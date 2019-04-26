@@ -1,5 +1,12 @@
 {
   "dependencies": {
     "express-generator": "^4.16.0"
-  }
+  },
+  "name": "chanuuuuu",
+  "version": "1.0.0",
+  "description": "chanuuuuu의 dev",
+  "main": "app.js",
+  "repository": "https://github.com/chanuuuuu/onadWeb.git",
+  "author": "dn0208@gmail.com <dn0208@gmail.com>",
+  "license": "MIT"
 }
