@@ -1,6 +1,8 @@
 import React from 'react';
 import ReactFullpage from '@fullpage/react-fullpage';
 
+import Section1 from './Section1';
+
 const SEL = 'custom-section';
 const SECTION_SEL = `.${SEL}`;
 
@@ -11,7 +13,7 @@ const pluginWrapper = () => {
    */
 };
 
-const originalColors = ['#282c34', '#ff5f45', '#0798ec'];
+const originalColors = ['#ffff', '#dddd', '#ffff'];
 
 export default class Main extends React.Component {
   constructor(props) {
@@ -19,9 +21,7 @@ export default class Main extends React.Component {
     this.state = {
       sectionsColor: [...originalColors],
       fullpages: [
-        {
-          text: 'section 1',
-        },
+        Section1,
         {
           text: 'section 2',
         },

@@ -4,6 +4,8 @@
   "private": true,
   "dependencies": {
     "@fullpage/react-fullpage": "^0.1.14",
+    "@material-ui/core": "^3.9.3",
+    "@material-ui/icons": "^3.0.2",
     "eslint-config-airbnb": "^17.1.0",
     "eslint-config-prettier": "^4.2.0",
     "eslint-plugin-prettier": "^3.0.1",
