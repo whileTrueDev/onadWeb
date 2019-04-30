@@ -669,6 +669,14 @@
     "@babel/helper-regex" "^7.4.3"
     regexpu-core "^4.5.4"
 
+"@babel/polyfill@^7.2.5":
+  version "7.4.4"
+  resolved "https://registry.yarnpkg.com/@babel/polyfill/-/polyfill-7.4.4.tgz#78801cf3dbe657844eeabf31c1cae3828051e893"
+  integrity sha512-WlthFLfhQQhh+A2Gn5NSFl0Huxz36x86Jn+E9OW7ibK8edKPq+KLy4apM1yDpQ8kJOVi1OVjpP4vSDLdrI04dg==
+  dependencies:
+    core-js "^2.6.5"
+    regenerator-runtime "^0.13.2"
+
 "@babel/preset-env@7.4.3", "@babel/preset-env@^7.1.6":
   version "7.4.3"
   resolved "https://registry.yarnpkg.com/@babel/preset-env/-/preset-env-7.4.3.tgz#e71e16e123dc0fbf65a52cbcbcefd072fbd02880"
@@ -799,6 +807,14 @@
   version "9.0.1"
   resolved "https://registry.yarnpkg.com/@csstools/normalize.css/-/normalize.css-9.0.1.tgz#c27b391d8457d1e893f1eddeaf5e5412d12ffbb5"
   integrity sha512-6It2EVfGskxZCQhuykrfnALg7oVeiI6KclWSmGDqB0AiInVrTGB9Jp9i4/Ad21u9Jde/voVQz6eFX/eSg/UsPA==
+
+"@fullpage/react-fullpage@^0.1.14":
+  version "0.1.14"
+  resolved "https://registry.yarnpkg.com/@fullpage/react-fullpage/-/react-fullpage-0.1.14.tgz#b248dc32c049de680fd4dc14f1893a715a809fc0"
+  integrity sha512-yAFlEtpQCCD2PDB9LCW9goPCvy3BXiE0bjgbe4Lw1oteeeywv+jmljXCodDQjWXFNcup3gGN0ZH9D7Hiq+W5HQ==
+  dependencies:
+    "@babel/polyfill" "^7.2.5"
+    fullpage.js "^3.0.5"
 
 "@jest/console@^24.7.1":
   version "24.7.1"
@@ -2568,7 +2584,7 @@ core-js@3.0.1:
   resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.0.1.tgz#1343182634298f7f38622f95e73f54e48ddf4738"
   integrity sha512-sco40rF+2KlE0ROMvydjkrVMMG1vYilP2ALoRXcYR4obqbYIuV3Bg+51GEDW+HF8n7NRA+iaA4qD0nD9lo9mew==
 
-core-js@^2.4.0:
+core-js@^2.4.0, core-js@^2.6.5:
   version "2.6.5"
   resolved "https://registry.yarnpkg.com/core-js/-/core-js-2.6.5.tgz#44bc8d249e7fb2ff5d00e0341a7ffb94fbf67895"
   integrity sha512-klh/kDpwX8hryYL14M9w/xei6vrv6sE8gTHDG7/T/+SEovB/G4ejwcfE/CBzO6Edsu+OETZMZ3wcX/EjUkrl5A==
@@ -4018,6 +4034,11 @@ fsevents@^1.2.7:
   dependencies:
     nan "^2.12.1"
     node-pre-gyp "^0.12.0"
+
+fullpage.js@^3.0.5:
+  version "3.0.5"
+  resolved "https://registry.yarnpkg.com/fullpage.js/-/fullpage.js-3.0.5.tgz#ed223ec81ea354bffcac37c24c946981a1124171"
+  integrity sha512-80zJ12tqIkwNgVRnrJiP2RDy1okF9wXj5I7BDg5dsJcHCpgzb052ATCjz+3g7Zp1fjGsaDmEu1m92MafGqcO3w==
 
 function-bind@^1.1.1:
   version "1.1.1"
@@ -7768,7 +7789,7 @@ react-dev-utils@^9.0.0:
     strip-ansi "5.2.0"
     text-table "0.2.0"
 
-react-dom@16.8.6:
+react-dom@^16.8.6:
   version "16.8.6"
   resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-16.8.6.tgz#71d6303f631e8b0097f56165ef608f051ff6e10f"
   integrity sha512-1nL7PIq9LTL3fthPqwkvr2zY7phIPjYrT0jp4HjyEQrEROnw4dG41VVwi/wfoCneoleqrNX7iAD+pXebJZwrwA==
@@ -7846,7 +7867,7 @@ react-scripts@3.0.0:
   optionalDependencies:
     fsevents "2.0.6"
 
-react@16.8.6:
+react@^16.8.6:
   version "16.8.6"
   resolved "https://registry.yarnpkg.com/react/-/react-16.8.6.tgz#ad6c3a9614fd3a4e9ef51117f54d888da01f2bbe"
   integrity sha512-pC0uMkhLaHm11ZSJULfOBqV4tIZkx87ZLvbbQYunNixAAvjnC+snJCg0XQXn9VIsttVsbZP/H/ewzgsd5fxKXw==
