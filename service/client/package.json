@@ -25,7 +25,8 @@
       "prettier"
     ],
     "rules": {
-      "no-unused-vars": 1
+      "no-unused-vars": 1,
+      "button-has-type": 0
     },
     "env": {
       "browser": true
