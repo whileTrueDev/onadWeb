@@ -6,4 +6,6 @@ import Main from './components/Main';
 
 const App = () => <Main />;
 
+const string = 'adf';
+
 export default App;

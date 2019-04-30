@@ -5,6 +5,8 @@
   "dependencies": {
     "@fullpage/react-fullpage": "^0.1.14",
     "eslint-config-airbnb": "^17.1.0",
+    "eslint-config-prettier": "^4.2.0",
+    "eslint-plugin-prettier": "^3.0.1",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-scripts": "3.0.0"
@@ -17,8 +19,10 @@
   },
   "eslintConfig": {
     "extends": [
-      "react-app",
       "airbnb"
+    ],
+    "plugins": [
+      "prettier"
     ],
     "rules": {
       "no-unused-vars": 1
@@ -26,6 +30,14 @@
     "env": {
       "browser": true
     }
+  },
+  "prettier": {
+    "singleQuote": true,
+    "semi": true,
+    "useTabs": false,
+    "tabWidth": 2,
+    "trailingComma": "all",
+    "printWidth": 80
   },
   "browserslist": {
     "production": [
