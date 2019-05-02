@@ -5,11 +5,15 @@ import {
 } from '@material-ui/core';
 
 const Footer = () => (
-  <Paper>
-    <Typography variant="h5" component="h3">
+  <Paper style={{
+    boxShadow: 'none',
+    borderTop: '1px solid #ddd',
+  }}
+  >
+    <Typography align="center" variant="h5" component="h3">
       Footer Paper
     </Typography>
-    <Typography component="p">
+    <Typography align="center" component="p">
       Footer content
     </Typography>
   </Paper>
