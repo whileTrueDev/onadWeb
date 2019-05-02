@@ -1,12 +1,14 @@
 import React from 'react';
-import Header from '../Layout/Main/Header';
-import Footer from '../Layout/Main/Footer';
-import Content from './Content';
 
-export default () => (
+import AppAppBar from './views/AppAppBar';
+import AppFooter from './views/AppFooter';
+import ProductHero from './views/ProductHero';
+import withRoot from './withRoot';
+
+export default withRoot(() => (
   <div>
-    <Header />
-    <Content />
-    <Footer />
+    <AppAppBar />
+    <ProductHero />
+    <AppFooter />
   </div>
-);
+));

@@ -1,11 +1,11 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import Link from '@material-ui/core/Link';
-import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
+import Button from '../components/Button';
+import Typography from '../components/Typography';
 import ProductHeroLayout from './ProductHeroLayout';
 
-const backgroundImage = '/images/main_top.JPEG';
+const backgroundImage = 'https://images.unsplash.com/photo-1534854638093-bada1813ca19?auto=format&fit=crop&w=1400&q=80';
 
 const styles = theme => ({
   background: {
@@ -14,18 +14,18 @@ const styles = theme => ({
     backgroundPosition: 'center',
   },
   button: {
-    minWidth: 150,
-
+    minWidth: 200,
+    marginTop: 50,
   },
   h5: {
-    marginBottom: theme.spacing.unit * 4,
-    marginTop: theme.spacing.unit * 4,
+    marginBottom: theme.spacing(4),
+    marginTop: theme.spacing(4),
     [theme.breakpoints.up('sm')]: {
-      marginTop: theme.spacing.unit * 10,
+      marginTop: theme.spacing(10),
     },
   },
   more: {
-    marginTop: theme.spacing.unit * 2,
+    marginTop: theme.spacing(2),
   },
 });
 
@@ -37,27 +37,34 @@ function ProductHero(props) {
       {/* Increase the network loading priority of the background image. */}
       <img style={{ display: 'none' }} src={backgroundImage} alt="" />
       <Typography color="inherit" align="center" variant="h2" marked="center">
-        광고 하고 싶으세요?
+        마음껏, 효율적으로 광고하세요. 광고를 유치하세요.
       </Typography>
-      <Typography color="inherit" align="center" variant="h5" className={classes.h5}>
-        우리는 1인 방송인과 DA 광고를 관련성 분석을 통해 최적화 매칭합니다.
+      <Typography
+        color="inherit"
+        align="center"
+        variant="h5"
+        className={classes.h5}
+        style={{ width: '450px' }}
+      >
+        우리는 관련성 분석 통해 크리에이터와 광고주를 1:N 또는 N:N 매칭합니다.
       </Typography>
       <Button
-        color="default"
+        color="secondary"
         variant="contained"
         size="large"
         className={classes.button}
-        component={linkProps => (
-          <Link {...linkProps} href="/" variant="button" />
-        )}
+        component="a"
+        href="/"
       >
-        시작하러가기
+        어떻게?
       </Button>
-      <Typography variant="body2" color="inherit" className={classes.more}>
-        쉽게 광고하세요
-      </Typography>
+      <Typography variant="body2" color="inherit" className={classes.more} />
     </ProductHeroLayout>
   );
 }
+
+ProductHero.propTypes = {
+  classes: PropTypes.object.isRequired,
+};
 
 export default withStyles(styles)(ProductHero);

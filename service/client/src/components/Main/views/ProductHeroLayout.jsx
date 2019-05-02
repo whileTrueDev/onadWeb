@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import classNames from 'classnames';
 import { withStyles } from '@material-ui/core/styles';
-import LayoutBody from './LayoutBody';
+import Container from '@material-ui/core/Container';
+import clsx from 'clsx';
 
 const styles = theme => ({
   root: {
@@ -16,9 +16,9 @@ const styles = theme => ({
       maxHeight: 1300,
     },
   },
-  layoutBody: {
-    marginTop: theme.spacing.unit * 3,
-    marginBottom: theme.spacing.unit * 14,
+  container: {
+    marginTop: theme.spacing(3),
+    marginBottom: theme.spacing(14),
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
@@ -45,7 +45,7 @@ const styles = theme => ({
   },
   arrowDown: {
     position: 'absolute',
-    bottom: theme.spacing.unit * 4,
+    bottom: theme.spacing(4),
   },
 });
 
@@ -54,18 +54,24 @@ function ProductHeroLayout(props) {
 
   return (
     <section className={classes.root}>
-      <LayoutBody className={classes.layoutBody} width="full">
+      <Container className={classes.container}>
+        <img
+          src="/images/productHeroWonder.png"
+          alt="wonder"
+          width="147"
+          height="80"
+        />
         {children}
         <div className={classes.backdrop} />
-        <div className={classNames(classes.background, backgroundClassName)} />
+        <div className={clsx(classes.background, backgroundClassName)} />
         <img
           className={classes.arrowDown}
-          src="/images/icon_creator.png"
+          src="/images/productHeroArrowDown.png"
           height="16"
           width="12"
-          alt="creator"
+          alt="arrow down"
         />
-      </LayoutBody>
+      </Container>
     </section>
   );
 }
