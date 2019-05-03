@@ -5,8 +5,10 @@ import Container from '@material-ui/core/Container';
 import grey from '@material-ui/core/colors/grey';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
+import Grow from '@material-ui/core/Grow';
 import Button from '../components/Button';
-import ProductHowItWorksItem from './ProductHowItWorksItem';
+import ProductHowItWorksMaketerItem from './ProductHowItWorksMaketerItem';
+import ProductHowItWorksCreatorItem from './ProductHowItWorksCreatorItem';
 
 const styles = theme => ({
   root: {
@@ -53,12 +55,31 @@ const styles = theme => ({
 
 function ProductHowItWorks(props) {
   const [value, setValue] = React.useState(0);
+  // const [checked, setChecked] = React.useState(false);
 
+  // tab에 따라 다른 howitworks를 보여준다
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
 
   const { classes } = props;
+
+  //   this.handleScroll = this.handleScroll.bind(this);
+  // }
+
+  // componentDidMount() {
+  //   window.addEventListener('scroll', this.handleScroll);
+  // }
+
+  // componentWillUnmount() {
+  //   window.removeEventListener('scroll', this.handleScroll);
+  // }
+
+  // handleScroll(e) {
+  //   this.setState({
+  //     checked: true,
+  //   });
+  // }
 
   return (
     <section className={classes.root}>
@@ -75,7 +96,16 @@ function ProductHowItWorks(props) {
         </Tabs>
         {
           value === 0 && (
-            <ProductHowItWorksItem
+            <Grow>
+              <ProductHowItWorksMaketerItem
+                classes={classes}
+              />
+            </Grow>
+          )
+        }
+        {
+          value === 1 && (
+            <ProductHowItWorksCreatorItem
               classes={classes}
             />
           )
