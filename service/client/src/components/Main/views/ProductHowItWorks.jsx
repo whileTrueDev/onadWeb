@@ -1,19 +1,20 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
 import Container from '@material-ui/core/Container';
+import grey from '@material-ui/core/colors/grey';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
 import Button from '../components/Button';
-import Typography from '../components/Typography';
+import ProductHowItWorksItem from './ProductHowItWorksItem';
 
 const styles = theme => ({
   root: {
     display: 'flex',
-    backgroundColor: theme.palette.secondary.light,
+    backgroundColor: grey[300],
     overflow: 'hidden',
   },
   container: {
-    marginTop: theme.spacing(10),
     marginBottom: theme.spacing(15),
     position: 'relative',
     display: 'flex',
@@ -40,84 +41,55 @@ const styles = theme => ({
     marginTop: theme.spacing(4),
     marginBottom: theme.spacing(4),
   },
-  curvyLines: {
-    pointerEvents: 'none',
-    position: 'absolute',
-    top: -180,
-    opacity: 0.7,
-  },
   button: {
     marginTop: theme.spacing(8),
+  },
+  tabs: {
+    flexGrow: 1,
+    marginBottom: theme.spacing(5),
+
   },
 });
 
 function ProductHowItWorks(props) {
+  const [value, setValue] = React.useState(0);
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
+
   const { classes } = props;
 
   return (
     <section className={classes.root}>
       <Container className={classes.container}>
-        <img
-          src="/static/themes/onepirate/productCurvyLines.png"
-          className={classes.curvyLines}
-          alt="curvy lines"
-        />
-        <Typography variant="h4" marked="center" className={classes.title} component="h2">
-          How it works
-        </Typography>
-        <div>
-          <Grid container spacing={5}>
-            <Grid item xs={12} md={4}>
-              <div className={classes.item}>
-                <div className={classes.number}>1.</div>
-                <img
-                  src="/static/themes/onepirate/productHowItWorks1.svg"
-                  alt="suitcase"
-                  className={classes.image}
-                />
-                <Typography variant="h5" align="center">
-                  Appointment every Wednesday 9am.
-                </Typography>
-              </div>
-            </Grid>
-            <Grid item xs={12} md={4}>
-              <div className={classes.item}>
-                <div className={classes.number}>2.</div>
-                <img
-                  src="/static/themes/onepirate/productHowItWorks2.svg"
-                  alt="graph"
-                  className={classes.image}
-                />
-                <Typography variant="h5" align="center">
-                  First come, first served. Our offers are in limited quantities, so be quick.
-                </Typography>
-              </div>
-            </Grid>
-            <Grid item xs={12} md={4}>
-              <div className={classes.item}>
-                <div className={classes.number}>3.</div>
-                <img
-                  src="/static/themes/onepirate/productHowItWorks3.svg"
-                  alt="clock"
-                  className={classes.image}
-                />
-                <Typography variant="h5" align="center">
-                  {'New offers every week. New experiences, new surprises. '}
-                  {'Your Sundays will no longer be alike.'}
-                </Typography>
-              </div>
-            </Grid>
-          </Grid>
-        </div>
+        <Tabs
+          className={classes.tabs}
+          value={value}
+          onChange={handleChange}
+          indicatorColor="primary"
+          textColor="primary"
+        >
+          <Tab label="마케터 또는 광고주" />
+          <Tab label="크리에이터 또는 1인미디어 방송" />
+        </Tabs>
+        {
+          value === 0 && (
+            <ProductHowItWorksItem
+              classes={classes}
+            />
+          )
+        }
+
         <Button
           color="secondary"
           size="large"
           variant="contained"
           className={classes.button}
           component="a"
-          href="/premium-themes/onepirate/sign-up"
+          href="/dashboard"
         >
-          Get started
+            시작하기
         </Button>
       </Container>
     </section>

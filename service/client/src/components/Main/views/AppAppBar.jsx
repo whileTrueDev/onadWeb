@@ -68,6 +68,24 @@ function AppAppBar(props) {
               className={classes.rightLink}
               href="/"
             >
+              {'서비스 소개'}
+            </Link>
+            <Link
+              color="inherit"
+              variant="h6"
+              underline="none"
+              className={classes.rightLink}
+              href="/"
+            >
+              {'이용 안내'}
+            </Link>
+            <Link
+              color="inherit"
+              variant="h6"
+              underline="none"
+              className={classes.rightLink}
+              href="/"
+            >
               {'로그인'}
             </Link>
             <Link

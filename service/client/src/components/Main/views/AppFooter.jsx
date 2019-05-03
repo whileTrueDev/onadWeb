@@ -4,6 +4,7 @@ import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Link from '@material-ui/core/Link';
 import Container from '@material-ui/core/Container';
+import { blueGrey } from '@material-ui/core/colors';
 import Typography from '../components/Typography';
 import TextField from '../components/TextField';
 import compose from '../utils/compose';
@@ -11,7 +12,7 @@ import compose from '../utils/compose';
 const styles = theme => ({
   root: {
     display: 'flex',
-    backgroundColor: theme.palette.secondary.light,
+    backgroundColor: blueGrey[100],
   },
   container: {
     marginTop: theme.spacing(8),
@@ -44,21 +45,25 @@ const styles = theme => ({
   listItem: {
     paddingTop: theme.spacing(0.5),
     paddingBottom: theme.spacing(0.5),
+    '&:hover': {
+      fontWeight: 'bold',
+    },
   },
   language: {
     marginTop: theme.spacing(1),
     width: 150,
+
   },
 });
 
 const LANGUAGES = [
   {
-    code: 'en-US',
-    name: 'English',
+    code: 'ko-KO',
+    name: '한글',
   },
   {
-    code: 'fr-FR',
-    name: 'Français',
+    code: 'en-US',
+    name: 'English',
   },
 ];
 
@@ -91,16 +96,62 @@ function AppFooter(props) {
             </Typography>
             <ul className={classes.list}>
               <li className={classes.listItem}>
-                <Link href="/premium-themes/onepirate/terms">Terms</Link>
+                <Link
+                  href="/premium-themes/onepirate/terms"
+                  color="inherit"
+                  underline="none"
+                >
+                이용약관
+                </Link>
               </li>
               <li className={classes.listItem}>
-                <Link href="/premium-themes/onepirate/privacy">Privacy</Link>
+                <Link
+                  href="/premium-themes/onepirate/privacy"
+                  color="inherit"
+                  underline="none"
+                >
+                개인정보 처리방침
+                </Link>
+              </li>
+              <li className={classes.listItem}>
+                <Link
+                  color="inherit"
+                  href="/premium-themes/onepirate/privacy"
+                  underline="none"
+                >
+                고객센터
+                </Link>
+              </li>
+            </ul>
+          </Grid>
+          <Grid item xs={6} sm={4} md={2}>
+            <Typography variant="h6" marked="left" gutterBottom>
+              Contact Us
+            </Typography>
+            <ul className={classes.list}>
+              <li className={classes.listItem}>
+                <Link
+                  href="https://on-ad.github.io"
+                  color="inherit"
+                  underline="none"
+                >
+                기술블로그
+                </Link>
+              </li>
+              <li className={classes.listItem}>
+                <Link
+                  href="/"
+                  color="inherit"
+                  underline="none"
+                >
+                회사 소개
+                </Link>
               </li>
             </ul>
           </Grid>
           <Grid item xs={6} sm={8} md={4}>
             <Typography variant="h6" marked="left" gutterBottom>
-              Language
+              언어
             </Typography>
             <TextField
               select
@@ -118,22 +169,14 @@ function AppFooter(props) {
           </Grid>
           <Grid item>
             <Typography variant="caption">
-              {'Icons made by '}
-              <Link href="https://www.freepik.com" rel="nofollow" title="Freepik">
-                Freepik
-              </Link>
-              {' from '}
-              <Link href="https://www.flaticon.com" rel="nofollow" title="Flaticon">
-                www.flaticon.com
-              </Link>
-              {' is licensed by '}
+              {'회사명 온애드 | 회사위치 어딘가 | 대표명 누군가 사업자등록번호 몇번 | 통신판매업신고번호 몇번 | E-mail : support@on.ad'}
               <Link
-                href="http://creativecommons.org/licenses/by/3.0/"
-                title="Creative Commons BY 3.0"
+                href="/"
+                title="some link"
                 target="_blank"
-                rel="noopener noreferrer"
+                rel="somelink"
               >
-                CC 3.0 BY
+                some link
               </Link>
             </Typography>
           </Grid>
@@ -148,6 +191,5 @@ AppFooter.propTypes = {
 };
 
 export default compose(
-  React.memo,
   withStyles(styles),
 )(AppFooter);
