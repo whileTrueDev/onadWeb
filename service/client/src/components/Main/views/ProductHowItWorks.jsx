@@ -53,78 +53,89 @@ const styles = theme => ({
   },
 });
 
-function ProductHowItWorks(props) {
-  const [value, setValue] = React.useState(0);
-  // const [checked, setChecked] = React.useState(false);
+class ProductHowItWorks extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      value: 0,
+      checked: false,
+    };
+    this.handleChange = this.handleChange.bind(this);
+    this.handleScroll = this.handleScroll.bind(this);
+  }
 
-  // tab에 따라 다른 howitworks를 보여준다
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
-  };
+  componentDidMount() {
+    window.addEventListener('scroll', this.handleScroll);
+  }
 
-  const { classes } = props;
+  componentDidUpdate() {
+    window.removeEventListener('scroll', this.handleScroll);
+  }
 
-  //   this.handleScroll = this.handleScroll.bind(this);
-  // }
+  handleChange(event, newValue) {
+    this.setState({
+      value: newValue,
+    });
+  }
 
-  // componentDidMount() {
-  //   window.addEventListener('scroll', this.handleScroll);
-  // }
+  handleScroll() {
+    if (!this.checked) {
+      this.setState({
+        checked: true,
+      });
+    }
+  }
 
-  // componentWillUnmount() {
-  //   window.removeEventListener('scroll', this.handleScroll);
-  // }
+  render() {
+    const { classes } = this.props;
+    const { value, checked } = this.state;
 
-  // handleScroll(e) {
-  //   this.setState({
-  //     checked: true,
-  //   });
-  // }
+    return (
+      <section className={classes.root}>
+        <Container className={classes.container}>
+          <Tabs
+            className={classes.tabs}
+            value={value}
+            onChange={this.handleChange}
+            indicatorColor="primary"
+            textColor="primary"
+          >
+            <Tab label="마케터 또는 광고주" />
+            <Tab label="크리에이터 또는 1인미디어 방송" />
+          </Tabs>
+          <Grow
+            in={checked}
+            {...(checked ? { timeout: 1500 } : {})}
+          >
+            {
+            value === 0 ? (
 
-  return (
-    <section className={classes.root}>
-      <Container className={classes.container}>
-        <Tabs
-          className={classes.tabs}
-          value={value}
-          onChange={handleChange}
-          indicatorColor="primary"
-          textColor="primary"
-        >
-          <Tab label="마케터 또는 광고주" />
-          <Tab label="크리에이터 또는 1인미디어 방송" />
-        </Tabs>
-        {
-          value === 0 && (
-            <Grow>
               <ProductHowItWorksMaketerItem
                 classes={classes}
               />
-            </Grow>
-          )
-        }
-        {
-          value === 1 && (
-            <ProductHowItWorksCreatorItem
-              classes={classes}
-            />
-          )
-        }
-
-        <Button
-          color="secondary"
-          size="large"
-          variant="contained"
-          className={classes.button}
-          component="a"
-          href="/dashboard"
-        >
+            ) : (
+              <ProductHowItWorksCreatorItem
+                classes={classes}
+              />
+            )
+          }
+          </Grow>
+          <Button
+            color="secondary"
+            size="large"
+            variant="contained"
+            className={classes.button}
+            component="a"
+            href="/dashboard"
+          >
             시작하기
-        </Button>
-      </Container>
-    </section>
-  );
+          </Button>
+        </Container>
+      </section>
+    );
+  }
 }
+
 
 ProductHowItWorks.propTypes = {
   classes: PropTypes.object.isRequired,

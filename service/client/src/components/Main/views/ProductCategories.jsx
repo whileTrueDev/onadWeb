@@ -142,14 +142,16 @@ class ProductCategories extends React.Component {
     window.addEventListener('scroll', this.handleScroll);
   }
 
-  componentWillUnmount() {
+  componentDidUpdate() {
     window.removeEventListener('scroll', this.handleScroll);
   }
 
-  handleScroll(e) {
-    this.setState({
-      checked: true,
-    });
+  handleScroll() {
+    if (!this.checked) {
+      this.setState({
+        checked: true,
+      });
+    }
   }
 
   render() {
@@ -199,7 +201,7 @@ class ProductCategories extends React.Component {
                     </Typography>
                     <Grid container>
                       <Typography
-                        variant="subtitle"
+                        variant="subtitle2"
                         className={classes.imageSubTitle}
                       >
                         {image.description}

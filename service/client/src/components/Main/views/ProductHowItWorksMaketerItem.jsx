@@ -4,12 +4,6 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '../components/Typography';
 
 export default function ProductHowItWorksMarketerItem(props) {
-  const [value, setValue] = React.useState(0);
-
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
-  };
-
   const { classes } = props;
   return (
     <React.Fragment>

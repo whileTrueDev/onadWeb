@@ -4,17 +4,11 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '../components/Typography';
 
 export default function ProductHowItWorksCreatorItem(props) {
-  const [value, setValue] = React.useState(0);
-
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
-  };
-
   const { classes } = props;
   return (
     <React.Fragment>
       <Typography variant="h4" marked="center" className={classes.title} component="h2">
-          간단하게 광고를 유치하세요. 가입만으로 광고료를 획득할 수 있습니다.
+        간단한 설정만으로 광고료를 획득할 수 있습니다. 광고를 유치하세요.
       </Typography>
       <div>
         <Grid container spacing={5}>
