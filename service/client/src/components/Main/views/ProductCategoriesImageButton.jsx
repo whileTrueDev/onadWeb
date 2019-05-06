@@ -4,7 +4,7 @@ import { withStyles } from '@material-ui/core/styles';
 import ButtonBase from '@material-ui/core/ButtonBase';
 import { Grid } from '@material-ui/core';
 import Typography from '../components/Typography';
-
+import ImageModal from './ImageModal';
 
 const styles = theme => ({
   imageWrapper: {
@@ -83,44 +83,59 @@ const styles = theme => ({
 
 const ProductCategoriesDetail = (props) => {
   const { classes, image, matches } = props;
+  const [isImageModalOpen, setIsImageModalOpen] = React.useState(false);
+
+  function handleModalOpen() {
+    setIsImageModalOpen(true);
+  }
 
   return (
-    <ButtonBase
-      key={image.title}
-      className={classes.imageWrapper}
-      style={{
-        width: image.width,
-      }}
-    >
-      <div
-        className={classes.imageSrc}
+    <React.Fragment>
+      <ButtonBase
+        key={image.title}
+        className={classes.imageWrapper}
+        onClick={handleModalOpen}
         style={{
-          backgroundImage: `url(${image.url})`,
+          width: image.width,
         }}
-      />
-      <div className={classes.imageBackdrop} />
-      <div className={classes.imageButton}>
-        <Typography
-          variant="h5"
-          color="inherit"
-          className={classes.imageTitle}
-        >
-          {image.title}
-          <div className={classes.imageMarked} />
-        </Typography>
-        { matches && (
-        <Grid container>
+      >
+        <div
+          className={classes.imageSrc}
+          style={{
+            backgroundImage: `url(${image.url})`,
+          }}
+        />
+        <div className={classes.imageBackdrop} />
+        <div className={classes.imageButton}>
           <Typography
-            variant="subtitle2"
-            className={classes.imageSubTitle}
+            variant="h5"
+            color="inherit"
+            className={classes.imageTitle}
           >
-            {image.description}
+            {image.title}
+            <div className={classes.imageMarked} />
           </Typography>
-        </Grid>
-        )}
+          { matches && (
+          <Grid container>
+            <Typography
+              variant="subtitle2"
+              className={classes.imageSubTitle}
+            >
+              {image.description}
+            </Typography>
+          </Grid>
+          )}
 
-      </div>
-    </ButtonBase>
+        </div>
+      </ButtonBase>
+
+      <ImageModal
+        isImageModalOpen={isImageModalOpen}
+        setIsImageModalOpen={setIsImageModalOpen}
+        image={image}
+      />
+
+    </React.Fragment>
   );
 };
 
@@ -131,4 +146,7 @@ ProductCategoriesDetail.propTypes = {
   matches: PropTypes.bool.isRequired,
 };
 
+ProductCategoriesDetail.defaultProps = {
+  classes: {},
+};
 export default withStyles(styles)(ProductCategoriesDetail);

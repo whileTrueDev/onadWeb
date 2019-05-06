@@ -56,6 +56,7 @@ class ProductHowItWorks extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      check: false,
       value: 0,
     };
     this.handleChange = this.handleChange.bind(this);
@@ -63,13 +64,14 @@ class ProductHowItWorks extends React.Component {
 
   handleChange(event, newValue) {
     this.setState({
+      check: true,
       value: newValue,
     });
   }
 
   render() {
     const { classes } = this.props;
-    const { value } = this.state;
+    const { value, check } = this.state;
 
     return (
       <section className={classes.root}>

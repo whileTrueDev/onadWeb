@@ -12,19 +12,22 @@ const styles = theme => ({
   },
 });
 
+// 이미지 데이터
 const images = [
   {
     url:
       '/images/productCategory1.gif',
     title: '1인 미디어. 크리에이터.',
-    description: '우리는 1인 미디어 크리에이터들을 사랑합니다. OBS, Xsplit 등의 방송 송출프로그램을 사용하신다면 바로 광고를 유치할 수 있습니다. 간단하고도 쉽게 광고수익을 얻으세요',
+    description: 'OBS 또는 Xsplit 을 사용하신다면 곧바로 광고를 유치할 수 있습니다.',
+    fullDescription: '우리는 1인 미디어 크리에이터들을 사랑합니다. OBS, Xsplit 등의 방송 송출프로그램을 사용하신다면 바로 광고를 유치할 수 있습니다. 간단하고도 쉽게 광고수익을 얻으세요',
     width: '35%',
   },
   {
     url:
       '/images/productCategory2.gif',
     title: 'DA광고를 누구나',
-    description: '광고를 원하는 누구나 광고 집행이 가능합니다. 광고 집행 시간에 따라 정확하고, 합리적인 금액으로 광고할 수 있습니다.',
+    description: '광고를 원하는 누구나 광고 집행이 가능합니다.',
+    fullDescription: '광고를 원하는 누구나 광고 집행이 가능합니다. 광고 집행 시간에 따라 정확하고, 합리적인 금액으로 광고할 수 있습니다.',
     width: '33%',
   },
   {
@@ -32,6 +35,7 @@ const images = [
     '/images/productCategory3.gif',
     title: '간단하게, 효율적으로',
     description: 'description',
+    fullDescription: 'fullDescription',
     width: '32%',
   },
   {
@@ -39,6 +43,7 @@ const images = [
     '/images/productCategory4.gif',
     title: 'some Image',
     description: 'description',
+    fullDescription: 'fullDescription',
     width: '60%',
   },
   {
@@ -46,6 +51,7 @@ const images = [
     '/images/productCategory5.gif',
     title: '오픈베타가 예정되어있습니다',
     description: '2019.10.',
+    fullDescription: 'fullDescription',
     width: '40%',
   },
 ];
@@ -102,6 +108,10 @@ class ProductCategories extends React.Component {
 
 ProductCategories.propTypes = {
   classes: PropTypes.shape(PropTypes.object),
+};
+
+ProductCategories.defaultProps = {
+  classes: {},
 };
 
 export default withStyles(styles)(ProductCategories);
