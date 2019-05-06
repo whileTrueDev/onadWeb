@@ -2,12 +2,19 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
 import Typography from '../components/Typography';
+import Button from '../components/Button';
 
 export default function ProductHowItWorksMarketerItem(props) {
   const { classes } = props;
   return (
     <React.Fragment>
-      <Typography variant="h4" marked="center" className={classes.title} component="h2">
+      <Typography
+        variant="h4"
+        marked="center"
+        align="center"
+        className={classes.title}
+        component="h2"
+      >
             빠르고 쉽게 광고를 집행하고 투명하게 확인하세요
       </Typography>
       <div>
@@ -53,9 +60,19 @@ export default function ProductHowItWorksMarketerItem(props) {
           </Grid>
         </Grid>
       </div>
+      <Button
+        color="secondary"
+        size="large"
+        variant="contained"
+        className={classes.button}
+        component="a"
+        href="/dashboard"
+      >
+        마케터로 시작하기
+      </Button>
     </React.Fragment>
   );
 }
 ProductHowItWorksMarketerItem.propTypes = {
-  classes: PropTypes.object.isRequired,
+  classes: PropTypes.shape(PropTypes.shape(PropTypes.object)).isRequired,
 };

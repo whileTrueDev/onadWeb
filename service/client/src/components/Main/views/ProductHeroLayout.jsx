@@ -79,7 +79,7 @@ function ProductHeroLayout(props) {
 ProductHeroLayout.propTypes = {
   backgroundClassName: PropTypes.string.isRequired,
   children: PropTypes.node.isRequired,
-  classes: PropTypes.object.isRequired,
+  classes: PropTypes.shape(PropTypes.object),
 };
 
 export default withStyles(styles)(ProductHeroLayout);

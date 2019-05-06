@@ -1,94 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import ButtonBase from '@material-ui/core/ButtonBase';
 import Container from '@material-ui/core/Container';
-import { Grid } from '@material-ui/core';
-import Grow from '@material-ui/core/Grow';
 import Typography from '../components/Typography';
+import ProductCategoriesDetail from './ProductCategoriesDetail';
 
 const styles = theme => ({
   root: {
     marginTop: theme.spacing(5),
     marginBottom: theme.spacing(4),
-  },
-  images: {
-    marginTop: theme.spacing(8),
-    display: 'flex',
-    flexWrap: 'wrap',
-    boxShadow: '5px 5px 5px 5px grey',
-  },
-  imageWrapper: {
-    position: 'relative',
-    display: 'block',
-    padding: 0,
-    borderRadius: 0,
-    height: '40vh',
-    transitionDelay: '2s',
-    [theme.breakpoints.down('sm')]: {
-      width: '100% !important',
-      height: 100,
-    },
-    '&:hover': {
-      zIndex: 1,
-    },
-    '&:hover $imageBackdrop': {
-      opacity: 0.15,
-    },
-    '&:hover $imageMarked': {
-      opacity: 0,
-    },
-    '&:hover $imageTitle': {
-      borderBottom: '3px solid',
-    },
-  },
-  imageButton: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    top: 0,
-    bottom: 0,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    color: theme.palette.common.white,
-  },
-  imageSrc: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    top: 0,
-    bottom: 0,
-    backgroundSize: 'cover',
-    backgroundPosition: 'center 40%',
-  },
-  imageBackdrop: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    top: 0,
-    bottom: 0,
-    background: theme.palette.common.black,
-    opacity: 0.5,
-    transition: theme.transitions.create('opacity'),
-  },
-  imageTitle: {
-    position: 'relative',
-    marginLeft: 13,
-    padding: `${theme.spacing(2)}px ${theme.spacing(2)}px 14px`,
-  },
-  imageSubTitle: {
-    position: 'relative',
-    marginRight: 20,
-  },
-  imageMarked: {
-    height: 3,
-    width: 18,
-    background: theme.palette.common.white,
-    position: 'absolute',
-    bottom: -2,
-    left: 'calc(50% - 9px)',
-    transition: theme.transitions.create('opacity'),
   },
 });
 
@@ -103,7 +23,7 @@ const images = [
   {
     url:
       '/images/productCategory2.gif',
-    title: 'DA광고를 누구나, ',
+    title: 'DA광고를 누구나',
     description: '광고를 원하는 누구나 광고 집행이 가능합니다. 광고 집행 시간에 따라 정확하고, 합리적인 금액으로 광고할 수 있습니다.',
     width: '33%',
   },
@@ -129,6 +49,8 @@ const images = [
     width: '40%',
   },
 ];
+
+
 class ProductCategories extends React.Component {
   constructor(props) {
     super(props);
@@ -157,6 +79,7 @@ class ProductCategories extends React.Component {
   render() {
     const { classes } = this.props;
     const { checked } = this.state;
+
     return (
       <Container
         className={classes.root}
@@ -165,55 +88,12 @@ class ProductCategories extends React.Component {
         <Typography variant="h4" marked="center" align="center" component="h2">
         손쉽게 이용할 수 있습니다.
         </Typography>
-        <Grow
-          in={checked}
-          {...(checked ? { timeout: 1500 } : {})}
-        >
-          <div className={classes.images}>
 
-            {images.map(image => (
-              <Grow
-                in={checked}
-                {...(checked ? { timeout: 1500 } : {})}
-              >
-                <ButtonBase
-                  key={image.title}
-                  className={classes.imageWrapper}
-                  style={{
-                    width: image.width,
-                  }}
-                >
-                  <div
-                    className={classes.imageSrc}
-                    style={{
-                      backgroundImage: `url(${image.url})`,
-                    }}
-                  />
-                  <div className={classes.imageBackdrop} />
-                  <div className={classes.imageButton}>
-                    <Typography
-                      variant="h5"
-                      color="inherit"
-                      className={classes.imageTitle}
-                    >
-                      {image.title}
-                      <div className={classes.imageMarked} />
-                    </Typography>
-                    <Grid container>
-                      <Typography
-                        variant="subtitle2"
-                        className={classes.imageSubTitle}
-                      >
-                        {image.description}
-                      </Typography>
-                    </Grid>
+        <ProductCategoriesDetail
+          checked={checked}
+          images={images}
+        />
 
-                  </div>
-                </ButtonBase>
-              </Grow>
-            ))}
-          </div>
-        </Grow>
       </Container>
     );
   }
@@ -221,7 +101,7 @@ class ProductCategories extends React.Component {
 
 
 ProductCategories.propTypes = {
-  classes: PropTypes.object.isRequired,
+  classes: PropTypes.shape(PropTypes.object),
 };
 
 export default withStyles(styles)(ProductCategories);

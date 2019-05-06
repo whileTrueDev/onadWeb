@@ -5,6 +5,7 @@ import blueGrey from '@material-ui/core/colors/blueGrey';
 import red from '@material-ui/core/colors/red';
 
 const rawTheme = createMuiTheme({
+  // material-ui의 테마를 덮어씌우는 작업
   palette: {
     primary: {
       light: '#69696a',

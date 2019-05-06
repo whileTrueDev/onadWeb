@@ -5,8 +5,7 @@ import Container from '@material-ui/core/Container';
 import grey from '@material-ui/core/colors/grey';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-import Grow from '@material-ui/core/Grow';
-import Button from '../components/Button';
+import { Subscriptions, Person } from '@material-ui/icons';
 import ProductHowItWorksMaketerItem from './ProductHowItWorksMaketerItem';
 import ProductHowItWorksCreatorItem from './ProductHowItWorksCreatorItem';
 
@@ -58,18 +57,8 @@ class ProductHowItWorks extends React.Component {
     super(props);
     this.state = {
       value: 0,
-      checked: false,
     };
     this.handleChange = this.handleChange.bind(this);
-    this.handleScroll = this.handleScroll.bind(this);
-  }
-
-  componentDidMount() {
-    window.addEventListener('scroll', this.handleScroll);
-  }
-
-  componentDidUpdate() {
-    window.removeEventListener('scroll', this.handleScroll);
   }
 
   handleChange(event, newValue) {
@@ -78,17 +67,9 @@ class ProductHowItWorks extends React.Component {
     });
   }
 
-  handleScroll() {
-    if (!this.checked) {
-      this.setState({
-        checked: true,
-      });
-    }
-  }
-
   render() {
     const { classes } = this.props;
-    const { value, checked } = this.state;
+    const { value } = this.state;
 
     return (
       <section className={classes.root}>
@@ -97,19 +78,21 @@ class ProductHowItWorks extends React.Component {
             className={classes.tabs}
             value={value}
             onChange={this.handleChange}
+
             indicatorColor="primary"
             textColor="primary"
           >
-            <Tab label="마케터 또는 광고주" />
-            <Tab label="크리에이터 또는 1인미디어 방송" />
+            <Tab
+              icon={<Person />}
+              label="마케터 또는 광고주"
+            />
+            <Tab
+              icon={<Subscriptions />}
+              label="크리에이터 또는 1인미디어 방송인"
+            />
           </Tabs>
-          <Grow
-            in={checked}
-            {...(checked ? { timeout: 1500 } : {})}
-          >
-            {
+          {
             value === 0 ? (
-
               <ProductHowItWorksMaketerItem
                 classes={classes}
               />
@@ -119,17 +102,6 @@ class ProductHowItWorks extends React.Component {
               />
             )
           }
-          </Grow>
-          <Button
-            color="secondary"
-            size="large"
-            variant="contained"
-            className={classes.button}
-            component="a"
-            href="/dashboard"
-          >
-            시작하기
-          </Button>
         </Container>
       </section>
     );
@@ -138,7 +110,7 @@ class ProductHowItWorks extends React.Component {
 
 
 ProductHowItWorks.propTypes = {
-  classes: PropTypes.object.isRequired,
+  classes: PropTypes.shape(PropTypes.object).isRequired,
 };
 
 export default withStyles(styles)(ProductHowItWorks);

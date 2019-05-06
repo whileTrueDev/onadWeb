@@ -20,8 +20,7 @@ const styles = theme => ({
     padding: theme.spacing(2, 5),
   },
   link: {
-    marginTop: theme.spacing(3),
-    marginBottom: theme.spacing(3),
+    marginTop: theme.spacing(1),
   },
   buoy: {
     width: 60,
@@ -35,19 +34,18 @@ function ProductSmokingHero(props) {
     <Container className={classes.root} component="section">
       <Button className={classes.button}>
         <Typography variant="h4" component="span">
-          Got any questions? Need help?
+          도움이 필요하세요?
         </Typography>
       </Button>
       <Typography variant="subtitle1" className={classes.link}>
         We are here to help. Get in touch!
       </Typography>
-      <img src="/static/themes/onepirate/producBuoy.svg" className={classes.buoy} alt="buoy" />
     </Container>
   );
 }
 
 ProductSmokingHero.propTypes = {
-  classes: PropTypes.object.isRequired,
+  classes: PropTypes.shape(PropTypes.object),
 };
 
 export default withStyles(styles)(ProductSmokingHero);

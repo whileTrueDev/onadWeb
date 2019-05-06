@@ -5,6 +5,7 @@ import AppFooter from './views/AppFooter';
 import ProductHero from './views/ProductHero';
 import ProductCategories from './views/ProductCategories';
 import ProductHowItWorks from './views/ProductHowItWorks';
+import ProductCTA from './views/ProductCTA';
 import withRoot from './withRoot';
 
 export default withRoot(() => (
@@ -13,6 +14,7 @@ export default withRoot(() => (
     <ProductHero />
     <ProductCategories />
     <ProductHowItWorks />
+    <ProductCTA />
     <AppFooter />
   </div>
 ));

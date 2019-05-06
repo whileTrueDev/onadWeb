@@ -4,12 +4,13 @@ import { withStyles } from '@material-ui/core/styles';
 import MuiSnackbar from '@material-ui/core/Snackbar';
 import Slide from '@material-ui/core/Slide';
 import CloseIcon from '@material-ui/icons/Close';
-import InfoIcon from '@material-ui/icons/Info';
+import { CheckCircle } from '@material-ui/icons';
 import IconButton from '@material-ui/core/IconButton';
+import { green } from '@material-ui/core/colors';
 
 const styles = theme => ({
   content: {
-    backgroundColor: theme.palette.secondary.light,
+    backgroundColor: green[600],
     color: theme.palette.text.primary,
     flexWrap: 'inherit',
     [theme.breakpoints.up('md')]: {
@@ -29,9 +30,11 @@ const styles = theme => ({
   },
   info: {
     flexShrink: 0,
+    color: '#fff',
     marginRight: theme.spacing(2),
   },
   close: {
+    color: '#fff',
     padding: theme.spacing(1),
   },
 });
@@ -42,13 +45,15 @@ function Transition(props) {
 
 function Snackbar(props) {
   const {
-    classes, onClose, message, ...other
+    classes, open, onClose, message, ...other
   } = props;
 
   return (
     <MuiSnackbar
       anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-      autoHideDuration={6e3}
+      autoHideDuration={3000}
+      onClose={onClose}
+      open={open}
       transition={Transition}
       ContentProps={{
         'aria-describedby': 'snackbar',
@@ -60,10 +65,10 @@ function Snackbar(props) {
       }}
       message={(
         <React.Fragment>
-          <InfoIcon className={classes.info} />
-          <span id="snackbar">{message}</span>
+          <CheckCircle className={classes.info} />
+          <span id="snackbar" className={classes.info}>{message}</span>
         </React.Fragment>
-)}
+      )}
       action={[
         <IconButton
           key="close"
@@ -81,8 +86,10 @@ function Snackbar(props) {
 }
 
 Snackbar.propTypes = {
-  classes: PropTypes.object.isRequired,
-  SnackbarContentProps: PropTypes.object,
+  classes: PropTypes.shape(PropTypes.object),
+  open: PropTypes.bool,
+  onClose: PropTypes.func,
+  SnackbarContentProps: PropTypes.shape(PropTypes.object),
 };
 
 export default withStyles(styles)(Snackbar);

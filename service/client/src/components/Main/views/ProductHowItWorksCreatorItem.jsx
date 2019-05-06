@@ -1,13 +1,20 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
+import Button from '../components/Button';
 import Typography from '../components/Typography';
 
 export default function ProductHowItWorksCreatorItem(props) {
   const { classes } = props;
   return (
     <React.Fragment>
-      <Typography variant="h4" marked="center" className={classes.title} component="h2">
+      <Typography
+        variant="h4"
+        marked="center"
+        align="center"
+        className={classes.title}
+        component="h2"
+      >
         간단한 설정만으로 광고료를 획득할 수 있습니다. 광고를 유치하세요.
       </Typography>
       <div>
@@ -16,12 +23,12 @@ export default function ProductHowItWorksCreatorItem(props) {
             <div className={classes.item}>
               <div className={classes.number}>1.</div>
               <img
-                src="/images/productValues1.svg"
+                src="/images/productValues3.svg"
                 alt="suitcase"
                 className={classes.image}
               />
               <Typography variant="h5" align="center">
-                    배너를 등록하고 관련성 매칭을 통해 추천된 크리에이터 목록을 확인하세요.
+                    OBS, Xsplit 등의 방송송출 프로그램에 오버레이 주소를 추가시키기만 하세요.
               </Typography>
             </div>
           </Grid>
@@ -29,12 +36,12 @@ export default function ProductHowItWorksCreatorItem(props) {
             <div className={classes.item}>
               <div className={classes.number}>2.</div>
               <img
-                src="/images/productValues2.svg"
+                src="/images/productValues1.svg"
                 alt="graph"
                 className={classes.image}
               />
               <Typography variant="h5" align="center">
-                    클릭 한번으로 간단하게 광고를 집행하세요.
+                    한번 설정하기만 하면, 방송과 관련 있는 광고가 자동으로 송출됩니다.
               </Typography>
             </div>
           </Grid>
@@ -42,20 +49,31 @@ export default function ProductHowItWorksCreatorItem(props) {
             <div className={classes.item}>
               <div className={classes.number}>3.</div>
               <img
-                src="/images/productValues3.svg"
+                src="/images/productValues2.svg"
                 alt="clock"
                 className={classes.image}
               />
               <Typography variant="h5" align="center">
-                  광고가 어떻게 진행되고 있는지, 실시간으로 집행된 금액은 얼마인지, 광고의 효과는 어떻게 되는지 확인하세요.
+                  어떤 광고가 진행되어 왔는지, 내 총 광고수익은 얼마인지, 대시보드에서 쉽게 확인하고, 수익금을 출금하세요.
               </Typography>
             </div>
           </Grid>
+
         </Grid>
       </div>
+      <Button
+        color="secondary"
+        size="large"
+        variant="contained"
+        className={classes.button}
+        component="a"
+        href="/dashboard"
+      >
+        크리에이터로 시작하기
+      </Button>
     </React.Fragment>
   );
 }
 ProductHowItWorksCreatorItem.propTypes = {
-  classes: PropTypes.object.isRequired,
+  classes: PropTypes.shape(PropTypes.object).isRequired,
 };

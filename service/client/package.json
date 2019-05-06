@@ -7,6 +7,7 @@
     "@material-ui/core": "^4.0.0-beta.0",
     "@material-ui/icons": "^3.0.2",
     "@material-ui/styles": "^3.0.0-alpha.10",
+    "axios": "^0.18.0",
     "classnames": "^2.2.6",
     "clsx": "^1.0.4",
     "eslint-config-airbnb": "^17.1.0",
@@ -25,6 +26,16 @@
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
+    "parser": "babel-eslint",
+    "parserOptions": {
+      "ecmaVersion": 6,
+      "sourceType": "module",
+      "ecmaFeatures": {
+        "jsx": true,
+        "modules": true,
+        "experimentalObjectRestSpread": true
+      }
+    },
     "extends": [
       "airbnb"
     ],
@@ -33,7 +44,20 @@
     ],
     "rules": {
       "no-unused-vars": "warn",
-      "button-has-type": "null"
+      "button-has-type": "null",
+      "react/prefer-stateless-function": 1,
+      "react/prop-types": [
+        1,
+        {
+          "ignore": [
+            "className",
+            "children",
+            "location",
+            "params",
+            "location*"
+          ]
+        }
+      ]
     },
     "env": {
       "browser": true

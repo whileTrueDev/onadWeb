@@ -62,7 +62,7 @@ function Typography(props) {
 
 Typography.propTypes = {
   children: PropTypes.node,
-  classes: PropTypes.object.isRequired,
+  classes: PropTypes.shape(PropTypes.object).isRequired,
   marked: PropTypes.oneOf([false, 'center', 'left']),
   variant: PropTypes.string,
 };

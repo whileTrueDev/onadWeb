@@ -42,7 +42,7 @@ function Paper(props) {
 
 Paper.propTypes = {
   background: PropTypes.oneOf(['light', 'main', 'dark']),
-  classes: PropTypes.object.isRequired,
+  classes: PropTypes.shape(PropTypes.object),
   className: PropTypes.string,
   padding: PropTypes.bool,
 };

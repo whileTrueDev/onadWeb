@@ -6,7 +6,6 @@ import Link from '@material-ui/core/Link';
 import Container from '@material-ui/core/Container';
 import { blueGrey } from '@material-ui/core/colors';
 import Typography from '../components/Typography';
-import TextField from '../components/TextField';
 import compose from '../utils/compose';
 
 const styles = theme => ({
@@ -49,23 +48,7 @@ const styles = theme => ({
       fontWeight: 'bold',
     },
   },
-  language: {
-    marginTop: theme.spacing(1),
-    width: 150,
-
-  },
 });
-
-const LANGUAGES = [
-  {
-    code: 'ko-KO',
-    name: '한글',
-  },
-  {
-    code: 'en-US',
-    name: 'English',
-  },
-];
 
 function AppFooter(props) {
   const { classes } = props;
@@ -149,24 +132,6 @@ function AppFooter(props) {
               </li>
             </ul>
           </Grid>
-          <Grid item xs={6} sm={8} md={4}>
-            <Typography variant="h6" marked="left" gutterBottom>
-              언어
-            </Typography>
-            <TextField
-              select
-              SelectProps={{
-                native: true,
-              }}
-              className={classes.language}
-            >
-              {LANGUAGES.map(language => (
-                <option value={language.code} key={language.code}>
-                  {language.name}
-                </option>
-              ))}
-            </TextField>
-          </Grid>
           <Grid item>
             <Typography variant="caption">
               {'회사명 온애드 | 회사위치 어딘가 | 대표명 누군가 사업자등록번호 몇번 | 통신판매업신고번호 몇번 | E-mail : support@on.ad'}
@@ -187,7 +152,7 @@ function AppFooter(props) {
 }
 
 AppFooter.propTypes = {
-  classes: PropTypes.object.isRequired,
+  classes: PropTypes.shape(PropTypes.object),
 };
 
 export default compose(

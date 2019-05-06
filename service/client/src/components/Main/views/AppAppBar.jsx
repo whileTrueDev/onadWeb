@@ -105,7 +105,7 @@ function AppAppBar(props) {
 }
 
 AppAppBar.propTypes = {
-  classes: PropTypes.object.isRequired,
+  classes: PropTypes.shape(PropTypes.object),
 };
 
 export default withStyles(styles)(AppAppBar);
