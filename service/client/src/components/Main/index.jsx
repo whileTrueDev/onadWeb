@@ -5,8 +5,8 @@ import AppFooter from './views/AppFooter';
 import ProductHero from './views/ProductHero';
 import ProductCategories from './views/ProductCategories';
 import ProductHowItWorks from './views/ProductHowItWorks';
-import ProductCTA from './views/ProductCTA';
 import withRoot from './withRoot';
+// import ProductCTA from './views/ProductCTA';
 
 export default withRoot(() => (
   <div>
@@ -14,7 +14,8 @@ export default withRoot(() => (
     <ProductHero />
     <ProductCategories />
     <ProductHowItWorks />
-    <ProductCTA />
+    {/* 문의받기 섹션, 오픈베타에 추가 */
+    /* <ProductCTA /> */}
     <AppFooter />
   </div>
 ));

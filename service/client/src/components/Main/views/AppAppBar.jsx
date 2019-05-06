@@ -2,11 +2,17 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { withStyles } from '@material-ui/core/styles';
-import Link from '@material-ui/core/Link';
 import { blueGrey } from '@material-ui/core/colors';
+import MoreIcon from '@material-ui/icons/MoreVert';
+import {
+  Menu, MenuItem, IconButton, Link, Button,
+} from '@material-ui/core';
+import {
+  AssignmentInd, PowerSettingsNew, Help, Domain,
+} from '@material-ui/icons';
 import AppBar from '../components/AppBar';
 import Toolbar, { styles as toolbarStyles } from '../components/Toolbar';
-
+import LoginModal from './LoginModal';
 
 const styles = theme => ({
   root: {
@@ -25,17 +31,30 @@ const styles = theme => ({
   leftLinkActive: {
     color: theme.palette.common.white,
   },
-  right: {
+  rightDesktop: {
     flex: 1,
-    display: 'flex',
+    display: 'none',
     justifyContent: 'flex-end',
+    [theme.breakpoints.up('md')]: {
+      display: 'flex',
+    },
+  },
+  rightMobile: {
+    display: 'flex',
+    [theme.breakpoints.up('md')]: {
+      display: 'none',
+    },
   },
   rightLink: {
+    color: theme.palette.common.black,
+    marginLeft: 0,
     fontSize: 16,
-    color: theme.palette.common.white,
-    marginLeft: theme.spacing(3),
-    '&:hover': {
-      fontWeight: 'bold',
+    [theme.breakpoints.up('md')]: {
+      color: theme.palette.common.white,
+      marginLeft: theme.spacing(3),
+      '&:hover': {
+        fontWeight: 'bold',
+      },
     },
   },
   linkSecondary: {
@@ -45,6 +64,87 @@ const styles = theme => ({
 
 function AppAppBar(props) {
   const { classes } = props;
+
+  // 로그인 모달창 state
+  const [isLoginModalOpen, setisLoginModalOpen] = React.useState(false);
+
+  // 로그인 모달창 클릭 시
+  function handleLoginClick() {
+    setisLoginModalOpen(true);
+  }
+
+  // mobile, desktop 구분된 appbar 를 위해
+  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
+  const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+
+  // 모바일 메뉴버튼 오픈 state
+  function handleMobileMenuOpen(event) {
+    setMobileMoreAnchorEl(event.currentTarget);
+  }
+
+  // 모바일 메뉴버튼 오픈 닫는 핸들링 함수
+  function handleMobileMenuClose() {
+    setMobileMoreAnchorEl(null);
+  }
+
+  // 모바일 메뉴 컴포넌트
+  const renderMobileMenu = (
+    <Menu
+      anchorEl={mobileMoreAnchorEl}
+      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+      transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+      open={isMobileMenuOpen}
+      onClose={handleMobileMenuClose}
+    >
+      <MenuItem className={classes.rightLink}>
+        <Link
+          color="inherit"
+          underline="none"
+          href="/"
+        >
+          <IconButton color="inherit">
+            <Domain />
+          </IconButton>
+          {'서비스 소개'}
+        </Link>
+      </MenuItem>
+      <MenuItem className={classes.rightLink}>
+        <Link
+          color="inherit"
+          underline="none"
+          href="/"
+        >
+          <IconButton color="inherit">
+            <Help />
+          </IconButton>
+          {'이용 안내'}
+        </Link>
+      </MenuItem>
+      <MenuItem
+        onClick={handleLoginClick}
+        className={classes.rightLink}
+      >
+        <IconButton
+          color="inherit"
+        >
+          <PowerSettingsNew />
+        </IconButton>
+        {'로그인'}
+      </MenuItem>
+      <MenuItem className={clsx(classes.rightLink, classes.linkSecondary)}>
+        <Link
+          color="inherit"
+          underline="none"
+          href="/"
+        >
+          <IconButton color="inherit">
+            <AssignmentInd />
+          </IconButton>
+          {'회원가입'}
+        </Link>
+      </MenuItem>
+    </Menu>
+  );
 
   return (
     <div>
@@ -60,46 +160,48 @@ function AppAppBar(props) {
           >
             {'OnAD'}
           </Link>
-          <div className={classes.right}>
-            <Link
+          <div className={classes.rightDesktop}>
+            <Button
               color="inherit"
-              variant="h6"
-              underline="none"
               className={classes.rightLink}
               href="/"
             >
               {'서비스 소개'}
-            </Link>
-            <Link
-              color="inherit"
-              variant="h6"
+            </Button>
+            <Button
               underline="none"
               className={classes.rightLink}
               href="/"
             >
               {'이용 안내'}
-            </Link>
-            <Link
+            </Button>
+            <Button
               color="inherit"
-              variant="h6"
-              underline="none"
               className={classes.rightLink}
-              href="/"
+              onClick={handleLoginClick}
             >
               {'로그인'}
-            </Link>
-            <Link
-              variant="h6"
-              underline="none"
+            </Button>
+            <Button
               className={clsx(classes.rightLink, classes.linkSecondary)}
               href="/"
             >
               {'회원가입'}
-            </Link>
+            </Button>
+          </div>
+          <div className={classes.rightMobile}>
+            <IconButton aria-haspopup="true" onClick={handleMobileMenuOpen} color="inherit">
+              <MoreIcon />
+            </IconButton>
           </div>
         </Toolbar>
       </AppBar>
+      {renderMobileMenu}
       <div className={classes.placeholder} />
+      <LoginModal
+        isLoginModalOpen={isLoginModalOpen}
+        setisLoginModalOpen={setisLoginModalOpen}
+      />
     </div>
   );
 }
@@ -107,5 +209,10 @@ function AppAppBar(props) {
 AppAppBar.propTypes = {
   classes: PropTypes.shape(PropTypes.object),
 };
+
+AppAppBar.defaultProps = {
+  classes: {},
+};
+
 
 export default withStyles(styles)(AppAppBar);

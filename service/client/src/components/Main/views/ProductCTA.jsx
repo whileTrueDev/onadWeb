@@ -62,13 +62,11 @@ const styles = theme => ({
 class ProductCTA extends React.Component {
   state = {
     open: false,
+    inquiryErr: false,
   };
 
   handleSubmit = (event) => {
     event.preventDefault();
-    this.setState({
-      open: true,
-    });
 
     const userEmail = event.target.email.value;
     const inquiryText = event.target.inquiry.value;
@@ -80,17 +78,21 @@ class ProductCTA extends React.Component {
       },
     }).then((res) => {
       console.log(res);
+      this.setState({
+        open: true,
+      });
     });
   };
 
   handleClose = () => {
     this.setState({
       open: false,
+      inquiryErr: false,
     });
   };
 
   render() {
-    const { open } = this.state;
+    const { open, inquiryErr } = this.state;
     const { classes } = this.props;
 
     return (
@@ -145,16 +147,34 @@ class ProductCTA extends React.Component {
             </Hidden>
           </Grid>
         </Grid>
-        <Snackbar
-          anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: 'center',
-          }}
-          open={open}
-          autoHideDuration={3000}
-          onClose={this.handleClose}
-          message="제출되었어요! 빠른 시일 내에 답장 드릴게요!"
-        />
+        {inquiryErr
+          ? (
+            <Snackbar
+              anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'center',
+              }}
+              open={open}
+              color="secondary"
+              autoHideDuration={3000}
+              onClose={this.handleClose}
+              message="오류에요..! 직접 보내실래요? support@onad.com"
+            />
+          )
+          : (
+            <Snackbar
+              anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'center',
+              }}
+              open={open}
+              autoHideDuration={3000}
+              onClose={this.handleClose}
+              message="제출되었어요! 빠른 시일 내에 답장 드릴게요!"
+            />
+          )
+        }
+
       </Container>
     );
   }

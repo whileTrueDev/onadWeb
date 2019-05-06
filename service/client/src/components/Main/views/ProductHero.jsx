@@ -37,7 +37,7 @@ function ProductHero(props) {
       {/* Increase the network loading priority of the background image. */}
       <img style={{ display: 'none' }} src={backgroundImage} alt="" />
       <Typography color="inherit" align="center" variant="h2" marked="center">
-        마음껏, 효율적으로 광고하세요.
+        효율적으로 광고하세요.
         <Typography color="inherit" align="center" variant="h2" style={{ marginTop: 15 }}>
         쉽게 광고를 유치하세요.
         </Typography>

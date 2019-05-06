@@ -3,7 +3,7 @@ const pool = mysql.createPool({
     host : 'onad.cbjjamtlar2t.ap-northeast-2.rds.amazonaws.com',
     user : 'onad',
     password : 'rkdghktn12',
-    database : 'platform',
+    database : 'onadNode',
     port : 3306
 });
 
