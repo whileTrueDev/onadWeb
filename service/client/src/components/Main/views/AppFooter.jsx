@@ -152,7 +152,11 @@ function AppFooter(props) {
 }
 
 AppFooter.propTypes = {
-  classes: PropTypes.shape(PropTypes.object),
+  classes: PropTypes.object,
+};
+
+AppFooter.defaultProps = {
+  classes: {},
 };
 
 export default compose(

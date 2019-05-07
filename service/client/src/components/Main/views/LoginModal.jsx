@@ -49,7 +49,7 @@ const LoginModal = (props) => {
 LoginModal.propTypes = {
   isLoginModalOpen: PropTypes.bool.isRequired,
   setisLoginModalOpen: PropTypes.func.isRequired,
-  classes: PropTypes.shape(PropTypes.object),
+  classes: PropTypes.object,
 };
 
 LoginModal.defaultProps = {

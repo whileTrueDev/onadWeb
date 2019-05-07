@@ -207,7 +207,7 @@ function AppAppBar(props) {
 }
 
 AppAppBar.propTypes = {
-  classes: PropTypes.shape(PropTypes.object),
+  classes: PropTypes.object,
 };
 
 AppAppBar.defaultProps = {

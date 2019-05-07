@@ -82,7 +82,9 @@ const styles = theme => ({
 });
 
 const ProductCategoriesDetail = (props) => {
-  const { classes, image, matches } = props;
+  const {
+    classes, image, matches,
+  } = props;
   const [isImageModalOpen, setIsImageModalOpen] = React.useState(false);
 
   function handleModalOpen() {
@@ -141,12 +143,14 @@ const ProductCategoriesDetail = (props) => {
 
 
 ProductCategoriesDetail.propTypes = {
-  classes: PropTypes.shape(PropTypes.object),
-  image: PropTypes.shape(PropTypes.object).isRequired,
+  classes: PropTypes.object,
+  image: PropTypes.object.isRequired,
   matches: PropTypes.bool.isRequired,
+  key: PropTypes.string,
 };
 
 ProductCategoriesDetail.defaultProps = {
   classes: {},
+  key: '',
 };
 export default withStyles(styles)(ProductCategoriesDetail);

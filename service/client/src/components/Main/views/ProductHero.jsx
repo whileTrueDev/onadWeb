@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { grey } from '@material-ui/core/colors';
+import Grow from '@material-ui/core/Grow';
 import Button from '../components/Button';
 import Typography from '../components/Typography';
 import ProductHeroLayout from './ProductHeroLayout';
@@ -17,6 +18,9 @@ const styles = theme => ({
   button: {
     minWidth: 200,
     marginTop: 50,
+  },
+  root: {
+
   },
   h2: {
     width: '330px',
@@ -47,60 +51,81 @@ const styles = theme => ({
 
 function ProductHero(props) {
   const { classes } = props;
+  const [check] = React.useState(true);
 
   return (
     <ProductHeroLayout backgroundClassName={classes.background}>
       {/* Increase the network loading priority of the background image. */}
       <img style={{ display: 'none' }} src={backgroundImage} alt="" />
-      <Typography
-        color="inherit"
-        align="center"
-        variant="h2"
-        marked="center"
-        className={classes.h2}
+      <Grow
+        in={check}
+        {...(check ? { timeout: 2500 } : {})}
       >
-        효율적으로 광고하세요
         <Typography
           color="inherit"
           align="center"
           variant="h2"
+          className={classes.h2}
+        >
+        효율적으로 광고하세요
+        </Typography>
+      </Grow>
+      <Grow
+        in={check}
+        {...(check ? { timeout: 2500 } : {})}
+      >
+        <Typography
+          color="inherit"
+          align="center"
+          variant="h2"
+          marked="center"
           style={{ marginTop: 15 }}
         >
         쉽게 광고를 유치하세요
         </Typography>
-      </Typography>
-      <Typography
-        color="inherit"
-        align="center"
-        variant="h5"
-        className={classes.h5}
+      </Grow>
+      <Grow
+        in={check}
+        {...(check ? { timeout: 2500 } : {})}
       >
-        관련성 분석 통해 크리에이터와 광고주를 1:N 또는 N:N 매칭합니다
         <Typography
-          className={classes.h6}
-          variant="body2"
+          color="inherit"
+          align="center"
+          variant="h5"
+          className={classes.h5}
         >
+        관련성 분석 통해 크리에이터와 광고주를 1:N 또는 N:N 매칭합니다
+          <Typography
+            className={classes.h6}
+            variant="body2"
+          >
           설치 없이 모든 일을 웹에서 간단히 할 수 있습니다.
+          </Typography>
         </Typography>
-      </Typography>
-
-      <Button
-        color="secondary"
-        variant="contained"
-        size="large"
-        className={classes.button}
-        component="a"
-        href="/"
+      </Grow>
+      <Grow
+        in={check}
+        {...(check ? { timeout: 2500 } : {})}
       >
+        <Button
+          color="secondary"
+          variant="contained"
+          size="large"
+          className={classes.button}
+          component="a"
+          href="/"
+        >
         대시보드로 이동
-      </Button>
-      <Typography variant="body2" color="inherit" className={classes.more} />
+        </Button>
+      </Grow>
+
+
     </ProductHeroLayout>
   );
 }
 
 ProductHero.propTypes = {
-  classes: PropTypes.shape(PropTypes.object),
+  classes: PropTypes.object,
 };
 
 ProductHero.defaultProps = {

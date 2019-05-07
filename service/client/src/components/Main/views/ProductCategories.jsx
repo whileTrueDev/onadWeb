@@ -107,7 +107,7 @@ class ProductCategories extends React.Component {
 
 
 ProductCategories.propTypes = {
-  classes: PropTypes.shape(PropTypes.object),
+  classes: PropTypes.object,
 };
 
 ProductCategories.defaultProps = {

@@ -110,15 +110,16 @@ function TextField(props) {
 }
 
 TextField.propTypes = {
-  classes: PropTypes.shape(PropTypes.object).isRequired,
-  InputLabelProps: PropTypes.shape(PropTypes.object),
-  InputProps: PropTypes.shape(PropTypes.object),
+  classes: PropTypes.object,
+  InputLabelProps: PropTypes.object,
+  InputProps: PropTypes.object,
   noBorder: PropTypes.bool,
-  SelectProps: PropTypes.shape(PropTypes.object),
+  SelectProps: PropTypes.object,
   size: PropTypes.oneOf(['small', 'medium', 'large', 'xlarge']),
 };
 
 TextField.defaultProps = {
+  classes: {},
   noBorder: false,
   size: 'medium',
 };

@@ -23,14 +23,15 @@ const ProductCategoriesDetail = (props) => {
   return (
     <Grow
       in={checked}
-      {...(checked ? { timeout: 1500 } : {})}
+      {...(checked ? { timeout: 2000 } : {})}
     >
       <div className={classes.images}>
 
         {images.map(image => (
           <Grow
+            key={image.title}
             in={checked}
-            {...(checked ? { timeout: 1500 } : {})}
+            {...(checked ? { timeout: 2000 } : {})}
           >
             <ProductCategoriesImageButton
               image={image}
@@ -45,9 +46,13 @@ const ProductCategoriesDetail = (props) => {
 
 
 ProductCategoriesDetail.propTypes = {
-  classes: PropTypes.shape(PropTypes.object),
+  classes: PropTypes.object,
   checked: PropTypes.bool.isRequired,
-  images: PropTypes.shape(PropTypes.array).isRequired,
+  images: PropTypes.array.isRequired,
+};
+
+ProductCategoriesDetail.defaultProps = {
+  classes: {},
 };
 
 export default withStyles(styles)(ProductCategoriesDetail);

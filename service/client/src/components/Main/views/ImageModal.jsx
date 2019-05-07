@@ -42,7 +42,6 @@ const ImageModal = (props) => {
 
   return (
     <Modal
-      closeAfterTransition="true"
       aria-labelledby="simple-modal-title"
       aria-describedby="simple-modal-description"
       open={isImageModalOpen}
@@ -72,8 +71,8 @@ const ImageModal = (props) => {
 ImageModal.propTypes = {
   isImageModalOpen: PropTypes.bool.isRequired,
   setIsImageModalOpen: PropTypes.func.isRequired,
-  classes: PropTypes.shape(PropTypes.object),
-  image: PropTypes.shape(PropTypes.object),
+  classes: PropTypes.object,
+  image: PropTypes.object,
 };
 
 ImageModal.defaultProps = {

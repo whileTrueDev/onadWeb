@@ -86,10 +86,10 @@ function Snackbar(props) {
 }
 
 Snackbar.propTypes = {
-  classes: PropTypes.shape(PropTypes.object),
+  classes: PropTypes.object,
   open: PropTypes.bool,
   onClose: PropTypes.func,
-  SnackbarContentProps: PropTypes.shape(PropTypes.object),
+  SnackbarContentProps: PropTypes.object,
 };
 
 export default withStyles(styles)(Snackbar);

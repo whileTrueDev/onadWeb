@@ -181,7 +181,7 @@ class ProductCTA extends React.Component {
 }
 
 ProductCTA.propTypes = {
-  classes: PropTypes.shape(PropTypes.object),
+  classes: PropTypes.object,
 };
 
 ProductCTA.defaultProps = {

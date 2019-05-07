@@ -48,7 +48,6 @@ const styles = theme => ({
   tabs: {
     flexGrow: 1,
     marginBottom: theme.spacing(5),
-
   },
 });
 
@@ -60,6 +59,18 @@ class ProductHowItWorks extends React.Component {
       value: 0,
     };
     this.handleChange = this.handleChange.bind(this);
+  }
+
+  componentWillMount() {
+    this.setState({
+      check: false,
+    });
+  }
+
+  componentDidMount() {
+    this.setState({
+      check: true,
+    });
   }
 
   handleChange(event, newValue) {
@@ -80,7 +91,6 @@ class ProductHowItWorks extends React.Component {
             className={classes.tabs}
             value={value}
             onChange={this.handleChange}
-
             indicatorColor="primary"
             textColor="primary"
           >
@@ -97,10 +107,12 @@ class ProductHowItWorks extends React.Component {
             value === 0 ? (
               <ProductHowItWorksMaketerItem
                 classes={classes}
+                check={check}
               />
             ) : (
               <ProductHowItWorksCreatorItem
                 classes={classes}
+                check={check}
               />
             )
           }
@@ -112,7 +124,11 @@ class ProductHowItWorks extends React.Component {
 
 
 ProductHowItWorks.propTypes = {
-  classes: PropTypes.shape(PropTypes.object).isRequired,
+  classes: PropTypes.object,
+};
+
+ProductHowItWorks.defaultProps = {
+  classes: {},
 };
 
 export default withStyles(styles)(ProductHowItWorks);
