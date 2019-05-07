@@ -3,30 +3,18 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@material-ui/core": "^3.9.3",
-    "axios": "^0.18.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
-    "react-router-dom": "^5.0.0",
-    "react-scripts": "3.0.0",
-    "react-text-mask": "^5.4.3"
+    "react-scripts": "3.0.0"
   },
   "scripts": {
-    "start": "cross-env NODE_PATH=src react-scripts start",
-    "build": "cross-env NODE_PATH=src react-scripts build",
+    "start": "react-scripts start",
+    "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
     "extends": "react-app"
-  },
-  "prettier": {
-    "singleQuote": true,
-    "semi": true,
-    "useTabs": false,
-    "tabWidth": 2,
-    "trailingComma": "all",
-    "printWidth": 80
   },
   "browserslist": {
     "production": [
@@ -40,8 +28,5 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "http://localhost:3000",
-  "devDependencies": {
-    "cross-env": "^5.2.0"
-  }
+  "proxy": "http://localhost:3001"
 }

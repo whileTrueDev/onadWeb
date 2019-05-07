@@ -3,12 +3,6 @@ react, express web server for onad platform.
 
 clone, do workout!
 
-## Contributor
-강동기
-강화수
-박찬우
-이진은
-
 
 ## how to start server
 
