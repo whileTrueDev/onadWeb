@@ -13,6 +13,7 @@ import {
 import AppBar from '../components/AppBar';
 import Toolbar, { styles as toolbarStyles } from '../components/Toolbar';
 import LoginModal from './LoginModal';
+import LoginPopover from './LoginPopover';
 
 const styles = theme => ({
   root: {
@@ -175,19 +176,22 @@ function AppAppBar(props) {
             >
               {'이용 안내'}
             </Button>
-            <Button
+            {/* <Button
               color="inherit"
               className={classes.rightLink}
               onClick={handleLoginClick}
             >
               {'로그인'}
-            </Button>
-            <Button
+            </Button> */}
+            <LoginPopover type="로그인" />
+            {/* <Button
               className={clsx(classes.rightLink, classes.linkSecondary)}
               href="/"
             >
               {'회원가입'}
-            </Button>
+            </Button> */}
+            <LoginPopover type="회원가입" />
+
           </div>
           <div className={classes.rightMobile}>
             <IconButton aria-haspopup="true" onClick={handleMobileMenuOpen} color="inherit">
