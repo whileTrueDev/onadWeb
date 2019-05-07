@@ -15,7 +15,7 @@ const LocalStrategy = require('passport-local').Strategy;
 const twitchStrategy = require("passport-twitch").Strategy;
 
 // DB 객체 생성
-const pool = require('./connectionPool');
+const pool = require('./model/connectionPool');
 
 // 암호화 체크 객체 생성
 const encrpyto = require('./encryption');

@@ -1,6 +1,6 @@
 const express = require('express');
 const encrypto = require('../encryption');
-const pool = require('../connectionPool');
+const pool = require('../model/connectionPool');
 
 var router = express.Router();
 
