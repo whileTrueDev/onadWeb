@@ -2,22 +2,6 @@
 # yarn lockfile v1
 
 
-"@babel/polyfill@^7.2.5":
-  version "7.4.3"
-  resolved "https://registry.yarnpkg.com/@babel/polyfill/-/polyfill-7.4.3.tgz#332dc6f57b718017c3a8b37b4eea8aa6eeac1187"
-  integrity sha512-rkv8WIvJshA5Ev8iNMGgz5WZkRtgtiPexiT7w5qevGTuT7ZBfM3de9ox1y9JR5/OXb/sWGBbWlHNa7vQKqku3Q==
-  dependencies:
-    core-js "^2.6.5"
-    regenerator-runtime "^0.13.2"
-
-"@fullpage/react-fullpage@^0.1.14":
-  version "0.1.14"
-  resolved "https://registry.yarnpkg.com/@fullpage/react-fullpage/-/react-fullpage-0.1.14.tgz#b248dc32c049de680fd4dc14f1893a715a809fc0"
-  integrity sha512-yAFlEtpQCCD2PDB9LCW9goPCvy3BXiE0bjgbe4Lw1oteeeywv+jmljXCodDQjWXFNcup3gGN0ZH9D7Hiq+W5HQ==
-  dependencies:
-    "@babel/polyfill" "^7.2.5"
-    fullpage.js "^3.0.5"
-
 accepts@~1.3.5:
   version "1.3.5"
   resolved "https://registry.yarnpkg.com/accepts/-/accepts-1.3.5.tgz#eb777df6011723a3b14e8a72c0805c8e86746bd2"
@@ -30,6 +14,11 @@ array-flatten@1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/array-flatten/-/array-flatten-1.1.1.tgz#9a5f699051b1e7073328f2a008968b64ea2955d2"
   integrity sha1-ml9pkFGx5wczKPKgCJaLZOopVdI=
+
+base64url@3.x.x:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/base64url/-/base64url-3.0.1.tgz#6399d572e2bc3f90a9a8b22d5dbb0a32d33f788d"
+  integrity sha512-ir1UPr3dkwexU7FdV8qBBbNDRUhMmIekYMFZfi+C/sLNnRESKPl23nB9b2pltqfOQNnGzsDdId90AEtG5tCx4A==
 
 basic-auth@~2.0.0:
   version "2.0.1"
@@ -112,11 +101,6 @@ cookie@0.3.1:
   version "0.3.1"
   resolved "https://registry.yarnpkg.com/cookie/-/cookie-0.3.1.tgz#e7e0a1f9ef43b4c8ba925c5c5a96e806d16873bb"
   integrity sha1-5+Ch+e9DtMi6klxcWpboBtFoc7s=
-
-core-js@^2.6.5:
-  version "2.6.5"
-  resolved "https://registry.yarnpkg.com/core-js/-/core-js-2.6.5.tgz#44bc8d249e7fb2ff5d00e0341a7ffb94fbf67895"
-  integrity sha512-klh/kDpwX8hryYL14M9w/xei6vrv6sE8gTHDG7/T/+SEovB/G4ejwcfE/CBzO6Edsu+OETZMZ3wcX/EjUkrl5A==
 
 core-util-is@~1.0.0:
   version "1.0.2"
@@ -248,11 +232,6 @@ fresh@0.5.2:
   resolved "https://registry.yarnpkg.com/fresh/-/fresh-0.5.2.tgz#3d8cadd90d976569fa835ab1f8e4b23a105605a7"
   integrity sha1-PYyt2Q2XZWn6g1qx+OSyOhBWBac=
 
-fullpage.js@^3.0.5:
-  version "3.0.5"
-  resolved "https://registry.yarnpkg.com/fullpage.js/-/fullpage.js-3.0.5.tgz#ed223ec81ea354bffcac37c24c946981a1124171"
-  integrity sha512-80zJ12tqIkwNgVRnrJiP2RDy1okF9wXj5I7BDg5dsJcHCpgzb052ATCjz+3g7Zp1fjGsaDmEu1m92MafGqcO3w==
-
 http-errors@1.6.3, http-errors@~1.6.2, http-errors@~1.6.3:
   version "1.6.3"
   resolved "https://registry.yarnpkg.com/http-errors/-/http-errors-1.6.3.tgz#8b55680bb4be283a0b5bf4ea2e38580be1d9320d"
@@ -366,6 +345,11 @@ negotiator@0.6.1:
   resolved "https://registry.yarnpkg.com/negotiator/-/negotiator-0.6.1.tgz#2b327184e8992101177b28563fb5e7102acd0ca9"
   integrity sha1-KzJxhOiZIQEXeyhWP7XnECrNDKk=
 
+oauth@0.9.x:
+  version "0.9.15"
+  resolved "https://registry.yarnpkg.com/oauth/-/oauth-0.9.15.tgz#bd1fefaf686c96b75475aed5196412ff60cfb9c1"
+  integrity sha1-vR/vr2hslrdUda7VGWQS/2DPucE=
+
 on-finished@~2.3.0:
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/on-finished/-/on-finished-2.3.0.tgz#20f1336481b083cd75337992a16971aa2d906947"
@@ -390,10 +374,29 @@ passport-local@^1.0.0:
   dependencies:
     passport-strategy "1.x.x"
 
+passport-oauth2@^1.1.2:
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/passport-oauth2/-/passport-oauth2-1.5.0.tgz#64babbb54ac46a4dcab35e7f266ed5294e3c4108"
+  integrity sha512-kqBt6vR/5VlCK8iCx1/KpY42kQ+NEHZwsSyt4Y6STiNjU+wWICG1i8ucc1FapXDGO15C5O5VZz7+7vRzrDPXXQ==
+  dependencies:
+    base64url "3.x.x"
+    oauth "0.9.x"
+    passport-strategy "1.x.x"
+    uid2 "0.0.x"
+    utils-merge "1.x.x"
+
 passport-strategy@1.x.x:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/passport-strategy/-/passport-strategy-1.0.0.tgz#b5539aa8fc225a3d1ad179476ddf236b440f52e4"
   integrity sha1-tVOaqPwiWj0a0XlHbd8ja0QPUuQ=
+
+passport-twitch@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/passport-twitch/-/passport-twitch-1.0.3.tgz#82a4a1fbe19368d44e62f057e93c414a9d4fe7cc"
+  integrity sha1-gqSh++GTaNROYvBX6TxBSp1P58w=
+  dependencies:
+    passport-oauth2 "^1.1.2"
+    pkginfo "0.2.x"
 
 passport@^0.4.0:
   version "0.4.0"
@@ -412,6 +415,11 @@ pause@0.0.1:
   version "0.0.1"
   resolved "https://registry.yarnpkg.com/pause/-/pause-0.0.1.tgz#1d408b3fdb76923b9543d96fb4c9dfd535d9cb5d"
   integrity sha1-HUCLP9t2kjuVQ9lvtMnf1TXZy10=
+
+pkginfo@0.2.x:
+  version "0.2.3"
+  resolved "https://registry.yarnpkg.com/pkginfo/-/pkginfo-0.2.3.tgz#7239c42a5ef6c30b8f328439d9b9ff71042490f8"
+  integrity sha1-cjnEKl72wwuPMoQ52bn/cQQkkPg=
 
 process-nextick-args@~2.0.0:
   version "2.0.0"
@@ -478,11 +486,6 @@ readable-stream@2.3.6:
     safe-buffer "~5.1.1"
     string_decoder "~1.1.1"
     util-deprecate "~1.0.1"
-
-regenerator-runtime@^0.13.2:
-  version "0.13.2"
-  resolved "https://registry.yarnpkg.com/regenerator-runtime/-/regenerator-runtime-0.13.2.tgz#32e59c9a6fb9b1a4aff09b4930ca2d4477343447"
-  integrity sha512-S/TQAZJO+D3m9xeN1WTI8dLKBBiRgXBlTJvbWjCThHWZj9EvHK70Ff50/tYj2J/fvBY6JtFVwRuazHN2E7M9BA==
 
 safe-buffer@5.1.2, safe-buffer@~5.1.0, safe-buffer@~5.1.1:
   version "5.1.2"
@@ -575,6 +578,11 @@ uid-safe@~2.1.5:
   dependencies:
     random-bytes "~1.0.0"
 
+uid2@0.0.x:
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/uid2/-/uid2-0.0.3.tgz#483126e11774df2f71b8b639dcd799c376162b82"
+  integrity sha1-SDEm4Rd03y9xuLY53NeZw3YWK4I=
+
 unpipe@1.0.0, unpipe@~1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/unpipe/-/unpipe-1.0.0.tgz#b2bf4ee8514aae6165b4817829d21b2ef49904ec"
@@ -585,7 +593,7 @@ util-deprecate@~1.0.1:
   resolved "https://registry.yarnpkg.com/util-deprecate/-/util-deprecate-1.0.2.tgz#450d4dc9fa70de732762fbd2d4a28981419a0ccf"
   integrity sha1-RQ1Nyfpw3nMnYvvS1KKJgUGaDM8=
 
-utils-merge@1.0.1:
+utils-merge@1.0.1, utils-merge@1.x.x:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/utils-merge/-/utils-merge-1.0.1.tgz#9f95710f50a267947b2ccc124741c1028427e713"
   integrity sha1-n5VxD1CiZ5R7LMwSR0HBAoQn5xM=

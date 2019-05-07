@@ -38,6 +38,11 @@ app.use(passport.session());
 //인증 method를 req에 추가한다.
 app.use(require('./middlewares/checkAuthOnReq'));
 
+app.all('/*', function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "X-Requested-With");
+  next();
+});
 
 app.use('/', homeRouter);
 app.use('/login', loginRouter);
@@ -61,5 +66,7 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
+
 //선언만 하고 start는 bin에서 시작.
+console.log(process.env);
 module.exports = app;
