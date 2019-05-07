@@ -21,8 +21,8 @@
     "react-text-mask": "^5.4.3"
   },
   "scripts": {
-    "start": "cross-env NODE_PATH=src react-scripts start",
-    "build": "cross-env NODE_PATH=src react-scripts build",
+    "start": "react-scripts start",
+    "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
@@ -92,7 +92,7 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "http://localhost:3000",
+  "proxy": "http://localhost:3001",
   "devDependencies": {
     "cross-env": "^5.2.0"
   }

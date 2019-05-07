@@ -1,7 +1,7 @@
 import React from 'react';
 import { Route } from 'react-router-dom';
+import RegistStepper from './components/regist/stepper';
 import Main from './components/Main';
-import RegistStepper from './regist/stepper';
 /* App component do routing all the other components */
 
 const App = () => (
