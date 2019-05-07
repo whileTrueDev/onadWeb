@@ -1,20 +1,16 @@
-import React from 'react';
+import React, {Component} from 'react';
+import { Route } from 'react-router-dom';
+import RegistStepper from './regist/stepper';
+import Home from 'home';
 
-class App extends React.Component{
-  state = {users: []};
 
-  componentDidMount = () => {
-    fetch('/users')
-      .then(res => res.json())
-      .then(users => this.setState({users}));
-  }
+
+class App extends Component{
   render() {
     return (
       <div>
-        <h1>Users</h1>  
-        {this.state.users.map( user => (
-          <li key={user.id}>{user.user_name}</li>
-        ))}
+        <Route exact path="/" component={Home}/>
+        <Route path="/regist" component={RegistStepper}/>
       </div>
     )
   }

@@ -12,6 +12,7 @@
 */
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
+const twitchStrategy = require("passport-twitch").Strategy;
 
 // DB 객체 생성
 const pool = require('./connectionPool');
@@ -32,7 +33,6 @@ passport.serializeUser((user, done)=>{
 passport.deserializeUser((userid, done)=>{
     console.log('deserialize');
     //db에서 추가로 데이터를 req.user에 저장.
-
     done(null, userid);
 })
 
@@ -58,8 +58,10 @@ passport.use( new LocalStrategy(
             conn.query(`SELECT passwd, salt FROM node_example WHERE userid = ? `, [userid], function(err, result, fields){
                 if(result[0]){
                     //비밀번호를 위한 수행
-                    if(encrpyto.check(passwd, result[0].passwd, result[0].salt)){
+                    //if(encrpyto.check(passwd, result[0].passwd, result[0].salt)){
+                    if(passwd === result[0].passwd){
                         conn.release();
+                        console.log('wow! checked!');
                         return done(null, {userid : userid , passwd : passwd});        
                     }
                     else{
@@ -73,6 +75,19 @@ passport.use( new LocalStrategy(
             });
         });
     }
+));
+
+
+passport.use(new twitchStrategy({
+    clientID: '7197nobf8rsf7aqqk4nf7a22dtyu93',
+    clientSecret: 'vn9jdnopcepz34so8g0adqml6sbvak',
+    callbackURL: "http://localhost:3000/login/twitch/callback",
+    scope: "user_read"
+  },
+  function(accessToken, refreshToken, profile, done) {
+    console.log(porfile);
+    return done(err, false);
+  }
 ));
 
 module.exports = passport;
