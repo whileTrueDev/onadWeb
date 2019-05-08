@@ -12,7 +12,11 @@ clone, do workout!
 
 ## how to start server
 
-1. onadWeb 폴더에서 `npm start` 로 express 서버 구동
-    - window : `node ./bin/www`
+1. onadWeb/service/ 폴더에서 `yarn install` 로 express 서버 dependencies 구축
+2. onadWeb/service/ 폴더에서 `yarn start` 로 express 서버 실행
+3. onadWeb/client/ 폴더에서 `yarn install` 로 react 서버 dependencies 구축
+4. onadWeb/client/ 폴더에서 `yarn install` 로 react 서버 실행
 
-2. onadWeb/client/ 폴더에서 npm start 로 react 서버 구동
+## Master Updated
+
+- 190508, Dev -> Master / email 인증 api 추가
