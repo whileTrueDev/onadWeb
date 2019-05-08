@@ -124,7 +124,7 @@ export default class LoginForm extends Component {
     return (
       <div style={this.props.style}>
         <Button color="inherit" onClick={this.handleClickOpen}>
-          {isMarketer ? 'MARKETER' : 'CREATOR'}
+          {isMarketer ? '마케터' : '크리에이터'}
         </Button>
         {dialog}
       </div>

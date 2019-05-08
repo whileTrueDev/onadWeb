@@ -21,7 +21,7 @@
     "react-text-mask": "^5.4.3"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "PORT=3001 react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
@@ -92,7 +92,7 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "http://localhost:3001",
+  "proxy": "http://localhost:3000",
   "devDependencies": {
     "cross-env": "^5.2.0"
   }

@@ -1,18 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import clsx from 'clsx';
 import { withStyles } from '@material-ui/core/styles';
 import { blueGrey } from '@material-ui/core/colors';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import {
-  Menu, MenuItem, IconButton, Link, Button,
+  Menu, MenuItem, IconButton, Button,
 } from '@material-ui/core';
 import {
   AssignmentInd, PowerSettingsNew, Help, Domain,
 } from '@material-ui/icons';
 import AppBar from '../components/AppBar';
 import Toolbar, { styles as toolbarStyles } from '../components/Toolbar';
-import LoginModal from './LoginModal';
 import LoginPopover from './LoginPopover';
 
 const styles = theme => ({
@@ -66,14 +64,6 @@ const styles = theme => ({
 function AppAppBar(props) {
   const { classes } = props;
 
-  // 로그인 모달창 state
-  const [isLoginModalOpen, setisLoginModalOpen] = React.useState(false);
-
-  // 로그인 모달창 클릭 시
-  function handleLoginClick() {
-    setisLoginModalOpen(true);
-  }
-
   // mobile, desktop 구분된 appbar 를 위해
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -97,52 +87,33 @@ function AppAppBar(props) {
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
-      <MenuItem className={classes.rightLink}>
-        <Link
+      <MenuItem>
+        <Button
+          className={classes.rightLink}
           color="inherit"
           underline="none"
           href="/"
         >
-          <IconButton color="inherit">
-            <Domain />
-          </IconButton>
+          <Domain style={{ marginRight: 10 }} />
           {'서비스 소개'}
-        </Link>
+        </Button>
       </MenuItem>
-      <MenuItem className={classes.rightLink}>
-        <Link
+      <MenuItem>
+        <Button
+          className={classes.rightLink}
           color="inherit"
           underline="none"
           href="/"
         >
-          <IconButton color="inherit">
-            <Help />
-          </IconButton>
+          <Help style={{ marginRight: 10 }} />
           {'이용 안내'}
-        </Link>
+        </Button>
       </MenuItem>
-      <MenuItem
-        onClick={handleLoginClick}
-        className={classes.rightLink}
-      >
-        <IconButton
-          color="inherit"
-        >
-          <PowerSettingsNew />
-        </IconButton>
-        {'로그인'}
+      <MenuItem>
+        <LoginPopover type="로그인" />
       </MenuItem>
-      <MenuItem className={clsx(classes.rightLink, classes.linkSecondary)}>
-        <Link
-          color="inherit"
-          underline="none"
-          href="/"
-        >
-          <IconButton color="inherit">
-            <AssignmentInd />
-          </IconButton>
-          {'회원가입'}
-        </Link>
+      <MenuItem>
+        <LoginPopover type="회원가입" />
       </MenuItem>
     </Menu>
   );
@@ -152,15 +123,13 @@ function AppAppBar(props) {
       <AppBar className={classes.root} position="fixed">
         <Toolbar className={classes.toolbar}>
           <div className={classes.left} />
-          <Link
-            variant="h6"
-            underline="none"
+          <Button
             color="inherit"
             className={classes.title}
             href="/"
           >
             {'OnAD'}
-          </Link>
+          </Button>
           <div className={classes.rightDesktop}>
             <Button
               color="inherit"
@@ -176,22 +145,8 @@ function AppAppBar(props) {
             >
               {'이용 안내'}
             </Button>
-            {/* <Button
-              color="inherit"
-              className={classes.rightLink}
-              onClick={handleLoginClick}
-            >
-              {'로그인'}
-            </Button> */}
             <LoginPopover type="로그인" />
-            {/* <Button
-              className={clsx(classes.rightLink, classes.linkSecondary)}
-              href="/"
-            >
-              {'회원가입'}
-            </Button> */}
             <LoginPopover type="회원가입" />
-
           </div>
           <div className={classes.rightMobile}>
             <IconButton aria-haspopup="true" onClick={handleMobileMenuOpen} color="inherit">
@@ -202,10 +157,6 @@ function AppAppBar(props) {
       </AppBar>
       {renderMobileMenu}
       <div className={classes.placeholder} />
-      <LoginModal
-        isLoginModalOpen={isLoginModalOpen}
-        setisLoginModalOpen={setisLoginModalOpen}
-      />
     </div>
   );
 }
