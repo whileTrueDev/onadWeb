@@ -53,9 +53,11 @@ export default class LoginForm extends Component {
         passwd: this.state.passwd,
       })
       .then((res) => {
-        console.log(res.data);
+        console.log('로그인 완료');
+        //this.context.history.push('/');
       })
       .catch((error) => {
+        console.log(error);
         alert('회원이 아닙니다.');
       });
     this.handleClose();

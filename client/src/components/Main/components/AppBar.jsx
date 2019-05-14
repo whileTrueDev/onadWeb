@@ -1,4 +1,5 @@
 import React from 'react';
+import axios from 'axios';
 import { withStyles } from '@material-ui/core/styles';
 import MuiAppBar from '@material-ui/core/AppBar';
 
@@ -8,8 +9,16 @@ const styles = theme => ({
   },
 });
 
-function AppBar(props) {
-  return <MuiAppBar elevation={0} position="static" {...props} />;
+// function AppBar(props) {
+//   return <MuiAppBar elevation={0} position="static" {...props} />;
+// }
+
+ class AppBar extends React.Component {
+  render(){
+    return (
+    <MuiAppBar elevation={0} position="static" {...this.props} />
+    )
 }
+ }
 
 export default withStyles(styles)(AppBar);

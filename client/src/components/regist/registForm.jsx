@@ -1,8 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import MenuItem from '@material-ui/core/MenuItem';
-import TextField from '@material-ui/core/TextField';
 import MaskedInput from 'react-text-mask';
 import {
   FormControl,
@@ -12,10 +9,12 @@ import {
   InputAdornment,
   Button,
   Divider,
+  withStyles,
+  MenuItem,
+  TextField
 } from '@material-ui/core';
 
-const encrpyto = require('./encryption');
-
+// Style Overriding용.
 const styles = theme => ({
   container: {
     display: 'block',
@@ -23,9 +22,9 @@ const styles = theme => ({
     width: 700,
   },
   textField: {
-    marginLeft: theme.spacing.unit,
+    marginLeft: theme.spacing(1),
     marginRight: 0,
-    marginBottom: theme.spacing.unit,
+    marginBottom: theme.spacing(1),
     width: 250,
   },
   menu: {
@@ -37,75 +36,45 @@ const styles = theme => ({
     margin: 4,
   },
   codeField: {
-    marginLeft: theme.spacing.unit,
+    marginLeft: theme.spacing(1),
     marginRight: 0,
-    marginTop: theme.spacing.unit * 2,
-    marginBottom: theme.spacing.unit * 2,
+    marginTop: theme.spacing(2),
+    marginBottom: theme.spacing(2),
     width: 400,
   },
   button: {
-    marginTop: theme.spacing.unit,
-    marginRight: theme.spacing.unit,
+    marginTop: theme.spacing(1),
+    marginRight: theme.spacing(1),
   },
   actionsContainer: {
-    marginBottom: theme.spacing.unit * 2,
+    marginBottom: theme.spacing(2),
   },
 });
 
+// domain select용.
 const domains = [
-  {
-    value: 'naver.com',
-  },
-  {
-    value: 'daum.net',
-  },
-  {
-    value: 'nate.com',
-  },
-  {
-    value: 'gmail.com',
-  },
-  {
-    value: 'hotmail.com',
-  },
-  {
-    value: 'yahoo.co.kr',
-  },
+  { value: 'naver.com'  },
+  { value: 'daum.net'   },
+  { value: 'nate.com'   },
+  { value: 'gmail.com'  },
+  { value: 'hotmail.com' },
+  { value: 'yahoo.co.kr' }
 ];
+
 
 class RegistForm extends React.Component {
   state = {
     id: '',
-    password: '',
+    passwd: '',
     name: '',
     email: '',
-    companyNumber: '',
+    businessRegNum: 'null',
     domain: '',
-    textmask: '',
+    phoneNum: '',
     error: false,
     errorType: '',
     errorMessage: '',
   };
-
-  TextMaskCustom(props) {
-    const { inputRef, ...other } = props;
-
-    return (
-      <MaskedInput
-        {...other}
-        ref={(ref) => {
-          inputRef(ref ? ref.inputElement : null);
-        }}
-        mask={['(', ' ', /\d/, /\d/, /\d/, ' ', ')', ' ', '-', ' ', /\d/, /\d/, /\d/, /\d/, ' ', '-', ' ', /\d/, /\d/, /\d/, /\d/]}
-        placeholderChar={'\u2000'}
-        showMask
-        style={{
-          fontSize: 17,
-          width: 200,
-        }}
-      />
-    );
-  }
 
   // handle을 전달.
 
@@ -156,10 +125,10 @@ class RegistForm extends React.Component {
     }
   }
 
-  checkPassword = (event) => {
+  checkPasswd = (event) => {
     const regx = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,20}$/;
     this.setState({
-      password: event.target.value,
+      passwd: event.target.value,
     });
     if (regx.test(event.target.value)) {
       this.setState({
@@ -174,8 +143,8 @@ class RegistForm extends React.Component {
     }
   }
 
-  checkRePassword = (event) => {
-    if (event.target.value === this.state.password) {
+  checkRePasswd = (event) => {
+    if (event.target.value === this.state.passwd) {
       this.setState({
         error: false,
       });
@@ -189,31 +158,57 @@ class RegistForm extends React.Component {
   }
 
   handleSubmit = (event) => {
-    let user;
     event.preventDefault();
+    let user;
     if (this.state.error) {
       alert(`${this.state.errorType} 입력 오류 입니다.`);
     } else {
-      let key; let
-        salt;
-      [key, salt] = encrpyto.make(this.state.password);
       user = {
-        marketerUserType: this.props.userType,
         marketerId: this.state.id,
-        marketerPasswd: key,
-        marketerSalt: salt,
+        marketerRawPasswd : this.state.passwd,
         marketerName: this.state.name,
         marketerMail: `${this.state.email}@${this.state.domain}`,
-        marketerBusinessRegNum: this.state.companyNumber,
-        marketerPhoneNum: this.state.textmask,
+        marketerPhoneNum: this.state.phoneNum,   
+        marketerBusinessRegNum: this.state.businessRegNum,
+        marketerUserType: this.props.userType,
       };
       this.props.handleUserInfo(user);
       this.props.handleNext();
     }
+    
+  }
+  
+  TextMaskCustom(props) {
+    const { inputRef, ...other } = props;
+    return (
+      <MaskedInput
+        {...other}
+        ref={(ref) => {
+          inputRef(ref ? ref.inputElement : null);
+        }}
+        mask={['(', ' ', /\d/, /\d/, /\d/, ' ', ')', ' ', '-', ' ', /\d/, /\d/, /\d/, /\d/, ' ', '-', ' ', /\d/, /\d/, /\d/, /\d/]}
+        placeholderChar={'\u2000'}
+        showMask
+        style={{
+          fontSize: 17,
+          width: 200,
+        }}
+      />
+    );
+  }
+
+  checkBusinessRegNum = (event) => {
+    alert('준비 중입니다. 회원가입을 진행해 주세요.');
   }
 
   render() {
     const { classes } = this.props;
+    const { 
+      errorMessage,
+      textmask,
+      error,
+      domain
+     } = this.state;
 
     return (
       <div className={classes.container}>
@@ -225,7 +220,7 @@ class RegistForm extends React.Component {
             placeholder="아이디를 입력하세요"
             onChange={this.checkId}
             margin="normal"
-            helperText={this.checkError('ID') ? this.state.errorMessage : ' '}
+            helperText={this.checkError('ID') ? errorMessage : ' '}
             error={this.checkError('ID')}
             InputLabelProps={{
               shrink: true,
@@ -243,8 +238,8 @@ class RegistForm extends React.Component {
             type="password"
             placeholder="비밀번호를 입력하세요."
             className={classes.textField}
-            onChange={this.checkPassword}
-            helperText={this.checkError('PASSWORD') ? this.state.errorMessage : ' '}
+            onChange={this.checkPasswd}
+            helperText={this.checkError('PASSWORD') ? errorMessage : ' '}
             error={this.checkError('PASSWORD')}
             margin="normal"
             InputLabelProps={{
@@ -261,10 +256,10 @@ class RegistForm extends React.Component {
             label="RE-PASSWORD"
             type="password"
             placeholder="비밀번호를 재입력하세요."
-            helperText={this.checkError('RE-PASSWORD') ? this.state.errorMessage : ' '}
+            helperText={this.checkError('RE-PASSWORD') ? errorMessage : ' '}
             error={this.checkError('RE-PASSWORD')}
             className={classes.textField}
-            onChange={this.checkRePassword}
+            onChange={this.checkRePasswd}
             margin="normal"
             InputLabelProps={{
               shrink: true,
@@ -296,12 +291,12 @@ class RegistForm extends React.Component {
           >
             <InputLabel shrink htmlFor="phoneNumber">전화번호</InputLabel>
             <Input
-              value={this.state.textmask}
-              onChange={this.handleChange('textmask')}
+              value={textmask}
+              onChange={this.handleChange('phoneNum')}
               id="phoneNumber"
               inputComponent={this.TextMaskCustom}
             />
-            <FormHelperText>정보를 수신받을 전화번호를 입력하세요.</FormHelperText>
+            <FormHelperText>전화번호를 입력하세요.</FormHelperText>
           </FormControl>
           <br />
 
@@ -310,22 +305,22 @@ class RegistForm extends React.Component {
               <FormControl className={classes.codeField}>
                 <InputLabel shrink>사업자등록번호</InputLabel>
                 <Input
-                  onChange={this.handleChange('companyNumber')}
+                  onChange={this.handleChange('businessRegNum')}
                   placeholder="사업자등록번호를 입력하세요"
                   endAdornment={(
-                  <InputAdornment position="end">
-        <Divider className={classes.divider} />
-        <Button>
-                    조회
-                  </Button>
-      </InputAdornment>
-)}
+                    <InputAdornment position="end">
+                      <Divider className={classes.divider} />
+                      <Button onClick={this.checkBusinessRegNum}>
+                        조회
+                      </Button>
+                    </InputAdornment>
+                  )}
                 />
-                <FormHelperText>{this.state.error ? this.state.errorMessage : '회사에 등록된 사업자 번호를 입력후 조회버튼을 누르세요.'}</FormHelperText>
+                <FormHelperText>회사에 등록된 사업자 번호를 입력후 조회버튼을 누르세요.</FormHelperText>
               </FormControl>
             )
             : <div />
-        }
+          }
           <br />
 
           <TextField
@@ -333,7 +328,7 @@ class RegistForm extends React.Component {
             label="EMAIL ID"
             className={classes.textField}
             onChange={this.checkEmail}
-            helperText={this.checkError('EMAIL') ? this.state.errorMessage : 'e-mail ID을 입력하세요.'}
+            helperText={this.checkError('EMAIL') ? errorMessage : 'e-mail ID을 입력하세요.'}
             error={this.checkError('EMAIL')}
             margin="normal"
             InputLabelProps={{
@@ -354,7 +349,7 @@ class RegistForm extends React.Component {
             select
             label="Domain"
             className={classes.textField}
-            value={this.state.domain}
+            value={domain}
             onChange={this.handleChange('domain')}
             helperText="e-mail Domain을 선택하세요."
             SelectProps={{
@@ -383,16 +378,15 @@ class RegistForm extends React.Component {
               onClick={this.props.handleBack}
               className={classes.button}
             >
-        Back
+        뒤로
             </Button>
             <Button
               variant="contained"
               color="primary"
               className={classes.button}
-              type="submit"
-              value="Submit"
+              type="submit" value="submit"
             >
-        Next
+            다음
             </Button>
           </div>
         </form>

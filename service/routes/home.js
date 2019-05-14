@@ -3,12 +3,10 @@ var router = express.Router();
 
 /* GET home page. */
 router.get( '/', function(req, res, next) {
-  if(typeof(req.session.count) === 'undefined'){
-    req.session.count = 0;
-  }else{
-    req.session.count++;
-  }
-  res.render('home', { title: 'Express' , count : req.session.count});
+});
+
+router.get( '/check', function(req, res, next) {
+  res.send(req.session.passport);
 });
 
 module.exports = router;

@@ -87,8 +87,8 @@ class LoginPopover extends Component {
                 }}
               >
                 <div>
-                  <LoginForm isMarketer />
-                  <LoginForm isMarketer={false} />
+                  <LoginForm isMarketer/>
+                  <LoginForm isMarketer={false}/>
                 </div>
               </Popover>
             </React.Fragment>

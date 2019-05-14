@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { blueGrey } from '@material-ui/core/colors';
@@ -14,6 +14,7 @@ import Link from 'react-router-dom/Link';
 import AppBar from '../components/AppBar';
 import Toolbar, { styles as toolbarStyles } from '../components/Toolbar';
 import LoginPopover from './LoginPopover';
+import axios from 'axios';
 
 const styles = theme => ({
   root: {
@@ -67,22 +68,39 @@ const styles = theme => ({
 });
 
 function AppAppBar(props) {
-  const { classes } = props;
-
-  // mobile, desktop 구분된 appbar 를 위해
-  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
+  const { classes, history } = props;
+  const [isLogin, setisLogin] = useState(false);
+  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
-
+  
   // 모바일 메뉴버튼 오픈 state
-  function handleMobileMenuOpen(event) {
+  const handleMobileMenuOpen = (event) => {
     setMobileMoreAnchorEl(event.currentTarget);
   }
 
+  useEffect(()=>{
+    axios.get('/check')
+    .then((res) => {
+      if(res.data){
+        console.log('로그인 되어있습니다.');
+        this.setState({isLogin : true});     
+      }
+      else{
+        console.log('로그인이 되어있지않습니다.');
+        console.log(history);
+      }
+
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+  })
+
   // 모바일 메뉴버튼 오픈 닫는 핸들링 함수
-  function handleMobileMenuClose() {
+  const handleMobileMenuClose = () => {
     setMobileMoreAnchorEl(null);
   }
-
+  
   // 모바일 메뉴 컴포넌트
   const renderMobileMenu = (
     <Menu

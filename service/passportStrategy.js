@@ -55,14 +55,13 @@ passport.use( new LocalStrategy(
                 return done(err);
             }
             // 쿼리문을 userid로 검색하면된다.
-            conn.query(`SELECT passwd, salt FROM node_example WHERE userid = ? `, [userid], function(err, result, fields){
+            conn.query(`SELECT marketerPasswd, marketerSalt FROM marketerInfo WHERE marketerId = ? `, [userid], function(err, result, fields){
                 if(result[0]){
                     //비밀번호를 위한 수행
-                    //if(encrpyto.check(passwd, result[0].passwd, result[0].salt)){
-                    if(passwd === result[0].passwd){
+                    if(encrpyto.check(passwd, result[0].marketerPasswd, result[0].marketerSalt)){
+                    //if(passwd === result[0].passwd){
                         conn.release();
-                        console.log('wow! checked!');
-                        return done(null, {userid : userid , passwd : passwd});        
+                        return done(null, {userid : userid});        
                     }
                     else{
                         conn.release();

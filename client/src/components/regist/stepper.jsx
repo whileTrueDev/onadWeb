@@ -1,4 +1,5 @@
 import React from 'react';
+import axios from 'axios';
 import PropTypes from 'prop-types';
 import {
   withStyles,
@@ -13,19 +14,20 @@ import PaperSheet from './paper';
 import AppAppBar from '../Main/views/AppAppBar';
 
 
+
 const styles = theme => ({
   root: {
     width: '100%',
   },
   button: {
-    marginTop: theme.spacing.unit,
-    marginRight: theme.spacing.unit,
+    marginTop: theme.spacing(1),
+    marginRight: theme.spacing(1),
   },
   actionsContainer: {
-    marginBottom: theme.spacing.unit * 2,
+    marginBottom: theme.spacing(2),
   },
   resetContainer: {
-    padding: theme.spacing.unit * 3,
+    padding: theme.spacing(1) * 3,
   },
 });
 
@@ -33,7 +35,7 @@ function getSteps() {
   return ['사업자 유형 선택', '개인정보 입력', '정보 동의 및 계약'];
 }
 
-function getStepContent(step, typeChange, handleNext, handleBack, userType, handleUserInfo) {
+function getStepContent(step, typeChange, handleNext, handleBack, userType, handleUserInfo, handleReset, handleUserSubmit) {
   switch (step) {
     case 0:
       return <Usertype typeChange={typeChange} handleNext={handleNext} />;
@@ -47,7 +49,7 @@ function getStepContent(step, typeChange, handleNext, handleBack, userType, hand
         />
       );
     case 2:
-      return <PaperSheet />;
+      return <PaperSheet handleNext={handleNext} handleReset={handleReset} handleUserSubmit={handleUserSubmit}/>;
     default:
       return 'Unknown step';
   }
@@ -97,6 +99,17 @@ class RegistStepper extends React.Component {
     });
   }
 
+  handleUserSubmit = (event) => { 
+    axios.post('/regist/marketer',
+      this.state.userInfo,  
+    )
+    .then((res) => {
+      this.props.history.push('/');
+    })
+    .catch((error) => {
+      alert('등록중 오류가 났습니다. 다시 회원가입을 시작하세요.');
+    });
+  }
 
   render() {
     const { classes } = this.props;
@@ -115,7 +128,9 @@ class RegistStepper extends React.Component {
                   this.handleNext,
                   this.handleBack,
                   userType,
-                  this.handleUserInfo)}
+                  this.handleUserInfo,
+                  this.handleReset,
+                  this.handleUserSubmit)}
               </StepContent>
             </Step>
           ))}
