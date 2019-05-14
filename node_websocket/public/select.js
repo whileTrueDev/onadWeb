@@ -1,11 +1,12 @@
 const pool = require('./connect');
 
-module.exports = function () {
+module.exports = function (sqlQuery) {
+
   return {
     select: function(callback){
       pool.getConnection(function(err, conn){
         if(err) return callback(err);
-        var sql = 'SELECT name, path FROM banner where state = 1';
+        var sql = sqlQuery;
         conn.query(sql, function (err, result, fields) {
           conn.release();
           if (err) return callback(err);

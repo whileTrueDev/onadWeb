@@ -3,10 +3,10 @@ const app = require('express')();
 const http = require('http').createServer(app);
 const io = require('socket.io')(http);
 const session = require('express-session');
-const sql = require('./public/select')();
+const sql = require('./public/select');
 const pool = require('./public/connect');
-const ipSql = require('./public/selectIp')();
-const schedule = require('node-schedule')
+const schedule = require('node-schedule');
+
 
 
 app.set('views', __dirname + '/views');
@@ -34,7 +34,8 @@ app.get('/', function(req, res){ //index.html /로 라우팅
 app.get('/banner/server', function(req, res){ // server.html /server로 라우팅 
     console.log('server')
     var toServer = {};
-    sql.select(function(err, data){
+    var tmp = sql('SELECT name, path FROM banner where state = 1')
+    tmp.select(function(err, data){
         if (err){
             console.log(err)
             res.render('server.ejs')
@@ -58,14 +59,17 @@ app.get('/banner/server', function(req, res){ // server.html /server로 라우�
 app.get('/banner/:id', function(req, res){ ///banner/:id로 라우팅
     console.log('banner')
     var clientIp = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-    ipSql.select(function(err, data){
+    var tmp = sql('SELECT ipAdr FROM creatorinfo')
+    tmp.select(function(err, data){
         if (err){
             console.log(err)
         }
         else {
             if(data[0].ipAdr != clientIp){ //나중에 이부분 경고창으로 바꿔야 함. 등록된 아이피가 아니면 접속차단시키는 부분임
+                console.log(data[0].ipAdr)
                 res.render('client.ejs')    
             } else{
+                console.log(data[0].ipAdr)
                 res.render('client.ejs');
             }
         }
@@ -99,19 +103,19 @@ io.use( function(socket, next) {
         var roomInfo = socket.adapter.rooms; // 현재 웹소켓에 접속중이 room들과 그 접속자들의 정보 얻음
         var keys = Object.keys(roomInfo); //websocket 접속자 정보 
         var rule = new schedule.RecurrenceRule(); //스케쥴러 객체 생성
-        
+
         rule.hour = new schedule.Range(0,23) 
         // rule.minute = [0, 10, 20, 30, 40, 50] //cronTask 실행되는 분(minute)
         rule.second = [0, 10, 20, 30, 40, 50]
         
         var cronTask = schedule.scheduleJob(rule, function(){ // 스케쥴러를 통해 1분마다 db에 배너정보 전송
-                    console.log('upload' + new Date())
                     if(serverId != clientId && clientId != undefined){
-                        console.log(serverId + clientId + '아디가 음쪄')
-                    } else if(serverId == clientId){
-                        io.to(serverId).emit('divReload', {})
-                        socket.emit('response banner data to server', {})
-                        console.log(serverId + '새로고침완료')
+                        socket.emit('response banner data to server', {});
+                        socket.emit('refresh request img', {})
+                }   else if(serverId == clientId && serverId!= undefined){
+                        io.to(serverId).emit('divReload', {});
+                        // socket.emit('response banner data to server', {});
+                        console.log(serverId + '새로고침완료');
                     }
                 });
     
@@ -164,39 +168,104 @@ io.use( function(socket, next) {
         socket.on('write to db', function(msg){
             pool.getConnection(function(err, conn){
             if(err) return err;
-            var sql = "INSERT INTO broadcastingcheck (bannerName, url) VALUES (?, ?);";
-            
-            conn.query(sql, [msg[0], msg[1]], function (err, result, fields) {
+            var sql = "INSERT INTO broadcastingcheck (bannerName, url, category) VALUES (?, ?, ?);";
+             
+            conn.query(sql, [msg[0], msg[1], msg[2]], function (err, result, fields) { //msg[0]:bannername msg[1]:url msg[2]:category
                 conn.release();
                 if (err) return err;   
                 });
             });   
         });
-        socket.on('request img', function(){
+        socket.on('request img', function(msg){
             var toServer = {};
-            sql.select(function(err, data){
+            var getQuery = sql(`SELECT * FROM matchedbanner WHERE matchedbanner.url = "${msg[0]}";`)
+            getQuery.select(function(err, data){
                 if (err){
                     console.log(err)
                 }
                 else {
-                    data.forEach(function(item, index, array){
-                        toServer['img'+index] = {path : item.path, name : item.name}
-                    });
-                    console.log(toServer['img0'].name)
-                    socket.emit('img receive', [toServer['img0'].path, toServer['img0'].name ])
-                };
-                
+                    if(data.length == 0){ //계약된 거가 없을때
+                        getQuery = sql(`SELECT name, path FROM banner;`)
+                                    getQuery.select(function(err, data){
+                                        if (err){
+                                            console.log(err)
+                                        }
+                                        else {
+                                            data.forEach(function(item, index){
+                                                toServer['img'+index] = {path : item.path, name : item.name}
+                                            });
+                                            console.log(toServer['img0'].name)
+                                            socket.emit('img receive', [toServer['img0'].path, toServer['img0'].name ])
+                                        };
+                                    })
+                    } else{
+                        getQuery = sql(`SELECT category FROM matchedbanner WHERE matchedbanner.url = "${msg[0]}";`) //계약 된게 있을때
+                        getQuery.select(function(err, data){
+                            if (err){
+                                console.log(err)
+                            }
+                            else {
+                                if(msg[1] == data[0].category || data[0].category == 'any' ){ //계약된게 있고, 카테고리가 any거나 일치할떄
+                                    getQuery = sql(`SELECT name, path FROM banner JOIN matchedbanner where matchedbanner.url = "${ msg[0] }" AND matchedbanner.bannerId = banner.name;`)
+                                    getQuery.select(function(err, data){
+                                        if (err){
+                                            console.log(err)
+                                        }
+                                        else {
+                                            data.forEach(function(item, index){
+                                                toServer['img'+index] = {path : item.path, name : item.name}
+                                            });
+                                            console.log(toServer['img0'].name)
+                                            socket.emit('img receive', [toServer['img0'].path, toServer['img0'].name ])
+                                        };
+                                    })
+                                } else{ //계약된게 있지만 카테고리가 일치하지 않을때
+                                    getQuery = sql(`SELECT name, path FROM banner;`)
+                                    getQuery.select(function(err, data){
+                                        if (err){
+                                            console.log(err)
+                                        }
+                                        else {
+                                            data.forEach(function(item, index){
+                                                toServer['img'+index] = {path : item.path, name : item.name}
+                                            });
+                                            console.log(toServer['img0'].name)
+                                            socket.emit('img receive', [toServer['img0'].path, toServer['img0'].name ])
+                                        };
+                                    })
+                                }
+                            };
+                        });
+
+                        
+                    };
+                }
+            })
+            // var getQuery = sql(`SELECT name, path FROM banner JOIN matchedbanner where matchedbanner.url = "${ msg[0] }" AND matchedbanner.bannerId = banner.name;`)
+
+            // getQuery.select(function(err, data){
+            //     if (err){
+            //         console.log(err)
+            //     }
+            //     else {
+            //         data.forEach(function(item, index){
+            //             toServer['img'+index] = {path : item.path, name : item.name}
+            //         });
+            //         console.log(toServer['img0'].name)
+            //         socket.emit('img receive', [toServer['img0'].path, toServer['img0'].name ])
+            //     };
                 // sql.pool.end(function(err){
                 //   if (err) console.log(err);
                 //   else {
                 //     console.log('** Finished');
                 //   }
                 // });
-              });
+            //   });
+            
         });
     });  
 }());
 
-http.listen(3000, function(){
+http.listen(3002, function(){
     console.log('connected!');
 });

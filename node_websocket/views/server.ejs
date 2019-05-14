@@ -7,7 +7,7 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
         <script src='/public/server.js'></script>
         <script src='/public/bannerUpload.js'></script>
-        <script src='/public/serverImgShow.js'></script>
+        <script src='/public/showDetail.js'></script>
         
         <input type='file' id="baseFile"/>
         <form action="">
@@ -16,15 +16,16 @@
         <select id="idReceiver"></select>
         <button id="idSelectImgButton">전송하기</button>
         <p>
-            <input id="textServer" type="text"/>
-            <button id="textButton"> 텍스트 전송 </button>
+            <strong>현재 광고 대기열</strong>
         </p>
-        <strong>현재 광고 대기열</strong>
-        
         <div id="dbImg">
             <% for (let item in imgSource ){%>      
-                <p><input id="chkImg1" type="checkbox" name= <%= imgSource[item].name %> value= <%= imgSource[item].path %>></P>
-                <p><img src= <%= imgSource[item].path %> title= <%= imgSource[item].name %> /></p>
+                
+                <p><input id="chkImg1" type="checkbox" name= <%= imgSource[item].name %> value= <%= imgSource[item].path %>></p>
+                <!-- <a href=#<%= imgSource[item].name %>> -->
+                    <img id= <%= imgSource[item].name %> src= <%= imgSource[item].path %> title= <%= imgSource[item].name %> />
+                <!-- </a> -->
+                
                 <%= imgSource[item].name %>
             <% }; %>
         </div>

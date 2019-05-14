@@ -1,5 +1,4 @@
 
-
 module.exports = function () {
   var mysql = require('mysql');
   var config = require('./db_info');
