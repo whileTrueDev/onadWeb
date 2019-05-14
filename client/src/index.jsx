@@ -18,7 +18,7 @@ ReactDOM.render(
     <Route exact path="/regist" component={RegistStepper} />
     <Route path="/introduction" component={Introduction} />
     <Route path="/manual" component={Manual} />
-    <Route path="/dashboard" render={() => <Route path="/dashboard/main" component={Dashboard} />} />
+    <Route path="/dashboard" component={Dashboard} />
   </Router>, document.getElementById('root'),
 );
 
