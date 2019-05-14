@@ -3,12 +3,14 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { blueGrey } from '@material-ui/core/colors';
 import MoreIcon from '@material-ui/icons/MoreVert';
+import classnames from 'classnames';
 import {
   Menu, MenuItem, IconButton, Button,
 } from '@material-ui/core';
 import {
-  AssignmentInd, PowerSettingsNew, Help, Domain,
+  Help, Domain,
 } from '@material-ui/icons';
+import Link from 'react-router-dom/Link';
 import AppBar from '../components/AppBar';
 import Toolbar, { styles as toolbarStyles } from '../components/Toolbar';
 import LoginPopover from './LoginPopover';
@@ -59,6 +61,9 @@ const styles = theme => ({
   linkSecondary: {
     color: theme.palette.secondary.main,
   },
+  active: {
+    fontWeight: 'bold',
+  },
 });
 
 function AppAppBar(props) {
@@ -92,7 +97,8 @@ function AppAppBar(props) {
           className={classes.rightLink}
           color="inherit"
           underline="none"
-          href="/"
+          component={Link}
+          to="/introduction"
         >
           <Domain style={{ marginRight: 10 }} />
           {'서비스 소개'}
@@ -103,7 +109,8 @@ function AppAppBar(props) {
           className={classes.rightLink}
           color="inherit"
           underline="none"
-          href="/"
+          component={Link}
+          to="/manual"
         >
           <Help style={{ marginRight: 10 }} />
           {'이용 안내'}
@@ -118,6 +125,12 @@ function AppAppBar(props) {
     </Menu>
   );
 
+  // 앱바의 선택 여부를 파악하여 state 로 설정한다.
+  const [selected, setSelected] = React.useState();
+  React.useEffect(() => {
+    setSelected(window.location.pathname.replace('/', ''));
+  }, []); // 무한루프를 야기하지 않도록 하기 위해 두번째 인수로 빈 배열을 넣는다.
+
   return (
     <div>
       <AppBar className={classes.root} position="fixed">
@@ -126,25 +139,60 @@ function AppAppBar(props) {
           <Button
             color="inherit"
             className={classes.title}
-            href="/"
+            component={Link}
+            to="/"
           >
             {'OnAD'}
           </Button>
           <div className={classes.rightDesktop}>
-            <Button
-              color="inherit"
-              className={classes.rightLink}
-              href="/"
-            >
-              {'서비스 소개'}
-            </Button>
-            <Button
-              underline="none"
-              className={classes.rightLink}
-              href="/"
-            >
-              {'이용 안내'}
-            </Button>
+            {selected === 'introduction'
+              ? (
+                <Button
+                  color="inherit"
+                  className={classnames(
+                    [classes.rightLink, classes.active],
+                  )}
+                  component={Link}
+                  to="/introduction"
+                >
+                  {'서비스 소개'}
+                </Button>
+              )
+              : (
+                <Button
+                  color="inherit"
+                  className={classes.rightLink}
+                  component={Link}
+                  to="/introduction"
+                >
+                  {'서비스 소개'}
+                </Button>
+              )
+          }
+            {selected === 'manual'
+              ? (
+                <Button
+                  underline="none"
+                  className={classnames(
+                    [classes.rightLink, classes.active],
+                  )}
+                  component={Link}
+                  to="/manual"
+                >
+                  {'이용 안내'}
+                </Button>
+              )
+              : (
+                <Button
+                  underline="none"
+                  className={classes.rightLink}
+                  component={Link}
+                  to="/manual"
+                >
+                  {'이용 안내'}
+                </Button>
+              )
+          }
             <LoginPopover type="로그인" />
             <LoginPopover type="회원가입" />
           </div>

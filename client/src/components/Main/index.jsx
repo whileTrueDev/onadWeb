@@ -8,14 +8,24 @@ import ProductHowItWorks from './views/ProductHowItWorks';
 import withRoot from './withRoot';
 // import ProductCTA from './views/ProductCTA';
 
-export default withRoot(() => (
-  <div>
-    <AppAppBar />
-    <ProductHero />
-    <ProductCategories />
-    <ProductHowItWorks />
-    {/* 문의받기 섹션, 오픈베타에 추가 */
-    /* <ProductCTA /> */}
-    <AppFooter />
-  </div>
-));
+const heroInfo = {
+  backImage: 'https://images.unsplash.com/photo-1556761175-4b46a572b786?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1867&q=80',
+};
+
+export default withRoot((props) => {
+  // if located here, set the scroll to top of the page
+  React.useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [props.location]);
+  return (
+    <div>
+      <AppAppBar />
+      <ProductHero backgroundImage={heroInfo.backImage} />
+      <ProductCategories />
+      <ProductHowItWorks />
+      {/* 문의받기 섹션, 오픈베타에 추가 */
+      /* <ProductCTA /> */}
+      <AppFooter />
+    </div>
+  );
+});

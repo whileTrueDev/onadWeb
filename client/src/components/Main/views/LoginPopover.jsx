@@ -6,6 +6,7 @@ import {
 import clsx from 'clsx';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
+import Link from 'react-router-dom/Link';
 import LoginForm from './LoginForm';
 
 const styles = theme => ({
@@ -94,39 +95,43 @@ class LoginPopover extends Component {
           )
           : (
             <React.Fragment>
-              <Button
-                className={clsx(classes.rightLink, classes.linkSecondary)}
-                aria-owns={open ? 'simple-popper' : undefined}
-                aria-haspopup="true"
-                color="inherit"
-                onClick={this.handleClick}
-              >
-                {'회원가입'}
-              </Button>
-              <Popover
-                className={classes.popOver}
-                id="simple-popper"
-                open={open}
-                anchorEl={anchorEl}
-                onClose={this.handleClose}
-                anchorOrigin={{
-                  vertical: 'bottom',
-                  horizontal: 'center',
-                }}
-                transformOrigin={{
-                  vertical: 'top',
-                  horizontal: 'center',
-                }}
-              >
-                <div>
+              <div>
+                <Button
+                  className={clsx(classes.rightLink, classes.linkSecondary)}
+                  aria-owns={open ? 'simple-popper' : undefined}
+                  aria-haspopup="true"
+                  color="inherit"
+                  onClick={this.handleClick}
+                >
+                  {'회원가입'}
+                </Button>
+              </div>
+              <div>
+                <Popover
+                  className={classes.popOver}
+                  id="simple-popper"
+                  open={open}
+                  anchorEl={anchorEl}
+                  onClose={this.handleClose}
+                  anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'center',
+                  }}
+                  transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'center',
+                  }}
+                >
                   <div>
-                    <Button href="/regist">마케터</Button>
+                    <div>
+                      <Button component={Link} to="/regist">마케터</Button>
+                    </div>
+                    <div style={this.buttonStyle}>
+                      <Button href="https://www.twitch.tv">크리에이터</Button>
+                    </div>
                   </div>
-                  <div style={this.buttonStyle}>
-                    <Button href="https://www.twitch.tv">크리에이터</Button>
-                  </div>
-                </div>
-              </Popover>
+                </Popover>
+              </div>
             </React.Fragment>
           )
         }

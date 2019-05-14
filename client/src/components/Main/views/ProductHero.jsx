@@ -7,11 +7,8 @@ import Button from '../components/Button';
 import Typography from '../components/Typography';
 import ProductHeroLayout from './ProductHeroLayout';
 
-const backgroundImage = 'https://images.unsplash.com/photo-1534854638093-bada1813ca19?auto=format&fit=crop&w=1400&q=80';
-
 const styles = theme => ({
   background: {
-    backgroundImage: `url(${backgroundImage})`,
     backgroundColor: '#7fc7d9', // Average color of the background image.
     backgroundPosition: 'center',
   },
@@ -50,13 +47,15 @@ const styles = theme => ({
 });
 
 function ProductHero(props) {
-  const { classes } = props;
+  const { classes, text, backgroundImage } = props;
   const [check] = React.useState(true);
 
   return (
-    <ProductHeroLayout backgroundClassName={classes.background}>
+    <ProductHeroLayout
+      backgroundClassName={classes.background}
+      backgroundImage={backgroundImage}
+    >
       {/* Increase the network loading priority of the background image. */}
-      <img style={{ display: 'none' }} src={backgroundImage} alt="" />
       <Grow
         in={check}
         {...(check ? { timeout: 2500 } : {})}
@@ -67,7 +66,7 @@ function ProductHero(props) {
           variant="h2"
           className={classes.h2}
         >
-        효율적으로 광고하세요
+          {text.title}
         </Typography>
       </Grow>
       <Grow
@@ -81,7 +80,7 @@ function ProductHero(props) {
           marked="center"
           style={{ marginTop: 15 }}
         >
-        쉽게 광고를 유치하세요
+          {text.subTitle}
         </Typography>
       </Grow>
       <Grow
@@ -94,12 +93,12 @@ function ProductHero(props) {
           variant="h5"
           className={classes.h5}
         >
-        관련성 분석 통해 크리에이터와 광고주를 1:N 또는 N:N 매칭합니다
+          {text.body}
           <Typography
             className={classes.h6}
             variant="body2"
           >
-          설치 없이 모든 일을 웹에서 간단히 할 수 있습니다.
+            {text.tail}
           </Typography>
         </Typography>
       </Grow>
@@ -113,7 +112,7 @@ function ProductHero(props) {
           size="large"
           className={classes.button}
           component="a"
-          href="/"
+          href="/dashboard/main"
         >
         대시보드로 이동
         </Button>
@@ -126,10 +125,19 @@ function ProductHero(props) {
 
 ProductHero.propTypes = {
   classes: PropTypes.object,
+  text: PropTypes.object,
+  backgroundImage: PropTypes.string,
 };
 
 ProductHero.defaultProps = {
   classes: {},
+  backgroundImage: '',
+  text: {
+    title: '효율적으로 광고하세요',
+    subTitle: '쉽게 광고를 유치하세요',
+    body: '관련성 분석 통해 크리에이터와 광고주를 1:N 또는 N:N 매칭합니다',
+    tail: '설치 없이 모든 일을 웹에서 간단히 할 수 있습니다.',
+  },
 };
 
 export default withStyles(styles)(ProductHero);

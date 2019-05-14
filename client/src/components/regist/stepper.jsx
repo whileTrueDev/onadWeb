@@ -10,6 +10,7 @@ import {
 import Usertype from './usertype';
 import RegistForm from './registForm';
 import PaperSheet from './paper';
+import AppAppBar from '../Main/views/AppAppBar';
 
 
 const styles = theme => ({
@@ -59,6 +60,13 @@ class RegistStepper extends React.Component {
     userInfo: {},
   };
 
+  // 이 페이지에 라우팅 되어 들어오면 (다른 페이지에서 여기로) 스크롤을 맨 위로 올린다.
+  componentDidUpdate(prevProps) {
+    if (this.props.location !== prevProps.location) {
+      window.scrollTo(0, 0);
+    }
+  }
+
   handleNext = () => {
     this.setState(state => ({
       activeStep: state.activeStep + 1,
@@ -96,6 +104,7 @@ class RegistStepper extends React.Component {
     const { activeStep, userType } = this.state;
     return (
       <div className={classes.root}>
+        <AppAppBar />
         <Stepper activeStep={activeStep} orientation="vertical">
           {steps.map((label, index) => (
             <Step key={label}>

@@ -70,7 +70,7 @@ function AppFooter(props) {
                   <img src="/images/appFooterFacebook.png" alt="Facebook" />
                 </a>
               </Grid>
-              <Grid item>© 2019 Onad</Grid>
+              <Grid item>© 2019 While True:</Grid>
             </Grid>
           </Grid>
           <Grid item xs={6} sm={4} md={2}>

@@ -5,6 +5,7 @@ import Container from '@material-ui/core/Container';
 import grey from '@material-ui/core/colors/grey';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
+import AppBar from '@material-ui/core/AppBar';
 import { Subscriptions, Person } from '@material-ui/icons';
 import ProductHowItWorksMaketerItem from './ProductHowItWorksMaketerItem';
 import ProductHowItWorksCreatorItem from './ProductHowItWorksCreatorItem';
@@ -48,6 +49,12 @@ const styles = theme => ({
   tabs: {
     flexGrow: 1,
     marginBottom: theme.spacing(5),
+    boxShadow: 'none',
+    backgroundColor: grey[300],
+    zIndex: 0,
+  },
+  tab: {
+    height: 85,
   },
 });
 
@@ -86,23 +93,28 @@ class ProductHowItWorks extends React.Component {
 
     return (
       <section className={classes.root}>
+
         <Container className={classes.container}>
-          <Tabs
-            className={classes.tabs}
-            value={value}
-            onChange={this.handleChange}
-            indicatorColor="primary"
-            textColor="primary"
-          >
-            <Tab
-              icon={<Person />}
-              label="마케터 또는 광고주"
-            />
-            <Tab
-              icon={<Subscriptions />}
-              label="크리에이터 또는 1인미디어 방송인"
-            />
-          </Tabs>
+          <AppBar className={classes.tabs} position="static">
+            <Tabs
+              value={value}
+              onChange={this.handleChange}
+              indicatorColor="primary"
+              textColor="primary"
+              variant="fullWidth"
+            >
+              <Tab
+                className={classes.tab}
+                icon={<Person />}
+                label="마케터 또는 광고주"
+              />
+              <Tab
+                className={classes.tab}
+                icon={<Subscriptions />}
+                label="크리에이터 또는 1인미디어 방송인"
+              />
+            </Tabs>
+          </AppBar>
           {
             value === 0 ? (
               <ProductHowItWorksMaketerItem
