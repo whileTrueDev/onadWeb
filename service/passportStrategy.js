@@ -25,15 +25,14 @@ const encrpyto = require('./encryption');
 passport.serializeUser((user, done)=>{
     console.log('serialize');
     //req.session.passport.user(inner property)의 영역으로 저장된다.
-    // done(null, user.id);
-    done(null, user.userid);
+    done(null, user);
 });
 
 //로그인이 되었을 때 매 요청시마다 자동으로 수행되는 session에서 인증된 req.user의 영역으로 저장하기.
-passport.deserializeUser((userid, done)=>{
+passport.deserializeUser((user, done)=>{
     console.log('deserialize');
     //db에서 추가로 데이터를 req.user에 저장.
-    done(null, userid);
+    done(null, user);
 })
 
 passport.use( new LocalStrategy(
@@ -42,34 +41,40 @@ passport.use( new LocalStrategy(
         usernameField : 'userid',
         passwordField : 'passwd',
         session       :  true,
-        passReqToCallback : false,
+        passReqToCallback : true,
     },
     
     // verify callback function
     // 위에서 정의한 username, password field명으로 인자값을 받는다.
-    (userid, passwd, done) => {
-
+    (req, userid, passwd, done) => {
         // db관련 오류 핸들러.
         pool.getConnection(function(err, conn){
             if(err){ 
                 return done(err);
             }
             // 쿼리문을 userid로 검색하면된다.
-            conn.query(`SELECT marketerPasswd, marketerSalt FROM marketerInfo WHERE marketerId = ? `, [userid], function(err, result, fields){
+            conn.query(`SELECT marketerPasswd, marketerSalt, marketerEmailAuth, temporaryLogin FROM marketerInfo WHERE marketerId = ? `, [userid], function(err, result, fields){
                 if(result[0]){
                     //비밀번호를 위한 수행
                     if(encrpyto.check(passwd, result[0].marketerPasswd, result[0].marketerSalt)){
-                    //if(passwd === result[0].passwd){
                         conn.release();
-                        return done(null, {userid : userid});        
+                        let user = {userid : userid}
+                        if(!result[0].marketerEmailAuth){
+                            user['marketerEmailAuth'] = result[0].marketerEmailAuth;
+                        }
+                        if(result[0].temporaryLogin){
+                            user['temporaryLogin'] = result[0].temporaryLogin;
+                        }
+                        return done(null, user);        
                     }
                     else{
                         conn.release();
-                        return done(null, false, {message : 'incorrect password!'} );        
+                        return done(null, false);        
                     }
                 }
                 conn.release();
-                return done(null, false, {message : 'incorrect id!'});
+                req.session.message = 'ID가 존재하지 않습니다.'
+                return done(null, false);
                 
             });
         });

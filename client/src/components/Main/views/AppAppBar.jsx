@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { blueGrey } from '@material-ui/core/colors';
@@ -7,14 +7,16 @@ import classnames from 'classnames';
 import {
   Menu, MenuItem, IconButton, Button,
 } from '@material-ui/core';
+
 import {
   Help, Domain,
 } from '@material-ui/icons';
-import Link from 'react-router-dom/Link';
+
+import { Link } from 'react-router-dom';
+import axios from 'axios';
 import AppBar from '../components/AppBar';
 import Toolbar, { styles as toolbarStyles } from '../components/Toolbar';
 import LoginPopover from './LoginPopover';
-import axios from 'axios';
 
 const styles = theme => ({
   root: {
@@ -68,39 +70,23 @@ const styles = theme => ({
 });
 
 function AppAppBar(props) {
-  const { classes, history } = props;
-  const [isLogin, setisLogin] = useState(false);
+  const {
+    classes, history, isLogin, setisLogin, logout,
+  } = props;
+
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
-  
+
   // 모바일 메뉴버튼 오픈 state
   const handleMobileMenuOpen = (event) => {
     setMobileMoreAnchorEl(event.currentTarget);
-  }
-
-  useEffect(()=>{
-    axios.get('/check')
-    .then((res) => {
-      if(res.data){
-        console.log('로그인 되어있습니다.');
-        this.setState({isLogin : true});     
-      }
-      else{
-        console.log('로그인이 되어있지않습니다.');
-        console.log(history);
-      }
-
-    })
-    .catch((error) => {
-      console.log(error);
-    });
-  })
+  };
 
   // 모바일 메뉴버튼 오픈 닫는 핸들링 함수
   const handleMobileMenuClose = () => {
     setMobileMoreAnchorEl(null);
-  }
-  
+  };
+
   // 모바일 메뉴 컴포넌트
   const renderMobileMenu = (
     <Menu
@@ -135,11 +121,16 @@ function AppAppBar(props) {
         </Button>
       </MenuItem>
       <MenuItem>
-        <LoginPopover type="로그인" />
+        {isLogin ? <Button>로그아웃</Button>
+          : <LoginPopover type="로그인" history={history} />
+        }
       </MenuItem>
       <MenuItem>
-        <LoginPopover type="회원가입" />
+        {isLogin ? <div />
+          : <LoginPopover type="회원가입" history={history} />
+        }
       </MenuItem>
+
     </Menu>
   );
 
@@ -148,6 +139,30 @@ function AppAppBar(props) {
   React.useEffect(() => {
     setSelected(window.location.pathname.replace('/', ''));
   }, []); // 무한루프를 야기하지 않도록 하기 위해 두번째 인수로 빈 배열을 넣는다.
+
+  const LogButton = (props) => {
+    const { history, logout } = props;
+    if (isLogin) {
+      return (
+        <Button
+          className={classes.rightLink}
+          color="inherit"
+          onClick={logout}
+        >로그아웃
+        </Button>
+      );
+    }
+    return <LoginPopover type="로그인" history={history} logout={logout} />;
+  };
+
+  const RegButton = (props) => {
+    const { history } = props;
+    if (isLogin) {
+      return <div />;
+    }
+    return <LoginPopover type="회원가입" history={history} />;
+  };
+
 
   return (
     <div>
@@ -211,8 +226,8 @@ function AppAppBar(props) {
                 </Button>
               )
           }
-            <LoginPopover type="로그인" />
-            <LoginPopover type="회원가입" />
+            <LogButton history={history} logout={logout} />
+            <RegButton history={history} logout={logout} />
           </div>
           <div className={classes.rightMobile}>
             <IconButton aria-haspopup="true" onClick={handleMobileMenuOpen} color="inherit">

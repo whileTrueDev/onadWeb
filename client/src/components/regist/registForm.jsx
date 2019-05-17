@@ -13,6 +13,7 @@ import {
   MenuItem,
   TextField
 } from '@material-ui/core';
+import axios from 'axios';
 
 // Style Overriding용.
 const styles = theme => ({
@@ -74,6 +75,7 @@ class RegistForm extends React.Component {
     error: false,
     errorType: '',
     errorMessage: '',
+    checkDuplication : false,
   };
 
   // handle을 전달.
@@ -108,7 +110,7 @@ class RegistForm extends React.Component {
   }
 
   checkEmail = (event) => {
-    const idReg = /^[a-z0-9]+[a-z0-9]{6,15}$/g;
+    const idReg = /^[a-z0-9]+[a-z0-9]{4,15}$/g;
     this.setState({
       email: event.target.value,
     });
@@ -160,22 +162,25 @@ class RegistForm extends React.Component {
   handleSubmit = (event) => {
     event.preventDefault();
     let user;
-    if (this.state.error) {
-      alert(`${this.state.errorType} 입력 오류 입니다.`);
-    } else {
-      user = {
-        marketerId: this.state.id,
-        marketerRawPasswd : this.state.passwd,
-        marketerName: this.state.name,
-        marketerMail: `${this.state.email}@${this.state.domain}`,
-        marketerPhoneNum: this.state.phoneNum,   
-        marketerBusinessRegNum: this.state.businessRegNum,
-        marketerUserType: this.props.userType,
-      };
-      this.props.handleUserInfo(user);
-      this.props.handleNext();
+    if(!this.state.checkDuplication){
+      alert('ID 중복조회를 해주세요.')
+    }else{
+      if (this.state.error) {
+        alert(`${this.state.errorType} 입력 오류 입니다.`);
+      } else {
+        user = {
+          marketerId: this.state.id,
+          marketerRawPasswd : this.state.passwd,
+          marketerName: this.state.name,
+          marketerMail: `${this.state.email}@${this.state.domain}`,
+          marketerPhoneNum: this.state.phoneNum,   
+          marketerBusinessRegNum: this.state.businessRegNum,
+          marketerUserType: this.props.userType,
+        };
+        this.props.handleUserInfo(user);
+        this.props.handleNext();
+      }
     }
-    
   }
   
   TextMaskCustom(props) {
@@ -201,36 +206,70 @@ class RegistForm extends React.Component {
     alert('준비 중입니다. 회원가입을 진행해 주세요.');
   }
 
+  checkDuplicateID = (event) => {
+    if(this.state.id === ''){
+      this.setState({
+        errorType: 'ID',
+        error: true,
+        errorMessage: '아무것도 입력하지 않았습니다.',
+      });
+    }else{
+      axios.post('/regist/checkId',{
+        id : this.state.id
+      })
+      .then((res)=>{
+        if(res.data){
+          this.setState({
+            errorType: 'ID',
+            error: true,
+            errorMessage: 'ID가 중복되었습니다.',
+          });
+        }else{
+          alert('회원가입이 가능합니다. 계속 진행하세요.');
+          this.setState({
+            error: false,
+            checkDuplication : true
+          });
+        }
+
+      })
+      .catch((err)=>{
+        console.log(err);
+      })
+    }
+  }
+
   render() {
     const { classes } = this.props;
     const { 
       errorMessage,
       textmask,
-      error,
       domain
      } = this.state;
 
     return (
       <div className={classes.container}>
         <form autoComplete="off" onSubmit={this.handleSubmit}>
-          <TextField
-            required
-            label="ID"
-            className={classes.textField}
-            placeholder="아이디를 입력하세요"
-            onChange={this.checkId}
-            margin="normal"
-            helperText={this.checkError('ID') ? errorMessage : ' '}
+          <FormControl className={classes.codeField}
             error={this.checkError('ID')}
-            InputLabelProps={{
-              shrink: true,
-            }}
-            style={
-            {
-              width: 300,
-            }
-          }
-          />
+          >
+            <InputLabel shrink>ID</InputLabel>
+            <Input
+              required
+              onChange={this.checkId}
+              placeholder="아이디를 입력하세요"
+              style={{ width: 300,}}
+              endAdornment={(
+                <InputAdornment position="end">
+                  <Divider className={classes.divider} />
+                  <Button onClick={this.checkDuplicateID}>
+                    조회
+                  </Button>
+                </InputAdornment>
+              )}
+            />
+            <FormHelperText>{this.checkError('ID') ? errorMessage : ' '}</FormHelperText>
+          </FormControl>
           <br />
           <TextField
             required

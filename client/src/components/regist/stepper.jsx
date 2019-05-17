@@ -104,6 +104,7 @@ class RegistStepper extends React.Component {
       this.state.userInfo,  
     )
     .then((res) => {
+      alert(res.data);
       this.props.history.push('/');
     })
     .catch((error) => {

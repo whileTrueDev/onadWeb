@@ -26,11 +26,16 @@ const styles = theme => ({
     color: theme.palette.secondary.main,
   },
   popOver: {
-    margin: 10,
+    marginTop: 10,
+    padding : 20,
+    alignItems: 'center',
+    justifyContent : 'center'
+
   },
-  buttonStyle: {
-    margin: 10,
-  },
+  button : {
+    fontWeight : 800, 
+    width:'100%',   
+  }
 });
 
 // login
@@ -53,7 +58,7 @@ class LoginPopover extends Component {
   };
 
   render() {
-    const { classes, type } = this.props;
+    const { classes, type, history, logout } = this.props;
     const { anchorEl } = this.state;
     const open = Boolean(anchorEl);
 
@@ -86,52 +91,55 @@ class LoginPopover extends Component {
                   horizontal: 'center',
                 }}
               >
-                <div>
-                  <LoginForm isMarketer/>
-                  <LoginForm isMarketer={false}/>
+                <div style={{
+                    padding : 10,
+                    alignItems: 'center',
+                    textAlign : 'center'
+                }}>
+                  <LoginForm isMarketer history={history} handleClose={this.handleClose} logout={logout}/>
+                  <LoginForm isMarketer={false} history={history} handleClose={this.handleClose} logout = {logout}/>
                 </div>
               </Popover>
             </React.Fragment>
           )
           : (
             <React.Fragment>
-              <div>
-                <Button
-                  className={clsx(classes.rightLink, classes.linkSecondary)}
-                  aria-owns={open ? 'simple-popper' : undefined}
-                  aria-haspopup="true"
-                  color="inherit"
-                  onClick={this.handleClick}
-                >
-                  {'회원가입'}
-                </Button>
-              </div>
-              <div>
-                <Popover
-                  className={classes.popOver}
-                  id="simple-popper"
-                  open={open}
-                  anchorEl={anchorEl}
-                  onClose={this.handleClose}
-                  anchorOrigin={{
-                    vertical: 'bottom',
-                    horizontal: 'center',
-                  }}
-                  transformOrigin={{
-                    vertical: 'top',
-                    horizontal: 'center',
-                  }}
-                >
-                  <div>
-                    <div>
-                      <Button component={Link} to="/regist">마케터</Button>
-                    </div>
-                    <div style={this.buttonStyle}>
-                      <Button href="https://www.twitch.tv">크리에이터</Button>
-                    </div>
-                  </div>
-                </Popover>
-              </div>
+              <Button
+                className={clsx(classes.rightLink, classes.linkSecondary)}
+                aria-owns={open ? 'simple-popper' : undefined}
+                aria-haspopup="true"
+                color="inherit"
+                onClick={this.handleClick}
+              >
+                {'회원가입'}
+              </Button>
+              <Popover
+                className={classes.popOver}
+                id="simple-popper"
+                open={open}
+                anchorEl={anchorEl}
+                onClose={this.handleClose}
+                anchorOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'center',
+                }}
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'center',
+                }}
+              >
+                <div style={{
+                    display : 'flex',
+                    flexDirection : 'column',
+                    padding : 10,
+                    alignItems: 'center',
+                    textAlign : 'center'
+                }}>                 
+                  <Button component={Link} to="/regist" className={classes.button}>마케터</Button>
+                  <Button href="https://www.twitch.tv"  className={classes.button}>크리에이터</Button>
+                </div>
+              </Popover>
+            
             </React.Fragment>
           )
         }

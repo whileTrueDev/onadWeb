@@ -69,6 +69,5 @@ app.use(function(err, req, res, next) {
 });
 
 
-//선언만 하고 start는 bin에서 시작.
-console.log(process.env);
+//선언만 하고 start는 bin에서 시작
 module.exports = app;
