@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import green from '@material-ui/core/colors/green';
-import { Redirect } from 'react-router-dom';
 import {
   Paper,
   Typography,
@@ -96,7 +95,7 @@ class PaperSheet extends React.Component {
   }
   
   render() {
-    const { classes, handleNext, handleReset } = this.props;
+    const { classes, handleReset } = this.props;
     return (
       <div>
           <Paper className={classes.root} elevation={1}>

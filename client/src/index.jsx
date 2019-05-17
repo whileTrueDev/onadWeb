@@ -14,11 +14,11 @@ const history = createBrowserHistory();
 
 ReactDOM.render(
   <Router history={history}>
-    <Route exact path="/" component={Main} />
+    <Route exact path="/" component={Main} history={history} />
     <Route exact path="/regist" component={RegistStepper} />
     <Route path="/introduction" component={Introduction} />
     <Route path="/manual" component={Manual} />
-    <Route path="/dashboard" render={() => <Route path="/dashboard/main" component={Dashboard} />} />
+    <Route path="/dashboard" component={Dashboard} />
   </Router>, document.getElementById('root'),
 );
 

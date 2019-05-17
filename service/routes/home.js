@@ -5,8 +5,5 @@ var router = express.Router();
 router.get( '/', function(req, res, next) {
 });
 
-router.get( '/check', function(req, res, next) {
-  res.send(req.session.passport);
-});
 
 module.exports = router;

@@ -16,6 +16,8 @@
     "eslint-config-prettier": "^4.2.0",
     "eslint-plugin-prettier": "^3.0.1",
     "history": "^4.9.0",
+    "http-server": "^0.11.1",
+    "perfect-scrollbar": "^1.4.0",
     "prop-types": "^15.7.2",
     "react": "^16.8.6",
     "react-chartist": "^0.13.3",
@@ -27,64 +29,11 @@
   },
   "scripts": {
     "start": "set PORT=3001 && react-scripts start",
+    "startWeb": "set PORT=3001 && react-scripts start",
     "startmac": "PORT=3001 && react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
-  },
-  "eslintConfig": {
-    "parser": "babel-eslint",
-    "parserOptions": {
-      "ecmaVersion": 6,
-      "sourceType": "module",
-      "ecmaFeatures": {
-        "jsx": true,
-        "modules": true,
-        "experimentalObjectRestSpread": true
-      }
-    },
-    "extends": [
-      "airbnb"
-    ],
-    "plugins": [
-      "prettier"
-    ],
-    "rules": {
-      "no-unused-vars": "warn",
-      "button-has-type": "null",
-      "react/prefer-stateless-function": 1,
-      "react/forbid-prop-types": [
-        0,
-        {
-          "forbid": [
-            "object"
-          ]
-        }
-      ],
-      "react/prop-types": [
-        1,
-        {
-          "ignore": [
-            "className",
-            "children",
-            "location",
-            "params",
-            "location*"
-          ]
-        }
-      ]
-    },
-    "env": {
-      "browser": true
-    }
-  },
-  "prettier": {
-    "singleQuote": true,
-    "semi": true,
-    "useTabs": false,
-    "tabWidth": 2,
-    "trailingComma": "all",
-    "printWidth": 80
   },
   "browserslist": {
     "production": [
@@ -98,8 +47,5 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "http://localhost:3000",
-  "devDependencies": {
-    "cross-env": "^5.2.0"
-  }
+  "proxy": "http://localhost:3000"
 }
