@@ -13,7 +13,7 @@ import CardBody from '../Card/CardBody';
 import CardHeader from '../Card/CardHeader';
 import Card from '../Card/Card';
 
-import customTabsStyle from '../../assets/jss/material-dashboard-react/components/customTabsStyle';
+import customTabsStyle from '../../assets/jss/onad/components/customTabsStyle';
 
 class CustomTabs extends React.Component {
   state = {

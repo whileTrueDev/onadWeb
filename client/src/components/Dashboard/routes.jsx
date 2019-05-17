@@ -4,6 +4,7 @@ import Person from '@material-ui/icons/Person';
 import LibraryBooks from '@material-ui/icons/LibraryBooks';
 import BubbleChart from '@material-ui/icons/BubbleChart';
 import Notifications from '@material-ui/icons/Notifications';
+import TableChart from '@material-ui/icons/TableChart';
 // core components/views for dashboard layout
 import UserProfile from './views/UserProfile/UserProfile';
 import TableList from './views/TableList/TableList';
@@ -31,7 +32,7 @@ const dashboardRoutes = [
   {
     path: '/table',
     name: '테이블 모음집',
-    icon: 'content_paste',
+    icon: TableChart,
     component: TableList,
     layout: '/dashboard',
   },

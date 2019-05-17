@@ -11,7 +11,7 @@ import {
   Divider,
   withStyles,
   MenuItem,
-  TextField
+  TextField,
 } from '@material-ui/core';
 import axios from 'axios';
 
@@ -54,12 +54,12 @@ const styles = theme => ({
 
 // domain select용.
 const domains = [
-  { value: 'naver.com'  },
-  { value: 'daum.net'   },
-  { value: 'nate.com'   },
-  { value: 'gmail.com'  },
+  { value: 'naver.com' },
+  { value: 'daum.net' },
+  { value: 'nate.com' },
+  { value: 'gmail.com' },
   { value: 'hotmail.com' },
-  { value: 'yahoo.co.kr' }
+  { value: 'yahoo.co.kr' },
 ];
 
 
@@ -162,6 +162,7 @@ class RegistForm extends React.Component {
   handleSubmit = (event) => {
     event.preventDefault();
     let user;
+
     if(!this.state.checkDuplication){
       alert('ID 중복조회를 해주세요.')
     }else{
@@ -182,7 +183,7 @@ class RegistForm extends React.Component {
       }
     }
   }
-  
+
   TextMaskCustom(props) {
     const { inputRef, ...other } = props;
     return (
@@ -241,11 +242,11 @@ class RegistForm extends React.Component {
 
   render() {
     const { classes } = this.props;
-    const { 
+    const {
       errorMessage,
       textmask,
-      domain
-     } = this.state;
+      domain,
+    } = this.state;
 
     return (
       <div className={classes.container}>
@@ -423,7 +424,8 @@ class RegistForm extends React.Component {
               variant="contained"
               color="primary"
               className={classes.button}
-              type="submit" value="submit"
+              type="submit"
+              value="submit"
             >
             다음
             </Button>

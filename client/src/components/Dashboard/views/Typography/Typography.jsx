@@ -44,7 +44,7 @@ const style = {
     marginTop: '0px',
     minHeight: 'auto',
     fontWeight: '300',
-    fontFamily: "'Roboto', 'Helvetica', 'Arial', sans-serif",
+    fontFamily: "'Roboto', 'Helvetica', 'Arial', 'Nanum Gothic', sans-serif",
     marginBottom: '3px',
     textDecoration: 'none',
   },
@@ -148,7 +148,9 @@ function TypographyPage(props) {
           <h2>
             Header with small subtitle
             <br />
-            <small>Use "Small" tag for the headers</small>
+            <small>
+              Use &quot;Small&quot; tag for the headers
+            </small>
           </h2>
         </div>
       </CardBody>

@@ -8,7 +8,7 @@ import withStyles from '@material-ui/core/styles/withStyles';
 // @material-ui/icons
 
 // core components
-import cardFooterStyle from '../../assets/jss/material-dashboard-react/components/cardFooterStyle';
+import cardFooterStyle from '../../assets/jss/onad/components/cardFooterStyle';
 
 function CardFooter({ ...props }) {
   const {

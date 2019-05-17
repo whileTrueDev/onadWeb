@@ -16,7 +16,7 @@ const styles = theme => ({
     transitionDelay: '2s',
     [theme.breakpoints.down('sm')]: {
       width: '100% !important',
-      height: 100,
+      height: 150,
     },
     '&:hover': {
       zIndex: 1,

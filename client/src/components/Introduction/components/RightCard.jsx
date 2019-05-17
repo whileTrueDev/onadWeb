@@ -37,13 +37,8 @@ const useStyles = makeStyles(theme => ({
     position: 'relative',
   },
   imageDots: {
-    position: 'absolute',
-    top: -67,
-    left: -67,
-    right: 0,
-    bottom: 0,
+    position: 'static',
     width: '100%',
-    background: 'url(/static/onepirate/productCTAImageDots.png)',
   },
   image: {
     position: 'absolute',
@@ -62,7 +57,24 @@ const RightCreator = (props) => {
     source, triggerThreshold, growCheck, growTime, slideTime, linkTo,
   } = props;
   const classes = useStyles();
-  const trigger = useScrollTrigger({ threshold: triggerThreshold, disableHysteresis: false });
+
+  // Value for image comming slide animation
+  const [trigger, setTrigger] = React.useState(
+    useScrollTrigger(
+      { threshold: triggerThreshold, disableHysteresis: true },
+    ),
+  );
+
+  React.useEffect(() => {
+    function scrollTrigger() {
+      if (window.scrollY > triggerThreshold) {
+        setTrigger(true);
+      } else {
+        setTrigger(false);
+      }
+    }
+    scrollTrigger();
+  });
 
   return (
     <Grow

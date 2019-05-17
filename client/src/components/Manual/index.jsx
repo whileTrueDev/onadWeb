@@ -5,16 +5,9 @@ import AppFooter from '../Main/views/AppFooter';
 import ProductHero from '../Main/views/ProductHero';
 import withRoot from '../Main/withRoot';
 // import ProductCTA from './views/ProductCTA';
+import textSource from './source/textSource';
+import Manual from './Manual';
 
-const heroInfo = {
-  text: {
-    title: '매뉴얼을 통해 쉽게',
-    subTitle: '당신의 광고를 실현하세요',
-    body: '간단한 작업만으로 OnAd를 이용할 수 있습니다.',
-    tail: '쉽게 따라하세요.',
-  },
-  backImage: 'https://images.unsplash.com/photo-1557509430-2f5317a45752?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1300&q=80',
-};
 
 export default withRoot((props) => {
   // if Link here, set the scroll to top of the page
@@ -26,9 +19,13 @@ export default withRoot((props) => {
     <div>
       <AppAppBar />
       <ProductHero
-        text={heroInfo.text}
-        backgroundImage={heroInfo.backImage}
+        text={textSource.heroSector}
+        backgroundImage={textSource.heroSector.backImage}
       />
+      {/* Login에 따라 크리에이터, 마케터로 나뉘어 기본 탭 설정 하기위해 */}
+      {/* <Manual textSource={textSource} isLogin={{ userType: 1 }} /> */}
+
+      <Manual textSource={textSource} />
       <AppFooter />
     </div>
   );

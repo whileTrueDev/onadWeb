@@ -30,7 +30,7 @@ const textSource = {
     firstSector: {
       image: 'images/twip2.png',
       head: 'sector 1',
-      body: 'descriptiondescriptiondescriptiondescriptiondescription',
+      body: 'd escriptiondescriptiondescriptiondescript iescriptiondescriptiondescriptiondescripti ondescriptiondescriptiond escriptiondescriptiondescriptiondescriptiondescripti ondescriptiondescrip tiondescriptiondescriptiondescri ptiondescription descriptiondescriptiondescription',
       buttonText: '이용하러 가기',
     },
     secondSector: {

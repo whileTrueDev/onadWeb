@@ -11,7 +11,7 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Icon from '@material-ui/core/Icon';
 // core components
-import sidebarStyle from '../../assets/jss/material-dashboard-react/components/sidebarStyle';
+import sidebarStyle from '../../assets/jss/onad/components/sidebarStyle';
 import AdminNavbarLinks from '../Navbars/AdminNavbarLinks';
 
 

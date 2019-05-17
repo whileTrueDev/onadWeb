@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import { Router, Route } from 'react-router-dom';
+import { createBrowserHistory } from 'history';
 import RegistStepper from './components/regist/stepper';
 import Main from './components/Main';
 import Dashboard from './components/Dashboard/layouts/DashboardLayout';
@@ -9,7 +10,6 @@ import Introduction from './components/Introduction';
 import Manual from './components/Manual';
 import * as serviceWorker from './serviceWorker';
 
-import { createBrowserHistory } from 'history';
 const history = createBrowserHistory();
 
 ReactDOM.render(

@@ -15,12 +15,12 @@ import FixedPlugin from "../components/FixedPlugin/FixedPlugin";
 
 import routes from "../routes";
 
-import dashboardStyle from "../assets/jss/material-dashboard-react/layouts/dashboardStyle";
-
-import image from "../assets/img/sidebar-2.jpg";
+import dashboardStyle from "../assets/jss/onad/layouts/dashboardStyle";
+// logo and sidebar image
+import sidebarImage from "../assets/img/sidebar-2.jpg";
 import logo from "../assets/img/reactlogo.png";
 
-import '../assets/css/material-dashboard-react.css';
+import '../assets/css/onad.css';
 
 const switchRoutes = (
   <Switch>
@@ -42,15 +42,15 @@ class Dashboard extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      image: image,
+      sidebarImage: sidebarImage,
       color: "blue",
       hasImage: true,
-      fixedClasses: "dropdown show",
+      fixedClasses: "dropdown",
       mobileOpen: false
     };
   }
-  handleImageClick = image => {
-    this.setState({ image: image });
+  handleImageClick = sidebarImage => {
+    this.setState({ sidebarImage: sidebarImage });
   };
   handleColorClick = color => {
     this.setState({ color: color });
@@ -99,7 +99,7 @@ class Dashboard extends React.Component {
           routes={routes}
           logoText={"OnAD"}
           logo={logo}
-          image={this.state.image}
+          image={this.state.sidebarImage}
           handleDrawerToggle={this.handleDrawerToggle}
           open={this.state.mobileOpen}
           color={this.state.color}

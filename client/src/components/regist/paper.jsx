@@ -8,26 +8,26 @@ import {
   FormControlLabel,
   Checkbox,
   Divider,
-  Button
+  Button,
 } from '@material-ui/core';
 
 const terms = [
   {
-    title : 'While:true 이용 약관', 
-    state : 'checkedA',
-    text : '' 
+    title: 'While:true 이용 약관',
+    state: 'checkedA',
+    text: '',
   },
   {
-    title : '개인정보 수집 및 이용 동의', 
-    state : 'checkedB',
-    text : ''
+    title: '개인정보 수집 및 이용 동의',
+    state: 'checkedB',
+    text: '',
   },
   {
-    title : '서비스 및 관련광고 수신 동의', 
-    state : 'checkedC',
-    text : ''
+    title: '서비스 및 관련광고 수신 동의',
+    state: 'checkedC',
+    text: '',
   },
-]
+];
 
 const styles = theme => ({
   root: {
@@ -36,7 +36,7 @@ const styles = theme => ({
     paddingBottom: theme.spacing(2),
   },
   checked: {},
-  checkboxRoot : {
+  checkboxRoot: {
     color: green[600],
     '&$checked': {
       color: green[500],
@@ -47,18 +47,18 @@ const styles = theme => ({
     height: 28,
     margin: 10,
   },
-  container : {
+  container: {
     ...theme.mixins.gutters(),
     paddingTop: theme.spacing(1),
     paddingBottom: theme.spacing(1),
-    marginTop : theme.spacing(2),
-    display : 'flex',
-    backgroundColor : '#f2f2f2',
-    flex : 1,
-    flexDirection : 'row',
+    marginTop: theme.spacing(2),
+    display: 'flex',
+    backgroundColor: '#f2f2f2',
+    flex: 1,
+    flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    fontSize : 13
+    fontSize: 13,
   },
   button: {
     marginTop: theme.spacing(1),
@@ -75,58 +75,61 @@ class PaperSheet extends React.Component {
     checkedA: false,
     checkedB: false,
     checkedC: false,
-    checkedAll : false
+    checkedAll: false,
   };
 
-  handleChange = name => event => {
+  handleChange = name => (event) => {
     this.setState({ [name]: event.target.checked });
   };
 
-  getChange = name => {
-    return this.state.name;
-  }
+  getChange = name => this.state.name
 
-  finishReg = event => {
-    if(this.state.checkedA && this.state.checkedB && this.state.checkedC){
-      this.props.handleUserSubmit();
-    }else{
+  finishReg = (event) => {
+    const { checkedA, checkedB, checkedC } = this.state;
+    const { handleUserSubmit } = this.props;
+    if (checkedA && checkedB && checkedC) {
+      handleUserSubmit();
+    } else {
       alert('모든 약관에 동의하지 않으면 회원가입이 완료되지 않습니다.');
     }
   }
-  
+
   render() {
     const { classes, handleReset } = this.props;
     return (
       <div>
-          <Paper className={classes.root} elevation={1}>
-          <Typography variant="h6" component="h6" style={{textAlign : 'center'}}>
+        <Paper className={classes.root} elevation={1}>
+          <Typography variant="h6" component="h6" style={{ textAlign: 'center' }}>
             While:True
           </Typography>
           {terms.map((term, index) => (
-          <Paper className={classes.container} elevation={1} key = {term.state}>
-            <Typography component="p" style = {{flex : 8, fontSize : 13}}>
-              {term.title}
-            </Typography>
-            <Button style = {{flex : 1, backgroundColor : '#d6d6d6' , height : '70%', fontSize : 13}}>약관보기</Button>
-            <Divider className={classes.divider} />
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={this.getChange(term.state)}
-                  onChange={this.handleChange(term.state)}
-                  value= {term.state}
-                  classes={{
-                    root: classes.checkboxRoot,
-                    checked: classes.checked,
-                  }}
-                />
-              }
-              label="동의"
-              style = {{flex : 2, marginRight : 0}}
-            />
-          </Paper>
-        
-        ))}
+            <Paper className={classes.container} elevation={1} key={term.state}>
+              <Typography component="p" style={{ flex: 8, fontSize: 13 }}>
+                {term.title}
+              </Typography>
+              <Button style={{
+                flex: 1, backgroundColor: '#d6d6d6', height: '70%', fontSize: 13,
+              }}
+              >약관보기</Button>
+              <Divider className={classes.divider} />
+              <FormControlLabel
+                control={(
+                  <Checkbox
+                    checked={this.getChange(term.state)}
+                    onChange={this.handleChange(term.state)}
+                    value={term.state}
+                    classes={{
+                      root: classes.checkboxRoot,
+                      checked: classes.checked,
+                    }}
+                  />
+                )}
+                label="동의"
+                style={{ flex: 2, marginRight: 0 }}
+              />
+            </Paper>
+
+          ))}
           {/* <FormControlLabel
             control={
               <Checkbox
@@ -142,11 +145,11 @@ class PaperSheet extends React.Component {
             style={{marginTop :10}}
           /> */}
         </Paper>
-        <div className={classes.actionsContainer}>  
+        <div className={classes.actionsContainer}>
           <div>
             <Button
-            onClick={handleReset}
-            className={classes.button}
+              onClick={handleReset}
+              className={classes.button}
             >
             다시입력
             </Button>
@@ -161,12 +164,13 @@ class PaperSheet extends React.Component {
           </div>
         </div>
       </div>
-    )
+    );
   }
 }
 
 PaperSheet.propTypes = {
   classes: PropTypes.object.isRequired,
+  handleUserSubmit: PropTypes.func,
 };
 
 export default withStyles(styles)(PaperSheet);

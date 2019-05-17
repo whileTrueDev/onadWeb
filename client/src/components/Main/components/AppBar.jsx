@@ -12,12 +12,12 @@ const styles = theme => ({
 //   return <MuiAppBar elevation={0} position="static" {...props} />;
 // }
 
- class AppBar extends React.Component {
-  render(){
+class AppBar extends React.Component {
+  render() {
     return (
-    <MuiAppBar elevation={0} position="static" {...this.props} />
-    )
+      <MuiAppBar elevation={0} position="static" {...this.props} />
+    );
+  }
 }
- }
 
 export default withStyles(styles)(AppBar);

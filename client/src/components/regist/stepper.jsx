@@ -14,7 +14,6 @@ import PaperSheet from './paper';
 import AppAppBar from '../Main/views/AppAppBar';
 
 
-
 const styles = theme => ({
   root: {
     width: '100%',
@@ -49,7 +48,7 @@ function getStepContent(step, typeChange, handleNext, handleBack, userType, hand
         />
       );
     case 2:
-      return <PaperSheet handleNext={handleNext} handleReset={handleReset} handleUserSubmit={handleUserSubmit}/>;
+      return <PaperSheet handleNext={handleNext} handleReset={handleReset} handleUserSubmit={handleUserSubmit} />;
     default:
       return 'Unknown step';
   }
@@ -99,9 +98,9 @@ class RegistStepper extends React.Component {
     });
   }
 
-  handleUserSubmit = (event) => { 
+  handleUserSubmit = (event) => {
     axios.post('/regist/marketer',
-      this.state.userInfo,  
+      this.state.userInfo,
     )
     .then((res) => {
       alert(res.data);

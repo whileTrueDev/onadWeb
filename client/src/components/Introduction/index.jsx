@@ -24,8 +24,12 @@ export default withRoot((props) => {
         backgroundImage={heroSector.backImage}
       />
       {/* ->/ header layout */}
-      <Introduce />
-      {/* /<- footer layout */}
+
+      {/* Login에 따라 크리에이터, 마케터로 나뉘어 기본 탭 설정 하기위해 */}
+      {/* <Introduce isLogin={{ userType: 1 }} /> */}
+
+      <Introduce textSource={textSource} />
+      {/* footer layout ->/ */}
       <AppFooter />
     </div>
   );

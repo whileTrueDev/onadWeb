@@ -15,6 +15,7 @@
     "eslint-config-airbnb": "^17.1.0",
     "eslint-config-prettier": "^4.2.0",
     "eslint-plugin-prettier": "^3.0.1",
+    "eslint-plugin-react-hooks": "^1.5.0",
     "history": "^4.9.0",
     "http-server": "^0.11.1",
     "perfect-scrollbar": "^1.4.0",
@@ -28,12 +29,19 @@
     "react-text-mask": "^5.4.3"
   },
   "scripts": {
+    "start:mac": "PORT=3001 react-scripts start",
     "start": "set PORT=3001 && react-scripts start",
-    "startWeb": "set PORT=3001 && react-scripts start",
-    "startmac": "PORT=3001 && react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
+  },
+  "prettier": {
+    "singleQuote": true,
+    "semi": true,
+    "useTabs": false,
+    "tabWidth": 2,
+    "trailingComma": "all",
+    "printWidth": 80
   },
   "browserslist": {
     "production": [
@@ -47,5 +55,8 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "http://localhost:3000"
+  "proxy": "http://localhost:3000",
+  "devDependencies": {
+    "cross-env": "^5.2.0"
+  }
 }

@@ -1,32 +1,29 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 // react plugin for creating charts
 import { Line } from 'react-chartjs-2';
+// for request
+import axios from 'axios';
+// for Link tag component
+import { Link } from 'react-router-dom';
 // @material-ui/core
 import withStyles from '@material-ui/core/styles/withStyles';
-import CheckIcon from '@material-ui/icons/Check';
-import CheckCircleIcon from '@material-ui/icons/CheckCircleOutlined';
 // @material-ui/icons
-import Store from '@material-ui/icons/Store';
+import CheckIcon from '@material-ui/icons/Check';
+import VideocamOff from '@material-ui/icons/VideocamOff';
 import Warning from '@material-ui/icons/Warning';
 import DateRange from '@material-ui/icons/DateRange';
-import LocalOffer from '@material-ui/icons/LocalOffer';
-import Update from '@material-ui/icons/Update';
 import ArrowUpward from '@material-ui/icons/ArrowUpward';
 import AccessTime from '@material-ui/icons/AccessTime';
-import Accessibility from '@material-ui/icons/Accessibility';
-import BugReport from '@material-ui/icons/BugReport';
-import Code from '@material-ui/icons/Code';
-import Cloud from '@material-ui/icons/Cloud';
+import AttachMoney from '@material-ui/icons/AttachMoney';
+import Money from '@material-ui/icons/Money';
 // core ../../components
-import { bugs, website, server } from '../../variables/general';
-import dashboardStyle from '../../assets/jss/material-dashboard-react/views/dashboardStyle';
+import dashboardStyle from '../../assets/jss/onad/views/dashboardStyle';
 import { ChartjsData } from '../../variables/charts';
 import GridContainer from '../../components/Grid/GridContainer';
 import Table from '../../components/Table/Table';
-import Tasks from '../../components/Tasks/Tasks';
-import CustomTabs from '../../components/CustomTabs/CustomTabs';
 import Danger from '../../components/Typography/Danger';
+import Info from '../../components/Typography/Info';
 import Card from '../../components/Card/Card';
 import CardHeader from '../../components/Card/CardHeader';
 import CardIcon from '../../components/Card/CardIcon';
@@ -34,130 +31,151 @@ import CardBody from '../../components/Card/CardBody';
 import CardFooter from '../../components/Card/CardFooter';
 import GridItem from '../../components/Grid/GridItem';
 
+// 임시로 크리에이터 아이디 설정
+const creatorId = '1234567890';
+
 const Dashboard = (props) => {
   const { classes } = props;
+
+  // 대시보드에 필요한 데이터 임시적으로 사용
+  const [data, setData] = useState({
+    code: 0,
+    creatorId: '0',
+    creatorName: 'NoOne',
+    creatorTotalIncome: 0,
+    creatorReceivable: 0,
+    date: '2019-05-16 16:10:12',
+  });
+
+  const [bannerData, setBannerData] = useState([]);
+
+  useEffect(() => {
+    // income 데이터 axios 요청
+    axios.get('/dashboard/creator/income', {
+      params: {
+        creatorId,
+      },
+    }).then((res) => {
+      setData(res.data);
+    }).catch((res) => {
+      console.log(res);
+    });
+
+    // Banner 데이터 axios 요청
+    axios.get('/dashboard/creator/matchedBanner', {
+      params: {
+        creatorId,
+      },
+    }).then((res) => {
+      setBannerData(res.data);
+    }).catch((res) => {
+      console.log(res);
+    });
+  }, []);
+
   return (
     <div>
+      {/* 인사 */}
+      <p>
+        <h4>
+        안녕하세요.
+          {` ${data.creatorName} 님 `}
+        행복한 하루 되세요
+        </h4>
+      </p>
 
-      {/* 인사 라인 */}
+      {/* 첫번째 라인 */}
       <GridContainer>
+        {/* 총 수익금 */}
         <GridItem xs={12} sm={6} md={6}>
           <Card>
-            <CardHeader color="primary" stats icon>
-              <CardIcon color="primary">
+            <CardHeader color="success" stats icon>
+              <CardIcon color="success">
+                <AttachMoney />
+              </CardIcon>
+              <p className={classes.cardCategory}>지금껏 총 수익금</p>
+              <h3 className={classes.cardTitle}>
+                {`${data.creatorTotalIncome} `}
+                <small>원</small>
+              </h3>
+            </CardHeader>
+            <CardFooter stats>
+              <div className={classes.stats}>
+                <DateRange />
+                {`Updated : ${data.date}`}
+              </div>
+            </CardFooter>
+          </Card>
+        </GridItem>
+        <GridItem xs={12} sm={6} md={6}>
+          <Card>
+            <CardHeader color="info" stats icon>
+              <CardIcon color="info">
                 <CheckIcon />
               </CardIcon>
-              <p className={classes.cardCategory}>
-                박찬우
-                {' '}
-                <small>님</small>
-              </p>
+              <p className={classes.cardCategory}>출금 가능한 수익금</p>
               <h3 className={classes.cardTitle}>
-                {'반갑습니다!'}
+                {`${data.creatorReceivable} `}
+                <small>원</small>
               </h3>
-
             </CardHeader>
+            <CardFooter stats>
+              <div className={classes.stats} style={{ alignItems: 'center' }}>
+                <Info><Money /></Info>
+                <Link to="/dashboard/user" underline>
+                  <span className={classes.infoText}>출금 신청 하시겠어요?</span>
+                </Link>
+              </div>
+            </CardFooter>
           </Card>
         </GridItem>
       </GridContainer>
 
       {/* URL 공개 라인 */}
       <GridContainer>
-        <GridItem xs={12} sm={6} md={10}>
-          <Card>
-            <CardHeader color="success" stats icon>
-              <CardIcon color="success">
-                <Store />
-              </CardIcon>
-              <p style={{ textAlign: 'center' }} className={classes.cardCategory}>오버레이 URL</p>
-              <h3 className={classes.cardTitle}>$34,245</h3>
-            </CardHeader>
-            <CardFooter stats>
-              <div className={classes.stats}>
-                <DateRange />
-                  Last 24 Hours
-              </div>
-            </CardFooter>
-          </Card>
-        </GridItem>
-      </GridContainer>
-
-      {/* 첫번째 라인 */}
-      <GridContainer>
-        <GridItem xs={12} sm={6} md={3}>
+        <GridItem xs={12} sm={6} md={12}>
           <Card>
             <CardHeader color="warning" stats icon>
               <CardIcon color="warning">
-                <CheckIcon />
+                <VideocamOff />
               </CardIcon>
-              <p className={classes.cardCategory}>Used Space</p>
-              <h3 className={classes.cardTitle}>
-                  49/50
-                {' '}
-                <small>GB</small>
-              </h3>
+              <p className={classes.cardCategory}>오버레이 URL</p>
+              <h3 className={classes.cardTitle}>오버레이 컴포넌트자리</h3>
             </CardHeader>
             <CardFooter stats>
               <div className={classes.stats}>
                 <Danger>
                   <Warning />
                 </Danger>
-                <a href="#pablo" onClick={e => e.preventDefault()}>
-                    Get more space
-                </a>
+                <span className={classes.dangerText}>타인에게 노출되지 않도록 주의하세요!</span>
               </div>
             </CardFooter>
           </Card>
         </GridItem>
-        <GridItem xs={12} sm={6} md={3}>
+      </GridContainer>
+
+      {/* 세번쨰 라인 */}
+      <GridContainer>
+        <GridItem xs={12} sm={12} md={12}>
           <Card>
-            <CardHeader color="success" stats icon>
-              <CardIcon color="success">
-                <Store />
-              </CardIcon>
-              <p className={classes.cardCategory}>Revenue</p>
-              <h3 className={classes.cardTitle}>$34,245</h3>
+            <CardHeader color="primary">
+              <h4 className={classes.cardTitleWhite}>내 모든 광고 내역</h4>
+              <p className={classes.cardCategoryWhite}>
+                  지금껏 내가 광고한 모든 배너를 보여줍니다.
+              </p>
             </CardHeader>
-            <CardFooter stats>
-              <div className={classes.stats}>
-                <DateRange />
-                  Last 24 Hours
-              </div>
-            </CardFooter>
-          </Card>
-        </GridItem>
-        <GridItem xs={12} sm={6} md={3}>
-          <Card>
-            <CardHeader color="danger" stats icon>
-              <CardIcon color="danger">
-                <CheckCircleIcon />
-              </CardIcon>
-              <p className={classes.cardCategory}>Fixed Issues</p>
-              <h3 className={classes.cardTitle}>75</h3>
-            </CardHeader>
-            <CardFooter stats>
-              <div className={classes.stats}>
-                <LocalOffer />
-                  Tracked from Github
-              </div>
-            </CardFooter>
-          </Card>
-        </GridItem>
-        <GridItem xs={12} sm={6} md={3}>
-          <Card>
-            <CardHeader color="info" stats icon>
-              <CardIcon color="info">
-                <Accessibility />
-              </CardIcon>
-              <p className={classes.cardCategory}>Followers</p>
-              <h3 className={classes.cardTitle}>+245</h3>
-            </CardHeader>
-            <CardFooter stats>
-              <div className={classes.stats}>
-                <Update />
-                  Just Updated
-              </div>
-            </CardFooter>
+            <CardBody>
+              <Table
+                tableHeaderColor="primary"
+                tableHead={['ID', 'Name', 'Salary', 'Country']}
+                tableData={[
+                  ['1', 'Dakota Rice', '$36,738', 'Niger'],
+                  ['2', 'Minerva Hooper', '$23,789', 'Curaçao'],
+                  ['3', 'Sage Rodriguez', '$56,142', 'Netherlands'],
+                  ['4', 'Philip Chaney', '$38,735', 'Korea, South'],
+                ]}
+              />
+            </CardBody>
           </Card>
         </GridItem>
       </GridContainer>
@@ -213,72 +231,6 @@ campaign sent 2 days ago
         </GridItem>
       </GridContainer>
 
-      {/* 세번쨰 라인 */}
-      <GridContainer>
-        <GridItem xs={12} sm={12} md={6}>
-          <CustomTabs
-            title="Tasks:"
-            headerColor="primary"
-            tabs={[
-              {
-                tabName: 'Bugs',
-                tabIcon: BugReport,
-                tabContent: (
-                  <Tasks
-                    checkedIndexes={[0, 3]}
-                    tasksIndexes={[0, 1, 2, 3]}
-                    tasks={bugs}
-                  />
-                ),
-              },
-              {
-                tabName: 'Website',
-                tabIcon: Code,
-                tabContent: (
-                  <Tasks
-                    checkedIndexes={[0]}
-                    tasksIndexes={[0, 1]}
-                    tasks={website}
-                  />
-                ),
-              },
-              {
-                tabName: 'Server',
-                tabIcon: Cloud,
-                tabContent: (
-                  <Tasks
-                    checkedIndexes={[1]}
-                    tasksIndexes={[0, 1, 2]}
-                    tasks={server}
-                  />
-                ),
-              },
-            ]}
-          />
-        </GridItem>
-        <GridItem xs={12} sm={12} md={6}>
-          <Card>
-            <CardHeader color="warning">
-              <h4 className={classes.cardTitleWhite}>Employees Stats</h4>
-              <p className={classes.cardCategoryWhite}>
-                  New employees on 15th September, 2016
-              </p>
-            </CardHeader>
-            <CardBody>
-              <Table
-                tableHeaderColor="warning"
-                tableHead={['ID', 'Name', 'Salary', 'Country']}
-                tableData={[
-                  ['1', 'Dakota Rice', '$36,738', 'Niger'],
-                  ['2', 'Minerva Hooper', '$23,789', 'Curaçao'],
-                  ['3', 'Sage Rodriguez', '$56,142', 'Netherlands'],
-                  ['4', 'Philip Chaney', '$38,735', 'Korea, South'],
-                ]}
-              />
-            </CardBody>
-          </Card>
-        </GridItem>
-      </GridContainer>
     </div>
   );
 };

@@ -15,7 +15,7 @@ import Notifications from '@material-ui/icons/Notifications';
 import Dashboard from '@material-ui/icons/Dashboard';
 import Search from '@material-ui/icons/Search';
 // core components
-import headerLinksStyle from '../../assets/jss/material-dashboard-react/components/headerLinksStyle';
+import headerLinksStyle from '../../assets/jss/onad/components/headerLinksStyle';
 import Button from '../CustomButtons/Button';
 
 import CustomInput from '../CustomInput/CustomInput';
@@ -97,9 +97,7 @@ class HeaderLinks extends React.Component {
             transition
             disablePortal
             className={
-              `${classNames({ [classes.popperClose]: !open })
-              } ${
-                classes.pooperNav}`
+              `${classNames({ [classes.popperClose]: !open })} ${classes.pooperNav}`
             }
           >
             {({ TransitionProps, placement }) => (

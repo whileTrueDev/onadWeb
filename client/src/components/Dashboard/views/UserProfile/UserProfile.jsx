@@ -28,7 +28,7 @@ const styles = {
     marginTop: '0px',
     minHeight: 'auto',
     fontWeight: '300',
-    fontFamily: "'Roboto', 'Helvetica', 'Arial', sans-serif",
+    fontFamily: "'Roboto', 'Helvetica', 'Arial', 'Nanum Gothic', sans-serif",
     marginBottom: '3px',
     textDecoration: 'none',
   },
@@ -160,9 +160,9 @@ function UserProfile(props) {
               <h6 className={classes.cardCategory}>CEO / CO-FOUNDER</h6>
               <h4 className={classes.cardTitle}>Alec Thompson</h4>
               <p className={classes.description}>
-                Don't be scared of the truth because we need to restart the
+                {`Don't be scared of the truth because we need to restart the
                 human foundation in truth And I love you like Kanye loves Kanye
-                I love Rick Owens’ bed design but the back is...
+                I love Rick Owens’ bed design but the back is...`}
               </p>
               <Button color="primary" round>
                 Follow

@@ -1,11 +1,10 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Container from '@material-ui/core/Container';
 import { makeStyles } from '@material-ui/core/styles';
 import LeftCard from './components/LeftCard';
 import RightCard from './components/RightCard';
 import TabBar from './components/TabBar';
-
-import textSource from './source/textSource';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -22,7 +21,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-function Introduce() {
+function Introduce(props) {
   const classes = useStyles();
 
   // Grow check value, set the grow check value
@@ -36,6 +35,14 @@ function Introduce() {
     setValue(newValue);
     setGrowCheck(true);
   }
+
+  const { isLogin, textSource } = props;
+  // value of login validation
+  React.useEffect(() => {
+    if (isLogin) {
+      setValue(isLogin.userType);
+    }
+  }, [isLogin]);
 
   return (
     <section className={classes.root}>
@@ -104,5 +111,13 @@ function Introduce() {
   );
 }
 
+Introduce.propTypes = {
+  isLogin: PropTypes.object,
+  textSource: PropTypes.object.isRequired,
+};
+
+Introduce.defaultProps = {
+  isLogin: { userType: 0 },
+};
 
 export default Introduce;

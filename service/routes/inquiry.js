@@ -11,19 +11,6 @@ router.post('/', function(req, res, next) {
     res.json({
       err: 'err! no value on submit data'
     });
-  } else {
-    // 문의 데이터를 쌓는 로직 추가  
-    // pool.getConnection((err, connection) => {
-    //   if(!err) {
-    //     // not error! connected logics
-    //     connection.query(
-    //       `insert into inquiry values("${email}", "${inquiryText}")`, (err, rows) => {
-    //       res.json(rows);
-    //     })
-    //   }
-      
-    })
-  };
-  })
+  }});
 
 module.exports = router;
