@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import Button from '../../components/CustomButtons/Button';
 
 class ShowSrcBtn extends Component {
@@ -39,24 +40,34 @@ class ShowSrcBtn extends Component {
       const style = {
         width: '50%',
       };
+      const {
+        disabled, cursor, value, src,
+      } = this.state;
 
       return (
-
         <div style={{ textAlign: 'center' }}>
 
           {/* 만약 계약을 하였다면 */}
-          <Button onClick={this.showSrcTimer} disabled={this.state.disabled} style={{ cursor: `${this.state.cursor}` }}>주소보기</Button>
+          <Button
+            onClick={this.showSrcTimer}
+            disabled={disabled}
+            style={{ cursor: `${cursor}` }}
+          >
+          주소보기
+          </Button>
           <input
             ref={(ref) => { this.input = ref; }}
             style={style}
             type="text"
             readOnly=""
-            value={this.state.value}
-            hiddenValue={this.state.src}
+            value={value}
+            hiddenValue={src}
           />
 
           {/* 계약을 하지 않았다면 */}
-          <Button><a href="#">계약하러가기</a></Button>
+          <Button>
+            <Link to="/dashboard/user">계약하러가기</Link>
+          </Button>
 
         </div>
       );
