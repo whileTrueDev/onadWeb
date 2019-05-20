@@ -67,7 +67,7 @@ const Dashboard = (props) => {
   const [currentBannerData, setCurrentBannerData] = React.useState([['', '']]);
 
   useEffect(() => {
-    axios.get('/main정', {
+    axios.get('/main', {
       params: {
         creatorId,
       },
