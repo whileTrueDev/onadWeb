@@ -31,6 +31,7 @@ import CardIcon from '../../components/Card/CardIcon';
 import CardBody from '../../components/Card/CardBody';
 import CardFooter from '../../components/Card/CardFooter';
 import GridItem from '../../components/Grid/GridItem';
+import ShowSrcBtn from './ShowSrcBtn';
 
 // 임시로 크리에이터 아이디 설정
 const creatorId = '1234567890';
@@ -227,7 +228,7 @@ const Dashboard = (props) => {
                 <VideocamOff />
               </CardIcon>
               <p className={classes.cardCategory}>오버레이 URL</p>
-              <h3 className={classes.cardTitle}>오버레이 컴포넌트자리</h3>
+              <ShowSrcBtn style={{ textAlign: 'center' }} />
             </CardHeader>
             <CardFooter stats>
               <div className={classes.stats}>

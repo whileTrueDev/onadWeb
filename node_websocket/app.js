@@ -103,7 +103,6 @@ io.use( function(socket, next) {
         var roomInfo = socket.adapter.rooms; // 현재 웹소켓에 접속중이 room들과 그 접속자들의 정보 얻음
         var keys = Object.keys(roomInfo); //websocket 접속자 정보 
         var rule = new schedule.RecurrenceRule(); //스케쥴러 객체 생성
-
         rule.hour = new schedule.Range(0,23) 
         // rule.minute = [0, 10, 20, 30, 40, 50] //cronTask 실행되는 분(minute)
         rule.second = [0, 10, 20, 30, 40, 50]
