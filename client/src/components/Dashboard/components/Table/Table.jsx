@@ -7,7 +7,6 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
-import TrendingFlat from '@material-ui/icons/TrendingFlat';
 import Done from '@material-ui/icons/Done';
 // custom table component
 import CustomTableFooter from './TableFooter';
@@ -40,24 +39,6 @@ function CustomTable({ ...props }) {
             </TableRow>
           </TableHead>
         ) : null}
-        <TableBody>
-          {tableData.map((prop, key) => (
-            <TableRow key={prop}>
-            {prop.map(value => (
-              value.indexOf('data:image/') === -1 // 없는 경우
-                ? (
-                  <TableCell className={classes.tableCell} key={value}>
-                    {value}
-                  </TableCell>
-                ) : (
-                  <TableCell className={classes.tableCell} key={value}>
-                    <img src={value} alt="banner" height="50%" />
-                  </TableCell>
-                )
-            ))}
-          </TableRow>
-          ))}
-        </TableBody>
 
         {pagination !== false ? (
           <TableBody>
@@ -97,21 +78,21 @@ function CustomTable({ ...props }) {
           <TableBody>
             {/** 페이지네이션 없는경우 */}
             {tableData.map((prop, key) => (
-            <TableRow key={prop}>
-            {prop.map(value => (
-              value.indexOf('data:image/') === -1 // 없는 경우
-                ? (
-                  <TableCell className={classes.tableCell} key={value}>
-                    {value}
-                  </TableCell>
-                ) : (
-                  <TableCell className={classes.tableCell} key={value}>
-                    <img src={value} alt="banner" height="50%" />
-                  </TableCell>
-                )
+              <TableRow key={prop}>
+                {prop.map(value => (
+                  value.indexOf('data:image/') === -1 // 없는 경우
+                    ? (
+                      <TableCell className={classes.tableCell} key={value}>
+                        {value}
+                      </TableCell>
+                    ) : (
+                      <TableCell className={classes.tableCell} key={value}>
+                        <img src={value} alt="banner" height="50%" />
+                      </TableCell>
+                    )
+                ))}
+              </TableRow>
             ))}
-          </TableRow>
-          ))}
           </TableBody>
         )}
 
