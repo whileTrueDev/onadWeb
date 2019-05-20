@@ -34,22 +34,67 @@ import GridItem from '../../components/Grid/GridItem';
 // 임시로 크리에이터 아이디 설정
 const creatorId = '1234567890';
 
+// 기본 배너 정보 스테이트 값
+const defaultBannerData = {
+  columns: [
+    '',
+    '',
+    '',
+    '',
+    '',
+    ''],
+  data:
+   [['',
+     '',
+     '',
+     '',
+     '',
+     '']],
+};
+
+const defaultIncomeData = {
+  code: 0,
+  creatorId: '',
+  creatorName: '',
+  creatorTotalIncome: 0,
+  creatorReceivable: 0,
+  date: '',
+};
+
 const Dashboard = (props) => {
   const { classes } = props;
 
   // 대시보드에 필요한 데이터 임시적으로 사용
-  const [data, setData] = useState({
-    code: 0,
-    creatorId: '0',
-    creatorName: 'NoOne',
-    creatorTotalIncome: 0,
-    creatorReceivable: 0,
-    date: '2019-05-16 16:10:12',
-  });
+  const [data, setData] = useState(defaultIncomeData);
 
-  const [bannerData, setBannerData] = useState([]);
+  const [bannerData, setBannerData] = useState(defaultBannerData);
+
+  const [loading, setLoading] = useState(false);
+
+  /**
+   * 배너 테이블 state, 테이블 페이지 state 선언
+   */
+  const [page, setPage] = React.useState(0); // 테이블 페이지
+  const [rowsPerPage, setRowsPerPage] = React.useState(3); // 테이블 페이지당 행
+
+  const emptyRows = rowsPerPage - Math.min(
+    rowsPerPage, bannerData.length - page * rowsPerPage,
+  );
+
+  // page handler
+  function handleChangeTablePage(event, newPage) {
+    setPage(newPage);
+  }
+
+  // page per row handler
+  function handleChangeTableRowsPerPage(event) {
+    setRowsPerPage(parseInt(event.target.value, 10));
+  }
 
   useEffect(() => {
+    /**
+     * 배너 테이블을 위한 데이터 요청
+     */
     // income 데이터 axios 요청
     axios.get('/dashboard/creator/income', {
       params: {
@@ -68,10 +113,11 @@ const Dashboard = (props) => {
       },
     }).then((res) => {
       setBannerData(res.data);
+      setLoading(true);
     }).catch((res) => {
       console.log(res);
     });
-  }, []);
+  }, []); // set 2nd argument to the empty array for request just once
 
   return (
     <div>
@@ -85,6 +131,7 @@ const Dashboard = (props) => {
       </p>
 
       {/* 첫번째 라인 */}
+
       <GridContainer>
         {/* 총 수익금 */}
         <GridItem xs={12} sm={6} md={6}>
@@ -166,14 +213,16 @@ const Dashboard = (props) => {
             </CardHeader>
             <CardBody>
               <Table
+                loading={loading}
                 tableHeaderColor="primary"
-                tableHead={['ID', 'Name', 'Salary', 'Country']}
-                tableData={[
-                  ['1', 'Dakota Rice', '$36,738', 'Niger'],
-                  ['2', 'Minerva Hooper', '$23,789', 'Curaçao'],
-                  ['3', 'Sage Rodriguez', '$56,142', 'Netherlands'],
-                  ['4', 'Philip Chaney', '$38,735', 'Korea, South'],
-                ]}
+                tableHead={bannerData.columns}
+                tableData={bannerData.data}
+                pagination
+                handleChangeTablePage={handleChangeTablePage}
+                handleChangeTableRowsPerPage={handleChangeTableRowsPerPage}
+                emptyRows={emptyRows}
+                rowsPerPage={rowsPerPage}
+                page={page}
               />
             </CardBody>
           </Card>
@@ -224,7 +273,7 @@ const Dashboard = (props) => {
               <div className={classes.stats}>
                 <AccessTime />
                 {' '}
-campaign sent 2 days ago
+                  campaign sent 2 days ago
               </div>
             </CardFooter>
           </Card>

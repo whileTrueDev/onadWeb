@@ -1,6 +1,8 @@
 .vscode/
 .vscode
 
+.eslintrc
+
 yarn.lock
 package-lock.json
 

@@ -12,7 +12,6 @@ import {
   Help, Domain,
 } from '@material-ui/icons';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
 import AppBar from '../components/AppBar';
 import Toolbar, { styles as toolbarStyles } from '../components/Toolbar';
 import LoginPopover from './LoginPopover';
@@ -140,14 +139,14 @@ function AppAppBar(props) {
   }, []); // 무한루프를 야기하지 않도록 하기 위해 두번째 인수로 빈 배열을 넣는다.
 
   const LogButton = (props) => {
-    const { history, logout } = props;
     if (isLogin) {
       return (
         <Button
           className={classes.rightLink}
           color="inherit"
           onClick={logout}
-        >로그아웃
+        >
+로그아웃
         </Button>
       );
     }

@@ -50,6 +50,18 @@ const tableStyle = theme => ({
     padding: '12px 8px',
     verticalAlign: 'middle',
   },
+  tableFooter: {
+    ...defaultFont,
+    float: 'right',
+  },
+  tableFooterCell: {
+    padding: '0 0 0 0',
+    borderBottom: 'none',
+  },
+  tableFooterPagination: {
+    ...defaultFont,
+    borderBottom: 'none',
+  },
   tableResponsive: {
     width: '100%',
     marginTop: theme.spacing.unit * 3,
