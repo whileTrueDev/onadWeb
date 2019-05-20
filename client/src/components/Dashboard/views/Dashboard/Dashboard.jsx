@@ -30,6 +30,9 @@ import CardIcon from '../../components/Card/CardIcon';
 import CardBody from '../../components/Card/CardBody';
 import CardFooter from '../../components/Card/CardFooter';
 import GridItem from '../../components/Grid/GridItem';
+import axios from 'axios';
+
+
 
 // 임시로 크리에이터 아이디 설정
 const creatorId = '1234567890';
@@ -63,6 +66,21 @@ const defaultIncomeData = {
 
 const Dashboard = (props) => {
   const { classes } = props;
+  const [currentBannerData, getCurrentBannerData] = React.useState([['','']])
+  
+  useEffect(() => {
+    axios.get('/main')
+    .then((res) => {
+      if(res.data){
+        getCurrentBannerData(res.data)
+      } else{
+        console.log('실패')
+      }
+    })
+    .catch((err) => {
+      console.log(err)
+    })
+  },[])
 
   // 대시보드에 필요한 데이터 임시적으로 사용
   const [data, setData] = useState(defaultIncomeData);
@@ -172,6 +190,48 @@ const Dashboard = (props) => {
                 <Link to="/dashboard/user" underline>
                   <span className={classes.infoText}>출금 신청 하시겠어요?</span>
                 </Link>
+              </div>
+            </CardFooter>
+          </Card>
+        </GridItem>
+      </GridContainer>
+            
+      {/* 현재송출 중인 배너 */}
+      <GridContainer>
+        <GridItem xs={12} sm={6} md={12}>
+          <Card>
+            <CardHeader color="success" stats icon>
+              <CardIcon color="success">
+                <Store />
+              </CardIcon>
+              <p style={{ textAlign: 'center' }} className={classes.cardCategory}>현재 송출 중인 배너</p>
+              <h3 className={classes.cardTitle}>
+                ...
+              </h3>
+            </CardHeader>
+            <GridItem xs={12} sm={12} md={12}>
+        <Card plain>
+          <CardHeader plain color="primary">
+            <h4 className={classes.cardTitleWhite}>
+              현재 송출 중인 배너
+            </h4>
+            <p className={classes.cardCategoryWhite}>
+              
+            </p>
+          </CardHeader>
+          <CardBody>
+            <Table
+              tableHeaderColor="primary"
+              tableHead={['배너', 'ID']}
+              tableData={currentBannerData}      
+            />
+          </CardBody>
+        </Card>
+      </GridItem>
+            <CardFooter stats>
+              <div className={classes.stats}>
+                <DateRange />
+                  Last 24 Hours
               </div>
             </CardFooter>
           </Card>

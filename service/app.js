@@ -15,8 +15,8 @@ var loginRouter = require('./routes/login');
 var userRouter = require('./routes/users');
 var registRouter = require('./routes/regist');
 var mailerRouter = require('./routes/mailer');
+var mainRouter = require('./routes/main');
 var dashboardRouter = require('./routes/dashboard');
-
 var app = express();
 
 // view를 찾을 경로를 `views`로 저장하여 rendering시 찾을 수 있도록 함.
@@ -53,6 +53,7 @@ app.use('/login', loginRouter);
 app.use('/user', checkLogin, userRouter);
 app.use('/regist', registRouter); 
 app.use('/mailer', mailerRouter); 
+app.use('/main', mainRouter);
 app.use('/dashboard', dashboardRouter);
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

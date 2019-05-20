@@ -40,6 +40,24 @@ function CustomTable({ ...props }) {
             </TableRow>
           </TableHead>
         ) : null}
+        <TableBody>
+          {tableData.map((prop, key) => (
+            <TableRow key={prop}>
+            {prop.map(value => (
+              value.indexOf('data:image/') === -1 // 없는 경우
+                ? (
+                  <TableCell className={classes.tableCell} key={value}>
+                    {value}
+                  </TableCell>
+                ) : (
+                  <TableCell className={classes.tableCell} key={value}>
+                    <img src={value} alt="banner" height="50%" />
+                  </TableCell>
+                )
+            ))}
+          </TableRow>
+          ))}
+        </TableBody>
 
         {pagination !== false ? (
           <TableBody>
@@ -78,15 +96,22 @@ function CustomTable({ ...props }) {
         ) : (
           <TableBody>
             {/** 페이지네이션 없는경우 */}
-            {tableData.map(prop => (
-              <TableRow key={prop}>
-                {prop.map(value => (
+            {tableData.map((prop, key) => (
+            <TableRow key={prop}>
+            {prop.map(value => (
+              value.indexOf('data:image/') === -1 // 없는 경우
+                ? (
                   <TableCell className={classes.tableCell} key={value}>
                     {value}
                   </TableCell>
-                ))}
-              </TableRow>
+                ) : (
+                  <TableCell className={classes.tableCell} key={value}>
+                    <img src={value} alt="banner" height="50%" />
+                  </TableCell>
+                )
             ))}
+          </TableRow>
+          ))}
           </TableBody>
         )}
 

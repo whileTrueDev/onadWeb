@@ -236,8 +236,6 @@ io.use( function(socket, next) {
                                 }
                             };
                         });
-
-                        
                     };
                 }
             })
