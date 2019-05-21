@@ -20,6 +20,14 @@ const styles = () => ({
     fontWeight: 800,
     width: '100%',
   },
+  imageSrc: {
+    position: 'flex',
+    backgroundSize: 'cover',
+    backgroundPosition: 'inherit',
+    margin : '20px',
+    width : '50%',
+    height : '80px',
+  },
 });
 // TODO: 비밀번호 암호화하여 전달하기.
 class LoginForm extends Component {
@@ -103,6 +111,9 @@ class LoginForm extends Component {
     this.handleClose();
   }
 
+  twitchLogin = (event) => {
+    //axios.get('')
+  }
   render() {
     let dialog;
     const { isMarketer, classes } = this.props;
@@ -182,23 +193,26 @@ class LoginForm extends Component {
         <Dialog
           open={open}
           onClose={this.handleClose}
-          aria-labelledby="form-dialog-title"
           maxWidth="sm"
         >
-          <DialogTitle id="form-dialog-title">LOGIN</DialogTitle>
+          <DialogTitle>LOGIN</DialogTitle>
           <DialogContent>
-            <DialogContentText>
-          트위치로 로그인 하세요!
+            <DialogContentText style={{ fontSize: 12 }}>
+            당신의 CHANNEL을 선택하세요.
             </DialogContentText>
+              <Button href='http://localhost:3000/login/twitch'
+                style={{
+                  backgroundImage: `url("pngs/twitch3.png")`,
+                }}
+                className = {classes.imageSrc}
+              />
+              {/* <Button href='http://localhost:3000/login/twitch' 
+                style={{
+                  backgroundImage: `url("pngs/youtube2.png")`,
+                }}
+                className = {classes.imageSrc}
+              />           */}
           </DialogContent>
-          <DialogActions>
-            <Button onClick={this.login} color="primary">
-          로그인
-            </Button>
-            <Button onClick={this.handleClose} color="primary">
-          취소
-            </Button>
-          </DialogActions>
         </Dialog>
       );
     }

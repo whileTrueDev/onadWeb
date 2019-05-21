@@ -61,7 +61,7 @@ passport.use( new LocalStrategy(
                         let user = {userid : userid}
                         if(!result[0].marketerEmailAuth){
                             user['marketerEmailAuth'] = result[0].marketerEmailAuth;
-                        }
+                        }   
                         if(result[0].temporaryLogin){
                             user['temporaryLogin'] = result[0].temporaryLogin;
                         }
@@ -83,15 +83,19 @@ passport.use( new LocalStrategy(
 
 
 passport.use(new twitchStrategy({
-    clientID: '7197nobf8rsf7aqqk4nf7a22dtyu93',
-    clientSecret: 'vn9jdnopcepz34so8g0adqml6sbvak',
+    clientID: 'mzmtrk1xlqerih1u10ilip2xwhowil',
+    clientSecret: 'urhry446c5geg16ucmr55hozif1tfq',
     callbackURL: "http://localhost:3000/login/twitch/callback",
-    scope: "user_read"
+    scope: "user_read",
+    passReqToCallback: true,
   },
-  function(accessToken, refreshToken, profile, done) {
-    console.log(porfile);
-    return done(err, false);
-  }
+  function(req, accessToken, refreshToken, profile, done) {
+        let user = {
+            creatorName : profile._json.name,
+            creatorMail : profile._json.email
+        }
+        return done(null, user);
+    } 
 ));
 
 module.exports = passport;
