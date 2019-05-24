@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import shortid from 'shortid';
 // @material-ui/core components
 import withStyles from '@material-ui/core/styles/withStyles';
 import Table from '@material-ui/core/Table';
@@ -19,7 +20,7 @@ function CustomTable({ ...props }) {
   const {
     classes, tableHead, tableData, tableHeaderColor, pagination,
     handleChangeTablePage, handleChangeTableRowsPerPage,
-    emptyRows, rowsPerPage, page, loading,
+    emptyRows, rowsPerPage, page,
   } = props;
 
   return (
@@ -28,10 +29,10 @@ function CustomTable({ ...props }) {
         {tableHead !== undefined ? (
           <TableHead className={classes[`${tableHeaderColor}TableHeader`]}>
             <TableRow>
-              {tableHead.map((value, index) => (
+              {tableHead.map(value => (
                 <TableCell
                   className={`${classes.tableCell} ${classes.tableHeadCell}`}
-                  key={index}
+                  key={shortid.generate()}
                 >
                   {value}
                 </TableCell>
@@ -44,11 +45,11 @@ function CustomTable({ ...props }) {
           <TableBody>
             {/** 페이지네이션 있는 경우 */}
             {tableData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(prop => (
-              <TableRow key={prop}>
+              <TableRow key={shortid.generate()}>
                 {prop.map(value => (
                   value.indexOf('data:image/') === -1 // 없는 경우
                     ? (
-                      <TableCell className={classes.tableCell} key={value}>
+                      <TableCell className={classes.tableCell} key={shortid.generate()}>
                         {value === '완료됨'
                           ? (
                             <span>
@@ -59,7 +60,7 @@ function CustomTable({ ...props }) {
                           : value}
                       </TableCell>
                     ) : (
-                      <TableCell className={classes.tableCell} key={value}>
+                      <TableCell className={classes.tableCell} key={shortid.generate()}>
                         <img src={value} alt="banner" height="50%" />
                       </TableCell>
                     )
@@ -77,16 +78,16 @@ function CustomTable({ ...props }) {
         ) : (
           <TableBody>
             {/** 페이지네이션 없는경우 */}
-            {tableData.map((prop, key) => (
-              <TableRow key={prop}>
-                {prop.map(value => (
+            {tableData.map(prop => (
+              <TableRow key={shortid.generate()}>
+                {prop.map((value, i) => (
                   value.indexOf('data:image/') === -1 // 없는 경우
                     ? (
-                      <TableCell className={classes.tableCell} key={value}>
+                      <TableCell className={classes.tableCell} key={shortid.generate()}>
                         {value}
                       </TableCell>
                     ) : (
-                      <TableCell className={classes.tableCell} key={value}>
+                      <TableCell className={classes.tableCell} key={shortid.generate()}>
                         <img src={value} alt="banner" height="50%" />
                       </TableCell>
                     )

@@ -1,17 +1,20 @@
+// import
 const express = require('express');
 const pool = require('../model/connectionPool');
+const preprocessing = require('../middlewares/preprocessingData/');
 const router = express.Router();
+const sortRows = preprocessing.sortRows;
+const preprocessingBannerData = preprocessing.preprocessingBannerData;
 
-/* 크리에이터 수익금 관련 함수 및 라우터 */
-// 시간순으로 최신으로 정렬하는 함수
-function sortRows(rows, sortingValue) {
-  const sortingField = sortingValue;
-  return rows.sort((a, b) => (b[sortingField] - a[sortingField]))
-}
+/** 세션의 userType 함수 및 라우터 */
+router.get('/checkUserType', function(req, res, next) {
+  const userInfo = req._passport.session.user;
+  res.send(userInfo);
+});
 
 // 크리에이터 수익금 라우터
 router.get('/creator/income', function(req, res, next) {
-  const creatorId = req.query.creatorId;
+  const creatorId = req._passport.session.user.creatorId;
   
   pool.getConnection((err, conn) => {
     if (err) {
@@ -19,11 +22,10 @@ router.get('/creator/income', function(req, res, next) {
       console.log(err);
       res.json(err);
     } else {
-      const DBquery = `SELECT * FROM
-      creatorIncome
-      JOIN creatorInfo
-      ON creatorIncome.creatorId=creatorInfo.creatorId
-      WHERE creatorIncome.creatorId="${creatorId}"`;
+      const DBquery = `SELECT 
+      creatorTotalIncome, creatorReceivable, date
+      FROM creatorIncome
+      WHERE creatorId="${creatorId}"`;
       conn.query(DBquery, (err, rows, fields) => {
         if (err) {
           // 디비 쿼리 오류인 경우
@@ -44,39 +46,9 @@ router.get('/creator/income', function(req, res, next) {
   })
 })
 
-/* 크리에이터 광고 내역 관련 함수 및 라우터 */
-// 크리에이터 광고내역 전처리 함수
-function preprocessingBannerData(result) {
-  if (result) {
-    // column preprocessing
-    let columns = result[0];
-    columns = Object.keys(columns);
-    columns = columns.map((col) => {
-      col = col.replace("bannerId", "배너")
-        .replace("marketerName", "광고주")
-        .replace("contractionTime", "첫 게시일")
-        .replace("contractionState", "현재 상태")
-
-      return col;
-    });
-
-    // dataset preprocessing
-    result = result.map(
-    (value) => {
-      value.contractionState === 0 ? value.contractionState = "진행중" : value.contractionState = "완료됨";
-      value.contractionTime = value.contractionTime.toLocaleString();
-
-      value = Object.values(value);
-      return value
-    }
-  );
-  return {columns: columns, data: result}
-  }
-}
-
 // 크리에이터 광고 내역 라우터
 router.get('/creator/matchedBanner', function(req, res, next) {
-  const creatorId = req.query.creatorId;
+  const creatorId = req._passport.session.user.creatorId;
 
   pool.getConnection((err, conn) => {
     if (err) {
@@ -85,7 +57,7 @@ router.get('/creator/matchedBanner', function(req, res, next) {
       res.json(err);
     } else {
       const DBquery = `SELECT 
-      bannerId, marketerName, contractionTime, contractionState
+      bannerSrc, marketerName, contractionTime, contractionState
       FROM bannerMatched
       JOIN marketerInfo
       ON bannerMatched.marketerId=marketerInfo.marketerId
@@ -108,6 +80,109 @@ router.get('/creator/matchedBanner', function(req, res, next) {
         conn.release();
       });
     }
+  })
+})
+
+// 크리에이터 현재 광고 중 배너
+router.route('/creator/currentBanner').get(function(req, res, next){
+  //DB연결후 query문을 통한 데이터 삽입 
+  pool.getConnection(function(err, conn){
+    if(err){ 
+        console.log(err)
+    }
+    conn.query(`SELECT 
+      bannerSrc, marketerName
+      FROM bannerMatched
+      JOIN contractionTimestamp as ct
+      ON ct.bannerId = bannerMatched.bannerId
+      JOIN marketerInfo as mi
+      ON mi.marketerId = bannerMatched.marketerId
+      WHERE contractionState = 0
+      AND creatorId=${req._passport.session.user.creatorId}
+      LIMIT 1`, function(err, result, fields){
+        if(err){
+            console.log(err);
+        }
+        result = result.map(
+          (value) => {
+            value = Object.values(value);
+            return value
+          }
+        )
+        res.send(result);
+        conn.release();
+      });
+    });
+});
+
+// 배너 오버레이 URL 주소 가져오기
+router.route('/creator/overlayUrl').get(function(req, res, next){
+  const creatorId = req._passport.session.user.creatorId;
+  //DB연결후 query문을 통한 데이터 삽입 
+    pool.getConnection(function(err, conn){
+      if(err){ 
+          console.log(err)
+      }
+      conn.query(`SELECT advertiseUrl, creatorContractionAgreement
+        FROM creatorInfo
+        WHERE creatorId = ${creatorId}
+        `, function(err, result, fields){
+          if(err){
+              console.log(err);
+          }
+          if (result.length > 0) {
+            res.send(result[0]);
+          };
+          conn.release();
+        });
+      });
+});
+  
+// 수익관리 탭의 크리에이터 별 수익금 차트 데이터
+router.route('/creator/chartdata').get(function(req, res, next) {
+  // creatorId 가져오기
+  const creatorId = req._passport.session.user.creatorId;
+
+  pool.getConnection((err, conn) => {
+    if (err) {
+      console.log(err)
+    }
+    // 지금으로부터 30일 이전의 데이터까지만 불러와 응답.
+    // 30일간의 모든 데이터를 보낸 뒤, 프론트에서 일별, 주별 분기처리
+    const DBquery = `SELECT
+    creatorTotalIncome, creatorReceivable, DATE_FORMAT(date, '%m-%d') as date
+    FROM creatorIncome
+    JOIN (
+      SELECT 
+      MAX(date) as d1
+      FROM creatorIncome
+      WHERE creatorId = ${creatorId}
+      AND date >= DATE_SUB(NOW(), INTERVAL 30 DAY)
+      GROUP BY DATE_FORMAT(date, '%y%m%d')
+    ) tmp
+    ON creatorIncome.date = tmp.d1
+    ORDER BY tmp.d1 asc
+    `
+    conn.query(DBquery, function(err, rows, filed) {
+      if (err) {
+        console.log(err);
+      }
+      if (rows.length > 0) {
+        rows = sortRows(rows, 'date', 'asc');
+        
+        const result = {
+          totalIncomeData: [],
+          receivableData: [],
+          labels: [],
+        };
+        rows.map((row) => {
+          result.totalIncomeData.push(row.creatorTotalIncome);
+          result.receivableData.push(row.creatorReceivable);
+          result.labels.push(row.date);
+        });
+        res.send(result);
+      }
+    })
   })
 })
 

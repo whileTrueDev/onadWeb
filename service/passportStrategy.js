@@ -91,11 +91,15 @@ passport.use(new twitchStrategy({
   },
   function(req, accessToken, refreshToken, profile, done) {
         let user = {
+            creatorId : profile._json._id,
+            creatorDisplayName: profile._json.display_name,
             creatorName : profile._json.name,
-            creatorMail : profile._json.email
+            creatorMail : profile._json.email,
+            creatorLogo : profile._json.logo,
+            userType: "creator"
         }
         return done(null, user);
-    } 
+    }
 ));
 
 module.exports = passport;

@@ -5,7 +5,7 @@ import {
   makeStyles, useTheme, withStyles,
 } from '@material-ui/core/styles';
 import {
-  TableCell, TableRow, TableFooter, TablePagination, IconButton,
+  TableRow, TableFooter, TablePagination, IconButton,
 } from '@material-ui/core';
 import {
   LastPage, FirstPage, KeyboardArrowRight, KeyboardArrowLeft,
@@ -83,27 +83,26 @@ function CustomTableFooter(props) {
   } = props;
 
   return (
-    <TableCell colSpan={6} className={classes.tableFooterCell}>
-      <TableFooter className={classes.tableFooter}>
-        <TableRow>
-          <TablePagination
-            style={{ paddingTop: 0, paddingBottom: 0 }}
-            className={classes.tableFooterPagination}
-            rowsPerPageOptions={[3, 7, 10]}
-            count={count}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            labelRowsPerPage="페이지 당 행:"
-            SelectProps={{
-              native: true,
-            }}
-            onChangePage={handleChangeTablePage}
-            onChangeRowsPerPage={handleChangeTableRowsPerPage}
-            ActionsComponent={TablePaginationActions}
-          />
-        </TableRow>
-      </TableFooter>
-    </TableCell>
+    <TableFooter colSpan={6} component="tfoot" className={classes.tableFooter}>
+      <TableRow>
+        <TablePagination
+        // component="tr"
+          style={{ paddingTop: 0, paddingBottom: 0 }}
+          className={classes.tableFooterPagination}
+          rowsPerPageOptions={[3, 7, 10]}
+          count={count}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          labelRowsPerPage="페이지 당 행:"
+          SelectProps={{
+            native: true,
+          }}
+          onChangePage={handleChangeTablePage}
+          onChangeRowsPerPage={handleChangeTableRowsPerPage}
+          ActionsComponent={TablePaginationActions}
+        />
+      </TableRow>
+    </TableFooter>
   );
 }
 

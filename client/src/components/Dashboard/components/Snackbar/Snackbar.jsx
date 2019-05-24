@@ -19,6 +19,8 @@ function Snackbar({ ...props }) {
     icon,
     place,
     open,
+    closeNotification,
+    contractLink,
   } = props;
   let action = [];
   const messageClasses = classNames({
@@ -31,7 +33,7 @@ function Snackbar({ ...props }) {
         key="close"
         aria-label="Close"
         color="inherit"
-        onClick={() => props.closeNotification()}
+        onClick={() => closeNotification()}
       >
         <Close className={classes.close} />
       </IconButton>,
@@ -39,6 +41,8 @@ function Snackbar({ ...props }) {
   }
   return (
     <Snack
+      onClose={closeNotification}
+      autoHideDuration={3000}
       anchorOrigin={{
         vertical: place.indexOf('t') === -1 ? 'bottom' : 'top',
         horizontal:
@@ -52,7 +56,10 @@ function Snackbar({ ...props }) {
       message={(
         <div>
           {icon !== undefined ? <props.icon className={classes.icon} /> : null}
-          <span className={messageClasses}>{message}</span>
+          <span className={messageClasses}>
+            {message}
+          </span>
+          <div style={{ textAlign: 'center' }}>{contractLink}</div>
         </div>
 )}
       action={action}

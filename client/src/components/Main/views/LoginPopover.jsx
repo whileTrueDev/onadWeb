@@ -6,7 +6,7 @@ import {
 import clsx from 'clsx';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
-import Link from 'react-router-dom/Link';
+import { Link } from 'react-router-dom';
 import LoginForm from './LoginForm';
 
 const styles = theme => ({
@@ -27,15 +27,15 @@ const styles = theme => ({
   },
   popOver: {
     marginTop: 10,
-    padding : 20,
+    padding: 20,
     alignItems: 'center',
-    justifyContent : 'center'
+    justifyContent: 'center',
 
   },
-  button : {
-    fontWeight : 800, 
-    width:'100%',   
-  }
+  button: {
+    fontWeight: 800,
+    width: '100%',
+  },
 });
 
 // login
@@ -58,7 +58,9 @@ class LoginPopover extends Component {
   };
 
   render() {
-    const { classes, type, history, logout } = this.props;
+    const {
+      classes, type, history, logout,
+    } = this.props;
     const { anchorEl } = this.state;
     const open = Boolean(anchorEl);
 
@@ -92,12 +94,13 @@ class LoginPopover extends Component {
                 }}
               >
                 <div style={{
-                    padding : 10,
-                    alignItems: 'center',
-                    textAlign : 'center'
-                }}>
-                  <LoginForm isMarketer history={history} handleClose={this.handleClose} logout={logout}/>
-                  <LoginForm isMarketer={false} history={history} handleClose={this.handleClose} logout = {logout}/>
+                  padding: 10,
+                  alignItems: 'center',
+                  textAlign: 'center',
+                }}
+                >
+                  <LoginForm isMarketer history={history} handleClose={this.handleClose} logout={logout} />
+                  <LoginForm isMarketer={false} history={history} handleClose={this.handleClose} logout={logout} />
                 </div>
               </Popover>
             </React.Fragment>
@@ -129,17 +132,18 @@ class LoginPopover extends Component {
                 }}
               >
                 <div style={{
-                    display : 'flex',
-                    flexDirection : 'column',
-                    padding : 10,
-                    alignItems: 'center',
-                    textAlign : 'center'
-                }}>                 
+                  display: 'flex',
+                  flexDirection: 'column',
+                  padding: 10,
+                  alignItems: 'center',
+                  textAlign: 'center',
+                }}
+                >
                   <Button component={Link} to="/regist" className={classes.button}>마케터</Button>
-                  <Button href="https://www.twitch.tv"  className={classes.button}>크리에이터</Button>
+                  <Button href="https://www.twitch.tv" className={classes.button}>크리에이터</Button>
                 </div>
               </Popover>
-            
+
             </React.Fragment>
           )
         }

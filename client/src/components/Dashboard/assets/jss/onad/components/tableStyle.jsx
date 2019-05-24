@@ -52,10 +52,6 @@ const tableStyle = theme => ({
   },
   tableFooter: {
     ...defaultFont,
-    float: 'right',
-  },
-  tableFooterCell: {
-    padding: '0 0 0 0',
     borderBottom: 'none',
   },
   tableFooterPagination: {
@@ -64,7 +60,7 @@ const tableStyle = theme => ({
   },
   tableResponsive: {
     width: '100%',
-    marginTop: theme.spacing.unit * 3,
+    marginTop: theme.spacing(3),
     overflowX: 'auto',
   },
 });

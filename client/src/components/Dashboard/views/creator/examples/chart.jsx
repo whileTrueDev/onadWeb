@@ -13,21 +13,18 @@ import BugReport from '@material-ui/icons/BugReport';
 import Code from '@material-ui/icons/Code';
 import Cloud from '@material-ui/icons/Cloud';
 // core ../../components
-import { bugs, website, server } from '../../variables/general';
-import dashboardStyle from '../../assets/jss/onad/views/dashboardStyle';
-import { ChartjsData } from '../../variables/charts';
-import GridContainer from '../../components/Grid/GridContainer';
-import Table from '../../components/Table/Table';
-import Tasks from '../../components/Tasks/Tasks';
-import CustomTabs from '../../components/CustomTabs/CustomTabs';
-import Card from '../../components/Card/Card';
-import CardHeader from '../../components/Card/CardHeader';
-import CardBody from '../../components/Card/CardBody';
-import CardFooter from '../../components/Card/CardFooter';
-import GridItem from '../../components/Grid/GridItem';
-
-// 임시로 크리에이터 아이디 설정
-const creatorId = '1234567890';
+import { bugs, website, server } from '../../../variables/general';
+import dashboardStyle from '../../../assets/jss/onad/views/dashboardStyle';
+import { ChartjsData } from '../../../variables/charts';
+import GridContainer from '../../../components/Grid/GridContainer';
+import Table from '../../../components/Table/Table';
+import Tasks from '../../../components/Tasks/Tasks';
+import CustomTabs from '../../../components/CustomTabs/CustomTabs';
+import Card from '../../../components/Card/Card';
+import CardHeader from '../../../components/Card/CardHeader';
+import CardBody from '../../../components/Card/CardBody';
+import CardFooter from '../../../components/Card/CardFooter';
+import GridItem from '../../../components/Grid/GridItem';
 
 const Dashboard = (props) => {
   const { classes } = props;

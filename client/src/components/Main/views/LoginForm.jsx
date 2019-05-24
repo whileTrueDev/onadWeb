@@ -111,10 +111,6 @@ class LoginForm extends Component {
     this.handleClose();
   }
 
-  twitchLogin = (event) => {
-    // axios.get('')
-  }
-
   render() {
     let dialog;
     const { isMarketer, classes } = this.props;
@@ -163,7 +159,8 @@ class LoginForm extends Component {
                 });
                 this.handleFindDialogOpen();
               }}
-            >아이디가 기억나지 않으신가요?
+            >
+            아이디가 기억나지 않으신가요?
             </Button>
             <br />
             <Button
@@ -176,7 +173,8 @@ class LoginForm extends Component {
                 });
                 this.handleFindDialogOpen();
               }}
-            >비밀번호가 기억나지 않으신가요?
+            >
+비밀번호가 기억나지 않으신가요?
             </Button>
           </DialogContent>
           <DialogActions>
@@ -224,7 +222,12 @@ class LoginForm extends Component {
           {isMarketer ? '마케터' : '크리에이터'}
         </Button>
         {dialog}
-        <FindDialog dialogType={dialogType} findDialogOpen={findDialogOpen} handleFindDialogClose={this.handleFindDialogClose} handleClose={this.handleClose} />
+        <FindDialog
+          dialogType={dialogType}
+          findDialogOpen={findDialogOpen}
+          handleFindDialogClose={this.handleFindDialogClose}
+          handleClose={this.handleClose}
+        />
       </div>
     );
   }

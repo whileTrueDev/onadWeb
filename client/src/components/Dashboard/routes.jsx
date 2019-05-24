@@ -5,58 +5,81 @@ import LibraryBooks from '@material-ui/icons/LibraryBooks';
 import BubbleChart from '@material-ui/icons/BubbleChart';
 import Notifications from '@material-ui/icons/Notifications';
 import TableChart from '@material-ui/icons/TableChart';
-// core components/views for dashboard layout
-import UserProfile from './views/UserProfile/UserProfile';
-import TableList from './views/TableList/TableList';
-import Typography from './views/Typography/Typography';
-import Icons from './views/Icons/Icons';
-import NotificationsPage from './views/Notifications/Notifications';
-// core components/./views for RTL layout
-import DashboardPage from './views/Dashboard/Dashboard';
+import AttachMoney from '@material-ui/icons/AttachMoney';
+// core components/views for Creator's dashboard layout
+import creatorUserProfile from './views/creator/UserProfile/UserProfile';
+import creatorTableList from './views/material-ui/TableList/TableList';
+import IncomeManage from './views/creator/IncomeManage/IncomeManege';
+import creatorTypography from './views/material-ui/Typography/Typography';
+import creatorIcons from './views/material-ui/Icons/Icons';
+import creatorNotificationsPage from './views/material-ui/Notifications/Notifications';
+import creatorDashboardPage from './views/creator/Dashboard/Dashboard';
+// 마케터 라우터
+import marketerDashboardPage from './views/marketer/Dashboard/Dashboard';
 
-const dashboardRoutes = [
-  {
-    path: '/main',
-    name: '대시보드',
-    icon: Dashboard,
-    component: DashboardPage,
-    layout: '/dashboard',
-  },
-  {
-    path: '/user',
-    name: '계정관리',
-    icon: Person,
-    component: UserProfile,
-    layout: '/dashboard',
-  },
-  {
-    path: '/table',
-    name: '테이블 모음집',
-    icon: TableChart,
-    component: TableList,
-    layout: '/dashboard',
-  },
-  {
-    path: '/typography',
-    name: '글씨 모음집',
-    icon: LibraryBooks,
-    component: Typography,
-    layout: '/dashboard',
-  },
-  {
-    path: '/icons',
-    name: '아이콘',
-    icon: BubbleChart,
-    component: Icons,
-    layout: '/dashboard',
-  },
-  {
-    path: '/notifications',
-    name: '알림',
-    icon: Notifications,
-    component: NotificationsPage,
-    layout: '/dashboard',
-  },
-];
+
+const dashboardRoutes = {
+  creator: [
+    {
+      path: '/main',
+      name: '대시보드',
+      icon: Dashboard,
+      component: creatorDashboardPage,
+      layout: '/dashboard',
+    },
+    {
+      path: '/income',
+      name: '수익 관리',
+      icon: AttachMoney,
+      component: IncomeManage,
+      layout: '/dashboard',
+    },
+    {
+      path: '/user',
+      name: '계정 관리',
+      icon: Person,
+      component: creatorUserProfile,
+      layout: '/dashboard',
+    },
+    {
+      path: '/table',
+      name: '테이블 모음집',
+      icon: TableChart,
+      component: creatorTableList,
+      layout: '/dashboard',
+    },
+    {
+      path: '/typography',
+      name: '글씨 모음집',
+      icon: LibraryBooks,
+      component: creatorTypography,
+      layout: '/dashboard',
+    },
+    {
+      path: '/icons',
+      name: '아이콘',
+      icon: BubbleChart,
+      component: creatorIcons,
+      layout: '/dashboard',
+    },
+    {
+      path: '/notifications',
+      name: '알림 모음',
+      icon: Notifications,
+      component: creatorNotificationsPage,
+      layout: '/dashboard',
+    },
+  ],
+  marketer: [
+    {
+      path: '/main',
+      name: '대시보드',
+      icon: Dashboard,
+      component: marketerDashboardPage, // 마케터 대시보드 컴포넌트로 수정
+      layout: '/dashboard',
+    },
+    // 라우팅 추가
+  ],
+};
 
 export default dashboardRoutes;

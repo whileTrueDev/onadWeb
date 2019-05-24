@@ -2,16 +2,16 @@ import React from 'react';
 // @material-ui/core components
 import withStyles from '@material-ui/core/styles/withStyles';
 // core components
-import Quote from '../../components/Typography/Quote';
-import Muted from '../../components/Typography/Muted';
-import Primary from '../../components/Typography/Primary';
-import Info from '../../components/Typography/Info';
-import Success from '../../components/Typography/Success';
-import Warning from '../../components/Typography/Warning';
-import Danger from '../../components/Typography/Danger';
-import Card from '../../components/Card/Card';
-import CardHeader from '../../components/Card/CardHeader';
-import CardBody from '../../components/Card/CardBody';
+import Quote from '../../../components/Typography/Quote';
+import Muted from '../../../components/Typography/Muted';
+import Primary from '../../../components/Typography/Primary';
+import Info from '../../../components/Typography/Info';
+import Success from '../../../components/Typography/Success';
+import Warning from '../../../components/Typography/Warning';
+import Danger from '../../../components/Typography/Danger';
+import Card from '../../../components/Card/Card';
+import CardHeader from '../../../components/Card/CardHeader';
+import CardBody from '../../../components/Card/CardBody';
 
 const style = {
   typo: {

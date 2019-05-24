@@ -4,12 +4,12 @@ import PropTypes from 'prop-types';
 import withStyles from '@material-ui/core/styles/withStyles';
 import Hidden from '@material-ui/core/Hidden';
 // core components
-import iconsStyle from '../../assets/jss/onad/views/iconsStyle';
-import GridItem from '../../components/Grid/GridItem';
-import GridContainer from '../../components/Grid/GridContainer';
-import Card from '../../components/Card/Card';
-import CardHeader from '../../components/Card/CardHeader';
-import CardBody from '../../components/Card/CardBody';
+import iconsStyle from '../../../assets/jss/onad/views/iconsStyle';
+import GridItem from '../../../components/Grid/GridItem';
+import GridContainer from '../../../components/Grid/GridContainer';
+import Card from '../../../components/Card/Card';
+import CardHeader from '../../../components/Card/CardHeader';
+import CardBody from '../../../components/Card/CardBody';
 
 
 function Icons(props) {

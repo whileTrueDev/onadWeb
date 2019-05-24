@@ -9,7 +9,6 @@
     "@material-ui/utils": "^4.0.0-beta.1",
     "axios": "^0.18.0",
     "chart.js": "^2.8.0",
-    "chartist": "^0.11.0",
     "classnames": "^2.2.6",
     "clsx": "^1.0.4",
     "eslint-config-airbnb": "^17.1.0",
@@ -26,7 +25,9 @@
     "react-dom": "^16.8.6",
     "react-router-dom": "^5.0.0",
     "react-scripts": "3.0.0",
-    "react-text-mask": "^5.4.3"
+    "react-text-mask": "^5.4.3",
+    "recharts": "^1.6.2",
+    "shortid": "^2.2.14"
   },
   "scripts": {
     "start:mac": "PORT=3001 react-scripts start",
