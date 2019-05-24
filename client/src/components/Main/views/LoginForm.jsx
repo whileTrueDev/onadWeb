@@ -24,9 +24,9 @@ const styles = () => ({
     position: 'flex',
     backgroundSize: 'cover',
     backgroundPosition: 'inherit',
-    margin : '20px',
-    width : '50%',
-    height : '80px',
+    margin: '20px',
+    width: '50%',
+    height: '80px',
   },
 });
 // TODO: 비밀번호 암호화하여 전달하기.
@@ -112,8 +112,9 @@ class LoginForm extends Component {
   }
 
   twitchLogin = (event) => {
-    //axios.get('')
+    // axios.get('')
   }
+
   render() {
     let dialog;
     const { isMarketer, classes } = this.props;
@@ -200,13 +201,14 @@ class LoginForm extends Component {
             <DialogContentText style={{ fontSize: 12 }}>
             당신의 CHANNEL을 선택하세요.
             </DialogContentText>
-              <Button href='http://localhost:3000/login/twitch'
-                style={{
-                  backgroundImage: `url("pngs/twitch3.png")`,
-                }}
-                className = {classes.imageSrc}
-              />
-              {/* <Button href='http://localhost:3000/login/twitch' 
+            <Button
+              href="http://localhost:3000/login/twitch"
+              style={{
+                backgroundImage: 'url("pngs/twitch3.png")',
+              }}
+              className={classes.imageSrc}
+            />
+            {/* <Button href='http://localhost:3000/login/twitch'
                 style={{
                   backgroundImage: `url("pngs/youtube2.png")`,
                 }}
