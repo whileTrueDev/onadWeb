@@ -12,7 +12,6 @@ import { Line } from 'react-chartjs-2';
 // } from 'recharts';
 
 // @material-ui/icons
-import ArrowUpward from '@material-ui/icons/ArrowUpward';
 import AccessTime from '@material-ui/icons/AccessTime';
 import CircularProgress from '@material-ui/core/CircularProgress';
 // core components
@@ -75,14 +74,11 @@ function Income(props) {
             </CardHeader>
             <CardBody>
               <h4 className={classes.cardTitle} style={{ textAlign: 'left' }}>나의 수익금</h4>
-
             </CardBody>
             <CardFooter chart>
               <div className={classes.stats}>
                 <AccessTime />
-              updated:
-                {' '}
-                {Date()}
+                {`updated:${Date()}`}
               </div>
             </CardFooter>
           </Card>

@@ -69,7 +69,7 @@ const styles = theme => ({
 
 function AppAppBar(props) {
   const {
-    classes, history, isLogin, setisLogin, logout,
+    classes, history, isLogin, logout,
   } = props;
 
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
