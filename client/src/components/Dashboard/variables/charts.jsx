@@ -20,7 +20,7 @@ function setChartjsData(labels, data) {
       {
         label: '수익금',
         fill: false,
-        lineTension: 0.2,
+        lineTension: 0.1,
         backgroundColor: '',
         borderColor: '#ddd',
         borderCapStyle: 'butt',

@@ -9,6 +9,7 @@ const preprocessingBannerData = preprocessing.preprocessingBannerData;
 /** 세션의 userType 함수 및 라우터 */
 router.get('/checkUserType', function(req, res, next) {
   const userInfo = req._passport.session.user;
+  console.log(userInfo);
   res.send(userInfo);
 });
 
@@ -30,17 +31,21 @@ router.get('/creator/income', function(req, res, next) {
         if (err) {
           // 디비 쿼리 오류인 경우
           console.log(err);
+          conn.release();
           res.json(err);
         } else {
           // 결과값이 있는 경우
           if (rows.length > 0) {
             let result = sortRows(rows, 'date')[0];
             result.date = result.date.toLocaleString();
+            conn.release();
             res.json(result)
+          }else{
+            conn.release();
+            res.end();
           }
         }
         // pool connection 해제
-        conn.release();
       });
     }
   })
@@ -54,6 +59,7 @@ router.get('/creator/matchedBanner', function(req, res, next) {
     if (err) {
       // 디비 커넥션 오류인 경우
       console.log(err);
+      conn.release();
       res.json(err);
     } else {
       const DBquery = `SELECT 
@@ -66,18 +72,21 @@ router.get('/creator/matchedBanner', function(req, res, next) {
         if (err) {
           // 디비 쿼리 오류인 경우
           console.log(err);
+          conn.release();
           res.json(err);
         } else {
           // 결과값이 있는 경우
           if (rows.length > 0) {
-            const result = preprocessingBannerData(
-              sortRows(rows, 'contractionTime'));
-
-            res.send(result)
+            const result = preprocessingBannerData(sortRows(rows, 'contractionTime'));
+            conn.release();
+            res.send(result);
+          }else{
+            conn.release();
+            res.end();
           }
         }
         // pool connection 해제
-        conn.release();
+      
       });
     }
   })
@@ -109,8 +118,8 @@ router.route('/creator/currentBanner').get(function(req, res, next){
             return value
           }
         )
-        res.send(result);
         conn.release();
+        res.send(result);
       });
     });
 });
@@ -131,9 +140,12 @@ router.route('/creator/overlayUrl').get(function(req, res, next){
               console.log(err);
           }
           if (result.length > 0) {
+            conn.release();
             res.send(result[0]);
-          };
-          conn.release();
+          }else{
+            conn.release();
+            res.end();
+          }
         });
       });
 });
@@ -142,6 +154,7 @@ router.route('/creator/overlayUrl').get(function(req, res, next){
 router.route('/creator/chartdata').get(function(req, res, next) {
   // creatorId 가져오기
   const creatorId = req._passport.session.user.creatorId;
+  const dateRange = req.query.dateRange;
 
   pool.getConnection((err, conn) => {
     if (err) {
@@ -157,7 +170,7 @@ router.route('/creator/chartdata').get(function(req, res, next) {
       MAX(date) as d1
       FROM creatorIncome
       WHERE creatorId = ${creatorId}
-      AND date >= DATE_SUB(NOW(), INTERVAL 30 DAY)
+      AND date >= DATE_SUB(NOW(), INTERVAL ${dateRange} DAY)
       GROUP BY DATE_FORMAT(date, '%y%m%d')
     ) tmp
     ON creatorIncome.date = tmp.d1
@@ -180,7 +193,12 @@ router.route('/creator/chartdata').get(function(req, res, next) {
           result.receivableData.push(row.creatorReceivable);
           result.labels.push(row.date);
         });
+        console.log(result);
+        conn.release();
         res.send(result);
+      }else{
+        conn.release();
+        res.end();
       }
     })
   })
