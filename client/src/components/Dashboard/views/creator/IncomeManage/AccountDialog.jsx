@@ -99,10 +99,13 @@ const banks = [
 
 const AccountDialog = (props) => {
   const {
-    classes, open, history, setDialogOpen,
+    classes, open, handleDialogClose, history,
   } = props;
+
   const [bank, setBank] = useState('농협');
+
   const [bankPattern, setbankPattern] = useState(13);
+
   const handleSubmit = (event) => {
     event.preventDefault();
     console.log('제출');
@@ -113,7 +116,7 @@ const AccountDialog = (props) => {
     axios.post('/regist/accountNum', userAccount)
       .then((res) => {
         alert('계좌번호 저장에 성공하였습니다.');
-        setDialogOpen(false);
+        history.push('/dashboard/income');
       })
       .catch((err) => {
         console.log(err);
@@ -124,13 +127,13 @@ const AccountDialog = (props) => {
 
   const handleChangeBack = (event) => {
     const newbank = event.target.value;
-    const newbankCount = banks.find(bank => bank.bankName === newbank).bankCount;
+    const newbankCount = banks.find(_bank => _bank.bankName === newbank).bankCount;
     setBank(newbank);
     setbankPattern(newbankCount);
   };
 
   const handleClose = () => {
-    history.push('/dashboard/main');
+    handleDialogClose(false);
   };
 
   const Content = () => (
@@ -177,7 +180,12 @@ const AccountDialog = (props) => {
             pattern: `[0-9]{${bankPattern}}`,
           }}
         />
-        <FormHelperText>(-)을 제외한 {bankPattern}자리 계좌번호를 입력하세요</FormHelperText>
+        <FormHelperText>
+          (-)을 제외한
+          {' '}
+          {bankPattern}
+          자리 계좌번호를 입력하세요
+        </FormHelperText>
       </FormControl>
     </DialogContent>
   );
@@ -217,9 +225,8 @@ const AccountDialog = (props) => {
 
 AccountDialog.propTypes = {
   classes: PropTypes.object.isRequired,
-  open: PropTypes.object.isRequired,
-  history: PropTypes.object.isRequired,
-  setDialogOpen: PropTypes.func.isRequired,
+  open: PropTypes.bool.isRequired,
+  handleDialogClose: PropTypes.func.isRequired,
 };
 
 export default withStyles(style)(AccountDialog);

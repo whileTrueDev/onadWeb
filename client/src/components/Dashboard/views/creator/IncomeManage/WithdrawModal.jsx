@@ -140,7 +140,7 @@ function WithdrawModal(props) {
               id="select-account"
               className={classes.contentDetail}
             >
-              {accountNumber}
+              {`${accountNumber.split('_')[0]}   ${accountNumber.split('_')[1]}`}
             </Typography>
           </div>
           <Divider />

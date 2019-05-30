@@ -2,7 +2,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
 // @material-ui/core components
 import withStyles from '@material-ui/core/styles/withStyles';
 // react plugin for creating charts
@@ -61,7 +60,6 @@ function useFetchData(url, dateRange) {
   const [payload, setPayload] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [accountDialogOpen, setDialogOpen] = useState(false);
 
   // get data function
   const callUrl = useCallback(async () => {
@@ -70,10 +68,8 @@ function useFetchData(url, dateRange) {
         params: { dateRange },
       });
       if (res.data.length !== 0) {
-        setDialogOpen(res.data.creatorAccountNumber === null);
         setPayload(res.data);
       } else {
-        setDialogOpen(res.data.creatorAccountNumber === null);
         throw new Error('데이터가 존재하지 않습니다');
       }
     } catch {
@@ -87,9 +83,20 @@ function useFetchData(url, dateRange) {
     callUrl();
   }, [callUrl]);
 
-  return {
- payload, loading, error, accountDialogOpen, setDialogOpen 
-};
+  return { payload, loading, error };
+}
+
+function useDialog() {
+  const [accountDialogOpen, setDialogOpen] = useState(false);
+
+  function handleDialogOpen() {
+    setDialogOpen(true);
+  }
+
+  function handleDialogClose() {
+    setDialogOpen(false);
+  }
+  return { accountDialogOpen, handleDialogOpen, handleDialogClose };
 }
 
 function useInputWidth() {
@@ -144,9 +151,7 @@ function Income(props) {
   // 날짜 범위 데이터
   const { value, handleChange } = useSelectValue();
   // data 요청
-  const {
- payload, loading, error, accountDialogOpen, setDialogOpen 
-} = useFetchData('/dashboard/creator/chartdata', value);
+  const { payload, loading, error } = useFetchData('/dashboard/creator/chartdata', value);
   // 날짜 범위 칸의 크기를 동적으로 하기위한 훅
   const { inputLabel, labelWidth } = useInputWidth();
   // 수익금 데이터
@@ -159,6 +164,9 @@ function Income(props) {
   } = useWithdrawModal();
   // 출금신청 스낵바
   const { withdrawalSnack, handleClose, handleSnackOpen } = useWithdrawalSnack();
+  // 계좌 입력 다이얼로그
+  const { accountDialogOpen, handleDialogOpen, handleDialogClose } = useDialog();
+
   return (
     <div>
       <GridContainer>
@@ -325,7 +333,7 @@ function Income(props) {
       </GridContainer>
 
       {/* 출금 신청 팝업 */}
-      {!incomeData.loading && incomeData.payload
+      {!incomeData.loading && incomeData.payload.creatorAccountNumber
       && (
       <WithdrawlModal
         open={modalOpen}
@@ -348,7 +356,7 @@ function Income(props) {
         open={!incomeData.payload.creatorAccountNumber}
         Link={
           // 계좌정보 입력 팝업
-          <Button color="warning" component={Link} to="/dashboard/user">계좌입력하기</Button>
+          <Button color="warning" onClick={handleDialogOpen}>계좌입력하기</Button>
         }
       />
       )}
@@ -362,7 +370,12 @@ function Income(props) {
         close
         closeNotification={handleClose}
       />
-      <AccountDialog open={accountDialogOpen} history={history} setDialogOpen={setDialogOpen} />
+      {/* 계좌입력 다이얼로그 */}
+      <AccountDialog
+        open={accountDialogOpen}
+        history={history}
+        handleDialogClose={handleDialogClose}
+      />
     </div>
   );
 }
