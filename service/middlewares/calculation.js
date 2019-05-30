@@ -169,8 +169,9 @@ const creatorCalcuate = (priceList) =>{
       } 
       priceList.map((row)=>{
         const creatorId = row.bannerId.split('_')[0];
-        conn.query(`UPDATE creatorIncome SET creatorTotalIncome = creatorTotalIncome + ?, creatorReceivable = creatorReceivable + ? WHERE creatorId = ? `, [row.price, row.price, creatorId], function(err, result, fields){ 
+        conn.query(`INSERT INTO creatorIncome (creatorId, creatorTotalIncome, creatorReceivable)  SELECT creatorId, creatorTotalIncome + ? , creatorReceivable + ? FROM creatorIncome WHERE creatorId = ? ORDER BY date DESC LIMIT 1`, [row.price, row.price, creatorId], function(err, result, fields){ 
           if(err){
+            console.log('변경점 에러');
             conn.release(); 
             reject(err);
           } 
@@ -282,6 +283,8 @@ async function calculation(){
   }
 }
 
+//5,15,25,35,45,55
+
 var scheduler = schedule.scheduleJob('5,15,25,35,45,55 * * * *', ()=>{
   console.log('작업을 시작합니다.')
   calculation();
@@ -289,7 +292,6 @@ var scheduler = schedule.scheduleJob('5,15,25,35,45,55 * * * *', ()=>{
 
 module.exports = scheduler;
 
-//calculation();
 
 
 
