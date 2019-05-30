@@ -123,7 +123,6 @@ router.route('/findPw')
 router.route('/auth/:id')
 .get((req, res, next) => {
   console.log('본인인증에 대한 접근입니다.');
-
   pool.getConnection(function(err, conn){
     if(err){ 
       console.log(err);
@@ -140,5 +139,35 @@ router.route('/auth/:id')
   
   res.redirect('http://localhost:3001');
 })
+
+router.post('/accountNum', (req, res, next)=>{
+  const { creatorId } = req.session.passport.user;
+  const { bankName, bankAccount } = req.body;
+  const creatorAccountNumber = `${bankName}_${bankAccount}`
+  try{
+    pool.getConnection(function(err, conn){
+      if(err){ 
+        conn.release();
+        throw new Error(err);
+      }
+      conn.query(`UPDATE creatorInfo SET creatorAccountNumber = ? WHERE creatorId = ? `, [creatorAccountNumber, creatorId], function(err, result, fields){
+        if(err){
+          conn.release();
+          throw new Error(err); 
+        }else{
+          console.log('계좌번호 입력이 완료되었습니다.');
+          res.end();
+          conn.release(); 
+        }
+      });
+    });
+  }
+  catch (err) {
+    console.log(err);
+  }
+})
+
+
+
 
 module.exports = router;

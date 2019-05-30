@@ -9,7 +9,7 @@ import AttachMoney from '@material-ui/icons/AttachMoney';
 // core components/views for Creator's dashboard layout
 import creatorUserProfile from './views/creator/UserProfile/UserProfile';
 import creatorTableList from './views/material-ui/TableList/TableList';
-import IncomeManage from './views/creator/IncomeManage/IncomeManege';
+import IncomeManage from './views/creator/IncomeManage/IncomeManage';
 import creatorTypography from './views/material-ui/Typography/Typography';
 import creatorIcons from './views/material-ui/Icons/Icons';
 import creatorNotificationsPage from './views/material-ui/Notifications/Notifications';
