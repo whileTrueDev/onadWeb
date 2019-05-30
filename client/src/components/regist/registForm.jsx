@@ -75,7 +75,7 @@ class RegistForm extends React.Component {
     error: false,
     errorType: '',
     errorMessage: '',
-    checkDuplication : false,
+    checkDuplication: false,
   };
 
   // handle을 전달.
@@ -163,24 +163,22 @@ class RegistForm extends React.Component {
     event.preventDefault();
     let user;
 
-    if(!this.state.checkDuplication){
-      alert('ID 중복조회를 해주세요.')
-    }else{
-      if (this.state.error) {
-        alert(`${this.state.errorType} 입력 오류 입니다.`);
-      } else {
-        user = {
-          marketerId: this.state.id,
-          marketerRawPasswd : this.state.passwd,
-          marketerName: this.state.name,
-          marketerMail: `${this.state.email}@${this.state.domain}`,
-          marketerPhoneNum: this.state.phoneNum,   
-          marketerBusinessRegNum: this.state.businessRegNum,
-          marketerUserType: this.props.userType,
-        };
-        this.props.handleUserInfo(user);
-        this.props.handleNext();
-      }
+    if (!this.state.checkDuplication) {
+      alert('ID 중복조회를 해주세요.');
+    } else if (this.state.error) {
+      alert(`${this.state.errorType} 입력 오류 입니다.`);
+    } else {
+      user = {
+        marketerId: this.state.id,
+        marketerRawPasswd: this.state.passwd,
+        marketerName: this.state.name,
+        marketerMail: `${this.state.email}@${this.state.domain}`,
+        marketerPhoneNum: this.state.phoneNum,
+        marketerBusinessRegNum: this.state.businessRegNum,
+        marketerUserType: this.props.userType,
+      };
+      this.props.handleUserInfo(user);
+      this.props.handleNext();
     }
   }
 
@@ -208,35 +206,34 @@ class RegistForm extends React.Component {
   }
 
   checkDuplicateID = (event) => {
-    if(this.state.id === ''){
+    if (this.state.id === '') {
       this.setState({
         errorType: 'ID',
         error: true,
         errorMessage: '아무것도 입력하지 않았습니다.',
       });
-    }else{
-      axios.post('/regist/checkId',{
-        id : this.state.id
+    } else {
+      axios.post('/regist/checkId', {
+        id: this.state.id,
       })
-      .then((res)=>{
-        if(res.data){
-          this.setState({
-            errorType: 'ID',
-            error: true,
-            errorMessage: 'ID가 중복되었습니다.',
-          });
-        }else{
-          alert('회원가입이 가능합니다. 계속 진행하세요.');
-          this.setState({
-            error: false,
-            checkDuplication : true
-          });
-        }
-
-      })
-      .catch((err)=>{
-        console.log(err);
-      })
+        .then((res) => {
+          if (res.data) {
+            this.setState({
+              errorType: 'ID',
+              error: true,
+              errorMessage: 'ID가 중복되었습니다.',
+            });
+          } else {
+            alert('회원가입이 가능합니다. 계속 진행하세요.');
+            this.setState({
+              error: false,
+              checkDuplication: true,
+            });
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     }
   }
 
@@ -251,7 +248,8 @@ class RegistForm extends React.Component {
     return (
       <div className={classes.container}>
         <form autoComplete="off" onSubmit={this.handleSubmit}>
-          <FormControl className={classes.codeField}
+          <FormControl
+            className={classes.codeField}
             error={this.checkError('ID')}
           >
             <InputLabel shrink>ID</InputLabel>
@@ -259,7 +257,7 @@ class RegistForm extends React.Component {
               required
               onChange={this.checkId}
               placeholder="아이디를 입력하세요"
-              style={{ width: 300,}}
+              style={{ width: 300 }}
               endAdornment={(
                 <InputAdornment position="end">
                   <Divider className={classes.divider} />

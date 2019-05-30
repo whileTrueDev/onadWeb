@@ -30,17 +30,21 @@ router.get('/creator/income', function(req, res, next) {
         if (err) {
           // 디비 쿼리 오류인 경우
           console.log(err);
+          conn.release();
           res.json(err);
         } else {
           // 결과값이 있는 경우
           if (rows.length > 0) {
             let result = sortRows(rows, 'date')[0];
             result.date = result.date.toLocaleString();
+            conn.release();
             res.json(result)
+          }else{
+            conn.release();
+            res.end();
           }
         }
         // pool connection 해제
-        conn.release();
       });
     }
   })
@@ -54,6 +58,7 @@ router.get('/creator/matchedBanner', function(req, res, next) {
     if (err) {
       // 디비 커넥션 오류인 경우
       console.log(err);
+      conn.release();
       res.json(err);
     } else {
       const DBquery = `SELECT 
@@ -66,18 +71,21 @@ router.get('/creator/matchedBanner', function(req, res, next) {
         if (err) {
           // 디비 쿼리 오류인 경우
           console.log(err);
+          conn.release();
           res.json(err);
         } else {
           // 결과값이 있는 경우
           if (rows.length > 0) {
-            const result = preprocessingBannerData(
-              sortRows(rows, 'contractionTime'));
-
-            res.send(result)
+            const result = preprocessingBannerData(sortRows(rows, 'contractionTime'));
+            conn.release();
+            res.send(result);
+          }else{
+            conn.release();
+            res.end();
           }
         }
         // pool connection 해제
-        conn.release();
+      
       });
     }
   })
@@ -109,8 +117,8 @@ router.route('/creator/currentBanner').get(function(req, res, next){
             return value
           }
         )
-        res.send(result);
         conn.release();
+        res.send(result);
       });
     });
 });
@@ -131,9 +139,12 @@ router.route('/creator/overlayUrl').get(function(req, res, next){
               console.log(err);
           }
           if (result.length > 0) {
+            conn.release();
             res.send(result[0]);
-          };
-          conn.release();
+          }else{
+            conn.release();
+            res.end();
+          }
         });
       });
 });
@@ -163,25 +174,39 @@ router.route('/creator/chartdata').get(function(req, res, next) {
     ON creatorIncome.date = tmp.d1
     ORDER BY tmp.d1 asc
     `
-    conn.query(DBquery, function(err, rows, filed) {
-      if (err) {
+    conn.query(`SELECT creatorAccountNumber FROM creatorInfo WHERE creatorId = ?`, [creatorId], function(err, rows, fields){
+      if(err){
         console.log(err);
       }
-      if (rows.length > 0) {
-        rows = sortRows(rows, 'date', 'asc');
-        
-        const result = {
-          totalIncomeData: [],
-          receivableData: [],
-          labels: [],
-        };
-        rows.map((row) => {
-          result.totalIncomeData.push(row.creatorTotalIncome);
-          result.receivableData.push(row.creatorReceivable);
-          result.labels.push(row.date);
-        });
-        res.send(result);
+      if(rows[0].creatorAccountNumber === null){
+        console.log('계좌번호가 존재하지 않습니다');
+      }else{
+        console.log('계좌번호가 존재합니다.');
       }
+      const result = {
+        creatorAccountNumber : rows[0].creatorAccountNumber,
+        totalIncomeData: [],
+        receivableData: [],
+        labels: [],
+      };
+      conn.query(DBquery, function(err, rows, filed) {
+        if (err) {
+          console.log(err);
+        }
+        if (rows.length > 0) {
+          rows = sortRows(rows, 'date', 'asc');
+          rows.map((row) => {
+            result.totalIncomeData.push(row.creatorTotalIncome);
+            result.receivableData.push(row.creatorReceivable);
+            result.labels.push(row.date);
+          });
+          conn.release();
+          res.send(result);
+        }else{
+          conn.release();
+          res.end();
+        }
+      })
     })
   })
 })
