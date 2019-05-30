@@ -33,17 +33,14 @@ function useFetchData(url) {
   const [payload, setPayload] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [accountDialogOpen, setDialogOpen] = useState(false);
 
   // get data function
   const callUrl = useCallback(async () => {
     try {
       const res = await axios.get(url);
       if (res.data.length !== 0) {
-        setDialogOpen(res.data.creatorAccountNumber === null);
         setPayload(res.data);
       } else {
-        setDialogOpen(res.data.creatorAccountNumber === null);
         throw new Error('데이터가 존재하지 않습니다');
       }
     } catch {
@@ -57,18 +54,77 @@ function useFetchData(url) {
     callUrl();
   }, [callUrl]);
 
-  return {
-    payload, loading, error, accountDialogOpen, setDialogOpen,
-  };
+  return { payload, loading, error };
+}
+
+function useDialog() {
+  const [accountDialogOpen, setDialogOpen] = useState(false);
+
+  function handleDialogOpen() {
+    setDialogOpen(true);
+  }
+
+  function handleDialogClose() {
+    setDialogOpen(false);
+  }
+  return { accountDialogOpen, handleDialogOpen, handleDialogClose };
+}
+
+function useInputWidth() {
+  const inputLabel = React.useRef(null);
+  const [labelWidth, setLabelWidth] = React.useState(0);
+  React.useEffect(() => {
+    setLabelWidth(inputLabel.current.offsetWidth);
+  }, []);
+
+  return { inputLabel, labelWidth };
+}
+
+function useSelectValue() {
+  const [value, setValue] = React.useState(7);
+
+  function handleChange(event) {
+    setValue(event.target.value);
+  }
+  return { value, handleChange };
+}
+
+function useWithdrawModal() {
+  const [modalOpen, setModalOpen] = useState(false);
+
+  function handleWithdrawModalOpen() {
+    setModalOpen(true);
+  }
+
+  function handleWithdrawModalClose() {
+    setModalOpen(false);
+  }
+
+  return { modalOpen, handleWithdrawModalOpen, handleWithdrawModalClose };
 }
 
 
 function Income(props) {
   const { classes, session, history } = props;
+  // 날짜 범위 데이터
+  const { value, handleChange } = useSelectValue();
+  // data 요청
+  const { payload, loading, error } = useFetchData('/dashboard/creator/chartdata', value);
+  // 날짜 범위 칸의 크기를 동적으로 하기위한 훅
+  const { inputLabel, labelWidth } = useInputWidth();
+  // 수익금 데이터
+  const incomeData = useFetchData('/dashboard/creator/income');
+  // 수익금 출금 모달창
   const {
-    payload, loading, error, accountDialogOpen, setDialogOpen,
-  } = useFetchData('/dashboard/creator/chartdata');
-  console.log('수행');
+    modalOpen,
+    handleWithdrawModalOpen,
+    handleWithdrawModalClose,
+  } = useWithdrawModal();
+  // 출금신청 스낵바
+  const { withdrawalSnack, handleClose, handleSnackOpen } = useWithdrawalSnack();
+  // 계좌 입력 다이얼로그
+  const { accountDialogOpen, handleDialogOpen, handleDialogClose } = useDialog();
+
   return (
     <GridContainer>
       <GridContainer>
@@ -118,8 +174,68 @@ function Income(props) {
           </Card>
         </GridItem>
       </GridContainer>
-      <AccountDialog open={accountDialogOpen} history={history} setDialogOpen={setDialogOpen} />
-    </GridContainer>
+
+      <GridContainer style={{ position: 'relative', top: -70 }}>
+        <GridItem xs={12} sm={12} md={12}>
+          <Card>
+            <CardHeader color="primary">
+              <h4 className={classes.cardTitleWhite}>
+                출금 신청 내역
+              </h4>
+              <p className={classes.cardCategoryWhite}>
+                지금껏의 출금 신청 내역을 확인하세요.
+              </p>
+            </CardHeader>
+
+          </Card>
+        </GridItem>
+      </GridContainer>
+
+      {/* 출금 신청 팝업 */}
+      {!incomeData.loading && incomeData.payload.creatorAccountNumber
+      && (
+      <WithdrawlModal
+        open={modalOpen}
+        handleOpen={handleWithdrawModalOpen}
+        handleClose={handleWithdrawModalClose}
+        accountNumber={incomeData.payload.creatorAccountNumber}
+        receivable={incomeData.payload.creatorReceivable}
+        handleSnackOpen={handleSnackOpen}
+      />
+      )}
+
+      {/* 계좌 입력 안했을 시 링크 문구 notification창 */}
+      {!incomeData.loading && incomeData.payload
+      && (
+      <Snackbar
+        place="bl"
+        color="danger"
+        icon={Warning}
+        message="아직 계좌정보를 입력하지 않았어요.. 계좌정보 입력 이후 출금신청하세요!"
+        open={!incomeData.payload.creatorAccountNumber}
+        Link={
+          // 계좌정보 입력 팝업
+          <Button color="warning" onClick={handleDialogOpen}>계좌입력하기</Button>
+        }
+      />
+      )}
+
+      {/* 출금 신청 완료 시의 notification */}
+      <Snackbar
+        place="bc"
+        color="success"
+        message="출금신청이 완료되었어요!! 입금에는 1일 ~ 2일정도 걸려요."
+        open={withdrawalSnack}
+        close
+        closeNotification={handleClose}
+      />
+      {/* 계좌입력 다이얼로그 */}
+      <AccountDialog
+        open={accountDialogOpen}
+        history={history}
+        handleDialogClose={handleDialogClose}
+      />
+    </div>
   );
 }
 
