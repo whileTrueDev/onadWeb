@@ -37,7 +37,6 @@ router.post('/changePw', (req, res, next) =>{
     });
     conn.release();
   });
-
 })
 
 router.get("/twitch", passport.authenticate("twitch"));

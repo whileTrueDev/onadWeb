@@ -20,7 +20,7 @@ function Snackbar({ ...props }) {
     place,
     open,
     closeNotification,
-    contractLink,
+    Link,
   } = props;
   let action = [];
   const messageClasses = classNames({
@@ -59,7 +59,7 @@ function Snackbar({ ...props }) {
           <span className={messageClasses}>
             {message}
           </span>
-          <div style={{ textAlign: 'center' }}>{contractLink}</div>
+          <div style={{ textAlign: 'center' }}>{Link}</div>
         </div>
 )}
       action={action}

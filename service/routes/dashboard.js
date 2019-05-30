@@ -9,6 +9,7 @@ const preprocessingBannerData = preprocessing.preprocessingBannerData;
 /** 세션의 userType 함수 및 라우터 */
 router.get('/checkUserType', function(req, res, next) {
   const userInfo = req._passport.session.user;
+  console.log(userInfo);
   res.send(userInfo);
 });
 
@@ -23,9 +24,13 @@ router.get('/creator/income', function(req, res, next) {
       res.json(err);
     } else {
       const DBquery = `SELECT 
-      creatorTotalIncome, creatorReceivable, date
+      creatorTotalIncome, creatorReceivable, creatorAccountNumber, creatorIncome.date
       FROM creatorIncome
-      WHERE creatorId="${creatorId}"`;
+      JOIN creatorInfo as ci
+      ON ci.creatorId = creatorIncome.creatorId
+      WHERE ci.creatorId="${creatorId}"
+      ORDER BY date desc
+      LIMIT 1`;
       conn.query(DBquery, (err, rows, fields) => {
         if (err) {
           // 디비 쿼리 오류인 경우
@@ -35,6 +40,7 @@ router.get('/creator/income', function(req, res, next) {
         } else {
           // 결과값이 있는 경우
           if (rows.length > 0) {
+            console.log(rows);
             let result = sortRows(rows, 'date')[0];
             result.date = result.date.toLocaleString();
             conn.release();
@@ -153,6 +159,7 @@ router.route('/creator/overlayUrl').get(function(req, res, next){
 router.route('/creator/chartdata').get(function(req, res, next) {
   // creatorId 가져오기
   const creatorId = req._passport.session.user.creatorId;
+  const dateRange = req.query.dateRange;
 
   pool.getConnection((err, conn) => {
     if (err) {
@@ -168,7 +175,7 @@ router.route('/creator/chartdata').get(function(req, res, next) {
       MAX(date) as d1
       FROM creatorIncome
       WHERE creatorId = ${creatorId}
-      AND date >= DATE_SUB(NOW(), INTERVAL 30 DAY)
+      AND date >= DATE_SUB(NOW(), INTERVAL ${dateRange} DAY)
       GROUP BY DATE_FORMAT(date, '%y%m%d')
     ) tmp
     ON creatorIncome.date = tmp.d1
@@ -208,6 +215,75 @@ router.route('/creator/chartdata').get(function(req, res, next) {
         }
       })
     })
+  })
+})
+
+// 계좌정보를 입력했는지
+router.route('/creator/account').get(function(req, res, next) {
+  const creatorId = req._passport.session.user.creatorId;
+  pool.getConnection((err, conn) => {
+    if (err) {
+      console.log(err)
+    } else {
+      conn.query(`SELECT creatorAccountNumber
+        FROM creatorInfo
+        WHERE creatorId = ${creatorId}
+        LIMIT 1
+        `, function(err, result, fields){
+          if(err){
+              console.log(err);
+          }
+          if (result.length > 0) {
+            conn.release();
+            res.send(result[0]);
+          }else{
+            conn.release();
+            res.end();
+          }
+      });
+    }
+  })
+})
+
+// 크리에이터 출금 정보 입력
+router.route('/creator/withdrawal').post(function(req, res, next) {
+  const creatorId = req._passport.session.user.creatorId;
+  const withdrawlAmount = req.body.withdrawalAmount;
+
+  pool.getConnection((err, conn) => {
+    if (err) {
+      console.log(err)
+    } else {
+      // 출금 신청 데이터 넣기
+      const queryState = `
+      INSERT
+      INTO creatorWithdrawal
+      (creatorId, creatorWithdrawalAmount, withdrawalState)
+      VALUES (?, ?, ?)`;
+      
+      const queryArray = [
+        creatorId, withdrawlAmount, 0
+      ];
+
+      conn.query(queryState, queryArray, function(err, result, fields){
+          if(err){
+            console.log('크리에이터 출금 정보 입력 오류', err);
+          }
+          res.send({success: success});
+          conn.release();
+      });
+
+      // 출금 신청 금액에 맞추어 출금 가능 금액 수정 쿼리
+      // const updateQueryState = `
+      // INSERT
+      // INTO creatorIncome
+      // (creatorId, creatorTotalIncome, creatorReceivable)
+      // VALUES (?, ?, ?)`;
+
+      // const updateQueryArray = [
+      //   creatorId,  - withdrawlAmount
+      // ];
+    }
   })
 })
 

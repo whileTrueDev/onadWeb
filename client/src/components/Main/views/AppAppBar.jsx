@@ -69,7 +69,7 @@ const styles = theme => ({
 
 function AppAppBar(props) {
   const {
-    classes, history, isLogin, setisLogin, logout,
+    classes, history, isLogin, logout,
   } = props;
 
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
@@ -138,7 +138,7 @@ function AppAppBar(props) {
     setSelected(window.location.pathname.replace('/', ''));
   }, []); // 무한루프를 야기하지 않도록 하기 위해 두번째 인수로 빈 배열을 넣는다.
 
-  const LogButton = (props) => {
+  const LogButton = () => {
     if (isLogin) {
       return (
         <Button
@@ -146,7 +146,7 @@ function AppAppBar(props) {
           color="inherit"
           onClick={logout}
         >
-로그아웃
+        로그아웃
         </Button>
       );
     }
