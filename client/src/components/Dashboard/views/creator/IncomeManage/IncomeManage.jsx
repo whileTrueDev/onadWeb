@@ -25,6 +25,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
 import Tooltip from '@material-ui/core/Tooltip';
 // custum cores
+
 import GridItem from '../../../components/Grid/GridItem';
 import GridContainer from '../../../components/Grid/GridContainer';
 import Card from '../../../components/Card/Card';
@@ -38,6 +39,7 @@ import Button from '../../../components/CustomButtons/Button';
 import WarningTypo from '../../../components/Typography/Warning';
 import SuccessTypo from '../../../components/Typography/Success';
 import WithdrawlModal from './WithdrawModal';
+
 // data
 import setChartjsData from '../../../variables/charts';
 // styles
@@ -58,6 +60,7 @@ function useFetchData(url, dateRange) {
   const [payload, setPayload] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [accountDialogOpen, setDialogOpen] = useState(false);
 
   // get data function
   const callUrl = useCallback(async () => {
@@ -65,7 +68,13 @@ function useFetchData(url, dateRange) {
       const res = await axios.get(url, {
         params: { dateRange },
       });
-      if (res.data.length !== 0) { setPayload(res.data); }
+      if (res.data.length !== 0) {
+        setDialogOpen(res.data.creatorAccountNumber === null);
+        setPayload(res.data);
+      } else {
+        setDialogOpen(res.data.creatorAccountNumber === null);
+        throw new Error('데이터가 존재하지 않습니다');
+      }
     } catch {
       setError('데이터가 없습니다.');
     } finally {
@@ -77,7 +86,7 @@ function useFetchData(url, dateRange) {
     callUrl();
   }, [callUrl]);
 
-  return { payload, loading, error };
+  return { payload, loading, error, accountDialogOpen, setDialogOpen };
 }
 
 function useInputWidth() {
@@ -128,11 +137,11 @@ function useWithdrawalSnack() {
 }
 
 function Income(props) {
-  const { classes, session } = props;
+  const { classes, session, history } = props;
   // 날짜 범위 데이터
   const { value, handleChange } = useSelectValue();
   // data 요청
-  const { payload, loading, error } = useFetchData('/dashboard/creator/chartdata', value);
+  const { payload, loading, error, accountDialogOpen, setDialogOpen } = useFetchData('/dashboard/creator/chartdata', value);
   // 날짜 범위 칸의 크기를 동적으로 하기위한 훅
   const { inputLabel, labelWidth } = useInputWidth();
   // 수익금 데이터
@@ -145,7 +154,6 @@ function Income(props) {
   } = useWithdrawModal();
   // 출금신청 스낵바
   const { withdrawalSnack, handleClose, handleSnackOpen } = useWithdrawalSnack();
-
   return (
     <div>
       <GridContainer>
@@ -349,6 +357,7 @@ function Income(props) {
         close
         closeNotification={handleClose}
       />
+    <AccountDialog open={accountDialogOpen} history={history} setDialogOpen={setDialogOpen} />
     </div>
   );
 }
@@ -356,6 +365,7 @@ function Income(props) {
 Income.propTypes = {
   classes: PropTypes.object.isRequired,
   session: PropTypes.object.isRequired,
+  history: PropTypes.object.isRequired,
 };
 
 export default withStyles(DashboardStyle)(Income);

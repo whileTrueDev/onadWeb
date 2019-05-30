@@ -181,30 +181,39 @@ router.route('/creator/chartdata').get(function(req, res, next) {
     ON creatorIncome.date = tmp.d1
     ORDER BY tmp.d1 asc
     `
-    conn.query(DBquery, function(err, rows, filed) {
-      if (err) {
+    conn.query(`SELECT creatorAccountNumber FROM creatorInfo WHERE creatorId = ?`, [creatorId], function(err, rows, fields){
+      if(err){
         console.log(err);
       }
-      if (rows.length > 0) {
-        rows = sortRows(rows, 'date', 'asc');
-        
-        const result = {
-          totalIncomeData: [],
-          receivableData: [],
-          labels: [],
-        };
-        rows.map((row) => {
-          result.totalIncomeData.push(row.creatorTotalIncome);
-          result.receivableData.push(row.creatorReceivable);
-          result.labels.push(row.date);
-        });
-        console.log(result);
-        conn.release();
-        res.send(result);
+      if(rows[0].creatorAccountNumber === null){
+        console.log('계좌번호가 존재하지 않습니다');
       }else{
-        conn.release();
-        res.end();
+        console.log('계좌번호가 존재합니다.');
       }
+      const result = {
+        creatorAccountNumber : rows[0].creatorAccountNumber,
+        totalIncomeData: [],
+        receivableData: [],
+        labels: [],
+      };
+      conn.query(DBquery, function(err, rows, filed) {
+        if (err) {
+          console.log(err);
+        }
+        if (rows.length > 0) {
+          rows = sortRows(rows, 'date', 'asc');
+          rows.map((row) => {
+            result.totalIncomeData.push(row.creatorTotalIncome);
+            result.receivableData.push(row.creatorReceivable);
+            result.labels.push(row.date);
+          });
+          conn.release();
+          res.send(result);
+        }else{
+          conn.release();
+          res.end();
+        }
+      })
     })
   })
 })

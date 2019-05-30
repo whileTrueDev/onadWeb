@@ -22,14 +22,14 @@ import '../assets/css/onad.css';
 import allRoutes from "../routes";
 
 // content 화면 라우팅 컴포넌트 생성 함수
-const switchRoutes = (routes, session) => (
+const switchRoutes = (routes, session, history) => (
   <Switch>
     {routes.map((prop, key) => {
       if (prop.layout === "/dashboard") {
         return (
           <Route
             path={prop.layout + prop.path}
-            component={() => <prop.component session={session}/>}
+            component={() => <prop.component session={session} history={history} />}
             key={key}
           />
         )}
@@ -108,7 +108,7 @@ class Dashboard extends React.Component {
     window.removeEventListener("resize", this.resizeFunction);
   }
   render() {
-    const { classes, ...rest } = this.props;
+    const { classes, history, ...rest } = this.props;
     const {session} = this.state;
     const routes = session.userType === "creator"
       ? allRoutes.creator
@@ -133,7 +133,7 @@ class Dashboard extends React.Component {
           />
 
           <div className={classes.content}>
-            <div className={classes.container}>{switchRoutes(routes, session)}</div>
+            <div className={classes.container}>{switchRoutes(routes, session, history)}</div>
           </div>
 
           <Footer /> 
