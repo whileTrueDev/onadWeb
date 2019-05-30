@@ -6,6 +6,7 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 // @material-ui/core
 import withStyles from '@material-ui/core/styles/withStyles';
+import Tooltip from '@material-ui/core/Tooltip';
 // @material-ui/icons
 import CheckIcon from '@material-ui/icons/Check';
 import Warning from '@material-ui/icons/Warning';
@@ -159,12 +160,14 @@ const Dashboard = (props) => {
               </h3>
             </CardHeader>
             <CardFooter stats>
-              <div className={classes.stats} style={{ alignItems: 'center' }}>
-                <Info><Money /></Info>
-                <Link to="/dashboard/income">
-                  <span className={classes.infoText}>출금 신청 하시겠어요?</span>
-                </Link>
-              </div>
+              <Tooltip title="수익관리 탭으로 이동해요!">
+                <div className={classes.stats} style={{ alignItems: 'center' }}>
+                  <Info><Money /></Info>
+                  <Link to="/dashboard/income">
+                    <span className={classes.infoText}>출금 신청하러가기</span>
+                  </Link>
+                </div>
+              </Tooltip>
             </CardFooter>
           </Card>
         </GridItem>

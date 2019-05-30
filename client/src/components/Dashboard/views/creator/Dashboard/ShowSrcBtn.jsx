@@ -164,7 +164,7 @@ class ShowSrcBtn extends Component {
           icon={Warning}
           message="아직 온애드와 계약하지 않았어요. 간단히 계약하고, 광고를 집행하세요."
           open={!contractionAgreement}
-          contractLink={
+          Link={
             <Button color="warning" component={Link} to="/dashboard/user">계약하러 가기</Button>
           }
         />
