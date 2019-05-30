@@ -39,6 +39,7 @@ import Button from '../../../components/CustomButtons/Button';
 import WarningTypo from '../../../components/Typography/Warning';
 import SuccessTypo from '../../../components/Typography/Success';
 import WithdrawlModal from './WithdrawModal';
+import AccountDialog from './AccountDialog';
 
 // data
 import setChartjsData from '../../../variables/charts';
@@ -86,7 +87,9 @@ function useFetchData(url, dateRange) {
     callUrl();
   }, [callUrl]);
 
-  return { payload, loading, error, accountDialogOpen, setDialogOpen };
+  return {
+ payload, loading, error, accountDialogOpen, setDialogOpen 
+};
 }
 
 function useInputWidth() {
@@ -141,7 +144,9 @@ function Income(props) {
   // 날짜 범위 데이터
   const { value, handleChange } = useSelectValue();
   // data 요청
-  const { payload, loading, error, accountDialogOpen, setDialogOpen } = useFetchData('/dashboard/creator/chartdata', value);
+  const {
+ payload, loading, error, accountDialogOpen, setDialogOpen 
+} = useFetchData('/dashboard/creator/chartdata', value);
   // 날짜 범위 칸의 크기를 동적으로 하기위한 훅
   const { inputLabel, labelWidth } = useInputWidth();
   // 수익금 데이터
@@ -357,7 +362,7 @@ function Income(props) {
         close
         closeNotification={handleClose}
       />
-    <AccountDialog open={accountDialogOpen} history={history} setDialogOpen={setDialogOpen} />
+      <AccountDialog open={accountDialogOpen} history={history} setDialogOpen={setDialogOpen} />
     </div>
   );
 }
