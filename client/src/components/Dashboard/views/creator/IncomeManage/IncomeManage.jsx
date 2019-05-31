@@ -6,16 +6,23 @@ import axios from 'axios';
 import withStyles from '@material-ui/core/styles/withStyles';
 // react plugin for creating charts
 import { Line } from 'react-chartjs-2';
-
-// import {
-//   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
-// } from 'recharts';
-
 // @material-ui/icons
 import AccessTime from '@material-ui/icons/AccessTime';
+import DateRange from '@material-ui/icons/DateRange';
+import AttachMoney from '@material-ui/icons/AttachMoney';
+import Check from '@material-ui/icons/Check';
+import Money from '@material-ui/icons/Money';
+import Warning from '@material-ui/icons/Warning';
+import Payment from '@material-ui/icons/Payment';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import AccountDialog from './AccountDialog';
 // core components
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
+import OutlinedInput from '@material-ui/core/OutlinedInput';
+import InputLabel from '@material-ui/core/InputLabel';
+import FormControl from '@material-ui/core/FormControl';
+import Tooltip from '@material-ui/core/Tooltip';
+// custum cores
 import GridItem from '../../../components/Grid/GridItem';
 import GridContainer from '../../../components/Grid/GridContainer';
 import Card from '../../../components/Card/Card';
@@ -23,13 +30,31 @@ import CardHeader from '../../../components/Card/CardHeader';
 import CardBody from '../../../components/Card/CardBody';
 import CardFooter from '../../../components/Card/CardFooter';
 import CardAvatar from '../../../components/Card/CardAvatar';
+import Button from '../../../components/CustomButtons/Button';
+import CardIcon from '../../../components/Card/CardIcon';
+import WarningTypo from '../../../components/Typography/Warning';
+import SuccessTypo from '../../../components/Typography/Success';
+import Snackbar from '../../../components/Snackbar/Snackbar';
+import WithdrawlModal from './WithdrawModal';
+import AccountDialog from './AccountDialog';
 // data
 import setChartjsData from '../../../variables/charts';
 // styles
 import DashboardStyle from '../../../assets/jss/onad/views/dashboardStyle';
 
+DashboardStyle.select = {
+  marginTop: 5,
+  // float: 'right',
+};
+
+DashboardStyle.buttonWrapper = {
+  textAlign: 'center',
+  marginTop: 35,
+  marginBottom: 30,
+};
+
 // data Fetch hooks
-function useFetchData(url) {
+function useFetchData(url, dateRange) {
   const [payload, setPayload] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -37,7 +62,9 @@ function useFetchData(url) {
   // get data function
   const callUrl = useCallback(async () => {
     try {
-      const res = await axios.get(url);
+      const res = await axios.get(url, {
+        params: { dateRange },
+      });
       if (res.data.length !== 0) {
         setPayload(res.data);
       } else {
@@ -48,7 +75,7 @@ function useFetchData(url) {
     } finally {
       setLoading(false);
     }
-  }, [url]);
+  }, [url, dateRange]);
 
   useEffect(() => {
     callUrl();
@@ -103,6 +130,19 @@ function useWithdrawModal() {
   return { modalOpen, handleWithdrawModalOpen, handleWithdrawModalClose };
 }
 
+function useWithdrawalSnack() {
+  const [withdrawalSnack, setWithdrawalSnack] = React.useState(false);
+
+  function handleClose() {
+    setWithdrawalSnack(false);
+  }
+
+  function handleSnackOpen() {
+    setWithdrawalSnack(true);
+  }
+
+  return { withdrawalSnack, handleClose, handleSnackOpen };
+}
 
 function Income(props) {
   const { classes, session, history } = props;
@@ -126,31 +166,57 @@ function Income(props) {
   const { accountDialogOpen, handleDialogOpen, handleDialogClose } = useDialog();
 
   return (
-    <GridContainer>
+    <div>
       <GridContainer>
-        <GridItem xs={12} sm={12} md={8}>
-          <Card chart>
-            <CardHeader color="success">
-              {loading && <div style={{ textAlign: 'center' }}><CircularProgress /></div>}
-              {!loading && error && <span>오류에요.. 침착하시고.. 다시 시도해보세요</span>}
-              {!loading && payload
-          && (
-          <Line
-            data={setChartjsData(payload.labels, payload.totalIncomeData)}
-            options={{ tooltips: { mode: 'index', intersect: false } }}
-          />
-          )}
-            </CardHeader>
-            <CardBody>
-              <h4 className={classes.cardTitle} style={{ textAlign: 'left' }}>나의 수익금</h4>
-
-            </CardBody>
-            <CardFooter chart>
+        <GridItem xs={12} sm={12} md={4}>
+          <Card>
+            {incomeData.loading && <div style={{ textAlign: 'center' }}><CircularProgress /></div>}
+            {!incomeData.loading && incomeData.error && <span>오류에요.. 침착하시고.. 다시 시도해보세요</span>}
+            {!incomeData.loading && incomeData.payload
+                && (
+                  <CardHeader color="primary" stats icon>
+                    <CardIcon color="primary">
+                      <AttachMoney />
+                    </CardIcon>
+                    <p className={classes.cardCategory}>지금껏 총 수익금</p>
+                    <h3 className={classes.cardTitle}>
+                      {`${incomeData.payload.creatorTotalIncome} `}
+                      <small>원</small>
+                    </h3>
+                  </CardHeader>
+                )}
+            <CardFooter stats>
               <div className={classes.stats}>
-                <AccessTime />
-            updated:
-                {' '}
-                {Date()}
+                <DateRange />
+                {!incomeData.loading && incomeData.payload
+                && <span>{`Updated : ${incomeData.payload.date}`}</span>
+                }
+              </div>
+            </CardFooter>
+          </Card>
+        </GridItem>
+        <GridItem xs={12} sm={12} md={4}>
+          <Card>
+            {incomeData.loading && <div style={{ textAlign: 'center' }}><CircularProgress /></div>}
+            {!incomeData.loading && incomeData.error && <span>오류에요.. 침착하시고.. 다시 시도해보세요</span>}
+            {!incomeData.loading && incomeData.payload
+                && (
+                  <CardHeader color="info" stats icon>
+                    <CardIcon color="info">
+                      <Check />
+                    </CardIcon>
+                    <p className={classes.cardCategory}>출금가능한 수익금</p>
+                    <h3 className={classes.cardTitle}>
+                      {`${incomeData.payload.creatorReceivable} `}
+                      <small>원</small>
+                    </h3>
+                  </CardHeader>
+                )}
+            <CardFooter stats>
+              <div className={classes.stats}>
+                <Money />
+                <SuccessTypo>출금 신청 버튼</SuccessTypo>
+                {' 으로 출금신청하세요!'}
               </div>
             </CardFooter>
           </Card>
@@ -163,14 +229,87 @@ function Income(props) {
               </a>
             </CardAvatar>
             <CardBody profile>
-              <h5 className={classes.cardCategory} style={{ marginBottom: 30 }}>크리에이터</h5>
+              <h5 className={classes.cardCategory}>크리에이터</h5>
               <h4 className={classes.cardTitle}>{session.creatorDisplayName}</h4>
-              <p className={classes.description}>
-                {`Don't be scared of the truth because we need to restart the
-              human foundation in truth And I love you like Kanye loves Kanye
-              I love Rick Owens’ bed design but the back is...`}
-              </p>
             </CardBody>
+          </Card>
+        </GridItem>
+      </GridContainer>
+      <GridContainer>
+        <GridItem xs={12} sm={12} md={8} style={{ position: 'relative', top: -70 }}>
+          <Card chart>
+            <CardHeader color="success">
+              <FormControl variant="outlined" className={classes.select}>
+                <InputLabel ref={inputLabel} htmlFor="selectDateRange">
+                  범위
+                </InputLabel>
+                <Select
+                  onChange={handleChange}
+                  input={(
+                    <OutlinedInput
+                      labelWidth={labelWidth}
+                      name="dateRange"
+                      id="selectDateRange"
+                      value={value}
+                    />
+                  )}
+                >
+                  <MenuItem value={7}>최근 7 일</MenuItem>
+                  <MenuItem value={14}>최근 14 일</MenuItem>
+                  <MenuItem value={30}>최근 30 일</MenuItem>
+                </Select>
+              </FormControl>
+              {loading && <div style={{ textAlign: 'center' }}><CircularProgress /></div>}
+              {!loading && error && <span>오류에요.. 침착하시고.. 다시 시도해보세요</span>}
+              {!loading && payload
+              && (
+              <Line
+                data={setChartjsData(payload.labels, payload.totalIncomeData)}
+                options={{ tooltips: { mode: 'index', intersect: false } }}
+              />
+              )}
+            </CardHeader>
+            <CardBody>
+              <h4 className={classes.cardTitle} style={{ textAlign: 'left' }}>나의 총 수익금</h4>
+            </CardBody>
+            <CardFooter chart>
+              <div className={classes.stats}>
+                <AccessTime />
+                {`updated: ${Date()}`}
+              </div>
+            </CardFooter>
+          </Card>
+        </GridItem>
+        <GridItem xs={12} sm={12} md={4}>
+          <Card>
+            <CardHeader color="info">
+              <h4 className={classes.cardTitleWhite}>
+                출금 신청하시겠어요?
+              </h4>
+              <p className={classes.cardCategoryWhite}>
+                간단하게 진행해보세요!
+              </p>
+            </CardHeader>
+            <CardBody>
+              <div className={classes.buttonWrapper}>
+                <Button
+                  color="success"
+                  round
+                  onClick={handleWithdrawModalOpen}
+                >
+                  <Payment />
+                  {'출금신청'}
+                </Button>
+              </div>
+            </CardBody>
+            <CardFooter stats>
+              <Tooltip title="계정관리로 이동해요!">
+                <div className={classes.stats}>
+                  <WarningTypo><Warning /></WarningTypo>
+                  <span className={classes.dangerText}>계좌정보를 정확히 입력하셨나요?</span>
+                </div>
+              </Tooltip>
+            </CardFooter>
           </Card>
         </GridItem>
       </GridContainer>

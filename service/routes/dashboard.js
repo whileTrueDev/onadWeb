@@ -13,7 +13,7 @@ router.get('/checkUserType', function(req, res, next) {
   res.send(userInfo);
 });
 
-// 크리에이터 수익금 라우터
+// 크리에이터 수익금 라우터 및 정보조회
 router.get('/creator/income', function(req, res, next) {
   const creatorId = req._passport.session.user.creatorId;
   
@@ -244,6 +244,36 @@ router.route('/creator/account').get(function(req, res, next) {
     }
   })
 })
+
+
+router.route('/creator/contraction')
+.post((req, res, next)=>{
+  const creatorId = req.body.creatorId;
+  console.log(creatorId);
+
+  pool.getConnection(function(err, conn){
+    if(err){ 
+      console.log(err);
+    }
+    const updateQuery = `
+    UPDATE creatorInfo
+    SET creatorContractionAgreement = ?
+    WHERE creatorInfo.creatorId = ?`;
+    const updateArray = [1, creatorId];
+    conn.query(updateQuery, updateArray, function(err, result, fields){
+      if (err) {
+        console.log(err);
+      }
+      if(result[0]){
+        res.send(true);
+      } else {
+        res.send(false);
+      }
+    });
+    conn.release();
+  });
+})
+
 
 // 크리에이터 출금 정보 입력
 router.route('/creator/withdrawal').post(function(req, res, next) {
