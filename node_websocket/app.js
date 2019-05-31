@@ -34,7 +34,7 @@ app.get('/', function(req, res){ //index.html /로 라우팅
 app.get('/banner/server', function(req, res){ // server.html /server로 라우팅 
     console.log('server')
     var toServer = {};
-    var tmp = sql('SELECT name, path FROM banner where state = 1')
+    var tmp = sql('SELECT bannerId, bannerSrc FROM bannerMatched where contractionState = 0')
     tmp.select(function(err, data){
         if (err){
             console.log(err)
@@ -59,7 +59,7 @@ app.get('/banner/server', function(req, res){ // server.html /server로 라우�
 app.get('/banner/:id', function(req, res){ ///banner/:id로 라우팅
     console.log('banner')
     var clientIp = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-    var tmp = sql('SELECT ipAdr FROM creatorinfo')
+    var tmp = sql('SELECT ipAdr FROM creatorInfo')
     tmp.select(function(err, data){
         if (err){
             console.log(err)
@@ -106,11 +106,11 @@ io.use( function(socket, next) {
         rule.hour = new schedule.Range(0,23) 
         // rule.minute = [0, 10, 20, 30, 40, 50] //cronTask 실행되는 분(minute)
         rule.second = [0, 10, 20, 30, 40, 50]
-        
+    
         var cronTask = schedule.scheduleJob(rule, function(){ // 스케쥴러를 통해 1분마다 db에 배너정보 전송
                     if(serverId != clientId && clientId != undefined){
                         socket.emit('response banner data to server', {});
-                        socket.emit('refresh request img', {})
+                        socket.emit('check bannerId', {})
                 }   else if(serverId == clientId && serverId!= undefined){
                         io.to(serverId).emit('divReload', {});
                         // socket.emit('response banner data to server', {});
@@ -167,9 +167,9 @@ io.use( function(socket, next) {
         socket.on('write to db', function(msg){
             pool.getConnection(function(err, conn){
             if(err) return err;
-            var sql = "INSERT INTO broadcastingcheck (bannerName, url, category) VALUES (?, ?, ?);";
-             
-            conn.query(sql, [msg[0], msg[1], msg[2]], function (err, result, fields) { //msg[0]:bannername msg[1]:url msg[2]:category
+            // var sql = "INSERT INTO contractionTimestamp (contractionId, url, category) VALUES (?, ?, ?);";
+            var sql = "INSERT INTO contractionTimestamp (bannerid) VALUES (?);"; 
+            conn.query(sql, [msg[0]/*, msg[1], msg[2]*/], function (err, result, fields) { //msg[0]:bannername msg[1]:url msg[2]:category
                 conn.release();
                 if (err) return err;   
                 });
@@ -177,59 +177,223 @@ io.use( function(socket, next) {
         });
         socket.on('request img', function(msg){
             var toServer = {};
-            var getQuery = sql(`SELECT * FROM matchedbanner WHERE matchedbanner.url = "${msg[0]}";`)
+            var _url = msg[0];
+            var getQuery = sql(`SELECT bannerId, bannerSrc, bannerCategory 
+                                    FROM bannerMatched AS bm 
+                                        JOIN creatorInfo AS ci 
+                                            ON bm.creatorId = ci.creatorId 
+                                                WHERE ci.advertiseUrl = "${_url}" 
+                                                    AND contractionState = 0;`)
+            // var broadcastingBannerName = msg[2]
             getQuery.select(function(err, data){
                 if (err){
                     console.log(err)
                 }
                 else {
                     if(data.length == 0){ //계약된 거가 없을때
-                        getQuery = sql(`SELECT name, path FROM banner;`)
+                        getQuery = sql(`SELECT bannerSrc, marketerId 
+                                            FROM bannerRegistered 
+                                                WHERE confirmState = 1;`)
                                     getQuery.select(function(err, data){
                                         if (err){
                                             console.log(err)
                                         }
                                         else {
                                             data.forEach(function(item, index){
-                                                toServer['img'+index] = {path : item.path, name : item.name}
+                                                toServer['img'+index] = {path : item.bannerSrc, name : item.marketerId}
                                             });
-                                            console.log(toServer['img0'].name)
                                             socket.emit('img receive', [toServer['img0'].path, toServer['img0'].name ])
                                         };
                                     })
+                    } else{ //계약 된게 있을때
+                        // getQuery = sql(`SELECT bannerCategory 
+                        //                     FROM bannerMatched AS bm 
+                        //                         JOIN creatorInfo AS ci 
+                        //                             ON bm.creatorId = ci.creatorId 
+                        //                                 WHERE ci.advertiseUrl = "${_url}" 
+                        //                                     AND contractionState = 0;`)
+                        // getQuery.select(function(err, data){
+                            // if (err){
+                            //     console.log(err)
+                            // }
+                            // else {
+                                if(msg[1] == data[0].bannerCategory || data[0].bannerCategory == 'any' ){ //계약된게 있고, 카테고리가 any거나 일치할떄
+                                    // getQuery = sql(`SELECT bannerId, bannerSrc 
+                                    //                     FROM bannerMatched AS bm 
+                                    //                         JOIN creatorInfo AS ci 
+                                    //                             ON bm.creatorId = ci.creatorId 
+                                    //                                 WHERE ci.advertiseUrl = "${_url}" 
+                                    //                                     AND contractionState = 0;`)
+                                    // getQuery.select(function(err, data){
+                                    //     if (err){
+                                    //         console.log(err)
+                                    //     }
+                                    //     else {
+                                            data.forEach(function(item, index){
+                                                toServer['img'+index] = {path : item.bannerSrc, name : item.bannerId}
+                                            });
+                                            socket.emit('img receive', [toServer['img0'].path, toServer['img0'].name ])
+                                        // };
+                                    // })
+                                } else{ //계약된게 있지만 카테고리가 일치하지 않을때
+                                    getQuery = sql(`SELECT bannerSrc, marketerId FROM bannerRegistered WHERE confirmState = 1;`)
+                                    getQuery.select(function(err, data){
+                                        if (err){
+                                            console.log(err)
+                                        }
+                                        else {
+                                            data.forEach(function(item, index){
+                                                toServer['img'+index] = {path : item.bannerSrc, name : item.marketerId}
+                                            });
+                                            socket.emit('img receive', [toServer['img0'].path, toServer['img0'].name ])
+                                        };
+                                    })
+                                }
+                            // };
+                        // });
+                    };
+                }
+            })
+            /*풀 닫는부분인데 나중에 에러 날까봐 일단 안지움
+                sql.pool.end(function(err){
+                  if (err) console.log(err);
+                  else {
+                    console.log('** Finished');
+                  }
+                });
+              });
+            */
+        });
+
+        socket.on('check plz', function(msg){
+            // DB에서 이름가져와서 확인
+            var toServer = {}; // 클라이언트로 보낼 객체
+            var _url = msg[0];
+            var broadcastingBannerName = msg[2] //클라이언트에 송출 중인 배너의 id
+            var getQuery = sql(`SELECT bannerId 
+                                    FROM bannerMatched AS bm 
+                                            JOIN creatorInfo AS ci 
+                                                ON bm.creatorId = ci.creatorId 
+                                                    WHERE ci.advertiseUrl = "${_url}" 
+                                                        AND bm.contractionState = 0;`)
+            
+            getQuery.select(function(err, data){
+                if (err){
+                    console.log(err)
+                }
+                else {
+                    if(data.length == 0){ //계약된 거가 없을때
+                        getQuery = sql(`SELECT marketerId 
+                                            FROM bannerRegistered 
+                                                WHERE confirmState = 1;`)
+                                    getQuery.select(function(err, data){
+                                        if (err){
+                                            console.log(err)
+                                        }
+                                        else {
+                                            console.log(1)
+                                            data.forEach(function(item, index){
+                                                toServer['img'+index] = {name : item.bannerId}
+                                            })
+                                                if(toServer['img0'].name == broadcastingBannerName){
+                                                    //pass
+                                                    console.log('넘어가는 편이야')
+                                                } else{
+                                                var getQuery = sql(`SELECT bannerSrc, marketerId 
+                                                                        FROM bannerRegistered 
+                                                                            WHERE confirmState = 1;`)
+                                                getQuery.select(function(err, data){
+                                                    if (err){
+                                                        console.log(err)
+                                                    }
+                                                    else {
+                                                        console.log('1여깁니다')
+                                                        data.forEach(function(item, index){
+                                                            toServer['img'+index] = {path : item.bannerSrc, name : item.marketerId}
+                                                        });
+                                                        socket.emit('img receive', [toServer['img0'].path, toServer['img0'].name ])
+                                                    };
+                                                })
+                                            };
+                                        };
+                                    })
                     } else{
-                        getQuery = sql(`SELECT category FROM matchedbanner WHERE matchedbanner.url = "${msg[0]}";`) //계약 된게 있을때
+                        getQuery = sql(`SELECT bannerCategory 
+                                            FROM bannerMatched AS bm 
+                                                    JOIN creatorInfo AS ci 
+                                                        ON bm.creatorId = ci.creatorId 
+                                                            WHERE ci.advertiseUrl = "${_url}" 
+                                                                AND bm.contractionState = 0;`) //계약 된게 있을때
                         getQuery.select(function(err, data){
                             if (err){
                                 console.log(err)
                             }
                             else {
-                                if(msg[1] == data[0].category || data[0].category == 'any' ){ //계약된게 있고, 카테고리가 any거나 일치할떄
-                                    getQuery = sql(`SELECT name, path FROM banner JOIN matchedbanner where matchedbanner.url = "${ msg[0] }" AND matchedbanner.bannerId = banner.name;`)
+                                if(msg[1] == data[0].bannerCategory || data[0].bannerCategory == 'any' ){ //계약된게 있고, 카테고리가 any거나 일치할떄
+                                    // getQuery = sql(`SELECT bannerId FROM bannerMatched AS bm JOIN creatorInfo AS ci ON bm.creatorId = ci.creatorId where ci.advertiseUrl = "${ msg[0] } AND contractionState = 0";`)
                                     getQuery.select(function(err, data){
                                         if (err){
                                             console.log(err)
                                         }
                                         else {
+                                            console.log(2)
                                             data.forEach(function(item, index){
-                                                toServer['img'+index] = {path : item.path, name : item.name}
-                                            });
-                                            console.log(toServer['img0'].name)
-                                            socket.emit('img receive', [toServer['img0'].path, toServer['img0'].name ])
+                                                toServer['img'+index] = {name : item.bannerId}
+                                            })
+                                            if(toServer['img0'].name == broadcastingBannerName){
+                                                //pass
+                                                console.log('넘어가는 편이야')
+                                            } else{
+                                                var getQuery = sql(`SELECT bannerId, bannerSrc 
+                                                                        FROM bannerMatched AS bm 
+                                                                                JOIN creatorInfo AS ci 
+                                                                                    ON bm.creatorId = ci.creatorId 
+                                                                                        WHERE ci.advertiseUrl = "${_url}" 
+                                                                                            AND bm.contractionState = 0;`)
+                                                getQuery.select(function(err, data){
+                                                    if (err){
+                                                        console.log(err)
+                                                    }
+                                                    else {
+                                                        console.log('2여깁니다')
+                                                        data.forEach(function(item, index){
+                                                            toServer['img'+index] = {path : item.bannerSrc, name : item.bannerId}
+                                                        });
+                                                        socket.emit('img receive', [data[0].bannerSrc, data[0].bannerId])
+                                                    };
+                                                });
+                                            }
                                         };
                                     })
                                 } else{ //계약된게 있지만 카테고리가 일치하지 않을때
-                                    getQuery = sql(`SELECT name, path FROM banner;`)
+                                    getQuery = sql(`SELECT bannerSrc, marketerId FROM bannerRegistered WHERE confirmState = 1;`)
                                     getQuery.select(function(err, data){
                                         if (err){
                                             console.log(err)
                                         }
                                         else {
+                                            console.log(3)
                                             data.forEach(function(item, index){
-                                                toServer['img'+index] = {path : item.path, name : item.name}
+                                                toServer['img'+index] = {path : item.bannerSrc, name : item.marketerId}
                                             });
-                                            console.log(toServer['img0'].name)
-                                            socket.emit('img receive', [toServer['img0'].path, toServer['img0'].name ])
+                                            if(toServer['img0'].name == broadcastingBannerName){
+                                                //pass
+                                                console.log('넘어가는 편이야')
+                                            } else{
+                                                var getQuery = sql(`SELECT bannerSrc, marketerId FROM bannerRegistered WHERE confirmState = 1;`)
+                                                getQuery.select(function(err, data){
+                                                    if (err){
+                                                        console.log(err)
+                                                    }
+                                                    else {
+                                                        console.log('3여깁니다')
+                                                        data.forEach(function(item, index){
+                                                            toServer['img'+index] = {path : item.bannerSrc, name : item.marketerId}
+                                                        });
+                                                        socket.emit('img receive', [toServer['img0'].path, toServer['img0'].name ])
+                                                    };
+                                                });
+                                            }
                                         };
                                     })
                                 }
@@ -237,31 +401,10 @@ io.use( function(socket, next) {
                         });
                     };
                 }
-            })
-            // var getQuery = sql(`SELECT name, path FROM banner JOIN matchedbanner where matchedbanner.url = "${ msg[0] }" AND matchedbanner.bannerId = banner.name;`)
-
-            // getQuery.select(function(err, data){
-            //     if (err){
-            //         console.log(err)
-            //     }
-            //     else {
-            //         data.forEach(function(item, index){
-            //             toServer['img'+index] = {path : item.path, name : item.name}
-            //         });
-            //         console.log(toServer['img0'].name)
-            //         socket.emit('img receive', [toServer['img0'].path, toServer['img0'].name ])
-            //     };
-                // sql.pool.end(function(err){
-                //   if (err) console.log(err);
-                //   else {
-                //     console.log('** Finished');
-                //   }
-                // });
-            //   });
-            
+            }) 
         });
-    });  
-}());
+    })
+})();
 
 http.listen(3002, function(){
     console.log('connected!');

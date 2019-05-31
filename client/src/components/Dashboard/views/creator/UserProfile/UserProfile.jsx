@@ -14,6 +14,7 @@ import CardHeader from '../../../components/Card/CardHeader';
 import CardAvatar from '../../../components/Card/CardAvatar';
 import CardBody from '../../../components/Card/CardBody';
 import CardFooter from '../../../components/Card/CardFooter';
+import EssayFormTest from './accountValidationFormTest';
 
 const styles = {
   cardCategoryWhite: {
@@ -297,6 +298,19 @@ function UserProfile(props) {
                 <Button color="primary">계약완료</Button>
               </CardFooter>
             )}
+          </Card>
+        </GridItem>
+      </GridContainer>
+      <GridContainer>
+        <GridItem xs={12} sm={12} md={8}>
+          <Card>
+            <CardHeader color="primary">
+              <h4 className={classes.cardTitleWhite}>계좌관리</h4>
+              <p className={classes.cardCategoryWhite}>내 계좌를 관리합니다.</p>
+            </CardHeader>
+            <CardBody>
+              <EssayFormTest />
+            </CardBody>
           </Card>
         </GridItem>
       </GridContainer>
