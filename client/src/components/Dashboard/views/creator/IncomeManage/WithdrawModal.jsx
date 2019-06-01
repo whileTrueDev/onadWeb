@@ -15,11 +15,14 @@ import RadioGroup from '@material-ui/core/RadioGroup';
 import Radio from '@material-ui/core/Radio';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import TextField from '@material-ui/core/TextField';
+import Dialog from '@material-ui/core/Dialog';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogActions from '@material-ui/core/DialogActions';
 // icons
 import Close from '@material-ui/icons/CloseOutlined';
 // customized component
 import Button from '../../../components/CustomButtons/Button';
-
+import Warning from '../../../components/Typography/Warning';
 
 const useStyles = makeStyles(theme => ({
   modal: {
@@ -66,7 +69,36 @@ const useStyles = makeStyles(theme => ({
     width: 250,
     fontSize: 16,
   },
+  dialog: {
+    marginTop: theme.spacing(2),
+    marginRight: theme.spacing(1),
+    marginLeft: theme.spacing(1),
+  },
+  dialogContent: {
+    marginBottom: theme.spacing(1),
+  },
 }));
+
+function useWithdrawalSnack(handleClose) {
+  const [withdrawalSnack, setWithdrawalSnack] = React.useState(false);
+
+  function handleSnackClose() {
+    setWithdrawalSnack(false);
+    handleClose(); // 모달창까지 닫기
+  }
+
+  function handleOnlyDialogClose() {
+    setWithdrawalSnack(false);
+  }
+
+  function handleSnackOpen() {
+    setWithdrawalSnack(true);
+  }
+
+  return {
+    withdrawalSnack, handleSnackClose, handleOnlyDialogClose, handleSnackOpen,
+  };
+}
 
 function useValue(defaultValue) {
   const [selectValue, setValue] = React.useState(defaultValue);
@@ -81,29 +113,37 @@ function useValue(defaultValue) {
 function WithdrawModal(props) {
   const classes = useStyles();
   const {
-    open, handleClose, accountNumber, receivable, handleSnackOpen,
+    open, handleClose, accountNumber, receivable, history,
   } = props;
   // select value
   const { selectValue, handleChange } = useValue('10000');
 
+  // 출금신청 스낵바
+  const {
+    withdrawalSnack, handleSnackClose, handleOnlyDialogClose, handleSnackOpen,
+  } = useWithdrawalSnack(handleClose);
+
   // 결제 진행 버튼 클릭
   function handleClick() {
-    // console.log(selectValue);
-    // 해당 금액 만큼 출금 내역에 추가하는 요청
-    axios.post('/dashboard/creator/withdrawal', {
-      withdrawalAmount: selectValue,
-    }).then((res) => {
-      console.log(res);
-    }).catch((err) => {
-      console.log(err);
-    });
-
-    // axios.put('/dashboard/creator/withdrawal', {
-
-    // })
-
     handleSnackOpen();
-    handleClose();
+  }
+
+  function handleSubmitClick() {
+    if (receivable - selectValue < 0) {
+      alert('장난치지마세요!!!');
+    } else {
+      // 해당 금액 만큼 출금 내역에 추가하는 요청
+      axios.post('/dashboard/creator/withdrawal', {
+        withdrawalAmount: selectValue,
+      }).then((res) => {
+        console.log(res);
+      }).catch((err) => {
+        console.log(err);
+      });
+
+      handleSnackClose();
+      history.push('/dashboard/income');
+    }
   }
 
   return (
@@ -280,6 +320,51 @@ function WithdrawModal(props) {
             </Button>
           </div>
         </div>
+        {/* 출금 신청 완료 시의 notification */}
+        <Dialog
+          open={withdrawalSnack}
+          keepMounted
+          onClose={handleSnackClose}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <AppBar color="primary" position="static" elevation={1}>
+            <Toolbar variant="dense">
+              <Typography variant="h6" color="inherit">
+                입력하신대로 출금 진행하시겠어요?
+              </Typography>
+              <div className={classes.sectionButton}>
+                <IconButton color="inherit" onClick={handleOnlyDialogClose}>
+                  <Close />
+                </IconButton>
+              </div>
+            </Toolbar>
+          </AppBar>
+
+          <Divider />
+          <DialogContent className={classes.dialog}>
+            <Typography className={classes.dialogContent} variant="h5" marked="center">
+              {`출금 신청액 : ${selectValue}`}
+            </Typography>
+            <Typography className={classes.dialogContent} variant="h5" marked="center">
+              {`출금 이후 잔여 출금 가능 금액 : ${receivable - selectValue}`}
+            </Typography>
+            <Warning>
+              <Typography className={classes.dialogContent} variant="h6" marked="center">
+                {'입금까지 하루 또는 이틀이 소요되어요!!'}
+              </Typography>
+            </Warning>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleOnlyDialogClose}>
+              취소
+            </Button>
+            <Button onClick={handleSubmitClick} color="info">
+              진행
+            </Button>
+          </DialogActions>
+        </Dialog>
+
       </div>
     </Modal>
   );
@@ -290,7 +375,6 @@ WithdrawModal.propTypes = {
   handleClose: PropTypes.func.isRequired,
   accountNumber: PropTypes.string.isRequired,
   receivable: PropTypes.number.isRequired,
-  handleSnackOpen: PropTypes.func.isRequired,
 };
 
 export default WithdrawModal;

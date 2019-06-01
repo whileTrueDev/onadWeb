@@ -25,8 +25,8 @@ router.get('/creator/income', function(req, res, next) {
     } else {
       const DBquery = `SELECT 
       creatorTotalIncome, creatorReceivable, creatorAccountNumber, creatorIncome.date
-      FROM creatorIncome
-      JOIN creatorInfo as ci
+      FROM creatorInfo as ci
+      JOIN creatorIncome 
       ON ci.creatorId = creatorIncome.creatorId
       WHERE ci.creatorId="${creatorId}"
       ORDER BY date desc
@@ -247,32 +247,32 @@ router.route('/creator/account').get(function(req, res, next) {
 
 
 router.route('/creator/contraction')
-.post((req, res, next)=>{
-  const creatorId = req.body.creatorId;
-  console.log(creatorId);
+  .post((req, res, next) => {
+    const creatorId = req.body.creatorId;
+    console.log(creatorId);
 
-  pool.getConnection(function(err, conn){
-    if(err){ 
-      console.log(err);
-    }
-    const updateQuery = `
-    UPDATE creatorInfo
-    SET creatorContractionAgreement = ?
-    WHERE creatorInfo.creatorId = ?`;
-    const updateArray = [1, creatorId];
-    conn.query(updateQuery, updateArray, function(err, result, fields){
-      if (err) {
+    pool.getConnection(function(err, conn){
+      if(err){ 
         console.log(err);
       }
-      if(result[0]){
-        res.send(true);
-      } else {
-        res.send(false);
-      }
+      const updateQuery = `
+      UPDATE creatorInfo
+      SET creatorContractionAgreement = ?
+      WHERE creatorInfo.creatorId = ?`;
+      const updateArray = [1, creatorId];
+      conn.query(updateQuery, updateArray, function(err, result, fields){
+        if (err) {
+          console.log(err);
+        }
+        if(result[0]){
+          res.send(true);
+        } else {
+          res.send(false);
+        }
+      });
+      conn.release();
     });
-    conn.release();
-  });
-})
+  })
 
 
 // 크리에이터 출금 정보 입력
@@ -299,20 +299,31 @@ router.route('/creator/withdrawal').post(function(req, res, next) {
           if(err){
             console.log('크리에이터 출금 정보 입력 오류', err);
           }
-          res.send({success: success});
-          conn.release();
       });
 
-      // 출금 신청 금액에 맞추어 출금 가능 금액 수정 쿼리
-      // const updateQueryState = `
-      // INSERT
-      // INTO creatorIncome
-      // (creatorId, creatorTotalIncome, creatorReceivable)
-      // VALUES (?, ?, ?)`;
+      // 출금 신청 금액에 맞추어 출금 가능 금액 수정하여 삽입하는 쿼리
+      const updateQueryState = `
+        INSERT INTO
+        creatorIncome (creatorId, creatorTotalIncome, creatorReceivable)
+        SELECT creatorId, creatorTotalIncome, creatorReceivable - ?
+        FROM creatorIncome
+        WHERE creatorId = ?
+        ORDER BY date DESC
+        LIMIT 1`
+      const updateQueryArray = [
+        withdrawlAmount, creatorId
+      ];
 
-      // const updateQueryArray = [
-      //   creatorId,  - withdrawlAmount
-      // ];
+      conn.query(updateQueryState, updateQueryArray, function(err, result, fields){
+        if(err){
+          console.log('크리에이터 출금신청 금액 수정삽입 오류', err);
+        }
+        res.send({
+          insertWithdrawalSuccess: 'success',
+          updateIncome: 'success'
+        });
+        conn.release();
+    });
     }
   })
 })

@@ -127,7 +127,10 @@ router.route('/auth/:id')
     if(err){ 
       console.log(err);
     }
-    conn.query(`UPDATE marketerInfo SET marketerEmailAuth = 1 WHERE marketerId = ? `, [req.params.id], function(err, result, fields){
+    conn.query(`
+    UPDATE marketerInfo
+    SET marketerEmailAuth = 1
+    WHERE marketerId = ?`, [req.params.id], function(err, result, fields){
       if(err){
         console.log(err);
       }else{

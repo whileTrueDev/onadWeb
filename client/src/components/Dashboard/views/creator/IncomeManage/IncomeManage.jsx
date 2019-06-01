@@ -129,21 +129,6 @@ function useWithdrawModal() {
 
   return { modalOpen, handleWithdrawModalOpen, handleWithdrawModalClose };
 }
-
-function useWithdrawalSnack() {
-  const [withdrawalSnack, setWithdrawalSnack] = React.useState(false);
-
-  function handleClose() {
-    setWithdrawalSnack(false);
-  }
-
-  function handleSnackOpen() {
-    setWithdrawalSnack(true);
-  }
-
-  return { withdrawalSnack, handleClose, handleSnackOpen };
-}
-
 function Income(props) {
   const { classes, session, history } = props;
   // 날짜 범위 데이터
@@ -160,8 +145,6 @@ function Income(props) {
     handleWithdrawModalOpen,
     handleWithdrawModalClose,
   } = useWithdrawModal();
-  // 출금신청 스낵바
-  const { withdrawalSnack, handleClose, handleSnackOpen } = useWithdrawalSnack();
   // 계좌 입력 다이얼로그
   const { accountDialogOpen, handleDialogOpen, handleDialogClose } = useDialog();
 
@@ -292,21 +275,28 @@ function Income(props) {
             </CardHeader>
             <CardBody>
               <div className={classes.buttonWrapper}>
+                {!incomeData.loading && incomeData.payload
+                && (
                 <Button
                   color="success"
                   round
                   onClick={handleWithdrawModalOpen}
+                  disabled={!incomeData.payload.creatorAccountNumber}
                 >
                   <Payment />
                   {'출금신청'}
                 </Button>
+                )}
               </div>
             </CardBody>
             <CardFooter stats>
-              <Tooltip title="계정관리로 이동해요!">
+              <Tooltip title="만일 그렇지 않다면 계정 관리탭에서 계좌 정보를 수정하세요!" placement="bottom-start">
                 <div className={classes.stats}>
                   <WarningTypo><Warning /></WarningTypo>
-                  <span className={classes.dangerText}>계좌정보를 정확히 입력하셨나요?</span>
+                  {!incomeData.loading && incomeData.payload.creatorAccountNumber
+                    ? (<span className={classes.dangerText}>계좌정보를 정확히 입력하셨나요?</span>)
+                    : (<span className={classes.dangerText}>계좌정보를 입력하셔야 출금이 가능해요!</span>)
+                  }
                 </div>
               </Tooltip>
             </CardFooter>
@@ -335,11 +325,11 @@ function Income(props) {
       && (
       <WithdrawlModal
         open={modalOpen}
+        history={history}
         handleOpen={handleWithdrawModalOpen}
         handleClose={handleWithdrawModalClose}
         accountNumber={incomeData.payload.creatorAccountNumber}
         receivable={incomeData.payload.creatorReceivable}
-        handleSnackOpen={handleSnackOpen}
       />
       )}
 
@@ -359,15 +349,6 @@ function Income(props) {
       />
       )}
 
-      {/* 출금 신청 완료 시의 notification */}
-      <Snackbar
-        place="bc"
-        color="success"
-        message="출금신청이 완료되었어요!! 입금에는 1일 ~ 2일정도 걸려요."
-        open={withdrawalSnack}
-        close
-        closeNotification={handleClose}
-      />
       {/* 계좌입력 다이얼로그 */}
       <AccountDialog
         open={accountDialogOpen}

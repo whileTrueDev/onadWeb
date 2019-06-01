@@ -10,9 +10,10 @@ router.route('/').get(function(req, res, next){
     if(err){ 
         console.log(err)
     }
-    conn.query(`SELECT * 
-                FROM creatorWithdrawal 
-                  WHERE creatorWithdrawal.creatorId = "${req.query.creatorId}"`, function(err, result, fields){
+    conn.query(`
+      SELECT * 
+      FROM creatorWithdrawal 
+      WHERE creatorWithdrawal.creatorId = "${req.query.creatorId}"`, function(err, result, fields){
         if(err){
             console.log(err);
         }
