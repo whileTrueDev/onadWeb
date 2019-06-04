@@ -71,8 +71,57 @@ const Dashboard = (props) => {
 
       {/* 첫번째 라인 */}
       <GridContainer>
-        {/* 총 수익금 */}
-        <GridItem xs={12} sm={6} md={6}>
+        {/* 승인된 배너 */}
+        {/* <GridItem xs={12} sm={6} md={4}>
+          <Card>
+            <CardHeader color="info" stats icon>
+              <CardIcon color="info">
+                <CheckIcon />
+              </CardIcon>
+              <p className={classes.cardCategory}>승인된 최신의 배너</p>
+              <ButtonBase
+                key={image.title}
+                className={classes.imageWrapper}
+                onClick={handleModalOpen}
+                style={{
+                  width: image.width,
+                }}
+              >
+                <div
+                  className={classes.imageSrc}
+                  style={{
+                    backgroundImage: `url(${image.url})`,
+                  }}
+                />
+                <div className={classes.imageBackdrop} />
+                <div className={classes.imageButton}>
+                  <Typography
+                    variant="h5"
+                    color="inherit"
+                    className={classes.imageTitle}
+                  >
+                    {image.title}
+                    <div className={classes.imageMarked} />
+                  </Typography>
+                  { matches && (
+                  <Grid container>
+                    <Typography
+                      variant="subtitle2"
+                      className={classes.imageSubTitle}
+                    >
+                      {image.description}
+                    </Typography>
+                  </Grid>
+                  )}
+
+                </div>
+              </ButtonBase>
+
+            </CardHeader>
+          </Card>
+        </GridItem> */}
+        {/* 광고캐시 잔액 */}
+        <GridItem xs={12} sm={6} md={4}>
           <Card>
             {cashData.loading && <div style={{ textAlign: 'center' }}><CircularProgress /></div>}
             {!cashData.loading && cashData.error && <span>오류에요.. 침착하시고.. 다시 시도해보세요</span>}
@@ -95,27 +144,6 @@ const Dashboard = (props) => {
                 {!cashData.loading && cashData.payload
                 && <span>{`Updated : ${cashData.payload.date}`}</span>
                 }
-              </div>
-            </CardFooter>
-          </Card>
-        </GridItem>
-        <GridItem xs={12} sm={6} md={6}>
-          <Card>
-            <CardHeader color="info" stats icon>
-              <CardIcon color="info">
-                <CheckIcon />
-              </CardIcon>
-              <p className={classes.cardCategory}>출금 가능한 수익금</p>
-              <h3 className={classes.cardTitle}>
-                <small>원</small>
-              </h3>
-            </CardHeader>
-            <CardFooter stats>
-              <div className={classes.stats} style={{ alignItems: 'center' }}>
-                <Info><Money /></Info>
-                <Link to="/dashboard/user">
-                  <span className={classes.infoText}>출금 신청 하시겠어요?</span>
-                </Link>
               </div>
             </CardFooter>
           </Card>

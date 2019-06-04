@@ -4,19 +4,14 @@ const path = require('path');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const passport = require('./passportStrategy');
-const pool = require('./model/connectionPool'); // local path로 key값을 사용하기 때문에 동일한 경로의 파일일 경우, 같은 객체를 공유하게 된다.
-const checkLogin = require('./middlewares/ensureAuthenticated');
-
 
 //Router 정의
-
-var homeRouter = require('./routes/home');
 var loginRouter = require('./routes/login');
 var registRouter = require('./routes/regist');
 var mailerRouter = require('./routes/mailer');
 var dashboardRouter = require('./routes/dashboard');
 var validatedAccountRouter = require('./routes/validatedAccount');
-var admin = require('./routes/admin');
+var adminRouter = require('./routes/admin');
 var app = express();
 
 // view를 찾을 경로를 `views`로 저장하여 rendering시 찾을 수 있도록 함.
@@ -48,14 +43,12 @@ app.all('/*', function(req, res, next) {
   next();
 });
 
-app.use('/', homeRouter);
 app.use('/login', loginRouter);
-//app.use('/user', checkLogin, userRouter);
-app.use('/regist', registRouter); 
+app.use('/regist', registRouter);
 app.use('/mailer', mailerRouter); 
 app.use('/dashboard', dashboardRouter);
 app.use('/validatedAccount', validatedAccountRouter)
-app.use('/admin', admin)
+app.use('/admin', adminRouter)
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
