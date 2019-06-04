@@ -16,21 +16,21 @@ const twitchStrategy = require("passport-twitch").Strategy;
 
 // DB 객체 생성
 const pool = require('./model/connectionPool');
-
+const axios = require('axios');
 // 암호화 체크 객체 생성
 const encrpyto = require('./encryption');
 
+
+
+
 //serializeUser를 정의한다. session에 저장해둘 data를 구현하는 것.
-//user는 LocalStrategy를 통해 정의된 done()을 통해 전달되는 인자값.
 passport.serializeUser((user, done)=>{
     console.log('serialize');
-    //req.session.passport.user(inner property)의 영역으로 저장된다.
     done(null, user);
 });
 
 //로그인이 되었을 때 매 요청시마다 자동으로 수행되는 session에서 인증된 req.user의 영역으로 저장하기.
 passport.deserializeUser((user, done)=>{
-    console.log('deserialize');
     //db에서 추가로 데이터를 req.user에 저장.
     done(null, user);
 })
@@ -97,6 +97,7 @@ passport.use(new twitchStrategy({
     scope: "user_read",
     passReqToCallback: true,
   },
+  // login성공시 수행되는 함수.
   function(req, accessToken, refreshToken, profile, done) {
         let user = {
             creatorId : profile._json._id,
@@ -106,7 +107,37 @@ passport.use(new twitchStrategy({
             creatorLogo : profile._json.logo,
             userType: "creator"
         }
-        return done(null, user);
+        
+        pool.getConnection(function(err, conn){
+            if(err){ 
+                console.log(err);
+                done(err, user);
+                //return err;
+            }
+            conn.query(`SELECT creatorIp, creatorId FROM creatorInfo WHERE creatorId = ? `, [user.creatorId], function(err, result, fields){
+                if(result[0]){
+                    //비밀번호를 위한 수행
+                    console.log('현재 DB에 존재합니다');
+                    user['creatorIp'] = result[0].creatorIp;
+                    conn.release();
+                    return done(null, user);
+                }else{
+                    console.log('DB에 존재하지 않습니다.');
+                    let creatorIp = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+                    user['creatorIp'] = creatorIp;
+                    const Infoquery = `INSERT INTO creatorInfo (creatorId, creatorName, creatorMail, creatorIp) VALUES (?, ?, ?, ?)`
+                    conn.query(Infoquery, [user.creatorId, user.creatorName, user.creatorMail, creatorIp], (err, result, field)=>{
+                        console.log('creatorInfo table에 정보 입력.');
+                    })
+                    const Incomequery = `INSERT INTO creatorIncome (creatorId, creatorTotalIncome, creatorReceivable) VALUES (?, ?, ?)`
+                    conn.query(Incomequery, [user.creatorId, 0, 0], (err, result, field)=>{
+                        console.log('creatorIncome table에 정보 입력.');
+                    })
+                    conn.release();
+                    return done(null, user);
+                }
+            });
+        })
     }
 ));
 

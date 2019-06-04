@@ -64,8 +64,6 @@ class Dashboard extends React.Component {
       mobileOpen: false,
       session: session,  // different router for creator or marketer
     };
-
-    console.log(this.state.session)
   }
   handleImageClick = sidebarImage => {
     this.setState({ sidebarImage: sidebarImage });

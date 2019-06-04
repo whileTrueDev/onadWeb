@@ -9,10 +9,9 @@ const checkLogin = require('./middlewares/ensureAuthenticated');
 
 
 //Router 정의
-var usersRouter = require('./routes/users');
+
 var homeRouter = require('./routes/home');
 var loginRouter = require('./routes/login');
-var userRouter = require('./routes/users');
 var registRouter = require('./routes/regist');
 var mailerRouter = require('./routes/mailer');
 var dashboardRouter = require('./routes/dashboard');
@@ -51,7 +50,7 @@ app.all('/*', function(req, res, next) {
 
 app.use('/', homeRouter);
 app.use('/login', loginRouter);
-app.use('/user', checkLogin, userRouter);
+//app.use('/user', checkLogin, userRouter);
 app.use('/regist', registRouter); 
 app.use('/mailer', mailerRouter); 
 app.use('/dashboard', dashboardRouter);

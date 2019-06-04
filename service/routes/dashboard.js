@@ -9,9 +9,12 @@ const preprocessingBannerData = preprocessing.preprocessingBannerData;
 /** 세션의 userType 함수 및 라우터 */
 router.get('/checkUserType', function(req, res, next) {
   const userInfo = req._passport.session.user;
-  console.log(userInfo);
   res.send(userInfo);
 });
+
+//크리에이터의 기본정보 들고오기.
+
+
 
 // 크리에이터 수익금 라우터 및 정보조회
 router.get('/creator/income', function(req, res, next) {
@@ -40,7 +43,6 @@ router.get('/creator/income', function(req, res, next) {
         } else {
           // 결과값이 있는 경우
           if (rows.length > 0) {
-            console.log(rows);
             let result = sortRows(rows, 'date')[0];
             result.date = result.date.toLocaleString();
             conn.release();
@@ -160,7 +162,6 @@ router.route('/creator/chartdata').get(function(req, res, next) {
   // creatorId 가져오기
   const creatorId = req._passport.session.user.creatorId;
   const dateRange = req.query.dateRange;
-
   pool.getConnection((err, conn) => {
     if (err) {
       console.log(err)
@@ -215,33 +216,6 @@ router.route('/creator/chartdata').get(function(req, res, next) {
         }
       })
     })
-  })
-})
-
-// 계좌정보를 입력했는지
-router.route('/creator/account').get(function(req, res, next) {
-  const creatorId = req._passport.session.user.creatorId;
-  pool.getConnection((err, conn) => {
-    if (err) {
-      console.log(err)
-    } else {
-      conn.query(`SELECT creatorAccountNumber
-        FROM creatorInfo
-        WHERE creatorId = ${creatorId}
-        LIMIT 1
-        `, function(err, result, fields){
-          if(err){
-              console.log(err);
-          }
-          if (result.length > 0) {
-            conn.release();
-            res.send(result[0]);
-          }else{
-            conn.release();
-            res.end();
-          }
-      });
-    }
   })
 })
 
@@ -328,41 +302,64 @@ router.route('/creator/withdrawal').post(function(req, res, next) {
   })
 })
 
+// 계좌정보를 입력했는지
+router.route('/creator/account').get(function(req, res, next) {
+  const creatorId = req._passport.session.user.creatorId;
+  pool.getConnection((err, conn) => {
+    if (err) {
+      console.log(err)
+    } else {
+      conn.query(`SELECT creatorAccountNumber
+        FROM creatorInfo
+        WHERE creatorId = ${creatorId}
+        LIMIT 1
+        `, function(err, result, fields){
+          if(err){
+              console.log(err);
+          }
+          if (result.length > 0) {
+            conn.release();
+            res.send(result[0]);
+          }else{
+            conn.release();
+            res.end();
+          }
+      });
+    }
+  })
+})
+
 /**
  * **********************************
  *  Marketer Routes
  * **********************************
  */
-
 router.route('/marketer/cash').get(function(req, res, next) {
   const marketerId = req._passport.session.user.userid;
+  
+    // 출금 신청 데이터 넣기
+    const queryState = `
+    SELECT marketerDebit, date
+    FROM marketerCost
+    WHERE marketerId = ?
+    ORDER BY date DESC
+    LIMIT 1`;
 
-  pool.getConnection((err, conn) => {
-    if (err) {
-      console.log(err)
-    } else {
-      // 출금 신청 데이터 넣기
-      const queryState = `
-      SELECT marketerDebit, date
-      FROM marketerCost
-      WHERE marketerId = ?
-      ORDER BY date DESC
-      LIMIT 1`;
+    const queryArray = [
+      marketerId
+    ];
 
-      const queryArray = [
-        marketerId
-      ];
-
-      conn.query(queryState, queryArray, function(err, result, fields){
-          if(err){
-            console.log('마케터 광고캐시 조회 오류', err);
-          }
-          if (result.length > 0) {
-            console.log(result[0]);
-            res.send(result[0])
-          }
-          conn.release();
-      });
+    conn.query(queryState, queryArray, function(err, result, fields){
+        if(err){
+          console.log('마케터 광고캐시 조회 오류', err);
+        }
+        if (result.length > 0) {
+          console.log(result[0]);
+          res.send(result[0])
+        }
+        conn.release();
+    });
   }})
 })
+
 module.exports = router;

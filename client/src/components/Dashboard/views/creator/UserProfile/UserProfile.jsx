@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 // @material-ui/core components
 import withStyles from '@material-ui/core/styles/withStyles';
-import InputLabel from '@material-ui/core/InputLabel';
+import TextField from '@material-ui/core/TextField';
+import Typography from '@material-ui/core/Typography';
+import Divider from '@material-ui/core/Divider';
 // core components
 import avatar from '../../../assets/img/faces/marc.jpg';
 import GridItem from '../../../components/Grid/GridItem';
@@ -14,7 +16,8 @@ import CardHeader from '../../../components/Card/CardHeader';
 import CardAvatar from '../../../components/Card/CardAvatar';
 import CardBody from '../../../components/Card/CardBody';
 import CardFooter from '../../../components/Card/CardFooter';
-import EssayFormTest from './accountValidationFormTest';
+import AccountNumberForm from '../IncomeManage/AccountNumberForm';
+
 
 const styles = {
   cardCategoryWhite: {
@@ -33,7 +36,47 @@ const styles = {
     marginBottom: '3px',
     textDecoration: 'none',
   },
+  contentWrapper: {
+    margin: '20px 0px 20px 0px',
+  },
+
+  contentDetail: {
+    marginTop: '5px',
+    marginLeft: '20px',
+  },
+  textField: {
+    width: '100%',
+    borderColor: 'linear-gradient(60deg, #ab47bc, #8e24aa)',
+  },
 };
+
+
+const CssTextField = withStyles({
+  root: {
+    color: '#9c27b0',
+    borderColor: '#9c27b0',
+    '& .MuiFormLabel-root ': {
+      color: '#9c27b0',
+    },
+    '& .MuiInputBase-input:before': {
+      color: '#9c27b0',
+    },
+    '& .MuiInput-underline:after': {
+      borderBottomColor: '#9c27b0',
+    },
+    '& .MuiOutlinedInput-root': {
+      '& fieldset': {
+        borderColor: '#9c27b0',
+      },
+      '&:hover fieldset': {
+        borderColor: '#9c27b0',
+      },
+      '&.Mui-focused fieldset': {
+        borderColor: '#9c27b0',
+      },
+    },
+  },
+})(TextField);
 
 
 // 임시데이터
@@ -53,22 +96,40 @@ function UserProfile(props) {
 
   // 대시보드에 필요한 데이터 임시적으로 사용
   const [data, setData] = useState(defaultIncomeData);
-
+  const [userData, setuserData] = useState('');
+  const [accountNum, setAccountNum] = useState('');
   // input값 얻기 위해
   const [value, setValue] = useState('...');
 
-  useEffect(() => {
-    console.log('데이터요청');
+  const readyIncomeData = useCallback(() => {
+    console.log('계좌정보 가져오기');
     axios.get('/dashboard/creator/income', {
       params: {
         creatorId,
       },
     }).then((res) => {
       setData(res.data);
-    }).catch((res) => {
-      console.log(res);
+      setAccountNum(res.data.creatorAccountNumber);
     });
   }, []);
+
+  const readyCreatorData = useCallback(() => {
+    console.log('유저정보 가져오기');
+    axios.get('/dashboard/checkUserType')
+      .then((res) => {
+        const user = res.data;
+        console.log(user);
+        setuserData(user);
+      });
+  }, []);
+
+  useEffect(() => {
+    readyIncomeData();
+  }, [readyIncomeData]);
+
+  useEffect(() => {
+    readyCreatorData();
+  }, [readyCreatorData]);
 
   const UserContract = () => {
     if (data.creatorName === value) {
@@ -93,145 +154,13 @@ function UserProfile(props) {
   return (
     <div>
       <GridContainer>
-        <GridItem xs={12} sm={12} md={8}>
-          <Card>
-            <CardHeader color="primary">
-              <h4 className={classes.cardTitleWhite}>Edit Profile</h4>
-              <p className={classes.cardCategoryWhite}>Complete your profile</p>
-            </CardHeader>
-            <CardBody>
-              <GridContainer>
-                <GridItem xs={12} sm={12} md={5}>
-                  <CustomInput
-                    labelText="Company (disabled)"
-                    id="company-disabled"
-                    formControlProps={{
-                      fullWidth: true,
-                    }}
-                    inputProps={{
-                      disabled: true,
-                    }}
-                  />
-                </GridItem>
-                <GridItem xs={12} sm={12} md={3}>
-                  <CustomInput
-                    labelText="Username"
-                    id="username"
-                    formControlProps={{
-                      fullWidth: true,
-                    }}
-                  />
-                </GridItem>
-                <GridItem xs={12} sm={12} md={4}>
-                  <CustomInput
-                    labelText="Email address"
-                    id="email-address"
-                    formControlProps={{
-                      fullWidth: true,
-                    }}
-                  />
-                </GridItem>
-              </GridContainer>
-              <GridContainer>
-                <GridItem xs={12} sm={12} md={6}>
-                  <CustomInput
-                    labelText="First Name"
-                    id="first-name"
-                    formControlProps={{
-                      fullWidth: true,
-                    }}
-                  />
-                </GridItem>
-                <GridItem xs={12} sm={12} md={6}>
-                  <CustomInput
-                    labelText="Last Name"
-                    id="last-name"
-                    formControlProps={{
-                      fullWidth: true,
-                    }}
-                  />
-                </GridItem>
-              </GridContainer>
-              <GridContainer>
-                <GridItem xs={12} sm={12} md={4}>
-                  <CustomInput
-                    labelText="City"
-                    id="city"
-                    formControlProps={{
-                      fullWidth: true,
-                    }}
-                  />
-                </GridItem>
-                <GridItem xs={12} sm={12} md={4}>
-                  <CustomInput
-                    labelText="Country"
-                    id="country"
-                    formControlProps={{
-                      fullWidth: true,
-                    }}
-                  />
-                </GridItem>
-                <GridItem xs={12} sm={12} md={4}>
-                  <CustomInput
-                    labelText="Postal Code"
-                    id="postal-code"
-                    formControlProps={{
-                      fullWidth: true,
-                    }}
-                  />
-                </GridItem>
-              </GridContainer>
-              <GridContainer>
-                <GridItem xs={12} sm={12} md={12}>
-                  <InputLabel style={{ color: '#AAAAAA' }}>About me</InputLabel>
-                  <CustomInput
-                    labelText="Lamborghini Mercy, Your chick she so thirsty, I'm in that two seat Lambo."
-                    id="about-me"
-                    formControlProps={{
-                      fullWidth: true,
-                    }}
-                    inputProps={{
-                      multiline: true,
-                      rows: 5,
-                    }}
-                  />
-                </GridItem>
-              </GridContainer>
-            </CardBody>
-            <CardFooter>
-              <Button color="primary">Update Profile</Button>
-            </CardFooter>
-          </Card>
-        </GridItem>
-        <GridItem xs={12} sm={12} md={4}>
-          <Card profile>
-            <CardAvatar profile>
-              <a href="#pablo" onClick={e => e.preventDefault()}>
-                <img src={avatar} alt="..." />
-              </a>
-            </CardAvatar>
-            <CardBody profile>
-              <h6 className={classes.cardCategory}>CEO / CO-FOUNDER</h6>
-              <h4 className={classes.cardTitle}>Alec Thompson</h4>
-              <p className={classes.description}>
-                {`Don't be scared of the truth because we need to restart the
-                human foundation in truth And I love you like Kanye loves Kanye
-                I love Rick Owens’ bed design but the back is...`}
-              </p>
-              <Button color="primary" round>
-                Follow
-              </Button>
-            </CardBody>
-          </Card>
-        </GridItem>
-
         {/* 계약페이지 */}
         <GridItem xs={12} sm={12} md={12}>
-          <Card paper>
+          <Card>
             <CardHeader color="primary">
               <h4 className={classes.cardTitleWhite}>Contraction</h4>
             </CardHeader>
-            <CardBody paper>
+            <CardBody>
               <h4 className={classes.cardCategory} style={{ textAlign: 'center' }}>거래계약서</h4>
               {/* user 이름 ......에 넣기 */}
               <h6 className={classes.cardTitle} style={{ textAlign: 'center' }}>
@@ -302,17 +231,101 @@ function UserProfile(props) {
         </GridItem>
       </GridContainer>
       <GridContainer>
-        <GridItem xs={12} sm={12} md={8}>
+        <GridItem xs={12} sm={12} md={5}>
           <Card>
             <CardHeader color="primary">
               <h4 className={classes.cardTitleWhite}>계좌관리</h4>
               <p className={classes.cardCategoryWhite}>내 계좌를 관리합니다.</p>
             </CardHeader>
             <CardBody>
-              <EssayFormTest />
+              <div className={classes.contentWrapper}>
+                <Typography variant="subtitle1" id="select-account" className={classes.contentTitle}>
+                현재 등록된 계좌
+                </Typography>
+                <Typography
+                  id="select-account"
+                  className={classes.contentDetail}
+                >
+                  {accountNum ? `${accountNum.split('_')[0]}   ${accountNum.split('_')[1]}` : '현재 등록된 계좌가 존재하지 않습니다.'}
+                </Typography>
+              </div>
+              <Divider />
+              <Typography variant="subtitle1" id="select-account" className={classes.contentTitle}>
+                계좌 재입력
+              </Typography>
+              <AccountNumberForm />
             </CardBody>
           </Card>
         </GridItem>
+        <GridItem xs={12} sm={12} md={1} />
+        <GridItem xs={12} sm={12} md={5}>
+          <Card profile>
+            <CardAvatar profile>
+              <a href="#pablo" onClick={e => e.preventDefault()}>
+                <img src={userData.creatorLogo} alt="..." />
+              </a>
+            </CardAvatar>
+            <CardBody profile>
+              <h4 className={classes.cardTitle}>{userData.creatorDisplayName} 님의 정보</h4>
+              <GridContainer>
+                <GridItem xs={12} sm={12} md={6}>
+                  <CssTextField
+                    label="TWITCH 고유 ID"
+                    value={userData.creatorId}
+                    className={classes.textField}
+                    margin="normal"
+                    InputProps={{
+                      readOnly: true,
+                    }}
+                  />
+                </GridItem>
+                <GridItem xs={12} sm={12} md={6}>
+                  <CssTextField
+                    label="NAME"
+                    value={userData.creatorName}
+                    className={classes.textField}
+                    margin="normal"
+                    InputProps={{
+                      readOnly: true,
+                    }}
+                  />
+                </GridItem>
+
+              </GridContainer>
+              <GridContainer>
+                <GridItem xs={12} sm={12} md={12}>
+                  <CssTextField
+                    label="MAIL"
+                    value={userData.creatorMail}
+                    className={classes.textField}
+                    margin="normal"
+                    InputProps={{
+                      readOnly: true,
+                    }}
+                  />
+                </GridItem>
+              </GridContainer>
+              <GridContainer>
+                <GridItem xs={12} sm={12} md={12}>
+                  <CssTextField
+                    label="IP"
+                    value={userData.creatorIp}
+                    className={classes.textField}
+                    margin="normal"
+                    InputProps={{
+                      readOnly: true,
+                    }}
+                  />
+                </GridItem>
+              </GridContainer>
+
+              <Button color="primary" href="https://www.twitch.tv/settings/profile" round>
+                정보변경
+              </Button>
+            </CardBody>
+          </Card>
+        </GridItem>
+
       </GridContainer>
     </div>
   );
