@@ -99,8 +99,18 @@ class LoginPopover extends Component {
                   textAlign: 'center',
                 }}
                 >
-                  <LoginForm isMarketer history={history} handleClose={this.handleClose} logout={logout} />
-                  <LoginForm isMarketer={false} history={history} handleClose={this.handleClose} logout={logout} />
+                  <LoginForm
+                    isMarketer
+                    history={history}
+                    handleClose={this.handleClose}
+                    logout={logout}
+                  />
+                  <LoginForm
+                    isMarketer={false}
+                    history={history}
+                    handleClose={this.handleClose}
+                    logout={logout}
+                  />
                 </div>
               </Popover>
             </React.Fragment>

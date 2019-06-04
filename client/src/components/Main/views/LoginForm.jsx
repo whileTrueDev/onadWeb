@@ -84,7 +84,9 @@ class LoginForm extends Component {
   login = (event) => {
     const { userid, passwd } = this.state;
     const { history, logout, handleClose } = this.props;
-    event.preventDefault();
+    if (event) {
+      event.preventDefault();
+    }
     axios.post('/login',
       {
         userid,
@@ -130,6 +132,7 @@ class LoginForm extends Component {
             </DialogContentText>
             <form onChange={this.onChange}>
               <TextField
+                autoFocus
                 required
                 label="ID"
                 helperText="ID를 입력하세요."
@@ -147,6 +150,11 @@ class LoginForm extends Component {
                 name="passwd"
                 InputLabelProps={{ shrink: true }}
                 style={{ width: '90%' }}
+                onKeyPress={(e) => {
+                  if (e.key === 'Enter') {
+                    this.login();
+                  }
+                }}
               />
             </form>
             <Button
@@ -174,7 +182,7 @@ class LoginForm extends Component {
                 this.handleFindDialogOpen();
               }}
             >
-비밀번호가 기억나지 않으신가요?
+            비밀번호가 기억나지 않으신가요?
             </Button>
           </DialogContent>
           <DialogActions>

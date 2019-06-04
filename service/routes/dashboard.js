@@ -275,7 +275,7 @@ router.route('/creator/contraction')
   })
 
 
-// 크리에이터 출금 정보 입력
+// 마케터 광고 잔액 정보
 router.route('/creator/withdrawal').post(function(req, res, next) {
   const creatorId = req._passport.session.user.creatorId;
   const withdrawlAmount = req.body.withdrawalAmount;
@@ -328,4 +328,41 @@ router.route('/creator/withdrawal').post(function(req, res, next) {
   })
 })
 
+/**
+ * **********************************
+ *  Marketer Routes
+ * **********************************
+ */
+
+router.route('/marketer/cash').get(function(req, res, next) {
+  const marketerId = req._passport.session.user.userid;
+
+  pool.getConnection((err, conn) => {
+    if (err) {
+      console.log(err)
+    } else {
+      // 출금 신청 데이터 넣기
+      const queryState = `
+      SELECT marketerDebit, date
+      FROM marketerCost
+      WHERE marketerId = ?
+      ORDER BY date DESC
+      LIMIT 1`;
+
+      const queryArray = [
+        marketerId
+      ];
+
+      conn.query(queryState, queryArray, function(err, result, fields){
+          if(err){
+            console.log('마케터 광고캐시 조회 오류', err);
+          }
+          if (result.length > 0) {
+            console.log(result[0]);
+            res.send(result[0])
+          }
+          conn.release();
+      });
+  }})
+})
 module.exports = router;
