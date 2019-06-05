@@ -1,7 +1,7 @@
 const express = require('express');
 const passport = require('passport');
 const checkEmailAuth = require('../middlewares/checkEmailAuth');
-
+const pool = require('../model/connectionPool');
 const encrypto = require('../encryption');
 var router = express.Router();
 
@@ -18,6 +18,7 @@ router.get('/logout', function(req, res){
   req.session.destroy((err)=>{
     console.log('로그아웃 되었습니다.');
   })
+  res.end();
 });
 
 
@@ -26,16 +27,21 @@ router.post('/changePw', (req, res, next) =>{
   let marketerId = req.session.passport.user.userid;
   let key, salt;
   [key, salt] = encrypto.make(password);
-
   pool.getConnection(function(err, conn){
     if(err){ 
-      console.log(err);
+      conn.release();
+      res.send(false);
     }
     conn.query(`UPDATE marketerInfo SET marketerSalt = ?, marketerPasswd = ?, temporaryLogin = 0 WHERE marketerId = ? `, [salt, key, marketerId], function(err, result, fields){
-      console.log('비밀번호 변경 성공');
-      res.end();
+      if(err){
+        conn.release();
+        res.send(false);
+      }else{
+        console.log('비밀번호 변경 성공');
+        conn.release();
+        res.send(true);
+      }
     });
-    conn.release();
   });
 })
 
