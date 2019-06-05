@@ -47,6 +47,7 @@ passport.use( new LocalStrategy(
     // verify callback function
     // 위에서 정의한 username, password field명으로 인자값을 받는다.
     (req, userid, passwd, done) => {
+        console.log("로그인을 수행합니다.");
         // db관련 오류 핸들러.
         pool.getConnection(function(err, conn){
             if(err){ 
@@ -73,6 +74,7 @@ passport.use( new LocalStrategy(
                         if(result[0].temporaryLogin){
                             user['temporaryLogin'] = result[0].temporaryLogin;
                         }
+                        console.log("로그인이 완료되었습니다");
                         return done(null, user);        
                     }
                     else{

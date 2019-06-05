@@ -5,8 +5,8 @@ const creatorRouter = require('./creator');
 const marketerRouter = require('./marketer');
 const pool = require('../model/connectionPool');
 
-router.use('/creator', creatorRouter)
-router.use('/marketer', marketerRouter)
+router.use('/creator', creatorRouter);
+router.use('/marketer', marketerRouter);
 
 /** 세션의 userType 함수 및 라우터 */
 router.get('/checkUserType', function(req, res, next) {

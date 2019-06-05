@@ -14,8 +14,8 @@ router.post("/auth", function(req, res, next){
   let transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
-          user: 'newage3333@gmail.com',  // gmail 계정 아이디를 입력
-          pass: '일단미입력'          // gmail 계정의 비밀번호 : 내꺼 다 털리는거 아이가
+          user: 'dn0208@gmail.com',  // gmail 계정 아이디를 입력
+          pass: ''          // gmail 계정의 비밀번호 : 내꺼 다 털리는거 아이가
       }
   });
   let mailOptions = {
@@ -27,7 +27,7 @@ router.post("/auth", function(req, res, next){
   };
   transporter.sendMail(mailOptions, function(error, info){
     if (error) {
-      res.send(err);
+      res.send(error);
     }
     else {
       res.send('Email sent: ' + info.response);

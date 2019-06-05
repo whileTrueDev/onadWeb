@@ -7,7 +7,6 @@ checkEmailAuth = (req, res, next) =>{
     console.log('인증되었습니다.');
     res.send(req.session.passport.user);
   }
-  
 }
 
 module.exports = checkEmailAuth;
