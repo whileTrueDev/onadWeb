@@ -33,11 +33,47 @@ router.route('/cash').get(function(req, res, next) {
             console.log('마케터 광고캐시 조회 오류', err);
           }
           if (result.length > 0) {
-            console.log(result[0]);
             conn.release();
-            res.send(result[0]);
+            res.send(result);
+          } else {
+            conn.release();
+            res.end();
           }
-          //conn.release();
+      });
+  }})
+})
+
+router.route('/banner').get(function(req, res, next) {
+  const marketerId = req._passport.session.user.userid;
+
+  pool.getConnection((err, conn) => {
+    if (err) {
+      console.log(err)
+    } else {
+      // 출금 신청 데이터 넣기
+      const queryState = `
+      SELECT bannerId, bannerSrc, bannerCategory, date
+      FROM bannerRegistered
+      WHERE marketerId = ? AND confirmState = ?
+      ORDER BY date DESC
+      LIMIT 10`;
+
+      const queryArray = [
+        marketerId, 1 // 1 is the confirmState of valid banner
+      ];
+
+      conn.query(queryState, queryArray, function(err, result, fields){
+          if(err){
+            console.log('마케터 배너데이터 조회 오류', err);
+          } else {
+            if (result.length > 0) {
+              conn.release();
+              res.send(result);
+            } else{
+              conn.release();
+              res.end();
+            }
+          }
       });
   }})
 })

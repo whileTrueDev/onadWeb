@@ -60,13 +60,20 @@ router.get('/matchedBanner', function(req, res, next) {
       conn.release();
       res.json(err);
     } else {
-      const DBquery = `SELECT 
-      bannerSrc, marketerName, contractionTime, contractionState
-      FROM bannerMatched
-      JOIN marketerInfo
-      ON bannerMatched.marketerId=marketerInfo.marketerId
-      WHERE creatorId="${creatorId}"`;
-      conn.query(DBquery, (err, rows, fields) => {
+      const queryState = `
+        SELECT br.bannerSrc, mi.marketerId, bm.contractionTime, bm.contractionState
+        FROM bannerMatched as bm
+        JOIN bannerRegistered as br
+        ON SUBSTRING_INDEX(bm.contractionId, '/', 1) = br.bannerId
+        JOIN marketerInfo as mi
+        ON SUBSTRING_INDEX(br.bannerId, '_', 1) = mi.marketerId
+        WHERE contractionId LIKE '%/?/%'}%'
+      `;
+      const queryArray = [
+        creatorId
+      ];
+
+      conn.query(queryState, queryArray, (err, rows, fields) => {
         if (err) {
           // 디비 쿼리 오류인 경우
           console.log(err);
@@ -92,21 +99,35 @@ router.get('/matchedBanner', function(req, res, next) {
 
 // 크리에이터 현재 광고 중 배너
 router.route('/currentBanner').get(function(req, res, next){
+  const creatorId = req._passport.session.user.creatorId
   //DB연결후 query문을 통한 데이터 삽입 
   pool.getConnection(function(err, conn){
     if(err){ 
         console.log(err)
     }
-    conn.query(`SELECT 
-      bannerSrc, marketerName
-      FROM bannerMatched
-      JOIN contractionTimestamp as ct
-      ON ct.bannerId = bannerMatched.bannerId
+    const queryState = `
+      SELECT mi.marketerName, br.bannerSrc
+      FROM bannerMatched as bm
+
+      JOIN bannerRegistered as br
+      ON SUBSTRING_INDEX(bm.contractionId, '/', 1) = br.bannerId
+
       JOIN marketerInfo as mi
-      ON mi.marketerId = bannerMatched.marketerId
-      WHERE contractionState = 0
-      AND creatorId=${req._passport.session.user.creatorId}
-      LIMIT 1`, function(err, result, fields){
+      ON SUBSTRING_INDEX(bm.contractionId, '_', 1) = mi.marketerId
+
+      JOIN contractionTimestamp as ct
+      ON  ct.contractionId = bm.contractionId
+      
+      WHERE bm.contractionState = 0
+      AND ct.date >= NOW() - INTERVAL 10 MINUTE
+      AND bm.contractionId LIKE '%?%'
+      ORDER BY ct.date DESC
+      LIMIT 1`;
+    
+    const queryArray = [
+      creatorId
+    ]
+    conn.query(queryState, queryArray, function(err, result, fields){
         if(err){
             console.log(err);
         }

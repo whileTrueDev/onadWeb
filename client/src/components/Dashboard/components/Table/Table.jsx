@@ -81,14 +81,14 @@ function CustomTable({ ...props }) {
             {tableData.map(prop => (
               <TableRow key={shortid.generate()}>
                 {prop.map((value, i) => (
-                  value.indexOf('data:image/') === -1 // 없는 경우
+                  typeof (value) === 'string' && value.indexOf('data:image/') >= 0 // 없는 경우
                     ? (
                       <TableCell className={classes.tableCell} key={shortid.generate()}>
-                        {value}
+                        <img src={value} alt="banner" height="50%" />
                       </TableCell>
                     ) : (
                       <TableCell className={classes.tableCell} key={shortid.generate()}>
-                        <img src={value} alt="banner" height="50%" />
+                        {value}
                       </TableCell>
                     )
                 ))}
