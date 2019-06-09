@@ -67,12 +67,13 @@ router.get('/creator/matchedBanner', function(req, res, next) {
       conn.release();
       res.json(err);
     } else {
-      const DBquery = `SELECT 
-      bannerSrc, marketerName, contractionTime, contractionState
-      FROM bannerMatched
-      JOIN marketerInfo
-      ON bannerMatched.marketerId=marketerInfo.marketerId
-      WHERE creatorId="${creatorId}"`;
+      const DBquery = `SELECT br.bannerSrc, mi.marketerId, bm.contractionTime, bm.contractionState
+      FROM bannerMatched as bm
+      JOIN bannerRegistered as br
+      ON SUBSTRING_INDEX(bm.contractionId, '/', 1) = br.bannerId
+      JOIN marketerInfo as mi
+      ON SUBSTRING_INDEX(br.bannerId, '_', 1) = mi.marketerId
+      WHERE contractionId LIKE '%/?/%'`;
       conn.query(DBquery, (err, rows, fields) => {
         if (err) {
           // 디비 쿼리 오류인 경우
@@ -104,16 +105,14 @@ router.route('/creator/currentBanner').get(function(req, res, next){
     if(err){ 
         console.log(err)
     }
-    conn.query(`SELECT 
-      bannerSrc, marketerName
-      FROM bannerMatched
-      JOIN contractionTimestamp as ct
-      ON ct.bannerId = bannerMatched.bannerId
-      JOIN marketerInfo as mi
-      ON mi.marketerId = bannerMatched.marketerId
-      WHERE contractionState = 0
-      AND creatorId=${req._passport.session.user.creatorId}
-      LIMIT 1`, function(err, result, fields){
+    conn.query(`SELECT bannerSrc, marketerId FROM bannerRegistered AS br 
+                JOIN bannerMatched AS bm 
+                ON bm.contractionId 
+                LIKE CONCAT(br.bannerId, '%') AND bm.contractionState = 0 
+                JOIN contractionTimestamp AS ct
+                ON ct.contractionId = bm.contractionId
+                AND ct.contractionId LIKE "%${req._passport.session.user.creatorId}%"
+                ORDER BY ct.date DESC LIMIT 1;`, function(err, result, fields){
         if(err){
             console.log(err);
         }

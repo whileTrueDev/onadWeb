@@ -6,7 +6,7 @@ import { createBrowserHistory } from 'history';
 import RegistStepper from './components/regist/stepper';
 import Main from './components/Main';
 import Dashboard from './components/Dashboard/layouts/DashboardLayout';
-import Admin from './components/admin';
+import adminRoutes from './components/admin/routes';
 import Introduction from './components/Introduction';
 import Manual from './components/Manual';
 import * as serviceWorker from './serviceWorker';
@@ -19,7 +19,7 @@ ReactDOM.render(
     <Route exact path="/regist" component={RegistStepper} />
     <Route path="/introduction" component={Introduction} />
     <Route path="/manual" component={Manual} />
-    <Route path="/admin" component={Admin} />
+    <Route path="/admin" component={adminRoutes} />
     <Route path="/dashboard" component={Dashboard} history={history} />
   </Router>, document.getElementById('root'),
 );

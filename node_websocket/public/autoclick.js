@@ -1,1 +1,0 @@
-// $(document).ready(function(){ $('#chkBoxButton').trigger('click'); });

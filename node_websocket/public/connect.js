@@ -1,7 +1,7 @@
 
 module.exports = function () {
   var mysql = require('mysql');
-  var config = require('./db_info');
+  var config = require('./dbInfo');
   var pool = mysql.createPool({
     host: config.host,
     user: config.user,
