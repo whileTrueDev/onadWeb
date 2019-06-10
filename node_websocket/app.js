@@ -6,29 +6,33 @@ const sql = require('./public/select');
 const pool = require('./public/connect');
 const schedule = require('node-schedule');
 
+//view engine
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
 app.engine('html', require('ejs').renderFile);
+
+//static
 app.use('/public', express.static(__dirname + '/public')); //디렉토리 정적으로 고정하는 부분
 
+//routing
 app.get('/', function(req, res){ //index.html /로 라우팅
     console.log('home')
     res.render('home.ejs')
 });
 
 app.get('/banner/server', function(req, res){ // server.html /server로 라우팅 
+    //관리자 페이지 접속 시 
     console.log('server')
     var toServer = {};
     var tmp = sql('SELECT bannerId, bannerSrc FROM bannerMatched where contractionState = 1')
+    // 현재 송출 중인 배너들을 띄우는 부분
     tmp.select(function(err, data){
         if (err){
             console.log(err)
             res.render('server.ejs')
         }
         else {
-            data.forEach(function(item, index, array){
-                toServer['img'+index] = {path : item.path, name : item.name}
-            });
+            toServer['img'] = {path : data[0].path, name : data[0].name}
             res.render('server', {imgSource : toServer});
         };
         
@@ -44,13 +48,13 @@ app.get('/banner/server', function(req, res){ // server.html /server로 라우�
 app.get('/banner/:id', function(req, res){ ///banner/:id로 라우팅
     console.log('banner')
     var clientIp = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-    var tmp = sql('SELECT ipAdr FROM creatorInfo')
+    var tmp = sql('SELECT creatorIp FROM creatorInfo')
     tmp.select(function(err, data){
         if (err){
             console.log(err)
         }
         else {
-            if(data[0].ipAdr != clientIp){ //나중에 이부분 경고창으로 바꿔야 함. 등록된 아이피가 아니면 접속차단시키는 부분임
+            if(data[0].creatorIp != clientIp){ //나중에 이부분 경고창으로 바꿔야 함. 등록된 아이피가 아니면 접속차단시키는 부분임
                 res.render('client.ejs')    
             } else{
                 res.render('client.ejs');
@@ -70,9 +74,9 @@ app.get('/banner/:id', function(req, res){ ///banner/:id로 라우팅
         var roomInfo = socket.adapter.rooms; // 현재 웹소켓에 접속중이 room들과 그 접속자들의 정보 얻음
         var keys = Object.keys(roomInfo); //websocket 접속자 정보 
         var rule = new schedule.RecurrenceRule(); //스케쥴러 객체 생성
-        rule.hour = new schedule.Range(0,23) 
-        rule.minute = [0, 10, 20, 30, 40, 50] //cronTask 실행되는 분(minute)
-        // rule.second = [0, 10, 20, 30, 40, 50] // 초단위 실행
+        rule.hour = new schedule.Range(0,23) // cronTask 시간지정
+        // rule.minute = [0, 10, 20, 30, 40, 50] //cronTask 실행되는 분(minute)
+        rule.second = [0, 30] // 초단위 실행 (테스트용)
         console.log(roomInfo)
         var cronTask = schedule.scheduleJob(rule, function(){ // 스케쥴러를 통해 1분마다 db에 배너정보 전송
                     if(serverId != clientId && clientId != undefined){ //해당 페이지의 클라이언트 아이디가 서버아이디와 일치하지 않고, undefined가 아니면 그건 client라는 뜻
@@ -107,7 +111,7 @@ app.get('/banner/:id', function(req, res){ ///banner/:id로 라우팅
             socketsInfo[Object.keys(roomInfo).pop()] = _url;
             console.log(socketsInfo); //접속중인 url 저장된 부분
         });
-
+    
         socket.on('disconnect', function(){ //접속종료시
             delete socketsInfo[clientId] //socketsInfo에서 접속종료한 clientID 삭제
             
@@ -137,7 +141,7 @@ app.get('/banner/:id', function(req, res){ ///banner/:id로 라우팅
         socket.on('write to db', function(msg){
             pool.getConnection(function(err, conn){
             if(err) return err;
-            var sql = "INSERT INTO contractionTimestamp (bannerid) VALUES (?);"; 
+            var sql = "INSERT INTO contractionTimestamp (contractionId) VALUES (?);"; 
             conn.query(sql, [msg[0]/*, msg[1], msg[2]*/], function (err, result, fields) { //msg[0]:bannername msg[1]:url msg[2]:category
                 conn.release();
                 if (err) return err;   
@@ -148,12 +152,13 @@ app.get('/banner/:id', function(req, res){ ///banner/:id로 라우팅
         socket.on('request img', function(msg){
             var toServer = {}; //서버로 보낼 이미지 객체 ()
             var _url = msg[0];
-            var getQuery = sql(`SELECT bannerId, bannerSrc, bannerCategory 
-                                    FROM bannerMatched AS bm 
-                                        JOIN creatorInfo AS ci 
-                                            ON bm.creatorId = ci.creatorId 
-                                                WHERE ci.advertiseUrl = "${_url}" 
-                                                    AND contractionState = 0;`)
+            var getQuery = sql(`SELECT bannerSrc, contractionId, bannerCategory
+                                FROM bannerMatched AS bm 
+                                JOIN bannerRegistered AS br 
+                                ON bm.contractionId LIKE CONCAT('%', br.bannerId, '%') 
+                                WHERE bm.contractionId LIKE CONCAT('%',(SELECT creatorId FROM creatorInfo WHERE advertiseUrl = "${_url}"),'%')
+                                AND bm.contractionState = 0 
+                                ORDER BY contractionTime ASC LIMIT 1;`)
             
             getQuery.select(function(err, data){
                 if (err){
@@ -161,38 +166,42 @@ app.get('/banner/:id', function(req, res){ ///banner/:id로 라우팅
                 }
                 else {
                     if(data.length == 0){ //계약된 거가 없을때 개인계약을 안한 광고주의 배너와 매칭
-                        getQuery = sql(`SELECT bannerSrc, marketerId 
-                                            FROM bannerRegistered 
-                                                WHERE confirmState = 1;`)
+                        getQuery = sql(`SELECT bannerSrc, bannerId 
+                                        FROM bannerRegistered 
+                                        WHERE confirmState = 1
+                                        ORDER BY date ASC LIMIT 1;`)
                         
                         getQuery.select(function(err, data){
                             if (err){
                                 console.log(err)
                             }
                             else {
-                                data.forEach(function(item, index){
-                                    toServer['img'+index] = {path : item.bannerSrc, name : item.marketerId}
-                                });
-                                socket.emit('img receive', [toServer['img0'].path, toServer['img0'].name ])
+                                console.log('계약된 배너가 없어서 bannerRegistered의 가장 오래된 광고와 매칭')
+                                toServer['img'] = {path : data[0].bannerSrc, name : data[0].bannerId}
+                                
+                                socket.emit('img receive', [toServer['img'].path, toServer['img'].name ])
                             };
                         })
                     } else {
                         if(msg[1] == data[0].bannerCategory || data[0].bannerCategory == 'any' ){ //계약된게 있고, 카테고리가 any거나 일치할떄
-                            data.forEach(function(item, index){
-                                toServer['img'+index] = {path : item.bannerSrc, name : item.bannerId}
-                            });
-                            socket.emit('img receive', [toServer['img0'].path, toServer['img0'].name ])
+                           
+                                console.log('계약된게 있고, 카테고리가 일치하여 정확히 매칭')
+                                toServer['img'] = {path : data[0].bannerSrc, name : data[0].contractionId}
+                            
+                            socket.emit('img receive', [toServer['img'].path, toServer['img'].name ])
                         } else{ //계약된게 있지만 카테고리가 일치하지 않을때
-                            getQuery = sql(`SELECT bannerSrc, marketerId FROM bannerRegistered WHERE confirmState = 1;`)
+                            getQuery = sql(`SELECT bannerSrc, bannerId 
+                                            FROM bannerRegistered 
+                                            WHERE confirmState = 1
+                                            ORDER BY date ASC LIMIT 1;`)
                             getQuery.select(function(err, data){
                                 if (err){
                                     console.log(err)
                                 }
                                 else {
-                                    data.forEach(function(item, index){
-                                        toServer['img'+index] = {path : item.bannerSrc, name : item.marketerId}
-                                    });
-                                    socket.emit('img receive', [toServer['img0'].path, toServer['img0'].name ])
+                                    console.log('계약된게 있지만, 카테고리가 일치하지 않아 bannerRegistered의 가장 오래된 광고와 매칭')  
+                                    toServer['img'+index] = {path : data[0].bannerSrc, name : data[0].bannerId}
+                                    socket.emit('img receive', [toServer['img'].path, toServer['img'].name ])
                                     };
                                 })
                             }
@@ -212,15 +221,17 @@ app.get('/banner/:id', function(req, res){ ///banner/:id로 라우팅
 
         socket.on('check plz', function(msg){
             // DB에서 이름가져와서 확인
+            //msg0 : url msg1 : category msg2 : broadcasting banner name
             var toServer = {}; // 클라이언트로 보낼 객체
             var _url = msg[0];
             var broadcastingBannerName = msg[2] //클라이언트에 송출 중인 배너의 id
-            var getQuery = sql(`SELECT bannerId 
-                                    FROM bannerMatched AS bm 
-                                            JOIN creatorInfo AS ci 
-                                                ON bm.creatorId = ci.creatorId 
-                                                    WHERE ci.advertiseUrl = "${_url}" 
-                                                        AND bm.contractionState = 0;`)
+            var getQuery = sql(`SELECT contractionId, bannerCategory 
+                                FROM bannerMatched AS bm  
+                                JOIN bannerRegistered AS br 
+                                ON bm.contractionId LIKE CONCAT('%', br.bannerId, '%') 
+                                WHERE bm.contractionId LIKE CONCAT('%',(SELECT creatorId FROM creatorInfo WHERE advertiseUrl = "${_url}"),'%') 
+                                AND bm.contractionState = 0 
+                                ORDER BY contractionTime ASC LIMIT 1;`)
             
             getQuery.select(function(err, data){
                 if (err){
@@ -228,47 +239,48 @@ app.get('/banner/:id', function(req, res){ ///banner/:id로 라우팅
                 }
                 else {
                     if(data.length == 0){ //계약된 거가 없을때
-                        getQuery = sql(`SELECT marketerId 
-                                            FROM bannerRegistered 
-                                                WHERE confirmState = 1;`)
+                        getQuery = sql(`SELECT bannerId 
+                                        FROM bannerRegistered 
+                                        WHERE confirmState = 1
+                                        ORDER BY date ASC LIMIT 1;`)
                                     getQuery.select(function(err, data){
                                         if (err){
                                             console.log(err)
                                         }
                                         else {
                                             console.log(1)
-                                            data.forEach(function(item, index){
-                                                toServer['img'+index] = {name : item.bannerId}
-                                            })
-                                                if(toServer['img0'].name == broadcastingBannerName){
+                                           
+                                                toServer['img'] = {name : data[0].bannerId}
+                                            
+                                                if(toServer['img'].name == broadcastingBannerName){
                                                     //pass
-                                                    console.log('넘어가는 편이야')
+                                                    console.log('계약된게 없고, 가장 최하위 banner도 그대로라서 이미지 호출안하고 넘어감')
                                                 } else{
-                                                var getQuery = sql(`SELECT bannerSrc, marketerId 
-                                                                        FROM bannerRegistered 
-                                                                            WHERE confirmState = 1;`)
+                                                var getQuery = sql(`SELECT bannerSrc, bannerId 
+                                                                    FROM bannerRegistered 
+                                                                    WHERE confirmState = 1
+                                                                    ORDER BY date ASC LIMIT 1;`)
                                                 getQuery.select(function(err, data){
                                                     if (err){
                                                         console.log(err)
                                                     }
                                                     else {
-                                                        console.log('1여깁니다')
-                                                        data.forEach(function(item, index){
-                                                            toServer['img'+index] = {path : item.bannerSrc, name : item.marketerId}
-                                                        });
-                                                        socket.emit('img receive', [toServer['img0'].path, toServer['img0'].name ])
+                                                        console.log('계약된게 없지만, 최하위 banner가 바뀌어서 이미지 재호출 or 계약되있던 이전 배너의 state가 바뀌어서 새 이미지 호출')
+                                                        
+                                                        toServer['img'] = {path : data[0].bannerSrc, name : data[0].bannerId}
+                                                        socket.emit('img receive', [toServer['img'].path, toServer['img'].name ])
                                                     };
                                                 })
                                             };
                                         };
                                     })
                     } else{
-                        getQuery = sql(`SELECT bannerCategory 
-                                            FROM bannerMatched AS bm 
-                                                    JOIN creatorInfo AS ci 
-                                                        ON bm.creatorId = ci.creatorId 
-                                                            WHERE ci.advertiseUrl = "${_url}" 
-                                                                AND bm.contractionState = 0;`) //계약 된게 있을때
+                        // getQuery = sql(`SELECT bannerCategory 
+                        //                     FROM bannerMatched AS bm 
+                        //                             JOIN creatorInfo AS ci 
+                        //                                 ON bm.creatorId = ci.creatorId 
+                        //                                     WHERE ci.advertiseUrl = "${_url}" 
+                        //                                         AND bm.contractionState = 0;`) //계약 된게 있을때
                         getQuery.select(function(err, data){
                             if (err){
                                 console.log(err)
@@ -281,60 +293,59 @@ app.get('/banner/:id', function(req, res){ ///banner/:id로 라우팅
                                         }
                                         else {
                                             console.log(2)
-                                            data.forEach(function(item, index){
-                                                toServer['img'+index] = {name : item.bannerId}
-                                            })
-                                            if(toServer['img0'].name == broadcastingBannerName){
+                                            toServer['img'] = {name : data[0].contractionId}
+                                            if(toServer['img'].name == broadcastingBannerName){
                                                 //pass
-                                                console.log('넘어가는 편이야')
+                                                console.log('계약된게 있고, 카테고리가 any거나 일치하고, contractionState도 바뀌지 않음')
                                             } else{
-                                                var getQuery = sql(`SELECT bannerId, bannerSrc 
-                                                                        FROM bannerMatched AS bm 
-                                                                                JOIN creatorInfo AS ci 
-                                                                                    ON bm.creatorId = ci.creatorId 
-                                                                                        WHERE ci.advertiseUrl = "${_url}" 
-                                                                                            AND bm.contractionState = 0;`)
+                                                var getQuery = sql(`SELECT bannerSrc, contractionId
+                                                                    FROM bannerMatched AS bm 
+                                                                    JOIN bannerRegistered AS br 
+                                                                    ON bm.contractionId LIKE CONCAT('%', br.bannerId, '%') 
+                                                                    WHERE bm.contractionId LIKE CONCAT('%',(SELECT creatorId FROM creatorInfo WHERE advertiseUrl = "${_url}"),'%')
+                                                                    AND bm.contractionState = 0 
+                                                                    ORDER BY contractionTime ASC LIMIT 1;`)
                                                 getQuery.select(function(err, data){
                                                     if (err){
                                                         console.log(err)
                                                     }
                                                     else {
-                                                        console.log('2여깁니다')
-                                                        data.forEach(function(item, index){
-                                                            toServer['img'+index] = {path : item.bannerSrc, name : item.bannerId}
-                                                        });
-                                                        socket.emit('img receive', [data[0].bannerSrc, data[0].bannerId])
+                                                        console.log('계약된게 있고, 카테고리도 맞지만, 기존광고의 contractionstate가 바뀌어 최신배너 호출')
+                                                        toServer['img'] = {path : data[0].bannerSrc, name : data[0].contractionId}
+                                                        socket.emit('img receive', [data[0].bannerSrc, data[0].contractionId])
                                                     };
                                                 });
                                             }
                                         };
                                     })
                                 } else{ //계약된게 있지만 카테고리가 일치하지 않을때
-                                    getQuery = sql(`SELECT bannerSrc, marketerId FROM bannerRegistered WHERE confirmState = 1;`)
+                                    getQuery = sql(`SELECT bannerId 
+                                                    FROM bannerRegistered 
+                                                    WHERE confirmState = 1
+                                                    ORDER BY date ASC LIMIT 1;`)
                                     getQuery.select(function(err, data){
                                         if (err){
                                             console.log(err)
                                         }
                                         else {
                                             console.log(3)
-                                            data.forEach(function(item, index){
-                                                toServer['img'+index] = {path : item.bannerSrc, name : item.marketerId}
-                                            });
-                                            if(toServer['img0'].name == broadcastingBannerName){
+                                                toServer['img'] = {path : data[0].bannerSrc, name : data[0].bannerId}
+                                            if(toServer['img'].name == broadcastingBannerName){
                                                 //pass
-                                                console.log('넘어가는 편이야')
+                                                console.log('계약된게있지만, 카테고리가 일치하지 않음. 그 전에 송출중인 배너가 bannerId가 같아 재호출안함')
                                             } else{
-                                                var getQuery = sql(`SELECT bannerSrc, marketerId FROM bannerRegistered WHERE confirmState = 1;`)
+                                                var getQuery = sql(`SELECT bannerSrc, bannerId 
+                                                                    FROM bannerRegistered 
+                                                                    WHERE confirmState = 1
+                                                                    ORDER BY date ASC LIMIT 1;`)
                                                 getQuery.select(function(err, data){
                                                     if (err){
                                                         console.log(err)
                                                     }
                                                     else {
-                                                        console.log('3여깁니다')
-                                                        data.forEach(function(item, index){
-                                                            toServer['img'+index] = {path : item.bannerSrc, name : item.marketerId}
-                                                        });
-                                                        socket.emit('img receive', [toServer['img0'].path, toServer['img0'].name ])
+                                                        console.log('계약된게있지만, 카테고리가 일치하지 않음. 그 전에 송출중인 배너가 bannerId가 달라 재호출')
+                                                        toServer['img'] = {path : data[0].bannerSrc, name : data[0].bannerId}
+                                                        socket.emit('img receive', [toServer['img'].path, toServer['img'].name ])
                                                     };
                                                 });
                                             }
