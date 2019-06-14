@@ -20,6 +20,16 @@ app.get('/', function(req, res){ //index.html /로 라우팅
     res.render('home.ejs')
 });
 
+app.get('/wrongIp', function(req, res){
+    res.render('wrongIp.ejs')
+});
+
+app.get('/wrongUrl', function(req, res){
+    res.render('wrongUrl.ejs')
+});
+app.get('/duplicate', function(req, res){
+    res.render('duplicate.ejs')
+});
 app.get('/banner/server', function(req, res){ // server.html /server로 라우팅 
     //관리자 페이지 접속 시 
     console.log('server')
@@ -48,16 +58,24 @@ app.get('/banner/server', function(req, res){ // server.html /server로 라우�
 app.get('/banner/:id', function(req, res){ ///banner/:id로 라우팅
     console.log('banner')
     var clientIp = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-    var tmp = sql('SELECT creatorIp FROM creatorInfo')
-    tmp.select(function(err, data){
+    var fullUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
+    var getIp = sql(`SELECT creatorIp FROM creatorInfo WHERE advertiseUrl = "${fullUrl}"`)
+    
+    getIp.select(function(err, data){
         if (err){
             console.log(err)
         }
         else {
-            if(data[0].creatorIp != clientIp){ //나중에 이부분 경고창으로 바꿔야 함. 등록된 아이피가 아니면 접속차단시키는 부분임
-                res.render('client.ejs')    
-            } else{
-                res.render('client.ejs');
+            try {
+                if(data[0].creatorIp != clientIp){ //나중에 이부분 경고창으로 바꿔야 함. 등록된 아이피가 아니면 접속차단시키는 부분임
+                res.render('wrongIp.ejs')    
+                } else{
+                    res.render('client.ejs');
+                }
+            } catch(exception){
+                console.log(fullUrl)
+                console.log(exception)
+                res.render('wrongUrl.ejs') //url주소 잘못 입력하면 뜨는 경고창
             }
         }
     });
@@ -88,7 +106,7 @@ app.get('/banner/:id', function(req, res){ ///banner/:id로 라우팅
                         console.log(serverId + '새로고침완료');
                     }
                 });
-    
+      
         socket.on('host', function(){ //server 접속시 발생
             keys.splice(keys.indexOf(clientId), 1) //서버의 웹소켓 아이디는 설렉트 박스에 안뜨도록 제거
             socket.emit('id receive', keys, socketsInfo); //socketInfo 객체(클라이언트 socketid와 url이 담김)랑 클라이언트 socketid 전송
@@ -97,18 +115,26 @@ app.get('/banner/:id', function(req, res){ ///banner/:id로 라우팅
         });
 
         socket.on('new client', function(_url){ //새로운 클라이언트 접속 시 발생 
-            
+            var urlArray = Object.values(socketsInfo)
             // 서버에 현재 배너창 띄운 크리에이터들 전송///////
-            if(serverId == undefined){ //해당페이지가 서버가 아님을 확인 
+            if(serverId == undefined){ //서버페이지의 id가 생성되지 않았을 때는, 전체에 송출을 해서 에러 방지
                 socket.broadcast.emit('id receive', clientId);
-            } else{
+            } else{ //서버페이지의 id가 생성되었을 때는 서버페이지에게만 클라이언트의 socketID 보낸다.
                 io.to(serverId).emit('id receive', clientId);
             };
             /////////////////////////////////////////////////////
-
             console.log(`-새 접속 ip : ${ip}`)
             console.log(`클라이언트id ${ clientId }`);
-            socketsInfo[Object.keys(roomInfo).pop()] = _url;
+            
+            if(urlArray.includes(_url)){
+                console.log('있다')
+                var destination = 'http://localhost:3002/duplicate'
+                socket.emit('redirect warn', destination)
+            } else{
+                socketsInfo[Object.keys(roomInfo).pop( )] = _url; //roomInfo에서 소켓아이디 불러와서 socketsInfo 객체에 {'id' : url} 형태로 저장 
+            }
+
+            
             console.log(socketsInfo); //접속중인 url 저장된 부분
         });
     
@@ -126,6 +152,7 @@ app.get('/banner/:id', function(req, res){ ///banner/:id로 라우팅
             clearInterval(socket.interval);
         });
 
+        /*나중에 쓰일 수 있는 부분
         socket.on('img send', function(msg){ 
             socket.broadcast.emit('img receive', msg);
         });
@@ -137,6 +164,7 @@ app.get('/banner/:id', function(req, res){ ///banner/:id로 라우팅
         socket.on('particular img send', function(msg){ //특정 클라이언트에게만 배너 전송
             io.to(msg[0]).emit('img receive', msg[1]);
         });
+        */
 
         socket.on('write to db', function(msg){
             pool.getConnection(function(err, conn){
@@ -158,14 +186,14 @@ app.get('/banner/:id', function(req, res){ ///banner/:id로 라우팅
                                 ON bm.contractionId LIKE CONCAT('%', br.bannerId, '%') 
                                 WHERE bm.contractionId LIKE CONCAT('%',(SELECT creatorId FROM creatorInfo WHERE advertiseUrl = "${_url}"),'%')
                                 AND bm.contractionState = 0 
-                                ORDER BY contractionTime ASC LIMIT 1;`)
+                                ORDER BY contractionTime ASC LIMIT 1;`) //일단 계약된 배너가 있는 지 확인해서 불러옴
             
             getQuery.select(function(err, data){
                 if (err){
                     console.log(err)
                 }
                 else {
-                    if(data.length == 0){ //계약된 거가 없을때 개인계약을 안한 광고주의 배너와 매칭
+                    if(data.length == 0){ //계약된 배너가 없을때 개인계약을 안한 광고주의 배너와 매칭 (현재는 bannerRegistered의 제일 오래된 배너랑 매칭)
                         getQuery = sql(`SELECT bannerSrc, bannerId 
                                         FROM bannerRegistered 
                                         WHERE confirmState = 1
@@ -275,12 +303,7 @@ app.get('/banner/:id', function(req, res){ ///banner/:id로 라우팅
                                         };
                                     })
                     } else{
-                        // getQuery = sql(`SELECT bannerCategory 
-                        //                     FROM bannerMatched AS bm 
-                        //                             JOIN creatorInfo AS ci 
-                        //                                 ON bm.creatorId = ci.creatorId 
-                        //                                     WHERE ci.advertiseUrl = "${_url}" 
-                        //                                         AND bm.contractionState = 0;`) //계약 된게 있을때
+                        
                         getQuery.select(function(err, data){
                             if (err){
                                 console.log(err)

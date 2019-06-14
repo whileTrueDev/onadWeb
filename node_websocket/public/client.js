@@ -3,12 +3,17 @@ $(function(){
     var _url = window.location.href;
     var myArray = ['eating', 'game']
     var rand = myArray[Math.floor(Math.random() * myArray.length)];
-    console.log(rand)
+    
 
+   
     socket.emit('new client', _url); //접속했다고 서버에 알려줌
 
+
     socket.emit('request img', [_url, rand]); // 접속 시 서버에 광고 이미지를 요청한다.
- 
+    
+    socket.on('redirect warn', function(destination){
+        window.location.href = destination
+    })
     socket.on('img receive', function(msg){
         $('#imgMessage').empty().append(`<img src= ${msg[0]} id='showBanner' name= ${msg[1]} width = '100%' height = '100%'>`)    
     });
