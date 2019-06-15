@@ -81,7 +81,9 @@ function CustomTable({ ...props }) {
             {tableData.map(prop => (
               <TableRow key={shortid.generate()}>
                 {prop.map((value, i) => (
-                  typeof (value) === 'string' && value.indexOf('data:image/') >= 0 // 없는 경우
+                  typeof (value) === 'string'
+                  && (value.indexOf('data:image/') >= 0
+                    || value.indexOf('http') === 0)// 사진데이터 또는 사진 url 인 경우
                     ? (
                       <TableCell className={classes.tableCell} key={shortid.generate()}>
                         <img src={value} alt="banner" height="50%" />
@@ -134,7 +136,7 @@ CustomTable.propTypes = {
     'gray',
   ]),
   tableHead: PropTypes.arrayOf(PropTypes.string),
-  tableData: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.string)),
+  tableData: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.string, PropTypes.number]))),
   pagination: PropTypes.bool,
   paginationOps: PropTypes.object,
 };

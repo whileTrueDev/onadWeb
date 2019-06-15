@@ -11,7 +11,6 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 // @material-ui/icons
 import Edit from '@material-ui/icons/Edit';
-import Close from '@material-ui/icons/Close';
 import Check from '@material-ui/icons/Check';
 // core components
 import tasksStyle from '../../assets/jss/onad/components/tasksStyle';
@@ -77,23 +76,6 @@ class Tasks extends React.Component {
                     <Edit
                       className={
                         `${classes.tableActionButtonIcon} ${classes.edit}`
-                      }
-                    />
-                  </IconButton>
-                </Tooltip>
-                <Tooltip
-                  id="tooltip-top-start"
-                  title="Remove"
-                  placement="top"
-                  classes={{ tooltip: classes.tooltip }}
-                >
-                  <IconButton
-                    aria-label="Close"
-                    className={classes.tableActionButton}
-                  >
-                    <Close
-                      className={
-                        `${classes.tableActionButtonIcon} ${classes.close}`
                       }
                     />
                   </IconButton>

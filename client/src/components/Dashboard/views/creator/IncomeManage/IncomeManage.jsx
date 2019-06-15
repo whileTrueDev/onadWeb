@@ -129,6 +129,7 @@ function useWithdrawModal() {
 
   return { modalOpen, handleWithdrawModalOpen, handleWithdrawModalClose };
 }
+
 function Income(props) {
   const { classes, session, history } = props;
   // 날짜 범위 데이터
@@ -245,12 +246,12 @@ function Income(props) {
               {loading && <div style={{ textAlign: 'center' }}><CircularProgress /></div>}
               {!loading && error && <span>오류에요.. 침착하시고.. 다시 시도해보세요</span>}
               {!loading && payload
-              && (
-              <Line
-                data={setChartjsData(payload.labels, payload.totalIncomeData)}
-                options={{ tooltips: { mode: 'index', intersect: false } }}
-              />
-              )}
+                && (
+                <Line
+                  data={setChartjsData(payload.labels, payload.totalIncomeData)}
+                  options={{ tooltips: { mode: 'index', intersect: false } }}
+                />
+                )}
             </CardHeader>
             <CardBody>
               <h4 className={classes.cardTitle} style={{ textAlign: 'left' }}>나의 총 수익금</h4>

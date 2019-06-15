@@ -55,7 +55,7 @@ passport.use( new LocalStrategy(
             }
             // 쿼리문을 userid로 검색하면된다.
             conn.query(`
-            SELECT marketerPasswd, marketerSalt, marketerName, marketerMail, marketerEmailAuth, temporaryLogin
+            SELECT marketerPasswd, marketerSalt, marketerName, marketerMail, marketerEmailAuth, temporaryLogin, marketerContraction
             FROM marketerInfo
             WHERE marketerId = ? `, [userid], function(err, result, fields){
                 if(result[0]){
@@ -67,10 +67,11 @@ passport.use( new LocalStrategy(
                             userid : userid,
                             marketerName: result[0].marketerName,
                             marketerEmail: result[0].marketerMail,
+                            marketerContraction: result[0].marketerContraction,
                         };
                         if(!result[0].marketerEmailAuth){
                             user['marketerEmailAuth'] = result[0].marketerEmailAuth;
-                        }   
+                        }
                         if(result[0].temporaryLogin){
                             user['temporaryLogin'] = result[0].temporaryLogin;
                         }
@@ -127,12 +128,22 @@ passport.use(new twitchStrategy({
                     console.log('DB에 존재하지 않습니다.');
                     let creatorIp = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
                     user['creatorIp'] = creatorIp;
-                    const Infoquery = `INSERT INTO creatorInfo (creatorId, creatorName, creatorMail, creatorIp) VALUES (?, ?, ?, ?)`
-                    conn.query(Infoquery, [user.creatorId, user.creatorName, user.creatorMail, creatorIp], (err, result, field)=>{
+                    const Infoquery = `INSERT INTO
+                        creatorInfo (creatorId, creatorName, creatorMail, creatorIp, creatorLogo, advertiseUrl)
+                        VALUES (?, ?, ?, ?, ?, ?)`;
+
+                    conn.query(Infoquery, [user.creatorId, user.creatorDisplayName, user.creatorMail, creatorIp, user.creatorLogo, `/${user.creatorName}`],
+                        (err, result, field) => {
+                            if (err) {
+                                console.log(err)
+                            }
                         console.log('creatorInfo table에 정보 입력.');
                     })
                     const Incomequery = `INSERT INTO creatorIncome (creatorId, creatorTotalIncome, creatorReceivable) VALUES (?, ?, ?)`
                     conn.query(Incomequery, [user.creatorId, 0, 0], (err, result, field)=>{
+                        if (err) {
+                            console.log(err)
+                        }
                         console.log('creatorIncome table에 정보 입력.');
                     })
                     conn.release();

@@ -1,3 +1,5 @@
+const pool = require('../../model/connectionPool');
+
 // 시간순으로 최신으로 정렬하는 함수
 function sortRows(rows, sortingValue, orderBy='desc') {
   const sortingField = sortingValue;
@@ -40,6 +42,6 @@ function preprocessingBannerData(result) {
 
 module.exports = {
   sortRows,
-  preprocessingBannerData
+  preprocessingBannerData,
 }
 

@@ -104,26 +104,6 @@ const Dashboard = (props) => {
 
   return (
     <div>
-      {/* 인사 */}
-
-      <span>
-        <CardAvatar
-          profile
-          style={{
-            position: 'absolute', top: 90, left: 375, opacity: 0.5,
-          }}
-        >
-          <a href="#avatar" onClick={e => e.preventDefault()}>
-            <img src={session.creatorLogo} alt="creator" />
-          </a>
-        </CardAvatar>
-        <h4>
-        안녕하세요.
-          {` ${session.creatorDisplayName} 님 `}
-        행복한 하루 되세요
-        </h4>
-      </span>
-
       {/* 첫번째 라인 */}
       <GridContainer>
         {/* 총 수익금 */}

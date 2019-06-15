@@ -265,7 +265,11 @@ function UserProfile(props) {
               </a>
             </CardAvatar>
             <CardBody profile>
-              <h4 className={classes.cardTitle}>{userData.creatorDisplayName} 님의 정보</h4>
+              <h4 className={classes.cardTitle}>
+{userData.creatorDisplayName}
+{' '}
+님의 정보
+</h4>
               <GridContainer>
                 <GridItem xs={12} sm={12} md={6}>
                   <CssTextField

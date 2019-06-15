@@ -8,15 +8,6 @@ import BrandingWatermark from '@material-ui/icons/BrandingWatermark';
 import creatorUserProfile from './views/creator/UserProfile/UserProfile';
 import IncomeManage from './views/creator/IncomeManage/IncomeManage';
 import creatorDashboardPage from './views/creator/Dashboard/Dashboard';
-// // 사용하지 않으나, 가져와 사용가능한 라우터들
-// import creatorTableList from './views/material-ui/TableList/TableList';
-// import creatorTypography from './views/material-ui/Typography/Typography';
-// import creatorIcons from './views/material-ui/Icons/Icons';
-// import creatorNotificationsPage from './views/material-ui/Notifications/Notifications';
-// import LibraryBooks from '@material-ui/icons/LibraryBooks';
-// import BubbleChart from '@material-ui/icons/BubbleChart';
-// import Notifications from '@material-ui/icons/Notifications';
-// import TableChart from '@material-ui/icons/TableChart';
 
 // 마케터 라우터
 import marketerDashboardPage from './views/marketer/Dashboard/Dashboard';

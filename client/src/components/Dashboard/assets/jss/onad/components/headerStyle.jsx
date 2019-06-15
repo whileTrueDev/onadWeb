@@ -7,6 +7,7 @@ import {
   successColor,
   warningColor,
   dangerColor,
+  blackColor,
   whiteColor,
   grayColor,
 } from '../../onad';
@@ -75,6 +76,10 @@ const headerStyle = theme => ({
     backgroundColor: dangerColor[0],
     color: whiteColor,
     ...defaultBoxShadow,
+  },
+  white: {
+    backgroundColor: whiteColor,
+    color: blackColor,
   },
 });
 

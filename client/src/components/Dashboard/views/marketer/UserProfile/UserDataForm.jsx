@@ -125,7 +125,9 @@ const UserDataForm = (props) => {
     <Card>
       <CardHeader color="primary">
         <h4 className={classes.cardTitleWhite}>
-          {userData.marketerName} 님의 정보
+          {userData.marketerName}
+          {' '}
+          님의 정보
         </h4>
         <p className={classes.cardCategoryWhite}>정보를 변경하시려면 정보변경을 클릭하세요.</p>
       </CardHeader>

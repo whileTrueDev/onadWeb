@@ -9,6 +9,7 @@ import {
   successColor,
   warningColor,
   dangerColor,
+  blueGrayColor,
   whiteColor,
   grayColor,
   blackColor,
@@ -58,7 +59,6 @@ const sidebarStyle = theme => ({
       content: '""',
       position: 'absolute',
       bottom: '0',
-
       height: '1px',
       right: '15px',
       width: 'calc(100% - 30px)',
@@ -111,8 +111,7 @@ const sidebarStyle = theme => ({
       height: '100%',
       content: '""',
       display: 'block',
-      background: blackColor,
-      opacity: '.8',
+      background: blueGrayColor[9],
     },
   },
   list: {

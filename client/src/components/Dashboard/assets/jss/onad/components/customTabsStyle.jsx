@@ -1,11 +1,6 @@
 import { hexToRgb, whiteColor } from '../../onad';
 
 const customTabsStyle = {
-  cardTitle: {
-    float: 'left',
-    padding: '10px 10px 10px 0px',
-    lineHeight: '24px',
-  },
   displayNone: {
     display: 'none !important',
   },
@@ -32,13 +27,6 @@ const customTabsStyle = {
     '&:last-child': {
       marginLeft: '0px',
     },
-  },
-  tabLabelContainer: {
-    padding: '0px',
-  },
-  tabLabel: {
-    fontWeight: '500',
-    fontSize: '12px',
   },
   tabSelected: {
     backgroundColor: `rgba(${hexToRgb(whiteColor)}, 0.2)`,

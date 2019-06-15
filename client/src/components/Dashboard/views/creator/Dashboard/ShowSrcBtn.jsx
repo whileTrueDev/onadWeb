@@ -39,7 +39,7 @@ class ShowSrcBtn extends Component {
     super(props);
     this.state = {
       showSrc: null,
-      value: '[주소 보기] 버튼을 누르면 주소가 표시됩니다',
+      value: '[주소 보기] 버튼을 누르면 주소가 10초간 표시됩니다',
       disabled: false,
       copySuccess: false,
       contractionAgreement: 1,
@@ -84,7 +84,7 @@ class ShowSrcBtn extends Component {
   timeFunction = () => {
     this.setState({
       disabled: false,
-      value: '[주소 보기] 버튼을 누르면 주소가 표시됩니다',
+      value: '[주소 보기] 버튼을 누르면 주소가 10초간 표시됩니다',
     });
   }
 

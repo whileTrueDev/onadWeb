@@ -13,12 +13,12 @@ const chartTheme = {
 };
 
 // 차트 데이터
-function setChartjsData(labels, data) {
+function setChartjsData(labels, data, label = '수익금') {
   const ChartjsLineData = {
     labels,
     datasets: [
       {
-        label: '수익금',
+        label,
         fill: false,
         lineTension: 0.1,
         backgroundColor: '',

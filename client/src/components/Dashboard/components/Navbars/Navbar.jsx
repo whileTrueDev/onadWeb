@@ -15,18 +15,22 @@ import Button from '../CustomButtons/Button';
 import AdminNavbarLinks from './AdminNavbarLinks';
 
 
-function Header({ ...props }) {
+function Header(props) {
+  const {
+    routes, classes, color, handleDrawerToggle,
+  } = props;
   function makeBrand() {
-    let name;
-    props.routes.map((prop, key) => {
-      if (prop.layout + prop.path === props.location.pathname) {
-        name = prop.name;
+    let routeName;
+    routes.map((route) => {
+      if (route.layout + route.path === props.location.pathname) {
+        const { name } = route;
+        routeName = name;
       }
       return null;
     });
-    return name;
+    return routeName;
   }
-  const { classes, color } = props;
+
   const appBarClasses = classNames({
     [` ${classes[color]}`]: color,
   });
@@ -46,7 +50,7 @@ function Header({ ...props }) {
           <IconButton
             color="inherit"
             aria-label="open drawer"
-            onClick={props.handleDrawerToggle}
+            onClick={handleDrawerToggle}
           >
             <Menu />
           </IconButton>
@@ -59,6 +63,8 @@ function Header({ ...props }) {
 Header.propTypes = {
   classes: PropTypes.object.isRequired,
   color: PropTypes.oneOf(['primary', 'info', 'success', 'warning', 'danger']),
+  handleDrawerToggle: PropTypes.func,
+  routes: PropTypes.object,
 };
 
 export default withStyles(headerStyle)(Header);

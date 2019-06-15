@@ -33,7 +33,7 @@ const UserProfile = (props) => {
               <Card>
                 <CardHeader color="primary">
                   <h4 className={classes.cardTitleWhite}>
-                추가할 수정사항
+                    추가할 수정사항
                   </h4>
                   <p className={classes.cardCategoryWhite}>변경할 비밀번호를 입력하세요.</p>
                 </CardHeader>
