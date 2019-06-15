@@ -58,7 +58,6 @@ DashboardStyle.buttonWrapper = {
 
 // data Fetch hooks
 function useFetchData(url, dateRange) {
-
   const [payload, setPayload] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -75,7 +74,7 @@ function useFetchData(url, dateRange) {
         throw new Error('데이터가 존재하지 않습니다');
       }
     } catch {
-      setError('데이터가 없습니다.' + url);
+      setError(`데이터가 없습니다.${url}`);
     } finally {
       setLoading(false);
     }
@@ -147,7 +146,7 @@ function Income(props) {
 
   // 수익금 데이터
   const incomeData = useFetchData('/dashboard/creator/income');
-  
+
   // 수익금 출금 모달창
   const {
     modalOpen,
@@ -163,7 +162,6 @@ function Income(props) {
 
   // 출금리스트 데이터 axios 요청
   useEffect(() => {
-    
     axios.get('/dashboard/creator/listOfWithdrawal')
       .then((res) => {
         if (res.data) {
@@ -192,7 +190,7 @@ function Income(props) {
   function handleChangeTableRowsPerPage(event) {
     setRowsPerPage(parseInt(event.target.value, 10));
   }
-  
+
   return (
     <div>
       <GridContainer>
@@ -331,7 +329,7 @@ function Income(props) {
                   <Payment />
                   {'출금신청'}
                 </Button>
-                )}          
+                )}
               </div>
             </CardBody>
             <CardFooter stats>
@@ -350,7 +348,7 @@ function Income(props) {
       </GridContainer>
 
       {/* 출금내역 */}
-      <GridContainer >
+      <GridContainer>
         <GridItem xs={12} sm={12} md={12}>
           <Card>
             <CardHeader color="primary">

@@ -85,20 +85,17 @@ function UserProfile(props) {
   const [value, setValue] = useState('...');
   const [userData, setuserData] = useState({});
   const [accountNum, setAccountNum] = useState('');
-  
-// 백엔드 
-//   쿼리 
-//   및 
-//   수정 
-//   필요 
-  
-  
+
+  // 백엔드
+  //   쿼리
+  //   및
+  //   수정
+  //   필요
+
+
   const readyIncomeData = useCallback(() => {
     console.log('계좌정보 가져오기');
     axios.get('/dashboard/creator/income', {
-      params: {
-        creatorId,
-      },
     }).then((res) => {
       setData(res.data);
       setAccountNum(res.data.creatorAccountNumber);
@@ -154,22 +151,36 @@ function UserProfile(props) {
               <h4 className={classes.cardCategory} style={{ textAlign: 'center' }}>거래계약서</h4>
               {/* user 이름 ......에 넣기 */}
               <h6 className={classes.cardTitle} style={{ textAlign: 'center' }}>
-                거래 대상 OnAD 와 상기인 {value}
+                거래 대상 OnAD 와 상기인
+                {' '}
+                {value}
               </h6>
               <p>
-                OnAD와 { data.creatorContractionAgreement === 0 ? (`${value}`) : (data.creatorName) }
+                OnAD와
+                {' '}
+                { data.creatorContractionAgreement === 0 ? (`${value}`) : (data.creatorName) }
                 간의 거래관계에 있어 서로 거래질서를 준수하고 상호 간 발전과 이익을 증진시키기 위하여 아래 조항들을 준수할 것을 약정한다.
               </p>
               <p>
-                제 1조(목적) 본 계약은 OnAD와 { data.creatorContractionAgreement === 0 ? (`${value}`) : (data.creatorName) } 
+                제 1조(목적) 본 계약은 OnAD와
+                {' '}
+                { data.creatorContractionAgreement === 0 ? (`${value}`) : (data.creatorName) }
                 상호간에 플랫폼의 계속적인 계약에 관한 제반 사항을 정하여 서로가 성실히 이행하며, 공동의 이익을 도모함을 목적으로 한다.
               </p>
               <p>
-                제 2조(플랫폼 이용) OnAD는 플랫폼 이용 또는 온라인 서비스를 능력의 범위 내에서 { data.creatorContractionAgreement === 0 ? (`${value}`) : (data.creatorName) }
-                에게 성실히 제공하여야 하며, { data.creatorContractionAgreement === 0 ? (`${value}`) : (data.creatorName) }는 OnAD의 서비스를 악의적인 용도로 사용하지 않는다.
+                제 2조(플랫폼 이용) OnAD는 플랫폼 이용 또는 온라인 서비스를 능력의 범위 내에서
+                {' '}
+                { data.creatorContractionAgreement === 0 ? (`${value}`) : (data.creatorName) }
+                에게 성실히 제공하여야 하며,
+                {' '}
+                { data.creatorContractionAgreement === 0 ? (`${value}`) : (data.creatorName) }
+는 OnAD의 서비스를 악의적인 용도로 사용하지 않는다.
               </p>
               <p>
-                제 3조(이용책임) { data.creatorContractionAgreement === 0 ? (`${value}`) : (data.creatorName) }는 
+                제 3조(이용책임)
+                {' '}
+                { data.creatorContractionAgreement === 0 ? (`${value}`) : (data.creatorName) }
+는
                 악의적인 플랫폼 이용으로 인하여 책임 사항이 발생시 모두 본인이 책임지며 이를 선언한다.
               </p>
               <p>
@@ -240,10 +251,10 @@ function UserProfile(props) {
             </CardAvatar>
             <CardBody profile>
               <h4 className={classes.cardTitle}>
-{userData.creatorDisplayName}
-{' '}
+                {userData.creatorDisplayName}
+                {' '}
 님의 정보
-</h4>
+              </h4>
               <GridContainer>
                 <GridItem xs={12} sm={12} md={6}>
                   <CssTextField

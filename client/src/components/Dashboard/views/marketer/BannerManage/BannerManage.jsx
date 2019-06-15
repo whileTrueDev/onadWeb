@@ -200,6 +200,7 @@ const BannerManage = (props) => {
             } else {
               failureBanners.push(banner);
             }
+            return null;
           });
           setApprovedList(completeBanners);
           setRejectedList(failureBanners);

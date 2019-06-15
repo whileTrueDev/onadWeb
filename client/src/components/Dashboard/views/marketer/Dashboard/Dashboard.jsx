@@ -117,7 +117,7 @@ function useAdStartModal() {
 
 const Dashboard = (props) => {
   const secondClasses = useStyles();
-  const { classes, session, history } = props;
+  const { classes, history } = props;
 
   const cashData = useFetchData('/dashboard/marketer/cash');
   const bannerData = useFetchData('/dashboard/marketer/banner');

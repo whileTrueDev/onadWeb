@@ -24,7 +24,6 @@ import CardHeader from '../../../components/Card/CardHeader';
 import CardIcon from '../../../components/Card/CardIcon';
 import CardBody from '../../../components/Card/CardBody';
 import CardFooter from '../../../components/Card/CardFooter';
-import CardAvatar from '../../../components/Card/CardAvatar';
 import GridItem from '../../../components/Grid/GridItem';
 import ShowSrcBtn from './ShowSrcBtn';
 // 기본 배너 정보 스테이트 값

@@ -65,6 +65,7 @@ passport.use( new LocalStrategy(
                         // 세션에 담길 내용 정의
                         let user = {
                             userid : userid,
+                            userType: 'marketer',
                             marketerName: result[0].marketerName,
                             marketerEmail: result[0].marketerMail,
                             marketerContraction: result[0].marketerContraction,
