@@ -4,6 +4,7 @@ const path = require('path');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const passport = require('./passportStrategy');
+const bodyParser = require('body-parser');
 
 //Router 정의
 var loginRouter = require('./routes/login');
@@ -20,8 +21,9 @@ app.set('view engine', 'ejs');
 
 // 정적 리소스 처리
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(express.urlencoded({ extended: false }));
-app.use(express.json());
+
+app.use(bodyParser.json({limit: '50mb'}));
+app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 
 app.use(cookieParser());
 app.use(session({
