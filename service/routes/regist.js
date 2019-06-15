@@ -125,7 +125,6 @@ router.post('/accountNum', (req, res, next)=>{
   .catch((data)=>{
     res.send(data);
   })
-
 })
 
 

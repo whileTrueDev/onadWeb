@@ -49,7 +49,6 @@ const styles = {
   },
 };
 
-
 const CssTextField = withStyles({
   root: {
     color: '#9c27b0',
@@ -77,29 +76,23 @@ const CssTextField = withStyles({
   },
 })(TextField);
 
-
-// 임시데이터
-const defaultIncomeData = {
-  code: 0,
-  creatorId: '',
-  creatorName: '앙기모뛰',
-  creatorTotalIncome: 0,
-  creatorReceivable: 0,
-  date: '',
-};
-
-const creatorId = '130096343';
-
 function UserProfile(props) {
   const { classes } = props;
 
   // 대시보드에 필요한 데이터 임시적으로 사용
-  const [data, setData] = useState(defaultIncomeData);
-  const [userData, setuserData] = useState('');
-  const [accountNum, setAccountNum] = useState('');
+  const [data, setData] = useState({});
   // input값 얻기 위해
   const [value, setValue] = useState('...');
-
+  const [userData, setuserData] = useState({});
+  const [accountNum, setAccountNum] = useState('');
+  
+// 백엔드 
+//   쿼리 
+//   및 
+//   수정 
+//   필요 
+  
+  
   const readyIncomeData = useCallback(() => {
     console.log('계좌정보 가져오기');
     axios.get('/dashboard/creator/income', {
@@ -132,9 +125,7 @@ function UserProfile(props) {
 
   const UserContract = () => {
     if (data.creatorName === value) {
-      console.log(data.creatorContractionAgreement);
       axios.post('/dashboard/creator/contraction', {
-        creatorId,
       })
         .catch((err) => {
           console.log(`계약과정오류${err}`);
@@ -145,7 +136,7 @@ function UserProfile(props) {
     }
   };
 
-  // console.log(ContractState)
+
   function handleChange(e) {
     setValue(e.target.value);
   }
@@ -163,43 +154,28 @@ function UserProfile(props) {
               <h4 className={classes.cardCategory} style={{ textAlign: 'center' }}>거래계약서</h4>
               {/* user 이름 ......에 넣기 */}
               <h6 className={classes.cardTitle} style={{ textAlign: 'center' }}>
-거래 대상 OnAD 와 상기인
-                {' '}
-                {value}
-                {' '}
+                거래 대상 OnAD 와 상기인 {value}
               </h6>
               <p>
-                OnAD와
-                {' '}
-                {value}
-간의 거래관계에 있어 서로 거래질서를 준수하고 상호 간 발전과 이익을 증진시키기 위하여 아래 조항들을 준수할 것을 약정한다.
+                OnAD와 { data.creatorContractionAgreement === 0 ? (`${value}`) : (data.creatorName) }
+                간의 거래관계에 있어 서로 거래질서를 준수하고 상호 간 발전과 이익을 증진시키기 위하여 아래 조항들을 준수할 것을 약정한다.
               </p>
               <p>
-                제 1조(목적) 본 계약은 OnAD와
-                {' '}
-                {value}
-                {' '}
-상호간에 플랫폼의 계속적인 계약에 관한 제반 사항을 정하여 서로가 성실히 이행하며, 공동의 이익을 도모함을 목적으로 한다.
+                제 1조(목적) 본 계약은 OnAD와 { data.creatorContractionAgreement === 0 ? (`${value}`) : (data.creatorName) } 
+                상호간에 플랫폼의 계속적인 계약에 관한 제반 사항을 정하여 서로가 성실히 이행하며, 공동의 이익을 도모함을 목적으로 한다.
               </p>
               <p>
-                제 2조(플랫폼 이용) OnAD는 플랫폼 이용 또는 온라인 서비스를 능력의 범위 내에서
-                {' '}
-                {value}
-에게 성실히 제공하여야 하며,
-                {' '}
-                {value}
-는 OnAD의 서비스를 악의적인 용도로
-                사용하지 않는다.
+                제 2조(플랫폼 이용) OnAD는 플랫폼 이용 또는 온라인 서비스를 능력의 범위 내에서 { data.creatorContractionAgreement === 0 ? (`${value}`) : (data.creatorName) }
+                에게 성실히 제공하여야 하며, { data.creatorContractionAgreement === 0 ? (`${value}`) : (data.creatorName) }는 OnAD의 서비스를 악의적인 용도로 사용하지 않는다.
               </p>
               <p>
-                제 3조(이용책임)
-                {' '}
-                {value}
-는 악의적인 플랫폼 이용으로 인하여 책임 사항이 발생시 모두 본인이 책임지며 이를 선언한다.
+                제 3조(이용책임) { data.creatorContractionAgreement === 0 ? (`${value}`) : (data.creatorName) }는 
+                악의적인 플랫폼 이용으로 인하여 책임 사항이 발생시 모두 본인이 책임지며 이를 선언한다.
               </p>
               <p>
                 제 4조(기타) 이 계약서에 기재되지 아니한 사항은 서비스의 이용약관 및 개인정보처리 방침 사항을 따른다.
               </p>
+
             </CardBody>
             {/* 여기에서 ContractState값을 데이터베이스테서 가져와서 비교를 해야됨 */}
             { data.creatorContractionAgreement === 0 ? (
@@ -218,8 +194,6 @@ function UserProfile(props) {
                 <CardFooter>
                   <Button color="primary" onClick={UserContract}>계약하기</Button>
                 </CardFooter>
-                {' '}
-
               </div>
             ) : (
               <CardFooter>

@@ -40,8 +40,75 @@ function preprocessingBannerData(result) {
   }
 }
 
+function withdrawalList(result) {
+  if (result) {
+
+    let columns = result[0];
+    columns = Object.keys(columns);
+    columns = columns.map((col) => {
+      col = col.replace("date", "출금날짜")
+        .replace("creatorWithdrawalAmount", "출금금액")
+        .replace("withdrawalState", "출금상태")
+
+
+      return col;
+    });
+
+    // dataset preprocessing
+    result = result.map(
+    (value) => {
+      value.withdrawalState === 0 ? value.withdrawalState = "진행중" : value.withdrawalState = "완료됨";
+      value.date = value.date.toLocaleString();
+      value.creatorWithdrawalAmount = value.creatorWithdrawalAmount.toLocaleString();
+
+      value = Object.values(value);
+      return value
+    }
+  );
+  return {columns: columns, data: result}
+  }
+}
+
+
+function cashlist(result) {
+  if (result) {
+
+    let columns = result[0];
+    columns = Object.keys(columns);
+    columns = columns.map((col) => {
+      col = col.replace("date", "날짜")
+        .replace("chargeCash", "캐시충전")
+        .replace("withdrawCash", "캐시환불")
+        .replace("cashReturnState", "환불상태")
+
+
+      return col;
+    });
+
+    // dataset preprocessing
+    result = result.map(
+    (value) => {
+      if (value.chargeCash !== 0) {
+        value.cashReturnState = "완료됨"
+      } else {
+        value.cashReturnState === 0 ? value.cashReturnState = "진행중" : value.cashReturnState = "완료됨";
+      }
+      value.date = value.date.toLocaleString();
+      value.chargeCash = value.chargeCash.toLocaleString();
+      value.withdrawCash = value.withdrawCash.toLocaleString();
+
+      value = Object.values(value);
+      return value
+    }
+  );
+  return {columns: columns, data: result}
+  }
+}
+
 module.exports = {
   sortRows,
   preprocessingBannerData,
+  withdrawalList,
+  cashlist
 }
 
