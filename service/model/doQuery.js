@@ -13,7 +13,6 @@ const doQuery = (query, queryArray=[]) => {
         logger.error('DB연결 관련 오류' + err);
         reject({
           error : err,
-          result : null,
         }); 
       }
       conn.query(query, queryArray, (error, result)=>{
@@ -22,7 +21,6 @@ const doQuery = (query, queryArray=[]) => {
           logger.error('query 관련 오류 : ' + error);
           reject({
             error : error.sqlMessage,
-            result : null,
           }); 
         }else{
           conn.release();

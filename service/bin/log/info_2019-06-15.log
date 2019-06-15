@@ -1,3 +1,33 @@
 { message: 'SELECT marketerId FROM marketerInfo WHERE marketerId = ? ',
   level: 'info',
   timestamp: '2019-06-14T15:11:43.174Z' }
+{ message: 'SELECT * FROM creatorInfo WHERE creatorId = ?',
+  level: 'info',
+  timestamp: '2019-06-15T09:02:31.737Z' }
+{ message: 'SELECT * FROM creatorInfo WHERE creatorId = ?',
+  level: 'info',
+  timestamp: '2019-06-15T09:04:17.499Z' }
+{ message: 'SELECT * FROM creatorInfo WHERE creatorId = ?',
+  level: 'info',
+  timestamp: '2019-06-15T09:06:09.413Z' }
+{ message: 'SELECT * FROM creatorInfo WHERE creatorId = ?',
+  level: 'info',
+  timestamp: '2019-06-15T09:07:18.616Z' }
+{ message: 'SELECT * FROM creatorInfo WHERE creatorId = ?',
+  level: 'info',
+  timestamp: '2019-06-15T09:08:10.641Z' }
+{ message: 'SELECT * FROM creatorInfo WHERE creatorId = ?',
+  level: 'info',
+  timestamp: '2019-06-15T09:08:49.200Z' }
+{ message: 'SELECT * FROM creatorInfo WHERE creatorId = ?',
+  level: 'info',
+  timestamp: '2019-06-15T09:08:59.800Z' }
+{ message: 'SELECT * FROM creatorInfo WHERE creatorId = ?',
+  level: 'info',
+  timestamp: '2019-06-15T09:09:01.847Z' }
+{ message: 'SELECT * FROM creatorInfo WHERE creatorId = ?',
+  level: 'info',
+  timestamp: '2019-06-15T09:12:35.184Z' }
+{ message: 'SELECT * FROM creatorInfo WHERE creatorId = ?',
+  level: 'info',
+  timestamp: '2019-06-15T09:18:10.456Z' }

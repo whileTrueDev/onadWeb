@@ -79,52 +79,24 @@ const CssTextField = withStyles({
 function UserProfile(props) {
   const { classes } = props;
 
-  // 대시보드에 필요한 데이터 임시적으로 사용
-  const [data, setData] = useState({});
-  // input값 얻기 위해
   const [value, setValue] = useState('...');
   const [userData, setuserData] = useState({});
-  const [accountNum, setAccountNum] = useState('');
-  
-// 백엔드 
-//   쿼리 
-//   및 
-//   수정 
-//   필요 
-  
-  
-  const readyIncomeData = useCallback(() => {
-    console.log('계좌정보 가져오기');
-    axios.get('/dashboard/creator/income', {
-      params: {
-        creatorId,
-      },
-    }).then((res) => {
-      setData(res.data);
-      setAccountNum(res.data.creatorAccountNumber);
-    });
-  }, []);
 
   const readyCreatorData = useCallback(() => {
-    console.log('유저정보 가져오기');
-    axios.get('/dashboard/checkUserType')
+    axios.get('/dashboard/creator/profile')
       .then((res) => {
-        const user = res.data;
-        console.log(user);
+        const user = res.data.result[0];
         setuserData(user);
       });
   }, []);
 
-  useEffect(() => {
-    readyIncomeData();
-  }, [readyIncomeData]);
 
   useEffect(() => {
     readyCreatorData();
   }, [readyCreatorData]);
 
   const UserContract = () => {
-    if (data.creatorName === value) {
+    if (userData.creatorName === value) {
       axios.post('/dashboard/creator/contraction', {
       })
         .catch((err) => {
@@ -157,19 +129,19 @@ function UserProfile(props) {
                 거래 대상 OnAD 와 상기인 {value}
               </h6>
               <p>
-                OnAD와 { data.creatorContractionAgreement === 0 ? (`${value}`) : (data.creatorName) }
+                OnAD와 { userData.creatorContractionAgreement === 0 ? (`${value}`) : (userData.creatorName) }
                 간의 거래관계에 있어 서로 거래질서를 준수하고 상호 간 발전과 이익을 증진시키기 위하여 아래 조항들을 준수할 것을 약정한다.
               </p>
               <p>
-                제 1조(목적) 본 계약은 OnAD와 { data.creatorContractionAgreement === 0 ? (`${value}`) : (data.creatorName) } 
+                제 1조(목적) 본 계약은 OnAD와 { userData.creatorContractionAgreement === 0 ? (`${value}`) : (userData.creatorName) }
                 상호간에 플랫폼의 계속적인 계약에 관한 제반 사항을 정하여 서로가 성실히 이행하며, 공동의 이익을 도모함을 목적으로 한다.
               </p>
               <p>
-                제 2조(플랫폼 이용) OnAD는 플랫폼 이용 또는 온라인 서비스를 능력의 범위 내에서 { data.creatorContractionAgreement === 0 ? (`${value}`) : (data.creatorName) }
-                에게 성실히 제공하여야 하며, { data.creatorContractionAgreement === 0 ? (`${value}`) : (data.creatorName) }는 OnAD의 서비스를 악의적인 용도로 사용하지 않는다.
+                제 2조(플랫폼 이용) OnAD는 플랫폼 이용 또는 온라인 서비스를 능력의 범위 내에서 { userData.creatorContractionAgreement === 0 ? (`${value}`) : (userData.creatorName) }
+                에게 성실히 제공하여야 하며, { userData.creatorContractionAgreement === 0 ? (`${value}`) : (userData.creatorName) }는 OnAD의 서비스를 악의적인 용도로 사용하지 않는다.
               </p>
               <p>
-                제 3조(이용책임) { data.creatorContractionAgreement === 0 ? (`${value}`) : (data.creatorName) }는 
+                제 3조(이용책임) { userData.creatorContractionAgreement === 0 ? (`${value}`) : (userData.creatorName) }는
                 악의적인 플랫폼 이용으로 인하여 책임 사항이 발생시 모두 본인이 책임지며 이를 선언한다.
               </p>
               <p>
@@ -178,7 +150,7 @@ function UserProfile(props) {
 
             </CardBody>
             {/* 여기에서 ContractState값을 데이터베이스테서 가져와서 비교를 해야됨 */}
-            { data.creatorContractionAgreement === 0 ? (
+            { userData.creatorContractionAgreement === 0 ? (
               <div>
                 <CustomInput
                   labelText="계약에 동의한다면 상기인의 서명을 입력하세요"
@@ -219,7 +191,7 @@ function UserProfile(props) {
                   id="select-account"
                   className={classes.contentDetail}
                 >
-                  {accountNum ? `${accountNum.split('_')[0]}   ${accountNum.split('_')[1]}` : '현재 등록된 계좌가 존재하지 않습니다.'}
+                  {userData.accountNum ? `${userData.accountNum.split('_')[0]}   ${userData.accountNum.split('_')[1]}` : '현재 등록된 계좌가 존재하지 않습니다.'}
                 </Typography>
               </div>
               <Divider />
@@ -240,15 +212,15 @@ function UserProfile(props) {
             </CardAvatar>
             <CardBody profile>
               <h4 className={classes.cardTitle}>
-{userData.creatorDisplayName}
-{' '}
+                {userData.creatorName}
+                {' '}
 님의 정보
-</h4>
+              </h4>
               <GridContainer>
                 <GridItem xs={12} sm={12} md={6}>
                   <CssTextField
                     label="TWITCH 고유 ID"
-                    value={userData.creatorId}
+                    value={userData.creatorId || ''}
                     className={classes.textField}
                     margin="normal"
                     InputProps={{
@@ -259,7 +231,7 @@ function UserProfile(props) {
                 <GridItem xs={12} sm={12} md={6}>
                   <CssTextField
                     label="NAME"
-                    value={userData.creatorName}
+                    value={userData.creatorName || ''}
                     className={classes.textField}
                     margin="normal"
                     InputProps={{
@@ -273,7 +245,7 @@ function UserProfile(props) {
                 <GridItem xs={12} sm={12} md={12}>
                   <CssTextField
                     label="MAIL"
-                    value={userData.creatorMail}
+                    value={userData.creatorMail || ''}
                     className={classes.textField}
                     margin="normal"
                     InputProps={{
@@ -286,7 +258,7 @@ function UserProfile(props) {
                 <GridItem xs={12} sm={12} md={12}>
                   <CssTextField
                     label="IP"
-                    value={userData.creatorIp}
+                    value={userData.creatorIp || ''}
                     className={classes.textField}
                     margin="normal"
                     InputProps={{
