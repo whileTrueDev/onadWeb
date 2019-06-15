@@ -67,7 +67,7 @@ router.get('/matchedBanner', function(req, res, next) {
         ON SUBSTRING_INDEX(bm.contractionId, '/', 1) = br.bannerId
         JOIN marketerInfo as mi
         ON SUBSTRING_INDEX(br.bannerId, '_', 1) = mi.marketerId
-        WHERE contractionId LIKE '%/?/%'}%'
+        WHERE contractionId LIKE '%/?/%'
       `;
       const queryArray = [
         creatorId

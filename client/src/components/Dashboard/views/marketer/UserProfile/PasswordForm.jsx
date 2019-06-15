@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import {
   TextField,
 } from '@material-ui/core';
-import Slide from '@material-ui/core/Slide';
 import withStyles from '@material-ui/core/styles/withStyles';
 import axios from 'axios';
 import Check from '@material-ui/icons/Check';
@@ -11,7 +10,6 @@ import CardHeader from '../../../components/Card/CardHeader';
 import CardBody from '../../../components/Card/CardBody';
 import CardFooter from '../../../components/Card/CardFooter';
 import Button from '../../../components/CustomButtons/Button';
-import GridContainer from '../../../components/Grid/GridContainer';
 import GridItem from '../../../components/Grid/GridItem';
 import dashboardStyle from '../../../assets/jss/onad/views/dashboardStyle';
 import Snackbar from '../../../components/Snackbar/Snackbar';
@@ -30,11 +28,6 @@ dashboardStyle.password = {
     borderBottomColor: '#00acc1',
   },
 };
-
-function SlideTransition(props) {
-  return <Slide {...props} direction="down" />;
-}
-
 
 const PasswordForm = (props) => {
   const { classes } = props;

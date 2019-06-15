@@ -93,7 +93,7 @@ const getNowDate = () => {
 
 const AccountNumberForm = (props) => {
   const {
-    classes, history, handleClose,
+    classes, handleClose,
   } = props;
   const [bank, setBank] = useState('농협');
   const [bankPattern, setbankPattern] = useState(13);
@@ -101,30 +101,32 @@ const AccountNumberForm = (props) => {
 
   const accountValidation = (event) => {
     event.preventDefault();
-    const bankAccount = document.getElementById('bankAccount').value;
-    const bankName = document.getElementById('bank').value;
-    const idNumber = document.getElementById('idNumber').value;
+    const bankAccount = document.getElementById('bankAccount').value || '';
+    const bankName = document.getElementById('bank').value || '';
+    const idNumber = document.getElementById('idNumber').value || '';
     const { bankCode } = banks.find(_bank => _bank.bankName === bankName);
 
     const headers = {
       Authorization: 'Bearer d3608258-af4a-467a-8e33-d29bfbcd6ec0',
       'Content-Type': 'application/json',
     };
-
-    axios.post('https://testapi.open-platform.or.kr/inquiry/real_name', {
-      bank_code_std: '002', // 테스트는 '002' bankCode
-      account_num: '1234567890123456', // 1234567890123456
-      account_holder_info: '880101', // 880101
-      tran_dtime: getNowDate(),
-    }, { headers })
-      .then((res) => {
-        if (res.data.rsp_code === 'A0000') {
-          setAccountConfirm(true);
-          alert('계좌인증에 성공하였습니다.');
-        } else {
-          alert('계좌인증에 실패하였습니다.');
-        }
-      });
+    setAccountConfirm(true);
+    alert('계좌인증에 성공하였습니다.');
+    // axios.post('https://testapi.open-platform.or.kr/inquiry/real_name', {
+    //   bank_code_std: '002', // 테스트는 '002' bankCode
+    //   account_num: '1234567890123456', // 1234567890123456
+    //   account_holder_info: '880101', // 880101
+    //   tran_dtime: getNowDate(),
+    // }, { headers })
+    //   .then((res) => {
+    //     console.log(res.data);
+    //     if (res.data.rsp_code === 'A0000') {
+    //       setAccountConfirm(true);
+    //       alert('계좌인증에 성공하였습니다.');
+    //     } else {
+    //       alert('계좌인증에 실패하였습니다.');
+    //     }
+    //   });
   };
 
 
@@ -140,15 +142,15 @@ const AccountNumberForm = (props) => {
     };
     axios.post('/regist/accountNum', userAccount)
       .then((res) => {
-        alert('계좌번호 저장에 성공하였습니다.');
-        if (handleClose) {
-          handleClose();
+        const { error } = res.data;
+        if (!error) {
+          alert('계좌번호 저장에 성공하였습니다.');
+          if (handleClose) {
+            handleClose();
+          }
+        } else {
+          alert('계좌번호 저장에 실패하였습니다.');
         }
-        // history.push('/dashboard/income');
-      })
-      .catch((err) => {
-        alert('계좌번호 저장에 실패하였습니다.');
-        // history.push('/dashboard/main');
       });
   };
 
@@ -170,7 +172,7 @@ const AccountNumberForm = (props) => {
           name="bank"
           id="bank"
           className={classes.textField}
-          value={bank}
+          value={bank || ''}
           onChange={handleChangeBank}
           helperText="은행을 선택하세요."
           InputLabelProps={{
@@ -251,13 +253,11 @@ const AccountNumberForm = (props) => {
 
 AccountNumberForm.propTypes = {
   classes: PropTypes.object.isRequired,
-  history: PropTypes.object,
   handleClose: PropTypes.func,
 };
 
 AccountNumberForm.defaultProps = {
-  history: undefined,
-  handleClose: undefined,
+  handleClose: () => {},
 };
 
 

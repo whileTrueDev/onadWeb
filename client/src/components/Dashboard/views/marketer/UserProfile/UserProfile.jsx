@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 // for Link tag component
 // @material-ui/core
 import withStyles from '@material-ui/core/styles/withStyles';

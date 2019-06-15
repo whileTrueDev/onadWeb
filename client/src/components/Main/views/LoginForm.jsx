@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 import {
   Dialog,
@@ -29,64 +29,40 @@ const styles = () => ({
     height: '80px',
   },
 });
+
 // TODO: 비밀번호 암호화하여 전달하기.
-class LoginForm extends Component {
+const LoginForm = (props) => {
   // prop를 통해 Marketer 인지 Creator인지 확인.
   // 데이터가 변경되는 것일 때 state로 처리를 한다.
-  state = {
-    open: false,
-    findDialogOpen: false,
-    dialogType: 'ID',
-    userid: '',
-    passwd: '',
-  };
+  const {
+    isMarketer, classes, handleClose, history, logout,
+  } = props;
+  const [open, setOpen] = useState(false);
+  const [findDialogOpen, setFindDialogOpen] = useState(false);
+  const [dialogType, setDialogType] = useState('ID');
+  const [userid, setUserid] = useState('');
+  const [passwd, setPasswd] = useState('');
 
   // 하나의 change로 값을 받을 수 있다.
-  onChange = (event) => {
-    this.setState({
-      [event.target.name]: event.target.value,
-    });
-  }
-
-  handleFindDialogOpen = () => {
-    this.setState({
-      findDialogOpen: true,
-    });
-  }
-
-  handleFindDialogClose = () => {
-    this.setState({
-      findDialogOpen: false,
-    });
-  }
-
-  handleClickOpen = () => {
-    this.setState({ open: true });
+  const onChange = (event) => {
+    if (event.target.name === 'userid') {
+      setUserid(event.target.value);
+    } else {
+      setPasswd(event.target.value);
+    }
   };
 
-  handleClose = () => {
-    const { handleClose } = this.props;
-    this.setState({ open: false });
+  const formhandleClose = () => {
+    setOpen(false);
     handleClose();
   };
 
-  loginTwitch = (event) => {
-    event.preventDefault();
-    axios.post('http://localhost:3000/login/twitch', {
-      'Access-Control-Allow-Origin': '*',
-    })
-      .then((res) => {
-        console.log(res);
-      });
-  }
 
-
-  login = (event) => {
-    const { userid, passwd } = this.state;
-    const { history, logout, handleClose } = this.props;
+  const login = (event) => {
     if (event) {
       event.preventDefault();
     }
+
     axios.post('/login',
       {
         userid,
@@ -110,143 +86,139 @@ class LoginForm extends Component {
         handleClose();
         alert('회원이 아닙니다.');
       });
-    this.handleClose();
-  }
+    formhandleClose();
+  };
 
-  render() {
-    let dialog;
-    const { isMarketer, classes } = this.props;
-    const { open, dialogType, findDialogOpen } = this.state;
-    if (isMarketer) {
-      dialog = (
-        <Dialog
-          open={open}
-          onClose={this.handleClose}
-          maxWidth="xs"
-          fullWidth
-        >
-          <DialogTitle>LOGIN</DialogTitle>
-          <DialogContent>
-            <DialogContentText style={{ fontSize: 12 }}>
+  const dialog = (isMarketer
+    ? (
+      <Dialog
+        open={open}
+        onClose={formhandleClose}
+        maxWidth="xs"
+        fullWidth
+      >
+        <DialogTitle>LOGIN</DialogTitle>
+        <DialogContent>
+          <DialogContentText style={{ fontSize: 12 }}>
               온애드로 쉽고 빠르게!
-            </DialogContentText>
-            <form onChange={this.onChange}>
-              <TextField
-                autoFocus
-                required
-                label="ID"
-                helperText="ID를 입력하세요."
-                margin="dense"
-                name="userid"
-                InputLabelProps={{ shrink: true }}
-                style={{ width: '90%' }}
-              />
-              <TextField
-                required
-                label="PASSWORD"
-                helperText="PASSWORD를 입력하세요"
-                type="password"
-                margin="dense"
-                name="passwd"
-                InputLabelProps={{ shrink: true }}
-                style={{ width: '90%' }}
-                onKeyPress={(e) => {
-                  if (e.key === 'Enter') {
-                    this.login();
-                  }
-                }}
-              />
-            </form>
-            <Button
-              component={Link}
-              underline="always"
-              style={{ fontSize: 10, marginTop: 10 }}
-              onClick={() => {
-                this.setState({
-                  dialogType: 'ID',
-                });
-                this.handleFindDialogOpen();
-              }}
-            >
-            아이디가 기억나지 않으신가요?
-            </Button>
-            <br />
-            <Button
-              component={Link}
-              underline="always"
-              style={{ fontSize: 10, marginTop: 10 }}
-              onClick={() => {
-                this.setState({
-                  dialogType: 'PASSWORD',
-                });
-                this.handleFindDialogOpen();
-              }}
-            >
-            비밀번호가 기억나지 않으신가요?
-            </Button>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={this.login} color="primary">
-              로그인
-            </Button>
-            <Button onClick={this.handleClose} color="primary">
-              취소
-            </Button>
-          </DialogActions>
-        </Dialog>
-      );
-    } else {
-      dialog = (
-        <Dialog
-          open={open}
-          onClose={this.handleClose}
-          maxWidth="sm"
-        >
-          <DialogTitle>LOGIN</DialogTitle>
-          <DialogContent>
-            <DialogContentText style={{ fontSize: 12 }}>
-            당신의 CHANNEL을 선택하세요.
-            </DialogContentText>
-            <Button
-              href="http://localhost:3000/login/twitch"
-              style={{
-                backgroundImage: 'url("pngs/twitch3.png")',
-              }}
-              className={classes.imageSrc}
+          </DialogContentText>
+          <form onChange={onChange}>
+            <TextField
+              autoFocus
+              required
+              label="ID"
+              helperText="ID를 입력하세요."
+              margin="dense"
+              name="userid"
+              InputLabelProps={{ shrink: true }}
+              style={{ width: '90%' }}
             />
-            {/* <Button href='http://localhost:3000/login/twitch'
-                style={{
-                  backgroundImage: `url("pngs/youtube2.png")`,
-                }}
-                className = {classes.imageSrc}
-              />           */}
-          </DialogContent>
-        </Dialog>
-      );
-    }
-    return (
-      <div>
-        <Button color="inherit" onClick={this.handleClickOpen} className={classes.button}>
-          {isMarketer ? '마케터' : '크리에이터'}
-        </Button>
-        {dialog}
-        <FindDialog
-          dialogType={dialogType}
-          findDialogOpen={findDialogOpen}
-          handleFindDialogClose={this.handleFindDialogClose}
-          handleClose={this.handleClose}
-        />
-      </div>
-    );
-  }
-}
+            <TextField
+              required
+              label="PASSWORD"
+              helperText="PASSWORD를 입력하세요"
+              type="password"
+              margin="dense"
+              name="passwd"
+              InputLabelProps={{ shrink: true }}
+              style={{ width: '90%' }}
+              onKeyPress={(e) => {
+                if (e.key === 'Enter') {
+                  login();
+                }
+              }}
+            />
+          </form>
+          <Button
+            component={Link}
+            underline="always"
+            style={{ fontSize: 10, marginTop: 10 }}
+            onClick={() => {
+              setDialogType('ID');
+              setFindDialogOpen(true);
+            }}
+          >
+            아이디가 기억나지 않으신가요?
+          </Button>
+          <br />
+          <Button
+            component={Link}
+            underline="always"
+            style={{ fontSize: 10, marginTop: 10 }}
+            onClick={() => {
+              setDialogType('PASSWORD');
+              setFindDialogOpen(true);
+            }}
+          >
+            비밀번호가 기억나지 않으신가요?
+          </Button>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={login} color="primary">
+              로그인
+          </Button>
+          <Button onClick={handleClose} color="primary">
+              취소
+          </Button>
+        </DialogActions>
+      </Dialog>
+    )
+    : (
+      <Dialog
+        open={open}
+        onClose={formhandleClose}
+        maxWidth="xs"
+        fullWidth
+      >
+        <DialogTitle>LOGIN</DialogTitle>
+        <DialogContent>
+          <DialogContentText style={{ fontSize: 12 }}>
+        당신의 CHANNEL을 선택하세요.
+          </DialogContentText>
+          <Button
+            component={Link}
+            href="http://localhost:3000/login/twitch"
+            style={{
+              backgroundImage: 'url("pngs/twitch3.png")',
+            }}
+            className={classes.imageSrc}
+          />
+        </DialogContent>
+      </Dialog>
+    )
+  );
+
+
+  return (
+    <div>
+      <Button color="inherit" onClick={() => { setOpen(true); }} className={classes.button}>
+        {isMarketer ? '마케터' : '크리에이터'}
+      </Button>
+      {dialog}
+      <FindDialog
+        dialogType={dialogType}
+        findDialogOpen={findDialogOpen}
+        handleFindDialogClose={() => { setFindDialogOpen(false); }}
+        handleClose={formhandleClose}
+      />
+    </div>
+  );
+};
 
 LoginForm.defaultProps = {
   classes: {},
+  isMarketer: true,
+  logout: () => {},
+  handleClose: () => {},
+  history: {},
 };
 
 LoginForm.propTypes = {
   classes: PropTypes.object,
+  isMarketer: PropTypes.bool,
+  logout: PropTypes.func,
+  handleClose: PropTypes.func,
+  history: PropTypes.object,
 };
 
 export default withStyles(styles)(LoginForm);

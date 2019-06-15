@@ -62,13 +62,10 @@ const FindDialog = (props) => {
             alert(res.data.message);
             handleClose();
           } else {
-            alert(res.data.message);
+            alert('가입시 등록한 이메일로 임시비밀번호가 발송되었습니다.');
             handleFindDialogClose();
             handleClose();
           }
-        })
-        .catch((err) => {
-          console.log(err);
         });
     } else {
       // 이메일 형식 오류
