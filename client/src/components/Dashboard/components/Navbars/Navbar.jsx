@@ -64,7 +64,7 @@ Header.propTypes = {
   classes: PropTypes.object.isRequired,
   color: PropTypes.oneOf(['primary', 'info', 'success', 'warning', 'danger']),
   handleDrawerToggle: PropTypes.func,
-  routes: PropTypes.object,
+  routes: PropTypes.array,
 };
 
 export default withStyles(headerStyle)(Header);

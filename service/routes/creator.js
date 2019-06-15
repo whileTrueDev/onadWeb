@@ -1,11 +1,13 @@
 // import
 const express = require('express');
 const pool = require('../model/connectionPool');
+const doQuery = require('../model/doQuery');
 const preprocessing = require('../middlewares/preprocessingData/');
 const router = express.Router();
 const sortRows = preprocessing.sortRows;
 const listOfWithdrawal = preprocessing.withdrawalList;
 const preprocessingBannerData = preprocessing.preprocessingBannerData;
+
 
 // 크리에이터 수익금 라우터 및 정보조회
 router.get('/income', function(req, res, next) {
@@ -338,6 +340,17 @@ router.post('/withdrawal', function(req, res, next) {
         conn.release();
     });
     }
+  })
+})
+
+router.get('/profile', (req, res)=>{
+  const creatorId = req._passport.session.user.creatorId;
+  doQuery(`SELECT * FROM creatorInfo WHERE creatorId = ?`, [creatorId])
+  .then((data)=>{
+    res.send(data);
+  })
+  .catch((data)=>{
+    res.send(data);
   })
 })
 
