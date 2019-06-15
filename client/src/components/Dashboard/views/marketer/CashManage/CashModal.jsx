@@ -132,16 +132,15 @@ function CashModal(props) {
 
   function handleSubmitClick() {
     // 해당 금액 만큼 광고 캐시에 추가하는 요청
-      axios.post('/dashboard/marketer/chargecash', {
-        chargecash: selectValue,
-      }).then((res) => {
-        console.log(res);
-      }).catch((err) => {
-        console.log(err);
-      });
-
+    axios.post('/dashboard/marketer/chargecash', {
+      chargecash: selectValue,
+    }).then((res) => {
+      console.log(res);
       handleSnackClose();
       history.push('/dashboard/cash');
+    }).catch((err) => {
+      console.log(err);
+    });
   }
 
 
@@ -196,29 +195,29 @@ function CashModal(props) {
               <FormControlLabel
                 value="신용카드"
                 control={<Radio color="primary" />}
-                label={
+                label={(
                   <Typography variant="h7" className={classes.selectValue}>
                     신용카드
                   </Typography>
-                  }
+)}
               />
               <FormControlLabel
                 value="계좌이체"
                 control={<Radio color="primary" />}
-                label={
+                label={(
                   <Typography variant="h7" className={classes.selectValue}>
                     계좌이체
                   </Typography>
-                  }
+)}
               />
               <FormControlLabel
                 value="무통장입금"
                 control={<Radio color="primary" />}
-                label={
+                label={(
                   <Typography variant="h7" className={classes.selectValue}>
                     무통장입금
                   </Typography>
-                  }
+)}
               />
             </RadioGroup>
           </div>
@@ -238,38 +237,38 @@ function CashModal(props) {
               <FormControlLabel
                 value="100000"
                 control={<Radio color="primary" />}
-                label={
-                      <Typography variant="h7" className={classes.selectValue}>
+                label={(
+                  <Typography variant="h7" className={classes.selectValue}>
                     100,000 원
-                      </Typography>
-                  }
+                  </Typography>
+)}
               />
               <FormControlLabel
                 value="500000"
                 control={<Radio color="primary" />}
-                label={
-                      <Typography variant="h7" className={classes.selectValue}>
+                label={(
+                  <Typography variant="h7" className={classes.selectValue}>
                     500,000 원
-                      </Typography>
-                  }
+                  </Typography>
+)}
               />
               <FormControlLabel
                 value="1000000"
                 control={<Radio color="primary" />}
-                label={
-                      <Typography variant="h7" className={classes.selectValue}>
+                label={(
+                  <Typography variant="h7" className={classes.selectValue}>
                     1,000,000 원
-                      </Typography>
-                  }
+                  </Typography>
+)}
               />
               <FormControlLabel
                 value="5000000"
                 control={<Radio color="primary" />}
-                label={
-                      <Typography variant="h7" className={classes.selectValue}>
+                label={(
+                  <Typography variant="h7" className={classes.selectValue}>
                     5,000,000 원
-                      </Typography>
-                  }
+                  </Typography>
+)}
               />
             </RadioGroup>
             <div style={{ position: 'absolute', top: 50, left: 200 }}>
@@ -360,7 +359,6 @@ function CashModal(props) {
 CashModal.propTypes = {
   open: PropTypes.bool.isRequired,
   handleClose: PropTypes.func.isRequired,
-  accountNumber: PropTypes.string.isRequired,
   chargeCash: PropTypes.number.isRequired,
 };
 

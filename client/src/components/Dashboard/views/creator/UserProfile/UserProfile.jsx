@@ -126,7 +126,9 @@ function UserProfile(props) {
               <h4 className={classes.cardCategory} style={{ textAlign: 'center' }}>거래계약서</h4>
               {/* user 이름 ......에 넣기 */}
               <h6 className={classes.cardTitle} style={{ textAlign: 'center' }}>
-                거래 대상 OnAD 와 상기인 {value}
+                거래 대상 OnAD 와 상기인
+                {' '}
+                {value}
               </h6>
               <p>
                 OnAD와 { userData.creatorContractionAgreement === 0 ? (`${value}`) : (userData.creatorName) }

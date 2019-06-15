@@ -114,11 +114,21 @@ router.get('/auth/:id', (req, res) => {
   })
 })
 
+// 크리에이터 마케터 계좌 정보 입력
 router.post('/accountNum', (req, res, next)=>{
-  const { creatorId } = req.session.passport.user;
+  const { userType } = req.session.passport.user;
+  let userId, query;
+  if ( userType === 'creator' ) {
+    userId = req.session.passport.user.creatorId;
+    query = `UPDATE creatorInfo SET creatorAccountNumber = ? WHERE creatorId = ?`;
+  } else {
+    userId = req.session.passport.user.userid;
+    query = `UPDATE marketerInfo SET marketerAccountNumber = ? WHERE marketerId = ?`;
+  }
+    
   const { bankName, bankAccount } = req.body;
-  const creatorAccountNumber = `${bankName}_${bankAccount}`
-  doQuery(`UPDATE creatorInfo SET creatorAccountNumber = ? WHERE creatorId = ? `, [creatorAccountNumber, creatorId])
+  const AccountNumber = `${bankName}_${bankAccount}`
+  doQuery(query, [AccountNumber, userId])
   .then((data)=>{
     res.send(data);
   })
@@ -126,6 +136,7 @@ router.post('/accountNum', (req, res, next)=>{
     res.send(data);
   })
 })
+
 
 
 

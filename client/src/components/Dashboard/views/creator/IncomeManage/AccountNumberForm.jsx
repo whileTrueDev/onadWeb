@@ -85,11 +85,13 @@ const banks = [
 ];
 
 
-const getNowDate = () => {
-  const date = new Date();
-  const fullDate = date.getFullYear() + (`0${date.getMonth() + 1}`).slice(-2) + (`0${date.getDate()}`).slice(-2) + (`0${date.getHours()}`).slice(-2) + (`0${date.getMinutes()}`).slice(-2) + (`0${date.getSeconds()}`).slice(-2);
-  return fullDate;
-};
+// const getNowDate = () => {
+//   const date = new Date();
+//   const fullDate = date.getFullYear() + (`0${date.getMonth() + 1}`).slice(-2)
+//     + (`0${date.getDate()}`).slice(-2) + (`0${date.getHours()}`).slice(-2)
+//     + (`0${date.getMinutes()}`).slice(-2) + (`0${date.getSeconds()}`).slice(-2);
+//   return fullDate;
+// };
 
 const AccountNumberForm = (props) => {
   const {
@@ -101,15 +103,15 @@ const AccountNumberForm = (props) => {
 
   const accountValidation = (event) => {
     event.preventDefault();
-    const bankAccount = document.getElementById('bankAccount').value || '';
-    const bankName = document.getElementById('bank').value || '';
-    const idNumber = document.getElementById('idNumber').value || '';
-    const { bankCode } = banks.find(_bank => _bank.bankName === bankName);
+    // const bankAccount = document.getElementById('bankAccount').value || '';
+    // const bankName = document.getElementById('bank').value || '';
+    // const idNumber = document.getElementById('idNumber').value || '';
+    // const { bankCode } = banks.find(_bank => _bank.bankName === bankName);
 
-    const headers = {
-      Authorization: 'Bearer d3608258-af4a-467a-8e33-d29bfbcd6ec0',
-      'Content-Type': 'application/json',
-    };
+    // const headers = {
+    //   Authorization: 'Bearer d3608258-af4a-467a-8e33-d29bfbcd6ec0',
+    //   'Content-Type': 'application/json',
+    // };
     setAccountConfirm(true);
     alert('계좌인증에 성공하였습니다.');
     // axios.post('https://testapi.open-platform.or.kr/inquiry/real_name', {

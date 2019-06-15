@@ -1,6 +1,8 @@
 const express = require('express');
 const pool = require('../model/connectionPool');
 const preprocessing = require('../middlewares/preprocessingData/');
+const sortRows = preprocessing.sortRows;
+const cashlist = preprocessing.cashlist;
 const router = express.Router();
 
 /**
@@ -467,6 +469,7 @@ router.get('/bannerValue', function(req, res, next) {
       })
   }})
 })
+
 router.post('/banner/delete', (req, res, next)=>{
   const {bannerId} = req.body;
   console.log(bannerId);
@@ -481,7 +484,6 @@ router.post('/banner/delete', (req, res, next)=>{
     })
   })
 })
-
 
 router.post('/banner/push', (req, res, next)=>{
   const marketerId = req._passport.session.user.userid;
@@ -530,5 +532,178 @@ router.post('/banner/push', (req, res, next)=>{
     })
   })
 })
+
+// 마케터 캐시 충전
+router.post('/chargecash', function(req, res, next) {
+  const marketerId = req._passport.session.user.userid;
+  const chargecash = req.body.chargecash;
+
+  pool.getConnection((err, conn) => {
+    if (err) {
+      console.log(err)
+    } else {
+      // 출금 신청 데이터 넣기
+      const queryState = `
+      INSERT
+      INTO marketerCash
+      (marketerId, chargeCash, withdrawCash)
+      VALUES (?, ?, ?)`;
+
+      const queryArray = [
+        marketerId , chargecash ,0
+      ];
+
+      conn.query(queryState, queryArray, function(err, result, fields){
+          if(err){
+            console.log('마케터 캐시충전 정보 입력 오류', err);
+          }
+      });
+
+      // 광고캐시 신청 금액에 맞추어 기존의 marketerDebit에 추가하기
+      const updateQueryState = `
+        INSERT INTO
+        marketerCost (marketerId, marketerDebit)
+        SELECT marketerId, marketerDebit + ?
+        FROM marketerCost
+        WHERE marketerId = ?
+        ORDER BY date DESC
+        LIMIT 1`
+      const updateQueryArray = [
+        chargecash, marketerId
+      ];
+
+      conn.query(updateQueryState, updateQueryArray, function(err, result, fields){
+        if(err){
+          console.log('마케터 캐시충전 금액 수정삽입 오류', err);
+        }
+        res.send({
+          insertDebit: 'success',
+          updateDebit: 'success'
+        });
+        conn.release();
+    });
+    }
+  })
+})
+
+// 마케터 캐시 환불
+router.post('/return', function(req, res, next) {
+  const marketerId = req._passport.session.user.userid;
+  const withdrawcash = req.body.withdrawCash;
+
+  pool.getConnection((err, conn) => {
+    if (err) {
+      console.log(err)
+    } else {
+      // 출금 신청 데이터 넣기
+      const queryState = `
+      INSERT
+      INTO marketerCash
+      (marketerId, chargeCash, withdrawCash)
+      VALUES (?, ?, ?)`;
+
+      const queryArray = [
+        marketerId, 0, withdrawcash
+      ];
+
+      conn.query(queryState, queryArray, function(err, result, fields){
+          if(err){
+            console.log('마케터 캐시충전 정보 입력 오류', err);
+          }
+      });
+
+      // 광고캐시 환불 금액에 맞추어 기존의 marketerDebit에 추가하기
+      const updateQueryState = `
+        INSERT INTO
+        marketerCost (marketerId, marketerDebit)
+        SELECT marketerId, marketerDebit - ?
+        FROM marketerCost
+        WHERE marketerId = ?
+        ORDER BY date DESC
+        LIMIT 1`
+      const updateQueryArray = [
+        withdrawcash, marketerId
+      ];
+
+      conn.query(updateQueryState, updateQueryArray, function(err, result, fields){
+        if(err){
+          console.log('마케터 캐시충전 금액 수정삽입 오류', err);
+        }
+        res.send({
+          insertDebit: 'success',
+          updateDebit: 'success'
+        });
+        conn.release();
+    });
+    }
+  })
+})
+
+// 마케터 캐시 충전 및 환불 내역
+router.get('/cashlist', function(req, res, next) {
+  //marketerID 가져오기
+  const marketerId = req._passport.session.user.userid;
+
+  pool.getConnection((err, conn) => {
+    if (err) {
+      console.log(err)
+      conn.release();
+      res.json(err);
+    } else {
+
+      const DBquery = `SELECT
+      DATE_FORMAT(date, '%y년 %m월 %d일') as date, chargeCash, withdrawCash, cashReturnState
+      FROM marketerCash
+      WHERE marketerId = "${marketerId}"
+      ORDER BY date DESC`;
+
+      conn.query(DBquery, (err, rows, fields) => {
+        if (err) {
+          console.log(err);
+          conn.release();
+          res.json(err);
+        } else {
+          if (rows.length > 0) {
+            const result = cashlist(sortRows(rows, 'date'));
+            conn.release();
+            res.send(result);
+          } else {
+            conn.release();
+            res.end();
+          }
+        }
+      })
+    }
+  })
+})
+
+// 마케터 계좌정보 조회
+router.get('/accountNumber', function(req, res, next) {
+  const marketerId = req._passport.session.user.userid;
+
+  pool.getConnection((err, conn) => {
+    if (err) {
+      console.log(err)
+    } else {
+      conn.query(`SELECT marketerAccountNumber
+        FROM marketerInfo
+        WHERE marketerId = "${marketerId}"
+        `, function(err, result, fields){
+          console.log(result)
+          if(err){
+              console.log(err);
+          }
+          if (result.length > 0) {
+            conn.release();
+            res.send(result[0]);
+          }else{
+            conn.release();
+            res.end();
+          }
+      });
+    }
+  })
+})
+
 
 module.exports = router;

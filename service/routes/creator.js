@@ -5,6 +5,7 @@ const doQuery = require('../model/doQuery');
 const preprocessing = require('../middlewares/preprocessingData/');
 const router = express.Router();
 const sortRows = preprocessing.sortRows;
+const listOfWithdrawal = preprocessing.withdrawalList;
 const preprocessingBannerData = preprocessing.preprocessingBannerData;
 
 
@@ -100,7 +101,7 @@ router.get('/matchedBanner', function(req, res, next) {
 })
 
 // 크리에이터 현재 광고 중 배너
-router.route('/currentBanner').get(function(req, res, next){
+router.get('/currentBanner', function(req, res, next){
   const creatorId = req._passport.session.user.creatorId
   //DB연결후 query문을 통한 데이터 삽입 
   pool.getConnection(function(err, conn){
@@ -146,7 +147,7 @@ router.route('/currentBanner').get(function(req, res, next){
 });
 
 // 배너 오버레이 URL 주소 가져오기
-router.route('/overlayUrl').get(function(req, res, next){
+router.get('/overlayUrl', function(req, res, next){
   const creatorId = req._passport.session.user.creatorId;
   //DB연결후 query문을 통한 데이터 삽입 
     pool.getConnection(function(err, conn){
@@ -172,7 +173,7 @@ router.route('/overlayUrl').get(function(req, res, next){
 });
   
 // 수익관리 탭의 크리에이터 별 수익금 차트 데이터
-router.route('/chartdata').get(function(req, res, next) {
+router.get('/chartdata', function(req, res, next) {
   // creatorId 가져오기
   const creatorId = req._passport.session.user.creatorId;
   const dateRange = req.query.dateRange;
@@ -235,7 +236,7 @@ router.route('/chartdata').get(function(req, res, next) {
 })
 
 // 계좌정보를 입력했는지
-router.route('/account').get(function(req, res, next) {
+router.get('/account', function(req, res, next) {
   const creatorId = req._passport.session.user.creatorId;
   pool.getConnection((err, conn) => {
     if (err) {
@@ -261,38 +262,36 @@ router.route('/account').get(function(req, res, next) {
   })
 })
 
+// creator contraction Update
+router.post('/contraction', (req, res, next) => {
+  const creatorId = req.body.creatorId;
+  console.log(creatorId);
 
-router.route('/contraction')
-  .post((req, res, next) => {
-    const creatorId = req.body.creatorId;
-    console.log(creatorId);
-
-    pool.getConnection(function(err, conn){
-      if(err){ 
+  pool.getConnection(function(err, conn){
+    if(err){ 
+      console.log(err);
+    }
+    const updateQuery = `
+    UPDATE creatorInfo
+    SET creatorContractionAgreement = ?
+    WHERE creatorInfo.creatorId = ?`;
+    const updateArray = [1, creatorId];
+    conn.query(updateQuery, updateArray, function(err, result, fields){
+      if (err) {
         console.log(err);
       }
-      const updateQuery = `
-      UPDATE creatorInfo
-      SET creatorContractionAgreement = ?
-      WHERE creatorInfo.creatorId = ?`;
-      const updateArray = [1, creatorId];
-      conn.query(updateQuery, updateArray, function(err, result, fields){
-        if (err) {
-          console.log(err);
-        }
-        if(result[0]){
-          res.send(true);
-        } else {
-          res.send(false);
-        }
-      });
-      conn.release();
+      if(result[0]){
+        res.send(true);
+      } else {
+        res.send(false);
+      }
     });
-  })
+    conn.release();
+  });
+})
 
-
-// 마케터 광고 잔액 정보
-router.route('/withdrawal').post(function(req, res, next) {
+// 크리에이터 출금신청 / 출금신청 금액만큼 creatorIncome에서 제외
+router.post('/withdrawal', function(req, res, next) {
   const creatorId = req._passport.session.user.creatorId;
   const withdrawlAmount = req.body.withdrawalAmount;
 
@@ -354,5 +353,44 @@ router.get('/profile', (req, res)=>{
     res.send(data);
   })
 })
+
+// 크리에이터 출금 내역 불러오기
+router.get('/listOfWithdrawal', function(req, res, next) {
+  // creatorID 가져오기
+  const creatorId = req._passport.session.user.creatorId;
+
+  pool.getConnection((err, conn) => {
+    if (err) {
+      console.log(err)
+      conn.release();
+      res.json(err);
+    } else {
+
+      const DBquery = `SELECT
+      date, creatorWithdrawalAmount, withdrawalState
+      FROM creatorWithdrawal
+      WHERE creatorId="${creatorId}"`;
+
+      conn.query(DBquery, (err, rows, fields) => {
+        if (err) {
+          // 디비 쿼리 오류인 경우
+          console.log(err);
+          conn.release();
+          res.json(err);
+        } else {
+          // 결과값이 있는 경우
+          if (rows.length > 0) {
+            const result = listOfWithdrawal(sortRows(rows, 'date'));
+            conn.release();
+            res.send(result);
+          } else {
+            conn.release();
+            res.end();
+          }
+        }
+      });
+    }
+  })
+});
 
 module.exports = router;

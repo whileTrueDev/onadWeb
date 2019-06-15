@@ -113,7 +113,7 @@ const AccountDialog = (props) => {
       bankName: event.target.bank.value,
       bankAccount: event.target.bankAccount.value,
     };
-    axios.post('/regist/marketeraccountNum', userAccount)
+    axios.post('/regist/accountNum', userAccount)
       .then((res) => {
         alert('계좌번호 저장에 성공하였습니다.');
         history.push('/dashboard/cash');

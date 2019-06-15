@@ -74,7 +74,7 @@ function useFetchData(url, dateRange) {
         throw new Error('데이터가 존재하지 않습니다');
       }
     } catch {
-      setError(`데이터가 없습니다.${  url}`);
+      setError(`데이터가 없습니다.${url}`);
     } finally {
       setLoading(false);
     }
@@ -162,17 +162,17 @@ function Income(props) {
 
   // 출금리스트 데이터 axios 요청
   useEffect(() => {
-    // axios.get('/dashboard/creator/listOfWithdrawal')
-    //   .then((res) => {
-    //     if (res.data) {
-    //       if (res.data) {
-    //         setWithdrawalData(res.data);
-    //       } else { setWithdrawalData(defaultWithdrawalData); }
-    //     }
-    //   }).catch((res) => {
-    //     console.log(res); // 오류처리 요망
-    //     setWithdrawalData(defaultWithdrawalData);
-    //   });
+    axios.get('/dashboard/creator/listOfWithdrawal')
+      .then((res) => {
+        if (res.data) {
+          if (res.data) {
+            setWithdrawalData(res.data);
+          } else { setWithdrawalData(defaultWithdrawalData); }
+        }
+      }).catch((res) => {
+        console.log(res); // 오류처리 요망
+        setWithdrawalData(defaultWithdrawalData);
+      });
   }, []);
 
   // 출금신청 페이지네이션
