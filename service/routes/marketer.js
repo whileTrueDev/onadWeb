@@ -1,6 +1,7 @@
 const express = require('express');
 const pool = require('../model/connectionPool');
 const preprocessing = require('../middlewares/preprocessingData/');
+const sortRows = preprocessing.sortRows;
 const cashlist = preprocessing.cashlist;
 const router = express.Router();
 
@@ -653,7 +654,8 @@ router.get('/cashlist', function(req, res, next) {
       const DBquery = `SELECT
       DATE_FORMAT(date, '%y년 %m월 %d일') as date, chargeCash, withdrawCash, cashReturnState
       FROM marketerCash
-      WHERE marketerId = "${marketerId}"`;
+      WHERE marketerId = "${marketerId}"
+      ORDER BY date DESC`;
 
       conn.query(DBquery, (err, rows, fields) => {
         if (err) {

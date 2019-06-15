@@ -325,7 +325,6 @@ const CashManage = (props) => {
 
 CashManage.propTypes = {
   classes: PropTypes.object.isRequired,
-  session: PropTypes.object.isRequired,
   history: PropTypes.object.isRequired,
 };
 
