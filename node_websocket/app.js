@@ -65,7 +65,7 @@ app.get('/banner/:id', function(req, res){ ///banner/:id로 라우팅
         if (err){
             console.log(err)
         }
-        else {
+        else { 
             try {
                 if(data[0].creatorIp != clientIp){ //나중에 이부분 경고창으로 바꿔야 함. 등록된 아이피가 아니면 접속차단시키는 부분임
                 res.render('wrongIp.ejs')    
