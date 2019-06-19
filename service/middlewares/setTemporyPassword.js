@@ -1,5 +1,5 @@
 const axios = require('axios');
-const pool = require('../model/connectionPool');
+const doQuery = require('../model/doQuery');
 const encrypto = require('../encryption');
 
 
@@ -19,35 +19,24 @@ const setTemporaryPassword = (req, res, next) => {
 
   [key, salt] = encrypto.make(password);
   
-  //DB로 비밀번호 변경 및 임시 비밀번호임을 체크
-  pool.getConnection(function(err, conn){
-    if(err){ 
-      console.log(err);
+  doQuery(`UPDATE marketerInfo SET marketerSalt = ?, marketerPasswd = ?, temporaryLogin = 1 WHERE marketerId = ? `, [salt, key, req.body.marketerId])
+  .then(()=>{
+    let user = {
+      marketerId : req.body.marketerId,
+      marketerMail : req.body.marketerMail,
+      password : password,
+      baseUrl : req.baseUrl
     }
-    conn.query(`UPDATE marketerInfo SET marketerSalt = ?, marketerPasswd = ?, temporaryLogin = 1 WHERE marketerId = ? `, [salt, key, req.body.marketerId], function(err, result, fields){
-      console.log('비밀번호 변경 성공');
-    });
-    conn.release();
-  });
-
-  let user = {
-    marketerId : req.body.marketerId,
-    marketerMail : req.body.marketerMail,
-    password : password,
-    baseUrl : req.baseUrl
-  }
-  sendMail( user );
-}
-
-const sendMail = ( user ) =>{
-  axios.post('http://localhost:3001/mailer/auth', user)
-  .then((res) => {
-    console.log(res.data);
+    axios.post('http://localhost:3001/mailer/auth', user)
+    .then((response)=>{
+      //메일 전송 오류 및 성공.    
+      res.send(response.data);
+    })
   })
-  .catch((err)=>{
-    console.log(err);
+  .catch((data)=>{
+    //쿼리문이나 커넥션에 대한 에러
+    res.send(data);
   })
 }
-
 
 module.exports = setTemporaryPassword;

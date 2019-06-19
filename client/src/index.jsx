@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 
 import { Router, Route } from 'react-router-dom';
 import { createBrowserHistory } from 'history';
-import RegistStepper from './components/regist/stepper';
+import RegistStepper from './components/Regist/Stepper';
 import Main from './components/Main';
 import Dashboard from './components/Dashboard/layouts/DashboardLayout';
 import adminRoutes from './components/admin/routes';

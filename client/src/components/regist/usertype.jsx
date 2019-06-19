@@ -93,18 +93,18 @@ const images = [
   },
 ];
 
-function Usertype(props) {
+const Usertype = (props) => {
   // props 는 전달하지 않아도 가능한가?
   const { classes } = props;
 
-  function typeChange(title) {
+  const typeChange = (title) => {
     if (title === '개인') {
       props.typeChange(0);
     } else {
       props.typeChange(1);
     }
     props.handleNext();
-  }
+  };
 
   return (
     <div className={classes.root}>
@@ -141,7 +141,7 @@ function Usertype(props) {
       ))}
     </div>
   );
-}
+};
 
 Usertype.propTypes = {
   classes: PropTypes.object.isRequired,

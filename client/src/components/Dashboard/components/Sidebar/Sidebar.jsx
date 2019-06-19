@@ -1,4 +1,5 @@
 import React from 'react';
+import shortid from 'shortid';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import { NavLink } from 'react-router-dom';
@@ -12,32 +13,33 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Icon from '@material-ui/core/Icon';
 // core components
 import sidebarStyle from '../../assets/jss/onad/components/sidebarStyle';
-import AdminNavbarLinks from '../Navbars/AdminNavbarLinks';
 
 
 const Sidebar = ({ ...props }) => {
   // verifies if routeName is the one active (in browser input)
-  function activeRoute(routeName) {
+  function isActiveRoute(routeName) {
     return props.location.pathname.indexOf(routeName) > -1;
   }
   const {
-    classes, color, logo, image, logoText, routes,
+    classes, color, logo, logoText, routes,
+    handleDrawerToggle, open,
   } = props;
+
   const links = (
     <List className={classes.list}>
       {routes.map((prop, key) => {
         const listItemClasses = classNames({
-          [` ${classes[color]}`]: activeRoute(prop.layout + prop.path),
+          [` ${classes[color]}`]: isActiveRoute(prop.layout + prop.path),
         });
         const whiteFontClasses = classNames({
-          [` ${classes.whiteFont}`]: activeRoute(prop.layout + prop.path),
+          [` ${classes.whiteFont}`]: isActiveRoute(prop.layout + prop.path),
         });
         return (
           <NavLink
             to={prop.layout + prop.path}
             className={classes.item}
             activeClassName="active"
-            key={key}
+            key={shortid.generate()}
           >
             <ListItem button className={classes.itemLink + listItemClasses}>
               {typeof prop.icon === 'string' ? (
@@ -62,6 +64,7 @@ const Sidebar = ({ ...props }) => {
       })}
     </List>
   );
+
   const brand = (
     <div className={classes.logo}>
       <a
@@ -75,6 +78,7 @@ const Sidebar = ({ ...props }) => {
       </a>
     </div>
   );
+
   return (
     <div>
       {/* 모바일 사이드바 */}
@@ -82,46 +86,52 @@ const Sidebar = ({ ...props }) => {
         <Drawer
           variant="temporary"
           anchor="right"
-          open={props.open}
+          open={open}
           classes={{
             paper: classNames(classes.drawerPaper),
           }}
-          onClose={props.handleDrawerToggle}
+          onClose={handleDrawerToggle}
           ModalProps={{
             keepMounted: true, // Better open performance on mobile.
           }}
         >
           {brand}
           <div className={classes.sidebarWrapper}>
-            <AdminNavbarLinks />
             {links}
           </div>
-          {image !== undefined ? (
-            <div
-              className={classes.background}
-              style={{ backgroundImage: `url(${image})` }}
-            />
-          ) : null}
+          <div
+            className={classes.background}
+          />
         </Drawer>
       </Hidden>
       {/* 데스크탑 사이드바 */}
       <Hidden smDown implementation="css">
         <Drawer
-          anchor="left"
           variant="permanent"
           open
           classes={{
             paper: classNames(classes.drawerPaper),
           }}
         >
-          {brand}
+          {/* 사이드바 Logo */}
+          <div className={classes.logo}>
+            <a
+              href="/dashboard/main"
+              className={classNames(classes.logoLink)}
+            >
+              <div className={classes.logoImage}>
+                <img src={logo} alt="logo" className={classes.img} />
+              </div>
+              {logoText}
+            </a>
+          </div>
+
+          {/* 사이드바 라우터 링크 */}
           <div className={classes.sidebarWrapper}>{links}</div>
-          {image !== undefined ? (
-            <div
-              className={classes.background}
-              style={{ backgroundImage: `url(${image})` }}
-            />
-          ) : null}
+          {/* 사이드바 배경 */}
+          <div
+            className={classes.background}
+          />
         </Drawer>
       </Hidden>
     </div>

@@ -1,0 +1,68 @@
+{ message:
+   'Email sent: 250 2.0.0 OK  1560497587 c142sm2450900pfb.171 - gsmtp',
+  level: 'info',
+  timestamp: '2019-06-14T07:33:06.691Z' }
+{ message:
+   'Email sent: 250 2.0.0 OK  1560497768 l1sm1843194pgj.67 - gsmtp',
+  level: 'info',
+  timestamp: '2019-06-14T07:36:06.894Z' }
+{ message:
+   'SELECT marketerId, marketerName FROM marketerInfo WHERE marketerMail = ? ',
+  level: 'info',
+  timestamp: '2019-06-14T10:22:50.623Z' }
+{ message:
+   'SELECT marketerId, marketerName FROM marketerInfo WHERE marketerMail = ? ',
+  level: 'info',
+  timestamp: '2019-06-14T10:24:09.226Z' }
+{ message:
+   'SELECT marketerMail FROM marketerInfo WHERE marketerId = ? ',
+  level: 'info',
+  timestamp: '2019-06-14T10:24:46.030Z' }
+{ message:
+   'UPDATE marketerInfo SET marketerSalt = ?, marketerPasswd = ?, temporaryLogin = 1 WHERE marketerId = ? ',
+  level: 'info',
+  timestamp: '2019-06-14T10:24:46.191Z' }
+{ message:
+   'Email sent: 250 2.0.0 OK  1560507891 30sm2764226pjk.17 - gsmtp',
+  level: 'info',
+  timestamp: '2019-06-14T10:24:50.292Z' }
+{ message:
+   'SELECT marketerMail FROM marketerInfo WHERE marketerId = ? ',
+  level: 'info',
+  timestamp: '2019-06-14T10:27:04.741Z' }
+{ message:
+   'UPDATE marketerInfo SET marketerSalt = ?, marketerPasswd = ?, temporaryLogin = 1 WHERE marketerId = ? ',
+  level: 'info',
+  timestamp: '2019-06-14T10:27:04.956Z' }
+{ message:
+   'Email sent: 250 2.0.0 OK  1560508029 o20sm2172628pgj.70 - gsmtp',
+  level: 'info',
+  timestamp: '2019-06-14T10:27:07.847Z' }
+{ message:
+   'SELECT marketerMail FROM marketerInfo WHERE marketerId = ? ',
+  level: 'info',
+  timestamp: '2019-06-14T10:29:05.017Z' }
+{ message:
+   'UPDATE marketerInfo SET marketerSalt = ?, marketerPasswd = ?, temporaryLogin = 1 WHERE marketerId = ? ',
+  level: 'info',
+  timestamp: '2019-06-14T10:29:05.167Z' }
+{ message:
+   'Email sent: 250 2.0.0 OK  1560508149 z126sm3709271pfb.100 - gsmtp',
+  level: 'info',
+  timestamp: '2019-06-14T10:29:08.521Z' }
+{ message:
+   'SELECT marketerMail FROM marketerInfo WHERE marketerId = ? ',
+  level: 'info',
+  timestamp: '2019-06-14T10:30:43.365Z' }
+{ message:
+   'UPDATE marketerInfo SET marketerSalt = ?, marketerPasswd = ?, temporaryLogin = 1 WHERE marketerId = ? ',
+  level: 'info',
+  timestamp: '2019-06-14T10:30:43.510Z' }
+{ message:
+   'Email sent: 250 2.0.0 OK  1560508247 t24sm2338705pfh.113 - gsmtp',
+  level: 'info',
+  timestamp: '2019-06-14T10:30:46.098Z' }
+{ message:
+   '\n  UPDATE marketerInfo\n  SET marketerEmailAuth = 1\n  WHERE marketerId = ?',
+  level: 'info',
+  timestamp: '2019-06-14T10:38:45.239Z' }

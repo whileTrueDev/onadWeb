@@ -2,12 +2,18 @@ import React from 'react';
 // @material-ui/core components
 import withStyles from '@material-ui/core/styles/withStyles';
 // core components
+import BugReport from '@material-ui/icons/BugReport';
+import Code from '@material-ui/icons/Code';
+import Cloud from '@material-ui/icons/Cloud';
 import GridItem from '../../../components/Grid/GridItem';
 import GridContainer from '../../../components/Grid/GridContainer';
 import Table from '../../../components/Table/Table';
 import Card from '../../../components/Card/Card';
 import CardHeader from '../../../components/Card/CardHeader';
 import CardBody from '../../../components/Card/CardBody';
+import CustomTabs from '../../../components/CustomTabs/CustomTabs';
+import Tasks from '../../../components/Tasks/Tasks';
+
 
 const styles = {
   cardCategoryWhite: {
@@ -39,10 +45,68 @@ const styles = {
   },
 };
 
+const bugs = [
+  'Sign contract for "What are conference organizers afraid of?"',
+  'Lines From Great Russian Literature? Or E-mails From My Boss?',
+  'Flooded: One year later, assessing what was lost and what was found when a ravaging rain swept through metro Detroit',
+  'Create 4 Invisible User Experiences you Never Knew About',
+];
+const website = [
+  'Flooded: One year later, assessing what was lost and what was found when a ravaging rain swept through metro Detroit',
+  'Sign contract for "What are conference organizers afraid of?"',
+];
+const server = [
+  'Lines From Great Russian Literature? Or E-mails From My Boss?',
+  'Flooded: One year later, assessing what was lost and what was found when a ravaging rain swept through metro Detroit',
+  'Sign contract for "What are conference organizers afraid of?"',
+];
+
+
 function TableList(props) {
   const { classes } = props;
   return (
     <GridContainer>
+      <GridItem xs={12} sm={12} md={6}>
+        <CustomTabs
+          title="Tasks:"
+          headerColor="primary"
+          tabs={[
+            {
+              tabName: 'Bugs',
+              tabIcon: BugReport,
+              tabContent: (
+                <Tasks
+                  checkedIndexes={[0, 3]}
+                  tasksIndexes={[0, 1, 2, 3]}
+                  tasks={bugs}
+                />
+              ),
+            },
+            {
+              tabName: 'Website',
+              tabIcon: Code,
+              tabContent: (
+                <Tasks
+                  checkedIndexes={[0]}
+                  tasksIndexes={[0, 1]}
+                  tasks={website}
+                />
+              ),
+            },
+            {
+              tabName: 'Server',
+              tabIcon: Cloud,
+              tabContent: (
+                <Tasks
+                  checkedIndexes={[1]}
+                  tasksIndexes={[0, 1, 2]}
+                  tasks={server}
+                />
+              ),
+            },
+          ]}
+        />
+      </GridItem>
       <GridItem xs={12} sm={12} md={12}>
         <Card>
           <CardHeader color="primary">

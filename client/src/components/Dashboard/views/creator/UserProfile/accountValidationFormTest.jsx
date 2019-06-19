@@ -36,7 +36,7 @@ class EssayFormTest extends React.Component {
       Authorization: 'Bearer d3608258-af4a-467a-8e33-d29bfbcd6ec0',
       'Content-Type': 'application/json',
     };
-    console.log(bankSelector, accountNumber, idNumber, getNowDate());
+
     event.preventDefault();
     axios.post('https://testapi.open-platform.or.kr/inquiry/real_name', {
       bank_code_std: bankSelector,

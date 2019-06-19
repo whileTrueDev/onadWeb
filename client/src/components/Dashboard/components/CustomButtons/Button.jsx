@@ -12,18 +12,8 @@ import buttonStyle from '../../assets/jss/onad/components/buttonStyle';
 
 function RegularButton({ ...props }) {
   const {
-    classes,
-    color,
-    round,
-    children,
-    disabled,
-    simple,
-    size,
-    block,
-    link,
-    justIcon,
-    className,
-    muiClasses,
+    classes, color, round, children, disabled, simple,
+    size, block, link, justIcon, className, muiClasses,
     ...rest
   } = props;
   const btnClasses = classNames({

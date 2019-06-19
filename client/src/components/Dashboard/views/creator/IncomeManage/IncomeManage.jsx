@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
@@ -23,6 +22,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
 import Tooltip from '@material-ui/core/Tooltip';
 // custum cores
+import Table from '../../../components/Table/Table';
 import GridItem from '../../../components/Grid/GridItem';
 import GridContainer from '../../../components/Grid/GridContainer';
 import Card from '../../../components/Card/Card';
@@ -41,6 +41,9 @@ import AccountDialog from './AccountDialog';
 import setChartjsData from '../../../variables/charts';
 // styles
 import DashboardStyle from '../../../assets/jss/onad/views/dashboardStyle';
+// variable
+import { defaultWithdrawalData } from '../../../variables/creatorWithdrawal';
+
 
 DashboardStyle.select = {
   marginTop: 5,
@@ -71,7 +74,7 @@ function useFetchData(url, dateRange) {
         throw new Error('데이터가 존재하지 않습니다');
       }
     } catch {
-      setError('데이터가 없습니다.');
+      setError(`데이터가 없습니다.${url}`);
     } finally {
       setLoading(false);
     }
@@ -130,40 +133,63 @@ function useWithdrawModal() {
   return { modalOpen, handleWithdrawModalOpen, handleWithdrawModalClose };
 }
 
-function useWithdrawalSnack() {
-  const [withdrawalSnack, setWithdrawalSnack] = React.useState(false);
-
-  function handleClose() {
-    setWithdrawalSnack(false);
-  }
-
-  function handleSnackOpen() {
-    setWithdrawalSnack(true);
-  }
-
-  return { withdrawalSnack, handleClose, handleSnackOpen };
-}
-
 function Income(props) {
   const { classes, session, history } = props;
   // 날짜 범위 데이터
   const { value, handleChange } = useSelectValue();
+
   // data 요청
   const { payload, loading, error } = useFetchData('/dashboard/creator/chartdata', value);
+
   // 날짜 범위 칸의 크기를 동적으로 하기위한 훅
   const { inputLabel, labelWidth } = useInputWidth();
+
   // 수익금 데이터
   const incomeData = useFetchData('/dashboard/creator/income');
+
   // 수익금 출금 모달창
   const {
     modalOpen,
     handleWithdrawModalOpen,
     handleWithdrawModalClose,
   } = useWithdrawModal();
-  // 출금신청 스낵바
-  const { withdrawalSnack, handleClose, handleSnackOpen } = useWithdrawalSnack();
+
   // 계좌 입력 다이얼로그
   const { accountDialogOpen, handleDialogOpen, handleDialogClose } = useDialog();
+
+  // 출금내역 데이터
+  const [WithdrawalData, setWithdrawalData] = useState(defaultWithdrawalData);
+
+  // 출금리스트 데이터 axios 요청
+  useEffect(() => {
+    axios.get('/dashboard/creator/listOfWithdrawal')
+      .then((res) => {
+        if (res.data) {
+          if (res.data) {
+            setWithdrawalData(res.data);
+          } else { setWithdrawalData(defaultWithdrawalData); }
+        }
+      }).catch((res) => {
+        console.log(res); // 오류처리 요망
+        setWithdrawalData(defaultWithdrawalData);
+      });
+  }, []);
+
+  // 출금신청 페이지네이션
+  const [page, setPage] = React.useState(0); // 테이블 페이지
+  const [rowsPerPage, setRowsPerPage] = React.useState(3); // 테이블 페이지당 행
+  const emptyRows = rowsPerPage - Math.min(
+    rowsPerPage, WithdrawalData.length - page * rowsPerPage,
+  );
+
+  // page handler
+  function handleChangeTablePage(event, newPage) {
+    setPage(newPage);
+  }
+  // page per row handler
+  function handleChangeTableRowsPerPage(event) {
+    setRowsPerPage(parseInt(event.target.value, 10));
+  }
 
   return (
     <div>
@@ -262,12 +288,12 @@ function Income(props) {
               {loading && <div style={{ textAlign: 'center' }}><CircularProgress /></div>}
               {!loading && error && <span>오류에요.. 침착하시고.. 다시 시도해보세요</span>}
               {!loading && payload
-              && (
-              <Line
-                data={setChartjsData(payload.labels, payload.totalIncomeData)}
-                options={{ tooltips: { mode: 'index', intersect: false } }}
-              />
-              )}
+                && (
+                <Line
+                  data={setChartjsData(payload.labels, payload.totalIncomeData)}
+                  options={{ tooltips: { mode: 'index', intersect: false } }}
+                />
+                )}
             </CardHeader>
             <CardBody>
               <h4 className={classes.cardTitle} style={{ textAlign: 'left' }}>나의 총 수익금</h4>
@@ -292,21 +318,28 @@ function Income(props) {
             </CardHeader>
             <CardBody>
               <div className={classes.buttonWrapper}>
+                {!incomeData.loading && incomeData.payload
+                && (
                 <Button
                   color="success"
                   round
                   onClick={handleWithdrawModalOpen}
+                  disabled={!incomeData.payload.creatorAccountNumber}
                 >
                   <Payment />
                   {'출금신청'}
                 </Button>
+                )}
               </div>
             </CardBody>
             <CardFooter stats>
-              <Tooltip title="계정관리로 이동해요!">
+              <Tooltip title="만일 그렇지 않다면 계정 관리탭에서 계좌 정보를 수정하세요!" placement="bottom-start">
                 <div className={classes.stats}>
                   <WarningTypo><Warning /></WarningTypo>
-                  <span className={classes.dangerText}>계좌정보를 정확히 입력하셨나요?</span>
+                  {!incomeData.loading && incomeData.payload.creatorAccountNumber
+                    ? (<span className={classes.dangerText}>계좌정보를 정확히 입력하셨나요?</span>)
+                    : (<span className={classes.dangerText}>계좌정보를 입력하셔야 출금이 가능해요!</span>)
+                  }
                 </div>
               </Tooltip>
             </CardFooter>
@@ -314,7 +347,8 @@ function Income(props) {
         </GridItem>
       </GridContainer>
 
-      <GridContainer style={{ position: 'relative', top: -70 }}>
+      {/* 출금내역 */}
+      <GridContainer>
         <GridItem xs={12} sm={12} md={12}>
           <Card>
             <CardHeader color="primary">
@@ -325,7 +359,19 @@ function Income(props) {
                 지금껏의 출금 신청 내역을 확인하세요.
               </p>
             </CardHeader>
-
+            <CardBody>
+              <Table
+                tableHeaderColor="primary"
+                tableHead={WithdrawalData.columns}
+                tableData={WithdrawalData.data}
+                pagination
+                handleChangeTablePage={handleChangeTablePage}
+                handleChangeTableRowsPerPage={handleChangeTableRowsPerPage}
+                emptyRows={emptyRows}
+                rowsPerPage={rowsPerPage}
+                page={page}
+              />
+            </CardBody>
           </Card>
         </GridItem>
       </GridContainer>
@@ -335,22 +381,22 @@ function Income(props) {
       && (
       <WithdrawlModal
         open={modalOpen}
+        history={history}
         handleOpen={handleWithdrawModalOpen}
         handleClose={handleWithdrawModalClose}
         accountNumber={incomeData.payload.creatorAccountNumber}
         receivable={incomeData.payload.creatorReceivable}
-        handleSnackOpen={handleSnackOpen}
       />
       )}
 
       {/* 계좌 입력 안했을 시 링크 문구 notification창 */}
-      {!incomeData.loading && incomeData.payload
+      {!incomeData.loading && incomeData.payload.creatorAccountNumber
       && (
       <Snackbar
         place="bl"
         color="danger"
         icon={Warning}
-        message="아직 계좌정보를 입력하지 않았어요.. 계좌정보 입력 이후 출금신청하세요!"
+        message="아직 계좌정보를 입력하지 않았어요.. 계좌정보 입력 이후 환불신청하세요!"
         open={!incomeData.payload.creatorAccountNumber}
         Link={
           // 계좌정보 입력 팝업
@@ -359,16 +405,8 @@ function Income(props) {
       />
       )}
 
-      {/* 출금 신청 완료 시의 notification */}
-      <Snackbar
-        place="bc"
-        color="success"
-        message="출금신청이 완료되었어요!! 입금에는 1일 ~ 2일정도 걸려요."
-        open={withdrawalSnack}
-        close
-        closeNotification={handleClose}
-      />
       {/* 계좌입력 다이얼로그 */}
+
       <AccountDialog
         open={accountDialogOpen}
         history={history}

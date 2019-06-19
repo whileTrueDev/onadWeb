@@ -21,7 +21,9 @@ const getStreamerList = () => {
         } 
         let time = result[0].time;
         time.setMinutes(time.getMinutes()-5);
-        conn.query(`SELECT B.streamerId FROM (SELECT * FROM twitchStreamDetail WHERE time > ?) AS A LEFT JOIN twitchStream AS B ON A.streamId = B.streamId `, [time], function(err, result, fields){
+        conn.query(`
+        SELECT B.streamerId
+        FROM (SELECT * FROM twitchStreamDetail WHERE time > ?) AS A LEFT JOIN twitchStream AS B ON A.streamId = B.streamId `, [time], function(err, result, fields){
           result.map((row)=>{
             streamers.push(row.streamerId);
           })

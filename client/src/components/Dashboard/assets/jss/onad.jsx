@@ -78,18 +78,12 @@ const successColor = ['#4caf50', '#66bb6a', '#43a047', '#5cb860'];
 const infoColor = ['#00acc1', '#26c6da', '#00acc1', '#00d3ee'];
 const roseColor = ['#e91e63', '#ec407a', '#d81b60', '#eb3573'];
 const grayColor = [
-  '#999',
-  '#777',
-  '#3C4858',
-  '#AAAAAA',
-  '#D2D2D2',
-  '#DDD',
-  '#b4b4b4',
-  '#555555',
-  '#333',
-  '#a9afbb',
-  '#eee',
-  '#e7e7e7',
+  '#999', '#777', '#3C4858', '#AAAAAA', '#D2D2D2', '#DDD',
+  '#b4b4b4', '#555555', '#333', '#a9afbb', '#eee', '#e7e7e7',
+];
+const blueGrayColor = [
+  '#eceff1', '#cfd8dc', '#b0bec5', '#90a4ae', '#78909c',
+  '#607d8b', '#546e7a', '#455a64', '#37474f', '#263238',
 ];
 const blackColor = '#000';
 const whiteColor = '#FFF';
@@ -281,6 +275,7 @@ export {
   grayColor,
   blackColor,
   whiteColor,
+  blueGrayColor,
   primaryBoxShadow,
   infoBoxShadow,
   successBoxShadow,

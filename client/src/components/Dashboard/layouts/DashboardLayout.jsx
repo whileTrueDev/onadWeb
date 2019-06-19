@@ -13,7 +13,6 @@ import Footer from "../components/Footer/Footer";
 import Sidebar from "../components/Sidebar/Sidebar";
 import FixedPlugin from "../components/FixedPlugin/FixedPlugin";
 // logo and sidebar image
-import sidebarImage from "../assets/img/sidebar-2.jpg";
 import logo from "../assets/img/main_logo.png";
 // import css or style
 import dashboardStyle from "../assets/jss/onad/layouts/dashboardStyle";
@@ -57,19 +56,13 @@ class Dashboard extends React.Component {
     let session = getUserType();
   
     this.state = {
-      sidebarImage: sidebarImage,
       color: 'blue',
       hasImage: true,
       fixedClasses: "dropdown",
       mobileOpen: false,
       session: session,  // different router for creator or marketer
     };
-
-    console.log(this.state.session)
   }
-  handleImageClick = sidebarImage => {
-    this.setState({ sidebarImage: sidebarImage });
-  };
   handleColorClick = color => {
     this.setState({ color: color });
   };
@@ -119,7 +112,6 @@ class Dashboard extends React.Component {
           routes={routes}
           logoText={"OnAD"}
           logo={logo}
-          image={this.state.sidebarImage}
           handleDrawerToggle={this.handleDrawerToggle}
           open={this.state.mobileOpen}
           color={this.state.color}
@@ -139,10 +131,8 @@ class Dashboard extends React.Component {
           <Footer /> 
 
           <FixedPlugin
-            handleImageClick={this.handleImageClick}
             handleColorClick={this.handleColorClick}
             bgColor={this.state["color"]}
-            bgImage={this.state["image"]}
             handleFixedClick={this.handleFixedClick}
             fixedClasses={this.state.fixedClasses}
           />

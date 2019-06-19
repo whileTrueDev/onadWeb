@@ -85,7 +85,8 @@ class RegistForm extends React.Component {
   };
 
   checkError = (type) => {
-    if (this.state.error && this.state.errorType === type) {
+    const { error, errorType } = this.state;
+    if (error && errorType === type) {
       return true;
     }
     return false;
@@ -146,7 +147,8 @@ class RegistForm extends React.Component {
   }
 
   checkRePasswd = (event) => {
-    if (event.target.value === this.state.passwd) {
+    const { passwd } = this.state;
+    if (event.target.value === passwd) {
       this.setState({
         error: false,
       });
@@ -161,28 +163,70 @@ class RegistForm extends React.Component {
 
   handleSubmit = (event) => {
     event.preventDefault();
+    const {
+      checkDuplication, error, errorType, passwd, id, name, email, domain, businessRegNum, phoneNum,
+    } = this.state;
+    const {
+      userType, handleUserInfo, handleNext,
+    } = this.props;
+
     let user;
 
-    if (!this.state.checkDuplication) {
+    if (!checkDuplication) {
       alert('ID 중복조회를 해주세요.');
-    } else if (this.state.error) {
-      alert(`${this.state.errorType} 입력 오류 입니다.`);
+    } else if (error) {
+      alert(`${errorType} 입력 오류 입니다.`);
     } else {
       user = {
-        marketerId: this.state.id,
-        marketerRawPasswd: this.state.passwd,
-        marketerName: this.state.name,
-        marketerMail: `${this.state.email}@${this.state.domain}`,
-        marketerPhoneNum: this.state.phoneNum,
-        marketerBusinessRegNum: this.state.businessRegNum,
-        marketerUserType: this.props.userType,
+        marketerId: id,
+        marketerRawPasswd: passwd,
+        marketerName: name,
+        marketerMail: `${email}@${domain}`,
+        marketerPhoneNum: phoneNum,
+        marketerBusinessRegNum: businessRegNum,
+        marketerUserType: userType,
       };
-      this.props.handleUserInfo(user);
-      this.props.handleNext();
+      handleUserInfo(user);
+      handleNext();
     }
   }
 
-  TextMaskCustom(props) {
+
+  checkBusinessRegNum = (event) => {
+    alert('준비 중입니다. 회원가입을 진행해 주세요.');
+  }
+
+  checkDuplicateID = (event) => {
+    const { id } = this.state;
+    if (id === '') {
+      this.setState({
+        errorType: 'ID',
+        error: true,
+        errorMessage: '아무것도 입력하지 않았습니다.',
+      });
+    } else {
+      axios.post('/regist/checkId', {
+        id,
+      })
+        .then((res) => {
+          if (res.data) {
+            this.setState({
+              errorType: 'ID',
+              error: true,
+              errorMessage: 'ID가 중복되었습니다.',
+            });
+          } else {
+            alert('회원가입이 가능합니다. 계속 진행하세요.');
+            this.setState({
+              error: false,
+              checkDuplication: true,
+            });
+          }
+        });
+    }
+  }
+
+  TextMaskCustom = (props) => {
     const { inputRef, ...other } = props;
     return (
       <MaskedInput
@@ -199,43 +243,8 @@ class RegistForm extends React.Component {
         }}
       />
     );
-  }
+  };
 
-  checkBusinessRegNum = (event) => {
-    alert('준비 중입니다. 회원가입을 진행해 주세요.');
-  }
-
-  checkDuplicateID = (event) => {
-    if (this.state.id === '') {
-      this.setState({
-        errorType: 'ID',
-        error: true,
-        errorMessage: '아무것도 입력하지 않았습니다.',
-      });
-    } else {
-      axios.post('/regist/checkId', {
-        id: this.state.id,
-      })
-        .then((res) => {
-          if (res.data) {
-            this.setState({
-              errorType: 'ID',
-              error: true,
-              errorMessage: 'ID가 중복되었습니다.',
-            });
-          } else {
-            alert('회원가입이 가능합니다. 계속 진행하세요.');
-            this.setState({
-              error: false,
-              checkDuplication: true,
-            });
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    }
-  }
 
   render() {
     const { classes } = this.props;
