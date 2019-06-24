@@ -68,7 +68,7 @@ const Sidebar = ({ ...props }) => {
   const brand = (
     <div className={classes.logo}>
       <a
-        href="/dashboard/main"
+        href="/"
         className={classNames(classes.logoLink)}
       >
         <div className={classes.logoImage}>
@@ -116,7 +116,7 @@ const Sidebar = ({ ...props }) => {
           {/* 사이드바 Logo */}
           <div className={classes.logo}>
             <a
-              href="/dashboard/main"
+              href="/"
               className={classNames(classes.logoLink)}
             >
               <div className={classes.logoImage}>

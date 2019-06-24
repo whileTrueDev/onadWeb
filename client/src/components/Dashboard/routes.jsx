@@ -23,21 +23,21 @@ const dashboardRoutes = {
       name: '대시보드',
       icon: Dashboard,
       component: creatorDashboardPage,
-      layout: '/dashboard',
+      layout: '/dashboard/creator',
     },
     {
       path: '/income',
       name: '수익 관리',
       icon: AttachMoney,
       component: IncomeManage,
-      layout: '/dashboard',
+      layout: '/dashboard/creator',
     },
     {
       path: '/user',
       name: '계정 관리',
       icon: Person,
       component: creatorUserProfile,
-      layout: '/dashboard',
+      layout: '/dashboard/creator',
     },
   ],
   marketer: [
@@ -46,28 +46,28 @@ const dashboardRoutes = {
       name: '대시보드',
       icon: Dashboard,
       component: marketerDashboardPage, // 마케터 대시보드 컴포넌트로 수정
-      layout: '/dashboard',
+      layout: '/dashboard/marketer',
     },
     {
       path: '/banner',
       name: '배너 관리',
       icon: BrandingWatermark,
       component: marketerBannerManage, // 마케터 대시보드 컴포넌트로 수정
-      layout: '/dashboard',
+      layout: '/dashboard/marketer',
     },
     {
       path: '/cash',
       name: '광고캐시 관리',
       icon: AttachMoney,
       component: marketerCashManage, // 마케터 대시보드 컴포넌트로 수정
-      layout: '/dashboard',
+      layout: '/dashboard/marketer',
     },
     {
       path: '/user',
       name: '계정 관리',
       icon: Person,
       component: marketerUserProfile, // 마케터 대시보드 컴포넌트로 수정
-      layout: '/dashboard',
+      layout: '/dashboard/marketer',
     },
   ],
 };

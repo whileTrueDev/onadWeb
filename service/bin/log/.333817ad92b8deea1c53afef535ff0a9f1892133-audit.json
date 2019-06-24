@@ -19,6 +19,31 @@
             "date": 1560524768907,
             "name": "bin\\log\\exception_2019-06-15.log",
             "hash": "eca0bf8b8b572e9cc39b2660d083aa5e"
+        },
+        {
+            "date": 1560756077477,
+            "name": "bin\\log\\exception_2019-06-17.log",
+            "hash": "bf18b73f3f08440d4b00a708bef9716f"
+        },
+        {
+            "date": 1560842626636,
+            "name": "bin\\log\\exception_2019-06-18.log",
+            "hash": "6a76b19ad34ee4d3a09982ad3d7d12e0"
+        },
+        {
+            "date": 1560922791454,
+            "name": "bin\\log\\exception_2019-06-19.log",
+            "hash": "686409e79bc0335c41b937a0c68fb1d0"
+        },
+        {
+            "date": 1561012438018,
+            "name": "bin\\log\\exception_2019-06-20.log",
+            "hash": "d98888d8e4cf65a6af17b30c0ea863f7"
+        },
+        {
+            "date": 1561356626309,
+            "name": "bin\\log\\exception_2019-06-24.log",
+            "hash": "c7374559cd881b2a84065273afea40fc"
         }
     ]
 }

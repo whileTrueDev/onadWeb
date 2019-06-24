@@ -19,6 +19,31 @@
             "date": 1560524768908,
             "name": "bin\\log\\info_2019-06-15.log",
             "hash": "2dd43e56914889f14a6cc26c2e6e79fb"
+        },
+        {
+            "date": 1560756077480,
+            "name": "bin\\log\\info_2019-06-17.log",
+            "hash": "1c5a72e79f67000a69b4c093f1cb7f4f"
+        },
+        {
+            "date": 1560842626638,
+            "name": "bin\\log\\info_2019-06-18.log",
+            "hash": "4d1e4c27f21261701b364d04a3a644ed"
+        },
+        {
+            "date": 1560922791456,
+            "name": "bin\\log\\info_2019-06-19.log",
+            "hash": "f7a40c944a05024024db1f7669e2ce60"
+        },
+        {
+            "date": 1561012438020,
+            "name": "bin\\log\\info_2019-06-20.log",
+            "hash": "88d8c7d95694da6d808934f7bbaa124e"
+        },
+        {
+            "date": 1561356626311,
+            "name": "bin\\log\\info_2019-06-24.log",
+            "hash": "899189665c8fd1dd99d8812bfde7375b"
         }
     ]
 }

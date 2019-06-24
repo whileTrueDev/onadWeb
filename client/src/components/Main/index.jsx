@@ -54,7 +54,7 @@ export default withRoot((props) => {
   return (
     <div>
       <AppAppBar history={history} isLogin={isLogin} setisLogin={setisLogin} logout={logout} />
-      <ProductHero backgroundImage={heroInfo.backImage} />
+      <ProductHero backgroundImage={heroInfo.backImage} history={history} />
       <ProductCategories />
       <ProductHowItWorks />
       {/* 문의받기 섹션, 오픈베타에 추가 */

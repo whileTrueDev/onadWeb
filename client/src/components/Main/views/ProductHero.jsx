@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { grey } from '@material-ui/core/colors';
 import Grow from '@material-ui/core/Grow';
+import axios from 'axios';
+import { CodeSharp } from '@material-ui/icons';
 import Button from '../components/Button';
 import Typography from '../components/Typography';
 import ProductHeroLayout from './ProductHeroLayout';
@@ -47,8 +49,24 @@ const styles = theme => ({
 });
 
 function ProductHero(props) {
-  const { classes, text, backgroundImage } = props;
+  const {
+    classes, text, backgroundImage, history,
+  } = props;
+
   const [check] = React.useState(true);
+
+  const handleClick = () => {
+    axios.get('/dashboard/checkUserType')
+      .then((res) => {
+        if (res.data.userType === 'marketer') {
+          history.push('/dashboard/marketer/main');
+        } else {
+          history.push('/dashboard/creator/main');
+        }
+      }).catch((err) => {
+
+      });
+  };
 
   return (
     <ProductHeroLayout
@@ -111,8 +129,9 @@ function ProductHero(props) {
           variant="contained"
           size="large"
           className={classes.button}
-          component="a"
-          href="/dashboard/main"
+          // component="a"
+          // href="/dashboard/main"
+          onClick={handleClick}
         >
         대시보드로 이동
         </Button>

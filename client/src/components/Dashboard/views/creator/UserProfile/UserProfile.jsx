@@ -193,7 +193,7 @@ function UserProfile(props) {
                   id="select-account"
                   className={classes.contentDetail}
                 >
-                  {userData.accountNum ? `${userData.accountNum.split('_')[0]}   ${userData.accountNum.split('_')[1]}` : '현재 등록된 계좌가 존재하지 않습니다.'}
+                  {userData.creatorAccountNumber ? `${userData.creatorAccountNumber.split('_')[0]}   ${userData.creatorAccountNumber.split('_')[1]}` : '현재 등록된 계좌가 존재하지 않습니다.'}
                 </Typography>
               </div>
               <Divider />

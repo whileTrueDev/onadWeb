@@ -146,6 +146,39 @@ router.get('/currentBanner', function(req, res, next){
     });
 });
 
+
+
+// // 크리에이터 현재 광고 중 배너
+// router.route('/creator/currentBanner').get(function(req, res, next){
+//   //DB연결후 query문을 통한 데이터 삽입 
+//   pool.getConnection(function(err, conn){
+//     if(err){ 
+//         console.log(err)
+//     }
+//     conn.query(`SELECT bannerSrc, marketerId FROM bannerRegistered AS br 
+//                 JOIN bannerMatched AS bm 
+//                 ON bm.contractionId 
+//                 LIKE CONCAT(br.bannerId, '%') AND bm.contractionState = 0 
+//                 JOIN contractionTimestamp AS ct
+//                 ON ct.contractionId = bm.contractionId
+//                 AND ct.contractionId LIKE "%${req._passport.session.user.creatorId}%"
+//                 ORDER BY ct.date DESC LIMIT 1;`, function(err, result, fields){
+//         if(err){
+//             console.log(err);
+//         }
+//         result = result.map(
+//           (value) => {
+//             value = Object.values(value);
+//             return value
+//           }
+//         )
+//         conn.release();
+//         res.send(result);
+//       });
+//     });
+// });
+
+
 // 배너 오버레이 URL 주소 가져오기
 router.get('/overlayUrl', function(req, res, next){
   const creatorId = req._passport.session.user.creatorId;
@@ -171,7 +204,8 @@ router.get('/overlayUrl', function(req, res, next){
         });
       });
 });
-  
+
+
 // 수익관리 탭의 크리에이터 별 수익금 차트 데이터
 router.get('/chartdata', function(req, res, next) {
   // creatorId 가져오기

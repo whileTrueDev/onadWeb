@@ -50,7 +50,7 @@ router.get("/twitch", passport.authenticate("twitch"));
 router.get("/twitch/callback", passport.authenticate("twitch"),
   function(req, res, next){
     console.log('success in server');
-    res.redirect("http://localhost:3001/dashboard/main");
+    res.redirect("http://localhost:3001/dashboard/creator/main");
   }
 );
 

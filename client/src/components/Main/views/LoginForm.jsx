@@ -57,6 +57,15 @@ const LoginForm = (props) => {
     handleClose();
   };
 
+  const twitchLogin = () => {
+    axios.get('http://localhost:3000/login/twitch')
+      .then((res) => {
+        console.log('응답완료');
+      })
+      .catch((err) => {
+        console.log('응답실패');
+      });
+  };
 
   const login = (event) => {
     if (event) {
@@ -74,7 +83,7 @@ const LoginForm = (props) => {
           if (res.data.temporaryLogin) {
             history.push('/');
           } else {
-            history.push('/dashboard/main');
+            history.push('/dashboard/marketer/main', { userType: res.data.userType });
           }
         } else {
           alert('이메일 본인인증을 해야합니다.');
@@ -178,6 +187,7 @@ const LoginForm = (props) => {
           <Button
             component={Link}
             href="http://localhost:3000/login/twitch"
+            // onClick ={twitchLogin}
             style={{
               backgroundImage: 'url("pngs/twitch3.png")',
             }}

@@ -134,7 +134,7 @@ function useWithdrawModal() {
 }
 
 function Income(props) {
-  const { classes, session, history } = props;
+  const { classes, history } = props;
   // 날짜 범위 데이터
   const { value, handleChange } = useSelectValue();
 
@@ -172,6 +172,20 @@ function Income(props) {
       }).catch((res) => {
         console.log(res); // 오류처리 요망
         setWithdrawalData(defaultWithdrawalData);
+      });
+  }, []);
+
+
+  const [session, setSession] = useState({});
+  useEffect(() => {
+    // Banner 데이터 axios 요청
+    axios.get('/dashboard/checkUserType')
+      .then((res) => {
+        if (res.data) {
+          setSession(res.data);
+        }
+      }).catch((err) => {
+        console.log(err); // 오류처리 요망
       });
   }, []);
 
@@ -418,7 +432,6 @@ function Income(props) {
 
 Income.propTypes = {
   classes: PropTypes.object.isRequired,
-  session: PropTypes.object.isRequired,
   history: PropTypes.object.isRequired,
 };
 
