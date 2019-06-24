@@ -13,7 +13,6 @@ import RegistForm from './RegistForm';
 import PaperSheet from './Paper';
 import AppAppBar from '../Main/views/AppAppBar';
 
-
 const styles = theme => ({
   root: {
     width: '100%',

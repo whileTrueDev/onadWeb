@@ -103,7 +103,7 @@ const PaperSheet = (props) => {
         <Typography variant="h6" component="h6" style={{ textAlign: 'center' }}>
             While:True
         </Typography>
-        {terms.map((term, index) => (
+        {terms.map(term => (
           <Paper className={classes.container} elevation={1} key={term.state}>
             <Typography component="p" style={{ flex: 8, fontSize: 13 }}>
               {term.title}
