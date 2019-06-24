@@ -19,6 +19,16 @@
             "date": 1560524768908,
             "name": "bin\\log\\info_2019-06-15.log",
             "hash": "2dd43e56914889f14a6cc26c2e6e79fb"
+        },
+        {
+            "date": 1560612229621,
+            "name": "bin\\log\\info_2019-06-16.log",
+            "hash": "2d81008f54bb36c38d62f0f1677b4770"
+        },
+        {
+            "date": 1560755304321,
+            "name": "bin\\log\\info_2019-06-17.log",
+            "hash": "c2777415608c3dfcfd50632cfe807010"
         }
     ]
 }

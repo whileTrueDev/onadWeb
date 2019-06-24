@@ -23,7 +23,7 @@ import AccountDialog from './AccountDialog';
 // styles
 import DashboardStyle from '../../../assets/jss/onad/views/dashboardStyle';
 // variable
-import { defaultCashData } from '../../../variables/marketerCashlist';
+import { defaultCashData, defaultCash } from '../../../variables/marketerCashlist';
 
 function useCashModal() {
   const [modalOpen, setModalOpen] = useState(false);
@@ -91,7 +91,6 @@ const CashManage = (props) => {
   useEffect(() => {
     axios.get('/dashboard/marketer/accountNumber')
       .then((res) => {
-        console.log(res.data);
         if (res.data) {
           if (res.data) {
             setAccountNumber(res.data);
@@ -104,20 +103,20 @@ const CashManage = (props) => {
   }, []);
 
   // 광고캐시 데이터
-  const [cash, setCash] = useState('');
+  const [cash, setCash] = useState(defaultCash);
 
   // 광고캐시 DB값 요
   useEffect(() => {
     axios.get('/dashboard/marketer/cash')
       .then((res) => {
+        
         if (res.data) {
-          if (res.data) {
-            setCash(res.data);
-          } else { setCash(''); }
-        }
+          setCash(res.data);
+        } else { setCash(defaultCash) }
+        
       }).catch((res) => {
         console.log(res); // 오류처리 요망
-        setCash('');
+        setCash(defaultCash);
       });
   }, []);
 
@@ -141,7 +140,7 @@ const CashManage = (props) => {
 
   // 충전 및 환불 페이지네이션
   const [page, setPage] = React.useState(0); // 테이블 페이지
-  const [rowsPerPage, setRowsPerPage] = React.useState(3); // 테이블 페이지당 행
+  const [rowsPerPage, setRowsPerPage] = React.useState(7); // 테이블 페이지당 행
   const emptyRows = rowsPerPage - Math.min(
     rowsPerPage, cashlist.length - page * rowsPerPage,
   );

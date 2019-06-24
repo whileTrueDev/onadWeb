@@ -19,6 +19,16 @@
             "date": 1560524768907,
             "name": "bin\\log\\exception_2019-06-15.log",
             "hash": "eca0bf8b8b572e9cc39b2660d083aa5e"
+        },
+        {
+            "date": 1560612229619,
+            "name": "bin\\log\\exception_2019-06-16.log",
+            "hash": "d85edb5b96569448f7d8621538638dd4"
+        },
+        {
+            "date": 1560755304318,
+            "name": "bin\\log\\exception_2019-06-17.log",
+            "hash": "e0e975ae3f62f0432fc1199bf5aaf430"
         }
     ]
 }
