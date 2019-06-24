@@ -102,7 +102,7 @@ class Dashboard extends React.Component {
   }
   render() {
     const { classes, history, ...rest } = this.props;
-    const {session} = this.state;
+    const { session } = this.state;
     const routes = session.userType === "creator"
       ? allRoutes.creator
       : allRoutes.marketer
@@ -121,6 +121,7 @@ class Dashboard extends React.Component {
           <Navbar
             routes={routes}
             handleDrawerToggle={this.handleDrawerToggle}
+            history={history}
             {...rest}
           />
 

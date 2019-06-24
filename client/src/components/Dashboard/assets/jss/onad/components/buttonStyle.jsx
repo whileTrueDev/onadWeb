@@ -2,6 +2,7 @@ import {
   grayColor,
   primaryColor,
   infoColor,
+  blueGrayColor,
   successColor,
   warningColor,
   dangerColor,
@@ -26,7 +27,7 @@ const buttonStyle = {
         hexToRgb(grayColor[0])
       }, 0.12)`,
     border: 'none',
-    borderRadius: '3px',
+    borderRadius: '1px',
     position: 'relative',
     padding: '12px 30px',
     margin: '.3125rem 1px',
@@ -223,6 +224,28 @@ const buttonStyle = {
           hexToRgb(blackColor)
         }, 0.12), 0 8px 10px -5px rgba(${
           hexToRgb(dangerColor[0])
+        }, 0.2)`,
+    },
+  },
+  blueGray: {
+    backgroundColor: blueGrayColor[6],
+    boxShadow:
+      `0 2px 2px 0 rgba(${
+        hexToRgb(blueGrayColor[6])
+      }, 0.14), 0 3px 1px -2px rgba(${
+        hexToRgb(blueGrayColor[6])
+      }, 0.2), 0 1px 5px 0 rgba(${
+        hexToRgb(blueGrayColor[6])
+      }, 0.12)`,
+    '&:hover,&:focus': {
+      backgroundColor: blueGrayColor[6],
+      boxShadow:
+        `0 14px 26px -12px rgba(${
+          hexToRgb(blueGrayColor[6])
+        }, 0.42), 0 4px 23px 0px rgba(${
+          hexToRgb(blackColor)
+        }, 0.12), 0 8px 10px -5px rgba(${
+          hexToRgb(blueGrayColor[6])
         }, 0.2)`,
     },
   },

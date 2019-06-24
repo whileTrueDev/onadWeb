@@ -111,7 +111,8 @@ const PaperSheet = (props) => {
             <Button style={{
               flex: 1, backgroundColor: '#d6d6d6', height: '70%', fontSize: 13,
             }}
-            >약관보기
+            >
+            약관보기
             </Button>
             <Divider className={classes.divider} />
             <FormControlLabel
