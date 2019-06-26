@@ -542,9 +542,9 @@ router.post('/chargecash', function(req, res, next) {
     if (err) {
       console.log(err)
     } else {
-      // 출금 신청 데이터 넣기
+      // 충전 데이터 넣기
       const queryState = `
-      INSERT
+      INSERT 
       INTO marketerCash
       (marketerId, chargeCash, withdrawCash)
       VALUES (?, ?, ?)`;
@@ -556,33 +556,74 @@ router.post('/chargecash', function(req, res, next) {
       conn.query(queryState, queryArray, function(err, result, fields){
           if(err){
             console.log('마케터 캐시충전 정보 입력 오류', err);
+          } else {
+            
+            conn.query(`SELECT 
+            marketerId 
+            FROM marketerCost
+            WHERE marketerId = ?  
+            ORDER BY date DESC
+            LIMIT 1`, [marketerId], (err, result)=>{
+              if(err){
+                console.log(err);
+                conn.release();
+                res.send([null, err]);
+              }
+              console.log(result)
+              if (result.length > 0) {
+                // 광고캐시 신청 금액에 맞추어 기존의 marketerDebit에 추가하기
+                  const updateQueryState = `
+                  INSERT INTO
+                  marketerCost (marketerId, marketerDebit)
+                  SELECT marketerId, marketerDebit + ?
+                  FROM marketerCost
+                  WHERE marketerId = ?
+                  ORDER BY date DESC
+                  LIMIT 1`
+
+                const updateQueryArray = [
+                  chargecash, marketerId
+                ];
+
+                conn.query(updateQueryState, updateQueryArray, function(err, result, fields){
+                  if(err){
+                    console.log('마케터 캐시충전 금액 수정삽입 오류', err);
+                  } else {
+                    res.send({
+                      insertDebit: 'success',
+                      updateDebit: 'success'
+                    });
+                    conn.release();
+                  }
+                });
+
+              } else {
+
+                const updateQueryState = `
+                  INSERT INTO
+                  marketerCost (marketerId, marketerDebit)
+                  VALUES (?, ?)`
+
+                const updateQueryArray = [
+                  marketerId, chargecash
+                ];
+
+                conn.query(updateQueryState, updateQueryArray, function(err, result, fields){
+                  if(err){
+                    console.log('마케터 캐시충전 금액 수정삽입 오류', err);
+                  } else {
+                    res.send({
+                      insertDebit: 'success',
+                      updateDebit: 'success'
+                    });
+                    conn.release();
+                  }
+                });
+              }
+            })
           }
       });
-
-      // 광고캐시 신청 금액에 맞추어 기존의 marketerDebit에 추가하기
-      const updateQueryState = `
-        INSERT INTO
-        marketerCost (marketerId, marketerDebit)
-        SELECT marketerId, marketerDebit + ?
-        FROM marketerCost
-        WHERE marketerId = ?
-        ORDER BY date DESC
-        LIMIT 1`
-      const updateQueryArray = [
-        chargecash, marketerId
-      ];
-
-      conn.query(updateQueryState, updateQueryArray, function(err, result, fields){
-        if(err){
-          console.log('마케터 캐시충전 금액 수정삽입 오류', err);
-        }
-        res.send({
-          insertDebit: 'success',
-          updateDebit: 'success'
-        });
-        conn.release();
-    });
-    }
+    } 
   })
 })
 

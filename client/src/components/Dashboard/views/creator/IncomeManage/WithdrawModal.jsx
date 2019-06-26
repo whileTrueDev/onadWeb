@@ -116,7 +116,7 @@ function WithdrawModal(props) {
     open, handleClose, accountNumber, receivable, history,
   } = props;
   // select value
-  const { selectValue, handleChange } = useValue('10000');
+  const { selectValue, handleChange } = useValue('0');
 
   // 출금신청 스낵바
   const {

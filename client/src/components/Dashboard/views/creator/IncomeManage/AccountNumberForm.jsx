@@ -239,7 +239,15 @@ const AccountNumberForm = (props) => {
 
 
       <DialogActions>
-        <Button type="submit" value="Submit" color={handleClose && 'primary'} className={!handleClose && 'MuiButtonBase-root MuiButton-root RegularButton-button-133 RegularButton-primary-136 MuiButton-text'}>
+        <Button
+          type="submit"
+          value="Submit"
+          className={
+            !handleClose
+              ? 'MuiButtonBase-root MuiButton-root RegularButton-button-133 RegularButton-primary-136 MuiButton-text'
+              : ''
+            }
+        >
           등록
         </Button>
         {handleClose

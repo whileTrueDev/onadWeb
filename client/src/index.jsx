@@ -5,10 +5,12 @@ import { Router, Route } from 'react-router-dom';
 import { createBrowserHistory } from 'history';
 import RegistStepper from './components/Regist/Stepper';
 import Main from './components/Main';
+
 import CreatorDashboard from './components/Dashboard/layouts/CreatorDashboardLayout';
 import CreatorDashboardDoor from './components/Dashboard/layouts/CreatorDashboardDoor';
 import MarketerDashboard from './components/Dashboard/layouts/MarketerDashboardLayout';
 import Admin from './components/admin';
+import adminRoutes from './components/admin/routes';
 import Introduction from './components/Introduction';
 import Manual from './components/Manual';
 import * as serviceWorker from './serviceWorker';
@@ -24,8 +26,8 @@ ReactDOM.render(
     <Route path="/dashboard/creator/door" component={CreatorDashboardDoor} history={history} />
     <Route path="/dashboard/creator" component={CreatorDashboard} history={history} />
     <Route path="/dashboard/marketer" component={MarketerDashboard} history={history} />
-  </Router>,
-  document.getElementById('root'),
+    <Route path="/admin" component={adminRoutes} />
+  </Router>, document.getElementById('root'),
 );
 
 // If you want your app to work offline and load faster, you can change

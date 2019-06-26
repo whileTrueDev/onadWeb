@@ -298,8 +298,7 @@ router.get('/account', function(req, res, next) {
 
 // creator contraction Update
 router.post('/contraction', (req, res, next) => {
-  const creatorId = req.body.creatorId;
-  console.log(creatorId);
+  const creatorId = req._passport.session.user.creatorId;
 
   pool.getConnection(function(err, conn){
     if(err){ 
@@ -314,10 +313,8 @@ router.post('/contraction', (req, res, next) => {
       if (err) {
         console.log(err);
       }
-      if(result[0]){
+      if (result.constructor.name == 'OkPacket') {
         res.send(true);
-      } else {
-        res.send(false);
       }
     });
     conn.release();

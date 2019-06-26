@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import {
+  Tooltip,
   Dialog,
   DialogActions,
   DialogContent,
@@ -14,8 +15,12 @@ import {
 import PropTypes from 'prop-types';
 import FindDialog from './FindDialog';
 
-
 const styles = () => ({
+  title: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   button: {
     fontWeight: 800,
     width: '100%',
@@ -24,9 +29,12 @@ const styles = () => ({
     position: 'flex',
     backgroundSize: 'cover',
     backgroundPosition: 'inherit',
-    margin: '20px',
-    width: '50%',
-    height: '80px',
+    width: '100%',
+    height: '120px',
+    margin: '10px',
+    maxWidth: '120px',
+    maxHeight: '130px',
+    padding: '0',
   },
 });
 
@@ -86,10 +94,9 @@ const LoginForm = (props) => {
         handleClose();
       })
       .catch(() => {
-        handleClose();
+        setPasswd(''); // 비밀번호 초기화
         alert('회원이 아닙니다.');
       });
-    formhandleClose();
   };
 
   const dialog = (isMarketer
@@ -100,7 +107,7 @@ const LoginForm = (props) => {
         maxWidth="xs"
         fullWidth
       >
-        <DialogTitle>LOGIN</DialogTitle>
+        <DialogTitle className={classes.title}>LOGIN</DialogTitle>
         <DialogContent>
           <DialogContentText style={{ fontSize: 12 }}>
               온애드로 쉽고 빠르게!
@@ -121,6 +128,7 @@ const LoginForm = (props) => {
               label="PASSWORD"
               helperText="PASSWORD를 입력하세요"
               type="password"
+              value={passwd}
               margin="dense"
               name="passwd"
               InputLabelProps={{ shrink: true }}
@@ -173,11 +181,12 @@ const LoginForm = (props) => {
         maxWidth="xs"
         fullWidth
       >
-        <DialogTitle>LOGIN</DialogTitle>
+        <DialogTitle className={classes.title}>LOGIN</DialogTitle>
         <DialogContent>
           <DialogContentText style={{ fontSize: 12 }}>
         당신의 CHANNEL을 선택하세요.
           </DialogContentText>
+          <Tooltip title="트위치 계정으로 로그인" placement="right">
           <Button
             component={Link}
             href="http://localhost:3000/login/twitch"
@@ -187,6 +196,7 @@ const LoginForm = (props) => {
             }}
             className={classes.imageSrc}
           />
+          </Tooltip>
         </DialogContent>
       </Dialog>
     )

@@ -52,7 +52,7 @@ const hexToRgb = (paramInput) => {
 // // // Variables - Styles that are used on more than one component
 // #############################
 
-const drawerWidth = 260;
+const drawerWidth = 230;
 
 const transition = {
   transition: 'all 0.33s cubic-bezier(0.685, 0.0473, 0.346, 1)',
@@ -66,7 +66,7 @@ const container = {
 };
 
 const defaultFont = {
-  fontFamily: '"Roboto", "Helvetica", "Nanum Gothic", "Arial", sans-serif',
+  fontFamily: "'Helvetica', 'Nanum Gothic', sans-serif",
   fontWeight: '300',
   lineHeight: '1.5em',
 };
@@ -85,6 +85,7 @@ const blueGrayColor = [
   '#eceff1', '#cfd8dc', '#b0bec5', '#90a4ae', '#78909c',
   '#607d8b', '#546e7a', '#455a64', '#37474f', '#263238',
 ];
+
 const blackColor = '#000';
 const whiteColor = '#FFF';
 
@@ -98,7 +99,6 @@ const boxShadow = {
       hexToRgb(blackColor)
     }, 0.2)`,
 };
-
 const primaryBoxShadow = {
   boxShadow:
     `0 4px 20px 0 rgba(${
@@ -147,6 +147,14 @@ const roseBoxShadow = {
       hexToRgb(roseColor[0])
     },.4)`,
 };
+const blueGrayShadow = {
+  boxShadow:
+    `0 4px 20px 0 rgba(${
+      hexToRgb(blackColor)
+    },.14), 0 7px 10px -5px rgba(${
+      hexToRgb(blueGrayColor[5])
+    },.4)`,
+};
 
 const warningCardHeader = {
   background:
@@ -177,6 +185,11 @@ const roseCardHeader = {
   background:
     `linear-gradient(60deg, ${roseColor[1]}, ${roseColor[2]})`,
   ...roseBoxShadow,
+};
+const blueGrayCardHeader = {
+  background:
+    `linear-gradient(60deg, ${blueGrayColor[7]}, ${blueGrayColor[8]})`,
+  ...blueGrayShadow,
 };
 
 const cardActions = {
@@ -226,7 +239,7 @@ const title = {
   marginTop: '30px',
   marginBottom: '25px',
   minHeight: '32px',
-  fontFamily: "'Roboto', 'Helvetica', 'Arial', 'Nanum Gothic', sans-serif",
+  fontFamily: defaultFont,
   '& small': {
     color: grayColor[1],
     fontWeight: '400',
@@ -287,6 +300,7 @@ export {
   dangerCardHeader,
   infoCardHeader,
   primaryCardHeader,
+  blueGrayCardHeader,
   roseCardHeader,
   cardActions,
   cardHeader,

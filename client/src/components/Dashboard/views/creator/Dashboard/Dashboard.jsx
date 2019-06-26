@@ -125,8 +125,8 @@ const Dashboard = (props) => {
         {/* 총 수익금 */}
         <GridItem xs={12} sm={6} md={6}>
           <Card>
-            <CardHeader color="success" stats icon>
-              <CardIcon color="success">
+            <CardHeader color="blueGray" stats icon>
+              <CardIcon color="blueGray">
                 <AttachMoney />
               </CardIcon>
               <p className={classes.cardCategory}>지금껏 총 수익금</p>
@@ -145,8 +145,8 @@ const Dashboard = (props) => {
         </GridItem>
         <GridItem xs={12} sm={6} md={6}>
           <Card>
-            <CardHeader color="info" stats icon>
-              <CardIcon color="info">
+            <CardHeader color="blueGray" stats icon>
+              <CardIcon color="blueGray">
                 <CheckIcon />
               </CardIcon>
               <p className={classes.cardCategory}>출금 가능한 수익금</p>
@@ -173,7 +173,7 @@ const Dashboard = (props) => {
         {/* 현재송출 중인 배너 */}
         <GridItem xs={12} sm={6} md={6}>
           <Card>
-            <CardHeader color="primary">
+            <CardHeader color="blueGray">
               <h4 className={classes.cardTitleWhite}>
               현재 송출 중인 배너
               </h4>
@@ -181,7 +181,7 @@ const Dashboard = (props) => {
             </CardHeader>
             <CardBody>
               <Table
-                tableHeaderColor="primary"
+                tableHeaderColor="danger"
                 tableHead={['배너', '광고주']}
                 tableData={currentBannerData}
               />
@@ -192,7 +192,7 @@ const Dashboard = (props) => {
         {/* URL 공개 라인 */}
         <GridItem xs={12} sm={6} md={6}>
           <Card>
-            <CardHeader color="warning">
+            <CardHeader color="blueGray">
               <h4 className={classes.cardTitleWhite}>
               배너 오버레이 URL
               </h4>
@@ -220,7 +220,7 @@ const Dashboard = (props) => {
       <GridContainer>
         <GridItem xs={12} sm={12} md={12}>
           <Card>
-            <CardHeader color="primary">
+            <CardHeader color="blueGray">
               <h4 className={classes.cardTitleWhite}>내 모든 광고 내역</h4>
               <p className={classes.cardCategoryWhite}>
                   지금껏 내가 광고한 모든 배너를 보여줍니다.
@@ -228,7 +228,7 @@ const Dashboard = (props) => {
             </CardHeader>
             <CardBody>
               <Table
-                tableHeaderColor="primary"
+                tableHeaderColor="blueGray"
                 tableHead={bannerData.columns}
                 tableData={bannerData.data}
                 pagination

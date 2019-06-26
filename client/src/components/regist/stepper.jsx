@@ -13,7 +13,6 @@ import RegistForm from './RegistForm';
 import PaperSheet from './Paper';
 import AppAppBar from '../Main/views/AppAppBar';
 
-
 const styles = theme => ({
   root: {
     width: '100%',
@@ -97,7 +96,11 @@ const RegistStepper = (props) => {
         <Step key="2">
           <StepLabel>정보 동의 및 계약</StepLabel>
           <StepContent>
-            <PaperSheet handleNext={handleNext} handleReset={handleReset} handleUserSubmit={handleUserSubmit} />
+            <PaperSheet
+              handleNext={handleNext}
+              handleReset={handleReset}
+              handleUserSubmit={handleUserSubmit}
+            />
           </StepContent>
         </Step>
       </Stepper>

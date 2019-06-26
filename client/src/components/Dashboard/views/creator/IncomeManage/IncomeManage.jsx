@@ -208,156 +208,169 @@ function Income(props) {
   return (
     <div>
       <GridContainer>
-        <GridItem xs={12} sm={12} md={4}>
-          <Card>
-            {incomeData.loading && <div style={{ textAlign: 'center' }}><CircularProgress /></div>}
-            {!incomeData.loading && incomeData.error && <span>오류에요.. 침착하시고.. 다시 시도해보세요</span>}
-            {!incomeData.loading && incomeData.payload
-                && (
-                  <CardHeader color="primary" stats icon>
-                    <CardIcon color="primary">
-                      <AttachMoney />
-                    </CardIcon>
-                    <p className={classes.cardCategory}>지금껏 총 수익금</p>
-                    <h3 className={classes.cardTitle}>
-                      {`${incomeData.payload.creatorTotalIncome} `}
-                      <small>원</small>
-                    </h3>
-                  </CardHeader>
-                )}
-            <CardFooter stats>
-              <div className={classes.stats}>
-                <DateRange />
+        {/* 수익금 및 수익금 그래프 */}
+        <GridItem xs={12} sm={12} md={8}>
+          <GridContainer>
+            {/* 지금껏 총 수익금 */}
+            <GridItem xs={12} sm={12} md={6}>
+              <Card>
+                {incomeData.loading && <div style={{ textAlign: 'center' }}><CircularProgress /></div>}
+                {!incomeData.loading && incomeData.error && <span>오류에요.. 침착하시고.. 다시 시도해보세요</span>}
                 {!incomeData.loading && incomeData.payload
-                && <span>{`Updated : ${incomeData.payload.date}`}</span>
-                }
-              </div>
-            </CardFooter>
-          </Card>
-        </GridItem>
-        <GridItem xs={12} sm={12} md={4}>
-          <Card>
-            {incomeData.loading && <div style={{ textAlign: 'center' }}><CircularProgress /></div>}
-            {!incomeData.loading && incomeData.error && <span>오류에요.. 침착하시고.. 다시 시도해보세요</span>}
-            {!incomeData.loading && incomeData.payload
-                && (
-                  <CardHeader color="info" stats icon>
-                    <CardIcon color="info">
-                      <Check />
-                    </CardIcon>
-                    <p className={classes.cardCategory}>출금가능한 수익금</p>
-                    <h3 className={classes.cardTitle}>
-                      {`${incomeData.payload.creatorReceivable} `}
-                      <small>원</small>
-                    </h3>
-                  </CardHeader>
-                )}
-            <CardFooter stats>
-              <div className={classes.stats}>
-                <Money />
-                <SuccessTypo>출금 신청 버튼</SuccessTypo>
-                {' 으로 출금신청하세요!'}
-              </div>
-            </CardFooter>
-          </Card>
-        </GridItem>
-        <GridItem xs={12} sm={12} md={4}>
-          <Card profile>
-            <CardAvatar profile>
-              <a href="#avatar" onClick={e => e.preventDefault()}>
-                <img src={session.creatorLogo} alt="creator" />
-              </a>
-            </CardAvatar>
-            <CardBody profile>
-              <h5 className={classes.cardCategory}>크리에이터</h5>
-              <h4 className={classes.cardTitle}>{session.creatorDisplayName}</h4>
-            </CardBody>
-          </Card>
-        </GridItem>
-      </GridContainer>
-      <GridContainer>
-        <GridItem xs={12} sm={12} md={8} style={{ position: 'relative', top: -70 }}>
-          <Card chart>
-            <CardHeader color="success">
-              <FormControl variant="outlined" className={classes.select}>
-                <InputLabel ref={inputLabel} htmlFor="selectDateRange">
-                  범위
-                </InputLabel>
-                <Select
-                  onChange={handleChange}
-                  input={(
-                    <OutlinedInput
-                      labelWidth={labelWidth}
-                      name="dateRange"
-                      id="selectDateRange"
-                      value={value}
-                    />
+                  && (
+                    <CardHeader color="blueGray" stats icon>
+                      <CardIcon color="blueGray">
+                        <AttachMoney />
+                      </CardIcon>
+                      <p className={classes.cardCategory}>지금껏 총 수익금</p>
+                      <h3 className={classes.cardTitle}>
+                        {`${incomeData.payload.creatorTotalIncome} `}
+                        <small>원</small>
+                      </h3>
+                    </CardHeader>
                   )}
-                >
-                  <MenuItem value={7}>최근 7 일</MenuItem>
-                  <MenuItem value={14}>최근 14 일</MenuItem>
-                  <MenuItem value={30}>최근 30 일</MenuItem>
-                </Select>
-              </FormControl>
-              {loading && <div style={{ textAlign: 'center' }}><CircularProgress /></div>}
-              {!loading && error && <span>오류에요.. 침착하시고.. 다시 시도해보세요</span>}
-              {!loading && payload
+                <CardFooter stats>
+                  <div className={classes.stats}>
+                    <DateRange />
+                    {!incomeData.loading && incomeData.payload
+                  && <span>{`Updated : ${incomeData.payload.date}`}</span>
+                  }
+                  </div>
+                </CardFooter>
+              </Card>
+            </GridItem>
+            {/* 출금 가능 수익금 */}
+            <GridItem xs={12} sm={12} md={6}>
+              <Card>
+                {incomeData.loading && <div style={{ textAlign: 'center' }}><CircularProgress /></div>}
+                {!incomeData.loading && incomeData.error && <span>오류에요.. 침착하시고.. 다시 시도해보세요</span>}
+                {!incomeData.loading && incomeData.payload
+                  && (
+                    <CardHeader color="blueGray" stats icon>
+                      <CardIcon color="blueGray">
+                        <Check />
+                      </CardIcon>
+                      <p className={classes.cardCategory}>출금가능한 수익금</p>
+                      <h3 className={classes.cardTitle}>
+                        {`${incomeData.payload.creatorReceivable} `}
+                        <small>원</small>
+                      </h3>
+                    </CardHeader>
+                  )}
+                <CardFooter stats>
+                  <div className={classes.stats}>
+                    <Money />
+                    <SuccessTypo>출금 신청 버튼</SuccessTypo>
+                    {' 으로 출금신청하세요!'}
+                  </div>
+                </CardFooter>
+              </Card>
+            </GridItem>
+            {/* 총 수익금 그래프 */}
+            <GridItem xs={12} sm={12} md={12}>
+              <Card chart>
+                <CardHeader color="success">
+                  <FormControl variant="outlined" className={classes.select}>
+                    <InputLabel ref={inputLabel} htmlFor="selectDateRange">
+                  범위
+                    </InputLabel>
+                    <Select
+                      onChange={handleChange}
+                      input={(
+                        <OutlinedInput
+                          labelWidth={labelWidth}
+                          name="dateRange"
+                          id="selectDateRange"
+                          value={value}
+                        />
+                  )}
+                    >
+                      <MenuItem value={7}>최근 7 일</MenuItem>
+                      <MenuItem value={14}>최근 14 일</MenuItem>
+                      <MenuItem value={30}>최근 30 일</MenuItem>
+                    </Select>
+                  </FormControl>
+                  {loading && <div style={{ textAlign: 'center' }}><CircularProgress /></div>}
+                  {!loading && error && <span>오류에요.. 침착하시고.. 다시 시도해보세요</span>}
+                  {!loading && payload
                 && (
                 <Line
                   data={setChartjsData(payload.labels, payload.totalIncomeData)}
                   options={{ tooltips: { mode: 'index', intersect: false } }}
                 />
                 )}
-            </CardHeader>
-            <CardBody>
-              <h4 className={classes.cardTitle} style={{ textAlign: 'left' }}>나의 총 수익금</h4>
-            </CardBody>
-            <CardFooter chart>
-              <div className={classes.stats}>
-                <AccessTime />
-                {`updated: ${Date()}`}
-              </div>
-            </CardFooter>
-          </Card>
+                </CardHeader>
+                <CardBody>
+                  <h4 className={classes.cardTitle} style={{ textAlign: 'left' }}>나의 총 수익금</h4>
+                </CardBody>
+                <CardFooter chart>
+                  <div className={classes.stats}>
+                    <AccessTime />
+                    {`updated: ${Date()}`}
+                  </div>
+                </CardFooter>
+              </Card>
+            </GridItem>
+          </GridContainer>
         </GridItem>
+        {/* 아바타 및 출금신청 */}
         <GridItem xs={12} sm={12} md={4}>
-          <Card>
-            <CardHeader color="info">
-              <h4 className={classes.cardTitleWhite}>
-                출금 신청하시겠어요?
-              </h4>
-              <p className={classes.cardCategoryWhite}>
-                간단하게 진행해보세요!
-              </p>
-            </CardHeader>
-            <CardBody>
-              <div className={classes.buttonWrapper}>
-                {!incomeData.loading && incomeData.payload
-                && (
-                <Button
-                  color="success"
-                  round
-                  onClick={handleWithdrawModalOpen}
-                  disabled={!incomeData.payload.creatorAccountNumber}
-                >
-                  <Payment />
-                  {'출금신청'}
-                </Button>
-                )}
-              </div>
-            </CardBody>
-            <CardFooter stats>
-              <Tooltip title="만일 그렇지 않다면 계정 관리탭에서 계좌 정보를 수정하세요!" placement="bottom-start">
-                <div className={classes.stats}>
-                  <WarningTypo><Warning /></WarningTypo>
-                  {!incomeData.loading && incomeData.payload.creatorAccountNumber
-                    ? (<span className={classes.dangerText}>계좌정보를 정확히 입력하셨나요?</span>)
-                    : (<span className={classes.dangerText}>계좌정보를 입력하셔야 출금이 가능해요!</span>)
-                  }
-                </div>
-              </Tooltip>
-            </CardFooter>
-          </Card>
+          <GridContainer>
+            {/* 크리에이터 아바타 */}
+            <GridItem xs={12} sm={12} md={12}>
+              <Card profile>
+                <CardAvatar profile>
+                  <a href="#avatar" onClick={e => e.preventDefault()}>
+                    <img src={session.creatorLogo} alt="creator" />
+                  </a>
+                </CardAvatar>
+                <CardBody profile>
+                  <h5 className={classes.cardCategory}>크리에이터</h5>
+                  <h4 className={classes.cardTitle}>{session.creatorDisplayName}</h4>
+                </CardBody>
+              </Card>
+            </GridItem>
+            {/* 크리에이터 출금 신청 */}
+            <GridItem xs={12} sm={12} md={12}>
+              <Card>
+                <CardHeader color="blueGray">
+                  <h4 className={classes.cardTitleWhite}>
+                  출금 신청하시겠어요?
+                  </h4>
+                  <p className={classes.cardCategoryWhite}>
+                  간단하게 진행해보세요!
+                  </p>
+                </CardHeader>
+                <CardBody>
+                  <div className={classes.buttonWrapper}>
+                    {!incomeData.loading && incomeData.payload
+                  && (
+                  <Button
+                    color="success"
+                    round
+                    onClick={handleWithdrawModalOpen}
+                    disabled={!incomeData.payload.creatorAccountNumber}
+                  >
+                    <Payment />
+                    {'출금신청'}
+                  </Button>
+                  )}
+                  </div>
+                </CardBody>
+                <CardFooter stats>
+                  <Tooltip title="만일 그렇지 않다면 계정 관리탭에서 계좌 정보를 수정하세요!" placement="bottom-start">
+                    <div className={classes.stats}>
+                      <WarningTypo><Warning /></WarningTypo>
+                      {!incomeData.loading && incomeData.payload.creatorAccountNumber
+                        ? (<span className={classes.dangerText}>계좌정보를 정확히 입력하셨나요?</span>)
+                        : (<span className={classes.dangerText}>계좌정보를 입력하셔야 출금이 가능해요!</span>)
+                    }
+                    </div>
+                  </Tooltip>
+                </CardFooter>
+              </Card>
+            </GridItem>
+          </GridContainer>
         </GridItem>
       </GridContainer>
 
@@ -365,7 +378,7 @@ function Income(props) {
       <GridContainer>
         <GridItem xs={12} sm={12} md={12}>
           <Card>
-            <CardHeader color="primary">
+            <CardHeader color="blueGray">
               <h4 className={classes.cardTitleWhite}>
                 출금 신청 내역
               </h4>
@@ -375,7 +388,7 @@ function Income(props) {
             </CardHeader>
             <CardBody>
               <Table
-                tableHeaderColor="primary"
+                tableHeaderColor="danger"
                 tableHead={WithdrawalData.columns}
                 tableData={WithdrawalData.data}
                 pagination

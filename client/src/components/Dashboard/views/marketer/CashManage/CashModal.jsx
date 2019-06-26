@@ -135,7 +135,6 @@ function CashModal(props) {
     axios.post('/dashboard/marketer/chargecash', {
       chargecash: selectValue,
     }).then((res) => {
-      console.log(res);
       handleSnackClose();
       history.push('/dashboard/cash');
     }).catch((err) => {
@@ -359,7 +358,8 @@ function CashModal(props) {
 CashModal.propTypes = {
   open: PropTypes.bool.isRequired,
   handleClose: PropTypes.func.isRequired,
-  chargeCash: PropTypes.number.isRequired,
+  chargeCash: PropTypes.string.isRequired
+  
 };
 
 export default CashModal;

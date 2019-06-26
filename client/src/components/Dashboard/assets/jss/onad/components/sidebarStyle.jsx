@@ -141,6 +141,9 @@ const sidebarStyle = theme => ({
     padding: '10px 15px',
     backgroundColor: 'transparent',
     ...defaultFont,
+    '&:hover': {
+      backgroundColor: blueGrayColor[8],
+    },
   },
   itemIcon: {
     width: '24px',
@@ -185,7 +188,7 @@ const sidebarStyle = theme => ({
         hexToRgb(infoColor[0])
       },.2)`,
     '&:hover': {
-      backgroundColor: infoColor[0],
+      backgroundColor: infoColor[1],
       boxShadow:
         `0 12px 20px -10px rgba(${
           hexToRgb(infoColor[0])
@@ -207,7 +210,7 @@ const sidebarStyle = theme => ({
         hexToRgb(successColor[0])
       },.2)`,
     '&:hover': {
-      backgroundColor: successColor[0],
+      backgroundColor: successColor[1],
       boxShadow:
         `0 12px 20px -10px rgba(${
           hexToRgb(successColor[0])
@@ -229,7 +232,7 @@ const sidebarStyle = theme => ({
         hexToRgb(warningColor[0])
       },.2)`,
     '&:hover': {
-      backgroundColor: warningColor[0],
+      backgroundColor: warningColor[1],
       boxShadow:
         `0 12px 20px -10px rgba(${
           hexToRgb(warningColor[0])
@@ -251,7 +254,7 @@ const sidebarStyle = theme => ({
         hexToRgb(dangerColor[0])
       },.2)`,
     '&:hover': {
-      backgroundColor: dangerColor[0],
+      backgroundColor: dangerColor[1],
       boxShadow:
         `0 12px 20px -10px rgba(${
           hexToRgb(dangerColor[0])
@@ -266,7 +269,7 @@ const sidebarStyle = theme => ({
     position: 'relative',
     height: 'calc(100vh - 75px)',
     overflow: 'auto',
-    width: '260px',
+    width: '230px',
     zIndex: '4',
     overflowScrolling: 'touch',
   },

@@ -136,13 +136,11 @@ function ReturnCashModal(props) {
       axios.post('/dashboard/marketer/return', {
         withdrawCash: selectValue,
       }).then((res) => {
-        console.log(res);
+        handleSnackClose();
+        history.push('/dashboard/cash');
       }).catch((err) => {
         console.log(err);
       });
-
-      handleSnackClose();
-      history.push('/dashboard/cash');
     }
   }
 
@@ -375,7 +373,7 @@ ReturnCashModal.propTypes = {
   open: PropTypes.bool.isRequired,
   handleClose: PropTypes.func.isRequired,
   accountNumber: PropTypes.string.isRequired,
-  chargeCash: PropTypes.number.isRequired,
+  chargeCash: PropTypes.string.isRequired,
 };
 
 export default ReturnCashModal;

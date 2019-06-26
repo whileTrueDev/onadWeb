@@ -134,6 +134,7 @@ CustomTable.propTypes = {
     'info',
     'rose',
     'gray',
+    'blueGray',
   ]),
   tableHead: PropTypes.arrayOf(PropTypes.string),
   tableData: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.string, PropTypes.number]))),

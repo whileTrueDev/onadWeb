@@ -31,34 +31,4 @@
 { message: 'SELECT * FROM creatorInfo WHERE creatorId = ?',
   level: 'info',
   timestamp: '2019-06-15T09:18:10.456Z' }
-{ message: 'SELECT * FROM creatorInfo WHERE creatorId = ?',
-  level: 'info',
-  timestamp: '2019-06-15T12:31:09.423Z' }
-{ message:
-   'UPDATE creatorInfo SET creatorAccountNumber = ? WHERE creatorId = ?',
-  level: 'info',
-  timestamp: '2019-06-15T12:31:21.092Z' }
-{ message: 'SELECT * FROM creatorInfo WHERE creatorId = ?',
-  level: 'info',
-  timestamp: '2019-06-15T12:31:26.495Z' }
-{ message: 'SELECT * FROM creatorInfo WHERE creatorId = ?',
-  level: 'info',
-  timestamp: '2019-06-15T12:31:46.018Z' }
-{ message: 'SELECT * FROM creatorInfo WHERE creatorId = ?',
-  level: 'info',
-  timestamp: '2019-06-15T12:34:03.266Z' }
-{ message: 'SELECT * FROM creatorInfo WHERE creatorId = ?',
-  level: 'info',
-  timestamp: '2019-06-15T12:35:32.235Z' }
-{ message: 'SELECT * FROM creatorInfo WHERE creatorId = ?',
-  level: 'info',
-  timestamp: '2019-06-15T12:35:43.169Z' }
-{ message: 'SELECT * FROM creatorInfo WHERE creatorId = ?',
-  level: 'info',
-  timestamp: '2019-06-15T12:37:40.868Z' }
-{ message: 'SELECT * FROM creatorInfo WHERE creatorId = ?',
-  level: 'info',
-  timestamp: '2019-06-15T12:37:49.128Z' }
-{ message: 'SELECT * FROM creatorInfo WHERE creatorId = ?',
-  level: 'info',
-  timestamp: '2019-06-15T12:38:07.417Z' }
+

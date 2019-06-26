@@ -17,7 +17,7 @@ import AdminNavbarLinks from './AdminNavbarLinks';
 
 function Header(props) {
   const {
-    routes, classes, color, handleDrawerToggle,
+    routes, classes, color, handleDrawerToggle, history,
   } = props;
   function makeBrand() {
     let routeName;
@@ -44,7 +44,7 @@ function Header(props) {
           </Button>
         </div>
         <Hidden smDown implementation="css">
-          <AdminNavbarLinks />
+          <AdminNavbarLinks history={history} />
         </Hidden>
         <Hidden mdUp implementation="css">
           <IconButton

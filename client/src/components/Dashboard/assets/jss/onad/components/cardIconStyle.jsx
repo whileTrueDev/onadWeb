@@ -5,13 +5,13 @@ import {
   infoCardHeader,
   primaryCardHeader,
   roseCardHeader,
+  blueGrayCardHeader,
   grayColor,
 } from '../../onad';
 
 const cardIconStyle = {
   cardIcon: {
-    '&$warningCardHeader,&$successCardHeader,&$dangerCardHeader,&$infoCardHeader,&$primaryCardHeader,&$roseCardHeader': {
-      borderRadius: '3px',
+    '&$warningCardHeader,&$successCardHeader,&$dangerCardHeader,&$infoCardHeader,&$primaryCardHeader,&$roseCardHeader,&$blueGrayCardHeader': {
       backgroundColor: grayColor[0],
       padding: '15px',
       marginTop: '-20px',
@@ -25,6 +25,7 @@ const cardIconStyle = {
   infoCardHeader,
   primaryCardHeader,
   roseCardHeader,
+  blueGrayCardHeader,
 };
 
 export default cardIconStyle;

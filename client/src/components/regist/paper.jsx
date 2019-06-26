@@ -103,7 +103,7 @@ const PaperSheet = (props) => {
         <Typography variant="h6" component="h6" style={{ textAlign: 'center' }}>
             While:True
         </Typography>
-        {terms.map((term, index) => (
+        {terms.map(term => (
           <Paper className={classes.container} elevation={1} key={term.state}>
             <Typography component="p" style={{ flex: 8, fontSize: 13 }}>
               {term.title}
@@ -111,7 +111,8 @@ const PaperSheet = (props) => {
             <Button style={{
               flex: 1, backgroundColor: '#d6d6d6', height: '70%', fontSize: 13,
             }}
-            >약관보기
+            >
+            약관보기
             </Button>
             <Divider className={classes.divider} />
             <FormControlLabel
