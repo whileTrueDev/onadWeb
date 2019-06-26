@@ -8,6 +8,7 @@ import Sidebar from '../components/Sidebar/Sidebar';
 import allRoutes from '../routes';
 import logo from '../assets/img/main_logo.png';
 import Footer from '../components/Footer/Footer';
+import '../assets/css/onad.css';
 
 const CreatorRoutes = ({ history }) => (
   <Switch>
@@ -21,41 +22,41 @@ const CreatorRoutes = ({ history }) => (
   </Switch>
 );
 
+// useEffect(() => {
+//   if (!history.location.state) {
+//     window.location.href = '/';
+//   } else if (history.location.state.userType !== 'creator') {
+//     window.location.href = '/';
+//   }
+// });
+
 const CreatorDashboard = ({
   classes, history, match, ...rest
-}) => {
-  useEffect(() => {
-    if (!history.location.state) {
-      window.location.href = '/';
-    } else if (history.location.state.userType !== 'creator') {
-      window.location.href = '/';
-    }
-  });
-
-  return (
-    <div className={classes.wrapper}>
-      <Sidebar
+}) => (
+  <div className={classes.wrapper}>
+    <Sidebar
+      routes={allRoutes.creator}
+      logoText="OnAD"
+      logo={logo}
+      {...rest}
+    />
+    <div className={classes.mainPanel}>
+      {/* ref="mainPanel" */}
+      <Navbar
         routes={allRoutes.creator}
-        logoText="OnAD"
-        logo={logo}
+        history={history} // 로그아웃을 위해 필요하다.
         {...rest}
       />
-      <div className={classes.mainPanel}>
-        {/* ref="mainPanel" */}
-        <Navbar
-          routes={allRoutes.creator}
-          {...rest}
-        />
-        <div className={classes.content}>
-          <div className={classes.container}>
-            <CreatorRoutes history={history} />
-          </div>
+      <div className={classes.content}>
+        <div className={classes.container}>
+          <CreatorRoutes history={history} />
         </div>
-        <Footer />
       </div>
+      <Footer />
     </div>
-  );
-};
+  </div>
+);
+
 
 CreatorRoutes.propTypes = {
   history: PropTypes.object.isRequired,

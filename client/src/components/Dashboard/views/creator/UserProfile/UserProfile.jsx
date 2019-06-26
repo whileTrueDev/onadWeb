@@ -141,11 +141,6 @@ function UserProfile(props) {
         <GridItem xs={12} sm={12} md={1} />
         <GridItem xs={12} sm={12} md={5}>
           <Card profile>
-            <CardAvatar profile>
-              <a href="#pablo" onClick={e => e.preventDefault()}>
-                <img src={session.creatorLogo} alt="..." />
-              </a>
-            </CardAvatar>
             <CardBody profile>
               <h4 className={classes.cardTitle}>
                 {`${userData.creatorName} 님의 정보`}

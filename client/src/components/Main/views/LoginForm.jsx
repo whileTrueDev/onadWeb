@@ -187,15 +187,15 @@ const LoginForm = (props) => {
         당신의 CHANNEL을 선택하세요.
           </DialogContentText>
           <Tooltip title="트위치 계정으로 로그인" placement="right">
-          <Button
-            component={Link}
-            href="http://localhost:3000/login/twitch"
-            // onClick ={twitchLogin}
-            style={{
-              backgroundImage: 'url("pngs/twitch3.png")',
-            }}
-            className={classes.imageSrc}
-          />
+            <Button
+              component={Link}
+              href="http://localhost:3000/login/twitch"
+              // onClick ={twitchLogin}
+              style={{
+                backgroundImage: 'url("pngs/twitch3.png")',
+              }}
+              className={classes.imageSrc}
+            />
           </Tooltip>
         </DialogContent>
       </Dialog>
