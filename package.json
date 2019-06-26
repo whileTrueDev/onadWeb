@@ -2,6 +2,10 @@
   "dependencies": {
     "express-generator": "^4.16.0"
   },
+  "scripts": {
+    "service": "cd service && node bin/www",
+    "client": "cd client && yarn start"
+  },
   "name": "chanuuuuu",
   "version": "1.0.0",
   "description": "chanuuuuu의 dev",

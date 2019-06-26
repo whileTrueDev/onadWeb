@@ -21,8 +21,6 @@ const axios = require('axios');
 const encrpyto = require('./encryption');
 
 
-
-
 //serializeUser를 정의한다. session에 저장해둘 data를 구현하는 것.
 passport.serializeUser((user, done)=>{
     console.log('serialize');
@@ -69,7 +67,6 @@ passport.use( new LocalStrategy(
                             marketerName: result[0].marketerName,
                             marketerEmail: result[0].marketerMail,
                             marketerContraction: result[0].marketerContraction,
-                            userType : "marketer",
                         };
                         if(!result[0].marketerEmailAuth){
                             user['marketerEmailAuth'] = result[0].marketerEmailAuth;

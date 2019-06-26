@@ -34,10 +34,11 @@ import {
 } from '../../../variables/creatorDashboardDefault';
 
 const Dashboard = (props) => {
-  const { classes, session } = props;
+  const { classes } = props;
 
   // 현재 송출중 배너 데이터 관련 로직
   const [currentBannerData, setCurrentBannerData] = React.useState([['', '']]);
+
   useEffect(() => {
     axios.get('/dashboard/creator/currentBanner')
       .then((res) => {
@@ -55,6 +56,7 @@ const Dashboard = (props) => {
 
   // 크리에이터 이름, 수익금 데이터 관련 로직
   const [data, setData] = useState(defaultIncomeData);
+
   useEffect(() => {
     // income 데이터 axios 요청
     axios.get('/dashboard/creator/income').then((res) => {
@@ -84,6 +86,20 @@ const Dashboard = (props) => {
         setBannerData(defaultBannerData);
       });
   }, []); // set 2nd argument to the empty array for request just once
+
+
+  const [session, setSession] = useState({});
+  useEffect(() => {
+    // Banner 데이터 axios 요청
+    axios.get('/dashboard/checkUserType')
+      .then((res) => {
+        if (res.data) {
+          setSession(res.data);
+        }
+      }).catch((err) => {
+        console.log(err); // 오류처리 요망
+      });
+  }, []);
 
 
   // 배너 테이블 state, 테이블 페이지 state 선언
@@ -232,7 +248,13 @@ const Dashboard = (props) => {
 
 Dashboard.propTypes = {
   classes: PropTypes.object.isRequired,
-  session: PropTypes.object.isRequired,
+  session: PropTypes.object,
 };
+
+
+Dashboard.defaultProps = {
+  session: {},
+};
+
 
 export default withStyles(dashboardStyle)(Dashboard);

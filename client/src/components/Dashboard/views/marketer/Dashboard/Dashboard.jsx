@@ -328,7 +328,6 @@ const Dashboard = (props) => {
 
 Dashboard.propTypes = {
   classes: PropTypes.object.isRequired,
-  session: PropTypes.object.isRequired,
 };
 
 export default withStyles(dashboardStyle)(Dashboard);

@@ -31,22 +31,4 @@
 { message: 'SELECT * FROM creatorInfo WHERE creatorId = ?',
   level: 'info',
   timestamp: '2019-06-15T09:18:10.456Z' }
-{ message: 'SELECT marketerId FROM marketerInfo WHERE marketerId = ? ',
-  level: 'info',
-  timestamp: '2019-06-15T13:10:47.005Z' }
-{ message:
-   'INSERT INTO marketerInfo (marketerId, marketerPasswd, marketerSalt, marketerName, marketerMail, marketerPhoneNum, marketerBusinessRegNum, marketerUserType) VALUES (?, ?, ?, ?, ?, ?, ?, ?) ',
-  level: 'info',
-  timestamp: '2019-06-15T13:11:29.891Z' }
-{ message:
-   'Email sent: 250 2.0.0 OK  1560604291 j7sm6022864pfa.184 - gsmtp',
-  level: 'info',
-  timestamp: '2019-06-15T13:11:33.224Z' }
-{ message:
-   '\n  UPDATE marketerInfo\n  SET marketerEmailAuth = 1\n  WHERE marketerId = ?',
-  level: 'info',
-  timestamp: '2019-06-15T13:11:44.488Z' }
-{ message:
-   'UPDATE marketerInfo SET marketerAccountNumber = ? WHERE marketerId = ?',
-  level: 'info',
-  timestamp: '2019-06-15T13:26:28.504Z' }
+
