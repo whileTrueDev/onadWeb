@@ -58,13 +58,7 @@ const LoginForm = (props) => {
   };
 
   const twitchLogin = () => {
-    axios.get('http://localhost:3000/login/twitch')
-      .then((res) => {
-        console.log('응답완료');
-      })
-      .catch((err) => {
-        console.log('응답실패');
-      });
+    axios.get('http://localhost:3000/login/twitch');
   };
 
   const login = (event) => {

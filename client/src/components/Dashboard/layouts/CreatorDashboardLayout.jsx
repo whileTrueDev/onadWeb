@@ -21,9 +21,15 @@ const CreatorRoutes = ({ history }) => (
   </Switch>
 );
 
-const CreatorDashboard = ({ classes, history, ...rest }) => {
+const CreatorDashboard = ({
+  classes, history, match, ...rest
+}) => {
   useEffect(() => {
-    console.log(history);
+    if (!history.location.state) {
+      window.location.href = '/';
+    } else if (history.location.state.userType !== 'creator') {
+      window.location.href = '/';
+    }
   });
 
   return (

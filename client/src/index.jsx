@@ -6,6 +6,7 @@ import { createBrowserHistory } from 'history';
 import RegistStepper from './components/Regist/Stepper';
 import Main from './components/Main';
 import CreatorDashboard from './components/Dashboard/layouts/CreatorDashboardLayout';
+import CreatorDashboardDoor from './components/Dashboard/layouts/CreatorDashboardDoor';
 import MarketerDashboard from './components/Dashboard/layouts/MarketerDashboardLayout';
 import Admin from './components/admin';
 import Introduction from './components/Introduction';
@@ -20,6 +21,7 @@ ReactDOM.render(
     <Route path="/introduction" component={Introduction} />
     <Route path="/manual" component={Manual} />
     <Route path="/admin" component={Admin} />
+    <Route path="/dashboard/creator/door" component={CreatorDashboardDoor} history={history} />
     <Route path="/dashboard/creator" component={CreatorDashboard} history={history} />
     <Route path="/dashboard/marketer" component={MarketerDashboard} history={history} />
   </Router>,
