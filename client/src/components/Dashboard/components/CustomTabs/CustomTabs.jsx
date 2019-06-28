@@ -78,6 +78,7 @@ CustomTabs.propTypes = {
     'danger',
     'info',
     'primary',
+    'blueGray',
   ]),
   tabs: PropTypes.arrayOf(
     PropTypes.shape({

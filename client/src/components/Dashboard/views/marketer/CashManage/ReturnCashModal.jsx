@@ -5,7 +5,6 @@ import axios from 'axios';
 // material ui core
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import Modal from '@material-ui/core/Modal';
 import IconButton from '@material-ui/core/IconButton';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -21,33 +20,11 @@ import DialogActions from '@material-ui/core/DialogActions';
 // icons
 import Close from '@material-ui/icons/CloseOutlined';
 // customized component
+import Modal from '../../../components/CustomModal/CustomModal';
 import Button from '../../../components/CustomButtons/Button';
 import Warning from '../../../components/Typography/Warning';
 
 const useStyles = makeStyles(theme => ({
-  modal: {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 600,
-    backgroundColor: theme.palette.background.paper,
-    boxShadow: theme.shadows[5],
-  },
-  sectionButton: {
-    flex: 1,
-    display: 'none',
-    justifyContent: 'flex-end',
-    [theme.breakpoints.up('md')]: {
-      display: 'flex',
-    },
-  },
-  inModalContent: {
-    padding: theme.spacing(3),
-    marginLeft: 30,
-    marginRight: 55,
-    outline: 'none',
-  },
   contentWrapper: {
     margin: '20px 0px 20px 0px',
   },
@@ -146,177 +123,161 @@ function ReturnCashModal(props) {
 
   return (
     <Modal
-      aria-labelledby="simple-modal-title"
-      aria-describedby="simple-modal-description"
       open={open}
       onClose={handleClose}
+      title="광고캐시 환불"
+      color="blueGray"
     >
-      <div className={classes.modal}>
-        {/* 상위 바 */}
-        <AppBar color="primary" position="static">
-          <Toolbar variant="dense">
-            <Typography variant="h6" color="inherit">
-            광고캐시 환불
-            </Typography>
-            <div className={classes.sectionButton}>
-              <IconButton color="inherit" onClick={handleClose}>
-                <Close />
-              </IconButton>
-            </div>
-          </Toolbar>
-        </AppBar>
-
+      <div>
         {/* 모달내용 */}
-        <div className={classes.inModalContent}>
-          {/* 보유한 광고캐시 금액 */}
-          <div className={classes.contentWrapper}>
-            <Typography variant="subtitle1" id="select-account" className={classes.contentTitle}>
+        {/* 보유한 광고캐시 금액 */}
+        <div className={classes.contentWrapper}>
+          <Typography variant="subtitle1" id="select-account" className={classes.contentTitle}>
             입금 계좌
-            </Typography>
-            <Typography
-              variant="h5"
-              id="select-account"
-              className={classes.contentDetail}
-            >
-              {`${accountNumber.split('_')[0]}   ${accountNumber.split('_')[1]}`}
-            </Typography>
-          </div>
-          <Divider />
+          </Typography>
+          <Typography
+            variant="h5"
+            id="select-account"
+            className={classes.contentDetail}
+          >
+            {`${accountNumber.split('_')[0]}   ${accountNumber.split('_')[1]}`}
+          </Typography>
+        </div>
+        <Divider />
 
-          {/* 출금가능금액 */}
-          <div className={classes.contentWrapper}>
-            <Typography className={classes.contentTitle} variant="subtitle1">
+        {/* 출금가능금액 */}
+        <div className={classes.contentWrapper}>
+          <Typography className={classes.contentTitle} variant="subtitle1">
             환불 가능 금액
-            </Typography>
-            <Typography
-              variant="h4"
-              id="select-account"
-              className={classes.contentDetail}
-            >
-              {`${chargeCash} 원`}
-            </Typography>
-          </div>
-          <Divider />
+          </Typography>
+          <Typography
+            variant="h4"
+            id="select-account"
+            className={classes.contentDetail}
+          >
+            {`${chargeCash} 원`}
+          </Typography>
+        </div>
+        <Divider />
 
-          {/* 출금금액입력 */}
-          <div className={classes.contentWrapper} style={{ position: 'relative', width: 150 }}>
-            <Typography className={classes.contentTitle} variant="subtitle1">
+        {/* 출금금액입력 */}
+        <div className={classes.contentWrapper} style={{ position: 'relative', width: 150 }}>
+          <Typography className={classes.contentTitle} variant="subtitle1">
               광고캐시 환불 금액
-            </Typography>
-            <RadioGroup
-              name="howmuch"
-              className={classes.contentDetail}
-              value={selectValue}
-              onChange={handleChange}
-            >
-              <FormControlLabel
-                value="100000"
-                control={<Radio color="primary" />}
-                label={
+          </Typography>
+          <RadioGroup
+            name="howmuch"
+            className={classes.contentDetail}
+            value={selectValue}
+            onChange={handleChange}
+          >
+            <FormControlLabel
+              value="100000"
+              control={<Radio color="primary" />}
+              label={
                   chargeCash > 100000
                     ? (
-                      <Typography variant="h7" className={classes.selectValue}>
+                      <Typography variant="subtitle1" className={classes.selectValue}>
                     100,000 원
                       </Typography>
                     )
                     : (
-                      <Typography variant="h7">
+                      <Typography variant="subtitle1">
                     100,000 원
                       </Typography>
                     )
                   }
-                disabled={!(chargeCash > 100000)}
-              />
-              <FormControlLabel
-                value="500000"
-                control={<Radio color="primary" />}
-                label={
+              disabled={!(chargeCash > 100000)}
+            />
+            <FormControlLabel
+              value="500000"
+              control={<Radio color="primary" />}
+              label={
                   chargeCash > 500000
                     ? (
-                      <Typography variant="h7" className={classes.selectValue}>
+                      <Typography variant="subtitle1" className={classes.selectValue}>
                     500,000 원
                       </Typography>
                     )
                     : (
-                      <Typography variant="h7">
+                      <Typography variant="subtitle1">
                     500,000 원
                       </Typography>
                     )
                 }
-                disabled={!(chargeCash > 500000)}
-              />
-              <FormControlLabel
-                value="1000000"
-                control={<Radio color="primary" />}
-                label={
+              disabled={!(chargeCash > 500000)}
+            />
+            <FormControlLabel
+              value="1000000"
+              control={<Radio color="primary" />}
+              label={
                   chargeCash > 100000
                     ? (
-                      <Typography variant="h7" className={classes.selectValue}>
+                      <Typography variant="subtitle1" className={classes.selectValue}>
                     1,000,000 원
                       </Typography>
                     )
                     : (
-                      <Typography variant="h7">
+                      <Typography variant="subtitle1">
                     1,000,000 원
                       </Typography>
                     )
                 }
-                disabled={!(chargeCash > 100000)}
-              />
-              <FormControlLabel
-                value="5000000"
-                control={<Radio color="primary" />}
-                label={
+              disabled={!(chargeCash > 100000)}
+            />
+            <FormControlLabel
+              value="5000000"
+              control={<Radio color="primary" />}
+              label={
                   chargeCash > 5000000
                     ? (
-                      <Typography variant="h7" className={classes.selectValue}>
+                      <Typography variant="subtitle1" className={classes.selectValue}>
                     5,000,000 원
                       </Typography>
                     )
                     : (
-                      <Typography variant="h7">
+                      <Typography variant="subtitle1">
                     5,000,000 원
                       </Typography>
                     )
                 }
-                disabled={!(chargeCash > 5000000)}
-              />
-            </RadioGroup>
-            <div style={{ position: 'absolute', top: 50, left: 200 }}>
-              <Tooltip title="직접입력 하십시오.">
-                <TextField
-                  id="selectValue"
-                  label={(
-                    <Typography variant="h6" className={classes.selectValue}>
+              disabled={!(chargeCash > 5000000)}
+            />
+          </RadioGroup>
+          <div style={{ position: 'absolute', top: 50, left: 200 }}>
+            <Tooltip title="직접입력 하십시오.">
+              <TextField
+                id="selectValue"
+                label={(
+                  <Typography variant="subtitle1" className={classes.selectValue}>
                     환불할 금액을 입력하세요
-                    </Typography>
+                  </Typography>
                   )}
-                  type="number"
-                  className={classes.textField}
-                  value={selectValue}
-                  onChange={handleChange}
-                  margin="normal"
-                  error={(!(chargeCash >= selectValue)) || !(selectValue >= 0)}
-                  variant="outlined"
-                  helperText={((chargeCash >= selectValue) && (selectValue >= 0)) ? '' : '입력이 잘못되었어요!'}
-                />
-              </Tooltip>
-            </div>
+                type="number"
+                className={classes.textField}
+                value={selectValue}
+                onChange={handleChange}
+                margin="normal"
+                error={(!(chargeCash >= selectValue)) || !(selectValue >= 0)}
+                variant="outlined"
+                helperText={((chargeCash >= selectValue) && (selectValue >= 0)) ? '' : '입력이 잘못되었어요!'}
+              />
+            </Tooltip>
           </div>
+        </div>
 
-          {/* 버튼 */}
-          <div className={classnames(classes.contentWrapper, classes.inModalButton)}>
-            <Button onClick={handleClose}>
+        {/* 버튼 */}
+        <div className={classnames(classes.contentWrapper, classes.inModalButton)}>
+          <Button onClick={handleClose}>
               취소
-            </Button>
-            <Button
-              color="info"
-              onClick={handleClick}
-              disabled={(!(chargeCash >= selectValue)) || !(selectValue >= 0)}
-            >
+          </Button>
+          <Button
+            color="info"
+            onClick={handleClick}
+            disabled={(!(chargeCash >= selectValue)) || !(selectValue >= 0)}
+          >
               진행
-            </Button>
-          </div>
+          </Button>
         </div>
 
         {/* 환불 신청 완료 시의 notification */}
@@ -329,7 +290,7 @@ function ReturnCashModal(props) {
         >
           <AppBar color="primary" position="static" elevation={1}>
             <Toolbar variant="dense">
-              <Typography variant="h6" color="inherit">
+              <Typography variant="subtitle1" color="inherit">
                 입력하신대로 환불 진행하시겠어요?
               </Typography>
               <div className={classes.sectionButton}>
@@ -349,7 +310,7 @@ function ReturnCashModal(props) {
               {`환불 이후 잔여 출금 가능 금액 : ${chargeCash - selectValue}`}
             </Typography>
             <Warning>
-              <Typography className={classes.dialogContent} variant="h6" marked="center">
+              <Typography className={classes.dialogContent} variant="subtitle1" marked="center">
                 {'입금까지 하루 또는 이틀이 소요되어요!!'}
               </Typography>
             </Warning>
@@ -363,7 +324,6 @@ function ReturnCashModal(props) {
             </Button>
           </DialogActions>
         </Dialog>
-
       </div>
     </Modal>
   );

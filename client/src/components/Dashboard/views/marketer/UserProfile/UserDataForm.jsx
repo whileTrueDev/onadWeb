@@ -22,15 +22,15 @@ import Snackbar from '../../../components/Snackbar/Snackbar';
 dashboardStyle.textField = {
   width: '100%',
   marginTop: '15px',
-  borderColor: '#9c27b0',
+  borderColor: '#00acc1',
   '& .MuiFormLabel-root ': {
-    color: '#9c27b0',
+    color: '#00acc1',
   },
   '& .MuiInputBase-input:before': {
-    color: '#9c27b0',
+    color: '#00acc1',
   },
   '& .MuiInput-underline:after': {
-    borderBottomColor: '#9c27b0',
+    borderBottomColor: '#00acc1',
   },
 };
 
@@ -123,7 +123,7 @@ const UserDataForm = (props) => {
 
   return (
     <Card>
-      <CardHeader color="primary">
+      <CardHeader color="blueGray">
         <h4 className={classes.cardTitleWhite}>
           {userData.marketerName}
           {' '}
@@ -231,7 +231,7 @@ const UserDataForm = (props) => {
             </GridContainer>
           </CardBody>
           <CardFooter>
-            <Button onClick={changeType} color="primary">
+            <Button onClick={changeType} color="info">
           정보변경
             </Button>
           </CardFooter>

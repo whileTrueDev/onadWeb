@@ -99,7 +99,7 @@ function CustomTable({ ...props }) {
           </TableBody>
         )}
 
-        {pagination !== false ? (
+        {pagination !== false && (
           <CustomTableFooter
             count={tableData.length}
             rowsPerPage={rowsPerPage}
@@ -107,8 +107,7 @@ function CustomTable({ ...props }) {
             handleChangeTablePage={handleChangeTablePage}
             handleChangeTableRowsPerPage={handleChangeTableRowsPerPage}
           />
-        )
-          : null}
+        )}
       </Table>
     </div>
   );
