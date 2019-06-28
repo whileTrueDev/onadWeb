@@ -9,7 +9,7 @@ import Main from './components/Main';
 import CreatorDashboard from './components/Dashboard/layouts/CreatorDashboardLayout';
 import CreatorDashboardDoor from './components/Dashboard/layouts/CreatorDashboardDoor';
 import MarketerDashboard from './components/Dashboard/layouts/MarketerDashboardLayout';
-import Admin from './components/admin';
+// import Admin from './components/admin';
 import adminRoutes from './components/admin/routes';
 import Introduction from './components/Introduction';
 import Manual from './components/Manual';
@@ -22,7 +22,7 @@ ReactDOM.render(
     <Route exact path="/regist" component={RegistStepper} />
     <Route path="/introduction" component={Introduction} />
     <Route path="/manual" component={Manual} />
-    <Route path="/admin" component={Admin} />
+    {/* <Route path="/admin" component={Admin} /> */}
     <Route path="/dashboard/creator/door" component={CreatorDashboardDoor} history={history} />
     <Route path="/dashboard/creator" component={CreatorDashboard} history={history} />
     <Route path="/dashboard/marketer" component={MarketerDashboard} history={history} />

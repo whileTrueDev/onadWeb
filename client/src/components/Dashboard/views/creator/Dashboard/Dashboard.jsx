@@ -159,7 +159,7 @@ const Dashboard = (props) => {
               <Tooltip title="수익관리 탭으로 이동해요!">
                 <div className={classes.stats} style={{ alignItems: 'center' }}>
                   <Info><Money /></Info>
-                  <Link to="/dashboard/income">
+                  <Link to="/dashboard/creator/income">
                     <span className={classes.infoText}>출금 신청하러가기</span>
                   </Link>
                 </div>

@@ -95,7 +95,7 @@ const LoginForm = (props) => {
       })
       .catch(() => {
         setPasswd(''); // 비밀번호 초기화
-        alert('회원이 아닙니다.');
+        alert('회원정보가 일치하지 않습니다.');
       });
   };
 
@@ -187,15 +187,17 @@ const LoginForm = (props) => {
         당신의 CHANNEL을 선택하세요.
           </DialogContentText>
           <Tooltip title="트위치 계정으로 로그인" placement="right">
-          <Button
-            component={Link}
-            href="http://localhost:3000/login/twitch"
+            <Button
+              component={Link}
+              href="http://localhost:3000/login/twitch"
             // onClick ={twitchLogin}
-            style={{
-              backgroundImage: 'url("pngs/twitch3.png")',
-            }}
-            className={classes.imageSrc}
-          />
+              style={{
+                backgroundImage: 'url("pngs/twitch3.png")',
+              }}
+              className={classes.imageSrc}
+            >
+              {''}
+            </Button>
           </Tooltip>
         </DialogContent>
       </Dialog>

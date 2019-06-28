@@ -110,11 +110,15 @@ const UploadDialog = (props) => {
 
   // url을 제출.
   const handleSubmit = () => {
-    axios.post('/dashboard/marketer/banner/push', { url })
-      .then((res) => {
-        alert(res.data[1]);
-        handleClose();
-      });
+    if (url) {
+      axios.post('/dashboard/marketer/banner/push', { url })
+        .then((res) => {
+          alert(res.data[1]);
+          handleClose();
+        });
+    } else {
+      alert('파일을 선택하지 않았습니다.');
+    }
   };
 
 

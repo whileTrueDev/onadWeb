@@ -8,6 +8,7 @@ import Sidebar from '../components/Sidebar/Sidebar';
 import allRoutes from '../routes';
 import logo from '../assets/img/main_logo.png';
 import Footer from '../components/Footer/Footer';
+import '../assets/css/onad.css';
 
 const MarketerRoutes = ({ history }) => (
   <Switch>
@@ -25,11 +26,11 @@ const MarketerDashboard = ({
   classes, history, ...rest
 }) => {
   useEffect(() => {
-    if (!history.location.state) {
-      window.location.href = '/';
-    } else if (history.location.state.userType !== 'marketer') {
-      window.location.href = '/';
-    }
+    // if (!history.location.state) {
+    //   window.location.href = '/';
+    // } else if (history.location.state.userType !== 'marketer') {
+    //   window.location.href = '/';
+    // }
   });
 
   return (

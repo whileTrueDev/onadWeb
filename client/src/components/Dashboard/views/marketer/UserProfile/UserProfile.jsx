@@ -30,7 +30,7 @@ const UserProfile = (props) => {
               <PasswordForm />
             </GridItem>
             <GridItem xs={12} sm={12} md={12}>
-              <Card>
+              {/* <Card>
                 <CardHeader color="primary">
                   <h4 className={classes.cardTitleWhite}>
                     추가할 수정사항
@@ -41,7 +41,7 @@ const UserProfile = (props) => {
                 <CardFooter>
                   <Button type="submit" value="Submit" color="primary">확인</Button>
                 </CardFooter>
-              </Card>
+              </Card> */}
             </GridItem>
           </GridContainer>
 

@@ -30,27 +30,38 @@ const FindDialog = (props) => {
 
   const CheckId = (event) => {
     event.preventDefault();
+    const mailInput = document.getElementById('mail');
     const user = {
       marketerName: event.target.marketerName.value,
       marketerMail: event.target.marketerMail.value,
     };
-    axios.post('/regist/findId', user)
-      .then((res) => {
-        if (res.data.error) {
-          alert(res.data.message);
-        } else {
-          alert(`당신의 ID는 ${res.data.message} 입니다.`);
+    const emailReg = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*[.]+[a-zA-Z]{2,3}$/i;
+    if (emailReg.test(user.marketerMail)) {
+      axios.post('/regist/findId', user)
+        .then((res) => {
+          if (res.data.error) {
+            alert(res.data.message);
+            mailInput.value = '';
+          } else {
+            alert(`당신의 ID는 ${res.data.message} 입니다.`);
+            handleFindDialogClose();
+          }
+        })
+        .catch((err) => {
+          console.log(err);
           handleFindDialogClose();
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+        });
+    } else {
+      // 이메일 형식 오류
+      alert('이메일 형식이 올바르지 않습니다.');
+      mailInput.value = '';
+    }
   };
 
   const CheckPasswd = (event) => {
     event.preventDefault();
     const emailReg = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*[.]+[a-zA-Z]{2,3}$/i;
+    const mailInput = document.getElementById('mail');
     const user = {
       marketerId: event.target.marketerId.value,
       marketerMail: event.target.marketerMail.value,
@@ -60,7 +71,9 @@ const FindDialog = (props) => {
         .then((res) => {
           if (res.data.error) {
             alert(res.data.message);
-            handleClose();
+            mailInput.value = '';
+            // handleFindDialogClose();
+            // handleClose();
           } else {
             alert('가입시 등록한 이메일로 임시비밀번호가 발송되었습니다.');
             handleFindDialogClose();
@@ -102,6 +115,7 @@ const FindDialog = (props) => {
             helperText="EMAIL을 입력하세요."
             margin="dense"
             name="marketerMail"
+            id="mail"
             InputLabelProps={{ shrink: true }}
             style={{ width: '80%' }}
           />
@@ -128,6 +142,7 @@ const FindDialog = (props) => {
           helperText="EMAIL을 입력하세요."
           margin="dense"
           name="marketerMail"
+          id="mail"
           InputLabelProps={{ shrink: true }}
           style={{ width: '80%' }}
         />

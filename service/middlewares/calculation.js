@@ -277,8 +277,10 @@ async function calculation(){
     }
 
     console.log(`계산을 실시합니다. 시작 시각 : ${new Date().toLocaleString()}`);  
-    await Promise.all([contractionCalculate(priceList), creatorCalcuate(priceList), marketerCalculate(priceList)])
-    //console.log(`계산이 완료되었습니다. 종료 시각 : ${new Date().toLocaleString()}`)
+    await Promise.all([contractionCalculate(priceList), creatorCalcuate(priceList), marketerCalculate(priceList)]).then(()=>{
+      console.log(`계산이 완료되었습니다. 종료 시각 : ${new Date().toLocaleString()}`);
+    })
+    
   }
   catch(err){
     console.log(err)

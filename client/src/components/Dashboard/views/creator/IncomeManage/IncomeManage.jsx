@@ -417,7 +417,7 @@ function Income(props) {
       )}
 
       {/* 계좌 입력 안했을 시 링크 문구 notification창 */}
-      {!incomeData.loading && incomeData.payload.creatorAccountNumber
+      {!incomeData.loading && !incomeData.payload.creatorAccountNumber
       && (
       <Snackbar
         place="bl"

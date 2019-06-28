@@ -95,7 +95,7 @@ const banks = [
 
 const AccountNumberForm = (props) => {
   const {
-    classes, handleClose,
+    classes, handleClose, history,
   } = props;
   const [bank, setBank] = useState('농협');
   const [bankPattern, setbankPattern] = useState(13);
@@ -150,6 +150,7 @@ const AccountNumberForm = (props) => {
           if (handleClose) {
             handleClose();
           }
+          history.push('/dashboard/creator/income');
         } else {
           alert('계좌번호 저장에 실패하였습니다.');
         }
@@ -213,14 +214,14 @@ const AccountNumberForm = (props) => {
             name="bankAccount"
             id="bankAccount"
             required
-            endAdornment={(
-              <InputAdornment position="end">
-                <Divider className={classes.divider} />
-                <Button onClick={accountValidation}>
-                조회
-                </Button>
-              </InputAdornment>
-            )}
+            // endAdornment={(
+            //   <InputAdornment position="end">
+            //     <Divider className={classes.divider} />
+            //     <Button onClick={accountValidation}>
+            //     조회
+            //     </Button>
+            //   </InputAdornment>
+            // )}
             inputProps={{
               required: '{true}',
               pattern: `[0-9]{${bankPattern}}`,
