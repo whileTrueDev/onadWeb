@@ -53,6 +53,7 @@ const getCreatorList = (streamList) =>{
             creators.push(row.creatorId)
           }
         })
+        console.log('creators:', creators);
         resolve(creators);
       })
       conn.release();
@@ -76,15 +77,16 @@ const getBannerList = () =>{
         } 
         let date = result[0].date;
         date.setMinutes(date.getMinutes()-5);
-        conn.query(`SELECT bannerId FROM contractionTimestamp WHERE date > ?`, [date], function(err, result, fields){
+        conn.query(`SELECT contractionId FROM contractionTimestamp WHERE date > ?`, [date], function(err, result, fields){
           if(err){
             conn.release(); 
             reject(err);
           } 
           result.map((row)=>{
-            const bannerId = row.bannerId;
+            const bannerId = row.contractionId;
             banners.push(bannerId);
           })
+          console.log('배너리스트 : ', banners);
           resolve(banners);
           conn.release();
         })
@@ -126,7 +128,7 @@ const getPrice = (viewdata) => {
       if(err){ 
         console.log(err);
       }
-      const creatorId = viewdata.bannerId.split('_')[0];
+      const creatorId = viewdata.bannerId.split('/')[1];
       conn.query(`SELECT unitPrice FROM creatorPrice WHERE creatorId = ?`,[creatorId], function(err, result, fields){
         //Price를 정의하는 함수
         const price = result[0].unitPrice * viewdata.viewer;
@@ -141,7 +143,7 @@ const getPrice = (viewdata) => {
 async function getPriceList([creatorList, bannerList]){
   let viewerList = await Promise.all( 
     bannerList.map(async (row)=>{
-      const creatorId = row.split('_')[0];
+      const creatorId = row.split('/')[1];
       if(creatorList.includes(creatorId)){
         const creatorData = {
           creatorId : creatorId,
@@ -166,15 +168,17 @@ const creatorCalcuate = (priceList) =>{
   return new Promise((resolve, reject)=>{
     pool.getConnection(function(err, conn){
       if(err){
-        conn.release(); 
+        //conn.release();
+        console.log(err); 
         reject(err);
       } 
       priceList.map((row)=>{
-        const creatorId = row.bannerId.split('_')[0];
+        const creatorId = row.bannerId.split('/')[1];
         conn.query(`INSERT INTO creatorIncome (creatorId, creatorTotalIncome, creatorReceivable)  SELECT creatorId, creatorTotalIncome + ? , creatorReceivable + ? FROM creatorIncome WHERE creatorId = ? ORDER BY date DESC LIMIT 1`, [row.price, row.price, creatorId], function(err, result, fields){ 
           if(err){
             console.log('변경점 에러');
-            conn.release(); 
+            console.log(err);
+            //conn.release(); 
             reject(err);
           } 
           console.log(row.price + '원을 ' + creatorId + " 에게 입금하였습니다.");
@@ -191,34 +195,39 @@ const marketerCalculate = (priceList) => {
   return new Promise((resolve, reject)=>{
     pool.getConnection(function(err, conn){
       if(err){
-        conn.release();       
+        console.log(err);
+        //conn.release();       
         reject(err);
       } 
       priceList.map((row)=>{
         const bannerId = row.bannerId;
-        conn.query(`SELECT marketerId FROM bannerMatched WHERE bannerId = ?`,[bannerId], function(err, result, fields){
+        conn.query(`SELECT marketerId FROM bannerMatched WHERE contractionId = ?`,[bannerId], function(err, result, fields){
           if(err){
-            conn.release(); 
+            console.log(err);
+            //conn.release(); 
             reject(err);
           } 
           const marketerId = result[0].marketerId;
           conn.query(`SELECT marketerDebit FROM marketerCost WHERE marketerId = ? `, [marketerId], function(err, result, fields){ 
             if(err){
-              conn.release(); 
+              console.log(err);
+              //conn.release(); 
               reject(err);
             } 
             const debit = result[0].marketerDebit;
             if(debit <= row.price){
               conn.query(`UPDATE marketerCost SET marketerDebit = 0 WHERE marketerId = ? `, [marketerId], function(err, result, fields){ 
                 if(err){
-                  conn.release(); 
+                  console.log(err);
+                  //conn.release(); 
                   reject(err);
                 } 
                 console.log('원 금액 ' + row.price + '를 채우지 못하고 ' + debit + '원을 ' + marketerId + " 에게서 지급받았습니다.");
               })
               conn.query(`UPDATE bannerMatched SET contractionState = 1 WHERE marketerId = ? `, [marketerId], function(err, result, fields){
                 if(err){
-                  conn.release(); 
+                  console.log(err);
+                  //conn.release(); 
                   reject(err);
                 }  
                 console.log('계약이 모두 이행되었습니다.');
@@ -227,7 +236,8 @@ const marketerCalculate = (priceList) => {
             }else{
               conn.query(`UPDATE marketerCost SET marketerDebit = marketerDebit - ? WHERE marketerId = ? `, [row.price, marketerId], function(err, result, fields){ 
                 if(err){
-                  conn.release(); 
+                  console.log(err);
+                  //conn.release(); 
                   reject(err);
                 } 
                 console.log(row.price + '원을 ' + marketerId + " 에게서 지급받았습니다.");
@@ -246,13 +256,15 @@ const contractionCalculate = (priceList) => {
   return new Promise((resolve, reject)=>{
     pool.getConnection(function(err, conn){
       if(err){
-        conn.release(); 
+        console.log(err);
+        //conn.release(); 
         reject(err);
       } 
       priceList.map((row)=>{
         conn.query(`INSERT INTO contractionValue(bannerId, contractionTotalValue) VALUES (?, ?);`, [row.bannerId, row.price], function(err, result, fields){
           if(err){
-            conn.release(); 
+            console.log(err);
+            //conn.release(); 
             reject(err);
           }else{
             console.log(row.price + '원을 ' + row.bannerId + " 에 등록하였습니다.");
@@ -287,14 +299,13 @@ async function calculation(){
 
 //5,15,25,35,45,55
 
-var scheduler = schedule.scheduleJob('5,15,25,35,45,55 * * * *', ()=>{
-  console.log('작업을 시작합니다.')
-  calculation();
-})
+// var scheduler = schedule.scheduleJob('5,15,25,35,45,55 * * * *', ()=>{
+//   console.log('작업을 시작합니다.')
+//   calculation();
+// })
 
-module.exports = scheduler;
-
-
+// module.exports = scheduler;
+calculation();
 
 
 

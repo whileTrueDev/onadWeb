@@ -81,16 +81,17 @@ router.route('/confirmState')
   //DB연결후 query문을 통한 데이터 삽입 
     pool.getConnection(function(err, conn){
       if(err){ 
-          console.log(err)
+        console.log(err)
       }
-      conn.query(`UPDATE bannerRegistered SET confirmState = 1 WHERE bannerRegistered.bannerId = "${req.body.bannerId}";`, function(err, result, fields){
-          if(err){
+      conn.query(`UPDATE bannerRegistered SET confirmState = 1 WHERE bannerRegistered.bannerId = "${req.body.bannerId}";`,function(err, result, fields){
+        if(err){
               console.log(err);
           } 
           conn.release();
         });
       });
     });
+
 router.route('/rejectBanner')
 .post(function(req, res, next){
   //DB연결후 query문을 통한 데이터 삽입 
