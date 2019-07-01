@@ -12,8 +12,9 @@ module.exports = function(sql, socket, msg){
                       LIKE CONCAT('%', br.bannerId, '%')
                       WHERE bm.contractionId 
                       LIKE CONCAT('%',(SELECT creatorId FROM creatorInfo WHERE advertiseUrl = "${_url}")) 
-                      AND bm.contractionState = 1
+                      AND bm.contractionState = 0
                       AND mi.marketerContraction = 1
+                      AND br.confirmState = 3
                       ORDER BY bm.contractionTime ASC LIMIT 1;`) //일단 계약된 배너가 있는 지 확인해서 불러옴
   
   getQuery.select(function(err, data){
@@ -26,7 +27,7 @@ module.exports = function(sql, socket, msg){
                               FROM bannerRegistered AS br
                               JOIN marketerInfo AS mi
                               ON br.bannerId LIKE CONCAT(mi.marketerId, '%')
-                              WHERE br.confirmState = 1 
+                              WHERE br.confirmState = 3
                               AND mi.marketerContraction = 1
                               ORDER BY br.date ASC LIMIT 1;`)
               
@@ -53,7 +54,7 @@ module.exports = function(sql, socket, msg){
                                   FROM bannerRegistered AS br
                                   JOIN marketerInfo AS mi
                                   ON br.bannerId LIKE CONCAT(mi.marketerId, '%')
-                                  WHERE br.confirmState = 1 
+                                  WHERE br.confirmState = 3
                                   AND mi.marketerContraction = 1
                                   ORDER BY br.date ASC LIMIT 1;`)
                   getQuery.select(function(err, data){
