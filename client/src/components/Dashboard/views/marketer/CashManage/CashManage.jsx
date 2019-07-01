@@ -109,11 +109,9 @@ const CashManage = (props) => {
   useEffect(() => {
     axios.get('/dashboard/marketer/cash')
       .then((res) => {
-        
         if (res.data) {
           setCash(res.data);
-        } else { setCash(defaultCash) }
-        
+        } else { setCash(defaultCash); }
       }).catch((res) => {
         console.log(res); // 오류처리 요망
         setCash(defaultCash);
@@ -157,119 +155,78 @@ const CashManage = (props) => {
   return (
     <div>
       <GridContainer>
-        {/* 광고캐시 충전  START */}
+
         <GridItem xs={12} sm={12} md={4}>
-          <Card>
-            <CardHeader color="rose">
-              <h4 className={classes.cardTitleWhite}>
-                  광고캐시 충전 하시겠어요?
-              </h4>
-              <p className={classes.cardCategoryWhite}>
-                  간단하게 진행해보세요!
-              </p>
-            </CardHeader>
-            <CardBody>
-              <div className={classes.buttonWrapper}>
-                <Button
-                  color="info"
-                  round
-                  onClick={handleCashModalOpen}
-                >
-                  <Payment />
-                  {'캐시충전'}
-                </Button>
-              </div>
-            </CardBody>
-            <CardFooter stats>
-              <div className={classes.stats}>
-                <span>추후 도입 기능입니다.</span>
-              </div>
-            </CardFooter>
-          </Card>
+          {/* 보유 광고캐시 START */}
+          <GridContainer>
+            <GridItem xs={12} sm={12} md={12}>
+              <Card>
+                <CardHeader color="blueGray" stats icon>
+                  <CardIcon color="blueGray">
+                    <AttachMoney />
+                  </CardIcon>
+                  <p className={classes.cardCategory} style={{ position: 'relative', top: 10 }}>보유 광고캐시</p>
+                  <h3 className={classes.cardTitle} style={{ position: 'relative', top: 10 }}>
+                    {`${cash.marketerDebit}`}
+                    <small>원</small>
+                  </h3>
+                </CardHeader>
+                <CardFooter stats>
+                  <div className={classes.stats}>
+                    <DateRange />
+                    <span>{`Updated : ${cash.date}`}</span>
+                  </div>
+                </CardFooter>
+              </Card>
+            </GridItem>
+
+            {/* 광고캐시 충전  START */}
+            <GridItem xs={12} sm={12} md={12}>
+              <Card>
+                <CardHeader color="blueGray">
+                  <h4 className={classes.cardTitleWhite}>
+                      광고 캐시 충전 및 환불
+                  </h4>
+                  <p className={classes.cardCategoryWhite}>
+                      간단하게 진행해보세요!
+                  </p>
+                </CardHeader>
+                <CardBody>
+                  <div className={classes.buttonWrapper}>
+                    <Button
+                      color="info"
+                      round
+                      onClick={handleCashModalOpen}
+                    >
+                      <Payment />
+                      {'캐시충전'}
+                    </Button>
+                    <Button
+                      color="danger"
+                      round
+                      onClick={handleCashModalOpen2}
+                      disabled={!accountNumber.marketerAccountNumber}
+                    >
+                      <Payment />
+                      {'캐시환불'}
+                    </Button>
+                  </div>
+                </CardBody>
+                <CardFooter stats>
+                  <div className={classes.stats}>
+                    <span>추후 도입 기능입니다.</span>
+                  </div>
+                </CardFooter>
+              </Card>
+            </GridItem>
+
+          </GridContainer>
         </GridItem>
 
-        {/* 광고캐쉬 신청 팝업 */}
-        <CashModal
-          open={modalOpen}
-          history={history}
-          handleOpen={handleCashModalOpen}
-          handleClose={handleCashModalClose}
-          chargeCash={cash.marketerDebit}
-        />
-
-        {/* 보유 광고캐시 START */}
-        <GridItem xs={12} sm={12} md={4} style={{ position: 'relative', top: 70 }}>
+        {/* 충전 및 환불 내역 */}
+        <GridItem xs={12} sm={12} md={8}>
           <Card>
-            <CardHeader color="rose" stats icon>
-              <CardIcon color="rose">
-                <AttachMoney />
-              </CardIcon>
-              <p className={classes.cardCategory} style={{ position: 'relative', top: 10 }}>보유 광고캐시</p>
-              <h3 className={classes.cardTitle} style={{ position: 'relative', top: 10 }}>
-                {`${cash.marketerDebit}`}
-                <small>원</small>
-              </h3>
-            </CardHeader>
-            <CardFooter stats>
-              <div className={classes.stats}>
-                <DateRange />
-                <span>{`Updated : ${cash.date}`}</span>
-              </div>
-            </CardFooter>
-          </Card>
-        </GridItem>
-
-        {/* 광고캐시 환불  START */}
-        <GridItem xs={12} sm={12} md={4}>
-          <Card>
-            <CardHeader color="rose">
-              <h4 className={classes.cardTitleWhite}>
-                  광고캐시 환불 하시겠어요?
-              </h4>
-              <p className={classes.cardCategoryWhite}>
-                  간단하게 진행해보세요!
-              </p>
-            </CardHeader>
-            <CardBody>
-              <div className={classes.buttonWrapper}>
-                <Button
-                  color="danger"
-                  round
-                  onClick={handleCashModalOpen2}
-                  disabled={!accountNumber.marketerAccountNumber}
-                >
-                  <Payment />
-                  {'캐시환불'}
-                </Button>
-              </div>
-            </CardBody>
-            <CardFooter stats>
-              <div className={classes.stats}>
-                <span>추후 도입 기능입니다.</span>
-              </div>
-            </CardFooter>
-          </Card>
-        </GridItem>
-
-        {/* 환불 신청 팝업 */}
-        {accountNumber.marketerAccountNumber && (
-          <ReturnCashModal
-            open={modalOpen2}
-            history={history}
-            handleOpen={handleCashModalOpen2}
-            handleClose={handleCashModalClose2}
-            accountNumber={accountNumber.marketerAccountNumber}
-            chargeCash={cash.marketerDebit}
-          />
-        )}
-      </GridContainer>
-
-
-      {/* 충전 및 환불 내역 */}
-      <GridContainer>
-        <GridItem xs={12} sm={12} md={12}>
-          <Card>
-            <CardHeader color="rose">
+            <CardHeader color="blueGray">
               <h4 className={classes.cardTitleWhite}>
                 캐시 충전 및 환불내역
               </h4>
@@ -279,7 +236,7 @@ const CashManage = (props) => {
             </CardHeader>
             <CardBody>
               <Table
-                tableHeaderColor="primary"
+                tableHeaderColor="danger"
                 tableHead={cashlist.columns}
                 tableData={cashlist.data}
                 pagination
@@ -310,6 +267,26 @@ const CashManage = (props) => {
         />
         )}
 
+      {/* 광고캐쉬 신청 팝업 */}
+      <CashModal
+        open={modalOpen}
+        history={history}
+        handleOpen={handleCashModalOpen}
+        handleClose={handleCashModalClose}
+        chargeCash={cash.marketerDebit}
+      />
+
+      {/* 환불 신청 팝업 */}
+      {accountNumber.marketerAccountNumber && (
+      <ReturnCashModal
+        open={modalOpen2}
+        history={history}
+        handleOpen={handleCashModalOpen2}
+        handleClose={handleCashModalClose2}
+        accountNumber={accountNumber.marketerAccountNumber}
+        chargeCash={cash.marketerDebit}
+      />
+      )}
 
       {/* 계좌입력 다이얼로그 */}
       <AccountDialog

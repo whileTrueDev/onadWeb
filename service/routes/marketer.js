@@ -391,7 +391,7 @@ router.post('/bannerStop', function(req, res, next) {
               SET contractionState = ?
               WHERE contractionId = ?
             `;
-            const updateStateArray = [1, result[0].contractionId]
+            const updateStateArray = [2, result[0].contractionId]
             conn.query(updateStateQuery, updateStateArray, function(err, result, fields) {
               if (err) {
                 console.log('Stop contraction 스테이트 수정 오류', err)
@@ -506,7 +506,7 @@ router.post('/banner/push', (req, res, next)=>{
         res.send([null, err]);
       }
       //등록된 배너가 존재할 경우
-      if(result){
+      if(result.length > 0){
         var count =  parseInt(result[0].bannerId.split('_')[1]) + 1;
         if (count < 10){
           count = '0'+`${count}`;

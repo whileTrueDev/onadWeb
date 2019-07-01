@@ -13,7 +13,7 @@ import Button from '../../../components/CustomButtons/Button';
 import dashboardStyle from '../../../assets/jss/onad/views/dashboardStyle';
 import PasswordForm from './PasswordForm';
 import UserDataForm from './UserDataForm';
-
+import Modal from '../../../components/CustomModal/CustomModal';
 // 마케터 유저 프로필 및 개인정보 수정 페이지
 const UserProfile = (props) => {
   const { classes } = props;
@@ -30,8 +30,9 @@ const UserProfile = (props) => {
               <PasswordForm />
             </GridItem>
             <GridItem xs={12} sm={12} md={12}>
-              {/* <Card>
-                <CardHeader color="primary">
+              {/*
+              <Card>
+                <CardHeader color="blueGray">
                   <h4 className={classes.cardTitleWhite}>
                     추가할 수정사항
                   </h4>
@@ -39,7 +40,7 @@ const UserProfile = (props) => {
                 </CardHeader>
                 <CardBody />
                 <CardFooter>
-                  <Button type="submit" value="Submit" color="primary">확인</Button>
+                  <Button type="submit" value="Submit" color="info">확인</Button>
                 </CardFooter>
               </Card> */}
             </GridItem>

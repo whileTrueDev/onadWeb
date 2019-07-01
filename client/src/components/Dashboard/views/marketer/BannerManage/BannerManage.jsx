@@ -250,7 +250,7 @@ const BannerManage = (props) => {
     <GridContainer>
       <GridItem xs={12} sm={12} md={8}>
         <Card>
-          <CardHeader color="primary" stats>
+          <CardHeader color="blueGray" stats>
             <h4 className={classes.cardTitleWhite}>등록한 배너</h4>
             <p className={classes.cardCategoryWhite}>등록된 모든 배너를 보여줍니다.</p>
           </CardHeader>
@@ -261,8 +261,8 @@ const BannerManage = (props) => {
       </GridItem>
       <GridItem xs={12} sm={6} md={4}>
         <Card>
-          <CardHeader color="warning" stats icon>
-            <CardIcon color="warning">
+          <CardHeader color="blueGray" stats icon>
+            <CardIcon color="blueGray">
               <AttachFile />
             </CardIcon>
             <p className={classes.cardCategory}>지금바로 배너를 등록하세요</p>
@@ -276,7 +276,7 @@ const BannerManage = (props) => {
             itemAlign: 'center',
           }}
           >
-            <CustomButton round color="warning" size="lg" onClick={handleUpload}>등록</CustomButton>
+            <CustomButton round color="info" size="lg" onClick={handleUpload}>등록</CustomButton>
           </CardBody>
           <CardFooter stats />
         </Card>

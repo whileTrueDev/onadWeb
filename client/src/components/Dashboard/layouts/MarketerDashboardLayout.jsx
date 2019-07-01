@@ -21,42 +21,40 @@ const MarketerRoutes = ({ history }) => (
     ))}
   </Switch>
 );
+// useEffect(() => {
+//   if (!history.location.state) {
+//     window.location.href = '/';
+//   } else if (history.location.state.userType !== 'marketer') {
+//     window.location.href = '/';
+//   }
+// });
 
 const MarketerDashboard = ({
   classes, history, ...rest
-}) => {
-  useEffect(() => {
-    // if (!history.location.state) {
-    //   window.location.href = '/';
-    // } else if (history.location.state.userType !== 'marketer') {
-    //   window.location.href = '/';
-    // }
-  });
-
-  return (
-    <div className={classes.wrapper}>
-      <Sidebar
+}) => (
+  <div className={classes.wrapper}>
+    <Sidebar
+      routes={allRoutes.marketer}
+      logoText="OnAD"
+      logo={logo}
+      {...rest}
+    />
+    <div className={classes.mainPanel}>
+      {/* ref="mainPanel" */}
+      <Navbar
         routes={allRoutes.marketer}
-        logoText="OnAD"
-        logo={logo}
+        history={history}
         {...rest}
       />
-      <div className={classes.mainPanel}>
-        {/* ref="mainPanel" */}
-        <Navbar
-          routes={allRoutes.marketer}
-          {...rest}
-        />
-        <div className={classes.content}>
-          <div className={classes.container}>
-            <MarketerRoutes history={history} />
-          </div>
+      <div className={classes.content}>
+        <div className={classes.container}>
+          <MarketerRoutes history={history} />
         </div>
-        <Footer />
       </div>
+      <Footer />
     </div>
-  );
-};
+  </div>
+);
 MarketerRoutes.propTypes = {
   history: PropTypes.object,
 };

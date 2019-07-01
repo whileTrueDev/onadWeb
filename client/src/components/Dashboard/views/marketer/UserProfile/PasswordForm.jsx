@@ -63,7 +63,7 @@ const PasswordForm = (props) => {
 
   return (
     <Card>
-      <CardHeader color="info">
+      <CardHeader color="blueGray">
         <h4 className={classes.cardTitleWhite}>
     비밀번호 변경
         </h4>

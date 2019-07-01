@@ -27,7 +27,9 @@ function HeaderLinks(props) {
         simple={!(window.innerWidth > 959)}
         aria-label="Dashboard"
         className={classes.buttonLink}
-        to="/dashboard/main"
+        to={window.location.pathname.includes('marketer')
+          ? '/dashboard/marketer/main'
+          : '/dashboard/creator/main'}
         component={Link}
       >
         <Tooltip title="대시보드로 이동">
@@ -41,7 +43,9 @@ function HeaderLinks(props) {
         simple={!(window.innerWidth > 959)}
         aria-label="User"
         className={classes.buttonLink}
-        to="/dashboard/user"
+        to={window.location.pathname.includes('marketer')
+          ? '/dashboard/marketer/user'
+          : '/dashboard/creator/user'}
         component={Link}
       >
         <Tooltip title="계정관리로 이동">

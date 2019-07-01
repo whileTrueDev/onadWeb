@@ -3,30 +3,29 @@ import axios from 'axios';
 import Table from '../components/Table/Table';
 
 const AdminConfirm = (props) => {
-
   const [data, setData] = React.useState([['', '', '', '', '']]);
-  
-  function confirmClickButton(e){
-    var bannerId = e.target.id;
-    axios.post('/admin/confirmState', {bannerId})
-    .then(refreshPage())
-    .catch((err) => {
-      console.log(err);
-    });
+
+  function refreshPage() {
+    window.location.reload();
   }
 
-  function refreshPage(){
-    window.location.reload()
+  function confirmClickButton(e) {
+    const bannerId = e.target.id;
+    axios.post('/admin/confirmState', { bannerId })
+      .then(refreshPage())
+      .catch((err) => {
+        console.log(err);
+      });
   }
 
-  function handleSeleted(e){
-    var bannerId = e.target.name;
-    var denialReason = e.target.value;
-    axios.post('/admin/rejectBanner', {denialReason, bannerId})
-    .then(refreshPage())
-    .catch((err) => {
-      console.log(err) ;
-    });
+  function handleSeleted(e) {
+    const bannerId = e.target.name;
+    const denialReason = e.target.value;
+    axios.post('/admin/rejectBanner', { denialReason, bannerId })
+      .then(refreshPage())
+      .catch((err) => {
+        console.log(err);
+      });
   }
 
   useEffect(() => {
@@ -43,7 +42,7 @@ const AdminConfirm = (props) => {
 
   return (
     <React.Fragment>
-     
+
       <Table
         tableHeaderColor="primary"
         tableHead={['이미지', '배너이름', '광고주', '카테고리', '승인하기']}
@@ -53,8 +52,7 @@ const AdminConfirm = (props) => {
       />
 
     </React.Fragment>
-     
-  )
 
-}
+  );
+};
 export default AdminConfirm;

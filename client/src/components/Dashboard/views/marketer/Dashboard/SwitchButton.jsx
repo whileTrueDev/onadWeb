@@ -113,7 +113,7 @@ function useUpdateData(url, history) {
         setLoading(false);
         setSuccess(res.data);
         if (res.data === 'success') {
-          history.push('/dashboard/main');
+          history.push('/dashboard/marketer/main');
         }
       }).catch((err) => {
         setError(err);

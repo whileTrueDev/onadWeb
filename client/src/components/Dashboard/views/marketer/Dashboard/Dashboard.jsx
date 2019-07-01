@@ -101,8 +101,8 @@ function useAdStartModal() {
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedBanner, setSelectedBanner] = useState({});
 
-  function handleModalOpen(name) {
-    setSelectedBanner(name);
+  function handleModalOpen(img) {
+    setSelectedBanner(img);
     setModalOpen(true);
   }
 
@@ -135,27 +135,17 @@ const Dashboard = (props) => {
           {/* 광고캐시 잔액 */}
           <GridItem xs={12} sm={6} md={12}>
             <Card>
-              <CardHeader color="info" stats icon>
-                <CardIcon color="info">
+              <CardHeader color="blueGray" stats icon>
+                <CardIcon color="blueGray">
                   <AttachMoney />
                 </CardIcon>
                 <p className={classes.cardCategory}>광고 캐시 잔액</p>
                 {cashData.loading && <div style={{ textAlign: 'center' }}><CircularProgress /></div>}
                 {!cashData.loading && cashData.error
                   && (
-                    <div>
-                      <h4 className={classes.cardTitle}>
-                        {'광고 캐시가 없어요!'}
-                      </h4>
-                      <Button
-                        style={{ display: 'flex' }}
-                        color="info"
-                        to="/dashboard/cash"
-                        component={Link}
-                      >
-                      충전하러 가기
-                      </Button>
-                    </div>
+                  <h3 className={classes.cardTitle}>
+                    <small>0 원</small>
+                  </h3>
                   )}
                 {!cashData.loading && cashData.payload
                   && (
@@ -168,7 +158,7 @@ const Dashboard = (props) => {
               <CardFooter stats>
                 <div className={classes.stats}>
                   <Info><Money /></Info>
-                  <Link to="/dashboard/cash">
+                  <Link to="/dashboard/marketer/cash">
                     <span className={classes.infoText}>충전하러 가기</span>
                   </Link>
                 </div>
@@ -178,7 +168,7 @@ const Dashboard = (props) => {
           {/* 현재 나의 광고 상태 */}
           <GridItem xs={12} sm={6} md={12}>
             <Card>
-              <CardHeader color="success" stats>
+              <CardHeader color="blueGray" stats>
                 <p className={classes.cardTitleWhite}>현재 나의 상태</p>
               </CardHeader>
               <CardBody>
@@ -192,7 +182,7 @@ const Dashboard = (props) => {
                     <Button
                       style={{ display: 'flex' }}
                       color="info"
-                      to="/dashboard/banner"
+                      to="/dashboard/marketer/banner"
                       component={Link}
                     >
                   배너 관리하러 가기
@@ -209,7 +199,7 @@ const Dashboard = (props) => {
         {/* 승인된 배너 */}
         <GridItem xs={12} sm={6} md={8}>
           <Card>
-            <CardHeader color="info" stats>
+            <CardHeader color="blueGray" stats>
               <h4 className={classes.cardTitleWhite}>승인된 배너</h4>
               <p className={classes.cardCategoryWhite}>업로드한 배너 중 승인된 배너의 목록입니다.</p>
             </CardHeader>
@@ -225,7 +215,7 @@ const Dashboard = (props) => {
                   <Button
                     style={{ display: 'flex' }}
                     color="info"
-                    to="/dashboard/banner"
+                    to="/dashboard/marketer/banner"
                     component={Link}
                   >
                   배너 관리하러 가기
@@ -281,7 +271,7 @@ const Dashboard = (props) => {
       <GridContainer>
         <GridItem xs={12} sm={6} md={12}>
           <CustomTabs
-            headerColor="success"
+            headerColor="blueGray"
             tabs={[
               {
                 tabName: '광고될 크리에이터 목록',

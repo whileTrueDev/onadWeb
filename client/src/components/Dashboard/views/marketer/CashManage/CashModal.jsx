@@ -5,7 +5,6 @@ import axios from 'axios';
 // material ui core
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import Modal from '@material-ui/core/Modal';
 import IconButton from '@material-ui/core/IconButton';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -22,32 +21,10 @@ import DialogActions from '@material-ui/core/DialogActions';
 import Close from '@material-ui/icons/CloseOutlined';
 // customized component
 import Button from '../../../components/CustomButtons/Button';
+import Modal from '../../../components/CustomModal/CustomModal';
 import Warning from '../../../components/Typography/Warning';
 
 const useStyles = makeStyles(theme => ({
-  modal: {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 600,
-    backgroundColor: theme.palette.background.paper,
-    boxShadow: theme.shadows[5],
-  },
-  sectionButton: {
-    flex: 1,
-    display: 'none',
-    justifyContent: 'flex-end',
-    [theme.breakpoints.up('md')]: {
-      display: 'flex',
-    },
-  },
-  inModalContent: {
-    padding: theme.spacing(3),
-    marginLeft: 30,
-    marginRight: 55,
-    outline: 'none',
-  },
   contentWrapper: {
     margin: '20px 0px 20px 0px',
   },
@@ -145,27 +122,12 @@ function CashModal(props) {
 
   return (
     <Modal
-      aria-labelledby="simple-modal-title"
-      aria-describedby="simple-modal-description"
       open={open}
       onClose={handleClose}
+      title="광고캐시 충전"
+      color="blueGray"
     >
-      <div className={classes.modal}>
-        {/* 상위 바 */}
-        <AppBar color="primary" position="static">
-          <Toolbar variant="dense">
-            <Typography variant="h6" color="inherit">
-            광고캐시 충전
-            </Typography>
-            <div className={classes.sectionButton}>
-              <IconButton color="inherit" onClick={handleClose}>
-                <Close />
-              </IconButton>
-            </div>
-          </Toolbar>
-        </AppBar>
-
-        {/* 모달내용 */}
+      <div>
         <div className={classes.inModalContent}>
           {/* 보유한 광고캐시 금액 */}
           <div className={classes.contentWrapper}>
@@ -195,28 +157,28 @@ function CashModal(props) {
                 value="신용카드"
                 control={<Radio color="primary" />}
                 label={(
-                  <Typography variant="h7" className={classes.selectValue}>
+                  <Typography variant="subtitle1" className={classes.selectValue}>
                     신용카드
                   </Typography>
-)}
+                )}
               />
               <FormControlLabel
                 value="계좌이체"
                 control={<Radio color="primary" />}
                 label={(
-                  <Typography variant="h7" className={classes.selectValue}>
+                  <Typography variant="subtitle1" className={classes.selectValue}>
                     계좌이체
                   </Typography>
-)}
+                )}
               />
               <FormControlLabel
                 value="무통장입금"
                 control={<Radio color="primary" />}
                 label={(
-                  <Typography variant="h7" className={classes.selectValue}>
+                  <Typography variant="subtitle1" className={classes.selectValue}>
                     무통장입금
                   </Typography>
-)}
+                )}
               />
             </RadioGroup>
           </div>
@@ -237,37 +199,37 @@ function CashModal(props) {
                 value="100000"
                 control={<Radio color="primary" />}
                 label={(
-                  <Typography variant="h7" className={classes.selectValue}>
+                  <Typography variant="subtitle1" className={classes.selectValue}>
                     100,000 원
                   </Typography>
-)}
+                )}
               />
               <FormControlLabel
                 value="500000"
                 control={<Radio color="primary" />}
                 label={(
-                  <Typography variant="h7" className={classes.selectValue}>
+                  <Typography variant="subtitle1" className={classes.selectValue}>
                     500,000 원
                   </Typography>
-)}
+                )}
               />
               <FormControlLabel
                 value="1000000"
                 control={<Radio color="primary" />}
                 label={(
-                  <Typography variant="h7" className={classes.selectValue}>
+                  <Typography variant="subtitle1" className={classes.selectValue}>
                     1,000,000 원
                   </Typography>
-)}
+                )}
               />
               <FormControlLabel
                 value="5000000"
                 control={<Radio color="primary" />}
                 label={(
-                  <Typography variant="h7" className={classes.selectValue}>
+                  <Typography variant="subtitle1" className={classes.selectValue}>
                     5,000,000 원
                   </Typography>
-)}
+                )}
               />
             </RadioGroup>
             <div style={{ position: 'absolute', top: 50, left: 200 }}>
@@ -275,7 +237,7 @@ function CashModal(props) {
                 <TextField
                   id="selectValue"
                   label={(
-                    <Typography variant="h6" className={classes.selectValue}>
+                    <Typography variant="subtitle1" className={classes.selectValue}>
                     충전할 금액을 입력하세요
                     </Typography>
                   )}
@@ -285,7 +247,8 @@ function CashModal(props) {
                   onChange={handleChange}
                   margin="normal"
                   variant="outlined"
-                  // helperText={((chargeCash >= selectValue) && (selectValue >= 0)) ? '' : '입력이 잘못되었어요!'}
+                  // helperText={((chargeCash >= selectValue)
+                  // && (selectValue >= 0)) ? '' : '입력이 잘못되었어요!'}
                 />
               </Tooltip>
             </div>
@@ -315,7 +278,7 @@ function CashModal(props) {
         >
           <AppBar color="primary" position="static" elevation={1}>
             <Toolbar variant="dense">
-              <Typography variant="h6" color="inherit">
+              <Typography variant="subtitle1" color="inherit">
                 입력하신대로 캐시 충전 진행하시겠어요?
               </Typography>
               <div className={classes.sectionButton}>
@@ -335,7 +298,7 @@ function CashModal(props) {
               {`충전 이후 보유 광고캐시 : ${totaldebit}`}
             </Typography>
             <Warning>
-              <Typography className={classes.dialogContent} variant="h6" marked="center">
+              <Typography className={classes.dialogContent} variant="subtitle1" marked="center">
                 {'추후 도입기능 입니다'}
               </Typography>
             </Warning>
@@ -358,8 +321,8 @@ function CashModal(props) {
 CashModal.propTypes = {
   open: PropTypes.bool.isRequired,
   handleClose: PropTypes.func.isRequired,
-  chargeCash: PropTypes.string.isRequired
-  
+  chargeCash: PropTypes.string.isRequired,
+
 };
 
 export default CashModal;

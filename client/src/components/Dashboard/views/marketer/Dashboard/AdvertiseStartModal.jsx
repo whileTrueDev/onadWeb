@@ -159,7 +159,7 @@ function AdvertiseStartModal(props) {
           console.log(err);
         });
     }
-    history.push('/dashboard/main');
+    history.push('/dashboard/marketer/main');
   }
 
   return (

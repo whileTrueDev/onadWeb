@@ -181,7 +181,8 @@ const creatorCalcuate = (priceList) =>{
   return new Promise((resolve, reject)=>{
     pool.getConnection(function(err, conn){
       if(err){
-        conn.release(); 
+        //conn.release();
+        console.log(err); 
         reject(err);
       } 
       priceList.map((row)=>{
@@ -204,21 +205,24 @@ const marketerCalculate = (priceList) => {
   return new Promise((resolve, reject)=>{
     pool.getConnection(function(err, conn){
       if(err){
-        conn.release();       
+        console.log(err);
+        //conn.release();       
         reject(err);
       }else{
         priceList.map((row)=>{
           const marketerId = row.contractionId.split('/')[0].split('_')[0];
           conn.query(`SELECT marketerDebit FROM marketerCost WHERE marketerId = ? `, [marketerId], function(err, result, fields){ 
             if(err){
-              conn.release(); 
+              console.log(err);
+              //conn.release(); 
               reject(err);
             } 
             const debit = result[0].marketerDebit;
             if(debit <= row.price){
               conn.query(`UPDATE marketerCost SET marketerDebit = 0 WHERE marketerId = ? `, [marketerId], function(err, result, fields){ 
                 if(err){
-                  conn.release(); 
+                  console.log(err);
+                  //conn.release(); 
                   reject(err);
                 }
                 conn.release();
@@ -226,7 +230,8 @@ const marketerCalculate = (priceList) => {
               })
               conn.query(`UPDATE bannerMatched SET contractionState = 1 WHERE marketerId = ? `, [marketerId], function(err, result, fields){
                 if(err){
-                  conn.release(); 
+                  console.log(err);
+                  //conn.release(); 
                   reject(err);
                 }
                 conn.release();  
@@ -236,7 +241,8 @@ const marketerCalculate = (priceList) => {
             }else{
               conn.query(`UPDATE marketerCost SET marketerDebit = marketerDebit - ? WHERE marketerId = ? `, [row.price, marketerId], function(err, result, fields){ 
                 if(err){
-                  conn.release(); 
+                  console.log(err);
+                  //conn.release(); 
                   reject(err);
                 }
                 conn.release(); 
@@ -255,13 +261,15 @@ const contractionCalculate = (priceList) => {
   return new Promise((resolve, reject)=>{
     pool.getConnection(function(err, conn){
       if(err){
-        conn.release(); 
+        console.log(err);
+        //conn.release(); 
         reject(err);
       } 
       priceList.map((row)=>{
         conn.query(`INSERT INTO contractionValue(contractionId, contractionTotalValue) VALUES (?, ?);`, [row.contractionId, row.price], function(err, result, fields){
           if(err){
-            conn.release(); 
+            console.log(err);
+            //conn.release(); 
             reject(err);
           }else{
             logger.info(row.price + '원을 ' + row.contractionId + " 에 등록하였습니다.");
@@ -324,10 +332,8 @@ calculation();
 //   calculation();
 // })
 
-//module.exports = scheduler;
-
-
-
+// module.exports = scheduler;
+calculation();
 
 
 
