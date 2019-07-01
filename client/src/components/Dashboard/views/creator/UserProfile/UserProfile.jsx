@@ -11,6 +11,7 @@ import GridItem from '../../../components/Grid/GridItem';
 import GridContainer from '../../../components/Grid/GridContainer';
 import Button from '../../../components/CustomButtons/Button';
 import Card from '../../../components/Card/Card';
+import CardAvatar from '../../../components/Card/CardAvatar';
 import CardHeader from '../../../components/Card/CardHeader';
 import CardBody from '../../../components/Card/CardBody';
 import AccountNumberForm from '../IncomeManage/AccountNumberForm';
@@ -143,7 +144,6 @@ function UserProfile(props) {
             <CardAvatar profile>
               <a href="#pablo" onClick={e => e.preventDefault()}>
                 {/* <img src={userData.creatorLogo} alt="..." /> */}
-                <img />
               </a>
             </CardAvatar>
             <CardBody profile>

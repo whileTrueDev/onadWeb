@@ -9,3 +9,8 @@ log/*
 /log/*
 /bin/log
 *.log
+
+calculationLog/*
+*/calculationLog
+/middlewares/bin/calculationLog
+/bin/calculationLog

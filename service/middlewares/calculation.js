@@ -131,7 +131,8 @@ const getPrice = (viewdata) => {
   return new Promise((resolve, reject)=>{
     pool.getConnection(function(err, conn){
       if(err){ 
-        conn.release();
+        console.log(err);
+        //conn.release();
         reject(err);
       }
       const creatorId = viewdata.contractionId.split('/')[1];
@@ -174,6 +175,7 @@ async function getPriceList([creatorList, bannerList]){
       }
     })
   )
+  console.log(viewerList);
   return viewerList;
 }
 
@@ -187,9 +189,14 @@ const creatorCalcuate = (priceList) =>{
       } 
       priceList.map((row)=>{
         const creatorId = row.contractionId.split('/')[1];
-        conn.query(`INSERT INTO creatorIncome (creatorId, creatorTotalIncome, creatorReceivable)  SELECT creatorId, creatorTotalIncome + ? , creatorReceivable + ? FROM creatorIncome WHERE creatorId = ? ORDER BY date DESC LIMIT 1`, [row.price, row.price, creatorId], function(err, result, fields){ 
+        conn.query(`INSERT INTO 
+        creatorIncome (creatorId, creatorTotalIncome, creatorReceivable)  
+        SELECT creatorId, creatorTotalIncome + ? , creatorReceivable + ? 
+        FROM creatorIncome WHERE creatorId = ? 
+        ORDER BY date DESC LIMIT 1`, [row.price, row.price, creatorId], function(err, result, fields){ 
           if(err){
-            conn.release(); 
+            console.log(err);
+            //conn.release(); 
             reject(err);
           } 
           logger.info(row.price + '원을 ' + creatorId + " 에게 입금하였습니다.");
@@ -206,7 +213,6 @@ const marketerCalculate = (priceList) => {
     pool.getConnection(function(err, conn){
       if(err){
         console.log(err);
-        //conn.release();       
         reject(err);
       }else{
         priceList.map((row)=>{
@@ -214,7 +220,6 @@ const marketerCalculate = (priceList) => {
           conn.query(`SELECT marketerDebit FROM marketerCost WHERE marketerId = ? `, [marketerId], function(err, result, fields){ 
             if(err){
               console.log(err);
-              //conn.release(); 
               reject(err);
             } 
             const debit = result[0].marketerDebit;
@@ -222,19 +227,15 @@ const marketerCalculate = (priceList) => {
               conn.query(`UPDATE marketerCost SET marketerDebit = 0 WHERE marketerId = ? `, [marketerId], function(err, result, fields){ 
                 if(err){
                   console.log(err);
-                  //conn.release(); 
                   reject(err);
                 }
-                conn.release();
                 logger.info('원 금액 ' + row.price + '를 채우지 못하고 ' + debit + '원을 ' + marketerId + " 에게서 지급받았습니다.");
               })
               conn.query(`UPDATE bannerMatched SET contractionState = 1 WHERE marketerId = ? `, [marketerId], function(err, result, fields){
                 if(err){
                   console.log(err);
-                  //conn.release(); 
                   reject(err);
-                }
-                conn.release();  
+                } 
                 logger.info('계약이 모두 이행되었습니다.');
                 
               })
@@ -242,15 +243,14 @@ const marketerCalculate = (priceList) => {
               conn.query(`UPDATE marketerCost SET marketerDebit = marketerDebit - ? WHERE marketerId = ? `, [row.price, marketerId], function(err, result, fields){ 
                 if(err){
                   console.log(err);
-                  //conn.release(); 
                   reject(err);
                 }
-                conn.release(); 
                 logger.info(row.price + '원을 ' + marketerId + " 에게서 지급받았습니다.");
               })
             }            
           })
         })
+        conn.release();
         resolve();
       } 
     })
@@ -282,58 +282,59 @@ const contractionCalculate = (priceList) => {
   })
 }
 
-function calculation(){
-  // const [streamerList, bannerList] = await Promise.all([getStreamerList(), getBannerList()]);
-  // const creatorList  = await getCreatorList(streamerList);
-  // const priceList = await getPriceList([creatorList, bannerList]);
+async function calculation(){
+  const [streamerList, bannerList] = await Promise.all([getStreamerList(), getBannerList()]);
+  const creatorList  = await getCreatorList(streamerList);
+  const priceList = await getPriceList([creatorList, bannerList]);
 
 
-  //Promise Chaining
-  console.log(`계산을 실시합니다. 시작 시각 : ${new Date().toLocaleString()}`);  
-  Promise.all([getStreamerList(), getBannerList()])
-  .then( async ([streamerList, bannerList]) => {
-    const creatorList = await getCreatorList(streamerList);
-    return [creatorList, bannerList];
-  })
-  .then(([creatorList, bannerList])=>{
-    return getPriceList([creatorList, bannerList]);
-  })
-  .then((priceList)=>{
-    Promise.all([contractionCalculate(priceList), creatorCalcuate(priceList), marketerCalculate(priceList)])
-    .then(()=>{
-      console.log(`계산이 완료되었습니다. 종료 시각 : ${new Date().toLocaleString()}`);
-    })
-    .catch((err)=>{
-      logger.error(err.sqlMessage);
-    })
-  })
-  .catch((err)=>{
-    logger.error(err.sqlMessage);
-  })
-  
-  // if(priceList[0] === undefined){
-  //   console.log('존재하지 않으므로 종료됩니다.', );
-  //   return;
-  // }
-
+  // //Promise Chaining
   // console.log(`계산을 실시합니다. 시작 시각 : ${new Date().toLocaleString()}`);  
-  // Promise.all([contractionCalculate(priceList), creatorCalcuate(priceList), marketerCalculate(priceList)]).then(()=>{
-  //   console.log(`계산이 완료되었습니다. 종료 시각 : ${new Date().toLocaleString()}`);
+  // Promise.all([getStreamerList(), getBannerList()])
+  // .then( async ([streamerList, bannerList]) => {
+  //   const creatorList = await getCreatorList(streamerList);
+  //   return [creatorList, bannerList];
   // })
-    
+  // .then(([creatorList, bannerList])=>{
+  //   return getPriceList([creatorList, bannerList]);
+  // })
+  // .then((priceList)=>{
+  //   Promise.all([contractionCalculate(priceList), creatorCalcuate(priceList), marketerCalculate(priceList)])
+  //   .then(()=>{
+  //     console.log(`계산이 완료되었습니다. 종료 시각 : ${new Date().toLocaleString()}`);
+  //   })
+  //   .catch((err)=>{
+  //     logger.error(err.sqlMessage);
+  //   })
+  // })
+  // .catch((err)=>{
+  //   logger.error(err.sqlMessage);
+  // })
+  
+  if(priceList[0] === undefined){
+    console.log('존재하지 않으므로 종료됩니다.', );
+    return;
+  }
+
+  console.log(`계산을 실시합니다. 시작 시각 : ${new Date().toLocaleString()}`);  
+  Promise.all([contractionCalculate(priceList), creatorCalcuate(priceList), marketerCalculate(priceList)]).then(()=>{
+   //console.log(`계산이 완료되었습니다. 종료 시각 : ${new Date().toLocaleString()}`);
+  })
+  //contractionCalculate(priceList)
+  // creatorCalcuate(priceList);
+  //marketerCalculate(priceList);
 }
 
-calculation();
+// calculation();
 
 //5,15,25,35,45,55
 
-// var scheduler = schedule.scheduleJob('5,15,25,35,45,55 * * * *', ()=>{
-//   console.log('작업을 시작합니다.')
-//   calculation();
-// })
+var scheduler = schedule.scheduleJob('5,15,25,35,45,55 * * * *', ()=>{
+  console.log('작업을 시작합니다.')
+  calculation();
+})
 
-// module.exports = scheduler;
-calculation();
+module.exports = scheduler;
 
 
 

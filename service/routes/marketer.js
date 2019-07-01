@@ -438,11 +438,11 @@ router.get('/bannerValue', function(req, res, next) {
       console.log(err)
     } else {
       const queryState = `
-        SELECT bannerId,
+        SELECT contractionId,
           SUM(contractionTotalValue) as contractionTotalValue,
           DATE_FORMAT(date, '%m-%d') as date
         FROM contractionValue
-        WHERE bannerId LIKE CONCAT('%', ?, '%')
+        WHERE contractionId LIKE CONCAT('%', ?, '%')
         AND date >= DATE_SUB(NOW(), INTERVAL 30 DAY)
         GROUP BY DATE_FORMAT(date, '%y%m%d')
         ORDER BY DATE_FORMAT(date, '%y%m%d')
