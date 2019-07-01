@@ -21,12 +21,11 @@ function Header(props) {
   } = props;
   function makeBrand() {
     let routeName;
-    routes.map((route) => {
+    routes.forEach((route) => {
       if (route.layout + route.path === props.location.pathname) {
         const { name } = route;
         routeName = name;
       }
-      return null;
     });
     return routeName;
   }

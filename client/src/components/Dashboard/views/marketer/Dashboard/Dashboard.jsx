@@ -34,13 +34,16 @@ import Button from '../../../components/CustomButtons/Button';
 import CustomTabs from '../../../components/CustomTabs/CustomTabs';
 import Table from './RecommendTable';
 import Switch from './SwitchButton';
-import AdvertiseStartModal from './AdvertiseStartModal';
+import AdvertiseStartDialog from './AdvertiseStartDialog';
 import ValueChart from './ValueChart';
 // Typography
 import SuccessTypography from '../../../components/Typography/Success';
 import DangerTypography from '../../../components/Typography/Danger';
 import Muted from '../../../components/Typography/Muted';
 import Info from '../../../components/Typography/Info';
+
+// 상수
+const WAIT_BANNER_STATE = 1; // 대기중 배너 스테이트
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -97,21 +100,21 @@ function useFetchData(url, dateRange) {
   return { payload, loading, error };
 }
 
-function useAdStartModal() {
-  const [modalOpen, setModalOpen] = useState(false);
+function useAdStartDialog() {
+  const [DialogOpen, setDialogOpen] = useState(false);
   const [selectedBanner, setSelectedBanner] = useState({});
 
-  function handleModalOpen(img) {
+  function handleDialogOpen(img) {
     setSelectedBanner(img);
-    setModalOpen(true);
+    setDialogOpen(true);
   }
 
-  function handleModalClose() {
-    setModalOpen(false);
+  function handleDialogClose() {
+    setDialogOpen(false);
   }
 
   return {
-    modalOpen, handleModalOpen, handleModalClose, selectedBanner,
+    DialogOpen, handleDialogOpen, handleDialogClose, selectedBanner,
   };
 }
 
@@ -123,9 +126,9 @@ const Dashboard = (props) => {
   const bannerData = useFetchData('/dashboard/marketer/banner');
   const tableData = useFetchData('/dashboard/marketer/creatorList');
   const {
-    modalOpen, handleModalOpen,
-    handleModalClose, selectedBanner,
-  } = useAdStartModal();
+    DialogOpen, handleDialogOpen,
+    handleDialogClose, selectedBanner,
+  } = useAdStartDialog();
 
   return (
     <div>
@@ -234,7 +237,7 @@ const Dashboard = (props) => {
                     <GridListTile
                       key={image.bannerId}
                       style={{ cursor: 'pointer' }}
-                      onClick={() => { handleModalOpen(image); }}
+                      onClick={() => { handleDialogOpen(image); }}
                     >
                       <img src={image.bannerSrc} alt={image.bannerId} />
                       <GridListTileBar
@@ -242,7 +245,7 @@ const Dashboard = (props) => {
                           root: secondClasses.titleBar,
                           actionIcon: secondClasses.icon,
                         }}
-                        actionIcon={image.confirmState === 1 ? (
+                        actionIcon={image.confirmState === WAIT_BANNER_STATE ? (
                           <div>
                             <Info>
                               {'승인'}
@@ -268,6 +271,7 @@ const Dashboard = (props) => {
         </GridItem>
       </GridContainer>
 
+      {/* 광고 될 크리에이터 목록 */}
       <GridContainer>
         <GridItem xs={12} sm={6} md={12}>
           <CustomTabs
@@ -303,9 +307,9 @@ const Dashboard = (props) => {
       </GridContainer>
 
       { !cashData.loading && cashData.payload && tableData.payload && (
-        <AdvertiseStartModal
-          open={modalOpen}
-          onClose={handleModalClose}
+        <AdvertiseStartDialog
+          open={DialogOpen}
+          onClose={handleDialogClose}
           marketerDebit={cashData.payload.marketerDebit}
           selectedBanner={selectedBanner}
           tableData={tableData.payload}
@@ -318,25 +322,7 @@ const Dashboard = (props) => {
 
 Dashboard.propTypes = {
   classes: PropTypes.object.isRequired,
+  history: PropTypes.object,
 };
 
 export default withStyles(dashboardStyle)(Dashboard);
-
-/** Tabs [0] */
-// // 내 광고 목록.
-// {
-//   tabName: '내 광고',
-//   tabIcon: Videocam,
-//   tabContent: (
-//     bannerData.loading && !bannerData.payload ? (
-//       <div style={{ textAlign: 'center' }}><CircularProgress /></div>
-//     ) : (
-//       <div>
-//         {/* <Table
-//           tableHeaderColor="danger"
-//           tableHead={['광고중 배너', '현재 상태', '노출 수', '비용', '일 예산']}
-//           tableData={[Object.values(bannerData.payload[0])]}
-//         /> */}
-//       </div>
-//     )),
-// },

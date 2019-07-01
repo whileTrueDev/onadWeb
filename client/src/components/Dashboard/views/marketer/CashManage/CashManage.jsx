@@ -17,41 +17,41 @@ import CardFooter from '../../../components/Card/CardFooter';
 import Button from '../../../components/CustomButtons/Button';
 import CardIcon from '../../../components/Card/CardIcon';
 import Snackbar from '../../../components/Snackbar/Snackbar';
-import CashModal from './CashModal';
-import ReturnCashModal from './ReturnCashModal';
+import CashDialog from './CashDialog';
+import ReturnCashDialog from './ReturnCashDialog';
 import AccountDialog from './AccountDialog';
 // styles
 import DashboardStyle from '../../../assets/jss/onad/views/dashboardStyle';
 // variable
 import { defaultCashData, defaultCash } from '../../../variables/marketerCashlist';
 
-function useCashModal() {
+function useCashDialog() {
   const [modalOpen, setModalOpen] = useState(false);
   const [modalOpen2, setModalOpen2] = useState(false);
 
-  function handleCashModalOpen() {
+  function handleCashDialogOpen() {
     setModalOpen(true);
   }
 
-  function handleCashModalOpen2() {
+  function handleCashDialogOpen2() {
     setModalOpen2(true);
   }
 
-  function handleCashModalClose() {
+  function handleCashDialogClose() {
     setModalOpen(false);
   }
 
-  function handleCashModalClose2() {
+  function handleCashDialogClose2() {
     setModalOpen2(false);
   }
 
   return {
     modalOpen,
     modalOpen2,
-    handleCashModalOpen,
-    handleCashModalClose,
-    handleCashModalOpen2,
-    handleCashModalClose2,
+    handleCashDialogOpen,
+    handleCashDialogClose,
+    handleCashDialogOpen2,
+    handleCashDialogClose2,
   };
 }
 
@@ -76,11 +76,11 @@ const CashManage = (props) => {
   const {
     modalOpen,
     modalOpen2,
-    handleCashModalOpen,
-    handleCashModalOpen2,
-    handleCashModalClose,
-    handleCashModalClose2,
-  } = useCashModal();
+    handleCashDialogOpen,
+    handleCashDialogOpen2,
+    handleCashDialogClose,
+    handleCashDialogClose2,
+  } = useCashDialog();
 
   // 계좌 입력 다이얼로그
   const { accountDialogOpen, handleDialogOpen, handleDialogClose } = useDialog();
@@ -196,7 +196,7 @@ const CashManage = (props) => {
                     <Button
                       color="info"
                       round
-                      onClick={handleCashModalOpen}
+                      onClick={handleCashDialogOpen}
                     >
                       <Payment />
                       {'캐시충전'}
@@ -204,7 +204,7 @@ const CashManage = (props) => {
                     <Button
                       color="danger"
                       round
-                      onClick={handleCashModalOpen2}
+                      onClick={handleCashDialogOpen2}
                       disabled={!accountNumber.marketerAccountNumber}
                     >
                       <Payment />
@@ -268,21 +268,21 @@ const CashManage = (props) => {
         )}
 
       {/* 광고캐쉬 신청 팝업 */}
-      <CashModal
+      <CashDialog
         open={modalOpen}
         history={history}
-        handleOpen={handleCashModalOpen}
-        handleClose={handleCashModalClose}
+        handleOpen={handleCashDialogOpen}
+        handleClose={handleCashDialogClose}
         chargeCash={cash.marketerDebit}
       />
 
       {/* 환불 신청 팝업 */}
       {accountNumber.marketerAccountNumber && (
-      <ReturnCashModal
+      <ReturnCashDialog
         open={modalOpen2}
         history={history}
-        handleOpen={handleCashModalOpen2}
-        handleClose={handleCashModalClose2}
+        handleOpen={handleCashDialogOpen2}
+        handleClose={handleCashDialogClose2}
         accountNumber={accountNumber.marketerAccountNumber}
         chargeCash={cash.marketerDebit}
       />

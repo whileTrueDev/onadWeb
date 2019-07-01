@@ -13,7 +13,6 @@ import Button from '../../../components/CustomButtons/Button';
 import dashboardStyle from '../../../assets/jss/onad/views/dashboardStyle';
 import PasswordForm from './PasswordForm';
 import UserDataForm from './UserDataForm';
-import Modal from '../../../components/CustomModal/CustomModal';
 // 마케터 유저 프로필 및 개인정보 수정 페이지
 const UserProfile = (props) => {
   const { classes } = props;

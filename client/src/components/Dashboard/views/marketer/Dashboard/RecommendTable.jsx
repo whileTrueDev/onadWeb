@@ -9,31 +9,24 @@ import TableRow from '@material-ui/core/TableRow';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import Link from '@material-ui/core/Link';
-// import Tooltip from '@material-ui/core/Tooltip';
-// import IconButton from '@material-ui/core/IconButton';
-// // icons
-// import Close from '@material-ui/icons/Close';
-
-// core components
-// import CardAvatar from '../../../components/Card/CardAvatar';
 import tableStyle from '../../../assets/jss/onad/components/tableStyle';
-import CreatorInfoModal from './CreatorInfoModal';
+import CreatorInfoDialog from './CreatorInfoDialog';
 
-function useModal() {
-  const [modalOpen, setModalOpen] = useState(false);
+function useDialog() {
+  const [DialogOpen, setDialogOpen] = useState(false);
   const [selectedCreator, setSelectedCreator] = useState('');
 
-  function handleModalOpen(name) {
+  function handleDialogOpen(name) {
     setSelectedCreator(name);
-    setModalOpen(true);
+    setDialogOpen(true);
   }
 
-  function handleModalClose() {
-    setModalOpen(false);
+  function handleDialogClose() {
+    setDialogOpen(false);
   }
 
   return {
-    modalOpen, handleModalOpen, handleModalClose, selectedCreator,
+    DialogOpen, handleDialogOpen, handleDialogClose, selectedCreator,
   };
 }
 
@@ -43,8 +36,8 @@ function CustomTable({ ...props }) {
   } = props;
 
   const {
-    modalOpen, handleModalOpen, handleModalClose, selectedCreator,
-  } = useModal();
+    DialogOpen, handleDialogOpen, handleDialogClose, selectedCreator,
+  } = useDialog();
 
   return (
     <div className={classes.tableResponsive}>
@@ -81,7 +74,7 @@ function CustomTable({ ...props }) {
                       href="/dashboard/main"
                       onClick={(e) => {
                         e.preventDefault();
-                        handleModalOpen(e.target.innerText);
+                        handleDialogOpen(e.target.innerText);
                       }}
                     >
                       {value}
@@ -98,31 +91,14 @@ function CustomTable({ ...props }) {
                 )
 
               ))}
-              {/* <Tooltip
-                  id="tooltip-top-start"
-                  title="삭제"
-                  placement="top"
-                  classes={{ tooltip: classes.tooltip }}
-                >
-                  <IconButton
-                    aria-label="Close"
-                    className={classes.tableActionButton}
-                  >
-                    <Close
-                      className={
-                    `${classes.tableActionButtonIcon} ${classes.close}`
-                  }
-                    />
-                  </IconButton>
-                </Tooltip> */}
             </TableRow>
           ))}
         </TableBody>
       </Table>
 
-      <CreatorInfoModal
-        open={modalOpen}
-        handleModalClose={handleModalClose}
+      <CreatorInfoDialog
+        open={DialogOpen}
+        handleDialogClose={handleDialogClose}
         creatorName={selectedCreator}
         tableData={tableData}
       />

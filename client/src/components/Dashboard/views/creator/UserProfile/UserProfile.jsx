@@ -12,7 +12,6 @@ import GridContainer from '../../../components/Grid/GridContainer';
 import Button from '../../../components/CustomButtons/Button';
 import Card from '../../../components/Card/Card';
 import CardHeader from '../../../components/Card/CardHeader';
-import CardAvatar from '../../../components/Card/CardAvatar';
 import CardBody from '../../../components/Card/CardBody';
 import AccountNumberForm from '../IncomeManage/AccountNumberForm';
 import Contraction from './Contraction';

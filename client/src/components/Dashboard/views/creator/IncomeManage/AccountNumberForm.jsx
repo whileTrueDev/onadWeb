@@ -1,9 +1,9 @@
 // AccountNumber를 입력하는 Form component 작성
 import React, { useState } from 'react';
 import axios from 'axios';
+import PropTypes from 'prop-types';
 import {
   DialogActions,
-  Button,
   TextField,
   withStyles,
   FormHelperText,
@@ -13,9 +13,9 @@ import {
   MenuItem,
   Divider,
   InputAdornment,
-
 } from '@material-ui/core';
-import PropTypes from 'prop-types';
+import OriginalButton from '@material-ui/core/Button';
+import Button from '../../../components/CustomButtons/Button';
 
 
 const style = theme => ({
@@ -217,9 +217,9 @@ const AccountNumberForm = (props) => {
             // endAdornment={(
             //   <InputAdornment position="end">
             //     <Divider className={classes.divider} />
-            //     <Button onClick={accountValidation}>
+            //     <OriginalButton onClick={accountValidation}>
             //     조회
-            //     </Button>
+            //     </OriginalButton>
             //   </InputAdornment>
             // )}
             inputProps={{
@@ -240,9 +240,16 @@ const AccountNumberForm = (props) => {
 
 
       <DialogActions>
+        {handleClose
+          && (
+          <Button onClick={handleClose}>
+              취소
+          </Button>
+          )}
         <Button
           type="submit"
           value="Submit"
+          color="info"
           className={
             !handleClose
               ? 'MuiButtonBase-root MuiButton-root RegularButton-button-133 RegularButton-primary-136 MuiButton-text'
@@ -251,12 +258,6 @@ const AccountNumberForm = (props) => {
         >
           등록
         </Button>
-        {handleClose
-        && (
-        <Button color="primary" onClick={handleClose}>
-            취소
-        </Button>
-        )}
       </DialogActions>
     </form>
   );

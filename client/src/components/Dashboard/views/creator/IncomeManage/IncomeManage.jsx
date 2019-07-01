@@ -35,7 +35,7 @@ import CardIcon from '../../../components/Card/CardIcon';
 import WarningTypo from '../../../components/Typography/Warning';
 import SuccessTypo from '../../../components/Typography/Success';
 import Snackbar from '../../../components/Snackbar/Snackbar';
-import WithdrawlModal from './WithdrawModal';
+import WithdrawlDialog from './WithdrawDialog';
 import AccountDialog from './AccountDialog';
 // data
 import setChartjsData from '../../../variables/charts';
@@ -119,18 +119,18 @@ function useSelectValue() {
   return { value, handleChange };
 }
 
-function useWithdrawModal() {
-  const [modalOpen, setModalOpen] = useState(false);
+function useWithdrawDialog() {
+  const [DialogOpen, setDialogOpen] = useState(false);
 
-  function handleWithdrawModalOpen() {
-    setModalOpen(true);
+  function handleWithdrawDialogOpen() {
+    setDialogOpen(true);
   }
 
-  function handleWithdrawModalClose() {
-    setModalOpen(false);
+  function handleWithdrawDialogClose() {
+    setDialogOpen(false);
   }
 
-  return { modalOpen, handleWithdrawModalOpen, handleWithdrawModalClose };
+  return { DialogOpen, handleWithdrawDialogOpen, handleWithdrawDialogClose };
 }
 
 function Income(props) {
@@ -149,10 +149,10 @@ function Income(props) {
 
   // 수익금 출금 모달창
   const {
-    modalOpen,
-    handleWithdrawModalOpen,
-    handleWithdrawModalClose,
-  } = useWithdrawModal();
+    DialogOpen,
+    handleWithdrawDialogOpen,
+    handleWithdrawDialogClose,
+  } = useWithdrawDialog();
 
   // 계좌 입력 다이얼로그
   const { accountDialogOpen, handleDialogOpen, handleDialogClose } = useDialog();
@@ -348,7 +348,7 @@ function Income(props) {
                   <Button
                     color="success"
                     round
-                    onClick={handleWithdrawModalOpen}
+                    onClick={handleWithdrawDialogOpen}
                     disabled={!incomeData.payload.creatorAccountNumber}
                   >
                     <Payment />
@@ -406,18 +406,18 @@ function Income(props) {
       {/* 출금 신청 팝업 */}
       {!incomeData.loading && incomeData.payload.creatorAccountNumber
       && (
-      <WithdrawlModal
-        open={modalOpen}
+      <WithdrawlDialog
+        open={DialogOpen}
         history={history}
-        handleOpen={handleWithdrawModalOpen}
-        handleClose={handleWithdrawModalClose}
+        handleOpen={handleWithdrawDialogOpen}
+        handleClose={handleWithdrawDialogClose}
         accountNumber={incomeData.payload.creatorAccountNumber}
         receivable={incomeData.payload.creatorReceivable}
       />
       )}
 
       {/* 계좌 입력 안했을 시 링크 문구 notification창 */}
-      {!incomeData.loading && !incomeData.payload.creatorAccountNumber
+      {!incomeData.loading && incomeData.payload
       && (
       <Snackbar
         place="bl"

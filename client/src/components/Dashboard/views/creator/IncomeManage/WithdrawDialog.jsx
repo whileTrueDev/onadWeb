@@ -5,7 +5,6 @@ import axios from 'axios';
 // material ui core
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import Modal from '@material-ui/core/Modal';
 import IconButton from '@material-ui/core/IconButton';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -15,35 +14,18 @@ import RadioGroup from '@material-ui/core/RadioGroup';
 import Radio from '@material-ui/core/Radio';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import TextField from '@material-ui/core/TextField';
-import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
 // icons
 import Close from '@material-ui/icons/CloseOutlined';
 // customized component
 import Button from '../../../components/CustomButtons/Button';
+import Dialog from '../../../components/Dialog/Dialog';
 import Warning from '../../../components/Typography/Warning';
 
 const useStyles = makeStyles(theme => ({
-  modal: {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 600,
-    backgroundColor: theme.palette.background.paper,
-    boxShadow: theme.shadows[5],
-  },
-  sectionButton: {
-    flex: 1,
-    display: 'none',
-    justifyContent: 'flex-end',
-    [theme.breakpoints.up('md')]: {
-      display: 'flex',
-    },
-  },
-  inModalContent: {
-    padding: theme.spacing(3),
+  inDialogContent: {
+    padding: theme.spacing(1),
     marginLeft: 30,
     marginRight: 55,
     outline: 'none',
@@ -57,7 +39,7 @@ const useStyles = makeStyles(theme => ({
   contentDetail: {
     marginTop: theme.spacing(1),
   },
-  inModalButton: {
+  inDialogButton: {
     textAlign: 'center',
   },
   selectValue: {
@@ -110,7 +92,7 @@ function useValue(defaultValue) {
   return { selectValue, handleChange };
 }
 
-function WithdrawModal(props) {
+function WithdrawDialog(props) {
   const classes = useStyles();
   const {
     open, handleClose, accountNumber, receivable, history,
@@ -142,34 +124,36 @@ function WithdrawModal(props) {
       });
 
       handleSnackClose();
-      history.push('/dashboard/income');
+      history.push('/dashboard/creator/income');
     }
   }
 
   return (
-    <Modal
-      aria-labelledby="simple-modal-title"
-      aria-describedby="simple-modal-description"
+    <Dialog
       open={open}
       onClose={handleClose}
+      title="출금 신청"
+      maxWidth="sm"
+      fullWidth
+      buttons={(
+        <div>
+          <Button onClick={handleClose}>
+              취소
+          </Button>
+          <Button
+            color="info"
+            onClick={handleClick}
+            disabled={(!(receivable >= selectValue)) || !(selectValue >= 0)}
+          >
+              진행
+          </Button>
+        </div>
+      )}
     >
-      <div className={classes.modal}>
-        {/* 상위 바 */}
-        <AppBar color="primary" position="static">
-          <Toolbar variant="dense">
-            <Typography variant="h6" color="inherit">
-            출금 신청
-            </Typography>
-            <div className={classes.sectionButton}>
-              <IconButton color="inherit" onClick={handleClose}>
-                <Close />
-              </IconButton>
-            </div>
-          </Toolbar>
-        </AppBar>
+      <div className={classes.Dialog}>
 
         {/* 모달내용 */}
-        <div className={classes.inModalContent}>
+        <div className={classes.inDialogContent}>
           {/* 출금계좌 */}
           <div className={classes.contentWrapper}>
             <Typography variant="subtitle1" id="select-account" className={classes.contentTitle}>
@@ -305,43 +289,22 @@ function WithdrawModal(props) {
               </Tooltip>
             </div>
           </div>
-
-          {/* 버튼 */}
-          <div className={classnames(classes.contentWrapper, classes.inModalButton)}>
-            <Button onClick={handleClose}>
-              취소
-            </Button>
-            <Button
-              color="info"
-              onClick={handleClick}
-              disabled={(!(receivable >= selectValue)) || !(selectValue >= 0)}
-            >
-              진행
-            </Button>
-          </div>
         </div>
         {/* 출금 신청 완료 시의 notification */}
         <Dialog
           open={withdrawalSnack}
-          keepMounted
           onClose={handleSnackClose}
-          aria-labelledby="alert-dialog-title"
-          aria-describedby="alert-dialog-description"
+          buttons={(
+            <div>
+              <Button onClick={handleOnlyDialogClose}>
+              취소
+              </Button>
+              <Button onClick={handleSubmitClick} color="info">
+              진행
+              </Button>
+            </div>
+          )}
         >
-          <AppBar color="primary" position="static" elevation={1}>
-            <Toolbar variant="dense">
-              <Typography variant="h6" color="inherit">
-                입력하신대로 출금 진행하시겠어요?
-              </Typography>
-              <div className={classes.sectionButton}>
-                <IconButton color="inherit" onClick={handleOnlyDialogClose}>
-                  <Close />
-                </IconButton>
-              </div>
-            </Toolbar>
-          </AppBar>
-
-          <Divider />
           <DialogContent className={classes.dialog}>
             <Typography className={classes.dialogContent} variant="h5" marked="center">
               {`출금 신청액 : ${selectValue}`}
@@ -350,31 +313,23 @@ function WithdrawModal(props) {
               {`출금 이후 잔여 출금 가능 금액 : ${receivable - selectValue}`}
             </Typography>
             <Warning>
-              <Typography className={classes.dialogContent} variant="h6" marked="center">
+              <Typography variant="h6" marked="center">
                 {'입금까지 하루 또는 이틀이 소요되어요!!'}
               </Typography>
             </Warning>
           </DialogContent>
-          <DialogActions>
-            <Button onClick={handleOnlyDialogClose}>
-              취소
-            </Button>
-            <Button onClick={handleSubmitClick} color="info">
-              진행
-            </Button>
-          </DialogActions>
         </Dialog>
 
       </div>
-    </Modal>
+    </Dialog>
   );
 }
 
-WithdrawModal.propTypes = {
+WithdrawDialog.propTypes = {
   open: PropTypes.bool.isRequired,
   handleClose: PropTypes.func.isRequired,
   accountNumber: PropTypes.string.isRequired,
   receivable: PropTypes.number.isRequired,
 };
 
-export default WithdrawModal;
+export default WithdrawDialog;

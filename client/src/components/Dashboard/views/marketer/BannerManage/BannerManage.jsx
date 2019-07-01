@@ -86,7 +86,7 @@ const BannerIcon = (props) => {
       </InfoTypography>
     );
     // 승인된 State
-  } if (confirmState === 1) {
+  } if (confirmState === 1 || confirmState === 3) {
     return (
       <SuccessTypography>
         <Check />
@@ -156,7 +156,14 @@ const BannerGridList = (props) => {
               actionIcon: imageClasses.icon,
             }}
             actionIcon={(
-              <BannerIcon confirmState={banner.confirmState} alarm={alarm} banner={banner} handleDelete={handleDelete} handleReason={handleReason} cols={cols} />
+              <BannerIcon
+                confirmState={banner.confirmState}
+                alarm={alarm}
+                banner={banner}
+                handleDelete={handleDelete}
+                handleReason={handleReason}
+                cols={cols}
+              />
             )}
           />
         </GridListTile>
@@ -195,7 +202,7 @@ const BannerManage = (props) => {
           res.data[1].map((banner) => {
             if (banner.confirmState === 0) {
               continueBanners.push(banner);
-            } else if (banner.confirmState === 1) {
+            } else if (banner.confirmState === 1 || banner.confirmState === 3) {
               completeBanners.push(banner);
             } else {
               failureBanners.push(banner);

@@ -1,5 +1,6 @@
 const express = require('express');
 const pool = require('../model/connectionPool');
+const doQuery = require('../model/doQuery');
 const preprocessing = require('../middlewares/preprocessingData/');
 const sortRows = preprocessing.sortRows;
 const cashlist = preprocessing.cashlist;
@@ -385,7 +386,7 @@ router.post('/bannerStop', function(req, res, next) {
         conn.query(queryState1, queryArray1, function(err, result, fields) {
           // 이미 이 배너와 크리에이터의 contraction이 존재할 때
           if (result.length > 0) {
-            // state를 1으로 수정한다 (1: 광고 완료됨)
+            // state를 2으로 수정한다 (2: 광고 중단됨)
             const updateStateQuery = `
               UPDATE bannerMatched
               SET contractionState = ?
@@ -745,6 +746,36 @@ router.get('/accountNumber', function(req, res, next) {
     }
   })
 })
+
+// bannerMatched의 특정 배너와 계약된 크리에이터 조회
+router.get('/contraction/creatorList', function(req, res, next) {
+  const { bannerId } = req.query;
+  
+  const BANNER_ID_INDEX = 1; // contractionId 의 bannerId 부분
+  const PAUSED_STATE = 2; // 중단된 배너의 경우만
+  const query = `
+  SELECT creatorName
+  FROM bannerMatched
+  JOIN creatorInfo as ci
+  ON ci.creatorId = SUBSTRING_INDEX(contractionId, '/', -1)
+  WHERE (SUBSTRING_INDEX(contractionId, '/', ?) = ? AND contractionState = ?)`;
+  const queryArray = [BANNER_ID_INDEX, bannerId, PAUSED_STATE];
+
+  doQuery(query, queryArray)
+    .then((data)=>{
+      const { error, result } = data;
+      if (error) {
+        res.send(error)
+      };
+      if (result.length > 0) {
+        let responseData = [];
+        result.map((row) => {
+          responseData.push((row.creatorName));
+        })
+        res.send(responseData);
+      }
+    })
+});
 
 
 module.exports = router;

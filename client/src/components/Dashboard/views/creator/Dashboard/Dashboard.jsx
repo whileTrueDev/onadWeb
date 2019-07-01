@@ -248,12 +248,6 @@ const Dashboard = (props) => {
 
 Dashboard.propTypes = {
   classes: PropTypes.object.isRequired,
-  session: PropTypes.object,
-};
-
-
-Dashboard.defaultProps = {
-  session: {},
 };
 
 

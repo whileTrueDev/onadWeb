@@ -8,18 +8,14 @@ import {
   Paper,
   Typography,
   Divider,
-  Modal,
-  AppBar,
-  Toolbar,
-  IconButton,
 } from '@material-ui/core';
 import green from '@material-ui/core/colors/green';
 import makeStyles from '@material-ui/core/styles/makeStyles';
-import Close from '@material-ui/icons/Close';
 import Done from '@material-ui/icons/Done';
 import Clear from '@material-ui/icons/Clear';
 
 import Button from '../../../components/CustomButtons/Button';
+import Dialog from '../../../components/Dialog/Dialog';
 import SuccessTypo from '../../../components/Typography/Success';
 import DangerTypo from '../../../components/Typography/Danger';
 import terms from './contractionConfig';
@@ -50,55 +46,30 @@ const useStyles = makeStyles(theme => ({
     alignItems: 'center',
     fontSize: 13,
   },
-  button: {
-    marginTop: theme.spacing(1),
-    marginRight: theme.spacing(1),
-  },
-  modal: {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 600,
-    backgroundColor: theme.palette.background.paper,
-    boxShadow: theme.shadows[5],
-    fontWeight: 'bold',
-  },
-  sectionButton: {
-    flex: 1,
-    display: 'none',
-    justifyContent: 'flex-end',
-    [theme.breakpoints.up('md')]: {
-      display: 'flex',
-    },
-  },
-  inModalContent: {
-    padding: theme.spacing(3),
+  inDialogContent: {
+    padding: theme.spacing(1),
     marginLeft: 30,
     marginRight: 55,
     outline: 'none',
   },
-  inModalButton: {
-    textAlign: 'center',
-  },
   actionsContainer: {
-    marginTop: theme.spacing(2),
+    marginTop: theme.spacing(1),
     float: 'right',
   },
 }));
 
-function useModal() {
-  const [modalOpen, setModalOpen] = useState(false);
+function useDialog() {
+  const [DialogOpen, setDialogOpen] = useState(false);
 
-  function handleModalOpen(termState) {
-    setModalOpen(termState);
+  function handleDialogOpen(termState) {
+    setDialogOpen(termState);
   }
 
-  function handleModalClose() {
-    setModalOpen(false);
+  function handleDialogClose() {
+    setDialogOpen(false);
   }
 
-  return { modalOpen, handleModalOpen, handleModalClose };
+  return { DialogOpen, handleDialogOpen, handleDialogClose };
 }
 
 function useContractionFlag() {
@@ -122,7 +93,7 @@ function useContractionFlag() {
 function Contraction(props) {
   const { history } = props;
   const classes = useStyles();
-  const { modalOpen, handleModalOpen, handleModalClose } = useModal();
+  const { DialogOpen, handleDialogOpen, handleDialogClose } = useDialog();
   const { contractionList, handleContraction } = useContractionFlag();
 
   const handleUserContract = () => {
@@ -152,63 +123,46 @@ function Contraction(props) {
             </Typography>
             <Button
               color="blueGray"
-              style={{
-                flex: 1, height: '70%', fontSize: 13,
-              }}
-              onClick={() => handleModalOpen(term.state)}
+              onClick={() => handleDialogOpen(term.state)}
             >
               약관보기
             </Button>
             <Divider className={classes.divider} />
-            { contractionList[index] ? <SuccessTypo><Done /></SuccessTypo>
+            { contractionList[index]
+              ? <SuccessTypo><Done /></SuccessTypo>
               : (
-                <Tooltip title="약관을 동의하세요!">
-                  <DangerTypo>
-                    <Clear />
-                  </DangerTypo>
-                </Tooltip>
-              )
-            }
+                <DangerTypo>
+                  <Clear />
+                </DangerTypo>
+              )}
 
           </Paper>
-          { /* 약관 보기 modal */ }
-          <Modal open={modalOpen === term.state} onClose={handleModalClose}>
-            <div className={classes.modal}>
-              {/* 위 앱 바 */}
-              <AppBar color="primary" position="static">
-                <Toolbar variant="dense">
-                  <Typography variant="h6" color="inherit">
-                    {term.title}
-                  </Typography>
-                  <div className={classes.sectionButton}>
-                    <IconButton color="inherit" onClick={handleModalClose}>
-                      <Close />
-                    </IconButton>
-                  </div>
-                </Toolbar>
-              </AppBar>
-              {/* 계약 내용 */}
-              <div className={classes.inModalContent}>
-                {term.text.split('\n').map(sentence => (
-                  <p key={shortid.generate()}>{sentence}</p>
-                ))}
-
-                {/* 버튼 */}
-                <div className={classnames(classes.contentWrapper, classes.inModalButton)}>
-                  <Button onClick={handleModalClose}>
+          { /* 약관 보기 Dialog */ }
+          <Dialog
+            open={DialogOpen === term.state}
+            onClose={handleDialogClose}
+            title={term.title}
+            buttons={(
+              <div>
+                <Button onClick={handleDialogClose}>
                     취소
-                  </Button>
-                  <Button
-                    color="info"
-                    onClick={() => { handleContraction(index); handleModalClose(); }}
-                  >
+                </Button>
+                <Button
+                  color="info"
+                  onClick={() => { handleContraction(index); handleDialogClose(); }}
+                >
                     동의
-                  </Button>
-                </div>
-
+                </Button>
               </div>
+            )}
+          >
+            {/* 계약 내용 */}
+            <div className={classes.inDialogContent}>
+              {term.text.split('\n').map(sentence => (
+                <p key={shortid.generate()}>{sentence}</p>
+              ))}
             </div>
-          </Modal>
+          </Dialog>
         </div>
       ))}
       {/* 버튼 */}

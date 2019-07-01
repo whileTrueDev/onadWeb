@@ -116,7 +116,7 @@ const AccountDialog = (props) => {
     axios.post('/regist/accountNum', userAccount)
       .then((res) => {
         alert('계좌번호 저장에 성공하였습니다.');
-        history.push('/dashboard/cash');
+        history.push('/dashboard/marketer/cash');
       })
       .catch((err) => {
         console.log(err);

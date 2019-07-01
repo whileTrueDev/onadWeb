@@ -1,41 +1,27 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import classnames from 'classnames';
 import axios from 'axios';
 // material ui core
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import IconButton from '@material-ui/core/IconButton';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
 import Tooltip from '@material-ui/core/Tooltip';
 import Divider from '@material-ui/core/Divider';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import Radio from '@material-ui/core/Radio';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import TextField from '@material-ui/core/TextField';
-import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
-import DialogActions from '@material-ui/core/DialogActions';
-// icons
-import Close from '@material-ui/icons/CloseOutlined';
 // customized component
 import Button from '../../../components/CustomButtons/Button';
-import Modal from '../../../components/CustomModal/CustomModal';
+import Dialog from '../../../components/Dialog/Dialog';
 import Warning from '../../../components/Typography/Warning';
 
 const useStyles = makeStyles(theme => ({
-  contentWrapper: {
-    margin: '20px 0px 20px 0px',
-  },
   contentTitle: {
     fontWeight: 'bold',
   },
   contentDetail: {
     marginTop: theme.spacing(1),
-  },
-  inModalButton: {
-    textAlign: 'center',
   },
   selectValue: {
     color: '#333',
@@ -45,14 +31,6 @@ const useStyles = makeStyles(theme => ({
     marginRight: theme.spacing(1),
     width: 250,
     fontSize: 16,
-  },
-  dialog: {
-    marginTop: theme.spacing(2),
-    marginRight: theme.spacing(1),
-    marginLeft: theme.spacing(1),
-  },
-  dialogContent: {
-    marginBottom: theme.spacing(1),
   },
 }));
 
@@ -87,7 +65,7 @@ function useValue(defaultValue) {
   return { selectValue, handleChange };
 }
 
-function CashModal(props) {
+function CashDialog(props) {
   const classes = useStyles();
   const {
     open, handleClose, chargeCash, history,
@@ -113,7 +91,7 @@ function CashModal(props) {
       chargecash: selectValue,
     }).then((res) => {
       handleSnackClose();
-      history.push('/dashboard/cash');
+      history.push('/dashboard/marketer/cash');
     }).catch((err) => {
       console.log(err);
     });
@@ -121,16 +99,30 @@ function CashModal(props) {
 
 
   return (
-    <Modal
+    <Dialog
       open={open}
       onClose={handleClose}
+      maxWidth="sm"
+      fullWidth
       title="광고캐시 충전"
-      color="blueGray"
+      buttons={(
+        <div>
+          <Button onClick={handleClose}>
+              취소
+          </Button>
+          <Button
+            color="info"
+            onClick={handleClick}
+          >
+              진행
+          </Button>
+        </div>
+)}
     >
       <div>
-        <div className={classes.inModalContent}>
+        <div>
           {/* 보유한 광고캐시 금액 */}
-          <div className={classes.contentWrapper}>
+          <div>
             <Typography className={classes.contentTitle} variant="subtitle1">
             보유한 광고캐시 금액
             </Typography>
@@ -145,7 +137,7 @@ function CashModal(props) {
           <Divider />
 
           {/* 결제방법 선택 */}
-          <div className={classes.contentWrapper}>
+          <div>
             <Typography variant="subtitle1" id="select-account" className={classes.contentTitle}>
             결제 방법
             </Typography>
@@ -185,7 +177,7 @@ function CashModal(props) {
           <Divider />
 
           {/* 충전금액입력 */}
-          <div className={classes.contentWrapper} style={{ position: 'relative', width: 150 }}>
+          <div style={{ position: 'relative', width: 150 }}>
             <Typography className={classes.contentTitle} variant="subtitle1">
               광고캐시 충전 금액
             </Typography>
@@ -254,75 +246,50 @@ function CashModal(props) {
             </div>
           </div>
 
-          {/* 버튼 */}
-          <div className={classnames(classes.contentWrapper, classes.inModalButton)}>
-            <Button onClick={handleClose}>
-              취소
-            </Button>
-            <Button
-              color="info"
-              onClick={handleClick}
-            >
-              진행
-            </Button>
-          </div>
         </div>
 
         {/* 캐시충전 신청 완료 시의 notification */}
         <Dialog
           open={cashSnack}
-          keepMounted
-          onClose={handleSnackClose}
-          aria-labelledby="alert-dialog-title"
-          aria-describedby="alert-dialog-description"
+          onClose={handleOnlyDialogClose}
+          title="입력하신대로 캐시 충전 진행하시겠어요?"
+          buttons={(
+            <div>
+              <Button onClick={handleOnlyDialogClose}>
+              취소
+              </Button>
+              <Button onClick={handleSubmitClick} color="info">
+              진행
+              </Button>
+            </div>
+          )}
         >
-          <AppBar color="primary" position="static" elevation={1}>
-            <Toolbar variant="dense">
-              <Typography variant="subtitle1" color="inherit">
-                입력하신대로 캐시 충전 진행하시겠어요?
-              </Typography>
-              <div className={classes.sectionButton}>
-                <IconButton color="inherit" onClick={handleOnlyDialogClose}>
-                  <Close />
-                </IconButton>
-              </div>
-            </Toolbar>
-          </AppBar>
-
-          <Divider />
-          <DialogContent className={classes.dialog}>
-            <Typography className={classes.dialogContent} variant="h5" marked="center">
+          <DialogContent>
+            <Typography variant="h5" marked="center">
               {`광고캐시 충전 신청액 : ${selectValue}`}
             </Typography>
-            <Typography className={classes.dialogContent} variant="h5" marked="center">
+            <Typography variant="h5" marked="center">
               {`충전 이후 보유 광고캐시 : ${totaldebit}`}
             </Typography>
+          </DialogContent>
+          <DialogContent>
             <Warning>
-              <Typography className={classes.dialogContent} variant="subtitle1" marked="center">
+              <Typography variant="subtitle1" marked="center">
                 {'추후 도입기능 입니다'}
               </Typography>
             </Warning>
           </DialogContent>
-          <DialogActions>
-            <Button onClick={handleOnlyDialogClose}>
-              취소
-            </Button>
-            <Button onClick={handleSubmitClick} color="info">
-              진행
-            </Button>
-          </DialogActions>
         </Dialog>
 
       </div>
-    </Modal>
+    </Dialog>
   );
 }
 
-CashModal.propTypes = {
+CashDialog.propTypes = {
   open: PropTypes.bool.isRequired,
   handleClose: PropTypes.func.isRequired,
-  chargeCash: PropTypes.string.isRequired,
-
+  chargeCash: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
 };
 
-export default CashModal;
+export default CashDialog;

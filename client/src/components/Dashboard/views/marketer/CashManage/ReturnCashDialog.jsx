@@ -1,41 +1,24 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import classnames from 'classnames';
 import axios from 'axios';
 // material ui core
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import IconButton from '@material-ui/core/IconButton';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
 import Tooltip from '@material-ui/core/Tooltip';
 import Divider from '@material-ui/core/Divider';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import Radio from '@material-ui/core/Radio';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import TextField from '@material-ui/core/TextField';
-import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
-import DialogActions from '@material-ui/core/DialogActions';
-// icons
-import Close from '@material-ui/icons/CloseOutlined';
 // customized component
-import Modal from '../../../components/CustomModal/CustomModal';
+import Dialog from '../../../components/Dialog/Dialog';
 import Button from '../../../components/CustomButtons/Button';
 import Warning from '../../../components/Typography/Warning';
 
 const useStyles = makeStyles(theme => ({
-  contentWrapper: {
-    margin: '20px 0px 20px 0px',
-  },
   contentTitle: {
     fontWeight: 'bold',
-  },
-  contentDetail: {
-    marginTop: theme.spacing(1),
-  },
-  inModalButton: {
-    textAlign: 'center',
   },
   selectValue: {
     color: '#333',
@@ -45,14 +28,6 @@ const useStyles = makeStyles(theme => ({
     marginRight: theme.spacing(1),
     width: 250,
     fontSize: 16,
-  },
-  dialog: {
-    marginTop: theme.spacing(2),
-    marginRight: theme.spacing(1),
-    marginLeft: theme.spacing(1),
-  },
-  dialogContent: {
-    marginBottom: theme.spacing(1),
   },
 }));
 
@@ -87,7 +62,7 @@ function useValue(defaultValue) {
   return { selectValue, handleChange };
 }
 
-function ReturnCashModal(props) {
+function ReturnCashDialog(props) {
   const classes = useStyles();
   const {
     open, handleClose, accountNumber, chargeCash, history,
@@ -114,7 +89,7 @@ function ReturnCashModal(props) {
         withdrawCash: selectValue,
       }).then((res) => {
         handleSnackClose();
-        history.push('/dashboard/cash');
+        history.push('/dashboard/marketer/cash');
       }).catch((err) => {
         console.log(err);
       });
@@ -122,52 +97,56 @@ function ReturnCashModal(props) {
   }
 
   return (
-    <Modal
+    <Dialog
       open={open}
       onClose={handleClose}
       title="광고캐시 환불"
-      color="blueGray"
+      buttons={(
+        <div>
+          <Button onClick={handleClose}>
+              취소
+          </Button>
+          <Button
+            color="info"
+            onClick={handleClick}
+            disabled={(!(chargeCash >= selectValue)) || !(selectValue >= 0)}
+          >
+              진행
+          </Button>
+        </div>
+)}
     >
       <div>
         {/* 모달내용 */}
         {/* 보유한 광고캐시 금액 */}
-        <div className={classes.contentWrapper}>
-          <Typography variant="subtitle1" id="select-account" className={classes.contentTitle}>
+        <div>
+          <Typography variant="subtitle1" className={classes.contentTitle}>
             입금 계좌
           </Typography>
-          <Typography
-            variant="h5"
-            id="select-account"
-            className={classes.contentDetail}
-          >
+          <Typography variant="h5">
             {`${accountNumber.split('_')[0]}   ${accountNumber.split('_')[1]}`}
           </Typography>
         </div>
         <Divider />
 
         {/* 출금가능금액 */}
-        <div className={classes.contentWrapper}>
-          <Typography className={classes.contentTitle} variant="subtitle1">
+        <div>
+          <Typography variant="subtitle1" className={classes.contentTitle}>
             환불 가능 금액
           </Typography>
-          <Typography
-            variant="h4"
-            id="select-account"
-            className={classes.contentDetail}
-          >
+          <Typography variant="h4">
             {`${chargeCash} 원`}
           </Typography>
         </div>
         <Divider />
 
         {/* 출금금액입력 */}
-        <div className={classes.contentWrapper} style={{ position: 'relative', width: 150 }}>
-          <Typography className={classes.contentTitle} variant="subtitle1">
+        <div style={{ position: 'relative', width: 150 }}>
+          <Typography variant="subtitle1" className={classes.contentTitle}>
               광고캐시 환불 금액
           </Typography>
           <RadioGroup
             name="howmuch"
-            className={classes.contentDetail}
             value={selectValue}
             onChange={handleChange}
           >
@@ -266,74 +245,47 @@ function ReturnCashModal(props) {
           </div>
         </div>
 
-        {/* 버튼 */}
-        <div className={classnames(classes.contentWrapper, classes.inModalButton)}>
-          <Button onClick={handleClose}>
-              취소
-          </Button>
-          <Button
-            color="info"
-            onClick={handleClick}
-            disabled={(!(chargeCash >= selectValue)) || !(selectValue >= 0)}
-          >
-              진행
-          </Button>
-        </div>
-
         {/* 환불 신청 완료 시의 notification */}
         <Dialog
           open={ReturnCashSnack}
-          keepMounted
-          onClose={handleSnackClose}
-          aria-labelledby="alert-dialog-title"
-          aria-describedby="alert-dialog-description"
+          onClose={handleOnlyDialogClose}
+          title="입력하신대로 환불 진행하시겠어요?"
+          buttons={(
+            <div>
+              <Button onClick={handleOnlyDialogClose}>
+              취소
+              </Button>
+              <Button onClick={handleSubmitClick} color="info">
+              진행
+              </Button>
+            </div>
+          )}
         >
-          <AppBar color="primary" position="static" elevation={1}>
-            <Toolbar variant="dense">
-              <Typography variant="subtitle1" color="inherit">
-                입력하신대로 환불 진행하시겠어요?
-              </Typography>
-              <div className={classes.sectionButton}>
-                <IconButton color="inherit" onClick={handleOnlyDialogClose}>
-                  <Close />
-                </IconButton>
-              </div>
-            </Toolbar>
-          </AppBar>
-
-          <Divider />
-          <DialogContent className={classes.dialog}>
-            <Typography className={classes.dialogContent} variant="h5" marked="center">
+          <DialogContent>
+            <Typography variant="h5" marked="center">
               {`환불 신청액 : ${selectValue}`}
             </Typography>
-            <Typography className={classes.dialogContent} variant="h5" marked="center">
+            <Typography variant="h5" marked="center">
               {`환불 이후 잔여 출금 가능 금액 : ${chargeCash - selectValue}`}
             </Typography>
             <Warning>
-              <Typography className={classes.dialogContent} variant="subtitle1" marked="center">
+              <Typography variant="subtitle1" marked="center">
                 {'입금까지 하루 또는 이틀이 소요되어요!!'}
               </Typography>
             </Warning>
           </DialogContent>
-          <DialogActions>
-            <Button onClick={handleOnlyDialogClose}>
-              취소
-            </Button>
-            <Button onClick={handleSubmitClick} color="info">
-              진행
-            </Button>
-          </DialogActions>
         </Dialog>
       </div>
-    </Modal>
+    </Dialog>
   );
 }
 
-ReturnCashModal.propTypes = {
+ReturnCashDialog.propTypes = {
   open: PropTypes.bool.isRequired,
   handleClose: PropTypes.func.isRequired,
   accountNumber: PropTypes.string.isRequired,
   chargeCash: PropTypes.string.isRequired,
+  history: PropTypes.object,
 };
 
-export default ReturnCashModal;
+export default ReturnCashDialog;
