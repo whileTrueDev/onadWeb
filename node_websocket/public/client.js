@@ -2,7 +2,6 @@ $(function(){
     var socket = io();
     var history = window.history.length;
     var _url = window.location.href;
-  
    
     socket.emit('new client', [_url, history]); 
     

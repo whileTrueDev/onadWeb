@@ -137,7 +137,7 @@ app.get('/banner/:id', function(req, res){ ///banner/:id로 라우팅
             console.log(`-새 접속 ip : ${ip}`)
             console.log(`클라이언트id ${ clientId }`);
             
-            if(history != 1){ /*이 부분 !=로 바꾸기*/
+            if(history == 2){ /*이 부분 !=로 바꾸기*/
               var destination = 'http://localhost:3002/browserWarn'
               socket.emit('browser warning', destination) 
             } else {
