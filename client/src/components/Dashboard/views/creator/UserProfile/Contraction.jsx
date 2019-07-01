@@ -131,7 +131,7 @@ function Contraction(props) {
       })
         .then((res) => {
           if (res.data === true) {
-            history.push('/dashboard/user');
+            history.push('/dashboard/creator/user');
           }
         })
         .catch((err) => {

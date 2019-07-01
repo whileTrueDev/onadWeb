@@ -1,8 +1,0 @@
-{ message:
-   'Email sent: 250 2.0.0 OK  1560425486 131sm3288435pfx.57 - gsmtp',
-  level: 'info',
-  timestamp: '2019-06-13T11:31:25.754Z' }
-{ message:
-   'query 관련 오류 : Error: ER_PARSE_ERROR: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near \'SELEC marketerId FROM marketerInfo WHERE marketerId = \'dn0208\'\' at line 1',
-  level: 'error',
-  timestamp: '2019-06-13T12:04:34.249Z' }

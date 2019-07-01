@@ -83,9 +83,7 @@ passport.use( new LocalStrategy(
                     }
                 }
                 conn.release();
-                req.session.message = 'ID가 존재하지 않습니다.'
                 return done(null, false);
-                
             });
         });
     }

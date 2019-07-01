@@ -166,14 +166,14 @@ const AccountDialog = (props) => {
         <Input
           name="bankAccount"
           required
-          endAdornment={(
-            <InputAdornment position="end">
-              <Divider className={classes.divider} />
-              <Button>
-                조회
-              </Button>
-            </InputAdornment>
-          )}
+          // endAdornment={(
+          //   <InputAdornment position="end">
+          //     <Divider className={classes.divider} />
+          //     <Button>
+          //       조회
+          //     </Button>
+          //   </InputAdornment>
+          // )}
           inputProps={{
             required: '{true}',
             pattern: `[0-9]{${bankPattern}}`,

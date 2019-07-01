@@ -76,7 +76,7 @@ const CssTextField = withStyles({
 })(TextField);
 
 function UserProfile(props) {
-  const { classes, session, history } = props;
+  const { classes, history } = props;
   const [userData, setuserData] = useState({});
 
   const readyCreatorData = useCallback(() => {
@@ -134,13 +134,19 @@ function UserProfile(props) {
               <Typography variant="subtitle1" id="select-account" className={classes.contentTitle}>
                 계좌 재입력
               </Typography>
-              <AccountNumberForm />
+              <AccountNumberForm history={history} />
             </CardBody>
           </Card>
         </GridItem>
         <GridItem xs={12} sm={12} md={1} />
         <GridItem xs={12} sm={12} md={5}>
           <Card profile>
+            <CardAvatar profile>
+              <a href="#pablo" onClick={e => e.preventDefault()}>
+                {/* <img src={userData.creatorLogo} alt="..." /> */}
+                <img />
+              </a>
+            </CardAvatar>
             <CardBody profile>
               <h4 className={classes.cardTitle}>
                 {`${userData.creatorName} 님의 정보`}
@@ -231,7 +237,6 @@ function UserProfile(props) {
 
 UserProfile.propTypes = {
   classes: PropTypes.object,
-  session: PropTypes.object,
   history: PropTypes.object,
 };
 
