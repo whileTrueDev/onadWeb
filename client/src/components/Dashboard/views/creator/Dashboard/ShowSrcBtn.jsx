@@ -58,7 +58,7 @@ class ShowSrcBtn extends Component {
         let url = '';
         if (res.data.creatorContractionAgreement === 0) {
           url = '온애드와 계약하지 않았어요! 계약해주세요.';
-        } else { url = `https://onad.com${res.data.advertiseUrl}`; }
+        } else { url = `https://onad.com/banner${res.data.advertiseUrl}`; }
 
         this.setState({
           showSrc: url,

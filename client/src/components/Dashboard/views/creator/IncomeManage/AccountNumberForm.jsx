@@ -11,10 +11,7 @@ import {
   InputLabel,
   Input,
   MenuItem,
-  Divider,
-  InputAdornment,
 } from '@material-ui/core';
-import OriginalButton from '@material-ui/core/Button';
 import Button from '../../../components/CustomButtons/Button';
 
 
@@ -134,10 +131,10 @@ const AccountNumberForm = (props) => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    if (!accountConfirm) {
-      alert('계좌 본인인증을 해주세요!');
-      return;
-    }
+    // if (!accountConfirm) {
+    //   alert('계좌 본인인증을 해주세요!');
+    //   return;
+    // }
     const userAccount = {
       bankName: event.target.bank.value,
       bankAccount: event.target.bankAccount.value,
@@ -150,7 +147,7 @@ const AccountNumberForm = (props) => {
           if (handleClose) {
             handleClose();
           }
-          history.push('/dashboard/creator/income');
+          history.push(window.location.pathname);
         } else {
           alert('계좌번호 저장에 실패하였습니다.');
         }

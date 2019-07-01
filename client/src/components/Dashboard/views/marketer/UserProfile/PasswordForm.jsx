@@ -117,11 +117,11 @@ const PasswordForm = (props) => {
       <Snackbar
         place="tr"
         color="success"
-        autoHideDuration={3000}
-        onClose={snackClose}
+        closeNotification={snackClose}
         message="비밀번호 변경 완료"
         open={snackOpen}
         icon={Check}
+        close
       />
     </Card>
   );

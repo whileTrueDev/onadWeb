@@ -1,13 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import classnames from 'classnames';
 import axios from 'axios';
 // material ui core
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import IconButton from '@material-ui/core/IconButton';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
 import Tooltip from '@material-ui/core/Tooltip';
 import Divider from '@material-ui/core/Divider';
 import RadioGroup from '@material-ui/core/RadioGroup';
@@ -15,9 +11,6 @@ import Radio from '@material-ui/core/Radio';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import TextField from '@material-ui/core/TextField';
 import DialogContent from '@material-ui/core/DialogContent';
-import DialogActions from '@material-ui/core/DialogActions';
-// icons
-import Close from '@material-ui/icons/CloseOutlined';
 // customized component
 import Button from '../../../components/CustomButtons/Button';
 import Dialog from '../../../components/Dialog/Dialog';
@@ -124,7 +117,7 @@ function WithdrawDialog(props) {
       });
 
       handleSnackClose();
-      history.push('/dashboard/creator/income');
+      history.push(window.location.pathname);
     }
   }
 
@@ -137,9 +130,6 @@ function WithdrawDialog(props) {
       fullWidth
       buttons={(
         <div>
-          <Button onClick={handleClose}>
-              취소
-          </Button>
           <Button
             color="info"
             onClick={handleClick}
@@ -147,6 +137,10 @@ function WithdrawDialog(props) {
           >
               진행
           </Button>
+          <Button onClick={handleClose}>
+              취소
+          </Button>
+
         </div>
       )}
     >
@@ -199,7 +193,7 @@ function WithdrawDialog(props) {
                 value="10000"
                 control={<Radio color="primary" />}
                 label={
-                  receivable > 10000
+                  receivable >= 10000
                     ? (
                       <Typography variant="h6" className={classes.selectValue}>
                     10,000 원
@@ -211,13 +205,13 @@ function WithdrawDialog(props) {
                       </Typography>
                     )
                   }
-                disabled={!(receivable > 10000)}
+                disabled={!(receivable >= 10000)}
               />
               <FormControlLabel
                 value="30000"
                 control={<Radio color="primary" />}
                 label={
-                  receivable > 30000
+                  receivable >= 30000
                     ? (
                       <Typography variant="h6" className={classes.selectValue}>
                     30,000 원
@@ -229,13 +223,13 @@ function WithdrawDialog(props) {
                       </Typography>
                     )
                 }
-                disabled={!(receivable > 30000)}
+                disabled={!(receivable >= 30000)}
               />
               <FormControlLabel
                 value="50000"
                 control={<Radio color="primary" />}
                 label={
-                  receivable > 50000
+                  receivable >= 50000
                     ? (
                       <Typography variant="h6" className={classes.selectValue}>
                     50,000 원
@@ -247,13 +241,13 @@ function WithdrawDialog(props) {
                       </Typography>
                     )
                 }
-                disabled={!(receivable > 50000)}
+                disabled={!(receivable >= 50000)}
               />
               <FormControlLabel
                 value="100000"
                 control={<Radio color="primary" />}
                 label={
-                  receivable > 100000
+                  receivable >= 100000
                     ? (
                       <Typography variant="h6" className={classes.selectValue}>
                     100,000 원
@@ -265,7 +259,7 @@ function WithdrawDialog(props) {
                       </Typography>
                     )
                 }
-                disabled={!(receivable > 100000)}
+                disabled={!(receivable >= 100000)}
               />
             </RadioGroup>
             <div style={{ position: 'absolute', top: 50, left: 200 }}>
@@ -296,11 +290,11 @@ function WithdrawDialog(props) {
           onClose={handleSnackClose}
           buttons={(
             <div>
+              <Button onClick={handleSubmitClick} color="info">
+              확인
+              </Button>
               <Button onClick={handleOnlyDialogClose}>
               취소
-              </Button>
-              <Button onClick={handleSubmitClick} color="info">
-              진행
               </Button>
             </div>
           )}
