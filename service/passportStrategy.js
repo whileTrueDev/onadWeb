@@ -19,7 +19,7 @@ const pool = require('./model/connectionPool');
 const axios = require('axios');
 // 암호화 체크 객체 생성
 const encrpyto = require('./encryption');
-
+const doQuery = require('./model/doQuery');
 
 //serializeUser를 정의한다. session에 저장해둘 data를 구현하는 것.
 passport.serializeUser((user, done)=>{
@@ -89,6 +89,53 @@ passport.use( new LocalStrategy(
     }
 ));
 
+/* 2019-07-02 박찬우
+
+1. twitch를 통해 받는 데이터
+    - creator ID => creatorId
+    - creator DisplayName => creatorName
+    - creator Name
+    - creator Mail
+    - creator Logo
+
+2. 구동방식
+    1) twitch를 통해 전달받은 데이터들은 session으로 전달된다.
+    2) 매 로그인 시, Data가 존재하는지 확인한다.
+
+    * 최초 로그인이 아닐 때
+    3-1) Data가 존재하므로 creatorName, creatorMail을 가져온다.
+    3-2) 현재 DB에서 가져온 값과 session으로 획득한 값을 비교하여 DB 수정.
+    3-3) 나머지 data는 session에 띄워놓고 필요할 때 바로 사용할 수 있도록 session을 context화 하여 필요한 Component에서 접근이 가능하게 구현한다.
+
+    * 최초 로그인시
+    3-1) creator Logo를 제외한 모든 값을 creatorInfo table에 저장한다.
+
+    - DB에 저장될 데이터 (col명 : twitchdata 명)
+        - creatorId : _id
+        - creatorName : display_name
+        - creatorMail : email
+        - advertiseUrl : 난수를 생성하여 추가.
+        - creatorIp : 현재 Ip를 추가.
+        - creatorAccountNumber : Null
+        - creatorAlarmAgreement : 0
+        - creatorContractionAgreement : 0
+
+3. clientID, clientSecret은 초기화 및 파일화하여 배포.
+*/
+
+const makeUrl = () => {
+    let password = "";
+
+    for(let i = 0; i < 8; i++){
+        let lowerStr = String.fromCharCode(Math.floor(Math.random() * 26 + 97));
+        if(i % 2 == 0){
+        password += String(Math.floor(Math.random() * 10));
+        }else{
+        password += lowerStr;
+        }
+    }
+    return password;
+}
 
 passport.use(new twitchStrategy({
     clientID: 'mzmtrk1xlqerih1u10ilip2xwhowil',
@@ -107,47 +154,69 @@ passport.use(new twitchStrategy({
             creatorLogo : profile._json.logo,
             userType: "creator"
         }
-        
-        pool.getConnection(function(err, conn){
-            if(err){ 
-                console.log(err);
-                done(err, user);
-                //return err;
-            }
-            conn.query(`SELECT creatorIp, creatorId FROM creatorInfo WHERE creatorId = ? `, [user.creatorId], function(err, result, fields){
-                if(result[0]){
-                    //비밀번호를 위한 수행
-                    console.log('현재 DB에 존재합니다');
-                    user['creatorIp'] = result[0].creatorIp;
-                    conn.release();
-                    return done(null, user);
-                }else{
-                    console.log('DB에 존재하지 않습니다.');
-                    let creatorIp = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-                    user['creatorIp'] = creatorIp;
-                    const Infoquery = `INSERT INTO
-                        creatorInfo (creatorId, creatorName, creatorMail, creatorIp, creatorLogo, advertiseUrl)
-                        VALUES (?, ?, ?, ?, ?, ?)`;
 
-                    conn.query(Infoquery, [user.creatorId, user.creatorDisplayName, user.creatorMail, creatorIp, user.creatorLogo, `/${user.creatorName}`],
-                        (err, result, field) => {
-                            if (err) {
-                                console.log(err)
-                            }
-                        console.log('creatorInfo table에 정보 입력.');
+        doQuery(`SELECT creatorIp, creatorId, creatorName, creatorMail FROM creatorInfo WHERE creatorId = ? `, [user.creatorId])
+        .then((row)=>{
+            const creatorData = row.result[0];
+            if(creatorData){
+                console.log(`${user.creatorDisplayName} 님이 로그인 하셨습니다.`);
+                user['creatorIp'] = creatorData.creatorIp;
+                
+                // Data 변경시에 변경된 값을 반영하는 영역.
+                if(!(creatorData.creatorName === user.creatorDisplayName && creatorData.creatorMail === user.creatorMail)){
+                    const UpdateQuery = `
+                    UPDATE creatorInfo
+                    SET 
+                    creatorName = ? ,
+                    creatorMail = ?
+                    WHERE creatorId = ?
+                    `
+                    doQuery(UpdateQuery, [user.creatorDisplayName, user.creatorMail, user.creatorId])
+                    .then(()=>{
+                        return done(null, user);
                     })
-                    const Incomequery = `INSERT INTO creatorIncome (creatorId, creatorTotalIncome, creatorReceivable) VALUES (?, ?, ?)`
-                    conn.query(Incomequery, [user.creatorId, 0, 0], (err, result, field)=>{
-                        if (err) {
-                            console.log(err)
-                        }
-                        console.log('creatorIncome table에 정보 입력.');
+                    .catch((errorData)=>{
+                        console.log(errorData);
+                        done(errorData, user);
                     })
-                    conn.release();
+                }else{
                     return done(null, user);
                 }
-            });
+
+            }else{
+                console.log(`${user.creatorDisplayName} 님이 최초 로그인 하셨습니다.`);
+                const creatorIp = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+                const creatorBannerUrl = makeUrl();
+                user['creatorIp'] = creatorIp;
+
+                const Infoquery = `
+                INSERT INTO creatorInfo
+                (creatorId, creatorName, creatorMail, creatorIp, advertiseUrl)
+                VALUES (?, ?, ?, ?, ?)`;
+
+                const Incomequery = `
+                INSERT INTO creatorIncome 
+                (creatorId, creatorTotalIncome, creatorReceivable) 
+                VALUES (?, ?, ?)`;
+
+                Promise.all([
+                    doQuery(Infoquery,  [user.creatorId, user.creatorDisplayName, user.creatorMail, creatorIp, `/${creatorBannerUrl}`]),
+                    doQuery(Incomequery,   [user.creatorId, 0, 0])
+                ])
+                .then(()=>{
+                    return done(null, user);
+                })
+                .catch((errorData)=>{
+                    console.log(errorData);
+                    done(errorData, user);
+                })
+            }
         })
+        .catch((errorData)=>{
+            console.log(errorData);
+            done(errorData, user);
+        })
+
     }
 ));
 

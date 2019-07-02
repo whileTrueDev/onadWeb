@@ -10,7 +10,7 @@ import {
 } from '@material-ui/core';
 import Usertype from './Usertype';
 import RegistForm from './RegistForm';
-import PaperSheet from './paper';
+import PaperSheet from './Paper';
 import AppAppBar from '../Main/views/AppAppBar';
 
 const styles = theme => ({
