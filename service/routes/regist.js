@@ -28,9 +28,10 @@ router.post('/marketer', (req, res, next)=>{
 router.post('/checkId', (req, res)=>{
   console.log('checkId로 중복확인 합니다.');
   doQuery(`SELECT marketerId FROM marketerInfo WHERE marketerId = ? `, [req.body.id])
-  .then((data)=>{
-    const {result} = data;
+  .then((row)=>{
+    const {result} = row;
     if(result[0]){
+      //ID가 존재한다.
       res.send(true);
     }
     else{

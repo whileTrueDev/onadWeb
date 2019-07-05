@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useReducer } from 'react';
 import {
   TextField,
 } from '@material-ui/core';
@@ -14,47 +14,57 @@ import GridItem from '../../../components/Grid/GridItem';
 import dashboardStyle from '../../../assets/jss/onad/views/dashboardStyle';
 import Snackbar from '../../../components/Snackbar/Snackbar';
 
-dashboardStyle.password = {
-  width: '100%',
-  marginTop: '15px',
-  borderColor: '#00acc1',
-  '& .MuiFormLabel-root ': {
-    color: '#00acc1',
-  },
-  '& .MuiInputBase-input:before': {
-    color: '#00acc1',
-  },
-  '& .MuiInput-underline:after': {
-    borderBottomColor: '#00acc1',
-  },
+const initialValue = {
+  value: '',
+  password: false,
+  repasswd: false,
+};
+
+// reducer를 사용하여 Error를 handling하자
+const myReducer = (state, action) => {
+  switch (action.type) {
+    case 'password': {
+      const regx = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,20}$/;
+      if (regx.test(action.value)) {
+        return { ...state, value: action.value, password: false };
+      }
+      return { ...state, value: action.value, password: true };
+    }
+    case 'repasswd': {
+      if (state.value === action.value) {
+        return { ...state, repasswd: false };
+      }
+      return { ...state, repasswd: true };
+    }
+    default: {
+      return state;
+    }
+  }
 };
 
 const PasswordForm = (props) => {
   const { classes } = props;
-  const [rePasswordError, setRePasswordError] = useState(false);
+  const [state, dispatch] = useReducer(myReducer, initialValue);
   const [snackOpen, setSnackOpen] = useState(false);
 
-  const snackClose = () => {
-    setSnackOpen(false);
+  const checkPasswd = (event) => {
+    event.preventDefault();
+    dispatch({ type: 'password', value: event.target.value });
   };
 
-  const checkRePassword = () => {
-    const password = document.getElementById('password').value;
-    const repassword = document.getElementById('repassword').value;
-    if (password !== repassword) {
-      setRePasswordError(true);
-    } else {
-      setRePasswordError(false);
-    }
+  const checkRePasswd = (event) => {
+    event.preventDefault();
+    dispatch({ type: 'repasswd', value: event.target.value });
   };
 
   const submitPassword = (event) => {
     event.preventDefault();
-    const password = document.getElementById('password').value;
-    if (!rePasswordError) {
-      axios.post('/login/changePw', { password })
+    if (!(state.password || state.repasswd)) {
+      axios.post('/login/changePw', { password: state.value })
         .then((res) => {
-          setSnackOpen(true);
+          if (res.data) {
+            setSnackOpen(true);
+          }
         });
     }
     document.getElementById('password').value = null;
@@ -65,35 +75,31 @@ const PasswordForm = (props) => {
     <Card>
       <CardHeader color="blueGray">
         <h4 className={classes.cardTitleWhite}>
-    비밀번호 변경
+          비밀번호 변경
         </h4>
         <p className={classes.cardCategoryWhite}>변경할 비밀번호를 입력하세요.</p>
       </CardHeader>
       <form onSubmit={submitPassword}>
         <CardBody>
-          <GridItem xs={12} sm={12} md={8}>
+          <GridItem xs={12} sm={12} md={12}>
             <TextField
               required
               label="PASSWORD"
               type="password"
               id="password"
               placeholder="비밀번호를 입력하세요."
-              helperText="특수문자를 포함한 8-20자 영문 또는 숫자"
-              margin="dense"
+              onChange={checkPasswd}
+              helperText={state.password ? '특수문자를 포함한 영문/숫자 혼합 8자리 이상입니다.' : ' '}
+              error={state.password}
+              margin="normal"
               autoFocus
-              className={classes.password}
-              onChange={checkRePassword}
-              inputProps={{
-                required: '{true}',
-                pattern: '^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,20}$',
-              }}
               InputLabelProps={{
                 shrink: true,
               }}
             />
           </GridItem>
-          <GridItem xs={12} sm={12} md={8}>
-            <TextField
+          <GridItem xs={12} sm={12} md={12}>
+            {/* <TextField
               required
               type="password"
               label="RE-PASSWORD"
@@ -107,6 +113,20 @@ const PasswordForm = (props) => {
               InputLabelProps={{
                 shrink: true,
               }}
+            /> */}
+            <TextField
+              required
+              type="password"
+              label="RE-PASSWORD"
+              placeholder="비밀번호를 재입력하세요."
+              helperText={state.repasswd ? '비밀번호와 동일하지 않습니다.' : ' '}
+              error={state.repasswd}
+              onChange={checkRePasswd}
+              margin="normal"
+              id="repassword"
+              InputLabelProps={{
+                shrink: true,
+              }}
             />
           </GridItem>
         </CardBody>
@@ -117,11 +137,11 @@ const PasswordForm = (props) => {
       <Snackbar
         place="tr"
         color="success"
-        autoHideDuration={3000}
-        onClose={snackClose}
         message="비밀번호 변경 완료"
         open={snackOpen}
         icon={Check}
+        closeNotification={() => { setSnackOpen(false); }}
+        close
       />
     </Card>
   );

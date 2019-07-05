@@ -14,9 +14,6 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const twitchStrategy = require("passport-twitch").Strategy;
 
-// DB 객체 생성
-const pool = require('./model/connectionPool');
-const axios = require('axios');
 // 암호화 체크 객체 생성
 const encrpyto = require('./encryption');
 const doQuery = require('./model/doQuery');
@@ -30,62 +27,82 @@ passport.serializeUser((user, done)=>{
 //로그인이 되었을 때 매 요청시마다 자동으로 수행되는 session에서 인증된 req.user의 영역으로 저장하기.
 passport.deserializeUser((user, done)=>{
     //db에서 추가로 데이터를 req.user에 저장.
+    console.log('deserialize');
     done(null, user);
 })
 
+
+/* 2019-07-03 박찬우
+
+1. session에 저장할 값 (변경되지 않는 영속적인 값)
+    - useType
+    - userId
+    - marketerUserType
+
+2. context에 저장할 값 (User의 기본적인 정보.)
+    - userid : userid,
+    - userType: 'marketer',
+    - marketerName
+    - marketerEmail
+    - marketerContraction
+    - marketerPhoneNum
+    - marketerUserType
+    - marketerAccountNumber
+
+3. 구동방식
+
+추후에 비밀번호 및 ID에 대한 오류 수정.
+
+*/
+
 passport.use( new LocalStrategy(
-    // option of LocalStrategy
     {
         usernameField : 'userid',
         passwordField : 'passwd',
         session       :  true,
-        passReqToCallback : true,
+        passReqToCallback : false,
     },
-    
-    // verify callback function
-    // 위에서 정의한 username, password field명으로 인자값을 받는다.
-    (req, userid, passwd, done) => {
+
+    (userid, passwd, done) => {
         console.log("로그인을 수행합니다.");
-        // db관련 오류 핸들러.
-        pool.getConnection(function(err, conn){
-            if(err){ 
-                return done(err);
-            }
-            // 쿼리문을 userid로 검색하면된다.
-            conn.query(`
-            SELECT marketerPasswd, marketerSalt, marketerName, marketerMail, marketerEmailAuth, temporaryLogin, marketerContraction
-            FROM marketerInfo
-            WHERE marketerId = ? `, [userid], function(err, result, fields){
-                if(result[0]){
-                    // 비밀번호를 위한 수행
-                    if(encrpyto.check(passwd, result[0].marketerPasswd, result[0].marketerSalt)){
-                        conn.release();
-                        // 세션에 담길 내용 정의
-                        let user = {
-                            userid : userid,
-                            userType: 'marketer',
-                            marketerName: result[0].marketerName,
-                            marketerEmail: result[0].marketerMail,
-                            marketerContraction: result[0].marketerContraction,
-                        };
-                        if(!result[0].marketerEmailAuth){
-                            user['marketerEmailAuth'] = result[0].marketerEmailAuth;
-                        }
-                        if(result[0].temporaryLogin){
-                            user['temporaryLogin'] = result[0].temporaryLogin;
-                        }
-                        console.log("로그인이 완료되었습니다");
-                        return done(null, user);        
-                    }
-                    else{
-                        conn.release();
-                        return done(null, false);        
-                    }
+        const checkQuery = `
+        SELECT marketerPasswd, marketerSalt,
+        marketerId, marketerName, marketerMail, marketerPhoneNum, marketerBusinessRegNum,
+        marketerUserType, marketerAccountNumber, marketerEmailAuth
+        FROM marketerInfo
+        WHERE marketerId = ? `
+
+        doQuery(checkQuery, [userid])
+        .then((row)=>{
+            if(row.result[0]){
+                const marketerData = row.result[0];
+                if(encrpyto.check(passwd, marketerData.marketerPasswd, marketerData.marketerSalt)){
+                    let user = {
+                        userid : userid,
+                        userType: 'marketer',
+                        marketerUserType: marketerData.marketerUserType,
+                        marketerMail: marketerData.marketerMail,
+                        marketerAccountNumber: marketerData.marketerAccountNumber,
+                        marketerBusinessRegNum: marketerData.marketerBusinessRegNum,
+                        marketerName: marketerData.marketerName,
+                        marketerPhoneNum: marketerData.marketerPhoneNum,
+                    };
+                    console.log("로그인이 완료되었습니다");
+                    return done(null, user);        
                 }
-                conn.release();
-                return done(null, false);
-            });
-        });
+                else{
+                    console.log('비밀번호가 일치하지 않습니다.');
+                    return done(null, {message : '비밀번호가 일치하지 않습니다.'});        
+                }
+            }
+            else{
+                console.log('회원이 아닙니다.');
+                return done('회원이 아닙니다.');
+            }
+        })
+        .catch((errorData)=>{
+            return done(errorData);
+        })
     }
 ));
 
@@ -177,7 +194,7 @@ passport.use(new twitchStrategy({
                     })
                     .catch((errorData)=>{
                         console.log(errorData);
-                        done(errorData, user);
+                        done(errorData, false);
                     })
                 }else{
                     return done(null, user);
@@ -208,13 +225,13 @@ passport.use(new twitchStrategy({
                 })
                 .catch((errorData)=>{
                     console.log(errorData);
-                    done(errorData, user);
+                    done(errorData, false);
                 })
             }
         })
         .catch((errorData)=>{
             console.log(errorData);
-            done(errorData, user);
+            done(errorData, false);
         })
 
     }

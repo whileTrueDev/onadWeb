@@ -1,4 +1,6 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, {
+  useState, useEffect, useCallback, useContext,
+} from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
@@ -41,7 +43,7 @@ import SuccessTypography from '../../../components/Typography/Success';
 import DangerTypography from '../../../components/Typography/Danger';
 import Muted from '../../../components/Typography/Muted';
 import Info from '../../../components/Typography/Info';
-
+import { StateContext } from '../../../../StateStore';
 // 상수
 const WAIT_BANNER_STATE = 1; // 대기중 배너 스테이트
 
@@ -82,7 +84,6 @@ function useFetchData(url, dateRange) {
       if (res.data.length !== 0) {
         setPayload(res.data);
       } else {
-        console.log(res);
         setError('데이터가 없습니다.');
         // throw new Error('데이터가 존재하지 않습니다');
       }
@@ -91,7 +92,7 @@ function useFetchData(url, dateRange) {
     } finally {
       setLoading(false);
     }
-  }, [url, dateRange]);
+  }, [dateRange, url]);
 
   useEffect(() => {
     callUrl();
@@ -120,7 +121,7 @@ function useAdStartDialog() {
 
 const Dashboard = (props) => {
   const secondClasses = useStyles();
-  const { classes, history } = props;
+  const { classes } = props;
 
   const cashData = useFetchData('/dashboard/marketer/cash');
   const bannerData = useFetchData('/dashboard/marketer/banner');
@@ -129,6 +130,8 @@ const Dashboard = (props) => {
     DialogOpen, handleDialogOpen,
     handleDialogClose, selectedBanner,
   } = useAdStartDialog();
+  const { state } = useContext(StateContext);
+  const { history } = state;
 
   return (
     <div>

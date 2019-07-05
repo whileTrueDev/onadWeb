@@ -22,28 +22,26 @@ export default withRoot((props) => {
   useEffect(() => {
     axios.get('/login/check')
       .then((res) => {
-        if (res.data) {
-          console.log('로그인 되어있습니다.');
-          if (res.data.user.temporaryLogin === 1) {
-            console.log('임시로그인되었습니다.');
+        if (!res.data.error) {
+          if (res.data.state) {
+            // 임시 로그인되었습니다.
+            console.log('임시로그인 되었습니다.');
             setRepassword(true);
           }
           setisLogin(true);
-        } else {
-          console.log('로그인이 되어있지 않습니다.');
         }
       })
-      .catch((error) => {
-        console.log(error);
+      .catch((err) => {
+        console.log(err);
       });
 
-    window.scrollTo(0, 0);
+    // window.scrollTo(0, 0);
   }, [props.location]);
 
   const logout = () => {
     setisLogin(false);
     axios.get('/login/logout')
-      .then((res) => {
+      .then(() => {
         history.push('/');
       })
       .catch((error) => {
