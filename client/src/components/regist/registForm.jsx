@@ -14,6 +14,10 @@ import {
   TextField,
 } from '@material-ui/core';
 import axios from 'axios';
+import Done from '@material-ui/icons/Done';
+import Clear from '@material-ui/icons/Clear';
+import SuccessTypo from '../Dashboard/components/Typography/Success';
+import DangerTypo from '../Dashboard/components/Typography/Danger';
 
 // Style Overriding용.
 const styles = theme => ({
@@ -49,6 +53,10 @@ const styles = theme => ({
   },
   actionsContainer: {
     marginBottom: theme.spacing(2),
+  },
+  row: {
+    flex: 1,
+    flexDirection: 'row', // 혹은 'column'
   },
 });
 
@@ -187,6 +195,13 @@ const RegistForm = (props) => {
                 <Button onClick={checkDuplicateID}>
                     조회
                 </Button>
+                { !state.checkDuplication
+                  ? <SuccessTypo><Done /></SuccessTypo>
+                  : (
+                    <DangerTypo>
+                      <Clear />
+                    </DangerTypo>
+                  )}
               </InputAdornment>
               )}
           />

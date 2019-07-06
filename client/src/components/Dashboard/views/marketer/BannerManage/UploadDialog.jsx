@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useReducer } from 'react';
 import axios from 'axios';
 import { withStyles } from '@material-ui/core/styles';
 import Dialog from '@material-ui/core/Dialog';
@@ -76,44 +76,64 @@ const dialogStyle = {
   },
 };
 
+const DEFAULT_IMAGE_PATH = '/images/captain.jpg';
+
+const myReducer = (state, action) => {
+  switch (action.type) {
+    case 'reset': {
+      return { imageName: '', imageUrl: DEFAULT_IMAGE_PATH };
+    }
+    case 'set': {
+      return { imageName: action.imageName, imageUrl: action.imageUrl };
+    }
+    default: {
+      console.log('잘못된 사용입니다');
+      return state;
+    }
+  }
+};
 const UploadDialog = (props) => {
   const {
     open, handleOpen, classes, readyBanner,
   } = props;
-  const [imageName, setName] = useState('');
-  const [url, setUrl] = useState('');
+  const [state, dispatch] = useReducer(myReducer, { imageName: '', imageUrl: DEFAULT_IMAGE_PATH });
 
   const readImage = (event) => {
-    // if (input.files && input.files[0]) {
-    const fileList = event.target.files;
-    // 읽기
-    if (fileList) {
-      const reader = new FileReader();
-      reader.readAsDataURL(fileList[0]);
-      reader.onload = () => {
-        setUrl(reader.result);
-        setName(fileList[0].name);
-      };
+    if (event.target.files.length !== 0) {
+      const fileRegx = /^image\/[a-z]*$/;
+      const myImage = event.target.files[0];
+      // 최대 size를 지정하자.
+      if (fileRegx.test(myImage.type)) {
+        const reader = new FileReader();
+        reader.readAsDataURL(myImage);
+        reader.onload = () => {
+          dispatch({ type: 'set', imageName: myImage.name, imageUrl: reader.result });
+        };
+      } else {
+        alert('파일의 형식이 올바르지 않습니다.');
+      }
+    } else {
+      dispatch({ type: 'reset' });
     }
   };
 
   const handleClose = () => {
-    setName('');
-    setUrl('');
+    dispatch({ type: 'reset' });
     readyBanner();
     handleOpen();
   };
 
-  const handleError = (e) => {
-    e.target.src = '/images/captain.jpg';
-  };
 
   // url을 제출.
   const handleSubmit = () => {
-    if (url) {
-      axios.post('/dashboard/marketer/banner/push', { url })
+    if (state.imageUrl) {
+      axios.post('/dashboard/marketer/banner/push', { url: state.imageUrl })
         .then((res) => {
-          alert(res.data[1]);
+          if (res.data[0]) {
+            alert(res.data[1]);
+          } else {
+            alert('현재는 등록할 수 없습니다. 본사에 문의하세요');
+          }
           handleClose();
         });
     } else {
@@ -134,10 +154,10 @@ const UploadDialog = (props) => {
       </DialogTitle>
       <DialogContent dividers>
         <Typography gutterBottom>
-          <img id="preview" src={url} width="600" height="400" onError={handleError} alt="이미지가 보일 영역" />
+          <img id="preview" src={state.imageUrl} width="600" height="400" onError={() => { dispatch({ type: 'reset' }); }} alt="이미지가 보일 영역" />
         </Typography>
         <div className="filebox">
-          <input className="upload-name" value={imageName} disabled="disabled" />
+          <input className="upload-name" value={state.imageName} disabled="disabled" />
           <label htmlFor="getfile">파일찾기
             <input type="file" id="getfile" accept="image/*" onChange={readImage} className={classes.input} />
           </label>

@@ -486,51 +486,49 @@ router.post('/banner/delete', (req, res, next)=>{
   })
 })
 
+/* 2019-07-05
+ */
 router.post('/banner/push', (req, res, next)=>{
   const marketerId = req._passport.session.user.userid;
-  //console.log(req.body);
   const bannerSrc = req.body.url;
-  pool.getConnection((err, conn) => {
-    if(err){
-      conn.release();
-      res.send([null, err]);
-    }
-    conn.query(`SELECT 
-    bannerId 
-    FROM bannerRegistered 
-    WHERE marketerId = ?  
-    ORDER BY date DESC
-    LIMIT 1`, [marketerId], (err, result)=>{
-      if(err){
-        console.log(err);
-        conn.release();
-        res.send([null, err]);
-      }
-      //등록된 배너가 존재할 경우
-      if(result.length > 0){
-        var count =  parseInt(result[0].bannerId.split('_')[1]) + 1;
-        if (count < 10){
-          count = '0'+`${count}`;
-        }
+  
+  const searchQuery = `
+  SELECT bannerId 
+  FROM bannerRegistered 
+  WHERE marketerId = ?  
+  ORDER BY date DESC
+  LIMIT 1`;
+
+  const saveQuery = `
+  INSERT INTO bannerRegistered 
+  (bannerId, marketerId, bannerSrc) 
+  VALUES (?, ?, ?)`;
+
+  doQuery(searchQuery, [marketerId])
+  .then((row)=>{
+    // 이전에 배너를 게시한 적이 있다는 의미.
+    let bannerId = '';
+    if(row.result[0]){
+      const lastBannerId = row.result[0].bannerId;
+      var count =  parseInt(lastBannerId.split('_')[1]) + 1;
+      if (count < 10){
+        bannerId = `${marketerId}_0${count}`;
       }else{
-        const count = '01';
+        bannerId = `${marketerId}_${count}`;
       }
-      const bannerId = `${marketerId}_${count}`
-      conn.query(`INSERT 
-      INTO bannerRegistered 
-      (bannerId, marketerId, bannerSrc) 
-      VALUES (?, ?, ?)
-      `, [bannerId, marketerId, bannerSrc], (err, result)=>{
-        if(err){
-          console.log(err);
-          conn.release();
-          res.send([null, err]);
-        }else{
-          conn.release();
-          res.send([true, '배너가 등록되었습니다.']);
-        }
-      })
+    }else{
+      bannerId = `${marketerId}_01`;
+    }
+    doQuery(saveQuery , [bannerId, marketerId, bannerSrc])
+    .then(()=>{
+      res.send([true, '배너가 등록되었습니다']);
     })
+    .catch(()=>{
+      res.send([false]);
+    })
+  })
+  .catch(()=>{
+    res.send([false]);
   })
 })
 

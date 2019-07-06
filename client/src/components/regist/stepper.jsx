@@ -100,7 +100,7 @@ const RegistStepper = (props) => {
   const [userType, setType] = useState(0);
   const [userInfo, setInfo] = useState({});
   const [state, dispatch] = useReducer(myReducer, initialState);
-
+  const [loading, setLoading] = useState(0);
   const handleNext = () => {
     setStep(activeStep + 1);
   };
@@ -130,9 +130,11 @@ const RegistStepper = (props) => {
         const { error } = res.data;
         if (!error) {
           alert('등록한 이메일로 인증메일을 발송하였습니다. 이메일을 확인하세요!');
+          setLoading(0);
           history.push('/');
         } else {
           alert('등록중 오류가 났습니다. 다시 회원가입을 시작하세요.');
+          setLoading(0);
           history.push('/');
         }
       });
@@ -168,6 +170,8 @@ const RegistStepper = (props) => {
               handleNext={handleNext}
               handleReset={handleReset}
               handleUserSubmit={handleUserSubmit}
+              loading={loading}
+              setLoading={setLoading}
             />
           </StepContent>
         </Step>

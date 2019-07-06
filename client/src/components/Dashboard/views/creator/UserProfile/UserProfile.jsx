@@ -82,8 +82,7 @@ function UserProfile(props) {
   const readyCreatorData = useCallback(() => {
     axios.get('/dashboard/creator/profile')
       .then((res) => {
-        const user = res.data.result[0];
-        setuserData(user);
+        setuserData(res.data);
       });
   }, []);
 
@@ -143,18 +142,18 @@ function UserProfile(props) {
           <Card profile>
             <CardAvatar profile>
               <a href="#pablo" onClick={e => e.preventDefault()}>
-                {/* <img src={userData.creatorLogo} alt="..." /> */}
+                <img src={userData.creatorLogo} alt="..." />
               </a>
             </CardAvatar>
             <CardBody profile>
               <h4 className={classes.cardTitle}>
-                {`${userData.creatorName} 님의 정보`}
+                {`${userData.creatorDisplayName} 님의 정보`}
               </h4>
               <GridContainer>
                 <GridItem xs={12} sm={12} md={6}>
                   <CssTextField
-                    label="TWITCH 고유 ID"
-                    value={userData.creatorId || ''}
+                    label="TWITCH ID"
+                    value={userData.creatorName || ''}
                     className={classes.textField}
                     margin="normal"
                     InputProps={{
@@ -165,7 +164,7 @@ function UserProfile(props) {
                 <GridItem xs={12} sm={12} md={6}>
                   <CssTextField
                     label="NAME"
-                    value={userData.creatorName || ''}
+                    value={userData.creatorDisplayName || ''}
                     className={classes.textField}
                     margin="normal"
                     InputProps={{

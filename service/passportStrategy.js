@@ -216,9 +216,15 @@ passport.use(new twitchStrategy({
                 (creatorId, creatorTotalIncome, creatorReceivable) 
                 VALUES (?, ?, ?)`;
 
+                const Pricequery = `
+                INSERT INTO creatorPrice
+                (creatorId, grade, viewerAverageCount, unitPrice)
+                VALUES (?, ?, ?, ?)
+                `
                 Promise.all([
                     doQuery(Infoquery,  [user.creatorId, user.creatorDisplayName, user.creatorMail, creatorIp, `/${creatorBannerUrl}`]),
-                    doQuery(Incomequery,   [user.creatorId, 0, 0])
+                    doQuery(Incomequery,   [user.creatorId, 0, 0]),
+                    doQuery(Pricequery,   [user.creatorId, 1, 0, 1])
                 ])
                 .then(()=>{
                     return done(null, user);
