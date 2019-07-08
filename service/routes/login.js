@@ -36,7 +36,15 @@ router.get( '/check', function(req, res) {
         error : true,
       })
     })
-  }else{
+  }
+  else if(req.session.passport && req.session.passport.user.userType === 'creator'){
+    res.send({
+      //creator 일 경우
+      error : false,
+      state : 0,
+    })
+  }
+  else {
     res.send({
       //creator 일 경우
       error : true,
