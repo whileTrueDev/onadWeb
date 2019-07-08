@@ -33,7 +33,7 @@ import CardAvatar from '../../../components/Card/CardAvatar';
 import Button from '../../../components/CustomButtons/Button';
 import CardIcon from '../../../components/Card/CardIcon';
 import WarningTypo from '../../../components/Typography/Warning';
-import SuccessTypo from '../../../components/Typography/Success';
+import InfoTypo from '../../../components/Typography/Info';
 import Snackbar from '../../../components/Snackbar/Snackbar';
 import WithdrawlDialog from './WithdrawDialog';
 import AccountDialog from './AccountDialog';
@@ -191,7 +191,7 @@ function Income(props) {
 
   // 출금신청 페이지네이션
   const [page, setPage] = React.useState(0); // 테이블 페이지
-  const [rowsPerPage, setRowsPerPage] = React.useState(3); // 테이블 페이지당 행
+  const [rowsPerPage, setRowsPerPage] = React.useState(5); // 테이블 페이지당 행
   const emptyRows = rowsPerPage - Math.min(
     rowsPerPage, WithdrawalData.length - page * rowsPerPage,
   );
@@ -260,7 +260,7 @@ function Income(props) {
                 <CardFooter stats>
                   <div className={classes.stats}>
                     <Money />
-                    <SuccessTypo>출금 신청 버튼</SuccessTypo>
+                    <InfoTypo>출금 신청 버튼</InfoTypo>
                     {' 으로 출금신청하세요!'}
                   </div>
                 </CardFooter>
@@ -269,7 +269,7 @@ function Income(props) {
             {/* 총 수익금 그래프 */}
             <GridItem xs={12} sm={12} md={12}>
               <Card chart>
-                <CardHeader color="success">
+                <CardHeader>
                   <FormControl variant="outlined" className={classes.select}>
                     <InputLabel ref={inputLabel} htmlFor="selectDateRange">
                   범위
@@ -346,7 +346,7 @@ function Income(props) {
                     {!incomeData.loading && incomeData.payload
                   && (
                   <Button
-                    color="success"
+                    color="info"
                     round
                     onClick={handleWithdrawDialogOpen}
                     disabled={!incomeData.payload.creatorAccountNumber}
