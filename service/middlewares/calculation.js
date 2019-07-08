@@ -4,8 +4,41 @@
 //4. StreamerName 으로 조회하여 존재하는지 여부 확인. => 방송중이라는 의미
 const schedule = require('node-schedule'); 
 const pool = require('../model/connectionPool');
+const doQuery = require('../model/calculatorQuery');
 const logger = require('../middlewares/calculatorLogger');
 
+/* 2019-07-06
+
+doQuery 모듈을 사용한 Error handling 및 동기식 수행.
+Creator 및 Marketer에 대해 계산시 필요한 table 고려후 초기값 삽입.
+
+1. Creator 관련 table
+
+  - creatorInfo
+  > 최초 로그인시 Data 삽입.
+
+  - creatorIncome
+  > 최초 로그인시 (Total, Will) => (0,0)으로 삽입.
+
+  - creatorPrice
+  > 최초 로그인시 (grade, viewCount, unitPrice) => (1,0,1)으로 삽입.
+
+  - creatorWithdrawal
+  > 환급 신청시에 기입하므로 초기값은 필요하지 않음.
+
+2. Marketer 관련 table
+
+  - marketerCost
+  > 최초 로그인시 (marketerDebit)=>(0)으로 삽입.
+
+  - marketerCash
+  > 최초 로그인시 (chargeCash, withdrawCash) => (0,0)으로 삽입.
+
+3. 수정사항
+
+- error handling을 위한 doQuery 사용
+> 현재 Promise 객체를 return하는 함수를 Promise 객체를 return하는 doQuery를 사용하여 어떻게 대체할 것인가?
+*/
 
 const getStreamerList = () => {
   return new Promise((resolve, reject)=>{

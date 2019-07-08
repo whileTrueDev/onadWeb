@@ -10,6 +10,7 @@ import {
   Divider,
   Button,
 } from '@material-ui/core';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const terms = [
   {
@@ -71,7 +72,9 @@ const styles = theme => ({
 
 
 const PaperSheet = (props) => {
-  const { handleReset, handleUserSubmit, classes } = props;
+  const {
+    handleReset, handleUserSubmit, loading, classes, setLoading,
+  } = props;
   const [checkedA, setA] = useState(false);
   const [checkedB, setB] = useState(false);
   const [checkedC, setC] = useState(false);
@@ -90,6 +93,7 @@ const PaperSheet = (props) => {
 
   const finishReg = () => {
     if (checkedA && checkedB && checkedC) {
+      setLoading(1);
       handleUserSubmit();
     } else {
       alert('모든 약관에 동의하지 않으면 회원가입이 완료되지 않습니다.');
@@ -99,41 +103,54 @@ const PaperSheet = (props) => {
 
   return (
     <div>
-      <Paper className={classes.root} elevation={1}>
-        <Typography variant="h6" component="h6" style={{ textAlign: 'center' }}>
-            While:True
-        </Typography>
-        {terms.map(term => (
-          <Paper className={classes.container} elevation={1} key={term.state}>
-            <Typography component="p" style={{ flex: 8, fontSize: 13 }}>
-              {term.title}
+      {loading
+        ? (
+          <Paper className={classes.root} elevation={1}>
+            <Typography variant="h6" component="h6" style={{ textAlign: 'center' }}>
+          회원 등록 중입니다. 잠시만 기다려주세요.
             </Typography>
-            <Button style={{
-              flex: 1, backgroundColor: '#d6d6d6', height: '70%', fontSize: 13,
-            }}
-            >
-            약관보기
-            </Button>
-            <Divider className={classes.divider} />
-            <FormControlLabel
-              control={(
-                <Checkbox
-                  // checked={this.getChange(term.state)}
-                  onChange={handleChange(term.state)}
-                  value={term.state}
-                  classes={{
-                    root: classes.checkboxRoot,
-                    checked: classes.checked,
-                  }}
-                />
-                )}
-              label="동의"
-              style={{ flex: 2, marginRight: 0 }}
-            />
+            <div style={{ textAlign: 'center' }}><CircularProgress /></div>
           </Paper>
+        )
+        : (
+          <Paper className={classes.root} elevation={1}>
+            <Typography variant="h6" component="h6" style={{ textAlign: 'center' }}>
+          While:True
+            </Typography>
+            {terms.map(term => (
+              <Paper className={classes.container} elevation={1} key={term.state}>
+                <Typography component="p" style={{ flex: 8, fontSize: 13 }}>
+                  {term.title}
+                </Typography>
+                <Button style={{
+                  flex: 1, backgroundColor: '#d6d6d6', height: '70%', fontSize: 13,
+                }}
+                >
+          약관보기
+                </Button>
+                <Divider className={classes.divider} />
+                <FormControlLabel
+                  control={(
+                    <Checkbox
+                // checked={this.getChange(term.state)}
+                      onChange={handleChange(term.state)}
+                      value={term.state}
+                      classes={{
+                        root: classes.checkboxRoot,
+                        checked: classes.checked,
+                      }}
+                    />
+              )}
+                  label="동의"
+                  style={{ flex: 2, marginRight: 0 }}
+                />
+              </Paper>
 
-        ))}
-      </Paper>
+            ))}
+          </Paper>
+        )
+
+      }
       <div className={classes.actionsContainer}>
         <div>
           <Button

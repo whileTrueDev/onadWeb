@@ -8,7 +8,7 @@ import TableRow from '@material-ui/core/TableRow';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import Done from '@material-ui/icons/Done';
-import {InputLabel} from '@material-ui/core';
+import { InputLabel } from '@material-ui/core';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -27,7 +27,7 @@ function CustomTable({ ...props }) {
     classes, tableHead, tableData, tableHeaderColor, pagination,
     handleChangeTablePage, handleChangeTableRowsPerPage,
     emptyRows, rowsPerPage, page, loading, confirmClickEvent,
-    handleSeleted
+    handleSeleted,
   } = props;
 
   return (
@@ -80,7 +80,7 @@ function CustomTable({ ...props }) {
               <TableCell colSpan={6} />
             </TableRow>
             )}
- 
+
           </TableBody>
         ) : (
           <TableBody>
@@ -92,44 +92,42 @@ function CustomTable({ ...props }) {
                   //   {value}
                   // </TableCell>
                   String(value).indexOf('data:image/') === -1 // 없는 경우
-                  ? 
-                  value == '0'
-                  ?
-                  (
-                   <TableCell className={classes.tableCell} key={value}>
-                    <p><Button id={prop[1]} onClick={confirmClickEvent}> 승인하기 </Button> </p>
-                   
-                    <FormControl className={classes.formControl}>
-                      <InputLabel> 거절하기 </InputLabel>
-                      <Select
-                        onChange={handleSeleted}
-                        input={(
-                          <OutlinedInput
-                            name={prop[1]}
-                            id={prop[1]}
-                            value={value}
-                          />
+                    ? value == '0'
+                      ? (
+                        <TableCell className={classes.tableCell} key={value}>
+                          <p><Button id={prop[1]} onClick={confirmClickEvent}> 승인하기 </Button> </p>
+
+                          <FormControl className={classes.formControl}>
+                            <InputLabel> 거절하기 </InputLabel>
+                            <Select
+                              onChange={handleSeleted}
+                              input={(
+                                <OutlinedInput
+                                  name={prop[1]}
+                                  id={prop[1]}
+                                  value={value}
+                                />
                         )}
-                      >
-                        <MenuItem value={'불법 베팅관련'}>불법 베팅관련</MenuItem>
-                        <MenuItem value={'선정적'}>선정적</MenuItem>
-                        <MenuItem value={'저작권 침해 우려'}>저작권 침해 우려</MenuItem>
-                        <MenuItem value={'잔인함'}>잔인함</MenuItem>
-                        <MenuItem value={'기타 : 고객센터 문의'}>기타 : 고객센터 문의</MenuItem>
-                      </Select>
-                    </FormControl>
-                  </TableCell>
-                  )
-                  :((
-                    <TableCell className={classes.tableCell} key={value}>
-                      {value}
-                    </TableCell>
-                  ))
-                  :(
-                    <TableCell className={classes.tableCell} key={value}>
-                      <img src={value} alt="banner" height="50%" />
-                    </TableCell>
-                  ) 
+                            >
+                              <MenuItem value="불법 베팅관련">불법 베팅관련</MenuItem>
+                              <MenuItem value="선정적">선정적</MenuItem>
+                              <MenuItem value="저작권 침해 우려">저작권 침해 우려</MenuItem>
+                              <MenuItem value="잔인함">잔인함</MenuItem>
+                              <MenuItem value="기타 : 고객센터 문의">기타 : 고객센터 문의</MenuItem>
+                            </Select>
+                          </FormControl>
+                        </TableCell>
+                      )
+                      : ((
+                        <TableCell className={classes.tableCell} key={value}>
+                          {value}
+                        </TableCell>
+                      ))
+                    : (
+                      <TableCell className={classes.tableCell} key={value}>
+                        <img src={value} alt="banner" height="50%" />
+                      </TableCell>
+                    )
                 ))}
               </TableRow>
             ))}

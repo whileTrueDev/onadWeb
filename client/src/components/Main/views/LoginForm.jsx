@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import axios from 'axios';
 import {
   Tooltip,
@@ -14,6 +14,7 @@ import {
 } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import FindDialog from './FindDialog';
+import { StateContext } from '../../StateStore';
 
 const styles = () => ({
   title: {
@@ -43,8 +44,10 @@ const LoginForm = (props) => {
   // prop를 통해 Marketer 인지 Creator인지 확인.
   // 데이터가 변경되는 것일 때 state로 처리를 한다.
   const {
-    isMarketer, classes, handleClose, history, logout,
+    isMarketer, classes, handleClose, logout,
   } = props;
+  const { state } = useContext(StateContext);
+  const { history } = state;
   const [open, setOpen] = useState(false);
   const [findDialogOpen, setFindDialogOpen] = useState(false);
   const [dialogType, setDialogType] = useState('ID');
@@ -73,29 +76,35 @@ const LoginForm = (props) => {
     if (event) {
       event.preventDefault();
     }
-
     axios.post('/login',
       {
         userid,
         passwd,
       })
       .then((res) => {
-        if (res.data) {
-          console.log('로그인 완료');
-          if (res.data.temporaryLogin) {
-            history.push('/');
-          } else {
-            history.push('/dashboard/marketer/main', { userType: res.data.userType });
+        if (res.data[0]) {
+          setPasswd('');
+          alert(res.data[1]);
+          if (res.data[1] === '이메일 본인인증을 해야합니다.') {
+            handleClose();
+            logout();
           }
         } else {
-          alert('이메일 본인인증을 해야합니다.');
-          logout();
+          const userData = res.data[1];
+          if (userData.temporaryLogin) {
+            handleClose();
+            history.push('/');
+          } else {
+            // dispatch({ type: 'session', data: userData });
+            handleClose();
+            history.push('/dashboard/marketer/main');
+          }
         }
-        handleClose();
       })
       .catch(() => {
+        setUserid('');
         setPasswd(''); // 비밀번호 초기화
-        alert('회원정보가 일치하지 않습니다.');
+        alert('회원이 아닙니다.');
       });
   };
 
@@ -118,6 +127,7 @@ const LoginForm = (props) => {
               required
               label="ID"
               helperText="ID를 입력하세요."
+              value={userid}
               margin="dense"
               name="userid"
               InputLabelProps={{ shrink: true }}

@@ -9,18 +9,52 @@ const sendEmailAuth = require('../middlewares/sendEmailAuth');
 
 const router = express.Router();
 
-// 쿼리관련 에러 핸들링 완료.
+/* 2019-07-06 박찬우
+
+- 회원가입시 초기화되어야하는 table 
+  1. marketerInfo 
+  2. marketerCash
+  3. marketerCost
+
+*/
 router.post('/marketer', (req, res, next)=>{
+  const {
+    marketerId, marketerName, 
+    marketerMail, marketerPhoneNum,
+    marketerBusinessRegNum, marketerUserType,
+    marketerRawPasswd
+  } = req.body;
   let key, salt;
-  [key, salt] = encrypto.make(req.body.marketerRawPasswd);
-  let query = `INSERT INTO marketerInfo (marketerId, marketerPasswd, marketerSalt, marketerName, marketerMail, marketerPhoneNum, marketerBusinessRegNum, marketerUserType) VALUES (?, ?, ?, ?, ?, ?, ?, ?) `
-  let queryArray = [req.body.marketerId, key, salt, req.body.marketerName, req.body.marketerMail, req.body.marketerPhoneNum, req.body.marketerBusinessRegNum, req.body.marketerUserType]
-  doQuery(query, queryArray)
+  [key, salt] = encrypto.make(marketerRawPasswd);
+  
+  const infoQuery = `
+  INSERT INTO marketerInfo 
+  (marketerId, marketerPasswd, marketerSalt, marketerName, marketerMail, 
+  marketerPhoneNum, marketerBusinessRegNum, marketerUserType) 
+  VALUES (?, ?, ?, ?, ?, ?, ?, ?) `;
+  const infoQueryArray = [marketerId, key, salt, marketerName, marketerMail, marketerPhoneNum, marketerBusinessRegNum, marketerUserType]
+  
+  const cashQuery = `
+  INSERT INTO marketerCash
+  (marketerId, chargeCash, withdrawCash, cashReturnState)
+  VALUES (?, ?, ?, ?)`
+
+  const costQuery = `
+  INSERT INTO marketerCost
+  (marketerId, marketerDebit)
+  VALUES (?, ?)
+  `
+
+  Promise.all([
+    doQuery(infoQuery, infoQueryArray),
+    doQuery(cashQuery, [marketerId, 0, 0, 0]),
+    doQuery(costQuery, [marketerId, 0])
+  ])
   .then(()=>{
     next();
   })
-  .catch((data)=>{
-    res.send(data); 
+  .catch((error)=>{
+    res.send([false, error]); 
   })
 }, sendEmailAuth);
 
@@ -28,9 +62,10 @@ router.post('/marketer', (req, res, next)=>{
 router.post('/checkId', (req, res)=>{
   console.log('checkId로 중복확인 합니다.');
   doQuery(`SELECT marketerId FROM marketerInfo WHERE marketerId = ? `, [req.body.id])
-  .then((data)=>{
-    const {result} = data;
+  .then((row)=>{
+    const {result} = row;
     if(result[0]){
+      //ID가 존재한다.
       res.send(true);
     }
     else{

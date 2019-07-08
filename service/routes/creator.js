@@ -36,7 +36,6 @@ router.get('/income', function(req, res, next) {
         } else {
           // 결과값이 있는 경우
           if (rows.length > 0) {
-            console.log(rows);
             let result = sortRows(rows, 'date')[0];
             result.date = result.date.toLocaleString();
             conn.release();
@@ -376,13 +375,15 @@ router.post('/withdrawal', function(req, res, next) {
 
 router.get('/profile', (req, res)=>{
   const creatorId = req._passport.session.user.creatorId;
-  doQuery(`SELECT * FROM creatorInfo WHERE creatorId = ?`, [creatorId])
-  .then((data)=>{
-    res.send(data);
-  })
-  .catch((data)=>{
-    res.send(data);
-  })
+  // doQuery(`SELECT * FROM creatorInfo WHERE creatorId = ?`, [creatorId])
+  // .then((data)=>{
+  //   res.send(data);
+  // })
+  // .catch((data)=>{
+  //   res.send(data);
+  // })
+  const userData = req._passport.session.user;
+  res.send(userData);
 })
 
 // 크리에이터 출금 내역 불러오기
