@@ -123,9 +123,9 @@ const Dashboard = (props) => {
   const secondClasses = useStyles();
   const { classes } = props;
 
-  const cashData = useFetchData('/dashboard/marketer/cash');
-  const bannerData = useFetchData('/dashboard/marketer/banner');
-  const tableData = useFetchData('/dashboard/marketer/creatorList');
+  const cashData = useFetchData('/api/dashboard/marketer/cash');
+  const bannerData = useFetchData('/api/dashboard/marketer/banner');
+  const tableData = useFetchData('/api/dashboard/marketer/creatorList');
   const {
     DialogOpen, handleDialogOpen,
     handleDialogClose, selectedBanner,
@@ -325,7 +325,6 @@ const Dashboard = (props) => {
 
 Dashboard.propTypes = {
   classes: PropTypes.object.isRequired,
-  history: PropTypes.object,
 };
 
 export default withStyles(dashboardStyle)(Dashboard);

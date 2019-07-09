@@ -13,6 +13,10 @@
  * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
  */
+
+ @import url('https://fonts.googleapis.com/css?family=Nanum+Gothic:400,700,800');
+ @import url('https://fonts.googleapis.com/css?family=Sunflower:300&display=swap');
+
 .ct-grid {
   stroke: rgba(255, 255, 255, 0.2);
   stroke-width: 1px;
@@ -65,7 +69,7 @@ body {
   background-color: #eeeeee;
   color: #3c4858;
   margin: 0;
-  font-family: Roboto, Helvetica, Arial, sans-serif;
+  font-family: Helvetica, 'Sunflower', sans-serif;
   font-weight: 300;
   line-height: 1.5em;
 }

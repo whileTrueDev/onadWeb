@@ -40,7 +40,7 @@ const Dashboard = (props) => {
   const [currentBannerData, setCurrentBannerData] = React.useState([['', '']]);
 
   useEffect(() => {
-    axios.get('/dashboard/creator/currentBanner')
+    axios.get('/api/dashboard/creator/currentBanner')
       .then((res) => {
         if (res.data) {
           if (res.data.length > 0) {
@@ -59,7 +59,7 @@ const Dashboard = (props) => {
 
   useEffect(() => {
     // income 데이터 axios 요청
-    axios.get('/dashboard/creator/income').then((res) => {
+    axios.get('/api/dashboard/creator/income').then((res) => {
       if (res.data) {
         if (!res.data.length) {
           setData(res.data);
@@ -74,7 +74,7 @@ const Dashboard = (props) => {
   const [bannerData, setBannerData] = useState(defaultBannerData);
   useEffect(() => {
     // Banner 데이터 axios 요청
-    axios.get('/dashboard/creator/matchedBanner')
+    axios.get('/api/dashboard/creator/matchedBanner')
       .then((res) => {
         if (res.data) {
           if (res.data) {
@@ -91,7 +91,7 @@ const Dashboard = (props) => {
   const [session, setSession] = useState({});
   useEffect(() => {
     // Banner 데이터 axios 요청
-    axios.get('/dashboard/checkUserType')
+    axios.get('/api/dashboard/checkUserType')
       .then((res) => {
         if (res.data) {
           setSession(res.data);
@@ -104,7 +104,7 @@ const Dashboard = (props) => {
 
   // 배너 테이블 state, 테이블 페이지 state 선언
   const [page, setPage] = React.useState(0); // 테이블 페이지
-  const [rowsPerPage, setRowsPerPage] = React.useState(3); // 테이블 페이지당 행
+  const [rowsPerPage, setRowsPerPage] = React.useState(5); // 테이블 페이지당 행
   const emptyRows = rowsPerPage - Math.min(
     rowsPerPage, bannerData.length - page * rowsPerPage,
   );

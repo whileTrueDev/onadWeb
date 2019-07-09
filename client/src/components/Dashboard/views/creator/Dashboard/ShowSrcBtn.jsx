@@ -49,7 +49,7 @@ class ShowSrcBtn extends Component {
   componentDidMount() {
     // url 데이터 가져와 state로 입력.
     const { creatorId } = this.props;
-    axios.get('/dashboard/creator/overlayUrl', {
+    axios.get('/api/dashboard/creator/overlayUrl', {
       params: {
         creatorId,
       },

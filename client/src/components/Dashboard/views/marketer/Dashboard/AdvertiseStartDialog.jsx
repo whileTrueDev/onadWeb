@@ -30,7 +30,7 @@ function useConfirmDialog() {
 function useFetchCreatorData(selectedBanner) {
   const [creatorData, setCreatorData] = useState();
   const callUrl = useCallback(async () => {
-    const url = '/dashboard/marketer/contraction/creatorList';
+    const url = '/api/dashboard/marketer/contraction/creatorList';
     const { bannerId } = selectedBanner;
     try {
       const res = await axios.get(url, { params: { bannerId } });
@@ -78,7 +78,7 @@ function AdvertiseStartDialog(props) {
         return null;
       });
 
-      const matchedBannerUrl = '/dashboard/marketer/bannerStart';
+      const matchedBannerUrl = '/api/dashboard/marketer/bannerStart';
       const matchedBannerData = { bannerId: selectedBanner.bannerId, creators };
       await axios.post(matchedBannerUrl, matchedBannerData)
         .then((res) => {
@@ -90,7 +90,7 @@ function AdvertiseStartDialog(props) {
           console.log(err);
         });
 
-      const bannerRegisteredUrl = '/dashboard/marketer/bannerStartStateChange';
+      const bannerRegisteredUrl = '/api/dashboard/marketer/bannerStartStateChange';
       const bannerRegisteredData = { bannerId: selectedBanner.bannerId };
       await axios.post(bannerRegisteredUrl, bannerRegisteredData)
         .then((res) => {
@@ -108,7 +108,7 @@ function AdvertiseStartDialog(props) {
         return null;
       });
 
-      const matchedBannerUrl = '/dashboard/marketer/bannerStop';
+      const matchedBannerUrl = '/api/dashboard/marketer/bannerStop';
       const matchedBannerData = { bannerId: selectedBanner.bannerId, creators };
       await axios.post(matchedBannerUrl, matchedBannerData)
         .then((res) => {
@@ -120,7 +120,7 @@ function AdvertiseStartDialog(props) {
           console.log(err);
         });
 
-      const bannerRegisteredUrl = '/dashboard/marketer/bannerStopStateChange';
+      const bannerRegisteredUrl = '/api/dashboard/marketer/bannerStopStateChange';
       const bannerRegisteredData = { bannerId: selectedBanner.bannerId };
       await axios.post(bannerRegisteredUrl, bannerRegisteredData)
         .then((res) => {
@@ -145,9 +145,6 @@ function AdvertiseStartDialog(props) {
         }
       buttons={(
         <div>
-          <Button onClick={onClose}>
-            취소
-          </Button>
           { selectedBanner.confirmState === 1 ? (
             <Button color="info" onClick={handleConfirmDialogOpen}>
             해당 배너 광고 시작
@@ -157,6 +154,9 @@ function AdvertiseStartDialog(props) {
             해당 배너 광고 중단
             </Button>
           )}
+          <Button onClick={onClose}>
+            취소
+          </Button>
         </div>
       )}
     >
@@ -188,15 +188,15 @@ function AdvertiseStartDialog(props) {
           onClose={handleConfirmDialogClose}
           buttons={(
             <div>
-              <Button onClick={handleConfirmDialogClose}>
-                취소
-              </Button>
               <Button
                 onClick={() => handleClick()}
                 color={selectedBanner.confirmState === CONFIRMED_BANNER_STATE
                   ? 'info' : 'blueGray'}
               >
                 진행
+              </Button>
+              <Button onClick={handleConfirmDialogClose}>
+                취소
               </Button>
             </div>
           )}

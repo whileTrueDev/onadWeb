@@ -60,7 +60,7 @@ const PasswordForm = (props) => {
   const submitPassword = (event) => {
     event.preventDefault();
     if (!(state.password || state.repasswd)) {
-      axios.post('/login/changePw', { password: state.value })
+      axios.post('/api/login/changePw', { password: state.value })
         .then((res) => {
           if (res.data) {
             setSnackOpen(true);

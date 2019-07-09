@@ -71,7 +71,7 @@ const UserDataForm = (props) => {
   const [snackOpen, setSnackOpen] = useState(false);
 
   const getData = useCallback(async () => {
-    axios.post('/dashboard/marketer/info')
+    axios.post('/api/dashboard/marketer/info')
       .then((res) => {
         setUserData(res.data);
         setDomain(res.data.marketerMail.split('@')[1]);
@@ -109,7 +109,7 @@ const UserDataForm = (props) => {
       marketerMail: `${mail}@${domain}`,
       marketerPhoneNum: phone,
     };
-    axios.post('/dashboard/marketer/info/change', user)
+    axios.post('/api/dashboard/marketer/info/change', user)
       .then((res) => {
         getData();
         setSnackOpen(true);

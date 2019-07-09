@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import classnames from 'classnames';
 import axios from 'axios';
 import shortid from 'shortid';
 import {
-  Tooltip,
   Paper,
   Typography,
   Divider,
@@ -98,7 +96,7 @@ function Contraction(props) {
 
   const handleUserContract = () => {
     if (contractionList.every(row => row === true)) {
-      axios.post('/dashboard/creator/contraction', {
+      axios.post('/api/dashboard/creator/contraction', {
       })
         .then((res) => {
           if (res.data === true) {

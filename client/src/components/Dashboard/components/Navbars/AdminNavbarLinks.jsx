@@ -15,16 +15,19 @@ import Button from '../CustomButtons/Button';
 function HeaderLinks(props) {
   const { classes, history } = props;
   function handleLogoutClick() {
-    axios.get('/login/logout').then(() => {
+    axios.get('/api/login/logout').then(() => {
       history.push('/');
     });
   }
+
+  const MOBILEWIDTH = 959;
+
   return (
     <div>
       <Button
-        color={window.innerWidth > 959 ? 'transparent' : 'white'}
-        justIcon={window.innerWidth > 959}
-        simple={!(window.innerWidth > 959)}
+        color={window.innerWidth > MOBILEWIDTH ? 'transparent' : 'white'}
+        justIcon={window.innerWidth > MOBILEWIDTH}
+        simple={!(window.innerWidth > MOBILEWIDTH)}
         aria-label="Dashboard"
         className={classes.buttonLink}
         to={window.location.pathname.includes('marketer')
@@ -38,9 +41,9 @@ function HeaderLinks(props) {
       </Button>
 
       <Button
-        color={window.innerWidth > 959 ? 'transparent' : 'white'}
-        justIcon={window.innerWidth > 959}
-        simple={!(window.innerWidth > 959)}
+        color={window.innerWidth > MOBILEWIDTH ? 'transparent' : 'white'}
+        justIcon={window.innerWidth > MOBILEWIDTH}
+        simple={!(window.innerWidth > MOBILEWIDTH)}
         aria-label="User"
         className={classes.buttonLink}
         to={window.location.pathname.includes('marketer')
@@ -54,9 +57,9 @@ function HeaderLinks(props) {
       </Button>
 
       <Button
-        color={window.innerWidth > 959 ? 'transparent' : 'white'}
-        justIcon={window.innerWidth > 959}
-        simple={!(window.innerWidth > 959)}
+        color={window.innerWidth > MOBILEWIDTH ? 'transparent' : 'white'}
+        justIcon={window.innerWidth > MOBILEWIDTH}
+        simple={!(window.innerWidth > MOBILEWIDTH)}
         aria-label="User"
         className={classes.buttonLink}
         onClick={handleLogoutClick}

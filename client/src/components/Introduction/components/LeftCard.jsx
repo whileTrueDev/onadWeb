@@ -7,9 +7,7 @@ import Container from '@material-ui/core/Container';
 import Slide from '@material-ui/core/Slide';
 import Grow from '@material-ui/core/Grow';
 import useScrollTrigger from '@material-ui/core/useScrollTrigger';
-import { Link } from 'react-router-dom';
 import Typography from '../../Main/components/Typography';
-import Button from '../../Main/components/Button';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -35,10 +33,6 @@ const useStyles = makeStyles(theme => ({
   imagesWrapper: {
     position: 'relative',
   },
-  imageDots: {
-    position: 'static',
-    width: '100%',
-  },
   image: {
     position: 'absolute',
     top: 100,
@@ -52,7 +46,7 @@ const useStyles = makeStyles(theme => ({
 
 const LeftCreator = (props) => {
   const {
-    source, triggerThreshold, growCheck, growTime, slideTime, linkTo,
+    source, triggerThreshold, growCheck, growTime, slideTime,
   } = props;
   const classes = useStyles();
 
@@ -94,16 +88,6 @@ const LeftCreator = (props) => {
                 <Typography variant="body1" align="center">
                   {source.body}
                 </Typography>
-                <Button
-                  type="submit"
-                  variant="contained"
-                  color="primary"
-                  component={Link}
-                  to={linkTo}
-                  className={classes.button}
-                >
-                  {source.buttonText}
-                </Button>
               </div>
             </div>
           </Grid>
@@ -118,7 +102,6 @@ const LeftCreator = (props) => {
           >
             <Grid item xs={12} md={6} className={classes.imagesWrapper}>
               <Hidden smDown>
-                <div className={classes.imageDots} />
                 <img
                   src={source.image}
                   alt="call to action"
@@ -135,7 +118,7 @@ const LeftCreator = (props) => {
 
 
 LeftCreator.propTypes = {
-  source: PropTypes.string, // text sources
+  source: PropTypes.object, // text sources
   growCheck: PropTypes.bool.isRequired, // grow animation trigger
   growTime: PropTypes.number, // grow animation timeout time
   triggerThreshold: PropTypes.number, // slide animation trigger threshold

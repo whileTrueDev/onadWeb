@@ -3,7 +3,7 @@ const textSource = {
     title: '매뉴얼을 통해 쉽게',
     subTitle: '당신의 광고를 실현하세요',
     body: '간단한 작업만으로 OnAd를 이용할 수 있습니다.',
-    tail: '쉽게 따라하세요.',
+    tail: '',
     backImage: 'https://images.unsplash.com/photo-1557509430-2f5317a45752?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1300&q=80',
   },
   creator: {

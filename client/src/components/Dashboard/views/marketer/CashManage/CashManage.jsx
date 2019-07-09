@@ -89,7 +89,7 @@ const CashManage = (props) => {
   const [accountNumber, setAccountNumber] = useState('');
 
   useEffect(() => {
-    axios.get('/dashboard/marketer/accountNumber')
+    axios.get('/api/dashboard/marketer/accountNumber')
       .then((res) => {
         if (res.data) {
           if (res.data) {
@@ -107,7 +107,7 @@ const CashManage = (props) => {
 
   // 광고캐시 DB값 요
   useEffect(() => {
-    axios.get('/dashboard/marketer/cash')
+    axios.get('/api/dashboard/marketer/cash')
       .then((res) => {
         if (res.data) {
           setCash(res.data);
@@ -123,7 +123,7 @@ const CashManage = (props) => {
 
   // 충전 및 환불 DB값 요
   useEffect(() => {
-    axios.get('/dashboard/marketer/cashlist')
+    axios.get('/api/dashboard/marketer/cashlist')
       .then((res) => {
         if (res.data) {
           if (res.data) {

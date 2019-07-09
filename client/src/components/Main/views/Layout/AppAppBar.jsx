@@ -1,20 +1,19 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
+import classNames from 'classnames';
 import { withStyles } from '@material-ui/core/styles';
 import { blueGrey } from '@material-ui/core/colors';
 import MoreIcon from '@material-ui/icons/MoreVert';
-import classnames from 'classnames';
 import {
   Menu, MenuItem, IconButton, Button,
 } from '@material-ui/core';
-
 import {
-  Help, Domain,
+  Help, Domain, Lock,
 } from '@material-ui/icons';
-import { Link } from 'react-router-dom';
-import AppBar from '../components/AppBar';
-import Toolbar, { styles as toolbarStyles } from '../components/Toolbar';
-import LoginPopover from './LoginPopover';
+import AppBar from '../../components/AppBar';
+import Toolbar from '../../components/Toolbar';
+import LoginPopover from '../Login/LoginPopover';
 
 const styles = theme => ({
   root: {
@@ -23,15 +22,11 @@ const styles = theme => ({
   title: {
     fontSize: 24,
   },
-  placeholder: toolbarStyles(theme).root,
   toolbar: {
     justifyContent: 'space-between',
   },
   left: {
     flex: 0,
-  },
-  leftLinkActive: {
-    color: theme.palette.common.white,
   },
   rightDesktop: {
     flex: 1,
@@ -49,6 +44,7 @@ const styles = theme => ({
   },
   rightLink: {
     color: theme.palette.common.black,
+    fontWeight: theme.typography.fontWeightRegular,
     marginLeft: 0,
     fontSize: 16,
     [theme.breakpoints.up('md')]: {
@@ -59,11 +55,11 @@ const styles = theme => ({
       },
     },
   },
-  linkSecondary: {
-    color: theme.palette.secondary.main,
-  },
   active: {
-    fontWeight: 'bold',
+    fontWeight: theme.typography.fontWeightMedium,
+  },
+  buttonIcon: {
+    marginRight: 10,
   },
 });
 
@@ -95,36 +91,37 @@ function AppAppBar(props) {
       onClose={handleMobileMenuClose}
     >
       <MenuItem>
-        <Button
+        <Link
           className={classes.rightLink}
-          color="inherit"
-          underline="none"
-          component={Link}
           to="/introduction"
         >
-          <Domain style={{ marginRight: 10 }} />
+          <Domain className={classes.buttonIcon} />
           {'서비스 소개'}
-        </Button>
+        </Link>
       </MenuItem>
       <MenuItem>
-        <Button
+        <Link
           className={classes.rightLink}
-          color="inherit"
-          underline="none"
-          component={Link}
           to="/manual"
         >
-          <Help style={{ marginRight: 10 }} />
+          <Help className={classes.buttonIcon} />
           {'이용 안내'}
-        </Button>
+        </Link>
       </MenuItem>
+
       <MenuItem>
-        {isLogin ? <Button>로그아웃</Button>
-          : <LoginPopover type="로그인" history={history} />
-        }
+        {isLogin ? (
+          <Button onClick={logout}>
+            <Lock className={classes.buttonIcon} />
+              로그아웃
+          </Button>
+        ) : (
+          <LoginPopover type="로그인" history={history} />
+        )}
       </MenuItem>
+
       <MenuItem>
-        {isLogin ? <div />
+        {isLogin ? null
           : <LoginPopover type="회원가입" history={history} />
         }
       </MenuItem>
@@ -153,12 +150,12 @@ function AppAppBar(props) {
     return <LoginPopover type="로그인" history={history} logout={logout} />;
   };
 
-  const RegButton = (props) => {
-    const { history } = props;
+  const RegButton = (prop) => {
+    const { history1 } = prop;
     if (isLogin) {
-      return <div />;
+      return null;
     }
-    return <LoginPopover type="회원가입" history={history} />;
+    return <LoginPopover type="회원가입" history={history1} />;
   };
 
 
@@ -175,55 +172,26 @@ function AppAppBar(props) {
           >
             {'OnAD'}
           </Button>
+
           <div className={classes.rightDesktop}>
-            {selected === 'introduction'
-              ? (
-                <Button
-                  color="inherit"
-                  className={classnames(
-                    [classes.rightLink, classes.active],
-                  )}
-                  component={Link}
-                  to="/introduction"
-                >
-                  {'서비스 소개'}
-                </Button>
-              )
-              : (
-                <Button
-                  color="inherit"
-                  className={classes.rightLink}
-                  component={Link}
-                  to="/introduction"
-                >
-                  {'서비스 소개'}
-                </Button>
-              )
-          }
-            {selected === 'manual'
-              ? (
-                <Button
-                  underline="none"
-                  className={classnames(
-                    [classes.rightLink, classes.active],
-                  )}
-                  component={Link}
-                  to="/manual"
-                >
-                  {'이용 안내'}
-                </Button>
-              )
-              : (
-                <Button
-                  underline="none"
-                  className={classes.rightLink}
-                  component={Link}
-                  to="/manual"
-                >
-                  {'이용 안내'}
-                </Button>
-              )
-          }
+            <Button
+              className={classNames(
+                { [classes.rightLink]: true, [classes.active]: selected === 'introduction' },
+              )}
+              component={Link}
+              to="/introduction"
+            >
+              {'서비스 소개'}
+            </Button>
+            <Button
+              className={classNames(
+                { [classes.rightLink]: true, [classes.active]: selected === 'manual' },
+              )}
+              component={Link}
+              to="/manual"
+            >
+              {'이용 안내'}
+            </Button>
             <LogButton history={history} logout={logout} />
             <RegButton history={history} logout={logout} />
           </div>

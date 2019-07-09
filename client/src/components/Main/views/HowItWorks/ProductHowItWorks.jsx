@@ -13,7 +13,7 @@ import ProductHowItWorksCreatorItem from './ProductHowItWorksCreatorItem';
 const styles = theme => ({
   root: {
     display: 'flex',
-    backgroundColor: grey[300],
+    backgroundColor: grey[100],
     overflow: 'hidden',
   },
   container: {
@@ -35,7 +35,7 @@ const styles = theme => ({
   number: {
     fontSize: 24,
     fontFamily: theme.typography.fontFamily,
-    color: theme.palette.secondary.main,
+    color: theme.palette.primary.main,
     fontWeight: theme.typography.fontWeightMedium,
   },
   image: {
@@ -50,11 +50,16 @@ const styles = theme => ({
     flexGrow: 1,
     marginBottom: theme.spacing(5),
     boxShadow: 'none',
-    backgroundColor: grey[300],
+    backgroundColor: grey[100],
     zIndex: 0,
   },
   tab: {
     height: 85,
+  },
+  icon: {
+    marginTop: 35,
+    marginBottom: 30,
+    fontSize: 48,
   },
 });
 
@@ -88,7 +93,7 @@ class ProductHowItWorks extends React.Component {
   }
 
   render() {
-    const { classes } = this.props;
+    const { classes, history, isLogin } = this.props;
     const { value, check } = this.state;
 
     return (
@@ -120,11 +125,15 @@ class ProductHowItWorks extends React.Component {
               <ProductHowItWorksMaketerItem
                 classes={classes}
                 check={check}
+                history={history}
+                isLogin={isLogin}
               />
             ) : (
               <ProductHowItWorksCreatorItem
                 classes={classes}
                 check={check}
+                history={history}
+                isLogin={isLogin}
               />
             )
           }

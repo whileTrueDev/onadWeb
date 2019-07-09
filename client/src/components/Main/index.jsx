@@ -1,26 +1,35 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import AppAppBar from './views/AppAppBar';
-import AppFooter from './views/AppFooter';
-import ProductHero from './views/ProductHero';
-import ProductCategories from './views/ProductCategories';
-import ProductHowItWorks from './views/ProductHowItWorks';
+import AppAppBar from './views/Layout/AppAppBar';
+import AppFooter from './views/Layout/AppFooter';
+import ProductHero from './views/Hero/ProductHero';
+import ProductCategories from './views/Categories/ProductCategories';
+import ProductHowItWorks from './views/HowItWorks/ProductHowItWorks';
+import RePasswordDialog from './views/Login/RePassword';
 import withRoot from './withRoot';
-import RePasswordDialog from './views/RePassword';
-// import ProductCTA from './views/ProductCTA';
 
 const heroInfo = {
   backImage: 'https://images.unsplash.com/photo-1556761175-4b46a572b786?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1867&q=80',
 };
 
-export default withRoot((props) => {
-  // if located here, set the scroll to top of the page
-  const { history } = props;
+const useLoginValue = (history, location) => {
   const [isLogin, setisLogin] = useState(false);
   const [repasswordOpen, setRepassword] = useState(false);
 
+  // logout function
+  const logout = () => {
+    setisLogin(false);
+    axios.get('/api/login/logout')
+      .then(() => {
+        history.push('/');
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
   useEffect(() => {
-    axios.get('/login/check')
+    axios.get('/api/login/check')
       .then((res) => {
         if (!res.data.error) {
           if (res.data.state) {
@@ -34,31 +43,39 @@ export default withRoot((props) => {
       .catch((err) => {
         console.log(err);
       });
+  });
 
-    // window.scrollTo(0, 0);
-  }, [props.location]);
-
-  const logout = () => {
-    setisLogin(false);
-    axios.get('/login/logout')
-      .then(() => {
-        history.push('/');
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+  return {
+    isLogin, repasswordOpen, logout, setisLogin, setRepassword,
   };
+};
+
+export default withRoot((props) => {
+  // if located here, set the scroll to top of the page
+  const { history, location } = props;
+  const {
+    isLogin, repasswordOpen, logout, setisLogin, setRepassword,
+  } = useLoginValue(history, location);
+
+  React.useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location]);
 
   return (
     <div>
       <AppAppBar history={history} isLogin={isLogin} setisLogin={setisLogin} logout={logout} />
       <ProductHero backgroundImage={heroInfo.backImage} history={history} />
-      <ProductCategories />
-      <ProductHowItWorks />
+      <ProductCategories history={history} />
+      <ProductHowItWorks history={history} isLogin={isLogin} />
       {/* 문의받기 섹션, 오픈베타에 추가 */
-      /* <ProductCTA /> */}
-      <AppFooter />
-      <RePasswordDialog repasswordOpen={repasswordOpen} setRepassword={setRepassword} history={history} logout={logout} />
+          /* <ProductCTA /> */}
+      <AppFooter history={history} />
+      <RePasswordDialog
+        repasswordOpen={repasswordOpen}
+        setRepassword={setRepassword}
+        history={history}
+        logout={logout}
+      />
     </div>
   );
 });

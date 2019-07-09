@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import withStyles from '@material-ui/core/styles/withStyles';
 import { Switch, Route } from 'react-router-dom';
@@ -31,30 +31,53 @@ const MarketerRoutes = ({ history }) => (
 
 const MarketerDashboard = ({
   classes, history, ...rest
-}) => (
-  <div className={classes.wrapper}>
-    <Sidebar
-      routes={allRoutes.marketer}
-      logoText="OnAD"
-      logo={logo}
-      {...rest}
-    />
-    <div className={classes.mainPanel}>
-      {/* ref="mainPanel" */}
-      <Navbar
+}) => {
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const handleDrawerToggle = () => {
+    setMobileOpen(!mobileOpen);
+  };
+
+  const mainPanel = useRef();
+
+  useEffect(() => {
+    mainPanel.current.scrollTop = 0;
+    if (history.location.pathname === window.location.pathname) {
+      if (mobileOpen) {
+        setMobileOpen(false);
+      }
+    }
+  }, [history.location, history.location.pathname, mobileOpen]);
+
+  return (
+    <div className={classes.wrapper}>
+      <Sidebar
         routes={allRoutes.marketer}
-        history={history}
+        logoText="OnAD"
+        color="info"
+        logo={logo}
+        open={mobileOpen}
+        handleDrawerToggle={handleDrawerToggle}
         {...rest}
       />
-      <div className={classes.content}>
-        <div className={classes.container}>
-          <MarketerRoutes history={history} />
+      <div className={classes.mainPanel} ref={mainPanel}>
+        {/* ref="mainPanel" */}
+        <Navbar
+          routes={allRoutes.marketer}
+          history={history}
+          handleDrawerToggle={handleDrawerToggle}
+          {...rest}
+        />
+        <div className={classes.content}>
+          <div className={classes.container}>
+            <MarketerRoutes history={history} />
+          </div>
         </div>
+        <Footer />
       </div>
-      <Footer />
     </div>
-  </div>
-);
+  );
+};
+
 MarketerRoutes.propTypes = {
   history: PropTypes.object,
 };

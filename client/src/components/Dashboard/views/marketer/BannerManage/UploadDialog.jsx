@@ -127,7 +127,7 @@ const UploadDialog = (props) => {
   // url을 제출.
   const handleSubmit = () => {
     if (state.imageUrl) {
-      axios.post('/dashboard/marketer/banner/push', { url: state.imageUrl })
+      axios.post('/api/dashboard/marketer/banner/push', { url: state.imageUrl })
         .then((res) => {
           if (res.data[0]) {
             alert(res.data[1]);
@@ -158,8 +158,9 @@ const UploadDialog = (props) => {
         </Typography>
         <div className="filebox">
           <input className="upload-name" value={state.imageName} disabled="disabled" />
-          <label htmlFor="getfile">파일찾기
-            <input type="file" id="getfile" accept="image/*" onChange={readImage} className={classes.input} />
+          <label htmlFor="getfile">
+파일찾기
+<input type="file" id="getfile" accept="image/*" onChange={readImage} className={classes.input} />
           </label>
         </div>
         <Divider />

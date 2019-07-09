@@ -54,24 +54,27 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-function useWithdrawalSnack(handleClose) {
-  const [withdrawalSnack, setWithdrawalSnack] = React.useState(false);
+function useWithdrawalConfirmDialog(handleClose) {
+  const [withdrawalConfirmDialog, setWithdrawalConfirmDialog] = React.useState(false);
 
-  function handleSnackClose() {
-    setWithdrawalSnack(false);
+  function handleConfirmDialogClose() {
+    setWithdrawalConfirmDialog(false);
     handleClose(); // 모달창까지 닫기
   }
 
   function handleOnlyDialogClose() {
-    setWithdrawalSnack(false);
+    setWithdrawalConfirmDialog(false);
   }
 
-  function handleSnackOpen() {
-    setWithdrawalSnack(true);
+  function handleConfirmDialogOpen() {
+    setWithdrawalConfirmDialog(true);
   }
 
   return {
-    withdrawalSnack, handleSnackClose, handleOnlyDialogClose, handleSnackOpen,
+    withdrawalConfirmDialog,
+    handleConfirmDialogClose,
+    handleOnlyDialogClose,
+    handleConfirmDialogOpen,
   };
 }
 
@@ -95,29 +98,35 @@ function WithdrawDialog(props) {
 
   // 출금신청 스낵바
   const {
-    withdrawalSnack, handleSnackClose, handleOnlyDialogClose, handleSnackOpen,
-  } = useWithdrawalSnack(handleClose);
+    withdrawalConfirmDialog, handleConfirmDialogClose,
+    handleOnlyDialogClose, handleConfirmDialogOpen,
+  } = useWithdrawalConfirmDialog(handleClose);
 
   // 결제 진행 버튼 클릭
   function handleClick() {
-    handleSnackOpen();
+    handleConfirmDialogOpen();
   }
 
   function handleSubmitClick() {
     if (receivable - selectValue < 0) {
       alert('장난치지마세요!!!');
+    } else if (selectValue < 30000) {
+      alert('3만원 이상부터 출금이 가능해요!');
     } else {
       // 해당 금액 만큼 출금 내역에 추가하는 요청
-      axios.post('/dashboard/creator/withdrawal', {
+      axios.post('/api/dashboard/creator/withdrawal', {
         withdrawalAmount: selectValue,
       }).then((res) => {
-        console.log(res);
+        const { insertWithdrawalSuccess, updateIncome } = res.data;
+        if (insertWithdrawalSuccess === 'success' && updateIncome === 'success') {
+          handleConfirmDialogClose();
+          history.push(window.location.pathname);
+        }
       }).catch((err) => {
         console.log(err);
+        alert('오류에요!.. 다시시도해보세요!');
+        history.push(window.location.pathname);
       });
-
-      handleSnackClose();
-      history.push(window.location.pathname);
     }
   }
 
@@ -133,7 +142,7 @@ function WithdrawDialog(props) {
           <Button
             color="info"
             onClick={handleClick}
-            disabled={(!(receivable >= selectValue)) || !(selectValue >= 0)}
+            disabled={(!(receivable >= selectValue)) || !(selectValue > 0)}
           >
               진행
           </Button>
@@ -189,24 +198,6 @@ function WithdrawDialog(props) {
               value={selectValue}
               onChange={handleChange}
             >
-              <FormControlLabel
-                value="10000"
-                control={<Radio color="primary" />}
-                label={
-                  receivable >= 10000
-                    ? (
-                      <Typography variant="h6" className={classes.selectValue}>
-                    10,000 원
-                      </Typography>
-                    )
-                    : (
-                      <Typography variant="h6">
-                    10,000 원
-                      </Typography>
-                    )
-                  }
-                disabled={!(receivable >= 10000)}
-              />
               <FormControlLabel
                 value="30000"
                 control={<Radio color="primary" />}
@@ -286,8 +277,8 @@ function WithdrawDialog(props) {
         </div>
         {/* 출금 신청 완료 시의 notification */}
         <Dialog
-          open={withdrawalSnack}
-          onClose={handleSnackClose}
+          open={withdrawalConfirmDialog}
+          onClose={handleConfirmDialogClose}
           buttons={(
             <div>
               <Button onClick={handleSubmitClick} color="info">

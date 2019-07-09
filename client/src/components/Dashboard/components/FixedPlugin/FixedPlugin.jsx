@@ -1,6 +1,6 @@
 /*eslint-disable*/
 import React, { Component } from "react";
-import classnames from "classnames";
+import classNames from "classnames";
 
 import imagine1 from "../../assets/img/sidebar-1.jpg";
 import imagine2 from "../../assets/img/sidebar-2.jpg";
@@ -25,7 +25,7 @@ class FixedPlugin extends Component {
   render() {
     return (
       <div
-        className={classnames("fixed-plugin")}
+        className={classNames("fixed-plugin")}
       >
         <div id="fixedPluginClasses" className={this.props.fixedClasses}>
           <div onClick={this.handleClick}>

@@ -13,7 +13,7 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: '#ffffff',
   },
   container: {
-    marginBottom: theme.spacing(15),
+    marginBottom: theme.spacing(20),
     position: 'relative',
     display: 'flex',
     flexDirection: 'column',
@@ -22,27 +22,22 @@ const useStyles = makeStyles(theme => ({
 }));
 
 function Manual(props) {
+  // value of login validation
+  const { userType, textSource } = props;
+
   const classes = useStyles();
 
   // Grow check value, set the grow check value
   const [growCheck, setGrowCheck] = React.useState(true);
 
   // Tab index value, set the value tab index
-  const [value, setValue] = React.useState(0);
+  const [value, setValue] = React.useState(userType);
 
   // handler for Tab changes
   function handleTabChange(evt, newValue) {
     setValue(newValue);
     setGrowCheck(true);
   }
-
-  // value of login validation
-  const { isLogin, textSource } = props;
-  React.useEffect(() => {
-    if (isLogin) {
-      setValue(isLogin.userType);
-    }
-  }, [isLogin]);
 
   return (
     <section className={classes.root}>
@@ -110,12 +105,12 @@ function Manual(props) {
 }
 
 Manual.propTypes = {
-  isLogin: PropTypes.object,
+  userType: PropTypes.bool,
   textSource: PropTypes.object.isRequired,
 };
 
 Manual.defaultProps = {
-  isLogin: { userType: 0 },
+  userType: 0,
 };
 
 export default Manual;

@@ -2,7 +2,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  makeStyles, useTheme, withStyles,
+  makeStyles, withStyles,
 } from '@material-ui/core/styles';
 import {
   TableCell, TableRow, TableFooter, TablePagination, IconButton,
@@ -25,7 +25,6 @@ const useStyles = makeStyles(theme => ({
 // Footer component
 function TablePaginationActions(props) {
   const classes = useStyles();
-  const theme = useTheme();
   const {
     count, page, rowsPerPage, onChangePage,
   } = props;

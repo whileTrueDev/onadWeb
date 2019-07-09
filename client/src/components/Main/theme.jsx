@@ -2,34 +2,37 @@ import { createMuiTheme } from '@material-ui/core/styles';
 import green from '@material-ui/core/colors/green';
 import grey from '@material-ui/core/colors/grey';
 import blueGrey from '@material-ui/core/colors/blueGrey';
-import red from '@material-ui/core/colors/red';
 
 const rawTheme = createMuiTheme({
+  '@font-face': {
+    fontFamily: 'Jua',
+    src: 'url(https://cdn.rawgit.com/singihae/Webfonts/master/style.css)',
+  },
   // material-ui의 테마를 덮어씌우는 작업
   palette: {
     primary: {
-      light: '#69696a',
-      main: '#28282a',
-      dark: '#1e1e1f',
+      light: '#00acc1',
+      main: '#26c6da',
+      dark: '#00acc1',
     },
-    bluegrey: {
-      light: blueGrey[250],
+    secondary: {
+      light: '#9c27b0',
+      main: '#ab47bc',
+      dark: '#8e24aa',
+    },
+    blueGrey: {
+      light: blueGrey[300],
       mian: blueGrey[700],
       dark: blueGrey[900],
     },
-    secondary: {
-      light: 'rgb(98%, 57.7%, 57.7%)',
-      main: '#ff3366',
-      dark: '#e62958',
-    },
     warning: {
-      main: '#ffc071',
-      dark: '#ffb25e',
+      main: '#ff9800',
+      dark: '#ffa726',
     },
     error: {
-      xLight: red[50],
-      main: red[500],
-      dark: red[700],
+      xLight: '#f44336',
+      main: '#ef5350',
+      dark: '#e53935',
     },
     success: {
       xLight: green[50],
@@ -42,13 +45,13 @@ const rawTheme = createMuiTheme({
     fontWeightLight: 300, // Work Sans
     fontWeightRegular: 400, // Work Sans
     fontWeightMedium: 700, // Roboto Condensed
-    fontFamilySecondary: "'Roboto Condensed', sans-serif",
+    fontFamilySecondary: "'Nanum Gothic', sans-serif",
   },
 });
 
 const fontHeader = {
   color: rawTheme.palette.text.primary,
-  fontWeight: rawTheme.typography.fontWeightMedium,
+  fontWeight: rawTheme.typography.fontWeightLight,
   fontFamily: rawTheme.typography.fontFamilySecondary,
   textTransform: 'uppercase',
 };

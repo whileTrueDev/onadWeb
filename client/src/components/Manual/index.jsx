@@ -1,31 +1,57 @@
-import React from 'react';
-
-import AppAppBar from '../Main/views/AppAppBar';
-import AppFooter from '../Main/views/AppFooter';
-import ProductHero from '../Main/views/ProductHero';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import AppAppBar from '../Main/views/Layout/AppAppBar';
+import AppFooter from '../Main/views/Layout/AppFooter';
+import ProductHero from '../Main/views/Hero/ProductHero';
 import withRoot from '../Main/withRoot';
 // import ProductCTA from './views/ProductCTA';
 import textSource from './source/textSource';
 import Manual from './Manual';
 
+const useLoginValue = (location) => {
+  const [isLogin, setisLogin] = useState(null);
+
+  useEffect(() => {
+    axios.get('/api/login/check')
+      .then((res) => {
+        if (res.data) {
+          const { userType } = res.data.user;
+          setisLogin(userType);
+        } else {
+          console.log('로그인이 되어있지 않습니다.');
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, [location]);
+
+  return { isLogin };
+};
+
+const MARKETER_TAB_NUMBER = 0;
+const CREATOR_TAB_NUMBER = 1;
 
 export default withRoot((props) => {
+  const { location } = props;
+  const { isLogin } = useLoginValue(location);
+
   // if Link here, set the scroll to top of the page
   React.useEffect(() => {
     window.scrollTo(0, 0);
-  }, [props.location]);
+  }, [location]);
 
   return (
     <div>
-      <AppAppBar />
+      <AppAppBar isLogin={isLogin} />
       <ProductHero
         text={textSource.heroSector}
         backgroundImage={textSource.heroSector.backImage}
       />
-      {/* Login에 따라 크리에이터, 마케터로 나뉘어 기본 탭 설정 하기위해 */}
-      {/* <Manual textSource={textSource} isLogin={{ userType: 1 }} /> */}
-
-      <Manual textSource={textSource} />
+      <Manual
+        textSource={textSource}
+        userType={isLogin === 'marketer' ? MARKETER_TAB_NUMBER : CREATOR_TAB_NUMBER}
+      />
       <AppFooter />
     </div>
   );

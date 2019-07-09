@@ -80,8 +80,9 @@ function UserProfile(props) {
   const [userData, setuserData] = useState({});
 
   const readyCreatorData = useCallback(() => {
-    axios.get('/dashboard/creator/profile')
+    axios.get('/api/dashboard/creator/profile')
       .then((res) => {
+        console.log(res);
         setuserData(res.data);
       });
   }, []);
@@ -113,7 +114,7 @@ function UserProfile(props) {
       <GridContainer>
         <GridItem xs={12} sm={12} md={5}>
           <Card>
-            <CardHeader color="info">
+            <CardHeader color="blueGray">
               <h4 className={classes.cardTitleWhite}>계좌관리</h4>
               <p className={classes.cardCategoryWhite}>내 계좌를 관리합니다.</p>
             </CardHeader>

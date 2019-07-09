@@ -5,10 +5,10 @@ import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Hidden from '@material-ui/core/Hidden';
 import Container from '@material-ui/core/Container';
-import Typography from '../components/Typography';
-import TextField from '../components/TextField';
-import Snackbar from '../components/Snackbar';
-import Button from '../components/Button';
+import Typography from '../../components/Typography';
+import TextField from '../../components/TextField';
+import Snackbar from '../../components/Snackbar';
+import Button from '../../components/Button';
 
 const styles = theme => ({
   root: {
@@ -38,15 +38,6 @@ const styles = theme => ({
   },
   imagesWrapper: {
     position: 'relative',
-  },
-  imageDots: {
-    position: 'absolute',
-    top: -67,
-    left: -67,
-    right: 0,
-    bottom: 0,
-    width: '100%',
-    background: 'url(/static/onepirate/productCTAImageDots.png)',
   },
   image: {
     position: 'absolute',
@@ -138,7 +129,6 @@ class ProductCTA extends React.Component {
           </Grid>
           <Grid item xs={12} md={6} className={classes.imagesWrapper}>
             <Hidden smDown>
-              <div className={classes.imageDots} />
               <img
                 src="/images/captain.jpg"
                 alt="call to action"

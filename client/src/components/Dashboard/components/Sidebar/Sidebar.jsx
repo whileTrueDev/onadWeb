@@ -10,7 +10,6 @@ import Hidden from '@material-ui/core/Hidden';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
-import Icon from '@material-ui/core/Icon';
 // core components
 import sidebarStyle from '../../assets/jss/onad/components/sidebarStyle';
 
@@ -41,18 +40,10 @@ const Sidebar = ({ ...props }) => {
             activeClassName="active"
             key={shortid.generate()}
           >
-            <ListItem button className={classes.itemLink + listItemClasses}>
-              {typeof prop.icon === 'string' ? (
-                <Icon
-                  className={classNames(classes.itemIcon, whiteFontClasses)}
-                >
-                  {prop.icon}
-                </Icon>
-              ) : (
-                <prop.icon
-                  className={classNames(classes.itemIcon, whiteFontClasses)}
-                />
-              )}
+            <ListItem button className={classNames(classes.itemLink, listItemClasses)}>
+              <prop.icon
+                className={classNames(classes.itemIcon, whiteFontClasses)}
+              />
               <ListItemText
                 primary={prop.name}
                 className={classNames(classes.itemText, whiteFontClasses)}
@@ -99,9 +90,7 @@ const Sidebar = ({ ...props }) => {
           <div className={classes.sidebarWrapper}>
             {links}
           </div>
-          <div
-            className={classes.background}
-          />
+          <div className={classes.background} />
         </Drawer>
       </Hidden>
       {/* 데스크탑 사이드바 */}
@@ -129,9 +118,7 @@ const Sidebar = ({ ...props }) => {
           {/* 사이드바 라우터 링크 */}
           <div className={classes.sidebarWrapper}>{links}</div>
           {/* 사이드바 배경 */}
-          <div
-            className={classes.background}
-          />
+          <div className={classes.background} />
         </Drawer>
       </Hidden>
     </div>
@@ -140,6 +127,18 @@ const Sidebar = ({ ...props }) => {
 
 Sidebar.propTypes = {
   classes: PropTypes.object.isRequired,
+  color: PropTypes.string,
+  logoText: PropTypes.string,
+  routes: PropTypes.array.isRequired,
+  handleDrawerToggle: PropTypes.func.isRequired,
+  open: PropTypes.bool,
+  logo: PropTypes.string,
+};
+
+Sidebar.defaultProps = {
+  color: 'info',
+  logoText: 'OnAD',
+  open: false,
 };
 
 export default withStyles(sidebarStyle)(Sidebar);

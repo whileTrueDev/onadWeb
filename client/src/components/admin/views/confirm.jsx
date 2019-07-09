@@ -11,7 +11,7 @@ const AdminConfirm = (props) => {
 
   function confirmClickButton(e) {
     const bannerId = e.target.id;
-    axios.post('/admin/confirmState', { bannerId })
+    axios.post('/api/admin/confirmState', { bannerId })
       .then(refreshPage())
       .catch((err) => {
         console.log(err);
@@ -21,7 +21,7 @@ const AdminConfirm = (props) => {
   function handleSeleted(e) {
     const bannerId = e.target.name;
     const denialReason = e.target.value;
-    axios.post('/admin/rejectBanner', { denialReason, bannerId })
+    axios.post('/api/admin/rejectBanner', { denialReason, bannerId })
       .then(refreshPage())
       .catch((err) => {
         console.log(err);
@@ -29,7 +29,7 @@ const AdminConfirm = (props) => {
   }
 
   useEffect(() => {
-    axios.get('/admin/confirm', {}).then((res) => {
+    axios.get('/api/admin/confirm', {}).then((res) => {
       if (res.data) {
         setData(res.data);
       } else {

@@ -35,7 +35,7 @@ import CardIcon from '../../../components/Card/CardIcon';
 import WarningTypo from '../../../components/Typography/Warning';
 import InfoTypo from '../../../components/Typography/Info';
 import Snackbar from '../../../components/Snackbar/Snackbar';
-import WithdrawlDialog from './WithdrawDialog';
+import WithdrawalDialog from './WithdrawDialog';
 import AccountDialog from './AccountDialog';
 // data
 import setChartjsData from '../../../variables/charts';
@@ -139,13 +139,10 @@ function Income(props) {
   const { value, handleChange } = useSelectValue();
 
   // data 요청
-  const { payload, loading, error } = useFetchData('/dashboard/creator/chartdata', value);
-
-  // 날짜 범위 칸의 크기를 동적으로 하기위한 훅
-  const { inputLabel, labelWidth } = useInputWidth();
+  const { payload, loading, error } = useFetchData('/api/dashboard/creator/chartdata', value);
 
   // 수익금 데이터
-  const incomeData = useFetchData('/dashboard/creator/income');
+  const incomeData = useFetchData('/api/dashboard/creator/income');
 
   // 수익금 출금 모달창
   const {
@@ -160,9 +157,12 @@ function Income(props) {
   // 출금내역 데이터
   const [WithdrawalData, setWithdrawalData] = useState(defaultWithdrawalData);
 
+  // 날짜 범위 칸의 크기를 동적으로 하기위한 훅
+  const { inputLabel, labelWidth } = useInputWidth();
+
   // 출금리스트 데이터 axios 요청
   useEffect(() => {
-    axios.get('/dashboard/creator/listOfWithdrawal')
+    axios.get('/api/dashboard/creator/listOfWithdrawal')
       .then((res) => {
         if (res.data) {
           if (res.data) {
@@ -179,7 +179,7 @@ function Income(props) {
   const [session, setSession] = useState({});
   useEffect(() => {
     // Banner 데이터 axios 요청
-    axios.get('/dashboard/checkUserType')
+    axios.get('/api/dashboard/checkUserType')
       .then((res) => {
         if (res.data) {
           setSession(res.data);
@@ -269,7 +269,17 @@ function Income(props) {
             {/* 총 수익금 그래프 */}
             <GridItem xs={12} sm={12} md={12}>
               <Card chart>
-                <CardHeader>
+                <CardHeader color="blueGray">
+                  <h4
+                    className={classes.cardTitleWhite}
+                  >
+                  나의 총 수익금
+                  </h4>
+                  <p className={classes.cardCategoryWhite}>
+                    지금껏의 수익금을 보여줍니다.
+                  </p>
+                </CardHeader>
+                <CardBody>
                   <FormControl variant="outlined" className={classes.select}>
                     <InputLabel ref={inputLabel} htmlFor="selectDateRange">
                   범위
@@ -283,7 +293,7 @@ function Income(props) {
                           id="selectDateRange"
                           value={value}
                         />
-                  )}
+                      )}
                     >
                       <MenuItem value={7}>최근 7 일</MenuItem>
                       <MenuItem value={14}>최근 14 일</MenuItem>
@@ -299,9 +309,6 @@ function Income(props) {
                   options={{ tooltips: { mode: 'index', intersect: false } }}
                 />
                 )}
-                </CardHeader>
-                <CardBody>
-                  <h4 className={classes.cardTitle} style={{ textAlign: 'left' }}>나의 총 수익금</h4>
                 </CardBody>
                 <CardFooter chart>
                   <div className={classes.stats}>
@@ -361,10 +368,10 @@ function Income(props) {
                   <Tooltip title="만일 그렇지 않다면 계정 관리탭에서 계좌 정보를 수정하세요!" placement="bottom-start">
                     <div className={classes.stats}>
                       <WarningTypo><Warning /></WarningTypo>
-                      {!incomeData.loading && incomeData.payload.creatorAccountNumber
+                      {!incomeData.loading && incomeData.payload
                         ? (<span className={classes.dangerText}>계좌정보를 정확히 입력하셨나요?</span>)
                         : (<span className={classes.dangerText}>계좌정보를 입력하셔야 출금이 가능해요!</span>)
-                    }
+                      }
                     </div>
                   </Tooltip>
                 </CardFooter>
@@ -406,7 +413,7 @@ function Income(props) {
       {/* 출금 신청 팝업 */}
       {!incomeData.loading && incomeData.payload.creatorAccountNumber
       && (
-      <WithdrawlDialog
+      <WithdrawalDialog
         open={DialogOpen}
         history={history}
         handleOpen={handleWithdrawDialogOpen}
@@ -423,7 +430,7 @@ function Income(props) {
         place="bl"
         color="danger"
         icon={Warning}
-        message="아직 계좌정보를 입력하지 않았어요.. 계좌정보 입력 이후 환불신청하세요!"
+        message="아직 계좌정보를 입력하지 않았어요.. 계좌정보 입력 이후 출금신청하세요!"
         open={!incomeData.payload.creatorAccountNumber}
         Link={
           // 계좌정보 입력 팝업

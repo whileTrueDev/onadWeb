@@ -155,9 +155,9 @@ const makeUrl = () => {
 }
 
 passport.use(new twitchStrategy({
-    clientID: 'mzmtrk1xlqerih1u10ilip2xwhowil',
-    clientSecret: 'urhry446c5geg16ucmr55hozif1tfq',
-    callbackURL: "http://localhost:3000/login/twitch/callback",
+    clientID: '7197nobf8rsf7aqqk4nf7a22dtyu93',
+    clientSecret: 'e4y6aaq6cq8vy1c0a4xfzo17ton7mi',
+    callbackURL: `http://localhost:3000/api/login/twitch/callback`,
     scope: "user_read",
     passReqToCallback: true,
   },

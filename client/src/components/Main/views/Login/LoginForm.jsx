@@ -14,7 +14,7 @@ import {
 } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import FindDialog from './FindDialog';
-import { StateContext } from '../../StateStore';
+import { StateContext } from '../../../StateStore';
 
 const styles = () => ({
   title: {
@@ -44,11 +44,10 @@ const LoginForm = (props) => {
   // prop를 통해 Marketer 인지 Creator인지 확인.
   // 데이터가 변경되는 것일 때 state로 처리를 한다.
   const {
-    isMarketer, classes, handleClose, logout,
+    open, isMarketer, classes, handleClose, logout,
   } = props;
   const { state } = useContext(StateContext);
   const { history } = state;
-  const [open, setOpen] = useState(false);
   const [findDialogOpen, setFindDialogOpen] = useState(false);
   const [dialogType, setDialogType] = useState('ID');
   const [userid, setUserid] = useState('');
@@ -63,20 +62,11 @@ const LoginForm = (props) => {
     }
   };
 
-  const formhandleClose = () => {
-    setOpen(false);
-    handleClose();
-  };
-
-  const twitchLogin = () => {
-    axios.get('http://localhost:3000/login/twitch');
-  };
-
   const login = (event) => {
     if (event) {
       event.preventDefault();
     }
-    axios.post('/login',
+    axios.post('/api/login',
       {
         userid,
         passwd,
@@ -112,7 +102,7 @@ const LoginForm = (props) => {
     ? (
       <Dialog
         open={open}
-        onClose={formhandleClose}
+        onClose={handleClose}
         maxWidth="xs"
         fullWidth
       >
@@ -187,7 +177,7 @@ const LoginForm = (props) => {
     : (
       <Dialog
         open={open}
-        onClose={formhandleClose}
+        onClose={handleClose}
         maxWidth="xs"
         fullWidth
       >
@@ -199,7 +189,7 @@ const LoginForm = (props) => {
           <Tooltip title="트위치 계정으로 로그인" placement="right">
             <Button
               component={Link}
-              href="http://localhost:3000/login/twitch"
+              href="http://localhost:3000/api/login/twitch"
             // onClick ={twitchLogin}
               style={{
                 backgroundImage: 'url("pngs/twitch3.png")',
@@ -214,18 +204,14 @@ const LoginForm = (props) => {
     )
   );
 
-
   return (
     <div>
-      <Button color="inherit" onClick={() => { setOpen(true); }} className={classes.button}>
-        {isMarketer ? '마케터' : '크리에이터'}
-      </Button>
       {dialog}
       <FindDialog
         dialogType={dialogType}
         findDialogOpen={findDialogOpen}
         handleFindDialogClose={() => { setFindDialogOpen(false); }}
-        handleClose={formhandleClose}
+        handleClose={handleClose}
       />
     </div>
   );
@@ -236,15 +222,14 @@ LoginForm.defaultProps = {
   isMarketer: true,
   logout: () => {},
   handleClose: () => {},
-  history: {},
 };
 
 LoginForm.propTypes = {
+  open: PropTypes.bool.isRequired,
   classes: PropTypes.object,
   isMarketer: PropTypes.bool,
   logout: PropTypes.func,
   handleClose: PropTypes.func,
-  history: PropTypes.object,
 };
 
 export default withStyles(styles)(LoginForm);

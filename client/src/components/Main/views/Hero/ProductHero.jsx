@@ -1,42 +1,49 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import { grey } from '@material-ui/core/colors';
 import Grow from '@material-ui/core/Grow';
 import axios from 'axios';
-import { CodeSharp } from '@material-ui/icons';
-import Button from '../components/Button';
-import Typography from '../components/Typography';
+import Button from '../../components/Button';
+import Typography from '../../components/Typography';
 import ProductHeroLayout from './ProductHeroLayout';
 
-const styles = theme => ({
+const styles = makeStyles(theme => ({
   background: {
     backgroundColor: '#7fc7d9', // Average color of the background image.
     backgroundPosition: 'center',
   },
   button: {
+    alignItems: 'center',
+    justifyContent: 'center',
     minWidth: 200,
     marginTop: 50,
   },
-  root: {
-
-  },
-  h2: {
-    width: '330px',
+  h3: {
     [theme.breakpoints.up('sm')]: {
-      marginTop: theme.spacing(10),
+      marginTop: theme.spacing(8),
       width: 1024,
+    },
+    [theme.breakpoints.down('sm')]: {
+      width: '330px',
+      fontSize: 37,
+    },
+  },
+  h3sub: {
+    [theme.breakpoints.down('sm')]: {
+      width: '330px',
+      fontSize: 37,
     },
   },
   h5: {
     width: '300px',
     marginLeft: theme.spacing(2),
     marginRight: theme.spacing(2),
-    marginBottom: theme.spacing(4),
-    marginTop: theme.spacing(4),
+    marginBottom: theme.spacing(3),
+    marginTop: theme.spacing(3),
     [theme.breakpoints.up('sm')]: {
       width: '500px',
-      marginTop: theme.spacing(10),
+      marginTop: theme.spacing(5),
     },
   },
   h6: {
@@ -46,25 +53,29 @@ const styles = theme => ({
   more: {
     marginTop: theme.spacing(2),
   },
-});
+}));
 
 function ProductHero(props) {
-  const {
-    classes, text, backgroundImage, history,
-  } = props;
+  const { text, backgroundImage, history } = props;
+
+  const classes = styles();
 
   const [check] = React.useState(true);
 
   const handleClick = () => {
-    axios.get('/dashboard/checkUserType')
+    axios.get('/api/dashboard/checkUserType')
       .then((res) => {
-        if (res.data.userType === 'marketer') {
+        const { userType } = res.data;
+        if (userType === undefined) {
+          // 로그인 이후 이용하세요
+          alert('로그인 이후 이용하세요!');
+        } else if (userType === 'marketer') {
           history.push('/dashboard/marketer/main');
-        } else {
+        } else if (userType === 'creator') {
           history.push('/dashboard/creator/main');
         }
       }).catch((err) => {
-
+        console.log(err);
       });
   };
 
@@ -81,8 +92,8 @@ function ProductHero(props) {
         <Typography
           color="inherit"
           align="center"
-          variant="h2"
-          className={classes.h2}
+          variant="h3"
+          className={classes.h3}
         >
           {text.title}
         </Typography>
@@ -92,9 +103,10 @@ function ProductHero(props) {
         {...(check ? { timeout: 2500 } : {})}
       >
         <Typography
+          className={classes.h3sub}
           color="inherit"
           align="center"
-          variant="h2"
+          variant="h3"
           marked="center"
           style={{ marginTop: 15 }}
         >
@@ -108,16 +120,10 @@ function ProductHero(props) {
         <Typography
           color="inherit"
           align="center"
-          variant="h5"
+          variant="subtitle2"
           className={classes.h5}
         >
           {text.body}
-          <Typography
-            className={classes.h6}
-            variant="body2"
-          >
-            {text.tail}
-          </Typography>
         </Typography>
       </Grow>
       <Grow
@@ -125,19 +131,24 @@ function ProductHero(props) {
         {...(check ? { timeout: 2500 } : {})}
       >
         <Button
-          color="secondary"
+          color="primary"
           variant="contained"
           size="large"
           className={classes.button}
-          // component="a"
-          // href="/dashboard/main"
           onClick={handleClick}
         >
-        대시보드로 이동
+          대시보드로 이동
         </Button>
       </Grow>
 
-
+      {text.tail && (
+      <Typography
+        className={classes.h6}
+        variant="subtitle2"
+      >
+        {text.tail}
+      </Typography>
+      )}
     </ProductHeroLayout>
   );
 }
@@ -154,9 +165,9 @@ ProductHero.defaultProps = {
   text: {
     title: '효율적으로 광고하세요',
     subTitle: '쉽게 광고를 유치하세요',
-    body: '관련성 분석 통해 크리에이터와 광고주를 1:N 또는 N:N 매칭합니다',
-    tail: '설치 없이 모든 일을 웹에서 간단히 할 수 있습니다.',
+    body: '모든 광고유치, 광고계약 등 모든 과정은 웹에서 손쉽게 사용하실 수 있습니다.',
+    tail: '',
   },
 };
 
-export default withStyles(styles)(ProductHero);
+export default ProductHero;

@@ -87,7 +87,7 @@ function CashDialog(props) {
 
   function handleSubmitClick() {
     // 해당 금액 만큼 광고 캐시에 추가하는 요청
-    axios.post('/dashboard/marketer/chargecash', {
+    axios.post('/api/dashboard/marketer/chargecash', {
       chargecash: selectValue,
     }).then((res) => {
       handleSnackClose();
@@ -107,14 +107,14 @@ function CashDialog(props) {
       title="광고캐시 충전"
       buttons={(
         <div>
-          <Button onClick={handleClose}>
-              취소
-          </Button>
           <Button
             color="info"
             onClick={handleClick}
           >
               진행
+          </Button>
+          <Button onClick={handleClose}>
+              취소
           </Button>
         </div>
 )}

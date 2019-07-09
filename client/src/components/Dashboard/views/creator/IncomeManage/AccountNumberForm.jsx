@@ -96,37 +96,37 @@ const AccountNumberForm = (props) => {
   } = props;
   const [bank, setBank] = useState('농협');
   const [bankPattern, setbankPattern] = useState(13);
-  const [accountConfirm, setAccountConfirm] = useState(false);
+  // const [accountConfirm, setAccountConfirm] = useState(false);
 
-  const accountValidation = (event) => {
-    event.preventDefault();
-    // const bankAccount = document.getElementById('bankAccount').value || '';
-    // const bankName = document.getElementById('bank').value || '';
-    // const idNumber = document.getElementById('idNumber').value || '';
-    // const { bankCode } = banks.find(_bank => _bank.bankName === bankName);
+  // const accountValidation = (event) => {
+  //   event.preventDefault();
+  //   // const bankAccount = document.getElementById('bankAccount').value || '';
+  //   // const bankName = document.getElementById('bank').value || '';
+  //   // const idNumber = document.getElementById('idNumber').value || '';
+  //   // const { bankCode } = banks.find(_bank => _bank.bankName === bankName);
 
-    // const headers = {
-    //   Authorization: 'Bearer d3608258-af4a-467a-8e33-d29bfbcd6ec0',
-    //   'Content-Type': 'application/json',
-    // };
-    setAccountConfirm(true);
-    alert('계좌인증에 성공하였습니다.');
-    // axios.post('https://testapi.open-platform.or.kr/inquiry/real_name', {
-    //   bank_code_std: '002', // 테스트는 '002' bankCode
-    //   account_num: '1234567890123456', // 1234567890123456
-    //   account_holder_info: '880101', // 880101
-    //   tran_dtime: getNowDate(),
-    // }, { headers })
-    //   .then((res) => {
-    //     console.log(res.data);
-    //     if (res.data.rsp_code === 'A0000') {
-    //       setAccountConfirm(true);
-    //       alert('계좌인증에 성공하였습니다.');
-    //     } else {
-    //       alert('계좌인증에 실패하였습니다.');
-    //     }
-    //   });
-  };
+  //   // const headers = {
+  //   //   Authorization: 'Bearer d3608258-af4a-467a-8e33-d29bfbcd6ec0',
+  //   //   'Content-Type': 'application/json',
+  //   // };
+  //   setAccountConfirm(true);
+  //   alert('계좌인증에 성공하였습니다.');
+  //   // axios.post('https://testapi.open-platform.or.kr/inquiry/real_name', {
+  //   //   bank_code_std: '002', // 테스트는 '002' bankCode
+  //   //   account_num: '1234567890123456', // 1234567890123456
+  //   //   account_holder_info: '880101', // 880101
+  //   //   tran_dtime: getNowDate(),
+  //   // }, { headers })
+  //   //   .then((res) => {
+  //   //     console.log(res.data);
+  //   //     if (res.data.rsp_code === 'A0000') {
+  //   //       setAccountConfirm(true);
+  //   //       alert('계좌인증에 성공하였습니다.');
+  //   //     } else {
+  //   //       alert('계좌인증에 실패하였습니다.');
+  //   //     }
+  //   //   });
+  // };
 
 
   const handleSubmit = (event) => {
@@ -139,7 +139,7 @@ const AccountNumberForm = (props) => {
       bankName: event.target.bank.value,
       bankAccount: event.target.bankAccount.value,
     };
-    axios.post('/regist/accountNum', userAccount)
+    axios.post('/api/regist/accountNum', userAccount)
       .then((res) => {
         const { error } = res.data;
         if (!error) {
@@ -237,12 +237,6 @@ const AccountNumberForm = (props) => {
 
 
       <DialogActions>
-        {handleClose
-          && (
-          <Button onClick={handleClose}>
-              취소
-          </Button>
-          )}
         <Button
           type="submit"
           value="Submit"
@@ -255,6 +249,12 @@ const AccountNumberForm = (props) => {
         >
           등록
         </Button>
+        {handleClose
+          && (
+          <Button onClick={handleClose}>
+              취소
+          </Button>
+          )}
       </DialogActions>
     </form>
   );

@@ -1,21 +1,21 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/styles';
 import Grid from '@material-ui/core/Grid';
 import Link from '@material-ui/core/Link';
 import Container from '@material-ui/core/Container';
-import { blueGrey } from '@material-ui/core/colors';
-import Typography from '../components/Typography';
-import compose from '../utils/compose';
+import Typography from '../../components/Typography';
+import compose from '../../utils/compose';
 
 const styles = theme => ({
   root: {
     display: 'flex',
-    backgroundColor: blueGrey[100],
+    borderTop: '0.2px solid',
+    // backgroundColor: theme.blueGrey.main,
   },
   container: {
-    marginTop: theme.spacing(8),
-    marginBottom: theme.spacing(8),
+    marginTop: theme.spacing(4),
+    marginBottom: theme.spacing(1),
     display: 'flex',
   },
   iconsWrapper: {
@@ -30,10 +30,10 @@ const styles = theme => ({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#ffc071',
+    backgroundColor: '#333',
     marginRight: theme.spacing(1),
     '&:hover': {
-      backgroundColor: '#ffb25e',
+      backgroundColor: '#333',
     },
   },
   list: {
@@ -56,21 +56,23 @@ function AppFooter(props) {
   return (
     <Typography component="footer" className={classes.root}>
       <Container className={classes.container}>
-        <Grid container spacing={5}>
+        <Grid container>
           <Grid item xs={6} sm={4} md={3}>
             <Grid
               container
               direction="column"
               justify="flex-end"
               className={classes.iconsWrapper}
-              spacing={2}
             >
               <Grid item className={classes.icons}>
                 <a href="https://on-ad.github.io" className={classes.icon}>
-                  <img src="/images/appFooterFacebook.png" alt="Facebook" />
+                  <img src="/pngs/whileTrueLogoTemporary.png" alt="WhileTrueLogo" height={50} />
                 </a>
               </Grid>
-              <Grid item>© 2019 While True:</Grid>
+              <Grid item>
+                {`${new Date().getFullYear()}`}
+                While True:
+              </Grid>
             </Grid>
           </Grid>
           <Grid item xs={6} sm={4} md={2}>
@@ -96,7 +98,7 @@ function AppFooter(props) {
                 개인정보 처리방침
                 </Link>
               </li>
-              <li className={classes.listItem}>
+              {/* <li className={classes.listItem}>
                 <Link
                   color="inherit"
                   href="/premium-themes/onepirate/privacy"
@@ -104,7 +106,7 @@ function AppFooter(props) {
                 >
                 고객센터
                 </Link>
-              </li>
+              </li> */}
             </ul>
           </Grid>
           <Grid item xs={6} sm={4} md={2}>
@@ -121,7 +123,7 @@ function AppFooter(props) {
                 기술블로그
                 </Link>
               </li>
-              <li className={classes.listItem}>
+              {/* <li className={classes.listItem}>
                 <Link
                   href="/"
                   color="inherit"
@@ -129,20 +131,12 @@ function AppFooter(props) {
                 >
                 회사 소개
                 </Link>
-              </li>
+              </li> */}
             </ul>
           </Grid>
           <Grid item>
             <Typography variant="caption">
-              {'회사명 온애드 | 회사위치 어딘가 | 대표명 누군가 사업자등록번호 몇번 | 통신판매업신고번호 몇번 | E-mail : support@on.ad'}
-              <Link
-                href="/"
-                title="some link"
-                target="_blank"
-                rel="somelink"
-              >
-                some link
-              </Link>
+              {'회사명 와일트루 | 회사위치 부산광역시 금정구 장전온천천로 51  3층 313호, 테라스파크 | 대표명 강동기 | 사업자등록번호 659-03-01549 | E-mail : whiletrueceo@gmail.com'}
             </Typography>
           </Grid>
         </Grid>

@@ -1,4 +1,5 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
+import PropTypes from 'prop-types';
 
 export default class CreatorDashboardDoor extends Component {
   constructor(props) {
@@ -11,3 +12,7 @@ export default class CreatorDashboardDoor extends Component {
     return ('잠시만 기다려주세요.');
   }
 }
+
+CreatorDashboardDoor.propTypes = {
+  history: PropTypes.object.isRequired,
+};

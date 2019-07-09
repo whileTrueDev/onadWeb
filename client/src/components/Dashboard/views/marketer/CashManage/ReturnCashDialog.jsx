@@ -85,7 +85,7 @@ function ReturnCashDialog(props) {
       alert('불가합니다');
     } else {
       // 해당 금액 만큼 환불 내역에 추가하는 요청
-      axios.post('/dashboard/marketer/return', {
+      axios.post('/api/dashboard/marketer/return', {
         withdrawCash: selectValue,
       }).then((res) => {
         handleSnackClose();

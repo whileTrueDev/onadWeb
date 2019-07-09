@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import ButtonBase from '@material-ui/core/ButtonBase';
 import { Grid } from '@material-ui/core';
-import Typography from '../components/Typography';
+import Typography from '../../components/Typography';
 import ImageModal from './ImageModal';
 
 const styles = theme => ({
@@ -146,11 +146,9 @@ ProductCategoriesDetail.propTypes = {
   classes: PropTypes.object,
   image: PropTypes.object.isRequired,
   matches: PropTypes.bool.isRequired,
-  key: PropTypes.string,
 };
 
 ProductCategoriesDetail.defaultProps = {
   classes: {},
-  key: '',
 };
 export default withStyles(styles)(ProductCategoriesDetail);

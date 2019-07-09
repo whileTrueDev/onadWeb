@@ -169,7 +169,7 @@ const sidebarStyle = theme => ({
   whiteFont: {
     color: whiteColor,
   },
-  purple: {
+  primary: {
     backgroundColor: primaryColor[0],
     ...primaryBoxShadow,
     '&:hover': {
@@ -177,7 +177,7 @@ const sidebarStyle = theme => ({
       ...primaryBoxShadow,
     },
   },
-  blue: {
+  info: {
     backgroundColor: infoColor[0],
     boxShadow:
       `0 12px 20px -10px rgba(${
@@ -199,7 +199,7 @@ const sidebarStyle = theme => ({
         },.2)`,
     },
   },
-  green: {
+  success: {
     backgroundColor: successColor[0],
     boxShadow:
       `0 12px 20px -10px rgba(${
@@ -221,7 +221,7 @@ const sidebarStyle = theme => ({
         },.2)`,
     },
   },
-  orange: {
+  warning: {
     backgroundColor: warningColor[0],
     boxShadow:
       `0 12px 20px -10px rgba(${
@@ -243,7 +243,7 @@ const sidebarStyle = theme => ({
         },.2)`,
     },
   },
-  red: {
+  danger: {
     backgroundColor: dangerColor[0],
     boxShadow:
       `0 12px 20px -10px rgba(${

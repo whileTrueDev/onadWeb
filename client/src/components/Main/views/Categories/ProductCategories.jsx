@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import Typography from '../components/Typography';
+import Typography from '../../components/Typography';
 import ProductCategoriesDetail from './ProductCategoriesDetail';
 
 const styles = theme => ({

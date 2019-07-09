@@ -13,7 +13,7 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: '#ffffff',
   },
   container: {
-    marginBottom: theme.spacing(15),
+    marginBottom: theme.spacing(20),
     position: 'relative',
     display: 'flex',
     flexDirection: 'column',
@@ -23,26 +23,19 @@ const useStyles = makeStyles(theme => ({
 
 function Introduce(props) {
   const classes = useStyles();
+  const { userType, textSource } = props;
 
   // Grow check value, set the grow check value
   const [growCheck, setGrowCheck] = React.useState(true);
 
   // Tab index value, set the value tab index
-  const [value, setValue] = React.useState(0);
+  const [value, setValue] = React.useState(userType);
 
   // handler for Tab changes
   function handleTabChange(evt, newValue) {
     setValue(newValue);
     setGrowCheck(true);
   }
-
-  const { isLogin, textSource } = props;
-  // value of login validation
-  React.useEffect(() => {
-    if (isLogin) {
-      setValue(isLogin.userType);
-    }
-  }, [isLogin]);
 
   return (
     <section className={classes.root}>
@@ -112,12 +105,12 @@ function Introduce(props) {
 }
 
 Introduce.propTypes = {
-  isLogin: PropTypes.object,
+  userType: PropTypes.bool,
   textSource: PropTypes.object.isRequired,
 };
 
 Introduce.defaultProps = {
-  isLogin: { userType: 0 },
+  userType: 0,
 };
 
 export default Introduce;

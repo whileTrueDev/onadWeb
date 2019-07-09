@@ -41,7 +41,7 @@ function useFetchData(url, dateRange) {
 }
 
 function ValueChart() {
-  const valueChartData = useFetchData('/dashboard/marketer/bannerValue');
+  const valueChartData = useFetchData('/api/dashboard/marketer/bannerValue');
 
   return (
     <div>

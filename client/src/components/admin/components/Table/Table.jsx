@@ -26,7 +26,7 @@ function CustomTable({ ...props }) {
   const {
     classes, tableHead, tableData, tableHeaderColor, pagination,
     handleChangeTablePage, handleChangeTableRowsPerPage,
-    emptyRows, rowsPerPage, page, loading, confirmClickEvent,
+    emptyRows, rowsPerPage, page, confirmClickEvent,
     handleSeleted,
   } = props;
 
@@ -92,10 +92,13 @@ function CustomTable({ ...props }) {
                   //   {value}
                   // </TableCell>
                   String(value).indexOf('data:image/') === -1 // 없는 경우
-                    ? value == '0'
+                    ? value === '0'
                       ? (
                         <TableCell className={classes.tableCell} key={value}>
-                          <p><Button id={prop[1]} onClick={confirmClickEvent}> 승인하기 </Button> </p>
+                          <p>
+                            <Button id={prop[1]} onClick={confirmClickEvent}> 승인하기 </Button>
+                            {' '}
+                          </p>
 
                           <FormControl className={classes.formControl}>
                             <InputLabel> 거절하기 </InputLabel>

@@ -1,27 +1,14 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import {
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  Button,
-  TextField,
-  withStyles,
-  FormHelperText,
-  FormControl,
-  InputLabel,
-  Input,
-  MenuItem,
-  Divider,
-  InputAdornment,
-  Typography,
-  AppBar,
-  Toolbar,
-  IconButton,
+  DialogActions, DialogContent,
+  DialogContentText, TextField,
+  withStyles, FormHelperText, FormControl,
+  InputLabel, Input, MenuItem,
 } from '@material-ui/core';
-import { Close } from '@material-ui/icons';
 import PropTypes from 'prop-types';
+import Dialog from '../../../components/Dialog/Dialog';
+import Button from '../../../components/CustomButtons/Button';
 
 const style = theme => ({
   contents: {
@@ -113,7 +100,7 @@ const AccountDialog = (props) => {
       bankName: event.target.bank.value,
       bankAccount: event.target.bankAccount.value,
     };
-    axios.post('/regist/accountNum', userAccount)
+    axios.post('/api/regist/accountNum', userAccount)
       .then((res) => {
         alert('계좌번호 저장에 성공하였습니다.');
         history.push('/dashboard/marketer/cash');
@@ -161,6 +148,25 @@ const AccountDialog = (props) => {
         })}
       </TextField>
 
+      <TextField
+        required
+        label="주민번호 앞자리"
+        name="idNumber"
+        id="idNumber"
+        className={classes.textField}
+        helperText="주민등록번호 앞 6자리를 입력해주세요."
+        margin="normal"
+        InputLabelProps={{
+          shrink: true,
+        }}
+        style={
+            {
+              maxWidth: 250,
+              marginRight: 10,
+            }
+          }
+      />
+
       <FormControl className={classes.textField}>
         <InputLabel shrink>계좌번호</InputLabel>
         <Input
@@ -192,29 +198,18 @@ const AccountDialog = (props) => {
   return (
     <Dialog
       maxWidth="xl"
+      title="환급 계좌 입력"
       open={open}
+      onClose={handleClose}
     >
-      <AppBar color="primary" position="static" elevation={1}>
-        <Toolbar variant="dense">
-          <Typography variant="h6" color="inherit">
-          환급 계좌 입력
-          </Typography>
-          <div className={classes.sectionButton}>
-            <IconButton color="inherit" onClick={handleClose}>
-              <Close />
-            </IconButton>
-          </div>
-        </Toolbar>
-      </AppBar>
-
       {/* <DialogTitle>환급 계좌 입력</DialogTitle> */}
       <form id="accountForm" onSubmit={handleSubmit}>
         <Content />
         <DialogActions>
-          <Button type="submit" value="Submit" color="primary">
+          <Button type="submit" value="Submit" color="info">
             확인
           </Button>
-          <Button color="primary" onClick={handleClose}>
+          <Button onClick={handleClose}>
             취소
           </Button>
         </DialogActions>

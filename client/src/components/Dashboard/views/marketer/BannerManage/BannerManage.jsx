@@ -193,7 +193,7 @@ const BannerManage = (props) => {
   };
 
   const readyBanner = useCallback(() => {
-    axios.get('/dashboard/marketer/banner/all')
+    axios.get('/api/dashboard/marketer/banner/all')
       .then((res) => {
         if (res.data[0]) {
           const completeBanners = [];
@@ -232,7 +232,7 @@ const BannerManage = (props) => {
   const handleDelete = banner => () => {
     console.log('배너를 삭제합니다');
     const { bannerId } = banner;
-    axios.post('/dashboard/marketer/banner/delete', { bannerId })
+    axios.post('/api/dashboard/marketer/banner/delete', { bannerId })
       .then((res) => {
         alert(res.data[1]);
         if (res.data[0]) {

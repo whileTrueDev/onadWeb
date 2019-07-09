@@ -1,19 +1,22 @@
 import React, { Component } from 'react';
-import {
-  Button,
-  Popover,
-} from '@material-ui/core';
 import clsx from 'clsx';
-import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
+import {
+  Button, Popover, Hidden,
+} from '@material-ui/core';
+import LockOpen from '@material-ui/icons/LockOpen';
+import SupervisedUserCircle from '@material-ui/icons/SupervisedUserCircle';
+import { withStyles } from '@material-ui/core/styles';
 import LoginForm from './LoginForm';
+
 
 const styles = theme => ({
   rightLink: {
     color: theme.palette.common.black,
     marginLeft: 0,
     fontSize: 16,
+    fontWeight: theme.typography.fontWeightRegular,
     [theme.breakpoints.up('md')]: {
       color: theme.palette.common.white,
       marginLeft: theme.spacing(3),
@@ -22,19 +25,24 @@ const styles = theme => ({
       },
     },
   },
-  linkSecondary: {
-    color: theme.palette.secondary.main,
+  linkPriamry: {
+    color: theme.palette.primary.main,
   },
   popOver: {
     marginTop: 10,
     padding: 20,
     alignItems: 'center',
     justifyContent: 'center',
-
   },
   button: {
-    fontWeight: 800,
     width: '100%',
+  },
+  popOverButton: {
+    display: 'flex',
+    flexDirection: 'column',
+    padding: 10,
+    alignItems: 'center',
+    textAlign: 'center',
   },
 });
 
@@ -43,6 +51,7 @@ const styles = theme => ({
 class LoginPopover extends Component {
   state = {
     anchorEl: null,
+    loginValue: null,
   };
 
   handleClick = (event) => {
@@ -57,11 +66,23 @@ class LoginPopover extends Component {
     });
   };
 
+  handleDialogOpenClick = (newValue) => {
+    this.setState({
+      loginValue: newValue,
+    });
+  }
+
+  handleDialogClose = () => {
+    this.setState({
+      loginValue: null,
+    });
+  }
+
   render() {
     const {
       classes, type, history, logout,
     } = this.props;
-    const { anchorEl } = this.state;
+    const { anchorEl, loginValue } = this.state;
     const open = Boolean(anchorEl);
 
     return (
@@ -71,11 +92,12 @@ class LoginPopover extends Component {
             <React.Fragment>
               <Button
                 className={classes.rightLink}
-                aria-owns={open ? 'simple-popper' : undefined}
-                aria-haspopup="true"
                 color="inherit"
                 onClick={this.handleClick}
               >
+                <Hidden mdUp>
+                  <LockOpen style={{ marginRight: 10 }} />
+                </Hidden>
                 {'로그인'}
               </Button>
               <Popover
@@ -93,39 +115,55 @@ class LoginPopover extends Component {
                   horizontal: 'center',
                 }}
               >
-                <div style={{
-                  padding: 10,
-                  alignItems: 'center',
-                  textAlign: 'center',
-                }}
-                >
-                  <LoginForm
-                    isMarketer
-                    history={history}
-                    handleClose={this.handleClose}
-                    logout={logout}
-                  />
-                  <LoginForm
-                    isMarketer={false}
-                    history={history}
-                    handleClose={this.handleClose}
-                    logout={logout}
-                  />
+                <div className={classes.popOverButton}>
+                  <Button
+                    className={classes.button}
+                    onClick={() => {
+                      this.handleDialogOpenClick('marketer'); this.handleClose();
+                    }}
+                  >
+                    마케터
+                  </Button>
+                  <Button
+                    className={classes.button}
+                    onClick={() => {
+                      this.handleDialogOpenClick('creator'); this.handleClose();
+                    }}
+                  >
+                    크리에이터
+                  </Button>
                 </div>
               </Popover>
+
+              <LoginForm
+                open={loginValue === 'marketer'}
+                isMarketer
+                history={history}
+                handleClose={this.handleDialogClose}
+                logout={logout}
+              />
+              <LoginForm
+                open={loginValue === 'creator'}
+                isMarketer={false}
+                history={history}
+                handleClose={this.handleDialogClose}
+                logout={logout}
+              />
             </React.Fragment>
           )
           : (
             <React.Fragment>
               <Button
-                className={clsx(classes.rightLink, classes.linkSecondary)}
-                aria-owns={open ? 'simple-popper' : undefined}
-                aria-haspopup="true"
+                className={clsx(classes.rightLink, classes.linkPriamry)}
                 color="inherit"
                 onClick={this.handleClick}
               >
+                <Hidden mdUp>
+                  <SupervisedUserCircle style={{ marginRight: 10 }} />
+                </Hidden>
                 {'회원가입'}
               </Button>
+
               <Popover
                 className={classes.popOver}
                 id="simple-popper"
@@ -141,14 +179,7 @@ class LoginPopover extends Component {
                   horizontal: 'center',
                 }}
               >
-                <div style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  padding: 10,
-                  alignItems: 'center',
-                  textAlign: 'center',
-                }}
-                >
+                <div className={classes.popOverButton}>
                   <Button component={Link} to="/regist" className={classes.button}>마케터</Button>
                   <Button href="https://www.twitch.tv" className={classes.button}>크리에이터</Button>
                 </div>

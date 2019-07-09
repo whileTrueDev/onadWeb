@@ -7,14 +7,12 @@ const passport = require('./passportStrategy');
 const bodyParser = require('body-parser');
 
 //Router 정의
-var loginRouter = require('./routes/login');
-var registRouter = require('./routes/regist');
 var mailerRouter = require('./routes/mailer');
-var dashboardRouter = require('./routes/dashboard');
-var validatedAccountRouter = require('./routes/validatedAccount');
-var adminRouter = require('./routes/admin');
+var apiRouter = require('./routes/api');
 var app = express();
 
+
+process.env.NODE_ENV = ( process.env.NODE_ENV && ( process.env.NODE_ENV ).trim().toLowerCase() == 'production' ) ? 'production' : 'development';
 // view를 찾을 경로를 `views`로 저장하여 rendering시 찾을 수 있도록 함.
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
@@ -45,12 +43,8 @@ app.all('/*', function(req, res, next) {
   next();
 });
 
-app.use('/login', loginRouter);
-app.use('/regist', registRouter);
 app.use('/mailer', mailerRouter); 
-app.use('/dashboard', dashboardRouter);
-app.use('/validatedAccount', validatedAccountRouter)
-app.use('/admin', adminRouter)
+app.use('/api', apiRouter)
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));

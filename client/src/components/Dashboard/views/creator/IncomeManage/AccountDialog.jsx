@@ -31,11 +31,11 @@ const AccountDialog = (props) => {
       maxWidth="xl"
       open={open}
       onClose={handleClose}
-      title="환급 계좌 입력"
+      title="출금 계좌 입력"
     >
       <DialogContent>
         <DialogContentText className={classes.contentText}>
-          환급 받을 계좌를 입력해주세요.
+          출금 받을 계좌를 입력해주세요.
         </DialogContentText>
         <AccountNumberForm history={history} handleClose={handleClose} />
       </DialogContent>
