@@ -25,7 +25,19 @@ const logger = createLogger({
             showLevel: true,
             json: false,
             timestamp: timeStampFormat
-        })
+        }),
+        new winstonDaily({
+            name: 'exceptionLogger',
+            filename: './bin/calculationLog/exception_%DATE%.log',
+            datePattern: 'YYYY-MM-DD',
+            colorize: true,
+            maxsize: 50000000,
+            maxFiles: 1000,
+            level: 'error',
+            showLevel: false,
+            json: false,
+            timestamp: timeStampFormat
+        }),
     ]
 });
 
