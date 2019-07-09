@@ -3,10 +3,10 @@ import {
   Switch,
   Route,
 } from 'react-router-dom';
+import shortid from 'shortid';
 import Dashboard from '@material-ui/icons/Dashboard';
 import Admin from './views/admin';
 import AdminConfirm from './views/confirm';
-
 
 const adminRoute = {
   admin: [
@@ -31,16 +31,15 @@ const adminRoute = {
 
 const adminRoutes = props => (
   <Switch>
-    {adminRoute.admin.map((props, key) => (
+    {adminRoute.admin.map((prop, key) => (
       <Route
         exact
-        path={props.layout + props.path}
-        component={() => <props.component />}
-        key={key}
+        path={prop.layout + prop.path}
+        component={() => <prop.component />}
+        key={shortid.generate()}
       />
     ))}
   </Switch>
 );
-
 
 export default adminRoutes;

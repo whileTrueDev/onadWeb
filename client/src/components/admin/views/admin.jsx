@@ -1,9 +1,11 @@
 import React, { useEffect } from 'react';
 import axios from 'axios';
-
+import shortid from 'shortid';
+import { Redirect } from 'react-router-dom';
 
 const Admin = (props) => {
   const [waiting, setWaiting] = React.useState([['', '', '', '']]);
+  const [check, setCheck] = React.useState('');
 
   function refreshPage() {
     window.location.reload();
@@ -19,17 +21,23 @@ const Admin = (props) => {
   }
 
   useEffect(() => {
-    axios.get('/api/admin', {}).then((res) => {
-      if (res.data) {
+    axios.get('/admin', {}).then((res) => {
+      if (res.data === 'wrong') {
+        setCheck(res.data);
+      } else if (res.data) {
         setWaiting(res.data);
       } else {
         console.log('실패');
       }
-    }).catch((err) => {
-      console.log(err);
-    });
+    })
+      .catch((err) => {
+        console.log(err);
+      });
   }, []);
 
+  if (check === 'wrong') {
+    return (<Redirect to="/" />);
+  }
   return (
     <React.Fragment>
       <table>
@@ -43,22 +51,29 @@ const Admin = (props) => {
           </tr>
         </thead>
         <tbody>
-          {waiting.map((listValue, index) => // 신청내역 불러와서 표로 띄워주는 부분
-            (
-              <tr key={index}>
-                <td>{listValue[0]}</td>
-                <td>{listValue[1]}</td>
-                <td>{listValue[2]}</td>
-                <td>{listValue[3]}</td>
-                <td>
-                  {
-                    listValue[4] === 0 ? <input type="button" id={listValue[0]} onClick={() => onClickButton(listValue[0])} value="입금하기" /> : '입금완료'
+          {/* // 신청내역 불러와서 표로 띄워주는 부분 */}
+          {waiting.map(listValue => (
+            <tr key={shortid.generate()}>
+              <td>{listValue[0]}</td>
+              <td>{listValue[1]}</td>
+              <td>{listValue[2]}</td>
+              <td>{listValue[3]}</td>
+              <td>
+                {
+                    listValue[4] === 0
+                      ? (
+                        <input
+                          type="button"
+                          id={listValue[0]}
+                          onClick={() => onClickButton(listValue[0])}
+                          value="입금하기"
+                        />
+                      ) : '입금완료'
                   }
-                </td>
-              </tr>
-            ))}
+              </td>
+            </tr>
+          ))}
         </tbody>
-
       </table>
     </React.Fragment>
   );

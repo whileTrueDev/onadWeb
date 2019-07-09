@@ -18,11 +18,14 @@ $(function(){
     
     socket.on('response banner data to server', function(){ 
         var bannerName = $("#showBanner").attr("name")
-        socket.emit('write to db', [bannerName, _url, 'any']);
+        socket.emit('write to db', bannerName);
     });
 
     socket.on('check bannerId', function(){
         var bannerId = $("#showBanner").attr("name")
-        socket.emit('check plz', [_url, 'any', bannerId])
+        socket.emit('check plz', [_url, bannerId])
+    })
+    socket.on('img clear', function(){
+        $('#imgMessage').empty()
     })
 });

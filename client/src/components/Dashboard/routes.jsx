@@ -8,6 +8,7 @@ import BrandingWatermark from '@material-ui/icons/BrandingWatermark';
 import creatorUserProfile from './views/creator/UserProfile/UserProfile';
 import IncomeManage from './views/creator/IncomeManage/IncomeManage';
 import creatorDashboardPage from './views/creator/Dashboard/Dashboard';
+import creatorManual from './views/creator/CreatorManual/CreatorManual'
 
 // 마케터 라우터
 import marketerDashboardPage from './views/marketer/Dashboard/Dashboard';
@@ -37,6 +38,13 @@ const dashboardRoutes = {
       name: '계정 관리',
       icon: Person,
       component: creatorUserProfile,
+      layout: '/dashboard/creator',
+    },
+    {
+      path: '/creatormanual',
+      name: '사용 방법',
+      icon: Person,
+      component: creatorManual,
       layout: '/dashboard/creator',
     },
   ],

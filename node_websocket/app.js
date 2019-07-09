@@ -35,7 +35,7 @@ app.get('/duplicate', function(req, res){
 app.get('/browserWarn', function(req, res){
   res.render('browserWarn.ejs')
 });
-app.get('/banner/server', function(req, res){ // server.html /server로 라우팅 
+/*app.get('/banner/server', function(req, res){ // server.html /server로 라우팅 
     //관리자 페이지 접속 시 
     console.log('server')
     var toServer = {};
@@ -50,15 +50,8 @@ app.get('/banner/server', function(req, res){ // server.html /server로 라우�
             toServer['img'] = {path : data[0].path, name : data[0].name}
             res.render('server', {imgSource : toServer});
         };
-        
-        // sql.pool.end(function(err){
-        //   if (err) console.log(err);
-        //   else {
-        //     console.log('** Finished');
-        //   }
-        // });
       });
-});
+});*/
 
 app.get('/banner/:id', function(req, res){ ///banner/:id로 라우팅
     console.log('banner')
@@ -109,19 +102,18 @@ app.get('/banner/:id', function(req, res){ ///banner/:id로 라우팅
                     if(serverId != clientId && clientId != undefined){ //해당 페이지의 클라이언트 아이디가 서버아이디와 일치하지 않고, undefined가 아니면 그건 client라는 뜻
                         socket.emit('response banner data to server', {}); //client로 emit
                         socket.emit('check bannerId', {})
-                }   else if(serverId == clientId && serverId!= undefined){ // server가 접속했을떄임
+                        }   /*else if(serverId == clientId && serverId!= undefined){ // server가 접속했을떄임
                         io.to(serverId).emit('divReload', {}); //송출중인 배너 div 10분마다 리로드 (실제 송출중인 배너 체크가능)
-                        // socket.emit('response banner data to server', {});
                         console.log(serverId + '새로고침완료');
-                    }
+                    }*/
                 });
       
-        socket.on('host', function(){ //server 접속시 발생
+        /*socket.on('host', function(){ //server 접속시 발생
             keys.splice(keys.indexOf(clientId), 1) //서버의 웹소켓 아이디는 설렉트 박스에 안뜨도록 제거
             socket.emit('id receive', keys, socketsInfo); //socketInfo 객체(클라이언트 socketid와 url이 담김)랑 클라이언트 socketid 전송
             serverId = clientId; //서버아이디 생성
             console.log(socketsInfo, keys);
-        });
+        });*/
 
         socket.on('new client', function(msg){ //새로운 클라이언트 접속 시 발생 
             var _url = msg[0]
@@ -137,7 +129,7 @@ app.get('/banner/:id', function(req, res){ ///banner/:id로 라우팅
             console.log(`-새 접속 ip : ${ip}`)
             console.log(`클라이언트id ${ clientId }`);
             
-            if(history == 2){ /*이 부분 !=로 바꾸기*/
+            if(history != 1){ /*이 부분 !=로 바꾸기*/
               var destination = 'http://localhost:3002/browserWarn'
               socket.emit('browser warning', destination) 
             } else {
@@ -147,7 +139,7 @@ app.get('/banner/:id', function(req, res){ ///banner/:id로 라우팅
                     socket.emit('redirect warn', destination)
                 } else{
                     socketsInfo[Object.keys(roomInfo).pop( )] = _url; //roomInfo에서 소켓아이디 불러와서 socketsInfo 객체에 {'id' : url} 형태로 저장 
-                    requestImg(sql, socket, [_url,'any'])
+                    requestImg(sql, socket, _url)
             }}
             console.log(socketsInfo); //접속중인 url 저장된 부분
         });
@@ -155,37 +147,23 @@ app.get('/banner/:id', function(req, res){ ///banner/:id로 라우팅
         socket.on('disconnect', function(){ //접속종료시
             delete socketsInfo[clientId] //socketsInfo에서 접속종료한 clientID 삭제
             
-            if(serverId == undefined){
-                socket.broadcast.emit('id remove', clientId);
-            } else{
-                io.to(serverId).emit('id remove', clientId);
-            };
-
+            // if(serverId == undefined){
+            //     socket.broadcast.emit('id remove', clientId);
+            // } else{
+            //     io.to(serverId).emit('id remove', clientId);
+            // };
+ 
             console.log(`- ip : ${ip} :  접속종료`);
             clientId = undefined;
             clearInterval(socket.interval);
         });
 
-        /*나중에 쓰일 수 있는 부분
-        socket.on('img send', function(msg){ 
-            socket.broadcast.emit('img receive', msg);
-        });
-
-        socket.on('db img send', function(msg){ 
-            socket.broadcast.emit('img receive', msg);
-        });
-
-        socket.on('particular img send', function(msg){ //특정 클라이언트에게만 배너 전송
-            io.to(msg[0]).emit('img receive', msg[1]);
-        });
-        */
-
         socket.on('write to db', function(msg){
             pool.getConnection(function(err, conn){
             if(err) return err;
-            var bannername = msg[0]
+            var bannername = msg
             var sql = "INSERT INTO contractionTimestamp (contractionId) VALUES (?);"; 
-            conn.query(sql, [bannername], function (err, result, fields) { //msg[0]:bannername msg[1]:url msg[2]:category
+            conn.query(sql, [bannername], function (err, result, fields) { 
                 conn.release();
                 if (err) return err;   
                 });

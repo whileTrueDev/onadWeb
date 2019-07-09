@@ -1,9 +1,11 @@
 import React, { useEffect } from 'react';
 import axios from 'axios';
+import { Redirect } from 'react-router-dom';
 import Table from '../components/Table/Table';
 
-const AdminConfirm = (props) => {
+const AdminConfirm = () => {
   const [data, setData] = React.useState([['', '', '', '', '']]);
+  const [check, setCheck] = React.useState('');
 
   function refreshPage() {
     window.location.reload();
@@ -29,8 +31,10 @@ const AdminConfirm = (props) => {
   }
 
   useEffect(() => {
-    axios.get('/api/admin/confirm', {}).then((res) => {
-      if (res.data) {
+    axios.get('/admin/confirm', {}).then((res) => {
+      if (res.data === 'wrong') {
+        setCheck(res.data);
+      } else if (res.data) {
         setData(res.data);
       } else {
         console.log('실패');
@@ -40,6 +44,9 @@ const AdminConfirm = (props) => {
     });
   }, []);
 
+  if (check === 'wrong') {
+    return (<Redirect to="/" />);
+  }
   return (
     <React.Fragment>
 
