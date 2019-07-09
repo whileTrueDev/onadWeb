@@ -1,10 +1,11 @@
 const mysql = require('mysql');
+const config = require('../config.json');
 const pool = mysql.createPool({
-    host : 'onad.cbjjamtlar2t.ap-northeast-2.rds.amazonaws.com',
-    user : 'onad',
-    password : 'rkdghktn12',
-    database : 'onadnode',
-    port : 3306
+    host : config.DB.host,
+    user : config.DB.user,
+    password : config.DB.password,
+    database : config.DB.database,
+    port : config.DB.port
 });
 
 console.log('create pool!');
