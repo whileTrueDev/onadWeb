@@ -12,24 +12,9 @@ import {
   Button,
 } from '@material-ui/core';
 import CircularProgress from '@material-ui/core/CircularProgress';
-
-const terms = [
-  {
-    title: 'While:true 이용 약관',
-    state: 'checkedA',
-    text: '',
-  },
-  {
-    title: '개인정보 수집 및 이용 동의',
-    state: 'checkedB',
-    text: '',
-  },
-  {
-    title: '서비스 및 관련광고 수신 동의',
-    state: 'checkedC',
-    text: '',
-  },
-];
+import shortid from 'shortid';
+import Dialog from '../Dashboard/components/Dialog/Dialog';
+import terms from './registConfig';
 
 const styles = theme => ({
   root: {
@@ -69,6 +54,12 @@ const styles = theme => ({
   actionsContainer: {
     marginBottom: theme.spacing(2),
   },
+  inDialogContent: {
+    padding: theme.spacing(1),
+    marginLeft: 30,
+    marginRight: 55,
+    outline: 'none',
+  },
 });
 
 
@@ -79,6 +70,10 @@ const PaperSheet = (props) => {
   const [checkedA, setA] = useState(false);
   const [checkedB, setB] = useState(false);
   const [checkedC, setC] = useState(false);
+  const [selectTerm, setTerm] = useState({
+    text: '',
+  });
+  const [open, setOpen] = useState(false);
 
   const handleChange = name => () => {
     if (name === 'checkedA') {
@@ -90,7 +85,15 @@ const PaperSheet = (props) => {
     }
   };
 
+  const handleClose = () => {
+    setOpen(false);
+  };
   // const getChange = name => this.state.name;
+
+  const handleOpen = term => () => {
+    setTerm(term);
+    setOpen(true);
+  };
 
   const finishReg = () => {
     if (checkedA && checkedB && checkedC) {
@@ -123,11 +126,13 @@ const PaperSheet = (props) => {
                 <Typography component="p" style={{ flex: 8, fontSize: 13 }}>
                   {term.title}
                 </Typography>
-                <Button style={{
-                  flex: 1, backgroundColor: '#d6d6d6', height: '70%', fontSize: 13,
-                }}
+                <Button
+                  style={{
+                    flex: 1, backgroundColor: '#d6d6d6', height: '70%', fontSize: 13,
+                  }}
+                  onClick={handleOpen(term)}
                 >
-          약관보기
+                약관보기
                 </Button>
                 <Divider className={classes.divider} />
                 <FormControlLabel
@@ -170,6 +175,25 @@ const PaperSheet = (props) => {
           </Button>
         </div>
       </div>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        title={selectTerm.title}
+        buttons={(
+          <div>
+            <Button onClick={handleClose}>
+                    취소
+            </Button>
+          </div>
+            )}
+      >
+        {/* 계약 내용 */}
+        <div className={classes.inDialogContent}>
+          {selectTerm.text.split('\n').map(sentence => (
+            <p key={shortid.generate()}>{sentence}</p>
+          ))}
+        </div>
+      </Dialog>
     </div>
   );
 };
@@ -181,19 +205,3 @@ PaperSheet.propTypes = {
 };
 
 export default withStyles(styles)(PaperSheet);
-
-
-// { /* <FormControlLabel
-//   control={
-//     <Checkbox
-//       checked={this.state.checkedAll}
-//       value="checkedAll"
-//       classes={{
-//         root: classes.checkboxRoot,
-//         checked: classes.checked,
-//       }}
-//     />
-//   }
-//   label="모든 약관 및 선택 정보에 동의 합니다."
-//   style={{marginTop :10}}
-// /> */ }

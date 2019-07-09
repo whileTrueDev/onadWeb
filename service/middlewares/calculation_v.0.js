@@ -292,6 +292,7 @@ const creatorCalcuate = ({price, creatorId}) =>{
     console.log(`${creatorId}에 대해 정산을 시작합니다.`);
     doQuery(calculateQuery, [price, price, creatorId])
     .then(()=>{
+      logger.info(`${price} 원을 ${creatorId} 에게 입금하였습니다`);
       console.log(`${price} 원을 ${creatorId} 에게 입금하였습니다`);
       resolve();
     })
@@ -371,7 +372,7 @@ const marketerCalculate = ({contractionId, price}) => {
 }
 
 const contractionCalculate = ({contractionId, price}) => {
-  console.log(`${contractionId}에 대한 정산을 시작합니다.`);
+  console.log(`계약인 ${contractionId}에 대한 정산을 시작합니다.`);
   const contractionValueQuery = `
     INSERT INTO contractionValue
     (contractionId, contractionTotalValue) 
@@ -433,7 +434,11 @@ async function calculation(){
 
   priceList.map( async ({creatorId, contractionId, price})=>{
     try{
-      await Promise.all([creatorCalcuate({creatorId, price}), marketerCalculate({contractionId, price})]);
+      await Promise.all([
+        creatorCalcuate({creatorId, price}), 
+        marketerCalculate({contractionId, price}), 
+        contractionCalculate({contractionId, price})
+      ]);
       logger.info(`계산을 종료합니다. 종료 시각 : ${new Date().toLocaleString()}`);
       console.log(`계산을 종료합니다. 종료 시각 : ${new Date().toLocaleString()}`);
     }
