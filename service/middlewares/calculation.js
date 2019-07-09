@@ -320,30 +320,6 @@ async function calculation(){
   const creatorList  = await getCreatorList(streamerList);
   const priceList = await getPriceList([creatorList, bannerList]);
 
-
-  // //Promise Chaining
-  // console.log(`계산을 실시합니다. 시작 시각 : ${new Date().toLocaleString()}`);  
-  // Promise.all([getStreamerList(), getBannerList()])
-  // .then( async ([streamerList, bannerList]) => {
-  //   const creatorList = await getCreatorList(streamerList);
-  //   return [creatorList, bannerList];
-  // })
-  // .then(([creatorList, bannerList])=>{
-  //   return getPriceList([creatorList, bannerList]);
-  // })
-  // .then((priceList)=>{
-  //   Promise.all([contractionCalculate(priceList), creatorCalcuate(priceList), marketerCalculate(priceList)])
-  //   .then(()=>{
-  //     console.log(`계산이 완료되었습니다. 종료 시각 : ${new Date().toLocaleString()}`);
-  //   })
-  //   .catch((err)=>{
-  //     logger.error(err.sqlMessage);
-  //   })
-  // })
-  // .catch((err)=>{
-  //   logger.error(err.sqlMessage);
-  // })
-  
   if(priceList[0] === undefined){
     console.log('존재하지 않으므로 종료됩니다.', );
     return;
