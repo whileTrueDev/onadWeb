@@ -168,7 +168,7 @@ const UserDataForm = (props) => {
               <GridItem xs={12} sm={12} md={7} />
               <GridItem xs={12} sm={12} md={7}>
                 <TextField
-                  label="MAIL"
+                  label="EMAIL"
                   value={userData.marketerMail || ''}
                   className={classes.textField}
                   id="mail"

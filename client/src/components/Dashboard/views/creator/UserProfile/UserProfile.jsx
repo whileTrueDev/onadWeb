@@ -177,7 +177,7 @@ function UserProfile(props) {
               <GridContainer>
                 <GridItem xs={12} sm={12} md={12}>
                   <CssTextField
-                    label="MAIL"
+                    label="EMAIL"
                     value={userData.creatorMail || ''}
                     className={classes.textField}
                     margin="normal"
@@ -222,7 +222,7 @@ function UserProfile(props) {
               </GridContainer>
               )}
 
-              <Button color="info" href="https://www.twitch.tv/settings/profile" round>
+              <Button color="info" href="https://www.twitch.tv/settings/profile">
                 정보변경하러가기
               </Button>
             </CardBody>
