@@ -412,7 +412,7 @@ async function getList(){
     console.log(`탐색을 종료합니다. 종료 시각 : ${new Date().toLocaleString()}`);
     return priceList;
   }
-  catch(errorData){
+  catch(errorData){6
     console.log(errorData);
     console.log("--------위의 사유로 인하여 계산이 종료됩니다.-------------");
     logger.error(errorData);
