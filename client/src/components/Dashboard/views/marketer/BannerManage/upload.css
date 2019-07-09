@@ -9,10 +9,10 @@
     font-size: inherit; 
     line-height: normal; 
     vertical-align: middle; 
-    background-color:#ff9800;
+    background-color:#00acc1;
     cursor: pointer; 
     border: 1px solid #ebebeb; 
-    border-color: #ff9800; 
+    border-color: #00acc1; 
     border-radius: .25em; 
 } 
 .filebox input[type="file"] {

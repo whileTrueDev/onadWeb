@@ -82,10 +82,24 @@ function UserProfile(props) {
   const readyCreatorData = useCallback(() => {
     axios.get('/api/dashboard/creator/profile')
       .then((res) => {
-        console.log(res);
-        setuserData(res.data);
+        if (res.data.error) {
+          history.push('/');
+        } else {
+          setuserData(res.data.result);
+        }
       });
-  }, []);
+  }, [history]);
+
+  const handleProfileChange = (event) => {
+    event.preventDefault();
+    axios.get('/api/login/logout')
+      .then(() => {
+        window.location.href = 'https://www.twitch.tv/settings/profile';
+      })
+      .catch(() => {
+        history.push('/');
+      });
+  };
 
   useEffect(() => {
     readyCreatorData();
@@ -148,13 +162,13 @@ function UserProfile(props) {
             </CardAvatar>
             <CardBody profile>
               <h4 className={classes.cardTitle}>
-                {`${userData.creatorDisplayName} 님의 정보`}
+                {`${userData.creatorName} 님의 정보`}
               </h4>
               <GridContainer>
                 <GridItem xs={12} sm={12} md={6}>
                   <CssTextField
                     label="TWITCH ID"
-                    value={userData.creatorName || ''}
+                    value={userData.creatorId || ''}
                     className={classes.textField}
                     margin="normal"
                     InputProps={{
@@ -165,7 +179,7 @@ function UserProfile(props) {
                 <GridItem xs={12} sm={12} md={6}>
                   <CssTextField
                     label="NAME"
-                    value={userData.creatorDisplayName || ''}
+                    value={userData.creatorName || ''}
                     className={classes.textField}
                     margin="normal"
                     InputProps={{
@@ -223,7 +237,7 @@ function UserProfile(props) {
               </GridContainer>
               )}
 
-              <Button color="info" href="https://www.twitch.tv/settings/profile">
+              <Button color="info" onClick={handleProfileChange}>
                 정보변경하러가기
               </Button>
             </CardBody>
