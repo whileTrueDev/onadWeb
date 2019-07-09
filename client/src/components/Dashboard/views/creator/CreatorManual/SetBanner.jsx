@@ -51,9 +51,9 @@ const SetBanner = (props) => {
 탭을 클릭하세요.
             </StepLabel>
             <StepContent>
-              <a>
-                <img src={broadCastingIcon} className={StepperClasses.img} alt="" />
-              </a>
+              
+              <img src={broadCastingIcon} className={StepperClasses.img} alt="" />
+              
             </StepContent>
           </Step>
           <Step active="true">
