@@ -18,6 +18,7 @@ import CallMissed from '@material-ui/icons/Clear';
 import AttachFile from '@material-ui/icons/AttachFile';
 import TouchApp from '@material-ui/icons/TouchApp';
 import Forum from '@material-ui/icons/Forum';
+import Warning from '@material-ui/icons/Warning';
 import GridContainer from '../../../components/Grid/GridContainer';
 import Card from '../../../components/Card/Card';
 import CardHeader from '../../../components/Card/CardHeader';
@@ -262,7 +263,15 @@ const BannerManage = (props) => {
             <p className={classes.cardCategoryWhite}>등록된 모든 배너를 보여줍니다.</p>
           </CardHeader>
           <CardBody>
-            <BannerGridList bannerList={bannerList} cols={3} />
+            {bannerList.length === 0
+              ? (
+                <DangerTypography>
+                  <Warning />
+                  {'승인된  배너가 없어요!'}
+                </DangerTypography>
+              )
+              : <BannerGridList bannerList={bannerList} cols={3} />
+            }
           </CardBody>
         </Card>
       </GridItem>

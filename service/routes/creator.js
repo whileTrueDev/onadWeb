@@ -374,16 +374,31 @@ router.post('/withdrawal', function(req, res, next) {
 })
 
 router.get('/profile', (req, res)=>{
-  const creatorId = req._passport.session.user.creatorId;
-  // doQuery(`SELECT * FROM creatorInfo WHERE creatorId = ?`, [creatorId])
-  // .then((data)=>{
-  //   res.send(data);
-  // })
-  // .catch((data)=>{
-  //   res.send(data);
-  // })
-  const userData = req._passport.session.user;
-  res.send(userData);
+  const profileQuery = `
+  SELECT creatorId, creatorName, creatorIp, creatorMail, creatorAccountNumber, creatorContractionAgreement
+  FROM creatorInfo 
+  WHERE creatorId = ?`;
+  if (req._passport.session === undefined) {
+    res.send({
+      error : true
+    })
+  }else{
+    const creatorId = req._passport.session.user.creatorId;
+    doQuery(profileQuery, [creatorId])
+    .then((data)=>{
+      const userData = data.result[0];
+      userData['creatorLogo'] =  req._passport.session.user.creatorLogo;
+      res.send({
+        error : false,
+        result : userData
+      });
+    })
+    .catch(()=>{
+      res.send({
+        error : true
+      });
+    })
+  }
 })
 
 // 크리에이터 출금 내역 불러오기
