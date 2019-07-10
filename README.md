@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/hwasurr/onadWeb.svg?branch=master)](https://travis-ci.org/hwasurr/onadWeb)
+
 # onadWeb
 react, express web server for onad platform.
 
