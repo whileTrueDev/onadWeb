@@ -23,7 +23,7 @@ const styles = theme => ({
     right: theme.spacing(1),
     top: theme.spacing(1),
     color: theme.palette.grey[100],
-  },
+  }
 });
 
 const DialogTitle = withStyles(styles)((props) => {
