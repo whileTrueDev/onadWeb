@@ -366,12 +366,12 @@ const UserDataForm = (props) => {
                 <Button
                   type="submit"
                   value="submit"
-                  color="primary"
+                  color="info"
                 >
                 확인
                 </Button>
                 <Button
-                  color="primary"
+                  // color="info"
                   onClick={() => { setTextType(true); }}
                 >
                 취소
@@ -384,11 +384,12 @@ const UserDataForm = (props) => {
       <Snackbar
         place="tr"
         color="success"
-        autoHideDuration={30}
         onClose={snackClose}
-        message="비밀번호 변경 완료"
+        message="정보 변경 완료"
         open={snackOpen}
         icon={Check}
+        closeNotification={() => { snackClose(); }}
+        close
       />
     </Card>
 

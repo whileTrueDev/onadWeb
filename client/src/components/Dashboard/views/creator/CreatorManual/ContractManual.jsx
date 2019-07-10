@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 // core ../../../components
 import Stepper from '@material-ui/core/Stepper';
@@ -11,9 +11,9 @@ import Card from '../../../components/Card/Card';
 import CardHeader from '../../../components/Card/CardHeader';
 import CardFooter from '../../../components/Card/CardFooter';
 // material-ui
-
-//
-import broadCastingIcon from '../../../assets/img/broadcasting.svg';
+import ImgModal from './ImgModal'
+//images
+import c1_1 from "../../../assets/img/creatorManualImage/1_1.png"
 
 const stepperStyles = makeStyles(theme => ({
   root: {
@@ -28,9 +28,22 @@ const stepperStyles = makeStyles(theme => ({
     float: 'right',
   },
 }));
+
 const ContractManual = (props) => {
   const { classes } = props;
   const StepperClasses = stepperStyles();
+
+  const [open, setOpen] = useState(false);
+  const [selectedImg, setSelectedImg] = useState(false);
+
+  const handleOpen = (imgSrc) => {
+    setOpen(true);
+    setSelectedImg(imgSrc);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   return (
     <GridContainer>
@@ -48,11 +61,10 @@ const ContractManual = (props) => {
           <Step active="true">
             <StepLabel>대쉬보드에서 계약하러 가기 알림창을 클릭합니다.</StepLabel>
             <StepContent>
-              
-                <img src={broadCastingIcon} alt="" className={StepperClasses.img} />
-              
+              <img src={c1_1} alt="" className={StepperClasses.img} onClick={() => handleOpen(c1_1)}/>
             </StepContent>
           </Step>
+
           <Step active="true">
             <StepLabel>
               {'계정 관리에 있는 서비스 이용 및 출금 계약하기의'}
@@ -68,7 +80,7 @@ const ContractManual = (props) => {
               {'를 클릭합니다.'}
             </StepLabel>
             <StepContent>
-              <img src={broadCastingIcon} alt="" className={StepperClasses.img} />
+            <img src={c1_1} alt="" className={StepperClasses.img} onClick={() => handleOpen(c1_1)}/>
             </StepContent>
           </Step>
           <Step active="true">
@@ -80,7 +92,7 @@ const ContractManual = (props) => {
               {'버튼을 클릭해 주세요.'}
             </StepLabel>
             <StepContent>
-              <img src={broadCastingIcon} alt="" className={StepperClasses.img} />
+            <img src={c1_1} alt="" className={StepperClasses.img} onClick={() => handleOpen(c1_1)}/>
             </StepContent>
           </Step>
           <Step active="true">
@@ -91,7 +103,7 @@ const ContractManual = (props) => {
               {'를 눌러 확인 가능합니다.'}
             </StepLabel>
             <StepContent>
-              <img src={broadCastingIcon} alt="" className={StepperClasses.img} />
+            <img src={c1_1} alt="" className={StepperClasses.img} onClick={() => handleOpen(c1_1)}/>
             </StepContent>
           </Step>
           <Step active="true">
@@ -106,6 +118,12 @@ const ContractManual = (props) => {
           {'이해가 잘 안되시거나, 문의사항이 있으시면 고객센터로 문의해주세요.'}
         </CardFooter>
       </Card>
+
+      <ImgModal
+      openModal={open} 
+      handleClose={handleClose} 
+      ImgSrc={selectedImg}
+      />
     </GridContainer>
   );
 };

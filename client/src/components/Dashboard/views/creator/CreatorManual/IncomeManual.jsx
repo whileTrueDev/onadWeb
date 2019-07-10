@@ -55,9 +55,9 @@ const IncomeManual = (props) => {
 로 이동합니다.
             </StepLabel>
             <StepContent>
-              <a>
+              
                 <img src={broadCastingIcon} alt="" className={StepperClasses.img} />
-              </a>
+              
             </StepContent>
           </Step>
           <Step active="true">
