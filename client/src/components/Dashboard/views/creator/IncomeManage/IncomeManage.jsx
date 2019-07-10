@@ -191,7 +191,7 @@ function Income(props) {
 
   // 출금신청 페이지네이션
   const [page, setPage] = React.useState(0); // 테이블 페이지
-  const [rowsPerPage, setRowsPerPage] = React.useState(5); // 테이블 페이지당 행
+  const [rowsPerPage, setRowsPerPage] = React.useState(7); // 테이블 페이지당 행
   const emptyRows = rowsPerPage - Math.min(
     rowsPerPage, WithdrawalData.length - page * rowsPerPage,
   );

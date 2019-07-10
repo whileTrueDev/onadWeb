@@ -26,26 +26,31 @@ import DashboardStyle from '../../../assets/jss/onad/views/dashboardStyle';
 import { defaultCashData, defaultCash } from '../../../variables/marketerCashlist';
 
 function useCashDialog() {
+  const [snackOpen, setsnackOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [modalOpen2, setModalOpen2] = useState(false);
 
-  function handleCashDialogOpen() {
+   function handleCashDialogOpen() {
     setModalOpen(true);
   }
 
   function handleCashDialogOpen2() {
+    setsnackOpen(true);
     setModalOpen2(true);
   }
 
+  
   function handleCashDialogClose() {
     setModalOpen(false);
   }
 
   function handleCashDialogClose2() {
     setModalOpen2(false);
+    setsnackOpen(false);
   }
 
   return {
+    snackOpen,
     modalOpen,
     modalOpen2,
     handleCashDialogOpen,
@@ -74,6 +79,7 @@ const CashManage = (props) => {
 
   // 수익금 출금 모달창
   const {
+    snackOpen,
     modalOpen,
     modalOpen2,
     handleCashDialogOpen,
@@ -194,6 +200,7 @@ const CashManage = (props) => {
                 <CardBody>
                   <div className={classes.buttonWrapper}>
                     <Button
+                      disabled="true"
                       color="info"
                       round
                       onClick={handleCashDialogOpen}
@@ -252,20 +259,21 @@ const CashManage = (props) => {
       </GridContainer>
 
       {/* 계좌 입력 안했을 시 링크 문구 notification창 */}
-      { !accountNumber.marketerAccountNumber
-        && (
-        <Snackbar
-          place="bl"
-          color="danger"
-          icon={Warning}
-          message="아직 계좌정보를 입력하지 않았어요.. 계좌정보 입력 이후 환불신청하세요!"
-          open={!accountNumber.marketerAccountNumber}
-          Link={
-            // 계좌정보 입력 팝업
-            <Button color="warning" onClick={handleDialogOpen}>계좌입력하기</Button>
-          }
-        />
-        )}
+      {!accountNumber.marketerAccountNumber && (
+      <Snackbar
+        place="bl"
+        color="danger"
+        icon={Warning}
+        message="아직 계좌정보를 입력하지 않았어요.. 계좌정보 입력 이후 환불신청하세요!"
+        open={!accountNumber.marketerAccountNumber && snackOpen}
+        Link={
+          // 계좌정보 입력 팝업
+          <Button color="warning" onClick={handleDialogOpen}>계좌입력하기</Button>
+        }
+      />
+      )}
+   
+        
 
       {/* 광고캐쉬 신청 팝업 */}
       <CashDialog
