@@ -74,10 +74,17 @@ class ShowSrcBtn extends Component {
 
   showSrcTimer = () => {
     const { showSrc } = this.state;
-    this.setState({
-      value: showSrc,
-      disabled: true,
+    if (this.state.contractionAgreement === 1) {
+      this.setState({
+        value: showSrc,
+        disabled: true,
     });
+    } else {
+      this.setState({
+        value: showSrc,
+        disabled: false,
+      });
+    }
     setTimeout(this.timeFunction, 8 * 1000);
   }
 

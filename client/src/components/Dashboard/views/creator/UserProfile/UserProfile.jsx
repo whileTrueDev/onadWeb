@@ -16,6 +16,9 @@ import CardHeader from '../../../components/Card/CardHeader';
 import CardBody from '../../../components/Card/CardBody';
 import AccountNumberForm from '../IncomeManage/AccountNumberForm';
 import Contraction from './Contraction';
+import CompletedContract from './CompletedContract';
+import Dialog from '../../../components/Dialog/Dialog';
+
 
 const styles = {
   cardCategoryWhite: {
@@ -37,7 +40,6 @@ const styles = {
   contentWrapper: {
     margin: '20px 0px 20px 0px',
   },
-
   contentDetail: {
     marginTop: '5px',
     marginLeft: '20px',
@@ -45,7 +47,7 @@ const styles = {
   textField: {
     width: '100%',
     borderColor: 'linear-gradient(60deg, #00acc1, #26c6da)',
-  },
+  }
 };
 
 const CssTextField = withStyles({
@@ -75,17 +77,51 @@ const CssTextField = withStyles({
   },
 })(TextField);
 
+function useDialog() {
+  // 계약서 다이얼로그 띄우기
+  const [ContractionOpen, setContractionOpen] = useState(false);
+
+  function handleContractionOpen() {
+    setContractionOpen(true);
+  }
+
+  function handleContractionClose() {
+    setContractionOpen(false);
+  }
+
+  return { ContractionOpen, handleContractionOpen, handleContractionClose };
+}
+
 function UserProfile(props) {
   const { classes, history } = props;
   const [userData, setuserData] = useState({});
+  const { 
+    ContractionOpen,
+    handleContractionOpen,
+    handleContractionClose
+  } = useDialog();
 
   const readyCreatorData = useCallback(() => {
     axios.get('/api/dashboard/creator/profile')
       .then((res) => {
-        console.log(res);
-        setuserData(res.data);
+        if (res.data.error) {
+          history.push('/');
+        } else {
+          setuserData(res.data.result);
+        }
       });
-  }, []);
+  }, [history]);
+
+  const handleProfileChange = (event) => {
+    event.preventDefault();
+    axios.get('/api/login/logout')
+      .then(() => {
+        window.location.href = 'https://www.twitch.tv/settings/profile';
+      })
+      .catch(() => {
+        history.push('/');
+      });
+  };
 
   useEffect(() => {
     readyCreatorData();
@@ -94,8 +130,7 @@ function UserProfile(props) {
   return (
     <div>
       {/* 계약 컴포넌트 */}
-      {userData.creatorContractionAgreement === 0
-      && (
+      {userData.creatorContractionAgreement === 0 && (
       <GridContainer>
         <GridItem xs={12} sm={12} md={12}>
           <Card>
@@ -107,8 +142,7 @@ function UserProfile(props) {
             </CardBody>
           </Card>
         </GridItem>
-      </GridContainer>
-      )}
+      </GridContainer>)}
 
       {/* 계정 관리 컴포넌트 */}
       <GridContainer>
@@ -148,13 +182,13 @@ function UserProfile(props) {
             </CardAvatar>
             <CardBody profile>
               <h4 className={classes.cardTitle}>
-                {`${userData.creatorDisplayName} 님의 정보`}
+                {`${userData.creatorName} 님의 정보`}
               </h4>
               <GridContainer>
                 <GridItem xs={12} sm={12} md={6}>
                   <CssTextField
                     label="TWITCH ID"
-                    value={userData.creatorName || ''}
+                    value={userData.creatorId || ''}
                     className={classes.textField}
                     margin="normal"
                     InputProps={{
@@ -165,7 +199,7 @@ function UserProfile(props) {
                 <GridItem xs={12} sm={12} md={6}>
                   <CssTextField
                     label="NAME"
-                    value={userData.creatorDisplayName || ''}
+                    value={userData.creatorName || ''}
                     className={classes.textField}
                     margin="normal"
                     InputProps={{
@@ -215,21 +249,43 @@ function UserProfile(props) {
                     }}
                   />
                 </GridItem>
-                {/* <GridItem xs={12} sm={12} md={6}>
-                  <Button color="blueGray" style={{ marginTop: 20, float: 'left' }}>
+                <GridItem xs={12} sm={12} md={6}>
+                  <Button
+                    color="blueGray" 
+                    style={{ marginTop: 20, float: 'left' }}
+                    onClick={handleContractionOpen}
+                  >
                       계약서 보기
                   </Button>
-                </GridItem> */}
-              </GridContainer>
-              )}
+                </GridItem>
+              </GridContainer>)}
+              
 
-              <Button color="info" href="https://www.twitch.tv/settings/profile">
+              <Button color="info" onClick={handleProfileChange}>
                 정보변경하러가기
               </Button>
             </CardBody>
           </Card>
         </GridItem>
       </GridContainer>
+
+      {userData.creatorContractionAgreement === 1 && (
+        <Dialog
+          open={ContractionOpen}
+          onClose={handleContractionClose}
+          fullWidth={true}
+          maxWidth={'sm'}
+        >
+          <Card>
+            <CardHeader color="blueGray">
+              <h4 className={classes.cardTitleWhite}>서비스 이용 및 출금 계약하기</h4>
+            </CardHeader>
+            <CardBody>
+              <CompletedContract/>
+            </CardBody>
+          </Card>
+        </Dialog>)}
+
     </div>
   );
 }

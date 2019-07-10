@@ -52,7 +52,7 @@ router.post("/regist", function(req, res, next){
     to: email, // 수신 메일 주소부분
     subject: `[ONAD] ${req.body.marketerId} 님, 가입을 환영합니다.`, // 제목부분인듯
     html: `<p>ONAD 가입을 축하드립니다!</p>` +
-          `<a href="http://localhost:3000/regist/auth/${req.body.marketerId}">해당 링크 클릭을 통해 인증을 완료하세요!</a>`   // 내용부분 토큰은 나중에 암호화하깅
+          `<a href="http://localhost:3000/api/regist/auth/${req.body.marketerId}">해당 링크 클릭을 통해 인증을 완료하세요!</a>`   // 내용부분 토큰은 나중에 암호화하깅
   };
 
   transporter.sendMail(mailOptions, function(error, info){

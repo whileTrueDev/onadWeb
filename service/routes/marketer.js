@@ -115,7 +115,7 @@ router.post('/info', (req, res, next)=> {
       conn.release();
       res.send(err);
     }
-    conn.query(`SELECT marketerId, marketerName, marketerMail, marketerPhoneNum, marketerBusinessRegNum, marketerUserType FROM marketerInfo WHERE marketerId = ? `, [marketerId], (err, result)=>{
+    conn.query(`SELECT marketerId, marketerName, marketerMail, marketerPhoneNum, marketerBusinessRegNum, marketerUserType, marketerContraction FROM marketerInfo WHERE marketerId = ? `, [marketerId], (err, result)=>{
       conn.release();
       res.send(result[0]);
     })

@@ -48,9 +48,9 @@ const WithdrawalManual = (props) => {
 탭을 클릭합니다.
             </StepLabel>
             <StepContent>
-              <a>
+              
                 <img src={broadCastingIcon} className={StepperClasses.img} alt="" />
-              </a>
+              
             </StepContent>
           </Step>
           <Step active="true">

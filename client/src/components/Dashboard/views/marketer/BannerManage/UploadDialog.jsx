@@ -76,7 +76,7 @@ const dialogStyle = {
   },
 };
 
-const DEFAULT_IMAGE_PATH = '/images/captain.jpg';
+const DEFAULT_IMAGE_PATH = '/images/onad_logo.jpg';
 
 const myReducer = (state, action) => {
   switch (action.type) {
@@ -92,6 +92,7 @@ const myReducer = (state, action) => {
     }
   }
 };
+
 const UploadDialog = (props) => {
   const {
     open, handleOpen, classes, readyBanner,
@@ -126,7 +127,7 @@ const UploadDialog = (props) => {
 
   // url을 제출.
   const handleSubmit = () => {
-    if (state.imageUrl) {
+    if (state.imageUrl !== DEFAULT_IMAGE_PATH) {
       axios.post('/api/dashboard/marketer/banner/push', { url: state.imageUrl })
         .then((res) => {
           if (res.data[0]) {
@@ -159,13 +160,13 @@ const UploadDialog = (props) => {
         <div className="filebox">
           <input className="upload-name" value={state.imageName} disabled="disabled" />
           <label htmlFor="getfile">
-파일찾기
-<input type="file" id="getfile" accept="image/*" onChange={readImage} className={classes.input} />
+            파일찾기
+            <input type="file" id="getfile" accept="image/*" onChange={readImage} className={classes.input} />
           </label>
         </div>
         <Divider />
         <div className={classes.company}>
-          <CustomButton color="warning" size="lg" onClick={handleSubmit}>업로드</CustomButton>
+          <CustomButton color="info" size="lg" onClick={handleSubmit}>업로드</CustomButton>
         </div>
         <Typography gutterBottom className={classes.time} />
       </DialogContent>

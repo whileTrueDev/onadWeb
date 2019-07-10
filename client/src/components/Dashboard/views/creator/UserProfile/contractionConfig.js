@@ -13,7 +13,7 @@ const terms = [
     `,
   },
   {
-    title: '개인 정보 수집 및 이용에 대한 동의',
+    title: '개인 정보 수집 및 이용에 대한 동의',
     state: 'checkedB',
     text: `
       거래 대상 OnAD 와 상기인
