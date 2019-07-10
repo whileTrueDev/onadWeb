@@ -48,9 +48,9 @@ const ContractManual = (props) => {
           <Step active="true">
             <StepLabel>대쉬보드에서 계약하러 가기 알림창을 클릭합니다.</StepLabel>
             <StepContent>
-              <a>
+              
                 <img src={broadCastingIcon} alt="" className={StepperClasses.img} />
-              </a>
+              
             </StepContent>
           </Step>
           <Step active="true">
