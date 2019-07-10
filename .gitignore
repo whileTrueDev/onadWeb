@@ -11,3 +11,7 @@ node_modules/*
 
 # configfile
 config.json
+
+.dockerignore
+docker-compose.*
+docker-compose.debug.*
