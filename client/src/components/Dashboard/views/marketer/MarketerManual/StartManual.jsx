@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState }  from 'react';
 
 // core ../../../components
 import Stepper from '@material-ui/core/Stepper';
@@ -11,8 +11,8 @@ import Card from '../../../components/Card/Card';
 import CardHeader from '../../../components/Card/CardHeader';
 import CardFooter from '../../../components/Card/CardFooter';
 import ImgModal from './ImgModal'
-//images
 import c1_1 from "../../../assets/img/creatorManualImage/1_1.png"
+
 const stepperStyles = makeStyles(theme => ({
   root: {
     float: 'right',
@@ -26,7 +26,7 @@ const stepperStyles = makeStyles(theme => ({
     float: 'right',
   },
 }));
-const WithdrawalManual = (props) => {
+const StartManual = (props) => {
   const { classes } = props;
   const StepperClasses = stepperStyles();
 
@@ -41,35 +41,22 @@ const WithdrawalManual = (props) => {
   const handleClose = () => {
     setOpen(false);
   };
-
   return (
     <GridContainer>
       <Card>
         <CardHeader color="blueGray" stats>
           <h6 className={classes.cardTitleWhite}>
-                  계좌등록 및 출금하기
+            승인된 배너 광고를 송출하고 싶어요
           </h6>
-          <p className={classes.cardCategoryWhite}>수익금이 쌓였으니 이제 출금을 해볼까요?</p>
+          <p className={classes.cardCategoryWhite}>관리자의 승인된 배너광고들을 대시보드에서 송출 및 제어가 가능합니다.</p>
         </CardHeader>
+
+        <h4>배너 송출하기</h4>
 
         <Stepper orientation="vertical">
           <Step active="true">
             <StepLabel>
-              왼쪽 네비게이션에서
-              {' '}
-              <strong>수익관리</strong>
-탭을 클릭합니다.
-            </StepLabel>
-            <StepContent>
-              
-                <img src={c1_1} alt="" className={StepperClasses.img} onClick={() => handleOpen(c1_1)}/>
-              
-            </StepContent>
-          </Step>
-          <Step active="true">
-            <StepLabel>
-              <strong>계좌 입력하기</strong>
-알림창을 클릭하여 계좌정보를 입력합니다.
+              {'마케터님의 대시보드로 이동합니다.'}
             </StepLabel>
             <StepContent>
               <img src={c1_1} alt="" className={StepperClasses.img} onClick={() => handleOpen(c1_1)}/>
@@ -77,18 +64,11 @@ const WithdrawalManual = (props) => {
           </Step>
           <Step active="true">
             <StepLabel>
-              화면 오른쪽에 있는
-              {' '}
-              <strong>출금신청</strong>
-을 누른 후,
+              {'승인된 배너 이미지를 클릭하여'}
+              <strong>해당 광고시작</strong>
+              {'을 클릭합니다.'}
               <br />
-              출금 가능 금액 이하의 금액을 입력합니다.
-              {' '}
-              <strong>진행</strong>
-을 클릭합니다.
-              {' '}
-              <br />
-              (* 출금 신청 후 계좌로 입금되기 까지 1~2일 소요됩니다.)
+              {'승인된 배너 이미지 클릭을 통해 개별 배너 광고의 송출과 중단이 가능합니다.'}
             </StepLabel>
             <StepContent>
               <img src={c1_1} alt="" className={StepperClasses.img} onClick={() => handleOpen(c1_1)}/>
@@ -96,18 +76,14 @@ const WithdrawalManual = (props) => {
           </Step>
           <Step active="true">
             <StepLabel>
-              출금신청 내역은 다음과 같이 확인 가능합니다.
-              {' '}
-              <br />
-              입금이 완료된 내역은
-              {' '}
-              <strong>완료됨v</strong>
-으로 표시됩니다.
-              <br />
-              입금 진행 중인 내역은
-              {' '}
-              <strong>진행중</strong>
-으로 표시됩니다.
+              <strong>현재 나의 상태</strong>
+              {'에서 승인된 배너들을 일괄 제어할 수 있습니다.'}
+              <br/>
+              <strong>ON</strong>
+              {'으로 모든 광고를 개별 제어합니다.'}
+              <br/>
+              <strong>OFF</strong>
+              {'로 모든 광고송출 중단합니다.'}
             </StepLabel>
             <StepContent>
               <img src={c1_1} alt="" className={StepperClasses.img} onClick={() => handleOpen(c1_1)}/>
@@ -115,10 +91,9 @@ const WithdrawalManual = (props) => {
           </Step>
           <Step active="true">
             <StepLabel>
-              마지막으로 기간별 수익데이터를 확인 가능합니다.
-              <br />
-              <strong>범위</strong>
-를 설정하여 기간별 데이터를 확인할 수 있습니다.
+              {'화면 하단에서 매칭된 크리에이터들을 조회 가능하며'}
+              <br/>
+              {'각 크리에이터명을 클릭하면 정보조회가 가능합니다.'}
             </StepLabel>
             <StepContent>
               <img src={c1_1} alt="" className={StepperClasses.img} onClick={() => handleOpen(c1_1)}/>
@@ -126,8 +101,13 @@ const WithdrawalManual = (props) => {
           </Step>
           <Step active="true">
             <StepLabel>
-              이것으로 OnAD 플랫폼 이용안내를 마치겠습니다. 크리에이터님의 성장을 후원합니다.
+              {'매칭된 크리에이터들이 방송 내에서 배너를 띄우면 마케터님의 광고가 송출되며'}
+              <br/>
+              {'광고캐시가 차감됩니다.'}
             </StepLabel>
+            <StepContent>
+              <img src={c1_1} alt="" className={StepperClasses.img} onClick={() => handleOpen(c1_1)}/>
+            </StepContent>
           </Step>
         </Stepper>
         <CardFooter>
@@ -143,4 +123,4 @@ const WithdrawalManual = (props) => {
   );
 };
 
-export default withStyles(stepperStyles)(WithdrawalManual);
+export default withStyles(stepperStyles)(StartManual);

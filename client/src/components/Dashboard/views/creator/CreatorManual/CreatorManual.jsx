@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 // core ../../../components
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 // material-ui
@@ -9,8 +9,6 @@ import ContractManual from './ContractManual';
 import ProgramSetting from './ProgramSetting';
 import IncomeManual from './IncomeManual';
 import WithdrawalManual from './WithdrawalManual';
-
-//
 
 const ButtonStyle = makeStyles({
   root: {
@@ -30,14 +28,35 @@ const ButtonStyle = makeStyles({
 });
 
 // const classes = ButtonStyle();
-const CreatorManual = props => (
+const CreatorManual = (props) => {
+
+  const [manual, setManual] = useState(0)
+
+  const handleButton = num => {
+    setManual(num);
+  };
+
+  const handleButtonClose = () => {
+    setManual(false);
+  };
+
+return(
   <div>
-    <Select />
-    <ContractManual />
-    <SetBanner />
-    <ProgramSetting />
-    <IncomeManual />
-    <WithdrawalManual />
+    <Select 
+    handleButton = {handleButton} 
+    handleButtonClose = {handleButtonClose}
+    />
+
+       { (() => {
+          if (manual === 0) return (<div></div>);
+          if (manual === 1) return (<ContractManual />);
+          if (manual === 2) return (<SetBanner />);
+          if (manual === 3) return (<ProgramSetting />);
+          if (manual === 4) return (<IncomeManual />);
+          if (manual === 5) return (<WithdrawalManual/>);
+    })()}
+    
   </div>
-);
+  )
+};
 export default withStyles(ButtonStyle)(CreatorManual);

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 // core ../../../components
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
@@ -9,7 +9,8 @@ import GridContainer from '../../../components/Grid/GridContainer';
 import Card from '../../../components/Card/Card';
 import CardHeader from '../../../components/Card/CardHeader';
 import CardFooter from '../../../components/Card/CardFooter';
-import broadCastingIcon from '../../../assets/img/broadcasting.svg';
+import c1_1 from "../../../assets/img/creatorManualImage/1_1.png"
+import ImgModal from './ImgModal'
 
 const stepperStyles = makeStyles(theme => ({
   root: {
@@ -27,6 +28,18 @@ const stepperStyles = makeStyles(theme => ({
 const ProgramSetting = (props) => {
   const { classes } = props;
   const StepperClasses = stepperStyles();
+
+  const [open, setOpen] = useState(false);
+  const [selectedImg, setSelectedImg] = useState(false);
+
+  const handleOpen = (imgSrc) => {
+    setOpen(true);
+    setSelectedImg(imgSrc);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   return (
     <GridContainer>
@@ -51,7 +64,7 @@ const ProgramSetting = (props) => {
             </StepLabel>
             <StepContent>
               
-                <img src={broadCastingIcon} alt="" className={StepperClasses.img} />
+                <img src={c1_1} alt="" className={StepperClasses.img} onClick={() => handleOpen(c1_1)}/>
               
             </StepContent>
           </Step>
@@ -70,7 +83,7 @@ const ProgramSetting = (props) => {
               되도록이면 XSplit 3.0 버전 이상으로 업그레이는 하는 것을 권장합니다.)
             </StepLabel>
             <StepContent>
-              <img src={broadCastingIcon} alt="" className={StepperClasses.img} />
+              <img src={c1_1} alt="" className={StepperClasses.img} onClick={() => handleOpen(c1_1)}/>
             </StepContent>
           </Step>
           <Step active="true">
@@ -84,7 +97,7 @@ const ProgramSetting = (props) => {
 를 클릭합니다.
             </StepLabel>
             <StepContent>
-              <img src={broadCastingIcon} alt="" className={StepperClasses.img} />
+              <img src={c1_1} alt="" className={StepperClasses.img} onClick={() => handleOpen(c1_1)}/>
             </StepContent>
           </Step>
           <Step active="true">
@@ -94,7 +107,7 @@ const ProgramSetting = (props) => {
               <p>2) 추가된 URL에 커서를 올리면 방송 화면에 흰 테두리가 보입니다. 드래그하여 알맞은 위치가 크기로 조절하면 됩니다.</p>
             </StepLabel>
             <StepContent>
-              <img src={broadCastingIcon} alt="" className={StepperClasses.img} />
+              <img src={c1_1} alt="" className={StepperClasses.img} onClick={() => handleOpen(c1_1)}/>
             </StepContent>
           </Step>
           <Step active="true">
@@ -128,7 +141,7 @@ const ProgramSetting = (props) => {
               </p>
             </StepLabel>
             <StepContent>
-              <img src={broadCastingIcon} alt="" className={StepperClasses.img} />
+              <img src={c1_1} alt="" className={StepperClasses.img} onClick={() => handleOpen(c1_1)}/>
             </StepContent>
           </Step>
           <Step active="true">
@@ -136,7 +149,7 @@ const ProgramSetting = (props) => {
               이제 매칭된 광고가 방송화면에 나타납니다.
             </StepLabel>
             <StepContent>
-              <img src={broadCastingIcon} alt="" className={StepperClasses.img} />
+              <img src={c1_1} alt="" className={StepperClasses.img} onClick={() => handleOpen(c1_1)}/>
             </StepContent>
           </Step>
         </Stepper>
@@ -149,7 +162,7 @@ const ProgramSetting = (props) => {
             </StepLabel>
             <StepContent>
               
-                <img src={broadCastingIcon} alt="" className={StepperClasses.img} />
+                <img src={c1_1} alt="" className={StepperClasses.img} onClick={() => handleOpen(c1_1)}/>
               
             </StepContent>
           </Step>
@@ -169,7 +182,7 @@ const ProgramSetting = (props) => {
               (참고 : OBS Studio 19 버전 이상 사용을 권장합니다.)
             </StepLabel>
             <StepContent>
-              <img src={broadCastingIcon} alt="" className={StepperClasses.img} />
+              <img src={c1_1} alt="" className={StepperClasses.img} onClick={() => handleOpen(c1_1)}/>
             </StepContent>
           </Step>
           <Step active="true">
@@ -183,7 +196,7 @@ const ProgramSetting = (props) => {
               (어떤 소스인지 구분하려면 BrowserSource를 Alert Box와 같이 원하는 이름으로 변경 후, 확인 버튼을 클릭하면 됩니다.)
             </StepLabel>
             <StepContent>
-              <img src={broadCastingIcon} alt="" className={StepperClasses.img} />
+              <img src={c1_1} alt="" className={StepperClasses.img} onClick={() => handleOpen(c1_1)}/>
             </StepContent>
           </Step>
           <Step active="true">
@@ -191,7 +204,7 @@ const ProgramSetting = (props) => {
               추가된 URL을 드래그 하여 맨 위에 둡니다. 빨간 영역을 드래그 하여 위치와 크기를 조절합니다.
             </StepLabel>
             <StepContent>
-              <img src={broadCastingIcon} alt="" className={StepperClasses.img} />
+              <img src={c1_1} alt="" className={StepperClasses.img} onClick={() => handleOpen(c1_1)}/>
             </StepContent>
           </Step>
           <Step active="true">
@@ -199,7 +212,7 @@ const ProgramSetting = (props) => {
             이제 매칭된 광고가 방송화면에 나타납니다.
             </StepLabel>
             <StepContent>
-              <img src={broadCastingIcon} alt="" className={StepperClasses.img} />
+              <img src={c1_1} alt="" className={StepperClasses.img} onClick={() => handleOpen(c1_1)}/>
             </StepContent>
           </Step>
           <Step active="true">
@@ -207,7 +220,7 @@ const ProgramSetting = (props) => {
               이제 매칭된 광고가 방송화면에 나타납니다.
             </StepLabel>
             <StepContent>
-              <img src={broadCastingIcon} alt="" className={StepperClasses.img} />
+              <img src={c1_1} alt="" className={StepperClasses.img} onClick={() => handleOpen(c1_1)}/>
             </StepContent>
           </Step>
         </Stepper>
@@ -215,6 +228,11 @@ const ProgramSetting = (props) => {
           이해가 잘 안되시거나, 문의사항이 있으시면 고객센터로 문의해주세요.
         </CardFooter>
       </Card>
+      <ImgModal
+      openModal={open} 
+      handleClose={handleClose} 
+      ImgSrc={selectedImg}
+      />
     </GridContainer>
   );
 };

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
 // core ../../../components
 import Stepper from '@material-ui/core/Stepper';
@@ -10,11 +10,10 @@ import GridContainer from '../../../components/Grid/GridContainer';
 import Card from '../../../components/Card/Card';
 import CardHeader from '../../../components/Card/CardHeader';
 import CardFooter from '../../../components/Card/CardFooter';
-// material-ui
 
-//
-import broadCastingIcon from '../../../assets/img/broadcasting.svg';
-
+import ImgModal from './ImgModal'
+//images
+import c1_1 from "../../../assets/img/creatorManualImage/1_1.png"
 const stepperStyles = makeStyles(theme => ({
   root: {
     float: 'right',
@@ -31,6 +30,18 @@ const stepperStyles = makeStyles(theme => ({
 const IncomeManual = (props) => {
   const { classes } = props;
   const StepperClasses = stepperStyles();
+
+  const [open, setOpen] = useState(false);
+  const [selectedImg, setSelectedImg] = useState(false);
+
+  const handleOpen = (imgSrc) => {
+    setOpen(true);
+    setSelectedImg(imgSrc);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   return (
     <GridContainer>
@@ -56,7 +67,7 @@ const IncomeManual = (props) => {
             </StepLabel>
             <StepContent>
               
-                <img src={broadCastingIcon} alt="" className={StepperClasses.img} />
+                <img src={c1_1} alt="" className={StepperClasses.img} onClick={() => handleOpen(c1_1)}/>
               
             </StepContent>
           </Step>
@@ -68,7 +79,7 @@ const IncomeManual = (props) => {
               아쉽게도 아직 매칭되지 않았다면, 빈화면이 유지됩니다..
             </StepLabel>
             <StepContent>
-              <img src={broadCastingIcon} alt="" className={StepperClasses.img} />
+              <img src={c1_1} alt="" className={StepperClasses.img} onClick={() => handleOpen(c1_1)}/>
             </StepContent>
           </Step>
           <Step active="true">
@@ -82,7 +93,7 @@ const IncomeManual = (props) => {
               10분마다 누적되는 수익금을 확인할 수 있습니다.
             </StepLabel>
             <StepContent>
-              <img src={broadCastingIcon} alt="" className={StepperClasses.img} />
+              <img src={c1_1} alt="" className={StepperClasses.img} onClick={() => handleOpen(c1_1)}/>
             </StepContent>
           </Step>
         </Stepper>
@@ -91,6 +102,11 @@ const IncomeManual = (props) => {
           이해가 잘 안되시거나, 문의사항이 있으시면 고객센터로 문의해주세요.
         </CardFooter>
       </Card>
+      <ImgModal
+      openModal={open} 
+      handleClose={handleClose} 
+      ImgSrc={selectedImg}
+      />
     </GridContainer>
   );
 };
