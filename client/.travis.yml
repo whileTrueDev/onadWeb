@@ -6,6 +6,10 @@ node_js:
 branches:
   only:
     - master
+sudo: required
+
+before_install:
+  - npm install -g yarn  # yarn을 글로벌로 설치
 
 services:
   - docker
@@ -17,3 +21,7 @@ after_success:
   - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
   - docker build -t hwasurr/onad_react .
   - docker push hwasurr/onad_react
+
+# slack notification for one channel
+notifications:
+  slack: onadworkspace:GAoJDTE0OUEwadREAoZizqFz
