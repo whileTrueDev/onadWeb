@@ -1,7 +1,7 @@
 FROM nginx:1.14.2-alpine
 
 COPY ./build /var/www/react.onad.com
-COPY ./nginx.conf /etc/nginx/conf.d/react.onad.com
+COPY ./nginx.conf /etc/nginx/conf.d/react.onad.com.conf
 
 EXPOSE 3001
 
