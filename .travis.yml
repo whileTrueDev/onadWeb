@@ -16,6 +16,7 @@ services:
 install:
   - yarn
 script:
+  - cd client
   - yarn build
 after_success:
   - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
