@@ -15,5 +15,5 @@ script:
   - yarn build
 after_success:
     - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
-    - docker build -t hwasurr/onadWeb .
-    - docker push hwasurr/onadWeb
+    - docker build -t hwasurr/onad_react .
+    - docker push hwasurr/onad_react
