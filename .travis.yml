@@ -15,18 +15,20 @@ services:
   - docker
 
 script:
-  - cd client
-  - yarn
-  - CI="false" yarn build 
+  - cd client && yarn && CI="false" yarn build && cd -
+  - cd service && yarn && cd -
 
 cache:
   yarn: true
 
 after_success:
   - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
-  - docker build -t hwasurr/onad_react .
-  - docker push hwasurr/onad_react
+  - docker build -t hwasurr/onad_web ./client
+  - docker build -t hwasurr/onad_web_api ./service
+  - docker push hwasurr/onad_web
+  - docker push hwasurr/onad_web_api
 
 # slack notification for one channel
 notifications:
+  email: false
   slack: onadworkspace:GAoJDTE0OUEwadREAoZizqFz
