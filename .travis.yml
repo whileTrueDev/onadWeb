@@ -17,7 +17,7 @@ services:
 script:
   - cd client
   - yarn
-  - yarn build
+  - CI="false" yarn build 
 
 cache:
   yarn: true
