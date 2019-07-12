@@ -13,6 +13,7 @@ var app = express();
 
 
 process.env.NODE_ENV = ( process.env.NODE_ENV && ( process.env.NODE_ENV ).trim().toLowerCase() == 'production' ) ? 'production' : 'development';
+
 // view를 찾을 경로를 `views`로 저장하여 rendering시 찾을 수 있도록 함.
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
