@@ -2,7 +2,6 @@ const express = require('express');
 const pool = require('../model/connectionPool');
 const doQuery = require('../model/doQuery');
 const preprocessing = require('../middlewares/preprocessingData/');
-const sortRows = preprocessing.sortRows;
 const cashlist = preprocessing.cashlist;
 const router = express.Router();
 
@@ -21,7 +20,8 @@ router.get('/cash', function(req, res, next) {
     } else {
       // 출금 신청 데이터 넣기
       const queryState = `
-      SELECT marketerDebit, date
+      SELECT marketerDebit, 
+            DATE_FORMAT(date, '%y년 %m월 %d일') as date
       FROM marketerCost
       WHERE marketerId = ?
       ORDER BY date DESC
@@ -650,68 +650,49 @@ router.post('/return', function(req, res, next) {
 })
 
 // 마케터 캐시 충전 및 환불 내역
+/* 올바른 OUTPUT의 형태
+{ columns: [ '날짜', '캐시충전', '캐시환불', '환불상태' ],
+  data: [ [ '19년 07월 06일', '0', '0', '진행중' ] ] }
+ */
 router.get('/cashlist', function(req, res, next) {
   //marketerID 가져오기
   const marketerId = req._passport.session.user.userid;
+  const listQuery = `
+  SELECT
+  DATE_FORMAT(date, '%y년 %m월 %d일') as date, chargeCash, 
+  withdrawCash, cashReturnState
+  FROM marketerCash
+  WHERE marketerId = ?
+  ORDER BY date DESC`;
 
-  pool.getConnection((err, conn) => {
-    if (err) {
-      console.log(err)
-      conn.release();
-      res.json(err);
-    } else {
-
-      const DBquery = `SELECT
-      DATE_FORMAT(date, '%y년 %m월 %d일') as date, chargeCash, withdrawCash, cashReturnState
-      FROM marketerCash
-      WHERE marketerId = "${marketerId}"
-      ORDER BY date DESC`;
-
-      conn.query(DBquery, (err, rows, fields) => {
-        if (err) {
-          console.log(err);
-          conn.release();
-          res.json(err);
-        } else {
-          if (rows.length > 0) {
-            const result = cashlist(sortRows(rows, 'date'));
-            conn.release();
-            res.send(result);
-          } else {
-            conn.release();
-            res.end();
-          }
-        }
-      })
-    }
+  doQuery(listQuery, [marketerId])
+  .then((row)=>{
+    const result = cashlist(row.result);
+    res.send(result);    
   })
+  .catch(()=>{
+    res.end();
+  })
+
 })
 
 // 마케터 계좌정보 조회
 router.get('/accountNumber', function(req, res, next) {
   const marketerId = req._passport.session.user.userid;
-
-  pool.getConnection((err, conn) => {
-    if (err) {
-      console.log(err)
-    } else {
-      conn.query(`SELECT marketerAccountNumber
-        FROM marketerInfo
-        WHERE marketerId = "${marketerId}"
-        `, function(err, result, fields){
-          console.log(result)
-          if(err){
-              console.log(err);
-          }
-          if (result.length > 0) {
-            conn.release();
-            res.send(result[0]);
-          }else{
-            conn.release();
-            res.end();
-          }
-      });
-    }
+  const accountQuery = `
+  SELECT marketerAccountNumber
+  FROM marketerInfo
+  WHERE marketerId = ?`;
+  doQuery(accountQuery, [marketerId])
+  .then((row)=>{
+    const accountNumber = row.result[0].marketerAccountNumber;
+    res.send({
+      accountNumber
+    })
+  })
+  .catch((error)=>{
+    console.log(error);
+    res.send({});
   })
 })
 
