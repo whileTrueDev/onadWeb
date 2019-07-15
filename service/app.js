@@ -29,7 +29,10 @@ app.use(cookieParser());
 app.use(session({
   secret: '@#@$MYSIGN#@$#$',
   resave: false,
-  saveUninitialized: true
+  saveUninitialized: true,
+  cookie: {
+    secure: false
+  }
  }));
 
 //passport 초기화를 통해 'local' 전략이 수립된다.
