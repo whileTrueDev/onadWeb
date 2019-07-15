@@ -1,15 +1,5 @@
 const pool = require('../../model/connectionPool');
 
-// 시간순으로 최신으로 정렬하는 함수
-function sortRows(rows, sortingValue, orderBy='desc') {
-  const sortingField = sortingValue;
-  if (orderBy === 'desc') {
-    return rows.sort((a, b) => (b[sortingField] - a[sortingField]))
-  } else {
-    return rows.sort((a, b) => (a[sortingField] - b[sortingField]))
-  }
-};
-
 /* 크리에이터 광고 내역 관련 함수 및 라우터 */
 // 크리에이터 광고내역 전처리 함수
 function preprocessingBannerData(result) {
@@ -49,7 +39,7 @@ function withdrawalList(result) {
     columns = columns.map((col) => {
       col = col.replace("date", "출금날짜")
         .replace("creatorWithdrawalAmount", "출금금액")
-        .replace("withdrawalState", "출금상태")
+        .replace("withdrawalState", "신청상태")
 
 
       return col;
@@ -80,7 +70,7 @@ function cashlist(result) {
       col = col.replace("date", "날짜")
         .replace("chargeCash", "캐시충전")
         .replace("withdrawCash", "캐시환불")
-        .replace("cashReturnState", "환불상태")
+        .replace("cashReturnState", "신청상태")
 
 
       return col;
@@ -144,7 +134,6 @@ function creatorList(result) {
 }
 
 module.exports = {
-  sortRows,
   preprocessingBannerData,
   withdrawalList,
   cashlist,

@@ -86,19 +86,16 @@ const CashManage = (props) => {
   const { accountDialogOpen, handleDialogOpen, handleDialogClose } = useDialog();
 
   // 마케터 계좌 데이터
-  const [accountNumber, setAccountNumber] = useState('');
+  const [accountNumber, setAccountNumber] = useState('true');
 
   useEffect(() => {
     axios.get('/api/dashboard/marketer/accountNumber')
       .then((res) => {
-        if (res.data) {
-          if (res.data) {
-            setAccountNumber(res.data);
-          } else { setAccountNumber(''); }
+        if (res.data.accountNumber !== null) {
+          setAccountNumber(res.data.accountNumber);
+        } else {
+          setAccountNumber('');
         }
-      }).catch((res) => {
-        console.log(res);
-        setAccountNumber('');
       });
   }, []);
 
@@ -197,6 +194,7 @@ const CashManage = (props) => {
                       color="info"
                       round
                       onClick={handleCashDialogOpen}
+                      disabled
                     >
                       <Payment />
                       {'캐시충전'}
@@ -205,7 +203,7 @@ const CashManage = (props) => {
                       color="danger"
                       round
                       onClick={handleCashDialogOpen2}
-                      disabled={!accountNumber.marketerAccountNumber}
+                      disabled={!accountNumber}
                     >
                       <Payment />
                       {'캐시환불'}
@@ -252,14 +250,14 @@ const CashManage = (props) => {
       </GridContainer>
 
       {/* 계좌 입력 안했을 시 링크 문구 notification창 */}
-      { !accountNumber.marketerAccountNumber
+      { !accountNumber
         && (
         <Snackbar
           place="bl"
           color="danger"
           icon={Warning}
           message="아직 계좌정보를 입력하지 않았어요.. 계좌정보 입력 이후 환불신청하세요!"
-          open={!accountNumber.marketerAccountNumber}
+          open={!accountNumber}
           Link={
             // 계좌정보 입력 팝업
             <Button color="warning" onClick={handleDialogOpen}>계좌입력하기</Button>
