@@ -41,7 +41,7 @@ const images = [
   },
   {
     url:
-    '/images/productCategory4.gif',
+    `${HOST}/images/productCategory4.gif`,
     title: 'some Image',
     description: 'description',
     fullDescription: 'fullDescription',

@@ -1,6 +1,7 @@
 const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
+const cors = require('cors');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const passport = require('./passportStrategy');
@@ -38,11 +39,8 @@ app.use(passport.session());
 //인증 method를 req에 추가한다.
 app.use(require('./middlewares/checkAuthOnReq'));
 
-app.all('*', function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "X-Requested-With");
-  next();
-});
+// use CORS
+app.use(cors());
 
 app.use('/mailer', mailerRouter); 
 app.use('/api', apiRouter)
