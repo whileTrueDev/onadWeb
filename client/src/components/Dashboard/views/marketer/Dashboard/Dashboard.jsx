@@ -277,6 +277,8 @@ const Dashboard = (props) => {
       {/* 광고 될 크리에이터 목록 */}
       <GridContainer>
         <GridItem xs={12} sm={6} md={12}>
+          { !tableData.loading && tableData.payload
+          && (
           <CustomTabs
             headerColor="blueGray"
             tabs={[
@@ -306,6 +308,8 @@ const Dashboard = (props) => {
               },
             ]}
           />
+          )
+        }
         </GridItem>
       </GridContainer>
 
