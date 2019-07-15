@@ -10,7 +10,6 @@ node_modules/
 node_modules/*
 
 # configfile
-config.json
 
 docker-compose.*
 docker-compose.debug.*
