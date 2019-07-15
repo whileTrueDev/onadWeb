@@ -17,7 +17,7 @@ const twitchStrategy = require("passport-twitch").Strategy;
 // 암호화 체크 객체 생성
 const encrpyto = require('./encryption');
 const doQuery = require('./model/doQuery');
-const config = require('../config.json');
+const config = require('./config.json');
 
 const HOST = process.env.NODE_ENV === 'production' ? config.production.apiHostName : config.dev.apiHostName
 
