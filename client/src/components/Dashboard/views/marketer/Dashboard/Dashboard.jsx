@@ -44,6 +44,7 @@ import DangerTypography from '../../../components/Typography/Danger';
 import Muted from '../../../components/Typography/Muted';
 import Info from '../../../components/Typography/Info';
 import { StateContext } from '../../../../StateStore';
+import HOST from '../../../../../config';
 // 상수
 const WAIT_BANNER_STATE = 1; // 대기중 배너 스테이트
 
@@ -123,9 +124,9 @@ const Dashboard = (props) => {
   const secondClasses = useStyles();
   const { classes } = props;
 
-  const cashData = useFetchData('/api/dashboard/marketer/cash');
-  const bannerData = useFetchData('/api/dashboard/marketer/banner');
-  const tableData = useFetchData('/api/dashboard/marketer/creatorList');
+  const cashData = useFetchData(`${HOST}/api/dashboard/marketer/cash`);
+  const bannerData = useFetchData(`${HOST}/api/dashboard/marketer/banner`);
+  const tableData = useFetchData(`${HOST}/api/dashboard/marketer/creatorList`);
   const {
     DialogOpen, handleDialogOpen,
     handleDialogClose, selectedBanner,

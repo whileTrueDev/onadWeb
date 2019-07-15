@@ -41,7 +41,7 @@ const Dashboard = (props) => {
   const [currentBannerData, setCurrentBannerData] = React.useState([['', '']]);
 
   useEffect(() => {
-    axios.get(HOST+'/api/dashboard/creator/currentBanner')
+    axios.get(`${HOST}/api/dashboard/creator/currentBanner`)
       .then((res) => {
         if (res.data) {
           if (res.data.length > 0) {
