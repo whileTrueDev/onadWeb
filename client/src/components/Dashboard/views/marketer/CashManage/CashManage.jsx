@@ -26,26 +26,31 @@ import DashboardStyle from '../../../assets/jss/onad/views/dashboardStyle';
 import { defaultCashData, defaultCash } from '../../../variables/marketerCashlist';
 
 function useCashDialog() {
+  const [snackOpen, setsnackOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [modalOpen2, setModalOpen2] = useState(false);
 
-  function handleCashDialogOpen() {
+   function handleCashDialogOpen() {
     setModalOpen(true);
   }
 
   function handleCashDialogOpen2() {
+    setsnackOpen(true);
     setModalOpen2(true);
   }
 
+  
   function handleCashDialogClose() {
     setModalOpen(false);
   }
 
   function handleCashDialogClose2() {
     setModalOpen2(false);
+    setsnackOpen(false);
   }
 
   return {
+    snackOpen,
     modalOpen,
     modalOpen2,
     handleCashDialogOpen,
@@ -74,6 +79,7 @@ const CashManage = (props) => {
 
   // 수익금 출금 모달창
   const {
+    snackOpen,
     modalOpen,
     modalOpen2,
     handleCashDialogOpen,
@@ -191,6 +197,7 @@ const CashManage = (props) => {
                 <CardBody>
                   <div className={classes.buttonWrapper}>
                     <Button
+                      disabled="true"
                       color="info"
                       round
                       onClick={handleCashDialogOpen}
@@ -264,7 +271,7 @@ const CashManage = (props) => {
           }
         />
         )}
-
+        
       {/* 광고캐쉬 신청 팝업 */}
       <CashDialog
         open={modalOpen}
