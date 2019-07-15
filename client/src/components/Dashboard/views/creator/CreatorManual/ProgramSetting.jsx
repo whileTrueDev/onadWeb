@@ -50,9 +50,9 @@ const ProgramSetting = (props) => {
               XSplit Broadcaster를 실행시킵니다.
             </StepLabel>
             <StepContent>
-              
-                <img src={broadCastingIcon} alt="" className={StepperClasses.img} />
-              
+
+              <img src={broadCastingIcon} alt="" className={StepperClasses.img} />
+
             </StepContent>
           </Step>
           <Step active="true">
@@ -148,9 +148,9 @@ const ProgramSetting = (props) => {
               OBS Studio를 실행시킵니다.
             </StepLabel>
             <StepContent>
-              
-                <img src={broadCastingIcon} alt="" className={StepperClasses.img} />
-              
+
+              <img src={broadCastingIcon} alt="" className={StepperClasses.img} />
+
             </StepContent>
           </Step>
           <Step active="true">

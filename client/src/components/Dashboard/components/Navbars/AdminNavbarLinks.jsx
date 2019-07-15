@@ -11,11 +11,12 @@ import PowerSettingsNew from '@material-ui/icons/PowerSettingsNew';
 // core components
 import headerLinksStyle from '../../assets/jss/onad/components/headerLinksStyle';
 import Button from '../CustomButtons/Button';
+import HOST from '../../../../config';
 
 function HeaderLinks(props) {
   const { classes, history } = props;
   function handleLogoutClick() {
-    axios.get('/api/login/logout').then(() => {
+    axios.get(`${HOST}/api/login/logout`).then(() => {
       history.push('/');
     });
   }

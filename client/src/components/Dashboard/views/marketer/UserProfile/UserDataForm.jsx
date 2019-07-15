@@ -18,6 +18,7 @@ import CardFooter from '../../../components/Card/CardFooter';
 import Button from '../../../components/CustomButtons/Button';
 import dashboardStyle from '../../../assets/jss/onad/views/dashboardStyle';
 import Snackbar from '../../../components/Snackbar/Snackbar';
+import HOST from '../../../../../config';
 
 dashboardStyle.textField = {
   width: '100%',
@@ -71,7 +72,7 @@ const UserDataForm = (props) => {
   const [snackOpen, setSnackOpen] = useState(false);
 
   const getData = useCallback(async () => {
-    axios.post('/api/dashboard/marketer/info')
+    axios.post(`${HOST}/api/dashboard/marketer/info`)
       .then((res) => {
         setUserData(res.data);
         setDomain(res.data.marketerMail.split('@')[1]);
@@ -109,7 +110,7 @@ const UserDataForm = (props) => {
       marketerMail: `${mail}@${domain}`,
       marketerPhoneNum: phone,
     };
-    axios.post('/api/dashboard/marketer/info/change', user)
+    axios.post(`${HOST}/api/dashboard/marketer/info/change`, user)
       .then((res) => {
         getData();
         setSnackOpen(true);

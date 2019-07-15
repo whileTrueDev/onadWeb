@@ -15,6 +15,8 @@ import DialogContent from '@material-ui/core/DialogContent';
 import Button from '../../../components/CustomButtons/Button';
 import Dialog from '../../../components/Dialog/Dialog';
 import Warning from '../../../components/Typography/Warning';
+import HOST from '../../../../../config';
+
 
 const useStyles = makeStyles(theme => ({
   inDialogContent: {
@@ -114,7 +116,7 @@ function WithdrawDialog(props) {
       alert('3만원 이상부터 출금이 가능해요!');
     } else {
       // 해당 금액 만큼 출금 내역에 추가하는 요청
-      axios.post('/api/dashboard/creator/withdrawal', {
+      axios.post(`${HOST}/api/dashboard/creator/withdrawal`, {
         withdrawalAmount: selectValue,
       }).then((res) => {
         const { insertWithdrawalSuccess, updateIncome } = res.data;

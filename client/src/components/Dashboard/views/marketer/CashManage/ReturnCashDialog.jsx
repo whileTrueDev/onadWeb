@@ -15,6 +15,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import Dialog from '../../../components/Dialog/Dialog';
 import Button from '../../../components/CustomButtons/Button';
 import Warning from '../../../components/Typography/Warning';
+import HOST from '../../../../../config';
 
 const useStyles = makeStyles(theme => ({
   contentTitle: {
@@ -85,7 +86,7 @@ function ReturnCashDialog(props) {
       alert('불가합니다');
     } else {
       // 해당 금액 만큼 환불 내역에 추가하는 요청
-      axios.post('/api/dashboard/marketer/return', {
+      axios.post(`${HOST}/api/dashboard/marketer/return`, {
         withdrawCash: selectValue,
       }).then((res) => {
         handleSnackClose();
@@ -285,7 +286,6 @@ ReturnCashDialog.propTypes = {
   handleClose: PropTypes.func.isRequired,
   accountNumber: PropTypes.string.isRequired,
   chargeCash: PropTypes.string.isRequired,
-  history: PropTypes.object,
 };
 
 export default ReturnCashDialog;

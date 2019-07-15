@@ -10,6 +10,7 @@ import Typography from '@material-ui/core/Typography';
 import { Divider } from '@material-ui/core';
 import CustomButton from '../../../components/CustomButtons/Button';
 import './upload.css';
+import HOST from '../../../../../config';
 
 
 const styles = theme => ({
@@ -76,7 +77,7 @@ const dialogStyle = {
   },
 };
 
-const DEFAULT_IMAGE_PATH = '/images/onad_logo.jpg';
+const DEFAULT_IMAGE_PATH = '/pngs/onad_logo.jpg';
 
 const myReducer = (state, action) => {
   switch (action.type) {
@@ -128,7 +129,7 @@ const UploadDialog = (props) => {
   // url을 제출.
   const handleSubmit = () => {
     if (state.imageUrl !== DEFAULT_IMAGE_PATH) {
-      axios.post('/api/dashboard/marketer/banner/push', { url: state.imageUrl })
+      axios.post(`${HOST}/api/dashboard/marketer/banner/push`, { url: state.imageUrl })
         .then((res) => {
           if (res.data[0]) {
             alert(res.data[1]);

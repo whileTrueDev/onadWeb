@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 
 // core ../../../components
 import Stepper from '@material-ui/core/Stepper';
@@ -55,9 +55,9 @@ const IncomeManual = (props) => {
 로 이동합니다.
             </StepLabel>
             <StepContent>
-              
-                <img src={broadCastingIcon} alt="" className={StepperClasses.img} />
-              
+
+              <img src={broadCastingIcon} alt="" className={StepperClasses.img} />
+
             </StepContent>
           </Step>
           <Step active="true">

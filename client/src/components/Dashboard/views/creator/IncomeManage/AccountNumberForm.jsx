@@ -13,6 +13,7 @@ import {
   MenuItem,
 } from '@material-ui/core';
 import Button from '../../../components/CustomButtons/Button';
+import HOST from '../../../../../config';
 
 
 const style = theme => ({
@@ -139,7 +140,7 @@ const AccountNumberForm = (props) => {
       bankName: event.target.bank.value,
       bankAccount: event.target.bankAccount.value,
     };
-    axios.post('/api/regist/accountNum', userAccount)
+    axios.post(`${HOST}/api/regist/accountNum`, userAccount)
       .then((res) => {
         const { error } = res.data;
         if (!error) {

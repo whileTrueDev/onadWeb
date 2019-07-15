@@ -1,4 +1,4 @@
-import React, { useReducer, useState, useEffect } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import MaskedInput from 'react-text-mask';
 import {
@@ -18,6 +18,7 @@ import Done from '@material-ui/icons/Done';
 import Clear from '@material-ui/icons/Clear';
 import SuccessTypo from '../Dashboard/components/Typography/Success';
 import DangerTypo from '../Dashboard/components/Typography/Danger';
+import HOST from '../../config';
 
 // Style Overriding용.
 const styles = theme => ({
@@ -160,7 +161,7 @@ const RegistForm = (props) => {
     if (state.id || id === '') {
       alert('ID을 올바르게 입력해주세요.');
     } else {
-      axios.post('/api/regist/checkId', {
+      axios.post(`${HOST}/api/regist/checkId`, {
         id,
       })
         .then((res) => {

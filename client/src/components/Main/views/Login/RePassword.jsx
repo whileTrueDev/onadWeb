@@ -10,6 +10,7 @@ import {
   TextField,
   withStyles,
 } from '@material-ui/core';
+import HOST from '../../../../config';
 
 const style = theme => ({
   contents: {
@@ -79,7 +80,7 @@ const RePasswordDialog = (props) => {
       password: event.target.password.value,
     };
 
-    axios.post('/api/login/changePw', user)
+    axios.post(`${HOST}/api/login/changePw`, user)
       .then((res) => {
         alert('비밀번호 변경이 완료되었습니다. 다시 로그인 해주세요');
         setRepassword(false);

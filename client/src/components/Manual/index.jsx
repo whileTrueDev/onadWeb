@@ -7,12 +7,14 @@ import withRoot from '../Main/withRoot';
 // import ProductCTA from './views/ProductCTA';
 import textSource from './source/textSource';
 import Manual from './Manual';
+import HOST from '../../config';
+
 
 const useLoginValue = (location) => {
   const [isLogin, setisLogin] = useState(null);
 
   useEffect(() => {
-    axios.get('/api/login/check')
+    axios.get(`${HOST}/api/login/check`)
       .then((res) => {
         if (res.data) {
           const { userType } = res.data.user;

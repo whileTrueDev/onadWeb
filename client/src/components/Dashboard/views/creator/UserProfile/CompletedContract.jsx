@@ -33,7 +33,7 @@ const useStyles = makeStyles(theme => ({
   actionsContainer: {
     marginTop: theme.spacing(1),
     float: 'right',
-  }
+  },
 }));
 
 function useDialog() {
@@ -49,7 +49,6 @@ function useDialog() {
 
   return { DialogOpen, handleDialogOpen, handleDialogClose };
 }
-
 
 
 function CompletedContract(props) {
@@ -70,7 +69,7 @@ function CompletedContract(props) {
             >
               약관보기
             </Button>
-            
+
           </Paper>
           { /* 약관 보기 Dialog */ }
           <Dialog

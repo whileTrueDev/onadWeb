@@ -15,6 +15,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import Button from '../../../components/CustomButtons/Button';
 import Dialog from '../../../components/Dialog/Dialog';
 import Warning from '../../../components/Typography/Warning';
+import HOST from '../../../../../config';
 
 const useStyles = makeStyles(theme => ({
   contentTitle: {
@@ -87,7 +88,7 @@ function CashDialog(props) {
 
   function handleSubmitClick() {
     // 해당 금액 만큼 광고 캐시에 추가하는 요청
-    axios.post('/api/dashboard/marketer/chargecash', {
+    axios.post(`${HOST}/api/dashboard/marketer/chargecash`, {
       chargecash: selectValue,
     }).then((res) => {
       handleSnackClose();

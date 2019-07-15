@@ -10,6 +10,7 @@ import {
   TextField,
   withStyles,
 } from '@material-ui/core';
+import HOST from '../../../../config';
 
 const style = theme => ({
   contents: {
@@ -37,7 +38,7 @@ const FindDialog = (props) => {
     };
     const emailReg = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*[.]+[a-zA-Z]{2,3}$/i;
     if (emailReg.test(user.marketerMail)) {
-      axios.post('/api/regist/findId', user)
+      axios.post(`${HOST}/api/regist/findId`, user)
         .then((res) => {
           if (res.data.error) {
             alert(res.data.message);
@@ -67,7 +68,7 @@ const FindDialog = (props) => {
       marketerMail: event.target.marketerMail.value,
     };
     if (emailReg.test(user.marketerMail)) {
-      axios.post('/api/regist/findPw', user)
+      axios.post(`${HOST}/api/regist/findPw`, user)
         .then((res) => {
           if (res.data.error) {
             alert(res.data.message);

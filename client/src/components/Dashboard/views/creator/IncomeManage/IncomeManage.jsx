@@ -43,6 +43,7 @@ import setChartjsData from '../../../variables/charts';
 import DashboardStyle from '../../../assets/jss/onad/views/dashboardStyle';
 // variable
 import { defaultWithdrawalData } from '../../../variables/creatorWithdrawal';
+import HOST from '../../../../../config';
 
 
 DashboardStyle.select = {
@@ -162,7 +163,7 @@ function Income(props) {
 
   // 출금리스트 데이터 axios 요청
   useEffect(() => {
-    axios.get('/api/dashboard/creator/listOfWithdrawal')
+    axios.get(`${HOST}/api/dashboard/creator/listOfWithdrawal`)
       .then((res) => {
         if (res.data) {
           if (res.data) {
@@ -179,7 +180,7 @@ function Income(props) {
   const [session, setSession] = useState({});
   useEffect(() => {
     // Banner 데이터 axios 요청
-    axios.get('/api/dashboard/checkUserType')
+    axios.get(`${HOST}/api/dashboard/checkUserType`)
       .then((res) => {
         if (res.data) {
           setSession(res.data);

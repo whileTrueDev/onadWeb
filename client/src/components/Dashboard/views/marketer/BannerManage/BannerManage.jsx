@@ -34,6 +34,7 @@ import DangerTypography from '../../../components/Typography/Danger';
 import InfoTypography from '../../../components/Typography/Info';
 import ReasonDialog from './ReasonDialog';
 import UploadDialog from './UploadDialog';
+import HOST from '../../../../../config';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -194,7 +195,7 @@ const BannerManage = (props) => {
   };
 
   const readyBanner = useCallback(() => {
-    axios.get('/api/dashboard/marketer/banner/all')
+    axios.get(`${HOST}/api/dashboard/marketer/banner/all`)
       .then((res) => {
         if (res.data[0]) {
           const completeBanners = [];
@@ -233,7 +234,7 @@ const BannerManage = (props) => {
   const handleDelete = banner => () => {
     console.log('배너를 삭제합니다');
     const { bannerId } = banner;
-    axios.post('/api/dashboard/marketer/banner/delete', { bannerId })
+    axios.post(`${HOST}/api/dashboard/marketer/banner/delete`, { bannerId })
       .then((res) => {
         alert(res.data[1]);
         if (res.data[0]) {

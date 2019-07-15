@@ -9,6 +9,7 @@ import Typography from '../../components/Typography';
 import TextField from '../../components/TextField';
 import Snackbar from '../../components/Snackbar';
 import Button from '../../components/Button';
+import HOST from '../../../../config';
 
 const styles = theme => ({
   root: {
@@ -62,7 +63,7 @@ class ProductCTA extends React.Component {
     const userEmail = event.target.email.value;
     const inquiryText = event.target.inquiry.value;
 
-    axios.post('/inquiry', {
+    axios.post(`${HOST}/inquiry`, {
       data: {
         email: userEmail,
         inquiryText,
@@ -130,7 +131,7 @@ class ProductCTA extends React.Component {
           <Grid item xs={12} md={6} className={classes.imagesWrapper}>
             <Hidden smDown>
               <img
-                src="/images/captain.jpg"
+                src="/pngs/captain.jpg"
                 alt="call to action"
                 className={classes.image}
               />

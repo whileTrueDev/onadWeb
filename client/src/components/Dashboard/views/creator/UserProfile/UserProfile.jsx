@@ -18,6 +18,7 @@ import AccountNumberForm from '../IncomeManage/AccountNumberForm';
 import Contraction from './Contraction';
 import CompletedContract from './CompletedContract';
 import Dialog from '../../../components/Dialog/Dialog';
+import HOST from '../../../../../config';
 
 
 const styles = {
@@ -102,7 +103,7 @@ function UserProfile(props) {
   } = useDialog();
 
   const readyCreatorData = useCallback(() => {
-    axios.get('/api/dashboard/creator/profile')
+    axios.get(HOST+'/api/dashboard/creator/profile')
       .then((res) => {
         if (res.data.error) {
           history.push('/');
@@ -114,7 +115,7 @@ function UserProfile(props) {
 
   const handleProfileChange = (event) => {
     event.preventDefault();
-    axios.get('/api/login/logout')
+    axios.get(HOST+'/api/login/logout')
       .then(() => {
         window.location.href = 'https://www.twitch.tv/settings/profile';
       })

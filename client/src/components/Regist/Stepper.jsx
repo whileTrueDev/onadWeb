@@ -13,6 +13,7 @@ import Usertype from './Usertype';
 import RegistForm from './RegistForm';
 import PaperSheet from './Paper';
 import AppAppBar from '../Main/views/Layout/AppAppBar';
+import HOST from '../../config';
 
 const styles = theme => ({
   root: {
@@ -125,7 +126,7 @@ const RegistStepper = (props) => {
   };
 
   const handleUserSubmit = () => {
-    axios.post('/api/regist/marketer',
+    axios.post(`${HOST}/api/regist/marketer`,
       userInfo)
       .then((res) => {
         const { error } = res.data;

@@ -20,7 +20,7 @@ const useLoginValue = (history, location) => {
   // logout function
   const logout = () => {
     setisLogin(false);
-    axios.get('/api/login/logout')
+    axios.get(`${HOST}/api/login/logout`)
       .then(() => {
         history.push('/');
       })

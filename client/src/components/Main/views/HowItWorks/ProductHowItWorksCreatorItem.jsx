@@ -11,6 +11,7 @@ import ShowChart from '@material-ui/icons/ShowChart';
 import Button from '../../components/Button';
 import Typography from '../../components/Typography';
 import LoginForm from '../Login/LoginForm';
+import HOST from '../../../../config';
 
 const creatorSource = {
   title: '간단한 설정만으로 광고료를 획득할 수 있습니다. 광고를 유치하세요.',
@@ -38,7 +39,7 @@ export default function ProductHowItWorksCreatorItem(props) {
   const { open, handleOpen, handleClose } = useDialog();
 
   function handleClick() {
-    axios.get('/api/dashboard/checkUserType').then((res) => {
+    axios.get(`${HOST}/api/dashboard/checkUserType`).then((res) => {
       const { userType } = res.data;
       if (userType === undefined) {
         handleOpen();

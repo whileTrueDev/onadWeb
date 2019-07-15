@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import axios from 'axios';
 import shortid from 'shortid';
 import { Redirect } from 'react-router-dom';
+import HOST from '../../../config';
 
 const Admin = (props) => {
   const [waiting, setWaiting] = React.useState([['', '', '', '']]);
@@ -13,7 +14,7 @@ const Admin = (props) => {
 
   function onClickButton(index) {
     console.log(index);
-    axios.post('/api/admin/pay', { index })
+    axios.post(`${HOST}/api/admin/pay`, { index })
       .then(refreshPage())
       .catch((err) => {
         console.log(err);
@@ -21,7 +22,7 @@ const Admin = (props) => {
   }
 
   useEffect(() => {
-    axios.get('/admin', {}).then((res) => {
+    axios.get(`${HOST}/admin`, {}).then((res) => {
       if (res.data === 'wrong') {
         setCheck(res.data);
       } else if (res.data) {

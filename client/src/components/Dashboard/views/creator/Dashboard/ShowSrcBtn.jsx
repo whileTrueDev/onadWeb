@@ -15,6 +15,7 @@ import Warning from '@material-ui/icons/Warning';
 
 import Button from '../../../components/CustomButtons/Button';
 import Snackbar from '../../../components/Snackbar/Snackbar';
+import HOST from '../../../../../config';
 
 const styles = {
   button: {
@@ -49,7 +50,7 @@ class ShowSrcBtn extends Component {
   componentDidMount() {
     // url 데이터 가져와 state로 입력.
     const { creatorId } = this.props;
-    axios.get('/api/dashboard/creator/overlayUrl', {
+    axios.get(HOST+'/api/dashboard/creator/overlayUrl', {
       params: {
         creatorId,
       },

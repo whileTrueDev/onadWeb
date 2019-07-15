@@ -13,6 +13,7 @@ import Button from '../../../components/CustomButtons/Button';
 import GridItem from '../../../components/Grid/GridItem';
 import dashboardStyle from '../../../assets/jss/onad/views/dashboardStyle';
 import Snackbar from '../../../components/Snackbar/Snackbar';
+import HOST from '../../../../../config';
 
 const initialValue = {
   value: '',
@@ -60,7 +61,7 @@ const PasswordForm = (props) => {
   const submitPassword = (event) => {
     event.preventDefault();
     if (!(state.password || state.repasswd)) {
-      axios.post('/api/login/changePw', { password: state.value })
+      axios.post(`${HOST}/api/login/changePw`, { password: state.value })
         .then((res) => {
           if (res.data) {
             setSnackOpen(true);

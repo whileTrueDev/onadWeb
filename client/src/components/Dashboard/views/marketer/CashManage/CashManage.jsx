@@ -24,13 +24,14 @@ import AccountDialog from './AccountDialog';
 import DashboardStyle from '../../../assets/jss/onad/views/dashboardStyle';
 // variable
 import { defaultCashData, defaultCash } from '../../../variables/marketerCashlist';
+import HOST from '../../../../../config';
 
 function useCashDialog() {
   const [snackOpen, setsnackOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [modalOpen2, setModalOpen2] = useState(false);
 
-   function handleCashDialogOpen() {
+  function handleCashDialogOpen() {
     setModalOpen(true);
   }
 
@@ -39,7 +40,7 @@ function useCashDialog() {
     setModalOpen2(true);
   }
 
-  
+
   function handleCashDialogClose() {
     setModalOpen(false);
   }
@@ -95,7 +96,7 @@ const CashManage = (props) => {
   const [accountNumber, setAccountNumber] = useState('');
 
   useEffect(() => {
-    axios.get('/api/dashboard/marketer/accountNumber')
+    axios.get(`${HOST}/api/dashboard/marketer/accountNumber`)
       .then((res) => {
         if (res.data) {
           if (res.data) {
@@ -113,7 +114,7 @@ const CashManage = (props) => {
 
   // 광고캐시 DB값 요
   useEffect(() => {
-    axios.get('/api/dashboard/marketer/cash')
+    axios.get(`${HOST}/api/dashboard/marketer/cash`)
       .then((res) => {
         if (res.data) {
           setCash(res.data);
@@ -129,7 +130,7 @@ const CashManage = (props) => {
 
   // 충전 및 환불 DB값 요
   useEffect(() => {
-    axios.get('/api/dashboard/marketer/cashlist')
+    axios.get(`${HOST}/api/dashboard/marketer/cashlist`)
       .then((res) => {
         if (res.data) {
           if (res.data) {
@@ -272,8 +273,7 @@ const CashManage = (props) => {
         }
       />
       )}
-   
-        
+
 
       {/* 광고캐쉬 신청 팝업 */}
       <CashDialog

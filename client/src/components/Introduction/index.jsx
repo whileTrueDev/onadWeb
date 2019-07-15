@@ -6,13 +6,14 @@ import ProductHero from '../Main/views/Hero/ProductHero';
 import withRoot from '../Main/withRoot';
 import Introduce from './Introduce';
 import textSource from './source/textSource';
+import HOST from '../../config';
 
 
 const useLoginValue = (location) => {
   const [isLogin, setisLogin] = useState(null);
 
   useEffect(() => {
-    axios.get('/api/login/check')
+    axios.get(`${HOST}/api/login/check`)
       .then((res) => {
         if (res.data) {
           const { userType } = res.data.user;

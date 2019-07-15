@@ -17,6 +17,7 @@ import Dialog from '../../../components/Dialog/Dialog';
 import SuccessTypo from '../../../components/Typography/Success';
 import DangerTypo from '../../../components/Typography/Danger';
 import terms from './contractionConfig';
+import HOST from '../../../../../config';
 
 const useStyles = makeStyles(theme => ({
   checked: {},
@@ -96,7 +97,7 @@ function Contraction(props) {
 
   const handleUserContract = () => {
     if (contractionList.every(row => row === true)) {
-      axios.post('/api/dashboard/creator/contraction', {
+      axios.post(`${HOST}/api/dashboard/creator/contraction`, {
       })
         .then((res) => {
           if (res.data === true) {
@@ -180,7 +181,6 @@ function Contraction(props) {
 }
 
 Contraction.propTypes = {
-  history: PropTypes.object,
 };
 
 export default Contraction;

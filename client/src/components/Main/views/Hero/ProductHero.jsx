@@ -7,6 +7,7 @@ import axios from 'axios';
 import Button from '../../components/Button';
 import Typography from '../../components/Typography';
 import ProductHeroLayout from './ProductHeroLayout';
+import HOST from '../../../../config';
 
 const styles = makeStyles(theme => ({
   background: {
@@ -63,7 +64,7 @@ function ProductHero(props) {
   const [check] = React.useState(true);
 
   const handleClick = () => {
-    axios.get('/api/dashboard/checkUserType')
+    axios.get(`${HOST}/api/dashboard/checkUserType`)
       .then((res) => {
         const { userType } = res.data;
         if (userType === undefined) {
