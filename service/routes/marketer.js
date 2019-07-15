@@ -13,6 +13,7 @@ const router = express.Router();
  */
 
 router.get('/cash', function(req, res, next) {
+  console.log(req.session);
   const marketerId = req._passport.session.user.userid;
 
   pool.getConnection((err, conn) => {
@@ -47,6 +48,7 @@ router.get('/cash', function(req, res, next) {
 })
 
 router.get('/banner', function(req, res, next) {
+  console.log(req.session);
   const marketerId = req._passport.session.user.userid;
 
   pool.getConnection((err, conn) => {
