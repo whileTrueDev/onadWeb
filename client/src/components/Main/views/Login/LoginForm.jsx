@@ -15,6 +15,7 @@ import {
 import PropTypes from 'prop-types';
 import FindDialog from './FindDialog';
 import { StateContext } from '../../../StateStore';
+import HOST from '../../../../config';
 
 const styles = () => ({
   title: {
@@ -66,7 +67,7 @@ const LoginForm = (props) => {
     if (event) {
       event.preventDefault();
     }
-    axios.post('/api/login',
+    axios.post(`${HOST}/api/login`,
       {
         userid,
         passwd,
@@ -189,7 +190,7 @@ const LoginForm = (props) => {
           <Tooltip title="트위치 계정으로 로그인" placement="right">
             <Button
               component={Link}
-              href="http://localhost:3000/api/login/twitch"
+              href={`${HOST}/api/login/twitch`}
             // onClick ={twitchLogin}
               style={{
                 backgroundImage: 'url("pngs/twitch3.png")',
