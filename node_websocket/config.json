@@ -1,0 +1,19 @@
+{
+    "DB": {
+        "host": "onad.cbjjamtlar2t.ap-northeast-2.rds.amazonaws.com",
+        "user": "onad",
+        "password": "rkdghktn12",
+        "database": "onadnode",
+        "port": 3306
+    },
+    "dev": {
+        "apiHostName": "http://localhost:3000",
+        "reactHostName": "http://localhost:3001",
+        "socketHostName": "http://localhost:3002"
+    },
+    "production": {
+        "apiHostName": "http://52.79.211.82:3000",
+        "reactHostName": "http://52.79.211.82:3001",
+        "socketHostName": "http://52.79.211.82:3002"
+    }
+}

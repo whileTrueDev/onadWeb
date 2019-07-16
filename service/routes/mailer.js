@@ -10,10 +10,13 @@ const HOST = process.env.NODE_ENV === 'production' ? config.production.apiHostNa
 router.post("/auth", (req, res) => {
   const {marketerMail, marketerId, password} = req.body;
   let transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-          user: 'onad6309@gmail.com',  // gmail 계정 아이디를 입력
-          pass: 'rkdghktn12'          // gmail 계정의 비밀번호 : 내꺼 다 털리는거 아이가
+    service: 'gmail',
+    host: 'smtp.gmail.com',
+    port: 465,
+    secure: true,
+    auth: {
+        user: 'onad6309@gmail.com',
+        pass: 'rkdghktn12'          
       }
   });
   let mailOptions = {
