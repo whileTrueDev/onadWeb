@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import {
   DialogActions, DialogContent,
   DialogContentText, TextField,
@@ -7,6 +6,7 @@ import {
   InputLabel, Input, MenuItem,
 } from '@material-ui/core';
 import PropTypes from 'prop-types';
+import axios from '../../../../../utils/axios';
 import Dialog from '../../../components/Dialog/Dialog';
 import Button from '../../../components/CustomButtons/Button';
 import HOST from '../../../../../config';

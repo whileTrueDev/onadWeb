@@ -3,8 +3,8 @@ import {
   TextField,
 } from '@material-ui/core';
 import withStyles from '@material-ui/core/styles/withStyles';
-import axios from 'axios';
 import Check from '@material-ui/icons/Check';
+import axios from '../../../../../utils/axios';
 import Card from '../../../components/Card/Card';
 import CardHeader from '../../../components/Card/CardHeader';
 import CardBody from '../../../components/Card/CardBody';

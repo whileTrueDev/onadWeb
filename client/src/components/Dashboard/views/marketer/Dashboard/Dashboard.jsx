@@ -2,7 +2,6 @@ import React, {
   useState, useEffect, useCallback, useContext,
 } from 'react';
 import PropTypes from 'prop-types';
-import axios from 'axios';
 import { Link } from 'react-router-dom';
 // @material-ui/core
 import withStyles from '@material-ui/core/styles/withStyles';
@@ -22,6 +21,7 @@ import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
 import GridListTileBar from '@material-ui/core/GridListTileBar';
 import Tooltip from '@material-ui/core/Tooltip';
+import axios from '../../../../../utils/axios';
 
 // core ../../../components
 import dashboardStyle from '../../../assets/jss/onad/views/dashboardStyle';

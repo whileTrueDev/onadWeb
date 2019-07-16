@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
-import axios from 'axios';
 import shortid from 'shortid';
 import { Redirect } from 'react-router-dom';
+import axios from '../../../utils/axios';
 import HOST from '../../../config';
 
 const Admin = (props) => {

@@ -1,6 +1,5 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
 // @material-ui/core components
 import withStyles from '@material-ui/core/styles/withStyles';
 import Tooltip from '@material-ui/core/Tooltip';
@@ -8,6 +7,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import Person from '@material-ui/icons/Person';
 import Dashboard from '@material-ui/icons/Dashboard';
 import PowerSettingsNew from '@material-ui/icons/PowerSettingsNew';
+import axios from '../../../../utils/axios';
 // core components
 import headerLinksStyle from '../../assets/jss/onad/components/headerLinksStyle';
 import Button from '../CustomButtons/Button';

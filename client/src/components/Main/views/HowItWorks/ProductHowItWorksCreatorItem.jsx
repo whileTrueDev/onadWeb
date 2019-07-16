@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import PropTypes from 'prop-types';
 
 import Grid from '@material-ui/core/Grid';
@@ -7,6 +6,7 @@ import Grow from '@material-ui/core/Grow';
 import BrandingWatermark from '@material-ui/icons/BrandingWatermark';
 import Subscriptions from '@material-ui/icons/Subscriptions';
 import ShowChart from '@material-ui/icons/ShowChart';
+import axios from '../../../../utils/axios';
 
 import Button from '../../components/Button';
 import Typography from '../../components/Typography';

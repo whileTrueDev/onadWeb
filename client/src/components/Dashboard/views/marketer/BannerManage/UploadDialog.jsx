@@ -1,5 +1,4 @@
-import React, { useState, useReducer } from 'react';
-import axios from 'axios';
+import React, { useReducer } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import Dialog from '@material-ui/core/Dialog';
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
@@ -11,6 +10,7 @@ import { Divider } from '@material-ui/core';
 import CustomButton from '../../../components/CustomButtons/Button';
 import './upload.css';
 import HOST from '../../../../../config';
+import axios from '../../../../../utils/axios';
 
 
 const styles = theme => ({

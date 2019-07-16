@@ -13,9 +13,9 @@ import {
   MenuItem,
   TextField,
 } from '@material-ui/core';
-import axios from 'axios';
 import Done from '@material-ui/icons/Done';
 import Clear from '@material-ui/icons/Clear';
+import axios from '../../utils/axios';
 import SuccessTypo from '../Dashboard/components/Typography/Success';
 import DangerTypo from '../Dashboard/components/Typography/Danger';
 import HOST from '../../config';

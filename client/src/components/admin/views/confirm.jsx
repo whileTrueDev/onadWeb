@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
-import axios from 'axios';
 import { Redirect } from 'react-router-dom';
+import axios from '../../../utils/axios';
+
 import Table from '../components/Table/Table';
 import HOST from '../../../config';
 

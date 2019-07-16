@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import axios from 'axios';
 import { Link } from 'react-router-dom';
 // material core
 import TextField from '@material-ui/core/TextField';
@@ -12,6 +11,7 @@ import OpenInNewOutlined from '@material-ui/icons/OpenInNewOutlined';
 import InsertLinkOutlined from '@material-ui/icons/InsertLinkOutlined';
 import FileCopyOutlined from '@material-ui/icons/FileCopyOutlined';
 import Warning from '@material-ui/icons/Warning';
+import axios from '../../../../../utils/axios';
 
 import Button from '../../../components/CustomButtons/Button';
 import Snackbar from '../../../components/Snackbar/Snackbar';
@@ -50,7 +50,7 @@ class ShowSrcBtn extends Component {
   componentDidMount() {
     // url 데이터 가져와 state로 입력.
     const { creatorId } = this.props;
-    axios.get(HOST+'/api/dashboard/creator/overlayUrl', {
+    axios.get(`${HOST}/api/dashboard/creator/overlayUrl`, {
       params: {
         creatorId,
       },
@@ -79,7 +79,7 @@ class ShowSrcBtn extends Component {
       this.setState({
         value: showSrc,
         disabled: true,
-    });
+      });
     } else {
       this.setState({
         value: showSrc,

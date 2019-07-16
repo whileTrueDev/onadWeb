@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import axios from 'axios';
 import { Line } from 'react-chartjs-2';
 
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Typography from '@material-ui/core/Typography';
+import axios from '../../../../../utils/axios';
 
 import setChartjsData from '../../../variables/charts';
 

@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
-import axios from 'axios';
 
 import withStyles from '@material-ui/core/styles/withStyles';
 import {
   Switch, FormControlLabel, Typography, makeStyles,
 } from '@material-ui/core';
+import axios from '../../../../../utils/axios';
 
 const IOSSwitch = withStyles(theme => ({
   root: {

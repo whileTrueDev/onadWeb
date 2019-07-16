@@ -1,6 +1,5 @@
 // AccountNumber를 입력하는 Form component 작성
 import React, { useState } from 'react';
-import axios from 'axios';
 import PropTypes from 'prop-types';
 import {
   DialogActions,
@@ -12,6 +11,7 @@ import {
   Input,
   MenuItem,
 } from '@material-ui/core';
+import axios from '../../../../../utils/axios';
 import Button from '../../../components/CustomButtons/Button';
 import HOST from '../../../../../config';
 

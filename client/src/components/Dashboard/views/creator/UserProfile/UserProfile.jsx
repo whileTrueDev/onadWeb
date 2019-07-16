@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
-import axios from 'axios';
 // @material-ui/core components
 import withStyles from '@material-ui/core/styles/withStyles';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
+import axios from '../../../../../utils/axios';
 // core components
 import GridItem from '../../../components/Grid/GridItem';
 import GridContainer from '../../../components/Grid/GridContainer';
@@ -48,7 +48,7 @@ const styles = {
   textField: {
     width: '100%',
     borderColor: 'linear-gradient(60deg, #00acc1, #26c6da)',
-  }
+  },
 };
 
 const CssTextField = withStyles({
@@ -96,14 +96,14 @@ function useDialog() {
 function UserProfile(props) {
   const { classes, history } = props;
   const [userData, setuserData] = useState({});
-  const { 
+  const {
     ContractionOpen,
     handleContractionOpen,
-    handleContractionClose
+    handleContractionClose,
   } = useDialog();
 
   const readyCreatorData = useCallback(() => {
-    axios.get(HOST+'/api/dashboard/creator/profile')
+    axios.get(`${HOST}/api/dashboard/creator/profile`)
       .then((res) => {
         if (res.data.error) {
           history.push('/');
@@ -115,7 +115,7 @@ function UserProfile(props) {
 
   const handleProfileChange = (event) => {
     event.preventDefault();
-    axios.get(HOST+'/api/login/logout')
+    axios.get(`${HOST}/api/login/logout`)
       .then(() => {
         window.location.href = 'https://www.twitch.tv/settings/profile';
       })
@@ -143,7 +143,8 @@ function UserProfile(props) {
             </CardBody>
           </Card>
         </GridItem>
-      </GridContainer>)}
+      </GridContainer>
+      )}
 
       {/* 계정 관리 컴포넌트 */}
       <GridContainer>
@@ -252,15 +253,16 @@ function UserProfile(props) {
                 </GridItem>
                 <GridItem xs={12} sm={12} md={6}>
                   <Button
-                    color="blueGray" 
+                    color="blueGray"
                     style={{ marginTop: 20, float: 'left' }}
                     onClick={handleContractionOpen}
                   >
                       계약서 보기
                   </Button>
                 </GridItem>
-              </GridContainer>)}
-              
+              </GridContainer>
+              )}
+
 
               <Button color="info" onClick={handleProfileChange}>
                 정보변경하러가기
@@ -274,18 +276,19 @@ function UserProfile(props) {
         <Dialog
           open={ContractionOpen}
           onClose={handleContractionClose}
-          fullWidth={true}
-          maxWidth={'sm'}
+          fullWidth
+          maxWidth="sm"
         >
           <Card>
             <CardHeader color="blueGray">
               <h4 className={classes.cardTitleWhite}>서비스 이용 및 출금 계약하기</h4>
             </CardHeader>
             <CardBody>
-              <CompletedContract/>
+              <CompletedContract />
             </CardBody>
           </Card>
-        </Dialog>)}
+        </Dialog>
+      )}
 
     </div>
   );

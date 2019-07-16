@@ -6,9 +6,9 @@ import {
   TextField,
   MenuItem,
 } from '@material-ui/core';
-import axios from 'axios';
 import Check from '@material-ui/icons/Check';
 import MaskedInput from 'react-text-mask';
+import axios from '../../../../../utils/axios';
 import GridContainer from '../../../components/Grid/GridContainer';
 import GridItem from '../../../components/Grid/GridItem';
 import Card from '../../../components/Card/Card';

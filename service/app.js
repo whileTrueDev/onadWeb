@@ -6,6 +6,7 @@ const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const passport = require('./passportStrategy');
 const bodyParser = require('body-parser');
+const config = require('./config.json');
 
 //Router 정의
 var mailerRouter = require('./routes/mailer');
@@ -14,6 +15,11 @@ var app = express();
 
 
 process.env.NODE_ENV = ( process.env.NODE_ENV && ( process.env.NODE_ENV ).trim().toLowerCase() == 'production' ) ? 'production' : 'development';
+let BACK_HOST = 'http://localhost:3000';
+let FRONT_HOST = 'http://localhost:3001';
+if (process.env.NODE_ENV === 'production') {
+  FRONT_HOST = config.production.reactHostName;
+}
 
 // view를 찾을 경로를 `views`로 저장하여 rendering시 찾을 수 있도록 함.
 app.set('views', path.join(__dirname, 'views'));
@@ -44,6 +50,15 @@ app.use(require('./middlewares/checkAuthOnReq'));
 
 // use CORS
 app.use(cors());
+// Enable CORS
+// X-Requested-With, X-AUTHENTICATION, X-IP
+app.use(req, res, next => {
+  res.header('Access-Control-Allow-Origin', FRONT_HOST)
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, X-AUTHENTICATION, X-IP, Content-Type, Accept')
+  res.header('Access-Control-Allow-Credentials', true)
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
+  next()
+})
 
 app.use('/mailer', mailerRouter); 
 app.use('/api', apiRouter)

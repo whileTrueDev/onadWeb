@@ -11,7 +11,6 @@ import {
   Button,
   Link,
 } from '@material-ui/core';
-import axios from 'axios';
 import Check from '@material-ui/icons/Check';
 import Clear from '@material-ui/icons/CallMissed';
 import CallMissed from '@material-ui/icons/Clear';
@@ -19,6 +18,7 @@ import AttachFile from '@material-ui/icons/AttachFile';
 import TouchApp from '@material-ui/icons/TouchApp';
 import Forum from '@material-ui/icons/Forum';
 import Warning from '@material-ui/icons/Warning';
+import axios from '../../../../../utils/axios';
 import GridContainer from '../../../components/Grid/GridContainer';
 import Card from '../../../components/Card/Card';
 import CardHeader from '../../../components/Card/CardHeader';

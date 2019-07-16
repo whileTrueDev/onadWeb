@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 // for request
-import axios from 'axios';
 // for Link tag component
 import { Link } from 'react-router-dom';
 // @material-ui/core
@@ -13,6 +12,7 @@ import Warning from '@material-ui/icons/Warning';
 import DateRange from '@material-ui/icons/DateRange';
 import AttachMoney from '@material-ui/icons/AttachMoney';
 import Money from '@material-ui/icons/Money';
+import axios from '../../../../../utils/axios';
 // core ../../../components
 import dashboardStyle from '../../../assets/jss/onad/views/dashboardStyle';
 import GridContainer from '../../../components/Grid/GridContainer';

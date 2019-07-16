@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import axios from 'axios';
 import shortid from 'shortid';
 import {
   Paper,
@@ -11,6 +10,7 @@ import green from '@material-ui/core/colors/green';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import Done from '@material-ui/icons/Done';
 import Clear from '@material-ui/icons/Clear';
+import axios from '../../../../../utils/axios';
 
 import Button from '../../../components/CustomButtons/Button';
 import Dialog from '../../../components/Dialog/Dialog';

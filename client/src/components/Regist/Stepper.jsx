@@ -1,5 +1,4 @@
 import React, { useState, useReducer } from 'react';
-import axios from 'axios';
 import PropTypes from 'prop-types';
 import {
   withStyles,
@@ -8,6 +7,7 @@ import {
   StepLabel,
   StepContent,
 } from '@material-ui/core';
+import axios from '../../utils/axios';
 
 import Usertype from './Usertype';
 import RegistForm from './RegistForm';

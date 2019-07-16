@@ -1,5 +1,4 @@
 import React, { useState, useReducer } from 'react';
-import axios from 'axios';
 import {
   Dialog,
   DialogActions,
@@ -10,6 +9,7 @@ import {
   TextField,
   withStyles,
 } from '@material-ui/core';
+import axios from '../../../../utils/axios';
 import HOST from '../../../../config';
 
 const style = theme => ({

@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import axios from 'axios';
 // @material-ui/core components
 import withStyles from '@material-ui/core/styles/withStyles';
 import Payment from '@material-ui/icons/Payment';
 import AttachMoney from '@material-ui/icons/AttachMoney';
 import DateRange from '@material-ui/icons/DateRange';
 import Warning from '@material-ui/icons/Warning';
+import axios from '../../../../../utils/axios';
 import Table from '../../../components/Table/Table';
 import GridItem from '../../../components/Grid/GridItem';
 import GridContainer from '../../../components/Grid/GridContainer';
