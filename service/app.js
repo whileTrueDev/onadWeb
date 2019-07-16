@@ -20,7 +20,6 @@ let FRONT_HOST = 'http://localhost:3001';
 if (process.env.NODE_ENV === 'production') {
   FRONT_HOST = config.production.reactHostName;
 }
-
 // view를 찾을 경로를 `views`로 저장하여 rendering시 찾을 수 있도록 함.
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
@@ -49,16 +48,9 @@ app.use(passport.session());
 app.use(require('./middlewares/checkAuthOnReq'));
 
 // use CORS
-app.use(cors());
-// Enable CORS
-// X-Requested-With, X-AUTHENTICATION, X-IP
-app.all((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', FRONT_HOST)
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, X-AUTHENTICATION, X-IP, Content-Type, Accept')
-  res.header('Access-Control-Allow-Credentials', true)
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
-  next()
-})
+const corsOptions = { origin: FRONT_HOST, credentials: true };
+app.use(cors(corsOptions));
+
 
 app.use('/mailer', mailerRouter); 
 app.use('/api', apiRouter)
