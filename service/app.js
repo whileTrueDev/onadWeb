@@ -52,7 +52,7 @@ app.use(require('./middlewares/checkAuthOnReq'));
 app.use(cors());
 // Enable CORS
 // X-Requested-With, X-AUTHENTICATION, X-IP
-app.use(req, res, next => {
+app.all((req, res, next) => {
   res.header('Access-Control-Allow-Origin', FRONT_HOST)
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, X-AUTHENTICATION, X-IP, Content-Type, Accept')
   res.header('Access-Control-Allow-Credentials', true)

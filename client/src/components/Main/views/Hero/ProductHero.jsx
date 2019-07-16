@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import { grey } from '@material-ui/core/colors';
 import Grow from '@material-ui/core/Grow';
-import axios from '../../../../../utils/axios';
+import axios from '../../../../utils/axios';
 import Button from '../../components/Button';
 import Typography from '../../components/Typography';
 import ProductHeroLayout from './ProductHeroLayout';
