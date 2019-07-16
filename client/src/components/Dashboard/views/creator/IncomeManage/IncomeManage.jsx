@@ -140,10 +140,10 @@ function Income(props) {
   const { value, handleChange } = useSelectValue();
 
   // data 요청
-  const { payload, loading, error } = useFetchData('/api/dashboard/creator/chartdata', value);
+  const { payload, loading, error } = useFetchData(`${HOST}/api/dashboard/creator/chartdata`, value);
 
   // 수익금 데이터
-  const incomeData = useFetchData('/api/dashboard/creator/income');
+  const incomeData = useFetchData(`${HOST}/api/dashboard/creator/income`);
 
   // 수익금 출금 모달창
   const {

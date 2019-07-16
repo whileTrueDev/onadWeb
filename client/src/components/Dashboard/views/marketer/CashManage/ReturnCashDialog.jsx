@@ -73,13 +73,14 @@ function ReturnCashDialog(props) {
 
   // 캐쉬 환불신청 스낵바
   const {
-    ReturnCashSnack, handleSnackClose, handleOnlyDialogClose, handleSnackOpen,
+    ReturnCashSnack, handleSnackClose, handleOnlyDialogClose,
+    // handleSnackOpen,
   } = useReturnCashSnack(handleClose);
 
-  // 캐시 환불 진행 버튼 클릭
-  function handleClick() {
-    handleSnackOpen();
-  }
+  // // 캐시 환불 진행 버튼 클릭
+  // function handleClick() {
+  //   handleSnackOpen();
+  // }
 
   function handleSubmitClick() {
     if (chargeCash - selectValue < 0) {
@@ -104,15 +105,15 @@ function ReturnCashDialog(props) {
       title="광고캐시 환불"
       buttons={(
         <div>
-          <Button onClick={handleClose}>
-              취소
-          </Button>
           <Button
             color="info"
-            onClick={handleClick}
+            // onClick={handleClick}
             disabled={(!(chargeCash >= selectValue)) || !(selectValue >= 0)}
           >
               진행
+          </Button>
+          <Button onClick={handleClose}>
+              취소
           </Button>
         </div>
 )}

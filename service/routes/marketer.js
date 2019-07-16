@@ -13,7 +13,6 @@ const router = express.Router();
  */
 
 router.get('/cash', function(req, res, next) {
-  console.log(req.session);
   const marketerId = req._passport.session.user.userid;
 
   pool.getConnection((err, conn) => {
@@ -48,7 +47,6 @@ router.get('/cash', function(req, res, next) {
 })
 
 router.get('/banner', function(req, res, next) {
-  console.log(req.session);
   const marketerId = req._passport.session.user.userid;
 
   pool.getConnection((err, conn) => {
@@ -155,7 +153,7 @@ router.get('/creatorlist', function(req, res, next) {
 
       conn.query(queryState, function(err, result, fields){
           if(err){
-            console.log('마케터 광고캐시 조회 오류', err);
+            console.log('마케터 크리에이터 리스트 조회 오류', err);
           }
           if (result.length > 0) {
             data = result;
@@ -176,7 +174,9 @@ router.get('/creatorlist', function(req, res, next) {
                 conn.release();
               }
               conn.release();
+              console.log(result);
               const data = preprocessing.creatorList(result);
+              console.log(data);
               res.send(data);
             });
             }

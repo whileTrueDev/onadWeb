@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 import shortid from 'shortid';
 import {
   Paper,

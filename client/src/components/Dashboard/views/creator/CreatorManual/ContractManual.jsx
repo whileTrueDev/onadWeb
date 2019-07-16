@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 // core ../../../components
 import Stepper from '@material-ui/core/Stepper';

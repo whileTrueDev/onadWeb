@@ -6,7 +6,7 @@ import Typography from '@material-ui/core/Typography';
 import axios from '../../../../../utils/axios';
 
 import setChartjsData from '../../../variables/charts';
-
+import HOST from '../../../../../config';
 // data Fetch hooks
 function useFetchData(url, dateRange) {
   const [payload, setPayload] = useState(null);
@@ -41,7 +41,7 @@ function useFetchData(url, dateRange) {
 }
 
 function ValueChart() {
-  const valueChartData = useFetchData('/api/dashboard/marketer/bannerValue');
+  const valueChartData = useFetchData(`${HOST}/api/dashboard/marketer/bannerValue`);
 
   return (
     <div>

@@ -119,6 +119,7 @@ function creatorList(result) {
 
   result.map((row) => {
     for (let i=0; i < data.length; i++) {
+      // 이름이 같다면
       if (row[0] === data[i][0]) {
         data[i].push(Math.ceil(row[1]));
         data[i].push(Math.ceil(row[1] * 6) + '원');
@@ -126,6 +127,7 @@ function creatorList(result) {
       }
     }
   })
+  console.log(data);
 
   // 빈 데이터 채우기
   data.map((row) => {

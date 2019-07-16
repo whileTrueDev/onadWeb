@@ -78,13 +78,14 @@ function CashDialog(props) {
 
   // 출금신청 스낵바
   const {
-    cashSnack, handleSnackClose, handleOnlyDialogClose, handleSnackOpen,
+    cashSnack, handleSnackClose, handleOnlyDialogClose,
+    // handleSnackOpen,
   } = useCashSnack(handleClose);
 
   // 캐시 충전진행 버튼 클릭
-  function handleClick() {
-    handleSnackOpen();
-  }
+  // function handleClick() {
+  //   handleSnackOpen();
+  // }
 
   function handleSubmitClick() {
     // 해당 금액 만큼 광고 캐시에 추가하는 요청
@@ -110,11 +111,11 @@ function CashDialog(props) {
         <div>
           <Button
             color="info"
-            onClick={handleClick}
+            // onClick={handleClick}
           >
               진행
           </Button>
-          <Button onClick={handleClose}>
+          <Button>
               취소
           </Button>
         </div>

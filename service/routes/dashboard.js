@@ -13,7 +13,7 @@ router.get('/checkUserType', function(req, res, next) {
   console.log('session check!')
   if (req._passport.session !== undefined) {
     // 세션이 있는 경우
-    console.log('valid session');
+    console.log('valid session', req._passport.session);
     const userInfo = req._passport.session.user;
     res.send(userInfo);
   } else {

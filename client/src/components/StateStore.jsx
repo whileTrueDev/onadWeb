@@ -1,5 +1,5 @@
-import React, { createContext, useReducer, useEffect } from 'react';
-import { createBrowserHistory } from 'history';
+import React, { createContext, useReducer } from 'react';
+// import { createBrowserHistory } from 'history';
 
 // const initialState = {
 //   history: {},

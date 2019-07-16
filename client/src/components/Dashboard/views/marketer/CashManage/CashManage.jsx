@@ -201,7 +201,7 @@ const CashManage = (props) => {
                 <CardBody>
                   <div className={classes.buttonWrapper}>
                     <Button
-                      disabled="true"
+                      disabled
                       color="info"
                       round
                       onClick={handleCashDialogOpen}
