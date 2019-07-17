@@ -73,8 +73,10 @@ const UserDataForm = (props) => {
   const getData = useCallback(async () => {
     axios.post('/api/dashboard/marketer/info')
       .then((res) => {
-        setUserData(res.data);
-        setDomain(res.data.marketerMail.split('@')[1]);
+        if (res.data) {
+          setUserData(res.data);
+          setDomain(res.data.marketerMail.split('@')[1]);
+        }
       });
   }, []);
 
@@ -111,9 +113,15 @@ const UserDataForm = (props) => {
     };
     axios.post('/api/dashboard/marketer/info/change', user)
       .then((res) => {
-        getData();
-        setSnackOpen(true);
-        setTextType(true);
+        if (res.data) {
+          getData();
+          setSnackOpen(true);
+          setTextType(true);
+        } else {
+          alert('변경도중 오류가 발생하였습니다.');
+          getData();
+          setTextType(true);
+        }
       });
   };
 

@@ -11,129 +11,97 @@ const router = express.Router();
  * **********************************
  */
 
-router.get('/cash', function(req, res, next) {
+router.get('/cash', function(req, res) {
   const marketerId = req._passport.session.user.userid;
+  const debitQuery = `
+  SELECT marketerDebit, 
+  DATE_FORMAT(date, '%y년 %m월 %d일') as date
+  FROM marketerCost
+  WHERE marketerId = ?
+  ORDER BY date DESC
+  LIMIT 1`;
 
-  pool.getConnection((err, conn) => {
-    if (err) {
-      console.log(err)
-    } else {
-      // 출금 신청 데이터 넣기
-      const queryState = `
-      SELECT marketerDebit, 
-            DATE_FORMAT(date, '%y년 %m월 %d일') as date
-      FROM marketerCost
-      WHERE marketerId = ?
-      ORDER BY date DESC
-      LIMIT 1`;
-
-      const queryArray = [
-        marketerId
-      ];
-
-      conn.query(queryState, queryArray, function(err, result, fields){
-          if(err){
-            console.log('마케터 광고캐시 조회 오류', err);
-          }
-          if (result.length > 0) {
-            conn.release();
-            res.send(result[0]);
-          } else {
-            conn.release();
-            res.end();
-          }
-      });
-  }})
+  doQuery(debitQuery, [marketerId])
+  .then((row)=>{
+    res.send(row.result[0]);
+  })
+  .catch(()=>{
+    res.end();
+  })
 })
 
-router.get('/banner', function(req, res, next) {
+router.get('/banner', function(req, res) {
   const marketerId = req._passport.session.user.userid;
+  const bannerListQuery = `
+  SELECT bannerId, bannerSrc, bannerCategory, date, confirmState
+  FROM bannerRegistered
+  WHERE marketerId = ? AND (confirmState = ? OR confirmstate = ?)
+  ORDER BY confirmState DESC, date DESC
+  LIMIT 5`;
 
-  pool.getConnection((err, conn) => {
-    if (err) {
-      console.log(err)
-    } else {
-      // 출금 신청 데이터 넣기
-      const queryState = `
-      SELECT bannerId, bannerSrc, bannerCategory, date, confirmState
-      FROM bannerRegistered
-      WHERE marketerId = ? AND (confirmState = ? OR confirmstate = ?)
-      ORDER BY confirmState DESC, date DESC
-      LIMIT 5`;
-
-      const queryArray = [
-        marketerId, 1, 3 // 1: valid 이, 3: now is broadcasted banner
-      ];
-
-      conn.query(queryState, queryArray, function(err, result, fields){
-          if(err){
-            console.log('마케터 배너데이터 조회 오류', err);
-          } else {
-            if (result.length > 0) {
-              conn.release();
-              res.send(result);
-            } else {
-              conn.release();
-              res.send(result);
-            }
-          }
-      });
-  }})
+  doQuery(bannerListQuery, [marketerId, 1, 3])
+  .then((row)=>{
+    res.send(row.result);
+  })
+  .catch((errorData)=>{
+    console.log(errorData);
+    res.end();
+  })
 })
 
 // bannner manage page banner list 가져오기 위한 query
-router.get('/banner/all',(req, res, next)=>{
+router.get('/banner/all',(req, res)=>{
   const marketerId = req._passport.session.user.userid;
-  pool.getConnection((err, conn) => {
-    if (err) {
-      conn.release();
-      res.send([null, err]);
-    } else {
-      const queryState = `
-      SELECT bannerId, bannerSrc, bannerCategory, date, confirmState, bannerDenialReason
-      FROM bannerRegistered
-      WHERE marketerId = ?
-      ORDER BY date DESC`;
-      conn.query(queryState, [marketerId], function(err, result, fields){
-        if(err){
-          conn.release();
-          res.send([null, err]);
-        }
-        else{
-          conn.release();
-          res.send([true, result]);
-        }
-      })
-    }
+  const bannerQuery = `
+  SELECT bannerId, bannerSrc, bannerCategory, date, confirmState, bannerDenialReason
+  FROM bannerRegistered
+  WHERE marketerId = ?
+  ORDER BY date DESC`;
+  doQuery(bannerQuery, [marketerId])
+  .then((row)=>{
+    res.send([true, row.result]);
+  })
+  .catch((errorData)=>{
+    console.log(errorData);
+    res.send([null, errorData]);
   })
 })
 
-router.post('/info', (req, res, next)=> {
+router.post('/info', (req, res)=> {
   const marketerId = req._passport.session.user.userid;
-  pool.getConnection((err, conn) => {
-    if(err){
-      conn.release();
-      res.send(err);
-    }
-    conn.query(`SELECT marketerId, marketerName, marketerMail, marketerPhoneNum, marketerBusinessRegNum, marketerUserType, marketerContraction FROM marketerInfo WHERE marketerId = ? `, [marketerId], (err, result)=>{
-      conn.release();
-      res.send(result[0]);
-    })
+  const infoQuery = `
+  SELECT 
+  marketerId, marketerName, marketerMail, 
+  marketerPhoneNum, marketerBusinessRegNum, marketerUserType, marketerContraction 
+  FROM marketerInfo 
+  WHERE marketerId = ? `
+
+  doQuery(infoQuery, [marketerId])
+  .then((row)=>{
+    res.send(row.result[0]);
+  })
+  .catch((errorData)=>{
+    console.log(errorData);
+    res.end();
   })
 })
 
+//doQuery 수정완료
 router.post('/info/change', (req, res, next)=> {
   const marketerId = req._passport.session.user.userid;
-  const {marketerName, marketerMail, marketerPhoneNum} = req.body;
-  pool.getConnection((err, conn) => {
-    if(err){
-      conn.release();
-      res.send(err);
-    }
-    conn.query(`UPDATE marketerInfo SET marketerName = ? , marketerMail = ? , marketerPhoneNum = ? WHERE marketerId = ? `, [marketerName, marketerMail, marketerPhoneNum, marketerId], (err, result)=>{
-      conn.release();
-      res.send(false);
-    })
+  const { marketerName, marketerMail, marketerPhoneNum } = req.body;
+  const updateQuery = `
+  UPDATE marketerInfo 
+  SET marketerName = ? , marketerMail = ? , marketerPhoneNum = ? 
+  WHERE marketerId = ? `;
+
+  doQuery(updateQuery, [marketerName, marketerMail, marketerPhoneNum, marketerId])
+  .then(()=>{
+    res.send(true);
+  })
+  .catch((errorData)=>{
+    console.log(errorData);
+    res.end();
   })
 })
 

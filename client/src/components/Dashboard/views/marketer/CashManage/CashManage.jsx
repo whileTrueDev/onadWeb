@@ -30,7 +30,7 @@ function useCashDialog() {
   const [modalOpen, setModalOpen] = useState(false);
   const [modalOpen2, setModalOpen2] = useState(false);
 
-   function handleCashDialogOpen() {
+  function handleCashDialogOpen() {
     setModalOpen(true);
   }
 
@@ -39,7 +39,7 @@ function useCashDialog() {
     setModalOpen2(true);
   }
 
-  
+
   function handleCashDialogClose() {
     setModalOpen(false);
   }
@@ -116,7 +116,6 @@ const CashManage = (props) => {
           setCash(res.data);
         } else { setCash(defaultCash); }
       }).catch((res) => {
-        console.log(res); // 오류처리 요망
         setCash(defaultCash);
       });
   }, []);
@@ -271,7 +270,7 @@ const CashManage = (props) => {
           }
         />
         )}
-        
+
       {/* 광고캐쉬 신청 팝업 */}
       <CashDialog
         open={modalOpen}
