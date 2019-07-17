@@ -13,7 +13,10 @@ import CardFooter from '../../../components/Card/CardFooter';
 
 import ImgModal from './ImgModal'
 //images
-import c1_1 from "../../../assets/img/creatorManualImage/1_1.png"
+import c1_1 from "../../../assets/img/creatorManualImage/dashboard.png"
+import c4_2 from "../../../assets/img/creatorManualImage/4_2.png"
+import c4_3 from "../../../assets/img/creatorManualImage/4_3.png"
+
 const stepperStyles = makeStyles(theme => ({
   root: {
     float: 'right',
@@ -43,6 +46,11 @@ const IncomeManual = (props) => {
     setOpen(false);
   };
 
+  const strongStyle = {
+    fontSize:'23px',
+    backgroundColor: '#FFFD95',
+  };
+
   return (
     <GridContainer>
       <Card>
@@ -51,7 +59,7 @@ const IncomeManual = (props) => {
                   수익금이 쌓입니다.
           </h6>
           <p className={classes.cardCategoryWhite}>
-            방송송출 프로글매에 고유 URL을 붙여넣기해서 광고를 송출하면 자동적으로 수익금이 쌓입니다.
+            방송송출 프로그램에 고유 URL을 붙여넣기해서 광고를 송출하면 자동적으로 수익금이 쌓입니다.
           </p>
         </CardHeader>
 
@@ -62,7 +70,7 @@ const IncomeManual = (props) => {
             <StepLabel>
               자신의
               {' '}
-              <strong>대시보드</strong>
+              <strong style={strongStyle}>대시보드</strong>
 로 이동합니다.
             </StepLabel>
             <StepContent>
@@ -79,21 +87,21 @@ const IncomeManual = (props) => {
               아쉽게도 아직 매칭되지 않았다면, 빈화면이 유지됩니다..
             </StepLabel>
             <StepContent>
-              <img src={c1_1} alt="" className={StepperClasses.img} onClick={() => handleOpen(c1_1)}/>
+              <img src={c4_2} alt="" className={StepperClasses.img} onClick={() => handleOpen(c4_2)}/>
             </StepContent>
           </Step>
           <Step active="true">
             <StepLabel>
               광고가 매칭된 상태에서 방송하게 되면 대시보드의
               {' '}
-              <strong>수익금</strong>
+              <strong style={strongStyle}>수익금</strong>
 에서
               {' '}
               <br />
               10분마다 누적되는 수익금을 확인할 수 있습니다.
             </StepLabel>
             <StepContent>
-              <img src={c1_1} alt="" className={StepperClasses.img} onClick={() => handleOpen(c1_1)}/>
+              <img src={c4_3} alt="" className={StepperClasses.img} onClick={() => handleOpen(c4_3)}/>
             </StepContent>
           </Step>
         </Stepper>

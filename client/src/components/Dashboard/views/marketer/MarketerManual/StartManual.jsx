@@ -11,12 +11,14 @@ import Card from '../../../components/Card/Card';
 import CardHeader from '../../../components/Card/CardHeader';
 import CardFooter from '../../../components/Card/CardFooter';
 import ImgModal from './ImgModal'
-import c1_1 from "../../../assets/img/creatorManualImage/1_1.png"
+import m2_1 from "../../../assets/img/MarketerManualImage/2_1.PNG"
+import m2_2 from "../../../assets/img/MarketerManualImage/2_2.PNG"
+import m2_3 from "../../../assets/img/MarketerManualImage/2_3.PNG"
 
 const stepperStyles = makeStyles(theme => ({
   root: {
     float: 'right',
-  },
+  }, 
   img: {
     height: 255,
     display: 'block',
@@ -41,6 +43,10 @@ const StartManual = (props) => {
   const handleClose = () => {
     setOpen(false);
   };
+  const strongStyle = {
+    fontSize:'23px',
+    backgroundColor: '#FFFD95',
+  };
   return (
     <GridContainer>
       <Card>
@@ -58,35 +64,35 @@ const StartManual = (props) => {
             <StepLabel>
               {'마케터님의 대시보드로 이동합니다.'}
             </StepLabel>
-            <StepContent>
-              <img src={c1_1} alt="" className={StepperClasses.img} onClick={() => handleOpen(c1_1)}/>
-            </StepContent>
+            {/* <StepContent>
+              <img src={m2_1} alt="" className={StepperClasses.img} onClick={() => handleOpen(m2_1)}/>
+            </StepContent> */}
           </Step>
           <Step active="true">
             <StepLabel>
               {'승인된 배너 이미지를 클릭하여'}
-              <strong>해당 광고시작</strong>
+              <strong style={strongStyle}>해당 광고시작</strong>
               {'을 클릭합니다.'}
               <br />
               {'승인된 배너 이미지 클릭을 통해 개별 배너 광고의 송출과 중단이 가능합니다.'}
             </StepLabel>
             <StepContent>
-              <img src={c1_1} alt="" className={StepperClasses.img} onClick={() => handleOpen(c1_1)}/>
+              <img src={m2_1} alt="" className={StepperClasses.img} onClick={() => handleOpen(m2_1)}/>
             </StepContent>
           </Step>
           <Step active="true">
             <StepLabel>
-              <strong>현재 나의 상태</strong>
+              <strong style={strongStyle}>현재 나의 상태</strong>
               {'에서 승인된 배너들을 일괄 제어할 수 있습니다.'}
               <br/>
-              <strong>ON</strong>
+              <strong style={strongStyle}>ON</strong>
               {'으로 모든 광고를 개별 제어합니다.'}
               <br/>
-              <strong>OFF</strong>
+              <strong style={strongStyle}>OFF</strong>
               {'로 모든 광고송출 중단합니다.'}
             </StepLabel>
             <StepContent>
-              <img src={c1_1} alt="" className={StepperClasses.img} onClick={() => handleOpen(c1_1)}/>
+              <img src={m2_2} alt="" className={StepperClasses.img} onClick={() => handleOpen(m2_2)}/>
             </StepContent>
           </Step>
           <Step active="true">
@@ -96,7 +102,7 @@ const StartManual = (props) => {
               {'각 크리에이터명을 클릭하면 정보조회가 가능합니다.'}
             </StepLabel>
             <StepContent>
-              <img src={c1_1} alt="" className={StepperClasses.img} onClick={() => handleOpen(c1_1)}/>
+              <img src={m2_3} alt="" className={StepperClasses.img} onClick={() => handleOpen(m2_3)}/>
             </StepContent>
           </Step>
           <Step active="true">
@@ -105,9 +111,9 @@ const StartManual = (props) => {
               <br/>
               {'광고캐시가 차감됩니다.'}
             </StepLabel>
-            <StepContent>
-              <img src={c1_1} alt="" className={StepperClasses.img} onClick={() => handleOpen(c1_1)}/>
-            </StepContent>
+            {/* <StepContent>
+              <img src={m2_1} alt="" className={StepperClasses.img} onClick={() => handleOpen(m2_1)}/>
+            </StepContent> */}
           </Step>
         </Stepper>
         <CardFooter>

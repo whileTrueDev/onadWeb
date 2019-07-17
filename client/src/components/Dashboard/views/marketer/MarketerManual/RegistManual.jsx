@@ -11,14 +11,18 @@ import Card from '../../../components/Card/Card';
 import CardHeader from '../../../components/Card/CardHeader';
 import CardFooter from '../../../components/Card/CardFooter';
 // material-ui
-import broadCastingIcon from '../../../assets/img/broadcasting.svg';
 import ImgModal from './ImgModal'
 //images
-import c1_1 from "../../../assets/img/creatorManualImage/1_1.png"
+import m1_1 from "../../../assets/img/MarketerManualImage/1_1.PNG"
+import m1_2 from "../../../assets/img/MarketerManualImage/1_2.PNG"
+import m1_3 from "../../../assets/img/MarketerManualImage/1_3.PNG"
+import m1_4 from "../../../assets/img/MarketerManualImage/1_4.PNG"
+import m1_5 from "../../../assets/img/MarketerManualImage/1_5.PNG"
 
 const stepperStyles = makeStyles(theme => ({
   root: {
     float: 'right',
+    fontSize: '15px'
   },
   img: {
     height: 255,
@@ -45,7 +49,10 @@ const RegistManual = (props) => {
   const handleClose = () => {
     setOpen(false);
   };
-
+  const strongStyle = {
+    fontSize:'23px',
+    backgroundColor: '#FFFD95',
+  };
   return (
     <GridContainer>
       <Card>
@@ -59,41 +66,39 @@ const RegistManual = (props) => {
         </CardHeader>
         <h4>배너 등록 - 관리</h4>
         <Stepper orientation="vertical">
-          <Step active="true">
-            <StepLabel>대쉬보드에서 계약하러 가기 알림창을 클릭합니다.</StepLabel>
-            <StepContent>
-
-                <img src={c1_1} alt="" className={StepperClasses.img} onClick={() => handleOpen(c1_1)}/>
-
-            </StepContent>
+          <Step active="true" >
+            <StepLabel className={stepperStyles.root}>대쉬보드에서 계약하러 가기 알림창을 클릭합니다.</StepLabel>
+            {/* <StepContent>
+              <img src={m1_1} alt="" className={StepperClasses.img} onClick={() => handleOpen(m1_1)}/>
+            </StepContent> */}
 
           </Step>
           <Step active="true">
             <StepLabel>
               {'먼저 자신의'}
-              <strong>배너 관리</strong>
+              <strong style={strongStyle}>배너 관리</strong>
               {'탭으로 이동합니다.'}
             </StepLabel>
             <StepContent>
-              <img src={broadCastingIcon} alt="" className={StepperClasses.img} onClick={() => handleOpen(broadCastingIcon)} />
+              <img src={m1_1} alt="" className={StepperClasses.img} onClick={() => handleOpen(m1_1)} />
             </StepContent>
           </Step>
           <Step active="true">
             <StepLabel>
               {'화면 오른쪽에 있는'}
               <br />
-              <strong>배너 등록하기</strong>
+              <strong style={strongStyle}>배너 등록하기</strong>
               {'에서'}
-              <strong>등록</strong>
+              <strong style={strongStyle}>등록</strong>
               {'을 클릭해주세요'}
               <br />
-              <strong>파일찾기</strong>
+              <strong style={strongStyle}>파일찾기</strong>
               {'후'}
-              <strong>업로드</strong>
+              <strong style={strongStyle}>업로드</strong>
               {'를 클릭해주세요.'}
             </StepLabel>
             <StepContent>
-              <img src={broadCastingIcon} alt="" className={StepperClasses.img} onClick={() => handleOpen(broadCastingIcon)} />
+              <img src={m1_2} alt="" className={StepperClasses.img} onClick={() => handleOpen(m1_2)} />
             </StepContent>
           </Step>
           <Step active="true">
@@ -102,42 +107,40 @@ const RegistManual = (props) => {
               <br />
               {'심의 진행중인 배너는'}
 
-              <strong>X 심의취소</strong>
+              <strong style={strongStyle}>X 심의취소</strong>
               {'와 삭제가 가능합니다.'}
             </StepLabel>
             <StepContent>
-              <img src={broadCastingIcon} alt="" className={StepperClasses.img} onClick={() => handleOpen(broadCastingIcon)} />
+              <img src={m1_3} alt="" className={StepperClasses.img} onClick={() => handleOpen(m1_3)} />
             </StepContent>
           </Step>
           <Step active="true">
             <StepLabel>
               {'관리자 승인이 거절된 배너는'}
-              <strong>X 배너삭제</strong>
+              <strong style={strongStyle}>X 배너삭제</strong>
               {'를 클릭하면 삭제 가능합니다.'}
             </StepLabel>
             <StepContent>
-              <img src={broadCastingIcon} alt="" className={StepperClasses.img} onClick={() => handleOpen(broadCastingIcon)} />
+              <img src={m1_4} alt="" className={StepperClasses.img} onClick={() => handleOpen(m1_4)} />
             </StepContent>
           </Step>
           <Step active="true">
             <StepLabel>
               {'관리자 승인이 완료된 배너는'}
-              <strong>광고시작</strong>
+              <strong style={strongStyle}>광고시작</strong>
               {'을 클릭하면 광고 송출이 가능합니다.'}
               <br />
               {'마케터님의 금액 입금이 확인되면 대시보드에서 승인된 배너를 확인할 수 있습니다.'}
             </StepLabel>
             <StepContent>
-              <img src={broadCastingIcon} alt="" className={StepperClasses.img} onClick={() => handleOpen(broadCastingIcon)} />
+              <img src={m1_5} alt="" className={StepperClasses.img} onClick={() => handleOpen(m1_5)} />
             </StepContent>
           </Step>
           <Step active="true">
             <StepLabel>
               {'이제 광고 송출이 가능합니다.'}
             </StepLabel>
-            <StepContent>
-              <img src={broadCastingIcon} alt="" className={StepperClasses.img} onClick={() => handleOpen(broadCastingIcon)} />
-            </StepContent>
+           
           </Step>
         </Stepper>
         <CardFooter>

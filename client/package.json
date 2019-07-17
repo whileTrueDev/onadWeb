@@ -28,6 +28,7 @@
     "react-dom": "^16.8.6",
     "react-router-dom": "^5.0.0",
     "react-scripts": "3.0.0",
+    "react-scroll": "^1.7.12",
     "react-text-mask": "^5.4.3",
     "recharts": "^1.6.2",
     "shortid": "^2.2.14"

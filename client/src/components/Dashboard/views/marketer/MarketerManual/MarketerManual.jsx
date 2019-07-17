@@ -37,7 +37,10 @@ const MarketerManual = (props) => {
     const handleButtonClose = () => {
       setManual(false);
     };
-  
+    const strongStyle = {
+      fontSize:'23px',
+      backgroundColor: '#FFFD95',
+    };
   return(
   <div>
     <Select 

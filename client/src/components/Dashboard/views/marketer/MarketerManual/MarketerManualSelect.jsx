@@ -16,6 +16,8 @@ import CardFooter from '../../../components/Card/CardFooter';
 import GridItem from '../../../components/Grid/GridItem';
 // material-ui
 import broadCastingIcon from '../../../assets/img/broadcasting.svg';
+import clip from '../../../assets/img/clip.svg';
+import graph from '../../../assets/img/graph.svg';
 
 const useButtonStyle = makeStyles({
   root: {
@@ -40,7 +42,7 @@ const Select = (props) => {
   const buttonClasses = useButtonStyle();
 
   return (
-    <GridContainer >
+    <GridContainer>
       <GridItem xs={12} sm={12} md={12}>
         <Card>
           <CardHeader color="blueGray" stats>
@@ -56,7 +58,8 @@ const Select = (props) => {
             m={1}
             bgcolor="background.paper"
             position="relative"
-            
+            alignItems="center"
+            justifyContent="space-around"
           >
             <Stepper>
               <Step active="true">
@@ -72,7 +75,7 @@ const Select = (props) => {
                     onClick={() => handleButton(1)}
                   >
 
-                    <img src={broadCastingIcon} alt="" />
+                    <img src={clip} alt="" />
 
                     <p>광고를 등록하고 싶어요</p>
                   </Button>
@@ -111,7 +114,7 @@ const Select = (props) => {
                     onClick={() => handleButton(3)}
                   >
 
-                    <img src={broadCastingIcon} alt="" />
+                    <img src={graph} alt="" />
 
                     <p>광고 성과차트를 보고싶어요.</p>
                   </Button>

@@ -9,6 +9,7 @@ import ContractManual from './ContractManual';
 import ProgramSetting from './ProgramSetting';
 import IncomeManual from './IncomeManual';
 import WithdrawalManual from './WithdrawalManual';
+import ProgramSelector from './ProgramSelector'
 
 const ButtonStyle = makeStyles({
   root: {
@@ -27,19 +28,29 @@ const ButtonStyle = makeStyles({
   },
 });
 
-// const classes = ButtonStyle();
 const CreatorManual = (props) => {
 
   const [manual, setManual] = useState(0)
+  const [activeStep, setStep] = useState(0);
+  const [program, setProgram] = useState(0);
 
   const handleButton = num => {
     setManual(num);
+    console.log(manual)
   };
 
   const handleButtonClose = () => {
     setManual(false);
+    console.log(manual)
   };
 
+  const typeChange = (type) => {
+    setProgram(type);
+  };
+
+  const handleNext = () => {
+    setStep(activeStep + 1);
+  };
 return(
   <div>
     <Select 
@@ -48,10 +59,12 @@ return(
     />
 
        { (() => {
-          if (manual === 0) return (<div></div>);
           if (manual === 1) return (<ContractManual />);
           if (manual === 2) return (<SetBanner />);
-          if (manual === 3) return (<ProgramSetting />);
+          if (manual === 3) return (<ProgramSetting
+                                    typeChange={typeChange} 
+                                    />
+                                    );
           if (manual === 4) return (<IncomeManual />);
           if (manual === 5) return (<WithdrawalManual/>);
     })()}
