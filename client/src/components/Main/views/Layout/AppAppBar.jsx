@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
+import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import classNames from 'classnames';
 import { withStyles } from '@material-ui/core/styles';
 import { blueGrey } from '@material-ui/core/colors';
 import MoreIcon from '@material-ui/icons/MoreVert';
@@ -57,6 +57,8 @@ const styles = theme => ({
   },
   active: {
     fontWeight: theme.typography.fontWeightMedium,
+    borderBottom: '1.2px solid',
+    borderBottomColor: theme.palette.primary.main,
   },
   buttonIcon: {
     marginRight: 10,
