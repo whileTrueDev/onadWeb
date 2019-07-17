@@ -4,6 +4,10 @@ const checkEmailAuth = require('../middlewares/checkEmailAuth');
 const pool = require('../model/connectionPool');
 const doQuery = require('../model/doQuery');
 const encrypto = require('../encryption');
+const config = require('../config.json');
+
+const HOST = process.env.NODE_ENV === 'production' ? config.production.apiHostName : config.dev.apiHostName
+
 var router = express.Router();
 
 router.post( '/', passport.authenticate('local'),
@@ -86,7 +90,7 @@ router.get("/twitch", passport.authenticate("twitch"));
 router.get("/twitch/callback", passport.authenticate("twitch"),
   function(req, res, next){
     console.log('success in server');
-    res.redirect("http://localhost:3001/dashboard/creator/door");
+    res.redirect(`${HOST}/dashboard/creator/door`);
     //res.send({userType: userType});
   }
 );
