@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 // core ../../../components
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
@@ -15,9 +16,7 @@ import CardFooter from '../../../components/Card/CardFooter';
 import GridItem from '../../../components/Grid/GridItem';
 // material-ui
 import broadCastingIcon from '../../../assets/img/broadcasting.svg';
-import contract from '../../../assets/img/contract.svg';
-import setting from '../../../assets/img/setting.svg';
-import money from '../../../assets/img/money.svg';
+import clip from '../../../assets/img/clip.svg';
 import graph from '../../../assets/img/graph.svg';
 
 const useButtonStyle = makeStyles({
@@ -26,7 +25,6 @@ const useButtonStyle = makeStyles({
     borderRadius: 3,
     border: 0,
     color: 'black',
-    // height: 48,
     padding: '0 30px',
     boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
     width: '100%',
@@ -76,8 +74,10 @@ const Select = (props) => {
                     }}
                     onClick={() => handleButton(1)}
                   >
-                    <img src={contract} alt="" />
-                    <p>OnAD 플랫폼과 계약하고 싶어요</p>
+
+                    <img src={clip} alt="" />
+
+                    <p>광고를 등록하고 싶어요</p>
                   </Button>
                 </CardContent>
               </Step>
@@ -94,8 +94,10 @@ const Select = (props) => {
                     }}
                     onClick={() => handleButton(2)}
                   >
+
                     <img src={broadCastingIcon} alt="" />
-                    <p>광고 배너를 송출하고 싶어요.</p>
+
+                    <p>승인된 배너를 송출하고 싶어요.</p>
                   </Button>
                 </CardContent>
               </Step>
@@ -111,50 +113,14 @@ const Select = (props) => {
                     }}
                     onClick={() => handleButton(3)}
                   >
-                    <img src={setting} alt="" />
-                    <p>방송 개인 설정을 하고싶어요.</p>
-                  </Button>
-                </CardContent>
-              </Step>
-              <Step active="true">
-                <StepLabel />
-                <CardContent>
-                  <Button
-                    align="center"
-                    variant="outlined"
-                    classes={{
-                      root: buttonClasses.root, // class name, e.g. `classes-nesting-root-x`
-                      label: buttonClasses.label, // class name, e.g. `classes-nesting-label-x`
-                    }}
-                    onClick={() => handleButton(4)}
-                  >
-                    <img src={money} alt="" />
-                    <p>수익금이 누적되요.</p>
-                  </Button>
-                </CardContent>
-              </Step>
-              <Step active="true">
-                <StepLabel />
-                <CardContent>
-                  <Button
-                    align="center"
-                    variant="outlined"
-                    classes={{
-                      root: buttonClasses.root, // class name, e.g. `classes-nesting-root-x`
-                      label: buttonClasses.label, // class name, e.g. `classes-nesting-label-x`
-                    }}
-                    onClick={() => handleButton(5)}
-                  >
+
                     <img src={graph} alt="" />
-                    <p>
-                    출금 신청을 하고
-                      {' '}
-                      <br />
-                    수익데이터를 확인하고 싶어요
-                    </p>
+
+                    <p>광고 성과차트를 보고싶어요.</p>
                   </Button>
                 </CardContent>
               </Step>
+             
             </Stepper>
           </Box>
           <CardFooter stats />
