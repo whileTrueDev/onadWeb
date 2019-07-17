@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 // core ../../../components
 import Stepper from '@material-ui/core/Stepper';
@@ -11,11 +11,9 @@ import Card from '../../../components/Card/Card';
 import CardHeader from '../../../components/Card/CardHeader';
 import CardFooter from '../../../components/Card/CardFooter';
 // material-ui
-import Modal from '@material-ui/core/Modal';
-//
 import broadCastingIcon from '../../../assets/img/broadcasting.svg';
 import testImg from '../../../assets/img/creatorManual/king.jpg';
-import ImgModal from './ImgModal'
+import ImgModal from './ImgModal';
 
 
 const stepperStyles = makeStyles(theme => ({
@@ -64,7 +62,7 @@ const ContractManual = (props) => {
           <Step active="true">
             <StepLabel>대쉬보드에서 계약하러 가기 알림창을 클릭합니다.</StepLabel>
             <StepContent>
-                <img src={testImg} alt="" className={StepperClasses.img} onClick={() => handleOpen(testImg)}/>
+              <img src={testImg} alt="" className={StepperClasses.img} onClick={() => handleOpen(testImg)} />
             </StepContent>
             {/* <Modal
               aria-labelledby="simple-modal-title"
@@ -76,7 +74,6 @@ const ContractManual = (props) => {
                 <img src={testImg} alt="" width="100%" height="100%"/>
               </div>
             </Modal> */}
-            
 
 
           </Step>
@@ -135,9 +132,9 @@ const ContractManual = (props) => {
       </Card>
 
       <ImgModal
-      openModal={open} 
-      handleClose={handleClose} 
-      ImgSrc={selectedImg}
+        openModal={open}
+        handleClose={handleClose}
+        ImgSrc={selectedImg}
       />
     </GridContainer>
   );

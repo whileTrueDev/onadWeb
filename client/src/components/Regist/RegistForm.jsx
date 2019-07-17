@@ -1,4 +1,4 @@
-import React, { useReducer, useState, useEffect } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import MaskedInput from 'react-text-mask';
 import {

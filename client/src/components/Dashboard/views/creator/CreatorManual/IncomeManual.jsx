@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 
 // core ../../../components
 import Stepper from '@material-ui/core/Stepper';
@@ -52,12 +52,12 @@ const IncomeManual = (props) => {
               자신의
               {' '}
               <strong>대시보드</strong>
-로 이동합니다.
+              로 이동합니다.
             </StepLabel>
             <StepContent>
-              
-                <img src={broadCastingIcon} alt="" className={StepperClasses.img} />
-              
+
+              <img src={broadCastingIcon} alt="" className={StepperClasses.img} />
+
             </StepContent>
           </Step>
           <Step active="true">
@@ -76,7 +76,7 @@ const IncomeManual = (props) => {
               광고가 매칭된 상태에서 방송하게 되면 대시보드의
               {' '}
               <strong>수익금</strong>
-에서
+              에서
               {' '}
               <br />
               10분마다 누적되는 수익금을 확인할 수 있습니다.
