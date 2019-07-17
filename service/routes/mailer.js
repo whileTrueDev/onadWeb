@@ -8,6 +8,8 @@ router.post("/auth", (req, res) => {
   const {marketerMail, marketerId, password} = req.body;
   let transporter = nodemailer.createTransport({
       service: 'gmail',
+      port: 587,
+      secure: false, // upgrade later with STARTTLS
       auth: {
           user: 'onad6309@gmail.com',  // gmail 계정 아이디를 입력
           pass: 'rkdghktn12'          // gmail 계정의 비밀번호 : 내꺼 다 털리는거 아이가
@@ -43,8 +45,8 @@ router.post("/regist", function(req, res, next){
   let transporter = nodemailer.createTransport({
       service: 'gmail',
       host: 'smtp.gmail.com',
-      port: 465,
-      secure: true,
+      port: 587,
+      secure: false, // upgrade later with STARTTLS
       auth: {
           user: 'onad6309@gmail.com',
           pass: 'rkdghktn12'          
