@@ -12,7 +12,6 @@ function preprocessingBannerData(result) {
         .replace("marketerName", "광고주")
         .replace("contractionTime", "첫 게시일")
         .replace("contractionState", "현재 상태")
-
       return col;
     });
 

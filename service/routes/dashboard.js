@@ -18,6 +18,7 @@ router.get('/checkUserType', function(req, res, next) {
     res.send(userInfo);
   } else {
     // 세션이 없는 경우
+    console.log('unvalid session');
     res.send('no session');
   }
 });

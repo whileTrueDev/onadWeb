@@ -47,38 +47,39 @@ class ShowSrcBtn extends Component {
   }
 
   componentDidMount() {
-    // url 데이터 가져와 state로 입력.
-    const { creatorId } = this.props;
-    axios.get('/api/dashboard/creator/overlayUrl', {
-      params: {
-        creatorId,
-      },
-    }).then((res) => {
-      if (res.data) {
-        let url = '';
-        if (res.data.creatorContractionAgreement === 0) {
-          url = '온애드와 계약하지 않았어요! 계약해주세요.';
-        } else { url = `https://onad.com/banner${res.data.advertiseUrl}`; }
+    axios.get('/api/dashboard/creator/overlayUrl')
+      .then((res) => {
+        if (res.data) {
+          let url = '';
+          if (res.data.creatorContractionAgreement === 0) {
+            url = '온애드와 계약하지 않았어요! 계약해주세요.';
+          } else { url = `https://onad.com/banner${res.data.advertiseUrl}`; }
 
+          this.setState({
+            showSrc: url,
+            contractionAgreement: res.data.creatorContractionAgreement,
+          });
+        } else {
+          this.setState({
+            showSrc: '지금은 확인이 불가능 합니다. 잠시후 시도해 주세요.',
+            contractionAgreement: 1,
+          });
+        }
+      }).catch(() => {
         this.setState({
-          showSrc: url,
-          contractionAgreement: res.data.creatorContractionAgreement,
+          showSrc: '지금은 확인이 불가능 합니다. 잠시후 시도해 주세요.',
+          contractionAgreement: 1,
         });
-      } else {
-        console.log('URL 불러오기 실패');
-      }
-    }).catch((err) => {
-      console.log(err);
-    });
+      });
   }
 
   showSrcTimer = () => {
-    const { showSrc } = this.state;
-    if (this.state.contractionAgreement === 1) {
+    const { showSrc, contractionAgreement } = this.state;
+    if (contractionAgreement === 1) {
       this.setState({
         value: showSrc,
         disabled: true,
-    });
+      });
     } else {
       this.setState({
         value: showSrc,

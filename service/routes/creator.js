@@ -10,369 +10,286 @@ const preprocessingBannerData = preprocessing.preprocessingBannerData;
 
 
 // 크리에이터 수익금 라우터 및 정보조회
+// doQuery 완료.
 router.get('/income', function(req, res, next) {
   const creatorId = req._passport.session.user.creatorId;
-  
-  pool.getConnection((err, conn) => {
-    if (err) {
-      // 디비 커넥션 오류인 경우
-      console.log(err);
-      res.json(err);
-    } else {
-      const DBquery = `SELECT 
-      creatorTotalIncome, creatorReceivable, creatorAccountNumber, creatorIncome.date
-      FROM creatorInfo as ci
-      JOIN creatorIncome 
-      ON ci.creatorId = creatorIncome.creatorId
-      WHERE ci.creatorId="${creatorId}"
-      ORDER BY date desc
-      LIMIT 1`;
-      conn.query(DBquery, (err, rows, fields) => {
-        if (err) {
-          // 디비 쿼리 오류인 경우
-          console.log(err);
-          conn.release();
-          res.json(err);
-        } else {
-          // 결과값이 있는 경우
-          if (rows.length > 0) {
-            let result = sortRows(rows, 'date')[0];
-            result.date = result.date.toLocaleString();
-            conn.release();
-            res.json(result)
-          }else{
-            conn.release();
-            res.end();
-          }
-        }
-        // pool connection 해제
-      });
-    }
+  const dataQuery = `
+  SELECT 
+  creatorTotalIncome, creatorReceivable, creatorAccountNumber, creatorIncome.date
+  FROM creatorInfo as ci
+  JOIN creatorIncome 
+  ON ci.creatorId = creatorIncome.creatorId
+  WHERE ci.creatorId= ? 
+  ORDER BY date desc
+  LIMIT 1`;
+
+  doQuery(dataQuery, [creatorId])
+  .then((row)=>{
+    const result = row.result[0];
+    result.date = result.date.toLocaleString();
+    res.json(result);
+  })
+  .catch((errorData)=>{
+    console.log(errorData);
+    res.end();
   })
 })
 
 // 크리에이터 광고 내역 라우터
+// doQuery 완료.
 router.get('/matchedBanner', function(req, res, next) {
   const creatorId = req._passport.session.user.creatorId;
-
-  pool.getConnection((err, conn) => {
-    if (err) {
-      // 디비 커넥션 오류인 경우
-      console.log(err);
-      conn.release();
-      res.json(err);
-    } else {
-      const queryState = `
-        SELECT br.bannerSrc, mi.marketerId, bm.contractionTime, bm.contractionState
-        FROM bannerMatched as bm
-        JOIN bannerRegistered as br
-        ON SUBSTRING_INDEX(bm.contractionId, '/', 1) = br.bannerId
-        JOIN marketerInfo as mi
-        ON SUBSTRING_INDEX(br.bannerId, '_', 1) = mi.marketerId
-        WHERE contractionId LIKE '%/?/%'
-      `;
-      const queryArray = [
-        creatorId
-      ];
-
-      conn.query(queryState, queryArray, (err, rows, fields) => {
-        if (err) {
-          // 디비 쿼리 오류인 경우
-          console.log(err);
-          conn.release();
-          res.json(err);
-        } else {
-          // 결과값이 있는 경우
-          if (rows.length > 0) {
-            const result = preprocessingBannerData(sortRows(rows, 'contractionTime'));
-            conn.release();
-            res.send(result);
-          }else{
-            conn.release();
-            res.end();
-          }
-        }
-        // pool connection 해제
-      
-      });
-    }
+  const bannerQuery = `
+  SELECT bm.contractionTime, mi.marketerName, bm.contractionState, br.bannerSrc
+  FROM bannerMatched as bm
+  JOIN bannerRegistered as br 
+  ON SUBSTRING_INDEX(bm.contractionId, '/', 1) = br.bannerId
+  JOIN marketerInfo as mi
+  ON SUBSTRING_INDEX(br.bannerId, '_', 1) = mi.marketerId
+  WHERE contractionId LIKE '%?%'
+  ORDER BY contractionTime DESC
+  `;
+  doQuery(bannerQuery, [creatorId])
+  .then((row)=>{    
+    const result = preprocessingBannerData(row.result);
+    res.send(result);
+  })
+  .catch((errorData)=>{
+    console.log(errorData);
+    res.end();
   })
 })
 
 // 크리에이터 현재 광고 중 배너
+// doQuery 완료.
 router.get('/currentBanner', function(req, res, next){
   const creatorId = req._passport.session.user.creatorId
   //DB연결후 query문을 통한 데이터 삽입 
-  pool.getConnection(function(err, conn){
-    if(err){ 
-        console.log(err)
-    }
-    const queryState = `
-      SELECT mi.marketerName, br.bannerSrc
-      FROM bannerMatched as bm
+  const queryState = `
+  SELECT mi.marketerName, br.bannerSrc
+  FROM bannerMatched as bm
 
-      JOIN bannerRegistered as br
-      ON SUBSTRING_INDEX(bm.contractionId, '/', 1) = br.bannerId
+  JOIN bannerRegistered as br
+  ON SUBSTRING_INDEX(bm.contractionId, '/', 1) = br.bannerId
 
-      JOIN marketerInfo as mi
-      ON SUBSTRING_INDEX(bm.contractionId, '_', 1) = mi.marketerId
+  JOIN marketerInfo as mi
+  ON SUBSTRING_INDEX(bm.contractionId, '_', 1) = mi.marketerId
 
-      JOIN contractionTimestamp as ct
-      ON  ct.contractionId = bm.contractionId
-      
-      WHERE bm.contractionState = 0
-      AND ct.date >= NOW() - INTERVAL 10 MINUTE
-      AND bm.contractionId LIKE '%?%'
-      ORDER BY ct.date DESC
-      LIMIT 1`;
-    
-    const queryArray = [
-      creatorId
-    ]
-    conn.query(queryState, queryArray, function(err, result, fields){
-        if(err){
-            console.log(err);
-        }
-        result = result.map(
-          (value) => {
-            value = Object.values(value);
-            return value
-          }
-        )
-        conn.release();
-        res.send(result);
-      });
-    });
+  JOIN contractionTimestamp as ct
+  ON  ct.contractionId = bm.contractionId
+  
+  WHERE bm.contractionState = 0
+  AND ct.date >= NOW() - INTERVAL 10 MINUTE
+  AND bm.contractionId LIKE '%?%'
+  ORDER BY ct.date DESC
+  LIMIT 1`;
+
+  doQuery(queryState, [creatorId])
+  .then((row)=>{
+    const result = row.result.map((value) => 
+      {
+        value = Object.values(value);
+        return value
+      }
+    )
+    res.send(result);
+  })
+  .catch((errorData)=>{
+    console.log(errorData);
+    res.end();
+  })
 });
 
-
-
-// // 크리에이터 현재 광고 중 배너
-// router.route('/creator/currentBanner').get(function(req, res, next){
-//   //DB연결후 query문을 통한 데이터 삽입 
-//   pool.getConnection(function(err, conn){
-//     if(err){ 
-//         console.log(err)
-//     }
-//     conn.query(`SELECT bannerSrc, marketerId FROM bannerRegistered AS br 
-//                 JOIN bannerMatched AS bm 
-//                 ON bm.contractionId 
-//                 LIKE CONCAT(br.bannerId, '%') AND bm.contractionState = 0 
-//                 JOIN contractionTimestamp AS ct
-//                 ON ct.contractionId = bm.contractionId
-//                 AND ct.contractionId LIKE "%${req._passport.session.user.creatorId}%"
-//                 ORDER BY ct.date DESC LIMIT 1;`, function(err, result, fields){
-//         if(err){
-//             console.log(err);
-//         }
-//         result = result.map(
-//           (value) => {
-//             value = Object.values(value);
-//             return value
-//           }
-//         )
-//         conn.release();
-//         res.send(result);
-//       });
-//     });
-// });
-
-
 // 배너 오버레이 URL 주소 가져오기
+// doQuery 완료.
 router.get('/overlayUrl', function(req, res, next){
   const creatorId = req._passport.session.user.creatorId;
-  //DB연결후 query문을 통한 데이터 삽입 
-    pool.getConnection(function(err, conn){
-      if(err){ 
-          console.log(err)
-      }
-      conn.query(`SELECT advertiseUrl, creatorContractionAgreement
-        FROM creatorInfo
-        WHERE creatorId = ${creatorId}
-        `, function(err, result, fields){
-          if(err){
-              console.log(err);
-          }
-          if (result.length > 0) {
-            conn.release();
-            res.send(result[0]);
-          }else{
-            conn.release();
-            res.end();
-          }
-        });
-      });
+  const urlQuery = `
+  SELECT advertiseUrl, creatorContractionAgreement
+  FROM creatorInfo
+  WHERE creatorId = ?
+  `
+  doQuery(urlQuery, [creatorId])
+  .then((row)=>{
+    res.send(row.result[0]);
+  })
+  .catch(()=>{
+    res.end();
+  })
 });
 
 
 // 수익관리 탭의 크리에이터 별 수익금 차트 데이터
+//doQuery 완료
 router.get('/chartdata', function(req, res, next) {
   // creatorId 가져오기
   const creatorId = req._passport.session.user.creatorId;
   const dateRange = req.query.dateRange;
-
-  pool.getConnection((err, conn) => {
-    if (err) {
-      console.log(err)
-    }
-    // 지금으로부터 30일 이전의 데이터까지만 불러와 응답.
-    // 30일간의 모든 데이터를 보낸 뒤, 프론트에서 일별, 주별 분기처리
-    const DBquery = `SELECT
-    creatorTotalIncome, creatorReceivable, DATE_FORMAT(date, '%m-%d') as date
+  const rangeQuery = `
+  SELECT
+  creatorTotalIncome, creatorReceivable, DATE_FORMAT(date, '%m-%d') as date
+  FROM creatorIncome
+  JOIN (
+    SELECT 
+    MAX(date) as d1
     FROM creatorIncome
-    JOIN (
-      SELECT 
-      MAX(date) as d1
-      FROM creatorIncome
-      WHERE creatorId = ${creatorId}
-      AND date >= DATE_SUB(NOW(), INTERVAL ${dateRange} DAY)
-      GROUP BY DATE_FORMAT(date, '%y%m%d')
-    ) tmp
-    ON creatorIncome.date = tmp.d1
-    ORDER BY tmp.d1 asc
-    `
-    conn.query(`SELECT creatorAccountNumber FROM creatorInfo WHERE creatorId = ?`, [creatorId], function(err, rows, fields){
-      if(err){
-        console.log(err);
-      }
-      if(rows[0].creatorAccountNumber === null){
-        console.log('계좌번호가 존재하지 않습니다');
-      }else{
-        console.log('계좌번호가 존재합니다.');
-      }
+    WHERE creatorId = ?
+    AND date >= DATE_SUB(NOW(), INTERVAL ? DAY)
+    GROUP BY DATE_FORMAT(date, '%y%m%d')
+  ) tmp
+  ON creatorIncome.date = tmp.d1
+  ORDER BY tmp.d1 ASC
+  `;
+
+  const accountQuery = `
+  SELECT creatorAccountNumber 
+  FROM creatorInfo 
+  WHERE creatorId = ?`;
+
+  doQuery(accountQuery, [creatorId])
+  .then((row)=>{
+    doQuery(rangeQuery, [creatorId, dateRange])
+    .then((inrows)=>{
       const result = {
-        creatorAccountNumber : rows[0].creatorAccountNumber,
+        creatorAccountNumber : row.result[0].creatorAccountNumber,
         totalIncomeData: [],
         receivableData: [],
         labels: [],
       };
-      conn.query(DBquery, function(err, rows, filed) {
-        if (err) {
-          console.log(err);
-        }
-        if (rows.length > 0) {
-          rows = sortRows(rows, 'date', 'asc');
-          rows.map((row) => {
-            result.totalIncomeData.push(row.creatorTotalIncome);
-            result.receivableData.push(row.creatorReceivable);
-            result.labels.push(row.date);
-          });
-          conn.release();
-          res.send(result);
-        }else{
-          conn.release();
-          res.end();
-        }
-      })
+      if (inrows.result.length > 0) {
+        inrows.result.map((inrow) => {
+          result.totalIncomeData.push(inrow.creatorTotalIncome);
+          result.receivableData.push(inrow.creatorReceivable);
+          result.labels.push(inrow.date);
+        });
+        res.send(result);
+      }else{
+        res.end();
+      }
+    })
+    .catch((errorData)=>{
+      console.log(errorData);
+      res.end();
     })
   })
-})
-
-// 계좌정보를 입력했는지
-router.get('/account', function(req, res, next) {
-  const creatorId = req._passport.session.user.creatorId;
-  pool.getConnection((err, conn) => {
-    if (err) {
-      console.log(err)
-    } else {
-      conn.query(`SELECT creatorAccountNumber
-        FROM creatorInfo
-        WHERE creatorId = ${creatorId}
-        LIMIT 1
-        `, function(err, result, fields){
-          if(err){
-              console.log(err);
-          }
-          if (result.length > 0) {
-            conn.release();
-            res.send(result[0]);
-          }else{
-            conn.release();
-            res.end();
-          }
-      });
-    }
+  .catch((errorData)=>{
+    console.log(errorData);
+    res.end();
   })
+
+  // doQuery(rangeQuery, [creatorId, dateRange])
+  // pool.getConnection((err, conn) => {
+  //   if (err) {
+  //     console.log(err)
+  //   }
+  //   // 지금으로부터 30일 이전의 데이터까지만 불러와 응답.
+  //   // 30일간의 모든 데이터를 보낸 뒤, 프론트에서 일별, 주별 분기처리
+  //   const DBquery = `SELECT
+  //   creatorTotalIncome, creatorReceivable, DATE_FORMAT(date, '%m-%d') as date
+  //   FROM creatorIncome
+  //   JOIN (
+  //     SELECT 
+  //     MAX(date) as d1
+  //     FROM creatorIncome
+  //     WHERE creatorId = ${creatorId}
+  //     AND date >= DATE_SUB(NOW(), INTERVAL ${dateRange} DAY)
+  //     GROUP BY DATE_FORMAT(date, '%y%m%d')
+  //   ) tmp
+  //   ON creatorIncome.date = tmp.d1
+  //   ORDER BY tmp.d1 asc
+  //   `
+  //   conn.query(`SELECT creatorAccountNumber FROM creatorInfo WHERE creatorId = ?`, [creatorId], function(err, rows, fields){
+  //     if(err){
+  //       console.log(err);
+  //     }
+  //     if(rows[0].creatorAccountNumber === null){
+  //       console.log('계좌번호가 존재하지 않습니다');
+  //     }else{
+  //       console.log('계좌번호가 존재합니다.');
+  //     }
+  //     const result = {
+  //       creatorAccountNumber : rows[0].creatorAccountNumber,
+  //       totalIncomeData: [],
+  //       receivableData: [],
+  //       labels: [],
+  //     };
+  //     conn.query(DBquery, function(err, rows, filed) {
+  //       if (err) {
+  //         console.log(err);
+  //       }
+  //       if (rows.length > 0) {
+  //         rows = sortRows(rows, 'date', 'asc');
+  //         rows.map((row) => {
+  //           result.totalIncomeData.push(row.creatorTotalIncome);
+  //           result.receivableData.push(row.creatorReceivable);
+  //           result.labels.push(row.date);
+  //         });
+  //         conn.release();
+  //         res.send(result);
+  //       }else{
+  //         conn.release();
+  //         res.end();
+  //       }
+  //     })
+  //   })
+  // })
 })
 
 // creator contraction Update
+//doQuery 완료
 router.post('/contraction', (req, res, next) => {
   const creatorId = req._passport.session.user.creatorId;
+  const updateQuery = `
+  UPDATE creatorInfo
+  SET creatorContractionAgreement = ?
+  WHERE creatorInfo.creatorId = ?`;
 
-  pool.getConnection(function(err, conn){
-    if(err){ 
-      console.log(err);
-    }
-    const updateQuery = `
-    UPDATE creatorInfo
-    SET creatorContractionAgreement = ?
-    WHERE creatorInfo.creatorId = ?`;
-    const updateArray = [1, creatorId];
-    conn.query(updateQuery, updateArray, function(err, result, fields){
-      if (err) {
-        console.log(err);
-      }
-      if (result.constructor.name == 'OkPacket') {
-        res.send(true);
-      }
-    });
-    conn.release();
-  });
+  doQuery(updateQuery, [1, creatorId])
+  .then(()=>{
+    res.send(true);
+  })
+  .catch(()=>{
+    res.end();
+  })
 })
 
 // 크리에이터 출금신청 / 출금신청 금액만큼 creatorIncome에서 제외
+//doQuery 완료
 router.post('/withdrawal', function(req, res, next) {
   const creatorId = req._passport.session.user.creatorId;
   const withdrawlAmount = req.body.withdrawalAmount;
 
-  pool.getConnection((err, conn) => {
-    if (err) {
-      console.log(err)
-    } else {
-      // 출금 신청 데이터 넣기
-      const queryState = `
-      INSERT
-      INTO creatorWithdrawal
-      (creatorId, creatorWithdrawalAmount, withdrawalState)
-      VALUES (?, ?, ?)`;
-      
-      const queryArray = [
-        creatorId, withdrawlAmount, 0
-      ];
+  const creatorWithdrawalQuery = `
+  INSERT INTO creatorWithdrawal
+  (creatorId, creatorWithdrawalAmount, withdrawalState)
+  VALUES (?, ?, ?)`;
 
-      conn.query(queryState, queryArray, function(err, result, fields){
-          if(err){
-            console.log('크리에이터 출금 정보 입력 오류', err);
-          }
-      });
+  const creatorIncomeQuery = `
+  INSERT INTO creatorIncome 
+  (creatorId, creatorTotalIncome, creatorReceivable)
+  SELECT creatorId, creatorTotalIncome, creatorReceivable - ?
+  FROM creatorIncome
+  WHERE creatorId = ?
+  ORDER BY date DESC
+  LIMIT 1`
 
-      // 출금 신청 금액에 맞추어 출금 가능 금액 수정하여 삽입하는 쿼리
-      const updateQueryState = `
-        INSERT INTO
-        creatorIncome (creatorId, creatorTotalIncome, creatorReceivable)
-        SELECT creatorId, creatorTotalIncome, creatorReceivable - ?
-        FROM creatorIncome
-        WHERE creatorId = ?
-        ORDER BY date DESC
-        LIMIT 1`
-      const updateQueryArray = [
-        withdrawlAmount, creatorId
-      ];
-
-      conn.query(updateQueryState, updateQueryArray, function(err, result, fields){
-        if(err){
-          console.log('크리에이터 출금신청 금액 수정삽입 오류', err);
-        }
-        res.send({
-          insertWithdrawalSuccess: 'success',
-          updateIncome: 'success'
-        });
-        conn.release();
+  Promise.all([
+    doQuery(creatorWithdrawalQuery, [creatorId, withdrawlAmount, 0]), 
+    doQuery(creatorIncomeQuery, [withdrawlAmount, creatorId])
+  ])
+  .then(()=>{
+    res.send({
+      error : null
     });
-    }
+  })
+  .catch(()=>{
+    res.send({
+      error : true
+    });
   })
 })
 
+//doQuery 완료
 router.get('/profile', (req, res)=>{
   const profileQuery = `
   SELECT creatorId, creatorName, creatorIp, creatorMail, creatorAccountNumber, creatorContractionAgreement
@@ -402,41 +319,31 @@ router.get('/profile', (req, res)=>{
 })
 
 // 크리에이터 출금 내역 불러오기
+//doQuery 완료
 router.get('/listOfWithdrawal', function(req, res, next) {
   // creatorID 가져오기
   const creatorId = req._passport.session.user.creatorId;
 
-  pool.getConnection((err, conn) => {
-    if (err) {
-      console.log(err)
-      conn.release();
-      res.json(err);
-    } else {
+  const listQuery = `
+  SELECT
+  date, creatorWithdrawalAmount, withdrawalState
+  FROM creatorWithdrawal
+  WHERE creatorId= ?
+  ORDER BY date DESC
+  `;
 
-      const DBquery = `SELECT
-      date, creatorWithdrawalAmount, withdrawalState
-      FROM creatorWithdrawal
-      WHERE creatorId="${creatorId}"`;
-
-      conn.query(DBquery, (err, rows, fields) => {
-        if (err) {
-          // 디비 쿼리 오류인 경우
-          console.log(err);
-          conn.release();
-          res.json(err);
-        } else {
-          // 결과값이 있는 경우
-          if (rows.length > 0) {
-            const result = listOfWithdrawal(sortRows(rows, 'date'));
-            conn.release();
-            res.send(result);
-          } else {
-            conn.release();
-            res.end();
-          }
-        }
-      });
+  doQuery(listQuery, creatorId)
+  .then((row)=>{
+    if(row.result.length > 0){
+      const result = listOfWithdrawal(row.result);
+      res.send(result);
+    }else{
+      res.end();
     }
+  })
+  .catch((errorData)=>{
+    console.log(errorData);
+    res.end();
   })
 });
 
