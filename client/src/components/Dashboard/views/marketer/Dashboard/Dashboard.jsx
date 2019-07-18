@@ -84,8 +84,9 @@ function useFetchData(url, dateRange) {
       if (res.data.length !== 0) {
         setPayload(res.data);
       } else {
+        // setPayload(res.data);
         setError('데이터가 없습니다.');
-        // throw new Error('데이터가 존재하지 않습니다');
+        // throw new Error('데이터가 존재하지   않습니다');
       }
     } catch {
       setError('오류입니다.');
@@ -288,16 +289,21 @@ const Dashboard = (props) => {
                     <div style={{ textAlign: 'center' }}><CircularProgress /></div>
                   ) : (
                     <div>
+                      {tableData.payload !== null
+                      && (
                       <Table
                         tableHeaderColor="danger"
                         tableHead={['크리에이터 명', '방송플랫폼', '방송 분류', '평균 시청자 수 (방송당)', '시간당 비용']}
                         tableData={tableData.payload}
                       />
+                      )
+                      }
                       <Muted>
                     * 베타테스트이므로, 제한된 수의 크리에이터만 존재해요! 향후 더욱 정교한 추천시스템, 그리고 더 많은 기능을 선보일게요!
                       </Muted>
                     </div>
-                  )),
+                  )
+                ),
               },
               {
                 tabName: '성과 차트',

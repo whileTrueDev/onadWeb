@@ -15,6 +15,7 @@ import marketerDashboardPage from './views/marketer/Dashboard/Dashboard';
 import marketerBannerManage from './views/marketer/BannerManage/BannerManage';
 import marketerCashManage from './views/marketer/CashManage/CashManage';
 import marketerUserProfile from './views/marketer/UserProfile/UserProfile';
+import MarketerManual from './views/marketer/MarketerManual/MarketerManual';
 
 
 const dashboardRoutes = {
@@ -75,6 +76,13 @@ const dashboardRoutes = {
       name: '계정 관리',
       icon: Person,
       component: marketerUserProfile, // 마케터 대시보드 컴포넌트로 수정
+      layout: '/dashboard/marketer',
+    },
+    {
+      path: '/marketermanual',
+      name: '사용 방법',
+      icon: Person,
+      component: MarketerManual, // 마케터 대시보드 컴포넌트로 수정
       layout: '/dashboard/marketer',
     },
   ],

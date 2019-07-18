@@ -30,7 +30,7 @@ function useCashDialog() {
   const [modalOpen, setModalOpen] = useState(false);
   const [modalOpen2, setModalOpen2] = useState(false);
 
-   function handleCashDialogOpen() {
+  function handleCashDialogOpen() {
     setModalOpen(true);
   }
 
@@ -39,7 +39,7 @@ function useCashDialog() {
     setModalOpen2(true);
   }
 
-  
+
   function handleCashDialogClose() {
     setModalOpen(false);
   }
@@ -92,19 +92,16 @@ const CashManage = (props) => {
   const { accountDialogOpen, handleDialogOpen, handleDialogClose } = useDialog();
 
   // 마케터 계좌 데이터
-  const [accountNumber, setAccountNumber] = useState('');
+  const [accountNumber, setAccountNumber] = useState('true');
 
   useEffect(() => {
     axios.get('/api/dashboard/marketer/accountNumber')
       .then((res) => {
-        if (res.data) {
-          if (res.data) {
-            setAccountNumber(res.data);
-          } else { setAccountNumber(''); }
+        if (res.data.accountNumber !== null) {
+          setAccountNumber(res.data.accountNumber);
+        } else {
+          setAccountNumber('');
         }
-      }).catch((res) => {
-        console.log(res);
-        setAccountNumber('');
       });
   }, []);
 
@@ -119,7 +116,6 @@ const CashManage = (props) => {
           setCash(res.data);
         } else { setCash(defaultCash); }
       }).catch((res) => {
-        console.log(res); // 오류처리 요망
         setCash(defaultCash);
       });
   }, []);
@@ -204,6 +200,7 @@ const CashManage = (props) => {
                       color="info"
                       round
                       onClick={handleCashDialogOpen}
+                      disabled
                     >
                       <Payment />
                       {'캐시충전'}
@@ -212,7 +209,7 @@ const CashManage = (props) => {
                       color="danger"
                       round
                       onClick={handleCashDialogOpen2}
-                      disabled={!accountNumber.marketerAccountNumber}
+                      disabled={!accountNumber}
                     >
                       <Payment />
                       {'캐시환불'}
@@ -259,21 +256,20 @@ const CashManage = (props) => {
       </GridContainer>
 
       {/* 계좌 입력 안했을 시 링크 문구 notification창 */}
-      {!accountNumber.marketerAccountNumber && (
-      <Snackbar
-        place="bl"
-        color="danger"
-        icon={Warning}
-        message="아직 계좌정보를 입력하지 않았어요.. 계좌정보 입력 이후 환불신청하세요!"
-        open={!accountNumber.marketerAccountNumber && snackOpen}
-        Link={
-          // 계좌정보 입력 팝업
-          <Button color="warning" onClick={handleDialogOpen}>계좌입력하기</Button>
-        }
-      />
-      )}
-   
-        
+      { !accountNumber
+        && (
+        <Snackbar
+          place="bl"
+          color="danger"
+          icon={Warning}
+          message="아직 계좌정보를 입력하지 않았어요.. 계좌정보 입력 이후 환불신청하세요!"
+          open={!accountNumber}
+          Link={
+            // 계좌정보 입력 팝업
+            <Button color="warning" onClick={handleDialogOpen}>계좌입력하기</Button>
+          }
+        />
+        )}
 
       {/* 광고캐쉬 신청 팝업 */}
       <CashDialog
