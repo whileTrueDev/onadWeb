@@ -9,6 +9,7 @@ import TableRow from '@material-ui/core/TableRow';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import Link from '@material-ui/core/Link';
+import { Tab } from '@material-ui/core';
 import tableStyle from '../../../assets/jss/onad/components/tableStyle';
 import CreatorInfoDialog from './CreatorInfoDialog';
 
@@ -39,6 +40,7 @@ function CustomTable({ ...props }) {
     DialogOpen, handleDialogOpen, handleDialogClose, selectedCreator,
   } = useDialog();
 
+
   return (
     <div className={classes.tableResponsive}>
       <Table className={classes.table}>
@@ -62,7 +64,6 @@ function CustomTable({ ...props }) {
             <TableRow
               hover
               key={shortid.generate()}
-              // className={classes.tableRow}
             >
               {prop.map((value, index) => (
                 index === 0 ? (
@@ -95,7 +96,6 @@ function CustomTable({ ...props }) {
           ))}
         </TableBody>
       </Table>
-
       <CreatorInfoDialog
         open={DialogOpen}
         handleDialogClose={handleDialogClose}

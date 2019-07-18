@@ -97,38 +97,16 @@ function cashlist(result) {
 
 // 마케터 대시보드에서 광고 될 크리에이터 목록에 들어가는 데이터 전처리 함수
 function creatorList(result) {
-  let data;
-  data = result.map((row) => Object.values(row));
-              
-  data = data.map((row) => {
-    row.streamPlatform = "Twitch.tv"
-    row.freqStreamCategory = "Gaming"
-    return Object.values(row)
+
+  const data = result.map((row) => {
+    row.streamPlatform = "Twitch.tv";
+    row.freqStreamCategory = "Gaming";
+    row['viewer'] = Math.ceil(row.avgViewer);
+    row['cost'] = Math.ceil(row.viewer * 6) + '원';
+    delete row.avgViewer;
+    return Object.values(row);
   });
-
-  result.map((row) => {
-    for (let i=0; i < data.length; i++) {
-      if (row[0] === data[i][0]) {
-        data[i].push(Math.ceil(row[1]));
-        data[i].push(Math.ceil(row[1] * 6) + '원');
-        break
-      }
-    }
-  })
-
-  // 빈 데이터 채우기
-  data.map((row) => {
-    if (row.length < 4) {
-      row.push(0);
-      row.push(0);
-    }
-  })
-
-  // 내림차순 정렬
-  data.sort((a, b) => {
-    return b[3] - a[3]
-  })
-
+  
   return data;
 }
 
