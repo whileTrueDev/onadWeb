@@ -82,7 +82,7 @@ function AppFooter(props) {
             <ul className={classes.list}>
               <li className={classes.listItem}>
                 <Link
-                  href="/premium-themes/onepirate/terms"
+                  href="/"
                   color="inherit"
                   underline="none"
                 >
@@ -91,7 +91,7 @@ function AppFooter(props) {
               </li>
               <li className={classes.listItem}>
                 <Link
-                  href="/premium-themes/onepirate/privacy"
+                  href="/"
                   color="inherit"
                   underline="none"
                 >

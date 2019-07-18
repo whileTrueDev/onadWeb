@@ -47,6 +47,7 @@ const styles = theme => ({
     fontWeight: theme.typography.fontWeightRegular,
     marginLeft: 0,
     fontSize: 16,
+    borderRadius: 0,
     [theme.breakpoints.up('md')]: {
       color: theme.palette.common.white,
       marginLeft: theme.spacing(3),

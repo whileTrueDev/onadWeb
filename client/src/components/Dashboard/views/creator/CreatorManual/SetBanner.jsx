@@ -10,10 +10,10 @@ import GridContainer from '../../../components/Grid/GridContainer';
 import Card from '../../../components/Card/Card';
 import CardHeader from '../../../components/Card/CardHeader';
 import CardFooter from '../../../components/Card/CardFooter';
-import c2_1 from "../../../assets/img/creatorManualImage/dashboard.png";
-import c2_2 from "../../../assets/img/creatorManualImage/2_2.png"
+import c2_1 from '../../../assets/img/creatorManualImage/dashboard.png';
+import c2_2 from '../../../assets/img/creatorManualImage/2_2.png';
 
-import ImgModal from './ImgModal'
+import ImgModal from './ImgModal';
 
 const stepperStyles = makeStyles(theme => ({
   root: {
@@ -44,7 +44,7 @@ const SetBanner = (props) => {
     setOpen(false);
   };
   const strongStyle = {
-    fontSize:'23px',
+    fontSize: '23px',
     backgroundColor: '#FFFD95',
   };
   return (
@@ -69,9 +69,9 @@ const SetBanner = (props) => {
               탭을 클릭하세요.
             </StepLabel>
             <StepContent>
-              
-              <img src={c2_1} alt="" className={StepperClasses.img} onClick={() => handleOpen(c2_1)}/>
-              
+
+              <img src={c2_1} alt="" className={StepperClasses.img} onClick={() => handleOpen(c2_1)} />
+
             </StepContent>
           </Step>
           <Step active="true">
@@ -85,11 +85,11 @@ const SetBanner = (props) => {
               <b>+</b>
               {' '}
 10초동안 주소가 보여집니다.
-              
+
             </StepLabel>
             <StepContent>
-            <p>주의 : Url 주소가 방송 중에 노출되지 않도록 주의해주세요.</p>
-              <img src={c2_2} alt="" className={StepperClasses.img} onClick={() => handleOpen(c2_2)}/>
+              <p>주의 : Url 주소가 방송 중에 노출되지 않도록 주의해주세요.</p>
+              <img src={c2_2} alt="" className={StepperClasses.img} onClick={() => handleOpen(c2_2)} />
             </StepContent>
           </Step>
           <Step active="true">
@@ -102,7 +102,7 @@ const SetBanner = (props) => {
               <br />
               이제 크리에이터님의 방송 송출 프로그램을 활성화 해주세요.
             </StepLabel>
-            
+
           </Step>
         </Stepper>
         <CardFooter>
@@ -110,9 +110,9 @@ const SetBanner = (props) => {
         </CardFooter>
       </Card>
       <ImgModal
-      openModal={open} 
-      handleClose={handleClose} 
-      ImgSrc={selectedImg}
+        openModal={open}
+        handleClose={handleClose}
+        ImgSrc={selectedImg}
       />
     </GridContainer>
   );

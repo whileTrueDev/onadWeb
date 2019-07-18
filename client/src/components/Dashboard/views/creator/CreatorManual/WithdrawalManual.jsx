@@ -10,13 +10,13 @@ import GridContainer from '../../../components/Grid/GridContainer';
 import Card from '../../../components/Card/Card';
 import CardHeader from '../../../components/Card/CardHeader';
 import CardFooter from '../../../components/Card/CardFooter';
-import ImgModal from './ImgModal'
-//images
-import c5_1 from "../../../assets/img/creatorManualImage/5_1.png"
-import c5_2 from "../../../assets/img/creatorManualImage/5_2.png"
-import c5_3 from "../../../assets/img/creatorManualImage/5_3.png"
-import c5_4 from "../../../assets/img/creatorManualImage/5_4.png"
-import c5_5 from "../../../assets/img/creatorManualImage/5_5.png"
+import ImgModal from './ImgModal';
+// images
+import c5_1 from '../../../assets/img/creatorManualImage/5_1.png';
+import c5_2 from '../../../assets/img/creatorManualImage/5_2.png';
+import c5_3 from '../../../assets/img/creatorManualImage/5_3.png';
+import c5_4 from '../../../assets/img/creatorManualImage/5_4.png';
+import c5_5 from '../../../assets/img/creatorManualImage/5_5.png';
 
 
 const stepperStyles = makeStyles(theme => ({
@@ -48,7 +48,7 @@ const WithdrawalManual = (props) => {
     setOpen(false);
   };
   const strongStyle = {
-    fontSize:'23px',
+    fontSize: '23px',
     backgroundColor: '#FFFD95',
   };
   return (
@@ -70,7 +70,7 @@ const WithdrawalManual = (props) => {
               탭을 클릭합니다.
             </StepLabel>
             <StepContent>
-              <img src={c5_1} alt="" className={StepperClasses.img} onClick={() => handleOpen(c5_1)}/>
+              <img src={c5_1} alt="" className={StepperClasses.img} onClick={() => handleOpen(c5_1)} />
             </StepContent>
           </Step>
           <Step active="true">
@@ -79,7 +79,7 @@ const WithdrawalManual = (props) => {
               알림창을 클릭하여 계좌정보를 입력합니다.
             </StepLabel>
             <StepContent>
-              <img src={c5_2} alt="" className={StepperClasses.img} onClick={() => handleOpen(c5_2)}/>
+              <img src={c5_2} alt="" className={StepperClasses.img} onClick={() => handleOpen(c5_2)} />
             </StepContent>
           </Step>
           <Step active="true">
@@ -98,7 +98,7 @@ const WithdrawalManual = (props) => {
               (* 출금 신청 후 계좌로 입금되기 까지 1~2일 소요됩니다.)
             </StepLabel>
             <StepContent>
-              <img src={c5_3} alt="" className={StepperClasses.img} onClick={() => handleOpen(c5_3)}/>
+              <img src={c5_3} alt="" className={StepperClasses.img} onClick={() => handleOpen(c5_3)} />
             </StepContent>
           </Step>
           <Step active="true">
@@ -117,7 +117,7 @@ const WithdrawalManual = (props) => {
               으로 표시됩니다.
             </StepLabel>
             <StepContent>
-              <img src={c5_4} alt="" className={StepperClasses.img} onClick={() => handleOpen(c5_4)}/>
+              <img src={c5_4} alt="" className={StepperClasses.img} onClick={() => handleOpen(c5_4)} />
             </StepContent>
           </Step>
           <Step active="true">
@@ -128,7 +128,7 @@ const WithdrawalManual = (props) => {
               를 설정하여 기간별 데이터를 확인할 수 있습니다.
             </StepLabel>
             <StepContent>
-              <img src={c5_5} alt="" className={StepperClasses.img} onClick={() => handleOpen(c5_5)}/>
+              <img src={c5_5} alt="" className={StepperClasses.img} onClick={() => handleOpen(c5_5)} />
             </StepContent>
           </Step>
           <Step active="true">
@@ -142,9 +142,9 @@ const WithdrawalManual = (props) => {
         </CardFooter>
       </Card>
       <ImgModal
-      openModal={open} 
-      handleClose={handleClose} 
-      ImgSrc={selectedImg}
+        openModal={open}
+        handleClose={handleClose}
+        ImgSrc={selectedImg}
       />
     </GridContainer>
   );
