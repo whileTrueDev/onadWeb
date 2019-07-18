@@ -53,18 +53,6 @@ const ContractManual = (props) => {
     backgroundColor: '#FFFD95',
   };
 
-  const [open, setOpen] = React.useState(false);
-  const [selectedImg, setSelectedImg] = React.useState(false);
-
-  const handleOpen = (imgSrc) => {
-    setOpen(true);
-    setSelectedImg(imgSrc);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
   return (
     <GridContainer>
       <Card>

@@ -80,6 +80,7 @@ const CashManage = (props) => {
 
   // 수익금 출금 모달창
   const {
+    snackOpen,
     modalOpen,
     modalOpen2,
     handleCashDialogOpen,
