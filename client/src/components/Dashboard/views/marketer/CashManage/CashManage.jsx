@@ -93,19 +93,16 @@ const CashManage = (props) => {
   const { accountDialogOpen, handleDialogOpen, handleDialogClose } = useDialog();
 
   // 마케터 계좌 데이터
-  const [accountNumber, setAccountNumber] = useState('');
+  const [accountNumber, setAccountNumber] = useState('true');
 
   useEffect(() => {
     axios.get(`${HOST}/api/dashboard/marketer/accountNumber`)
       .then((res) => {
-        if (res.data) {
-          if (res.data) {
-            setAccountNumber(res.data);
-          } else { setAccountNumber(''); }
+        if (res.data.accountNumber !== null) {
+          setAccountNumber(res.data.accountNumber);
+        } else {
+          setAccountNumber('');
         }
-      }).catch((res) => {
-        console.log(res);
-        setAccountNumber('');
       });
   }, []);
 
@@ -120,7 +117,6 @@ const CashManage = (props) => {
           setCash(res.data);
         } else { setCash(defaultCash); }
       }).catch((res) => {
-        console.log(res); // 오류처리 요망
         setCash(defaultCash);
       });
   }, []);
@@ -201,10 +197,10 @@ const CashManage = (props) => {
                 <CardBody>
                   <div className={classes.buttonWrapper}>
                     <Button
-                      disabled
                       color="info"
                       round
                       onClick={handleCashDialogOpen}
+                      disabled
                     >
                       <Payment />
                       {'캐시충전'}
@@ -213,7 +209,7 @@ const CashManage = (props) => {
                       color="danger"
                       round
                       onClick={handleCashDialogOpen2}
-                      disabled={!accountNumber.marketerAccountNumber}
+                      disabled={!accountNumber}
                     >
                       <Payment />
                       {'캐시환불'}
@@ -273,8 +269,6 @@ const CashManage = (props) => {
         }
       />
       )}
-
-
       {/* 광고캐쉬 신청 팝업 */}
       <CashDialog
         open={modalOpen}

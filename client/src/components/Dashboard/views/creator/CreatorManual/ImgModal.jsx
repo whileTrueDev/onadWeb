@@ -2,12 +2,10 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
 
-const rand = () => Math.round(Math.random() * 20) - 10;
 
 const getModalStyle = () => {
-  const top = 50 + rand();
-  const left = 50 + rand();
-
+  const top = 50;
+  const left = 50;
   return {
     top: `${top}%`,
     left: `${left}%`,
@@ -18,12 +16,11 @@ const getModalStyle = () => {
 
 const ModalStyles = makeStyles(theme => ({
   paper: {
-    position: 'absolute',
-    width: 600,
-    height: 600,
+    position: 'relative',
+    width: '80%',
+    height: '60%',
     backgroundColor: theme.palette.background.paper,
     boxShadow: theme.shadows[5],
-    // padding: theme.spacing(2, 4, 4),
     outline: 'none',
   },
 }));

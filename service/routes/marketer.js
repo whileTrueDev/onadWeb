@@ -2,7 +2,6 @@ const express = require('express');
 const pool = require('../model/connectionPool');
 const doQuery = require('../model/doQuery');
 const preprocessing = require('../middlewares/preprocessingData/');
-const sortRows = preprocessing.sortRows;
 const cashlist = preprocessing.cashlist;
 const router = express.Router();
 
@@ -12,454 +11,326 @@ const router = express.Router();
  * **********************************
  */
 
-router.get('/cash', function(req, res, next) {
+//doQuery 수정
+router.get('/cash', function(req, res) {
   const marketerId = req._passport.session.user.userid;
+  const debitQuery = `
+  SELECT marketerDebit, 
+  DATE_FORMAT(date, '%y년 %m월 %d일') as date
+  FROM marketerCost
+  WHERE marketerId = ?
+  ORDER BY date DESC
+  LIMIT 1`;
 
-  pool.getConnection((err, conn) => {
-    if (err) {
-      console.log(err)
-    } else {
-      // 출금 신청 데이터 넣기
-      const queryState = `
-      SELECT marketerDebit, date
-      FROM marketerCost
-      WHERE marketerId = ?
-      ORDER BY date DESC
-      LIMIT 1`;
-
-      const queryArray = [
-        marketerId
-      ];
-
-      conn.query(queryState, queryArray, function(err, result, fields){
-          if(err){
-            console.log('마케터 광고캐시 조회 오류', err);
-          }
-          if (result.length > 0) {
-            conn.release();
-            res.send(result[0]);
-          } else {
-            conn.release();
-            res.end();
-          }
-      });
-  }})
+  doQuery(debitQuery, [marketerId])
+  .then((row)=>{
+    res.send(row.result[0]);
+  })
+  .catch(()=>{
+    res.end();
+  })
 })
 
-router.get('/banner', function(req, res, next) {
+//doQuery 수정
+router.get('/banner', function(req, res) {
   const marketerId = req._passport.session.user.userid;
+  const bannerListQuery = `
+  SELECT bannerId, bannerSrc, bannerCategory, date, confirmState
+  FROM bannerRegistered
+  WHERE marketerId = ? AND (confirmState = ? OR confirmstate = ?)
+  ORDER BY confirmState DESC, date DESC
+  LIMIT 5`;
 
-  pool.getConnection((err, conn) => {
-    if (err) {
-      console.log(err)
-    } else {
-      // 출금 신청 데이터 넣기
-      const queryState = `
-      SELECT bannerId, bannerSrc, bannerCategory, date, confirmState
-      FROM bannerRegistered
-      WHERE marketerId = ? AND (confirmState = ? OR confirmstate = ?)
-      ORDER BY confirmState DESC, date DESC
-      LIMIT 5`;
-
-      const queryArray = [
-        marketerId, 1, 3 // 1: valid 이, 3: now is broadcasted banner
-      ];
-
-      conn.query(queryState, queryArray, function(err, result, fields){
-          if(err){
-            console.log('마케터 배너데이터 조회 오류', err);
-          } else {
-            if (result.length > 0) {
-              conn.release();
-              res.send(result);
-            } else {
-              conn.release();
-              res.send(result);
-            }
-          }
-      });
-  }})
+  doQuery(bannerListQuery, [marketerId, 1, 3])
+  .then((row)=>{
+    res.send(row.result);
+  })
+  .catch((errorData)=>{
+    console.log(errorData);
+    res.end();
+  })
 })
 
 // bannner manage page banner list 가져오기 위한 query
-router.get('/banner/all',(req, res, next)=>{
+//doQuery 수정
+router.get('/banner/all',(req, res)=>{
   const marketerId = req._passport.session.user.userid;
-  pool.getConnection((err, conn) => {
-    if (err) {
-      conn.release();
-      res.send([null, err]);
-    } else {
-      const queryState = `
-      SELECT bannerId, bannerSrc, bannerCategory, date, confirmState, bannerDenialReason
-      FROM bannerRegistered
-      WHERE marketerId = ?
-      ORDER BY date DESC`;
-      conn.query(queryState, [marketerId], function(err, result, fields){
-        if(err){
-          conn.release();
-          res.send([null, err]);
-        }
-        else{
-          conn.release();
-          res.send([true, result]);
-        }
-      })
-    }
+  const bannerQuery = `
+  SELECT bannerId, bannerSrc, bannerCategory, date, confirmState, bannerDenialReason
+  FROM bannerRegistered
+  WHERE marketerId = ?
+  ORDER BY date DESC`;
+  doQuery(bannerQuery, [marketerId])
+  .then((row)=>{
+    res.send([true, row.result]);
+  })
+  .catch((errorData)=>{
+    console.log(errorData);
+    res.send([null, errorData]);
   })
 })
 
-router.post('/info', (req, res, next)=> {
+//doQuery 수정
+router.post('/info', (req, res)=> {
   const marketerId = req._passport.session.user.userid;
-  pool.getConnection((err, conn) => {
-    if(err){
-      conn.release();
-      res.send(err);
-    }
-    conn.query(`SELECT marketerId, marketerName, marketerMail, marketerPhoneNum, marketerBusinessRegNum, marketerUserType, marketerContraction FROM marketerInfo WHERE marketerId = ? `, [marketerId], (err, result)=>{
-      conn.release();
-      res.send(result[0]);
-    })
+  const infoQuery = `
+  SELECT 
+  marketerId, marketerName, marketerMail, 
+  marketerPhoneNum, marketerBusinessRegNum, marketerUserType, marketerContraction 
+  FROM marketerInfo 
+  WHERE marketerId = ? `
+
+  doQuery(infoQuery, [marketerId])
+  .then((row)=>{
+    res.send(row.result[0]);
+  })
+  .catch((errorData)=>{
+    console.log(errorData);
+    res.end();
   })
 })
 
-router.post('/info/change', (req, res, next)=> {
+//doQuery 수정
+router.post('/info/change', (req, res)=> {
   const marketerId = req._passport.session.user.userid;
-  const {marketerName, marketerMail, marketerPhoneNum} = req.body;
-  pool.getConnection((err, conn) => {
-    if(err){
-      conn.release();
-      res.send(err);
-    }
-    conn.query(`UPDATE marketerInfo SET marketerName = ? , marketerMail = ? , marketerPhoneNum = ? WHERE marketerId = ? `, [marketerName, marketerMail, marketerPhoneNum, marketerId], (err, result)=>{
-      conn.release();
-      res.send(false);
-    })
+  const { marketerName, marketerMail, marketerPhoneNum } = req.body;
+  const updateQuery = `
+  UPDATE marketerInfo 
+  SET marketerName = ? , marketerMail = ? , marketerPhoneNum = ? 
+  WHERE marketerId = ? `;
+
+  doQuery(updateQuery, [marketerName, marketerMail, marketerPhoneNum, marketerId])
+  .then(()=>{
+    res.send(true);
+  })
+  .catch((errorData)=>{
+    console.log(errorData);
+    res.end();
   })
 })
 
-router.get('/creatorlist', function(req, res, next) {
+//doQuery 수정
+router.get('/creatorlist', function(req, res) {
+  const listQuery = `
+  SELECT ts.streamerName, avg(viewer) as avgViewer
+  FROM twitchStream as ts
+  JOIN twitchStreamDetail as tsd
+  ON tsd.streamId = ts.streamId
+  JOIN creatorInfo
+  ON creatorInfo.creatorId = ts.streamerId
+  WHERE creatorInfo.creatorContractionAgreement = 1
+  GROUP BY ts.streamerName
+  ORDER BY RAND()
+  LIMIT 10`;
 
-  pool.getConnection((err, conn) => {
-    if (err) {
-      console.log(err)
-    } else {
-      
-      let data = null;
-
-      const queryState = `
-      SELECT creatorName
-      FROM creatorInfo
-      LIMIT 10`;
-
-      conn.query(queryState, function(err, result, fields){
-          if(err){
-            console.log('마케터 크리에이터 리스트 조회 오류', err);
-          }
-          if (result.length > 0) {
-            data = result;
-            
-            if (data !== null) {
-              const queryState1 = `
-              SELECT ts.streamerName, avg(viewer) as avgViewer
-              FROM twitchStream as ts
-              JOIN twitchStreamDetail as tsd
-              ON tsd.streamId = ts.streamId
-              JOIN creatorInfo
-              ON creatorInfo.creatorId = ts.streamerId
-              GROUP BY ts.streamerName`;
-      
-            conn.query(queryState1, function(err, result, fields){
-              if(err){
-                console.log('추천 크리에이터 평균 시청자 수 조회 오류', err);
-                conn.release();
-              }
-              conn.release();
-              console.log(result);
-              const data = preprocessing.creatorList(result);
-              console.log(data);
-              res.send(data);
-            });
-            }
-          }
-      });
-
-  }})
+  doQuery(listQuery)
+  .then((row)=>{
+    const data = preprocessing.creatorList(row.result);
+    res.send(data);
+  })
+  .catch((errorData)=>{
+    console.log(errorData);
+    res.end();
+  })
 })
 
-router.get('/advertiseOnOff', function(req, res, next) {
+//doQuery 수정
+router.get('/advertiseOnOff', function(req, res) {
   const marketerId = req._passport.session.user.userid;
-
-  pool.getConnection((err, conn) => {
-    if (err) {
-      console.log(err)
-    } else {
-      // 출금 신청 데이터 넣기
-      const queryState = `
-        SELECT marketerContraction
-        FROM marketerInfo
-        WHERE marketerId = ?
-      `;
-
-      const queryArray = [
-        marketerId
-      ];
-
-      conn.query(queryState, queryArray, function(err, result, fields){
-          if(err){
-            console.log('마케터 광고 시작 토글 조회 오류', err);
-          }
-          if (result.length > 0) {
-            conn.release();
-            // 1: 광고 ON, 0: 광고 OFF
-            result[0].marketerContraction === 1
-              ? result[0].marketerContraction = true
-              : result[0].marketerContraction = false
-            res.send(result[0]);
-          } else {
-            conn.release();
-            res.end();
-          }
-      });
-  }})
+  const contractionQuery = `
+  SELECT marketerContraction
+  FROM marketerInfo
+  WHERE marketerId = ?
+  `;
+  doQuery(contractionQuery, [marketerId])
+  .then((row)=>{
+    let data = row.result[0].marketerContraction === 1 ? true : false;
+    res.send(data);
+  })
+  .catch((errorData)=>{
+    console.log(errorData);
+    res.send(false);
+  })
 })
 
-router.post('/advertiseOnOff', function(req, res, next) {
-  let contractionState = req.body.contraction;
-  contractionState === false ? contractionState = 0 : contractionState = 1;
+//doQuery 수정
+router.post('/advertiseOnOff', function(req, res) {
+  const contractionState = req.body.contraction === falssse ? 0 : 1;
   const marketerId = req._passport.session.user.userid;
+  const infoQuery = `
+  UPDATE marketerInfo
+  SET marketerContraction = ?
+  WHERE marketerId = ?`;
 
-  pool.getConnection((err, conn) => {
-    if (err) {
-      console.log(err)
-    } else {
-      // 출금 신청 데이터 넣기
-      const queryState = `
-        UPDATE marketerInfo
-        SET marketerContraction = ?
-        WHERE marketerId = ?`;
-
-      const queryArray = [
-        contractionState, marketerId
-      ];
-
-      conn.query(queryState, queryArray, function(err, result, fields){
-          if(err){
-            console.log('마케터 광고 ON/OFF 업데이트 오류', err);
-          } else {
-            conn.release();
-            console.log('마케터 광고 ON/OFF', result);
-            res.send('success');
-          }
-      });
-  }})
+  doQuery(infoQuery, [contractionState, marketerId])
+  .then(()=>{
+    res.send(true);
+  })
+  .catch((errorData)=>{
+    console.log(errorData);
+    res.send(false);
+  })
 })
 
-router.post('/bannerStart', function(req, res, next) {
-  const marketerId = req._passport.session.user.userid;
+//doQuery 수정
+router.post('/bannerStart', function(req, res) {
   const { bannerId, creators } = req.body;
 
-  pool.getConnection((err, conn) => {
-    if (err) {
-      console.log(err)
-    } else {
-      const queryState1 = `SELECT contractionId
-        FROM bannerMatched
-        JOIN creatorInfo
-        ON creatorName = ?
-        WHERE contractionId = CONCAT(?, "/", creatorId)
-      `;
-      // 모든 크리에이터를 한번씩
-      creators.map((creatorName) => {
-        const queryArray1 = [ creatorName, bannerId ];
-        conn.query(queryState1, queryArray1, function(err, result, fields) {
-          // 이미 이 배너와 크리에이터의 contraction이 존재할 때
-          if (result.length > 0) {
-            // state를 0으로 수정한다 (0: 광고 진행중)
-            const updateStateQuery = `
-              UPDATE bannerMatched
-              SET contractionState = ?
-              WHERE contractionId = ?
-            `;
-            const updateStateArray = [0, result[0].contractionId]
-            conn.query(updateStateQuery, updateStateArray, function(err, result, fields) {
-              if (err) {
-                console.log('contraction 스테이트 수정 오류', err)
-              } else {
-                console.log(`contraction 스테이트 수정 : ${creatorName}, ${result.message}`);
-              }
-            })
-          }
-          // 이 배너와 크리에이터의 contraction이 기존에 존재하지 않는 경우
-          else {
-            // Insert Contractions
-            const insertQeury = `
-              INSERT INTO bannerMatched (contractionId)
-              SELECT CONCAT(?, "/", creatorId)
-              FROM creatorInfo
-              WHERE creatorName = ?
-            `;
-            const insertArray = [bannerId, creatorName];
-            conn.query(insertQeury, insertArray, function(err, result, fields) {
-              if (err) {
-                console.log('contraction 인서트 오류', err);
-              } else {
-                console.log(`contraction 인서트 : ${creatorName}, ${result.message}`)
-              }
-            })
-          }
-        })
-      })
-      conn.release();
-      res.send("sucess!");
-  }})
+  const selectQuery =  `
+  SELECT contractionId
+  FROM bannerMatched
+  JOIN creatorInfo
+  ON creatorName = ?
+  WHERE contractionId = CONCAT(?, "/", creatorId)
+  `;
+
+  const updateQuery = `
+  UPDATE bannerMatched
+  SET contractionState = 0
+  WHERE contractionId = ?
+  `;
+
+  const insertQuery = `
+  INSERT INTO bannerMatched 
+  (contractionId)
+  SELECT CONCAT(?, "/", creatorId)
+  FROM creatorInfo
+  WHERE creatorName = ?
+  `;
+
+  Promise.all(creators.map((creator)=>{
+    doQuery(selectQuery, [creator, bannerId])
+    .then((row)=>{
+      if(row.result.length !== 0){
+        return doQuery(updateQuery, [0, row.result[0].contractionId])
+      }else{
+        return doQuery(insertQuery, [bannerId, creator])
+      }
+    })
+  }))
+  .then(()=>{
+    res.send(true);
+  })
+  .catch((errorData)=>{
+    console.log(errorData);
+    res.send(false);
+  })
 })
 
+//doQuery 완료
 router.post('/bannerStartStateChange', function(req, res, next) {
   const marketerId = req._passport.session.user.userid;
   const { bannerId } = req.body;
+  const bannerQuery = `
+  UPDATE bannerRegistered
+  SET confirmState = ?
+  WHERE bannerId = ? AND marketerId = ?
+  `;
 
-  pool.getConnection((err, conn) => {
-    if (err) {
-      console.log(err)
-    } else {
-      const queryState = `
-        UPDATE bannerRegistered
-        SET confirmState = ?
-        WHERE bannerId = ? AND marketerId = ?
-      `;
-      const queryArray = [3, bannerId, marketerId]; // 3: 광고 중 상태
-      conn.query(queryState, queryArray, function(err, result, fields) {
-        if (err) {
-          console.log('배너 시작 시 배너 스테이트 변경 오류', err)
-        }
-      })
-      conn.release();
-      res.send("success");
-  }})
-})
-
-router.post('/bannerStop', function(req, res, next) {
-  const { bannerId, creators } = req.body;
-
-  pool.getConnection((err, conn) => {
-    if (err) {
-      console.log(err)
-    } else {
-      const queryState1 = `
-        SELECT contractionId
-        FROM bannerMatched
-        JOIN creatorInfo
-        ON creatorName = ?
-        WHERE contractionId = CONCAT(?, "/", creatorId)
-      `;
-      // 모든 크리에이터를 한번씩
-      creators.map((creatorName) => {
-        const queryArray1 = [ creatorName, bannerId ];
-        conn.query(queryState1, queryArray1, function(err, result, fields) {
-          // 이미 이 배너와 크리에이터의 contraction이 존재할 때
-          if (result.length > 0) {
-            // state를 2으로 수정한다 (2: 광고 중단됨)
-            const updateStateQuery = `
-              UPDATE bannerMatched
-              SET contractionState = ?
-              WHERE contractionId = ?
-            `;
-            const updateStateArray = [2, result[0].contractionId]
-            conn.query(updateStateQuery, updateStateArray, function(err, result, fields) {
-              if (err) {
-                console.log('Stop contraction 스테이트 수정 오류', err)
-              } 
-            })
-          }
-        })
-      })
-      conn.release();
-      res.send("sucess!");
-  }})
-})
-
-router.post('/bannerStopStateChange', function(req, res, next) {
-  const marketerId = req._passport.session.user.userid;
-  const { bannerId } = req.body;
-
-  pool.getConnection((err, conn) => {
-    if (err) {
-      console.log(err)
-    } else {
-      const queryState = `
-        UPDATE bannerRegistered
-        SET confirmState = ?
-        WHERE bannerId = ? AND marketerId = ?
-      `;
-      const queryArray = [1, bannerId, marketerId]; // 1: 승인됨 (광고대기)
-      conn.query(queryState, queryArray, function(err, result, fields) {
-        if (err) {
-          console.log('배너 중단 시 배너 스테이트 변경 오류', err)
-        }
-      })
-      conn.release();
-      res.send("success");
-  }})
-})
-
-router.get('/bannerValue', function(req, res, next) {
-  const marketerId = req._passport.session.user.userid;
-
-  pool.getConnection((err, conn) => {
-    if (err) {
-      console.log(err)
-    } else {
-      const queryState = `
-        SELECT contractionId,
-          SUM(contractionTotalValue) as contractionTotalValue,
-          DATE_FORMAT(date, '%m-%d') as date
-        FROM contractionValue
-        WHERE contractionId LIKE CONCAT('%', ?, '%')
-        AND date >= DATE_SUB(NOW(), INTERVAL 30 DAY)
-        GROUP BY DATE_FORMAT(date, '%y%m%d')
-        ORDER BY DATE_FORMAT(date, '%y%m%d')
-      `;
-      const queryArray = [marketerId];
-      conn.query(queryState, queryArray, function(err, result, fields) {
-        if (err) {
-          console.log('배너 수익 / 비용 결과 select 오류', err)
-        } else {
-          console.log(result)
-          conn.release();
-
-          const dataSet = [];
-          const labels = [];
-          if (result.length > 0) {
-            result.map((data) => {
-              dataSet.push(Math.ceil(data.contractionTotalValue));
-              labels.push(data.date);
-            })
-  
-            res.send({dataSet, labels});
-          }
-        }
-        res.end();
-      })
-  }})
-})
-
-router.post('/banner/delete', (req, res, next)=>{
-  const {bannerId} = req.body;
-  console.log(bannerId);
-  pool.getConnection((err, conn) => {
-    if(err){
-      conn.release();
-      res.send([null, err]);
-    }
-    conn.query(`DELETE FROM bannerRegistered WHERE bannerId = ? `, [bannerId], (err, result)=>{
-      conn.release();
-      res.send([true, '배너가 성공적으로 삭제되었습니다.']);
-    })
+  doQuery(bannerQuery, [3, bannerId, marketerId])
+  .then(()=>{
+    res.send(true);
+  })
+  .catch((errorData)=>{
+    console.log(errorData);
+    res.send(false);
   })
 })
 
-/* 2019-07-05
- */
+//doQuery 완료
+router.post('/bannerStop', function(req, res, next) {
+  const { bannerId, creators } = req.body;
+  const selectQuery = `
+  SELECT creatorId
+  FROM creatorInfo
+  WHERE creatorName = ?
+  `
+  const stopQuery = `
+  UPDATE bannerMatched
+  SET contractionState = 2
+  WHERE contractionId = CONCAT(?, "/", ?)
+  AND contractionState = 0
+  `;
+  console.log(creators);
+  Promise.all(creators.map((creator)=>{
+    doQuery(selectQuery, [creator])
+    .then((row)=>{
+      return doQuery(stopQuery, [bannerId, row.result[0].creatorId]);
+    })
+  }))
+  .then(()=>{
+    res.send("sucess!");
+  })
+  .catch((errorData)=>{
+    console.log(errorData);
+    res.send(false);
+  })
+})
+
+//doQuery 완료
+router.post('/bannerStopStateChange', function(req, res, next) {
+  const marketerId = req._passport.session.user.userid;
+  const { bannerId } = req.body;
+  const updateQuery = `
+  UPDATE bannerRegistered
+  SET confirmState = ?
+  WHERE bannerId = ? AND marketerId = ?
+  `;
+  doQuery(updateQuery, [1, bannerId, marketerId])
+  .then(()=>{
+    res.send(true);
+  })
+  .catch((errorData)=>{
+    console.log(errorData);
+    res.end(false);
+  })
+})
+
+//doQuery 완료
+router.get('/bannerValue', function(req, res, next) {
+  const marketerId = req._passport.session.user.userid;
+  const valueQuery= `
+  SELECT contractionId,
+  SUM(contractionTotalValue) as contractionTotalValue,
+  DATE_FORMAT(date, '%m-%d') as date
+  FROM contractionValue
+  WHERE contractionId LIKE CONCAT('%', ?, '%')
+  AND date >= DATE_SUB(NOW(), INTERVAL 30 DAY)
+  GROUP BY DATE_FORMAT(date, '%y%m%d')
+  ORDER BY DATE_FORMAT(date, '%y%m%d')
+  `;
+  doQuery(valueQuery, [marketerId])
+  .then((row)=>{
+    const dataSet = [];
+    const labels = [];
+    row.result.map((data) => {
+      dataSet.push(Math.ceil(data.contractionTotalValue));
+      labels.push(data.date);
+    })
+    res.send({dataSet, labels});
+  })
+  .catch((errorData)=>{
+    console.log(errorData);
+    res.end();
+  })
+})
+//doQuery 완료
+router.post('/banner/delete', (req, res, next)=>{
+  const {bannerId} = req.body;
+  const bannerQuery = `
+  DELETE FROM bannerRegistered 
+  WHERE bannerId = ? `;
+  doQuery(bannerQuery, [bannerId])
+  .then(()=>{
+    res.send([true, '배너가 성공적으로 삭제되었습니다.']);
+  })
+  .catch((errorData)=>{
+    console.log(errorData);
+    res.send([false, '배너 삭제에 실패하였습니다 잠시후 시도해주세요.']);
+  })
+})
+
+//doQuery 완료
 router.post('/banner/push', (req, res, next)=>{
   const marketerId = req._passport.session.user.userid;
   const bannerSrc = req.body.url;
@@ -504,220 +375,214 @@ router.post('/banner/push', (req, res, next)=>{
   })
 })
 
-// 마케터 캐시 충전
-router.post('/chargecash', function(req, res, next) {
-  const marketerId = req._passport.session.user.userid;
-  const chargecash = req.body.chargecash;
+// // 마케터 캐시 충전
+// router.post('/chargecash', function(req, res, next) {
+//   const marketerId = req._passport.session.user.userid;
+//   const { chargecash } = req.body;
+//   const insertQuery = `
+//   INSERT 
+//   INTO marketerCash
+//   (marketerId, chargeCash, withdrawCash)
+//   VALUES (?, ?, ?)`;
 
-  pool.getConnection((err, conn) => {
-    if (err) {
-      console.log(err)
-    } else {
-      // 충전 데이터 넣기
-      const queryState = `
-      INSERT 
-      INTO marketerCash
-      (marketerId, chargeCash, withdrawCash)
-      VALUES (?, ?, ?)`;
 
-      const queryArray = [
-        marketerId , chargecash ,0
-      ];
+//   doQuery(insertQuery, [marketerId, chargecash, 0])
+//   .then((row)=>{
+    
+//   })
+//   pool.getConnection((err, conn) => {
+//     if (err) {
+//       console.log(err)
+//     } else {
+//       // 충전 데이터 넣기
+//       const queryState = `
+//       INSERT 
+//       INTO marketerCash
+//       (marketerId, chargeCash, withdrawCash)
+//       VALUES (?, ?, ?)`;
 
-      conn.query(queryState, queryArray, function(err, result, fields){
-          if(err){
-            console.log('마케터 캐시충전 정보 입력 오류', err);
-          } else {
+//       const queryArray = [
+//         marketerId , chargecash ,0
+//       ];
+
+//       conn.query(queryState, queryArray, function(err, result, fields){
+//           if(err){
+//             console.log('마케터 캐시충전 정보 입력 오류', err);
+//           } else {
             
-            conn.query(`SELECT 
-            marketerId 
-            FROM marketerCost
-            WHERE marketerId = ?  
-            ORDER BY date DESC
-            LIMIT 1`, [marketerId], (err, result)=>{
-              if(err){
-                console.log(err);
-                conn.release();
-                res.send([null, err]);
-              }
-              console.log(result)
-              if (result.length > 0) {
-                // 광고캐시 신청 금액에 맞추어 기존의 marketerDebit에 추가하기
-                  const updateQueryState = `
-                  INSERT INTO
-                  marketerCost (marketerId, marketerDebit)
-                  SELECT marketerId, marketerDebit + ?
-                  FROM marketerCost
-                  WHERE marketerId = ?
-                  ORDER BY date DESC
-                  LIMIT 1`
+//             conn.query(`SELECT 
+//             marketerId 
+//             FROM marketerCost
+//             WHERE marketerId = ?  
+//             ORDER BY date DESC
+//             LIMIT 1`, [marketerId], (err, result)=>{
+//               if(err){
+//                 console.log(err);
+//                 conn.release();
+//                 res.send([null, err]);
+//               }
+//               console.log(result)
+//               if (result.length > 0) {
+//                 // 광고캐시 신청 금액에 맞추어 기존의 marketerDebit에 추가하기
+//                   const updateQueryState = `
+//                   INSERT INTO
+//                   marketerCost (marketerId, marketerDebit)
+//                   SELECT marketerId, marketerDebit + ?
+//                   FROM marketerCost
+//                   WHERE marketerId = ?
+//                   ORDER BY date DESC
+//                   LIMIT 1`
 
-                const updateQueryArray = [
-                  chargecash, marketerId
-                ];
+//                 const updateQueryArray = [
+//                   chargecash, marketerId
+//                 ];
 
-                conn.query(updateQueryState, updateQueryArray, function(err, result, fields){
-                  if(err){
-                    console.log('마케터 캐시충전 금액 수정삽입 오류', err);
-                  } else {
-                    res.send({
-                      insertDebit: 'success',
-                      updateDebit: 'success'
-                    });
-                    conn.release();
-                  }
-                });
+//                 conn.query(updateQueryState, updateQueryArray, function(err, result, fields){
+//                   if(err){
+//                     console.log('마케터 캐시충전 금액 수정삽입 오류', err);
+//                   } else {
+//                     res.send({
+//                       insertDebit: 'success',
+//                       updateDebit: 'success'
+//                     });
+//                     conn.release();
+//                   }
+//                 });
 
-              } else {
+//               } else {
 
-                const updateQueryState = `
-                  INSERT INTO
-                  marketerCost (marketerId, marketerDebit)
-                  VALUES (?, ?)`
+//                 const updateQueryState = `
+//                   INSERT INTO
+//                   marketerCost (marketerId, marketerDebit)
+//                   VALUES (?, ?)`
 
-                const updateQueryArray = [
-                  marketerId, chargecash
-                ];
+//                 const updateQueryArray = [
+//                   marketerId, chargecash
+//                 ];
 
-                conn.query(updateQueryState, updateQueryArray, function(err, result, fields){
-                  if(err){
-                    console.log('마케터 캐시충전 금액 수정삽입 오류', err);
-                  } else {
-                    res.send({
-                      insertDebit: 'success',
-                      updateDebit: 'success'
-                    });
-                    conn.release();
-                  }
-                });
-              }
-            })
-          }
-      });
-    } 
-  })
-})
+//                 conn.query(updateQueryState, updateQueryArray, function(err, result, fields){
+//                   if(err){
+//                     console.log('마케터 캐시충전 금액 수정삽입 오류', err);
+//                   } else {
+//                     res.send({
+//                       insertDebit: 'success',
+//                       updateDebit: 'success'
+//                     });
+//                     conn.release();
+//                   }
+//                 });
+//               }
+//             })
+//           }
+//       });
+//     } 
+//   })
+// })
 
-// 마케터 캐시 환불
-router.post('/return', function(req, res, next) {
-  const marketerId = req._passport.session.user.userid;
-  const withdrawcash = req.body.withdrawCash;
+// // 마케터 캐시 환불
+// router.post('/return', function(req, res, next) {
+//   const marketerId = req._passport.session.user.userid;
+//   const withdrawcash = req.body.withdrawCash;
 
-  pool.getConnection((err, conn) => {
-    if (err) {
-      console.log(err)
-    } else {
-      // 출금 신청 데이터 넣기
-      const queryState = `
-      INSERT
-      INTO marketerCash
-      (marketerId, chargeCash, withdrawCash)
-      VALUES (?, ?, ?)`;
+//   pool.getConnection((err, conn) => {
+//     if (err) {
+//       console.log(err)
+//     } else {
+//       // 출금 신청 데이터 넣기
+//       const queryState = `
+//       INSERT
+//       INTO marketerCash
+//       (marketerId, chargeCash, withdrawCash)
+//       VALUES (?, ?, ?)`;
 
-      const queryArray = [
-        marketerId, 0, withdrawcash
-      ];
+//       const queryArray = [
+//         marketerId, 0, withdrawcash
+//       ];
 
-      conn.query(queryState, queryArray, function(err, result, fields){
-          if(err){
-            console.log('마케터 캐시충전 정보 입력 오류', err);
-          }
-      });
+//       conn.query(queryState, queryArray, function(err, result, fields){
+//           if(err){
+//             console.log('마케터 캐시충전 정보 입력 오류', err);
+//           }
+//       });
 
-      // 광고캐시 환불 금액에 맞추어 기존의 marketerDebit에 추가하기
-      const updateQueryState = `
-        INSERT INTO
-        marketerCost (marketerId, marketerDebit)
-        SELECT marketerId, marketerDebit - ?
-        FROM marketerCost
-        WHERE marketerId = ?
-        ORDER BY date DESC
-        LIMIT 1`
-      const updateQueryArray = [
-        withdrawcash, marketerId
-      ];
+//       // 광고캐시 환불 금액에 맞추어 기존의 marketerDebit에 추가하기
+//       const updateQueryState = `
+//         INSERT INTO
+//         marketerCost (marketerId, marketerDebit)
+//         SELECT marketerId, marketerDebit - ?
+//         FROM marketerCost
+//         WHERE marketerId = ?
+//         ORDER BY date DESC
+//         LIMIT 1`
+//       const updateQueryArray = [
+//         withdrawcash, marketerId
+//       ];
 
-      conn.query(updateQueryState, updateQueryArray, function(err, result, fields){
-        if(err){
-          console.log('마케터 캐시충전 금액 수정삽입 오류', err);
-        }
-        res.send({
-          insertDebit: 'success',
-          updateDebit: 'success'
-        });
-        conn.release();
-    });
-    }
-  })
-})
+//       conn.query(updateQueryState, updateQueryArray, function(err, result, fields){
+//         if(err){
+//           console.log('마케터 캐시충전 금액 수정삽입 오류', err);
+//         }
+//         res.send({
+//           insertDebit: 'success',
+//           updateDebit: 'success'
+//         });
+//         conn.release();
+//     });
+//     }
+//   })
+// })
 
 // 마케터 캐시 충전 및 환불 내역
+/* 올바른 OUTPUT의 형태
+{ columns: [ '날짜', '캐시충전', '캐시환불', '환불상태' ],
+  data: [ [ '19년 07월 06일', '0', '0', '진행중' ] ] }
+ */
+//doQuery 완료
 router.get('/cashlist', function(req, res, next) {
   //marketerID 가져오기
   const marketerId = req._passport.session.user.userid;
+  const listQuery = `
+  SELECT
+  DATE_FORMAT(date, '%y년 %m월 %d일') as date, chargeCash, 
+  withdrawCash, cashReturnState
+  FROM marketerCash
+  WHERE marketerId = ?
+  ORDER BY date DESC`;
 
-  pool.getConnection((err, conn) => {
-    if (err) {
-      console.log(err)
-      conn.release();
-      res.json(err);
-    } else {
-
-      const DBquery = `SELECT
-      DATE_FORMAT(date, '%y년 %m월 %d일') as date, chargeCash, withdrawCash, cashReturnState
-      FROM marketerCash
-      WHERE marketerId = "${marketerId}"
-      ORDER BY date DESC`;
-
-      conn.query(DBquery, (err, rows, fields) => {
-        if (err) {
-          console.log(err);
-          conn.release();
-          res.json(err);
-        } else {
-          if (rows.length > 0) {
-            const result = cashlist(sortRows(rows, 'date'));
-            conn.release();
-            res.send(result);
-          } else {
-            conn.release();
-            res.end();
-          }
-        }
-      })
-    }
+  doQuery(listQuery, [marketerId])
+  .then((row)=>{
+    const result = cashlist(row.result);
+    res.send(result);    
   })
+  .catch(()=>{
+    res.end();
+  })
+
 })
 
 // 마케터 계좌정보 조회
+//doQuery 완료
 router.get('/accountNumber', function(req, res, next) {
   const marketerId = req._passport.session.user.userid;
-
-  pool.getConnection((err, conn) => {
-    if (err) {
-      console.log(err)
-    } else {
-      conn.query(`SELECT marketerAccountNumber
-        FROM marketerInfo
-        WHERE marketerId = "${marketerId}"
-        `, function(err, result, fields){
-          console.log(result)
-          if(err){
-              console.log(err);
-          }
-          if (result.length > 0) {
-            conn.release();
-            res.send(result[0]);
-          }else{
-            conn.release();
-            res.end();
-          }
-      });
-    }
+  const accountQuery = `
+  SELECT marketerAccountNumber
+  FROM marketerInfo
+  WHERE marketerId = ?`;
+  doQuery(accountQuery, [marketerId])
+  .then((row)=>{
+    const accountNumber = row.result[0].marketerAccountNumber;
+    res.send({
+      accountNumber
+    })
+  })
+  .catch((error)=>{
+    console.log(error);
+    res.send({});
   })
 })
 
 // bannerMatched의 특정 배너와 계약된 크리에이터 조회
+//doQuery 완료
 router.get('/contraction/creatorList', function(req, res, next) {
   const { bannerId } = req.query;
   

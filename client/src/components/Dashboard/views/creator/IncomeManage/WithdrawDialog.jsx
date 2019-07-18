@@ -119,14 +119,16 @@ function WithdrawDialog(props) {
       axios.post(`${HOST}/api/dashboard/creator/withdrawal`, {
         withdrawalAmount: selectValue,
       }).then((res) => {
-        const { insertWithdrawalSuccess, updateIncome } = res.data;
-        if (insertWithdrawalSuccess === 'success' && updateIncome === 'success') {
+        if (!res.data.error) {
           handleConfirmDialogClose();
+          alert('출금 신청이 완료되었습니다.');
+          history.push(window.location.pathname);
+        } else {
+          alert('현재는 출금 신청이 불가능하오니 잠시 후 시도해주시기 바랍니다.');
           history.push(window.location.pathname);
         }
       }).catch((err) => {
-        console.log(err);
-        alert('오류에요!.. 다시시도해보세요!');
+        alert('현재는 출금 신청이 불가능하오니 잠시 후 시도해주시기 바랍니다.');
         history.push(window.location.pathname);
       });
     }

@@ -40,7 +40,7 @@ function useFetchCreatorData(selectedBanner) {
         throw new Error('데이터가 존재하지 않습니다');
       }
     } catch {
-      setCreatorData('데이터를 불러오지 못했습니다.');
+      setCreatorData([]);
     }
   }, [selectedBanner]);
 
@@ -94,7 +94,7 @@ function AdvertiseStartDialog(props) {
       const bannerRegisteredData = { bannerId: selectedBanner.bannerId };
       await axios.post(bannerRegisteredUrl, bannerRegisteredData)
         .then((res) => {
-          console.log(res);
+          // console.log(res);
         })
         .catch((err) => {
           console.log(err);
@@ -137,7 +137,7 @@ function AdvertiseStartDialog(props) {
     <Dialog
       open={open}
       onClose={onClose}
-      maxWidth="xs"
+      maxWidth="md"
       title={
         selectedBanner.confirmState === CONFIRMED_BANNER_STATE
           ? '해당 배너 광고 시작하기'
@@ -163,7 +163,7 @@ function AdvertiseStartDialog(props) {
       <div>
         {/* 모달내용 */}
         <div>
-          <img src={selectedBanner.bannerSrc} alt="selectedBanner" />
+          <img src={selectedBanner.bannerSrc} alt="selectedBanner" height="400px" width="600px" />
           <Typography variant="h6">{`광고 캐시 잔액 : ${marketerDebit}`}</Typography>
           {/* 승인된 배너 / 일시정지가 아닌 배너 */}
           { selectedBanner.confirmState === CONFIRMED_BANNER_STATE && (

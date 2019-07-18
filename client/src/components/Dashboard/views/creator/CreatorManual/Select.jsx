@@ -1,5 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 // core ../../../components
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
@@ -16,6 +15,10 @@ import CardFooter from '../../../components/Card/CardFooter';
 import GridItem from '../../../components/Grid/GridItem';
 // material-ui
 import broadCastingIcon from '../../../assets/img/broadcasting.svg';
+import contract from '../../../assets/img/contract.svg';
+import setting from '../../../assets/img/setting.svg';
+import money from '../../../assets/img/money.svg';
+import graph from '../../../assets/img/graph.svg';
 
 const useButtonStyle = makeStyles({
   root: {
@@ -37,7 +40,7 @@ const useButtonStyle = makeStyles({
 });
 
 const Select = (props) => {
-  const { classes } = props;
+  const { classes, handleButton } = props;
   const buttonClasses = useButtonStyle();
 
   return (
@@ -57,6 +60,8 @@ const Select = (props) => {
             m={1}
             bgcolor="background.paper"
             position="relative"
+            alignItems="center"
+            justifyContent="space-around"
           >
             <Stepper>
               <Step active="true">
@@ -65,16 +70,13 @@ const Select = (props) => {
                   <Button
                     size="large"
                     variant="outlined"
-                    component={Link}
-                    to="/dashboard/creator/creatormanual/setbanner"
                     classes={{
                       root: buttonClasses.root, // class name, e.g. `classes-nesting-root-x`
                       label: buttonClasses.label, // class name, e.g. `classes-nesting-label-x`
                     }}
+                    onClick={() => handleButton(1)}
                   >
-
-                    <img src={broadCastingIcon} alt="" />
-
+                    <img src={contract} alt="" />
                     <p>OnAD 플랫폼과 계약하고 싶어요</p>
                   </Button>
                 </CardContent>
@@ -90,10 +92,9 @@ const Select = (props) => {
                       root: buttonClasses.root, // class name, e.g. `classes-nesting-root-x`
                       label: buttonClasses.label, // class name, e.g. `classes-nesting-label-x`
                     }}
+                    onClick={() => handleButton(2)}
                   >
-
                     <img src={broadCastingIcon} alt="" />
-
                     <p>광고 배너를 송출하고 싶어요.</p>
                   </Button>
                 </CardContent>
@@ -108,10 +109,9 @@ const Select = (props) => {
                       root: buttonClasses.root, // class name, e.g. `classes-nesting-root-x`
                       label: buttonClasses.label, // class name, e.g. `classes-nesting-label-x`
                     }}
+                    onClick={() => handleButton(3)}
                   >
-
-                    <img src={broadCastingIcon} alt="" />
-
+                    <img src={setting} alt="" />
                     <p>방송 개인 설정을 하고싶어요.</p>
                   </Button>
                 </CardContent>
@@ -126,10 +126,9 @@ const Select = (props) => {
                       root: buttonClasses.root, // class name, e.g. `classes-nesting-root-x`
                       label: buttonClasses.label, // class name, e.g. `classes-nesting-label-x`
                     }}
+                    onClick={() => handleButton(4)}
                   >
-
-                    <img src={broadCastingIcon} alt="" />
-
+                    <img src={money} alt="" />
                     <p>수익금이 누적되요.</p>
                   </Button>
                 </CardContent>
@@ -144,15 +143,14 @@ const Select = (props) => {
                       root: buttonClasses.root, // class name, e.g. `classes-nesting-root-x`
                       label: buttonClasses.label, // class name, e.g. `classes-nesting-label-x`
                     }}
+                    onClick={() => handleButton(5)}
                   >
-
-                    <img src={broadCastingIcon} alt="" />
-
+                    <img src={graph} alt="" />
                     <p>
-출금 신청을 하고
+                    출금 신청을 하고
                       {' '}
                       <br />
-수익데이터를 확인하고 싶어요
+                    수익데이터를 확인하고 싶어요
                     </p>
                   </Button>
                 </CardContent>

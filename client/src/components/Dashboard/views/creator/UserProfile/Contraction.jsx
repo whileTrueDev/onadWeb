@@ -100,14 +100,14 @@ function Contraction(props) {
       })
         .then((res) => {
           if (res.data === true) {
+            alert('성공적으로 계약이 완료되었습니다.');
             history.push('/dashboard/creator/user');
           }
         })
-        .catch((err) => {
-          console.log(`계약과정오류${err}`);
+        .catch(() => {
+          alert('계약과정의 오류가 발생하였습니다. 잠시후 시도해주세요.');
+          history.push('/dashboard/creator/user');
         });
-    } else {
-      alert('아직 동의하지 않으셨어요!');
     }
   };
 
@@ -179,7 +179,5 @@ function Contraction(props) {
   );
 }
 
-Contraction.propTypes = {
-};
 
 export default Contraction;

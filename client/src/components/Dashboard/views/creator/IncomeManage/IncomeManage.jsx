@@ -166,9 +166,9 @@ function Income(props) {
     axios.get(`${HOST}/api/dashboard/creator/listOfWithdrawal`)
       .then((res) => {
         if (res.data) {
-          if (res.data) {
-            setWithdrawalData(res.data);
-          } else { setWithdrawalData(defaultWithdrawalData); }
+          setWithdrawalData(res.data);
+        } else {
+          setWithdrawalData(defaultWithdrawalData);
         }
       }).catch((res) => {
         console.log(res); // 오류처리 요망
@@ -302,7 +302,7 @@ function Income(props) {
                     </Select>
                   </FormControl>
                   {loading && <div style={{ textAlign: 'center' }}><CircularProgress /></div>}
-                  {!loading && error && <span>오류에요.. 침착하시고.. 다시 시도해보세요</span>}
+                  {!loading && error && <span>최근 수익금 내역이 존재하지 않습니다.</span>}
                   {!loading && payload
                 && (
                 <Line

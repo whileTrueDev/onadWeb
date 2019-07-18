@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 // core ../../../components
 import Stepper from '@material-ui/core/Stepper';
@@ -10,10 +10,12 @@ import GridContainer from '../../../components/Grid/GridContainer';
 import Card from '../../../components/Card/Card';
 import CardHeader from '../../../components/Card/CardHeader';
 import CardFooter from '../../../components/Card/CardFooter';
-// material-ui
 
-//
-import broadCastingIcon from '../../../assets/img/broadcasting.svg';
+import ImgModal from './ImgModal';
+// images
+import c1_1 from '../../../assets/img/creatorManualImage/dashboard.png';
+import c4_2 from '../../../assets/img/creatorManualImage/4_2.png';
+import c4_3 from '../../../assets/img/creatorManualImage/4_3.png';
 
 const stepperStyles = makeStyles(theme => ({
   root: {
@@ -32,6 +34,23 @@ const IncomeManual = (props) => {
   const { classes } = props;
   const StepperClasses = stepperStyles();
 
+  const [open, setOpen] = useState(false);
+  const [selectedImg, setSelectedImg] = useState(false);
+
+  const handleOpen = (imgSrc) => {
+    setOpen(true);
+    setSelectedImg(imgSrc);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const strongStyle = {
+    fontSize: '23px',
+    backgroundColor: '#FFFD95',
+  };
+
   return (
     <GridContainer>
       <Card>
@@ -40,7 +59,7 @@ const IncomeManual = (props) => {
                   수익금이 쌓입니다.
           </h6>
           <p className={classes.cardCategoryWhite}>
-            방송송출 프로글매에 고유 URL을 붙여넣기해서 광고를 송출하면 자동적으로 수익금이 쌓입니다.
+            방송송출 프로그램에 고유 URL을 붙여넣기해서 광고를 송출하면 자동적으로 수익금이 쌓입니다.
           </p>
         </CardHeader>
 
@@ -51,12 +70,11 @@ const IncomeManual = (props) => {
             <StepLabel>
               자신의
               {' '}
-              <strong>대시보드</strong>
+              <strong style={strongStyle}>대시보드</strong>
 로 이동합니다.
             </StepLabel>
             <StepContent>
-
-              <img src={broadCastingIcon} alt="" className={StepperClasses.img} />
+              <img src={c1_1} alt="" className={StepperClasses.img} onClick={() => handleOpen(c1_1)} />
 
             </StepContent>
           </Step>
@@ -68,21 +86,21 @@ const IncomeManual = (props) => {
               아쉽게도 아직 매칭되지 않았다면, 빈화면이 유지됩니다..
             </StepLabel>
             <StepContent>
-              <img src={broadCastingIcon} alt="" className={StepperClasses.img} />
+              <img src={c4_2} alt="" className={StepperClasses.img} onClick={() => handleOpen(c4_2)} />
             </StepContent>
           </Step>
           <Step active="true">
             <StepLabel>
               광고가 매칭된 상태에서 방송하게 되면 대시보드의
               {' '}
-              <strong>수익금</strong>
+              <strong style={strongStyle}>수익금</strong>
 에서
               {' '}
               <br />
               10분마다 누적되는 수익금을 확인할 수 있습니다.
             </StepLabel>
             <StepContent>
-              <img src={broadCastingIcon} alt="" className={StepperClasses.img} />
+              <img src={c4_3} alt="" className={StepperClasses.img} onClick={() => handleOpen(c4_3)} />
             </StepContent>
           </Step>
         </Stepper>
@@ -91,6 +109,11 @@ const IncomeManual = (props) => {
           이해가 잘 안되시거나, 문의사항이 있으시면 고객센터로 문의해주세요.
         </CardFooter>
       </Card>
+      <ImgModal
+        openModal={open}
+        handleClose={handleClose}
+        ImgSrc={selectedImg}
+      />
     </GridContainer>
   );
 };

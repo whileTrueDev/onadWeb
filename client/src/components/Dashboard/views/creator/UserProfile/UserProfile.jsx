@@ -20,7 +20,6 @@ import CompletedContract from './CompletedContract';
 import Dialog from '../../../components/Dialog/Dialog';
 import HOST from '../../../../../config';
 
-
 const styles = {
   cardCategoryWhite: {
     color: 'rgba(255,255,255,.62)',
@@ -272,6 +271,7 @@ function UserProfile(props) {
         </GridItem>
       </GridContainer>
 
+      {/* 계약 완료시, 완료된 약관 보기 */}
       {userData.creatorContractionAgreement === 1 && (
         <Dialog
           open={ContractionOpen}
@@ -294,9 +294,5 @@ function UserProfile(props) {
   );
 }
 
-UserProfile.propTypes = {
-  classes: PropTypes.object,
-  history: PropTypes.object,
-};
 
 export default withStyles(styles)(UserProfile);

@@ -43,15 +43,14 @@ const Dashboard = (props) => {
   useEffect(() => {
     axios.get(`${HOST}/api/dashboard/creator/currentBanner`)
       .then((res) => {
-        if (res.data) {
-          if (res.data.length > 0) {
-            setCurrentBannerData(res.data);
-          } else { setCurrentBannerData(defaultCurruntBanner); }
+        if (res.data.length > 0) {
+          setCurrentBannerData(res.data);
         } else {
-          console.log('실패'); // 오류처리 요망
+          setCurrentBannerData(defaultCurruntBanner);
         }
-      }).catch((err) => {
-        console.log(err); // 오류처리 요망
+      })
+      .catch(() => {
+        setCurrentBannerData(defaultCurruntBanner);
       });
   }, []);
 
@@ -66,8 +65,8 @@ const Dashboard = (props) => {
           setData(res.data);
         } else { setData(defaultIncomeData); }
       }
-    }).catch((res) => {
-      console.log(res); // 오류처리 요망
+    }).catch(() => {
+      setData(defaultIncomeData);
     });
   }, []);
 
@@ -82,8 +81,7 @@ const Dashboard = (props) => {
             setBannerData(res.data);
           } else { setBannerData(defaultBannerData); }
         }
-      }).catch((res) => {
-        console.log(res); // 오류처리 요망
+      }).catch(() => {
         setBannerData(defaultBannerData);
       });
   }, []); // set 2nd argument to the empty array for request just once
@@ -97,8 +95,6 @@ const Dashboard = (props) => {
         if (res.data) {
           setSession(res.data);
         }
-      }).catch((err) => {
-        console.log(err); // 오류처리 요망
       });
   }, []);
 

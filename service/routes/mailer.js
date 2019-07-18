@@ -20,7 +20,7 @@ const transporter = nodemailer.createTransport({
 //인증을 위한 Mailer
 router.post("/auth", (req, res) => {
   const {marketerMail, marketerId, password} = req.body;
-  
+
   let mailOptions = {
     from: 'onad6309@gmail.com', // 발송 메일 주소 (위에서 작성한 gmail 계정 아이디)
     to: marketerMail, // 수신 메일 주소부분
@@ -48,6 +48,7 @@ router.post("/auth", (req, res) => {
 
 router.post("/regist", function(req, res, next){
   let email = req.body.marketerMail;
+
   let mailOptions = {
     from: 'onad6309@gmail.com', // 발송 메일 주소 (위에서 작성한 gmail 계정 아이디)
     to: email, // 수신 메일 주소부분

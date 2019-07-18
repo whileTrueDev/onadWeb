@@ -39,6 +39,7 @@ function CustomTable({ ...props }) {
     DialogOpen, handleDialogOpen, handleDialogClose, selectedCreator,
   } = useDialog();
 
+
   return (
     <div className={classes.tableResponsive}>
       <Table className={classes.table}>
@@ -62,7 +63,6 @@ function CustomTable({ ...props }) {
             <TableRow
               hover
               key={shortid.generate()}
-              // className={classes.tableRow}
             >
               {prop.map((value, index) => (
                 index === 0 ? (
@@ -95,7 +95,6 @@ function CustomTable({ ...props }) {
           ))}
         </TableBody>
       </Table>
-
       <CreatorInfoDialog
         open={DialogOpen}
         handleDialogClose={handleDialogClose}

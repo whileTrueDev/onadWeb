@@ -38,14 +38,14 @@ const logger = createLogger({
             json: false,
             timestamp: timeStampFormat
         }),
-        new transports.Console({
-            name: 'debug-console',
-            colorize: true,
-            level: 'debug',
-            showLevel: true,
-            json: false,
-            timestamp: timeStampFormat
-        })
+        // new transports.Console({
+        //     name: 'debug-console',
+        //     colorize: true,
+        //     level: 'debug',
+        //     showLevel: true,
+        //     json: false,
+        //     timestamp: timeStampFormat
+        // })
     ]
 });
 
