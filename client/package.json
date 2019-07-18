@@ -35,7 +35,7 @@
   "scripts": {
     "start:mac": "PORT=3001 react-scripts start",
     "start": "set PORT=3001 && react-scripts start",
-    "build": "react-scripts build",
+    "build": "NODE_ENV=production HOST=$HOST react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

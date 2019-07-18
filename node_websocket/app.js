@@ -7,7 +7,20 @@ const pool = require('./public/connect');
 const schedule = require('node-schedule');
 const requestImg = require('./public/requestImg.js')
 const checkPlz = require('./public/checkPlz.js')
+const config = require('./config.json');
 
+// port 설정 및 hostname 설정
+const PORT = 3002;
+process.env.NODE_ENV = ( process.env.NODE_ENV && ( process.env.NODE_ENV ).trim().toLowerCase() == 'production' ) ? 'production' : 'development';
+let BACK_HOST = config.dev.apiHostName;
+let FRONT_HOST = config.dev.reactHostName;
+let SOCKET_HOST = config.dev.socketHostName;
+if (process.env.NODE_ENV === 'production') {
+    console.log(`now listening on ${PORT} PORT with ${process.env.NODE_ENV} environment!`)
+    BACK_HOST = config.production.apiHostName;
+    FRONT_HOST = config.production.reactHostName;
+    SOCKET_HOST = config.production.socketHostName;
+}
 //view engine
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
@@ -19,7 +32,7 @@ app.use('/public', express.static(__dirname + '/public')); //디렉토리 정적
 //routing
 app.get('/', function(req, res){ //index.html /로 라우팅
     console.log('home')
-    res.render('home.ejs')
+    res.render('home.ejs', {hostname: SOCKET_HOST})
 });
 
 app.get('/wrongIp', function(req, res){
@@ -130,12 +143,12 @@ app.get('/banner/:id', function(req, res){ ///banner/:id로 라우팅
             console.log(`클라이언트id ${ clientId }`);
             
             if(history != 1){ /*이 부분 !=로 바꾸기*/
-              var destination = 'http://localhost:3002/browserWarn'
+              var destination = `${SOCKET_HOST}/browserWarn`;
               socket.emit('browser warning', destination) 
             } else {
                 if(urlArray.includes(_url)){
                     console.log('있다')
-                    var destination = 'http://localhost:3002/duplicate'
+                    var destination = `${SOCKET_HOST}/duplicate`
                     socket.emit('redirect warn', destination)
                 } else{
                     socketsInfo[Object.keys(roomInfo).pop( )] = _url; //roomInfo에서 소켓아이디 불러와서 socketsInfo 객체에 {'id' : url} 형태로 저장 
@@ -176,6 +189,6 @@ app.get('/banner/:id', function(req, res){ ///banner/:id로 라우팅
     })
 })();
 
-http.listen(3002, function(){
+http.listen(PORT, function(){
     console.log('connected!');
 });

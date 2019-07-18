@@ -1,6 +1,9 @@
 const axios = require('axios');
 const doQuery = require('../model/doQuery');
 const encrypto = require('../encryption');
+const config = require('../config.json');
+
+const HOST = process.env.NODE_ENV === 'production' ? config.production.apiHostName : config.dev.apiHostName
 
 
 const setTemporaryPassword = (req, res, next) => {
@@ -27,7 +30,7 @@ const setTemporaryPassword = (req, res, next) => {
       password : password,
       baseUrl : req.baseUrl
     }
-    axios.post('http://localhost:3001/mailer/auth', user)
+    axios.post(`${HOST}/mailer/auth`, user)
     .then((response)=>{
       //메일 전송 오류 및 성공.    
       res.send(response.data);

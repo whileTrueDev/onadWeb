@@ -13,11 +13,12 @@ import {
   MenuItem,
   TextField,
 } from '@material-ui/core';
-import axios from 'axios';
 import Done from '@material-ui/icons/Done';
 import Clear from '@material-ui/icons/Clear';
+import axios from '../../utils/axios';
 import SuccessTypo from '../Dashboard/components/Typography/Success';
 import DangerTypo from '../Dashboard/components/Typography/Danger';
+import HOST from '../../config';
 
 // Style Overriding용.
 const styles = theme => ({
@@ -160,7 +161,7 @@ const RegistForm = (props) => {
     if (state.id || id === '') {
       alert('ID을 올바르게 입력해주세요.');
     } else {
-      axios.post('/api/regist/checkId', {
+      axios.post(`${HOST}/api/regist/checkId`, {
         id,
       })
         .then((res) => {

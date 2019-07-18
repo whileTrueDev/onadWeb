@@ -1,5 +1,4 @@
 import React, { useState, useReducer } from 'react';
-import axios from 'axios';
 import PropTypes from 'prop-types';
 import {
   withStyles,
@@ -8,11 +7,13 @@ import {
   StepLabel,
   StepContent,
 } from '@material-ui/core';
+import axios from '../../utils/axios';
 
 import Usertype from './Usertype';
 import RegistForm from './RegistForm';
 import PaperSheet from './Paper';
 import AppAppBar from '../Main/views/Layout/AppAppBar';
+import HOST from '../../config';
 
 const styles = theme => ({
   root: {
@@ -125,7 +126,7 @@ const RegistStepper = (props) => {
   };
 
   const handleUserSubmit = () => {
-    axios.post('/api/regist/marketer',
+    axios.post(`${HOST}/api/regist/marketer`,
       userInfo)
       .then((res) => {
         const { error } = res.data;

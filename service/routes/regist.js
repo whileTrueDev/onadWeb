@@ -5,6 +5,9 @@ const pool = require('../model/connectionPool');
 const setTemporaryPassword = require('../middlewares/setTemporyPassword');
 const logger = require('../middlewares/logger');
 const sendEmailAuth = require('../middlewares/sendEmailAuth');
+const config = require('../config.json');
+
+const HOST = process.env.NODE_ENV === 'production' ? config.production.apiHostName : config.dev.apiHostName
 
 
 const router = express.Router();
@@ -142,10 +145,10 @@ router.get('/auth/:id', (req, res) => {
   SET marketerEmailAuth = 1
   WHERE marketerId = ?`, [req.params.id])
   .then(()=>{
-    res.redirect('http://localhost:3001');
+    res.redirect(HOST);
   })
   .catch(()=>{
-    res.redirect('http://localhost:3001');
+    res.redirect(HOST);
   })
 })
 

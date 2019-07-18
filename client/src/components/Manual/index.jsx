@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import axios from '../../utils/axios';
 import AppAppBar from '../Main/views/Layout/AppAppBar';
 import AppFooter from '../Main/views/Layout/AppFooter';
 import ProductHero from '../Main/views/Hero/ProductHero';
@@ -7,12 +7,14 @@ import withRoot from '../Main/withRoot';
 // import ProductCTA from './views/ProductCTA';
 import textSource from './source/textSource';
 import Manual from './Manual';
+import HOST from '../../config';
+
 
 const useLoginValue = (location) => {
   const [isLogin, setisLogin] = useState(null);
 
   useEffect(() => {
-    axios.get('/api/login/check')
+    axios.get(`${HOST}/api/login/check`)
       .then((res) => {
         if (res.data) {
           const { userType } = res.data.user;

@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import {
   DialogActions, DialogContent,
   DialogContentText, TextField,
@@ -7,8 +6,10 @@ import {
   InputLabel, Input, MenuItem,
 } from '@material-ui/core';
 import PropTypes from 'prop-types';
+import axios from '../../../../../utils/axios';
 import Dialog from '../../../components/Dialog/Dialog';
 import Button from '../../../components/CustomButtons/Button';
+import HOST from '../../../../../config';
 
 const style = theme => ({
   contents: {
@@ -100,7 +101,7 @@ const AccountDialog = (props) => {
       bankName: event.target.bank.value,
       bankAccount: event.target.bankAccount.value,
     };
-    axios.post('/api/regist/accountNum', userAccount)
+    axios.post(`${HOST}/api/regist/accountNum`, userAccount)
       .then((res) => {
         alert('계좌번호 저장에 성공하였습니다.');
         history.push('/dashboard/marketer/cash');

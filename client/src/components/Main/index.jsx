@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import axios from '../../utils/axios';
 import AppAppBar from './views/Layout/AppAppBar';
 import AppFooter from './views/Layout/AppFooter';
 import ProductHero from './views/Hero/ProductHero';
@@ -7,6 +7,7 @@ import ProductCategories from './views/Categories/ProductCategories';
 import ProductHowItWorks from './views/HowItWorks/ProductHowItWorks';
 import RePasswordDialog from './views/Login/RePassword';
 import withRoot from './withRoot';
+import HOST from '../../config';
 
 const heroInfo = {
   backImage: 'https://images.unsplash.com/photo-1556761175-4b46a572b786?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1867&q=80',
@@ -19,7 +20,7 @@ const useLoginValue = (history, location) => {
   // logout function
   const logout = () => {
     setisLogin(false);
-    axios.get('/api/login/logout')
+    axios.get(`${HOST}/api/login/logout`)
       .then(() => {
         history.push('/');
       })
@@ -29,7 +30,7 @@ const useLoginValue = (history, location) => {
   };
 
   useEffect(() => {
-    axios.get('/api/login/check')
+    axios.get(`${HOST}/api/login/check`)
       .then((res) => {
         if (!res.data.error) {
           if (res.data.state) {

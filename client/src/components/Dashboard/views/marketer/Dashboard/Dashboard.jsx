@@ -2,7 +2,6 @@ import React, {
   useState, useEffect, useCallback, useContext,
 } from 'react';
 import PropTypes from 'prop-types';
-import axios from 'axios';
 import { Link } from 'react-router-dom';
 // @material-ui/core
 import withStyles from '@material-ui/core/styles/withStyles';
@@ -22,6 +21,7 @@ import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
 import GridListTileBar from '@material-ui/core/GridListTileBar';
 import Tooltip from '@material-ui/core/Tooltip';
+import axios from '../../../../../utils/axios';
 
 // core ../../../components
 import dashboardStyle from '../../../assets/jss/onad/views/dashboardStyle';
@@ -44,6 +44,7 @@ import DangerTypography from '../../../components/Typography/Danger';
 import Muted from '../../../components/Typography/Muted';
 import Info from '../../../components/Typography/Info';
 import { StateContext } from '../../../../StateStore';
+import HOST from '../../../../../config';
 // 상수
 const WAIT_BANNER_STATE = 1; // 대기중 배너 스테이트
 
@@ -124,9 +125,9 @@ const Dashboard = (props) => {
   const secondClasses = useStyles();
   const { classes } = props;
 
-  const cashData = useFetchData('/api/dashboard/marketer/cash');
-  const bannerData = useFetchData('/api/dashboard/marketer/banner');
-  const tableData = useFetchData('/api/dashboard/marketer/creatorList');
+  const cashData = useFetchData(`${HOST}/api/dashboard/marketer/cash`);
+  const bannerData = useFetchData(`${HOST}/api/dashboard/marketer/banner`);
+  const tableData = useFetchData(`${HOST}/api/dashboard/marketer/creatorList`);
   const {
     DialogOpen, handleDialogOpen,
     handleDialogClose, selectedBanner,
@@ -278,6 +279,8 @@ const Dashboard = (props) => {
       {/* 광고 될 크리에이터 목록 */}
       <GridContainer>
         <GridItem xs={12} sm={6} md={12}>
+          { !tableData.loading && tableData.payload
+          && (
           <CustomTabs
             headerColor="blueGray"
             tabs={[
@@ -312,6 +315,8 @@ const Dashboard = (props) => {
               },
             ]}
           />
+          )
+        }
         </GridItem>
       </GridContainer>
 

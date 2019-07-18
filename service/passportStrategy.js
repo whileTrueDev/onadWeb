@@ -17,6 +17,9 @@ const twitchStrategy = require("passport-twitch").Strategy;
 // 암호화 체크 객체 생성
 const encrpyto = require('./encryption');
 const doQuery = require('./model/doQuery');
+const config = require('./config.json');
+
+const HOST = process.env.NODE_ENV === 'production' ? config.production.apiHostName : config.dev.apiHostName
 
 //serializeUser를 정의한다. session에 저장해둘 data를 구현하는 것.
 passport.serializeUser((user, done)=>{
@@ -157,7 +160,7 @@ const makeUrl = () => {
 passport.use(new twitchStrategy({
     clientID: '7197nobf8rsf7aqqk4nf7a22dtyu93',
     clientSecret: 'e4y6aaq6cq8vy1c0a4xfzo17ton7mi',
-    callbackURL: `http://localhost:3000/api/login/twitch/callback`,
+    callbackURL: `${HOST}/api/login/twitch/callback`,	
     scope: "user_read",
     passReqToCallback: true,
   },

@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import axios from 'axios';
 // material ui core
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
@@ -11,10 +10,12 @@ import Radio from '@material-ui/core/Radio';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import TextField from '@material-ui/core/TextField';
 import DialogContent from '@material-ui/core/DialogContent';
+import axios from '../../../../../utils/axios';
 // customized component
 import Dialog from '../../../components/Dialog/Dialog';
 import Button from '../../../components/CustomButtons/Button';
 import Warning from '../../../components/Typography/Warning';
+import HOST from '../../../../../config';
 
 const useStyles = makeStyles(theme => ({
   contentTitle: {
@@ -72,20 +73,21 @@ function ReturnCashDialog(props) {
 
   // 캐쉬 환불신청 스낵바
   const {
-    ReturnCashSnack, handleSnackClose, handleOnlyDialogClose, handleSnackOpen,
+    ReturnCashSnack, handleSnackClose, handleOnlyDialogClose,
+    // handleSnackOpen,
   } = useReturnCashSnack(handleClose);
 
-  // 캐시 환불 진행 버튼 클릭
-  function handleClick() {
-    handleSnackOpen();
-  }
+  // // 캐시 환불 진행 버튼 클릭
+  // function handleClick() {
+  //   handleSnackOpen();
+  // }
 
   function handleSubmitClick() {
     if (chargeCash - selectValue < 0) {
       alert('불가합니다');
     } else {
       // 해당 금액 만큼 환불 내역에 추가하는 요청
-      axios.post('/api/dashboard/marketer/return', {
+      axios.post(`${HOST}/api/dashboard/marketer/return`, {
         withdrawCash: selectValue,
       }).then((res) => {
         handleSnackClose();
@@ -103,15 +105,15 @@ function ReturnCashDialog(props) {
       title="광고캐시 환불"
       buttons={(
         <div>
-          <Button onClick={handleClose}>
-              취소
-          </Button>
           <Button
             color="info"
-            onClick={handleClick}
+            // onClick={handleClick}
             disabled={(!(chargeCash >= selectValue)) || !(selectValue >= 0)}
           >
               진행
+          </Button>
+          <Button onClick={handleClose}>
+              취소
           </Button>
         </div>
 )}
@@ -285,7 +287,6 @@ ReturnCashDialog.propTypes = {
   handleClose: PropTypes.func.isRequired,
   accountNumber: PropTypes.string.isRequired,
   chargeCash: PropTypes.string.isRequired,
-  history: PropTypes.object,
 };
 
 export default ReturnCashDialog;

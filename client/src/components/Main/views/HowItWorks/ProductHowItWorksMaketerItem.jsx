@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
 import Grow from '@material-ui/core/Grow';
 import BrandingWatermark from '@material-ui/icons/BrandingWatermark';
 import Router from '@material-ui/icons/Router';
 import BarChart from '@material-ui/icons/BarChart';
+import axios from '../../../../utils/axios';
 
 import Typography from '../../components/Typography';
 import Button from '../../components/Button';
 import LoginForm from '../Login/LoginForm';
+import HOST from '../../../../config';
 
 const marketerSource = {
   title: '빠르고 쉽게 광고를 집행하고 투명하게 확인하세요',
@@ -38,7 +39,7 @@ export default function ProductHowItWorksMarketerItem(props) {
 
   const { open, handleOpen, handleClose } = useDialog();
   function handleClick() {
-    axios.get('/api/dashboard/checkUserType').then((res) => {
+    axios.get(`${HOST}/api/dashboard/checkUserType`).then((res) => {
       const { userType } = res.data;
       if (userType === undefined) {
         // 로그인창

@@ -69,9 +69,7 @@ const SetBanner = (props) => {
               탭을 클릭하세요.
             </StepLabel>
             <StepContent>
-
               <img src={c2_1} alt="" className={StepperClasses.img} onClick={() => handleOpen(c2_1)} />
-
             </StepContent>
           </Step>
           <Step active="true">

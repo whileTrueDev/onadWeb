@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import axios from 'axios';
 import { Link } from 'react-router-dom';
 // material core
 import TextField from '@material-ui/core/TextField';
@@ -12,9 +11,11 @@ import OpenInNewOutlined from '@material-ui/icons/OpenInNewOutlined';
 import InsertLinkOutlined from '@material-ui/icons/InsertLinkOutlined';
 import FileCopyOutlined from '@material-ui/icons/FileCopyOutlined';
 import Warning from '@material-ui/icons/Warning';
+import axios from '../../../../../utils/axios';
 
 import Button from '../../../components/CustomButtons/Button';
 import Snackbar from '../../../components/Snackbar/Snackbar';
+import HOST from '../../../../../config';
 
 const styles = {
   button: {
@@ -47,13 +48,14 @@ class ShowSrcBtn extends Component {
   }
 
   componentDidMount() {
-    axios.get('/api/dashboard/creator/overlayUrl')
+    // url 데이터 가져와 state로 입력.
+    axios.get(`${HOST}/api/dashboard/creator/overlayUrl`)
       .then((res) => {
-        if (res.data) {
-          let url = '';
-          if (res.data.creatorContractionAgreement === 0) {
-            url = '온애드와 계약하지 않았어요! 계약해주세요.';
-          } else { url = `https://onad.com/banner${res.data.advertiseUrl}`; }
+      if (res.data) {
+        let url = '';
+        if (res.data.creatorContractionAgreement === 0) {
+          url = '온애드와 계약하지 않았어요! 계약해주세요.';
+        } else { url = `https://onad.com/banner${res.data.advertiseUrl}`; }
 
           this.setState({
             showSrc: url,

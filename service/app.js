@@ -1,10 +1,12 @@
 const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
+const cors = require('cors');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const passport = require('./passportStrategy');
 const bodyParser = require('body-parser');
+const config = require('./config.json');
 
 //Router 정의
 var mailerRouter = require('./routes/mailer');
@@ -13,6 +15,11 @@ var app = express();
 
 
 process.env.NODE_ENV = ( process.env.NODE_ENV && ( process.env.NODE_ENV ).trim().toLowerCase() == 'production' ) ? 'production' : 'development';
+let BACK_HOST = 'http://localhost:3000';
+let FRONT_HOST = 'http://localhost:3001';
+if (process.env.NODE_ENV === 'production') {
+  FRONT_HOST = config.production.reactHostName;
+}
 // view를 찾을 경로를 `views`로 저장하여 rendering시 찾을 수 있도록 함.
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
@@ -27,7 +34,10 @@ app.use(cookieParser());
 app.use(session({
   secret: '@#@$MYSIGN#@$#$',
   resave: false,
-  saveUninitialized: true
+  saveUninitialized: true,
+  cookie: {
+    secure: false
+  }
  }));
 
 //passport 초기화를 통해 'local' 전략이 수립된다.
@@ -37,11 +47,10 @@ app.use(passport.session());
 //인증 method를 req에 추가한다.
 app.use(require('./middlewares/checkAuthOnReq'));
 
-app.all('/*', function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "X-Requested-With");
-  next();
-});
+// use CORS
+const corsOptions = { origin: FRONT_HOST, credentials: true };
+app.use(cors(corsOptions));
+
 
 app.use('/mailer', mailerRouter); 
 app.use('/api', apiRouter)

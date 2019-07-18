@@ -11,7 +11,6 @@ import {
   Button,
   Link,
 } from '@material-ui/core';
-import axios from 'axios';
 import Check from '@material-ui/icons/Check';
 import Clear from '@material-ui/icons/CallMissed';
 import CallMissed from '@material-ui/icons/Clear';
@@ -19,6 +18,7 @@ import AttachFile from '@material-ui/icons/AttachFile';
 import TouchApp from '@material-ui/icons/TouchApp';
 import Forum from '@material-ui/icons/Forum';
 import Warning from '@material-ui/icons/Warning';
+import axios from '../../../../../utils/axios';
 import GridContainer from '../../../components/Grid/GridContainer';
 import Card from '../../../components/Card/Card';
 import CardHeader from '../../../components/Card/CardHeader';
@@ -34,6 +34,7 @@ import DangerTypography from '../../../components/Typography/Danger';
 import InfoTypography from '../../../components/Typography/Info';
 import ReasonDialog from './ReasonDialog';
 import UploadDialog from './UploadDialog';
+import HOST from '../../../../../config';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -194,7 +195,7 @@ const BannerManage = (props) => {
   };
 
   const readyBanner = useCallback(() => {
-    axios.get('/api/dashboard/marketer/banner/all')
+    axios.get(`${HOST}/api/dashboard/marketer/banner/all`)
       .then((res) => {
         if (res.data[0]) {
           const completeBanners = [];
@@ -233,7 +234,7 @@ const BannerManage = (props) => {
   const handleDelete = banner => () => {
     console.log('배너를 삭제합니다');
     const { bannerId } = banner;
-    axios.post('/api/dashboard/marketer/banner/delete', { bannerId })
+    axios.post(`${HOST}/api/dashboard/marketer/banner/delete`, { bannerId })
       .then((res) => {
         alert(res.data[1]);
         if (res.data[0]) {
