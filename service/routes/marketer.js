@@ -202,7 +202,6 @@ router.post('/bannerStart', function(req, res) {
     doQuery(selectQuery, [creator, bannerId])
     .then((row)=>{
       if(row.result.length !== 0){
-        console.log(row.result);
         return doQuery(updateQuery, [0, row.result[0].contractionId])
       }else{
         return doQuery(insertQuery, [bannerId, creator])
