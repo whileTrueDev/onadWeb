@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
-import axios from 'axios';
 // @material-ui/core components
 import withStyles from '@material-ui/core/styles/withStyles';
 // react plugin for creating charts
@@ -21,6 +20,7 @@ import OutlinedInput from '@material-ui/core/OutlinedInput';
 import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
 import Tooltip from '@material-ui/core/Tooltip';
+import axios from '../../../../../utils/axios';
 // custum cores
 import Table from '../../../components/Table/Table';
 import GridItem from '../../../components/Grid/GridItem';
@@ -43,6 +43,7 @@ import setChartjsData from '../../../variables/charts';
 import DashboardStyle from '../../../assets/jss/onad/views/dashboardStyle';
 // variable
 import { defaultWithdrawalData } from '../../../variables/creatorWithdrawal';
+import HOST from '../../../../../config';
 
 
 DashboardStyle.select = {
@@ -139,10 +140,10 @@ function Income(props) {
   const { value, handleChange } = useSelectValue();
 
   // data 요청
-  const { payload, loading, error } = useFetchData('/api/dashboard/creator/chartdata', value);
+  const { payload, loading, error } = useFetchData(`${HOST}/api/dashboard/creator/chartdata`, value);
 
   // 수익금 데이터
-  const incomeData = useFetchData('/api/dashboard/creator/income');
+  const incomeData = useFetchData(`${HOST}/api/dashboard/creator/income`);
 
   // 수익금 출금 모달창
   const {
@@ -162,7 +163,7 @@ function Income(props) {
 
   // 출금리스트 데이터 axios 요청
   useEffect(() => {
-    axios.get('/api/dashboard/creator/listOfWithdrawal')
+    axios.get(`${HOST}/api/dashboard/creator/listOfWithdrawal`)
       .then((res) => {
         if (res.data) {
           setWithdrawalData(res.data);
@@ -179,7 +180,7 @@ function Income(props) {
   const [session, setSession] = useState({});
   useEffect(() => {
     // Banner 데이터 axios 요청
-    axios.get('/api/dashboard/checkUserType')
+    axios.get(`${HOST}/api/dashboard/checkUserType`)
       .then((res) => {
         if (res.data) {
           setSession(res.data);

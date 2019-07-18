@@ -1,14 +1,14 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import axios from 'axios';
 import shortId from 'shortid';
 import PropTypes from 'prop-types';
 
 import Typography from '@material-ui/core/Typography';
 import DialogContent from '@material-ui/core/DialogContent';
+import axios from '../../../../../utils/axios';
 // custom components
 import Dialog from '../../../components/Dialog/Dialog';
 import Button from '../../../components/CustomButtons/Button';
-
+import HOST from '../../../../../config';
 // 상수
 const CONFIRMED_BANNER_STATE = 1; // 승인됨 배너 스테이트
 const STARTED_BANNER_STATE = 3; // 광고중 배너 스테이트
@@ -30,7 +30,7 @@ function useConfirmDialog() {
 function useFetchCreatorData(selectedBanner) {
   const [creatorData, setCreatorData] = useState();
   const callUrl = useCallback(async () => {
-    const url = '/api/dashboard/marketer/contraction/creatorList';
+    const url = `${HOST}/api/dashboard/marketer/contraction/creatorList`;
     const { bannerId } = selectedBanner;
     try {
       const res = await axios.get(url, { params: { bannerId } });
@@ -78,7 +78,7 @@ function AdvertiseStartDialog(props) {
         return null;
       });
 
-      const matchedBannerUrl = '/api/dashboard/marketer/bannerStart';
+      const matchedBannerUrl = `${HOST}/api/dashboard/marketer/bannerStart`;
       const matchedBannerData = { bannerId: selectedBanner.bannerId, creators };
       await axios.post(matchedBannerUrl, matchedBannerData)
         .then((res) => {
@@ -90,11 +90,11 @@ function AdvertiseStartDialog(props) {
           console.log(err);
         });
 
-      const bannerRegisteredUrl = '/api/dashboard/marketer/bannerStartStateChange';
+      const bannerRegisteredUrl = `${HOST}/api/dashboard/marketer/bannerStartStateChange`;
       const bannerRegisteredData = { bannerId: selectedBanner.bannerId };
       await axios.post(bannerRegisteredUrl, bannerRegisteredData)
         .then((res) => {
-          console.log(res);
+          // console.log(res);
         })
         .catch((err) => {
           console.log(err);
@@ -108,7 +108,7 @@ function AdvertiseStartDialog(props) {
         return null;
       });
 
-      const matchedBannerUrl = '/api/dashboard/marketer/bannerStop';
+      const matchedBannerUrl = `${HOST}/api/dashboard/marketer/bannerStop`;
       const matchedBannerData = { bannerId: selectedBanner.bannerId, creators };
       await axios.post(matchedBannerUrl, matchedBannerData)
         .then((res) => {
@@ -120,7 +120,7 @@ function AdvertiseStartDialog(props) {
           console.log(err);
         });
 
-      const bannerRegisteredUrl = '/api/dashboard/marketer/bannerStopStateChange';
+      const bannerRegisteredUrl = `${HOST}/api/dashboard/marketer/bannerStopStateChange`;
       const bannerRegisteredData = { bannerId: selectedBanner.bannerId };
       await axios.post(bannerRegisteredUrl, bannerRegisteredData)
         .then((res) => {

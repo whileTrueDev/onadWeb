@@ -1,0 +1,35 @@
+language: node_js
+
+node_js:
+  - "10.15.3"
+
+branches:
+  only:
+    - master
+sudo: required
+
+before_install:
+  - npm install -g yarn  # yarn을 글로벌로 설치
+
+services:
+  - docker
+
+script:
+  - cd client && yarn && CI="false" yarn build && cd -
+  
+cache:
+  yarn: true
+
+after_success:
+  - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
+  - docker build -t hwasurr/onad_web ./client
+  - docker build -t hwasurr/onad_web_api ./service
+  - docker build -t hwasurr/onad_socket ./node_websocket
+  - docker push hwasurr/onad_web
+  - docker push hwasurr/onad_web_api
+  - docker push hwasurr/onad_socket
+
+# slack notification for one channel
+notifications:
+  email: false
+  slack: onadworkspace:GAoJDTE0OUEwadREAoZizqFz

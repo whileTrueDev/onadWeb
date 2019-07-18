@@ -1,7 +1,8 @@
 FROM nginx:1.14.2-alpine
 
-COPY ./build /var/www/react.onad.com
-COPY ./nginx.conf /etc/nginx/conf.d/react.onad.com
+COPY ./build /var/www/onad.com
+COPY ./nginx.conf /etc/nginx/conf.d/onad.com.conf
+ENV NODE_ENV production
 
 EXPOSE 3001
 

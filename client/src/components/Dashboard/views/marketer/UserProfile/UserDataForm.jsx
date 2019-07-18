@@ -6,9 +6,9 @@ import {
   TextField,
   MenuItem,
 } from '@material-ui/core';
-import axios from 'axios';
 import Check from '@material-ui/icons/Check';
 import MaskedInput from 'react-text-mask';
+import axios from '../../../../../utils/axios';
 import GridContainer from '../../../components/Grid/GridContainer';
 import GridItem from '../../../components/Grid/GridItem';
 import Card from '../../../components/Card/Card';
@@ -18,6 +18,7 @@ import CardFooter from '../../../components/Card/CardFooter';
 import Button from '../../../components/CustomButtons/Button';
 import dashboardStyle from '../../../assets/jss/onad/views/dashboardStyle';
 import Snackbar from '../../../components/Snackbar/Snackbar';
+import HOST from '../../../../../config';
 
 dashboardStyle.textField = {
   width: '100%',
@@ -71,7 +72,7 @@ const UserDataForm = (props) => {
   const [snackOpen, setSnackOpen] = useState(false);
 
   const getData = useCallback(async () => {
-    axios.post('/api/dashboard/marketer/info')
+    axios.post(`${HOST}/api/dashboard/marketer/info`)
       .then((res) => {
         if (res.data) {
           setUserData(res.data);
@@ -111,7 +112,7 @@ const UserDataForm = (props) => {
       marketerMail: `${mail}@${domain}`,
       marketerPhoneNum: phone,
     };
-    axios.post('/api/dashboard/marketer/info/change', user)
+    axios.post(`${HOST}/api/dashboard/marketer/info/change`, user)
       .then((res) => {
         if (res.data) {
           getData();

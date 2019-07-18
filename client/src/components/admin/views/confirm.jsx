@@ -1,7 +1,9 @@
 import React, { useEffect } from 'react';
-import axios from 'axios';
 import { Redirect } from 'react-router-dom';
+import axios from '../../../utils/axios';
+
 import Table from '../components/Table/Table';
+import HOST from '../../../config';
 
 const AdminConfirm = () => {
   const [data, setData] = React.useState([['', '', '', '', '']]);
@@ -13,7 +15,7 @@ const AdminConfirm = () => {
 
   function confirmClickButton(e) {
     const bannerId = e.target.id;
-    axios.post('/api/admin/confirmState', { bannerId })
+    axios.post(`${HOST}/api/admin/confirmState`, { bannerId })
       .then(refreshPage())
       .catch((err) => {
         console.log(err);
@@ -23,7 +25,7 @@ const AdminConfirm = () => {
   function handleSeleted(e) {
     const bannerId = e.target.name;
     const denialReason = e.target.value;
-    axios.post('/api/admin/rejectBanner', { denialReason, bannerId })
+    axios.post(`${HOST}/api/admin/rejectBanner`, { denialReason, bannerId })
       .then(refreshPage())
       .catch((err) => {
         console.log(err);
@@ -31,7 +33,7 @@ const AdminConfirm = () => {
   }
 
   useEffect(() => {
-    axios.get('/admin/confirm', {}).then((res) => {
+    axios.get(`${HOST}/admin/confirm`, {}).then((res) => {
       if (res.data === 'wrong') {
         setCheck(res.data);
       } else if (res.data) {

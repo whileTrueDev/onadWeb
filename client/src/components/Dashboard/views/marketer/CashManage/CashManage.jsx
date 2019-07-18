@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import axios from 'axios';
 // @material-ui/core components
 import withStyles from '@material-ui/core/styles/withStyles';
 import Payment from '@material-ui/icons/Payment';
 import AttachMoney from '@material-ui/icons/AttachMoney';
 import DateRange from '@material-ui/icons/DateRange';
 import Warning from '@material-ui/icons/Warning';
+import axios from '../../../../../utils/axios';
 import Table from '../../../components/Table/Table';
 import GridItem from '../../../components/Grid/GridItem';
 import GridContainer from '../../../components/Grid/GridContainer';
@@ -24,6 +24,7 @@ import AccountDialog from './AccountDialog';
 import DashboardStyle from '../../../assets/jss/onad/views/dashboardStyle';
 // variable
 import { defaultCashData, defaultCash } from '../../../variables/marketerCashlist';
+import HOST from '../../../../../config';
 
 function useCashDialog() {
   const [snackOpen, setsnackOpen] = useState(false);
@@ -94,7 +95,7 @@ const CashManage = (props) => {
   const [accountNumber, setAccountNumber] = useState('true');
 
   useEffect(() => {
-    axios.get('/api/dashboard/marketer/accountNumber')
+    axios.get(`${HOST}/api/dashboard/marketer/accountNumber`)
       .then((res) => {
         if (res.data.accountNumber !== null) {
           setAccountNumber(res.data.accountNumber);
@@ -109,7 +110,7 @@ const CashManage = (props) => {
 
   // 광고캐시 DB값 요
   useEffect(() => {
-    axios.get('/api/dashboard/marketer/cash')
+    axios.get(`${HOST}/api/dashboard/marketer/cash`)
       .then((res) => {
         if (res.data) {
           setCash(res.data);
@@ -124,7 +125,7 @@ const CashManage = (props) => {
 
   // 충전 및 환불 DB값 요
   useEffect(() => {
-    axios.get('/api/dashboard/marketer/cashlist')
+    axios.get(`${HOST}/api/dashboard/marketer/cashlist`)
       .then((res) => {
         if (res.data) {
           if (res.data) {
@@ -254,21 +255,19 @@ const CashManage = (props) => {
       </GridContainer>
 
       {/* 계좌 입력 안했을 시 링크 문구 notification창 */}
-      { !accountNumber
-        && (
-        <Snackbar
-          place="bl"
-          color="danger"
-          icon={Warning}
-          message="아직 계좌정보를 입력하지 않았어요.. 계좌정보 입력 이후 환불신청하세요!"
-          open={!accountNumber}
-          Link={
-            // 계좌정보 입력 팝업
-            <Button color="warning" onClick={handleDialogOpen}>계좌입력하기</Button>
-          }
-        />
-        )}
-
+      {!accountNumber.marketerAccountNumber && (
+      <Snackbar
+        place="bl"
+        color="danger"
+        icon={Warning}
+        message="아직 계좌정보를 입력하지 않았어요.. 계좌정보 입력 이후 환불신청하세요!"
+        open={!accountNumber.marketerAccountNumber && snackOpen}
+        Link={
+          // 계좌정보 입력 팝업
+          <Button color="warning" onClick={handleDialogOpen}>계좌입력하기</Button>
+        }
+      />
+      )}
       {/* 광고캐쉬 신청 팝업 */}
       <CashDialog
         open={modalOpen}

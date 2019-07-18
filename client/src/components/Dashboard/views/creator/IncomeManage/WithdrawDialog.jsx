@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import axios from 'axios';
 // material ui core
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
@@ -11,10 +10,13 @@ import Radio from '@material-ui/core/Radio';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import TextField from '@material-ui/core/TextField';
 import DialogContent from '@material-ui/core/DialogContent';
+import axios from '../../../../../utils/axios';
 // customized component
 import Button from '../../../components/CustomButtons/Button';
 import Dialog from '../../../components/Dialog/Dialog';
 import Warning from '../../../components/Typography/Warning';
+import HOST from '../../../../../config';
+
 
 const useStyles = makeStyles(theme => ({
   inDialogContent: {
@@ -114,7 +116,7 @@ function WithdrawDialog(props) {
       alert('3만원 이상부터 출금이 가능해요!');
     } else {
       // 해당 금액 만큼 출금 내역에 추가하는 요청
-      axios.post('/api/dashboard/creator/withdrawal', {
+      axios.post(`${HOST}/api/dashboard/creator/withdrawal`, {
         withdrawalAmount: selectValue,
       }).then((res) => {
         if (!res.data.error) {

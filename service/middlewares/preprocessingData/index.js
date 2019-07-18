@@ -97,7 +97,6 @@ function cashlist(result) {
 
 // 마케터 대시보드에서 광고 될 크리에이터 목록에 들어가는 데이터 전처리 함수
 function creatorList(result) {
-
   const data = result.map((row) => {
     row.streamPlatform = "Twitch.tv";
     row.freqStreamCategory = "Gaming";

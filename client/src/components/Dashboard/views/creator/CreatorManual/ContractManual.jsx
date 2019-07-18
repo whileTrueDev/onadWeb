@@ -53,6 +53,18 @@ const ContractManual = (props) => {
     backgroundColor: '#FFFD95',
   };
 
+  const [open, setOpen] = React.useState(false);
+  const [selectedImg, setSelectedImg] = React.useState(false);
+
+  const handleOpen = (imgSrc) => {
+    setOpen(true);
+    setSelectedImg(imgSrc);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   return (
     <GridContainer>
       <Card>
@@ -71,6 +83,18 @@ const ContractManual = (props) => {
             <StepContent>
               <img src={c1_1} alt="" className={StepperClasses.img} onClick={() => handleOpen(c1_1)} />
             </StepContent>
+            {/* <Modal
+              aria-labelledby="simple-modal-title"
+              aria-describedby="simple-modal-description"
+              open={open}
+              onClose={handleClose}
+            >
+              <div style={modalStyle} className={ModalClasses.paper}>
+                <img src={testImg} alt="" width="100%" height="100%"/>
+              </div>
+            </Modal> */}
+
+
           </Step>
 
           <Step active="true">

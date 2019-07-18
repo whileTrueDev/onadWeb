@@ -72,6 +72,7 @@ CreatorInfoDialog.propTypes = {
 
 CreatorInfoDialog.defaultProps = {
   creatorName: '',
+  tableData: [['']],
 };
 
 export default CreatorInfoDialog;

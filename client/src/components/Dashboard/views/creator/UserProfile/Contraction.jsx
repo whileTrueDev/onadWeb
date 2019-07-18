@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import shortid from 'shortid';
 import {
   Paper,
@@ -10,12 +9,14 @@ import green from '@material-ui/core/colors/green';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import Done from '@material-ui/icons/Done';
 import Clear from '@material-ui/icons/Clear';
+import axios from '../../../../../utils/axios';
 
 import Button from '../../../components/CustomButtons/Button';
 import Dialog from '../../../components/Dialog/Dialog';
 import SuccessTypo from '../../../components/Typography/Success';
 import DangerTypo from '../../../components/Typography/Danger';
 import terms from './contractionConfig';
+import HOST from '../../../../../config';
 
 const useStyles = makeStyles(theme => ({
   checked: {},
@@ -95,7 +96,7 @@ function Contraction(props) {
 
   const handleUserContract = () => {
     if (contractionList.every(row => row === true)) {
-      axios.post('/api/dashboard/creator/contraction', {
+      axios.post(`${HOST}/api/dashboard/creator/contraction`, {
       })
         .then((res) => {
           if (res.data === true) {

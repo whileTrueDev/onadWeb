@@ -74,7 +74,6 @@ const IncomeManual = (props) => {
 로 이동합니다.
             </StepLabel>
             <StepContent>
-
               <img src={c1_1} alt="" className={StepperClasses.img} onClick={() => handleOpen(c1_1)} />
 
             </StepContent>

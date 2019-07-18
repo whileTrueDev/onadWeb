@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import PropTypes from 'prop-types';
 
 import Grid from '@material-ui/core/Grid';
@@ -7,10 +6,12 @@ import Grow from '@material-ui/core/Grow';
 import BrandingWatermark from '@material-ui/icons/BrandingWatermark';
 import Subscriptions from '@material-ui/icons/Subscriptions';
 import ShowChart from '@material-ui/icons/ShowChart';
+import axios from '../../../../utils/axios';
 
 import Button from '../../components/Button';
 import Typography from '../../components/Typography';
 import LoginForm from '../Login/LoginForm';
+import HOST from '../../../../config';
 
 const creatorSource = {
   title: '간단한 설정만으로 광고료를 획득할 수 있습니다. 광고를 유치하세요.',
@@ -38,7 +39,7 @@ export default function ProductHowItWorksCreatorItem(props) {
   const { open, handleOpen, handleClose } = useDialog();
 
   function handleClick() {
-    axios.get('/api/dashboard/checkUserType').then((res) => {
+    axios.get(`${HOST}/api/dashboard/checkUserType`).then((res) => {
       const { userType } = res.data;
       if (userType === undefined) {
         handleOpen();

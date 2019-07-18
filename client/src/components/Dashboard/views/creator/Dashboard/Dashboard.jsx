@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 // for request
-import axios from 'axios';
 // for Link tag component
 import { Link } from 'react-router-dom';
 // @material-ui/core
@@ -13,6 +12,7 @@ import Warning from '@material-ui/icons/Warning';
 import DateRange from '@material-ui/icons/DateRange';
 import AttachMoney from '@material-ui/icons/AttachMoney';
 import Money from '@material-ui/icons/Money';
+import axios from '../../../../../utils/axios';
 // core ../../../components
 import dashboardStyle from '../../../assets/jss/onad/views/dashboardStyle';
 import GridContainer from '../../../components/Grid/GridContainer';
@@ -32,6 +32,7 @@ import {
   defaultBannerData,
   defaultCurruntBanner,
 } from '../../../variables/creatorDashboardDefault';
+import HOST from '../../../../../config';
 
 const Dashboard = (props) => {
   const { classes } = props;
@@ -40,7 +41,7 @@ const Dashboard = (props) => {
   const [currentBannerData, setCurrentBannerData] = React.useState([['', '']]);
 
   useEffect(() => {
-    axios.get('/api/dashboard/creator/currentBanner')
+    axios.get(`${HOST}/api/dashboard/creator/currentBanner`)
       .then((res) => {
         if (res.data.length > 0) {
           setCurrentBannerData(res.data);
@@ -58,7 +59,7 @@ const Dashboard = (props) => {
 
   useEffect(() => {
     // income 데이터 axios 요청
-    axios.get('/api/dashboard/creator/income').then((res) => {
+    axios.get(`${HOST}/api/dashboard/creator/income`).then((res) => {
       if (res.data) {
         if (!res.data.length) {
           setData(res.data);
@@ -73,7 +74,7 @@ const Dashboard = (props) => {
   const [bannerData, setBannerData] = useState(defaultBannerData);
   useEffect(() => {
     // Banner 데이터 axios 요청
-    axios.get('/api/dashboard/creator/matchedBanner')
+    axios.get(`${HOST}/api/dashboard/creator/matchedBanner`)
       .then((res) => {
         if (res.data) {
           if (res.data) {
@@ -89,7 +90,7 @@ const Dashboard = (props) => {
   const [session, setSession] = useState({});
   useEffect(() => {
     // Banner 데이터 axios 요청
-    axios.get('/api/dashboard/checkUserType')
+    axios.get(`${HOST}/api/dashboard/checkUserType`)
       .then((res) => {
         if (res.data) {
           setSession(res.data);
