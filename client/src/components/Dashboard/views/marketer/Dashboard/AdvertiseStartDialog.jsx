@@ -94,7 +94,7 @@ function AdvertiseStartDialog(props) {
       const bannerRegisteredData = { bannerId: selectedBanner.bannerId };
       await axios.post(bannerRegisteredUrl, bannerRegisteredData)
         .then((res) => {
-          console.log(res);
+          // console.log(res);
         })
         .catch((err) => {
           console.log(err);

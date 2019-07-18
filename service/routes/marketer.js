@@ -172,65 +172,50 @@ router.post('/advertiseOnOff', function(req, res) {
   })
 })
 
-
+//doQuery 수정
 router.post('/bannerStart', function(req, res) {
-  const marketerId = req._passport.session.user.userid;
   const { bannerId, creators } = req.body;
 
-  pool.getConnection((err, conn) => {
-    if (err) {
-      console.log(err)
-    } else {
-      const queryState1 = `SELECT contractionId
-        FROM bannerMatched
-        JOIN creatorInfo
-        ON creatorName = ?
-        WHERE contractionId = CONCAT(?, "/", creatorId)
-      `;
-      // 모든 크리에이터를 한번씩
-      creators.map((creatorName) => {
-        const queryArray1 = [ creatorName, bannerId ];
-        conn.query(queryState1, queryArray1, function(err, result, fields) {
-          // 이미 이 배너와 크리에이터의 contraction이 존재할 때
-          if (result.length > 0) {
-            // state를 0으로 수정한다 (0: 광고 진행중)
-            const updateStateQuery = `
-              UPDATE bannerMatched
-              SET contractionState = ?
-              WHERE contractionId = ?
-            `;
-            const updateStateArray = [0, result[0].contractionId]
-            conn.query(updateStateQuery, updateStateArray, function(err, result, fields) {
-              if (err) {
-                console.log('contraction 스테이트 수정 오류', err)
-              } else {
-                console.log(`contraction 스테이트 수정 : ${creatorName}, ${result.message}`);
-              }
-            })
-          }
-          // 이 배너와 크리에이터의 contraction이 기존에 존재하지 않는 경우
-          else {
-            // Insert Contractions
-            const insertQeury = `
-              INSERT INTO bannerMatched (contractionId)
-              SELECT CONCAT(?, "/", creatorId)
-              FROM creatorInfo
-              WHERE creatorName = ?
-            `;
-            const insertArray = [bannerId, creatorName];
-            conn.query(insertQeury, insertArray, function(err, result, fields) {
-              if (err) {
-                console.log('contraction 인서트 오류', err);
-              } else {
-                console.log(`contraction 인서트 : ${creatorName}, ${result.message}`)
-              }
-            })
-          }
-        })
-      })
-      conn.release();
-      res.send("sucess!");
-  }})
+  const selectQuery =  `
+  SELECT contractionId
+  FROM bannerMatched
+  JOIN creatorInfo
+  ON creatorName = ?
+  WHERE contractionId = CONCAT(?, "/", creatorId)
+  `;
+
+  const updateQuery = `
+  UPDATE bannerMatched
+  SET contractionState = 0
+  WHERE contractionId = ?
+  `;
+
+  const insertQuery = `
+  INSERT INTO bannerMatched 
+  (contractionId)
+  SELECT CONCAT(?, "/", creatorId)
+  FROM creatorInfo
+  WHERE creatorName = ?
+  `;
+
+  Promise.all(creators.map((creator)=>{
+    doQuery(selectQuery, [creator, bannerId])
+    .then((row)=>{
+      if(row.result.length !== 0){
+        console.log(row.result);
+        return doQuery(updateQuery, [0, row.result[0].contractionId])
+      }else{
+        return doQuery(insertQuery, [bannerId, creator])
+      }
+    })
+  }))
+  .then(()=>{
+    res.send(true);
+  })
+  .catch((errorData)=>{
+    console.log(errorData);
+    res.send(false);
+  })
 })
 
 //doQuery 완료
@@ -256,6 +241,11 @@ router.post('/bannerStartStateChange', function(req, res, next) {
 //doQuery 완료
 router.post('/bannerStop', function(req, res, next) {
   const { bannerId, creators } = req.body;
+  const selectQuery = `
+  SELECT creatorId
+  FROM creatorInfo
+  WHERE creatorName = ?
+  `
   const stopQuery = `
   UPDATE bannerMatched
   SET contractionState = 2
@@ -264,7 +254,10 @@ router.post('/bannerStop', function(req, res, next) {
   `;
   console.log(creators);
   Promise.all(creators.map((creator)=>{
-    return doQuery(stopQuery, [bannerId, creator]);
+    doQuery(selectQuery, [creator])
+    .then((row)=>{
+      return doQuery(stopQuery, [bannerId, row.result[0].creatorId]);
+    })
   }))
   .then(()=>{
     res.send("sucess!");
