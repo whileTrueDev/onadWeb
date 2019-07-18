@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+
 // core ../../../components
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
@@ -10,11 +11,11 @@ import Card from '../../../components/Card/Card';
 import CardHeader from '../../../components/Card/CardHeader';
 import CardFooter from '../../../components/Card/CardFooter';
 // material-ui
-import ImgModal from './ImgModal'
-//images
-import c1_1 from "../../../assets/img/creatorManualImage/1_1.png"
-import c1_2 from "../../../assets/img/creatorManualImage/1_2.png"
-import c1_3 from "../../../assets/img/creatorManualImage/1_3.png"
+import ImgModal from './ImgModal';
+
+import c1_1 from '../../../assets/img/creatorManualImage/1_1.png';
+import c1_2 from '../../../assets/img/creatorManualImage/1_2.png';
+import c1_3 from '../../../assets/img/creatorManualImage/1_3.png';
 
 const stepperStyles = makeStyles(theme => ({
   root: {
@@ -48,7 +49,7 @@ const ContractManual = (props) => {
   };
 
   const strongStyle = {
-    fontSize:'23px',
+    fontSize: '23px',
     backgroundColor: '#FFFD95',
   };
 
@@ -68,7 +69,7 @@ const ContractManual = (props) => {
           <Step active="true">
             <StepLabel>대쉬보드에서 계약하러 가기 알림창을 클릭합니다.</StepLabel>
             <StepContent>
-              <img src={c1_1} alt="" className={StepperClasses.img} onClick={() => handleOpen(c1_1)}/>
+              <img src={c1_1} alt="" className={StepperClasses.img} onClick={() => handleOpen(c1_1)} />
             </StepContent>
           </Step>
 
@@ -87,7 +88,7 @@ const ContractManual = (props) => {
               {'를 클릭합니다.'}
             </StepLabel>
             <StepContent>
-            <img src={c1_2} alt="" className={StepperClasses.img} onClick={() => handleOpen(c1_2)}/>
+              <img src={c1_2} alt="" className={StepperClasses.img} onClick={() => handleOpen(c1_2)} />
             </StepContent>
           </Step>
           <Step active="true">
@@ -107,7 +108,7 @@ const ContractManual = (props) => {
               {' 를 눌러 확인 가능합니다.'}
             </StepLabel>
             <StepContent>
-            <img src={c1_3} alt="" className={StepperClasses.img} onClick={() => handleOpen(c1_3)}/>
+              <img src={c1_3} alt="" className={StepperClasses.img} onClick={() => handleOpen(c1_3)} />
             </StepContent>
           </Step>
           <Step active="true">
@@ -124,9 +125,9 @@ const ContractManual = (props) => {
       </Card>
 
       <ImgModal
-      openModal={open} 
-      handleClose={handleClose} 
-      ImgSrc={selectedImg}
+        openModal={open}
+        handleClose={handleClose}
+        ImgSrc={selectedImg}
       />
     </GridContainer>
   );

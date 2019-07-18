@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 import axios from 'axios';
 import shortid from 'shortid';
 import {
@@ -179,8 +178,5 @@ function Contraction(props) {
   );
 }
 
-Contraction.propTypes = {
-  history: PropTypes.object,
-};
 
 export default Contraction;

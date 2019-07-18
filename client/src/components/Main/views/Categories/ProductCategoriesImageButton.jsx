@@ -12,7 +12,7 @@ const styles = theme => ({
     display: 'block',
     padding: 0,
     borderRadius: 0,
-    height: '40vh',
+    height: '35vh',
     transitionDelay: '2s',
     [theme.breakpoints.down('sm')]: {
       width: '100% !important',
@@ -63,7 +63,7 @@ const styles = theme => ({
   },
   imageTitle: {
     position: 'relative',
-    marginLeft: 13,
+    marginLeft: 15,
     padding: `${theme.spacing(2)}px ${theme.spacing(2)}px 14px`,
   },
   imageSubTitle: {

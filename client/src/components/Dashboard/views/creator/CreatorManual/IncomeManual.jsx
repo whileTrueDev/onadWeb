@@ -11,11 +11,11 @@ import Card from '../../../components/Card/Card';
 import CardHeader from '../../../components/Card/CardHeader';
 import CardFooter from '../../../components/Card/CardFooter';
 
-import ImgModal from './ImgModal'
-//images
-import c1_1 from "../../../assets/img/creatorManualImage/dashboard.png"
-import c4_2 from "../../../assets/img/creatorManualImage/4_2.png"
-import c4_3 from "../../../assets/img/creatorManualImage/4_3.png"
+import ImgModal from './ImgModal';
+// images
+import c1_1 from '../../../assets/img/creatorManualImage/dashboard.png';
+import c4_2 from '../../../assets/img/creatorManualImage/4_2.png';
+import c4_3 from '../../../assets/img/creatorManualImage/4_3.png';
 
 const stepperStyles = makeStyles(theme => ({
   root: {
@@ -47,7 +47,7 @@ const IncomeManual = (props) => {
   };
 
   const strongStyle = {
-    fontSize:'23px',
+    fontSize: '23px',
     backgroundColor: '#FFFD95',
   };
 
@@ -74,9 +74,9 @@ const IncomeManual = (props) => {
 로 이동합니다.
             </StepLabel>
             <StepContent>
-              
-                <img src={c1_1} alt="" className={StepperClasses.img} onClick={() => handleOpen(c1_1)}/>
-              
+
+              <img src={c1_1} alt="" className={StepperClasses.img} onClick={() => handleOpen(c1_1)} />
+
             </StepContent>
           </Step>
           <Step active="true">
@@ -87,7 +87,7 @@ const IncomeManual = (props) => {
               아쉽게도 아직 매칭되지 않았다면, 빈화면이 유지됩니다..
             </StepLabel>
             <StepContent>
-              <img src={c4_2} alt="" className={StepperClasses.img} onClick={() => handleOpen(c4_2)}/>
+              <img src={c4_2} alt="" className={StepperClasses.img} onClick={() => handleOpen(c4_2)} />
             </StepContent>
           </Step>
           <Step active="true">
@@ -101,7 +101,7 @@ const IncomeManual = (props) => {
               10분마다 누적되는 수익금을 확인할 수 있습니다.
             </StepLabel>
             <StepContent>
-              <img src={c4_3} alt="" className={StepperClasses.img} onClick={() => handleOpen(c4_3)}/>
+              <img src={c4_3} alt="" className={StepperClasses.img} onClick={() => handleOpen(c4_3)} />
             </StepContent>
           </Step>
         </Stepper>
@@ -111,9 +111,9 @@ const IncomeManual = (props) => {
         </CardFooter>
       </Card>
       <ImgModal
-      openModal={open} 
-      handleClose={handleClose} 
-      ImgSrc={selectedImg}
+        openModal={open}
+        handleClose={handleClose}
+        ImgSrc={selectedImg}
       />
     </GridContainer>
   );

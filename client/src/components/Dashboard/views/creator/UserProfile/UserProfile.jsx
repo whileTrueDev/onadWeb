@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import PropTypes from 'prop-types';
 import axios from 'axios';
 // @material-ui/core components
 import withStyles from '@material-ui/core/styles/withStyles';
@@ -47,7 +46,7 @@ const styles = {
   textField: {
     width: '100%',
     borderColor: 'linear-gradient(60deg, #00acc1, #26c6da)',
-  }
+  },
 };
 
 const CssTextField = withStyles({
@@ -95,10 +94,10 @@ function useDialog() {
 function UserProfile(props) {
   const { classes, history } = props;
   const [userData, setuserData] = useState({});
-  const { 
+  const {
     ContractionOpen,
     handleContractionOpen,
-    handleContractionClose
+    handleContractionClose,
   } = useDialog();
 
   const readyCreatorData = useCallback(() => {
@@ -142,7 +141,8 @@ function UserProfile(props) {
             </CardBody>
           </Card>
         </GridItem>
-      </GridContainer>)}
+      </GridContainer>
+      )}
 
       {/* 계정 관리 컴포넌트 */}
       <GridContainer>
@@ -251,15 +251,16 @@ function UserProfile(props) {
                 </GridItem>
                 <GridItem xs={12} sm={12} md={6}>
                   <Button
-                    color="blueGray" 
+                    color="blueGray"
                     style={{ marginTop: 20, float: 'left' }}
                     onClick={handleContractionOpen}
                   >
                       계약서 보기
                   </Button>
                 </GridItem>
-              </GridContainer>)}
-              
+              </GridContainer>
+              )}
+
 
               <Button color="info" onClick={handleProfileChange}>
                 정보변경하러가기
@@ -269,30 +270,28 @@ function UserProfile(props) {
         </GridItem>
       </GridContainer>
 
+      {/* 계약 완료시, 완료된 약관 보기 */}
       {userData.creatorContractionAgreement === 1 && (
         <Dialog
           open={ContractionOpen}
           onClose={handleContractionClose}
-          fullWidth={true}
-          maxWidth={'sm'}
+          fullWidth
+          maxWidth="sm"
         >
           <Card>
             <CardHeader color="blueGray">
               <h4 className={classes.cardTitleWhite}>서비스 이용 및 출금 계약하기</h4>
             </CardHeader>
             <CardBody>
-              <CompletedContract/>
+              <CompletedContract />
             </CardBody>
           </Card>
-        </Dialog>)}
+        </Dialog>
+      )}
 
     </div>
   );
 }
 
-UserProfile.propTypes = {
-  classes: PropTypes.object,
-  history: PropTypes.object,
-};
 
 export default withStyles(styles)(UserProfile);
