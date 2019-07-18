@@ -40,7 +40,7 @@ const useButtonStyle = makeStyles({
 });
 
 const Select = (props) => {
-  const { classes, handleButton, handleButtonClose } = props;
+  const { classes, handleButton } = props;
   const buttonClasses = useButtonStyle();
 
   return (

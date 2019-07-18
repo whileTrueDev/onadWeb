@@ -27,35 +27,35 @@ const ButtonStyle = makeStyles({
 
 // const classes = ButtonStyle();
 const MarketerManual = (props) => {
- 
-    const [manual, setManual] = useState(0)
-  
-    const handleButton = num => {
-      setManual(num);
-    };
-  
-    const handleButtonClose = () => {
-      setManual(false);
-    };
-    const strongStyle = {
-      fontSize:'23px',
-      backgroundColor: '#FFFD95',
-    };
-  return(
-  <div>
-    <Select 
-    handleButton = {handleButton} 
-    handleButtonClose = {handleButtonClose}
-    />
+  const [manual, setManual] = useState(0);
 
-       { (() => {
-          if (manual === 0) return (<div></div>);
-          if (manual === 1) return (<RegistManual />);
-          if (manual === 2) return (<StartManual />);
-          if (manual === 3) return (<ChartManual />);
-    })()}
-    
-  </div>
-)};
+  const handleButton = (num) => {
+    setManual(num);
+  };
+
+  const handleButtonClose = () => {
+    setManual(false);
+  };
+  // const strongStyle = {
+  //   fontSize: '23px',
+  //   backgroundColor: '#FFFD95',
+  // };
+  return (
+    <div>
+      <Select
+        handleButton={handleButton}
+        handleButtonClose={handleButtonClose}
+      />
+
+      { (() => {
+        if (manual === 0) return (<div />);
+        if (manual === 1) return (<RegistManual />);
+        if (manual === 2) return (<StartManual />);
+        if (manual === 3) return (<ChartManual />);
+      })()}
+
+    </div>
+  );
+};
 
 export default withStyles(ButtonStyle)(MarketerManual);

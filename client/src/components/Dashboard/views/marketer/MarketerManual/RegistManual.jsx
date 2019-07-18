@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 // core ../../../components
 import Stepper from '@material-ui/core/Stepper';
@@ -11,18 +11,18 @@ import Card from '../../../components/Card/Card';
 import CardHeader from '../../../components/Card/CardHeader';
 import CardFooter from '../../../components/Card/CardFooter';
 // material-ui
-import ImgModal from './ImgModal'
-//images
-import m1_1 from "../../../assets/img/MarketerManualImage/1_1.PNG"
-import m1_2 from "../../../assets/img/MarketerManualImage/1_2.PNG"
-import m1_3 from "../../../assets/img/MarketerManualImage/1_3.PNG"
-import m1_4 from "../../../assets/img/MarketerManualImage/1_4.PNG"
-import m1_5 from "../../../assets/img/MarketerManualImage/1_5.PNG"
+import ImgModal from './ImgModal';
+// images
+import m1_1 from '../../../assets/img/MarketerManualImage/1_1.PNG';
+import m1_2 from '../../../assets/img/MarketerManualImage/1_2.PNG';
+import m1_3 from '../../../assets/img/MarketerManualImage/1_3.PNG';
+import m1_4 from '../../../assets/img/MarketerManualImage/1_4.PNG';
+import m1_5 from '../../../assets/img/MarketerManualImage/1_5.PNG';
 
 const stepperStyles = makeStyles(theme => ({
   root: {
     float: 'right',
-    fontSize: '15px'
+    fontSize: '15px',
   },
   img: {
     height: 255,
@@ -50,7 +50,7 @@ const RegistManual = (props) => {
     setOpen(false);
   };
   const strongStyle = {
-    fontSize:'23px',
+    fontSize: '23px',
     backgroundColor: '#FFFD95',
   };
   return (
@@ -66,7 +66,7 @@ const RegistManual = (props) => {
         </CardHeader>
         <h4>배너 등록 - 관리</h4>
         <Stepper orientation="vertical">
-          <Step active="true" >
+          <Step active="true">
             <StepLabel className={stepperStyles.root}>대쉬보드에서 계약하러 가기 알림창을 클릭합니다.</StepLabel>
             {/* <StepContent>
               <img src={m1_1} alt="" className={StepperClasses.img} onClick={() => handleOpen(m1_1)}/>
@@ -140,7 +140,7 @@ const RegistManual = (props) => {
             <StepLabel>
               {'이제 광고 송출이 가능합니다.'}
             </StepLabel>
-           
+
           </Step>
         </Stepper>
         <CardFooter>
@@ -149,9 +149,9 @@ const RegistManual = (props) => {
       </Card>
 
       <ImgModal
-      openModal={open} 
-      handleClose={handleClose} 
-      ImgSrc={selectedImg}
+        openModal={open}
+        handleClose={handleClose}
+        ImgSrc={selectedImg}
       />
     </GridContainer>
   );

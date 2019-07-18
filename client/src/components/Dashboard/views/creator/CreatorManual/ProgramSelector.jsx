@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import {
   withStyles,
@@ -105,10 +105,10 @@ const ProgramSelector = (props) => {
     }
     props.handleNext();
   };
-  const strongStyle = {
-    fontSize:'23px',
-    backgroundColor: '#FFFD95',
-  };
+  // const strongStyle = {
+  //   fontSize: '23px',
+  //   backgroundColor: '#FFFD95',
+  // };
   return (
     <div className={classes.root}>
       {images.map(image => (

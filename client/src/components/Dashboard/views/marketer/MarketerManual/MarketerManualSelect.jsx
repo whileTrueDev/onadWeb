@@ -1,5 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 // core ../../../components
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
@@ -38,7 +37,7 @@ const useButtonStyle = makeStyles({
 });
 
 const Select = (props) => {
-  const { classes, handleButton, handleButtonClose } = props;
+  const { classes, handleButton } = props;
   const buttonClasses = useButtonStyle();
 
   return (
@@ -120,7 +119,7 @@ const Select = (props) => {
                   </Button>
                 </CardContent>
               </Step>
-             
+
             </Stepper>
           </Box>
           <CardFooter stats />

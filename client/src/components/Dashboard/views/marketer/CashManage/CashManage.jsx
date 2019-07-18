@@ -79,7 +79,6 @@ const CashManage = (props) => {
 
   // 수익금 출금 모달창
   const {
-    snackOpen,
     modalOpen,
     modalOpen2,
     handleCashDialogOpen,
@@ -196,7 +195,6 @@ const CashManage = (props) => {
                 <CardBody>
                   <div className={classes.buttonWrapper}>
                     <Button
-                      disabled="true"
                       color="info"
                       round
                       onClick={handleCashDialogOpen}

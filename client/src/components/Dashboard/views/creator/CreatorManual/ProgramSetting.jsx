@@ -9,7 +9,6 @@ import { makeStyles, withStyles } from '@material-ui/core/styles';
 import GridContainer from '../../../components/Grid/GridContainer';
 import GridItem from '../../../components/Grid/GridItem';
 import Card from '../../../components/Card/Card';
-import CardHeader from '../../../components/Card/CardHeader';
 import CardFooter from '../../../components/Card/CardFooter';
 import c1_1 from '../../../assets/img/creatorManualImage/1_1.png';
 import c3_2 from '../../../assets/img/creatorManualImage/3_2.png';
