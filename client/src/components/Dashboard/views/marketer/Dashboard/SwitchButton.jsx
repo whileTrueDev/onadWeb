@@ -82,13 +82,7 @@ function useFetchData(url, params) {
   const callUrl = useCallback(async () => {
     try {
       const res = await axios.get(url, params);
-      if (res.data.length !== 0) {
-        setPayload(res.data);
-      } else {
-        console.log(res);
-        setError('데이터가 없습니다.');
-        // throw new Error('데이터가 존재하지 않습니다');
-      }
+      setPayload(res.data);
     } catch {
       setError('오류입니다.');
     } finally {
@@ -114,7 +108,7 @@ function useUpdateData(url, history) {
       .then((res) => {
         setLoading(false);
         setSuccess(res.data);
-        if (res.data === 'success') {
+        if (res.data) {
           history.push('/dashboard/marketer/main');
         }
       }).catch((err) => {
@@ -138,9 +132,9 @@ function CustomSwitch(props) {
 
   return (
     <div className={classes.typo}>
-      {!loading && !error && payload ? (
+      {!loading && !error ? (
         <div>
-          {payload.marketerContraction === true ? (
+          {payload === true ? (
             <Typography variant="h4">광고ON</Typography>
           ) : (
             <Typography variant="h4" color="secondary">광고OFF</Typography>
@@ -149,8 +143,8 @@ function CustomSwitch(props) {
             className={classes.switch}
             control={(
               <IOSSwitch
-                checked={payload.marketerContraction}
-                onChange={() => handleSwitch({ contraction: !payload.marketerContraction })}
+                checked={payload}
+                onChange={() => handleSwitch({ contraction: !payload })}
               />
                )}
             label="광고ON & OFF"

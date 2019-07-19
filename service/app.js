@@ -74,6 +74,6 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-
+console.log(process.env.NODE_ENV);
 //선언만 하고 start는 bin에서 시작
 module.exports = app;

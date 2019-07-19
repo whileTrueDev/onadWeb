@@ -6,8 +6,7 @@ const doQuery = require('../model/doQuery');
 const encrypto = require('../encryption');
 const config = require('../config.json');
 
-const HOST = process.env.NODE_ENV === 'production' ? config.production.apiHostName : config.dev.apiHostName
-
+const HOST = process.env.NODE_ENV === 'production' ? config.production.reactHostName : config.dev.reactHostName
 var router = express.Router();
 
 router.post( '/', passport.authenticate('local'),
@@ -20,7 +19,6 @@ router.get( '/check', function(req, res) {
     SELECT temporaryLogin
     FROM marketerInfo
     WHERE marketerId = ?`
-    console.log(req.session)
     doQuery(checkQuery, [req.session.passport.user.userid])
     .then((row)=>{
       const { temporaryLogin } = row.result[0];
