@@ -48,7 +48,7 @@ app.use(passport.session());
 app.use(require('./middlewares/checkAuthOnReq'));
 
 // use CORS
-const corsOptions = { origin: [FRONT_HOST], credentials: true };
+const corsOptions = { origin: FRONT_HOST, credentials: true };
 app.use(cors(corsOptions));
 
 
