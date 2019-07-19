@@ -450,11 +450,11 @@ async function calculation(){
   })
 } 
 
-calculation();
+//calculation();
 
-// var scheduler = schedule.scheduleJob('5,15,25,35,45,55 * * * *', ()=>{
-//   calculation();
-// })
+var scheduler = schedule.scheduleJob('5,15,25,35,45,55 * * * *', ()=>{
+  calculation();
+})
 
-// module.exports = scheduler;
+module.exports = scheduler;
 

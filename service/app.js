@@ -48,7 +48,7 @@ app.use(passport.session());
 app.use(require('./middlewares/checkAuthOnReq'));
 
 // use CORS
-const corsOptions = { origin: "*", credentials: true };
+const corsOptions = { origin: FRONT_HOST, credentials: true };
 app.use(cors(corsOptions));
 
 
@@ -70,6 +70,6 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-
+console.log(process.env.NODE_ENV);
 //선언만 하고 start는 bin에서 시작
 module.exports = app;

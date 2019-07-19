@@ -155,7 +155,7 @@ router.get('/advertiseOnOff', function(req, res) {
 
 //doQuery 수정
 router.post('/advertiseOnOff', function(req, res) {
-  const contractionState = req.body.contraction === falssse ? 0 : 1;
+  const contractionState = req.body.contraction === false ? 0 : 1;
   const marketerId = req._passport.session.user.userid;
   const infoQuery = `
   UPDATE marketerInfo
@@ -608,6 +608,9 @@ router.get('/contraction/creatorList', function(req, res, next) {
           responseData.push((row.creatorName));
         })
         res.send(responseData);
+      }else{
+        console.log('이전에 계약된 내역이 존재하지 않습니다.');
+        res.send([]);
       }
     })
 });
