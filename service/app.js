@@ -51,6 +51,10 @@ app.use(require('./middlewares/checkAuthOnReq'));
 const corsOptions = { origin: FRONT_HOST, credentials: true };
 app.use(cors(corsOptions));
 
+// for aws ELB health check
+app.get('/', function(req, res, next) {
+  res.sendStatus(200);
+})
 
 app.use('/mailer', mailerRouter); 
 app.use('/api', apiRouter)
