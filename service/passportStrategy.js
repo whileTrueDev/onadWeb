@@ -157,9 +157,16 @@ const makeUrl = () => {
     return password;
 }
 
+const clientID = process.env.NODE_ENV === 'production'
+    ? config.production.clientID
+    : config.dev.clientID
+const clientSecret = process.env.NODE_ENV === 'production'
+    ? config.production.clientSecret
+    : config.dev.clientSecret
+
 passport.use(new twitchStrategy({
-    clientID: '7197nobf8rsf7aqqk4nf7a22dtyu93',
-    clientSecret: 'e4y6aaq6cq8vy1c0a4xfzo17ton7mi',
+    clientID: clientID,
+    clientSecret: clientSecret,
     callbackURL: `${HOST}/api/login/twitch/callback`,	
     scope: "user_read",
     passReqToCallback: true,

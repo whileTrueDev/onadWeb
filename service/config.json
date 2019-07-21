@@ -8,10 +8,14 @@
     },
     "dev": {
         "apiHostName": "http://localhost:3000",
-        "reactHostName": "http://localhost:3001"
+        "reactHostName": "http://localhost:3001",
+        "clientID": "mzmtrk1xlqerih1u10ilip2xwhowil",
+        "clientSecret": "urhry446c5geg16ucmr55hozif1tfq"
     },
     "production": {
         "apiHostName": "https://api.onad.io",
-        "reactHostName": "https://onad.io"
+        "reactHostName": "https://onad.io",
+        "clientID": "7197nobf8rsf7aqqk4nf7a22dtyu93",
+        "clientSecret": "e4y6aaq6cq8vy1c0a4xfzo17ton7mi"
     }
 }

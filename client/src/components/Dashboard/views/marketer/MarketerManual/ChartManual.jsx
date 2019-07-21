@@ -59,7 +59,7 @@ const ChartManual = (props) => {
         <h4>광고 송출 후엔 어떻게?</h4>
 
         <Stepper orientation="vertical">
-          <Step active="true">
+          <Step active>
             <StepLabel>
               매칭된 크리에어터들이 배너광고를 송출하면 10분마다 캐시가 차감됩니다.
             </StepLabel>
@@ -67,7 +67,7 @@ const ChartManual = (props) => {
               <img src={m3_1} alt="" className={StepperClasses.img} onClick={() => handleOpen(m3_1)} />
             </StepContent>
           </Step>
-          <Step active="true">
+          <Step active>
             <StepLabel>
               광고캐시가 소진될 때까지 크리에이터들은 마케터님의 광고를 송출합니다.
               <br />
@@ -83,7 +83,7 @@ const ChartManual = (props) => {
               <img src={m3_1} alt="" className={StepperClasses.img} onClick={() => handleOpen(m3_1)}/>
             </StepContent> */}
           </Step>
-          <Step active="true">
+          <Step active>
             <StepLabel>
               화면 하단에서 매칭된 크리에이터들의 방송을 통해
               <br />
@@ -93,7 +93,7 @@ const ChartManual = (props) => {
               <img src={m3_3} alt="" className={StepperClasses.img} onClick={() => handleOpen(m3_3)} />
             </StepContent>
           </Step>
-          <Step active="true">
+          <Step active>
             <StepLabel>
              마케터님의 광고를 OnAd를 통해 1인 미디어로 송출하세요!
             </StepLabel>

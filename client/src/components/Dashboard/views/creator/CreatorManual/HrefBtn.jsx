@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 
 // export default class HrefBtn extends React.Component () {
 //   handleClick = (e) => {
@@ -25,12 +25,12 @@ import React from 'react'
 //   Click me
 // </a>)
 // }
-class HrefBtn extends React.Component { 
+class HrefBtn extends React.Component {
   handleClick(event) {
     event.preventDefault();
     event.stopPropagation();
- 
   }
+
   render() {
     return (
       <a href="#" onClick={this.handleClick}>Test link</a>

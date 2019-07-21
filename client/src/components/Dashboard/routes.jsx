@@ -1,6 +1,7 @@
 // 라우터 아이콘 @material-ui/icons
 import Dashboard from '@material-ui/icons/Dashboard';
 import Person from '@material-ui/icons/Person';
+import Search from '@material-ui/icons/Search';
 import AttachMoney from '@material-ui/icons/AttachMoney';
 import BrandingWatermark from '@material-ui/icons/BrandingWatermark';
 
@@ -8,7 +9,7 @@ import BrandingWatermark from '@material-ui/icons/BrandingWatermark';
 import creatorUserProfile from './views/creator/UserProfile/UserProfile';
 import IncomeManage from './views/creator/IncomeManage/IncomeManage';
 import creatorDashboardPage from './views/creator/Dashboard/Dashboard';
-import creatorManual from './views/creator/CreatorManual/CreatorManual'
+import creatorManual from './views/creator/CreatorManual/CreatorManual';
 
 // 마케터 라우터
 import marketerDashboardPage from './views/marketer/Dashboard/Dashboard';
@@ -35,17 +36,17 @@ const dashboardRoutes = {
       layout: '/dashboard/creator',
     },
     {
+      path: '/manual',
+      name: '사용 방법',
+      icon: Search,
+      component: creatorManual,
+      layout: '/dashboard/creator',
+    },
+    {
       path: '/user',
       name: '계정 관리',
       icon: Person,
       component: creatorUserProfile,
-      layout: '/dashboard/creator',
-    },
-    {
-      path: '/creatormanual',
-      name: '사용 방법',
-      icon: Person,
-      component: creatorManual,
       layout: '/dashboard/creator',
     },
   ],
@@ -72,17 +73,17 @@ const dashboardRoutes = {
       layout: '/dashboard/marketer',
     },
     {
+      path: '/manual',
+      name: '사용 방법',
+      icon: Search,
+      component: MarketerManual, // 마케터 대시보드 컴포넌트로 수정
+      layout: '/dashboard/marketer',
+    },
+    {
       path: '/user',
       name: '계정 관리',
       icon: Person,
       component: marketerUserProfile, // 마케터 대시보드 컴포넌트로 수정
-      layout: '/dashboard/marketer',
-    },
-    {
-      path: '/marketermanual',
-      name: '사용 방법',
-      icon: Person,
-      component: MarketerManual, // 마케터 대시보드 컴포넌트로 수정
       layout: '/dashboard/marketer',
     },
   ],

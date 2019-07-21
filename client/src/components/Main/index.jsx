@@ -47,7 +47,7 @@ const useLoginValue = (history, location) => {
   });
 
   return {
-    isLogin, repasswordOpen, logout, setisLogin, setRepassword,
+    isLogin, repasswordOpen, logout, setRepassword,
   };
 };
 
@@ -55,7 +55,7 @@ export default withRoot((props) => {
   // if located here, set the scroll to top of the page
   const { history, location } = props;
   const {
-    isLogin, repasswordOpen, logout, setisLogin, setRepassword,
+    isLogin, repasswordOpen, logout, setRepassword,
   } = useLoginValue(history, location);
 
   React.useEffect(() => {
@@ -64,7 +64,7 @@ export default withRoot((props) => {
 
   return (
     <div>
-      <AppAppBar history={history} isLogin={isLogin} setisLogin={setisLogin} logout={logout} />
+      <AppAppBar history={history} isLogin={isLogin} logout={logout} />
       <ProductHero backgroundImage={heroInfo.backImage} history={history} />
       <ProductCategories history={history} />
       <ProductHowItWorks history={history} isLogin={isLogin} />

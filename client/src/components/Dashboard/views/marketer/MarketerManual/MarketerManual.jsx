@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 // core ../../../components
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 // material-ui
+import GridContainer from '../../../components/Grid/GridContainer';
+import GridItem from '../../../components/Grid/GridItem';
 
 import Select from './MarketerManualSelect';
 import StartManual from './StartManual';
@@ -33,28 +35,32 @@ const MarketerManual = (props) => {
     setManual(num);
   };
 
-  const handleButtonClose = () => {
-    setManual(false);
-  };
-  // const strongStyle = {
-  //   fontSize: '23px',
-  //   backgroundColor: '#FFFD95',
-  // };
+  let selectedComponent;
+  switch (manual) {
+    case 1:
+      selectedComponent = <RegistManual />;
+      break;
+    case 2:
+      selectedComponent = <StartManual />;
+      break;
+    case 3:
+      selectedComponent = <ChartManual />;
+      break;
+    default:
+      selectedComponent = null;
+  }
+
+
   return (
-    <div>
-      <Select
-        handleButton={handleButton}
-        handleButtonClose={handleButtonClose}
-      />
+    <GridContainer>
+      <GridItem xs={12} sm={6} md={3}>
+        <Select handleButton={handleButton} activeStep={manual} />
+      </GridItem>
 
-      { (() => {
-        if (manual === 0) return (<div />);
-        if (manual === 1) return (<RegistManual />);
-        if (manual === 2) return (<StartManual />);
-        if (manual === 3) return (<ChartManual />);
-      })()}
-
-    </div>
+      <GridItem xs={12} sm={6} md={9}>
+        {selectedComponent}
+      </GridItem>
+    </GridContainer>
   );
 };
 

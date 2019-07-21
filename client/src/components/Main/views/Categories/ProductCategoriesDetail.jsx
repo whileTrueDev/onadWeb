@@ -25,7 +25,7 @@ const ProductCategoriesDetail = (props) => {
 
   // Value for image comming slide animation
   const triggerThreshold = 200; // trigger for scrollTop
-  const slideTime = 1200; // slide animation tile
+  const slideTime = 1000; // slide animation tile
   const [trigger, setTrigger] = React.useState(
     useScrollTrigger(
       { threshold: triggerThreshold, disableHysteresis: true },
@@ -45,23 +45,20 @@ const ProductCategoriesDetail = (props) => {
     <Slide
       in={trigger}
       direction="right"
-      {...(trigger ? { timeout: slideTime } : { timeout: slideTime })}
+      timeout={{ enter: slideTime }}
+      mountOnEnter
+      unmountOnExit
     >
       <div className={classes.images}>
 
         {images.map(image => (
-          <Grow
-            key={image.title}
-            in={checked}
-            {...(checked ? { timeout: 2000 } : {})}
-          >
-            <ProductCategoriesImageButton
-              image={image}
-              matches={matches}
-            />
-          </Grow>
+          <ProductCategoriesImageButton
+            image={image}
+            matches={matches}
+          />
         ))}
       </div>
+
     </Slide>
   );
 };
