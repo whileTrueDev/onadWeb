@@ -3,12 +3,11 @@ const pool = require('../model/connectionPool');
 
 var router = express.Router();
 
-/* POST register page */
 router.route('/')
 .get(function(req, res, next){
   //DB연결후 query문을 통한 데이터 삽입
   var adminIp = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-  if(adminIp === '127.0.0.1'){
+  if(adminIp ==! '127.0.0.1'){
     res.send('wrong')
   } else
     { 

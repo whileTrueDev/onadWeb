@@ -61,7 +61,7 @@ const Select = (props) => {
             justifyContent="space-around"
           >
             <Stepper>
-              <Step active="true">
+              <Step active>
                 <StepLabel />
                 <CardContent>
                   <Button
@@ -81,7 +81,7 @@ const Select = (props) => {
                 </CardContent>
               </Step>
 
-              <Step active="true">
+              <Step active>
                 <StepLabel />
                 <CardContent>
                   <Button
@@ -100,7 +100,7 @@ const Select = (props) => {
                   </Button>
                 </CardContent>
               </Step>
-              <Step active="true">
+              <Step active>
                 <StepLabel />
                 <CardContent>
                   <Button

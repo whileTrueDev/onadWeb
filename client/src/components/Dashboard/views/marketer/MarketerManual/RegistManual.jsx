@@ -25,12 +25,14 @@ const stepperStyles = makeStyles(theme => ({
     fontSize: '15px',
   },
   img: {
-    height: 255,
+    // height: 255,
     display: 'block',
     maxWidth: 400,
     overflow: 'hidden',
-    width: '100%',
+    width: 'auto',
+    height: 'auto',
     float: 'right',
+    cursor:'pointer'
   },
 }));
 
@@ -66,14 +68,14 @@ const RegistManual = (props) => {
         </CardHeader>
         <h4>배너 등록 - 관리</h4>
         <Stepper orientation="vertical">
-          <Step active="true">
+          <Step active >
             <StepLabel className={stepperStyles.root}>대쉬보드에서 계약하러 가기 알림창을 클릭합니다.</StepLabel>
             {/* <StepContent>
               <img src={m1_1} alt="" className={StepperClasses.img} onClick={() => handleOpen(m1_1)}/>
             </StepContent> */}
 
           </Step>
-          <Step active="true">
+          <Step active>
             <StepLabel>
               {'먼저 자신의'}
               <strong style={strongStyle}>배너 관리</strong>
@@ -83,7 +85,7 @@ const RegistManual = (props) => {
               <img src={m1_1} alt="" className={StepperClasses.img} onClick={() => handleOpen(m1_1)} />
             </StepContent>
           </Step>
-          <Step active="true">
+          <Step active>
             <StepLabel>
               {'화면 오른쪽에 있는'}
               <br />
@@ -101,7 +103,7 @@ const RegistManual = (props) => {
               <img src={m1_2} alt="" className={StepperClasses.img} onClick={() => handleOpen(m1_2)} />
             </StepContent>
           </Step>
-          <Step active="true">
+          <Step active>
             <StepLabel>
               {'등록한 배너는 OnAD 플랫폼의 관리자 승인을 받아야 합니다.'}
               <br />
@@ -114,7 +116,7 @@ const RegistManual = (props) => {
               <img src={m1_3} alt="" className={StepperClasses.img} onClick={() => handleOpen(m1_3)} />
             </StepContent>
           </Step>
-          <Step active="true">
+          <Step active>
             <StepLabel>
               {'관리자 승인이 거절된 배너는'}
               <strong style={strongStyle}>X 배너삭제</strong>
@@ -124,7 +126,7 @@ const RegistManual = (props) => {
               <img src={m1_4} alt="" className={StepperClasses.img} onClick={() => handleOpen(m1_4)} />
             </StepContent>
           </Step>
-          <Step active="true">
+          <Step active>
             <StepLabel>
               {'관리자 승인이 완료된 배너는'}
               <strong style={strongStyle}>광고시작</strong>
@@ -136,7 +138,7 @@ const RegistManual = (props) => {
               <img src={m1_5} alt="" className={StepperClasses.img} onClick={() => handleOpen(m1_5)} />
             </StepContent>
           </Step>
-          <Step active="true">
+          <Step active>
             <StepLabel>
               {'이제 광고 송출이 가능합니다.'}
             </StepLabel>

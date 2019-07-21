@@ -3,6 +3,7 @@ import Dashboard from '@material-ui/icons/Dashboard';
 import Person from '@material-ui/icons/Person';
 import AttachMoney from '@material-ui/icons/AttachMoney';
 import BrandingWatermark from '@material-ui/icons/BrandingWatermark';
+import { Reorder } from '@material-ui/icons';
 
 // 크리에이터 라우터
 import creatorUserProfile from './views/creator/UserProfile/UserProfile';
@@ -44,7 +45,7 @@ const dashboardRoutes = {
     {
       path: '/creatormanual',
       name: '사용 방법',
-      icon: Person,
+      icon: Reorder,
       component: creatorManual,
       layout: '/dashboard/creator',
     },
@@ -81,7 +82,7 @@ const dashboardRoutes = {
     {
       path: '/marketermanual',
       name: '사용 방법',
-      icon: Person,
+      icon: Reorder,
       component: MarketerManual, // 마케터 대시보드 컴포넌트로 수정
       layout: '/dashboard/marketer',
     },

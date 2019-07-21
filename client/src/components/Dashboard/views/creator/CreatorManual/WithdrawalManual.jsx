@@ -28,8 +28,10 @@ const stepperStyles = makeStyles(theme => ({
     display: 'block',
     maxWidth: 400,
     overflow: 'hidden',
-    width: '100%',
+    width: 'auto',
+    height: 'auto',
     float: 'right',
+    cursor:'pointer'
   },
 }));
 const WithdrawalManual = (props) => {
@@ -62,7 +64,7 @@ const WithdrawalManual = (props) => {
         </CardHeader>
 
         <Stepper orientation="vertical">
-          <Step active="true">
+          <Step active>
             <StepLabel>
               왼쪽 네비게이션에서
               {' '}
@@ -73,7 +75,7 @@ const WithdrawalManual = (props) => {
               <img src={c5_1} alt="" className={StepperClasses.img} onClick={() => handleOpen(c5_1)} />
             </StepContent>
           </Step>
-          <Step active="true">
+          <Step active>
             <StepLabel>
               <strong style={strongStyle}>계좌 입력하기</strong>
               알림창을 클릭하여 계좌정보를 입력합니다.
@@ -82,7 +84,7 @@ const WithdrawalManual = (props) => {
               <img src={c5_2} alt="" className={StepperClasses.img} onClick={() => handleOpen(c5_2)} />
             </StepContent>
           </Step>
-          <Step active="true">
+          <Step active>
             <StepLabel>
               화면 오른쪽에 있는
               {' '}
@@ -101,7 +103,7 @@ const WithdrawalManual = (props) => {
               <img src={c5_3} alt="" className={StepperClasses.img} onClick={() => handleOpen(c5_3)} />
             </StepContent>
           </Step>
-          <Step active="true">
+          <Step active>
             <StepLabel>
               출금신청 내역은 다음과 같이 확인 가능합니다.
               {' '}
@@ -120,7 +122,7 @@ const WithdrawalManual = (props) => {
               <img src={c5_4} alt="" className={StepperClasses.img} onClick={() => handleOpen(c5_4)} />
             </StepContent>
           </Step>
-          <Step active="true">
+          <Step active>
             <StepLabel>
               마지막으로 기간별 수익데이터를 확인 가능합니다.
               <br />
@@ -131,7 +133,7 @@ const WithdrawalManual = (props) => {
               <img src={c5_5} alt="" className={StepperClasses.img} onClick={() => handleOpen(c5_5)} />
             </StepContent>
           </Step>
-          <Step active="true">
+          <Step active>
             <StepLabel>
               이것으로 OnAD 플랫폼 이용안내를 마치겠습니다. 크리에이터님의 성장을 후원합니다.
             </StepLabel>

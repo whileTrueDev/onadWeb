@@ -33,7 +33,7 @@ const AdminConfirm = () => {
   }
 
   useEffect(() => {
-    axios.get(`${HOST}/admin/confirm`, {}).then((res) => {
+    axios.get('/api/admin/confirm', {}).then((res) => {
       if (res.data === 'wrong') {
         setCheck(res.data);
       } else if (res.data) {

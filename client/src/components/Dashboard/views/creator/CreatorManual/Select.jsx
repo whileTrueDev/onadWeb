@@ -28,7 +28,7 @@ const useButtonStyle = makeStyles({
     color: 'black',
     // height: 48,
     padding: '0 30px',
-    boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
+    boxShadow: '0 3px 3px 2px rgba(102, 102, 102, .3)',
     width: '100%',
     height: '100%',
     position: 'relative',
@@ -64,8 +64,9 @@ const Select = (props) => {
             justifyContent="space-around"
           >
             <Stepper>
-              <Step active="true">
-                <StepLabel />
+              <Step active>
+                <StepLabel>
+                </StepLabel>
                 <CardContent>
                   <Button
                     size="large"
@@ -82,8 +83,8 @@ const Select = (props) => {
                 </CardContent>
               </Step>
 
-              <Step active="true">
-                <StepLabel />
+              <Step active>
+                 <StepLabel></StepLabel>
                 <CardContent>
                   <Button
                     size="large"
@@ -99,8 +100,8 @@ const Select = (props) => {
                   </Button>
                 </CardContent>
               </Step>
-              <Step active="true">
-                <StepLabel />
+              <Step active>
+                 <StepLabel></StepLabel>
                 <CardContent>
                   <Button
                     align="center"
@@ -116,8 +117,8 @@ const Select = (props) => {
                   </Button>
                 </CardContent>
               </Step>
-              <Step active="true">
-                <StepLabel />
+              <Step active>
+                 <StepLabel></StepLabel>
                 <CardContent>
                   <Button
                     align="center"
@@ -133,8 +134,8 @@ const Select = (props) => {
                   </Button>
                 </CardContent>
               </Step>
-              <Step active="true">
-                <StepLabel />
+              <Step active>
+                 <StepLabel></StepLabel>
                 <CardContent>
                   <Button
                     align="center"
