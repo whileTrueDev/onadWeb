@@ -47,7 +47,6 @@ const ProductCategoriesDetail = (props) => {
       direction="right"
       timeout={{ enter: slideTime }}
       mountOnEnter
-      unmountOnExit
     >
       <div className={classes.images}>
 
