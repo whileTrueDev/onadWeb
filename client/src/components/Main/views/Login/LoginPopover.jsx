@@ -78,9 +78,6 @@ class LoginPopover extends Component {
     });
   }
 
-  handleRegiCreatorClick = () => {
-    // window.open('https://www.twitch.tv');
-  }
 
   render() {
     const {

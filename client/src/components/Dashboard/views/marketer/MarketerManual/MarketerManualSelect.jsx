@@ -2,12 +2,10 @@ import React from 'react';
 // core ../../../components
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
-import CardContent from '@material-ui/core/CardContent';
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
 // icons
-import BrandingWatermark from '@material-ui/icons/BrandingWatermark';
 // customized components
 import Card from '../../../components/Card/Card';
 import CardHeader from '../../../components/Card/CardHeader';
@@ -15,6 +13,7 @@ import CardHeader from '../../../components/Card/CardHeader';
 import dashboardStyle from '../../../assets/jss/onad/views/dashboardStyle';
 import clip from '../../../assets/img/clip.svg';
 import graph from '../../../assets/img/graph.svg';
+import broadcasting from '../../../assets/img/broadcasting.svg';
 
 const useButtonStyle = makeStyles({
   root: {
@@ -40,7 +39,7 @@ const sources = [
     label: '광고를 등록하고 싶어요',
   },
   {
-    icon: <BrandingWatermark />,
+    icon: broadcasting,
     label: '승인된 배너를 송출하고 싶어요',
   },
   {
@@ -77,11 +76,7 @@ const Select = (props) => {
                 }}
                 onClick={() => handleButton(index + 1)}
               >
-                {source.icon && typeof (source.icon) === 'string' ? (
-                  <img src={source.icon} alt="" />
-                ) : (
-                  <source.icon />
-                ) }
+                <img src={source.icon} alt="" />
                 <p>{source.label}</p>
               </Button>
             </StepLabel>

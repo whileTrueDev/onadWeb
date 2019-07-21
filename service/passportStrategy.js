@@ -91,11 +91,11 @@ passport.use( new LocalStrategy(
                         marketerPhoneNum: marketerData.marketerPhoneNum,
                     };
                     console.log("로그인이 완료되었습니다");
-                    return done(null, user);        
+                    return done(null, user);
                 }
                 else{
                     console.log('비밀번호가 일치하지 않습니다.');
-                    return done(null, {message : '비밀번호가 일치하지 않습니다.'});        
+                    return done(null, {message : '비밀번호가 일치하지 않습니다.'});
                 }
             }
             else{

@@ -59,7 +59,7 @@ export default withRoot((props) => {
 
   return (
     <div>
-      <AppAppBar isLogin={isLogin} logout={logout} />
+      <AppAppBar isLogin={isLogin} logout={logout} history={history} />
       <ProductHero
         text={textSource.heroSector}
         backgroundImage={textSource.heroSector.backImage}
