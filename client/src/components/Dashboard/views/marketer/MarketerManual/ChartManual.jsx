@@ -22,8 +22,10 @@ const stepperStyles = makeStyles(theme => ({
     display: 'block',
     maxWidth: 400,
     overflow: 'hidden',
-    width: '100%',
+    width: 'auto',
+    height: 'auto',
     float: 'right',
+    cursor:'pointer'
   },
 }));
 const ChartManual = (props) => {

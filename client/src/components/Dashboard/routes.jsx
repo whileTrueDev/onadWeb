@@ -1,9 +1,9 @@
 // 라우터 아이콘 @material-ui/icons
 import Dashboard from '@material-ui/icons/Dashboard';
 import Person from '@material-ui/icons/Person';
-import Search from '@material-ui/icons/Search';
 import AttachMoney from '@material-ui/icons/AttachMoney';
 import BrandingWatermark from '@material-ui/icons/BrandingWatermark';
+import Reorder from '@material-ui/icons/Reorder';
 
 // 크리에이터 라우터
 import creatorUserProfile from './views/creator/UserProfile/UserProfile';
@@ -36,17 +36,16 @@ const dashboardRoutes = {
       layout: '/dashboard/creator',
     },
     {
-      path: '/manual',
-      name: '사용 방법',
-      icon: Search,
-      component: creatorManual,
-      layout: '/dashboard/creator',
-    },
-    {
       path: '/user',
       name: '계정 관리',
       icon: Person,
       component: creatorUserProfile,
+    },
+    {
+      path: '/manual',
+      name: '사용 방법',
+      icon: Reorder,
+      component: creatorManual,
       layout: '/dashboard/creator',
     },
   ],
@@ -73,17 +72,16 @@ const dashboardRoutes = {
       layout: '/dashboard/marketer',
     },
     {
-      path: '/manual',
-      name: '사용 방법',
-      icon: Search,
-      component: MarketerManual, // 마케터 대시보드 컴포넌트로 수정
-      layout: '/dashboard/marketer',
-    },
-    {
       path: '/user',
       name: '계정 관리',
       icon: Person,
       component: marketerUserProfile, // 마케터 대시보드 컴포넌트로 수정
+    },
+    {
+      path: '/manual',
+      name: '사용 방법',
+      icon: Reorder,
+      component: MarketerManual, // 마케터 대시보드 컴포넌트로 수정
       layout: '/dashboard/marketer',
     },
   ],

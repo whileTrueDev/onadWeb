@@ -19,12 +19,12 @@ const getModalStyle = () => {
 const ModalStyles = makeStyles(theme => ({
   paper: {
     position: 'absolute',
-    width: 600,
-    height: 600,
+    width: 'auto',
+    height: 'auto',
     backgroundColor: theme.palette.background.paper,
     boxShadow: theme.shadows[5],
-    // padding: theme.spacing(2, 4, 4),
     outline: 'none',
+    border:'0'
   },
 }));
 

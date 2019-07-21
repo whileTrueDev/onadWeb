@@ -4,7 +4,6 @@ import {
   withStyles,
   ButtonBase,
   Typography,
-
 } from '@material-ui/core';
 
 const styles = theme => ({
@@ -82,12 +81,12 @@ const styles = theme => ({
 
 const images = [
   {
-    url: '/pngs/Personal.jpg',
+    url: '/pngs/xsplit.jpg',
     title: 'XSplit Broadcaster',
     width: '50%',
   },
   {
-    url: '/pngs/group.jpg',
+    url: '/pngs/obs.png',
     title: 'OBS Studio',
     width: '50%',
   },
@@ -105,10 +104,7 @@ const ProgramSelector = (props) => {
     }
     props.handleNext();
   };
-  // const strongStyle = {
-  //   fontSize: '23px',
-  //   backgroundColor: '#FFFD95',
-  // };
+
   return (
     <div className={classes.root}>
       {images.map(image => (

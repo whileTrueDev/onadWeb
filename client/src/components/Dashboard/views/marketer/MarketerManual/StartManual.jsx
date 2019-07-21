@@ -24,8 +24,10 @@ const stepperStyles = makeStyles(theme => ({
     display: 'block',
     maxWidth: 400,
     overflow: 'hidden',
-    width: '100%',
+    width: 'auto',
+    height: 'auto',
     float: 'right',
+    cursor:'pointer'
   },
 }));
 const StartManual = (props) => {
@@ -60,15 +62,13 @@ const StartManual = (props) => {
         <h4>배너 송출하기</h4>
 
         <Stepper orientation="vertical">
-          <Step active="true">
+          <Step active>
             <StepLabel>
               {'마케터님의 대시보드로 이동합니다.'}
             </StepLabel>
-            {/* <StepContent>
-              <img src={m2_1} alt="" className={StepperClasses.img} onClick={() => handleOpen(m2_1)}/>
-            </StepContent> */}
+          
           </Step>
-          <Step active="true">
+          <Step active>
             <StepLabel>
               {'승인된 배너 이미지를 클릭하여'}
               <strong style={strongStyle}>해당 광고시작</strong>
@@ -80,7 +80,7 @@ const StartManual = (props) => {
               <img src={m2_1} alt="" className={StepperClasses.img} onClick={() => handleOpen(m2_1)} />
             </StepContent>
           </Step>
-          <Step active="true">
+          <Step active>
             <StepLabel>
               <strong style={strongStyle}>현재 나의 상태</strong>
               {'에서 승인된 배너들을 일괄 제어할 수 있습니다.'}
@@ -95,7 +95,7 @@ const StartManual = (props) => {
               <img src={m2_2} alt="" className={StepperClasses.img} onClick={() => handleOpen(m2_2)} />
             </StepContent>
           </Step>
-          <Step active="true">
+          <Step active>
             <StepLabel>
               {'화면 하단에서 매칭된 크리에이터들을 조회 가능하며'}
               <br />
@@ -105,15 +105,13 @@ const StartManual = (props) => {
               <img src={m2_3} alt="" className={StepperClasses.img} onClick={() => handleOpen(m2_3)} />
             </StepContent>
           </Step>
-          <Step active="true">
+          <Step active>
             <StepLabel>
               {'매칭된 크리에이터들이 방송 내에서 배너를 띄우면 마케터님의 광고가 송출되며'}
               <br />
               {'광고캐시가 차감됩니다.'}
             </StepLabel>
-            {/* <StepContent>
-              <img src={m2_1} alt="" className={StepperClasses.img} onClick={() => handleOpen(m2_1)}/>
-            </StepContent> */}
+           
           </Step>
         </Stepper>
         <CardFooter>
