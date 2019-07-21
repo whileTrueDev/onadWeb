@@ -30,7 +30,8 @@ router.get( '/check', function(req, res) {
       }else{
         res.send({
           error : false,
-          state : 0
+          state : 0,
+          userType : 'marketer'
         })
       }
     })
@@ -45,6 +46,7 @@ router.get( '/check', function(req, res) {
       //creator 일 경우
       error : false,
       state : 0,
+      userType : 'creator'
     })
   }
   else {

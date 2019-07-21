@@ -134,7 +134,7 @@ LeftCreator.defaultProps = {
   growTime: 1000,
   slideTime: 1000,
   linkTo: '/dashboard/marketer/main',
-  isLogin: 0,
+  isLogin: false,
 };
 
 

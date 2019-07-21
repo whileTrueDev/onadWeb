@@ -105,7 +105,7 @@ function Introduce(props) {
 }
 
 Introduce.propTypes = {
-  userType: PropTypes.bool,
+  userType: PropTypes.number,
   textSource: PropTypes.object.isRequired,
 };
 
