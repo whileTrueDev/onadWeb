@@ -56,6 +56,7 @@ app.get('/', function(req, res, next) {
   res.sendStatus(200);
 })
 
+
 app.use('/mailer', mailerRouter); 
 app.use('/api', apiRouter)
 // catch 404 and forward to error handler
