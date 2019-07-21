@@ -36,17 +36,17 @@ const dashboardRoutes = {
       layout: '/dashboard/creator',
     },
     {
-      path: '/user',
-      name: '계정 관리',
-      icon: Person,
-      component: creatorUserProfile,
-    },
-    {
       path: '/manual',
       name: '사용 방법',
       icon: Reorder,
       component: creatorManual,
       layout: '/dashboard/creator',
+    },
+    {
+      path: '/user',
+      name: '계정 관리',
+      icon: Person,
+      component: creatorUserProfile,
     },
   ],
   marketer: [
@@ -72,16 +72,17 @@ const dashboardRoutes = {
       layout: '/dashboard/marketer',
     },
     {
-      path: '/user',
-      name: '계정 관리',
-      icon: Person,
-      component: marketerUserProfile, // 마케터 대시보드 컴포넌트로 수정
-    },
-    {
       path: '/manual',
       name: '사용 방법',
       icon: Reorder,
       component: MarketerManual, // 마케터 대시보드 컴포넌트로 수정
+      layout: '/dashboard/marketer',
+    },
+    {
+      path: '/user',
+      name: '계정 관리',
+      icon: Person,
+      component: marketerUserProfile, // 마케터 대시보드 컴포넌트로 수정
       layout: '/dashboard/marketer',
     },
   ],

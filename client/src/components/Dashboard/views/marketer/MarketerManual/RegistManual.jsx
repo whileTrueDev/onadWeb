@@ -12,6 +12,8 @@ import CardHeader from '../../../components/Card/CardHeader';
 import CardFooter from '../../../components/Card/CardFooter';
 // material-ui
 import ImgModal from './ImgModal';
+import dashboardStyle from '../../../assets/jss/onad/views/dashboardStyle';
+
 // images
 import m1_1 from '../../../assets/img/MarketerManualImage/1_1.PNG';
 import m1_2 from '../../../assets/img/MarketerManualImage/1_2.PNG';
@@ -32,7 +34,7 @@ const stepperStyles = makeStyles(theme => ({
     width: 'auto',
     height: 'auto',
     float: 'right',
-    cursor:'pointer'
+    cursor: 'pointer',
   },
 }));
 
@@ -59,19 +61,21 @@ const RegistManual = (props) => {
     <GridContainer>
       <Card>
         <CardHeader color="blueGray" stats>
-          <h6 className={classes.cardTitleWhite}>
-            {'광고배너 등록 - 관리하기'}
-          </h6>
+          <h4 className={classes.cardTitleWhite}>
+            광고배너 등록
+          </h4>
           <p className={classes.cardCategoryWhite}>
             {'크리에이터의 방송에 송출하고자 하는 광고를 등록하고 관리할 수 있습니다.'}
           </p>
         </CardHeader>
-        <h4>배너 등록 - 관리</h4>
         <Stepper orientation="vertical">
-          <Step active >
+          <Step active>
             <StepLabel className={stepperStyles.root}>대쉬보드에서 계약하러 가기 알림창을 클릭합니다.</StepLabel>
             {/* <StepContent>
-              <img src={m1_1} alt="" className={StepperClasses.img} onClick={() => handleOpen(m1_1)}/>
+              <img src={m1_1}
+              alt=""
+              className={StepperClasses.img}
+               onClick={() => handleOpen(m1_1)}/>
             </StepContent> */}
 
           </Step>
@@ -159,4 +163,4 @@ const RegistManual = (props) => {
   );
 };
 
-export default withStyles(stepperStyles)(RegistManual);
+export default withStyles(dashboardStyle)(RegistManual);

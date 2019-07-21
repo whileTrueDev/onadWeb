@@ -19,6 +19,7 @@ function Header(props) {
   const {
     routes, classes, color, handleDrawerToggle, history,
   } = props;
+
   function makeBrand() {
     let routeName;
     routes.forEach((route) => {

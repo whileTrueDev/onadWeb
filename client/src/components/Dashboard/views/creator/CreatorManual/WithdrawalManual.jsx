@@ -31,7 +31,7 @@ const stepperStyles = makeStyles(theme => ({
     width: 'auto',
     height: 'auto',
     float: 'right',
-    cursor:'pointer'
+    cursor: 'pointer',
   },
 }));
 const WithdrawalManual = (props) => {
@@ -57,9 +57,9 @@ const WithdrawalManual = (props) => {
     <GridContainer>
       <Card>
         <CardHeader color="blueGray" stats>
-          <h6 className={classes.cardTitleWhite}>
+          <h4 className={classes.cardTitleWhite}>
             계좌등록 및 출금하기
-          </h6>
+          </h4>
           <p className={classes.cardCategoryWhite}>언제나 짜릿하고 늘 새로운 출금 시간입니다.</p>
         </CardHeader>
 

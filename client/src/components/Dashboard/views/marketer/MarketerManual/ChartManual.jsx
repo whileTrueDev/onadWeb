@@ -12,6 +12,7 @@ import CardFooter from '../../../components/Card/CardFooter';
 import ImgModal from './ImgModal';
 import m3_1 from '../../../assets/img/MarketerManualImage/3_1.PNG';
 import m3_3 from '../../../assets/img/MarketerManualImage/3_3.PNG';
+import dashboardStyle from '../../../assets/jss/onad/views/dashboardStyle';
 
 const stepperStyles = makeStyles(theme => ({
   root: {
@@ -23,9 +24,8 @@ const stepperStyles = makeStyles(theme => ({
     maxWidth: 400,
     overflow: 'hidden',
     width: 'auto',
-    height: 'auto',
     float: 'right',
-    cursor:'pointer'
+    cursor: 'pointer',
   },
 }));
 const ChartManual = (props) => {
@@ -50,15 +50,13 @@ const ChartManual = (props) => {
     <GridContainer>
       <Card>
         <CardHeader color="blueGray" stats>
-          <h6 className={classes.cardTitleWhite}>
-            광고 성과차트를 볼 수 있습니다.
-          </h6>
+          <h4 className={classes.cardTitleWhite}>
+            광고 성과차트
+          </h4>
           <p className={classes.cardCategoryWhite}>
-            크리에이터가 배너 송출 시 마케터님이 보유하신 광고캐시가 차감되며 광고집행에 대한 성과차트를 보여드립니다.
+            광고집행에 대한 성과차트를 볼 수 있습니다.
           </p>
         </CardHeader>
-
-        <h4>광고 송출 후엔 어떻게?</h4>
 
         <Stepper orientation="vertical">
           <Step active>
@@ -117,4 +115,4 @@ const ChartManual = (props) => {
   );
 };
 
-export default withStyles(stepperStyles)(ChartManual);
+export default withStyles(dashboardStyle)(ChartManual);

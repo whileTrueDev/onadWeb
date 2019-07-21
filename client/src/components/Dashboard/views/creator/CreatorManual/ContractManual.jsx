@@ -29,7 +29,7 @@ const stepperStyles = makeStyles(theme => ({
     width: '100%',
     height: 'auto',
     float: 'right',
-    cursor:'pointer'
+    cursor: 'pointer',
   },
 }));
 
@@ -58,9 +58,9 @@ const ContractManual = (props) => {
     <GridContainer>
       <Card>
         <CardHeader color="blueGray" stats>
-          <h6 className={classes.cardTitleWhite}>
+          <h4 className={classes.cardTitleWhite}>
             {'OnAD 플랫폼과 계약하고 싶어요.'}
-          </h6>
+          </h4>
           <p className={classes.cardCategoryWhite}>
             OnAD 플랫폼과 계약할 수 있습니다. 서비스 이용약관과 개인정보 수집에 동의 해주세요.
           </p>
@@ -70,7 +70,12 @@ const ContractManual = (props) => {
           <Step active>
             <StepLabel>대쉬보드에서 계약하러 가기 알림창을 클릭합니다.</StepLabel>
             <StepContent>
-              <img src={c1_1} alt="" className={StepperClasses.img} onClick={() => handleOpen(c1_1)} />
+              <img
+                src={c1_1}
+                alt=""
+                className={StepperClasses.img}
+                onClick={() => handleOpen(c1_1)}
+              />
             </StepContent>
             {/* <Modal
               aria-labelledby="simple-modal-title"
@@ -138,9 +143,9 @@ const ContractManual = (props) => {
       </Card>
 
       <ImgModal
-      openModal={open} 
-      handleClose={handleClose} 
-      ImgSrc={selectedImg}
+        openModal={open}
+        handleClose={handleClose}
+        ImgSrc={selectedImg}
       />
     </GridContainer>
   );

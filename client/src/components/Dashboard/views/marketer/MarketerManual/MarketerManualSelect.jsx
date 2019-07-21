@@ -23,7 +23,7 @@ const useButtonStyle = makeStyles({
     border: 0,
     color: 'black',
     padding: '0 30px',
-    boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
+    boxShadow: '0 3px 3px 2px rgba(102, 102, 102, .3)',
     width: '100%',
     height: '100%',
     position: 'relative',
@@ -33,6 +33,21 @@ const useButtonStyle = makeStyles({
     flexDirection: 'column',
   },
 });
+
+const sources = [
+  {
+    icon: clip,
+    label: '광고를 등록하고 싶어요',
+  },
+  {
+    icon: <BrandingWatermark />,
+    label: '승인된 배너를 송출하고 싶어요',
+  },
+  {
+    icon: graph,
+    label: '광고 성과차트를 보고싶어요',
+  },
+];
 
 const Select = (props) => {
   const { classes, activeStep, handleButton } = props;
@@ -45,70 +60,36 @@ const Select = (props) => {
         <h4 className={classes.cardTitleWhite}>
           이용 안내
         </h4>
-        <p className={classes.cardCategoryWhite}>순서대로 진행해주세요.</p>
+        <p className={classes.cardCategoryWhite}>처음이시라면, 순서대로 진행해주세요.</p>
       </CardHeader>
 
       <Stepper orientation="vertical" activeStep={doneIndex}>
-        <Step>
-          <StepLabel />
-          <CardContent>
-            <Button
-              size="large"
-              variant="outlined"
-              classes={{
-                root: buttonClasses.root, // class name, e.g. `classes-nesting-root-x`
-                label: buttonClasses.label, // class name, e.g. `classes-nesting-label-x`
-              }}
-              onClick={() => handleButton(1)}
-            >
-              <img src={clip} alt="" />
+        {sources.map((source, index) => (
+          <Step>
+            <StepLabel>
 
-              <p>광고를 등록하고 싶어요</p>
-            </Button>
-          </CardContent>
-        </Step>
-
-        <Step>
-          <StepLabel />
-          <CardContent>
-            <Button
-              size="large"
-              variant="outlined"
-              classes={{
-                root: buttonClasses.root, // class name, e.g. `classes-nesting-root-x`
-                label: buttonClasses.label, // class name, e.g. `classes-nesting-label-x`
-              }}
-              onClick={() => handleButton(2)}
-            >
-
-              <BrandingWatermark />
-
-              <p>승인된 배너를 송출하고 싶어요.</p>
-            </Button>
-          </CardContent>
-        </Step>
-
-        <Step>
-          <StepLabel />
-          <CardContent>
-            <Button
-              align="center"
-              variant="outlined"
-              classes={{
-                root: buttonClasses.root, // class name, e.g. `classes-nesting-root-x`
-                label: buttonClasses.label, // class name, e.g. `classes-nesting-label-x`
-              }}
-              onClick={() => handleButton(3)}
-            >
-
-              <img src={graph} alt="" />
-
-              <p>광고 성과차트를 보고싶어요.</p>
-            </Button>
-          </CardContent>
-        </Step>
+              <Button
+                size="large"
+                variant="outlined"
+                classes={{
+                  root: buttonClasses.root, // class name, e.g. `classes-nesting-root-x`
+                  label: buttonClasses.label, // class name, e.g. `classes-nesting-label-x`
+                }}
+                onClick={() => handleButton(index + 1)}
+              >
+                {source.icon && typeof (source.icon) === 'string' ? (
+                  <img src={source.icon} alt="" />
+                ) : (
+                  <source.icon />
+                ) }
+                <p>{source.label}</p>
+              </Button>
+            </StepLabel>
+          </Step>
+        ))}
 
       </Stepper>
+
     </Card>
   );
 };

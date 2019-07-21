@@ -1,34 +1,31 @@
 import React, { useState } from 'react';
 // core ../../../components
-import { makeStyles, withStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
+import ArrowUpward from '@material-ui/icons/ArrowUpward';
+
 // material-ui
 import GridContainer from '../../../components/Grid/GridContainer';
 import GridItem from '../../../components/Grid/GridItem';
+import Fab from '../../../components/Fab/Fab';
 
 import Select from './MarketerManualSelect';
 import StartManual from './StartManual';
 import RegistManual from './RegistManual';
 import ChartManual from './ChartManual';
 
-const ButtonStyle = makeStyles({
-  root: {
-    background: 'white',
-    borderRadius: 3,
-    border: 0,
-    color: 'black',
-    padding: '0 30px',
-    boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
-    width: '300px',
-    height: '100px',
+const useStyles = makeStyles(theme => ({
+  upwardButton: {
+    right: 25,
+    bottom: 20,
+    position: 'fixed',
+    margin: theme.spacing(1),
+    color: '#fff',
   },
-  label: {
-    textTransform: 'capitalize',
-    flexDirection: 'column',
-  },
-});
+}));
 
-// const classes = ButtonStyle();
 const MarketerManual = (props) => {
+  const { pannelRef } = props;
+  const classes = useStyles();
   const [manual, setManual] = useState(0);
 
   const handleButton = (num) => {
@@ -50,6 +47,9 @@ const MarketerManual = (props) => {
       selectedComponent = null;
   }
 
+  function handleUpward() {
+    pannelRef.current.scrollTop = 50;
+  }
 
   return (
     <GridContainer>
@@ -60,8 +60,11 @@ const MarketerManual = (props) => {
       <GridItem xs={12} sm={6} md={9}>
         {selectedComponent}
       </GridItem>
+      <Fab color="info" size="medium" className={classes.upwardButton} onClick={handleUpward}>
+        <ArrowUpward />
+      </Fab>
     </GridContainer>
   );
 };
 
-export default withStyles(ButtonStyle)(MarketerManual);
+export default MarketerManual;

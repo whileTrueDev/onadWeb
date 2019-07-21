@@ -27,7 +27,7 @@ const stepperStyles = makeStyles(theme => ({
     width: 'auto',
     height: 'auto',
     float: 'right',
-    cursor:'pointer'
+    cursor: 'pointer',
   },
 }));
 const SetBanner = (props) => {
@@ -53,9 +53,9 @@ const SetBanner = (props) => {
     <GridContainer>
       <Card>
         <CardHeader color="blueGray" stats>
-          <h6 className={classes.cardTitleWhite}>
+          <h4 className={classes.cardTitleWhite}>
             광고 배너를 송출하고 싶어요.
-          </h6>
+          </h4>
           <p className={classes.cardCategoryWhite}>계약을 완료하면 크리에이터님 고유의 광고 URL을 부여합니다.</p>
         </CardHeader>
 

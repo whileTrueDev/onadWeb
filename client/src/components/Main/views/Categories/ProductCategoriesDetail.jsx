@@ -1,7 +1,7 @@
 import React from 'react';
+import shortid from 'shortid';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import Grow from '@material-ui/core/Grow';
 import Slide from '@material-ui/core/Slide';
 import useScrollTrigger from '@material-ui/core/useScrollTrigger';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
@@ -53,6 +53,7 @@ const ProductCategoriesDetail = (props) => {
 
         {images.map(image => (
           <ProductCategoriesImageButton
+            key={shortid.generate()}
             image={image}
             matches={matches}
           />

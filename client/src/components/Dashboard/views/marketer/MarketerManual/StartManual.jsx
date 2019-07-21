@@ -14,6 +14,7 @@ import ImgModal from './ImgModal';
 import m2_1 from '../../../assets/img/MarketerManualImage/2_1.PNG';
 import m2_2 from '../../../assets/img/MarketerManualImage/2_2.PNG';
 import m2_3 from '../../../assets/img/MarketerManualImage/2_3.PNG';
+import dashboardStyle from '../../../assets/jss/onad/views/dashboardStyle';
 
 const stepperStyles = makeStyles(theme => ({
   root: {
@@ -27,7 +28,7 @@ const stepperStyles = makeStyles(theme => ({
     width: 'auto',
     height: 'auto',
     float: 'right',
-    cursor:'pointer'
+    cursor: 'pointer',
   },
 }));
 const StartManual = (props) => {
@@ -53,20 +54,17 @@ const StartManual = (props) => {
     <GridContainer>
       <Card>
         <CardHeader color="blueGray" stats>
-          <h6 className={classes.cardTitleWhite}>
-            승인된 배너 광고를 송출하고 싶어요
-          </h6>
-          <p className={classes.cardCategoryWhite}>관리자의 승인된 배너광고들을 대시보드에서 송출 및 제어가 가능합니다.</p>
+          <h4 className={classes.cardTitleWhite}>
+            배너 광고 송출
+          </h4>
+          <p className={classes.cardCategoryWhite}>승인된 배너광고들을 대시보드에서 송출 및 제어가 가능합니다.</p>
         </CardHeader>
-
-        <h4>배너 송출하기</h4>
-
         <Stepper orientation="vertical">
           <Step active>
             <StepLabel>
               {'마케터님의 대시보드로 이동합니다.'}
             </StepLabel>
-          
+
           </Step>
           <Step active>
             <StepLabel>
@@ -111,7 +109,7 @@ const StartManual = (props) => {
               <br />
               {'광고캐시가 차감됩니다.'}
             </StepLabel>
-           
+
           </Step>
         </Stepper>
         <CardFooter>
@@ -127,4 +125,4 @@ const StartManual = (props) => {
   );
 };
 
-export default withStyles(stepperStyles)(StartManual);
+export default withStyles(dashboardStyle)(StartManual);
