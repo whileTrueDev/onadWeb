@@ -68,7 +68,7 @@ const styles = theme => ({
 
 function AppAppBar(props) {
   const {
-    classes, history, isLogin, logout,
+    classes, history, isLogin, logout, unuse,
   } = props;
 
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
@@ -195,8 +195,12 @@ function AppAppBar(props) {
             >
               {'이용 안내'}
             </Button>
-            <LogButton history={history} logout={logout} />
-            <RegButton history={history} logout={logout} />
+            {unuse
+            && <LogButton history={history} logout={logout} />
+            }
+            {unuse
+            && <RegButton history={history} logout={logout} />
+            }
           </div>
           <div className={classes.rightMobile}>
             <IconButton aria-haspopup="true" onClick={handleMobileMenuOpen} color="inherit">
@@ -213,10 +217,12 @@ function AppAppBar(props) {
 
 AppAppBar.propTypes = {
   classes: PropTypes.object,
+  unuse: PropTypes.bool,
 };
 
 AppAppBar.defaultProps = {
   classes: {},
+  unuse: true,
 };
 
 

@@ -11,7 +11,7 @@
         "reactHostName": "http://localhost:3001"
     },
     "production": {
-        "apiHostName": "http://52.79.211.82:3000",
-        "reactHostName": "http://52.79.211.82:3001"
+        "apiHostName": "https://api.onad.io",
+        "reactHostName": "https://onad.io"
     }
 }

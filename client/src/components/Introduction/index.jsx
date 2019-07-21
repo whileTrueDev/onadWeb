@@ -8,26 +8,27 @@ import Introduce from './Introduce';
 import textSource from './source/textSource';
 import HOST from '../../config';
 
-
 const useLoginValue = (location) => {
-  const [isLogin, setisLogin] = useState(null);
+  const [isLogin, setisLogin] = useState(false);
+  const [userType, setUserType] = useState('');
 
   useEffect(() => {
     axios.get(`${HOST}/api/login/check`)
       .then((res) => {
-        if (res.data) {
-          const { userType } = res.data.user;
-          setisLogin(userType);
+        if (!res.data.error) {
+          setisLogin(true);
+          setUserType(res.data.userType);
         } else {
-          console.log('로그인이 되어있지 않습니다.');
+          setisLogin(false);
         }
       })
       .catch((error) => {
         console.log(error);
+        setisLogin(false);
       });
   }, [location]);
 
-  return { isLogin };
+  return { isLogin, userType };
 };
 
 const MARKETER_TAB_NUMBER = 0;
@@ -37,7 +38,7 @@ const CREATOR_TAB_NUMBER = 1;
 export default withRoot((props) => {
   const { heroSector } = textSource;
   const { location } = props;
-  const { isLogin } = useLoginValue(location);
+  const { isLogin, userType } = useLoginValue(location);
 
   // if Link here, set the scroll to top of the page
   React.useEffect(() => {
@@ -46,7 +47,7 @@ export default withRoot((props) => {
 
   return (
     <div>
-      <AppAppBar isLogin={isLogin} />
+      <AppAppBar isLogin={isLogin} unuse={false} />
       <ProductHero
         text={heroSector}
         backgroundImage={heroSector.backImage}
@@ -55,7 +56,7 @@ export default withRoot((props) => {
 
       <Introduce
         textSource={textSource}
-        userType={isLogin === 'marketer' ? MARKETER_TAB_NUMBER : CREATOR_TAB_NUMBER}
+        userType={userType === 'marketer' ? MARKETER_TAB_NUMBER : CREATOR_TAB_NUMBER}
       />
       {/* footer layout ->/ */}
       <AppFooter />

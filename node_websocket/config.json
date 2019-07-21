@@ -12,8 +12,8 @@
         "socketHostName": "http://localhost:3002"
     },
     "production": {
-        "apiHostName": "http://52.79.211.82:3000",
-        "reactHostName": "http://52.79.211.82:3001",
-        "socketHostName": "http://52.79.211.82:3002"
+        "apiHostName": "https://api.onad.io",
+        "reactHostName": "http://onad.io",
+        "socketHostName": "http://banner.onad.io"
     }
 }
