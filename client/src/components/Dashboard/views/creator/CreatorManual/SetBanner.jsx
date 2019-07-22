@@ -24,8 +24,10 @@ const stepperStyles = makeStyles(theme => ({
     display: 'block',
     maxWidth: 400,
     overflow: 'hidden',
-    width: '100%',
+    width: 'auto',
+    height: 'auto',
     float: 'right',
+    cursor: 'pointer',
   },
 }));
 const SetBanner = (props) => {
@@ -51,16 +53,16 @@ const SetBanner = (props) => {
     <GridContainer>
       <Card>
         <CardHeader color="blueGray" stats>
-          <h6 className={classes.cardTitleWhite}>
+          <h4 className={classes.cardTitleWhite}>
             광고 배너를 송출하고 싶어요.
-          </h6>
+          </h4>
           <p className={classes.cardCategoryWhite}>계약을 완료하면 크리에이터님 고유의 광고 URL을 부여합니다.</p>
         </CardHeader>
 
         <h4 Style="padding-left:30px">광고 URL 복사하기</h4>
 
         <Stepper orientation="vertical">
-          <Step active="true">
+          <Step active>
             <StepLabel>
               화면 왼쪽 네비게이션의
               {' '}
@@ -72,7 +74,7 @@ const SetBanner = (props) => {
               <img src={c2_1} alt="" className={StepperClasses.img} onClick={() => handleOpen(c2_1)} />
             </StepContent>
           </Step>
-          <Step active="true">
+          <Step active>
             <StepLabel>
               배너 오버레이 URL
               <br />
@@ -90,7 +92,7 @@ const SetBanner = (props) => {
               <img src={c2_2} alt="" className={StepperClasses.img} onClick={() => handleOpen(c2_2)} />
             </StepContent>
           </Step>
-          <Step active="true">
+          <Step active>
             <StepLabel>
               주소 오른쪽의
               {' '}

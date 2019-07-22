@@ -210,7 +210,6 @@ function AppAppBar(props) {
         </Toolbar>
       </AppBar>
       {renderMobileMenu}
-      <div className={classes.placeholder} />
     </div>
   );
 }

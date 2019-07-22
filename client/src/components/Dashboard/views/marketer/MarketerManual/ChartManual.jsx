@@ -12,6 +12,7 @@ import CardFooter from '../../../components/Card/CardFooter';
 import ImgModal from './ImgModal';
 import m3_1 from '../../../assets/img/MarketerManualImage/3_1.PNG';
 import m3_3 from '../../../assets/img/MarketerManualImage/3_3.PNG';
+import dashboardStyle from '../../../assets/jss/onad/views/dashboardStyle';
 
 const stepperStyles = makeStyles(theme => ({
   root: {
@@ -22,8 +23,9 @@ const stepperStyles = makeStyles(theme => ({
     display: 'block',
     maxWidth: 400,
     overflow: 'hidden',
-    width: '100%',
+    width: 'auto',
     float: 'right',
+    cursor: 'pointer',
   },
 }));
 const ChartManual = (props) => {
@@ -48,18 +50,16 @@ const ChartManual = (props) => {
     <GridContainer>
       <Card>
         <CardHeader color="blueGray" stats>
-          <h6 className={classes.cardTitleWhite}>
-            광고 성과차트를 볼 수 있습니다.
-          </h6>
+          <h4 className={classes.cardTitleWhite}>
+            광고 성과차트
+          </h4>
           <p className={classes.cardCategoryWhite}>
-            크리에이터가 배너 송출 시 마케터님이 보유하신 광고캐시가 차감되며 광고집행에 대한 성과차트를 보여드립니다.
+            광고집행에 대한 성과차트를 볼 수 있습니다.
           </p>
         </CardHeader>
 
-        <h4>광고 송출 후엔 어떻게?</h4>
-
         <Stepper orientation="vertical">
-          <Step active="true">
+          <Step active>
             <StepLabel>
               매칭된 크리에어터들이 배너광고를 송출하면 10분마다 캐시가 차감됩니다.
             </StepLabel>
@@ -67,7 +67,7 @@ const ChartManual = (props) => {
               <img src={m3_1} alt="" className={StepperClasses.img} onClick={() => handleOpen(m3_1)} />
             </StepContent>
           </Step>
-          <Step active="true">
+          <Step active>
             <StepLabel>
               광고캐시가 소진될 때까지 크리에이터들은 마케터님의 광고를 송출합니다.
               <br />
@@ -83,7 +83,7 @@ const ChartManual = (props) => {
               <img src={m3_1} alt="" className={StepperClasses.img} onClick={() => handleOpen(m3_1)}/>
             </StepContent> */}
           </Step>
-          <Step active="true">
+          <Step active>
             <StepLabel>
               화면 하단에서 매칭된 크리에이터들의 방송을 통해
               <br />
@@ -93,7 +93,7 @@ const ChartManual = (props) => {
               <img src={m3_3} alt="" className={StepperClasses.img} onClick={() => handleOpen(m3_3)} />
             </StepContent>
           </Step>
-          <Step active="true">
+          <Step active>
             <StepLabel>
              마케터님의 광고를 OnAd를 통해 1인 미디어로 송출하세요!
             </StepLabel>
@@ -115,4 +115,4 @@ const ChartManual = (props) => {
   );
 };
 
-export default withStyles(stepperStyles)(ChartManual);
+export default withStyles(dashboardStyle)(ChartManual);

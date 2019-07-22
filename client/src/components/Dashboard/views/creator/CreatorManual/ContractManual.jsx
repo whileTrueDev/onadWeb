@@ -22,19 +22,20 @@ const stepperStyles = makeStyles(theme => ({
     float: 'right',
   },
   img: {
-    height: 255,
+    // height: 255,
     display: 'block',
     maxWidth: 400,
     overflow: 'hidden',
     width: '100%',
+    height: 'auto',
     float: 'right',
+    cursor: 'pointer',
   },
 }));
 
 const ContractManual = (props) => {
   const { classes } = props;
   const StepperClasses = stepperStyles();
-  // const strongClasses = strongStyles();
 
   const [open, setOpen] = useState(false);
   const [selectedImg, setSelectedImg] = useState(false);
@@ -57,19 +58,24 @@ const ContractManual = (props) => {
     <GridContainer>
       <Card>
         <CardHeader color="blueGray" stats>
-          <h6 className={classes.cardTitleWhite}>
+          <h4 className={classes.cardTitleWhite}>
             {'OnAD 플랫폼과 계약하고 싶어요.'}
-          </h6>
+          </h4>
           <p className={classes.cardCategoryWhite}>
             OnAD 플랫폼과 계약할 수 있습니다. 서비스 이용약관과 개인정보 수집에 동의 해주세요.
           </p>
         </CardHeader>
 
         <Stepper orientation="vertical">
-          <Step active="true">
+          <Step active>
             <StepLabel>대쉬보드에서 계약하러 가기 알림창을 클릭합니다.</StepLabel>
             <StepContent>
-              <img src={c1_1} alt="" className={StepperClasses.img} onClick={() => handleOpen(c1_1)} />
+              <img
+                src={c1_1}
+                alt=""
+                className={StepperClasses.img}
+                onClick={() => handleOpen(c1_1)}
+              />
             </StepContent>
             {/* <Modal
               aria-labelledby="simple-modal-title"
@@ -85,7 +91,7 @@ const ContractManual = (props) => {
 
           </Step>
 
-          <Step active="true">
+          <Step active>
             <StepLabel>
               {'계정 관리에 있는 서비스 이용 및 출금 계약하기의'}
               <br />
@@ -103,7 +109,7 @@ const ContractManual = (props) => {
               <img src={c1_2} alt="" className={StepperClasses.img} onClick={() => handleOpen(c1_2)} />
             </StepContent>
           </Step>
-          <Step active="true">
+          <Step active>
             <StepLabel>
               {'모두 동의가 되면 체크박스가 2개 생깁니다.'}
               <br />
@@ -112,7 +118,7 @@ const ContractManual = (props) => {
               {' 버튼을 클릭해 주세요.'}
             </StepLabel>
           </Step>
-          <Step active="true">
+          <Step active>
             <StepLabel>
               {'완료된 계약서는 계정관리 -> 크리에이터님의 정보란의 '}
               <br />
@@ -123,7 +129,7 @@ const ContractManual = (props) => {
               <img src={c1_3} alt="" className={StepperClasses.img} onClick={() => handleOpen(c1_3)} />
             </StepContent>
           </Step>
-          <Step active="true">
+          <Step active>
             <StepLabel>
               {'OnAD 플랫폼과 크리에이터님의 이용계약이 완료되었습니다.'}
               <br />

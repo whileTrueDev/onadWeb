@@ -22,7 +22,9 @@ const Admin = (props) => {
   }
 
   useEffect(() => {
-    axios.get(`${HOST}/admin`, {}).then((res) => {
+
+    axios.get('/api/admin', {}).then((res) => {
+
       if (res.data === 'wrong') {
         setCheck(res.data);
       } else if (res.data) {
@@ -52,7 +54,7 @@ const Admin = (props) => {
           </tr>
         </thead>
         <tbody>
-          {/* // 신청내역 불러와서 표로 띄워주는 부분 */}
+          {/* 신청내역 불러와서 표로 띄워주는 부분 */}
           {waiting.map(listValue => (
             <tr key={shortid.generate()}>
               <td>{listValue[0]}</td>

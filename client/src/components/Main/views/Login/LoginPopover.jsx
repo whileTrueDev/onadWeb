@@ -78,6 +78,7 @@ class LoginPopover extends Component {
     });
   }
 
+
   render() {
     const {
       classes, type, history, logout,
@@ -181,9 +182,25 @@ class LoginPopover extends Component {
               >
                 <div className={classes.popOverButton}>
                   <Button component={Link} to="/regist" className={classes.button}>마케터</Button>
-                  <Button href="https://www.twitch.tv" className={classes.button}>크리에이터</Button>
+                  <Button
+                    onClick={() => {
+                      alert('현재, Twitch 아이디로 로그인할 수 있어요! 확인 이후 로그인하세요!');
+                      this.handleDialogOpenClick('creator'); this.handleClose();
+                    }}
+                    className={classes.button}
+                  >
+                  크리에이터
+                  </Button>
                 </div>
               </Popover>
+
+              <LoginForm
+                open={loginValue === 'creator'}
+                isMarketer={false}
+                history={history}
+                handleClose={this.handleDialogClose}
+                logout={logout}
+              />
 
             </React.Fragment>
           )

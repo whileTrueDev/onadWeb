@@ -10,12 +10,12 @@ import logo from '../assets/img/main_logo.png';
 import Footer from '../components/Footer/Footer';
 import '../assets/css/onad.css';
 
-const MarketerRoutes = ({ history }) => (
+const MarketerRoutes = ({ history, pannelRef }) => (
   <Switch>
     {allRoutes.marketer.map(prop => (
       <Route
         path={prop.layout + prop.path}
-        component={() => <prop.component history={history} />}
+        component={() => <prop.component history={history} pannelRef={pannelRef} />}
         key={prop.name}
       />
     ))}
@@ -69,7 +69,7 @@ const MarketerDashboard = ({
         />
         <div className={classes.content}>
           <div className={classes.container}>
-            <MarketerRoutes history={history} />
+            <MarketerRoutes history={history} pannelRef={mainPanel} />
           </div>
         </div>
         <Footer />

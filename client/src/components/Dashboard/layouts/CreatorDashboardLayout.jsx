@@ -11,12 +11,12 @@ import Footer from '../components/Footer/Footer';
 import dashboardStyle from '../assets/jss/onad/layouts/dashboardStyle';
 import '../assets/css/onad.css';
 
-const CreatorRoutes = ({ history }) => (
+const CreatorRoutes = ({ history, pannelRef }) => (
   <Switch>
     {allRoutes.creator.map(prop => (
       <Route
         path={prop.layout + prop.path}
-        component={() => <prop.component history={history} />}
+        component={() => <prop.component history={history} pannelRef={pannelRef} />}
         key={prop.name}
       />
     ))}
@@ -65,7 +65,7 @@ const CreatorDashboard = (props) => {
         />
         <div className={classes.content}>
           <div className={classes.container}>
-            <CreatorRoutes history={history} />
+            <CreatorRoutes history={history} pannelRef={mainPanel} />
           </div>
         </div>
         <Footer />

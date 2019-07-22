@@ -22,12 +22,14 @@ const stepperStyles = makeStyles(theme => ({
     float: 'right',
   },
   img: {
-    height: 255,
+    // height: 255,
     display: 'block',
     maxWidth: 400,
     overflow: 'hidden',
-    width: '100%',
+    width: 'auto',
+    height: 'auto',
     float: 'right',
+    cursor: 'pointer',
   },
 }));
 const IncomeManual = (props) => {
@@ -55,9 +57,9 @@ const IncomeManual = (props) => {
     <GridContainer>
       <Card>
         <CardHeader color="blueGray" stats>
-          <h6 className={classes.cardTitleWhite}>
+          <h4 className={classes.cardTitleWhite}>
                   수익금이 쌓입니다.
-          </h6>
+          </h4>
           <p className={classes.cardCategoryWhite}>
             방송송출 프로그램에 고유 URL을 붙여넣기해서 광고를 송출하면 자동적으로 수익금이 쌓입니다.
           </p>
@@ -66,19 +68,19 @@ const IncomeManual = (props) => {
         <h4>수익금 확인하기</h4>
 
         <Stepper orientation="vertical">
-          <Step active="true">
+          <Step active>
             <StepLabel>
               자신의
               {' '}
               <strong style={strongStyle}>대시보드</strong>
-로 이동합니다.
+              로 이동합니다.
             </StepLabel>
             <StepContent>
               <img src={c1_1} alt="" className={StepperClasses.img} onClick={() => handleOpen(c1_1)} />
 
             </StepContent>
           </Step>
-          <Step active="true">
+          <Step active>
             <StepLabel>
               광고가 매칭되면 자동적으로 배너이미지가 뜹니다.
               {' '}
@@ -89,7 +91,7 @@ const IncomeManual = (props) => {
               <img src={c4_2} alt="" className={StepperClasses.img} onClick={() => handleOpen(c4_2)} />
             </StepContent>
           </Step>
-          <Step active="true">
+          <Step active>
             <StepLabel>
               광고가 매칭된 상태에서 방송하게 되면 대시보드의
               {' '}

@@ -19,6 +19,13 @@ const styles = theme => ({
   root: {
     width: '100%',
   },
+  container: {
+    marginTop: theme.spacing(10),
+    marginBottom: theme.spacing(5),
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
   button: {
     marginTop: theme.spacing(1),
     marginRight: theme.spacing(1),
@@ -144,40 +151,43 @@ const RegistStepper = (props) => {
 
   return (
     <div className={classes.root}>
-      <AppAppBar />
-      <Stepper activeStep={activeStep} orientation="vertical">
-        <Step key="0">
-          <StepLabel>사업자 유형 선택</StepLabel>
-          <StepContent>
-            <Usertype typeChange={typeChange} handleNext={handleNext} />
-          </StepContent>
-        </Step>
-        <Step key="1">
-          <StepLabel>개인정보 입력</StepLabel>
-          <StepContent>
-            <RegistForm
-              userType={userType}
-              handleNext={handleNext}
-              handleBack={handleBack}
-              handleUserInfo={handleUserInfo}
-              state={state}
-              dispatch={dispatch}
-            />
-          </StepContent>
-        </Step>
-        <Step key="2">
-          <StepLabel>정보 동의 및 계약</StepLabel>
-          <StepContent>
-            <PaperSheet
-              handleNext={handleNext}
-              handleReset={handleReset}
-              handleUserSubmit={handleUserSubmit}
-              loading={loading}
-              setLoading={setLoading}
-            />
-          </StepContent>
-        </Step>
-      </Stepper>
+      <AppAppBar unuse={false} />
+      <div className={classes.container}>
+
+        <Stepper activeStep={activeStep} orientation="vertical">
+          <Step key="0">
+            <StepLabel>사업자 유형 선택</StepLabel>
+            <StepContent>
+              <Usertype typeChange={typeChange} handleNext={handleNext} />
+            </StepContent>
+          </Step>
+          <Step key="1">
+            <StepLabel>개인정보 입력</StepLabel>
+            <StepContent>
+              <RegistForm
+                userType={userType}
+                handleNext={handleNext}
+                handleBack={handleBack}
+                handleUserInfo={handleUserInfo}
+                state={state}
+                dispatch={dispatch}
+              />
+            </StepContent>
+          </Step>
+          <Step key="2">
+            <StepLabel>정보 동의 및 계약</StepLabel>
+            <StepContent>
+              <PaperSheet
+                handleNext={handleNext}
+                handleReset={handleReset}
+                handleUserSubmit={handleUserSubmit}
+                loading={loading}
+                setLoading={setLoading}
+              />
+            </StepContent>
+          </Step>
+        </Stepper>
+      </div>
     </div>
   );
 };

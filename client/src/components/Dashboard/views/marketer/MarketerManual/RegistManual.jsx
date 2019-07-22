@@ -12,6 +12,8 @@ import CardHeader from '../../../components/Card/CardHeader';
 import CardFooter from '../../../components/Card/CardFooter';
 // material-ui
 import ImgModal from './ImgModal';
+import dashboardStyle from '../../../assets/jss/onad/views/dashboardStyle';
+
 // images
 import m1_1 from '../../../assets/img/MarketerManualImage/1_1.PNG';
 import m1_2 from '../../../assets/img/MarketerManualImage/1_2.PNG';
@@ -25,12 +27,14 @@ const stepperStyles = makeStyles(theme => ({
     fontSize: '15px',
   },
   img: {
-    height: 255,
+    // height: 255,
     display: 'block',
     maxWidth: 400,
     overflow: 'hidden',
-    width: '100%',
+    width: 'auto',
+    height: 'auto',
     float: 'right',
+    cursor: 'pointer',
   },
 }));
 
@@ -57,23 +61,25 @@ const RegistManual = (props) => {
     <GridContainer>
       <Card>
         <CardHeader color="blueGray" stats>
-          <h6 className={classes.cardTitleWhite}>
-            {'광고배너 등록 - 관리하기'}
-          </h6>
+          <h4 className={classes.cardTitleWhite}>
+            광고배너 등록
+          </h4>
           <p className={classes.cardCategoryWhite}>
             {'크리에이터의 방송에 송출하고자 하는 광고를 등록하고 관리할 수 있습니다.'}
           </p>
         </CardHeader>
-        <h4>배너 등록 - 관리</h4>
         <Stepper orientation="vertical">
-          <Step active="true">
+          <Step active>
             <StepLabel className={stepperStyles.root}>대쉬보드에서 계약하러 가기 알림창을 클릭합니다.</StepLabel>
             {/* <StepContent>
-              <img src={m1_1} alt="" className={StepperClasses.img} onClick={() => handleOpen(m1_1)}/>
+              <img src={m1_1}
+              alt=""
+              className={StepperClasses.img}
+               onClick={() => handleOpen(m1_1)}/>
             </StepContent> */}
 
           </Step>
-          <Step active="true">
+          <Step active>
             <StepLabel>
               {'먼저 자신의'}
               <strong style={strongStyle}>배너 관리</strong>
@@ -83,7 +89,7 @@ const RegistManual = (props) => {
               <img src={m1_1} alt="" className={StepperClasses.img} onClick={() => handleOpen(m1_1)} />
             </StepContent>
           </Step>
-          <Step active="true">
+          <Step active>
             <StepLabel>
               {'화면 오른쪽에 있는'}
               <br />
@@ -101,7 +107,7 @@ const RegistManual = (props) => {
               <img src={m1_2} alt="" className={StepperClasses.img} onClick={() => handleOpen(m1_2)} />
             </StepContent>
           </Step>
-          <Step active="true">
+          <Step active>
             <StepLabel>
               {'등록한 배너는 OnAD 플랫폼의 관리자 승인을 받아야 합니다.'}
               <br />
@@ -114,7 +120,7 @@ const RegistManual = (props) => {
               <img src={m1_3} alt="" className={StepperClasses.img} onClick={() => handleOpen(m1_3)} />
             </StepContent>
           </Step>
-          <Step active="true">
+          <Step active>
             <StepLabel>
               {'관리자 승인이 거절된 배너는'}
               <strong style={strongStyle}>X 배너삭제</strong>
@@ -124,7 +130,7 @@ const RegistManual = (props) => {
               <img src={m1_4} alt="" className={StepperClasses.img} onClick={() => handleOpen(m1_4)} />
             </StepContent>
           </Step>
-          <Step active="true">
+          <Step active>
             <StepLabel>
               {'관리자 승인이 완료된 배너는'}
               <strong style={strongStyle}>광고시작</strong>
@@ -136,7 +142,7 @@ const RegistManual = (props) => {
               <img src={m1_5} alt="" className={StepperClasses.img} onClick={() => handleOpen(m1_5)} />
             </StepContent>
           </Step>
-          <Step active="true">
+          <Step active>
             <StepLabel>
               {'이제 광고 송출이 가능합니다.'}
             </StepLabel>
@@ -157,4 +163,4 @@ const RegistManual = (props) => {
   );
 };
 
-export default withStyles(stepperStyles)(RegistManual);
+export default withStyles(dashboardStyle)(RegistManual);

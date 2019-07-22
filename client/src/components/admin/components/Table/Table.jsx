@@ -37,12 +37,23 @@ function CustomTable({ ...props }) {
           <TableHead className={classes[`${tableHeaderColor}TableHeader`]}>
             <TableRow>
               {tableHead.map((value, index) => (
-                <TableCell
-                  className={`${classes.tableCell} ${classes.tableHeadCell}`}
-                  key={index}
-                >
-                  {value}
-                </TableCell>
+               value.indexOf('data:image/') === -1 // 없는 경우
+               ? (
+                 <TableCell className={classes.tableCell} key={value}>
+                   {value === '완료됨'
+                     ? (
+                       <span>
+                         {value}
+                         <Done color="secondary" />
+                       </span>
+                     )
+                     : value}
+                 </TableCell>
+               ) : (
+                 <TableCell className={classes.tableCell} key={value}>
+                   <img src={value} alt="banner" height="50%" />
+                 </TableCell>
+               )
               ))}
             </TableRow>
           </TableHead>
@@ -92,12 +103,11 @@ function CustomTable({ ...props }) {
                   //   {value}
                   // </TableCell>
                   String(value).indexOf('data:image/') === -1 // 없는 경우
-                    ? value === '0'
+                    ? value === 0
                       ? (
                         <TableCell className={classes.tableCell} key={value}>
                           <p>
                             <Button id={prop[1]} onClick={confirmClickEvent}> 승인하기 </Button>
-                            {' '}
                           </p>
 
                           <FormControl className={classes.formControl}>
