@@ -1,11 +1,10 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Line } from 'react-chartjs-2';
 
-import CircularProgress from '@material-ui/core/CircularProgress';
 import Typography from '@material-ui/core/Typography';
 import axios from '../../../../../utils/axios';
-
 import setChartjsData from '../../../variables/charts';
+import CircularProgress from '../../../components/Progress/CircularProgress';
 import HOST from '../../../../../config';
 // data Fetch hooks
 function useFetchData(url, dateRange) {
@@ -45,7 +44,7 @@ function ValueChart() {
 
   return (
     <div>
-      { valueChartData.loading && (<div style={{ textAlign: 'center' }}><CircularProgress /></div>)}
+      { valueChartData.loading && (<CircularProgress />)}
       { !valueChartData.loading && valueChartData.error && (
         <div>
           <Typography variant="h6">데이터가 없어요! 광고를 진행하세요.</Typography>

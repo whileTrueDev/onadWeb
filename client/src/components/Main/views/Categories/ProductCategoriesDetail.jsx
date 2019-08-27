@@ -18,7 +18,7 @@ const styles = theme => ({
 });
 
 const ProductCategoriesDetail = (props) => {
-  const { classes, checked, images } = props;
+  const { classes, images } = props;
 
   // 작아지면(phone 환경) false, 커지면 true
   const matches = useMediaQuery('(min-width:600px)');
@@ -46,7 +46,7 @@ const ProductCategoriesDetail = (props) => {
       in={trigger}
       direction="right"
       timeout={{ enter: slideTime }}
-      mountOnEnter
+      // mountOnEnter
     >
       <div className={classes.images}>
 
@@ -66,7 +66,6 @@ const ProductCategoriesDetail = (props) => {
 
 ProductCategoriesDetail.propTypes = {
   classes: PropTypes.object,
-  checked: PropTypes.bool.isRequired,
   images: PropTypes.array.isRequired,
 };
 

@@ -1,5 +1,5 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { useState, useCallback } from 'react';
+import classnames from 'classnames';
 import { makeStyles } from '@material-ui/core/styles';
 import { grey } from '@material-ui/core/colors';
 import Grow from '@material-ui/core/Grow';
@@ -7,6 +7,7 @@ import axios from '../../../../utils/axios';
 import Button from '../../components/Button';
 import Typography from '../../components/Typography';
 import ProductHeroLayout from './ProductHeroLayout';
+import LoginForm from '../Login/LoginForm';
 import HOST from '../../../../config';
 
 const styles = makeStyles(theme => ({
@@ -17,8 +18,35 @@ const styles = makeStyles(theme => ({
   button: {
     alignItems: 'center',
     justifyContent: 'center',
-    minWidth: 200,
+    minWidth: 170,
     marginTop: 50,
+  },
+  loginButton: {
+    '&:hover': {
+      backgroundColor: theme.palette.primary.main,
+    },
+    borderWidth: 2,
+  },
+  loginButtonLeft: {
+    [theme.breakpoints.up('sm')]: {
+      marginRight: 10,
+    },
+    [theme.breakpoints.down('sm')]: {
+      marginRight: 3,
+      backgroundColor: theme.palette.primary.main,
+    },
+  },
+  loginButtonRight: {
+    [theme.breakpoints.up('sm')]: {
+      marginLeft: 10,
+    },
+    [theme.breakpoints.down('sm')]: {
+      marginLeft: 3,
+      backgroundColor: theme.palette.primary.main,
+    },
+  },
+  loginButtonWrapper: {
+    display: 'flex',
   },
   h3: {
     [theme.breakpoints.up('sm')]: {
@@ -26,18 +54,18 @@ const styles = makeStyles(theme => ({
       width: 1024,
     },
     [theme.breakpoints.down('sm')]: {
-      width: '330px',
+      width: '210px',
       fontSize: 37,
     },
   },
   h3sub: {
     [theme.breakpoints.down('sm')]: {
-      width: '330px',
+      width: '300px',
       fontSize: 37,
     },
   },
   h5: {
-    width: '300px',
+    width: '250px',
     marginLeft: theme.spacing(2),
     marginRight: theme.spacing(2),
     marginBottom: theme.spacing(3),
@@ -56,20 +84,42 @@ const styles = makeStyles(theme => ({
   },
 }));
 
-function ProductHero(props) {
-  const { text, backgroundImage, history } = props;
+function useDialog() {
+  const [open, setOpen] = useState(false);
+  const [isMarketer, setIsMarketer] = useState();
+  function handleOpen(buttonType) {
+    setIsMarketer(buttonType === 'marketer');
+    setOpen(true);
+  }
+  function handleClose() {
+    setOpen(false);
+  }
+  return {
+    open, isMarketer, handleOpen, handleClose,
+  };
+}
 
+function ProductHero(props) {
+  const {
+    isLogin, history, source,
+  } = props;
+
+  const {
+    open, isMarketer, handleOpen, handleClose,
+  } = useDialog();
   const classes = styles();
 
-  const [check] = React.useState(true);
-
-  const handleClick = () => {
+  const handleClick = useCallback((buttonType) => {
     axios.get(`${HOST}/api/dashboard/checkUserType`)
       .then((res) => {
         const { userType } = res.data;
         if (userType === undefined) {
-          // 로그인 이후 이용하세요
-          alert('로그인 이후 이용하세요!');
+          if (buttonType) {
+            handleOpen(buttonType);
+          } else {
+            // 로그인 이후 이용하세요
+            alert('로그인 이후 이용하세요');
+          }
         } else if (userType === 'marketer') {
           history.push('/dashboard/marketer/main');
         } else if (userType === 'creator') {
@@ -78,31 +128,25 @@ function ProductHero(props) {
       }).catch((err) => {
         console.log(err);
       });
-  };
+  }, [handleOpen, history]);
 
   return (
     <ProductHeroLayout
       backgroundClassName={classes.background}
-      backgroundImage={backgroundImage}
+      backgroundImage={source.backImage}
     >
       {/* Increase the network loading priority of the background image. */}
-      <Grow
-        in={check}
-        {...(check ? { timeout: 2500 } : {})}
-      >
+      <Grow in timeout={1500}>
         <Typography
           color="inherit"
           align="center"
           variant="h3"
           className={classes.h3}
         >
-          {text.title}
+          {source.text.title}
         </Typography>
       </Grow>
-      <Grow
-        in={check}
-        {...(check ? { timeout: 2500 } : {})}
-      >
+      <Grow in timeout={1500}>
         <Typography
           className={classes.h3sub}
           color="inherit"
@@ -111,64 +155,77 @@ function ProductHero(props) {
           marked="center"
           style={{ marginTop: 15 }}
         >
-          {text.subTitle}
+          {source.text.subTitle}
         </Typography>
       </Grow>
-      <Grow
-        in={check}
-        {...(check ? { timeout: 2500 } : {})}
-      >
+      <Grow in timeout={2500}>
         <Typography
           color="inherit"
           align="center"
           variant="subtitle2"
           className={classes.h5}
         >
-          {text.body}
+          {source.text.body}
         </Typography>
       </Grow>
-      <Grow
-        in={check}
-        {...(check ? { timeout: 2500 } : {})}
-      >
-        <Button
-          color="primary"
-          variant="contained"
-          size="large"
-          className={classes.button}
-          onClick={handleClick}
-        >
+      {/* 로그인 / 대시보드로 이동 버튼 */}
+      {isLogin ? (
+        <Grow in timeout={2500}>
+          <Button
+            color="primary"
+            variant="contained"
+            size="large"
+            className={classes.button}
+            onClick={handleClick}
+          >
           대시보드로 이동
-        </Button>
-      </Grow>
+          </Button>
+        </Grow>
+      ) : (
 
-      {text.tail && (
-      <Typography
-        className={classes.h6}
-        variant="subtitle2"
-      >
-        {text.tail}
-      </Typography>
+        <Grow in timeout={2500}>
+          <div className={classes.loginButtonWrapper}>
+            <Button
+              color="primary"
+              variant="outlined"
+              className={
+                classnames([classes.button], [classes.loginButton], [classes.loginButtonLeft])}
+              onClick={() => handleClick('marketer')}
+            >
+              광고주로 로그인
+            </Button>
+            <Button
+              color="primary"
+              variant="outlined"
+              className={
+                classnames([classes.button], [classes.loginButton], [classes.loginButtonRight])}
+              onClick={() => handleClick('creator')}
+            >
+              크리에이터 로그인
+            </Button>
+          </div>
+
+        </Grow>
+
       )}
+
+      {source.text.tail && (
+        <Typography
+          className={classes.h6}
+          variant="subtitle2"
+        >
+          {source.text.tail}
+        </Typography>
+      )}
+
+      <LoginForm
+        open={open}
+        isMarketer={isMarketer}
+        history={history}
+        handleClose={handleClose}
+      />
     </ProductHeroLayout>
   );
 }
-
-ProductHero.propTypes = {
-  classes: PropTypes.object,
-  text: PropTypes.object,
-  backgroundImage: PropTypes.string,
-};
-
-ProductHero.defaultProps = {
-  classes: {},
-  backgroundImage: '',
-  text: {
-    title: '효율적으로 광고하세요',
-    subTitle: '쉽게 광고를 유치하세요',
-    body: '모든 광고유치, 광고계약 등 모든 과정은 웹에서 손쉽게 사용하실 수 있습니다.',
-    tail: '',
-  },
-};
 
 export default ProductHero;

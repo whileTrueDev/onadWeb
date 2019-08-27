@@ -61,8 +61,9 @@ export default withRoot((props) => {
     <div>
       <AppAppBar isLogin={isLogin} logout={logout} history={history} />
       <ProductHero
-        text={textSource.heroSector}
-        backgroundImage={textSource.heroSector.backImage}
+        history={history}
+        isLogin={isLogin}
+        source={textSource.heroSector}
       />
       <Manual
         textSource={textSource}

@@ -19,28 +19,30 @@ const doQuery = (query, queryArray=[]) => {
     pool.getConnection((err, conn)=>{
       // 커넥션 시 에러발생
       if(err){
-        conn.release();
+        console.log('conn in err - getConnection 함수', conn)
+        console.log('DB연결 오류' + err.message);
         logger.error('DB연결 관련 오류' + err);
         reject({
           error : err,
         }); 
+      } else {
+        conn.query(query, queryArray, (error, result)=>{
+          if(error){
+            conn.release();
+            logger.error('query 관련 오류 : ' + error);
+            reject({
+              error : error.sqlMessage,
+            }); 
+          }else{
+            conn.release();
+            logger.info(query);
+            resolve({
+              error : null,
+              result : result,
+            });
+          }
+        })
       }
-      conn.query(query, queryArray, (error, result)=>{
-        if(error){
-          conn.release();
-          logger.error('query 관련 오류 : ' + error);
-          reject({
-            error : error.sqlMessage,
-          }); 
-        }else{
-          conn.release();
-          logger.info(query);
-          resolve({
-            error : null,
-            result : result,
-          });
-        }
-      })
     })
   })
 }

@@ -5,6 +5,7 @@ import AppFooter from '../Main/views/Layout/AppFooter';
 import ProductHero from '../Main/views/Hero/ProductHero';
 import withRoot from '../Main/withRoot';
 import Introduce from './Introduce';
+import IntroduceTop from './IntroduceTop';
 import textSource from './source/textSource';
 import HOST from '../../config';
 
@@ -48,7 +49,6 @@ const CREATOR_TAB_NUMBER = 1;
 
 // this is layout compoent
 export default withRoot((props) => {
-  const { heroSector } = textSource;
   const { history } = props;
   const { isLogin, logout, userType } = useLoginValue(history);
 
@@ -61,10 +61,12 @@ export default withRoot((props) => {
     <div>
       <AppAppBar isLogin={isLogin} logout={logout} history={history} />
       <ProductHero
-        text={heroSector}
-        backgroundImage={heroSector.backImage}
+        history={history}
+        isLogin={isLogin}
+        source={textSource.heroSector}
       />
       {/* ->/ header layout */}
+      <IntroduceTop source={textSource.topSector} />
 
       <Introduce
         textSource={textSource}

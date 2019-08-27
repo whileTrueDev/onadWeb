@@ -1,5 +1,5 @@
 import React from 'react';
-import clsx from 'clsx';
+import classnames from 'classnames';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import MuiTextField from '@material-ui/core/TextField';
@@ -79,7 +79,7 @@ function TextField(props) {
         disableUnderline: true,
         classes: {
           root: classes.root,
-          input: clsx(
+          input: classnames(
             classes.input,
             classes[`inputSize${capitalize(size)}`],
             {

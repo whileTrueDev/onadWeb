@@ -3,6 +3,7 @@ import shortid from 'shortid';
 import {
   Paper,
   Typography,
+  Grid,
 } from '@material-ui/core';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import Button from '../../../components/CustomButtons/Button';
@@ -15,23 +16,31 @@ const useStyles = makeStyles(theme => ({
     paddingTop: theme.spacing(1),
     paddingBottom: theme.spacing(1),
     marginTop: theme.spacing(2),
-    display: 'flex',
     backgroundColor: '#f2f2f2',
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
     fontSize: 13,
   },
   inDialogContent: {
-    padding: theme.spacing(1),
-    marginLeft: 30,
-    marginRight: 55,
+    [theme.breakpoints.down('md')]: {
+      padding: theme.spacing(1),
+      marginLeft: theme.spacing(1),
+      marginRight: theme.spacing(1),
+    },
+    marginLeft: 0,
+    marginRight: 0,
     outline: 'none',
+    [theme.breakpoints.down('xs')]: {
+      fontWeight: 500,
+      fontSize: '10px',
+    },
   },
   actionsContainer: {
     marginTop: theme.spacing(1),
     float: 'right',
+  },
+  termTitle: {
+    [theme.breakpoints.down('xs')]: {
+      fontSize: '12px',
+    },
   },
 }));
 
@@ -50,25 +59,30 @@ function useDialog() {
 }
 
 
-function CompletedContract(props) {
+function CompletedContract() {
   const classes = useStyles();
   const { DialogOpen, handleDialogOpen, handleDialogClose } = useDialog();
 
   return (
     <div>
-      {terms.map((term, index) => (
+      {terms.map(term => (
         <div key={term.state}>
           <Paper className={classes.container} elevation={1} key={term.state}>
-            <Typography component="p" style={{ flex: 8, fontSize: 13 }}>
-              {term.title}
-            </Typography>
-            <Button
-              color="blueGray"
-              onClick={() => handleDialogOpen(term.state)}
-            >
-              약관보기
-            </Button>
-
+            <Grid container direction="row" justify="space-between" alignItems="center" spacing={1}>
+              <Grid item>
+                <Typography component="p" className={classes.termTitle}>
+                  {term.title}
+                </Typography>
+              </Grid>
+              <Grid item>
+                <Button
+                  color="blueGray"
+                  onClick={() => handleDialogOpen(term.state)}
+                >
+                약관보기
+                </Button>
+              </Grid>
+            </Grid>
           </Paper>
           { /* 약관 보기 Dialog */ }
           <Dialog

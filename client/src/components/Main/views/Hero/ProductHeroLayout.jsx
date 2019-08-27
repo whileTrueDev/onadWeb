@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import clsx from 'clsx';
+import classnames from 'classnames';
 
 const styles = theme => ({
   root: {
@@ -30,7 +30,7 @@ const styles = theme => ({
     top: 0,
     bottom: 0,
     backgroundColor: theme.palette.common.black,
-    opacity: 0.5,
+    opacity: 0.43,
     zIndex: -1,
   },
   background: {
@@ -56,7 +56,7 @@ function ProductHeroLayout(props) {
         {children}
         <div className={classes.backdrop} />
         <div
-          className={clsx(classes.background, backgroundClassName)}
+          className={classnames(classes.background, backgroundClassName)}
           style={{ backgroundImage: `url(${backgroundImage})` }}
         />
       </Container>

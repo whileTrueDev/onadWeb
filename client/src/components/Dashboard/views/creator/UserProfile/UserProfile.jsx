@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import PropTypes from 'prop-types';
 // @material-ui/core components
 import withStyles from '@material-ui/core/styles/withStyles';
 import TextField from '@material-ui/core/TextField';
+import Hidden from '@material-ui/core/Hidden';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
+import Check from '@material-ui/icons/Check';
 import axios from '../../../../../utils/axios';
 // core components
 import GridItem from '../../../components/Grid/GridItem';
@@ -14,13 +15,16 @@ import Card from '../../../components/Card/Card';
 import CardAvatar from '../../../components/Card/CardAvatar';
 import CardHeader from '../../../components/Card/CardHeader';
 import CardBody from '../../../components/Card/CardBody';
+import Snackbar from '../../../components/Snackbar/Snackbar';
 import AccountNumberForm from '../IncomeManage/AccountNumberForm';
 import Contraction from './Contraction';
 import CompletedContract from './CompletedContract';
 import Dialog from '../../../components/Dialog/Dialog';
 import HOST from '../../../../../config';
+import IpChanger from './IpChanger';
 
-const styles = {
+
+const styles = theme => ({
   cardCategoryWhite: {
     color: 'rgba(255,255,255,.62)',
     margin: '0',
@@ -37,18 +41,30 @@ const styles = {
     marginBottom: '3px',
     textDecoration: 'none',
   },
+  dialogTitle: {
+    color: '#FFFFFF',
+    marginTop: '0px',
+    minHeight: 'auto',
+    fontWeight: '300',
+    marginBottom: '3px',
+    [theme.breakpoints.down('xs')]: {
+      fontSize: '12px',
+    },
+  },
   contentWrapper: {
     margin: '20px 0px 20px 0px',
   },
   contentDetail: {
     marginTop: '5px',
     marginLeft: '20px',
+    fontFamily: "'Roboto', 'Helvetica', 'Arial', 'Nanum Gothic', sans-serif",
+    fontWeight: 900,
   },
   textField: {
     width: '100%',
     borderColor: 'linear-gradient(60deg, #00acc1, #26c6da)',
   },
-};
+});
 
 const CssTextField = withStyles({
   root: {
@@ -80,7 +96,7 @@ const CssTextField = withStyles({
 function useDialog() {
   // 계약서 다이얼로그 띄우기
   const [ContractionOpen, setContractionOpen] = useState(false);
-
+  const [IpChangerOpen, setIpChangerOpen] = useState(false);
   function handleContractionOpen() {
     setContractionOpen(true);
   }
@@ -89,16 +105,30 @@ function useDialog() {
     setContractionOpen(false);
   }
 
-  return { ContractionOpen, handleContractionOpen, handleContractionClose };
+  function handleIpChangerOpen() {
+    setIpChangerOpen(true);
+  }
+
+  function handleIpChangerClose() {
+    setIpChangerOpen(false);
+  }
+
+  return {
+    ContractionOpen, handleContractionOpen, handleContractionClose, IpChangerOpen, handleIpChangerOpen, handleIpChangerClose,
+  };
 }
 
 function UserProfile(props) {
   const { classes, history } = props;
   const [userData, setuserData] = useState({});
+  const [snackOpen, setSnackOpen] = useState(false);
   const {
     ContractionOpen,
     handleContractionOpen,
     handleContractionClose,
+    IpChangerOpen,
+    handleIpChangerOpen,
+    handleIpChangerClose,
   } = useDialog();
 
   const readyCreatorData = useCallback(() => {
@@ -132,13 +162,13 @@ function UserProfile(props) {
       {/* 계약 컴포넌트 */}
       {userData.creatorContractionAgreement === 0 && (
       <GridContainer>
-        <GridItem xs={12} sm={12} md={12}>
+        <GridItem xs={12} sm={12} md={12} lg={9} xl={8}>
           <Card>
             <CardHeader color="blueGray">
               <h4 className={classes.cardTitleWhite}>서비스 이용 및 출금 계약하기</h4>
             </CardHeader>
             <CardBody>
-              <Contraction history={history} />
+              <Contraction history={history} setSnackOpen={setSnackOpen} />
             </CardBody>
           </Card>
         </GridItem>
@@ -147,7 +177,7 @@ function UserProfile(props) {
 
       {/* 계정 관리 컴포넌트 */}
       <GridContainer>
-        <GridItem xs={12} sm={12} md={5}>
+        <GridItem xs={12} sm={12} md={6} lg={4}>
           <Card>
             <CardHeader color="blueGray">
               <h4 className={classes.cardTitleWhite}>계좌관리</h4>
@@ -165,7 +195,7 @@ function UserProfile(props) {
                   {userData.creatorAccountNumber ? `${userData.creatorAccountNumber.split('_')[0]}   ${userData.creatorAccountNumber.split('_')[1]}` : '현재 등록된 계좌가 존재하지 않습니다.'}
                 </Typography>
               </div>
-              <Divider />
+              <Divider style={{ marginBottom: '15px' }} />
               <Typography variant="subtitle1" id="select-account" className={classes.contentTitle}>
                 계좌 재입력
               </Typography>
@@ -173,8 +203,10 @@ function UserProfile(props) {
             </CardBody>
           </Card>
         </GridItem>
-        <GridItem xs={12} sm={12} md={1} />
-        <GridItem xs={12} sm={12} md={5}>
+        <Hidden mdDown>
+          <GridItem md={1} />
+        </Hidden>
+        <GridItem xs={12} sm={12} md={6} lg={4} xl={3}>
           <Card profile>
             <CardAvatar profile>
               <a href="#pablo" onClick={e => e.preventDefault()}>
@@ -224,25 +256,10 @@ function UserProfile(props) {
                 </GridItem>
               </GridContainer>
               <GridContainer>
-                <GridItem xs={12} sm={12} md={12}>
-                  <CssTextField
-                    label="IP"
-                    value={userData.creatorIp || ''}
-                    className={classes.textField}
-                    margin="normal"
-                    InputProps={{
-                      readOnly: true,
-                    }}
-                  />
-                </GridItem>
-              </GridContainer>
-
-              {userData.creatorContractionAgreement === 1 && (
-              <GridContainer>
                 <GridItem xs={12} sm={12} md={6}>
                   <CssTextField
-                    label="계약상태"
-                    value="계약완료"
+                    label="등록된 IP"
+                    value={userData.creatorIp || ''}
                     className={classes.textField}
                     margin="normal"
                     InputProps={{
@@ -254,14 +271,38 @@ function UserProfile(props) {
                   <Button
                     color="blueGray"
                     style={{ marginTop: 20, float: 'left' }}
+                    onClick={handleIpChangerOpen}
+                  >
+                      IP 변경하기
+                  </Button>
+                </GridItem>
+
+              </GridContainer>
+
+              {userData.creatorContractionAgreement === 1 && (
+              <GridContainer>
+                <GridItem xs={6} sm={6} md={6}>
+                  <CssTextField
+                    label="계약상태"
+                    value="계약완료"
+                    className={classes.textField}
+                    margin="normal"
+                    InputProps={{
+                      readOnly: true,
+                    }}
+                  />
+                </GridItem>
+                <GridItem xs={6} sm={6} md={6}>
+                  <Button
+                    color="blueGray"
+                    style={{ marginTop: 20, float: 'left' }}
                     onClick={handleContractionOpen}
                   >
-                      계약서 보기
+                    계약서 보기
                   </Button>
                 </GridItem>
               </GridContainer>
               )}
-
 
               <Button color="info" onClick={handleProfileChange}>
                 정보변경하러가기
@@ -277,11 +318,11 @@ function UserProfile(props) {
           open={ContractionOpen}
           onClose={handleContractionClose}
           fullWidth
-          maxWidth="sm"
+          maxWidth="md"
         >
           <Card>
             <CardHeader color="blueGray">
-              <h4 className={classes.cardTitleWhite}>서비스 이용 및 출금 계약하기</h4>
+              <h4 className={classes.dialogTitle}>서비스 이용 및 출금 계약하기</h4>
             </CardHeader>
             <CardBody>
               <CompletedContract />
@@ -289,7 +330,33 @@ function UserProfile(props) {
           </Card>
         </Dialog>
       )}
-
+      <Dialog
+        open={IpChangerOpen}
+        onClose={handleIpChangerClose}
+        title="ip변경하기"
+        fullWidth
+        maxWidth="sm"
+      >
+        <IpChanger
+          classes={classes}
+          localIp={userData.localIp}
+          styles={styles}
+          CssTextField={CssTextField}
+          onClose={handleIpChangerClose}
+          history={history}
+        />
+      </Dialog>
+      <Snackbar
+        place="tr"
+        color="success"
+        message="성공적으로 계약이 완료되었습니다."
+        open={snackOpen}
+        icon={Check}
+        closeNotification={() => { 
+          setSnackOpen(false);
+          history.push('/dashboard/creator/user'); }}
+        close
+      />
     </div>
   );
 }

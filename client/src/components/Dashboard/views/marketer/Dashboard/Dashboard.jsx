@@ -1,5 +1,5 @@
 import React, {
-  useState, useEffect, useCallback, useContext,
+  useState, useEffect, useCallback,
 } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
@@ -14,13 +14,14 @@ import Warning from '@material-ui/icons/Warning';
 import PlayArrow from '@material-ui/icons/PlayArrow';
 import ListAlt from '@material-ui/icons/ListAlt';
 import BarChart from '@material-ui/icons/BarChart';
+import Cancel from '@material-ui/icons/StopScreenShareOutlined';
 
 // material core
-import CircularProgress from '@material-ui/core/CircularProgress';
 import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
 import GridListTileBar from '@material-ui/core/GridListTileBar';
 import Tooltip from '@material-ui/core/Tooltip';
+import CircularProgress from '../../../components/Progress/CircularProgress';
 import axios from '../../../../../utils/axios';
 
 // core ../../../components
@@ -51,7 +52,8 @@ const useStyles = makeStyles(theme => ({
   root: {
     display: 'flex',
     flexWrap: 'wrap',
-    justifyContent: 'space-around',
+    alignItems: 'center',
+    justifyContent: 'center',
     overflow: 'hidden',
     backgroundColor: theme.palette.background.paper,
   },
@@ -120,13 +122,49 @@ function useAdStartDialog() {
   };
 }
 
+const ActionIcon = (props) => {
+  const { confirmState, marketerContraction } = props;
+  return (
+    <div>
+      {marketerContraction === 0 ? (
+        <DangerTypography>
+          {'일시정지'}
+          <Cancel />
+        </DangerTypography>
+      ) : (
+        <div>
+          {confirmState === WAIT_BANNER_STATE ? (
+            <Info>
+              {'승인'}
+              <Check />
+            </Info>
+          ) : (
+            <SuccessTypography>
+              {'광고 중'}
+              <PlayArrow />
+            </SuccessTypography>
+          )}
+        </div>
+      )}
+    </div>
+
+  );
+};
+
 const Dashboard = (props) => {
   const secondClasses = useStyles();
   const { classes, history } = props;
-
+  const [marketerContraction, setContraction] = useState(0);
   const cashData = useFetchData(`${HOST}/api/dashboard/marketer/cash`);
   const bannerData = useFetchData(`${HOST}/api/dashboard/marketer/banner`);
   const tableData = useFetchData(`${HOST}/api/dashboard/marketer/creatorList`);
+
+  useEffect(() => (() => {
+    axios.post(`${HOST}/api/dashboard/marketer/info`)
+      .then((res) => {
+        setContraction(res.data.marketerContraction);
+      });
+  }));
   const {
     DialogOpen, handleDialogOpen,
     handleDialogClose, selectedBanner,
@@ -136,16 +174,16 @@ const Dashboard = (props) => {
     <div>
       {/* 첫번째 라인 */}
       <GridContainer>
-        <GridItem xs={12} sm={6} md={4}>
+        <GridItem xs={12} sm={12} md={5} xl={3}>
           {/* 광고캐시 잔액 */}
-          <GridItem xs={12} sm={6} md={12}>
+          <GridItem xs={12} sm={12} md={12}>
             <Card>
               <CardHeader color="blueGray" stats icon>
                 <CardIcon color="blueGray">
                   <AttachMoney />
                 </CardIcon>
                 <p className={classes.cardCategory}>광고 캐시 잔액</p>
-                {cashData.loading && <div style={{ textAlign: 'center' }}><CircularProgress /></div>}
+                {cashData.loading && <CircularProgress />}
                 {!cashData.loading && cashData.error
                   && (
                   <h3 className={classes.cardTitle}>
@@ -171,12 +209,12 @@ const Dashboard = (props) => {
             </Card>
           </GridItem>
           {/* 현재 나의 광고 상태 */}
-          <GridItem xs={12} sm={6} md={12}>
+          <GridItem xs={12} sm={12} md={12}>
             <Card>
               <CardHeader color="blueGray" stats>
                 <p className={classes.cardTitleWhite}>현재 나의 상태</p>
               </CardHeader>
-              <CardBody>
+              <CardBody className={secondClasses.root}>
                 {!bannerData.loading && bannerData.error ? (
                 // 승인된 배너가 없는 경우
                   <GridItem>
@@ -202,14 +240,14 @@ const Dashboard = (props) => {
         </GridItem>
 
         {/* 승인된 배너 */}
-        <GridItem xs={12} sm={6} md={8}>
+        <GridItem xs={12} sm={12} md={7} xl={5}>
           <Card>
             <CardHeader color="blueGray" stats>
               <h4 className={classes.cardTitleWhite}>승인된 배너</h4>
               <p className={classes.cardCategoryWhite}>업로드한 배너 중 승인된 배너의 목록입니다.</p>
             </CardHeader>
             <CardBody className={secondClasses.root}>
-              {bannerData.loading && <div style={{ textAlign: 'center' }}><CircularProgress /></div>}
+              {bannerData.loading && <CircularProgress />}
               {!bannerData.loading && bannerData.error && (
                 // 승인된 배너가 없는 경우
                 <GridItem>
@@ -239,7 +277,11 @@ const Dashboard = (props) => {
                     <GridListTile
                       key={image.bannerId}
                       style={{ cursor: 'pointer' }}
-                      onClick={() => { handleDialogOpen(image); }}
+                      onClick={() => {
+                        if (marketerContraction) {
+                          handleDialogOpen(image);
+                        }
+                      }}
                     >
                       <img src={image.bannerSrc} alt={image.bannerId} />
                       <GridListTileBar
@@ -247,20 +289,11 @@ const Dashboard = (props) => {
                           root: secondClasses.titleBar,
                           actionIcon: secondClasses.icon,
                         }}
-                        actionIcon={image.confirmState === WAIT_BANNER_STATE ? (
-                          <div>
-                            <Info>
-                              {'승인'}
-                              <Check />
-                            </Info>
-                          </div>
-                        ) : (
-                          <div>
-                            <SuccessTypography>
-                              {'광고 중'}
-                              <PlayArrow />
-                            </SuccessTypography>
-                          </div>
+                        actionIcon={(
+                          <ActionIcon
+                            confirmState={image.confirmState}
+                            marketerContraction={marketerContraction}
+                          />
                         )}
                       />
                     </GridListTile>
@@ -275,7 +308,7 @@ const Dashboard = (props) => {
 
       {/* 광고 될 크리에이터 목록 */}
       <GridContainer>
-        <GridItem xs={12} sm={6} md={12}>
+        <GridItem xs={12} sm={12} md={12} xl={8}>
           { !tableData.loading && tableData.payload
           && (
           <CustomTabs
@@ -286,7 +319,7 @@ const Dashboard = (props) => {
                 tabIcon: ListAlt,
                 tabContent: (
                   tableData.loading && !tableData.payload ? (
-                    <div style={{ textAlign: 'center' }}><CircularProgress /></div>
+                    <CircularProgress />
                   ) : (
                     <div>
                       {tableData.payload !== null

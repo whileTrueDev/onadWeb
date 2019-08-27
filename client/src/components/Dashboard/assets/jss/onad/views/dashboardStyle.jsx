@@ -91,6 +91,12 @@ const dashboardStyle = {
       lineHeight: '1',
     },
   },
+  spanText: {
+    marginLeft:"8px",
+    color: infoColor[0],
+    fontWeight: 'bold',
+
+  },
 };
 
 export default dashboardStyle;

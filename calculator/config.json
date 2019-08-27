@@ -1,0 +1,21 @@
+{
+    "DB": {
+        "host": "onad.cbjjamtlar2t.ap-northeast-2.rds.amazonaws.com",
+        "user": "onad",
+        "password": "rkdghktn12",
+        "database": "onadnode",
+        "port": 3306
+    },
+    "dev": {
+        "apiHostName": "http://localhost:3000",
+        "reactHostName": "http://localhost:3001",
+        "clientID": "sg055nhf0x1m0m0vhm43m7ypuz9qo9",
+        "clientSecret": "k040veeblyq41xnkf4yc95vpyd2vck"
+    },
+    "production": {
+        "apiHostName": "https://api.onad.io",
+        "reactHostName": "https://onad.io",
+        "clientID": "7197nobf8rsf7aqqk4nf7a22dtyu93",
+        "clientSecret": "y602ztp4vw24wrcufhk3bisuttjhue"
+    }
+}

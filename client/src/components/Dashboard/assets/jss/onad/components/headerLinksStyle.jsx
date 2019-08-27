@@ -51,7 +51,7 @@ const headerLinksStyle = theme => ({
         marginLeft: '-15px',
       },
       '& > span': {
-        justifyContent: 'flex-start',
+        justifyContent: 'flex-end',
         width: '100%',
       },
     },
@@ -107,6 +107,9 @@ const headerLinksStyle = theme => ({
       margin: '10px 15px 0',
     },
     display: 'inline-block',
+  },
+  icons: {
+    float: 'center',
   },
 });
 

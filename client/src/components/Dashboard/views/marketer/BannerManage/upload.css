@@ -4,11 +4,14 @@
 }
 .filebox label { 
     display: inline-block; 
-    padding: .5em .75em; 
+    /* padding: .5em .75em;  */
+    height: 32px;
     color: #fff; 
-    font-size: inherit; 
+    padding: 0.107rem 1.25rem;
+    font-size: 0.9rem;
     line-height: normal; 
     vertical-align: middle; 
+    text-align: center;
     background-color:#00acc1;
     cursor: pointer; 
     border: 1px solid #ebebeb; 
@@ -29,9 +32,11 @@
 
 .filebox .upload-name { 
     display: inline-block; 
-    padding: .5em .75em; /* label의 패딩값과 일치 */ 
+    /* padding: .5em .75em; /* label의 패딩값과 일치 */ 
+    padding-left: .5em;
+    height: 27px;
     margin-right: 3px;
-    font-size: inherit;
+    font-size: 0.9rem;
     font-family: inherit; 
     line-height: normal; 
     vertical-align: middle; 

@@ -12,8 +12,14 @@ const styles = theme => ({
     display: 'block',
     padding: 0,
     borderRadius: 0,
-    height: '35vh',
+    height: '28vh',
     transitionDelay: '2s',
+    [theme.breakpoints.up('xl')]: {
+      height: '26vh',
+    },
+    [theme.breakpoints.up('md')]: {
+      height: '22vh',
+    },
     [theme.breakpoints.down('sm')]: {
       width: '100% !important',
       height: 150,
@@ -22,13 +28,7 @@ const styles = theme => ({
       zIndex: 1,
     },
     '&:hover $imageBackdrop': {
-      opacity: 0.15,
-    },
-    '&:hover $imageMarked': {
-      opacity: 0,
-    },
-    '&:hover $imageTitle': {
-      borderBottom: '3px solid',
+      opacity: 0.1,
     },
   },
   imageButton: {
@@ -49,7 +49,8 @@ const styles = theme => ({
     top: 0,
     bottom: 0,
     backgroundSize: 'cover',
-    backgroundPosition: 'center 40%',
+    backgroundRepeat: 'no-repeat',
+    backgroundPosition: 'center',
   },
   imageBackdrop: {
     position: 'absolute',
@@ -58,26 +59,19 @@ const styles = theme => ({
     top: 0,
     bottom: 0,
     background: theme.palette.common.black,
-    opacity: 0.5,
+    opacity: 0.01,
     transition: theme.transitions.create('opacity'),
   },
   imageTitle: {
     position: 'relative',
+    width: '100%',
     marginLeft: 15,
     padding: `${theme.spacing(2)}px ${theme.spacing(2)}px 14px`,
+    fontWeight: 'bold',
   },
   imageSubTitle: {
     position: 'relative',
     marginRight: 20,
-  },
-  imageMarked: {
-    height: 3,
-    width: 18,
-    background: theme.palette.common.white,
-    position: 'absolute',
-    bottom: -2,
-    left: 'calc(50% - 9px)',
-    transition: theme.transitions.create('opacity'),
   },
 });
 
@@ -99,6 +93,7 @@ const ProductCategoriesDetail = (props) => {
         onClick={handleModalOpen}
         style={{
           width: image.width,
+          height: image.height,
         }}
       >
         <div
@@ -107,28 +102,36 @@ const ProductCategoriesDetail = (props) => {
             backgroundImage: `url(${image.url})`,
           }}
         />
-        <div className={classes.imageBackdrop} />
-        <div className={classes.imageButton}>
-          <Typography
-            variant="h5"
-            color="inherit"
-            className={classes.imageTitle}
-          >
-            {image.title}
-            <div className={classes.imageMarked} />
-          </Typography>
-          { matches && (
-          <Grid container>
+        <div
+          className={classes.imageBackdrop}
+          style={{ opacity: image.opacity }}
+        />
+        { image.isText ? (
+          <div className={classes.imageButton}>
             <Typography
-              variant="subtitle2"
-              className={classes.imageSubTitle}
+              variant="h5"
+              color="inherit"
+              className={classes.imageTitle}
             >
-              {image.description}
+              {image.title}
+              <br />
+              {image.subTitle}
             </Typography>
-          </Grid>
-          )}
 
-        </div>
+            { matches && (
+            <Grid container>
+              <Typography
+                variant="h5"
+                color="inherit"
+                className={classes.imageSubTitle}
+              >
+                {image.description}
+              </Typography>
+            </Grid>
+            )}
+
+          </div>
+        ) : null}
       </ButtonBase>
 
       <ImageModal

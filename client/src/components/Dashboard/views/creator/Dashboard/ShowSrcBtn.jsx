@@ -4,10 +4,9 @@ import { Link } from 'react-router-dom';
 // material core
 import TextField from '@material-ui/core/TextField';
 // material styles
-import withStyles from '@material-ui/styles/withStyles';
+import withStyles from '@material-ui/core/styles/withStyles';
 // material icons
 import RemoveRedEyeOutlined from '@material-ui/icons/RemoveRedEyeOutlined';
-import OpenInNewOutlined from '@material-ui/icons/OpenInNewOutlined';
 import InsertLinkOutlined from '@material-ui/icons/InsertLinkOutlined';
 import FileCopyOutlined from '@material-ui/icons/FileCopyOutlined';
 import Warning from '@material-ui/icons/Warning';
@@ -17,30 +16,37 @@ import Button from '../../../components/CustomButtons/Button';
 import Snackbar from '../../../components/Snackbar/Snackbar';
 import HOST from '../../../../../config';
 
-const styles = {
+const styles = theme => ({
   button: {
     textAlign: 'center',
   },
   buttonWrapper: {
     textAlign: 'center',
-    marginTop: 47.5,
-    marginBottom: 60,
+    marginTop: theme.spacing(7),
+    marginBottom: theme.spacing(8),
   },
   textField: {
     width: '85%',
   },
-  copyButton: {
-    width: '20px',
-    height: '45px',
+  overlayWrapper: {
+    display: 'flex',
+    marginTop: theme.spacing(5),
+    marginBottom: theme.spacing(5),
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-};
+  copyButton: {
+    textAlign: 'center',
+    width: '20px',
+  },
+});
 
 class ShowSrcBtn extends Component {
   constructor(props) {
     super(props);
     this.state = {
       showSrc: null,
-      value: '[주소 보기] 버튼을 누르면 주소가 10초간 표시됩니다',
+      value: '[주소 보기] 버튼을 누르세요.',
       disabled: false,
       copySuccess: false,
       contractionAgreement: 1,
@@ -51,11 +57,11 @@ class ShowSrcBtn extends Component {
     // url 데이터 가져와 state로 입력.
     axios.get(`${HOST}/api/dashboard/creator/overlayUrl`)
       .then((res) => {
-      if (res.data) {
-        let url = '';
-        if (res.data.creatorContractionAgreement === 0) {
-          url = '온애드와 계약하지 않았어요! 계약해주세요.';
-        } else { url = `https://onad.com/banner${res.data.advertiseUrl}`; }
+        if (res.data) {
+          let url = '';
+          if (res.data.creatorContractionAgreement === 0) {
+            url = '온애드와 계약하지 않았어요! 계약해주세요.';
+          } else { url = `https://banner.onad.io/banner${res.data.advertiseUrl}`; }
 
           this.setState({
             showSrc: url,
@@ -113,7 +119,7 @@ class ShowSrcBtn extends Component {
 
   render() {
     const {
-      disabled, value, showSrc, copySuccess, contractionAgreement,
+      disabled, value, copySuccess, contractionAgreement,
     } = this.state;
     const { classes } = this.props;
 
@@ -130,7 +136,7 @@ class ShowSrcBtn extends Component {
             <RemoveRedEyeOutlined />
           주소보기
           </Button>
-          <Button
+          {/* <Button
             disabled={!contractionAgreement}
             className={classes.button}
             color="info"
@@ -138,46 +144,48 @@ class ShowSrcBtn extends Component {
           >
             <OpenInNewOutlined />
           창열기
-          </Button>
+          </Button> */}
         </div>
 
-        <TextField
-          className={classes.textField}
-          id="overlayUrl"
-          label="오버레이 URL 주소"
-          value={value}
-          InputProps={{
-            readOnly: true,
-          }}
-          variant="outlined"
-        />
-        <Button
-          className={classes.copyButton}
-          disabled={!disabled}
-          onClick={this.copyToClipboard}
-        >
-          <InsertLinkOutlined />
+        <div className={classes.overlayWrapper}>
+          <TextField
+            className={classes.textField}
+            id="overlayUrl"
+            label="오버레이 URL 주소"
+            value={value}
+            InputProps={{
+              readOnly: true,
+            }}
+            variant="outlined"
+          />
+          <Button
+            className={classes.copyButton}
+            disabled={!disabled}
+            onClick={this.copyToClipboard}
+          >
+            <InsertLinkOutlined />
           복사
-        </Button>
-        <Snackbar
-          place="bc"
-          color="success"
-          icon={FileCopyOutlined}
-          message="클립보드에 복사되었어요!"
-          open={copySuccess}
-          closeNotification={() => this.setState({ copySuccess: false })}
-          close
-        />
-        <Snackbar
-          place="bl"
-          color="danger"
-          icon={Warning}
-          message="아직 온애드와 계약하지 않았어요. 간단히 계약하고, 광고를 집행하세요."
-          open={!contractionAgreement}
-          Link={
-            <Button color="warning" component={Link} to="/dashboard/creator/user">계약하러 가기</Button>
+          </Button>
+          <Snackbar
+            place="bc"
+            color="success"
+            icon={FileCopyOutlined}
+            message="클립보드에 복사되었어요!"
+            open={copySuccess}
+            closeNotification={() => this.setState({ copySuccess: false })}
+            close
+          />
+          <Snackbar
+            place="bl"
+            color="danger"
+            icon={Warning}
+            message="아직 온애드와 계약하지 않았어요. 간단히 계약하고, 광고를 집행하세요."
+            open={!contractionAgreement}
+            Link={
+              <Button color="warning" component={Link} to="/dashboard/creator/user">계약하러 가기</Button>
           }
-        />
+          />
+        </div>
       </div>
     );
   }
@@ -185,12 +193,10 @@ class ShowSrcBtn extends Component {
 
 ShowSrcBtn.propTypes = {
   classes: PropTypes.object,
-  creatorId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
 };
 
 ShowSrcBtn.defaultProps = {
   classes: {},
-  creatorId: '',
 };
 
 export default withStyles(styles)(ShowSrcBtn);

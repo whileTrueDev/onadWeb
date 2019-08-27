@@ -62,7 +62,7 @@ const sidebarStyle = theme => ({
       height: '1px',
       right: '15px',
       width: 'calc(100% - 30px)',
-      backgroundColor: `rgba(${hexToRgb(grayColor[6])}, 0.3)`,
+      backgroundColor: `rgba(${hexToRgb(grayColor[6])}, 0해.3)`,
     },
   },
   logoLink: {
@@ -115,6 +115,10 @@ const sidebarStyle = theme => ({
     },
   },
   list: {
+    display: 'flex',
+    height: '90%',
+    flexDirection: 'column',
+    justifyContent: 'space-between',
     marginTop: '20px',
     paddingLeft: '0',
     paddingTop: '0',
@@ -122,6 +126,14 @@ const sidebarStyle = theme => ({
     marginBottom: '0',
     listStyle: 'none',
     position: 'unset',
+  },
+  linkWrapper: {},
+  NavBarLinksWrapper: {
+    marginLeft: theme.spacing(2),
+    marginRight: theme.spacing(2),
+    borderTop: `0.05em solid ${grayColor[7]}`,
+    display: 'flex',
+    justifyContent: 'flex-end',
   },
   item: {
     position: 'relative',

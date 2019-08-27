@@ -4,7 +4,7 @@ import { withStyles } from '@material-ui/core/styles';
 import {
   Modal, Typography, Divider,
 } from '@material-ui/core';
-import clsx from 'clsx';
+import classnames from 'classnames';
 
 const styles = theme => ({
   paper: {
@@ -47,13 +47,14 @@ const ImageModal = (props) => {
       open={isImageModalOpen}
       onClose={handleClose}
     >
-      <div className={clsx(classes.paper, classes.modal)}>
+      <div className={classnames(classes.paper, classes.modal)}>
         <Typography
           className={classes.title}
           variant="h6"
           id="image-modal-title"
         >
-          {image.title}
+          {`${image.title}`}
+          { image.subTitle ? ` ${image.subTitle}` : null}
         </Typography>
         <Divider />
         <Typography
@@ -61,7 +62,9 @@ const ImageModal = (props) => {
           variant="subtitle1"
           id="image-modal-description"
         >
-          {image.fullDescription}
+          {image.fullDescription.split('\n').map(row => (
+            <p key={row}>{`${row}`}</p>
+          ))}
         </Typography>
       </div>
     </Modal>

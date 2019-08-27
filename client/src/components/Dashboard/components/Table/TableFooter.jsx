@@ -88,7 +88,7 @@ function CustomTableFooter(props) {
         // component="tr"
           style={{ paddingTop: 0, paddingBottom: 0 }}
           className={classes.tableFooterPagination}
-          rowsPerPageOptions={[5, 7, 10]}
+          rowsPerPageOptions={[3, 5, 10]}
           count={count}
           rowsPerPage={rowsPerPage}
           page={page}

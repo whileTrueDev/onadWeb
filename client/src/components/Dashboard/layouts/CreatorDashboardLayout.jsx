@@ -5,7 +5,6 @@ import { Switch, Route } from 'react-router-dom';
 import Navbar from '../components/Navbars/Navbar';
 import Sidebar from '../components/Sidebar/Sidebar';
 import allRoutes from '../routes';
-import logo from '../assets/img/main_logo.png';
 import Footer from '../components/Footer/Footer';
 // css
 import dashboardStyle from '../assets/jss/onad/layouts/dashboardStyle';
@@ -37,12 +36,15 @@ const CreatorDashboard = (props) => {
   const mainPanel = useRef();
 
   useEffect(() => {
+    document.title = '온애드 | 대시보드';
     mainPanel.current.scrollTop = 0;
-    if (history.location.pathname === window.location.pathname) {
-      if (mobileOpen) {
-        setMobileOpen(false);
+    return () => {
+      if (history.location.pathname === window.location.pathname) {
+        if (mobileOpen) {
+          setMobileOpen(false);
+        }
       }
-    }
+    };
   }, [history.location, history.location.pathname, mobileOpen]);
 
   return (
@@ -51,9 +53,10 @@ const CreatorDashboard = (props) => {
         routes={allRoutes.creator}
         logoText="OnAD"
         color="info"
-        logo={logo}
-        open={mobileOpen}
+        logo="/pngs/logo/onad_logo_vertical.png"
+        mobileOpen={mobileOpen}
         handleDrawerToggle={handleDrawerToggle}
+        history={history}
         {...rest}
       />
       <div className={classes.mainPanel} ref={mainPanel}>

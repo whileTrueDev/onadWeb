@@ -7,8 +7,9 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import AppBar from '@material-ui/core/AppBar';
 import { Subscriptions, Person } from '@material-ui/icons';
-import ProductHowItWorksMaketerItem from './ProductHowItWorksMaketerItem';
-import ProductHowItWorksCreatorItem from './ProductHowItWorksCreatorItem';
+import HowItWorksDetailMarketer from './HowItWorksDetailMarketer';
+import HowItWorksDetailCreator from './HowItWorksDetailCreator';
+import sources from '../../source/sources';
 
 const styles = theme => ({
   root: {
@@ -23,29 +24,6 @@ const styles = theme => ({
     flexDirection: 'column',
     alignItems: 'center',
   },
-  item: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    padding: theme.spacing(0, 5),
-  },
-  title: {
-    marginBottom: theme.spacing(14),
-  },
-  number: {
-    fontSize: 24,
-    fontFamily: theme.typography.fontFamily,
-    color: theme.palette.primary.main,
-    fontWeight: theme.typography.fontWeightMedium,
-  },
-  image: {
-    height: 55,
-    marginTop: theme.spacing(4),
-    marginBottom: theme.spacing(4),
-  },
-  button: {
-    marginTop: theme.spacing(8),
-  },
   tabs: {
     flexGrow: 1,
     marginBottom: theme.spacing(5),
@@ -55,11 +33,6 @@ const styles = theme => ({
   },
   tab: {
     height: 85,
-  },
-  icon: {
-    marginTop: 35,
-    marginBottom: 30,
-    fontSize: 48,
   },
 });
 
@@ -111,32 +84,30 @@ class ProductHowItWorks extends React.Component {
               <Tab
                 className={classes.tab}
                 icon={<Person />}
-                label="마케터 또는 광고주"
+                label="마케터"
               />
               <Tab
                 className={classes.tab}
                 icon={<Subscriptions />}
-                label="크리에이터 또는 1인미디어 방송인"
+                label="크리에이터"
               />
             </Tabs>
           </AppBar>
-          {
-            value === 0 ? (
-              <ProductHowItWorksMaketerItem
-                classes={classes}
-                check={check}
-                history={history}
-                isLogin={isLogin}
-              />
-            ) : (
-              <ProductHowItWorksCreatorItem
-                classes={classes}
-                check={check}
-                history={history}
-                isLogin={isLogin}
-              />
-            )
-          }
+          { value === 0 ? (
+            <HowItWorksDetailMarketer
+              check={check}
+              source={sources.howitworks.marketer}
+              isLogin={isLogin}
+              history={history}
+            />
+          ) : (
+            <HowItWorksDetailCreator
+              check={check}
+              source={sources.howitworks.creator}
+              isLogin={isLogin}
+              history={history}
+            />
+          )}
         </Container>
       </section>
     );

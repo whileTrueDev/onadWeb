@@ -7,10 +7,10 @@ const router = express.Router();
 const sortRows = preprocessing.sortRows;
 const listOfWithdrawal = preprocessing.withdrawalList;
 const preprocessingBannerData = preprocessing.preprocessingBannerData;
+const CustomDate = require('../middlewares/customDate');
 
 
 // 크리에이터 수익금 라우터 및 정보조회
-// doQuery 완료.
 router.get('/income', function(req, res, next) {
   const creatorId = req._passport.session.user.creatorId;
   const dataQuery = `
@@ -36,23 +36,26 @@ router.get('/income', function(req, res, next) {
 })
 
 // 크리에이터 광고 내역 라우터
-// doQuery 완료.
 router.get('/matchedBanner', function(req, res, next) {
   const creatorId = req._passport.session.user.creatorId;
   const bannerQuery = `
-  SELECT bm.contractionTime, mi.marketerName, bm.contractionState, br.bannerSrc
+  SELECT bm.contractionTime, mi.marketerName, bm.contractionState, br.bannerSrc, bm.contractionId
   FROM bannerMatched as bm
   JOIN bannerRegistered as br 
   ON SUBSTRING_INDEX(bm.contractionId, '/', 1) = br.bannerId
   JOIN marketerInfo as mi
   ON SUBSTRING_INDEX(br.bannerId, '_', 1) = mi.marketerId
-  WHERE contractionId LIKE '%?%'
+  WHERE contractionId LIKE CONCAT('%', ?, '%')
   ORDER BY contractionTime DESC
   `;
   doQuery(bannerQuery, [creatorId])
-  .then((row)=>{    
-    const result = preprocessingBannerData(row.result);
-    res.send(result);
+  .then((row)=>{
+    if(row.result.length > 0){
+      const result = preprocessingBannerData(row.result);
+      res.send(result);
+    }else{
+      res.end();
+    }    
   })
   .catch((errorData)=>{
     console.log(errorData);
@@ -61,7 +64,6 @@ router.get('/matchedBanner', function(req, res, next) {
 })
 
 // 크리에이터 현재 광고 중 배너
-// doQuery 완료.
 router.get('/currentBanner', function(req, res, next){
   const creatorId = req._passport.session.user.creatorId
   //DB연결후 query문을 통한 데이터 삽입 
@@ -80,7 +82,7 @@ router.get('/currentBanner', function(req, res, next){
   
   WHERE bm.contractionState = 0
   AND ct.date >= NOW() - INTERVAL 10 MINUTE
-  AND bm.contractionId LIKE '%?%'
+  AND bm.contractionId LIKE CONCAT('%', ?, '%')
   ORDER BY ct.date DESC
   LIMIT 1`;
 
@@ -100,8 +102,40 @@ router.get('/currentBanner', function(req, res, next){
   })
 });
 
+router.post('/banner/desc', (req, res)=>{
+  const { contractionId } = req.body;
+  const bannerId = contractionId.split('/')[0];
+  const descQuery = `
+  SELECT *
+  FROM bannerRegistered
+  WHERE bannerId = ?`
+  doQuery(descQuery, [bannerId])
+  .then((row)=>{
+    res.send(row.result[0]);
+  })
+  .catch((errorData)=>{
+    console.log(errorData);
+    res.end();
+  })
+})
+
+//doQuery 완료
+router.post('/banner/delete', (req, res, next)=>{
+  const { contractionId } = req.body;
+  const bannerQuery = `
+  DELETE FROM bannerMatched
+  WHERE contractionId = ? `;
+  doQuery(bannerQuery, [contractionId])
+  .then(()=>{
+    res.send([true, '배너가 성공적으로 삭제되었습니다.']);
+  })
+  .catch((errorData)=>{
+    console.log(errorData);
+    res.send([false, '배너 삭제에 실패하였습니다 잠시후 시도해주세요.']);
+  })
+})
+
 // 배너 오버레이 URL 주소 가져오기
-// doQuery 완료.
 router.get('/overlayUrl', function(req, res, next){
   const creatorId = req._passport.session.user.creatorId;
   const urlQuery = `
@@ -120,7 +154,6 @@ router.get('/overlayUrl', function(req, res, next){
 
 
 // 수익관리 탭의 크리에이터 별 수익금 차트 데이터
-//doQuery 완료
 router.get('/chartdata', function(req, res, next) {
   // creatorId 가져오기
   const creatorId = req._passport.session.user.creatorId;
@@ -236,15 +269,23 @@ router.get('/chartdata', function(req, res, next) {
 })
 
 // creator contraction Update
-//doQuery 완료
 router.post('/contraction', (req, res, next) => {
   const creatorId = req._passport.session.user.creatorId;
+  const dateCode =  new CustomDate().getCode();
+  const insertQuery = 
+  `INSERT INTO bannerMatched (contractionId)
+  VALUES (CONCAT("onad6309_01/", ?, "/", ?))
+  `
+
   const updateQuery = `
   UPDATE creatorInfo
   SET creatorContractionAgreement = ?
   WHERE creatorInfo.creatorId = ?`;
 
-  doQuery(updateQuery, [1, creatorId])
+  Promise.all([
+    doQuery(insertQuery, [creatorId, dateCode]),
+    doQuery(updateQuery, [1, creatorId])
+  ])
   .then(()=>{
     res.send(true);
   })
@@ -254,7 +295,6 @@ router.post('/contraction', (req, res, next) => {
 })
 
 // 크리에이터 출금신청 / 출금신청 금액만큼 creatorIncome에서 제외
-//doQuery 완료
 router.post('/withdrawal', function(req, res, next) {
   const creatorId = req._passport.session.user.creatorId;
   const withdrawlAmount = req.body.withdrawalAmount;
@@ -289,7 +329,6 @@ router.post('/withdrawal', function(req, res, next) {
   })
 })
 
-//doQuery 완료
 router.get('/profile', (req, res)=>{
   const profileQuery = `
   SELECT creatorId, creatorName, creatorIp, creatorMail, creatorAccountNumber, creatorContractionAgreement
@@ -319,7 +358,6 @@ router.get('/profile', (req, res)=>{
 })
 
 // 크리에이터 출금 내역 불러오기
-//doQuery 완료
 router.get('/listOfWithdrawal', function(req, res, next) {
   // creatorID 가져오기
   const creatorId = req._passport.session.user.creatorId;
@@ -347,4 +385,45 @@ router.get('/listOfWithdrawal', function(req, res, next) {
   })
 });
 
-module.exports = router;
+router.post('/ipchange', function(req, res, next){
+  let newIp = req.body.value;
+  let creatorId = req._passport.session.user.creatorId;
+  console.log(req)
+  const ipQuery=`UPDATE creatorInfo SET creatorIp = ? WHERE creatorId = ?`
+  doQuery(ipQuery, [newIp, creatorId])
+  .then(()=>{
+    console.log(`${creatorId}님 IP변경완료`);
+    res.send(true);
+  })
+  .catch(()=>{
+    res.send(false);
+  })
+})
+
+// router.post('/welcome', function(req, res, next) {
+//   const creatorId = req._passport.session.user.creatorId;
+//   const dateCode =  new CustomDate().getCode();
+  
+//   const insertQuery = 
+//   `INSERT INTO bannerMatched 
+//   (contractionId)
+//   VALUES CONCAT("onad6309_01", "/", ?, "/", ?)
+//   `
+//   const updateQuery = `
+//   UPDATE creatorInfo
+//   SET creatorContractionAgreement = ?
+//   WHERE creatorInfo.creatorId = ?`;
+
+//   Promise.all([
+//     doQuery(insertQuery, [creatorId, dateCode]),
+//     doQuery(updateQuery, [1, creatorId])
+//   ])
+//   .then(()=>{
+//     res.send(true);
+//   })
+//   .catch(()=>{
+//     res.send(false);
+//   })
+// })
+
+module.exports = router

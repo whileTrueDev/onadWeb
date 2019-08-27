@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import clsx from 'clsx';
+import classnames from 'classnames';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import {
@@ -9,7 +9,6 @@ import LockOpen from '@material-ui/icons/LockOpen';
 import SupervisedUserCircle from '@material-ui/icons/SupervisedUserCircle';
 import { withStyles } from '@material-ui/core/styles';
 import LoginForm from './LoginForm';
-
 
 const styles = theme => ({
   rightLink: {
@@ -49,10 +48,13 @@ const styles = theme => ({
 // login
 // regist가 다르게 렌더링 되어야함.
 class LoginPopover extends Component {
-  state = {
-    anchorEl: null,
-    loginValue: null,
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      anchorEl: null,
+      loginValue: null,
+    };
+  }
 
   handleClick = (event) => {
     this.setState({
@@ -101,6 +103,7 @@ class LoginPopover extends Component {
                 </Hidden>
                 {'로그인'}
               </Button>
+
               <Popover
                 className={classes.popOver}
                 id="login-poper"
@@ -127,9 +130,12 @@ class LoginPopover extends Component {
                   </Button>
                   <Button
                     className={classes.button}
-                    onClick={() => {
-                      this.handleDialogOpenClick('creator'); this.handleClose();
-                    }}
+                    onClick={
+                      (() => {
+                        this.handleDialogOpenClick('creator');
+                        this.handleClose();
+                      })
+                    }
                   >
                     크리에이터
                   </Button>
@@ -150,13 +156,16 @@ class LoginPopover extends Component {
                 handleClose={this.handleDialogClose}
                 logout={logout}
               />
+
             </React.Fragment>
           )
           : (
             <React.Fragment>
               <Button
-                className={clsx(classes.rightLink, classes.linkPriamry)}
+                className={classnames(classes.rightLink, classes.linkPriamry)}
                 color="inherit"
+                // // 클로즈베타를 위해 회원가입을 막아둠
+                // onClick={this.handleClick}
                 onClick={this.handleClick}
               >
                 <Hidden mdUp>
@@ -185,7 +194,8 @@ class LoginPopover extends Component {
                   <Button
                     onClick={() => {
                       alert('현재, Twitch 아이디로 로그인할 수 있어요! 확인 이후 로그인하세요!');
-                      this.handleDialogOpenClick('creator'); this.handleClose();
+                      this.handleDialogOpenClick('creator');
+                      this.handleClose();
                     }}
                     className={classes.button}
                   >
@@ -201,7 +211,6 @@ class LoginPopover extends Component {
                 handleClose={this.handleDialogClose}
                 logout={logout}
               />
-
             </React.Fragment>
           )
         }

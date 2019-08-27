@@ -327,7 +327,7 @@ const buttonStyle = {
     paddingRight: '12px',
     fontSize: '20px',
     height: '41px',
-    minWidth: '41px',
+    minWidth: '20px',
     width: '41px',
     '& .fab,& .fas,& .far,& .fal,& svg,& .material-icons': {
       marginRight: '0px',

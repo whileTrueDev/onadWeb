@@ -49,6 +49,7 @@ const tableStyle = theme => ({
     lineHeight: '1.42857143',
     padding: '12px 8px',
     verticalAlign: 'middle',
+    // fontWeight: 700,
   },
   tableFooter: {
     ...defaultFont,
@@ -62,6 +63,30 @@ const tableStyle = theme => ({
     width: '100%',
     marginTop: theme.spacing(3),
     overflowX: 'auto',
+  },
+  imgCell: {
+    [theme.breakpoints.up('md')]: {
+      maxWidth: '12vh',
+    },
+    maxHeight: '6vh',
+  },
+  tableButton: {
+    [theme.breakpoints.down('sm')]: {
+      fontSize: '2px',
+    },
+  },
+  ButtonCell: {
+    [theme.breakpoints.down('sm')]: {
+      padding: 0,
+    },
+  },
+  imgCellNoPage: {
+    maxWidth: '5.7vh',
+    maxHeight: '2.6vh',
+    [theme.breakpoints.down('sm')]: {
+      maxHeight: '50px',
+    },
+
   },
 });
 

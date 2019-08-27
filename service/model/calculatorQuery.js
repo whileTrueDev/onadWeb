@@ -19,26 +19,26 @@ const calculatorQuery = (query, queryArray=[]) => {
     pool.getConnection((err, conn)=>{
       // 커넥션 시 에러발생
       if(err){
-        conn.release();
         reject({
           cause : 'connection',
           error : err
         }); 
+      }else{
+        conn.query(query, queryArray, (error, result)=>{
+          if(error){
+            conn.release();
+            reject({
+              cause : 'query',
+              error : error.sqlMessage
+            }); 
+          }else{
+            conn.release();
+            resolve({
+              result : result
+            });
+          }
+        })
       }
-      conn.query(query, queryArray, (error, result)=>{
-        if(error){
-          conn.release();
-          reject({
-            cause : 'query',
-            error : error.sqlMessage
-          }); 
-        }else{
-          conn.release();
-          resolve({
-            result : result
-          });
-        }
-      })
     })
   })
 }

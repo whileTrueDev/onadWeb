@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import shortId from 'shortid';
 import PropTypes from 'prop-types';
-
+import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import DialogContent from '@material-ui/core/DialogContent';
+import withStyles from '@material-ui/core/styles/withStyles';
 import axios from '../../../../../utils/axios';
 // custom components
 import Dialog from '../../../components/Dialog/Dialog';
@@ -12,6 +13,28 @@ import HOST from '../../../../../config';
 // 상수
 const CONFIRMED_BANNER_STATE = 1; // 승인됨 배너 스테이트
 const STARTED_BANNER_STATE = 3; // 광고중 배너 스테이트
+
+const style = theme => ({
+  title: {
+    [theme.breakpoints.down('xs')]: {
+      fontSize: '14px',
+
+    },
+    [theme.breakpoints.up('sm')]: {
+      fontSize: '1.25rem',
+    },
+  },
+  names: {
+    [theme.breakpoints.down('xs')]: {
+      fontSize: '14px',
+      fontWeight: 700,
+    },
+    [theme.breakpoints.up('sm')]: {
+      fontSize: '1.25rem',
+      fontWeight: 700,
+    },
+  },
+});
 
 function useConfirmDialog() {
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
@@ -60,7 +83,7 @@ function useFetchCreatorData(selectedBanner, tableData) {
 
 function AdvertiseStartDialog(props) {
   const {
-    open, marketerDebit, onClose, selectedBanner, tableData, history,
+    open, marketerDebit, onClose, selectedBanner, tableData, history, classes,
   } = props;
 
   const {
@@ -96,6 +119,12 @@ function AdvertiseStartDialog(props) {
         .catch((err) => {
           console.log(err);
         });
+
+      // const advertiseOnOffUrl = `${HOST}/api/dashboard/marketer/advertiseOnOff`;
+      // await axios.post(advertiseOnOffUrl)
+      //   .catch((err) => {
+      //     console.log(err);
+      //   });
     } else if (selectedBanner.confirmState === STARTED_BANNER_STATE) {
       // 광고중인 배너인 경우
 
@@ -118,6 +147,12 @@ function AdvertiseStartDialog(props) {
         .catch((err) => {
           console.log(err);
         });
+
+      // const advertiseOnOffUrl = `${HOST}/api/dashboard/marketer/advertiseOnOff`;
+      // await axios.post(advertiseOnOffUrl)
+      //   .catch((err) => {
+      //     console.log(err);
+      //   });
     }
     history.push('/dashboard/marketer/main');
   }
@@ -151,25 +186,42 @@ function AdvertiseStartDialog(props) {
     >
       <div>
         {/* 모달내용 */}
-        <div>
-          <img src={selectedBanner.bannerSrc} alt="selectedBanner" height="400px" width="600px" />
-          <Typography variant="h6">{`광고 캐시 잔액 : ${marketerDebit}`}</Typography>
+        <Grid container direction="column" spacing={1}>
+          <Grid item>
+            <img src={selectedBanner.bannerSrc} alt="selectedBanner" style={{ width: '100%', height: 'auto' }} />
+          </Grid>
+          <Grid item>
+            <Typography className={classes.title}>
+              {'사용할 광고캐시 : '}
+              <b>{marketerDebit}</b>
+              {' 원'}
+            </Typography>
+          </Grid>
+
           {/* 승인된 배너 / 일시정지가 아닌 배너 */}
           { selectedBanner.confirmState === CONFIRMED_BANNER_STATE && (
-            <div>
-              <Typography variant="h6">광고가 송출될 크리에이터 :</Typography>
-              {creatorData ? creatorData.map(data => (
-                // 일시정지된 배너인 경우 creatorData가 있으므로 해당 데이터를 사용한다
-                <span key={data}>{`${data}, `}</span>
-              )) : (
-                // 일시정지된 배너가 아닌 경우 광고될 크리에이터 목록에서 가져온다.
-                tableData.map(data => (
-                  <span key={shortId.generate()}>{`${data[0]}, `}</span>
-                ))
-              )}
-            </div>
+            <Grid item>
+              <Grid container direction="row" alignItems="center" spacing={1}>
+                <Grid item>
+                  <Typography className={classes.title}>광고가 송출될 크리에이터 :</Typography>
+                </Grid>
+                <Grid item>
+                  {creatorData ? creatorData.map(data => (
+                    // 일시정지된 배너인 경우 creatorData가 있으므로 해당 데이터를 사용한다
+                    <span key={data} className={classes.names}>{`${data}, `}</span>
+                  )) : (
+                  // 일시정지된 배너가 아닌 경우 광고될 크리에이터 목록에서 가져온다.
+                    tableData.map(data => (
+                      <span key={shortId.generate()} className={classes.names}>{`${data[0]}, `}</span>
+                    ))
+                  )}
+                </Grid>
+              </Grid>
+            </Grid>
           )}
-        </div>
+
+
+        </Grid>
 
         {/* confirm dialog */}
         <Dialog
@@ -215,4 +267,4 @@ AdvertiseStartDialog.propTypes = {
   tableData: PropTypes.array.isRequired,
 };
 
-export default AdvertiseStartDialog;
+export default withStyles(style)(AdvertiseStartDialog);

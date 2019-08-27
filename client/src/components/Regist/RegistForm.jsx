@@ -12,52 +12,42 @@ import {
   withStyles,
   MenuItem,
   TextField,
+  Grid,
 } from '@material-ui/core';
 import Done from '@material-ui/icons/Done';
-import Clear from '@material-ui/icons/Clear';
 import axios from '../../utils/axios';
 import SuccessTypo from '../Dashboard/components/Typography/Success';
-import DangerTypo from '../Dashboard/components/Typography/Danger';
 import HOST from '../../config';
 
 // Style Overriding용.
 const styles = theme => ({
-  container: {
-    display: 'block',
-    flexWrap: 'wrap',
-    width: 700,
-  },
   textField: {
-    marginLeft: theme.spacing(1),
-    marginRight: 0,
-    marginBottom: theme.spacing(1),
-    width: 250,
+    [theme.breakpoints.down('xs')]: {
+      minWidth: '200px',
+      marginRight: 0,
+    },
+    [theme.breakpoints.up('sm')]: {
+      minWidth: '300px',
+      marginRight: '10px',
+    },
   },
-  menu: {
-    width: 200,
+  phoneField: {
+    [theme.breakpoints.down('xs')]: {
+      minWidth: '200px',
+      marginRight: 0,
+    },
+    [theme.breakpoints.up('sm')]: {
+      width: 220,
+    },
   },
   divider: {
     width: 2,
     height: 28,
-    margin: 4,
-  },
-  codeField: {
-    marginLeft: theme.spacing(1),
-    marginRight: 0,
-    marginTop: theme.spacing(2),
-    marginBottom: theme.spacing(2),
-    width: 400,
+    margin: 2,
   },
   button: {
     marginTop: theme.spacing(1),
     marginRight: theme.spacing(1),
-  },
-  actionsContainer: {
-    marginBottom: theme.spacing(2),
-  },
-  row: {
-    flex: 1,
-    flexDirection: 'row', // 혹은 'column'
   },
 });
 
@@ -134,13 +124,13 @@ const RegistForm = (props) => {
       const marketerBusinessRegNum = (document.getElementById('marketerBusinessRegNum') ? document.getElementById('marketerBusinessRegNum').value : '');
       const marketerPhoneNum = state.phoneNum;
       const marketerRawPasswd = state.passwordValue;
-      const makreterDomain = state.domain;
+      const marketerDomain = state.domain;
       const marketerUserType = userType;
       const user = {
         marketerId,
         marketerRawPasswd,
         marketerName,
-        marketerMail: `${marketerMailId}@${makreterDomain}`,
+        marketerMail: `${marketerMailId}@${marketerDomain}`,
         marketerPhoneNum,
         marketerBusinessRegNum,
         marketerUserType,
@@ -169,7 +159,6 @@ const RegistForm = (props) => {
             alert('ID가 중복되었습니다. 다시 입력해 주세요.');
             dispatch({ type: 'checkDuplication', value: true });
           } else {
-            alert('회원가입이 가능합니다. 계속 진행하세요.');
             dispatch({ type: 'checkDuplication', value: false });
           }
         });
@@ -177,200 +166,183 @@ const RegistForm = (props) => {
   };
 
   return (
-    <div className={classes.container}>
+    <div>
       <form autoComplete="off" onSubmit={handleSubmit} id="form">
-        <FormControl
-          className={classes.codeField}
-          error={state.id}
-        >
-          <InputLabel shrink>ID</InputLabel>
-          <Input
-            required
-            id="id"
-            placeholder="아이디를 입력하세요"
-            style={{ width: 300 }}
-            onChange={handleChange('id')}
-            endAdornment={(
-              <InputAdornment position="end">
-                <Divider className={classes.divider} />
-                <Button onClick={checkDuplicateID}>
-                    조회
-                </Button>
-                { !state.checkDuplication
-                  ? <SuccessTypo><Done /></SuccessTypo>
-                  : (
-                    <DangerTypo>
-                      <Clear />
-                    </DangerTypo>
-                  )}
-              </InputAdornment>
-              )}
-          />
-          <FormHelperText>{state.id ? '영문자로 시작하는 4-15자 영문 또는 숫자' : ' '}</FormHelperText>
-        </FormControl>
-        <br />
-        <TextField
-          required
-          label="PASSWORD"
-          type="password"
-          placeholder="비밀번호를 입력하세요."
-          className={classes.textField}
-          onChange={handleChange('password')}
-          helperText={state.password ? '특수문자를 포함한 8-20자 영문 또는 숫자' : ' '}
-          error={state.password}
-          margin="normal"
-          InputLabelProps={{
-            shrink: true,
-          }}
-          style={
-            {
-              marginRight: 10,
-            }
-          }
-        />
-        <TextField
-          required
-          label="RE-PASSWORD"
-          type="password"
-          placeholder="비밀번호를 재입력하세요."
-          helperText={state.repasswd ? '비밀번호와 동일하지 않습니다.' : ' '}
-          error={state.repasswd}
-          className={classes.textField}
-          onChange={handleChange('repasswd')}
-          margin="normal"
-          InputLabelProps={{
-            shrink: true,
-          }}
-        />
-
-        <TextField
-          required
-          label="이름(회사명)"
-          id="name"
-          className={classes.textField}
-          placeholder="이름(회사명)을 입력하세요"
-          margin="normal"
-          InputLabelProps={{
-            shrink: true,
-          }}
-          style={
-            {
-              width: 300,
-              marginRight: 10,
-            }
-          }
-        />
-
-        <FormControl
-          className={classes.textField}
-          required
-          margin="normal"
-          style={{ width: 220 }}
-        >
-          <InputLabel shrink htmlFor="phoneNumber">전화번호</InputLabel>
-          <Input
-            value={state.phoneNum}
-            onChange={handleChange('phoneNum')}
-            id="phoneNumber"
-            inputComponent={TextMaskCustom}
-          />
-          <FormHelperText>전화번호를 입력하세요.</FormHelperText>
-        </FormControl>
-        <br />
-
-        {userType
-          ? (
-            <FormControl className={classes.codeField}>
-              <InputLabel shrink>사업자등록번호</InputLabel>
+        <Grid container direction="column" spacing={1}>
+          <Grid item xs={12}>
+            <FormControl
+              error={state.id}
+            >
+              <InputLabel shrink>ID</InputLabel>
               <Input
-                // onChange={handleChange('businessRegNum')}
-                name="businessRegNum"
-                placeholder="사업자등록번호를 입력하세요"
+                required
+                id="id"
+                placeholder="아이디를 입력하세요"
+                onChange={handleChange('id')}
                 endAdornment={(
                   <InputAdornment position="end">
                     <Divider className={classes.divider} />
-                    <Button onClick={checkBusinessRegNum}>
+                    <Button onClick={checkDuplicateID}>
                         조회
                     </Button>
+                    { !state.checkDuplication && <SuccessTypo><Done /></SuccessTypo>}
                   </InputAdornment>
                   )}
               />
-              <FormHelperText>회사에 등록된 사업자 번호를 입력후 조회버튼을 누르세요.</FormHelperText>
+              <FormHelperText>{state.id ? '영문자로 시작하는 4-15자 영문 또는 숫자' : ' '}</FormHelperText>
             </FormControl>
-          )
-          : <div />
+          </Grid>
+          <Grid container direction="row">
+            <Grid item>
+              <TextField
+                required
+                label="PASSWORD"
+                type="password"
+                placeholder="비밀번호를 입력하세요."
+                className={classes.textField}
+                onChange={handleChange('password')}
+                helperText={state.password ? '특수문자를 포함한 8-20자 영문 또는 숫자' : ' '}
+                error={state.password}
+                margin="normal"
+                InputLabelProps={{
+                  shrink: true,
+                }}
+              />
+            </Grid>
+            <Grid item>
+              <TextField
+                required
+                label="RE-PASSWORD"
+                type="password"
+                placeholder="비밀번호를 재입력하세요."
+                helperText={state.repasswd ? '비밀번호와 동일하지 않습니다.' : ' '}
+                error={state.repasswd}
+                className={classes.textField}
+                onChange={handleChange('repasswd')}
+                margin="normal"
+                InputLabelProps={{
+                  shrink: true,
+                }}
+              />
+            </Grid>
+          </Grid>
+          <Grid item container direction="row">
+            <Grid item>
+              <TextField
+                required
+                label="이름(회사명)"
+                id="name"
+                className={classes.textField}
+                placeholder="이름(회사명)을 입력하세요"
+                margin="normal"
+                InputLabelProps={{
+                  shrink: true,
+                }}
+              />
+            </Grid>
+            <Grid item>
+              <FormControl
+                className={classes.phoneField}
+                required
+                margin="normal"
+              >
+                <InputLabel shrink htmlFor="phoneNumber">전화번호</InputLabel>
+                <Input
+                  value={state.phoneNum}
+                  onChange={handleChange('phoneNum')}
+                  id="phoneNumber"
+                  inputComponent={TextMaskCustom}
+                />
+                <FormHelperText>전화번호를 입력하세요.</FormHelperText>
+              </FormControl>
+            </Grid>
+          </Grid>
+          <Grid item>
+            {userType
+              ? (
+                <FormControl style={{ marginTop: '8px', marginBottom: '16px' }}>
+                  <InputLabel shrink>사업자등록번호</InputLabel>
+                  <Input
+                // onChange={handleChange('businessRegNum')}
+                    name="businessRegNum"
+                    endAdornment={(
+                      <InputAdornment position="end">
+                        <Divider className={classes.divider} />
+                        <Button onClick={checkBusinessRegNum}>
+                        조회
+                        </Button>
+                      </InputAdornment>
+                  )}
+                  />
+                  <FormHelperText>사업자 번호를 입력후 조회버튼을 누르세요.</FormHelperText>
+                </FormControl>
+              )
+              : <div />
           }
-        <br />
-
-        <TextField
-          required
-          label="EMAIL ID"
-          className={classes.textField}
-          onChange={handleChange('email')}
-          helperText={state.email ? 'ID의 형식이 올바르지 않습니다.' : 'EMAIL ID을 입력하세요.'}
-          error={state.email}
-          margin="normal"
-          id="email"
-          InputLabelProps={{
-            shrink: true,
-          }}
-          InputProps={{
-            endAdornment: <InputAdornment position="end">@</InputAdornment>,
-          }}
-          style={
-            {
-              width: 200,
-            }
-          }
-        />
-
-        <TextField
-          required
-          select
-          label="Domain"
-          className={classes.textField}
-          value={state.domain}
-          onChange={handleChange('domain')}
-          helperText="EMAIL Domain을 선택하세요."
-          SelectProps={{
-            MenuProps: {
-              className: classes.menu,
-            },
-          }}
-          InputLabelProps={{
-            shrink: true,
-          }}
-          margin="normal"
-          style={
-            {
-              width: 200,
-            }
-          }
-        >
-          {domains.map(option => (
-            <MenuItem key={option.value} value={option.value}>
-              {option.value}
-            </MenuItem>
-          ))}
-        </TextField>
-        <div className={classes.actionsContainer}>
-          <Button
-            onClick={handleBack}
-            className={classes.button}
-          >
-        뒤로
-          </Button>
-          <Button
-            variant="contained"
-            color="primary"
-            className={classes.button}
-            type="submit"
-            value="submit"
-          >
-            다음
-          </Button>
-        </div>
+          </Grid>
+          <Grid container direction="row">
+            <Grid item>
+              <TextField
+                required
+                label="EMAIL ID"
+                className={classes.textField}
+                onChange={handleChange('email')}
+                helperText={state.email ? 'ID의 형식이 올바르지 않습니다.' : 'EMAIL ID을 입력하세요.'}
+                error={state.email}
+                margin="normal"
+                id="email"
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                InputProps={{
+                  endAdornment: <InputAdornment position="end">@</InputAdornment>,
+                }}
+              />
+            </Grid>
+            <Grid item>
+              <TextField
+                required
+                select
+                label="Domain"
+                className={classes.textField}
+                value={state.domain}
+                onChange={handleChange('domain')}
+                helperText="EMAIL Domain을 선택하세요."
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                margin="normal"
+              >
+                {domains.map(option => (
+                  <MenuItem key={option.value} value={option.value}>
+                    {option.value}
+                  </MenuItem>
+                ))}
+              </TextField>
+            </Grid>
+          </Grid>
+          <Grid item style={{ marginTop: '16px' }}>
+            <div>
+              <Button
+                onClick={handleBack}
+                className={classes.button}
+              >
+              뒤로
+              </Button>
+              <Button
+                variant="contained"
+                color="primary"
+                className={classes.button}
+                type="submit"
+                value="submit"
+              >
+              다음
+              </Button>
+            </div>
+          </Grid>
+        </Grid>
       </form>
+
     </div>
   );
 };

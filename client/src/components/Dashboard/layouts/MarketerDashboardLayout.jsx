@@ -6,7 +6,6 @@ import Navbar from '../components/Navbars/Navbar';
 import dashboardStyle from '../assets/jss/onad/layouts/dashboardStyle';
 import Sidebar from '../components/Sidebar/Sidebar';
 import allRoutes from '../routes';
-import logo from '../assets/img/main_logo.png';
 import Footer from '../components/Footer/Footer';
 import '../assets/css/onad.css';
 
@@ -21,13 +20,6 @@ const MarketerRoutes = ({ history, pannelRef }) => (
     ))}
   </Switch>
 );
-// useEffect(() => {
-//   if (!history.location.state) {
-//     window.location.href = '/';
-//   } else if (history.location.state.userType !== 'marketer') {
-//     window.location.href = '/';
-//   }
-// });
 
 const MarketerDashboard = ({
   classes, history, ...rest
@@ -40,12 +32,15 @@ const MarketerDashboard = ({
   const mainPanel = useRef();
 
   useEffect(() => {
+    document.title = '온애드 | 대시보드';
     mainPanel.current.scrollTop = 0;
-    if (history.location.pathname === window.location.pathname) {
-      if (mobileOpen) {
-        setMobileOpen(false);
+    return (() => {
+      if (history.location.pathname === window.location.pathname) {
+        if (mobileOpen) {
+          setMobileOpen(false);
+        }
       }
-    }
+    });
   }, [history.location, history.location.pathname, mobileOpen]);
 
   return (
@@ -54,9 +49,10 @@ const MarketerDashboard = ({
         routes={allRoutes.marketer}
         logoText="OnAD"
         color="info"
-        logo={logo}
-        open={mobileOpen}
+        logo="/pngs/logo/onad_logo_vertical.png"
+        mobileOpen={mobileOpen}
         handleDrawerToggle={handleDrawerToggle}
+        history={history}
         {...rest}
       />
       <div className={classes.mainPanel} ref={mainPanel}>

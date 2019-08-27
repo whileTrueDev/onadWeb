@@ -1,8 +1,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 // for Link tag component
 // @material-ui/core
-import withStyles from '@material-ui/core/styles/withStyles';
-import makeStyles from '@material-ui/core/styles/makeStyles';
+import { withStyles, makeStyles } from '@material-ui/core/styles';
 import {
   GridList,
   GridListTile,
@@ -150,8 +149,8 @@ const BannerGridList = (props) => {
       style={gridStyle}
     >
       {bannerList.map(banner => (
-        <GridListTile key={banner.bannerId} style={{ height: '250px' }}>
-          <img src={banner.bannerSrc} alt={banner.bannerId} />
+        <GridListTile key={banner.bannerId} style={{ height: 'auto', maxHeight: '200px' }}>
+          <img src={banner.bannerSrc} alt={banner.bannerId} style={{ maxWidth: '100%', height: '100%' }} />
           <GridListTileBar
             classes={{
               root: imageClasses.titleBar,
@@ -175,11 +174,12 @@ const BannerGridList = (props) => {
 };
 
 const BannerManage = (props) => {
-  const { classes } = props;
+  const { classes, history } = props;
   const [bannerList, setBannerList] = useState([]);
   const [ApprovedList, setApprovedList] = useState([]);
   const [RejectedList, setRejectedList] = useState([]);
   const [OngoingList, setOngoingList] = useState([]);
+  const [cols, setCol] = useState(1);
   const [RejectedAlarm, setRejected] = useState(false);
   const [OngoingAlarm, setOngoing] = useState(false);
   const [open, setOpen] = useState(false);
@@ -215,6 +215,11 @@ const BannerManage = (props) => {
           setRejectedList(failureBanners);
           setOngoingList(continueBanners);
           setBannerList(res.data[1]);
+          if (window.innerWidth > 600) {
+            setCol(3);
+          } else {
+            setCol(1);
+          }
         }
       });
   }, []);
@@ -232,7 +237,6 @@ const BannerManage = (props) => {
   };
 
   const handleDelete = banner => () => {
-    console.log('배너를 삭제합니다');
     const { bannerId } = banner;
     axios.post(`${HOST}/api/dashboard/marketer/banner/delete`, { bannerId })
       .then((res) => {
@@ -246,140 +250,158 @@ const BannerManage = (props) => {
   };
 
   const handleReason = banner => () => {
-    console.log('배너의 사유를 보여줍니다');
     const { bannerDenialReason, date, bannerSrc } = banner;
-    console.log(typeof (date));
     let newdate = new Date(date);
     newdate = newdate.toLocaleString();
     setBanner({ bannerDenialReason, date: newdate, bannerSrc });
     handleOpen();
   };
 
+  const handleRedirect = () => {
+    history.push('/dashboard/marketer/main');
+  };
+
   return (
-    <GridContainer>
-      <GridItem xs={12} sm={12} md={8}>
-        <Card>
-          <CardHeader color="blueGray" stats>
-            <h4 className={classes.cardTitleWhite}>등록한 배너</h4>
-            <p className={classes.cardCategoryWhite}>등록된 모든 배너를 보여줍니다.</p>
-          </CardHeader>
-          <CardBody>
-            {bannerList.length === 0
-              ? (
-                <DangerTypography>
-                  <Warning />
-                  {'승인된  배너가 없어요!'}
-                </DangerTypography>
-              )
-              : <BannerGridList bannerList={bannerList} cols={3} />
+    <div>
+      <GridContainer>
+        <GridItem xs={12} sm={12} md={8} xl={6}>
+          <Card>
+            <CardHeader color="blueGray" stats>
+              <h4 className={classes.cardTitleWhite}>등록한 배너</h4>
+              <p className={classes.cardCategoryWhite}>등록된 모든 배너를 보여줍니다.</p>
+            </CardHeader>
+            <CardBody>
+              {bannerList.length === 0
+                ? (
+                  <DangerTypography>
+                    <Warning />
+                    {'승인된  배너가 없어요!'}
+                  </DangerTypography>
+                )
+                : <BannerGridList bannerList={bannerList} cols={cols} />
             }
-          </CardBody>
-        </Card>
-      </GridItem>
-      <GridItem xs={12} sm={6} md={4}>
-        <Card>
-          <CardHeader color="blueGray" stats icon>
-            <CardIcon color="blueGray">
-              <AttachFile />
-            </CardIcon>
-            <p className={classes.cardCategory}>지금바로 배너를 등록하세요</p>
-            <h3 className={classes.cardTitle}>
+            </CardBody>
+          </Card>
+        </GridItem>
+        <GridItem xs={12} sm={12} md={4} xl={3}>
+          <Card>
+            <CardHeader color="blueGray" stats icon>
+              <CardIcon color="blueGray">
+                <AttachFile />
+              </CardIcon>
+              <p className={classes.cardCategory}>지금바로 배너를 등록하세요</p>
+              <h3 className={classes.cardTitle}>
             배너 등록하기
-            </h3>
-          </CardHeader>
-          <CardBody style={{
-            margin: '30px auto',
-            padding: 'auto',
-            itemAlign: 'center',
-          }}
-          >
-            <CustomButton round color="info" size="lg" onClick={handleUpload}>등록</CustomButton>
-          </CardBody>
-          <CardFooter stats />
-        </Card>
-      </GridItem>
-      <GridItem xs={12} sm={6} md={4}>
-        <Card>
-          <CardHeader color="info" stats icon>
-            <CardIcon color="info">
-              <Forum />
-            </CardIcon>
-            <p className={classes.cardCategory}>광고 심의중인 배너</p>
-            <h3 className={classes.cardTitle}>
+              </h3>
+            </CardHeader>
+            <CardBody style={{
+              margin: '30px auto',
+              padding: 'auto',
+              itemAlign: 'center',
+            }}
+            >
+              <CustomButton round color="info" size="lg" onClick={handleUpload}>등록</CustomButton>
+            </CardBody>
+            <CardFooter stats />
+          </Card>
+        </GridItem>
+      </GridContainer>
+
+      <GridContainer>
+        <GridItem xs={12} sm={12} md={4} xl={3}>
+          <Card>
+            <CardHeader color="info" stats icon>
+              <CardIcon color="info">
+                <Forum />
+              </CardIcon>
+              <p className={classes.cardCategory}>광고 심의중인 배너</p>
+              <h3 className={classes.cardTitle}>
             진행중인 배너
-            </h3>
-          </CardHeader>
-          <CardBody>
-            <BannerGridList bannerList={OngoingList} cols={1} alarm={OngoingAlarm} handleDelete={handleDelete} />
-          </CardBody>
-          <CardFooter stats>
-            <Tooltip title="취소할 배너를 고르세요.">
-              <Button style={{ alignItems: 'center' }} onClick={handleAlarm('ongoing')}>
-                <InfoTypography><CallMissed /></InfoTypography>
-                <span className={classes.infoText}>심의취소</span>
-              </Button>
-            </Tooltip>
-          </CardFooter>
-        </Card>
-      </GridItem>
-      <GridItem xs={12} sm={6} md={4}>
-        <Card>
-          <CardHeader color="success" stats icon>
-            <CardIcon color="success">
-              <Check />
-            </CardIcon>
-            <p className={classes.cardCategory}>심의가 완료된 배너</p>
-            <h3 className={classes.cardTitle}>
+              </h3>
+            </CardHeader>
+            <CardBody>
+              <BannerGridList
+                bannerList={OngoingList}
+                cols={1}
+                alarm={OngoingAlarm}
+                handleDelete={handleDelete}
+              />
+            </CardBody>
+            <CardFooter stats>
+              <Tooltip title="취소할 배너를 고르세요.">
+                <Button style={{ alignItems: 'center' }} onClick={handleAlarm('ongoing')}>
+                  <InfoTypography><CallMissed /></InfoTypography>
+                  <span className={classes.infoText}>심의취소</span>
+                </Button>
+              </Tooltip>
+            </CardFooter>
+          </Card>
+        </GridItem>
+        <GridItem xs={12} sm={12} md={4} xl={3}>
+          <Card>
+            <CardHeader color="success" stats icon>
+              <CardIcon color="success">
+                <Check />
+              </CardIcon>
+              <p className={classes.cardCategory}>심의가 완료된 배너</p>
+              <h3 className={classes.cardTitle}>
             완료된 배너
-            </h3>
-          </CardHeader>
-          <CardBody>
-            <BannerGridList bannerList={ApprovedList} cols={1} />
-          </CardBody>
-          <CardFooter stats>
-            <Tooltip title="대시보드로 광고를 시작하러 이동합니다.">
-              <Button style={{ alignItems: 'center' }}>
-                <SuccessTypography><TouchApp /></SuccessTypography>
-                <span className={classes.successText}>광고시작하기</span>
-              </Button>
-            </Tooltip>
-          </CardFooter>
-        </Card>
-      </GridItem>
-      <GridItem xs={12} sm={6} md={4}>
-        <Card>
-          <CardHeader color="danger" stats icon>
-            <CardIcon color="danger">
-              <Clear />
-            </CardIcon>
-            <p className={classes.cardCategory}>심의가 거절된 배너</p>
-            <h3 className={classes.cardTitle}>
+              </h3>
+            </CardHeader>
+            <CardBody>
+              <BannerGridList bannerList={ApprovedList} cols={1} />
+            </CardBody>
+            <CardFooter stats>
+              <Tooltip title="대시보드로 광고를 시작하러 이동합니다.">
+                <Button style={{ alignItems: 'center' }} onClick={handleRedirect}>
+                  <SuccessTypography><TouchApp /></SuccessTypography>
+                  <span className={classes.successText}>광고시작하기</span>
+                </Button>
+              </Tooltip>
+            </CardFooter>
+          </Card>
+        </GridItem>
+        <GridItem xs={12} sm={12} md={4} xl={3}>
+          <Card>
+            <CardHeader color="danger" stats icon>
+              <CardIcon color="danger">
+                <Clear />
+              </CardIcon>
+              <p className={classes.cardCategory}>심의가 거절된 배너</p>
+              <h3 className={classes.cardTitle}>
             거절된 배너
-            </h3>
-          </CardHeader>
-          <CardBody>
-            <BannerGridList bannerList={RejectedList} cols={1} alarm={RejectedAlarm} handleDelete={handleDelete} handleReason={handleReason} />
-          </CardBody>
-          <CardFooter stats>
-            <Tooltip title="삭제할 배너를 고르세요.">
-              {RejectedAlarm ? (
-                <Button style={{ alignItems: 'center' }} onClick={handleAlarm('rejected')}>
-                  <DangerTypography><CallMissed /></DangerTypography>
-                  <span className={classes.dangerText} name="ongoing">취소</span>
-                </Button>
-              ) : (
-                <Button style={{ alignItems: 'center' }} onClick={handleAlarm('rejected')}>
-                  <DangerTypography><CallMissed /></DangerTypography>
-                  <span className={classes.dangerText} name="ongoing">배너삭제</span>
-                </Button>
-              )}
-            </Tooltip>
-          </CardFooter>
-        </Card>
-      </GridItem>
-      <ReasonDialog open={open} handleOpen={handleOpen} banner={selectedBanner} />
-      <UploadDialog open={upload} handleOpen={handleUpload} readyBanner={readyBanner} />
-    </GridContainer>
+              </h3>
+            </CardHeader>
+            <CardBody>
+              <BannerGridList
+                bannerList={RejectedList}
+                cols={1}
+                alarm={RejectedAlarm}
+                handleDelete={handleDelete}
+                handleReason={handleReason}
+              />
+            </CardBody>
+            <CardFooter stats>
+              <Tooltip title="삭제할 배너를 고르세요.">
+                {RejectedAlarm ? (
+                  <Button style={{ alignItems: 'center' }} onClick={handleAlarm('rejected')}>
+                    <DangerTypography><CallMissed /></DangerTypography>
+                    <span className={classes.dangerText} name="ongoing">취소</span>
+                  </Button>
+                ) : (
+                  <Button style={{ alignItems: 'center' }} onClick={handleAlarm('rejected')}>
+                    <DangerTypography><CallMissed /></DangerTypography>
+                    <span className={classes.dangerText} name="ongoing">배너삭제</span>
+                  </Button>
+                )}
+              </Tooltip>
+            </CardFooter>
+          </Card>
+        </GridItem>
+        <ReasonDialog open={open} handleOpen={handleOpen} banner={selectedBanner} />
+        <UploadDialog open={upload} handleOpen={handleUpload} readyBanner={readyBanner} />
+      </GridContainer>
+    </div>
   );
 };
 

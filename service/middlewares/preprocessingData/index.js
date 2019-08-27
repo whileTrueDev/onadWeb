@@ -10,22 +10,26 @@ function preprocessingBannerData(result) {
     columns = columns.map((col) => {
       col = col.replace("bannerSrc", "배너")
         .replace("marketerName", "광고주")
-        .replace("contractionTime", "첫 게시일")
+        .replace("contractionTime", "계약일")
         .replace("contractionState", "현재 상태")
       return col;
     });
-
+    columns.splice(-1, 1);
+    
+    let contractionIds = [];
     // dataset preprocessing
     result = result.map(
     (value) => {
       value.contractionState === 0 ? value.contractionState = "진행중" : value.contractionState = "완료됨";
       value.contractionTime = value.contractionTime.toLocaleString();
+      contractionIds.push(value.contractionId);
+      delete value.contractionId;
 
       value = Object.values(value);
       return value
     }
   );
-  return {columns: columns, data: result}
+  return {columns: columns, data: result, contractionIds: contractionIds}
   }
 }
 

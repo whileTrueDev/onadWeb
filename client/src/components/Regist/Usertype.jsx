@@ -11,15 +11,15 @@ const styles = theme => ({
   root: {
     display: 'flex',
     flexWrap: 'wrap',
-    minWidth: 800,
   },
   image: {
     position: 'relative',
-    height: 300,
-
     [theme.breakpoints.down('xs')]: {
       width: '100% !important', // Overrides inline-style
       height: 100,
+    },
+    [theme.breakpoints.up('sm')]: {
+      height: 300,
     },
     '&:hover, &$focusVisible': {
       zIndex: 1,
@@ -67,7 +67,7 @@ const styles = theme => ({
   },
   imageTitle: {
     position: 'relative',
-    padding: `${theme.spacing(2)}px ${theme.spacing(1) * 4}px ${theme.spacing(1) + 6}px`,
+    padding: `${theme.spacing(2)}px ${theme.spacing(3)}px ${theme.spacing(1)}px`,
   },
   imageMarked: {
     height: 3,
@@ -82,12 +82,12 @@ const styles = theme => ({
 
 const images = [
   {
-    url: '/pngs/Personal.jpg',
+    url: '/pngs/regist/Personal.jpg',
     title: '개인',
     width: '50%',
   },
   {
-    url: '/pngs/group.jpg',
+    url: '/pngs/regist/group.jpg',
     title: '법인',
     width: '50%',
   },

@@ -12,7 +12,7 @@
 */
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
-const twitchStrategy = require("passport-twitch").Strategy;
+const twitchStrategy = require("passport-twitch-new").Strategy;
 
 // 암호화 체크 객체 생성
 const encrpyto = require('./encryption');
@@ -30,7 +30,6 @@ passport.serializeUser((user, done)=>{
 //로그인이 되었을 때 매 요청시마다 자동으로 수행되는 session에서 인증된 req.user의 영역으로 저장하기.
 passport.deserializeUser((user, done)=>{
     //db에서 추가로 데이터를 req.user에 저장.
-    console.log('deserialize');
     done(null, user);
 })
 
@@ -62,7 +61,6 @@ passport.use( new LocalStrategy(
     {
         usernameField : 'userid',
         passwordField : 'passwd',
-        session       :  true,
         passReqToCallback : false,
     },
 
@@ -167,22 +165,21 @@ const clientSecret = process.env.NODE_ENV === 'production'
 passport.use(new twitchStrategy({
     clientID: clientID,
     clientSecret: clientSecret,
-    callbackURL: `${HOST}/api/login/twitch/callback`,	
-    scope: "user_read",
+    callbackURL: `${HOST}/api/login/twitch/callback`,
+    scope: "user:read:email",//user:read:email
     passReqToCallback: true,
   },
   // login성공시 수행되는 함수.
   function(req, accessToken, refreshToken, profile, done) {
         let user = {
-            creatorId : profile._json._id,
-            creatorDisplayName: profile._json.display_name,
-            creatorName : profile._json.name,
-            creatorMail : profile._json.email,
-            creatorLogo : profile._json.logo,
+            creatorId : profile.id,
+            creatorDisplayName: profile.display_name, 
+            creatorName : profile.login,
+            creatorMail : profile.email,
+            creatorLogo : profile.profile_image_url,
             userType: "creator"
         }
-
-        doQuery(`SELECT creatorIp, creatorId, creatorName, creatorMail FROM creatorInfo WHERE creatorId = ? `, [user.creatorId])
+        doQuery(`SELECT creatorIp, creatorId, creatorName, creatorMail, creatorTwitchId, creatorLogo FROM creatorInfo WHERE creatorId = ? `, [user.creatorId])
         .then((row)=>{
             const creatorData = row.result[0];
             if(creatorData){
@@ -191,14 +188,13 @@ passport.use(new twitchStrategy({
                 
                 // Data 변경시에 변경된 값을 반영하는 영역.
                 if(!(creatorData.creatorName === user.creatorDisplayName && creatorData.creatorMail === user.creatorMail)){
+                    // 크리에이터의 name 또는 email 이 바뀐 경우 재설정
                     const UpdateQuery = `
                     UPDATE creatorInfo
-                    SET 
-                    creatorName = ? ,
-                    creatorMail = ?
+                    SET  creatorName = ?, creatorMail = ?, creatorTwitchId = ?, creatorLogo = ?
                     WHERE creatorId = ?
                     `
-                    doQuery(UpdateQuery, [user.creatorDisplayName, user.creatorMail, user.creatorId])
+                    doQuery(UpdateQuery, [user.creatorDisplayName, user.creatorMail, user.creatorName, user.creatorLogo, user.creatorId])
                     .then(()=>{
                         return done(null, user);
                     })
@@ -206,35 +202,79 @@ passport.use(new twitchStrategy({
                         console.log(errorData);
                         done(errorData, false);
                     })
-                }else{
+                } else if (!(creatorData.creatorLogo === user.creatorLogo) ) {
+                    // 크리에이터의 로고가 바뀐 경우 재설정
+                    const updateQuery = `
+                    UPDATE creatorInfo
+                    SET creatorLogo = ?
+                    WHERE creatorId = ?
+                    `;
+
+                    doQuery(updateQuery, [user.creatorLogo, user.creatorId])
+                    .then(() => {
+                        return done(null, user);
+                    })
+                    .catch((errorData) => {
+                        console.log(errorData);
+                        done(errorData, false);
+                    })
+                } else if (!(creatorData.creatorTwitchId === user.creatorName) ) {
+                    // 크리에이터의 twitch id가 바뀐 경우 재 설정
+                    const updateQuery = `
+                    UPDATE creatorInfo
+                    SET creatorTwitchId = ?
+                    WHERE creatorId = ?
+                    `;
+
+                    doQuery(updateQuery, [user.creatorName, user.creatorId])
+                    .then(() => {
+                        return done(null, user);
+                    })
+                    .catch((errorData) => {
+                        console.log(errorData);
+                        done(errorData, false);
+                    })
+                } else {
                     return done(null, user);
                 }
-
-            }else{
+            } else {
                 console.log(`${user.creatorDisplayName} 님이 최초 로그인 하셨습니다.`);
                 const creatorIp = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
                 const creatorBannerUrl = makeUrl();
                 user['creatorIp'] = creatorIp;
 
-                const Infoquery = `
+                /**
+                 * 기본값 설정 쿼리
+                 */
+                const infoQuery = `
                 INSERT INTO creatorInfo
-                (creatorId, creatorName, creatorMail, creatorIp, advertiseUrl)
-                VALUES (?, ?, ?, ?, ?)`;
+                (creatorId, creatorName, creatorMail, creatorIp, advertiseUrl, creatorTwitchId, creatorLogo)
+                VALUES (?, ?, ?, ?, ?, ?, ?)`;
 
-                const Incomequery = `
+                const incomeQuery = `
                 INSERT INTO creatorIncome 
                 (creatorId, creatorTotalIncome, creatorReceivable) 
                 VALUES (?, ?, ?)`;
 
-                const Pricequery = `
+                const priceQuery = `
                 INSERT INTO creatorPrice
                 (creatorId, grade, viewerAverageCount, unitPrice)
                 VALUES (?, ?, ?, ?)
                 `
+                
+                // landing 기본값 쿼리 추가
+                const landingQuery = `
+                INSERT INTO creatorLanding
+                (creatorId, creatorTwitchId)
+                VALUES (?, ?)`;
+
                 Promise.all([
-                    doQuery(Infoquery,  [user.creatorId, user.creatorDisplayName, user.creatorMail, creatorIp, `/${creatorBannerUrl}`]),
-                    doQuery(Incomequery,   [user.creatorId, 0, 0]),
-                    doQuery(Pricequery,   [user.creatorId, 1, 0, 1])
+                    doQuery(infoQuery,  [user.creatorId, user.creatorDisplayName,
+                        user.creatorMail, creatorIp, `/${creatorBannerUrl}`,
+                        user.creatorName, user.CreatorLogo]),
+                    doQuery(incomeQuery,   [user.creatorId, 0, 0]),
+                    doQuery(priceQuery,   [user.creatorId, 1, 0, 1]),
+                    doQuery(landingQuery,   [user.creatorId, user.creatorName]),
                 ])
                 .then(()=>{
                     return done(null, user);

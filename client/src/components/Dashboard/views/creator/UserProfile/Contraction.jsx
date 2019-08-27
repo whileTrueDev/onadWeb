@@ -4,6 +4,7 @@ import {
   Paper,
   Typography,
   Divider,
+  Grid,
 } from '@material-ui/core';
 import green from '@material-ui/core/colors/green';
 import makeStyles from '@material-ui/core/styles/makeStyles';
@@ -36,23 +37,30 @@ const useStyles = makeStyles(theme => ({
     paddingTop: theme.spacing(1),
     paddingBottom: theme.spacing(1),
     marginTop: theme.spacing(2),
-    display: 'flex',
+    // display: 'flex',
     backgroundColor: '#f2f2f2',
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    // flex: 1,
+    // flexDirection: 'row',
+    // justifyContent: 'space-between',
+    // alignItems: 'center',
     fontSize: 13,
   },
   inDialogContent: {
     padding: theme.spacing(1),
-    marginLeft: 30,
-    marginRight: 55,
     outline: 'none',
+    [theme.breakpoints.down('xs')]: {
+      fontWeight: 500,
+      fontSize: '10px',
+    },
   },
   actionsContainer: {
     marginTop: theme.spacing(1),
     float: 'right',
+  },
+  termTitle: {
+    [theme.breakpoints.down('xs')]: {
+      fontSize: '12px',
+    },
   },
 }));
 
@@ -89,7 +97,7 @@ function useContractionFlag() {
 }
 
 function Contraction(props) {
-  const { history } = props;
+  const { history, setSnackOpen } = props;
   const classes = useStyles();
   const { DialogOpen, handleDialogOpen, handleDialogClose } = useDialog();
   const { contractionList, handleContraction } = useContractionFlag();
@@ -100,8 +108,8 @@ function Contraction(props) {
       })
         .then((res) => {
           if (res.data === true) {
-            alert('성공적으로 계약이 완료되었습니다.');
-            history.push('/dashboard/creator/user');
+            //history.push('/dashboard/creator/user');
+            setSnackOpen(true);
           }
         })
         .catch(() => {
@@ -111,35 +119,65 @@ function Contraction(props) {
     }
   };
 
+  // const handleWelcomeBanner = () => {
+  //   if (contractionList.every(row => row === true)) {
+  //     axios.post(`${HOST}/api/dashboard/creator/welcome`, {})
+  //       .then(
+  //         (res) => {
+  //           if (res.data === true) { alert('성공적으로 계약이 완료되었습니다.'); }
+  //           history.push('/dashboard/creator/user');
+  //         },
+  //       )
+  //       .catch((res) => {
+  //         alert('계약과정의 오류가 발생하였습니다. 잠시후 시도해주세요.');
+  //         history.push('/dashboard/creator/user');
+  //       });
+  //   }
+  // };
+
   return (
     <div>
       {terms.map((term, index) => (
         <div key={term.state}>
           <Paper className={classes.container} elevation={1} key={term.state}>
-            <Typography component="p" style={{ flex: 8, fontSize: 13 }}>
-              {term.title}
-            </Typography>
-            <Button
-              color="blueGray"
-              onClick={() => handleDialogOpen(term.state)}
-            >
-              약관보기
-            </Button>
-            <Divider className={classes.divider} />
-            { contractionList[index]
-              ? <SuccessTypo><Done /></SuccessTypo>
-              : (
-                <DangerTypo>
-                  <Clear />
-                </DangerTypo>
-              )}
-
+            <Grid container direction="row" justify="space-between" alignItems="center" spacing={1}>
+              <Grid item>
+                <Typography component="p" className={classes.termTitle}>
+                  {term.title}
+                </Typography>
+              </Grid>
+              <Grid item>
+                <Grid container direction="row" alignItems="center">
+                  <Grid item>
+                    <Button
+                      color="blueGray"
+                      onClick={() => handleDialogOpen(term.state)}
+                    >
+                약관보기
+                    </Button>
+                  </Grid>
+                  <Grid>
+                    <Divider className={classes.divider} />
+                  </Grid>
+                  <Grid item>
+                    { contractionList[index]
+                      ? <SuccessTypo><Done /></SuccessTypo>
+                      : (
+                        <DangerTypo>
+                          <Clear />
+                        </DangerTypo>
+                      )}
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Grid>
           </Paper>
           { /* 약관 보기 Dialog */ }
           <Dialog
             open={DialogOpen === term.state}
             onClose={handleDialogClose}
             title={term.title}
+            maxWidth="md"
             buttons={(
               <div>
                 <Button onClick={handleDialogClose}>
@@ -168,6 +206,7 @@ function Contraction(props) {
         <Button
           variant="contained"
           color="info"
+          // onClick={handleUserContract}
           onClick={handleUserContract}
           disabled={!(contractionList.every(row => row === true))}
           className={classes.button}

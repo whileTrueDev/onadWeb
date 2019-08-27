@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import classnames from 'classnames';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Hidden from '@material-ui/core/Hidden';
@@ -13,6 +14,10 @@ import Typography from '../../Main/components/Typography';
 const useStyles = makeStyles(theme => ({
   root: {
     marginBottom: theme.spacing(2),
+    borderBottom: '1px solid rgba(102, 102, 102, 0.2)',
+  },
+  rootLast: {
+    marginBottom: theme.spacing(1),
   },
   cardWrapper: {
     zIndex: 1,
@@ -35,19 +40,19 @@ const useStyles = makeStyles(theme => ({
     position: 'relative',
   },
   image: {
-    position: 'relative',
-    top: 100,
-    left: 52,
+    position: 'absolute',
+    top: 40,
+    left: 75,
     right: 0,
     bottom: 0,
-    width: '100%',
+    height: '75%',
     maxWidth: 400,
   },
 }));
 
 const LeftCreator = (props) => {
   const {
-    source, triggerThreshold, growCheck, growTime, slideTime,
+    source, triggerThreshold, growCheck, growTime, slideTime, last,
   } = props;
   const classes = useStyles();
 
@@ -78,13 +83,16 @@ const LeftCreator = (props) => {
       // trigger -> false
         : { timeout: growTime })}
     >
-      <Container className={classes.root} component="section">
+      <Container className={classnames({ [classes.root]: !last, [classes.rootLast]: last })} component="section">
         <Grid container>
           <Grid item xs={12} md={6} className={classes.cardWrapper}>
             <div className={classes.card}>
               <div className={classes.cardContent}>
-                <Typography variant="h4" marked="center" align="center" gutterBottom>
+                <Typography variant="h5" align="center" style={{ marginBottom: 10 }}>
                   {source.head}
+                </Typography>
+                <Typography variant="h4" marked="center" align="center" gutterBottom>
+                  {source.title}
                 </Typography>
                 <Typography variant="body1" align="center">
                   {source.body}
@@ -124,8 +132,8 @@ LeftCreator.propTypes = {
   growTime: PropTypes.number, // grow animation timeout time
   triggerThreshold: PropTypes.number, // slide animation trigger threshold
   slideTime: PropTypes.number, // slide animation timeout time
-  linkTo: PropTypes.string, // button link
   isLogin: PropTypes.bool,
+  last: PropTypes.bool,
 };
 
 LeftCreator.defaultProps = {
@@ -133,8 +141,8 @@ LeftCreator.defaultProps = {
   triggerThreshold: 100,
   growTime: 1000,
   slideTime: 1000,
-  linkTo: '/dashboard/marketer/main',
   isLogin: false,
+  last: false,
 };
 
 

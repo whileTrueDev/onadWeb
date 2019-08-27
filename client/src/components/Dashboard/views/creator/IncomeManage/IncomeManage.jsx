@@ -12,7 +12,6 @@ import Check from '@material-ui/icons/Check';
 import Money from '@material-ui/icons/Money';
 import Warning from '@material-ui/icons/Warning';
 import Payment from '@material-ui/icons/Payment';
-import CircularProgress from '@material-ui/core/CircularProgress';
 // core components
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -20,8 +19,10 @@ import OutlinedInput from '@material-ui/core/OutlinedInput';
 import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
 import Tooltip from '@material-ui/core/Tooltip';
-import axios from '../../../../../utils/axios';
+import Hidden from '@material-ui/core/Hidden';
+import CircularProgress from '../../../components/Progress/CircularProgress';
 // custum cores
+import axios from '../../../../../utils/axios';
 import Table from '../../../components/Table/Table';
 import GridItem from '../../../components/Grid/GridItem';
 import GridContainer from '../../../components/Grid/GridContainer';
@@ -44,6 +45,7 @@ import DashboardStyle from '../../../assets/jss/onad/views/dashboardStyle';
 // variable
 import { defaultWithdrawalData } from '../../../variables/creatorWithdrawal';
 import HOST from '../../../../../config';
+import setTimeFormat from '../../../lib/setTimeFormat';
 
 
 DashboardStyle.select = {
@@ -134,6 +136,7 @@ function useWithdrawDialog() {
   return { DialogOpen, handleWithdrawDialogOpen, handleWithdrawDialogClose };
 }
 
+
 function Income(props) {
   const { classes, history } = props;
   // 날짜 범위 데이터
@@ -192,7 +195,7 @@ function Income(props) {
 
   // 출금신청 페이지네이션
   const [page, setPage] = React.useState(0); // 테이블 페이지
-  const [rowsPerPage, setRowsPerPage] = React.useState(7); // 테이블 페이지당 행
+  const [rowsPerPage, setRowsPerPage] = React.useState(5); // 테이블 페이지당 행
   const emptyRows = rowsPerPage - Math.min(
     rowsPerPage, WithdrawalData.length - page * rowsPerPage,
   );
@@ -210,12 +213,12 @@ function Income(props) {
     <div>
       <GridContainer>
         {/* 수익금 및 수익금 그래프 */}
-        <GridItem xs={12} sm={12} md={8}>
+        <GridItem xs={12} sm={12} md={12} lg={8} xl={6}>
           <GridContainer>
             {/* 지금껏 총 수익금 */}
             <GridItem xs={12} sm={12} md={6}>
               <Card>
-                {incomeData.loading && <div style={{ textAlign: 'center' }}><CircularProgress /></div>}
+                {incomeData.loading && <CircularProgress />}
                 {!incomeData.loading && incomeData.error && <span>오류에요.. 침착하시고.. 다시 시도해보세요</span>}
                 {!incomeData.loading && incomeData.payload
                   && (
@@ -243,7 +246,7 @@ function Income(props) {
             {/* 출금 가능 수익금 */}
             <GridItem xs={12} sm={12} md={6}>
               <Card>
-                {incomeData.loading && <div style={{ textAlign: 'center' }}><CircularProgress /></div>}
+                {incomeData.loading && <CircularProgress />}
                 {!incomeData.loading && incomeData.error && <span>오류에요.. 침착하시고.. 다시 시도해보세요</span>}
                 {!incomeData.loading && incomeData.payload
                   && (
@@ -301,7 +304,7 @@ function Income(props) {
                       <MenuItem value={30}>최근 30 일</MenuItem>
                     </Select>
                   </FormControl>
-                  {loading && <div style={{ textAlign: 'center' }}><CircularProgress /></div>}
+                  {loading && <CircularProgress />}
                   {!loading && error && <span>최근 수익금 내역이 존재하지 않습니다.</span>}
                   {!loading && payload
                 && (
@@ -314,7 +317,7 @@ function Income(props) {
                 <CardFooter chart>
                   <div className={classes.stats}>
                     <AccessTime />
-                    {`updated: ${Date()}`}
+                    {`Updated: ${setTimeFormat()}`}
                   </div>
                 </CardFooter>
               </Card>
@@ -322,22 +325,24 @@ function Income(props) {
           </GridContainer>
         </GridItem>
         {/* 아바타 및 출금신청 */}
-        <GridItem xs={12} sm={12} md={4}>
+        <GridItem xs={12} sm={12} md={4} lg={4} xl={2}>
           <GridContainer>
             {/* 크리에이터 아바타 */}
-            <GridItem xs={12} sm={12} md={12}>
-              <Card profile>
-                <CardAvatar profile>
-                  <a href="#avatar" onClick={e => e.preventDefault()}>
-                    <img src={session.creatorLogo} alt="creator" />
-                  </a>
-                </CardAvatar>
-                <CardBody profile>
-                  <h5 className={classes.cardCategory}>크리에이터</h5>
-                  <h4 className={classes.cardTitle}>{session.creatorDisplayName}</h4>
-                </CardBody>
-              </Card>
-            </GridItem>
+            <Hidden mdDown>
+              <GridItem xs={12} sm={12} md={12}>
+                <Card profile>
+                  <CardAvatar profile>
+                    <a href="#avatar" onClick={e => e.preventDefault()}>
+                      <img src={session.creatorLogo} alt="creator" />
+                    </a>
+                  </CardAvatar>
+                  <CardBody profile>
+                    <h5 className={classes.cardCategory}>크리에이터</h5>
+                    <h4 className={classes.cardTitle}>{session.creatorDisplayName}</h4>
+                  </CardBody>
+                </Card>
+              </GridItem>
+            </Hidden>
             {/* 크리에이터 출금 신청 */}
             <GridItem xs={12} sm={12} md={12}>
               <Card>
@@ -370,8 +375,8 @@ function Income(props) {
                     <div className={classes.stats}>
                       <WarningTypo><Warning /></WarningTypo>
                       {!incomeData.loading && incomeData.payload
-                        ? (<span className={classes.dangerText}>계좌정보를 정확히 입력하셨나요?</span>)
-                        : (<span className={classes.dangerText}>계좌정보를 입력하셔야 출금이 가능해요!</span>)
+                        ? (<span className={classes.dangerText} style={{ fontSize: '12px' }}>계좌정보를 정확히 입력하셨나요?</span>)
+                        : (<span className={classes.dangerText} style={{ fontSize: '12px' }}>계좌정보를 입력하셔야 출금이 가능해요!</span>)
                       }
                     </div>
                   </Tooltip>
@@ -380,11 +385,8 @@ function Income(props) {
             </GridItem>
           </GridContainer>
         </GridItem>
-      </GridContainer>
-
-      {/* 출금내역 */}
-      <GridContainer>
-        <GridItem xs={12} sm={12} md={12}>
+        {/* 출금내역 */}
+        <GridItem xs={12} sm={12} md={8} lg={12} xl={8}>
           <Card>
             <CardHeader color="blueGray">
               <h4 className={classes.cardTitleWhite}>

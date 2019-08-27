@@ -90,7 +90,6 @@ const getStreamerList = () => {
   })
 }
 
-
 const getCreatorList = (streamerList) =>{
   console.log('현재 방송 중인 모든 creator의 list 계산 시작');
 
@@ -118,7 +117,6 @@ const getCreatorList = (streamerList) =>{
   })
 }
 
-
 /* 2019-07-08 박찬우
   contracionTimestamp table에서 가장 최신의 data를 가져오는 함수
 
@@ -129,49 +127,34 @@ const getCreatorList = (streamerList) =>{
  */
 const getContractionList = () =>{
   console.log('현재 광고가 집행중인 contracionId List를 계산합니다.');
-  const dateQuery = `
-  SELECT date 
-  FROM contractionTimestamp 
-  ORDER BY date DESC 
-  LIMIT 1`;
-
-  const contractionQuery = `
-  SELECT contractionId 
-  FROM contractionTimestamp 
-  WHERE date > ?`;
+  
+  const CheckedContractionQuery = `
+  SELECT ct.contractionId
+  FROM (SELECT contractionId FROM contractionTimestamp WHERE date > ?) as ct
+  JOIN (SELECT contractionId FROM bannerMatched WHERE contractionState = 0) as bm
+  ON ct.contractionId = bm.contractionId
+  `;
 
   return new Promise((resolve, reject)=>{
-    doQuery(dateQuery)
-    .then((row)=>{
-      let date = row.result[0].date;
-      date.setMinutes(date.getMinutes()-5);
-      return date;
-    })
-    .then((date=>{
-        doQuery(contractionQuery, [date])
-        .then((inrow)=>{
-          let contractions = [];
-          inrow.result.map((ininrow)=>{
-            contractions.push(ininrow.contractionId);
-          })
-          resolve(contractions);
+      let date = new Date();
+      date.setHours(date.getHours() + 9);
+      date.setMinutes(date.getMinutes() - 10);
+      doQuery(CheckedContractionQuery, [date])
+      .then((inrow)=>{
+        let contractions = [];
+        inrow.result.map((ininrow)=>{
+          contractions.push(ininrow.contractionId);
         })
-        .catch((errorData)=>{
-          errorData['point'] = 'getBannerList()';
-          errorData['description'] = 'contractionTimestamp table에서 최신 contractionId 가져오는 과정.'
-          reject(errorData);
-        })
-      }
-    ))
-    .catch((errorData)=>{
-      errorData['point'] = 'getBannerList()';
-      errorData['description'] = 'contractionTimestamp table에서 최신 date를 가져오는 과정.'
-      reject(errorData);
-    }) 
+        console.log(contractions);
+        resolve(contractions);
+      })
+      .catch((errorData)=>{
+        errorData['point'] = 'getBannerList()';
+        errorData['description'] = 'contractionTimestamp table에서 최신 contractionId 가져오는 과정.'
+        reject(errorData);
+      })
   })
 }
-
-
 
 /* 2019-07-08 박찬우
   1. streamIdQuery의 역할
@@ -250,7 +233,6 @@ const getPrice = ({creatorId}) => {
   })
 }
 
-
 const getPriceList = ([creatorList, contractionList]) => {
   console.log('각 creator 마다 단가를 계산합니다');
   const creators = contractionList.reduce(( result, contractionId )=>
@@ -278,36 +260,47 @@ const getPriceList = ([creatorList, contractionList]) => {
 }
 
 const creatorCalcuate = ({price, creatorId}) =>{
-  
-  const calculateQuery = `
-  INSERT INTO creatorIncome 
-  (creatorId, creatorTotalIncome, creatorReceivable)  
-  SELECT creatorId, creatorTotalIncome + ? , creatorReceivable + ? 
-  FROM creatorIncome 
+  const searchQuery = `
+  SELECT creatorId, creatorTotalIncome, creatorReceivable 
+  FROM creatorIncome
   WHERE creatorId = ? 
   ORDER BY date DESC 
-  LIMIT 1`;
+  LIMIT 1
+  `;
+
+  const calculateQuery =`
+  INSERT INTO creatorIncome
+  (creatorId, creatorTotalIncome, creatorReceivable) 
+  VALUES (?, ?, ?)`;
 
   return new Promise((resolve, reject)=>{
     console.log(`${creatorId}에 대해 정산을 시작합니다.`);
-    doQuery(calculateQuery, [price, price, creatorId])
-    .then(()=>{
-      logger.info(`${price} 원을 ${creatorId} 에게 입금하였습니다`);
-      console.log(`${price} 원을 ${creatorId} 에게 입금하였습니다`);
-      resolve();
+    doQuery(searchQuery, [creatorId])
+    .then((row)=>{
+      const { creatorTotalIncome, creatorReceivable } = row.result[0];
+      doQuery(calculateQuery, [creatorId, creatorTotalIncome + price, creatorReceivable + price])
+      .then(()=>{
+        logger.info(`${price} 원을 ${creatorId} 에게 입금하였습니다`);
+        console.log(`${price} 원을 ${creatorId} 에게 입금하였습니다`);
+        resolve();
+      })
+      .catch((errorData)=>{
+        errorData['point'] = 'creatorCalcuate()';
+        errorData['description'] = `${price} 원을 ${creatorId} 에게 입금하는 과정.`;
+        reject( errorData );
+      })
     })
     .catch((errorData)=>{
       errorData['point'] = 'creatorCalcuate()';
-      errorData['description'] = `${price} 원을 ${creatorId} 에게 입금하는 과정.`;
+      errorData['description'] = `${creatorId}의 수입을 조회하는 과정.`;
       reject( errorData );
     })
   })
 }
 
-
-const marketerCalculate = ({contractionId, price}) => {
+const marketerZeroCalculate = ({contractionId})=>{
   const marketerId = contractionId.split('/')[0].split('_')[0];
-  console.log(`${marketerId}에 대한 정산을 시작합니다.`);
+  console.log(`${marketerId}에 잔고확인을 시작합니다.`);
   const marketerDebitQuery = `
   SELECT marketerDebit 
   FROM marketerCost 
@@ -320,13 +313,23 @@ const marketerCalculate = ({contractionId, price}) => {
 
   const bannerSetQuery = `
   UPDATE bannerMatched 
-  SET contractionState = 1 
-  WHERE contractionId = ? `;
+  SET contractionState = 1  
+  WHERE SUBSTRING_INDEX(contractionId, '_' , 1) = ?
+  `;
 
-  const countQuery = `
-  UPDATE marketerCost 
-  SET marketerDebit = marketerDebit - ? 
-  WHERE marketerId = ? `;
+  const marketerSetQuery = `
+  UPDATE marketerInfo
+  SET marketerContraction = 0
+  WHERE marketerId = ?
+  `;
+
+  const confirmSetQuery = `
+  UPDATE bannerRegistered 
+  SET confirmState = 1  
+  WHERE marketerId = ?
+  `;
+
+  
 
   return new Promise((resolve, reject)=>{
     doQuery(marketerDebitQuery, [marketerId])
@@ -336,38 +339,59 @@ const marketerCalculate = ({contractionId, price}) => {
     })
     .then((debit)=>{
       // 현재의 잔액보다 계산되어야하는 가격이 크다면.
-      if(debit <= price){
+      if(debit <= 0){
         Promise.all([
+          doQuery(confirmSetQuery, [marketerId]),
           doQuery(emptyQuery, [marketerId]), 
-          doQuery(bannerSetQuery, [contractionId])
+          doQuery(bannerSetQuery, [marketerId]),
+          doQuery(marketerSetQuery, [marketerId])
         ])
         .then(()=>{
-          logger.info(`원 금액 ${price} 를 채우지 못하고 ${debit}원을 ${marketerId}에게서 지급받았습니다.`);
+          console.log(`${marketerId}의 잔액을 모두 소모하였습니다.`);
+          logger.info(`${marketerId}의 잔액을 모두 소모하였습니다.`);
           resolve();          
         })
         .catch((errorData)=>{
-          errorData['point'] = 'marketerCalculate()';
-          errorData['description'] = `원 금액 ${price} 를 채우지 못하고 ${debit}원을 ${marketerId}에게서 지급받는 과정`;
+          errorData['point'] = 'marketerZeroCalculate()';
+          errorData['description'] = `${debit} 만큼의 손해를 입고 ${marketerId}의 잔액을 모두 소모하여 값을 0으로 변경하는 과정`;
           reject(errorData);
         })
       }else{
-        doQuery(countQuery, [price, marketerId])
-        .then(()=>{
-          logger.info(`${price}원을 ${marketerId} 에게서 지급받았습니다.`);
-          resolve();          
-        })
-        .catch((errorData)=>{
-          errorData['point'] = 'marketerCalculate()';
-          errorData['description'] = `${price}원을 ${marketerId} 에게서 지급받는 과정.`;
-          reject(errorData);
-        })
+        console.log(`${marketerId}의 잔고가 아직 존재합니다.`);
+        resolve();
       }
     })
     .catch((errorData)=>{
-      errorData['point'] = 'getStreamerList()';
-      errorData['description'] = `${marketerId}의 markerDebit을 구하는 과정`;
+      errorData['point'] = 'marketerZeroCalculate()';
+      errorData['description'] = `${marketerId}의 잔고를 확인하는 과정`;
       reject(errorData);
     }) 
+  })
+
+
+}
+
+const marketerCalculate = ({contractionId, price}) => {
+  const marketerId = contractionId.split('/')[0].split('_')[0];
+  console.log(`${marketerId}에 대한 정산을 시작합니다.`);
+
+  const countQuery = `
+  UPDATE marketerCost 
+  SET marketerDebit = marketerDebit - ? 
+  WHERE marketerId = ? `;
+
+  return new Promise((resolve, reject)=>{
+    doQuery(countQuery, [price, marketerId])
+    .then(()=>{
+      logger.info(`${price}원을 ${marketerId} 에게서 지급받았습니다.`);
+      console.log(`${price}원을 ${marketerId} 에게서 지급받았습니다.`);
+      resolve();          
+    })
+    .catch((errorData)=>{
+      errorData['point'] = 'marketerCalculate()';
+      errorData['description'] = `${price}원을 ${marketerId} 에게서 지급받는 과정.`;
+      reject(errorData);
+    })
   })
 }
 
@@ -382,6 +406,7 @@ const contractionCalculate = ({contractionId, price}) => {
     
     doQuery(contractionValueQuery, [contractionId, price])
     .then(()=>{
+      console.log(`${price} 원을 ${contractionId} 에 등록하였습니다.`);
       logger.info(`${price} 원을 ${contractionId} 에 등록하였습니다.`);
       resolve();          
     })
@@ -394,26 +419,22 @@ const contractionCalculate = ({contractionId, price}) => {
   })
 }
 
-
 async function getList(){
   try{
     logger.info(`탐색을 실시합니다. 시작 시각 : ${new Date().toLocaleString()}`);
-    console.log(`탐색을 실시합니다. 시작 시각 : ${new Date().toLocaleString()}`);
     const [streamerList, contractionList] = await Promise.all([getStreamerList(), getContractionList()]);
     const creatorList  = await getCreatorList(streamerList);
     
     if(creatorList.length === 0){ 
       logger.info(`탐색을 종료합니다. 종료 시각 : ${new Date().toLocaleString()}`);
-      console.log(`탐색을 종료합니다. 종료 시각 : ${new Date().toLocaleString()}`);
       return []; 
     }
     
     const priceList = await getPriceList([creatorList, contractionList]);
     logger.info(`탐색을 종료합니다. 종료 시각 : ${new Date().toLocaleString()}`);
-    console.log(`탐색을 종료합니다. 종료 시각 : ${new Date().toLocaleString()}`);
     return priceList;
   }
-  catch(errorData){6
+  catch(errorData){
     console.log(errorData);
     console.log("--------위의 사유로 인하여 계산이 종료됩니다.-------------");
     logger.error(errorData);
@@ -421,40 +442,47 @@ async function getList(){
 };
 
 async function calculation(){
+  console.log(`계산을 실시합니다. 시작 시각 : ${new Date().toLocaleString()}`);
   const priceList = await getList();
-  
+  let marketerList = [];
   if(priceList.length === 0){
+    console.log(`---------------------------------------------------`);
     logger.info(`계산 항목이 존재하지 않으므로 계산 종료합니다. 종료 시각 : ${new Date().toLocaleString()}`);
     console.log(`계산 항목이 존재하지 않으므로 계산 종료합니다. 종료 시각 : ${new Date().toLocaleString()}`);
     return
   };
-
-  logger.info(`계산을 실시합니다. 시작 시각 : ${new Date().toLocaleString()}`);
-  console.log(`계산을 실시합니다. 시작 시각 : ${new Date().toLocaleString()}`);
-
-  priceList.map( async ({creatorId, contractionId, price})=>{
-    try{
-      await Promise.all([
-        creatorCalcuate({creatorId, price}), 
+  
+  await Promise.all(
+    priceList.map(({creatorId, contractionId, price})=>{
+      return Promise.all([
+        creatorCalcuate({creatorId, price}),
         marketerCalculate({contractionId, price}), 
         contractionCalculate({contractionId, price})
-      ]);
-      logger.info(`계산을 종료합니다. 종료 시각 : ${new Date().toLocaleString()}`);
-      console.log(`계산을 종료합니다. 종료 시각 : ${new Date().toLocaleString()}`);
-    }
-    catch(errorData){
-      console.log(errorData);
-      console.log("--------위의 사유로 인하여 계산이 종료됩니다.-------------");
-      logger.error(errorData);
-    }
+      ])
+      .then(()=>{
+        const marketerId = contractionId.split('/')[0].split('_')[0];
+        if(!marketerList.includes(marketerId)){
+          marketerList.push(marketerId);
+          return marketerZeroCalculate({contractionId});
+        }
+      })
+      .catch((errorData)=>{
+        console.log(`-----------------------------------------------------------`);
+        console.log(errorData);
+        console.log("--------위의 사유로 인하여 에러가 발생하였습니다.-------------");
+        logger.error(errorData);
+      })
+    })
+  )
+  .then(()=>{
+    logger.info(`계산을 종료합니다. 종료 시각 : ${new Date().toLocaleString()}`);
+    console.log(`계산을 종료합니다. 종료 시각 : ${new Date().toLocaleString()}`);
   })
 } 
 
 //calculation();
-
 var scheduler = schedule.scheduleJob('5,15,25,35,45,55 * * * *', ()=>{
   calculation();
 })
 
 module.exports = scheduler;
-

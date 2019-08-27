@@ -11,7 +11,7 @@ import Typography from '../../Main/components/Typography';
 
 const useStyles = makeStyles(theme => ({
   root: {
-    marginBottom: theme.spacing(2),
+    marginBottom: theme.spacing(8),
   },
   cardWrapper: {
     zIndex: 1,
@@ -35,8 +35,8 @@ const useStyles = makeStyles(theme => ({
   },
   image: {
     position: 'absolute',
-    top: 100,
-    left: 52,
+    top: 0,
+    left: 75,
     right: 0,
     bottom: 0,
     width: '100%',
@@ -85,7 +85,7 @@ const LeftCreator = (props) => {
                 <Typography variant="h4" marked="center" align="center" gutterBottom>
                   {source.head}
                 </Typography>
-                <Typography variant="body1" align="center">
+                <Typography variant="body1">
                   {source.body}
                 </Typography>
               </div>
@@ -104,7 +104,7 @@ const LeftCreator = (props) => {
               <Hidden smDown>
                 <img
                   src={source.image}
-                  alt="call to action"
+                  alt={source.image}
                   className={classes.image}
                 />
               </Hidden>
@@ -123,7 +123,6 @@ LeftCreator.propTypes = {
   growTime: PropTypes.number, // grow animation timeout time
   triggerThreshold: PropTypes.number, // slide animation trigger threshold
   slideTime: PropTypes.number, // slide animation timeout time
-  linkTo: PropTypes.string, // button link
 };
 
 LeftCreator.defaultProps = {
@@ -131,7 +130,6 @@ LeftCreator.defaultProps = {
   triggerThreshold: 100,
   growTime: 1000,
   slideTime: 1000,
-  linkTo: '/dashboard/main',
 };
 
 

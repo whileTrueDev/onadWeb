@@ -1,8 +1,8 @@
 const express = require('express');
-const pool = require('../model/connectionPool');
 const doQuery = require('../model/doQuery');
 const preprocessing = require('../middlewares/preprocessingData/');
 const cashlist = preprocessing.cashlist;
+const CustomDate = require('../middlewares/customDate');
 const router = express.Router();
 
 /**
@@ -16,7 +16,7 @@ router.get('/cash', function(req, res) {
   const marketerId = req._passport.session.user.userid;
   const debitQuery = `
   SELECT marketerDebit, 
-  DATE_FORMAT(date, '%y년 %m월 %d일') as date
+  DATE_FORMAT(date, '%y년 %m월 %d일 %T') as date
   FROM marketerCost
   WHERE marketerId = ?
   ORDER BY date DESC
@@ -120,8 +120,7 @@ router.get('/creatorlist', function(req, res) {
   ON creatorInfo.creatorId = ts.streamerId
   WHERE creatorInfo.creatorContractionAgreement = 1
   GROUP BY ts.streamerName
-  ORDER BY RAND()
-  LIMIT 10`;
+  ORDER BY RAND()`;
 
   doQuery(listQuery)
   .then((row)=>{
@@ -142,6 +141,7 @@ router.get('/advertiseOnOff', function(req, res) {
   FROM marketerInfo
   WHERE marketerId = ?
   `;
+
   doQuery(contractionQuery, [marketerId])
   .then((row)=>{
     let data = row.result[0].marketerContraction === 1 ? true : false;
@@ -154,17 +154,37 @@ router.get('/advertiseOnOff', function(req, res) {
 })
 
 //doQuery 수정
+// 잔액이 0원일 때는 불가능 하도록 정의.
 router.post('/advertiseOnOff', function(req, res) {
   const contractionState = req.body.contraction === false ? 0 : 1;
+  console.log(contractionState);
   const marketerId = req._passport.session.user.userid;
+  const costQuery = `
+  SELECT marketerDebit
+  FROM marketerCost
+  WHERE marketerId = ?
+  `;
+
   const infoQuery = `
   UPDATE marketerInfo
   SET marketerContraction = ?
-  WHERE marketerId = ?`;
-
-  doQuery(infoQuery, [contractionState, marketerId])
-  .then(()=>{
-    res.send(true);
+  WHERE marketerId = ?
+  `;
+  doQuery(costQuery, [marketerId])
+  .then((row)=>{
+    const debit = row.result[0].marketerDebit;
+    if(debit === 0){
+      res.send(false);
+    }else{
+      doQuery(infoQuery, [contractionState, marketerId])
+      .then(()=>{
+        res.send(true);
+      })
+      .catch((errorData)=>{
+        console.log(errorData);
+        res.send(false);
+      })
+    }
   })
   .catch((errorData)=>{
     console.log(errorData);
@@ -175,13 +195,14 @@ router.post('/advertiseOnOff', function(req, res) {
 //doQuery 수정
 router.post('/bannerStart', function(req, res) {
   const { bannerId, creators } = req.body;
-
+  const dateCode =  new CustomDate().getCode();
   const selectQuery =  `
   SELECT contractionId
   FROM bannerMatched
   JOIN creatorInfo
   ON creatorName = ?
-  WHERE contractionId = CONCAT(?, "/", creatorId)
+  WHERE contractionId LIKE CONCAT(?, "/", creatorId, "%")
+  AND contractionState = 2
   `;
 
   const updateQuery = `
@@ -193,19 +214,33 @@ router.post('/bannerStart', function(req, res) {
   const insertQuery = `
   INSERT INTO bannerMatched 
   (contractionId)
-  SELECT CONCAT(?, "/", creatorId)
+  SELECT CONCAT(?, "/", creatorId, "/", ?)
   FROM creatorInfo
   WHERE creatorName = ?
   `;
+
+  const insertLandingClickQuery = `
+  INSERT INTO landingClick (clickCount, transferCount, contractionId)
+  VALUES (?, ?, ?)`;
 
   Promise.all(creators.map((creator)=>{
     doQuery(selectQuery, [creator, bannerId])
     .then((row)=>{
       if(row.result.length !== 0){
-        return doQuery(updateQuery, [0, row.result[0].contractionId])
+        // 이전에 계약한 경우가 존재할 떄
+        return Promise.all([
+          // contractionId 생성
+          doQuery(updateQuery, [0, row.result[0].contractionId]),
+          // landingClick 기본값 생성
+          doQuery(insertLandingClickQuery, [0, 0, row.result[0].contractionId])
+        ]);
       }else{
-        return doQuery(insertQuery, [bannerId, creator])
+        // 이전에 계약한 배너가 존재하지 않은 경우.
+        return doQuery(insertQuery, [bannerId, dateCode, creator]);
       }
+    })
+    .catch((errorData)=>{
+      console.log(errorData);
     })
   }))
   .then(()=>{
@@ -238,36 +273,6 @@ router.post('/bannerStartStateChange', function(req, res, next) {
 })
 
 //doQuery 완료
-router.post('/bannerStop', function(req, res, next) {
-  const { bannerId, creators } = req.body;
-  const selectQuery = `
-  SELECT creatorId
-  FROM creatorInfo
-  WHERE creatorName = ?
-  `
-  const stopQuery = `
-  UPDATE bannerMatched
-  SET contractionState = 2
-  WHERE contractionId = CONCAT(?, "/", ?)
-  AND contractionState = 0
-  `;
-  console.log(creators);
-  Promise.all(creators.map((creator)=>{
-    doQuery(selectQuery, [creator])
-    .then((row)=>{
-      return doQuery(stopQuery, [bannerId, row.result[0].creatorId]);
-    })
-  }))
-  .then(()=>{
-    res.send("sucess!");
-  })
-  .catch((errorData)=>{
-    console.log(errorData);
-    res.send(false);
-  })
-})
-
-//doQuery 완료
 router.post('/bannerStopStateChange', function(req, res, next) {
   const marketerId = req._passport.session.user.userid;
   const { bannerId } = req.body;
@@ -287,6 +292,37 @@ router.post('/bannerStopStateChange', function(req, res, next) {
 })
 
 //doQuery 완료
+router.post('/bannerStop', function(req, res, next) {
+  const { bannerId, creators } = req.body;
+  const selectQuery = ` 
+  SELECT creatorId
+  FROM creatorInfo
+  WHERE creatorName = ?
+  `
+  const stopQuery = `
+  UPDATE bannerMatched
+  SET contractionState = 2
+  WHERE contractionId LIKE CONCAT(?, "%")
+  AND contractionState = 0
+  `;
+  console.log(creators);
+  Promise.all(creators.map((creator)=>{
+    doQuery(selectQuery, [creator])
+    .then((row)=>{
+      const contractionId = `${bannerId}/${row.result[0].creatorId}`;
+      return doQuery(stopQuery, [contractionId]);
+    })
+  }))
+  .then(()=>{
+    res.send("success!");
+  })
+  .catch((errorData)=>{
+    console.log(errorData);
+    res.send(false);
+  })
+})
+
+//doQuery 완료
 router.get('/bannerValue', function(req, res, next) {
   const marketerId = req._passport.session.user.userid;
   const valueQuery= `
@@ -294,7 +330,7 @@ router.get('/bannerValue', function(req, res, next) {
   SUM(contractionTotalValue) as contractionTotalValue,
   DATE_FORMAT(date, '%m-%d') as date
   FROM contractionValue
-  WHERE contractionId LIKE CONCAT('%', ?, '%')
+  WHERE SUBSTRING_INDEX(contractionId, '_' , 1) = ?
   AND date >= DATE_SUB(NOW(), INTERVAL 30 DAY)
   GROUP BY DATE_FORMAT(date, '%y%m%d')
   ORDER BY DATE_FORMAT(date, '%y%m%d')
@@ -314,6 +350,7 @@ router.get('/bannerValue', function(req, res, next) {
     res.end();
   })
 })
+
 //doQuery 완료
 router.post('/banner/delete', (req, res, next)=>{
   const {bannerId} = req.body;
@@ -331,9 +368,9 @@ router.post('/banner/delete', (req, res, next)=>{
 })
 
 //doQuery 완료
-router.post('/banner/push', (req, res, next)=>{
+router.post('/banner/push', (req, res)=>{
   const marketerId = req._passport.session.user.userid;
-  const bannerSrc = req.body.url;
+  const { bannerSrc, bannerDescription, companyDescription, landingUrl } = req.body;
   
   const searchQuery = `
   SELECT bannerId 
@@ -344,8 +381,8 @@ router.post('/banner/push', (req, res, next)=>{
 
   const saveQuery = `
   INSERT INTO bannerRegistered 
-  (bannerId, marketerId, bannerSrc) 
-  VALUES (?, ?, ?)`;
+  (bannerId, marketerId, bannerSrc, bannerDescription, companyDescription, landingUrl) 
+  VALUES (?, ?, ?, ?, ?, ?)`;
 
   doQuery(searchQuery, [marketerId])
   .then((row)=>{
@@ -362,7 +399,7 @@ router.post('/banner/push', (req, res, next)=>{
     }else{
       bannerId = `${marketerId}_01`;
     }
-    doQuery(saveQuery , [bannerId, marketerId, bannerSrc])
+    doQuery(saveQuery , [bannerId, marketerId, bannerSrc, bannerDescription, companyDescription, landingUrl])
     .then(()=>{
       res.send([true, '배너가 등록되었습니다']);
     })
@@ -609,9 +646,12 @@ router.get('/contraction/creatorList', function(req, res, next) {
         })
         res.send(responseData);
       }else{
-        console.log('이전에 계약된 내역이 존재하지 않습니다.');
         res.send([]);
       }
+    })
+    .catch((errorData)=>{
+      console.log(errorData);
+      res.send([]);
     })
 });
 

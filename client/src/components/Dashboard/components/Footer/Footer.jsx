@@ -34,13 +34,7 @@ function Footer({ ...props }) {
         <p className={classes.right}>
           <span>
             &copy;
-            {' '}
-            {1900 + new Date().getYear()}
-            {' '}
-            <a href="/" className={classes.a}>
-              OnAD
-            </a>
-            , Amazing platform for a better streaming, broadcasting and advertising
+            {`${1900 + new Date().getYear()} while True Corp. All right Reserved`}
           </span>
         </p>
       </div>

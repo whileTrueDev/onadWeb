@@ -1,16 +1,28 @@
 {
-  "dependencies": {
-    "express-generator": "^4.16.0"
+  "devDependencies": {
+    "babel-eslint": "^10.0.2",
+    "eslint": "^6.1.0",
+    "eslint-config-airbnb": "^17.1.1",
+    "eslint-config-prettier": "^6.0.0",
+    "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-jest": "^22.15.1",
+    "eslint-plugin-jsx-a11y": "^6.2.3",
+    "eslint-plugin-prettier": "^3.1.0",
+    "eslint-plugin-react": "^7.14.3",
+    "eslint-plugin-react-hooks": "^1.7.0",
+    "express-generator": "^4.16.0",
+    "prettier": "^1.18.2"
+  },
+  "prettier": {
+    "singleQuote": true,
+    "semi": true,
+    "useTabs": false,
+    "tabWidth": 2,
+    "trailingComma": "all",
+    "printWidth": 80
   },
   "scripts": {
     "service": "cd service && node bin/www",
     "client": "cd client && yarn start"
-  },
-  "name": "chanuuuuu",
-  "version": "1.0.0",
-  "description": "chanuuuuu의 dev",
-  "main": "app.js",
-  "repository": "https://github.com/chanuuuuu/onadWeb.git",
-  "author": "dn0208@gmail.com <dn0208@gmail.com>",
-  "license": "MIT"
+  }
 }

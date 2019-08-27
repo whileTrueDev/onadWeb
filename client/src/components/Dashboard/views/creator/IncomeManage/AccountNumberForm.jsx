@@ -82,7 +82,6 @@ const banks = [
   },
 ];
 
-
 // const getNowDate = () => {
 //   const date = new Date();
 //   const fullDate = date.getFullYear() + (`0${date.getMonth() + 1}`).slice(-2)
@@ -222,14 +221,14 @@ const AccountNumberForm = (props) => {
             // )}
             inputProps={{
               required: '{true}',
-              pattern: `[0-9]{${bankPattern}}`,
+              // pattern: `[0-9]{${bankPattern}}`,
             }}
           />
           <FormHelperText>
             (-)을 제외한
             {' '}
-            {bankPattern}
-            자리 계좌번호를 입력하세요
+            {/* {bankPattern} */}
+            계좌번호를 입력하세요
           </FormHelperText>
         </FormControl>
 

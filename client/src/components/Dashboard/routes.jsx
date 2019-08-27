@@ -9,14 +9,14 @@ import Reorder from '@material-ui/icons/Reorder';
 import creatorUserProfile from './views/creator/UserProfile/UserProfile';
 import IncomeManage from './views/creator/IncomeManage/IncomeManage';
 import creatorDashboardPage from './views/creator/Dashboard/Dashboard';
-import creatorManual from './views/creator/CreatorManual/CreatorManual';
+import creatorManual from './views/creator/Manual/Manual';
 
 // 마케터 라우터
 import marketerDashboardPage from './views/marketer/Dashboard/Dashboard';
 import marketerBannerManage from './views/marketer/BannerManage/BannerManage';
 import marketerCashManage from './views/marketer/CashManage/CashManage';
 import marketerUserProfile from './views/marketer/UserProfile/UserProfile';
-import MarketerManual from './views/marketer/MarketerManual/MarketerManual';
+import MarketerManual from './views/marketer/Manual/Manual';
 
 
 const dashboardRoutes = {
@@ -47,6 +47,7 @@ const dashboardRoutes = {
       name: '계정 관리',
       icon: Person,
       component: creatorUserProfile,
+      layout: '/dashboard/creator',
     },
   ],
   marketer: [

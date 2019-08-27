@@ -3,11 +3,9 @@ import PropTypes from 'prop-types';
 import shortid from 'shortid';
 // @material-ui/core components
 import withStyles from '@material-ui/core/styles/withStyles';
-import Table from '@material-ui/core/Table';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
+import {
+  Table, TableHead, TableRow, TableBody, TableCell,
+} from '@material-ui/core';
 import Done from '@material-ui/icons/Done';
 // custom table component
 import CustomTableFooter from './TableFooter';
@@ -15,12 +13,11 @@ import CustomTableFooter from './TableFooter';
 // core components
 import tableStyle from '../../assets/jss/onad/components/tableStyle';
 
-
 function CustomTable({ ...props }) {
   const {
     classes, tableHead, tableData, tableHeaderColor, pagination,
     handleChangeTablePage, handleChangeTableRowsPerPage,
-    emptyRows, rowsPerPage, page,
+    emptyRows, rowsPerPage, page, buttonSet,
   } = props;
 
   return (
@@ -40,7 +37,6 @@ function CustomTable({ ...props }) {
             </TableRow>
           </TableHead>
         ) : null}
-
         {pagination !== false ? (
           <TableBody>
             {/** 페이지네이션 있는 경우 */}
@@ -60,8 +56,8 @@ function CustomTable({ ...props }) {
                           : value}
                       </TableCell>
                     ) : (
-                      <TableCell className={classes.tableCell} key={shortid.generate()}>
-                        <img src={value} alt="banner" height="50%" />
+                      <TableCell className={classes.imgCell} key={shortid.generate()}>
+                        <img src={value} alt="banner" style={{ width: '100%', height: 'auto' }} />
                       </TableCell>
                     )
                 ))}
@@ -69,7 +65,7 @@ function CustomTable({ ...props }) {
             ))}
 
             {emptyRows > 0 && (
-            <TableRow style={{ height: 48 * emptyRows }}>
+            <TableRow style={{ height: 48 * emptyRows }} key={shortid.generate()}>
               <TableCell colSpan={6} />
             </TableRow>
             )}
@@ -85,8 +81,8 @@ function CustomTable({ ...props }) {
                   && (value.indexOf('data:image/') >= 0
                     || value.indexOf('http') === 0)// 사진데이터 또는 사진 url 인 경우
                     ? (
-                      <TableCell className={classes.tableCell} key={shortid.generate()}>
-                        <img src={value} alt="banner" height="50%" />
+                      <TableCell className={classes.imgCellNoPage} key={shortid.generate()}>
+                        <img src={value} alt="banner" style={{ width: '100%', height: 'auto' }} key={shortid.generate()} />
                       </TableCell>
                     ) : (
                       <TableCell className={classes.tableCell} key={shortid.generate()}>
@@ -116,6 +112,7 @@ function CustomTable({ ...props }) {
 CustomTable.defaultProps = {
   tableHeaderColor: 'gray',
   pagination: false,
+  buttonSet: false,
   paginationOps: {
     tableDataLength: 10,
     rowsPerPage: 5,
@@ -135,10 +132,13 @@ CustomTable.propTypes = {
     'gray',
     'blueGray',
   ]),
-  tableHead: PropTypes.arrayOf(PropTypes.string),
-  tableData: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.string, PropTypes.number]))),
+  tableHead: PropTypes.arrayOf(PropTypes.string).isRequired,
+  tableData: PropTypes.arrayOf(PropTypes.arrayOf(
+    PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  )).isRequired,
   pagination: PropTypes.bool,
   paginationOps: PropTypes.object,
+  buttonSet: PropTypes.bool,
 };
 
 

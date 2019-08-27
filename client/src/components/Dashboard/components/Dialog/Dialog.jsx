@@ -10,6 +10,7 @@ import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 // icons
 import CloseIcon from '@material-ui/icons/Close';
+import Grid from '@material-ui/core/Grid';
 
 const styles = theme => ({
   root: {
@@ -23,19 +24,35 @@ const styles = theme => ({
     right: theme.spacing(1),
     top: theme.spacing(1),
     color: theme.palette.grey[100],
-  }
+  },
+  title: {
+    [theme.breakpoints.down('xs')]: {
+      fontSize: '13px',
+    },
+    [theme.breakpoints.up('sm')]: {
+      fontSize: '1.25rem',
+    },
+  },
 });
 
 const DialogTitle = withStyles(styles)((props) => {
   const { children, classes, onClose } = props;
   return (
     <MuiDialogTitle disableTypography className={classes.root}>
-      <Typography variant="h6">{children}</Typography>
-      {onClose ? (
-        <IconButton aria-label="Close" className={classes.closeButton} onClick={onClose}>
-          <CloseIcon />
-        </IconButton>
-      ) : null}
+      <Grid container direction="row" justify="space-between" alignItems="center" spacing={1}>
+        <Grid item>
+          <Typography className={classes.title}>{children}</Typography>
+        </Grid>
+        <Grid item>
+          {onClose ? (
+            <IconButton aria-label="Close" className={classes.closeButton} onClick={onClose}>
+              <CloseIcon />
+            </IconButton>
+          ) : null}
+        </Grid>
+      </Grid>
+
+
     </MuiDialogTitle>
   );
 });

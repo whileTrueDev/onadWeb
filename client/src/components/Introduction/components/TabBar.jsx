@@ -1,12 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import classNames from 'classnames';
 import Tab from '@material-ui/core/Tab';
 import AppBar from '@material-ui/core/AppBar';
 import { Subscriptions, Person } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/core/styles';
-import grey from '@material-ui/core/colors/grey';
-import Tabs from '../../Main/components/Tabs';
+import Tabs from '@material-ui/core/Tabs';
 
 const useStyles = makeStyles(theme => ({
   tabs: {
@@ -17,10 +15,6 @@ const useStyles = makeStyles(theme => ({
   },
   tab: {
     height: 85,
-  },
-  deactivated: {
-    backgroundColor: grey[300],
-    transitionDuration: '1s',
   },
 }));
 
@@ -34,18 +28,19 @@ function TabBar(props) {
       <Tabs
         value={tabValue}
         onChange={handleTabChange}
+        indicatorColor="primary"
         textColor="primary"
         variant="fullWidth"
       >
         <Tab
-          className={classNames({ [classes.tab]: true, [classes.deactivated]: tabValue === 1 })}
+          className={classes.tab}
           icon={<Person />}
-          label="마케터 또는 광고주"
+          label="마케터"
         />
         <Tab
-          className={classNames({ [classes.tab]: true, [classes.deactivated]: tabValue === 0 })}
+          className={classes.tab}
           icon={<Subscriptions />}
-          label="크리에이터 또는 1인미디어 방송인"
+          label="크리에이터"
         />
       </Tabs>
     </AppBar>

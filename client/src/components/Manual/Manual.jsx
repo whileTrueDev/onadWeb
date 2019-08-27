@@ -51,51 +51,83 @@ function Manual(props) {
         {value === 0 ? (
           // 마케터
           <React.Fragment>
+            <div style={{ marginTop: 50 }} />
+
             <LeftCard
               growCheck={growCheck}
-              triggerThreshold={300}
+              triggerThreshold={200}
               growTime={1000}
               slideTime={700}
               source={textSource.marketer.firstSector}
             />
             <LeftCard
               growCheck={growCheck}
-              triggerThreshold={800}
+              triggerThreshold={600}
               growTime={1000}
               slideTime={700}
               source={textSource.marketer.secondSector}
             />
             <LeftCard
               growCheck={growCheck}
-              triggerThreshold={1300}
+              triggerThreshold={1000}
               growTime={1000}
               slideTime={700}
               source={textSource.marketer.thirdSector}
+            />
+            <LeftCard
+              growCheck={growCheck}
+              triggerThreshold={1300}
+              growTime={1000}
+              slideTime={700}
+              source={textSource.marketer.fourSector}
+            />
+            <LeftCard
+              growCheck={growCheck}
+              triggerThreshold={1600}
+              growTime={1000}
+              slideTime={700}
+              source={textSource.marketer.fiveSector}
             />
           </React.Fragment>
         ) : (
           // 크리에이터
           <React.Fragment>
+            <div style={{ marginTop: 50 }} />
             <RightCard
               growCheck={growCheck}
-              triggerThreshold={300}
+              triggerThreshold={200}
               growTime={1000}
               slideTime={700}
               source={textSource.creator.firstSector}
             />
             <RightCard
               growCheck={growCheck}
-              triggerThreshold={800}
+              triggerThreshold={600}
               growTime={1000}
               slideTime={700}
               source={textSource.creator.secondSector}
             />
             <RightCard
               growCheck={growCheck}
-              triggerThreshold={1300}
+              triggerThreshold={1000}
               growTime={1000}
               slideTime={700}
               source={textSource.creator.thirdSector}
+            />
+            <RightCard
+              growCheck={growCheck}
+              triggerThreshold={1300}
+              growTime={1000}
+              slideTime={700}
+              source={textSource.creator.fourSector}
+            />
+            <RightCard
+              last
+              growCheck={growCheck}
+              triggerThreshold={1600}
+              growTime={1000}
+              slideTime={700}
+              source={textSource.creator.fiveSector}
             />
           </React.Fragment>
         )}
@@ -110,7 +142,7 @@ Manual.propTypes = {
 };
 
 Manual.defaultProps = {
-  userType: 0,
+  userType: 1,
 };
 
 export default Manual;

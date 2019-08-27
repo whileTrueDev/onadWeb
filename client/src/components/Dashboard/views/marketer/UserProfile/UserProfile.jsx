@@ -12,31 +12,13 @@ import UserDataForm from './UserDataForm';
 const UserProfile = props => (
   <div>
     <GridContainer>
-      <GridItem xs={12} sm={12} md={6}>
+      {/* 개인 정보 관리 */}
+      <GridItem xs={12} sm={12} md={6} xl={4}>
         <UserDataForm />
       </GridItem>
-      <GridItem xs={12} sm={12} md={6}>
-        <GridContainer>
-          <GridItem xs={12} sm={12} md={12}>
-            <PasswordForm />
-          </GridItem>
-          <GridItem xs={12} sm={12} md={12}>
-            {/*
-              <Card>
-                <CardHeader color="blueGray">
-                  <h4 className={classes.cardTitleWhite}>
-                    추가할 수정사항
-                  </h4>
-                  <p className={classes.cardCategoryWhite}>변경할 비밀번호를 입력하세요.</p>
-                </CardHeader>
-                <CardBody />
-                <CardFooter>
-                  <Button type="submit" value="Submit" color="info">확인</Button>
-                </CardFooter>
-              </Card> */}
-          </GridItem>
-        </GridContainer>
-
+      {/* 비밀번호 변경 */}
+      <GridItem xs={12} sm={12} md={6} xl={4}>
+        <PasswordForm />
       </GridItem>
     </GridContainer>
   </div>

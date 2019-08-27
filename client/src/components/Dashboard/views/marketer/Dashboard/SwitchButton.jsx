@@ -18,7 +18,6 @@ const IOSSwitch = withStyles(theme => ({
   switchBase: {
     padding: 1,
     '&$checked': {
-      transform: 'translateX(16px)',
       color: theme.palette.common.white,
       '& + $track': {
         backgroundColor: '#52d869',
@@ -37,8 +36,7 @@ const IOSSwitch = withStyles(theme => ({
   },
   track: {
     borderRadius: 26 / 2,
-    border: '1px solid',
-    borderColor: theme.palette.grey[300],
+    border: `1px solid ${theme.palette.grey[400]}`,
     backgroundColor: theme.palette.grey[50],
     opacity: 1,
     transition: theme.transitions.create(['background-color', 'border']),
@@ -59,6 +57,7 @@ const IOSSwitch = withStyles(theme => ({
     {...props}
   />
 ));
+
 
 const useStyle = makeStyles(theme => ({
   typo: {
@@ -110,6 +109,8 @@ function useUpdateData(url, history) {
         setSuccess(res.data);
         if (res.data) {
           history.push('/dashboard/marketer/main');
+        } else {
+          alert('잔액이 충분하지 않습니다.');
         }
       }).catch((err) => {
         setError(err);

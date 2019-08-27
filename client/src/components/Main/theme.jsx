@@ -4,10 +4,6 @@ import grey from '@material-ui/core/colors/grey';
 import blueGrey from '@material-ui/core/colors/blueGrey';
 
 const rawTheme = createMuiTheme({
-  '@font-face': {
-    fontFamily: 'Jua',
-    src: 'url(https://cdn.rawgit.com/singihae/Webfonts/master/style.css)',
-  },
   // material-ui의 테마를 덮어씌우는 작업
   palette: {
     primary: {

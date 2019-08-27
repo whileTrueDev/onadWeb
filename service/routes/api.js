@@ -1,14 +1,15 @@
 const express = require('express');
+
 const router = express.Router();
 
-var loginRouter = require('./login');
-var registRouter = require('./regist');
-var dashboardRouter = require('./dashboard');
-var adminRouter = require('./admin');
+const loginRouter = require('./login');
+const registRouter = require('./regist');
+const dashboardRouter = require('./dashboard');
+const payRouter = require('./payment/pay');
 
 router.use('/login', loginRouter);
 router.use('/regist', registRouter);
 router.use('/dashboard', dashboardRouter);
-router.use('/admin', adminRouter)
+router.use('/pay', payRouter);
 
 module.exports = router;

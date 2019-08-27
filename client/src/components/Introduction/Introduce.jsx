@@ -49,23 +49,24 @@ function Introduce(props) {
         {value === 0 ? (
           // 마케터
           <React.Fragment>
+            <div style={{ marginTop: 50 }} />
             <RightCard
               growCheck={growCheck}
-              triggerThreshold={300}
+              triggerThreshold={1000}
               growTime={1000}
               slideTime={700}
               source={textSource.marketer.firstSector}
             />
             <LeftCard
               growCheck={growCheck}
-              triggerThreshold={800}
+              triggerThreshold={1450}
               growTime={1000}
               slideTime={700}
               source={textSource.marketer.secondSector}
             />
             <RightCard
               growCheck={growCheck}
-              triggerThreshold={1400}
+              triggerThreshold={1800}
               growTime={1000}
               slideTime={700}
               source={textSource.marketer.thirdSector}
@@ -74,30 +75,30 @@ function Introduce(props) {
         ) : (
           // 크리에이터
           <React.Fragment>
+            <div style={{ marginTop: 50 }} />
             <LeftCard
               growCheck={growCheck}
-              triggerThreshold={300}
+              triggerThreshold={1000}
               growTime={1000}
               slideTime={700}
               source={textSource.creator.firstSector}
             />
             <RightCard
               growCheck={growCheck}
-              triggerThreshold={800}
+              triggerThreshold={1450}
               growTime={1000}
               slideTime={700}
               source={textSource.creator.secondSector}
             />
             <LeftCard
               growCheck={growCheck}
-              triggerThreshold={1400}
+              triggerThreshold={1800}
               growTime={1000}
               slideTime={700}
               source={textSource.creator.thirdSector}
             />
           </React.Fragment>
         )}
-
 
       </Container>
     </section>

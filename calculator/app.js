@@ -1,0 +1,18 @@
+const express = require('express');
+const app = express();
+
+// process.env.NODE_ENV = ( process.env.NODE_ENV && ( process.env.NODE_ENV ).trim().toLowerCase() == 'production' ) ? 'production' : 'development';
+// if(process.env.NODE_ENV === 'production'){
+//   console.log('계산프로그램을 IMPORT 합니다.');
+//   const calculation = require('./middlewares/calculation_v.0');
+// }
+// let BACK_HOST = 'http://localhost:3000';
+// let FRONT_HOST = 'http://localhost:3001';
+// if (process.env.NODE_ENV === 'production') {
+//   FRONT_HOST = config.production.reactHostName;
+// }
+
+console.log('계산프로그램을 IMPORT 합니다.');
+const calculation = require('./javascripts/calculation_v.0');
+
+module.exports = app;

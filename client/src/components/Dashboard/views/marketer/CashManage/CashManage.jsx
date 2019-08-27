@@ -134,14 +134,13 @@ const CashManage = (props) => {
           } else { setcashlist(defaultCashData); }
         }
       }).catch((res) => {
-        console.log(res);
         setcashlist(defaultCashData);
       });
   }, []);
 
   // 충전 및 환불 페이지네이션
   const [page, setPage] = React.useState(0); // 테이블 페이지
-  const [rowsPerPage, setRowsPerPage] = React.useState(7); // 테이블 페이지당 행
+  const [rowsPerPage, setRowsPerPage] = React.useState(5); // 테이블 페이지당 행
   const emptyRows = rowsPerPage - Math.min(
     rowsPerPage, cashlist.length - page * rowsPerPage,
   );
@@ -159,7 +158,7 @@ const CashManage = (props) => {
     <div>
       <GridContainer>
 
-        <GridItem xs={12} sm={12} md={4}>
+        <GridItem xs={12} sm={12} md={4} xl={3}>
           {/* 보유 광고캐시 START */}
           <GridContainer>
             <GridItem xs={12} sm={12} md={12}>
@@ -228,7 +227,7 @@ const CashManage = (props) => {
         </GridItem>
 
         {/* 충전 및 환불 내역 */}
-        <GridItem xs={12} sm={12} md={8}>
+        <GridItem xs={12} sm={12} md={8} xl={5}>
           <Card>
             <CardHeader color="blueGray">
               <h4 className={classes.cardTitleWhite}>

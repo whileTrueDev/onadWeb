@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
@@ -9,11 +9,13 @@ import {
   Menu, MenuItem, IconButton, Button,
 } from '@material-ui/core';
 import {
-  Help, Domain, Lock,
+  Help, Domain, Lock, Dashboard,
 } from '@material-ui/icons';
 import AppBar from '../../components/AppBar';
 import Toolbar from '../../components/Toolbar';
 import LoginPopover from '../Login/LoginPopover';
+import HOST from '../../../../config';
+import axios from '../../../../utils/axios';
 
 const styles = theme => ({
   root: {
@@ -56,6 +58,9 @@ const styles = theme => ({
       },
     },
   },
+  coloredLink: {
+    color: theme.palette.primary.main,
+  },
   active: {
     fontWeight: theme.typography.fontWeightMedium,
     borderBottom: '1.2px solid',
@@ -68,9 +73,64 @@ const styles = theme => ({
 
 function AppAppBar(props) {
   const {
-    classes, history, isLogin, logout, unuse,
+    classes, history, isLogin, logout,
   } = props;
 
+  // 앱바의 선택 여부를 파악하여 state 로 설정한다.
+  const [selected, setSelected] = React.useState();
+  React.useEffect(() => {
+    setSelected(window.location.pathname.replace('/', ''));
+  }, []); // 무한루프를 야기하지 않도록 하기 위해 두번째 인수로 빈 배열을 넣는다.
+
+  // 대시보드로 이동 버튼 클릭
+  const handleClick = useCallback((buttonType) => {
+    axios.get(`${HOST}/api/dashboard/checkUserType`)
+      .then((res) => {
+        const { userType } = res.data;
+        if (userType === undefined) {
+          if (buttonType) {
+            alert('로그인 이후 이용하세요');
+          }
+        } else if (userType === 'marketer') {
+          history.push('/dashboard/marketer/main');
+        } else if (userType === 'creator') {
+          history.push('/dashboard/creator/main');
+        }
+      }).catch((err) => {
+        console.log(err);
+      });
+  }, [history]);
+
+  const LogButton = () => {
+    if (isLogin) {
+      return (
+        <Button
+          className={classes.rightLink}
+          color="inherit"
+          onClick={logout}
+        >
+        로그아웃
+        </Button>
+      );
+    }
+    return <LoginPopover type="로그인" history={history} logout={logout} />;
+  };
+
+  const RegButton = () => {
+    if (isLogin) {
+      return (
+        <Button
+          className={classNames(classes.rightLink, classes.coloredLink)}
+          onClick={handleClick}
+        >
+        대시보드이동
+        </Button>
+      );
+    }
+    return <LoginPopover type="회원가입" history={history} />;
+  };
+
+  /** 모바일 메뉴 ********************************************* */
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
@@ -94,27 +154,29 @@ function AppAppBar(props) {
       onClose={handleMobileMenuClose}
     >
       <MenuItem>
-        <Link
+        <Button
           className={classes.rightLink}
+          component={Link}
           to="/introduction"
         >
           <Domain className={classes.buttonIcon} />
           {'서비스 소개'}
-        </Link>
+        </Button>
       </MenuItem>
       <MenuItem>
-        <Link
+        <Button
           className={classes.rightLink}
+          component={Link}
           to="/manual"
         >
           <Help className={classes.buttonIcon} />
           {'이용 안내'}
-        </Link>
+        </Button>
       </MenuItem>
 
       <MenuItem>
         {isLogin ? (
-          <Button onClick={logout}>
+          <Button className={classes.rightLink} onClick={logout}>
             <Lock className={classes.buttonIcon} />
               로그아웃
           </Button>
@@ -124,43 +186,21 @@ function AppAppBar(props) {
       </MenuItem>
 
       <MenuItem>
-        {isLogin ? null
+        {isLogin ? (
+          <Button
+            className={classNames(classes.rightLink, classes.coloredLink)}
+            onClick={handleClick}
+          >
+            <Dashboard className={classes.buttonIcon} />
+            대시보드이동
+          </Button>
+        )
           : <LoginPopover type="회원가입" history={history} />
         }
       </MenuItem>
 
     </Menu>
   );
-
-  // 앱바의 선택 여부를 파악하여 state 로 설정한다.
-  const [selected, setSelected] = React.useState();
-  React.useEffect(() => {
-    setSelected(window.location.pathname.replace('/', ''));
-  }, []); // 무한루프를 야기하지 않도록 하기 위해 두번째 인수로 빈 배열을 넣는다.
-
-  const LogButton = () => {
-    if (isLogin) {
-      return (
-        <Button
-          className={classes.rightLink}
-          color="inherit"
-          onClick={logout}
-        >
-        로그아웃
-        </Button>
-      );
-    }
-    return <LoginPopover type="로그인" history={history} logout={logout} />;
-  };
-
-  const RegButton = (prop) => {
-    const { history1 } = prop;
-    if (isLogin) {
-      return null;
-    }
-    return <LoginPopover type="회원가입" history={history1} />;
-  };
-
 
   return (
     <div>
@@ -195,12 +235,8 @@ function AppAppBar(props) {
             >
               {'이용 안내'}
             </Button>
-            {unuse
-            && <LogButton history={history} logout={logout} />
-            }
-            {unuse
-            && <RegButton history={history} logout={logout} />
-            }
+            <LogButton history={history} logout={logout} />
+            <RegButton history={history} logout={logout} />
           </div>
           <div className={classes.rightMobile}>
             <IconButton aria-haspopup="true" onClick={handleMobileMenuOpen} color="inherit">
@@ -216,12 +252,10 @@ function AppAppBar(props) {
 
 AppAppBar.propTypes = {
   classes: PropTypes.object,
-  unuse: PropTypes.bool,
 };
 
 AppAppBar.defaultProps = {
   classes: {},
-  unuse: true,
 };
 
 

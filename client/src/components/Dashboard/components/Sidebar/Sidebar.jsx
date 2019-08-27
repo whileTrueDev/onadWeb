@@ -1,18 +1,19 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import shortid from 'shortid';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import { NavLink } from 'react-router-dom';
 // @material-ui/core components
 import withStyles from '@material-ui/core/styles/withStyles';
-import Drawer from '@material-ui/core/Drawer';
-import Hidden from '@material-ui/core/Hidden';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
+import {
+  Drawer, Hidden, Button, List, ListItem, ListItemText, Grid,
+} from '@material-ui/core';
 // core components
+import AdminNavbarLinks from '../Navbars/AdminNavbarLinks';
+// styles
 import sidebarStyle from '../../assets/jss/onad/components/sidebarStyle';
-
+import HOST from '../../../../config';
+import axios from '../../../../utils/axios';
 
 const Sidebar = ({ ...props }) => {
   // verifies if routeName is the one active (in browser input)
@@ -21,52 +22,77 @@ const Sidebar = ({ ...props }) => {
   }
   const {
     classes, color, logo, logoText, routes,
-    handleDrawerToggle, open,
+    handleDrawerToggle, mobileOpen, history,
   } = props;
+
+  const handleClick = useCallback((buttonType) => {
+    axios.get(`${HOST}/api/dashboard/checkUserType`)
+      .then((res) => {
+        const { userType } = res.data;
+        if (userType === undefined) {
+          if (buttonType) {
+            alert('로그인 이후 이용하세요');
+          }
+        } else if (userType === 'marketer') {
+          history.push('/dashboard/marketer/main');
+        } else if (userType === 'creator') {
+          history.push('/dashboard/creator/main');
+        }
+      }).catch((err) => {
+        console.log(err);
+      });
+  }, [history]);
 
   const links = (
     <List className={classes.list}>
-      {routes.map((prop, key) => {
-        const listItemClasses = classNames({
-          [` ${classes[color]}`]: isActiveRoute(prop.layout + prop.path),
-        });
-        const whiteFontClasses = classNames({
-          [` ${classes.whiteFont}`]: isActiveRoute(prop.layout + prop.path),
-        });
-        return (
-          <NavLink
-            to={prop.layout + prop.path}
-            className={classes.item}
-            activeClassName="active"
-            key={shortid.generate()}
-          >
-            <ListItem button className={classNames(classes.itemLink, listItemClasses)}>
-              <prop.icon
-                className={classNames(classes.itemIcon, whiteFontClasses)}
-              />
-              <ListItemText
-                primary={prop.name}
-                className={classNames(classes.itemText, whiteFontClasses)}
-                disableTypography
-              />
-            </ListItem>
-          </NavLink>
-        );
-      })}
+      <div className={classes.linkWrapper}>
+        {routes.map((prop, key) => {
+          const listItemClasses = classNames({
+            [` ${classes[color]}`]: isActiveRoute(prop.layout + prop.path),
+          });
+          const whiteFontClasses = classNames({
+            [` ${classes.whiteFont}`]: isActiveRoute(prop.layout + prop.path),
+          });
+          return (
+            <NavLink
+              to={prop.layout + prop.path}
+              className={classes.item}
+              activeClassName="active"
+              key={shortid.generate()}
+            >
+              <ListItem button className={classNames(classes.itemLink, listItemClasses)}>
+                <prop.icon
+                  className={classNames(classes.itemIcon, whiteFontClasses)}
+                />
+                <ListItemText
+                  primary={prop.name}
+                  className={classNames(classes.itemText, whiteFontClasses)}
+                  disableTypography
+                />
+              </ListItem>
+            </NavLink>
+          );
+        })}
+      </div>
+      <Hidden mdUp implementation="css">
+        <div className={classes.NavBarLinksWrapper}>
+          <AdminNavbarLinks history={history} />
+        </div>
+      </Hidden>
     </List>
   );
 
   const brand = (
     <div className={classes.logo}>
-      <a
-        href="/"
+      <Button
+        onClick={handleClick}
         className={classNames(classes.logoLink)}
       >
         <div className={classes.logoImage}>
           <img src={logo} alt="logo" className={classes.img} />
         </div>
-        {logoText}
-      </a>
+        {` ${logoText}`}
+      </Button>
     </div>
   );
 
@@ -77,7 +103,7 @@ const Sidebar = ({ ...props }) => {
         <Drawer
           variant="temporary"
           anchor="right"
-          open={open}
+          open={mobileOpen}
           classes={{
             paper: classNames(classes.drawerPaper),
           }}
@@ -103,17 +129,19 @@ const Sidebar = ({ ...props }) => {
           }}
         >
           {/* 사이드바 Logo */}
-          <div className={classes.logo}>
-            <a
-              href="/"
-              className={classNames(classes.logoLink)}
-            >
-              <div className={classes.logoImage}>
-                <img src={logo} alt="logo" className={classes.img} />
-              </div>
-              {logoText}
-            </a>
-          </div>
+          <Grid className={classes.logo} container direction="row" alignItems="center">
+            <Grid item className={classes.logoImage}>
+              <img src={logo} alt="logo" className={classes.img} />
+            </Grid>
+            <Grid item>
+              <Button
+                onClick={handleClick}
+                className={classNames(classes.logoLink)}
+              >
+                {logoText}
+              </Button>
+            </Grid>
+          </Grid>
 
           {/* 사이드바 라우터 링크 */}
           <div className={classes.sidebarWrapper}>{links}</div>
@@ -131,14 +159,15 @@ Sidebar.propTypes = {
   logoText: PropTypes.string,
   routes: PropTypes.array.isRequired,
   handleDrawerToggle: PropTypes.func.isRequired,
-  open: PropTypes.bool,
-  logo: PropTypes.string,
+  mobileOpen: PropTypes.bool,
+  logo: PropTypes.string.isRequired,
+  history: PropTypes.object.isRequired,
 };
 
 Sidebar.defaultProps = {
   color: 'info',
-  logoText: 'OnAD',
-  open: false,
+  logoText: '',
+  mobileOpen: false,
 };
 
 export default withStyles(sidebarStyle)(Sidebar);

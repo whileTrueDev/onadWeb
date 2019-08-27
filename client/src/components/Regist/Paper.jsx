@@ -10,6 +10,7 @@ import {
   Checkbox,
   Divider,
   Button,
+  Grid,
 } from '@material-ui/core';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import shortid from 'shortid';
@@ -55,10 +56,20 @@ const styles = theme => ({
     marginBottom: theme.spacing(2),
   },
   inDialogContent: {
-    padding: theme.spacing(1),
-    marginLeft: 30,
-    marginRight: 55,
     outline: 'none',
+    [theme.breakpoints.up('sm')]: {
+      padding: theme.spacing(2),
+    },
+  },
+  names: {
+    [theme.breakpoints.down('xs')]: {
+      fontSize: '12px',
+      fontWeight: 500,
+    },
+    [theme.breakpoints.up('sm')]: {
+      fontSize: '12px',
+      fontWeight: 700,
+    },
   },
 });
 
@@ -123,33 +134,47 @@ const PaperSheet = (props) => {
             </Typography>
             {terms.map(term => (
               <Paper className={classes.container} elevation={1} key={term.state}>
-                <Typography component="p" style={{ flex: 8, fontSize: 13 }}>
-                  {term.title}
-                </Typography>
-                <Button
-                  style={{
-                    flex: 1, backgroundColor: '#d6d6d6', height: '70%', fontSize: 13,
-                  }}
-                  onClick={handleOpen(term)}
-                >
-                약관보기
-                </Button>
-                <Divider className={classes.divider} />
-                <FormControlLabel
-                  control={(
-                    <Checkbox
+                <Grid container direction="row" justify="space-between" alignItems="center" spacing={1}>
+                  <Grid item>
+                    <Typography component="p" style={{ flex: 8, fontSize: 13 }}>
+                      {term.title}
+                    </Typography>
+                  </Grid>
+                  <Grid item>
+                    <Grid container direction="row" alignItems="center">
+                      <Grid item>
+                        <Button
+                          style={{
+                            flex: 1, backgroundColor: '#d6d6d6', height: '70%', fontSize: 13,
+                          }}
+                          onClick={handleOpen(term)}
+                        >
+                        약관보기
+                        </Button>
+                      </Grid>
+                      <Grid item>
+                        <Divider className={classes.divider} />
+                      </Grid>
+                      <Grid item>
+                        <FormControlLabel
+                          control={(
+                            <Checkbox
                 // checked={this.getChange(term.state)}
-                      onChange={handleChange(term.state)}
-                      value={term.state}
-                      classes={{
-                        root: classes.checkboxRoot,
-                        checked: classes.checked,
-                      }}
-                    />
-              )}
-                  label="동의"
-                  style={{ flex: 2, marginRight: 0 }}
-                />
+                              onChange={handleChange(term.state)}
+                              value={term.state}
+                              classes={{
+                                root: classes.checkboxRoot,
+                                checked: classes.checked,
+                              }}
+                            />
+                        )}
+                          label="동의"
+                          style={{ flex: 2, marginRight: 0 }}
+                        />
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                </Grid>
               </Paper>
 
             ))}
@@ -179,6 +204,7 @@ const PaperSheet = (props) => {
         open={open}
         onClose={handleClose}
         title={selectTerm.title}
+        maxWidth="md"
         buttons={(
           <div>
             <Button onClick={handleClose}>
@@ -190,7 +216,7 @@ const PaperSheet = (props) => {
         {/* 계약 내용 */}
         <div className={classes.inDialogContent}>
           {selectTerm.text.split('\n').map(sentence => (
-            <p key={shortid.generate()}>{sentence}</p>
+            <p key={shortid.generate()} className={classes.names}>{sentence}</p>
           ))}
         </div>
       </Dialog>

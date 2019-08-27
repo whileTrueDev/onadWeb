@@ -1,4 +1,5 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import {
   Tooltip,
   Dialog,
@@ -7,7 +8,6 @@ import {
   DialogContentText,
   DialogTitle,
   Button,
-  Link,
   TextField,
   withStyles,
 } from '@material-ui/core';
@@ -140,9 +140,8 @@ const LoginForm = (props) => {
             />
           </form>
           <Button
-            component={Link}
             underline="always"
-            style={{ fontSize: 10, marginTop: 10 }}
+            style={{ fontSize: 11, marginTop: 10 }}
             onClick={() => {
               setDialogType('ID');
               setFindDialogOpen(true);
@@ -152,15 +151,23 @@ const LoginForm = (props) => {
           </Button>
           <br />
           <Button
-            component={Link}
             underline="always"
-            style={{ fontSize: 10, marginTop: 10 }}
+            style={{ fontSize: 11, marginTop: 10 }}
             onClick={() => {
               setDialogType('PASSWORD');
               setFindDialogOpen(true);
             }}
           >
             비밀번호가 기억나지 않으신가요?
+          </Button>
+          <br />
+          <Button
+            component={Link}
+            underline="always"
+            style={{ fontSize: 11, marginTop: 10 }}
+            to="/regist"
+          >
+            계정이 없으신가요? 회원가입하기
           </Button>
         </DialogContent>
         <DialogActions>
@@ -187,11 +194,9 @@ const LoginForm = (props) => {
           </DialogContentText>
           <Tooltip title="트위치 계정으로 로그인" placement="right">
             <Button
-              component={Link}
               href={`${HOST}/api/login/twitch`}
-            // onClick ={twitchLogin}
               style={{
-                backgroundImage: 'url("pngs/twitch3.png")',
+                backgroundImage: 'url("pngs/logo/twitch.png")',
               }}
               className={classes.imageSrc}
             >

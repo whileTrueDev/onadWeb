@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import classnames from 'classnames';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Hidden from '@material-ui/core/Hidden';
@@ -11,13 +12,18 @@ import Typography from '../../Main/components/Typography';
 
 const useStyles = makeStyles(theme => ({
   root: {
-    marginBottom: theme.spacing(2),
+    marginBottom: theme.spacing(6),
+    borderBottom: '1px solid rgba(102, 102, 102, 0.2)',
+  },
+  rootLast: {
+    marginBottom: theme.spacing(1),
   },
   cardWrapper: {
     zIndex: 1,
   },
   card: {
-    marginTop: theme.spacing(5),
+    marginTop: theme.spacing(1),
+    marginBottom: theme.spacing(5),
     display: 'flex',
     justifyContent: 'center',
     backgroundColor: '#ffffff',
@@ -35,11 +41,11 @@ const useStyles = makeStyles(theme => ({
   },
   image: {
     position: 'absolute',
-    top: 100,
-    left: 0,
+    top: 40,
+    left: 75,
     right: 0,
     bottom: 0,
-    width: '100%',
+    height: '75%',
     maxWidth: 400,
   },
 }));
@@ -47,7 +53,7 @@ const useStyles = makeStyles(theme => ({
 
 const RightCreator = (props) => {
   const {
-    source, triggerThreshold, growCheck, growTime, slideTime,
+    source, triggerThreshold, growCheck, growTime, slideTime, last,
   } = props;
   const classes = useStyles();
 
@@ -74,28 +80,32 @@ const RightCreator = (props) => {
       in={growCheck}
       {...(growCheck ? { timeout: growTime } : { timeout: growTime })}
     >
-      <Container className={classes.root} component="section">
+      <Container className={classnames({ [classes.root]: !last, [classes.rootLast]: last })} component="section">
         <Grid container>
           <Slide
             in={trigger}
             direction="right"
             {...(trigger ? { timeout: slideTime } : { timeout: slideTime })}
           >
-            <Grid item xs={12} md={6} className={classes.imagesWrapper}>
+            <Grid item xs={12} sm={12} md={6} className={classes.imagesWrapper}>
               <Hidden smDown>
                 <img
                   src={source.image}
-                  alt="call to action"
+                  alt=""
                   className={classes.image}
                 />
               </Hidden>
             </Grid>
           </Slide>
-          <Grid item xs={12} md={6} className={classes.cardWrapper}>
+
+          <Grid item xs={12} sm={12} md={6} className={classes.cardWrapper}>
             <div className={classes.card}>
               <div className={classes.cardContent}>
-                <Typography variant="h4" marked="center" align="center" gutterBottom>
+                <Typography variant="h5" align="center" style={{ marginBottom: 10 }}>
                   {source.head}
+                </Typography>
+                <Typography variant="h4" marked="center" align="center" gutterBottom>
+                  {source.title}
                 </Typography>
                 <Typography variant="body1" align="center">
                   {source.body}
@@ -103,6 +113,7 @@ const RightCreator = (props) => {
               </div>
             </div>
           </Grid>
+
         </Grid>
       </Container>
     </Grow>
@@ -116,7 +127,7 @@ RightCreator.propTypes = {
   growTime: PropTypes.number, // grow animation timeout time
   triggerThreshold: PropTypes.number, // slide animation trigger threshold
   slideTime: PropTypes.number, // slide animation timeout time
-  linkTo: PropTypes.string, // button link prop
+  last: PropTypes.bool,
 };
 
 RightCreator.defaultProps = {
@@ -124,7 +135,7 @@ RightCreator.defaultProps = {
   triggerThreshold: 700,
   slideTime: 1000,
   growTime: 1000,
-  linkTo: '/',
+  last: false,
 };
 
 

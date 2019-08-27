@@ -7,12 +7,11 @@ const cookieParser = require('cookie-parser');
 const passport = require('./passportStrategy');
 const bodyParser = require('body-parser');
 const config = require('./config.json');
-
+const MySQLStore = require('express-mysql-session')(session);
 //Router 정의
 var mailerRouter = require('./routes/mailer');
 var apiRouter = require('./routes/api');
 var app = express();
-
 
 process.env.NODE_ENV = ( process.env.NODE_ENV && ( process.env.NODE_ENV ).trim().toLowerCase() == 'production' ) ? 'production' : 'development';
 let BACK_HOST = 'http://localhost:3000';
@@ -20,7 +19,17 @@ let FRONT_HOST = 'http://localhost:3001';
 if (process.env.NODE_ENV === 'production') {
   FRONT_HOST = config.production.reactHostName;
 }
-// view를 찾을 경로를 `views`로 저장하여 rendering시 찾을 수 있도록 함.
+
+const storeOptions = {
+    host: config.SESSIONSTORE.host,
+    port: config.SESSIONSTORE.port,
+    user: config.SESSIONSTORE.user,
+    password: config.SESSIONSTORE.password,
+    database: config.SESSIONSTORE.database,
+};
+ 
+var sessionStore = new MySQLStore(storeOptions);
+ 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
@@ -34,7 +43,8 @@ app.use(cookieParser());
 app.use(session({
   secret: '@#@$MYSIGN#@$#$',
   resave: false,
-  saveUninitialized: true,
+  saveUninitialized: false,
+  store: sessionStore,
   cookie: {
     secure: false
   }

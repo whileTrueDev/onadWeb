@@ -8,12 +8,9 @@ import ProductHowItWorks from './views/HowItWorks/ProductHowItWorks';
 import RePasswordDialog from './views/Login/RePassword';
 import withRoot from './withRoot';
 import HOST from '../../config';
+import sources from './source/sources';
 
-const heroInfo = {
-  backImage: 'https://images.unsplash.com/photo-1556761175-4b46a572b786?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1867&q=80',
-};
-
-const useLoginValue = (history, location) => {
+const useLoginValue = (history) => {
   const [isLogin, setisLogin] = useState(false);
   const [repasswordOpen, setRepassword] = useState(false);
 
@@ -65,7 +62,11 @@ export default withRoot((props) => {
   return (
     <div>
       <AppAppBar history={history} isLogin={isLogin} logout={logout} />
-      <ProductHero backgroundImage={heroInfo.backImage} history={history} />
+      <ProductHero
+        isLogin={isLogin}
+        history={history}
+        source={sources.hero}
+      />
       <ProductCategories history={history} />
       <ProductHowItWorks history={history} isLogin={isLogin} />
       {/* 문의받기 섹션, 오픈베타에 추가 */

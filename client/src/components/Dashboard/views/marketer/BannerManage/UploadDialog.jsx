@@ -1,83 +1,63 @@
-import React, { useReducer } from 'react';
-import { withStyles } from '@material-ui/core/styles';
-import Dialog from '@material-ui/core/Dialog';
-import MuiDialogTitle from '@material-ui/core/DialogTitle';
-import MuiDialogContent from '@material-ui/core/DialogContent';
-import IconButton from '@material-ui/core/IconButton';
-import CloseIcon from '@material-ui/icons/Close';
-import Typography from '@material-ui/core/Typography';
-import { Divider } from '@material-ui/core';
-import CustomButton from '../../../components/CustomButtons/Button';
+import React, { useReducer, useState } from 'react';
+import PropTypes from 'prop-types';
+import { makeStyles, withStyles } from '@material-ui/core/styles';
+import {
+  Stepper, Step, StepLabel, StepContent,
+} from '@material-ui/core';
+import clsx from 'clsx';
+import Check from '@material-ui/icons/Check';
+import Dialog from '../../../components/Dialog/Dialog';
+import BannerDescrForm from './BannerDescForm';
 import './upload.css';
+import ImageUpload from './ImageUpload';
 import HOST from '../../../../../config';
 import axios from '../../../../../utils/axios';
 
+const DEFAULT_IMAGE_PATH = '/pngs/dashboard/manual/marketer/banner_upload.png';
 
-const styles = theme => ({
-  root: {
-    margin: 0,
-    padding: theme.spacing(2),
-  },
-  closeButton: {
-    position: 'absolute',
-    right: theme.spacing(1),
-    top: theme.spacing(1),
-    color: theme.palette.grey[500],
-  },
-  head: {
-    fontSize: '20px',
-    fontWeight: '600',
+const dialogStyle = theme => ({
+  formRoot: {
+    margin: theme.spacing(2),
+    padding: theme.spacing(1),
   },
 });
 
-const DialogTitle = withStyles(styles)((props) => {
-  const { children, classes, onClose } = props;
+const useQontoStepIconStyles = makeStyles({
+  root: {
+    color: '#eaeaf0',
+    display: 'flex',
+  },
+  active: {
+    color: '#00acc1',
+  },
+  circle: {
+    width: 11,
+    height: 11,
+    borderRadius: '50%',
+    backgroundColor: 'currentColor',
+  },
+  completed: {
+    color: '#00acc1',
+    zIndex: 1,
+    fontSize: 18,
+  },
+});
+
+function QontoStepIcon(props) {
+  const classes = useQontoStepIconStyles();
+  const { active, completed } = props;
+
   return (
-    <MuiDialogTitle disableTypography className={classes.root}>
-      <Typography variant="h5" className={classes.head}>{children}</Typography>
-      {onClose ? (
-        <IconButton aria-label="Close" className={classes.closeButton} onClick={onClose}>
-          <CloseIcon />
-        </IconButton>
-      ) : null}
-    </MuiDialogTitle>
+    <div
+      className={clsx(classes.root, {
+        [classes.active]: active,
+      })}
+    >
+      {completed ? <Check className={classes.completed} /> : <div className={classes.circle} />}
+    </div>
   );
-});
+}
 
-const DialogContent = withStyles(theme => ({
-  root: {
-    padding: theme.spacing(2),
-  },
-
-}))(MuiDialogContent);
-
-const dialogStyle = {
-  reason: {
-    marginTop: '10px',
-    margin: '7px',
-    fontSize: '16px',
-    fontWeight: '500',
-  },
-  company: {
-    marginTop: '10px',
-    textAlign: 'left',
-    margin: '7px',
-    fontSize: '20px',
-    fontWeight: '700',
-  },
-  time: {
-    textAlign: 'right',
-  },
-  body: {
-    textAlign: 'center',
-    fontSize: '20px',
-  },
-  input: {
-    fontSize: '20px',
-  },
-};
-
-const DEFAULT_IMAGE_PATH = '/pngs/onad_logo.jpg';
 
 const myReducer = (state, action) => {
   switch (action.type) {
@@ -88,7 +68,6 @@ const myReducer = (state, action) => {
       return { imageName: action.imageName, imageUrl: action.imageUrl };
     }
     default: {
-      console.log('잘못된 사용입니다');
       return state;
     }
   }
@@ -99,48 +78,41 @@ const UploadDialog = (props) => {
     open, handleOpen, classes, readyBanner,
   } = props;
   const [state, dispatch] = useReducer(myReducer, { imageName: '', imageUrl: DEFAULT_IMAGE_PATH });
-
-  const readImage = (event) => {
-    if (event.target.files.length !== 0) {
-      const fileRegx = /^image\/[a-z]*$/;
-      const myImage = event.target.files[0];
-      // 최대 size를 지정하자.
-      if (fileRegx.test(myImage.type)) {
-        const reader = new FileReader();
-        reader.readAsDataURL(myImage);
-        reader.onload = () => {
-          dispatch({ type: 'set', imageName: myImage.name, imageUrl: reader.result });
-        };
-      } else {
-        alert('파일의 형식이 올바르지 않습니다.');
-      }
-    } else {
-      dispatch({ type: 'reset' });
-    }
-  };
+  const [activeStep, setStep] = useState(0);
 
   const handleClose = () => {
     dispatch({ type: 'reset' });
+    setStep(0);
     readyBanner();
     handleOpen();
   };
 
-
-  // url을 제출.
-  const handleSubmit = () => {
+  const handleNext = number => () => {
     if (state.imageUrl !== DEFAULT_IMAGE_PATH) {
-      axios.post(`${HOST}/api/dashboard/marketer/banner/push`, { url: state.imageUrl })
-        .then((res) => {
-          if (res.data[0]) {
-            alert(res.data[1]);
-          } else {
-            alert('현재는 등록할 수 없습니다. 본사에 문의하세요');
-          }
-          handleClose();
-        });
+      setStep(number);
     } else {
       alert('파일을 선택하지 않았습니다.');
     }
+  };
+
+  // url을 제출.
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const bannerDescription = document.getElementById('banner').value || null;
+    const companyDescription = document.getElementById('company').value || null;
+    const landingUrl = document.getElementById('url').value || null;
+
+    axios.post(`${HOST}/api/dashboard/marketer/banner/push`, {
+      bannerSrc: state.imageUrl, bannerDescription, companyDescription, landingUrl,
+    })
+      .then((res) => {
+        if (res.data[0]) {
+          alert(res.data[1]);
+        } else {
+          alert('현재는 등록할 수 없습니다. 본사에 문의하세요');
+        }
+        handleClose();
+      });
   };
 
 
@@ -150,29 +122,41 @@ const UploadDialog = (props) => {
       open={open}
       maxWidth="lg"
       disableBackdropClick
+      title="배너 등록"
     >
-      <DialogTitle onClose={handleClose}>
-            배너 등록
-      </DialogTitle>
-      <DialogContent dividers>
-        <Typography gutterBottom>
-          <img id="preview" src={state.imageUrl} width="600" height="400" onError={() => { dispatch({ type: 'reset' }); }} alt="이미지가 보일 영역" />
-        </Typography>
-        <div className="filebox">
-          <input className="upload-name" value={state.imageName} disabled="disabled" />
-          <label htmlFor="getfile">
-            파일찾기
-            <input type="file" id="getfile" accept="image/*" onChange={readImage} className={classes.input} />
-          </label>
-        </div>
-        <Divider />
-        <div className={classes.company}>
-          <CustomButton color="info" size="lg" onClick={handleSubmit}>업로드</CustomButton>
-        </div>
-        <Typography gutterBottom className={classes.time} />
-      </DialogContent>
+      <Stepper activeStep={activeStep} orientation="vertical" style={{ padding: 0 }}>
+        <Step key="0">
+          <StepLabel StepIconComponent={QontoStepIcon}>
+            배너 이미지 등록
+          </StepLabel>
+          <StepContent>
+            <ImageUpload handleClose={handleClose} handleNext={handleNext} state={state} dispatch={dispatch} />
+          </StepContent>
+        </Step>
+        <Step key="1">
+          <StepLabel StepIconComponent={QontoStepIcon}>
+            배너 상세정보 입력
+          </StepLabel>
+          <StepContent className={classes.formRoot}>
+            <BannerDescrForm handleNext={handleNext} state={state} handleSubmit={handleSubmit} />
+          </StepContent>
+        </Step>
+      </Stepper>
     </Dialog>
   );
+};
+
+
+UploadDialog.propTypes = {
+  classes: PropTypes.object.isRequired,
+  handleOpen: PropTypes.func.isRequired,
+  open: PropTypes.bool.isRequired,
+  readyBanner: PropTypes.func.isRequired,
+};
+
+QontoStepIcon.propTypes = {
+  active: PropTypes.bool.isRequired,
+  completed: PropTypes.bool.isRequired,
 };
 
 export default withStyles(dialogStyle)(UploadDialog);

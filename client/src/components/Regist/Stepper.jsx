@@ -14,17 +14,23 @@ import RegistForm from './RegistForm';
 import PaperSheet from './Paper';
 import AppAppBar from '../Main/views/Layout/AppAppBar';
 import HOST from '../../config';
+import withRoot from '../Main/withRoot';
 
 const styles = theme => ({
   root: {
-    width: '100%',
-  },
-  container: {
-    marginTop: theme.spacing(10),
-    marginBottom: theme.spacing(5),
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
+  },
+  container: {
+    [theme.breakpoints.down('sm')]: {
+      width: '90%',
+    },
+    [theme.breakpoints.up('md')]: {
+      width: '75%',
+    },
+    marginTop: theme.spacing(10),
+    marginBottom: theme.spacing(5),
   },
   button: {
     marginTop: theme.spacing(1),
@@ -101,7 +107,7 @@ const myReducer = (state, action) => {
   }
 };
 
-const RegistStepper = (props) => {
+const RegistStepper = withRoot((props) => {
   const {
     classes, history,
   } = props;
@@ -190,7 +196,7 @@ const RegistStepper = (props) => {
       </div>
     </div>
   );
-};
+});
 
 RegistStepper.propTypes = {
   history: PropTypes.object.isRequired,
