@@ -29,8 +29,8 @@ WhileTrue 개발자 [강동기](https://github.com/GoMotiv), [강화수](https:/
 #### 설치 및 설정
 
 - 최상위 폴더에서 yarn 을 통해 devDependencies 설치 ( 모두 eslint 및 prettier 관련)
-- vscode 설정 변경 ( Ctrl + , ) => eslint 검색 => "auto Fix On Save" 체크 활성화
-- 우측 상단 <설정열기> 클릭한 이후 settings.json 에서 다음 설정을 복사 및 붙여넣기.
+- vscode 설정 변경 ( `Ctrl` + `,` ) => `eslint` 검색 => `"auto Fix On Save"` 체크 활성화
+- 우측 상단 `<설정열기>` 클릭한 이후 `settings.json` 에서 다음 설정을 복사 및 붙여넣기.
 
     ~~~json
     // These are all my auto-save configs
@@ -46,9 +46,9 @@ WhileTrue 개발자 [강동기](https://github.com/GoMotiv), [강화수](https:/
     },
     ~~~
 
-- 최상위 폴더에 eslint 설정파일인 .eslintrc 파일 추가
+- 최상위 폴더에 eslint 설정파일인 `.eslintrc` 파일 추가
 
-- 윈도우즈의 eslint 설정은 다음과 같다.
+- windows 운영체제의 eslint 설정은 다음과 같다.
 
     ~~~json
     {
