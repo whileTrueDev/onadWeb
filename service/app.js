@@ -4,40 +4,41 @@ const path = require('path');
 const cors = require('cors');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
-const passport = require('./passportStrategy');
 const bodyParser = require('body-parser');
+const passport = require('./passportStrategy');
 const config = require('./config.json');
 const MySQLStore = require('express-mysql-session')(session);
-//Router 정의
-var mailerRouter = require('./routes/mailer');
-var apiRouter = require('./routes/api');
-var app = express();
+// Router 정의
+const mailerRouter = require('./routes/mailer');
+const apiRouter = require('./routes/api');
 
-process.env.NODE_ENV = ( process.env.NODE_ENV && ( process.env.NODE_ENV ).trim().toLowerCase() == 'production' ) ? 'production' : 'development';
-let BACK_HOST = 'http://localhost:3000';
+const app = express();
+
+process.env.NODE_ENV = (process.env.NODE_ENV && (process.env.NODE_ENV).trim().toLowerCase() == 'production') ? 'production' : 'development';
+const BACK_HOST = 'http://localhost:3000';
 let FRONT_HOST = 'http://localhost:3001';
 if (process.env.NODE_ENV === 'production') {
   FRONT_HOST = config.production.reactHostName;
 }
 
 const storeOptions = {
-    host: config.SESSIONSTORE.host,
-    port: config.SESSIONSTORE.port,
-    user: config.SESSIONSTORE.user,
-    password: config.SESSIONSTORE.password,
-    database: config.SESSIONSTORE.database,
+  host: config.SESSIONSTORE.host,
+  port: config.SESSIONSTORE.port,
+  user: config.SESSIONSTORE.user,
+  password: config.SESSIONSTORE.password,
+  database: config.SESSIONSTORE.database,
 };
- 
-var sessionStore = new MySQLStore(storeOptions);
- 
+
+const sessionStore = new MySQLStore(storeOptions);
+
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 // 정적 리소스 처리
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use(bodyParser.json({limit: '50mb'}));
-app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
+app.use(bodyParser.json({ limit: '50mb' }));
+app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 
 app.use(cookieParser());
 app.use(session({
@@ -48,13 +49,13 @@ app.use(session({
   cookie: {
     secure: false
   }
- }));
+}));
 
-//passport 초기화를 통해 'local' 전략이 수립된다.
+// passport 초기화를 통해 'local' 전략이 수립된다.
 app.use(passport.initialize());
 app.use(passport.session());
 
-//인증 method를 req에 추가한다.
+// 인증 method를 req에 추가한다.
 app.use(require('./middlewares/checkAuthOnReq'));
 
 // use CORS
@@ -62,20 +63,20 @@ const corsOptions = { origin: FRONT_HOST, credentials: true };
 app.use(cors(corsOptions));
 
 // for aws ELB health check
-app.get('/', function(req, res, next) {
+app.get('/', (req, res, next) => {
   res.sendStatus(200);
-})
+});
 
 
-app.use('/mailer', mailerRouter); 
-app.use('/api', apiRouter)
+app.use('/mailer', mailerRouter);
+app.use('/api', apiRouter);
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use((req, res, next) => {
   next(createError(404));
 });
 
 // error handler
-app.use(function(err, req, res, next) {
+app.use((err, req, res, next) => {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
@@ -86,5 +87,5 @@ app.use(function(err, req, res, next) {
 });
 
 console.log(process.env.NODE_ENV);
-//선언만 하고 start는 bin에서 시작
+// 선언만 하고 start는 bin에서 시작
 module.exports = app;

@@ -72,7 +72,7 @@ function HeaderLinks(props) {
               className={classes.buttonLink}
               onClick={handleMenuOpen}
             >
-              <Badge className={classes.margin} badgeContent={10} color="secondary" variant="dot">
+              <Badge className={classes.margin} badgeContent={2} color="secondary">
                 <Tooltip title="알림">
                   <Notifications className={classes.icons} />
                 </Tooltip>
@@ -130,19 +130,6 @@ function HeaderLinks(props) {
           <PowerSettingsNew className={classes.icons} />
         </Tooltip>
       </Button>
-    {session.creatorName &&
-      <Button
-        color={window.innerWidth > MOBILEWIDTH ? 'transparent' : 'white'}
-        justIcon={window.innerWidth > MOBILEWIDTH}
-        simple
-        aria-label="MyLogo"
-        className={classes.buttonLink}
-      >
-        <Tooltip title={session.creatorName ? session.creatorName : "myLogo"}>
-          <img className={classes.icons} src={session.creatorLogo} alt="creatorLogo" width="30px" height="30px"/>
-        </Tooltip>
-      </Button>
-    }
     </div>
   );
 }
