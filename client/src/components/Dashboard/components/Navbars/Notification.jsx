@@ -63,10 +63,13 @@ export default function Notification(props) {
               10월 중으로 2차 테스트로 찾아 뵙도록 하겠습니다.
             </Typography>
             <Typography variant="body2" gutterBottom noWrap>
-              크리에이터와 함께 성장하는 온애드🧞가 되겠습니다.
+              크리에이터와 함께 성장하는 온애드
+              <span role="img" aria-label="genie">🧞</span>
+              가 되겠습니다.
             </Typography>
             <Typography variant="body2" gutterBottom noWrap style={{ fontWeight: 'bold' }}>
-              해당 공지를 클릭하면 설문조사를 진행할 수 있습니다.😀
+              해당 공지를 클릭하면 설문조사를 진행할 수 있습니다.
+              <span role="img" aria-label="genie">😀</span>
             </Typography>
           </div>
         </div>

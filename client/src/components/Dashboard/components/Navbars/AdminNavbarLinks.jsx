@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 // @material-ui/core components
 import withStyles from '@material-ui/core/styles/withStyles';
@@ -33,20 +33,6 @@ const useMenu = () => {
 
 function HeaderLinks(props) {
   const { classes, history } = props;
-
-  const [session, setSession] = useState({});
-
-  useEffect(() => {
-    // Banner 데이터 axios 요청
-    axios.get(`${HOST}/api/dashboard/checkUserType`)
-      .then((res) => {
-        if (res.data) {
-          setSession(res.data);
-        }
-      }).catch((err) => {
-        console.log(err); // 오류처리 요망
-      });
-  }, []);
 
   function handleLogoutClick() {
     axios.get(`${HOST}/api/login/logout`).then(() => {
@@ -133,6 +119,5 @@ function HeaderLinks(props) {
     </div>
   );
 }
-
 
 export default withStyles(headerLinksStyle)(HeaderLinks);
