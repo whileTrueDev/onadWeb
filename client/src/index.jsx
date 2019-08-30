@@ -11,6 +11,7 @@ import MarketerDashboard from './components/Dashboard/layouts/MarketerDashboardL
 import Introduction from './components/Introduction';
 import Manual from './components/Manual';
 import NotFound from './components/Common/NotFound';
+import ShutDownCloseBeta from './components/Common/ShutDownCloseBeta';
 // import KakaoPay from './components/Common/KakaoPay';
 import * as serviceWorker from './serviceWorker';
 
@@ -32,6 +33,7 @@ ReactDOM.render(
       {/* 페이 연습 페이지 */}
       {/* <Route exact path="/pay" component={KakaoPay} /> */}
       {/* not found page */}
+      <Route path="/willbeback" component={ShutDownCloseBeta} />
       <Route component={NotFound} />
     </Switch>
   </Router>, // </StateStore>
