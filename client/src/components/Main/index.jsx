@@ -9,11 +9,12 @@ import RePasswordDialog from './views/Login/RePassword';
 import withRoot from './withRoot';
 import HOST from '../../config';
 import sources from './source/sources';
+import BetaDialog from './views/Login/BetaDialog';
 
 const useLoginValue = (history) => {
   const [isLogin, setisLogin] = useState(false);
   const [repasswordOpen, setRepassword] = useState(false);
-
+  
   // logout function
   const logout = () => {
     setisLogin(false);
@@ -55,6 +56,11 @@ export default withRoot((props) => {
     isLogin, repasswordOpen, logout, setRepassword,
   } = useLoginValue(history, location);
 
+  const [open, setOpen] = useState(true);
+  const handleClose = () => {
+    setOpen(false);
+  };
+  
   React.useEffect(() => {
     window.scrollTo(0, 0);
   }, [location]);
@@ -77,6 +83,10 @@ export default withRoot((props) => {
         setRepassword={setRepassword}
         history={history}
         logout={logout}
+      />
+      <BetaDialog
+        open={open}
+        handleClose={handleClose}
       />
     </div>
   );
