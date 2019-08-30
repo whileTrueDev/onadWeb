@@ -21,7 +21,6 @@ function useFetchData(url, dateRange) {
       if (res.data.length !== 0) {
         setPayload(res.data);
       } else {
-        console.log(res);
         setError('데이터가 없습니다.');
         // throw new Error('데이터가 존재하지 않습니다');
       }
