@@ -3,16 +3,17 @@ const express = require('express');
 const pool = require('../model/connectionPool');
 const doQuery = require('../model/doQuery');
 const preprocessing = require('../middlewares/preprocessingData/');
+
 const router = express.Router();
-const sortRows = preprocessing.sortRows;
+const { sortRows } = preprocessing;
 const listOfWithdrawal = preprocessing.withdrawalList;
-const preprocessingBannerData = preprocessing.preprocessingBannerData;
+const { preprocessingBannerData } = preprocessing;
 const CustomDate = require('../middlewares/customDate');
 
 
 // 크리에이터 수익금 라우터 및 정보조회
-router.get('/income', function(req, res, next) {
-  const creatorId = req._passport.session.user.creatorId;
+router.get('/income', (req, res, next) => {
+  const { creatorId } = req._passport.session.user;
   const dataQuery = `
   SELECT 
   creatorTotalIncome, creatorReceivable, creatorAccountNumber, creatorIncome.date
@@ -24,20 +25,20 @@ router.get('/income', function(req, res, next) {
   LIMIT 1`;
 
   doQuery(dataQuery, [creatorId])
-  .then((row)=>{
-    const result = row.result[0];
-    result.date = result.date.toLocaleString();
-    res.json(result);
-  })
-  .catch((errorData)=>{
-    console.log(errorData);
-    res.end();
-  })
-})
+    .then((row) => {
+      const result = row.result[0];
+      result.date = result.date.toLocaleString();
+      res.json(result);
+    })
+    .catch((errorData) => {
+      console.log(errorData);
+      res.end();
+    });
+});
 
 // 크리에이터 광고 내역 라우터
-router.get('/matchedBanner', function(req, res, next) {
-  const creatorId = req._passport.session.user.creatorId;
+router.get('/matchedBanner', (req, res, next) => {
+  const { creatorId } = req._passport.session.user;
   const bannerQuery = `
   SELECT bm.contractionTime, mi.marketerName, bm.contractionState, br.bannerSrc, bm.contractionId
   FROM bannerMatched as bm
@@ -49,24 +50,24 @@ router.get('/matchedBanner', function(req, res, next) {
   ORDER BY contractionTime DESC
   `;
   doQuery(bannerQuery, [creatorId])
-  .then((row)=>{
-    if(row.result.length > 0){
-      const result = preprocessingBannerData(row.result);
-      res.send(result);
-    }else{
+    .then((row) => {
+      if (row.result.length > 0) {
+        const result = preprocessingBannerData(row.result);
+        res.send(result);
+      } else {
+        res.end();
+      }
+    })
+    .catch((errorData) => {
+      console.log(errorData);
       res.end();
-    }    
-  })
-  .catch((errorData)=>{
-    console.log(errorData);
-    res.end();
-  })
-})
+    });
+});
 
 // 크리에이터 현재 광고 중 배너
-router.get('/currentBanner', function(req, res, next){
-  const creatorId = req._passport.session.user.creatorId
-  //DB연결후 query문을 통한 데이터 삽입 
+router.get('/currentBanner', (req, res, next) => {
+  const { creatorId } = req._passport.session.user;
+  // DB연결후 query문을 통한 데이터 삽입
   const queryState = `
   SELECT mi.marketerName, br.bannerSrc
   FROM bannerMatched as bm
@@ -87,77 +88,75 @@ router.get('/currentBanner', function(req, res, next){
   LIMIT 1`;
 
   doQuery(queryState, [creatorId])
-  .then((row)=>{
-    const result = row.result.map((value) => 
-      {
+    .then((row) => {
+      const result = row.result.map((value) => {
         value = Object.values(value);
-        return value
-      }
-    )
-    res.send(result);
-  })
-  .catch((errorData)=>{
-    console.log(errorData);
-    res.end();
-  })
+        return value;
+      });
+      res.send(result);
+    })
+    .catch((errorData) => {
+      console.log(errorData);
+      res.end();
+    });
 });
 
-router.post('/banner/desc', (req, res)=>{
+router.post('/banner/desc', (req, res) => {
   const { contractionId } = req.body;
   const bannerId = contractionId.split('/')[0];
   const descQuery = `
   SELECT *
   FROM bannerRegistered
-  WHERE bannerId = ?`
+  WHERE bannerId = ?`;
   doQuery(descQuery, [bannerId])
-  .then((row)=>{
-    res.send(row.result[0]);
-  })
-  .catch((errorData)=>{
-    console.log(errorData);
-    res.end();
-  })
-})
+    .then((row) => {
+      res.send(row.result[0]);
+    })
+    .catch((errorData) => {
+      console.log(errorData);
+      res.end();
+    });
+});
 
-//doQuery 완료
-router.post('/banner/delete', (req, res, next)=>{
+// doQuery 완료
+router.post('/banner/delete', (req, res, next) => {
   const { contractionId } = req.body;
   const bannerQuery = `
   DELETE FROM bannerMatched
   WHERE contractionId = ? `;
   doQuery(bannerQuery, [contractionId])
-  .then(()=>{
-    res.send([true, '배너가 성공적으로 삭제되었습니다.']);
-  })
-  .catch((errorData)=>{
-    console.log(errorData);
-    res.send([false, '배너 삭제에 실패하였습니다 잠시후 시도해주세요.']);
-  })
-})
+    .then(() => {
+      res.send([true, '배너가 성공적으로 삭제되었습니다.']);
+    })
+    .catch((errorData) => {
+      console.log(errorData);
+      res.send([false, '배너 삭제에 실패하였습니다 잠시후 시도해주세요.']);
+    });
+});
 
 // 배너 오버레이 URL 주소 가져오기
-router.get('/overlayUrl', function(req, res, next){
-  const creatorId = req._passport.session.user.creatorId;
+router.get('/overlayUrl', (req, res, next) => {
+  const { creatorId } = req._passport.session.user;
   const urlQuery = `
   SELECT advertiseUrl, creatorContractionAgreement
   FROM creatorInfo
   WHERE creatorId = ?
-  `
+  `;
   doQuery(urlQuery, [creatorId])
-  .then((row)=>{
-    res.send(row.result[0]);
-  })
-  .catch(()=>{
-    res.end();
-  })
+    .then((row) => {
+      res.send(row.result[0]);
+    })
+    .catch(() => {
+      res.end();
+    });
 });
 
 
 // 수익관리 탭의 크리에이터 별 수익금 차트 데이터
-router.get('/chartdata', function(req, res, next) {
+router.get('/chartdata', (req, res, next) => {
   // creatorId 가져오기
-  const creatorId = req._passport.session.user.creatorId;
-  const dateRange = req.query.dateRange;
+  const { creatorId } = req._passport.session.user;
+  const { dateRange } = req.query;
   const rangeQuery = `
   SELECT
   creatorTotalIncome, creatorReceivable, DATE_FORMAT(date, '%m-%d') as date
@@ -180,35 +179,35 @@ router.get('/chartdata', function(req, res, next) {
   WHERE creatorId = ?`;
 
   doQuery(accountQuery, [creatorId])
-  .then((row)=>{
-    doQuery(rangeQuery, [creatorId, dateRange])
-    .then((inrows)=>{
-      const result = {
-        creatorAccountNumber : row.result[0].creatorAccountNumber,
-        totalIncomeData: [],
-        receivableData: [],
-        labels: [],
-      };
-      if (inrows.result.length > 0) {
-        inrows.result.map((inrow) => {
-          result.totalIncomeData.push(inrow.creatorTotalIncome);
-          result.receivableData.push(inrow.creatorReceivable);
-          result.labels.push(inrow.date);
+    .then((row) => {
+      doQuery(rangeQuery, [creatorId, dateRange])
+        .then((inrows) => {
+          const result = {
+            creatorAccountNumber: row.result[0].creatorAccountNumber,
+            totalIncomeData: [],
+            receivableData: [],
+            labels: [],
+          };
+          if (inrows.result.length > 0) {
+            inrows.result.map((inrow) => {
+              result.totalIncomeData.push(inrow.creatorTotalIncome);
+              result.receivableData.push(inrow.creatorReceivable);
+              result.labels.push(inrow.date);
+            });
+            res.send(result);
+          } else {
+            res.end();
+          }
+        })
+        .catch((errorData) => {
+          console.log(errorData);
+          res.end();
         });
-        res.send(result);
-      }else{
-        res.end();
-      }
     })
-    .catch((errorData)=>{
+    .catch((errorData) => {
       console.log(errorData);
       res.end();
-    })
-  })
-  .catch((errorData)=>{
-    console.log(errorData);
-    res.end();
-  })
+    });
 
   // doQuery(rangeQuery, [creatorId, dateRange])
   // pool.getConnection((err, conn) => {
@@ -221,7 +220,7 @@ router.get('/chartdata', function(req, res, next) {
   //   creatorTotalIncome, creatorReceivable, DATE_FORMAT(date, '%m-%d') as date
   //   FROM creatorIncome
   //   JOIN (
-  //     SELECT 
+  //     SELECT
   //     MAX(date) as d1
   //     FROM creatorIncome
   //     WHERE creatorId = ${creatorId}
@@ -266,16 +265,15 @@ router.get('/chartdata', function(req, res, next) {
   //     })
   //   })
   // })
-})
+});
 
 // creator contraction Update
 router.post('/contraction', (req, res, next) => {
-  const creatorId = req._passport.session.user.creatorId;
-  const dateCode =  new CustomDate().getCode();
-  const insertQuery = 
-  `INSERT INTO bannerMatched (contractionId)
+  const { creatorId } = req._passport.session.user;
+  const dateCode = new CustomDate().getCode();
+  const insertQuery = `INSERT INTO bannerMatched (contractionId)
   VALUES (CONCAT("onad6309_01/", ?, "/", ?))
-  `
+  `;
 
   const updateQuery = `
   UPDATE creatorInfo
@@ -286,17 +284,17 @@ router.post('/contraction', (req, res, next) => {
     doQuery(insertQuery, [creatorId, dateCode]),
     doQuery(updateQuery, [1, creatorId])
   ])
-  .then(()=>{
-    res.send(true);
-  })
-  .catch(()=>{
-    res.end();
-  })
-})
+    .then(() => {
+      res.send(true);
+    })
+    .catch(() => {
+      res.end();
+    });
+});
 
 // 크리에이터 출금신청 / 출금신청 금액만큼 creatorIncome에서 제외
-router.post('/withdrawal', function(req, res, next) {
-  const creatorId = req._passport.session.user.creatorId;
+router.post('/withdrawal', (req, res, next) => {
+  const { creatorId } = req._passport.session.user;
   const withdrawlAmount = req.body.withdrawalAmount;
 
   const creatorWithdrawalQuery = `
@@ -311,56 +309,56 @@ router.post('/withdrawal', function(req, res, next) {
   FROM creatorIncome
   WHERE creatorId = ?
   ORDER BY date DESC
-  LIMIT 1`
+  LIMIT 1`;
 
   Promise.all([
-    doQuery(creatorWithdrawalQuery, [creatorId, withdrawlAmount, 0]), 
+    doQuery(creatorWithdrawalQuery, [creatorId, withdrawlAmount, 0]),
     doQuery(creatorIncomeQuery, [withdrawlAmount, creatorId])
   ])
-  .then(()=>{
-    res.send({
-      error : null
+    .then(() => {
+      res.send({
+        error: null
+      });
+    })
+    .catch(() => {
+      res.send({
+        error: true
+      });
     });
-  })
-  .catch(()=>{
-    res.send({
-      error : true
-    });
-  })
-})
+});
 
-router.get('/profile', (req, res)=>{
+router.get('/profile', (req, res) => {
   const profileQuery = `
   SELECT creatorId, creatorName, creatorIp, creatorMail, creatorAccountNumber, creatorContractionAgreement
   FROM creatorInfo 
   WHERE creatorId = ?`;
   if (req._passport.session === undefined) {
     res.send({
-      error : true
-    })
-  }else{
-    const creatorId = req._passport.session.user.creatorId;
+      error: true
+    });
+  } else {
+    const { creatorId } = req._passport.session.user;
     doQuery(profileQuery, [creatorId])
-    .then((data)=>{
-      const userData = data.result[0];
-      userData['creatorLogo'] =  req._passport.session.user.creatorLogo;
-      res.send({
-        error : false,
-        result : userData
+      .then((data) => {
+        const userData = data.result[0];
+        userData.creatorLogo = req._passport.session.user.creatorLogo;
+        res.send({
+          error: false,
+          result: userData
+        });
+      })
+      .catch(() => {
+        res.send({
+          error: true
+        });
       });
-    })
-    .catch(()=>{
-      res.send({
-        error : true
-      });
-    })
   }
-})
+});
 
 // 크리에이터 출금 내역 불러오기
-router.get('/listOfWithdrawal', function(req, res, next) {
+router.get('/listOfWithdrawal', (req, res, next) => {
   // creatorID 가져오기
-  const creatorId = req._passport.session.user.creatorId;
+  const { creatorId } = req._passport.session.user;
 
   const listQuery = `
   SELECT
@@ -371,41 +369,41 @@ router.get('/listOfWithdrawal', function(req, res, next) {
   `;
 
   doQuery(listQuery, creatorId)
-  .then((row)=>{
-    if(row.result.length > 0){
-      const result = listOfWithdrawal(row.result);
-      res.send(result);
-    }else{
+    .then((row) => {
+      if (row.result.length > 0) {
+        const result = listOfWithdrawal(row.result);
+        res.send(result);
+      } else {
+        res.end();
+      }
+    })
+    .catch((errorData) => {
+      console.log(errorData);
       res.end();
-    }
-  })
-  .catch((errorData)=>{
-    console.log(errorData);
-    res.end();
-  })
+    });
 });
 
-router.post('/ipchange', function(req, res, next){
-  let newIp = req.body.value;
-  let creatorId = req._passport.session.user.creatorId;
-  console.log(req)
-  const ipQuery=`UPDATE creatorInfo SET creatorIp = ? WHERE creatorId = ?`
+router.post('/ipchange', (req, res, next) => {
+  const newIp = req.body.value;
+  const { creatorId } = req._passport.session.user;
+  console.log(req);
+  const ipQuery = 'UPDATE creatorInfo SET creatorIp = ? WHERE creatorId = ?';
   doQuery(ipQuery, [newIp, creatorId])
-  .then(()=>{
-    console.log(`${creatorId}님 IP변경완료`);
-    res.send(true);
-  })
-  .catch(()=>{
-    res.send(false);
-  })
-})
+    .then(() => {
+      console.log(`${creatorId}님 IP변경완료`);
+      res.send(true);
+    })
+    .catch(() => {
+      res.send(false);
+    });
+});
 
 // router.post('/welcome', function(req, res, next) {
 //   const creatorId = req._passport.session.user.creatorId;
 //   const dateCode =  new CustomDate().getCode();
-  
-//   const insertQuery = 
-//   `INSERT INTO bannerMatched 
+
+//   const insertQuery =
+//   `INSERT INTO bannerMatched
 //   (contractionId)
 //   VALUES CONCAT("onad6309_01", "/", ?, "/", ?)
 //   `
@@ -426,4 +424,4 @@ router.post('/ipchange', function(req, res, next){
 //   })
 // })
 
-module.exports = router
+module.exports = router;
