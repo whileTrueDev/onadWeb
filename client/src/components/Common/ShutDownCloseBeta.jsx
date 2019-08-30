@@ -86,8 +86,7 @@ export default function ShutDownCloseBeta() {
           <Button
             className={classes.linkButton2}
             size="large"
-            to="/"
-            component={Link}
+            onClick={() => { window.open('https://forms.gle/oktdRvutqneeKAWRA'); }}
           >
             2차 클로즈베타 신청하기
           </Button>
