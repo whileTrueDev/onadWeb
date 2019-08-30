@@ -25,7 +25,7 @@ export default function Notification(props) {
     >
       {/* 공지 메뉴 컴포넌트 */}
       <MenuItem
-        onClick={handleMenuClose}
+        onClick={() => { window.open('https://forms.gle/BTXTpvEpQJWfgPDz5'); handleMenuClose(); }}
         style={{
           maxWidth: 420,
           borderBottom: '1px solid',
@@ -34,7 +34,7 @@ export default function Notification(props) {
       >
         <div>
           <Typography variant="h5" gutterBottom noWrap>
-                  # 클로즈베타 종료 관련 공지
+                  # 클로즈 베타 테스트 종료 안내
           </Typography>
           <Typography variant="subtitle2" gutterBottom noWrap>
                   19-08-30 / onad 개발자
@@ -48,16 +48,25 @@ export default function Notification(props) {
               금일 18시까지 적립된 금액을 기준으로 정산이 될 예정입니다.
             </Typography>
             <Typography variant="body2" gutterBottom noWrap>
-              정산금의 지급은  온애드 서비스 이용에 관한
+              정산금의 지급은  온애드 서비스 이용에 관한 미흡하였던 부분과
             </Typography>
             <Typography variant="body2" gutterBottom noWrap>
-              설문조사가 완료됨을 확인한 이후, ~~~ 이내 지급될 예정입니다.
+            개선점들에 대한 설문이 완료됨을 확인한 이후,
             </Typography>
             <Typography variant="body2" gutterBottom noWrap>
-              10월 둘째주, 2차 클로즈베타가 예정되어 있습니다.
+              19-09-15 이내로 지급됩니다.
             </Typography>
             <Typography variant="body2" gutterBottom noWrap>
-              새로운 모습으로 다시 찾아뵙겠습니다.
+              여러분의 피드백을 받아 더욱더 발전한 모습으로
+            </Typography>
+            <Typography variant="body2" gutterBottom noWrap>
+              10월 중으로 2차 테스트로 찾아 뵙도록 하겠습니다.
+            </Typography>
+            <Typography variant="body2" gutterBottom noWrap>
+              크리에이터와 함께 성장하는 온애드🧞가 되겠습니다.
+            </Typography>
+            <Typography variant="body2" gutterBottom noWrap style={{ fontWeight: 'bold' }}>
+              해당 공지를 클릭하면 설문조사를 진행할 수 있습니다.😀
             </Typography>
           </div>
         </div>

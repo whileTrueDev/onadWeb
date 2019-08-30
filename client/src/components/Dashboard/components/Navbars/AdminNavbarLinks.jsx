@@ -130,21 +130,6 @@ function HeaderLinks(props) {
           <PowerSettingsNew className={classes.icons} />
         </Tooltip>
       </Button>
-      {session.creatorName
-      && (
-      <Button
-        color={window.innerWidth > MOBILEWIDTH ? 'transparent' : 'white'}
-        justIcon={window.innerWidth > MOBILEWIDTH}
-        simple
-        aria-label="MyLogo"
-        className={classes.buttonLink}
-      >
-        <Tooltip title={session.creatorName ? session.creatorName : 'myLogo'}>
-          <img className={classes.icons} src={session.creatorLogo} alt="creatorLogo" width="30px" height="30px" />
-        </Tooltip>
-      </Button>
-      )
-    }
     </div>
   );
 }
