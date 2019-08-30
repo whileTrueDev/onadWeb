@@ -17,7 +17,7 @@ function CustomTable({ ...props }) {
   const {
     classes, tableHead, tableData, tableHeaderColor, pagination,
     handleChangeTablePage, handleChangeTableRowsPerPage,
-    emptyRows, rowsPerPage, page, buttonSet,
+    emptyRows, rowsPerPage, page,
   } = props;
 
   return (
@@ -112,7 +112,6 @@ function CustomTable({ ...props }) {
 CustomTable.defaultProps = {
   tableHeaderColor: 'gray',
   pagination: false,
-  buttonSet: false,
   paginationOps: {
     tableDataLength: 10,
     rowsPerPage: 5,
@@ -138,7 +137,6 @@ CustomTable.propTypes = {
   )).isRequired,
   pagination: PropTypes.bool,
   paginationOps: PropTypes.object,
-  buttonSet: PropTypes.bool,
 };
 
 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
@@ -35,8 +35,8 @@ const list = text.split(/\r\n|\r|\n/);
 
 const BetaDialog = (props) => {
   const { open, handleClose, classes } = props;
- 
-  
+
+
   // useEffect(() => {
   //   const script = document.createElement('script');
 
@@ -55,13 +55,17 @@ const BetaDialog = (props) => {
       fullWidth
     >
       <Grid container direction="column" justify="center" alignContent="center" alignItems="center" spacing={2}>
-        {list.map((typo, i)=>(
-           <Grid item key={i}>
+        {list.map((typo, i) => (
+          <Grid item key={i}>
             <Typography className={classes.font}>{typo}</Typography>
           </Grid>
         ))}
         <Grid item style={{ marginBottom: '10px' }} className={classes.font}>
-        💌설문조사 링크 : <a href="https://forms.gle/BTXTpvEpQJWfgPDz5" className={classes.link}>https://forms.gle/BTXTpvEpQJWfgPDz5</a>💌
+          <span role="img" aria-label="heart">💌</span>
+        설문조사 링크 :
+          {' '}
+          <a href="https://forms.gle/BTXTpvEpQJWfgPDz5" className={classes.link}>https://forms.gle/BTXTpvEpQJWfgPDz5</a>
+          <span role="img" aria-label="heart">💌</span>
         </Grid>
       </Grid>
     </Dialog>
@@ -70,7 +74,7 @@ const BetaDialog = (props) => {
 
 export default withStyles(style)(BetaDialog);
 
-{/* <Grid item>
+{ /* <Grid item>
   <Typography className={classes.font}>안녕하세요 온애드입니다. 먼저 홈페이지를 방문해주셔서 감사합니다. </Typography>
 </Grid>
 <Grid item>
@@ -87,4 +91,4 @@ export default withStyles(style)(BetaDialog);
 </Grid>
 <Grid item style={{ marginBottom: '10px' }}>
   <a href="http://pf.kakao.com/_xoyxmfT/chat" className={classes.link}>1:1 채팅하기</a>
-</Grid>  */}
+</Grid>  */ }
