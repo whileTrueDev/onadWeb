@@ -24,6 +24,44 @@ export default function Notification(props) {
       onClose={handleMenuClose}
     >
       {/* 공지 메뉴 컴포넌트 */}
+      <MenuItem
+        onClick={handleMenuClose}
+        style={{
+          maxWidth: 420,
+          borderBottom: '1px solid',
+          marginBottom: 10
+        }}
+      >
+        <div>
+          <Typography variant="h5" gutterBottom noWrap>
+                  # 클로즈베타 종료 관련 공지
+          </Typography>
+          <Typography variant="subtitle2" gutterBottom noWrap>
+                  19-08-30 / onad 개발자
+          </Typography>
+          <Divider style={{ marginBottom: 10 }} />
+          <div>
+            <Typography variant="body2" gutterBottom noWrap>
+              금일 19-08-30 18:00 를 기점으로 1차 클로즈베타가 종료됩니다.
+            </Typography>
+            <Typography variant="body2" gutterBottom noWrap>
+              금일 18시까지 적립된 금액을 기준으로 정산이 될 예정입니다.
+            </Typography>
+            <Typography variant="body2" gutterBottom noWrap>
+              정산금의 지급은  온애드 서비스 이용에 관한
+            </Typography>
+            <Typography variant="body2" gutterBottom noWrap>
+              설문조사가 완료됨을 확인한 이후, ~~~ 이내 지급될 예정입니다.
+            </Typography>
+            <Typography variant="body2" gutterBottom noWrap>
+              10월 둘째주, 2차 클로즈베타가 예정되어 있습니다.
+            </Typography>
+            <Typography variant="body2" gutterBottom noWrap>
+              새로운 모습으로 다시 찾아뵙겠습니다.
+            </Typography>
+          </div>
+        </div>
+      </MenuItem>
       <MenuItem onClick={handleMenuClose} style={{ maxWidth: 420 }}>
         <div>
           <Typography variant="h5" gutterBottom noWrap>
