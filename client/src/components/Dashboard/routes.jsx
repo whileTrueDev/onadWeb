@@ -4,6 +4,7 @@ import Person from '@material-ui/icons/Person';
 import AttachMoney from '@material-ui/icons/AttachMoney';
 import BrandingWatermark from '@material-ui/icons/BrandingWatermark';
 import Reorder from '@material-ui/icons/Reorder';
+import Work from '@material-ui/icons/Work';
 
 // 크리에이터 라우터
 import creatorUserProfile from './views/creator/UserProfile/UserProfile';
@@ -15,9 +16,8 @@ import creatorManual from './views/creator/Manual/Manual';
 import marketerDashboardPage from './views/marketer/Dashboard/Dashboard';
 import marketerBannerManage from './views/marketer/BannerManage/BannerManage';
 import marketerCashManage from './views/marketer/CashManage/CashManage';
-import marketerUserProfile from './views/marketer/UserProfile/UserProfile';
 import MarketerManual from './views/marketer/Manual/Manual';
-
+import marketerMyOffice from './views/marketer/MyOffice/MyOffice';
 
 const dashboardRoutes = {
   creator: [
@@ -80,11 +80,11 @@ const dashboardRoutes = {
       layout: '/dashboard/marketer',
     },
     {
-      path: '/user',
-      name: '계정 관리',
-      icon: Person,
-      component: marketerUserProfile, // 마케터 대시보드 컴포넌트로 수정
-      layout: '/dashboard/marketer',
+      path: '/myoffice',
+      name: '내 오피스',
+      icon: Work,
+      component: marketerMyOffice,
+      layout: '/dashboard/marketer'
     },
   ],
 };

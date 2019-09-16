@@ -2,10 +2,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 // for Link tag component
 // @material-ui/core
 import withStyles from '@material-ui/core/styles/withStyles';
-import {
-  TextField,
-  MenuItem,
-} from '@material-ui/core';
+import { TextField, MenuItem } from '@material-ui/core';
 import Check from '@material-ui/icons/Check';
 import MaskedInput from 'react-text-mask';
 import axios from '../../../../../utils/axios';
@@ -34,6 +31,34 @@ dashboardStyle.textField = {
     borderBottomColor: '#00acc1',
   },
 };
+
+const initialValue = {
+  value: '',
+  password: false,
+  repasswd: false,
+};
+// reducer를 사용하여 Error를 handling하자
+const myReducer = (state, action) => {
+  switch (action.type) {
+    case 'password': {
+      const regx = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,20}$/;
+      if (regx.test(action.value)) {
+        return { ...state, value: action.value, password: false };
+      }
+      return { ...state, value: action.value, password: true };
+    }
+    case 'repasswd': {
+      if (state.value === action.value) {
+        return { ...state, repasswd: false };
+      }
+      return { ...state, repasswd: true };
+    }
+    default: {
+      return state;
+    }
+  }
+};
+
 
 const TextMaskCustom = (props) => {
   const { inputRef, ...other } = props;
@@ -70,6 +95,7 @@ const UserDataForm = (props) => {
   const [domain, setDomain] = useState('');
   const [phone, setPhone] = useState('');
   const [snackOpen, setSnackOpen] = useState(false);
+  const [state, dispatch] = React.useReducer(myReducer, initialValue);
 
   const getData = useCallback(async () => {
     axios.post(`${HOST}/api/dashboard/marketer/info`)
@@ -85,7 +111,7 @@ const UserDataForm = (props) => {
     getData();
   }, [getData]);
 
-  const changeType = () => {
+  const handleChangeType = () => {
     document.getElementById('name').value = '';
     document.getElementById('mail').value = '';
     setTextType(false);
@@ -124,10 +150,32 @@ const UserDataForm = (props) => {
           setTextType(true);
         }
       });
+
+    if (!(state.password || state.repasswd)) {
+      axios.post(`${HOST}/api/login/changePw`, { password: state.value })
+        .then((res) => {
+          if (res.data) {
+            setSnackOpen(true);
+          }
+        });
+    }
+    document.getElementById('password').value = null;
+    document.getElementById('repassword').value = null;
   };
 
   const snackClose = () => {
     setSnackOpen(false);
+  };
+
+
+  const checkPasswd = (event) => {
+    event.preventDefault();
+    dispatch({ type: 'password', value: event.target.value });
+  };
+
+  const checkRePasswd = (event) => {
+    event.preventDefault();
+    dispatch({ type: 'repasswd', value: event.target.value });
   };
 
   return (
@@ -159,6 +207,26 @@ const UserDataForm = (props) => {
                 />
               </GridItem>
               <GridItem xs={12} sm={12} md={7} />
+              <GridItem xs={12} sm={12} md={5}>
+                <TextField
+                  required
+                  label="PASSWORD"
+                  type="password"
+                  id="password"
+                  value="***********"
+                  error={state.password}
+                  className={classes.textField}
+                  margin="normal"
+                  InputProps={{
+                    readOnly: true,
+                  }}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                />
+              </GridItem>
+              <GridItem xs={12} sm={12} md={7} />
+
               <GridItem xs={12} sm={12} md={5}>
                 <TextField
                   label="NAME"
@@ -240,7 +308,7 @@ const UserDataForm = (props) => {
             </GridContainer>
           </CardBody>
           <CardFooter>
-            <Button onClick={changeType} color="info">
+            <Button onClick={handleChangeType} color="info">
           정보변경
             </Button>
           </CardFooter>
@@ -265,6 +333,41 @@ const UserDataForm = (props) => {
                   />
                 </GridItem>
                 <GridItem xs={12} sm={12} md={7} />
+                <GridItem xs={12} sm={12} md={5}>
+                  <TextField
+                    required
+                    label="PASSWORD"
+                    type="password"
+                    id="password"
+                    placeholder="비밀번호를 입력하세요."
+                    onChange={checkPasswd}
+                    helperText={state.password ? '특수문자를 포함한 영문/숫자 혼합 8자리 이상입니다.' : ' '}
+                    error={state.password}
+                    className={classes.textField}
+                    margin="normal"
+                    autoFocus
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                  />
+                </GridItem>
+                <GridItem xs={12} sm={12} md={5}>
+                  <TextField
+                    required
+                    type="password"
+                    label="RE-PASSWORD"
+                    placeholder="비밀번호를 재입력하세요."
+                    helperText={state.repasswd ? '비밀번호와 동일하지 않습니다.' : ' '}
+                    error={state.repasswd}
+                    onChange={checkRePasswd}
+                    className={classes.textField}
+                    margin="normal"
+                    id="repassword"
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                  />
+                </GridItem>
                 <GridItem xs={12} sm={12} md={5}>
                   <TextField
                     required

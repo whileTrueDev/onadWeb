@@ -14,7 +14,7 @@ import BetaDialog from './views/Login/BetaDialog';
 const useLoginValue = (history) => {
   const [isLogin, setisLogin] = useState(false);
   const [repasswordOpen, setRepassword] = useState(false);
-  
+
   // logout function
   const logout = () => {
     setisLogin(false);
@@ -60,7 +60,7 @@ export default withRoot((props) => {
   const handleClose = () => {
     setOpen(false);
   };
-  
+
   React.useEffect(() => {
     window.scrollTo(0, 0);
   }, [location]);

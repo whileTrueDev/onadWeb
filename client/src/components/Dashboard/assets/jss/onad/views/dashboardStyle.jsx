@@ -92,7 +92,7 @@ const dashboardStyle = {
     },
   },
   spanText: {
-    marginLeft:"8px",
+    marginLeft: '8px',
     color: infoColor[0],
     fontWeight: 'bold',
 
