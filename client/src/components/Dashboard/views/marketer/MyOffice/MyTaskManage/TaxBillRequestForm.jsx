@@ -32,7 +32,7 @@ function TaxBillRequestForm(props) {
       <CardHeader color="blueGray">
         <div className={myClasses.textBox}>
           <h4 className={classes.cardTitleWhite}>
-            세금계산서 발행
+            세금계산서 발행 신청
           </h4>
         </div>
 
@@ -43,11 +43,12 @@ function TaxBillRequestForm(props) {
         <div className={myClasses.buttonWrapper}>
           <Button
             color="info"
+            // onClick={handleClick}
           >
-            세금계산서 발행
+            세금계산서 신청
           </Button>
         </div>
-        <div className={myClasses.textBox} style={{ marginTop: 20 }}>
+        <div className={myClasses.textBox} style={{ marginTop: 5 }}>
           <Typography gutterBottom variant="body1">발행에 대한 설명</Typography>
         </div>
         <div className={myClasses.textBox} style={{ marginBottom: 20 }}>

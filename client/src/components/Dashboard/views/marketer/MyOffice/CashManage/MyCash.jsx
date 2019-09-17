@@ -19,12 +19,11 @@ import RefundDialog from './RefundDialog';
 import useFetchData from '../../../../lib/hooks/useFetchData';
 import useDialog from '../../../../lib/hooks/useDialog';
 
-function RefundAccountForm(props) {
+function MyCash(props) {
   const chargeDialog = useDialog();
   const refundDialog = useDialog();
   const cashData = useFetchData('/api/dashboard/marketer/cash');
-  const accountData = useFetchData('/api/dashboard/marketer/accountNumber');
-  const { classes } = props;
+  const { classes, accountData } = props;
 
   return (
     <Card>
@@ -83,6 +82,9 @@ function RefundAccountForm(props) {
         <RefundDialog
           open={refundDialog.open}
           handleClose={refundDialog.handleClose}
+          accountNumber={accountData.payload.accountNumber}
+          currentCash={!cashData.loading && !cashData.error
+            ? cashData.payload.marketerDebit : null}
         />
       )}
 
@@ -91,8 +93,13 @@ function RefundAccountForm(props) {
   );
 }
 
-RefundAccountForm.propTypes = {
-  classes: PropTypes.object.isRequired
+MyCash.propTypes = {
+  classes: PropTypes.object.isRequired,
+  accountData: PropTypes.object
 };
 
-export default withStyles(DashboardStyle)(RefundAccountForm);
+MyCash.defaultProps = {
+  accountData: { payload: null, loading: true, error: '' }
+};
+
+export default withStyles(DashboardStyle)(MyCash);

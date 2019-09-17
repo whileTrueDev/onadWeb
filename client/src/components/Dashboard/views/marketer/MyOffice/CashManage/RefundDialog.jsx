@@ -66,7 +66,7 @@ function useValue(defaultValue) {
 function RefundDialog(props) {
   const classes = useStyles();
   const {
-    open, handleClose, accountNumber, chargeCash, history,
+    open, handleClose, accountNumber, currentCash, history,
   } = props;
   // select value
   const { selectValue, handleChange } = useValue('100000');
@@ -78,7 +78,7 @@ function RefundDialog(props) {
   } = useRefundSnack(handleClose);
 
   function handleSubmitClick() {
-    if (chargeCash - selectValue < 0) {
+    if (currentCash - selectValue < 0) {
       alert('불가합니다');
     } else {
       // 해당 금액 만큼 환불 내역에 추가하는 요청
@@ -98,12 +98,14 @@ function RefundDialog(props) {
       open={open}
       onClose={handleClose}
       title="광고캐시 환불"
+      maxWidth="sm"
+      fullWidth
       buttons={(
         <div>
           <Button
             color="info"
             // onClick={handleClick}
-            disabled={(!(chargeCash >= selectValue)) || !(selectValue >= 0)}
+            disabled={(!(currentCash >= selectValue)) || !(selectValue >= 0)}
           >
               진행
           </Button>
@@ -132,7 +134,7 @@ function RefundDialog(props) {
             환불 가능 금액
           </Typography>
           <Typography variant="h4">
-            {`${chargeCash} 원`}
+            {`${currentCash} 원`}
           </Typography>
         </div>
         <Divider />
@@ -151,7 +153,7 @@ function RefundDialog(props) {
               value="100000"
               control={<Radio color="primary" />}
               label={
-                  chargeCash > 100000
+                  currentCash > 100000
                     ? (
                       <Typography variant="subtitle1" className={classes.selectValue}>
                     100,000 원
@@ -163,13 +165,13 @@ function RefundDialog(props) {
                       </Typography>
                     )
                   }
-              disabled={!(chargeCash > 100000)}
+              disabled={!(currentCash > 100000)}
             />
             <FormControlLabel
               value="500000"
               control={<Radio color="primary" />}
               label={
-                  chargeCash > 500000
+                  currentCash > 500000
                     ? (
                       <Typography variant="subtitle1" className={classes.selectValue}>
                     500,000 원
@@ -181,13 +183,13 @@ function RefundDialog(props) {
                       </Typography>
                     )
                 }
-              disabled={!(chargeCash > 500000)}
+              disabled={!(currentCash > 500000)}
             />
             <FormControlLabel
               value="1000000"
               control={<Radio color="primary" />}
               label={
-                  chargeCash > 100000
+                  currentCash > 100000
                     ? (
                       <Typography variant="subtitle1" className={classes.selectValue}>
                     1,000,000 원
@@ -199,13 +201,13 @@ function RefundDialog(props) {
                       </Typography>
                     )
                 }
-              disabled={!(chargeCash > 100000)}
+              disabled={!(currentCash > 100000)}
             />
             <FormControlLabel
               value="5000000"
               control={<Radio color="primary" />}
               label={
-                  chargeCash > 5000000
+                  currentCash > 5000000
                     ? (
                       <Typography variant="subtitle1" className={classes.selectValue}>
                     5,000,000 원
@@ -217,7 +219,7 @@ function RefundDialog(props) {
                       </Typography>
                     )
                 }
-              disabled={!(chargeCash > 5000000)}
+              disabled={!(currentCash > 5000000)}
             />
           </RadioGroup>
           <div style={{ position: 'absolute', top: 50, left: 200 }}>
@@ -234,9 +236,9 @@ function RefundDialog(props) {
                 value={selectValue}
                 onChange={handleChange}
                 margin="normal"
-                error={(!(chargeCash >= selectValue)) || !(selectValue >= 0)}
+                error={(!(currentCash >= selectValue)) || !(selectValue >= 0)}
                 variant="outlined"
-                helperText={((chargeCash >= selectValue) && (selectValue >= 0)) ? '' : '입력이 잘못되었어요!'}
+                helperText={((currentCash >= selectValue) && (selectValue >= 0)) ? '' : '입력이 잘못되었어요!'}
               />
             </Tooltip>
           </div>
@@ -263,7 +265,7 @@ function RefundDialog(props) {
               {`환불 신청액 : ${selectValue}`}
             </Typography>
             <Typography variant="h5" marked="center">
-              {`환불 이후 잔여 출금 가능 금액 : ${chargeCash - selectValue}`}
+              {`환불 이후 잔여 출금 가능 금액 : ${currentCash - selectValue}`}
             </Typography>
             <Warning>
               <Typography variant="subtitle1" marked="center">
@@ -281,7 +283,7 @@ RefundDialog.propTypes = {
   open: PropTypes.bool.isRequired,
   handleClose: PropTypes.func.isRequired,
   accountNumber: PropTypes.string.isRequired,
-  chargeCash: PropTypes.string.isRequired,
+  currentCash: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired
 };
 
 export default RefundDialog;

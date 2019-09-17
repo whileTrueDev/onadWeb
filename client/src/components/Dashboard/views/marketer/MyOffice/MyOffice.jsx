@@ -4,12 +4,17 @@ import GridContainer from '../../../components/Grid/GridContainer';
 import GridItem from '../../../components/Grid/GridItem';
 import UserDataForm from './UserManage/UserDataForm';
 import RefundAccountForm from './CashManage/RefundAccountForm';
-import CashHistory from './CashManage/CashHistory';
+import MyCash from './CashManage/MyCash';
 import CashHistoryTable from './CashManage/CashHistoryTable';
 import BusinessRegistration from './MyTaskManage/BusinessRegistrationUploadForm';
 import TaxBillRequestForm from './MyTaskManage/TaxBillRequestForm';
+// hook for data fetching
+import useFetchData from '../../../lib/hooks/useFetchData';
 
-export default function MyOffice(props) {
+export default function MyOffice() {
+  // 계좌 정보 데이터 조회
+  const accountData = useFetchData('/api/dashboard/marketer/accountNumber');
+
   return (
     <div>
       <Typography variant="h5">광고캐시 관리</Typography>
@@ -18,10 +23,10 @@ export default function MyOffice(props) {
         <GridItem xs={12} sm={12} md={6} lg={5} xl={3}>
           <GridContainer>
             <GridItem xs={12}>
-              <CashHistory />
+              <MyCash accountData={accountData} />
             </GridItem>
             <GridItem xs={12}>
-              <RefundAccountForm />
+              <RefundAccountForm accountData={accountData} />
             </GridItem>
           </GridContainer>
         </GridItem>

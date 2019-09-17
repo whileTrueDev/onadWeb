@@ -17,10 +17,10 @@ export default function CircularProgress(props) {
   return (
     <div>
       { small ? (
-        <MuiCircularProgress />
+        <MuiCircularProgress {...rest} />
       ) : (
         <div className={classes.wrapper}>
-          <MuiCircularProgress />
+          <MuiCircularProgress {...rest} />
         </div>
       )}
     </div>

@@ -49,7 +49,7 @@ function BusinessRegistrationUploadForm(props) {
             사업자 등록증 변경
             </Button>
           </div>
-          <div className={myClasses.textBox} style={{ marginTop: 20 }}>
+          <div className={myClasses.textBox} style={{ marginTop: 5 }}>
             <Typography gutterBottom variant="body1">등록된 계좌</Typography>
           </div>
           <div className={myClasses.textBox} style={{ marginBottom: 20 }}>
@@ -67,13 +67,13 @@ function BusinessRegistrationUploadForm(props) {
             사업자 등록증 등록
             </Button>
           </div>
-          <div className={myClasses.textBox} style={{ marginTop: 20 }}>
+          <div className={myClasses.textBox} style={{ marginTop: 5 }}>
             <Typography gutterBottom variant="body1">아직 등록된 사업자 등록증이 없습니다.</Typography>
           </div>
           <div className={myClasses.textBox} style={{ marginBottom: 20 }}>
             <Typography gutterBottom variant="body1" style={{ color: '#00acc1' }}>등록</Typography>
             <Typography gutterBottom variant="body1">
-              버튼을 눌러 환불계좌를 등록해주세요.
+              버튼을 눌러 사업자 등록증을 업로드해주세요.
             </Typography>
           </div>
         </CardBody>

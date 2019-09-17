@@ -25,7 +25,7 @@ const cardHeaderStyle = {
     '&$warningCardHeader,&$successCardHeader,&$dangerCardHeader,&$infoCardHeader,&$primaryCardHeader,&$roseCardHeader,&$blueGrayCardHeader': {
       '&:not($cardHeaderIcon)': {
         marginTop: '-20px',
-        padding: '15px',
+        padding: '10px',
       },
     },
     '&$cardHeaderStats svg': {

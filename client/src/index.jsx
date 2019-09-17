@@ -16,8 +16,11 @@ import ShutDownCloseBeta from './components/Common/ShutDownCloseBeta';
 import * as serviceWorker from './serviceWorker';
 
 const history = createBrowserHistory();
+// history를 state drilling 없이 사용하기 위해 history를 가지는 context를 모든 컴포넌트에 래핑
+// const HistoryCTX = React.createContext();
 
 const developRouter = (
+  // <HistoryCTX.Provider value={history}>
   <Router history={history}>
     <Switch>
       <Route exact path="/" component={Main} history={history} />
@@ -35,6 +38,7 @@ const developRouter = (
       <Route component={NotFound} />
     </Switch>
   </Router>
+  // </HistoryCTX.Provider>
 );
 
 const productionRouter = (
