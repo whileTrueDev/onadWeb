@@ -1,0 +1,39 @@
+import { useState, useEffect, useCallback } from 'react';
+import axios from '../../../../utils/axios';
+import host from '../../../../config';
+/**
+ * @author hwasurr
+ * @description api 서버와의 통신을 통해 데이터를 가져오는 훅.
+ * @param {string} url 데이터를 받아 올 api 엔드포인트
+ * @returns { object, bool, string}
+ * payload: api 서버로부터의 데이터,
+ * loading: 데이터가 도착하기 이전까지 ture,
+ * 도착이후 false 값, error: 에러의 종류 문자열
+ */
+export default function useFetchData(url) {
+  const [payload, setPayload] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+
+  // get data function
+  const callUrl = useCallback(async () => {
+    try {
+      const res = await axios.get(`${host}${url}`);
+      if (res.data.length !== 0) {
+        setPayload(res.data);
+      } else {
+        throw new Error('데이터가 존재하지 않습니다');
+      }
+    } catch {
+      setError(`데이터가 없습니다.${url}`);
+    } finally {
+      setLoading(false);
+    }
+  }, [url]);
+
+  useEffect(() => {
+    callUrl();
+  }, [callUrl]);
+
+  return { payload, loading, error };
+}

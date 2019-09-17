@@ -10,12 +10,12 @@ import Radio from '@material-ui/core/Radio';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import TextField from '@material-ui/core/TextField';
 import DialogContent from '@material-ui/core/DialogContent';
-import axios from '../../../../../utils/axios';
+import axios from '../../../../../../utils/axios';
 // customized component
-import Dialog from '../../../components/Dialog/Dialog';
-import Button from '../../../components/CustomButtons/Button';
-import Warning from '../../../components/Typography/Warning';
-import HOST from '../../../../../config';
+import Dialog from '../../../../components/Dialog/Dialog';
+import Button from '../../../../components/CustomButtons/Button';
+import Warning from '../../../../components/Typography/Warning';
+import HOST from '../../../../../../config';
 
 const useStyles = makeStyles(theme => ({
   contentTitle: {
@@ -32,24 +32,24 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-function useReturnCashSnack(handleClose) {
-  const [ReturnCashSnack, setReturnCashSnack] = React.useState(false);
+function useRefundSnack(handleClose) {
+  const [RefundSnack, setRefundSnack] = React.useState(false);
 
   function handleSnackClose() {
-    setReturnCashSnack(false);
+    setRefundSnack(false);
     handleClose(); // 모달창까지 닫기
   }
 
   function handleOnlyDialogClose() {
-    setReturnCashSnack(false);
+    setRefundSnack(false);
   }
 
   function handleSnackOpen() {
-    setReturnCashSnack(true);
+    setRefundSnack(true);
   }
 
   return {
-    ReturnCashSnack, handleSnackClose, handleOnlyDialogClose, handleSnackOpen,
+    RefundSnack, handleSnackClose, handleOnlyDialogClose, handleSnackOpen,
   };
 }
 
@@ -63,7 +63,7 @@ function useValue(defaultValue) {
   return { selectValue, handleChange };
 }
 
-function ReturnCashDialog(props) {
+function RefundDialog(props) {
   const classes = useStyles();
   const {
     open, handleClose, accountNumber, chargeCash, history,
@@ -73,9 +73,9 @@ function ReturnCashDialog(props) {
 
   // 캐쉬 환불신청 스낵바
   const {
-    ReturnCashSnack, handleSnackClose, handleOnlyDialogClose,
+    RefundSnack, handleSnackClose, handleOnlyDialogClose,
     // handleSnackOpen,
-  } = useReturnCashSnack(handleClose);
+  } = useRefundSnack(handleClose);
 
   function handleSubmitClick() {
     if (chargeCash - selectValue < 0) {
@@ -244,7 +244,7 @@ function ReturnCashDialog(props) {
 
         {/* 환불 신청 완료 시의 notification */}
         <Dialog
-          open={ReturnCashSnack}
+          open={RefundSnack}
           onClose={handleOnlyDialogClose}
           title="입력하신대로 환불 진행하시겠어요?"
           buttons={(
@@ -277,11 +277,11 @@ function ReturnCashDialog(props) {
   );
 }
 
-ReturnCashDialog.propTypes = {
+RefundDialog.propTypes = {
   open: PropTypes.bool.isRequired,
   handleClose: PropTypes.func.isRequired,
   accountNumber: PropTypes.string.isRequired,
   chargeCash: PropTypes.string.isRequired,
 };
 
-export default ReturnCashDialog;
+export default RefundDialog;

@@ -643,7 +643,7 @@ router.get('/contraction/creatorList', (req, res, next) => {
       }
       if (result.length > 0) {
         const responseData = [];
-        result.map((row) => {
+        result.forEach((row) => {
           responseData.push((row.creatorName));
         });
         res.send(responseData);

@@ -2,16 +2,18 @@ import React from 'react';
 import Typography from '@material-ui/core/Typography';
 import GridContainer from '../../../components/Grid/GridContainer';
 import GridItem from '../../../components/Grid/GridItem';
-import UserDataForm from './UserDataForm';
-import RefundAccountForm from './RefundAccountForm';
-import CashHistory from './CashHistory';
-import CashHistoryTable from './CashHistoryTable';
+import UserDataForm from './UserManage/UserDataForm';
+import RefundAccountForm from './CashManage/RefundAccountForm';
+import CashHistory from './CashManage/CashHistory';
+import CashHistoryTable from './CashManage/CashHistoryTable';
+import BusinessRegistration from './MyTaskManage/BusinessRegistrationUploadForm';
+import TaxBillRequestForm from './MyTaskManage/TaxBillRequestForm';
 
 export default function MyOffice(props) {
   return (
     <div>
-      {/* 광고캐시 충전 및 환불, 관리 */}
       <Typography variant="h5">광고캐시 관리</Typography>
+      {/* 광고캐시 충전 및 환불, 관리 */}
       <GridContainer>
         <GridItem xs={12} sm={12} md={6} lg={5} xl={3}>
           <GridContainer>
@@ -29,27 +31,28 @@ export default function MyOffice(props) {
         </GridItem>
       </GridContainer>
 
-      {/* 내 업무 관리 */}
-      <Typography variant="h5">업무 관리</Typography>
+      <Typography variant="h5">??????????</Typography>
       {/* 계정 관리 */}
       <GridContainer>
 
         <GridItem xs={12} sm={12} md={6} lg={5} xl={3}>
           <UserDataForm />
         </GridItem>
-
-      </GridContainer>
-
-      {/* 내 업무 관리 */}
-      <Typography variant="h5">계정 관리</Typography>
-      {/* 계정 관리 */}
-      <GridContainer>
-
         <GridItem xs={12} sm={12} md={6} lg={5} xl={3}>
-          <UserDataForm />
+          <GridContainer>
+            <GridItem xs={12}>
+              <BusinessRegistration />
+            </GridItem>
+            <GridItem xs={12}>
+              <TaxBillRequestForm />
+            </GridItem>
+          </GridContainer>
         </GridItem>
 
+
       </GridContainer>
+
+
     </div>
   );
 }

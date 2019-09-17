@@ -10,11 +10,19 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function CircularProgress() {
+export default function CircularProgress(props) {
+  const { small, ...rest } = props;
   const classes = useStyles();
+
   return (
-    <div className={classes.wrapper}>
-      <MuiCircularProgress />
+    <div>
+      { small ? (
+        <MuiCircularProgress />
+      ) : (
+        <div className={classes.wrapper}>
+          <MuiCircularProgress />
+        </div>
+      )}
     </div>
   );
 }

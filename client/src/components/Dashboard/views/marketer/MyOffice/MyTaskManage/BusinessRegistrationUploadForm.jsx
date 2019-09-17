@@ -5,11 +5,11 @@ import withStyles from '@material-ui/core/styles/withStyles';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import Typography from '@material-ui/core/Typography';
 // own components
-import Card from '../../../components/Card/Card';
-import CardHeader from '../../../components/Card/CardHeader';
-import CardBody from '../../../components/Card/CardBody';
-import Button from '../../../components/CustomButtons/Button';
-import DashboardStyle from '../../../assets/jss/onad/views/dashboardStyle';
+import Card from '../../../../components/Card/Card';
+import CardHeader from '../../../../components/Card/CardHeader';
+import CardBody from '../../../../components/Card/CardBody';
+import Button from '../../../../components/CustomButtons/Button';
+import DashboardStyle from '../../../../assets/jss/onad/views/dashboardStyle';
 
 const useStyles = makeStyles(() => ({
   buttonWrapper: {
@@ -23,7 +23,7 @@ const useStyles = makeStyles(() => ({
     alignItems: 'center',
   }
 }));
-function RefundAccountForm(props) {
+function BusinessRegistrationUploadForm(props) {
   const myClasses = useStyles();
   const { classes } = props;
   const [AccountNumber, setAccountNumber] = React.useState(null);
@@ -33,7 +33,7 @@ function RefundAccountForm(props) {
       <CardHeader color="blueGray">
         <div className={myClasses.textBox}>
           <h4 className={classes.cardTitleWhite}>
-            환불 계좌 정보
+            사업자 등록증 업로드
           </h4>
         </div>
 
@@ -46,7 +46,7 @@ function RefundAccountForm(props) {
             <Button
               color="info"
             >
-            환불계좌 변경
+            사업자 등록증 변경
             </Button>
           </div>
           <div className={myClasses.textBox} style={{ marginTop: 20 }}>
@@ -64,11 +64,11 @@ function RefundAccountForm(props) {
             <Button
               color="info"
             >
-            환불계좌 등록
+            사업자 등록증 등록
             </Button>
           </div>
           <div className={myClasses.textBox} style={{ marginTop: 20 }}>
-            <Typography gutterBottom variant="body1">아직 등록된 환불계좌가 없습니다.</Typography>
+            <Typography gutterBottom variant="body1">아직 등록된 사업자 등록증이 없습니다.</Typography>
           </div>
           <div className={myClasses.textBox} style={{ marginBottom: 20 }}>
             <Typography gutterBottom variant="body1" style={{ color: '#00acc1' }}>등록</Typography>
@@ -84,8 +84,8 @@ function RefundAccountForm(props) {
   );
 }
 
-RefundAccountForm.propTypes = {
+BusinessRegistrationUploadForm.propTypes = {
   classes: PropTypes.object.isRequired
 };
 
-export default withStyles(DashboardStyle)(RefundAccountForm);
+export default withStyles(DashboardStyle)(BusinessRegistrationUploadForm);
