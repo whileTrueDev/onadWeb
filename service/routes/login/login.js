@@ -1,10 +1,9 @@
 const express = require('express');
 const passport = require('passport');
-const checkEmailAuth = require('../middlewares/checkEmailAuth');
-const pool = require('../model/connectionPool');
-const doQuery = require('../model/doQuery');
-const encrypto = require('../encryption');
-const config = require('../config.json');
+const checkEmailAuth = require('../../middlewares/checkEmailAuth');
+const doQuery = require('../../model/doQuery');
+const encrypto = require('../../encryption');
+const config = require('../../config.json');
 
 const HOST = process.env.NODE_ENV === 'production' ? config.production.reactHostName : config.dev.reactHostName;
 const router = express.Router();

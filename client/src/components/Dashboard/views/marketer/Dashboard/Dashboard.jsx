@@ -160,7 +160,7 @@ const Dashboard = (props) => {
   const tableData = useFetchData(`${HOST}/api/dashboard/marketer/creatorList`);
 
   useEffect(() => (() => {
-    axios.post(`${HOST}/api/dashboard/marketer/info`)
+    axios.post(`${HOST}/api/dashboard/marketer/profile`)
       .then((res) => {
         setContraction(res.data.marketerContraction);
       });

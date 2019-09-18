@@ -13,7 +13,7 @@ import useFetchData from '../../../lib/hooks/useFetchData';
 
 export default function MyOffice() {
   // 계좌 정보 데이터 조회
-  const accountData = useFetchData('/api/dashboard/marketer/accountNumber');
+  const accountData = useFetchData('/api/dashboard/marketer/profile/accountNumber');
 
   return (
     <div>

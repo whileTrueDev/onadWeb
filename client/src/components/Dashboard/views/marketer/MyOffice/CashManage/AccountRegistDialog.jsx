@@ -44,57 +44,22 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const banks = [
-  {
-    bankName: '국민',
-    bankCount: 14,
-  },
-  {
-    bankName: '기업',
-    bankCount: 14,
-  },
-  {
-    bankName: '농협',
-    bankCount: 13,
-  },
-  {
-    bankName: '신한(구)',
-    bankCount: 11,
-  },
-  {
-    bankName: '신한(신)',
-    bankCount: 12,
-  },
-  {
-    bankName: '우리',
-    bankCount: 13,
-  },
-  {
-    bankName: '우체국',
-    bankCount: 14,
-  },
-  {
-    bankName: '하나',
-    bankCount: 14,
-  },
-  {
-    bankName: '부산',
-    bankCount: 13,
-  },
-  {
-    bankName: 'SC제일',
-    bankCount: 11,
-  },
+  { bankName: '국민', }, { bankName: '기업', },
+  { bankName: '농협', }, { bankName: '신한(구)', },
+  { bankName: '신한(신)', }, { bankName: '우리', },
+  { bankName: '우체국', }, { bankName: '하나', },
+  { bankName: '부산', }, { bankName: 'SC제일', },
 ];
 
 function useBankApi(history) {
   const [bank, setBank] = useState('농협');
-  const [bankPattern, setbankPattern] = useState(13);
 
   const handleSubmit = (event) => {
     event.preventDefault();
     console.log('제출');
     const userAccount = {
       bankName: event.target.bank.value,
+      idNumber: event.target.idNumber.value,
       bankAccount: event.target.bankAccount.value,
     };
 
@@ -114,9 +79,7 @@ function useBankApi(history) {
 
   const handleChangeBank = (event) => {
     const newbank = event.target.value;
-    const newbankCount = banks.find(_bank => _bank.bankName === newbank).bankCount;
     setBank(newbank);
-    setbankPattern(newbankCount);
   };
 
   return { bank, handleSubmit, handleChangeBank };
@@ -178,8 +141,8 @@ const AccountDialog = (props) => {
       <FormControl className={classes.textField}>
         <InputLabel shrink>계좌번호</InputLabel>
         <Input
-          name="bankAccount"
           required
+          name="bankAccount"
           // endAdornment={(
           //   <InputAdornment position="end">
           //     <Divider className={classes.divider} />
@@ -189,15 +152,11 @@ const AccountDialog = (props) => {
           //   </InputAdornment>
           // )}
           inputProps={{
-            required: '{true}',
-            // pattern: `[0-9]{${bankPattern}}`,
+            required: '{true}'
           }}
         />
         <FormHelperText>
-          (-)을 제외한
-          {' '}
-          {/* {bankPattern} */}
-          계좌번호를 입력하세요
+          {'(-)을 제외한 계좌번호를 입력하세요'}
         </FormHelperText>
       </FormControl>
     </DialogContent>

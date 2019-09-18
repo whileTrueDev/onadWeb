@@ -127,7 +127,7 @@ function CustomSwitch(props) {
   const { history } = props;
   const classes = useStyle();
 
-  const url = `${HOST}/api/dashboard/marketer/advertiseOnOff`;
+  const url = `${HOST}/api/dashboard/marketer/campaign/onoff`;
   const { payload, loading, error } = useFetchData(url);
   const { handleSwitch } = useUpdateData(url, history);
 

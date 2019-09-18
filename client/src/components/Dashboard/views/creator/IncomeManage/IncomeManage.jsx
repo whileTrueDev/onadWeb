@@ -166,7 +166,7 @@ function Income(props) {
 
   // 출금리스트 데이터 axios 요청
   useEffect(() => {
-    axios.get(`${HOST}/api/dashboard/creator/listOfWithdrawal`)
+    axios.get(`${HOST}/api/dashboard/creator/withdrawal/list`)
       .then((res) => {
         if (res.data) {
           setWithdrawalData(res.data);

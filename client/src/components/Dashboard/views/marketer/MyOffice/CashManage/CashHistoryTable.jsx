@@ -22,7 +22,7 @@ const initialData = {
 function CashHistory(props) {
   const { classes } = props;
 
-  const { payload, loading } = useFetchData('/api/dashboard/marketer/cashlist');
+  const { payload, loading } = useFetchData('/api/dashboard/marketer/cash/refund/list');
   // 충전 및 환불 페이지네이션
   const [page, setPage] = React.useState(0); // 테이블 페이지
   const [rowsPerPage, setRowsPerPage] = React.useState(5); // 테이블 페이지당 행

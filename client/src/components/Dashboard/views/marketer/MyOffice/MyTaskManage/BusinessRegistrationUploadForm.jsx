@@ -26,7 +26,7 @@ const useStyles = makeStyles(() => ({
 function BusinessRegistrationUploadForm(props) {
   const myClasses = useStyles();
   const { classes } = props;
-  const [AccountNumber, setAccountNumber] = React.useState(null);
+  const [businessRegistration] = React.useState(null);
 
   return (
     <Card>
@@ -40,7 +40,7 @@ function BusinessRegistrationUploadForm(props) {
       </CardHeader>
 
 
-      { AccountNumber ? (
+      { businessRegistration ? (
         <CardBody>
           <div className={myClasses.buttonWrapper}>
             <Button
@@ -52,9 +52,9 @@ function BusinessRegistrationUploadForm(props) {
           <div className={myClasses.textBox} style={{ marginTop: 5 }}>
             <Typography gutterBottom variant="body1">등록된 계좌</Typography>
           </div>
-          <div className={myClasses.textBox} style={{ marginBottom: 20 }}>
+          <div className={myClasses.textBox} style={{ marginBottom: 10 }}>
             <Typography gutterBottom variant="body1">
-              {AccountNumber}
+              {businessRegistration}
             </Typography>
           </div>
         </CardBody>
@@ -70,7 +70,7 @@ function BusinessRegistrationUploadForm(props) {
           <div className={myClasses.textBox} style={{ marginTop: 5 }}>
             <Typography gutterBottom variant="body1">아직 등록된 사업자 등록증이 없습니다.</Typography>
           </div>
-          <div className={myClasses.textBox} style={{ marginBottom: 20 }}>
+          <div className={myClasses.textBox} style={{ marginBottom: 10 }}>
             <Typography gutterBottom variant="body1" style={{ color: '#00acc1' }}>등록</Typography>
             <Typography gutterBottom variant="body1">
               버튼을 눌러 사업자 등록증을 업로드해주세요.

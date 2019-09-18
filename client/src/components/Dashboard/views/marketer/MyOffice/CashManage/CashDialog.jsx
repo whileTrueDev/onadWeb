@@ -34,24 +34,24 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-function useCashSnack(handleClose) {
-  const [cashSnack, setcashSnack] = React.useState(false);
+function useConfirmDialog(handleClose) {
+  const [confirmDialogOpen, setConfirmDialogOpen] = React.useState(false);
 
-  function handleSnackClose() {
-    setcashSnack(false);
+  function handleConfirmDialogClose() {
+    setConfirmDialogOpen(false);
     handleClose(); // 모달창까지 닫기
   }
 
   function handleOnlyDialogClose() {
-    setcashSnack(false);
+    setConfirmDialogOpen(false);
   }
 
-  function handleSnackOpen() {
-    setcashSnack(true);
+  function handleConfirmDialogOpen() {
+    setConfirmDialogOpen(true);
   }
 
   return {
-    cashSnack, handleSnackClose, handleOnlyDialogClose, handleSnackOpen,
+    confirmDialogOpen, handleConfirmDialogClose, handleOnlyDialogClose, handleConfirmDialogOpen,
   };
 }
 
@@ -77,13 +77,13 @@ function CashDialog(props) {
 
   // 출금신청 스낵바
   const {
-    cashSnack, handleSnackClose, handleOnlyDialogClose,
-    handleSnackOpen,
-  } = useCashSnack(handleClose);
+    confirmDialogOpen, handleConfirmDialogClose, handleOnlyDialogClose,
+    handleConfirmDialogOpen,
+  } = useConfirmDialog(handleClose);
 
   // 캐시 충전진행 버튼 클릭
   // function handleClick() {
-  //   handleSnackOpen();
+  //   handleConfirmDialogOpen();
   // }
 
   function handleSubmitClick() {
@@ -91,7 +91,7 @@ function CashDialog(props) {
     axios.post(`${HOST}/api/dashboard/marketer/currentCash`, {
       currentCash: selectValue,
     }).then((res) => {
-      handleSnackClose();
+      handleConfirmDialogClose();
       history.push('/dashboard/marketer/cash');
     }).catch((err) => {
       console.log(err);
@@ -110,7 +110,7 @@ function CashDialog(props) {
         <div>
           <Button
             color="info"
-            onClick={handleSnackOpen}
+            onClick={handleConfirmDialogOpen}
           >
             진행
 
@@ -248,16 +248,16 @@ function CashDialog(props) {
 
         {/* 캐시충전 신청 완료 시의 notification */}
         <Dialog
-          open={cashSnack}
+          open={confirmDialogOpen}
           onClose={handleOnlyDialogClose}
           title="입력하신대로 캐시 충전 진행하시겠어요?"
           buttons={(
             <div>
-              <Button onClick={handleOnlyDialogClose}>
-              취소
-              </Button>
               <Button onClick={handleSubmitClick} color="info">
-              진행
+                진행
+              </Button>
+              <Button onClick={handleOnlyDialogClose}>
+                취소
               </Button>
             </div>
           )}

@@ -5,7 +5,6 @@ import withStyles from '@material-ui/core/styles/withStyles';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import Typography from '@material-ui/core/Typography';
 // own components
-import CircularProgress from '../../../../components/Progress/CircularProgress';
 import Card from '../../../../components/Card/Card';
 import CardHeader from '../../../../components/Card/CardHeader';
 import CardBody from '../../../../components/Card/CardBody';
@@ -32,7 +31,7 @@ function RefundAccountForm(props) {
   // open, handleDialogClose, history
 
   const myClasses = useStyles();
-  const { classes, accountData, history } = props;
+  const { classes, accountData } = props;
   const { open, handleOpen, handleClose } = useDialog();
   return (
     <Card>
@@ -54,7 +53,7 @@ function RefundAccountForm(props) {
           <div className={myClasses.textBox} style={{ marginTop: 10 }}>
             <Typography gutterBottom variant="body1">등록된 계좌</Typography>
           </div>
-          <div className={myClasses.textBox} style={{ marginBottom: 20 }}>
+          <div className={myClasses.textBox} style={{ marginBottom: 10 }}>
             <Typography gutterBottom variant="body1">
               {accountData.payload.accountNumber}
             </Typography>
@@ -62,7 +61,6 @@ function RefundAccountForm(props) {
         </CardBody>
       ) : (
         <CardBody>
-
           <div className={myClasses.buttonWrapper}>
             <Button
               color="info"
@@ -74,7 +72,7 @@ function RefundAccountForm(props) {
           <div className={myClasses.textBox} style={{ marginTop: 5 }}>
             <Typography gutterBottom variant="body1">아직 등록된 환불계좌가 없습니다.</Typography>
           </div>
-          <div className={myClasses.textBox} style={{ marginBottom: 20 }}>
+          <div className={myClasses.textBox} style={{ marginBottom: 10 }}>
             <Typography gutterBottom variant="body1" style={{ color: '#00acc1' }}>등록</Typography>
             <Typography gutterBottom variant="body1">
               버튼을 눌러 환불계좌를 등록해주세요.

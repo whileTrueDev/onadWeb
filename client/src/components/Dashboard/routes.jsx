@@ -15,7 +15,6 @@ import creatorManual from './views/creator/Manual/Manual';
 // 마케터 라우터
 import marketerDashboardPage from './views/marketer/Dashboard/Dashboard';
 import marketerBannerManage from './views/marketer/BannerManage/BannerManage';
-import marketerCashManage from './views/marketer/CashManage/CashManage';
 import MarketerManual from './views/marketer/Manual/Manual';
 import marketerMyOffice from './views/marketer/MyOffice/MyOffice';
 
@@ -63,13 +62,6 @@ const dashboardRoutes = {
       name: '배너 관리',
       icon: BrandingWatermark,
       component: marketerBannerManage, // 마케터 대시보드 컴포넌트로 수정
-      layout: '/dashboard/marketer',
-    },
-    {
-      path: '/cash',
-      name: '광고캐시 관리',
-      icon: AttachMoney,
-      component: marketerCashManage, // 마케터 대시보드 컴포넌트로 수정
       layout: '/dashboard/marketer',
     },
     {

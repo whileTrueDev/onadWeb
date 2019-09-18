@@ -2,7 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import { Router, Switch, Route } from 'react-router-dom';
-import { createBrowserHistory } from 'history';
 import RegistStepper from './components/Regist/Stepper';
 import Main from './components/Main';
 import CreatorDashboard from './components/Dashboard/layouts/CreatorDashboardLayout';
@@ -14,31 +13,26 @@ import NotFound from './components/Common/NotFound';
 import ShutDownCloseBeta from './components/Common/ShutDownCloseBeta';
 // import KakaoPay from './components/Common/KakaoPay';
 import * as serviceWorker from './serviceWorker';
-
-const history = createBrowserHistory();
-// history를 state drilling 없이 사용하기 위해 history를 가지는 context를 모든 컴포넌트에 래핑
-// const HistoryCTX = React.createContext();
+import history from './history';
 
 const developRouter = (
-  // <HistoryCTX.Provider value={history}>
-  <Router history={history}>
-    <Switch>
-      <Route exact path="/" component={Main} history={history} />
-      <Route exact path="/regist" component={RegistStepper} />
-      <Route exact path="/introduction" component={Introduction} history={history} />
-      <Route exact path="/manual" component={Manual} history={history} />
-      <Route exact path="/dashboard/creator/door" component={CreatorDashboardDoor} history={history} />
-      <Route path="/dashboard/creator" component={CreatorDashboard} history={history} />
-      <Route path="/dashboard/marketer" component={MarketerDashboard} history={history} />
+    <Router history={history}>
+      <Switch>
+        <Route exact path="/" component={Main} history={history} />
+        <Route exact path="/regist" component={RegistStepper} />
+        <Route exact path="/introduction" component={Introduction} history={history} />
+        <Route exact path="/manual" component={Manual} history={history} />
+        <Route exact path="/dashboard/creator/door" component={CreatorDashboardDoor} history={history} />
+        <Route path="/dashboard/creator" component={CreatorDashboard} history={history} />
+        <Route path="/dashboard/marketer" component={MarketerDashboard} history={history} />
 
-      {/* 페이 연습 페이지 */}
-      {/* <Route exact path="/pay" component={KakaoPay} /> */}
-      {/* not found page */}
-      <Route path="/willbeback" component={ShutDownCloseBeta} />
-      <Route component={NotFound} />
-    </Switch>
-  </Router>
-  // </HistoryCTX.Provider>
+        {/* 페이 연습 페이지 */}
+        {/* <Route exact path="/pay" component={KakaoPay} /> */}
+        {/* not found page */}
+        <Route path="/willbeback" component={ShutDownCloseBeta} />
+        <Route component={NotFound} />
+      </Switch>
+    </Router>
 );
 
 const productionRouter = (

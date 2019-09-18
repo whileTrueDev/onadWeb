@@ -44,7 +44,7 @@ const Dashboard = (props) => {
   const [currentBannerData, setCurrentBannerData] = useState([['', '']]);
   const [currentBannerDataLoading, setCurrentBannerDataLoading] = useState(true);
   useEffect(() => {
-    axios.get(`${HOST}/api/dashboard/creator/currentBanner`)
+    axios.get(`${HOST}/api/dashboard/creator/banner/current`)
       .then((res) => {
         if (res.data.length > 0) {
           setCurrentBannerData(res.data);
@@ -80,7 +80,7 @@ const Dashboard = (props) => {
   const [bannerDataLoading, setBannerDataLoading] = useState(true);
 
   const callBanner = useCallback(() => {
-    axios.get(`${HOST}/api/dashboard/creator/matchedBanner`)
+    axios.get(`${HOST}/api/dashboard/creator/banner/matched`)
       .then((res) => {
         if (res.data) {
           setBannerData(res.data);

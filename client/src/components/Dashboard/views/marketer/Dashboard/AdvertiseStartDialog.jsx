@@ -106,21 +106,21 @@ function AdvertiseStartDialog(props) {
         return null;
       });
 
-      const matchedBannerUrl = `${HOST}/api/dashboard/marketer/bannerStart`;
+      const matchedBannerUrl = `${HOST}/api/dashboard/marketer/banner/start`;
       const matchedBannerData = { bannerId: selectedBanner.bannerId, creators };
       await axios.post(matchedBannerUrl, matchedBannerData)
         .catch((err) => {
           console.log(err);
         });
 
-      const bannerRegisteredUrl = `${HOST}/api/dashboard/marketer/bannerStartStateChange`;
+      const bannerRegisteredUrl = `${HOST}/api/dashboard/marketer/banner/start/statechange`;
       const bannerRegisteredData = { bannerId: selectedBanner.bannerId };
       await axios.post(bannerRegisteredUrl, bannerRegisteredData)
         .catch((err) => {
           console.log(err);
         });
 
-      // const advertiseOnOffUrl = `${HOST}/api/dashboard/marketer/advertiseOnOff`;
+      // const advertiseOnOffUrl = `${HOST}/api/dashboard/marketer/campaign/onoff`;
       // await axios.post(advertiseOnOffUrl)
       //   .catch((err) => {
       //     console.log(err);
@@ -134,21 +134,21 @@ function AdvertiseStartDialog(props) {
         return null;
       });
 
-      const matchedBannerUrl = `${HOST}/api/dashboard/marketer/bannerStop`;
+      const matchedBannerUrl = `${HOST}/api/dashboard/marketer/banner/stop`;
       const matchedBannerData = { bannerId: selectedBanner.bannerId, creators };
       await axios.post(matchedBannerUrl, matchedBannerData)
         .catch((err) => {
           console.log(err);
         });
 
-      const bannerRegisteredUrl = `${HOST}/api/dashboard/marketer/bannerStopStateChange`;
+      const bannerRegisteredUrl = `${HOST}/api/dashboard/marketer/banner/stop/statechange`;
       const bannerRegisteredData = { bannerId: selectedBanner.bannerId };
       await axios.post(bannerRegisteredUrl, bannerRegisteredData)
         .catch((err) => {
           console.log(err);
         });
 
-      // const advertiseOnOffUrl = `${HOST}/api/dashboard/marketer/advertiseOnOff`;
+      // const advertiseOnOffUrl = `${HOST}/api/dashboard/marketer/campaign/onoff`;
       // await axios.post(advertiseOnOffUrl)
       //   .catch((err) => {
       //     console.log(err);

@@ -98,7 +98,7 @@ const UserDataForm = (props) => {
   const [state, dispatch] = React.useReducer(myReducer, initialValue);
 
   const getData = useCallback(async () => {
-    axios.post(`${HOST}/api/dashboard/marketer/info`)
+    axios.post(`${HOST}/api/dashboard/marketer/profile`)
       .then((res) => {
         if (res.data) {
           setUserData(res.data);
@@ -138,7 +138,7 @@ const UserDataForm = (props) => {
       marketerMail: `${mail}@${domain}`,
       marketerPhoneNum: phone,
     };
-    axios.post(`${HOST}/api/dashboard/marketer/info/change`, user)
+    axios.post(`${HOST}/api/dashboard/marketer/profile/change`, user)
       .then((res) => {
         if (res.data) {
           getData();

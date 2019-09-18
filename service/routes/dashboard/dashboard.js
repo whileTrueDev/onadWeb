@@ -2,9 +2,9 @@
 const express = require('express');
 
 const router = express.Router();
-const creatorRouter = require('./creator');
-const marketerRouter = require('./marketer');
-const passport = require('../passportStrategy');
+const creatorRouter = require('./creator/creator');
+const marketerRouter = require('./marketer/marketer');
+const passport = require('../../passportStrategy');
 
 router.use('/creator', creatorRouter);
 router.use('/marketer', marketerRouter);
@@ -14,7 +14,6 @@ router.get('/checkUserType', (req, res, next) => {
   if (req._passport.session !== undefined) {
     // 세션이 있는 경우
     const userInfo = req._passport.session.user;
-    // console.log('from ' + req.headers.referer, userInfo.creatorDisplayName, new Date(), '- valid');
     res.send(userInfo);
   } else {
     // 세션이 없는 경우

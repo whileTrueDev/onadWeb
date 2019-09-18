@@ -16,6 +16,7 @@ import Dialog from '../../../../components/Dialog/Dialog';
 import Button from '../../../../components/CustomButtons/Button';
 import Warning from '../../../../components/Typography/Warning';
 import HOST from '../../../../../../config';
+import history from '../../../../../../history';
 
 const useStyles = makeStyles(theme => ({
   contentTitle: {
@@ -32,24 +33,27 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-function useRefundSnack(handleClose) {
-  const [RefundSnack, setRefundSnack] = React.useState(false);
+function useRefundConfirmDialog(handleClose) {
+  const [RefundConfirmDialog, setRefundConfirmDialog] = React.useState(false);
 
-  function handleSnackClose() {
-    setRefundSnack(false);
+  function handleDialogClose() {
+    setRefundConfirmDialog(false);
     handleClose(); // 모달창까지 닫기
   }
 
-  function handleOnlyDialogClose() {
-    setRefundSnack(false);
+  function handleOnlyConfirmDialogClose() {
+    setRefundConfirmDialog(false);
   }
 
-  function handleSnackOpen() {
-    setRefundSnack(true);
+  function handleConfirmDialogOpen() {
+    setRefundConfirmDialog(true);
   }
 
   return {
-    RefundSnack, handleSnackClose, handleOnlyDialogClose, handleSnackOpen,
+    RefundConfirmDialog,
+    handleDialogClose,
+    handleOnlyConfirmDialogClose,
+    handleConfirmDialogOpen,
   };
 }
 
@@ -66,16 +70,17 @@ function useValue(defaultValue) {
 function RefundDialog(props) {
   const classes = useStyles();
   const {
-    open, handleClose, accountNumber, currentCash, history,
+    open, handleClose, accountNumber, currentCash,
   } = props;
+
   // select value
-  const { selectValue, handleChange } = useValue('100000');
+  const { selectValue, handleChange } = useValue('0');
 
   // 캐쉬 환불신청 스낵바
   const {
-    RefundSnack, handleSnackClose, handleOnlyDialogClose,
-    // handleSnackOpen,
-  } = useRefundSnack(handleClose);
+    RefundConfirmDialog, handleDialogClose, handleOnlyConfirmDialogClose,
+    handleConfirmDialogOpen,
+  } = useRefundConfirmDialog(handleClose);
 
   function handleSubmitClick() {
     if (currentCash - selectValue < 0) {
@@ -85,7 +90,7 @@ function RefundDialog(props) {
       axios.post(`${HOST}/api/dashboard/marketer/return`, {
         withdrawCash: selectValue,
       }).then((res) => {
-        handleSnackClose();
+        handleDialogClose();
         history.push('/dashboard/marketer/cash');
       }).catch((err) => {
         console.log(err);
@@ -104,16 +109,19 @@ function RefundDialog(props) {
         <div>
           <Button
             color="info"
-            // onClick={handleClick}
-            disabled={(!(currentCash >= selectValue)) || !(selectValue >= 0)}
+            onClick={(!(currentCash >= selectValue))
+              || !(selectValue > 0)
+              ? handleConfirmDialogOpen
+              : null}
+            disabled={(!(currentCash >= selectValue)) || !(selectValue > 0)}
           >
-              진행
+                진행
           </Button>
           <Button onClick={handleClose}>
               취소
           </Button>
         </div>
-)}
+      )}
     >
       <div>
         {/* 모달내용 */}
@@ -238,7 +246,7 @@ function RefundDialog(props) {
                 margin="normal"
                 error={(!(currentCash >= selectValue)) || !(selectValue >= 0)}
                 variant="outlined"
-                helperText={((currentCash >= selectValue) && (selectValue >= 0)) ? '' : '입력이 잘못되었어요!'}
+                helperText={((currentCash >= selectValue) && (selectValue >= 0)) ? null : '입력이 잘못되었어요!'}
               />
             </Tooltip>
           </div>
@@ -246,16 +254,16 @@ function RefundDialog(props) {
 
         {/* 환불 신청 완료 시의 notification */}
         <Dialog
-          open={RefundSnack}
-          onClose={handleOnlyDialogClose}
+          open={RefundConfirmDialog}
+          onClose={handleOnlyConfirmDialogClose}
           title="입력하신대로 환불 진행하시겠어요?"
           buttons={(
             <div>
-              <Button onClick={handleOnlyDialogClose}>
-              취소
-              </Button>
               <Button onClick={handleSubmitClick} color="info">
               진행
+              </Button>
+              <Button onClick={handleOnlyConfirmDialogClose}>
+              취소
               </Button>
             </div>
           )}

@@ -51,7 +51,7 @@ function TaxBillRequestForm(props) {
         <div className={myClasses.textBox} style={{ marginTop: 5 }}>
           <Typography gutterBottom variant="body1">발행에 대한 설명</Typography>
         </div>
-        <div className={myClasses.textBox} style={{ marginBottom: 20 }}>
+        <div className={myClasses.textBox} style={{ marginBottom: 10 }}>
           <Typography gutterBottom variant="body1">
             세금계산서 프로세스를 잘 몰라서 일단은 보류
           </Typography>

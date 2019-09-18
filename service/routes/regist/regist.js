@@ -1,11 +1,9 @@
 const express = require('express');
-const encrypto = require('../encryption');
-const doQuery = require('../model/doQuery');
-const pool = require('../model/connectionPool');
-const setTemporaryPassword = require('../middlewares/setTemporyPassword');
-const logger = require('../middlewares/logger');
-const sendEmailAuth = require('../middlewares/sendEmailAuth');
-const config = require('../config.json');
+const encrypto = require('../../encryption');
+const doQuery = require('../../model/doQuery');
+const setTemporaryPassword = require('../../middlewares/setTemporyPassword');
+const sendEmailAuth = require('../../middlewares/sendEmailAuth');
+const config = require('../../config.json');
 
 const HOST = process.env.NODE_ENV === 'production' ? config.production.apiHostName : config.dev.apiHostName;
 
