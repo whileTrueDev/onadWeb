@@ -31,8 +31,8 @@ router.post('/onoff', (req, res) => {
   console.log(contractionState);
   const marketerId = req._passport.session.user.userid;
   const costQuery = `
-  SELECT marketerDebit
-  FROM marketerCost
+  SELECT cashAmount
+  FROM marketerDebit
   WHERE marketerId = ?
   `;
 
@@ -43,7 +43,7 @@ router.post('/onoff', (req, res) => {
   `;
   doQuery(costQuery, [marketerId])
     .then((row) => {
-      const debit = row.result[0].marketerDebit;
+      const debit = row.result[0].cashAmount;
       if (debit === 0) {
         res.send(false);
       } else {
