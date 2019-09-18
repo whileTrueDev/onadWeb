@@ -70,7 +70,7 @@ function useBankApi() {
     axios.post(`${HOST}/api/regist/accountNum`, userAccount)
       .then((res) => {
         alert('계좌번호 저장에 성공하였습니다.');
-        history.push('/dashboard/marketer/cash');
+        history.push('/dashboard/marketer/myoffice');
       })
       .catch((err) => {
         console.log(err);

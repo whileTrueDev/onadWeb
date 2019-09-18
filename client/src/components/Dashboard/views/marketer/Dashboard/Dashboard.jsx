@@ -202,7 +202,7 @@ const Dashboard = (props) => {
               <CardFooter stats>
                 <div className={classes.stats}>
                   <Info><Money /></Info>
-                  <Link to="/dashboard/marketer/cash">
+                  <Link to="/dashboard/marketer/myoffice">
                     <span className={classes.infoText}>충전하러 가기</span>
                   </Link>
                 </div>

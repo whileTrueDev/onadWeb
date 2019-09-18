@@ -87,11 +87,11 @@ function RefundDialog(props) {
       alert('불가합니다');
     } else {
       // 해당 금액 만큼 환불 내역에 추가하는 요청
-      axios.post(`${HOST}/api/dashboard/marketer/return`, {
+      axios.post(`${HOST}/api/dashboard/marketer/cash/refund`, {
         withdrawCash: selectValue,
       }).then((res) => {
         handleDialogClose();
-        history.push('/dashboard/marketer/cash');
+        history.push('/dashboard/marketer/myoffice');
       }).catch((err) => {
         console.log(err);
       });
@@ -109,8 +109,7 @@ function RefundDialog(props) {
         <div>
           <Button
             color="info"
-            onClick={(!(currentCash >= selectValue))
-              || !(selectValue > 0)
+            onClick={!(!(currentCash >= selectValue)) || !(selectValue > 0)
               ? handleConfirmDialogOpen
               : null}
             disabled={(!(currentCash >= selectValue)) || !(selectValue > 0)}
@@ -128,7 +127,7 @@ function RefundDialog(props) {
         {/* 보유한 광고캐시 금액 */}
         <div>
           <Typography variant="subtitle1" className={classes.contentTitle}>
-            입금 계좌
+            환불 계좌
           </Typography>
           <Typography variant="h5">
             {`${accountNumber.split('_')[0]}   ${accountNumber.split('_')[1]}`}
@@ -197,7 +196,7 @@ function RefundDialog(props) {
               value="1000000"
               control={<Radio color="primary" />}
               label={
-                  currentCash > 100000
+                  currentCash > 1000000
                     ? (
                       <Typography variant="subtitle1" className={classes.selectValue}>
                     1,000,000 원
@@ -209,7 +208,7 @@ function RefundDialog(props) {
                       </Typography>
                     )
                 }
-              disabled={!(currentCash > 100000)}
+              disabled={!(currentCash > 1000000)}
             />
             <FormControlLabel
               value="5000000"
@@ -277,7 +276,7 @@ function RefundDialog(props) {
             </Typography>
             <Warning>
               <Typography variant="subtitle1" marked="center">
-                {'입금까지 하루 또는 이틀이 소요되어요!!'}
+                {'환불까지 하루 또는 이틀이 소요되어요!!'}
               </Typography>
             </Warning>
           </DialogContent>

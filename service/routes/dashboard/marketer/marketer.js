@@ -4,6 +4,7 @@ const bannerRoute = require('./sub/banner');
 const cashRoute = require('./sub/cash');
 const campaignRoute = require('./sub/campaign');
 const profileRoute = require('./sub/profile');
+const { creatorList } = require('../../../middlewares/preprocessingData');
 
 const router = express.Router();
 
@@ -32,7 +33,7 @@ router.get('/creatorlist', (req, res) => {
 
   doQuery(listQuery)
     .then((row) => {
-      const data = preprocessing.creatorList(row.result);
+      const data = creatorList(row.result);
       res.send(data);
     })
     .catch((errorData) => {

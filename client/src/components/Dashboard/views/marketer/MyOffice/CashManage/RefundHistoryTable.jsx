@@ -12,16 +12,14 @@ import DashboardStyle from '../../../../assets/jss/onad/views/dashboardStyle';
 import useFetchData from '../../../../lib/hooks/useFetchData';
 
 const initialData = {
-  columns: ['날짜', '충전금액', '결제수단'],
-  data: [
-    ['-', '-', '-'],
-  ],
+  columns: ['날짜', '환불금액', '진행상황'],
+  data: [['-', '-', '-']],
 };
 
-function CashHistory(props) {
+function RefundHistory(props) {
   const { classes } = props;
 
-  const { payload, loading } = useFetchData('/api/dashboard/marketer/cash/charge/list');
+  const { payload, loading } = useFetchData('/api/dashboard/marketer/cash/refund/list');
   // 충전 및 환불 페이지네이션
   const [page, setPage] = React.useState(0); // 테이블 페이지
   const [rowsPerPage, setRowsPerPage] = React.useState(5); // 테이블 페이지당 행
@@ -42,12 +40,12 @@ function CashHistory(props) {
     <Card>
       <CardHeader color="blueGray">
         <h4 className={classes.cardTitleWhite}>
-          충전 내역
+          환불내역
         </h4>
       </CardHeader>
       <CardBody>
         <Table
-          tableHeaderColor="info"
+          tableHeaderColor="danger"
           tableHead={initialData.columns}
           tableData={loading ? initialData.data : payload.data}
           pagination
@@ -64,8 +62,8 @@ function CashHistory(props) {
   );
 }
 
-CashHistory.propTypes = {
-  classes: PropTypes.object
+RefundHistory.propTypes = {
+  classes: PropTypes.object.isRequired
 };
 
-export default withStyles(DashboardStyle)(CashHistory);
+export default withStyles(DashboardStyle)(RefundHistory);

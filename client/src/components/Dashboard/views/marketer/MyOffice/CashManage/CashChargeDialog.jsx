@@ -73,7 +73,7 @@ function CashDialog(props) {
   } = props;
   // select value
   const { selectValue, handleChange } = useValue('100000');
-
+  const chargeType = useValue('계좌이체');
   const totalDebit = Number(currentCash) + Number(selectValue);
 
   // 출금신청 스낵바
@@ -89,11 +89,16 @@ function CashDialog(props) {
 
   function handleSubmitClick() {
     // 해당 금액 만큼 광고 캐시에 추가하는 요청
-    axios.post(`${HOST}/api/dashboard/marketer/currentCash`, {
-      currentCash: selectValue,
+    axios.post(`${HOST}/api/dashboard/marketer/cash/charge`, {
+      chargeCash: selectValue,
+      chargeType: chargeType.selectValue
     }).then((res) => {
-      handleConfirmDialogClose();
-      history.push('/dashboard/marketer/cash');
+      if (!res[0]) {
+        handleConfirmDialogClose();
+        history.push('/dashboard/marketer/myoffice');
+      } else {
+        console.log('cash - charge - error!');
+      }
     }).catch((err) => {
       console.log(err);
     });
@@ -139,12 +144,14 @@ function CashDialog(props) {
 
           {/* 결제방법 선택 */}
           <div>
-            <Typography variant="subtitle1" id="select-account" className={classes.contentTitle}>
+            <Typography variant="subtitle1" id="select-type" className={classes.contentTitle}>
             결제 방법
             </Typography>
             <RadioGroup
-              name="howmuch"
+              name="type"
               className={classes.contentDetail}
+              value={chargeType.selectValue}
+              onChange={chargeType.handleChange}
             >
               <FormControlLabel
                 value="신용카드"

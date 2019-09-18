@@ -6,6 +6,7 @@ import UserDataForm from './UserManage/UserDataForm';
 import RefundAccountForm from './CashManage/RefundAccountForm';
 import MyCash from './CashManage/MyCash';
 import CashHistoryTable from './CashManage/CashHistoryTable';
+import RefundHistoryTable from './CashManage/RefundHistoryTable';
 import BusinessRegistration from './MyTaskManage/BusinessRegistrationUploadForm';
 import TaxBillRequestForm from './MyTaskManage/TaxBillRequestForm';
 // hook for data fetching
@@ -20,35 +21,38 @@ export default function MyOffice() {
       <Typography variant="h5">광고캐시 관리</Typography>
       {/* 광고캐시 충전 및 환불, 관리 */}
       <GridContainer>
-        <GridItem xs={12} sm={12} md={6} lg={5} xl={3}>
+        <GridItem xs={12} xl={6}>
           <GridContainer>
-            <GridItem xs={12}>
+            <GridItem xs={12} md={6}>
               <MyCash accountData={accountData} />
             </GridItem>
-            <GridItem xs={12}>
+            <GridItem xs={12} md={6}>
               <RefundAccountForm accountData={accountData} />
             </GridItem>
           </GridContainer>
         </GridItem>
-        <GridItem xs={12} sm={12} md={6} lg={7} xl={5}>
-          <CashHistoryTable />
-
-        </GridItem>
       </GridContainer>
 
-      <Typography variant="h5">??????????</Typography>
-      {/* 계정 관리 */}
       <GridContainer>
-
-        <GridItem xs={12} sm={12} md={6} lg={5} xl={3}>
-          <UserDataForm />
+        <GridItem xs={12} sm={12} md={6} lg={7} xl={3}>
+          <CashHistoryTable />
         </GridItem>
-        <GridItem xs={12} sm={12} md={6} lg={5} xl={3}>
+        <GridItem xs={12} sm={12} md={6} lg={7} xl={3}>
+          <RefundHistoryTable />
+        </GridItem>
+
+
+      </GridContainer>
+
+      <Typography variant="h5" style={{ marginTop: 35 }}>업무 관리</Typography>
+      {/* 업무 관리 */}
+      <GridContainer>
+        <GridItem xs={12} xl={6}>
           <GridContainer>
-            <GridItem xs={12}>
+            <GridItem md={6}>
               <BusinessRegistration />
             </GridItem>
-            <GridItem xs={12}>
+            <GridItem md={6}>
               <TaxBillRequestForm />
             </GridItem>
           </GridContainer>
@@ -57,6 +61,16 @@ export default function MyOffice() {
 
       </GridContainer>
 
+
+      <Typography variant="h5" style={{ marginTop: 35 }}>내정보관리</Typography>
+      {/* 계정 관리 */}
+      <GridContainer>
+
+        <GridItem xs={12} sm={12} md={6} lg={5} xl={3}>
+          <UserDataForm />
+        </GridItem>
+
+      </GridContainer>
 
     </div>
   );
