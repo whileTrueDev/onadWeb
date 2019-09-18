@@ -16,6 +16,7 @@ import Toolbar from '../../components/Toolbar';
 import LoginPopover from '../Login/LoginPopover';
 import HOST from '../../../../config';
 import axios from '../../../../utils/axios';
+import history from '../../../../history';
 
 const styles = theme => ({
   root: {
@@ -73,7 +74,7 @@ const styles = theme => ({
 
 function AppAppBar(props) {
   const {
-    classes, history, isLogin, logout,
+    classes, isLogin, logout,
   } = props;
 
   // 앱바의 선택 여부를 파악하여 state 로 설정한다.
@@ -99,7 +100,7 @@ function AppAppBar(props) {
       }).catch((err) => {
         console.log(err);
       });
-  }, [history]);
+  }, []);
 
   const LogButton = () => {
     if (isLogin) {

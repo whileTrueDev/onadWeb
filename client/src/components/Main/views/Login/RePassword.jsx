@@ -11,6 +11,7 @@ import {
 } from '@material-ui/core';
 import axios from '../../../../utils/axios';
 import HOST from '../../../../config';
+import history from '../../../../history';
 
 const style = theme => ({
   contents: {
@@ -70,7 +71,7 @@ const RePasswordDialog = (props) => {
   };
 
   const handleSubmit = (event) => {
-    const { history, setRepassword, logout } = props;
+    const { setRepassword, logout } = props;
     event.preventDefault();
     if (state.password || state.repasswd) {
       alert('입력이 올바르지 않습니다.');

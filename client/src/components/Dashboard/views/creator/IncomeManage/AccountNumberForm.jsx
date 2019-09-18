@@ -14,7 +14,7 @@ import {
 import axios from '../../../../../utils/axios';
 import Button from '../../../components/CustomButtons/Button';
 import HOST from '../../../../../config';
-
+import history from '../../../../../history';
 
 const style = theme => ({
   contents: {
@@ -92,7 +92,7 @@ const banks = [
 
 const AccountNumberForm = (props) => {
   const {
-    classes, handleClose, history,
+    classes, handleClose
   } = props;
   const [bank, setBank] = useState('농협');
   const [bankPattern, setbankPattern] = useState(13);

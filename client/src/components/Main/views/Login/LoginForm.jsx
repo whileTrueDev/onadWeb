@@ -15,6 +15,7 @@ import PropTypes from 'prop-types';
 import axios from '../../../../utils/axios';
 import FindDialog from './FindDialog';
 import HOST from '../../../../config';
+import history from '../../../../history';
 
 const styles = () => ({
   title: {
@@ -44,7 +45,7 @@ const LoginForm = (props) => {
   // prop를 통해 Marketer 인지 Creator인지 확인.
   // 데이터가 변경되는 것일 때 state로 처리를 한다.
   const {
-    open, isMarketer, classes, handleClose, logout, history,
+    open, isMarketer, classes, handleClose, logout,
   } = props;
   const [findDialogOpen, setFindDialogOpen] = useState(false);
   const [dialogType, setDialogType] = useState('ID');

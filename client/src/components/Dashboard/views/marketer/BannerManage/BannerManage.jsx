@@ -34,6 +34,7 @@ import InfoTypography from '../../../components/Typography/Info';
 import ReasonDialog from './ReasonDialog';
 import UploadDialog from './UploadDialog';
 import HOST from '../../../../../config';
+import history from '../../../../../history';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -174,7 +175,7 @@ const BannerGridList = (props) => {
 };
 
 const BannerManage = (props) => {
-  const { classes, history } = props;
+  const { classes } = props;
   const [bannerList, setBannerList] = useState([]);
   const [ApprovedList, setApprovedList] = useState([]);
   const [RejectedList, setRejectedList] = useState([]);

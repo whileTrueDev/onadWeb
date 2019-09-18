@@ -9,6 +9,7 @@ import LockOpen from '@material-ui/icons/LockOpen';
 import SupervisedUserCircle from '@material-ui/icons/SupervisedUserCircle';
 import { withStyles } from '@material-ui/core/styles';
 import LoginForm from './LoginForm';
+import history from '../../../../history';
 
 const styles = theme => ({
   rightLink: {
@@ -83,7 +84,7 @@ class LoginPopover extends Component {
 
   render() {
     const {
-      classes, type, history, logout,
+      classes, type, logout,
     } = this.props;
     const { anchorEl, loginValue } = this.state;
     const open = Boolean(anchorEl);

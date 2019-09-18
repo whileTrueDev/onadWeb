@@ -45,6 +45,7 @@ import DangerTypography from '../../../components/Typography/Danger';
 import Muted from '../../../components/Typography/Muted';
 import Info from '../../../components/Typography/Info';
 import HOST from '../../../../../config';
+import history from '../../../../../history';
 // 상수
 const WAIT_BANNER_STATE = 1; // 대기중 배너 스테이트
 
@@ -153,7 +154,7 @@ const ActionIcon = (props) => {
 
 const Dashboard = (props) => {
   const secondClasses = useStyles();
-  const { classes, history } = props;
+  const { classes } = props;
   const [marketerContraction, setContraction] = useState(0);
   const cashData = useFetchData(`${HOST}/api/dashboard/marketer/cash`);
   const bannerData = useFetchData(`${HOST}/api/dashboard/marketer/banner`);

@@ -11,6 +11,7 @@ import Button from '../../components/Button';
 import Typography from '../../components/Typography';
 import LoginForm from '../Login/LoginForm';
 import HOST from '../../../../config';
+import history from '../../../../history';
 
 const useStyles = makeStyles(theme => ({
   item: {
@@ -51,7 +52,7 @@ function useDialog() {
 
 export default function ProductHowItWorksCreatorItem(props) {
   const {
-    check, history, isLogin, source,
+    check, isLogin, source,
   } = props;
   const classes = useStyles();
   const { open, handleOpen, handleClose } = useDialog();

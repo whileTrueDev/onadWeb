@@ -7,6 +7,7 @@ import {
 import PropTypes from 'prop-types';
 import Dialog from '../../../components/Dialog/Dialog';
 import AccountNumberForm from './AccountNumberForm';
+import history from '../../../../../history';
 
 const style = theme => ({
   contentText: {
@@ -19,7 +20,7 @@ const style = theme => ({
 
 const AccountDialog = (props) => {
   const {
-    classes, open, handleDialogClose, history,
+    classes, open, handleDialogClose,
   } = props;
 
   const handleClose = () => {
@@ -47,7 +48,6 @@ AccountDialog.propTypes = {
   classes: PropTypes.object.isRequired,
   open: PropTypes.bool.isRequired,
   handleDialogClose: PropTypes.func.isRequired,
-  history: PropTypes.object.isRequired,
 };
 
 export default withStyles(style)(AccountDialog);

@@ -8,8 +8,9 @@ import Introduce from './Introduce';
 import IntroduceTop from './IntroduceTop';
 import textSource from './source/textSource';
 import HOST from '../../config';
+import history from '../../history';
 
-const useLoginValue = (history) => {
+const useLoginValue = () => {
   const [isLogin, setisLogin] = useState(false);
   const [userType, setUserType] = useState('');
 
@@ -48,8 +49,7 @@ const MARKETER_TAB_NUMBER = 0;
 const CREATOR_TAB_NUMBER = 1;
 
 // this is layout compoent
-export default withRoot((props) => {
-  const { history } = props;
+export default withRoot(() => {
   const { isLogin, logout, userType } = useLoginValue(history);
 
   // if Link here, set the scroll to top of the page
@@ -59,9 +59,8 @@ export default withRoot((props) => {
 
   return (
     <div>
-      <AppAppBar isLogin={isLogin} logout={logout} history={history} />
+      <AppAppBar isLogin={isLogin} logout={logout} />
       <ProductHero
-        history={history}
         isLogin={isLogin}
         source={textSource.heroSector}
       />

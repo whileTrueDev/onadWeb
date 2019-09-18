@@ -16,23 +16,23 @@ import * as serviceWorker from './serviceWorker';
 import history from './history';
 
 const developRouter = (
-    <Router history={history}>
-      <Switch>
-        <Route exact path="/" component={Main} history={history} />
-        <Route exact path="/regist" component={RegistStepper} />
-        <Route exact path="/introduction" component={Introduction} history={history} />
-        <Route exact path="/manual" component={Manual} history={history} />
-        <Route exact path="/dashboard/creator/door" component={CreatorDashboardDoor} history={history} />
-        <Route path="/dashboard/creator" component={CreatorDashboard} history={history} />
-        <Route path="/dashboard/marketer" component={MarketerDashboard} history={history} />
+  <Router history={history}>
+    <Switch>
+      <Route exact path="/" component={Main} history={history} />
+      <Route exact path="/regist" component={RegistStepper} />
+      <Route exact path="/introduction" component={Introduction} history={history} />
+      <Route exact path="/manual" component={Manual} history={history} />
+      <Route exact path="/dashboard/creator/door" component={CreatorDashboardDoor} history={history} />
+      <Route path="/dashboard/creator" component={CreatorDashboard} history={history} />
+      <Route path="/dashboard/marketer" component={MarketerDashboard} history={history} />
 
-        {/* 페이 연습 페이지 */}
-        {/* <Route exact path="/pay" component={KakaoPay} /> */}
-        {/* not found page */}
-        <Route path="/willbeback" component={ShutDownCloseBeta} />
-        <Route component={NotFound} />
-      </Switch>
-    </Router>
+      {/* 페이 연습 페이지 */}
+      {/* <Route exact path="/pay" component={KakaoPay} /> */}
+      {/* not found page */}
+      <Route path="/willbeback" component={ShutDownCloseBeta} />
+      <Route component={NotFound} />
+    </Switch>
+  </Router>
 );
 
 const productionRouter = (

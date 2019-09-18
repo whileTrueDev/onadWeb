@@ -22,7 +22,7 @@ import CompletedContract from './CompletedContract';
 import Dialog from '../../../components/Dialog/Dialog';
 import HOST from '../../../../../config';
 import IpChanger from './IpChanger';
-
+import history from '../../../../../history';
 
 const styles = theme => ({
   cardCategoryWhite: {
@@ -119,7 +119,7 @@ function useDialog() {
 }
 
 function UserProfile(props) {
-  const { classes, history } = props;
+  const { classes } = props;
   const [userData, setuserData] = useState({});
   const [snackOpen, setSnackOpen] = useState(false);
   const {
@@ -140,7 +140,7 @@ function UserProfile(props) {
           setuserData(res.data.result);
         }
       });
-  }, [history]);
+  }, []);
 
   const handleProfileChange = (event) => {
     event.preventDefault();
@@ -352,9 +352,10 @@ function UserProfile(props) {
         message="성공적으로 계약이 완료되었습니다."
         open={snackOpen}
         icon={Check}
-        closeNotification={() => { 
+        closeNotification={() => {
           setSnackOpen(false);
-          history.push('/dashboard/creator/user'); }}
+          history.push('/dashboard/creator/user');
+        }}
         close
       />
     </div>

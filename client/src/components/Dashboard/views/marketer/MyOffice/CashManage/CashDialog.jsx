@@ -15,6 +15,7 @@ import axios from '../../../../../../utils/axios';
 import Button from '../../../../components/CustomButtons/Button';
 import Dialog from '../../../../components/Dialog/Dialog';
 import HOST from '../../../../../../config';
+import history from '../../../../../../history';
 
 const useStyles = makeStyles(theme => ({
   contentTitle: {
@@ -68,7 +69,7 @@ function useValue(defaultValue) {
 function CashDialog(props) {
   const classes = useStyles();
   const {
-    open, handleClose, currentCash, history,
+    open, handleClose, currentCash,
   } = props;
   // select value
   const { selectValue, handleChange } = useValue('100000');

@@ -46,7 +46,7 @@ import DashboardStyle from '../../../assets/jss/onad/views/dashboardStyle';
 import { defaultWithdrawalData } from '../../../variables/creatorWithdrawal';
 import HOST from '../../../../../config';
 import setTimeFormat from '../../../lib/setTimeFormat';
-
+import history from '../../../../../history';
 
 DashboardStyle.select = {
   marginTop: 5,
@@ -138,7 +138,7 @@ function useWithdrawDialog() {
 
 
 function Income(props) {
-  const { classes, history } = props;
+  const { classes } = props;
   // 날짜 범위 데이터
   const { value, handleChange } = useSelectValue();
 
@@ -455,7 +455,6 @@ function Income(props) {
 
 Income.propTypes = {
   classes: PropTypes.object.isRequired,
-  history: PropTypes.object.isRequired,
 };
 
 export default withStyles(DashboardStyle)(Income);

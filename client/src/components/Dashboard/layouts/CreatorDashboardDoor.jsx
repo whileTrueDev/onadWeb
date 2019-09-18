@@ -1,10 +1,9 @@
 import { Component } from 'react';
-import PropTypes from 'prop-types';
+import history from '../../../history';
 
 export default class CreatorDashboardDoor extends Component {
   constructor(props) {
     super(props);
-    const { history } = props;
     history.push('/dashboard/creator/main', { userType: 'creator' });
   }
 
@@ -12,7 +11,3 @@ export default class CreatorDashboardDoor extends Component {
     return ('잠시만 기다려주세요.');
   }
 }
-
-CreatorDashboardDoor.propTypes = {
-  history: PropTypes.object.isRequired,
-};

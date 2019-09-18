@@ -6,11 +6,11 @@ import Button from '../../../components/CustomButtons/Button';
 import HOST from '../../../../../config';
 import Snackbar from '../../../components/Snackbar/Snackbar';
 import IpChangerForm from './IpChangerForm';
-
+import history from '../../../../../history';
 
 const IpChanger = (props) => {
   const {
-    classes, localIp, onClose, history,
+    classes, localIp, onClose,
   } = props;
   const [openSnackBar, setOpenSnackBar] = useState(false);
 

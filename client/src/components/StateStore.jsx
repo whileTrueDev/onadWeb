@@ -1,4 +1,5 @@
 import React, { createContext, useReducer } from 'react';
+import history from '../history';
 // import { createBrowserHistory } from 'history';
 
 // const initialState = {
@@ -20,7 +21,7 @@ const myReducer = (state, action) => {
   }
 };
 
-const StateStore = ({ children, history }) => {
+const StateStore = ({ children }) => {
   const [state, dispatch] = useReducer(myReducer, { history, session: {} });
 
   // useEffect(() => {

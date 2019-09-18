@@ -11,6 +11,7 @@ import axios from '../../../../../../utils/axios';
 import Dialog from '../../../../components/Dialog/Dialog';
 import Button from '../../../../components/CustomButtons/Button';
 import HOST from '../../../../../../config';
+import history from '../../../../../../history';
 
 const useStyles = makeStyles(theme => ({
   contents: {
@@ -51,7 +52,7 @@ const banks = [
   { bankName: '부산', }, { bankName: 'SC제일', },
 ];
 
-function useBankApi(history) {
+function useBankApi() {
   const [bank, setBank] = useState('농협');
 
   const handleSubmit = (event) => {
@@ -86,7 +87,7 @@ function useBankApi(history) {
 }
 
 const AccountDialog = (props) => {
-  const { open, handleDialogClose, history } = props;
+  const { open, handleDialogClose } = props;
   const classes = useStyles();
 
   const {

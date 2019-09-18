@@ -10,6 +10,8 @@ import axios from '../../../../../utils/axios';
 import Dialog from '../../../components/Dialog/Dialog';
 import Button from '../../../components/CustomButtons/Button';
 import HOST from '../../../../../config';
+import history from '../../../../../history';
+
 // 상수
 const CONFIRMED_BANNER_STATE = 1; // 승인됨 배너 스테이트
 const STARTED_BANNER_STATE = 3; // 광고중 배너 스테이트
@@ -83,7 +85,7 @@ function useFetchCreatorData(selectedBanner, tableData) {
 
 function AdvertiseStartDialog(props) {
   const {
-    open, marketerDebit, onClose, selectedBanner, tableData, history, classes,
+    open, marketerDebit, onClose, selectedBanner, tableData, classes,
   } = props;
 
   const {

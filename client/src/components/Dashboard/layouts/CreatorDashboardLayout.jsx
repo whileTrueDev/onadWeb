@@ -9,13 +9,14 @@ import Footer from '../components/Footer/Footer';
 // css
 import dashboardStyle from '../assets/jss/onad/layouts/dashboardStyle';
 import '../assets/css/onad.css';
+import history from '../../../history';
 
-const CreatorRoutes = ({ history, pannelRef }) => (
+const CreatorRoutes = ({ pannelRef }) => (
   <Switch>
     {allRoutes.creator.map(prop => (
       <Route
         path={prop.layout + prop.path}
-        component={() => <prop.component history={history} pannelRef={pannelRef} />}
+        component={() => <prop.component pannelRef={pannelRef} />}
         key={prop.name}
       />
     ))}
@@ -24,7 +25,7 @@ const CreatorRoutes = ({ history, pannelRef }) => (
 
 const CreatorDashboard = (props) => {
   const {
-    classes, history, ...rest
+    classes, ...rest
   } = props;
 
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -45,7 +46,7 @@ const CreatorDashboard = (props) => {
         }
       }
     };
-  }, [history.location, history.location.pathname, mobileOpen]);
+  }, [mobileOpen]);
 
   return (
     <div className={classes.wrapper}>
@@ -56,19 +57,17 @@ const CreatorDashboard = (props) => {
         logo="/pngs/logo/onad_logo_vertical.png"
         mobileOpen={mobileOpen}
         handleDrawerToggle={handleDrawerToggle}
-        history={history}
         {...rest}
       />
       <div className={classes.mainPanel} ref={mainPanel}>
         <Navbar
           handleDrawerToggle={handleDrawerToggle}
           routes={allRoutes.creator}
-          history={history} // 로그아웃을 위해 필요하다.
           {...rest}
         />
         <div className={classes.content}>
           <div className={classes.container}>
-            <CreatorRoutes history={history} pannelRef={mainPanel} />
+            <CreatorRoutes pannelRef={mainPanel} />
           </div>
         </div>
         <Footer />
@@ -78,13 +77,8 @@ const CreatorDashboard = (props) => {
 };
 
 
-CreatorRoutes.propTypes = {
-  history: PropTypes.object.isRequired,
-};
-
 CreatorDashboard.propTypes = {
   classes: PropTypes.object.isRequired,
-  history: PropTypes.object.isRequired,
 };
 
 export default withStyles(dashboardStyle)(CreatorDashboard);

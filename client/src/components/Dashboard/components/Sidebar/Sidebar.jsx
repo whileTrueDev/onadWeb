@@ -14,6 +14,7 @@ import AdminNavbarLinks from '../Navbars/AdminNavbarLinks';
 import sidebarStyle from '../../assets/jss/onad/components/sidebarStyle';
 import HOST from '../../../../config';
 import axios from '../../../../utils/axios';
+import history from '../../../../history';
 
 const Sidebar = ({ ...props }) => {
   // verifies if routeName is the one active (in browser input)
@@ -22,7 +23,7 @@ const Sidebar = ({ ...props }) => {
   }
   const {
     classes, color, logo, logoText, routes,
-    handleDrawerToggle, mobileOpen, history,
+    handleDrawerToggle, mobileOpen,
   } = props;
 
   const handleClick = useCallback((buttonType) => {
@@ -41,7 +42,7 @@ const Sidebar = ({ ...props }) => {
       }).catch((err) => {
         console.log(err);
       });
-  }, [history]);
+  }, []);
 
   const links = (
     <List className={classes.list}>
@@ -161,7 +162,6 @@ Sidebar.propTypes = {
   handleDrawerToggle: PropTypes.func.isRequired,
   mobileOpen: PropTypes.bool,
   logo: PropTypes.string.isRequired,
-  history: PropTypes.object.isRequired,
 };
 
 Sidebar.defaultProps = {

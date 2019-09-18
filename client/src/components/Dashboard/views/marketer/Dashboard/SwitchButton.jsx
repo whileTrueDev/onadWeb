@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import PropTypes from 'prop-types';
 
 import withStyles from '@material-ui/core/styles/withStyles';
 import {
@@ -7,6 +6,7 @@ import {
 } from '@material-ui/core';
 import axios from '../../../../../utils/axios';
 import HOST from '../../../../../config';
+import history from '../../../../../history';
 
 const IOSSwitch = withStyles(theme => ({
   root: {
@@ -96,7 +96,7 @@ function useFetchData(url, params) {
   return { payload, loading, error };
 }
 
-function useUpdateData(url, history) {
+function useUpdateData(url) {
   const [success, setSuccess] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -123,8 +123,7 @@ function useUpdateData(url, history) {
   };
 }
 
-function CustomSwitch(props) {
-  const { history } = props;
+function CustomSwitch() {
   const classes = useStyle();
 
   const url = `${HOST}/api/dashboard/marketer/campaign/onoff`;
@@ -157,9 +156,5 @@ function CustomSwitch(props) {
     </div>
   );
 }
-
-CustomSwitch.propTypes = {
-  history: PropTypes.object.isRequired,
-};
 
 export default CustomSwitch;
