@@ -161,7 +161,7 @@ const Dashboard = (props) => {
   const tableData = useFetchData(`${HOST}/api/dashboard/marketer/creatorList`);
 
   useEffect(() => (() => {
-    axios.post(`${HOST}/api/dashboard/marketer/profile`)
+    axios.post(`${HOST}/api/dashboard/marketer/profile/contraction`)
       .then((res) => {
         setContraction(res.data.marketerContraction);
       });
@@ -194,7 +194,7 @@ const Dashboard = (props) => {
                 {!cashData.loading && cashData.payload
                   && (
                   <h3 className={classes.cardTitle}>
-                    {`${cashData.payload.marketerDebit} `}
+                    {`${cashData.payload.cashAmount} `}
                     <small>원</small>
                   </h3>
                   )}

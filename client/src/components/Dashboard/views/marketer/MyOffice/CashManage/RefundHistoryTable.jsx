@@ -21,26 +21,13 @@ function RefundHistory(props) {
 
   const { payload, loading } = useFetchData('/api/dashboard/marketer/cash/refund/list');
   // 충전 및 환불 페이지네이션
-  const [page, setPage] = React.useState(0); // 테이블 페이지
-  const [rowsPerPage, setRowsPerPage] = React.useState(5); // 테이블 페이지당 행
-  const emptyRows = rowsPerPage - Math.min(
-    rowsPerPage, initialData.data.length - page * rowsPerPage,
-  );
-  // page handler
-  function handleChangeTablePage(event, newPage) {
-    setPage(newPage);
-  }
-  // page per row handler
-  function handleChangeTableRowsPerPage(event) {
-    setRowsPerPage(parseInt(event.target.value, 10));
-  }
 
 
   return (
     <Card>
       <CardHeader color="blueGray">
         <h4 className={classes.cardTitleWhite}>
-          환불내역
+          환불 처리 내역
         </h4>
       </CardHeader>
       <CardBody>
@@ -49,11 +36,6 @@ function RefundHistory(props) {
           tableHead={initialData.columns}
           tableData={loading ? initialData.data : payload.data}
           pagination
-          handleChangeTablePage={handleChangeTablePage}
-          handleChangeTableRowsPerPage={handleChangeTableRowsPerPage}
-          emptyRows={emptyRows}
-          rowsPerPage={rowsPerPage}
-          page={page}
         />
       </CardBody>
 

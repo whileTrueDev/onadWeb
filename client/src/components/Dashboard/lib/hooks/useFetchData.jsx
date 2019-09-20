@@ -3,12 +3,13 @@ import axios from '../../../../utils/axios';
 import host from '../../../../config';
 /**
  * @author hwasurr
- * @description api 서버와의 통신을 통해 데이터를 가져오는 훅.
+ * @description api 서버와의 통신을 통해 데이터를 가져오는 훅. ( only get 방식)
  * @param {string} url 데이터를 받아 올 api 엔드포인트
- * @returns { object, bool, string}
+ * @returns { object, bool, string, func}
  * payload: api 서버로부터의 데이터,
- * loading: 데이터가 도착하기 이전까지 ture,
- * 도착이후 false 값, error: 에러의 종류 문자열
+ * loading: 데이터가 도착하기 이전까지 ture, 도착이후 false 값,
+ * error: 에러의 종류 문자열,
+ * callUrl: 재요청이 필요한 작업에서 사용하기위한, 데이터 요청함수
  */
 export default function useFetchData(url) {
   const [payload, setPayload] = useState(null);
@@ -35,5 +36,7 @@ export default function useFetchData(url) {
     callUrl();
   }, [callUrl]);
 
-  return { payload, loading, error };
+  return {
+    payload, loading, error, callUrl
+  };
 }

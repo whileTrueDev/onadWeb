@@ -265,7 +265,7 @@ passport.use(new TwitchStrategy({
         Promise.all([
           doQuery(infoQuery, [user.creatorId, user.creatorDisplayName,
             user.creatorMail, creatorIp, `/${creatorBannerUrl}`,
-            user.creatorName, user.CreatorLogo]),
+            user.creatorName, user.creatorLogo]),
           doQuery(incomeQuery, [user.creatorId, 0, 0]),
           doQuery(priceQuery, [user.creatorId, 1, 0, 1]),
           doQuery(landingQuery, [user.creatorId, user.creatorName]),

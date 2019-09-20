@@ -298,8 +298,17 @@ const Dashboard = (props) => {
           </Card>
         </GridItem>
       </GridContainer>
-      <BannerDescDialog open={descDialgOpen} descData={descData} handleClose={handleCloseDialog} />
-      <CheckDialog open={checkDialgOpen} setOpen={setCheckDialogOpen} handleBannerDelete={handleBannerDelete} callBanner={callBanner} />
+      <BannerDescDialog
+        open={descDialgOpen}
+        descData={descData}
+        handleClose={handleCloseDialog}
+      />
+      <CheckDialog
+        open={checkDialgOpen}
+        setOpen={setCheckDialogOpen}
+        handleBannerDelete={handleBannerDelete}
+        callBanner={callBanner}
+      />
     </div>
   );
 };

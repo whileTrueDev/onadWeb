@@ -16,9 +16,21 @@ import tableStyle from '../../assets/jss/onad/components/tableStyle';
 function CustomTable({ ...props }) {
   const {
     classes, tableHead, tableData, tableHeaderColor, pagination,
-    handleChangeTablePage, handleChangeTableRowsPerPage,
-    emptyRows, rowsPerPage, page,
   } = props;
+
+  const [page, setPage] = React.useState(0); // 테이블 페이지
+  const [rowsPerPage, setRowsPerPage] = React.useState(5); // 테이블 페이지당 행
+  const emptyRows = rowsPerPage - Math.min(
+    rowsPerPage, tableData.length - page * rowsPerPage,
+  );
+  // page handler
+  function handleChangeTablePage(event, newPage) {
+    setPage(newPage);
+  }
+  // page per row handler
+  function handleChangeTableRowsPerPage(event) {
+    setRowsPerPage(parseInt(event.target.value, 10));
+  }
 
   return (
     <div className={classes.tableResponsive}>
@@ -37,7 +49,7 @@ function CustomTable({ ...props }) {
             </TableRow>
           </TableHead>
         ) : null}
-        {pagination !== false ? (
+        {pagination ? (
           <TableBody>
             {/** 페이지네이션 있는 경우 */}
             {tableData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(prop => (
@@ -112,11 +124,6 @@ function CustomTable({ ...props }) {
 CustomTable.defaultProps = {
   tableHeaderColor: 'gray',
   pagination: false,
-  paginationOps: {
-    tableDataLength: 10,
-    rowsPerPage: 5,
-    page: 0,
-  },
 };
 
 CustomTable.propTypes = {
@@ -136,7 +143,6 @@ CustomTable.propTypes = {
     PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   )).isRequired,
   pagination: PropTypes.bool,
-  paginationOps: PropTypes.object,
 };
 
 

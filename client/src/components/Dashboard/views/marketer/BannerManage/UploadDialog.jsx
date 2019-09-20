@@ -4,7 +4,7 @@ import { makeStyles, withStyles } from '@material-ui/core/styles';
 import {
   Stepper, Step, StepLabel, StepContent,
 } from '@material-ui/core';
-import clsx from 'clsx';
+import classnames from 'classnames';
 import Check from '@material-ui/icons/Check';
 import Dialog from '../../../components/Dialog/Dialog';
 import BannerDescrForm from './BannerDescForm';
@@ -49,9 +49,7 @@ function QontoStepIcon(props) {
 
   return (
     <div
-      className={clsx(classes.root, {
-        [classes.active]: active,
-      })}
+      className={classnames(classes.root, { [classes.active]: active })}
     >
       {completed ? <Check className={classes.completed} /> : <div className={classes.circle} />}
     </div>
@@ -75,7 +73,7 @@ const myReducer = (state, action) => {
 
 const UploadDialog = (props) => {
   const {
-    open, handleOpen, classes, readyBanner,
+    open, handleOpen, classes, readyBanner
   } = props;
   const [state, dispatch] = useReducer(myReducer, { imageName: '', imageUrl: DEFAULT_IMAGE_PATH });
   const [activeStep, setStep] = useState(0);
@@ -130,7 +128,12 @@ const UploadDialog = (props) => {
             배너 이미지 등록
           </StepLabel>
           <StepContent>
-            <ImageUpload handleClose={handleClose} handleNext={handleNext} state={state} dispatch={dispatch} />
+            <ImageUpload
+              handleClose={handleClose}
+              handleNext={handleNext}
+              state={state}
+              dispatch={dispatch}
+            />
           </StepContent>
         </Step>
         <Step key="1">
@@ -138,7 +141,11 @@ const UploadDialog = (props) => {
             배너 상세정보 입력
           </StepLabel>
           <StepContent className={classes.formRoot}>
-            <BannerDescrForm handleNext={handleNext} state={state} handleSubmit={handleSubmit} />
+            <BannerDescrForm
+              handleNext={handleNext}
+              state={state}
+              handleSubmit={handleSubmit}
+            />
           </StepContent>
         </Step>
       </Stepper>

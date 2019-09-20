@@ -432,7 +432,7 @@ function Income(props) {
       <Snackbar
         place="bl"
         color="danger"
-        icon={Warning}
+        icon
         message="아직 계좌정보를 입력하지 않았어요.. 계좌정보 입력 이후 출금신청하세요!"
         open={!incomeData.payload.creatorAccountNumber}
         Link={

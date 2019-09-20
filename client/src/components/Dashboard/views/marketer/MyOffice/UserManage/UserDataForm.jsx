@@ -1,9 +1,8 @@
-import React, { useEffect, useState, useCallback } from 'react';
-// for Link tag component
+import React, { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
 // @material-ui/core
 import withStyles from '@material-ui/core/styles/withStyles';
 import { TextField, MenuItem } from '@material-ui/core';
-import Check from '@material-ui/icons/Check';
 import MaskedInput from 'react-text-mask';
 import axios from '../../../../../../utils/axios';
 import GridContainer from '../../../../components/Grid/GridContainer';
@@ -16,6 +15,8 @@ import Button from '../../../../components/CustomButtons/Button';
 import dashboardStyle from '../../../../assets/jss/onad/views/dashboardStyle';
 import Snackbar from '../../../../components/Snackbar/Snackbar';
 import HOST from '../../../../../../config';
+import useDialog from '../../../../lib/hooks/useDialog';
+import useToggle from '../../../../lib/hooks/useToggle';
 
 dashboardStyle.textField = {
   width: '100%',
@@ -30,6 +31,33 @@ dashboardStyle.textField = {
   '& .MuiInput-underline:after': {
     borderBottomColor: '#00acc1',
   },
+};
+const domains = [
+  { value: 'naver.com' },
+  { value: 'daum.net' },
+  { value: 'nate.com' },
+  { value: 'gmail.com' },
+  { value: 'hotmail.com' },
+  { value: 'yahoo.co.kr' },
+];
+
+const TextMaskCustom = (props) => {
+  const { inputRef, ...other } = props;
+  return (
+    <MaskedInput
+      {...other}
+      ref={(ref) => {
+        inputRef(ref ? ref.inputElement : null);
+      }}
+      mask={['(', ' ', /\d/, /\d/, /\d/, ' ', ')', ' ', '-', ' ', /\d/, /\d/, /\d/, /\d/, ' ', '-', ' ', /\d/, /\d/, /\d/, /\d/]}
+      placeholderChar={'\u2000'}
+      showMask
+      style={{
+        fontSize: 17,
+        width: '100%',
+      }}
+    />
+  );
 };
 
 const initialValue = {
@@ -59,69 +87,25 @@ const myReducer = (state, action) => {
   }
 };
 
-
-const TextMaskCustom = (props) => {
-  const { inputRef, ...other } = props;
-  return (
-    <MaskedInput
-      {...other}
-      ref={(ref) => {
-        inputRef(ref ? ref.inputElement : null);
-      }}
-      mask={['(', ' ', /\d/, /\d/, /\d/, ' ', ')', ' ', '-', ' ', /\d/, /\d/, /\d/, /\d/, ' ', '-', ' ', /\d/, /\d/, /\d/, /\d/]}
-      placeholderChar={'\u2000'}
-      showMask
-      style={{
-        fontSize: 17,
-        width: '100%',
-      }}
-    />
-  );
-};
-
-const domains = [
-  { value: 'naver.com' },
-  { value: 'daum.net' },
-  { value: 'nate.com' },
-  { value: 'gmail.com' },
-  { value: 'hotmail.com' },
-  { value: 'yahoo.co.kr' },
-];
-
 const UserDataForm = (props) => {
-  const { classes } = props;
-  const [userData, setUserData] = useState({});
-  const [TextType, setTextType] = useState(true);
-  const [domain, setDomain] = useState('');
-  const [phone, setPhone] = useState('');
-  const [snackOpen, setSnackOpen] = useState(false);
-  const [state, dispatch] = React.useReducer(myReducer, initialValue);
-
-  const getData = useCallback(async () => {
-    axios.post(`${HOST}/api/dashboard/marketer/profile`)
-      .then((res) => {
-        if (res.data) {
-          setUserData(res.data);
-          setDomain(res.data.marketerMail.split('@')[1]);
-        }
-      });
-  }, []);
-
-  useEffect(() => {
-    getData();
-  }, [getData]);
+  const { classes, userData, reCall } = props;
+  const editType = useToggle(); // 변경 / 기본 토글
+  const [domain, setDomain] = useState(''); // 이메일 도메인
+  const [phone, setPhone] = useState(''); // 폰번호
+  const [state, dispatch] = React.useReducer(myReducer, initialValue); // 비밀번호 변경 리듀서
+  const snack = useDialog(); // 스낵바
 
   const handleChangeType = () => {
     document.getElementById('name').value = '';
     document.getElementById('mail').value = '';
-    setTextType(false);
+    editType.handleToggle();
   };
 
   const handlePhoneChange = (event) => {
     setPhone(event.target.value);
   };
 
-  const handleChange = (event) => {
+  const handleDomainChange = (event) => {
     setDomain(event.target.value);
   };
 
@@ -141,13 +125,12 @@ const UserDataForm = (props) => {
     axios.post(`${HOST}/api/dashboard/marketer/profile/change`, user)
       .then((res) => {
         if (res.data) {
-          getData();
-          setSnackOpen(true);
-          setTextType(true);
+          reCall();
+          snack.handleOpen(true);
+          editType.handleToggle();
         } else {
           alert('변경도중 오류가 발생하였습니다.');
-          getData();
-          setTextType(true);
+          editType.handleToggle();
         }
       });
 
@@ -155,18 +138,13 @@ const UserDataForm = (props) => {
       axios.post(`${HOST}/api/login/changePw`, { password: state.value })
         .then((res) => {
           if (res.data) {
-            setSnackOpen(true);
+            snack.handleOpen(true);
           }
         });
     }
     document.getElementById('password').value = null;
     document.getElementById('repassword').value = null;
   };
-
-  const snackClose = () => {
-    setSnackOpen(false);
-  };
-
 
   const checkPasswd = (event) => {
     event.preventDefault();
@@ -178,6 +156,11 @@ const UserDataForm = (props) => {
     dispatch({ type: 'repasswd', value: event.target.value });
   };
 
+  useEffect(() => {
+    setDomain(userData.marketerMail.split('@')[1]);
+    setPhone(userData.marketerPhoneNum);
+  }, [userData.marketerMail, userData.marketerPhoneNum]);
+
   return (
     <Card>
       <CardHeader color="blueGray">
@@ -188,7 +171,7 @@ const UserDataForm = (props) => {
         </h4>
         <p className={classes.cardCategoryWhite}>정보를 변경하시려면 정보변경을 클릭하세요.</p>
       </CardHeader>
-      {TextType ? (
+      {!editType.toggle ? (
         <div>
           <CardBody>
             <GridContainer>
@@ -402,7 +385,7 @@ const UserDataForm = (props) => {
                     label="Domain"
                     className={classes.textField}
                     value={domain}
-                    onChange={handleChange}
+                    onChange={handleDomainChange}
                     margin="normal"
                     SelectProps={{
                       MenuProps: {
@@ -484,7 +467,7 @@ const UserDataForm = (props) => {
                 </Button>
                 <Button
                   // color="info"
-                  onClick={() => { setTextType(true); }}
+                  onClick={() => { editType.handleToggle(); }}
                 >
                 취소
                 </Button>
@@ -496,16 +479,21 @@ const UserDataForm = (props) => {
       <Snackbar
         place="tr"
         color="success"
-        onClose={snackClose}
+        onClose={snack.handleClose}
         message="정보 변경 완료"
-        open={snackOpen}
-        icon={Check}
-        closeNotification={() => { snackClose(); }}
+        open={snack.open}
+        icon
+        closeNotification={() => { snack.handleClose(); }}
         close
       />
     </Card>
 
   );
+};
+
+UserDataForm.propTypes = {
+  userData: PropTypes.object.isRequired,
+  reCall: PropTypes.func.isRequired
 };
 
 export default withStyles(dashboardStyle)(UserDataForm);

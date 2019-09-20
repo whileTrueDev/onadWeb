@@ -10,12 +10,17 @@ import CardHeader from '../../../../components/Card/CardHeader';
 import CardBody from '../../../../components/Card/CardBody';
 import Button from '../../../../components/CustomButtons/Button';
 import DashboardStyle from '../../../../assets/jss/onad/views/dashboardStyle';
+import BusinessRegiUploadDialog from './BusinessRegiUploadDialog';
+import Snackbar from '../../../../components/Snackbar/Snackbar';
+// hooks
+import useDialog from '../../../../lib/hooks/useDialog';
 
 const useStyles = makeStyles(() => ({
   buttonWrapper: {
     display: 'flex',
     flexDirection: 'row-reverse',
-    justifyContent: 'space-between'
+    alignItems: 'center',
+
   },
   textBox: {
     display: 'flex',
@@ -25,8 +30,9 @@ const useStyles = makeStyles(() => ({
 }));
 function BusinessRegistrationUploadForm(props) {
   const myClasses = useStyles();
-  const { classes } = props;
-  const [businessRegistration] = React.useState(null);
+  const { classes, businessRegistrationData } = props;
+  const { open, handleOpen, handleClose } = useDialog();
+  const snack = useDialog();
 
   return (
     <Card>
@@ -39,22 +45,22 @@ function BusinessRegistrationUploadForm(props) {
 
       </CardHeader>
 
-
-      { businessRegistration ? (
+      {!businessRegistrationData.loading && businessRegistrationData.payload ? (
         <CardBody>
           <div className={myClasses.buttonWrapper}>
             <Button
               color="info"
+              onClick={handleOpen}
             >
-            사업자 등록증 변경
+              사업자 등록증 변경
             </Button>
           </div>
           <div className={myClasses.textBox} style={{ marginTop: 5 }}>
-            <Typography gutterBottom variant="body1">등록된 계좌</Typography>
+            <Typography gutterBottom variant="body1">등록된 사업자 등록번호</Typography>
           </div>
           <div className={myClasses.textBox} style={{ marginBottom: 10 }}>
             <Typography gutterBottom variant="body1">
-              {businessRegistration}
+              {businessRegistrationData.payload.marketerBusinessRegNum}
             </Typography>
           </div>
         </CardBody>
@@ -63,8 +69,9 @@ function BusinessRegistrationUploadForm(props) {
           <div className={myClasses.buttonWrapper}>
             <Button
               color="info"
+              onClick={handleOpen}
             >
-            사업자 등록증 등록
+              사업자 등록증 등록
             </Button>
           </div>
           <div className={myClasses.textBox} style={{ marginTop: 5 }}>
@@ -79,13 +86,44 @@ function BusinessRegistrationUploadForm(props) {
         </CardBody>
       )}
 
+      { !businessRegistrationData.loading && (
+        <BusinessRegiUploadDialog
+          open={open}
+          handleClose={handleClose}
+          businessRegiImage={businessRegistrationData.payload.marketerBusinessRegSrc}
+          request={businessRegistrationData.callUrl}
+          handleSnackOpen={snack.handleOpen}
+        />
+      )}
+
+      <Snackbar
+        place="tc"
+        color="success"
+        message="사업자 등록증이 등록되었습니다."
+        open={snack.open}
+        onClose={snack.handleClose}
+        closeNotification={() => { snack.handleClose(); }}
+        close
+      />
 
     </Card>
   );
 }
 
 BusinessRegistrationUploadForm.propTypes = {
-  classes: PropTypes.object.isRequired
+  classes: PropTypes.object.isRequired,
+  businessRegistrationData: PropTypes.object
+};
+
+BusinessRegistrationUploadForm.defaultProps = {
+  businessRegistrationData: {
+    loading: true,
+    error: '',
+    payload: {
+      marketerBusinessRegNum: 0,
+      marketerBusinessRegSrc: ''
+    }
+  }
 };
 
 export default withStyles(DashboardStyle)(BusinessRegistrationUploadForm);

@@ -7,20 +7,14 @@ import Snack from '@material-ui/core/Snackbar';
 import IconButton from '@material-ui/core/IconButton';
 // @material-ui/icons
 import Close from '@material-ui/icons/Close';
+import Notification from '@material-ui/icons/Notifications';
 // core components
 import snackbarContentStyle from '../../assets/jss/onad/components/snackbarContentStyle';
 
 function Snackbar({ ...props }) {
   const {
-    classes,
-    message,
-    color,
-    close,
-    icon,
-    place,
-    open,
-    closeNotification,
-    Link,
+    classes, message, color, close,
+    place, icon, open, closeNotification, Link,
   } = props;
   let action = [];
   const messageClasses = classNames({
@@ -55,7 +49,7 @@ function Snackbar({ ...props }) {
       open={open}
       message={(
         <div>
-          {icon !== undefined ? <props.icon className={classes.icon} /> : null}
+          {icon !== undefined ? <Notification className={classes.icon} /> : null}
           <span className={messageClasses}>
             {message}
           </span>
@@ -78,9 +72,16 @@ Snackbar.propTypes = {
   message: PropTypes.node.isRequired,
   color: PropTypes.oneOf(['info', 'success', 'warning', 'danger', 'primary']),
   close: PropTypes.bool,
-  icon: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
+  icon: PropTypes.bool,
   place: PropTypes.oneOf(['tl', 'tr', 'tc', 'br', 'bl', 'bc']),
-  open: PropTypes.bool,
+  open: PropTypes.bool.isRequired,
+};
+
+Snackbar.defaultProps = {
+  color: 'info',
+  close: false,
+  icon: false,
+  place: 'tc'
 };
 
 export default withStyles(snackbarContentStyle)(Snackbar);

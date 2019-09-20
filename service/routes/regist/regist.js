@@ -36,20 +36,13 @@ router.post('/marketer', (req, res, next) => {
     marketerPhoneNum, marketerBusinessRegNum, marketerUserType];
 
   const cashQuery = `
-  INSERT INTO marketerCash
-  (marketerId, chargeCash, withdrawCash, cashReturnState)
-  VALUES (?, ?, ?, ?)`;
-
-  const costQuery = `
-  INSERT INTO marketerCost
-  (marketerId, marketerDebit)
-  VALUES (?, ?)
-  `;
+  INSERT INTO marketerDebit
+  (marketerId, cashAmount )
+  VALUES (?, ?)`;
 
   Promise.all([
     doQuery(infoQuery, infoQueryArray),
-    doQuery(cashQuery, [marketerId, 0, 0, 0]),
-    doQuery(costQuery, [marketerId, 0])
+    doQuery(cashQuery, [marketerId, 0]),
   ])
     .then(() => {
       next();

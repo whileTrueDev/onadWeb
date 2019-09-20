@@ -13,7 +13,6 @@ import Card from '../../../../components/Card/Card';
 import CardHeader from '../../../../components/Card/CardHeader';
 import CardBody from '../../../../components/Card/CardBody';
 import CardIcon from '../../../../components/Card/CardIcon';
-import CardFooter from '../../../../components/Card/CardFooter';
 import DashboardStyle from '../../../../assets/jss/onad/views/dashboardStyle';
 import CashChargeDialog from './CashChargeDialog';
 import RefundDialog from './RefundDialog';
@@ -62,7 +61,7 @@ function MyCash(props) {
           {!cashData.loading && !cashData.error && (
           <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
 
-            <Typography gutterBottom variant="h6">
+            <Typography gutterBottom variant="h5">
               {`${cashData.payload.cashAmount} 원`}
             </Typography>
           </div>

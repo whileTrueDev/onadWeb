@@ -5,7 +5,6 @@ import TextField from '@material-ui/core/TextField';
 import Hidden from '@material-ui/core/Hidden';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
-import Check from '@material-ui/icons/Check';
 import axios from '../../../../../utils/axios';
 // core components
 import GridItem from '../../../components/Grid/GridItem';
@@ -351,7 +350,7 @@ function UserProfile(props) {
         color="success"
         message="성공적으로 계약이 완료되었습니다."
         open={snackOpen}
-        icon={Check}
+        icon
         closeNotification={() => {
           setSnackOpen(false);
           history.push('/dashboard/creator/user');
