@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Typography } from '@material-ui/core';
+import makeStyles from '@material-ui/core/styles/makeStyles';
 import Dialog from '../../../../components/Dialog/Dialog';
 import useFetchData from '../../../../lib/hooks/useFetchData';
 import Table from '../../../../components/Table/CashUsageTable';
@@ -10,7 +11,12 @@ const initialData = {
   data: [['-', '-', '-']]
 };
 
+const useStyles = makeStyles(() => ({
+  flex: { display: 'flex', alignItems: 'center' }
+}));
+
 export default function CashUsageDialog(props) {
+  const classes = useStyles();
   const { open, handleClose, data } = props;
   const usagePerMonthData = useFetchData('/api/dashboard/marketer/cash/usage/month', {
     month: data[0]
@@ -25,7 +31,7 @@ export default function CashUsageDialog(props) {
       fullWidth
     >
       <div>
-        <div style={{ display: 'flex', alignItems: 'center' }}>
+        <div className={classes.flex}>
           <Typography variant="body1" gutterBottom>
             집행 금액:&emsp;
           </Typography>
@@ -40,9 +46,9 @@ export default function CashUsageDialog(props) {
         </div>
 
         {!usagePerMonthData.loading && (
-        <div style={{ display: 'flex', alignItems: 'center' }}>
+        <div className={classes.flex}>
             {usagePerMonthData.payload.metaData.map(meta => (
-              <div key={meta[1]} style={{ display: 'flex', alignItems: 'center' }}>
+              <div key={meta[1]} className={classes.flex}>
                 <Typography variant="body1" gutterBottom>
                   &emsp;
                   {`${meta[0]}: `}
