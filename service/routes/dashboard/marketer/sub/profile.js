@@ -111,30 +111,4 @@ router.post('/business/upload', (req, res) => {
     });
 });
 
-//
-// 세금계산서 데이터 등록
-router.post('/taxbill', (req, res) => {
-  // 회사명, (회사주소, 업태, 업종, 사업자등록번호, 이메일 주소(세금계산서를 모으는 메일이 따로있을 수 있으므로 메일주소를 입력받아야 함)
-  const marketerId = req._passport.session.user.userid;
-  const { email } = req.body;
-  console.log(req.body);
-
-  const query = `
-  INSERT INTO marketerTaxBill
-  (marketerId, state, receivingMail)
-  VALUES( ?, ?, ? )
-  `;
-  const array = [marketerId, 0, email];
-  doQuery(query, array)
-    .then((row) => {
-      if (!row.error && row.result) {
-        res.send([true, '등록되었습니다.']);
-      }
-    })
-    .catch((err) => {
-      console.log(err);
-      res.end();
-    });
-});
-
 module.exports = router;

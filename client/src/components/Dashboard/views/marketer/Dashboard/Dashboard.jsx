@@ -158,10 +158,11 @@ const Dashboard = (props) => {
   const [marketerContraction, setContraction] = useState(0);
   const cashData = useFetchData(`${HOST}/api/dashboard/marketer/cash`);
   const bannerData = useFetchData(`${HOST}/api/dashboard/marketer/banner`);
-  const tableData = useFetchData(`${HOST}/api/dashboard/marketer/creatorList`);
+  const tableData = useFetchData(`${HOST}/api/dashboard/marketer/creatorlist`);
+  console.log(tableData);
 
   useEffect(() => (() => {
-    axios.post(`${HOST}/api/dashboard/marketer/profile/contraction`)
+    axios.get(`${HOST}/api/dashboard/marketer/campaign/onoff`)
       .then((res) => {
         setContraction(res.data.marketerContraction);
       });

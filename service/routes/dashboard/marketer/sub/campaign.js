@@ -28,7 +28,6 @@ router.get('/onoff', (req, res) => {
 // 잔액이 0원일 때는 불가능 하도록 정의.
 router.post('/onoff', (req, res) => {
   const contractionState = req.body.contraction === false ? 0 : 1;
-  console.log(contractionState);
   const marketerId = req._passport.session.user.userid;
   const costQuery = `
   SELECT cashAmount

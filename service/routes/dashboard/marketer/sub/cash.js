@@ -8,7 +8,8 @@ const router = express.Router();
 router.get('/', (req, res) => {
   const marketerId = req._passport.session.user.userid;
   const debitQuery = `
-  SELECT cashAmount, DATE_FORMAT(date, '%y년 %m월 %d일 %T') as date
+  SELECT FORMAT(cashAmount, 0) as cashAmount,
+    DATE_FORMAT(date, '%y년 %m월 %d일 %T') as date
   FROM marketerDebit
   WHERE marketerId = ?
   ORDER BY date DESC
@@ -150,7 +151,7 @@ router.get('/charge/list', (req, res) => {
   const selectQuery = `
   SELECT 
     DATE_FORMAT(date, '%y년 %m월 %d일 %T') as date,
-    cash, type
+    FORMAT(cash, 0) as cash, type
   FROM marketerCharge
   WHERE marketerId = ?
   ORDER BY date DESC`;
@@ -178,9 +179,6 @@ router.get('/charge/list', (req, res) => {
 });
 
 // 마케터 광고캐시 환불 내역 리스트
-
-
-// 마케터 캐시 충전 및 환불 내역
 // { columns: [ '날짜', '환불금액' '환불상태' ], data: [ [ '19년 07월 06일', '0', '0', '진행중' ], [] ] }
 router.get('/refund/list', (req, res) => {
   // marketerID 가져오기
@@ -188,7 +186,7 @@ router.get('/refund/list', (req, res) => {
   const selectQuery = `
   SELECT 
     DATE_FORMAT(date, '%y년 %m월 %d일 %T') as date,
-    cash, marketerRefund.check
+    FORMAT(cash, 0) as cash, marketerRefund.check
   FROM marketerRefund
   WHERE marketerId = ?
   ORDER BY date DESC`;
@@ -200,7 +198,6 @@ router.get('/refund/list', (req, res) => {
         const sendArray = [];
         row.result.forEach((obj) => {
           const object = obj;
-          object.cash = String(obj.cash);
           object.check = object.check === 0 ? '진행중' : '완료됨';
           sendArray.push(Object.values(object));
         });
@@ -217,5 +214,94 @@ router.get('/refund/list', (req, res) => {
       res.end();
     });
 });
+
+// 마케터 광고 캐시 소진 내역
+// { columns: ['날짜', '소진금액', '세금계산서 발행 여부'], data: [ [], [] ] }
+router.get('/usage', (req, res) => {
+  const marketerId = req._passport.session.user.userid;
+
+  const selectQuery = `
+  SELECT
+    DATE_FORMAT(cl.date, "%y년 %m월") as date,
+    FORMAT(sum(cash), 0) as cash,
+    state
+  FROM campaignLog AS cl
+  JOIN campaign AS cmp
+  JOIN marketerTaxBill AS mtb
+  ON cmp.marketerId = mtb.marketerId 
+  AND DATE_FORMAT(cl.date, "%y%m") = DATE_FORMAT(mtb.date, "%y%m") 
+  WHERE cmp.marketerId = ?
+  GROUP BY month(cl.date)
+  ORDER BY cl.date DESC
+  `;
+  const selectArray = [marketerId];
+
+  doQuery(selectQuery, selectArray)
+    .then((row) => {
+      if (!row.error) {
+        if (row.result) {
+          const sendArray = [];
+          row.result.forEach((obj) => {
+            const object = obj;
+            switch (object.state) {
+              case 0: { object.state = '발행대기'; break; }
+              case 1: { object.state = '발행완료'; break; }
+              case 2: { object.state = '미발행'; break; }
+              default: break;
+            }
+            sendArray.push(Object.values(obj));
+          });
+
+          res.send({
+            data: sendArray
+          });
+        }
+      }
+    })
+    .catch((err) => {
+      console.log('/usage', err);
+      res.end();
+    });
+});
+
+// 마케터 광고 캐시 소진 내역 - 월별
+router.get('/usage/month', (req, res) => {
+  const marketerId = req._passport.session.user.userid;
+  const { month } = req.query; // ex) 19년 09월
+
+  const selectQuery = `
+  SELECT
+    DATE_FORMAT(cl.date, "%y년 %m월 %d일") as date1,
+    FORMAT(sum(cash), 0) as cash, type
+  FROM campaignLog AS cl
+  JOIN campaign AS cmp
+  WHERE cmp.marketerId = ?
+  AND DATE_FORMAT(cl.date, "%y년 %m월") = ?
+  GROUP BY DATE_FORMAT(cl.date, "%y년 %m월 %d일"), type
+  ORDER BY cl.date DESC
+  `;
+  const selectArray = [marketerId, month];
+
+  doQuery(selectQuery, selectArray)
+    .then((row) => {
+      if (!row.error) {
+        if (row.result) {
+          const sendArray = [];
+          row.result.forEach((obj) => {
+            sendArray.push(Object.values(obj));
+          });
+
+          res.send({
+            data: sendArray
+          });
+        }
+      }
+    })
+    .catch((err) => {
+      console.log('/usage', err);
+      res.end();
+    });
+});
+
 
 module.exports = router;

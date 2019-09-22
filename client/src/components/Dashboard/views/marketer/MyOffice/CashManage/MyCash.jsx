@@ -8,6 +8,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
 // own components
 import CircularProgress from '../../../../components/Progress/CircularProgress';
+import ExpansionPannel from '../../../../components/ExpansionPannel/ExpansionPannel';
 import Button from '../../../../components/CustomButtons/Button';
 import Card from '../../../../components/Card/Card';
 import CardHeader from '../../../../components/Card/CardHeader';
@@ -16,6 +17,7 @@ import CardIcon from '../../../../components/Card/CardIcon';
 import DashboardStyle from '../../../../assets/jss/onad/views/dashboardStyle';
 import CashChargeDialog from './CashChargeDialog';
 import RefundDialog from './RefundDialog';
+import CashUsageList from './CashUsageList';
 // hooks
 import useFetchData from '../../../../lib/hooks/useFetchData';
 import useDialog from '../../../../lib/hooks/useDialog';
@@ -37,14 +39,14 @@ function MyCash(props) {
           display: 'flex', alignItems: 'center', flexDirection: 'row-reverse', padding: 5
         }}
         >
-          <Button color="info" onClick={chargeDialog.handleOpen}>충전</Button>
+          <Button color="info" onClick={() => { chargeDialog.handleOpen(); }}>충전</Button>
           {!accountData.loading && !accountData.error
               && !accountData.payload.accountNumber ? (
                 <Tooltip title="환불계좌가 등록되지 않아 진행이 불가합니다.">
                   <span><Button color="danger" disabled>환불</Button></span>
                 </Tooltip>
             ) : (
-              <Button color="danger" onClick={refundDialog.handleOpen}>
+              <Button color="danger" onClick={() => { refundDialog.handleOpen(); }}>
                   환불
               </Button>
             )}
@@ -53,25 +55,33 @@ function MyCash(props) {
       </CardHeader>
 
       <CardBody>
-        <div>
-          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-            <Typography gutterBottom variant="body1">보유 광고캐시</Typography>
-          </div>
-          {cashData.loading && (<CircularProgress small />)}
-          {!cashData.loading && !cashData.error && (
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          <Typography gutterBottom variant="body1">보유 광고캐시</Typography>
+        </div>
+        {cashData.loading && (<CircularProgress small />)}
+        {!cashData.loading && !cashData.error && (
           <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
 
             <Typography gutterBottom variant="h5">
               {`${cashData.payload.cashAmount} 원`}
             </Typography>
           </div>
-          )}
-          <div className={classes.stats} style={{ display: 'flex', justifyContent: 'center' }}>
-            <DateRange />
-            {!cashData.loading && !cashData.error
-            && (<span>{`업데이트 : ${cashData.payload.date}`}</span>)}
-          </div>
+        )}
+        <div className={classes.stats} style={{ display: 'flex', justifyContent: 'center' }}>
+          {!cashData.loading && !cashData.error && cashData.payload.date
+            && (
+              <div>
+                <DateRange />
+                <span>{`업데이트 : ${cashData.payload.date}`}</span>
+              </div>
+            )}
         </div>
+
+
+        <ExpansionPannel title="상세 캐시 소진내역 보기">
+          <CashUsageList />
+        </ExpansionPannel>
+
 
       </CardBody>
 
@@ -95,7 +105,6 @@ function MyCash(props) {
             ? cashData.payload.cashAmount : 0}
         />
       )}
-
 
     </Card>
   );

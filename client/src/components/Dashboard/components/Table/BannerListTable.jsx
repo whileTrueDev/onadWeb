@@ -17,9 +17,24 @@ import CustomButton from '../CustomButtons/Button';
 function CustomTable({ ...props }) {
   const {
     classes, tableHead, tableData, tableHeaderColor, pagination,
-    handleChangeTablePage, handleChangeTableRowsPerPage,
-    emptyRows, rowsPerPage, page, buttonSet, handleDescDialog, handleBannerDelete,
+    buttonSet, handleDescDialog, handleBannerDelete,
   } = props;
+
+
+  const [page, setPage] = React.useState(0); // 테이블 페이지
+  const [rowsPerPage, setRowsPerPage] = React.useState(3); // 테이블 당 행
+
+  const emptyRows = rowsPerPage - Math.min(
+    rowsPerPage, tableData.length - page * rowsPerPage,
+  );
+  // page handler
+  function handleChangeTablePage(event, newPage) {
+    setPage(newPage);
+  }
+  // page per row handler
+  function handleChangeTableRowsPerPage(event) {
+    setRowsPerPage(parseInt(event.target.value, 10));
+  }
 
   return (
     <div className={classes.tableResponsive}>
