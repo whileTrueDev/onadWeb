@@ -1,6 +1,6 @@
 import React from 'react';
 import Tooltip from '@material-ui/core/Tooltip';
-import Error from '@material-ui/icons/ErrorOutlined';
+import Error from '@material-ui/icons/ErrorOutline';
 
 const TooltipContents = () => (
   <React.Fragment>

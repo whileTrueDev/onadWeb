@@ -282,20 +282,44 @@ router.get('/usage/month', (req, res) => {
   `;
   const selectArray = [marketerId, month];
 
-  doQuery(selectQuery, selectArray)
-    .then((row) => {
-      if (!row.error) {
-        if (row.result) {
-          const sendArray = [];
-          row.result.forEach((obj) => {
-            sendArray.push(Object.values(obj));
-          });
+  const selectMetaQuery = `
+  SELECT
+    type, FORMAT(sum(cash), 0) as cash
+  FROM campaignLog AS cl
+  JOIN campaign AS cmp
+  WHERE cmp.marketerId = ?
+  AND DATE_FORMAT(cl.date, "%y년 %m월") = ?
+  GROUP BY DATE_FORMAT(cl.date, "%y년 %m월"), type
+  ORDER BY type DESC
+  `;
+  const selectMetaArray = [marketerId, month];
 
-          res.send({
-            data: sendArray
-          });
+  const sendArray = [];
+  const sendMetaArray = [];
+  Promise.all([
+    doQuery(selectQuery, selectArray)
+      .then((row) => {
+        if (!row.error) {
+          if (row.result) {
+            row.result.forEach((obj) => {
+              sendArray.push(Object.values(obj));
+            });
+          }
         }
-      }
+      }),
+    doQuery(selectMetaQuery, selectMetaArray)
+      .then((row) => {
+        if (!row.error) {
+          if (row.result) {
+            row.result.forEach((obj) => {
+              sendMetaArray.push(Object.values(obj));
+            });
+          }
+        }
+      })
+  ])
+    .then(() => {
+      res.send({ data: sendArray, metaData: sendMetaArray });
     })
     .catch((err) => {
       console.log('/usage', err);

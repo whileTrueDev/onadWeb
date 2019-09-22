@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Typography, Tooltip } from '@material-ui/core';
-import Error from '@material-ui/icons/ErrorOutline';
+import { Typography } from '@material-ui/core';
 import Dialog from '../../../../components/Dialog/Dialog';
 import useFetchData from '../../../../lib/hooks/useFetchData';
 import Table from '../../../../components/Table/CashUsageTable';
@@ -39,6 +38,20 @@ export default function CashUsageDialog(props) {
             <NoTaxBillTooltip />
           )}
         </div>
+
+        {!usagePerMonthData.loading && (
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+            {usagePerMonthData.payload.metaData.map(meta => (
+              <div key={meta[1]} style={{ display: 'flex', alignItems: 'center' }}>
+                <Typography variant="body1" gutterBottom>
+                  &emsp;
+                  {`${meta[0]}: `}
+                </Typography>
+                <Typography variant="h6" gutterBottom>{` ${meta[1]} 원`}</Typography>
+              </div>
+            ))}
+        </div>
+        )}
 
         <Table
           tableHeaderColor="info"

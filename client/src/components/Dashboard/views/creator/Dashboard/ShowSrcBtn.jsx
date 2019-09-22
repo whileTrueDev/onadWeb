@@ -8,8 +8,6 @@ import withStyles from '@material-ui/core/styles/withStyles';
 // material icons
 import RemoveRedEyeOutlined from '@material-ui/icons/RemoveRedEyeOutlined';
 import InsertLinkOutlined from '@material-ui/icons/InsertLinkOutlined';
-import FileCopyOutlined from '@material-ui/icons/FileCopyOutlined';
-import Warning from '@material-ui/icons/Warning';
 import axios from '../../../../../utils/axios';
 
 import Button from '../../../components/CustomButtons/Button';

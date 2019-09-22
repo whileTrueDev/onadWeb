@@ -4,14 +4,14 @@ import shortid from 'shortid';
 // @material-ui/core components
 import withStyles from '@material-ui/core/styles/withStyles';
 import {
-  Table, TableHead, TableRow, TableBody, TableCell, Tooltip
+  Table, TableHead, TableRow, TableBody, TableCell
 } from '@material-ui/core';
-import Error from '@material-ui/icons/ErrorOutline';
 // custom table component
 import CustomTableFooter from './TableFooter';
 import Button from '../CustomButtons/Button';
 import tableStyle from '../../assets/jss/onad/components/tableStyle';
-import CpcCpmTooltip from '../Tooltip/CpcCpmTooltip';
+import NoTaxBillTooltip from '../Tooltip/NoTaxBillTooltip';
+// import CpcCpmTooltip from '../Tooltip/CpcCpmTooltip';
 
 function CustomTable({ ...props }) {
   const {
@@ -34,7 +34,7 @@ function CustomTable({ ...props }) {
   }
 
   return (
-    <div className={classes.tableResponsive}>
+    <div className={classes.tableResponsive} style={{ marginTop: 0 }}>
       <Table className={classes.table}>
         <TableHead className={classes[`${tableHeaderColor}TableHeader`]}>
           <TableRow>
@@ -58,21 +58,7 @@ function CustomTable({ ...props }) {
                     <div style={{ display: 'flex' }}>
                       <span>{value}</span>
                       {value === '미발행' && (
-                        <Tooltip
-                          title={(
-                            <React.Fragment>
-                              <span>사업자 등록증을 등록하지 않아</span>
-                              <br />
-                              <span>세금계산서가 미발행 되었습니다.</span>
-                              <br />
-                              <span>필요시 이메일을 보내주세요. support@onad.io</span>
-                            </React.Fragment>
-                          )}
-                          placement="bottom"
-                          disableFocusListener
-                        >
-                          <div><Error /></div>
-                        </Tooltip>
+                        <NoTaxBillTooltip />
                       )}
                     </div>
                   ) : (
@@ -93,7 +79,7 @@ function CustomTable({ ...props }) {
                     variant="contained"
                     color="success"
                     size="sm"
-                    onClick={() => { handleDialogOpen(i + 1); }}
+                    onClick={() => { handleDialogOpen((page * rowsPerPage) + i + 1); }}
                   >
                     상세보기
                   </Button>
@@ -124,7 +110,9 @@ function CustomTable({ ...props }) {
 
 CustomTable.defaultProps = {
   tableHeaderColor: 'gray',
-  perMonth: false
+  perMonth: false,
+  detailButton: false,
+  handleDialogOpen() { }
 };
 
 CustomTable.propTypes = {
@@ -137,7 +125,9 @@ CustomTable.propTypes = {
   tableData: PropTypes.arrayOf(
     PropTypes.arrayOf(PropTypes.string)
   ).isRequired,
-  perMonth: PropTypes.bool
+  perMonth: PropTypes.bool,
+  detailButton: PropTypes.bool,
+  handleDialogOpen: PropTypes.func
 };
 
 
