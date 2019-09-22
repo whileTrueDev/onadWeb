@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 // @material-ui/core components
 import withStyles from '@material-ui/core/styles/withStyles';
 // @material-ui/icons
-
+import Paper from '@material-ui/core/Paper';
 // core components
 import cardStyle from '../../assets/jss/onad/components/cardStyle';
 
@@ -28,9 +28,9 @@ function Card({ ...props }) {
     [className]: className !== undefined,
   });
   return (
-    <div className={cardClasses} {...rest}>
+    <Paper square className={cardClasses} {...rest}>
       {children}
-    </div>
+    </Paper>
   );
 }
 

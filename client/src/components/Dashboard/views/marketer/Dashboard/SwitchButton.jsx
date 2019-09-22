@@ -1,9 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 
 import withStyles from '@material-ui/core/styles/withStyles';
-import {
-  Switch, FormControlLabel, Typography, makeStyles,
-} from '@material-ui/core';
+import { Switch, FormControlLabel } from '@material-ui/core';
 import axios from '../../../../../utils/axios';
 import HOST from '../../../../../config';
 import history from '../../../../../history';
@@ -13,7 +11,7 @@ const IOSSwitch = withStyles(theme => ({
     width: 42,
     height: 26,
     padding: 0,
-    margin: theme.spacing(1),
+    margin: theme.spacing(2),
   },
   switchBase: {
     padding: 1,
@@ -57,19 +55,6 @@ const IOSSwitch = withStyles(theme => ({
     {...props}
   />
 ));
-
-
-const useStyle = makeStyles(theme => ({
-  typo: {
-    marginTop: 15,
-    textAlign: 'center',
-  },
-  switch: {
-    textAlign: 'right',
-    marginTop: 15,
-    marginLeft: 40,
-  },
-}));
 
 // data Fetch hooks
 function useFetchData(url, params) {
@@ -124,34 +109,22 @@ function useUpdateData(url) {
 }
 
 function CustomSwitch() {
-  const classes = useStyle();
-
   const url = `${HOST}/api/dashboard/marketer/campaign/onoff`;
   const { payload, loading, error } = useFetchData(url);
   const { handleSwitch } = useUpdateData(url, history);
 
   return (
-    <div className={classes.typo}>
-      {!loading && !error ? (
-        <div>
-          {payload === true ? (
-            <Typography variant="h4">광고ON</Typography>
-          ) : (
-            <Typography variant="h4" color="secondary">광고OFF</Typography>
-          )}
-          <FormControlLabel
-            className={classes.switch}
-            control={(
-              <IOSSwitch
-                checked={payload}
-                onChange={() => handleSwitch({ contraction: !payload })}
-              />
+    <div>
+      {!loading && !error && (
+        <FormControlLabel
+          control={(
+            <IOSSwitch
+              checked={payload}
+              onChange={() => handleSwitch({ contraction: !payload })}
+            />
                )}
-            label="광고ON & OFF"
-          />
-        </div>
-      ) : (
-        null
+          label="광고ON & OFF"
+        />
       )}
     </div>
   );
