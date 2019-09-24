@@ -62,44 +62,9 @@ function withdrawalList(result) {
   }
 }
 
-// 마케터 캐시 충전 및 환불 내역 전처리 함수
-function cashlist(result) {
-  if (result) {
-    let columns = result[0];
-    columns = Object.keys(columns);
-    columns = columns.map((col) => {
-      col = col.replace('date', '날짜')
-        .replace('chargeCash', '캐시충전')
-        .replace('withdrawCash', '캐시환불')
-        .replace('cashReturnState', '신청상태');
-
-
-      return col;
-    });
-
-    // dataset preprocessing
-    result = result.map(
-      (value) => {
-        if (value.chargeCash !== 0) {
-          value.cashReturnState = '완료됨';
-        } else {
-          value.cashReturnState === 0 ? value.cashReturnState = '진행중' : value.cashReturnState = '완료됨';
-        }
-        value.date = value.date.toLocaleString();
-        value.chargeCash = value.chargeCash.toLocaleString();
-        value.withdrawCash = value.withdrawCash.toLocaleString();
-
-        value = Object.values(value);
-        return value;
-      }
-    );
-    return { columns, data: result };
-  }
-}
-
 // 마케터 대시보드에서 광고 될 크리에이터 목록에 들어가는 데이터 전처리 함수
 function creatorList(result) {
-  const data = result.map((row) => {
+  const data = result.forEach((row) => {
     row.streamPlatform = 'Twitch.tv';
     row.freqStreamCategory = 'Gaming';
     row.viewer = Math.ceil(row.avgViewer);
@@ -114,6 +79,5 @@ function creatorList(result) {
 module.exports = {
   preprocessingBannerData,
   withdrawalList,
-  cashlist,
   creatorList
 };

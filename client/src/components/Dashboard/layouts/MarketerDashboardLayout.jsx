@@ -8,8 +8,9 @@ import Sidebar from '../components/Sidebar/Sidebar';
 import allRoutes from '../routes';
 import Footer from '../components/Footer/Footer';
 import '../assets/css/onad.css';
+import history from '../../../history';
 
-const MarketerRoutes = ({ history, pannelRef }) => (
+const MarketerRoutes = ({ pannelRef }) => (
   <Switch>
     {allRoutes.marketer.map(prop => (
       <Route
@@ -22,7 +23,7 @@ const MarketerRoutes = ({ history, pannelRef }) => (
 );
 
 const MarketerDashboard = ({
-  classes, history, ...rest
+  classes, ...rest
 }) => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const handleDrawerToggle = () => {
@@ -41,7 +42,7 @@ const MarketerDashboard = ({
         }
       }
     });
-  }, [history.location, history.location.pathname, mobileOpen]);
+  }, [mobileOpen]);
 
   return (
     <div className={classes.wrapper}>
@@ -52,14 +53,12 @@ const MarketerDashboard = ({
         logo="/pngs/logo/onad_logo_vertical.png"
         mobileOpen={mobileOpen}
         handleDrawerToggle={handleDrawerToggle}
-        history={history}
         {...rest}
       />
       <div className={classes.mainPanel} ref={mainPanel}>
         {/* ref="mainPanel" */}
         <Navbar
           routes={allRoutes.marketer}
-          history={history}
           handleDrawerToggle={handleDrawerToggle}
           {...rest}
         />

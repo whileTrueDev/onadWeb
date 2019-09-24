@@ -63,7 +63,7 @@ const ImageUpload = (props) => {
           </Grid>
           <Grid item>
             <CustomButton component="label" color="info" size="sm" htmlFor="getfile" className={classes.imgInput}>
-                    파일찾기
+                파일찾기
               <input type="file" id="getfile" accept="image/*" onChange={readImage} />
             </CustomButton>
           </Grid>

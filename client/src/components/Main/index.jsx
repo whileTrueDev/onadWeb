@@ -10,11 +10,12 @@ import withRoot from './withRoot';
 import HOST from '../../config';
 import sources from './source/sources';
 import BetaDialog from './views/Login/BetaDialog';
+import history from '../../history';
 
-const useLoginValue = (history) => {
+const useLoginValue = () => {
   const [isLogin, setisLogin] = useState(false);
   const [repasswordOpen, setRepassword] = useState(false);
-  
+
   // logout function
   const logout = () => {
     setisLogin(false);
@@ -51,37 +52,35 @@ const useLoginValue = (history) => {
 
 export default withRoot((props) => {
   // if located here, set the scroll to top of the page
-  const { history, location } = props;
+  const { location } = props;
   const {
     isLogin, repasswordOpen, logout, setRepassword,
-  } = useLoginValue(history, location);
+  } = useLoginValue(location);
 
   const [open, setOpen] = useState(true);
   const handleClose = () => {
     setOpen(false);
   };
-  
+
   React.useEffect(() => {
     window.scrollTo(0, 0);
   }, [location]);
 
   return (
     <div>
-      <AppAppBar history={history} isLogin={isLogin} logout={logout} />
+      <AppAppBar isLogin={isLogin} logout={logout} />
       <ProductHero
         isLogin={isLogin}
-        history={history}
         source={sources.hero}
       />
-      <ProductCategories history={history} />
-      <ProductHowItWorks history={history} isLogin={isLogin} />
+      <ProductCategories />
+      <ProductHowItWorks isLogin={isLogin} />
       {/* 문의받기 섹션, 오픈베타에 추가 */
           /* <ProductCTA /> */}
-      <AppFooter history={history} />
+      <AppFooter />
       <RePasswordDialog
         repasswordOpen={repasswordOpen}
         setRepassword={setRepassword}
-        history={history}
         logout={logout}
       />
       <BetaDialog

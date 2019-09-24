@@ -10,6 +10,7 @@ import { Subscriptions, Person } from '@material-ui/icons';
 import HowItWorksDetailMarketer from './HowItWorksDetailMarketer';
 import HowItWorksDetailCreator from './HowItWorksDetailCreator';
 import sources from '../../source/sources';
+import history from '../../../../history';
 
 const styles = theme => ({
   root: {
@@ -66,7 +67,7 @@ class ProductHowItWorks extends React.Component {
   }
 
   render() {
-    const { classes, history, isLogin } = this.props;
+    const { classes, isLogin } = this.props;
     const { value, check } = this.state;
 
     return (

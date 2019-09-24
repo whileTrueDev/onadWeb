@@ -88,7 +88,7 @@ passport.use(new LocalStrategy(
               marketerName: marketerData.marketerName,
               marketerPhoneNum: marketerData.marketerPhoneNum,
             };
-            console.log('로그인이 완료되었습니다');
+            console.log('로그인이 완료되었습니다, ', marketerData.marketerName);
             return done(null, user);
           }
 
@@ -119,7 +119,8 @@ passport.use(new LocalStrategy(
     * 최초 로그인이 아닐 때
     3-1) Data가 존재하므로 creatorName, creatorMail을 가져온다.
     3-2) 현재 DB에서 가져온 값과 session으로 획득한 값을 비교하여 DB 수정.
-    3-3) 나머지 data는 session에 띄워놓고 필요할 때 바로 사용할 수 있도록 session을 context화 하여 필요한 Component에서 접근이 가능하게 구현한다.
+    3-3) 나머지 data는 session에 띄워놓고 필요할 때 바로 사용할 수 있도록
+        session을 context화 하여 필요한 Component에서 접근이 가능하게 구현한다.
 
     * 최초 로그인시
     3-1) creator Logo를 제외한 모든 값을 creatorInfo table에 저장한다.
@@ -140,9 +141,9 @@ passport.use(new LocalStrategy(
 const makeUrl = () => {
   let password = '';
 
-  for (let i = 0; i < 8; i++) {
+  for (let i = 0; i < 8; i += 1) {
     const lowerStr = String.fromCharCode(Math.floor(Math.random() * 26 + 97));
-    if (i % 2 == 0) {
+    if (i % 2 === 0) {
       password += String(Math.floor(Math.random() * 10));
     } else {
       password += lowerStr;
@@ -157,7 +158,6 @@ const clientID = process.env.NODE_ENV === 'production'
 const clientSecret = process.env.NODE_ENV === 'production'
   ? config.production.clientSecret
   : config.dev.clientSecret;
-
 
 passport.use(new TwitchStrategy({
   clientID,
@@ -184,14 +184,17 @@ passport.use(new TwitchStrategy({
         user.creatorIp = creatorData.creatorIp;
 
         // Data 변경시에 변경된 값을 반영하는 영역.
-        if (!(creatorData.creatorName === user.creatorDisplayName && creatorData.creatorMail === user.creatorMail)) {
+        if (!(creatorData.creatorName === user.creatorDisplayName
+          && creatorData.creatorMail === user.creatorMail)) {
           // 크리에이터의 name 또는 email 이 바뀐 경우 재설정
           const UpdateQuery = `
                     UPDATE creatorInfo
                     SET  creatorName = ?, creatorMail = ?, creatorTwitchId = ?, creatorLogo = ?
                     WHERE creatorId = ?
                     `;
-          doQuery(UpdateQuery, [user.creatorDisplayName, user.creatorMail, user.creatorName, user.creatorLogo, user.creatorId])
+          doQuery(UpdateQuery,
+            [user.creatorDisplayName, user.creatorMail,
+              user.creatorName, user.creatorLogo, user.creatorId])
             .then(() => done(null, user))
             .catch((errorData) => {
               console.log(errorData);
@@ -262,7 +265,7 @@ passport.use(new TwitchStrategy({
         Promise.all([
           doQuery(infoQuery, [user.creatorId, user.creatorDisplayName,
             user.creatorMail, creatorIp, `/${creatorBannerUrl}`,
-            user.creatorName, user.CreatorLogo]),
+            user.creatorName, user.creatorLogo]),
           doQuery(incomeQuery, [user.creatorId, 0, 0]),
           doQuery(priceQuery, [user.creatorId, 1, 0, 1]),
           doQuery(landingQuery, [user.creatorId, user.creatorName]),

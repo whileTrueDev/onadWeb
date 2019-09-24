@@ -6,35 +6,29 @@ import {
   GridList,
   GridListTile,
   GridListTileBar,
-  Tooltip,
   Button,
   Link,
 } from '@material-ui/core';
 import Check from '@material-ui/icons/Check';
 import Clear from '@material-ui/icons/CallMissed';
-import CallMissed from '@material-ui/icons/Clear';
-import AttachFile from '@material-ui/icons/AttachFile';
-import TouchApp from '@material-ui/icons/TouchApp';
 import Forum from '@material-ui/icons/Forum';
 import Warning from '@material-ui/icons/Warning';
 import axios from '../../../../../utils/axios';
 import GridContainer from '../../../components/Grid/GridContainer';
 import Card from '../../../components/Card/Card';
 import CardHeader from '../../../components/Card/CardHeader';
-import CardIcon from '../../../components/Card/CardIcon';
 import CardBody from '../../../components/Card/CardBody';
-import CardFooter from '../../../components/Card/CardFooter';
 import GridItem from '../../../components/Grid/GridItem';
 import CustomButton from '../../../components/CustomButtons/Button';
-import Table from '../../../components/Table/Table'
+import Table from '../../../components/Table/Table';
 // core ../../../components
 import dashboardStyle from '../../../assets/jss/onad/views/dashboardStyle';
 import SuccessTypography from '../../../components/Typography/Success';
 import DangerTypography from '../../../components/Typography/Danger';
 import InfoTypography from '../../../components/Typography/Info';
-import ReasonDialog from './ReasonDialog';
 import UploadDialog from './UploadDialog';
 import HOST from '../../../../../config';
+import history from '../../../../../history';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -135,18 +129,18 @@ const BannerIcon = (props) => {
 
 
 const CustomTable = (props) => {
-  const { BannerList, handleDelete, classes } =props;
+  const { BannerList, handleDelete, classes } = props;
   return (
     <GridContainer>
-      <Table 
+      <Table
         tableHead={['캠페인', '배너 이미지', '심의결과', '기타']}
         tableData={BannerList}
-        />
-        
-      
+      />
+
+
     </GridContainer>
-  )
-}
+  );
+};
 
 const BannerGridList = (props) => {
   const {
@@ -189,7 +183,7 @@ const BannerGridList = (props) => {
 };
 
 const BannerManage = (props) => {
-  const { classes, history } = props;
+  const { classes } = props;
   const [BannerList, setBannerList] = useState([]);
   const [open, setOpen] = useState(false);
   const [upload, setUpload] = useState(false);
@@ -205,22 +199,20 @@ const BannerManage = (props) => {
   const readyBanner = useCallback(() => {
     axios.get(`${HOST}/api/dashboard/marketer/banner/all`)
       .then((res) => {
-        
         if (res.data) {
           res.data[1].map((banner) => {
             if (banner[2] === 0) {
-              banner[2] = '심의 진행중'
+              banner[2] = '심의 진행중';
             } else if (banner[2] === 1) {
-              banner[2] = '승인 - 광고 대기 중'
-            } else if(banner[2] === 2){
-              banner[2] = '승인 거절'
-            }
-            else if(banner[2] === 3){
-              banner[2] = '승인 - 광고 진행 중'
+              banner[2] = '승인 - 광고 대기 중';
+            } else if (banner[2] === 2) {
+              banner[2] = '승인 거절';
+            } else if (banner[2] === 3) {
+              banner[2] = '승인 - 광고 진행 중';
             }
             return null;
           });
-        setBannerList(res.data[1]);
+          setBannerList(res.data[1]);
         }
       });
   }, []);
@@ -248,34 +240,37 @@ const BannerManage = (props) => {
 
   return (
     <GridContainer>
-    <GridItem xs={12} sm={12} md={10}>
-      <Card>
-        <CardHeader color="blueGray" stats>
-          <h4 className={classes.cardTitleWhite}>배너 리스트</h4>
-          <p className={classes.cardCategoryWhite}>등록된 모든 배너를 보여줍니다.</p>
-        </CardHeader>
-        <CardBody>
-        <CustomButton round color="info" size="lg" onClick={handleUpload}>
+      <GridItem xs={12} sm={12} md={10}>
+        <Card>
+          <CardHeader color="blueGray" stats>
+            <h4 className={classes.cardTitleWhite}>배너 리스트</h4>
+            <p className={classes.cardCategoryWhite}>등록된 모든 배너를 보여줍니다.</p>
+          </CardHeader>
+          <CardBody>
+            <CustomButton round color="info" size="lg" onClick={handleUpload}>
           + 새 배너 만들기
-        </CustomButton>
-          {BannerList.length === 0
-            ? (
-              <DangerTypography>
-                <Warning />
-                {'등록된 배너가 없어요! 새 배너 만들기를 통해 등록해보세요.'}
-              </DangerTypography>
-            )
-             : <CustomTable BannerList={BannerList}
-                            className={classes.dangerText}
-                            handleDelete={handleDelete}
-                            />
+            </CustomButton>
+            {BannerList.length === 0
+              ? (
+                <DangerTypography>
+                  <Warning />
+                  {'등록된 배너가 없어요! 새 배너 만들기를 통해 등록해보세요.'}
+                </DangerTypography>
+              )
+              : (
+                <CustomTable
+                  BannerList={BannerList}
+                  className={classes.dangerText}
+                  handleDelete={handleDelete}
+                />
+              )
           }
-        </CardBody>
-      </Card>
-    </GridItem>
-    <UploadDialog open={upload} handleOpen={handleUpload} readyBanner={readyBanner} />
-  </GridContainer>
-   
+          </CardBody>
+        </Card>
+      </GridItem>
+      <UploadDialog open={upload} handleOpen={handleUpload} readyBanner={readyBanner} />
+    </GridContainer>
+
   );
 };
 

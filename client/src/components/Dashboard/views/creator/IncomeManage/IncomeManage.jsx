@@ -46,7 +46,7 @@ import DashboardStyle from '../../../assets/jss/onad/views/dashboardStyle';
 import { defaultWithdrawalData } from '../../../variables/creatorWithdrawal';
 import HOST from '../../../../../config';
 import setTimeFormat from '../../../lib/setTimeFormat';
-
+import history from '../../../../../history';
 
 DashboardStyle.select = {
   marginTop: 5,
@@ -138,7 +138,7 @@ function useWithdrawDialog() {
 
 
 function Income(props) {
-  const { classes, history } = props;
+  const { classes } = props;
   // 날짜 범위 데이터
   const { value, handleChange } = useSelectValue();
 
@@ -166,7 +166,7 @@ function Income(props) {
 
   // 출금리스트 데이터 axios 요청
   useEffect(() => {
-    axios.get(`${HOST}/api/dashboard/creator/listOfWithdrawal`)
+    axios.get(`${HOST}/api/dashboard/creator/withdrawal/list`)
       .then((res) => {
         if (res.data) {
           setWithdrawalData(res.data);
@@ -193,21 +193,6 @@ function Income(props) {
       });
   }, []);
 
-  // 출금신청 페이지네이션
-  const [page, setPage] = React.useState(0); // 테이블 페이지
-  const [rowsPerPage, setRowsPerPage] = React.useState(5); // 테이블 페이지당 행
-  const emptyRows = rowsPerPage - Math.min(
-    rowsPerPage, WithdrawalData.length - page * rowsPerPage,
-  );
-
-  // page handler
-  function handleChangeTablePage(event, newPage) {
-    setPage(newPage);
-  }
-  // page per row handler
-  function handleChangeTableRowsPerPage(event) {
-    setRowsPerPage(parseInt(event.target.value, 10));
-  }
 
   return (
     <div>
@@ -402,11 +387,6 @@ function Income(props) {
                 tableHead={WithdrawalData.columns}
                 tableData={WithdrawalData.data}
                 pagination
-                handleChangeTablePage={handleChangeTablePage}
-                handleChangeTableRowsPerPage={handleChangeTableRowsPerPage}
-                emptyRows={emptyRows}
-                rowsPerPage={rowsPerPage}
-                page={page}
               />
             </CardBody>
           </Card>
@@ -432,7 +412,7 @@ function Income(props) {
       <Snackbar
         place="bl"
         color="danger"
-        icon={Warning}
+        icon
         message="아직 계좌정보를 입력하지 않았어요.. 계좌정보 입력 이후 출금신청하세요!"
         open={!incomeData.payload.creatorAccountNumber}
         Link={
@@ -455,7 +435,6 @@ function Income(props) {
 
 Income.propTypes = {
   classes: PropTypes.object.isRequired,
-  history: PropTypes.object.isRequired,
 };
 
 export default withStyles(DashboardStyle)(Income);

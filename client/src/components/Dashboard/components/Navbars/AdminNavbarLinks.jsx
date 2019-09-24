@@ -17,6 +17,7 @@ import Button from '../CustomButtons/Button';
 import Notification from './Notification';
 import HOST from '../../../../config';
 import axios from '../../../../utils/axios';
+import history from '../../../../history';
 
 const useMenu = () => {
   const [anchorEl, setAnchorEl] = React.useState();
@@ -32,7 +33,7 @@ const useMenu = () => {
 };
 
 function HeaderLinks(props) {
-  const { classes, history } = props;
+  const { classes } = props;
 
   function handleLogoutClick() {
     axios.get(`${HOST}/api/login/logout`).then(() => {

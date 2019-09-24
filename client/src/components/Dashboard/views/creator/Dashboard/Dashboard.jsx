@@ -44,7 +44,7 @@ const Dashboard = (props) => {
   const [currentBannerData, setCurrentBannerData] = useState([['', '']]);
   const [currentBannerDataLoading, setCurrentBannerDataLoading] = useState(true);
   useEffect(() => {
-    axios.get(`${HOST}/api/dashboard/creator/currentBanner`)
+    axios.get(`${HOST}/api/dashboard/creator/banner/current`)
       .then((res) => {
         if (res.data.length > 0) {
           setCurrentBannerData(res.data);
@@ -80,7 +80,7 @@ const Dashboard = (props) => {
   const [bannerDataLoading, setBannerDataLoading] = useState(true);
 
   const callBanner = useCallback(() => {
-    axios.get(`${HOST}/api/dashboard/creator/matchedBanner`)
+    axios.get(`${HOST}/api/dashboard/creator/banner/matched`)
       .then((res) => {
         if (res.data) {
           setBannerData(res.data);
@@ -96,21 +96,6 @@ const Dashboard = (props) => {
     // Banner 데이터 axios 요청
     callBanner();
   }, [callBanner]); // set 2nd argument to the empty array for request just once
-
-  const [page, setPage] = React.useState(0); // 테이블 페이지
-  const [rowsPerPage, setRowsPerPage] = React.useState(3); // 테이블 당 행
-
-  const emptyRows = rowsPerPage - Math.min(
-    rowsPerPage, bannerData.length - page * rowsPerPage,
-  );
-  // page handler
-  function handleChangeTablePage(event, newPage) {
-    setPage(newPage);
-  }
-  // page per row handler
-  function handleChangeTableRowsPerPage(event) {
-    setRowsPerPage(parseInt(event.target.value, 10));
-  }
 
   /* index를 받아서 전달되기는하는데, pagnation일 때는 확인을 하지 못함. */
   const [descDialgOpen, setDescDialogOpen] = React.useState(false);
@@ -277,17 +262,12 @@ const Dashboard = (props) => {
               {bannerDataLoading ? (
                 <CircularProgress />
               ) : (
-                bannerData.hasOwnProperty('data') && (
+                bannerData.data && (
                 <Table
                   tableHeaderColor="danger"
                   tableHead={bannerData.columns}
                   tableData={bannerData.data}
                   pagination
-                  handleChangeTablePage={handleChangeTablePage}
-                  handleChangeTableRowsPerPage={handleChangeTableRowsPerPage}
-                  emptyRows={emptyRows}
-                  rowsPerPage={rowsPerPage}
-                  page={page}
                   buttonSet
                   handleDescDialog={handleDescDialog}
                   handleBannerDelete={handleDeleteChoice}
@@ -298,8 +278,17 @@ const Dashboard = (props) => {
           </Card>
         </GridItem>
       </GridContainer>
-      <BannerDescDialog open={descDialgOpen} descData={descData} handleClose={handleCloseDialog} />
-      <CheckDialog open={checkDialgOpen} setOpen={setCheckDialogOpen} handleBannerDelete={handleBannerDelete} callBanner={callBanner} />
+      <BannerDescDialog
+        open={descDialgOpen}
+        descData={descData}
+        handleClose={handleCloseDialog}
+      />
+      <CheckDialog
+        open={checkDialgOpen}
+        setOpen={setCheckDialogOpen}
+        handleBannerDelete={handleBannerDelete}
+        callBanner={callBanner}
+      />
     </div>
   );
 };

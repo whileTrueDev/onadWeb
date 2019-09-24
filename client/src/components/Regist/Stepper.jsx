@@ -15,6 +15,7 @@ import PaperSheet from './Paper';
 import AppAppBar from '../Main/views/Layout/AppAppBar';
 import HOST from '../../config';
 import withRoot from '../Main/withRoot';
+import history from '../../history';
 
 const styles = theme => ({
   root: {
@@ -108,9 +109,7 @@ const myReducer = (state, action) => {
 };
 
 const RegistStepper = withRoot((props) => {
-  const {
-    classes, history,
-  } = props;
+  const { classes } = props;
   const [activeStep, setStep] = useState(0);
   const [userType, setType] = useState(0);
   const [userInfo, setInfo] = useState({});
@@ -199,7 +198,6 @@ const RegistStepper = withRoot((props) => {
 });
 
 RegistStepper.propTypes = {
-  history: PropTypes.object.isRequired,
   classes: PropTypes.object,
 };
 

@@ -18,6 +18,7 @@ import SuccessTypo from '../../../components/Typography/Success';
 import DangerTypo from '../../../components/Typography/Danger';
 import terms from './contractionConfig';
 import HOST from '../../../../../config';
+import history from '../../../../../history';
 
 const useStyles = makeStyles(theme => ({
   checked: {},
@@ -97,7 +98,7 @@ function useContractionFlag() {
 }
 
 function Contraction(props) {
-  const { history, setSnackOpen } = props;
+  const { setSnackOpen } = props;
   const classes = useStyles();
   const { DialogOpen, handleDialogOpen, handleDialogClose } = useDialog();
   const { contractionList, handleContraction } = useContractionFlag();
@@ -108,7 +109,7 @@ function Contraction(props) {
       })
         .then((res) => {
           if (res.data === true) {
-            //history.push('/dashboard/creator/user');
+            // history.push('/dashboard/creator/user');
             setSnackOpen(true);
           }
         })

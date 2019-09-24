@@ -16,7 +16,7 @@ import Button from '../../../components/CustomButtons/Button';
 import Dialog from '../../../components/Dialog/Dialog';
 import Warning from '../../../components/Typography/Warning';
 import HOST from '../../../../../config';
-
+import history from '../../../../../history';
 
 const useStyles = makeStyles(theme => ({
   inDialogContent: {
@@ -93,7 +93,7 @@ function useValue(defaultValue) {
 function WithdrawDialog(props) {
   const classes = useStyles();
   const {
-    open, handleClose, accountNumber, receivable, history,
+    open, handleClose, accountNumber, receivable,
   } = props;
   // select value
   const { selectValue, handleChange } = useValue('0');

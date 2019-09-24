@@ -8,8 +8,6 @@ import withStyles from '@material-ui/core/styles/withStyles';
 // material icons
 import RemoveRedEyeOutlined from '@material-ui/icons/RemoveRedEyeOutlined';
 import InsertLinkOutlined from '@material-ui/icons/InsertLinkOutlined';
-import FileCopyOutlined from '@material-ui/icons/FileCopyOutlined';
-import Warning from '@material-ui/icons/Warning';
 import axios from '../../../../../utils/axios';
 
 import Button from '../../../components/CustomButtons/Button';
@@ -169,7 +167,7 @@ class ShowSrcBtn extends Component {
           <Snackbar
             place="bc"
             color="success"
-            icon={FileCopyOutlined}
+            icon
             message="클립보드에 복사되었어요!"
             open={copySuccess}
             closeNotification={() => this.setState({ copySuccess: false })}
@@ -178,7 +176,7 @@ class ShowSrcBtn extends Component {
           <Snackbar
             place="bl"
             color="danger"
-            icon={Warning}
+            icon
             message="아직 온애드와 계약하지 않았어요. 간단히 계약하고, 광고를 집행하세요."
             open={!contractionAgreement}
             Link={

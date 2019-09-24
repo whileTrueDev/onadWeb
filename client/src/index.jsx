@@ -2,7 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import { Router, Switch, Route } from 'react-router-dom';
-import { createBrowserHistory } from 'history';
 import RegistStepper from './components/Regist/Stepper';
 import Main from './components/Main';
 import CreatorDashboard from './components/Dashboard/layouts/CreatorDashboardLayout';
@@ -14,20 +13,19 @@ import NotFound from './components/Common/NotFound';
 import ShutDownCloseBeta from './components/Common/ShutDownCloseBeta';
 // import KakaoPay from './components/Common/KakaoPay';
 import * as serviceWorker from './serviceWorker';
+import history from './history';
 import CampaignCreateStepper from './pages/CampaignCreate/CampaignCreateStepper';
-
-const history = createBrowserHistory();
 
 const developRouter = (
   <Router history={history}>
     <Switch>
-      <Route exact path="/" component={Main} history={history} />
+      <Route exact path="/" component={Main} />
       <Route exact path="/regist" component={RegistStepper} />
-      <Route exact path="/introduction" component={Introduction} history={history} />
-      <Route exact path="/manual" component={Manual} history={history} />
-      <Route exact path="/dashboard/creator/door" component={CreatorDashboardDoor} history={history} />
-      <Route path="/dashboard/creator" component={CreatorDashboard} history={history} />
-      <Route path="/dashboard/marketer" component={MarketerDashboard} history={history} />
+      <Route exact path="/introduction" component={Introduction} />
+      <Route exact path="/manual" component={Manual} />
+      <Route exact path="/dashboard/creator/door" component={CreatorDashboardDoor} />
+      <Route path="/dashboard/creator" component={CreatorDashboard} />
+      <Route path="/dashboard/marketer" component={MarketerDashboard} />
       <Route path="/dashboard/test" component={CampaignCreateStepper} history={history} />
       {/* 페이 연습 페이지 */}
       {/* <Route exact path="/pay" component={KakaoPay} /> */}

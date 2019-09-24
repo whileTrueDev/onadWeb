@@ -9,6 +9,7 @@ import Typography from '../../components/Typography';
 import ProductHeroLayout from './ProductHeroLayout';
 import LoginForm from '../Login/LoginForm';
 import HOST from '../../../../config';
+import history from '../../../../history';
 
 const styles = makeStyles(theme => ({
   background: {
@@ -101,7 +102,7 @@ function useDialog() {
 
 function ProductHero(props) {
   const {
-    isLogin, history, source,
+    isLogin, source,
   } = props;
 
   const {
@@ -128,7 +129,7 @@ function ProductHero(props) {
       }).catch((err) => {
         console.log(err);
       });
-  }, [handleOpen, history]);
+  }, [handleOpen]);
 
   return (
     <ProductHeroLayout

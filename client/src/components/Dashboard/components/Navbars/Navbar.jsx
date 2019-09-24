@@ -13,11 +13,12 @@ import Menu from '@material-ui/icons/Menu';
 import headerStyle from '../../assets/jss/onad/components/headerStyle';
 import Button from '../CustomButtons/Button';
 import AdminNavbarLinks from './AdminNavbarLinks';
+import history from '../../../../history';
 
 
 function Header(props) {
   const {
-    routes, classes, color, handleDrawerToggle, history,
+    routes, classes, color, handleDrawerToggle
   } = props;
 
   function makeBrand() {
