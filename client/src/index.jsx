@@ -22,7 +22,7 @@ const developRouter = (
       <Route exact path="/regist" component={RegistStepper} />
       <Route exact path="/introduction" component={Introduction} />
       <Route exact path="/manual" component={Manual} />
-      <Route exact path="/dashboard/creator/door" component={CreatorDashboardDoor} history={history} />
+      <Route exact path="/dashboard/creator/door" component={CreatorDashboardDoor} />
       <Route path="/dashboard/creator" component={CreatorDashboard} />
       <Route path="/dashboard/marketer" component={MarketerDashboard} />
 
