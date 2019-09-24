@@ -75,7 +75,7 @@ router.post('/start', (req, res) => {
   INSERT INTO landingClick (clickCount, transferCount, contractionId)
   VALUES (?, ?, ?)`;
 
-  Promise.all(creators.map((creator) => {
+  Promise.all(creators.forEach((creator) => {
     doQuery(selectQuery, [creator, bannerId])
       .then((row) => {
         if (row.result.length !== 0) {
@@ -160,7 +160,7 @@ router.post('/stop', (req, res) => {
   AND contractionState = 0
   `;
   console.log(creators);
-  Promise.all(creators.map((creator) => {
+  Promise.all(creators.forEach((creator) => {
     doQuery(selectQuery, [creator])
       .then((row) => {
         const contractionId = `${bannerId}/${row.result[0].creatorId}`;
