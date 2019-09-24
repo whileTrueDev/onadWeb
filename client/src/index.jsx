@@ -14,6 +14,7 @@ import ShutDownCloseBeta from './components/Common/ShutDownCloseBeta';
 // import KakaoPay from './components/Common/KakaoPay';
 import * as serviceWorker from './serviceWorker';
 import history from './history';
+import CampaignCreateStepper from './pages/CampaignCreate/CampaignCreateStepper';
 
 const developRouter = (
   <Router history={history}>
@@ -25,7 +26,7 @@ const developRouter = (
       <Route exact path="/dashboard/creator/door" component={CreatorDashboardDoor} />
       <Route path="/dashboard/creator" component={CreatorDashboard} />
       <Route path="/dashboard/marketer" component={MarketerDashboard} />
-
+      <Route path="/dashboard/test" component={CampaignCreateStepper} history={history} />
       {/* 페이 연습 페이지 */}
       {/* <Route exact path="/pay" component={KakaoPay} /> */}
       {/* not found page */}
