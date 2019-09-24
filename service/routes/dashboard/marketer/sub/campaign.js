@@ -4,7 +4,7 @@ const doQuery = require('../../../../model/doQuery');
 const router = express.Router();
 
 
-// doQuery 수정
+// 캠페인 온오프 조회
 router.get('/onoff', (req, res) => {
   const marketerId = req._passport.session.user.userid;
   const contractionQuery = `
@@ -24,7 +24,7 @@ router.get('/onoff', (req, res) => {
     });
 });
 
-// doQuery 수정
+// 캠페인 On & Off 기능
 // 잔액이 0원일 때는 불가능 하도록 정의.
 router.post('/onoff', (req, res) => {
   const contractionState = req.body.contraction === false ? 0 : 1;
@@ -61,5 +61,44 @@ router.post('/onoff', (req, res) => {
       res.send(false);
     });
 });
+
+// 해당 마케터의 성과 차트 데이터 조회
+// contractionValue
+router.get('/chart', (req, res) => {
+  const marketerId = req._passport.session.user.userid;
+  const query = `
+  SELECT
+    cl.date as date,
+    sum(cash) as cash, type
+  FROM campaignLog AS cl
+  WHERE SUBSTRING_INDEX(cl.campaignId, '_', 1) = ?
+    AND  cl.date >= DATE_SUB(NOW(), INTERVAL 14 DAY)
+  GROUP BY DATE_FORMAT(cl.date, "%y년 %m월 %d일"), type
+  ORDER BY cl.date DESC
+  `;
+  const queryArray = [marketerId];
+
+  doQuery(query, queryArray)
+    .then((row) => {
+      console.log(row);
+      /**
+       * 필요 데이터 셋:
+       * labels: [ '9월 9일', ... ]
+       * dataSet: [ ... ]
+       */
+      // const dataSet = [];
+      // const labels = [];
+      // row.result.forEach((data) => {
+      //   dataSet.push(Math.ceil(data.cash));
+      //   labels.push(data.date);
+      // });
+      res.send(row.result);
+    })
+    .catch((errorData) => {
+      console.log(errorData);
+      res.end();
+    });
+});
+
 
 module.exports = router;

@@ -226,11 +226,10 @@ router.get('/usage', (req, res) => {
     FORMAT(sum(cash), 0) as cash,
     state
   FROM campaignLog AS cl
-  JOIN campaign AS cmp
   JOIN marketerTaxBill AS mtb
-  ON cmp.marketerId = mtb.marketerId 
+  ON SUBSTRING_INDEX(cl.campaignId, '_', 1) = mtb.marketerId
   AND DATE_FORMAT(cl.date, "%y%m") = DATE_FORMAT(mtb.date, "%y%m") 
-  WHERE cmp.marketerId = ?
+  WHERE SUBSTRING_INDEX(cl.campaignId, '_', 1) = ?
   GROUP BY month(cl.date)
   ORDER BY cl.date DESC
   `;
@@ -271,14 +270,14 @@ router.get('/usage/month', (req, res) => {
 
   const selectQuery = `
   SELECT
-    DATE_FORMAT(cl.date, "%y년 %m월 %d일") as date1,
+    DATE_FORMAT(cl.date, "%y년 %m월 %d일") as date,
     FORMAT(sum(cash), 0) as cash, type
   FROM campaignLog AS cl
-  JOIN campaign AS cmp
-  WHERE cmp.marketerId = ?
+  WHERE SUBSTRING_INDEX(cl.campaignId, '_', 1) = ?
   AND DATE_FORMAT(cl.date, "%y년 %m월") = ?
   GROUP BY DATE_FORMAT(cl.date, "%y년 %m월 %d일"), type
   ORDER BY cl.date DESC
+
   `;
   const selectArray = [marketerId, month];
 
@@ -286,8 +285,7 @@ router.get('/usage/month', (req, res) => {
   SELECT
     type, FORMAT(sum(cash), 0) as cash
   FROM campaignLog AS cl
-  JOIN campaign AS cmp
-  WHERE cmp.marketerId = ?
+  WHERE SUBSTRING_INDEX(cl.campaignId, '_', 1) = ?
   AND DATE_FORMAT(cl.date, "%y년 %m월") = ?
   GROUP BY DATE_FORMAT(cl.date, "%y년 %m월"), type
   ORDER BY type DESC

@@ -4,7 +4,7 @@ const CustomDate = require('../../../../middlewares/customDate');
 
 const router = express.Router();
 
-// doQuery 수정
+// 광고가능, 광고중 배너 조회 confirmState = 1 or 3
 router.get('/', (req, res) => {
   const marketerId = req._passport.session.user.userid;
   const bannerListQuery = `
@@ -24,7 +24,7 @@ router.get('/', (req, res) => {
     });
 });
 
-// 특정 마케터의 배너를 조회
+// 특정 마케터의 모든 배너를 조회
 router.get('/all', (req, res) => {
   const marketerId = req._passport.session.user.userid;
   const bannerQuery = `
@@ -172,36 +172,6 @@ router.post('/stop', (req, res) => {
     .catch((errorData) => {
       console.log(errorData);
       res.send(false);
-    });
-});
-
-// 해당 마케터의 성과 차트 데이터 조회
-// contractionValue
-router.get('/value', (req, res) => {
-  const marketerId = req._passport.session.user.userid;
-  const valueQuery = `
-  SELECT contractionId,
-  SUM(contractionTotalValue) as contractionTotalValue,
-  DATE_FORMAT(date, '%m-%d') as date
-  FROM contractionValue
-  WHERE SUBSTRING_INDEX(contractionId, '_' , 1) = ?
-  AND date >= DATE_SUB(NOW(), INTERVAL 30 DAY)
-  GROUP BY DATE_FORMAT(date, '%y%m%d')
-  ORDER BY DATE_FORMAT(date, '%y%m%d')
-  `;
-  doQuery(valueQuery, [marketerId])
-    .then((row) => {
-      const dataSet = [];
-      const labels = [];
-      row.result.map((data) => {
-        dataSet.push(Math.ceil(data.contractionTotalValue));
-        labels.push(data.date);
-      });
-      res.send({ dataSet, labels });
-    })
-    .catch((errorData) => {
-      console.log(errorData);
-      res.end();
     });
 });
 
