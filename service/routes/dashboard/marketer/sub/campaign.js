@@ -80,18 +80,11 @@ router.get('/chart', (req, res) => {
 
   doQuery(query, queryArray)
     .then((row) => {
-      console.log(row);
       /**
        * 필요 데이터 셋:
        * labels: [ '9월 9일', ... ]
        * dataSet: [ ... ]
        */
-      // const dataSet = [];
-      // const labels = [];
-      // row.result.forEach((data) => {
-      //   dataSet.push(Math.ceil(data.cash));
-      //   labels.push(data.date);
-      // });
       res.send(row.result);
     })
     .catch((errorData) => {
