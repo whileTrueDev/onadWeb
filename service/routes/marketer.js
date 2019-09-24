@@ -112,6 +112,7 @@ router.post('/info/change', (req, res) => {
 });
 
 // doQuery 수정
+// 확인
 router.get('/creatorlist', (req, res) => {
   const listQuery = `
   SELECT ts.streamerName, avg(viewer) as avgViewer

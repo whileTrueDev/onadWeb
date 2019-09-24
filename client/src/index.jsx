@@ -14,6 +14,7 @@ import NotFound from './components/Common/NotFound';
 import ShutDownCloseBeta from './components/Common/ShutDownCloseBeta';
 // import KakaoPay from './components/Common/KakaoPay';
 import * as serviceWorker from './serviceWorker';
+import CampaignCreateStepper from './pages/CampaignCreate/CampaignCreateStepper';
 
 const history = createBrowserHistory();
 
@@ -28,8 +29,7 @@ ReactDOM.render(
       <Route exact path="/dashboard/creator/door" component={CreatorDashboardDoor} history={history} />
       <Route path="/dashboard/creator" component={CreatorDashboard} history={history} />
       <Route path="/dashboard/marketer" component={MarketerDashboard} history={history} />
-
-
+      <Route path="/dashboard/test" component={CampaignCreateStepper} history={history} />
       {/* 페이 연습 페이지 */}
       {/* <Route exact path="/pay" component={KakaoPay} /> */}
       {/* not found page */}
