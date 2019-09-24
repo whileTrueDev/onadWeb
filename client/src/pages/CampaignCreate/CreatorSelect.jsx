@@ -1,11 +1,12 @@
-import React from 'react';
-import { makeStyles, withStyles } from '@material-ui/core/styles';
+import React, { useEffect } from 'react';
+import { makeStyles } from '@material-ui/core/styles';
 import {
-  Grid, ListItemText, Checkbox, Paper, Divider,
+  Grid, Divider,
 } from '@material-ui/core';
 import Table from '../../components/NewCreates/Table';
-import CustomizedCard from '../../components/NewCreates/CustomizedCard';
+
 import StyledItemText from '../../components/NewCreates/StyledItemText';
+import tableColumnConfig from './tableColumnConfig';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -18,12 +19,16 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const CreatorSelectPaper = (props) => {
+const CreatorSelect = (props) => {
+  const { setStepComplete } = props;
   const classes = useStyles();
   const tableData = [[
-    'chanwoo', 'twitch', 'eat', '3000', '7000']
+    '제101공수사단', 'just chatting', '3', '4', '0.34', '1600']
   ];
 
+  useEffect(() => {
+    setStepComplete(true);
+  });
   return (
     <Grid container direction="column" spacing={2} className={classes.root}>
       <Grid item>
@@ -35,8 +40,9 @@ const CreatorSelectPaper = (props) => {
           <Grid item>
             <Table
               tableHeaderColor="info"
-              tableHead={['활동명', '주 컨텐츠', '평균 시청자 수', '평균 방송시간', '충성도', '일일 예상 비용']}
+              tableHead={tableColumnConfig}
               tableData={tableData}
+              pagination
             />
           </Grid>
         </Grid>
@@ -45,4 +51,4 @@ const CreatorSelectPaper = (props) => {
   );
 };
 
-export default CreatorSelectPaper;
+export default CreatorSelect;

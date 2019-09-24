@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   Grid, ListItemText, Divider, Input
 } from '@material-ui/core';
@@ -47,16 +47,29 @@ const useStyles = makeStyles(theme => ({
 
 const CampaignCreate = (props) => {
   const classes = useStyles();
-  const { bannerList, setCampaignName } = props;
+  const {
+    bannerList, dispatch, campaignName
+  } = props;
+
+  // 이름의  format을 체크하는 State
   const [checkName, setCheckName] = React.useState(false);
+
 
   const handleChangeName = (event) => {
     if (event.target.value.length >= 3) {
       setCheckName(true);
       // 캠페인 명 조회추가해야함.. // 캠페인 명 조회 후 setCampaignName을 이용하여 상위 컴포넌트에 이름 전달.
+      // 만약 조회가 끝난다면
+      // setCampaignName(event.target.value);
+      dispatch({ key: 'campaignName', value: event.target.value });
     } else {
       setCheckName(false);
+      dispatch({ key: 'campaignName', value: '' });
     }
+  };
+
+  const handleBannerId = (bannerId) => {
+    dispatch({ key: 'bannerId', value: bannerId });
   };
 
   return (
@@ -91,7 +104,7 @@ const CampaignCreate = (props) => {
             <Divider component="hr" style={{ marginBottom: '10px', width: '300px' }} />
           </Grid>
           <Grid item>
-            <BannerCarousel steps={bannerList} />
+            <BannerCarousel steps={bannerList} setCheckBannerId={handleBannerId} />
           </Grid>
         </Grid>
       </Grid>

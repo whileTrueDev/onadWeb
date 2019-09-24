@@ -5,29 +5,32 @@ import { makeStyles } from '@material-ui/core/styles';
 // @material-ui/core components
 import withStyles from '@material-ui/core/styles/withStyles';
 import {
-  Table, TableHead, TableRow, TableBody, TableCell,
+  Table, TableHead, TableRow, TableBody, TableCell, Grid
 } from '@material-ui/core';
 import Done from '@material-ui/icons/Done';
 // custom table component
 import Help from '@material-ui/icons/Help';
 import CustomTableFooter from './TableFooter';
-
+import GreenCheckbox from './GreenCheckBox';
 // core components
 import tableStyle from '../../assets/jss/onad/components/tableStyle';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles({
   tableHeadCell: {
     fontSize: '15px',
     fontWeight: '700',
+    textAlign: 'center',
   }
-}));
+});
 
 function CustomTable({ ...props }) {
   const {
-    classes, tableHead, tableData, tableHeaderColor, pagination,
-    handleChangeTablePage, handleChangeTableRowsPerPage,
-    emptyRows, rowsPerPage, page, buttonSet,
+    classes, tableHead, tableData, tableHeaderColor, paginationOps
   } = props;
+  const {
+    rowsPerPage,
+    page,
+  } = paginationOps;
 
   const myClasses = useStyles();
   return (
@@ -37,88 +40,56 @@ function CustomTable({ ...props }) {
           <TableHead className={classes[`${tableHeaderColor}TableHeader`]}>
             <TableRow>
               <TableCell />
-              {tableHead.map(value => (
+              {tableHead.map((column, index) => (
                 <TableCell
                   className={myClasses.tableHeadCell}
                   key={shortid.generate()}
                 >
-                  {value}
-                  <Help
-                    fontSize="small"
-                    color="disabled"
-                  />
+                  <Grid container direction="row">
+                    <Grid item>
+                      <div>{column.label}</div>
+                    </Grid>
+                    {/* 각 변수에 대한 설명 Dialog를 추가하는 영역 */}
+                    {column.desc !== '' && (
+                    <Grid item>
+                      <Help
+                        fontSize="small"
+                        color="disabled"
+                        name={index}
+                      />
+                    </Grid>
+                    )}
+                  </Grid>
                 </TableCell>
               ))}
             </TableRow>
           </TableHead>
         ) : null}
-        {pagination !== false ? (
-          <TableBody>
-            {/** 페이지네이션 있는 경우 */}
-            {tableData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(prop => (
-              <TableRow key={shortid.generate()}>
-                {prop.map(value => (
-                  value.indexOf('data:image/') === -1 // 없는 경우
-                    ? (
-                      <TableCell className={classes.tableCell} key={shortid.generate()}>
-                        {value === '완료됨'
-                          ? (
-                            <span>
-                              {value}
-                              <Done color="secondary" />
-                            </span>
-                          )
-                          : value}
-                      </TableCell>
-                    ) : (
-                      <TableCell className={classes.imgCell} key={shortid.generate()}>
-                        <img src={value} alt="banner" style={{ width: '100%', height: 'auto' }} />
-                      </TableCell>
-                    )
-                ))}
-              </TableRow>
-            ))}
-
-            {emptyRows > 0 && (
-            <TableRow style={{ height: 48 * emptyRows }} key={shortid.generate()}>
-              <TableCell colSpan={6} />
+        <TableBody>
+          {tableData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(prop => (
+            <TableRow key={shortid.generate()}>
+              <TableCell key={shortid.generate()}>
+                <img src="/pngs/logo/onad_logo.png" alt="banner" style={{ width: '100%', height: 'auto', maxWidth: '50px' }} key={shortid.generate()} />
+              </TableCell>
+              {prop.map((value, i) => (
+                <TableCell className={classes.tableCell} key={shortid.generate()}>
+                  {value}
+                </TableCell>
+              ))}
+              <TableCell className={classes.tableCell}>
+                <GreenCheckbox fontSize="small" checked />
+              </TableCell>
             </TableRow>
-            )}
+          ))}
+        </TableBody>
+        {/* <CustomTableFooter
+          count={tableData.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          handleChangeTablePage={handleChangeTablePage}
+          handleChangeTableRowsPerPage={handleChangeTableRowsPerPage}
+        /> */}
 
-          </TableBody>
-        ) : (
-          <TableBody>
-            {/** 페이지네이션 없는경우 */}
-            {tableData.map(prop => (
-              <TableRow key={shortid.generate()}>
-                {prop.map((value, i) => (
-                  typeof (value) === 'string'
-                  && (value.indexOf('data:image/') >= 0
-                    || value.indexOf('http') === 0)// 사진데이터 또는 사진 url 인 경우
-                    ? (
-                      <TableCell className={classes.imgCellNoPage} key={shortid.generate()}>
-                        <img src={value} alt="banner" style={{ width: '100%', height: 'auto' }} key={shortid.generate()} />
-                      </TableCell>
-                    ) : (
-                      <TableCell className={classes.tableCell} key={shortid.generate()}>
-                        {value}
-                      </TableCell>
-                    )
-                ))}
-              </TableRow>
-            ))}
-          </TableBody>
-        )}
-
-        {pagination !== false && (
-          <CustomTableFooter
-            count={tableData.length}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            handleChangeTablePage={handleChangeTablePage}
-            handleChangeTableRowsPerPage={handleChangeTableRowsPerPage}
-          />
-        )}
       </Table>
     </div>
   );
@@ -147,7 +118,7 @@ CustomTable.propTypes = {
     'gray',
     'blueGray',
   ]),
-  tableHead: PropTypes.arrayOf(PropTypes.string).isRequired,
+  tableHead: PropTypes.arrayOf(PropTypes.object).isRequired,
   tableData: PropTypes.arrayOf(PropTypes.arrayOf(
     PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   )).isRequired,

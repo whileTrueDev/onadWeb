@@ -109,7 +109,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 function BannerCarousel(props) {
-  const { steps } = props;
+  const { steps, setCheckBannerId } = props;
   const classes = useStyles();
   const theme = useTheme();
   const [activeStep, setActiveStep] = useState(0);
@@ -131,14 +131,16 @@ function BannerCarousel(props) {
   }
 
   // check가 안될
-  function handleActiveStep(step) {
+  const handleActiveStep = step => () => {
     // check가 되어있었던 상태였다면.
     if (checkImage.check) {
       setCheckImage({ step: -1, check: 0 });
+      setCheckBannerId('');
     } else {
       setCheckImage({ step: activeStep, check: 1 });
+      setCheckBannerId(step.bannerId);
     }
-  }
+  };
 
   return (
     <div className={classes.root}>
@@ -153,7 +155,7 @@ function BannerCarousel(props) {
             key={step.bannerId}
             className={classes.image}
             focusvisibleclassname={classes.focusVisible}
-            onClick={() => { handleActiveStep(); }}
+            onClick={handleActiveStep(step)}
           >
             <img className={classes.imageSrc} src={step.bannerSrc} alt={step.bannerId} />
             <span className={classes.imageBackdrop} style={checkImage.check ? { opacity: 0.5 } : {}} />

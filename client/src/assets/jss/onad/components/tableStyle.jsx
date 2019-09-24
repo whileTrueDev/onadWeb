@@ -38,6 +38,7 @@ const tableStyle = theme => ({
     backgroundColor: 'transparent',
     borderSpacing: '0',
     borderCollapse: 'collapse',
+    textAlign: 'center',
   },
   tableHeadCell: {
     color: 'inherit',
@@ -49,7 +50,7 @@ const tableStyle = theme => ({
     lineHeight: '1.42857143',
     padding: '12px 8px',
     verticalAlign: 'middle',
-    // fontWeight: 700,
+    textAlign: 'center',
   },
   tableFooter: {
     ...defaultFont,

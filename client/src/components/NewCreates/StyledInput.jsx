@@ -4,10 +4,17 @@ import {
 } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 
-const StyledInput = withStyles({
+const StyledInput = withStyles(theme => ({
   root: {
     fontSize: '15px',
+    fontWeight: '700',
     color: '#3c4858',
+    width: '300px',
+    [theme.breakpoints.down('sm')]: {
+      width: '100%',
+      fontSize: '12px',
+      margin: 0,
+    },
   },
   underline: {
     '&:after': {
@@ -15,6 +22,6 @@ const StyledInput = withStyles({
     },
     color: '#3c4858'
   },
-})(Input);
+}))(Input);
 
 export default StyledInput;

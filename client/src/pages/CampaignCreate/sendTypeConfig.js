@@ -1,4 +1,4 @@
-const terms = [
+const sendTypeConfig = [
   {
     title: '크리에이터 우선형이란?',
     text: `  
@@ -20,4 +20,31 @@ const terms = [
   },
 
 ];
-export default terms;
+
+const optionConfig = [
+  {
+    title: '배너 광고 옵션은?',
+    text: `  
+    - 배너 광고만 노출하고 노출량에 따라 CPM(1,000개 노출 당 비용)으로 과금됩니다.
+    - 일일 예산을 등록하여 추가 과금이 발생하지 않도록 할 수 있습니다.
+    `
+  },
+  {
+    title: '배너 광고 + 랜딩 페이지 옵션은?',
+    text: `  
+    - 배너 광고 노출과 방송국 하단에 링크를 추가하여 구매 페이지로 넘어갈 수 있게되며 
+     링크 클릭수에 따라 CPC(클릭당 비용)로 과금됩니다.
+    - 보고서를 통해 광고 효과를 제공받습니다.`
+  }
+];
+
+const budgetConfig = [
+  {
+    title: '켐페인의 일한도 예산을 설정할 수 있습니다.',
+    text: `
+    - 300,000원 ~ 1,000,000원 사이에서 10원 단위로 설정할 수 있습니다.
+    ⚠️ 일 한도 예산을 초과할 경우, 광고 집행이 중지 됩니다.`
+  }
+];
+
+export { sendTypeConfig, optionConfig, budgetConfig };

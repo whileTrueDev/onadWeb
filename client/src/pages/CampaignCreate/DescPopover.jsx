@@ -4,7 +4,7 @@ import {
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import shortid from 'shortid';
-import terms from './sendTypeConfig';
+import { sendTypeConfig, optionConfig, budgetConfig } from './sendTypeConfig';
 import StyledSelectText from '../../components/NewCreates/StyledSelectText';
 
 const useStyles = makeStyles(theme => ({
@@ -30,14 +30,66 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function DescPopover(props) {
+function DescPopover(props) {
   const classes = useStyles();
   const {
-    open, anchorEl, handlePopoverClose, descIndex
+    open, anchorEl, handlePopoverClose, descIndex, contentType, ...rest
   } = props;
 
+  const getContent = (type) => {
+    switch (type) {
+      case 'priority':
+        return (
+          <Grid container direction="column" spacing={1}>
+            <Grid item>
+              <StyledSelectText primary={sendTypeConfig[descIndex].title} className={classes.label} />
+            </Grid>
+            {sendTypeConfig[descIndex].text.split('\n').map(row => (
+              <Grid item key={shortid.generate()}>
+                <Typography className={classes.text}>
+                  {row}
+                </Typography>
+              </Grid>
+            ))}
+          </Grid>
+        );
+      case 'option':
+        return (
+          <Grid container direction="column" spacing={1}>
+            <Grid item>
+              <StyledSelectText primary={optionConfig[descIndex].title} className={classes.label} />
+            </Grid>
+            {optionConfig[descIndex].text.split('\n').map(row => (
+              <Grid item key={shortid.generate()}>
+                <Typography className={classes.text}>
+                  {row}
+                </Typography>
+              </Grid>
+            ))}
+          </Grid>
+        );
+      case 'budget':
+        return (
+          <Grid container direction="column" spacing={1}>
+            <Grid item>
+              <StyledSelectText primary={budgetConfig[descIndex].title} className={classes.label} />
+            </Grid>
+            {budgetConfig[descIndex].text.split('\n').map(row => (
+              <Grid item key={shortid.generate()}>
+                <Typography className={classes.text}>
+                  {row}
+                </Typography>
+              </Grid>
+            ))}
+          </Grid>
+        );
+      default:
+        return <div />;
+    }
+  };
   return (
     <Popover
+      {...rest}
       id="send-desc-popover"
       className={classes.popover}
       classes={{
@@ -45,28 +97,39 @@ export default function DescPopover(props) {
       }}
       open={open}
       anchorEl={anchorEl}
-      anchorOrigin={{
-        vertical: 'center',
-        horizontal: 'left',
-      }}
-      transformOrigin={{
-        vertical: 'center',
-        horizontal: 'right',
-      }}
+      // anchorOrigin={{
+      //   vertical: 'center',
+      //   horizontal: 'left',
+      // }}
+      // transformOrigin={{
+      //   vertical: 'center',
+      //   horizontal: 'right',
+      // }}
       onClose={handlePopoverClose}
     >
-      <Grid container direction="column" spacing={1}>
-        <Grid item>
-          <StyledSelectText primary={terms[descIndex].title} className={classes.label} />
-        </Grid>
-        {terms[descIndex].text.split('\n').map(row => (
-          <Grid item key={shortid.generate()}>
-            <Typography className={classes.text}>
-              {row}
-            </Typography>
-          </Grid>
-        ))}
-      </Grid>
+      {getContent(contentType)}
     </Popover>
   );
 }
+
+
+// DescPopover.propTypes = {
+//   title: PropTypes.node,
+//   open: PropTypes.bool.isRequired,
+//   onClose: PropTypes.func,
+//   buttons: PropTypes.node,
+// };
+
+DescPopover.defaultProps = {
+  anchorOrigin:
+  {
+    vertical: 'center',
+    horizontal: 'left',
+  },
+  transformOrigin: {
+    vertical: 'center',
+    horizontal: 'right',
+  },
+};
+
+export default DescPopover;

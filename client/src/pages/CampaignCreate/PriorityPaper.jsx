@@ -1,16 +1,13 @@
 import React, { useReducer } from 'react';
 import {
-  Grid, ListItemText, Checkbox, Paper, Divider,
+  Grid, Paper, Divider,
 } from '@material-ui/core';
-import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
-import CheckBoxIcon from '@material-ui/icons/CheckBox';
-import { green } from '@material-ui/core/colors';
-import { makeStyles, withStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import Help from '@material-ui/icons/Help';
 import DescPopover from './DescPopover';
 import StyledItemText from '../../components/NewCreates/StyledItemText';
 import StyledSelectText from '../../components/NewCreates/StyledSelectText';
-
+import GreenCheckbox from '../../components/NewCreates/GreenCheckBox';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -35,6 +32,14 @@ const useStyles = makeStyles(theme => ({
       padding: theme.spacing(1),
     },
   },
+  ready: {
+    padding: theme.spacing(3),
+    [theme.breakpoints.down('sm')]: {
+      padding: theme.spacing(1),
+    },
+    color: 'rgba(0, 0, 0, 0.26)',
+    backgroundColor: 'rgba(0, 0, 0, 0.15)',
+  },
   icon: {
     display: 'flex',
     justifyContent: 'center',
@@ -46,54 +51,10 @@ const useStyles = makeStyles(theme => ({
 
 }));
 
-
-const GreenCheckbox = withStyles(theme => ({
-  root: {
-    color: green[400],
-    '&$checked': {
-      color: green[600],
-    },
-    margin: 0,
-  },
-  checked: {},
-}))(props => (
-  <Checkbox
-    color="default"
-    fontSize="large"
-    icon={<CheckBoxOutlineBlankIcon fontSize="large" />}
-    checkedIcon={<CheckBoxIcon fontSize="large" />}
-    {...props}
-  />
-));
-
-
-// reducer를 사용하여 state를 설정한다.
-// 사용하는 state는
-// choose - 선택되었다.
-// type - 선택된 유형
-const myReducer = (state, action) => {
-  switch (action.type) {
-    case 'type1': {
-      return { choose: 1, type: 1 };
-    }
-    case 'type2': {
-      return { choose: 1, type: 2 };
-    }
-    case 'type3': {
-      return { choose: 1, type: 3 };
-    }
-    case 'reset': {
-      return { choose: 0, type: 0 };
-    }
-    default: {
-      return state;
-    }
-  }
-};
-
 const PriorityPaper = (props) => {
+  const { handleNext, state, dispatch } = props;
   const classes = useStyles();
-  const [state, dispatch] = useReducer(myReducer, { choose: 0, type: 0 });
+  // const [state, dispatch] = useReducer(myReducer, { choose: 0, type: 0 });
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [descIndex, setDescIndex] = React.useState(0);
   const open = Boolean(anchorEl);
@@ -127,10 +88,11 @@ const PriorityPaper = (props) => {
           <Grid item className={classes.item}>
             <Grid container direction="column" spacing={2}>
               <Grid item>
-                <Paper className={classes.choice}>
+                <Paper className={classes.ready}>
                   <Grid container direction="row" justify="space-between">
                     <Grid item>
-                      <StyledSelectText primary="1. 크리에이터 우선형" secondary="광고를 넣고 싶은 크리에이터가 있어요." />
+                      <StyledSelectText primary="1. 크리에이터 우선형" secondary="해당옵션은 준비 중입니다." />
+                      {/* 광고를 넣고 싶은 크리에이터가 있어요. */}
                     </Grid>
                     <Grid item className={classes.icon}>
                       <Grid container direction="row">
@@ -149,6 +111,9 @@ const PriorityPaper = (props) => {
                             name="type1"
                             checked={state.type === 1}
                             onChange={handleChange}
+                            onClick={handleNext(true, 2)}
+                            fontSize="large"
+                            disabled
                           />
                         </Grid>
                       </Grid>
@@ -180,6 +145,8 @@ const PriorityPaper = (props) => {
                             name="type2"
                             checked={state.type === 2}
                             onChange={handleChange}
+                            onClick={handleNext(true, 3)}
+                            fontSize="large"
                           />
                         </Grid>
                       </Grid>
@@ -211,6 +178,8 @@ const PriorityPaper = (props) => {
                             name="type3"
                             checked={state.type === 3}
                             onChange={handleChange}
+                            onClick={handleNext(false, 4)}
+                            fontSize="large"
                           />
                         </Grid>
                       </Grid>
@@ -222,7 +191,7 @@ const PriorityPaper = (props) => {
           </Grid>
         </Grid>
       </Grid>
-      <DescPopover open={open} anchorEl={anchorEl} handlePopoverClose={handlePopoverClose} descIndex={descIndex} />
+      <DescPopover open={open} anchorEl={anchorEl} handlePopoverClose={handlePopoverClose} descIndex={descIndex} contentType="priority" />
     </Grid>
   );
 };
