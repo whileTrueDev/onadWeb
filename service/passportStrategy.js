@@ -12,7 +12,7 @@
 */
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
-const twitchStrategy = require('passport-twitch-new').Strategy;
+const TwitchStrategy = require('passport-twitch-new').Strategy;
 
 // 암호화 체크 객체 생성
 const encrpyto = require('./encryption');
@@ -158,7 +158,8 @@ const clientSecret = process.env.NODE_ENV === 'production'
   ? config.production.clientSecret
   : config.dev.clientSecret;
 
-passport.use(new twitchStrategy({
+
+passport.use(new TwitchStrategy({
   clientID,
   clientSecret,
   callbackURL: `${HOST}/api/login/twitch/callback`,
