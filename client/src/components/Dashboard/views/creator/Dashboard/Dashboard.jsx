@@ -160,7 +160,6 @@ const Dashboard = (props) => {
     setCheckDialogOpen(false);
   };
 
-
   return (
     <div>
       {/* 첫번째 라인 */}

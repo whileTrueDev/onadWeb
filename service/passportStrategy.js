@@ -158,6 +158,7 @@ const clientSecret = process.env.NODE_ENV === 'production'
   ? config.production.clientSecret
   : config.dev.clientSecret;
 
+
 passport.use(new TwitchStrategy({
   clientID,
   clientSecret,

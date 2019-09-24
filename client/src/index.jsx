@@ -18,8 +18,7 @@ import CampaignCreateStepper from './pages/CampaignCreate/CampaignCreateStepper'
 
 const history = createBrowserHistory();
 
-ReactDOM.render(
-  // <StateStore history={history}>
+const developRouter = (
   <Router history={history}>
     <Switch>
       <Route exact path="/" component={Main} history={history} />
@@ -36,10 +35,22 @@ ReactDOM.render(
       <Route path="/willbeback" component={ShutDownCloseBeta} />
       <Route component={NotFound} />
     </Switch>
-  </Router>, // </StateStore>
-
-  document.getElementById('root'),
+  </Router>
 );
+
+const productionRouter = (
+  <Router history={history}>
+    <Switch>
+      {/* closebeta shutdown notification */}
+      <Route path="/willbeback" component={ShutDownCloseBeta} />
+      <Route component={ShutDownCloseBeta} />
+    </Switch>
+  </Router>
+);
+
+const router = process.env.NODE_ENV === 'production' ? productionRouter : developRouter;
+
+ReactDOM.render(router, document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
