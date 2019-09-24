@@ -55,22 +55,29 @@ router.get('/banner', (req, res) => {
 
 // bannner manage page banner list 가져오기 위한 query
 // doQuery 수정
-router.get('/banner/all', (req, res) => {
+router.get('/banner/all',(req, res)=>{
   const marketerId = req._passport.session.user.userid;
-  const bannerQuery = `
-  SELECT bannerId, bannerSrc, bannerCategory, date, confirmState, bannerDenialReason
-  FROM bannerRegistered
-  WHERE marketerId = ?
-  ORDER BY date DESC`;
+  const bannerQuery = `SELECT cp.campaignId, br.bannerSrc, confirmState
+                        FROM bannerRegistered AS br
+                        LEFT JOIN campaign AS cp ON br.bannerId = cp.bannerId
+                        WHERE br.marketerId = ?
+                        ORDER BY confirmState DESC, date DESC`;
   doQuery(bannerQuery, [marketerId])
-    .then((row) => {
-      res.send([true, row.result]);
-    })
-    .catch((errorData) => {
-      console.log(errorData);
-      res.send([null, errorData]);
-    });
-});
+  .then((row)=>{
+    row.result = row.result.map(
+      (value) => {
+        value = Object.values(value);
+        return value
+      }
+    )
+    res.send([true, row.result]);
+  })
+  .catch((errorData)=>{
+    console.log(errorData);
+    res.send([null, errorData]);
+  })
+})
+
 
 // doQuery 수정
 router.post('/info', (req, res) => {
