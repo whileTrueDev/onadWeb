@@ -1,15 +1,4 @@
-const dataP = [
-  { date: '2019-09-23T02:17:44.000Z', cash: 34353, type: 'CPM' },
-  { date: '2019-09-23T02:17:44.000Z', cash: 7070, type: 'CPC' },
-  { date: '2019-09-22T02:36:25.000Z', cash: 1444, type: 'CPC' },
-  { date: '2019-09-22T02:17:36.000Z', cash: 20745, type: 'CPM' },
-  { date: '2019-09-21T02:36:25.000Z', cash: 2522, type: 'CPC' },
-  { date: '2019-09-21T02:17:35.000Z', cash: 18234, type: 'CPM' },
-  { date: '2019-09-20T02:36:25.000Z', cash: 1234, type: 'CPC' },
-  { date: '2019-09-20T02:17:34.000Z', cash: 17000, type: 'CPM' },
-  { date: '2019-09-19T02:36:25.000Z', cash: 3453, type: 'CPC' },
-  { date: '2019-09-19T02:36:25.000Z', cash: 15000, type: 'CPM' },
-  { date: '2019-09-18T02:36:25.000Z', cash: 14000, type: 'CPM' }];
+
 /**
  * @description 오늘로부터 howMuch 만큼 이전의 날짜까지를 배열로 반환하는 함수.
  * @param {number} distance
@@ -85,7 +74,6 @@ function createStackBarDataSet(dataPacket) {
   // const splited = obj.date.split('-');
   // days.push(`${splited[1]}월 ${splited[2].slice(0, 2)}일`);
 }
-createStackBarDataSet(dataP);
 
 module.exports = {
   createStackBarDataSet,
