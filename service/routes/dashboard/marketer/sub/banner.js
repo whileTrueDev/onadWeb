@@ -28,10 +28,11 @@ router.get('/', (req, res) => {
 router.get('/all', (req, res) => {
   const marketerId = req._passport.session.user.userid;
   const bannerQuery = `
-  SELECT bannerId, bannerSrc, bannerCategory, date, confirmState, bannerDenialReason
-  FROM bannerRegistered
-  WHERE marketerId = ?
-  ORDER BY date DESC`;
+  SELECT cp.campaignId, br.bannerSrc, confirmState
+  FROM bannerRegistered AS br
+  LEFT JOIN campaign AS cp ON br.bannerId = cp.bannerId
+  WHERE br.marketerId = ?
+  ORDER BY confirmState DESC, date DESC`;
   doQuery(bannerQuery, [marketerId])
     .then((row) => {
       res.send([true, row.result]);
