@@ -47,15 +47,16 @@ class ProductHowItWorks extends React.Component {
     this.handleChange = this.handleChange.bind(this);
   }
 
-  componentWillMount() {
-    this.setState({
-      check: false,
-    });
-  }
 
   componentDidMount() {
     this.setState({
       check: true,
+    });
+  }
+
+  UNSAFE_componentWillMount() {
+    this.setState({
+      check: false,
     });
   }
 

@@ -97,14 +97,6 @@ function DescPopover(props) {
       }}
       open={open}
       anchorEl={anchorEl}
-      // anchorOrigin={{
-      //   vertical: 'center',
-      //   horizontal: 'left',
-      // }}
-      // transformOrigin={{
-      //   vertical: 'center',
-      //   horizontal: 'right',
-      // }}
       onClose={handlePopoverClose}
     >
       {getContent(contentType)}

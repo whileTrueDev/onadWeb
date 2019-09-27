@@ -1,4 +1,5 @@
 import React from 'react';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 import PropTypes from 'prop-types';
 import { Bar } from 'react-chartjs-2';
 import chartFunctions from './chartFunction';
@@ -20,12 +21,12 @@ function setStackedBarData(data) {
       {
         stack: '1',
         label: 'CPM',
+        borderWidth: 1,
+        data: CPM
         // backgroundColor: chartTheme.first,
         // borderColor: chartTheme.first,
-        borderWidth: 1,
         // hoverBackgroundColor: chartTheme.second,
         // hoverBorderColor: chartTheme.second,
-        data: CPM
       },
       {
         stack: '1',
@@ -44,14 +45,14 @@ function setStackedBarData(data) {
 
 export default function StackedBar(props) {
   const {
-    dataSet, height, ...rest
+    dataSet, ...rest
   } = props;
+  const mdMatches = useMediaQuery('(min-width:960px)');
 
   return (
     <Bar
-      height={height}
       data={setStackedBarData(dataSet)}
-      options={{ tooltips: { mode: 'index', intersect: false, responsive: false } }}
+      options={{ tooltips: { mode: 'index', intersect: false, responsive: false }, aspectRatio: 2 }}
       {...rest}
     />
   );
