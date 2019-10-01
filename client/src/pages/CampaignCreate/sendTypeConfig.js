@@ -55,10 +55,9 @@ const landingManageConfig = [
     image: '/pngs/landing/example2.png'
   },
   {
-    title: 'SNS 관리란?',
+    title: '광고페이지의 테마를 설정하세요',
     text: `  
-    - 자신의 유튜브채널, 페이스북, 인스타그램, 트게더 등을 곧바로 링크할 수 있습니다.`,
-    // image: '/pngs/landing/example2.png'
+    - 밝은 테마와 어두운 테마로 당신의 페이지를 설정할 수 있습니다.`,
   }
 ];
 

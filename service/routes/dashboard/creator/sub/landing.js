@@ -25,17 +25,18 @@ router.get('/', (req, res) => {
     });
 });
 
-router.post('/desc', (req, res) => {
-  const { description } = req.body;
+// creatorLanding update query
+router.post('/update', (req, res) => {
+  const { description, creatorTheme } = req.body;
   const { creatorId } = req._passport.session.user;
 
   const query = `
   UPDATE creatorLanding
-  SET creatorDesc = ?
+  SET creatorDesc = ?, creatorTheme = ?
   WHERE creatorId = ?
   `;
 
-  const queryArray = [description, creatorId];
+  const queryArray = [description, creatorTheme, creatorId];
 
   doQuery(query, queryArray)
     .then((row) => {

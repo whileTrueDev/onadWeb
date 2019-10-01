@@ -3,10 +3,14 @@ import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import Typography from '@material-ui/core/Typography';
+// icons
 import Help from '@material-ui/icons/Help';
+import WbSunny from '@material-ui/icons/WbSunny';
+import NightsStay from '@material-ui/icons/NightsStay';
 import TextField from '../../../components/TextField/TextField';
 import Button from '../../../components/CustomButtons/Button';
 import Snackbar from '../../../components/Snackbar/Snackbar';
+import DefaultSwitch from '../../../components/Switch/DefaultSwitch';
 import Tooltip from '../../../../../pages/CampaignCreate/DescPopover';
 // hooks
 import useDialog from '../../../lib/hooks/useDialog';
@@ -25,6 +29,9 @@ const useStyles = makeStyles(theme => ({
       width: '50%',
     },
     marginRight: theme.spacing(1)
+  },
+  active: {
+    color: '#00acc1',
   }
 }));
 
@@ -50,57 +57,89 @@ export default function LandingSetting(props) {
   function handleDescChange(e) {
     setDescription(e.target.value);
   }
-
   // for tooltip
   const {
     tooltipIndex, anchorEl, handleTooltipOpen, handleTooltipClose,
   } = useTooltip();
 
   // for data update
-  const updateRequest = useUpdateData('/api/dashboard/creator/landing/desc', userData.callUrl);
+  const updateRequest = useUpdateData('/api/dashboard/creator/landing/update', userData.callUrl);
   const snack = useDialog(); // for sanckbar
 
+  const [darkTheme, setTheme] = React.useState(userData.payload.creatorTheme === 'dark');
+  function handleThemeChange() {
+    setTheme(!darkTheme);
+  }
 
   return (
     <div>
-
-      <div className={classes.flex}>
-        <Typography variant="body1">
+      <div style={{ marginBottom: 40 }}>
+        <div className={classes.flex}>
+          <Typography variant="h6">
             소개글 관리
-        </Typography>
-        <Help
-          fontSize="small"
-          color="disabled"
-          onMouseEnter={evt => handleTooltipOpen(evt, 0)}
-          onMouseLeave={handleTooltipClose}
-          aria-owns={anchorEl ? 'send-desc-popover' : undefined}
-          aria-haspopup="true"
-        />
+          </Typography>
+          <Help
+            fontSize="small"
+            color="disabled"
+            onMouseEnter={evt => handleTooltipOpen(evt, 0)}
+            onMouseLeave={handleTooltipClose}
+            aria-owns={anchorEl ? 'send-desc-popover' : undefined}
+            aria-haspopup="true"
+          />
+        </div>
+        <div>
+          <TextField
+            multiline
+            rows={4}
+            label="소개글"
+            name="description"
+            id="description"
+            margin="normal"
+            value={description}
+            onChange={handleDescChange}
+            className={classes.textField}
+            InputLabelProps={{
+              shrink: true,
+            }}
+          />
+        </div>
       </div>
 
-
       <div>
-        <TextField
-          multiline
-          rows={4}
-          label="소개글"
-          name="description"
-          id="description"
-          margin="normal"
-          value={description}
-          onChange={handleDescChange}
-          className={classes.textField}
-          InputLabelProps={{
-            shrink: true,
-          }}
-        />
+        <div className={classes.flex}>
+
+          <Typography variant="h6">
+          라이트모드 / 다크모드 관리
+          </Typography>
+          <Help
+            fontSize="small"
+            color="disabled"
+            onMouseEnter={evt => handleTooltipOpen(evt, 1)}
+            onMouseLeave={handleTooltipClose}
+            aria-owns={anchorEl ? 'send-desc-popover' : undefined}
+            aria-haspopup="true"
+          />
+        </div>
+
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <WbSunny
+            className={classnames({ [classes.icon]: true, [classes.active]: !darkTheme })}
+          />
+          <DefaultSwitch checked={darkTheme} onChange={() => { handleThemeChange(); }} />
+          <NightsStay
+            className={classnames({ [classes.icon]: true, [classes.active]: darkTheme })}
+          />
+        </div>
       </div>
 
       <div className={classnames(classes.flex, classes.flexEnd)}>
         <Button
           color="info"
           onClick={() => {
-            updateRequest.handleUpdateRequest({ description });
+            updateRequest.handleUpdateRequest({
+              description,
+              creatorTheme: darkTheme ? 'dark' : 'light'
+            });
             if (updateRequest.success) {
               snack.handleOpen();
             }
