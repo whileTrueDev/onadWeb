@@ -44,10 +44,7 @@ function setStackedBarData(data) {
 }
 
 export default function StackedBar(props) {
-  const {
-    dataSet, ...rest
-  } = props;
-  const mdMatches = useMediaQuery('(min-width:960px)');
+  const { dataSet, ...rest } = props;
 
   return (
     <Bar

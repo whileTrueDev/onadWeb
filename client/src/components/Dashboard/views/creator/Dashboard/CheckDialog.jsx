@@ -7,17 +7,17 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
 export default function AlertDialog(props) {
-  const {open, setOpen, handleBannerDelete} = props;
+  const { open, setOpen, handleBannerDelete } = props;
 
   function handleClose() {
     setOpen(false);
   }
 
   return (
-      <Dialog
-        open={open}
-        onClose={handleClose}
-      >
+    <Dialog
+      open={open}
+      onClose={handleClose}
+    >
       <DialogTitle id="alert-dialog-title">해당 배너를 삭제하시겠습니까?</DialogTitle>
       <DialogContent>
         <DialogContentText>

@@ -355,7 +355,7 @@ const UserDataForm = (props) => {
                   <TextField
                     required
                     label="NAME"
-                    placeholder={userData.marketerName}
+                    value={userData.marketerName}
                     className={classes.textField}
                     margin="normal"
                     id="name2"
@@ -369,7 +369,7 @@ const UserDataForm = (props) => {
                   <TextField
                     required
                     label="MAIL"
-                    placeholder={userData.marketerMail.split('@')[0]}
+                    value={userData.marketerMail.split('@')[0]}
                     className={classes.textField}
                     margin="normal"
                     id="mail2"

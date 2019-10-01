@@ -7,6 +7,7 @@ const pool = mysql.createPool({
   password: config.DB.password,
   database: config.DB.database,
   port: config.DB.port,
+  charset: config.DB.charset
   /**
      * The maximum number of connection requests the pool will queue
      * before returning an error from getConnection.

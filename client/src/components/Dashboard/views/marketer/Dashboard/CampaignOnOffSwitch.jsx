@@ -18,7 +18,7 @@ const useStyles = makeStyles(theme => ({
 export default function StatusBar(props) {
   const { onOffData } = props;
   const classes = useStyles();
-  const { handleSwitch } = useUpdateData('/api/dashboard/marketer/onoff', onOffData.callUrl);
+  const { handleUpdateRequest } = useUpdateData('/api/dashboard/marketer/onoff', onOffData.callUrl);
 
   return (
 
@@ -29,7 +29,7 @@ export default function StatusBar(props) {
             control={(
               <IOSSwitch
                 checked={onOffData.payload}
-                onChange={() => handleSwitch({ contraction: !onOffData.payload })}
+                onChange={() => handleUpdateRequest({ contraction: !onOffData.payload })}
               />
                )}
             label={onOffData.payload ? '광고 ON' : '광고 OFF'}

@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useCallback } from 'react';
 // @material-ui/core components
 import withStyles from '@material-ui/core/styles/withStyles';
-import TextField from '@material-ui/core/TextField';
 import Hidden from '@material-ui/core/Hidden';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import axios from '../../../../../utils/axios';
 // core components
+import TextField from '../../../components/TextField/TextField';
 import GridItem from '../../../components/Grid/GridItem';
 import GridContainer from '../../../components/Grid/GridContainer';
 import Button from '../../../components/CustomButtons/Button';
@@ -65,32 +65,6 @@ const styles = theme => ({
   },
 });
 
-const CssTextField = withStyles({
-  root: {
-    color: '#00acc1',
-    borderColor: '#00acc1',
-    '& .MuiFormLabel-root ': {
-      color: '#00acc1',
-    },
-    '& .MuiInputBase-input:before': {
-      color: '#00acc1',
-    },
-    '& .MuiInput-underline:after': {
-      borderBottomColor: '#00acc1',
-    },
-    '& .MuiOutlinedInput-root': {
-      '& fieldset': {
-        borderColor: '#00acc1',
-      },
-      '&:hover fieldset': {
-        borderColor: '#00acc1',
-      },
-      '&.Mui-focused fieldset': {
-        borderColor: '#00acc1',
-      },
-    },
-  },
-})(TextField);
 
 function useDialog() {
   // 계약서 다이얼로그 띄우기
@@ -218,7 +192,7 @@ function UserProfile(props) {
               </h4>
               <GridContainer>
                 <GridItem xs={12} sm={12} md={6}>
-                  <CssTextField
+                  <TextField
                     label="TWITCH ID"
                     value={userData.creatorId || ''}
                     className={classes.textField}
@@ -229,7 +203,7 @@ function UserProfile(props) {
                   />
                 </GridItem>
                 <GridItem xs={12} sm={12} md={6}>
-                  <CssTextField
+                  <TextField
                     label="NAME"
                     value={userData.creatorName || ''}
                     className={classes.textField}
@@ -243,7 +217,7 @@ function UserProfile(props) {
               </GridContainer>
               <GridContainer>
                 <GridItem xs={12} sm={12} md={12}>
-                  <CssTextField
+                  <TextField
                     label="EMAIL"
                     value={userData.creatorMail || ''}
                     className={classes.textField}
@@ -256,7 +230,7 @@ function UserProfile(props) {
               </GridContainer>
               <GridContainer>
                 <GridItem xs={12} sm={12} md={6}>
-                  <CssTextField
+                  <TextField
                     label="등록된 IP"
                     value={userData.creatorIp || ''}
                     className={classes.textField}
@@ -281,7 +255,7 @@ function UserProfile(props) {
               {userData.creatorContractionAgreement === 1 && (
               <GridContainer>
                 <GridItem xs={6} sm={6} md={6}>
-                  <CssTextField
+                  <TextField
                     label="계약상태"
                     value="계약완료"
                     className={classes.textField}
@@ -340,7 +314,7 @@ function UserProfile(props) {
           classes={classes}
           localIp={userData.localIp}
           styles={styles}
-          CssTextField={CssTextField}
+          TextField={TextField}
           onClose={handleIpChangerClose}
           history={history}
         />

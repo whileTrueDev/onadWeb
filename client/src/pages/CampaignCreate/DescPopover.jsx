@@ -4,7 +4,9 @@ import {
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import shortid from 'shortid';
-import { sendTypeConfig, optionConfig, budgetConfig } from './sendTypeConfig';
+import {
+  sendTypeConfig, optionConfig, budgetConfig, landingManageConfig
+} from './sendTypeConfig';
 import StyledSelectText from '../../components/NewCreates/StyledSelectText';
 
 const useStyles = makeStyles(theme => ({
@@ -42,7 +44,10 @@ function DescPopover(props) {
         return (
           <Grid container direction="column" spacing={1}>
             <Grid item>
-              <StyledSelectText primary={sendTypeConfig[descIndex].title} className={classes.label} />
+              <StyledSelectText
+                primary={sendTypeConfig[descIndex].title}
+                className={classes.label}
+              />
             </Grid>
             {sendTypeConfig[descIndex].text.split('\n').map(row => (
               <Grid item key={shortid.generate()}>
@@ -81,6 +86,31 @@ function DescPopover(props) {
                 </Typography>
               </Grid>
             ))}
+          </Grid>
+        );
+      case 'landingManage':
+        return (
+          <Grid container direction="column" spacing={1}>
+            <Grid item>
+              <StyledSelectText
+                primary={landingManageConfig[descIndex].title}
+                className={classes.label}
+              />
+            </Grid>
+            {landingManageConfig[descIndex].text.split('\n').map(row => (
+              <Grid item key={shortid.generate()}>
+                <Typography className={classes.text}>
+                  {row}
+                </Typography>
+              </Grid>
+            ))}
+            {landingManageConfig[descIndex].image ? (
+              <img
+                style={{ maxWidth: 500 }}
+                src={landingManageConfig[descIndex].image}
+                alt={landingManageConfig[descIndex].image}
+              />
+            ) : null}
           </Grid>
         );
       default:

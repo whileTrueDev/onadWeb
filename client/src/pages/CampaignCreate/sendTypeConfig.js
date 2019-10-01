@@ -47,4 +47,21 @@ const budgetConfig = [
   }
 ];
 
-export { sendTypeConfig, optionConfig, budgetConfig };
+const landingManageConfig = [
+  {
+    title: '소개글 이란?',
+    text: `  
+    - 소개글은 해당 광고페이지에서 자신을 소개 및 어필할 수 있는 글공간입니다.`,
+    image: '/pngs/landing/example2.png'
+  },
+  {
+    title: 'SNS 관리란?',
+    text: `  
+    - 자신의 유튜브채널, 페이스북, 인스타그램, 트게더 등을 곧바로 링크할 수 있습니다.`,
+    // image: '/pngs/landing/example2.png'
+  }
+];
+
+export {
+  sendTypeConfig, optionConfig, budgetConfig, landingManageConfig
+};

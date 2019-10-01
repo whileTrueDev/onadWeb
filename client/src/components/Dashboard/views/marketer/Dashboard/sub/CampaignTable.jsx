@@ -53,10 +53,8 @@ function CampaignTable({ ...props }) {
   const { dataSet } = props;
 
   const tableRef = React.useRef();
-  const { handleSwitch } = useUpdateData('/api/dashboard/marketer/campaign/onoff');
-  const {
-    success, loading, error, handleDelete
-  } = useDeleteData('/api/dashboard/marketer/campaign');
+  const { handleUpdateRequest } = useUpdateData('/api/dashboard/marketer/campaign/onoff');
+  const { handleDelete } = useDeleteData('/api/dashboard/marketer/campaign');
   const { open, handleOpen, handleClose } = useDialog();
   const snackbar = useDialog();
 
@@ -117,7 +115,7 @@ function CampaignTable({ ...props }) {
             icon: () => (<IOSSwitch checked={Boolean(rowData.onOff)} />),
             tooltip: '캠페인 On/Off',
             onClick: async () => {
-              await handleSwitch({ onoffState: !rowData.onOff, campaignId: rowData.campaignId });
+              await handleUpdateRequest({ onoffState: !rowData.onOff, campaignId: rowData.campaignId });
               setTimeout(() => {
                 history.push(window.location.pathname);
               }, 300);
