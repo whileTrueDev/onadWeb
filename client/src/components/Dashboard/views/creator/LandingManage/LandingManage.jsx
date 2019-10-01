@@ -2,8 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 // @material-ui/core
 import withStyles from '@material-ui/core/styles/withStyles';
-// @material-ui/icons
-import DateRange from '@material-ui/icons/DateRange';
 // core ../../../components
 import GridContainer from '../../../components/Grid/GridContainer';
 import Card from '../../../components/Card/Card';

@@ -1,13 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import makeStyles from '@material-ui/core/styles/makeStyles';
-import Typography from '@material-ui/core/Typography';
 
 import Button from '../../../components/CustomButtons/Button';
 import Snackbar from '../../../components/Snackbar/Snackbar';
 import useImageUpload from '../../../lib/hooks/useImageUpload';
 import useDialog from '../../../lib/hooks/useDialog';
-import history from '../../../../../history';
 
 const useStyles = makeStyles(theme => ({
   imageWrapper: {
@@ -37,11 +35,16 @@ const useStyles = makeStyles(theme => ({
   imageButton: {
     transition: theme.transitions.create('opacity'),
     opacity: 0,
+    margin: 0,
+    padding: theme.spacing(1),
+    textAlign: 'center',
     [theme.breakpoints.down('xs')]: {
       margin: '2px',
+      width: 235
     },
-    margin: 0,
-    textAlign: 'center',
+    [theme.breakpoints.up('xl')]: {
+      padding: theme.spacing(2)
+    },
   },
 }));
 
@@ -87,10 +90,7 @@ export default function LandingImageUploadForm(props) {
         <Button
           color="info"
           disabled={imageUrl === userImage}
-          onClick={() => {
-            handleUploadClick();
-            // history.push(window.location.pathname);
-          }}
+          onClick={() => { handleUploadClick(); }}
         >
             변경 저장하기
         </Button>
@@ -98,10 +98,7 @@ export default function LandingImageUploadForm(props) {
         <Button
           color="warning"
           disabled={imageUrl === defaultImage}
-          onClick={() => {
-            handleImageChange({ newImageUrl: defaultImage });
-            console.log(imageUrl);
-          }}
+          onClick={() => { handleImageChange({ newImageUrl: defaultImage }); }}
         >
             기본 이미지로
         </Button>
