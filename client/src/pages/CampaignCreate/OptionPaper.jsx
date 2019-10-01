@@ -1,11 +1,11 @@
-import React, { useReducer, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import {
-  Grid, Paper, Divider, Collapse, Checkbox, FormControlLabel, Typography
+  Grid, Paper, Divider, Collapse, Checkbox, FormControlLabel
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import Help from '@material-ui/icons/Help';
 import NumberFormat from 'react-number-format';
-import DescPopover from './DescPopover';
+import DescPopover from '../../components/NewCreates/DescPopover';
 import StyledItemText from '../../components/NewCreates/StyledItemText';
 import StyledSelectText from '../../components/NewCreates/StyledSelectText';
 import GreenCheckbox from '../../components/NewCreates/GreenCheckBox';
@@ -78,11 +78,11 @@ const OptionPaper = (props) => {
 
   useEffect(() => {
     // type 1 - 예산 미설정
-    if (state.option === 1 && state.noBudget) {
+    if (state.option === 0 && state.noBudget) {
       handleSubmitCheck(true);
-    } else if (state.option === 1 && !error && state.budget.length !== 0) {
+    } else if (state.option === 0 && !error && state.budget.length !== 0) {
       handleSubmitCheck(true);
-    } else if (state.option === 2) {
+    } else if (state.option === 1) {
       handleSubmitCheck(true);
     } else {
       handleSubmitCheck(false);
@@ -91,9 +91,10 @@ const OptionPaper = (props) => {
 
   // option을 선택하였을 때 event listener
   const handleChange = (event) => {
+    // event.preventDefault();
     if (event.target.checked) {
       dispatch({ key: event.target.name });
-      if (event.target.name === 'option1') {
+      if (event.target.name === 'option0') {
         setBudgetOpen(true);
       } else {
         setBudgetOpen(false);
@@ -160,8 +161,8 @@ const OptionPaper = (props) => {
                         </Grid>
                         <Grid item>
                           <GreenCheckbox
-                            name="option1"
-                            checked={state.option === 1}
+                            name="option0"
+                            checked={state.option === 0}
                             onChange={handleChange}
                             fontSize="large"
                           />
@@ -191,8 +192,8 @@ const OptionPaper = (props) => {
                         </Grid>
                         <Grid item>
                           <GreenCheckbox
-                            name="option2"
-                            checked={state.option === 2}
+                            name="option1"
+                            checked={state.option === 1}
                             onChange={handleChange}
                             fontSize="large"
                           />

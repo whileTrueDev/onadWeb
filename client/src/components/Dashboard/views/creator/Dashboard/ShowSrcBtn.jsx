@@ -151,7 +151,7 @@ class ShowSrcBtn extends Component {
             id="overlayUrl"
             label="오버레이 URL 주소"
             value={value}
-            InputProps={{
+            inputprops={{
               readOnly: true,
             }}
             variant="outlined"

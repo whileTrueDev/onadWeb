@@ -4,6 +4,7 @@ const bannerRoute = require('./sub/banner');
 const cashRoute = require('./sub/cash');
 const campaignRoute = require('./sub/campaign');
 const profileRoute = require('./sub/profile');
+const categoryRoute = require('./sub/category');
 const { creatorList } = require('../../../middlewares/preprocessingData');
 
 const router = express.Router();
@@ -17,6 +18,8 @@ router.use('/cash', cashRoute);
 router.use('/banner', bannerRoute);
 router.use('/profile', profileRoute);
 router.use('/campaign', campaignRoute);
+router.use('/category', categoryRoute);
+
 
 // doQuery 수정
 router.get('/creatorlist', (req, res) => {

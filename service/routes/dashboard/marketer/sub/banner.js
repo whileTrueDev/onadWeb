@@ -44,6 +44,24 @@ router.get('/banner/all', (req, res) => {
     });
 });
 
+// 특정 마케터의 승인된 배너를 조회
+router.get('/registed', (req, res) => {
+  const marketerId = req._passport.session.user.userid;
+  const bannerQuery = `
+  SELECT bannerId, bannerSrc
+  FROM bannerRegistered
+  WHERE marketerId = ? AND (confirmState = 1 OR confirmState = 3)
+  `;
+  doQuery(bannerQuery, [marketerId])
+    .then((row) => {
+      res.send([true, row.result]);
+    })
+    .catch((errorData) => {
+      console.log(errorData);
+      res.send([null, errorData]);
+    });
+});
+
 // 배너의 상태를 시작으로 바꾸는 쿼리
 // bannerMatched
 router.post('/start', (req, res) => {

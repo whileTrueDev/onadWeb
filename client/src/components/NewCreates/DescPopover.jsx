@@ -4,8 +4,8 @@ import {
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import shortid from 'shortid';
-import { sendTypeConfig, optionConfig, budgetConfig } from './sendTypeConfig';
-import StyledSelectText from '../../components/NewCreates/StyledSelectText';
+import { sendTypeConfig, optionConfig, budgetConfig } from '../../pages/CampaignCreate/sendTypeConfig';
+import StyledSelectText from './StyledSelectText';
 
 const useStyles = makeStyles(theme => ({
   label: {
@@ -33,7 +33,7 @@ const useStyles = makeStyles(theme => ({
 function DescPopover(props) {
   const classes = useStyles();
   const {
-    open, anchorEl, handlePopoverClose, descIndex, contentType, ...rest
+    open, anchorEl, handlePopoverClose, descIndex, contentType, children, ...rest
   } = props;
 
   const getContent = (type) => {
@@ -107,7 +107,7 @@ function DescPopover(props) {
       // }}
       onClose={handlePopoverClose}
     >
-      {getContent(contentType)}
+      {children || getContent(contentType)}
     </Popover>
   );
 }

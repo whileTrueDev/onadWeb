@@ -47,11 +47,22 @@ router.get('/overlayUrl', (req, res) => {
   `;
   doQuery(urlQuery, [creatorId])
     .then((row) => {
-      res.send(row.result[0]);
+      const data = row.result[0];
+      data.advertiseUrl = `https://banner.onad.io/banner${row.result[0].advertiseUrl}`;
+      res.send(data);
     })
     .catch(() => {
       res.end();
     });
+});
+
+router.get('/landingUrl', (req, res) => {
+  const { creatorId } = req._passport.session.user;
+  if (creatorId) {
+    res.send(`http://l.onad.io/${creatorId}`);
+  } else {
+    res.end();
+  }
 });
 
 // 수익관리 탭의 크리에이터 별 수익금 차트 데이터
@@ -222,6 +233,23 @@ router.get('/profile', (req, res) => {
       });
   }
 });
+
+// 우리와 계약된 모든 크리에이터 리스트를 가져온다.
+router.get('/list', (req, res) => {
+  const searchQuery = `
+  SELECT creatorId, creatorName, creatorLogo
+  FROM creatorInfo
+  WHERE creatorContractionAgreement = 1 `;
+  doQuery(searchQuery)
+    .then((row) => {
+      res.send([true, row.result]);
+    })
+    .catch((errorData) => {
+      console.log(errorData);
+      res.send([null, errorData]);
+    });
+});
+
 
 // ip change
 router.post('/ipchange', (req, res) => {

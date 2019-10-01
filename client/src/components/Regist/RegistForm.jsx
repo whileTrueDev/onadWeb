@@ -294,7 +294,7 @@ const RegistForm = (props) => {
                 InputLabelProps={{
                   shrink: true,
                 }}
-                InputProps={{
+                inputprops={{
                   endAdornment: <InputAdornment position="end">@</InputAdornment>,
                 }}
               />

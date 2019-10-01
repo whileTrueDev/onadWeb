@@ -1,13 +1,16 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import {
-  Grid, ListItemText, Divider, Input
+  Grid, Divider
 } from '@material-ui/core';
-import { makeStyles, withStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import Check from '@material-ui/icons/Check';
 import BannerCarousel from '../../components/NewCreates/BannerCarousel';
 import Success from '../../components/NewCreates/Success';
 import StyledItemText from '../../components/NewCreates/StyledItemText';
 import StyledInput from '../../components/NewCreates/StyledInput';
+import axios from '../../utils/axios';
+import HOST from '../../config';
+import DangerTypography from '../../components/NewCreates/Typography/Danger';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -48,20 +51,35 @@ const useStyles = makeStyles(theme => ({
 const CampaignCreate = (props) => {
   const classes = useStyles();
   const {
-    bannerList, dispatch, campaignName
+    bannerList, dispatch
   } = props;
 
   // 이름의  format을 체크하는 State
   const [checkName, setCheckName] = React.useState(false);
+  const [duplicate, setDuplicate] = React.useState(false);
 
+  const checkCampaignName = (value) => {
+    axios.post(`${HOST}/api/dashboard/marketer/campaign/checkName`, { campaignName: value })
+      .then((res) => {
+      // 올바른 데이터가 전달되었다.
+        if (res.data) {
+          setCheckName(false);
+          dispatch({ key: 'campaignName', value: '' });
+          setDuplicate(true);
+        } else {
+          setCheckName(true);
+          dispatch({ key: 'campaignName', value });
+          setDuplicate(false);
+        }
+      });
+  };
 
   const handleChangeName = (event) => {
+    if (event.target.value.length === 0) {
+      setDuplicate(false);
+    }
     if (event.target.value.length >= 3) {
-      setCheckName(true);
-      // 캠페인 명 조회추가해야함.. // 캠페인 명 조회 후 setCampaignName을 이용하여 상위 컴포넌트에 이름 전달.
-      // 만약 조회가 끝난다면
-      // setCampaignName(event.target.value);
-      dispatch({ key: 'campaignName', value: event.target.value });
+      checkCampaignName(event.target.value);
     } else {
       setCheckName(false);
       dispatch({ key: 'campaignName', value: '' });
@@ -75,7 +93,7 @@ const CampaignCreate = (props) => {
   return (
     <Grid container direction="column" spacing={2} className={classes.root}>
       <Grid item>
-        <Grid container direction="column" className={classes.item}>
+        <Grid container direction="column" className={classes.item} spacing={1}>
           <Grid item>
             <StyledItemText primary="첫째,&nbsp;&nbsp; 캠페인 이름 입력하기" secondary="해당 광고 캠페인의 이름을 입력하세요." className={classes.label} />
           </Grid>
@@ -93,18 +111,24 @@ const CampaignCreate = (props) => {
                 )}
               </Grid>
             </Grid>
-
+          </Grid>
+          <Grid item>
+            <DangerTypography>
+              {duplicate
+              && ('캠페인명이 중복되었습니다.')
+              }
+            </DangerTypography>
           </Grid>
         </Grid>
       </Grid>
       <Grid item>
-        <Grid container direction="column" className={classes.item}>
+        <Grid container direction="column" className={classes.item} spacing={1}>
           <Grid item>
             <StyledItemText primary="둘째,&nbsp;&nbsp; 배너 선택하기" secondary="해당 광고 캠페인에 사용할 배너를 선택해주세요." className={classes.label} />
             <Divider component="hr" style={{ marginBottom: '10px', width: '300px' }} />
           </Grid>
           <Grid item>
-            <BannerCarousel steps={bannerList} setCheckBannerId={handleBannerId} />
+            <BannerCarousel steps={bannerList} handleBannerId={handleBannerId} />
           </Grid>
         </Grid>
       </Grid>

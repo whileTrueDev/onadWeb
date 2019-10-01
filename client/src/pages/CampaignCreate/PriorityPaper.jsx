@@ -1,10 +1,10 @@
-import React, { useReducer } from 'react';
+import React from 'react';
 import {
   Grid, Paper, Divider,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import Help from '@material-ui/icons/Help';
-import DescPopover from './DescPopover';
+import DescPopover from '../../components/NewCreates/DescPopover';
 import StyledItemText from '../../components/NewCreates/StyledItemText';
 import StyledSelectText from '../../components/NewCreates/StyledSelectText';
 import GreenCheckbox from '../../components/NewCreates/GreenCheckBox';
@@ -108,8 +108,8 @@ const PriorityPaper = (props) => {
                         </Grid>
                         <Grid item>
                           <GreenCheckbox
-                            name="type1"
-                            checked={state.type === 1}
+                            name="type0"
+                            checked={state.type === 0}
                             onChange={handleChange}
                             onClick={handleNext(true, 2)}
                             fontSize="large"
@@ -142,8 +142,8 @@ const PriorityPaper = (props) => {
                         </Grid>
                         <Grid item>
                           <GreenCheckbox
-                            name="type2"
-                            checked={state.type === 2}
+                            name="type1"
+                            checked={state.type === 1}
                             onChange={handleChange}
                             onClick={handleNext(true, 3)}
                             fontSize="large"
@@ -175,8 +175,8 @@ const PriorityPaper = (props) => {
                         </Grid>
                         <Grid item>
                           <GreenCheckbox
-                            name="type3"
-                            checked={state.type === 3}
+                            name="type2"
+                            checked={state.type === 2}
                             onChange={handleChange}
                             onClick={handleNext(false, 4)}
                             fontSize="large"

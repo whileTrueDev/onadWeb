@@ -1,12 +1,13 @@
 import React, { useEffect } from 'react';
-import { makeStyles, withStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import {
-  Grid, ListItemText, Checkbox, Paper, Divider,
+  Grid, Paper, Divider, Button
 } from '@material-ui/core';
-import Table from '../../components/NewCreates/Table';
-import CustomizedCard from '../../components/NewCreates/CustomizedCard';
+import Help from '@material-ui/icons/Help';
+import shortid from 'shortid';
 import StyledItemText from '../../components/NewCreates/StyledItemText';
-import tableColumnConfig from './tableColumnConfig';
+import GreenCheckBox from '../../components/NewCreates/GreenCheckBox';
+
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -16,35 +17,113 @@ const useStyles = makeStyles(theme => ({
     [theme.breakpoints.down('sm')]: {
       margin: 0,
     },
+    marginBottom: theme.spacing(2),
+  },
+  choice: {
+    width: '100%',
+    padding: theme.spacing(2),
+    [theme.breakpoints.down('sm')]: {
+      padding: theme.spacing(1),
+    },
+  },
+  button: {
+    width: '100%',
+  },
+  icon: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 }));
 
 const CategorySelect = (props) => {
-  const { setStepComplete } = props;
+  const {
+    setStepComplete, categoryList, checkedCategories, checkedCategoriesDispatch
+  } = props;
   const classes = useStyles();
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [descIndex, setDescIndex] = React.useState(0); // popover의 내용 Index
 
   useEffect(() => {
-    setStepComplete(true);
-  });
+    if (checkedCategories.length >= 3) {
+      setStepComplete(true);
+    } else {
+      setStepComplete(false);
+    }
+  }, [checkedCategories, setStepComplete]);
 
-  const tableData = [[
-    '제101공수사단', 'just chatting', '3', '4', '0.34', '1600']
-  ];
+  const handlePopoverOpen = index => (event) => {
+    setDescIndex(index);
+    setAnchorEl(event.currentTarget);
+  };
+
+  const getChecked = categoryName => checkedCategories.includes(categoryName);
+
+  const handleChecked = (event) => {
+    const categoryName = event.target.name;
+    if (getChecked(categoryName)) {
+      checkedCategoriesDispatch({ type: 'delete', value: categoryName });
+    } else {
+      checkedCategoriesDispatch({ type: 'push', value: categoryName });
+    }
+  };
+
+
+  const handlePopoverClose = () => {
+    setAnchorEl(null);
+  };
+
   return (
     <Grid container direction="column" spacing={2} className={classes.root}>
       <Grid item>
         <Grid container direction="column" spacing={2}>
           <Grid item className={classes.item}>
-            <StyledItemText primary="넷째,&nbsp;&nbsp; 카테고리 선택" secondary="해당 캠페인의 배너가 송출될 배너를 선택하세요." className={classes.label} />
+            <StyledItemText primary="넷째,&nbsp;&nbsp; 카테고리 선택" secondary="해당 캠페인의 배너가 송출될 배너를 3개 이상 선택하세요." className={classes.label} />
             <Divider component="hr" style={{ height: '2px' }} />
           </Grid>
           <Grid item>
-            <Table
-              tableHeaderColor="info"
-              tableHead={tableColumnConfig}
-              tableData={tableData}
-              pagination
-            />
+            <Grid container direction="row" spacing={2}>
+              {categoryList.map((category, i) => (
+                <Grid item xs={12} sm={3} key={shortid.generate()}>
+                  <Button className={classes.button}>
+                    <Paper className={classes.choice}>
+                      <Grid container direction="row" justify="space-between" spacing={2}>
+                        <Grid item>
+                          <GreenCheckBox
+                            checked={getChecked(category.categoryName)}
+                            fontSize="large"
+                            style={{ padding: '3px' }}
+                            onClick={handleChecked}
+                            name={category.categoryName}
+                          />
+                        </Grid>
+                        <Grid item>
+                          <Grid container direction="row" spacing={1}>
+                            <Grid item>
+                              <StyledItemText primary={category.categoryName} />
+                            </Grid>
+                            <Grid
+                              item
+                              className={classes.icon}
+                            >
+                              <Help
+                                fontSize="small"
+                                onMouseEnter={handlePopoverOpen(i)}
+                                onMouseLeave={handlePopoverClose}
+                                aria-owns={anchorEl ? 'send-desc-popover' : undefined}
+                                aria-haspopup="true"
+                                color="disabled"
+                              />
+                            </Grid>
+                          </Grid>
+                        </Grid>
+                      </Grid>
+                    </Paper>
+                  </Button>
+                </Grid>
+
+              ))}
+            </Grid>
           </Grid>
         </Grid>
       </Grid>

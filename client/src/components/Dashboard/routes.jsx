@@ -9,7 +9,8 @@ import Work from '@material-ui/icons/Work';
 // 크리에이터 라우터
 import creatorUserProfile from './views/creator/UserProfile/UserProfile';
 import IncomeManage from './views/creator/IncomeManage/IncomeManage';
-import creatorDashboardPage from './views/creator/Dashboard/Dashboard';
+// import creatorDashboardPage from './views/creator/Dashboard/Dashboard';
+import creatorDashboardPage from '../../pages/CreatorDashboard/Dashboard';
 import creatorManual from './views/creator/Manual/Manual';
 
 // 마케터 라우터

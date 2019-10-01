@@ -10,30 +10,26 @@ router.get('/current', (req, res) => {
   const { creatorId } = req._passport.session.user;
   // DB연결후 query문을 통한 데이터 삽입
   const queryState = `
-  SELECT mi.marketerName, br.bannerSrc
-  FROM bannerMatched as bm
+  SELECT mi.marketerName, br.bannerSrc, br.bannerDescription, br.companyDescription
+  FROM campaign as cp
 
   JOIN bannerRegistered as br
-  ON SUBSTRING_INDEX(bm.contractionId, '/', 1) = br.bannerId
+  ON cp.bannerId = br.bannerId
 
   JOIN marketerInfo as mi
-  ON SUBSTRING_INDEX(bm.contractionId, '_', 1) = mi.marketerId
+  ON cp.marketerId = mi.marketerId
 
-  JOIN contractionTimestamp as ct
-  ON  ct.contractionId = bm.contractionId
+  JOIN campaignTimestamp as ct
+  ON  cp.campaignId = ct.campaignId
   
-  WHERE bm.contractionState = 0
+  WHERE cp.onOff = 1
   AND ct.date >= NOW() - INTERVAL 10 MINUTE
-  AND bm.contractionId LIKE CONCAT('%', ?, '%')
   ORDER BY ct.date DESC
-  LIMIT 1`;
+  LIMIT 2`;
 
   doQuery(queryState, [creatorId])
     .then((row) => {
-      const result = row.result.map((value) => {
-        value = Object.values(value);
-        return value;
-      });
+      const { result } = row;
       res.send(result);
     })
     .catch((errorData) => {

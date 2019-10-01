@@ -40,7 +40,8 @@ const tutorialSteps = [
 
 const useStyles = makeStyles(theme => ({
   root: {
-    width: '100%',
+    width: '900px',
+    // width: '100%',
     height: 'auto',
   },
   image: {
@@ -109,7 +110,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 function BannerCarousel(props) {
-  const { steps, setCheckBannerId } = props;
+  const { steps, handleBannerId } = props;
   const classes = useStyles();
   const theme = useTheme();
   const [activeStep, setActiveStep] = useState(0);
@@ -135,10 +136,10 @@ function BannerCarousel(props) {
     // check가 되어있었던 상태였다면.
     if (checkImage.check) {
       setCheckImage({ step: -1, check: 0 });
-      setCheckBannerId('');
+      handleBannerId('');
     } else {
       setCheckImage({ step: activeStep, check: 1 });
-      setCheckBannerId(step.bannerId);
+      handleBannerId(step.bannerId);
     }
   };
 
