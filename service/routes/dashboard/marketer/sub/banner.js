@@ -25,18 +25,21 @@ router.get('/', (req, res) => {
 });
 
 // 특정 마케터의 모든 배너를 조회
-router.get('/banner/all', (req, res) => {
+router.get('/all', (req, res) => {
   const marketerId = req._passport.session.user.userid;
   const bannerQuery = `
-  SELECT cp.campaignId, br.bannerSrc, confirmState
+  SELECT cp.campaignId, br.bannerSrc, confirmState, br.bannerId
   FROM bannerRegistered AS br
   LEFT JOIN campaign AS cp ON br.bannerId = cp.bannerId
   WHERE br.marketerId = ?
   ORDER BY confirmState DESC, date DESC`;
   doQuery(bannerQuery, [marketerId])
     .then((row) => {
-      const result = row.result.map(value => Object.values(value));
-      res.send([true, result]);
+      const tableData = row.result.map(value => Object.values(value).slice(0, 3));
+      const bannerIdData = [];
+      row.result.forEach((item, index) => bannerIdData.push(item.bannerId));
+      console.log(bannerIdData);
+      res.send({ data: tableData, bannerData: bannerIdData });
     })
     .catch((errorData) => {
       console.log(errorData);

@@ -6,7 +6,6 @@ import withStyles from '@material-ui/core/styles/withStyles';
 import {
   Table, TableHead, TableRow, TableBody, TableCell, Grid, Hidden,
 } from '@material-ui/core';
-import Done from '@material-ui/icons/Done';
 // custom table component
 import CustomTableFooter from './TableFooter';
 
@@ -17,7 +16,7 @@ import CustomButton from '../CustomButtons/Button';
 function CustomTable({ ...props }) {
   const {
     classes, tableHead, tableData, tableHeaderColor, pagination,
-    buttonSet, handleDescDialog, handleBannerDelete,
+    buttonSet, handleDescDialog, handleDeleteOpen, bannerId
   } = props;
 
 
@@ -65,17 +64,16 @@ function CustomTable({ ...props }) {
           <TableBody>
             {/** 페이지네이션 있는 경우 */}
             {tableData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((prop, i) => (
-              <TableRow key={shortid.generate()}>
+              <TableRow key={shortid.generate()} id={bannerId[i]}>
                 {prop.map(value => (
-                  value.indexOf('data:image/') === -1 // 없는 경우
+                  value === null || value.indexOf('data:image/') === -1// 없는 경우
                     ? (
                       <Hidden smDown key={shortid.generate()}>
                         <TableCell className={classes.tableCell} key={shortid.generate()}>
-                          {value === '완료됨'
+                          {value === null
                             ? (
                               <span>
-                                {value}
-                                <Done color="secondary" />
+                                {'등록된 캠페인이 없습니다.'}
                               </span>
                             )
                             : value}
@@ -96,7 +94,7 @@ function CustomTable({ ...props }) {
                           color="success"
                           size="sm"
                           className={classes.tableButton}
-                          // onClick={handleDescDialog(page * rowsPerPage + i)}
+                          onClick={handleDescDialog}
                         >
                         상세정보
                         </CustomButton>
@@ -107,7 +105,9 @@ function CustomTable({ ...props }) {
                           color="danger"
                           size="sm"
                           className={classes.tableButton}
-                          // onClick={handleBannerDelete(page * rowsPerPage + i)}
+                          onClick={() => {
+                            handleDeleteOpen(bannerId[i]);
+                          }}
                         >
                         배너삭제
                         </CustomButton>
@@ -146,7 +146,34 @@ function CustomTable({ ...props }) {
                       </Hidden>
                     )
                 ))}
-
+                {buttonSet && (
+                  <TableCell className={classes.ButtonCell} key={shortid.generate()}>
+                    <Grid container direction="column">
+                      <Grid item>
+                        <CustomButton
+                          variant="contained"
+                          color="success"
+                          size="sm"
+                          className={classes.tableButton}
+                          onClick={handleDescDialog}
+                        >
+                        상세정보
+                        </CustomButton>
+                      </Grid>
+                      <Grid item>
+                        <CustomButton
+                          variant="contained"
+                          color="danger"
+                          size="sm"
+                          className={classes.tableButton}
+                          onClick={handleDeleteOpen}
+                        >
+                        배너삭제
+                        </CustomButton>
+                      </Grid>
+                    </Grid>
+                  </TableCell>
+                )}
               </TableRow>
             ))}
           </TableBody>
