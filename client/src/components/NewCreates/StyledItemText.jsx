@@ -18,7 +18,8 @@ const StyledItemText = withStyles(theme => ({
   primary: props => ({
     fontSize: props.fontSize ? props.fontSize : '18px',
     // fontSize: '18px',
-    fontWeight: '700'
+    fontWeight: '700',
+    color: props.color || 'inherit'
   }),
 }))(ListItemText);
 

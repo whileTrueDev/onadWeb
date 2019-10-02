@@ -1,4 +1,4 @@
-import React, { useState, useLayoutEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import classnames from 'classnames';
 import { makeStyles } from '@material-ui/core/styles';
 import {
@@ -14,7 +14,7 @@ import useFetchData from '../../utils/lib/hooks/useFetchData';
 import PrettoSlider from '../../components/NewCreates/PrettoSlider';
 import StyledItemText from '../../components/NewCreates/StyledItemText';
 
-const useStyles = makeStyles(_theme => ({
+const useStyles = makeStyles(({
   stats: {
     color: '#999',
     display: 'inline-flex',
@@ -57,7 +57,7 @@ const useStyles = makeStyles(_theme => ({
 
 const IncomeCard = () => {
   const classes = useStyles();
-  const cashData = useFetchData('/api/dashboard/creator/income');
+  const landingData = useFetchData('/api/dashboard/creator/landing/data');
 
   return (
     <CustomCard iconComponent={<BarChart />} buttonComponent={<StyledItemText primary="랜딩페이지 현황" secondary="다음 보상까지 남은 경험치입니다." />}>
@@ -74,23 +74,29 @@ const IncomeCard = () => {
             }}
           >
             <Grid item xs={12} sm={11}>
-              <PrettoSlider valueLabelDisplay="on" aria-label="pretto slider" value={20} />
+              <PrettoSlider valueLabelDisplay="on" aria-label="pretto slider" value={!landingData.loading && !landingData.error ? landingData.payload.exp : 0} />
             </Grid>
             <Grid item>
-              <Typography gutterBottom variant="body2" className={classes.level}>LV.4</Typography>
+              <Typography gutterBottom variant="body2" className={classes.level}>
+                LV.
+                {landingData.loading && '0'}
+                {!landingData.loading && !landingData.error && (
+                  landingData.payload.level
+                )}
+              </Typography>
             </Grid>
           </Grid>
         </Grid>
         <Grid container direction="row" justify="space-evenly">
           <Grid item>
             <div className={classes.flex}>
-              <Typography gutterBottom variant="body1" className={classes.head}>총 배너 클릭수</Typography>
+              <Typography gutterBottom variant="body1" className={classes.head}>총 방문수</Typography>
             </div>
-            {cashData.loading && (<CircularProgress small />)}
-            {!cashData.loading && !cashData.error && (
+            {landingData.loading && (<CircularProgress small />)}
+            {!landingData.loading && !landingData.error && (
               <div className={classes.flex}>
                 <Typography gutterBottom variant="h5">
-                  {`${cashData.payload.creatorTotalIncome} `}
+                  {`${landingData.payload.visitCount} `}
                 </Typography>
                 <Typography gutterBottom variant="body2" className={classes.unit}>
                 회
@@ -103,13 +109,13 @@ const IncomeCard = () => {
           </Grid>
           <Grid item>
             <div className={classes.flex}>
-              <Typography gutterBottom variant="body1" className={classes.head}>총 구매 조회수</Typography>
+              <Typography gutterBottom variant="body1" className={classes.head}>총 배너 클릭수</Typography>
             </div>
-            {cashData.loading && (<CircularProgress small />)}
-            {!cashData.loading && !cashData.error && (
+            {landingData.loading && (<CircularProgress small />)}
+            {!landingData.loading && !landingData.error && (
               <div className={classes.flex}>
                 <Typography gutterBottom variant="h5">
-                  {`${cashData.payload.creatorTotalIncome} `}
+                  {`${landingData.payload.clickCount} `}
                 </Typography>
                 <Typography gutterBottom variant="body2" className={classes.unit}>
                 회
@@ -120,7 +126,7 @@ const IncomeCard = () => {
           <Grid item>
             <Divider component="hr" orientation="vertical" />
           </Grid>
-          <Grid item>
+          {/* <Grid item>
             <Grid container className={classes.flex}>
               <Grid item>
                 <Typography gutterBottom variant="body1" className={classes.head}>반응도</Typography>
@@ -148,17 +154,46 @@ const IncomeCard = () => {
                 </Typography>
               </div>
             )}
+          </Grid> */}
+          <Grid item>
+            <Grid container className={classes.flex}>
+              <Grid item>
+                <Typography gutterBottom variant="body1" className={classes.head}>총 구매 조회수</Typography>
+              </Grid>
+              <Grid item>
+
+                <Help
+                  fontSize="small"
+                // onMouseEnter={handlePopoverOpen(i)}
+                // onMouseLeave={handlePopoverClose}
+                // aria-owns={anchorEl ? 'send-desc-popover' : undefined}
+                  aria-haspopup="true"
+                  color="disabled"
+                />
+              </Grid>
+            </Grid>
+            {landingData.loading && (<CircularProgress small />)}
+            {!landingData.loading && !landingData.error && (
+              <div className={classes.flex}>
+                <Typography gutterBottom variant="h5">
+                  {`${landingData.payload.transferCount} `}
+                </Typography>
+                <Typography gutterBottom variant="body2" className={classes.unit}>
+                회
+                </Typography>
+              </div>
+            )}
           </Grid>
         </Grid>
         <Grid item>
           <div
             className={classnames(classes.stats, classes.flex)}
           >
-            {!cashData.loading && !cashData.error && cashData.payload.date
+            {!landingData.loading && !landingData.error && landingData.payload.date
                   && (
                   <div>
                     <DateRange />
-                    <span>{`업데이트 : ${cashData.payload.date}`}</span>
+                    <span>{`업데이트 : ${landingData.payload.date}`}</span>
                   </div>
                   )}
           </div>

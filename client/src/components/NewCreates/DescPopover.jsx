@@ -4,6 +4,7 @@ import {
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import shortid from 'shortid';
+import classNames from 'classnames';
 import { sendTypeConfig, optionConfig, budgetConfig } from '../../pages/CampaignCreate/sendTypeConfig';
 import StyledSelectText from './StyledSelectText';
 
@@ -19,21 +20,23 @@ const useStyles = makeStyles(theme => ({
   popover: {
     pointerEvents: 'none',
   },
-  choice: {
-    padding: theme.spacing(3),
+  choice: props => ({
+    // padding: theme.spacing(3),
+    padding: props.padding === 0 ? 0 : theme.spacing(3),
+    paddingBottom: theme.spacing(3),
     [theme.breakpoints.down('sm')]: {
       padding: theme.spacing(2),
     },
-  },
+  }),
   text: {
     fontSize: '14px',
-  }
+  },
 }));
 
 function DescPopover(props) {
-  const classes = useStyles();
+  const classes = useStyles(props.styleProps);
   const {
-    open, anchorEl, handlePopoverClose, descIndex, contentType, children, ...rest
+    open, anchorEl, handlePopoverClose, descIndex, contentType, children, head, ...rest
   } = props;
 
   const getContent = (type) => {
@@ -93,7 +96,7 @@ function DescPopover(props) {
       id="send-desc-popover"
       className={classes.popover}
       classes={{
-        paper: classes.choice,
+        paper: classes.choice
       }}
       open={open}
       anchorEl={anchorEl}

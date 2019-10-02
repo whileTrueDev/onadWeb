@@ -45,8 +45,9 @@ const Sidebar = ({ ...props }) => {
   }, []);
 
   const links = (
-    <List className={classes.list}>
-      <div className={classes.linkWrapper}>
+    <List>
+      {/* className={classes.list}  */}
+      <div>
         {routes.map((prop, key) => {
           const listItemClasses = classNames({
             [` ${classes[color]}`]: isActiveRoute(prop.layout + prop.path),
@@ -57,11 +58,27 @@ const Sidebar = ({ ...props }) => {
           return (
             <NavLink
               to={prop.layout + prop.path}
-              className={classes.item}
+              // className={classes.item}
               activeClassName="active"
               key={shortid.generate()}
             >
-              <ListItem button className={classNames(classes.itemLink, listItemClasses)}>
+              <Button className={classNames(classes.itemLink, listItemClasses)}>
+                <Grid container direction="column">
+                  <Grid item>
+                    <prop.icon
+                      className={classNames(classes.itemIcon, whiteFontClasses)}
+                    />
+                  </Grid>
+                  <Grid item>
+                    <ListItemText
+                      primary={prop.name}
+                      className={classNames(classes.itemText)}
+                      disableTypography
+                    />
+                  </Grid>
+                </Grid>
+              </Button>
+              {/* <ListItem button className={classNames(classes.itemLink, listItemClasses)}>
                 <prop.icon
                   className={classNames(classes.itemIcon, whiteFontClasses)}
                 />
@@ -70,7 +87,7 @@ const Sidebar = ({ ...props }) => {
                   className={classNames(classes.itemText, whiteFontClasses)}
                   disableTypography
                 />
-              </ListItem>
+              </ListItem> */}
             </NavLink>
           );
         })}

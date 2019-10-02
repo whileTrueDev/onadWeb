@@ -8,7 +8,9 @@ const router = express.Router();
 // sub router
 const bannerRouter = require('./sub/banner');
 const withdrawalRouter = require('./sub/withdrawal');
+const landingRouter = require('./sub/landing');
 
+router.use('/landing', landingRouter);
 router.use('/banner', bannerRouter);
 router.use('/withdrawal', withdrawalRouter);
 
