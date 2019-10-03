@@ -7,11 +7,14 @@ const router = express.Router();
 
 // sub router
 const bannerRouter = require('./sub/banner');
+const chartRouter = require('./sub/chart');
 const landingRouter = require('./sub/landing');
 const withdrawalRouter = require('./sub/withdrawal');
 
 router.use('/banner', bannerRouter);
+router.use('/chart', chartRouter);
 router.use('/landing', landingRouter);
+router.use('/withdrawal', withdrawalRouter);
 router.use('/withdrawal', withdrawalRouter);
 
 // 크리에이터 수익금 정보조회
@@ -52,65 +55,6 @@ router.get('/overlayUrl', (req, res) => {
       res.send(row.result[0]);
     })
     .catch(() => {
-      res.end();
-    });
-});
-
-// 수익관리 탭의 크리에이터 별 수익금 차트 데이터
-router.get('/chartdata', (req, res) => {
-  // creatorId 가져오기
-  const { creatorId } = req._passport.session.user;
-  const { dateRange } = req.query;
-  const rangeQuery = `
-  SELECT
-  creatorTotalIncome, creatorReceivable, DATE_FORMAT(date, '%m-%d') as date
-  FROM creatorIncome
-  JOIN (
-    SELECT 
-    MAX(date) as d1
-    FROM creatorIncome
-    WHERE creatorId = ?
-    AND date >= DATE_SUB(NOW(), INTERVAL ? DAY)
-    GROUP BY DATE_FORMAT(date, '%y%m%d')
-  ) tmp
-  ON creatorIncome.date = tmp.d1
-  ORDER BY tmp.d1 ASC
-  `;
-
-  const accountQuery = `
-  SELECT creatorAccountNumber 
-  FROM creatorInfo 
-  WHERE creatorId = ?`;
-
-  doQuery(accountQuery, [creatorId])
-    .then((row) => {
-      doQuery(rangeQuery, [creatorId, dateRange])
-        .then((inrows) => {
-          const result = {
-            creatorAccountNumber: row.result[0].creatorAccountNumber,
-            totalIncomeData: [],
-            receivableData: [],
-            labels: [],
-          };
-          if (inrows.result.length > 0) {
-            inrows.result.map((inrow) => {
-              result.totalIncomeData.push(inrow.creatorTotalIncome);
-              result.receivableData.push(inrow.creatorReceivable);
-              result.labels.push(inrow.date);
-              return null;
-            });
-            res.send(result);
-          } else {
-            res.end();
-          }
-        })
-        .catch((errorData) => {
-          console.log(errorData);
-          res.end();
-        });
-    })
-    .catch((errorData) => {
-      console.log(errorData);
       res.end();
     });
 });

@@ -1,6 +1,5 @@
 import React from 'react';
 import Typography from '@material-ui/core/Typography';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
 import StackedBar from '../../../components/Chart/StackedBar';
 import CircularProgress from '../../../components/Progress/CircularProgress';
 import useFetchData from '../../../lib/hooks/useFetchData';

@@ -1,7 +1,43 @@
 
+/** **********************************************
+ * ***************** 보조 함수 *********************
+ * *********************************************** */
+
 /**
- * @description 오늘로부터 howMuch 만큼 이전의 날짜까지를 배열로 반환하는 함수.
+  * @description 날짜간의 차이를 반환하는 함수
+  * @param {Date} date1 날짜 차이를 구할 기준
+  * @param {Date} date2 타겟 날짜
+  * @returns {Number} 날짜차이
+  * @author hwasurr
+  */
+function dateDiff(date1, date2) {
+  return Math.floor((date1.getTime() - date2.getTime()) / (1000 * 60 * 60 * 24));
+}
+
+/**
+  * @description 날짜간의 월의 차이를 반환하는 함수
+  * @param {Date} date1 월 차이를 구할 기준
+  * @param {Date} date2 타겟 날짜
+  * @returns {Number} 월 차이
+  * @author hwasurr
+  */
+function monthDiff(date1, date2) {
+  let strTermCnt = 0;
+  // 년도가 같으면 단순히 월을 마이너스 한다.
+  // => 20090301-20090201 의 경우(윤달이 있는 경우) 아래 else의 로직으로는 정상적인 1이 리턴되지 않는다.
+  if (date2.getFullYear() === date1.getFullYear()) {
+    strTermCnt = date1.getMonth() * 1 - date2.getMonth() * 1;
+  } else {
+    strTermCnt = Math.round((date2.getTime() - date1.getTime()) / (1000 * 60 * 60 * 24 * 365 / 12));
+  }
+  return strTermCnt;
+}
+
+
+/**
+ * @description 날짜를 문자열로 변환하는 함수
  * @param {number} distance
+ * @return {String} "%m월 %d일" 에 따르는 날짜 문자열
  * @author hwasurr
  */
 function datefy(dateObject) {
@@ -12,22 +48,19 @@ function datefy(dateObject) {
 }
 
 /**
- * @param {*} dataPacket api 요청으로 받아온 데이터. 데이터형은 다음과 같다.
- * `[ { date: '09월 10일', cash: 9000, type: 'CPM' },
- *    {date: '09월 10일', cash: 9000, type: 'CPC'}, {}, ... ]`
- * @description StackedBar에 해당하는 데이터를 생성해주는 함수,
- * 데이터가 2주 미만으로 존재할 시, 빈 데이터를 채워준다.
+ * @description 데이터를 셋업하는 함수
+ * @param {array} dataPacket 로부터 api 서버로부터 넘겨받은 데이터.
  * @author hwasurr
  */
-function createStackBarDataSet(dataPacket) {
-  const DEFAULT_CASH = 0;
-  const WEEK_LENGTH = 14;
+function setUpData(dataPacket) {
+  const DEFAULT_VALUE = 0;
   const CPM = []; const CPC = [];
-  let days = [];
+  const setUpLabels = [];
 
   dataPacket.forEach((obj, index) => {
-    if (days.indexOf(datefy(obj.date)) === -1) { // 처음보는 date
-      days.push(datefy(obj.date));
+    if (setUpLabels.indexOf(datefy(obj.date)) === -1) { // 처음보는 date
+      setUpLabels.push(datefy(obj.date));
+      // console.log(datefy(obj.date));
 
       if (obj.type === 'CPM') {
         CPM.push(obj.cash);
@@ -41,9 +74,9 @@ function createStackBarDataSet(dataPacket) {
             || datefy(dataPacket[index + 1].date)
             !== datefy(obj.date)) {
           if (obj.type === 'CPM') {
-            CPC.push(DEFAULT_CASH);
+            CPC.push(DEFAULT_VALUE);
           } else if (obj.type === 'CPC') {
-            CPM.push(DEFAULT_CASH);
+            CPM.push(DEFAULT_VALUE);
           }
         }
       }
@@ -54,27 +87,89 @@ function createStackBarDataSet(dataPacket) {
       CPC.push(obj.cash);
     }
   });
+  return { setUpLabels, CPM, CPC };
+}
 
-  days = days.map(day => `${day.split('-')[1]}월 ${day.split('-')[2]}일`);
 
-  // 2주일의 데이터보다 적다면, 2주(14일)의 데이터만큼 day를 채운다.
-  if (days.length < WEEK_LENGTH) {
-    const lastTime = new Date(
-      dataPacket[dataPacket.length - 1].date.split('T')[0]
-    ); // 현재 날짜 수
+/** ************************************************
+ * ***************** 실 사용 함수 *********************
+ * *********************************************** */
+/**
+ * @param {[ {}, {}, ]} dataPacket api 요청으로 받아온 데이터. 데이터형은 다음과 같다.
+ * `[ { date: '09월 10일', cash: 9000, type: 'CPM' },
+ *    {date: '09월 10일', cash: 9000, type: 'CPC'}, {}, ... ]`
+ * @description StackedBar에 해당하는 데이터를 생성해주는 함수, 데이터가 15일 미만으로 존재할 시, 빈 데이터를 채워준다.
+ * @author hwasurr
+ */
+function createStackBarDataSet(dataPacket, DATE_RANGE = 15) {
+  const today = new Date();
+  const { setUpLabels, CPM, CPC } = setUpData(dataPacket);
 
-    for (let i = WEEK_LENGTH - days.length; i > 0; i -= 1) {
-      lastTime.setDate(lastTime.getDate() - 1);
-      days.push(`${lastTime.getMonth() + 1}월 ${lastTime.getDate()}일`);
-      // console.log('lastTime in days:', days[days.length - 1]);
+  const labels = setUpLabels.map(day => `${day.split('-')[1]}월 ${day.split('-')[2]}일`);
+  const firstTime = new Date(dataPacket[0].date.split('T')[0]); // 마지막 날짜
+  const lastTime = new Date(dataPacket[dataPacket.length - 1].date.split('T')[0]); // 현재 날짜 수
+
+  // 오늘과 today, firstTime 사이의 빈 데이터가 있는경우 채운다.
+  if (dateDiff(today, firstTime) > 0) {
+    // 날짜 차이 만큼 앞에 데이터를 추가한다.
+    for (let i = dateDiff(today, firstTime); i > 0; i -= 1) {
+      labels.unshift(datefy(today));
+      CPM.unshift(0);
+      CPC.unshift(0);
+      today.setDate(today.getDate() - 1);
     }
   }
-  return { days, CPM, CPC };
 
-  // const splited = obj.date.split('-');
-  // days.push(`${splited[1]}월 ${splited[2].slice(0, 2)}일`);
+  // 2주일의 데이터보다 적다면, 한달(30일)의 데이터만큼 day를 채운다.
+  if (labels.length < DATE_RANGE) {
+    for (let i = DATE_RANGE - labels.length; i > 0; i -= 1) {
+      lastTime.setDate(lastTime.getDate() - 1);
+      labels.push(`${lastTime.getMonth() + 1}월 ${lastTime.getDate()}일`);
+    }
+  }
+  return { labels, CPM, CPC };
 }
+
+
+/**
+ * @description 월별 데이터를 받아와 차트용 데이터로 전처리하는 함수.
+ * @param {[ {}, {}, ...]}  dataPacket DB로부터 가져온 데이터
+ * @author hwasurr
+ */
+function createStackBarDataSetPerMonth(dataPacket) {
+  const today = new Date();
+  const MONTH_LENGTH = 12;
+  const { setUpLabels, CPM, CPC } = setUpData(dataPacket);
+
+  const labels = setUpLabels.map(day => `${day.split('-')[0]}년 ${day.split('-')[1]}월`);
+  const firstTime = new Date(dataPacket[0].date.split('T')[0]); // 처음 날짜
+  const lastTime = new Date(dataPacket[dataPacket.length - 1].date.split('T')[0]); // 마지막 날짜
+
+  // 오늘과 today, firstTime 사이의 빈 데이터가 있는경우 채운다.
+  if (monthDiff(today, firstTime) > 0) {
+    // 날짜 차이 만큼 앞에 데이터를 추가한다.
+    for (let i = monthDiff(today, firstTime); i > 0; i -= 1) {
+      labels.unshift(`${today.getFullYear()}년 ${today.getMonth() + 1}월`);
+      CPM.unshift(0);
+      CPC.unshift(0);
+      today.setMonth(today.getMonth() + 1);
+    }
+  }
+
+
+  // 2주일의 데이터보다 적다면, 2주(14일)의 데이터만큼 day를 채운다.
+  if (labels.length < MONTH_LENGTH) {
+    for (let i = MONTH_LENGTH - labels.length; i > 0; i -= 1) {
+      lastTime.setMonth(lastTime.getMonth() - 1);
+      labels.push(`${lastTime.getFullYear()}년 ${lastTime.getMonth() + 1}월`);
+    }
+  }
+
+  return { labels, CPM, CPC };
+}
+
 
 module.exports = {
   createStackBarDataSet,
+  createStackBarDataSetPerMonth
 };

@@ -54,7 +54,7 @@ const CreatorDashboard = (props) => {
         routes={allRoutes.creator}
         logoText="OnAD"
         color="info"
-        logo="/pngs/logo/onad_logo_vertical.png"
+        logo="/pngs/logo/onad_logo_vertical_white.png"
         mobileOpen={mobileOpen}
         handleDrawerToggle={handleDrawerToggle}
         {...rest}

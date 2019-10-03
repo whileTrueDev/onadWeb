@@ -42,7 +42,7 @@ export default function NotFound() {
     <Grid container className={classes.root}>
       <Grid className={classes.container} item xs={12}>
 
-        <img src="/pngs/logo/onad_logo_vertical.png" alt="logo" width="150px" />
+        <img src="/pngs/logo/onad_logo_vertical_black.png" alt="logo" width="150px" />
 
         <h2>페이지를 찾을 수 없습니다.</h2>
         <span>방문을 원하시는 페이지의 주소가 잘못되었거나 혹은 </span>

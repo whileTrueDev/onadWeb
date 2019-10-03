@@ -39,7 +39,7 @@ const dashboardRoutes = {
     },
     {
       path: '/landing',
-      name: '내 광고사이트 관리',
+      name: '내 광고페이지 관리',
       icon: LocalAirport,
       component: LandingManage,
       layout: '/dashboard/creator',

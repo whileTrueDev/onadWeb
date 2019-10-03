@@ -63,6 +63,8 @@ function LandingManage(props) {
                 <CardBody>
                   <div className={classes.stats}>
                     랜딩페이지 현황 (충성도 및 지표)
+                    <br />
+                    {"chan's component"}
                   </div>
                 </CardBody>
               </Card>

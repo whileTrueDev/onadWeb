@@ -66,9 +66,12 @@ export default function LandingSetting(props) {
   const updateRequest = useUpdateData('/api/dashboard/creator/landing/update', userData.callUrl);
   const snack = useDialog(); // for sanckbar
 
-  const [darkTheme, setTheme] = React.useState(userData.payload.creatorTheme === 'dark');
+  const [darkTheme, setTheme] = React.useState({
+    bool: userData.payload.creatorTheme === 'dark',
+    theme: userData.payload.creatorTheme
+  });
   function handleThemeChange() {
-    setTheme(!darkTheme);
+    setTheme({ bool: !darkTheme.bool, theme: !darkTheme.bool ? 'dark' : 'light' });
   }
 
   return (
@@ -123,11 +126,11 @@ export default function LandingSetting(props) {
 
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <WbSunny
-            className={classnames({ [classes.icon]: true, [classes.active]: !darkTheme })}
+            className={classnames({ [classes.icon]: true, [classes.active]: !darkTheme.bool })}
           />
-          <DefaultSwitch checked={darkTheme} onChange={() => { handleThemeChange(); }} />
+          <DefaultSwitch checked={darkTheme.bool} onChange={() => { handleThemeChange(); }} />
           <NightsStay
-            className={classnames({ [classes.icon]: true, [classes.active]: darkTheme })}
+            className={classnames({ [classes.icon]: true, [classes.active]: darkTheme.bool })}
           />
         </div>
       </div>
@@ -135,17 +138,21 @@ export default function LandingSetting(props) {
       <div className={classnames(classes.flex, classes.flexEnd)}>
         <Button
           color="info"
+          disabled={
+            (userData.payload.creatorDesc === description)
+            && (userData.payload.creatorTheme === darkTheme.theme)
+          }
           onClick={() => {
             updateRequest.handleUpdateRequest({
               description,
-              creatorTheme: darkTheme ? 'dark' : 'light'
+              creatorTheme: darkTheme.theme
             });
             if (updateRequest.success) {
               snack.handleOpen();
             }
           }}
         >
-          변경하기
+          변경 저장하기
         </Button>
       </div>
 
