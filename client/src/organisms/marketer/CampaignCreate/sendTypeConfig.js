@@ -52,12 +52,12 @@ const landingManageConfig = [
     title: '소개글 이란?',
     text: `  
     - 소개글은 해당 광고페이지에서 자신을 소개 및 어필할 수 있는 글공간입니다.`,
-    image: '/pngs/landing/example2.png'
+    image: '/pngs/landing/description_sample.png'
   },
   {
     title: '광고페이지의 테마를 설정하세요',
     text: `  
-    - 밝은 테마와 어두운 테마로 당신의 페이지를 설정할 수 있습니다.`,
+    - 밝은 테마와 어두운 테마로 자신의 페이지를 설정할 수 있습니다.`,
   },
   {
     title: '광고 레벨 - 광고 유치점수 및 시청자 충성도',
