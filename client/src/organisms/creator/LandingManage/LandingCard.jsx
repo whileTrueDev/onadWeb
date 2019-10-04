@@ -130,35 +130,6 @@ const IncomeCard = () => {
           <Grid item>
             <Divider component="hr" orientation="vertical" />
           </Grid>
-          {/* <Grid item>
-            <Grid container className={classes.flex}>
-              <Grid item>
-                <Typography gutterBottom variant="body1" className={classes.head}>반응도</Typography>
-              </Grid>
-              <Grid item>
-
-                <Help
-                  fontSize="small"
-                // onMouseEnter={handlePopoverOpen(i)}
-                // onMouseLeave={handlePopoverClose}
-                // aria-owns={anchorEl ? 'send-desc-popover' : undefined}
-                  aria-haspopup="true"
-                  color="disabled"
-                />
-              </Grid>
-            </Grid>
-            {cashData.loading && (<CircularProgress small />)}
-            {!cashData.loading && !cashData.error && (
-              <div className={classes.flex}>
-                <Typography gutterBottom variant="h5">
-                  {`${cashData.payload.creatorTotalIncome} `}
-                </Typography>
-                <Typography gutterBottom variant="body2" className={classes.unit}>
-                %
-                </Typography>
-              </div>
-            )}
-          </Grid> */}
           <Grid item>
             <Grid container className={classes.flex}>
               <Grid item>
@@ -168,9 +139,6 @@ const IncomeCard = () => {
 
                 <Help
                   fontSize="small"
-                // onMouseEnter={handlePopoverOpen(i)}
-                // onMouseLeave={handlePopoverClose}
-                // aria-owns={anchorEl ? 'send-desc-popover' : undefined}
                   aria-haspopup="true"
                   color="disabled"
                 />

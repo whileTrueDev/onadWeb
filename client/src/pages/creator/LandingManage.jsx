@@ -9,11 +9,14 @@ import CardHeader from '../../atoms/Card/CardHeader';
 import CardBody from '../../atoms/Card/CardBody';
 import GridItem from '../../atoms/Grid/GridItem';
 import CircularProgress from '../../atoms/Progress/CircularProgress';
+
 import LandingSetting from '../../organisms/creator/LandingManage/LandingSetting';
-import useFetchData from '../../utils/lib/hooks/useFetchData';
 import LandingImageUploadForm from '../../organisms/creator/LandingManage/LandingImageUploadForm';
 import LandingUrl from '../../organisms/creator/LandingManage/LandingUrl';
+import LandingCard from '../../organisms/creator/LandingManage/LandingCard';
+
 import dashboardStyle from '../../assets/jss/onad/views/dashboardStyle';
+import useFetchData from '../../utils/lib/hooks/useFetchData';
 
 function LandingManage(props) {
   const { classes } = props;
@@ -54,20 +57,8 @@ function LandingManage(props) {
             </GridItem>
 
             <GridItem xs={12}>
-              <Card>
-                <CardHeader color="blueGray" stats>
-                  <h4 className={classes.cardTitleWhite}>
-                    랜딩페이지 현황
-                  </h4>
-                </CardHeader>
-                <CardBody>
-                  <div className={classes.stats}>
-                    랜딩페이지 현황 (충성도 및 지표)
-                    <br />
-                    {"chan's component"}
-                  </div>
-                </CardBody>
-              </Card>
+
+              <LandingCard />
 
             </GridItem>
           </GridContainer>

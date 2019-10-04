@@ -1,6 +1,6 @@
 import React from 'react';
 import Typography from '@material-ui/core/Typography';
-import BarChart from '@material-ui/icons/BarChart';
+import StyledItemText from '../../../atoms/StyledItemText';
 import Card from '../../../atoms/CustomCard';
 import StackedBar from '../../../atoms/Chart/StackedBar';
 import CircularProgress from '../../../atoms/Progress/CircularProgress';
@@ -45,7 +45,7 @@ function IncomeChart() {
 
   return (
     <Card
-      iconComponent={<BarChart />}
+      iconComponent={<StyledItemText primary="광고 수익 확인하기" style={{ color: '#FFF' }} />}
       buttonComponent={<ChartChangeButton type={type} setType={setType} />}
     >
       { valueChartData.loading && (<CircularProgress />)}

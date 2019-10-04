@@ -1,7 +1,4 @@
-import React from 'react';
-import {
-  ListItemText
-} from '@material-ui/core';
+import { ListItemText } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 
 // props를 이용한 정의

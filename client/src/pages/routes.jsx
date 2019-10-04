@@ -5,11 +5,10 @@ import AttachMoney from '@material-ui/icons/AttachMoneyOutlined';
 import BrandingWatermark from '@material-ui/icons/BrandingWatermarkOutlined';
 import Reorder from '@material-ui/icons/Reorder';
 import Work from '@material-ui/icons/Work';
-import LocalAirport from '@material-ui/icons/LocalAirport';
+import Public from '@material-ui/icons/Public';
 // import Public from '@material-ui/icons/Public'; // 지구본 아이콘
 
 // 크리에이터 라우터
-import CreatorUserProfile from './creator/UserProfile';
 import CreatorLandingManage from './creator/LandingManage';
 import CreatorIncomeManage from './creator/IncomeManage';
 import CreatorDashboard from './creator/Dashboard';
@@ -42,7 +41,7 @@ const dashboardRoutes = {
     {
       path: '/landing',
       name: '내 광고페이지 관리',
-      icon: LocalAirport,
+      icon: Public,
       component: CreatorLandingManage,
       layout: '/dashboard/creator',
     },
