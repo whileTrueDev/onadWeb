@@ -7,6 +7,9 @@ import Typography from '@material-ui/core/Typography';
 import Help from '@material-ui/icons/Help';
 import WbSunny from '@material-ui/icons/WbSunny';
 import NightsStay from '@material-ui/icons/Check';
+// atoms
+import StyledItemText from '../../../atoms/StyledItemText';
+import CustomCard from '../../../atoms/CustomCard';
 import TextField from '../../../atoms/TextField/TextField';
 import Button from '../../../atoms/CustomButtons/Button';
 import Snackbar from '../../../atoms/Snackbar/Snackbar';
@@ -15,6 +18,7 @@ import Tooltip from '../../../atoms/DescPopover';
 // hooks
 import useDialog from '../../../utils/lib/hooks/useDialog';
 import useUpdateData from '../../../utils/lib/hooks/useUpdateData';
+import useTooltip from '../../../utils/lib/hooks/useTooltip';
 
 const useStyles = makeStyles(theme => ({
   flex: {
@@ -35,24 +39,12 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-function useTooltip() {
-  const [tooltipIndex, setTooltipIndex] = React.useState(0);
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  function handleTooltipOpen(e, index) {
-    setAnchorEl(e.currentTarget);
-    setTooltipIndex(index);
-  }
-  function handleTooltipClose() {
-    setAnchorEl(null);
-  }
-  return {
-    tooltipIndex, anchorEl, handleTooltipOpen, handleTooltipClose
-  };
-}
 
 export default function LandingSetting(props) {
   const { userData } = props;
   const classes = useStyles();
+
+  // for descriptoin
   const [description, setDescription] = React.useState(userData.payload.creatorDesc);
   function handleDescChange(e) {
     setDescription(e.target.value);
@@ -66,6 +58,7 @@ export default function LandingSetting(props) {
   const updateRequest = useUpdateData('/api/dashboard/creator/landing/update', userData.callUrl);
   const snack = useDialog(); // for sanckbar
 
+  // for landing page theme
   const [darkTheme, setTheme] = React.useState({
     bool: userData.payload.creatorTheme === 'dark',
     theme: userData.payload.creatorTheme
@@ -75,7 +68,31 @@ export default function LandingSetting(props) {
   }
 
   return (
-    <div>
+    <CustomCard
+      iconComponent={<StyledItemText primary="광고페이지 설정" style={{ color: '#fff' }} />}
+      buttonComponent={(
+        <div className={classnames(classes.flex, classes.flexEnd)}>
+          <Button
+            color="info"
+            disabled={
+            (userData.payload.creatorDesc === description)
+            && (userData.payload.creatorTheme === darkTheme.theme)
+          }
+            onClick={() => {
+              updateRequest.handleUpdateRequest({
+                description,
+                creatorTheme: darkTheme.theme
+              });
+              if (updateRequest.success) {
+                snack.handleOpen();
+              }
+            }}
+          >
+          변경 저장하기
+          </Button>
+        </div>
+      )}
+    >
       <div style={{ marginBottom: 40 }}>
         <div className={classes.flex}>
           <Typography variant="h6">
@@ -135,27 +152,6 @@ export default function LandingSetting(props) {
         </div>
       </div>
 
-      <div className={classnames(classes.flex, classes.flexEnd)}>
-        <Button
-          color="info"
-          disabled={
-            (userData.payload.creatorDesc === description)
-            && (userData.payload.creatorTheme === darkTheme.theme)
-          }
-          onClick={() => {
-            updateRequest.handleUpdateRequest({
-              description,
-              creatorTheme: darkTheme.theme
-            });
-            if (updateRequest.success) {
-              snack.handleOpen();
-            }
-          }}
-        >
-          변경 저장하기
-        </Button>
-      </div>
-
       <Tooltip
         open={Boolean(anchorEl)}
         anchorEl={anchorEl}
@@ -179,7 +175,7 @@ export default function LandingSetting(props) {
         close
       />
 
-    </div>
+    </CustomCard>
   );
 }
 

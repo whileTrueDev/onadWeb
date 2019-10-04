@@ -1,40 +1,18 @@
 import React from 'react';
-import classnames from 'classnames';
 import { makeStyles } from '@material-ui/core/styles';
 import {
   Grid, Typography, Divider
 } from '@material-ui/core';
-import Help from '@material-ui/icons/Help';
 import BarChart from '@material-ui/icons/BarChart';
-import DateRange from '@material-ui/icons/DateRange';
 import CustomCard from '../../../atoms/CustomCard';
 import CircularProgress from '../../../atoms/Progress/CircularProgress';
-import useFetchData from '../../../utils/lib/hooks/useFetchData';
 import PrettoSlider from '../../../atoms/PrettoSlider';
 import StyledItemText from '../../../atoms/StyledItemText';
+import Tooltip from '../../../atoms/DescPopover';
+import useFetchData from '../../../utils/lib/hooks/useFetchData';
+import useTooltip from '../../../utils/lib/hooks/useTooltip';
 
 const useStyles = makeStyles(({
-  stats: {
-    color: '#999',
-    display: 'inline-flex',
-    fontSize: '14px',
-    lineHeight: '22px',
-    '& svg': {
-      top: '4px',
-      width: '16px',
-      height: '16px',
-      position: 'relative',
-      marginRight: '3px',
-      marginLeft: '3px',
-    },
-    '& .fab,& .fas,& .far,& .fal,& .material-icons': {
-      top: '4px',
-      fontSize: '16px',
-      position: 'relative',
-      marginRight: '3px',
-      marginLeft: '3px',
-    },
-  },
   flex: {
     display: 'flex',
     justifyContent: 'center',
@@ -57,9 +35,16 @@ const useStyles = makeStyles(({
 const IncomeCard = () => {
   const classes = useStyles();
   const landingData = useFetchData('/api/dashboard/creator/landing/data');
+  const {
+    tooltipIndex, anchorEl, handleTooltipClose, handleTooltipOpen
+  } = useTooltip();
+
 
   return (
-    <CustomCard iconComponent={<BarChart />} buttonComponent={<StyledItemText primary="랜딩페이지 현황" secondary="다음 보상까지 남은 경험치입니다." />}>
+    <CustomCard
+      iconComponent={(<BarChart />)}
+      buttonComponent={<StyledItemText primary="광고페이지 현황" secondary="광고페이지의 상호작용에 따라 레벨이 결정됩니다." />}
+    >
       <Grid container direction="column" spacing={2}>
         <Grid item />
         <Grid item />
@@ -71,6 +56,10 @@ const IncomeCard = () => {
               justifyContent: 'center',
               alignItems: 'center'
             }}
+            onMouseEnter={evt => handleTooltipOpen(evt, 2)}
+            onMouseLeave={handleTooltipClose}
+            aria-owns={anchorEl ? 'send-desc-popover' : undefined}
+            aria-haspopup="true"
           >
             <Grid item xs={11} sm={11}>
               <PrettoSlider
@@ -80,6 +69,7 @@ const IncomeCard = () => {
                 value={!landingData.loading && !landingData.error ? landingData.payload.exp : 0}
               />
             </Grid>
+
             <Grid item>
               <Typography gutterBottom variant="body2" className={classes.level}>
                 LV.
@@ -89,8 +79,11 @@ const IncomeCard = () => {
                 )}
               </Typography>
             </Grid>
+
           </Grid>
         </Grid>
+
+
         <Grid container direction="row" justify="space-evenly">
           <Grid item>
             <div className={classes.flex}>
@@ -111,6 +104,7 @@ const IncomeCard = () => {
           <Grid item>
             <Divider component="hr" orientation="vertical" />
           </Grid>
+
           <Grid item>
             <div className={classes.flex}>
               <Typography gutterBottom variant="body1" className={classes.head}>총 배너 클릭수</Typography>
@@ -127,6 +121,7 @@ const IncomeCard = () => {
               </div>
             )}
           </Grid>
+
           <Grid item>
             <Divider component="hr" orientation="vertical" />
           </Grid>
@@ -134,14 +129,6 @@ const IncomeCard = () => {
             <Grid container className={classes.flex}>
               <Grid item>
                 <Typography gutterBottom variant="body1" className={classes.head}>총 구매 조회수</Typography>
-              </Grid>
-              <Grid item>
-
-                <Help
-                  fontSize="small"
-                  aria-haspopup="true"
-                  color="disabled"
-                />
               </Grid>
             </Grid>
             {landingData.loading && (<CircularProgress small />)}
@@ -157,20 +144,24 @@ const IncomeCard = () => {
             )}
           </Grid>
         </Grid>
-        <Grid item>
-          <div
-            className={classnames(classes.stats, classes.flex)}
-          >
-            {!landingData.loading && !landingData.error && landingData.payload.date
-                  && (
-                  <div>
-                    <DateRange />
-                    <span>{`업데이트 : ${landingData.payload.date}`}</span>
-                  </div>
-                  )}
-          </div>
-        </Grid>
       </Grid>
+
+      <Tooltip
+        open={Boolean(anchorEl)}
+        anchorEl={anchorEl}
+        handlePopoverClose={handleTooltipClose}
+        descIndex={tooltipIndex}
+        contentType="landingManage"
+        anchorOrigin={{
+          vertical: 'center',
+          horizontal: 'center',
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'left',
+        }}
+      />
+
     </CustomCard>
   );
 };

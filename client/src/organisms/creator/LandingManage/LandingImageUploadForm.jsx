@@ -6,6 +6,8 @@ import Button from '../../../atoms/CustomButtons/Button';
 import Snackbar from '../../../atoms/Snackbar/Snackbar';
 import useImageUpload from '../../../utils/lib/hooks/useImageUpload';
 import useDialog from '../../../utils/lib/hooks/useDialog';
+import CustomCard from '../../../atoms/CustomCard';
+import StyledItemText from '../../../atoms/StyledItemText';
 
 const useStyles = makeStyles(theme => ({
   imageWrapper: {
@@ -64,7 +66,28 @@ export default function LandingImageUploadForm(props) {
 
 
   return (
-    <div>
+    <CustomCard
+      iconComponent={<StyledItemText primary="배경이미지 업로드" style={{ color: '#fff' }} />}
+      buttonComponent={(
+        <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
+          <Button
+            color="info"
+            disabled={imageUrl === userImage}
+            onClick={() => { handleUploadClick(); }}
+          >
+            변경 저장하기
+          </Button>
+
+          <Button
+            color="warning"
+            disabled={imageUrl === defaultImage}
+            onClick={() => { handleImageChange({ newImageUrl: defaultImage }); }}
+          >
+            기본 이미지로
+          </Button>
+        </div>
+      )}
+    >
       <div
         className={classes.imageWrapper}
         htmlFor="getfile"
@@ -86,30 +109,13 @@ export default function LandingImageUploadForm(props) {
           </Button>
         </div>
       </div>
-      <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-        <Button
-          color="info"
-          disabled={imageUrl === userImage}
-          onClick={() => { handleUploadClick(); }}
-        >
-            변경 저장하기
-        </Button>
-
-        <Button
-          color="warning"
-          disabled={imageUrl === defaultImage}
-          onClick={() => { handleImageChange({ newImageUrl: defaultImage }); }}
-        >
-            기본 이미지로
-        </Button>
-      </div>
 
       <Snackbar
         open={snack.open}
         message="이미지가 등록되었습니다."
         handleClose={snack.handleClose}
       />
-    </div>
+    </CustomCard>
   );
 }
 
