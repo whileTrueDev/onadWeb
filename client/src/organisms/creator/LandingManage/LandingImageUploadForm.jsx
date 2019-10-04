@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import makeStyles from '@material-ui/core/styles/makeStyles';
-
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 import Button from '../../../atoms/CustomButtons/Button';
 import Snackbar from '../../../atoms/Snackbar/Snackbar';
 import useImageUpload from '../../../utils/lib/hooks/useImageUpload';
@@ -52,8 +52,35 @@ const useStyles = makeStyles(theme => ({
 
 const defaultImage = '/pngs/landing/background-whale.jpg';
 
+// 배경이미지 업로드, 기본이미지로 돌아가기 button
+const Buttons = (props) => {
+  const {
+    imageUrl, userImage, handleUploadClick, handleImageChange
+  } = props;
+  return (
+    <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
+      <Button
+        color="info"
+        disabled={imageUrl === userImage}
+        onClick={() => { handleUploadClick(); }}
+      >
+            변경 저장하기
+      </Button>
+
+      <Button
+        color="warning"
+        disabled={imageUrl === defaultImage}
+        onClick={() => { handleImageChange({ newImageUrl: defaultImage }); }}
+      >
+            기본 이미지로
+      </Button>
+    </div>
+  );
+};
+
 export default function LandingImageUploadForm(props) {
   const { userData } = props;
+  const isLgWidth = useMediaQuery('(min-width:1200px)');
   const classes = useStyles();
   const snack = useDialog();
   const url = '/api/dashboard/creator/landing/image/upload';
@@ -68,24 +95,13 @@ export default function LandingImageUploadForm(props) {
   return (
     <CustomCard
       iconComponent={<StyledItemText primary="배경이미지 업로드" style={{ color: '#fff' }} />}
-      buttonComponent={(
-        <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
-          <Button
-            color="info"
-            disabled={imageUrl === userImage}
-            onClick={() => { handleUploadClick(); }}
-          >
-            변경 저장하기
-          </Button>
-
-          <Button
-            color="warning"
-            disabled={imageUrl === defaultImage}
-            onClick={() => { handleImageChange({ newImageUrl: defaultImage }); }}
-          >
-            기본 이미지로
-          </Button>
-        </div>
+      buttonComponent={isLgWidth && (
+      <Buttons
+        imageUrl={imageUrl}
+        userImage={userImage}
+        handleUploadClick={handleUploadClick}
+        handleImageChange={handleImageChange}
+      />
       )}
     >
       <div
@@ -109,6 +125,15 @@ export default function LandingImageUploadForm(props) {
           </Button>
         </div>
       </div>
+
+      {!isLgWidth && (
+      <Buttons
+        imageUrl={imageUrl}
+        userImage={userImage}
+        handleUploadClick={handleUploadClick}
+        handleImageChange={handleImageChange}
+      />
+      )}
 
       <Snackbar
         open={snack.open}

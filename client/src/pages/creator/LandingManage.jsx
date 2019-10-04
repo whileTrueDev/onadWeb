@@ -25,7 +25,26 @@ function LandingManage() {
       </GridContainer>
 
       <GridContainer>
-        <GridItem xs={12} sm={6} md={6} xl={3}>
+        <GridItem xs={12} sm={6} md={6} xl={4}>
+          <GridContainer>
+
+            {/* 배경이미지 선택 */}
+            <GridItem xs={12}>
+              {landingData.loading && (<CircularProgress small />)}
+              {!landingData.loading && landingData.payload && (
+              <LandingImageUploadForm userData={landingData} />
+              )}
+            </GridItem>
+
+            {/* 광고페이지 현황 */}
+            <GridItem xs={12}>
+              <LandingDetail />
+            </GridItem>
+
+          </GridContainer>
+        </GridItem>
+
+        <GridItem xs={12} sm={6} md={6} xl={4}>
           <GridContainer>
 
             {/* 랜딩페이지설정 */}
@@ -36,28 +55,13 @@ function LandingManage() {
               )}
             </GridItem>
 
-            {/* 레벨 및 게이지바 */}
-            <GridItem xs={12}>
-              <LandingDetail />
-            </GridItem>
 
             {/* 패널배너 기본이미지 */}
             <GridItem xs={12}>
               <LandingPanelBanner userData={landingData} />
             </GridItem>
 
-          </GridContainer>
-        </GridItem>
 
-        <GridItem xs={12} sm={6} md={6} xl={5}>
-          <GridContainer>
-            {/* 배경이미지 선택 */}
-            <GridItem xs={12}>
-              {landingData.loading && (<CircularProgress small />)}
-              {!landingData.loading && landingData.payload && (
-              <LandingImageUploadForm userData={landingData} />
-              )}
-            </GridItem>
           </GridContainer>
         </GridItem>
       </GridContainer>
