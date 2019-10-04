@@ -2,19 +2,19 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import { Router, Switch, Route } from 'react-router-dom';
-import RegistStepper from './components/Regist/Stepper';
-import Main from './components/Main';
-import CreatorDashboard from './components/Dashboard/layouts/CreatorDashboardLayout';
-import CreatorDashboardDoor from './components/Dashboard/layouts/CreatorDashboardDoor';
-import MarketerDashboard from './components/Dashboard/layouts/MarketerDashboardLayout';
-import Introduction from './components/Introduction';
-import Manual from './components/Manual';
-import NotFound from './components/Common/NotFound';
-import ShutDownCloseBeta from './components/Common/ShutDownCloseBeta';
-// import KakaoPay from './components/Common/KakaoPay';
-import * as serviceWorker from './serviceWorker';
+import RegistStepper from './organisms/main/Regist/Stepper';
+import Main from './organisms/main/Main';
+import CreatorDashboard from './pages/layouts/CreatorDashboardLayout';
+import CreatorDashboardDoor from './pages/layouts/CreatorDashboardDoor';
+import MarketerDashboard from './pages/layouts/MarketerDashboardLayout';
+import Introduction from './organisms/main/Introduction';
+import Manual from './organisms/main/Manual';
+import NotFound from './pages/others/NotFound';
+import ShutDownCloseBeta from './pages/others/ShutDownCloseBeta';
+// import KakaoPay from './pages/Common/KakaoPay';
+import * as serviceWorker from './utils/serviceWorker';
 import history from './history';
-import CampaignCreateStepper from './pages/CampaignCreate/CampaignCreateStepper';
+import CampaignCreate from './pages/marketer/CampaignCreate';
 
 const developRouter = (
   <Router history={history}>
@@ -26,7 +26,7 @@ const developRouter = (
       <Route exact path="/dashboard/creator/door" component={CreatorDashboardDoor} />
       <Route path="/dashboard/creator" component={CreatorDashboard} />
       <Route path="/dashboard/marketer" component={MarketerDashboard} />
-      <Route path="/dashboard/test" component={CampaignCreateStepper} history={history} />
+      <Route path="/dashboard/test" component={CampaignCreate} history={history} />
       {/* 페이 연습 페이지 */}
       {/* <Route exact path="/pay" component={KakaoPay} /> */}
       {/* not found page */}

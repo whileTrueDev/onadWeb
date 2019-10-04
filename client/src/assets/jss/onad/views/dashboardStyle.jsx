@@ -81,8 +81,8 @@ const dashboardStyle = {
     textAlign: 'center',
     marginTop: '0px',
     minHeight: 'auto',
-    fontWeight: '500',
-    // fontFamily: "'Roboto', 'Helvetica', 'Arial', 'Nanum Gothic', sans-serif",
+    fontWeight: '300',
+    fontFamily: "'Roboto', 'Helvetica', 'Arial', 'Nanum Gothic', sans-serif",
     marginBottom: '3px',
     textDecoration: 'none',
     '& small': {

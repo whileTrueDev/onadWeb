@@ -10,13 +10,10 @@ const bannerRouter = require('./sub/banner');
 const chartRouter = require('./sub/chart');
 const landingRouter = require('./sub/landing');
 const withdrawalRouter = require('./sub/withdrawal');
-const landingRouter = require('./sub/landing');
 
 router.use('/landing', landingRouter);
 router.use('/banner', bannerRouter);
 router.use('/chart', chartRouter);
-router.use('/landing', landingRouter);
-router.use('/withdrawal', withdrawalRouter);
 router.use('/withdrawal', withdrawalRouter);
 
 // 크리에이터 수익금 정보조회
