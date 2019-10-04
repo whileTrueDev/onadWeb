@@ -3,12 +3,17 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Grid, Typography } from '@material-ui/core';
 import FlightTakeoff from '@material-ui/icons/FlightTakeoff';
+import Help from '@material-ui/icons/Help';
 import CustomCard from '../../../atoms/CustomCard';
 import StyledItemText from '../../../atoms/StyledItemText';
 import Tooltip from '../../../atoms/DescPopover';
 import useTooltip from '../../../utils/lib/hooks/useTooltip';
 
 const useStyles = makeStyles(() => ({
+  flex: {
+    display: 'flex',
+
+  },
   site: {
     color: '#00acc1',
     textDecoration: 'underline',
@@ -32,10 +37,6 @@ export default function LandingPanelBanner(props) {
         <StyledItemText
           primary="트위치 패널용 온애드 기본 배너"
           secondary="광고페이지로 링크하여 광고를 더 많이 노출할 수 있습니다."
-          onMouseEnter={evt => handleTooltipOpen(evt, 3)}
-          onMouseLeave={handleTooltipClose}
-          aria-owns={anchorEl ? 'send-desc-popover' : undefined}
-          aria-haspopup="true"
         />
       )}
     >
@@ -61,9 +62,19 @@ export default function LandingPanelBanner(props) {
           </div>
 
           <div>
-            <Typography variant="h6">
+            <div className={classes.flex}>
+              <Typography variant="h6">
               기본 이미지
-            </Typography>
+              </Typography>
+              <Help
+                fontSize="small"
+                color="disabled"
+                onMouseEnter={evt => handleTooltipOpen(evt, 3)}
+                onMouseLeave={handleTooltipClose}
+                aria-owns={anchorEl ? 'send-desc-popover' : undefined}
+                aria-haspopup="true"
+              />
+            </div>
 
             <img src="/pngs/landing/panel_banner_default.png" alt="패널기본배너1" />
             <img src="/pngs/landing/panel_banner_default_black.png" alt="패널기본배너2" />
@@ -79,12 +90,12 @@ export default function LandingPanelBanner(props) {
         descIndex={tooltipIndex}
         contentType="landingManage"
         anchorOrigin={{
-          vertical: 'bottom',
+          vertical: 'top',
           horizontal: 'right',
         }}
         transformOrigin={{
-          vertical: 'top',
-          horizontal: 'center',
+          vertical: 'bottom',
+          horizontal: 'left',
         }}
       />
     </CustomCard>
