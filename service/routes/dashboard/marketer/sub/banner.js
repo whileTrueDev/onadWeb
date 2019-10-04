@@ -25,7 +25,7 @@ router.get('/', (req, res) => {
 });
 
 // 특정 마케터의 모든 배너를 조회
-router.get('/banner/all', (req, res) => {
+router.get('/all', (req, res) => {
   const marketerId = req._passport.session.user.userid;
   const bannerQuery = `
   SELECT cp.campaignId, br.bannerSrc, confirmState

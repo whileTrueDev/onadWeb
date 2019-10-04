@@ -19,7 +19,7 @@ router.get('/current', (req, res) => {
   JOIN marketerInfo as mi
   ON SUBSTRING_INDEX(bm.contractionId, '_', 1) = mi.marketerId
 
-  JOIN contractionTimestamp as ct
+  JOIN contractionTime as ct
   ON  ct.contractionId = bm.contractionId
   
   WHERE bm.contractionState = 0
