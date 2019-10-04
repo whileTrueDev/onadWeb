@@ -4,8 +4,9 @@ import {
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import shortid from 'shortid';
-import classNames from 'classnames';
-import { sendTypeConfig, optionConfig, budgetConfig } from '../../pages/CampaignCreate/sendTypeConfig';
+import {
+  sendTypeConfig, optionConfig, budgetConfig, landingManageConfig
+} from '../../pages/CampaignCreate/sendTypeConfig';
 import StyledSelectText from './StyledSelectText';
 
 const useStyles = makeStyles(theme => ({
@@ -34,10 +35,10 @@ const useStyles = makeStyles(theme => ({
 }));
 
 function DescPopover(props) {
-  const classes = useStyles(props.styleProps);
   const {
-    open, anchorEl, handlePopoverClose, descIndex, contentType, children, head, ...rest
+    open, anchorEl, handlePopoverClose, descIndex, contentType, children, head, styleProps, ...rest
   } = props;
+  const classes = useStyles(styleProps);
 
   const getContent = (type) => {
     switch (type) {
@@ -45,7 +46,10 @@ function DescPopover(props) {
         return (
           <Grid container direction="column" spacing={1}>
             <Grid item>
-              <StyledSelectText primary={sendTypeConfig[descIndex].title} className={classes.label} />
+              <StyledSelectText
+                primary={sendTypeConfig[descIndex].title}
+                className={classes.label}
+              />
             </Grid>
             {sendTypeConfig[descIndex].text.split('\n').map(row => (
               <Grid item key={shortid.generate()}>
@@ -86,6 +90,31 @@ function DescPopover(props) {
             ))}
           </Grid>
         );
+      case 'landingManage':
+        return (
+          <Grid container direction="column" spacing={1}>
+            <Grid item>
+              <StyledSelectText
+                primary={landingManageConfig[descIndex].title}
+                className={classes.label}
+              />
+            </Grid>
+            {landingManageConfig[descIndex].text.split('\n').map(row => (
+              <Grid item key={shortid.generate()}>
+                <Typography className={classes.text}>
+                  {row}
+                </Typography>
+              </Grid>
+            ))}
+            {landingManageConfig[descIndex].image ? (
+              <img
+                style={{ maxWidth: 500 }}
+                src={landingManageConfig[descIndex].image}
+                alt={landingManageConfig[descIndex].image}
+              />
+            ) : null}
+          </Grid>
+        );
       default:
         return <div />;
     }
@@ -100,14 +129,6 @@ function DescPopover(props) {
       }}
       open={open}
       anchorEl={anchorEl}
-      // anchorOrigin={{
-      //   vertical: 'center',
-      //   horizontal: 'left',
-      // }}
-      // transformOrigin={{
-      //   vertical: 'center',
-      //   horizontal: 'right',
-      // }}
       onClose={handlePopoverClose}
     >
       {children || getContent(contentType)}

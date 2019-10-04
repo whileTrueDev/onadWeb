@@ -14,7 +14,7 @@ import snackbarContentStyle from '../../assets/jss/onad/components/snackbarConte
 function Snackbar({ ...props }) {
   const {
     classes, message, color, close,
-    place, icon, open, closeNotification, Link,
+    place, icon, open, handleClose, Link,
   } = props;
   let action = [];
   const messageClasses = classNames({
@@ -27,7 +27,7 @@ function Snackbar({ ...props }) {
         key="close"
         aria-label="Close"
         color="inherit"
-        onClick={() => closeNotification()}
+        onClick={() => handleClose()}
       >
         <Close className={classes.close} />
       </IconButton>,
@@ -35,7 +35,7 @@ function Snackbar({ ...props }) {
   }
   return (
     <Snack
-      onClose={closeNotification}
+      onClose={handleClose}
       autoHideDuration={3000}
       anchorOrigin={{
         vertical: place.indexOf('t') === -1 ? 'bottom' : 'top',
@@ -68,8 +68,8 @@ function Snackbar({ ...props }) {
 }
 
 Snackbar.propTypes = {
-  classes: PropTypes.object.isRequired,
   message: PropTypes.node.isRequired,
+  classes: PropTypes.object,
   color: PropTypes.oneOf(['info', 'success', 'warning', 'danger', 'primary']),
   close: PropTypes.bool,
   icon: PropTypes.bool,

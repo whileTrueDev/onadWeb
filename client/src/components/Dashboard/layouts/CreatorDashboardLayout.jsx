@@ -5,11 +5,11 @@ import { Switch, Route } from 'react-router-dom';
 import Navbar from '../components/Navbars/Navbar';
 import Sidebar from '../components/Sidebar/Sidebar';
 import allRoutes from '../routes';
+import history from '../../../history';
 import Footer from '../components/Footer/Footer';
 // css
 import dashboardStyle from '../assets/jss/onad/layouts/dashboardStyle';
 import '../assets/css/onad.css';
-import history from '../../../history';
 
 const CreatorRoutes = ({ pannelRef }) => (
   <Switch>
@@ -54,7 +54,7 @@ const CreatorDashboard = (props) => {
         routes={allRoutes.creator}
         logoText="OnAD"
         color="info"
-        logo="/pngs/logo/box.png"
+        logo="/pngs/logo/onad_logo_vertical_white.png"
         mobileOpen={mobileOpen}
         handleDrawerToggle={handleDrawerToggle}
         {...rest}

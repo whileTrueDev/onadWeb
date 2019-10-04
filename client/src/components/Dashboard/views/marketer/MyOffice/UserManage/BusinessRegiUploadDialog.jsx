@@ -5,8 +5,7 @@ import Button from '../../../../components/CustomButtons/Button';
 import Dialog from '../../../../components/Dialog/Dialog';
 import GridContainer from '../../../../components/Grid/GridContainer';
 import GridItem from '../../../../components/Grid/GridItem';
-import axios from '../../../../../../utils/axios';
-import HOST from '../../../../../../config';
+import useImageUpload from '../../../../lib/hooks/useImageUpload';
 
 const useStyles = makeStyles(theme => ({
   imgInput: {
@@ -30,72 +29,15 @@ const useStyles = makeStyles(theme => ({
 }));
 
 
-function useImageUpload(DEFAULT_IMAGE, url, snackOpenFunction) {
-  const [imageUrl, setImageUrl] = React.useState(DEFAULT_IMAGE);
-  const [imageName, setImageName] = React.useState('');
-  function handleReset() {
-    setImageName('');
-    setImageUrl(DEFAULT_IMAGE);
-  }
-  function handleImageChange({ newImageName, newImageUrl }) {
-    setImageName(newImageName);
-    setImageUrl(newImageUrl);
-  }
-
-  const readImage = (event) => {
-    if (event.target.files.length !== 0) {
-      const fileRegx = /^image\/[a-z]*$/;
-      const myImage = event.target.files[0];
-      // 최대 size를 지정하자.
-      if (fileRegx.test(myImage.type)) {
-        const reader = new FileReader();
-        reader.readAsDataURL(myImage);
-        reader.onload = () => {
-          handleImageChange({ newImageName: myImage.name, newImageUrl: reader.result });
-        };
-      } else {
-        alert('파일의 형식이 올바르지 않습니다.');
-      }
-    } else {
-      handleReset();
-    }
-  };
-
-  function handleClick() {
-    axios.post(url, {
-      imageUrl, imageName
-    })
-      .then((res) => {
-        if (res.data[0]) {
-          snackOpenFunction();
-        } else {
-          alert('현재는 등록할 수 없습니다. 본사에 문의하세요');
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }
-
-  return {
-    imageUrl,
-    imageName,
-    handleReset,
-    handleImageChange,
-    readImage,
-    handleClick
-  };
-}
-
 export default function BusinessRegiUploadDialog(props) {
   const {
     open, handleClose, businessRegiImage, request, handleSnackOpen
   } = props;
   const classes = useStyles();
   const {
-    imageUrl, imageName, handleReset, readImage, handleClick
+    imageUrl, imageName, handleReset, readImage, handleUploadClick
   } = useImageUpload(businessRegiImage,
-    `${HOST}/api/dashboard/marketer/profile/business/upload`,
+    '/api/dashboard/marketer/profile/business/upload',
     handleSnackOpen);
 
   return (
@@ -110,7 +52,7 @@ export default function BusinessRegiUploadDialog(props) {
           <Button
             color="info"
             onClick={async () => {
-              await handleClick();
+              await handleUploadClick();
               await handleClose();
               request();
             }}

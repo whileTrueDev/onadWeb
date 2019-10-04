@@ -5,9 +5,12 @@ import AttachMoney from '@material-ui/icons/AttachMoneyOutlined';
 import BrandingWatermark from '@material-ui/icons/BrandingWatermarkOutlined';
 import Reorder from '@material-ui/icons/Reorder';
 import Work from '@material-ui/icons/Work';
+import LocalAirport from '@material-ui/icons/LocalAirport';
+// import Public from '@material-ui/icons/Public'; // 지구본 아이콘
 
 // 크리에이터 라우터
 import creatorUserProfile from './views/creator/UserProfile/UserProfile';
+import LandingManage from './views/creator/LandingManage/LandingManage';
 import IncomeManage from './views/creator/IncomeManage/IncomeManage';
 // import creatorDashboardPage from './views/creator/Dashboard/Dashboard';
 import creatorDashboardPage from '../../pages/CreatorDashboard/Dashboard';
@@ -34,6 +37,13 @@ const dashboardRoutes = {
       name: '수익 관리',
       icon: AttachMoney,
       component: IncomeManage,
+      layout: '/dashboard/creator',
+    },
+    {
+      path: '/landing',
+      name: '내 광고페이지 관리',
+      icon: LocalAirport,
+      component: LandingManage,
       layout: '/dashboard/creator',
     },
     {

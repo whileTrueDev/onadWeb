@@ -2,54 +2,54 @@ const express = require('express');
 const app = require('express')();
 const http = require('http').createServer(app);
 const io = require('socket.io')(http);
+const schedule = require('node-schedule');
 const sql = require('./public/select');
 const pool = require('./public/connect');
-const schedule = require('node-schedule');
-const requestImg = require('./public/requestImg.js')
-const checkPlz = require('./public/checkPlz.js')
+const requestImg = require('./public/requestImg.js');
+const checkPlz = require('./public/checkPlz.js');
 const config = require('./config.json');
 
 // port 설정 및 hostname 설정
 const PORT = 3002;
-process.env.NODE_ENV = ( process.env.NODE_ENV && ( process.env.NODE_ENV ).trim().toLowerCase() == 'production' ) ? 'production' : 'development';
+process.env.NODE_ENV = (process.env.NODE_ENV && (process.env.NODE_ENV).trim().toLowerCase() == 'production') ? 'production' : 'development';
 let BACK_HOST = config.dev.apiHostName;
 let FRONT_HOST = config.dev.reactHostName;
 let SOCKET_HOST = config.dev.socketHostName;
 if (process.env.NODE_ENV === 'production') {
-    console.log(`now listening on ${PORT} PORT with ${process.env.NODE_ENV} environment!`)
-    BACK_HOST = config.production.apiHostName;
-    FRONT_HOST = config.production.reactHostName;
-    SOCKET_HOST = config.production.socketHostName;
+  console.log(`now listening on ${PORT} PORT with ${process.env.NODE_ENV} environment!`);
+  BACK_HOST = config.production.apiHostName;
+  FRONT_HOST = config.production.reactHostName;
+  SOCKET_HOST = config.production.socketHostName;
 }
-//view engine
-app.set('views', __dirname + '/views');
+// view engine
+app.set('views', `${__dirname}/views`);
 app.set('view engine', 'ejs');
 app.engine('html', require('ejs').renderFile);
 
-//static
-app.use('/public', express.static(__dirname + '/public')); //디렉토리 정적으로 고정하는 부분
+// static
+app.use('/public', express.static(`${__dirname}/public`)); // 디렉토리 정적으로 고정하는 부분
 
-app.get('/wrongIp', function(req, res){
-  res.render('wrongIp.ejs')
+app.get('/wrongIp', (req, res) => {
+  res.render('wrongIp.ejs');
 });
 
-app.get('/wrongUrl', function(req, res){
-  res.render('wrongUrl.ejs')
+app.get('/wrongUrl', (req, res) => {
+  res.render('wrongUrl.ejs');
 });
-app.get('/duplicate', function(req, res){
-  res.render('duplicate.ejs')
+app.get('/duplicate', (req, res) => {
+  res.render('duplicate.ejs');
 });
-app.get('/browserWarn', function(req, res){
-  res.render('browserWarn.ejs')
+app.get('/browserWarn', (req, res) => {
+  res.render('browserWarn.ejs');
 });
-app.get('/test', function(req, res){
-  res.render('test.ejs')
+app.get('/test', (req, res) => {
+  res.render('test.ejs');
 });
-app.get('/error', function(req, res){
-  res.render('error.ejs')
-})
-/*app.get('/banner/server', function(req, res){ // server.html /server로 라우팅 
-    //관리자 페이지 접속 시 
+app.get('/error', (req, res) => {
+  res.render('error.ejs');
+});
+/* app.get('/banner/server', function(req, res){ // server.html /server로 라우팅
+    //관리자 페이지 접속 시
     console.log('server')
     var toServer = {};
     var tmp = sql('SELECT bannerId, bannerSrc FROM bannerMatched where contractionState = 1')
@@ -64,16 +64,16 @@ app.get('/error', function(req, res){
             res.render('server', {imgSource : toServer});
         };
       });
-});*/
+}); */
 
-app.get('/banner/:id', function(req, res){ ///banner/:id로 라우팅
-  console.log('banner')
-  var clientIp = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-  var fullUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
-  var cutUrl = '/' + fullUrl.split('/')[4]
-  var getIp = sql(`SELECT creatorIp FROM creatorInfo WHERE advertiseUrl = "${cutUrl}"`)
+app.get('/banner/:id', (req, res) => { // /banner/:id로 라우팅
+  console.log('banner');
+  let clientIp = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+  let fullUrl = `${req.protocol  }://${  req.get('host')  }${req.originalUrl}`;
+  let cutUrl = `/${  fullUrl.split('/')[4]}`;
+  let getIp = sql(`SELECT creatorIp FROM creatorInfo WHERE advertiseUrl = "${cutUrl}"`);
 
-  getIp.select(function(err, data){
+  getIp.select((err, data) => {
     if (err){
       console.log(err)
     }
@@ -99,21 +99,21 @@ app.get('/banner/:id', function(req, res){ ///banner/:id로 라우팅
 
 });
 
-(function(){
-  var socketsInfo = {}; //클라이언트로 보낼 socketinfo 객체
-  var serverId = undefined; //서버아이디 체크를 위해 생성
-  io.on('connection', function(socket){
-    console.log('socket client on') // 연결이 되면 로그 발생
-    var clientId = socket.id; //socketID 획득
-    var req = socket.request; // req
-    var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress; //클라이언트 ip주소 얻는 부분
-    var roomInfo = socket.adapter.rooms; // 현재 웹소켓에 접속중이 room들과 그 접속자들의 정보 얻음
-    var keys = Object.keys(roomInfo); //websocket 접속자 정보 
-    var rule = new schedule.RecurrenceRule(); //스케쥴러 객체 생성
-    rule.hour = new schedule.Range(0,23) // cronTask 시간지정
-    rule.minute = [0, 10, 20, 30, 40, 50] //cronTask 실행되는 분(minute)
-    console.log(roomInfo)
-    var cronTask = schedule.scheduleJob(rule, function(){ // 스케쥴러를 통해 1분마다 db에 배너정보 전송
+(function () {
+  const socketsInfo = {}; // 클라이언트로 보낼 socketinfo 객체
+  const serverId; // 서버아이디 체크를 위해 생성
+  io.on('connection', (socket) => {
+    console.log('socket client on'); // 연결이 되면 로그 발생
+    let clientId = socket.id; // socketID 획득
+    let req = socket.request; // req
+    let ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress; // 클라이언트 ip주소 얻는 부분
+    let roomInfo = socket.adapter.rooms; // 현재 웹소켓에 접속중이 room들과 그 접속자들의 정보 얻음
+    let keys = Object.keys(roomInfo); // websocket 접속자 정보
+    let rule = new schedule.RecurrenceRule(); // 스케쥴러 객체 생성
+    rule.hour = new schedule.Range(0, 23); // cronTask 시간지정
+    rule.minute = [0, 10, 20, 30, 40, 50]; // cronTask 실행되는 분(minute)
+    console.log(roomInfo);
+    let cronTask = schedule.scheduleJob(rule, () => { // 스케쥴러를 통해 1분마다 db에 배너정보 전송
       if(serverId != clientId && clientId != undefined){ //해당 페이지의 클라이언트 아이디가 서버아이디와 일치하지 않고, undefined가 아니면 그건 client라는 뜻
         socket.emit('response banner data to server', {}); //client로 emit
         socket.emit('check bannerId', {})
@@ -122,15 +122,15 @@ app.get('/banner/:id', function(req, res){ ///banner/:id로 라우팅
         console.log(serverId + '새로고침완료');
         }*/  
       });
-    
-      /*socket.on('host', function(){ //server 접속시 발생
+
+    /*socket.on('host', function(){ //server 접속시 발생
           keys.splice(keys.indexOf(clientId), 1) //서버의 웹소켓 아이디는 설렉트 박스에 안뜨도록 제거
           socket.emit('id receive', keys, socketsInfo); //socketInfo 객체(클라이언트 socketid와 url이 담김)랑 클라이언트 socketid 전송
           serverId = clientId; //서버아이디 생성
           console.log(socketsInfo, keys);
-      });*/
+      }); */
 
-    socket.on('new client', function(msg){ //새로운 클라이언트 접속 시 발생 
+    socket.on('new client', (msg) => { //새로운 클라이언트 접속 시 발생 
       var _url = msg[0]
       var history = msg[1]
       var urlArray = Object.values(socketsInfo)
@@ -159,7 +159,7 @@ app.get('/banner/:id', function(req, res){ ///banner/:id로 라우팅
       console.log(socketsInfo); //접속중인 url 저장된 부분
     });
 
-    socket.on('disconnect', function(){ //접속종료시
+    socket.on('disconnect', () => { //접속종료시
       delete socketsInfo[clientId] //socketsInfo에서 접속종료한 clientID 삭제  
       // if(serverId == undefined){
       //     socket.broadcast.emit('id remove', clientId);
@@ -171,7 +171,7 @@ app.get('/banner/:id', function(req, res){ ///banner/:id로 라우팅
       clearInterval(socket.interval);
     });
 
-    socket.on('write to db', function(msg){
+    socket.on('write to db', (msg) => {
       pool.getConnection(function(err, conn){
       if(err) return err;
       var bannername = msg
@@ -183,16 +183,16 @@ app.get('/banner/:id', function(req, res){ ///banner/:id로 라우팅
       });   
     });
 
-    socket.on('check plz', function(msg){
+    socket.on('check plz', (msg) => {
       checkPlz(sql, socket, msg)
     });
 
-    socket.on('pageActive', function(_url){
+    socket.on('pageActive', (_url) => {
       var activeState = true;
       requestImg(sql, socket, _url, activeState)
     });
 
-    socket.on('pageActive handler', function(msg){
+    socket.on('pageActive handler', (msg) => {
       var bannerName = msg[0];
       var state = msg[1];
       pool.getConnection(function(err, conn){
@@ -204,11 +204,11 @@ app.get('/banner/:id', function(req, res){ ///banner/:id로 라우팅
             if (err) return err;   
           });
         });     
-      })
+      });
 
-    })
-})();
+  });
+}());
 
-http.listen(PORT, function(){
+http.listen(PORT, () => {
   console.log('node_websocket server on');
 });

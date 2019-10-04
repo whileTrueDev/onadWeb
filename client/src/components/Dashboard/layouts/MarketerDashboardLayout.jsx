@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
+
 import withStyles from '@material-ui/core/styles/withStyles';
 import { Switch, Route } from 'react-router-dom';
 import Navbar from '../components/Navbars/Navbar';
@@ -50,7 +51,7 @@ const MarketerDashboard = ({
         routes={allRoutes.marketer}
         logoText="OnAD"
         color="info"
-        logo="/pngs/logo/onad_logo_vertical.png"
+        logo="/pngs/logo/onad_logo_vertical_white.png"
         mobileOpen={mobileOpen}
         handleDrawerToggle={handleDrawerToggle}
         {...rest}
@@ -73,9 +74,6 @@ const MarketerDashboard = ({
   );
 };
 
-MarketerRoutes.propTypes = {
-  history: PropTypes.object,
-};
 
 MarketerRoutes.defaultProps = {
   history: {},

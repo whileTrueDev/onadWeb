@@ -1,4 +1,6 @@
 import React from 'react';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
+import useTheme from '@material-ui/core/styles/useTheme';
 import Typography from '@material-ui/core/Typography';
 import StackedBar from '../../../components/Chart/StackedBar';
 import CircularProgress from '../../../components/Progress/CircularProgress';
@@ -6,6 +8,9 @@ import useFetchData from '../../../lib/hooks/useFetchData';
 
 function ValueChart() {
   const valueChartData = useFetchData('/api/dashboard/marketer/campaign/chart');
+  const theme = useTheme();
+  const isXlWidth = useMediaQuery(theme.breakpoints.up('lg'));
+  console.log(isXlWidth);
 
   return (
     <div>
@@ -15,11 +20,11 @@ function ValueChart() {
       )}
       { !valueChartData.loading && valueChartData.payload && (
         <div>
-          <StackedBar
-
-            // labels={valueChartData.payload.labels}
-            dataSet={valueChartData.payload}
-          />
+          {isXlWidth ? (
+            <StackedBar height={70} dataSet={valueChartData.payload} />
+          ) : (
+            <StackedBar height={150} dataSet={valueChartData.payload} />
+          )}
         </div>
       )}
     </div>

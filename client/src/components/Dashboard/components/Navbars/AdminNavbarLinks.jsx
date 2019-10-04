@@ -47,7 +47,7 @@ function HeaderLinks(props) {
   return (
     <div>
       {/* notification */}
-      {window.location.pathname.includes('marketer')
+      {/* {window.location.pathname.includes('marketer')
         ? null
         : (
           <Hidden smDown>
@@ -69,7 +69,7 @@ function HeaderLinks(props) {
             <Notification anchorEl={anchorEl} handleMenuClose={handleMenuClose} />
           </Hidden>
 
-        )}
+        )} */}
 
       <Hidden smDown>
         <Button
