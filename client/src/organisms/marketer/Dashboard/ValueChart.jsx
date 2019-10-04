@@ -10,7 +10,6 @@ function ValueChart() {
   const valueChartData = useFetchData('/api/dashboard/marketer/campaign/chart');
   const theme = useTheme();
   const isXlWidth = useMediaQuery(theme.breakpoints.up('lg'));
-  console.log(isXlWidth);
 
   return (
     <div>
