@@ -38,7 +38,6 @@ const tableStyle = theme => ({
     backgroundColor: 'transparent',
     borderSpacing: '0',
     borderCollapse: 'collapse',
-    textAlign: 'center',
   },
   tableHeadCell: {
     color: 'inherit',

@@ -17,6 +17,15 @@ import {
 } from '../../onad';
 
 const sidebarStyle = theme => ({
+  flex: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  center: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   drawerPaper: {
     border: 'none',
     position: 'fixed',
@@ -32,7 +41,7 @@ const sidebarStyle = theme => ({
       height: '100%',
     },
     [theme.breakpoints.down('sm')]: {
-      width: drawerWidth,
+      width: '80px',
       ...boxShadow,
       position: 'fixed',
       display: 'block',
@@ -47,13 +56,23 @@ const sidebarStyle = theme => ({
       textAlign: 'left',
       paddingRight: '0px',
       paddingLeft: '0',
-      transform: `translate3d(${drawerWidth}px, 0, 0)`,
+      transform: `translate3d(${80}px, 0, 0)`,
       ...transition,
     },
   },
+  desktopPaper: {
+    overflow: false,
+    border: 'none',
+    top: '0',
+    bottom: '0',
+    left: '0',
+    zIndex: '1',
+    ...boxShadow,
+    width: drawerWidth,
+  },
   logo: {
     position: 'relative',
-    padding: '15px 15px',
+    // padding: '15px 15px',
     zIndex: '4',
     '&:after': {
       content: '""',
@@ -64,6 +83,10 @@ const sidebarStyle = theme => ({
       width: 'calc(100% - 30px)',
       backgroundColor: `rgba(${hexToRgb(grayColor[6])}, 0해.3)`,
     },
+  },
+  desktopLogo: {
+    zIndex: '4',
+    // padding: '0'
   },
   logoLink: {
     ...defaultFont,
@@ -79,18 +102,43 @@ const sidebarStyle = theme => ({
     '&:hover': {
       color: grayColor[5],
     },
+    // marginBottom: '30px',
+    // backgroundColor: '#ff9800'
+  },
+  mobileHead: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%',
+    marginTop: '15px',
+    padding: '0',
+    margin: '0',
+    zIndex: '4',
+    marginBottom: '10px',
+    backgroundColor: '#ff9800'
+  },
+  head: {
+    width: '100%',
+    marginTop: '15px',
+    padding: '0',
+    margin: '0',
+    zIndex: '4',
+    marginBottom: '30px',
+    backgroundColor: '#ff9800'
   },
   logoImage: {
-    width: '30px',
+    width: '100%',
     display: 'inline-block',
-    maxHeight: '30px',
     marginLeft: '10px',
     marginRight: '15px',
   },
+  desktopImg: {
+    display: 'flex',
+    width: '60%',
+    height: '60px',
+  },
   img: {
     width: '35px',
-    top: '22px',
-    position: 'absolute',
     verticalAlign: 'middle',
     border: '0',
   },
@@ -111,7 +159,27 @@ const sidebarStyle = theme => ({
       height: '100%',
       content: '""',
       display: 'block',
-      background: blueGrayColor[9],
+      background: '#fff',
+    },
+  },
+  desktopBackground: {
+    position: 'absolute',
+    zIndex: '1',
+    height: '100%',
+    width: '100%',
+    display: 'block',
+    top: '0',
+    left: '0',
+    backgroundSize: 'cover',
+    backgroundPosition: 'center center',
+    '&:after': {
+      position: 'absolute',
+      zIndex: '3',
+      width: '100%',
+      height: '100%',
+      content: '""',
+      display: 'block',
+      background: '#fff',
     },
   },
   list: {
@@ -131,7 +199,7 @@ const sidebarStyle = theme => ({
   NavBarLinksWrapper: {
     marginLeft: theme.spacing(2),
     marginRight: theme.spacing(2),
-    borderTop: `0.05em solid ${grayColor[7]}`,
+    borderTop: `0.05em solid ${'#fff'}`,
     display: 'flex',
     justifyContent: 'flex-end',
   },
@@ -140,43 +208,50 @@ const sidebarStyle = theme => ({
     display: 'block',
     textDecoration: 'none',
     '&:hover,&:focus,&:visited,&': {
-      color: whiteColor,
+      color: '#000',
     },
   },
   itemLink: {
-    width: 'auto',
+    width: '100%',
     transition: 'all 300ms linear',
-    margin: '10px 15px 0',
     borderRadius: '3px',
     position: 'relative',
     display: 'block',
-    padding: '10px 15px',
+    padding: '10px 8px',
+    paddingTop: '15px',
+    paddingBottom: '15px',
+    [theme.breakpoints.down('md')]: {
+      padding: 0,
+      margin: 0
+    },
     backgroundColor: 'transparent',
     ...defaultFont,
     '&:hover': {
-      backgroundColor: blueGrayColor[8],
+      backgroundColor: '#ffc166',
+      // 마우스 가져갈때
     },
   },
   itemIcon: {
-    width: '24px',
-    height: '30px',
-    fontSize: '24px',
-    lineHeight: '30px',
+    width: '40%',
+    height: 'auto',
     float: 'left',
-    marginRight: '15px',
+    [theme.breakpoints.down('md')]: {
+      width: '40%',
+      padding: 0,
+      margin: 0
+    },
     textAlign: 'center',
     verticalAlign: 'middle',
-    color: `rgba(${hexToRgb(whiteColor)}, 0.8)`,
   },
   itemText: {
     ...defaultFont,
     margin: '0',
     lineHeight: '30px',
-    fontSize: '14px',
-    color: whiteColor,
-    '&:hover': {
-      color: grayColor[5],
+    fontSize: '16px',
+    [theme.breakpoints.down('md')]: {
+      fontSize: '10px',
     },
+    fontWeight: '700',
   },
   whiteFont: {
     color: whiteColor,
@@ -190,24 +265,24 @@ const sidebarStyle = theme => ({
     },
   },
   info: {
-    backgroundColor: infoColor[0],
+    backgroundColor: '#ff9800',
     boxShadow:
       `0 12px 20px -10px rgba(${
-        hexToRgb(infoColor[0])
+        hexToRgb('#ff9800')
       },.28), 0 4px 20px 0 rgba(${
         hexToRgb(blackColor)
       },.12), 0 7px 8px -5px rgba(${
-        hexToRgb(infoColor[0])
+        hexToRgb('#ff9800')
       },.2)`,
     '&:hover': {
-      backgroundColor: infoColor[1],
+      backgroundColor: '#ff9800',
       boxShadow:
         `0 12px 20px -10px rgba(${
-          hexToRgb(infoColor[0])
+          hexToRgb('#ff9800')
         },.28), 0 4px 20px 0 rgba(${
           hexToRgb(blackColor)
         },.12), 0 7px 8px -5px rgba(${
-          hexToRgb(infoColor[0])
+          hexToRgb('#ff9800')
         },.2)`,
     },
   },
@@ -281,10 +356,13 @@ const sidebarStyle = theme => ({
     position: 'relative',
     height: 'calc(100vh - 75px)',
     overflow: 'auto',
-    width: '150px',
+    width: '80px',
     zIndex: '4',
     overflowScrolling: 'touch',
   },
+  desktopWrapper: {
+    zIndex: '3',
+  }
 });
 
 export default sidebarStyle;

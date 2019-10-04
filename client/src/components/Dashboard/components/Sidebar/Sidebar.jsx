@@ -6,7 +6,7 @@ import { NavLink } from 'react-router-dom';
 // @material-ui/core components
 import withStyles from '@material-ui/core/styles/withStyles';
 import {
-  Drawer, Hidden, Button, List, ListItem, ListItemText, Grid,
+  Drawer, Hidden, Button, List, ListItemText, Grid,
 } from '@material-ui/core';
 // core components
 import AdminNavbarLinks from '../Navbars/AdminNavbarLinks';
@@ -22,7 +22,7 @@ const Sidebar = ({ ...props }) => {
     return props.location.pathname.indexOf(routeName) > -1;
   }
   const {
-    classes, color, logo, logoText, routes,
+    classes, color, logo, routes,
     handleDrawerToggle, mobileOpen,
   } = props;
 
@@ -45,8 +45,7 @@ const Sidebar = ({ ...props }) => {
   }, []);
 
   const links = (
-    <List>
-      {/* className={classes.list}  */}
+    <List className={classes.flex}>
       <div>
         {routes.map((prop, key) => {
           const listItemClasses = classNames({
@@ -64,7 +63,7 @@ const Sidebar = ({ ...props }) => {
             >
               <Button className={classNames(classes.itemLink, listItemClasses)}>
                 <Grid container direction="column">
-                  <Grid item>
+                  <Grid item className={classes.center}>
                     <prop.icon
                       className={classNames(classes.itemIcon, whiteFontClasses)}
                     />
@@ -72,22 +71,12 @@ const Sidebar = ({ ...props }) => {
                   <Grid item>
                     <ListItemText
                       primary={prop.name}
-                      className={classNames(classes.itemText)}
+                      className={classNames(classes.itemText, whiteFontClasses)}
                       disableTypography
                     />
                   </Grid>
                 </Grid>
               </Button>
-              {/* <ListItem button className={classNames(classes.itemLink, listItemClasses)}>
-                <prop.icon
-                  className={classNames(classes.itemIcon, whiteFontClasses)}
-                />
-                <ListItemText
-                  primary={prop.name}
-                  className={classNames(classes.itemText, whiteFontClasses)}
-                  disableTypography
-                />
-              </ListItem> */}
             </NavLink>
           );
         })}
@@ -101,17 +90,13 @@ const Sidebar = ({ ...props }) => {
   );
 
   const brand = (
-    <div className={classes.logo}>
-      <Button
-        onClick={handleClick}
-        className={classNames(classes.logoLink)}
-      >
-        <div className={classes.logoImage}>
-          <img src={logo} alt="logo" className={classes.img} />
-        </div>
-        {` ${logoText}`}
-      </Button>
-    </div>
+    <Button
+      onClick={handleClick}
+      className={classes.center}
+    >
+      <img src={logo} alt="logo" className={classes.img} />
+    </Button>
+
   );
 
   return (
@@ -130,10 +115,14 @@ const Sidebar = ({ ...props }) => {
             keepMounted: true, // Better open performance on mobile.
           }}
         >
-          {brand}
-          <div className={classes.sidebarWrapper}>
-            {links}
-          </div>
+          <Grid container direction="column">
+            <Grid item className={classes.mobileHead}>
+              {brand}
+            </Grid>
+            <Grid item className={classes.sidebarWrapper}>
+              {links}
+            </Grid>
+          </Grid>
           <div className={classes.background} />
         </Drawer>
       </Hidden>
@@ -143,28 +132,25 @@ const Sidebar = ({ ...props }) => {
           variant="permanent"
           open
           classes={{
-            paper: classNames(classes.drawerPaper),
+            paper: classNames(classes.desktopPaper),
           }}
         >
           {/* 사이드바 Logo */}
-          <Grid className={classes.logo} container direction="row" alignItems="center">
-            <Grid item className={classes.logoImage}>
-              <img src={logo} alt="logo" className={classes.img} />
-            </Grid>
-            <Grid item>
+          <Grid container direction="column">
+            <Grid item className={classes.head}>
               <Button
                 onClick={handleClick}
-                className={classNames(classes.logoLink)}
+                className={classNames(classes.desktopLogo)}
               >
-                {logoText}
+                <img src={logo} alt="logo" className={classes.desktopImg} />
               </Button>
             </Grid>
+            <Grid item className={classes.desktopWrapper}>
+              {links}
+            </Grid>
           </Grid>
-
-          {/* 사이드바 라우터 링크 */}
-          <div className={classes.sidebarWrapper}>{links}</div>
           {/* 사이드바 배경 */}
-          <div className={classes.background} />
+          <div className={classes.desktopBackground} />
         </Drawer>
       </Hidden>
     </div>

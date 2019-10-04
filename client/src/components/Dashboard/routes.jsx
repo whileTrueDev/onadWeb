@@ -1,8 +1,8 @@
 // 라우터 아이콘 @material-ui/icons
-import Dashboard from '@material-ui/icons/Dashboard';
-import Person from '@material-ui/icons/Person';
-import AttachMoney from '@material-ui/icons/AttachMoney';
-import BrandingWatermark from '@material-ui/icons/BrandingWatermark';
+import Dashboard from '@material-ui/icons/DashboardOutlined';
+import Person from '@material-ui/icons/PersonOutline';
+import AttachMoney from '@material-ui/icons/AttachMoneyOutlined';
+import BrandingWatermark from '@material-ui/icons/BrandingWatermarkOutlined';
 import Reorder from '@material-ui/icons/Reorder';
 import Work from '@material-ui/icons/Work';
 
@@ -11,6 +11,7 @@ import creatorUserProfile from './views/creator/UserProfile/UserProfile';
 import IncomeManage from './views/creator/IncomeManage/IncomeManage';
 // import creatorDashboardPage from './views/creator/Dashboard/Dashboard';
 import creatorDashboardPage from '../../pages/CreatorDashboard/Dashboard';
+import creatorMyPage from '../../pages/CreatorMypage/Mypage';
 import creatorManual from './views/creator/Manual/Manual';
 
 // 마케터 라우터
@@ -46,7 +47,7 @@ const dashboardRoutes = {
       path: '/user',
       name: '계정 관리',
       icon: Person,
-      component: creatorUserProfile,
+      component: creatorMyPage,
       layout: '/dashboard/creator',
     },
   ],

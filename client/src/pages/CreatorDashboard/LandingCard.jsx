@@ -51,7 +51,7 @@ const useStyles = makeStyles(({
   },
   level: {
     fontWeight: '700',
-    marginLeft: '8px'
+    marginLeft: '3px'
   }
 }));
 
@@ -73,7 +73,7 @@ const IncomeCard = () => {
               alignItems: 'center'
             }}
           >
-            <Grid item xs={12} sm={11}>
+            <Grid item xs={11} sm={11}>
               <PrettoSlider valueLabelDisplay="on" aria-label="pretto slider" value={!landingData.loading && !landingData.error ? landingData.payload.exp : 0} />
             </Grid>
             <Grid item>

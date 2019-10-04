@@ -1,6 +1,6 @@
 const express = require('express');
 const doQuery = require('../../../../model/doQuery');
-const { listOfWithdrawal } = require('../../../../middlewares/preprocessingData/');
+const { withdrawalList } = require('../../../../middlewares/preprocessingData/');
 
 const router = express.Router();
 
@@ -55,7 +55,7 @@ router.get('/list', (req, res) => {
   doQuery(listQuery, creatorId)
     .then((row) => {
       if (row.result.length > 0) {
-        const result = listOfWithdrawal(row.result);
+        const result = withdrawalList(row.result);
         res.send(result);
       } else {
         res.end();

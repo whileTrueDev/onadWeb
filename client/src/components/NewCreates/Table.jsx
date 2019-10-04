@@ -25,7 +25,7 @@ const useStyles = makeStyles({
 
 function CustomTable({ ...props }) {
   const {
-    classes, tableHead, tableData, tableHeaderColor, paginationOps
+    classes, tableHead, tableData, tableHeaderColor, paginationOps, banner, checkBox
   } = props;
   const {
     rowsPerPage,
@@ -39,7 +39,10 @@ function CustomTable({ ...props }) {
         {tableHead !== undefined ? (
           <TableHead className={classes[`${tableHeaderColor}TableHeader`]}>
             <TableRow>
+              {banner
+              && (
               <TableCell />
+              )}
               {tableHead.map((column, index) => (
                 <TableCell
                   className={myClasses.tableHeadCell}
@@ -68,17 +71,25 @@ function CustomTable({ ...props }) {
         <TableBody>
           {tableData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(prop => (
             <TableRow key={shortid.generate()}>
+              {banner
+              && (
               <TableCell key={shortid.generate()}>
                 <img src="/pngs/logo/onad_logo.png" alt="banner" style={{ width: '100%', height: 'auto', maxWidth: '50px' }} key={shortid.generate()} />
               </TableCell>
+              )
+              }
               {prop.map((value, i) => (
                 <TableCell className={classes.tableCell} key={shortid.generate()}>
                   {value}
                 </TableCell>
               ))}
+              {checkBox
+              && (
               <TableCell className={classes.tableCell}>
                 <GreenCheckbox fontSize="small" checked />
               </TableCell>
+              )
+              }
             </TableRow>
           ))}
         </TableBody>
@@ -104,6 +115,8 @@ CustomTable.defaultProps = {
     rowsPerPage: 5,
     page: 0,
   },
+  banner: false,
+  checkBox: false
 };
 
 CustomTable.propTypes = {
@@ -125,6 +138,8 @@ CustomTable.propTypes = {
   pagination: PropTypes.bool,
   paginationOps: PropTypes.object,
   buttonSet: PropTypes.bool,
+  banner: PropTypes.bool,
+  checkBox: PropTypes.bool
 };
 
 

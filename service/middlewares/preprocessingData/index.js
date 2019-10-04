@@ -35,31 +35,22 @@ function preprocessingBannerData(result) {
 
 // 크리에이터 광고 출금 내역 전처리 함수
 function withdrawalList(result) {
-  if (result) {
-    let columns = result[0];
-    columns = Object.keys(columns);
-    columns = columns.map((col) => {
-      col = col.replace('date', '출금날짜')
-        .replace('creatorWithdrawalAmount', '출금금액')
-        .replace('withdrawalState', '신청상태');
+  const rows = result;
+  const columns = Object.keys(rows[0]).map(col => col.replace('date', '출금날짜')
+    .replace('creatorWithdrawalAmount', '출금금액')
+    .replace('withdrawalState', '신청상태'));
 
-
-      return col;
-    });
-
-    // dataset preprocessing
-    result = result.map(
-      (value) => {
-        value.withdrawalState === 0 ? value.withdrawalState = '진행중' : value.withdrawalState = '완료됨';
-        value.date = value.date.toLocaleString();
-        value.creatorWithdrawalAmount = value.creatorWithdrawalAmount.toLocaleString();
-
-        value = Object.values(value);
-        return value;
-      }
-    );
-    return { columns, data: result };
-  }
+  // dataset preprocessing
+  const data = rows.map(
+    (value) => {
+      const obj = [];
+      obj.push(value.date.toLocaleString());
+      obj.push(value.creatorWithdrawalAmount.toLocaleString());
+      obj.push(value.withdrawalState === 0 ? '진행중' : '완료됨');
+      return obj;
+    }
+  );
+  return { columns, data };
 }
 
 // 마케터 대시보드에서 광고 될 크리에이터 목록에 들어가는 데이터 전처리 함수

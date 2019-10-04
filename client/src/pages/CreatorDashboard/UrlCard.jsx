@@ -37,7 +37,7 @@ const UrlCard = () => {
 
   return (
     <CustomCard iconComponent={<Fingerprint />}>
-      <Grid container direction="column" spacing={4}>
+      <Grid container direction="column" spacing={3}>
         <Grid item>
           <Grid container direction="column" spacing={2}>
             <Grid item>
