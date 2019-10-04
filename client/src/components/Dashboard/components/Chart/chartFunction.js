@@ -11,7 +11,10 @@
   * @author hwasurr
   */
 function dateDiff(date1, date2) {
-  return Math.floor((date1.getTime() - date2.getTime()) / (1000 * 60 * 60 * 24));
+  if (date1 instanceof Date && date2 instanceof Date) {
+    return Math.ceil((date1.getTime() - date2.getTime()) / (1000 * 60 * 60 * 24));
+  }
+  return null;
 }
 
 /**
@@ -59,8 +62,28 @@ function setUpData(dataPacket) {
 
   dataPacket.forEach((obj, index) => {
     if (setUpLabels.indexOf(datefy(obj.date)) === -1) { // 처음보는 date
+      if (setUpLabels.length > 1) {
+        const previousDate = setUpLabels[setUpLabels.length - 1];
+        const currentDate = datefy(obj.date);
+        const datediff = dateDiff(new Date(previousDate), new Date(currentDate));
+
+        // 이전날짜와 지금날짜의 날짜차이가 있다면 ( 빈 데이터가 존재한다면 )
+        if (datediff > 1) {
+          const emptyDate = new Date(previousDate);
+          for (let i = 1; i < datediff; i += 1) {
+            // 빠진 날짜만큼 반복
+            emptyDate.setDate(emptyDate.getDate() - 1);
+
+            // console.log(emptyDate.toISOString().split('T')[0]);
+            setUpLabels.push(emptyDate.toISOString().split('T')[0]);
+            CPM.push(DEFAULT_VALUE);
+            CPC.push(DEFAULT_VALUE);
+          }
+        }
+      }
+
       setUpLabels.push(datefy(obj.date));
-      // console.log(datefy(obj.date));
+
 
       if (obj.type === 'CPM') {
         CPM.push(obj.cash);
@@ -112,11 +135,11 @@ function createStackBarDataSet(dataPacket, DATE_RANGE = 15) {
   // 오늘과 today, firstTime 사이의 빈 데이터가 있는경우 채운다.
   if (dateDiff(today, firstTime) > 0) {
     // 날짜 차이 만큼 앞에 데이터를 추가한다.
-    for (let i = dateDiff(today, firstTime); i > 0; i -= 1) {
-      labels.unshift(datefy(today));
+    for (let i = dateDiff(today, firstTime); i > 1; i -= 1) {
+      firstTime.setDate(firstTime.getDate() + 1);
+      labels.unshift(datefy(firstTime));
       CPM.unshift(0);
       CPC.unshift(0);
-      today.setDate(today.getDate() - 1);
     }
   }
 

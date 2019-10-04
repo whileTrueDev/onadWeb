@@ -12,7 +12,7 @@ const chartTheme2 = {
 
 // 차트 데이터
 function setStackedBarData(
-  data, labelArray = ['CPM', 'CPC'], type = 'day', dateRange
+  data, labelArray, type = 'day', dateRange
 ) {
   let setupFunc;
   if (type === 'day') {
@@ -63,11 +63,13 @@ StackedBar.propTypes = {
   dataSet: PropTypes.arrayOf(PropTypes.object).isRequired,
   height: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   labelArray: PropTypes.arrayOf(PropTypes.string),
-  type: PropTypes.string
+  type: PropTypes.string,
+  dateRange: PropTypes.number
 };
 
 StackedBar.defaultProps = {
   type: 'day',
   height: 70,
-  labelArray: []
+  labelArray: ['CPM', 'CPC'],
+  dateRange: 15
 };
