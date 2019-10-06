@@ -5,14 +5,14 @@ import {
   Grid, Paper, Button, Slide, Collapse
 } from '@material-ui/core';
 import { green } from '@material-ui/core/colors';
-import LinearStepper from '../../atoms/LinearStepper';
-import CreatePaper from '../../organisms/marketer/CampaignCreate/CreatePaper';
-import ProrityPaper from '../../organisms/marketer/CampaignCreate/PriorityPaper';
-import CreatorSelect from '../../organisms/marketer/CampaignCreate/CreatorSelect';
-import CategorySelect from '../../organisms/marketer/CampaignCreate/CategorySelect';
-import OptionPaper from '../../organisms/marketer/CampaignCreate/OptionPaper';
-import HOST from '../../utils/config';
-import axios from '../../utils/axios';
+import LinearStepper from '../../../atoms/LinearStepper';
+import CreatePaper from '../CampaignCreate/CreatePaper';
+import ProrityPaper from '../CampaignCreate/PriorityPaper';
+import CreatorSelect from '../CampaignCreate/CreatorSelect';
+import CategorySelect from '../CampaignCreate/CategorySelect';
+import OptionPaper from '../CampaignCreate/OptionPaper';
+import HOST from '../../../utils/config';
+import axios from '../../../utils/axios';
 
 const theme = createMuiTheme({
   palette: {
@@ -145,7 +145,8 @@ const CampaignCreateStepper = (props) => {
     choose: 0, option: null, noBudget: false, budget: ''
   });
 
-  const [submitCheck, handleSubmitCheck] = React.useState(false); // 최종 step에서 handleSubmit을 하기위한 signal
+  // 최종 step에서 handleSubmit을 하기위한 signal
+  const [submitCheck, handleSubmitCheck] = React.useState(false);
   const [stepComplete, setStepComplete] = React.useState(false); // 현재 step에서 다음 step으로 넘어가기위한 state
   const [paperSwitch, setPaperSwitch] = React.useState(true); // animation을 위한 state
   const [index, setIndex] = React.useState(0); // 각 step을 정의하는  state
@@ -278,15 +279,41 @@ const CampaignCreateStepper = (props) => {
   const setSteps = (_index) => {
     switch (_index) {
       case 0:
-        return <CreatePaper bannerList={bannerList} dispatch={step1Dispatch} setStepComplete={setStepComplete} />;
+        return (
+          <CreatePaper
+            bannerList={bannerList}
+            dispatch={step1Dispatch}
+            setStepComplete={setStepComplete}
+          />
+        );
       case 1:
-        return <ProrityPaper handleNext={handleNext} state={step2State} dispatch={step2Dispatch} />;
+        return (
+          <ProrityPaper
+            handleNext={handleNext}
+            state={step2State}
+            dispatch={step2Dispatch}
+          />
+        );
       case 2:
         return <CreatorSelect setStepComplete={setStepComplete} />;
       case 3:
-        return <CategorySelect setStepComplete={setStepComplete} categoryList={categoryList} checkedCategories={checkedCategories} checkedCategoriesDispatch={checkedCategoriesDispatch} />;
+        return (
+          <CategorySelect
+            setStepComplete={setStepComplete}
+            categoryList={categoryList}
+            checkedCategories={checkedCategories}
+            checkedCategoriesDispatch={checkedCategoriesDispatch}
+          />
+        );
       case 4:
-        return <OptionPaper setStepComplete={setStepComplete} handleSubmitCheck={handleSubmitCheck} state={step4State} dispatch={step4Dispatch} />;
+        return (
+          <OptionPaper
+            setStepComplete={setStepComplete}
+            handleSubmitCheck={handleSubmitCheck}
+            state={step4State}
+            dispatch={step4Dispatch}
+          />
+        );
       default:
         return <div />;
     }

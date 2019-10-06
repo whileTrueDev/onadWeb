@@ -59,7 +59,6 @@ const useStyles = makeStyles(theme => ({
       '& $imageTitle': {
         opacity: 1.0,
       },
-
     },
   },
   focusVisible: {},
@@ -71,7 +70,8 @@ const useStyles = makeStyles(theme => ({
     bottom: 0,
     backgroundSize: 'cover',
     width: '100%',
-    height: 'auto'
+    height: 'auto',
+    maxHeight: 300
     // backgroundPosition: 'center 40%',
   },
   imageBackdrop: {
