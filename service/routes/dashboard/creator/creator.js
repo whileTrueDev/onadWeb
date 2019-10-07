@@ -62,11 +62,19 @@ router.get('/overlayUrl', (req, res) => {
 
 router.get('/landingUrl', (req, res) => {
   const { creatorId } = req._passport.session.user;
-  if (creatorId) {
-    res.send(`http://l.onad.io/${creatorId}`);
-  } else {
-    res.end();
-  }
+  const query = `SELECT 
+  creatorTwitchId 
+  FROM creatorInfo
+  WHERE creatorId = ?`;
+  doQuery(query, [creatorId])
+    .then((row) => {
+      const { creatorTwitchId } = row.result[0];
+      res.send(`http://l.onad.io/${creatorTwitchId}`);
+    })
+    .catch((err) => {
+      console.log('ERROR in /landingUrl', err);
+      res.end();
+    });
 });
 
 // creator contraction Update
