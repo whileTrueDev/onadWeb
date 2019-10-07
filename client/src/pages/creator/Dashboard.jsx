@@ -13,20 +13,32 @@ const Dashboard = () => (
     <GridItem sm={12} md={10}>
       <ContractionCard />
     </GridItem>
-    <GridItem xs={12} sm={4} xl={3}>
-      <IncomCard />
-      <LandingCard />
+
+    <GridItem xs={12} xl={3}>
+
+      <GridContainer>
+        <GridItem xs={12} md={6} xl={12}>
+          <IncomCard />
+        </GridItem>
+        <GridItem xs={12} md={6} xl={12}>
+          <LandingCard />
+        </GridItem>
+      </GridContainer>
     </GridItem>
-    <GridItem xs={12} sm={7} xl={7}>
+
+
+    <GridItem xs={12} xl={7}>
       <IncomeChart />
     </GridItem>
-    <GridItem xs={12} sm={1} xl={2} />
+
     <GridItem xs={12} sm={6}>
       <BannerCard />
     </GridItem>
-    <GridItem xs={12} sm={5} xl={4}>
+
+    <GridItem xs={12} sm={6} xl={4}>
       <UrlCard />
     </GridItem>
+
     <GridItem xs={12} sm={1} xl={2} />
   </GridContainer>
 );
