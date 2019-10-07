@@ -12,13 +12,11 @@ import FilterList from '@material-ui/icons/FilterListRounded';
 import FirstPage from '@material-ui/icons/FirstPageRounded';
 import LastPage from '@material-ui/icons/LastPageRounded';
 // own components
-import { Typography } from '@material-ui/core';
 import IOSSwitch from '../../../../atoms/Switch/IOSSwitch';
-import Dialog from '../../../../atoms/Dialog/Dialog';
-import Button from '../../../../atoms/CustomButtons/Button';
 import useUpdateData from '../../../../utils/lib/hooks/useUpdateData';
 import useDialog from '../../../../utils/lib/hooks/useDialog';
 import useDeleteData from '../../../../utils/lib/hooks/useDeleteData';
+import CampaignDeleteConfirmDialog from './CampaignDeleteConfirmDialog';
 import history from '../../../../history';
 
 const tableIcons = {
@@ -109,16 +107,17 @@ function CampaignTable({ ...props }) {
           rowData => ({
             icon: () => (<Delete />),
             tooltip: '캠페인 삭제',
-            onClick: () => { console.log('delete clicked! - ', rowData.campaignId); handleOpen(rowData.campaignId); }
+            onClick: () => { handleOpen(rowData.campaignId); }
           }),
           rowData => ({
             icon: () => (<IOSSwitch checked={Boolean(rowData.onOff)} />),
             tooltip: '캠페인 On/Off',
             onClick: async () => {
-              await handleUpdateRequest({ onoffState: !rowData.onOff, campaignId: rowData.campaignId });
-              setTimeout(() => {
-                history.push(window.location.pathname);
-              }, 300);
+              await handleUpdateRequest({
+                onoffState: !rowData.onOff,
+                campaignId: rowData.campaignId
+              });
+              setTimeout(() => history.push(window.location.pathname), 300);
             }
           })
         ]}
@@ -128,44 +127,11 @@ function CampaignTable({ ...props }) {
         }}
       />
       {}
-      <Dialog
-        open={Boolean(open)}
-        onClose={handleClose}
-        maxWidth="sm"
-        fullWidth
-        buttons={(
-          <div>
-            <Button
-              color="info"
-              onClick={() => {
-                handleDelete({ campaignId: open });
-                setTimeout(
-                  history.push(`${window.location.pathname}`),
-                  300
-                );
-              }}
-            >
-                진행
-            </Button>
-            <Button onClick={handleClose}>
-              취소
-            </Button>
-          </div>
-      )}
-      >
-        <div style={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
-          <div style={{ justifyContent: 'center', alignItems: 'center' }}>
-            <Typography variant="body1">
-            해당 캠페인을 삭제하시겠습니까?
-            </Typography>
-          </div>
-          <div>
-            <Typography variant="body1">
-            삭제시, 진행중이던 광고는 모두 중지됩니다.
-            </Typography>
-          </div>
-        </div>
-      </Dialog>
+      <CampaignDeleteConfirmDialog
+        open={open}
+        handleDelete={handleDelete}
+        handleClose={handleClose}
+      />
     </div>
   );
 }

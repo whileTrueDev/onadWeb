@@ -1,11 +1,13 @@
 import React, { useEffect, useReducer } from 'react';
+import PropTypes from 'prop-types';
 import { createMuiTheme, makeStyles } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/styles';
 import {
-  Grid, Paper, Button, Slide, Collapse
+  Grid, Paper, Slide, Collapse
 } from '@material-ui/core';
 import { green } from '@material-ui/core/colors';
 import LinearStepper from '../../../atoms/LinearStepper';
+import Button from '../../../atoms/CustomButtons/Button';
 import CreatePaper from '../CampaignCreate/CreatePaper';
 import ProrityPaper from '../CampaignCreate/PriorityPaper';
 import CreatorSelect from '../CampaignCreate/CreatorSelect';
@@ -13,6 +15,7 @@ import CategorySelect from '../CampaignCreate/CategorySelect';
 import OptionPaper from '../CampaignCreate/OptionPaper';
 import HOST from '../../../utils/config';
 import axios from '../../../utils/axios';
+import history from '../../../history';
 
 const theme = createMuiTheme({
   palette: {
@@ -123,6 +126,7 @@ const step4Reducer = (state, action) => {
 
 // 생성 버튼을 누를 때 axios 요청 후 props로 전달받음. (bannerList)
 const CampaignCreateStepper = (props) => {
+  const { handleCampaignCreateMode } = props;
   const classes = useStyles();
   // const { bannerList } = props;
   const [bannerList, setbannerList] = React.useState([]);
@@ -257,6 +261,9 @@ const CampaignCreateStepper = (props) => {
     event.preventDefault();
     setStepComplete(false);
     setPaperSwitch(false);
+    if (index === 0) {
+      handleCampaignCreateMode();
+    }
     if (index === 1) {
       step1Dispatch({ key: 'bannerId', value: '' });
     }
@@ -342,7 +349,7 @@ const CampaignCreateStepper = (props) => {
         <Grid item>
           <Grid container direction="row">
             <Grid item>
-              <Button disabled={index === 0} onClick={handleBack} className={classes.button}>
+              <Button onClick={handleBack} className={classes.button}>
               뒤로
               </Button>
             </Grid>
@@ -354,8 +361,11 @@ const CampaignCreateStepper = (props) => {
                     <Button
                       disabled={!submitCheck}
                       variant="contained"
-                      color="primary"
-                      onClick={handleSubmit}
+                      color="info"
+                      onClick={() => {
+                        handleSubmit();
+                        history.push('/dashboard/marketer/main');
+                      }}
                       className={classes.end}
                     >
                      완료
@@ -369,7 +379,7 @@ const CampaignCreateStepper = (props) => {
                     <ThemeProvider theme={theme}>
                       <Button
                         variant="contained"
-                        color="primary"
+                        color="info"
                         onClick={handleNext()}
                         className={classes.end}
                       >
@@ -390,3 +400,7 @@ const CampaignCreateStepper = (props) => {
 
 
 export default CampaignCreateStepper;
+
+CampaignCreateStepper.propTypes = {
+  handleCampaignCreateMode: PropTypes.func
+};

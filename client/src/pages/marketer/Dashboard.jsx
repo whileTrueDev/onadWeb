@@ -25,7 +25,7 @@ const Dashboard = () => {
       {campaignCreateMode.toggle ? (
         <GridContainer>
           <GridItem xs={12} xl={12}>
-            <CampaignCreate />
+            <CampaignCreate handleCampaignCreateMode={campaignCreateMode.handleToggle} />
           </GridItem>
         </GridContainer>
       ) : (
