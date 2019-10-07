@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import axios from '../../../utils/axios';
-import AppAppBar from '../../layout/AppAppBar';
-import AppFooter from '../../layout/AppFooter';
-import ProductHero from '../Main/views/Hero/ProductHero';
-import withRoot from '../Main/withRoot';
-import Introduce from './Introduce';
-import IntroduceTop from './IntroduceTop';
-import textSource from './source/textSource';
-import HOST from '../../../utils/config';
-import history from '../../../history';
+import axios from '../../utils/axios';
+import AppAppBar from '../../organisms/main/layout/AppAppBar';
+import AppFooter from '../../organisms/main/layout/AppFooter';
+import ProductHero from '../../organisms/main/Main/views/Hero/ProductHero';
+import withRoot from '../../organisms/main/Main/withRoot';
+import textSource from './manualSource/textSource';
+import Manual from '../../organisms/main/Manual/Manual';
+import HOST from '../../utils/config';
+import history from '../../history';
+
 
 const useLoginValue = () => {
   const [isLogin, setisLogin] = useState(false);
@@ -40,7 +40,7 @@ const useLoginValue = () => {
         console.log(error);
         setisLogin(false);
       });
-  }, []);
+  });
 
   return { isLogin, logout, userType };
 };
@@ -48,9 +48,8 @@ const useLoginValue = () => {
 const MARKETER_TAB_NUMBER = 0;
 const CREATOR_TAB_NUMBER = 1;
 
-// this is layout compoent
 export default withRoot(() => {
-  const { isLogin, logout, userType } = useLoginValue(history);
+  const { isLogin, logout, userType } = useLoginValue();
 
   // if Link here, set the scroll to top of the page
   React.useEffect(() => {
@@ -64,14 +63,10 @@ export default withRoot(() => {
         isLogin={isLogin}
         source={textSource.heroSector}
       />
-      {/* ->/ header layout */}
-      <IntroduceTop source={textSource.topSector} />
-
-      <Introduce
+      <Manual
         textSource={textSource}
         userType={userType === 'marketer' ? MARKETER_TAB_NUMBER : CREATOR_TAB_NUMBER}
       />
-      {/* footer layout ->/ */}
       <AppFooter />
     </div>
   );

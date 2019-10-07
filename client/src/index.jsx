@@ -1,12 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Router, Switch, Route } from 'react-router-dom';
-// organism
-import RegistStepper from './organisms/main/Regist/Stepper';
-import Main from './organisms/main/Main';
-import Introduction from './organisms/main/Introduction';
-import Manual from './organisms/main/Manual';
 // page
+import Main from './pages/main/Main';
+import Manual from './pages/main/Manual';
+import Introduction from './pages/main/Introduction';
+import RegistPage from './pages/main/Regist';
 import CreatorDashboard from './pages/layouts/CreatorDashboardLayout';
 import CreatorDashboardDoor from './pages/layouts/CreatorDashboardDoor';
 import MarketerDashboard from './pages/layouts/MarketerDashboardLayout';
@@ -21,7 +20,7 @@ const developRouter = (
   <Router history={history}>
     <Switch>
       <Route exact path="/" component={Main} />
-      <Route exact path="/regist" component={RegistStepper} />
+      <Route exact path="/regist" component={RegistPage} />
       <Route exact path="/introduction" component={Introduction} />
       <Route exact path="/manual" component={Manual} />
       <Route exact path="/notice" component={Notice} />

@@ -1,5 +1,5 @@
 import React from 'react';
-import AppAppBar from '../../organisms/layout/AppAppBar';
+import AppAppBar from '../../organisms/main/layout/AppAppBar';
 
 export default function PublicNotification() {
   return (

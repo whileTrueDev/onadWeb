@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import axios from '../../../utils/axios';
-import AppAppBar from '../../layout/AppAppBar';
-import AppFooter from '../../layout/AppFooter';
-import ProductHero from './views/Hero/ProductHero';
-import ProductCategories from './views/Categories/ProductCategories';
-import ProductHowItWorks from './views/HowItWorks/ProductHowItWorks';
-import RePasswordDialog from './views/Login/RePassword';
-import withRoot from './withRoot';
-import HOST from '../../../utils/config';
-import sources from './source/sources';
-import BetaDialog from './views/Login/BetaDialog';
-import history from '../../../history';
+import AppAppBar from '../../organisms/main/layout/AppAppBar';
+import AppFooter from '../../organisms/main/layout/AppFooter';
+import ProductHero from '../../organisms/main/Main/views/Hero/ProductHero';
+import ProductCategories from '../../organisms/main/Main/views/Categories/ProductCategories';
+import ProductHowItWorks from '../../organisms/main/Main/views/HowItWorks/ProductHowItWorks';
+import RePasswordDialog from '../../organisms/main/Main/views/Login/RePassword';
+import withRoot from '../../organisms/main/Main/withRoot';
+import sources from '../../organisms/main/Main/source/sources';
+import BetaDialog from '../../organisms/main/Main/views/Login/BetaDialog';
+
+import axios from '../../utils/axios';
+import HOST from '../../utils/config';
+import history from '../../history';
 
 const useLoginValue = () => {
   const [isLogin, setisLogin] = useState(false);
