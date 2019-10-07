@@ -7,10 +7,8 @@ import withStyles from '@material-ui/core/styles/withStyles';
 import {
   Table, TableHead, TableRow, TableBody, TableCell, Grid
 } from '@material-ui/core';
-import Done from '@material-ui/icons/Done';
 // custom table component
 import Help from '@material-ui/icons/Help';
-import CustomTableFooter from './TableFooter';
 import GreenCheckbox from './GreenCheckBox';
 // core components
 import tableStyle from '../assets/jss/onad/components/tableStyle';

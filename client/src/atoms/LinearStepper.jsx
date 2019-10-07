@@ -1,7 +1,7 @@
 import React from 'react';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
-import clsx from 'clsx';
+import classnames from 'classnames';
 import Stepper from '@material-ui/core/Stepper';
 import { Step, StepLabel } from '@material-ui/core';
 import CreateIcon from '@material-ui/icons/Create';
@@ -87,7 +87,7 @@ const useColorlibStepIconStyles = makeStyles({
 
 function ColorlibStepIcon(props) {
   const classes = useColorlibStepIconStyles();
-  const { active, completed } = props;
+  const { active, completed, icon } = props;
 
   const icons = {
     1: <CreateIcon />,
@@ -97,12 +97,12 @@ function ColorlibStepIcon(props) {
 
   return (
     <div
-      className={clsx(classes.root, {
+      className={classnames(classes.root, {
         [classes.active]: active,
         [classes.completed]: completed,
       })}
     >
-      {icons[String(props.icon)]}
+      {icons[String(icon)]}
     </div>
   );
 }

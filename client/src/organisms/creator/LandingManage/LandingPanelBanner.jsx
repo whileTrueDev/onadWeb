@@ -1,5 +1,6 @@
 
 import React from 'react';
+import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import { Grid, Typography } from '@material-ui/core';
 import FlightTakeoff from '@material-ui/icons/FlightTakeoff';
@@ -76,8 +77,13 @@ export default function LandingPanelBanner(props) {
               />
             </div>
 
-            <img src="/pngs/landing/panel_banner_default.png" alt="패널기본배너1" />
-            <img src="/pngs/landing/panel_banner_default_black.png" alt="패널기본배너2" />
+            <a href="/pngs/landing/onad_panel_banner_default.png" download>
+              <img src="/pngs/landing/onad_panel_banner_default.png" alt="패널기본배너1" />
+            </a>
+
+            <a href="/pngs/landing/onad_panel_banner_default_black.png" download>
+              <img src="/pngs/landing/onad_panel_banner_default_black.png" alt="패널기본배너2" />
+            </a>
 
           </div>
         </Grid>
@@ -101,3 +107,7 @@ export default function LandingPanelBanner(props) {
     </CustomCard>
   );
 }
+
+LandingPanelBanner.propTypes = {
+  userData: PropTypes.object
+};

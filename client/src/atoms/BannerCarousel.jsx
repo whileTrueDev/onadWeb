@@ -159,7 +159,10 @@ function BannerCarousel(props) {
             onClick={handleActiveStep(step)}
           >
             <img className={classes.imageSrc} src={step.bannerSrc} alt={step.bannerId} />
-            <span className={classes.imageBackdrop} style={checkImage.check ? { opacity: 0.5 } : {}} />
+            <span
+              className={classes.imageBackdrop}
+              style={checkImage.check ? { opacity: 0.5 } : {}}
+            />
             <span className={classes.imageTitle} style={checkImage.check ? { opacity: 1 } : {}}>
               <Success>
                 <Check fontSize="large" />

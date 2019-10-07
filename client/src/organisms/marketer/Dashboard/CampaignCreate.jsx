@@ -138,7 +138,7 @@ const CampaignCreateStepper = (props) => {
 
   // 2 번째 step에서 사용할 State.
   const [creatorList, setCreatorList] = React.useState([]);
-  const [checkedCreators, checkedCreatorsDispatch] = useReducer(step3Reducer, []);
+  const [checkedCreators] = useReducer(step3Reducer, []);
 
   // 3 번째 step에서 사용할 State.(캠페인 카테고리)
   const [categoryList, setCategoryList] = React.useState([]);
