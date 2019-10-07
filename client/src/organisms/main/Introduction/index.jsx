@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from '../../../utils/axios';
-import AppAppBar from '../Main/views/Layout/AppAppBar';
-import AppFooter from '../Main/views/Layout/AppFooter';
+import AppAppBar from '../../layout/AppAppBar';
+import AppFooter from '../../layout/AppFooter';
 import ProductHero from '../Main/views/Hero/ProductHero';
 import withRoot from '../Main/withRoot';
 import Introduce from './Introduce';

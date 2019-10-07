@@ -12,7 +12,7 @@ import axios from '../../../utils/axios';
 import Usertype from './Usertype';
 import RegistForm from './RegistForm';
 import PaperSheet from './Paper';
-import AppAppBar from '../Main/views/Layout/AppAppBar';
+import AppAppBar from '../../layout/AppAppBar';
 import HOST from '../../../utils/config';
 import withRoot from '../Main/withRoot';
 import history from '../../../history';

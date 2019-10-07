@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from '../../../utils/axios';
-import AppAppBar from './views/Layout/AppAppBar';
-import AppFooter from './views/Layout/AppFooter';
+import AppAppBar from '../../layout/AppAppBar';
+import AppFooter from '../../layout/AppFooter';
 import ProductHero from './views/Hero/ProductHero';
 import ProductCategories from './views/Categories/ProductCategories';
 import ProductHowItWorks from './views/HowItWorks/ProductHowItWorks';
