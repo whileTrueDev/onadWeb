@@ -20,7 +20,7 @@ function preprocessingBannerData(result) {
     // dataset preprocessing
     result = result.map(
       (value) => {
-        value.contractionState === 0 ? value.contractionState = '진행중' : value.contractionState = '완료됨';
+        value.contractionState === 0 ? value.contractionState = '진행중⌛️' : value.contractionState = '완료됨👌';
         value.contractionTime = value.contractionTime.toLocaleString();
         contractionIds.push(value.contractionId);
         delete value.contractionId;
@@ -46,7 +46,7 @@ function withdrawalList(result) {
       const obj = [];
       obj.push(value.date.toLocaleString());
       obj.push(value.creatorWithdrawalAmount.toLocaleString());
-      obj.push(value.withdrawalState === 0 ? '진행중' : '완료됨');
+      obj.push(value.withdrawalState === 0 ? '진행중⏰' : '완료됨👌');
       return obj;
     }
   );

@@ -73,7 +73,7 @@ const IncomeCard = () => {
             }}
           >
             <Grid item xs={11} sm={11}>
-              <PrettoSlider valueLabelDisplay="on" aria-label="pretto slider" value={!landingData.loading && !landingData.error ? landingData.payload.exp : 0} />
+              <PrettoSlider max="500" valueLabelDisplay="on" aria-label="pretto slider" value={!landingData.loading && !landingData.error ? landingData.payload.exp : 0} />
             </Grid>
             <Grid item>
               <Typography gutterBottom variant="body2" className={classes.level}>

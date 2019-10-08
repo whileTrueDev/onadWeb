@@ -7,7 +7,6 @@ import withStyles from '@material-ui/core/styles/withStyles';
 import {
   Table, TableHead, TableRow, TableBody, TableCell, Grid
 } from '@material-ui/core';
-import Done from '@material-ui/icons/Done';
 // custom table component
 import Help from '@material-ui/icons/Help';
 import CustomTableFooter from './TableFooter';
@@ -20,6 +19,7 @@ const useStyles = makeStyles({
     fontSize: '15px',
     fontWeight: '700',
     textAlign: 'center',
+    color: '#455a64'
   }
 });
 

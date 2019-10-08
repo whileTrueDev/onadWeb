@@ -6,7 +6,7 @@ const schedule = require('node-schedule');
 const doQuery = require('../model/calculatorQuery');
 const logger = require('./calculatorLogger');
 
-/* 2019-07-06
+/* 2019-10-08
 
 doQuery 모듈을 사용한 Error handling 및 동기식 수행.
 Creator 및 Marketer에 대해 계산시 필요한 table 고려후 초기값 삽입.

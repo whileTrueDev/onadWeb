@@ -10,7 +10,7 @@ const useStyles = makeStyles(theme => ({
     display: 'flex', alignItems: 'center', flexDirection: 'row-reverse', padding: 5
   },
   root: {
-    width: '90%',
+    width: '100%',
     heigth: '100%',
     [theme.breakpoints.down('sm')]: {
       width: '100%',

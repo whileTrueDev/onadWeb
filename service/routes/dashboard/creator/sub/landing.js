@@ -81,8 +81,7 @@ router.get('/data', (req, res) => {
   SUM(clickCount) as clickCount, 
   SUM(transferCount) as transferCount,
   B.visitCount, 
-  C.exp, 
-  C.level, 
+  C.exp,
   C.updateDate AS date 
   FROM landingClick AS A 
   JOIN creatorLanding AS B ON A.creatorId = B.creatorId
@@ -92,8 +91,14 @@ router.get('/data', (req, res) => {
 
   doQuery(selectQuery, [creatorId])
     .then((row) => {
+      // exp를 이용하여 레벨을 계산. -> level 컬럼에 대한  레벨은
+      const Exexp = row.result[0].exp || 0;
+      const level = Exexp !== 0 ? parseInt(Exexp / 500) + 1 : 1;
+      const exp = Exexp % 500;
       const data = {
         ...row.result[0],
+        level,
+        exp,
         date: row.result[0].date.toLocaleString(),
         clickCount: row.result[0].clickCount || 0,
         transferCount: row.result[0].transferCount || 0,

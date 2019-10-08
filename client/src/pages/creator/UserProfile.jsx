@@ -16,11 +16,10 @@ import CardHeader from '../../atoms/Card/CardHeader';
 import CardBody from '../../atoms/Card/CardBody';
 import Snackbar from '../../atoms/Snackbar/Snackbar';
 import AccountNumberForm from '../../organisms/creator/IncomeManage/AccountNumberForm';
-import Contraction from '../../organisms/creator/UserProfile/Contraction';
-import CompletedContract from '../../organisms/creator/UserProfile/CompletedContract';
+import Contract from '../../organisms/creator/Mypage/Contract/Contract';
 import Dialog from '../../atoms/Dialog/Dialog';
 import HOST from '../../utils/config';
-import IpChanger from '../../organisms/creator/UserProfile/IpChanger';
+import IpChanger from '../../organisms/creator/Mypage/Ip/IpChanger';
 import history from '../../history';
 
 const styles = theme => ({
@@ -132,22 +131,6 @@ function UserProfile(props) {
 
   return (
     <div>
-      {/* 계약 컴포넌트 */}
-      {userData.creatorContractionAgreement === 0 && (
-      <GridContainer>
-        <GridItem xs={12} sm={12} md={12} lg={9} xl={8}>
-          <Card>
-            <CardHeader color="blueGray">
-              <h4 className={classes.cardTitleWhite}>서비스 이용 및 출금 계약하기</h4>
-            </CardHeader>
-            <CardBody>
-              <Contraction history={history} setSnackOpen={setSnackOpen} />
-            </CardBody>
-          </Card>
-        </GridItem>
-      </GridContainer>
-      )}
-
       {/* 계정 관리 컴포넌트 */}
       <GridContainer>
         <GridItem xs={12} sm={12} md={6} lg={4}>
@@ -298,7 +281,7 @@ function UserProfile(props) {
               <h4 className={classes.dialogTitle}>서비스 이용 및 출금 계약하기</h4>
             </CardHeader>
             <CardBody>
-              <CompletedContract />
+              <Contract />
             </CardBody>
           </Card>
         </Dialog>

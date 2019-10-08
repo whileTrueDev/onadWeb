@@ -49,7 +49,8 @@ const tableStyle = theme => ({
     lineHeight: '1.42857143',
     padding: '12px 8px',
     verticalAlign: 'middle',
-    // fontWeight: 700,
+    fontWeight: 500,
+    fontSize: '1.1em'
   },
   tableFooter: {
     ...defaultFont,

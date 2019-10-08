@@ -25,7 +25,7 @@ const cardStyle = {
     boxShadow: 'none',
   },
   cardProfile: {
-    marginTop: '30px',
+    marginTop: '20px',
     textAlign: 'center',
   },
   cardChart: {

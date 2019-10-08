@@ -14,7 +14,7 @@ import Dialog from '../../../../atoms/Dialog/Dialog';
 import SuccessTypo from '../../../../atoms/Typography/Success';
 import DangerTypo from '../../../../atoms/Typography/Danger';
 import Button from '../../../../atoms/CustomButtons/Button';
-import terms from './contractionConfig';
+import terms from '../../Mypage/Contract/contractTerms';
 import axios from '../../../../utils/axios';
 import HOST from '../../../../utils/config';
 import history from '../../../../history';

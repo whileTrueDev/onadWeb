@@ -1,5 +1,5 @@
 // AccountNumber를 입력하는 Form component 작성
-import React, { useState } from 'react';
+import React, { useState, useReducer } from 'react';
 import PropTypes from 'prop-types';
 import {
   DialogActions,
@@ -10,26 +10,38 @@ import {
   InputLabel,
   Input,
   MenuItem,
+  Grid,
+  Divider
 } from '@material-ui/core';
+import NumberFormat from 'react-number-format';
+import StyledInput from '../../../atoms/StyledInput';
 import axios from '../../../utils/axios';
 import Button from '../../../atoms/CustomButtons/Button';
 import HOST from '../../../utils/config';
 import history from '../../../history';
+import StyledItemText from '../../../atoms/StyledItemText';
 
 const style = theme => ({
-  contents: {
-    display: 'flex',
-    flexDirection: 'column',
-  },
   divider: {
     width: 2,
     height: 28,
     margin: 4,
   },
   textField: {
+    width: '180px',
+    [theme.breakpoints.down('sm')]: {
+      width: '100%'
+    },
     margin: theme.spacing(1),
     marginBottom: theme.spacing(2),
     minWidth: 120,
+  },
+  item: {
+    [theme.breakpoints.down('sm')]: {
+      width: '100%',
+      margin: 0,
+      padding: 0,
+    },
   },
 });
 
@@ -82,51 +94,73 @@ const banks = [
   },
 ];
 
-// const getNowDate = () => {
-//   const date = new Date();
-//   const fullDate = date.getFullYear() + (`0${date.getMonth() + 1}`).slice(-2)
-//     + (`0${date.getDate()}`).slice(-2) + (`0${date.getHours()}`).slice(-2)
-//     + (`0${date.getMinutes()}`).slice(-2) + (`0${date.getSeconds()}`).slice(-2);
-//   return fullDate;
-// };
+const getNowDate = () => {
+  const date = new Date();
+  const fullDate = date.getFullYear() + (`0${date.getMonth() + 1}`).slice(-2)
+    + (`0${date.getDate()}`).slice(-2) + (`0${date.getHours()}`).slice(-2)
+    + (`0${date.getMinutes()}`).slice(-2) + (`0${date.getSeconds()}`).slice(-2);
+  return fullDate;
+};
+
+const bankReducer = (state, action) => {
+  switch (action.type) {
+    case 'set': {
+      return { name: action.name, code: banks.find(_bank => _bank.bankName === action.name).bankCode };
+    }
+    default: {
+      return { name: '농협', code: '011' };
+    }
+  }
+};
 
 const AccountNumberForm = (props) => {
   const {
     classes, handleClose
   } = props;
-  const [bank, setBank] = useState('농협');
-  const [bankPattern, setbankPattern] = useState(13);
-  // const [accountConfirm, setAccountConfirm] = useState(false);
+  // const [bank, setBank] = useState('농협');
+  const [bankState, dispatch] = useReducer(bankReducer, { name: '농협', code: '011' });
+  const [birth, setBirth] = useState(null);
+  const [accountNum, setAccountNum] = useState(null);
+  const [accountConfirm, setAccountConfirm] = useState(false);
 
-  // const accountValidation = (event) => {
-  //   event.preventDefault();
-  //   // const bankAccount = document.getElementById('bankAccount').value || '';
-  //   // const bankName = document.getElementById('bank').value || '';
-  //   // const idNumber = document.getElementById('idNumber').value || '';
-  //   // const { bankCode } = banks.find(_bank => _bank.bankName === bankName);
 
-  //   // const headers = {
-  //   //   Authorization: 'Bearer d3608258-af4a-467a-8e33-d29bfbcd6ec0',
-  //   //   'Content-Type': 'application/json',
-  //   // };
-  //   setAccountConfirm(true);
-  //   alert('계좌인증에 성공하였습니다.');
-  //   // axios.post('https://testapi.open-platform.or.kr/inquiry/real_name', {
-  //   //   bank_code_std: '002', // 테스트는 '002' bankCode
-  //   //   account_num: '1234567890123456', // 1234567890123456
-  //   //   account_holder_info: '880101', // 880101
-  //   //   tran_dtime: getNowDate(),
-  //   // }, { headers })
-  //   //   .then((res) => {
-  //   //     console.log(res.data);
-  //   //     if (res.data.rsp_code === 'A0000') {
-  //   //       setAccountConfirm(true);
-  //   //       alert('계좌인증에 성공하였습니다.');
-  //   //     } else {
-  //   //       alert('계좌인증에 실패하였습니다.');
-  //   //     }
-  //   //   });
-  // };
+  const handleChangeBank = (event) => {
+    const newbank = event.target.value;
+    dispatch({ type: 'set', name: newbank });
+  };
+
+  const onAccountChange = (value) => {
+    setAccountNum(value.value);
+  };
+
+  const onBirthChange = (value) => {
+    setBirth(value.value);
+  };
+
+  const accountValidation = (event) => {
+    event.preventDefault();
+    const headers = {
+      Authorization: 'Bearer OVGY8ObRgN6Glqqc9A0T1nAcQ4CXgBaEKKUCGx8c',
+      'Content-Type': 'application/json; charset=UTF-8',
+    };
+    // setAccountConfirm(true);
+    // alert('계좌인증에 성공하였습니다.');
+    axios.post('https://openapi.open-platform.or.kr/inquiry/real_name', {
+      bank_code_std: '098', // 테스트는 '002' bankCode
+      account_num: '0001230000678', // 1234567890123456
+      account_holder_info: '8801012', // 880101
+      tran_dtime: getNowDate(),
+    }, { headers })
+      .then((res) => {
+        console.log(res.data);
+        if (res.data.rsp_code === 'A0000') {
+          setAccountConfirm(true);
+          alert('계좌인증에 성공하였습니다.');
+        } else {
+          alert('계좌인증에 실패하였습니다.');
+        }
+      });
+  };
 
 
   const handleSubmit = (event) => {
@@ -136,8 +170,9 @@ const AccountNumberForm = (props) => {
     //   return;
     // }
     const userAccount = {
-      bankName: event.target.bank.value,
-      bankAccount: event.target.bankAccount.value,
+      bankName: bankState.name,
+      bankAccount: accountNum,
+      birth
     };
     axios.post(`${HOST}/api/regist/accountNum`, userAccount)
       .then((res) => {
@@ -155,107 +190,96 @@ const AccountNumberForm = (props) => {
   };
 
 
-  const handleChangeBank = (event) => {
-    const newbank = event.target.value;
-    const newbankCount = banks.find(_bank => _bank.bankName === newbank).bankCount;
-    setBank(newbank);
-    setbankPattern(newbankCount);
-  };
-
   return (
     <form id="accountForm" onSubmit={handleSubmit}>
-      <div className={classes.contents}>
-        <TextField
-          required
-          select
-          label="BANK"
-          name="bank"
-          id="bank"
-          className={classes.textField}
-          value={bank || ''}
-          onChange={handleChangeBank}
-          helperText="은행을 선택하세요."
-          InputLabelProps={{
-            shrink: true,
-          }}
-          margin="normal"
-        >
-          {banks.map((row) => {
-            const name = row.bankName;
-            return <MenuItem key={name} value={name}>{name}</MenuItem>;
-          })}
-        </TextField>
+      <Grid container direction="column" justify="center">
+        <Grid container direction="column">
+          <Grid item className={classes.item}>
+            <StyledItemText primary="은행" secondary="은행을 선택하세요." fontSize="13px" />
+          </Grid>
+          <Grid item className={classes.item}>
+            <TextField
+              required
+              select
+              name="bank"
+              id="bank"
+              className={classes.textField}
+              value={bankState.name || ''}
+              onChange={handleChangeBank}
+              style={{ width: '40%' }}
+              margin="normal"
+            >
+              {banks.map((row) => {
+                const name = row.bankName;
+                return <MenuItem key={name} value={name}>{name}</MenuItem>;
+              })}
+            </TextField>
+          </Grid>
+        </Grid>
 
-        <TextField
-          required
-          label="주민번호 앞자리"
-          name="idNumber"
-          id="idNumber"
-          className={classes.textField}
-          helperText="주민등록번호 앞 6자리를 입력해주세요."
-          margin="normal"
-          InputLabelProps={{
-            shrink: true,
-          }}
-          style={
-            {
-              maxWidth: 250,
-              marginRight: 10,
-            }
-          }
-        />
+        <Grid container direction="column">
+          <Grid item className={classes.item}>
+            <StyledItemText primary="주민번호 앞자리" fontSize="13px" />
+          </Grid>
+          <Grid item className={classes.item}>
+            <NumberFormat
+              required
+              value={birth}
+              onValueChange={onBirthChange}
+              customInput={StyledInput}
+              className={classes.textField}
+              margin="dense"
+              style={{ width: '200px' }}
+              allowNegative={false}
+            />
+          </Grid>
+        </Grid>
 
-        <FormControl className={classes.textField}>
-          <InputLabel shrink>계좌번호</InputLabel>
-          <Input
-            name="bankAccount"
-            id="bankAccount"
-            required
-            // endAdornment={(
-            //   <InputAdornment position="end">
-            //     <Divider className={classes.divider} />
-            //     <OriginalButton onClick={accountValidation}>
-            //     조회
-            //     </OriginalButton>
-            //   </InputAdornment>
-            // )}
-            inputProps={{
-              required: '{true}',
-              // pattern: `[0-9]{${bankPattern}}`,
-            }}
-          />
-          <FormHelperText>
-            (-)을 제외한
-            {' '}
-            {/* {bankPattern} */}
-            계좌번호를 입력하세요
-          </FormHelperText>
-        </FormControl>
-
-
-      </div>
-
-
-      <DialogActions>
-        <Button
-          type="submit"
-          value="Submit"
-          color="info"
-          className={
+        <Grid container direction="column">
+          <Grid item className={classes.item}>
+            <StyledItemText primary="계좌번호" secondary=" (-)을 제외한 계좌번호를 입력하세요" fontSize="13px" />
+          </Grid>
+          <Grid container direction="row" className={classes.item}>
+            <Grid item>
+              <NumberFormat
+                required
+                value={accountNum}
+                onValueChange={onAccountChange}
+                customInput={StyledInput}
+                margin="dense"
+                className={classes.textField}
+                style={{ width: '250px' }}
+                allowNegative={false}
+              />
+            </Grid>
+            <Grid item>
+              <Button size="sm" color="blueGray" onClick={accountValidation}>조회</Button>
+            </Grid>
+          </Grid>
+        </Grid>
+        <Grid item>
+          <DialogActions>
+            <Button
+              type="submit"
+              value="Submit"
+              color="info"
+              className={
             !handleClose
               ? 'MuiButtonBase-root MuiButton-root RegularButton-button-133 RegularButton-primary-136 MuiButton-text'
               : ''
             }
-        >
+            >
           등록
-        </Button>
-        {handleClose
+            </Button>
+            {handleClose
           && (
           <Button onClick={handleClose}>
               취소
           </Button>
           )}
-      </DialogActions>
+          </DialogActions>
+        </Grid>
+      </Grid>
     </form>
   );
 };
