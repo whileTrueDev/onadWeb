@@ -29,7 +29,7 @@ export default function NoticeTable(props) {
             </Typography>
           )
         },
-        {ㄴ
+        {
           title: '작성일',
           field: 'regiDate',
           render: rowData => (
