@@ -24,7 +24,7 @@ const developRouter = (
       <Route exact path="/introduction" component={Introduction} />
       <Route exact path="/manual" component={Manual} />
       <Route exact path="/notice" component={Notice} />
-      <Route path="/notice:code" component={Notice} />
+      <Route path="/notice/:code" component={Notice} />
       <Route exact path="/dashboard/creator/door" component={CreatorDashboardDoor} />
       <Route path="/dashboard/creator" component={CreatorDashboard} />
       <Route path="/dashboard/marketer" component={MarketerDashboard} />
