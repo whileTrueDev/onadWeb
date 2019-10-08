@@ -1,16 +1,8 @@
-import React, { forwardRef } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
-import MaterialTable from 'material-table';
-// icons
-import ArrowUpward from '@material-ui/icons/ArrowUpwardRounded';
-import Check from '@material-ui/icons/CheckRounded';
-import Clear from '@material-ui/icons/ClearRounded';
 import Delete from '@material-ui/icons/DeleteRounded';
-import ChevronLeft from '@material-ui/icons/ChevronLeftRounded';
-import ChevronRight from '@material-ui/icons/ChevronRightRounded';
-import FilterList from '@material-ui/icons/FilterListRounded';
-import FirstPage from '@material-ui/icons/FirstPageRounded';
-import LastPage from '@material-ui/icons/LastPageRounded';
+import MaterialTable from '../../../../atoms/Table/MaterialTable';
+// icons
 // own components
 import IOSSwitch from '../../../../atoms/Switch/IOSSwitch';
 import useUpdateData from '../../../../utils/lib/hooks/useUpdateData';
@@ -18,34 +10,6 @@ import useDialog from '../../../../utils/lib/hooks/useDialog';
 import useDeleteData from '../../../../utils/lib/hooks/useDeleteData';
 import CampaignDeleteConfirmDialog from './CampaignDeleteConfirmDialog';
 import history from '../../../../history';
-
-const tableIcons = {
-  Check: forwardRef((props, ref) => <Check {...props} ref={ref} />),
-  Clear: forwardRef((props, ref) => <Clear {...props} ref={ref} />),
-  Delete: forwardRef((props, ref) => <Delete {...props} ref={ref} />),
-  Filter: forwardRef((props, ref) => <FilterList {...props} ref={ref} />),
-  FirstPage: forwardRef((props, ref) => <FirstPage {...props} ref={ref} />),
-  LastPage: forwardRef((props, ref) => <LastPage {...props} ref={ref} />),
-  NextPage: forwardRef((props, ref) => <ChevronRight {...props} ref={ref} />),
-  PreviousPage: forwardRef((props, ref) => <ChevronLeft {...props} ref={ref} />),
-  SortArrow: forwardRef((props, ref) => <ArrowUpward {...props} ref={ref} />),
-};
-
-const localization = {
-  body: {
-    deleteTooltip: '캠페인 삭제',
-  },
-  pagination: {
-    firstTooltip: '첫 페이지',
-    previousTooltip: '이전 페이지',
-    nextTooltip: '다음 페이지',
-    lastTooltip: '마지막 페이지',
-    labelRowsSelect: '행'
-  },
-  header: {
-    actions: ''
-  }
-};
 
 function CampaignTable({ ...props }) {
   const { dataSet } = props;
@@ -98,9 +62,7 @@ function CampaignTable({ ...props }) {
     <div>
       <MaterialTable
         tableRef={tableRef}
-        localization={localization}
         style={{ boxShadow: 'none' }}
-        icons={tableIcons}
         columns={state.columns}
         data={state.data}
         actions={[

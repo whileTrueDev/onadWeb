@@ -1,22 +1,14 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/styles';
+import makeStyles from '@material-ui/core/styles/makeStyles';
 import Grid from '@material-ui/core/Grid';
 import Link from '@material-ui/core/Link';
 import Container from '@material-ui/core/Container';
 import Typography from '../Main/components/Typography';
-import compose from '../../../utils/compose';
 
-const styles = theme => ({
-  '@font-face': {
-    fontFamily: 'Noto Sans KR',
-    src: 'url(https://fonts.googleapis.com/css?family=Noto+Sans+KR&display=swap)',
-  },
+const useStyles = makeStyles(theme => ({
   root: {
     fontFamily: 'Noto Sans KR',
     display: 'flex',
-    borderTop: '0.2px solid',
-
     backgroundColor: '#fff',
   },
   container: {
@@ -76,7 +68,6 @@ const styles = theme => ({
     paddingTop: theme.spacing(0.1),
     paddingBottom: theme.spacing(0.1),
     paddingLeft: '10px',
-
     '&:hover': {
       fontWeight: 'bold',
     },
@@ -97,9 +88,9 @@ const styles = theme => ({
     float: 'right',
     display: 'inline',
   },
-});
-function AppFooter(props) {
-  const { classes } = props;
+}));
+function AppFooter() {
+  const classes = useStyles();
   return (
     <Typography component="footer" className={classes.root}>
       <Container className={classes.container}>
@@ -188,12 +179,4 @@ function AppFooter(props) {
     </Typography>
   );
 }
-AppFooter.propTypes = {
-  classes: PropTypes.object,
-};
-AppFooter.defaultProps = {
-  classes: {},
-};
-export default compose(
-  withStyles(styles),
-)(AppFooter);
+export default AppFooter;
