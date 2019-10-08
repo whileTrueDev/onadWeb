@@ -4,6 +4,10 @@ import { Typography, Link } from '@material-ui/core';
 import FiberNew from '@material-ui/icons/FiberNew';
 import MaterialTable from '../../atoms/Table/MaterialTable';
 
+function dateDiff(date1, date2) {
+  return Math.ceil((date1.getTime() - date2.getTime()) / (1000 * 60 * 60 * 24));
+}
+
 export default function NoticeTable() {
   return (
     <MaterialTable
@@ -22,8 +26,8 @@ export default function NoticeTable() {
               >
                 {rowData.title}
               </Link>
-              { rowData.regiDate.getDate() > new Date().getDate() && (
-                <FiberNew color="secondary" />
+              { dateDiff(new Date(), rowData.regiDate) < 8 && (
+                <FiberNew style={{ color: '#ff9800' }} />
               )}
             </Typography>
           )
@@ -32,49 +36,49 @@ export default function NoticeTable() {
       ]}
       data={[
         {
-          code: '15', topic: '시스템 점검', title: '[긴급 점검] 1994년 09월 15일 긴급 시스템 점검 안내', regiDate: new Date()
+          code: '15', topic: '시스템 점검', title: '[긴급 점검] 1994년 09월 15일 긴급 시스템 점검 안내', regiDate: new Date(2019, 9, 7)
         },
         {
-          code: '14', topic: '시스템 점검', title: '[긴급 점검] 1994년 09월 15일 긴급 시스템 점검 안내 ', regiDate: new Date()
+          code: '14', topic: '시스템 점검', title: '[긴급 점검] 1994년 09월 15일 긴급 시스템 점검 안내 ', regiDate: new Date(2019, 9, 6)
         },
         {
-          code: '13', topic: '시스템 점검', title: '[긴급 점검] 1994년 09월 15일 긴급 시스템 점검 안내', regiDate: new Date()
+          code: '13', topic: '시스템 점검', title: '[긴급 점검] 1994년 09월 15일 긴급 시스템 점검 안내', regiDate: new Date(2019, 9, 5)
         },
         {
-          code: '12', topic: '결제/계산서', title: '[계산서] 2019년 9월 세금계산서 발행 및 수정발행 안내', regiDate: new Date()
+          code: '12', topic: '결제/계산서', title: '[계산서] 2019년 9월 세금계산서 발행 및 수정발행 안내', regiDate: new Date(2019, 9, 4)
         },
         {
-          code: '11', topic: '결제/계산서', title: '[계산서] 2019년 9월 세금계산서 발행 및 수정발행 안내', regiDate: new Date()
+          code: '11', topic: '결제/계산서', title: '[계산서] 2019년 9월 세금계산서 발행 및 수정발행 안내', regiDate: new Date(2019, 9, 3)
         },
         {
-          code: '10', topic: '결제/계산서', title: '[계산서] 2019년 9월 세금계산서 발행 및 수정발행 안내', regiDate: new Date()
+          code: '10', topic: '결제/계산서', title: '[계산서] 2019년 9월 세금계산서 발행 및 수정발행 안내', regiDate: new Date(2019, 9, 2)
         },
         {
-          code: '9', topic: '결제/계산서', title: '[계산서] 2019년 9월 세금계산서 발행 및 수정발행 안내', regiDate: new Date()
+          code: '9', topic: '결제/계산서', title: '[계산서] 2019년 9월 세금계산서 발행 및 수정발행 안내', regiDate: new Date(2019, 9, 2)
         },
         {
-          code: '8', topic: '결제/계산서', title: '[계산서] 2019년 9월 세금계산서 발행 및 수정발행 안내', regiDate: new Date()
+          code: '8', topic: '결제/계산서', title: '[계산서] 2019년 9월 세금계산서 발행 및 수정발행 안내', regiDate: new Date(2019, 9, 1)
         },
         {
-          code: '7', topic: '결제/계산서', title: '[계산서] 2019년 9월 세금계산서 발행 및 수정발행 안내', regiDate: new Date()
+          code: '7', topic: '결제/계산서', title: '[계산서] 2019년 9월 세금계산서 발행 및 수정발행 안내', regiDate: new Date(2019, 9, 1)
         },
         {
-          code: '6', topic: '결제/계산서', title: '[계산서] 2019년 9월 세금계산서 발행 및 수정발행 안내', regiDate: new Date()
+          code: '6', topic: '결제/계산서', title: '[계산서] 2019년 9월 세금계산서 발행 및 수정발행 안내', regiDate: new Date(2019, 9, 1)
         },
         {
-          code: '5', topic: '결제/계산서', title: '[계산서] 2019년 9월 세금계산서 발행 및 수정발행 안내', regiDate: new Date()
+          code: '5', topic: '결제/계산서', title: '[계산서] 2019년 9월 세금계산서 발행 및 수정발행 안내', regiDate: new Date(2019, 9, 1)
         },
         {
-          code: '4', topic: '결제/계산서', title: '[계산서] 2019년 9월 세금계산서 발행 및 수정발행 안내', regiDate: new Date()
+          code: '4', topic: '결제/계산서', title: '[계산서] 2019년 9월 세금계산서 발행 및 수정발행 안내', regiDate: new Date(2019, 9, 1)
         },
         {
-          code: '3', topic: '결제/계산서', title: '[계산서] 2019년 9월 세금계산서 발행 및 수정발행 안내', regiDate: new Date()
+          code: '3', topic: '결제/계산서', title: '[계산서] 2019년 9월 세금계산서 발행 및 수정발행 안내', regiDate: new Date(2019, 9, 1)
         },
         {
-          code: '2', topic: '결제/계산서', title: '[계산서] 2019년 9월 세금계산서 발행 및 수정발행 안내', regiDate: new Date()
+          code: '2', topic: '결제/계산서', title: '[계산서] 2019년 9월 세금계산서 발행 및 수정발행 안내', regiDate: new Date(2019, 9, 1)
         },
         {
-          code: '1', topic: '결제/계산서', title: '[계산서] 2019년 9월 세금계산서 발행 및 수정발행 안내', regiDate: new Date()
+          code: '1', topic: '결제/계산서', title: '[계산서] 2019년 9월 세금계산서 발행 및 수정발행 안내', regiDate: new Date(2019, 9, 1)
         },
       ]}
       options={{
