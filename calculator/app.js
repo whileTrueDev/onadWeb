@@ -1,4 +1,5 @@
 const express = require('express');
+
 const app = express();
 
 // process.env.NODE_ENV = ( process.env.NODE_ENV && ( process.env.NODE_ENV ).trim().toLowerCase() == 'production' ) ? 'production' : 'development';
@@ -13,6 +14,7 @@ const app = express();
 // }
 
 console.log('계산프로그램을 IMPORT 합니다.');
-const calculation = require('./javascripts/calculation_v.0');
+const calculation = require('./javascripts/calculation_v.1');
+const landingCalculation = require('./javascripts/landingCalculator');
 
 module.exports = app;

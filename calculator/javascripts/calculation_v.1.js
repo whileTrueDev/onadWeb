@@ -5,8 +5,8 @@
 const schedule = require('node-schedule');
 const doQuery = require('../model/calculatorQuery');
 const logger = require('./calculatorLogger');
-
-/* 2019-07-06
+const Notification = require('./notification');
+/* 2019-10-08
 
 doQuery 모듈을 사용한 Error handling 및 동기식 수행.
 Creator 및 Marketer에 대해 계산시 필요한 table 고려후 초기값 삽입.
@@ -123,32 +123,30 @@ const getCreatorList = (streamerList) => {
   - 이 contracion list와 현재 방송이 진행 중인 creator list를 통해 계산을 해야하는 실제 banner list를 추출한다.
 
  */
-const getContractionList = () => {
+/* 2019-10-08 박찬우
+  contractionTimestamp -> campaignTimestamp로 변경.
+
+*/
+const getCampaignList = () => {
   console.log('현재 광고가 집행중인 contracionId List를 계산합니다.');
 
-  const CheckedContractionQuery = `
-  SELECT ct.contractionId
-  FROM (SELECT contractionId FROM contractionTimestamp WHERE date > ?) as ct
-  JOIN (SELECT contractionId FROM bannerMatched WHERE contractionState = 0) as bm
-  ON ct.contractionId = bm.contractionId
+  const CheckedCampaignQuery = `
+  SELECT campaignId, creatorId
+  FROM campaignTimestamp 
+  WHERE date > ? 
   `;
 
   return new Promise((resolve, reject) => {
     const date = new Date();
     date.setHours(date.getHours() + 9);
     date.setMinutes(date.getMinutes() - 10);
-    doQuery(CheckedContractionQuery, [date])
+    doQuery(CheckedCampaignQuery, [date])
       .then((inrow) => {
-        const contractions = [];
-        inrow.result.map((ininrow) => {
-          contractions.push(ininrow.contractionId);
-        });
-        console.log(contractions);
-        resolve(contractions);
+        resolve(inrow.result);
       })
       .catch((errorData) => {
-        errorData.point = 'getBannerList()';
-        errorData.description = 'contractionTimestamp table에서 최신 contractionId 가져오는 과정.';
+        errorData.point = 'getCampaignList()';
+        errorData.description = 'campaignTimestamp table에서 최신 campaignId 가져오는 과정.';
         reject(errorData);
       });
   });
@@ -230,27 +228,28 @@ const getPrice = ({ creatorId }) => {
   });
 };
 
-const getPriceList = ([creatorList, contractionList]) => {
+/* 2019-10-08 박찬우
+  contractionList -> campaignList로 변경.
+
+*/
+const getPriceList = ([creatorList, campaignList]) => {
   console.log('각 creator 마다 단가를 계산합니다');
-  const creators = contractionList.reduce((result, contractionId) => {
-    // format : (marketerId)_(contractionOrder)/(creatorId)
-    const creatorId = contractionId.split('/')[1];
+  const campaigns = campaignList.reduce((result, campaignData) => {
     // 현재 방송중인 creator 중에서 banner를 게시하고 있다면?
-    if (creatorList.includes(creatorId)) {
-      const creatorData = {
-        creatorId,
-        contractionId
-      };
-      result.push(creatorData);
+    if (creatorList.includes(campaignData.creatorId)) {
+      result.push(campaignData);
     }
     return result;
   }, []);
 
   return Promise.all(
-    creators.map(async (creatorData) => {
-      const [viewer, price] = await Promise.all([getViewer(creatorData), getPrice(creatorData)]);
-      creatorData.price = viewer * price;
-      return creatorData;
+    campaigns.map(async (campaignData) => {
+      const [viewer, price] = await Promise.all([getViewer(campaignData), getPrice(campaignData)]);
+      const returnData = {
+        ...campaignData,
+        price: viewer * price
+      };
+      return returnData;
     })
   );
 };
@@ -294,23 +293,27 @@ const creatorCalcuate = ({ price, creatorId }) => {
   });
 };
 
-const marketerZeroCalculate = ({ contractionId }) => {
-  const marketerId = contractionId.split('/')[0].split('_')[0];
+
+/* 2019-10-08 박찬우
+  marketerDebit table 변경
+  contraction에서 campaign으로 변경.
+*/
+const marketerZeroCalculate = ({ marketerId }) => {
   console.log(`${marketerId}에 잔고확인을 시작합니다.`);
   const marketerDebitQuery = `
-  SELECT marketerDebit 
-  FROM marketerCost 
+  SELECT cashAmount, warning
+  FROM marketerDebit 
   WHERE marketerId = ? `;
 
   const emptyQuery = `
-  UPDATE marketerCost 
-  SET marketerDebit = 0 
+  UPDATE marketerDebit 
+  SET cashAmount = 0 
   WHERE marketerId = ? `;
 
-  const bannerSetQuery = `
-  UPDATE bannerMatched 
-  SET contractionState = 1  
-  WHERE SUBSTRING_INDEX(contractionId, '_' , 1) = ?
+  const campaignSetQuery = `
+  UPDATE campaign 
+  SET onOff = 0  
+  WHERE SUBSTRING_INDEX(campaignId, '_' , 1) = ?
   `;
 
   const marketerSetQuery = `
@@ -319,27 +322,32 @@ const marketerZeroCalculate = ({ contractionId }) => {
   WHERE marketerId = ?
   `;
 
-  const confirmSetQuery = `
-  UPDATE bannerRegistered 
-  SET confirmState = 1  
+  const setWarningQuery = `
+  UPDATE marketerDebit
+  SET warning = 1 
   WHERE marketerId = ?
   `;
-
 
   return new Promise((resolve, reject) => {
     doQuery(marketerDebitQuery, [marketerId])
       .then((row) => {
-        const debit = row.result[0].marketerDebit;
-        return debit;
+        const debit = row.result[0].cashAmount;
+        const { warning } = row.result[0];
+        return { debit, warning };
       })
-      .then((debit) => {
-      // 현재의 잔액보다 계산되어야하는 가격이 크다면.
+      .then(({ debit, warning }) => {
+        // 임계치의 값에 해당한다면,
+        // 현재의 잔액보다 계산되어야하는 가격이 크다면.
         if (debit <= 0) {
           Promise.all([
-            doQuery(confirmSetQuery, [marketerId]),
             doQuery(emptyQuery, [marketerId]),
-            doQuery(bannerSetQuery, [marketerId]),
-            doQuery(marketerSetQuery, [marketerId])
+            doQuery(campaignSetQuery, [marketerId]),
+            doQuery(marketerSetQuery, [marketerId]),
+            Notification({
+              userType: 'marketer',
+              type: 'runOut',
+              targetId: marketerId
+            }),
           ])
             .then(() => {
               console.log(`${marketerId}의 잔액을 모두 소모하였습니다.`);
@@ -351,6 +359,18 @@ const marketerZeroCalculate = ({ contractionId }) => {
               errorData.description = `${debit} 만큼의 손해를 입고 ${marketerId}의 잔액을 모두 소모하여 값을 0으로 변경하는 과정`;
               reject(errorData);
             });
+        } else if (debit <= 10000 && warning === 0) {
+          Promise.all([
+            Notification({
+              userType: 'marketer',
+              type: 'readyTorunOut',
+              targetId: marketerId
+            }),
+            doQuery(setWarningQuery, [marketerId])
+          ]).then(() => {
+            console.log(`${marketerId}의 잔고가 아직 존재합니다.`);
+            resolve();
+          });
         } else {
           console.log(`${marketerId}의 잔고가 아직 존재합니다.`);
           resolve();
@@ -364,13 +384,17 @@ const marketerZeroCalculate = ({ contractionId }) => {
   });
 };
 
-const marketerCalculate = ({ contractionId, price }) => {
-  const marketerId = contractionId.split('/')[0].split('_')[0];
+/* 2019-10-08 박찬우
+  marketerDebit table 변경
+  marketerDebit => cashAmount으로 col 변경
+*/
+const marketerCalculate = ({ campaignId, price }) => {
+  const marketerId = campaignId.split('_')[0];
   console.log(`${marketerId}에 대한 정산을 시작합니다.`);
 
   const countQuery = `
-  UPDATE marketerCost 
-  SET marketerDebit = marketerDebit - ? 
+  UPDATE marketerDebit 
+  SET cashAmount = cashAmount - ? 
   WHERE marketerId = ? `;
 
   return new Promise((resolve, reject) => {
@@ -388,23 +412,23 @@ const marketerCalculate = ({ contractionId, price }) => {
   });
 };
 
-const contractionCalculate = ({ contractionId, price }) => {
-  console.log(`계약인 ${contractionId}에 대한 정산을 시작합니다.`);
-  const contractionValueQuery = `
-    INSERT INTO contractionValue
-    (contractionId, contractionTotalValue) 
-    VALUES (?, ?)`;
+const campaignCalculate = ({ creatorId, campaignId, price }) => {
+  console.log(`계약인 ${campaignId}에 대한 정산을 시작합니다.`);
+  const campaignLogQuery = `
+    INSERT INTO campaignLog
+    (campaignId, creatorId, type, cash) 
+    VALUES (?, ?, ?, ?)`;
 
   return new Promise((resolve, reject) => {
-    doQuery(contractionValueQuery, [contractionId, price])
+    doQuery(campaignLogQuery, [campaignId, creatorId, 'CPM', price])
       .then(() => {
-        console.log(`${price} 원을 ${contractionId} 에 등록하였습니다.`);
-        logger.info(`${price} 원을 ${contractionId} 에 등록하였습니다.`);
+        console.log(`${price} 원을 ${campaignId} 에 등록하였습니다.`);
+        logger.info(`${price} 원을 ${campaignId} 에 등록하였습니다.`);
         resolve();
       })
       .catch((errorData) => {
         errorData.point = 'contractionCalculate()';
-        errorData.description = `${price} 원을 ${contractionId} 에 등록하는 과정`;
+        errorData.description = `${price} 원을 ${campaignId} 에 등록하는 과정`;
         reject(errorData);
       });
   });
@@ -413,7 +437,7 @@ const contractionCalculate = ({ contractionId, price }) => {
 async function getList() {
   try {
     logger.info(`탐색을 실시합니다. 시작 시각 : ${new Date().toLocaleString()}`);
-    const [streamerList, contractionList] = await Promise.all([getStreamerList(), getContractionList()]);
+    const [streamerList, contractionList] = await Promise.all([getStreamerList(), getCampaignList()]);
     const creatorList = await getCreatorList(streamerList);
 
     if (creatorList.length === 0) {
@@ -428,12 +452,14 @@ async function getList() {
     console.log(errorData);
     console.log('--------위의 사유로 인하여 계산이 종료됩니다.-------------');
     logger.error(errorData);
+    return [];
   }
 }
 
 async function calculation() {
   console.log(`계산을 실시합니다. 시작 시각 : ${new Date().toLocaleString()}`);
   const priceList = await getList();
+  // marketer에 대한 잔액확인을 위한 리스트 생성
   const marketerList = [];
   if (priceList.length === 0) {
     console.log('---------------------------------------------------');
@@ -443,16 +469,16 @@ async function calculation() {
   }
 
   await Promise.all(
-    priceList.map(({ creatorId, contractionId, price }) => Promise.all([
+    priceList.map(({ creatorId, campaignId, price }) => Promise.all([
       creatorCalcuate({ creatorId, price }),
-      marketerCalculate({ contractionId, price }),
-      contractionCalculate({ contractionId, price })
+      marketerCalculate({ campaignId, price }),
+      campaignCalculate({ creatorId, campaignId, price })
     ])
       .then(() => {
-        const marketerId = contractionId.split('/')[0].split('_')[0];
+        const marketerId = campaignId.split('_')[0];
         if (!marketerList.includes(marketerId)) {
           marketerList.push(marketerId);
-          return marketerZeroCalculate({ contractionId });
+          return marketerZeroCalculate({ marketerId });
         }
       })
       .catch((errorData) => {
@@ -468,7 +494,7 @@ async function calculation() {
     });
 }
 
-// calculation();
+
 const scheduler = schedule.scheduleJob('5,15,25,35,45,55 * * * *', () => {
   calculation();
 });

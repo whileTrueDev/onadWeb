@@ -3,10 +3,10 @@
 // 3. 현재시각 10분전부터 끌어모아 Listup
 // 4. StreamerName 으로 조회하여 존재하는지 여부 확인. => 방송중이라는 의미
 const schedule = require('node-schedule');
-const doQuery = require('../model/calculatorQuery');
+const doQuery = require('../../model/calculatorQuery');
 const logger = require('./calculatorLogger');
 
-/* 2019-10-08
+/* 2019-07-06
 
 doQuery 모듈을 사용한 Error handling 및 동기식 수행.
 Creator 및 Marketer에 대해 계산시 필요한 table 고려후 초기값 삽입.
@@ -468,9 +468,9 @@ async function calculation() {
     });
 }
 
-// calculation();
-const scheduler = schedule.scheduleJob('5,15,25,35,45,55 * * * *', () => {
-  calculation();
-});
+// // calculation();
+// const scheduler = schedule.scheduleJob('5,15,25,35,45,55 * * * *', () => {
+//   calculation();
+// });
 
-module.exports = scheduler;
+// module.exports = scheduler;

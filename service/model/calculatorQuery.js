@@ -1,6 +1,6 @@
 // DB 커넥션 가져오기.
 const pool = require('./connectionPool');
-const logger = require('../middlewares/calculatorLogger');
+const logger = require('../middlewares/calculation/calculatorLogger');
 
 
 /* 2019-07-02 박찬우
