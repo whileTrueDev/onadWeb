@@ -51,6 +51,7 @@ const tableStyle = theme => ({
     verticalAlign: 'middle',
     // fontWeight: 700,
   },
+
   tableFooter: {
     ...defaultFont,
     borderBottom: 'none',

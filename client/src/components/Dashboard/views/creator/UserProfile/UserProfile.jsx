@@ -22,6 +22,7 @@ import Dialog from '../../../components/Dialog/Dialog';
 import HOST from '../../../../../config';
 import IpChanger from './IpChanger';
 import history from '../../../../../history';
+import Table from '../../../components/Table/NotificationTable';
 
 const styles = theme => ({
   cardCategoryWhite: {
@@ -121,6 +122,7 @@ function UserProfile(props) {
   const { classes } = props;
   const [userData, setuserData] = useState({});
   const [snackOpen, setSnackOpen] = useState(false);
+  const [notificationArray, setNotificationArray] = useState([['', '', '', '']]);
   const {
     ContractionOpen,
     handleContractionOpen,
@@ -151,9 +153,15 @@ function UserProfile(props) {
         history.push('/');
       });
   };
-
+  const notificationList = () => {
+    axios.get(`${HOST}/api/dashboard/creator/notification/list`)
+      .then((res) => {
+        setNotificationArray(res.data);
+      });
+  };
   useEffect(() => {
     readyCreatorData();
+    notificationList();
   }, [readyCreatorData]);
 
   return (
@@ -306,6 +314,21 @@ function UserProfile(props) {
               <Button color="info" onClick={handleProfileChange}>
                 정보변경하러가기
               </Button>
+            </CardBody>
+          </Card>
+        </GridItem>
+        <GridItem xs={12} sm={12} md={12}>
+          <Card>
+            <CardHeader color="blueGray">
+              <h4 className={classes.cardTitleWhite}>내 모든 알림내역</h4>
+              <p className={classes.cardCategoryWhite}>내 모든 알림내역을 보여줍니다.</p>
+            </CardHeader>
+            <CardBody>
+              <Table
+                tableHead={['제목', '내용', '날짜', '확인']}
+                tableData={notificationArray}
+                pagination
+              />
             </CardBody>
           </Card>
         </GridItem>

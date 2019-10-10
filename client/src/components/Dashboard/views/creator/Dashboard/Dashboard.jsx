@@ -100,7 +100,7 @@ const Dashboard = (props) => {
   /* index를 받아서 전달되기는하는데, pagnation일 때는 확인을 하지 못함. */
   const [descDialgOpen, setDescDialogOpen] = React.useState(false);
   const [checkDialgOpen, setCheckDialogOpen] = React.useState(false);
-  const [descData, setDescData] = useState({});
+  const [descData, setDescData] = useState(false);
   const handleDescDialog = index => (event) => {
     event.preventDefault();
     const contractionId = bannerData.contractionIds[index];
