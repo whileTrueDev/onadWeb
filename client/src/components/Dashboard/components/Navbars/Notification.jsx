@@ -15,16 +15,12 @@ function Notification(props) {
 
   const updateReadState = (index) => {
     axios.post(`${HOST}/api/dashboard/creator/notification/readState`, { index })
-      .then().catch('에러삐삑');
+      .then().catch((err) => { console.log(err); });
   };
   return (
 
     <Menu
       elevation={0}
-      // anchorOrigin={{
-      //   vertical: 'bottom',
-      //   horizontal: 'right',
-      // }}
       transformOrigin={{
         vertical: 'top',
         horizontal: 'right',
@@ -57,7 +53,7 @@ function Notification(props) {
                 <summary
                   role="button"
                   tabIndex="-1"
-                  // onClick={() => updateReadState(noti.index)}
+                  onClick={() => updateReadState(noti.index)}
                   onKeyDown={() => updateReadState(noti.index)}
                 >
                   <Typography variant="h5" gutterBottom noWrap>
@@ -93,7 +89,7 @@ function Notification(props) {
 }
 
 Notification.propTypes = {
-  anchorEl: PropTypes.oneOfType([PropTypes.node, PropTypes.string]),
+  anchorEl: PropTypes.oneOfType([PropTypes.node, PropTypes.string, PropTypes.object]),
   handleMenuClose: PropTypes.func.isRequired,
   notificationData: PropTypes.object.isRequired,
 };

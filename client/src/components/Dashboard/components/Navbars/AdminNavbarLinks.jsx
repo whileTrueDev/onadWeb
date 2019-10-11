@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 // @material-ui/core components
 import withStyles from '@material-ui/core/styles/withStyles';
