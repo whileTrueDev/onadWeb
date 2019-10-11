@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Card from '../../../atoms/Card/Card';
 import IOSSwitch from '../../../atoms/Switch/IOSSwitch';
 import useUpdateData from '../../../utils/lib/hooks/useUpdateData';
 
@@ -21,10 +22,10 @@ export default function StatusBar(props) {
   const { handleUpdateRequest } = useUpdateData('/api/dashboard/marketer/onoff', onOffData.callUrl);
 
   return (
-
-    <div className={classes.root}>
-      <div>
-        {!onOffData.loading && !onOffData.error && (
+    <Card style={{ marginBottom: 0 }}>
+      <div className={classes.root}>
+        <div>
+          {!onOffData.loading && !onOffData.error && (
           <FormControlLabel
             control={(
               <IOSSwitch
@@ -34,16 +35,10 @@ export default function StatusBar(props) {
                )}
             label={onOffData.payload ? '광고 ON' : '광고 OFF'}
           />
-        )}
+          )}
+        </div>
       </div>
-
-      {/* <div>
-          운영 상태 :
-          {' '}
-          {payload ? '광고 ON' : '광고 OFF'}
-        </div> */}
-
-    </div>
+    </Card>
   );
 }
 

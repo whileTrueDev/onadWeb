@@ -71,5 +71,5 @@ StackedBar.defaultProps = {
   type: 'day',
   height: 70,
   labelArray: ['CPM', 'CPC'],
-  dateRange: 15
+  dateRange: 30
 };

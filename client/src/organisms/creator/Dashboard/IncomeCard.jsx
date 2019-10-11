@@ -11,7 +11,7 @@ import Button from '../../../atoms/CustomButtons/Button';
 import CircularProgress from '../../../atoms/Progress/CircularProgress';
 import useFetchData from '../../../utils/lib/hooks/useFetchData';
 
-const useStyles = makeStyles(_theme => ({
+const useStyles = makeStyles(() => ({
   stats: {
     color: '#999',
     display: 'inline-flex',

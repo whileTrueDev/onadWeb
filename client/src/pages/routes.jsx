@@ -5,17 +5,17 @@ import AttachMoney from '@material-ui/icons/AttachMoneyOutlined';
 import BrandingWatermark from '@material-ui/icons/BrandingWatermarkOutlined';
 import Reorder from '@material-ui/icons/Reorder';
 import Work from '@material-ui/icons/Work';
-import LocalAirport from '@material-ui/icons/LocalAirport';
+import Public from '@material-ui/icons/Public';
 // import Public from '@material-ui/icons/Public'; // 지구본 아이콘
 
 // 크리에이터 라우터
-import CreatorUserProfile from './creator/UserProfile';
 import CreatorLandingManage from './creator/LandingManage';
 import CreatorIncomeManage from './creator/IncomeManage';
 import CreatorDashboard from './creator/Dashboard';
 // 수정필요함.
 import CreatorMyPage from '../organisms/creator/Mypage/Mypage';
 import CreatorManual from './creator/Manual';
+import UserProfile from './creator/UserProfile';
 
 // 마케터 라우터
 import MarketerDashboard from './marketer/Dashboard';
@@ -42,7 +42,7 @@ const dashboardRoutes = {
     {
       path: '/landing',
       name: '내 광고페이지 관리',
-      icon: LocalAirport,
+      icon: Public,
       component: CreatorLandingManage,
       layout: '/dashboard/creator',
     },
@@ -54,10 +54,17 @@ const dashboardRoutes = {
       layout: '/dashboard/creator',
     },
     {
-      path: '/user',
-      name: '계정 관리',
+      path: '/user1',
+      name: '계정 관리 - 찬우',
       icon: Person,
       component: CreatorMyPage,
+      layout: '/dashboard/creator',
+    },
+    {
+      path: '/user2',
+      name: '계정 관리 - 진은',
+      icon: Person,
+      component: UserProfile,
       layout: '/dashboard/creator',
     },
   ],

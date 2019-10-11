@@ -80,9 +80,9 @@ router.get('/data', (req, res) => {
   SELECT 
   SUM(clickCount) as clickCount, 
   SUM(transferCount) as transferCount,
-  B.visitCount, 
+  C.visitCount, 
   C.exp, 
-  C.level, 
+  truncate(C.exp / 500, 0) + 1 as level,
   C.updateDate AS date 
   FROM landingClick AS A 
   JOIN creatorLanding AS B ON A.creatorId = B.creatorId

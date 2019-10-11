@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useCallback } from 'react';
 // @material-ui/core components
 import withStyles from '@material-ui/core/styles/withStyles';
+import TextField from '@material-ui/core/TextField';
 import Hidden from '@material-ui/core/Hidden';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import axios from '../../utils/axios';
 // core components
-import TextField from '../../atoms/TextField/TextField';
 import GridItem from '../../atoms/Grid/GridItem';
 import GridContainer from '../../atoms/Grid/GridContainer';
 import Button from '../../atoms/CustomButtons/Button';
@@ -15,13 +15,15 @@ import CardAvatar from '../../atoms/Card/CardAvatar';
 import CardHeader from '../../atoms/Card/CardHeader';
 import CardBody from '../../atoms/Card/CardBody';
 import Snackbar from '../../atoms/Snackbar/Snackbar';
-import AccountNumberForm from '../../organisms/creator/IncomeManage/AccountNumberForm';
-import Contraction from '../../organisms/creator/UserProfile/Contraction';
-import CompletedContract from '../../organisms/creator/UserProfile/CompletedContract';
 import Dialog from '../../atoms/Dialog/Dialog';
+
 import HOST from '../../utils/config';
+import AccountNumberForm from '../../organisms/creator/IncomeManage/AccountNumberForm';
+import Contraction from '../../organisms/creator/Dashboard/Contraction/Contraction';
+import CompletedContract from '../../organisms/creator/UserProfile/CompletedContract';
 import IpChanger from '../../organisms/creator/UserProfile/IpChanger';
 import history from '../../history';
+import Table from '../../atoms/Table/NotificationTable';
 
 const styles = theme => ({
   cardCategoryWhite: {
@@ -65,6 +67,32 @@ const styles = theme => ({
   },
 });
 
+const CssTextField = withStyles({
+  root: {
+    color: '#00acc1',
+    borderColor: '#00acc1',
+    '& .MuiFormLabel-root ': {
+      color: '#00acc1',
+    },
+    '& .MuiInputBase-input:before': {
+      color: '#00acc1',
+    },
+    '& .MuiInput-underline:after': {
+      borderBottomColor: '#00acc1',
+    },
+    '& .MuiOutlinedInput-root': {
+      '& fieldset': {
+        borderColor: '#00acc1',
+      },
+      '&:hover fieldset': {
+        borderColor: '#00acc1',
+      },
+      '&.Mui-focused fieldset': {
+        borderColor: '#00acc1',
+      },
+    },
+  },
+})(TextField);
 
 function useDialog() {
   // 계약서 다이얼로그 띄우기
@@ -95,6 +123,7 @@ function UserProfile(props) {
   const { classes } = props;
   const [userData, setuserData] = useState({});
   const [snackOpen, setSnackOpen] = useState(false);
+  const [notificationArray, setNotificationArray] = useState([['', '', '', '']]);
   const {
     ContractionOpen,
     handleContractionOpen,
@@ -125,9 +154,15 @@ function UserProfile(props) {
         history.push('/');
       });
   };
-
+  const notificationList = () => {
+    axios.get(`${HOST}/api/dashboard/creator/notification/list`)
+      .then((res) => {
+        setNotificationArray(res.data);
+      });
+  };
   useEffect(() => {
     readyCreatorData();
+    notificationList();
   }, [readyCreatorData]);
 
   return (
@@ -192,7 +227,7 @@ function UserProfile(props) {
               </h4>
               <GridContainer>
                 <GridItem xs={12} sm={12} md={6}>
-                  <TextField
+                  <CssTextField
                     label="TWITCH ID"
                     value={userData.creatorId || ''}
                     className={classes.textField}
@@ -203,7 +238,7 @@ function UserProfile(props) {
                   />
                 </GridItem>
                 <GridItem xs={12} sm={12} md={6}>
-                  <TextField
+                  <CssTextField
                     label="NAME"
                     value={userData.creatorName || ''}
                     className={classes.textField}
@@ -217,7 +252,7 @@ function UserProfile(props) {
               </GridContainer>
               <GridContainer>
                 <GridItem xs={12} sm={12} md={12}>
-                  <TextField
+                  <CssTextField
                     label="EMAIL"
                     value={userData.creatorMail || ''}
                     className={classes.textField}
@@ -230,7 +265,7 @@ function UserProfile(props) {
               </GridContainer>
               <GridContainer>
                 <GridItem xs={12} sm={12} md={6}>
-                  <TextField
+                  <CssTextField
                     label="등록된 IP"
                     value={userData.creatorIp || ''}
                     className={classes.textField}
@@ -255,7 +290,7 @@ function UserProfile(props) {
               {userData.creatorContractionAgreement === 1 && (
               <GridContainer>
                 <GridItem xs={6} sm={6} md={6}>
-                  <TextField
+                  <CssTextField
                     label="계약상태"
                     value="계약완료"
                     className={classes.textField}
@@ -280,6 +315,21 @@ function UserProfile(props) {
               <Button color="info" onClick={handleProfileChange}>
                 정보변경하러가기
               </Button>
+            </CardBody>
+          </Card>
+        </GridItem>
+        <GridItem xs={12} sm={12} md={12}>
+          <Card>
+            <CardHeader color="blueGray">
+              <h4 className={classes.cardTitleWhite}>내 모든 알림내역</h4>
+              <p className={classes.cardCategoryWhite}>내 모든 알림내역을 보여줍니다.</p>
+            </CardHeader>
+            <CardBody>
+              <Table
+                tableHead={['제목', '내용', '날짜', '확인']}
+                tableData={notificationArray}
+                pagination
+              />
             </CardBody>
           </Card>
         </GridItem>
@@ -314,7 +364,7 @@ function UserProfile(props) {
           classes={classes}
           localIp={userData.localIp}
           styles={styles}
-          TextField={TextField}
+          CssTextField={CssTextField}
           onClose={handleIpChangerClose}
           history={history}
         />

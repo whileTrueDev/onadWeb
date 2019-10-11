@@ -17,7 +17,6 @@ const ContractionCard = () => {
         if (res.data.error) {
           history.push('/');
         } else {
-          console.log(res.data.result);
           setuserData(res.data.result);
         }
       });

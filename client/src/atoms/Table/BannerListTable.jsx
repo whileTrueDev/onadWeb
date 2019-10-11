@@ -23,7 +23,6 @@ function CustomTable({ ...props }) {
 
   const [page, setPage] = React.useState(0); // 테이블 페이지
   const [rowsPerPage, setRowsPerPage] = React.useState(3); // 테이블 당 행
-
   const emptyRows = rowsPerPage - Math.min(
     rowsPerPage, tableData.length - page * rowsPerPage,
   );
@@ -64,7 +63,9 @@ function CustomTable({ ...props }) {
         {pagination !== false ? (
           <TableBody>
             {/** 페이지네이션 있는 경우 */}
-            {tableData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((prop, i) => (
+            {tableData.slice(
+              page * rowsPerPage, page * rowsPerPage + rowsPerPage
+            ).map((prop, i) => (
               <TableRow key={shortid.generate()}>
                 {prop.map(value => (
                   value.indexOf('data:image/') === -1 // 없는 경우
@@ -88,32 +89,30 @@ function CustomTable({ ...props }) {
                     )
                 ))}
                 {buttonSet && (
-                  <TableCell className={classes.ButtonCell} key={shortid.generate()}>
-                    <Grid container direction="column">
-                      <Grid item>
-                        <CustomButton
-                          variant="contained"
-                          color="success"
-                          size="sm"
-                          className={classes.tableButton}
-                          onClick={handleDescDialog(page * rowsPerPage + i)}
-                        >
+                <TableCell className={classes.ButtonCell} key={shortid.generate()}>
+                  <Grid container direction="column">
+                    <Grid item>
+                      <CustomButton
+                        variant="contained"
+                        color="success"
+                        size="sm"
+                        className={classes.tableButton}
+                      >
                         상세정보
-                        </CustomButton>
-                      </Grid>
-                      <Grid item>
-                        <CustomButton
-                          variant="contained"
-                          color="danger"
-                          size="sm"
-                          className={classes.tableButton}
-                          onClick={handleBannerDelete(page * rowsPerPage + i)}
-                        >
-                        배너삭제
-                        </CustomButton>
-                      </Grid>
+                      </CustomButton>
                     </Grid>
-                  </TableCell>
+                    <Grid item>
+                      <CustomButton
+                        variant="contained"
+                        color="danger"
+                        size="sm"
+                        className={classes.tableButton}
+                      >
+                        배너삭제
+                      </CustomButton>
+                    </Grid>
+                  </Grid>
+                </TableCell>
                 )}
               </TableRow>
             ))}
@@ -146,6 +145,7 @@ function CustomTable({ ...props }) {
                       </Hidden>
                     )
                 ))}
+
               </TableRow>
             ))}
           </TableBody>

@@ -10,7 +10,7 @@ const useStyles = makeStyles(theme => ({
     display: 'flex', alignItems: 'center', flexDirection: 'row-reverse', padding: 5
   },
   root: {
-    width: '90%',
+    width: '100%',
     heigth: '100%',
     [theme.breakpoints.down('sm')]: {
       width: '100%',
@@ -20,6 +20,9 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
+/**
+ * @param {} props iconComponent=왼쪽상단의 아이콘, buttonComponent=오른쪽 상단의 버튼
+ */
 export default function CustomCard(props) {
   const classes = useStyles();
   const { iconComponent, buttonComponent, children } = props;

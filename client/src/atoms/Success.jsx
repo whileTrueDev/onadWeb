@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 // @material-ui/core components
 import { makeStyles } from '@material-ui/core/styles';
 // core components
@@ -11,7 +10,7 @@ const defaultFont = {
 };
 const successColor = ['#4caf50', '#66bb6a', '#43a047', '#5cb860'];
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles(() => ({
   defaultFontStyle: {
     ...defaultFont,
     fontSize: '14px',

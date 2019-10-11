@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import classnames from 'classnames';
 import Link from '@material-ui/core/Link';
 import { makeStyles } from '@material-ui/core/styles';
 import {
@@ -54,7 +53,7 @@ const UrlCard = () => {
         <Grid item>
           <Grid container direction="column" spacing={2}>
             <Grid item>
-              <StyledItemText primary="랜딩페이지 URL" secondary="랜딩페이지용 URL을 보여줍니다. 당신의 채널 페이지에 등록하세요." />
+              <StyledItemText primary="광고페이지 URL" secondary="내 광고페이지용 URL을 보여줍니다. 당신의 채널 페이지에 등록하세요." />
             </Grid>
             <Grid item xs={12}>
               <Grid container direction="row" spacing={1} className={classes.line}>

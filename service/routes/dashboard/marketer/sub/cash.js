@@ -51,6 +51,7 @@ router.post('/charge', (req, res) => {
   `;
   const cashChargeArray = [marketerId, chargeCash, chargeType];
 
+  // 충전시 기존의 캐시량 + 캐시충전량으로 update
   const debitUpdateQuery = `
   INSERT INTO marketerDebit
   (marketerId, cashAmount)
