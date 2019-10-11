@@ -10,11 +10,13 @@ const bannerRouter = require('./sub/banner');
 const chartRouter = require('./sub/chart');
 const landingRouter = require('./sub/landing');
 const withdrawalRouter = require('./sub/withdrawal');
+const notificationRouter = require('./sub/notification');
 
 router.use('/landing', landingRouter);
 router.use('/banner', bannerRouter);
 router.use('/chart', chartRouter);
 router.use('/withdrawal', withdrawalRouter);
+router.use('/notification', notificationRouter);
 
 // 크리에이터 수익금 정보조회
 router.get('/income', (req, res) => {
@@ -163,31 +165,5 @@ router.post('/ipchange', (req, res) => {
       res.send(false);
     });
 });
-
-// router.post('/welcome', function(req, res ) {
-//   const creatorId = req._passport.session.user.creatorId;
-//   const dateCode =  new CustomDate().getCode();
-
-//   const insertQuery =
-//   `INSERT INTO bannerMatched
-//   (contractionId)
-//   VALUES CONCAT("onad6309_01", "/", ?, "/", ?)
-//   `
-//   const updateQuery = `
-//   UPDATE creatorInfo
-//   SET creatorContractionAgreement = ?
-//   WHERE creatorInfo.creatorId = ?`;
-
-//   Promise.all([
-//     doQuery(insertQuery, [creatorId, dateCode]),
-//     doQuery(updateQuery, [1, creatorId])
-//   ])
-//   .then(()=>{
-//     res.send(true);
-//   })
-//   .catch(()=>{
-//     res.send(false);
-//   })
-// })
 
 module.exports = router;

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 // @material-ui/core components
 import withStyles from '@material-ui/core/styles/withStyles';
@@ -18,9 +18,10 @@ import Notification from './Notification';
 import HOST from '../../utils/config';
 import axios from '../../utils/axios';
 import history from '../../history';
+import useFetchData from '../../utils/lib/hooks/useFetchData';
 
 const useMenu = () => {
-  const [anchorEl, setAnchorEl] = React.useState();
+  const [anchorEl, setAnchorEl] = useState(null);
 
   function handleMenuOpen(event) {
     setAnchorEl(event.currentTarget);
@@ -34,6 +35,8 @@ const useMenu = () => {
 
 function HeaderLinks(props) {
   const { classes } = props;
+  const notificationData = useFetchData('/api/dashboard/creator/notification');
+  const notificationCountData = useFetchData('/api/dashboard/creator/notification/count');
 
   function handleLogoutClick() {
     axios.get(`${HOST}/api/login/logout`).then(() => {
@@ -47,7 +50,7 @@ function HeaderLinks(props) {
   return (
     <div>
       {/* notification */}
-      {/* {window.location.pathname.includes('marketer')
+      {window.location.pathname.includes('marketer')
         ? null
         : (
           <Hidden smDown>
@@ -59,17 +62,30 @@ function HeaderLinks(props) {
               className={classes.buttonLink}
               onClick={handleMenuOpen}
             >
-              <Badge className={classes.margin} badgeContent={2} color="secondary">
+              <Badge
+                className={classes.margin}
+                badgeContent={!notificationCountData.loading
+                  && notificationCountData.payload
+                  ? (notificationCountData.payload.count)
+                  : (null)}
+                color="secondary"
+              >
                 <Tooltip title="알림">
-                  <Notifications className={classes.icons} />
+                  <Notifications
+                    className={classes.icons}
+                  />
                 </Tooltip>
               </Badge>
             </Button>
 
-            <Notification anchorEl={anchorEl} handleMenuClose={handleMenuClose} />
+            <Notification
+              anchorEl={anchorEl}
+              handleMenuClose={handleMenuClose}
+              notificationData={notificationData}
+            />
           </Hidden>
 
-        )} */}
+        )}
 
       <Hidden smDown>
         <Button

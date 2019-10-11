@@ -15,6 +15,7 @@ import CreatorDashboard from './creator/Dashboard';
 // 수정필요함.
 import CreatorMyPage from '../organisms/creator/Mypage/Mypage';
 import CreatorManual from './creator/Manual';
+import UserProfile from './creator/UserProfile';
 
 // 마케터 라우터
 import MarketerDashboard from './marketer/Dashboard';
@@ -53,10 +54,17 @@ const dashboardRoutes = {
       layout: '/dashboard/creator',
     },
     {
-      path: '/user',
-      name: '계정 관리',
+      path: '/user1',
+      name: '계정 관리 - 찬우',
       icon: Person,
       component: CreatorMyPage,
+      layout: '/dashboard/creator',
+    },
+    {
+      path: '/user2',
+      name: '계정 관리 - 진은',
+      icon: Person,
+      component: UserProfile,
       layout: '/dashboard/creator',
     },
   ],
