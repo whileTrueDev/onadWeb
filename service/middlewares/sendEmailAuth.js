@@ -3,7 +3,7 @@ const config = require('../config.json');
 
 const HOST = process.env.NODE_ENV === 'production' ? config.production.apiHostName : config.dev.apiHostName;
 
-sendEmailAuth = (req, response, next) => {
+const sendEmailAuth = (req, response) => {
   const user = {
     marketerId: req.body.marketerId,
     marketerMail: req.body.marketerMail

@@ -2,7 +2,7 @@ const CustomDate = function () {
   this.getKoreaDate = () => {
     const date = new Date();
     date.setHours(date.getHours() + 9);
-    dateString = date.toLocaleString('ko-KR', {
+    const dateString = date.toLocaleString('ko-KR', {
       timeZone: 'UTC',
       hour12: false,
       year: '2-digit',
