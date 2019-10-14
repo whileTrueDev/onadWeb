@@ -66,7 +66,6 @@ router.get('/list', (req, res) => {
   `;
   doQuery(callQuery, [creatorId])
     .then((data) => {
-      console.log(`${creatorId}님 노티 리스트 호출`);
       dataArray = data.result.map(value => Object.values(value));
       tmpDataArray = dataArray;
       tmpDataArray.map((value, index) => {
