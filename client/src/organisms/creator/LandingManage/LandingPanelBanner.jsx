@@ -77,12 +77,12 @@ export default function LandingPanelBanner(props) {
               />
             </div>
 
-            <a href="/pngs/landing/onad_panel_banner_default.png" download="onad_panel_default">
+            <a href="/pngs/landing/onad_panel_banner_default.png" download="onad_panel_banner_default">
               <img src="/pngs/landing/onad_panel_banner_default.png" alt="패널기본배너1" />
             </a>
 
-            <a href="/pngs/landing/onad_panel_banner_default_black.png" download="onad_panel_default2">
-              <img src="/pngs/landing/onad_panel_banner_default_black.png" alt="패널기본배너2" />
+            <a href="/pngs/landing/onad_panel_banner_default_third.png" download="onad_panel_banner_default_third">
+              <img src="/pngs/landing/onad_panel_banner_default_third.png" alt="패널기본배너2" />
             </a>
 
           </div>
