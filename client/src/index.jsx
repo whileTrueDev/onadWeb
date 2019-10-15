@@ -29,7 +29,7 @@ const developRouter = (
       <Route exact path="/dashboard/creator/door" component={CreatorDashboardDoor} />
       <Route path="/dashboard/creator" component={CreatorDashboard} />
       <Route path="/dashboard/marketer" component={MarketerDashboard} />
-      <Route path="/dashboard/test" component={Moniter} history={history} />
+      <Route path="/dashboard/test" component={Moniter} />
       {/* 페이 연습 페이지 */}
       {/* <Route exact path="/pay" component={KakaoPay} /> */}
       {/* not found page */}

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import classnames from 'classnames';
 import { makeStyles } from '@material-ui/core/styles';
 import {
@@ -10,6 +10,7 @@ import CustomCard from '../../../atoms/CustomCard';
 import Button from '../../../atoms/CustomButtons/Button';
 import CircularProgress from '../../../atoms/Progress/CircularProgress';
 import useFetchData from '../../../utils/lib/hooks/useFetchData';
+import WithdrawalDialog from './WithdrawDialog';
 
 const useStyles = makeStyles(() => ({
   stats: {
@@ -45,19 +46,26 @@ const useStyles = makeStyles(() => ({
 }));
 
 const WithdrawalButton = (props) => {
-  const { handleClick } = props;
-  return (<Button color="info" onClick={() => { }}>출금신청</Button>);
+  const { handleOpen } = props;
+  return (<Button color="info" onClick={() => { handleOpen(); }}>출금신청</Button>);
 };
 
 const IncomeCard = () => {
   const classes = useStyles();
   const cashData = useFetchData('/api/dashboard/creator/income');
+  const [open, setOpen] = useState(false);
 
-  // 출금신청 버튼 클릭시
-  const handleIncomeClick = () => '하이';
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
 
   return (
-    <CustomCard iconComponent={<AttachMoney />} buttonComponent={<WithdrawalButton />}>
+    <CustomCard iconComponent={<AttachMoney />} buttonComponent={<WithdrawalButton handleOpen={handleOpen} />}>
       <Grid container direction="column" spacing={2}>
         <Grid item>
           <div className={classes.flex}>
@@ -93,15 +101,24 @@ const IncomeCard = () => {
             className={classnames(classes.stats, classes.flex)}
           >
             {!cashData.loading && !cashData.error && cashData.payload.date
-                  && (
-                  <div>
-                    <DateRange />
-                    <span>{`업데이트 : ${cashData.payload.date}`}</span>
-                  </div>
-                  )}
+              && (
+              <div>
+                <DateRange />
+                <span>{`업데이트 : ${cashData.payload.date}`}</span>
+              </div>
+              )}
           </div>
         </Grid>
       </Grid>
+      {!cashData.loading && !cashData.error && (
+      <WithdrawalDialog
+        open={open}
+        handleOpen={handleOpen}
+        handleClose={handleClose}
+        accountNumber={cashData.payload.creatorAccountNumber}
+        receivable={cashData.payload.creatorReceivable}
+      />
+      )}
     </CustomCard>
   );
 };

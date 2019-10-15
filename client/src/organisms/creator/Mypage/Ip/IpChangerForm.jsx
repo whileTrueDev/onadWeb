@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import {
-  Input, FormControl, InputLabel, Grid
+  FormControl, Grid
 } from '@material-ui/core';
-import MaskedInput from 'react-text-mask';
 import NumberFormat from 'react-number-format';
 import Button from '../../../../atoms/CustomButtons/Button';
 import StyledItemText from '../../../../atoms/StyledItemText';
