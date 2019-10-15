@@ -12,6 +12,7 @@ import './upload.css';
 import ImageUpload from './ImageUpload';
 import HOST from '../../../utils/config';
 import axios from '../../../utils/axios';
+import history from '../../../history';
 
 const DEFAULT_IMAGE_PATH = '/pngs/dashboard/manual/marketer/banner_upload.png';
 
@@ -56,7 +57,6 @@ function QontoStepIcon(props) {
   );
 }
 
-
 const myReducer = (state, action) => {
   switch (action.type) {
     case 'reset': {
@@ -73,7 +73,7 @@ const myReducer = (state, action) => {
 
 const UploadDialog = (props) => {
   const {
-    open, handleOpen, classes, readyBanner
+    open, onClose, classes
   } = props;
   const [state, dispatch] = useReducer(myReducer, { imageName: '', imageUrl: DEFAULT_IMAGE_PATH });
   const [activeStep, setStep] = useState(0);
@@ -81,8 +81,7 @@ const UploadDialog = (props) => {
   const handleClose = () => {
     dispatch({ type: 'reset' });
     setStep(0);
-    readyBanner();
-    handleOpen();
+    onClose();
   };
 
   const handleNext = number => () => {
@@ -106,6 +105,7 @@ const UploadDialog = (props) => {
       .then((res) => {
         if (res.data[0]) {
           alert(res.data[1]);
+          history.push(window.location.pathname);
         } else {
           alert('현재는 등록할 수 없습니다. 본사에 문의하세요');
         }
@@ -118,7 +118,8 @@ const UploadDialog = (props) => {
     <Dialog
       onClose={handleClose}
       open={open}
-      maxWidth="lg"
+      maxWidth="sm"
+      fullWidth
       disableBackdropClick
       title="배너 등록"
     >
@@ -156,9 +157,8 @@ const UploadDialog = (props) => {
 
 UploadDialog.propTypes = {
   classes: PropTypes.object.isRequired,
-  handleOpen: PropTypes.func.isRequired,
+  onClose: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
-  readyBanner: PropTypes.func.isRequired,
 };
 
 QontoStepIcon.propTypes = {
