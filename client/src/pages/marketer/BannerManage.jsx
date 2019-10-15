@@ -1,139 +1,45 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React from 'react';
 // for Link tag component
 // @material-ui/core
 import { withStyles } from '@material-ui/core/styles';
-import Warning from '@material-ui/icons/Warning';
-import axios from '../../utils/axios';
 import GridContainer from '../../atoms/Grid/GridContainer';
-import Card from '../../atoms/Card/Card';
-import CardHeader from '../../atoms/Card/CardHeader';
-import CardBody from '../../atoms/Card/CardBody';
 import GridItem from '../../atoms/Grid/GridItem';
 import CustomButton from '../../atoms/CustomButtons/Button';
-import MarketerBannerListTable from '../../atoms/Table/MarketerBannerListTable';
-import DeleteDialog from '../../organisms/marketer/BannerManage/DeleteDialog';
+
+import BannerTable from '../../organisms/marketer/BannerManage/BannerTable';
 import UploadDialog from '../../organisms/marketer/BannerManage/UploadDialog';
+import DeleteDialog from '../../organisms/marketer/BannerManage/DeleteDialog';
+
 // core ../../atoms
 import dashboardStyle from '../../assets/jss/onad/views/dashboardStyle';
-import DangerTypography from '../../atoms/Typography/Danger';
-import HOST from '../../utils/config';
-import history from '../../history';
 
-const CustomTable = (props) => {
-  const {
-    BannerList, handleDeleteOpen, bannerId, classes
-  } = props;
-  return (
-    <GridContainer>
-      <MarketerBannerListTable
-        tableHead={['캠페인', '배너 이미지', '심의결과', '기타']}
-        tableData={BannerList}
-        handleDeleteOpen={handleDeleteOpen}
-        pagination
-        buttonSet
-        bannerId={bannerId}
-      />
-    </GridContainer>
-  );
-};
+import useDialog from '../../utils/lib/hooks/useDialog';
 
-const BannerManage = (props) => {
-  const { classes } = props;
-  const [BannerList, setBannerList] = useState([]);
-  const [doUpload, setUpload] = useState(false);
-  const [deleteDialogOpenWithBannerId, setDeleteOpen] = useState(false);
-  const [bannerIdData, setbannerIdData] = useState({});
-
-  const handleDeleteOpen = (bannerId) => {
-    setDeleteOpen(bannerId);
-  };
-
-  const handleUploadOpen = () => {
-    setUpload(true);
-  };
-  const handleUploadClose = () => {
-    setUpload(false);
-  };
-  const handleDeleteClose = () => {
-    setDeleteOpen(false);
-  };
-  const handleDelete = (bannerId) => {
-    axios.post(`${HOST}/api/dashboard/marketer/banner/delete`, { bannerId })
-      .then((res) => {
-        if (res.data[0]) {
-          handleDeleteClose();
-          history.push(window.location.pathname);
-        } else {
-          console.log('에러가 떴습니다');
-        }
-      });
-  };
-
-  const readyBanner = useCallback(() => {
-    axios.get(`${HOST}/api/dashboard/marketer/banner/all`)
-      .then((res) => {
-        if (res.data) {
-          res.data.data.map((banner) => {
-            if (banner[2] === 0) {
-              banner[2] = '심의 진행중';
-            } else if (banner[2] === 1) {
-              banner[2] = '승인 - 광고 대기 중';
-            } else if (banner[2] === 2) {
-              banner[2] = '승인 거절';
-            } else if (banner[2] === 3) {
-              banner[2] = '승인 - 광고 진행 중';
-            }
-            return null;
-          });
-          setbannerIdData(res.data.bannerData);
-          setBannerList(res.data.data);
-        }
-      });
-  }, []);
-
-  useEffect(() => {
-    readyBanner();
-  }, [readyBanner]);
+const BannerManage = () => {
+  const deleteDialog = useDialog();
+  const uploadDialog = useDialog();
 
   return (
     <GridContainer>
-      <GridItem xs={12} sm={12} md={10}>
-        <Card>
-          <CardHeader color="blueGray" stats>
-            <h4 className={classes.cardTitleWhite}>배너 리스트</h4>
-            <p className={classes.cardCategoryWhite}>등록된 모든 배너를 보여줍니다.</p>
-          </CardHeader>
-          <CardBody>
-            <CustomButton round color="info" size="lg" onClick={handleUploadOpen}>
-          + 새 배너 만들기
-            </CustomButton>
-            {BannerList.length === 0
-              ? (
-                <DangerTypography>
-                  <Warning />
-                  {'등록된 배너가 없어요! 새 배너 만들기를 통해 등록해보세요.'}
-                </DangerTypography>
-              )
-              : (
-                <CustomTable
-                  BannerList={BannerList}
-                  className={classes.dangerText}
-                  handleDeleteOpen={handleDeleteOpen}
-                  bannerId={bannerIdData}
-                />
-              )
-          }
-          </CardBody>
-        </Card>
+      <GridItem xs={12} xl={10}>
+        <CustomButton color="info" size="lg" onClick={() => { uploadDialog.handleOpen(); }}>
+          + 새 배너 등록
+        </CustomButton>
+        <BannerTable handleDeleteOpen={deleteDialog.handleOpen} />
       </GridItem>
-      <UploadDialog open={doUpload} handleOpen={handleUploadClose} readyBanner={readyBanner} />
-      <DeleteDialog
-        open={Boolean(deleteDialogOpenWithBannerId)}
-        handleOpen={handleDeleteClose}
-        readyBanner={readyBanner}
-        deleteFunc={handleDelete}
-        bannerId={deleteDialogOpenWithBannerId}
+
+      <UploadDialog
+        open={uploadDialog.open}
+        onClose={uploadDialog.handleClose}
       />
+      {Boolean(deleteDialog.open) && (
+        <DeleteDialog
+          open={Boolean(deleteDialog.open)}
+          selectedBanner={deleteDialog.open}
+          handleClose={deleteDialog.handleClose}
+        />
+      )}
+
     </GridContainer>
 
   );

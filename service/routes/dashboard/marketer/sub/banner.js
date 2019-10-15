@@ -1,6 +1,5 @@
 const express = require('express');
 const doQuery = require('../../../../model/doQuery');
-const CustomDate = require('../../../../middlewares/customDate');
 
 const router = express.Router();
 
@@ -28,18 +27,21 @@ router.get('/', (req, res) => {
 router.get('/all', (req, res) => {
   const marketerId = req._passport.session.user.userid;
   const bannerQuery = `
-  SELECT cp.campaignId, br.bannerSrc, confirmState, br.bannerId
-  FROM bannerRegistered AS br
-  LEFT JOIN campaign AS cp ON br.bannerId = cp.bannerId
-  WHERE br.marketerId = ?
-  ORDER BY confirmState DESC, date DESC`;
+  SELECT bannerSrc, confirmState, bannerId, 
+    bannerDenialReason, bannerDescription, 
+    companyDescription, landingUrl,
+    DATE_FORMAT(date, "%Y년% %m월 %d일") as date,
+    DATE_FORMAT(regiDate, "%Y년% %m월 %d일") as regiDate
+  FROM bannerRegistered
+  WHERE marketerId = ?
+  ORDER BY confirmState DESC, regiDate DESC`;
   doQuery(bannerQuery, [marketerId])
     .then((row) => {
-      const tableData = row.result.map(value => Object.values(value).slice(0, 3));
-      const bannerIdData = [];
-      row.result.forEach((item, index) => bannerIdData.push(item.bannerId));
-      console.log(bannerIdData);
-      res.send({ data: tableData, bannerData: bannerIdData });
+      if (row.result.length > 0) {
+        res.send(row.result);
+      } else {
+        res.send([]);
+      }
     })
     .catch((errorData) => {
       console.log(errorData);
@@ -62,139 +64,6 @@ router.get('/registed', (req, res) => {
     .catch((errorData) => {
       console.log(errorData);
       res.send([null, errorData]);
-    });
-});
-
-// 배너의 상태를 시작으로 바꾸는 쿼리
-// bannerMatched
-router.post('/start', (req, res) => {
-  const { bannerId, creators } = req.body;
-  const dateCode = new CustomDate().getCode();
-  const selectQuery = `
-  SELECT contractionId
-  FROM bannerMatched
-  JOIN creatorInfo
-  ON creatorName = ?
-  WHERE contractionId LIKE CONCAT(?, "/", creatorId, "%")
-  AND contractionState = 2
-  `;
-
-  const updateQuery = `
-  UPDATE bannerMatched
-  SET contractionState = 0
-  WHERE contractionId = ?
-  `;
-
-  const insertQuery = `
-  INSERT INTO bannerMatched 
-  (contractionId)
-  SELECT CONCAT(?, "/", creatorId, "/", ?)
-  FROM creatorInfo
-  WHERE creatorName = ?
-  `;
-
-  const insertLandingClickQuery = `
-  INSERT INTO landingClick (clickCount, transferCount, contractionId)
-  VALUES (?, ?, ?)`;
-
-  Promise.all(creators.forEach((creator) => {
-    doQuery(selectQuery, [creator, bannerId])
-      .then((row) => {
-        if (row.result.length !== 0) {
-        // 이전에 계약한 경우가 존재할 떄
-          return Promise.all([
-          // contractionId 생성
-            doQuery(updateQuery, [0, row.result[0].contractionId]),
-            // landingClick 기본값 생성
-            doQuery(insertLandingClickQuery, [0, 0, row.result[0].contractionId])
-          ]);
-        }
-        // 이전에 계약한 배너가 존재하지 않은 경우.
-        return doQuery(insertQuery, [bannerId, dateCode, creator]);
-      })
-      .catch((errorData) => {
-        console.log(errorData);
-      });
-  }))
-    .then(() => {
-      res.send(true);
-    })
-    .catch((errorData) => {
-      console.log(errorData);
-      res.send(false);
-    });
-});
-
-// 배너의 상태를 시작으로 바꾸는 쿼리
-// bannerRegistered
-router.post('/start/statechange', (req, res) => {
-  const marketerId = req._passport.session.user.userid;
-  const { bannerId } = req.body;
-  const bannerQuery = `
-  UPDATE bannerRegistered
-  SET confirmState = ?
-  WHERE bannerId = ? AND marketerId = ?
-  `;
-
-  doQuery(bannerQuery, [3, bannerId, marketerId])
-    .then(() => {
-      res.send(true);
-    })
-    .catch((errorData) => {
-      console.log(errorData);
-      res.send(false);
-    });
-});
-
-// 배너의 상태를 일시정지로 바꾸는 쿼리
-// bannerRegistered
-router.post('/stop/statechange', (req, res) => {
-  const marketerId = req._passport.session.user.userid;
-  const { bannerId } = req.body;
-  const updateQuery = `
-  UPDATE bannerRegistered
-  SET confirmState = ?
-  WHERE bannerId = ? AND marketerId = ?
-  `;
-  doQuery(updateQuery, [1, bannerId, marketerId])
-    .then(() => {
-      res.send(true);
-    })
-    .catch((errorData) => {
-      console.log(errorData);
-      res.end(false);
-    });
-});
-
-// 배너의 상태를 일시정지로 바꾸는 쿼리
-// bannerMatched
-router.post('/stop', (req, res) => {
-  const { bannerId, creators } = req.body;
-  const selectQuery = ` 
-  SELECT creatorId
-  FROM creatorInfo
-  WHERE creatorName = ?
-  `;
-  const stopQuery = `
-  UPDATE bannerMatched
-  SET contractionState = 2
-  WHERE contractionId LIKE CONCAT(?, "%")
-  AND contractionState = 0
-  `;
-  console.log(creators);
-  Promise.all(creators.forEach((creator) => {
-    doQuery(selectQuery, [creator])
-      .then((row) => {
-        const contractionId = `${bannerId}/${row.result[0].creatorId}`;
-        return doQuery(stopQuery, [contractionId]);
-      });
-  }))
-    .then(() => {
-      res.send('success!');
-    })
-    .catch((errorData) => {
-      console.log(errorData);
-      res.send(false);
     });
 });
 
@@ -262,6 +131,24 @@ router.post('/push', (req, res) => {
     })
     .catch(() => {
       res.send([false]);
+    });
+});
+
+// 전달된 해당 배너와 연결된 캠페인이 있는지 조회
+router.get('/connectedcampaign', (req, res) => {
+  const { bannerId } = req.query;
+  const query = `
+  SELECT *
+  FROM campaign
+  WHERE bannerId = ? AND deletedState = 0`;
+  const queryArray = [bannerId];
+  doQuery(query, queryArray)
+    .then((row) => {
+      res.send(row.result);
+    })
+    .catch((err) => {
+      console.log('connectedcampaign', err);
+      res.end();
     });
 });
 

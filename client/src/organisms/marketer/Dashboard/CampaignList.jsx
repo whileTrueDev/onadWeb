@@ -42,7 +42,7 @@ function CampaignTable(props) {
         <div>
           <Button color="info" onClick={handleCampaignCreateMode}>
             <Add />
-            새 캠페인 등록하기
+            새 캠페인 등록
           </Button>
         </div>
         {campaignData.loading && (

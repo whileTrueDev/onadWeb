@@ -53,7 +53,13 @@ const ImageUpload = (props) => {
 
   return (
     <div>
-      <img id="preview" src={state.imageUrl} className={classes.imgPreview} onError={() => { dispatch({ type: 'reset' }); }} alt="이미지가 보일 영역" />
+      <img
+        id="preview"
+        src={state.imageUrl}
+        className={classes.imgPreview}
+        onError={() => { dispatch({ type: 'reset' }); }}
+        alt="이미지가 보일 영역"
+      />
       <div className="filebox">
         <Grid container direction="row" justify="flex-end">
           <Grid item>

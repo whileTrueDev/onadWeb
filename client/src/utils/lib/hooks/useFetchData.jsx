@@ -24,7 +24,7 @@ export default function useFetchData(url, params) {
     try {
       const res = await axios.get(`${host}${url}${querify(param)}`);
 
-      if (res.data.length !== 0) {
+      if (res.data) {
         setPayload(res.data);
       } else {
         throw new Error('데이터가 존재하지 않습니다');

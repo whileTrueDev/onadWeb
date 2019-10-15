@@ -53,19 +53,20 @@ function datefy(dateObject) {
 /**
  * @description 데이터를 셋업하는 함수
  * @param {array} dataPacket 로부터 api 서버로부터 넘겨받은 데이터.
+ * @param {function} dateDiffFunc 두 날짜간의 사이를 구할 함수 ( dateDiff or monthDiff )
  * @author hwasurr
  */
-function setUpData(dataPacket) {
+function setUpData(dataPacket, dateDiffFunc) {
   const DEFAULT_VALUE = 0;
   const CPM = []; const CPC = [];
   const setUpLabels = [];
 
   dataPacket.forEach((obj, index) => {
     if (setUpLabels.indexOf(datefy(obj.date)) === -1) { // 처음보는 date
-      if (setUpLabels.length > 1) {
+      if (setUpLabels.length >= 1) {
         const previousDate = setUpLabels[setUpLabels.length - 1];
         const currentDate = datefy(obj.date);
-        const datediff = dateDiff(new Date(previousDate), new Date(currentDate));
+        const datediff = dateDiffFunc(new Date(previousDate), new Date(currentDate));
 
         // 이전날짜와 지금날짜의 날짜차이가 있다면 ( 빈 데이터가 존재한다면 )
         if (datediff > 1) {
@@ -126,7 +127,7 @@ function setUpData(dataPacket) {
  */
 function createStackBarDataSet(dataPacket, DATE_RANGE = 15) {
   const today = new Date();
-  const { setUpLabels, CPM, CPC } = setUpData(dataPacket);
+  const { setUpLabels, CPM, CPC } = setUpData(dataPacket, dateDiff);
 
   const labels = setUpLabels.map(day => `${day.split('-')[1]}월 ${day.split('-')[2]}일`);
   const firstTime = new Date(dataPacket[0].date.split('T')[0]); // 마지막 날짜
@@ -162,7 +163,7 @@ function createStackBarDataSet(dataPacket, DATE_RANGE = 15) {
 function createStackBarDataSetPerMonth(dataPacket) {
   const today = new Date();
   const MONTH_LENGTH = 12;
-  const { setUpLabels, CPM, CPC } = setUpData(dataPacket);
+  const { setUpLabels, CPM, CPC } = setUpData(dataPacket, monthDiff);
 
   const labels = setUpLabels.map(day => `${day.split('-')[0]}년 ${day.split('-')[1]}월`);
   const firstTime = new Date(dataPacket[0].date.split('T')[0]); // 처음 날짜
@@ -178,7 +179,6 @@ function createStackBarDataSetPerMonth(dataPacket) {
       today.setMonth(today.getMonth() + 1);
     }
   }
-
 
   // 2주일의 데이터보다 적다면, 2주(14일)의 데이터만큼 day를 채운다.
   if (labels.length < MONTH_LENGTH) {

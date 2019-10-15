@@ -1,6 +1,7 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
+import classnames from 'classnames';
 import { makeStyles } from '@material-ui/core/styles';
 import { Grid, Typography } from '@material-ui/core';
 import FlightTakeoff from '@material-ui/icons/FlightTakeoff';
@@ -13,7 +14,9 @@ import useTooltip from '../../../utils/lib/hooks/useTooltip';
 const useStyles = makeStyles(() => ({
   flex: {
     display: 'flex',
-
+  },
+  images: {
+    flexDirection: 'column',
   },
   site: {
     color: '#00acc1',
@@ -77,14 +80,15 @@ export default function LandingPanelBanner(props) {
               />
             </div>
 
-            <a href="/pngs/landing/onad_panel_banner_default.png" download>
-              <img src="/pngs/landing/onad_panel_banner_default.png" alt="패널기본배너1" />
-            </a>
+            <div className={classnames(classes.flex, classes.images)}>
+              <a href="/pngs/landing/onad_panel_banner_default.png" download="onad_panel_banner_default">
+                <img src="/pngs/landing/onad_panel_banner_default.png" alt="패널기본배너1" />
+              </a>
 
-            <a href="/pngs/landing/onad_panel_banner_default_black.png" download>
-              <img src="/pngs/landing/onad_panel_banner_default_black.png" alt="패널기본배너2" />
-            </a>
-
+              <a href="/pngs/landing/onad_panel_banner_default_third.png" download="onad_panel_banner_default2">
+                <img src="/pngs/landing/onad_panel_banner_default_third.png" alt="패널기본배너2" />
+              </a>
+            </div>
           </div>
         </Grid>
       </Grid>
