@@ -10,6 +10,7 @@ import LocalAirport from '@material-ui/icons/LocalAirport';
 
 // 크리에이터 라우터
 import CreatorUserProfile from './creator/UserProfile';
+import CreatorBannerManage from './creator/BannerManage';
 import CreatorLandingManage from './creator/LandingManage';
 import CreatorIncomeManage from './creator/IncomeManage';
 import CreatorDashboard from './creator/Dashboard';
@@ -33,10 +34,10 @@ const dashboardRoutes = {
       layout: '/dashboard/creator',
     },
     {
-      path: '/income',
-      name: '수익 관리',
-      icon: AttachMoney,
-      component: CreatorIncomeManage,
+      path: '/banner',
+      name: '배너 관리',
+      icon: BrandingWatermark,
+      component: CreatorBannerManage, // 마케터 대시보드 컴포넌트로 수정
       layout: '/dashboard/creator',
     },
     {

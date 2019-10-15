@@ -1,15 +1,18 @@
 // import
 const express = require('express');
 const doQuery = require('../../../../model/doQuery');
+const CustomDate = require('../../../../middlewares/customDate');
 
 const router = express.Router();
 
 router.get('/', (req, res) => {
   const { creatorId } = req._passport.session.user;
   const query = `
-  SELECT  creatorTwitchId, creatorDesc, creatorBackgroundImage, creatorTheme, visitCount
-  FROM creatorLanding
-  WHERE creatorId = ?
+  SELECT  CL.creatorTwitchId, CL.creatorDesc, CL.creatorBackgroundImage, CL.creatorTheme, CR.visitCount
+  FROM creatorLanding as CL
+  JOIN creatorRoyaltyLevel as CR
+  ON CL.creatorId = CR.creatorId 
+  WHERE CL.creatorId = ?
   LIMIT 1`;
   const queryArray = [creatorId];
 
@@ -80,26 +83,24 @@ router.get('/data', (req, res) => {
   SELECT 
   SUM(clickCount) as clickCount, 
   SUM(transferCount) as transferCount,
-  B.visitCount, 
-  C.exp,
-  C.updateDate AS date 
+  C.visitCount, 
+  C.level,
+  C.exp
   FROM landingClick AS A 
   JOIN creatorLanding AS B ON A.creatorId = B.creatorId
   LEFT JOIN creatorRoyaltyLevel AS C ON B.creatorId = C.creatorId 
   WHERE A.creatorId = ?
   `;
+  const dateCode = new CustomDate().getKoreaDate();
 
   doQuery(selectQuery, [creatorId])
     .then((row) => {
       // exp를 이용하여 레벨을 계산. -> level 컬럼에 대한  레벨은
-      const Exexp = row.result[0].exp || 0;
-      const level = Exexp !== 0 ? parseInt(Exexp / 500) + 1 : 1;
-      const exp = Exexp % 500;
+      const exp = row.result[0].exp - row.result[0].level * 500 || 0;
       const data = {
         ...row.result[0],
-        level,
         exp,
-        date: row.result[0].date.toLocaleString(),
+        date: dateCode,
         clickCount: row.result[0].clickCount || 0,
         transferCount: row.result[0].transferCount || 0,
         visitCount: row.result[0].visitCount || 0

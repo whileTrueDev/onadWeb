@@ -43,14 +43,17 @@ const tableStyle = theme => ({
     color: 'inherit',
     ...defaultFont,
     fontSize: '1em',
+    textAlign: 'center'
   },
   tableCell: {
     ...defaultFont,
     lineHeight: '1.42857143',
-    padding: '12px 8px',
+    padding: '10px 8px',
+    // padding: 0,
     verticalAlign: 'middle',
     fontWeight: 500,
-    fontSize: '1.1em'
+    fontSize: '1.1em',
+    textAlign: 'center'
   },
   tableFooter: {
     ...defaultFont,
@@ -66,8 +69,9 @@ const tableStyle = theme => ({
     overflowX: 'auto',
   },
   imgCell: {
+    padding: '10px 8px',
     [theme.breakpoints.up('md')]: {
-      maxWidth: '12vh',
+      maxWidth: '25vh',
     },
     maxHeight: '6vh',
   },
