@@ -63,6 +63,7 @@ const IncomeCard = () => {
           >
             <Grid item xs={11} sm={11}>
               <PrettoSlider
+                max="500"
                 style={{ cursor: 'default' }}
                 valueLabelDisplay="on"
                 aria-label="pretto slider"
