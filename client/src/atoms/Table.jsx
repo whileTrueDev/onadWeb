@@ -9,7 +9,6 @@ import {
 } from '@material-ui/core';
 // custom table component
 import Help from '@material-ui/icons/Help';
-import CustomTableFooter from './TableFooter';
 import GreenCheckbox from './GreenCheckBox';
 // core components
 import tableStyle from '../assets/jss/onad/components/tableStyle';

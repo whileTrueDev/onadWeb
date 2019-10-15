@@ -15,11 +15,11 @@ import tableStyle from '../../assets/jss/onad/components/tableStyle';
 
 function CustomTable({ ...props }) {
   const {
-    classes, tableHead, tableData, tableHeaderColor, pagination,
+    classes, tableHead, tableData, tableHeaderColor, pagination, rowPerPage
   } = props;
 
   const [page, setPage] = React.useState(0); // 테이블 페이지
-  const [rowsPerPage, setRowsPerPage] = React.useState(5); // 테이블 페이지당 행
+  const [rowsPerPage, setRowsPerPage] = React.useState(rowPerPage); // 테이블 페이지당 행
   const emptyRows = rowsPerPage - Math.min(
     rowsPerPage, tableData.length - page * rowsPerPage,
   );
@@ -124,6 +124,7 @@ function CustomTable({ ...props }) {
 CustomTable.defaultProps = {
   tableHeaderColor: 'gray',
   pagination: false,
+  rowPerPage: 5
 };
 
 CustomTable.propTypes = {
@@ -143,6 +144,7 @@ CustomTable.propTypes = {
     PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   )).isRequired,
   pagination: PropTypes.bool,
+  rowPerPage: PropTypes.number
 };
 
 

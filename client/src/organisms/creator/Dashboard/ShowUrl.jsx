@@ -106,12 +106,12 @@ const ShowUrl = (props) => {
         message="클립보드에 복사되었어요!"
         open={copySuccess}
         closeNotification={() => setCopySuccess(false)}
-        close
+        handleClose={() => { setCopySuccess(false); }}
       />
       <Snackbar
+        icon
         place="bl"
         color="danger"
-        icon
         message="아직 온애드와 계약하지 않았어요. 간단히 계약하고, 광고를 집행하세요."
         open={!contractionAgreement}
         Link={

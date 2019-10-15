@@ -1,8 +1,5 @@
 import React, { useEffect } from 'react';
-import {
-  Grid, Typography, Divider
-} from '@material-ui/core';
-import shortid from 'shortid';
+import { Grid, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import BrandingWatermark from '@material-ui/icons/BrandingWatermark';
 import Button from '../../../atoms/CustomButtons/Button';
@@ -38,7 +35,6 @@ const UrlCard = () => {
   const open = Boolean(anchorEl);
 
   useEffect(() => {
-    console.log(currentBannerData.payload);
   }, [currentBannerData.payload]);
 
   const handlePopoverClose = () => {

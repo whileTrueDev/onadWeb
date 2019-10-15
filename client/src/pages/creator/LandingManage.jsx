@@ -1,22 +1,18 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-// @material-ui/core
-import withStyles from '@material-ui/core/styles/withStyles';
 // core ../../../atoms
 import GridContainer from '../../atoms/Grid/GridContainer';
-import Card from '../../atoms/Card/Card';
-import CardHeader from '../../atoms/Card/CardHeader';
-import CardBody from '../../atoms/Card/CardBody';
 import GridItem from '../../atoms/Grid/GridItem';
 import CircularProgress from '../../atoms/Progress/CircularProgress';
+
 import LandingSetting from '../../organisms/creator/LandingManage/LandingSetting';
-import useFetchData from '../../utils/lib/hooks/useFetchData';
 import LandingImageUploadForm from '../../organisms/creator/LandingManage/LandingImageUploadForm';
 import LandingUrl from '../../organisms/creator/LandingManage/LandingUrl';
-import dashboardStyle from '../../assets/jss/onad/views/dashboardStyle';
+import LandingDetail from '../../organisms/creator/LandingManage/LandingDetail';
+import LandingPanelBanner from '../../organisms/creator/LandingManage/LandingPanelBanner';
 
-function LandingManage(props) {
-  const { classes } = props;
+import useFetchData from '../../utils/lib/hooks/useFetchData';
+
+function LandingManage() {
   const landingData = useFetchData('/api/dashboard/creator/landing');
   return (
     <div>
@@ -24,75 +20,48 @@ function LandingManage(props) {
       <GridContainer>
         {/* 랜딩페이지 URL 보기 */}
         <GridItem xs={12} xl={8}>
-          <Card style={{ marginBottom: 0 }}>
-            <CardBody>
-              <LandingUrl userData={landingData} />
-            </CardBody>
-          </Card>
+          <LandingUrl userData={landingData} />
         </GridItem>
       </GridContainer>
 
       <GridContainer>
-        <GridItem xs={12} sm={6} md={6} xl={3}>
-          <GridContainer>
-
-            {/* 레벨 및 게이지바 */}
-            <GridItem xs={12}>
-              <Card>
-                <CardHeader color="blueGray" stats>
-                  <h4 className={classes.cardTitleWhite}>
-                    설정
-                  </h4>
-                </CardHeader>
-                <CardBody>
-                  {landingData.loading && (<CircularProgress small />)}
-                  {!landingData.loading && landingData.payload && (
-                    <LandingSetting userData={landingData} />
-                  )}
-                </CardBody>
-              </Card>
-            </GridItem>
-
-            <GridItem xs={12}>
-              <Card>
-                <CardHeader color="blueGray" stats>
-                  <h4 className={classes.cardTitleWhite}>
-                    랜딩페이지 현황
-                  </h4>
-                </CardHeader>
-                <CardBody>
-                  <div className={classes.stats}>
-                    랜딩페이지 현황 (충성도 및 지표)
-                    <br />
-                    {"chan's component"}
-                  </div>
-                </CardBody>
-              </Card>
-
-            </GridItem>
-          </GridContainer>
-        </GridItem>
-
-        <GridItem xs={12} sm={6} md={6} xl={5}>
-
+        <GridItem xs={12} sm={6} md={6} xl={4}>
           <GridContainer>
 
             {/* 배경이미지 선택 */}
             <GridItem xs={12}>
-              <Card>
-                <CardHeader color="blueGray" stats>
-                  <h4 className={classes.cardTitleWhite}>
-                    배경 이미지 업로드
-                  </h4>
-                </CardHeader>
-                <CardBody>
-                  {landingData.loading && (<CircularProgress small />)}
-                  {!landingData.loading && landingData.payload && (
-                  <LandingImageUploadForm userData={landingData} />
-                  )}
-                </CardBody>
-              </Card>
+              {landingData.loading && (<CircularProgress small />)}
+              {!landingData.loading && landingData.payload && (
+              <LandingImageUploadForm userData={landingData} />
+              )}
             </GridItem>
+
+            {/* 광고페이지 현황 */}
+            <GridItem xs={12}>
+              <LandingDetail />
+            </GridItem>
+
+          </GridContainer>
+        </GridItem>
+
+        <GridItem xs={12} sm={6} md={6} xl={4}>
+          <GridContainer>
+
+            {/* 랜딩페이지설정 */}
+            <GridItem xs={12}>
+              {landingData.loading && (<CircularProgress small />)}
+              {!landingData.loading && landingData.payload && (
+                <LandingSetting userData={landingData} />
+              )}
+            </GridItem>
+
+
+            {/* 패널배너 기본이미지 */}
+            <GridItem xs={12}>
+              <LandingPanelBanner userData={landingData} />
+            </GridItem>
+
+
           </GridContainer>
         </GridItem>
       </GridContainer>
@@ -100,8 +69,4 @@ function LandingManage(props) {
     </div>
   );
 }
-export default withStyles(dashboardStyle)(LandingManage);
-
-LandingManage.propTypes = {
-  classes: PropTypes.object.isRequired
-};
+export default LandingManage;

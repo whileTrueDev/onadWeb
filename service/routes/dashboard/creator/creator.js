@@ -10,11 +10,13 @@ const bannerRouter = require('./sub/banner');
 const chartRouter = require('./sub/chart');
 const landingRouter = require('./sub/landing');
 const withdrawalRouter = require('./sub/withdrawal');
+const notificationRouter = require('./sub/notification');
 
 router.use('/landing', landingRouter);
 router.use('/banner', bannerRouter);
 router.use('/chart', chartRouter);
 router.use('/withdrawal', withdrawalRouter);
+router.use('/notification', notificationRouter);
 
 // 크리에이터 수익금 정보조회
 router.get('/income', (req, res) => {
@@ -62,11 +64,19 @@ router.get('/overlayUrl', (req, res) => {
 
 router.get('/landingUrl', (req, res) => {
   const { creatorId } = req._passport.session.user;
-  if (creatorId) {
-    res.send(`http://l.onad.io/${creatorId}`);
-  } else {
-    res.end();
-  }
+  const query = `SELECT 
+  creatorTwitchId 
+  FROM creatorInfo
+  WHERE creatorId = ?`;
+  doQuery(query, [creatorId])
+    .then((row) => {
+      const { creatorTwitchId } = row.result[0];
+      res.send(`http://l.onad.io/${creatorTwitchId}`);
+    })
+    .catch((err) => {
+      console.log('ERROR in /landingUrl', err);
+      res.end();
+    });
 });
 
 // creator contraction Update
@@ -153,36 +163,6 @@ router.post('/ipchange', (req, res) => {
     .catch(() => {
       res.send(false);
     });
-});
-
-// router.post('/welcome', function(req, res ) {
-//   const creatorId = req._passport.session.user.creatorId;
-//   const dateCode =  new CustomDate().getCode();
-
-//   const insertQuery =
-//   `INSERT INTO bannerMatched
-//   (contractionId)
-//   VALUES CONCAT("onad6309_01", "/", ?, "/", ?)
-//   `
-//   const updateQuery = `
-//   UPDATE creatorInfo
-//   SET creatorContractionAgreement = ?
-//   WHERE creatorInfo.creatorId = ?`;
-
-//   Promise.all([
-//     doQuery(insertQuery, [creatorId, dateCode]),
-//     doQuery(updateQuery, [1, creatorId])
-//   ])
-//   .then(()=>{
-//     res.send(true);
-//   })
-//   .catch(()=>{
-//     res.send(false);
-//   })
-// })
-
-router.get('/bank/callback', (req, res) => {
-  res.redirect(`${HOST}/dashboard/creator/door`);
 });
 
 module.exports = router;

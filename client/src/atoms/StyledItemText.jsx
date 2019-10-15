@@ -1,7 +1,4 @@
-import React from 'react';
-import {
-  ListItemText
-} from '@material-ui/core';
+import { ListItemText } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 
 // props를 이용한 정의
@@ -9,7 +6,7 @@ import { withStyles } from '@material-ui/core/styles';
 const StyledItemText = withStyles(theme => ({
   root: {
     color: '#455a64',
-    fontWeight: '700',
+    fontWeight: '600',
     [theme.breakpoints.down('sm')]: {
       fontSize: '14px',
       marginBottom: '8px',
@@ -18,7 +15,7 @@ const StyledItemText = withStyles(theme => ({
   primary: props => ({
     fontSize: props.fontSize ? props.fontSize : '18px',
     // fontSize: '18px',
-    fontWeight: '700',
+    fontWeight: '600',
     color: props.color || 'inherit'
   }),
 }))(ListItemText);

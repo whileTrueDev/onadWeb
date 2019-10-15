@@ -2,19 +2,18 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import {
-  Grid, FormControl, InputLabel, Input, FormHelperText,
+  Grid, FormControl, InputLabel, Input, FormHelperText
 } from '@material-ui/core';
 import CustomButton from '../../../atoms/CustomButtons/Button';
 
 const formStyle = theme => ({
   imgPreview: {
     width: '100%',
-    height: 'auto',
     [theme.breakpoints.down('xs')]: {
       maxHeight: '200px',
     },
     [theme.breakpoints.up('sm')]: {
-      maxWidth: '600px',
+      maxWidth: '350px',
       maxHeight: '300px',
     },
   },
@@ -56,8 +55,11 @@ const BannerDescFrom = (props) => {
   return (
     <Grid container direction="column" spacing={3}>
       <Grid item>
-        <img id="preview" src={state.imageUrl} className={classes.imgPreview} alt="이미지가 보일 영역" />
+        <div>
+          <img id="preview" src={state.imageUrl} className={classes.imgPreview} alt="배너이미지" />
+        </div>
       </Grid>
+
       <Grid item>
         <CssFormControl
           required

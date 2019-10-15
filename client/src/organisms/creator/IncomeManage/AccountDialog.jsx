@@ -9,7 +9,7 @@ import Dialog from '../../../atoms/Dialog/Dialog';
 import AccountNumberForm from './AccountNumberForm';
 import history from '../../../history';
 
-const style = theme => ({
+const style = () => ({
   contentText: {
     marginTop: '8px',
     fontSize: 15,

@@ -92,7 +92,6 @@ const LoginForm = (props) => {
       })
       .catch((reason) => {
         console.log(reason);
-        setUserid('');
         setPasswd(''); // 비밀번호 초기화
         alert('회원이 아닙니다.');
       });

@@ -12,17 +12,11 @@ import axios from '../../../utils/axios';
 import Usertype from './Usertype';
 import RegistForm from './RegistForm';
 import PaperSheet from './Paper';
-import AppAppBar from '../Main/views/Layout/AppAppBar';
 import HOST from '../../../utils/config';
 import withRoot from '../Main/withRoot';
 import history from '../../../history';
 
 const styles = theme => ({
-  root: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-  },
   container: {
     [theme.breakpoints.down('sm')]: {
       width: '90%',
@@ -155,44 +149,42 @@ const RegistStepper = withRoot((props) => {
   };
 
   return (
-    <div className={classes.root}>
-      <AppAppBar unuse={false} />
-      <div className={classes.container}>
 
-        <Stepper activeStep={activeStep} orientation="vertical">
-          <Step key="0">
-            <StepLabel>사업자 유형 선택</StepLabel>
-            <StepContent>
-              <Usertype typeChange={typeChange} handleNext={handleNext} />
-            </StepContent>
-          </Step>
-          <Step key="1">
-            <StepLabel>개인정보 입력</StepLabel>
-            <StepContent>
-              <RegistForm
-                userType={userType}
-                handleNext={handleNext}
-                handleBack={handleBack}
-                handleUserInfo={handleUserInfo}
-                state={state}
-                dispatch={dispatch}
-              />
-            </StepContent>
-          </Step>
-          <Step key="2">
-            <StepLabel>정보 동의 및 계약</StepLabel>
-            <StepContent>
-              <PaperSheet
-                handleNext={handleNext}
-                handleReset={handleReset}
-                handleUserSubmit={handleUserSubmit}
-                loading={loading}
-                setLoading={setLoading}
-              />
-            </StepContent>
-          </Step>
-        </Stepper>
-      </div>
+    <div className={classes.container}>
+
+      <Stepper activeStep={activeStep} orientation="vertical">
+        <Step key="0">
+          <StepLabel>사업자 유형 선택</StepLabel>
+          <StepContent>
+            <Usertype typeChange={typeChange} handleNext={handleNext} />
+          </StepContent>
+        </Step>
+        <Step key="1">
+          <StepLabel>개인정보 입력</StepLabel>
+          <StepContent>
+            <RegistForm
+              userType={userType}
+              handleNext={handleNext}
+              handleBack={handleBack}
+              handleUserInfo={handleUserInfo}
+              state={state}
+              dispatch={dispatch}
+            />
+          </StepContent>
+        </Step>
+        <Step key="2">
+          <StepLabel>정보 동의 및 계약</StepLabel>
+          <StepContent>
+            <PaperSheet
+              handleNext={handleNext}
+              handleReset={handleReset}
+              handleUserSubmit={handleUserSubmit}
+              loading={loading}
+              setLoading={setLoading}
+            />
+          </StepContent>
+        </Step>
+      </Stepper>
     </div>
   );
 });

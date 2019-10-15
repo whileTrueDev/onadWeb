@@ -11,12 +11,12 @@ import {
 import {
   Help, Domain, Lock, Dashboard,
 } from '@material-ui/icons';
-import AppBar from '../../components/AppBar';
-import Toolbar from '../../components/Toolbar';
-import LoginPopover from '../Login/LoginPopover';
-import HOST from '../../../../../utils/config';
-import axios from '../../../../../utils/axios';
-import history from '../../../../../history';
+import AppBar from '../Main/components/AppBar';
+import Toolbar from '../Main/components/Toolbar';
+import LoginPopover from '../Main/views/Login/LoginPopover';
+import HOST from '../../../utils/config';
+import axios from '../../../utils/axios';
+import history from '../../../history';
 
 const styles = theme => ({
   root: {

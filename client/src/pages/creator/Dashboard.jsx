@@ -1,7 +1,6 @@
 import React from 'react';
-import {
-  Grid
-} from '@material-ui/core';
+import GridContainer from '../../atoms/Grid/GridContainer';
+import GridItem from '../../atoms/Grid/GridItem';
 import IncomCard from '../../organisms/creator/Dashboard/IncomeCard';
 import UrlCard from '../../organisms/creator/Dashboard/UrlCard';
 import BannerCard from '../../organisms/creator/Dashboard/BannerCard';
@@ -10,26 +9,38 @@ import ContractionCard from '../../organisms/creator/Dashboard/ContractionCard';
 import IncomeChart from '../../organisms/creator/Dashboard/IncomeChart';
 
 const Dashboard = () => (
-  <Grid container direction="row">
-    <Grid item sm={12} md={11}>
+  <GridContainer direction="row">
+    <GridItem sm={12} md={10}>
       <ContractionCard />
-    </Grid>
-    <Grid item xs={12} sm={4} xl={3}>
-      <IncomCard />
-      <LandingCard />
-    </Grid>
-    <Grid item xs={12} sm={7} xl={7}>
+    </GridItem>
+
+    <GridItem xs={12} xl={3}>
+
+      <GridContainer>
+        <GridItem xs={12} md={6} xl={12}>
+          <IncomCard />
+        </GridItem>
+        <GridItem xs={12} md={6} xl={12}>
+          <LandingCard />
+        </GridItem>
+      </GridContainer>
+    </GridItem>
+
+
+    <GridItem xs={12} xl={7}>
       <IncomeChart />
-    </Grid>
-    <Grid item xs={12} sm={1} xl={2} />
-    <Grid item xs={12} sm={6}>
+    </GridItem>
+
+    <GridItem xs={12} sm={6}>
       <BannerCard />
-    </Grid>
-    <Grid item xs={12} sm={5} xl={4}>
+    </GridItem>
+
+    <GridItem xs={12} sm={6} xl={4}>
       <UrlCard />
-    </Grid>
-    <Grid item xs={12} sm={1} xl={2} />
-  </Grid>
+    </GridItem>
+
+    <GridItem xs={12} sm={1} xl={2} />
+  </GridContainer>
 );
 
 export default Dashboard;

@@ -6,7 +6,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import shortid from 'shortid';
 import {
   sendTypeConfig, optionConfig, budgetConfig, landingManageConfig
-} from '../organisms/marketer/CampaignCreate/sendTypeConfig';
+} from '../utils/TooltipContentConfig';
 import StyledSelectText from './StyledSelectText';
 
 const useStyles = makeStyles(theme => ({

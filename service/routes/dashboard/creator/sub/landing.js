@@ -8,11 +8,17 @@ const router = express.Router();
 router.get('/', (req, res) => {
   const { creatorId } = req._passport.session.user;
   const query = `
+<<<<<<< HEAD
   SELECT  CL.creatorTwitchId, CL.creatorDesc, CL.creatorBackgroundImage, CL.creatorTheme, CR.visitCount
   FROM creatorLanding as CL
   JOIN creatorRoyaltyLevel as CR
   ON CL.creatorId = CR.creatorId 
   WHERE CL.creatorId = ?
+=======
+  SELECT  creatorTwitchId, creatorDesc, creatorBackgroundImage, creatorTheme
+  FROM creatorLanding
+  WHERE creatorId = ?
+>>>>>>> dev
   LIMIT 1`;
   const queryArray = [creatorId];
 

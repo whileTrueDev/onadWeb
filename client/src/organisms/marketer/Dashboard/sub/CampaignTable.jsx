@@ -1,53 +1,15 @@
-import React, { forwardRef } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
-import MaterialTable from 'material-table';
-// icons
-import ArrowUpward from '@material-ui/icons/ArrowUpwardRounded';
-import Check from '@material-ui/icons/CheckRounded';
-import Clear from '@material-ui/icons/ClearRounded';
 import Delete from '@material-ui/icons/DeleteRounded';
-import ChevronLeft from '@material-ui/icons/ChevronLeftRounded';
-import ChevronRight from '@material-ui/icons/ChevronRightRounded';
-import FilterList from '@material-ui/icons/FilterListRounded';
-import FirstPage from '@material-ui/icons/FirstPageRounded';
-import LastPage from '@material-ui/icons/LastPageRounded';
+import MaterialTable from '../../../../atoms/Table/MaterialTable';
+// icons
 // own components
-import { Typography } from '@material-ui/core';
 import IOSSwitch from '../../../../atoms/Switch/IOSSwitch';
-import Dialog from '../../../../atoms/Dialog/Dialog';
-import Button from '../../../../atoms/CustomButtons/Button';
 import useUpdateData from '../../../../utils/lib/hooks/useUpdateData';
 import useDialog from '../../../../utils/lib/hooks/useDialog';
 import useDeleteData from '../../../../utils/lib/hooks/useDeleteData';
+import CampaignDeleteConfirmDialog from './CampaignDeleteConfirmDialog';
 import history from '../../../../history';
-
-const tableIcons = {
-  Check: forwardRef((props, ref) => <Check {...props} ref={ref} />),
-  Clear: forwardRef((props, ref) => <Clear {...props} ref={ref} />),
-  Delete: forwardRef((props, ref) => <Delete {...props} ref={ref} />),
-  Filter: forwardRef((props, ref) => <FilterList {...props} ref={ref} />),
-  FirstPage: forwardRef((props, ref) => <FirstPage {...props} ref={ref} />),
-  LastPage: forwardRef((props, ref) => <LastPage {...props} ref={ref} />),
-  NextPage: forwardRef((props, ref) => <ChevronRight {...props} ref={ref} />),
-  PreviousPage: forwardRef((props, ref) => <ChevronLeft {...props} ref={ref} />),
-  SortArrow: forwardRef((props, ref) => <ArrowUpward {...props} ref={ref} />),
-};
-
-const localization = {
-  body: {
-    deleteTooltip: '캠페인 삭제',
-  },
-  pagination: {
-    firstTooltip: '첫 페이지',
-    previousTooltip: '이전 페이지',
-    nextTooltip: '다음 페이지',
-    lastTooltip: '마지막 페이지',
-    labelRowsSelect: '행'
-  },
-  header: {
-    actions: ''
-  }
-};
 
 function CampaignTable({ ...props }) {
   const { dataSet } = props;
@@ -100,25 +62,24 @@ function CampaignTable({ ...props }) {
     <div>
       <MaterialTable
         tableRef={tableRef}
-        localization={localization}
         style={{ boxShadow: 'none' }}
-        icons={tableIcons}
         columns={state.columns}
         data={state.data}
         actions={[
           rowData => ({
             icon: () => (<Delete />),
             tooltip: '캠페인 삭제',
-            onClick: () => { console.log('delete clicked! - ', rowData.campaignId); handleOpen(rowData.campaignId); }
+            onClick: () => { handleOpen(rowData.campaignId); }
           }),
           rowData => ({
             icon: () => (<IOSSwitch checked={Boolean(rowData.onOff)} />),
             tooltip: '캠페인 On/Off',
             onClick: async () => {
-              await handleUpdateRequest({ onoffState: !rowData.onOff, campaignId: rowData.campaignId });
-              setTimeout(() => {
-                history.push(window.location.pathname);
-              }, 300);
+              await handleUpdateRequest({
+                onoffState: !rowData.onOff,
+                campaignId: rowData.campaignId
+              });
+              setTimeout(() => history.push(window.location.pathname), 300);
             }
           })
         ]}
@@ -128,44 +89,11 @@ function CampaignTable({ ...props }) {
         }}
       />
       {}
-      <Dialog
-        open={Boolean(open)}
-        onClose={handleClose}
-        maxWidth="sm"
-        fullWidth
-        buttons={(
-          <div>
-            <Button
-              color="info"
-              onClick={() => {
-                handleDelete({ campaignId: open });
-                setTimeout(
-                  history.push(`${window.location.pathname}`),
-                  300
-                );
-              }}
-            >
-                진행
-            </Button>
-            <Button onClick={handleClose}>
-              취소
-            </Button>
-          </div>
-      )}
-      >
-        <div style={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
-          <div style={{ justifyContent: 'center', alignItems: 'center' }}>
-            <Typography variant="body1">
-            해당 캠페인을 삭제하시겠습니까?
-            </Typography>
-          </div>
-          <div>
-            <Typography variant="body1">
-            삭제시, 진행중이던 광고는 모두 중지됩니다.
-            </Typography>
-          </div>
-        </div>
-      </Dialog>
+      <CampaignDeleteConfirmDialog
+        open={open}
+        handleDelete={handleDelete}
+        handleClose={handleClose}
+      />
     </div>
   );
 }
