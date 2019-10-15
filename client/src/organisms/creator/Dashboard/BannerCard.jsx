@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import shortid from 'shortid';
 import { Grid, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import BrandingWatermark from '@material-ui/icons/BrandingWatermark';
@@ -30,6 +31,7 @@ const BannerManageButton = (props) => {
 const UrlCard = () => {
   const classes = useStyles();
   const currentBannerData = useFetchData('/api/dashboard/creator/banner/current');
+  console.log(currentBannerData);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [descIndex, setDescIndex] = React.useState(0); // popover의 내용 Index
   const open = Boolean(anchorEl);
@@ -73,7 +75,7 @@ const UrlCard = () => {
                 xs={12}
                 sm={6}
                 onClick={handlePopoverClick(index)}
-                key={`popover_${index}`}
+                key={shortid.generate()}
               >
                 <img
                   src={bannerData.bannerSrc}
@@ -88,7 +90,7 @@ const UrlCard = () => {
             ))
           )
           }
-          {!currentBannerData.loading && currentBannerData.error && (
+          {!currentBannerData.loading && currentBannerData.payload.length === 0 && (
           <div className={classes.area}>
             <Typography variant="h6" className={classes.head}>
               <span role="img" aria-label="caution">🚫</span>
@@ -100,7 +102,17 @@ const UrlCard = () => {
         </Grid>
         <Grid item />
       </Grid>
-      <BannerDescPopover currentBannerData={currentBannerData} open={open} anchorEl={anchorEl} handlePopoverClose={handlePopoverClose} descIndex={descIndex} />
+
+      {!currentBannerData.loading && currentBannerData.error && (
+      <BannerDescPopover
+        currentBannerData={currentBannerData}
+        open={open}
+        anchorEl={anchorEl}
+        handlePopoverClose={handlePopoverClose}
+        descIndex={descIndex}
+      />
+      )}
+
     </CustomCard>
   );
 };

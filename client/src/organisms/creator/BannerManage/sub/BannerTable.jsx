@@ -249,7 +249,6 @@ BannerTable.propTypes = {
     'gray',
     'blueGray',
   ]),
-  tableHead: PropTypes.arrayOf(PropTypes.string).isRequired,
   tableData: PropTypes.arrayOf(PropTypes.arrayOf(
     PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   )).isRequired,

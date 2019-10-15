@@ -6,7 +6,7 @@ import Typography from '@material-ui/core/Typography';
 // icons
 import Help from '@material-ui/icons/Help';
 import WbSunny from '@material-ui/icons/WbSunny';
-import NightsStay from '@material-ui/icons/Check';
+import NightsStay from '@material-ui/icons/NightsStay';
 // atoms
 import StyledItemText from '../../../atoms/StyledItemText';
 import CustomCard from '../../../atoms/CustomCard';
