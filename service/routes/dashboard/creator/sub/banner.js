@@ -101,4 +101,85 @@ router.get('/matched', (req, res) => {
     });
 });
 
+// 하나의 gameId에 해당하는 모든 캠페인 리스트를 반환하는 Promise
+const getCash = async (campaignList) => {
+  console.log('캠페인 List 각각의 campaignId를 통해 cash를 가져옵니다.');
+  const cashQuery = `
+  SELECT campaignId, type , sum(cash) as cash
+  FROM campaignLog
+  WHERE campaignId = ? 
+  AND creatorId = ?
+  GROUP by campaignLog.type
+  `;
+  const newList = [];
+  await Promise.all(
+    campaignList.map((campaignData) => {
+      const newCampaignData = { ...campaignData, CPC: 0, CPM: 0 };
+      return doQuery(cashQuery, [campaignData.campaignId, campaignData.creatorId])
+        .then((row) => {
+          if (row.result) {
+            let cash = 0;
+            row.result.forEach((cashData) => {
+              newCampaignData[cashData.type] = cashData.cash;
+              cash += cashData.cash;
+            });
+            newCampaignData.cash = cash;
+            newList.push(newCampaignData);
+            const newDate = new Date(newCampaignData.date);
+            newDate.setHours(newDate.getHours() + 9);
+            newCampaignData.date = newDate.toLocaleString('ko-KR', {
+              timeZone: 'UTC',
+              hour12: false,
+              year: '2-digit',
+              month: '2-digit',
+              day: '2-digit',
+              hour: '2-digit',
+              minute: '2-digit',
+              second: '2-digit'
+            });
+          }
+        });
+    })
+  )
+    .catch((errorData) => {
+      console.log(errorData);
+      errorData.point = 'getCash()';
+      errorData.description = 'categoryCampaign에서 각각의 categoryId에 따른 캠페인 가져오기';
+    });
+
+  return newList;
+};
+
+router.get('/list', (req, res) => {
+  const { creatorId } = req._passport.session.user;
+  const listQuery = `
+  SELECT CT.campaignId, CT.date, BR.bannerSrc, CT.creatorId,
+  campaign.onOff as state, campaign.marketerName, 
+  bannerDescription, companyDescription,
+  landingUrl
+  FROM 
+  (
+  SELECT creatorId, campaignId , min(date) as date FROM campaignTimestamp
+  WHERE creatorId = ?
+  GROUP BY campaignId
+  ) AS CT 
+
+  JOIN campaign 
+  ON CT.campaignId = campaign.campaignId
+
+  JOIN bannerRegistered AS BR
+  ON campaign.bannerId = BR.bannerId
+  `;
+  doQuery(listQuery, [creatorId])
+    .then(async (row) => {
+      const campaignList = await getCash(row.result);
+      res.send(campaignList);
+    })
+    .catch((errorData) => {
+      console.log(errorData);
+      res.send([]);
+    });
+});
+
+
 module.exports = router;

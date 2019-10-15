@@ -18,6 +18,7 @@ const useStyles = makeStyles({
     fontSize: '15px',
     fontWeight: '700',
     textAlign: 'center',
+    color: '#455a64'
   }
 });
 

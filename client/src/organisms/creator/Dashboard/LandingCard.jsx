@@ -59,7 +59,15 @@ const IncomeCard = () => {
   const landingData = useFetchData('/api/dashboard/creator/landing/data');
 
   return (
-    <CustomCard iconComponent={<BarChart />} buttonComponent={<StyledItemText primary="랜딩페이지 현황" secondary="다음 보상까지 남은 경험치입니다." />}>
+    <CustomCard
+      iconComponent={<BarChart />}
+      buttonComponent={(
+        <StyledItemText
+          primary="랜딩페이지 현황"
+          secondary="다음 보상까지 남은 경험치입니다."
+        />
+      )}
+    >
       <Grid container direction="column" spacing={2}>
         <Grid item />
         <Grid item />
@@ -74,7 +82,7 @@ const IncomeCard = () => {
           >
             <Grid item xs={11} sm={11}>
               <PrettoSlider
-                style={{ cursor: 'default' }}
+                max="500"
                 valueLabelDisplay="on"
                 aria-label="pretto slider"
                 value={!landingData.loading && !landingData.error ? landingData.payload.exp : 0}

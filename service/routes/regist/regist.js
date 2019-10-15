@@ -37,7 +37,7 @@ router.post('/marketer', (req, res, next) => {
 
   const cashQuery = `
   INSERT INTO marketerDebit
-  (marketerId, cashAmount )
+  (marketerId, cashAmount)
   VALUES (?, ?)`;
 
   Promise.all([

@@ -162,12 +162,15 @@ const CampaignCreateStepper = (props) => {
     const priorityList = ((priorityType) => {
       switch (priorityType) {
         case 0: {
+          // 선택된 크리에이터
           return checkedCreators;
         }
         case 1: {
+          // 선택된 카테고리
           return checkedCategories;
         }
         case 2: {
+          // 모든 creatorList
           return creatorList;
         }
         default: {

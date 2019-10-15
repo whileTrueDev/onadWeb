@@ -271,19 +271,19 @@ router.post('/push', (req, res) => {
 
   const saveQuery = `
   INSERT INTO campaign 
-  (campaignId, campaignName, marketerId, bannerId, dailyLimit, priorityType, optionType, onOff) 
-  VALUES (?, ?, ?, ?, ?, ?, ?, 1)`;
+  (campaignId, campaignName, marketerId, bannerId, dailyLimit, priorityType, optionType, onOff, targetList) 
+  VALUES (?, ?, ?, ?, ?, ?, ?, 1, ?)`;
 
   // 캠페인 등록.
   doQuery(searchQuery, [marketerId])
     .then((row) => {
       const campaignId = getCampaignId(row.result[0], marketerId);
       const limit = (optionType === 0 && noBudget) || optionType === 1 ? -1 : dailyLimit;
-
+      const targetJsonData = JSON.stringify({ targetList: priorityList });
       Promise.all([
         doQuery(saveQuery,
           [campaignId, campaignName, marketerId, bannerId, limit,
-            priorityType, optionType]),
+            priorityType, optionType, targetJsonData]),
         PriorityDoquery({ campaignId, priorityType, priorityList }),
         LandingDoQuery({ campaignId, priorityType, priorityList })
       ])

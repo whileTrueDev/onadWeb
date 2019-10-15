@@ -234,12 +234,10 @@ passport.use(new TwitchStrategy({
       } else {
         console.log(`${user.creatorDisplayName} 님이 최초 로그인 하셨습니다.`);
         const creatorIp = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+        const campaignList = JSON.stringify({ campaignList: [] });
         const creatorBannerUrl = makeUrl();
         user.creatorIp = creatorIp;
 
-        /**
-                 * 기본값 설정 쿼리
-                 */
         const infoQuery = `
                 INSERT INTO creatorInfo
                 (creatorId, creatorName, creatorMail, creatorIp, advertiseUrl, creatorTwitchId, creatorLogo)
@@ -256,6 +254,18 @@ passport.use(new TwitchStrategy({
                 VALUES (?, ?, ?, ?)
                 `;
 
+        const royaltyQuery = `
+                INSERT INTO creatorRoyaltyLevel
+                (creatorId, level, exp, visitCount)
+                VALUES (?, 0, 0, 0)
+                `;
+
+        const campaignQuery = `
+              INSERT INTO creatorCampaign
+              (creatorId, campaignList)
+              VALUES (?, ?)
+              `;
+
         // landing 기본값 쿼리 추가
         const landingQuery = `
                 INSERT INTO creatorLanding
@@ -266,6 +276,8 @@ passport.use(new TwitchStrategy({
           doQuery(infoQuery, [user.creatorId, user.creatorDisplayName,
             user.creatorMail, creatorIp, `/${creatorBannerUrl}`,
             user.creatorName, user.creatorLogo]),
+          doQuery(royaltyQuery, [user.creatorId]),
+          doQuery(campaignQuery, [user.creatorId, campaignList]),
           doQuery(incomeQuery, [user.creatorId, 0, 0]),
           doQuery(priceQuery, [user.creatorId, 1, 0, 1]),
           doQuery(landingQuery, [user.creatorId, user.creatorName]),

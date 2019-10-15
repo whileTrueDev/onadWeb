@@ -9,6 +9,8 @@ log/*
 /log/*
 /bin/log
 *.log
+/bin/log/*.json
+/log
 
 calculationLog/*
 */calculationLog

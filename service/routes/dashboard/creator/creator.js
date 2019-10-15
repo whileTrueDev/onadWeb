@@ -152,9 +152,8 @@ router.get('/list', (req, res) => {
 
 // ip change
 router.post('/ipchange', (req, res) => {
-  const newIp = req.body.value;
+  const { newIp } = req.body;
   const { creatorId } = req._passport.session.user;
-  console.log(req);
   const ipQuery = 'UPDATE creatorInfo SET creatorIp = ? WHERE creatorId = ?';
   doQuery(ipQuery, [newIp, creatorId])
     .then(() => {

@@ -1,7 +1,6 @@
 // 라우터 아이콘 @material-ui/icons
 import Dashboard from '@material-ui/icons/DashboardOutlined';
 import Person from '@material-ui/icons/PersonOutline';
-import AttachMoney from '@material-ui/icons/AttachMoneyOutlined';
 import BrandingWatermark from '@material-ui/icons/BrandingWatermarkOutlined';
 import Reorder from '@material-ui/icons/Reorder';
 import Work from '@material-ui/icons/Work';
@@ -9,8 +8,8 @@ import Public from '@material-ui/icons/Public';
 // import Public from '@material-ui/icons/Public'; // 지구본 아이콘
 
 // 크리에이터 라우터
+import CreatorBannerManage from './creator/BannerManage';
 import CreatorLandingManage from './creator/LandingManage';
-import CreatorIncomeManage from './creator/IncomeManage';
 import CreatorDashboard from './creator/Dashboard';
 // 수정필요함.
 import CreatorMyPage from '../organisms/creator/Mypage/Mypage';
@@ -33,10 +32,10 @@ const dashboardRoutes = {
       layout: '/dashboard/creator',
     },
     {
-      path: '/income',
-      name: '수익 관리',
-      icon: AttachMoney,
-      component: CreatorIncomeManage,
+      path: '/banner',
+      name: '배너 관리',
+      icon: BrandingWatermark,
+      component: CreatorBannerManage, // 마케터 대시보드 컴포넌트로 수정
       layout: '/dashboard/creator',
     },
     {
