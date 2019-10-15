@@ -46,7 +46,7 @@ function BusinessRegistrationUploadForm(props) {
       </CardHeader>
 
       {!businessRegistrationData.loading
-      && businessRegistrationData.payload.marketerBusinessRegNum ? (
+      && businessRegistrationData.payload.marketerBusinessRegSrc ? (
         <CardBody>
           <div className={myClasses.buttonWrapper}>
             <Button
@@ -121,7 +121,6 @@ BusinessRegistrationUploadForm.defaultProps = {
     loading: true,
     error: '',
     payload: {
-      marketerBusinessRegNum: 0,
       marketerBusinessRegSrc: ''
     }
   }

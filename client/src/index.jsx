@@ -15,7 +15,6 @@ import ShutDownCloseBeta from './pages/others/ShutDownCloseBeta';
 // import KakaoPay from './pages/Common/KakaoPay';
 import * as serviceWorker from './utils/serviceWorker';
 import history from './history';
-import Moniter from './pages/admin/Moniter';
 
 const developRouter = (
   <Router history={history}>
@@ -29,7 +28,6 @@ const developRouter = (
       <Route exact path="/dashboard/creator/door" component={CreatorDashboardDoor} />
       <Route path="/dashboard/creator" component={CreatorDashboard} />
       <Route path="/dashboard/marketer" component={MarketerDashboard} />
-      <Route path="/dashboard/test" component={Moniter} history={history} />
       {/* 페이 연습 페이지 */}
       {/* <Route exact path="/pay" component={KakaoPay} /> */}
       {/* not found page */}
