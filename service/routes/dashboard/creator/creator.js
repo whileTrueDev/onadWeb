@@ -107,7 +107,9 @@ router.post('/contraction', (req, res) => {
 // 유저 정보
 router.get('/profile', (req, res) => {
   const profileQuery = `
-  SELECT creatorId, creatorName, creatorIp, creatorMail, creatorAccountNumber, creatorContractionAgreement, creatorTwitchId
+  SELECT 
+  creatorId, creatorName, creatorIp, creatorMail, 
+  creatorAccountNumber, creatorContractionAgreement, creatorTwitchId
   FROM creatorInfo 
   WHERE creatorId = ?`;
   if (req._passport.session === undefined) {

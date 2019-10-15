@@ -1,7 +1,5 @@
 import React from 'react';
-import {
-  Grid, Hidden
-} from '@material-ui/core';
+import { Hidden } from '@material-ui/core';
 import GridContainer from '../../../atoms/Grid/GridContainer';
 import GridItem from '../../../atoms/Grid/GridItem';
 import WithdrawalCard from './WithdrawalCard';
@@ -11,6 +9,7 @@ import AccountCard from './AccountCard';
 
 const Mypage = () => {
   const profileData = useFetchData('/api/dashboard/creator/profile');
+  // console.log(profileData);
 
   return (
     <GridContainer direction="row">
