@@ -97,10 +97,12 @@ const BannerDescFrom = (props) => {
           <InputLabel shrink htmlFor="company" className={classes.label}>URL</InputLabel>
           <Input
             required
+            defaultValue="http://"
             type="url"
             id="url"
             className={classes.input}
           />
+
           <FormHelperText>랜딩페이지를 통해 접속할 웹페이지를 작성해주세요</FormHelperText>
         </CssFormControl>
       </Grid>

@@ -97,6 +97,8 @@ const UploadDialog = (props) => {
     event.preventDefault();
     const bannerDescription = document.getElementById('banner').value || null;
     const companyDescription = document.getElementById('company').value || null;
+    // text format을 사용하기 위해 state로 사용한다.
+
     const landingUrl = document.getElementById('url').value || null;
 
     axios.post(`${HOST}/api/dashboard/marketer/banner/push`, {
