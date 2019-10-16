@@ -5,9 +5,9 @@ import {
   DialogContentText,
 } from '@material-ui/core';
 import PropTypes from 'prop-types';
-import Dialog from '../../../atoms/Dialog/Dialog';
+import Dialog from '../../../../atoms/Dialog/Dialog';
 import AccountNumberForm from './AccountNumberForm';
-import history from '../../../history';
+import history from '../../../../history';
 
 const style = () => ({
   contentText: {

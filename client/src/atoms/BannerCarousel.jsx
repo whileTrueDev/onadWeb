@@ -40,8 +40,10 @@ const tutorialSteps = [
 
 const useStyles = makeStyles(theme => ({
   root: {
-    width: '900px',
-    // width: '100%',
+    width: '600px',
+    [theme.breakpoints.down('sm')]: {
+      width: '100%',
+    },
     height: 'auto',
   },
   image: {

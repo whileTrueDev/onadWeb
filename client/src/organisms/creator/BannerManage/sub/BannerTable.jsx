@@ -172,7 +172,7 @@ function BannerTable({ ...props }) {
                     <Grid item>
                       <Grid container className={innerClasses.flex}>
                         <Grid item>
-                          <Typography gutterBottom variant="body1" className={innerClasses.head}>랜딩페이지 수익</Typography>
+                          <Typography gutterBottom variant="body1" className={innerClasses.head}>광고페이지 수익</Typography>
                         </Grid>
                       </Grid>
                       <div className={innerClasses.flex}>

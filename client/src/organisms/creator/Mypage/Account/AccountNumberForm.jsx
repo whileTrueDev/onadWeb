@@ -5,21 +5,16 @@ import {
   DialogActions,
   TextField,
   withStyles,
-  FormHelperText,
-  FormControl,
-  InputLabel,
-  Input,
   MenuItem,
   Grid,
-  Divider
 } from '@material-ui/core';
 import NumberFormat from 'react-number-format';
-import StyledInput from '../../../atoms/StyledInput';
-import axios from '../../../utils/axios';
-import Button from '../../../atoms/CustomButtons/Button';
-import HOST from '../../../utils/config';
-import history from '../../../history';
-import StyledItemText from '../../../atoms/StyledItemText';
+import StyledInput from '../../../../atoms/StyledInput';
+import axios from '../../../../utils/axios';
+import Button from '../../../../atoms/CustomButtons/Button';
+import HOST from '../../../../utils/config';
+import history from '../../../../history';
+import StyledItemText from '../../../../atoms/StyledItemText';
 
 const style = theme => ({
   divider: {

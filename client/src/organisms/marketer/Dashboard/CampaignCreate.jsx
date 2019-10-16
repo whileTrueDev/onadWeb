@@ -158,7 +158,6 @@ const CampaignCreateStepper = (props) => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-
     const priorityList = ((priorityType) => {
       switch (priorityType) {
         case 0: {
@@ -191,6 +190,7 @@ const CampaignCreateStepper = (props) => {
       })
         .then((res) => {
           alert(res.data[1]);
+          history.push('/dashboard/marketer/main');
         });
     } else {
       alert('제출불가');
@@ -226,9 +226,9 @@ const CampaignCreateStepper = (props) => {
       .then((res) => {
       // 올바른 데이터가 전달되었다.
         if (res.data[0]) {
-          // setCreatorList(res.data[1]);
+          setCreatorList(res.data[1]);
           // TODO : 위의 것으로 변경
-          setCreatorList(['123', '1234']);
+          // setCreatorList(['123', '1234']);
         } else {
           alert(res.data[1]);
         }
@@ -365,10 +365,7 @@ const CampaignCreateStepper = (props) => {
                       disabled={!submitCheck}
                       variant="contained"
                       color="info"
-                      onClick={() => {
-                        handleSubmit();
-                        history.push('/dashboard/marketer/main');
-                      }}
+                      onClick={handleSubmit}
                       className={classes.end}
                     >
                      완료
