@@ -102,7 +102,7 @@ function HeaderLinks(props) {
                   : (null)}
                 color="secondary"
               >
-                <Tooltip title="맡케터 알림">
+                <Tooltip title="알림">
                   <Notifications
                     className={classes.icons}
                   />
