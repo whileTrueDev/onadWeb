@@ -35,24 +35,24 @@ const useMenu = () => {
 
 function HeaderLinks(props) {
   const { classes } = props;
-  const notificationData = useFetchData('/api/dashboard/creator/notification');
-  const notificationCountData = useFetchData('/api/dashboard/creator/notification/count');
-
+  const creatorNotificationData = useFetchData('/api/dashboard/creator/notification');
+  const creatorNotificationCountData = useFetchData('/api/dashboard/creator/notification/count');
+  const marketerNotificationData = useFetchData('/api/dashboard/marketer/notification');
+  const marketerNotificationCountData = useFetchData('/api/dashboard/marketer/notification/count');
   function handleLogoutClick() {
     axios.get(`${HOST}/api/login/logout`).then(() => {
       history.push('/');
     });
   }
-
   const MOBILEWIDTH = 959;
   const { anchorEl, handleMenuOpen, handleMenuClose } = useMenu();
 
   return (
     <div>
       {/* notification */}
-      {window.location.pathname.includes('marketer')
-        ? null
-        : (
+
+      {window.location.pathname.includes('creator')
+        ? (
           <Hidden smDown>
             <Button
               color={window.innerWidth > MOBILEWIDTH ? 'transparent' : 'white'}
@@ -64,9 +64,9 @@ function HeaderLinks(props) {
             >
               <Badge
                 className={classes.margin}
-                badgeContent={!notificationCountData.loading
-                  && notificationCountData.payload
-                  ? (notificationCountData.payload.count)
+                badgeContent={!creatorNotificationCountData.loading
+                  && creatorNotificationCountData.payload
+                  ? (creatorNotificationCountData.payload.count)
                   : (null)}
                 color="secondary"
               >
@@ -81,11 +81,43 @@ function HeaderLinks(props) {
             <Notification
               anchorEl={anchorEl}
               handleMenuClose={handleMenuClose}
-              notificationData={notificationData}
+              notificationData={creatorNotificationData}
             />
           </Hidden>
+        ) : (
+          <Hidden smDown>
+            <Button
+              color={window.innerWidth > MOBILEWIDTH ? 'transparent' : 'white'}
+              justIcon={window.innerWidth > MOBILEWIDTH}
+              simple={!(window.innerWidth > MOBILEWIDTH)}
+              aria-label="notifications"
+              className={classes.buttonLink}
+              onClick={handleMenuOpen}
+            >
+              <Badge
+                className={classes.margin}
+                badgeContent={!marketerNotificationCountData.loading
+                  && marketerNotificationCountData.payload
+                  ? (marketerNotificationCountData.payload.count)
+                  : (null)}
+                color="secondary"
+              >
+                <Tooltip title="알림">
+                  <Notifications
+                    className={classes.icons}
+                  />
+                </Tooltip>
+              </Badge>
+            </Button>
 
-        )}
+            <Notification
+              anchorEl={anchorEl}
+              handleMenuClose={handleMenuClose}
+              notificationData={marketerNotificationData}
+            />
+          </Hidden>
+        )
+}
 
       <Hidden smDown>
         <Button

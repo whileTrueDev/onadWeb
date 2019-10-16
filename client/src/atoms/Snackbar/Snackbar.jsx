@@ -27,7 +27,7 @@ function Snackbar({ ...props }) {
         key="close"
         aria-label="Close"
         color="inherit"
-        onClick={() => handleClose()}
+        onClick={() => { handleClose(); }}
       >
         <Close className={classes.close} />
       </IconButton>,

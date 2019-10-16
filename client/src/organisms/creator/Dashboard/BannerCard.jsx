@@ -9,6 +9,7 @@ import useFetchData from '../../../utils/lib/hooks/useFetchData';
 import CircularProgress from '../../../atoms/Progress/CircularProgress';
 import StyledItemText from '../../../atoms/StyledItemText';
 import BannerDescPopover from './BannerDescPopover';
+import history from '../../../history';
 
 const useStyles = makeStyles(theme => ({
   area: {
@@ -22,21 +23,25 @@ const useStyles = makeStyles(theme => ({
 }));
 
 
-const BannerManageButton = (props) => {
-  const { handleClick } = props;
-  return (<Button color="info" onClick={() => { }}>배너관리</Button>);
-};
+const BannerManageButton = () => (
+  <Button
+    color="info"
+    onClick={() => {
+      history.push('/dashboard/creator/banner');
+    }}
+  >
+  캠페인 관리
+
+  </Button>
+);
 
 
-const UrlCard = () => {
+const BannerCard = () => {
   const classes = useStyles();
   const currentBannerData = useFetchData('/api/dashboard/creator/banner/current');
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [descIndex, setDescIndex] = React.useState(0); // popover의 내용 Index
   const open = Boolean(anchorEl);
-
-  useEffect(() => {
-  }, [currentBannerData.payload]);
 
   const handlePopoverClose = () => {
     setAnchorEl(null);
@@ -116,4 +121,4 @@ const UrlCard = () => {
   );
 };
 
-export default UrlCard;
+export default BannerCard;

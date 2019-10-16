@@ -4,13 +4,7 @@ import makeStyles from '@material-ui/core/styles/makeStyles';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import { Grid } from '@material-ui/core';
-import axios from '../../../utils/axios';
-// core components
-import Card from '../../../atoms/Card/Card';
-import CardAvatar from '../../../atoms/Card/CardAvatar';
-import CardHeader from '../../../atoms/Card/CardHeader';
-import CardBody from '../../../atoms/Card/CardBody';
-import AccountNumberForm from '../IncomeManage/AccountNumberForm';
+import AccountNumberForm from './Account/AccountNumberForm';
 import history from '../../../history';
 import CircularProgress from '../../../atoms/Progress/CircularProgress';
 import CustomCard from '../../../atoms/CustomCard';

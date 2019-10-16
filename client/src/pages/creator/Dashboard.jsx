@@ -26,7 +26,6 @@ const Dashboard = () => (
       </GridContainer>
     </GridItem>
 
-
     <GridItem xs={12} xl={7}>
       <IncomeChart />
     </GridItem>

@@ -23,6 +23,7 @@ router.get('/current', (req, res) => {
   ON  cp.campaignId = ct.campaignId
   
   WHERE cp.onOff = 1
+  AND ct.creatorId = ?
   AND ct.date >= NOW() - INTERVAL 10 MINUTE
   ORDER BY ct.date DESC
   LIMIT 2`;
@@ -103,7 +104,6 @@ router.get('/matched', (req, res) => {
 
 // 하나의 gameId에 해당하는 모든 캠페인 리스트를 반환하는 Promise
 const getCash = async (campaignList) => {
-  console.log('캠페인 List 각각의 campaignId를 통해 cash를 가져옵니다.');
   const cashQuery = `
   SELECT campaignId, type , sum(cash) as cash
   FROM campaignLog

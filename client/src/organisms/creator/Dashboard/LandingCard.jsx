@@ -63,7 +63,7 @@ const IncomeCard = () => {
       iconComponent={<BarChart />}
       buttonComponent={(
         <StyledItemText
-          primary="랜딩페이지 현황"
+          primary="광고페이지 현황"
           secondary="다음 보상까지 남은 경험치입니다."
         />
       )}
