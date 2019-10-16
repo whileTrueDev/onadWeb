@@ -83,7 +83,7 @@ const IncomeCard = () => {
             <Grid item xs={11} sm={11}>
               <PrettoSlider
                 style={{ cursor: 'default' }}
-                max="500"
+                max={500}
                 valueLabelDisplay="on"
                 aria-label="pretto slider"
                 value={!landingData.loading && !landingData.error ? landingData.payload.exp : 0}

@@ -3,7 +3,6 @@ const express = require('express');
 const doQuery = require('../../model/doQuery');
 const creatorRouter = require('./creator/creator');
 const marketerRouter = require('./marketer/marketer');
-const passport = require('../../passportStrategy');
 
 const router = express.Router();
 router.use('/creator', creatorRouter);
@@ -21,8 +20,6 @@ router.get('/checkUserType', (req, res, next) => {
     res.send('no session');
   }
 });
-
-router.get('/check', passport.authenticate('local'));
 
 router.get('/notice', (req, res) => {
   const query = `

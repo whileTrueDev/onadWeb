@@ -31,7 +31,6 @@ const BannerManageButton = (props) => {
 const UrlCard = () => {
   const classes = useStyles();
   const currentBannerData = useFetchData('/api/dashboard/creator/banner/current');
-  console.log(currentBannerData);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [descIndex, setDescIndex] = React.useState(0); // popover의 내용 Index
   const open = Boolean(anchorEl);
