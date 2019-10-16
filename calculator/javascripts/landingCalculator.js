@@ -155,13 +155,19 @@ const creatorExpCalcuate = ({ creatorId, exp }) => {
   WHERE creatorId = ?
   `;
 
+  const expCalculateQuery = `
+  UPDATE creatorRoyaltyLevel
+  SET exp = ?
+  WHERE creatorId = ?
+  `;
+
   return new Promise((resolve, reject) => {
     console.log(`${creatorId}에 대해 경험치 정산을 시작합니다.`);
     doQuery(calculateQuery, [exp, creatorId])
       .then((row) => {
         doQuery(searchQuery, [creatorId])
           .then((inrow) => {
-            if (parseInt(inrow.result[0].exp / GAUGE) !== inrow.result[0].level) {
+            if (parseInt(inrow.result[0].exp / GAUGE) >= 1) {
               Promise.all(
                 [
                   Notification(
@@ -174,6 +180,7 @@ const creatorExpCalcuate = ({ creatorId, exp }) => {
                       }
                     }
                   ),
+                  doQuery(expCalculateQuery, [(inrow.result[0].exp % GAUGE), creatorId]),
                   doQuery(levelCalculateQuery, [creatorId])
                 ]
               );

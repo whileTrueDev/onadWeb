@@ -79,34 +79,40 @@ router.post('/image/upload', (req, res) => {
 
 router.get('/data', (req, res) => {
   const { creatorId } = req._passport.session.user;
-  const selectQuery = `
+  const royaltyQuery = `
+  SELECT 
+  visitCount, 
+  level,
+  exp
+  FROM creatorRoyaltyLevel
+  WHERE creatorId = ?
+  `;
+
+  const landingQuery = `
   SELECT 
   SUM(clickCount) as clickCount, 
-  SUM(transferCount) as transferCount,
-  C.visitCount, 
-  C.level,
-  C.exp
-  FROM landingClick AS A 
-  JOIN creatorLanding AS B ON A.creatorId = B.creatorId
-  LEFT JOIN creatorRoyaltyLevel AS C ON B.creatorId = C.creatorId 
-  WHERE A.creatorId = ?
+  SUM(transferCount) as transferCount
+  FROM landingClick 
+  WHERE creatorId = ?
   `;
+
   const dateCode = new CustomDate().getKoreaDate();
 
-  doQuery(selectQuery, [creatorId])
-    .then((row) => {
-      // exp를 이용하여 레벨을 계산. -> level 컬럼에 대한  레벨은
-      const exp = row.result[0].exp - row.result[0].level * 500 || 0;
-      const data = {
-        ...row.result[0],
-        exp,
-        date: dateCode,
-        clickCount: row.result[0].clickCount || 0,
-        transferCount: row.result[0].transferCount || 0,
-        visitCount: row.result[0].visitCount || 0
-      };
-      res.send(data);
-    })
+  Promise.all([
+    doQuery(royaltyQuery, [creatorId]),
+    doQuery(landingQuery, [creatorId])
+  ]).then((row) => {
+    // exp를 이용하여 레벨을 계산. -> level 컬럼에 대한  레벨은
+    const [royaltyData, landingData] = row;
+    const { clickCount, transferCount } = landingData.result[0];
+    const data = {
+      ...royaltyData.result[0],
+      date: dateCode,
+      clickCount: clickCount || 0,
+      transferCount: transferCount || 0,
+    };
+    res.send(data);
+  })
     .catch((errorData) => {
       console.log(errorData);
       res.end();

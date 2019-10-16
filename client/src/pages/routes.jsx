@@ -32,14 +32,14 @@ const dashboardRoutes = {
     },
     {
       path: '/banner',
-      name: '배너 관리',
+      name: '내 배너',
       icon: BrandingWatermark,
       component: CreatorBannerManage, // 마케터 대시보드 컴포넌트로 수정
       layout: '/dashboard/creator',
     },
     {
       path: '/landing',
-      name: '내 광고페이지 관리',
+      name: '내 광고페이지',
       icon: Public,
       component: CreatorLandingManage,
       layout: '/dashboard/creator',
@@ -53,7 +53,7 @@ const dashboardRoutes = {
     },
     {
       path: '/user',
-      name: '계정 관리',
+      name: '내 계정',
       icon: Person,
       component: CreatorMyPage,
       layout: '/dashboard/creator',
@@ -70,7 +70,7 @@ const dashboardRoutes = {
     },
     {
       path: '/banner',
-      name: '배너 관리',
+      name: '내 배너',
       icon: BrandingWatermark,
       component: MarketerBannerManage, // 마케터 대시보드 컴포넌트로 수정
       layout: '/dashboard/marketer',

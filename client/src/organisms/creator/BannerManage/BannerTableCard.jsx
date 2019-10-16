@@ -30,7 +30,7 @@ const BannerTableCard = (props) => {
   return (
     <Card>
       <CardHeader color="blueGray">
-        <h4 className={classes.cardTitleWhite}>캠페인 내역</h4>
+        <h4 className={classes.cardTitleWhite}>배너 내역</h4>
       </CardHeader>
       <CardBody>
         {tableData.loading && (<CircularProgress small />)}

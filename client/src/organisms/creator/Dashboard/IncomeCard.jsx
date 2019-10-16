@@ -110,14 +110,15 @@ const IncomeCard = () => {
           </div>
         </Grid>
       </Grid>
-      {!cashData.loading && !cashData.error && (
-      <WithdrawalDialog
-        open={open}
-        handleOpen={handleOpen}
-        handleClose={handleClose}
-        accountNumber={cashData.payload.creatorAccountNumber}
-        receivable={cashData.payload.creatorReceivable}
-      />
+      {!cashData.loading && !cashData.error
+      && cashData.payload.creatorContractionAgreement && cashData.payload.creatorAccountNumber && (
+        <WithdrawalDialog
+          open={open}
+          handleOpen={handleOpen}
+          handleClose={handleClose}
+          accountNumber={cashData.payload.creatorAccountNumber}
+          receivable={cashData.payload.creatorReceivable}
+        />
       )}
     </CustomCard>
   );

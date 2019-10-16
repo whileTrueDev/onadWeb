@@ -30,7 +30,7 @@ const BannerManageButton = () => (
       history.push('/dashboard/creator/banner');
     }}
   >
-배너관리
+  캠페인 관리
 
   </Button>
 );

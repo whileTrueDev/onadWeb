@@ -6,7 +6,7 @@ const router = express.Router();
 router.get('/', (req, res) => {
   const infoQuery = `
   SELECT 
-  categoryName, campaignList, gameList
+  categoryName, campaignList
   FROM categoryCampaign`;
 
   doQuery(infoQuery)

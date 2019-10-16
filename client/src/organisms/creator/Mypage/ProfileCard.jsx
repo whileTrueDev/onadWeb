@@ -135,7 +135,7 @@ const ProfileCard = (props) => {
                 <Grid item sm={12} md={6}>
                   <TextField
                     label="계약상태"
-                    value="계약완료"
+                    value={profileData.payload.result.creatorContractionAgreement === 1 ? '계약완료' : '미계약'}
                     className={classes.textField}
                     margin="normal"
                     InputProps={{
@@ -174,10 +174,10 @@ const ProfileCard = (props) => {
                     <Grid item>
                       <Grid container direction="row" className={classes.text} spacing={1}>
                         <Grid item>
-                          <Chip variant="outlined" size="medium" label="게임" avatar={<Avatar><span role="img" aria-label="게임">❤️</span></Avatar>} />
+                          <Chip variant="outlined" size="medium" label="게임" avatar={<Avatar><span role="img" aria-label="게임">🎲</span></Avatar>} />
                         </Grid>
                         <Grid item>
-                          <Chip variant="outlined" size="medium" label="소통" avatar={<Avatar><span role="img" aria-label="소통">❤️</span></Avatar>} />
+                          <Chip variant="outlined" size="medium" label="소통" avatar={<Avatar><span role="img" aria-label="소통">🙋‍</span></Avatar>} />
                         </Grid>
                       </Grid>
                     </Grid>

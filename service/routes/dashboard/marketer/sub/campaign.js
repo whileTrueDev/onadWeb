@@ -220,14 +220,14 @@ const PriorityDoquery = ({ campaignId, priorityType, priorityList }) => {
 const LandingDoQuery = ({ campaignId, priorityType, priorityList }) => {
   const insertQuery = `
   INSERT INTO landingClick
-  (contractionId, campaignId, creatorId)
-  VALUES (?, ?, ?)
+  (campaignId, creatorId)
+  VALUES (?, ?)
   `;
 
   if (priorityType !== 1) {
     return Promise.all(
       priorityList.map(async targetId => new Promise((resolve, reject) => {
-        doQuery(insertQuery, [campaignId, campaignId, targetId])
+        doQuery(insertQuery, [campaignId, targetId])
           .then((row) => {
             resolve();
           })
