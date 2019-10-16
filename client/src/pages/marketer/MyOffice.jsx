@@ -44,16 +44,17 @@ export default function MyOffice() {
       {/* 계정 관리 */}
       {!userData.loading && userData.payload && (
       <GridContainer>
-
         <GridItem xs={12} sm={12} md={8} lg={6} xl={3}>
           <UserDataForm userData={userData.payload} reCall={userData.callUrl} />
         </GridItem>
 
         <GridItem xs={12} lg={6} xl={3}>
           <GridContainer>
-            <GridItem xs={12}>
-              <BusinessRegistration businessRegistrationData={businessRegistrationData} />
-            </GridItem>
+            {userData.payload.marketerUserType ? (
+              <GridItem xs={12}>
+                <BusinessRegistration businessRegistrationData={businessRegistrationData} />
+              </GridItem>
+            ) : (null)}
             <GridItem xs={12}>
               <RefundAccountForm accountData={accountData} />
             </GridItem>

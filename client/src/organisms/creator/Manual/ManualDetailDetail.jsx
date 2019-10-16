@@ -42,7 +42,7 @@ const useStyles = makeStyles(theme => ({
 
 const useDialog = () => {
   const [open, setOpen] = React.useState(false);
-  const [imageSrc, setImageSrc] = React.useState();
+  const [imageSrc, setImageSrc] = React.useState('');
 
   function handleDialogOpen() {
     setOpen(true);

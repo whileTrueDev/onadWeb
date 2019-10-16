@@ -42,10 +42,6 @@ const ManualDetail = (props) => {
         </CardHeader>
         <CardBody>
           <div>
-            {/*
-            programSetting 이면 ProgramSelector -> 선택시 ManualDetailDetail
-            그렇지 않으면 ManualDetailDetail
-             */}
             {source.subType
               ? (
                 <div>

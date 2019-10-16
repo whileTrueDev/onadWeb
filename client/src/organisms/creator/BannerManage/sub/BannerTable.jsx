@@ -121,7 +121,7 @@ function BannerTable({ ...props }) {
                     <Grid item>
                       <div className={classnames(innerClasses.stats, innerClasses.flex)}>
                         <DateRange />
-                        <Typography gutterTop variant="body2" className={innerClasses.head}>
+                        <Typography gutterBottom variant="body2" className={innerClasses.head}>
                           {bannerData.date}
                           {' '}
                         ~
@@ -141,7 +141,7 @@ function BannerTable({ ...props }) {
               </TableCell>
               <TableCell className={classes.tableCell}>
                 <div className={innerClasses.flex}>
-                  <Typography gutterBottom variant="h7" className={innerClasses.head}>총 수익</Typography>
+                  <Typography gutterBottom variant="h6" className={innerClasses.head}>총 수익</Typography>
                 </div>
                 <div className={innerClasses.flex}>
                   <Typography gutterBottom className={innerClasses.cash}>
@@ -199,7 +199,7 @@ function BannerTable({ ...props }) {
                       ))}
                     </Grid>
                     <Grid item>
-                      <Divider component="hr" orientation="horizental" width="90%" />
+                      <Divider component="hr" orientation="horizontal" width="90%" />
                     </Grid>
                     <Grid item className={innerClasses.textCell}>
                       <StyledItemText primary="배너 소개" fontSize="15px" />
@@ -249,9 +249,7 @@ BannerTable.propTypes = {
     'gray',
     'blueGray',
   ]),
-  tableData: PropTypes.arrayOf(PropTypes.arrayOf(
-    PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  )).isRequired,
+  tableData: PropTypes.arrayOf(PropTypes.object).isRequired,
   pagination: PropTypes.bool,
 };
 
