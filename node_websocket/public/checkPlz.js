@@ -6,7 +6,7 @@ module.exports = function (sql, socket, msg) {
   const cutUrl = `/${fullUrl.split('/')[4]}`;
 
   const broadcastingBannerName = msg[1]; // 클라이언트에 송출 중인 배너의 id
-  const getQuery = sql(`SELECT contractionId FROM bannerMatched AS bm 
+  let getQuery = sql(`SELECT contractionId FROM bannerMatched AS bm 
                       JOIN marketerInfo as mi
                       ON bm.contractionId 
                       LIKE CONCAT(mi.marketerId, '%')
@@ -25,7 +25,7 @@ module.exports = function (sql, socket, msg) {
       console.log(err);
     } else if (data.length === 0) { // 계약된 거가 없을때
       // socket.emit('img clear')
-      var getQuery = sql(`SELECT contractionId, bannerSrc FROM bannerMatched AS bm 
+      getQuery = sql(`SELECT contractionId, bannerSrc FROM bannerMatched AS bm 
                                 JOIN marketerInfo as mi
                                 ON bm.contractionId 
                                 LIKE CONCAT(mi.marketerId, '%')
@@ -58,7 +58,7 @@ module.exports = function (sql, socket, msg) {
         // pass
         console.log('ONAD가 아닌 계약된 광고가 존재 / 기존광고는 ONAD광고가 아님 / 모든 STATE변화 없음 / 배너 변경 없이 넘어감');
       } else {
-        var getQuery = sql(`SELECT contractionId, bannerSrc FROM bannerMatched AS bm 
+        getQuery = sql(`SELECT contractionId, bannerSrc FROM bannerMatched AS bm 
                                     JOIN marketerInfo as mi
                                     ON bm.contractionId 
                                     LIKE CONCAT(mi.marketerId, '%')
