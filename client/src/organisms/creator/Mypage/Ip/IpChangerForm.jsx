@@ -23,24 +23,31 @@ const useStyles = makeStyles(theme => ({
       margin: 0,
       padding: 0,
     },
-  }
+  },
 }));
 
 const IpChangerForm = (props) => {
-  const { localIp, newIp, setIp } = props;
+  const {
+    localIp, newIp, setIp, NowIp
+  } = props;
   const [state, setState] = useState(false);
-
-
+  const [useNowIp, setUseNowIp] = useState(false);
   const classes = useStyles();
+
   const selfButton = () => {
     setState(true);
   };
   const autoButton = () => {
-    setState(false);
+    //  newIp의 값에 지금 IP 주소값을 넣어야한다.
+    setIp(NowIp);
+    setUseNowIp(true);
   };
 
   const onIpChange = (value) => {
-    setIp(String(value.formattedValue));
+    if (!useNowIp) {
+      setIp(String(value.formattedValue));
+      setUseNowIp(false);
+    }
   };
 
   return (
@@ -51,29 +58,29 @@ const IpChangerForm = (props) => {
     >
       {state
         ? (
-          <Grid container direction="column" className={classes.item} spacing={1}>
+          <Grid container direction="column" className={classes.item} spacing={1} justify="center">
             <Grid item>
-              <StyledItemText primary="IP 변경하기" fontSize="13px" />
+              <StyledItemText primary="IP 변경하기" fontSize="15px" />
             </Grid>
             <Grid item className={classes.textField}>
               <NumberFormat
-                placeholder="__.__.___.__"
+                placeholder="___.___.___.___"
                 value={newIp}
                 onValueChange={onIpChange}
                 customInput={StyledInput}
                 margin="dense"
-                format="##.##.###.##"
+                format="###.###.###.###"
                 mask="_"
-                style={{ width: '200px' }}
+                style={{ width: '300px' }}
                 allowNegative={false}
               />
             </Grid>
           </Grid>
         )
         : (
-          <Grid container direction="column" className={classes.item} spacing={1}>
+          <Grid container direction="column" className={classes.item} spacing={1} justify="center">
             <Grid item>
-              <StyledItemText primary="현재 PC의 IP" fontSize="13px" />
+              <StyledItemText primary="현재 등록된 IP" fontSize="15px" />
             </Grid>
             <Grid item className={classes.textField}>
               <NumberFormat
@@ -81,29 +88,30 @@ const IpChangerForm = (props) => {
                 readOnly
                 customInput={StyledInput}
                 margin="dense"
-                format="## . ## . ### . ##"
-                style={{ width: '200px' }}
+                format="### . ### . ### . ###"
+                style={{ width: '300px' }}
                 allowNegative={false}
               />
             </Grid>
           </Grid>
         )}
-      {state ? (
-        <Button
-          color="info"
-          onClick={autoButton}
-        >
+      {state
+        ? (
+          <Button
+            color="info"
+            onClick={autoButton}
+          >
         현재 PC의 IP 주소
-        </Button>
-      ) : (
-        <Button
-          color="info"
-          onClick={selfButton}
-        >
+          </Button>
+        )
+        : (
+          <Button
+            color="info"
+            onClick={selfButton}
+          >
         직접 입력하러 가기
-        </Button>
-      )}
-
+          </Button>
+        )}
     </FormControl>
 
   );

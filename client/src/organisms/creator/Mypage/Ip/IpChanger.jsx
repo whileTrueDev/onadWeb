@@ -10,7 +10,7 @@ import history from '../../../../history';
 
 const IpChanger = (props) => {
   const {
-    localIp, onClose,
+    localIp, onClose, NowIp
   } = props;
   const [openSnackBar, setOpenSnackBar] = useState(false);
   const [newIp, setIp] = useState(null);
@@ -47,6 +47,7 @@ const IpChanger = (props) => {
           handleSnackClose={handleSnackClose}
           newIp={newIp}
           setIp={setIp}
+          NowIp={NowIp}
         />
       </GridItem>
       <GridItem xs={12} sm={12} md={7} />

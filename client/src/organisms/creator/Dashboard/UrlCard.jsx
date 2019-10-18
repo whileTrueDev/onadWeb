@@ -10,6 +10,7 @@ import useFetchData from '../../../utils/lib/hooks/useFetchData';
 import ShowUrl from './ShowUrl';
 import StyledItemText from '../../../atoms/StyledItemText';
 import StyledInput from '../../../atoms/StyledInput';
+import CircularProgress from '../../../atoms/Progress/CircularProgress';
 
 const useStyles = makeStyles(theme => ({
   link: {
@@ -43,7 +44,10 @@ const UrlCard = () => {
               <StyledItemText primary="배너 오버레이 URL" secondary="광고 송출용 URL을 보여줍니다. 방송 도구에 등록하세요." style={{ width: '100%' }} />
             </Grid>
             <Grid item>
+              { overlayUrlData.loading && (<CircularProgress />)}
+              { !overlayUrlData.loading && (
               <ShowUrl urlData={overlayUrlData} />
+              )}
             </Grid>
           </Grid>
         </Grid>

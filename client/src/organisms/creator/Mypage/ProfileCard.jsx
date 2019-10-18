@@ -217,6 +217,7 @@ const ProfileCard = (props) => {
       >
         <IpChanger
           localIp={profileData.payload.result.creatorIp}
+          NowIp={profileData.payload.result.NowIp}
           onClose={handleIpChangerClose}
         />
       </Dialog>

@@ -67,7 +67,7 @@ export default function BannerTable(props) {
       {!fetchData.loading && fetchData.error && (<span>Error</span>)}
       {!fetchData.loading && fetchData.payload && (
         <MaterialTable
-          title="나의 배너 리스트"
+          title="나의 배너 리스트"
           columns={columns}
           data={fetchData.payload}
           actions={[

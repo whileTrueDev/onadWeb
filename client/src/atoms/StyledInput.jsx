@@ -6,7 +6,7 @@ import { withStyles } from '@material-ui/core/styles';
 
 const StyledInput = withStyles(theme => ({
   root: {
-    fontSize: '17px',
+    fontSize: '16px',
     fontWeight: '700',
     color: '#3c4858',
     width: '300px',
