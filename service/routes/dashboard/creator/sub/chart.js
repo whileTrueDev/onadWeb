@@ -22,7 +22,9 @@ router.get('/', (req, res) => {
   const queryArray = [creatorId, dateRange];
 
   doQuery(query, queryArray)
-    .then((row) => { res.send(row.result); })
+    .then((row) => {
+      res.send(row.result);
+    })
     .catch((errorData) => {
       console.log(errorData);
       res.end();

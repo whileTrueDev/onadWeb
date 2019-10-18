@@ -127,68 +127,89 @@ function setUpData(dataPacket, dateDiffFunc) {
  */
 function createStackBarDataSet(dataPacket, DATE_RANGE = 15) {
   const today = new Date();
-  const { setUpLabels, CPM, CPC } = setUpData(dataPacket, dateDiff);
+  if (dataPacket.length > 0) {
+    const { setUpLabels, CPM, CPC } = setUpData(dataPacket, dateDiff);
 
-  const labels = setUpLabels.map(day => `${day.split('-')[1]}월 ${day.split('-')[2]}일`);
-  const firstTime = new Date(dataPacket[0].date.split('T')[0]); // 마지막 날짜
-  const lastTime = new Date(dataPacket[dataPacket.length - 1].date.split('T')[0]); // 현재 날짜 수
+    const labels = setUpLabels.map(day => `${day.split('-')[1]}월 ${day.split('-')[2]}일`);
+    const firstTime = new Date(dataPacket[0].date.split('T')[0]); // 마지막 날짜
+    const lastTime = new Date(dataPacket[dataPacket.length - 1].date.split('T')[0]); // 현재 날짜 수
 
-  // 오늘과 today, firstTime 사이의 빈 데이터가 있는경우 채운다.
-  if (dateDiff(today, firstTime) > 0) {
-    // 날짜 차이 만큼 앞에 데이터를 추가한다.
-    for (let i = dateDiff(today, firstTime); i > 1; i -= 1) {
-      firstTime.setDate(firstTime.getDate() + 1);
-      labels.unshift(datefy(firstTime));
-      CPM.unshift(0);
-      CPC.unshift(0);
+    // 오늘과 today, firstTime 사이의 빈 데이터가 있는경우 채운다.
+    if (dateDiff(today, firstTime) > 0) {
+      // 날짜 차이 만큼 앞에 데이터를 추가한다.
+      for (let i = dateDiff(today, firstTime); i > 1; i -= 1) {
+        firstTime.setDate(firstTime.getDate() + 1);
+        labels.unshift(datefy(firstTime));
+        CPM.unshift(0);
+        CPC.unshift(0);
+      }
     }
-  }
 
-  // 2주일의 데이터보다 적다면, 한달(30일)의 데이터만큼 day를 채운다.
-  if (labels.length < DATE_RANGE) {
-    for (let i = DATE_RANGE - labels.length; i > 0; i -= 1) {
-      lastTime.setDate(lastTime.getDate() - 1);
-      labels.push(`${lastTime.getMonth() + 1}월 ${lastTime.getDate()}일`);
+    // 2주일의 데이터보다 적다면, 한달(30일)의 데이터만큼 day를 채운다.
+    if (labels.length < DATE_RANGE) {
+      for (let i = DATE_RANGE - labels.length; i > 0; i -= 1) {
+        lastTime.setDate(lastTime.getDate() - 1);
+        labels.push(`${lastTime.getMonth() + 1}월 ${lastTime.getDate()}일`);
+      }
     }
+    return { labels, CPM, CPC };
   }
-  return { labels, CPM, CPC };
+  const labels = []; const CPM = []; const CPC = [];
+  for (let i = DATE_RANGE; i > 0; i -= 1) {
+    today.setDate(today.getDate() - 1);
+    labels.push(`${today.getMonth() + 1}월 ${today.getDate()}일`);
+    CPM.push(0);
+    CPC.push(0);
+  }
+  return { labels, CPC, CPM };
 }
 
 
 /**
  * @description 월별 데이터를 받아와 차트용 데이터로 전처리하는 함수.
- * @param {[ {}, {}, ...]}  dataPacket DB로부터 가져온 데이터
+ * @param { [ {}, {}, ...] }  dataPacket DB로부터 가져온 데이터
  * @author hwasurr
  */
 function createStackBarDataSetPerMonth(dataPacket) {
-  const today = new Date();
   const MONTH_LENGTH = 12;
-  const { setUpLabels, CPM, CPC } = setUpData(dataPacket, monthDiff);
+  const today = new Date();
+  if (dataPacket.length > 0) {
+    const { setUpLabels, CPM, CPC } = setUpData(dataPacket, monthDiff);
 
-  const labels = setUpLabels.map(day => `${day.split('-')[0]}년 ${day.split('-')[1]}월`);
-  const firstTime = new Date(dataPacket[0].date.split('T')[0]); // 처음 날짜
-  const lastTime = new Date(dataPacket[dataPacket.length - 1].date.split('T')[0]); // 마지막 날짜
+    const labels = setUpLabels.map(day => `${day.split('-')[0]}년 ${day.split('-')[1]}월`);
+    const firstTime = new Date(dataPacket[0].date.split('T')[0]); // 처음 날짜
+    const lastTime = new Date(dataPacket[dataPacket.length - 1].date.split('T')[0]); // 마지막 날짜
 
-  // 오늘과 today, firstTime 사이의 빈 데이터가 있는경우 채운다.
-  if (monthDiff(today, firstTime) > 0) {
+    // 오늘과 today, firstTime 사이의 빈 데이터가 있는경우 채운다.
+    if (monthDiff(today, firstTime) > 0) {
     // 날짜 차이 만큼 앞에 데이터를 추가한다.
-    for (let i = monthDiff(today, firstTime); i > 0; i -= 1) {
-      labels.unshift(`${today.getFullYear()}년 ${today.getMonth() + 1}월`);
-      CPM.unshift(0);
-      CPC.unshift(0);
-      today.setMonth(today.getMonth() + 1);
+      for (let i = monthDiff(today, firstTime); i > 0; i -= 1) {
+        labels.unshift(`${today.getFullYear()}년 ${today.getMonth() + 1}월`);
+        CPM.unshift(0);
+        CPC.unshift(0);
+        today.setMonth(today.getMonth() + 1);
+      }
     }
+
+    // 2주일의 데이터보다 적다면, 2주(14일)의 데이터만큼 day를 채운다.
+    if (labels.length < MONTH_LENGTH) {
+      for (let i = MONTH_LENGTH - labels.length; i > 0; i -= 1) {
+        lastTime.setMonth(lastTime.getMonth() - 1);
+        labels.push(`${lastTime.getFullYear()}년 ${lastTime.getMonth() + 1}월`);
+      }
+    }
+
+    return { labels, CPM, CPC };
   }
 
-  // 2주일의 데이터보다 적다면, 2주(14일)의 데이터만큼 day를 채운다.
-  if (labels.length < MONTH_LENGTH) {
-    for (let i = MONTH_LENGTH - labels.length; i > 0; i -= 1) {
-      lastTime.setMonth(lastTime.getMonth() - 1);
-      labels.push(`${lastTime.getFullYear()}년 ${lastTime.getMonth() + 1}월`);
-    }
+  const labels = []; const CPM = []; const CPC = [];
+  for (let i = MONTH_LENGTH; i > 0; i -= 1) {
+    today.setDate(today.getDate() - 1);
+    labels.push(`${today.getMonth() + 1}월 ${today.getDate()}일`);
+    CPM.push(0);
+    CPC.push(0);
   }
-
-  return { labels, CPM, CPC };
+  return { labels, CPC, CPM };
 }
 
 

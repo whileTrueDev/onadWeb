@@ -6,8 +6,14 @@ import chartFunctions from './chartFunction';
 
 // 차트 컬러 테마
 const chartTheme2 = {
-  main: ['#9DC8C8', '#58C9B9', '#519D9E', '#D1B6E1', '#dcaf87', '#69a7bc', '#61b7bc', '#9aC1C8', '#9DC8C8', '#58C9B9', '#519D9E', '#D1B6E1', '#dcaf87', '#69a7bc', '#61b7bc', '#9aC1C8', '#9DC8C8', '#58C9B9', '#519D9E', '#D1B6E1', '#dcaf87', '#69a7bc', '#61b7bc', '#9aC1C8'],
-  hover: ['#9aC8C8', '#51C9B9', '#598D9E', '#D9c6E1', '#d1af87', '#61a7bc', '#69b7bc', '#91C1C8', '#9aC8C8', '#51C9B9', '#598D9E', '#D9c6E1', '#d1af87', '#61a7bc', '#69b7bc', '#91C1C8', '#9aC8C8', '#51C9B9', '#598D9E', '#D9c6E1', '#d1af87', '#61a7bc', '#69b7bc', '#91C1C8'],
+  main: ['#9DC8C8', '#58C9B9', '#519D9E', '#D1B6E1', '#dcaf87',
+    '#69a7bc', '#61b7bc', '#9aC1C8', '#9DC8C8', '#58C9B9', '#519D9E',
+    '#D1B6E1', '#dcaf87', '#69a7bc', '#61b7bc', '#9aC1C8', '#9DC8C8',
+    '#58C9B9', '#519D9E', '#D1B6E1', '#dcaf87', '#69a7bc', '#61b7bc', '#9aC1C8'],
+  hover: ['#9aC8C8', '#51C9B9', '#598D9E', '#D9c6E1', '#d1af87',
+    '#61a7bc', '#69b7bc', '#91C1C8', '#9aC8C8', '#51C9B9', '#598D9E',
+    '#D9c6E1', '#d1af87', '#61a7bc', '#69b7bc', '#91C1C8', '#9aC8C8',
+    '#51C9B9', '#598D9E', '#D9c6E1', '#d1af87', '#61a7bc', '#69b7bc', '#91C1C8'],
 };
 
 // 차트 데이터
@@ -50,9 +56,11 @@ export default function StackedBar(props) {
     dataSet, labelArray, type, dateRange, ...rest
   } = props;
 
+  const preprocessedDataSet = setStackedBarData(dataSet, labelArray, type, dateRange);
+
   return (
     <Bar
-      data={setStackedBarData(dataSet, labelArray, type, dateRange)}
+      data={preprocessedDataSet}
       options={{ tooltips: { mode: 'index', intersect: false, responsive: false }, aspectRatio: 2 }}
       {...rest}
     />
