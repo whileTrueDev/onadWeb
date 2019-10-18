@@ -1,6 +1,7 @@
 import React from 'react';
 import shortid from 'shortid';
 
+import Markdown from 'react-markdown/with-html';
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
@@ -8,7 +9,6 @@ import StepContent from '@material-ui/core/StepContent';
 import { makeStyles } from '@material-ui/core/styles';
 import ButtonBase from '@material-ui/core/ButtonBase';
 import Typography from '@material-ui/core/Typography';
-
 import ImageDialog from './ImageDialog';
 
 const useStyles = makeStyles(theme => ({
@@ -70,11 +70,11 @@ const ManualDetailDetail = (props) => {
       {source.map(value => (
         <Step active key={shortid.generate()}>
           <StepLabel>
-            {value.description.split('\n').map(row => (
-              <Typography key={shortid.generate()} variant="body1">
-                {row}
-              </Typography>
-            ))}
+            <Markdown
+              source={value.description}
+              escapeHtml={false}
+              renderers={{ code: ({ value1 }) => <Markdown source={value1} /> }}
+            />
           </StepLabel>
           <StepContent>
             {value.image && (

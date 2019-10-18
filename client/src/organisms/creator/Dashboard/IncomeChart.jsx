@@ -25,7 +25,7 @@ const ChartChangeButton = (props) => {
           <div />
 
           <Button color="warning" onClick={() => { setType('day'); }}>
-      일별로 보기
+            일별로 보기
           </Button>
         </div>
       )}
@@ -50,7 +50,7 @@ function IncomeChart() {
     >
       { valueChartData.loading && (<CircularProgress />)}
       { !valueChartData.loading && valueChartData.error && (
-      <Typography variant="h6">데이터가 없어요! 광고를 진행하세요.</Typography>
+        <Typography variant="h6">데이터가 없어요! 광고를 진행하세요.</Typography>
       )}
       { !valueChartData.loading && valueChartData.payload && (
         <div>

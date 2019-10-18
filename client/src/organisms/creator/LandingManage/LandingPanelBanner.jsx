@@ -6,10 +6,16 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Grid, Typography } from '@material-ui/core';
 import FlightTakeoff from '@material-ui/icons/FlightTakeoff';
 import Help from '@material-ui/icons/Help';
+import InsertLinkOutlined from '@material-ui/icons/InsertLinkOutlined';
+
 import CustomCard from '../../../atoms/CustomCard';
 import StyledItemText from '../../../atoms/StyledItemText';
+import StyledInput from '../../../atoms/StyledInput';
+import Button from '../../../atoms/CustomButtons/Button';
+import Snackbar from '../../../atoms/Snackbar/Snackbar';
 import Tooltip from '../../../atoms/DescPopover';
 import useTooltip from '../../../utils/lib/hooks/useTooltip';
+import useOpenValue from '../../../utils/lib/hooks/useOpenValue';
 
 const useStyles = makeStyles(() => ({
   flex: {
@@ -20,20 +26,29 @@ const useStyles = makeStyles(() => ({
   },
   site: {
     color: '#00acc1',
-    textDecoration: 'underline',
-    '&:hover': {
-      cursor: 'pointer'
-    }
   }
 }));
 
 export default function LandingPanelBanner(props) {
   const classes = useStyles();
   const { userData } = props;
-
+  const snack = useOpenValue();
   const {
     tooltipIndex, anchorEl, handleTooltipOpen, handleTooltipClose
   } = useTooltip();
+
+  // 클립보드에 카피 함수
+  const copyToClipboard = (e) => {
+    e.preventDefault();
+    const landingUrl = document.getElementById('landing_url');
+    landingUrl.select();
+    document.execCommand('copy');
+    // This is just personal preference.
+    // I prefer to not show the the whole text area selected.
+    e.target.focus();
+    snack.handleOpen();
+  };
+
   return (
     <CustomCard
       iconComponent={<FlightTakeoff />}
@@ -51,18 +66,26 @@ export default function LandingPanelBanner(props) {
             <Typography variant="h6">
               광고페이지 링크
             </Typography>
-
-            { !userData.loading && userData.payload && (
-            <Typography
-              className={classes.site}
-              variant="body1"
-              onClick={() => { window.open(`https://l.onad.io/${userData.payload.creatorTwitchId}`); }}
-            >
-              {`https://l.onad.io/${userData.payload.creatorTwitchId}`}
-
-            </Typography>
-            )}
-
+            <div>
+              { !userData.loading && userData.payload && (
+                <div>
+                  <StyledInput
+                    className={classes.site}
+                    style={{ cursor: 'default' }}
+                    id="landing_url"
+                    value={`https://l.onad.io/${userData.payload.creatorTwitchId}`}
+                    inputprops={{
+                      readOnly: true,
+                    }}
+                    variant="outlined"
+                  />
+                  <Button onClick={copyToClipboard} size="sm">
+                    <InsertLinkOutlined />
+                    복사
+                  </Button>
+                </div>
+              )}
+            </div>
           </div>
 
           <div>
@@ -111,6 +134,16 @@ export default function LandingPanelBanner(props) {
           vertical: 'bottom',
           horizontal: 'left',
         }}
+      />
+
+      <Snackbar
+        place="bc"
+        color="success"
+        icon
+        message="클립보드에 복사되었어요!"
+        open={snack.open}
+        closeNotification={snack.handleClose}
+        handleClose={snack.handleClose}
       />
     </CustomCard>
   );

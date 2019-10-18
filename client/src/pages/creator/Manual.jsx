@@ -61,11 +61,10 @@ const CreatorManual = (props) => {
         <GridItem xs={12} sm={12} md={6} lg={8} xl={6}>
           {(() => {
             if (manual === 1) return (<ManualDetail source={sources.contract} />);
-            if (manual === 2) return (<ManualDetail source={sources.setBanner} />);
-            if (manual === 3) return (<ManualDetail source={sources.programSetting} />);
-            if (manual === 4) return (<ManualDetail source={sources.income} />);
-            if (manual === 5) return (<ManualDetail source={sources.withdrawal} />);
-            if (manual === 6) return (<ManualDetail source={sources.bannerError} />);
+            if (manual === 2) return (<ManualDetail source={sources.programSetting} />);
+            if (manual === 3) return (<ManualDetail source={sources.income} />);
+            if (manual === 4) return (<ManualDetail source={sources.withdrawal} />);
+            if (manual === 5) return (<ManualDetail source={sources.bannerError} />);
             return null;
           })()}
         </GridItem>
