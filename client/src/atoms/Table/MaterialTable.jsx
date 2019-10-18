@@ -45,8 +45,23 @@ const localization = {
   }
 };
 
+function styleColumn(columns) {
+  columns.map((col) => {
+    const column = col;
+    column.cellStyle = { minWidth: 120, ...column };
+    return column;
+  });
+  return columns;
+}
+
 export default function MaterialTable(props) {
+  const { columns, ...rest } = props;
   return (
-    <MuiMaterialTable icons={tableIcons} localization={localization} {...props} />
+    <MuiMaterialTable
+      icons={tableIcons}
+      localization={localization}
+      columns={styleColumn(columns)}
+      {...rest}
+    />
   );
 }

@@ -6,17 +6,33 @@ const router = express.Router();
 
 
 router.get('/', (req, res) => {
-  const { marketerId } = req;
-  console.log(marketerId);
+  const marketerId = req._passport.session.user.userid;
   const callQuery = `
-  SELECT mn.index, title, content, date_format(date,'%y-%m-%d %H:%i') AS dateform
+  SELECT 
+    mn.index, title, content,
+    date_format(date,'%y년 %m월 %d일') AS dateform,
+    readState
   FROM marketerNotification AS mn
   WHERE marketerId = ?
-  AND readState = 0`;
-  doQuery(callQuery, [marketerId])
+  ORDER BY date DESC, readState ASC`;
+
+  const countQuery = `
+    SELECT count(*) as count
+    FROM marketerNotification
+    WHERE marketerId = ? AND readState = 0`;
+  const variableArray = [marketerId];
+
+  const result = { notifications: [{}], unReadCount: 0 };
+  doQuery(callQuery, variableArray)
     .then((data) => {
-      console.log(data.result);
-      res.send(data.result);
+      result.notifications = data.result;
+      doQuery(countQuery, variableArray).then((row) => {
+        if (row.result) {
+          const { count } = row.result[0];
+          result.unReadCount = count;
+        }
+        res.send(result);
+      });
     })
     .catch((err) => {
       console.log('notification error - ', err);
@@ -24,31 +40,16 @@ router.get('/', (req, res) => {
     });
 });
 
-router.get('/count', (req, res) => {
-  const { marketerId } = req._passport.session.user.userid;
-  const callQuery = `SELECT count(*) as count
-  FROM marketerNotification 
-  WHERE marketerId = ? AND readState = 0`;
-  doQuery(callQuery, marketerId)
-    .then((data) => {
-      if (!data.error && data.result.length > 0) {
-        res.send(data.result[0]);
-      }
-    })
-    .catch(() => {
-      res.send(false);
-    });
-});
-
-router.post('/readState', (req, res) => {
-  const { marketerId } = req._passport.session.user.userid;
+router.post('/update/read', (req, res) => {
+  const marketerId = req._passport.session.user.userid;
   const { index } = req.body;
-  const callQuery = `UPDATE marketerNotification AS mn 
-                      SET readState = 1
-                      WHERE cn.index = ${index}`;
-  doQuery(callQuery, [index])
+  const callQuery = `
+  UPDATE marketerNotification
+  SET readState = 1
+  WHERE marketerNotification.index = ? AND marketerId = ?`;
+  doQuery(callQuery, [index, marketerId])
     .then(() => {
-      res.send(true);
+      res.send([true]);
     }).catch((err) => {
       console.log('readState 에러발생');
       console.log(err);
@@ -57,10 +58,10 @@ router.post('/readState', (req, res) => {
 });
 
 router.get('/list', (req, res) => {
-  const { marketerId } = req._passport.session.user.userid;
+  const marketerId = req._passport.session.user.userid;
   let dataArray;
   let tmpDataArray;
-  const callQuery = `
+  const callQuery = `ㅔ
   SELECT title, content, date_format(date,'%y-%m-%d %H:%i'), readState
   FROM marketerNotification AS mn
   WHERE marketerId = ?
@@ -68,7 +69,6 @@ router.get('/list', (req, res) => {
   `;
   doQuery(callQuery, [marketerId])
     .then((data) => {
-      console.log(`${marketerId}님 노티 리스트 호출`);
       dataArray = data.result.map(value => Object.values(value));
       tmpDataArray = dataArray;
       tmpDataArray.map((value, index) => {

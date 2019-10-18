@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import shortid from 'shortid';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
@@ -8,12 +8,9 @@ import withStyles from '@material-ui/core/styles/withStyles';
 import {
   Drawer, Hidden, Button, List, ListItemText, Grid,
 } from '@material-ui/core';
-// core components
 import AdminNavbarLinks from '../Navbars/AdminNavbarLinks';
 // styles
 import sidebarStyle from '../../assets/jss/onad/components/sidebarStyle';
-import HOST from '../../utils/config';
-import axios from '../../utils/axios';
 import history from '../../history';
 
 const Sidebar = ({ ...props }) => {
@@ -26,23 +23,9 @@ const Sidebar = ({ ...props }) => {
     handleDrawerToggle, mobileOpen,
   } = props;
 
-  const handleClick = useCallback((buttonType) => {
-    axios.get(`${HOST}/api/dashboard/checkUserType`)
-      .then((res) => {
-        const { userType } = res.data;
-        if (userType === undefined) {
-          if (buttonType) {
-            alert('로그인 이후 이용하세요');
-          }
-        } else if (userType === 'marketer') {
-          history.push('/dashboard/marketer/main');
-        } else if (userType === 'creator') {
-          history.push('/dashboard/creator/main');
-        }
-      }).catch((err) => {
-        console.log(err);
-      });
-  }, []);
+  function handleLogoClick() {
+    history.push(`/dashboard/${window.location.pathname.split('/')[2]}/main`);
+  }
 
   const links = (
     <List className={classes.flex}>
@@ -83,7 +66,7 @@ const Sidebar = ({ ...props }) => {
       </div>
       <Hidden mdUp implementation="css">
         <div className={classes.NavBarLinksWrapper}>
-          <AdminNavbarLinks history={history} />
+          <AdminNavbarLinks />
         </div>
       </Hidden>
     </List>
@@ -91,7 +74,7 @@ const Sidebar = ({ ...props }) => {
 
   const brand = (
     <Button
-      onClick={handleClick}
+      onClick={handleLogoClick}
       className={classes.center}
     >
       <img src={logo} alt="logo" className={classes.img} />
@@ -134,12 +117,15 @@ const Sidebar = ({ ...props }) => {
           classes={{
             paper: classNames(classes.desktopPaper),
           }}
+          ModalProps={{
+            keepMounted: true, // Better open performance on mobile.
+          }}
         >
           {/* 사이드바 Logo */}
           <Grid container direction="column">
             <Grid item className={classes.head}>
               <Button
-                onClick={handleClick}
+                onClick={handleLogoClick}
                 className={classNames(classes.desktopLogo)}
               >
                 <img src={logo} alt="logo" className={classes.desktopImg} />
@@ -149,8 +135,6 @@ const Sidebar = ({ ...props }) => {
               {links}
             </Grid>
           </Grid>
-          {/* 사이드바 배경 */}
-          <div className={classes.desktopBackground} />
         </Drawer>
       </Hidden>
     </div>

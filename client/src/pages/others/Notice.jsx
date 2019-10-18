@@ -35,7 +35,7 @@ export default function PublicNotification(props) {
 
   return (
     <div>
-      <AppAppBar />
+      <AppAppBar noButtons />
 
       <div className={classes.root}>
 

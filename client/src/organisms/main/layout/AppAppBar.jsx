@@ -74,7 +74,7 @@ const styles = theme => ({
 
 function AppAppBar(props) {
   const {
-    classes, isLogin, logout,
+    classes, isLogin, logout, noButtons
   } = props;
 
   // 앱바의 선택 여부를 파악하여 state 로 설정한다.
@@ -216,29 +216,30 @@ function AppAppBar(props) {
           >
             {'OnAD'}
           </Button>
-
-          <div className={classes.rightDesktop}>
-            <Button
-              className={classNames(
-                { [classes.rightLink]: true, [classes.active]: selected === 'introduction' },
-              )}
-              component={Link}
-              to="/introduction"
-            >
-              {'서비스 소개'}
-            </Button>
-            <Button
-              className={classNames(
-                { [classes.rightLink]: true, [classes.active]: selected === 'manual' },
-              )}
-              component={Link}
-              to="/manual"
-            >
-              {'이용 안내'}
-            </Button>
-            <LogButton history={history} logout={logout} />
-            <RegButton history={history} logout={logout} />
-          </div>
+          {noButtons ? (<div className={classes.rightDesktop} />) : (
+            <div className={classes.rightDesktop}>
+              <Button
+                className={classNames(
+                  { [classes.rightLink]: true, [classes.active]: selected === 'introduction' },
+                )}
+                component={Link}
+                to="/introduction"
+              >
+                {'서비스 소개'}
+              </Button>
+              <Button
+                className={classNames(
+                  { [classes.rightLink]: true, [classes.active]: selected === 'manual' },
+                )}
+                component={Link}
+                to="/manual"
+              >
+                {'이용 안내'}
+              </Button>
+              <LogButton history={history} logout={logout} />
+              <RegButton history={history} logout={logout} />
+            </div>
+          )}
           <div className={classes.rightMobile}>
             <IconButton aria-haspopup="true" onClick={handleMobileMenuOpen} color="inherit">
               <MoreIcon />
@@ -253,10 +254,12 @@ function AppAppBar(props) {
 
 AppAppBar.propTypes = {
   classes: PropTypes.object,
+  noButtons: PropTypes.bool
 };
 
 AppAppBar.defaultProps = {
   classes: {},
+  noButtons: false
 };
 
 

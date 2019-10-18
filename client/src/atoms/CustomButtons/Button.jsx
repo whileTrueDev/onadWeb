@@ -16,6 +16,7 @@ function RegularButton({ ...props }) {
     size, block, link, justIcon, className, muiClasses,
     ...rest
   } = props;
+
   const btnClasses = classNames({
     [classes.button]: true,
     [classes[size]]: size,

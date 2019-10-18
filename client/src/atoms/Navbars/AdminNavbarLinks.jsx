@@ -5,15 +5,16 @@ import withStyles from '@material-ui/core/styles/withStyles';
 import Tooltip from '@material-ui/core/Tooltip';
 import Badge from '@material-ui/core/Badge';
 import Hidden from '@material-ui/core/Hidden';
+import IconButton from '@material-ui/core/IconButton';
 // @material-ui/icons
 import Notifications from '@material-ui/icons/Notifications';
 import Person from '@material-ui/icons/Person';
 import Home from '@material-ui/icons/Home';
+import SpeakerNotes from '@material-ui/icons/SpeakerNotes';
 import PowerSettingsNew from '@material-ui/icons/PowerSettingsNew';
 // core components
 // import Dialog from '../Dialog/Dialog';
 import headerLinksStyle from '../../assets/jss/onad/components/headerLinksStyle';
-import Button from '../CustomButtons/Button';
 import Notification from './Notification';
 import HOST from '../../utils/config';
 import axios from '../../utils/axios';
@@ -22,11 +23,9 @@ import useFetchData from '../../utils/lib/hooks/useFetchData';
 
 const useMenu = () => {
   const [anchorEl, setAnchorEl] = useState(null);
-
   function handleMenuOpen(event) {
     setAnchorEl(event.currentTarget);
   }
-
   function handleMenuClose() {
     setAnchorEl(null);
   }
@@ -35,136 +34,87 @@ const useMenu = () => {
 
 function HeaderLinks(props) {
   const { classes } = props;
-  const creatorNotificationData = useFetchData('/api/dashboard/creator/notification');
-  const creatorNotificationCountData = useFetchData('/api/dashboard/creator/notification/count');
-  const marketerNotificationData = useFetchData('/api/dashboard/marketer/notification');
-  const marketerNotificationCountData = useFetchData('/api/dashboard/marketer/notification/count');
+  const userType = window.location.pathname.split('/')[2];
+  const NotificationData = useFetchData(`/api/dashboard/${userType}/notification`);
+
   function handleLogoutClick() {
     axios.get(`${HOST}/api/login/logout`).then(() => {
       history.push('/');
     });
   }
-  const MOBILEWIDTH = 959;
+
   const { anchorEl, handleMenuOpen, handleMenuClose } = useMenu();
 
   return (
     <div>
       {/* notification */}
-
-      {window.location.pathname.includes('creator')
-        ? (
-          <Hidden smDown>
-            <Button
-              color={window.innerWidth > MOBILEWIDTH ? 'transparent' : 'white'}
-              justIcon={window.innerWidth > MOBILEWIDTH}
-              simple={!(window.innerWidth > MOBILEWIDTH)}
-              aria-label="notifications"
-              className={classes.buttonLink}
-              onClick={handleMenuOpen}
-            >
-              <Badge
-                className={classes.margin}
-                badgeContent={!creatorNotificationCountData.loading
-                  && creatorNotificationCountData.payload
-                  ? (creatorNotificationCountData.payload.count)
-                  : (null)}
-                color="secondary"
-              >
-                <Tooltip title="알림">
-                  <Notifications
-                    className={classes.icons}
-                  />
-                </Tooltip>
-              </Badge>
-            </Button>
-
-            <Notification
-              anchorEl={anchorEl}
-              handleMenuClose={handleMenuClose}
-              notificationData={creatorNotificationData}
-            />
-          </Hidden>
-        ) : (
-          <Hidden smDown>
-            <Button
-              color={window.innerWidth > MOBILEWIDTH ? 'transparent' : 'white'}
-              justIcon={window.innerWidth > MOBILEWIDTH}
-              simple={!(window.innerWidth > MOBILEWIDTH)}
-              aria-label="notifications"
-              className={classes.buttonLink}
-              onClick={handleMenuOpen}
-            >
-              <Badge
-                className={classes.margin}
-                badgeContent={!marketerNotificationCountData.loading
-                  && marketerNotificationCountData.payload
-                  ? (marketerNotificationCountData.payload.count)
-                  : (null)}
-                color="secondary"
-              >
-                <Tooltip title="알림">
-                  <Notifications
-                    className={classes.icons}
-                  />
-                </Tooltip>
-              </Badge>
-            </Button>
-
-            <Notification
-              anchorEl={anchorEl}
-              handleMenuClose={handleMenuClose}
-              notificationData={marketerNotificationData}
-            />
-          </Hidden>
-        )
-}
+      <Tooltip title="알림">
+        <IconButton
+          aria-label="notifications"
+          onClick={handleMenuOpen}
+        >
+          <Badge
+            badgeContent={!NotificationData.loading && NotificationData.payload
+              ? (NotificationData.payload.unReadCount)
+              : (null)}
+            color="secondary"
+          >
+            <Notifications fontSize="large" />
+          </Badge>
+        </IconButton>
+      </Tooltip>
+      <Notification
+        anchorEl={anchorEl}
+        handleMenuClose={handleMenuClose}
+        notificationData={NotificationData}
+      />
 
       <Hidden smDown>
-        <Button
-          color={window.innerWidth > MOBILEWIDTH ? 'transparent' : 'white'}
-          justIcon={window.innerWidth > MOBILEWIDTH}
-          simple={!(window.innerWidth > MOBILEWIDTH)}
-          aria-label="User"
-          className={classes.buttonLink}
-          to={window.location.pathname.includes('marketer')
-            ? '/dashboard/marketer/user'
-            : '/dashboard/creator/user'}
-          component={Link}
-        >
-          <Tooltip title="계정관리로 이동">
-            <Person className={classes.icons} />
-          </Tooltip>
-        </Button>
-      </Hidden>
-
-      <Hidden smDown>
-        <Button
-          color={window.innerWidth > MOBILEWIDTH ? 'transparent' : 'white'}
-          justIcon={window.innerWidth > MOBILEWIDTH}
-          simple={!(window.innerWidth > MOBILEWIDTH)}
-          aria-label="Dashboard"
-          className={classes.buttonLink}
-          to="/"
-          component={Link}
-        >
-          <Tooltip title="홈으로 이동">
-            <Home className={classes.icons} />
-          </Tooltip>
-        </Button>
-      </Hidden>
-
-      <Button
-        color={window.innerWidth > MOBILEWIDTH ? 'transparent' : 'white'}
-        justIcon={window.innerWidth > MOBILEWIDTH}
-        simple
-        aria-label="Logout"
-        className={classes.buttonLink}
-        onClick={handleLogoutClick}
-      >
-        <Tooltip title="로그아웃">
-          <PowerSettingsNew className={classes.icons} />
+        <Tooltip title="계정관리로 이동">
+          <IconButton
+            aria-label="User"
+            to={window.location.pathname.includes('marketer')
+              ? '/dashboard/marketer/myoffice'
+              : '/dashboard/creator/user'}
+            component={Link}
+          >
+            <Person fontSize="large" />
+          </IconButton>
         </Tooltip>
-      </Button>
+      </Hidden>
+
+      <Hidden smDown>
+        <Tooltip title="공지사항으로 이동">
+          <IconButton
+            aria-label="to-notice"
+            to="/notice"
+            component={Link}
+          >
+            <SpeakerNotes fontSize="large" />
+          </IconButton>
+        </Tooltip>
+      </Hidden>
+
+      <Hidden smDown>
+        <Tooltip title="홈으로 이동">
+          <IconButton
+            aria-label="to-dashboard"
+            to="/"
+            component={Link}
+          >
+            <Home fontSize="large" />
+          </IconButton>
+        </Tooltip>
+      </Hidden>
+
+      <Tooltip title="로그아웃">
+        <IconButton
+          onClick={handleLogoutClick}
+          aria-label="logout"
+        >
+          <PowerSettingsNew fontSize="large" />
+        </IconButton>
+      </Tooltip>
     </div>
   );
 }

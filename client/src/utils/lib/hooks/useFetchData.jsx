@@ -41,6 +41,6 @@ export default function useFetchData(url, params) {
   }, [callUrl]);
 
   return {
-    payload, loading, error, callUrl
+    payload, loading, error, callUrl, setPayload
   };
 }

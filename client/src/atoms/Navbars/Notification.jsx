@@ -1,22 +1,49 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import makeStyles from '@material-ui/core/styles/makeStyles';
 import {
-  Typography, Divider
+  Typography, Divider, Badge
 } from '@material-ui/core';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
-import HOST from '../../utils/config';
-import axios from '../../utils/axios';
+import useUpdateData from '../../utils/lib/hooks/useUpdateData';
+
+const useStyles = makeStyles(() => ({
+  contents: {
+    minWidth: 300, maxHeight: 540
+  },
+  title: {
+    padding: 8, display: 'flex', justifyContent: 'space-between'
+  },
+  message: {
+    marginTop: 4, marginBottom: 4
+  },
+  grey: {
+    color: '#90909090'
+  }
+}));
+
+const UNREAD_STATE = 0; // 읽지않음 상태값
 
 function Notification(props) {
+  const classes = useStyles();
   const {
     anchorEl, handleMenuClose, notificationData,
   } = props;
 
-  const updateReadState = (index) => {
-    axios.post(`${HOST}/api/dashboard/creator/notification/readState`, { index })
-      .then().catch((err) => { console.log(err); });
-  };
+  const userType = window.location.pathname.split('/')[2];
+  const updateRequest = useUpdateData(`/api/dashboard/${userType}/notification/update/read`);
+
+  function updateNotifications(notiArray, targetIndex) {
+    const arr = notiArray;
+    arr.forEach((noti, idx) => {
+      if (noti.index === targetIndex) {
+        arr[idx] = { ...noti, readState: 1 };
+      }
+    });
+    return arr;
+  }
+
   return (
     <Menu
       elevation={0}
@@ -24,62 +51,69 @@ function Notification(props) {
         vertical: 'top',
         horizontal: 'right',
       }}
-      id="simple-menu"
+      id="notification-menu"
       keepMounted
       anchorEl={anchorEl}
       open={Boolean(anchorEl)}
       onClose={handleMenuClose}
     >
       {/* 공지 메뉴 컴포넌트 */}
-      { !notificationData.loading && !notificationData.error && (
-      <div>
-        {notificationData.payload.map(noti => (
-          <MenuItem
-            key={noti.index}
-            style={{
-              width: 420,
-              borderBottom: '1px solid',
-              marginBottom: 10
-            }}
+      <div className={classes.contents}>
+        <div className={classes.title}>
+          <Typography variant="h5">알림</Typography>
+          <Typography
+            className={classes.grey}
+            align="right"
+            gutterBottom
+            variant="caption"
           >
+            클릭시 읽음처리됩니다.
+          </Typography>
+        </div>
+        <Divider />
 
-            <details style={{
-              width: '100%'
-            }}
-            >
-              <summary
-                role="button"
-                tabIndex="-1"
-                onClick={() => updateReadState(noti.index)}
-                onKeyDown={() => updateReadState(noti.index)}
+        { !notificationData.loading && !notificationData.error && (
+        <div>
+          {notificationData.payload.notifications.map(noti => (
+            <div key={noti.index}>
+              <MenuItem onClick={() => {
+                updateRequest.handleUpdateRequest({ index: noti.index });
+                if (noti.readState === UNREAD_STATE) {
+                  notificationData.setPayload({
+                    notifications: [
+                      ...updateNotifications(notificationData.payload.notifications, noti.index)
+                    ],
+                    unReadCount: notificationData.payload.unReadCount - 1
+                  });
+                }
+              }}
               >
-                <Typography variant="h5" gutterBottom noWrap>
-                  <p>{noti.title}</p>
-                </Typography>
-                <Typography align="right" variant="subtitle2" gutterBottom noWrap>
-                  <span>{noti.dateform}</span>
-                  {' '}
-                      / ONAD
-                </Typography>
-              </summary>
-              <Divider style={{ marginBottom: 10 }} />
-              <Typography variant="body2" gutterBottom noWrap>
-                <span style={{
-                  whiteSpace: 'pre-line'
-                }}
-                >
-                  {noti.content}
-                </span>
-              </Typography>
-            </details>
-
-          </MenuItem>
-
-        ))}
+                <div className={classes.message}>
+                  <Typography>
+                    {noti.readState
+                      ? (<Badge variant="dot" color="default"><span /></Badge>)
+                      : (<Badge variant="dot" color="secondary"><span /></Badge>)}
+                  </Typography>
+                  <Typography variant="body1" gutterBottom noWrap>
+                    {noti.title}
+                  </Typography>
+                  <Typography variant="body2" gutterBottom noWrap>
+                    <span style={{ whiteSpace: 'pre-line' }}>
+                      {noti.content}
+                    </span>
+                  </Typography>
+                  <Typography variant="caption" gutterBottom noWrap>
+                    <span>{`${noti.dateform} / ONAD`}</span>
+                  </Typography>
+                </div>
+              </MenuItem>
+              <Divider />
+            </div>
+          ))}
+        </div>
+        )}
       </div>
 
-      )
-    }
 
     </Menu>
   );
