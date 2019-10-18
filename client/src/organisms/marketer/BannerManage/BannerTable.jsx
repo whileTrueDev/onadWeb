@@ -23,8 +23,8 @@ export default function BannerTable(props) {
         />
       )
     },
-    { title: '회사 소개', field: 'companyDescription' },
-    { title: '배너 소개', field: 'bannerDescription' },
+    { title: '회사 소개', field: 'companyDescription', },
+    { title: '배너 소개', field: 'bannerDescription', },
     {
       title: '배너 링크',
       render: rowData => (
@@ -35,7 +35,8 @@ export default function BannerTable(props) {
         >
           {rowData.landingUrl}
         </Typography>
-      )
+      ),
+
     },
     {
       title: '심의 결과',
@@ -53,10 +54,11 @@ export default function BannerTable(props) {
           );
           default: throw new Error('you need confirmState for table');
         }
-      }
+      },
+
     },
-    { title: '최근 업데이트', field: 'date' },
-    { title: '배너 생성 일자', field: 'regiDate' },
+    { title: '최근 업데이트', field: 'date', },
+    { title: '배너 생성 일자', field: 'regiDate', },
   ];
 
   return (

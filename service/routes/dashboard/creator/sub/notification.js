@@ -8,13 +8,31 @@ const router = express.Router();
 router.get('/', (req, res) => {
   const { creatorId } = req._passport.session.user;
   const callQuery = `
-  SELECT cn.index, title, content, date_format(date,'%y-%m-%d %H:%i') AS dateform
-  FROM creatorNotification AS cn
+  SELECT 
+    mn.index, title, content,
+    date_format(date,'%y년 %m월 %d일') AS dateform,
+    readState
+  FROM creatorNotification AS mn
   WHERE creatorId = ?
-  AND readState = 0`;
-  doQuery(callQuery, [creatorId])
+  ORDER BY date DESC, readState ASC`;
+
+  const countQuery = `
+    SELECT count(*) as count
+    FROM creatorNotification
+    WHERE creatorId = ? AND readState = 0`;
+  const variableArray = [creatorId];
+
+  const result = { notifications: [{}], unReadCount: 0 };
+  doQuery(callQuery, variableArray)
     .then((data) => {
-      res.send(data.result);
+      result.notifications = data.result;
+      doQuery(countQuery, variableArray).then((row) => {
+        if (row.result) {
+          const { count } = row.result[0];
+          result.unReadCount = count;
+        }
+        res.send(result);
+      });
     })
     .catch((err) => {
       console.log('notification error - ', err);
@@ -22,28 +40,11 @@ router.get('/', (req, res) => {
     });
 });
 
-router.get('/count', (req, res) => {
-  const { creatorId } = req._passport.session.user;
-  const callQuery = `SELECT count(*) as count
-  FROM creatorNotification 
-  WHERE creatorId = ? AND readState = 0`;
-  doQuery(callQuery, creatorId)
-    .then((data) => {
-      if (!data.error && data.result.length > 0) {
-        res.send(data.result[0]);
-      }
-    })
-    .catch(() => {
-      res.send(false);
-    });
-});
-
-router.post('/readState', (req, res) => {
-  const { creatorId } = req._passport.session.user;
+router.post('/update/read', (req, res) => {
   const { index } = req.body;
   const callQuery = `UPDATE creatorNotification AS cn 
-                      SET readState = 1
-                      WHERE cn.index = ${index}`;
+    SET readState = 1
+    WHERE cn.index = ${index}`;
   doQuery(callQuery, [index])
     .then(() => {
       res.send(true);

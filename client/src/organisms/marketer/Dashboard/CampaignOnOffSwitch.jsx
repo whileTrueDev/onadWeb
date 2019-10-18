@@ -29,7 +29,7 @@ export default function StatusBar(props) {
           <FormControlLabel
             control={(
               <IOSSwitch
-                checked={onOffData.payload}
+                checked={onOffData.payload.onOff}
                 onChange={() => handleUpdateRequest({ contraction: !onOffData.payload })}
               />
                )}

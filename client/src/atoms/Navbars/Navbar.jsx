@@ -13,8 +13,6 @@ import Menu from '@material-ui/icons/Menu';
 import headerStyle from '../../assets/jss/onad/components/headerStyle';
 import Button from '../CustomButtons/Button';
 import AdminNavbarLinks from './AdminNavbarLinks';
-import history from '../../history';
-
 
 function Header(props) {
   const {
@@ -44,9 +42,9 @@ function Header(props) {
             {makeBrand()}
           </Button>
         </div>
-        <Hidden smDown implementation="css">
-          <AdminNavbarLinks history={history} />
-        </Hidden>
+
+        <AdminNavbarLinks />
+
         <Hidden mdUp implementation="css">
           <IconButton
             color="inherit"

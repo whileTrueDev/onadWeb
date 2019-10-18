@@ -35,7 +35,7 @@ router.get('/onoff', (req, res) => {
   doQuery(contractionQuery, [marketerId])
     .then((row) => {
       const data = row.result[0].marketerContraction === 1;
-      res.send(data);
+      res.send({ onOff: data });
     })
     .catch((errorData) => {
       console.log(errorData);
