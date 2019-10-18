@@ -36,7 +36,7 @@ const ShowUrl = (props) => {
   const defaultUrl = '[주소 보기] 버튼을 누르면 주소가 10초간 표시됩니다';
   const [value, setValue] = useState(defaultUrl);
   const [disabled, setDisabled] = useState(true);
-  const [contractionAgreement, setContractionAgreement] = useState(1);
+  const [contractionAgreement] = useState(1);
   const [copySuccess, setCopySuccess] = useState(false); // snackbar를 위한 State
 
   const showSrcTimer = () => {
