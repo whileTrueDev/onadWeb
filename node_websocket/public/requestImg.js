@@ -80,14 +80,13 @@ module.exports = function (sql, socket, msg, activeState) {
     const getGameIdQuery = `
     SELECT gameId 
     FROM twitchStreamDetail 
-    WHERE streamId = (SELECT streamId FROM twitchStream WHERE streamerId = ? LIMIT 1) 
+    WHERE streamId = (SELECT streamId FROM twitchStream WHERE streamerId = ? ORDER BY startedAt DESC LIMIT 1) 
     LIMIT 1;
     `;
     return new Promise((resolve, reject) => {
       doQuery(getGameIdQuery, [creatorId])
         .then((row) => {
           myGameId = row.result[0].gameId;
-          console.log(row.result[0].gameId);
           resolve(myGameId);
         })
         .catch((errorData) => {
