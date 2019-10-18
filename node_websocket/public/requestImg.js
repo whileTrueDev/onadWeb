@@ -6,7 +6,7 @@ module.exports = function (sql, socket, msg, activeState) {
   const cutUrl = `/${fullUrl.split('/')[4]}`;
   let myCreatorId;
   let myCampaignId;
-
+  let myGameId;
   // creatorId를 전달받아 creatorCampaign과 onff List를 도출.
   const getCreatorCampaignList = (creatorId) => {
     console.log(`${creatorId}에게 계약된 creatorCampaign의 campaignList를 가져옵니다.`);
@@ -70,6 +70,29 @@ module.exports = function (sql, socket, msg, activeState) {
         .catch((errorData) => {
           errorData.point = 'getCategoryCampaignList()';
           errorData.description = '하나의 categoryId를 통하여 계약된 campaignList 가져오는 과정.';
+          reject(errorData);
+        });
+    });
+  };
+
+  const getGameId = async (creatorId) => {
+    console.log('크리에이터의 gameid를 받아옵니다');
+    const getGameIdQuery = `
+    SELECT gameId 
+    FROM twitchStreamDetail 
+    WHERE streamId = (SELECT streamId FROM twitchStream WHERE streamerId = ? LIMIT 1) 
+    LIMIT 1;
+    `;
+    return new Promise((resolve, reject) => {
+      doQuery(getGameIdQuery, [creatorId])
+        .then((row) => {
+          myGameId = row.result[0].gameId;
+          console.log(row.result[0].gameId);
+          resolve(myGameId);
+        })
+        .catch((errorData) => {
+          errorData.point = 'getGameId()';
+          errorData.description = 'TWITCHSTREAMDETAIL에서 GAMEID 가져오기';
           reject(errorData);
         });
     });
@@ -139,14 +162,15 @@ module.exports = function (sql, socket, msg, activeState) {
     const bannerSrc = await getBannerSrc(campaignId);
     return [bannerSrc, myCampaignId, creatorId];
   }
-  const gameId = 509658;
+  // const gameId = 509658;
   const getQuery = sql(`SELECT creatorId FROM creatorInfo WHERE advertiseUrl = "${cutUrl}"`);
   getQuery.select(async (err, data) => {
     if (err) {
       console.log(err);
     } else {
       myCreatorId = data[0].creatorId;
-      const bannerInfo = await getBanner([myCreatorId, gameId]);
+      myGameId = await getGameId(myCreatorId);
+      const bannerInfo = await getBanner([myCreatorId, myGameId]);
       socket.emit('img receive', [bannerInfo[0], [bannerInfo[1], bannerInfo[2]]]);
     }
   });
