@@ -65,9 +65,7 @@ router.get('/logout', (req, res) => {
 router.post('/changePw', (req, res, next) => {
   const { password } = req.body;
   const marketerId = req.session.passport.user.userid;
-  let key; let
-    salt;
-  [key, salt] = encrypto.make(password);
+  const [key, salt] = encrypto.make(password);
   const changeQuery = `
   UPDATE marketerInfo 
   SET marketerSalt = ?, marketerPasswd = ?, temporaryLogin = 0 

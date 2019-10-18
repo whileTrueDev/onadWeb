@@ -129,7 +129,7 @@ const IncomeCard = () => {
           <Grid item>
             <Grid container className={classes.flex}>
               <Grid item>
-                <Typography gutterBottom variant="body1" className={classes.head}>총 구매 조회수</Typography>
+                <Typography gutterBottom variant="body1" className={classes.head}>총 구매 이동수</Typography>
               </Grid>
             </Grid>
             {landingData.loading && (<CircularProgress small />)}

@@ -21,7 +21,7 @@ const BannerManage = () => {
 
   return (
     <GridContainer>
-      <GridItem xs={12} xl={10}>
+      <GridItem xs={12} xl={11}>
         <CustomButton color="info" size="lg" onClick={() => { uploadDialog.handleOpen(); }}>
           + 새 배너 등록
         </CustomButton>

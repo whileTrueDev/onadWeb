@@ -1,4 +1,5 @@
 const express = require('express');
+const axios = require('axios');
 const encrypto = require('../../encryption');
 const doQuery = require('../../model/doQuery');
 const setTemporaryPassword = require('../../middlewares/setTemporyPassword');
@@ -165,5 +166,32 @@ router.post('/accountNum', (req, res, next) => {
     });
 });
 
+
+router.get('/account', (req, res) => {
+  axios.get('https://testapi.open-platform.or.kr/oauth/2.0/authorize',
+    {
+      params: {
+        response_type: 'code',
+        client_id: 'ONAD',
+        redirect_uri: 'http://localhost:3000/api/regist/account/callback',
+        scope: 'login transfer inquiry',
+        client_info: 'OVGY8ObRgN6Glqqc9A0T1nAcQ4CXgBaEKKUCGx8c',
+        auth_type: 0
+      }
+    })
+    .then((row) => {
+      console.log(row);
+      console.log('요청완료');
+    })
+    .catch((errorData) => {
+      console.log(errorData);
+    });
+});
+
+router.get('/account/callback', (req, res) => {
+  console.log('콜백');
+  console.log(req.body);
+  res.send('');
+});
 
 module.exports = router;

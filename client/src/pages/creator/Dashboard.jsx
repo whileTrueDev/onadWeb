@@ -10,12 +10,10 @@ import IncomeChart from '../../organisms/creator/Dashboard/IncomeChart';
 
 const Dashboard = () => (
   <GridContainer direction="row">
-    <GridItem sm={12} md={10}>
+    <GridItem sm={12} xl={10}>
       <ContractionCard />
     </GridItem>
-
     <GridItem xs={12} xl={3}>
-
       <GridContainer>
         <GridItem xs={12} md={6} xl={12}>
           <IncomCard />

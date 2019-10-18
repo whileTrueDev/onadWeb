@@ -60,7 +60,7 @@ const AccountCard = (props) => {
   const { profileData } = props;
   return (
     <CustomCard
-      iconComponent={<StyledItemText primary="계정 및 계좌 정보 변경" style={{ color: '#FFF' }} />}
+      iconComponent={<StyledItemText primary="내 계좌 정보 변경" style={{ color: '#FFF' }} />}
     >
       {profileData.loading && (<CircularProgress small />)}
       {!profileData.loading && !profileData.error && (
