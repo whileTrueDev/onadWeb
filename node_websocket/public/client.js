@@ -9,7 +9,7 @@ $(() => {
     // test for native support
     if ('hidden' in document) return 'hidden';
     // find prefixes
-    for (let i = 0; i < prefixes.length; i++) {
+    for (let i = 0; i < prefixes.length; i += 1) {
       if ((`${prefixes[i]}Hidden`) in document) { return `${prefixes[i]}Hidden`; }
     }
     // otherwise it's not supported
@@ -60,15 +60,16 @@ $(() => {
 
   socket.on('response banner data to server', () => {
     const bannerName = $('#showBanner').attr('name');
+    const cutBannerName = bannerName.split(',');
     if (bannerName) {
-      socket.emit('write to db', bannerName);
+      socket.emit('write to db', cutBannerName);
     }
   });
 
   socket.on('check bannerId', () => {
     const bannerId = $('#showBanner').attr('name');
     if (bannerId) {
-      socket.emit('check plz', [_url, bannerId]);
+      socket.emit('reRender', _url);
     }
   });
   socket.on('img clear', () => {

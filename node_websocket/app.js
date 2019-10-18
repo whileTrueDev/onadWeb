@@ -83,9 +83,10 @@ app.get('/banner/:id', (req, res) => { // /banner/:id로 라우팅
     const rule = new schedule.RecurrenceRule(); // 스케쥴러 객체 생성
     rule.hour = new schedule.Range(0, 23); // cronTask 시간지정
     rule.minute = [0, 10, 20, 30, 40, 50]; // cronTask 실행되는 분(minute)
+
     console.log(roomInfo);
     const cronTask = schedule.scheduleJob(rule, () => { // 스케쥴러를 통해 1분마다 db에 배너정보 전송
-      if (serverId != clientId && clientId != undefined) { // 해당 페이지의 클라이언트 아이디가 서버아이디와 일치하지 않고, undefined가 아니면 그건 client라는 뜻
+      if (serverId !== clientId && clientId !== undefined) { // 해당 페이지의 클라이언트 아이디가 서버아이디와 일치하지 않고, undefined가 아니면 그건 client라는 뜻
         socket.emit('response banner data to server', {}); // client로 emit
         socket.emit('check bannerId', {});
       } /* else if(serverId == clientId && serverId!= undefined){ // server가 접속했을떄임
@@ -144,17 +145,18 @@ app.get('/banner/:id', (req, res) => { // /banner/:id로 라우팅
     socket.on('write to db', (msg) => {
       pool.getConnection((err, conn) => {
         if (err) return err;
-        const bannername = msg;
-        const writeQuery = 'INSERT INTO contractionTimestamp (contractionId) VALUES (?);';
-        conn.query(writeQuery, [bannername], (err, result, fields) => {
+        const campaignId = msg[0];
+        const creatorId = msg[1];
+        const writeQuery = 'INSERT INTO campaignTimestamp (campaignId, creatorId) VALUES (?, ?);';
+        conn.query(writeQuery, [campaignId, creatorId], (err, result, fields) => {
           conn.release();
           if (err) return err;
         });
       });
     });
 
-    socket.on('check plz', (msg) => {
-      checkPlz(sql, socket, msg);
+    socket.on('reRender', (msg) => {
+      requestImg(sql, socket, msg);
     });
 
     socket.on('pageActive', (_url) => {

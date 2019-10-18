@@ -48,7 +48,7 @@ module.exports = function (sql, socket, msg, activeState) {
         })
         .catch((errorData) => {
           errorData.point = 'getOnCampaignList()';
-          errorData.description = 'lcampaign table에서 현재 ON 되어있는 campaignList 가져오는 과정.';
+          errorData.description = 'campaign table에서 현재 ON 되어있는 campaignList 가져오는 과정.';
           reject(errorData);
         });
     });
@@ -140,16 +140,14 @@ module.exports = function (sql, socket, msg, activeState) {
     return [bannerSrc, myCampaignId, creatorId];
   }
   const gameId = 509658;
-  if (activeState === true) {
-    const getQuery = sql(`SELECT creatorId FROM creatorInfo WHERE advertiseUrl = "${cutUrl}"`);
-    getQuery.select(async (err, data) => {
-      if (err) {
-        console.log(err);
-      } else {
-        myCreatorId = data[0].creatorId;
-        const bannerInfo = await getBanner([myCreatorId, gameId]);
-        socket.emit('img receive', [bannerInfo[0], [bannerInfo[1], bannerInfo[2]]]);
-      }
-    });
-  }
+  const getQuery = sql(`SELECT creatorId FROM creatorInfo WHERE advertiseUrl = "${cutUrl}"`);
+  getQuery.select(async (err, data) => {
+    if (err) {
+      console.log(err);
+    } else {
+      myCreatorId = data[0].creatorId;
+      const bannerInfo = await getBanner([myCreatorId, gameId]);
+      socket.emit('img receive', [bannerInfo[0], [bannerInfo[1], bannerInfo[2]]]);
+    }
+  });
 };
