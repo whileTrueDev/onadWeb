@@ -112,6 +112,9 @@ router.get('/profile', (req, res) => {
   creatorAccountNumber, creatorContractionAgreement, creatorTwitchId
   FROM creatorInfo 
   WHERE creatorId = ?`;
+
+  const NowIp = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+
   if (req._passport.session === undefined) {
     res.send({
       error: true
@@ -124,7 +127,10 @@ router.get('/profile', (req, res) => {
         userData.creatorLogo = req._passport.session.user.creatorLogo;
         res.send({
           error: false,
-          result: userData
+          result: {
+            ...userData,
+            NowIp
+          }
         });
       })
       .catch(() => {

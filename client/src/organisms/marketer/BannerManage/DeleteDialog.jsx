@@ -1,8 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import makeStyles from '@material-ui/core/styles/makeStyles';
-import { Typography, Tooltip } from '@material-ui/core';
+import { Typography, Tooltip, Grid } from '@material-ui/core';
 import CustomButton from '../../../atoms/CustomButtons/Button';
+import StyledItemText from '../../../atoms/StyledItemText';
 import Dialog from '../../../atoms/Dialog/Dialog';
 import useFetchData from '../../../utils/lib/hooks/useFetchData';
 import useUpdateData from '../../../utils/lib/hooks/useUpdateData';
@@ -11,11 +12,15 @@ import history from '../../../history';
 const useStyles = makeStyles(theme => ({
   img: {
     maxHeight: 320,
-    maxWidth: 540
+    // maxWidth: 540
+    width: '100%'
   },
   reasonText: {
-    display: 'flex',
-    marginBottom: theme.spacing(2)
+    marginLeft: theme.spacing(2),
+    color: 'red'
+  },
+  typo: {
+    marginBottom: theme.spacing(1),
   }
 }));
 
@@ -66,22 +71,35 @@ const DeleteDialog = (props) => {
         </div>
       )}
     >
-      <div style={{ padding: 10 }}>
-        <img
-          src={selectedBanner.bannerSrc}
-          alt={selectedBanner.bannerId}
-          className={classes.img}
-        />
-        <br />
-        {selectedBanner.bannerDenialReason && (
-          <div className={classes.reasonText}>
-            <Typography variant="body1">거절 사유 :&emsp;</Typography>
-            <Typography variant="body1">{selectedBanner.bannerDenialReason}</Typography>
+      <Grid container direction="column" spacing={2}>
+        <Grid item className={classes.img}>
+          <img
+            src={selectedBanner.bannerSrc}
+            alt={selectedBanner.bannerId}
+            width="100%"
+          />
+        </Grid>
+        <Grid item>
+          {selectedBanner.bannerDenialReason && (
+          <div>
+            <StyledItemText primary="거절 사유:" fontSize="18px" />
+            <Typography variant="body1" className={classes.reasonText}>{selectedBanner.bannerDenialReason}</Typography>
           </div>
-        )}
-        <Typography variant="body2">- 배너가 현재 ON 상태인 캠페인에 할당되어 있는 경우 삭제가 불가능합니다.</Typography>
-        <Typography variant="body2">- 배너 등록 관련 도움은 support@onad.io 로 메일을 보내주시거나, onad 카카오톡 채널에서 상담가능합니다.</Typography>
-      </div>
+          )}
+        </Grid>
+        <Grid item>
+          <Typography variant="body2" className={classes.typo}>
+            <span role="img" aria-label="warning">⚠️</span>
+            {' '}
+            배너가 현재 ON 상태인 캠페인에 할당되어 있는 경우 삭제가 불가능합니다.
+          </Typography>
+          <Typography variant="body2">
+            <span role="img" aria-label="calling">📞</span>
+            {' '}
+            배너 등록 관련 도움은 support@onad.io 로 메일을 보내주시거나, onad 카카오톡 채널에서 상담가능합니다.
+          </Typography>
+        </Grid>
+      </Grid>
     </Dialog>
   );
 };

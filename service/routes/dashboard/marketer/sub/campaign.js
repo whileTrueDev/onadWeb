@@ -28,7 +28,8 @@ router.delete('/', (req, res) => {
   const { campaignId } = req.body.data;
   const query = `
   UPDATE campaign
-  SET deletedState = 1
+  SET deletedState = 1 ,
+  onOFF = 0
   WHERE campaignId = ?`;
   const queryArray = [campaignId];
 

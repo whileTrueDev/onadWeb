@@ -34,9 +34,9 @@ const ShowUrl = (props) => {
   const { urlData } = props;
   const classes = useStyles();
   const defaultUrl = '[주소 보기] 버튼을 누르면 주소가 10초간 표시됩니다';
+  const notAgreeValue = ' 계약을 먼저 진행해주세요.';
   const [value, setValue] = useState(defaultUrl);
   const [disabled, setDisabled] = useState(true);
-  const [contractionAgreement] = useState(1);
   const [copySuccess, setCopySuccess] = useState(false); // snackbar를 위한 State
 
   const showSrcTimer = () => {
@@ -68,7 +68,7 @@ const ShowUrl = (props) => {
           <StyledInput
             className={classes.textField}
             id="overlayUrl"
-            value={value}
+            value={urlData.payload.creatorContractionAgreement ? value : notAgreeValue}
             inputprops={{
               readOnly: true,
             }}
@@ -89,7 +89,7 @@ const ShowUrl = (props) => {
           <Button
             className={classes.button}
             color="warning"
-            onClick={disabled && showSrcTimer}
+            onClick={disabled ? showSrcTimer : undefined}
           >
             <RemoveRedEyeOutlined />
                   주소보기
@@ -107,16 +107,6 @@ const ShowUrl = (props) => {
         open={copySuccess}
         closeNotification={() => setCopySuccess(false)}
         handleClose={() => { setCopySuccess(false); }}
-      />
-      <Snackbar
-        icon
-        place="bl"
-        color="danger"
-        message="아직 온애드와 계약하지 않았어요. 간단히 계약하고, 광고를 집행하세요."
-        open={!contractionAgreement}
-        Link={
-          <Button color="warning" component={Link} to="/dashboard/creator/user">계약하러 가기</Button>
-          }
       />
     </div>
   );
