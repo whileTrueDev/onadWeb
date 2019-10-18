@@ -4,6 +4,7 @@ import Setting from '@material-ui/icons/Settings';
 import AttachMoney from '@material-ui/icons/AttachMoney';
 import InsertChart from '@material-ui/icons/InsertChart';
 import ErrorIcon from '@material-ui/icons/Error';
+import { minHeight } from '@material-ui/system';
 
 
 const manualSources = {
@@ -14,15 +15,11 @@ const manualSources = {
     },
     {
       icon: BrandingWatermark,
-      label: '광고 배너 송출',
-    },
-    {
-      icon: Setting,
-      label: '송출프로그램 개인 설정',
+      label: '배너광고 송출',
     },
     {
       icon: AttachMoney,
-      label: '수익금 확인',
+      label: '수익 방식 및 수익 확인',
     },
     {
       icon: InsertChart,
@@ -33,57 +30,30 @@ const manualSources = {
       label: '배너 오류 해결 방법',
     },
   ],
+
   contract: {
     subType: false,
     card: {
       title: 'OnAD 플랫폼과 계약하고 싶어요.',
-      subtitle: 'OnAD 플랫폼과 계약할 수 있습니다. 서비스 이용약관과 개인정보 수집에 동의 해주세요.',
+      subtitle: '계약이후 배너송출 및 출금 등 올바른 서비스 이용이 가능합니다.',
     },
     source: [
       {
-        image: '/pngs/dashboard/manual/creator/1_1.png',
-        description: '대쉬보드에서 계약하러 가기 알림창을 클릭합니다.',
-      },
-      {
-        image: '/pngs/dashboard/manual/creator/1_2.png',
-        description: '계정 관리에 있는 서비스 이용 및 출금 계약하기의\n서비스 이용약관과 개인 정보 수집 및 동의 약관보기를 클릭합니다.\n+ 내용을 읽고 모두 동의를 클릭합니다.',
-      },
-      {
-        image: null,
-        description: '모두 동의가 되면 체크박스가 2개 생깁니다.\n마지막으로 확인 버튼을 클릭해 주세요.',
-      },
-      {
-        image: '/pngs/dashboard/manual/creator/1_3.png',
-        description: '완료된 계약서는 계정관리 -> 크리에이터님의 정보란의\n계약완료를 눌러 확인 가능합니다.',
+        image: '/pngs/dashboard/manual/new_creator/creator-contraction-01.png',
+        description: `대시보드의 상단에 있는 **서비스 이용 및 출금 계약하기**의  
+        서비스 이용약관과 개인 정보 수집 및 동의 약관보기를 클릭합니다.  
+        내용을 읽고 모두 동의를 클릭합니다.  `,
       },
       {
         image: null,
-        description: 'OnAD 플랫폼과 크리에이터님의 이용계약이 완료되었습니다.\n매칭된 광고를 통해 수익을 창출해보세요. :)',
+        description: '동의 이후, 체크박스가 생성된 것을 확인하세요.\n진행을 위해 확인 버튼을 클릭해 주세요.',
+      },
+      {
+        image: '/pngs/dashboard/manual/new_creator/creator-contraction-02.png',
+        description: '계약 상태 및 계약서 확인은 **내 계정** 크리에이터님의 정보란에서 확인 가능합니다.',
       },
     ],
   },
-  setBanner: {
-    subType: false,
-    card: {
-      title: '광고 배너를 송출하고 싶어요.',
-      subtitle: '계약을 완료하면 크리에이터님 고유의 광고 URL을 부여합니다.',
-    },
-    source: [
-      {
-        image: '/pngs/dashboard/manual/creator/dashboard.png',
-        description: '화면 왼쪽 네비게이션의 대시보드 탭을 클릭하세요.',
-      },
-      {
-        image: '/pngs/dashboard/manual/creator/bannerError_5.png',
-        description: '배너 오버레이 URL\n주소보기를 클릭해주세요.\n+10초동안 주소가 보여집니다.',
-      },
-      {
-        image: null,
-        description: '주소 오른쪽의 복사 버튼을 클릭해주세요.\n이제 크리에이터님의 방송 송출 프로그램을 활성화 해주세요.',
-      },
-    ],
-  },
-
   programSetting: {
     subType: true,
     selectorImages: [
@@ -97,38 +67,44 @@ const manualSources = {
       },
     ],
     card: {
-      title: '방송 개인 설정',
-      subtitle: 'Xsplit, OBS 와 같은 방송송출 프로그램을 설정하세요.',
+      title: '배너 설정 및 광고 송출 방법',
+      subtitle: '',
     },
     xsplit: {
       source: [
         {
           image: null,
-          description: '권장사항 : Chrome(75 버전 이상)을 기본 브라우저으로 사용하셔야 광고가 송출 됩니다.',
+          description: `권장사항 : **Chrome(75 버전 이상)**을 <span style="color:red">기본 브라우저으로 사용하셔야 광고가 올바르게 송출 됩니다.</span>  
+          크롬 버전 확인은 크롬 오른쪽 상단에 있는 아이콘 클릭 < 도움말 > - < Chrome 정보 >를 눌러 확인 가능합니다.`,
         },
         {
-          image: null,
-          description: 'XSplit Broadcaster를 실행시킵니다.',
+          image: '/pngs/dashboard/manual/new_creator/creator-setBanner-01.png',
+          description: '배너를 송출하기 위해 **<배너 오버레이 주소>**를 확인하고, 복사하세요.',
         },
         {
           image: '/pngs/dashboard/manual/creator/3_2.png',
-          description: '하단에 있는 추가를 누른 후, \nWebpage 를 클릭합니다.\n(참고 : XSplit 2.9 이하의 버전에서는 기타(Others) - Webpage에 있습니다.\n되도록이면 XSplit 3.0 버전 이상으로 업그레이는 하는 것을 권장합니다.)',
+          description: `XSplit Broadcaster를 실행시키 이후,  
+          하단에 있는 추가를 누른 후, **< Webpage >** 를 클릭합니다.  
+          (참고 : XSplit 2.9 이하의 버전에서는 기타(Others) - Webpage에 있습니다. XSplit 3.0 버전 이상을 사용하는 것을 권장합니다.)`,
         },
         {
           image: '/pngs/dashboard/manual/creator/3_3.png',
-          description: '복사해둔 Url을 Ctrl + V 를 눌러 붙여넣고, OK를 클릭합니다.',
+          description: '복사해둔 오버레이 주소를 Ctrl + V 를 눌러 붙여넣고, OK를 클릭합니다.',
         },
         {
           image: '/pngs/dashboard/manual/creator/3_4.png',
-          description: '(오른쪽 이미지를 클릭하여 참고해주세요.)\n1) 추가된 URL을 드래그 하여 맨 위에 둡니다.\n2) 추가된 URL에 커서를 올리면 방송 화면에 흰 테두리가 보입니다. 드래그하여 알맞은 위치가 크기로 조절하면 됩니다.',
+          description: `(오른쪽 이미지를 클릭하여 참고해주세요.)  
+          추가된 URL을 드래그 하여 맨 위에 둡니다.  
+          이후, 추가된 URL에 커서를 올리면 방송 화면에 흰 테두리가 보입니다.  
+          테두리를 드래그하여 알맞은 위치로 조절하세요.`,
         },
         {
           image: '/pngs/dashboard/manual/creator/3_5.png',
-          description: `배너 소스를 우클릭합니다. 환경설정 창이 뜨면
-          1. 스크롤바 숨기기에 체크
-          2. 메모리 소스 유지를 체크
-          해상도는 CUSTOM 선택 후 640 x 320으로 지정하세요.
-          해상도를 설정 후 크기를 줄여도 비율은 유지됩니다.
+          description: `배너 소스를 우클릭합니다. 환경설정 창이 뜨면  
+          1. <span style="color: red">스크롤바 숨기기에 체크</span>에 체크합니다.  
+          2. <span style="color: red">메모리 소스 유지</span>에 체크합니다.  
+          해상도는 custom 선택 이후 **< 320 x 160 >** 으로 지정하세요.  
+          해상도를 설정 후 크기를 줄여도 비율은 유지됩니다.  
           모든 설정이 끝나면 창 밖을 마우스로 클릭하여 환경설정 창을 닫습니다.`,
         },
         {
@@ -141,23 +117,29 @@ const manualSources = {
       source: [
         {
           image: null,
-          description: '권장사항 : Chrome(75 버전 이상)을 기본 브라우저으로 사용하셔야 광고가 송출 됩니다.',
+          description: `권장사항 : **Chrome(75 버전 이상)**을 <span style="color:red">기본 브라우저으로 사용하셔야 광고가 올바르게 송출 됩니다.</span>  
+          크롬 버전 확인은 크롬 오른쪽 상단에 있는 아이콘 클릭 < 도움말 > - < Chrome 정보 >를 눌러 확인 가능합니다.`,
         },
         {
-          image: null,
-          description: 'OBS Studio를 실행시킵니다.',
+          image: '/pngs/dashboard/manual/new_creator/creator-setBanner-01.png',
+          description: '배너를 송출하기 위해 <배너 오버레이 주소>를 확인하고, 복사하세요.',
         },
         {
           image: '/pngs/dashboard/manual/creator/3_7.png',
-          description: '하단에 있는 소스 목록에서 + 를 누른 후, BrowserSource 를 클릭합니다.\n(참고 : OBS Studio 19 버전 이상 사용을 권장합니다.)',
+          description: `OBS Studio를 실행시킨 이후,  
+          하단에 있는 **소스 목록**에서 **+ 버튼** 을 누른 후,  **BrowserSource** 를 클릭합니다.  
+          (참고 : OBS Studio 19 버전 이상 사용을 권장합니다.)`,
         },
         {
           image: '/pngs/dashboard/manual/creator/3_8.png',
-          description: '새로 만들기를 클릭하여 확인을 클릭합니다.\n(어떤 소스인지 구분하려면\nBrowserSource를 Alert Box와 같이 원하는 이름으로 변경 후\n확인 버튼을 클릭하면 됩니다.)',
+          description: `새로 만들기를 클릭하여 확인을 클릭합니다.  
+          (어떤 소스인지 구분하려면 **BrowserSource**를 **"온애드광고박스"**와 같이 원하는 이름으로 변경 후 확인 버튼을 클릭하면 됩니다.)`,
         },
         {
           image: '/pngs/dashboard/manual/creator/3_9.png',
-          description: '추가된 URL을 드래그 하여 맨 위에 둡니다.\n빨간 영역을 드래그 하여 위치와 크기를 조절합니다.',
+          description: `추가된 소스를 드래그하여 **맨 위에 둡니다.**  
+          빨간 영역을 드래그 하여 위치를 조절합니다.  
+          크기는 **< 320 x 160 >** 으로 설정합니다.`,
         },
         {
           image: null,
@@ -166,24 +148,38 @@ const manualSources = {
       ],
     },
   },
+  landing: {
+    subType: false,
+    card: {
+      title: '내 광고페이지를 관리하기',
+      subtitle: '광고 페이지를 관리하고, 현황을 확인하세요'
+    },
+    source: [
+      {}
+    ]
+  },
   income: {
     subType: false,
     card: {
       title: '쌓이는 수익금을 확인하기',
-      subtitle: '광고를 송출하면 자동적으로 수익금이 쌓이고, 확인할 수 있습니다.',
+      subtitle: '광고를 송출하면 자동적으로 수익금이 쌓입니다.',
     },
     source: [
       {
-        image: '/pngs/dashboard/manual/creator/dashboard.png',
-        description: '자신의 대시보드로 이동합니다.',
-      },
-      {
         image: '/pngs/dashboard/manual/creator/4_2.png',
-        description: '광고가 매칭되면 자동적으로 배너이미지가 뜹니다.\n아쉽게도 아직 매칭되지 않았다면, 빈화면이 유지됩니다.',
+        description: `배너광고는 광고송출 알고리즘에 따라 **자동적으로 송출됩니다.**  
+        상황에 따라, 곧바로 광고가 송출되지 않을 수 있습니다.`,
       },
       {
         image: '/pngs/dashboard/manual/creator/4_3.png',
-        description: '광고가 매칭된 상태에서 방송하게 되면 대시보드의 수익금에서\n10분마다 누적되는 수익금을 확인할 수 있습니다.',
+        description: `방송 중, 광고가 송출되면 **수익금이 자동적으로 누적됩니다.**  
+        수익금은 송출시간 및 시청인원, 광고레벨 등 여러 변수에 의해 결정됩니다.  
+        누적되는 수익금은 대시보드에서 확인할 수 있습니다.`,
+      },
+      {
+        image: null,
+        description: `송출된 광고는 크리에이터님의 **광고페이지**에도 게시됩니다.  
+        게시된 광고페이지의 **상호작용(광고 조회, 상품 및 브랜드 페이지 이동 등)에 따라 수익은 추가적으로 발생합니다.**`
       },
     ],
   },
