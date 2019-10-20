@@ -13,10 +13,43 @@ import history from '../../../../../history';
 
 const styles = theme => ({
   rightLink: {
+    fontFamily: 'Noto Sans KR',
     color: theme.palette.common.black,
     marginLeft: 0,
     fontSize: 16,
-    fontWeight: theme.typography.fontWeightRegular,
+    fontWeight: 'bold',
+    [theme.breakpoints.up('md')]: {
+      color: theme.palette.common.white,
+      marginLeft: theme.spacing(3),
+      '&:hover': {
+        fontWeight: 'bold',
+      },
+    },
+  },
+  str_rightLink: {
+    fontFamily: 'Noto Sans KR',
+    width: 120,
+    background: 'linear-gradient(45deg, #00DBE0 30%, #21CBF3 90%)',
+    color: theme.palette.common.white,
+    marginLeft: 0,
+    fontSize: 16,
+    fontWeight: 'bold',
+    [theme.breakpoints.up('md')]: {
+      color: theme.palette.common.white,
+      marginLeft: theme.spacing(3),
+      '&:hover': {
+        fontWeight: 'bold',
+      },
+    },
+  },
+  str_rightLink2: {
+    fontFamily: 'Noto Sans KR',
+    width: 120,
+    background: 'linear-gradient(45deg, #FFAA00 30%, #FF8E53 90%)',
+    color: theme.palette.common.white,
+    marginLeft: 0,
+    fontSize: 16,
+    fontWeight: 'bold',
     [theme.breakpoints.up('md')]: {
       color: theme.palette.common.white,
       marginLeft: theme.spacing(3),
@@ -26,10 +59,9 @@ const styles = theme => ({
     },
   },
   linkPriamry: {
-    color: theme.palette.primary.main,
+    color: 'black',
   },
   popOver: {
-    marginTop: 10,
     padding: 20,
     alignItems: 'center',
     justifyContent: 'center',
@@ -84,7 +116,7 @@ class LoginPopover extends Component {
 
   render() {
     const {
-      classes, type, logout,
+      classes, type, logout, tabValue
     } = this.props;
     const { anchorEl, loginValue } = this.state;
     const open = Boolean(anchorEl);
@@ -95,14 +127,13 @@ class LoginPopover extends Component {
           ? (
             <React.Fragment>
               <Button
-                className={classes.rightLink}
-                color="inherit"
+                className={tabValue ? (classes.str_rightLink) : (classes.str_rightLink2)}
                 onClick={this.handleClick}
               >
                 <Hidden mdUp>
-                  <LockOpen style={{ marginRight: 10 }} />
+                  <LockOpen />
                 </Hidden>
-                {'로그인'}
+                {'시작하기'}
               </Button>
 
               <Popover
@@ -164,9 +195,6 @@ class LoginPopover extends Component {
             <React.Fragment>
               <Button
                 className={classnames(classes.rightLink, classes.linkPriamry)}
-                color="inherit"
-                // // 클로즈베타를 위해 회원가입을 막아둠
-                // onClick={this.handleClick}
                 onClick={this.handleClick}
               >
                 <Hidden mdUp>

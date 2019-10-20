@@ -1,20 +1,53 @@
-import React from 'react';
-import AppAppBar from '../../organisms/main/layout/AppAppBar';
+import React, { useState, useEffect } from 'react';
 import AppFooter from '../../organisms/main/layout/AppFooter';
-import ProductHero from '../../organisms/main/Main/views/Hero/ProductHero';
 import withRoot from '../../organisms/main/Main/withRoot';
 import Introduce from '../../organisms/main/Introduction/Introduce';
-import IntroduceTop from '../../organisms/main/Introduction/IntroduceTop';
-import textSource from './introductionSource/textSource';
-import history from '../../history';
+import textSource from '../../organisms/main/Introduction/source/textSource';
+import sources from '../../organisms/main/Main/source/sources';
+import axios from '../../utils/axios';
+import HOST from '../../utils/config';
 
-import useLoginValue from '../../utils/lib/hooks/useLoginValue';
+const useLoginValue = (history) => {
+  const [isLogin, setisLogin] = useState(false);
+  const [userType, setUserType] = useState('');
+
+  // logout function
+  const logout = () => {
+    setisLogin(false);
+    axios.get(`${HOST}/api/login/logout`)
+      .then(() => {
+        history.push('/');
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  useEffect(() => {
+    axios.get(`${HOST}/api/login/check`)
+      .then((res) => {
+        if (!res.data.error) {
+          setisLogin(true);
+          setUserType(res.data.userType);
+        } else {
+          setisLogin(false);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+        setisLogin(false);
+      });
+  }, []);
+
+  return { isLogin, logout, userType };
+};
 
 const MARKETER_TAB_NUMBER = 0;
 const CREATOR_TAB_NUMBER = 1;
 
 // this is layout compoent
-export default withRoot(() => {
+export default withRoot((props) => {
+  const { history } = props;
   const { isLogin, logout, userType } = useLoginValue(history);
 
   // if Link here, set the scroll to top of the page
@@ -24,19 +57,19 @@ export default withRoot(() => {
 
   return (
     <div>
-      <AppAppBar isLogin={isLogin} logout={logout} />
-      <ProductHero
-        isLogin={isLogin}
-        source={textSource.heroSector}
-      />
-      {/* ->/ header layout */}
-      <IntroduceTop source={textSource.topSector} />
-
       <Introduce
+        isLogin={isLogin}
+        logout={logout}
+        history={history}
         textSource={textSource}
+        source={textSource.topSector}
+        productsource={sources}
         userType={userType === 'marketer' ? MARKETER_TAB_NUMBER : CREATOR_TAB_NUMBER}
       />
       {/* footer layout ->/ */}
+      {/* ->/ header layout */}
+
+
       <AppFooter />
     </div>
   );

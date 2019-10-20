@@ -1,4 +1,5 @@
 import React from 'react';
+import shortid from 'shortid';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
@@ -11,27 +12,27 @@ import Typography from '../../Main/components/Typography';
 
 const useStyles = makeStyles(theme => ({
   root: {
-    marginBottom: theme.spacing(8),
+    marginBottom: theme.spacing(0),
+    overflow: 'hidden',
   },
   cardWrapper: {
     zIndex: 1,
   },
   card: {
-    marginTop: theme.spacing(5),
     display: 'flex',
     justifyContent: 'center',
-    backgroundColor: '#ffffff',
-    padding: theme.spacing(8, 3),
+    backgroundColor: '#ffffff'
   },
   cardContent: {
-    maxWidth: 400,
-  },
-  button: {
-    marginTop: 25,
-    width: '100%',
+    maxWidth: 500,
+    marginLeft: 20
   },
   imagesWrapper: {
     position: 'relative',
+    overflow: 'hidden',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   image: {
     position: 'absolute',
@@ -53,7 +54,7 @@ const LeftCreator = (props) => {
   // Value for image comming slide animation
   const [trigger, setTrigger] = React.useState(
     useScrollTrigger(
-      { threshold: triggerThreshold, disableHysteresis: true },
+      { threshold: triggerThreshold, disableHysteresis: false },
     ),
   );
 
@@ -82,17 +83,19 @@ const LeftCreator = (props) => {
           <Grid item xs={12} md={6} className={classes.cardWrapper}>
             <div className={classes.card}>
               <div className={classes.cardContent}>
-                <Typography variant="h4" marked="center" align="center" gutterBottom>
+                <Typography variant="h4" marked="centerC" align="center" gutterBottom style={{ wordBreak: 'keep-all' }}>
                   {source.head}
                 </Typography>
-                <Typography variant="body1">
-                  {source.body}
+                <Typography variant="h5">
+                  {source.body.split('\n').map((row, index) => (
+                    <p key={shortid.generate()} style={{ fontFamily: 'Noto Sans kr', fontSize: 18, wordBreak: 'keep-all' }}>{`${row}`}</p>
+                  ))}
                 </Typography>
               </div>
             </div>
           </Grid>
           <Slide
-            in={trigger}
+            in
             direction="left"
             {...(trigger
             // trigger -> true

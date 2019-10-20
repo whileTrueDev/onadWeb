@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom';
 import { Router, Switch, Route } from 'react-router-dom';
 // page
 import Main from './pages/main/Main';
-import Manual from './pages/main/Manual';
 import Introduction from './pages/main/Introduction';
 import RegistPage from './pages/main/Regist';
 import CreatorDashboard from './pages/layouts/CreatorDashboardLayout';
@@ -22,7 +21,6 @@ const developRouter = (
       <Route exact path="/" component={Main} />
       <Route exact path="/regist" component={RegistPage} />
       <Route exact path="/introduction" component={Introduction} />
-      <Route exact path="/manual" component={Manual} />
       <Route exact path="/notice" component={Notice} />
       <Route path="/notice/:code" component={Notice} />
       <Route exact path="/dashboard/creator/door" component={CreatorDashboardDoor} />

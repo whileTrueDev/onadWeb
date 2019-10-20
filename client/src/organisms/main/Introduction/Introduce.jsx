@@ -5,25 +5,77 @@ import { makeStyles } from '@material-ui/core/styles';
 import LeftCard from './components/LeftCard';
 import RightCard from './components/RightCard';
 import TabBar from './components/TabBar';
+import AppAppBar from '../layout/AppAppBar';
+import HowToUseCreator from './components/HowToUseCreator';
+import HowToUseMarketer from './components/HowToUseMarketer';
+import IntroduceTop from './IntroduceTop';
+import ProductHowItWorks from '../Main/views/HowItWorks/ProductHowItWorks';
 
 const useStyles = makeStyles(theme => ({
   root: {
-    display: 'flex',
-    overflow: 'hidden',
-    backgroundColor: '#ffffff',
+    display: 'block',
   },
   container: {
-    marginBottom: theme.spacing(20),
+    marginBottom: theme.spacing(16),
     position: 'relative',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
   },
+  mainTop: {
+    display: 'flex',
+    background: 'linear-gradient(45deg, #FFAA00 30%, #FF8E53 90%)',
+    width: '100%',
+    height: theme.spacing(32),
+    marginTop: theme.spacing(9),
+  },
+  mainTop2: {
+    display: 'flex',
+    background: 'linear-gradient(45deg, #00DBE0 30%, #21CBF3 90%)',
+    width: '100%',
+    height: theme.spacing(32),
+    marginTop: theme.spacing(9),
+  },
+  mainToptext: {
+    alignText: 'left',
+    fontFamily: 'Noto Sans Kr',
+    fontSize: '30px',
+    width: '60%',
+    paddingTop: theme.spacing(6),
+    color: 'white',
+    [theme.breakpoints.down('sm')]: {
+      fontSize: '22px',
+    },
+    [theme.breakpoints.down('xs')]: {
+      fontSize: '15px',
+      wordBreak: 'keep-all'
+    },
+
+  },
+  mainTopIamge: {
+    backgroundImage: 'url(/pngs/introduction/serviceCreator.png)',
+    backgroundSize: 'cover',
+    width: '40%',
+    height: theme.spacing(27),
+  },
+  mainTopIamge2: {
+    backgroundImage: 'url(/pngs/introduction/serviceClient.png)',
+    backgroundSize: 'cover',
+    width: '40%',
+    height: theme.spacing(27),
+  },
+  topContent: {
+    display: 'flex',
+    flewDirection: 'row',
+    // justifyContent: 'center'
+  }
 }));
 
 function Introduce(props) {
   const classes = useStyles();
-  const { userType, textSource } = props;
+  const {
+    userType, textSource, isLogin, logout, history, productsource
+  } = props;
 
   // Grow check value, set the grow check value
   const [growCheck, setGrowCheck] = React.useState(true);
@@ -38,70 +90,86 @@ function Introduce(props) {
   }
 
   return (
-    <section className={classes.root}>
-      <Container className={classes.container}>
+    <>
+      <AppAppBar
+        isLogin={isLogin}
+        logout={logout}
+        history={history}
+        tabValue={value}
+        handleTabChange={handleTabChange}
+      />
+      <section className={classes.root}>
+        <div className={value ? (classes.mainTop) : (classes.mainTop2)}>
+          <Container className={classes.topContent}>
+            <div className={classes.mainToptext}>
+              {textSource.heroSector.text.title.split('\n').map(row => (
+                <p key={row} style={{ marginTop: 1, marginBottom: 2 }}>{`${row}`}</p>
+              ))}
+            </div>
+            <div className={value ? (classes.mainTopIamge) : (classes.mainTopIamge2)} />
+          </Container>
+        </div>
+        <Container className={classes.container}>
 
-        <TabBar
+          <TabBar
+            tabValue={value}
+            handleTabChange={handleTabChange}
+          />
+
+          {value === 0 ? (
+            // 마케터
+            <React.Fragment>
+              <div style={{ marginTop: 50 }} />
+              <RightCard
+                growCheck={growCheck}
+                triggerThreshold={0}
+                growTime={1000}
+                slideTime={700}
+                source={textSource.marketer.firstSector}
+              />
+            </React.Fragment>
+          ) : (
+            // 크리에이터
+            <React.Fragment>
+              <div style={{ marginTop: 50 }} />
+              <LeftCard
+                growCheck={growCheck}
+                triggerThreshold={0}
+                growTime={1000}
+                slideTime={700}
+                source={textSource.creator.firstSector}
+              />
+            </React.Fragment>
+          )}
+        </Container>
+      </section>
+      <section style={{ background: value ? ('linear-gradient(45deg, #FFAA00 30%, #FF8E53 90%)') : ('linear-gradient(45deg, #00DBE0 30%, #21CBF3 90%)'), marginTop: 40 }}>
+        {value === 0 ? (
+          <HowToUseMarketer source={textSource.marketer.secondSector} />
+        ) : (
+          <HowToUseCreator source={textSource.creator.secondSector} />
+        )}
+      </section>
+      <IntroduceTop source={textSource.topSector} />
+
+      {value === 0 ? (
+        <ProductHowItWorks
+          history={history}
+          isLogin={isLogin}
+          source={productsource.marketerWorks}
           tabValue={value}
           handleTabChange={handleTabChange}
         />
-
-        {value === 0 ? (
-          // 마케터
-          <React.Fragment>
-            <div style={{ marginTop: 50 }} />
-            <RightCard
-              growCheck={growCheck}
-              triggerThreshold={1000}
-              growTime={1000}
-              slideTime={700}
-              source={textSource.marketer.firstSector}
-            />
-            <LeftCard
-              growCheck={growCheck}
-              triggerThreshold={1450}
-              growTime={1000}
-              slideTime={700}
-              source={textSource.marketer.secondSector}
-            />
-            <RightCard
-              growCheck={growCheck}
-              triggerThreshold={1800}
-              growTime={1000}
-              slideTime={700}
-              source={textSource.marketer.thirdSector}
-            />
-          </React.Fragment>
-        ) : (
-          // 크리에이터
-          <React.Fragment>
-            <div style={{ marginTop: 50 }} />
-            <LeftCard
-              growCheck={growCheck}
-              triggerThreshold={1000}
-              growTime={1000}
-              slideTime={700}
-              source={textSource.creator.firstSector}
-            />
-            <RightCard
-              growCheck={growCheck}
-              triggerThreshold={1450}
-              growTime={1000}
-              slideTime={700}
-              source={textSource.creator.secondSector}
-            />
-            <LeftCard
-              growCheck={growCheck}
-              triggerThreshold={1800}
-              growTime={1000}
-              slideTime={700}
-              source={textSource.creator.thirdSector}
-            />
-          </React.Fragment>
-        )}
-
-      </Container>
-    </section>
+      ) : (
+        <ProductHowItWorks
+          history={history}
+          isLogin={isLogin}
+          source={productsource.creatorWorks}
+          tabValue={value}
+          handleTabChange={handleTabChange}
+        />
+      )}
+    </>
   );
 }
 

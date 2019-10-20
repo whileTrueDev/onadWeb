@@ -9,7 +9,7 @@ const styles = theme => ({
     display: 'block',
     padding: 0,
     borderRadius: 0,
-    height: '28vh',
+    height: '280px',
     [theme.breakpoints.down('xs')]: {
       width: '100% !important',
       height: 200,

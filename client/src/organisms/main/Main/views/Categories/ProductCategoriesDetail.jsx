@@ -13,7 +13,7 @@ const styles = theme => ({
     marginTop: theme.spacing(8),
     display: 'flex',
     flexWrap: 'wrap',
-    boxShadow: '5px 5px 5px 5px grey',
+    boxShadow: 'none',
   },
 });
 

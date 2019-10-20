@@ -26,6 +26,20 @@ const styles = theme => ({
     margin: `${theme.spacing(1)}px auto 0`,
     backgroundColor: theme.palette.primary.main,
   },
+  markedH4CenterM: {
+    height: 4,
+    width: 55,
+    display: 'block',
+    margin: `${theme.spacing(1)}px auto 0`,
+    background: 'linear-gradient(45deg, #00DBE0 30%, #21CBF3 90%)',
+  },
+  markedH4CenterC: {
+    height: 4,
+    width: 55,
+    display: 'block',
+    margin: `${theme.spacing(1)}px auto 0`,
+    background: 'linear-gradient(45deg, #FFAA00 30%, #FF8E53 90%)',
+  },
   markedH6Left: {
     height: 2,
     width: 28,
@@ -62,7 +76,7 @@ function Typography(props) {
 
 Typography.propTypes = {
   classes: PropTypes.object,
-  marked: PropTypes.oneOf([false, 'center', 'left']),
+  marked: PropTypes.oneOf([false, 'center', 'left', 'centerC', 'centerM']),
   children: PropTypes.node,
   variant: PropTypes.string,
 };

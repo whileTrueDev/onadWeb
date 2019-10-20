@@ -1,7 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import classnames from 'classnames';
 import { makeStyles } from '@material-ui/core/styles';
-import { grey } from '@material-ui/core/colors';
 import Grow from '@material-ui/core/Grow';
 import axios from '../../../../../utils/axios';
 import Button from '../../components/Button';
@@ -12,57 +11,224 @@ import HOST from '../../../../../utils/config';
 import history from '../../../../../history';
 
 const styles = makeStyles(theme => ({
-  background: {
-    backgroundColor: '#7fc7d9', // Average color of the background image.
-    backgroundPosition: 'center',
-  },
   button: {
     alignItems: 'center',
     justifyContent: 'center',
-    minWidth: 170,
+    width: '100%',
     marginTop: 50,
+    fontFamily: 'Noto Sans KR',
   },
-  loginButton: {
-    '&:hover': {
-      backgroundColor: theme.palette.primary.main,
-    },
+  loginButtonMarketer: {
+    background: 'linear-gradient(45deg, #00DBE0 30%, #21CBF3 90%)',
     borderWidth: 2,
+    color: 'white',
+    fontSize: '18px',
+    fontWeight: '600',
+    fontFamily: 'Noto Sans KR',
+    [theme.breakpoints.down('md')]: {
+      fontSize: '14px',
+    },
+  },
+  loginButtonCreator: {
+    background: 'linear-gradient(45deg, #FFAA00 30%, #FF8E53 90%)',
+    borderWidth: 2,
+    color: 'white',
+    fontSize: '18px',
+    fontWeight: '600',
+    fontFamily: 'Noto Sans KR',
+    [theme.breakpoints.down('md')]: {
+      fontSize: '14px',
+    },
   },
   loginButtonLeft: {
-    [theme.breakpoints.up('sm')]: {
+    color: 'black',
+    marginRight: 10,
+    textAlign: 'left',
+    width: '22%',
+    fontSize: '18px',
+    fontFamily: 'Noto Sans KR',
+    [theme.breakpoints.down('md')]: {
+      color: 'black',
       marginRight: 10,
+      textAlign: 'left',
+      width: '23%',
+      fontSize: '15px',
+      fontFamily: 'Noto Sans KR',
     },
     [theme.breakpoints.down('sm')]: {
-      marginRight: 3,
-      backgroundColor: theme.palette.primary.main,
+      color: 'black',
+      marginRight: 10,
+      textAlign: 'center',
+      width: '80%',
+      fontFamily: 'Noto Sans KR',
+      gridColumn: '1/3',
+      gridRow: '2',
+      margin: 'auto',
+      fontSize: '13px',
+    },
+    [theme.breakpoints.down('xs')]: {
+      color: 'black',
+      marginRight: 20,
+      textAlign: 'center',
+      width: '70%',
+      fontFamily: 'Noto Sans KR',
+      gridColumn: '1/3',
+      gridRow: '2',
+      margin: 'auto',
+      fontSize: '11px',
+    },
+  },
+  loginButtonLeftLogined: {
+    color: 'black',
+    marginRight: 20,
+    textAlign: 'center',
+    width: '27%',
+    fontSize: '20px',
+    fontFamily: 'Noto Sans KR',
+    [theme.breakpoints.down('md')]: {
+      color: 'black',
+      marginRight: 20,
+      textAlign: 'center',
+      width: '28%',
+      fontSize: '15px',
+      fontFamily: 'Noto Sans KR',
+    },
+    [theme.breakpoints.down('sm')]: {
+      color: 'black',
+      textAlign: 'center',
+      width: '80%',
+      fontFamily: 'Noto Sans KR',
+      gridColumn: '2/4',
+      gridRow: '2',
+      margin: 'auto',
+      fontSize: '14px',
+    },
+    [theme.breakpoints.down('xs')]: {
+      color: 'black',
+      textAlign: 'center',
+      width: '70%',
+      fontFamily: 'Noto Sans KR',
+      gridColumn: '2/4',
+      gridRow: '2',
+      margin: 'auto',
+      fontSize: '11px',
     },
   },
   loginButtonRight: {
-    [theme.breakpoints.up('sm')]: {
+    color: 'black',
+    marginLeft: 10,
+    textAlign: 'right',
+    width: '22%',
+    fontSize: '18px',
+    fontFamily: 'Noto Sans KR',
+    [theme.breakpoints.down('md')]: {
+      color: 'black',
       marginLeft: 10,
+      textAlign: 'right',
+      width: '23%',
+      fontSize: '15px',
+      fontFamily: 'Noto Sans KR',
     },
     [theme.breakpoints.down('sm')]: {
-      marginLeft: 3,
-      backgroundColor: theme.palette.primary.main,
+      color: 'black',
+      marginLeft: 10,
+      textAlign: 'center',
+      width: '80%',
+      fontFamily: 'Noto Sans KR',
+      gridColumn: '3/5',
+      gridRow: '2',
+      margin: 'auto',
+      fontSize: '13px',
     },
+    [theme.breakpoints.down('xs')]: {
+      color: 'black',
+      marginLeft: 20,
+      textAlign: 'center',
+      width: '70%',
+      fontFamily: 'Noto Sans KR',
+      gridColumn: '3/5',
+      gridRow: '2',
+      margin: 'auto',
+      fontSize: '11px',
+    },
+
   },
-  loginButtonWrapper: {
-    display: 'flex',
+  loginButtonRightLogined: {
+    color: 'black',
+    marginLeft: 20,
+    textAlign: 'center',
+    width: '27%',
+    fontSize: '20px',
+    fontFamily: 'Noto Sans KR',
+    [theme.breakpoints.down('md')]: {
+      color: 'black',
+      marginLeft: 20,
+      textAlign: 'center',
+      width: '28%',
+      fontSize: '15px',
+      fontFamily: 'Noto Sans KR',
+    },
+    [theme.breakpoints.down('sm')]: {
+      color: 'black',
+      textAlign: 'center',
+      width: '80%',
+      fontFamily: 'Noto Sans KR',
+      gridColumn: '2/4',
+      gridRow: '2',
+      margin: 'auto',
+      fontSize: '14px',
+    },
+    [theme.breakpoints.down('xs')]: {
+      color: 'black',
+      textAlign: 'center',
+      width: '70%',
+      fontFamily: 'Noto Sans KR',
+      gridColumn: '2/4',
+      gridRow: '2',
+      margin: 'auto',
+      fontSize: '11px',
+    },
   },
   h3: {
-    [theme.breakpoints.up('sm')]: {
+    [theme.breakpoints.up('md')]: {
       marginTop: theme.spacing(8),
       width: 1024,
+      color: 'black',
+      fontSize: 37,
+    },
+    [theme.breakpoints.up('sm')]: {
+      marginTop: theme.spacing(8),
+      width: 800,
+      color: 'black',
+      fontSize: 30,
+      wordBreak: 'keep-all'
     },
     [theme.breakpoints.down('sm')]: {
-      width: '210px',
-      fontSize: 37,
+      marginTop: theme.spacing(8),
+      width: '320px',
+      fontSize: 25,
+      wordBreak: 'keep-all'
     },
   },
   h3sub: {
-    [theme.breakpoints.down('sm')]: {
-      width: '300px',
+    [theme.breakpoints.up('md')]: {
+      marginTop: theme.spacing(8),
+      width: 960,
+      color: 'black',
       fontSize: 37,
+    },
+    [theme.breakpoints.up('sm')]: {
+      marginTop: theme.spacing(8),
+      width: 600,
+      color: 'black',
+      fontSize: 30,
+      wordBreak: 'keep-all'
+    },
+    [theme.breakpoints.down('sm')]: {
+      marginTop: theme.spacing(8),
+      width: 320,
+      fontSize: 23,
+      wordBreak: 'keep-all'
     },
   },
   h5: {
@@ -76,12 +242,98 @@ const styles = makeStyles(theme => ({
       marginTop: theme.spacing(5),
     },
   },
-  h6: {
-    marginTop: theme.spacing(2),
-    color: grey[500],
+  // more: {
+  //   marginTop: theme.spacing(2),
+  // },
+  mainbarImg: {
+    backgroundImage: 'url(/pngs/main/mainbar.png)',
+    width: '80px',
+    height: '35px',
+    marginTop: theme.spacing(3),
+    marginBottom: theme.spacing(1),
+    margin: 'auto',
+    [theme.breakpoints.down('sm')]: {
+      width: '60px',
+      height: '28px',
+      marginTop: theme.spacing(2),
+      marginBottom: theme.spacing(1),
+      margin: 'auto',
+      backgroundSize: 'cover'
+    },
+
   },
-  more: {
-    marginTop: theme.spacing(2),
+  maintop: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    [theme.breakpoints.down('sm')]: {
+      display: 'grid',
+      gridTemplateColumns: 'repeat(4, 120px)',
+      gridTemplateRows: 'repeat(2, 270px)'
+    },
+    [theme.breakpoints.down('xs')]: {
+      display: 'grid',
+      gridTemplateColumns: 'repeat(4, 110px)',
+      gridTemplateRows: 'repeat(2, 250px)'
+    },
+  },
+  maintopCenterImg: {
+    backgroundImage: 'url(/pngs/main/mainImage.png)',
+    backgroundSize: 'cover',
+    [theme.breakpoints.up('lg')]: {
+      width: '700px',
+      height: '400px',
+    },
+    [theme.breakpoints.down('md')]: {
+      width: '500px',
+      height: '280px',
+    },
+    [theme.breakpoints.down('sm')]: {
+      width: '400px',
+      height: '240px',
+      gridColumn: '1/5',
+      gridRow: '1',
+      margin: 'auto'
+    },
+    [theme.breakpoints.down('xs')]: {
+      width: '280px',
+      height: '160px',
+      gridColumn: '1/5',
+      gridRow: '1',
+      margin: 'auto'
+    },
+  },
+  maintopmarketerText: {
+    display: 'block',
+    color: '#00DBE0',
+    fontSize: '25px',
+    fontWeight: '700',
+    fontFamily: 'Noto Sans KR',
+    [theme.breakpoints.down('md')]: {
+      fontSize: '23px',
+    },
+    [theme.breakpoints.down('sm')]: {
+      fontSize: '20px',
+    },
+    [theme.breakpoints.down('xs')]: {
+      fontSize: '15px',
+    },
+  },
+  maintopcreatorText: {
+    display: 'block',
+    color: '#FFAA00',
+    fontSize: '25px',
+    fontWeight: '700',
+    fontFamily: 'Noto Sans KR',
+    [theme.breakpoints.down('md')]: {
+      fontSize: '23px',
+    },
+    [theme.breakpoints.down('sm')]: {
+      fontSize: '20px',
+    },
+    [theme.breakpoints.down('xs')]: {
+      fontSize: '15px',
+    },
   },
 }));
 
@@ -102,12 +354,13 @@ function useDialog() {
 
 function ProductHero(props) {
   const {
-    isLogin, source,
+    isLogin, source, userType
   } = props;
 
   const {
-    open, isMarketer, handleOpen, handleClose,
+    open, isMarketer, handleOpen, handleClose
   } = useDialog();
+
   const classes = styles();
 
   const handleClick = useCallback((buttonType) => {
@@ -132,14 +385,10 @@ function ProductHero(props) {
   }, [handleOpen]);
 
   return (
-    <ProductHeroLayout
-      backgroundClassName={classes.background}
-      backgroundImage={source.backImage}
-    >
-      {/* Increase the network loading priority of the background image. */}
+    <ProductHeroLayout>
       <Grow in timeout={1500}>
         <Typography
-          color="inherit"
+          // color="inherit"
           align="center"
           variant="h3"
           className={classes.h3}
@@ -150,74 +399,108 @@ function ProductHero(props) {
       <Grow in timeout={1500}>
         <Typography
           className={classes.h3sub}
-          color="inherit"
+          // color="inherit"
           align="center"
           variant="h3"
-          marked="center"
           style={{ marginTop: 15 }}
         >
           {source.text.subTitle}
+          <div
+            className={classes.mainbarImg}
+          />
         </Typography>
       </Grow>
-      <Grow in timeout={2500}>
-        <Typography
-          color="inherit"
-          align="center"
-          variant="subtitle2"
-          className={classes.h5}
-        >
-          {source.text.body}
-        </Typography>
-      </Grow>
+
       {/* 로그인 / 대시보드로 이동 버튼 */}
       {isLogin ? (
         <Grow in timeout={2500}>
-          <Button
-            color="primary"
-            variant="contained"
-            size="large"
-            className={classes.button}
-            onClick={handleClick}
-          >
-          대시보드로 이동
-          </Button>
+          <div className={classes.maintop}>
+            { userType === 'marketer' ? (
+              <>
+                <div className={classes.loginButtonLeftLogined}>
+                  <div className={classes.maintopmarketerText}>{source.text.marketer}</div>
+                  <div>
+                    {source.text.marketerTail.split('\n').map(row => (
+                      <p key={row}>{`${row}`}</p>
+                    ))}
+                  </div>
+                  <Button
+                    className={
+                    classnames([classes.button], [classes.loginButtonMarketer])}
+                    onClick={() => handleClick('marketer')}
+                  >
+                  대시보드로 이동
+                  </Button>
+                </div>
+
+                <div className={classes.maintopCenterImg} />
+              </>
+            ) : (
+              <>
+                <div className={classes.maintopCenterImg} />
+                <div className={classes.loginButtonRightLogined}>
+                  <div className={classes.maintopcreatorText}>{source.text.creator}</div>
+                  <div>
+                    {source.text.creatorTail.split('\n').map(row => (
+                      <p key={row}>{`${row}`}</p>
+                    ))}
+                  </div>
+                  <Button
+                    className={
+                    classnames([classes.button], [classes.loginButtonCreator])}
+                    onClick={() => handleClick('creator')}
+                  >
+                  대시보드로 이동
+                  </Button>
+                </div>
+              </>
+            )}
+          </div>
         </Grow>
       ) : (
 
         <Grow in timeout={2500}>
-          <div className={classes.loginButtonWrapper}>
-            <Button
-              color="primary"
-              variant="outlined"
-              className={
-                classnames([classes.button], [classes.loginButton], [classes.loginButtonLeft])}
-              onClick={() => handleClick('marketer')}
-            >
-              광고주로 로그인
-            </Button>
-            <Button
-              color="primary"
-              variant="outlined"
-              className={
-                classnames([classes.button], [classes.loginButton], [classes.loginButtonRight])}
-              onClick={() => handleClick('creator')}
-            >
-              크리에이터 로그인
-            </Button>
-          </div>
+          <div className={classes.maintop}>
 
+            <div className={classes.loginButtonLeft}>
+              <div className={classes.maintopmarketerText}>{source.text.marketer}</div>
+              <div>
+                {source.text.marketerTail.split('\n').map(row => (
+                  <p key={row}>{`${row}`}</p>
+                ))}
+              </div>
+              <Button
+                className={
+                  classnames([classes.button], [classes.loginButtonMarketer])}
+                onClick={() => handleClick('marketer')}
+              >
+                + 자세히보기
+              </Button>
+            </div>
+
+            <div className={classes.maintopCenterImg} />
+
+            <div className={classes.loginButtonRight}>
+              <div className={classes.maintopcreatorText}>{source.text.creator}</div>
+              <div>
+                {source.text.creatorTail.split('\n').map(row => (
+                  <p key={row}>{`${row}`}</p>
+                ))}
+              </div>
+              <Button
+                className={
+                  classnames([classes.button], [classes.loginButtonCreator])}
+                onClick={() => handleClick('creator')}
+              >
+                + 자세히보기
+              </Button>
+            </div>
+
+          </div>
         </Grow>
 
       )}
 
-      {source.text.tail && (
-        <Typography
-          className={classes.h6}
-          variant="subtitle2"
-        >
-          {source.text.tail}
-        </Typography>
-      )}
 
       <LoginForm
         open={open}

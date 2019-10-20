@@ -10,13 +10,11 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: theme.palette.grey[100],
   },
   container: {
-    position: 'relative',
     display: 'flex',
     flexDirection: 'column',
-    alignItems: 'center',
   },
   sources: {
-    marginTop: theme.spacing(8),
+    marginTop: theme.spacing(0),
     marginBottom: theme.spacing(8),
     display: 'flex',
     flexWrap: 'wrap',
@@ -26,6 +24,28 @@ const useStyles = makeStyles(theme => ({
   title: {
     marginTop: theme.spacing(3),
   },
+  bottomMiddle: {
+    marginBottom: theme.spacing(0),
+    marginTop: theme.spacing(8)
+  },
+  bottomtitle: {
+    [theme.breakpoints.up('sm')]: {
+      fontSize: '40px',
+      fontWeight: '700'
+    },
+    [theme.breakpoints.down('xs')]: {
+      fontSize: '30px',
+      fontWeight: '600'
+    },
+  },
+  bottomContent: {
+    [theme.breakpoints.up('sm')]: {
+      fontSize: '30px',
+    },
+    [theme.breakpoints.down('xs')]: {
+      fontSize: '20px',
+    },
+  }
 }));
 
 export default function IntroduceTop(props) {
@@ -33,7 +53,7 @@ export default function IntroduceTop(props) {
   const classes = useStyles();
   const [trigger, setTrigger] = React.useState(
     useScrollTrigger(
-      { threshold: 300, disableHysteresis: true },
+      { threshold: 900, disableHysteresis: true },
     ),
   );
   React.useEffect(() => {
@@ -47,9 +67,13 @@ export default function IntroduceTop(props) {
 
   return (
     <section className={classes.root}>
-      <Container className={classes.container}>
-        <Typography className={classes.title} variant="h4">Why ONAD?</Typography>
-
+      <Container maxWidth="lg" className={classes.container} component="section">
+        <div className={classes.bottomMiddle}>
+          <Typography component="h2" className={classes.bottomtitle} style={{ fontFamily: 'Noto Sans kr', marginBottom: 32 }}>ONAD와 함께 하세요</Typography>
+          <Typography component="h2" className={classes.bottomContent} style={{ fontFamily: 'Noto Sans kr' }}>
+           지금 시작하면 누릴 수 있는혜택입니다.
+          </Typography>
+        </div>
         <Slide
           in={trigger}
           direction="right"

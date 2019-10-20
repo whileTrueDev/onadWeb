@@ -3,14 +3,12 @@ import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
-import { blueGrey } from '@material-ui/core/colors';
+// import { blueGrey } from '@material-ui/core/colors';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import {
   Menu, MenuItem, IconButton, Button,
 } from '@material-ui/core';
-import {
-  Help, Domain, Lock, Dashboard,
-} from '@material-ui/icons';
+import { Domain, Dashboard } from '@material-ui/icons';
 import AppBar from '../Main/components/AppBar';
 import Toolbar from '../Main/components/Toolbar';
 import LoginPopover from '../Main/views/Login/LoginPopover';
@@ -20,18 +18,20 @@ import history from '../../../history';
 
 const styles = theme => ({
   root: {
-    backgroundColor: blueGrey[900],
+    backgroundColor: 'white',
   },
   title: {
     fontSize: 24,
   },
   toolbar: {
     justifyContent: 'space-between',
+    boxShadow: '0 1px 10px gainsboro'
   },
   left: {
     flex: 0,
   },
   rightDesktop: {
+    height: '100%',
     flex: 1,
     display: 'none',
     justifyContent: 'flex-end',
@@ -51,12 +51,11 @@ const styles = theme => ({
     marginLeft: 0,
     fontSize: 16,
     borderRadius: 0,
+    fontFamily: 'Noto Sans KR',
     [theme.breakpoints.up('md')]: {
-      color: theme.palette.common.white,
+      fontWeight: 'bold',
+      color: theme.palette.common.black,
       marginLeft: theme.spacing(3),
-      '&:hover': {
-        fontWeight: 'bold',
-      },
     },
   },
   coloredLink: {
@@ -70,12 +69,22 @@ const styles = theme => ({
   buttonIcon: {
     marginRight: 10,
   },
+  icon: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: theme.spacing(1),
+    '&:hover': {
+      cursor: 'pointer',
+    },
+  },
 });
 
 function AppAppBar(props) {
   const {
-    classes, isLogin, logout, noButtons
+    classes, isLogin, logout, tabValue, handleTabChange, noButtons
   } = props;
+
 
   // 앱바의 선택 여부를 파악하여 state 로 설정한다.
   const [selected, setSelected] = React.useState();
@@ -114,7 +123,15 @@ function AppAppBar(props) {
         </Button>
       );
     }
-    return <LoginPopover type="로그인" history={history} logout={logout} />;
+    return (
+      <LoginPopover
+        type="로그인"
+        history={history}
+        logout={logout}
+        tabValue={tabValue}
+        onChange={handleTabChange}
+      />
+    );
   };
 
   const RegButton = () => {
@@ -164,27 +181,6 @@ function AppAppBar(props) {
           {'서비스 소개'}
         </Button>
       </MenuItem>
-      <MenuItem>
-        <Button
-          className={classes.rightLink}
-          component={Link}
-          to="/manual"
-        >
-          <Help className={classes.buttonIcon} />
-          {'이용 안내'}
-        </Button>
-      </MenuItem>
-
-      <MenuItem>
-        {isLogin ? (
-          <Button className={classes.rightLink} onClick={logout}>
-            <Lock className={classes.buttonIcon} />
-              로그아웃
-          </Button>
-        ) : (
-          <LoginPopover type="로그인" history={history} />
-        )}
-      </MenuItem>
 
       <MenuItem>
         {isLogin ? (
@@ -196,8 +192,18 @@ function AppAppBar(props) {
             대시보드이동
           </Button>
         )
-          : <LoginPopover type="회원가입" history={history} />
+          : <LoginPopover type="회원가입" />
         }
+      </MenuItem>
+
+      <MenuItem>
+        {isLogin ? (
+          <Button className={classes.rightLink} onClick={logout}>
+              로그아웃
+          </Button>
+        ) : (
+          <LoginPopover type="로그인" />
+        )}
       </MenuItem>
 
     </Menu>
@@ -208,15 +214,14 @@ function AppAppBar(props) {
       <AppBar className={classes.root} position="fixed">
         <Toolbar className={classes.toolbar}>
           <div className={classes.left} />
-          <Button
-            color="inherit"
-            className={classes.title}
-            component={Link}
-            to="/"
-          >
-            {'OnAD'}
-          </Button>
-          {noButtons ? (<div className={classes.rightDesktop} />) : (
+          <a href="/" className={classes.icon}>
+            <img src="/pngs/logo/onad_logo_vertical_black.png" id="logo" alt="OnADLogo" width={100} height={70} style={{ padding: 18 }} />
+          </a>
+
+          {noButtons ? (
+            <div className={classes.rightDesktop} />
+          ) : (
+
             <div className={classes.rightDesktop}>
               <Button
                 className={classNames(
@@ -227,21 +232,17 @@ function AppAppBar(props) {
               >
                 {'서비스 소개'}
               </Button>
-              <Button
-                className={classNames(
-                  { [classes.rightLink]: true, [classes.active]: selected === 'manual' },
-                )}
-                component={Link}
-                to="/manual"
-              >
-                {'이용 안내'}
-              </Button>
-              <LogButton history={history} logout={logout} />
               <RegButton history={history} logout={logout} />
+              <LogButton
+                history={history}
+                logout={logout}
+              />
+
             </div>
           )}
+
           <div className={classes.rightMobile}>
-            <IconButton aria-haspopup="true" onClick={handleMobileMenuOpen} color="inherit">
+            <IconButton aria-haspopup="true" onClick={handleMobileMenuOpen} color="primary">
               <MoreIcon />
             </IconButton>
           </div>
@@ -254,12 +255,10 @@ function AppAppBar(props) {
 
 AppAppBar.propTypes = {
   classes: PropTypes.object,
-  noButtons: PropTypes.bool
 };
 
 AppAppBar.defaultProps = {
   classes: {},
-  noButtons: false
 };
 
 
