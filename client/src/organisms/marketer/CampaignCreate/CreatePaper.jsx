@@ -1,16 +1,19 @@
 import React from 'react';
 import {
-  Grid, Divider
+  Grid, Divider, Typography
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import Check from '@material-ui/icons/Check';
 import BannerCarousel from '../../../atoms/BannerCarousel';
+import Button from '../../../atoms/CustomButtons/Button';
 import Success from '../../../atoms/Success';
 import StyledItemText from '../../../atoms/StyledItemText';
 import StyledInput from '../../../atoms/StyledInput';
 import axios from '../../../utils/axios';
 import HOST from '../../../utils/config';
 import DangerTypography from '../../../atoms/Typography/Danger';
+// 배너 등록
+import history from '../../../history';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -53,7 +56,6 @@ const CampaignCreate = (props) => {
   const {
     bannerList, dispatch
   } = props;
-
   // 이름의  format을 체크하는 State
   const [checkName, setCheckName] = React.useState(false);
   const [duplicate, setDuplicate] = React.useState(false);
@@ -128,7 +130,19 @@ const CampaignCreate = (props) => {
             <Divider component="hr" style={{ marginBottom: '10px', width: '300px' }} />
           </Grid>
           <Grid item>
-            <BannerCarousel steps={bannerList} handleBannerId={handleBannerId} />
+            {bannerList.length > 0 ? (
+              <BannerCarousel steps={bannerList} handleBannerId={handleBannerId} />
+            ) : (
+              <div>
+                <Typography variant="body1">아직 승인된 배너가 없어요! 먼저 배너를 등록한 이후, 캠페인을 생성해주세요!</Typography>
+                <Button
+                  color="info"
+                  onClick={() => { history.push('/dashboard/marketer/banner'); }}
+                >
+                  배너등록하러 가기
+                </Button>
+              </div>
+            )}
           </Grid>
         </Grid>
       </Grid>

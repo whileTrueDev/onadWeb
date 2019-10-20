@@ -14,7 +14,7 @@ import HOST from '../../../utils/config';
 import axios from '../../../utils/axios';
 import history from '../../../history';
 
-const DEFAULT_IMAGE_PATH = '/pngs/dashboard/manual/marketer/banner_upload.png';
+const DEFAULT_IMAGE_PATH = '/pngs/dashboard/banner_upload_manual.png';
 
 const dialogStyle = theme => ({
   formRoot: {

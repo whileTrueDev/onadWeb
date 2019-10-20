@@ -62,7 +62,7 @@ router.get('/list', (req, res) => {
   let dataArray;
   let tmpDataArray;
   const callQuery = `ㅔ
-  SELECT title, content, date_format(date,'%y-%m-%d %H:%i'), readState
+  SELECT title, content, date_format(date,'%y. %m. %d'), readState
   FROM marketerNotification AS mn
   WHERE marketerId = ?
   ORDER BY readState;

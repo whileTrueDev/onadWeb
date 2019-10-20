@@ -236,7 +236,6 @@ const CampaignCreateStepper = (props) => {
   };
 
   useEffect(() => {
-    console.log('data fetch');
     getCategoryList();
     getBannerList();
     getCreatorList();

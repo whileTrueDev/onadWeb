@@ -63,8 +63,9 @@ const CreatorManual = (props) => {
             if (manual === 1) return (<ManualDetail source={sources.contract} />);
             if (manual === 2) return (<ManualDetail source={sources.programSetting} />);
             if (manual === 3) return (<ManualDetail source={sources.income} />);
-            if (manual === 4) return (<ManualDetail source={sources.withdrawal} />);
-            if (manual === 5) return (<ManualDetail source={sources.bannerError} />);
+            if (manual === 4) return (<ManualDetail source={sources.landing} />);
+            if (manual === 5) return (<ManualDetail source={sources.bannerlist} />);
+            if (manual === 6) return (<ManualDetail source={sources.withdrawal} />);
             return null;
           })()}
         </GridItem>

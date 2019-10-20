@@ -30,8 +30,7 @@ const BannerManageButton = () => (
       history.push('/dashboard/creator/banner');
     }}
   >
-  캠페인 관리
-
+  배너내역
   </Button>
 );
 
@@ -68,7 +67,7 @@ const BannerCard = () => {
     <CustomCard iconComponent={<BrandingWatermark />} buttonComponent={<BannerManageButton />}>
       <Grid container direction="column" spacing={2}>
         <Grid item>
-          <StyledItemText primary="현재 송출중인 배너" secondary="마우스를 가져가면 상세정보를 확인할 수 있습니다." />
+          <StyledItemText primary="현재 송출중인 배너" secondary="배너관리로 이동하면 상세정보를 확인할 수 있습니다." />
         </Grid>
         <Grid container direction="row" spacing={1} justify="center">
           {currentBannerData.loading && (<CircularProgress small />)}
@@ -88,7 +87,7 @@ const BannerCard = () => {
                   alt="bannerArea"
                   width="100%"
                   height="100%"
-                  style={{ maxHeight: '300px' }}
+                  style={{ maxHeight: '160px', maxWidth: '320px' }}
                 />
               </Grid>
             ))

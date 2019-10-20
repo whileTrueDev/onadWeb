@@ -1,5 +1,6 @@
 import React from 'react';
 import shortid from 'shortid';
+import Markdown from 'react-markdown/with-html';
 // material-ui
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
@@ -86,11 +87,11 @@ const ManualDetail = (props) => {
             {source.source.map(value => (
               <Step active key={shortid.generate()}>
                 <StepLabel>
-                  {value.description.split('\n').map(row => (
-                    <Typography key={shortid.generate()} variant="body1">
-                      {row}
-                    </Typography>
-                  ))}
+                  <Markdown
+                    source={value.description}
+                    escapeHtml={false}
+                    renderers={{ code: ({ value1 }) => <Markdown source={value1} /> }}
+                  />
                 </StepLabel>
                 <StepContent>
                   {value.image && (

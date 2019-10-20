@@ -154,7 +154,7 @@ const RegistStepper = withRoot((props) => {
 
       <Stepper activeStep={activeStep} orientation="vertical">
         <Step key="0">
-          <StepLabel>사업자 유형 선택</StepLabel>
+          <StepLabel>마케터 유형 선택</StepLabel>
           <StepContent>
             <Usertype typeChange={typeChange} handleNext={handleNext} />
           </StepContent>

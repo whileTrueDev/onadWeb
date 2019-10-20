@@ -24,15 +24,15 @@ const Dashboard = () => (
       </GridContainer>
     </GridItem>
 
-    <GridItem xs={12} xl={7}>
+    <GridItem xs={12} xl={6}>
       <IncomeChart />
     </GridItem>
 
-    <GridItem xs={12} sm={6}>
+    <GridItem xs={12} sm={4}>
       <BannerCard />
     </GridItem>
 
-    <GridItem xs={12} sm={6} xl={4}>
+    <GridItem xs={12} sm={4}>
       <UrlCard />
     </GridItem>
 

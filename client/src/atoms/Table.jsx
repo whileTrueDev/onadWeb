@@ -10,6 +10,7 @@ import {
 // custom table component
 import Help from '@material-ui/icons/Help';
 import GreenCheckbox from './GreenCheckBox';
+import TableFooter from './TableFooter';
 // core components
 import tableStyle from '../assets/jss/onad/components/tableStyle';
 
@@ -19,17 +20,29 @@ const useStyles = makeStyles({
     fontWeight: '700',
     textAlign: 'center',
     color: '#455a64'
-  }
+  },
 });
 
 function CustomTable({ ...props }) {
   const {
-    classes, tableHead, tableData, tableHeaderColor, paginationOps, banner, checkBox
+    classes, tableHead, tableData, tableHeaderColor, banner, checkBox,
+    pagination
   } = props;
-  const {
-    rowsPerPage,
-    page,
-  } = paginationOps;
+
+  const [page, setPage] = React.useState(0); // 테이블 페이지
+  const [rowsPerPage, setRowsPerPage] = React.useState(5); // 테이블 페이지당 행
+  const emptyRows = rowsPerPage - Math.min(
+    rowsPerPage, tableData.length - page * rowsPerPage,
+  );
+  // page handler
+  function handleChangeTablePage(event, newPage) {
+    setPage(newPage);
+  }
+  // page per row handler
+  function handleChangeTableRowsPerPage(event) {
+    setRowsPerPage(parseInt(event.target.value, 10));
+  }
+
 
   const myClasses = useStyles();
   return (
@@ -91,14 +104,23 @@ function CustomTable({ ...props }) {
               }
             </TableRow>
           ))}
+
+          {emptyRows > 0 && (
+          <TableRow style={{ height: 48 * emptyRows }} key={shortid.generate()}>
+            <TableCell colSpan={3} />
+          </TableRow>
+          )}
         </TableBody>
-        {/* <CustomTableFooter
+
+        {pagination && (
+        <TableFooter
           count={tableData.length}
           rowsPerPage={rowsPerPage}
           page={page}
           handleChangeTablePage={handleChangeTablePage}
           handleChangeTableRowsPerPage={handleChangeTableRowsPerPage}
-        /> */}
+        />
+        )}
 
       </Table>
     </div>

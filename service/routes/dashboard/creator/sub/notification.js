@@ -60,7 +60,7 @@ router.get('/list', (req, res) => {
   let dataArray;
   let tmpDataArray;
   const callQuery = `
-  SELECT title, content, date_format(date,'%y-%m-%d %H:%i'), readState
+  SELECT title, content, date_format(date,'%y. %m. %d'), readState
   FROM creatorNotification AS cn
   WHERE creatorId = ?
   ORDER BY readState;
