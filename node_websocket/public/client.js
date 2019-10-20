@@ -4,6 +4,7 @@ $(() => {
   const _url = window.location.href;
   const cutUrl = `/${_url.split('/')[4]}`;
   let socketHost;
+  let activeState = 1;
   function getHiddenProp() {
     const prefixes = ['webkit', 'moz', 'ms', 'o'];
     // test for native support
@@ -28,10 +29,13 @@ $(() => {
     if (!document[visProp]) {
       socket.emit('pageActive handler', [cutUrl, 1]);
       socket.emit('pageActive', _url);
+      activeState = 1;
     } else {
       socket.emit('pageActive handler', [cutUrl, 0]);
       $('#imgMessage').empty();
+      activeState = 0;
     }
+    return activeState;
   }
 
   socket.emit('new client', [_url, history]);
@@ -67,11 +71,11 @@ $(() => {
   });
 
   socket.on('check bannerId', () => {
-    const bannerId = $('#showBanner').attr('name');
-    if (bannerId) {
+    if (activeState === 1) {
       socket.emit('reRender', _url);
     }
   });
+
   socket.on('img clear', () => {
     $('#imgMessage').empty();
   });
