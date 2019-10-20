@@ -77,12 +77,10 @@ module.exports = function (sql, socket, msg, activeState) {
 
   const getGameId = async (creatorId) => {
     console.log('크리에이터의 gameid를 받아옵니다');
-    const getGameIdQuery = `
-    SELECT gameId 
-    FROM twitchStreamDetail 
-    WHERE streamId = (SELECT streamId FROM twitchStream WHERE streamerId = ? ORDER BY startedAt DESC LIMIT 1) 
-    LIMIT 1;
-    `;
+    const getGameIdQuery = `SELECT gameId 
+                            FROM twitchStreamDetail AS tsd 
+                            WHERE streamId = (SELECT streamId FROM twitchStream WHERE streamerId = ? ORDER BY startedAt DESC LIMIT 1)
+                            AND date_format(tsd.time, '%Y-%m-%d %H:%i') > date_format(NOW() - interval 10 minute, '%Y-%m-%d %H:%i');`;
     return new Promise((resolve, reject) => {
       doQuery(getGameIdQuery, [creatorId])
         .then((row) => {
