@@ -38,6 +38,14 @@ const useStyles = makeStyles(theme => ({
       padding: theme.spacing(1),
     },
   },
+  ready: {
+    padding: theme.spacing(3),
+    [theme.breakpoints.down('sm')]: {
+      padding: theme.spacing(1),
+    },
+    color: 'rgba(0, 0, 0, 0.26)',
+    backgroundColor: 'rgba(0, 0, 0, 0.15)',
+  },
   icon: {
     display: 'flex',
     justifyContent: 'center',
@@ -142,7 +150,7 @@ const OptionPaper = (props) => {
           <Grid item className={classes.item}>
             <Grid container direction="column" spacing={2}>
               <Grid item>
-                <Paper className={classes.choice}>
+                <Paper className={classes.ready}>
                   <Grid container direction="row" justify="space-between">
                     <Grid item>
                       <StyledSelectText primary="1. 배너 광고" secondary="상품, 브랜드 홍보만 하고 싶어요." />
@@ -165,6 +173,7 @@ const OptionPaper = (props) => {
                             checked={state.option === 0}
                             onChange={handleChange}
                             fontSize="large"
+                            disabled
                           />
                         </Grid>
                       </Grid>

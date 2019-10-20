@@ -33,7 +33,17 @@ function CampaignTable({ ...props }) {
       title: '일예산',
       field: 'dailyLimit',
       type: 'numeric',
-      lookup: { '-1': '설정안함' },
+      render: (col) => {
+        if (col.dailyLimit !== '-1') {
+          return (
+            <div>
+              {col.dailyLimit}
+            </div>
+          );
+        }
+        return <div>설정안함</div>;
+      }
+      // lookup: { '-1': '설정안함' },
     },
     {
       title: '게재 우선순위',

@@ -259,6 +259,7 @@ const getCampaignId = (result, marketerId) => {
 
 router.post('/push', (req, res) => {
   const marketerId = req._passport.session.user.userid;
+  const { marketerName } = req._passport.session.user;
   const {
     bannerId, campaignName, dailyLimit, priorityType, optionType, priorityList, noBudget
   } = req.body;
@@ -272,9 +273,8 @@ router.post('/push', (req, res) => {
 
   const saveQuery = `
   INSERT INTO campaign 
-  (campaignId, campaignName, marketerId, bannerId, dailyLimit, priorityType, optionType, onOff, targetList) 
-  VALUES (?, ?, ?, ?, ?, ?, ?, 1, ?)`;
-
+  (campaignId, campaignName, marketerId, bannerId, dailyLimit, priorityType, optionType, onOff, targetList, marketerName) 
+  VALUES (?, ?, ?, ?, ?, ?, ?, 1, ?, ?)`;
   // 캠페인 등록.
   doQuery(searchQuery, [marketerId])
     .then((row) => {
@@ -284,7 +284,7 @@ router.post('/push', (req, res) => {
       Promise.all([
         doQuery(saveQuery,
           [campaignId, campaignName, marketerId, bannerId, limit,
-            priorityType, optionType, targetJsonData]),
+            priorityType, optionType, targetJsonData, marketerName]),
         PriorityDoquery({ campaignId, priorityType, priorityList }),
         LandingDoQuery({ campaignId, priorityType, priorityList })
       ])

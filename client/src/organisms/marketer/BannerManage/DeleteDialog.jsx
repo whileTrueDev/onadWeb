@@ -11,17 +11,19 @@ import history from '../../../history';
 
 const useStyles = makeStyles(theme => ({
   img: {
-    maxHeight: 320,
+    maxHeight: '200px',
     // maxWidth: 540
-    width: '100%'
+    maxWidth: '100%'
   },
   reasonText: {
     marginLeft: theme.spacing(2),
     color: 'red'
   },
-  typo: {
-    marginBottom: theme.spacing(1),
-  }
+  center: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 }));
 
 const DeleteDialog = (props) => {
@@ -72,21 +74,21 @@ const DeleteDialog = (props) => {
       )}
     >
       <Grid container direction="column" spacing={2}>
-        <Grid item className={classes.img}>
+        <Grid item className={classes.center}>
           <img
             src={selectedBanner.bannerSrc}
             alt={selectedBanner.bannerId}
-            width="100%"
+            className={classes.img}
           />
         </Grid>
+        {selectedBanner.bannerDenialReason && (
         <Grid item>
-          {selectedBanner.bannerDenialReason && (
           <div>
             <StyledItemText primary="거절 사유:" fontSize="18px" />
             <Typography variant="body1" className={classes.reasonText}>{selectedBanner.bannerDenialReason}</Typography>
           </div>
-          )}
         </Grid>
+        )}
         <Grid item>
           <Typography variant="body2" className={classes.typo}>
             <span role="img" aria-label="warning">⚠️</span>

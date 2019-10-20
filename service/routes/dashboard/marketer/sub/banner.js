@@ -125,11 +125,13 @@ router.post('/push', (req, res) => {
         .then(() => {
           res.send([true, '배너가 등록되었습니다']);
         })
-        .catch(() => {
+        .catch((errorData) => {
+          console.log(errorData);
           res.send([false]);
         });
     })
-    .catch(() => {
+    .catch((errorData) => {
+      console.log(errorData);
       res.send([false]);
     });
 });

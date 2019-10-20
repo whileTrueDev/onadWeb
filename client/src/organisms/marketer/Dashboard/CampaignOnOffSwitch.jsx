@@ -30,10 +30,10 @@ export default function StatusBar(props) {
             control={(
               <IOSSwitch
                 checked={onOffData.payload.onOff}
-                onChange={() => handleUpdateRequest({ contraction: !onOffData.payload })}
+                onChange={() => handleUpdateRequest({ contraction: !onOffData.payload.onOff })}
               />
                )}
-            label={onOffData.payload ? '광고 ON' : '광고 OFF'}
+            label={onOffData.payload.onOff ? '광고 ON' : '광고 OFF'}
           />
           )}
         </div>
