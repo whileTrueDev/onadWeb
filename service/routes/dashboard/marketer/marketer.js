@@ -68,11 +68,11 @@ router.post('/onoff', (req, res) => {
       } else {
         doQuery(infoQuery, [contractionState, marketerId])
           .then(() => {
-            res.send(true);
+            res.send([true, { onOff: contractionState }]);
           })
           .catch((errorData) => {
             console.log(errorData);
-            res.send(false);
+            res.send([false]);
           });
       }
     })
@@ -107,7 +107,7 @@ router.get('/creatorlist', (req, res) => {
 });
 
 // bannerMatched의 특정 배너와 계약된 크리에이터 조회
-router.get('/contraction/creatorList', (req, res, next) => {
+router.get('/contraction/creatorList', (req, res) => {
   const { bannerId } = req.query;
 
   const BANNER_ID_INDEX = 1; // contractionId 의 bannerId 부분

@@ -23,7 +23,7 @@ router.get('/income', (req, res) => {
   const { creatorId } = req._passport.session.user;
   const dataQuery = `
   SELECT 
-  creatorTotalIncome, creatorReceivable, creatorAccountNumber, creatorIncome.date
+  creatorTotalIncome, creatorReceivable, creatorAccountNumber, creatorIncome.date, creatorContractionAgreement
   FROM creatorInfo as ci
   JOIN creatorIncome 
   ON ci.creatorId = creatorIncome.creatorId
@@ -83,9 +83,10 @@ router.get('/landingUrl', (req, res) => {
 router.post('/contraction', (req, res) => {
   const { creatorId } = req._passport.session.user;
   const dateCode = new CustomDate().getCode();
-  const insertQuery = `INSERT INTO bannerMatched (contractionId)
-  VALUES (CONCAT("onad6309_01/", ?, "/", ?))
-  `;
+  // 기본배너 설정을 위한 쿼리
+  // const insertQuery = `INSERT INTO bannerMatched (contractionId)
+  // VALUES (CONCAT("onad6309_01/", ?, "/", ?))
+  // `;
 
   const updateQuery = `
   UPDATE creatorInfo
@@ -93,7 +94,7 @@ router.post('/contraction', (req, res) => {
   WHERE creatorInfo.creatorId = ?`;
 
   Promise.all([
-    doQuery(insertQuery, [creatorId, dateCode]),
+    // doQuery(insertQuery, [creatorId, dateCode]),
     doQuery(updateQuery, [1, creatorId])
   ])
     .then(() => {
