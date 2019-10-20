@@ -50,6 +50,7 @@ app.get('/banner/:id', (req, res) => { // /banner/:id로 라우팅
 
 (function () {
   const socketsInfo = {}; // 클라이언트로 보낼 socketinfo 객체
+  let activeState;
   io.on('connection', (socket) => {
     console.log('socket client on'); // 연결이 되면 로그 발생
     let clientId = socket.id; // socketID 획득
@@ -58,12 +59,12 @@ app.get('/banner/:id', (req, res) => { // /banner/:id로 라우팅
     const roomInfo = socket.adapter.rooms; // 현재 웹소켓에 접속중이 room들과 그 접속자들의 정보 얻음
     const rule = new schedule.RecurrenceRule(); // 스케쥴러 객체 생성
     rule.hour = new schedule.Range(0, 23); // cronTask 시간지정
-    rule.minute = [0, 10, 20, 30, 40, 50]; // cronTask 실행되는 분(minute)
-    // rule.second = [10, 20, 30, 40, 50];
+    // rule.minute = [0, 10, 20, 30, 40, 50]; // cronTask 실행되는 분(minute)
+    rule.second = [0, 10, 20, 30, 40, 50];
     console.log(roomInfo);
     const cronTask = schedule.scheduleJob(rule, () => { // 스케쥴러를 통해 1분마다 db에 배너정보 전송
       socket.emit('response banner data to server', {}); // client로 emit
-      socket.emit('check bannerId', {});
+      socket.emit('reRender at client', {});
     });
 
 
@@ -81,11 +82,11 @@ app.get('/banner/:id', (req, res) => { // /banner/:id로 라우팅
       } else if (urlArray.includes(_url)) {
         console.log(`${_url} 중복접속`);
         const destination = `${SOCKET_HOST}/duplicate`;
-        socket.emit('redirect warn', destination);
+        // socket.emit('redirect warn', destination);
       } else {
         socket.emit('host pass', SOCKET_HOST);
         socketsInfo[Object.keys(roomInfo).pop()] = _url; // roomInfo에서 소켓아이디 불러와서 socketsInfo 객체에 {'id' : url} 형태로 저장
-        requestImg(sql, socket, _url);
+        requestImg(sql, socket, [_url, false]);
       }
       console.log(socketsInfo); // 접속중인 url 저장된 부분
     });

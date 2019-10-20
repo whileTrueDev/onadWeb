@@ -4,7 +4,6 @@ $(() => {
   const _url = window.location.href;
   const cutUrl = `/${_url.split('/')[4]}`;
   let socketHost;
-  let activeState = 1;
   function getHiddenProp() {
     const prefixes = ['webkit', 'moz', 'ms', 'o'];
     // test for native support
@@ -54,26 +53,27 @@ $(() => {
 
   socket.on('img receive', (msg) => {
     if ($('#imgMessage').find('#showBanner').length === 1) {
-      $('#showBanner').fadeOut(1000, () => {
-        $('#imgMessage').empty().append(`<img src= ${msg[0]} id='showBanner' name= ${msg[1]} width = '100%' height = '100%'>`);
-      }).fadeIn(1000);
+      console.log($('#showBanner').attr('name').split(',') === msg[1]);
+      if ($('#showBanner').attr('name').split(',') !== msg[1]) {
+        $('#showBanner').fadeOut(1000, () => {
+          $('#imgMessage').empty().append(`<img src= ${msg[0]} id='showBanner' name= ${msg[1]} width = '100%' height = '100%'>`);
+        }).fadeIn(1000);
+      }
     } else {
       $('#imgMessage').empty().append(`<img src= ${msg[0]} id='showBanner' name= ${msg[1]} width = '100%' height = '100%'>`);
     }
   });
 
   socket.on('response banner data to server', () => {
-    const bannerName = $('#showBanner').attr('name');
-    const cutBannerName = bannerName.split(',');
-    if (bannerName) {
+    if ($('#showBanner').attr('name')) {
+      const cutBannerName = $('#showBanner').attr('name').split(',');
       socket.emit('write to db', cutBannerName);
     }
   });
 
-  socket.on('check bannerId', () => {
-    if (activeState === 1) {
-      socket.emit('reRender', _url);
-    }
+  socket.on('reRender at client', () => {
+    const bannerName = $('#showBanner').attr('name');
+    socket.emit('reRender', [_url, bannerName]);
   });
 
   socket.on('img clear', () => {

@@ -2,8 +2,9 @@ const gameDict = require('./models/gameCategorieDic');
 const doQuery = require('./models/doQuery');
 
 module.exports = function (sql, socket, msg, activeState) {
-  const fullUrl = msg;
+  const fullUrl = msg[0];
   const cutUrl = `/${fullUrl.split('/')[4]}`;
+  const prevBannerName = msg[1];
   let myCreatorId;
   let myCampaignId;
   let myGameId;
@@ -87,7 +88,6 @@ module.exports = function (sql, socket, msg, activeState) {
     return new Promise((resolve, reject) => {
       doQuery(getGameIdQuery, [creatorId])
         .then((row) => {
-          console.log(row);
           myGameId = row.result[0].gameId;
           resolve(myGameId);
         })
@@ -149,7 +149,6 @@ module.exports = function (sql, socket, msg, activeState) {
   };
 
   async function getBanner([creatorId, gameId]) {
-    let bannerSrc;
     const [creatorCampaignList, onCampaignList] = await Promise.all(
       [
         getCreatorCampaignList(creatorId),
@@ -157,21 +156,19 @@ module.exports = function (sql, socket, msg, activeState) {
       ]
     );
     const categoryCampaignList = await getGameCampaignList(gameId);
-
     const onCreatorcampaignList = creatorCampaignList.filter(campaignId => onCampaignList.includes(campaignId));
     const onCategorycampaignList = categoryCampaignList.filter(campaignId => onCampaignList.includes(campaignId));
     const campaignList = Array.from(new Set(onCreatorcampaignList.concat(onCategorycampaignList)));
-
     const campaignId = campaignList[getRandomInt(campaignList.length)];
     myCampaignId = campaignId;
     console.log(`이번에 광고될 캠페인은 ${campaignId} 입니다.`);
-    if (myCampaignId !== undefined) {
-      bannerSrc = await getBannerSrc(campaignId);
-      return [bannerSrc, myCampaignId, creatorId];
+    if (prevBannerName && myCampaignId === prevBannerName.split(',')[0]) {
+      return false;
     }
-    socket.emit('img clear', []);
-    return false;
+    const bannerSrc = await getBannerSrc(campaignId);
+    return [bannerSrc, myCampaignId, creatorId];
   }
+
   const getQuery = sql(`SELECT creatorId FROM creatorInfo WHERE advertiseUrl = "${cutUrl}"`);
   getQuery.select(async (err, data) => {
     if (err) {
@@ -180,7 +177,11 @@ module.exports = function (sql, socket, msg, activeState) {
       myCreatorId = data[0].creatorId;
       myGameId = await getGameId(myCreatorId);
       const bannerInfo = await getBanner([myCreatorId, myGameId]);
-      socket.emit('img receive', [bannerInfo[0], [bannerInfo[1], bannerInfo[2]]]);
+      if (bannerInfo) {
+        socket.emit('img receive', [bannerInfo[0], [bannerInfo[1], bannerInfo[2]]]);
+      } else {
+        console.log('같은 캠페인 송출 중이어서 재호출 안합니다.');
+      }
     }
   });
 };
