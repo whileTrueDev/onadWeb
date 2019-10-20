@@ -20,8 +20,10 @@ module.exports = function (sql, socket, msg, activeState) {
     return new Promise((resolve, reject) => {
       doQuery(campaignListQuery, [creatorId])
         .then((row) => {
-          const jsonData = JSON.parse(row.result[0].campaignList);
-          resolve(jsonData.campaignList);
+          if (row.result.length !== 0) {
+            const jsonData = JSON.parse(row.result[0].campaignList);
+            resolve(jsonData.campaignList);
+          }
         })
         .catch((errorData) => {
           errorData.point = 'getCreatorCampaignList()';
@@ -76,7 +78,7 @@ module.exports = function (sql, socket, msg, activeState) {
   };
 
   const getGameId = async (creatorId) => {
-    console.log('크리에이터의 gameid를 받아옵니다');
+    console.log(`크리에이터 ${creatorId}의 gameid를 받아옵니다`);
     const getGameIdQuery = `SELECT gameId 
                             FROM twitchStreamDetail AS tsd 
                             WHERE streamId = (SELECT streamId FROM twitchStream WHERE streamerId = ? ORDER BY startedAt DESC LIMIT 1)
@@ -125,7 +127,12 @@ module.exports = function (sql, socket, msg, activeState) {
     return new Promise((resolve, reject) => {
       doQuery(selectQuery, [campaignId])
         .then((row) => {
-          resolve(row.result[0].bannerSrc);
+          console.log(row);
+          if (row.result.length === 0) {
+            socket.emit('img clear', []);
+          } else {
+            resolve(row.result[0].bannerSrc);
+          }
         })
         .catch((errorData) => {
           errorData.point = 'getBannerSrc()';
@@ -159,7 +166,6 @@ module.exports = function (sql, socket, msg, activeState) {
     const bannerSrc = await getBannerSrc(campaignId);
     return [bannerSrc, myCampaignId, creatorId];
   }
-  // const gameId = 509658;
   const getQuery = sql(`SELECT creatorId FROM creatorInfo WHERE advertiseUrl = "${cutUrl}"`);
   getQuery.select(async (err, data) => {
     if (err) {
