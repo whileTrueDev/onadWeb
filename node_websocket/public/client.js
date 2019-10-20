@@ -28,13 +28,10 @@ $(() => {
     if (!document[visProp]) {
       socket.emit('pageActive handler', [cutUrl, 1]);
       socket.emit('pageActive', _url);
-      activeState = 1;
     } else {
       socket.emit('pageActive handler', [cutUrl, 0]);
       $('#imgMessage').empty();
-      activeState = 0;
     }
-    return activeState;
   }
 
   socket.emit('new client', [_url, history]);
@@ -53,12 +50,9 @@ $(() => {
 
   socket.on('img receive', (msg) => {
     if ($('#imgMessage').find('#showBanner').length === 1) {
-      console.log($('#showBanner').attr('name').split(',') === msg[1]);
-      if ($('#showBanner').attr('name').split(',') !== msg[1]) {
-        $('#showBanner').fadeOut(1000, () => {
-          $('#imgMessage').empty().append(`<img src= ${msg[0]} id='showBanner' name= ${msg[1]} width = '100%' height = '100%'>`);
-        }).fadeIn(1000);
-      }
+      $('#showBanner').fadeOut(1000, () => {
+        $('#imgMessage').empty().append(`<img src= ${msg[0]} id='showBanner' name= ${msg[1]} width = '100%' height = '100%'>`);
+      }).fadeIn(1000);
     } else {
       $('#imgMessage').empty().append(`<img src= ${msg[0]} id='showBanner' name= ${msg[1]} width = '100%' height = '100%'>`);
     }
