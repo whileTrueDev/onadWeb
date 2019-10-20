@@ -74,7 +74,7 @@ app.get('/banner/:id', (req, res) => { // /banner/:id로 라우팅
       console.log(`- 새 접속 ip : ${ip}`);
       console.log(`- 클라이언트 소켓 아이디 : ${clientId}`);
 
-      if (history === 10) { /* 이 부분 !=로 바꾸기 */
+      if (history !== 1) { /* 이 부분 !=로 바꾸기 */
         const destination = `${SOCKET_HOST}/browserWarn`;
         socket.emit('browser warning', destination);
       } else if (urlArray.includes(_url)) {
