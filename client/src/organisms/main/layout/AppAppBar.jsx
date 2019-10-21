@@ -18,7 +18,7 @@ import history from '../../../history';
 
 const styles = theme => ({
   root: {
-    backgroundColor: 'white',
+    backgroundColor: theme.palette.common.white,
   },
   title: {
     fontSize: 24,
@@ -82,7 +82,8 @@ const styles = theme => ({
 
 function AppAppBar(props) {
   const {
-    classes, isLogin, logout, tabValue, handleTabChange, noButtons
+    classes, isLogin, logout, tabValue,
+    handleTabChange, noButtons
   } = props;
 
 
@@ -215,7 +216,14 @@ function AppAppBar(props) {
         <Toolbar className={classes.toolbar}>
           <div className={classes.left} />
           <a href="/" className={classes.icon}>
-            <img src="/pngs/logo/onad_logo_vertical_black.png" id="logo" alt="OnADLogo" width={100} height={70} style={{ padding: 18 }} />
+            <img
+              src="/pngs/logo/onad_logo_vertical_black.png"
+              id="logo"
+              alt="OnADLogo"
+              width={100}
+              height={70}
+              style={{ padding: '10px 18px 10px 18px' }}
+            />
           </a>
 
           {noButtons ? (

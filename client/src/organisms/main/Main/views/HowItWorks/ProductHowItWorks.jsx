@@ -8,6 +8,7 @@ import Typography from '../../components/Typography';
 import LoginForm from '../Login/LoginForm';
 import axios from '../../../../../utils/axios';
 import HOST from '../../../../../utils/config';
+import history from '../../../../../history';
 
 const styles = theme => ({
   root: {
@@ -218,7 +219,7 @@ const styles = theme => ({
 
 const ProductHowItWorks = (props) => {
   const {
-    classes, history, source, tabValue
+    classes, source, tabValue
   } = props;
 
   function useDialog() {
@@ -259,7 +260,7 @@ const ProductHowItWorks = (props) => {
       }).catch((err) => {
         console.log(err);
       });
-  }, [handleOpen, history]);
+  }, [handleOpen]);
 
   return (
     <section className={source.content.location === 'mainpageLogin' ? (classes.root) : (classes.root2)}>

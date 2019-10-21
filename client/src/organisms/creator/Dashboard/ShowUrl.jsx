@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 // material core
 import { Grid } from '@material-ui/core';
-import { Link } from 'react-router-dom';
 // material styles
 import { makeStyles } from '@material-ui/core/styles';
 // material icons
@@ -13,7 +12,7 @@ import StyledInput from '../../../atoms/StyledInput';
 import Button from '../../../atoms/CustomButtons/Button';
 
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles(() => ({
   button: {
     margin: 0,
     // padding: '2px',
@@ -113,7 +112,7 @@ const ShowUrl = (props) => {
 };
 
 ShowUrl.propTypes = {
-
+  urlData: PropTypes.object
 };
 
 ShowUrl.defaultProps = {

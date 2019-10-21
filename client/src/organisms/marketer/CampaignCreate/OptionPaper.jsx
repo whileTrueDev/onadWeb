@@ -60,7 +60,7 @@ const useStyles = makeStyles(theme => ({
 const OptionPaper = (props) => {
   const classes = useStyles();
   const {
-    setStepComplete, handleSubmitCheck, state, dispatch
+    handleSubmitCheck, state, dispatch
   } = props;
 
   const [anchorEl, setAnchorEl] = React.useState(null);

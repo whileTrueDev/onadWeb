@@ -10,6 +10,7 @@ import HowToUseCreator from './components/HowToUseCreator';
 import HowToUseMarketer from './components/HowToUseMarketer';
 import IntroduceTop from './IntroduceTop';
 import ProductHowItWorks from '../Main/views/HowItWorks/ProductHowItWorks';
+import history from '../../../history';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -74,7 +75,7 @@ const useStyles = makeStyles(theme => ({
 function Introduce(props) {
   const classes = useStyles();
   const {
-    userType, textSource, isLogin, logout, history, productsource
+    userType, textSource, isLogin, logout, productsource
   } = props;
 
   // Grow check value, set the grow check value

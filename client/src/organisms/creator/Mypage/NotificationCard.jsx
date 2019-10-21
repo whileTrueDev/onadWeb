@@ -1,5 +1,4 @@
 import React from 'react';
-import makeStyles from '@material-ui/core/styles/makeStyles';
 // @material-ui/core components
 import useFetchData from '../../../utils/lib/hooks/useFetchData';
 // core components

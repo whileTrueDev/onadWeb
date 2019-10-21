@@ -8,7 +8,6 @@ import StepLabel from '@material-ui/core/StepLabel';
 import StepContent from '@material-ui/core/StepContent';
 import { makeStyles } from '@material-ui/core/styles';
 import ButtonBase from '@material-ui/core/ButtonBase';
-import Typography from '@material-ui/core/Typography';
 import ImageDialog from './ImageDialog';
 
 const useStyles = makeStyles(theme => ({

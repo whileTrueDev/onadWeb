@@ -42,7 +42,6 @@ const CategorySelect = (props) => {
   } = props;
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const [descIndex, setDescIndex] = React.useState(0); // popover의 내용 Index
 
   useEffect(() => {
     if (checkedCategories.length >= 3) {
@@ -52,8 +51,7 @@ const CategorySelect = (props) => {
     }
   }, [checkedCategories, setStepComplete]);
 
-  const handlePopoverOpen = index => (event) => {
-    setDescIndex(index);
+  const handlePopoverOpen = () => (event) => {
     setAnchorEl(event.currentTarget);
   };
 
