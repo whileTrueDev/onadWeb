@@ -61,3 +61,5 @@ yarn-debug.log*
 yarn-error.log*
 
 .github
+node_websocket/bin/log/.4656d4b69a1bdd3f78a7960fb7be9313031a78bb-audit.json
+node_websocket/bin/log/.095c09e3523e69374ed428d1a39c4cde0127627b-audit.json
