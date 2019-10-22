@@ -21,43 +21,40 @@ const sources = {
   categories: [
     {
       url: '/pngs/main/mainBenefit1.png',
-      // isText: true,
       title: '누구나 1인 미디어 마케팅',
       fullDescription: '1인 미디어에 광고를 올리고 싶지만 크리에이터에 \n 대해 모르거나, 일일이 계약하기 힘든 광고주.\n광고주를 찾기 힘든 크리에이터 모두에게 \n 광고를 유치하고 집행할 수 있는 기회를 제공합니다.',
-      width: '50%',
+      trigger: {
+        threshold: 100,
+        timeout: 500,
+      }
     },
     {
       url: '/pngs/main/mainBenefit2.png',
-      // isText: false,
       title: '비용, 수익에 대한 실시간 분석',
       fullDescription: '광고 집행으로 발생하는 비용과 수익을 실시간으로\n 볼 수 있으며, 어떻게 그 금액이 발생하였는지에 대한\n광고 시간, 노출량 등을 분석하여 확인할 수 있습니다.',
-      width: '50%',
+      trigger: {
+        threshold: 100,
+        timeout: 1000,
+      }
     },
     {
       url: '/pngs/main/mainBenefit3.png',
-      // isText: false,
       title: '자유로운 금액설정',
       fullDescription: '광고주는 목표 노출량과 광고예산을 정할 수 있고, \n크리에이터는 정산 기간에 광고수익 한도 내에서\n원하는 금액을 정산 받을 수 있습니다.',
-      width: '50%',
+      trigger: {
+        threshold: 400,
+        timeout: 500,
+      }
     },
     {
       url: '/pngs/main/mainBenefit4.png',
-      // isText: false,
       title: '합리적 가격 책정',
       fullDescription: '광고를 송출한 시간과 노출량만큼 금액을 책정하기\n때문에 \'부르는게 값\'이 아닌 합리적인 이익 배분을\n가능하게 합니다.',
-      width: '50%',
+      trigger: {
+        threshold: 400,
+        timeout: 1000,
+      }
     },
-    // {
-    //   url: '/pngs/main/open_beta.jpg',
-    //   isText: true,
-    //   title: '오픈베타가',
-    //   subTitle: '예정되어있습니다',
-    //   description: '2019.10.',
-    //   fullDescription: 'OnAD는 2019년 10월 중 오픈베타 예정입니다.\nOnAD 팀원들은 "성장"의 가치를 추구합니다. 지속적으로 기술 발전을 추구하고, 끊임없이 사고합니다. OnAD와 함께 성장하시겠습니까?',
-    //   width: '100%',
-    //   opacity: 0.3,
-    //   height: 300,
-    // },
   ],
 
   howitworks: {
@@ -103,18 +100,6 @@ const sources = {
       ],
     },
   },
-  marketerWorks: {
-    content: {
-      title: '지금 바로 시작하세요',
-      text: '간단한 약관만 수락해주시면 바로 해보실 수 있습니다.\n배너를 등록하시면 실시간으로 광고를 본 시청자 수에 비례해 금액이 차감됩니다.\n궁금한 사항이 있으시면 고객센터와 플러스친구에 문의주십시오.'
-    },
-  },
-  creatorWorks: {
-    content: {
-      title: '지금 바로 트위치 아이디로 시작하세요',
-      text: '간단한 약관만 수락해주시면 바로 해보실 수 있습니다.\n간단하게 오버레이주소만 복사해서 방송송출프로그램에 붙여넣어 주시면 됩니다'
-    },
-  }
 };
 
 export default sources;

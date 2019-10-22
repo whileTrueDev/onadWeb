@@ -1,4 +1,5 @@
 import React, { useState, useCallback } from 'react';
+import shortid from 'shortid';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
@@ -277,9 +278,9 @@ const ProductHowItWorks = (props) => {
         </div>
 
         <div>
-          {source.content.text.split('\n').map((row, i) => (
+          {source.content.text.split('\n').map(row => (
             <Typography
-              key={row + i}
+              key={shortid.generate()}
               component="h2"
               style={{ marginTop: 12, marginBottom: 12, fontFamily: 'Noto Sans Kr' }}
               className={classes.bottomText}

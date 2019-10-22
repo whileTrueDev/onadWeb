@@ -56,9 +56,7 @@ const HowToUseCreator = (props) => {
   return (
     <Container className={classes.root} component="section">
       <Grid className={classes.creatorUse}>
-        {/* <Grid item xs={12} md={6} className={classes.cardWrapper}> */}
-        {/* <div className={classes.card}> */}
-        {/* <div className={classes.cardContent}> */}
+
         <Typography variant="h4" component="h2" className={classes.head}>
           {source.head}
         </Typography>
@@ -72,8 +70,8 @@ const HowToUseCreator = (props) => {
               {'회원가입'}
             </Typography>
             <div className={classes.Content}>
-              {source.firstContent.split('\n').map((row, i) => (
-                <p key={shortid.generate()}>{`${row}`}</p>
+              {source.firstContent.split('\n').map(row => (
+                <Typography variant="body1" key={shortid.generate()}>{`${row}`}</Typography>
               ))}
             </div>
           </Grid>
@@ -83,8 +81,8 @@ const HowToUseCreator = (props) => {
               {'URL복사'}
             </Typography>
             <div className={classes.Content}>
-              {source.secondContent.split('\n').map((row, i) => (
-                <p key={shortid.generate()}>{`${row}`}</p>
+              {source.secondContent.split('\n').map(row => (
+                <Typography variant="body1" key={shortid.generate()}>{`${row}`}</Typography>
               ))}
             </div>
           </Grid>
@@ -94,8 +92,8 @@ const HowToUseCreator = (props) => {
               {'방송송출적용'}
             </Typography>
             <div className={classes.Content}>
-              {source.thirdContent.split('\n').map((row, i) => (
-                <p key={shortid.generate()}>{`${row}`}</p>
+              {source.thirdContent.split('\n').map(row => (
+                <Typography variant="body1" key={shortid.generate()}>{`${row}`}</Typography>
               ))}
             </div>
           </Grid>
@@ -105,8 +103,8 @@ const HowToUseCreator = (props) => {
               {'금액반환'}
             </Typography>
             <div className={classes.Content}>
-              {source.fourthContent.split('\n').map((row, i) => (
-                <p key={shortid.generate()}>{`${row}`}</p>
+              {source.fourthContent.split('\n').map(row => (
+                <Typography variant="body1" key={shortid.generate()}>{`${row}`}</Typography>
               ))}
             </div>
           </Grid>

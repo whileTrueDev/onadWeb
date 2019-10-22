@@ -88,7 +88,7 @@ const theme = {
     },
     h5: {
       ...rawTheme.typography.h5,
-      fontSize: 20,
+      fontSize: 24,
       ...fontHeader,
     },
     h6: {
@@ -103,7 +103,7 @@ const theme = {
     body1: {
       ...rawTheme.typography.body2,
       fontWeight: rawTheme.typography.fontWeightRegular,
-      fontSize: 16,
+      fontSize: 18,
     },
     body2: {
       ...rawTheme.typography.body1,

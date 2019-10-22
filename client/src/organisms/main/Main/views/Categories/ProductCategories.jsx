@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
@@ -102,79 +102,47 @@ const styles = theme => ({
   },
 });
 
-class ProductCategories extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      checked: false,
-    };
-    this.handleScroll = this.handleScroll.bind(this);
-  }
-
-  componentDidMount() {
-    window.addEventListener('scroll', this.handleScroll);
-  }
-
-  componentDidUpdate() {
-    window.removeEventListener('scroll', this.handleScroll);
-  }
-
-  handleScroll() {
-    if (!this.checked) {
-      this.setState({
-        checked: true,
-      });
-    }
-  }
-
-  render() {
-    const { classes } = this.props;
-    const { checked } = this.state;
-
-    return (
-      <Container
-        maxWidth="lg"
-        className={classes.root}
-        component="section"
-      >
-        <div className={classes.mainMiddle}>
-          <img src="/pngs/main/mainBenefitTitleLeft.png" alt="middleTitleLeft" className={classes.titleLeft} />
-          <Typography component="h2" className={classes.Middletitle}>
-            지금 당장 온애드를 사용해보세요
-          </Typography>
-          <img src="/pngs/main/mainBenefitTitleRight.png" alt="middleTitleRight" className={classes.titleRight} />
-        </div>
-
-        <Typography component="h2" style={{ fontFamily: 'Noto Sans KR' }} className={classes.MiddleContent}>
-          간단한 약관만 수락해주시면 바로 해보실 수 있습니다
+function ProductCategories(props) {
+  const { classes } = props;
+  return (
+    <Container
+      maxWidth="lg"
+      className={classes.root}
+      component="section"
+    >
+      <div className={classes.mainMiddle}>
+        <img src="/pngs/main/mainBenefitTitleLeft.png" alt="middleTitleLeft" className={classes.titleLeft} />
+        <Typography component="h2" className={classes.Middletitle}>
+          지금 당장 온애드를 사용해보세요
         </Typography>
+        <img src="/pngs/main/mainBenefitTitleRight.png" alt="middleTitleRight" className={classes.titleRight} />
+      </div>
+
+      <Typography component="h2" style={{ fontFamily: 'Noto Sans KR' }} className={classes.MiddleContent}>
+        간단한 약관만 수락해주시면 바로 해보실 수 있습니다
+      </Typography>
 
 
-        <ProductCategoriesDetail
-          checked={checked}
-          images={sources.categories}
-        />
+      <ProductCategoriesDetail images={sources.categories} />
 
-        <Button
-          component={Link}
-          to="/introduction"
-          style={{ float: 'right' }}
+      <Button
+        component={Link}
+        to="/introduction"
+        style={{ float: 'right' }}
+      >
+        <Typography
+          variant="h5"
+          component="h2"
+          style={{ color: '#00DBE0', fontWeight: 'bold', fontFamily: 'Noto Sans KR', }}
         >
-          <Typography
-            variant="h5"
-            component="h2"
-            style={{ color: '#00DBE0', fontWeight: 'bold', fontFamily: 'Noto Sans KR', }}
-          >
-              + 자세히 알아보기
-          </Typography>
-        </Button>
-        <div style={{ clear: 'both' }} />
+            + 자세히 알아보기
+        </Typography>
+      </Button>
+      <div style={{ clear: 'both' }} />
 
-      </Container>
-    );
-  }
+    </Container>
+  );
 }
-
 
 ProductCategories.propTypes = {
   classes: PropTypes.object,

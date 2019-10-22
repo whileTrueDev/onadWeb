@@ -79,17 +79,13 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const HowToUsemarketer = (props) => {
-  const {
-    source
-  } = props;
+  const { source } = props;
   const classes = useStyles();
 
   return (
     <Container className={classes.root} component="section">
       <Grid className={classes.marketerUse}>
-        {/* <Grid item xs={12} md={6} className={classes.cardWrapper}> */}
-        {/* <div className={classes.card}> */}
-        {/* <div className={classes.cardContent}> */}
+
         <Typography variant="h4" component="h2" className={classes.head}>
           {source.head}
         </Typography>
@@ -103,8 +99,8 @@ const HowToUsemarketer = (props) => {
               {'회원가입'}
             </Typography>
             <div className={classes.Content}>
-              {source.firstContent.split('\n').map((row, i) => (
-                <p key={shortid.generate()}>{`${row}`}</p>
+              {source.firstContent.split('\n').map(row => (
+                <Typography variant="body1" key={shortid.generate()}>{`${row}`}</Typography>
               ))}
             </div>
           </Grid>
@@ -114,8 +110,8 @@ const HowToUsemarketer = (props) => {
               {'배너등록'}
             </Typography>
             <div className={classes.Content}>
-              {source.secondContent.split('\n').map((row, i) => (
-                <p key={shortid.generate()}>{`${row}`}</p>
+              {source.secondContent.split('\n').map(row => (
+                <Typography variant="body1" key={shortid.generate()}>{`${row}`}</Typography>
               ))}
             </div>
           </Grid>
@@ -125,8 +121,8 @@ const HowToUsemarketer = (props) => {
               {'배너송출'}
             </Typography>
             <div className={classes.Content}>
-              {source.thirdContent.split('\n').map((row, i) => (
-                <p key={shortid.generate()}>{`${row}`}</p>
+              {source.thirdContent.split('\n').map(row => (
+                <Typography variant="body1" key={shortid.generate()}>{`${row}`}</Typography>
               ))}
             </div>
           </Grid>

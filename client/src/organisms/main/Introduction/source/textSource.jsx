@@ -2,8 +2,15 @@
 
 const textSource = {
   heroSector: {
-    text: {
-      title: '시청자 맞춤형 광고 서비스\n생방송으로 즐기는 배너광고\n원하는 대로 맞춤형 광고 서비스',
+    marketer: {
+      text: {
+        title: '시청자 맞춤형 광고 서비스\n생방송으로 즐기는 배너광고\n원하는 대로 맞춤형 광고 서비스.',
+      },
+    },
+    creator: {
+      text: {
+        title: '별다른 설정없이\n자동으로 송출되는 광고\n지속적인 추가수입을 창출하세요.'
+      }
     },
     backImage: '/pngs/main/mainImage.jpg',
   },
@@ -11,18 +18,34 @@ const textSource = {
     {
       url: '/pngs/introduction/service_main_1.png',
       width: '50%',
+      trigger: {
+        threshold: 500,
+        timeout: 500
+      }
     },
     {
       url: '/pngs/introduction/service_main_2.png',
       width: '50%',
+      trigger: {
+        threshold: 500,
+        timeout: 1000
+      }
     },
     {
       url: '/pngs/introduction/service_main_3.png',
       width: '50%',
+      trigger: {
+        threshold: 800,
+        timeout: 500
+      }
     },
     {
       url: '/pngs/introduction/service_main_4.png',
       width: '50%',
+      trigger: {
+        threshold: 800,
+        timeout: 1000
+      }
     },
   ],
   creator: {
@@ -48,7 +71,7 @@ const textSource = {
     },
     secondSector: {
       head: '이용안내',
-      subTitle: '정말 쉬운 사용방법이 있습니다. 간단한 가입 후에 배너를 올리고 금액을 지불하시면\n실시간으로 광고를 본 사람 수에 비례해서 금액이 차감됩니다.',
+      subTitle: '간단한 가입 후 캠페인을 생성하세요. 광고는 자동으로 관련있는 방송에 송출됩니다. 광고비용은 시청자 수 데이터에 기반합니다.',
       firstContent: '회원가입과 몇 가지 약관을\n 동의해주세요',
       secondContent: '실시간 방송에 올라갈 배너를 등록해주세요',
       thirdContent: '지불한 서비스에 따라 실시간 방송에\n 배너가 송출됩니다.'

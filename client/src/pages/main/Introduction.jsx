@@ -1,10 +1,8 @@
 import React from 'react';
 import AppFooter from '../../organisms/main/layout/AppFooter';
 import withRoot from '../../organisms/main/Main/withRoot';
-import Introduce from '../../organisms/main/Introduction/Introduce';
-import textSource from '../../organisms/main/Introduction/source/textSource';
-import sources from '../../organisms/main/Main/source/sources';
 import useLoginValue from '../../utils/lib/hooks/useLoginValue';
+import Introduce from '../../organisms/main/Introduction/Introduce';
 
 const MARKETER_TAB_NUMBER = 0;
 const CREATOR_TAB_NUMBER = 1;
@@ -24,9 +22,6 @@ export default withRoot((props) => {
       <Introduce
         isLogin={isLogin}
         logout={logout}
-        textSource={textSource}
-        source={textSource.topSector}
-        productsource={sources}
         userType={userType === 'marketer' ? MARKETER_TAB_NUMBER : CREATOR_TAB_NUMBER}
       />
       <AppFooter />

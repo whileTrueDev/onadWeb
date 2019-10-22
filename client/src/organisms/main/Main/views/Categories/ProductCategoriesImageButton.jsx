@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import ButtonBase from '@material-ui/core/ButtonBase';
+import Grow from '@material-ui/core/Grow';
+import useScrollTrigger from '@material-ui/core/useScrollTrigger';
 import Typography from '../../components/Typography';
 
 const styles = theme => ({
@@ -10,6 +12,7 @@ const styles = theme => ({
     marginBottom: theme.spacing(3),
     padding: 0,
     borderRadius: 0,
+    width: '50%',
     height: 230,
     [theme.breakpoints.down('md')]: {
       height: '210px',
@@ -95,36 +98,58 @@ const ProductCategoriesDetail = (props) => {
     classes, image
   } = props;
 
+  // Value for image comming slide animation
+  const triggerThreshold = image.trigger.threshold; // trigger for scrollTop
+  const slideTime = image.trigger.timeout; // slide animation tile
+  const [trigger, setTrigger] = React.useState(
+    useScrollTrigger(
+      { threshold: triggerThreshold, disableHysteresis: true },
+    ),
+  );
+
+  React.useEffect(() => {
+    function scrollTrigger() {
+      if (window.scrollY > triggerThreshold) {
+        setTrigger(true);
+      }
+    }
+    scrollTrigger();
+  });
+
+
   return (
     <React.Fragment>
-      <ButtonBase
-        disabled
-        key={image.title}
-        className={classes.imageWrapper}
-        style={{
-          width: image.width,
-          height: image.height,
-        }}
+      <Grow
+        in={trigger}
+        direction="right"
+        timeout={{ enter: slideTime }}
       >
-        <div className={classes.imageButton}>
-          <img src={image.url} className={classes.imageSrc} alt={image.title} />
-          <Typography
-            color="inherit"
-            className={classes.imageTitle}
-          >
-            {image.title}
-            <br />
-            <br />
 
-            <div className={classes.imageSubTitle}>
-              {image.fullDescription.split('\n').map(row => (
-                <p key={row} style={{ marginTop: 1, marginBottom: 1 }}>{`${row}`}</p>
-              ))}
-            </div>
-          </Typography>
-        </div>
+        <ButtonBase
+          disabled
+          key={image.title}
+          className={classes.imageWrapper}
+        >
+          <div className={classes.imageButton}>
+            <img src={image.url} className={classes.imageSrc} alt={image.title} />
+            <Typography
+              color="inherit"
+              className={classes.imageTitle}
+            >
+              {image.title}
+              <br />
+              <br />
 
-      </ButtonBase>
+              <div className={classes.imageSubTitle}>
+                {image.fullDescription.split('\n').map(row => (
+                  <p key={row} style={{ marginTop: 1, marginBottom: 1 }}>{`${row}`}</p>
+                ))}
+              </div>
+            </Typography>
+          </div>
+
+        </ButtonBase>
+      </Grow>
     </React.Fragment>
   );
 };

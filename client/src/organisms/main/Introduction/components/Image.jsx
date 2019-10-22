@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import ButtonBase from '@material-ui/core/ButtonBase';
+import { useScrollTrigger } from '@material-ui/core';
+import Grow from '@material-ui/core/Grow';
 import { withStyles } from '@material-ui/core/styles';
 
 const styles = theme => ({
@@ -29,22 +31,39 @@ const styles = theme => ({
 
 const ProductCategoriesDetail = (props) => {
   const { classes, image } = props;
+
+  const [trigger, setTrigger] = React.useState(
+    useScrollTrigger(
+      { threshold: image.trigger.threshold, disableHysteresis: true },
+    ),
+  );
+  React.useEffect(() => {
+    function scrollTrigger() {
+      if (window.scrollY > image.trigger.threshold) {
+        setTrigger(true);
+      }
+    }
+    scrollTrigger();
+  });
+
   return (
-    <ButtonBase
-      className={classes.imageWrapper}
-      style={{
-        width: image.width,
-        height: image.height,
-      }}
-      disabled
-    >
-      <div
-        className={classes.imageSrc}
-        style={{
-          backgroundImage: `url(${image.url})`,
-        }}
-      />
-    </ButtonBase>
+    <React.Fragment>
+      <Grow
+        in={trigger}
+        timeout={{ enter: image.trigger.timeout }}
+      >
+        <ButtonBase
+          className={classes.imageWrapper}
+          style={{ width: image.width }}
+          disabled
+        >
+          <div
+            className={classes.imageSrc}
+            style={{ backgroundImage: `url(${image.url})` }}
+          />
+        </ButtonBase>
+      </Grow>
+    </React.Fragment>
   );
 };
 

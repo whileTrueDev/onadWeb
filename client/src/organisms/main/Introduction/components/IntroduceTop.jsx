@@ -1,9 +1,9 @@
 import React from 'react';
 import shortid from 'shortid';
 import { makeStyles } from '@material-ui/core/styles';
-import { useScrollTrigger, Slide, Container } from '@material-ui/core';
-import Image from './components/Image';
-import Typography from '../Main/components/Typography';
+import { Container } from '@material-ui/core';
+import Image from './Image';
+import Typography from '../../Main/components/Typography';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -51,45 +51,37 @@ const useStyles = makeStyles(theme => ({
 export default function IntroduceTop(props) {
   const { source } = props;
   const classes = useStyles();
-  const [trigger, setTrigger] = React.useState(
-    useScrollTrigger(
-      { threshold: 900, disableHysteresis: true },
-    ),
-  );
-  React.useEffect(() => {
-    function scrollTrigger() {
-      if (window.scrollY > 300) {
-        setTrigger(true);
-      }
-    }
-    scrollTrigger();
-  });
 
   return (
     <section className={classes.root}>
       <Container maxWidth="lg" className={classes.container} component="section">
         <div className={classes.bottomMiddle}>
-          <Typography component="h2" className={classes.bottomtitle} style={{ fontFamily: 'Noto Sans kr', marginBottom: 32 }}>ONAD와 함께 하세요</Typography>
-          <Typography component="h2" className={classes.bottomContent} style={{ fontFamily: 'Noto Sans kr' }}>
+          <Typography
+            component="h2"
+            className={classes.bottomtitle}
+            style={{ fontFamily: 'Noto Sans kr', marginBottom: 32 }}
+          >
+            ONAD와 함께 하세요
+          </Typography>
+
+          <Typography
+            component="h2"
+            className={classes.bottomContent}
+            style={{ fontFamily: 'Noto Sans kr' }}
+          >
            지금 시작하면 누릴 수 있는혜택입니다.
           </Typography>
         </div>
-        <Slide
-          in={trigger}
-          direction="right"
-          timeout={{ enter: 700 }}
-        >
-          <div className={classes.sources}>
 
-            {source.map(image => (
-              <Image
-                key={shortid.generate()}
-                image={image}
-              />
-            ))}
-          </div>
+        <div className={classes.sources}>
 
-        </Slide>
+          {source.map(image => (
+            <Image
+              key={shortid.generate()}
+              image={image}
+            />
+          ))}
+        </div>
       </Container>
     </section>
   );

@@ -6,30 +6,33 @@ import AppBar from '@material-ui/core/AppBar';
 import { makeStyles } from '@material-ui/core/styles';
 import Tabs from '@material-ui/core/Tabs';
 
+const ORANGE_BACKGROUND = 'linear-gradient(45deg, #FFAA00 30%, #FF8E53 90%)';
+const EMERALD_BACKGROUND = 'linear-gradient(45deg, #00DBE0 30%, #21CBF3 90%)';
+
 const useStyles = makeStyles(theme => ({
   tabs: {
     flexGrow: 1,
     marginBottom: theme.spacing(5),
-    boxShadow: '0 1px 1px gainsboro',
+    boxShadow: 'none',
     zIndex: '3',
   },
   tab: {
     height: 50,
-    background: 'linear-gradient(45deg, #FFAA00 30%, #FF8E53 90%)',
+    background: ORANGE_BACKGROUND,
     color: 'white',
     fontFamily: 'Noto Sans Kr',
     fontSize: 16,
     fontWeight: '600',
-    boxShadow: '0 2px 1px gainsboro',
+    // boxShadow: '0 2px 1px gainsboro',
   },
   tab2: {
     height: 50,
-    background: 'linear-gradient(45deg, #00DBE0 30%, #21CBF3 90%)',
+    background: EMERALD_BACKGROUND,
     color: 'white',
     fontFamily: 'Noto Sans Kr',
     fontSize: 16,
     fontWeight: '600',
-    boxShadow: '0 2px 1px gainsboro',
+    // boxShadow: '0 2px 1px gainsboro',
   },
   tab3: {
     height: 50,
@@ -38,16 +41,15 @@ const useStyles = makeStyles(theme => ({
     fontFamily: 'Noto Sans Kr',
     fontSize: 16,
     fontWeight: '600',
-    boxShadow: '0 2px 1px gainsboro',
   },
   indicator_marketer: {
     indicator: {
-      backgroundColor: '#00DBE0'
+      backgroundColor: EMERALD_BACKGROUND
     }
   },
   indicator_creator: {
     indicator: {
-      backgroundColor: '#FFAA00'
+      backgroundColor: ORANGE_BACKGROUND
     }
   }
 }));
