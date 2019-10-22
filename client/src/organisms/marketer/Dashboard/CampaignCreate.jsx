@@ -180,6 +180,7 @@ const CampaignCreateStepper = (props) => {
 
     if (submitCheck) {
       // categorie에서 creator로 변경되어야함.
+      console.log(priorityList);
       axios.post(`${HOST}/api/dashboard/marketer/campaign/push`, {
         ...step1State,
         dailyLimit: step4State.budget,
@@ -226,9 +227,9 @@ const CampaignCreateStepper = (props) => {
       .then((res) => {
       // 올바른 데이터가 전달되었다.
         if (res.data[0]) {
-          setCreatorList(res.data[1]);
-          // TODO : 위의 것으로 변경
-          // setCreatorList(['123', '1234']);
+          // {creatorId, creatorName, creatorLogo}의 형태이므로 creatorId만 남도록 재 array화.
+          const creators = res.data[1].map(data => data.creatorId);
+          setCreatorList(creators);
         } else {
           alert(res.data[1]);
         }

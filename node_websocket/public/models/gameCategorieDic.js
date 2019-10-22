@@ -3,7 +3,8 @@
 
 const gameDict = {
   509658: [6],
-  21779: [1, 6]
+  21779: [1, 6],
+  0: [6]
 };
 
 module.exports = gameDict;

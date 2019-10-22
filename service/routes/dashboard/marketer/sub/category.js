@@ -7,7 +7,8 @@ router.get('/', (req, res) => {
   const infoQuery = `
   SELECT 
   categoryName, campaignList
-  FROM categoryCampaign`;
+  FROM categoryCampaign
+  WHERE state = 1`;
 
   doQuery(infoQuery)
     .then((row) => {

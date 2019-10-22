@@ -67,7 +67,7 @@ const BannerCard = () => {
     <CustomCard iconComponent={<BrandingWatermark />} buttonComponent={<BannerManageButton />}>
       <Grid container direction="column" spacing={2}>
         <Grid item>
-          <StyledItemText primary="현재 송출중인 배너" secondary="배너관리로 이동하면 상세정보를 확인할 수 있습니다." />
+          <StyledItemText primary="현재 송출중인 배너" secondary="배너 관리로 이동하면 상세정보를 확인할 수 있습니다." />
         </Grid>
         <Grid container direction="row" spacing={1} justify="center">
           {currentBannerData.loading && (<CircularProgress small />)}
@@ -106,7 +106,7 @@ const BannerCard = () => {
         <Grid item />
       </Grid>
 
-      {!currentBannerData.loading && currentBannerData.error && (
+      {/* {!currentBannerData.loading && (
       <BannerDescPopover
         currentBannerData={currentBannerData}
         open={open}
@@ -114,7 +114,7 @@ const BannerCard = () => {
         handlePopoverClose={handlePopoverClose}
         descIndex={descIndex}
       />
-      )}
+      )} */}
 
     </CustomCard>
   );

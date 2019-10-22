@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import classnames from 'classnames';
 import { makeStyles } from '@material-ui/core/styles';
 import {
@@ -11,6 +11,7 @@ import Button from '../../../atoms/CustomButtons/Button';
 import CircularProgress from '../../../atoms/Progress/CircularProgress';
 import useFetchData from '../../../utils/lib/hooks/useFetchData';
 import WithdrawalDialog from './WithdrawDialog';
+import history from '../../../history';
 
 const useStyles = makeStyles(() => ({
   stats: {
@@ -56,13 +57,16 @@ const IncomeCard = () => {
   const [open, setOpen] = useState(false);
 
   const handleOpen = () => {
+    if (!cashData.payload.creatorAccountNumber) {
+      alert('등록된 계좌가 존재하지 않으므로 내 계정으로 이동합니다.');
+      history.push('/dashboard/creator/user');
+    }
     setOpen(true);
   };
 
   const handleClose = () => {
     setOpen(false);
   };
-
 
   return (
     <CustomCard iconComponent={<AttachMoney />} buttonComponent={<WithdrawalButton handleOpen={handleOpen} />}>
