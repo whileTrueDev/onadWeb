@@ -246,10 +246,11 @@ const campaignCalculate = ({ creatorId, campaignId, exp }) => {
 };
 
 async function calculation() {
-  // const date = new Date();
+  console.log('-----------------------------------------------------------');
+  console.log(`계산을 실시합니다. 시작 시각 : ${new Date().toLocaleString()}`);
+  const date = new Date();
   // date.setHours(date.getHours() + 9);
-  // date.setMinutes(date.getMinutes() - 10);
-  const date = '2019-10-05 19:50:00';
+  date.setMinutes(date.getMinutes() - 10);
 
   const [creatorList, marketerList, campaignList] = await Promise.all(
     [
