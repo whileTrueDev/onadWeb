@@ -10,7 +10,7 @@ import CreatorDashboardDoor from './pages/layouts/CreatorDashboardDoor';
 import MarketerDashboard from './pages/layouts/MarketerDashboardLayout';
 import NotFound from './pages/others/NotFound';
 import Notice from './pages/others/Notice';
-import ShutDownCloseBeta from './pages/others/ShutDownCloseBeta';
+// import ShutDownCloseBeta from './pages/others/ShutDownCloseBeta';
 // import KakaoPay from './pages/Common/KakaoPay';
 import * as serviceWorker from './utils/serviceWorker';
 import history from './history';
@@ -37,9 +37,18 @@ const developRouter = (
 const productionRouter = (
   <Router history={history}>
     <Switch>
-      {/* closebeta shutdown notification */}
-      <Route path="/willbeback" component={ShutDownCloseBeta} />
-      <Route component={ShutDownCloseBeta} />
+      <Route exact path="/" component={Main} />
+      <Route exact path="/regist" component={RegistPage} />
+      <Route exact path="/introduction" component={Introduction} />
+      <Route exact path="/notice" component={Notice} />
+      <Route path="/notice/:code" component={Notice} />
+      <Route exact path="/dashboard/creator/door" component={CreatorDashboardDoor} />
+      <Route path="/dashboard/creator" component={CreatorDashboard} />
+      <Route path="/dashboard/marketer" component={MarketerDashboard} />
+      {/* 페이 연습 페이지 */}
+      {/* <Route exact path="/pay" component={KakaoPay} /> */}
+      {/* not found page */}
+      <Route component={NotFound} />
     </Switch>
   </Router>
 );
