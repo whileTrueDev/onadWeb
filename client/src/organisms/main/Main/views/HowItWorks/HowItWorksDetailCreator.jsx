@@ -22,10 +22,11 @@ const useStyles = makeStyles(theme => ({
   },
   title: {
     marginBottom: theme.spacing(14),
+    fontFamily: 'Noto Sans KR',
   },
   number: {
     fontSize: 24,
-    fontFamily: theme.typography.fontFamily,
+    fontFamily: 'Noto Sans KR',
     color: theme.palette.primary.main,
     fontWeight: theme.typography.fontWeightMedium,
   },

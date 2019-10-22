@@ -32,8 +32,7 @@ const useMenu = () => {
   return { anchorEl, handleMenuOpen, handleMenuClose };
 };
 
-function HeaderLinks(props) {
-  const { classes } = props;
+function HeaderLinks() {
   const userType = window.location.pathname.split('/')[2];
   const NotificationData = useFetchData(`/api/dashboard/${userType}/notification`);
 

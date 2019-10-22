@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import shortid from 'shortid';
 import { Grid, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
@@ -30,8 +30,7 @@ const BannerManageButton = () => (
       history.push('/dashboard/creator/banner');
     }}
   >
-  캠페인 관리
-
+  배너내역
   </Button>
 );
 
@@ -88,7 +87,7 @@ const BannerCard = () => {
                   alt="bannerArea"
                   width="100%"
                   height="100%"
-                  style={{ maxHeight: '300px' }}
+                  style={{ maxHeight: '160px', maxWidth: '320px' }}
                 />
               </Grid>
             ))

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Hidden } from '@material-ui/core';
 import GridContainer from '../../atoms/Grid/GridContainer';
 import GridItem from '../../atoms/Grid/GridItem';
@@ -7,8 +7,6 @@ import ProfileCard from '../../organisms/creator/Mypage/ProfileCard';
 import useFetchData from '../../utils/lib/hooks/useFetchData';
 import AccountCard from '../../organisms/creator/Mypage/AccountCard';
 import NotificationCard from '../../organisms/creator/Mypage/NotificationCard';
-import axios from '../../utils/axios';
-import HOST from '../../utils/config';
 
 const Mypage = () => {
   const profileData = useFetchData('/api/dashboard/creator/profile');

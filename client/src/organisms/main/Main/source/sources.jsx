@@ -7,58 +7,62 @@ import BarChart from '@material-ui/icons/BarChart';
 
 const sources = {
   hero: {
-    backImage: '/pngs/main/main_image.jpg',
+    // backImage: '/pngs/main/main_image.jpg',
     text: {
-      title: '배너광고의 새로운 기준',
-      subTitle: 'ONAD',
-      body: '온애드는 크리에이터와 광고주를 연결해주는 실시간 광고 송출 플랫폼입니다.',
-      // tail: '베너광고에 필요한 모든 과정을 온애드에서 손쉽게 진행하실 수 있습니다.',
+      title: '실시간 스트리밍 방송에',
+      // body: '온애드는 크리에이터와 광고주를 연결해주는 실시간 광고 송출 플랫폼입니다.',
+      subTitle: '배너광고 넣으실래요?',
+      marketer: '마케터 고객님',
+      marketerTail: '광고를 한 시간만큼\n광고 하고 싶은 금액만큼만\n원하는대로, 하고 싶은대로',
+      creator: '크리에이터 고객님',
+      creatorTail: '원하는 시간만큼, 껏다 켰다\n자유로운 광고, 시청자수와\n방송시간에 비례한 수익'
     },
   },
   categories: [
     {
-      url: '/pngs/main/category_1.jpg',
-      isText: false,
-      title: '1인 방송 마케팅',
-      fullDescription: '1인 미디어에 광고를 올리고 싶지만 크리에이터에 대해 모르거나, 일일이 계약하기 힘든 광고주.\n광고주를 찾기 힘든 크리에이터 모두에게 광고를 유치하고 집행할 수 있는 기회를 제공합니다.',
-      width: '50%',
+      url: '/pngs/main/mainBenefit1.png',
+      title: '누구나 1인 미디어 마케팅',
+      fullDescription: '1인 미디어에 광고를 올리고 싶지만 크리에이터에 \n 대해 모르거나, 일일이 계약하기 힘든 광고주.\n광고주를 찾기 힘든 크리에이터 모두에게 \n 광고를 유치하고 집행할 수 있는 기회를 제공합니다.',
+      trigger: {
+        threshold: 100,
+        timeout: 500,
+      }
     },
     {
-      url: '/pngs/main/category_2.jpg',
-      isText: false,
-      title: '합리적 금액 책정',
-      fullDescription: 'OnAD는 시청자 수 및 조회수에 기반힌 광고 집행량에 따라 금액을 산정합니다.\n합리적인 방식의 과금체계를 통해 광고 집행으로 발생하는 비용과 수익을 투명하게 확인할 수 있습니다.',
-      width: '50%',
+      url: '/pngs/main/mainBenefit2.png',
+      title: '비용, 수익에 대한 실시간 분석',
+      fullDescription: '광고 집행으로 발생하는 비용과 수익을 실시간으로\n 볼 수 있으며, 어떻게 그 금액이 발생하였는지에 대한\n광고 시간, 노출량 등을 분석하여 확인할 수 있습니다.',
+      trigger: {
+        threshold: 100,
+        timeout: 1000,
+      }
     },
     {
-      url:
-      '/pngs/main/category_3.jpg',
-      isText: false,
-      title: '관련성 기반 매칭 시스템',
-      fullDescription: '배너의 카테고리 및 특징과 크리에이터의 방송 컨텐츠의 연관성을 분석하여 실시간으로 가장 관련있는 방송에 광고가 들어갈 수 있습니다.\n분석은 영상 이미지, 크리에이터의 음성, 시청자 반응등을 토대로 진행됩니다. 예를 들면, 치킨먹방 방송 시, 맥주 배너가 나타나는 것처럼 말이죠.',
-      width: '50%',
+      url: '/pngs/main/mainBenefit3.png',
+      title: '자유로운 금액설정',
+      fullDescription: '광고주는 목표 노출량과 광고예산을 정할 수 있고, \n크리에이터는 정산 기간에 광고수익 한도 내에서\n원하는 금액을 정산 받을 수 있습니다.',
+      trigger: {
+        threshold: 400,
+        timeout: 500,
+      }
     },
     {
-      url: '/pngs/main/category_4.jpg',
-      isText: false,
-      title: '실시간 비용 분석',
-      fullDescription: '광고 집행으로 발생하는 비용과 수익을 실시간으로 볼 수 있으며 광고 시간, 노출량 등을 분석을 통해 확인할 수 있습니다.',
-      width: '50%',
-    },
-    {
-      url: '/pngs/main/open_beta.jpg',
-      isText: true,
-      title: '오픈베타가',
-      subTitle: '예정되어있습니다',
-      description: '2019.10.',
-      fullDescription: 'OnAD는 2019년 10월 중 오픈베타 예정입니다.\nOnAD 팀원들은 "성장"의 가치를 추구합니다. 지속적으로 기술 발전을 추구하고, 끊임없이 사고합니다. OnAD와 함께 성장하시겠습니까?',
-      width: '100%',
-      opacity: 0.3,
-      // height: 300,
+      url: '/pngs/main/mainBenefit4.png',
+      title: '합리적 가격 책정',
+      fullDescription: '광고를 송출한 시간과 노출량만큼 금액을 책정하기\n때문에 \'부르는게 값\'이 아닌 합리적인 이익 배분을\n가능하게 합니다.',
+      trigger: {
+        threshold: 400,
+        timeout: 1000,
+      }
     },
   ],
 
   howitworks: {
+    content: {
+      title: '지금 당장 시작하기',
+      text: '도움이 필요하신 경우 바로 카카오 플러스 친구추가 및\n전화로 연결해주십시오. 소중한 고객 놓지 않겠습니다.\n고객센터와 전화로 연결해주세요',
+      location: 'mainpageLogin'
+    },
     creator: {
       title: '간단한 설정 한번으로 광고를 유치하세요',
       buttonText: '크리에이터로 시작하기',

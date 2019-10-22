@@ -20,7 +20,7 @@ const useLoginValue = () => {
       });
   };
 
-  React.useEffect(() => {
+  React.useLayoutEffect(() => {
     axios.get(`${HOST}/api/login/check`)
       .then((res) => {
         if (!res.data.error) {

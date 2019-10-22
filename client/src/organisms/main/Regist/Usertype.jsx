@@ -88,7 +88,7 @@ const images = [
   },
   {
     url: '/pngs/regist/group.jpg',
-    title: '법인',
+    title: '사업자',
     width: '50%',
   },
 ];

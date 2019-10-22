@@ -69,6 +69,7 @@ class ProductCTA extends React.Component {
         inquiryText,
       },
     }).then((res) => {
+      console.log(res);
       this.setState({
         open: true,
       });

@@ -100,7 +100,10 @@ const getNowDate = () => {
 const bankReducer = (state, action) => {
   switch (action.type) {
     case 'set': {
-      return { name: action.name, code: banks.find(_bank => _bank.bankName === action.name).bankCode };
+      return {
+        name: action.name,
+        code: banks.find(_bank => _bank.bankName === action.name).bankCode
+      };
     }
     default: {
       return { name: '농협', code: '011' };
@@ -117,7 +120,7 @@ const AccountNumberForm = (props) => {
   const [birth, setBirth] = useState(null);
   const [accountNum, setAccountNum] = useState(null);
   const [accountConfirm, setAccountConfirm] = useState(false);
-
+  console.log(accountConfirm);
 
   const handleChangeBank = (event) => {
     const newbank = event.target.value;

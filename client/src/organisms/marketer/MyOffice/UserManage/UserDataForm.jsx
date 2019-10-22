@@ -161,6 +161,8 @@ const UserDataForm = (props) => {
     setPhone(userData.marketerPhoneNum);
   }, [userData.marketerMail, userData.marketerPhoneNum]);
 
+  console.log(userData);
+
   return (
     <Card>
       <CardHeader color="blueGray">
@@ -259,7 +261,7 @@ const UserDataForm = (props) => {
               <GridItem xs={12} sm={12} md={2}>
                 <TextField
                   label="TYPE"
-                  value={!userData.marketerUserType ? '개인' : '법인'}
+                  value={!userData.marketerUserType ? '개인' : '사업자'}
                   className={classes.textField}
                   margin="normal"
                   InputProps={{
@@ -274,7 +276,7 @@ const UserDataForm = (props) => {
                 {userData.marketerUserType
                   ? (
                     <TextField
-                      label="REGIDENT NUMBER"
+                      label="COMPANY REGISTRATION NUMBER"
                       className={classes.textField}
                       margin="normal"
                       InputProps={{
@@ -283,6 +285,7 @@ const UserDataForm = (props) => {
                       InputLabelProps={{
                         shrink: true,
                       }}
+                      value={userData.marketerBusinessRegNum}
                     />
                   )
                   : <div />
@@ -424,7 +427,7 @@ const UserDataForm = (props) => {
                 <GridItem xs={12} sm={12} md={2}>
                   <TextField
                     label="TYPE"
-                    value={!userData.marketerUserType ? '개인' : '법인'}
+                    value={!userData.marketerUserType ? '개인' : '사업자'}
                     className={classes.textField}
                     margin="normal"
                     InputProps={{
@@ -439,9 +442,10 @@ const UserDataForm = (props) => {
                   {userData.marketerUserType
                     ? (
                       <TextField
-                        label="REGIDENT NUMBER"
+                        label="COMPANY REGISTRATION NUMBER"
           // value={userData.creatorIp}
                         className={classes.textField}
+                        value={userData.marketerBusinessRegNum}
                         margin="normal"
                         InputProps={{
                           readOnly: true,

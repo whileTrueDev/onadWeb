@@ -17,26 +17,30 @@ import FindDialog from './FindDialog';
 import HOST from '../../../../../utils/config';
 import history from '../../../../../history';
 
+
 const styles = () => ({
   title: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
+    fontSize: '20px',
+    fontFamily: 'Noto Sans KR',
+    fontWeight: '600'
   },
   button: {
     fontWeight: 800,
     width: '100%',
+    fontFamily: 'Noto Sans KR',
   },
   imageSrc: {
-    position: 'flex',
+    display: 'flex',
     backgroundSize: 'cover',
     backgroundPosition: 'inherit',
-    width: '100%',
+    width: '150px',
     height: '120px',
-    margin: '10px',
-    maxWidth: '120px',
+    maxWidth: '160px',
     maxHeight: '130px',
-    padding: '0',
+    margin: '0 auto',
   },
 });
 
@@ -107,7 +111,7 @@ const LoginForm = (props) => {
       >
         <DialogTitle className={classes.title}>LOGIN</DialogTitle>
         <DialogContent>
-          <DialogContentText style={{ fontSize: 12 }}>
+          <DialogContentText style={{ fontSize: 15, fontFamily: 'Noto Sans kr' }}>
               온애드로 쉽고 빠르게!
           </DialogContentText>
           <form onChange={onChange}>
@@ -189,7 +193,7 @@ const LoginForm = (props) => {
       >
         <DialogTitle className={classes.title}>LOGIN</DialogTitle>
         <DialogContent>
-          <DialogContentText style={{ fontSize: 12 }}>
+          <DialogContentText style={{ fontSize: 15, fontFamily: 'Noto Sans kr' }}>
         당신의 CHANNEL을 선택하세요.
           </DialogContentText>
           <Tooltip title="트위치 계정으로 로그인" placement="right">

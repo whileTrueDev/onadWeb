@@ -7,21 +7,14 @@ import ProductHowItWorks from '../../organisms/main/Main/views/HowItWorks/Produc
 import RePasswordDialog from '../../organisms/main/Main/views/Login/RePassword';
 import withRoot from '../../organisms/main/Main/withRoot';
 import sources from '../../organisms/main/Main/source/sources';
-import BetaDialog from '../../organisms/main/Main/views/Login/BetaDialog';
-
 import useLoginValue from '../../utils/lib/hooks/useLoginValue';
-import useDialog from '../../utils/lib/hooks/useDialog';
-
 
 export default withRoot((props) => {
   // if located here, set the scroll to top of the page
-  const { location } = props;
+  const { history, location } = props;
   const {
-    isLogin, repasswordOpen, logout, setRepassword,
-  } = useLoginValue(location);
-
-  // for betaDIalog
-  const { open, handleClose } = useDialog();
+    isLogin, repasswordOpen, logout, setRepassword, userType
+  } = useLoginValue(history, location);
 
   React.useEffect(() => {
     window.scrollTo(0, 0);
@@ -33,9 +26,10 @@ export default withRoot((props) => {
       <ProductHero
         isLogin={isLogin}
         source={sources.hero}
+        userType={userType}
       />
       <ProductCategories />
-      <ProductHowItWorks isLogin={isLogin} />
+      <ProductHowItWorks isLogin={isLogin} source={sources.howitworks} />
       {/* 문의받기 섹션, 오픈베타에 추가 */
           /* <ProductCTA /> */}
       <AppFooter />
@@ -43,10 +37,6 @@ export default withRoot((props) => {
         repasswordOpen={repasswordOpen}
         setRepassword={setRepassword}
         logout={logout}
-      />
-      <BetaDialog
-        open={open}
-        handleClose={handleClose}
       />
     </div>
   );

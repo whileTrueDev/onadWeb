@@ -2,33 +2,27 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import ButtonBase from '@material-ui/core/ButtonBase';
-import { Grid } from '@material-ui/core';
+import Grow from '@material-ui/core/Grow';
+import useScrollTrigger from '@material-ui/core/useScrollTrigger';
 import Typography from '../../components/Typography';
-import ImageModal from './ImageModal';
 
 const styles = theme => ({
   imageWrapper: {
-    position: 'relative',
-    display: 'block',
+    display: 'flex',
+    marginBottom: theme.spacing(3),
     padding: 0,
     borderRadius: 0,
-    height: '28vh',
-    transitionDelay: '2s',
-    [theme.breakpoints.up('xl')]: {
-      height: '26vh',
-    },
-    [theme.breakpoints.up('md')]: {
-      height: '22vh',
+    width: '50%',
+    height: 230,
+    [theme.breakpoints.down('md')]: {
+      height: '210px',
     },
     [theme.breakpoints.down('sm')]: {
+      height: '200px',
+    },
+    [theme.breakpoints.down('xs')]: {
       width: '100% !important',
       height: 150,
-    },
-    '&:hover': {
-      zIndex: 1,
-    },
-    '&:hover $imageBackdrop': {
-      opacity: 0.1,
     },
   },
   imageButton: {
@@ -38,108 +32,124 @@ const styles = theme => ({
     top: 0,
     bottom: 0,
     display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    color: theme.palette.common.white,
+    color: '#000',
+    overflow: 'auto',
+    fontFamily: 'Noto Sans KR',
   },
   imageSrc: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    top: 0,
-    bottom: 0,
+    width: '90px',
+    height: '90px',
     backgroundSize: 'cover',
     backgroundRepeat: 'no-repeat',
     backgroundPosition: 'center',
-  },
-  imageBackdrop: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    top: 0,
-    bottom: 0,
-    background: theme.palette.common.black,
-    opacity: 0.01,
-    transition: theme.transitions.create('opacity'),
+    [theme.breakpoints.down('md')]: {
+      width: '90px',
+      height: '90px'
+    },
+    [theme.breakpoints.down('sm')]: {
+      width: '80px',
+      height: '80px'
+    },
+    [theme.breakpoints.down('xs')]: {
+      width: '80px',
+      height: '80px'
+    },
   },
   imageTitle: {
     position: 'relative',
-    width: '100%',
+    width: '80%',
     marginLeft: 15,
-    padding: `${theme.spacing(2)}px ${theme.spacing(2)}px 14px`,
     fontWeight: 'bold',
+    textAlign: 'left',
+    alignItems: 'top',
+    fontFamily: 'Noto Sans KR',
+    fontSize: 22,
+    [theme.breakpoints.down('md')]: {
+      fontSize: 20
+    },
+    [theme.breakpoints.down('sm')]: {
+      fontSize: 17
+    },
+    [theme.breakpoints.down('xs')]: {
+      fontSize: 15,
+      wordBreak: 'keep-all'
+    },
   },
   imageSubTitle: {
     position: 'relative',
-    marginRight: 20,
+    fontSize: '18px',
+    fontWeight: 'normal',
+    fontFamily: 'Noto Sans KR',
+    [theme.breakpoints.down('md')]: {
+      fontSize: 17
+    },
+    [theme.breakpoints.down('sm')]: {
+      fontSize: 15
+    },
+    [theme.breakpoints.down('xs')]: {
+      fontSize: 13,
+      wordBreak: 'keep-all'
+    },
   },
 });
 
 const ProductCategoriesDetail = (props) => {
   const {
-    classes, image, matches,
+    classes, image
   } = props;
-  const [isImageModalOpen, setIsImageModalOpen] = React.useState(false);
 
-  function handleModalOpen() {
-    setIsImageModalOpen(true);
-  }
+  // Value for image comming slide animation
+  const triggerThreshold = image.trigger.threshold; // trigger for scrollTop
+  const slideTime = image.trigger.timeout; // slide animation tile
+  const [trigger, setTrigger] = React.useState(
+    useScrollTrigger(
+      { threshold: triggerThreshold, disableHysteresis: true },
+    ),
+  );
+
+  React.useEffect(() => {
+    function scrollTrigger() {
+      if (window.scrollY > triggerThreshold) {
+        setTrigger(true);
+      }
+    }
+    scrollTrigger();
+  });
+
 
   return (
     <React.Fragment>
-      <ButtonBase
-        key={image.title}
-        className={classes.imageWrapper}
-        onClick={handleModalOpen}
-        style={{
-          width: image.width,
-          height: image.height,
-        }}
+      <Grow
+        in={trigger}
+        direction="right"
+        timeout={{ enter: slideTime }}
       >
-        <div
-          className={classes.imageSrc}
-          style={{
-            backgroundImage: `url(${image.url})`,
-          }}
-        />
-        <div
-          className={classes.imageBackdrop}
-          style={{ opacity: image.opacity }}
-        />
-        { image.isText ? (
+
+        <ButtonBase
+          disabled
+          key={image.title}
+          className={classes.imageWrapper}
+        >
           <div className={classes.imageButton}>
+            <img src={image.url} className={classes.imageSrc} alt={image.title} />
             <Typography
-              variant="h5"
               color="inherit"
               className={classes.imageTitle}
             >
               {image.title}
               <br />
-              {image.subTitle}
+              <br />
+
+              <div className={classes.imageSubTitle}>
+                {image.fullDescription.split('\n').map(row => (
+                  <p key={row} style={{ marginTop: 1, marginBottom: 1 }}>{`${row}`}</p>
+                ))}
+              </div>
             </Typography>
-
-            { matches && (
-            <Grid container>
-              <Typography
-                variant="h5"
-                color="inherit"
-                className={classes.imageSubTitle}
-              >
-                {image.description}
-              </Typography>
-            </Grid>
-            )}
-
           </div>
-        ) : null}
-      </ButtonBase>
 
-      <ImageModal
-        isImageModalOpen={isImageModalOpen}
-        setIsImageModalOpen={setIsImageModalOpen}
-        image={image}
-      />
-
+        </ButtonBase>
+      </Grow>
     </React.Fragment>
   );
 };
@@ -148,7 +158,6 @@ const ProductCategoriesDetail = (props) => {
 ProductCategoriesDetail.propTypes = {
   classes: PropTypes.object,
   image: PropTypes.object.isRequired,
-  matches: PropTypes.bool.isRequired,
 };
 
 ProductCategoriesDetail.defaultProps = {

@@ -1,84 +1,91 @@
 import CloudUpload from '@material-ui/icons/CloudUpload';
 import BrandingWatermark from '@material-ui/icons/BrandingWatermarkOutlined';
 import InsertChart from '@material-ui/icons/InsertChart';
+import AccountBox from '@material-ui/icons/AccountBox';
+import Money from '@material-ui/icons/Money';
+
+const HOST_URL = `${window.location.protocol}//${window.location.host}/dashboard/marketer`;
+function colorize(string, color) {
+  return `<span style="color:${color}">${string}</span>`;
+}
 
 const manualSources = {
   selectComponent: [
     {
       icon: CloudUpload,
-      label: '광고 등록',
+      label: '배너 등록',
     },
     {
       icon: BrandingWatermark,
-      label: '승인된 배너 송출',
+      label: '배너 광고 송출',
     },
     {
       icon: InsertChart,
-      label: '광고 성과차트',
+      label: '성과차트',
+    },
+    {
+      icon: Money,
+      label: '광고 캐시 관리',
+    },
+    {
+      icon: AccountBox,
+      label: '세금계산서 발행'
     },
   ],
   bannerRegist: {
     card: {
       title: '광고배너 등록',
-      subtitle: '크리에이터의 방송에 송출하고자 하는 광고를 등록하고 관리할 수 있습니다.',
+      subtitle: '크리에이터의 방송 및 광고페이지에 송출하고자 하는 광고를 등록하고 관리할 수 있습니다.',
     },
     source: [
       {
-        image: null,
-        description: '대쉬보드에서 계약하러 가기 알림창을 클릭합니다.',
-      },
-      {
-        image: '/pngs/dashboard/manual/marketer/1_1.PNG',
-        description: '먼저 자신의 배너 관리 탭으로 이동합니다.',
-      },
-      {
-        image: '/pngs/dashboard/manual/marketer/1_2.PNG',
-        description: '화면 오른쪽에 있는 배너 등록하기에서 등록을 클릭해주세요.\n파일찾기 후 업로드를 클릭해주세요.',
-      },
-      {
-        image: '/pngs/dashboard/manual/marketer/1_3.PNG',
-        description: '등록한 배너는 OnAD 플랫폼의 관리자 승인을 받아야 합니다.\n심의 진행중인 배너는 X 심의취소와 삭제가 가능합니다.',
-      },
-      {
-        image: '/pngs/dashboard/manual/marketer/1_4.PNG',
-        description: '관리자 승인이 거절된 배너는 X 배너삭제를 클릭하면 삭제 가능합니다.',
-      },
-      {
-        image: '/pngs/dashboard/manual/marketer/1_5.PNG',
-        description: '관리자 승인이 완료된 배너는 광고시작을 클릭하면 광고 송출이 가능합니다.\n마케터님의 금액 입금이 확인되면 대시보드에서 승인된 배너를 확인할 수 있습니다.',
+        image: '/pngs/dashboard/manual/new_marketer/marketer-banner-01.png',
+        description: `[**<내 배너>**](${HOST_URL}/banner) 탭에서 "새 배너 등록" 버튼을 클릭하여,  
+        규정에 맞는 배너를 업로드합니다.  
+        **등록된 배너는 검수과정을 거쳐 승인/거절 됩니다.** (최대 7일 이내)`,
       },
       {
         image: null,
-        description: '이제 광고 송출이 가능합니다.',
+        description: `거절된 배너의 경우 거절 사유를 확인한 이후 삭제한 뒤,  
+        규정에 알맞은 배너로 다시 업로드합니다.  
+        배너 승인 및 거절에 대한 도움은 support@onad.io 에게 메일로 요청가능합니다.`
       },
-
+      {
+        image: null,
+        description: `**배너의 송출은 캠페인을 생성한 이후에 가능합니다.**  
+        승인된 배너의 경우 캠페인 생성시에 활용 가능합니다.
+        캠페인 생성은 [**<대시보드>**](${HOST_URL}/main)에서 진행할 수 있습니다.`,
+      },
     ],
   },
-  bannerStart: {
+  campaignStart: {
     card: {
       title: '배너 광고 송출',
-      subtitle: '승인된 배너광고들을 대시보드에서 송출 및 제어가 가능합니다.',
+      subtitle: '승인된 배너를 송출하는 방법에 대한 설명입니다.',
     },
     source: [
       {
-        image: null,
-        description: '마케터님의 대시보드로 이동합니다.',
+        image: '/pngs/dashboard/manual/new_marketer/marketer-campaign-01.png',
+        description: `광고 송출을 위해 < 캠페인 > 을 생성하여야 합니다.  
+        캠페인은 [**<대시보드>**](${HOST_URL}/main)에서  
+        "캠페인 생성하기"를 클릭하여 생성할 수 있습니다.`,
       },
       {
-        image: '/pngs/dashboard/manual/marketer/2_1.PNG',
-        description: '승인된 배너 이미지를 클릭하여 해당 광고시작을 클릭합니다.\n승인된 배너 이미지 클릭을 통해 개별 배너 광고의 송출과 중단이 가능합니다.',
+        image: '/pngs/dashboard/manual/new_marketer/marketer-campaign-02.png',
+        description: `검수과정를 통해 승인된 배너들 중 해당 캠페인에 사용할 배너를 선택,  
+        광고 송출 우선순위, 광고 송출을 원하는 우선순위, 광고의 유형등을 선택하는 등,  
+        필요한 사항을 입력하여 **캠페인 등록을 진행**합니다.`,
       },
       {
-        image: '/pngs/dashboard/manual/marketer/2_2.PNG',
-        description: '현재 나의 상태에서 승인된 배너들을 일괄 제어할 수 있습니다.\nON 으로 모든 광고를 개별 제어합니다.\nOFF 로 모든 광고송출 중단합니다.',
+        image: '/pngs/dashboard/manual/new_marketer/marketer-campaign-03.png',
+        description: '등록된 **캠페인의 광고 송출 상태를 On/Off 버튼으로 제어할 수 있으며**,  ',
       },
       {
-        image: '/pngs/dashboard/manual/marketer/2_3.PNG',
-        description: '화면 하단에서 매칭된 크리에이터들을 조회 가능하며\n각 크리에이터명을 클릭하면 정보조회가 가능합니다.',
-      },
-      {
-        image: null,
-        description: '매칭된 크리에이터들이 방송 내에서 배너를 띄우면 마케터님의 광고가 송출되며\n광고캐시가 차감됩니다.',
+        image: '/pngs/dashboard/manual/new_marketer/marketer-campaign-04.png',
+        description: `대시보드 **좌측 상단**의 On/Off 버튼을 통해
+        **광고주님의 광고상태를 On/Off 하여 등록된 모든 캠페인 송출을 제어할 수 있습니다**.  
+        광고 캐시가 충분하며, 광고주의 광고상태 ON / 캠페인의 광고상태 ON 인 모든 광고는 송출할 준비가 되었고,  
+        내부 광고 송출 알고리즘에 따라 자동적으로 송출됩니다.  `,
       },
     ],
   },
@@ -89,24 +96,63 @@ const manualSources = {
     },
     source: [
       {
-        image: '/pngs/dashboard/manual/marketer/3_1.PNG',
-        description: '매칭된 크리에어터들이 배너광고를 송출하면 10분마다 캐시가 차감됩니다.',
+        image: '/pngs/dashboard/manual/new_marketer/marketer-campaign-05.png',
+        description: `광고 비용에 대한 차트는 [**<대시보드 >**](${HOST_URL}/main)에서 확인할 수 있습니다.  
+        향후 차트 제어 기능과, 더욱 활용성 있는 지표들에 대한 분석 기능을 도입할 예정입니다.`,
       },
-      {
-        image: null,
-        description: '광고캐시가 소진될 때까지 크리에이터들은 마케터님의 광고를 송출합니다.\n추후에 캐시충전과 캐시 환불 기능 도입예정입니다.',
-      },
-      {
-        image: '/pngs/dashboard/manual/marketer/3_3.PNG',
-        description: '화면 하단에서 매칭된 크리에이터들의 방송을 통해\n마케터님의 광고의 성과차트를 확인할 수 있습니다.',
-      },
-      {
-        image: null,
-        description: '마케터님의 광고를 OnAd를 통해 1인 미디어로 송출하세요!',
-      },
-
     ],
   },
+  cash: {
+    card: {
+      title: '광고 캐시 관리',
+    },
+    source: [
+      {
+        image: '/pngs/dashboard/manual/new_marketer/marketer-taxbill-02.png',
+        description: `[**<내 오피스>**](${HOST_URL}/myoffice) 에서 캐시를 충전하거나, 환불할 수 있습니다.  
+        환불의 경우, 환불계좌 등록 이후 진행 가능합니다.`
+      },
+      {
+        image: null,
+        description: `[**<내 오피스>**](${HOST_URL}/myoffice) 에서 상세 캐시 소진내역을 확인할 수 있습니다.  
+        상세 보기 클릭시, 해당 월의 세부 캐시 소진내역을 확인 할 수 있습니다.`
+      }
+    ]
+  },
+  business: {
+    card: {
+      title: '세금 계산서 발행',
+      subtitle: '사업자 계정의 경우만 세금계산서가 발행됩니다.'
+    },
+    source: [
+      {
+        image: '',
+        description: `세금계산서는  
+        **발행 기준** : OnAD를 통해 구매한 모든 상품의 당월 총 광고캐시 소진 금액  
+        **발행 주기** : 익월 중, 월 1회 세금계산서 발행  
+        **발행 단위** : ${colorize('**사업자 등록증을 업로드한 사업자 계정에 한해**', 'red')}, 월 소진 총 금액에 대하여 한장의 세금계산서로 발행  
+        의 기준에 따라, 회원가입시 입력한 메일로 전송됩니다.`
+      },
+      {
+        image: '/pngs/dashboard/manual/new_marketer/marketer-taxbill-01.png',
+        description: `사업자 등록증 업로드는 [**<내 오피스>**](${HOST_URL}/myoffice) --> **"내 정보 관리"**에서 진행 할 수 있습니다.  
+        **사업자 등록증이 업로드 된 계정만 세금계산서가 발행됨을 유의하시기 바랍니다.**  `
+      },
+      {
+        image: '/pngs/dashboard/manual/new_marketer/marketer-taxbill-02.png',
+        description: `[**<내 오피스>**](${HOST_URL}/myoffice) 에서 상세 캐시 소진내역과 함께  
+        해당 월의 세금계산서 발행 여부를 확인 할 수 있습니다.  
+        이상 있거나, 지난 달의 세금계산서(수정 발행 포함)에 대한 수요가 있는 경우,  
+        support@onad.io 로 메일을 보내주시기 바랍니다.  
+        **수정발행, 지난 달의 세금계산서 발행 마감 주기**  
+        - 1분기 : 1월 ~ 3월, 발행 마감: 4월 9일  
+        - 2분기 : 4월 ~ 6월, 발행 마감: 7월 9일  
+        - 3분기 : 7월 ~ 9월, 발행 마감: 10월 9일   
+        - 4분기 : 10월 ~ 12월, 발행 마감: 1월 9일  
+        `
+      }
+    ]
+  }
 };
 
 export default manualSources;

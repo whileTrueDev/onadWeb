@@ -43,13 +43,13 @@ export default function BannerTable(props) {
       field: 'confirmState',
       render: (rowData) => {
         switch (rowData.confirmState) {
-          case 0: return '승인대기';
-          case 1: return '승인됨';
+          case 0: return '승인대기⏰';
+          case 1: return '승인됨👌';
           case 2: return (
             <Tooltip
               title={<Typography variant="body2">{`사유: ${rowData.bannerDenialReason}`}</Typography>}
             >
-              <span style={{ color: 'red' }}>거절됨</span>
+              <Typography style={{ color: 'red' }}>거절됨</Typography>
             </Tooltip>
           );
           default: throw new Error('you need confirmState for table');
