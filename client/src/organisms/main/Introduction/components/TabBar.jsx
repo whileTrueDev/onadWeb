@@ -73,11 +73,11 @@ function TabBar(props) {
       >
         <Tab
           className={tabValue ? (classes.tab3) : (classes.tab2)}
-          label="마케터 배너광고"
+          label="마케터"
         />
         <Tab
           className={tabValue ? (classes.tab) : (classes.tab3)}
-          label="크리에이터 배너광고"
+          label="크리에이터"
         />
       </Tabs>
     </AppBar>

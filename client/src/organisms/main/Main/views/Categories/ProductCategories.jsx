@@ -118,9 +118,9 @@ function ProductCategories(props) {
         <img src="/pngs/main/mainBenefitTitleRight.png" alt="middleTitleRight" className={classes.titleRight} />
       </div>
 
-      <Typography component="h2" style={{ fontFamily: 'Noto Sans KR' }} className={classes.MiddleContent}>
+      {/* <Typography component="h2" style={{ fontFamily: 'Noto Sans KR' }} className={classes.MiddleContent}>
         간단한 약관만 수락해주시면 바로 해보실 수 있습니다
-      </Typography>
+      </Typography> */}
 
 
       <ProductCategoriesDetail images={sources.categories} />

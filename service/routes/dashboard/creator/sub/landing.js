@@ -96,7 +96,7 @@ router.get('/data', (req, res) => {
   WHERE creatorId = ?
   `;
 
-  const dateCode = new CustomDate().getKoreaDate();
+  const dateCode = new Date();
 
   Promise.all([
     doQuery(royaltyQuery, [creatorId]),

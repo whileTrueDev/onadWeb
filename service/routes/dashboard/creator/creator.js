@@ -1,7 +1,6 @@
 // import
 const express = require('express');
 const doQuery = require('../../../model/doQuery');
-const CustomDate = require('../../../middlewares/customDate');
 
 const router = express.Router();
 
@@ -85,7 +84,7 @@ router.get('/landingUrl', (req, res) => {
 router.post('/contraction', (req, res) => {
   const { creatorId, creatorName } = req._passport.session.user;
   const campaignList = JSON.stringify({ campaignList: [] });
-  const dateCode = new CustomDate().getCode();
+  //   const dateCode = new Date();
   // 기본배너 설정을 위한 쿼리
   // const insertQuery = `INSERT INTO bannerMatched (contractionId)
   // VALUES (CONCAT("onad6309_01/", ?, "/", ?))

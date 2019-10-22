@@ -86,14 +86,14 @@ const HowToUsemarketer = (props) => {
     <Container className={classes.root} component="section">
       <Grid className={classes.marketerUse}>
 
-        <Typography variant="h4" component="h2" className={classes.head}>
+        <Typography variant="h4" component="h2" align="center" className={classes.head}>
           {source.head}
         </Typography>
         <Typography variant="h5" component="h2" className={classes.subTitle}>
           {source.subTitle}
         </Typography>
         <Grid container className={classes.numbertable}>
-          <Grid item xs={12} md={4} className={classes.marketerUse}>
+          <Grid item xs={12} md={3} className={classes.marketerUse}>
             <div className={classes.useNumber}>1</div>
             <Typography variant="h5" component="h2" style={{ color: 'white', fontFamily: 'Noto Sans kr', fontWeight: '600' }}>
               {'회원가입'}
@@ -104,7 +104,7 @@ const HowToUsemarketer = (props) => {
               ))}
             </div>
           </Grid>
-          <Grid item xs={12} md={4} className={classes.marketerUse}>
+          <Grid item xs={12} md={3} className={classes.marketerUse}>
             <div className={classes.useNumber}>2</div>
             <Typography variant="h5" component="h2" style={{ color: 'white', fontFamily: 'Noto Sans kr', fontWeight: '600' }}>
               {'배너등록'}
@@ -115,7 +115,7 @@ const HowToUsemarketer = (props) => {
               ))}
             </div>
           </Grid>
-          <Grid item xs={12} md={4} className={classes.marketerUse}>
+          <Grid item xs={12} md={3} className={classes.marketerUse}>
             <div className={classes.useNumber}>3</div>
             <Typography variant="h5" component="h2" style={{ color: 'white', fontFamily: 'Noto Sans kr', fontWeight: '600' }}>
               {'배너송출'}
@@ -126,12 +126,18 @@ const HowToUsemarketer = (props) => {
               ))}
             </div>
           </Grid>
+          <Grid item xs={12} md={3} className={classes.marketerUse}>
+            <div className={classes.useNumber}>4</div>
+            <Typography variant="h5" component="h2" style={{ color: 'white', fontFamily: 'Noto Sans kr', fontWeight: '600' }}>
+              {'배너관리'}
+            </Typography>
+            <div className={classes.Content}>
+              {source.fourthContent.split('\n').map(row => (
+                <Typography variant="body1" key={shortid.generate()}>{`${row}`}</Typography>
+              ))}
+            </div>
+          </Grid>
         </Grid>
-        {/* <Typography variant="body1">
-                  {source.body.split('\n').map((row, index) => (
-                    <p key={source.body+index} style={{fontFamily:'Noto Sans kr'}}>{`${row}`}</p>
-                  ))}
-                </Typography> */}
         {/* </div> */}
         {/* </div> */}
       </Grid>

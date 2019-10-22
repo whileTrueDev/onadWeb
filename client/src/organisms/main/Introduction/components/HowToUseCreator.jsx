@@ -57,7 +57,7 @@ const HowToUseCreator = (props) => {
     <Container className={classes.root} component="section">
       <Grid className={classes.creatorUse}>
 
-        <Typography variant="h4" component="h2" className={classes.head}>
+        <Typography variant="h4" component="h2" align="center" className={classes.head}>
           {source.head}
         </Typography>
         <Typography variant="h5" component="h2" className={classes.subTitle}>
@@ -100,7 +100,7 @@ const HowToUseCreator = (props) => {
           <Grid item xs={12} md={3} className={classes.creatorUse}>
             <div className={classes.useNumber}>4</div>
             <Typography variant="h5" component="h2" style={{ color: 'white', fontFamily: 'Noto Sans kr', fontWeight: '600' }}>
-              {'금액반환'}
+              {'수익정산'}
             </Typography>
             <div className={classes.Content}>
               {source.fourthContent.split('\n').map(row => (
