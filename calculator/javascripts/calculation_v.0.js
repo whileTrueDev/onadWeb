@@ -135,7 +135,7 @@ const getContractionList = () => {
 
   return new Promise((resolve, reject) => {
     const date = new Date();
-    date.setHours(date.getHours() + 9);
+    // date.setHours(date.getHours() + 9);
     date.setMinutes(date.getMinutes() - 10);
     doQuery(CheckedContractionQuery, [date])
       .then((inrow) => {

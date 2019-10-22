@@ -1,7 +1,6 @@
 // import
 const express = require('express');
 const doQuery = require('../../../model/doQuery');
-const CustomDate = require('../../../middlewares/customDate');
 
 const router = express.Router();
 
@@ -23,7 +22,9 @@ router.get('/income', (req, res) => {
   const { creatorId } = req._passport.session.user;
   const dataQuery = `
   SELECT 
-  creatorTotalIncome, creatorReceivable, creatorAccountNumber, creatorIncome.date, creatorContractionAgreement
+  TRUNCATE(creatorTotalIncome, -1) as creatorTotalIncome,
+  TRUNCATE(creatorReceivable, -1) as creatorReceivable,
+  creatorAccountNumber, creatorIncome.date, creatorContractionAgreement
   FROM creatorInfo as ci
   JOIN creatorIncome 
   ON ci.creatorId = creatorIncome.creatorId
@@ -81,11 +82,24 @@ router.get('/landingUrl', (req, res) => {
 
 // creator contraction Update
 router.post('/contraction', (req, res) => {
-  const { creatorId } = req._passport.session.user;
+  const { creatorId, creatorName } = req._passport.session.user;
+  const campaignList = JSON.stringify({ campaignList: [] });
+  //   const dateCode = new Date();
   // 기본배너 설정을 위한 쿼리
   // const insertQuery = `INSERT INTO bannerMatched (contractionId)
   // VALUES (CONCAT("onad6309_01/", ?, "/", ?))
   // `;
+  const campaignQuery = `
+  INSERT INTO creatorCampaign
+  (creatorId, campaignList)
+  VALUES (?, ?)
+  `;
+
+  // landing 기본값 쿼리 추가
+  const landingQuery = `
+    INSERT INTO creatorLanding
+    (creatorId, creatorTwitchId)
+    VALUES (?, ?)`;
 
   const updateQuery = `
   UPDATE creatorInfo
@@ -94,6 +108,8 @@ router.post('/contraction', (req, res) => {
 
   Promise.all([
     // doQuery(insertQuery, [creatorId, dateCode]),
+    doQuery(campaignQuery, [creatorId, campaignList]),
+    doQuery(landingQuery, [creatorId, creatorName]),
     doQuery(updateQuery, [1, creatorId])
   ])
     .then(() => {

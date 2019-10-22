@@ -260,27 +260,14 @@ passport.use(new TwitchStrategy({
                 VALUES (?, 0, 0, 0)
                 `;
 
-        const campaignQuery = `
-              INSERT INTO creatorCampaign
-              (creatorId, campaignList)
-              VALUES (?, ?)
-              `;
-
-        // landing 기본값 쿼리 추가
-        const landingQuery = `
-                INSERT INTO creatorLanding
-                (creatorId, creatorTwitchId)
-                VALUES (?, ?)`;
 
         Promise.all([
           doQuery(infoQuery, [user.creatorId, user.creatorDisplayName,
             user.creatorMail, creatorIp, `/${creatorBannerUrl}`,
             user.creatorName, user.creatorLogo]),
           doQuery(royaltyQuery, [user.creatorId]),
-          doQuery(campaignQuery, [user.creatorId, campaignList]),
           doQuery(incomeQuery, [user.creatorId, 0, 0]),
           doQuery(priceQuery, [user.creatorId, 1, 0, 1]),
-          doQuery(landingQuery, [user.creatorId, user.creatorName]),
         ])
           .then(() => done(null, user))
           .catch((errorData) => {

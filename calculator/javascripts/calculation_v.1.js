@@ -138,7 +138,7 @@ const getCampaignList = () => {
 
   return new Promise((resolve, reject) => {
     const date = new Date();
-    date.setHours(date.getHours() + 9);
+    // date.setHours(date.getHours() + 9);
     date.setMinutes(date.getMinutes() - 10);
     doQuery(CheckedCampaignQuery, [date])
       .then((inrow) => {
@@ -217,7 +217,7 @@ const getPrice = ({ creatorId }) => {
   return new Promise((resolve, reject) => {
     doQuery(priceQuery, [creatorId])
       .then((row) => {
-        const price = row.result[0].unitPrice;
+        const price = row.result[0].unitPrice * 0.6;
         resolve(price);
       })
       .catch((errorData) => {

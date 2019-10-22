@@ -29,7 +29,7 @@ const useStyles = makeStyles(() => ({
 function CampaignTable(props) {
   const { classes, handleCampaignCreateMode } = props;
   const classes1 = useStyles();
-  const { campaignData } = props;
+  const { campaignData, bannerData } = props;
 
   return (
 
@@ -38,13 +38,14 @@ function CampaignTable(props) {
         <h4 className={classes.cardTitleWhite}>캠페인 내역</h4>
       </CardHeader>
       <CardBody>
-
+        {!bannerData.loading && !bannerData.error && bannerData.payload.length > 0 && (
         <div>
           <Button color="info" onClick={handleCampaignCreateMode}>
             <Add />
             새 캠페인 등록
           </Button>
         </div>
+        )}
         {campaignData.loading && (
         <div className={classes1.flex} style={{ height: 200 }}><CircularProgress small /></div>
         )}

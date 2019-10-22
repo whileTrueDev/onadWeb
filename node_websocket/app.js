@@ -10,7 +10,7 @@ const config = require('./config.json');
 
 // port 설정 및 hostname 설정
 const PORT = 3002;
-process.env.NODE_ENV = (process.env.NODE_ENV && (process.env.NODE_ENV).trim().toLowerCase() == 'production') ? 'production' : 'development';
+process.env.NODE_ENV = (process.env.NODE_ENV && (process.env.NODE_ENV).trim().toLowerCase() === 'production') ? 'production' : 'development';
 let BACK_HOST = config.dev.apiHostName;
 let FRONT_HOST = config.dev.reactHostName;
 let SOCKET_HOST = config.dev.socketHostName;
@@ -28,7 +28,7 @@ app.engine('html', require('ejs').renderFile);
 // static
 app.use('/public', express.static(`${__dirname}/public`)); // 디렉토리 정적으로 고정하는 부분
 
-app.get('/wrongUrl', (req, res) => {
+app.get('/wrongurl', (req, res) => {
   res.render('wrongUrl.ejs');
 });
 
@@ -36,7 +36,7 @@ app.get('/duplicate', (req, res) => {
   res.render('duplicate.ejs');
 });
 
-app.get('/browserWarn', (req, res) => {
+app.get('/browserwarn', (req, res) => {
   res.render('browserWarn.ejs');
 });
 
@@ -44,7 +44,7 @@ app.get('/error', (req, res) => {
   res.render('error.ejs');
 });
 
-app.get('/banner/:id', (req, res) => { // /banner/:id로 라우팅
+app.get('/banner/:id', (req, res, next) => { // /banner/:id로 라우팅
   res.render('client.ejs');
 });
 
@@ -59,11 +59,10 @@ app.get('/banner/:id', (req, res) => { // /banner/:id로 라우팅
     const rule = new schedule.RecurrenceRule(); // 스케쥴러 객체 생성
     rule.hour = new schedule.Range(0, 23); // cronTask 시간지정
     rule.minute = [0, 10, 20, 30, 40, 50]; // cronTask 실행되는 분(minute)
-
     console.log(roomInfo);
     const cronTask = schedule.scheduleJob(rule, () => { // 스케쥴러를 통해 1분마다 db에 배너정보 전송
       socket.emit('response banner data to server', {}); // client로 emit
-      socket.emit('check bannerId', {});
+      socket.emit('re-render at client', {});
     });
 
 
@@ -75,17 +74,17 @@ app.get('/banner/:id', (req, res) => { // /banner/:id로 라우팅
       console.log(`- 새 접속 ip : ${ip}`);
       console.log(`- 클라이언트 소켓 아이디 : ${clientId}`);
 
-      if (history === 10) { /* 이 부분 !=로 바꾸기 */
+      if (history !== 1) { /* 이 부분 !=로 바꾸기 */
         const destination = `${SOCKET_HOST}/browserWarn`;
         socket.emit('browser warning', destination);
       } else if (urlArray.includes(_url)) {
         console.log(`${_url} 중복접속`);
         const destination = `${SOCKET_HOST}/duplicate`;
-        socket.emit('redirect warn', destination);
+        socket.emit('duplicate warn', destination);
       } else {
         socket.emit('host pass', SOCKET_HOST);
         socketsInfo[Object.keys(roomInfo).pop()] = _url; // roomInfo에서 소켓아이디 불러와서 socketsInfo 객체에 {'id' : url} 형태로 저장
-        requestImg(sql, socket, _url);
+        requestImg(sql, socket, [_url, false]);
       }
       console.log(socketsInfo); // 접속중인 url 저장된 부분
     });
@@ -110,13 +109,13 @@ app.get('/banner/:id', (req, res) => { // /banner/:id로 라우팅
       });
     });
 
-    socket.on('reRender', (msg) => {
+    socket.on('re-render', (msg) => {
       requestImg(sql, socket, msg);
     });
 
     socket.on('pageActive', (_url) => {
       const activeState = true;
-      requestImg(sql, socket, _url, activeState);
+      requestImg(sql, socket, [_url, false], activeState);
     });
 
     socket.on('pageActive handler', (msg) => {
