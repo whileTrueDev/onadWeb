@@ -6,7 +6,7 @@ const getUpdateCode = (timeformat) => {
     return `${year.slice(2)}년 ${month}월 ${day}일 ${hour}:${min}:${second}`;
   }
   const date = new Date();
-  date.setHours(date.getHours() + 9);
+  //date.setHours(date.getHours() + 9);
 
   const dateString = date.toLocaleString('ko-KR', {
     timeZone: 'UTC',

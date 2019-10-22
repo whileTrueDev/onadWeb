@@ -138,7 +138,7 @@ const getCampaignList = () => {
 
   return new Promise((resolve, reject) => {
     const date = new Date();
-    date.setHours(date.getHours() + 9);
+    // date.setHours(date.getHours() + 9);
     date.setMinutes(date.getMinutes() - 10);
     doQuery(CheckedCampaignQuery, [date])
       .then((inrow) => {
