@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import classnames from 'classnames';
 import { makeStyles } from '@material-ui/core/styles';
 import {
@@ -69,7 +69,10 @@ const IncomeCard = () => {
   };
 
   return (
-    <CustomCard iconComponent={<AttachMoney />} buttonComponent={<WithdrawalButton handleOpen={handleOpen} />}>
+    <CustomCard
+      iconComponent={<AttachMoney />}
+      buttonComponent={<WithdrawalButton handleOpen={handleOpen} />}
+    >
       <Grid container direction="column" spacing={2}>
         <Grid item>
           <div className={classes.flex}>

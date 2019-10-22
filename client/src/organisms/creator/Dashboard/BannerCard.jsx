@@ -8,7 +8,6 @@ import CustomCard from '../../../atoms/CustomCard';
 import useFetchData from '../../../utils/lib/hooks/useFetchData';
 import CircularProgress from '../../../atoms/Progress/CircularProgress';
 import StyledItemText from '../../../atoms/StyledItemText';
-import BannerDescPopover from './BannerDescPopover';
 import history from '../../../history';
 
 const useStyles = makeStyles(theme => ({
@@ -40,7 +39,6 @@ const BannerCard = () => {
   const currentBannerData = useFetchData('/api/dashboard/creator/banner/current');
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [descIndex, setDescIndex] = React.useState(0); // popover의 내용 Index
-  const open = Boolean(anchorEl);
 
   const handlePopoverClose = () => {
     setAnchorEl(null);
