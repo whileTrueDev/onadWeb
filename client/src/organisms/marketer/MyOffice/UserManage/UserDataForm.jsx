@@ -161,8 +161,6 @@ const UserDataForm = (props) => {
     setPhone(userData.marketerPhoneNum);
   }, [userData.marketerMail, userData.marketerPhoneNum]);
 
-  console.log(userData);
-
   return (
     <Card>
       <CardHeader color="blueGray">

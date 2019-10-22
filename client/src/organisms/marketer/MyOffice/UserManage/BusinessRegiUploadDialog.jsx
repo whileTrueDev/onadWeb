@@ -34,9 +34,11 @@ export default function BusinessRegiUploadDialog(props) {
     open, handleClose, businessRegiImage, request, handleSnackOpen
   } = props;
   const classes = useStyles();
+
+  const defaultImage = businessRegiImage || '/pngs/logo/onad_logo_vertical_small.png';
   const {
     imageUrl, imageName, handleReset, readImage, handleUploadClick
-  } = useImageUpload(businessRegiImage,
+  } = useImageUpload(defaultImage,
     '/api/dashboard/marketer/profile/business/upload',
     handleSnackOpen);
 
