@@ -7,15 +7,13 @@ import BarChart from '@material-ui/icons/BarChart';
 
 const sources = {
   hero: {
-    // backImage: '/pngs/main/main_image.jpg',
     text: {
-      title: '실시간 스트리밍 방송에',
-      // body: '온애드는 크리에이터와 광고주를 연결해주는 실시간 광고 송출 플랫폼입니다.',
+      title: '1인 미디어 실시간 방송에',
       subTitle: '배너광고 넣으실래요?',
       marketer: '마케터 고객님',
       marketerTail: '광고를 한 시간만큼\n광고 하고 싶은 금액만큼만\n원하는대로, 하고 싶은대로',
       creator: '크리에이터 고객님',
-      creatorTail: '원하는 시간만큼, 껏다 켰다\n자유로운 광고, 시청자수와\n방송시간에 비례한 수익'
+      creatorTail: '간단한 설정만으로\n배너를 송출하고, 방송 한 만큼\n 추가수익을 가져가세요'
     },
   },
   categories: [
@@ -42,7 +40,7 @@ const sources = {
       title: '자유로운 금액설정',
       fullDescription: '광고주는 목표 노출량과 광고예산을 정할 수 있고, \n크리에이터는 정산 기간에 광고수익 한도 내에서\n원하는 금액을 정산 받을 수 있습니다.',
       trigger: {
-        threshold: 400,
+        threshold: 300,
         timeout: 500,
       }
     },
@@ -51,7 +49,7 @@ const sources = {
       title: '합리적 가격 책정',
       fullDescription: '광고를 송출한 시간과 노출량만큼 금액을 책정하기\n때문에 \'부르는게 값\'이 아닌 합리적인 이익 배분을\n가능하게 합니다.',
       trigger: {
-        threshold: 400,
+        threshold: 300,
         timeout: 1000,
       }
     },

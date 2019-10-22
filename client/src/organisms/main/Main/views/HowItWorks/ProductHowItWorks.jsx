@@ -307,6 +307,7 @@ const ProductHowItWorks = (props) => {
 
           <Button
             className={tabValue ? (classes.plusLink2) : (classes.plusLink)}
+            onClick={() => { window.open('http://pf.kakao.com/_xoyxmfT/chat'); }}
           >
             <div style={{ fontFamily: 'Noto Sans Kr', fontWeight: '500' }}>플러스친구 문의</div>
           </Button>

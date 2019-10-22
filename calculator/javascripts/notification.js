@@ -93,7 +93,7 @@ const Notification = async ({
   userType, type, targetId, params
 }) => {
   // 날짜 수집.
-  const dateCode = new CustomDate().getKoreaDate();
+  const dateCode = new Date();
   const { selectQuery, getTitle, getMessage } = messageDict[userType][type];
 
   // 일단 해당 target의 기본정보 및 개인알림 등록에 필요한 데이터 수집.

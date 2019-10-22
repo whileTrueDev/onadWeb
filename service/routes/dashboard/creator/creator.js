@@ -82,7 +82,7 @@ router.get('/landingUrl', (req, res) => {
 // creator contraction Update
 router.post('/contraction', (req, res) => {
   const { creatorId } = req._passport.session.user;
-  const dateCode = new CustomDate().getCode();
+  const dateCode = new Date();
   const insertQuery = `INSERT INTO bannerMatched (contractionId)
   VALUES (CONCAT("onad6309_01/", ?, "/", ?))
   `;

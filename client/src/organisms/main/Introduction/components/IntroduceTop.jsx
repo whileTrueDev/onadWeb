@@ -63,14 +63,6 @@ export default function IntroduceTop(props) {
           >
             ONAD와 함께 하세요
           </Typography>
-
-          <Typography
-            component="h2"
-            className={classes.bottomContent}
-            style={{ fontFamily: 'Noto Sans kr' }}
-          >
-           지금 시작하면 누릴 수 있는혜택입니다.
-          </Typography>
         </div>
 
         <div className={classes.sources}>
