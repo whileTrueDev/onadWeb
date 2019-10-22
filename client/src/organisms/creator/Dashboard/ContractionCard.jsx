@@ -37,7 +37,7 @@ const ContractionCard = () => {
         message="성공적으로 계약이 완료되었습니다."
         open={snackOpen}
         icon
-        closeNotification={() => {
+        handleClose={() => {
           setSnackOpen(false);
           history.push('/dashboard/creator/main');
         }}
