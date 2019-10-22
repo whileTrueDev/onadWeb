@@ -69,7 +69,10 @@ const IncomeCard = () => {
   };
 
   return (
-    <CustomCard iconComponent={<AttachMoney />} buttonComponent={<WithdrawalButton handleOpen={handleOpen} />}>
+    <CustomCard
+      iconComponent={<AttachMoney />}
+      buttonComponent={<WithdrawalButton handleOpen={handleOpen} />}
+    >
       <Grid container direction="column" spacing={2}>
         <Grid item>
           <div className={classes.flex}>
