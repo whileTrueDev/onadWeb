@@ -43,6 +43,9 @@ const useStyles = makeStyles(theme => ({
   head: {
     fontWeight: '500',
     color: '#455a64',
+    [theme.breakpoints.down('sm')]: {
+      fontSize: '0.80rem'
+    }
   },
   unit: {
     fontWeight: '700',
@@ -136,7 +139,7 @@ function BannerTable({ ...props }) {
               </Hidden>
               <TableCell className={classes.imgCell}>
                 <div className={innerClasses.flex}>
-                  <img src="/pngs/landing/background-whale.jpg" alt="banner" style={{ maxHeight: '200px', width: '100%' }} />
+                  <img src={bannerData.bannerSrc} alt="banner" style={{ maxHeight: '200px', width: '100%' }} />
                 </div>
               </TableCell>
               <TableCell className={classes.tableCell}>

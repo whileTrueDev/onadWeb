@@ -23,7 +23,9 @@ router.get('/income', (req, res) => {
   const { creatorId } = req._passport.session.user;
   const dataQuery = `
   SELECT 
-  creatorTotalIncome, creatorReceivable, creatorAccountNumber, creatorIncome.date, creatorContractionAgreement
+  TRUNCATE(creatorTotalIncome, -1) as creatorTotalIncome,
+  TRUNCATE(creatorReceivable, -1) as creatorReceivable,
+  creatorAccountNumber, creatorIncome.date, creatorContractionAgreement
   FROM creatorInfo as ci
   JOIN creatorIncome 
   ON ci.creatorId = creatorIncome.creatorId

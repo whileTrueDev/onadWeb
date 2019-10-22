@@ -21,18 +21,33 @@ const GAUGE = 500;
 
 
 // 순식간에 creator / campaign 별로 하나씩 계산할 array를 생성한다.
+// 해당 exp를 계산하는 이유는 마케터의 금액에서 제하기 위해서.
+// 경험지를 위해서는 type이 0인 갯수를 계산하여 경험치로
 const getCreatorList = (date) => {
   console.log('10분 전까지의 크리에이터별 경험치 및 수익을 계산합니다.');
 
   const creatorListQuery = `
+  SELECT A.creatorId, A.exp, IFNULL(B.count, 0) as count
+  FROM (
   SELECT creatorId, sum(type) as exp
   FROM landingClickIp   
-  WHERE date > ? 
+  WHERE date > ?
   GROUP BY creatorId
+  ) as A
+  LEFT OUTER JOIN 
+  (SELECT creatorId,  count(*) as count
+  FROM landingClickIp 
+  WHERE landingClickIp.type = 0 AND date > ?
+  GROUP BY creatorId) as B
+  ON A.creatorId = B.creatorId
   `;
+  //  SELECT creatorId, sum(type) as exp
+  // FROM landingClickIp
+  // WHERE date > ?
+  // GROUP BY creatorId
 
   return new Promise((resolve, reject) => {
-    doQuery(creatorListQuery, [date])
+    doQuery(creatorListQuery, [date, date])
       .then((inrow) => {
         resolve(inrow.result);
       })
@@ -50,7 +65,7 @@ const getCampaignList = (date) => {
   const campaignListQuery = `
   SELECT li.campaignId, sum(type) as exp, li.creatorId
   FROM landingClickIp as li 
-  WHERE date > ?
+  WHERE date > ? AND NOT type = 0
   GROUP BY li.campaignId, li.creatorId
   `;
 
@@ -75,7 +90,7 @@ const getMarketerList = (date) => {
   FROM 
   ( SELECT * 
     FROM landingClickIp  
-    WHERE date > ?
+    WHERE date > ? AND NOT type = 0
   ) as li
   JOIN campaign 
   ON li.campaignId = campaign.campaignId
@@ -110,30 +125,32 @@ const creatorIncomeCalcuate = ({ creatorId, exp }) => {
   (creatorId, creatorTotalIncome, creatorReceivable) 
   VALUES (?, ?, ?)`;
 
-  const price = exp * COST;
-  return new Promise((resolve, reject) => {
-    console.log(`${creatorId}에 대해 수익 정산을 시작합니다.`);
-    doQuery(searchQuery, [creatorId])
-      .then((row) => {
-        const { creatorTotalIncome, creatorReceivable } = row.result[0];
-        doQuery(calculateQuery, [creatorId, creatorTotalIncome + price, creatorReceivable + price])
-          .then(() => {
-            logger.info(`${price} 원을 ${creatorId} 에게 입금하였습니다`);
-            console.log(`${price} 원을 ${creatorId} 에게 입금하였습니다`);
-            resolve();
-          })
-          .catch((errorData) => {
-            errorData.point = 'creatorCalcuate()';
-            errorData.description = `${price} 원을 ${creatorId} 에게 입금하는 과정.`;
-            reject(errorData);
-          });
-      })
-      .catch((errorData) => {
-        errorData.point = 'creatorCalcuate()';
-        errorData.description = `${creatorId}의 수입을 조회하는 과정.`;
-        reject(errorData);
-      });
-  });
+  if (exp > 0) {
+    const price = exp * COST;
+    return new Promise((resolve, reject) => {
+      console.log(`${creatorId}에 대해 수익 정산을 시작합니다.`);
+      doQuery(searchQuery, [creatorId])
+        .then((row) => {
+          const { creatorTotalIncome, creatorReceivable } = row.result[0];
+          doQuery(calculateQuery, [creatorId, creatorTotalIncome + price, creatorReceivable + price])
+            .then(() => {
+              logger.info(`${price} 원을 ${creatorId} 에게 입금하였습니다`);
+              console.log(`${price} 원을 ${creatorId} 에게 입금하였습니다`);
+              resolve();
+            })
+            .catch((errorData) => {
+              errorData.point = 'creatorCalcuate()';
+              errorData.description = `${price} 원을 ${creatorId} 에게 입금하는 과정.`;
+              reject(errorData);
+            });
+        })
+        .catch((errorData) => {
+          errorData.point = 'creatorCalcuate()';
+          errorData.description = `${creatorId}의 수입을 조회하는 과정.`;
+          reject(errorData);
+        });
+    });
+  }
 };
 
 const creatorExpCalcuate = ({ creatorId, exp }) => {
@@ -160,6 +177,7 @@ const creatorExpCalcuate = ({ creatorId, exp }) => {
   SET exp = ?
   WHERE creatorId = ?
   `;
+
 
   return new Promise((resolve, reject) => {
     console.log(`${creatorId}에 대해 경험치 정산을 시작합니다.`);
@@ -249,7 +267,7 @@ async function calculation() {
   console.log('-----------------------------------------------------------');
   console.log(`계산을 실시합니다. 시작 시각 : ${new Date().toLocaleString()}`);
   const date = new Date();
-  // date.setHours(date.getHours() + 9);
+  date.setHours(date.getHours() + 9);
   date.setMinutes(date.getMinutes() - 10);
 
   const [creatorList, marketerList, campaignList] = await Promise.all(
@@ -261,9 +279,9 @@ async function calculation() {
   );
 
   Promise.all(
-    creatorList.map(({ creatorId, exp }) => Promise.all([
+    creatorList.map(({ creatorId, exp, count }) => Promise.all([
       creatorIncomeCalcuate({ creatorId, exp }),
-      creatorExpCalcuate({ creatorId, exp })
+      creatorExpCalcuate({ creatorId, exp: Number(exp) + Number(count) })
     ])),
     marketerList.map(({ marketerId, exp }) => marketerCalculate({ marketerId, exp }))
   )
