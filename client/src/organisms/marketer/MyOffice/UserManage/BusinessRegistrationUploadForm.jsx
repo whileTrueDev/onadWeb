@@ -33,6 +33,7 @@ function BusinessRegistrationUploadForm(props) {
   const { classes, businessRegistrationData } = props;
   const { open, handleOpen, handleClose } = useDialog();
   const snack = useDialog();
+  console.log('businessRegistrationData:', businessRegistrationData);
 
   return (
     <Card>
@@ -51,7 +52,7 @@ function BusinessRegistrationUploadForm(props) {
           <div className={myClasses.buttonWrapper}>
             <Button
               color="info"
-              onClick={handleOpen}
+              onClick={() => { handleOpen(); }}
             >
               사업자 등록증 변경
             </Button>
