@@ -1,10 +1,11 @@
 const gameDict = require('./models/gameCategorieDic');
 const doQuery = require('./models/doQuery');
 
-module.exports = function (sql, socket, msg, activeState) {
+module.exports = function (sql, socket, msg) {
   const fullUrl = msg[0];
   const cutUrl = `/${fullUrl.split('/')[4]}`;
   const prevBannerName = msg[1];
+  let broadcastState;
   let myCreatorId;
   let myCampaignId;
   let myGameId;
@@ -38,10 +39,10 @@ module.exports = function (sql, socket, msg, activeState) {
     console.log('현재 ON되어있는 campaign List를 조회한다.');
 
     const campaignListQuery = `
-            SELECT campaignId 
-            FROM campaign
-            WHERE onOff = 1
-             `;
+                              SELECT campaignId 
+                              FROM campaign
+                              WHERE onOff = 1
+                              `;
 
     return new Promise((resolve, reject) => {
       doQuery(campaignListQuery)
@@ -83,13 +84,16 @@ module.exports = function (sql, socket, msg, activeState) {
     const getGameIdQuery = `SELECT gameId 
                             FROM twitchStreamDetail AS tsd 
                             WHERE streamId = (SELECT streamId FROM twitchStream WHERE streamerId = ? ORDER BY startedAt DESC LIMIT 1)
-                            AND date_format(tsd.time, '%Y-%m-%d %H:%i') >= date_format(NOW() - interval 10 minute, '%Y-%m-%d %H:%i')
                             ORDER BY tsd.time DESC LIMIT 1;`;
     return new Promise((resolve, reject) => {
       doQuery(getGameIdQuery, [creatorId])
         .then((row) => {
-          myGameId = row.result[0].gameId;
-          resolve(myGameId);
+          if (row.result.length !== 0) {
+            myGameId = row.result[0].gameId;
+            resolve(myGameId);
+          } else {
+            console.log('방송기록이 없어서 배너가 호출되지 않았습니다.');
+          }
         })
         .catch((errorData) => {
           errorData.point = 'getGameId()';
@@ -120,12 +124,12 @@ module.exports = function (sql, socket, msg, activeState) {
 
   const getBannerSrc = (campaignId) => {
     const selectQuery = `
-  SELECT br.bannerSrc
-  FROM campaign
-  JOIN bannerRegistered as br
-  ON br.bannerId = campaign.bannerId
-  WHERE campaign.campaignId = ?
-  `;
+                        SELECT br.bannerSrc
+                        FROM campaign
+                        JOIN bannerRegistered as br
+                        ON br.bannerId = campaign.bannerId
+                        WHERE campaign.campaignId = ?
+                        `;
     return new Promise((resolve, reject) => {
       doQuery(selectQuery, [campaignId])
         .then((row) => {
@@ -173,7 +177,7 @@ module.exports = function (sql, socket, msg, activeState) {
   getQuery.select(async (err, data) => {
     if (err) {
       console.log(err);
-    } else {
+    } else if (data[0]) {
       myCreatorId = data[0].creatorId;
       myGameId = await getGameId(myCreatorId);
       const bannerInfo = await getBanner([myCreatorId, myGameId]);
@@ -182,6 +186,8 @@ module.exports = function (sql, socket, msg, activeState) {
       } else {
         console.log('같은 캠페인 송출 중이어서 재호출 안합니다.');
       }
+    } else {
+      socket.emit('url warning', []);
     }
   });
 };

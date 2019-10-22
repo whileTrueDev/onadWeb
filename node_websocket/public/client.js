@@ -1,37 +1,38 @@
+/* eslint-env jquery */
 $(() => {
   const socket = io();
   const history = window.history.length;
   const _url = window.location.href;
   const cutUrl = `/${_url.split('/')[4]}`;
   let socketHost;
-  function getHiddenProp() {
-    const prefixes = ['webkit', 'moz', 'ms', 'o'];
-    // test for native support
-    if ('hidden' in document) return 'hidden';
-    // find prefixes
-    for (let i = 0; i < prefixes.length; i += 1) {
-      if ((`${prefixes[i]}Hidden`) in document) { return `${prefixes[i]}Hidden`; }
-    }
-    // otherwise it's not supported
-    return null;
+  let hidden;
+  let visibilityChange;
+  if (typeof document.hidden !== 'undefined') { // Opera 12.10 and Firefox 18 and later support
+    hidden = 'hidden';
+    visibilityChange = 'visibilitychange';
+  } else if (typeof document.msHidden !== 'undefined') {
+    hidden = 'msHidden';
+    visibilityChange = 'msvisibilitychange';
+  } else if (typeof document.webkitHidden !== 'undefined') {
+    hidden = 'webkitHidden';
+    visibilityChange = 'webkitvisibilitychange';
   }
 
-  const visProp = getHiddenProp();
-  if (visProp) {
-    const evtname = `${visProp.replace(/[H|h]idden/, '')}visibilitychange`;
-    document.addEventListener(evtname, changeEventListener, false);
-  } else {
-    console.log('Page Visibility API doesnt support !');
-  }
-
-  function changeEventListener() {
-    if (!document[visProp]) {
-      socket.emit('pageActive handler', [cutUrl, 1]);
-      socket.emit('pageActive', _url);
-    } else {
+  function handleVisibilityChange() {
+    if (document[hidden]) {
       socket.emit('pageActive handler', [cutUrl, 0]);
       $('#imgMessage').empty();
+    } else {
+      socket.emit('pageActive handler', [cutUrl, 1]);
+      socket.emit('pageActive', _url);
     }
+  }
+  // Warn if the browser doesn't support addEventListener or the Page Visibility API
+  if (typeof document.addEventListener === 'undefined' || typeof document[hidden] === 'undefined') {
+    alert('change the browser');
+  } else {
+  // Handle page visibility change
+    document.addEventListener(visibilityChange, handleVisibilityChange, false);
   }
 
   socket.emit('new client', [_url, history]);
@@ -40,12 +41,16 @@ $(() => {
     socketHost = SOCKET_HOST;
   });
 
-  socket.on('redirect warn', (destination) => {
+  socket.on('duplicate warn', (destination) => {
     window.location.href = destination;
   });
 
   socket.on('browser warning', (destination) => {
     window.location.href = destination;
+  });
+
+  socket.on('url warning', () => {
+    window.location.href = `${socketHost}/wrongurl`;
   });
 
   socket.on('img receive', (msg) => {
@@ -65,17 +70,12 @@ $(() => {
     }
   });
 
-  socket.on('reRender at client', () => {
+  socket.on('re-render at client', () => {
     const bannerName = $('#showBanner').attr('name');
-    socket.emit('reRender', [_url, bannerName]);
+    socket.emit('re-render', [_url, bannerName]);
   });
 
   socket.on('img clear', () => {
     $('#imgMessage').empty();
-  });
-
-  socket.on('error page', () => {
-    const destination = `${socketHost}/error`;
-    window.location.href = destination;
   });
 });
