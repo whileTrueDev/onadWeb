@@ -5,7 +5,6 @@ module.exports = function (sql, socket, msg) {
   const fullUrl = msg[0];
   const cutUrl = `/${fullUrl.split('/')[4]}`;
   const prevBannerName = msg[1];
-  let broadcastState;
   let myCreatorId;
   let myCampaignId;
   let myGameId;
@@ -61,10 +60,10 @@ module.exports = function (sql, socket, msg) {
   // 하나의 categoryId 에 해당하는 캠페인 리스트를 반환하는 Promise
   const getCategoryCampaignList = (categoryId) => {
     const campaignListQuery = `
-  SELECT campaignList 
-  FROM categoryCampaign
-  WHERE categoryId = ? 
-  `;
+                              SELECT campaignList 
+                              FROM categoryCampaign
+                              WHERE categoryId = ? 
+                              `;
     return new Promise((resolve, reject) => {
       doQuery(campaignListQuery, [categoryId])
         .then((row) => {
@@ -92,7 +91,7 @@ module.exports = function (sql, socket, msg) {
             myGameId = row.result[0].gameId;
             resolve(myGameId);
           } else {
-            console.log('방송기록이 없어서 배너가 호출되지 않았습니다.');
+            console.log('GETGAMEID ERROR');
           }
         })
         .catch((errorData) => {
