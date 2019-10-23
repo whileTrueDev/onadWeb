@@ -22,7 +22,7 @@ const sources = {
       title: '누구나 1인 미디어 마케팅',
       fullDescription: '1인 미디어에 광고를 올리고 싶지만 크리에이터에 \n 대해 모르거나, 일일이 계약하기 힘든 광고주.\n광고주를 찾기 힘든 크리에이터 모두에게 \n 광고를 유치하고 집행할 수 있는 기회를 제공합니다.',
       trigger: {
-        threshold: 100,
+        threshold: 0,
         timeout: 500,
       }
     },
@@ -31,7 +31,7 @@ const sources = {
       title: '비용, 수익에 대한 실시간 분석',
       fullDescription: '광고 집행으로 발생하는 비용과 수익을 실시간으로\n 볼 수 있으며, 어떻게 그 금액이 발생하였는지에 대한\n광고 시간, 노출량 등을 분석하여 확인할 수 있습니다.',
       trigger: {
-        threshold: 100,
+        threshold: 0,
         timeout: 1000,
       }
     },
@@ -40,7 +40,7 @@ const sources = {
       title: '자유로운 금액설정',
       fullDescription: '광고주는 목표 노출량과 광고예산을 정할 수 있고, \n크리에이터는 정산 기간에 광고수익 한도 내에서\n원하는 금액을 정산 받을 수 있습니다.',
       trigger: {
-        threshold: 300,
+        threshold: 200,
         timeout: 500,
       }
     },
@@ -49,7 +49,7 @@ const sources = {
       title: '합리적 가격 책정',
       fullDescription: '광고를 송출한 시간과 노출량만큼 금액을 책정하기\n때문에 \'부르는게 값\'이 아닌 합리적인 이익 배분을\n가능하게 합니다.',
       trigger: {
-        threshold: 300,
+        threshold: 200,
         timeout: 1000,
       }
     },
