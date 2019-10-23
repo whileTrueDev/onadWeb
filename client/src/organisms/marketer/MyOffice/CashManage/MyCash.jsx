@@ -39,7 +39,7 @@ function MyCash(props) {
           display: 'flex', alignItems: 'center', flexDirection: 'row-reverse', padding: 5
         }}
         >
-          <Button color="info" disabled onClick={() => { chargeDialog.handleOpen(); }}>충전</Button>
+          <Button color="info" onClick={() => { chargeDialog.handleOpen(); }}>충전</Button>
           {!accountData.loading && !accountData.error
               && !accountData.payload.accountNumber ? (
                 <Tooltip title="환불계좌가 등록되지 않아 진행이 불가합니다.">

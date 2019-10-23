@@ -12,9 +12,9 @@ import DashboardStyle from '../../../../assets/jss/onad/views/dashboardStyle';
 import useFetchData from '../../../../utils/lib/hooks/useFetchData';
 
 const initialData = {
-  columns: ['날짜', '충전금액', '결제수단'],
+  columns: ['날짜', '충전금액', '결제수단', '진행상황'],
   data: [
-    ['-', '-', '-'],
+    ['-', '-', '-', '-'],
   ],
 };
 
