@@ -108,17 +108,19 @@ module.exports = function (sql, socket, msg) {
     console.log('게임의 카테고리에 계약되어있는 캠페인 List를 가져옵니다.');
     const categoryList = gameDict[gameId];
     let returnList = [];
-    await Promise.all(
-      categoryList.map(categoryId => getCategoryCampaignList(categoryId)
-        .then((campaignList) => {
-          returnList = returnList.concat(campaignList);
-        }))
-    )
-      .catch((errorData) => {
-        console.log(errorData);
-        errorData.point = 'getGameCampaignList()';
-        errorData.description = 'categoryCampaign에서 각각의 categoryId에 따른 캠페인 가져오기';
-      });
+    if (categoryList) {
+      await Promise.all(
+        categoryList.map(categoryId => getCategoryCampaignList(categoryId)
+          .then((campaignList) => {
+            returnList = returnList.concat(campaignList);
+          }))
+      )
+        .catch((errorData) => {
+          console.log(errorData);
+          errorData.point = 'getGameCampaignList()';
+          errorData.description = 'categoryCampaign에서 각각의 categoryId에 따른 캠페인 가져오기';
+        });
+    }
     return Array.from(new Set(returnList));
   };
 
