@@ -148,6 +148,21 @@ module.exports = function (sql, socket, msg) {
     return Math.floor(Math.random() * (max - 0)) + 0; // 최댓값은 제외, 최솟값은 포함
   };
 
+  const insertLandingPage = (campaignId, creatorId) => {
+    const insertLandingQuery = 'INSERT IGNORE INTO landingClick(campaignId, creatorId) value(?,?);';
+    return new Promise((resolve, reject) => {
+      doQuery(insertLandingQuery, [campaignId, creatorId])
+        .then((row) => {
+          resolve(row.result);
+          // console.log(row);
+        })
+        .catch((errorData) => {
+          errorData.point = 'insertLandingPage()';
+          errorData.description = 'landingClick에 새로운 랜딩페이지 입력 과정';
+          reject(errorData);
+        });
+    });
+  };
   async function getBanner([creatorId, gameId]) {
     console.log(`-----------------------Id : ${creatorId} / ${getTime}---------------------------`);
     const [creatorCampaignList, onCampaignList] = await Promise.all(
@@ -186,6 +201,7 @@ module.exports = function (sql, socket, msg) {
       myGameId = await getGameId(myCreatorId);
       const bannerInfo = await getBanner([myCreatorId, myGameId]);
       if (bannerInfo) {
+        const doInsert = await insertLandingPage(bannerInfo[1], bannerInfo[2]);
         socket.emit('img receive', [bannerInfo[0], [bannerInfo[1], bannerInfo[2]]]);
       } else {
         console.log('같은 캠페인 송출 중이어서 재호출 안합니다.');
