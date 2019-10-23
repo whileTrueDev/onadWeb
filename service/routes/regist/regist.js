@@ -6,7 +6,7 @@ const setTemporaryPassword = require('../../middlewares/setTemporyPassword');
 const sendEmailAuth = require('../../middlewares/sendEmailAuth');
 const config = require('../../config.json');
 
-const HOST = process.env.NODE_ENV === 'production' ? config.production.apiHostName : config.dev.apiHostName;
+const HOST = process.env.NODE_ENV === 'production' ? config.production.reactHostName : config.dev.reactHostName;
 
 
 const router = express.Router();
