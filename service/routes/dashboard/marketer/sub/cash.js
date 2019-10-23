@@ -8,7 +8,7 @@ const router = express.Router();
 router.get('/', (req, res) => {
   const marketerId = req._passport.session.user.userid;
   const debitQuery = `
-  SELECT FORMAT(ROUND(cashAmount), 0) as cashAmount,
+  SELECT FORMAT(cashAmount, 0) as cashAmount,
     DATE_FORMAT(date, '%y년 %m월 %d일 %T') as date
   FROM marketerDebit
   WHERE marketerId = ?
@@ -36,7 +36,7 @@ router.post('/charge', (req, res) => {
   console.log(`/marketer/charge - id: ${marketerId} | amount: ${chargeCash}`);
 
   const currentDebitQuery = `
-    SELECT ROUND(cashAmount) as cashAmount
+    SELECT cashAmount as cashAmount
     FROM marketerDebit
     WHERE marketerId = ?
     ORDER BY date DESC
@@ -55,8 +55,7 @@ router.post('/charge', (req, res) => {
   const debitUpdateQuery = `
   UPDATE marketerDebit
   SET cashAmount = ?
-  WHERE marketerId = ?
-  `;
+  WHERE marketerId = ?`;
 
   /** ********************
    * api call 및 캐시충전 처리 필요
@@ -100,7 +99,7 @@ router.post('/refund', (req, res) => {
 
   // 현재 마케터의 캐시 보유량 조회
   const currentDebitQuery = `
-  SELECT ROUND(cashAmount) as cashAmount
+  SELECT cashAmount as cashAmount
   FROM marketerDebit
   WHERE marketerId = ?
   ORDER BY date DESC
@@ -191,7 +190,7 @@ router.get('/refund/list', (req, res) => {
   const selectQuery = `
   SELECT 
     DATE_FORMAT(date, '%y년 %m월 %d일 %T') as date,
-    FORMAT(ROUND(cash), 0) as cash, marketerRefund.check
+    FORMAT(cash, 0) as cash, marketerRefund.check
   FROM marketerRefund
   WHERE marketerId = ?
   ORDER BY date DESC`;
@@ -228,7 +227,7 @@ router.get('/usage', (req, res) => {
   const selectQuery = `
   SELECT
     DATE_FORMAT(cl.date, "%y년 %m월") as date,
-    FORMAT(ROUND(sum(cash)), 0) as cash,
+    FORMAT(sum(cashFromMarketer), 0) as cash,
     state
   FROM campaignLog AS cl
   JOIN marketerTaxBill AS mtb
@@ -276,7 +275,7 @@ router.get('/usage/month', (req, res) => {
   const selectQuery = `
   SELECT
     DATE_FORMAT(cl.date, "%y년 %m월 %d일") as date,
-    FORMAT(ROUND(sum(cash)), 0) as cash, type
+    FORMAT(sum(cashFromMarketer), 0) as cash, type
   FROM campaignLog AS cl
   WHERE SUBSTRING_INDEX(cl.campaignId, '_', 1) = ?
   AND DATE_FORMAT(cl.date, "%y년 %m월") = ?
@@ -288,7 +287,7 @@ router.get('/usage/month', (req, res) => {
 
   const selectMetaQuery = `
   SELECT
-    type, FORMAT(ROUND(sum(cash)), 0) as cash
+    type, FORMAT(sum(cashFromMarketer), 0) as cash
   FROM campaignLog AS cl
   WHERE SUBSTRING_INDEX(cl.campaignId, '_', 1) = ?
   AND DATE_FORMAT(cl.date, "%y년 %m월") = ?

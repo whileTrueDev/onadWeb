@@ -106,7 +106,7 @@ router.get('/chart', (req, res) => {
   const query = `
   SELECT
     cl.date as date,
-    sum(cash) as cash, type
+    sum(cashFromMarketer) as cash, type
   FROM campaignLog AS cl
   WHERE SUBSTRING_INDEX(cl.campaignId, '_', 1) = ?
     AND  cl.date >= DATE_SUB(NOW(), INTERVAL 30 DAY)

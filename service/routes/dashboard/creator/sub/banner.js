@@ -107,8 +107,7 @@ const getCash = async (campaignList) => {
   const cashQuery = `
   SELECT campaignId, type, sum(cashToCreator)  as cash
   FROM campaignLog
-  WHERE campaignId = ? 
-  AND creatorId = ?
+  WHERE campaignId = ?  AND creatorId = ?
   GROUP by campaignLog.type
   `;
   const newList = [];
@@ -138,6 +137,9 @@ const getCash = async (campaignList) => {
               second: '2-digit'
             });
           }
+        })
+        .catch((err) => {
+          console.log(err);
         });
     })
   )

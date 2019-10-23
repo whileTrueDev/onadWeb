@@ -132,8 +132,7 @@ const RegistStepper = withRoot((props) => {
   };
 
   const handleUserSubmit = () => {
-    axios.post(`${HOST}/api/regist/marketer`,
-      userInfo)
+    axios.post(`${HOST}/api/regist/marketer`, userInfo)
       .then((res) => {
         const { error } = res.data;
         if (!error) {
