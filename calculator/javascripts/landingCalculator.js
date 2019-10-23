@@ -18,6 +18,7 @@ const Notification = require('./notification');
 
 const COST = 5; // 랜딩페이지의 점수에 비례하여 creator에게 보상을 준다.
 const GAUGE = 500;
+const FEERATE = 0.6;
 
 
 // 순식간에 creator / campaign 별로 하나씩 계산할 array를 생성한다.
@@ -126,7 +127,7 @@ const creatorIncomeCalcuate = ({ creatorId, exp }) => {
   VALUES (?, ?, ?)`;
 
   if (exp > 0) {
-    const price = exp * COST;
+    const price = Math.round(exp * COST * FEERATE);
     return new Promise((resolve, reject) => {
       console.log(`${creatorId}에 대해 수익 정산을 시작합니다.`);
       doQuery(searchQuery, [creatorId])
@@ -224,7 +225,7 @@ const marketerCalculate = ({ marketerId, exp }) => {
   SET cashAmount = cashAmount - ? 
   WHERE marketerId = ? `;
 
-  const price = exp * COST * 2;
+  const price = exp * COST;
 
   return new Promise((resolve, reject) => {
     doQuery(calculateQuery, [price, marketerId])
@@ -245,11 +246,12 @@ const campaignCalculate = ({ creatorId, campaignId, exp }) => {
   console.log(`계약인 ${campaignId}에 대한 정산을 시작합니다.`);
   const campaignLogQuery = `
     INSERT INTO campaignLog
-    (campaignId, creatorId, type, cash) 
-    VALUES (?, ?, ?, ?)`;
+    (campaignId, creatorId, type, cashFromMarketer, cashToCreator) 
+    VALUES (?, ?, ?, ?, ?)`;
   const price = exp * COST;
+  const CTC = Math.round(price * 0.6);
   return new Promise((resolve, reject) => {
-    doQuery(campaignLogQuery, [campaignId, creatorId, 'CPC', price])
+    doQuery(campaignLogQuery, [campaignId, creatorId, 'CPC', price, CTC])
       .then(() => {
         console.log(`${price} 원을 ${campaignId} 에 등록하였습니다.`);
         logger.info(`${price} 원을 ${campaignId} 에 등록하였습니다.`);

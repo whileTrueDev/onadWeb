@@ -267,7 +267,7 @@ passport.use(new TwitchStrategy({
             user.creatorName, user.creatorLogo]),
           doQuery(royaltyQuery, [user.creatorId]),
           doQuery(incomeQuery, [user.creatorId, 0, 0]),
-          doQuery(priceQuery, [user.creatorId, 1, 0, 1]),
+          doQuery(priceQuery, [user.creatorId, 1, 0, 2]),
         ])
           .then(() => done(null, user))
           .catch((errorData) => {

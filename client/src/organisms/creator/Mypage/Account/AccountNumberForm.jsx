@@ -44,48 +44,75 @@ const style = theme => ({
 const banks = [
   {
     bankName: '국민',
-    bankCount: 14,
     bankCode: '004',
   },
   {
     bankName: '기업',
-    bankCount: 14,
     bankCode: '004',
   },
   {
     bankName: '농협',
-    bankCount: 13,
     bankCode: '011',
   },
   {
-    bankName: '신한(구)',
-    bankCount: 11,
-    bankCode: '088',
-  },
-  {
-    bankName: '신한(신)',
-    bankCount: 12,
+    bankName: '신한',
     bankCode: '088',
   },
   {
     bankName: '우리',
-    bankCount: 13,
     bankCode: '020',
   },
   {
-    bankName: '하나',
-    bankCount: 14,
+    bankName: 'KEB 하나',
     bankCode: '081',
   },
   {
     bankName: '부산',
-    bankCount: 13,
     bankCode: '032',
   },
   {
     bankName: 'SC제일',
-    bankCount: 11,
     bankCode: '023',
+  },
+  {
+    bankName: '산업',
+    bankCode: '002',
+  },
+  {
+    bankName: '수협',
+    bankCode: '007',
+  },
+  {
+    bankName: '씨티',
+    bankCode: '027',
+  },
+  {
+    bankName: '대구',
+    bankCode: '031',
+  },
+  {
+    bankName: '광주',
+    bankCode: '034',
+  },
+  {
+    bankName: '제주',
+    bankCode: '035',
+  },
+  {
+    bankName: '전북',
+    bankCode: '037',
+  },
+  {
+    bankName: '경남',
+    bankCode: '039',
+  },
+  {
+    bankName: 'K 뱅크',
+    bankCode: '089',
+  },
+  {
+    bankName: '카카오뱅크',
+    bankCode: '090',
   },
 ];
 
