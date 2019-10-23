@@ -29,6 +29,8 @@ export default function useUpdateData(url, callUrl = null) {
           if (callUrl) {
             callUrl();
           }
+        } else if (res.data[1]) {
+          alert(res.data[1]);
         } else {
           alert('오류가 발생했습니다.');
         }
