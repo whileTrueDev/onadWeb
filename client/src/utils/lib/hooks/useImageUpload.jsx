@@ -16,7 +16,6 @@ export default function useImageUpload(DEFAULT_IMAGE, url, snackOpenFunction, ca
   }
 
   function handleUploadClick() {
-    console.log(`${HOST}${url}`);
     axios.post(`${HOST}${url}`, { imageUrl })
       .then((res) => {
         if (res.data[0]) {

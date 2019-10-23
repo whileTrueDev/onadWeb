@@ -26,7 +26,6 @@ const useLoginValue = () => {
         if (!res.data.error) {
           if (res.data.state) {
             // 임시 로그인되었습니다.
-            console.log('임시로그인 되었습니다.');
             setRepassword(true);
           }
           setisLogin(true);

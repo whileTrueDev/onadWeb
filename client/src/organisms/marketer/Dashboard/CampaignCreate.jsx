@@ -180,7 +180,6 @@ const CampaignCreateStepper = (props) => {
 
     if (submitCheck) {
       // categorie에서 creator로 변경되어야함.
-      console.log(priorityList);
       axios.post(`${HOST}/api/dashboard/marketer/campaign/push`, {
         ...step1State,
         dailyLimit: step4State.budget,
