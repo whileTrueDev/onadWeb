@@ -121,7 +121,6 @@ const ProductCategoriesDetail = (props) => {
     <React.Fragment>
       <Grow
         in={trigger}
-        direction="right"
         timeout={{ enter: slideTime }}
       >
 
