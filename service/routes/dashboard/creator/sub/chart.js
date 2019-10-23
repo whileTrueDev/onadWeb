@@ -11,7 +11,7 @@ router.get('/', (req, res) => {
   const query = `
   SELECT
     cl.date as date,
-    sum(cash) as cash, type
+    ROUND( sum(cash) ) as cash, type
   FROM campaignLog AS cl
   WHERE creatorId = ?
     AND  cl.date >= DATE_SUB(NOW(), INTERVAL ? DAY)
@@ -38,7 +38,7 @@ router.get('/monthly', (req, res) => {
 
   const query = `
   SELECT 
-  date, sum(cash) as cash, type
+  date, ROUND( sum(cash) ) as cash, type
   FROM campaignLog
   WHERE creatorId = ? AND date >= DATE_SUB(NOW(), INTERVAL 12 MONTH)
   GROUP BY DATE_FORMAT(date, "%y년 %m월%"), type

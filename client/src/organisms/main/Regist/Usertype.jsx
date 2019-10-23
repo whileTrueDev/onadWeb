@@ -83,7 +83,7 @@ const styles = theme => ({
 const images = [
   {
     url: '/pngs/regist/Personal.jpg',
-    title: '개인',
+    title: '일반인',
     width: '50%',
   },
   {

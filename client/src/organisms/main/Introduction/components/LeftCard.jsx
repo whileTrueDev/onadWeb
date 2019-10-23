@@ -25,6 +25,7 @@ const useStyles = makeStyles(theme => ({
   },
   cardContent: {
     maxWidth: 500,
+    height: 236,
     marginLeft: 20
   },
   imagesWrapper: {
