@@ -217,7 +217,7 @@ const getPrice = ({ creatorId }) => {
   return new Promise((resolve, reject) => {
     doQuery(priceQuery, [creatorId])
       .then((row) => {
-        const price = row.result[0].unitPrice * 0.6;
+        const price = row.result[0].unitPrice;
         resolve(price);
       })
       .catch((errorData) => {
@@ -470,7 +470,7 @@ async function calculation() {
 
   await Promise.all(
     priceList.map(({ creatorId, campaignId, price }) => Promise.all([
-      creatorCalcuate({ creatorId, price }),
+      creatorCalcuate({ creatorId, price: Number(price) * 0.6 }),
       marketerCalculate({ campaignId, price }),
       campaignCalculate({ creatorId, campaignId, price })
     ])
