@@ -16,7 +16,7 @@ const logger = require('./calculatorLogger');
 const doQuery = require('../model/calculatorQuery');
 const Notification = require('./notification');
 
-const COST = 10; // 랜딩페이지의 점수에 비례하여 creator에게 보상을 준다.
+const COST = 5; // 랜딩페이지의 점수에 비례하여 creator에게 보상을 준다.
 const GAUGE = 500;
 
 
@@ -224,7 +224,7 @@ const marketerCalculate = ({ marketerId, exp }) => {
   SET cashAmount = cashAmount - ? 
   WHERE marketerId = ? `;
 
-  const price = exp * COST;
+  const price = exp * COST * 2;
 
   return new Promise((resolve, reject) => {
     doQuery(calculateQuery, [price, marketerId])
