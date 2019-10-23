@@ -53,9 +53,10 @@ router.post('/charge', (req, res) => {
 
   // 충전시 기존의 캐시량 + 캐시충전량으로 update
   const debitUpdateQuery = `
-  INSERT INTO marketerDebit
-  (marketerId, cashAmount)
-  VALUES (?, ?)`;
+  UPDATE marketerDebit
+  SET cashAmount = ?
+  WHERE marketerId = ?
+  `;
 
   /** ********************
    * api call 및 캐시충전 처리 필요
@@ -70,7 +71,7 @@ router.post('/charge', (req, res) => {
         }
         Promise.all([
           doQuery(cashChargeInsertQuery, cashChargeArray),
-          doQuery(debitUpdateQuery, [marketerId, currentCashAmount + chargeCash])
+          // doQuery(debitUpdateQuery, [currentCashAmount + chargedCash, marketerId])
         ])
           .then((secondrow) => {
             // 마케터 캐시 충전 쿼리 완료
@@ -105,11 +106,13 @@ router.post('/refund', (req, res) => {
   ORDER BY date DESC
   LIMIT 1`;
   const currentDebitArray = [marketerId];
+
   // 마케터 캐시 보유량 수정 ( 환불진행한 만큼 차감 )
   const debitUpdateQuery = `
-  INSERT INTO marketerDebit
-  (marketerId, cashAmount)
-  VALUES (?, ?)`;
+  UPDATE marketerDebit
+  SET cashAmount = ?
+  WHERE  marketerId = ?`;
+
   // 환불 내역에 데이터 적재
   const refundHistoryInsertQuery = `
   INSERT INTO marketerRefund
@@ -124,7 +127,7 @@ router.post('/refund', (req, res) => {
           const currentCashAmount = Number(row.result[0].cashAmount);
           Promise.all([
             doQuery(refundHistoryInsertQuery, refundHistoryInsertArray),
-            doQuery(debitUpdateQuery, [marketerId, currentCashAmount - withdrawCash])
+            doQuery(debitUpdateQuery, [currentCashAmount - withdrawCash, marketerId])
           ])
             .then((secondrow) => {
             // 마케터 캐시 환불 쿼리 완료
@@ -152,9 +155,9 @@ router.get('/charge/list', (req, res) => {
   const selectQuery = `
   SELECT 
     DATE_FORMAT(date, '%y년 %m월 %d일 %T') as date,
-    FORMAT(ROUND(cash), 0) as cash, type
+    FORMAT(ROUND(cash), 0) as cash, type, temporaryState
   FROM marketerCharge
-  WHERE marketerId = ?
+  WHERE marketerId = ? 
   ORDER BY date DESC`;
   const selectArray = [marketerId];
 
@@ -165,6 +168,7 @@ router.get('/charge/list', (req, res) => {
         row.result.forEach((obj) => {
           const object = obj;
           object.cash = String(obj.cash);
+          object.temporaryState = object.temporaryState === 0 ? '진행중' : '완료됨' 
           sendArray.push(Object.values(object));
         });
         const result = {
