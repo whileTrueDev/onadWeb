@@ -5,11 +5,13 @@ module.exports = function (sql, socket, msg) {
   const fullUrl = msg[0];
   const cutUrl = `/${fullUrl.split('/')[4]}`;
   const prevBannerName = msg[1];
+  const getTime = Date(Date.now()).toLocaleString();
   let myCreatorId;
   let myCampaignId;
   let myGameId;
   // creatorId를 전달받아 creatorCampaign과 onff List를 도출.
   const getCreatorCampaignList = (creatorId) => {
+    console.log(`-----------------------Id : ${creatorId} / ${getTime}---------------------------`);
     console.log(`${creatorId}에게 계약된 creatorCampaign의 campaignList를 가져옵니다.`);
 
     const campaignListQuery = `
