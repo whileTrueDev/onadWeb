@@ -119,8 +119,7 @@ const AccountNumberForm = (props) => {
   const [bankState, dispatch] = useReducer(bankReducer, { name: '농협', code: '011' });
   const [birth, setBirth] = useState(null);
   const [accountNum, setAccountNum] = useState(null);
-  const [accountConfirm, setAccountConfirm] = useState(false);
-  console.log(accountConfirm);
+  const [setAccountConfirm] = useState(false);
 
   const handleChangeBank = (event) => {
     const newbank = event.target.value;
@@ -150,7 +149,6 @@ const AccountNumberForm = (props) => {
       tran_dtime: getNowDate(),
     }, { headers })
       .then((res) => {
-        console.log(res.data);
         if (res.data.rsp_code === 'A0000') {
           setAccountConfirm(true);
           alert('계좌인증에 성공하였습니다.');

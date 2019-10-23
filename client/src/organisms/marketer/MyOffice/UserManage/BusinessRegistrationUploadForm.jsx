@@ -33,7 +33,6 @@ function BusinessRegistrationUploadForm(props) {
   const { classes, businessRegistrationData } = props;
   const { open, handleOpen, handleClose } = useDialog();
   const snack = useDialog();
-  console.log('businessRegistrationData:', businessRegistrationData);
 
   return (
     <Card>

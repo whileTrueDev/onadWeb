@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 // @material-ui/core
 import Hidden from '@material-ui/core/Hidden';
 // core ../../../atoms
@@ -19,10 +19,6 @@ const Dashboard = () => {
   const marketerProfileData = useFetchData('/api/dashboard/marketer/profile');
   const campaignData = useFetchData('/api/dashboard/marketer/campaign/list');
   const bannerData = useFetchData('/api/dashboard/marketer/banner');
-
-  useEffect(() => {
-    console.log(bannerData);
-  }, [bannerData]);
 
   return (
     <div>
