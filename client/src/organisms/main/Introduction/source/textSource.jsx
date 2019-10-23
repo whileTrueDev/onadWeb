@@ -50,7 +50,7 @@ const textSource = {
   ],
   creator: {
     firstSector: {
-      image: 'pngs/introduction/serviceMain.png',
+      image: 'pngs/introduction/service_main.png',
       head: '크리에이터',
       body: '방송에 배너를 띄우기만 하세요.\n시청자 수와 방송시간에 비례해서\n추가수익을 창출할 수 있습니다.',
     },
@@ -65,7 +65,7 @@ const textSource = {
   },
   marketer: {
     firstSector: {
-      image: 'pngs/introduction/serviceMain.png',
+      image: 'pngs/introduction/service_main.png',
       head: '마케터',
       body: '배너 이미지를 업로드한 이후\n실시간 방송에 배너가 송출됩니다.\n또한, 광고 페이지를 통해 구매로 이어질 수 있습니다.',
     },

@@ -14,7 +14,6 @@ const useStyles = makeStyles(theme => ({
   root: {
     marginBottom: theme.spacing(0),
     overflow: 'hidden',
-
   },
   cardWrapper: {
     zIndex: 1,
