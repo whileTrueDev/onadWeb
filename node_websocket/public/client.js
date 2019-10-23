@@ -1,87 +1,81 @@
-$(function(){
+/* eslint-env jquery */
+$(() => {
+  const socket = io();
+  const history = window.history.length;
+  const _url = window.location.href;
+  const cutUrl = `/${_url.split('/')[4]}`;
+  let socketHost;
+  let hidden;
+  let visibilityChange;
+  if (typeof document.hidden !== 'undefined') { // Opera 12.10 and Firefox 18 and later support
+    hidden = 'hidden';
+    visibilityChange = 'visibilitychange';
+  } else if (typeof document.msHidden !== 'undefined') {
+    hidden = 'msHidden';
+    visibilityChange = 'msvisibilitychange';
+  } else if (typeof document.webkitHidden !== 'undefined') {
+    hidden = 'webkitHidden';
+    visibilityChange = 'webkitvisibilitychange';
+  }
 
-  var socket = io();
-  var history = window.history.length;
-  var _url = window.location.href;
-  var cutUrl = '/' + _url.split('/')[4];
-  var socketHost;
-  function getHiddenProp(){
-    var prefixes = ['webkit','moz','ms','o'];
-    // test for native support
-    if ('hidden' in document) return 'hidden';
-    //find prefixes
-    for (var i = 0; i < prefixes.length; i++){
-      if ((prefixes[i] + 'Hidden') in document) 
-        return prefixes[i] + 'Hidden';
+  function handleVisibilityChange() {
+    if (document[hidden]) {
+      socket.emit('pageActive handler', [cutUrl, 0]);
+      $('#imgMessage').empty();
+    } else {
+      socket.emit('pageActive handler', [cutUrl, 1]);
+      socket.emit('pageActive', _url);
     }
-    // otherwise it's not supported
-    return null;
-  } 
-  
-    var visProp = getHiddenProp();
-    if (visProp) {
-      var evtname = visProp.replace(/[H|h]idden/,'') + 'visibilitychange';
-      document.addEventListener(evtname, changeEventListener , false);
-    } else{
-      console.log("Page Visibility API doesnt support !");
-    }
-  
-    function changeEventListener(){
-    if (!document[visProp]){
-      socket.emit('pageActive handler', [cutUrl, 1])
-      socket.emit('pageActive', _url)   
-    } else{
-      socket.emit('pageActive handler', [cutUrl, 0])
-      $('#imgMessage').empty()
-    }
-  }  
+  }
+  // Warn if the browser doesn't support addEventListener or the Page Visibility API
+  if (typeof document.addEventListener === 'undefined' || typeof document[hidden] === 'undefined') {
+    alert('change the browser');
+  } else {
+  // Handle page visibility change
+    document.addEventListener(visibilityChange, handleVisibilityChange, false);
+  }
 
-  socket.emit('new client', [_url, history]); 
-  
-  socket.on('host pass', function(SOCKET_HOST){
-    socketHost = SOCKET_HOST
-    } 
-  )
+  socket.emit('new client', [_url, history]);
 
-  socket.on('redirect warn', function(destination){
-    window.location.href = destination
-  })
-
-  socket.on('browser warning', function(destination){
-    window.location.href = destination
-  })
-
-  socket.on('img receive', function(msg){
-    if($("#imgMessage").find("#showBanner").length === 1){
-      $("#showBanner").fadeOut(1000, function(){
-        $('#imgMessage').empty().append(`<img src= ${msg[0]} id='showBanner' name= ${msg[1]} width = '100%' height = '100%'>`)
-      }).fadeIn(1000)
-
-    }
-    else{
-    $('#imgMessage').empty().append(`<img src= ${msg[0]} id='showBanner' name= ${msg[1]} width = '100%' height = '100%'>`)
-  }    
-    }  );
-  
-  socket.on('response banner data to server', function(){ 
-    var bannerName = $("#showBanner").attr("name")
-    if (bannerName){
-      socket.emit('write to db', bannerName);
-    }  
+  socket.on('host pass', (SOCKET_HOST) => {
+    socketHost = SOCKET_HOST;
   });
 
-  socket.on('check bannerId', function(){
-    var bannerId = $("#showBanner").attr("name")
-    if (bannerId){
-      socket.emit('check plz', [_url, bannerId])
+  socket.on('duplicate warn', (destination) => {
+    window.location.href = destination;
+  });
+
+  socket.on('browser warning', (destination) => {
+    window.location.href = destination;
+  });
+
+  socket.on('url warning', () => {
+    window.location.href = `${socketHost}/wrongurl`;
+  });
+
+  socket.on('img receive', (msg) => {
+    if ($('#imgMessage').find('#showBanner').length === 1) {
+      $('#showBanner').fadeOut(1000, () => {
+        $('#imgMessage').empty().append(`<img src= ${msg[0]} id='showBanner' name= ${msg[1]} width = '100%' height = '100%'>`);
+      }).fadeIn(1000);
+    } else {
+      $('#imgMessage').empty().append(`<img src= ${msg[0]} id='showBanner' name= ${msg[1]} width = '100%' height = '100%'>`);
     }
-  })
-  socket.on('img clear', function(){
-    $('#imgMessage').empty()
-  })
-  
-  socket.on('error page', function(){
-    var destination =  `${socketHost}/error`
-    window.location.href = destination
-  })
+  });
+
+  socket.on('response banner data to server', () => {
+    if ($('#showBanner').attr('name')) {
+      const cutBannerName = $('#showBanner').attr('name').split(',');
+      socket.emit('write to db', cutBannerName);
+    }
+  });
+
+  socket.on('re-render at client', () => {
+    const bannerName = $('#showBanner').attr('name');
+    socket.emit('re-render', [_url, bannerName]);
+  });
+
+  socket.on('img clear', () => {
+    $('#imgMessage').empty();
+  });
 });

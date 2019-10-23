@@ -12,26 +12,26 @@
 */
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
-const twitchStrategy = require("passport-twitch-new").Strategy;
+const TwitchStrategy = require('passport-twitch-new').Strategy;
 
 // 암호화 체크 객체 생성
 const encrpyto = require('./encryption');
 const doQuery = require('./model/doQuery');
 const config = require('./config.json');
 
-const HOST = process.env.NODE_ENV === 'production' ? config.production.apiHostName : config.dev.apiHostName
+const HOST = process.env.NODE_ENV === 'production' ? config.production.apiHostName : config.dev.apiHostName;
 
-//serializeUser를 정의한다. session에 저장해둘 data를 구현하는 것.
-passport.serializeUser((user, done)=>{
-    console.log('serialize');
-    done(null, user);
+// serializeUser를 정의한다. session에 저장해둘 data를 구현하는 것.
+passport.serializeUser((user, done) => {
+  console.log('serialize');
+  done(null, user);
 });
 
-//로그인이 되었을 때 매 요청시마다 자동으로 수행되는 session에서 인증된 req.user의 영역으로 저장하기.
-passport.deserializeUser((user, done)=>{
-    //db에서 추가로 데이터를 req.user에 저장.
-    done(null, user);
-})
+// 로그인이 되었을 때 매 요청시마다 자동으로 수행되는 session에서 인증된 req.user의 영역으로 저장하기.
+passport.deserializeUser((user, done) => {
+  // db에서 추가로 데이터를 req.user에 저장.
+  done(null, user);
+});
 
 
 /* 2019-07-03 박찬우
@@ -57,54 +57,50 @@ passport.deserializeUser((user, done)=>{
 
 */
 
-passport.use( new LocalStrategy(
-    {
-        usernameField : 'userid',
-        passwordField : 'passwd',
-        passReqToCallback : false,
-    },
+passport.use(new LocalStrategy(
+  {
+    usernameField: 'userid',
+    passwordField: 'passwd',
+    passReqToCallback: false,
+  },
 
-    (userid, passwd, done) => {
-        console.log("로그인을 수행합니다.");
-        const checkQuery = `
+  (userid, passwd, done) => {
+    console.log('로그인을 수행합니다.');
+    const checkQuery = `
         SELECT marketerPasswd, marketerSalt,
         marketerId, marketerName, marketerMail, marketerPhoneNum, marketerBusinessRegNum,
         marketerUserType, marketerAccountNumber, marketerEmailAuth
         FROM marketerInfo
-        WHERE marketerId = ? `
+        WHERE marketerId = ? `;
 
-        doQuery(checkQuery, [userid])
-        .then((row)=>{
-            if(row.result[0]){
-                const marketerData = row.result[0];
-                if(encrpyto.check(passwd, marketerData.marketerPasswd, marketerData.marketerSalt)){
-                    let user = {
-                        userid : userid,
-                        userType: 'marketer',
-                        marketerUserType: marketerData.marketerUserType,
-                        marketerMail: marketerData.marketerMail,
-                        marketerAccountNumber: marketerData.marketerAccountNumber,
-                        marketerBusinessRegNum: marketerData.marketerBusinessRegNum,
-                        marketerName: marketerData.marketerName,
-                        marketerPhoneNum: marketerData.marketerPhoneNum,
-                    };
-                    console.log("로그인이 완료되었습니다");
-                    return done(null, user);
-                }
-                else{
-                    console.log('비밀번호가 일치하지 않습니다.');
-                    return done(null, {message : '비밀번호가 일치하지 않습니다.'});
-                }
-            }
-            else{
-                console.log('회원이 아닙니다.');
-                return done('회원이 아닙니다.');
-            }
-        })
-        .catch((errorData)=>{
-            return done(errorData);
-        })
-    }
+    doQuery(checkQuery, [userid])
+      .then((row) => {
+        if (row.result[0]) {
+          const marketerData = row.result[0];
+          if (encrpyto.check(passwd, marketerData.marketerPasswd, marketerData.marketerSalt)) {
+            const user = {
+              userid,
+              userType: 'marketer',
+              marketerUserType: marketerData.marketerUserType,
+              marketerMail: marketerData.marketerMail,
+              marketerAccountNumber: marketerData.marketerAccountNumber,
+              marketerBusinessRegNum: marketerData.marketerBusinessRegNum,
+              marketerName: marketerData.marketerName,
+              marketerPhoneNum: marketerData.marketerPhoneNum,
+            };
+            console.log('로그인이 완료되었습니다, ', marketerData.marketerName);
+            return done(null, user);
+          }
+
+          console.log('비밀번호가 일치하지 않습니다.');
+          return done(null, { message: '비밀번호가 일치하지 않습니다.' });
+        }
+
+        console.log('회원이 아닙니다.');
+        return done('회원이 아닙니다.');
+      })
+      .catch(errorData => done(errorData));
+  }
 ));
 
 /* 2019-07-02 박찬우
@@ -123,7 +119,8 @@ passport.use( new LocalStrategy(
     * 최초 로그인이 아닐 때
     3-1) Data가 존재하므로 creatorName, creatorMail을 가져온다.
     3-2) 현재 DB에서 가져온 값과 session으로 획득한 값을 비교하여 DB 수정.
-    3-3) 나머지 data는 session에 띄워놓고 필요할 때 바로 사용할 수 있도록 session을 context화 하여 필요한 Component에서 접근이 가능하게 구현한다.
+    3-3) 나머지 data는 session에 띄워놓고 필요할 때 바로 사용할 수 있도록
+        session을 context화 하여 필요한 Component에서 접근이 가능하게 구현한다.
 
     * 최초 로그인시
     3-1) creator Logo를 제외한 모든 값을 creatorInfo table에 저장한다.
@@ -142,155 +139,147 @@ passport.use( new LocalStrategy(
 */
 
 const makeUrl = () => {
-    let password = "";
+  let password = '';
 
-    for(let i = 0; i < 8; i++){
-        let lowerStr = String.fromCharCode(Math.floor(Math.random() * 26 + 97));
-        if(i % 2 == 0){
-        password += String(Math.floor(Math.random() * 10));
-        }else{
-        password += lowerStr;
-        }
+  for (let i = 0; i < 8; i += 1) {
+    const lowerStr = String.fromCharCode(Math.floor(Math.random() * 26 + 97));
+    if (i % 2 === 0) {
+      password += String(Math.floor(Math.random() * 10));
+    } else {
+      password += lowerStr;
     }
-    return password;
-}
+  }
+  return password;
+};
 
 const clientID = process.env.NODE_ENV === 'production'
-    ? config.production.clientID
-    : config.dev.clientID
+  ? config.production.clientID
+  : config.dev.clientID;
 const clientSecret = process.env.NODE_ENV === 'production'
-    ? config.production.clientSecret
-    : config.dev.clientSecret
+  ? config.production.clientSecret
+  : config.dev.clientSecret;
 
-passport.use(new twitchStrategy({
-    clientID: clientID,
-    clientSecret: clientSecret,
-    callbackURL: `${HOST}/api/login/twitch/callback`,
-    scope: "user:read:email",//user:read:email
-    passReqToCallback: true,
-  },
-  // login성공시 수행되는 함수.
-  function(req, accessToken, refreshToken, profile, done) {
-        let user = {
-            creatorId : profile.id,
-            creatorDisplayName: profile.display_name, 
-            creatorName : profile.login,
-            creatorMail : profile.email,
-            creatorLogo : profile.profile_image_url,
-            userType: "creator"
-        }
-        doQuery(`SELECT creatorIp, creatorId, creatorName, creatorMail, creatorTwitchId, creatorLogo FROM creatorInfo WHERE creatorId = ? `, [user.creatorId])
-        .then((row)=>{
-            const creatorData = row.result[0];
-            if(creatorData){
-                console.log(`${user.creatorDisplayName} 님이 로그인 하셨습니다.`);
-                user['creatorIp'] = creatorData.creatorIp;
-                
-                // Data 변경시에 변경된 값을 반영하는 영역.
-                if(!(creatorData.creatorName === user.creatorDisplayName && creatorData.creatorMail === user.creatorMail)){
-                    // 크리에이터의 name 또는 email 이 바뀐 경우 재설정
-                    const UpdateQuery = `
+passport.use(new TwitchStrategy({
+  clientID,
+  clientSecret,
+  callbackURL: `${HOST}/api/login/twitch/callback`,
+  scope: 'user:read:email', // user:read:email
+  passReqToCallback: true,
+},
+// login성공시 수행되는 함수.
+((req, accessToken, refreshToken, profile, done) => {
+  const user = {
+    creatorId: profile.id,
+    creatorDisplayName: profile.display_name,
+    creatorName: profile.login,
+    creatorMail: profile.email,
+    creatorLogo: profile.profile_image_url,
+    userType: 'creator'
+  };
+  doQuery('SELECT creatorIp, creatorId, creatorName, creatorMail, creatorTwitchId, creatorLogo FROM creatorInfo WHERE creatorId = ? ', [user.creatorId])
+    .then((row) => {
+      const creatorData = row.result[0];
+      if (creatorData) {
+        console.log(`${user.creatorDisplayName} 님이 로그인 하셨습니다.`);
+        user.creatorIp = creatorData.creatorIp;
+
+        // Data 변경시에 변경된 값을 반영하는 영역.
+        if (!(creatorData.creatorName === user.creatorDisplayName
+          && creatorData.creatorMail === user.creatorMail)) {
+          // 크리에이터의 name 또는 email 이 바뀐 경우 재설정
+          const UpdateQuery = `
                     UPDATE creatorInfo
                     SET  creatorName = ?, creatorMail = ?, creatorTwitchId = ?, creatorLogo = ?
                     WHERE creatorId = ?
-                    `
-                    doQuery(UpdateQuery, [user.creatorDisplayName, user.creatorMail, user.creatorName, user.creatorLogo, user.creatorId])
-                    .then(()=>{
-                        return done(null, user);
-                    })
-                    .catch((errorData)=>{
-                        console.log(errorData);
-                        done(errorData, false);
-                    })
-                } else if (!(creatorData.creatorLogo === user.creatorLogo) ) {
-                    // 크리에이터의 로고가 바뀐 경우 재설정
-                    const updateQuery = `
+                    `;
+          doQuery(UpdateQuery,
+            [user.creatorDisplayName, user.creatorMail,
+              user.creatorName, user.creatorLogo, user.creatorId])
+            .then(() => done(null, user))
+            .catch((errorData) => {
+              console.log(errorData);
+              done(errorData, false);
+            });
+        } else if (!(creatorData.creatorLogo === user.creatorLogo)) {
+          // 크리에이터의 로고가 바뀐 경우 재설정
+          const updateQuery = `
                     UPDATE creatorInfo
                     SET creatorLogo = ?
                     WHERE creatorId = ?
                     `;
 
-                    doQuery(updateQuery, [user.creatorLogo, user.creatorId])
-                    .then(() => {
-                        return done(null, user);
-                    })
-                    .catch((errorData) => {
-                        console.log(errorData);
-                        done(errorData, false);
-                    })
-                } else if (!(creatorData.creatorTwitchId === user.creatorName) ) {
-                    // 크리에이터의 twitch id가 바뀐 경우 재 설정
-                    const updateQuery = `
+          doQuery(updateQuery, [user.creatorLogo, user.creatorId])
+            .then(() => done(null, user))
+            .catch((errorData) => {
+              console.log(errorData);
+              done(errorData, false);
+            });
+        } else if (!(creatorData.creatorTwitchId === user.creatorName)) {
+          // 크리에이터의 twitch id가 바뀐 경우 재 설정
+          const updateQuery = `
                     UPDATE creatorInfo
                     SET creatorTwitchId = ?
                     WHERE creatorId = ?
                     `;
 
-                    doQuery(updateQuery, [user.creatorName, user.creatorId])
-                    .then(() => {
-                        return done(null, user);
-                    })
-                    .catch((errorData) => {
-                        console.log(errorData);
-                        done(errorData, false);
-                    })
-                } else {
-                    return done(null, user);
-                }
-            } else {
-                console.log(`${user.creatorDisplayName} 님이 최초 로그인 하셨습니다.`);
-                const creatorIp = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-                const creatorBannerUrl = makeUrl();
-                user['creatorIp'] = creatorIp;
+          doQuery(updateQuery, [user.creatorName, user.creatorId])
+            .then(() => done(null, user))
+            .catch((errorData) => {
+              console.log(errorData);
+              done(errorData, false);
+            });
+        } else {
+          return done(null, user);
+        }
+      } else {
+        console.log(`${user.creatorDisplayName} 님이 최초 로그인 하셨습니다.`);
+        const creatorIp = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+        const campaignList = JSON.stringify({ campaignList: [] });
+        const creatorBannerUrl = makeUrl();
+        user.creatorIp = creatorIp;
 
-                /**
-                 * 기본값 설정 쿼리
-                 */
-                const infoQuery = `
+        const infoQuery = `
                 INSERT INTO creatorInfo
                 (creatorId, creatorName, creatorMail, creatorIp, advertiseUrl, creatorTwitchId, creatorLogo)
                 VALUES (?, ?, ?, ?, ?, ?, ?)`;
 
-                const incomeQuery = `
+        const incomeQuery = `
                 INSERT INTO creatorIncome 
                 (creatorId, creatorTotalIncome, creatorReceivable) 
                 VALUES (?, ?, ?)`;
 
-                const priceQuery = `
+        const priceQuery = `
                 INSERT INTO creatorPrice
                 (creatorId, grade, viewerAverageCount, unitPrice)
                 VALUES (?, ?, ?, ?)
-                `
-                
-                // landing 기본값 쿼리 추가
-                const landingQuery = `
-                INSERT INTO creatorLanding
-                (creatorId, creatorTwitchId)
-                VALUES (?, ?)`;
+                `;
 
-                Promise.all([
-                    doQuery(infoQuery,  [user.creatorId, user.creatorDisplayName,
-                        user.creatorMail, creatorIp, `/${creatorBannerUrl}`,
-                        user.creatorName, user.CreatorLogo]),
-                    doQuery(incomeQuery,   [user.creatorId, 0, 0]),
-                    doQuery(priceQuery,   [user.creatorId, 1, 0, 1]),
-                    doQuery(landingQuery,   [user.creatorId, user.creatorName]),
-                ])
-                .then(()=>{
-                    return done(null, user);
-                })
-                .catch((errorData)=>{
-                    console.log(errorData);
-                    done(errorData, false);
-                })
-            }
-        })
-        .catch((errorData)=>{
+        const royaltyQuery = `
+                INSERT INTO creatorRoyaltyLevel
+                (creatorId, level, exp, visitCount)
+                VALUES (?, 0, 0, 0)
+                `;
+
+
+        Promise.all([
+          doQuery(infoQuery, [user.creatorId, user.creatorDisplayName,
+            user.creatorMail, creatorIp, `/${creatorBannerUrl}`,
+            user.creatorName, user.creatorLogo]),
+          doQuery(royaltyQuery, [user.creatorId]),
+          doQuery(incomeQuery, [user.creatorId, 0, 0]),
+          doQuery(priceQuery, [user.creatorId, 1, 0, 1]),
+        ])
+          .then(() => done(null, user))
+          .catch((errorData) => {
             console.log(errorData);
             done(errorData, false);
-        })
-
-    }
-));
+          });
+      }
+    })
+    .catch((errorData) => {
+      console.log(errorData);
+      done(errorData, false);
+    });
+})));
 
 module.exports = passport;
