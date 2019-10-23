@@ -19,7 +19,7 @@ export default function UserProfile({ marketerProfileData }) {
         <Typography variant="body1">계정 유형 :&emsp;</Typography>
         {!marketerProfileData.loading && marketerProfileData.payload && (
           <Typography variant="body1" style={{ fontWeight: 'bold' }}>
-            {marketerProfileData.payload.marketerUserType === 0 ? '개인' : '사업체'}
+            {marketerProfileData.payload.marketerUserType === 0 ? '일반인' : '사업자'}
           </Typography>
         )}
       </div>
