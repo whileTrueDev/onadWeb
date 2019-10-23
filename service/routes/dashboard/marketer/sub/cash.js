@@ -8,7 +8,7 @@ const router = express.Router();
 router.get('/', (req, res) => {
   const marketerId = req._passport.session.user.userid;
   const debitQuery = `
-  SELECT FORMAT(ROUND(cashAmount, 0)) as cashAmount,
+  SELECT FORMAT(ROUND(cashAmount), 0) as cashAmount,
     DATE_FORMAT(date, '%y년 %m월 %d일 %T') as date
   FROM marketerDebit
   WHERE marketerId = ?
@@ -152,7 +152,7 @@ router.get('/charge/list', (req, res) => {
   const selectQuery = `
   SELECT 
     DATE_FORMAT(date, '%y년 %m월 %d일 %T') as date,
-    FORMAT(ROUND(cash, 0)) as cash, type
+    FORMAT(ROUND(cash), 0) as cash, type
   FROM marketerCharge
   WHERE marketerId = ?
   ORDER BY date DESC`;
@@ -187,7 +187,7 @@ router.get('/refund/list', (req, res) => {
   const selectQuery = `
   SELECT 
     DATE_FORMAT(date, '%y년 %m월 %d일 %T') as date,
-    FORMAT(ROUND(cash, 0)) as cash, marketerRefund.check
+    FORMAT(ROUND(cash), 0) as cash, marketerRefund.check
   FROM marketerRefund
   WHERE marketerId = ?
   ORDER BY date DESC`;
