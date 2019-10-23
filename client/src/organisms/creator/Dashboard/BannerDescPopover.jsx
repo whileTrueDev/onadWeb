@@ -155,7 +155,8 @@ const BannerDescPopover = (props) => {
                 <Grid item>
                   <Chip variant="outlined" size="large" label="성인" avatar={<Avatar><span role="img" aria-label="성인">✂️</span></Avatar>} />
                 </Grid>
-                {/* {currentBannerData.payload && currentBannerData.payload[descIndex].bannerDescription.split('\n').map(row => (
+                {/* {currentBannerData.payload
+                  && currentBannerData.payload[descIndex].bannerDescription.split('\n').map(row => (
                     <Grid item key={shortid.generate()}>
                       <Typography variant="body2">
                         {row}

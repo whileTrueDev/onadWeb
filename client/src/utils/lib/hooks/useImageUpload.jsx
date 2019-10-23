@@ -2,6 +2,8 @@ import React from 'react';
 import axios from '../../axios';
 import HOST from '../../config';
 
+const IMAGE_SIZE_LIMIT = 1048576;
+
 export default function useImageUpload(DEFAULT_IMAGE, url, snackOpenFunction, callUrl) {
   const [imageUrl, setImageUrl] = React.useState(DEFAULT_IMAGE);
   const [imageName, setImageName] = React.useState('');
@@ -38,11 +40,15 @@ export default function useImageUpload(DEFAULT_IMAGE, url, snackOpenFunction, ca
       const myImage = event.target.files[0];
       // 최대 size를 지정하자.
       if (fileRegx.test(myImage.type)) {
-        const reader = new FileReader();
-        reader.readAsDataURL(myImage);
-        reader.onload = () => {
-          handleImageChange({ newImageName: myImage.name, newImageUrl: reader.result });
-        };
+        if (myImage.size > IMAGE_SIZE_LIMIT) {
+          const reader = new FileReader();
+          reader.readAsDataURL(myImage);
+          reader.onload = () => {
+            handleImageChange({ newImageName: myImage.name, newImageUrl: reader.result });
+          };
+        } else {
+          alert('10MB 이하의 이미지를 업로드해주세요.');
+        }
       } else {
         alert('파일의 형식이 올바르지 않습니다.');
       }

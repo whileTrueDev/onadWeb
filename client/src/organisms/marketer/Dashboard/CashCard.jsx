@@ -62,7 +62,7 @@ const CashCard = (props) => {
           display: 'flex', alignItems: 'center', flexDirection: 'row-reverse', padding: 5
         }}
         >
-          <Button color="info" onClick={() => { }}>충전</Button>
+          <Button color="info" disabled onClick={() => { }}>충전</Button>
         </div>
       </CardHeader>
 
