@@ -44,6 +44,7 @@ Creator 및 Marketer에 대해 계산시 필요한 table 고려후 초기값 삽
   error : '에러에 대한 내용'
 }
 */
+const FEERATE = 0.6;
 
 const getStreamerList = () => {
   const currentTimeQuery = `
@@ -414,13 +415,14 @@ const marketerCalculate = ({ campaignId, price }) => {
 
 const campaignCalculate = ({ creatorId, campaignId, price }) => {
   console.log(`계약인 ${campaignId}에 대한 정산을 시작합니다.`);
+  const CTC = Math.round(Number(price) * FEERATE);
   const campaignLogQuery = `
     INSERT INTO campaignLog
-    (campaignId, creatorId, type, cash) 
-    VALUES (?, ?, ?, ?)`;
+    (campaignId, creatorId, type, cashFromMarketer, cashToCreator) 
+    VALUES (?, ?, ?, ?, ?)`;
 
   return new Promise((resolve, reject) => {
-    doQuery(campaignLogQuery, [campaignId, creatorId, 'CPM', price])
+    doQuery(campaignLogQuery, [campaignId, creatorId, 'CPM', price, CTC])
       .then(() => {
         console.log(`${price} 원을 ${campaignId} 에 등록하였습니다.`);
         logger.info(`${price} 원을 ${campaignId} 에 등록하였습니다.`);
@@ -470,7 +472,7 @@ async function calculation() {
 
   await Promise.all(
     priceList.map(({ creatorId, campaignId, price }) => Promise.all([
-      creatorCalcuate({ creatorId, price: Number(price) * 0.6 }),
+      creatorCalcuate({ creatorId, price: Math.round(Number(price) * FEERATE) }),
       marketerCalculate({ campaignId, price }),
       campaignCalculate({ creatorId, campaignId, price })
     ])

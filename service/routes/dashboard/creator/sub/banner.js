@@ -105,7 +105,7 @@ router.get('/matched', (req, res) => {
 // 하나의 gameId에 해당하는 모든 캠페인 리스트를 반환하는 Promise
 const getCash = async (campaignList) => {
   const cashQuery = `
-  SELECT campaignId, type , ROUND(sum(cash))  as cash
+  SELECT campaignId, type, sum(cashToCreator)  as cash
   FROM campaignLog
   WHERE campaignId = ? 
   AND creatorId = ?
@@ -123,7 +123,7 @@ const getCash = async (campaignList) => {
               newCampaignData[cashData.type] = cashData.cash;
               cash += cashData.cash;
             });
-            newCampaignData.cash = cash * 0.6;
+            newCampaignData.cash = cash;
             newList.push(newCampaignData);
             const newDate = new Date(newCampaignData.date);
             newDate.setHours(newDate.getHours() + 9);
