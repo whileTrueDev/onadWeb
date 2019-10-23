@@ -53,9 +53,9 @@ router.post('/charge', (req, res) => {
 
   // 충전시 기존의 캐시량 + 캐시충전량으로 update
   const debitUpdateQuery = `
-  INSERT INTO marketerDebit
-  (marketerId, cashAmount)
-  VALUES (?, ?)`;
+  UPDATE marketerDebit
+  SET cashAmount = ?
+  WHERE marketerId = ?`;
 
   /** ********************
    * api call 및 캐시충전 처리 필요
@@ -70,7 +70,7 @@ router.post('/charge', (req, res) => {
         }
         Promise.all([
           doQuery(cashChargeInsertQuery, cashChargeArray),
-          doQuery(debitUpdateQuery, [marketerId, currentCashAmount + chargeCash])
+          doQuery(debitUpdateQuery, [currentCashAmount + chargeCash, marketerId])
         ])
           .then((secondrow) => {
             // 마케터 캐시 충전 쿼리 완료
