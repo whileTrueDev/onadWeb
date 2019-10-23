@@ -72,26 +72,23 @@ function CashDialog(props) {
     open, handleClose, currentCash,
   } = props;
   // select value
-  const { selectValue, handleChange } = useValue('100000');
-  const chargeType = useValue('계좌이체');
-  const totalDebit = Number(currentCash) + Number(selectValue);
-
+  const { selectValue, handleChange } = useValue('10000');
+  const chargeType = useValue('무통장입금');
+  const currentCashNumber = currentCash.replace(",","")
+  const totalDebit = Number(currentCashNumber) + Number(selectValue);
+  
   // 출금신청 스낵바
   const {
     confirmDialogOpen, handleConfirmDialogClose, handleOnlyDialogClose,
     handleConfirmDialogOpen,
   } = useConfirmDialog(handleClose);
 
-  // 캐시 충전진행 버튼 클릭
-  // function handleClick() {
-  //   handleConfirmDialogOpen();
-  // }
 
   function handleSubmitClick() {
     // 해당 금액 만큼 광고 캐시에 추가하는 요청
     axios.post(`${HOST}/api/dashboard/marketer/cash/charge`, {
       chargeCash: selectValue,
-      chargeType: chargeType.selectValue
+      chargeType: chargeType.selectValue,
     }).then((res) => {
       if (!res[0]) {
         handleConfirmDialogClose();
@@ -153,7 +150,7 @@ function CashDialog(props) {
               value={chargeType.selectValue}
               onChange={chargeType.handleChange}
             >
-              <FormControlLabel
+              {/* <FormControlLabel
                 value="신용카드"
                 control={<Radio color="primary" />}
                 label={(
@@ -161,8 +158,8 @@ function CashDialog(props) {
                     신용카드
                   </Typography>
                 )}
-              />
-              <FormControlLabel
+              /> */}
+              {/* <FormControlLabel
                 value="계좌이체"
                 control={<Radio color="primary" />}
                 label={(
@@ -170,7 +167,7 @@ function CashDialog(props) {
                     계좌이체
                   </Typography>
                 )}
-              />
+              /> */}
               <FormControlLabel
                 value="무통장입금"
                 control={<Radio color="primary" />}
@@ -181,6 +178,10 @@ function CashDialog(props) {
                 )}
               />
             </RadioGroup>
+            <Typography variant="subtitle1" style={{marginBottom: 5, fontWeight:'700', color: 'red'}} className={classes.selectValue}>
+              부산은행 : 101 - 2064 - 1964 - 03 (와일트루강동기)
+            </Typography>
+
           </div>
           <Divider />
 
@@ -196,38 +197,38 @@ function CashDialog(props) {
               onChange={handleChange}
             >
               <FormControlLabel
+                value="10000"
+                control={<Radio color="primary" />}
+                label={(
+                  <Typography variant="subtitle1" className={classes.selectValue}>
+                    10,000 원
+                  </Typography>
+                )}
+              />
+              <FormControlLabel
+                value="30000"
+                control={<Radio color="primary" />}
+                label={(
+                  <Typography variant="subtitle1" className={classes.selectValue}>
+                    30,000 원
+                  </Typography>
+                )}
+              />
+              <FormControlLabel
+                value="50000"
+                control={<Radio color="primary" />}
+                label={(
+                  <Typography variant="subtitle1" className={classes.selectValue}>
+                    50,000 원
+                  </Typography>
+                )}
+              />
+              <FormControlLabel
                 value="100000"
                 control={<Radio color="primary" />}
                 label={(
                   <Typography variant="subtitle1" className={classes.selectValue}>
                     100,000 원
-                  </Typography>
-                )}
-              />
-              <FormControlLabel
-                value="500000"
-                control={<Radio color="primary" />}
-                label={(
-                  <Typography variant="subtitle1" className={classes.selectValue}>
-                    500,000 원
-                  </Typography>
-                )}
-              />
-              <FormControlLabel
-                value="1000000"
-                control={<Radio color="primary" />}
-                label={(
-                  <Typography variant="subtitle1" className={classes.selectValue}>
-                    1,000,000 원
-                  </Typography>
-                )}
-              />
-              <FormControlLabel
-                value="5000000"
-                control={<Radio color="primary" />}
-                label={(
-                  <Typography variant="subtitle1" className={classes.selectValue}>
-                    5,000,000 원
                   </Typography>
                 )}
               />
@@ -258,7 +259,7 @@ function CashDialog(props) {
         <Dialog
           open={confirmDialogOpen}
           onClose={handleOnlyDialogClose}
-          title="입력하신대로 캐시 충전 진행하시겠어요?"
+          title="입력하신대로 캐시 충전 하시겠어요?"
           buttons={(
             <div>
               <Button onClick={handleSubmitClick} color="info">
@@ -271,11 +272,23 @@ function CashDialog(props) {
           )}
         >
           <DialogContent>
-            <Typography variant="h5" marked="center">
+            <Typography variant="h6" marked="center">
               {`광고캐시 충전 신청액 : ${selectValue}`}
             </Typography>
-            <Typography variant="h5" marked="center">
+            <Typography variant="h6" marked="center">
               {`충전 이후 보유 광고캐시 : ${totalDebit}`}
+            </Typography>
+            <Typography variant="subtitle1" marked="center" style={{fontWeight: "600", color:'red', marginTop: 10}}>
+              부산은행 : 101 - 2064 - 1964 - 03 (와일트루강동기)
+            </Typography>
+            <Typography variant="subtitle1" marked="center" style={{fontWeight: "600"}}>
+              입금 확인이 되면 캐시가 충전됩니다.
+            </Typography>
+            <Typography variant="subtitle1" marked="center" style={{fontWeight: "600", color:'red',}}>
+              회원가입시 이름(회사명) 명의로 입금해주십시오.
+            </Typography>
+            <Typography variant="subtitle1" marked="center" style={{fontWeight: "600"}}>
+              세금계산서 발행은 화면 왼쪽의 사용방법에서 안내합니다.
             </Typography>
           </DialogContent>
         </Dialog>

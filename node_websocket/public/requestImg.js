@@ -5,6 +5,7 @@ module.exports = function (sql, socket, msg) {
   const fullUrl = msg[0];
   const cutUrl = `/${fullUrl.split('/')[4]}`;
   const prevBannerName = msg[1];
+  const getTime = new Date().toLocaleString();
   let myCreatorId;
   let myCampaignId;
   let myGameId;
@@ -132,11 +133,7 @@ module.exports = function (sql, socket, msg) {
     return new Promise((resolve, reject) => {
       doQuery(selectQuery, [campaignId])
         .then((row) => {
-          if (row.result.length === 0) {
-            socket.emit('img clear', []);
-          } else {
-            resolve(row.result[0].bannerSrc);
-          }
+          resolve(row.result[0].bannerSrc);
         })
         .catch((errorData) => {
           errorData.point = 'getBannerSrc()';
@@ -151,7 +148,23 @@ module.exports = function (sql, socket, msg) {
     return Math.floor(Math.random() * (max - 0)) + 0; // 최댓값은 제외, 최솟값은 포함
   };
 
+  const insertLandingPage = (campaignId, creatorId) => {
+    const insertLandingQuery = 'INSERT IGNORE INTO landingClick(campaignId, creatorId) value(?,?);';
+    return new Promise((resolve, reject) => {
+      doQuery(insertLandingQuery, [campaignId, creatorId])
+        .then((row) => {
+          resolve(row.result);
+          // console.log(row);
+        })
+        .catch((errorData) => {
+          errorData.point = 'insertLandingPage()';
+          errorData.description = 'landingClick에 새로운 랜딩페이지 입력 과정';
+          reject(errorData);
+        });
+    });
+  };
   async function getBanner([creatorId, gameId]) {
+    console.log(`-----------------------Id : ${creatorId} / ${getTime}---------------------------`);
     const [creatorCampaignList, onCampaignList] = await Promise.all(
       [
         getCreatorCampaignList(creatorId),
@@ -164,7 +177,14 @@ module.exports = function (sql, socket, msg) {
     const campaignList = Array.from(new Set(onCreatorcampaignList.concat(onCategorycampaignList)));
     const campaignId = campaignList[getRandomInt(campaignList.length)];
     myCampaignId = campaignId;
-    console.log(`이번에 광고될 캠페인은 ${campaignId} 입니다.`);
+    if (myCampaignId) {
+      console.log(`이번에 광고될 캠페인은 ${myCampaignId} 입니다.`);
+    } else {
+      console.log('켜져있는 광고가 없습니다.');
+      socket.emit('img clear', []);
+      return false;
+    }
+
     if (prevBannerName && myCampaignId === prevBannerName.split(',')[0]) {
       return false;
     }
@@ -181,6 +201,7 @@ module.exports = function (sql, socket, msg) {
       myGameId = await getGameId(myCreatorId);
       const bannerInfo = await getBanner([myCreatorId, myGameId]);
       if (bannerInfo) {
+        const doInsert = await insertLandingPage(bannerInfo[1], bannerInfo[2]);
         socket.emit('img receive', [bannerInfo[0], [bannerInfo[1], bannerInfo[2]]]);
       } else {
         console.log('같은 캠페인 송출 중이어서 재호출 안합니다.');

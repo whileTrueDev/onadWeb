@@ -140,7 +140,7 @@ const RegistStepper = withRoot((props) => {
           setLoading(0);
           history.push('/');
         } else {
-          alert('등록중 오류가 났습니다. 다시 회원가입을 시작하세요.');
+          alert('등록중 오류가 났습니다. 본사로 문의해주세요.');
           setLoading(0);
           history.push('/');
         }

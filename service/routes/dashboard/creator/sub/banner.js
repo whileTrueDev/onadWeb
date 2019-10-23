@@ -122,7 +122,7 @@ const getCash = async (campaignList) => {
               newCampaignData[cashData.type] = cashData.cash;
               cash += cashData.cash;
             });
-            newCampaignData.cash = cash;
+            newCampaignData.cash = cash * 0.6;
             newList.push(newCampaignData);
             const newDate = new Date(newCampaignData.date);
             newDate.setHours(newDate.getHours() + 9);
