@@ -60,6 +60,7 @@ router.post('/regist', (req, res, next) => {
   transporter.sendMail(mailOptions, (error, info) => {
     if (error) {
       logger.error(`Email 전송오류 : ${error.response}`);
+      console.log(`Email 전송오류 : ${error.response}`);
       res.send({
         error: error.response
       });
