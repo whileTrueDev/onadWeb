@@ -5,6 +5,7 @@ module.exports = function (sql, socket, msg) {
   const fullUrl = msg[0];
   const cutUrl = `/${fullUrl.split('/')[4]}`;
   const prevBannerName = msg[1];
+  const getTime = new Date().toLocaleString();
   let myCreatorId;
   let myCampaignId;
   let myGameId;
@@ -132,11 +133,7 @@ module.exports = function (sql, socket, msg) {
     return new Promise((resolve, reject) => {
       doQuery(selectQuery, [campaignId])
         .then((row) => {
-          if (row.result.length === 0) {
-            socket.emit('img clear', []);
-          } else {
-            resolve(row.result[0].bannerSrc);
-          }
+          resolve(row.result[0].bannerSrc);
         })
         .catch((errorData) => {
           errorData.point = 'getBannerSrc()';
@@ -152,6 +149,7 @@ module.exports = function (sql, socket, msg) {
   };
 
   async function getBanner([creatorId, gameId]) {
+    console.log(`-----------------------Id : ${creatorId} / ${getTime}---------------------------`);
     const [creatorCampaignList, onCampaignList] = await Promise.all(
       [
         getCreatorCampaignList(creatorId),
@@ -164,7 +162,14 @@ module.exports = function (sql, socket, msg) {
     const campaignList = Array.from(new Set(onCreatorcampaignList.concat(onCategorycampaignList)));
     const campaignId = campaignList[getRandomInt(campaignList.length)];
     myCampaignId = campaignId;
-    console.log(`이번에 광고될 캠페인은 ${campaignId} 입니다.`);
+    if (myCampaignId) {
+      console.log(`이번에 광고될 캠페인은 ${myCampaignId} 입니다.`);
+    } else {
+      console.log('켜져있는 광고가 없습니다.');
+      socket.emit('img clear', []);
+      return false;
+    }
+
     if (prevBannerName && myCampaignId === prevBannerName.split(',')[0]) {
       return false;
     }
