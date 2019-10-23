@@ -2,7 +2,7 @@
 const express = require('express');
 const doQuery = require('../../../../model/doQuery');
 
-const CREATOR_EARN_EXCEPT_FEES = 0.6;
+// const CREATOR_EARN_EXCEPT_FEES = 0.6;
 
 const router = express.Router();
 // 해당 크리에이터 성과 차트 데이터 조회
@@ -13,7 +13,7 @@ router.get('/', (req, res) => {
   const query = `
   SELECT
     cl.date as date,
-    ROUND( sum(cash) * ?) as cash, type
+    ROUND( sum(cash) * 0.6) as cash, type
   FROM campaignLog AS cl
   WHERE creatorId = ?
     AND  cl.date >= DATE_SUB(NOW(), INTERVAL ? DAY)
@@ -21,7 +21,7 @@ router.get('/', (req, res) => {
   ORDER BY cl.date DESC
   `;
 
-  const queryArray = [CREATOR_EARN_EXCEPT_FEES, creatorId, dateRange];
+  const queryArray = [creatorId, dateRange];
 
   doQuery(query, queryArray)
     .then((row) => {
@@ -40,13 +40,13 @@ router.get('/monthly', (req, res) => {
 
   const query = `
   SELECT 
-  date, ROUND( sum(cash) * ? ) as cash, type
+  date, ROUND( sum(cash) * 0.6 ) as cash, type
   FROM campaignLog
   WHERE creatorId = ? AND date >= DATE_SUB(NOW(), INTERVAL 12 MONTH)
   GROUP BY DATE_FORMAT(date, "%y년 %m월%"), type
   ORDER BY date DESC`;
 
-  const queryArray = [CREATOR_EARN_EXCEPT_FEES, creatorId];
+  const queryArray = [creatorId];
 
   doQuery(query, queryArray)
     .then((row) => { res.send(row.result); })
