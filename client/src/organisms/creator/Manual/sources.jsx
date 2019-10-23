@@ -236,10 +236,7 @@ const manualSources = {
     ]
   },
   withdrawal: {
-    card: {
-      title: '수익금 출금',
-      subtitle: '언제나 짜릿하고 늘 새로운 출금 시간입니다.',
-    },
+    card: { title: '수익금 출금' },
     source: [
       {
         image: '/pngs/dashboard/manual/new_creator/creator-withdrawal-01.png',
@@ -249,6 +246,7 @@ const manualSources = {
         image: '/pngs/dashboard/manual/new_creator/creator-withdrawal-03.png',
         description: `[**<대시보드>**](${HOST_URL}/main)에서 <출금신청> 버튼을 클릭하여  
         **출금 가능 금액 이하의 금액**을 입력하여 신청할 수 있습니다.  
+        **최소 출금 가능 금액**은 3만원입니다.  
         출금 신청된 금액은 신청한 달의 다음달 10일에 등록한 계좌로 정산됩니다.`,
       },
       {

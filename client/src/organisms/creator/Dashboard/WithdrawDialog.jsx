@@ -191,6 +191,12 @@ function WithdrawDialog(props) {
           </div>
           <Divider />
 
+          <div>
+            <Typography variant="caption">
+            * 출금은 최소 3만원 이상부터 가능합니다.
+            </Typography>
+          </div>
+
           {/* 출금금액입력 */}
           <div className={classes.contentWrapper} style={{ position: 'relative', width: 150 }}>
             <Typography className={classes.contentTitle} variant="subtitle1">
