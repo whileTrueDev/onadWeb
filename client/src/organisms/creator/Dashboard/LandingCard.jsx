@@ -80,7 +80,7 @@ const IncomeCard = () => {
               alignItems: 'center'
             }}
           >
-            <Grid item sm={11}>
+            <Grid item xs={11}>
               <PrettoSlider
                 style={{ cursor: 'default' }}
                 max={500}
@@ -92,7 +92,7 @@ const IncomeCard = () => {
             <Grid item>
               <Typography gutterBottom variant="body2" className={classes.level}>
                 LV.
-                {landingData.loading && '0'}
+                {landingData.loading && '1'}
                 {!landingData.loading && !landingData.error && (
                   landingData.payload.level
                 )}
