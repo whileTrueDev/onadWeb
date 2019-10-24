@@ -50,7 +50,7 @@ const useStyles = makeStyles(({
   },
   level: {
     fontWeight: '700',
-    marginLeft: '3px'
+    marginLeft: '1px'
   }
 }));
 
@@ -80,7 +80,7 @@ const IncomeCard = () => {
               alignItems: 'center'
             }}
           >
-            <Grid item xs={11} sm={11}>
+            <Grid item sm={11}>
               <PrettoSlider
                 style={{ cursor: 'default' }}
                 max={500}
