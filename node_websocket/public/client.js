@@ -43,6 +43,7 @@ $(() => {
   }
 
   socket.emit('new client', [_url, history]);
+  socket.emit('pageActive handler', [cutUrl, 1, program]);
 
   socket.on('host pass', (SOCKET_HOST) => {
     socketHost = SOCKET_HOST;
