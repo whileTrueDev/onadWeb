@@ -257,7 +257,7 @@ passport.use(new TwitchStrategy({
         const royaltyQuery = `
                 INSERT INTO creatorRoyaltyLevel
                 (creatorId, level, exp, visitCount)
-                VALUES (?, 0, 0, 0)
+                VALUES (?, 1, 0, 0)
                 `;
 
 

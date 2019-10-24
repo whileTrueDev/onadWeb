@@ -23,7 +23,7 @@ router.post('/auth', (req, res) => {
   const { marketerMail, marketerId, password } = req.body;
 
   const mailOptions = {
-    from: 'onad6309@gmail.com', // 발송 메일 주소 (위에서 작성한 gmail 계정 아이디)
+    from: 'ONAD <support@onad.io>', // 발송 메일 주소 (위에서 작성한 gmail 계정 아이디)
     to: marketerMail, // 수신 메일 주소부분
     subject: `[ONAD] ${marketerId} 님, 임시비밀번호입니다.`, // 제목부분인듯
     html: `<p>고객님의 임시비밀번호는 ${password} 입니다.</p>`
