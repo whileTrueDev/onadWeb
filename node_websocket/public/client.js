@@ -4,9 +4,16 @@ $(() => {
   const history = window.history.length;
   const _url = window.location.href;
   const cutUrl = `/${_url.split('/')[4]}`;
+  const navi = navigator.userAgent.toLowerCase();
+  let program;
   let socketHost;
   let hidden;
   let visibilityChange;
+
+  if (navi.indexOf('xsplit' !== -1)) {
+    program = 'xsplit';
+  } else { program = 'obs'; }
+
   if (typeof document.hidden !== 'undefined') { // Opera 12.10 and Firefox 18 and later support
     hidden = 'hidden';
     visibilityChange = 'visibilitychange';
@@ -20,10 +27,10 @@ $(() => {
 
   function handleVisibilityChange() {
     if (document[hidden]) {
-      socket.emit('pageActive handler', [cutUrl, 0]);
+      socket.emit('pageActive handler', [cutUrl, 0, program]);
       $('#imgMessage').empty();
     } else {
-      socket.emit('pageActive handler', [cutUrl, 1]);
+      socket.emit('pageActive handler', [cutUrl, 1, program]);
       socket.emit('pageActive', _url);
     }
   }
@@ -66,7 +73,7 @@ $(() => {
   socket.on('response banner data to server', () => {
     if ($('#showBanner').attr('name')) {
       const cutBannerName = $('#showBanner').attr('name').split(',');
-      socket.emit('write to db', cutBannerName);
+      socket.emit('write to db', [cutBannerName, program]);
     }
   });
 

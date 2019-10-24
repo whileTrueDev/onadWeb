@@ -44,6 +44,9 @@ app.get('/error', (req, res) => {
   res.render('error.ejs');
 });
 
+app.get('/test', (req, res) => {
+  res.render('testpage.ejs');
+});
 app.get('/banner/:id', (req, res, next) => { // /banner/:id로 라우팅
   res.render('client.ejs');
 });
@@ -100,10 +103,11 @@ app.get('/banner/:id', (req, res, next) => { // /banner/:id로 라우팅
     socket.on('write to db', (msg) => {
       pool.getConnection((err, conn) => {
         if (err) return err;
-        const campaignId = msg[0];
-        const creatorId = msg[1];
-        const writeQuery = 'INSERT INTO campaignTimestamp (campaignId, creatorId) VALUES (?, ?);';
-        conn.query(writeQuery, [campaignId, creatorId], (err, result, fields) => {
+        const campaignId = msg[0][0];
+        const creatorId = msg[0][1];
+        const program = msg[1];
+        const writeQuery = 'INSERT INTO campaignTimestamp (campaignId, creatorId, program) VALUES (?, ?, ?);';
+        conn.query(writeQuery, [campaignId, creatorId, program], (err, result, fields) => {
           conn.release();
           if (err) return err;
         });
@@ -122,10 +126,11 @@ app.get('/banner/:id', (req, res, next) => { // /banner/:id로 라우팅
     socket.on('pageActive handler', (msg) => {
       const bannerName = msg[0];
       const state = msg[1];
+      const program = msg[2];
       pool.getConnection((err, conn) => {
         if (err) return err;
-        const activeQuery = 'INSERT INTO bannerVisible (advertiseUrl, visibleState) VALUES (?, ?);';
-        conn.query(activeQuery, [bannerName, state], (err, result, fields) => {
+        const activeQuery = 'INSERT INTO bannerVisible (advertiseUrl, visibleState, program) VALUES (?, ?, ?);';
+        conn.query(activeQuery, [bannerName, state, program], (err, result, fields) => {
           conn.release();
           if (err) return err;
         });
