@@ -97,21 +97,19 @@ const getGameId = async (creatorId) => {
 // 하나의 gameId에 해당하는 모든 캠페인 리스트를 반환하는 Promise
 const getGameCampaignList = async (gameId) => {
   console.log('게임의 카테고리에 계약되어있는 캠페인 List를 가져옵니다.');
-  const categoryList = gameDict[gameId];
+  const categoryList = gameDict[gameId] || gameDict.default;
   let returnList = [];
-  if (categoryList) {
-    await Promise.all(
-      categoryList.map(categoryId => getCategoryCampaignList(categoryId)
-        .then((campaignList) => {
-          returnList = returnList.concat(campaignList);
-        }))
-    )
-      .catch((errorData) => {
-        console.log(errorData);
-        errorData.point = 'getGameCampaignList()';
-        errorData.description = 'categoryCampaign에서 각각의 categoryId에 따른 캠페인 가져오기';
-      });
-  }
+  await Promise.all(
+    categoryList.map(categoryId => getCategoryCampaignList(categoryId)
+      .then((campaignList) => {
+        returnList = returnList.concat(campaignList);
+      }))
+  )
+    .catch((errorData) => {
+      console.log(errorData);
+      errorData.point = 'getGameCampaignList()';
+      errorData.description = 'categoryCampaign에서 각각의 categoryId에 따른 캠페인 가져오기';
+    });
   return Array.from(new Set(returnList));
 };
 
@@ -135,4 +133,4 @@ async function getBanner([creatorId, gameId]) {
   console.log(campaignList);
 }
 
-getBanner(['137697282']);
+getBanner(['137697282', '123123']);

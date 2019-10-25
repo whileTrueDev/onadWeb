@@ -169,8 +169,8 @@ const CampaignCreateStepper = (props) => {
           return checkedCategories;
         }
         case 2: {
-          // 모든 creatorList
-          return creatorList;
+          // 카테고리 무관인 카테고리 ID
+          return ['무관'];
         }
         default: {
           return [];

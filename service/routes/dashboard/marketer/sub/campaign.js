@@ -155,7 +155,7 @@ const PriorityDoquery = ({ campaignId, priorityType, priorityList }) => {
         return 'SELECT campaignList FROM categoryCampaign WHERE categoryName = ?';
       }
       case 2: {
-        return 'SELECT campaignList FROM creatorCampaign WHERE creatorId = ?';
+        return 'SELECT campaignList FROM categoryCampaign WHERE categoryName = ?';
       }
       default: {
         return '';
@@ -179,9 +179,9 @@ const PriorityDoquery = ({ campaignId, priorityType, priorityList }) => {
       }
       case 2: {
         return `
-        UPDATE creatorCampaign 
+        UPDATE categoryCampaign 
         SET campaignList = ?
-        WHERE creatorId = ? `;
+        WHERE categoryName = ? `;
       }
       default: {
         return '';
@@ -286,7 +286,7 @@ router.post('/push', (req, res) => {
           [campaignId, campaignName, marketerId, bannerId, limit,
             priorityType, optionType, targetJsonData, marketerName]),
         PriorityDoquery({ campaignId, priorityType, priorityList }),
-        LandingDoQuery({ campaignId, priorityType, priorityList })
+        // LandingDoQuery({ campaignId, priorityType, priorityList })
       ])
         .then(() => {
           res.send([true, '캠페인이 등록되었습니다']);
