@@ -106,7 +106,7 @@ module.exports = function (sql, socket, msg) {
   // 하나의 gameId에 해당하는 모든 캠페인 리스트를 반환하는 Promise
   const getGameCampaignList = async (gameId) => {
     console.log('게임의 카테고리에 계약되어있는 캠페인 List를 가져옵니다.');
-    const categoryList = gameDict[gameId] || gameDict.default;
+    const categoryList = gameDict[gameId] ? gameDict[gameId].concat(gameDict.default) : gameDict.default;
     let returnList = [];
     if (categoryList) {
       await Promise.all(
