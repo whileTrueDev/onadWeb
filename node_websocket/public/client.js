@@ -10,7 +10,7 @@ $(() => {
   let hidden;
   let visibilityChange;
 
-  if (navi.indexOf('xsplit' !== -1)) {
+  if (navi.indexOf('xsplit') !== -1) {
     program = 'xsplit';
   } else { program = 'obs'; }
 
