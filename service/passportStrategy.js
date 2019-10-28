@@ -180,7 +180,7 @@ passport.use(new TwitchStrategy({
     .then((row) => {
       const creatorData = row.result[0];
       if (creatorData) {
-        console.log(`${user.creatorDisplayName} 님이 로그인 하셨습니다.`);
+        console.log(`[${new Date().toLocaleString()}] [로그인] ${user.creatorDisplayName}`);
         user.creatorIp = creatorData.creatorIp;
 
         // Data 변경시에 변경된 값을 반영하는 영역.
@@ -221,13 +221,24 @@ passport.use(new TwitchStrategy({
                     SET creatorTwitchId = ?
                     WHERE creatorId = ?
                     `;
+          const landingClickUpdateQuery = `
+          UPDATE creatorLanding SET creatorTwitchId = ? WHERE creatorId = ?
+          `;
 
-          doQuery(updateQuery, [user.creatorName, user.creatorId])
-            .then(() => done(null, user))
-            .catch((errorData) => {
-              console.log(errorData);
-              done(errorData, false);
-            });
+          Promise.all([
+            doQuery(updateQuery, [user.creatorName, user.creatorId])
+              .then(() => done(null, user))
+              .catch((errorData) => {
+                console.log(errorData);
+                done(errorData, false);
+              }),
+            doQuery(landingClickUpdateQuery, [user.creatorName, user.creatorId])
+              .then(() => done(null, user))
+              .catch((errorData) => {
+                console.log(errorData);
+                done(errorData, false);
+              })
+          ]);
         } else {
           return done(null, user);
         }

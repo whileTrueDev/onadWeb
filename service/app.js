@@ -11,10 +11,14 @@ const MySQLStore = require('express-mysql-session')(session);
 // Router 정의
 const mailerRouter = require('./routes/mailer');
 const apiRouter = require('./routes/api');
+// marketer Tax Bill scheduler
+const taxBillScheduler = require('./middlewares/scheduler/taxBillScheduler');
 
 const app = express();
 
-process.env.NODE_ENV = (process.env.NODE_ENV && (process.env.NODE_ENV).trim().toLowerCase() == 'production') ? 'production' : 'development';
+process.env.NODE_ENV = (process.env.NODE_ENV
+  && (process.env.NODE_ENV).trim().toLowerCase() === 'production')
+  ? 'production' : 'development';
 const BACK_HOST = 'http://localhost:3000';
 let FRONT_HOST = 'http://localhost:3001';
 if (process.env.NODE_ENV === 'production') {
@@ -86,6 +90,8 @@ app.use((err, req, res, next) => {
   res.render('error');
 });
 
-console.log(process.env.NODE_ENV);
+console.log('ENVIRONMENT: ', process.env.NODE_ENV);
+console.log(`SCHEDULER: [${taxBillScheduler.name}] - ON `);
+console.log('===========================================');
 // 선언만 하고 start는 bin에서 시작
 module.exports = app;
