@@ -3,8 +3,7 @@ const tmi = require('tmi.js');
 const BOT_USERNAME = 'adbot';
 const OAUTH_TOKEN = 'oauth:ql78nrmxylz561jfwizzu7vi973vld';
 const CHANNEL_NAME = 'iamsupermazinga';
-const CHANNEL_NAME2 = 'dn0208';
-const CHANNEL_NAME3 = 'looksam';
+const CHANNEL_NAME2 = 'dingception';
 
 // Define configuration options
 const opts = {
@@ -18,6 +17,9 @@ const opts = {
     CHANNEL_NAME, CHANNEL_NAME2
   ]
 };
+
+// Data format
+
 
 const client = new tmi.Client(opts); // Create a client with our options
 client.connect(); // Connect to Twitch:

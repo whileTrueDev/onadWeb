@@ -49,7 +49,7 @@ const ContractionCard = () => {
             </span>
           </Grid>
           <Grid item>
-            <Divider variant="vertical" />
+            <Divider orientation="vertical" />
           </Grid>
           <Grid item>
             <Grid container direction="row" className={classes.text}>
