@@ -1,3 +1,4 @@
+require('dotenv').config(); // 환경변수를 위해. dev환경: .env 파일 / production환경: docker run의 --env-file인자로 넘김.
 const express = require('express');
 const app = require('express')();
 const http = require('http').createServer(app);
@@ -6,19 +7,13 @@ const schedule = require('node-schedule');
 const sql = require('./public/models/select');
 const pool = require('./public/models/connect');
 const requestImg = require('./public/requestImg.js');
-const config = require('./config.json');
 
 // port 설정 및 hostname 설정
 const PORT = 3002;
 process.env.NODE_ENV = (process.env.NODE_ENV && (process.env.NODE_ENV).trim().toLowerCase() === 'production') ? 'production' : 'development';
-let BACK_HOST = config.dev.apiHostName;
-let FRONT_HOST = config.dev.reactHostName;
-let SOCKET_HOST = config.dev.socketHostName;
+let SOCKET_HOST = process.env.DEV_SOCKET_HOSTNAME;
 if (process.env.NODE_ENV === 'production') {
-  console.log(`now listening on ${PORT} PORT with ${process.env.NODE_ENV} environment!`);
-  BACK_HOST = config.production.apiHostName;
-  FRONT_HOST = config.production.reactHostName;
-  SOCKET_HOST = config.production.socketHostName;
+  SOCKET_HOST = process.env.PRODUCTION_SOCKET_HOSTNAME;
 }
 // view engine
 app.set('views', `${__dirname}/views`);
@@ -140,5 +135,5 @@ app.get('/banner/:id', (req, res, next) => { // /banner/:id로 라우팅
 }());
 
 http.listen(PORT, () => {
-  console.log('node_websocket server on');
+  console.log(`node_websocket server on ${process.env.NODE_ENV} mode`);
 });

@@ -3,9 +3,11 @@ const nodemailer = require('nodemailer');
 const logger = require('../middlewares/logger');
 
 const router = express.Router();
-const config = require('../config.json');
 
-const HOST = process.env.NODE_ENV === 'production' ? config.production.apiHostName : config.dev.apiHostName;
+
+const HOST = process.env.NODE_ENV === 'production'
+  ? process.env.PRODUCTION_API_HOSTNAME
+  : process.env.DEV_API_HOSTNAME;
 
 const transporter = nodemailer.createTransport({
   service: 'gmail',
