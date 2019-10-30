@@ -1,3 +1,4 @@
+require('dotenv').config(); // 환경변수를 위해. dev환경: .env 파일 / production환경: docker run의 --env-file인자로 넘김.
 const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
@@ -6,7 +7,6 @@ const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const passport = require('./passportStrategy');
-const config = require('./config.json');
 const MySQLStore = require('express-mysql-session')(session);
 // Router 정의
 const mailerRouter = require('./routes/mailer');
@@ -16,21 +16,17 @@ const taxBillScheduler = require('./middlewares/scheduler/taxBillScheduler');
 
 const app = express();
 
-process.env.NODE_ENV = (process.env.NODE_ENV
-  && (process.env.NODE_ENV).trim().toLowerCase() === 'production')
-  ? 'production' : 'development';
-const BACK_HOST = 'http://localhost:3000';
-let FRONT_HOST = 'http://localhost:3001';
+let FRONT_HOST = process.env.DEV_REACT_HOSTNAME;
 if (process.env.NODE_ENV === 'production') {
-  FRONT_HOST = config.production.reactHostName;
+  FRONT_HOST = process.env.PRODUCTION_REACT_HOSTNAME;
 }
 
 const storeOptions = {
-  host: config.SESSIONSTORE.host,
-  port: config.SESSIONSTORE.port,
-  user: config.SESSIONSTORE.user,
-  password: config.SESSIONSTORE.password,
-  database: config.SESSIONSTORE.database,
+  host: process.env.SESSIONSTORE_HOST,
+  port: process.env.SESSIONSTORE_PORT,
+  user: process.env.SESSIONSTORE_USER,
+  password: process.env.SESSIONSTORE_PASSWORD,
+  database: process.env.SESSIONSTORE_DATABASE,
 };
 
 const sessionStore = new MySQLStore(storeOptions);
