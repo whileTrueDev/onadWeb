@@ -1,7 +1,8 @@
 const axios = require('axios');
-const config = require('../config.json');
 
-const HOST = process.env.NODE_ENV === 'production' ? config.production.apiHostName : config.dev.apiHostName;
+const HOST = process.env.NODE_ENV === 'production'
+  ? process.env.PRODUCTION_API_HOSTNAME
+  : process.env.DEV_API_HOSTNAME;
 
 const sendEmailAuth = (req, response) => {
   const user = {

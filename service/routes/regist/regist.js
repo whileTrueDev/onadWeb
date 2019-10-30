@@ -4,10 +4,10 @@ const encrypto = require('../../encryption');
 const doQuery = require('../../model/doQuery');
 const setTemporaryPassword = require('../../middlewares/setTemporyPassword');
 const sendEmailAuth = require('../../middlewares/sendEmailAuth');
-const config = require('../../config.json');
 
-const HOST = process.env.NODE_ENV === 'production' ? config.production.reactHostName : config.dev.reactHostName;
-
+const HOST = process.env.NODE_ENV === 'production'
+  ? process.env.PRODUCTION_REACT_HOSTNAME
+  : process.env.DEV_REACT_HOSTNAME;
 
 const router = express.Router();
 
