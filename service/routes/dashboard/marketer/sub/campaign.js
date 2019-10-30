@@ -274,7 +274,7 @@ router.post('/push', (req, res) => {
   const saveQuery = `
   INSERT INTO campaign 
   (campaignId, campaignName, marketerId, bannerId, dailyLimit, priorityType, optionType, onOff, targetList, marketerName) 
-  VALUES (?, ?, ?, ?, ?, ?, ?, 1, ?, ?)`;
+  VALUES (?, ?, ?, ?, ?, ?, ?, 0, ?, ?)`;
   // 캠페인 등록.
   doQuery(searchQuery, [marketerId])
     .then((row) => {

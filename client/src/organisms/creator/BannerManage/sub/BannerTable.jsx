@@ -5,10 +5,11 @@ import classnames from 'classnames';
 // @material-ui/core components
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import {
-  Table, TableHead, TableRow, TableBody, TableCell, Grid, Typography, Divider, Hidden
+  Table, TableHead, TableRow, TableBody, TableCell, Grid, Typography, Divider, Hidden, IconButton
 } from '@material-ui/core';
 // custom table component
 import DateRange from '@material-ui/icons/DateRange';
+import DeleteIcon from '@material-ui/icons/Delete';
 import CustomTableFooter from '../../../../atoms/Table/TableFooter';
 // core components
 import tableStyle from '../../../../assets/jss/onad/components/tableStyle';
@@ -74,9 +75,10 @@ const stateDic = {
   1: '⏱ 진행중',
   0: '✔️ 완료',
 };
+
 function BannerTable({ ...props }) {
   const {
-    classes, tableData, tableHeaderColor,
+    classes, tableData, tableHeaderColor, setOpen, setCampaign
   } = props;
   const innerClasses = useStyles();
   const [page, setPage] = React.useState(0); // 테이블 페이지
@@ -93,6 +95,11 @@ function BannerTable({ ...props }) {
   function handleChangeTableRowsPerPage(event) {
     setRowsPerPage(parseInt(event.target.value, 10));
   }
+
+  const handleBan = campaign => () => {
+    setCampaign(campaign);
+    setOpen(true);
+  };
 
   const tableHead = ['광고주 / 시작일', '배너이미지', '수익', '배너 및 광고주 설명', ''];
   return (
@@ -215,6 +222,17 @@ function BannerTable({ ...props }) {
                   </Grid>
                 </TableCell>
               </Hidden>
+              {bannerData.state === 1
+              && (
+              <Hidden mdDown>
+                <TableCell className={classes.tableCell}>
+                  <IconButton aria-label="delete" onClick={handleBan(bannerData)}>
+                    <DeleteIcon />
+                  </IconButton>
+                </TableCell>
+              </Hidden>
+              )
+              }
             </TableRow>
           ))}
           {emptyRows > 0 && (
