@@ -172,7 +172,7 @@ function AppFooter() {
               &copy;
               {'while True Corp.'}
             </strong>
-            {' All right Reserved'}
+            {' All rights Reserved'}
           </Typography>
         </Grid>
       </Container>
