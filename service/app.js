@@ -22,11 +22,11 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 const storeOptions = {
-  host: process.env.SESSIONSTORE_HOST,
-  port: process.env.SESSIONSTORE_PORT,
-  user: process.env.SESSIONSTORE_USER,
-  password: process.env.SESSIONSTORE_PASSWORD,
-  database: process.env.SESSIONSTORE_DATABASE,
+  host: process.env.SESSION_STORE_DB_HOST,
+  port: process.env.SESSION_STORE_DB_PORT,
+  user: process.env.SESSION_STORE_DB_USER,
+  password: process.env.SESSION_STORE_DB_PASSWORD,
+  database: process.env.SESSION_STORE_DB_DATABASE,
 };
 
 const sessionStore = new MySQLStore(storeOptions);
@@ -50,7 +50,6 @@ app.use(session({
     secure: false
   }
 }));
-
 // passport 초기화를 통해 'local' 전략이 수립된다.
 app.use(passport.initialize());
 app.use(passport.session());
@@ -67,9 +66,9 @@ app.get('/', (req, res, next) => {
   res.sendStatus(200);
 });
 
-
 app.use('/mailer', mailerRouter);
 app.use('/api', apiRouter);
+
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
   next(createError(404));
@@ -81,6 +80,7 @@ app.use((err, req, res, next) => {
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
 
+  console.log(`Error occurred\n${err}`);
   // render the error page
   res.status(err.status || 500);
   res.render('error');

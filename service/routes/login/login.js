@@ -86,6 +86,7 @@ router.get('/twitch', passport.authenticate('twitch'));
 router.get('/twitch/callback', passport.authenticate('twitch'),
   (req, res, next) => {
     console.log('success in server');
+    console.log(HOST);
     res.redirect(`${HOST}/dashboard/creator/door`);
     // res.send({userType: userType});
   });
