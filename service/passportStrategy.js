@@ -163,7 +163,7 @@ passport.use(new TwitchStrategy({
   clientID,
   clientSecret,
   callbackURL: `${HOST}/api/login/twitch/callback`,
-  scope: 'user:read:email', // user:read:email
+  scope: ['user:read:email'], // user:read:email
   passReqToCallback: true,
 },
 // login성공시 수행되는 함수.
