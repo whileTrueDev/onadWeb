@@ -13,7 +13,7 @@ const sources = {
       marketer: '마케터 고객님',
       marketerTail: '광고를 한 시간만큼\n광고 하고 싶은 금액만큼만\n원하는대로, 하고 싶은대로',
       creator: '크리에이터 고객님',
-      creatorTail: '간단한 설정만으로\n배너를 송출하고, 방송 한 만큼\n 추가수익을 가져가세요'
+      creatorTail: '간단한 설정만으로\n배너를 송출하고, 방송한 만큼\n 추가수익을 가져가세요'
     },
   },
   categories: [

@@ -7,7 +7,7 @@ export default function UserProfile({ marketerProfileData }) {
       <div>
         {!marketerProfileData.loading && marketerProfileData.payload && (
           <div style={{ display: 'flex', alignItems: 'center' }}>
-            <Typography variant="h6">
+            <Typography variant="body1" style={{ fontWeight: 'bold' }}>
               {marketerProfileData.payload.marketerName}
             </Typography>
             <Typography variant="body1">&emsp;님</Typography>
@@ -18,8 +18,8 @@ export default function UserProfile({ marketerProfileData }) {
       <div style={{ display: 'flex', alignItems: 'center' }}>
         <Typography variant="body1">계정 유형 :&emsp;</Typography>
         {!marketerProfileData.loading && marketerProfileData.payload && (
-          <Typography variant="h6">
-            {marketerProfileData.payload.marketerUserType === 0 ? '개인' : '사업체'}
+          <Typography variant="body1" style={{ fontWeight: 'bold' }}>
+            {marketerProfileData.payload.marketerUserType === 0 ? '일반인' : '사업자'}
           </Typography>
         )}
       </div>

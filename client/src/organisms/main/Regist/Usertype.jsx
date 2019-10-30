@@ -98,7 +98,7 @@ const Usertype = (props) => {
   const { classes } = props;
 
   const typeChange = (title) => {
-    if (title === '개인') {
+    if (title === '일반인') {
       props.typeChange(0);
     } else {
       props.typeChange(1);

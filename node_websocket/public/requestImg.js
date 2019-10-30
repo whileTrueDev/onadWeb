@@ -103,22 +103,43 @@ module.exports = function (sql, socket, msg) {
     });
   };
 
+  const insertTwitchGameUnchecked = (gameId, creatorId) => {
+    const insertTwitchGameUncheckedQuery = 'INSERT IGNORE INTO twitchGame_unchecked(gameId, creatorId) values(?,?)';
+    return new Promise((resolve, reject) => {
+      doQuery(insertTwitchGameUncheckedQuery, [gameId, creatorId])
+        .then((row) => {
+          console.log(`새로운 game : ${gameId} 추가 / cretorId ${creatorId} / at : ${getTime}`);
+          resolve(row.result);
+        })
+        .catch((errorData) => {
+          errorData.point = 'insertTwitchGameUnchecked()';
+          errorData.description = 'twitchGameUnchecked 새게임 insert 과정';
+          reject(errorData);
+        });
+    });
+  };
+
   // 하나의 gameId에 해당하는 모든 캠페인 리스트를 반환하는 Promise
-  const getGameCampaignList = async (gameId) => {
+  const getGameCampaignList = async (gameId, creatorId) => {
     console.log('게임의 카테고리에 계약되어있는 캠페인 List를 가져옵니다.');
-    const categoryList = gameDict[gameId];
+    const categoryList = gameDict[gameId] ? gameDict[gameId].concat(gameDict.default) : gameDict.default;
     let returnList = [];
-    await Promise.all(
-      categoryList.map(categoryId => getCategoryCampaignList(categoryId)
-        .then((campaignList) => {
-          returnList = returnList.concat(campaignList);
-        }))
-    )
-      .catch((errorData) => {
-        console.log(errorData);
-        errorData.point = 'getGameCampaignList()';
-        errorData.description = 'categoryCampaign에서 각각의 categoryId에 따른 캠페인 가져오기';
-      });
+    if (categoryList) {
+      if (categoryList.includes(14) && categoryList.length === 1) {
+        insertTwitchGameUnchecked(gameId, creatorId);
+      }
+      await Promise.all(
+        categoryList.map(categoryId => getCategoryCampaignList(categoryId)
+          .then((campaignList) => {
+            returnList = returnList.concat(campaignList);
+          }))
+      )
+        .catch((errorData) => {
+          console.log(errorData);
+          errorData.point = 'getGameCampaignList()';
+          errorData.description = 'categoryCampaign에서 각각의 categoryId에 따른 캠페인 가져오기';
+        });
+    }
     return Array.from(new Set(returnList));
   };
 
@@ -148,6 +169,21 @@ module.exports = function (sql, socket, msg) {
     return Math.floor(Math.random() * (max - 0)) + 0; // 최댓값은 제외, 최솟값은 포함
   };
 
+  const insertLandingPage = (campaignId, creatorId) => {
+    const insertLandingQuery = 'INSERT IGNORE INTO landingClick(campaignId, creatorId) values(?,?);';
+    return new Promise((resolve, reject) => {
+      doQuery(insertLandingQuery, [campaignId, creatorId])
+        .then((row) => {
+          resolve(row.result);
+        })
+        .catch((errorData) => {
+          errorData.point = 'insertLandingPage()';
+          errorData.description = 'landingClick에 새로운 랜딩페이지 입력 과정';
+          reject(errorData);
+        });
+    });
+  };
+
   async function getBanner([creatorId, gameId]) {
     console.log(`-----------------------Id : ${creatorId} / ${getTime}---------------------------`);
     const [creatorCampaignList, onCampaignList] = await Promise.all(
@@ -156,16 +192,16 @@ module.exports = function (sql, socket, msg) {
         getOnCampaignList(),
       ]
     );
-    const categoryCampaignList = await getGameCampaignList(gameId);
+    const categoryCampaignList = await getGameCampaignList(gameId, creatorId);
     const onCreatorcampaignList = creatorCampaignList.filter(campaignId => onCampaignList.includes(campaignId));
     const onCategorycampaignList = categoryCampaignList.filter(campaignId => onCampaignList.includes(campaignId));
     const campaignList = Array.from(new Set(onCreatorcampaignList.concat(onCategorycampaignList)));
     const campaignId = campaignList[getRandomInt(campaignList.length)];
     myCampaignId = campaignId;
     if (myCampaignId) {
-      console.log(`이번에 광고될 캠페인은 ${myCampaignId} 입니다.`);
+      console.log(`${creatorId} : 광고될 캠페인은 ${myCampaignId} 입니다. at : ${getTime}`);
     } else {
-      console.log('켜져있는 광고가 없습니다.');
+      console.log(`${creatorId} : 켜져있는 광고가 없습니다. at : ${getTime}`);
       socket.emit('img clear', []);
       return false;
     }
@@ -186,9 +222,10 @@ module.exports = function (sql, socket, msg) {
       myGameId = await getGameId(myCreatorId);
       const bannerInfo = await getBanner([myCreatorId, myGameId]);
       if (bannerInfo) {
+        const doInsert = await insertLandingPage(bannerInfo[1], bannerInfo[2]);
         socket.emit('img receive', [bannerInfo[0], [bannerInfo[1], bannerInfo[2]]]);
       } else {
-        console.log('같은 캠페인 송출 중이어서 재호출 안합니다.');
+        console.log(`${myCreatorId} : 같은 캠페인 송출 중이어서 재호출 안합니다. at ${getTime}`);
       }
     } else {
       socket.emit('url warning', []);

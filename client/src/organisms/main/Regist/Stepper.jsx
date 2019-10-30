@@ -74,11 +74,11 @@ const myReducer = (state, action) => {
       return { ...state, repasswd: true };
     }
     case 'email': {
-      const emailReg = /^[a-z0-9]+[a-z0-9]{4,15}$/g;
-      if (emailReg.test(action.value)) {
-        return { ...state, email: false };
-      }
-      return { ...state, email: true };
+      // if (emailReg.test(action.value)) {
+      //   return { ...state, email: false };
+      // }
+      // return { ...state, email: true };
+      return { ...state, email: false };
     }
     case 'phoneNum': {
       return { ...state, phoneNum: action.value };
@@ -132,8 +132,7 @@ const RegistStepper = withRoot((props) => {
   };
 
   const handleUserSubmit = () => {
-    axios.post(`${HOST}/api/regist/marketer`,
-      userInfo)
+    axios.post(`${HOST}/api/regist/marketer`, userInfo)
       .then((res) => {
         const { error } = res.data;
         if (!error) {

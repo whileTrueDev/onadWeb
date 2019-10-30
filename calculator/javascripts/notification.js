@@ -1,6 +1,5 @@
 const doQuery = require('../model/doQuery');
 // const logger = require('./calculatorLogger');
-const CustomDate = require('./customDate');
 
 // userType : 마케터인가 크리에이터인가
 // type : 현재 어떠한 상황의 메세지인가 => 해당 값을 통해 messeage dictionary에서 꺼내 사용한다.
@@ -93,7 +92,7 @@ const Notification = async ({
   userType, type, targetId, params
 }) => {
   // 날짜 수집.
-  const dateCode = new Date();
+  const dateCode = new Date().toLocaleString();
   const { selectQuery, getTitle, getMessage } = messageDict[userType][type];
 
   // 일단 해당 target의 기본정보 및 개인알림 등록에 필요한 데이터 수집.

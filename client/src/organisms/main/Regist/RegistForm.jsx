@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import MaskedInput from 'react-text-mask';
 import {
@@ -59,6 +59,7 @@ const domains = [
   { value: 'gmail.com' },
   { value: 'hotmail.com' },
   { value: 'yahoo.co.kr' },
+  { value: '직접입력' },
 ];
 
 
@@ -100,7 +101,12 @@ const RegistForm = (props) => {
     classes, userType, handleBack, handleUserInfo, handleNext, state, dispatch,
   } = props;
 
+  const [marketerCustomDomain, setCustomDomain] = useState('');
+
   // handle을 전달.
+  const handleCustom = (event) => {
+    setCustomDomain(event.target.value);
+  };
 
   const handleChange = name => (event) => {
     dispatch({ type: name, value: event.target.value });
@@ -124,7 +130,7 @@ const RegistForm = (props) => {
       const marketerBusinessRegNum = (document.getElementById('marketerBusinessRegNum') ? document.getElementById('marketerBusinessRegNum').value : '');
       const marketerPhoneNum = state.phoneNum;
       const marketerRawPasswd = state.passwordValue;
-      const marketerDomain = state.domain;
+      const marketerDomain = state.domain === '직접입력' ? marketerCustomDomain : state.domain;
       const marketerUserType = userType;
       const user = {
         marketerId,
@@ -300,25 +306,43 @@ const RegistForm = (props) => {
               />
             </Grid>
             <Grid item>
-              <TextField
-                required
-                select
-                label="Domain"
-                className={classes.textField}
-                value={state.domain}
-                onChange={handleChange('domain')}
-                helperText="EMAIL Domain을 선택하세요."
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                margin="normal"
-              >
-                {domains.map(option => (
-                  <MenuItem key={option.value} value={option.value}>
-                    {option.value}
-                  </MenuItem>
-                ))}
-              </TextField>
+              {state.domain !== '직접입력' ? (
+                <TextField
+                  required
+                  select
+                  label="Domain"
+                  className={classes.textField}
+                  value={state.domain}
+                  onChange={handleChange('domain')}
+                  helperText="EMAIL Domain을 선택하세요."
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  margin="normal"
+                >
+                  {domains.map(option => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.value}
+                    </MenuItem>
+                  ))}
+                </TextField>
+
+              )
+                : (
+                  <TextField
+                    required
+                    autoFocus
+                    label="Domain"
+                    className={classes.textField}
+                    value={marketerCustomDomain}
+                    onChange={handleCustom}
+                    helperText="EMAIL Domain을 입력하세요."
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    margin="normal"
+                  />
+                )}
             </Grid>
           </Grid>
           <Grid item style={{ marginTop: '16px' }}>

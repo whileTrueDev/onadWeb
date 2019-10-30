@@ -44,6 +44,9 @@ app.get('/error', (req, res) => {
   res.render('error.ejs');
 });
 
+app.get('/test', (req, res) => {
+  res.render('testpage.ejs');
+});
 app.get('/banner/:id', (req, res, next) => { // /banner/:id로 라우팅
   res.render('client.ejs');
 });
@@ -59,6 +62,7 @@ app.get('/banner/:id', (req, res, next) => { // /banner/:id로 라우팅
     const rule = new schedule.RecurrenceRule(); // 스케쥴러 객체 생성
     rule.hour = new schedule.Range(0, 23); // cronTask 시간지정
     rule.minute = [0, 10, 20, 30, 40, 50]; // cronTask 실행되는 분(minute)
+
     console.log(roomInfo);
     const cronTask = schedule.scheduleJob(rule, () => { // 스케쥴러를 통해 1분마다 db에 배너정보 전송
       socket.emit('response banner data to server', {}); // client로 emit
@@ -99,10 +103,11 @@ app.get('/banner/:id', (req, res, next) => { // /banner/:id로 라우팅
     socket.on('write to db', (msg) => {
       pool.getConnection((err, conn) => {
         if (err) return err;
-        const campaignId = msg[0];
-        const creatorId = msg[1];
-        const writeQuery = 'INSERT INTO campaignTimestamp (campaignId, creatorId) VALUES (?, ?);';
-        conn.query(writeQuery, [campaignId, creatorId], (err, result, fields) => {
+        const campaignId = msg[0][0];
+        const creatorId = msg[0][1];
+        const program = msg[1];
+        const writeQuery = 'INSERT INTO campaignTimestamp (campaignId, creatorId, program) VALUES (?, ?, ?);';
+        conn.query(writeQuery, [campaignId, creatorId, program], (err, result, fields) => {
           conn.release();
           if (err) return err;
         });
@@ -121,10 +126,11 @@ app.get('/banner/:id', (req, res, next) => { // /banner/:id로 라우팅
     socket.on('pageActive handler', (msg) => {
       const bannerName = msg[0];
       const state = msg[1];
+      const program = msg[2];
       pool.getConnection((err, conn) => {
         if (err) return err;
-        const activeQuery = 'INSERT INTO bannerVisible (advertiseUrl, visibleState) VALUES (?, ?);';
-        conn.query(activeQuery, [bannerName, state], (err, result, fields) => {
+        const activeQuery = 'INSERT INTO bannerVisible (advertiseUrl, visibleState, program) VALUES (?, ?, ?);';
+        conn.query(activeQuery, [bannerName, state, program], (err, result, fields) => {
           conn.release();
           if (err) return err;
         });

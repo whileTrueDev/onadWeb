@@ -163,7 +163,7 @@ passport.use(new TwitchStrategy({
   clientID,
   clientSecret,
   callbackURL: `${HOST}/api/login/twitch/callback`,
-  scope: 'user:read:email', // user:read:email
+  scope: ['user:read:email'], // user:read:email
   passReqToCallback: true,
 },
 // login성공시 수행되는 함수.
@@ -180,7 +180,7 @@ passport.use(new TwitchStrategy({
     .then((row) => {
       const creatorData = row.result[0];
       if (creatorData) {
-        console.log(`${user.creatorDisplayName} 님이 로그인 하셨습니다.`);
+        console.log(`[${new Date().toLocaleString()}] [로그인] ${user.creatorDisplayName}`);
         user.creatorIp = creatorData.creatorIp;
 
         // Data 변경시에 변경된 값을 반영하는 영역.
@@ -221,13 +221,24 @@ passport.use(new TwitchStrategy({
                     SET creatorTwitchId = ?
                     WHERE creatorId = ?
                     `;
+          const landingClickUpdateQuery = `
+          UPDATE creatorLanding SET creatorTwitchId = ? WHERE creatorId = ?
+          `;
 
-          doQuery(updateQuery, [user.creatorName, user.creatorId])
-            .then(() => done(null, user))
-            .catch((errorData) => {
-              console.log(errorData);
-              done(errorData, false);
-            });
+          Promise.all([
+            doQuery(updateQuery, [user.creatorName, user.creatorId])
+              .then(() => done(null, user))
+              .catch((errorData) => {
+                console.log(errorData);
+                done(errorData, false);
+              }),
+            doQuery(landingClickUpdateQuery, [user.creatorName, user.creatorId])
+              .then(() => done(null, user))
+              .catch((errorData) => {
+                console.log(errorData);
+                done(errorData, false);
+              })
+          ]);
         } else {
           return done(null, user);
         }
@@ -257,7 +268,7 @@ passport.use(new TwitchStrategy({
         const royaltyQuery = `
                 INSERT INTO creatorRoyaltyLevel
                 (creatorId, level, exp, visitCount)
-                VALUES (?, 0, 0, 0)
+                VALUES (?, 1, 0, 0)
                 `;
 
 
@@ -267,7 +278,7 @@ passport.use(new TwitchStrategy({
             user.creatorName, user.creatorLogo]),
           doQuery(royaltyQuery, [user.creatorId]),
           doQuery(incomeQuery, [user.creatorId, 0, 0]),
-          doQuery(priceQuery, [user.creatorId, 1, 0, 1]),
+          doQuery(priceQuery, [user.creatorId, 1, 0, 2]),
         ])
           .then(() => done(null, user))
           .catch((errorData) => {
