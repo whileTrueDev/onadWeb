@@ -113,24 +113,49 @@ const getGameCampaignList = async (gameId) => {
   return Array.from(new Set(returnList));
 };
 
+
+const getBanList = (creatorId) => {
+  const selectQuery = `
+  SELECT banList 
+  FROM creatorCampaign
+  WHERE creatorId = ?
+  `;
+
+  return new Promise((resolve, reject) => {
+    doQuery(selectQuery, [creatorId])
+      .then((row) => {
+        const banList = JSON.parse(row.result[0].banList).campaignList;
+        resolve(banList);
+      })
+      .catch((errorData) => {
+        errorData.point = 'getBanList()';
+        errorData.description = '해당 creator의 banList를 가져오는 과정';
+        reject(errorData);
+      });
+  });
+};
+
 const getRandomInt = (length) => {
   const max = Math.floor(length);
   return Math.floor(Math.random() * (max - 0)) + 0; // 최댓값은 제외, 최솟값은 포함
 };
 
 async function getBanner([creatorId, gameId]) {
-  const [creatorCampaignList, onCampaignList] = await Promise.all(
+  const [creatorCampaignList, onCampaignList, banList] = await Promise.all(
     [
       getCreatorCampaignList(creatorId),
       getOnCampaignList(),
+      getBanList(creatorId)
     ]
   );
   const categoryCampaignList = await getGameCampaignList(gameId);
   const onCreatorcampaignList = creatorCampaignList.filter(campaignId => onCampaignList.includes(campaignId));
   const onCategorycampaignList = categoryCampaignList.filter(campaignId => onCampaignList.includes(campaignId));
   const campaignList = Array.from(new Set(onCreatorcampaignList.concat(onCategorycampaignList)));
-  const campaignId = campaignList[getRandomInt(campaignList.length)];
-  console.log(campaignList);
+  const cutCampaignList = campaignList.filter(campaignId => !banList.includes(campaignId));
+  const campaignId = cutCampaignList[getRandomInt(cutCampaignList.length)];
+
+  console.log(cutCampaignList);
 }
 
-getBanner(['137697282', '123123']);
+getBanner(['433501310', '123123']);
