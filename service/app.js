@@ -83,10 +83,15 @@ app.use((err, req, res, next) => {
   res.locals.error = req.app.get('env') === 'development' ? err : {};
   if (err) {
     const where = req._parsedOriginalUrl.pathname;
-    console.log(`[${new Date().toLocaleString()}] Error occurred in - ${where}\n${err}`);
+    const who = req.session.passport.user.creatorDisplayName
+      ? req.session.passport.user.creatorDisplayName
+      : req._passport.user.creatorDisplayName;
+    console.log(`[${new Date().toLocaleString()}] Error occurred in - ${where} ::${who}\n${err}`);
+
     slack.push(`[ERROR] API 서버에서 에러가 발생했습니다.
       에러메시지 : 
-      ${err}`, `${where}`, 'onad_web_api');
+      ${err}`, `${where}:${who}`, 'onad_web_api');
+
     // render the error page
     res.status(err.status || 500);
     res.render('error');
