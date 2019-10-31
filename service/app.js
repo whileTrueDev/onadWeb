@@ -13,6 +13,7 @@ const mailerRouter = require('./routes/mailer');
 const apiRouter = require('./routes/api');
 // marketer Tax Bill scheduler
 const taxBillScheduler = require('./middlewares/scheduler/taxBillScheduler');
+const slack = require('./middlewares/slack/message');
 
 const app = express();
 
@@ -75,16 +76,26 @@ app.use((req, res, next) => {
   next(createError(404));
 });
 
-// error handler
+// error handler 무조건 app.use 중 맨 마지막에 위치해야 한다.
 app.use((err, req, res, next) => {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
+  if (err) {
+    const where = req._parsedOriginalUrl.pathname;
+    const who = req.session.passport.user.creatorDisplayName
+      ? req.session.passport.user.creatorDisplayName
+      : req._passport.user.creatorDisplayName;
+    console.log(`[${new Date().toLocaleString()}] Error occurred in - ${where} ::${who}\n${err}`);
 
-  console.log(`Error occurred in - ${req.route.path}\n${err}`);
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
+    slack.push(`[ERROR] API 서버에서 에러가 발생했습니다.
+      에러메시지 : 
+      ${err}`, `${where}:${who}`, 'onad_web_api');
+
+    // render the error page
+    res.status(err.status || 500);
+    res.render('error');
+  }
 });
 
 console.log('ENVIRONMENT: ', process.env.NODE_ENV);
