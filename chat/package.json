@@ -10,6 +10,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "dotenv": "^8.2.0",
+    "mysql": "^2.17.1",
     "tmi.js": "^1.5.0"
   }
 }

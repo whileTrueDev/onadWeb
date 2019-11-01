@@ -1,52 +1,72 @@
+require('dotenv').config();
 const tmi = require('tmi.js');
+const now = require('./lib/now');
+const doQuery = require('./lib/doQuery');
 
-const BOT_USERNAME = 'adbot';
-const OAUTH_TOKEN = 'oauth:ql78nrmxylz561jfwizzu7vi973vld';
-const CHANNEL_NAME = 'silphtv';
-const CHANNEL_NAME2 = 'dingception';
+// configure constants
+const BOT_NAME = 'ADy';
+const BOT_OAUTH_TOKEN = 'oauth:ql78nrmxylz561jfwizzu7vi973vld';
+const CHANNEL_NAME = 'jinsooo0';
 
-// Define configuration options
-const opts = {
+// Create a client with our options
+const client = new tmi.Client({
   debug: true,
-  connections: { reconnect: true, secure: true },
+  connection: { reconnect: true, secure: true },
   identity: {
-    username: BOT_USERNAME,
-    password: OAUTH_TOKEN
+    username: BOT_NAME,
+    password: BOT_OAUTH_TOKEN
   },
-  channels: [
-    CHANNEL_NAME, CHANNEL_NAME2
-  ]
-};
-
-// Data format
-
-
-const client = new tmi.Client(opts); // Create a client with our options
+  channels: [CHANNEL_NAME]
+});
 client.connect(); // Connect to Twitch:
 
-// Date Fuction called when the message comes in
-function now() {
-  const thisTime = new Date();
-  return thisTime.toLocaleString();
-}
+// Define Chat data list
+let chat = [];
+// Constants
+const COLLECT_UNIT_SIZE = 100;
+// Queries
+const query = `
+INSERT INTO twitchChat
+( creatorId, time, name, id, subscriber, manager, badges, text  )
+VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+`;
+const queryArray = [];
 
 // Called every time a message comes in
 function onMessageHandler(target, context, msg, self) {
   if (self) { return; } // Ignore messages from the bot
 
+
   const data = {
-    channel: target.slice(1),
+    creatorId: context['room-id'],
     time: now(),
     name: context['display-name'],
     id: context.username,
     subscriber: context.subscriber,
-    badges: context.badges,
     manager: context.mod,
+    badges: context.badges,
     text: msg
   };
 
   console.log(data);
 
+  // 데이터를 지속적으로 메모리에 쌓는다.
+  chat.push(data);
+  console.log(`현재 데이터 개수: ${chat.length}`);
+
+  // 채팅 로그가 특정 시간 or 특정 개수 이상이 되면 DB에 적재한다.
+
+  if (chat.length >= COLLECT_UNIT_SIZE) {
+    console.log(`${COLLECT_UNIT_SIZE}개의 채팅 데이터가 메모리 상에 쌓였습니다.`);
+
+    // DB에 적재
+    doQuery().then().catch();
+
+    // 데이터 삭제하여 메모리 공간 확보
+    chat = [];
+  }
+
+  //
 
   /** *************************************
    * 챗봇의 영역.
