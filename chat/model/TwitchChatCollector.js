@@ -1,6 +1,7 @@
 const tmi = require('tmi.js');
 const schedule = require('node-schedule');
 const doQuery = require('../lib/doQuery');
+const createChatInsertQueryValues = require('../lib/createChatInsertQueryValues');
 // utils
 const now = require('../utils/now');
 const arrayDivide = require('../utils/arrayDivide');
@@ -37,9 +38,11 @@ function TwitchChatCollector() {
 
     // tmi client configurations
     client.clientId = `onadClient${this.clients.length + 1}`;
-    client.chats = [];
+    client.numChats = 0;
     client.status = 'connected';
     client.COLLECT_UNIT_SIZE = this.COLLECT_UNIT_SIZE;
+    client.chats = [];
+    client.initalizeChats = () => { client.chats = []; };
     client.connect();
     this.clients.push(client);
     console.log('===================================================');
@@ -47,6 +50,7 @@ function TwitchChatCollector() {
 
     // Called every time a message comes in
     function onMessageHandler(target, context, msg, self) {
+      client.numChats += 1;
       if (self) { return; } // Ignore messages from the bot
 
       const data = {
@@ -61,52 +65,33 @@ function TwitchChatCollector() {
       };
 
       // 채팅로그 보기
-      const { clientId, chats } = client;
-      const { text } = data;
-      const log = `[${clientId}] ${chats.length} - <${target}> ${text}`;
-      console.log(log);
+      // const { clientId, chats } = client;
+      // const { text } = data;
+      // const log = `[${clientId}] ${chats.length} - <${target}> ${text}`;
+      // console.log(log);
 
       // 데이터를 지속적으로 메모리에 쌓는다.
       client.chats.push(data);
 
       // 채팅 로그가 특정 시간 or 특정 개수 이상이 되면 DB에 적재한다.
       if (client.chats.length >= client.COLLECT_UNIT_SIZE) {
-        console.log(`${client.COLLECT_UNIT_SIZE}개의 채팅 데이터가 메모리 상에 쌓였습니다.`);
+        const { clientId, COLLECT_UNIT_SIZE } = client;
+        console.log(`[${now()}][${clientId}] - ${COLLECT_UNIT_SIZE} STORE REQUEST`);
 
         // DB에 적재
         // Queries
         const query = `
         INSERT INTO twitchChat
-        ( creatorId, time, name, userId, subscriber, manager, badges, text  )
+        ( creatorId, time, name, userId, subscriber, manager, badges, text )
         VALUES`;
-        let queryValues = '';
-        let queryArray = [];
-
-        client.chats.map((chat, index) => {
-          const values = '(?, ?, ?, ?, ?, ?, ?, ?)';
-          const comma = ',\n';
-
-          if (index !== client.chats.length - 1) {
-            queryValues += values + comma;
-          } else {
-            queryValues += values;
-          }
-
-          queryArray = queryArray.concat([
-            chat.creatorId, chat.time, chat.name, chat.userid,
-            chat.subscriber ? 1 : 0, chat.manager ? 1 : 0,
-            chat.badges ? JSON.stringify(chat.badges) : null, chat.text
-          ]);
-
-          return null;
-        });
+        const [queryArray, queryValues] = createChatInsertQueryValues(client.chats);
 
         // Reqeust query to DB
         doQuery(query + queryValues, queryArray).then((row) => {
           if (!row.error && row.result) {
-            console.log('[DB적재 성공]');
+            console.log(`[${now()}][${clientId}] - [DB적재 성공] ${COLLECT_UNIT_SIZE} STORED`);
           } else {
-            console.log('[DB적재 에러]');
+            console.log(`[${now()}][${clientId}] - [DB적재 에러]`);
           }
         }).catch((err) => {
           console.log('err', err);
@@ -134,17 +119,22 @@ function TwitchChatCollector() {
       console.log(`* Connected to ${addr}:${port}`);
     }
 
+    function onDisconnectedHandler() {
+      client.status = 'stopped';
+    }
+
     // Set handlers
     client.on('message', onMessageHandler);
     client.on('connected', onConnectedHandler);
+    client.on('disconnected', onDisconnectedHandler);
 
     return client;
   }
 
+  // 현재 작동중인 클라이언트를 조회
   function getStatus() {
-    // 현재 작동중인 클라이언트를 조회
-    const runningClient = [];
-    const stoppedClient = []; // 꺼진 클라이언트
+    const runningClient = []; const stoppedClient = [];
+    let allChatsNum = 0; let allCHatsNumInBuffer = 0;
     let allRunningChannels = []; // 켜진 모든 채널
     let allStoppedChannels = []; // 꺼진 클라이언트
     this.clients.map((client) => {
@@ -161,10 +151,14 @@ function TwitchChatCollector() {
         });
         allStoppedChannels = allStoppedChannels.concat(client.channels);
       }
+      allChatsNum += client.numChats;
+      allCHatsNumInBuffer += client.chats.length;
       return client;
     });
 
     this.status = {
+      allChatsNum,
+      allCHatsNumInBuffer,
       allRunningChannels,
       allStoppedChannels,
       running: runningClient,
@@ -172,9 +166,11 @@ function TwitchChatCollector() {
     };
   }
 
+  // 채팅로그 시작함수, creatorInfo에 따라.
   function start() {
     const CONTRACTED_STATE = 1; // 온애드와 계약된 크리에이터 상태값
 
+    // 모든 계약된 크리에이터를 조회
     const query = `
       SELECT creatorTwitchId
       FROM creatorInfo
@@ -255,15 +251,61 @@ function TwitchChatCollector() {
       });
     }
 
+    // 매일 자정 작업
     schedule.scheduleJob('twitchChatScheduler', '1 0 * * *', () => {
       // 매일 0시 1분에 실행할 작업. ( 새로 계약한 크리에이터 및 꺼진 클라이언트의 크리에이터들을 모아 새로운 클라이언트 생성 )
       console.log('[TwitchCaht - dailyJob] ========= START =========');
       dailyJob(this);
     });
 
-    schedule.scheduleJob('healthCheck', '*/10 * * * *', () => {
+    // 매분 작업
+    schedule.scheduleJob('healthCheck', '* * * * *', () => {
       this.getStatus();
-      console.log(this.status.allRunningChannels);
+      console.log('=================== healthCheck ====================');
+      console.log('[TIME]: ', new Date().toLocaleString());
+      console.log('[Running clients]: ', this.status.running.length);
+      console.log('[Number of collecting channels]: ', this.status.allRunningChannels.length);
+      console.log('[Collecting channels]: ', this.status.allRunningChannels.join(', '));
+      console.log('[Stopped clients]: ', this.status.stopped.length);
+      console.log('[Number of stopped channels]: ', this.status.allStoppedChannels.length);
+      console.log('[Stopped channels]: ', this.status.allStoppedChannels.join(', '));
+      console.log('[Chats on all clients]: ', this.status.allChatsNum);
+      console.log('[Chats on onad collector buffer]: ', this.status.allCHatsNumInBuffer);
+      console.log('================= healthCheck DONE ==================');
+    });
+
+    // 매 10분 마다, 최대 20 * 5 만큼의 버퍼가 차있지 않더라도, 로그를 저장.
+    schedule.scheduleJob('Chat-autoInsert', '*/10 * * * *', () => {
+      console.log('=================== Chat-autoInsert ====================');
+      console.log('[TIME]: ', new Date().toLocaleString());
+
+      const allChats = [];
+      this.clients.map((client) => {
+        // 한곳에 데이터를 모은다.
+        allChats.concat(client.chats);
+
+        // 데이터 삭제하여 메모리 공간 확보
+        client.initalizeChats();
+        return client;
+      });
+      console.log(`[Store request] - ${allChats.length} chats`);
+
+      const insertQuery = `
+        INSERT INTO twitchChat
+        ( creatorId, time, name, userId, subscriber, manager, badges, text )
+        VALUES`;
+      const [insertQueryArray, queryValues] = createChatInsertQueryValues(allChats);
+
+      // Reqeust query to DB
+      doQuery(insertQuery + queryValues, insertQueryArray).then((row) => {
+        if (!row.error && row.result) {
+          console.log(`[Insert Success] - number of row: ${allChats.length}`);
+        } else {
+          console.log('[DB적재 에러]');
+        }
+      }).catch((err) => {
+        console.log('err', err);
+      });
     });
   }
 
@@ -271,6 +313,5 @@ function TwitchChatCollector() {
   this.getStatus = getStatus;
   this.start = start;
 }
-
 
 module.exports = TwitchChatCollector;
