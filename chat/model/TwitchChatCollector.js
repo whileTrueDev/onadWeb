@@ -279,16 +279,17 @@ function TwitchChatCollector() {
       console.log('=================== Chat-autoInsert ====================');
       console.log('[TIME]: ', new Date().toLocaleString());
 
-      const allChats = [];
+      let allChats = [];
       this.clients.map((client) => {
         // 한곳에 데이터를 모은다.
-        allChats.concat(client.chats);
+        allChats = allChats.concat(client.chats);
 
         // 데이터 삭제하여 메모리 공간 확보
         client.initalizeChats();
         return client;
       });
       console.log(`[Store request] - ${allChats.length} chats`);
+      console.log(allChats);
 
       const insertQuery = `
         INSERT INTO twitchChat
