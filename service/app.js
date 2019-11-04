@@ -13,7 +13,6 @@ const mailerRouter = require('./routes/mailer');
 const apiRouter = require('./routes/api');
 // marketer Tax Bill scheduler
 const taxBillScheduler = require('./middlewares/scheduler/taxBillScheduler');
-const slack = require('./middlewares/slack/message');
 
 const app = express();
 
