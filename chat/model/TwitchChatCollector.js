@@ -189,6 +189,7 @@ function TwitchChatCollector() {
         const dividedChannels = arrayDivide(allChannels, LIMIT_CHANNEL_ON_CLIENT);
         dividedChannels.map((channels) => {
           this.createClient(channels);
+          setTimeout(() => {}, 200);
           return channels;
         });
       }
