@@ -8,7 +8,8 @@ const arrayDivide = require('../utils/arrayDivide');
 // configure constants
 const BOT_NAME = 'OnADy';
 const BOT_OAUTH_TOKEN = 'oauth:ql78nrmxylz561jfwizzu7vi973vld';
-
+const CLIENT_CONNECTED_STATE = 'connected';
+const CLIENT_STOPPED_STATE = 'stopped';
 /**
  * 온애드 트위치 채팅 수집기
  */
@@ -39,7 +40,7 @@ function TwitchChatCollector() {
     // tmi client configurations
     client.clientId = `onadClient${this.clients.length + 1}`;
     client.numChats = 0;
-    client.status = 'connected';
+    client.status = CLIENT_CONNECTED_STATE;
     client.COLLECT_UNIT_SIZE = this.COLLECT_UNIT_SIZE;
     client.chats = [];
     client.initalizeChats = () => { client.chats = []; };
@@ -79,15 +80,10 @@ function TwitchChatCollector() {
         console.log(`[${now()}][${clientId}] - ${COLLECT_UNIT_SIZE} STORE REQUEST`);
 
         // DB에 적재
-        // Queries
-        const query = `
-        INSERT INTO twitchChat
-        ( creatorId, time, name, userId, subscriber, manager, badges, text )
-        VALUES`;
-        const [queryArray, queryValues] = createChatInsertQueryValues(client.chats);
+        const [query, queryArray] = createChatInsertQueryValues(client.chats);
 
         // Reqeust query to DB
-        doQuery(query + queryValues, queryArray).then((row) => {
+        doQuery(query, queryArray).then((row) => {
           if (!row.error && row.result) {
             console.log(`[${now()}][${clientId}] - [DB적재 성공] ${COLLECT_UNIT_SIZE} STORED`);
           } else {
@@ -116,11 +112,13 @@ function TwitchChatCollector() {
 
     // Called every time connected with chat room
     function onConnectedHandler(addr, port) {
+      client.status = CLIENT_CONNECTED_STATE;
       console.log(`* Connected to ${addr}:${port}`);
     }
 
     function onDisconnectedHandler() {
-      client.status = 'stopped';
+      client.status = CLIENT_STOPPED_STATE;
+      client.connect();
     }
 
     // Set handlers
@@ -292,14 +290,10 @@ function TwitchChatCollector() {
       console.log(`[Store request] - ${allChats.length} chats`);
 
       if (allChats.length > 0) {
-        const insertQuery = `
-          INSERT INTO twitchChat
-          ( creatorId, time, name, userId, subscriber, manager, badges, text )
-          VALUES`;
-        const [insertQueryArray, queryValues] = createChatInsertQueryValues(allChats);
+        const [insertQuery, insertQueryArray] = createChatInsertQueryValues(allChats);
 
         // Reqeust query to DB
-        doQuery(insertQuery + queryValues, insertQueryArray).then((row) => {
+        doQuery(insertQuery, insertQueryArray).then((row) => {
           if (!row.error && row.result) {
             console.log(`[Insert Success] - number of row: ${allChats.length}`);
           } else {

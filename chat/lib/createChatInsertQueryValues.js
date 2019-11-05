@@ -1,4 +1,8 @@
 function createChatInsertQueryValues(data) {
+  const insertQuery = `
+    INSERT INTO twitchChat
+    ( creatorId, time, name, userId, subscriber, manager, badges, text )
+    VALUES`;
   let queryArray = [];
   let queryValues = '';
 
@@ -21,7 +25,7 @@ function createChatInsertQueryValues(data) {
     return null;
   });
 
-  return [queryArray, queryValues];
+  return [insertQuery + queryValues, queryArray];
 }
 
 module.exports = createChatInsertQueryValues;
