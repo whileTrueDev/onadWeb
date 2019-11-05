@@ -290,24 +290,27 @@ function TwitchChatCollector() {
         return client;
       });
       console.log(`[Store request] - ${allChats.length} chats`);
-      console.log(allChats);
 
-      const insertQuery = `
-        INSERT INTO twitchChat
-        ( creatorId, time, name, userId, subscriber, manager, badges, text )
-        VALUES`;
-      const [insertQueryArray, queryValues] = createChatInsertQueryValues(allChats);
+      if (allChats.length > 0) {
+        const insertQuery = `
+          INSERT INTO twitchChat
+          ( creatorId, time, name, userId, subscriber, manager, badges, text )
+          VALUES`;
+        const [insertQueryArray, queryValues] = createChatInsertQueryValues(allChats);
 
-      // Reqeust query to DB
-      doQuery(insertQuery + queryValues, insertQueryArray).then((row) => {
-        if (!row.error && row.result) {
-          console.log(`[Insert Success] - number of row: ${allChats.length}`);
-        } else {
-          console.log('[DB적재 에러]');
-        }
-      }).catch((err) => {
-        console.log('err', err);
-      });
+        // Reqeust query to DB
+        doQuery(insertQuery + queryValues, insertQueryArray).then((row) => {
+          if (!row.error && row.result) {
+            console.log(`[Insert Success] - number of row: ${allChats.length}`);
+          } else {
+            console.log('[DB적재 에러]');
+          }
+        }).catch((err) => {
+          console.log('err', err);
+        });
+      } else {
+        console.log('[채팅데이터없음]');
+      }
     });
   }
 
