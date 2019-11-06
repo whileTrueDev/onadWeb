@@ -10,7 +10,7 @@ import useUpdateData from '../../utils/lib/hooks/useUpdateData';
 
 const useStyles = makeStyles(() => ({
   contents: {
-    minWidth: 300, maxHeight: 540
+    width: 420, maxHeight: 540
   },
   title: {
     padding: 8, display: 'flex', justifyContent: 'space-between'
