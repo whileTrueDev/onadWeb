@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import Delete from '@material-ui/icons/DeleteRounded';
 import MaterialTable from '../../../../atoms/Table/MaterialTable';
+import Button from '../../../../atoms/CustomButtons/Button';
 // icons
 // own components
 import IOSSwitch from '../../../../atoms/Switch/IOSSwitch';
@@ -12,7 +13,7 @@ import CampaignDeleteConfirmDialog from './CampaignDeleteConfirmDialog';
 import history from '../../../../history';
 
 function CampaignTable({ ...props }) {
-  const { dataSet } = props;
+  const { dataSet, handleReportModeToggle } = props;
 
   const tableRef = React.useRef();
   const { handleUpdateRequest } = useUpdateData('/api/dashboard/marketer/campaign/onoff');
@@ -23,6 +24,11 @@ function CampaignTable({ ...props }) {
   React.useEffect(() => {
     snackbar.handleOpen(history.location.search === '?deleted');
   });
+
+  const routeChange = (rowData) => {
+    const path = `/dashboard/marketer/report/${rowData.campaignId}`;
+    history.push(path);
+  };
 
   const columns = [
     {
@@ -58,11 +64,23 @@ function CampaignTable({ ...props }) {
         if (rowData.bannerSrc) {
           return (<img src={rowData.bannerSrc} alt="banner" style={{ width: 'auto', maxHeight: 200 }} />);
         }
-        return '배너가 없삽니다.';
+        return '배너가 없습니다.';
       },
       editable: 'never'
     },
     { title: '등록일', field: 'regiDate', editable: 'never' },
+    {
+      title: '효과 보고서',
+      field: '보고서 버튼',
+      render: rowData => (
+        <Button
+          color="danger"
+          onClick={() => routeChange(rowData)}
+        >
+        보고서
+        </Button>
+      )
+    }
   ];
 
   const [state] = React.useState({ columns: [...columns], data: [...dataSet] });

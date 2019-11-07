@@ -7,6 +7,7 @@ const profileRoute = require('./sub/profile');
 const categoryRoute = require('./sub/category');
 const { creatorList } = require('../../../middlewares/preprocessingData');
 const notificationRouter = require('./sub/notification');
+const reportRouter = require('./sub/report');
 
 const router = express.Router();
 
@@ -21,6 +22,7 @@ router.use('/profile', profileRoute);
 router.use('/campaign', campaignRoute);
 router.use('/category', categoryRoute);
 router.use('/notification', notificationRouter);
+router.use('/report', reportRouter);
 
 
 // 캠페인 온오프 조회

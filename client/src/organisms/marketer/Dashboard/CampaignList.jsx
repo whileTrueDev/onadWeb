@@ -27,7 +27,9 @@ const useStyles = makeStyles(() => ({
 }));
 
 function CampaignTable(props) {
-  const { classes, handleCampaignCreateMode } = props;
+  const {
+    classes, handleCampaignCreateMode, handleReportModeToggle
+  } = props;
   const classes1 = useStyles();
   const { campaignData, bannerData } = props;
 
@@ -52,6 +54,7 @@ function CampaignTable(props) {
         {!campaignData.loading && !campaignData.error && campaignData.payload && (
         <Table
           dataSet={campaignData.payload.data}
+          handleReportModeToggle={handleReportModeToggle}
         />
         )}
 

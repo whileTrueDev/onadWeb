@@ -139,7 +139,7 @@ function AppFooter() {
                 <img src="/pngs/logo/whileTrue_final.png" id="logo" alt="WhileTrueLogo" height={30} />
               </a>
               <Typography className={classes.name} variant="body2">
-                {'While True:'}
+                While True:
               </Typography>
               <br />
             </Grid>
@@ -147,21 +147,21 @@ function AppFooter() {
           </Grid>
           <Grid container>
             <Typography variant="caption" className={classes.addressLocation}>
-              {'부산광역시 금정구 장전온천천로 51 테라스파크 3층 313호 와일트루 '}
+              부산광역시 금정구 장전온천천로 51 테라스파크 3층 313호 와일트루 
             </Typography>
           </Grid>
           <Grid container>
             <Typography variant="caption" className={classes.addressTitle}>
               <div>
-                {'대표명'}
+                대표명
                 <span className={classes.address}>강동기</span>
               </div>
               <div>
-                {'이메일'}
+                이메일
                 <span className={classes.address}>support@onad.io</span>
               </div>
               <div>
-                {'사업자등록번호'}
+                사업자등록번호
                 <span className={classes.address}>659-03-01549</span>
               </div>
             </Typography>
@@ -170,9 +170,9 @@ function AppFooter() {
           <Typography variant="caption" className={classes.corp}>
             <strong>
               &copy;
-              {'while True Corp.'}
+              while True Corp.
             </strong>
-            {' All right Reserved'}
+             All rights Reserved
           </Typography>
         </Grid>
       </Container>

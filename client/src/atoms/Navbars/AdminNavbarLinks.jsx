@@ -35,7 +35,6 @@ const useMenu = () => {
 function HeaderLinks() {
   const userType = window.location.pathname.split('/')[2];
   const NotificationData = useFetchData(`/api/dashboard/${userType}/notification`);
-
   function handleLogoutClick() {
     axios.get(`${HOST}/api/login/logout`).then(() => {
       history.push('/');
