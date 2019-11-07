@@ -195,6 +195,9 @@ function WithdrawDialog(props) {
             <Typography variant="caption">
             * 출금은 최소 3만원 이상부터 가능합니다.
             </Typography>
+            <Typography variant="caption">
+            * 사업소득 원천신고액 3.3%를 제한 금액이 입금됩니다.
+            </Typography>
           </div>
 
           {/* 출금금액입력 */}
