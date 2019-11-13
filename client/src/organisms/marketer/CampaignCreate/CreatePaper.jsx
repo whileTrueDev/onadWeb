@@ -53,9 +53,7 @@ const useStyles = makeStyles(theme => ({
 
 const CampaignCreate = (props) => {
   const classes = useStyles();
-  const {
-    bannerList, dispatch
-  } = props;
+  const { bannerList, dispatch } = props;
   // 이름의  format을 체크하는 State
   const [checkName, setCheckName] = React.useState(false);
   const [duplicate, setDuplicate] = React.useState(false);

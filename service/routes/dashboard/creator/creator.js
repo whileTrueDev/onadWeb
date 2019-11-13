@@ -113,7 +113,7 @@ router.post('/contraction', (req, res) => {
     doQuery(updateQuery, [1, creatorId])
   ])
     .then(() => {
-      res.send(true);
+      res.send([true]);
     })
     .catch(() => {
       res.end();

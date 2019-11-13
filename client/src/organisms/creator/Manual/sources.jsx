@@ -121,6 +121,12 @@ const manualSources = {
         },
         {
           image: null,
+          description: `${colorize('배너 크기를 변경하고자 하는 경우', 'red')}에는  
+          해당 배너 소스를 ${colorize('삭제', 'red')}한 이후 다시 생성하여  
+          배너 해상도는 **< 320 x 160 >** 이상으로 지정하여야 합니다.  `,
+        },
+        {
+          image: null,
           description: '이제 매칭된 광고가 방송화면에 나타납니다.',
         },
       ],
@@ -230,7 +236,7 @@ const manualSources = {
     source: [
       {
         image: '/pngs/dashboard/manual/new_creator/creator-banner-01.png',
-        description: `[**<배너관리>**](${HOST_URL}/banner)에서 지금까지 진행한 모든 배너와,  
+        description: `[**<너관리>**](${HOST_URL}/banner)에서 지금까지 진행한 모든 배너와,  
         해당 배너 및 광고주의 정보, 해당 배너로 인한 수익정보를 확인할 수 있습니다.`
       },
     ]

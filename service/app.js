@@ -6,18 +6,19 @@ const cors = require('cors');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
-const passport = require('./passportStrategy');
 const MySQLStore = require('express-mysql-session')(session);
+const passport = require('./passportStrategy');
 // Router 정의
 const mailerRouter = require('./routes/mailer');
 const apiRouter = require('./routes/api');
 // marketer Tax Bill scheduler
 const taxBillScheduler = require('./middlewares/scheduler/taxBillScheduler');
-const slack = require('./middlewares/slack/message');
 
 const app = express();
 
-process.env.NODE_ENV = (process.env.NODE_ENV && (process.env.NODE_ENV).trim().toLowerCase() === 'production') ? 'production' : 'development';
+process.env.NODE_ENV = (process.env.NODE_ENV
+  && (process.env.NODE_ENV).trim().toLowerCase() === 'production')
+  ? 'production' : 'development';
 let FRONT_HOST = process.env.DEV_REACT_HOSTNAME;
 if (process.env.NODE_ENV === 'production') {
   FRONT_HOST = process.env.PRODUCTION_REACT_HOSTNAME;
@@ -30,7 +31,6 @@ const storeOptions = {
   password: process.env.SESSION_STORE_DB_PASSWORD,
   database: process.env.SESSION_STORE_DB_DATABASE,
 };
-
 const sessionStore = new MySQLStore(storeOptions);
 
 app.set('views', path.join(__dirname, 'views'));
@@ -82,16 +82,6 @@ app.use((err, req, res, next) => {
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
   if (err) {
-    const where = req._parsedOriginalUrl.pathname;
-    const who = req.session.passport.user.creatorDisplayName
-      ? req.session.passport.user.creatorDisplayName
-      : req._passport.user.creatorDisplayName;
-    console.log(`[${new Date().toLocaleString()}] Error occurred in - ${where} ::${who}\n${err}`);
-
-    slack.push(`[ERROR] API 서버에서 에러가 발생했습니다.
-      에러메시지 : 
-      ${err}`, `${where}:${who}`, 'onad_web_api');
-
     // render the error page
     res.status(err.status || 500);
     res.render('error');

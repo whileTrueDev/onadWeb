@@ -1,75 +1,19 @@
-const tmi = require('tmi.js');
+require('dotenv').config();
+const TwitchChatCollector = require('./model/TwitchChatCollector');
 
-const BOT_USERNAME = 'adbot';
-const OAUTH_TOKEN = 'oauth:ql78nrmxylz561jfwizzu7vi973vld';
-const CHANNEL_NAME = 'silphtv';
-const CHANNEL_NAME2 = 'dingception';
+const onad = new TwitchChatCollector();
 
-// Define configuration options
-const opts = {
-  debug: true,
-  connections: { reconnect: true, secure: true },
-  identity: {
-    username: BOT_USERNAME,
-    password: OAUTH_TOKEN
-  },
-  channels: [
-    CHANNEL_NAME, CHANNEL_NAME2
-  ]
-};
+onad.start();
 
-// Data format
+// 채팅로그 수집 서버 시작시, OnAD와 계약된 모든 크리에이터에 대한 채팅로그를 수집.
 
+// 온애드와 계약된 모든 크리에이터 조회
 
-const client = new tmi.Client(opts); // Create a client with our options
-client.connect(); // Connect to Twitch:
+// 크리에이터들을 적당한 크기의 군집 [리스트] 으로 할당
+// 하나의 클라이언트에는 크리에이터 총 5명 / 10명 ? 아니면 어떠한 기준이 필요함.
 
-// Date Fuction called when the message comes in
-function now() {
-  const thisTime = new Date();
-  return thisTime.toLocaleString();
-}
+// 군집별로 채팅로그 수집 클라이언트 생성.
 
-// Called every time a message comes in
-function onMessageHandler(target, context, msg, self) {
-  if (self) { return; } // Ignore messages from the bot
-
-  const data = {
-    channel: target.slice(1),
-    time: now(),
-    name: context['display-name'],
-    id: context.username,
-    subscriber: context.subscriber,
-    badges: context.badges,
-    manager: context.mod,
-    text: msg
-  };
-
-  console.log(data);
-
-
-  /** *************************************
-   * 챗봇의 영역.
-   * 메시지 중, 특정 단어의 경우 대답하도록 한다.
-   * 크리에이터의 oauth 권한 허용이 필요하다.
-   **************************************** */
-  // Remove whitespace from chat message
-
-  // const commandName = msg.trim();
-
-  // If the command is known, let's execute it
-  // if (commandName === '!dice') {
-  //   const num = rollDice();
-  //   client.say(target, `You rolled a ${num}`);
-  //   console.log(`* Executed ${commandName} command`);
-  // }
-}
-
-// Called every time the bot connects to Twitch chat
-function onConnectedHandler(addr, port) {
-  console.log(`* Connected to ${addr}:${port}`);
-}
-
-// Register our event handlers (defined below)
-client.on('message', onMessageHandler);
-client.on('connected', onConnectedHandler);
+// 스케쥴러 이용하여 매일 자정, 새로운 크리에이터가 있는 경우에만 새로운 클라이언트 생성.
+// 추가해야하는 크리에이터twitchId를 담은 리스트를 받고,
+// 해당 리스트를 타겟으로하는 클라이언트를 생성
