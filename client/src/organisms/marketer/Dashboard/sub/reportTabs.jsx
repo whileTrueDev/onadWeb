@@ -1,16 +1,32 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+//
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
+import useTheme from '@material-ui/core/styles/useTheme';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
+import Select from '@material-ui/core/Select';
+import { Divider, Grid } from '@material-ui/core';
+import Hidden from '@material-ui/core/Hidden';
 
-function TabPanel(props) {
+//
+import ReportStackedBar from '../../../../atoms/Chart/ReportStackedBar';
+import CardHeader from '../../../../atoms/Card/CardHeader';
+import Card from '../../../../atoms/Card/Card';
+import CardBody from '../../../../atoms/Card/CardBody';
+import Button from '../../../../atoms/CustomButtons/Button';
+//
+import ReportTabsCard from './ReportTabsCard';
+
+const TabPanel = (props) => {
   const {
-    children, value, index, ...other
+    children, value, index, valueChartData, ...other
   } = props;
+
 
   return (
     <Typography
@@ -24,7 +40,7 @@ function TabPanel(props) {
       <Box p={3}>{children}</Box>
     </Typography>
   );
-}
+};
 
 TabPanel.propTypes = {
   children: PropTypes.node,
@@ -39,32 +55,131 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function ReportTabs() {
-  const classes = useStyles();
-  const [value, setValue] = React.useState(0);
+const ReportTabs = (props) => {
+  const { classes, valueChartData } = props;
+  const styleClasses = useStyles();
+  const [value, setValue] = useState(0);
+  const [show, setShow] = useState(false);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
 
+  const handleShow = () => {
+    setShow(!show);
+  };
+
   return (
-    <div className={classes.root}>
+    <div className={styleClasses.root}>
       <AppBar position="static">
         <Tabs value={value} onChange={handleChange} style={{ backgroundColor: '#ff9800' }}>
-          <Tab label="TOTAL" />
+          <Tab label="개요" />
           <Tab label="CPM" />
           <Tab label="CPC" />
         </Tabs>
       </AppBar>
+
       <TabPanel value={value} index={0}>
-        Item One
+        <Grid container xs={12} spacing={3}>
+          <Grid item xs={12}>
+            {!show
+              ? (
+                <Button color="primary" onClick={handleShow}>
+              그래프 보기
+                </Button>
+              )
+              : (
+                <Button onClick={handleShow}>
+                그래프 숨기기
+                </Button>
+              )
+            }
+          </Grid>
+
+          <ReportTabsCard />
+          {show
+          && (
+          <Grid item xs={12}>
+            <CardHeader color="blueGray">
+            지출 추이
+            </CardHeader>
+            <Card>
+              <ReportStackedBar height={100} dataSet={valueChartData.payload[0]} />
+            </Card>
+          </Grid>
+          )
+      }
+        </Grid>
       </TabPanel>
+
       <TabPanel value={value} index={1}>
-        Item Two
+        <Grid container xs={12} spacing={3}>
+          <Grid item xs={12}>
+            {!show
+              ? (
+                <Button color="primary" onClick={handleShow}>
+              그래프 보기
+                </Button>
+              )
+              : (
+                <Button onClick={handleShow}>
+                그래프 숨기기
+                </Button>
+              )
+            }
+          </Grid>
+
+          <ReportTabsCard />
+          {show
+          && (
+          <Grid item xs={12}>
+            <CardHeader color="blueGray">
+            지출 추이
+            </CardHeader>
+            <Card>
+              <ReportStackedBar height={100} dataSet={valueChartData.payload[1]} />
+            </Card>
+          </Grid>
+          )
+      }
+        </Grid>
       </TabPanel>
+
       <TabPanel value={value} index={2}>
-        Item Three
+        <Grid container xs={12} spacing={3}>
+          <Grid item xs={12}>
+            {!show
+              ? (
+                <Button color="primary" onClick={handleShow}>
+              그래프 보기
+                </Button>
+              )
+              : (
+                <Button onClick={handleShow}>
+                그래프 숨기기
+                </Button>
+              )
+            }
+          </Grid>
+
+          <ReportTabsCard />
+          {show
+          && (
+          <Grid item xs={12}>
+            <CardHeader color="blueGray">
+            지출 추이
+            </CardHeader>
+            <Card>
+              <ReportStackedBar height={100} dataSet={valueChartData.payload[2]} />
+            </Card>
+          </Grid>
+          )
+      }
+        </Grid>
       </TabPanel>
     </div>
   );
-}
+};
+
+
+export default ReportTabs;

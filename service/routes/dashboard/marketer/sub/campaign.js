@@ -111,12 +111,15 @@ router.get('/chart', (req, res) => {
   WHERE SUBSTRING_INDEX(cl.campaignId, '_', 1) = ?
     AND  cl.date >= DATE_SUB(NOW(), INTERVAL 30 DAY)
   GROUP BY DATE_FORMAT(cl.date, "%y년 %m월 %d일"), type
-  ORDER BY cl.date DESC
+  ORDER BY cl.date ASC
   `;
   const queryArray = [marketerId];
 
   doQuery(query, queryArray)
-    .then((row) => { res.send(row.result); })
+    .then((row) => {
+      console.log(row.result);
+      res.send(row.result);
+    })
     .catch((errorData) => {
       console.log(errorData);
       res.end();
