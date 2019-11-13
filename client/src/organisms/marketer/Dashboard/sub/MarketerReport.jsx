@@ -13,7 +13,6 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 //
 import Card from '../../../../atoms/Card/Card';
 import CardHeader from '../../../../atoms/Card/CardHeader';
-import CardBody from '../../../../atoms/Card/CardBody';
 import Tooltip from '../../../../atoms/DescPopover';
 //
 import useFetchData from '../../../../utils/lib/hooks/useFetchData';
@@ -23,7 +22,7 @@ import HOST from '../../../../utils/config';
 import history from '../../../../history';
 
 //
-import ReportTabs from './ReportTabs';
+import ReportTabs from './TabsReport';
 
 const useStyles = makeStyles(theme => ({
   root: {
