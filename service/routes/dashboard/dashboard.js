@@ -5,21 +5,16 @@ const creatorRouter = require('./creator/creator');
 const marketerRouter = require('./marketer/marketer');
 
 const router = express.Router();
-router.use('/creator', creatorRouter);
-router.use('/marketer', marketerRouter);
-
-/** 세션의 userType 함수 및 라우터 */
-router.get('/checkUserType', (req, res, next) => {
-  if (req._passport.session !== undefined) {
-    // 세션이 있는 경우
-    const userInfo = req._passport.session.user;
-    res.send(userInfo);
+router.use((req, res, next) => {
+  if (req && req._passport && req._passport.session
+    && req._passport.session.user) {
+    next();
   } else {
-    // 세션이 없는 경우
-    // console.log('from ' + req.headers.referer, new Date(), '- no session');
     res.send('no session');
   }
 });
+router.use('/creator', creatorRouter);
+router.use('/marketer', marketerRouter);
 
 router.get('/notice', (req, res) => {
   const query = `

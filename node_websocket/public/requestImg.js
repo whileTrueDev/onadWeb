@@ -143,6 +143,27 @@ module.exports = function (sql, socket, msg) {
     return Array.from(new Set(returnList));
   };
 
+  const getBanList = (creatorId) => {
+    const selectQuery = `
+    SELECT banList 
+    FROM creatorCampaign
+    WHERE creatorId = ?
+    `;
+
+    return new Promise((resolve, reject) => {
+      doQuery(selectQuery, [creatorId])
+        .then((row) => {
+          const banList = JSON.parse(row.result[0].banList).campaignList;
+          resolve(banList);
+        })
+        .catch((errorData) => {
+          errorData.point = 'getBanList()';
+          errorData.description = '해당 creator의 banList를 가져오는 과정';
+          reject(errorData);
+        });
+    });
+  };
+
   const getBannerSrc = (campaignId) => {
     const selectQuery = `
                         SELECT br.bannerSrc
@@ -186,17 +207,19 @@ module.exports = function (sql, socket, msg) {
 
   async function getBanner([creatorId, gameId]) {
     console.log(`-----------------------Id : ${creatorId} / ${getTime}---------------------------`);
-    const [creatorCampaignList, onCampaignList] = await Promise.all(
+    const [creatorCampaignList, onCampaignList, banList] = await Promise.all(
       [
         getCreatorCampaignList(creatorId),
         getOnCampaignList(),
+        getBanList(creatorId)
       ]
     );
     const categoryCampaignList = await getGameCampaignList(gameId, creatorId);
     const onCreatorcampaignList = creatorCampaignList.filter(campaignId => onCampaignList.includes(campaignId));
     const onCategorycampaignList = categoryCampaignList.filter(campaignId => onCampaignList.includes(campaignId));
     const campaignList = Array.from(new Set(onCreatorcampaignList.concat(onCategorycampaignList)));
-    const campaignId = campaignList[getRandomInt(campaignList.length)];
+    const cutCampaignList = campaignList.filter(campaignId => !banList.includes(campaignId)); // 마지막에 banList를 통해 거르기.
+    const campaignId = cutCampaignList[getRandomInt(cutCampaignList.length)];
     myCampaignId = campaignId;
     if (myCampaignId) {
       console.log(`${creatorId} : 광고될 캠페인은 ${myCampaignId} 입니다. at : ${getTime}`);

@@ -61,7 +61,7 @@ router.get('/list', (req, res) => {
   const marketerId = req._passport.session.user.userid;
   let dataArray;
   let tmpDataArray;
-  const callQuery = `ㅔ
+  const callQuery = `
   SELECT title, content, date_format(date,'%y. %m. %d'), readState
   FROM marketerNotification AS mn
   WHERE marketerId = ?

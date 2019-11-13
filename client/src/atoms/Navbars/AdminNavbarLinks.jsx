@@ -88,7 +88,12 @@ function HeaderLinks() {
             to="/notice"
             component={Link}
           >
-            <SpeakerNotes fontSize="large" />
+            <Badge
+              variant="dot"
+              color="secondary"
+            >
+              <SpeakerNotes fontSize="large" />
+            </Badge>
           </IconButton>
         </Tooltip>
       </Hidden>

@@ -91,8 +91,8 @@ router.post('/contraction', (req, res) => {
   // `;
   const campaignQuery = `
   INSERT INTO creatorCampaign
-  (creatorId, campaignList)
-  VALUES (?, ?)
+  (creatorId, campaignList, banList)
+  VALUES (?, ?, ?)
   `;
 
   // landing 기본값 쿼리 추가
@@ -108,12 +108,12 @@ router.post('/contraction', (req, res) => {
 
   Promise.all([
     // doQuery(insertQuery, [creatorId, dateCode]),
-    doQuery(campaignQuery, [creatorId, campaignList]),
+    doQuery(campaignQuery, [creatorId, campaignList, campaignList]),
     doQuery(landingQuery, [creatorId, creatorName]),
     doQuery(updateQuery, [1, creatorId])
   ])
     .then(() => {
-      res.send(true);
+      res.send([true]);
     })
     .catch(() => {
       res.end();

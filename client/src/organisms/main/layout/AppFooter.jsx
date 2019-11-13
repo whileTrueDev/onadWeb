@@ -164,6 +164,14 @@ function AppFooter() {
                 사업자등록번호
                 <span className={classes.address}>659-03-01549</span>
               </div>
+              <div>
+                {'통신판매업 신고번호'}
+                <span className={classes.address}>제2019-부산금정-0581호</span>
+              </div>
+              <div>
+                {'고객센터'}
+                <span className={classes.address}>051-515-6309</span>
+              </div>
             </Typography>
           </Grid>
 
@@ -172,7 +180,7 @@ function AppFooter() {
               &copy;
               while True Corp.
             </strong>
-             All rights Reserved
+            {' All rights Reserved'}
           </Typography>
         </Grid>
       </Container>

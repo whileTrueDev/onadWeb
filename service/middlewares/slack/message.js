@@ -1,6 +1,6 @@
 const Axios = require('axios');
 
-const url = 'https://hooks.slack.com/services/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';
+const url = process.env.SLACK_ALARM_URL;
 
 /**
  * slack onad_alarm 채널에 메시지를 보내는 함수.
@@ -14,11 +14,15 @@ const url = 'https://hooks.slack.com/services/TGUBU02BC/BGZ163X7A/MdS3meWuD2gnBI
  * - onad_calculator
  */
 function push(text, task, type = 'onad_web_api') {
-  const sendingText = `[${type}]\n[${task} - ${new Date().toLocaleString()}]\n${text}`;
+  const sendingText = `[${type}]\n[${`${task} - ` || ''}${new Date().toLocaleString()}]\n${text}`;
   Axios.post(url,
     JSON.stringify({
       text: sendingText
-    }), { withCredentials: false });
+    }), { withCredentials: true })
+    .catch((err) => {
+      const { status, statusText } = err.response;
+      console.log(status, statusText, 'ERR in Slack alarm to onad_alarm, check slack webhook');
+    });
 }
 
 module.exports = {

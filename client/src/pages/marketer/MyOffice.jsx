@@ -26,7 +26,7 @@ export default function MyOffice() {
       {/* 광고캐시 충전 및 환불, 관리 */}
       <GridContainer>
         <GridItem xs={12} md={12} lg={8} xl={6}>
-          <MyCash accountData={accountData} />
+          <MyCash accountData={accountData} userData={userData}/>
         </GridItem>
       </GridContainer>
 

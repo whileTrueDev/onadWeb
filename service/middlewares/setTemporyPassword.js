@@ -1,10 +1,10 @@
 const axios = require('axios');
 const doQuery = require('../model/doQuery');
 const encrypto = require('../encryption');
-const config = require('../config.json');
 
-const HOST = process.env.NODE_ENV === 'production' ? config.production.apiHostName : config.dev.apiHostName;
-
+const HOST = process.env.NODE_ENV === 'production'
+  ? process.env.PRODUCTION_API_HOSTNAME
+  : process.env.DEV_API_HOSTNAME;
 
 const setTemporaryPassword = (req, res, next) => {
   // 임시비밀번호 생성.

@@ -59,13 +59,31 @@ router.post('/desc', (req, res) => {
 
 // 배너 삭제
 router.post('/delete', (req, res) => {
-  const { contractionId } = req.body;
-  const bannerQuery = `
-  DELETE FROM bannerMatched
-  WHERE contractionId = ? `;
-  doQuery(bannerQuery, [contractionId])
-    .then(() => {
-      res.send([true, '배너가 성공적으로 삭제되었습니다.']);
+  const { campaignId } = req.body;
+  const { creatorId } = req._passport.session.user;
+  const searchQuery = `
+  SELECT banList 
+  FROM creatorCampaign 
+  WHERE creatorId = ?`;
+
+  const saveQuery = `
+  UPDATE creatorCampaign 
+  SET banList = ? 
+  WHERE creatorId = ?`;
+
+  doQuery(searchQuery, [creatorId])
+    .then((row) => {
+      const jsonData = JSON.parse(row.result[0].banList);
+      const newCampaignList = jsonData.campaignList.concat(campaignId);
+      jsonData.campaignList = newCampaignList;
+      doQuery(saveQuery, [JSON.stringify(jsonData), creatorId])
+        .then(() => {
+          res.send([true]);
+        })
+        .catch((errorData) => {
+          console.log(errorData);
+          res.send([false, '배너 삭제에 실패하였습니다 잠시후 시도해주세요.']);
+        });
     })
     .catch((errorData) => {
       console.log(errorData);
@@ -102,8 +120,9 @@ router.get('/matched', (req, res) => {
     });
 });
 
-// 하나의 gameId에 해당하는 모든 캠페인 리스트를 반환하는 Promise
-const getCash = async (campaignList) => {
+// 캠페인 ID array 를 통해 각 캠페인 ID에 따른 cash를 구하는 함수.
+// banList에 존재할 때 state 또한 변경하는 함수.
+const getCash = async ({ campaignList, banList }) => {
   const cashQuery = `
   SELECT campaignId, type, sum(cashToCreator)  as cash
   FROM campaignLog
@@ -117,6 +136,9 @@ const getCash = async (campaignList) => {
       return doQuery(cashQuery, [campaignData.campaignId, campaignData.creatorId])
         .then((row) => {
           if (row.result) {
+            if (banList.includes(newCampaignData.campaignId)) {
+              newCampaignData.state = 0;
+            }
             let cash = 0;
             row.result.forEach((cashData) => {
               newCampaignData[cashData.type] = cashData.cash;
@@ -172,9 +194,21 @@ router.get('/list', (req, res) => {
   JOIN bannerRegistered AS BR
   ON campaign.bannerId = BR.bannerId
   `;
-  doQuery(listQuery, [creatorId])
-    .then(async (row) => {
-      const campaignList = await getCash(row.result);
+
+  const banQuery = `
+  SELECT banList 
+  FROM creatorCampaign
+  WHERE creatorId = ?
+  `;
+
+  Promise.all([
+    doQuery(listQuery, [creatorId]),
+    doQuery(banQuery, [creatorId])
+  ])
+    .then(async ([row, ban]) => {
+    // banList를 통해 캠페인의 완료를 체크하여 전달한다.
+      const banList = JSON.parse(ban.result[0].banList).campaignList;
+      const campaignList = await getCash({ campaignList: row.result, banList });
       res.send(campaignList);
     })
     .catch((errorData) => {

@@ -16,6 +16,7 @@ import CardBody from '../../../../atoms/Card/CardBody';
 import CardIcon from '../../../../atoms/Card/CardIcon';
 import DashboardStyle from '../../../../assets/jss/onad/views/dashboardStyle';
 import CashChargeDialog from './CashChargeDialog';
+import TestChargeDialog from './TestChargeDialog';
 import RefundDialog from './RefundDialog';
 import CashUsageList from './CashUsageList';
 // hooks
@@ -25,8 +26,11 @@ import useDialog from '../../../../utils/lib/hooks/useDialog';
 function MyCash(props) {
   const chargeDialog = useDialog();
   const refundDialog = useDialog();
+  const testChargeDialog = useDialog();
   const cashData = useFetchData('/api/dashboard/marketer/cash');
-  const { classes, accountData } = props;
+  const marketerProfileData = useFetchData('/api/dashboard/marketer/profile');
+  
+  const { classes, accountData, userData } = props;
 
   return (
     <Card>
@@ -39,6 +43,13 @@ function MyCash(props) {
           display: 'flex', alignItems: 'center', flexDirection: 'row-reverse', padding: 5
         }}
         >
+          {!userData.loading && !userData.error
+            && userData.payload.marketerId === 'admin' ? (
+              <Button color="info" onClick={() => { testChargeDialog.handleOpen(); }}>전자결제충전</Button>
+            ) : (
+              null
+            )}
+          
           <Button color="info" onClick={() => { chargeDialog.handleOpen(); }}>충전</Button>
           {!accountData.loading && !accountData.error
               && !accountData.payload.accountNumber ? (
@@ -93,6 +104,17 @@ function MyCash(props) {
           currentCash={cashData.payload.cashAmount}
         />
       )}
+
+      {/* 결제 테스트를 위한 다이얼로그 Start*/}
+      {!cashData.loading && !cashData.error && (
+        <TestChargeDialog
+          open={testChargeDialog.open}
+          handleClose={testChargeDialog.handleClose}
+          currentCash={cashData.payload.cashAmount}
+          marketerProfileData={marketerProfileData}
+        />
+      )}
+      {/* 결제 테스트를 위한 다이얼로그 End*/}
 
       {!accountData.loading
       && !accountData.error

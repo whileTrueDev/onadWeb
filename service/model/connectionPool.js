@@ -1,13 +1,12 @@
 const mysql = require('mysql');
-const config = require('../config.json');
 
 const pool = mysql.createPool({
-  host: config.DB.host,
-  user: config.DB.user,
-  password: config.DB.password,
-  database: config.DB.database,
-  port: config.DB.port,
-  charset: config.DB.charset
+  host: process.env.DB_HOST,
+  port: process.env.DB_PORT,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_DATABASE,
+  charset: process.env.DB_CHARSET
   /**
      * The maximum number of connection requests the pool will queue
      * before returning an error from getConnection.
