@@ -21,7 +21,6 @@ router.get('/', (req, res) => {
         return click;
       });
 
-      console.log(result);
       res.send(result);
     })
     .catch((errorData) => {
