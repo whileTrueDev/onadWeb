@@ -25,11 +25,9 @@ const doQuery = (query, queryArray = []) => new Promise((resolve, reject) => {
     // 커넥션 시 에러발생
     if (err) {
       console.log('conn in err - getConnection 함수', conn);
-      console.log(`DB연결 오류${err.message}`);
+      console.log(`DB연결 오류 ${err.message}`);
       logger.error(`DB연결 관련 오류${err}`);
-      reject({
-        error: err,
-      });
+      reject({ error: err });
     } else {
       conn.query(query, queryArray, (error, result) => {
         if (error) {
