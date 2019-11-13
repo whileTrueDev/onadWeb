@@ -5,7 +5,7 @@ import {
 import { makeStyles } from '@material-ui/core/styles';
 import shortid from 'shortid';
 import {
-  sendTypeConfig, optionConfig, budgetConfig, landingManageConfig
+  sendTypeConfig, optionConfig, budgetConfig, landingManageConfig, reportConfig
 } from '../utils/TooltipContentConfig';
 import StyledSelectText from './StyledSelectText';
 
@@ -113,6 +113,25 @@ function DescPopover(props) {
                 alt={landingManageConfig[descIndex].image}
               />
             ) : null}
+          </Grid>
+        );
+
+      case 'reportTooltip':
+        return (
+          <Grid container direction="column" spacing={1}>
+            <Grid item>
+              <StyledSelectText
+                primary={reportConfig[descIndex].title}
+                className={classes.label}
+              />
+            </Grid>
+            {reportConfig[descIndex].text.split('\n').map(row => (
+              <Grid item key={shortid.generate()}>
+                <Typography className={classes.text}>
+                  {row}
+                </Typography>
+              </Grid>
+            ))}
           </Grid>
         );
       default:

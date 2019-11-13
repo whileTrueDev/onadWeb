@@ -8,6 +8,7 @@ import RegistPage from './pages/main/Regist';
 import CreatorDashboard from './pages/layouts/CreatorDashboardLayout';
 import CreatorDashboardDoor from './pages/layouts/CreatorDashboardDoor';
 import MarketerDashboard from './pages/layouts/MarketerDashboardLayout';
+import MarketerReport from './organisms/marketer/Dashboard/MarketerReportLayout';
 import NotFound from './pages/others/NotFound';
 import Notice from './pages/others/Notice';
 // import ShutDownCloseBeta from './pages/others/ShutDownCloseBeta';
@@ -25,6 +26,7 @@ const developRouter = (
       <Route path="/notice/:code" component={Notice} />
       <Route exact path="/dashboard/creator/door" component={CreatorDashboardDoor} />
       <Route path="/dashboard/creator" component={CreatorDashboard} />
+      <Route path="/dashboard/marketer/report/:campaignId" component={MarketerReport} />
       <Route path="/dashboard/marketer" component={MarketerDashboard} />
       {/* 페이 연습 페이지 */}
       {/* <Route exact path="/pay" component={KakaoPay} /> */}
@@ -44,6 +46,7 @@ const productionRouter = (
       <Route path="/notice/:code" component={Notice} />
       <Route exact path="/dashboard/creator/door" component={CreatorDashboardDoor} />
       <Route path="/dashboard/creator" component={CreatorDashboard} />
+      <Route path="/dashboard/marketer/report/:campaignId" component={MarketerReport} />
       <Route path="/dashboard/marketer" component={MarketerDashboard} />
       {/* 페이 연습 페이지 */}
       {/* <Route exact path="/pay" component={KakaoPay} /> */}

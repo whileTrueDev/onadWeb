@@ -75,6 +75,29 @@ const landingManageConfig = [
   }
 ];
 
+const reportConfig = [
+
+  {
+    title: 'CPM?',
+    text: `  
+    cpm은 방송화면에 노출되는 광고를 뜻합니다`
+  },
+  {
+    title: 'cpc',
+    text: `
+    - 레벨은 광고페이지에서의 유저의 지속적인 상호작용(조회, 클릭, 방문, 구매전환 등)에 의해 결정됩니다.
+    - 광고레벨에 따라 광고 단가가 조정될 수 있으며, 광고주에게 우선 배정될 수 있는 등 혜택을 받을 수 있습니다.
+    `
+  },
+  {
+    title: '자신의 트위치 채널의 패널에 게시할 배너입니다.',
+    text: `
+    - 패널에 광고페이지 랜딩 배너를 부착하여 더 많은 시청자를 광고에 노출시키세요.
+    - 아직 준비된 배너 이미지가 없으신가요? 기본 이미지를 활용하세요!
+    - 이미지 클릭시 다운로드됩니다.`
+  }
+];
+
 export {
-  sendTypeConfig, optionConfig, budgetConfig, landingManageConfig
+  sendTypeConfig, optionConfig, budgetConfig, landingManageConfig, reportConfig
 };
