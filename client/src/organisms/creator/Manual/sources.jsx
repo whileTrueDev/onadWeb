@@ -157,7 +157,13 @@ const manualSources = {
           image: '/pngs/dashboard/manual/creator/3_9.png',
           description: `추가된 소스를 드래그하여 **맨 위에 둡니다.**  
           빨간 영역을 드래그 하여 위치를 조절합니다.  
-          크기는 **< 320 x 160 >** 으로 설정합니다.`,
+          해상 소스의 크기는 필히, **< 320 x 160 >** 으로 설정합니다.`,
+        },
+        {
+          image: null,
+          description: `${colorize('배너 크기를 변경하고자 하는 경우', 'red')}에는  
+          해당 배너 소스를 ${colorize('삭제', 'red')}한 이후 다시 생성하여  
+          배너 해상도는 **< 320 x 160 >** 이상으로 지정하여야 합니다.  `,
         },
         {
           image: null,

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import Delete from '@material-ui/icons/DeleteRounded';
 import MaterialTable from '../../../../atoms/Table/MaterialTable';
@@ -13,7 +13,7 @@ import CampaignDeleteConfirmDialog from './CampaignDeleteConfirmDialog';
 import history from '../../../../history';
 
 function CampaignTable({ ...props }) {
-  const { dataSet, handleReportModeToggle } = props;
+  const { dataSet } = props;
 
   const tableRef = React.useRef();
   const { handleUpdateRequest } = useUpdateData('/api/dashboard/marketer/campaign/onoff');
@@ -24,11 +24,6 @@ function CampaignTable({ ...props }) {
   React.useEffect(() => {
     snackbar.handleOpen(history.location.search === '?deleted');
   });
-
-  const routeChange = (rowData) => {
-    const path = `/dashboard/marketer/report/${rowData.campaignId}`;
-    history.push(path);
-  };
 
   const columns = [
     {
@@ -75,7 +70,10 @@ function CampaignTable({ ...props }) {
       render: rowData => (
         <Button
           color="danger"
-          onClick={() => routeChange(rowData)}
+          onClick={() => {
+            const path = `/dashboard/marketer/report/${rowData.campaignId}`;
+            history.push(path);
+          }}
         >
         보고서
         </Button>

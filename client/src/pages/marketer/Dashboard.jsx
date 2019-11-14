@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { Route, Switch } from 'react-router-dom';
 // @material-ui/core
 import Hidden from '@material-ui/core/Hidden';
 // core ../../../atoms
@@ -9,22 +10,17 @@ import CashCard from '../../organisms/marketer/Dashboard/CashCard';
 import StatusBar from '../../organisms/marketer/Dashboard/CampaignOnOffSwitch';
 import CampaignCreate from '../../organisms/marketer/Dashboard/CampaignCreate';
 import CampaignList from '../../organisms/marketer/Dashboard/CampaignList';
+import MarketerReport from '../../organisms/marketer/Dashboard/sub/MarketerReport';
 
 import useFetchData from '../../utils/lib/hooks/useFetchData';
 import useToggle from '../../utils/lib/hooks/useToggle';
 
 const Dashboard = () => {
   const campaignCreateMode = useToggle();
-  const reportMode = useToggle();
   const marketerOnOffData = useFetchData('/api/dashboard/marketer/onoff');
   const marketerProfileData = useFetchData('/api/dashboard/marketer/profile');
   const campaignData = useFetchData('/api/dashboard/marketer/campaign/list');
   const bannerData = useFetchData('/api/dashboard/marketer/banner');
-  const [reportOpen, setReportOpen] = useState(false);
-
-  const handleReportOpen = () => {
-    setReportOpen(true);
-  };
 
   return (
     <div>
@@ -36,15 +32,7 @@ const Dashboard = () => {
         </GridContainer>
       )}
 
-      {reportMode.toggle && (
-        <GridContainer>
-          <GridItem>
-            보고서 페이지
-          </GridItem>
-        </GridContainer>
-      )}
-
-      {!campaignCreateMode.toggle && !reportMode.toggle && (
+      {!campaignCreateMode.toggle && (
         <div>
           <GridContainer>
             <GridItem xs={12} md={12} xl={12}>
@@ -73,7 +61,6 @@ const Dashboard = () => {
                 campaignData={campaignData}
                 handleCampaignCreateMode={campaignCreateMode.handleToggle}
                 bannerData={bannerData}
-                handleReportModeToggle={reportMode.handleToggle}
               />
             </GridItem>
           </GridContainer>

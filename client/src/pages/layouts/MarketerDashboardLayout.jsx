@@ -11,21 +11,25 @@ import Footer from '../../atoms/Footer/Footer';
 import '../../assets/css/onad.css';
 import history from '../../history';
 
-const MarketerRoutes = ({ pannelRef }) => (
+const MarketerRoutes = ({ pannelRef, ...rest }) => (
   <Switch>
     {allRoutes.marketer.map(prop => (
       <Route
         path={prop.layout + prop.path}
-        component={() => <prop.component history={history} pannelRef={pannelRef} />}
+        component={() => (
+          <prop.component
+            history={history}
+            pannelRef={pannelRef}
+            {...rest}
+          />
+        )}
         key={prop.name}
       />
     ))}
   </Switch>
 );
 
-const MarketerDashboard = ({
-  classes, ...rest
-}) => {
+const MarketerDashboard = ({ classes, match, ...rest }) => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -65,7 +69,7 @@ const MarketerDashboard = ({
         />
         <div className={classes.content}>
           <div className={classes.container}>
-            <MarketerRoutes history={history} pannelRef={mainPanel} />
+            <MarketerRoutes history={history} pannelRef={mainPanel} {...rest} />
           </div>
         </div>
         <Footer />

@@ -192,10 +192,15 @@ function WithdrawDialog(props) {
           <Divider />
 
           <div>
-            <Typography variant="caption">
+            <Typography variant="caption" gutterBottom>
             * 출금은 최소 3만원 이상부터 가능합니다.
             </Typography>
-            <Typography variant="caption">
+            <br />
+            <Typography variant="caption" gutterBottom>
+            * 매달 10일 기준으로 정산하여 입급합니다.
+            </Typography>
+            <br />
+            <Typography variant="caption" gutterBottom>
             * 사업소득 원천신고액 3.3%를 제한 금액이 입금됩니다.
             </Typography>
           </div>
