@@ -1,6 +1,7 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import shortid from 'shortid';
-import useFetchData from '../../../utils/lib/hooks/useFetchData';
+import useFetchData from '../../../../utils/lib/hooks/useFetchData';
 
 const { compose, withProps, withHandlers } = require('recompose');
 const {
@@ -15,7 +16,7 @@ const MapWithAMarkerClusterer = compose(
   withProps({
     googleMapURL: [
       'https://maps.googleapis.com/maps/api/js',
-      '?key=AIzaSyAtdXsDoxu-pCerC02KWhXl0oE-PI-UDs0',
+      `?key=${process.env.REACT_APP_GOOGLE_MAP_API_KEY}`,
       '&v=3.exp&libraries=geometry,drawing,places'].join(''),
     loadingElement: <div style={{ height: '100%' }} />,
     containerElement: <div style={{ height: '400px' }} />,
@@ -51,8 +52,9 @@ const MapWithAMarkerClusterer = compose(
   </GoogleMap>
 ));
 
-export default function Geo() {
-  const data = useFetchData('/api/dashboard/marketer/geo');
+export default function IpToGeo(props) {
+  const { campaignId } = props;
+  const data = useFetchData('/api/dashboard/marketer/geo', { campaignId });
 
   return (
     <div>
@@ -62,3 +64,7 @@ export default function Geo() {
     </div>
   );
 }
+
+IpToGeo.propTypes = {
+  campaignId: PropTypes.string.isRequired
+};

@@ -315,6 +315,7 @@ const MarketerReport = (props) => {
           <Grid item xs={12}>
             <ReportTabs
               valueChartData={valueChartData}
+              campaignId={match.params.campaignId}
             />
           </Grid>
           <Tooltip

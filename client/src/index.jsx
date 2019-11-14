@@ -1,3 +1,5 @@
+// 환경변수를 위해. dev환경: .env 파일 / production환경: docker run의 --env-file인자로 넘김.
+import dotenv from 'dotenv';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Router, Switch, Route } from 'react-router-dom';
@@ -15,6 +17,8 @@ import Notice from './pages/others/Notice';
 // import KakaoPay from './pages/Common/KakaoPay';
 import * as serviceWorker from './utils/serviceWorker';
 import history from './history';
+
+dotenv.config();
 
 const developRouter = (
   <Router history={history}>

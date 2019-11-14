@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
-
 import withStyles from '@material-ui/core/styles/withStyles';
-import { Switch, Route } from 'react-router-dom';
+
 import Navbar from '../../../atoms/Navbars/Navbar';
 import dashboardStyle from '../../../assets/jss/onad/layouts/dashboardStyle';
 import Sidebar from '../../../atoms/Sidebar/Sidebar';
@@ -11,18 +10,6 @@ import Footer from '../../../atoms/Footer/Footer';
 // import '../../assets/css/onad.css';
 import history from '../../../history';
 import MarketerReport from './sub/MarketerReport';
-
-const MarketerRoutes = ({ pannelRef }) => (
-  <Switch>
-    {allRoutes.marketer.map(prop => (
-      <Route
-        path={prop.layout + prop.path}
-        component={() => <prop.component history={history} pannelRef={pannelRef} />}
-        key={prop.name}
-      />
-    ))}
-  </Switch>
-);
 
 const MarketerReportLayout = ({
   classes, match, ...rest
@@ -70,19 +57,12 @@ const MarketerReportLayout = ({
             <MarketerReport
               match={match}
             />
-
-            <MarketerRoutes history={history} pannelRef={mainPanel} />
           </div>
         </div>
         <Footer />
       </div>
     </div>
   );
-};
-
-
-MarketerRoutes.defaultProps = {
-  history: {},
 };
 
 MarketerReport.propTypes = {

@@ -11,7 +11,7 @@ import Card from '../../../atoms/Card/Card';
 import CardHeader from '../../../atoms/Card/CardHeader';
 import CardBody from '../../../atoms/Card/CardBody';
 import dashboardStyle from '../../../assets/jss/onad/views/dashboardStyle';
-
+import history from '../../../history';
 
 const useStyles = makeStyles(() => ({
   flex: {
@@ -27,9 +27,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 function CampaignTable(props) {
-  const {
-    classes, handleCampaignCreateMode, handleReportModeToggle
-  } = props;
+  const { classes, handleCampaignCreateMode } = props;
   const classes1 = useStyles();
   const { campaignData, bannerData } = props;
 
@@ -42,7 +40,11 @@ function CampaignTable(props) {
       <CardBody>
         {!bannerData.loading && !bannerData.error && bannerData.payload.length > 0 && (
         <div>
-          <Button color="info" onClick={handleCampaignCreateMode}>
+          <Button
+            color="info"
+            onClick={() => { handleCampaignCreateMode(); }
+            }
+          >
             <Add />
             새 캠페인 등록
           </Button>
@@ -52,10 +54,7 @@ function CampaignTable(props) {
         <div className={classes1.flex} style={{ height: 200 }}><CircularProgress small /></div>
         )}
         {!campaignData.loading && !campaignData.error && campaignData.payload && (
-        <Table
-          dataSet={campaignData.payload.data}
-          handleReportModeToggle={handleReportModeToggle}
-        />
+        <Table dataSet={campaignData.payload.data} />
         )}
 
         {!campaignData.loading && campaignData.error && !campaignData.payload && (
