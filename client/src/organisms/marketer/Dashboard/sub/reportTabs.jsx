@@ -56,7 +56,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const ReportTabs = (props) => {
-  const { classes, valueChartData } = props;
+  const { classes, valueChartData, reportData } = props;
   const styleClasses = useStyles();
   const [value, setValue] = useState(0);
   const [show, setShow] = useState(false);
@@ -96,7 +96,9 @@ const ReportTabs = (props) => {
             }
           </Grid>
 
-          <ReportTabsCard />
+          <ReportTabsCard
+            reportData={reportData}
+          />
           {show
           && (
           <Grid item xs={12}>
