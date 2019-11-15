@@ -7,20 +7,16 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
-import useTheme from '@material-ui/core/styles/useTheme';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
-import Select from '@material-ui/core/Select';
-import { Divider, Grid } from '@material-ui/core';
-import Hidden from '@material-ui/core/Hidden';
+import { Grid } from '@material-ui/core';
 
-//
 import ReportStackedBar from '../../../../atoms/Chart/ReportStackedBar';
 import CardHeader from '../../../../atoms/Card/CardHeader';
 import Card from '../../../../atoms/Card/Card';
-import CardBody from '../../../../atoms/Card/CardBody';
 import Button from '../../../../atoms/CustomButtons/Button';
-//
+
 import ReportTabsCard from './ReportTabsCard';
+import IpToGeo from './IpToGeo';
+
 
 const TabPanel = (props) => {
   const {
@@ -56,7 +52,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const ReportTabs = (props) => {
-  const { classes, valueChartData, reportData } = props;
+  const { classes, valueChartData, campaignId } = props;
   const styleClasses = useStyles();
   const [value, setValue] = useState(0);
   const [show, setShow] = useState(false);
@@ -96,9 +92,8 @@ const ReportTabs = (props) => {
             }
           </Grid>
 
-          <ReportTabsCard
-            reportData={reportData}
-          />
+          <ReportTabsCard />
+
           {show
           && (
           <Grid item xs={12}>
@@ -148,7 +143,7 @@ const ReportTabs = (props) => {
       </TabPanel>
 
       <TabPanel value={value} index={2}>
-        <Grid container xs={12} spacing={3}>
+        <Grid container>
           <Grid item xs={12}>
             {!show
               ? (
@@ -165,6 +160,14 @@ const ReportTabs = (props) => {
           </Grid>
 
           <ReportTabsCard />
+
+          <Grid item xs={6}>
+            <Typography variant="h6">
+              지역별 클릭
+            </Typography>
+            <IpToGeo campaignId={campaignId} />
+          </Grid>
+
           {show
           && (
           <Grid item xs={12}>

@@ -23,7 +23,7 @@ import HOST from '../../../../utils/config';
 import history from '../../../../history';
 
 //
-import ReportTabs from './ReportTabs';
+import ReportTabs from './TabsReport';
 
 const useStyles = makeStyles(theme => ({
   root: {
