@@ -6,7 +6,6 @@ const router = express.Router();
 router.get('/', (req, res) => {
   const marketerId = req._passport.session.user.userid;
   const { campaignId } = req.query;
-  console.log(req.query);
   let data;
   const getCampaignNameQuery = `
   SELECT campaignName 
@@ -22,10 +21,9 @@ router.get('/', (req, res) => {
   const getViewCountQuery = `
   SELECT SUM(cashFromMarketer) / (SELECT unitPrice FROM marketerDebit WHERE marketerId = ?)
   FROM campaignLog as cl
-  WHERE campaignId= ? AND type="CPM";
-`;
+  WHERE campaignId= ? AND type="CPM";`;
 
-  const getTimeCountQuery = `
+  const getTimeQuery = `
   SELECT count(*) / 6
   FROM campaignLog
   WHERE campaignId = ?`;
@@ -40,14 +38,89 @@ router.get('/', (req, res) => {
   FROM landingClick 
   WHERE campaignId = ? `;
 
+  const getWeeksCpmQuery = `
+  SELECT SUM(cashFromMarketer) 
+  FROM campaignLog as cl
+  WHERE campaignId= ?
+  AND cl.date > date_add(now(),interval -14 day) 
+  AND type="CPM";`;
+
+  const getWeeksViewCountQuery = `
+  SELECT SUM(cashFromMarketer) / (SELECT unitPrice FROM marketerDebit WHERE marketerId = ?)
+  FROM campaignLog as cl
+  WHERE campaignId= ?
+  AND cl.date > date_add(now(),interval -14 day) 
+  AND type="CPM"`;
+
+  const getWeeksTimeQuery = `
+  SELECT count(*) / 6
+  FROM campaignLog as cl
+  WHERE campaignId = ?
+  AND cl.date > date_add(now(),interval -14 day)`;
+
+  const getWeeksCpcQuery = `
+  SELECT SUM(cashFromMarketer) 
+  FROM campaignLog as cl
+  WHERE campaignId= ?
+  AND cl.date > date_add(now(),interval -14 day)
+  AND type="CPC"`;
+
+  const getWeeksClickCountQuery = `
+  SELECT SUM(clickCount), SUM(transferCount)
+  FROM landingClick 
+  WHERE campaignId = ? 
+  AND regiDate > date_add(now(),interval -14 day)`;
+
+  const getMonthsCpmQuery = `
+  SELECT SUM(cashFromMarketer) 
+  FROM campaignLog as cl
+  WHERE campaignId= ?
+  AND cl.date > date_add(now(),interval -1 MONTH) 
+  AND type="CPM";`;
+
+  const getMonthsViewCountQuery = `
+  SELECT SUM(cashFromMarketer) / (SELECT unitPrice FROM marketerDebit WHERE marketerId = ?)
+  FROM campaignLog as cl
+  WHERE campaignId= ?
+  AND cl.date > date_add(now(),interval -1 MONTH) 
+  AND type="CPM"`;
+
+  const getMonthsTimeQuery = `
+  SELECT count(*) / 6
+  FROM campaignLog as cl
+  WHERE campaignId = ?
+  AND cl.date > date_add(now(),interval -1 MONTH)`;
+
+  const getMonthsCpcQuery = `
+  SELECT SUM(cashFromMarketer) 
+  FROM campaignLog as cl
+  WHERE campaignId= ?
+  AND cl.date > date_add(now(),interval -1 MONTH)
+  AND type="CPC"`;
+
+  const getMonthsClickCountQuery = `
+  SELECT SUM(clickCount), SUM(transferCount)
+  FROM landingClick as cl
+  WHERE campaignId = ? 
+  AND regiDate > date_add(now(),interval -1 MONTH)`;
 
   Promise.all([
     doQuery(getCampaignNameQuery, campaignId),
     doQuery(getTotalCpmQuery, campaignId),
     doQuery(getViewCountQuery, [marketerId, campaignId]),
-    doQuery(getTimeCountQuery, campaignId),
+    doQuery(getTimeQuery, campaignId),
     doQuery(getTotalCpcQuery, campaignId),
     doQuery(getClickCountQuery, campaignId),
+    doQuery(getWeeksCpmQuery, campaignId),
+    doQuery(getWeeksViewCountQuery, [marketerId, campaignId]),
+    doQuery(getWeeksTimeQuery, campaignId),
+    doQuery(getWeeksCpcQuery, campaignId),
+    doQuery(getWeeksClickCountQuery, campaignId),
+    doQuery(getMonthsCpmQuery, campaignId),
+    doQuery(getMonthsViewCountQuery, [marketerId, campaignId]),
+    doQuery(getMonthsTimeQuery, campaignId),
+    doQuery(getMonthsCpcQuery, campaignId),
+    doQuery(getMonthsClickCountQuery, campaignId),
   ])
     .then((row) => {
       data = row.map(value => Object.values(value.result[0]));
@@ -84,6 +157,7 @@ router.get('/totalSpendChart', (req, res) => {
   GROUP BY DATE_FORMAT(cl.date, "%y년 %m월 %d일"), type
   ORDER BY cl.date ASC
   `;
+
   const cpcQuery = `
   SELECT
     cl.date as date,
@@ -94,76 +168,11 @@ router.get('/totalSpendChart', (req, res) => {
   GROUP BY DATE_FORMAT(cl.date, "%y년 %m월 %d일"), type
   ORDER BY cl.date ASC
   `;
-  const weeksTotalQuery = `
-  SELECT
-    cl.date as date,
-    sum(cashFromMarketer) as cash, type
-  FROM campaignLog AS cl
-  WHERE campaignId = ?
-  GROUP BY DATE_FORMAT(cl.date, "%y년 %m월 %d일"), type
-  ORDER BY cl.date ASC
-  `;
 
-  const weeksCpmQuery = `
-  SELECT
-    cl.date as date,
-    sum(cashFromMarketer) as cash, type
-  FROM campaignLog AS cl
-  WHERE campaignId = ?
-    AND type="cpm"
-  GROUP BY DATE_FORMAT(cl.date, "%y년 %m월 %d일"), type
-  ORDER BY cl.date ASC
-  `;
-  const weeksCpcQuery = `
-  SELECT
-    cl.date as date,
-    sum(cashFromMarketer) as cash, type
-  FROM campaignLog AS cl
-  WHERE campaignId = ?
-    AND type="cpc"
-  GROUP BY DATE_FORMAT(cl.date, "%y년 %m월 %d일"), type
-  ORDER BY cl.date ASC
-  `;
-  const monthTotalQuery = `
-  SELECT
-    cl.date as date,
-    sum(cashFromMarketer) as cash, type
-  FROM campaignLog AS cl
-  WHERE campaignId = ?
-  GROUP BY DATE_FORMAT(cl.date, "%y년 %m월 %d일"), type
-  ORDER BY cl.date ASC
-  `;
-
-  const monthCpmQuery = `
-  SELECT
-    cl.date as date,
-    sum(cashFromMarketer) as cash, type
-  FROM campaignLog AS cl
-  WHERE campaignId = ?
-    AND type="cpm"
-  GROUP BY DATE_FORMAT(cl.date, "%y년 %m월 %d일"), type
-  ORDER BY cl.date ASC
-  `;
-  const monthCpcQuery = `
-  SELECT
-    cl.date as date,
-    sum(cashFromMarketer) as cash, type
-  FROM campaignLog AS cl
-  WHERE campaignId = ?
-    AND type="cpc"
-  GROUP BY DATE_FORMAT(cl.date, "%y년 %m월 %d일"), type
-  ORDER BY cl.date ASC
-  `;
   Promise.all([
     doQuery(totalQuery, campaignId),
     doQuery(cpmQuery, campaignId),
     doQuery(cpcQuery, campaignId),
-    doQuery(weeksTotalQuery, campaignId),
-    doQuery(weeksCpmQuery, campaignId),
-    doQuery(weeksCpcQuery, campaignId),
-    doQuery(monthTotalQuery, campaignId),
-    doQuery(monthCpmQuery, campaignId),
-    doQuery(monthCpcQuery, campaignId),
   ])
     .then((row) => {
       const resData = row.map(value => value.result);
