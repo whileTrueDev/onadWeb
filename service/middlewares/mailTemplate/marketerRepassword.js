@@ -1,5 +1,5 @@
-function makeMarketerRegistTemplate(buttonLinkTo) {
-  return `
+function marketerRepassword(marketerId, password) {
+  return (`
   <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><!--[if IE]><html xmlns="http://www.w3.org/1999/xhtml" class="ie"><![endif]--><!--[if !IE]><!--><html style="margin: 0;padding: 0;" xmlns="http://www.w3.org/1999/xhtml"><!--<![endif]--><head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title></title>
@@ -493,15 +493,30 @@ body{background-color:#fbfbfb}.logo a:hover,.logo a:focus{color:#1e2e3b !importa
         
             <div style="Margin-left: 20px;Margin-right: 20px;Margin-top: 24px;">
       <div style="mso-line-height-rule: exactly;mso-text-raise: 4px;">
-        <h1 style="Margin-top: 0;Margin-bottom: 0;font-style: normal;font-weight: normal;color: #565656;font-size: 22px;line-height: 31px;font-family: arial,sans-serif;text-align: center;"><span class="font-arial">&#44032;&#51077;&#51012; &#52629;&#54616;&#46300;&#47549;&#45768;&#45796;!</span></h1><p style="Margin-top: 20px;Margin-bottom: 0;font-family: arial,sans-serif;text-align: center;"><span class="font-arial">OnAD&#45716; &#47560;&#52992;&#53552;&#44032; &#54952;&#50984;&#51201;&#51060;&#44256;, &#44036;&#45800;&#54616;&#44172; &#44305;&#44256;&#47484; &#51665;&#54652;&#54624; &#49688; &#51080;&#46020;&#47197; &#46037;&#49845;&#45768;&#45796;.&nbsp;</span></p><p style="Margin-top: 20px;Margin-bottom: 0;font-family: arial,sans-serif;text-align: center;"><span class="font-arial">&#53581;&#49828;&#53944; &#48143; &#51060;&#48120;&#51648; &#48516;&#49437;&#51012; &#53685;&#54620; 
-&#44305;&#44256; &#47588;&#52845;, &#48169;&#49569; &#49884;&#52397; &#45936;&#51060;&#53552;&#50640; &#46384;&#47476;&#45716; &#44305;&#44256;&#48708; &#51665;&#54665; &#46321;&#51012; &#44221;&#54744;&#54624; &#49688; &#51080;&#46020;&#47197; &#50500;&#47000;&#51032; &#47553;&#53356;&#47484; &#53364;&#47533;&#54616;&#50668;, OnAD &#44032;&#51077; &#51064;&#51613;&#51012; &#50756;&#47308;&#54616;&#49464;&#50836;.</span></p><p style="Margin-top: 20px;Margin-bottom: 20px;font-family: arial,sans-serif;text-align: center;"><span class="font-arial">&nbsp;</span></p>
+        <h1 style="Margin-top: 0;Margin-bottom: 0;font-style: normal;font-weight: normal;color: #565656;font-size: 22px;line-height: 31px;font-family: arial,sans-serif;text-align: center;"><span class="font-arial">&#50504;&#45397;&#54616;&#49464;&#50836; ${marketerId}&#45784;</span></h1><p style="Margin-top: 20px;Margin-bottom: 0;font-family: arial,sans-serif;text-align: center;"><span class="font-arial">&#44480;&#54616;&#51032; OnAD &#44228;&#51221;&#51032; &#44228;&#51221; &#48320;&#44221; &#50836;&#52397;&#51060; &#51217;&#49688;&#46104;&#50612;, &#51076;&#49884; &#48708;&#48128;&#48264;&#54840;&#44032; &#48156;&#44553;&#46104;&#50632;&#49845;&#45768;&#45796;.</span></p><p style="Margin-top: 20px;Margin-bottom: 0;font-family: arial,sans-serif;text-align: center;"><span class="font-arial">&#48156;&#44553;&#46108; &#51076;&#49884; &#48708;&#48128;&#48264;&#54840;&#45716; 
+&#45796;&#51020;&#44284; &#44057;&#49845;&#45768;&#45796;.</span></p><p style="Margin-top: 20px;Margin-bottom: 20px;font-family: arial,sans-serif;text-align: center;"><span class="font-arial">&nbsp;</span></p>
       </div>
     </div>
         
+            <div style="Margin-left: 20px;Margin-right: 20px;">
+      <div class="divider" style="display: block;font-size: 2px;line-height: 2px;Margin-left: auto;Margin-right: auto;width: 40px;background-color: #c8c8c8;Margin-bottom: 20px;">&nbsp;</div>
+    </div>
+        
+            <div style="Margin-left: 20px;Margin-right: 20px;">
+      <div style="mso-line-height-rule: exactly;mso-text-raise: 4px;">
+        <p class="size-20" style="Margin-top: 0;Margin-bottom: 20px;font-family: arial,sans-serif;font-size: 17px;line-height: 26px;text-align: center;" lang="x-size-20"><span class="font-arial">${password}</span></p>
+      </div>
+    </div>
+        
+            <div style="Margin-left: 20px;Margin-right: 20px;">
+      <div class="divider" style="display: block;font-size: 2px;line-height: 2px;Margin-left: auto;Margin-right: auto;width: 40px;background-color: #c8c8c8;Margin-bottom: 20px;">&nbsp;</div>
+    </div>
+        
             <div style="Margin-left: 20px;Margin-right: 20px;Margin-bottom: 24px;">
-      <div class="btn btn--flat btn--large" style="text-align:center;">
-        <![if !mso]><a style="border-radius: 4px;display: inline-block;font-size: 14px;font-weight: bold;line-height: 24px;padding: 12px 24px;text-align: center;text-decoration: none !important;transition: opacity 0.1s ease-in;color: #ffffff !important;background-color: #ffa726;font-family: Arial, sans-serif;" href="${buttonLinkTo}">&#51064;&#51613; &#50756;&#47308;&#54616;&#44592;</a><![endif]>
-      <!--[if mso]><p style="line-height:0;margin:0;">&nbsp;</p><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" href="${buttonLinkTo}" style="width:125px" arcsize="9%" fillcolor="#FFA726" stroke="f"><v:textbox style="mso-fit-shape-to-text:t" inset="0px,11px,0px,11px"><center style="font-size:14px;line-height:24px;color:#FFFFFF;font-family:Arial,sans-serif;font-weight:bold;mso-line-height-rule:exactly;mso-text-raise:4px">&#51064;&#51613; &#50756;&#47308;&#54616;&#44592;</center></v:textbox></v:roundrect><![endif]--></div>
+      <div style="mso-line-height-rule: exactly;mso-text-raise: 4px;">
+        <p style="Margin-top: 0;Margin-bottom: 0;font-family: arial,sans-serif;text-align: center;"><span class="font-arial">&nbsp;</span></p><p style="Margin-top: 20px;Margin-bottom: 0;font-family: arial,sans-serif;text-align: center;"><span class="font-arial">&#51060;&#54980;, &#51593;&#49884; &#54644;&#45817; &#48708;&#48128;&#48264;&#54840;&#47196; &#47196;&#44536;&#51064; &#54620; &#46244;, &#48708;&#48128;&#48320;&#54840;&#47484; &#48320;&#44221;&#54644;&#51452;&#49464;&#50836;.</span></p><p style="Margin-top: 20px;Margin-bottom: 0;font-family: arial,sans-serif;text-align: center;"><span class="font-arial">&#54924;&#50896; &#51221;&#48372;&#45716; &#47196;&#44536;&#51064; &#51060;&#54980; &lt;&#45236; &#50724;&#54588;&#49828;&gt;&nbsp;&#53485;&#50640;&#49436;&nbsp;&#48320;&#44221;&#54616;&#49892; &#49688; &#51080;&#49845;&#45768;&#45796;.</span></p><p style="Margin-top: 
+20px;Margin-bottom: 0;font-family: arial,sans-serif;text-align: center;"><span class="font-arial">&#50616;&#51228;&#45208; &#52572;&#49440;&#51012; &#45796;&#54616;&#44192;&#49845;&#45768;&#45796;.</span></p><p style="Margin-top: 20px;Margin-bottom: 0;font-family: arial,sans-serif;text-align: center;"><span class="font-arial">OnAD</span></p>
+      </div>
     </div>
         
           </div>
@@ -528,7 +543,7 @@ body{background-color:#fbfbfb}.logo a:hover,.logo a:focus{color:#1e2e3b !importa
 &#169; while True Corp.&nbsp;All rights Reserved</div>
                 </div>
                 <div style="font-size: 12px;line-height: 19px;Margin-top: 18px;">
-                  <div>&#48376; &#51060;&#47700;&#51068;&#51008;&nbsp;OnAD &#44305;&#44256; &#54540;&#47019;&#54268; &#44032;&#51077;&#51012; &#50948;&#54644; &#48156;&#49569;&#46108; &#51060;&#47700;&#51068;&#51077;&#45768;&#45796;.</div>
+                  <div>&#48376; &#51060;&#47700;&#51068;&#51008;&nbsp;OnAD &#44305;&#44256; &#54540;&#47019;&#54268; &#44228;&#51221;&#51032; &#51076;&#49884; &#48708;&#48128;&#48264;&#54840; &#48156;&#44553;&#51012;&nbsp; &#50948;&#54644; &#48156;&#49569;&#46108; &#51060;&#47700;&#51068;&#51077;&#45768;&#45796;.</div>
                 </div>
                 <!--[if mso]>&nbsp;<![endif]-->
               </div>
@@ -559,8 +574,7 @@ body{background-color:#fbfbfb}.logo a:hover,.logo a:focus{color:#1e2e3b !importa
     </div></td></tr></tbody></table>
   
 </body></html>
-
-`;
+`);
 }
 
-module.exports = makeMarketerRegistTemplate;
+module.exports = marketerRepassword;
