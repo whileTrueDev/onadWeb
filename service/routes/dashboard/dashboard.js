@@ -10,9 +10,10 @@ router.use((req, res, next) => {
     && req._passport.session.user) {
     next();
   } else {
-    res.send('no session');
+    res.send('session not exists');
   }
 });
+
 router.use('/creator', creatorRouter);
 router.use('/marketer', marketerRouter);
 

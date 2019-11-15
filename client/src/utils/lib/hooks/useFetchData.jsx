@@ -2,6 +2,10 @@ import { useState, useEffect, useCallback } from 'react';
 import axios from '../../axios';
 import host from '../../config';
 import querify from '../querify';
+import history from '../../../history';
+
+const SESSION_NOT_EXISTS = 'session not exists';
+
 /**
  * @author hwasurr
  * @description api 서버와의 통신을 통해 데이터를 가져오는 훅. ( only get 방식)
@@ -25,7 +29,11 @@ export default function useFetchData(url, params) {
       const res = await axios.get(`${host}${url}${querify(param)}`);
 
       if (res.data) {
-        setPayload(res.data);
+        if (res.data === SESSION_NOT_EXISTS) {
+          history.push('/');
+        } else {
+          setPayload(res.data);
+        }
       } else {
         throw new Error('데이터가 존재하지 않습니다');
       }

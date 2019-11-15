@@ -16,6 +16,7 @@ const taxBillScheduler = require('./middlewares/scheduler/taxBillScheduler');
 
 const app = express();
 
+process.env.ROOT_PATH = __dirname;
 process.env.NODE_ENV = (process.env.NODE_ENV
   && (process.env.NODE_ENV).trim().toLowerCase() === 'production')
   ? 'production' : 'development';

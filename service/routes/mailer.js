@@ -1,6 +1,8 @@
 const express = require('express');
 const nodemailer = require('nodemailer');
 const logger = require('../middlewares/logger');
+const makeMarketerRegistTemplate = require('../middlewares/mailTemplate/marketerRegist');
+const makeMarketerRepassword = require('../middlewares/mailTemplate/marketerRepassword');
 
 const router = express.Router();
 
@@ -27,9 +29,13 @@ router.post('/auth', (req, res) => {
   const mailOptions = {
     from: 'ONAD <support@onad.io>', // 발송 메일 주소 (위에서 작성한 gmail 계정 아이디)
     to: marketerMail, // 수신 메일 주소부분
-    subject: `[ONAD] ${marketerId} 님, 임시비밀번호입니다.`, // 제목부분인듯
-    html: `<p>고객님의 임시비밀번호는 ${password} 입니다.</p>`
-          + `<a href='${HOST}'>ONAD 홈페이지</a>` // 내용부분 토큰은 나중에 암호화하깅
+    subject: `[ONAD] ${marketerId} 님, 임시 비밀번호가 발급 되었습니다.`, // 제목부분인듯
+    html: makeMarketerRepassword(marketerId, password),
+    attachments: [{
+      filename: 'onad_logo_vertical_small.png',
+      path: `${process.env.ROOT_PATH}/images/onad_logo_vertical_small.png`,
+      cid: 'logo'
+    }]
   };
   transporter.sendMail(mailOptions, (error, info) => {
     if (error) {
@@ -50,19 +56,22 @@ router.post('/auth', (req, res) => {
 
 router.post('/regist', (req, res, next) => {
   const email = req.body.marketerMail;
-
   const mailOptions = {
     from: 'ONAD <support@onad.io>', // 발송 메일 주소 (위에서 작성한 gmail 계정 아이디)
     to: email, // 수신 메일 주소부분
     subject: `[ONAD] ${req.body.marketerId} 님, 가입을 환영합니다.`, // 제목부분인듯
-    html: '<p>ONAD 가입을 축하드립니다!</p>'
-          + `<a href="${HOST}/api/regist/auth/${req.body.marketerId}">해당 링크 클릭을 통해 인증을 완료하세요!</a>` // 내용부분 토큰은 나중에 암호화하깅
+    html: makeMarketerRegistTemplate(`${HOST}/api/regist/auth/${req.body.marketerId}`),
+    attachments: [{
+      filename: 'onad_logo_vertical_small.png',
+      path: `${process.env.ROOT_PATH}/images/onad_logo_vertical_small.png`,
+      cid: 'logo'
+    }]
   };
 
   transporter.sendMail(mailOptions, (error, info) => {
     if (error) {
       logger.error(`Email 전송오류 : ${error.response}`);
-      console.log(`Email 전송오류 : ${error.response}`);
+      console.log(`Email 전송오류 : ${error}`);
       res.send({
         error: error.response
       });
