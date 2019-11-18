@@ -182,5 +182,27 @@ router.get('/totalSpendChart', (req, res) => {
     });
 });
 
+router.get('/cpm', (res, req) => {
+  const marketerId = req._passport.session.user.userid;
+  const { campaignId } = req.query;
 
+  const getStreamerQuery = `
+  SELECT count(*), creatorId 
+  FROM campaignLog 
+  WHERE campaignId = ?
+  GROUP BY creatorId
+  ORDER BY count(*) DESC
+  `;
+  Promise.all([
+    doQuery(getStreamerQuery, campaignId)
+  ]).then((row) => {
+    const resData = row.map(value => value.result);
+    console.log(resData);
+    res.send(resData);
+  })
+    .catch((errorData) => {
+      console.log(errorData);
+      res.end();
+    });
+});
 module.exports = router;

@@ -280,59 +280,62 @@ const MarketerReport = (props) => {
                     </Typography>
                   </div>
 
-                  <Hidden mdDown>
-                    <Grid container direction="row" spacing={5} className={classes.grid}>
-                      <Grid item>
-                        <div className={classes.flex}>
-                          <Typography gutterBottom variant="body1" className={classes.head}>CPM 비율</Typography>
-                        </div>
-                        <div className={classes.flex}>
-                          <Typography gutterBottom variant="h5">
-                            {dataSet
-                              ? (parseInt(dataSet[0], 10) / (parseInt(dataSet[0], 10)
-                            + parseInt(dataSet[3], 10))).toFixed(2)
-                              : (parseInt(Object.values(reportData.payload[1]), 10)
+              <Hidden mdDown>
+                <Grid container direction="row" spacing={5} className={classes.grid}>
+                  <Grid item>
+                    <div className={classes.flex}>
+                      <Typography gutterBottom variant="body1" className={classes.head}>CPM 비율</Typography>
+                    </div>
+                    <div className={classes.flex}>
+                      <Typography gutterBottom variant="h5">
+                        {dataSet
+                          ? ((parseInt(dataSet[0], 10) / (parseInt(dataSet[0], 10)
+                            + parseInt(dataSet[3], 10))) * 100).toFixed(2)
+                          : ((parseInt(Object.values(reportData.payload[1]), 10)
                             / (parseInt(Object.values(reportData.payload[1]), 10)
-                            + parseInt(Object.values(reportData.payload[4]), 10))).toFixed(2)}
-                          </Typography>
-                        </div>
-                      </Grid>
+                            + parseInt(Object.values(reportData.payload[4]), 10))) * 100).toFixed(2)}
+                      </Typography>
+                      <Typography gutterBottom variant="body2">
+                        %
+                      </Typography>
+                    </div>
+                  </Grid>
+                  <Grid item>
+                    <Divider component="hr" orientation="vertical" />
+                  </Grid>
+                  <Grid item>
+                    <Grid container className={classes.flex}>
                       <Grid item>
                         <Divider component="hr" orientation="vertical" />
                       </Grid>
-                      <Grid item>
-                        <Grid container className={classes.flex}>
-                          <Grid item>
-                            <Typography gutterBottom variant="body1" className={classes.head}>CPC 비율</Typography>
-                          </Grid>
-                        </Grid>
-                        <div className={classes.flex}>
-                          <Typography gutterBottom variant="h5">
-                            {dataSet
-                              ? (parseInt(dataSet[3], 10) / (parseInt(dataSet[0], 10)
-                              + parseInt(dataSet[3], 10))).toFixed(2)
-                              : (parseInt(Object.values(reportData.payload[4]), 10)
-                              / (parseInt(Object.values(reportData.payload[1]), 10)
-                              + parseInt(Object.values(reportData.payload[4]), 10))).toFixed(2)}
-                          </Typography>
-                        </div>
-                      </Grid>
                     </Grid>
-                  </Hidden>
-                </Card>
-              </Grid>
-            </Grid>
+                    <div className={classes.flex}>
+                      <Typography gutterBottom variant="h5">
+                        {dataSet
+                          ? ((parseInt(dataSet[3], 10) / (parseInt(dataSet[0], 10)
+                              + parseInt(dataSet[3], 10))) * 100).toFixed(2)
+                          : ((parseInt(Object.values(reportData.payload[4]), 10)
+                              / (parseInt(Object.values(reportData.payload[1]), 10)
+                              + parseInt(Object.values(reportData.payload[4]), 10))) * 100).toFixed(2)}
+                      </Typography>
+                      <Typography gutterBottom variant="body2">
+                        %
+                      </Typography>
+                    </div>
+                  </Grid>
+                </Grid>
+              </Hidden>
+            </Card>
+
+
           </Grid>
 
           <Grid item xs={12}>
-            {!reportData.loading
-              && reportData.payload && !valueChartData.loading && valueChartData.payload && (
-              <ReportTabs
-                valueChartData={valueChartData}
-                reportData={dataSet}
-                period={period}
-              />
-            )}
+            <ReportTabs
+              valueChartData={valueChartData}
+              period={period}
+              reportData={reportData}
+            />
           </Grid>
 
           <Tooltip
