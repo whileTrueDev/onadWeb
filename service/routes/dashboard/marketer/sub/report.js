@@ -124,7 +124,6 @@ router.get('/', (req, res) => {
   ])
     .then((row) => {
       data = row.map(value => Object.values(value.result[0]));
-      console.log(data);
       res.send(data);
     })
     .catch((err) => {
@@ -134,7 +133,6 @@ router.get('/', (req, res) => {
 });
 
 router.get('/totalSpendChart', (req, res) => {
-  const marketerId = req._passport.session.user.userid;
   const { campaignId } = req.query;
 
   const totalQuery = `
@@ -176,7 +174,6 @@ router.get('/totalSpendChart', (req, res) => {
   ])
     .then((row) => {
       const resData = row.map(value => value.result);
-      console.log(resData);
       res.send(resData);
     })
     .catch((errorData) => {

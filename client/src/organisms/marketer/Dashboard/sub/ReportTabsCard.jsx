@@ -66,7 +66,7 @@ const ReportTabsCard = (props) => {
   } = useTooltip();
 
   return (
-    <Grid container>
+    <Grid container spacing={4}>
       {Object.keys(contents).map((value, index) => (
         <Grid item xs={3}>
           <Card>

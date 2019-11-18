@@ -1,8 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Bar } from 'react-chartjs-2';
-import chartFunctions from './chartFunction';
-// import chartTheme from './chartTheme';
 
 // 차트 컬러 테마
 const chartTheme2 = {
@@ -19,16 +17,22 @@ const chartTheme2 = {
 };
 
 // 차트 데이터
-function setStackedBarData(
-  data, labelArray, type = 'day', dateRange
-) {
-  let setupFunc;
-  if (type === 'day') {
-    setupFunc = chartFunctions.createStackBarDataSet;
-  } else {
-    setupFunc = chartFunctions.createStackBarDataSetPerMonth;
-  }
-  const { labels, CPM, CPC } = setupFunc(data, dateRange);
+function setStackedBarData(data, labelArray, dateRange) {
+  const labels = []; const CPM = []; const CPC = [];
+  data.map((d) => {
+    const date = new Date(d.date);
+    const label = `${date.getMonth() + 1}. ${date.getDate()}.`;
+    if (!labels.includes(label)) {
+      labels.push(label);
+    }
+    if (d.type === 'CPM') {
+      CPM.push(d.cash);
+    } else {
+      CPC.push(d.cash);
+    }
+    return d;
+  });
+
   const ChartjsBarData = {
     labels,
     datasets: [
