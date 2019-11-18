@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import shortid from 'shortid';
+import Skeleton from '@material-ui/lab/Skeleton';
 import useFetchData from '../../../../utils/lib/hooks/useFetchData';
 
 const { compose, withProps, withHandlers } = require('recompose');
@@ -58,6 +59,9 @@ export default function IpToGeo(props) {
 
   return (
     <div>
+      {data.loading && (
+        <Skeleton height={400} />
+      )}
       {!data.loading && data.payload && (
         <MapWithAMarkerClusterer markers={data.payload} />
       )}

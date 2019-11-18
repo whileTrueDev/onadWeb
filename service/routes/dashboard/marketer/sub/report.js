@@ -133,7 +133,6 @@ router.get('/', (req, res) => {
 });
 
 router.get('/totalSpendChart', (req, res) => {
-  const marketerId = req._passport.session.user.userid;
   const { campaignId } = req.query;
 
   const totalQuery = `

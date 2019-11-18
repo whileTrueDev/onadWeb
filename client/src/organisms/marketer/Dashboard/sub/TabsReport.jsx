@@ -16,7 +16,8 @@ import Button from '../../../../atoms/CustomButtons/Button';
 
 import ReportTabsCard from './ReportTabsCard';
 import IpToGeo from './IpToGeo';
-
+import IpToGeoTable from './IpToGeoTable';
+import useFetchData from '../../../../utils/lib/hooks/useFetchData';
 
 const TabPanel = (props) => {
   const {
@@ -67,6 +68,8 @@ const ReportTabs = (props) => {
     setShow(!show);
   };
 
+  const ipToGeoData = useFetchData('/api/dashboard/marketer/geo', { campaignId });
+
   return (
     <div className={styleClasses.root}>
       <AppBar position="static">
@@ -77,21 +80,20 @@ const ReportTabs = (props) => {
         </Tabs>
       </AppBar>
 
-      <TabPanel value={value} index={0}>
+      <TabPanel value={value} index={0} style={{ padding: 24 }}>
         <Grid container xs={12} spacing={3}>
           <Grid item xs={12}>
             {!show
               ? (
                 <Button color="primary" onClick={handleShow}>
-              그래프 보기
+                  그래프 보기
                 </Button>
               )
               : (
                 <Button onClick={handleShow}>
-                그래프 숨기기
+                  그래프 숨기기
                 </Button>
-              )
-            }
+              )}
           </Grid>
 
           <ReportTabsCard
@@ -166,11 +168,18 @@ const ReportTabs = (props) => {
 
           <ReportTabsCard />
 
-          <Grid item xs={6}>
-            <Typography variant="h6">
+          <Grid container spacing={4}>
+            <Grid item xs={12}>
+              <Typography variant="h6">
               지역별 클릭
-            </Typography>
-            <IpToGeo campaignId={campaignId} />
+              </Typography>
+            </Grid>
+            <Grid item xs={6}>
+              <IpToGeo data={ipToGeoData} />
+            </Grid>
+            <Grid item xs={6}>
+              <IpToGeoTable data={ipToGeoData} />
+            </Grid>
           </Grid>
 
           {show
@@ -183,8 +192,7 @@ const ReportTabs = (props) => {
               <ReportStackedBar height={100} dataSet={valueChartData.payload[2]} />
             </Card>
           </Grid>
-          )
-      }
+          )}
         </Grid>
       </TabPanel>
     </div>
