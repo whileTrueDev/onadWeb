@@ -286,11 +286,14 @@ const MarketerReport = (props) => {
                     <div className={classes.flex}>
                       <Typography gutterBottom variant="h5">
                         {dataSet
-                          ? (parseInt(dataSet[0], 10) / (parseInt(dataSet[0], 10)
-                            + parseInt(dataSet[3], 10))).toFixed(2)
-                          : (parseInt(Object.values(reportData.payload[1]), 10)
+                          ? ((parseInt(dataSet[0], 10) / (parseInt(dataSet[0], 10)
+                            + parseInt(dataSet[3], 10))) * 100).toFixed(2)
+                          : ((parseInt(Object.values(reportData.payload[1]), 10)
                             / (parseInt(Object.values(reportData.payload[1]), 10)
-                            + parseInt(Object.values(reportData.payload[4]), 10))).toFixed(2)}
+                            + parseInt(Object.values(reportData.payload[4]), 10))) * 100).toFixed(2)}
+                      </Typography>
+                      <Typography gutterBottom variant="body2">
+                        %
                       </Typography>
                     </div>
                   </Grid>
@@ -306,11 +309,14 @@ const MarketerReport = (props) => {
                     <div className={classes.flex}>
                       <Typography gutterBottom variant="h5">
                         {dataSet
-                          ? (parseInt(dataSet[3], 10) / (parseInt(dataSet[0], 10)
-                              + parseInt(dataSet[3], 10))).toFixed(2)
-                          : (parseInt(Object.values(reportData.payload[4]), 10)
+                          ? ((parseInt(dataSet[3], 10) / (parseInt(dataSet[0], 10)
+                              + parseInt(dataSet[3], 10))) * 100).toFixed(2)
+                          : ((parseInt(Object.values(reportData.payload[4]), 10)
                               / (parseInt(Object.values(reportData.payload[1]), 10)
-                              + parseInt(Object.values(reportData.payload[4]), 10))).toFixed(2)}
+                              + parseInt(Object.values(reportData.payload[4]), 10))) * 100).toFixed(2)}
+                      </Typography>
+                      <Typography gutterBottom variant="body2">
+                        %
                       </Typography>
                     </div>
                   </Grid>
@@ -321,14 +327,11 @@ const MarketerReport = (props) => {
 
           </Grid>
           <Grid item xs={12}>
-            {!reportData.loading
-              && reportData.payload && !valueChartData.loading && valueChartData.payload && (
-              <ReportTabs
-                valueChartData={valueChartData}
-                reportData={dataSet}
-                period={period}
-              />
-            )}
+            <ReportTabs
+              valueChartData={valueChartData}
+              period={period}
+              reportData={reportData}
+            />
           </Grid>
           <Tooltip
             open={Boolean(anchorEl)}
