@@ -52,7 +52,9 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const ReportTabs = (props) => {
-  const { classes, valueChartData, campaignId } = props;
+  const {
+    classes, valueChartData, campaignId, period, reportData
+  } = props;
   const styleClasses = useStyles();
   const [value, setValue] = useState(0);
   const [show, setShow] = useState(false);
@@ -92,7 +94,10 @@ const ReportTabs = (props) => {
             }
           </Grid>
 
-          <ReportTabsCard />
+          <ReportTabsCard
+            period={period}
+            reportData={reportData}
+          />
 
           {show
           && (
