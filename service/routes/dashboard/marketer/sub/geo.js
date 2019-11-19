@@ -33,7 +33,9 @@ router.get('/', (req, res) => {
 router.get('/campaign', (req, res) => {
   const { campaignId } = req.query;
 
-  const query = 'SELECT * FROM landingClickIp WHERE campaignId = ?;';
+  const query = `SELECT *
+  FROM landingClickIp
+  WHERE campaignId = ?`;
   const queryArray = [campaignId];
   doQuery(query, queryArray)
     .then((row) => {
