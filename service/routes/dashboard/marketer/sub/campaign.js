@@ -117,7 +117,6 @@ router.get('/chart', (req, res) => {
 
   doQuery(query, queryArray)
     .then((row) => {
-      console.log(row.result);
       res.send(row.result);
     })
     .catch((errorData) => {

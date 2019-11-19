@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import makeStyles from '@material-ui/core/styles/makeStyles';
-import withStyles from '@material-ui/core/styles/withStyles';
 import Typography from '@material-ui/core/Typography';
 import { Grid, Hidden, Divider } from '@material-ui/core';
 import Paper from '@material-ui/core/Paper';
@@ -11,14 +10,14 @@ import MenuItem from '@material-ui/core/MenuItem';
 import InputLabel from '@material-ui/core/InputLabel';
 import FormHelperText from '@material-ui/core/FormHelperText';
 //
-import Card from '../../../../atoms/Card/Card';
-import CardHeader from '../../../../atoms/Card/CardHeader';
-import Tooltip from '../../../../atoms/DescPopover';
+import Card from '../../../atoms/Card/Card';
+import CardHeader from '../../../atoms/Card/CardHeader';
+import Tooltip from '../../../atoms/DescPopover';
 //
-import useFetchData from '../../../../utils/lib/hooks/useFetchData';
-import useTooltip from '../../../../utils/lib/hooks/useTooltip';
+import useFetchData from '../../../utils/lib/hooks/useFetchData';
+import useTooltip from '../../../utils/lib/hooks/useTooltip';
 //
-import ReportTabs from './TabsReport';
+import ReportTabs from './sub/TabsReport';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -343,4 +342,4 @@ const MarketerReport = (props) => {
     </Paper>
   );
 };
-export default withStyles(useStyles)(MarketerReport);
+export default MarketerReport;

@@ -1,5 +1,4 @@
 import React from 'react';
-import { Route, Switch } from 'react-router-dom';
 // @material-ui/core
 import Hidden from '@material-ui/core/Hidden';
 // core ../../../atoms
@@ -10,7 +9,6 @@ import CashCard from '../../organisms/marketer/Dashboard/CashCard';
 import StatusBar from '../../organisms/marketer/Dashboard/CampaignOnOffSwitch';
 import CampaignCreate from '../../organisms/marketer/Dashboard/CampaignCreate';
 import CampaignList from '../../organisms/marketer/Dashboard/CampaignList';
-import MarketerReport from '../../organisms/marketer/Dashboard/sub/MarketerReport';
 
 import useFetchData from '../../utils/lib/hooks/useFetchData';
 import useToggle from '../../utils/lib/hooks/useToggle';

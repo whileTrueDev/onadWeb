@@ -2,14 +2,14 @@ import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import withStyles from '@material-ui/core/styles/withStyles';
 
-import Navbar from '../../../atoms/Navbars/Navbar';
-import dashboardStyle from '../../../assets/jss/onad/layouts/dashboardStyle';
-import Sidebar from '../../../atoms/Sidebar/Sidebar';
-import allRoutes from '../../../pages/routes';
-import Footer from '../../../atoms/Footer/Footer';
+import Navbar from '../../atoms/Navbars/Navbar';
+import dashboardStyle from '../../assets/jss/onad/layouts/dashboardStyle';
+import Sidebar from '../../atoms/Sidebar/Sidebar';
+import allRoutes from '../routes';
+import Footer from '../../atoms/Footer/Footer';
 // import '../../assets/css/onad.css';
-import history from '../../../history';
-import MarketerReport from './sub/MarketerReport';
+import history from '../../history';
+import MarketerReport from '../../organisms/marketer/Report/Report_new';
 
 const MarketerReportLayout = ({
   classes, match, ...rest
@@ -33,7 +33,10 @@ const MarketerReportLayout = ({
     });
   }, [mobileOpen]);
 
+
+  // without layout
   return (
+
     <div className={classes.wrapper}>
       <Sidebar
         routes={allRoutes.marketer}
@@ -66,7 +69,6 @@ const MarketerReportLayout = ({
 };
 
 MarketerReport.propTypes = {
-  classes: PropTypes.object.isRequired,
   history: PropTypes.object,
 };
 

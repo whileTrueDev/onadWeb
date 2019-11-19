@@ -38,7 +38,7 @@ export default function IpToGeoTable(props) {
     <div style={{ height: '400px' }}>
       {!data.loading && data.payload && (
         <MaterialTable
-          title="지역별 클릭"
+          style={{ boxShadow: 'none' }}
           columns={[
             { title: '지역', field: 'city', },
             {
@@ -69,7 +69,9 @@ export default function IpToGeoTable(props) {
           }}
         />
       )}
-      <Typography variant="caption">* 정확한 위치가 확인되는 경우에만 해당 테이블에 표시됩니다.</Typography>
+      <div style={{ padding: 8 }}>
+        <Typography variant="caption">* 정확한 위치가 확인되는 경우에만 해당 테이블에 표시됩니다.</Typography>
+      </div>
     </div>
   );
 }

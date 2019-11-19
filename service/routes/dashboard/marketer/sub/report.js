@@ -7,110 +7,120 @@ router.get('/', (req, res) => {
   const marketerId = req._passport.session.user.userid;
   const { campaignId } = req.query;
   let data;
+  // 켐페인 이름
   const getCampaignNameQuery = `
   SELECT campaignName 
   FROM campaign 
-  WHERE campaignId=?;
-  `;
+  WHERE campaignId=?;`;
 
+  // 총 CPM 비용
   const getTotalCpmQuery = `
-  SELECT SUM(cashFromMarketer) 
+  SELECT SUM(cashFromMarketer) as totalCPM
   FROM campaignLog as cl
   WHERE campaignId= ? AND type="CPM";`;
 
+  // 총 노출 수 ( 총 CPM 비용 / 광고 단가 )
   const getViewCountQuery = `
-  SELECT SUM(cashFromMarketer) / (SELECT unitPrice FROM marketerDebit WHERE marketerId = ?)
+  SELECT SUM(cashFromMarketer)
+        / (SELECT unitPrice FROM marketerDebit WHERE marketerId = ?)
+      as totalViewCount
   FROM campaignLog as cl
   WHERE campaignId= ? AND type="CPM";`;
 
+  // 총 노출 시간 ( 캠페인로그의 숫자 / 6 ) - 10분당 쌓이기 때문.
   const getTimeQuery = `
-  SELECT count(*) / 6
+  SELECT count(*) / 6 as totalTime
   FROM campaignLog
   WHERE campaignId = ?`;
 
+  // 총 CPC 비용
   const getTotalCpcQuery = `
-  SELECT SUM(cashFromMarketer) 
+  SELECT SUM(cashFromMarketer) as totalCPC
   FROM campaignLog
   WHERE campaignId= ? AND type="CPC";`;
 
+  // CPC 총 클릭 수 (홈페이지 이동 + 배너클릭)
   const getClickCountQuery = `
-  SELECT SUM(clickCount), SUM(transferCount)
+  SELECT SUM(clickCount) as totalClick, SUM(transferCount) as totalTransfer
   FROM landingClick 
   WHERE campaignId = ? `;
 
+  // 총 CPM
   const getWeeksCpmQuery = `
-  SELECT SUM(cashFromMarketer) 
+  SELECT SUM(cashFromMarketer) as weeksCPM
   FROM campaignLog as cl
   WHERE campaignId= ?
   AND cl.date > date_add(now(),interval -14 day) 
   AND type="CPM";`;
 
   const getWeeksViewCountQuery = `
-  SELECT SUM(cashFromMarketer) / (SELECT unitPrice FROM marketerDebit WHERE marketerId = ?)
+  SELECT SUM(cashFromMarketer) / (SELECT unitPrice FROM marketerDebit WHERE marketerId = ?) as weeksViewCount
   FROM campaignLog as cl
   WHERE campaignId= ?
   AND cl.date > date_add(now(),interval -14 day) 
   AND type="CPM"`;
 
   const getWeeksTimeQuery = `
-  SELECT count(*) / 6
+  SELECT count(*) / 6 as weeksTime
   FROM campaignLog as cl
   WHERE campaignId = ?
   AND cl.date > date_add(now(),interval -14 day)`;
 
   const getWeeksCpcQuery = `
-  SELECT SUM(cashFromMarketer) 
+  SELECT SUM(cashFromMarketer) as weeksCPC
   FROM campaignLog as cl
   WHERE campaignId= ?
   AND cl.date > date_add(now(),interval -14 day)
   AND type="CPC"`;
 
   const getWeeksClickCountQuery = `
-  SELECT SUM(clickCount), SUM(transferCount)
+  SELECT SUM(clickCount) as weeksClick, SUM(transferCount) as weeksTransfer
   FROM landingClick 
   WHERE campaignId = ? 
   AND regiDate > date_add(now(),interval -14 day)`;
 
   const getMonthsCpmQuery = `
-  SELECT SUM(cashFromMarketer) 
+  SELECT SUM(cashFromMarketer) as monthsCPM
   FROM campaignLog as cl
   WHERE campaignId= ?
   AND cl.date > date_add(now(),interval -1 MONTH) 
   AND type="CPM";`;
 
   const getMonthsViewCountQuery = `
-  SELECT SUM(cashFromMarketer) / (SELECT unitPrice FROM marketerDebit WHERE marketerId = ?)
+  SELECT SUM(cashFromMarketer)
+    / (SELECT unitPrice FROM marketerDebit WHERE marketerId = ?) 
+    AS monthsViewCount
   FROM campaignLog as cl
   WHERE campaignId= ?
   AND cl.date > date_add(now(),interval -1 MONTH) 
   AND type="CPM"`;
 
   const getMonthsTimeQuery = `
-  SELECT count(*) / 6
+  SELECT count(*) / 6  as monthsTime
   FROM campaignLog as cl
   WHERE campaignId = ?
   AND cl.date > date_add(now(),interval -1 MONTH)`;
 
   const getMonthsCpcQuery = `
-  SELECT SUM(cashFromMarketer) 
+  SELECT SUM(cashFromMarketer) as monthsCPC
   FROM campaignLog as cl
   WHERE campaignId= ?
   AND cl.date > date_add(now(),interval -1 MONTH)
   AND type="CPC"`;
 
   const getMonthsClickCountQuery = `
-  SELECT SUM(clickCount), SUM(transferCount)
+  SELECT SUM(clickCount) as monthsClick, SUM(transferCount) as monthsTransfer
   FROM landingClick as cl
   WHERE campaignId = ? 
   AND regiDate > date_add(now(),interval -1 MONTH)`;
 
   Promise.all([
-    doQuery(getCampaignNameQuery, campaignId),
-    doQuery(getTotalCpmQuery, campaignId),
-    doQuery(getViewCountQuery, [marketerId, campaignId]),
-    doQuery(getTimeQuery, campaignId),
-    doQuery(getTotalCpcQuery, campaignId),
-    doQuery(getClickCountQuery, campaignId),
+    doQuery(getCampaignNameQuery, campaignId), // 캠페인 이름
+    doQuery(getTotalCpmQuery, campaignId), // 총 CPM 비용
+    doQuery(getViewCountQuery, [marketerId, campaignId]), // 총 노출 수 ( 총 CPM 비용 / 광고 단가 )
+    doQuery(getTimeQuery, campaignId), // 총 노출 시간 ( 캠페인로그의 숫자 / 6 ) - 10분당 쌓이기 때문.
+    doQuery(getTotalCpcQuery, campaignId), // CPC 총 비용
+    doQuery(getClickCountQuery, campaignId), // CPC 총 클릭 수 (홈페이지 이동 + 배너클릭)
     doQuery(getWeeksCpmQuery, campaignId),
     doQuery(getWeeksViewCountQuery, [marketerId, campaignId]),
     doQuery(getWeeksTimeQuery, campaignId),
@@ -123,8 +133,12 @@ router.get('/', (req, res) => {
     doQuery(getMonthsClickCountQuery, campaignId),
   ])
     .then((row) => {
-      data = row.map(value => Object.values(value.result[0]));
-      res.send(data);
+      const result = {};
+      row.map((value) => {
+        Object.assign(result, value.result[0]);
+        return value;
+      });
+      res.send(result);
     })
     .catch((err) => {
       console.log('reportPage: ', err);
@@ -183,7 +197,6 @@ router.get('/totalSpendChart', (req, res) => {
 });
 
 router.get('/cpm', (res, req) => {
-  const marketerId = req._passport.session.user.userid;
   const { campaignId } = req.query;
 
   const getStreamerQuery = `
@@ -197,7 +210,6 @@ router.get('/cpm', (res, req) => {
     doQuery(getStreamerQuery, campaignId)
   ]).then((row) => {
     const resData = row.map(value => value.result);
-    console.log(resData);
     res.send(resData);
   })
     .catch((errorData) => {
@@ -205,4 +217,5 @@ router.get('/cpm', (res, req) => {
       res.end();
     });
 });
+
 module.exports = router;

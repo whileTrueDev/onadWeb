@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import shortid from 'shortid';
 import Skeleton from '@material-ui/lab/Skeleton';
-import useFetchData from '../../../../utils/lib/hooks/useFetchData';
 
 const { compose, withProps, withHandlers } = require('recompose');
 const {
@@ -54,8 +53,7 @@ const MapWithAMarkerClusterer = compose(
 ));
 
 export default function IpToGeo(props) {
-  const { campaignId } = props;
-  const data = useFetchData('/api/dashboard/marketer/geo', { campaignId });
+  const { data } = props;
 
   return (
     <div>
@@ -70,5 +68,5 @@ export default function IpToGeo(props) {
 }
 
 IpToGeo.propTypes = {
-  campaignId: PropTypes.string.isRequired
+  data: PropTypes.object
 };

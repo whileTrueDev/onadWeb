@@ -10,7 +10,7 @@ import RegistPage from './pages/main/Regist';
 import CreatorDashboard from './pages/layouts/CreatorDashboardLayout';
 import CreatorDashboardDoor from './pages/layouts/CreatorDashboardDoor';
 import MarketerDashboard from './pages/layouts/MarketerDashboardLayout';
-import MarketerReport from './organisms/marketer/Dashboard/MarketerReportLayout';
+import MarketerReport from './pages/marketer/MarketerReport';
 import NotFound from './pages/others/NotFound';
 import Notice from './pages/others/Notice';
 // import ShutDownCloseBeta from './pages/others/ShutDownCloseBeta';
