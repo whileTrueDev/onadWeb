@@ -1,36 +1,21 @@
 import React from 'react';
-import { Pie } from 'react-chartjs-2';
 import CountUp from 'react-countup';
 import { Grid, Divider } from '@material-ui/core';
 import Assignment from '@material-ui/icons/Assignment';
-import DonutSmall from '@material-ui/icons/DonutSmall';
 import InsertChart from '@material-ui/icons/InsertChart';
+import BubbleChart from '@material-ui/icons/BubbleChart';
 import Typography from '@material-ui/core/Typography';
 import Card from '../../../../atoms/Card/Card';
 import ReportCard from './ReportCard';
+import IpToGeo from './IpToGeo';
+import IpToGeoTable from './IpToGeoTable';
 import ReportStackedBar from '../../../../atoms/Chart/ReportStackedBar';
 
-
 const makeContents = reportData => [
-  {
-    title: '광고 총 비용',
-    value: Number(parseInt(reportData.totalCPM, 10) + parseInt(reportData.totalCPC, 10)),
-    unit: '원'
-  },
-  {
-    title: 'CPM 총 비용',
-    value: Number(reportData.totalCPM),
-    unit: '원'
-  },
   {
     title: 'CPC 총 비용',
     value: Number(reportData.totalCPC),
     unit: '원'
-  },
-  {
-    title: '배너 총 노출 수',
-    value: Number(reportData.totalViewCount),
-    unit: '회'
   },
   {
     title: '배너 총 클릭 수',
@@ -46,7 +31,7 @@ const makeContents = reportData => [
 
 export default function ContentsTotal(props) {
   const {
-    period, reportData, valueChartData
+    period, reportData, valueChartData, ipToGeoData
   } = props;
   const contents = makeContents(reportData);
 
@@ -66,8 +51,9 @@ export default function ContentsTotal(props) {
         <Card>
           <div style={{ padding: '14px 20px', display: 'flex', justifyContent: 'space-between' }}>
             <div style={{ display: 'flex', alignItems: 'center' }}>
-              <Assignment fontSize="large" style={{ color: '#ff9800', marginRight: '5px' }} />
+              <Assignment fontSize="large" style={{ color: '#ff9800' }} />
               <Typography gutterBottom variant="h5" align="center">
+                &emsp;
                 개요
               </Typography>
             </div>
@@ -107,9 +93,9 @@ export default function ContentsTotal(props) {
         <Card>
           <div style={{ padding: '14px 20px' }}>
             <div style={{ display: 'flex', alignItems: 'center' }}>
-              <InsertChart fontSize="large" style={{ color: '#00acc1', marginRight: '5px' }} />
+              <InsertChart fontSize="large" style={{ color: '#00acc1' }} />
               <Typography variant="h5">
-                광고 비용 그래프
+                &emsp;비용 그래프
               </Typography>
             </div>
           </div>
@@ -118,31 +104,29 @@ export default function ContentsTotal(props) {
             <ReportStackedBar height={200} dataSet={valueChartData.payload[0]} />
           </div>
         </Card>
+      </Grid>
 
+      <Grid item xs={12}>
         <Card>
           <div style={{ padding: '14px 20px' }}>
             <div style={{ display: 'flex', alignItems: 'center' }}>
-              <DonutSmall fontSize="large" style={{ color: '#00acc1', marginRight: '5px' }} />
+              <BubbleChart fontSize="large" style={{ color: '#00acc1' }} />
               <Typography variant="h5">
-                광고 비용 비율
+                &emsp;지역별 클릭
               </Typography>
             </div>
           </div>
           <Divider />
-          <div style={{ padding: '14px 20px' }}>
-            {!reportData.loading && (
-            <Pie
-              height={140}
-              data={{
-                labels: ['CPM', 'CPC'],
-                datasets: [{
-                  data: [reportData.totalCPM, reportData.totalCPC],
-                  backgroundColor: ['#00acc1', '#ff9800']
-                }]
-              }}
-            />
-            )}
-          </div>
+
+          <Grid container style={{ padding: '14px 20px' }} spacing={1}>
+            <Grid item xs={12} md={6}>
+              <IpToGeo data={ipToGeoData} />
+            </Grid>
+
+            <Grid item xs={12} md={6}>
+              <IpToGeoTable data={ipToGeoData} />
+            </Grid>
+          </Grid>
         </Card>
       </Grid>
 

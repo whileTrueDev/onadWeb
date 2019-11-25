@@ -11,7 +11,6 @@ import Card from '../../../atoms/Card/Card';
 import CardHeader from '../../../atoms/Card/CardHeader';
 import CardBody from '../../../atoms/Card/CardBody';
 import dashboardStyle from '../../../assets/jss/onad/views/dashboardStyle';
-import history from '../../../history';
 
 const useStyles = makeStyles(() => ({
   flex: {

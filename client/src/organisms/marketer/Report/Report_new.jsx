@@ -7,11 +7,13 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import InputLabel from '@material-ui/core/InputLabel';
+import Hidden from '@material-ui/core/Hidden';
 // own components
-import Skeleton from '@material-ui/lab/Skeleton';
 import Tabs from './sub/Tabs';
-import IpToGeo from './sub/IpToGeo';
 import ContentsTotal from './sub/ContentsTotal';
+import ContentsCPM from './sub/ContentsCPM';
+import ContentsCPC from './sub/ContentsCPC';
+import ReportLoading from './sub/ReportLoading';
 // hooks
 import useFetchData from '../../../utils/lib/hooks/useFetchData';
 
@@ -40,13 +42,13 @@ const MarketerReport = (props) => {
   const classes = useStyles();
   const { match } = props;
 
-  const [period, setPeriod] = useState(0);
-  const [dataSet, setDataSet] = useState();
+  const [period, setPeriod] = useState('norange');
   const reportData = useFetchData(
     '/api/dashboard/marketer/report', {
       campaignId: match.params.campaignId,
     }
   );
+
   const valueChartData = useFetchData(
     '/api/dashboard/marketer/report/totalSpendChart', {
       campaignId: match.params.campaignId,
@@ -56,24 +58,15 @@ const MarketerReport = (props) => {
     campaignId: match.params.campaignId
   });
 
+  const creatorsData = useFetchData(
+    '/api/dashboard/marketer/report/creators', {
+      campaignId: match.params.campaignId,
+    }
+  );
 
   const handleChange = (event) => {
-    setPeriod(event.target.value);
     event.preventDefault();
-    const dateArray = [];
-    if (event.target.value === 0) {
-      setDataSet(false);
-    } else if (event.target.value === 1) {
-      for (let i = 6; i <= 10; i += 1) {
-        dateArray.push(reportData.payload[i]);
-      }
-      setDataSet(dateArray);
-    } else if (event.target.value === 2) {
-      for (let i = 11; i <= 15; i += 1) {
-        dateArray.push(reportData.payload[i]);
-      }
-      setDataSet(dateArray);
-    }
+    setPeriod(event.target.value);
   };
 
   const [value, setValue] = React.useState(0);
@@ -85,14 +78,7 @@ const MarketerReport = (props) => {
     <Grid container>
       <Grid item xs={12} xl={8}>
         <Paper className={classes.root}>
-          {reportData.loading && (
-          <div>
-            <Skeleton />
-            <Skeleton />
-            <Skeleton />
-            <Skeleton />
-          </div>
-          )}
+          {reportData.loading && (<ReportLoading />)}
           {!reportData.loading
       && reportData.payload && !valueChartData.loading && valueChartData.payload && (
         <Grid container>
@@ -111,7 +97,7 @@ const MarketerReport = (props) => {
               </div>
 
               {/* 날짜선택 */}
-              <div>
+              <Hidden xsDown>
                 <FormControl className={classes.formControl}>
                   <InputLabel>기간</InputLabel>
                   <Select
@@ -119,12 +105,12 @@ const MarketerReport = (props) => {
                     onChange={handleChange}
                     displayEmpty
                   >
-                    <MenuItem value={0}>전체</MenuItem>
-                    <MenuItem value={1}>최근 2주</MenuItem>
-                    <MenuItem value={2}>최근 한 달</MenuItem>
+                    <MenuItem value="norange">전체</MenuItem>
+                    <MenuItem value={14}>최근 2주</MenuItem>
+                    <MenuItem value={30}>최근 한 달</MenuItem>
                   </Select>
                 </FormControl>
-              </div>
+              </Hidden>
 
             </div>
             <Divider />
@@ -134,32 +120,43 @@ const MarketerReport = (props) => {
           <Grid item xs={12}>
             {!reportData.loading && reportData.payload && (
             <div style={{ padding: '24px 32px' }}>
+              <Hidden smUp>
+                <FormControl className={classes.formControl}>
+                  <InputLabel>기간</InputLabel>
+                  <Select
+                    value={period}
+                    onChange={handleChange}
+                    displayEmpty
+                  >
+                    <MenuItem value="norange">전체</MenuItem>
+                    <MenuItem value={14}>최근 2주</MenuItem>
+                    <MenuItem value={30}>최근 한 달</MenuItem>
+                  </Select>
+                </FormControl>
+              </Hidden>
+
               {value === 0 && (
               <ContentsTotal
                 period={period}
                 reportData={reportData.payload}
-                dataSet={dataSet}
                 valueChartData={valueChartData}
               />
               )}
               {value === 1 && (
-              <ContentsTotal
+              <ContentsCPM
                 period={period}
-                reportData={reportData}
-                dataSet={dataSet}
+                reportData={reportData.payload}
                 valueChartData={valueChartData}
+                creatorsData={creatorsData}
               />
               )}
               {value === 2 && (
-                <div>
-                  <ContentsTotal
-                    period={period}
-                    reportData={reportData}
-                    dataSet={dataSet}
-                    valueChartData={valueChartData}
-                  />
-                  <IpToGeo ipToGeoData={ipToGeoData} />
-                </div>
+              <ContentsCPC
+                period={period}
+                reportData={reportData.payload}
+                valueChartData={valueChartData}
+                ipToGeoData={ipToGeoData}
+              />
               )}
 
             </div>

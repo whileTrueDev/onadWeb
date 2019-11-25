@@ -2,8 +2,6 @@ import React from 'react';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-import Tooltip from '../../../../atoms/DescPopover';
-import useTooltip from '../../../../utils/lib/hooks/useTooltip';
 
 const useStyles = makeStyles(() => ({
   wrapper: {
@@ -17,10 +15,6 @@ const useStyles = makeStyles(() => ({
 export default function ReportTabs(props) {
   const classes = useStyles();
   const { value, handleChange } = props;
-
-  const {
-    tooltipIndex, anchorEl, handleTooltipOpen, handleTooltipClose
-  } = useTooltip();
 
   return (
     <Tabs

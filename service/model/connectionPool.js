@@ -6,13 +6,13 @@ const pool = mysql.createPool({
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_DATABASE,
-  charset: process.env.DB_CHARSET
+  charset: process.env.DB_CHARSET,
+  connectTimeout: 10000
   /**
      * The maximum number of connection requests the pool will queue
      * before returning an error from getConnection.
      * If set to 0, there is no limit to the number of queued connection requests. (Default: 0)
      */
-  // connectionLimit : 1000,
   // connectTimeout  : 60 * 60 * 1000,
   // acquireTimeout  : 60 * 60 * 1000,
   // timeout         : 60 * 60 * 1000,
