@@ -197,7 +197,7 @@ function TwitchChatCollector() {
       console.log('ERROR in first START JOB:', err);
     });
 
-    // 매일 실행하는 작업
+    // 매일 실행하는 작업 - 꺼진 클라이언트 재시동, 새로가입한 크리에이터 클라이언트 생성
     function dailyJob(twitchChatCollector) {
       const YESTERDAY = new Date();
       YESTERDAY.setDate(YESTERDAY.getDate() - 1);
