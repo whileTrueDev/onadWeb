@@ -77,5 +77,5 @@ export default function IpToGeoTable(props) {
 }
 
 IpToGeoTable.propTypes = {
-  data: PropTypes.arrayOf(PropTypes.object).isRequired
+  data: PropTypes.object
 };
