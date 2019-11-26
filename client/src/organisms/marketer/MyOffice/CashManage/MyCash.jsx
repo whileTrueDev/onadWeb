@@ -29,7 +29,7 @@ function MyCash(props) {
   const testChargeDialog = useDialog();
   const cashData = useFetchData('/api/dashboard/marketer/cash');
   const marketerProfileData = useFetchData('/api/dashboard/marketer/profile');
-  
+
   const { classes, accountData, userData } = props;
 
   return (
@@ -49,7 +49,7 @@ function MyCash(props) {
             ) : (
               null
             )}
-          
+
           <Button color="info" onClick={() => { chargeDialog.handleOpen(); }}>충전</Button>
           {!accountData.loading && !accountData.error
               && !accountData.payload.accountNumber ? (
@@ -62,7 +62,6 @@ function MyCash(props) {
               </Button>
             )}
         </div>
-
       </CardHeader>
 
       <CardBody>
@@ -105,7 +104,7 @@ function MyCash(props) {
         />
       )}
 
-      {/* 결제 테스트를 위한 다이얼로그 Start*/}
+      {/* 결제 테스트를 위한 다이얼로그 Start */}
       {!cashData.loading && !cashData.error && (
         <TestChargeDialog
           open={testChargeDialog.open}
@@ -114,7 +113,7 @@ function MyCash(props) {
           marketerProfileData={marketerProfileData}
         />
       )}
-      {/* 결제 테스트를 위한 다이얼로그 End*/}
+      {/* 결제 테스트를 위한 다이얼로그 End */}
 
       {!accountData.loading
       && !accountData.error

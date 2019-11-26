@@ -2,8 +2,6 @@ import React from 'react';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-import Tooltip from '../../../../atoms/DescPopover';
-import useTooltip from '../../../../utils/lib/hooks/useTooltip';
 
 const useStyles = makeStyles(() => ({
   wrapper: {
@@ -11,16 +9,15 @@ const useStyles = makeStyles(() => ({
   },
   labelIcon: {
     display: 'flex'
+  },
+  tab: {
+    minWidth: 0
   }
 }));
 
 export default function ReportTabs(props) {
   const classes = useStyles();
   const { value, handleChange } = props;
-
-  const {
-    tooltipIndex, anchorEl, handleTooltipOpen, handleTooltipClose
-  } = useTooltip();
 
   return (
     <Tabs
@@ -32,14 +29,14 @@ export default function ReportTabs(props) {
       aria-label="scrollable auto tabs example"
     >
       <Tab
-        style={{ minWidth: 0 }}
+        className={classes.tab}
         label="Total"
         classes={{
           wrapper: classes.wrapper
         }}
       />
       <Tab
-        style={{ minWidth: 0 }}
+        className={classes.tab}
         label="CPM"
         classes={{
           wrapper: classes.wrapper,
@@ -47,7 +44,7 @@ export default function ReportTabs(props) {
         }}
       />
       <Tab
-        style={{ minWidth: 0 }}
+        className={classes.tab}
         label="CPC"
         classes={{
           wrapper: classes.wrapper
