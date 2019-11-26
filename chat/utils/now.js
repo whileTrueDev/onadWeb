@@ -2,7 +2,7 @@
 function now() {
   const thisTime = new Date();
   const year = thisTime.getFullYear();
-  const month = thisTime.getMonth();
+  const month = thisTime.getMonth() + 1;
   const date = thisTime.getDate();
   const hours = thisTime.getHours();
   const minutes = thisTime.getMinutes();
