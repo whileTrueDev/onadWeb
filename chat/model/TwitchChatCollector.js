@@ -2,9 +2,11 @@ const tmi = require('tmi.js');
 const schedule = require('node-schedule');
 const doQuery = require('../lib/doQuery');
 const createChatInsertQueryValues = require('../lib/createChatInsertQueryValues');
+
 // utils
 const now = require('../utils/now');
 const arrayDivide = require('../utils/arrayDivide');
+
 // configure constants
 const BOT_NAME = 'OnADy';
 const BOT_OAUTH_TOKEN = 'oauth:ql78nrmxylz561jfwizzu7vi973vld';
@@ -264,7 +266,7 @@ function TwitchChatCollector() {
       console.log('[TIME]: ', new Date().toLocaleString());
       console.log('[Running clients]: ', this.status.running.length);
       console.log('[Number of collecting channels]: ', this.status.allRunningChannels.length);
-      console.log('[Collecting channels]: ', this.status.allRunningChannels.join(', '));
+      console.log('[Collecting channels]: ', this.status.allRunningChannels.slice(0, 10).join(', '));
       console.log('[Stopped clients]: ', this.status.stopped.length);
       console.log('[Number of stopped channels]: ', this.status.allStoppedChannels.length);
       console.log('[Stopped channels]: ', this.status.allStoppedChannels.join(', '));
