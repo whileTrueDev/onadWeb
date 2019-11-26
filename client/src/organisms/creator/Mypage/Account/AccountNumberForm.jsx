@@ -212,7 +212,6 @@ const AccountNumberForm = (props) => {
       });
   };
 
-
   return (
     <form id="accountForm" onSubmit={handleSubmit}>
       <Grid container direction="column" justify="center">
