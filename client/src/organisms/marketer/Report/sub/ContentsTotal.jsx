@@ -2,6 +2,7 @@ import React from 'react';
 import { Pie } from 'react-chartjs-2';
 import CountUp from 'react-countup';
 import { Grid, Divider } from '@material-ui/core';
+import makeStyles from '@material-ui/core/styles/makeStyles';
 import Assignment from '@material-ui/icons/Assignment';
 import DonutSmall from '@material-ui/icons/DonutSmall';
 import InsertChart from '@material-ui/icons/InsertChart';
@@ -10,6 +11,8 @@ import Card from '../../../../atoms/Card/Card';
 import ReportCard from './ReportCard';
 import ReportStackedBar from '../../../../atoms/Chart/ReportStackedBar';
 
+const EMERALD = '#00acc1';
+const ORANGE = '#ff9800';
 
 const makeContents = reportData => [
   {
@@ -44,7 +47,29 @@ const makeContents = reportData => [
   },
 ];
 
+const useStyles = makeStyles(theme => ({
+  container: {
+    padding: '14px 20px'
+  },
+  flex: {
+    display: 'flex', alignItems: 'center'
+  },
+  flexCenter: {
+    display: 'flex', justifyContent: 'center', alignItems: 'center'
+  },
+  contents: {
+    padding: '16px 28px', display: 'flex', justifyContent: 'space-between'
+  },
+  icon: {
+    color: ORANGE, marginRight: '5px'
+  },
+  value: {
+    color: ORANGE, fontWeight: 700
+  }
+}));
+
 export default function ContentsTotal(props) {
+  const classes = useStyles();
   const {
     period, reportData, valueChartData
   } = props;
@@ -63,10 +88,11 @@ export default function ContentsTotal(props) {
 
       {/* 왼쪽 라인 */}
       <Grid item xs={12} sm={6}>
+
         <Card>
-          <div style={{ padding: '14px 20px', display: 'flex', justifyContent: 'space-between' }}>
-            <div style={{ display: 'flex', alignItems: 'center' }}>
-              <Assignment fontSize="large" style={{ color: '#ff9800', marginRight: '5px' }} />
+          <div className={classes.container}>
+            <div className={classes.flex}>
+              <Assignment fontSize="large" className={classes.icon} />
               <Typography gutterBottom variant="h5" align="center">
                 개요
               </Typography>
@@ -77,16 +103,16 @@ export default function ContentsTotal(props) {
           {/* 광고 총 비용 */}
           {contents.map(content => (
             <div key={content.title}>
-              <div style={{ padding: '16px 28px', display: 'flex', justifyContent: 'space-between' }}>
+              <div className={classes.contents}>
                 <Typography gutterBottom variant="h6">
                   {content.title}
                 </Typography>
 
-                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                  <Typography gutterBottom variant="h5" style={{ color: '#ff9800', fontWeight: 700 }}>
+                <div className={classes.flexCenter}>
+                  <Typography gutterBottom variant="h5" className={classes.value}>
                     <CountUp
                       duration={1}
-                      style={{ color: '#ff9800', fontWeight: 700 }}
+                      className={classes.value}
                       end={content.value}
                     />
                   </Typography>
@@ -105,31 +131,31 @@ export default function ContentsTotal(props) {
       {/* 오른쪽 라인 */}
       <Grid item xs={12} sm={6}>
         <Card>
-          <div style={{ padding: '14px 20px' }}>
-            <div style={{ display: 'flex', alignItems: 'center' }}>
-              <InsertChart fontSize="large" style={{ color: '#00acc1', marginRight: '5px' }} />
+          <div className={classes.container}>
+            <div className={classes.flex}>
+              <InsertChart fontSize="large" className={classes.icon} style={{ color: EMERALD }} />
               <Typography variant="h5">
                 광고 비용 그래프
               </Typography>
             </div>
           </div>
           <Divider />
-          <div style={{ padding: '14px 20px' }}>
+          <div className={classes.container}>
             <ReportStackedBar height={200} dataSet={valueChartData.payload[0]} />
           </div>
         </Card>
 
         <Card>
-          <div style={{ padding: '14px 20px' }}>
-            <div style={{ display: 'flex', alignItems: 'center' }}>
-              <DonutSmall fontSize="large" style={{ color: '#00acc1', marginRight: '5px' }} />
+          <div className={classes.container}>
+            <div className={classes.flex}>
+              <DonutSmall fontSize="large" style={{ color: EMERALD }} />
               <Typography variant="h5">
                 광고 비용 비율
               </Typography>
             </div>
           </div>
           <Divider />
-          <div style={{ padding: '14px 20px' }}>
+          <div className={classes.container}>
             {!reportData.loading && (
             <Pie
               height={140}
@@ -137,7 +163,7 @@ export default function ContentsTotal(props) {
                 labels: ['CPM', 'CPC'],
                 datasets: [{
                   data: [reportData.totalCPM, reportData.totalCPC],
-                  backgroundColor: ['#00acc1', '#ff9800']
+                  backgroundColor: [EMERALD, ORANGE]
                 }]
               }}
             />

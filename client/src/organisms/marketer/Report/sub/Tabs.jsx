@@ -9,6 +9,9 @@ const useStyles = makeStyles(() => ({
   },
   labelIcon: {
     display: 'flex'
+  },
+  tab: {
+    minWidth: 0
   }
 }));
 
@@ -26,14 +29,14 @@ export default function ReportTabs(props) {
       aria-label="scrollable auto tabs example"
     >
       <Tab
-        style={{ minWidth: 0 }}
+        className={classes.tab}
         label="Total"
         classes={{
           wrapper: classes.wrapper
         }}
       />
       <Tab
-        style={{ minWidth: 0 }}
+        className={classes.tab}
         label="CPM"
         classes={{
           wrapper: classes.wrapper,
@@ -41,7 +44,7 @@ export default function ReportTabs(props) {
         }}
       />
       <Tab
-        style={{ minWidth: 0 }}
+        className={classes.tab}
         label="CPC"
         classes={{
           wrapper: classes.wrapper

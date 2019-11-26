@@ -10,6 +10,12 @@ import Tooltip from '../../../../atoms/DescPopover';
 import useTooltip from '../../../../utils/lib/hooks/useTooltip';
 
 const useStyles = makeStyles(theme => ({
+  container: {
+    marginTop: theme.spacing(2),
+  },
+  card: {
+    margin: 0, padding: 0
+  },
   titleSection: {
     display: 'flex',
     [theme.breakpoints.up('md')]: {
@@ -21,6 +27,9 @@ const useStyles = makeStyles(theme => ({
     [theme.breakpoints.only('md')]: {
       fontSize: 16
     }
+  },
+  value: {
+    color: '#00acc1', fontWeight: 700
   }
 }));
 
@@ -97,15 +106,18 @@ const ReportCard = (props) => {
   const classes = useStyles();
 
   return (
-    <Grid container spacing={3} style={{ marginTop: 20 }}>
+    <Grid container spacing={3} className={classes.container}>
+
       {contents.map((content, index) => (
         <Grid key={content.title} item xs={12} sm={6} md={3}>
-          <Card style={{ padding: 0, margin: 0 }}>
+          <Card className={classes.card}>
             <CardBody>
               <div className={classes.titleSection}>
+
                 <Typography variant="h6" className={classes.title}>
                   {content.title}
                 </Typography>
+
                 <Help
                   fontSize="small"
                   color="disabled"
@@ -116,19 +128,23 @@ const ReportCard = (props) => {
                   aria-owns={anchorEl ? 'send-desc-popover' : undefined}
                   aria-haspopup="true"
                 />
+
               </div>
 
               <div style={{ display: 'flex' }}>
-                <Typography gutterBottom variant="h4" style={{ color: '#00acc1', fontWeight: 700 }}>
+
+                <Typography gutterBottom variant="h4" className={classes.value}>
                   {content.value === '-' ? (
                     <span>{content.value}</span>
                   ) : (
                     <CountUp duration={1} end={Number(content.value)} />
                   )}
                 </Typography>
+
                 <Typography gutterBottom variant="body2">
                   {content.unit}
                 </Typography>
+
               </div>
             </CardBody>
           </Card>

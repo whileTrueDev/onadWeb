@@ -1,11 +1,26 @@
 import React from 'react';
 import { Divider, Avatar } from '@material-ui/core';
+import makeStyles from '@material-ui/core/styles/makeStyles';
 import Typography from '@material-ui/core/Typography';
 import Popover from '@material-ui/core/Popover';
 import Button from '@material-ui/core/Button';
 
+const useStyles = makeStyles(() => ({
+  container: {
+    padding: 12, minWidth: 420
+  },
+  spaceBetween: {
+    display: 'flex', justifyContent: 'space-between', padding: 4
+  },
+  flex: {
+    display: 'flex', alignItems: 'center'
+  }
+}));
+
 export default function CreatorInfo(props) {
+  const classes = useStyles();
   const { anchorEl, handleClose, creatorInfo } = props;
+
   return (
     <Popover
       open={Boolean(anchorEl)}
@@ -20,9 +35,9 @@ export default function CreatorInfo(props) {
         horizontal: 'left',
       }}
     >
-      <div style={{ padding: 12, minWidth: 420 }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', padding: 4 }}>
-          <div style={{ display: 'flex', alignItems: 'center' }}>
+      <div className={classes.container}>
+        <div className={classes.spaceBetween}>
+          <div className={classes.flex}>
             <Avatar
               src={creatorInfo.creatorLogo}
               alt={creatorInfo.creatorName}
@@ -46,7 +61,7 @@ export default function CreatorInfo(props) {
         </div>
         <Divider />
 
-        <div style={{ display: 'flex', marginTop: 10 }}>
+        <div className={classes.flex} style={{ marginTop: 10 }}>
           <div>
             {/* 크리에이터 정보 */}
             <Typography gutterBottom variant="body1">
