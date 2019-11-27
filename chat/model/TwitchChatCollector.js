@@ -41,11 +41,12 @@ function TwitchChatCollector() {
 
     // tmi client configurations
     client.clientId = `onadClient${this.clients.length + 1}`;
-    client.numChats = 0;
     client.status = CLIENT_CONNECTED_STATE;
     client.COLLECT_UNIT_SIZE = this.COLLECT_UNIT_SIZE;
     client.chats = [];
-    client.initalizeChats = () => { client.chats = []; };
+    client.numChats = 0;
+    client.initializeChats = () => { client.chats = []; };
+    client.initializeChatsNum = () => { client.numChats = 0; };
     client.connect();
     this.clients.push(client);
     console.log('===================================================');
@@ -250,6 +251,12 @@ function TwitchChatCollector() {
           }
         }
       });
+
+      // allChatsNum 초기화
+      twitchChatCollector.clients.map((client) => {
+        client.initializeChatsNum();
+        return client;
+      });
     }
 
     // 매일 자정 작업
@@ -286,7 +293,7 @@ function TwitchChatCollector() {
         allChats = allChats.concat(client.chats);
 
         // 데이터 삭제하여 메모리 공간 확보
-        client.initalizeChats();
+        client.initializeChats();
         return client;
       });
       console.log(`[Store request] - ${allChats.length} chats`);
