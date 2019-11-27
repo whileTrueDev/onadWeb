@@ -2,9 +2,11 @@ const tmi = require('tmi.js');
 const schedule = require('node-schedule');
 const doQuery = require('../lib/doQuery');
 const createChatInsertQueryValues = require('../lib/createChatInsertQueryValues');
+
 // utils
 const now = require('../utils/now');
 const arrayDivide = require('../utils/arrayDivide');
+
 // configure constants
 const BOT_NAME = 'OnADy';
 const BOT_OAUTH_TOKEN = 'oauth:ql78nrmxylz561jfwizzu7vi973vld';
@@ -195,7 +197,7 @@ function TwitchChatCollector() {
       console.log('ERROR in first START JOB:', err);
     });
 
-    // 매일 실행하는 작업
+    // 매일 실행하는 작업 - 꺼진 클라이언트 재시동, 새로가입한 크리에이터 클라이언트 생성
     function dailyJob(twitchChatCollector) {
       const YESTERDAY = new Date();
       YESTERDAY.setDate(YESTERDAY.getDate() - 1);
@@ -264,7 +266,7 @@ function TwitchChatCollector() {
       console.log('[TIME]: ', new Date().toLocaleString());
       console.log('[Running clients]: ', this.status.running.length);
       console.log('[Number of collecting channels]: ', this.status.allRunningChannels.length);
-      console.log('[Collecting channels]: ', this.status.allRunningChannels.join(', '));
+      console.log('[Collecting channels]: ', this.status.allRunningChannels.slice(0, 10).join(', '));
       console.log('[Stopped clients]: ', this.status.stopped.length);
       console.log('[Number of stopped channels]: ', this.status.allStoppedChannels.length);
       console.log('[Stopped channels]: ', this.status.allStoppedChannels.join(', '));

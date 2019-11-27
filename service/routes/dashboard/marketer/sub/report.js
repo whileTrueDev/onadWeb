@@ -3,56 +3,114 @@ const doQuery = require('../../../../model/doQuery');
 
 const router = express.Router();
 
+// 리포트 필요 데이터
 router.get('/', (req, res) => {
   const marketerId = req._passport.session.user.userid;
   const { campaignId } = req.query;
-  console.log(req.query);
-  let data;
-  const getCampaignNameQuery = `
-  SELECT campaignName 
-  FROM campaign 
-  WHERE campaignId=?;
-  `;
+  // 켐페인 이름
+  const query = `
+  SELECT 
+    (SELECT campaignName 
+      FROM campaign 
+      WHERE campaignId = ?) AS campaignName,
+    
+    (SELECT SUM(cashFromMarketer)
+      FROM campaignLog as cl
+      WHERE campaignId= ? AND type="CPM") AS totalCPM,
+    
+    (SELECT SUM(cashFromMarketer)
+          / (SELECT unitPrice FROM marketerDebit WHERE marketerId = ?)
+      FROM campaignLog as cl
+      WHERE campaignId= ? AND type="CPM") AS totalViewCount,
+      
+    (SELECT count(*) / 6
+      FROM campaignLog
+      WHERE campaignId = ?) AS totalTime,
+    
+    (SELECT SUM(cashFromMarketer)
+      FROM campaignLog
+      WHERE campaignId= ? AND type="CPC") AS totalCPC,
+    
+    (SELECT SUM(clickCount)
+      FROM landingClick 
+      WHERE campaignId = ?) AS totalClick,
+    
+    (SELECT SUM(transferCount)
+      FROM landingClick 
+      WHERE campaignId = ?) AS totalTransfer,
+      
+    (SELECT SUM(cashFromMarketer)
+      FROM campaignLog as cl
+      WHERE campaignId= ? AND type="CPM"
+      AND cl.date > DATE_SUB(now(), INTERVAL 14 DAY)) AS weeksCPM,
+    
+    (SELECT SUM(cashFromMarketer)
+          / (SELECT unitPrice FROM marketerDebit WHERE marketerId = ?)
+      FROM campaignLog as cl
+      WHERE campaignId= ? AND type="CPM"
+      AND cl.date > DATE_SUB(now(), INTERVAL 14 DAY)) AS weeksViewCount,
+      
+    (SELECT count(*) / 6
+      FROM campaignLog as cl
+      WHERE campaignId = ?
+      AND cl.date > DATE_SUB(now(), INTERVAL 14 DAY)) AS weeksTime,
+    
+    (SELECT SUM(cashFromMarketer)
+      FROM campaignLog as cl
+      WHERE campaignId= ? AND type="CPC"
+      AND cl.date > DATE_SUB(now(), INTERVAL 14 DAY)) AS weeksCPC,
+    
+    (SELECT SUM(clickCount)
+      FROM landingClick
+      WHERE campaignId = ?
+      AND regiDate > DATE_SUB(now(), INTERVAL 14 DAY)) AS weeksClick,
+    
+    (SELECT SUM(transferCount)
+      FROM landingClick
+      WHERE campaignId = ?
+      AND regiDate > DATE_SUB(now(), INTERVAL 30 DAY)) AS weeksTransfer,
+      
+      (SELECT SUM(cashFromMarketer)
+      FROM campaignLog as cl
+      WHERE campaignId= ? AND type="CPM"
+      AND cl.date > DATE_SUB(now(), INTERVAL 30 DAY)) AS monthsCPM,
+    
+    (SELECT SUM(cashFromMarketer)
+          / (SELECT unitPrice FROM marketerDebit WHERE marketerId = ?)
+      FROM campaignLog as cl
+      WHERE campaignId= ? AND type="CPM"
+      AND cl.date > DATE_SUB(now(), INTERVAL 30 DAY)) AS monthsViewCount,
+      
+    (SELECT count(*) / 6
+      FROM campaignLog as cl
+      WHERE campaignId = ?
+      AND cl.date > DATE_SUB(now(), INTERVAL 30 DAY)) AS monthsTime,
+    
+    (SELECT SUM(cashFromMarketer)
+      FROM campaignLog as cl
+      WHERE campaignId= ? AND type="CPC"
+      AND cl.date > DATE_SUB(now(), INTERVAL 30 DAY)) AS monthsCPC,
+    
+    (SELECT SUM(clickCount)
+      FROM landingClick
+      WHERE campaignId = ?
+      AND regiDate > DATE_SUB(now(), INTERVAL 30 DAY)) AS monthsClick,
+    
+    (SELECT SUM(transferCount)
+      FROM landingClick
+      WHERE campaignId = ?
+      AND regiDate > DATE_SUB(now(), INTERVAL 30 DAY)) AS monthsTransfer`;
 
-  const getTotalCpmQuery = `
-  SELECT SUM(cashFromMarketer) 
-  FROM campaignLog as cl
-  WHERE campaignId= ? AND type="CPM";`;
-
-  const getViewCountQuery = `
-  SELECT SUM(cashFromMarketer) / (SELECT unitPrice FROM marketerDebit WHERE marketerId = ?)
-  FROM campaignLog as cl
-  WHERE campaignId= ? AND type="CPM";
-`;
-
-  const getTimeCountQuery = `
-  SELECT count(*) / 6
-  FROM campaignLog
-  WHERE campaignId = ?`;
-
-  const getTotalCpcQuery = `
-  SELECT SUM(cashFromMarketer) 
-  FROM campaignLog
-  WHERE campaignId= ? AND type="CPC";`;
-
-  const getClickCountQuery = `
-  SELECT SUM(clickCount), SUM(transferCount)
-  FROM landingClick 
-  WHERE campaignId = ? `;
-
-
-  Promise.all([
-    doQuery(getCampaignNameQuery, campaignId),
-    doQuery(getTotalCpmQuery, campaignId),
-    doQuery(getViewCountQuery, [marketerId, campaignId]),
-    doQuery(getTimeCountQuery, campaignId),
-    doQuery(getTotalCpcQuery, campaignId),
-    doQuery(getClickCountQuery, campaignId),
-  ])
+  doQuery(query, [
+    campaignId, campaignId, marketerId,
+    campaignId, campaignId, campaignId, campaignId, campaignId, // 기본
+    campaignId, marketerId, campaignId, campaignId, campaignId, campaignId, campaignId, // weeks
+    campaignId, marketerId, campaignId, campaignId, campaignId, campaignId, campaignId // months
+  ]) // 캠페인 이름
     .then((row) => {
-      data = row.map(value => Object.values(value.result[0]));
-      console.log(data);
-      res.send(data);
+      if (!row.error && row.result) {
+        res.send(row.result[0]);
+      }
     })
     .catch((err) => {
       console.log('reportPage: ', err);
@@ -61,7 +119,6 @@ router.get('/', (req, res) => {
 });
 
 router.get('/totalSpendChart', (req, res) => {
-  const marketerId = req._passport.session.user.userid;
   const { campaignId } = req.query;
 
   const totalQuery = `
@@ -84,6 +141,7 @@ router.get('/totalSpendChart', (req, res) => {
   GROUP BY DATE_FORMAT(cl.date, "%y년 %m월 %d일"), type
   ORDER BY cl.date ASC
   `;
+
   const cpcQuery = `
   SELECT
     cl.date as date,
@@ -94,80 +152,14 @@ router.get('/totalSpendChart', (req, res) => {
   GROUP BY DATE_FORMAT(cl.date, "%y년 %m월 %d일"), type
   ORDER BY cl.date ASC
   `;
-  const weeksTotalQuery = `
-  SELECT
-    cl.date as date,
-    sum(cashFromMarketer) as cash, type
-  FROM campaignLog AS cl
-  WHERE campaignId = ?
-  GROUP BY DATE_FORMAT(cl.date, "%y년 %m월 %d일"), type
-  ORDER BY cl.date ASC
-  `;
 
-  const weeksCpmQuery = `
-  SELECT
-    cl.date as date,
-    sum(cashFromMarketer) as cash, type
-  FROM campaignLog AS cl
-  WHERE campaignId = ?
-    AND type="cpm"
-  GROUP BY DATE_FORMAT(cl.date, "%y년 %m월 %d일"), type
-  ORDER BY cl.date ASC
-  `;
-  const weeksCpcQuery = `
-  SELECT
-    cl.date as date,
-    sum(cashFromMarketer) as cash, type
-  FROM campaignLog AS cl
-  WHERE campaignId = ?
-    AND type="cpc"
-  GROUP BY DATE_FORMAT(cl.date, "%y년 %m월 %d일"), type
-  ORDER BY cl.date ASC
-  `;
-  const monthTotalQuery = `
-  SELECT
-    cl.date as date,
-    sum(cashFromMarketer) as cash, type
-  FROM campaignLog AS cl
-  WHERE campaignId = ?
-  GROUP BY DATE_FORMAT(cl.date, "%y년 %m월 %d일"), type
-  ORDER BY cl.date ASC
-  `;
-
-  const monthCpmQuery = `
-  SELECT
-    cl.date as date,
-    sum(cashFromMarketer) as cash, type
-  FROM campaignLog AS cl
-  WHERE campaignId = ?
-    AND type="cpm"
-  GROUP BY DATE_FORMAT(cl.date, "%y년 %m월 %d일"), type
-  ORDER BY cl.date ASC
-  `;
-  const monthCpcQuery = `
-  SELECT
-    cl.date as date,
-    sum(cashFromMarketer) as cash, type
-  FROM campaignLog AS cl
-  WHERE campaignId = ?
-    AND type="cpc"
-  GROUP BY DATE_FORMAT(cl.date, "%y년 %m월 %d일"), type
-  ORDER BY cl.date ASC
-  `;
   Promise.all([
     doQuery(totalQuery, campaignId),
     doQuery(cpmQuery, campaignId),
     doQuery(cpcQuery, campaignId),
-    doQuery(weeksTotalQuery, campaignId),
-    doQuery(weeksCpmQuery, campaignId),
-    doQuery(weeksCpcQuery, campaignId),
-    doQuery(monthTotalQuery, campaignId),
-    doQuery(monthCpmQuery, campaignId),
-    doQuery(monthCpcQuery, campaignId),
   ])
     .then((row) => {
       const resData = row.map(value => value.result);
-      console.log(resData);
       res.send(resData);
     })
     .catch((errorData) => {
@@ -176,5 +168,61 @@ router.get('/totalSpendChart', (req, res) => {
     });
 });
 
+router.get('/cpm', (res, req) => {
+  const { campaignId } = req.query;
+
+  const getStreamerQuery = `
+  SELECT count(*), creatorId 
+  FROM campaignLog 
+  WHERE campaignId = ?
+  GROUP BY creatorId
+  ORDER BY count(*) DESC
+  `;
+  Promise.all([
+    doQuery(getStreamerQuery, campaignId)
+  ]).then((row) => {
+    const resData = row.map(value => value.result);
+    res.send(resData);
+  })
+    .catch((errorData) => {
+      console.log(errorData);
+      res.end();
+    });
+});
+
+router.get('/creators', (req, res) => {
+  const { campaignId } = req.query;
+
+  // name: '화수르',
+  // twitchId: 'iamsupermazinga',
+  // logo: 'https://static-cdn.jtvnw.net/jtv_user_pictures/e14cbb83-71ba-46eb-8fc1-9fd484da2db2-profile_image-300x300.png',
+  // total_ad_exposure_amount: 123123,
+  // total_ad_time: 123
+  // most_contents: '오버워치',
+  // avg_viewer: 150,
+  // avg_broadcast_time: 7,
+
+  const query = `
+  SELECT
+    ci.creatorName, ci.creatorTwitchId,
+    ci.creatorLogo, sum(cashFromMarketer) AS total_ad_exposure_amount
+  FROM campaignLog as cl
+  JOIN creatorInfo as ci
+  ON cl.creatorId = ci.creatorId
+  WHERE campaignId = ?
+  GROUP BY cl.creatorId
+  ORDER BY total_ad_exposure_amount DESC
+  LIMIT 30`;
+
+  doQuery(query, [campaignId])
+    .then((row) => {
+      if (!row.error && row.result) {
+        res.send(row.result);
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+});
 
 module.exports = router;

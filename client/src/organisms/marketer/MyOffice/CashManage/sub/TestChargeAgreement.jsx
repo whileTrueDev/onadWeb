@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import sources from '../../source/sources'
 import { green } from '@material-ui/core/colors';
 import {
   Paper,
@@ -12,6 +11,7 @@ import {
   Grid,
 } from '@material-ui/core';
 import shortid from 'shortid';
+import sources from '../../source/sources';
 import Dialog from '../../../../../atoms/Dialog/Dialog';
 
 const useStyles = makeStyles(theme => ({
@@ -22,8 +22,8 @@ const useStyles = makeStyles(theme => ({
   },
   warning: {
     backgroundColor: 'rgba(0,0,0,0.05)',
-    borderLeft: `0.25rem solid #d0021b`,
-    wordBreak:'keep-all'
+    borderLeft: '0.25rem solid #d0021b',
+    wordBreak: 'keep-all'
   },
   title: {
     marginBottom: 0,
@@ -34,7 +34,7 @@ const useStyles = makeStyles(theme => ({
   content: {
     marginBottom: theme.spacing(4),
     paddingLeft: 5,
-    marginTop:3,
+    marginTop: 3,
     fontSize: 15,
     fontStyle: 'inherit',
     fontFamily: 'Noto Sans KR',
@@ -53,10 +53,10 @@ const useStyles = makeStyles(theme => ({
   },
   container: {
     ...theme.mixins.gutters(),
-    width: `78%`,
+    width: '78%',
     paddingTop: theme.spacing(1),
     paddingBottom: theme.spacing(1),
-    margin: `0 auto`,
+    margin: '0 auto',
     display: 'flex',
     backgroundColor: '#f2f2f2',
     flex: 1,
@@ -88,12 +88,12 @@ const useStyles = makeStyles(theme => ({
       fontWeight: 700,
     },
   },
-  
+
 }));
 
 const TestChargeAgreement = (props) => {
   const classes = useStyles();
-  const terms = sources.agreement
+  const terms = sources.agreement;
   const {
     setStepComplete
   } = props;
@@ -111,7 +111,7 @@ const TestChargeAgreement = (props) => {
   const handleChange = name => () => {
     if (name === 'checkedA') {
       setA(!checkedA);
-      if ( !checkedA === true ) {
+      if (!checkedA === true) {
         setB(true);
         setC(true);
         setD(true);
@@ -122,42 +122,42 @@ const TestChargeAgreement = (props) => {
         setD(false);
         setStepComplete(false);
       }
-    } else if ( name === 'checkedB' ) {
+    } else if (name === 'checkedB') {
       setB(!checkedB);
       if (!checkedB === false) {
-        setA(false)
-        setStepComplete(false)
+        setA(false);
+        setStepComplete(false);
       }
       if (!checkedB && checkedC && checkedD) {
-        setA(true)
+        setA(true);
         setStepComplete(true);
       }
-    } else if ( name === 'checkedC') {
+    } else if (name === 'checkedC') {
       setC(!checkedC);
       if (!checkedC === false) {
-        setA(false)
-        setStepComplete(false)
+        setA(false);
+        setStepComplete(false);
       }
       if (checkedB && !checkedC && checkedD) {
-        setA(true)
+        setA(true);
         setStepComplete(true);
       }
     } else {
       setD(!checkedD);
       if (!checkedD === false) {
-        setA(false)
-        setStepComplete(false)
+        setA(false);
+        setStepComplete(false);
       }
       if (checkedB && checkedC && !checkedD) {
-        setA(true)
+        setA(true);
         setStepComplete(true);
       }
     }
-  }
+  };
 
   const handleClose = () => {
     setOpen(false);
-  }
+  };
 
   const handleOpen = term => () => {
     setTerm(term);
@@ -173,22 +173,21 @@ const TestChargeAgreement = (props) => {
   //   }
   // }
 
-  const checked = (term) =>{
-    if (term.state === "checkedB") {
-      return checkedB
-    } else if (term.state === "checkedC") {
-      return checkedC
-    } else if (term.state === "checkedD") {
-      return checkedD
-    } else {
-      return checkedA
+  const checked = (term) => {
+    if (term.state === 'checkedB') {
+      return checkedB;
+    } if (term.state === 'checkedC') {
+      return checkedC;
+    } if (term.state === 'checkedD') {
+      return checkedD;
     }
-  }
+    return checkedA;
+  };
 
   useEffect(() => {
-    setStepComplete(false)
-  }, [])
-  
+    setStepComplete(false);
+  }, [setStepComplete]);
+
 
   return (
     <div>
@@ -197,77 +196,77 @@ const TestChargeAgreement = (props) => {
         <p className={classes.content}>{sources.content.warning}</p>
       </blockquote>
       <div>
-      {terms.map((term) => (
-        <Paper className={classes.container} elevation={1} key={term.state}>
-          <Grid container direction="row" justify="space-between" alignItems="center" spacing={1}>
-            <Grid item>
-              <Typography component="p" style={{ flex: 8, fontSize: 13 }}>
-                {term.title}
-              </Typography>
-            </Grid>
-            <Grid item>
-              <Grid container direction="row" alignItems="center">
-                <Grid item>
-                  { term.state === 'checkedA' ? (null) : (
-                  <Button
-                    style={{
-                      flex: 1, backgroundColor: '#d6d6d6', height: '70%', fontSize: 13,
-                    }}
-                    onClick={handleOpen(term)}
-                  >
-                  전문보기
-                  </Button>)}
-                </Grid>
-                <Grid item>
-                  <Divider className={classes.divider} />
-                </Grid>
-                <Grid item>
-                  <FormControlLabel
-                    control={(
-                      <Checkbox
-                        onChange={handleChange(term.state)}
-                        checked={checked(term)}
-                        value={term.state}
-                        classes={{
-                          root: classes.checkboxRoot,
-                          checked: classes.checked,
+        {terms.map(term => (
+          <Paper className={classes.container} elevation={1} key={term.state}>
+            <Grid container direction="row" justify="space-between" alignItems="center" spacing={1}>
+              <Grid item>
+                <Typography component="p" style={{ flex: 8, fontSize: 13 }}>
+                  {term.title}
+                </Typography>
+              </Grid>
+              <Grid item>
+                <Grid container direction="row" alignItems="center">
+                  <Grid item>
+                    { term.state === 'checkedA' ? (null) : (
+                      <Button
+                        style={{
+                          flex: 1, backgroundColor: '#d6d6d6', height: '70%', fontSize: 13,
                         }}
-                      />
+                        onClick={handleOpen(term)}
+                      >
+                  전문보기
+                      </Button>
+                    )}
+                  </Grid>
+                  <Grid item>
+                    <Divider className={classes.divider} />
+                  </Grid>
+                  <Grid item>
+                    <FormControlLabel
+                      control={(
+                        <Checkbox
+                          onChange={handleChange(term.state)}
+                          checked={checked(term)}
+                          value={term.state}
+                          classes={{
+                            root: classes.checkboxRoot,
+                            checked: classes.checked,
+                          }}
+                        />
                   )}
-                    label="동의"
-                    style={{ flex: 2, marginRight: 0 }}
-                  />
+                      label="동의"
+                      style={{ flex: 2, marginRight: 0 }}
+                    />
+                  </Grid>
                 </Grid>
               </Grid>
             </Grid>
-          </Grid>
-        </Paper>
-      ))}
-      <Dialog
-        open={open}
-        onClose={handleClose}
-        title={selectTerm.title}
-        maxWidth="md"
-        buttons={(
-          <div>
-            <Button onClick={handleClose}>
+          </Paper>
+        ))}
+        <Dialog
+          open={open}
+          onClose={handleClose}
+          title={selectTerm.title}
+          maxWidth="md"
+          buttons={(
+            <div>
+              <Button onClick={handleClose}>
               취소
-            </Button>
-          </div>
+              </Button>
+            </div>
             )}
-      >
-        {/* 계약 내용 */}
-        <div className={classes.inDialogContent}>
-          {selectTerm.text.split('\n').map(sentence => (
-            <p key={shortid.generate()} className={classes.names}>{sentence}</p>
-          ))}
-        </div>
-      </Dialog>
-      
-        </div>
+        >
+          {/* 계약 내용 */}
+          <div className={classes.inDialogContent}>
+            {selectTerm.text.split('\n').map(sentence => (
+              <p key={shortid.generate()} className={classes.names}>{sentence}</p>
+            ))}
+          </div>
+        </Dialog>
+
+      </div>
     </div>
   );
-
 };
 
-export default TestChargeAgreement
+export default TestChargeAgreement;

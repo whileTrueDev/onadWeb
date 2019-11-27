@@ -43,7 +43,7 @@ router.post('/marketer', (req, res, next) => {
 
   // marketerTaxBill 신규값 초기화 쿼리
   const taxBillQuery = `
-  INSERT INTO marketer
+  INSERT INTO marketerTaxBill
   (marketerId, date, state)
   VALUES (?, ?, ?)`;
   let THIS_MONTH = '';

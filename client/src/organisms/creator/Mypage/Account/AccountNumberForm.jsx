@@ -212,7 +212,6 @@ const AccountNumberForm = (props) => {
       });
   };
 
-
   return (
     <form id="accountForm" onSubmit={handleSubmit}>
       <Grid container direction="column" justify="center">
@@ -254,6 +253,7 @@ const AccountNumberForm = (props) => {
               margin="dense"
               style={{ width: '200px' }}
               allowNegative={false}
+              allowLeadingZeros={true}
             />
           </Grid>
         </Grid>
@@ -273,6 +273,7 @@ const AccountNumberForm = (props) => {
                 className={classes.textField}
                 style={{ width: '250px' }}
                 allowNegative={false}
+                allowLeadingZeros={true}
               />
             </Grid>
             <Grid item>

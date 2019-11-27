@@ -19,7 +19,9 @@
     "prop-types": "^15.7.2",
     "react": "^16.9.0",
     "react-bootstrap": "^1.0.0-beta.14",
+    "react-calendar-heatmap": "^1.8.1",
     "react-chartjs-2": "^2.7.6",
+    "react-countup": "^4.2.3",
     "react-dom": "^16.9.0",
     "react-google-maps": "^9.4.5",
     "react-markdown": "^4.2.2",
@@ -29,6 +31,7 @@
     "react-swipeable-views": "^0.13.3",
     "react-swipeable-views-utils": "^0.13.3",
     "react-text-mask": "^5.4.3",
+    "react-tooltip": "^3.11.1",
     "recompose": "^0.30.0",
     "shortid": "^2.2.14"
   },

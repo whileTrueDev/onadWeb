@@ -315,7 +315,7 @@ const ProductHowItWorks = (props) => {
           <img src="/pngs/main/call.png" alt="callimage" className={classes.callImage} />
 
           <Typography variant="h5" component="h2" className={classes.callNumber}>
-              010-4176-5342
+            051-515-6309
           </Typography>
         </div>
 

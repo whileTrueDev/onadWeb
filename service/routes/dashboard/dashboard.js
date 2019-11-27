@@ -10,11 +10,19 @@ router.use((req, res, next) => {
     && req._passport.session.user) {
     next();
   } else {
-    res.send('no session');
+    res.send('session not exists');
   }
 });
+
 router.use('/creator', creatorRouter);
 router.use('/marketer', marketerRouter);
+
+router.get('/checkUserType', (req, res) => {
+  if (req && req._passport && req._passport.session
+    && req._passport.session.user) {
+    res.send({ userType: req._passport.session.user.userType });
+  }
+});
 
 router.get('/notice', (req, res) => {
   const query = `
