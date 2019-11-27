@@ -24,5 +24,8 @@
   "scripts": {
     "service": "cd service && node bin/www",
     "client": "cd client && yarn start"
+  },
+  "dependencies": {
+    "node-sass": "^4.13.0"
   }
 }

@@ -22,6 +22,7 @@ import useFetchData from '../../../utils/lib/hooks/useFetchData';
 import dashboardStyle from '../../../assets/jss/onad/views/dashboardStyle';
 
 
+
 const useStyles = makeStyles(theme => ({
   root: {
     [theme.breakpoints.between('md', 'lg')]: {
@@ -47,7 +48,7 @@ const useStyles = makeStyles(theme => ({
 const CashCard = (props) => {
   const classes2 = useStyles();
   const {
-    classes, marketerProfileData, campaignData, bannerData
+    classes, marketerProfileData, campaignData, bannerData, history
   } = props;
   const cashData = useFetchData('/api/dashboard/marketer/cash');
 
@@ -62,7 +63,7 @@ const CashCard = (props) => {
           display: 'flex', alignItems: 'center', flexDirection: 'row-reverse', padding: 5
         }}
         >
-          <Button color="info" disabled onClick={() => { }}>충전</Button>
+          <Button color="info" onClick={() => {history.push('/dashboard/marketer/myoffice')}}>충전</Button>
         </div>
       </CardHeader>
 
