@@ -12,7 +12,6 @@ import CampaignList from '../../organisms/marketer/Dashboard/CampaignList';
 
 import useFetchData from '../../utils/lib/hooks/useFetchData';
 import useToggle from '../../utils/lib/hooks/useToggle';
-import history from '../../history';
 
 const Dashboard = () => {
   const campaignCreateMode = useToggle();
@@ -45,7 +44,6 @@ const Dashboard = () => {
                 marketerProfileData={marketerProfileData}
                 campaignData={campaignData}
                 bannerData={bannerData}
-                history={history}
               />
             </GridItem>
             <Hidden xsDown>

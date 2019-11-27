@@ -4,7 +4,7 @@ import makeStyles from '@material-ui/core/styles/makeStyles';
 import withStyles from '@material-ui/core/styles/withStyles';
 import DateRange from '@material-ui/icons/DateRange';
 import Typography from '@material-ui/core/Typography';
-
+import history from '../../../history';
 // Custom components
 import AttachMoney from '@material-ui/icons/AttachMoney';
 import CircularProgress from '../../../atoms/Progress/CircularProgress';
@@ -48,7 +48,7 @@ const useStyles = makeStyles(theme => ({
 const CashCard = (props) => {
   const classes2 = useStyles();
   const {
-    classes, marketerProfileData, campaignData, bannerData, history
+    classes, marketerProfileData, campaignData, bannerData,
   } = props;
   const cashData = useFetchData('/api/dashboard/marketer/cash');
 

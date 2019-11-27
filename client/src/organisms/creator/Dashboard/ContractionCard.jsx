@@ -22,8 +22,9 @@ const ContractionCard = () => {
       });
   }, []);
 
-  
-
+  useEffect(() => {
+    readyCreatorData();
+  }, [readyCreatorData]);
 
   return (
     userData.creatorContractionAgreement === 0 && (
