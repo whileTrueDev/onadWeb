@@ -1,0 +1,121 @@
+$item-width: 50%;
+$item-separation: 0px;
+$viewer-distance: 500px;
+
+.nowCreatorTitle {
+	 width: 100%;
+	 text-align: center;
+	 font-weight: 700;
+	 color: #00DBE0;
+	 font-family: Noto Sans KR;
+	 animation-name: nowCreatorTitle;
+	 animation-duration:2s;
+	 animation-delay: 3s;
+	 animation-fill-mode: forwards;
+	 animation-iteration-count : 반복 횟수 지정
+}
+
+.before-carousel {
+	width: 80%;
+	height: 0px;
+	margin: 0 auto;
+	animation-delay: 5s;
+	align-items: center;
+	animation-name: before-carousel;
+	animation-duration:2s;
+	animation-fill-mode: forwards;
+
+	.after-fetch {
+		visibility: hidden;
+		
+		.carousel {
+			padding: 20px;
+			perspective: $viewer-distance;
+			overflow: hidden;
+			display: flex;
+			flex-direction: row;
+			justify-content: space-between;
+			align-items: center;
+			> * {
+				flex: 0 0 auto;
+			}
+			
+			figure {
+				margin: 0;
+				width: $item-width;
+				transform-style: preserve-3d;
+				transition: transform 0.5s;
+				
+				iframe {
+					width: 100%;
+					box-sizing: border-box;
+					padding: 0 $item-separation / 2;
+					z-index: 1;
+					
+					&:not(:first-of-type) {
+						position: absolute;
+						left: 0;
+						top: 0;
+					}
+				}
+			}
+
+			.prev{
+				width: 40px;
+				height: 40px;	
+				cursor: pointer;
+				background: none;
+				border: 1px solid;
+				letter-spacing: 1px;
+				padding: 5px 10px;
+			}
+
+			.next{
+				width: 40px;
+				height: 40px;	
+				cursor: pointer;
+				background: none;
+				border: 1px solid;
+				letter-spacing: 1px;
+				padding: 5px 10px;
+			}
+			}
+	}
+}
+
+@keyframes before-carousel {
+	from {
+		height: 0px;
+		padding-top: 0px;
+		border-bottom: 0px solid #00DBE0;
+	}
+	to {
+		height: 420px;
+		padding-top: 20px;
+		border-bottom: 3px solid #FFAA00;
+	}
+}
+
+@keyframes nowCreatorTitle {
+	from {
+		color: #00DBE0;
+		opacity: 0;
+	}
+	to {
+		color: #FFAA00;
+		opacity: 1;
+	}
+}
+
+.stayEndCaoursel {
+	height: 420px;
+	padding-top: 20px;
+	border-bottom: 3px solid #FFAA00;
+}
+
+.stayEndTitle {
+	color: #FFAA00;
+		opacity: 1;
+}
+
+

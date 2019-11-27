@@ -26,7 +26,6 @@ const ContractionCard = () => {
     readyCreatorData();
   }, [readyCreatorData]);
 
-
   return (
     userData.creatorContractionAgreement === 0 && (
     <CustomCard iconComponent={<StyledItemText primary="서비스 이용 및 출금 계약하기" style={{ color: '#FFF' }} />}>

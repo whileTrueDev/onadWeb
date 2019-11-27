@@ -61,4 +61,27 @@ router.get('/creators', async (req, res) => {
   res.send(creatorList);
 });
 
+// 계약되어있는 크리에이터인지 확인된 리스트
+router.route('/streams').get((req, res) => {
+  const date = new Date();
+  // date.setHours(date.getHours() + 9);
+  date.setMinutes(date.getMinutes() - 10);
+  const selectQuery = `
+  SELECT creatorTwitchId 
+  FROM creatorInfo as CI
+  JOIN 
+  (SELECT streamerName 
+  FROM twitchStreamDetail
+  WHERE time > ?) as A
+  ON CI.creatorName = A.streamerName
+  WHERE creatorContractionAgreement  = 1
+  `;
+  doQuery(selectQuery, [date]).then((row) => {
+    const retultList = row.result.map(creator => creator.creatorTwitchId);
+    const resultList = retultList.slice(0,10)
+    console.log(resultList)
+    res.send(resultList);
+  });
+});
+
 module.exports = router;
