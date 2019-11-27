@@ -124,7 +124,7 @@ function TestChargeDialog(props) {
 
     // IMP.request_pay(param, callback) 호출
     IMP.request_pay({ // param
-      pg: "inicis", // useState 써야함
+      pg: "danal_tpay", // useState 써야함
       pay_method: chargeType , // useState 써야함
       merchant_uid: marketerProfileData.payload.marketerId + currentDateFormat,
       name: "OnAD 광고캐시",
