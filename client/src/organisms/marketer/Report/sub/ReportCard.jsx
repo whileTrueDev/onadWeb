@@ -35,6 +35,7 @@ const useStyles = makeStyles(theme => ({
 
 const ReportCard = (props) => {
   const { reportData, period } = props;
+  console.log(reportData);
   let contents = {
     '전환당 비용': '-',
     '전환율 ': '-',
@@ -45,28 +46,50 @@ const ReportCard = (props) => {
     '스트리머 충성도': '-'
   };
 
-  if (reportData !== undefined) {
+  if (reportData) {
     switch (period) {
       case 'norange':
         contents = [
-          { title: '전환당 비용', value: (reportData.totalCPM / reportData.totalClick).toFixed(2), unit: '원' },
-          { title: '전환율 ', value: ((reportData.totalTransfer / reportData.totalClick) * 100).toFixed(2), unit: '%' },
-          { title: '광고 노출 점유율', value: '', unit: '%' },
-          { title: '상호 작용 발생율', value: ((reportData.totalClick / reportData.totalViewCount) * 100).toFixed(2), unit: '%' },
+          {
+            title: '전환당 비용',
+            value: ((reportData.totalCPM + reportData.totalCPC) / reportData.totalTransfer),
+            unit: '원',
+            decimalRange: 2
+          },
+          {
+            title: '전환율',
+            value: (reportData.totalTransfer / reportData.totalViewCount),
+            unit: '%',
+            decimalRange: 4
+          },
           { title: '상호작용 수', value: (reportData.totalClick + reportData.totalTransfer), unit: '회' },
-          { title: '리뷰 수', value: '', unit: '회' },
+          {
+            title: '상호 작용 발생율',
+            value: ((reportData.totalClick + reportData.totalTransfer)
+                      / reportData.totalViewCount),
+            unit: '%',
+            decimalRange: 4
+          },
+          { title: '광고 노출 점유율', value: '', unit: '%' },
+          { title: '리뷰 수(기능도입예정)', value: '', unit: '회' },
           { title: '스트리머 충성도', value: '', unit: '' },
           { title: '준비중', value: '', unit: '' }
         ];
         break;
       case 14: // week
         contents = [
-          { title: '전환당 비용', value: (reportData.weeksCPM / reportData.weeksClick).toFixed(2), unit: '원' },
-          { title: '전환율 ', value: ((reportData.weeksTransfer / reportData.weeksClick) * 100).toFixed(2), unit: '%' },
-          { title: '광고 노출 점유율', value: '', unit: '%' },
-          { title: '상호 작용 발생율', value: ((reportData.weeksClick / reportData.weeksViewCount) * 100).toFixed(2), unit: '%' },
+          {
+            title: '전환당 비용', value: (reportData.weeksCPM / reportData.weeksClick).toFixed(2), unit: '원', decimalRange: 2
+          },
+          {
+            title: '전환율 ', value: ((reportData.weeksTransfer / reportData.weeksCPM) * 100).toFixed(2), unit: '%', decimalRange: 4
+          },
           { title: '상호작용 수', value: (reportData.weeksClick + reportData.weeksTransfer), unit: '회' },
-          { title: '리뷰 수', value: '', unit: '회' },
+          {
+            title: '상호 작용 발생율', value: ((reportData.weeksClick / reportData.weeksViewCount) * 100).toFixed(2), unit: '%', decimalRange: 2
+          },
+          { title: '광고 노출 점유율', value: '', unit: '%' },
+          { title: '리뷰 수(기능도입예정)', value: '', unit: '회' },
           { title: '스트리머 충성도', value: '', unit: '' },
           { title: '준비중', value: '', unit: '' }
         ];
@@ -76,10 +99,10 @@ const ReportCard = (props) => {
         contents = [
           { title: '전환당 비용', value: (reportData.monthsCPM / reportData.monthsClick).toFixed(2), unit: '원' },
           { title: '전환율 ', value: ((reportData.monthsTransfer / reportData.monthsClick) * 100).toFixed(2), unit: '%' },
-          { title: '광고 노출 점유율', value: '', unit: '%' },
-          { title: '상호 작용 발생율', value: ((reportData.monthsClick / reportData.monthsViewCount) * 100).toFixed(2), unit: '%' },
           { title: '상호작용 수', value: (reportData.monthsClick + reportData.monthsTransfer), unit: '회' },
-          { title: '리뷰 수', value: '', unit: '회' },
+          { title: '상호 작용 발생율', value: ((reportData.monthsClick / reportData.monthsViewCount) * 100).toFixed(2), unit: '%' },
+          { title: '광고 노출 점유율', value: '', unit: '%' },
+          { title: '리뷰 수(기능도입예정)', value: '', unit: '회' },
           { title: '스트리머 충성도', value: '', unit: '' },
           { title: '준비중', value: '', unit: '' }
         ];
@@ -88,9 +111,9 @@ const ReportCard = (props) => {
         contents = [
           { title: '전환당 비용', value: '', unit: '원' },
           { title: '전환율 ', value: '', unit: '%' },
-          { title: '광고 노출 점유율', value: '', unit: '%' },
-          { title: '상호 작용 발생율', value: '', unit: '%' },
           { title: '상호작용 수', value: '', unit: '회' },
+          { title: '상호 작용 발생율', value: '', unit: '%' },
+          { title: '광고 노출 점유율', value: '', unit: '%' },
           { title: '리뷰 수', value: '', unit: '회' },
           { title: '스트리머 충성도', value: '', unit: '' },
           { title: '준비중', value: '', unit: '' }
@@ -137,7 +160,11 @@ const ReportCard = (props) => {
                   {content.value === '-' ? (
                     <span>{content.value}</span>
                   ) : (
-                    <CountUp duration={1} end={Number(content.value)} />
+                    <CountUp
+                      duration={1}
+                      end={Number(content.value)}
+                      decimals={content.decimalRange}
+                    />
                   )}
                 </Typography>
 

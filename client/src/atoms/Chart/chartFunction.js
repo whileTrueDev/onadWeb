@@ -45,7 +45,7 @@ function monthDiff(date1, date2) {
  */
 function datefy(dateObject) {
   if (typeof dateObject === 'string') {
-    return dateObject.split('T')[0];
+    return dateObject.split(' ')[0];
   }
   return `${dateObject.getMonth() + 1}월 ${dateObject.getDate()}일`;
 }
@@ -130,6 +130,7 @@ function createStackBarDataSet(dataPacket, DATE_RANGE = 15) {
   if (dataPacket.length > 0) {
     const { setUpLabels, CPM, CPC } = setUpData(dataPacket, dateDiff);
 
+
     const labels = setUpLabels.map(day => `${day.split('-')[1]}월 ${day.split('-')[2]}일`);
     const firstTime = new Date(dataPacket[0].date.split('T')[0]); // 마지막 날짜
     const lastTime = new Date(dataPacket[dataPacket.length - 1].date.split('T')[0]); // 현재 날짜 수
@@ -161,6 +162,7 @@ function createStackBarDataSet(dataPacket, DATE_RANGE = 15) {
     CPM.push(0);
     CPC.push(0);
   }
+
   return { labels, CPC, CPM };
 }
 
