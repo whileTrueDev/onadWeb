@@ -119,6 +119,7 @@ function AppFooter() {
                     href="/"
                     color="inherit"
                     underline="none"
+                    style={{ fontWeight: 'bold' }}
                   >
                     개인정보 처리방침
                   </Link>
@@ -147,7 +148,7 @@ function AppFooter() {
           </Grid>
           <Grid container>
             <Typography variant="caption" className={classes.addressLocation}>
-              부산광역시 금정구 장전온천천로 51 테라스파크 3층 313호 와일트루 
+              부산광역시 금정구 장전온천천로 51 테라스파크 3층 313호 와일트루
             </Typography>
           </Grid>
           <Grid container>

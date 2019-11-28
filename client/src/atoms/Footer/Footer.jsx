@@ -15,7 +15,7 @@ function Footer({ ...props }) {
         <div className={classes.left}>
           <List className={classes.list}>
             <ListItem className={classes.inlineBlock}>
-              <a href="/" className={classes.block}>
+              <a href="/" className={classes.block} style={{ fontWeight: 'bold' }}>
                 개인정보 처리방침
               </a>
             </ListItem>

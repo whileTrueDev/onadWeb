@@ -17,6 +17,7 @@ import Tabs from '../../../atoms/Tabs/Tabs';
 import UserProfile from './sub/UserProfile';
 import AdProfile from './sub/AdProfile';
 import GraphConsole from './sub/GraphConsole';
+import history from '../../../history';
 // hooks
 import useFetchData from '../../../utils/lib/hooks/useFetchData';
 import dashboardStyle from '../../../assets/jss/onad/views/dashboardStyle';
@@ -62,7 +63,7 @@ const CashCard = (props) => {
           display: 'flex', alignItems: 'center', flexDirection: 'row-reverse', padding: 5
         }}
         >
-          <Button color="info" disabled onClick={() => { }}>충전</Button>
+          <Button color="info" onClick={() => { history.push('/dashboard/marketer/myoffice'); }}>충전하러가기</Button>
         </div>
       </CardHeader>
 
