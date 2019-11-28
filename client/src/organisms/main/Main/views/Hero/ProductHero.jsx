@@ -500,8 +500,7 @@ function ProductHero(props) {
         </Grow>
 
       )}
-
-
+      
       <LoginForm
         open={open}
         isMarketer={isMarketer}
