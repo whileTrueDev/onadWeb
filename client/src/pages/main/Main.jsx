@@ -8,7 +8,7 @@ import RePasswordDialog from '../../organisms/main/Main/views/Login/RePassword';
 import withRoot from '../../organisms/main/Main/withRoot';
 import sources from '../../organisms/main/Main/source/sources';
 import useLoginValue from '../../utils/lib/hooks/useLoginValue';
-import MainCarousel from '../../organisms/main/Main/views/Carousel/MainCarousel'
+import MainCarousel from '../../organisms/main/Main/views/Carousel/MainCarousel';
 
 
 export default withRoot((props) => {
@@ -24,7 +24,7 @@ export default withRoot((props) => {
 
   return (
     <div>
-      <MainCarousel/>
+      <MainCarousel />
       <AppAppBar isLogin={isLogin} logout={logout} />
       <ProductHero
         isLogin={isLogin}

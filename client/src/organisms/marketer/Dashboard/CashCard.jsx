@@ -4,9 +4,8 @@ import makeStyles from '@material-ui/core/styles/makeStyles';
 import withStyles from '@material-ui/core/styles/withStyles';
 import DateRange from '@material-ui/icons/DateRange';
 import Typography from '@material-ui/core/Typography';
-import history from '../../../history';
-// Custom components
 import AttachMoney from '@material-ui/icons/AttachMoney';
+// Custom components
 import CircularProgress from '../../../atoms/Progress/CircularProgress';
 import Card from '../../../atoms/Card/Card';
 import CardBody from '../../../atoms/Card/CardBody';
@@ -21,7 +20,6 @@ import history from '../../../history';
 // hooks
 import useFetchData from '../../../utils/lib/hooks/useFetchData';
 import dashboardStyle from '../../../assets/jss/onad/views/dashboardStyle';
-
 
 
 const useStyles = makeStyles(theme => ({
