@@ -38,6 +38,22 @@ router.get('/', (req, res) => {
     (SELECT SUM(transferCount)
       FROM landingClick 
       WHERE campaignId = ?) AS totalTransfer,
+
+    (SELECT count(*) FROM landingClickIp
+      WHERE creatorId
+      IN (
+        SELECT lci.creatorId
+        FROM landingClickIp AS lci
+        JOIN campaignLog AS cl ON cl.campaignId = ?
+        JOIN campaign ON campaign.campaignId = ?
+        WHERE landingClickIp.campaignId=?
+        AND lci.date > regiDate
+        AND lci.date < (
+            SELECT max(date)
+            FROM campaignLog WHERE campaignId = ?)
+            GROUP BY lci.creatorId
+          )
+        ) AS totalLandingView,
       
     (SELECT SUM(cashFromMarketer)
       FROM campaignLog as cl
@@ -103,6 +119,7 @@ router.get('/', (req, res) => {
 
   doQuery(query, [
     campaignId, campaignId, marketerId,
+    campaignId, campaignId, campaignId, campaignId,
     campaignId, campaignId, campaignId, campaignId, campaignId, // 기본
     campaignId, marketerId, campaignId, campaignId, campaignId, campaignId, campaignId, // weeks
     campaignId, marketerId, campaignId, campaignId, campaignId, campaignId, campaignId // months
@@ -190,6 +207,7 @@ router.get('/cpm', (res, req) => {
     });
 });
 
+// creator 정보 - CPM: 송출 크리에이터
 router.get('/creators', (req, res) => {
   const { campaignId } = req.query;
 
@@ -223,6 +241,29 @@ router.get('/creators', (req, res) => {
     .catch((err) => {
       console.log(err);
     });
+});
+
+// 일별 click 정보 - CPC: 히트맵
+router.get('/clicks', (req, res) => {
+  const { campaignId } = req.query;
+
+  const query = `
+  SELECT
+  DATE_FORMAT(date, "%Y-%m-%d") AS date,
+  count(*) AS count
+  FROM landingClickIp
+  WHERE campaignId = ?
+  GROUP BY DATE_FORMAT(date, "%Y-%m-%d")
+  ORDER BY DATE_FORMAT(date, "%Y-%m-%d") DESC`;
+  const queryArray = [campaignId];
+
+  doQuery(query, queryArray).then((row) => {
+    if (!row.error && row.result) {
+      res.send(row.result);
+    }
+  }).catch((err) => {
+    console.log(err);
+  });
 });
 
 module.exports = router;

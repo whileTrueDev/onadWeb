@@ -64,6 +64,11 @@ const MarketerReport = (props) => {
     }
   );
 
+  const clickData = useFetchData(
+    '/api/dashboard/marketer/report/clicks', {
+      campaignId: match.params.campaignId
+    }
+  );
 
   const [tabValue, setTabValue] = React.useState(0);
   function handleTabChange(event, newValue) {
@@ -152,6 +157,7 @@ const MarketerReport = (props) => {
                     reportData={reportData.payload}
                     valueChartData={valueChartData}
                     ipToGeoData={ipToGeoData}
+                    clickData={clickData}
                   />
                   )}
 
