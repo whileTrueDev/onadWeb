@@ -35,65 +35,144 @@ const useStyles = makeStyles(theme => ({
 
 const ReportCard = (props) => {
   const { reportData, period } = props;
-  let contents = {
-    '전환당 비용': '-',
-    '전환율 ': '-',
-    '상호 작용 발생율': '-',
-    '상호작용 수': '-',
-    '광고 노출 점유율': '-',
-    // '리뷰 수': '-',
-    '스트리머 충성도': '-'
-  };
+  console.log(reportData);
+  let contents = [];
 
-  if (reportData !== undefined) {
+  if (reportData) {
     switch (period) {
       case 'norange':
         contents = [
-          { title: '전환당 비용', value: (reportData.totalCPM / reportData.totalClick).toFixed(2), unit: '원' },
-          { title: '전환율 ', value: ((reportData.totalTransfer / reportData.totalClick) * 100).toFixed(2), unit: '%' },
-          { title: '광고 노출 점유율', value: '', unit: '%' },
-          { title: '상호 작용 발생율', value: ((reportData.totalClick / reportData.totalViewCount) * 100).toFixed(2), unit: '%' },
+          {
+            title: '전환당 비용',
+            value: ((reportData.totalCPM + reportData.totalCPC) / reportData.totalTransfer),
+            unit: '원',
+            decimalRange: 2
+          },
+          {
+            title: '전환율',
+            value: (reportData.totalTransfer / reportData.totalLandingView),
+            unit: '%',
+            decimalRange: 4
+          },
           { title: '상호작용 수', value: (reportData.totalClick + reportData.totalTransfer), unit: '회' },
-          { title: '리뷰 수', value: '', unit: '회' },
-          { title: '스트리머 충성도', value: '', unit: '' },
-          { title: '준비중', value: '', unit: '' }
+          {
+            title: '상호 작용 발생율',
+            value: ((reportData.totalClick + reportData.totalTransfer)
+                      / reportData.totalCPM),
+            unit: '%',
+            decimalRange: 4
+          },
+          {
+            title: '배너조회율',
+            value: (reportData.totalClick / reportData.totalCPM),
+            unit: '',
+            decimalRange: 4
+          },
+          {
+            title: '배너클릭율',
+            value: (reportData.totalTransfer / reportData.totalCPM),
+            unit: '',
+            decimalRange: 4
+          },
+          { title: '광고 노출 점유율(도입예정)', value: '', unit: '%' },
+          { title: '리뷰 수(도입예정)', value: '', unit: '회' },
         ];
         break;
       case 14: // week
         contents = [
-          { title: '전환당 비용', value: (reportData.weeksCPM / reportData.weeksClick).toFixed(2), unit: '원' },
-          { title: '전환율 ', value: ((reportData.weeksTransfer / reportData.weeksClick) * 100).toFixed(2), unit: '%' },
-          { title: '광고 노출 점유율', value: '', unit: '%' },
-          { title: '상호 작용 발생율', value: ((reportData.weeksClick / reportData.weeksViewCount) * 100).toFixed(2), unit: '%' },
+          {
+            title: '전환당 비용',
+            value: ((reportData.weeksCPM + reportData.weeksCPC) / reportData.weeksTransfer),
+            unit: '원',
+            decimalRange: 2
+          },
+          {
+            title: '전환율',
+            value: (reportData.weeksTransfer / reportData.totalLandingView),
+            unit: '%',
+            decimalRange: 4
+          },
           { title: '상호작용 수', value: (reportData.weeksClick + reportData.weeksTransfer), unit: '회' },
-          { title: '리뷰 수', value: '', unit: '회' },
-          { title: '스트리머 충성도', value: '', unit: '' },
-          { title: '준비중', value: '', unit: '' }
+          {
+            title: '상호 작용 발생율',
+            value: ((reportData.weeksClick + reportData.weeksTransfer)
+                    / reportData.weeksCPM),
+            unit: '%',
+            decimalRange: 4
+          },
+          {
+            title: '배너조회율',
+            value: (reportData.weeksClick / reportData.weeksCPM),
+            unit: '',
+            decimalRange: 4
+          },
+          {
+            title: '배너클릭율',
+            value: (reportData.weeksTransfer / reportData.weeksCPM),
+            unit: '',
+            decimalRange: 4
+          },
+          { title: '광고 노출 점유율(도입예정)', value: '', unit: '%' },
+          { title: '리뷰 수(도입예정)', value: '', unit: '회' },
         ];
         break;
 
       case 30: // months
         contents = [
-          { title: '전환당 비용', value: (reportData.monthsCPM / reportData.monthsClick).toFixed(2), unit: '원' },
-          { title: '전환율 ', value: ((reportData.monthsTransfer / reportData.monthsClick) * 100).toFixed(2), unit: '%' },
-          { title: '광고 노출 점유율', value: '', unit: '%' },
-          { title: '상호 작용 발생율', value: ((reportData.monthsClick / reportData.monthsViewCount) * 100).toFixed(2), unit: '%' },
+          {
+            title: '전환당 비용',
+            value: ((reportData.monthsCPM + reportData.monthsCPC) / reportData.monthsTransfer),
+            unit: '원',
+            decimalRange: 2
+          },
+          {
+            title: '전환율',
+            value: (reportData.monthsTransfer / reportData.totalLandingView),
+            unit: '%',
+            decimalRange: 4
+          },
           { title: '상호작용 수', value: (reportData.monthsClick + reportData.monthsTransfer), unit: '회' },
-          { title: '리뷰 수', value: '', unit: '회' },
-          { title: '스트리머 충성도', value: '', unit: '' },
-          { title: '준비중', value: '', unit: '' }
+          {
+            title: '상호 작용 발생율',
+            value: ((reportData.monthsClick + reportData.monthsTransfer)
+                    / reportData.monthsCPM),
+            unit: '%',
+            decimalRange: 4
+          },
+          {
+            title: '배너조회율',
+            value: (reportData.monthsClick / reportData.monthsCPM),
+            unit: '',
+            decimalRange: 4
+          },
+          {
+            title: '배너클릭율',
+            value: (reportData.monthsTransfer / reportData.monthsCPM),
+            unit: '',
+            decimalRange: 4
+          },
+          { title: '광고 노출 점유율(도입예정)', value: '', unit: '%' },
+          { title: '리뷰 수(도입예정)', value: '', unit: '회' },
         ];
         break;
       default: // 기본값
         contents = [
-          { title: '전환당 비용', value: '', unit: '원' },
-          { title: '전환율 ', value: '', unit: '%' },
-          { title: '광고 노출 점유율', value: '', unit: '%' },
-          { title: '상호 작용 발생율', value: '', unit: '%' },
+          {
+            title: '전환당 비용', value: '', unit: '원', decimalRange: 2
+          },
+          {
+            title: '전환율', value: '', unit: '%', decimalRange: 4
+          },
           { title: '상호작용 수', value: '', unit: '회' },
-          { title: '리뷰 수', value: '', unit: '회' },
-          { title: '스트리머 충성도', value: '', unit: '' },
-          { title: '준비중', value: '', unit: '' }
+          {
+            title: '상호 작용 발생율', value: '', unit: '%', decimalRange: 4
+          },
+          {
+            title: '배너조회율', value: '', unit: '', decimalRange: 4
+          },
+          { title: '배너클릭율', value: '', unit: '' },
+          { title: '광고 노출 점유율(도입예정)', value: '', unit: '%' },
+          { title: '리뷰 수(도입예정)', value: '', unit: '회' },
         ];
         break;
     }
@@ -109,7 +188,7 @@ const ReportCard = (props) => {
     <Grid container spacing={3} className={classes.container}>
 
       {contents.map((content, index) => (
-        <Grid key={content.title} item xs={12} sm={6} md={3}>
+        <Grid key={content.title} item xs={12} md={6}>
           <Card className={classes.card}>
             <CardBody>
               <div className={classes.titleSection}>
@@ -137,7 +216,11 @@ const ReportCard = (props) => {
                   {content.value === '-' ? (
                     <span>{content.value}</span>
                   ) : (
-                    <CountUp duration={1} end={Number(content.value)} />
+                    <CountUp
+                      duration={1}
+                      end={Number(content.value)}
+                      decimals={content.decimalRange}
+                    />
                   )}
                 </Typography>
 

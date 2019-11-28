@@ -45,7 +45,7 @@ function monthDiff(date1, date2) {
  */
 function datefy(dateObject) {
   if (typeof dateObject === 'string') {
-    return dateObject.split('T')[0];
+    return dateObject.split(' ')[0];
   }
   return `${dateObject.getMonth() + 1}월 ${dateObject.getDate()}일`;
 }
@@ -68,14 +68,15 @@ function setUpData(dataPacket, dateDiffFunc) {
         const currentDate = datefy(obj.date);
         const datediff = dateDiffFunc(new Date(previousDate), new Date(currentDate));
 
-        // 이전날짜와 지금날짜의 날짜차이가 있다면 ( 빈 데이터가 존재한다면 )
+        // 앞의날짜와 지금날짜의 날짜차이가 있다면 ( 빈 데이터가 존재한다면 )
         if (datediff > 1) {
           const emptyDate = new Date(previousDate);
+          console.log(datediff);
           for (let i = 1; i < datediff; i += 1) {
             // 빠진 날짜만큼 반복
             emptyDate.setDate(emptyDate.getDate() - 1);
 
-            // console.log(emptyDate.toISOString().split('T')[0]);
+            console.log(emptyDate.toISOString());
             setUpLabels.push(emptyDate.toISOString().split('T')[0]);
             CPM.push(DEFAULT_VALUE);
             CPC.push(DEFAULT_VALUE);
@@ -130,6 +131,7 @@ function createStackBarDataSet(dataPacket, DATE_RANGE = 15) {
   if (dataPacket.length > 0) {
     const { setUpLabels, CPM, CPC } = setUpData(dataPacket, dateDiff);
 
+
     const labels = setUpLabels.map(day => `${day.split('-')[1]}월 ${day.split('-')[2]}일`);
     const firstTime = new Date(dataPacket[0].date.split('T')[0]); // 마지막 날짜
     const lastTime = new Date(dataPacket[dataPacket.length - 1].date.split('T')[0]); // 현재 날짜 수
@@ -161,6 +163,7 @@ function createStackBarDataSet(dataPacket, DATE_RANGE = 15) {
     CPM.push(0);
     CPC.push(0);
   }
+
   return { labels, CPC, CPM };
 }
 

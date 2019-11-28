@@ -1,5 +1,6 @@
 const express = require('express');
 const doQuery = require('../../../../model/doQuery');
+const customToLocaleString = require('../../../../utils/customToLocaleString');
 
 const router = express.Router();
 
@@ -105,7 +106,7 @@ router.get('/chart', (req, res) => {
   const marketerId = req._passport.session.user.userid;
   const query = `
   SELECT
-    cl.date as date,
+    max(cl.date) as date,
     sum(cashFromMarketer) as cash, type
   FROM campaignLog AS cl
   WHERE SUBSTRING_INDEX(cl.campaignId, '_', 1) = ?
@@ -117,7 +118,12 @@ router.get('/chart', (req, res) => {
 
   doQuery(query, queryArray)
     .then((row) => {
-      res.send(row.result);
+      if (!row.error && row.result) {
+        const result = row.result.map(o => ({ ...o, date: customToLocaleString(o.date) }));
+        res.send(result);
+      } else {
+        res.send([false]);
+      }
     })
     .catch((errorData) => {
       console.log(errorData);

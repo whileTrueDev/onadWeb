@@ -74,9 +74,9 @@ function CashDialog(props) {
   // select value
   const { selectValue, handleChange } = useValue('10000');
   const chargeType = useValue('무통장입금');
-  const currentCashNumber = currentCash.replace(",","")
+  const currentCashNumber = currentCash.replace(',', '');
   const totalDebit = Number(currentCashNumber) + Number(selectValue);
-  
+
   // 출금신청 스낵바
   const {
     confirmDialogOpen, handleConfirmDialogClose, handleOnlyDialogClose,
@@ -178,7 +178,7 @@ function CashDialog(props) {
                 )}
               />
             </RadioGroup>
-            <Typography variant="subtitle1" style={{marginBottom: 5, fontWeight:'700', color: 'red'}} className={classes.selectValue}>
+            <Typography variant="subtitle1" style={{ marginBottom: 5, fontWeight: '700', color: 'red' }} className={classes.selectValue}>
               부산은행 : 101 - 2064 - 1964 - 03 (와일트루강동기)
             </Typography>
 
@@ -278,16 +278,16 @@ function CashDialog(props) {
             <Typography variant="h6" marked="center">
               {`충전 이후 보유 광고캐시 : ${totalDebit}`}
             </Typography>
-            <Typography variant="subtitle1" marked="center" style={{fontWeight: "600", color:'red', marginTop: 10}}>
+            <Typography variant="subtitle1" marked="center" style={{ fontWeight: '600', color: 'red', marginTop: 10 }}>
               부산은행 : 101 - 2064 - 1964 - 03 (와일트루강동기)
             </Typography>
-            <Typography variant="subtitle1" marked="center" style={{fontWeight: "600"}}>
+            <Typography variant="subtitle1" marked="center" style={{ fontWeight: '600' }}>
               입금 확인이 되면 캐시가 충전됩니다.
             </Typography>
-            <Typography variant="subtitle1" marked="center" style={{fontWeight: "600", color:'red',}}>
+            <Typography variant="subtitle1" marked="center" style={{ fontWeight: '600', color: 'red', }}>
               회원가입시 이름(회사명) 명의로 입금해주십시오.
             </Typography>
-            <Typography variant="subtitle1" marked="center" style={{fontWeight: "600"}}>
+            <Typography variant="subtitle1" marked="center" style={{ fontWeight: '600' }}>
               세금계산서 발행은 화면 왼쪽의 사용방법에서 안내합니다.
             </Typography>
           </DialogContent>
