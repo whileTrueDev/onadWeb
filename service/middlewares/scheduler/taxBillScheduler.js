@@ -133,7 +133,7 @@ function taxBillDefaultJob() {
 }
 
 // 매 달 1일에 0시 1분에 실행.
-const scheduler = schedule.scheduleJob('taxbillScheduler', '11 4 1,*/3 * *', () => {
+const scheduler = schedule.scheduleJob('taxbillScheduler', '1 9 1,4,7,10,13,16,19,22,25,28 * *', () => {
   console.log(`[${new Date().toLocaleString()}] START SCHEDULER JOB - [taxbillScheduler]`);
 
   // tax bill issue fail job
