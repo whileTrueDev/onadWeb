@@ -11,8 +11,8 @@ import InsertChart from '@material-ui/icons/InsertChart';
 import Whatshot from '@material-ui/icons/Whatshot';
 import FiberNew from '@material-ui/icons/FiberNew';
 
-import Card from '../../../../atoms/Card/Card';
-import ReportStackedBar from '../../../../atoms/Chart/ReportStackedBar';
+import Card from '../../../../../atoms/Card/Card';
+import ReportStackedBar from '../../../../../atoms/Chart/ReportStackedBar';
 
 const EMERALD = '#00acc1';
 const ORANGE = '#ff9800';

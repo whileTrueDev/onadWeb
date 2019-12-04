@@ -9,11 +9,11 @@ import MenuItem from '@material-ui/core/MenuItem';
 import InputLabel from '@material-ui/core/InputLabel';
 import Hidden from '@material-ui/core/Hidden';
 // own components
-import Tabs from './sub/Tabs';
-import ContentsTotal from './sub/ContentsTotal';
-import ContentsCPM from './sub/ContentsCPM';
-import ContentsCPC from './sub/ContentsCPC';
-import ReportLoading from './sub/ReportLoading';
+import Tabs from './sub/campaignSub/Tabs';
+import ContentsTotal from './sub/campaignSub/ContentsTotal';
+import ContentsCPM from './sub/campaignSub/ContentsCPM';
+import ContentsCPC from './sub/campaignSub/ContentsCPC';
+import ReportLoading from './sub/campaignSub/ReportLoading';
 // hooks
 import useFetchData from '../../../utils/lib/hooks/useFetchData';
 import useEventTargetValue from '../../../utils/lib/hooks/useEventTargetValue';
@@ -36,7 +36,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const MarketerReport = (props) => {
+const MarketerReportCampaign = (props) => {
   const classes = useStyles();
   const { match } = props;
   const period = useEventTargetValue('norange');
@@ -173,4 +173,4 @@ const MarketerReport = (props) => {
     </Grid>
   );
 };
-export default MarketerReport;
+export default MarketerReportCampaign;

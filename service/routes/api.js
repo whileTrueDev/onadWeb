@@ -77,7 +77,7 @@ router.route('/streams').get((req, res) => {
   //   WHERE creatorContractionAgreement  = 1`;
   // 현재방송중이면서, 배너를 띄우고있는 스트리머 (시청자 많은 순)
   const selectQuery = `SELECT creatorTwitchId
-  FROM creatorInfo as CI
+  LEFT FROM creatorInfo as CI
   JOIN
   (SELECT streamerName, viewer
   FROM twitchStreamDetail
