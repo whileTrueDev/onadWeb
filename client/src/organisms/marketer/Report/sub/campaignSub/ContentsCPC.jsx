@@ -6,11 +6,11 @@ import Assignment from '@material-ui/icons/Assignment';
 import InsertChart from '@material-ui/icons/InsertChart';
 import BubbleChartIcon from '@material-ui/icons/BubbleChart';
 import Typography from '@material-ui/core/Typography';
-import Card from '../../../../atoms/Card/Card';
+import Card from '../../../../../atoms/Card/Card';
 import ReportCard from './ReportCard';
 import IpToGeo from './IpToGeo';
 import IpToGeoTable from './IpToGeoTable';
-import ClickHeatmap from '../../../../atoms/Chart/ClickHeatmap';
+import ClickHeatmap from '../../../../../atoms/Chart/ClickHeatmap';
 
 const EMERALD = '#00acc1';
 const ORANGE = '#ff9800';

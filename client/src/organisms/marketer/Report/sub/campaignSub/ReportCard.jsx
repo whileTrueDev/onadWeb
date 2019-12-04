@@ -4,10 +4,10 @@ import makeStyles from '@material-ui/core/styles/makeStyles';
 import CountUp from 'react-countup';
 import { Grid, Typography } from '@material-ui/core';
 import Help from '@material-ui/icons/Help';
-import Card from '../../../../atoms/Card/Card';
-import CardBody from '../../../../atoms/Card/CardBody';
-import Tooltip from '../../../../atoms/DescPopover';
-import useTooltip from '../../../../utils/lib/hooks/useTooltip';
+import Card from '../../../../../atoms/Card/Card';
+import CardBody from '../../../../../atoms/Card/CardBody';
+import Tooltip from '../../../../../atoms/DescPopover';
+import useTooltip from '../../../../../utils/lib/hooks/useTooltip';
 
 const useStyles = makeStyles(theme => ({
   container: {
