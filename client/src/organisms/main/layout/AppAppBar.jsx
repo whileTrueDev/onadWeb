@@ -77,7 +77,24 @@ const styles = theme => ({
     '&:hover': {
       cursor: 'pointer',
     },
+    '&>img': {
+      width: 100,
+      height: 70
+    }
   },
+  noButtonIcon: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: theme.spacing(1),
+    '&:hover': {
+      cursor: 'pointer',
+    },
+    '&>img': {
+      width: 64,
+      height: 50
+    }
+  }
 });
 
 function AppAppBar(props) {
@@ -215,13 +232,11 @@ function AppAppBar(props) {
       <AppBar className={classes.root} position="fixed">
         <Toolbar className={classes.toolbar}>
           <div className={classes.left} />
-          <a href="/" className={classes.icon}>
+          <a href="/" className={noButtons? classes.noButtonIcon : classes.icon }>
             <img
               src="/pngs/logo/onad_logo_vertical_black.png"
               id="logo"
               alt="OnADLogo"
-              width={100}
-              height={70}
               style={{ padding: '10px 18px 10px 18px' }}
             />
           </a>
