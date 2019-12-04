@@ -69,13 +69,13 @@ const dashboardRoutes = {
       component: MarketerDashboard, // 마케터 대시보드 컴포넌트로 수정
       layout: '/dashboard/marketer',
     },
-    // {
-    //   path: '/report',
-    //   name: '분석',
-    //   icon: Assessment,
-    //   component: MarketerReport,
-    //   layout: '/dashboard/marketer'
-    // },
+    {
+      path: '/report',
+      name: '분석',
+      icon: Assessment,
+      component: MarketerReport,
+      layout: '/dashboard/marketer'
+    },
     {
       path: '/banner',
       name: '내 배너',

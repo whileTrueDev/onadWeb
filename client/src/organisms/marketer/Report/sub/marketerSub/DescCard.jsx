@@ -1,17 +1,17 @@
 import React from 'react';
-import makeStyles from '@material-ui/core/styles/makeStyles';
+// import makeStyles from '@material-ui/core/styles/makeStyles';
 import {
   Grid, Paper, Divider, Typography
 } from '@material-ui/core';
 
-const useStyles = makeStyles(theme => ({
-  container: {
-    padding: 16
-  }
-}));
+// const useStyles = makeStyles(theme => ({
+//   container: {
+//     padding: 16
+//   }
+// }));
 
 export default function DescCard(props) {
-  const classes = useStyles();
+  // const classes = useStyles();
   const { data, ...rest } = props;
   return (
     <Paper {...rest}>

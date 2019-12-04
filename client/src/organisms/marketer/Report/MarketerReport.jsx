@@ -1,6 +1,8 @@
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import DescCard from './sub/marketerSub/DescCard';
+import DescCardLong from './sub/marketerSub/DescCardLong';
+import CanvasForChart from './sub/marketerSub/CanvasForChart';
 
 const dummy = [
   { title: '총 비용', value: '100,000,000', unit: '원' },
@@ -24,14 +26,15 @@ export default function MarketerReport() {
           </Grid>
         ))}
 
-        <Grid item xs={12} lg={9}>
-          <DescCard data={dummy2[0]} style={{ minHeight: 600 }} />
-        </Grid>
-
         <Grid item xs={12} lg={3}>
-          <DescCard data={dummy2[1]} style={{ minHeight: 600 }} />
+          <DescCardLong />
 
         </Grid>
+
+        <Grid item xs={12} lg={9}>
+          <CanvasForChart />
+        </Grid>
+
       </Grid>
     </div>
   );

@@ -64,7 +64,7 @@ const makeContents = reportData => [
 ];
 
 export default function ContentsTotal(props) {
-  const { period, reportData, creatorsData } = props;
+  const { reportData, creatorsData } = props;
   const contents = makeContents(reportData);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [dataindex, setDataIndex] = React.useState(0);
