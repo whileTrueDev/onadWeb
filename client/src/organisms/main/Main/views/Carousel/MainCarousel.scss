@@ -3,23 +3,25 @@ $item-separation: 0px;
 $viewer-distance: 500px;
 
 .nowCreatorTitle {
-	 width: 100%;
-	 text-align: center;
-	 font-weight: 700;
-	 color: #00DBE0;
-	 font-family: Noto Sans KR;
-	 animation-name: nowCreatorTitle;
-	 animation-duration:2s;
-	 animation-delay: 3s;
-	 animation-fill-mode: forwards;
-	 animation-iteration-count : 반복 횟수 지정
+	width: 100%;
+	text-align: center;
+	font-weight: 700;
+	color: #FFAA00;
+	font-family: Noto Sans KR;
+}
+
+.titleWrapper {
+	height: 0px;
+	animation-name: titleWrapper;
+	animation-duration:1s;
+	animation-fill-mode: forwards;
 }
 
 .before-carousel {
 	width: 80%;
 	height: 0px;
 	margin: 0 auto;
-	animation-delay: 5s;
+	animation-delay: 2s;
 	align-items: center;
 	animation-name: before-carousel;
 	animation-duration:2s;
@@ -96,16 +98,15 @@ $viewer-distance: 500px;
 	}
 }
 
-@keyframes nowCreatorTitle {
+@keyframes titleWrapper {
 	from {
-		color: #00DBE0;
-		opacity: 0;
+		height: 0px;
 	}
 	to {
-		color: #FFAA00;
-		opacity: 1;
+		height: 63px;
 	}
 }
+
 
 .stayEndCaoursel {
 	height: 420px;
