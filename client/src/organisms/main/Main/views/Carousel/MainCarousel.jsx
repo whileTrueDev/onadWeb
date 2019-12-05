@@ -67,28 +67,31 @@ const initialState = {
 const MainCarousel = () => {
   const classes = useStyles();
   const [creator, setCreator] = useState({})
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(false)
+  const [title, setTitle] = useState(false)
   const [autoState, autoDispatch ] = useReducer(autoReducer, initialState )
   const {auto0, auto1, auto2, auto3, auto4, auto5, auto6, auto7, auto8, auto9} = autoState 
   
   const readyCreatorData = useCallback(() => {
     axios.get(`${HOST}/api/streams`).then((res) => {
       if (res.data) {
-        setCreator(res.data)
-        console.log(res.data.length);
-        if (res.data.length < 10) {
-          setLoading(false);
-        } else {
-          getHTMLElement();
+        if (res.data.length === 10) {
+          setLoading(true);
+          setCreator(res.data);
+
+          setTimeout(function() {
+            getHTMLElement();
+            setTitle(true);
+          }, 2000)
+
           setTimeout(function() {
             document.getElementsByClassName('after-fetch')[0].style.visibility = 'visible'
             document.getElementsByClassName('before-carousel')[0].classList.add('stayEndCaoursel')
             document.getElementsByClassName('after-fetch')[0].classList.add('stayEndTitle')
             document.getElementsByClassName('before-carousel')[0].style.animation = `none !important`
             document.getElementsByClassName('after-fetch')[0].style.animation = `none !important`
-          }, 2700)
+          }, 3500)
         }
-        
       } else {
         alert('OnAD 홈페이지 방문을 환영합니다!')
       }
@@ -235,10 +238,9 @@ const MainCarousel = () => {
   }, [readyCreatorData]);
 
   return (
-    <>
+    <section className={classes.container}>
     {loading? (
-        <section className={classes.container}>
-          
+        <>
           <div className="before-carousel">
             <div className="after-fetch" >
             <div className="carousel" data-gap="20">
@@ -353,12 +355,14 @@ const MainCarousel = () => {
             </div>
             </div>
           </div>
-          <h1 className="nowCreatorTitle">OnAD와 함께하는 크리에이터입니다</h1>
-          
-        </section>)
-      
-      : (null) }
-    </>
+          <div className="titleWrapper">
+          {title && <h1 className="nowCreatorTitle">OnAD와 함께하는 크리에이터입니다</h1>}
+          </div>
+        </>
+        ) 
+      : (null)
+      }
+      </section>
   );
 };
 

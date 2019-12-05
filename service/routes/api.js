@@ -55,7 +55,6 @@ const getStreamerList = () => {
   });
 };
 
-
 router.get('/creators', async (req, res) => {
   const creatorList = await getStreamerList();
   res.send(creatorList);
@@ -97,5 +96,7 @@ router.route('/streams').get((req, res) => {
     res.send(resultList);
   });
 });
+
+
 
 module.exports = router;
