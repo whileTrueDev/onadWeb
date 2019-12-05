@@ -76,7 +76,7 @@ const MainCarousel = () => {
       if (res.data) {
         setCreator(res.data)
         console.log(res.data.length);
-        if (res.data.length === 0) {
+        if (res.data.length < 10) {
           setLoading(false);
         } else {
           getHTMLElement();
