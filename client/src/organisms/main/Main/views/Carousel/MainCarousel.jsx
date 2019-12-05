@@ -67,7 +67,7 @@ const initialState = {
 const MainCarousel = () => {
   const classes = useStyles();
   const [creator, setCreator] = useState({})
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
   const [autoState, autoDispatch ] = useReducer(autoReducer, initialState )
   const {auto0, auto1, auto2, auto3, auto4, auto5, auto6, auto7, auto8, auto9} = autoState 
   
@@ -75,15 +75,20 @@ const MainCarousel = () => {
     axios.get(`${HOST}/api/streams`).then((res) => {
       if (res.data) {
         setCreator(res.data)
-        setLoading(true);
-        getHTMLElement();
-        setTimeout(function() {
-          document.getElementsByClassName('after-fetch')[0].style.visibility = 'visible'
-          document.getElementsByClassName('before-carousel')[0].classList.add('stayEndCaoursel')
-          document.getElementsByClassName('after-fetch')[0].classList.add('stayEndTitle')
-          document.getElementsByClassName('before-carousel')[0].style.animation = `none !important`
-          document.getElementsByClassName('after-fetch')[0].style.animation = `none !important`
-        }, 2700)
+        console.log(res.data.length);
+        if (res.data.length === 0) {
+          setLoading(false);
+        } else {
+          getHTMLElement();
+          setTimeout(function() {
+            document.getElementsByClassName('after-fetch')[0].style.visibility = 'visible'
+            document.getElementsByClassName('before-carousel')[0].classList.add('stayEndCaoursel')
+            document.getElementsByClassName('after-fetch')[0].classList.add('stayEndTitle')
+            document.getElementsByClassName('before-carousel')[0].style.animation = `none !important`
+            document.getElementsByClassName('after-fetch')[0].style.animation = `none !important`
+          }, 2700)
+        }
+        
       } else {
         alert('OnAD 홈페이지 방문을 환영합니다!')
       }
@@ -230,125 +235,130 @@ const MainCarousel = () => {
   }, [readyCreatorData]);
 
   return (
-    
-      <section className={classes.container}>
-        <div className="before-carousel">
-          <div className="after-fetch" >
-          <div className="carousel" data-gap="20">
-            <nav>
-              <div className="prev" id="prev">
-                <svg width="100%" height="100%" viewBox="0 0 20 20" x="0px" y="0px">
-                  <path d="M13.5 14.5L9 10l4.5-4.5L12 4l-6 6 6 6 1.5-1.5z"></path>
-                </svg>
-              </div>
-            </nav>
-            
-            <figure>
-                <iframe
-                  title="hero"
-                  src={`https://player.twitch.tv/?channel=${creator[0]}&autoplay=${auto0}`}
-                  height="300"
-                  width="450"
-                  frameBorder="0"
-                  scrolling="no"
-                  allowFullScreen
-                />
-                <iframe
-                  title="hero"
-                  src={`https://player.twitch.tv/?channel=${creator[1]}&autoplay=${auto1}`}
-                  height="300"
-                  width="450"
-                  frameBorder="0"
-                  scrolling="no"
-                  allowFullScreen
-                />
-                <iframe
-                  title="hero"
-                  src={`https://player.twitch.tv/?channel=${creator[2]}&autoplay=${auto2}`}
-                  height="300"
-                  width="450"
-                  frameBorder="0"
-                  scrolling="no"
-                  allowFullScreen
-                />
-                <iframe
-                  title="hero"
-                  src={`https://player.twitch.tv/?channel=${creator[3]}&autoplay=${auto3}`}
-                  height="300"
-                  width="450"
-                  frameBorder="0"
-                  scrolling="no"
-                  allowFullScreen
-                />
-                <iframe
-                  title="hero"
-                  src={`https://player.twitch.tv/?channel=${creator[4]}&autoplay=${auto4}`}
-                  height="300"
-                  width="450"
-                  frameBorder="0"
-                  scrolling="no"
-                  allowFullScreen
-                />
-                <iframe
-                  title="hero"
-                  src={`https://player.twitch.tv/?channel=${creator[5]}&autoplay=${auto5}`}
-                  height="300"
-                  width="450"
-                  frameBorder="0"
-                  scrolling="no"
-                  allowFullScreen
-                />
-                <iframe
-                  title="hero"
-                  src={`https://player.twitch.tv/?channel=${creator[6]}&autoplay=${auto6}`}
-                  height="300"
-                  width="450"
-                  frameBorder="0"
-                  scrolling="no"
-                  allowFullScreen
-                />
-                <iframe
-                  title="hero"
-                  src={`https://player.twitch.tv/?channel=${creator[7]}&autoplay=${auto7}`}
-                  height="300"
-                  width="450"
-                  frameBorder="0"
-                  scrolling="no"
-                  allowFullScreen
-                />
-                <iframe
-                  title="hero"
-                  src={`https://player.twitch.tv/?channel=${creator[8]}&autoplay=${auto8}`}
-                  height="300"
-                  width="450"
-                  frameBorder="0"
-                  scrolling="no"
-                  allowFullScreen
-                />
-                <iframe
-                  title="hero"
-                  src={`https://player.twitch.tv/?channel=${creator[9]}&autoplay=${auto9}`}
-                  height="300"
-                  width="450"
-                  frameBorder="0"
-                  scrolling="no"
-                  allowFullScreen
-                />
-              </figure>
+    <>
+    {loading? (
+        <section className={classes.container}>
+          
+          <div className="before-carousel">
+            <div className="after-fetch" >
+            <div className="carousel" data-gap="20">
               <nav>
-                <div className="next" id="next">
-                    <svg width="100%" height="100%" viewBox="0 0 20 20" x="0px" y="0px">
-                      <path d="M6.5 5.5L11 10l-4.5 4.5L8 16l6-6-6-6-1.5 1.5z"></path>
-                    </svg>
+                <div className="prev" id="prev">
+                  <svg width="100%" height="100%" viewBox="0 0 20 20" x="0px" y="0px">
+                    <path d="M13.5 14.5L9 10l4.5-4.5L12 4l-6 6 6 6 1.5-1.5z"></path>
+                  </svg>
                 </div>
               </nav>
+              
+              <figure>
+                  <iframe
+                    title="hero"
+                    src={`https://player.twitch.tv/?channel=${creator[0]}&autoplay=${auto0}`}
+                    height="300"
+                    width="450"
+                    frameBorder="0"
+                    scrolling="no"
+                    allowFullScreen
+                  />
+                  <iframe
+                    title="hero"
+                    src={`https://player.twitch.tv/?channel=${creator[1]}&autoplay=${auto1}`}
+                    height="300"
+                    width="450"
+                    frameBorder="0"
+                    scrolling="no"
+                    allowFullScreen
+                  />
+                  <iframe
+                    title="hero"
+                    src={`https://player.twitch.tv/?channel=${creator[2]}&autoplay=${auto2}`}
+                    height="300"
+                    width="450"
+                    frameBorder="0"
+                    scrolling="no"
+                    allowFullScreen
+                  />
+                  <iframe
+                    title="hero"
+                    src={`https://player.twitch.tv/?channel=${creator[3]}&autoplay=${auto3}`}
+                    height="300"
+                    width="450"
+                    frameBorder="0"
+                    scrolling="no"
+                    allowFullScreen
+                  />
+                  <iframe
+                    title="hero"
+                    src={`https://player.twitch.tv/?channel=${creator[4]}&autoplay=${auto4}`}
+                    height="300"
+                    width="450"
+                    frameBorder="0"
+                    scrolling="no"
+                    allowFullScreen
+                  />
+                  <iframe
+                    title="hero"
+                    src={`https://player.twitch.tv/?channel=${creator[5]}&autoplay=${auto5}`}
+                    height="300"
+                    width="450"
+                    frameBorder="0"
+                    scrolling="no"
+                    allowFullScreen
+                  />
+                  <iframe
+                    title="hero"
+                    src={`https://player.twitch.tv/?channel=${creator[6]}&autoplay=${auto6}`}
+                    height="300"
+                    width="450"
+                    frameBorder="0"
+                    scrolling="no"
+                    allowFullScreen
+                  />
+                  <iframe
+                    title="hero"
+                    src={`https://player.twitch.tv/?channel=${creator[7]}&autoplay=${auto7}`}
+                    height="300"
+                    width="450"
+                    frameBorder="0"
+                    scrolling="no"
+                    allowFullScreen
+                  />
+                  <iframe
+                    title="hero"
+                    src={`https://player.twitch.tv/?channel=${creator[8]}&autoplay=${auto8}`}
+                    height="300"
+                    width="450"
+                    frameBorder="0"
+                    scrolling="no"
+                    allowFullScreen
+                  />
+                  <iframe
+                    title="hero"
+                    src={`https://player.twitch.tv/?channel=${creator[9]}&autoplay=${auto9}`}
+                    height="300"
+                    width="450"
+                    frameBorder="0"
+                    scrolling="no"
+                    allowFullScreen
+                  />
+                </figure>
+                <nav>
+                  <div className="next" id="next">
+                      <svg width="100%" height="100%" viewBox="0 0 20 20" x="0px" y="0px">
+                        <path d="M6.5 5.5L11 10l-4.5 4.5L8 16l6-6-6-6-1.5 1.5z"></path>
+                      </svg>
+                  </div>
+                </nav>
+            
+            </div>
+            </div>
+          </div>
+          <h1 className="nowCreatorTitle">OnAD와 함께하는 크리에이터입니다</h1>
           
-          </div>
-          </div>
-        </div>
-        <h1 className="nowCreatorTitle">OnAD와 함께하는 크리에이터입니다</h1>
-      </section>
-
+        </section>)
+      
+      : (null) }
+    </>
   );
 };
 
