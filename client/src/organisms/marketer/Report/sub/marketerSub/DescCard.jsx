@@ -1,23 +1,26 @@
 import React from 'react';
-// import makeStyles from '@material-ui/core/styles/makeStyles';
+import Countup from 'react-countup';
+import makeStyles from '@material-ui/core/styles/makeStyles';
 import {
-  Grid, Paper, Divider, Typography
+  Grid, Paper, Divider, Typography,
 } from '@material-ui/core';
 
-// const useStyles = makeStyles(theme => ({
-//   container: {
-//     padding: 16
-//   }
-// }));
+const useStyles = makeStyles(theme => ({
+  container: {
+    padding: 16
+  }
+}));
 
 export default function DescCard(props) {
-  // const classes = useStyles();
-  const { data, ...rest } = props;
+  const classes = useStyles();
+  const {
+    data, ...rest
+  } = props;
   return (
     <Paper {...rest}>
 
       <div>
-        <div style={{ padding: 16 }}>
+        <div className={classes.container}>
           <Typography variant="h6">
             {data.title}
           </Typography>
@@ -28,8 +31,8 @@ export default function DescCard(props) {
         <Grid container justify="center" alignItems="center" style={{ padding: 24 }}>
 
           <Grid item>
-            <Typography variant="h5" color="primary">
-              {`${data.value}`}
+            <Typography variant="h5" color="primary" align="center">
+              <Countup duration={1} end={data.value} separator="," />
             </Typography>
 
             <Typography variant="body1" align="center">

@@ -24,7 +24,7 @@ export default function StatusBar(props) {
   return (
     <Card style={{ marginBottom: 0 }}>
       <div className={classes.root}>
-        <div>
+        <div style={{ margin: 16 }}>
           {!onOffData.loading && !onOffData.error && (
           <FormControlLabel
             control={(
