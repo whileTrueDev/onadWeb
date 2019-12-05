@@ -4,9 +4,8 @@ import makeStyles from '@material-ui/core/styles/makeStyles';
 import withStyles from '@material-ui/core/styles/withStyles';
 import DateRange from '@material-ui/icons/DateRange';
 import Typography from '@material-ui/core/Typography';
-import history from '../../../history';
-// Custom components
 import AttachMoney from '@material-ui/icons/AttachMoney';
+// Custom components
 import CircularProgress from '../../../atoms/Progress/CircularProgress';
 import Card from '../../../atoms/Card/Card';
 import CardBody from '../../../atoms/Card/CardBody';
@@ -17,10 +16,10 @@ import Tabs from '../../../atoms/Tabs/Tabs';
 import UserProfile from './sub/UserProfile';
 import AdProfile from './sub/AdProfile';
 import GraphConsole from './sub/GraphConsole';
+import history from '../../../history';
 // hooks
 import useFetchData from '../../../utils/lib/hooks/useFetchData';
 import dashboardStyle from '../../../assets/jss/onad/views/dashboardStyle';
-
 
 
 const useStyles = makeStyles(theme => ({
@@ -63,7 +62,7 @@ const CashCard = (props) => {
           display: 'flex', alignItems: 'center', flexDirection: 'row-reverse', padding: 5
         }}
         >
-          <Button color="info" onClick={() => {history.push('/dashboard/marketer/myoffice')}}>충전</Button>
+          <Button color="info" onClick={() => { history.push('/dashboard/marketer/myoffice'); }}>충전하러가기</Button>
         </div>
       </CardHeader>
 

@@ -6,11 +6,11 @@ import Assignment from '@material-ui/icons/Assignment';
 import InsertChart from '@material-ui/icons/InsertChart';
 import BubbleChartIcon from '@material-ui/icons/BubbleChart';
 import Typography from '@material-ui/core/Typography';
-import Card from '../../../../atoms/Card/Card';
+import Card from '../../../../../atoms/Card/Card';
 import ReportCard from './ReportCard';
 import IpToGeo from './IpToGeo';
 import IpToGeoTable from './IpToGeoTable';
-import ClickHeatmap from '../../../../atoms/Chart/ClickHeatmap';
+import ClickHeatmap from '../../../../../atoms/Chart/ClickHeatmap';
 
 const EMERALD = '#00acc1';
 const ORANGE = '#ff9800';
@@ -58,20 +58,12 @@ const makeContents = reportData => [
 export default function ContentsTotal(props) {
   const classes = useStyles();
   const {
-    period, reportData, valueChartData, ipToGeoData
+    period, reportData, ipToGeoData, clickData
   } = props;
   const contents = makeContents(reportData);
 
   return (
     <Grid container spacing={4}>
-
-      {/* 윗 라인 */}
-      <Grid item xs={12}>
-        <ReportCard
-          period={period}
-          reportData={reportData}
-        />
-      </Grid>
 
       {/* 왼쪽 라인 */}
       <Grid item xs={12} sm={6}>
@@ -111,6 +103,11 @@ export default function ContentsTotal(props) {
             </div>
           ))}
         </Card>
+
+        <ReportCard
+          period={period}
+          reportData={reportData}
+        />
       </Grid>
 
       {/* 오른쪽 라인 */}
@@ -126,14 +123,12 @@ export default function ContentsTotal(props) {
           </div>
           <Divider />
           <div className={classes.container}>
-            {!ipToGeoData.loading && (
-              <ClickHeatmap />
+            {!clickData.loading && (
+              <ClickHeatmap data={clickData.payload} />
             )}
           </div>
         </Card>
-      </Grid>
 
-      <Grid item xs={12}>
         <Card>
           <div className={classes.container}>
             <div className={classes.flex}>
@@ -146,17 +141,16 @@ export default function ContentsTotal(props) {
           <Divider />
 
           <Grid container className={classes.container} spacing={1}>
-            <Grid item xs={12} md={6}>
+            <Grid item xs={12}>
               <IpToGeo data={ipToGeoData} />
             </Grid>
 
-            <Grid item xs={12} md={6}>
+            <Grid item xs={12}>
               <IpToGeoTable data={ipToGeoData} />
             </Grid>
           </Grid>
         </Card>
       </Grid>
-
     </Grid>
   );
 }

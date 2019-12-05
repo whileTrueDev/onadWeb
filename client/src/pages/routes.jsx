@@ -5,6 +5,7 @@ import BrandingWatermark from '@material-ui/icons/BrandingWatermarkOutlined';
 import Reorder from '@material-ui/icons/Reorder';
 import Work from '@material-ui/icons/Work';
 import Public from '@material-ui/icons/Public';
+import Assessment from '@material-ui/icons/Assessment';
 // import Public from '@material-ui/icons/Public'; // 지구본 아이콘
 
 // 크리에이터 라우터
@@ -20,6 +21,7 @@ import MarketerDashboard from './marketer/Dashboard';
 import MarketerBannerManage from './marketer/BannerManage';
 import MarketerManual from './marketer/Manual';
 import MarketerMyOffice from './marketer/MyOffice';
+import MarketerReport from './marketer/Report';
 
 const dashboardRoutes = {
   creator: [
@@ -58,7 +60,6 @@ const dashboardRoutes = {
       component: CreatorMyPage,
       layout: '/dashboard/creator',
     },
-
   ],
   marketer: [
     {
@@ -68,6 +69,13 @@ const dashboardRoutes = {
       component: MarketerDashboard, // 마케터 대시보드 컴포넌트로 수정
       layout: '/dashboard/marketer',
     },
+    // {
+    //   path: '/report',
+    //   name: '분석',
+    //   icon: Assessment,
+    //   component: MarketerReport,
+    //   layout: '/dashboard/marketer'
+    // },
     {
       path: '/banner',
       name: '내 배너',

@@ -4,16 +4,17 @@ import useMediaQuery from '@material-ui/core/useMediaQuery';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import { Grid, Divider, Avatar } from '@material-ui/core';
 import Assignment from '@material-ui/icons/Assignment';
+import DonutSmall from '@material-ui/icons/DonutSmall';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import Typography from '@material-ui/core/Typography';
-import Card from '../../../../atoms/Card/Card';
-import ReportCard from './ReportCard';
+import Card from '../../../../../atoms/Card/Card';
+import Pie from '../../../../../atoms/Chart/PieChart';
 import CreatorInfo from './CreatorInfo';
 
 const EMERALD = '#00acc1';
 const ORANGE = '#ff9800';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles(() => ({
   container: {
     padding: '14px 20px'
   },
@@ -78,7 +79,7 @@ export default function ContentsTotal(props) {
   };
 
   // 화면 크기에 따라 크리에이터 목록 개수 조절을 위해
-  const isMobileWidth = useMediaQuery('(max-width:959px)');
+  const isMobileWidth = useMediaQuery('(max-width:1024px)');
   const [howMuchCreator, setHowMuchCreator] = React.useState(30);
   React.useEffect(() => {
     if (isMobileWidth) {
@@ -90,14 +91,6 @@ export default function ContentsTotal(props) {
 
   return (
     <Grid container spacing={4}>
-
-      {/* 윗 라인 */}
-      <Grid item xs={12}>
-        <ReportCard
-          period={period}
-          reportData={reportData}
-        />
-      </Grid>
 
       {/* 왼쪽 라인 */}
       <Grid item xs={12} sm={6}>
@@ -177,8 +170,34 @@ export default function ContentsTotal(props) {
             </Grid>
           </div>
         </Card>
-      </Grid>
 
+        {useMediaQuery('(max-width:959px)') ? (null) : (
+          <Card>
+            <div className={classes.container}>
+              <div className={classes.flex}>
+                <DonutSmall fontSize="large" className={classes.icon} style={{ color: EMERALD }} />
+                <Typography gutterBottom variant="h5" align="center">
+                  크리에이터 비율
+                </Typography>
+              </div>
+            </div>
+            <Divider />
+
+            <div className={classes.container}>
+              <Grid container>
+                <Pie
+                  height={140}
+                  labels={creatorsData.payload.slice(0, howMuchCreator).map(d => d.creatorName)}
+                  data={creatorsData.payload
+                    .slice(0, howMuchCreator)
+                    .map(d => (d.total_ad_exposure_amount))}
+                  options={{ legend: { display: true, position: 'right' } }}
+                />
+              </Grid>
+            </div>
+          </Card>
+        )}
+      </Grid>
     </Grid>
   );
 }

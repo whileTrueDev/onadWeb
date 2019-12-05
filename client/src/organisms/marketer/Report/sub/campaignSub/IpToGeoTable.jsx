@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
-import MaterialTable from '../../../../atoms/Table/MaterialTable';
+import MaterialTable from '../../../../../atoms/Table/MaterialTable';
 
 function groupByCity(payload) {
   const newData = [];

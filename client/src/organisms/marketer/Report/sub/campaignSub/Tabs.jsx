@@ -11,7 +11,8 @@ const useStyles = makeStyles(() => ({
     display: 'flex'
   },
   tab: {
-    minWidth: 0
+    minWidth: 0,
+    fontSize: 17
   }
 }));
 
@@ -30,14 +31,14 @@ export default function ReportTabs(props) {
     >
       <Tab
         className={classes.tab}
-        label="Total"
+        label="통합분석"
         classes={{
           wrapper: classes.wrapper
         }}
       />
       <Tab
         className={classes.tab}
-        label="CPM"
+        label="배너광고"
         classes={{
           wrapper: classes.wrapper,
           labelIcon: classes.labelIcon
@@ -45,7 +46,7 @@ export default function ReportTabs(props) {
       />
       <Tab
         className={classes.tab}
-        label="CPC"
+        label="클릭광고"
         classes={{
           wrapper: classes.wrapper
         }}

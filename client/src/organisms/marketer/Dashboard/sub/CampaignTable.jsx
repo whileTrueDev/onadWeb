@@ -72,7 +72,8 @@ function CampaignTable({ ...props }) {
           color="danger"
           onClick={() => {
             const path = `/dashboard/marketer/report/${rowData.campaignId}`;
-            history.push(path);
+            // history.push(path);
+            alert('준비중입니다.');
           }}
         >
         보고서

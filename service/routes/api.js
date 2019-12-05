@@ -66,20 +66,34 @@ router.route('/streams').get((req, res) => {
   const date = new Date();
   // date.setHours(date.getHours() + 9);
   date.setMinutes(date.getMinutes() - 10);
-  const selectQuery = `
-  SELECT creatorTwitchId 
+  // const selectQuery = `
+  // SELECT creatorTwitchId
+  // FROM creatorInfo as CI
+  // JOIN
+  // (SELECT streamerName
+  //   FROM twitchStreamDetail
+  //   WHERE time > ?) as A
+  //   ON CI.creatorName = A.streamerName
+  //   WHERE creatorContractionAgreement  = 1`;
+  // 현재방송중이면서, 배너를 띄우고있는 스트리머 (시청자 많은 순)
+  const selectQuery = `SELECT creatorTwitchId
   FROM creatorInfo as CI
-  JOIN 
-  (SELECT streamerName 
+  LEFT JOIN
+  (SELECT streamerName, viewer
   FROM twitchStreamDetail
-  WHERE time > ?) as A
+  WHERE time > ?
+  GROUP BY streamerName) as A
   ON CI.creatorName = A.streamerName
+  JOIN (
+  SELECT creatorId FROM campaignTimestamp
+  WHERE date > ?
+  ) AS B ON CI.creatorId = B.creatorId
   WHERE creatorContractionAgreement  = 1
-  `;
-  doQuery(selectQuery, [date]).then((row) => {
+  ORDER BY viewer DESC`;
+  doQuery(selectQuery, [date, date]).then((row) => {
     const retultList = row.result.map(creator => creator.creatorTwitchId);
-    const resultList = retultList.slice(0,10)
-    console.log(resultList)
+    const resultList = retultList.slice(0, 10);
+    console.log(resultList);
     res.send(resultList);
   });
 });
