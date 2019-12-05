@@ -145,7 +145,7 @@ const MainCarousel = () => {
       document.getElementById('next').addEventListener('click', onClickNext, true);
       
       function onClickPrev() {
-        currVideo++;
+        currVideo--;
         rotateCarousel(currVideo);
         switch ((Math.abs(currVideo)%n).toString()) {
           case '0' : {
@@ -185,7 +185,7 @@ const MainCarousel = () => {
       }
 
       function onClickNext() {
-        currVideo--;
+        currVideo++;
         rotateCarousel(currVideo);
         switch ((Math.abs(currVideo)%n).toString()) {
           case '0' : {
