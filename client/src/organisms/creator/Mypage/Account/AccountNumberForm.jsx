@@ -27,8 +27,7 @@ const style = theme => ({
     [theme.breakpoints.down('sm')]: {
       width: '100%'
     },
-    margin: theme.spacing(1),
-    marginBottom: theme.spacing(2),
+    marginBottom: theme.spacing(1),
     minWidth: 120,
   },
   item: {
@@ -214,70 +213,94 @@ const AccountNumberForm = (props) => {
 
   return (
     <form id="accountForm" onSubmit={handleSubmit}>
-      <Grid container direction="column" justify="center">
-        <Grid container direction="column">
-          <Grid item className={classes.item}>
-            <StyledItemText primary="은행" secondary="은행을 선택하세요." fontSize="13px" />
-          </Grid>
-          <Grid item className={classes.item}>
-            <TextField
-              required
-              select
-              name="bank"
-              id="bank"
-              className={classes.textField}
-              value={bankState.name || ''}
-              onChange={handleChangeBank}
-              style={{ width: '40%' }}
-              margin="normal"
-            >
-              {banks.map((row) => {
-                const name = row.bankName;
-                return <MenuItem key={name} value={name}>{name}</MenuItem>;
-              })}
-            </TextField>
-          </Grid>
-        </Grid>
-
-        <Grid container direction="column">
-          <Grid item className={classes.item}>
-            <StyledItemText primary="주민번호 앞자리" fontSize="13px" />
-          </Grid>
-          <Grid item className={classes.item}>
-            <NumberFormat
-              required
-              value={birth}
-              onValueChange={onBirthChange}
-              customInput={StyledInput}
-              className={classes.textField}
-              margin="dense"
-              style={{ width: '200px' }}
-              allowNegative={false}
-              allowLeadingZeros={true}
-            />
-          </Grid>
-        </Grid>
-
-        <Grid container direction="column">
-          <Grid item className={classes.item}>
-            <StyledItemText primary="계좌번호" secondary=" (-)을 제외한 계좌번호를 입력하세요" fontSize="13px" />
-          </Grid>
-          <Grid container direction="row" className={classes.item}>
-            <Grid item>
-              <NumberFormat
-                required
-                value={accountNum}
-                onValueChange={onAccountChange}
-                customInput={StyledInput}
-                margin="dense"
-                className={classes.textField}
-                style={{ width: '250px' }}
-                allowNegative={false}
-                allowLeadingZeros={true}
-              />
+      <Grid container direction="column" justify="center" spacing={2}>
+        <Grid item>
+          <Grid container direction="column">
+            <Grid item className={classes.item}>
+              <StyledItemText primary="은행" secondary="은행을 선택하세요." fontSize="14px" />
             </Grid>
-            <Grid item>
-              <Button size="sm" color="blueGray" onClick={accountValidation}>조회</Button>
+            <Grid item className={classes.item}>
+              <TextField
+                required
+                select
+                name="bank"
+                id="bank"
+                className={classes.textField}
+                value={bankState.name || ''}
+                onChange={handleChangeBank}
+                style={{ width: '40%' }}
+                margin="dense"
+              >
+                {banks.map((row) => {
+                  const name = row.bankName;
+                  return <MenuItem key={name} value={name}>{name}</MenuItem>;
+                })}
+              </TextField>
+            </Grid>
+          </Grid>
+        </Grid>
+        <Grid item>
+          <Grid container direction="row">
+            <Grid container direction="column" xs={5}>
+              <Grid item className={classes.item}>
+                <StyledItemText primary="예금주명" fontSize="14px" />
+              </Grid>
+              <Grid item className={classes.item}>
+                <NumberFormat
+                  required
+                  value={birth}
+                  onValueChange={onBirthChange}
+                  customInput={StyledInput}
+                  className={classes.textField}
+                  margin="dense"
+                  style={{ width: '80%' }}
+                  allowNegative={false}
+                  allowLeadingZeros
+                />
+              </Grid>
+            </Grid>
+            <Grid container direction="column" xs={7}>
+              <Grid item className={classes.item}>
+                <StyledItemText primary="주민번호 앞자리" fontSize="14px" />
+              </Grid>
+              <Grid item className={classes.item}>
+                <NumberFormat
+                  required
+                  value={birth}
+                  onValueChange={onBirthChange}
+                  customInput={StyledInput}
+                  className={classes.textField}
+                  margin="dense"
+                  style={{ width: '200px' }}
+                  allowNegative={false}
+                  allowLeadingZeros
+                />
+              </Grid>
+            </Grid>
+          </Grid>
+        </Grid>
+        <Grid item>
+          <Grid container direction="column">
+            <Grid item className={classes.item}>
+              <StyledItemText primary="계좌번호" secondary=" (-)을 제외한 계좌번호를 입력하세요" fontSize="14px" />
+            </Grid>
+            <Grid container direction="row" className={classes.item}>
+              <Grid item>
+                <NumberFormat
+                  required
+                  value={accountNum}
+                  onValueChange={onAccountChange}
+                  customInput={StyledInput}
+                  margin="dense"
+                  className={classes.textField}
+                  style={{ width: '250px' }}
+                  allowNegative={false}
+                  allowLeadingZeros
+                />
+              </Grid>
+              <Grid item>
+                <Button size="sm" color="blueGray" onClick={accountValidation}>조회</Button>
+              </Grid>
             </Grid>
           </Grid>
         </Grid>

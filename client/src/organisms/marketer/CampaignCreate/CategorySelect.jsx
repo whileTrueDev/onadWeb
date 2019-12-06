@@ -104,14 +104,14 @@ const CategorySelect = (props) => {
                               item
                               className={classes.icon}
                             >
-                              <Help
+                              {/* <Help
                                 fontSize="small"
                                 onMouseEnter={handlePopoverOpen(i)}
                                 onMouseLeave={handlePopoverClose}
                                 aria-owns={anchorEl ? 'send-desc-popover' : undefined}
                                 aria-haspopup="true"
                                 color="disabled"
-                              />
+                              /> */}
                             </Grid>
                           </Grid>
                         </Grid>

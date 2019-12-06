@@ -159,8 +159,8 @@ router.get('/auth/:id', (req, res) => {
 // 크리에이터 마케터 계좌 정보 입력
 router.post('/accountNum', (req, res, next) => {
   const { userType } = req.session.passport.user;
-  let userId; let
-    query;
+  let userId;
+  let query;
   if (userType === 'creator') {
     userId = req.session.passport.user.creatorId;
     query = 'UPDATE creatorInfo SET creatorAccountNumber = ? WHERE creatorId = ?';
@@ -171,7 +171,9 @@ router.post('/accountNum', (req, res, next) => {
 
   const { bankName, bankAccount } = req.body;
   const AccountNumber = `${bankName}_${bankAccount}`;
-  doQuery(query, [AccountNumber, userId])
+  // 계좌정보 변경시 암호화하여 저장한다.
+  const enciphedAccountNum = encrypto.encipher(AccountNumber);
+  doQuery(query, [enciphedAccountNum, userId])
     .then((data) => {
       res.send(data);
     })
