@@ -90,12 +90,11 @@ export default function BannerList(props) {
           </div>
 
           <Divider />
-          <Paper square elevation={0} style={{ padding: 12 }}>
-            <Typography variant="h6">배너 소개</Typography>
-            <Typography variant="body2">{bannerData.payload[activeStep].bannerDescription}</Typography>
-
-            <Typography variant="h6">배너 URL</Typography>
-            <Typography variant="body2">{bannerData.payload[activeStep].landingUrl}</Typography>
+          <Paper square elevation={0} style={{ padding: 20 }}>
+            <Grid container direction="column" alignItems="flex-start" spacing={2}>
+              <Typography variant="body2">{bannerData.payload[activeStep].bannerDescription}</Typography>
+              <Typography variant="caption">{bannerData.payload[activeStep].landingUrl}</Typography>
+            </Grid>
           </Paper>
           <MobileStepper
             steps={maxSteps}

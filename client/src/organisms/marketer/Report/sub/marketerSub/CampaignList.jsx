@@ -4,7 +4,7 @@ import {
   Grid, Paper, Divider, Button,
   Avatar, Typography, IconButton,
   ListItem, List, Grow, FormControlLabel,
-  Switch, CircularProgress, Snackbar
+  Switch, Snackbar
 } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 import useUpdateData from '../../../../../utils/lib/hooks/useUpdateData';
@@ -24,7 +24,11 @@ const useStyles = makeStyles(theme => ({
     width: 96,
     height: 96,
     marginRight: theme.spacing(3),
-    backgroundColor: theme.palette.grey[100]
+    backgroundColor: theme.palette.grey[100],
+    [theme.breakpoints.only('lg')]: {
+      width: 72,
+      height: 72
+    }
   },
   img: {
     margin: 'auto',
@@ -56,7 +60,7 @@ export default function CampaignList(props) {
 
       <Divider />
       {!campaignData.loading && campaignData.payload && (
-        <List style={{ maxHeight: 380, overflow: 'auto' }}>
+        <List style={{ maxHeight: 380, overflowY: 'auto' }}>
           {campaignData.payload.map((d, index) => (
             <Grow in timeout={{ enter: d.timein }}>
               <div>
@@ -69,7 +73,6 @@ export default function CampaignList(props) {
                         <img className={classes.img} alt="campaign-logo" src={d.bannerSrc} />
                       </Avatar>
                       <FormControlLabel
-                        style={{ marginLeft: 5 }}
                         control={(
                           <Switch
                             color="primary"
@@ -86,26 +89,27 @@ export default function CampaignList(props) {
                           />
                                 )}
                         label={d.onOff ? 'ON' : 'OFF'}
+                        labelPlacement="bottom"
                       />
                     </Grid>
 
-                    <Grid item xs={8} sm container>
-                      <Grid item xs container direction="column" alignItems="flex-start" spacing={2} style={{ padding: 8 }}>
-                        <Typography gutterBottom variant="subtitle1">
+                    <Grid item xs={8} container>
+                      <Grid item xs container direction="column" alignItems="flex-start" spacing={2} style={{ padding: '8px 0px 8px 8px' }}>
+                        <Typography gutterBottom variant="body2">
                           {d.campaignName}
                         </Typography>
-                        <Typography variant="body2" gutterBottom>
+                        <Typography variant="caption" gutterBottom>
                           {/* 0: 'CPM', 1: 'CPC + CPM' */}
                           {d.optionType === 0 && '배너 광고'}
                           {d.optionType === 1 && '배너 + 클릭 광고'}
                         </Typography>
-                        <Typography variant="body2" gutterBottom>
+                        <Typography variant="caption" gutterBottom>
                           {/* 0: '크리에이터 우선', 1: '카테고리 우선', 2: '노출우선' */}
                           {d.priorityType === 0 && '크리에이터 우선'}
                           {d.priorityType === 1 && '카테고리 우선'}
                           {d.priorityType === 2 && '노출 우선'}
                         </Typography>
-                        <Typography variant="body2" color="textSecondary">
+                        <Typography variant="caption" color="textSecondary">
                           {new Date(d.regiDate).toLocaleDateString()}
                         </Typography>
                       </Grid>
