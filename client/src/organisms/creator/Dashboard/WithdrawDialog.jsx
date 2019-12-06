@@ -93,7 +93,7 @@ function useValue(defaultValue) {
 function WithdrawDialog(props) {
   const classes = useStyles();
   const {
-    open, handleClose, accountNumber, receivable,
+    open, handleClose, accountNumber, receivable, realName
   } = props;
   // select value
   const { selectValue, handleChange } = useValue('0');
@@ -176,6 +176,21 @@ function WithdrawDialog(props) {
           </div>
           <Divider />
 
+          {/* 예금주 */}
+          <div className={classes.contentWrapper}>
+            <Typography variant="subtitle1" id="select-account" className={classes.contentTitle}>
+            예금주
+            </Typography>
+            <Typography
+              variant="h5"
+              id="select-account"
+              className={classes.contentDetail}
+            >
+              {`${realName}`}
+            </Typography>
+          </div>
+          <Divider />
+
           {/* 출금가능금액 */}
           <div className={classes.contentWrapper}>
             <Typography className={classes.contentTitle} variant="subtitle1">
@@ -202,6 +217,10 @@ function WithdrawDialog(props) {
             <br />
             <Typography variant="caption" gutterBottom>
             * 사업소득 원천신고액 3.3%를 제한 금액이 입금됩니다.
+            </Typography>
+            <br />
+            <Typography variant="caption" gutterBottom>
+            * 계좌번호와 예금주가 일치하지 않을 경우 출금 요청이 거절될 수 있으니 정확히 입력해주세요.
             </Typography>
           </div>
 
@@ -310,15 +329,24 @@ function WithdrawDialog(props) {
         >
           <DialogContent className={classes.dialog}>
             <Typography className={classes.dialogContent} variant="h5" marked="center">
+              {`계좌번호 : ${accountNumber}`}
+            </Typography>
+            <Typography className={classes.dialogContent} variant="h5" marked="center">
+              {`예금주 : ${realName}`}
+            </Typography>
+            <Typography className={classes.dialogContent} variant="h5" marked="center">
               {`출금 신청액 : ${selectValue}`}
             </Typography>
             <Typography className={classes.dialogContent} variant="h5" marked="center">
               {`출금 이후 잔여 출금 가능 금액 : ${receivable - selectValue}`}
             </Typography>
             <Warning>
-              <Typography variant="h6" marked="center">
-                {'입금까지 하루 또는 이틀이 소요되어요!!'}
-              </Typography>
+            <Typography variant="h6" marked="center">
+              {'해당 내용이 확실한가요?'}
+            </Typography>
+            <Typography variant="h6" marked="center">
+              {'입금까지 하루 또는 이틀이 소요되어요!!'}
+            </Typography>
             </Warning>
           </DialogContent>
         </Dialog>
