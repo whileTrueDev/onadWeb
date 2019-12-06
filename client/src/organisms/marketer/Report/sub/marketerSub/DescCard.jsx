@@ -5,7 +5,7 @@ import {
   Grid, Paper, Divider, Typography,
 } from '@material-ui/core';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles(() => ({
   container: {
     padding: 16
   }
@@ -31,8 +31,8 @@ export default function DescCard(props) {
         <Grid container justify="center" alignItems="center" style={{ padding: 24 }}>
 
           <Grid item>
-            <Typography variant="h5" color="primary" align="center">
-              <Countup duration={1} end={data.value} separator="," />
+            <Typography variant="h4" color="primary" align="center">
+              <Countup duration={2} end={data.value ? data.value : 0} separator="," />
             </Typography>
 
             <Typography variant="body1" align="center">

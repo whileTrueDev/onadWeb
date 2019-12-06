@@ -9,21 +9,10 @@ import BannerList from './sub/marketerSub/BannerList';
 import CanvasForChart from './sub/marketerSub/CanvasForChart';
 import IssueTable from './sub/marketerSub/IssueTable';
 import OnOffSwitch from './sub/marketerSub/OnOffSwitch';
-
-const dummy = [
-  {
-    title: '운용중 캠페인', value: '2', unit: '캠페인', timein: 300
-  },
-  {
-    title: '보유 광고 캐시', value: '255555', unit: '원', timein: 700
-  },
-  {
-    title: '총 소진 비용', value: '100000000', unit: '원', timein: 1100
-  },
-  {
-    title: '송출크리에이터수', value: '255', unit: '명', timein: 1500
-  },
-];
+import ReportLoading from './sub/marketerSub/ReportLoading';
+// import MakeCampaign from './sub/marketerSub/MakeCampaign';
+// hooks
+import useFetchData from '../../../utils/lib/hooks/useFetchData';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -35,49 +24,99 @@ const useStyles = makeStyles(theme => ({
 
 export default function MarketerReport() {
   const classes = useStyles();
+  const campaignData = useFetchData('/api/dashboard/marketer/report/new');
+  const onOffData = useFetchData('/api/dashboard/marketer/onoff');
+  const normalData = useFetchData('/api/dashboard/marketer/report/normal');
+  const creatorsData = useFetchData('/api/dashboard/marketer/report/creators');
+  const bannerData = useFetchData('/api/dashboard/marketer/banner/all');
+  const valueChartData = useFetchData('/api/dashboard/marketer/campaign/chart');
 
   return (
     <div className={classes.root}>
-      <Grid container spacing={2}>
-        {dummy.map(d => (
-          <Grid item key={d.title} xs={12} sm={6} lg={3}>
-            <Grow in timeout={{ enter: d.timein }}>
-              <DescCard data={d} />
-            </Grow>
-          </Grid>
-        ))}
-
-        <Grid item xs={12} lg={3}>
+      {(normalData.loading || campaignData.loading
+        || onOffData.loading || creatorsData.loading
+        || bannerData.loading || valueChartData.loading) ? (
+          <ReportLoading />
+        ) : (
           <Grid container spacing={2}>
+            {normalData.payload && campaignData.payload
+            && creatorsData.payload && bannerData.payload
+            && valueChartData.payload && (
             <Grid item xs={12}>
-              <OnOffSwitch />
+              <Grid container spacing={2}>
+                <Grid item xs={12} sm={6} lg={3}>
+                  <Grow in timeout={{ enter: 300 }}>
+                    <DescCard data={{
+                      title: '광고 캐시 잔액', value: normalData.payload.cashAmount, unit: '원'
+                    }}
+                    />
+                  </Grow>
+                </Grid>
+                <Grid item xs={12} sm={6} lg={3}>
+                  <Grow in timeout={{ enter: 700 }}>
+                    <DescCard data={{
+                      title: '총 소진 비용', value: normalData.payload.spendAll, unit: '원'
+                    }}
+                    />
+                  </Grow>
+                </Grid>
+                <Grid item xs={12} sm={6} lg={3}>
+                  <Grow in timeout={{ enter: 1100 }}>
+                    <DescCard data={{
+                      title: '운용중 캠페인',
+                      value: campaignData.payload.filter(c => c.onOff === 1).length,
+                      unit: '캠페인'
+                    }}
+                    />
+                  </Grow>
+                </Grid>
+                <Grid item xs={12} sm={6} lg={3}>
+                  <Grow in timeout={{ enter: 1500 }}>
+                    <DescCard data={{
+                      title: '송출크리에이터수', value: creatorsData.payload.length, unit: '명'
+                    }}
+                    />
+                  </Grow>
+                </Grid>
+              </Grid>
             </Grid>
-            <Grid item xs={12}>
-              <CampaignList
-                handleCampaignClick={() => {
-                  console.log('handleCampaignClick');
-                }}
-              />
+            )}
+
+            <Grid item xs={12} md={6} lg={3}>
+              <Grid container spacing={2}>
+                <Grid item xs={12}>
+                  <OnOffSwitch onOffData={onOffData} />
+                </Grid>
+                <Grid item xs={12}>
+                  <CampaignList campaignData={campaignData} />
+                </Grid>
+                <Grid item xs={12}>
+                  <BannerList bannerData={bannerData} />
+                </Grid>
+              </Grid>
             </Grid>
-            <Grid item xs={12}>
-              <BannerList />
+
+            <Grid item xs={12} md={6} lg={9}>
+              <Grid container spacing={2}>
+                <Grid item xs={12}>
+                  <CanvasForChart
+                    valueChartData={valueChartData}
+                    creatorsData={creatorsData}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <IssueTable />
+                </Grid>
+
+                {/* <Grid item xs={12}>
+              <MakeCampaign />
+            </Grid> */}
+              </Grid>
             </Grid>
+
+
           </Grid>
-        </Grid>
-
-        <Grid item xs={12} lg={9}>
-          <Grid container spacing={2}>
-            <Grid item xs={12}>
-              <CanvasForChart />
-            </Grid>
-            <Grid item xs={12}>
-              <IssueTable />
-            </Grid>
-          </Grid>
-        </Grid>
-
-
-      </Grid>
+        )}
     </div>
   );
 }

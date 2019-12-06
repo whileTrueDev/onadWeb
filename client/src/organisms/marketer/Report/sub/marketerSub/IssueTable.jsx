@@ -20,7 +20,7 @@ export default function issueTable() {
       <Grid container alignItems="center" style={{ height: 330, overflow: 'auto' }}>
         <List component="nav" style={{ width: '100%' }} aria-label="mailbox folders">
           {data.map((r, index) => (
-            <div>
+            <div key={r}>
               <ListItem button style={{ justifyContent: 'space-between' }}>
                 <ListItemText primary={r} secondary="2019. 09. 15." />
                 <Typography variant="caption" style={{ color: 'grey' }}>2019-09-15</Typography>

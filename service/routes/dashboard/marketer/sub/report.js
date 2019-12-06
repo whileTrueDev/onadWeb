@@ -209,30 +209,40 @@ router.get('/cpm', (res, req) => {
 
 // creator 정보 - CPM: 송출 크리에이터
 router.get('/creators', (req, res) => {
+  const marketerId = req._passport.session.user.userid;
   const { campaignId } = req.query;
 
-  // name: '화수르',
-  // twitchId: 'iamsupermazinga',
-  // logo: 'https://static-cdn.jtvnw.net/jtv_user_pictures/e14cbb83-71ba-46eb-8fc1-9fd484da2db2-profile_image-300x300.png',
-  // total_ad_exposure_amount: 123123,
-  // total_ad_time: 123
-  // most_contents: '오버워치',
-  // avg_viewer: 150,
-  // avg_broadcast_time: 7,
+  let query = '';
+  let queryArray = [];
+  if (campaignId) {
+    query = `
+    SELECT
+      ci.creatorName, ci.creatorTwitchId,
+      ci.creatorLogo, sum(cashFromMarketer) AS total_ad_exposure_amount
+    FROM campaignLog as cl
+    JOIN creatorInfo as ci
+    ON cl.creatorId = ci.creatorId
+    WHERE campaignId = ?
+    GROUP BY cl.creatorId
+    ORDER BY total_ad_exposure_amount DESC`;
 
-  const query = `
-  SELECT
-    ci.creatorName, ci.creatorTwitchId,
-    ci.creatorLogo, sum(cashFromMarketer) AS total_ad_exposure_amount
-  FROM campaignLog as cl
-  JOIN creatorInfo as ci
-  ON cl.creatorId = ci.creatorId
-  WHERE campaignId = ?
-  GROUP BY cl.creatorId
-  ORDER BY total_ad_exposure_amount DESC
-  LIMIT 30`;
+    queryArray = [campaignId];
+  } else {
+    query = `
+    SELECT
+      ci.creatorName, ci.creatorTwitchId,
+      ci.creatorLogo, sum(cashFromMarketer) AS total_ad_exposure_amount
+    FROM campaignLog as cl
+    JOIN creatorInfo as ci
+    ON cl.creatorId = ci.creatorId
+    WHERE SUBSTRING_INDEX(campaignId, '_', 1) = ?
+    GROUP BY cl.creatorId
+    ORDER BY total_ad_exposure_amount DESC`;
 
-  doQuery(query, [campaignId])
+    queryArray = [marketerId];
+  }
+
+  doQuery(query, queryArray)
     .then((row) => {
       if (!row.error && row.result) {
         res.send(row.result);
@@ -266,4 +276,52 @@ router.get('/clicks', (req, res) => {
   });
 });
 
+// 2019-12-06 새로운 대시보드(분석)을 위한 요청
+// 캠페인 리스트
+router.get('/new', (req, res) => {
+  const marketerId = req._passport.session.user.userid;
+
+  const query = `
+  SELECT
+  campaignId, campaignName, optionType, priorityType, campaign.regiDate, onOff, bannerSrc
+  FROM campaign
+  JOIN bannerRegistered AS br
+  ON br.bannerId = campaign.bannerId
+  WHERE campaign.marketerId = ?
+  AND deletedState = 0
+  ORDER BY onOff DESC, br.regiDate DESC
+  `;
+  const queryArray = [marketerId];
+
+  doQuery(query, queryArray).then((row) => {
+    if (row.result && !row.error) {
+      res.send(row.result);
+    }
+  }).catch((err) => {
+    console.log('err in /report/new', err);
+  });
+});
+
+router.get('/normal', (req, res) => {
+  const marketerId = req._passport.session.user.userid;
+  const query = `SELECT cashAmount, spendAll FROM
+  (
+    SELECT cashAmount
+    FROM marketerDebit
+    WHERE marketerId = ?) AS cashAmount,
+  (
+    SELECT sum(cashFromMarketer) AS spendAll
+    FROM campaignLog
+    WHERE SUBSTRING_INDEX(campaignId, "_" , 1) = ?) AS spendAll
+  `;
+
+  const queryArray = [marketerId, marketerId];
+  doQuery(query, queryArray).then((row) => {
+    if (row.result && !row.error) {
+      res.send(row.result[0]);
+    }
+  }).catch((err) => {
+    console.log('err in /report/new', err);
+  });
+});
 module.exports = router;

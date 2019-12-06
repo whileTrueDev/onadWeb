@@ -2,15 +2,19 @@ import React from 'react';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import {
   Grid, Paper, Divider, Button,
-  Avatar, Typography, ButtonBase,
-  ListItem, List, Grow
+  Avatar, Typography, IconButton,
+  ListItem, List, Grow, FormControlLabel,
+  Switch, CircularProgress, Snackbar
 } from '@material-ui/core';
+import CloseIcon from '@material-ui/icons/Close';
+import useUpdateData from '../../../../../utils/lib/hooks/useUpdateData';
+import useDialog from '../../../../../utils/lib/hooks/useDialog';
 
 const useStyles = makeStyles(theme => ({
   container: {
     padding: 16,
   },
-  button: {
+  list: {
     width: '100%',
     '&:hover': {
       backgroundColor: theme.palette.grey[200]
@@ -30,16 +34,17 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const data = [
-  { value: 1, timein: 1000 },
-  { value: 3, timein: 1400 },
-  { value: 2, timein: 1800 },
-];
 export default function CampaignList(props) {
   const classes = useStyles();
-  const { handleCampaignClick } = props;
+  const { campaignData } = props;
+  const { handleUpdateRequest } = useUpdateData(
+    '/api/dashboard/marketer/campaign/onoff',
+    campaignData.callUrl
+  );
+  const snack = useDialog();
+
   return (
-    <Paper style={{ maxheight: 460 }}>
+    <Paper style={{ minHeight: 220 }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', padding: 16 }}>
         <Typography variant="h6">
           캠페인 목록
@@ -50,55 +55,101 @@ export default function CampaignList(props) {
       </div>
 
       <Divider />
+      {!campaignData.loading && campaignData.payload && (
+        <List style={{ maxHeight: 380, overflow: 'auto' }}>
+          {campaignData.payload.map((d, index) => (
+            <Grow in timeout={{ enter: d.timein }}>
+              <div>
 
-      <List style={{ height: 370, overflow: 'auto' }}>
-        {data.map((d, index) => (
-          <Grow in timeout={{ enter: d.timein }}>
-            <div>
-
-              <ListItem>
-                <Grid container spacing={2}>
-                  <ButtonBase
-                    className={classes.button}
-                    onClick={() => {
-                      handleCampaignClick();
-                    }}
-                  >
-                    <Grid item>
+                <ListItem className={classes.list}>
+                  <Grid container spacing={2} justify="space-between">
+                    <Grid item xs={4}>
                       <Avatar variant="rounded" className={classes.image}>
                         {/* 등록된 배너 */}
-                        <img className={classes.img} alt="campaign-logo" src="/pngs/logo/onad_logo_vertical_black.png" />
+                        <img className={classes.img} alt="campaign-logo" src={d.bannerSrc} />
                       </Avatar>
+                      <FormControlLabel
+                        style={{ marginLeft: 5 }}
+                        control={(
+                          <Switch
+                            color="primary"
+                            checked={d.onOff}
+                            onChange={async () => {
+                              // update 요청
+                              await handleUpdateRequest({
+                                onoffState: !d.onOff,
+                                campaignId: d.campaignId
+                              });
+
+                              snack.handleOpen();
+                            }}
+                          />
+                                )}
+                        label={d.onOff ? 'ON' : 'OFF'}
+                      />
                     </Grid>
-                    <Grid item xs={12} sm container>
+
+                    <Grid item xs={8} sm container>
                       <Grid item xs container direction="column" alignItems="flex-start" spacing={2} style={{ padding: 8 }}>
                         <Typography gutterBottom variant="subtitle1">
-                      캠페인 명
+                          {d.campaignName}
                         </Typography>
                         <Typography variant="body2" gutterBottom>
-                      광고 유형
+                          {/* 0: 'CPM', 1: 'CPC + CPM' */}
+                          {d.optionType === 0 && '배너 광고'}
+                          {d.optionType === 1 && '배너 + 클릭 광고'}
                         </Typography>
                         <Typography variant="body2" gutterBottom>
-                      게재 우선순위
+                          {/* 0: '크리에이터 우선', 1: '카테고리 우선', 2: '노출우선' */}
+                          {d.priorityType === 0 && '크리에이터 우선'}
+                          {d.priorityType === 1 && '카테고리 우선'}
+                          {d.priorityType === 2 && '노출 우선'}
                         </Typography>
                         <Typography variant="body2" color="textSecondary">
-                      2019. 12. 04.
-                        </Typography>
-                        <Typography variant="caption" color="textSecondary">
-                      On
+                          {new Date(d.regiDate).toLocaleDateString()}
                         </Typography>
                       </Grid>
                     </Grid>
-                  </ButtonBase>
-                </Grid>
-              </ListItem>
-              {data.length - 1 !== index && (
-              <Divider light />
-              )}
-            </div>
-          </Grow>
-        ))}
-      </List>
+                  </Grid>
+                </ListItem>
+                {!(campaignData.payload.length - 1 === index) && (<Divider light />)}
+              </div>
+            </Grow>
+          ))}
+        </List>
+      )}
+      {!campaignData.loading && campaignData.payload.length === 0 && (
+        <Grid container justify="center" alignItems="center" direction="column" style={{ marginTop: 40 }}>
+          <Typography variant="body1">생성된 캠페인이 없습니다.</Typography>
+          <Typography variant="body1">새로운 캠페인을 생성해 광고를 진행하세요.</Typography>
+        </Grid>
+      )}
+
+      <Snackbar
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'left',
+        }}
+        open={snack.open}
+        autoHideDuration={6000}
+        onClose={snack.handleClose}
+        ContentProps={{
+          'aria-describedby': 'message-id',
+        }}
+        variant="success"
+        message={<Typography id="message-id">성공적으로 반영되었습니다.</Typography>}
+        action={[
+          <IconButton
+            key="close"
+            aria-label="close"
+            color="inherit"
+            className={classes.close}
+            onClick={snack.handleClose}
+          >
+            <CloseIcon />
+          </IconButton>,
+        ]}
+      />
     </Paper>
   );
 }

@@ -1,5 +1,7 @@
 import React from 'react';
-import { Paper, Typography, Divider } from '@material-ui/core';
+import {
+  Paper, Typography, Divider, Grid
+} from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import MobileStepper from '@material-ui/core/MobileStepper';
 import Button from '@material-ui/core/Button';
@@ -15,49 +17,23 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     alignItems: 'center',
     height: 50,
-    paddingLeft: theme.spacing(4),
+    margin: '0px 12px',
     backgroundColor: theme.palette.background.default,
   },
   img: {
-    height: 255,
+    width: '100%',
+    height: '100%',
     overflow: 'hidden',
     display: 'block',
-    width: '100%',
   },
 }));
 
-const tutorialSteps = [
-  {
-    label: 'San Francisco – Oakland Bay Bridge, United States',
-    imgPath:
-      'https://images.unsplash.com/photo-1537944434965-cf4679d1a598?auto=format&fit=crop&w=400&h=250&q=60',
-  },
-  {
-    label: 'Bird',
-    imgPath:
-      'https://images.unsplash.com/photo-1538032746644-0212e812a9e7?auto=format&fit=crop&w=400&h=250&q=60',
-  },
-  {
-    label: 'Bali, Indonesia',
-    imgPath:
-      'https://images.unsplash.com/photo-1537996194471-e657df975ab4?auto=format&fit=crop&w=400&h=250&q=80',
-  },
-  {
-    label: 'NeONBRAND Digital Marketing, Las Vegas, United States',
-    imgPath:
-      'https://images.unsplash.com/photo-1518732714860-b62714ce0c59?auto=format&fit=crop&w=400&h=250&q=60',
-  },
-  {
-    label: 'Goč, Serbia',
-    imgPath:
-      'https://images.unsplash.com/photo-1512341689857-198e7e2f3ca8?auto=format&fit=crop&w=400&h=250&q=60',
-  },
-];
-
-export default function BannerList() {
+export default function BannerList(props) {
+  const CONFIRMED = 1;
+  const { bannerData } = props;
   const classes = useStyles();
   const [activeStep, setActiveStep] = React.useState(0);
-  const maxSteps = tutorialSteps.length;
+  const maxSteps = bannerData.payload.length;
 
   const handleNext = () => {
     setActiveStep(prevActiveStep => prevActiveStep + 1);
@@ -68,7 +44,7 @@ export default function BannerList() {
   };
 
   return (
-    <Paper style={{ maxheight: 100 }}>
+    <Paper style={{ minHeight: 220, maxheight: 460 }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', padding: 16 }}>
         <Typography variant="h6">
           배너 목록
@@ -79,47 +55,68 @@ export default function BannerList() {
       </div>
       <Divider />
 
-      <div className={classes.root}>
-        <Paper square elevation={0} className={classes.header}>
-          <Typography>{tutorialSteps[activeStep].label}</Typography>
-        </Paper>
-        <div style={{ position: 'relative' }}>
-          <img
-            className={classes.img}
-            src={tutorialSteps[activeStep].imgPath}
-            alt={tutorialSteps[activeStep].label}
-          />
-          <div style={{
-            position: 'absolute',
-            top: '5%',
-            left: '5%',
-            backgroundColor: '##898989',
-          }}
-          >
-            <Typography variant="body1" style={{ color: '#fff' }}>
-              승인됨
-            </Typography>
-          </div>
+      {!(bannerData.payload.length > 0) ? (
+        <div>
+          <Grid container justify="center" alignItems="center" direction="column" style={{ marginTop: 40 }}>
+            <Typography variant="body1">업로드한 배너가 없습니다.</Typography>
+            <Typography variant="body1">배너를 업로드하여 광고를 진행하세요.</Typography>
+          </Grid>
         </div>
-        <MobileStepper
-          steps={maxSteps}
-          position="static"
-          variant="text"
-          activeStep={activeStep}
-          nextButton={(
-            <Button size="small" onClick={handleNext} disabled={activeStep === maxSteps - 1}>
+      ) : (
+        <div className={classes.root}>
+          <div style={{ position: 'relative' }}>
+            <img
+              className={classes.img}
+              src={bannerData.payload[activeStep].bannerSrc}
+              alt={bannerData.payload[activeStep].bannerDescription}
+            />
+            <div style={{
+              position: 'absolute',
+              top: '5%',
+              left: '5%',
+              backgroundColor: bannerData.payload[activeStep].confirmState === CONFIRMED ? '#898989' : '#dddddd',
+            }}
+            >
+              {bannerData.payload[activeStep].confirmState === CONFIRMED ? (
+                <Typography variant="body1" style={{ color: '#fff' }}>
+                승인됨
+                </Typography>
+              ) : (
+                <Typography variant="body1" style={{ color: 'red' }}>
+                미승인
+                </Typography>
+              )}
+            </div>
+          </div>
+
+          <Divider />
+          <Paper square elevation={0} style={{ padding: 12 }}>
+            <Typography variant="h6">배너 소개</Typography>
+            <Typography variant="body2">{bannerData.payload[activeStep].bannerDescription}</Typography>
+
+            <Typography variant="h6">배너 URL</Typography>
+            <Typography variant="body2">{bannerData.payload[activeStep].landingUrl}</Typography>
+          </Paper>
+          <MobileStepper
+            steps={maxSteps}
+            position="static"
+            variant="text"
+            activeStep={activeStep}
+            nextButton={(
+              <Button size="small" onClick={handleNext} disabled={activeStep === maxSteps - 1}>
               다음
-              <KeyboardArrowRight />
-            </Button>
+                <KeyboardArrowRight />
+              </Button>
           )}
-          backButton={(
-            <Button size="small" onClick={handleBack} disabled={activeStep === 0}>
-              <KeyboardArrowLeft />
+            backButton={(
+              <Button size="small" onClick={handleBack} disabled={activeStep === 0}>
+                <KeyboardArrowLeft />
               이전
-            </Button>
+              </Button>
             )}
-        />
-      </div>
+          />
+        </div>
+      )}
     </Paper>
   );
 }
