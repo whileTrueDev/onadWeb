@@ -71,7 +71,7 @@ function CampaignTable({ ...props }) {
         <Button
           color="danger"
           onClick={() => {
-            const path = `/dashboard/marketer/report/${rowData.campaignId}`;
+            // const path = `/dashboard/marketer/report/${rowData.campaignId}`;
             // history.push(path);
             alert('준비중입니다.');
           }}
