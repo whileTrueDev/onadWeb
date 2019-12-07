@@ -96,7 +96,7 @@ router.post('/push', (req, res) => {
   SELECT bannerId 
   FROM bannerRegistered 
   WHERE marketerId = ?  
-  ORDER BY date DESC
+  ORDER BY regiDate DESC
   LIMIT 1`;
 
   const saveQuery = `
@@ -109,6 +109,7 @@ router.post('/push', (req, res) => {
     // 이전에 배너를 게시한 적이 있다는 의미.
       let bannerId = '';
       if (row.result[0]) {
+        console.log(row.result);
         const lastBannerId = row.result[0].bannerId;
         const count = parseInt(lastBannerId.split('_')[1]) + 1;
         if (count < 10) {

@@ -135,7 +135,7 @@ export default function CampaignList(props) {
           horizontal: 'left',
         }}
         open={snack.open}
-        autoHideDuration={6000}
+        autoHideDuration={3000}
         onClose={snack.handleClose}
         ContentProps={{
           'aria-describedby': 'message-id',

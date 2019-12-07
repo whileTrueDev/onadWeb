@@ -7,6 +7,8 @@ import MobileStepper from '@material-ui/core/MobileStepper';
 import Button from '@material-ui/core/Button';
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
+import useDialog from '../../../../../utils/lib/hooks/useDialog';
+import UploadDialog from './UploadDialog';
 
 
 const useStyles = makeStyles(theme => ({
@@ -43,13 +45,15 @@ export default function BannerList(props) {
     setActiveStep(prevActiveStep => prevActiveStep - 1);
   };
 
+  const bannerUploadDialog = useDialog();
+
   return (
     <Paper style={{ minHeight: 220, maxheight: 460 }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', padding: 16 }}>
         <Typography variant="h6">
           배너 목록
         </Typography>
-        <Button variant="contained" color="primary">
+        <Button variant="contained" color="primary" onClick={bannerUploadDialog.handleOpen}>
           배너 등록하기
         </Button>
       </div>
@@ -116,6 +120,8 @@ export default function BannerList(props) {
           />
         </div>
       )}
+
+      <UploadDialog open={bannerUploadDialog.open} onClose={bannerUploadDialog.handleClose} />
     </Paper>
   );
 }
