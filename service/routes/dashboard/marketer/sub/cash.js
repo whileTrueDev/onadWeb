@@ -95,8 +95,15 @@ router.post('/charge', (req, res) => {
 // marketerRefund
 router.post('/refund', (req, res) => {
   const marketerId = req._passport.session.user.userid;
-  const withdrawCash = Number(req.body.withdrawCash);
-  console.log(`/marketer/refund - id: ${marketerId} | amount: ${withdrawCash}`);
+  const refundCash = Number(req.body.withdrawCash);
+  console.log(`/marketer/refund - id: ${marketerId} | amount: ${refundCash}`);
+  
+  let withFeeRefundCash;
+  if (refundCash < 10000) {
+      withFeeRefundCash = refundCash-1000
+    } else {
+      withFeeRefundCash = refundCash*0.9
+    }
 
   // 현재 마케터의 캐시 보유량 조회
   const currentDebitQuery = `
@@ -118,7 +125,7 @@ router.post('/refund', (req, res) => {
   INSERT INTO marketerRefund
   (marketerId, cash, marketerRefund.check)
   VALUES (?, ?, ?)`;
-  const refundHistoryInsertArray = [marketerId, Number(withdrawCash), 0];
+  const refundHistoryInsertArray = [marketerId, Number(withFeeRefundCash), 0];
 
   doQuery(currentDebitQuery, currentDebitArray)
     .then((row) => {
@@ -127,7 +134,7 @@ router.post('/refund', (req, res) => {
           const currentCashAmount = Number(row.result[0].cashAmount);
           Promise.all([
             doQuery(refundHistoryInsertQuery, refundHistoryInsertArray),
-            doQuery(debitUpdateQuery, [currentCashAmount - withdrawCash, marketerId])
+            doQuery(debitUpdateQuery, [currentCashAmount - refundCash, marketerId])
           ])
             .then((secondrow) => {
             // 마케터 캐시 환불 쿼리 완료

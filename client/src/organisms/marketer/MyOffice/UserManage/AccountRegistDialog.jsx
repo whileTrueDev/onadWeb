@@ -62,6 +62,7 @@ function useBankApi() {
       bankName: event.target.bank.value,
       idNumber: event.target.idNumber.value,
       bankAccount: event.target.bankAccount.value,
+      bankRealName: event.target.accountHolder.value
     };
 
     /** *******************
@@ -97,7 +98,7 @@ const AccountDialog = (props) => {
   const Content = () => (
     <DialogContent className={classes.contents}>
       <DialogContentText className={classes.contentText}>
-          환불 받을 계좌를 입력해주세요.
+          환불 받을 계좌정보를 입력해주세요.
       </DialogContentText>
       <TextField
         required
@@ -119,6 +120,18 @@ const AccountDialog = (props) => {
           return <MenuItem key={name} value={name}>{name}</MenuItem>;
         })}
       </TextField>
+
+      <TextField
+        required
+        label="예금주"
+        margin="dense"
+        className={classes.textField}
+        name="accountHolder"
+        InputLabelProps={{
+          shrink: true,
+        }}
+        style={{ width: '200px' }}
+      />
 
       <TextField
         required
