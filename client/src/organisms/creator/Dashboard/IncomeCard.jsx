@@ -123,6 +123,7 @@ const IncomeCard = () => {
           open={open}
           handleOpen={handleOpen}
           handleClose={handleClose}
+          realName={cashData.payload.realName}
           accountNumber={cashData.payload.creatorAccountNumber}
           receivable={cashData.payload.creatorReceivable}
         />
