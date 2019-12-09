@@ -106,7 +106,7 @@ router.get('/chart', (req, res) => {
   const marketerId = req._passport.session.user.userid;
   const query = `
   SELECT
-    max(cl.date) as date,
+    DATE_FORMAT(max(cl.date), "%Y-%m-%d") as date,
     sum(cashFromMarketer) as cash, type
   FROM campaignLog AS cl
   WHERE SUBSTRING_INDEX(cl.campaignId, '_', 1) = ?

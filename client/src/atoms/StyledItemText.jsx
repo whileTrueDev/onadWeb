@@ -13,7 +13,7 @@ const StyledItemText = withStyles(theme => ({
     },
   },
   primary: props => ({
-    fontSize: props.fontSize ? props.fontSize : '18px',
+    fontSize: props.fontSize ? props.fontSize : '16px',
     // fontSize: '18px',
     fontWeight: '600',
     color: props.color || 'inherit'

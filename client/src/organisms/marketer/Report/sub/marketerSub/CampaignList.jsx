@@ -4,11 +4,16 @@ import {
   Grid, Paper, Divider, Button,
   Avatar, Typography, IconButton,
   ListItem, List, Grow, FormControlLabel,
-  Switch, Snackbar
+  Switch, Snackbar, Popover
 } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
+import DeleteIcon from '@material-ui/icons/DeleteRounded';
+import CampaignCreateDialog from './CampaignCreateDialog';
+import CampaignDeleteConfirmDialog from './CampaignDeleteConfirmDialog';
 import useUpdateData from '../../../../../utils/lib/hooks/useUpdateData';
 import useDialog from '../../../../../utils/lib/hooks/useDialog';
+import useDeleteData from '../../../../../utils/lib/hooks/useDeleteData';
+import useAnchorEl from '../../../../../utils/lib/hooks/useAnchorEl';
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -41,11 +46,19 @@ const useStyles = makeStyles(theme => ({
 export default function CampaignList(props) {
   const classes = useStyles();
   const { campaignData } = props;
+
   const { handleUpdateRequest } = useUpdateData(
     '/api/dashboard/marketer/campaign/onoff',
     campaignData.callUrl
   );
   const snack = useDialog();
+  const campaignCreateDialog = useDialog();
+  const campaignMenuAnchor = useAnchorEl();
+
+  // For delete campaigns
+  const [selectedCampaign, setSelectedCampaign] = React.useState(null);
+  const campaignDeleteDialog = useDialog();
+  const { handleDelete } = useDeleteData('/api/dashboard/marketer/campaign');
 
   return (
     <Paper style={{ minHeight: 220 }}>
@@ -53,7 +66,7 @@ export default function CampaignList(props) {
         <Typography variant="h6">
           캠페인 목록
         </Typography>
-        <Button variant="contained" color="primary">
+        <Button variant="contained" color="primary" onClick={campaignCreateDialog.handleOpen}>
           캠페인 등록하기
         </Button>
       </div>
@@ -62,10 +75,17 @@ export default function CampaignList(props) {
       {!campaignData.loading && campaignData.payload && (
         <List style={{ maxHeight: 380, overflowY: 'auto' }}>
           {campaignData.payload.map((d, index) => (
-            <Grow in timeout={{ enter: d.timein }}>
+            <Grow in timeout={{ enter: d.timein }} key={d.campaignName}>
               <div>
 
-                <ListItem className={classes.list}>
+                <ListItem
+                  className={classes.list}
+                  button
+                  onClick={(e) => {
+                    campaignMenuAnchor.handleClick(e);
+                    setSelectedCampaign(d.campaignId);
+                  }}
+                >
                   <Grid container spacing={2} justify="space-between">
                     <Grid item xs={4}>
                       <Avatar variant="rounded" className={classes.image}>
@@ -76,7 +96,7 @@ export default function CampaignList(props) {
                         control={(
                           <Switch
                             color="primary"
-                            checked={d.onOff}
+                            checked={Boolean(d.onOff)}
                             onChange={async () => {
                               // update 요청
                               await handleUpdateRequest({
@@ -154,6 +174,47 @@ export default function CampaignList(props) {
           </IconButton>,
         ]}
       />
+
+      <CampaignCreateDialog
+        open={campaignCreateDialog.open}
+        handleClose={campaignCreateDialog.handleClose}
+      />
+
+      <CampaignDeleteConfirmDialog
+        open={campaignDeleteDialog.open}
+        handleClose={campaignDeleteDialog.handleClose}
+        handleDelete={handleDelete}
+      />
+
+      <Popover
+        id="campaign-menu"
+        open={Boolean(campaignMenuAnchor.anchorEl)}
+        anchorEl={campaignMenuAnchor.anchorEl}
+        onClose={campaignMenuAnchor.handleClose}
+        anchorOrigin={{
+          vertical: 'center',
+          horizontal: 'center',
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'left',
+        }}
+      >
+        <List>
+          <ListItem
+            button
+            onClick={() => {
+              // Open delete confirm dialog
+              campaignDeleteDialog.handleOpen(selectedCampaign);
+              // Close the menu popover
+              campaignMenuAnchor.handleClose();
+            }}
+          >
+            <DeleteIcon />
+            <Typography>삭제</Typography>
+          </ListItem>
+        </List>
+      </Popover>
     </Paper>
   );
 }

@@ -44,13 +44,6 @@ export default function ReportTabs(props) {
           labelIcon: classes.labelIcon
         }}
       />
-      <Tab
-        className={classes.tab}
-        label="차트2"
-        classes={{
-          wrapper: classes.wrapper
-        }}
-      />
     </Tabs>
   );
 }

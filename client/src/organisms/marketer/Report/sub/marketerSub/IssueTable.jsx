@@ -18,7 +18,7 @@ export default function issueTable() {
       <Divider />
 
       <Grid container alignItems="center" style={{ height: 330, overflow: 'auto' }}>
-        <List component="nav" style={{ width: '100%' }} aria-label="mailbox folders">
+        {/* <List component="nav" style={{ width: '100%' }} aria-label="mailbox folders">
           {data.map((r, index) => (
             <div key={r}>
               <ListItem button style={{ justifyContent: 'space-between' }}>
@@ -30,7 +30,13 @@ export default function issueTable() {
               )}
             </div>
           ))}
-        </List>
+        </List> */}
+
+        <div style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
+          <Typography variant="h6" align="center" justify="center">
+          [활동 내역 보기] 준비중입니다.
+          </Typography>
+        </div>
       </Grid>
     </Paper>
   );
