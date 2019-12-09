@@ -51,7 +51,7 @@ function CampaignTable({ ...props }) {
       field: 'priorityType',
       lookup: { 0: '크리에이터 우선', 1: '카테고리 우선', 2: '노출우선' },
     },
-    { title: '광고유형', field: 'optionType', lookup: { 0: 'CPM', 1: 'CPC + CPM', } },
+    { title: '광고유형', field: 'optionType', lookup: { 0: '배너광고', 1: '배너광고 + 클릭광고', } },
     {
       title: '등록된 배너',
       field: 'bannerSrc',

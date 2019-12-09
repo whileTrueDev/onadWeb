@@ -59,7 +59,7 @@ router.post('/regist', (req, res, next) => {
   const mailOptions = {
     from: 'ONAD <support@onad.io>', // 발송 메일 주소 (위에서 작성한 gmail 계정 아이디)
     to: email, // 수신 메일 주소부분
-    subject: `[ONAD] ${req.body.marketerId} 님, 가입을 환영합니다.`, // 제목부분인듯
+    subject: '[ONAD] 휴면전환 예정 알림', // 제목부분인듯
     html: makeMarketerRegistTemplate(`${HOST}/api/regist/auth/${req.body.marketerId}`),
     attachments: [{
       filename: 'onad_logo_vertical_small.png',
@@ -85,4 +85,33 @@ router.post('/regist', (req, res, next) => {
   });
 });
 
+router.post('/sleep', (req, res, next) => {
+  const email = req.body.marketerMail;
+  const mailOptions = {
+    from: 'ONAD <support@onad.io>', // 발송 메일 주소 (위에서 작성한 gmail 계정 아이디)
+    to: email, // 수신 메일 주소부분
+    subject: `[ONAD] ${req.body.marketerId} 님, 휴면전환 예정 알림.`, // 제목부분인듯
+    html: makeMarketerRegistTemplate(`${HOST}/api/regist/auth/${req.body.marketerId}`),
+    attachments: [{
+      filename: 'onad_logo_vertical_small.png',
+      path: `${process.env.ROOT_PATH}/images/onad_logo_vertical_small.png`,
+      cid: 'logo'
+    }]
+  };
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      logger.error(`Email 전송오류 : ${error.response}`);
+      res.send({
+        error: error.response,
+        result: null,
+      });
+    } else {
+      logger.info(`Email sent: ${info.response}`);
+      res.send({
+        error: null,
+        result: info.response,
+      });
+    }
+  });
+});
 module.exports = router;

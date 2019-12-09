@@ -1,0 +1,27 @@
+<html>
+
+<head>
+  <title>
+    browser version check
+  </title>
+  <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+  <script>
+    const browser = navigator.appVersion;
+    document.write(browser)
+  </script>
+  <script>
+    $(window).resize(function () {
+      $("#width").text($(this).width());
+      $("#height").text($(this).height());
+    });
+  </script>
+</head>
+
+<body>
+  <p>
+    Width: <span id="width"></span><br>
+    Height <span id="height"></span>
+  </p>
+</body>
+
+</html>

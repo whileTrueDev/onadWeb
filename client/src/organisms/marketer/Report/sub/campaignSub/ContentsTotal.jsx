@@ -198,7 +198,7 @@ export default function ContentsTotal(props) {
             <Pie
               height={140}
               data={{
-                labels: ['CPM', 'CPC'],
+                labels: ['배너광고', '클릭광고'],
                 datasets: [{
                   data: [reportData.totalCPM, reportData.totalCPC],
                   backgroundColor: [EMERALD, ORANGE]

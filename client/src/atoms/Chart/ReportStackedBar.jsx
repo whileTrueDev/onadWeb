@@ -84,6 +84,6 @@ ReportStackedBar.propTypes = {
 ReportStackedBar.defaultProps = {
   type: 'day',
   height: 70,
-  labelArray: ['CPM', 'CPC'],
+  labelArray: ['배너광고', '클릭광고'],
   dateRange: 30
 };
