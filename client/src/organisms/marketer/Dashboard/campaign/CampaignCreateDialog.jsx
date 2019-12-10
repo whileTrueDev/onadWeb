@@ -4,17 +4,17 @@ import { makeStyles } from '@material-ui/core/styles';
 import {
   Grid, Paper, Slide, Collapse
 } from '@material-ui/core';
-import LinearStepper from '../../../../../atoms/LinearStepper';
-import Dialog from '../../../../../atoms/Dialog/Dialog';
-import Button from '../../../../../atoms/CustomButtons/Button';
-import CreatePaper from '../../../CampaignCreate/CreatePaper';
-import ProrityPaper from '../../../CampaignCreate/PriorityPaper';
-import CreatorSelect from '../../../CampaignCreate/CreatorSelect';
-import CategorySelect from '../../../CampaignCreate/CategorySelect';
-import OptionPaper from '../../../CampaignCreate/OptionPaper';
-import HOST from '../../../../../utils/config';
-import axios from '../../../../../utils/axios';
-import history from '../../../../../history';
+import LinearStepper from '../../../../atoms/LinearStepper';
+import Dialog from '../../../../atoms/Dialog/Dialog';
+import Button from '../../../../atoms/CustomButtons/Button';
+import CreatePaper from '../../CampaignCreate/CreatePaper';
+import ProrityPaper from '../../CampaignCreate/PriorityPaper';
+import CreatorSelect from '../../CampaignCreate/CreatorSelect';
+import CategorySelect from '../../CampaignCreate/CategorySelect';
+import OptionPaper from '../../CampaignCreate/OptionPaper';
+import HOST from '../../../../utils/config';
+import axios from '../../../../utils/axios';
+import history from '../../../../history';
 
 const useStyles = makeStyles(_theme => ({
   paper: {

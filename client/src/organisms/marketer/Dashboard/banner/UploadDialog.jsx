@@ -6,13 +6,13 @@ import {
 } from '@material-ui/core';
 import classnames from 'classnames';
 import Check from '@material-ui/icons/Check';
-import Dialog from '../../../../../atoms/Dialog/Dialog';
+import Dialog from '../../../../atoms/Dialog/Dialog';
 import BannerDescrForm from './BannerDescForm';
 import './upload.css';
 import ImageUpload from './ImageUpload';
-import HOST from '../../../../../utils/config';
-import axios from '../../../../../utils/axios';
-import history from '../../../../../history';
+import HOST from '../../../../utils/config';
+import axios from '../../../../utils/axios';
+import history from '../../../../history';
 
 const DEFAULT_IMAGE_PATH = '/pngs/dashboard/banner_upload_manual.png';
 

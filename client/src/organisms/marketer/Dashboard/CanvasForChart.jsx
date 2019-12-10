@@ -1,9 +1,9 @@
 import React from 'react';
 import 'chartjs-plugin-colorschemes';
 import { Paper, Divider } from '@material-ui/core';
-import ChartTabs from './ChartTabs';
-import CreatorsChart from './CreatorsChart';
-import ReChartBar from '../../../../../atoms/Chart/ReChartBar';
+import ChartTabs from './chart/ChartTabs';
+import CreatorsChart from './chart/CreatorsChart';
+import ReChartBar from '../../../atoms/Chart/ReChartBar';
 
 export default function CanvasForChart(props) {
   const { creatorsData, valueChartData, broadCreatorData } = props;

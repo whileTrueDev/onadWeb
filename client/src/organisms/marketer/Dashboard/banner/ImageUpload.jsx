@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { Grid, Hidden } from '@material-ui/core';
-import CustomButton from '../../../../../atoms/CustomButtons/Button';
+import CustomButton from '../../../../atoms/CustomButtons/Button';
 
 
 const ImageUploadgStyle = theme => ({

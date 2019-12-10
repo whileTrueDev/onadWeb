@@ -1,86 +1,233 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import makeStyles from '@material-ui/core/styles/makeStyles';
-import Typography from '@material-ui/core/Typography';
-import Add from '@material-ui/icons/Add';
-import { withStyles } from '@material-ui/core';
-import Table from './sub/CampaignTable';
-import Button from '../../../atoms/CustomButtons/Button';
-import CircularProgress from '../../../atoms/Progress/CircularProgress';
-import Card from '../../../atoms/Card/Card';
-import CardHeader from '../../../atoms/Card/CardHeader';
-import CardBody from '../../../atoms/Card/CardBody';
-import dashboardStyle from '../../../assets/jss/onad/views/dashboardStyle';
+import {
+  Grid, Paper, Divider, Button,
+  Avatar, Typography, IconButton,
+  ListItem, List, Grow, FormControlLabel,
+  Switch, Snackbar, Popover
+} from '@material-ui/core';
+import CloseIcon from '@material-ui/icons/Close';
+import DeleteIcon from '@material-ui/icons/DeleteRounded';
+import Assessment from '@material-ui/icons/Assessment';
+import CampaignCreateDialog from './campaign/CampaignCreateDialog';
+import CampaignDeleteConfirmDialog from './campaign/CampaignDeleteConfirmDialog';
+import useUpdateData from '../../../utils/lib/hooks/useUpdateData';
+import useDialog from '../../../utils/lib/hooks/useDialog';
+import useDeleteData from '../../../utils/lib/hooks/useDeleteData';
+import useAnchorEl from '../../../utils/lib/hooks/useAnchorEl';
 
-const useStyles = makeStyles(() => ({
-  flex: {
-    display: 'flex', justifyContent: 'center', alignItems: 'center'
+const useStyles = makeStyles(theme => ({
+  container: {
+    padding: 16,
   },
-  clickable: {
-    color: '#00acc1',
-    cursor: 'pointer',
+  list: {
+    width: '100%',
     '&:hover': {
-      textDecoration: 'underline'
+      backgroundColor: theme.palette.grey[200]
     }
-  }
+  },
+  image: {
+    width: 96,
+    height: 96,
+    marginRight: theme.spacing(3),
+    backgroundColor: theme.palette.grey[100],
+    [theme.breakpoints.only('lg')]: {
+      width: 72,
+      height: 72
+    }
+  },
+  img: {
+    margin: 'auto',
+    display: 'block',
+    maxWidth: '100%',
+    maxHeight: '100%',
+  },
 }));
 
-function CampaignTable(props) {
-  const { classes, handleCampaignCreateMode } = props;
-  const classes1 = useStyles();
-  const { campaignData, bannerData } = props;
+export default function CampaignList(props) {
+  const classes = useStyles();
+  const { campaignData } = props;
+
+  const { handleUpdateRequest } = useUpdateData(
+    '/api/dashboard/marketer/campaign/onoff',
+    campaignData.callUrl
+  );
+  const snack = useDialog();
+  const campaignCreateDialog = useDialog();
+  const campaignMenuAnchor = useAnchorEl();
+
+  // For delete campaigns
+  const [selectedCampaign, setSelectedCampaign] = React.useState(null);
+  const campaignDeleteDialog = useDialog();
+  const { handleDelete } = useDeleteData('/api/dashboard/marketer/campaign');
 
   return (
+    <Paper style={{ minHeight: 220 }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', padding: 16 }}>
+        <Typography variant="h6">
+          캠페인 목록
+        </Typography>
+        <Button variant="contained" color="primary" onClick={campaignCreateDialog.handleOpen}>
+          캠페인 등록하기
+        </Button>
+      </div>
 
-    <Card>
-      <CardHeader color="blueGray">
-        <h4 className={classes.cardTitleWhite}>캠페인 내역</h4>
-      </CardHeader>
-      <CardBody>
-        {!bannerData.loading && !bannerData.error && bannerData.payload.length > 0 && (
-        <div>
-          <Button
-            color="info"
-            onClick={() => { handleCampaignCreateMode(); }
-            }
+      <Divider />
+      {!campaignData.loading && campaignData.payload && (
+        <List style={{ maxHeight: 380, overflowY: 'auto' }}>
+          {campaignData.payload.map((d, index) => (
+            <Grow in timeout={{ enter: d.timein }} key={d.campaignName}>
+              <div>
+
+                <ListItem
+                  className={classes.list}
+                  button
+                  onClick={(e) => {
+                    campaignMenuAnchor.handleClick(e);
+                    setSelectedCampaign(d.campaignId);
+                  }}
+                >
+                  <Grid container spacing={2} justify="space-between">
+                    <Grid item xs={4}>
+                      <Avatar variant="rounded" className={classes.image}>
+                        {/* 등록된 배너 */}
+                        <img className={classes.img} alt="campaign-logo" src={d.bannerSrc} />
+                      </Avatar>
+                      <FormControlLabel
+                        control={(
+                          <Switch
+                            color="secondary"
+                            checked={Boolean(d.onOff)}
+                            onChange={async () => {
+                              // update 요청
+                              await handleUpdateRequest({
+                                onoffState: !d.onOff,
+                                campaignId: d.campaignId
+                              });
+
+                              snack.handleOpen();
+                            }}
+                          />
+                                )}
+                        label={d.onOff ? 'ON' : 'OFF'}
+                        labelPlacement="bottom"
+                      />
+                    </Grid>
+
+                    <Grid item xs={8} container>
+                      <Grid item xs container direction="column" alignItems="flex-start" spacing={2} style={{ padding: '8px 0px 8px 8px' }}>
+                        <Typography gutterBottom variant="body2">
+                          {d.campaignName}
+                        </Typography>
+                        <Typography variant="caption" gutterBottom>
+                          {/* 0: 'CPM', 1: 'CPC + CPM' */}
+                          {d.optionType === 0 && '배너 광고'}
+                          {d.optionType === 1 && '배너 + 클릭 광고'}
+                        </Typography>
+                        <Typography variant="caption" gutterBottom>
+                          {/* 0: '크리에이터 우선', 1: '카테고리 우선', 2: '노출우선' */}
+                          {d.priorityType === 0 && '크리에이터 우선'}
+                          {d.priorityType === 1 && '카테고리 우선'}
+                          {d.priorityType === 2 && '노출 우선'}
+                        </Typography>
+                        <Typography variant="caption" color="textSecondary">
+                          {new Date(d.regiDate).toLocaleDateString()}
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                </ListItem>
+                {!(campaignData.payload.length - 1 === index) && (<Divider light />)}
+              </div>
+            </Grow>
+          ))}
+        </List>
+      )}
+      {!campaignData.loading && campaignData.payload.length === 0 && (
+        <Grid container justify="center" alignItems="center" direction="column" style={{ marginTop: 40 }}>
+          <Typography variant="body1">생성된 캠페인이 없습니다.</Typography>
+          <Typography variant="body1">새로운 캠페인을 생성해 광고를 진행하세요.</Typography>
+        </Grid>
+      )}
+
+      <Snackbar
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'left',
+        }}
+        open={snack.open}
+        autoHideDuration={3000}
+        onClose={snack.handleClose}
+        ContentProps={{
+          'aria-describedby': 'message-id',
+        }}
+        variant="success"
+        message={<Typography id="message-id">성공적으로 반영되었습니다.</Typography>}
+        action={[
+          <IconButton
+            key="close"
+            aria-label="close"
+            color="inherit"
+            className={classes.close}
+            onClick={snack.handleClose}
           >
-            <Add />
-            새 캠페인 등록
-          </Button>
-        </div>
-        )}
-        {campaignData.loading && (
-        <div className={classes1.flex} style={{ height: 200 }}><CircularProgress small /></div>
-        )}
-        {!campaignData.loading && !campaignData.error && campaignData.payload && (
-        <Table dataSet={campaignData.payload.data} />
-        )}
+            <CloseIcon />
+          </IconButton>,
+        ]}
+      />
 
-        {!campaignData.loading && campaignData.error && !campaignData.payload && (
-        <div style={{ marginBottom: 55, marginTop: 55 }}>
-          <div className={classes1.flex}>
-            <Typography>등록된 캠페인이 없습니다.</Typography>
-          </div>
-          <div className={classes1.flex}>
-            <Typography
-              className={classes1.clickable}
-              onClick={handleCampaignCreateMode}
-            >
-              새 캠페인 등록하기
-            </Typography>
-            <Typography>&emsp;를 클릭하여 새로운 캠페인을 시작하세요.</Typography>
-          </div>
-        </div>
-        )}
-      </CardBody>
-    </Card>
+      <CampaignCreateDialog
+        open={campaignCreateDialog.open}
+        handleClose={campaignCreateDialog.handleClose}
+      />
 
+      <CampaignDeleteConfirmDialog
+        open={campaignDeleteDialog.open}
+        handleClose={campaignDeleteDialog.handleClose}
+        handleDelete={handleDelete}
+      />
+
+      <Popover
+        id="campaign-menu"
+        open={Boolean(campaignMenuAnchor.anchorEl)}
+        anchorEl={campaignMenuAnchor.anchorEl}
+        onClose={campaignMenuAnchor.handleClose}
+        anchorOrigin={{
+          vertical: 'center',
+          horizontal: 'center',
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'left',
+        }}
+      >
+        <List>
+          <ListItem
+            button
+            onClick={() => {
+              // Open Analysis page
+              console.log('보고서 보기', selectedCampaign);
+              // Close the menu popover
+              campaignMenuAnchor.handleClose();
+            }}
+          >
+            <Assessment />
+            <Typography>분석</Typography>
+          </ListItem>
+          <ListItem
+            button
+            onClick={() => {
+              // Open delete confirm dialog
+              campaignDeleteDialog.handleOpen(selectedCampaign);
+              // Close the menu popover
+              campaignMenuAnchor.handleClose();
+            }}
+          >
+            <DeleteIcon color="error" />
+            <Typography color="error">삭제</Typography>
+          </ListItem>
+        </List>
+      </Popover>
+    </Paper>
   );
 }
-
-CampaignTable.propTypes = {
-  campaignData: PropTypes.object,
-  handleCampaignCreateMode: PropTypes.func.isRequired
-};
-
-export default withStyles(dashboardStyle)(CampaignTable);

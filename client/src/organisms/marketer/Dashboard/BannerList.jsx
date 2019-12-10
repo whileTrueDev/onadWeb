@@ -7,8 +7,8 @@ import MobileStepper from '@material-ui/core/MobileStepper';
 import Button from '@material-ui/core/Button';
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
-import useDialog from '../../../../../utils/lib/hooks/useDialog';
-import UploadDialog from './UploadDialog';
+import useDialog from '../../../utils/lib/hooks/useDialog';
+import UploadDialog from './banner/UploadDialog';
 
 
 const useStyles = makeStyles(theme => ({

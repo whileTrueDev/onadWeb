@@ -1,10 +1,13 @@
 import React from 'react';
 import {
   Paper, Grid, Typography, Divider,
-  List, ListItem, ListItemText
+  // List, ListItem, ListItemText
 } from '@material-ui/core';
 
-const data = ['123123', 'sadfasdf', 'asdfasdfsa', 'some information', 'some information2', 'some information3'];
+// const data = [
+//   '123123', 'sadfasdf', 'asdfasdfsa',
+//   'some information', 'some information2', 'some information3'
+// ];
 
 export default function issueTable() {
   return (

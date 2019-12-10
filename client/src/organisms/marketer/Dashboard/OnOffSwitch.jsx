@@ -2,7 +2,7 @@ import React from 'react';
 import {
   Paper, Typography, FormControlLabel, Switch
 } from '@material-ui/core';
-import useUpdateData from '../../../../../utils/lib/hooks/useUpdateData';
+import useUpdateData from '../../../utils/lib/hooks/useUpdateData';
 
 export default function OnOffSwitch(props) {
   const { onOffData } = props;

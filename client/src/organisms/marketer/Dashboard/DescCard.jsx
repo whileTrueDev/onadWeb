@@ -13,9 +13,7 @@ const useStyles = makeStyles(() => ({
 
 export default function DescCard(props) {
   const classes = useStyles();
-  const {
-    data, ...rest
-  } = props;
+  const { data, ...rest } = props;
   return (
     <Paper {...rest}>
 

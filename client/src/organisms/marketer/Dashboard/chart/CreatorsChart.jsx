@@ -5,7 +5,7 @@ import {
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import Skeleton from '@material-ui/lab/Skeleton';
 import Error from '@material-ui/icons/Error';
-import ReChartPie from '../../../../../atoms/Chart/ReChartPie';
+import ReChartPie from '../../../../atoms/Chart/ReChartPie';
 
 const useStyles = makeStyles(theme => ({
   chip: {

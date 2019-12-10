@@ -38,36 +38,26 @@ const useStyles = makeStyles(theme => ({
 
 const MarketerReportCampaign = (props) => {
   const classes = useStyles();
-  const { match } = props;
+  const { campaignId } = props;
   const period = useEventTargetValue('norange');
 
   const reportData = useFetchData(
-    '/api/dashboard/marketer/report', {
-      campaignId: match.params.campaignId,
-    }
+    '/api/dashboard/marketer/report', { campaignId }
   );
 
   const valueChartData = useFetchData(
-    '/api/dashboard/marketer/report/totalSpendChart', {
-      campaignId: match.params.campaignId,
-    }
+    '/api/dashboard/marketer/report/totalSpendChart', { campaignId }
   );
   const ipToGeoData = useFetchData(
-    '/api/dashboard/marketer/geo/campaign', {
-      campaignId: match.params.campaignId
-    }
+    '/api/dashboard/marketer/geo/campaign', { campaignId }
   );
 
   const creatorsData = useFetchData(
-    '/api/dashboard/marketer/report/creators', {
-      campaignId: match.params.campaignId,
-    }
+    '/api/dashboard/marketer/report/creators', { campaignId }
   );
 
   const clickData = useFetchData(
-    '/api/dashboard/marketer/report/clicks', {
-      campaignId: match.params.campaignId
-    }
+    '/api/dashboard/marketer/report/clicks', { campaignId }
   );
 
   const [tabValue, setTabValue] = React.useState(0);
