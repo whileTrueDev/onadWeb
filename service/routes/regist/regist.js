@@ -163,15 +163,15 @@ router.post('/accountNum', (req, res, next) => {
     query;
   if (userType === 'creator') {
     userId = req.session.passport.user.creatorId;
-    query = 'UPDATE creatorInfo SET creatorAccountNumber = ? WHERE creatorId = ?';
+    query = 'UPDATE creatorInfo SET creatorAccountNumber = ?, realName = ?  WHERE creatorId = ?';
   } else {
     userId = req.session.passport.user.userid;
-    query = 'UPDATE marketerInfo SET marketerAccountNumber = ? WHERE marketerId = ?';
+    query = 'UPDATE marketerInfo SET marketerAccountNumber = ?, accountHolder = ? WHERE marketerId = ?';
   }
 
-  const { bankName, bankAccount } = req.body;
+  const { bankName, bankRealName, bankAccount } = req.body;
   const AccountNumber = `${bankName}_${bankAccount}`;
-  doQuery(query, [AccountNumber, userId])
+  doQuery(query, [AccountNumber, bankRealName, userId])
     .then((data) => {
       res.send(data);
     })

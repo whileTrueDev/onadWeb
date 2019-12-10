@@ -1,12 +1,13 @@
-import React, { useState, useEffect, useCallback, useReducer } from 'react';
+import React, { useState, useEffect, useCallback, useReducer, useRef} from 'react';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import './MainCarousel.scss';
 import HOST from '../../../../../utils/config';
 import axios from '../../../../../utils/axios';
+import $ from 'jquery';
 
 const useStyles = makeStyles(theme => ({
   container: {
-    marginTop: theme.spacing(12),
+    marginTop: theme.spacing(8),
     [theme.breakpoints.down('sm')]: {
       display: 'none'
     },
@@ -65,32 +66,26 @@ const initialState = {
 }
 
 const MainCarousel = () => {
+
   const classes = useStyles();
   const [creator, setCreator] = useState({})
   const [loading, setLoading] = useState(false)
   const [title, setTitle] = useState(false)
   const [autoState, autoDispatch ] = useReducer(autoReducer, initialState )
-  const {auto0, auto1, auto2, auto3, auto4, auto5, auto6, auto7, auto8, auto9} = autoState 
-  
+  const {auto0, auto1, auto2, auto3, auto4, auto5, auto6, auto7, auto8, auto9} = autoState
+  const tagcarousel = useRef()
+  const tagfigure = useRef()
+  const [currVideo, setCurrVideo] = useState(800);
+
   const readyCreatorData = useCallback(() => {
     axios.get(`${HOST}/api/streams`).then((res) => {
       if (res.data) {
         if (res.data.length === 10) {
-          setLoading(true);
           setCreator(res.data);
-
+          setLoading(true);       
           setTimeout(function() {
-            getHTMLElement();
             setTitle(true);
           }, 2000)
-
-          setTimeout(function() {
-            document.getElementsByClassName('after-fetch')[0].style.visibility = 'visible'
-            document.getElementsByClassName('before-carousel')[0].classList.add('stayEndCaoursel')
-            document.getElementsByClassName('after-fetch')[0].classList.add('stayEndTitle')
-            document.getElementsByClassName('before-carousel')[0].style.animation = `none !important`
-            document.getElementsByClassName('after-fetch')[0].style.animation = `none !important`
-          }, 3500)
         }
       } else {
         alert('OnAD 홈페이지 방문을 환영합니다!')
@@ -98,29 +93,28 @@ const MainCarousel = () => {
     })
   }, [])
 
-  // 3D carousel 구현
-  function getHTMLElement() {
-    let	carousels = document.querySelector('.carousel');
-    carousel(carousels);
+// 3D carousel 구현
+  if (loading) {
+    $(document).ready(function() {
+      carousel();
+    })
   }
-    
-  function carousel(root) {
 
-    let
-      figure = root.querySelector('figure'),
+  let n = 10,
+      theta = 2 * Math.PI / 10
+  
+  function carousel() {
+
+    let 
+      figure = tagfigure.current,
       videos = figure.children,
-      n = videos.length,
-      gap = root.dataset.gap || 0,
-      theta =  2 * Math.PI / n,
-      currVideo = 800;
-      
-    setupCarousel(n, parseFloat(getComputedStyle(videos[1]).width));
+      gap = tagcarousel.current.dataset.gap || 0
+
+    setupCarousel(n, parseFloat(getComputedStyle(videos[0]).width));
     
     window.addEventListener('resize', () => { 
-      setupCarousel(n, parseFloat(getComputedStyle(videos[1]).width)) 
+      setupCarousel(n, parseFloat(getComputedStyle(videos[0]).width)) 
     });
-
-    setupNavigation();
 
     function setupCarousel(n, s) {
       let	
@@ -131,105 +125,102 @@ const MainCarousel = () => {
 
       for (let i = 0; i < n; i++)
         videos[i].style.padding = `${gap}px`;
-      for (let i = 0; i < n; i++) {
+      for (let i = 1; i < n; i++) {
         videos[i].style.transformOrigin = `50% 50% ${- apothem}px`;
         videos[i].style.transform = `rotateY(${i * theta}rad)`;
       }
       
       for (let i = 0; i < n; i++)
       videos[i].style.backfaceVisibility = 'hidden';
-    
-        
+
       rotateCarousel(currVideo);
     }
+  }
 
-    function setupNavigation() {
-      document.getElementById('prev').addEventListener('click', onClickPrev, true);
-      document.getElementById('next').addEventListener('click', onClickNext, true);
-      
-      function onClickPrev() {
-        currVideo--;
-        rotateCarousel(currVideo);
-        switch ((Math.abs(currVideo)%n).toString()) {
-          case '0' : {
-            return autoDispatch({ key: 'zero'})
-          }
-          case '1' : {
-            return autoDispatch({ key: 'one'})
-          }
-          case '2' : {
-            return autoDispatch({ key: 'two'})
-          }
-          case '3' : {
-            return autoDispatch({ key: 'three'})
-          }
-          case '4' : {
-            return autoDispatch({ key: 'four'})
-          }
-          case '5' : {
-            return autoDispatch({ key: 'five'})
-          }
-          case '6' : {
-            return autoDispatch({ key: 'six'})
-          }
-          case '7' : {
-            return autoDispatch({ key: 'seven'})
-          }
-          case '8' : {
-            return autoDispatch({ key: 'eight'})
-          }
-          case '9' : {
-            return autoDispatch({ key: 'nine'})
-          }
-          default: {
-            return autoDispatch({ key: 'zero'})
-          }
-        }
+  function rotateCarousel(videoIndex) {
+    let figure = tagfigure.current
+    figure.style.transform = `rotateY(${videoIndex * - theta}rad)`;
+  }
+
+  function onClickPrev() {
+    setCurrVideo(currVideo-1);
+    rotateCarousel(currVideo-1);
+
+    switch ((Math.abs(currVideo-1)%n).toString()) {
+      case '0' : {
+        return autoDispatch({ key: 'zero'})
       }
-
-      function onClickNext() {
-        currVideo++;
-        rotateCarousel(currVideo);
-        switch ((Math.abs(currVideo)%n).toString()) {
-          case '0' : {
-            return autoDispatch({ key: 'zero'})
-          }
-          case '1' : {
-            return autoDispatch({ key: 'one'})
-          }
-          case '2' : {
-            return autoDispatch({ key: 'two'})
-          }
-          case '3' : {
-            return autoDispatch({ key: 'three'})
-          }
-          case '4' : {
-            return autoDispatch({ key: 'four'})
-          }
-          case '5' : {
-            return autoDispatch({ key: 'five'})
-          }
-          case '6' : {
-            return autoDispatch({ key: 'six'})
-          }
-          case '7' : {
-            return autoDispatch({ key: 'seven'})
-          }
-          case '8' : {
-            return autoDispatch({ key: 'eight'})
-          }
-          case '9' : {
-            return autoDispatch({ key: 'nine'})
-          }
-          default: {
-            return autoDispatch({ key: 'zero'})
-          }
-        }
-      } 
+      case '1' : {
+        return autoDispatch({ key: 'one'})
+      }
+      case '2' : {
+        return autoDispatch({ key: 'two'})
+      }
+      case '3' : {
+        return autoDispatch({ key: 'three'})
+      }
+      case '4' : {
+        return autoDispatch({ key: 'four'})
+      }
+      case '5' : {
+        return autoDispatch({ key: 'five'})
+      }
+      case '6' : {
+        return autoDispatch({ key: 'six'})
+      }
+      case '7' : {
+        return autoDispatch({ key: 'seven'})
+      }
+      case '8' : {
+        return autoDispatch({ key: 'eight'})
+      }
+      case '9' : {
+        return autoDispatch({ key: 'nine'})
+      }
+      default: {
+        return autoDispatch({ key: 'zero'})
+      }
     }
+  }
 
-    function rotateCarousel(videoIndex) {
-      figure.style.transform = `rotateY(${videoIndex * -theta}rad)`;
+  function onClickNext() {
+    setCurrVideo(currVideo+1);
+    rotateCarousel(currVideo+1);
+
+    switch ((Math.abs(currVideo+1)%n).toString()) {
+      case '0' : {
+        return autoDispatch({ key: 'zero'})
+      }
+      case '1' : {
+        return autoDispatch({ key: 'one'})
+      }
+      case '2' : {
+        return autoDispatch({ key: 'two'})
+      }
+      case '3' : {
+        return autoDispatch({ key: 'three'})
+      }
+      case '4' : {
+        return autoDispatch({ key: 'four'})
+      }
+      case '5' : {
+        return autoDispatch({ key: 'five'})
+      }
+      case '6' : {
+        return autoDispatch({ key: 'six'})
+      }
+      case '7' : {
+        return autoDispatch({ key: 'seven'})
+      }
+      case '8' : {
+        return autoDispatch({ key: 'eight'})
+      }
+      case '9' : {
+        return autoDispatch({ key: 'nine'})
+      }
+      default: {
+        return autoDispatch({ key: 'zero'})
+      }
     }
   }
 
@@ -241,18 +232,18 @@ const MainCarousel = () => {
     <section className={classes.container}>
     {loading? (
         <>
-          <div className="before-carousel">
+          <div className="before-carousel" >
             <div className="after-fetch" >
-            <div className="carousel" data-gap="20">
+            <div ref={tagcarousel} className="carousel" data-gap="20">
               <nav>
-                <div className="prev" id="prev">
+                <div className="prev" id="prev" onClick={onClickPrev}>
                   <svg width="100%" height="100%" viewBox="0 0 20 20" x="0px" y="0px">
                     <path d="M13.5 14.5L9 10l4.5-4.5L12 4l-6 6 6 6 1.5-1.5z"></path>
                   </svg>
                 </div>
               </nav>
               
-              <figure>
+              <figure ref={tagfigure}>
                   <iframe
                     title="hero"
                     src={`https://player.twitch.tv/?channel=${creator[0]}&autoplay=${auto0}`}
@@ -345,7 +336,7 @@ const MainCarousel = () => {
                   />
                 </figure>
                 <nav>
-                  <div className="next" id="next">
+                  <div className="next" id="next" onClick={onClickNext}>
                       <svg width="100%" height="100%" viewBox="0 0 20 20" x="0px" y="0px">
                         <path d="M6.5 5.5L11 10l-4.5 4.5L8 16l6-6-6-6-1.5 1.5z"></path>
                       </svg>
@@ -355,13 +346,17 @@ const MainCarousel = () => {
             </div>
             </div>
           </div>
-          <div className="titleWrapper">
+          {/* <div className="titleWrapper">
           {title && <h1 className="nowCreatorTitle">OnAD와 함께하는 크리에이터입니다</h1>}
-          </div>
+          </div> */}
         </>
         ) 
       : (null)
       }
+        <div className="titleWrapper">
+          {title &&
+          <h2 className="nowCreatorTitle">OnAD와 함께하는 크리에이터입니다</h2>}
+        </div>
       </section>
   );
 };
