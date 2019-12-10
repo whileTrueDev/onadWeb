@@ -97,7 +97,7 @@ const BannerDescFrom = (props) => {
           <InputLabel shrink htmlFor="company" className={classes.label}>URL</InputLabel>
           <Input
             required
-            defaultValue="http://"
+            defaultValue="https://"
             type="url"
             id="url"
             className={classes.input}
