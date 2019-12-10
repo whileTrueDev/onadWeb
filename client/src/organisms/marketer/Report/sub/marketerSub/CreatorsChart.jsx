@@ -22,6 +22,8 @@ export default function CustomPieChart(props) {
     setActiveIndex(index);
   };
 
+  console.log(broadCreatorData);
+
   return (
     <Grid container>
 
@@ -71,19 +73,14 @@ export default function CustomPieChart(props) {
         )}
 
         {!creatorsData.loading && !broadCreatorData.loading
-        && creatorsData.payload && broadCreatorData.payload.length > 0 && (
+        && creatorsData.payload && broadCreatorData.payload && (
           <Grid container>
             <Grid item xs={12}>
               <Typography variant="caption">* 아이콘 클릭시 해당 크리에이터의 채널로 이동됩니다.</Typography>
             </Grid>
             <Grid item xs={12}>
               <Typography variant="caption">
-                * 아이콘의 점 표시는 현재 배너 송출중 상태를 나타냅니다
-              </Typography>
-            </Grid>
-            <Grid item xs={12}>
-              <Typography variant="caption">
-                * 갱신에는 새로고침이 필요하며, 오차가 있을수 있습니다.
+                * 주황색 점 표시는 현재 배너 송출중 상태를 나타냅니다 (오차가 있을수 있습니다.)
               </Typography>
             </Grid>
               {creatorsData.payload.slice(0, 30).map((d, index) => (
