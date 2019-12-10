@@ -31,7 +31,7 @@ export default function DescCard(props) {
         <Grid container justify="center" alignItems="center" style={{ padding: 24 }}>
 
           <Grid item>
-            <Typography variant="h4" color="primary" align="center">
+            <Typography variant="h4" color="secondary" align="center">
               <Countup duration={2} end={data.value ? data.value : 0} separator="," />
             </Typography>
 

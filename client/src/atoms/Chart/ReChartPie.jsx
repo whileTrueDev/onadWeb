@@ -8,7 +8,7 @@ const renderActiveShape = (props) => {
   const RADIAN = Math.PI / 180;
   const {
     cx, cy, midAngle, innerRadius, outerRadius, startAngle, endAngle,
-    fill, percent, value, name
+    fill, percent, value, name, TooltipLabelText
   } = props;
   const sin = Math.sin(-RADIAN * midAngle);
   const cos = Math.cos(-RADIAN * midAngle);
@@ -43,7 +43,7 @@ const renderActiveShape = (props) => {
       />
       <path d={`M${sx},${sy}L${mx},${my}L${ex},${ey}`} stroke={fill} fill="none" />
       <circle cx={ex} cy={ey} r={2} fill={fill} stroke="none" />
-      <text x={ex + (cos >= 0 ? 1 : -1) * 12} y={ey} textAnchor={textAnchor} fill="#333">{`${value}`}</text>
+      <text x={ex + (cos >= 0 ? 1 : -1) * 12} y={ey} textAnchor={textAnchor} fill="#333">{`${value} ${TooltipLabelText}`}</text>
       <text x={ex + (cos >= 0 ? 1 : -1) * 12} y={ey} dy={18} textAnchor={textAnchor} fill="#999">
         {`(${(percent * 100).toFixed(2)}%)`}
       </text>
@@ -53,7 +53,7 @@ const renderActiveShape = (props) => {
 
 export default function CustomPieChart(props) {
   const {
-    data, height, dataKey, nameKey, activeIndex, onPieEnter
+    data, height, dataKey, nameKey, activeIndex, onPieEnter, TooltipLabelText
   } = props;
 
   const [defaultActiveIndex, setActiveIndex] = React.useState(0);
@@ -68,7 +68,8 @@ export default function CustomPieChart(props) {
           <Pie
             activeIndex={activeIndex || defaultActiveIndex}
             onMouseEnter={onPieEnter || defaultOnPieEnter}
-            activeShape={renderActiveShape}
+            activeShape={renderActiveShape
+            }
             data={data}
             cx="50%"
             cy="50%"
@@ -80,7 +81,13 @@ export default function CustomPieChart(props) {
             animationEnd={1000}
           >
             {data.map(
-              (entry, index) => <Cell key={entry} fill={COLORS.pie[index % COLORS.pie.length]} />
+              (entry, index) => (
+                <Cell
+                  key={entry}
+                  fill={COLORS.pie[index % COLORS.pie.length]}
+                  TooltipLabelText={TooltipLabelText || ''}
+                />
+              )
             )}
           </Pie>
         </PieChart>

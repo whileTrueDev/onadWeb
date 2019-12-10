@@ -33,8 +33,8 @@ export default function issueTable() {
         </List> */}
 
         <div style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
-          <Typography variant="h6" align="center" justify="center">
-          [활동 내역 보기] 준비중입니다.
+          <Typography variant="body1" align="center" justify="center">
+            {'<활동 내역 보기 탭> 준비중입니다.'}
           </Typography>
         </div>
       </Grid>

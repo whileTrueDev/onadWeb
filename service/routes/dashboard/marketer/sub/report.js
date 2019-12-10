@@ -324,4 +324,28 @@ router.get('/normal', (req, res) => {
     console.log('err in /report/new', err);
   });
 });
+
+router.get('/broadcast/creator', (req, res) => {
+  const marketerId = req._passport.session.user.userid;
+  const tenMinuteAgoTime = new Date();
+  tenMinuteAgoTime.setMinutes(tenMinuteAgoTime.getMinutes() - 10);
+  const query = `SELECT streamerName, creatorTwitchId, viewer FROM twitchStreamDetail
+    JOIN creatorInfo
+    ON creatorInfo.creatorName = twitchStreamDetail.streamerName
+    JOIN campaignTimestamp
+    ON campaignTimestamp.creatorId = creatorInfo.creatorId
+    WHERE TIME > ? 
+    AND creatorInfo.creatorContractionAgreement = 1
+    AND campaignTimestamp.date > ?
+    AND substring_index(campaignTimestamp.campaignId, "_", 1) = ?`;
+  const queryArray = [tenMinuteAgoTime, tenMinuteAgoTime, marketerId];
+  doQuery(query, queryArray).then((row) => {
+    if (!row.error && row.result) {
+      const result = row.result.map(d => d.streamerName);
+      res.send(result);
+    }
+  }).catch((err) => {
+    console.log('err in /report/broadcast/creator', err);
+  });
+});
 module.exports = router;

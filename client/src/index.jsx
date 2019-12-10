@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Router, Switch, Route } from 'react-router-dom';
+import { MuiThemeProvider as ThemeProvider } from '@material-ui/core/styles';
 // page
 import Main from './pages/main/Main';
 import Introduction from './pages/main/Introduction';
@@ -14,6 +15,7 @@ import NotFound from './pages/others/NotFound';
 import Notice from './pages/others/Notice';
 import * as serviceWorker from './utils/serviceWorker';
 import history from './history';
+import theme from './theme';
 
 dotenv.config();
 
@@ -25,9 +27,11 @@ const developRouter = (
       <Route exact path="/introduction" component={Introduction} />
       <Route exact path="/notice" component={Notice} />
       <Route path="/notice/:code" component={Notice} />
-      <Route exact path="/dashboard/creator/door" component={CreatorDashboardDoor} />
-      <Route path="/dashboard/creator" component={CreatorDashboard} />
-      <Route path="/dashboard/marketer" component={MarketerDashboard} />
+      <ThemeProvider theme={theme}>
+        <Route exact path="/dashboard/creator/door" component={CreatorDashboardDoor} />
+        <Route path="/dashboard/creator" component={CreatorDashboard} />
+        <Route path="/dashboard/marketer" component={MarketerDashboard} />
+      </ThemeProvider>
       {/* not found page */}
       <Route component={NotFound} />
     </Switch>

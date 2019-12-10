@@ -18,7 +18,7 @@ export default function OnOffSwitch(props) {
         <FormControlLabel
           control={(
             <Switch
-              color="primary"
+              color="secondary"
               checked={onOffData.payload.onOff}
               onChange={() => handleUpdateRequest({ contraction: !onOffData.payload.onOff })
               }

@@ -30,6 +30,7 @@ export default function MarketerReport() {
   const creatorsData = useFetchData('/api/dashboard/marketer/report/creators');
   const bannerData = useFetchData('/api/dashboard/marketer/banner/all');
   const valueChartData = useFetchData('/api/dashboard/marketer/campaign/chart');
+  const broadCreatorData = useFetchData('/api/dashboard/marketer/report/broadcast/creator');
 
   return (
     <div className={classes.root}>
@@ -102,6 +103,7 @@ export default function MarketerReport() {
                   <CanvasForChart
                     valueChartData={valueChartData}
                     creatorsData={creatorsData}
+                    broadCreatorData={broadCreatorData}
                   />
                 </Grid>
                 <Grid item xs={12}>

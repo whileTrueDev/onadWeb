@@ -95,7 +95,7 @@ export default function CampaignList(props) {
                       <FormControlLabel
                         control={(
                           <Switch
-                            color="primary"
+                            color="secondary"
                             checked={Boolean(d.onOff)}
                             onChange={async () => {
                               // update 요청
