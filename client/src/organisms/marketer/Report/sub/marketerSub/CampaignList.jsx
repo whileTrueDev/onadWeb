@@ -210,8 +210,8 @@ export default function CampaignList(props) {
               campaignMenuAnchor.handleClose();
             }}
           >
-            <DeleteIcon />
-            <Typography>삭제</Typography>
+            <DeleteIcon color="error" />
+            <Typography color="error">삭제</Typography>
           </ListItem>
         </List>
       </Popover>

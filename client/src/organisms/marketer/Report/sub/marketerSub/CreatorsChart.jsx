@@ -4,6 +4,7 @@ import {
 } from '@material-ui/core';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import Skeleton from '@material-ui/lab/Skeleton';
+import Error from '@material-ui/icons/Error';
 import ReChartPie from '../../../../../atoms/Chart/ReChartPie';
 
 const useStyles = makeStyles(theme => ({
@@ -23,6 +24,32 @@ export default function CustomPieChart(props) {
 
   return (
     <Grid container>
+
+      {!broadCreatorData.loading && !creatorsData.loading
+         && broadCreatorData.payload.length === 0 && creatorsData.payload.length === 0 && (
+         <Grid
+           item
+           xs={12}
+           style={{
+             height: 350, display: 'flex', justifyContent: 'center', alignItems: 'center'
+           }}
+         >
+           <div style={{ position: 'absolute' }}>
+             <Error style={{ fontSize: 128, opacity: 0.6, zIndex: 0 }} color="secondary" />
+           </div>
+           <div>
+             <Grid container direction="column" justify="center" alignItems="center">
+               <Typography style={{ zIndex: 1 }}>
+            아직 광고를 송출한 크리에이터가 없어요.
+               </Typography>
+               <Typography style={{ zIndex: 1 }}>
+            배너와 캠페인을 등록해 광고를 집행해보세요.
+               </Typography>
+             </Grid>
+           </div>
+         </Grid>
+      )}
+
       <Grid item xs={12} lg={6}>
 
         {!creatorsData.loading && creatorsData.payload.length > 0 && (
@@ -42,15 +69,21 @@ export default function CustomPieChart(props) {
         {(creatorsData.loading || broadCreatorData.loading) && (
           <Skeleton height="100%" />
         )}
+
         {!creatorsData.loading && !broadCreatorData.loading
-        && creatorsData.payload && (
+        && creatorsData.payload && broadCreatorData.payload.length > 0 && (
           <Grid container>
             <Grid item xs={12}>
               <Typography variant="caption">* 아이콘 클릭시 해당 크리에이터의 채널로 이동됩니다.</Typography>
             </Grid>
             <Grid item xs={12}>
               <Typography variant="caption">
-                * 아이콘의 점 표시는 현재 배너 송출중 상태를 나타냅니다.(갱신에는 새로고침이 필요하며, 오차가 있을수 있습니다.)
+                * 아이콘의 점 표시는 현재 배너 송출중 상태를 나타냅니다
+              </Typography>
+            </Grid>
+            <Grid item xs={12}>
+              <Typography variant="caption">
+                * 갱신에는 새로고침이 필요하며, 오차가 있을수 있습니다.
               </Typography>
             </Grid>
               {creatorsData.payload.slice(0, 30).map((d, index) => (

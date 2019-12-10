@@ -122,7 +122,6 @@ const UploadDialog = (props) => {
       open={open}
       maxWidth="sm"
       fullWidth
-      disableBackdropClick
       title="배너 등록"
     >
       <Stepper activeStep={activeStep} orientation="vertical" style={{ padding: 0 }}>

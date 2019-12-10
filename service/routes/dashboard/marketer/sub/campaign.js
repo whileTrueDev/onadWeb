@@ -119,8 +119,7 @@ router.get('/chart', (req, res) => {
   doQuery(query, queryArray)
     .then((row) => {
       if (!row.error && row.result) {
-        const result = row.result.map(o => ({ ...o, date: customToLocaleString(o.date) }));
-        res.send(result);
+        res.send(row.result);
       } else {
         res.send([false]);
       }
