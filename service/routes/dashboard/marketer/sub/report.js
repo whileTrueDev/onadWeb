@@ -154,7 +154,7 @@ router.get('/totalSpendChart', (req, res) => {
     sum(cashFromMarketer) as cash, type
   FROM campaignLog AS cl
   WHERE campaignId = ?
-    AND type="cpm"
+    AND type="CPM"
   GROUP BY DATE_FORMAT(cl.date, "%y년 %m월 %d일"), type
   ORDER BY cl.date ASC
   `;
@@ -165,7 +165,7 @@ router.get('/totalSpendChart', (req, res) => {
     sum(cashFromMarketer) as cash, type
   FROM campaignLog AS cl
   WHERE campaignId = ?
-    AND type="cpc"
+    AND type="CPC"
   GROUP BY DATE_FORMAT(cl.date, "%y년 %m월 %d일"), type
   ORDER BY cl.date ASC
   `;
@@ -302,6 +302,7 @@ router.get('/new', (req, res) => {
   });
 });
 
+// 대시보드 보유 캐시량, 총 소진 비용
 router.get('/normal', (req, res) => {
   const marketerId = req._passport.session.user.userid;
   const query = `SELECT cashAmount, spendAll FROM
@@ -321,10 +322,11 @@ router.get('/normal', (req, res) => {
       res.send(row.result[0]);
     }
   }).catch((err) => {
-    console.log('err in /report/new', err);
+    console.log('err in /report/normal', err);
   });
 });
 
+// 현재 특정 캠페인을 송출중인 크리에이터 목록
 router.get('/broadcast/creator', (req, res) => {
   const marketerId = req._passport.session.user.userid;
   const tenMinuteAgoTime = new Date();
@@ -346,6 +348,25 @@ router.get('/broadcast/creator', (req, res) => {
     }
   }).catch((err) => {
     console.log('err in /report/broadcast/creator', err);
+  });
+});
+
+// 특정 캠페인의 시작 이후, 채팅 내 언급 빈도
+router.get('/commentonchat', (req, res) => {
+  const { campaignId, keyword } = req.query;
+
+  const query = `
+  SELECT time, text, subscriber, manager, badges FROM twitchChat
+  JOIN campaign ON campaignId = campaignId
+  WHERE time > campaign.regiDate
+  AND text like "%?%"`;
+
+  const queryArray = [campaignId, keyword];
+
+  doQuery(query, queryArray).then((row) => {
+
+  }).catch((err) => {
+    console.log('err in /report/commentonchat', err);
   });
 });
 module.exports = router;

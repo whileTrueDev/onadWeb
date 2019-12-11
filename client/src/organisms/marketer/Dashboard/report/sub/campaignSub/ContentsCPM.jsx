@@ -7,8 +7,8 @@ import Assignment from '@material-ui/icons/Assignment';
 import DonutSmall from '@material-ui/icons/DonutSmall';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import Typography from '@material-ui/core/Typography';
-import Card from '../../../../../atoms/Card/Card';
-import Pie from '../../../../../atoms/Chart/PieChart';
+import Card from '../../../../../../atoms/Card/Card';
+import Pie from '../../../../../../atoms/Chart/PieChart';
 import CreatorInfo from './CreatorInfo';
 
 const EMERALD = '#00acc1';
@@ -37,7 +37,7 @@ const useStyles = makeStyles(() => ({
 
 const makeContents = reportData => [
   {
-    title: 'CPM 총 비용',
+    title: '배너광고 총 비용',
     value: Number(reportData.totalCPM),
     unit: '원'
   },

@@ -4,18 +4,19 @@ import {
   Grid, Paper, Divider, Button,
   Avatar, Typography, IconButton,
   ListItem, List, Grow, FormControlLabel,
-  Switch, Snackbar, Popover
+  Switch, Snackbar
 } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
-import DeleteIcon from '@material-ui/icons/DeleteRounded';
-import Assessment from '@material-ui/icons/Assessment';
 import CampaignCreateDialog from './campaign/CampaignCreateDialog';
 import CampaignDeleteConfirmDialog from './campaign/CampaignDeleteConfirmDialog';
 import useUpdateData from '../../../utils/lib/hooks/useUpdateData';
 import useDialog from '../../../utils/lib/hooks/useDialog';
 import useDeleteData from '../../../utils/lib/hooks/useDeleteData';
 import useAnchorEl from '../../../utils/lib/hooks/useAnchorEl';
+import CampaignPopover from './campaign/CampaignPopover';
+import CampaignAnalysisDialog from './report/CampaignReportDialog';
 
+const SLIDE_TIMEOUT = 500;
 const useStyles = makeStyles(theme => ({
   container: {
     padding: 16,
@@ -48,18 +49,30 @@ export default function CampaignList(props) {
   const classes = useStyles();
   const { campaignData } = props;
 
+  // For campaign On/ Off
   const { handleUpdateRequest } = useUpdateData(
     '/api/dashboard/marketer/campaign/onoff',
     campaignData.callUrl
   );
+
+  // For reaction to on/off completed
   const snack = useDialog();
+
+  // To open campaign create dialog
   const campaignCreateDialog = useDialog();
+
+  // To open campaign Menu
   const campaignMenuAnchor = useAnchorEl();
 
-  // For delete campaigns
+  // 선택된 캠페인이 무엇인지
   const [selectedCampaign, setSelectedCampaign] = React.useState(null);
+
+  // To delete campaigns
   const campaignDeleteDialog = useDialog();
   const { handleDelete } = useDeleteData('/api/dashboard/marketer/campaign');
+
+  // For Campaign analysis
+  const CampaignReportDialog = useDialog();
 
   return (
     <Paper style={{ minHeight: 220 }}>
@@ -78,13 +91,12 @@ export default function CampaignList(props) {
           {campaignData.payload.map((d, index) => (
             <Grow in timeout={{ enter: d.timein }} key={d.campaignName}>
               <div>
-
                 <ListItem
                   className={classes.list}
                   button
                   onClick={(e) => {
                     campaignMenuAnchor.handleClick(e);
-                    setSelectedCampaign(d.campaignId);
+                    setSelectedCampaign(d);
                   }}
                 >
                   <Grid container spacing={2} justify="space-between">
@@ -156,7 +168,7 @@ export default function CampaignList(props) {
           horizontal: 'left',
         }}
         open={snack.open}
-        autoHideDuration={3000}
+        autoHideDuration={2000}
         onClose={snack.handleClose}
         ContentProps={{
           'aria-describedby': 'message-id',
@@ -176,58 +188,46 @@ export default function CampaignList(props) {
         ]}
       />
 
+      {/* 캠페인 클릭시 메뉴 팝오버 */}
+      <CampaignPopover
+        anchorEl={campaignMenuAnchor.anchorEl}
+        handleClose={campaignMenuAnchor.handleClose}
+        selectedCampaign={selectedCampaign}
+        handleDeleteDialogOpen={campaignDeleteDialog.handleOpen}
+        handleCampaignReportOpen={CampaignReportDialog.handleOpen}
+      />
+
+      {/* 캠페인 생성 클릭시 다이얼로그 */}
       <CampaignCreateDialog
         open={campaignCreateDialog.open}
         handleClose={campaignCreateDialog.handleClose}
       />
 
+      {/* 캠페인 분석 다이얼로그 (full screen) */}
+      {selectedCampaign && (
+      <CampaignAnalysisDialog
+        SLIDE_TIMEOUT={SLIDE_TIMEOUT} // 슬라이드 트랜지션 타임아웃
+        open={CampaignReportDialog.open}
+        selectedCampaign={selectedCampaign}
+        handleClose={() => {
+          CampaignReportDialog.handleClose();
+          setTimeout(() => {
+            setSelectedCampaign(false);
+            // 트랜지션 만큼 뒤에 실행. (먼저 실행하면 트랜지션 발동 안됨)
+          }, SLIDE_TIMEOUT);
+        }}
+      />
+      )}
+
+      {/* 캠페인 삭제 클릭시 다이얼로그 */}
       <CampaignDeleteConfirmDialog
         open={campaignDeleteDialog.open}
-        handleClose={campaignDeleteDialog.handleClose}
+        handleClose={() => {
+          campaignDeleteDialog.handleClose();
+          setSelectedCampaign(false);
+        }}
         handleDelete={handleDelete}
       />
-
-      <Popover
-        id="campaign-menu"
-        open={Boolean(campaignMenuAnchor.anchorEl)}
-        anchorEl={campaignMenuAnchor.anchorEl}
-        onClose={campaignMenuAnchor.handleClose}
-        anchorOrigin={{
-          vertical: 'center',
-          horizontal: 'center',
-        }}
-        transformOrigin={{
-          vertical: 'top',
-          horizontal: 'left',
-        }}
-      >
-        <List>
-          <ListItem
-            button
-            onClick={() => {
-              // Open Analysis page
-              console.log('보고서 보기', selectedCampaign);
-              // Close the menu popover
-              campaignMenuAnchor.handleClose();
-            }}
-          >
-            <Assessment />
-            <Typography>분석</Typography>
-          </ListItem>
-          <ListItem
-            button
-            onClick={() => {
-              // Open delete confirm dialog
-              campaignDeleteDialog.handleOpen(selectedCampaign);
-              // Close the menu popover
-              campaignMenuAnchor.handleClose();
-            }}
-          >
-            <DeleteIcon color="error" />
-            <Typography color="error">삭제</Typography>
-          </ListItem>
-        </List>
-      </Popover>
     </Paper>
   );
 }
