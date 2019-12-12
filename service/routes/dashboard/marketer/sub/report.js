@@ -40,89 +40,12 @@ router.get('/', (req, res) => {
       WHERE campaignId = ?) AS totalTransfer,
 
     (SELECT count(*) FROM landingClickIp
-      WHERE creatorId
-      IN (
-        SELECT lci.creatorId
-        FROM landingClickIp AS lci
-        JOIN campaignLog AS cl ON cl.campaignId = ?
-        JOIN campaign ON campaign.campaignId = ?
-        WHERE landingClickIp.campaignId=?
-        AND lci.date > regiDate
-        AND lci.date < (
-            SELECT max(date)
-            FROM campaignLog WHERE campaignId = ?)
-            GROUP BY lci.creatorId
-          )
-        ) AS totalLandingView,
-      
-    (SELECT SUM(cashFromMarketer)
-      FROM campaignLog as cl
-      WHERE campaignId= ? AND type="CPM"
-      AND cl.date > DATE_SUB(now(), INTERVAL 14 DAY)) AS weeksCPM,
-    
-    (SELECT SUM(cashFromMarketer)
-          / (SELECT unitPrice FROM marketerDebit WHERE marketerId = ?)
-      FROM campaignLog as cl
-      WHERE campaignId= ? AND type="CPM"
-      AND cl.date > DATE_SUB(now(), INTERVAL 14 DAY)) AS weeksViewCount,
-      
-    (SELECT count(*) / 6
-      FROM campaignLog as cl
-      WHERE campaignId = ?
-      AND cl.date > DATE_SUB(now(), INTERVAL 14 DAY)) AS weeksTime,
-    
-    (SELECT SUM(cashFromMarketer)
-      FROM campaignLog as cl
-      WHERE campaignId= ? AND type="CPC"
-      AND cl.date > DATE_SUB(now(), INTERVAL 14 DAY)) AS weeksCPC,
-    
-    (SELECT SUM(clickCount)
-      FROM landingClick
-      WHERE campaignId = ?
-      AND regiDate > DATE_SUB(now(), INTERVAL 14 DAY)) AS weeksClick,
-    
-    (SELECT SUM(transferCount)
-      FROM landingClick
-      WHERE campaignId = ?
-      AND regiDate > DATE_SUB(now(), INTERVAL 30 DAY)) AS weeksTransfer,
-      
-      (SELECT SUM(cashFromMarketer)
-      FROM campaignLog as cl
-      WHERE campaignId= ? AND type="CPM"
-      AND cl.date > DATE_SUB(now(), INTERVAL 30 DAY)) AS monthsCPM,
-    
-    (SELECT SUM(cashFromMarketer)
-          / (SELECT unitPrice FROM marketerDebit WHERE marketerId = ?)
-      FROM campaignLog as cl
-      WHERE campaignId= ? AND type="CPM"
-      AND cl.date > DATE_SUB(now(), INTERVAL 30 DAY)) AS monthsViewCount,
-      
-    (SELECT count(*) / 6
-      FROM campaignLog as cl
-      WHERE campaignId = ?
-      AND cl.date > DATE_SUB(now(), INTERVAL 30 DAY)) AS monthsTime,
-    
-    (SELECT SUM(cashFromMarketer)
-      FROM campaignLog as cl
-      WHERE campaignId= ? AND type="CPC"
-      AND cl.date > DATE_SUB(now(), INTERVAL 30 DAY)) AS monthsCPC,
-    
-    (SELECT SUM(clickCount)
-      FROM landingClick
-      WHERE campaignId = ?
-      AND regiDate > DATE_SUB(now(), INTERVAL 30 DAY)) AS monthsClick,
-    
-    (SELECT SUM(transferCount)
-      FROM landingClick
-      WHERE campaignId = ?
-      AND regiDate > DATE_SUB(now(), INTERVAL 30 DAY)) AS monthsTransfer`;
+      WHERE date > (SELECT regiDate FROM campaign WHERE campaignId = ?)) AS totalLandingView
+    `;
 
   doQuery(query, [
-    campaignId, campaignId, marketerId,
-    campaignId, campaignId, campaignId, campaignId,
-    campaignId, campaignId, campaignId, campaignId, campaignId, // 기본
-    campaignId, marketerId, campaignId, campaignId, campaignId, campaignId, campaignId, // weeks
-    campaignId, marketerId, campaignId, campaignId, campaignId, campaignId, campaignId // months
+    campaignId, campaignId, marketerId, campaignId,
+    campaignId, campaignId, campaignId, campaignId, campaignId
   ]) // 캠페인 이름
     .then((row) => {
       if (!row.error && row.result) {
@@ -143,7 +66,7 @@ router.get('/totalSpendChart', (req, res) => {
     cl.date as date,
     sum(cashFromMarketer) as cash, type
   FROM campaignLog AS cl
-  WHERE campaignId = ?
+  WHERE campaignId = ? AND cl.date > DATE_SUB(cl.date, INTERVAL 30 DAY)
   GROUP BY DATE_FORMAT(cl.date, "%y년 %m월 %d일"), type
   ORDER BY cl.date ASC
   `;
@@ -155,6 +78,7 @@ router.get('/totalSpendChart', (req, res) => {
   FROM campaignLog AS cl
   WHERE campaignId = ?
     AND type="CPM"
+    AND cl.date > DATE_SUB(cl.date, INTERVAL 30 DAY)
   GROUP BY DATE_FORMAT(cl.date, "%y년 %m월 %d일"), type
   ORDER BY cl.date ASC
   `;
@@ -166,6 +90,7 @@ router.get('/totalSpendChart', (req, res) => {
   FROM campaignLog AS cl
   WHERE campaignId = ?
     AND type="CPC"
+    AND cl.date > DATE_SUB(cl.date, INTERVAL 30 DAY)
   GROUP BY DATE_FORMAT(cl.date, "%y년 %m월 %d일"), type
   ORDER BY cl.date ASC
   `;
@@ -331,7 +256,8 @@ router.get('/broadcast/creator', (req, res) => {
   const marketerId = req._passport.session.user.userid;
   const tenMinuteAgoTime = new Date();
   tenMinuteAgoTime.setMinutes(tenMinuteAgoTime.getMinutes() - 10);
-  const query = `SELECT streamerName, creatorTwitchId, viewer FROM twitchStreamDetail
+  const query = `
+  SELECT streamerName, creatorTwitchId, viewer FROM twitchStreamDetail
     JOIN creatorInfo
     ON creatorInfo.creatorName = twitchStreamDetail.streamerName
     JOIN campaignTimestamp

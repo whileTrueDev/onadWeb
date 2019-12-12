@@ -212,7 +212,7 @@ export default function CampaignList(props) {
         handleClose={() => {
           CampaignReportDialog.handleClose();
           setTimeout(() => {
-            setSelectedCampaign(false);
+            setSelectedCampaign(null);
             // 트랜지션 만큼 뒤에 실행. (먼저 실행하면 트랜지션 발동 안됨)
           }, SLIDE_TIMEOUT);
         }}
@@ -224,7 +224,7 @@ export default function CampaignList(props) {
         open={campaignDeleteDialog.open}
         handleClose={() => {
           campaignDeleteDialog.handleClose();
-          setSelectedCampaign(false);
+          setSelectedCampaign(null);
         }}
         handleDelete={handleDelete}
       />

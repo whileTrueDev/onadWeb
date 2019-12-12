@@ -38,7 +38,7 @@ export default function ReChartBar(props) {
               <Typography>{value === 'cpm_amount' ? '배너광고' : '클릭광고'}</Typography>)}
           />
           <Bar dataKey="cpm_amount" stackId="a" fill={theme.palette.primary.light} />
-          <Bar dataKey="cpc_amount" stackId="b" fill={theme.palette.secondary.light} />
+          <Bar dataKey="cpc_amount" stackId="a" fill={theme.palette.secondary.light} />
         </BarChart>
       </ResponsiveContainer>
     </div>

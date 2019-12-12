@@ -2,7 +2,7 @@ import React from 'react';
 import { Grid, Slide } from '@material-ui/core';
 
 import Dialog from '../../../../atoms/Dialog/Dialog';
-import ReportLoading from './sub/campaignSub/ReportLoading';
+import ReportLoading from './sub/ReportLoading';
 import CampaignBannerClickAd from './sub/CampaignBannerClickAd';
 import CampaignOnlyClickAd from './sub/CampaignOnlyClickAd';
 import CampaignOnlyBannerAd from './sub/CampaignOnlyBannerAd';
@@ -53,6 +53,7 @@ export default function CampaignReportDialog(props) {
   return (
     <Dialog
       fullScreen
+      disableBackdropClick
       title="캠페인 효과 분석"
       open={Boolean(open)}
       onClose={handleClose}
@@ -65,24 +66,38 @@ export default function CampaignReportDialog(props) {
         <Grid item xl={3} />
         <Grid item xs={12} xl={6}>
           {/* 로딩중 화면 */}
-          {reportData.loading && (<ReportLoading />)}
+          {(reportData.loading || valueChartData.loading
+          || ipToGeoData.loading || creatorsData.loading
+          || clickData.loading) && (<ReportLoading />)}
 
           {/* 로딩 이후 화면 */}
 
           {/* Only CPC (클릭 광고인 경우) */}
           {selectedCampaign.optionType === ONLY_CLICK_STATE && (
-          <CampaignOnlyClickAd />
+          <CampaignOnlyClickAd
+            selectedCampaign={selectedCampaign}
+            reportData={reportData}
+            valueChartData={valueChartData}
+            ipToGeoData={ipToGeoData}
+            clickData={clickData}
+          />
           )}
 
 
           {/* Only CPM (배너 광고인 경우) */}
           {selectedCampaign.optionType === ONLY_BANNER_STATE && (
-          <CampaignOnlyBannerAd />
+          <CampaignOnlyBannerAd
+            selectedCampaign={selectedCampaign}
+            reportData={reportData}
+            valueChartData={valueChartData}
+            creatorsData={creatorsData}
+          />
           )}
 
           {/* CPM + CPC (배너 광고 + 클릭 광고인 경우) */}
           {selectedCampaign.optionType === BANNER_WITH_CLICK_STATE && (
             <CampaignBannerClickAd
+              selectedCampaign={selectedCampaign}
               reportData={reportData}
               valueChartData={valueChartData}
               ipToGeoData={ipToGeoData}
