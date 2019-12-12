@@ -24,7 +24,8 @@ const MapWithAMarkerClusterer = compose(
   }),
   withHandlers({
     onMarkerClustererClick: () => (markerClusterer) => {
-      const clickedMarkers = markerClusterer.getMarkers();
+      // 마커 클릭 이벤트 걸기
+      // const clickedMarkers = markerClusterer.getMarkers();
     },
   }),
   withScriptjs,

@@ -6,7 +6,7 @@ import CardTemplate from '../common/CardTemplate';
 
 export default function CampaignCostPie(props) {
   const theme = useTheme();
-  const { color, reportData, valueChartData } = props;
+  const { color, reportData } = props;
 
   return (
     <CardTemplate title="광고 비용 비율" color={color} IconComponent={DonutSmall}>
