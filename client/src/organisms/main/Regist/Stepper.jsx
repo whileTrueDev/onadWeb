@@ -109,8 +109,14 @@ const RegistStepper = withRoot((props) => {
   const [userType, setType] = useState(0);
   const [state, dispatch] = useReducer(myReducer, initialState);
   const [loading, setLoading] = useState(0);
+  const [open, setOpen] = useState(0);
+  const [defaultName, setDefaultName] = useState('');
+
   const handleNext = () => {
     setStep(activeStep + 1);
+    if (activeStep === 0) {
+      setOpen(1);
+    }
   };
 
   const handleBack = () => {
@@ -164,7 +170,7 @@ const RegistStepper = withRoot((props) => {
         <Step key="1">
           <StepLabel>미성년자 확인</StepLabel>
           <StepContent>
-            <IndentityVerification handleNext={handleNext} handleBack={handleBack} />
+            <IndentityVerification handleNext={handleNext} handleBack={handleBack} open={open} setOpen={setOpen} setDefaultName={setDefaultName} />
           </StepContent>
         </Step>
         <Step key="2">
@@ -172,7 +178,7 @@ const RegistStepper = withRoot((props) => {
           <StepContent>
             <PaperSheet
               handleNext={handleNext}
-              handleBack={handleBack}
+              handleBack={handleReset}
             />
           </StepContent>
         </Step>
@@ -187,6 +193,7 @@ const RegistStepper = withRoot((props) => {
               dispatch={dispatch}
               loading={loading}
               setLoading={setLoading}
+              defaultName={defaultName}
             />
           </StepContent>
         </Step>

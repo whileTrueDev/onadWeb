@@ -216,7 +216,6 @@ const PaperSheet = (props) => {
 PaperSheet.propTypes = {
   classes: PropTypes.object.isRequired,
   handleNext: PropTypes.func.isRequired,
-  handleReset: PropTypes.func.isRequired,
 };
 
 export default withStyles(styles)(PaperSheet);

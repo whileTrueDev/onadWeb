@@ -102,7 +102,7 @@ const TextMaskCustom = (props) => {
 
 const RegistForm = (props) => {
   const {
-    classes, userType, handleBack, handleUserInfo, handleUserSubmit, state, dispatch, loading, setLoading
+    classes, userType, handleBack, handleUserInfo, handleUserSubmit, state, dispatch, loading, setLoading, defaultName
   } = props;
 
   const [marketerCustomDomain, setCustomDomain] = useState('');
@@ -253,11 +253,13 @@ const RegistForm = (props) => {
                 label="이름(회사명)"
                 id="name"
                 className={classes.textField}
+                defaultValue={defaultName}
                 placeholder="이름(회사명)을 입력하세요"
                 margin="normal"
                 InputLabelProps={{
                   shrink: true,
                 }}
+                helperText="크리에이터들에게 보여질 이름입니다!"
               />
             </Grid>
             <Grid item>
@@ -314,7 +316,7 @@ const RegistForm = (props) => {
                 InputLabelProps={{
                   shrink: true,
                 }}
-                inputprops={{
+                InputProps={{
                   endAdornment: <InputAdornment position="end">@</InputAdornment>,
                 }}
               />

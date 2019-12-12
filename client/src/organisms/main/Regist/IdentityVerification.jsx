@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useEffect, useCallback } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Fingerprint from '@material-ui/icons/Fingerprint';
 import {
   Grid, Typography, Divider, Button
 } from '@material-ui/core';
+import axios from '../../../utils/axios';
+import HOST from '../../../utils/config';
 import CustomCard from '../../../atoms/CustomCard';
 import StyledItemText from '../../../atoms/StyledItemText';
 
@@ -48,10 +50,51 @@ const useStyles = makeStyles(({
   }
 }));
 
-
+// 마케터 유형을 선택하고 난 뒤 rendering되는 컴포넌트.
+// useEffect를 사용하여
 const IndentityVerification = (props) => {
   const classes = useStyles();
-  const { handleBack, handleNext } = props;
+  const {
+    handleBack, handleNext, open, setOpen, setDefaultName
+  } = props;
+
+  const submitImpUid = useCallback(({ impUid }) => {
+    axios.post(`${HOST}/api/regist/certifications`, { imp_uid: impUid })
+      .then((res) => {
+        const { error, data } = res.data;
+        if (error) {
+          alert(data.msg);
+          handleBack();
+        } else {
+          setDefaultName(data.name);
+          alert('본인인증이 성공하였습니다.');
+          handleNext();
+        }
+      })
+      .catch(() => {
+        alert('본인인증이 실패하였습니다.');
+        handleBack();
+      });
+  }, [handleBack, handleNext, setDefaultName]);
+
+  useEffect(() => {
+    if (open) {
+      const { IMP } = window;
+      IMP.init('imp00026649');
+
+      IMP.certification({ // param
+        merchant_uid: 'ORD20180131-0000011',
+        min_age: '19'
+      }, (rsp) => { // callback
+        if (rsp.success) {
+          submitImpUid({ impUid: rsp.imp_uid });
+        } else {
+          handleBack();
+        }
+      });
+      setOpen(0);
+    }
+  }, [handleBack, open, setOpen, submitImpUid]);
 
 
   return (
@@ -74,14 +117,6 @@ const IndentityVerification = (props) => {
             className={classes.button}
           >
               뒤로
-          </Button>
-          <Button
-            variant="contained"
-            color="primary"
-            className={classes.button}
-            onClick={handleNext}
-          >
-              다음
           </Button>
         </div>
       </Grid>
