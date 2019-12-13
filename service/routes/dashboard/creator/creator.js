@@ -143,7 +143,7 @@ router.get('/profile', (req, res) => {
         const userData = data.result[0];
         // 받은 데이터에 대한 복호화 실시.
         const rawAccount = data.result[0].creatorAccountNumber || '';
-        const deciphedAccountNum = encrypto.decipher(rawAccount);
+        // const deciphedAccountNum = encrypto.decipher(rawAccount);
         userData.creatorLogo = req._passport.session.user.creatorLogo;
         // userData.creatorAccountNumber = deciphedAccountNum;
         userData.creatorAccountNumber = rawAccount;
