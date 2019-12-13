@@ -7,12 +7,13 @@ export default function PieChart(props) {
   return (
     <Pie
       {...rest}
+      redraw
       data={{
         labels,
         datasets: [{
           data,
           backgroundColor: chartTheme.pie
-        }]
+        }],
       }}
     />
   );

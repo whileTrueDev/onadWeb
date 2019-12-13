@@ -114,10 +114,10 @@ ColorlibStepIcon.propTypes = {
 };
 
 export default function HorizontalLinearStepper(props) {
-  const { steps, activeStep } = props;
+  const { steps, activeStep, ...rest } = props;
 
   return (
-    <div>
+    <div {...rest}>
       <Stepper alternativeLabel activeStep={activeStep} connector={<ColorlibConnector />} style={{ padding: '10px' }}>
         {steps.map(content => (
           <Step key={content.label}>

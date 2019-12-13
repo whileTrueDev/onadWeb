@@ -94,7 +94,6 @@ router.route('/streams').get((req, res) => {
   doQuery(selectQuery, [date, date]).then((row) => {
     const retultList = row.result.map(creator => creator.creatorTwitchId);
     const resultList = retultList.slice(0, 10);
-    console.log(resultList);
     res.send(resultList);
   });
 });

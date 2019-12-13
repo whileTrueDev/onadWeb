@@ -67,23 +67,6 @@ router.get('/registed', (req, res) => {
     });
 });
 
-// 배너 삭제
-// bannerRegistered
-router.post('/delete', (req, res) => {
-  const { bannerId } = req.body;
-  const bannerQuery = `
-  DELETE FROM bannerRegistered 
-  WHERE bannerId = ? `;
-  doQuery(bannerQuery, [bannerId])
-    .then(() => {
-      res.send([true, '배너가 성공적으로 삭제되었습니다.']);
-    })
-    .catch((errorData) => {
-      console.log(errorData);
-      res.send([false, '배너 삭제에 실패하였습니다 잠시후 시도해주세요.']);
-    });
-});
-
 // 배너 등록
 // bannerRegistered
 router.post('/push', (req, res) => {
@@ -96,7 +79,7 @@ router.post('/push', (req, res) => {
   SELECT bannerId 
   FROM bannerRegistered 
   WHERE marketerId = ?  
-  ORDER BY date DESC
+  ORDER BY regiDate DESC
   LIMIT 1`;
 
   const saveQuery = `
@@ -109,6 +92,7 @@ router.post('/push', (req, res) => {
     // 이전에 배너를 게시한 적이 있다는 의미.
       let bannerId = '';
       if (row.result[0]) {
+        console.log(row.result);
         const lastBannerId = row.result[0].bannerId;
         const count = parseInt(lastBannerId.split('_')[1]) + 1;
         if (count < 10) {
@@ -136,7 +120,25 @@ router.post('/push', (req, res) => {
     });
 });
 
-// 전달된 해당 배너와 연결된 캠페인이 있는지 조회
+
+// 배너 삭제
+// bannerRegistered
+router.post('/delete', (req, res) => {
+  const { bannerId } = req.body;
+  const bannerQuery = `
+  DELETE FROM bannerRegistered 
+  WHERE bannerId = ? `;
+  doQuery(bannerQuery, [bannerId])
+    .then(() => {
+      res.send([true, '배너가 성공적으로 삭제되었습니다.']);
+    })
+    .catch((errorData) => {
+      console.log(errorData);
+      res.send([false, '배너 삭제에 실패하였습니다 잠시후 시도해주세요.']);
+    });
+});
+
+// (배너 삭제시) 전달된 해당 배너와 연결된 캠페인이 있는지 조회
 router.get('/connectedcampaign', (req, res) => {
   const { bannerId } = req.query;
   const query = `
