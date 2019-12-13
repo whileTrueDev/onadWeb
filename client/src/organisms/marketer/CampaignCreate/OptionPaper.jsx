@@ -92,6 +92,8 @@ const OptionPaper = (props) => {
       handleSubmitCheck(true);
     } else if (state.option === 1) {
       handleSubmitCheck(true);
+    } else if (state.option === 2) {
+      handleSubmitCheck(true);
     } else {
       handleSubmitCheck(false);
     }
@@ -150,7 +152,8 @@ const OptionPaper = (props) => {
           <Grid item className={classes.item}>
             <Grid container direction="column" spacing={2}>
               <Grid item>
-                <Paper className={classes.ready}>
+                {/* <Paper className={classes.ready}> */}
+                <Paper className={classes.choice}>
                   <Grid container direction="row" justify="space-between">
                     <Grid item>
                       <StyledSelectText primary="1. 배너 광고" secondary="상품, 브랜드 홍보만 하고 싶어요." />
@@ -173,7 +176,7 @@ const OptionPaper = (props) => {
                             checked={state.option === 0}
                             onChange={handleChange}
                             fontSize="large"
-                            disabled
+                            // disabled
                           />
                         </Grid>
                       </Grid>
@@ -185,7 +188,38 @@ const OptionPaper = (props) => {
                 <Paper className={classes.choice}>
                   <Grid container direction="row" justify="space-between">
                     <Grid item>
-                      <StyledSelectText primary="2. 배너 광고 + 랜딩 페이지" secondary="상품, 브랜드 홍보 뿐 아니라 구매 전환까지 하고 싶어요." />
+                      <StyledSelectText primary="2. 클릭광고" secondary="구매 전환을 하고 싶어요." />
+                    </Grid>
+                    <Grid item className={classes.icon}>
+                      <Grid container direction="row">
+                        <Grid item className={classes.icon}>
+                          <Help
+                            fontSize="large"
+                            color="disabled"
+                            onMouseEnter={handlePopoverOpen(2)}
+                            onMouseLeave={handlePopoverClose}
+                            aria-owns={open ? 'send-desc-popover' : undefined}
+                            aria-haspopup="true"
+                          />
+                        </Grid>
+                        <Grid item>
+                          <GreenCheckbox
+                            name="option2"
+                            checked={state.option === 2}
+                            onChange={handleChange}
+                            fontSize="large"
+                          />
+                        </Grid>
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                </Paper>
+              </Grid>
+              <Grid item>
+                <Paper className={classes.choice}>
+                  <Grid container direction="row" justify="space-between">
+                    <Grid item>
+                      <StyledSelectText primary="2. 배너 광고 + 클릭 광고" secondary="상품, 브랜드 홍보 뿐 아니라 구매 전환까지 하고 싶어요." />
                     </Grid>
                     <Grid item className={classes.icon}>
                       <Grid container direction="row">

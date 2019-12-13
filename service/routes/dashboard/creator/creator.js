@@ -1,6 +1,7 @@
 // import
 const express = require('express');
 const doQuery = require('../../../model/doQuery');
+const encrypto = require('../../../encryption');
 
 const router = express.Router();
 
@@ -140,12 +141,16 @@ router.get('/profile', (req, res) => {
     doQuery(profileQuery, [creatorId])
       .then((data) => {
         const userData = data.result[0];
+        // 받은 데이터에 대한 복호화 실시.
+        const rawAccount = data.result[0].creatorAccountNumber || '';
+        const deciphedAccountNum = encrypto.decipher(rawAccount);
         userData.creatorLogo = req._passport.session.user.creatorLogo;
+        userData.creatorAccountNumber = deciphedAccountNum;
         res.send({
           error: false,
           result: {
             ...userData,
-            NowIp
+            NowIp,
           }
         });
       })

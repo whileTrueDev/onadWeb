@@ -18,6 +18,7 @@ router.get('/check', (req, res) => {
     SELECT temporaryLogin
     FROM marketerInfo
     WHERE marketerId = ?`;
+
     doQuery(checkQuery, [req.session.passport.user.userid])
       .then((row) => {
         const { temporaryLogin } = row.result[0];

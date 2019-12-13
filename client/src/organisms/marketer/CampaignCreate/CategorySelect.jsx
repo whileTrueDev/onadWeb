@@ -3,7 +3,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import {
   Grid, Paper, Divider, Button
 } from '@material-ui/core';
-import Help from '@material-ui/icons/Help';
 import shortid from 'shortid';
 import StyledItemText from '../../../atoms/StyledItemText';
 import GreenCheckBox from '../../../atoms/GreenCheckBox';
@@ -29,11 +28,6 @@ const useStyles = makeStyles(theme => ({
   button: {
     width: '100%',
   },
-  icon: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
 }));
 
 const CategorySelect = (props) => {
@@ -41,7 +35,6 @@ const CategorySelect = (props) => {
     setStepComplete, categoryList, checkedCategories, checkedCategoriesDispatch
   } = props;
   const classes = useStyles();
-  const [anchorEl, setAnchorEl] = React.useState(null);
 
   useEffect(() => {
     if (checkedCategories.length >= 3) {
@@ -50,10 +43,6 @@ const CategorySelect = (props) => {
       setStepComplete(false);
     }
   }, [checkedCategories, setStepComplete]);
-
-  const handlePopoverOpen = () => (event) => {
-    setAnchorEl(event.currentTarget);
-  };
 
   const getChecked = categoryName => checkedCategories.includes(categoryName);
 
@@ -67,22 +56,18 @@ const CategorySelect = (props) => {
   };
 
 
-  const handlePopoverClose = () => {
-    setAnchorEl(null);
-  };
-
   return (
     <Grid container direction="column" spacing={2} className={classes.root}>
       <Grid item>
         <Grid container direction="column" spacing={2}>
           <Grid item className={classes.item}>
-            <StyledItemText primary="넷째,&nbsp;&nbsp; 카테고리 선택" secondary="해당 캠페인의 배너가 송출될 배너를 3개 이상 선택하세요." className={classes.label} />
+            <StyledItemText primary="넷째,&nbsp;&nbsp; 카테고리 선택" secondary="해당 캠페인의 배너가 송출될 카테고리를 3개 이상 선택하세요." className={classes.label} />
             <Divider component="hr" style={{ height: '2px' }} />
           </Grid>
           <Grid item>
             <Grid container direction="row" spacing={2}>
               {categoryList.map((category, i) => (
-                <Grid item xs={12} sm={3} key={shortid.generate()}>
+                <Grid item xs={12} sm={4} lg={3} key={shortid.generate()}>
                   <Button className={classes.button}>
                     <Paper className={classes.choice}>
                       <Grid container direction="row" justify="space-between" spacing={2}>
@@ -99,19 +84,6 @@ const CategorySelect = (props) => {
                           <Grid container direction="row" spacing={1}>
                             <Grid item>
                               <StyledItemText primary={category.categoryName} />
-                            </Grid>
-                            <Grid
-                              item
-                              className={classes.icon}
-                            >
-                              <Help
-                                fontSize="small"
-                                onMouseEnter={handlePopoverOpen(i)}
-                                onMouseLeave={handlePopoverClose}
-                                aria-owns={anchorEl ? 'send-desc-popover' : undefined}
-                                aria-haspopup="true"
-                                color="disabled"
-                              />
                             </Grid>
                           </Grid>
                         </Grid>

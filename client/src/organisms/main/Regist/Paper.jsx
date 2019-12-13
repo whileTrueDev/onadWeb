@@ -12,7 +12,7 @@ import {
   Button,
   Grid,
 } from '@material-ui/core';
-import CircularProgress from '@material-ui/core/CircularProgress';
+
 import shortid from 'shortid';
 import Dialog from '../../../atoms/Dialog/Dialog';
 import terms from './registConfig';
@@ -76,7 +76,7 @@ const styles = theme => ({
 
 const PaperSheet = (props) => {
   const {
-    handleReset, handleUserSubmit, loading, classes, setLoading,
+    handleBack, handleNext, classes,
   } = props;
   const [checkedA, setA] = useState(false);
   const [checkedB, setB] = useState(false);
@@ -107,9 +107,8 @@ const PaperSheet = (props) => {
   };
 
   const finishReg = () => {
-    if (checkedA && checkedB && checkedC) {
-      setLoading(1);
-      handleUserSubmit();
+    if (checkedA && checkedB) {
+      handleNext();
     } else {
       alert('모든 약관에 동의하지 않으면 회원가입이 완료되지 않습니다.');
     }
@@ -118,77 +117,67 @@ const PaperSheet = (props) => {
 
   return (
     <div>
-      {loading
-        ? (
-          <Paper className={classes.root} elevation={1}>
-            <Typography variant="h6" component="h6" style={{ textAlign: 'center' }}>
-          회원 등록 중입니다. 잠시만 기다려주세요.
-            </Typography>
-            <div style={{ textAlign: 'center' }}><CircularProgress /></div>
-          </Paper>
-        )
-        : (
-          <Paper className={classes.root} elevation={1}>
-            <Typography variant="h6" component="h6" style={{ textAlign: 'center' }}>
+
+      <Paper className={classes.root} elevation={1}>
+        <Typography variant="h6" component="h6" style={{ textAlign: 'center' }}>
           While:True
-            </Typography>
-            {terms.map(term => (
-              <Paper className={classes.container} elevation={1} key={term.state}>
-                <Grid container direction="row" justify="space-between" alignItems="center" spacing={1}>
+        </Typography>
+        {terms.map(term => (
+          <Paper className={classes.container} elevation={1} key={term.state}>
+            <Grid container direction="row" justify="space-between" alignItems="center" spacing={1}>
+              <Grid item>
+                <Typography component="p" style={{ flex: 8, fontSize: 13 }}>
+                  {term.title}
+                </Typography>
+              </Grid>
+              <Grid item>
+                <Grid container direction="row" alignItems="center">
                   <Grid item>
-                    <Typography component="p" style={{ flex: 8, fontSize: 13 }}>
-                      {term.title}
-                    </Typography>
+                    <Button
+                      style={{
+                        flex: 1, backgroundColor: '#d6d6d6', height: '70%', fontSize: 13,
+                      }}
+                      onClick={handleOpen(term)}
+                    >
+                        약관보기
+                    </Button>
                   </Grid>
                   <Grid item>
-                    <Grid container direction="row" alignItems="center">
-                      <Grid item>
-                        <Button
-                          style={{
-                            flex: 1, backgroundColor: '#d6d6d6', height: '70%', fontSize: 13,
-                          }}
-                          onClick={handleOpen(term)}
-                        >
-                        약관보기
-                        </Button>
-                      </Grid>
-                      <Grid item>
-                        <Divider className={classes.divider} />
-                      </Grid>
-                      <Grid item>
-                        <FormControlLabel
-                          control={(
-                            <Checkbox
+                    <Divider className={classes.divider} />
+                  </Grid>
+                  <Grid item>
+                    <FormControlLabel
+                      control={(
+                        <Checkbox
                 // checked={this.getChange(term.state)}
-                              onChange={handleChange(term.state)}
-                              value={term.state}
-                              classes={{
-                                root: classes.checkboxRoot,
-                                checked: classes.checked,
-                              }}
-                            />
-                        )}
-                          label="동의"
-                          style={{ flex: 2, marginRight: 0 }}
+                          onChange={handleChange(term.state)}
+                          value={term.state}
+                          classes={{
+                            root: classes.checkboxRoot,
+                            checked: classes.checked,
+                          }}
                         />
-                      </Grid>
-                    </Grid>
+                        )}
+                      label="동의"
+                      style={{ flex: 2, marginRight: 0 }}
+                    />
                   </Grid>
                 </Grid>
-              </Paper>
-
-            ))}
+              </Grid>
+            </Grid>
           </Paper>
-        )
 
-      }
+        ))}
+      </Paper>
+
+
       <div className={classes.actionsContainer}>
         <div>
           <Button
-            onClick={handleReset}
+            onClick={handleBack}
             className={classes.button}
           >
-            다시입력
+            뒤로
           </Button>
           <Button
             variant="contained"
@@ -196,7 +185,7 @@ const PaperSheet = (props) => {
             onClick={finishReg}
             className={classes.button}
           >
-            가입완료
+            다음
           </Button>
         </div>
       </div>
@@ -226,8 +215,7 @@ const PaperSheet = (props) => {
 
 PaperSheet.propTypes = {
   classes: PropTypes.object.isRequired,
-  handleUserSubmit: PropTypes.func.isRequired,
-  handleReset: PropTypes.func.isRequired,
+  handleNext: PropTypes.func.isRequired,
 };
 
 export default withStyles(styles)(PaperSheet);

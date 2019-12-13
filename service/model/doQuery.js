@@ -1,6 +1,6 @@
 // DB 커넥션 가져오기.
 const pool = require('./connectionPool');
-const logger = require('../middlewares/logger');
+// const logger = require('../middlewares/logger');
 
 
 /* 2019-07-02 박찬우
@@ -26,19 +26,19 @@ const doQuery = (query, queryArray = []) => new Promise((resolve, reject) => {
     if (err) {
       console.log('conn in err - getConnection 함수', conn);
       console.log(`DB연결 오류 ${err.message}`);
-      logger.error(`DB연결 관련 오류${err}`);
+      // logger.error(`DB연결 관련 오류${err}`);
       reject({ error: err });
     } else {
       conn.query(query, queryArray, (error, result) => {
         if (error) {
           conn.release();
-          logger.error(`query 관련 오류 : ${error}`);
+          // logger.error(`query 관련 오류 : ${error}`);
           reject({
             error: error.sqlMessage,
           });
         } else {
           conn.release();
-          logger.info(query);
+          // logger.info(query);
           resolve({
             error: null,
             result,

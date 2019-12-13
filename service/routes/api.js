@@ -7,11 +7,13 @@ const loginRouter = require('./login/login');
 const registRouter = require('./regist/regist');
 const dashboardRouter = require('./dashboard/dashboard');
 const payRouter = require('./payment/pay');
+const socketRouter = require('./socket/socket');
 
 router.use('/login', loginRouter);
 router.use('/regist', registRouter);
 router.use('/dashboard', dashboardRouter);
 router.use('/pay', payRouter);
+router.use('/socket', socketRouter);
 
 const getStreamerList = () => {
   const currentTimeQuery = `
@@ -92,11 +94,10 @@ router.route('/streams').get((req, res) => {
   doQuery(selectQuery, [date, date]).then((row) => {
     const retultList = row.result.map(creator => creator.creatorTwitchId);
     const resultList = retultList.slice(0, 10);
-    console.log(resultList);
     res.send(resultList);
   });
 });
 
-
+// socket과 통신할 router를 하나 만들자.
 
 module.exports = router;

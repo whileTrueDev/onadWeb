@@ -1,7 +1,7 @@
 
 const terms = [
   {
-    title: 'OnAd 서비스 이용 약관',
+    title: 'OnAd 서비스 이용 약관*',
     state: 'checkedA',
     text: `  
     제 1조 목적
@@ -581,7 +581,7 @@ const terms = [
     `,
   },
   {
-    title: '서비스 및 관련광고 수신 동의',
+    title: '서비스 및 관련광고 수신 동의 (선택)',
     state: 'checkedC',
     text: `
     마케팅 정보 수신동의

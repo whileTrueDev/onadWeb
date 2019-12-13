@@ -71,12 +71,10 @@ function setUpData(dataPacket, dateDiffFunc) {
         // 앞의날짜와 지금날짜의 날짜차이가 있다면 ( 빈 데이터가 존재한다면 )
         if (datediff > 1) {
           const emptyDate = new Date(previousDate);
-          console.log(datediff);
           for (let i = 1; i < datediff; i += 1) {
             // 빠진 날짜만큼 반복
             emptyDate.setDate(emptyDate.getDate() - 1);
 
-            console.log(emptyDate.toISOString());
             setUpLabels.push(emptyDate.toISOString().split('T')[0]);
             CPM.push(DEFAULT_VALUE);
             CPC.push(DEFAULT_VALUE);

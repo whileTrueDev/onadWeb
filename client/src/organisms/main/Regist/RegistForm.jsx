@@ -13,7 +13,11 @@ import {
   MenuItem,
   TextField,
   Grid,
+  Paper,
+  Typography,
 } from '@material-ui/core';
+
+import CircularProgress from '@material-ui/core/CircularProgress';
 import Done from '@material-ui/icons/Done';
 import axios from '../../../utils/axios';
 import SuccessTypo from '../../../atoms/Typography/Success';
@@ -98,7 +102,7 @@ const TextMaskCustom = (props) => {
 
 const RegistForm = (props) => {
   const {
-    classes, userType, handleBack, handleUserInfo, handleNext, state, dispatch,
+    classes, userType, handleBack, handleUserInfo, handleUserSubmit, state, dispatch, loading, setLoading, defaultName
   } = props;
 
   const [marketerCustomDomain, setCustomDomain] = useState('');
@@ -141,8 +145,8 @@ const RegistForm = (props) => {
         marketerBusinessRegNum,
         marketerUserType,
       };
-      handleUserInfo(user);
-      handleNext();
+      setLoading(1);
+      handleUserSubmit(user);
     } else {
       alert('입력이 올바르지 않습니다.');
     }
@@ -173,6 +177,16 @@ const RegistForm = (props) => {
 
   return (
     <div>
+    {loading
+        ? (
+          <Paper className={classes.root} elevation={1}>
+            <Typography variant="h6" component="h6" style={{ textAlign: 'center' }}>
+          회원 등록 중입니다. 잠시만 기다려주세요.
+            </Typography>
+            <div style={{ textAlign: 'center' }}><CircularProgress /></div>
+          </Paper>
+        )
+        : (
       <form autoComplete="off" onSubmit={handleSubmit} id="form">
         <Grid container direction="column" spacing={1}>
           <Grid item xs={12}>
@@ -239,11 +253,13 @@ const RegistForm = (props) => {
                 label="이름(회사명)"
                 id="name"
                 className={classes.textField}
+                defaultValue={defaultName}
                 placeholder="이름(회사명)을 입력하세요"
                 margin="normal"
                 InputLabelProps={{
                   shrink: true,
                 }}
+                helperText="크리에이터들에게 보여질 이름입니다!"
               />
             </Grid>
             <Grid item>
@@ -300,7 +316,7 @@ const RegistForm = (props) => {
                 InputLabelProps={{
                   shrink: true,
                 }}
-                inputprops={{
+                InputProps={{
                   endAdornment: <InputAdornment position="end">@</InputAdornment>,
                 }}
               />
@@ -366,8 +382,9 @@ const RegistForm = (props) => {
           </Grid>
         </Grid>
       </form>
-
-    </div>
+      )
+    }
+    </div>   
   );
 };
 
