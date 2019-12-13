@@ -11,7 +11,6 @@ if (process.env.NODE_ENV === 'production') {
   FRONT_HOST = process.env.PRODUCTION_REACT_HOSTNAME;
 }
 
-
 const getCreatorList = () => {
   console.log('현재 방송 중인 모든 creator의 list 계산 시작');
 
@@ -32,7 +31,6 @@ const getCreatorList = () => {
       });
   });
 };
-
 
 const setCipher = async () => {
   const cipherQuery = `
@@ -60,3 +58,36 @@ const setCipher = async () => {
 };
 
 setCipher();
+
+
+// // 커넥션을 전달 받아 쿼리문을 수행한다. 트랜잭션을 사용하기 때문에
+// const doTransacQuery = ({ connection, queryState, params }) => new Promise((resolve, reject) => {
+//   connection.beginTransaction((err) => {
+//     if (err) {
+//       console.log('doTransacQuery err');
+//       console.log(err);
+//       reject(err);
+//     }
+//     connection.query(queryState, params, (err1, result) => {
+//       if (err1) {
+//         console.log('doTransacQuery err1');
+//         console.log(err1);
+//         connection.rollback(() => {
+//           reject(err1);
+//         });
+//       } else {
+//         connection.commit((err2) => {
+//           if (err2) {
+//             console.log('doTransacQuery err2');
+//             console.log(err2);
+//             connection.rollback(() => {
+//               reject(err2);
+//             });
+//           } else {
+//             resolve();
+//           }
+//         });
+//       }
+//     });
+//   });
+// });

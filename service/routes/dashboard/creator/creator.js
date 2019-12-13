@@ -145,8 +145,8 @@ router.get('/profile', (req, res) => {
         const rawAccount = data.result[0].creatorAccountNumber || '';
         const deciphedAccountNum = encrypto.decipher(rawAccount);
         userData.creatorLogo = req._passport.session.user.creatorLogo;
-        userData.creatorAccountNumber = deciphedAccountNum;
-        // userData.creatorAccountNumber = rawAccount;
+        // userData.creatorAccountNumber = deciphedAccountNum;
+        userData.creatorAccountNumber = rawAccount;
         res.send({
           error: false,
           result: {
