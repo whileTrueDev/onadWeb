@@ -106,7 +106,7 @@ router.get('/chart', (req, res) => {
   const marketerId = req._passport.session.user.userid;
   const query = `
   SELECT
-    max(cl.date) as date,
+    DATE_FORMAT(max(cl.date), "%Y-%m-%d") as date,
     sum(cashFromMarketer) as cash, type
   FROM campaignLog AS cl
   WHERE SUBSTRING_INDEX(cl.campaignId, '_', 1) = ?
@@ -119,8 +119,7 @@ router.get('/chart', (req, res) => {
   doQuery(query, queryArray)
     .then((row) => {
       if (!row.error && row.result) {
-        const result = row.result.map(o => ({ ...o, date: customToLocaleString(o.date) }));
-        res.send(result);
+        res.send(row.result);
       } else {
         res.send([false]);
       }

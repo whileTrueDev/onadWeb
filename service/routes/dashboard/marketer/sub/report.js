@@ -40,89 +40,12 @@ router.get('/', (req, res) => {
       WHERE campaignId = ?) AS totalTransfer,
 
     (SELECT count(*) FROM landingClickIp
-      WHERE creatorId
-      IN (
-        SELECT lci.creatorId
-        FROM landingClickIp AS lci
-        JOIN campaignLog AS cl ON cl.campaignId = ?
-        JOIN campaign ON campaign.campaignId = ?
-        WHERE landingClickIp.campaignId=?
-        AND lci.date > regiDate
-        AND lci.date < (
-            SELECT max(date)
-            FROM campaignLog WHERE campaignId = ?)
-            GROUP BY lci.creatorId
-          )
-        ) AS totalLandingView,
-      
-    (SELECT SUM(cashFromMarketer)
-      FROM campaignLog as cl
-      WHERE campaignId= ? AND type="CPM"
-      AND cl.date > DATE_SUB(now(), INTERVAL 14 DAY)) AS weeksCPM,
-    
-    (SELECT SUM(cashFromMarketer)
-          / (SELECT unitPrice FROM marketerDebit WHERE marketerId = ?)
-      FROM campaignLog as cl
-      WHERE campaignId= ? AND type="CPM"
-      AND cl.date > DATE_SUB(now(), INTERVAL 14 DAY)) AS weeksViewCount,
-      
-    (SELECT count(*) / 6
-      FROM campaignLog as cl
-      WHERE campaignId = ?
-      AND cl.date > DATE_SUB(now(), INTERVAL 14 DAY)) AS weeksTime,
-    
-    (SELECT SUM(cashFromMarketer)
-      FROM campaignLog as cl
-      WHERE campaignId= ? AND type="CPC"
-      AND cl.date > DATE_SUB(now(), INTERVAL 14 DAY)) AS weeksCPC,
-    
-    (SELECT SUM(clickCount)
-      FROM landingClick
-      WHERE campaignId = ?
-      AND regiDate > DATE_SUB(now(), INTERVAL 14 DAY)) AS weeksClick,
-    
-    (SELECT SUM(transferCount)
-      FROM landingClick
-      WHERE campaignId = ?
-      AND regiDate > DATE_SUB(now(), INTERVAL 30 DAY)) AS weeksTransfer,
-      
-      (SELECT SUM(cashFromMarketer)
-      FROM campaignLog as cl
-      WHERE campaignId= ? AND type="CPM"
-      AND cl.date > DATE_SUB(now(), INTERVAL 30 DAY)) AS monthsCPM,
-    
-    (SELECT SUM(cashFromMarketer)
-          / (SELECT unitPrice FROM marketerDebit WHERE marketerId = ?)
-      FROM campaignLog as cl
-      WHERE campaignId= ? AND type="CPM"
-      AND cl.date > DATE_SUB(now(), INTERVAL 30 DAY)) AS monthsViewCount,
-      
-    (SELECT count(*) / 6
-      FROM campaignLog as cl
-      WHERE campaignId = ?
-      AND cl.date > DATE_SUB(now(), INTERVAL 30 DAY)) AS monthsTime,
-    
-    (SELECT SUM(cashFromMarketer)
-      FROM campaignLog as cl
-      WHERE campaignId= ? AND type="CPC"
-      AND cl.date > DATE_SUB(now(), INTERVAL 30 DAY)) AS monthsCPC,
-    
-    (SELECT SUM(clickCount)
-      FROM landingClick
-      WHERE campaignId = ?
-      AND regiDate > DATE_SUB(now(), INTERVAL 30 DAY)) AS monthsClick,
-    
-    (SELECT SUM(transferCount)
-      FROM landingClick
-      WHERE campaignId = ?
-      AND regiDate > DATE_SUB(now(), INTERVAL 30 DAY)) AS monthsTransfer`;
+      WHERE date > (SELECT regiDate FROM campaign WHERE campaignId = ?)) AS totalLandingView
+    `;
 
   doQuery(query, [
-    campaignId, campaignId, marketerId,
-    campaignId, campaignId, campaignId, campaignId,
-    campaignId, campaignId, campaignId, campaignId, campaignId, // 기본
-    campaignId, marketerId, campaignId, campaignId, campaignId, campaignId, campaignId, // weeks
-    campaignId, marketerId, campaignId, campaignId, campaignId, campaignId, campaignId // months
+    campaignId, campaignId, marketerId, campaignId,
+    campaignId, campaignId, campaignId, campaignId, campaignId
   ]) // 캠페인 이름
     .then((row) => {
       if (!row.error && row.result) {
@@ -143,7 +66,7 @@ router.get('/totalSpendChart', (req, res) => {
     cl.date as date,
     sum(cashFromMarketer) as cash, type
   FROM campaignLog AS cl
-  WHERE campaignId = ?
+  WHERE campaignId = ? AND cl.date > DATE_SUB(cl.date, INTERVAL 30 DAY)
   GROUP BY DATE_FORMAT(cl.date, "%y년 %m월 %d일"), type
   ORDER BY cl.date ASC
   `;
@@ -154,7 +77,8 @@ router.get('/totalSpendChart', (req, res) => {
     sum(cashFromMarketer) as cash, type
   FROM campaignLog AS cl
   WHERE campaignId = ?
-    AND type="cpm"
+    AND type="CPM"
+    AND cl.date > DATE_SUB(cl.date, INTERVAL 30 DAY)
   GROUP BY DATE_FORMAT(cl.date, "%y년 %m월 %d일"), type
   ORDER BY cl.date ASC
   `;
@@ -165,7 +89,8 @@ router.get('/totalSpendChart', (req, res) => {
     sum(cashFromMarketer) as cash, type
   FROM campaignLog AS cl
   WHERE campaignId = ?
-    AND type="cpc"
+    AND type="CPC"
+    AND cl.date > DATE_SUB(cl.date, INTERVAL 30 DAY)
   GROUP BY DATE_FORMAT(cl.date, "%y년 %m월 %d일"), type
   ORDER BY cl.date ASC
   `;
@@ -209,30 +134,40 @@ router.get('/cpm', (res, req) => {
 
 // creator 정보 - CPM: 송출 크리에이터
 router.get('/creators', (req, res) => {
+  const marketerId = req._passport.session.user.userid;
   const { campaignId } = req.query;
 
-  // name: '화수르',
-  // twitchId: 'iamsupermazinga',
-  // logo: 'https://static-cdn.jtvnw.net/jtv_user_pictures/e14cbb83-71ba-46eb-8fc1-9fd484da2db2-profile_image-300x300.png',
-  // total_ad_exposure_amount: 123123,
-  // total_ad_time: 123
-  // most_contents: '오버워치',
-  // avg_viewer: 150,
-  // avg_broadcast_time: 7,
+  let query = '';
+  let queryArray = [];
+  if (campaignId) {
+    query = `
+    SELECT
+      ci.creatorName, ci.creatorTwitchId,
+      ci.creatorLogo, sum(cashFromMarketer) AS total_ad_exposure_amount
+    FROM campaignLog as cl
+    JOIN creatorInfo as ci
+    ON cl.creatorId = ci.creatorId
+    WHERE campaignId = ?
+    GROUP BY cl.creatorId
+    ORDER BY total_ad_exposure_amount DESC`;
 
-  const query = `
-  SELECT
-    ci.creatorName, ci.creatorTwitchId,
-    ci.creatorLogo, sum(cashFromMarketer) AS total_ad_exposure_amount
-  FROM campaignLog as cl
-  JOIN creatorInfo as ci
-  ON cl.creatorId = ci.creatorId
-  WHERE campaignId = ?
-  GROUP BY cl.creatorId
-  ORDER BY total_ad_exposure_amount DESC
-  LIMIT 30`;
+    queryArray = [campaignId];
+  } else {
+    query = `
+    SELECT
+      ci.creatorName, ci.creatorTwitchId,
+      ci.creatorLogo, sum(cashFromMarketer) AS total_ad_exposure_amount
+    FROM campaignLog as cl
+    JOIN creatorInfo as ci
+    ON cl.creatorId = ci.creatorId
+    WHERE SUBSTRING_INDEX(campaignId, '_', 1) = ?
+    GROUP BY cl.creatorId
+    ORDER BY total_ad_exposure_amount DESC`;
 
-  doQuery(query, [campaignId])
+    queryArray = [marketerId];
+  }
+
+  doQuery(query, queryArray)
     .then((row) => {
       if (!row.error && row.result) {
         res.send(row.result);
@@ -266,4 +201,98 @@ router.get('/clicks', (req, res) => {
   });
 });
 
+// 2019-12-06 새로운 대시보드(분석)을 위한 요청
+// 캠페인 리스트
+router.get('/new', (req, res) => {
+  const marketerId = req._passport.session.user.userid;
+
+  const query = `
+  SELECT
+  campaignId, campaignName, optionType, priorityType, campaign.regiDate, onOff, bannerSrc
+  FROM campaign
+  JOIN bannerRegistered AS br
+  ON br.bannerId = campaign.bannerId
+  WHERE campaign.marketerId = ?
+  AND deletedState = 0
+  ORDER BY onOff DESC, br.regiDate DESC
+  `;
+  const queryArray = [marketerId];
+
+  doQuery(query, queryArray).then((row) => {
+    if (row.result && !row.error) {
+      res.send(row.result);
+    }
+  }).catch((err) => {
+    console.log('err in /report/new', err);
+  });
+});
+
+// 대시보드 보유 캐시량, 총 소진 비용
+router.get('/normal', (req, res) => {
+  const marketerId = req._passport.session.user.userid;
+  const query = `SELECT cashAmount, spendAll FROM
+  (
+    SELECT cashAmount
+    FROM marketerDebit
+    WHERE marketerId = ?) AS cashAmount,
+  (
+    SELECT sum(cashFromMarketer) AS spendAll
+    FROM campaignLog
+    WHERE SUBSTRING_INDEX(campaignId, "_" , 1) = ?) AS spendAll
+  `;
+
+  const queryArray = [marketerId, marketerId];
+  doQuery(query, queryArray).then((row) => {
+    if (row.result && !row.error) {
+      res.send(row.result[0]);
+    }
+  }).catch((err) => {
+    console.log('err in /report/normal', err);
+  });
+});
+
+// 현재 특정 캠페인을 송출중인 크리에이터 목록
+router.get('/broadcast/creator', (req, res) => {
+  const marketerId = req._passport.session.user.userid;
+  const tenMinuteAgoTime = new Date();
+  tenMinuteAgoTime.setMinutes(tenMinuteAgoTime.getMinutes() - 10);
+  const query = `
+  SELECT streamerName, creatorTwitchId, viewer FROM twitchStreamDetail
+    JOIN creatorInfo
+    ON creatorInfo.creatorName = twitchStreamDetail.streamerName
+    JOIN campaignTimestamp
+    ON campaignTimestamp.creatorId = creatorInfo.creatorId
+    WHERE TIME > ? 
+    AND creatorInfo.creatorContractionAgreement = 1
+    AND campaignTimestamp.date > ?
+    AND substring_index(campaignTimestamp.campaignId, "_", 1) = ?`;
+  const queryArray = [tenMinuteAgoTime, tenMinuteAgoTime, marketerId];
+  doQuery(query, queryArray).then((row) => {
+    if (!row.error && row.result) {
+      const result = row.result.map(d => d.streamerName);
+      res.send(result);
+    }
+  }).catch((err) => {
+    console.log('err in /report/broadcast/creator', err);
+  });
+});
+
+// 특정 캠페인의 시작 이후, 채팅 내 언급 빈도
+router.get('/commentonchat', (req, res) => {
+  const { campaignId, keyword } = req.query;
+
+  const query = `
+  SELECT time, text, subscriber, manager, badges FROM twitchChat
+  JOIN campaign ON campaignId = campaignId
+  WHERE time > campaign.regiDate
+  AND text like "%?%"`;
+
+  const queryArray = [campaignId, keyword];
+
+  doQuery(query, queryArray).then((row) => {
+
+  }).catch((err) => {
+    console.log('err in /report/commentonchat', err);
+  });
+});
 module.exports = router;
