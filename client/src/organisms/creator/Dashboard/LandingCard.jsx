@@ -173,17 +173,6 @@ const IncomeCard = () => {
               <Grid item>
                 <Typography gutterBottom variant="body1" className={classes.head}>총 구매 이동수</Typography>
               </Grid>
-              <Grid item>
-
-                <Help
-                  fontSize="small"
-                // onMouseEnter={handlePopoverOpen(i)}
-                // onMouseLeave={handlePopoverClose}
-                // aria-owns={anchorEl ? 'send-desc-popover' : undefined}
-                  aria-haspopup="true"
-                  color="disabled"
-                />
-              </Grid>
             </Grid>
             {landingData.loading && (<CircularProgress small />)}
             {!landingData.loading && !landingData.error && (

@@ -3,7 +3,7 @@ import React from 'react';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
-import { Grid } from '@material-ui/core';
+import { Grid, Paper } from '@material-ui/core';
 import AccountNumberForm from './Account/AccountNumberForm';
 import history from '../../../history';
 import CircularProgress from '../../../atoms/Progress/CircularProgress';
@@ -64,21 +64,21 @@ const AccountCard = (props) => {
     >
       {profileData.loading && (<CircularProgress small />)}
       {!profileData.loading && !profileData.error && (
-        <Grid container direction="column" justify="center">
-          <Grid container direction="column">
-            <Grid item>
-              <Typography variant="subtitle1" id="select-account" className={classes.contentTitle}>
-               현재 등록된 계좌
-              </Typography>
-            </Grid>
-            <Grid item>
-              <Typography
-                id="select-account"
-                className={classes.contentDetail}
-              >
-                {profileData.payload.result.creatorAccountNumber ? `${profileData.payload.result.creatorAccountNumber.split('_')[0]}   ${profileData.payload.result.creatorAccountNumber.split('_')[1]}` : '현재 등록된 계좌가 존재하지 않습니다.'}
-              </Typography>
-              <Divider style={{ marginBottom: '15px' }} />
+        <Grid container direction="column" justify="center" spacing={3}>
+          <Grid item>
+            <Grid container direction="column">
+              <Grid item>
+                <StyledItemText primary="현재 등록된 계좌" fontSize="18px" />
+              </Grid>
+              <Grid item>
+                <Typography
+                  id="select-account"
+                  className={classes.contentDetail}
+                >
+                  {profileData.payload.result.creatorAccountNumber ? `${profileData.payload.result.creatorAccountNumber.split('_')[0]}   ${profileData.payload.result.creatorAccountNumber.split('_')[1]}` : '현재 등록된 계좌가 존재하지 않습니다.'}
+                </Typography>
+                <Divider style={{ marginBottom: '15px' }} />
+              </Grid>
             </Grid>
             <Grid item>
               <Typography variant="subtitle1" id="select-account" className={classes.contentTitle}>
@@ -96,14 +96,14 @@ const AccountCard = (props) => {
             </Grid>
 
           </Grid>
-          <Grid container direction="column">
-            <Grid item>
-              <Typography variant="subtitle1" id="select-account" className={classes.contentTitle}>
-                계좌 재입력
-              </Typography>
-            </Grid>
-            <Grid item>
-              <AccountNumberForm history={history} />
+          <Grid item>
+            <Grid container direction="column">
+              <Grid item>
+                <StyledItemText primary="계좌 재입력" fontSize="18px" />
+              </Grid>
+              <Grid item>
+                <AccountNumberForm history={history} />
+              </Grid>
             </Grid>
           </Grid>
         </Grid>

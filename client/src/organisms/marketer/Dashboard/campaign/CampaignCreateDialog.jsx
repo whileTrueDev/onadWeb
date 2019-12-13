@@ -98,6 +98,9 @@ const step4Reducer = (state, action) => {
     case 'option1': {
       return { ...state, choose: 1, option: 1 };
     }
+    case 'option2': {
+      return { ...state, choose: 1, option: 2 };
+    }
     case 'noBudget': {
       return { ...state, noBudget: !state.noBudget };
     }

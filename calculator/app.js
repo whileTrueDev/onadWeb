@@ -17,6 +17,6 @@ const app = express();
 
 console.log('계산프로그램을 IMPORT 합니다.');
 require('./javascripts/calculation_v.2');
-require('./javascripts/landingCalculator');
+require('./javascripts/landingCalculator_v.1');
 
 module.exports = app;

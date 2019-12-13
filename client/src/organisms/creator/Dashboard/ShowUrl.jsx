@@ -32,7 +32,7 @@ const useStyles = makeStyles(() => ({
 const ShowUrl = (props) => {
   const { urlData } = props;
   const classes = useStyles();
-  const defaultUrl = '[주소 보기] 버튼을 누르면 주소가 10초간 표시됩니다';
+  const defaultUrl = '주소보기 버튼을 누르세요!';
   const notAgreeValue = ' 계약을 먼저 진행해주세요.';
   const [value, setValue] = useState(defaultUrl);
   const [disabled, setDisabled] = useState(true);
