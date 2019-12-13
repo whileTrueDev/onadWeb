@@ -18,8 +18,7 @@ const getCreatorList = () => {
   const listQuery = `
   SELECT creatorId, creatorAccountNumber 
   FROM creatorInfo
-  WHERE creatorContractionAgreement = 1
-  AND creatorAccountNumber IS NOT NULL`;
+  WHERE creatorAccountNumber IS NOT NULL`;
 
   return new Promise((resolve, reject) => {
     doQuery(listQuery)
