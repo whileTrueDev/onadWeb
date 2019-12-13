@@ -88,7 +88,11 @@ passport.use(new LocalStrategy(
               marketerName: marketerData.marketerName,
               marketerPhoneNum: marketerData.marketerPhoneNum,
             };
+            const stampQuery = `
+              INSERT INTO loginStamp(userId, userIp, userType) Values(?,?,?)`;
+            doQuery(stampQuery, [user.userid, '', '1']);
             console.log('로그인이 완료되었습니다, ', marketerData.marketerName);
+
             return done(null, user);
           }
 
