@@ -59,6 +59,7 @@ const useStyles = makeStyles(theme => ({
     fontFamily: 'Noto Sans KR',
     fontWeight: 300,
     fontSize: '12px',
+    fontWeight: 'bold',
   },
   list: {
     margin: 0,
@@ -107,7 +108,7 @@ function AppFooter() {
               <ul className={classes.list}>
                 <li className={classes.listItem}>
                   <Link
-                    href="/"
+                    href="/policy"
                     color="inherit"
                     underline="none"
                   >
@@ -116,7 +117,7 @@ function AppFooter() {
                 </li>
                 <li className={classes.listItem}>
                   <Link
-                    href="/"
+                    href="/policy/privacy"
                     color="inherit"
                     underline="none"
                     style={{ fontWeight: 'bold' }}
@@ -168,6 +169,10 @@ function AppFooter() {
               <div>
                 {'통신판매업 신고번호'}
                 <span className={classes.address}>제2019-부산금정-0581호</span>
+              </div>
+              <div>
+                {'개인정보보호책임자'}
+                <span className={classes.address}>전민관</span>
               </div>
               <div>
                 {'고객센터'}
