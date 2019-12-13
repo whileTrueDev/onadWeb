@@ -185,7 +185,7 @@ const OptionPaper = (props) => {
                 <Paper className={classes.choice}>
                   <Grid container direction="row" justify="space-between">
                     <Grid item>
-                      <StyledSelectText primary="2. 배너 광고 + 랜딩 페이지" secondary="상품, 브랜드 홍보 뿐 아니라 구매 전환까지 하고 싶어요." />
+                      <StyledSelectText primary="2. 배너 광고 + 클릭 광고" secondary="상품, 브랜드 홍보 뿐 아니라 구매 전환까지 하고 싶어요." />
                     </Grid>
                     <Grid item className={classes.icon}>
                       <Grid container direction="row">

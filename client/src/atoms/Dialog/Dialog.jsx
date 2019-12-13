@@ -51,8 +51,6 @@ const DialogTitle = withStyles(styles)((props) => {
           ) : null}
         </Grid>
       </Grid>
-
-
     </MuiDialogTitle>
   );
 });
