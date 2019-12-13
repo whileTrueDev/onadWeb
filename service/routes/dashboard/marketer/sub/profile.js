@@ -50,14 +50,15 @@ router.post('/change', (req, res) => {
 router.get('/accountNumber', (req, res) => {
   const marketerId = req._passport.session.user.userid;
   const accountQuery = `
-  SELECT marketerAccountNumber
+  SELECT marketerAccountNumber, accountHolder
   FROM marketerInfo
   WHERE marketerId = ?`;
   doQuery(accountQuery, [marketerId])
     .then((row) => {
       const accountNumber = row.result[0].marketerAccountNumber;
+      const accountHolder = row.result[0].accountHolder;
       res.send({
-        accountNumber
+        accountNumber, accountHolder
       });
     })
     .catch((error) => {

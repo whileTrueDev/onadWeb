@@ -153,7 +153,11 @@ router.post('/checkName', (req, res) => {
 // 2. 카테고리 우선형일 경우, 카테고리 Id에 해당하는 campaign list로 들어감.
 // 3. 노출 우선형일 경우, 모든 크리에이터 Id에 해당하는 campaign list로 들어감.
 
-const PriorityDoquery = ({ campaignId, priorityType, priorityList }) => {
+// 위의 모든 행위는 optionType이  2(클릭광고만) 일 경우에는 사용하지 않는다.
+// 왜냐하면 이모든 행위는 배너광고를 위한 list 작업이기 때문이다.
+const PriorityDoquery = ({
+  campaignId, priorityType, priorityList, optionType
+}) => {
   const getSearchQuery = (type) => {
     switch (type) {
       case 0: {
@@ -200,7 +204,11 @@ const PriorityDoquery = ({ campaignId, priorityType, priorityList }) => {
   const searchQuery = getSearchQuery(priorityType);
   const saveQuery = getSaveQuery(priorityType);
 
-  // 노출우선형일 경우, priorityList가 모든 creator에 해당되어야함.
+  if (optionType === 2) {
+    return new Promise((resolve, reject) => {
+      resolve();
+    });
+  }
   return Promise.all(
     priorityList.map(async targetId => new Promise((resolve, reject) => {
       doQuery(searchQuery, [targetId])
@@ -223,19 +231,44 @@ const PriorityDoquery = ({ campaignId, priorityType, priorityList }) => {
         });
     }))
   );
+
+  // 노출우선형일 경우, priorityList가 모든 creator에 해당되어야함.
 };
 
-// 크리에이터 우선형 및 노출 우선형일 경우 랜딩페이지 초기화.
-const LandingDoQuery = ({ campaignId, priorityType, priorityList }) => {
+const getCreatorList = () => new Promise((resolve, reject) => {
+  const creatorSelectQuery = `
+  SELECT creatorId
+  FROM creatorInfo
+  WHERE creatorContractionAgreement = 1
+  `;
+  doQuery(creatorSelectQuery)
+    .then((row) => {
+      const creatorList = row.result.map(data => data.creatorId);
+      resolve(creatorList);
+    })
+    .catch(() => {
+      console.log('LandingDoQuery => getCreatorList');
+      reject();
+    });
+});
+
+
+// optionType이 2인 경우에만 landingPage 초기화를 초기 캠페인 생성시
+// optionType이 1인 경우에는 landingPage 초기화를 실제 배너 최초 게시시에 실시.
+
+// optionType이 2인 경우에는 priorityList가 모든 크리에이터가 되게끔 해야한다.
+const LandingDoQuery = async ({ campaignId, priorityType }) => {
   const insertQuery = `
   INSERT INTO landingClick
   (campaignId, creatorId)
   VALUES (?, ?)
   `;
 
-  if (priorityType !== 1) {
+  const creatorList = await getCreatorList();
+
+  if (priorityType === 2) {
     return Promise.all(
-      priorityList.map(async targetId => new Promise((resolve, reject) => {
+      creatorList.map(async targetId => new Promise((resolve, reject) => {
         doQuery(insertQuery, [campaignId, targetId])
           .then((row) => {
             resolve();
@@ -272,6 +305,7 @@ router.post('/push', (req, res) => {
     bannerId, campaignName, dailyLimit, priorityType, optionType, priorityList, noBudget
   } = req.body;
 
+  // 현재까지 중에서 최신으로 등록된 켐페인 명을 가져와서 번호를 증가시켜 추가하기 위함.
   const searchQuery = `
   SELECT campaignId 
   FROM campaign 
@@ -283,6 +317,7 @@ router.post('/push', (req, res) => {
   INSERT INTO campaign 
   (campaignId, campaignName, marketerId, bannerId, dailyLimit, priorityType, optionType, onOff, targetList, marketerName) 
   VALUES (?, ?, ?, ?, ?, ?, ?, 0, ?, ?)`;
+
   // 캠페인 등록.
   doQuery(searchQuery, [marketerId])
     .then((row) => {
@@ -293,8 +328,10 @@ router.post('/push', (req, res) => {
         doQuery(saveQuery,
           [campaignId, campaignName, marketerId, bannerId, limit,
             priorityType, optionType, targetJsonData, marketerName]),
-        PriorityDoquery({ campaignId, priorityType, priorityList }),
-        // LandingDoQuery({ campaignId, priorityType, priorityList })
+        PriorityDoquery({
+          campaignId, priorityType, priorityList, optionType
+        }),
+        LandingDoQuery({ campaignId, priorityType })
       ])
         .then(() => {
           res.send([true, '캠페인이 등록되었습니다']);
@@ -307,11 +344,5 @@ router.post('/push', (req, res) => {
       res.send([false]);
     });
 });
-
-// 1. creator우선형일 경우 실행되는 Promise 정의
-
-
-// priorityType에 따라 쿼리가 달라짐.
-
 
 module.exports = router;

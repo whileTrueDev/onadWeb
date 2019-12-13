@@ -27,8 +27,7 @@ const style = theme => ({
     [theme.breakpoints.down('sm')]: {
       width: '100%'
     },
-    margin: theme.spacing(1),
-    marginBottom: theme.spacing(2),
+    marginBottom: theme.spacing(1),
     minWidth: 120,
   },
   item: {
@@ -143,6 +142,7 @@ const AccountNumberForm = (props) => {
     classes, handleClose
   } = props;
   // const [bank, setBank] = useState('농협');
+  const [realName, setRealName] = useState('');
   const [bankState, dispatch] = useReducer(bankReducer, { name: '농협', code: '011' });
   const [birth, setBirth] = useState(null);
   const [accountNum, setAccountNum] = useState(null);
@@ -155,6 +155,10 @@ const AccountNumberForm = (props) => {
 
   const onAccountChange = (value) => {
     setAccountNum(value.value);
+  };
+
+  const onRealNameChange = (event) => {
+    setRealName(event.target.value);
   };
 
   const onBirthChange = (value) => {
@@ -194,8 +198,10 @@ const AccountNumberForm = (props) => {
     // }
     const userAccount = {
       bankName: bankState.name,
+      bankRealName: realName,
       bankAccount: accountNum,
-      birth
+      birth,
+
     };
     axios.post(`${HOST}/api/regist/accountNum`, userAccount)
       .then((res) => {
@@ -214,28 +220,46 @@ const AccountNumberForm = (props) => {
 
   return (
     <form id="accountForm" onSubmit={handleSubmit}>
-      <Grid container direction="column" justify="center">
+      <Grid container direction="column" justify="center" spacing={2}>
+        <Grid item>
+          <Grid container direction="column">
+            <Grid item className={classes.item}>
+              <StyledItemText primary="은행" secondary="은행을 선택하세요." fontSize="14px" />
+            </Grid>
+            <Grid item className={classes.item}>
+              <TextField
+                required
+                select
+                name="bank"
+                id="bank"
+                className={classes.textField}
+                value={bankState.name || ''}
+                onChange={handleChangeBank}
+                style={{ width: '40%' }}
+                margin="dense"
+              >
+                {banks.map((row) => {
+                  const name = row.bankName;
+                  return <MenuItem key={name} value={name}>{name}</MenuItem>;
+                })}
+              </TextField>
+            </Grid>
+          </Grid>
+        </Grid>
         <Grid container direction="column">
           <Grid item className={classes.item}>
-            <StyledItemText primary="은행" secondary="은행을 선택하세요." fontSize="13px" />
+            <StyledItemText primary="예금주" secondary=" 해당 계좌의 예금주를 입력해주세요" fontSize="13px" />
           </Grid>
           <Grid item className={classes.item}>
             <TextField
               required
-              select
-              name="bank"
-              id="bank"
+              value={realName}
+              onChange={onRealNameChange}
+              margin="dense"
               className={classes.textField}
-              value={bankState.name || ''}
-              onChange={handleChangeBank}
-              style={{ width: '40%' }}
-              margin="normal"
-            >
-              {banks.map((row) => {
-                const name = row.bankName;
-                return <MenuItem key={name} value={name}>{name}</MenuItem>;
-              })}
-            </TextField>
+              name="userName"
+              style={{ width: '200px' }}
+            />
           </Grid>
         </Grid>
 
@@ -257,27 +281,28 @@ const AccountNumberForm = (props) => {
             />
           </Grid>
         </Grid>
-
-        <Grid container direction="column">
-          <Grid item className={classes.item}>
-            <StyledItemText primary="계좌번호" secondary=" (-)을 제외한 계좌번호를 입력하세요" fontSize="13px" />
-          </Grid>
-          <Grid container direction="row" className={classes.item}>
-            <Grid item>
-              <NumberFormat
-                required
-                value={accountNum}
-                onValueChange={onAccountChange}
-                customInput={StyledInput}
-                margin="dense"
-                className={classes.textField}
-                style={{ width: '250px' }}
-                allowNegative={false}
-                allowLeadingZeros={true}
-              />
+        <Grid item>
+          <Grid container direction="column">
+            <Grid item className={classes.item}>
+              <StyledItemText primary="계좌번호" secondary=" (-)을 제외한 계좌번호를 입력하세요" fontSize="14px" />
             </Grid>
-            <Grid item>
-              <Button size="sm" color="blueGray" onClick={accountValidation}>조회</Button>
+            <Grid container direction="row" className={classes.item}>
+              <Grid item>
+                <NumberFormat
+                  required
+                  value={accountNum}
+                  onValueChange={onAccountChange}
+                  customInput={StyledInput}
+                  margin="dense"
+                  className={classes.textField}
+                  style={{ width: '250px' }}
+                  allowNegative={false}
+                  allowLeadingZeros
+                />
+              </Grid>
+              <Grid item>
+                <Button size="sm" color="blueGray" onClick={accountValidation}>조회</Button>
+              </Grid>
             </Grid>
           </Grid>
         </Grid>

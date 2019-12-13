@@ -57,7 +57,6 @@ const useStyles = makeStyles(theme => ({
     background: 'linear-gradient(45deg, #00DBE0 30%, #21CBF3 90%)',
     color: 'white',
     textAlign: 'center'
-
   }
 }));
 
@@ -100,7 +99,7 @@ function TestChargeDialog(props) {
     stepReducer,
     {
       currentCash: currentCashNumber,
-      selectValue: '0',
+      selectValue: '',
       chargeType: '',
       totalDebit: ''
     }
@@ -318,8 +317,7 @@ function TestChargeDialog(props) {
           <div style={{ fontSize: 18, paddingTop: 15 }}>
               OnAD 캐시 충전하기 Step
             {' '}
-            {index + 1}
-/4
+            {index + 1}/4
           </div>
           <h4 className={classes.title}>{sources.title[index]}</h4>
         </div>

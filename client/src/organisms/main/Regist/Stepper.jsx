@@ -12,6 +12,7 @@ import axios from '../../../utils/axios';
 import Usertype from './Usertype';
 import RegistForm from './RegistForm';
 import PaperSheet from './Paper';
+import IndentityVerification from './IdentityVerification';
 import HOST from '../../../utils/config';
 import withRoot from '../Main/withRoot';
 import history from '../../../history';
@@ -106,11 +107,16 @@ const RegistStepper = withRoot((props) => {
   const { classes } = props;
   const [activeStep, setStep] = useState(0);
   const [userType, setType] = useState(0);
-  const [userInfo, setInfo] = useState({});
   const [state, dispatch] = useReducer(myReducer, initialState);
   const [loading, setLoading] = useState(0);
+  const [open, setOpen] = useState(0);
+  const [defaultName, setDefaultName] = useState('');
+
   const handleNext = () => {
     setStep(activeStep + 1);
+    if (activeStep === 0) {
+      setOpen(1);
+    }
   };
 
   const handleBack = () => {
@@ -127,12 +133,10 @@ const RegistStepper = withRoot((props) => {
     setType(type);
   };
 
-  const handleUserInfo = (user) => {
-    setInfo(user);
-  };
 
-  const handleUserSubmit = () => {
-    axios.post(`${HOST}/api/regist/marketer`, userInfo)
+  const handleUserSubmit = (user) => {
+    console.log(user);
+    axios.post(`${HOST}/api/regist/marketer`, user)
       .then((res) => {
         const { error } = res.data;
         if (!error) {
@@ -144,6 +148,11 @@ const RegistStepper = withRoot((props) => {
           setLoading(0);
           history.push('/');
         }
+      })
+      .catch(() => {
+        alert('등록중 오류가 났습니다. 본사로 문의해주세요.');
+        setLoading(0);
+        history.push('/');
       });
   };
 
@@ -159,16 +168,9 @@ const RegistStepper = withRoot((props) => {
           </StepContent>
         </Step>
         <Step key="1">
-          <StepLabel>개인정보 입력</StepLabel>
+          <StepLabel>미성년자 확인</StepLabel>
           <StepContent>
-            <RegistForm
-              userType={userType}
-              handleNext={handleNext}
-              handleBack={handleBack}
-              handleUserInfo={handleUserInfo}
-              state={state}
-              dispatch={dispatch}
-            />
+            <IndentityVerification handleNext={handleNext} handleBack={handleBack} open={open} setOpen={setOpen} setDefaultName={setDefaultName} />
           </StepContent>
         </Step>
         <Step key="2">
@@ -176,10 +178,22 @@ const RegistStepper = withRoot((props) => {
           <StepContent>
             <PaperSheet
               handleNext={handleNext}
-              handleReset={handleReset}
+              handleBack={handleReset}
+            />
+          </StepContent>
+        </Step>
+        <Step key="3">
+          <StepLabel>개인정보 입력</StepLabel>
+          <StepContent>
+            <RegistForm
+              userType={userType}
               handleUserSubmit={handleUserSubmit}
+              handleBack={handleBack}
+              state={state}
+              dispatch={dispatch}
               loading={loading}
               setLoading={setLoading}
+              defaultName={defaultName}
             />
           </StepContent>
         </Step>
