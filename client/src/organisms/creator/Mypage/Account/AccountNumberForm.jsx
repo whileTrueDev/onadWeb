@@ -142,6 +142,7 @@ const AccountNumberForm = (props) => {
     classes, handleClose
   } = props;
   // const [bank, setBank] = useState('농협');
+  const [realName, setRealName] = useState('');
   const [bankState, dispatch] = useReducer(bankReducer, { name: '농협', code: '011' });
   const [birth, setBirth] = useState(null);
   const [accountNum, setAccountNum] = useState(null);
@@ -154,6 +155,10 @@ const AccountNumberForm = (props) => {
 
   const onAccountChange = (value) => {
     setAccountNum(value.value);
+  };
+
+  const onRealNameChange = (event) => {
+    setRealName(event.target.value);
   };
 
   const onBirthChange = (value) => {
@@ -193,8 +198,10 @@ const AccountNumberForm = (props) => {
     // }
     const userAccount = {
       bankName: bankState.name,
+      bankRealName: realName,
       bankAccount: accountNum,
-      birth
+      birth,
+
     };
     axios.post(`${HOST}/api/regist/accountNum`, userAccount)
       .then((res) => {
@@ -239,44 +246,39 @@ const AccountNumberForm = (props) => {
             </Grid>
           </Grid>
         </Grid>
-        <Grid item>
-          <Grid container direction="row">
-            <Grid container direction="column" xs={5}>
-              <Grid item className={classes.item}>
-                <StyledItemText primary="예금주명" fontSize="14px" />
-              </Grid>
-              <Grid item className={classes.item}>
-                <NumberFormat
-                  required
-                  value={birth}
-                  onValueChange={onBirthChange}
-                  customInput={StyledInput}
-                  className={classes.textField}
-                  margin="dense"
-                  style={{ width: '80%' }}
-                  allowNegative={false}
-                  allowLeadingZeros
-                />
-              </Grid>
-            </Grid>
-            <Grid container direction="column" xs={7}>
-              <Grid item className={classes.item}>
-                <StyledItemText primary="주민번호 앞자리" fontSize="14px" />
-              </Grid>
-              <Grid item className={classes.item}>
-                <NumberFormat
-                  required
-                  value={birth}
-                  onValueChange={onBirthChange}
-                  customInput={StyledInput}
-                  className={classes.textField}
-                  margin="dense"
-                  style={{ width: '200px' }}
-                  allowNegative={false}
-                  allowLeadingZeros
-                />
-              </Grid>
-            </Grid>
+        <Grid container direction="column">
+          <Grid item className={classes.item}>
+            <StyledItemText primary="예금주" secondary=" 해당 계좌의 예금주를 입력해주세요" fontSize="13px" />
+          </Grid>
+          <Grid item className={classes.item}>
+            <TextField
+              required
+              value={realName}
+              onChange={onRealNameChange}
+              margin="dense"
+              className={classes.textField}
+              name="userName"
+              style={{ width: '200px' }}
+            />
+          </Grid>
+        </Grid>
+
+        <Grid container direction="column">
+          <Grid item className={classes.item}>
+            <StyledItemText primary="주민번호 앞자리" fontSize="13px" />
+          </Grid>
+          <Grid item className={classes.item}>
+            <NumberFormat
+              required
+              value={birth}
+              onValueChange={onBirthChange}
+              customInput={StyledInput}
+              className={classes.textField}
+              margin="dense"
+              style={{ width: '200px' }}
+              allowNegative={false}
+              allowLeadingZeros={true}
+            />
           </Grid>
         </Grid>
         <Grid item>

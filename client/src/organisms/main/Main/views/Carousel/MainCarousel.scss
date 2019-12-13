@@ -8,13 +8,15 @@ $viewer-distance: 500px;
 	font-weight: 700;
 	color: #FFAA00;
 	font-family: Noto Sans KR;
+	opacity: 0;
+	animation-name: nowCreatorTitle;
+	animation-duration:2s;
+	animation-fill-mode: forwards;
 }
 
 .titleWrapper {
-	height: 0px;
-	animation-name: titleWrapper;
-	animation-duration:1s;
-	animation-fill-mode: forwards;
+	height:64px;
+	width: 100%;
 }
 
 .before-carousel {
@@ -29,7 +31,10 @@ $viewer-distance: 500px;
 
 	.after-fetch {
 		visibility: hidden;
-		
+		animation-name: after-fetch;
+		animation-duration:3.5s;
+		animation-fill-mode: forwards;
+
 		.carousel {
 			padding: 20px;
 			perspective: $viewer-distance;
@@ -67,7 +72,7 @@ $viewer-distance: 500px;
 				height: 40px;	
 				cursor: pointer;
 				background: none;
-				border: 1px solid;
+				border: 1px solid #FFAA00;
 				letter-spacing: 1px;
 				padding: 5px 10px;
 			}
@@ -77,7 +82,7 @@ $viewer-distance: 500px;
 				height: 40px;	
 				cursor: pointer;
 				background: none;
-				border: 1px solid;
+				border: 1px solid #FFAA00;
 				letter-spacing: 1px;
 				padding: 5px 10px;
 			}
@@ -98,25 +103,27 @@ $viewer-distance: 500px;
 	}
 }
 
-@keyframes titleWrapper {
+
+@keyframes after-fetch {
+	0% {
+		visibility: hidden;
+	}
+	99% {
+		visibility: hidden;
+	}
+	100% {
+		visibility: visible;
+	}
+}
+
+@keyframes nowCreatorTitle {
 	from {
-		height: 0px;
+		opacity: 0;
 	}
 	to {
-		height: 63px;
+		opacity: 1;
 	}
 }
 
-
-.stayEndCaoursel {
-	height: 420px;
-	padding-top: 20px;
-	border-bottom: 3px solid #FFAA00;
-}
-
-.stayEndTitle {
-	color: #FFAA00;
-		opacity: 1;
-}
 
 

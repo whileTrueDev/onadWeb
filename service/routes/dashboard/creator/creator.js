@@ -25,7 +25,7 @@ router.get('/income', (req, res) => {
   SELECT 
   creatorTotalIncome as creatorTotalIncome,
   creatorReceivable as creatorReceivable,
-  creatorAccountNumber, creatorIncome.date, creatorContractionAgreement
+  creatorAccountNumber, creatorIncome.date, creatorContractionAgreement, realName
   FROM creatorInfo as ci
   JOIN creatorIncome 
   ON ci.creatorId = creatorIncome.creatorId
@@ -126,7 +126,7 @@ router.get('/profile', (req, res) => {
   const profileQuery = `
   SELECT 
   creatorId, creatorName, creatorIp, creatorMail, 
-  creatorAccountNumber, creatorContractionAgreement, creatorTwitchId
+  creatorAccountNumber, creatorContractionAgreement, creatorTwitchId, realName
   FROM creatorInfo 
   WHERE creatorId = ?`;
 

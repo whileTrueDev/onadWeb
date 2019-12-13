@@ -163,17 +163,17 @@ router.post('/accountNum', (req, res, next) => {
   let query;
   if (userType === 'creator') {
     userId = req.session.passport.user.creatorId;
-    query = 'UPDATE creatorInfo SET creatorAccountNumber = ? WHERE creatorId = ?';
+    query = 'UPDATE creatorInfo SET creatorAccountNumber = ?, realName = ?  WHERE creatorId = ?';
   } else {
     userId = req.session.passport.user.userid;
-    query = 'UPDATE marketerInfo SET marketerAccountNumber = ? WHERE marketerId = ?';
+    query = 'UPDATE marketerInfo SET marketerAccountNumber = ?, accountHolder = ? WHERE marketerId = ?';
   }
 
-  const { bankName, bankAccount } = req.body;
+  const { bankName, bankRealName, bankAccount } = req.body;
   const AccountNumber = `${bankName}_${bankAccount}`;
   // 계좌정보 변경시 암호화하여 저장한다.
   const enciphedAccountNum = encrypto.encipher(AccountNumber);
-  doQuery(query, [enciphedAccountNum, userId])
+  doQuery(query, [enciphedAccountNum, bankRealName, userId])
     .then((data) => {
       res.send(data);
     })

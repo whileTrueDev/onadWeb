@@ -54,11 +54,11 @@ function MyCash(props) {
           {!accountData.loading && !accountData.error
               && !accountData.payload.accountNumber ? (
                 <Tooltip title="환불계좌가 등록되지 않아 진행이 불가합니다.">
-                  <span><Button color="danger" disabled>환불</Button></span>
+                  <span><Button color="danger" disabled>환불요청</Button></span>
                 </Tooltip>
             ) : (
               <Button color="danger" onClick={() => { refundDialog.handleOpen(); }}>
-                  환불
+                  환불요청
               </Button>
             )}
         </div>
@@ -122,6 +122,7 @@ function MyCash(props) {
           open={refundDialog.open}
           handleClose={refundDialog.handleClose}
           accountNumber={accountData.payload.accountNumber}
+          accountHolder={accountData.payload.accountHolder}
           currentCash={!cashData.loading && !cashData.error
             ? cashData.payload.cashAmount : 0}
         />

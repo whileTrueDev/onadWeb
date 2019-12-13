@@ -80,6 +80,21 @@ const AccountCard = (props) => {
                 <Divider style={{ marginBottom: '15px' }} />
               </Grid>
             </Grid>
+            <Grid item>
+              <Typography variant="subtitle1" id="select-account" className={classes.contentTitle}>
+               현재 등록된 예금주
+              </Typography>
+            </Grid>
+            <Grid item>
+              <Typography
+                id="select-account"
+                className={classes.contentDetail}
+              >
+                {profileData.payload.result.realName ? `${profileData.payload.result.realName}` : '현재 등록된 예금주가 존재하지 않습니다.'}
+              </Typography>
+              <Divider style={{ marginBottom: '15px' }} />
+            </Grid>
+
           </Grid>
           <Grid item>
             <Grid container direction="column">
