@@ -1,6 +1,8 @@
 import React from 'react';
 import shortid from 'shortid';
-import { Grid, Typography } from '@material-ui/core';
+import {
+  Grid, Typography, Button
+} from '@material-ui/core';
 import Skeleton from '@material-ui/lab/Skeleton';
 import BubbleChart from '@material-ui/icons/BubbleChart';
 import { compose, withProps, withHandlers } from 'recompose';
@@ -17,7 +19,8 @@ const MapWithAMarkerClusterer = compose(
     googleMapURL: [
       'https://maps.googleapis.com/maps/api/js',
       `?key=${process.env.REACT_APP_GOOGLE_MAP_API_KEY}`,
-      '&v=3.exp&libraries=geometry,drawing,places'].join(''),
+      '&v=3',
+    ].join(''),
     loadingElement: <div style={{ height: '100%' }} />,
     containerElement: <div style={{ height: '400px' }} />,
     mapElement: <div style={{ height: '100%' }} />,
@@ -54,6 +57,7 @@ const MapWithAMarkerClusterer = compose(
 // Ip To Geo Map component
 function IpToGeo(props) {
   const { data } = props;
+  const [mapOpen, setMapOpen] = React.useState(false);
 
   return (
     <div>
@@ -61,7 +65,26 @@ function IpToGeo(props) {
         <Skeleton height={400} />
       )}
       {!data.loading && data.payload && (
-        <MapWithAMarkerClusterer markers={data.payload} />
+        <div>
+          {mapOpen ? (null) : (
+            <div style={{
+              display: 'flex', justifyContent: 'center', alignItems: 'center', height: 150
+            }}
+            >
+              <Button
+                variant="contained"
+                color="secondary"
+                onClick={() => { setMapOpen(true); }}
+              >
+              지도보기
+              </Button>
+            </div>
+          )}
+
+          {mapOpen ? (
+            <MapWithAMarkerClusterer markers={data.payload} />
+          ) : (null)}
+        </div>
       )}
     </div>
   );
