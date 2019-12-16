@@ -37,9 +37,12 @@ export default function BannerBroadCreators(props) {
             {creatorsData.payload.slice(0, 50).map((creator, index) => (
               <Grid key={creator.creatorName} item xs={6} md={4} lg={3} style={{ padding: 8 }}>
                 <Avatar
-                  style={{ cursor: 'pointer' }}
                   src={creator.creatorLogo}
-                  alt={creator.creatorName}
+                  style={{
+                    cursor: 'pointer',
+                    backgroundSize: 'cover',
+                    backgroundImage: 'url(\'/pngs/logo/onad_logo_vertical_black.png\')'
+                  }}
                   onClick={(e) => { handleClick(e, index); }}
                 />
                 <Typography variant="body1">{`${index + 1}. ${creator.creatorName}`}</Typography>

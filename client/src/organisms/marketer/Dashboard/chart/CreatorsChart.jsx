@@ -97,7 +97,15 @@ export default function CustomPieChart(props) {
                       )}
                     </div>
                     )}
-                  avatar={(<Avatar alt={d.creatorName} src={d.creatorLogo} />)}
+                  avatar={(
+                    <Avatar
+                      style={{
+                        backgroundSize: 'cover',
+                        backgroundImage: 'url(\'/pngs/logo/onad_logo_vertical_black.png\')'
+                      }}
+                      src={d.creatorLogo}
+                    />
+                    )}
                   onMouseEnter={() => {
                     setActiveIndex(index);
                   }}

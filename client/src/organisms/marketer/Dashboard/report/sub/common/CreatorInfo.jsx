@@ -40,7 +40,11 @@ export default function CreatorInfo(props) {
           <div className={classes.flex}>
             <Avatar
               src={creatorInfo.creatorLogo}
-              alt={creatorInfo.creatorName}
+              alt=""
+              style={{
+                backgroundSize: 'cover',
+                backgroundImage: 'url(\'/pngs/logo/onad_logo_vertical_black.png\')'
+              }}
             />
             <Typography gutterBottom variant="h6">
               &emsp;
