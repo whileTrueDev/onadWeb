@@ -85,7 +85,7 @@ export default function CampaignOnlyClickAd(props) {
     <div>
       {!reportData.loading && reportData.payload
       && !valueChartData.loading && valueChartData.payload
-      && !ipToGeoData.loading && clickData.loading && (
+      && !ipToGeoData.loading && !clickData.loading && (
       <Grid container>
         {/* 헤드라인 */}
         <Grid item xs={12}>

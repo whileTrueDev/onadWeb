@@ -1,7 +1,7 @@
 import React from 'react';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import {
-  Grid, Divider, Typography,
+  Grid, Divider, Typography, Button
 } from '@material-ui/core';
 import { Assignment } from '@material-ui/icons';
 // own components
@@ -13,6 +13,7 @@ import ReportCard from './common/ReportCard';
 import InteractionHeatmap from './onlyClickSub/InteractionHeatmap';
 import InteractionToGeo from './onlyClickSub/InteractionToGeo';
 import CampaignInfo from './common/CampaignInfo';
+import jsPdfGenerate from './common/PdfGenerator';
 
 const makeContents = reportData => ({
   price: [
@@ -133,6 +134,16 @@ export default function CampaignBannerClickAd(props) {
               {reportData.payload.campaignName}
                 &emsp;광고 효과 분석
             </Typography>
+
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => {
+                jsPdfGenerate();
+              }}
+            >
+              PDF로 다운로드
+            </Button>
 
           </div>
           <Divider />
