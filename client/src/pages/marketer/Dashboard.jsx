@@ -35,11 +35,13 @@ export default function Dashboard() {
     <div className={classes.root}>
       {(normalData.loading || campaignData.loading
         || onOffData.loading || creatorsData.loading
-        || bannerData.loading || valueChartData.loading) ? (
+        || bannerData.loading || valueChartData.loading
+        || broadCreatorData.loading) ? (
           <ReportLoading />
         ) : (
           <Grid container spacing={2}>
             {normalData.payload && campaignData.payload
+            && onOffData.loading && broadCreatorData.payload
             && creatorsData.payload && bannerData.payload
             && valueChartData.payload && (
             <Grid item xs={12}>

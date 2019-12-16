@@ -22,8 +22,6 @@ export default function CustomPieChart(props) {
     setActiveIndex(index);
   };
 
-  console.log(broadCreatorData);
-
   return (
     <Grid container>
 
