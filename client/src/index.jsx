@@ -53,9 +53,11 @@ const productionRouter = (
       <Route exact path="/policy/:privacy" component={Policy} />
       <Route exact path="/notice" component={Notice} />
       <Route path="/notice/:code" component={Notice} />
-      <Route exact path="/dashboard/creator/door" component={CreatorDashboardDoor} />
-      <Route path="/dashboard/creator" component={CreatorDashboard} />
-      <Route path="/dashboard/marketer" component={MarketerDashboard} />
+      <ThemeProvider theme={theme}>
+        <Route exact path="/dashboard/creator/door" component={CreatorDashboardDoor} />
+        <Route path="/dashboard/creator" component={CreatorDashboard} />
+        <Route path="/dashboard/marketer" component={MarketerDashboard} />
+      </ThemeProvider>
       {/* not found page */}
       <Route component={NotFound} />
     </Switch>
