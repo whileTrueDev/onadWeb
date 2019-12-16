@@ -9,16 +9,16 @@ export default function ReportLoading() {
         <Grid item xs={12}>
           <Grid container spacing={2}>
             <Grid item xs={12} sm={6} lg={3}>
-              <Skeleton height={180} />
+              <Skeleton variant="rect" height={180} />
             </Grid>
             <Grid item xs={12} sm={6} lg={3}>
-              <Skeleton height={180} />
+              <Skeleton variant="rect" height={180} />
             </Grid>
             <Grid item xs={12} sm={6} lg={3}>
-              <Skeleton height={180} />
+              <Skeleton variant="rect" height={180} />
             </Grid>
             <Grid item xs={12} sm={6} lg={3}>
-              <Skeleton height={180} />
+              <Skeleton variant="rect" height={180} />
             </Grid>
           </Grid>
         </Grid>
@@ -26,13 +26,13 @@ export default function ReportLoading() {
         <Grid item xs={12} lg={3}>
           <Grid container spacing={2}>
             <Grid item xs={12}>
-              <Skeleton height={100} />
+              <Skeleton variant="rect" height={100} />
             </Grid>
             <Grid item xs={12}>
-              <Skeleton height={200} />
+              <Skeleton variant="rect" height={200} />
             </Grid>
             <Grid item xs={12}>
-              <Skeleton height={200} />
+              <Skeleton variant="rect" height={200} />
             </Grid>
           </Grid>
         </Grid>
@@ -40,10 +40,10 @@ export default function ReportLoading() {
         <Grid item xs={12} lg={9}>
           <Grid container spacing={2}>
             <Grid item xs={12}>
-              <Skeleton height={500} />
+              <Skeleton variant="rect" height={500} />
             </Grid>
             <Grid item xs={12}>
-              <Skeleton height={400} />
+              <Skeleton variant="rect" height={400} />
             </Grid>
 
           </Grid>
