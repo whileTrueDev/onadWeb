@@ -172,8 +172,8 @@ router.post('/accountNum', (req, res, next) => {
   const { bankName, bankRealName, bankAccount } = req.body;
   const AccountNumber = `${bankName}_${bankAccount}`;
   // 계좌정보 변경시 암호화하여 저장한다.
-  // const enciphedAccountNum = encrypto.encipher(AccountNumber);
-  doQuery(query, [AccountNumber, bankRealName, userId])
+  const enciphedAccountNum = encrypto.encipher(AccountNumber);
+  doQuery(query, [enciphedAccountNum, bankRealName, userId])
     .then((data) => {
       res.send(data);
     })
