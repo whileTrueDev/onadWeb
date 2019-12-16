@@ -7,6 +7,7 @@ import { withStyles } from '@material-ui/core/styles';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import {
   Menu, MenuItem, IconButton, Button,
+  Tooltip
 } from '@material-ui/core';
 import { Domain, Dashboard } from '@material-ui/icons';
 import AppBar from '../Main/components/AppBar';
@@ -232,7 +233,7 @@ function AppAppBar(props) {
       <AppBar className={classes.root} position="fixed">
         <Toolbar className={classes.toolbar}>
           <div className={classes.left} />
-          <a href="/" className={noButtons? classes.noButtonIcon : classes.icon }>
+          <a href="/" className={noButtons ? classes.noButtonIcon : classes.icon}>
             <img
               src="/pngs/logo/onad_logo_vertical_black.png"
               id="logo"
@@ -242,7 +243,13 @@ function AppAppBar(props) {
           </a>
 
           {noButtons ? (
-            <div className={classes.rightDesktop} />
+            <div className={classes.rightDesktop}>
+              <Tooltip title="대시보드로 이동">
+                <IconButton className={classes.rightLink} onClick={handleClick}>
+                  <Dashboard color="action" />
+                </IconButton>
+              </Tooltip>
+            </div>
           ) : (
 
             <div className={classes.rightDesktop}>

@@ -59,7 +59,6 @@ const useStyles = makeStyles(theme => ({
     fontFamily: 'Noto Sans KR',
     fontWeight: 300,
     fontSize: '12px',
-    fontWeight: 'bold',
   },
   list: {
     margin: 0,

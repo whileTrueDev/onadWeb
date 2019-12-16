@@ -18,67 +18,71 @@ const makeContents = reportData => ({
   price: [
     {
       title: '광고 총 비용',
-      value: Number(parseInt(reportData.totalCPM, 10) + parseInt(reportData.totalCPC, 10)),
+      value: Number(reportData.totalCPM) + Number(reportData.totalCPC) || 0,
       unit: '원'
     },
     {
       title: '배너광고 총 비용',
-      value: Number(reportData.totalCPM),
+      value: Number(reportData.totalCPM) || 0,
       unit: '원'
     },
     {
       title: '클릭광고 총 비용',
-      value: Number(reportData.totalCPC),
+      value: Number(reportData.totalCPC) || 0,
       unit: '원'
     }
   ],
   effect: [
     {
       title: '배너 총 노출 수',
-      value: Number(reportData.totalViewCount),
+      value: Number(reportData.totalViewCount) || 0,
       unit: '회'
     },
     {
       title: '배너 총 클릭 수',
-      value: Number(reportData.totalClick),
+      value: Number(reportData.totalClick) || 0,
       unit: '회'
     },
     {
       title: '홈페이지 이동 수',
-      value: Number(reportData.totalTransfer),
+      value: Number(reportData.totalTransfer) || 0,
       unit: '회'
     },
   ],
   metrics: [
     {
       title: '전환당 비용',
-      value: ((reportData.totalCPM + reportData.totalCPC) / reportData.totalTransfer),
+      value: ((reportData.totalCPM + reportData.totalCPC) / reportData.totalTransfer) || 0,
       unit: '원',
       decimalRange: 2
     },
     {
       title: '전환율',
-      value: (reportData.totalTransfer / reportData.totalLandingView),
+      value: (reportData.totalTransfer / reportData.totalLandingView) || 0,
       unit: '%',
       decimalRange: 4
     },
-    { title: '상호작용 수', value: (reportData.totalClick + reportData.totalTransfer), unit: '회' },
+    {
+      title: '상호작용 수',
+      value: (reportData.totalClick + reportData.totalTransfer) || 0,
+      unit: '회'
+    },
     {
       title: '상호 작용 발생율',
       value: ((reportData.totalClick + reportData.totalTransfer)
-                / reportData.totalViewCount),
+                / reportData.totalViewCount) || 0,
       unit: '%',
       decimalRange: 4
     },
     {
       title: '배너조회율',
-      value: (reportData.totalClick / reportData.totalViewCount),
+      value: (reportData.totalClick / reportData.totalViewCount) || 0,
       unit: '',
       decimalRange: 4
     },
     {
       title: '배너클릭율',
-      value: (reportData.totalTransfer / reportData.totalViewCount),
+      value: (reportData.totalTransfer / reportData.totalViewCount) || 0,
       unit: '',
       decimalRange: 4
     },
