@@ -60,7 +60,7 @@ export default function CampaignInfo(props) {
   return (
     <Grid container spacing={4}>
       <Grid item xs={12}>
-        <div style={{ maxWidth: 320, maxHeight: 160 }}>
+        <div style={{ maxWidth: 320, maxHeight: 160, marginBottom: '16px' }}>
           <Typography variant="h6">배너 이미지</Typography>
           <img
             style={{
