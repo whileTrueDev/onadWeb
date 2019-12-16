@@ -95,8 +95,10 @@ export default function CampaignList(props) {
                   className={classes.list}
                   button
                   onClick={(e) => {
-                    campaignMenuAnchor.handleClick(e);
-                    setSelectedCampaign(d);
+                    if (e.target.id !== 'onoff-switch') {
+                      campaignMenuAnchor.handleClick(e);
+                      setSelectedCampaign(d);
+                    }
                   }}
                 >
                   <Grid container spacing={2} justify="space-between">
@@ -108,6 +110,7 @@ export default function CampaignList(props) {
                       <FormControlLabel
                         control={(
                           <Switch
+                            id="onoff-switch"
                             color="secondary"
                             checked={Boolean(d.onOff)}
                             onChange={async () => {
