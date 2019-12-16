@@ -53,6 +53,10 @@ const styles = theme => ({
     marginTop: theme.spacing(1),
     marginRight: theme.spacing(1),
   },
+  adornment:{
+    fontSize : '20px',
+    fontWeight: 900
+  }
 });
 
 // domain select용.
@@ -102,7 +106,7 @@ const TextMaskCustom = (props) => {
 
 const RegistForm = (props) => {
   const {
-    classes, userType, handleBack, handleUserInfo, handleUserSubmit, state, dispatch, loading, setLoading, defaultName
+    classes, userType, handleBack, handleUserInfo, handleUserSubmit, state, dispatch, loading, setLoading
   } = props;
 
   const [marketerCustomDomain, setCustomDomain] = useState('');
@@ -250,16 +254,16 @@ const RegistForm = (props) => {
             <Grid item>
               <TextField
                 required
-                label="이름(회사명)"
+                label="회사명(브랜드명)"
                 id="name"
                 className={classes.textField}
-                defaultValue={defaultName}
-                placeholder="이름(회사명)을 입력하세요"
+                // defaultValue={defaultName}
+                placeholder="회사명(브랜드명)을 입력하세요"
                 margin="normal"
                 InputLabelProps={{
                   shrink: true,
                 }}
-                helperText="크리에이터들에게 보여질 이름입니다!"
+                helperText="크리에이터와 시청자들에게 보여질 이름입니다!"
               />
             </Grid>
             <Grid item>
@@ -317,7 +321,7 @@ const RegistForm = (props) => {
                   shrink: true,
                 }}
                 InputProps={{
-                  endAdornment: <InputAdornment position="end">@</InputAdornment>,
+                  endAdornment: <InputAdornment position="end" className={classes.adornment}><div>@</div></InputAdornment>,
                 }}
               />
             </Grid>
