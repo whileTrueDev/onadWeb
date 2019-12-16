@@ -43,15 +43,24 @@ const getCreatorCampaignList = (creatorId) => {
   });
 };
 
+/*
+2019-12-16 수정
+campaignId를 각각 체크하여 해당 캠페인의 marketer의 onOff를 살핀다.
+onOff가 off일 경우에는 제한다.
+
+*/
 const getOnCampaignList = () => {
   console.log('현재 ON되어있는 campaign List를 조회한다.');
 
   // 랜딩페이지가 아닌 경우,
   const campaignListQuery = `
-                            SELECT campaignId 
-                            FROM campaign
-                            WHERE onOff = 1
-                            AND NOT optionType = 2
+  SELECT campaignId
+  FROM campaign
+  LEFT JOIN marketerInfo
+  ON campaign.marketerId = marketerInfo.marketerId
+  WHERE NOT marketerInfo.marketerContraction = 0
+  AND campaign.onOff = 1
+  AND NOT campaign.optionType = 2
                             `;
 
   return new Promise((resolve, reject) => {
@@ -244,7 +253,12 @@ async function getBanner([creatorId, gameId, prevBannerName]) {
   const onCreatorcampaignList = creatorCampaignList.filter(campaignId => onCampaignList.includes(campaignId));
   const onCategorycampaignList = categoryCampaignList.filter(campaignId => onCampaignList.includes(campaignId));
   const campaignList = Array.from(new Set(onCreatorcampaignList.concat(onCategorycampaignList)));
+
+
   const cutCampaignList = campaignList.filter(campaignId => !banList.includes(campaignId)); // 마지막에 banList를 통해 거르기.
+
+  console.log(cutCampaignList);
+
   const campaignId = cutCampaignList[getRandomInt(cutCampaignList.length)];
 
   if (!campaignId) {
@@ -313,4 +327,8 @@ const calculateCampaignId = ({ cutUrl, prevBannerName }) => {
 
 // module.exports = router;
 
-calculateCampaignId({ cutUrl: '/8s5g3f0n', prevBannerName: 'jinsagalbi_01' });
+// calculateCampaignId({ cutUrl: '/8s5g3f0n', prevBannerName: 'jinsagalbi_01' });
+
+getOnCampaignList().then((data) => {
+  console.log(data);
+});
