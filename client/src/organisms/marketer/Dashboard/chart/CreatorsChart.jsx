@@ -71,7 +71,7 @@ export default function CustomPieChart(props) {
         )}
 
         {!creatorsData.loading && !broadCreatorData.loading
-        && creatorsData.payload && broadCreatorData.payload && (
+        && creatorsData.payload.length > 0 && broadCreatorData.payload && (
           <Grid container>
             <Grid item xs={12}>
               <Typography variant="caption">* 아이콘 클릭시 해당 크리에이터의 채널로 이동됩니다.</Typography>

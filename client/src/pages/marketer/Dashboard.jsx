@@ -41,7 +41,6 @@ export default function Dashboard() {
         ) : (
           <Grid container spacing={2}>
             {normalData.payload && campaignData.payload
-            && onOffData.loading && broadCreatorData.payload
             && creatorsData.payload && bannerData.payload
             && valueChartData.payload && (
             <Grid item xs={12}>
