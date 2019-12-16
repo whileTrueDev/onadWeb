@@ -51,7 +51,7 @@ const ReportCard = (props) => {
             <CardBody>
               <div className={classes.titleSection}>
 
-                <Typography variant="h6" className={classes.title}>
+                <Typography variant="body1" className={classes.title}>
                   {content.title}
                 </Typography>
 
@@ -70,7 +70,7 @@ const ReportCard = (props) => {
 
               <div style={{ display: 'flex' }}>
 
-                <Typography gutterBottom variant="h4" className={classes.value}>
+                <Typography gutterBottom variant="h5" className={classes.value}>
                   {content.value === '-' ? (
                     <span>{content.value}</span>
                   ) : (

@@ -87,8 +87,8 @@ const makeContents = reportData => ({
       unit: '',
       decimalRange: 4
     },
-    { title: '노출 점유율(도입예정)', value: '', unit: '%' },
-    { title: '리뷰 수(도입예정)', value: '', unit: '회' },
+    { title: '지표 준비중', value: '', unit: '' },
+    { title: '지표 준비중.', value: '', unit: '' },
   ]
 });
 
@@ -124,7 +124,7 @@ export default function CampaignBannerClickAd(props) {
       && !valueChartData.loading && valueChartData.payload
       && !creatorsData.loading && !ipToGeoData.loading
       && !clickData.loading && (
-      <Grid container>
+      <Grid container id="report-window">
         {/* 헤드라인 */}
         <Grid item xs={12}>
           <div className={classes.headline}>
@@ -139,7 +139,9 @@ export default function CampaignBannerClickAd(props) {
               variant="contained"
               color="primary"
               onClick={() => {
-                jsPdfGenerate();
+                const reportElement = document.getElementById('report-window');
+
+                jsPdfGenerate(reportElement);
               }}
             >
               PDF로 다운로드
