@@ -193,7 +193,7 @@ const RegistStepper = withRoot((props) => {
               dispatch={dispatch}
               loading={loading}
               setLoading={setLoading}
-              defaultName={defaultName}
+              // defaultName={defaultName}
             />
           </StepContent>
         </Step>
