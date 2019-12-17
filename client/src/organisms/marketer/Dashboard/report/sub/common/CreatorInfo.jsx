@@ -41,10 +41,6 @@ export default function CreatorInfo(props) {
             <Avatar
               src={creatorInfo.creatorLogo}
               alt=""
-              style={{
-                backgroundSize: 'cover',
-                backgroundImage: 'url(\'/pngs/logo/onad_logo_vertical_black.png\')'
-              }}
             />
             <Typography gutterBottom variant="h6">
               &emsp;

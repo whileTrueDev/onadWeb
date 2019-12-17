@@ -4,12 +4,14 @@ import CardTemplate from '../common/CardTemplate';
 import ClickHeatmap from '../../../../../../atoms/Chart/ClickHeatmap';
 
 export default function InteractionHeatmap(props) {
-  const { clickData } = props;
+  const { clickData, ...rest } = props;
   return (
-    <CardTemplate title="날짜별 상호작용" IconComponent={Flag} color="secondary">
-      <ClickHeatmap
-        data={clickData}
-      />
-    </CardTemplate>
+    <div {...rest}>
+      <CardTemplate title="날짜별 상호작용" IconComponent={Flag} color="secondary">
+        <ClickHeatmap
+          data={clickData}
+        />
+      </CardTemplate>
+    </div>
   );
 }

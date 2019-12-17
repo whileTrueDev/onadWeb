@@ -121,10 +121,10 @@ function groupByCity(payload) {
 
 // Ip To Geo Table
 function IpToGeoTable(props) {
-  const { data } = props;
+  const { data, ...rest } = props;
 
   return (
-    <div style={{ height: '400px' }}>
+    <div style={{ height: '410px' }} {...rest}>
       {!data.loading && data.payload && (
         <MaterialTable
           style={{ boxShadow: 'none' }}
@@ -166,18 +166,20 @@ function IpToGeoTable(props) {
 }
 
 export default function InteractionToGeo(props) {
-  const { ipToGeoData } = props;
+  const { ipToGeoData, ...rest } = props;
   return (
-    <CardTemplate title="지역별 상호작용" color="secondary" IconComponent={BubbleChart}>
-      <Grid container spacing={1}>
-        <Grid item xs={12}>
-          <IpToGeo data={ipToGeoData} />
-        </Grid>
+    <div {...rest}>
+      <CardTemplate title="지역별 상호작용" color="secondary" IconComponent={BubbleChart}>
+        <Grid container spacing={1}>
+          <Grid item xs={12}>
+            <IpToGeo data={ipToGeoData} />
+          </Grid>
 
-        <Grid item xs={12}>
-          <IpToGeoTable data={ipToGeoData} />
+          <Grid item xs={12}>
+            <IpToGeoTable data={ipToGeoData} />
+          </Grid>
         </Grid>
-      </Grid>
-    </CardTemplate>
+      </CardTemplate>
+    </div>
   );
 }

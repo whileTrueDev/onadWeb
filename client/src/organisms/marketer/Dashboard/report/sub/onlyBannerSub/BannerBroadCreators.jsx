@@ -8,7 +8,7 @@ import CardTemplate from '../common/CardTemplate';
 import CreatorInfo from '../common/CreatorInfo';
 
 export default function BannerBroadCreators(props) {
-  const { creatorsData } = props;
+  const { creatorsData, ...rest } = props;
 
   // For creator menu
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -24,12 +24,12 @@ export default function BannerBroadCreators(props) {
   };
 
   return (
-    <div>
+    <div {...rest}>
       {creatorsData.payload.length === 0 ? (
         null
       ) : (
         <CardTemplate title="배너 송출 크리에이터" color="secondary" IconComponent={AccountCircle}>
-          <Grid container style={{ height: 400, overflow: 'auto' }}>
+          <Grid container style={{ height: 380, overflow: 'auto' }} id="broad-creators">
             <Grid item container direction="column">
               <Typography variant="caption">* 송출량 순 상위 50명까지의 크리에이터 목록입니다.</Typography>
               <Typography variant="caption">* 크리에이터 클릭 시, 상세정보를 볼 수 있습니다.</Typography>
@@ -40,8 +40,6 @@ export default function BannerBroadCreators(props) {
                   src={creator.creatorLogo}
                   style={{
                     cursor: 'pointer',
-                    backgroundSize: 'cover',
-                    backgroundImage: 'url(\'/pngs/logo/onad_logo_vertical_black.png\')'
                   }}
                   onClick={(e) => { handleClick(e, index); }}
                 />

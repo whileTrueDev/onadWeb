@@ -11,10 +11,12 @@ import useTooltip from '../../../../../../utils/lib/hooks/useTooltip';
 
 const useStyles = makeStyles(theme => ({
   container: {
-    padding: '28px 0px'
+    padding: '28px 0px',
   },
   card: {
-    margin: 0, padding: 0
+    margin: 0,
+    padding: 0,
+    backgroundColor: theme.palette.background.paper
   },
   titleSection: {
     display: 'flex',
@@ -34,7 +36,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const ReportCard = (props) => {
-  const { data } = props;
+  const { data, ...rest } = props;
 
   const {
     tooltipIndex, anchorEl, handleTooltipOpen, handleTooltipClose
@@ -43,7 +45,7 @@ const ReportCard = (props) => {
   const classes = useStyles();
 
   return (
-    <Grid container spacing={3} className={classes.container}>
+    <Grid container spacing={3} className={classes.container} {...rest}>
 
       {data.map((content, index) => (
         <Grid key={content.title} item xs={12} sm={6} lg={3}>
