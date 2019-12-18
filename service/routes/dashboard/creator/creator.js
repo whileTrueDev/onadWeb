@@ -32,11 +32,12 @@ router.get('/income', (req, res) => {
   WHERE ci.creatorId= ? 
   ORDER BY date desc
   LIMIT 1`;
-
   doQuery(dataQuery, [creatorId])
     .then((row) => {
       const result = row.result[0];
       result.date = result.date.toLocaleString();
+      const deciphedAccountNum = encrypto.decipher(result.creatorAccountNumber);
+      result.creatorAccountNumber = deciphedAccountNum;
       res.json(result);
     })
     .catch((errorData) => {
