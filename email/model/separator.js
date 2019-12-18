@@ -5,7 +5,7 @@ module.exports = async function (marketerId) {
     pool.getConnection((err, conn) => {
       if (err) return err;
       const separateQuery = `INSERT INTO sleepMarketer (
-        marketerId,
+          marketerId,
           marketerPasswd,
           marketerSalt,
           marketerName,
@@ -22,7 +22,7 @@ module.exports = async function (marketerId) {
           marketerAccountNumber,
           accountHolder
         ) SELECT 
-        marketerId,
+          marketerId,
           marketerPasswd,
           marketerSalt,
           marketerName,
