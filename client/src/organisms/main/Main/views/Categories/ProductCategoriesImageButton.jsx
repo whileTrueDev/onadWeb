@@ -131,10 +131,7 @@ const ProductCategoriesDetail = (props) => {
         >
           <div className={classes.imageButton}>
             <img src={image.url} className={classes.imageSrc} alt={image.title} />
-            <Typography
-              color="inherit"
-              className={classes.imageTitle}
-            >
+            <div className={classes.imageTitle}>
               {image.title}
               <br />
               <br />
@@ -144,7 +141,7 @@ const ProductCategoriesDetail = (props) => {
                   <p key={row} style={{ marginTop: 1, marginBottom: 1 }}>{`${row}`}</p>
                 ))}
               </div>
-            </Typography>
+            </div>
           </div>
 
         </ButtonBase>

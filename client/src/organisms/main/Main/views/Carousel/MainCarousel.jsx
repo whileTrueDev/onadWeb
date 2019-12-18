@@ -3,7 +3,6 @@ import makeStyles from '@material-ui/core/styles/makeStyles';
 import './MainCarousel.scss';
 import HOST from '../../../../../utils/config';
 import axios from '../../../../../utils/axios';
-import $ from 'jquery';
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -77,28 +76,7 @@ const MainCarousel = () => {
   const tagfigure = useRef()
   const [currVideo, setCurrVideo] = useState(800);
 
-  const readyCreatorData = useCallback(() => {
-    axios.get(`${HOST}/api/streams`).then((res) => {
-      if (res.data) {
-        if (res.data.length === 10) {
-          setCreator(res.data);
-          setLoading(true);       
-          setTimeout(function() {
-            setTitle(true);
-          }, 2000)
-        }
-      } else {
-        alert('OnAD 홈페이지 방문을 환영합니다!')
-      }
-    })
-  }, [])
-
 // 3D carousel 구현
-  if (loading) {
-    $(document).ready(function() {
-      carousel();
-    })
-  }
 
   let n = 10,
       theta = 2 * Math.PI / 10
@@ -225,8 +203,46 @@ const MainCarousel = () => {
   }
 
   useEffect(() => {
+    const abortController = new AbortController();
+    const source = axios.CancelToken.source();
+
+    const readyCreatorData = async () => {
+      try {
+
+        const res = await axios.get(`${HOST}/api/streams`,{
+          cancelToken: source.token
+        });
+
+        if (res.data) {
+          if (res.data.length === 10) {
+            setCreator(res.data);
+            setLoading(true);
+            carousel();       
+            setTimeout(function() {
+            setTitle(true);
+          }, 2000)
+        }} else {
+          alert('OnAD 홈페이지 방문을 환영합니다!')
+        }
+
+      } catch (error) {
+        if (axios.isCancel(error)) {
+          console.log('axios=>canceled')
+        } else {
+          throw error;
+        }
+      }
+    }
+
     readyCreatorData();
-  }, [readyCreatorData]);
+    
+    return () => {
+      source.cancel();
+      abortController.abort();
+      console.log('useEffect => canceled')
+    };
+
+  }, []);
 
   return (
     <section className={classes.container}>
