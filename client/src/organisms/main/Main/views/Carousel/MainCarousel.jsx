@@ -346,9 +346,6 @@ const MainCarousel = () => {
             </div>
             </div>
           </div>
-          {/* <div className="titleWrapper">
-          {title && <h1 className="nowCreatorTitle">OnAD와 함께하는 크리에이터입니다</h1>}
-          </div> */}
         </>
         ) 
       : (null)

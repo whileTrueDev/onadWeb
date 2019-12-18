@@ -16,9 +16,9 @@ const useStyles = makeStyles((theme) => ({
     marginTop: 70
   },
   contentBox: {
-    width: 980,
+    width: '80%',
     margin: '0px auto',
-    minHeight: 924,
+    wordBreak: 'keep-all'
   },
   policyTitle: {
     paddingTop: '10px',    
