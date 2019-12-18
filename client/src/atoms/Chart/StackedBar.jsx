@@ -29,6 +29,7 @@ function setStackedBarData(
     setupFunc = chartFunctions.createStackBarDataSetPerMonth;
   }
   const { labels, CPM, CPC } = setupFunc(data, dateRange);
+
   const ChartjsBarData = {
     labels,
     datasets: [

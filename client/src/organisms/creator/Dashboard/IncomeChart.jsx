@@ -1,5 +1,6 @@
 import React from 'react';
 import Typography from '@material-ui/core/Typography';
+import ReChartBar from '../../../atoms/Chart/ReChartBar';
 import StyledItemText from '../../../atoms/StyledItemText';
 import Card from '../../../atoms/CustomCard';
 import StackedBar from '../../../atoms/Chart/StackedBar';
@@ -17,7 +18,7 @@ const ChartChangeButton = (props) => {
           <div />
 
           <Button color="info" onClick={() => { setType('month'); }}>
-      월별로 보기
+            월별로 보기
           </Button>
         </div>
       ) : (
@@ -55,20 +56,14 @@ function IncomeChart() {
       { !valueChartData.loading && valueChartData.payload && (
         <div>
           {type === 'day' ? (
-            <StackedBar
-              height={140}
-              dataSet={valueChartData.payload}
-              labelArray={['배너수익', '광고페이지수익']}
-              type="day"
-              dateRange={selectedDateRange.value}
-            />
+            <ReChartBar data={valueChartData.payload} />
           ) : (
             <div>
               {!valueChartMonthlyData.loading && valueChartMonthlyData.payload && (
               <StackedBar
                 height={140}
                 dataSet={valueChartMonthlyData.payload}
-                labelArray={['배너수익', '광고페이지수익']}
+                labelArray={['배너광고', '클릭광고']}
                 type="month"
               />
               )}
