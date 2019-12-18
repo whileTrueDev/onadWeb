@@ -90,9 +90,9 @@ const MainCarousel = () => {
 
     setupCarousel(n, parseFloat(getComputedStyle(videos[0]).width));
     
-    window.addEventListener('resize', () => { 
-      setupCarousel(n, parseFloat(getComputedStyle(videos[0]).width)) 
-    });
+    // window.addEventListener('resize', () => { 
+    //   setupCarousel(n, parseFloat(getComputedStyle(videos[0]).width)) 
+    // });
 
     function setupCarousel(n, s) {
       let	

@@ -4,7 +4,7 @@ import { withStyles } from '@material-ui/core/styles';
 import ButtonBase from '@material-ui/core/ButtonBase';
 import Grow from '@material-ui/core/Grow';
 import useScrollTrigger from '@material-ui/core/useScrollTrigger';
-import Typography from '../../components/Typography';
+
 
 const styles = theme => ({
   imageWrapper: {
