@@ -90,33 +90,40 @@ const UpdateFollower = creatorId => new Promise((resolve, reject) => {
     });
 });
 
+// 2. stream별 이상치제거를 수행하는 함수.
+// streamId로 구별되는 평균시청자수, 평균 방송시간의 분포에서 이상치를 구별하여 제거한다.
+// 이상치의 정의는, 평균방송시간의 평균과 편차를 구하여
+const removeOutliner = ({ streamData }) => {
+  const viewerList = [];
+  const airtimeList = [];
+  const average = data => data.reduce((sum, value) => sum + value) / data.length;
+  const stddev = values => Math.sqrt(average(values.map(value => (value - average(values)) ** 2)));
+
+
+  streamData.forEach(({ viewer, airtime }) => {
+    airtimeList.push(airtime);
+  });
+  console.log(average(airtimeList));
+  console.log(stddev(airtimeList));
+};
 // 1. 평균 시청자수를 계산하여 반환하는 함수
-// 이전달의 데이터를 기준으로 평균시청자수를 반환한다.
-// 이전달의 실제 방송을 한 날짜를 일별로 평균시청자수를 계산한다음,
-// 평균시청자수들의 평균을 가져온다.
-// 이때 사용되는 실제 방송 일수, 방송시간을 함께 가져와 다른 계산을 할 때 함께 사용한다.
+// 이전달의 데이터를 기준으로 일간 평균시청자수, 방송날짜, 방송시간(from-to)를 list형태로 반환한다.
 const getViewer = ({
-  connection, month, year, creatorId
+  connection, creatorId
 }) => new Promise((resolve, reject) => {
   const selectQuery = `
-    SELECT streamerName, COUNT(*) AS days, ROUND(AVG(avgviewer)) AS viewer, SUM(airtime) AS airtime
-    FROM (
-    SELECT B.streamerName, B.streamerId, DATE(time) AS days, AVG(viewer) AS avgviewer, COUNT(*) AS airtime
-    FROM (
-    SELECT *
-    FROM twitchStreamDetail
-    WHERE MONTH(time) = ?
-    AND YEAR(time) = ?) AS A
-    LEFT JOIN twitchStream AS B 
-    ON A.streamId = B.streamId
-    WHERE B.streamerId = ?
-    GROUP BY DATE(time)
-    ) AS C  
-    `;
-  doConnectionQuery({ connection, queryState: selectQuery, params: [month, year, creatorId] })
+  SELECT B.streamId, AVG(viewer) AS viewer, COUNT(*) AS airtime
+  FROM twitchStreamDetail AS A
+  LEFT JOIN twitchStream AS B 
+  ON A.streamId = B.streamId
+  WHERE B.streamerId = ?
+  GROUP BY B.streamId
+  `;
+  doConnectionQuery({ connection, queryState: selectQuery, params: [creatorId] })
     .then((row) => {
       if (row.length > 0) {
-        resolve(row[0]);
+        removeOutliner({ streamData: row });
+        resolve(row);
       } else {
         reject();
       }
@@ -133,10 +140,10 @@ pool.getConnection((err, connection) => {
     console.log(err);
   } else {
     getViewer({
-      connection, month: 11, year: 2019, creatorId: '147356756'
+      connection, creatorId: '147356756'
     })
       .then((data) => {
-        console.log(data);
+
       });
   }
 });
