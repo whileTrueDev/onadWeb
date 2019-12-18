@@ -70,7 +70,7 @@ const CategorySelect = (props) => {
                 <Grid item xs={12} sm={4} lg={3} key={shortid.generate()}>
                   <Button className={classes.button}>
                     <Paper className={classes.choice}>
-                      <Grid container direction="row" justify="space-between" spacing={2}>
+                      <Grid container direction="row" justify="space-between" spacing={1}>
                         <Grid item>
                           <GreenCheckBox
                             checked={getChecked(category.categoryName)}
