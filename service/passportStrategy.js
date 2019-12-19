@@ -195,9 +195,18 @@ passport.use(new TwitchStrategy({
                     SET  creatorName = ?, creatorMail = ?, creatorTwitchId = ?, creatorLogo = ?
                     WHERE creatorId = ?
                     `;
-          doQuery(UpdateQuery,
-            [user.creatorDisplayName, user.creatorMail,
-              user.creatorName, user.creatorLogo, user.creatorId])
+          // 랜딩페이지 명 변경
+          const landingUpdateQuery = `
+          UPDATE creatorLanding
+          SET creatorTwitchId = ?
+          WHERE creatorId = ?`;
+          Promise.all([
+            doQuery(UpdateQuery, [
+              user.creatorDisplayName, user.creatorMail,
+              user.creatorName, user.creatorLogo, user.creatorId
+            ]),
+            doQuery(landingUpdateQuery, [user.creatorName, user.creatorId])
+          ])
             .then(() => done(null, user))
             .catch((errorData) => {
               console.log(errorData);
