@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useReducer, useRef} from 'react';
+import React, { useState, useEffect,useReducer, useRef} from 'react';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import './MainCarousel.scss';
 import HOST from '../../../../../utils/config';
