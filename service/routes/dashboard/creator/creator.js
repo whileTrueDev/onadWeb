@@ -2,7 +2,6 @@
 const express = require('express');
 const doQuery = require('../../../model/doQuery');
 const encrypto = require('../../../encryption');
-
 const router = express.Router();
 
 // sub router

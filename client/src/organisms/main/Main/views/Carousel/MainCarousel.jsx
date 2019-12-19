@@ -3,7 +3,6 @@ import makeStyles from '@material-ui/core/styles/makeStyles';
 import './MainCarousel.scss';
 import HOST from '../../../../../utils/config';
 import axios from '../../../../../utils/axios';
-import $ from 'jquery';
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -77,35 +76,12 @@ const MainCarousel = () => {
   const tagfigure = useRef()
   const [currVideo, setCurrVideo] = useState(800);
 
-  const readyCreatorData = useCallback(() => {
-    axios.get(`${HOST}/api/streams`).then((res) => {
-      if (res.data) {
-        if (res.data.length === 10) {
-          setCreator(res.data);
-          setLoading(true);       
-          setTimeout(function() {
-            setTitle(true);
-          }, 2000)
-        }
-      } else {
-        alert('OnAD 홈페이지 방문을 환영합니다!')
-      }
-    })
-  }, [])
-
 // 3D carousel 구현
-  if (loading) {
-    $(document).ready(function() {
-      carousel();
-    })
-  }
-
   let n = 10,
       theta = 2 * Math.PI / 10
   
   function carousel() {
-
-    let 
+      let 
       figure = tagfigure.current,
       videos = figure.children,
       gap = tagcarousel.current.dataset.gap || 0
@@ -133,7 +109,7 @@ const MainCarousel = () => {
       for (let i = 0; i < n; i++)
       videos[i].style.backfaceVisibility = 'hidden';
 
-      rotateCarousel(currVideo);
+      figure.style.transform = `rotateY(${currVideo * - theta}rad)`;
     }
   }
 
@@ -225,8 +201,43 @@ const MainCarousel = () => {
   }
 
   useEffect(() => {
+    const abortController = new AbortController();
+    const source = axios.CancelToken.source();
+
+    const readyCreatorData = async () => {
+      try {
+        const res = await axios.get(`${HOST}/api/streams`,{
+          cancelToken: source.token
+        });
+
+        if (res.data) {
+          if (res.data.length === 10) {
+            setCreator(res.data);
+            setLoading(true);
+            carousel();       
+            setTitle(true);
+          
+        }} else {
+          alert('OnAD 홈페이지 방문을 환영합니다!')
+        }
+
+      } catch (error) {
+        if (axios.isCancel(error)) {
+          // 언마운트 이후에 실행할 함수들 넣어도 됨
+        } else {
+          throw error;
+        }
+      }
+    }
+
     readyCreatorData();
-  }, [readyCreatorData]);
+    
+    return () => {
+      source.cancel();
+      abortController.abort();
+    };
+
+  }, []);
 
   return (
     <section className={classes.container}>
@@ -342,13 +353,9 @@ const MainCarousel = () => {
                       </svg>
                   </div>
                 </nav>
-            
             </div>
             </div>
           </div>
-          {/* <div className="titleWrapper">
-          {title && <h1 className="nowCreatorTitle">OnAD와 함께하는 크리에이터입니다</h1>}
-          </div> */}
         </>
         ) 
       : (null)
