@@ -214,9 +214,8 @@ const MainCarousel = () => {
           if (res.data.length === 10) {
             setCreator(res.data);
             setLoading(true);
-            carousel();       
-            setTitle(true);
-          
+            carousel();
+            setTitle(true)       
         }} else {
           alert('OnAD 홈페이지 방문을 환영합니다!')
         }
