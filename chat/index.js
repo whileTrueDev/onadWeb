@@ -4,4 +4,4 @@ const TwitchChatCollectorV2 = require('./model/TwitchChatCollectorV2');
 
 const onad = new TwitchChatCollectorV2();
 
-onad.start();
+onad.run();
