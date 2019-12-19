@@ -11,6 +11,9 @@ const useStyles = makeStyles(theme => ({
       display: 'none'
     },
   },
+  video: {
+    
+  }
 }));
 
 const autoReducer = (state, action) => {
@@ -259,7 +262,7 @@ const MainCarousel = () => {
                 </div>
               </nav>
               
-              <figure ref={tagfigure}>
+              <figure ref={tagfigure} className={classes.video}>
                   <iframe
                     title="hero"
                     src={`https://player.twitch.tv/?channel=${creator[0]}&autoplay=${auto0}`}
@@ -358,7 +361,6 @@ const MainCarousel = () => {
                       </svg>
                   </div>
                 </nav>
-            
             </div>
             </div>
           </div>

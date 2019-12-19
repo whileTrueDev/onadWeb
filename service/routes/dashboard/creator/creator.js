@@ -37,6 +37,8 @@ router.get('/income', (req, res) => {
     .then((row) => {
       const result = row.result[0];
       result.date = result.date.toLocaleString();
+      const deciphedAccountNum = encrypto.decipher(result.creatorAccountNumber);
+      result.creatorAccountNumber = deciphedAccountNum;
       res.json(result);
     })
     .catch((errorData) => {
