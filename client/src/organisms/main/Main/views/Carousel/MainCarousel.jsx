@@ -11,9 +11,6 @@ const useStyles = makeStyles(theme => ({
       display: 'none'
     },
   },
-  video: {
-    
-  }
 }));
 
 const autoReducer = (state, action) => {
@@ -80,22 +77,20 @@ const MainCarousel = () => {
   const [currVideo, setCurrVideo] = useState(800);
 
 // 3D carousel 구현
-
   let n = 10,
       theta = 2 * Math.PI / 10
   
   function carousel() {
-
-    let 
+      let 
       figure = tagfigure.current,
       videos = figure.children,
       gap = tagcarousel.current.dataset.gap || 0
 
     setupCarousel(n, parseFloat(getComputedStyle(videos[0]).width));
     
-    // window.addEventListener('resize', () => { 
-    //   setupCarousel(n, parseFloat(getComputedStyle(videos[0]).width)) 
-    // });
+    window.addEventListener('resize', () => { 
+      setupCarousel(n, parseFloat(getComputedStyle(videos[0]).width)) 
+    });
 
     function setupCarousel(n, s) {
       let	
@@ -114,7 +109,7 @@ const MainCarousel = () => {
       for (let i = 0; i < n; i++)
       videos[i].style.backfaceVisibility = 'hidden';
 
-      rotateCarousel(currVideo);
+      figure.style.transform = `rotateY(${currVideo * - theta}rad)`;
     }
   }
 
@@ -211,7 +206,6 @@ const MainCarousel = () => {
 
     const readyCreatorData = async () => {
       try {
-
         const res = await axios.get(`${HOST}/api/streams`,{
           cancelToken: source.token
         });
@@ -221,16 +215,15 @@ const MainCarousel = () => {
             setCreator(res.data);
             setLoading(true);
             carousel();       
-            setTimeout(function() {
             setTitle(true);
-          }, 2000)
+          
         }} else {
           alert('OnAD 홈페이지 방문을 환영합니다!')
         }
 
       } catch (error) {
         if (axios.isCancel(error)) {
-          console.log('axios=>canceled')
+          // 언마운트 이후에 실행할 함수들 넣어도 됨
         } else {
           throw error;
         }
@@ -242,7 +235,6 @@ const MainCarousel = () => {
     return () => {
       source.cancel();
       abortController.abort();
-      console.log('useEffect => canceled')
     };
 
   }, []);
@@ -262,7 +254,7 @@ const MainCarousel = () => {
                 </div>
               </nav>
               
-              <figure ref={tagfigure} className={classes.video}>
+              <figure ref={tagfigure}>
                   <iframe
                     title="hero"
                     src={`https://player.twitch.tv/?channel=${creator[0]}&autoplay=${auto0}`}
