@@ -50,11 +50,11 @@ class TwitchChatCollectorV2 {
       onDisconnectedHandler: (reason) => {
         console.log(`Client Disconnected.. ${reason}`);
       },
-      // Called when client join on channel
+      // Called when client join channel
       onJoinHandler: (channel, username, self) => {
         if (self) { // join event from the onad bot
           const channelName = channel.replace('#', '');
-          console.log(`[${new Date().toLocaleString()}] join on channel: ${channelName}`);
+          console.log(`[${new Date().toLocaleString()}] join channel: ${channelName}`);
           this.joinedChannels.push(channelName);
         }
       },
