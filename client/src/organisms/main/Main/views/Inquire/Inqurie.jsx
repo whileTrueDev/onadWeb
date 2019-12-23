@@ -158,7 +158,7 @@ const Inquire = () => {
             <Grid container direction="row" alignItems="center" className={classes.cardContent}>
               <Grid item xs={6} sm={6} className={classes.detailWrap}>
                 <Typography className={classes.detailTitle}>
-                  성명
+                  * 성명
                 </Typography>
                 <Input
                   className={classes.datailContent}
@@ -170,7 +170,7 @@ const Inquire = () => {
               </Grid>
               <Grid item xs={6} sm={6} className={classes.detailWrap}>
                 <Typography className={classes.detailTitle}>
-                  이메일
+                  * 이메일
                 </Typography>
                 <Input
                   className={classes.datailContent}
@@ -185,7 +185,7 @@ const Inquire = () => {
             <Grid container direction="row" alignItems="center" className={classes.cardContent}>
               <Grid item xs={6} sm={6} className={classes.detailWrap}>
                 <Typography className={classes.detailTitle}>
-                  연락처
+                  * 연락처
                 </Typography>
                 <Input
                   className={classes.datailContent}
@@ -211,7 +211,7 @@ const Inquire = () => {
             <Grid container className={classes.cardContent}>
               <Grid item xs={12} sm={12} className={classes.detailWrap}>
                 <Typography className={classes.detailTitle}>
-                  상세내용
+                  * 상세내용
                 </Typography>
                 <Input
                   classes={{focused: classes.inputStyle}}
