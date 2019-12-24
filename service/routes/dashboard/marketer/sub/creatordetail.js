@@ -105,6 +105,6 @@ router.get('/viewerheatmap', (req, res) => {
       }
     }
   });
-})
+});
 
 module.exports = router;

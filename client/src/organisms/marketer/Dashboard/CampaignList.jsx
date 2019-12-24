@@ -103,7 +103,7 @@ export default function CampaignList(props) {
                 >
                   <Grid container spacing={2} justify="space-between">
                     <Grid item xs={4}>
-                      <Avatar variant="rounded" className={classes.image}>
+                      <Avatar className={classes.image}>
                         {/* 등록된 배너 */}
                         <img className={classes.img} alt="campaign-logo" src={d.bannerSrc} />
                       </Avatar>
