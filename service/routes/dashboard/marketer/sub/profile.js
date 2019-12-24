@@ -47,6 +47,13 @@ router.post('/change', (req, res) => {
 
 router.post('/signout', (req, res) => {
   const marketerId = req._passport.session.user.userid;
+  const deleteQuery = 'DELETE FROM marketerInfo WHERE marketerId = ?;';
+  doQuery(deleteQuery, marketerId)
+    .then(() => {
+      console.log(`${marketerId}님 회원탈퇴`);
+      res.send(true);
+    })
+    .catch((err) => { console.log(` 회원탈퇴 에러 : ${err}`); });
   // const moveQuery = `
   // INSERT INTO signOutId SELECT marketerId FROM marketerInfo WHERE marketerId = ?
   // `;
@@ -65,8 +72,6 @@ router.post('/signout', (req, res) => {
   //     console.log(errorData);
   //     res.end();
   //   });
-  console.log('signout');
-  res.send(true);
 });
 
 // 마케터 계좌정보 조회

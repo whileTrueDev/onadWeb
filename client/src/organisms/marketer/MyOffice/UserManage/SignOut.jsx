@@ -29,8 +29,8 @@ const SignOut = (props) => {
     axios.post(`${HOST}/api/dashboard/marketer/profile/signout`)
       .then(() => {
         alert('탈퇴가 완료되었습니다.');
-        // window.location.href = 'https://onad.io';
-      });
+        window.location.href = 'https://onad.io';
+      }).catch(() => { alert('오류가 발생했습니다. 잠시 후 다시 시도해주세요.'); });
   }
 
   useEffect(() => {
