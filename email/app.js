@@ -103,8 +103,9 @@ function doDailyCheck() {
   mailSend();
   doMoveData();
 }
+
 const rule = new schedule.RecurrenceRule(); // 스케쥴러 객체 생성
 rule.hour = 0; // cronTask 시간지정
-const cronTask = schedule.scheduleJob(rule, () => {
-  doDailyCheck();
-});
+// const cronTask = schedule.scheduleJob(rule, () => {
+//   doDailyCheck();
+// });

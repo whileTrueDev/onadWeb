@@ -48,9 +48,12 @@ const CategorySelect = (props) => {
 
   const handleChecked = (event) => {
     const categoryName = event.target.name;
+    const categoryId = event.target.id;
     if (getChecked(categoryName)) {
+      // 체크 된 걸 다시 체크할 때
       checkedCategoriesDispatch({ type: 'delete', value: categoryName });
     } else {
+      // 체크 됐을 때
       checkedCategoriesDispatch({ type: 'push', value: categoryName });
     }
   };
@@ -66,7 +69,7 @@ const CategorySelect = (props) => {
           </Grid>
           <Grid item>
             <Grid container direction="row" spacing={2}>
-              {categoryList.map((category, i) => (
+              {categoryList.map((category, index) => (
                 <Grid item xs={12} sm={4} lg={3} key={shortid.generate()}>
                   <Button className={classes.button}>
                     <Paper className={classes.choice}>
@@ -78,6 +81,7 @@ const CategorySelect = (props) => {
                             style={{ padding: '3px' }}
                             onClick={handleChecked}
                             name={category.categoryName}
+                            id={index.toString()}
                           />
                         </Grid>
                         <Grid item>
