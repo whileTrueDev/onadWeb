@@ -14,8 +14,7 @@ export default function makeBarChartData(arrayOfExposureData, howMuchDate = 30) 
   if (arrayOfExposureData && arrayOfExposureData.length > 0) {
     // 데이터 형 변환
     arrayOfExposureData.map((d) => {
-      const data = {};
-      // date 검사
+      const data = {}; // date 검사
 
       // 이전 날짜와 비교
       if (!(previousDates.includes(d.date))) {
@@ -60,29 +59,6 @@ export default function makeBarChartData(arrayOfExposureData, howMuchDate = 30) 
       const now = new Date(currentValue);
       const DAY_EQUAL = datefy(previous) === datefy(now);
 
-      // if (currentIndex === previousDates.length - 1) {
-      //   console.log(previousDates);
-      //   console.log(dataSet.length);
-      //   console.log(currentIndex, now);
-      //   const emptyDate = datefy(now);
-      //   if (dataSet.findIndex(d2 => d2.date === emptyDate) === -1) {
-      //     // dataSet에 해당 날짜의 데이터가 없는 경우
-      //     dataSet.splice(currentIndex + 1, 0, {
-      //       cpc_amount: 0, date: emptyDate, cpm_amount: 0
-      //     });
-      //   } else {
-      //     // console.log('날짜 데이터 있음 - ', dataSet[currentIndex]);
-      //     // dataSet에 해당 날짜의 데이터가 있는 경우
-      //     const keys = Object.keys(dataSet[currentIndex + 1]);
-      //     if (!(keys.includes(KEY_CPC))) {
-      //       dataSet[currentIndex + 1][KEY_CPC] = 0;
-      //     }
-      //     if (!(keys.includes(KEY_CPM))) {
-      //       dataSet[currentIndex + 1][KEY_CPM] = 0;
-      //     }
-      //   }
-      // }
-
       if (!DAY_EQUAL) {
         // 같지 않다면,
         const emptyDate = datefy(previous);
@@ -118,6 +94,21 @@ export default function makeBarChartData(arrayOfExposureData, howMuchDate = 30) 
         // howMuchDate - 14 만큼 반복하며 하루씩 빼고, 0,0의 데이터를 넣어준다.
         farthestDay.setDate(farthestDay.getDate() - 1);
         dataSet.push({ date: datefy(farthestDay), cpc_amount: 0, cpm_amount: 0 });
+      }
+    }
+
+    // 제일 최신의 데이터가 today보다 이전의 날짜인 경우
+    // 비는 날짜만큼 기본 데이터 추가
+    const newestDate = new Date(previousDates[0]);
+    if (newestDate < new Date()) {
+      // console.log(newestDate, '최신 데이터가 오늘날짜보다 이전이에요');
+      const today = new Date();
+
+      const betweenDay = Math.floor((today.getTime() - newestDate.getTime()) / 1000 / 60 / 60 / 24);
+
+      for (let i = 0; i < betweenDay; i += 1) {
+        newestDate.setDate(newestDate.getDate() + 1);
+        dataSet.push({ date: datefy(newestDate), cpc_amount: 0, cpm_amount: 0 });
       }
     }
 

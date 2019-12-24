@@ -13,6 +13,7 @@ import ReportCard from './common/ReportCard';
 import InteractionHeatmap from './onlyClickSub/InteractionHeatmap';
 import InteractionToGeo from './onlyClickSub/InteractionToGeo';
 import CampaignInfo from './common/CampaignInfo';
+import MakePdfButton from './MakePdfButton';
 
 const makeContents = reportData => ({
   price: [
@@ -86,8 +87,8 @@ const makeContents = reportData => ({
       unit: '',
       decimalRange: 4
     },
-    { title: '노출 점유율(도입예정)', value: '', unit: '%' },
-    { title: '리뷰 수(도입예정)', value: '', unit: '회' },
+    { title: '지표 준비중', value: '', unit: '' },
+    { title: '지표 준비중.', value: '', unit: '' },
   ]
 });
 
@@ -107,7 +108,7 @@ const useStyles = makeStyles(theme => ({
   },
   contents: {
     padding: '24px 32px'
-  }
+  },
 }));
 
 export default function CampaignBannerClickAd(props) {
@@ -117,13 +118,14 @@ export default function CampaignBannerClickAd(props) {
     creatorsData, ipToGeoData, clickData
   } = props;
 
+
   return (
-    <div>
+    <div style={{ backgroundColor: '#fff' }}>
       {!reportData.loading && reportData.payload
       && !valueChartData.loading && valueChartData.payload
       && !creatorsData.loading && !ipToGeoData.loading
       && !clickData.loading && (
-      <Grid container>
+      <Grid container id="report-window">
         {/* 헤드라인 */}
         <Grid item xs={12}>
           <div className={classes.headline}>
@@ -133,6 +135,8 @@ export default function CampaignBannerClickAd(props) {
               {reportData.payload.campaignName}
                 &emsp;광고 효과 분석
             </Typography>
+
+            <MakePdfButton />
 
           </div>
           <Divider />
@@ -187,14 +191,12 @@ export default function CampaignBannerClickAd(props) {
                   <Grid item xs={12} sm={6}>
                     <CampaignCostBar
                       color="primary"
-                      reportData={reportData.payload}
                       valueChartData={valueChartData}
                     />
 
                     <CampaignCostPie
                       color="primary"
                       reportData={reportData.payload}
-                      valueChartData={valueChartData}
                     />
                   </Grid>
 
@@ -204,10 +206,12 @@ export default function CampaignBannerClickAd(props) {
                     />
 
                     <InteractionHeatmap
+                      data-html2canvas-ignore
                       clickData={clickData.payload}
                     />
 
                     <InteractionToGeo
+                      data-html2canvas-ignore
                       ipToGeoData={ipToGeoData}
                     />
 

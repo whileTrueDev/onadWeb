@@ -4,16 +4,18 @@ import CardTemplate from '../common/CardTemplate';
 import ReportStackedBar from '../../../../../../atoms/Chart/ReportStackedBar';
 
 export default function CampaignCostBar(props) {
-  const { color, valueChartData } = props;
+  const { color, valueChartData, ...rest } = props;
 
   return (
-    <CardTemplate title="광고 비용 그래프" color={color} IconComponent={Assignment}>
-      {!valueChartData.loading && (
-        <ReportStackedBar
-          height={200}
-          dataSet={valueChartData.payload[0]}
-        />
-      )}
-    </CardTemplate>
+    <div {...rest}>
+      <CardTemplate title="광고 비용 그래프" color={color} IconComponent={Assignment}>
+        {!valueChartData.loading && (
+          <ReportStackedBar
+            height={200}
+            dataSet={valueChartData.payload[0]}
+          />
+        )}
+      </CardTemplate>
+    </div>
   );
 }

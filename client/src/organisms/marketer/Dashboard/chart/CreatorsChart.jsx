@@ -99,10 +99,6 @@ export default function CustomPieChart(props) {
                     )}
                   avatar={(
                     <Avatar
-                      style={{
-                        backgroundSize: 'cover',
-                        backgroundImage: 'url(\'/pngs/logo/onad_logo_vertical_black.png\')'
-                      }}
                       src={d.creatorLogo}
                     />
                     )}

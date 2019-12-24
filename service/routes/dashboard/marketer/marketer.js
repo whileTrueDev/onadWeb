@@ -9,6 +9,7 @@ const { creatorList } = require('../../../middlewares/preprocessingData');
 const notificationRouter = require('./sub/notification');
 const reportRouter = require('./sub/report');
 const geoRouter = require('./sub/geo');
+const creatordetailRouter = require('./sub/creatordetail');
 
 const router = express.Router();
 
@@ -25,7 +26,7 @@ router.use('/category', categoryRoute);
 router.use('/notification', notificationRouter);
 router.use('/report', reportRouter);
 router.use('/geo', geoRouter);
-
+router.use('/creatordetail', creatordetailRouter);
 
 // 캠페인 온오프 조회
 router.get('/onoff', (req, res) => {

@@ -1,11 +1,11 @@
 const tmi = require('tmi.js');
 const schedule = require('node-schedule');
-const doQuery = require('../lib/doQuery');
-const createChatInsertQueryValues = require('../lib/createChatInsertQueryValues');
+const doQuery = require('../../lib/doQuery');
+const createChatInsertQueryValues = require('../../lib/createChatInsertQueryValues');
 
 // utils
-const now = require('../utils/now');
-const arrayDivide = require('../utils/arrayDivide');
+const now = require('../../utils/now');
+const arrayDivide = require('../../utils/arrayDivide');
 
 // configure constants
 const BOT_NAME = 'OnADy';
