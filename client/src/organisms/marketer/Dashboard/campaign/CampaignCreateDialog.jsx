@@ -320,6 +320,7 @@ const CampaignCreateStepper = (props) => {
             handleSubmitCheck={handleSubmitCheck}
             state={step4State}
             dispatch={step4Dispatch}
+            selectedCategory={checkedCategories}
           />
         );
       default:

@@ -8,6 +8,7 @@ import MyCash from '../../organisms/marketer/MyOffice/CashManage/MyCash';
 import CashHistoryTable from '../../organisms/marketer/MyOffice/CashManage/CashHistoryTable';
 import RefundHistoryTable from '../../organisms/marketer/MyOffice/CashManage/RefundHistoryTable';
 import BusinessRegistration from '../../organisms/marketer/MyOffice/UserManage/BusinessRegistrationUploadForm';
+import SignOut from '../../organisms/marketer/MyOffice/UserManage/SignOut';
 // hook for data fetching
 import useFetchData from '../../utils/lib/hooks/useFetchData';
 
@@ -57,6 +58,10 @@ export default function MyOffice() {
             ) : (null)}
             <GridItem xs={12}>
               <RefundAccountForm accountData={accountData} />
+            </GridItem>
+
+            <GridItem xs={12}>
+              <SignOut userData={userData.payload} />
             </GridItem>
           </GridContainer>
         </GridItem>

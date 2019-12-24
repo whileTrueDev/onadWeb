@@ -101,7 +101,7 @@ function BannerTable({ ...props }) {
     setOpen(true);
   };
 
-  const tableHead = ['광고주 / 시작일', '배너이미지', '수익', '배너 및 광고주 설명', ''];
+  const tableHead = ['광고주 / 시작일', '배너이미지', '수익', '배너 설명', ''];
   return (
     <div className={classes.tableResponsive}>
       <Table className={classes.table}>
@@ -200,17 +200,6 @@ function BannerTable({ ...props }) {
               <Hidden mdDown>
                 <TableCell className={classes.tableCell}>
                   <Grid container direction="column" spacing={1}>
-                    <Grid item className={innerClasses.textCell}>
-                      <StyledItemText primary="광고주 소개" fontSize="15px" />
-                      {bannerData.companyDescription.split('\n').map(row => (
-                        <Typography variant="body2" key={shortid.generate()}>
-                          {row}
-                        </Typography>
-                      ))}
-                    </Grid>
-                    <Grid item>
-                      <Divider component="hr" orientation="horizontal" width="90%" />
-                    </Grid>
                     <Grid item className={innerClasses.textCell}>
                       <StyledItemText primary="배너 소개" fontSize="15px" />
                       {bannerData.bannerDescription.split('\n').map(row => (

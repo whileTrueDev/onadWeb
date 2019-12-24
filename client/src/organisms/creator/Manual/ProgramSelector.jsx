@@ -49,7 +49,7 @@ const ProgramSelector = (props) => {
         >
           <div>
 
-            <Avatar alt={image.title} src={image.url} className={classes.bigAvatar} />
+            <Avatar src={image.url} className={classes.bigAvatar} />
             <Typography>{image.title}</Typography>
           </div>
         </ButtonBase>

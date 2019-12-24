@@ -4,7 +4,7 @@ import { withStyles } from '@material-ui/core/styles';
 import ButtonBase from '@material-ui/core/ButtonBase';
 import Grow from '@material-ui/core/Grow';
 import useScrollTrigger from '@material-ui/core/useScrollTrigger';
-import Typography from '../../components/Typography';
+
 
 const styles = theme => ({
   imageWrapper: {
@@ -131,10 +131,7 @@ const ProductCategoriesDetail = (props) => {
         >
           <div className={classes.imageButton}>
             <img src={image.url} className={classes.imageSrc} alt={image.title} />
-            <Typography
-              color="inherit"
-              className={classes.imageTitle}
-            >
+            <div className={classes.imageTitle}>
               {image.title}
               <br />
               <br />
@@ -144,7 +141,7 @@ const ProductCategoriesDetail = (props) => {
                   <p key={row} style={{ marginTop: 1, marginBottom: 1 }}>{`${row}`}</p>
                 ))}
               </div>
-            </Typography>
+            </div>
           </div>
 
         </ButtonBase>

@@ -64,8 +64,8 @@ const makeContents = reportData => ({
       unit: '',
       decimalRange: 4
     },
-    { title: '노출 점유율(도입예정)', value: '', unit: '%' },
-    { title: '리뷰 수(도입예정)', value: '', unit: '회' },
+    { title: '지표 준비중', value: '', unit: '' },
+    { title: '지표 준비중.', value: '', unit: '' },
   ]
 });
 

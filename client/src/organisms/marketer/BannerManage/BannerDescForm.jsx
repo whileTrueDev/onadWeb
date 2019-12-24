@@ -65,21 +65,6 @@ const BannerDescFrom = (props) => {
           required
           fullWidth
         >
-          <InputLabel shrink htmlFor="company" className={classes.label}>회사소개</InputLabel>
-          <Input
-            required
-            id="company"
-            multiline
-            className={classes.input}
-          />
-          <FormHelperText>배너를 게시할 크리에이터에게 회사를 소개해주세요.(30자 이내)</FormHelperText>
-        </CssFormControl>
-      </Grid>
-      <Grid item>
-        <CssFormControl
-          required
-          fullWidth
-        >
           <InputLabel shrink htmlFor="company" className={classes.label}>배너소개</InputLabel>
           <Input
             required
@@ -87,7 +72,7 @@ const BannerDescFrom = (props) => {
             multiline
             className={classes.input}
           />
-          <FormHelperText>배너를 게시할 크리에이터에게 배너를 설명해주세요.(30자 이내)</FormHelperText>
+          <FormHelperText>시청자들에게 배너에 대해 간략히 설명해주세요.</FormHelperText>
         </CssFormControl>
       </Grid>
       <Grid item>

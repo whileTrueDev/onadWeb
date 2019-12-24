@@ -10,7 +10,7 @@ router.get('/current', (req, res) => {
   const { creatorId } = req._passport.session.user;
   // DB연결후 query문을 통한 데이터 삽입
   const queryState = `
-  SELECT mi.marketerName, br.bannerSrc, br.bannerDescription, br.companyDescription
+  SELECT mi.marketerName, br.bannerSrc, br.bannerDescription
   FROM campaign as cp
 
   JOIN bannerRegistered as br
@@ -179,7 +179,7 @@ router.get('/list', (req, res) => {
   const listQuery = `
   SELECT CT.campaignId, CT.date, BR.bannerSrc, CT.creatorId,
   campaign.onOff as state, campaign.marketerName, 
-  bannerDescription, companyDescription,
+  bannerDescription,
   landingUrl
   FROM 
   (

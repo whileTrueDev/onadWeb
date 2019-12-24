@@ -6,7 +6,7 @@ import Divider from '@material-ui/core/Divider';
 
 export default function ReportLoading() {
   return (
-    <div>
+    <div data-html2canvas-ignore>
       <div style={{ padding: 24 }}>
         <Skeleton height={80} />
       </div>

@@ -6,22 +6,24 @@ import CardTemplate from '../common/CardTemplate';
 
 export default function CampaignCostPie(props) {
   const theme = useTheme();
-  const { color, reportData } = props;
+  const { color, reportData, ...rest } = props;
 
   return (
-    <CardTemplate title="광고 비용 비율" color={color} IconComponent={DonutSmall}>
-      {!reportData.loading && (
-      <Pie
-        height={140}
-        data={{
-          labels: ['CPM', 'CPC'],
-          datasets: [{
-            data: [reportData.totalCPM, reportData.totalCPC],
-            backgroundColor: [theme.palette.primary.light, theme.palette.secondary.light]
-          }]
-        }}
-      />
-      )}
-    </CardTemplate>
+    <div {...rest}>
+      <CardTemplate title="광고 비용 비율" color={color} IconComponent={DonutSmall}>
+        {!reportData.loading && (
+        <Pie
+          height={140}
+          data={{
+            labels: ['CPM', 'CPC'],
+            datasets: [{
+              data: [reportData.totalCPM, reportData.totalCPC],
+              backgroundColor: [theme.palette.primary.light, theme.palette.secondary.light]
+            }]
+          }}
+        />
+        )}
+      </CardTemplate>
+    </div>
   );
 }

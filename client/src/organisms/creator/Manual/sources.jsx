@@ -243,7 +243,7 @@ const manualSources = {
       {
         image: '/pngs/dashboard/manual/new_creator/creator-banner-01.png',
         description: `[**<너관리>**](${HOST_URL}/banner)에서 지금까지 진행한 모든 배너와,  
-        해당 배너 및 광고주의 정보, 해당 배너로 인한 수익정보를 확인할 수 있습니다.`
+        해당 배너 정보, 해당 배너로 인한 수익정보를 확인할 수 있습니다.`
       },
     ]
   },

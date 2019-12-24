@@ -177,7 +177,9 @@ function createStackBarDataSetPerMonth(dataPacket) {
   if (dataPacket.length > 0) {
     const { setUpLabels, CPM, CPC } = setUpData(dataPacket, monthDiff);
 
-    const labels = setUpLabels.map(day => `${day.split('-')[0]}년 ${day.split('-')[1]}월`);
+    const labels = setUpLabels.map(
+      day => `${day.split('-')[0]}년 ${day.split('-')[1]}월`
+    ).reverse();
     const firstTime = new Date(dataPacket[0].date.split('T')[0]); // 처음 날짜
     const lastTime = new Date(dataPacket[dataPacket.length - 1].date.split('T')[0]); // 마지막 날짜
 
@@ -192,11 +194,13 @@ function createStackBarDataSetPerMonth(dataPacket) {
       }
     }
 
-    // 2주일의 데이터보다 적다면, 2주(14일)의 데이터만큼 day를 채운다.
+    // 12개월 데이터보다 적다면, 12개월의 데이터만큼 month를 채운다.
     if (labels.length < MONTH_LENGTH) {
       for (let i = MONTH_LENGTH - labels.length; i > 0; i -= 1) {
         lastTime.setMonth(lastTime.getMonth() - 1);
         labels.push(`${lastTime.getFullYear()}년 ${lastTime.getMonth() + 1}월`);
+        CPM.unshift(0);
+        CPC.unshift(0);
       }
     }
 
@@ -210,6 +214,7 @@ function createStackBarDataSetPerMonth(dataPacket) {
     CPM.push(0);
     CPC.push(0);
   }
+
   return { labels, CPC, CPM };
 }
 

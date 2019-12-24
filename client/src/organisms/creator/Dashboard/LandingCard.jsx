@@ -4,7 +4,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import {
   Grid, Typography, Divider
 } from '@material-ui/core';
-import Help from '@material-ui/icons/Help';
 import BarChart from '@material-ui/icons/BarChart';
 import DateRange from '@material-ui/icons/DateRange';
 import CustomCard from '../../../atoms/CustomCard';
