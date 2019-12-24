@@ -9,7 +9,7 @@ import Dialog from '../../../../atoms/Dialog/Dialog';
 import Button from '../../../../atoms/CustomButtons/Button';
 import CreatePaper from '../../CampaignCreate/CreatePaper';
 import ProrityPaper from '../../CampaignCreate/PriorityPaper';
-import CreatorSelect from '../../CampaignCreate/CreatorSelect';
+import CreatorSelectDialog from '../../CampaignCreate/CreatorSelectDialog';
 import CategorySelect from '../../CampaignCreate/CategorySelect';
 import OptionPaper from '../../CampaignCreate/OptionPaper';
 import HOST from '../../../../utils/config';
@@ -284,6 +284,9 @@ const CampaignCreateStepper = (props) => {
   const setSteps = (_index) => {
     switch (_index) {
       case 0:
+        return <CreatorSelectDialog setStepComplete={setStepComplete} />;
+
+      case 5:
         return (
           <CreatePaper
             bannerList={bannerList}
@@ -300,7 +303,7 @@ const CampaignCreateStepper = (props) => {
           />
         );
       case 2:
-        return <CreatorSelect setStepComplete={setStepComplete} />;
+        return <CreatorSelectDialog setStepComplete={setStepComplete} />;
       case 3:
         return (
           <CategorySelect
@@ -338,7 +341,7 @@ const CampaignCreateStepper = (props) => {
       open={open}
       onClose={handleClose}
       fullWidth
-      maxWidth="md"
+      maxWidth="lg"
       title="캠페인 등록"
     >
       <Paper className={classes.paper}>

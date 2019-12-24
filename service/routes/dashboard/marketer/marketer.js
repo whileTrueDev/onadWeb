@@ -5,6 +5,8 @@ const cashRoute = require('./sub/cash');
 const campaignRoute = require('./sub/campaign');
 const profileRoute = require('./sub/profile');
 const categoryRoute = require('./sub/category');
+const creatordetailRoute = require('./sub/creatordetail');
+
 const { creatorList } = require('../../../middlewares/preprocessingData');
 const notificationRouter = require('./sub/notification');
 const reportRouter = require('./sub/report');
@@ -25,6 +27,7 @@ router.use('/category', categoryRoute);
 router.use('/notification', notificationRouter);
 router.use('/report', reportRouter);
 router.use('/geo', geoRouter);
+router.use('/creatordetail', creatordetailRoute);
 
 
 // 캠페인 온오프 조회
