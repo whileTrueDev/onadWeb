@@ -94,7 +94,7 @@ export default function CreatoreTable(props) {
       render: rowData => (
         <Grid container direction="row">
           <Grid item>
-            <Avatar variant="rounded" className={classes.image}>
+            <Avatar variant="round" className={classes.image}>
               <img
                 src={rowData.creatorLogo}
                 alt={rowData.creatorName}
