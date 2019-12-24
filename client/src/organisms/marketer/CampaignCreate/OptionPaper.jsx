@@ -2,8 +2,10 @@ import React, { useEffect } from 'react';
 import {
   Grid, Paper, Divider, Collapse, Checkbox, FormControlLabel
 } from '@material-ui/core';
+import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Help from '@material-ui/icons/Help';
+import qs from 'qs';
 import NumberFormat from 'react-number-format';
 import DescPopover from '../../../atoms/DescPopover';
 import StyledItemText from '../../../atoms/StyledItemText';
@@ -11,6 +13,10 @@ import StyledSelectText from '../../../atoms/StyledSelectText';
 import GreenCheckbox from '../../../atoms/GreenCheckBox';
 import StyledInput from '../../../atoms/StyledInput';
 import DangerTypography from '../../../atoms/Typography/Danger';
+import Button from '../../../atoms/CustomButtons/Button';
+import axios from '../../../utils/axios';
+import HOST from '../../../utils/config';
+import useFetchData from '../../../utils/lib/hooks/useFetchData';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -68,7 +74,7 @@ const useStyles = makeStyles(theme => ({
 const OptionPaper = (props) => {
   const classes = useStyles();
   const {
-    handleSubmitCheck, state, dispatch
+    handleSubmitCheck, state, dispatch, selectedCategory
   } = props;
 
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -77,6 +83,10 @@ const OptionPaper = (props) => {
 
   const [budgetOpen, setBudgetOpen] = React.useState(false); // budget 입력창 띄우는 State
   const [error, setError] = React.useState(false); // budget 작성시 한도 체크용 State
+  const [total, setTotal] = React.useState();
+  const [exepectedDay, setExcpectedDay] = React.useState(0);
+  const [exepectedViews, setExcpectedViews] = React.useState(0);
+
   const open = Boolean(anchorEl);
 
 
@@ -105,6 +115,12 @@ const OptionPaper = (props) => {
     if (event.target.checked) {
       dispatch({ key: event.target.name });
       if (event.target.name === 'option0') {
+        axios.post(`${HOST}/api/dashboard/marketer/campaign/getcategory`, selectedCategory)
+          .then((res) => {
+            if (res) {
+              setTotal(res.data.result);
+            }
+          }).catch((errorData) => { alert('오류가 발생하였습니다. 나중에 다시 시도해주세요.') ;});
         setBudgetOpen(true);
       } else {
         setBudgetOpen(false);
@@ -136,6 +152,8 @@ const OptionPaper = (props) => {
     if (Number(value.value) < 5000 && value.value !== '') {
       setError(true);
     } else {
+      setExcpectedDay(parseInt(Number(value.value) / Number(total / 30), 10));
+      setExcpectedViews(parseInt(Number(value.value) / 2, 10));
       setError(false);
     }
   };
@@ -304,7 +322,22 @@ const OptionPaper = (props) => {
                     </Grid>
                   </Grid>
                 </Grid>
-
+                <Grid item>
+                  <Grid>
+                    <StyledItemText
+                      primary="예상 노출 일"
+                      secondary={`${exepectedDay} 일`}
+                    />
+                  </Grid>
+                </Grid>
+                <Grid item>
+                  <Grid>
+                    <StyledItemText
+                      primary="예상 노출 수"
+                      secondary={`${exepectedViews} 회`}
+                    />
+                  </Grid>
+                </Grid>
                 <Grid item>
                   <DangerTypography>
                     {error
