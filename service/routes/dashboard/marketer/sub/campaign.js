@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const doQuery = require('../../../../model/doQuery');
-const customToLocaleString = require('../../../../utils/customToLocaleString');
+const marketerActionLogging = require('../../../../middlewares/marketerActionLog');
 
 const app = express();
 const router = express.Router();
@@ -97,6 +97,11 @@ router.post('/onoff', (req, res) => {
       if (row.result) {
         res.send([true]);
       }
+
+      // 마케터 활동내역 테이블 적재
+      const MARKETER_ACTION_LOG_TYPE = 6; // 마케터 활동내역 - 캠페인 on off상태값
+      marketerActionLogging([campaignId.split('_')[0], MARKETER_ACTION_LOG_TYPE,
+        JSON.stringify({ campaignId, onoffState }) ]);
     })
     .catch((err) => {
       console.log(err);
@@ -163,7 +168,9 @@ router.post('/getcategory', (req, res) => {
         doQuery(getCategoryQuery, value)
           .then((row) => {
             const data = JSON.parse(row.result[0].campaignList).campaignList;
-            data.map((innerData) => { if (dataArray.indexOf(innerData) === -1) { dataArray.push(innerData); } });
+            data.forEach((innerData) => {
+              if (dataArray.indexOf(innerData) === -1) { dataArray.push(innerData); }
+            });
             resolve(true);
           })
           .catch((err) => {
@@ -185,7 +192,7 @@ router.post('/getcategory', (req, res) => {
       dataArray.map(value => new Promise((resolve, reject) => {
         doQuery(sumQuery, value)
           .then((row) => {
-            numberArray.push(parseInt(Object.values(row.result[0]), 10));
+            numberArray.push(parseInt(Object.values(row.result[0]), 10)); // 10진수
             resolve();
           })
           .catch((err) => {
@@ -345,7 +352,7 @@ const getCampaignId = (result, marketerId) => {
   let campaignId = '';
   if (result) {
     const lastCampaignId = result.campaignId;
-    const count = parseInt(lastCampaignId.split('_c')[1]) + 1;
+    const count = parseInt(lastCampaignId.split('_c')[1], 10) + 1;
     if (count < 10) {
       campaignId = `${marketerId}_c0${count}`;
     } else {
@@ -383,6 +390,9 @@ router.post('/push', (req, res) => {
       const campaignId = getCampaignId(row.result[0], marketerId);
       const limit = (optionType === 0 && noBudget) || optionType === 1 ? -1 : dailyLimit;
       const targetJsonData = JSON.stringify({ targetList: priorityList });
+      // 마케터 활동내역 로깅 테이블에서, 캠페인 생성의 상태값
+      const MARKETER_ACTION_LOG_TYPE = 5;
+
       Promise.all([
         doQuery(saveQuery,
           [campaignId, campaignName, marketerId, bannerId, limit,
@@ -390,7 +400,11 @@ router.post('/push', (req, res) => {
         PriorityDoquery({
           campaignId, priorityType, priorityList, optionType
         }),
-        LandingDoQuery({ campaignId, priorityType })
+        LandingDoQuery({ campaignId, priorityType }),
+        // 마케터 활동내역 테이블 적재.
+        marketerActionLogging([
+          marketerId, MARKETER_ACTION_LOG_TYPE, JSON.stringify({ campaignId })
+        ])
       ])
         .then(() => {
           res.send([true, '캠페인이 등록되었습니다']);
