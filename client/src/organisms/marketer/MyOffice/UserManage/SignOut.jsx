@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import Typography from '@material-ui/core/Typography';
-import Card from '@material-ui/core/Card';
-import CardBody from '../../../../atoms/Card/CardBody';
-import Button from '../../../../atoms/CustomButtons/Button';
+import Button from '@material-ui/core/Button';
+
 import axios from '../../../../utils/axios';
 import SignOutDialog from './SignOutDialog';
 import HOST from '../../../../utils/config';
@@ -38,26 +37,28 @@ const SignOut = (props) => {
   }, [userData.marketerId]);
 
   return (
-    <Card>
-      <CardBody>
-        <div>
-          <Typography>
-            더 이상 온애드를 사용하시지 않나요?
-          </Typography>
-        </div>
-        <div className={myClass.buttonWrapper}>
-          <Button variant="contained" color="danger" onClick={handleOpen}>
-          회원탈퇴
-          </Button>
-        </div>
-      </CardBody>
+
+    <div style={{ display: 'flex' }}>
+      <Typography style={{ margin: '5px', border: '5px' }}>
+        더 이상 온애드를 사용하시지 않나요?
+      </Typography>
+      <Typography
+        style={{
+          margin: '5px', border: '5px', cursor: 'pointer', textDecoration: 'underline'
+        }}
+        variant="button"
+        onClick={handleOpen}
+      >
+        회원탈퇴
+      </Typography>
+
       <SignOutDialog
         handleOpen={handleOpen}
         open={open}
         marketerId={marketerId}
         signOutFunc={doSignOut}
       />
-    </Card>
+    </div>
   );
 };
 
