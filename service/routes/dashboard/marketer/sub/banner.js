@@ -1,5 +1,7 @@
 const express = require('express');
 const doQuery = require('../../../../model/doQuery');
+// marketer action log
+const marketerActionLogging = require('../../../../middlewares/marketerActionLog');
 
 const router = express.Router();
 
@@ -29,12 +31,12 @@ router.get('/all', (req, res) => {
   const bannerQuery = `
   SELECT bannerSrc, confirmState, bannerId, 
     bannerDenialReason, bannerDescription, 
-    companyDescription, landingUrl,
+    landingUrl,
     DATE_FORMAT(date, "%Y년% %m월 %d일") as date,
     DATE_FORMAT(regiDate, "%Y년% %m월 %d일") as regiDate
   FROM bannerRegistered
   WHERE marketerId = ?
-  ORDER BY confirmState DESC, regiDate DESC`;
+  ORDER BY confirmState ASC, regiDate DESC`;
   doQuery(bannerQuery, [marketerId])
     .then((row) => {
       if (row.result.length > 0) {
@@ -72,7 +74,7 @@ router.get('/registed', (req, res) => {
 router.post('/push', (req, res) => {
   const marketerId = req._passport.session.user.userid;
   const {
-    bannerSrc, bannerDescription, companyDescription, landingUrl
+    bannerSrc, bannerDescription, landingUrl
   } = req.body;
 
   const searchQuery = `
@@ -84,17 +86,16 @@ router.post('/push', (req, res) => {
 
   const saveQuery = `
   INSERT INTO bannerRegistered 
-  (bannerId, marketerId, bannerSrc, bannerDescription, companyDescription, landingUrl) 
-  VALUES (?, ?, ?, ?, ?, ?)`;
+  (bannerId, marketerId, bannerSrc, bannerDescription, landingUrl) 
+  VALUES (?, ?, ?, ?, ?)`;
 
   doQuery(searchQuery, [marketerId])
     .then((row) => {
     // 이전에 배너를 게시한 적이 있다는 의미.
       let bannerId = '';
       if (row.result[0]) {
-        console.log(row.result);
         const lastBannerId = row.result[0].bannerId;
-        const count = parseInt(lastBannerId.split('_')[1]) + 1;
+        const count = parseInt(lastBannerId.split('_')[1], 10) + 1; // 10 진수
         if (count < 10) {
           bannerId = `${marketerId}_0${count}`;
         } else {
@@ -105,9 +106,15 @@ router.post('/push', (req, res) => {
       }
       doQuery(saveQuery,
         [bannerId, marketerId, bannerSrc, bannerDescription,
-          companyDescription, landingUrl])
+          landingUrl])
         .then(() => {
           res.send([true, '배너가 등록되었습니다']);
+
+          // marketer action log 데이터 적재
+          const MARKETER_ACTION_LOG_TYPE = 2; // <배너 등록> 의 상태값 : 2
+          marketerActionLogging([
+            marketerId, MARKETER_ACTION_LOG_TYPE, JSON.stringify({ bannerId })
+          ]);
         })
         .catch((errorData) => {
           console.log(errorData);

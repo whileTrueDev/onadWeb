@@ -30,13 +30,14 @@ export default function Dashboard() {
   const bannerData = useFetchData('/api/dashboard/marketer/banner/all');
   const valueChartData = useFetchData('/api/dashboard/marketer/campaign/chart');
   const broadCreatorData = useFetchData('/api/dashboard/marketer/report/broadcast/creator');
+  const actionLogData = useFetchData('/api/dashboard/marketer/actionlog');
 
   return (
     <div className={classes.root}>
       {(normalData.loading || campaignData.loading
         || onOffData.loading || creatorsData.loading
         || bannerData.loading || valueChartData.loading
-        || broadCreatorData.loading) ? (
+        || broadCreatorData.loading || actionLogData.loading) ? (
           <ReportLoading />
         ) : (
           <Grid container spacing={2}>
@@ -107,7 +108,9 @@ export default function Dashboard() {
                   />
                 </Grid>
                 <Grid item xs={12}>
-                  <IssueTable />
+                  <IssueTable
+                    actionLogData={actionLogData}
+                  />
                 </Grid>
 
               </Grid>

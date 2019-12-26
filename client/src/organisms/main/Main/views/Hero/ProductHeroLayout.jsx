@@ -16,6 +16,9 @@ const styles = theme => ({
       minHeight: 500,
       maxHeight: 1300,
     },
+    [theme.breakpoints.down('md')]: {
+      marginTop: theme.spacing(10),
+    }
   },
   container: {
     marginTop: theme.spacing(2),

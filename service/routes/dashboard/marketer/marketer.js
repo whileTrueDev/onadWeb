@@ -5,10 +5,14 @@ const cashRoute = require('./sub/cash');
 const campaignRoute = require('./sub/campaign');
 const profileRoute = require('./sub/profile');
 const categoryRoute = require('./sub/category');
+const creatordetailRoute = require('./sub/creatordetail');
+
 const { creatorList } = require('../../../middlewares/preprocessingData');
+const marketerActionLogging = require('../../../middlewares/marketerActionLog');
 const notificationRouter = require('./sub/notification');
 const reportRouter = require('./sub/report');
 const geoRouter = require('./sub/geo');
+
 
 const router = express.Router();
 
@@ -25,6 +29,7 @@ router.use('/category', categoryRoute);
 router.use('/notification', notificationRouter);
 router.use('/report', reportRouter);
 router.use('/geo', geoRouter);
+router.use('/creatordetail', creatordetailRoute);
 
 
 // 캠페인 온오프 조회
@@ -39,7 +44,7 @@ router.get('/onoff', (req, res) => {
   doQuery(contractionQuery, [marketerId])
     .then((row) => {
       const data = row.result[0].marketerContraction === 1;
-      res.send({ onOff: data });
+      res.send({ onOffState: data });
     })
     .catch((errorData) => {
       console.log(errorData);
@@ -70,7 +75,16 @@ router.post('/onoff', (req, res) => {
       if (debit === 0) {
         res.send([false, '잔액이 부족합니다']);
       } else {
-        doQuery(infoQuery, [contractionState, marketerId])
+        // 마케터 활동내역 테이블 적재: 마케터 onoff를 위한 상태값
+        const MARKETER_ACTION_LOG_TYPE = 7;
+        Promise.all([
+          doQuery(infoQuery, [contractionState, marketerId]),
+          // 마케터 활동내역 테이블 적재
+          marketerActionLogging([marketerId, MARKETER_ACTION_LOG_TYPE,
+            JSON.stringify({
+              onoffState: contractionState // on: 1, off : 0
+            })])
+        ])
           .then(() => {
             res.send([true, { onOff: contractionState }]);
           })
@@ -146,5 +160,40 @@ router.get('/contraction/creatorList', (req, res) => {
     });
 });
 
+// 활동 내역 보기 데이터 조회
+router.get('/actionlog', (req, res) => {
+  const marketerId = req._passport.session.user.userid;
 
+  // 0 - 이벤트 캐시충전 (온애드에서 제공되는)
+  // 1 - 자가 캐시충전  v-191226 X : 무통장입급 캐시충전 기능 x이기 떄문.
+  // 2 - 배너 업로드(생성) v-191226 ㅇ
+  // 3 - 배너 승인 v-191226 ㅇ
+  // 4 - 배너 거절 v-191226 ㅇ
+  // 5 - 캠페인 생성 v-191226 ㅇ
+  // 6 - 캠페인 on / off v-191226 ㅇ
+  // 7 - 마케터 광고 on / off v-191226 ㅇ
+  // 8 - 세금계산서 발행 / 미발행
+  // 9 - 환불요청  v-191226
+  // 10 - 환불요청결과
+
+  const query = `
+  SELECT *
+  FROM marketerActionLog
+  WHERE marketerId = ?
+  ORDER BY date DESC
+  `;
+  const queryArray = [marketerId];
+
+  doQuery(query, queryArray).then((row) => {
+    if (!row.error && row.result) {
+      res.send(row.result);
+    } else {
+      res.end();
+    }
+  })
+    .catch((err) => {
+      console.log('/marketer/actions err - ', err);
+      res.end();
+    });
+});
 module.exports = router;

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {
   PieChart, Pie, Sector, Cell, ResponsiveContainer
 } from 'recharts';
@@ -8,7 +9,7 @@ const renderActiveShape = (props) => {
   const RADIAN = Math.PI / 180;
   const {
     cx, cy, midAngle, innerRadius, outerRadius, startAngle, endAngle,
-    fill, percent, value, name, TooltipLabelText
+    fill, percent, value, name, TooltipLabelText, underText
   } = props;
   const sin = Math.sin(-RADIAN * midAngle);
   const cos = Math.cos(-RADIAN * midAngle);
@@ -18,11 +19,12 @@ const renderActiveShape = (props) => {
   const my = cy + (outerRadius + 30) * sin;
   const ex = mx + (cos >= 0 ? 1 : -1) * 22;
   const ey = my;
+  const underTextY = underText ? cy + 130 : cy;
   const textAnchor = cos >= 0 ? 'start' : 'end';
 
   return (
     <g>
-      <text x={cx} y={cy} dy={8} textAnchor="middle" fill={fill}>{name}</text>
+      <text x={cx} y={underTextY} dy={8} textAnchor="middle" fill={fill}>{name}</text>
       <Sector
         cx={cx}
         cy={cy}
@@ -53,7 +55,8 @@ const renderActiveShape = (props) => {
 
 export default function CustomPieChart(props) {
   const {
-    data, height, dataKey, nameKey, activeIndex, onPieEnter, TooltipLabelText
+    data, height, dataKey, nameKey,
+    activeIndex, onPieEnter, TooltipLabelText, underText
   } = props;
 
   const [defaultActiveIndex, setActiveIndex] = React.useState(0);
@@ -68,8 +71,7 @@ export default function CustomPieChart(props) {
           <Pie
             activeIndex={activeIndex || defaultActiveIndex}
             onMouseEnter={onPieEnter || defaultOnPieEnter}
-            activeShape={renderActiveShape
-            }
+            activeShape={renderActiveShape}
             data={data}
             cx="50%"
             cy="50%"
@@ -86,6 +88,7 @@ export default function CustomPieChart(props) {
                   key={entry}
                   fill={COLORS.pie[index % COLORS.pie.length]}
                   TooltipLabelText={TooltipLabelText || ''}
+                  underText={underText}
                 />
               )
             )}
@@ -95,3 +98,23 @@ export default function CustomPieChart(props) {
     </div>
   );
 }
+
+CustomPieChart.propTypes = {
+  dataKey: PropTypes.string.isRequired,
+  nameKey: PropTypes.string.isRequired,
+  data: PropTypes.arrayOf(PropTypes.object),
+  height: PropTypes.number,
+  activeIndex: PropTypes.oneOfType([PropTypes.number, PropTypes.bool]),
+  onPieEnter: PropTypes.func,
+  TooltipLabelText: PropTypes.string,
+  underText: PropTypes.bool
+};
+
+CustomPieChart.defaultProps = {
+  underText: null,
+  data: '',
+  height: 400,
+  activeIndex: null,
+  TooltipLabelText: '',
+  onPieEnter() {},
+};

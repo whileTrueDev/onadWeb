@@ -32,11 +32,17 @@ router.get('/income', (req, res) => {
   WHERE ci.creatorId= ? 
   ORDER BY date desc
   LIMIT 1`;
-
   doQuery(dataQuery, [creatorId])
     .then((row) => {
       const result = row.result[0];
       result.date = result.date.toLocaleString();
+      let deciphedAccountNum;
+      if (result.creatorAccountNumber) {
+        deciphedAccountNum = encrypto.decipher(result.creatorAccountNumber);
+      } else {
+        deciphedAccountNum = '';
+      }
+      result.creatorAccountNumber = deciphedAccountNum;
       res.json(result);
     })
     .catch((errorData) => {
@@ -143,10 +149,10 @@ router.get('/profile', (req, res) => {
         const userData = data.result[0];
         // 받은 데이터에 대한 복호화 실시.
         const rawAccount = data.result[0].creatorAccountNumber || '';
-        // const deciphedAccountNum = encrypto.decipher(rawAccount);
+        const deciphedAccountNum = encrypto.decipher(rawAccount);
         userData.creatorLogo = req._passport.session.user.creatorLogo;
-        // userData.creatorAccountNumber = deciphedAccountNum;
-        userData.creatorAccountNumber = rawAccount;
+        userData.creatorAccountNumber = deciphedAccountNum;
+        // userData.creatorAccountNumber = rawAccount;
         res.send({
           error: false,
           result: {

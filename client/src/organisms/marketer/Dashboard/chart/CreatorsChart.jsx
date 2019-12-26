@@ -89,7 +89,7 @@ export default function CustomPieChart(props) {
                   label={(
                     <div>
                       {broadCreatorData.payload.includes(d.creatorName) ? (
-                        <Badge color="secondary" badgeContent=" " variant="dot">
+                        <Badge color="error" badgeContent=" " variant="dot">
                           <Typography variant="body2">{`${index + 1}. ${d.creatorName}`}</Typography>
                         </Badge>
                       ) : (

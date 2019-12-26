@@ -1,8 +1,13 @@
 const express = require('express');
+const bodyParser = require('body-parser');
 const doQuery = require('../../../../model/doQuery');
-const customToLocaleString = require('../../../../utils/customToLocaleString');
+const marketerActionLogging = require('../../../../middlewares/marketerActionLog');
 
+const app = express();
 const router = express.Router();
+
+app.use(bodyParser.json()); // support json encoded bodies
+app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 
 // 캠페인 정보 조회 - 캠페인 리스트 테이블
 router.get('/', (req, res) => {
@@ -92,6 +97,11 @@ router.post('/onoff', (req, res) => {
       if (row.result) {
         res.send([true]);
       }
+
+      // 마케터 활동내역 테이블 적재
+      const MARKETER_ACTION_LOG_TYPE = 6; // 마케터 활동내역 - 캠페인 on off상태값
+      marketerActionLogging([campaignId.split('_')[0], MARKETER_ACTION_LOG_TYPE,
+        JSON.stringify({ campaignId, onoffState }) ]);
     })
     .catch((err) => {
       console.log(err);
@@ -146,6 +156,63 @@ router.post('/checkName', (req, res) => {
     });
 });
 
+router.post('/getcategory', (req, res) => {
+  const getCategoryQuery = 'SELECT * FROM categoryCampaign WHERE categoryName = ?';
+  const categoryArray = req.body;
+  const dataArray = [];
+  const numberArray = [];
+
+  async function getArray(param) {
+    return Promise.all(
+      param.map(value => new Promise((resolve, reject) => {
+        doQuery(getCategoryQuery, value)
+          .then((row) => {
+            const data = JSON.parse(row.result[0].campaignList).campaignList;
+            data.forEach((innerData) => {
+              if (dataArray.indexOf(innerData) === -1) { dataArray.push(innerData); }
+            });
+            resolve(true);
+          })
+          .catch((err) => {
+            console.log('위 에러 삐빅', err);
+            reject();
+          });
+      }))
+    );
+  }
+
+  async function doSum(array) {
+    const campaignArray = await getArray(array);
+    const sumQuery = `SELECT SUM(cashFromMarketer) 
+                      FROM campaignLog 
+                      WHERE campaignId = ? 
+                      AND DATE BETWEEN DATE_ADD(NOW(),INTERVAL -1 MONTH ) 
+                      AND NOW();`;
+    return Promise.all(
+      dataArray.map(value => new Promise((resolve, reject) => {
+        doQuery(sumQuery, value)
+          .then((row) => {
+            numberArray.push(parseInt(Object.values(row.result[0]), 10)); // 10진수
+            resolve();
+          })
+          .catch((err) => {
+            console.log('밑 에러 삐빅', err);
+            reject();
+          });
+      }))
+    );
+  }
+
+  function nanEraser(array) {
+    const newArray = array.filter(value => !Number.isNaN(value));
+    return newArray;
+  }
+
+  const reducer = (accumulator, currentValue) => accumulator + currentValue;
+  doSum(categoryArray)
+    .then(() => { res.send({ result: nanEraser(numberArray).reduce(reducer) }); });
+  // getArray(categoryArray).then(() => { console.log(dataArray); });
+});
 // marketer가 campaign을 생성할 경우,
 // campaign을 생성할 때, 각 옵션마다 다르게 수행하여야함.
 // 1. 크리에이터 우선형일 경우, 크리에이터 Id에 해당하는 campaign list로 들어감.
@@ -285,7 +352,7 @@ const getCampaignId = (result, marketerId) => {
   let campaignId = '';
   if (result) {
     const lastCampaignId = result.campaignId;
-    const count = parseInt(lastCampaignId.split('_c')[1]) + 1;
+    const count = parseInt(lastCampaignId.split('_c')[1], 10) + 1;
     if (count < 10) {
       campaignId = `${marketerId}_c0${count}`;
     } else {
@@ -323,6 +390,9 @@ router.post('/push', (req, res) => {
       const campaignId = getCampaignId(row.result[0], marketerId);
       const limit = (optionType === 0 && noBudget) || optionType === 1 ? -1 : dailyLimit;
       const targetJsonData = JSON.stringify({ targetList: priorityList });
+      // 마케터 활동내역 로깅 테이블에서, 캠페인 생성의 상태값
+      const MARKETER_ACTION_LOG_TYPE = 5;
+
       Promise.all([
         doQuery(saveQuery,
           [campaignId, campaignName, marketerId, bannerId, limit,
@@ -330,7 +400,11 @@ router.post('/push', (req, res) => {
         PriorityDoquery({
           campaignId, priorityType, priorityList, optionType
         }),
-        LandingDoQuery({ campaignId, priorityType })
+        LandingDoQuery({ campaignId, priorityType }),
+        // 마케터 활동내역 테이블 적재.
+        marketerActionLogging([
+          marketerId, MARKETER_ACTION_LOG_TYPE, JSON.stringify({ campaignId })
+        ])
       ])
         .then(() => {
           res.send([true, '캠페인이 등록되었습니다']);

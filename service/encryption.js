@@ -19,6 +19,10 @@ const checkEncryption = function (passwd, key, salt) {
 
 const makeDecipherText = (account) => {
   //  base64로 되어있는 string을 buffer화 한다.
+  if (account === '') {
+    return '';
+  }
+
   const accountBuffer = Buffer.from(account, 'base64');
   const secret = process.env.CIPHER_KEY;
   const cryptkey = crypto.createHash('sha256').update(secret).digest();
@@ -35,6 +39,10 @@ const makeDecipherText = (account) => {
 
 
 const makeCipherText = (account) => {
+  if (account === '') {
+    return '';
+  }
+
   const secret = process.env.CIPHER_KEY;
   const iv = Buffer.alloc(16, process.env.CIPHER_IV, 'base64');
   const cryptkey = crypto.createHash('sha256').update(secret).digest();

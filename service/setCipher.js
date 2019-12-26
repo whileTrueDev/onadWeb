@@ -57,8 +57,34 @@ const setCipher = async () => {
   );
 };
 
-setCipher();
 
+const setDecipher = async () => {
+  const cipherQuery = `
+  UPDATE creatorInfo 
+  SET creatorAccountNumber = ?
+  WHERE creatorId = ?
+  `;
+
+  const creatorList = await getCreatorList();
+  Promise.all(
+    creatorList.map(({ creatorId, creatorAccountNumber }) => new Promise((resolve, reject) => {
+      const decipheredAccount = crypto.decipher(creatorAccountNumber);
+      // console.log(cipheredAccount);
+      doQuery(cipherQuery, [decipheredAccount, creatorId])
+        .then(() => {
+          console.log(`${creatorId} 의 계좌번호가 변경 되었습니다.`);
+          resolve();
+        })
+        .catch((errorData) => {
+          console.log(errorData);
+          reject(errorData);
+        });
+    }))
+  );
+};
+
+// setCipher();
+setDecipher();
 
 // // 커넥션을 전달 받아 쿼리문을 수행한다. 트랜잭션을 사용하기 때문에
 // const doTransacQuery = ({ connection, queryState, params }) => new Promise((resolve, reject) => {

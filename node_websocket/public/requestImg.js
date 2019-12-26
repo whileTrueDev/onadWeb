@@ -39,9 +39,13 @@ module.exports = function (sql, socket, msg) {
     console.log('현재 ON되어있는 campaign List를 조회한다.');
 
     const campaignListQuery = `
-                              SELECT campaignId 
-                              FROM campaign
-                              WHERE onOff = 1
+    SELECT campaignId
+    FROM campaign
+    LEFT JOIN marketerInfo
+    ON campaign.marketerId = marketerInfo.marketerId
+    WHERE NOT marketerInfo.marketerContraction = 0
+    AND campaign.onOff = 1
+    AND NOT campaign.optionType = 2
                               `;
 
     return new Promise((resolve, reject) => {
