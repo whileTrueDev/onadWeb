@@ -343,7 +343,9 @@ const getOpenHourPercent = ({ connection, creatorId }) => {
     });
 
     outData.sort((a, b) => a.hours - b.hours);
-    return outData;
+    const returArray = outData.concat(outData.splice(0, 6));
+
+    return returArray;
   };
 
   const timeQuery = `
@@ -616,29 +618,129 @@ const getDetailList = ({ connection }) => new Promise((resolve, reject) => {
     });
 });
 
+const updateTimeGraphData = ({ connection, creatorId }) => new Promise((resolve, reject) => {
+  getOpenHourPercent({ connection, creatorId })
+    .then((row) => {
+      const { timeGraphData } = row;
+      const timeJsonData = JSON.stringify({ data: timeGraphData });
+      const queryState = `
+          UPDATE creatorDetail 
+          SET timeGraphData = ?
+          WHERE creatorId = ? 
+          `;
+      doTransacQuery({ connection, queryState, params: [timeJsonData, creatorId] })
+        .then(() => {
+          console.log(`${creatorId}의 데이터를 저장하였습니다.`);
+          resolve();
+        })
+        .catch((error) => {
+          console.log(`${creatorId}의 데이터를 저장하는 과정`);
+          reject(error);
+        });
+    });
+});
+
+// 1.가입을 진행한 날짜
+const getRegDate = ({ connection, creatorId }) => new Promise((resolve, reject) => {
+  const selectQuery = `
+  select date
+  from creatorInfo
+  where creatorId = ?
+  `;
+  doConnectionQuery({ connection, queryState: selectQuery, params : [creatorId] })
+    .then((row) => {
+      const {date }  = row[0];
+      resolve(date);
+    })
+    .catch((err) => {
+      console.log('getRegDate');
+      console.log(err);
+      resolve([]);
+    });
+});
+// 2. API로 수집된 실제 방송 시간
+const getAirtime = ({ connection, creatorId, date }) => new Promise((resolve, reject) => {
+  const selectQuery = `
+  SELECT  COUNT(*) AS airtime
+  FROM twitchStreamDetail AS A
+  LEFT JOIN twitchStream AS B 
+  ON A.streamId = B.streamId
+  WHERE B.streamerId = ?
+  AND time > ?
+  
+  `;
+  doConnectionQuery({ connection, queryState: selectQuery, params : [creatorId, date] })
+    .then((row) => {
+      const {airtime }  = row[0];
+      resolve(airtime);
+    })
+    .catch((err) => {
+      console.log('getRegDate');
+      console.log(err);
+      resolve([]);
+    });
+});
+// 3. timestamp에 찍힌 실제 배너 게시 시간.
+const getImpressiontime = ({ connection, creatorId }) => new Promise((resolve, reject) => {
+  const selectQuery = `
+  SELECT  COUNT(*) AS impressiontime
+  FROM campaignTimestamp
+  WHERE creatorId = ?
+  
+  `;
+  doConnectionQuery({ connection, queryState: selectQuery, params : [creatorId] })
+    .then((row) => {
+      const {impressiontime }  = row[0];
+      resolve(impressiontime);
+    })
+    .catch((err) => {
+      console.log('getRegDate');
+      console.log(err);
+      resolve([]);
+    });
+});
+
+const getTimeData = ({connection, creatorId})  => new Promise((resolve, reject) => {
+  getRegDate({connection, creatorId})
+  .then((date)=>{
+    Promise.all([
+      getAirtime({connection, creatorId, date}),
+      getImpressiontime({connection, creatorId})
+    ])
+    .then(([airtime, impressiontime])=>{
+      resolve({airtime, impressiontime})
+    })
+  })
+})
+
 async function detailcalculation() {
   pool.getConnection(async (err, connection) => {
     if (err) {
       console.log(err);
     } else {
+
       const creatorList = await getDetailList({ connection });
-      // const targetList = creatorList.slice(0, 100);
-      const targetList = creatorList;
-      Promise.all(
-        targetList.map(creatorId => getHeatmapData({ connection, creatorId }))
-      )
-        .then(() => {
-          connection.release();
-          console.log('분석이 완료 되었습니다.');
-        })
-        .catch((errorData) => {
-          connection.release();
-          console.log('-----------------------------------------------------------');
-          console.log(errorData);
-          console.log('--------위의 사유로 인하여 에러가 발생하였습니다.-------------');
-        });
+      const creatorId = creatorList[0]
+      // // const targetList = creatorList.slice(0, 100);
+      // const targetList = creatorList;
+
+     
+      // Promise.all(
+      //   creatorList.map(creatorId => getImpressiontime({ connection, creatorId }))
+      // )
+      //   .then(() => {
+      //     connection.release();
+      //     console.log('분석이 완료 되었습니다.');
+      //   })
+      //   .catch((errorData) => {
+      //     connection.release();
+      //     console.log('-----------------------------------------------------------');
+      //     console.log(errorData);
+      //     console.log('--------위의 사유로 인하여 에러가 발생하였습니다.-------------');
+      //   });
+
     }
   });
 }
 
-// detailcalculation();
+detailcalculation();

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import classnames from 'classnames';
 import { makeStyles } from '@material-ui/core/styles';
 import {
@@ -12,6 +12,7 @@ import CircularProgress from '../../../atoms/Progress/CircularProgress';
 import useFetchData from '../../../utils/lib/hooks/useFetchData';
 import WithdrawalDialog from './WithdrawDialog';
 import history from '../../../history';
+
 
 const useStyles = makeStyles(() => ({
   stats: {

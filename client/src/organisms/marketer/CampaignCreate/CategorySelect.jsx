@@ -64,7 +64,7 @@ const CategorySelect = (props) => {
       <Grid item>
         <Grid container direction="column" spacing={2}>
           <Grid item className={classes.item}>
-            <StyledItemText primary="넷째,&nbsp;&nbsp; 카테고리 선택" secondary="해당 캠페인의 배너가 송출될 카테고리를 3개 이상 선택하세요." className={classes.label} />
+            <StyledItemText primary="넷째,&nbsp;&nbsp; 카테고리 선택" secondary="해당 캠페인의 배너가 송출될 카테고리를 3개 이상 선택하세요." />
             <Divider component="hr" style={{ height: '2px' }} />
           </Grid>
           <Grid item>

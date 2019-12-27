@@ -2,16 +2,16 @@ import React from 'react';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import PropTypes from 'prop-types';
 import {
-  Typography, Tooltip, Avatar, Grid
+  Typography, Avatar, Grid
 } from '@material-ui/core';
-import BarChart from '@material-ui/icons/BarChart';
-import Delete from '@material-ui/icons/Delete';
+import Poll from '@material-ui/icons/Poll';
 import MaterialTable from '../../../../atoms/Table/MaterialTable_2';
 import useFetchData from '../../../../utils/lib/hooks/useFetchData';
 import ChartPopover from './ChartPopover';
+import GreenCheckBox from '../../../../atoms/GreenCheckBox';
 
-const BANNER_MAX_WIDTH = 100;
-const BANNER_MAX_HEIGHT = 100;
+const BANNER_MAX_WIDTH = 48;
+const BANNER_MAX_HEIGHT = 48;
 
 const useStyles = makeStyles(theme => ({
   name: {
@@ -19,13 +19,13 @@ const useStyles = makeStyles(theme => ({
     fontSize: '12px'
   },
   image: {
-    width: 96,
-    height: 96,
+    width: 48,
+    height: 48,
     marginRight: theme.spacing(3),
     backgroundColor: theme.palette.grey[100],
     [theme.breakpoints.only('lg')]: {
-      width: 72,
-      height: 72
+      width: 48,
+      height: 48
     }
   },
   flex: {
@@ -42,18 +42,35 @@ const useStyles = makeStyles(theme => ({
 
 export default function CreatoreTable(props) {
   const classes = useStyles();
-  const { handleDeleteOpen } = props;
+  const {
+    creatorList, checkedCreators, checkedCreatorsDispatch
+  } = props;
   const fetchData = useFetchData('/api/dashboard/marketer/creatordetail');
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [selectedChartData, setChartData] = React.useState({});
   const [selectedType, setType] = React.useState('');
-
   const open = Boolean(anchorEl);
+
+  const getChecked = creatorId => checkedCreators.includes(creatorId);
+
+  const handleChecked = rowData => () => {
+    const { creatorId } = rowData;
+    if (getChecked(creatorId)) {
+      // 체크 된 걸 다시 체크할 때
+      checkedCreatorsDispatch({ type: 'delete', value: creatorId });
+    } else {
+      // 체크 됐을 때
+      checkedCreatorsDispatch({ type: 'push', value: creatorId });
+    }
+  };
 
 
   const handlePopoverOpen = data => (event) => {
     const { chartData, type } = data;
-    setChartData(chartData);
+    // chartData는 파싱하기전 text형태이므로 parse를 진행한다.
+    const jsonChartData = JSON.parse(chartData);
+    // console.log(chartData);
+    setChartData(jsonChartData);
     setType(type);
     setAnchorEl(event.currentTarget);
   };
@@ -77,8 +94,9 @@ export default function CreatoreTable(props) {
       <Typography gutterBottom variant="body2">
         {value}
       </Typography>
-      <BarChart
-        fontSize="small"
+      <Poll
+        style={{ marginLeft: '3px' }}
+        fontSize="large"
         onMouseEnter={handlePopoverOpen({ chartData, type })}
         onMouseLeave={handlePopoverClose}
         aria-owns={anchorEl ? 'send-desc-popover' : undefined}
@@ -164,6 +182,18 @@ export default function CreatoreTable(props) {
         makeChartComponent({ value: rowData.openHour, chartData: rowData.timeGraphData, type: 'bar' })
       )
     },
+    {
+      title: '',
+      render: rowData => (
+        <GreenCheckBox
+          checked={getChecked(rowData.creatorId)}
+          fontSize="large"
+          style={{ padding: '3px', fontSize: '20px' }}
+          onClick={handleChecked(rowData)}
+          name={rowData.creatorId}
+        />
+      )
+    }
   ];
 
   return (
@@ -175,15 +205,23 @@ export default function CreatoreTable(props) {
           title=""
           columns={columns}
           data={fetchData.payload}
-          actions={[
-            {
-              icon: () => (<Delete />),
-              tooltip: '배너삭제',
-              onClick: (e, rowData) => { handleDeleteOpen(rowData); }
-            }
-          ]}
+          // actions={[
+          //   {
+          //     icon: () => (
+          //       <GreenCheckBox
+          //         checked={getChecked(rowData.creatorId)}
+          //         fontSize="large"
+          //         style={{ padding: '3px', fontSize: '20px' }}
+          //         onClick={handleChecked}
+          //       />
+          //     ),
+          //     tooltip: '크리에이터 선택',
+          //     onClick: (e, rowData) => { handleChecked(rowData); }
+          //   }
+          // ]}
           options={{
-            actionsColumnIndex: -1
+            actionsColumnIndex: -1,
+            pageSize: 10
           }}
           localization={{
             body: {
@@ -193,13 +231,10 @@ export default function CreatoreTable(props) {
               actions: '기타'
             }
           }}
+
         />
       )}
       <ChartPopover open={open} anchorEl={anchorEl} handlePopoverClose={handlePopoverClose} selectedChartData={selectedChartData} type={selectedType} />
     </div>
   );
 }
-
-CreatoreTable.propTypes = {
-  handleDeleteOpen: PropTypes.func.isRequired
-};
