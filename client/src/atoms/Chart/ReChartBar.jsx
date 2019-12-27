@@ -89,11 +89,7 @@ ReChartBar.defaultProps = {
   tooltipFormatter(value, name) {
     if (name === 'cpm_amount') { return [value, '배너광고']; } return [value, '클릭광고'];
   },
-  tooltipLabelFormatter(value) {
-    return (
-      <span>{value === 'cpm_amount' ? '배너광고' : '클릭광고'}</span>
-    );
-  },
-  legendFormatter() {},
+  tooltipLabelFormatter: null,
+  legendFormatter: null,
   nopreprocessing: false,
 };

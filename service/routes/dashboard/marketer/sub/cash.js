@@ -1,6 +1,7 @@
 const express = require('express');
 const axios = require('axios');
 const doQuery = require('../../../../model/doQuery');
+const marketerActionLogging = require('../../../../middlewares/marketerActionLog');
 
 const router = express.Router();
 
@@ -69,9 +70,18 @@ router.post('/charge', (req, res) => {
         if (row.result[0]) { // 기존에 marketerDebit에 데이터가 있는 경우
           currentCashAmount = Number(row.result[0].cashAmount);
         }
+
+        // 마케터 활동내역 테이블 : 캐시 충전 상태값
+        // const MARKETER_ACTION_LOG_TYPE = 1;
         Promise.all([
           doQuery(cashChargeInsertQuery, cashChargeArray),
           // doQuery(debitUpdateQuery, [currentCashAmount + chargedCash, marketerId])
+
+          // 마케터 활동내역 테이블 : 마케터 캐시 충전 상태값
+          // marketerActionLogging([marketerId, MARKETER_ACTION_LOG_TYPE,
+          //   JSON.stringify({
+          //     chargeCash
+          //   })])
         ])
           .then((secondrow) => {
             // 마케터 캐시 충전 쿼리 완료
@@ -97,13 +107,13 @@ router.post('/refund', (req, res) => {
   const marketerId = req._passport.session.user.userid;
   const refundCash = Number(req.body.withdrawCash);
   console.log(`/marketer/refund - id: ${marketerId} | amount: ${refundCash}`);
-  
+
   let withFeeRefundCash;
   if (refundCash < 10000) {
-      withFeeRefundCash = refundCash-1000
-    } else {
-      withFeeRefundCash = refundCash*0.9
-    }
+    withFeeRefundCash = refundCash - 1000;
+  } else {
+    withFeeRefundCash = refundCash * 0.9;
+  }
 
   // 현재 마케터의 캐시 보유량 조회
   const currentDebitQuery = `
@@ -127,6 +137,8 @@ router.post('/refund', (req, res) => {
   VALUES (?, ?, ?)`;
   const refundHistoryInsertArray = [marketerId, Number(withFeeRefundCash), 0];
 
+  const MARKETER_ACTION_LOG_TYPE = 9;
+
   doQuery(currentDebitQuery, currentDebitArray)
     .then((row) => {
       if (!row.error) {
@@ -134,7 +146,11 @@ router.post('/refund', (req, res) => {
           const currentCashAmount = Number(row.result[0].cashAmount);
           Promise.all([
             doQuery(refundHistoryInsertQuery, refundHistoryInsertArray),
-            doQuery(debitUpdateQuery, [currentCashAmount - refundCash, marketerId])
+            doQuery(debitUpdateQuery, [currentCashAmount - refundCash, marketerId]),
+            // 마케터 활동내역 로깅 테이블 :환불 신청 적재
+            marketerActionLogging([marketerId,
+              MARKETER_ACTION_LOG_TYPE,
+              JSON.stringify({ refundCash })])
           ])
             .then((secondrow) => {
             // 마케터 캐시 환불 쿼리 완료

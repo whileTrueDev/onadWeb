@@ -15,7 +15,7 @@ const makeContents = reportData => ({
   price: [
     {
       title: '광고 총 비용',
-      value: Number(parseInt(reportData.totalCPM, 10) + parseInt(reportData.totalCPC, 10)),
+      value: Number(reportData.totalCPM, 10 + reportData.totalCPC, 10),
       unit: '원'
     },
     {
@@ -39,15 +39,15 @@ const makeContents = reportData => ({
   metrics: [
     {
       title: '전환율',
-      value: (reportData.totalTransfer / reportData.totalLandingView),
+      value: (reportData.totalTransfer / reportData.totalLandingView) || 0,
       unit: '%',
       decimalRange: 4
     },
-    { title: '상호작용 수', value: (reportData.totalClick + reportData.totalTransfer), unit: '회' },
+    { title: '상호작용 수', value: (reportData.totalClick + reportData.totalTransfer) || 0, unit: '회' },
     {
       title: '상호 작용 발생율',
       value: ((reportData.totalClick + reportData.totalTransfer)
-                / reportData.totalCPM),
+                / reportData.totalCPM) || 0,
       unit: '%',
       decimalRange: 4
     },

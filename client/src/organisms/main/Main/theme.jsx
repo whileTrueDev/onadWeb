@@ -18,7 +18,7 @@ const rawTheme = createMuiTheme({
     },
     blueGrey: {
       light: blueGrey[300],
-      mian: blueGrey[700],
+      main: blueGrey[700],
       dark: blueGrey[900],
     },
     warning: {
@@ -31,7 +31,8 @@ const rawTheme = createMuiTheme({
       dark: '#e53935',
     },
     success: {
-      xLight: green[50],
+      light: green[50],
+      main: green[500],
       dark: green[700],
     },
   },
