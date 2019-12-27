@@ -2,10 +2,8 @@ import React, { useEffect } from 'react';
 import {
   Grid, Paper, Divider, Collapse, Checkbox, FormControlLabel
 } from '@material-ui/core';
-import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Help from '@material-ui/icons/Help';
-import qs from 'qs';
 import NumberFormat from 'react-number-format';
 import DescPopover from '../../../atoms/DescPopover';
 import StyledItemText from '../../../atoms/StyledItemText';
@@ -13,10 +11,8 @@ import StyledSelectText from '../../../atoms/StyledSelectText';
 import GreenCheckbox from '../../../atoms/GreenCheckBox';
 import StyledInput from '../../../atoms/StyledInput';
 import DangerTypography from '../../../atoms/Typography/Danger';
-import Button from '../../../atoms/CustomButtons/Button';
 import axios from '../../../utils/axios';
 import HOST from '../../../utils/config';
-import useFetchData from '../../../utils/lib/hooks/useFetchData';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -120,7 +116,7 @@ const OptionPaper = (props) => {
             if (res) {
               setTotal(res.data.result);
             }
-          }).catch((errorData) => { alert('오류가 발생하였습니다. 나중에 다시 시도해주세요.') ;});
+          }).catch((errorData) => { alert('오류가 발생하였습니다. 나중에 다시 시도해주세요.'); });
         setBudgetOpen(true);
       } else {
         setBudgetOpen(false);
