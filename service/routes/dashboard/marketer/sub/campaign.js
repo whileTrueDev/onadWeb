@@ -268,6 +268,7 @@ const PriorityDoquery = ({
       resolve();
     });
   }
+
   return Promise.all(
     priorityList.map(async targetId => new Promise((resolve, reject) => {
       doQuery(searchQuery, [targetId])
@@ -316,7 +317,7 @@ const getCreatorList = () => new Promise((resolve, reject) => {
 // optionType이 1인 경우에는 landingPage 초기화를 실제 배너 최초 게시시에 실시.
 
 // optionType이 2인 경우에는 priorityList가 모든 크리에이터가 되게끔 해야한다.
-const LandingDoQuery = async ({ campaignId, priorityType }) => {
+const LandingDoQuery = async ({ campaignId, optionType }) => {
   const insertQuery = `
   INSERT INTO landingClick
   (campaignId, creatorId)
@@ -325,7 +326,7 @@ const LandingDoQuery = async ({ campaignId, priorityType }) => {
 
   const creatorList = await getCreatorList();
 
-  if (priorityType === 2) {
+  if (optionType === 2) {
     return Promise.all(
       creatorList.map(async targetId => new Promise((resolve, reject) => {
         doQuery(insertQuery, [campaignId, targetId])
@@ -383,6 +384,12 @@ router.post('/push', (req, res) => {
       const campaignId = getCampaignId(row.result[0], marketerId);
       const limit = (optionType === 0 && noBudget) || optionType === 1 ? -1 : dailyLimit;
       const targetJsonData = JSON.stringify({ targetList: priorityList });
+      // PriorityDoquery({
+      //   campaignId, priorityType, priorityList, optionType
+      // })
+      //   .then(() => {
+      //     res.send([true, '캠페인이 등록되었습니다']);
+      //   });
       Promise.all([
         doQuery(saveQuery,
           [campaignId, campaignName, marketerId, bannerId, limit,
@@ -390,7 +397,7 @@ router.post('/push', (req, res) => {
         PriorityDoquery({
           campaignId, priorityType, priorityList, optionType
         }),
-        LandingDoQuery({ campaignId, priorityType })
+        LandingDoQuery({ campaignId, optionType })
       ])
         .then(() => {
           res.send([true, '캠페인이 등록되었습니다']);

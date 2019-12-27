@@ -48,7 +48,7 @@ const CategorySelect = (props) => {
 
   const handleChecked = (event) => {
     const categoryName = event.target.name;
-    const categoryId = event.target.id;
+    // const categoryId = event.target.id;
     if (getChecked(categoryName)) {
       // 체크 된 걸 다시 체크할 때
       checkedCategoriesDispatch({ type: 'delete', value: categoryName });

@@ -699,45 +699,65 @@ const getImpressiontime = ({ connection, creatorId }) => new Promise((resolve, r
       resolve([]);
     });
 });
-
-const getTimeData = ({connection, creatorId})  => new Promise((resolve, reject) => {
-  getRegDate({connection, creatorId})
-  .then((date)=>{
-    Promise.all([
-      getAirtime({connection, creatorId, date}),
-      getImpressiontime({connection, creatorId})
-    ])
-    .then(([airtime, impressiontime])=>{
-      resolve({airtime, impressiontime})
-    })
-  })
-})
+const getTimeData = ({ connection, creatorId }) => new Promise((resolve, reject) => {
+  getRegDate({ connection, creatorId })
+    .then((date) => {
+      Promise.all([
+        getAirtime({ connection, creatorId, date }),
+        getImpressiontime({ connection, creatorId })
+      ])
+        .then(([airtime, impressiontime]) => {
+          // 실제 배너 송출 비율 RIP
+          let RIP = 0;
+          if (impressiontime !== 0) {
+            RIP = Number((airtime / impressiontime).toFixed(2));
+            if (RIP >= 1) {
+              RIP = 1;
+            }
+          } else {
+            RIP = 0;
+          }
+          return (RIP);
+        })
+        .then((RIP) => {
+          console.log(RIP);
+          const queryState = `
+      UPDATE creatorDetail 
+      SET rip = ?
+      WHERE creatorId = ? 
+      `;
+          doTransacQuery({ connection, queryState, params: [RIP, creatorId] })
+            .then(() => {
+              console.log(`${creatorId}의 데이터를 저장하였습니다.`);
+              resolve();
+            })
+            .catch((error) => {
+              console.log(`${creatorId}의 데이터를 저장하는 과정`);
+              reject(error);
+            });
+        });
+    });
+});
 
 async function detailcalculation() {
   pool.getConnection(async (err, connection) => {
     if (err) {
       console.log(err);
     } else {
-
       const creatorList = await getDetailList({ connection });
-      const creatorId = creatorList[0]
-      // // const targetList = creatorList.slice(0, 100);
-      // const targetList = creatorList;
-
-     
-      // Promise.all(
-      //   creatorList.map(creatorId => getImpressiontime({ connection, creatorId }))
-      // )
-      //   .then(() => {
-      //     connection.release();
-      //     console.log('분석이 완료 되었습니다.');
-      //   })
-      //   .catch((errorData) => {
-      //     connection.release();
-      //     console.log('-----------------------------------------------------------');
-      //     console.log(errorData);
-      //     console.log('--------위의 사유로 인하여 에러가 발생하였습니다.-------------');
-      //   });
+      Promise.all(
+        creatorList.map(creatorId => getTimeData({ connection, creatorId }))
+      )
+        .then(() => {
+          connection.release();
+          console.log('분석이 완료 되었습니다.');
+        })
+        .catch((errorData) => {
+          connection.release();
+          console.log('-----------------------------------------------------------');
+          console.log(errorData);
+          console.log('--------위의 사유로 인하여 에러가 발생하였습니다.-------------');
+        });
 
     }
   });

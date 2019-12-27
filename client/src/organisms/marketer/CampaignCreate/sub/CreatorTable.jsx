@@ -40,10 +40,10 @@ const useStyles = makeStyles(theme => ({
 
 }));
 
-export default function CreatoreTable(props) {
+export default function CreatorTable(props) {
   const classes = useStyles();
   const {
-    creatorList, checkedCreators, checkedCreatorsDispatch
+    checkedCreators, checkedCreatorsDispatch
   } = props;
   const fetchData = useFetchData('/api/dashboard/marketer/creatordetail');
   const [anchorEl, setAnchorEl] = React.useState(null);

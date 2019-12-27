@@ -14,6 +14,7 @@ router.get('/', (req, res) => {
   )as B
   on creatorDetail.creatorId = B.creatorId
   WHERE viewer > 20
+  AND rip > 0.5
   order by viewer desc`;
 
   doQuery(infoQuery)

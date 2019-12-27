@@ -6,7 +6,7 @@ import {
 
 import Dialog from '../../../atoms/Dialog/Dialog';
 import StyledItemText from '../../../atoms/StyledItemText';
-import CreatorTable from './sub/CreatoreTable';
+import CreatorTable from './sub/CreatorTable';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -66,7 +66,7 @@ const CreatorSelect = (props) => {
         <Grid item>
           <Grid container direction="column" spacing={2}>
             <Grid item className={classes.item}>
-              <StyledItemText primary="넷째,&nbsp;&nbsp; 크리에이터 선택" secondary="해당 캠페인의 배너가 송출될 크리에이터를 선택하세요."/>
+              <StyledItemText primary="넷째,&nbsp;&nbsp; 크리에이터 선택" secondary="해당 캠페인의 배너가 송출될 크리에이터를 선택하세요." />
               <Divider component="hr" style={{ height: '2px' }} />
             </Grid>
             <Grid item>
