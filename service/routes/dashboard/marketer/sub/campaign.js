@@ -149,7 +149,7 @@ router.post('/onoff', (req, res) => {
           // 마케터 활동내역 테이블 적재
           const MARKETER_ACTION_LOG_TYPE = 6; // 마케터 활동내역 - 캠페인 on off상태값
           marketerActionLogging([campaignId.split('_')[0], MARKETER_ACTION_LOG_TYPE,
-            JSON.stringify({ campaignName, onoffState }) ]);
+            JSON.stringify({ campaignName, onoffState })]);
         }
       });
     })
@@ -368,12 +368,13 @@ const getCreatorList = () => new Promise((resolve, reject) => {
     });
 });
 
+// optionType == 2이면 랜딩페이지를 초기화하지 않는다.
+// optionType === 1이면 노출우선형일때는 모든 크리에이터에게
+// 크리에이터 우선형일때는 priorityList에 대해 초기화한다.
 
-// optionType이 2인 경우에만 landingPage 초기화를 초기 캠페인 생성시
-// optionType이 1인 경우에는 landingPage 초기화를 실제 배너 최초 게시시에 실시.
-
-// optionType이 2인 경우에는 priorityList가 모든 크리에이터가 되게끔 해야한다.
-const LandingDoQuery = async ({ campaignId, optionType }) => {
+const LandingDoQuery = async ({
+  campaignId, optionType, priorityType, priorityList
+}) => {
   const insertQuery = `
   INSERT INTO landingClick
   (campaignId, creatorId)
@@ -382,9 +383,26 @@ const LandingDoQuery = async ({ campaignId, optionType }) => {
 
   const creatorList = await getCreatorList();
 
-  if (optionType === 2) {
+  // 모든 크리에이터에게 할당하기.
+  if (optionType === 2 && priorityType === 2) {
     return Promise.all(
       creatorList.map(async targetId => new Promise((resolve, reject) => {
+        doQuery(insertQuery, [campaignId, targetId])
+          .then((row) => {
+            resolve();
+          })
+          .catch((errorData) => {
+            console.log(errorData);
+            reject(errorData);
+          });
+      }))
+    );
+  }
+
+  // 모든 크리에이터에게 할당하기.
+  if (optionType === 2 && priorityType === 1) {
+    return Promise.all(
+      priorityList.map(async targetId => new Promise((resolve, reject) => {
         doQuery(insertQuery, [campaignId, targetId])
           .then((row) => {
             resolve();
@@ -449,7 +467,9 @@ router.post('/push', (req, res) => {
         PriorityDoquery({
           campaignId, priorityType, priorityList, optionType
         }),
-        LandingDoQuery({ campaignId, optionType }),
+        LandingDoQuery({
+          campaignId, optionType, priorityType, priorityList
+        }),
         // 마케터 활동내역 테이블 적재.
         marketerActionLogging([
           marketerId, MARKETER_ACTION_LOG_TYPE, JSON.stringify({ campaignName })

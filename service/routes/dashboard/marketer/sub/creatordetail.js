@@ -13,8 +13,7 @@ router.get('/', (req, res) => {
   from creatorInfo
   )as B
   on creatorDetail.creatorId = B.creatorId
-  WHERE viewer > 20
-  AND rip > 0.5
+  WHERE rip > 0.5
   order by viewer desc`;
 
   doQuery(infoQuery)
@@ -28,7 +27,6 @@ router.get('/', (req, res) => {
 });
 
 router.get('/contents', (req, res) => {
-  // const marketerId = req._passport.session.user.userid;
   const { creatorId } = req.query;
 
   const query = `

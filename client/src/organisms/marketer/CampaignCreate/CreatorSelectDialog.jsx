@@ -56,7 +56,7 @@ const CreatorSelect = (props) => {
       disableBackdropClick
       title="3명 이상의 크리에이터를 선택하세요!"
       open
-      // onClose={handleClose}
+      onClose={handleBack}
       TransitionComponent={Transition}
       TransitionProps={{
         timeout: { enter: SLIDE_TIMEOUT, exit: SLIDE_TIMEOUT }

@@ -108,7 +108,8 @@ export default function CreatorTable(props) {
 
   const columns = [
     {
-      title: '크리에이터',
+      title: '',
+      field: 'creatorName',
       render: rowData => (
         <Grid container direction="row">
           <Grid item>
@@ -126,6 +127,12 @@ export default function CreatorTable(props) {
         </Grid>
       )
     },
+    // {
+    //   title: '크리에이터',
+    //   render: rowData => (
+    //     makeValueComponent({ value: rowData.creatorName, unit: '' })
+    //   )
+    // },
     {
       title: '팔로워',
       field: 'followers',

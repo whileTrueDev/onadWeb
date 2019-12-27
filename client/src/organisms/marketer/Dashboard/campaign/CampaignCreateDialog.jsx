@@ -327,6 +327,7 @@ const CampaignCreateStepper = (props) => {
           <OptionPaper
             setStepComplete={setStepComplete}
             handleSubmitCheck={handleSubmitCheck}
+            step2State={step2State}
             state={step4State}
             dispatch={step4Dispatch}
             selectedCategory={checkedCategories}
