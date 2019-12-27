@@ -51,6 +51,9 @@ const step1Reducer = (state, action) => {
       return { ...state, campaignName: action.value };
     case 'bannerId':
       return { ...state, bannerId: action.value };
+    case 'reset': {
+      return { campaignName: '', bannerId: '' };
+    }
     default:
       return state;
   }
@@ -132,7 +135,7 @@ const CampaignCreateStepper = (props) => {
 
   // 2 번째 step에서 사용할 State.
   const [creatorList, setCreatorList] = React.useState([]);
-  const [checkedCreators] = useReducer(step3Reducer, []);
+  const [checkedCreators, checkedCreatorsDispatch] = useReducer(step3Reducer, []);
 
   // 3 번째 step에서 사용할 State.(캠페인 카테고리)
   const [categoryList, setCategoryList] = React.useState([]);
@@ -270,6 +273,7 @@ const CampaignCreateStepper = (props) => {
       // additional page의 경우, 반드시 이전 page로 넘어가게끔.
       if (index === 2 || index === 3 || index === 4) {
         checkedCategoriesDispatch({ type: 'reset' });
+        checkedCreatorsDispatch({ type: 'reset' });
         step2Dispatch({ type: 'reset' });
         setIndex(1);
       } else if (index === 0) {
@@ -284,9 +288,6 @@ const CampaignCreateStepper = (props) => {
   const setSteps = (_index) => {
     switch (_index) {
       case 0:
-        return <CreatorSelectDialog setStepComplete={setStepComplete} />;
-
-      case 5:
         return (
           <CreatePaper
             bannerList={bannerList}
@@ -303,7 +304,15 @@ const CampaignCreateStepper = (props) => {
           />
         );
       case 2:
-        return <CreatorSelectDialog setStepComplete={setStepComplete} />;
+        return <CreatorSelectDialog 
+        setStepComplete={setStepComplete} 
+        creatorList={creatorList}
+        checkedCreators={checkedCreators}
+        checkedCreatorsDispatch={checkedCreatorsDispatch}
+        handleBack={handleBack}
+        handleNext={handleNext}
+        stepComplete={stepComplete}
+        />;
       case 3:
         return (
           <CategorySelect
@@ -336,11 +345,24 @@ const CampaignCreateStepper = (props) => {
       setStepComplete(false);
     }
   }, [step1State.bannerId, step1State.campaignName, step1State.checkedBannerId]);
+ 
+  // 해당 다이얼로그를 클로즈할 때, 여러가지 setup들을 갱신한다.
+  const wrapHandleClose = (event) =>{
+    event.preventDefault();
+    setIndex(0);
+    setActiveStep(0);
+    step1Dispatch({ type: 'reset' });
+    setStepComplete(false);
+    checkedCategoriesDispatch({ type: 'reset' });
+    checkedCreatorsDispatch({ type: 'reset' });
+    step2Dispatch({ type: 'reset' });
+    handleClose();
+  }
 
   return (
     <Dialog
       open={open}
-      onClose={handleClose}
+      onClose={wrapHandleClose}
       fullWidth
       maxWidth="lg"
       title="캠페인 등록"
@@ -405,6 +427,6 @@ const CampaignCreateStepper = (props) => {
 export default CampaignCreateStepper;
 
 CampaignCreateStepper.propTypes = {
-  open: PropTypes.bool,
+  open: PropTypes.object,
   handleClose: PropTypes.func
 };
