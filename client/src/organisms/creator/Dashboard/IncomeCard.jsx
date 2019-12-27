@@ -13,6 +13,7 @@ import useFetchData from '../../../utils/lib/hooks/useFetchData';
 import WithdrawalDialog from './WithdrawDialog';
 import history from '../../../history';
 
+
 const useStyles = makeStyles(() => ({
   stats: {
     color: '#999',

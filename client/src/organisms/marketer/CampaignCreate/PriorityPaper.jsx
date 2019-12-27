@@ -88,10 +88,10 @@ const PriorityPaper = (props) => {
           <Grid item className={classes.item}>
             <Grid container direction="column" spacing={2}>
               <Grid item>
-                <Paper className={classes.ready}>
+                <Paper className={classes.choice}>
                   <Grid container direction="row" justify="space-between">
                     <Grid item>
-                      <StyledSelectText primary="1. 크리에이터 우선형" secondary="해당옵션은 준비 중입니다." />
+                      <StyledSelectText primary="1. 크리에이터 우선형" secondary="원하는 크리에이터에게 광고를 넣을 수 있어요." />
                       {/* 광고를 넣고 싶은 크리에이터가 있어요. */}
                     </Grid>
                     <Grid item className={classes.icon}>
@@ -113,7 +113,7 @@ const PriorityPaper = (props) => {
                             onChange={handleChange}
                             onClick={handleNext(true, 2)}
                             fontSize="large"
-                            disabled
+                            // disabled
                           />
                         </Grid>
                       </Grid>
