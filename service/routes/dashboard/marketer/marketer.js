@@ -43,8 +43,8 @@ router.get('/onoff', (req, res) => {
 
   doQuery(contractionQuery, [marketerId])
     .then((row) => {
-      const data = row.result[0].marketerContraction === 1;
-      res.send({ onOffState: data });
+      const onOffState = row.result[0].marketerContraction === 1;
+      res.send({ onOffState });
     })
     .catch((errorData) => {
       console.log(errorData);
@@ -55,7 +55,7 @@ router.get('/onoff', (req, res) => {
 // 캠페인 On & Off 기능
 // 잔액이 0원일 때는 불가능 하도록 정의.
 router.post('/onoff', (req, res) => {
-  const contractionState = req.body.contraction === false ? 0 : 1;
+  const contractionState = req.body.onOffState === false ? 0 : 1;
   const marketerId = req._passport.session.user.userid;
   const costQuery = `
   SELECT cashAmount
@@ -181,6 +181,7 @@ router.get('/actionlog', (req, res) => {
   FROM marketerActionLog
   WHERE marketerId = ?
   ORDER BY date DESC
+  LIMIT 100
   `;
   const queryArray = [marketerId];
 
@@ -196,4 +197,56 @@ router.get('/actionlog', (req, res) => {
       res.end();
     });
 });
+
+// 대시보드 - 마케터의 보유 캐시량, 총 소진 비용
+router.get('/normal', (req, res) => {
+  const marketerId = req._passport.session.user.userid;
+  const query = `SELECT cashAmount, spendAll FROM
+  (
+    SELECT cashAmount
+    FROM marketerDebit
+    WHERE marketerId = ?) AS cashAmount,
+  (
+    SELECT sum(cashFromMarketer) AS spendAll
+    FROM campaignLog
+    WHERE SUBSTRING_INDEX(campaignId, "_" , 1) = ?) AS spendAll
+  `;
+
+  const queryArray = [marketerId, marketerId];
+  doQuery(query, queryArray).then((row) => {
+    if (row.result && !row.error) {
+      res.send(row.result[0]);
+    }
+  }).catch((err) => {
+    console.log('err in /report/normal', err);
+  });
+});
+
+// 현재 특정 캠페인을 송출중인 크리에이터 목록
+router.get('/broadcast/creator', (req, res) => {
+  const marketerId = req._passport.session.user.userid;
+  const tenMinuteAgoTime = new Date();
+  tenMinuteAgoTime.setMinutes(tenMinuteAgoTime.getMinutes() - 10);
+  const query = `
+  SELECT streamerName, creatorTwitchId, viewer FROM twitchStreamDetail
+    JOIN creatorInfo
+    ON creatorInfo.creatorName = twitchStreamDetail.streamerName
+    JOIN campaignTimestamp
+    ON campaignTimestamp.creatorId = creatorInfo.creatorId
+    WHERE TIME > ? 
+    AND creatorInfo.creatorContractionAgreement = 1
+    AND campaignTimestamp.date > ?
+    AND substring_index(campaignTimestamp.campaignId, "_", 1) = ?`;
+  const queryArray = [tenMinuteAgoTime, tenMinuteAgoTime, marketerId];
+  doQuery(query, queryArray).then((row) => {
+    if (!row.error && row.result) {
+      const result = row.result.map(d => d.streamerName);
+      res.send(result);
+    }
+  }).catch((err) => {
+    console.log('err in /report/broadcast/creator', err);
+  });
+});
+
+
 module.exports = router;

@@ -29,8 +29,36 @@ router.get('/', (req, res) => {
     });
 });
 
+// 2019-12-06 새로운 대시보드(분석)을 위한 요청
+// 캠페인 리스트 조회
+router.get('/new', (req, res) => {
+  const marketerId = req._passport.session.user.userid;
+
+  const query = `
+  SELECT
+  campaignId, campaignName, optionType, priorityType, campaign.regiDate, onOff, bannerSrc
+  FROM campaign
+  JOIN bannerRegistered AS br
+  ON br.bannerId = campaign.bannerId
+  WHERE campaign.marketerId = ?
+  AND deletedState = 0
+  ORDER BY br.regiDate DESC
+  `;
+  const queryArray = [marketerId];
+
+  doQuery(query, queryArray).then((row) => {
+    if (row.result && !row.error) {
+      res.send(row.result);
+    }
+  }).catch((err) => {
+    console.log('err in /campaign/new', err);
+  });
+});
+
+
 // 캠페인 삭제
 router.delete('/', (req, res) => {
+  const marketerId = req._passport.session.user.userid;
   const { campaignId } = req.body.data;
   const query = `
   UPDATE campaign
@@ -39,10 +67,23 @@ router.delete('/', (req, res) => {
   WHERE campaignId = ?`;
   const queryArray = [campaignId];
 
+  const selectQuery = `
+  SELECT campaignName FROM campaign WHERE campaignId = ?`;
+
   doQuery(query, queryArray)
     .then((row) => {
       if (row.result) {
         res.send([true]);
+
+        doQuery(selectQuery, [campaignId]).then((row1) => {
+          if (!row1.error) {
+            const { campaignName } = row1.result[0];
+            // marketer action log 테이블 적재
+            const MARKETER_ACTION_LOG_TYPE = 12; // <캠페인 삭제> 상태값
+            marketerActionLogging([marketerId,
+              MARKETER_ACTION_LOG_TYPE, JSON.stringify({ campaignName })]);
+          }
+        });
       }
     })
     .catch((err) => {
@@ -83,6 +124,7 @@ router.get('/list', (req, res) => {
     });
 });
 
+// 캠페인 광고 켜기 / 끄기
 router.post('/onoff', (req, res) => {
   const { onoffState, campaignId } = req.body; // boolean값
   const query = `
@@ -92,23 +134,30 @@ router.post('/onoff', (req, res) => {
 
   const queryArray = [onoffState, campaignId];
 
+  const selectQuery = `
+  SELECT campaignName FROM campaign WHERE campaignId = ?`;
+
   doQuery(query, queryArray)
     .then((row) => {
       if (row.result) {
         res.send([true]);
       }
 
-      // 마케터 활동내역 테이블 적재
-      const MARKETER_ACTION_LOG_TYPE = 6; // 마케터 활동내역 - 캠페인 on off상태값
-      marketerActionLogging([campaignId.split('_')[0], MARKETER_ACTION_LOG_TYPE,
-        JSON.stringify({ campaignId, onoffState }) ]);
+      doQuery(selectQuery, [campaignId]).then((row1) => {
+        if (!row1.error) {
+          const { campaignName } = row1.result[0];
+          // 마케터 활동내역 테이블 적재
+          const MARKETER_ACTION_LOG_TYPE = 6; // 마케터 활동내역 - 캠페인 on off상태값
+          marketerActionLogging([campaignId.split('_')[0], MARKETER_ACTION_LOG_TYPE,
+            JSON.stringify({ campaignName, onoffState }) ]);
+        }
+      });
     })
     .catch((err) => {
       console.log(err);
       res.end();
     });
 });
-
 
 // 해당 마케터의 성과 차트 데이터 조회
 // contractionValue
@@ -403,7 +452,7 @@ router.post('/push', (req, res) => {
         LandingDoQuery({ campaignId, priorityType }),
         // 마케터 활동내역 테이블 적재.
         marketerActionLogging([
-          marketerId, MARKETER_ACTION_LOG_TYPE, JSON.stringify({ campaignId })
+          marketerId, MARKETER_ACTION_LOG_TYPE, JSON.stringify({ campaignName })
         ])
       ])
         .then(() => {

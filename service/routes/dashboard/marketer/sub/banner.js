@@ -131,6 +131,7 @@ router.post('/push', (req, res) => {
 // 배너 삭제
 // bannerRegistered
 router.post('/delete', (req, res) => {
+  const marketerId = req._passport.session.user.userid;
   const { bannerId } = req.body;
   const bannerQuery = `
   DELETE FROM bannerRegistered 
@@ -138,6 +139,11 @@ router.post('/delete', (req, res) => {
   doQuery(bannerQuery, [bannerId])
     .then(() => {
       res.send([true, '배너가 성공적으로 삭제되었습니다.']);
+
+      // marketer action log 데이터 적재
+      const MARKETER_ACTION_LOG_TYPE = 11; // <배너 삭제>의 상태값 : 11
+      marketerActionLogging([marketerId,
+        MARKETER_ACTION_LOG_TYPE, JSON.stringify({ bannerId })]);
     })
     .catch((errorData) => {
       console.log(errorData);
