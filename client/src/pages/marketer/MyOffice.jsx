@@ -60,12 +60,12 @@ export default function MyOffice() {
               <RefundAccountForm accountData={accountData} />
             </GridItem>
 
-            <GridItem xs={12}>
-              <SignOut userData={userData.payload} />
-            </GridItem>
+
           </GridContainer>
         </GridItem>
-
+        <GridItem xs={12}>
+          <SignOut userData={userData.payload} />
+        </GridItem>
       </GridContainer>
       )}
 

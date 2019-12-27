@@ -12,6 +12,8 @@ $(() => {
 
   if (navi.indexOf('xsplit') !== -1) {
     program = 'xsplit';
+  } else if (navi.indexOf('twitch') !== -1) {
+    program = 'twitch-studio';
   } else { program = 'obs'; }
 
   if (typeof document.hidden !== 'undefined') { // Opera 12.10 and Firefox 18 and later support
