@@ -90,6 +90,8 @@ ReChartBar.defaultProps = {
     if (name === 'cpm_amount') { return [value, '배너광고']; } return [value, '클릭광고'];
   },
   tooltipLabelFormatter: null,
-  legendFormatter: null,
+  legendFormatter(value) {
+    if (value === 'cpm_amount') { return '배너광고'; } return '클릭광고';
+  },
   nopreprocessing: false,
 };
