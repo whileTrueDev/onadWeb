@@ -100,12 +100,12 @@ export default function issueTable(props) {
         {/* 데이터 있는 경우 */}
         {actionLogData.loading && (<CircularProgress />)}
         {actionLogData.payload.length > 0 ? (
-          <List component="nav" style={{ width: '100%' }} aria-label="mailbox folders">
+          <List component="nav" style={{ width: '100%' }} aria-label="issue-table">
             {actionLogData.payload
               .sort((a, b) => (a.date > b.date ? -1 : a.date < b.date ? 1 : 0))
               .map((r, index) => (
                 <div key={shortid.generate()}>
-                  <ListItem button style={{ justifyContent: 'space-between' }}>
+                  <ListItem style={{ justifyContent: 'space-between' }}>
                     <ListItemText
                       primary={makeContents(r.type, r.detail)}
                       secondary={new Date(r.date).toLocaleString()}
