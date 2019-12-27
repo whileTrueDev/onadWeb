@@ -138,6 +138,7 @@ export default function CampaignList(props) {
                           {/* 0: 'CPM', 1: 'CPC + CPM' */}
                           {d.optionType === 0 && '배너 광고'}
                           {d.optionType === 1 && '배너 + 클릭 광고'}
+                          {d.optionType === 2 && '클릭 광고'}
                         </Typography>
                         <Typography variant="caption" gutterBottom>
                           {/* 0: '크리에이터 우선', 1: '카테고리 우선', 2: '노출우선' */}

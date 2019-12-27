@@ -6,7 +6,7 @@ import { Typography, Grid } from '@material-ui/core';
  * @param {number} type 우선순위 타입넘버
  * @return // 0: CPM, 1: CPC + CPM, 2: CPC
  */
-function getPriorityType(type) {
+function getOptionType(type) {
   let result;
   if (type === 0) {
     result = '배너광고';
@@ -25,7 +25,7 @@ function getPriorityType(type) {
  * @param {number} type 광고유형 타입넘버
  * @return 0: '크리에이터 우선', 1: '카테고리 우선', 2: '노출우선'
  */
-function getOptionType(type) {
+function getPriorityType(type) {
   let result;
   if (type === 0) {
     result = '크리에이터 우선';

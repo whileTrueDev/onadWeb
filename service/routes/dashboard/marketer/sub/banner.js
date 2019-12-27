@@ -1,5 +1,7 @@
 const express = require('express');
 const doQuery = require('../../../../model/doQuery');
+// marketer action log
+const marketerActionLogging = require('../../../../middlewares/marketerActionLog');
 
 const router = express.Router();
 
@@ -34,7 +36,7 @@ router.get('/all', (req, res) => {
     DATE_FORMAT(regiDate, "%Y년% %m월 %d일") as regiDate
   FROM bannerRegistered
   WHERE marketerId = ?
-  ORDER BY confirmState DESC, regiDate DESC`;
+  ORDER BY confirmState ASC, regiDate DESC`;
   doQuery(bannerQuery, [marketerId])
     .then((row) => {
       if (row.result.length > 0) {
@@ -92,9 +94,8 @@ router.post('/push', (req, res) => {
     // 이전에 배너를 게시한 적이 있다는 의미.
       let bannerId = '';
       if (row.result[0]) {
-        console.log(row.result);
         const lastBannerId = row.result[0].bannerId;
-        const count = parseInt(lastBannerId.split('_')[1]) + 1;
+        const count = parseInt(lastBannerId.split('_')[1], 10) + 1; // 10 진수
         if (count < 10) {
           bannerId = `${marketerId}_0${count}`;
         } else {
@@ -108,6 +109,12 @@ router.post('/push', (req, res) => {
           landingUrl])
         .then(() => {
           res.send([true, '배너가 등록되었습니다']);
+
+          // marketer action log 데이터 적재
+          const MARKETER_ACTION_LOG_TYPE = 2; // <배너 등록> 의 상태값 : 2
+          marketerActionLogging([
+            marketerId, MARKETER_ACTION_LOG_TYPE, JSON.stringify({ bannerId })
+          ]);
         })
         .catch((errorData) => {
           console.log(errorData);
@@ -124,6 +131,7 @@ router.post('/push', (req, res) => {
 // 배너 삭제
 // bannerRegistered
 router.post('/delete', (req, res) => {
+  const marketerId = req._passport.session.user.userid;
   const { bannerId } = req.body;
   const bannerQuery = `
   DELETE FROM bannerRegistered 
@@ -131,6 +139,11 @@ router.post('/delete', (req, res) => {
   doQuery(bannerQuery, [bannerId])
     .then(() => {
       res.send([true, '배너가 성공적으로 삭제되었습니다.']);
+
+      // marketer action log 데이터 적재
+      const MARKETER_ACTION_LOG_TYPE = 11; // <배너 삭제>의 상태값 : 11
+      marketerActionLogging([marketerId,
+        MARKETER_ACTION_LOG_TYPE, JSON.stringify({ bannerId })]);
     })
     .catch((errorData) => {
       console.log(errorData);
