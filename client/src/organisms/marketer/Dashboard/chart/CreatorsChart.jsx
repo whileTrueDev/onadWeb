@@ -78,7 +78,7 @@ export default function CustomPieChart(props) {
             </Grid>
             <Grid item xs={12}>
               <Typography variant="caption">
-                * 주황색 점 표시는 현재 배너 송출중 상태를 나타냅니다 (오차가 있을수 있습니다.)
+                * 붉은 점 표시는 현재 배너 송출중 상태를 나타냅니다 (오차가 있을수 있습니다.)
               </Typography>
             </Grid>
               {creatorsData.payload.slice(0, 30).map((d, index) => (
@@ -89,7 +89,7 @@ export default function CustomPieChart(props) {
                   label={(
                     <div>
                       {broadCreatorData.payload.includes(d.creatorName) ? (
-                        <Badge color="secondary" badgeContent=" " variant="dot">
+                        <Badge color="error" badgeContent=" " variant="dot">
                           <Typography variant="body2">{`${index + 1}. ${d.creatorName}`}</Typography>
                         </Badge>
                       ) : (

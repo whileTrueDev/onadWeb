@@ -23,20 +23,21 @@ const useStyles = makeStyles(theme => ({
 
 export default function Dashboard() {
   const classes = useStyles();
-  const campaignData = useFetchData('/api/dashboard/marketer/report/new');
+  const campaignData = useFetchData('/api/dashboard/marketer/campaign/new');
   const onOffData = useFetchData('/api/dashboard/marketer/onoff');
-  const normalData = useFetchData('/api/dashboard/marketer/report/normal');
+  const normalData = useFetchData('/api/dashboard/marketer/normal');
   const creatorsData = useFetchData('/api/dashboard/marketer/report/creators');
   const bannerData = useFetchData('/api/dashboard/marketer/banner/all');
   const valueChartData = useFetchData('/api/dashboard/marketer/campaign/chart');
-  const broadCreatorData = useFetchData('/api/dashboard/marketer/report/broadcast/creator');
+  const broadCreatorData = useFetchData('/api/dashboard/marketer/broadcast/creator');
+  const actionLogData = useFetchData('/api/dashboard/marketer/actionlog');
 
   return (
     <div className={classes.root}>
       {(normalData.loading || campaignData.loading
         || onOffData.loading || creatorsData.loading
         || bannerData.loading || valueChartData.loading
-        || broadCreatorData.loading) ? (
+        || broadCreatorData.loading || actionLogData.loading) ? (
           <ReportLoading />
         ) : (
           <Grid container spacing={2}>
@@ -107,7 +108,9 @@ export default function Dashboard() {
                   />
                 </Grid>
                 <Grid item xs={12}>
-                  <IssueTable />
+                  <IssueTable
+                    actionLogData={actionLogData}
+                  />
                 </Grid>
 
               </Grid>
