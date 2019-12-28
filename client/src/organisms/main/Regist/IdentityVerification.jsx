@@ -2,7 +2,7 @@ import React, { useEffect, useCallback } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Fingerprint from '@material-ui/icons/Fingerprint';
 import {
-  Grid, Typography, Divider, Button
+  Grid, Button
 } from '@material-ui/core';
 import axios from '../../../utils/axios';
 import HOST from '../../../utils/config';

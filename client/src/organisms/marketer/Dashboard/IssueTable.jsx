@@ -2,8 +2,8 @@ import React from 'react';
 import shortid from 'shortid';
 import {
   Paper, Grid, Typography, Divider,
-  List, ListItem, ListItemText, IconButton, CircularProgress,
-  Slide
+  Tooltip, List, ListItem, ListItemText,
+  IconButton, CircularProgress,
 } from '@material-ui/core';
 import Refresh from '@material-ui/icons/Refresh';
 
@@ -20,6 +20,8 @@ function makeContents(typeNumber, detail) {
   // 8 - 세금계산서 발행 / 미발행
   // 9 - 환불요청  v-191226
   // 10 - 환불요청결과
+  // 11 - 배너 삭제 v-191227
+  // 11 - 캠페인 삭제 v-191227
   let content = '';
   switch (typeNumber) {
     case 0:
@@ -38,10 +40,10 @@ function makeContents(typeNumber, detail) {
       content = `${details.bannerId} 배너 심사 거절됨`;
       return content;
     case 5:
-      content = `${details.campaignId} 캠페인 생성`;
+      content = `${details.campaignName} 캠페인 생성`;
       return content;
     case 6:
-      content = `${details.campaignId} 캠페인 ${details.onoffState ? 'ON' : 'OFF'}`;
+      content = `${details.campaignName} 캠페인 ${details.onoffState ? 'ON' : 'OFF'}`;
       return content;
     case 7:
       content = `광고 스위치 ${details.onoffState ? 'ON' : 'OFF'}`;
@@ -55,6 +57,12 @@ function makeContents(typeNumber, detail) {
     case 10:
       content = ' 환불요청결과';
       return content;
+    case 11:
+      content = `${details.bannerId} 배너 삭제`;
+      return content;
+    case 12:
+      content = `${details.campaignName} 캠페인 삭제`;
+      return content;
     default:
       throw Error('typeNumber must be need');
   }
@@ -63,18 +71,26 @@ function makeContents(typeNumber, detail) {
 export default function issueTable(props) {
   const { actionLogData } = props;
 
+  // console.log(actionLogData);
+
   return (
     <Paper style={{ height: 400 }}>
       <div style={{ padding: 16, display: 'flex', justifyContent: 'space-between' }}>
-        <Typography variant="h6">
-          활동
-        </Typography>
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <Typography variant="h6">활동</Typography>
+          <Typography variant="caption">
+            &emsp;
+            {'(목록 갱신은 새로고침을 눌러주세요.)'}
+          </Typography>
+        </div>
 
         <IconButton
           size="small"
           onClick={() => { actionLogData.callUrl(); }}
         >
-          <Refresh />
+          <Tooltip title="활동내역 새로고침">
+            <Refresh />
+          </Tooltip>
         </IconButton>
       </div>
 
@@ -84,19 +100,17 @@ export default function issueTable(props) {
         {/* 데이터 있는 경우 */}
         {actionLogData.loading && (<CircularProgress />)}
         {actionLogData.payload.length > 0 ? (
-          <List component="nav" style={{ width: '100%' }} aria-label="mailbox folders">
+          <List component="nav" style={{ width: '100%' }} aria-label="issue-table">
             {actionLogData.payload
               .sort((a, b) => (a.date > b.date ? -1 : a.date < b.date ? 1 : 0))
               .map((r, index) => (
                 <div key={shortid.generate()}>
-                  <Slide direction="up" in={!actionLogData.loading}>
-                    <ListItem button style={{ justifyContent: 'space-between' }}>
-                      <ListItemText
-                        primary={makeContents(r.type, r.detail)}
-                        secondary={new Date(r.date).toLocaleString()}
-                      />
-                    </ListItem>
-                  </Slide>
+                  <ListItem style={{ justifyContent: 'space-between' }}>
+                    <ListItemText
+                      primary={makeContents(r.type, r.detail)}
+                      secondary={new Date(r.date).toLocaleString()}
+                    />
+                  </ListItem>
                   {index !== actionLogData.length - 1 && (<Divider light />)}
                 </div>
               ))}
