@@ -27,6 +27,7 @@ router.get('/', (req, res) => {
     });
 });
 
+
 router.get('/contents', (req, res) => {
   // const marketerId = req._passport.session.user.userid;
   const { creatorId } = req.query;

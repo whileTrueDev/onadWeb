@@ -30,6 +30,11 @@ const makeContents = reportData => ({
       value: Number(reportData.totalViewCount),
       unit: '회'
     },
+    {
+      title: '배너 총 노출 시간',
+      value: Number(reportData.totalTime),
+      unit: '분'
+    }
   ],
   metrics: [
     {
@@ -157,13 +162,11 @@ export default function CampaignOnlyBannerAd(props) {
                   <Grid item xs={12} sm={6}>
                     <CampaignCostBar
                       color="primary"
-                      reportData={reportData.payload}
                       valueChartData={valueChartData}
                     />
                     <CampaignCostPie
                       color="secondary"
                       reportData={reportData.payload}
-                      valueChartData={valueChartData}
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
