@@ -24,11 +24,6 @@ function Footer({ ...props }) {
                 이용약관
               </a>
             </ListItem>
-            <ListItem className={classes.inlineBlock}>
-              <a href="https://on-ad.github.io" className={classes.block}>
-                블로그
-              </a>
-            </ListItem>
           </List>
         </div>
         <p className={classes.right}>

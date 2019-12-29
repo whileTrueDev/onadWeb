@@ -124,15 +124,6 @@ function AppFooter() {
                     개인정보 처리방침
                   </Link>
                 </li>
-                <li className={classes.listItem}>
-                  <Link
-                    href="https://on-ad.github.io"
-                    color="inherit"
-                    underline="none"
-                  >
-                기술블로그
-                  </Link>
-                </li>
               </ul>
             </Grid>
             <Grid item className={classes.icons}>
