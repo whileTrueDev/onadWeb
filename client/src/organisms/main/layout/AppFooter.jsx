@@ -124,15 +124,6 @@ function AppFooter() {
                     개인정보 처리방침
                   </Link>
                 </li>
-                <li className={classes.listItem}>
-                  <Link
-                    href="https://on-ad.github.io"
-                    color="inherit"
-                    underline="none"
-                  >
-                기술블로그
-                  </Link>
-                </li>
               </ul>
             </Grid>
             <Grid item className={classes.icons}>
@@ -166,15 +157,15 @@ function AppFooter() {
                 <span className={classes.address}>659-03-01549</span>
               </div>
               <div>
-                {'통신판매업 신고번호'}
+                통신판매업 신고번호
                 <span className={classes.address}>제2019-부산금정-0581호</span>
               </div>
               <div>
-                {'개인정보보호책임자'}
+                개인정보보호책임자
                 <span className={classes.address}>전민관</span>
               </div>
               <div>
-                {'고객센터'}
+                고객센터
                 <span className={classes.address}>051-515-6309</span>
               </div>
             </Typography>
