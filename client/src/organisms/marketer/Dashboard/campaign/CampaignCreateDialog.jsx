@@ -275,6 +275,7 @@ const CampaignCreateStepper = (props) => {
         checkedCategoriesDispatch({ type: 'reset' });
         checkedCreatorsDispatch({ type: 'reset' });
         step2Dispatch({ type: 'reset' });
+        step4Dispatch({ type: 'reset' });
         setIndex(1);
       } else if (index === 0) {
         handleClose();
@@ -357,8 +358,9 @@ const CampaignCreateStepper = (props) => {
     checkedCategoriesDispatch({ type: 'reset' });
     checkedCreatorsDispatch({ type: 'reset' });
     step2Dispatch({ type: 'reset' });
+    step4Dispatch({ type: 'reset' });
     handleClose();
-  }
+  };
 
   return (
     <Dialog
