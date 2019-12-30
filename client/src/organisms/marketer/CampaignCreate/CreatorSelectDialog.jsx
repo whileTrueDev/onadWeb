@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import {
-  Grid, Divider, Slide, Button, Collapse
+  Grid, Divider, Slide, Collapse
 } from '@material-ui/core';
-
+import Button from '../../../atoms/CustomButtons/Button';
 import Dialog from '../../../atoms/Dialog/Dialog';
 import StyledItemText from '../../../atoms/StyledItemText';
 import CreatorTable from './sub/CreatorTable';
