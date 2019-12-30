@@ -5,7 +5,7 @@ import {
 import AccountCircle from '@material-ui/icons/AccountCircle';
 
 import CardTemplate from '../common/CardTemplate';
-import CreatorInfo from '../common/CreatorInfo';
+import CreatorInfo from './CreatorInfo';
 
 export default function BannerBroadCreators(props) {
   const { creatorsData, ...rest } = props;
