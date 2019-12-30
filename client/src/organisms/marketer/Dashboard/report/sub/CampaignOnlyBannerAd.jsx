@@ -10,6 +10,7 @@ import CampaignCostPie from './BannerAndClickSub/CampaignCostPie';
 import CampaignCostBar from './BannerAndClickSub/CampaignCostBar';
 import BannerBroadCreators from './onlyBannerSub/BannerBroadCreators';
 import CampaignInfo from './common/CampaignInfo';
+import MakePdfButton from './MakePdfButton';
 
 const makeContents = reportData => ({
   price: [
@@ -105,7 +106,7 @@ export default function CampaignOnlyBannerAd(props) {
       {!reportData.loading && reportData.payload
       && !valueChartData.loading && valueChartData.payload
       && !creatorsData.loading && (
-      <Grid container>
+      <Grid container id="report-window">
         {/* 헤드라인 */}
         <Grid item xs={12}>
           <div className={classes.headline}>
@@ -116,6 +117,7 @@ export default function CampaignOnlyBannerAd(props) {
                 &emsp;광고 효과 분석
             </Typography>
 
+            <MakePdfButton />
           </div>
           <Divider />
         </Grid>
