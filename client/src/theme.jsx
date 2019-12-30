@@ -24,7 +24,6 @@ const rawTheme = createMuiTheme({
   typography: {
     fontFamily: [
       'Roboto',
-      'Nanum Gothic',
       '-apple-system',
       'BlinkMacSystemFont',
       '"Segoe UI"',

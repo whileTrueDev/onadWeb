@@ -37,7 +37,7 @@ export default function Dashboard() {
       {(normalData.loading || campaignData.loading
         || onOffData.loading || creatorsData.loading
         || bannerData.loading || valueChartData.loading
-        || broadCreatorData.loading || actionLogData.loading) ? (
+        || actionLogData.loading) ? (
           <ReportLoading />
         ) : (
           <Grid container spacing={2}>
