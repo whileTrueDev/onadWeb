@@ -68,28 +68,13 @@ router.post('/signout', (req, res) => {
                         WHERE marketerId = ?`;
   doQuery(deleteQuery, marketerId)
     .then(() => {
-      console.log(`${marketerId}님 회원탈퇴`);
+      req.logout();
+      req.session.destroy(() => {
+        console.log(`${marketerId}님 회원탈퇴`);
+      });
       res.send(true);
     })
     .catch((err) => { console.log(` 회원탈퇴 에러 : ${err}`); });
-  // const moveQuery = `
-  // INSERT INTO signOutId SELECT marketerId FROM marketerInfo WHERE marketerId = ?
-  // `;
-  // const deleteQuery = `SELECT * FROM marketerInfo AS mi
-  //                       LEFT JOIN bannerRegistered AS br ON mi.marketerId = br.marketerId
-  //                       LEFT JOIN campaign AS cp ON mi.marketerId = cp.marketerId
-  //                       WHERE mi.marketerId = ?`;
-  // Promise.all(
-  //   [doQuery(moveQuery, [marketerId])],
-  //   doQuery(deleteQuery, [marketerId])
-  // )
-  //   .then(() => {
-  //     res.send(true);
-  //   })
-  //   .catch((errorData) => {
-  //     console.log(errorData);
-  //     res.end();
-  //   });
 });
 
 // 마케터 계좌정보 조회
