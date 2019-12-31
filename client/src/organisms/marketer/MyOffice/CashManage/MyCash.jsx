@@ -15,8 +15,7 @@ import CardHeader from '../../../../atoms/Card/CardHeader';
 import CardBody from '../../../../atoms/Card/CardBody';
 import CardIcon from '../../../../atoms/Card/CardIcon';
 import DashboardStyle from '../../../../assets/jss/onad/views/dashboardStyle';
-import CashChargeDialog from './CashChargeDialog';
-import TestChargeDialog from './TestChargeDialog';
+// import CashChargeDialog from './CashChargeDialog';
 import RefundDialog from './RefundDialog';
 import CashUsageList from './CashUsageList';
 // hooks
@@ -24,13 +23,14 @@ import useFetchData from '../../../../utils/lib/hooks/useFetchData';
 import useDialog from '../../../../utils/lib/hooks/useDialog';
 
 function MyCash(props) {
-  const chargeDialog = useDialog();
+  // const chargeDialog = useDialog();
   const refundDialog = useDialog();
-  const testChargeDialog = useDialog();
   const cashData = useFetchData('/api/dashboard/marketer/cash');
-  const marketerProfileData = useFetchData('/api/dashboard/marketer/profile');
 
   const { classes, accountData, userData } = props;
+  const POPUP_X = (window.screen.width/2) - 300;
+  const POPUP_Y = (window.screen.height/2) - 275;
+  const HOST = process.env.NODE_ENV === 'production' ? 'http://onad.io' : 'http://localhost:3001';
 
   return (
     <Card>
@@ -44,13 +44,9 @@ function MyCash(props) {
         }}
         >
           {!userData.loading && !userData.error
-            && userData.payload.marketerId === 'admin' ? (
-              <Button color="info" onClick={() => { testChargeDialog.handleOpen(); }}>전자결제충전</Button>
-            ) : (
-              null
-            )}
-
-          <Button color="info" onClick={() => { chargeDialog.handleOpen(); }}>충전</Button>
+            && <Button color="info" onClick={() => { window.open(`${HOST}/marketer/charge`, "_blank", `width=600, height=550, left=${POPUP_X}, top=${POPUP_Y}`) }}>캐시충전</Button>
+          }
+           
           {!accountData.loading && !accountData.error
               && !accountData.payload.accountNumber ? (
                 <Tooltip title="환불계좌가 등록되지 않아 진행이 불가합니다.">
@@ -96,24 +92,13 @@ function MyCash(props) {
       </CardBody>
 
       {/* Dialogs */}
-      {!cashData.loading && !cashData.error && (
+      {/* {!cashData.loading && !cashData.error && (
         <CashChargeDialog
           open={chargeDialog.open}
           handleClose={chargeDialog.handleClose}
           currentCash={cashData.payload.cashAmount}
         />
-      )}
-
-      {/* 결제 테스트를 위한 다이얼로그 Start */}
-      {!cashData.loading && !cashData.error && (
-        <TestChargeDialog
-          open={testChargeDialog.open}
-          handleClose={testChargeDialog.handleClose}
-          currentCash={cashData.payload.cashAmount}
-          marketerProfileData={marketerProfileData}
-        />
-      )}
-      {/* 결제 테스트를 위한 다이얼로그 End */}
+      )} */}
 
       {!accountData.loading
       && !accountData.error

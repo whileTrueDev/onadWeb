@@ -14,11 +14,13 @@ import MarketerDashboard from './pages/layouts/MarketerDashboardLayout';
 import NotFound from './pages/others/NotFound';
 import Notice from './pages/others/Notice';
 import Policy from './pages/main/Policy';
+import TestChargeDialog from './organisms/marketer/MyOffice/CashManage/TestChargeDialog';
 // import ShutDownCloseBeta from './pages/others/ShutDownCloseBeta';
 // import KakaoPay from './pages/Common/KakaoPay';
 import * as serviceWorker from './utils/serviceWorker';
 import history from './history';
 import theme from './theme';
+
 
 dotenv.config();
 
@@ -31,6 +33,7 @@ const developRouter = (
       <Route exact path="/policy" component={Policy} />
       <Route exact path="/policy/:privacy" component={Policy} />
       <Route exact path="/notice" component={Notice} />
+      <Route exact path="/marketer/charge" component={TestChargeDialog} />
       <Route path="/notice/:code" component={Notice} />
       <ThemeProvider theme={theme}>
         <Route exact path="/dashboard/creator/door" component={CreatorDashboardDoor} />

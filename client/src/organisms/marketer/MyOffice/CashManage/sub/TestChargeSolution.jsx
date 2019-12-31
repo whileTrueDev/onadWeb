@@ -118,7 +118,7 @@ const TestChargeSolution = (props) => {
                   onChange={handleChange}
                 >
                   <FormControlLabel
-                    value="신용카드"
+                    value="card"
                     control={<Radio color="primary" />}
                     label={(
                       <Typography variant="subtitle1" className={classes.selectValue}>
@@ -127,7 +127,7 @@ const TestChargeSolution = (props) => {
                     )}
                   />
                   <FormControlLabel
-                    value="계좌이체"
+                    value="trans"
                     control={<Radio color="primary" />}
                     label={(
                       <Typography variant="subtitle1" className={classes.selectValue}>
@@ -136,7 +136,7 @@ const TestChargeSolution = (props) => {
                     )}
                   />
                   <FormControlLabel
-                    value="가상계좌"
+                    value="vbank"
                     control={<Radio color="primary" />}
                     label={(
                       <Typography variant="subtitle1" className={classes.selectValue}>
