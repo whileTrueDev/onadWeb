@@ -1,25 +1,55 @@
 import React from 'react';
-import { Divider, Avatar } from '@material-ui/core';
+import { Divider, Avatar, Grid } from '@material-ui/core';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import Typography from '@material-ui/core/Typography';
 import Popover from '@material-ui/core/Popover';
 import Button from '@material-ui/core/Button';
+import ContentsPie from './ContentsPie';
+import TimeChart from './TimeChart';
 
 const useStyles = makeStyles(() => ({
   container: {
-    padding: 12, minWidth: 420
+    padding: 12, minWidth: 600
   },
   spaceBetween: {
     display: 'flex', justifyContent: 'space-between', padding: 4
   },
   flex: {
-    display: 'flex', alignItems: 'center'
-  }
+    justifyContent: 'center',
+    display: 'flex',
+    alignItems: 'center'
+  },
+  unit: {
+    fontWeight: '700',
+    marginLeft: '3px'
+  },
+
 }));
 
 export default function CreatorInfo(props) {
   const classes = useStyles();
   const { anchorEl, handleClose, creatorInfo } = props;
+
+
+  const makeValueComponent = ({ value, unit }) => (
+    <div className={classes.flex}>
+      <Typography gutterBottom variant="h6">
+        {value}
+      </Typography>
+      <Typography variant="body2" gutterBottom className={classes.unit}>{unit}</Typography>
+    </div>
+  );
+
+
+  const makeNameComponent = ({ value }) => (
+    <div className={classes.flex}>
+      <Typography gutterBottom variant="body1" style={{ fontWeight: 700 }}>
+        {value}
+        :
+      </Typography>
+    </div>
+  );
+
 
   return (
     <Popover
@@ -60,57 +90,67 @@ export default function CreatorInfo(props) {
           </Button>
         </div>
         <Divider />
-
-        <div className={classes.flex} style={{ marginTop: 10 }}>
-          <div>
-            {/* 크리에이터 정보 */}
-            <Typography gutterBottom variant="body1">
-              주 컨텐츠 :&emsp;
-            </Typography>
-            <Typography gutterBottom variant="body1">
-              평균 시청자 :&emsp;
-            </Typography>
-            <Typography gutterBottom variant="body1">
-              총 배너 노출량 :&emsp;
-            </Typography>
-            <Typography gutterBottom variant="body1">
-              평균 방송 시간 :&emsp;
-            </Typography>
-            <Typography gutterBottom variant="body1">
-              평균 방송 시간대 :&emsp;
-            </Typography>
-            <Typography gutterBottom variant="body1">
-              총 배너 송출 시간 :&emsp;
-            </Typography>
-          </div>
-
-          <div>
-            {/* 크리에이터 정보 */}
-            <Typography gutterBottom variant="body1">
-              {creatorInfo.most_contents ? creatorInfo.most_contents : '준비중입니다.'}
-            </Typography>
-            <Typography gutterBottom variant="body1">
-              {creatorInfo.avg_viewer ? creatorInfo.avg_viewer : '준비중입니다.'}
-            </Typography>
-            <Typography gutterBottom variant="body1">
-              {creatorInfo.total_ad_exposure_amount
-                ? creatorInfo.total_ad_exposure_amount
-                : '준비중입니다.'}
-            </Typography>
-            <Typography gutterBottom variant="body1">
-              {creatorInfo.avg_broadcast_time_amount
-                ? creatorInfo.avg_broadcast_time_amount
-                : '준비중입니다.'}
-            </Typography>
-            <Typography gutterBottom variant="body1">
-              {creatorInfo.avg_broadcast_time ? creatorInfo.avg_broadcast_time : '준비중입니다.'}
-            </Typography>
-            <Typography gutterBottom variant="body1">
-              {creatorInfo.total_ad_time ? creatorInfo.total_ad_time : '준비중입니다.'}
-            </Typography>
-          </div>
-        </div>
-
+        <Grid container direction="column" style={{ marginTop: 20 }}>
+          <Grid item>
+            <Grid container direction="column">
+              <Grid item>
+                <Grid container direction="row" className={classes.flex} spacing={1}>
+                  <Grid item xs={2}>
+                    {makeNameComponent({ value: '주 컨텐츠' })}
+                  </Grid>
+                  <Grid item xs={4}>
+                    {/* {makeValueComponent({ value: creatorInfo.content, unit: '' })} */}
+                    <div className={classes.flex}>
+                      <Typography gutterBottom variant="body1">
+                        {creatorInfo.content}
+                      </Typography>
+                    </div>
+                  </Grid>
+                  <Grid item xs={3}>
+                    {makeNameComponent({ value: '평균 시청자 수' })}
+                  </Grid>
+                  <Grid item xs={2}>
+                    {makeValueComponent({ value: creatorInfo.viewer, unit: '명' })}
+                  </Grid>
+                </Grid>
+                <Grid container direction="row" className={classes.flex} spacing={2}>
+                  <Grid item xs={3}>
+                    {makeNameComponent({ value: '평균 방송 시간' })}
+                  </Grid>
+                  <Grid item xs={2}>
+                    {makeValueComponent({ value: creatorInfo.airtime, unit: '분' })}
+                  </Grid>
+                  <Grid item xs={3}>
+                    {makeNameComponent({ value: '평균 방송 시간대' })}
+                  </Grid>
+                  <Grid item xs={3}>
+                    {makeValueComponent({ value: creatorInfo.openHour, unit: '' })}
+                  </Grid>
+                </Grid>
+                <Grid container direction="row" className={classes.flex} spacing={2}>
+                  <Grid item xs={3}>
+                    {makeNameComponent({ value: '배너 노출량' })}
+                  </Grid>
+                  <Grid item xs={2}>
+                    {makeValueComponent({ value: creatorInfo.impression, unit: '' })}
+                  </Grid>
+                  <Grid item xs={3}>
+                    {makeNameComponent({ value: '팔로워 수' })}
+                  </Grid>
+                  <Grid item xs={2}>
+                    {makeValueComponent({ value: creatorInfo.followers, unit: '명' })}
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid item>
+            <ContentsPie selectedChartData={creatorInfo.contentsGraphData} />
+          </Grid>
+          <Grid>
+            <TimeChart selectedChartData={creatorInfo.timeGraphData} />
+          </Grid>
+        </Grid>
       </div>
     </Popover>
   );

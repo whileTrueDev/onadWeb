@@ -430,6 +430,6 @@ const CampaignCreateStepper = (props) => {
 export default CampaignCreateStepper;
 
 CampaignCreateStepper.propTypes = {
-  open: PropTypes.object,
+  // open: PropTypes.object,
   handleClose: PropTypes.func
 };

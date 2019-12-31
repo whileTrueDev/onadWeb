@@ -142,6 +142,7 @@ router.get('/creators', (req, res) => {
   if (campaignId) {
     query = `
     SELECT
+      ci.creatorId,
       ci.creatorName, ci.creatorTwitchId,
       ci.creatorLogo, sum(cashFromMarketer) AS total_ad_exposure_amount
     FROM campaignLog as cl
@@ -155,6 +156,7 @@ router.get('/creators', (req, res) => {
   } else {
     query = `
     SELECT
+      ci.creatorId,
       ci.creatorName, ci.creatorTwitchId,
       ci.creatorLogo, sum(cashFromMarketer) AS total_ad_exposure_amount
     FROM campaignLog as cl
@@ -219,4 +221,34 @@ router.get('/commentonchat', (req, res) => {
     console.log('err in /report/commentonchat', err);
   });
 });
+
+
+router.post('/detail', (req, res) => {
+  const { creatorId } = req.body;
+  const selectQuery = `
+  SELECT *
+  FROM creatorDetail
+  WHERE creatorId = ? `;
+
+  doQuery(selectQuery, [creatorId])
+    .then((row) => {
+      let detailData = {};
+      // string to JSON data
+      if (row.result.length > 0) {
+        const { timeGraphData, contentsGraphData } = row.result[0];
+
+        detailData = {
+          ...row.result[0],
+          timeGraphData: JSON.parse(timeGraphData),
+          contentsGraphData: JSON.parse(contentsGraphData),
+        };
+      }
+      res.send(detailData);
+    })
+    .catch((errorData) => {
+      console.log(errorData);
+      res.end({});
+    });
+});
+
 module.exports = router;

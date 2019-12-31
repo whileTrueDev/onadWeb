@@ -1,5 +1,5 @@
 import React from 'react';
-import { Typography, Grid } from '@material-ui/core';
+import { Typography, Grid, Divider } from '@material-ui/core';
 
 /**
  * 우선 순위 타입넘버에 해당하는 문자열 반환
@@ -62,6 +62,7 @@ export default function CampaignInfo(props) {
       <Grid item xs={12}>
         <div style={{ maxWidth: 320, maxHeight: 160, marginBottom: '16px' }}>
           <Typography variant="h6">배너 이미지</Typography>
+          <Divider style={{ marginBottom: 5 }} />
           <img
             style={{
               width: '100%',
@@ -77,7 +78,8 @@ export default function CampaignInfo(props) {
       {data.map(d => (
         <Grid item xs={6} sm={3} key={d.topic}>
           <Typography variant="h6">{d.topic}</Typography>
-          <Typography variant="body2">
+          { d.value && <Divider style={{ marginBottom: 10 }} />}
+          <Typography variant="body1" style={{ fontWeight: 700, textAlign: 'right' }}>
             {d.value}
           </Typography>
         </Grid>
