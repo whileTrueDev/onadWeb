@@ -47,7 +47,25 @@ router.post('/change', (req, res) => {
 
 router.post('/signout', (req, res) => {
   const marketerId = req._passport.session.user.userid;
-  const deleteQuery = 'DELETE FROM marketerInfo WHERE marketerId = ?;';
+  const deleteQuery = ` UPDATE marketerInfo SET
+                        marketerPasswd = null,
+                        marketerSalt= null,
+                        marketerName= null,
+                        marketerMail= null,
+                        marketerPhoneNum= null,
+                        marketerBusinessRegNum= null,
+                        marketerBusinessRegSrc= null,
+                        marketerUserType= null,
+                        marketerContraction= null,
+                        marketerAlarmAgreement= null,
+                        marketerEmailAuth= null,
+                        date= null,
+                        temporaryLogin= null,
+                        marketerAccountNumber= null,
+                        accountHolder= null,
+                        signOutState =2,
+                        signOutDate = NOW()
+                        WHERE marketerId = ?`;
   doQuery(deleteQuery, marketerId)
     .then(() => {
       console.log(`${marketerId}님 회원탈퇴`);
