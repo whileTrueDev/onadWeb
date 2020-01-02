@@ -10,7 +10,7 @@ import makeBarChartData from './makeBarChartData';
 export default function ReChartBar(props) {
   const {
     data, legend, containerHeight, chartHeight,
-    chartWidth, xAxisDataKey, yAxisDataKey,
+    chartWidth, xAxisDataKey,
     tooltipFormatter, tooltipLabelFormatter,
     legendFormatter, dataKey, nopreprocessing
   } = props;
@@ -24,13 +24,14 @@ export default function ReChartBar(props) {
           width={chartWidth}
           height={chartHeight}
           data={nopreprocessing ? data : makeBarChartData(data)}
+          stackOffset="sign"
           margin={{
             top: 20, right: 30, left: 20, bottom: 5,
           }}
         >
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey={xAxisDataKey} />
-          <YAxis dataKey={yAxisDataKey} />
+          <YAxis />
           <Tooltip
             cursor={{ stroke: theme.palette.primary.main, strokeWidth: 1 }}
             labelFormatter={tooltipLabelFormatter}
@@ -68,7 +69,6 @@ ReChartBar.propTypes = {
   chartHeight: PropTypes.number,
   chartWidth: PropTypes.number,
   xAxisDataKey: PropTypes.string,
-  yAxisDataKey: PropTypes.string,
   tooltipFormatter: PropTypes.func,
   tooltipLabelFormatter: PropTypes.func,
   legendFormatter: PropTypes.func,
@@ -85,7 +85,6 @@ ReChartBar.defaultProps = {
   chartHeight: 300,
   chartWidth: 500,
   xAxisDataKey: 'date',
-  yAxisDataKey: 'cpm_amount',
   tooltipFormatter(value, name) {
     if (name === 'cpm_amount') { return [value, '배너광고']; } return [value, '클릭광고'];
   },
