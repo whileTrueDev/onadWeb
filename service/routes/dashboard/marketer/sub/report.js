@@ -142,12 +142,14 @@ router.get('/creators', (req, res) => {
   if (campaignId) {
     query = `
     SELECT
-      ci.creatorId,
-      ci.creatorName, ci.creatorTwitchId,
-      ci.creatorLogo, sum(cashFromMarketer) AS total_ad_exposure_amount
+      ci.creatorId, ci.creatorName, ci.creatorTwitchId,
+      ci.creatorLogo, sum(cashFromMarketer) AS total_ad_exposure_amount,
+      cd.viewer, cd.followers, cd.airtime, cd.impression, cd.openHour, cd.content
     FROM campaignLog as cl
     JOIN creatorInfo as ci
     ON cl.creatorId = ci.creatorId
+    LEFT JOIN creatorDetail AS cd
+    ON cl.creatorId = cd.creatorId
     WHERE campaignId = ?
     GROUP BY cl.creatorId
     ORDER BY total_ad_exposure_amount DESC`;
@@ -156,12 +158,14 @@ router.get('/creators', (req, res) => {
   } else {
     query = `
     SELECT
-      ci.creatorId,
-      ci.creatorName, ci.creatorTwitchId,
-      ci.creatorLogo, sum(cashFromMarketer) AS total_ad_exposure_amount
+      ci.creatorId, ci.creatorName, ci.creatorTwitchId,
+      ci.creatorLogo, sum(cashFromMarketer) AS total_ad_exposure_amount,
+      cd.viewer, cd.followers, cd.airtime, cd.impression, cd.openHour, cd.content
     FROM campaignLog as cl
     JOIN creatorInfo as ci
     ON cl.creatorId = ci.creatorId
+    LEFT JOIN creatorDetail AS cd
+    ON cl.creatorId = cd.creatorId
     WHERE SUBSTRING_INDEX(campaignId, '_', 1) = ?
     GROUP BY cl.creatorId
     ORDER BY total_ad_exposure_amount DESC`;

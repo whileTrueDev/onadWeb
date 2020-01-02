@@ -7,6 +7,7 @@ import CardTemplate from '../common/CardTemplate';
 import CreatorInfo from '../common/CreatorInfo';
 import axios from '../../../../../../utils/axios';
 import HOST from '../../../../../../utils/config';
+// import CreatorInfo from './CreatorInfo';
 
 export default function BannerBroadCreators(props) {
   const { creatorsData, ...rest } = props;
