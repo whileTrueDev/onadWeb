@@ -23,12 +23,20 @@ const useStyles = makeStyles(() => ({
     fontWeight: '700',
     marginLeft: '3px'
   },
-
+  nodetails: {
+    height: '150px',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center'
+  }
 }));
 
 export default function CreatorInfo(props) {
   const classes = useStyles();
-  const { anchorEl, handleClose, creatorInfo } = props;
+  const {
+    anchorEl, handleClose, creatorInfo, empty
+  } = props;
 
 
   const makeValueComponent = ({ value, unit }) => (
@@ -90,67 +98,76 @@ export default function CreatorInfo(props) {
           </Button>
         </div>
         <Divider />
-        <Grid container direction="column" style={{ marginTop: 20 }}>
-          <Grid item>
-            <Grid container direction="column">
-              <Grid item>
-                <Grid container direction="row" className={classes.flex} spacing={1}>
-                  <Grid item xs={2}>
-                    {makeNameComponent({ value: '주 컨텐츠' })}
+        {!empty ? (
+          <Grid container direction="column" style={{ marginTop: 20 }}>
+            <Grid item>
+              <Grid container direction="column">
+                <Grid item>
+                  <Grid container direction="row" className={classes.flex} spacing={1}>
+                    <Grid item xs={2}>
+                      {makeNameComponent({ value: '주 컨텐츠' })}
+                    </Grid>
+                    <Grid item xs={4}>
+                      {/* {makeValueComponent({ value: creatorInfo.content, unit: '' })} */}
+                      <div className={classes.flex}>
+                        <Typography gutterBottom variant="body1">
+                          {creatorInfo.content}
+                        </Typography>
+                      </div>
+                    </Grid>
+                    <Grid item xs={3}>
+                      {makeNameComponent({ value: '평균 시청자 수' })}
+                    </Grid>
+                    <Grid item xs={2}>
+                      {makeValueComponent({ value: creatorInfo.viewer, unit: '명' })}
+                    </Grid>
                   </Grid>
-                  <Grid item xs={4}>
-                    {/* {makeValueComponent({ value: creatorInfo.content, unit: '' })} */}
-                    <div className={classes.flex}>
-                      <Typography gutterBottom variant="body1">
-                        {creatorInfo.content}
-                      </Typography>
-                    </div>
+                  <Grid container direction="row" className={classes.flex} spacing={2}>
+                    <Grid item xs={3}>
+                      {makeNameComponent({ value: '평균 방송 시간' })}
+                    </Grid>
+                    <Grid item xs={2}>
+                      {makeValueComponent({ value: creatorInfo.airtime, unit: '분' })}
+                    </Grid>
+                    <Grid item xs={3}>
+                      {makeNameComponent({ value: '평균 방송 시간대' })}
+                    </Grid>
+                    <Grid item xs={3}>
+                      {makeValueComponent({ value: creatorInfo.openHour, unit: '' })}
+                    </Grid>
                   </Grid>
-                  <Grid item xs={3}>
-                    {makeNameComponent({ value: '평균 시청자 수' })}
-                  </Grid>
-                  <Grid item xs={2}>
-                    {makeValueComponent({ value: creatorInfo.viewer, unit: '명' })}
-                  </Grid>
-                </Grid>
-                <Grid container direction="row" className={classes.flex} spacing={2}>
-                  <Grid item xs={3}>
-                    {makeNameComponent({ value: '평균 방송 시간' })}
-                  </Grid>
-                  <Grid item xs={2}>
-                    {makeValueComponent({ value: creatorInfo.airtime, unit: '분' })}
-                  </Grid>
-                  <Grid item xs={3}>
-                    {makeNameComponent({ value: '평균 방송 시간대' })}
-                  </Grid>
-                  <Grid item xs={3}>
-                    {makeValueComponent({ value: creatorInfo.openHour, unit: '' })}
-                  </Grid>
-                </Grid>
-                <Grid container direction="row" className={classes.flex} spacing={2}>
-                  <Grid item xs={3}>
-                    {makeNameComponent({ value: '배너 노출량' })}
-                  </Grid>
-                  <Grid item xs={2}>
-                    {makeValueComponent({ value: creatorInfo.impression, unit: '' })}
-                  </Grid>
-                  <Grid item xs={3}>
-                    {makeNameComponent({ value: '팔로워 수' })}
-                  </Grid>
-                  <Grid item xs={2}>
-                    {makeValueComponent({ value: creatorInfo.followers, unit: '명' })}
+                  <Grid container direction="row" className={classes.flex} spacing={2}>
+                    <Grid item xs={3}>
+                      {makeNameComponent({ value: '배너 노출량' })}
+                    </Grid>
+                    <Grid item xs={2}>
+                      {makeValueComponent({ value: creatorInfo.impression, unit: '' })}
+                    </Grid>
+                    <Grid item xs={3}>
+                      {makeNameComponent({ value: '팔로워 수' })}
+                    </Grid>
+                    <Grid item xs={2}>
+                      {makeValueComponent({ value: creatorInfo.followers, unit: '명' })}
+                    </Grid>
                   </Grid>
                 </Grid>
               </Grid>
             </Grid>
+            <Grid item>
+              <ContentsPie selectedChartData={creatorInfo.contentsGraphData} />
+            </Grid>
+            <Grid>
+              <TimeChart selectedChartData={creatorInfo.timeGraphData} />
+            </Grid>
           </Grid>
-          <Grid item>
-            <ContentsPie selectedChartData={creatorInfo.contentsGraphData} />
-          </Grid>
-          <Grid>
-            <TimeChart selectedChartData={creatorInfo.timeGraphData} />
-          </Grid>
-        </Grid>
+        )
+          : (
+            <div className={classes.nodetails}>
+              <Typography variant="body1">해당 크리에이터는 </Typography>
+              <Typography variant="body1">아직 분석할 데이터가 부족합니다.</Typography>
+            </div>
+          )
+       }
       </div>
     </Popover>
   );

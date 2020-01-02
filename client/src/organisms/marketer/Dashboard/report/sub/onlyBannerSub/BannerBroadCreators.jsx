@@ -14,13 +14,13 @@ export default function BannerBroadCreators(props) {
 
   // For creator menu
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const [dataindex, setDataIndex] = React.useState(0);
   const [detailData, setDetail] = React.useState({
     loading: true,
+    empty: false,
     payload: {}
   });
+
   const handleClick = (event, index) => {
-    setDataIndex(index);
     setAnchorEl(event.currentTarget);
     // creatorsData의 특정 데이터를 로드할 수 있다.
     const { creatorId } = creatorsData.payload[index];
@@ -28,13 +28,26 @@ export default function BannerBroadCreators(props) {
       .then((res) => {
         // 빈 것일 수도 있고 꽉 차있을 수 있다.
         const rawDetailData = res.data;
-        setDetail({
-          loading: false,
-          payload: {
-            ...rawDetailData,
-            ...creatorsData.payload[index]
-          }
-        });
+        // 데이터가 존재하지 않을경우, 에러처리
+        // javascript object empty check
+        if (Object.entries(rawDetailData).length === 0 && rawDetailData.constructor === Object) {
+          setDetail({
+            loading: false,
+            empty: true,
+            payload: {
+              ...creatorsData.payload[index]
+            }
+          });
+        } else {
+          setDetail({
+            loading: false,
+            empty: false,
+            payload: {
+              ...rawDetailData,
+              ...creatorsData.payload[index]
+            }
+          });
+        }
       });
   };
 
@@ -71,6 +84,7 @@ export default function BannerBroadCreators(props) {
               creatorInfo={detailData.payload}
               anchorEl={anchorEl}
               handleClose={handleClose}
+              empty={detailData.empty}
             />
             )}
           </Grid>
