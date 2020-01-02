@@ -31,7 +31,7 @@ function MyCash(props) {
   const POPUP_X = (window.screen.width/2) - 300;
   const POPUP_Y = (window.screen.height/2) - 275;
   // front HOST
-  const HOST = process.env.NODE_ENV === 'production' ? 'http://onad.io' : 'http://localhost:3001';
+  const FRONT_HOST = process.env.NODE_ENV === 'production' ? 'https://onad.io' : 'https://localhost:3001';
 
   return(
     <Card>
@@ -45,7 +45,7 @@ function MyCash(props) {
         }}
         >
           {!userData.loading && !userData.error && userData.payload.marketerId === 'admin'
-            && <Button color="info" onClick={() => { window.open(`${HOST}/marketer/charge`, "_blank", `width=600, height=550, left=${POPUP_X}, top=${POPUP_Y}`) }}>캐시충전</Button>
+            && <Button color="info" onClick={() => { window.open(`${FRONT_HOST}/marketer/charge`, "_blank", `width=600, height=550, left=${POPUP_X}, top=${POPUP_Y}`) }}>캐시충전</Button>
           }
           {!userData.loading && !userData.error
             && <Button color="info" onClick={() => { chargeDialog.handleOpen(); }}>충전</Button>
