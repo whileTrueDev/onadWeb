@@ -6,7 +6,9 @@ import useUpdateData from '../../../utils/lib/hooks/useUpdateData';
 
 export default function OnOffSwitch(props) {
   const { onOffData } = props;
-  const { handleUpdateRequest } = useUpdateData('/api/dashboard/marketer/onoff', onOffData.callUrl);
+  const { handleUpdateRequest } = useUpdateData(
+    '/api/dashboard/marketer/onoff', onOffData.callUrl
+  );
 
   return (
     <Paper style={{ maxheight: 100 }}>
@@ -19,8 +21,12 @@ export default function OnOffSwitch(props) {
           control={(
             <Switch
               color="secondary"
-              checked={onOffData.payload.onOff}
-              onChange={() => handleUpdateRequest({ contraction: !onOffData.payload.onOff })
+              checked={onOffData.payload.onOffState}
+              onChange={() => {
+                handleUpdateRequest({
+                  onOffState: !onOffData.payload.onOffState
+                });
+              }
               }
             />
           )}

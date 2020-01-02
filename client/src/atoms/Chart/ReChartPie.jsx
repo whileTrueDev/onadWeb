@@ -71,8 +71,7 @@ export default function CustomPieChart(props) {
           <Pie
             activeIndex={activeIndex || defaultActiveIndex}
             onMouseEnter={onPieEnter || defaultOnPieEnter}
-            activeShape={renderActiveShape
-            }
+            activeShape={renderActiveShape}
             data={data}
             cx="50%"
             cy="50%"
