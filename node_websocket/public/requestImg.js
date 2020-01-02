@@ -6,6 +6,8 @@ module.exports = function (sql, socket, msg) {
   const cutUrl = `/${fullUrl.split('/')[4]}`;
   const prevBannerName = msg[1];
   const getTime = new Date().toLocaleString();
+  const campaignObject = {};
+
   let myCreatorId;
   let myCampaignId;
   let myGameId;
@@ -39,7 +41,7 @@ module.exports = function (sql, socket, msg) {
     console.log('현재 ON되어있는 campaign List를 조회한다.');
 
     const campaignListQuery = `
-    SELECT campaignId
+    SELECT campaignId, optionType
     FROM campaign
     LEFT JOIN marketerInfo
     ON campaign.marketerId = marketerInfo.marketerId
@@ -52,8 +54,13 @@ module.exports = function (sql, socket, msg) {
     return new Promise((resolve, reject) => {
       doQuery(campaignListQuery)
         .then((row) => {
-          const list = row.result.map(data => data.campaignId);
-          resolve(list);
+          const campaignIdlist = row.result.map(data => data.campaignId);
+          row.result.map((data) => {
+            const campId = Object.values(data)[0];
+            const optionType = Object.values(data)[1];
+            campaignObject[campId] = optionType;
+          });
+          resolve(campaignIdlist);
         })
         .catch((errorData) => {
           errorData.point = 'getOnCampaignList()';
@@ -197,7 +204,11 @@ module.exports = function (sql, socket, msg) {
   };
 
   const insertLandingPage = (campaignId, creatorId) => {
-    // campaignId를 가져와서 0,1check후 삽입.
+     // campaignId를 가져와서 optionType 0,1check후 삽입.
+    const optionType = campaignObject[campaignId];
+    if (optionType === 0) {
+      return false;
+    }
     const insertLandingQuery = 'INSERT IGNORE INTO landingClick(campaignId, creatorId) values(?,?);';
     return new Promise((resolve, reject) => {
       doQuery(insertLandingQuery, [campaignId, creatorId])

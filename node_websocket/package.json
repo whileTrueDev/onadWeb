@@ -1,6 +1,6 @@
 {
     "name": "socket-node",
-    "version": "0.0.1",
+    "version": "1.0.0",
     "description": "웹소켓을 통한 배너 실시간 전송",
     "dependencies": {
         "create-react-app": "^3.0.0",
