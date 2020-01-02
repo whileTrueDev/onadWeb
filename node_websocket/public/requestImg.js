@@ -202,7 +202,7 @@ module.exports = function (sql, socket, msg) {
   };
 
   const insertLandingPage = (campaignId, creatorId) => {
-    if (campaignObject[campaignId] === 1) {
+    if (campaignObject[campaignId] === 0) {
       return false;
     }
     const insertLandingQuery = 'INSERT IGNORE INTO landingClick(campaignId, creatorId) values(?,?);';
