@@ -16,10 +16,10 @@ module.exports = function (sql, socket, msg) {
     console.log(`${creatorId}에게 계약된 creatorCampaign의 campaignList를 가져옵니다.`);
 
     const campaignListQuery = `
-                                SELECT campaignList 
-                                FROM creatorCampaign
-                                WHERE creatorId = ? 
-                                `;
+    SELECT campaignList 
+    FROM creatorCampaign
+    WHERE creatorId = ? 
+    `;
 
     return new Promise((resolve, reject) => {
       doQuery(campaignListQuery, [creatorId])
@@ -48,6 +48,7 @@ module.exports = function (sql, socket, msg) {
     WHERE NOT marketerInfo.marketerContraction = 0
     AND campaign.onOff = 1
     AND NOT campaign.optionType = 2
+    AND campaign.limitState = 0
                               `;
 
     return new Promise((resolve, reject) => {
@@ -72,10 +73,11 @@ module.exports = function (sql, socket, msg) {
   // 하나의 categoryId 에 해당하는 캠페인 리스트를 반환하는 Promise
   const getCategoryCampaignList = (categoryId) => {
     const campaignListQuery = `
-                              SELECT campaignList 
-                              FROM categoryCampaign
-                              WHERE categoryId = ? 
-                              `;
+    SELECT campaignList 
+    FROM categoryCampaign
+    WHERE categoryId = ? 
+    `;
+
     return new Promise((resolve, reject) => {
       doQuery(campaignListQuery, [categoryId])
         .then((row) => {
@@ -202,6 +204,7 @@ module.exports = function (sql, socket, msg) {
   };
 
   const insertLandingPage = (campaignId, creatorId) => {
+     // campaignId를 가져와서 optionType 0,1check후 삽입.
     const optionType = campaignObject[campaignId];
     if (optionType === 0) {
       return false;

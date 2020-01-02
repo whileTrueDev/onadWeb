@@ -2,13 +2,15 @@ import React from 'react';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import PropTypes from 'prop-types';
 import {
-  Typography, Avatar, Grid
+  Typography, Avatar, Grid,
 } from '@material-ui/core';
 import Poll from '@material-ui/icons/Poll';
 import MaterialTable from '../../../../atoms/Table/MaterialTable_2';
 import useFetchData from '../../../../utils/lib/hooks/useFetchData';
-import ChartPopover from './ChartPopover';
 import GreenCheckBox from '../../../../atoms/GreenCheckBox';
+import ContentsPie from './ContentsPie';
+import TimeChart from './TimeChart';
+import StyledSelectText from '../../../../atoms/StyledItemText';
 
 const BANNER_MAX_WIDTH = 48;
 const BANNER_MAX_HEIGHT = 48;
@@ -43,41 +45,22 @@ const useStyles = makeStyles(theme => ({
 export default function CreatorTable(props) {
   const classes = useStyles();
   const {
-    checkedCreators, checkedCreatorsDispatch
+    checkedCreators, checkedCreatorsDispatch, creatorNamesDispatch
   } = props;
   const fetchData = useFetchData('/api/dashboard/marketer/creatordetail');
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const [selectedChartData, setChartData] = React.useState({});
-  const [selectedType, setType] = React.useState('');
-  const open = Boolean(anchorEl);
-
   const getChecked = creatorId => checkedCreators.includes(creatorId);
 
   const handleChecked = rowData => () => {
-    const { creatorId } = rowData;
+    const { creatorId, creatorName } = rowData;
     if (getChecked(creatorId)) {
       // 체크 된 걸 다시 체크할 때
       checkedCreatorsDispatch({ type: 'delete', value: creatorId });
+      creatorNamesDispatch({ type: 'delete', value: creatorName });
     } else {
       // 체크 됐을 때
       checkedCreatorsDispatch({ type: 'push', value: creatorId });
+      creatorNamesDispatch({ type: 'push', value: creatorName });
     }
-  };
-
-
-  const handlePopoverOpen = data => (event) => {
-    const { chartData, type } = data;
-    // chartData는 파싱하기전 text형태이므로 parse를 진행한다.
-    const jsonChartData = JSON.parse(chartData);
-    // console.log(chartData);
-    setChartData(jsonChartData);
-    setType(type);
-    setAnchorEl(event.currentTarget);
-  };
-
-
-  const handlePopoverClose = () => {
-    setAnchorEl(null);
   };
 
   const makeValueComponent = ({ value, unit }) => (
@@ -89,20 +72,11 @@ export default function CreatorTable(props) {
     </div>
   );
 
-  const makeChartComponent = ({ value, chartData, type }) => (
+  const makeChartComponent = ({ value }) => (
     <div className={classes.flex}>
-      <Typography gutterBottom variant="body2">
+      <Typography gutterBottom variant="body2" style={{ fontWeight: 700 }}>
         {value}
       </Typography>
-      <Poll
-        style={{ marginLeft: '3px' }}
-        fontSize="large"
-        onMouseEnter={handlePopoverOpen({ chartData, type })}
-        onMouseLeave={handlePopoverClose}
-        aria-owns={anchorEl ? 'send-desc-popover' : undefined}
-        aria-haspopup="true"
-        color="disabled"
-      />
     </div>
   );
 
@@ -127,12 +101,6 @@ export default function CreatorTable(props) {
         </Grid>
       )
     },
-    // {
-    //   title: '크리에이터',
-    //   render: rowData => (
-    //     makeValueComponent({ value: rowData.creatorName, unit: '' })
-    //   )
-    // },
     {
       title: '팔로워',
       field: 'followers',
@@ -179,14 +147,14 @@ export default function CreatorTable(props) {
       title: '주 컨텐츠',
       field: 'content',
       render: rowData => (
-        makeChartComponent({ value: rowData.content, chartData: rowData.contentsGraphData, type: 'donut' })
+        makeChartComponent({ value: rowData.content })
       )
     },
     {
       title: '주 방송시간대',
       field: 'openHour',
       render: rowData => (
-        makeChartComponent({ value: rowData.openHour, chartData: rowData.timeGraphData, type: 'bar' })
+        makeChartComponent({ value: rowData.openHour })
       )
     },
     {
@@ -195,11 +163,11 @@ export default function CreatorTable(props) {
         <GreenCheckBox
           checked={getChecked(rowData.creatorId)}
           fontSize="large"
-          style={{ padding: '3px', fontSize: '20px' }}
+          style={{ fontSize: '20px', padding: 0 }}
           onClick={handleChecked(rowData)}
           name={rowData.creatorId}
         />
-      )
+      ),
     }
   ];
 
@@ -212,36 +180,61 @@ export default function CreatorTable(props) {
           title=""
           columns={columns}
           data={fetchData.payload}
-          // actions={[
-          //   {
-          //     icon: () => (
-          //       <GreenCheckBox
-          //         checked={getChecked(rowData.creatorId)}
-          //         fontSize="large"
-          //         style={{ padding: '3px', fontSize: '20px' }}
-          //         onClick={handleChecked}
-          //       />
-          //     ),
-          //     tooltip: '크리에이터 선택',
-          //     onClick: (e, rowData) => { handleChecked(rowData); }
-          //   }
-          // ]}
+          detailPanel={[
+            {
+              icon: () => (
+                <Poll
+                  color="disabled"
+                />
+              ),
+              tooltip: '그래프보기',
+              render: rowData => (
+                 <Grid container direction = "row" justify="center" style={{marginTop : 10}}>
+                   <Grid item xs={5}>
+                    <Grid container direction="column" spacing={1}>
+                      <Grid item>
+                        <StyledSelectText
+                          primary="컨텐츠 분포도"
+                          className={classes.label}
+                        />
+                      </Grid>
+                      <Grid item lg={12}>
+                        <ContentsPie selectedChartData={JSON.parse(rowData.contentsGraphData)} />
+                      </Grid>
+                    </Grid>
+                   </Grid>
+                   <Grid item xs={5}>
+                    <Grid container direction="column" spacing={1}>
+                      <Grid item>
+                        <StyledSelectText primary="시간대별 방송시간" className={classes.label} />
+                      </Grid>
+                      <Grid item>
+                        <TimeChart selectedChartData={JSON.parse(rowData.timeGraphData)} />
+                      </Grid>
+                    </Grid>
+                   </Grid>
+                 </Grid>
+              ),
+            }
+          ]}
           options={{
             actionsColumnIndex: -1,
-            pageSize: 10
+            pageSize: 10,
+            detailPanelColumnAlignment: 'right',
+            rowStyle: rowData => ({
+              backgroundColor: getChecked(rowData.creatorId) ? '#EEE' : '#FFF'
+            })
           }}
           localization={{
             body: {
               emptyDataSourceMessage: '등록된 배너가 없습니다.'
             },
             header: {
-              actions: '기타'
+              actions: ''
             }
           }}
-
         />
       )}
-      <ChartPopover open={open} anchorEl={anchorEl} handlePopoverClose={handlePopoverClose} selectedChartData={selectedChartData} type={selectedType} />
     </div>
   );
 }
