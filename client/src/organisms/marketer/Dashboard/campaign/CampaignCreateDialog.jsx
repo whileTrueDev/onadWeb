@@ -275,6 +275,7 @@ const CampaignCreateStepper = (props) => {
         checkedCategoriesDispatch({ type: 'reset' });
         checkedCreatorsDispatch({ type: 'reset' });
         step2Dispatch({ type: 'reset' });
+        step4Dispatch({ type: 'reset' });
         setIndex(1);
       } else if (index === 0) {
         handleClose();
@@ -327,6 +328,7 @@ const CampaignCreateStepper = (props) => {
           <OptionPaper
             setStepComplete={setStepComplete}
             handleSubmitCheck={handleSubmitCheck}
+            step2State={step2State}
             state={step4State}
             dispatch={step4Dispatch}
             selectedCategory={checkedCategories}
@@ -356,8 +358,9 @@ const CampaignCreateStepper = (props) => {
     checkedCategoriesDispatch({ type: 'reset' });
     checkedCreatorsDispatch({ type: 'reset' });
     step2Dispatch({ type: 'reset' });
+    step4Dispatch({ type: 'reset' });
     handleClose();
-  }
+  };
 
   return (
     <Dialog
@@ -427,6 +430,6 @@ const CampaignCreateStepper = (props) => {
 export default CampaignCreateStepper;
 
 CampaignCreateStepper.propTypes = {
-  open: PropTypes.object,
+  // open: PropTypes.object,
   handleClose: PropTypes.func
 };

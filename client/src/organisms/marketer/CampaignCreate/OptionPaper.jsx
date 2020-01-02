@@ -71,7 +71,7 @@ const useStyles = makeStyles(theme => ({
 const OptionPaper = (props) => {
   const classes = useStyles();
   const {
-    handleSubmitCheck, state, dispatch, selectedCategory
+    handleSubmitCheck, state, dispatch, selectedCategory, step2State
   } = props;
 
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -223,6 +223,7 @@ const OptionPaper = (props) => {
                             checked={state.option === 2}
                             onChange={handleChange}
                             fontSize="large"
+                            disabled={step2State.type === 1}
                           />
                         </Grid>
                       </Grid>

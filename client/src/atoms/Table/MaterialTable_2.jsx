@@ -48,7 +48,7 @@ const localization = {
 function styleColumn(columns) {
   columns.map((col) => {
     const column = col;
-    column.cellStyle = { minWidth: 100, ...column };
+    column.cellStyle = { minWidth: 80, ...column };
     return column;
   });
   return columns;

@@ -6,6 +6,8 @@ module.exports = function (sql, socket, msg) {
   const cutUrl = `/${fullUrl.split('/')[4]}`;
   const prevBannerName = msg[1];
   const getTime = new Date().toLocaleString();
+  const campaignObject = {};
+
   let myCreatorId;
   let myCampaignId;
   let myGameId;
@@ -14,10 +16,10 @@ module.exports = function (sql, socket, msg) {
     console.log(`${creatorId}에게 계약된 creatorCampaign의 campaignList를 가져옵니다.`);
 
     const campaignListQuery = `
-                                SELECT campaignList 
-                                FROM creatorCampaign
-                                WHERE creatorId = ? 
-                                `;
+    SELECT campaignList 
+    FROM creatorCampaign
+    WHERE creatorId = ? 
+    `;
 
     return new Promise((resolve, reject) => {
       doQuery(campaignListQuery, [creatorId])
@@ -39,20 +41,26 @@ module.exports = function (sql, socket, msg) {
     console.log('현재 ON되어있는 campaign List를 조회한다.');
 
     const campaignListQuery = `
-    SELECT campaignId
+    SELECT campaignId, optionType
     FROM campaign
     LEFT JOIN marketerInfo
     ON campaign.marketerId = marketerInfo.marketerId
     WHERE NOT marketerInfo.marketerContraction = 0
     AND campaign.onOff = 1
     AND NOT campaign.optionType = 2
+    AND campaign.limitState = 0
                               `;
 
     return new Promise((resolve, reject) => {
       doQuery(campaignListQuery)
         .then((row) => {
-          const list = row.result.map(data => data.campaignId);
-          resolve(list);
+          const campaignIdlist = row.result.map(data => data.campaignId);
+          row.result.map((data) => {
+            const campId = Object.values(data)[0];
+            const optionType = Object.values(data)[1];
+            campaignObject[campId] = optionType;
+          });
+          resolve(campaignIdlist);
         })
         .catch((errorData) => {
           errorData.point = 'getOnCampaignList()';
@@ -65,10 +73,11 @@ module.exports = function (sql, socket, msg) {
   // 하나의 categoryId 에 해당하는 캠페인 리스트를 반환하는 Promise
   const getCategoryCampaignList = (categoryId) => {
     const campaignListQuery = `
-                              SELECT campaignList 
-                              FROM categoryCampaign
-                              WHERE categoryId = ? 
-                              `;
+    SELECT campaignList 
+    FROM categoryCampaign
+    WHERE categoryId = ? 
+    `;
+
     return new Promise((resolve, reject) => {
       doQuery(campaignListQuery, [categoryId])
         .then((row) => {
@@ -195,6 +204,11 @@ module.exports = function (sql, socket, msg) {
   };
 
   const insertLandingPage = (campaignId, creatorId) => {
+     // campaignId를 가져와서 optionType 0,1check후 삽입.
+    const optionType = campaignObject[campaignId];
+    if (optionType === 0) {
+      return false;
+    }
     const insertLandingQuery = 'INSERT IGNORE INTO landingClick(campaignId, creatorId) values(?,?);';
     return new Promise((resolve, reject) => {
       doQuery(insertLandingQuery, [campaignId, creatorId])
