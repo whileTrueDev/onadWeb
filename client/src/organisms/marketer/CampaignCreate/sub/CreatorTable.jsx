@@ -63,6 +63,20 @@ export default function CreatorTable(props) {
     }
   };
 
+  
+  const handleCheckedEvt = (rowData) => {
+    const { creatorId, creatorName } = rowData;
+    if (getChecked(creatorId)) {
+      // 체크 된 걸 다시 체크할 때
+      checkedCreatorsDispatch({ type: 'delete', value: creatorId });
+      creatorNamesDispatch({ type: 'delete', value: creatorName });
+    } else {
+      // 체크 됐을 때
+      checkedCreatorsDispatch({ type: 'push', value: creatorId });
+      creatorNamesDispatch({ type: 'push', value: creatorName });
+    }
+  };
+
   const makeValueComponent = ({ value, unit }) => (
     <div className={classes.flex}>
       <Typography gutterBottom variant="h5">
@@ -220,7 +234,10 @@ export default function CreatorTable(props) {
           options={{
             actionsColumnIndex: -1,
             pageSize: 10,
-            detailPanelColumnAlignment: 'right'
+            detailPanelColumnAlignment: 'right',
+            rowStyle: rowData => ({
+              backgroundColor: getChecked(rowData.creatorId) ? '#EEE' : '#FFF'
+            })
           }}
           localization={{
             body: {
@@ -230,6 +247,7 @@ export default function CreatorTable(props) {
               actions: ''
             }
           }}
+          onRowClick={((evt, selectedRow) =>{ handleCheckedEvt(selectedRow)})}
         />
       )}
     </div>
