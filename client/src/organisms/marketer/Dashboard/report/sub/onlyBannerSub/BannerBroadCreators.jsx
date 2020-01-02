@@ -24,7 +24,7 @@ export default function BannerBroadCreators(props) {
     setAnchorEl(event.currentTarget);
     // creatorsData의 특정 데이터를 로드할 수 있다.
     const { creatorId } = creatorsData.payload[index];
-    axios.post(`${HOST}/api/dashboard/marketer/report/detail`, { creatorId })
+    axios.get(`${HOST}/api/dashboard/marketer/report/detail`, { params: { creatorId } })
       .then((res) => {
         // 빈 것일 수도 있고 꽉 차있을 수 있다.
         const rawDetailData = res.data;

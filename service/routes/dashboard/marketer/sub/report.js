@@ -227,8 +227,9 @@ router.get('/commentonchat', (req, res) => {
 });
 
 
-router.post('/detail', (req, res) => {
-  const { creatorId } = req.body;
+router.get('/detail', (req, res) => {
+  const { creatorId } = req.query;
+  console.log(creatorId);
   const selectQuery = `
   SELECT *
   FROM creatorDetail
