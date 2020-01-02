@@ -223,7 +223,7 @@ const OptionPaper = (props) => {
                             checked={state.option === 2}
                             onChange={handleChange}
                             fontSize="large"
-                            disabled={step2State.choose === 1}
+                            disabled={step2State.type === 1}
                           />
                         </Grid>
                       </Grid>

@@ -3,20 +3,52 @@ import {
   Grid, Avatar, Typography
 } from '@material-ui/core';
 import AccountCircle from '@material-ui/icons/AccountCircle';
-
 import CardTemplate from '../common/CardTemplate';
-import CreatorInfo from './CreatorInfo';
+import CreatorInfo from '../common/CreatorInfo';
+import axios from '../../../../../../utils/axios';
+import HOST from '../../../../../../utils/config';
+// import CreatorInfo from './CreatorInfo';
 
 export default function BannerBroadCreators(props) {
   const { creatorsData, ...rest } = props;
 
   // For creator menu
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const [dataindex, setDataIndex] = React.useState(0);
+  const [detailData, setDetail] = React.useState({
+    loading: true,
+    empty: false,
+    payload: {}
+  });
 
   const handleClick = (event, index) => {
-    setDataIndex(index);
     setAnchorEl(event.currentTarget);
+    // creatorsData의 특정 데이터를 로드할 수 있다.
+    const { creatorId } = creatorsData.payload[index];
+    axios.get(`${HOST}/api/dashboard/marketer/report/detail`, { params: { creatorId } })
+      .then((res) => {
+        // 빈 것일 수도 있고 꽉 차있을 수 있다.
+        const rawDetailData = res.data;
+        // 데이터가 존재하지 않을경우, 에러처리
+        // javascript object empty check
+        if (Object.entries(rawDetailData).length === 0 && rawDetailData.constructor === Object) {
+          setDetail({
+            loading: false,
+            empty: true,
+            payload: {
+              ...creatorsData.payload[index]
+            }
+          });
+        } else {
+          setDetail({
+            loading: false,
+            empty: false,
+            payload: {
+              ...rawDetailData,
+              ...creatorsData.payload[index]
+            }
+          });
+        }
+      });
   };
 
   const handleClose = () => {
@@ -47,11 +79,12 @@ export default function BannerBroadCreators(props) {
               </Grid>
             ))}
 
-            {!creatorsData.loading && (
+            {!detailData.loading && (
             <CreatorInfo
-              creatorInfo={creatorsData.payload[dataindex]}
+              creatorInfo={detailData.payload}
               anchorEl={anchorEl}
               handleClose={handleClose}
+              empty={detailData.empty}
             />
             )}
           </Grid>

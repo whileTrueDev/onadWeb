@@ -21,21 +21,20 @@ const rawTheme = createMuiTheme({
       contrastText: defaultTheme.palette.getContrastText(orange[700]),
     },
   },
-  typography: {
-    fontFamily: [
-      'Roboto',
-      'Nanum Gothic',
-      '-apple-system',
-      'BlinkMacSystemFont',
-      '"Segoe UI"',
-      '"Helvetica Neue"',
-      'Arial',
-      'sans-serif',
-      '"Apple Color Emoji"',
-      '"Segoe UI Emoji"',
-      '"Segoe UI Symbol"',
-    ].join(','),
-  }
+  // typography: {
+  //   fontFamily: [
+  //     'Roboto',
+  //     '"Helvetica Neue"',
+  //     '-apple-system',
+  //     'BlinkMacSystemFont',
+  //     '"Segoe UI"',
+  //     'Arial',
+  //     'sans-serif',
+  //     '"Apple Color Emoji"',
+  //     '"Segoe UI Emoji"',
+  //     '"Segoe UI Symbol"',
+  //   ].join(','),
+  // }
 });
 
 const theme = responsiveFontSizes(rawTheme);
