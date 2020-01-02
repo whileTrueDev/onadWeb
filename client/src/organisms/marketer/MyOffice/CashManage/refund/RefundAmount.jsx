@@ -241,7 +241,7 @@ const RefundAmount = (props) => {
                       margin="normal"
                       variant="outlined"
                       error={!((currentCash >= selectValue)) || !(selectValue > 1000)}
-                      helperText={((currentCash >= selectValue) && (selectValue > 1000)) ? null : '입력이 잘못되었어요!'}
+                      helperText={((currentCash >= selectValue) && (selectValue > 1000)) ? null : '올바른 입력 부탁드립니다'}
                     />
                   </Tooltip>
                 </div>

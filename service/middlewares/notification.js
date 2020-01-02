@@ -64,6 +64,29 @@ const messageDict = {
       getTitle: ({ marketerName }) => `${marketerName}님, 세금 계산서가 발행되었습니다.`,
       getMessage: ({ marketerName }) => `${marketerName}님이 신청하신 세금 계산서가 발행되었습니다.
       마이 오피스에서 확인하세요.`
+    },
+    vbankChargeReady: {
+      selectQuery: `
+      SELECT marketerName , (SELECT DATE_FORMAT(FROM_UNIXTIME(vbankDueDate, "%Y-%m-%d %h:%i:%s"), "%Y-%m-%d %h시%i분%s초")) AS date
+      FROM marketerInfo AS mI
+      LEFT JOIN marketerCharge AS mC
+      ON mC.marketerId = ?
+      WHERE mI.marketerId = mC.marketerId
+     `
+     ,
+      getTitle: ({ marketerName }) => `${marketerName}님, 가상계좌 발급이 완료되었습니다.`,
+      getMessage: ({ marketerName, cashAmount, date, vbankName, vbankNum }) => `${marketerName}님, ${vbankName} ${vbankNum}으로 ${date}까지 ${cashAmount}원을 입금해주세요.
+      `,
+    },
+    vbankChargeComplete: {
+      selectQuery: `
+      SELECT marketerName
+      FROM marketerInfo
+      WHERE marketerId = ? 
+     `,
+      getTitle: ({ marketerName }) => `${marketerName}님, 가상계좌 결제가 완료되었습니다.`,
+      getMessage: ({ marketerName, cashAmount }) => `${marketerName}님, 가상계좌 결제가 완료되어 ONAD캐시 ${cashAmount}이 충전되었습니다.
+      `,
     }
   },
   creator: {
@@ -98,7 +121,7 @@ const Notification = async ({
 
   // 일단 해당 target의 기본정보 및 개인알림 등록에 필요한 데이터 수집.
   const row = await doQuery(selectQuery, [targetId]);
-  const data = { ...row.result[0], date: dateCode, ...params };
+  const data = { ...row.result[0], date: dateCode, ...params};
   const title = getTitle(data);
   const message = getMessage(data);
   const sendQuery = userType === 'creator'
@@ -111,4 +134,4 @@ const Notification = async ({
   return doQuery(sendQuery, [targetId, title, message]);
 };
 
-export default Notification;
+module.exports = Notification;

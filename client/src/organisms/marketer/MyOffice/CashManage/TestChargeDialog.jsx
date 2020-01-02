@@ -13,7 +13,6 @@ import TestChargeComplete from './sub/TestChargeComplete';
 import TestChargeSolution from './sub/TestChargeSolution';
 import useFetchData from '../../../../utils/lib/hooks/useFetchData';
 import sources from '../source/sources';
-import history from '../../../../history';
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -186,6 +185,7 @@ function TestChargeDialog() {
             case 'success':
               if (!data[0]) {
                 setIndex(preIndex => preIndex + 1);
+
               } else {
                 console.log('cash - charge - error!');
               }
@@ -217,14 +217,30 @@ function TestChargeDialog() {
     setPaperSwitch(false);
     setStepComplete(false);
 
-    setTimeout(() => {
-      if (go) {
-        setIndex(go);
+    if (index === 1) {
+      if (selectValue < 5000) {
+        alert('충전 최소 금액은 5000원 입니다')
+        window.close();
       } else {
-        setIndex(preIndex => preIndex + 1);
+        setTimeout(() => {
+          if (go) {
+            setIndex(go);
+          } else {
+            setIndex(preIndex => preIndex + 1);
+          }
+          setPaperSwitch(true);
+        }, 500);
       }
-      setPaperSwitch(true);
-    }, 500);
+    } else {
+      setTimeout(() => {
+        if (go) {
+          setIndex(go);
+        } else {
+          setIndex(preIndex => preIndex + 1);
+        }
+        setPaperSwitch(true);
+      }, 500);
+    }
   };
 
   const handleBack = (event) => {

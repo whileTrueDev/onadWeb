@@ -2,6 +2,7 @@ const express = require('express');
 const axios = require('axios');
 const doQuery = require('../../../../model/doQuery');
 const marketerActionLogging = require('../../../../middlewares/marketerActionLog');
+const Notification = require('../../../../middlewares/notification');
 
 const router = express.Router();
 
@@ -198,7 +199,18 @@ router.get('/charge/list', (req, res) => {
           } else if (object.type === 'card'){
             object.type = '신용카드'
           }
-          object.temporaryState = object.temporaryState === 0 ? '진행중' : '완료됨';
+          switch(object.temporaryState) {
+            case 1 :
+              object.temporaryState = '완료됨'
+              break;
+            case 2 :
+              object.temporaryState = '취소됨'
+              break;
+            default :
+              object.temporaryState = '진행중'
+              break;
+          }
+          
           sendArray.push(Object.values(object));
         });
         const result = {
@@ -392,12 +404,13 @@ router.post('/testcharge', async (req, res) => {
     const paymentData = getPaymentData.data.response; // 조회한 결제 정보를 들고 있는 변수
 
     const { amount, status } = paymentData; // 실제로 사용자가 전송한 금액과 그 상태
-    console.log( status )
-    console.log(paymentData)
+
+    
     // 우리 DB에서 결제되어야 하는 금액과 실제로 사용자가 입금한 금액 대조하기
     if (parseInt(chargeCash * 1.1) === parseInt(amount)) {
 
-      if (status === "ready") {
+      switch(status) {
+        case 'ready' :
           // 가상계좌 발급 시 로직
           // DB에 가상계좌 발급 정보 저장
           const { vbank_num, vbank_date, vbank_name, vbank_holder } = paymentData;
@@ -440,8 +453,19 @@ router.post('/testcharge', async (req, res) => {
                       vbank_name: `${vbank_name}`, vbank_holder: `${vbank_holder}`,
                       });
 
-                      // 알림 넣기 기능 쿼리 넣기
-                      // 잊지말고 알림기능 넣어야 한다.
+                      // 가상계좌에 대한 알림 발송
+                      Promise.all[Notification(
+                        {
+                          userType: 'marketer',
+                          type: 'vbankChargeReady',
+                          targetId: marketerId,
+                          params: {
+                            cashAmount: amount,
+                            vbankName: vbank_name,
+                            vbankNum: vbank_num,
+                          }
+                        }
+                      )]
                     }
                   })
                   .catch((err) => {
@@ -450,8 +474,10 @@ router.post('/testcharge', async (req, res) => {
                   });
               } 
             });
-          } else {
-          // 계좌이체 및 신용카드 결제 로직
+          break;
+
+        case 'paid' :
+            // 계좌이체 및 신용카드 결제 로직
           // 현재 마케터 보유 캐시량 조회
           const currentDebitQuery = `
           SELECT cashAmount as cashAmount
@@ -494,7 +520,7 @@ router.post('/testcharge', async (req, res) => {
                     console.log(secondrow)
                     // 마케터 캐시 충전 쿼리 완료
                     if (!secondrow.error) {
-                      res.send({ status: 'success', message: '일반 결제 성공' });
+                        res.send({ status: 'success', message: '일반 결제 성공' });
                     }
                   })
                   .catch((err) => {
@@ -503,7 +529,10 @@ router.post('/testcharge', async (req, res) => {
                   });
               }
             });
-          }
+          break;
+
+        default: break;
+      }
     } else {
       throw {status: "forgery", message: "위조된 결제시도!!!"}
     }    
@@ -513,58 +542,148 @@ router.post('/testcharge', async (req, res) => {
 });
 
 
-// "/iamport-webhook"에 대한 POST 요청을 처리
-router.post('/iamport-webhook', async (req, res) => {
+// "/iamportWebhook"에 대한 POST 요청을 처리
+router.post('/iamportWebhook', async (req, res) => {
   try {
-    const { imp_uid, merchant_uid } = req.body; // req의 body에서 imp_uid, merchant_uid 추출
+    const { imp_uid, merchant_uid } = req.body;
+    console.log(`/marketer/iamportWebhook - imp_uid: ${imp_uid} | merchant_uid: ${merchant_uid}`);
 
-    // 액세스 토큰(access token) 발급 받기
+    // 결제시스템의 액세스 토큰(access token) 발급 받기 => 결제 위변조를 대조 용도도 포함
     const getToken = await axios({
       url: 'https://api.iamport.kr/users/getToken',
-      method: 'post', // POST method
-      headers: { 'Content-Type': 'application/json' }, // "Content-Type": "application/json"
+      method: 'post',
+      headers: { 'Content-Type': 'application/json' },
       data: {
-        imp_key: '2306149701563593', // REST API키
-        imp_secret: 'Oc6uNyT5UYJ1oGNoQn6aV3xZ5AdJeGJ2TPwGnqMipvkNc7c2uicqlKprlCbzjUBcK8T8yFqXbKLoSXqn' // REST API Secret
+        imp_key: '2306149701563593', // REST API키 => import 관리자 페이지에 있음
+        imp_secret: 'Oc6uNyT5UYJ1oGNoQn6aV3xZ5AdJeGJ2TPwGnqMipvkNc7c2uicqlKprlCbzjUBcK8T8yFqXbKLoSXqn' // REST API Secret => import 관리자 페이지에 있음
       }
     });
-    const { access_token } = getToken.data.response; // 인증 토큰
+
+    const { access_token } = getToken.data.response; // 접속 인증 토큰
 
     // imp_uid로 아임포트 서버에서 결제 정보 조회
     const getPaymentData = await axios({
       url: `https://api.iamport.kr/payments/${imp_uid}`, // imp_uid 전달
-      method: 'get', // GET method
+      method: 'get',
       headers: { Authorization: access_token } // 인증 토큰 Authorization header에 추가
     });
-    const paymentData = getPaymentData.data.response; // 조회한 결제 정보
 
-    // DB에서 결제되어야 하는 금액 조회
-    const order = await Orders.findById(paymentData.merchant_uid);
-    const amountToBePaid = order.amount; // 결제 되어야 하는 금액
+    const paymentData = getPaymentData.data.response; // 조회한 결제 정보를 들고 있는 변수
 
-    // 결제 검증하기
-    const { amount, status } = paymentData;
-    if (amount === amountToBePaid) { // 결제 금액 일치. 결제 된 금액 === 결제 되어야 하는 금액
-      await Orders.findByIdAndUpdate(merchant_uid, { $set: paymentData }); // DB에 결제 정보 저장
-      switch (status) {
-        case 'ready': // 가상계좌 발급
-          // DB에 가상계좌 발급 정보 저장
-          const { vbank_num, vbank_date, vbank_name } = paymentData;
-          await Users.findByIdAndUpdate('/* 고객 id */', { $set: { vbank_num, vbank_date, vbank_name } });
-          // 가상계좌 발급 안내 문자메시지 발송
-          SMS.send({ text: `가상계좌 발급이 성공되었습니다. 계좌 정보 ${vbank_num} ${vbank_date} ${vbank_name}` });
-          res.send({ status: 'vbankIssued', message: '가상계좌 발급 성공' });
-          break;
-        case 'paid': // 결제 완료
-          res.send({ status: 'success', message: '일반 결제 성공' });
-          break;
+    const { amount, status } = paymentData; // 실제로 사용자가 전송한 금액과 그 상태
+
+    const marketerDBdata = `
+    SELECT marketerId, cash
+    FROM marketerCharge
+    WHERE imp_uid = ?
+    `
+
+    const marketerDBdataArray = [imp_uid]
+
+    doQuery(marketerDBdata, marketerDBdataArray)
+    .then((row) => {
+      if (!row.error) {
+        if (parseInt(row.result[0].cash) === parseInt(amount)) {
+          const {marketerId, cash } = row.result[0]
+
+          switch(status) {
+            case 'paid' : 
+
+            // 현재 마케터 보유 금액 조회
+            const vbankCurrentDebitQuery = `
+            SELECT cashAmount as cashAmount
+            FROM marketerDebit
+            WHERE marketerId = ?
+            ORDER BY date DESC
+            LIMIT 1
+            `;
+            // 현재 마케터 보유 금액 조회
+            const vbankCurrentDebitArray = [marketerId];
+
+            // 가상계좌 입금시 기존의 캐시량 + 캐시충전량으로 update
+            const vbankDebitUpdateQuery = `
+            UPDATE marketerDebit
+            SET cashAmount = ? 
+            WHERE marketerId = ?`;
+
+            // 가상계좌 입금시 marketerCharge 테이블 temporaryState값 1로 바꾸기 및 date 업뎃
+            const vbankChargeUpdateQuery = `
+            UPDATE marketerCharge
+            SET temporaryState = 1, date = ?
+            WHERE imp_uid = ?
+            `;
+            const vbankChargeUpdateArray = [new Date().toLocaleString(), imp_uid]
+
+            doQuery(vbankCurrentDebitQuery, vbankCurrentDebitArray)
+            .then((row) => {
+              if (!row.error) {
+                
+                const currentCashAmount = Number(row.result[0].cashAmount);
+                
+                Promise.all([
+                  doQuery(vbankChargeUpdateQuery, vbankChargeUpdateArray),
+                  doQuery(vbankDebitUpdateQuery, [currentCashAmount + cash, marketerId]),
+                  Notification(
+                    {
+                      userType: 'marketer',
+                      type: 'vbankChargeComplete',
+                      targetId: marketerId,
+                      params: {
+                        cashAmount: amount
+                      }
+                    }
+                  )
+                ])
+                  .then((secondrow) => {
+                    console.log(secondrow)
+                    // 마케터 캐시 충전 쿼리 완료
+                    if (!secondrow.error) {
+                        res.send({ status: 'success', message: '가상계좌 결제 성공!'
+                    })
+                    .catch((err) => {
+                      console.log(err);
+                      res.end();
+                    });
+                  }
+                });
+              }})
+
+                break;
+
+            case 'cancelled' :
+              // 추후 업뎃 예정
+              // 금액 다시 떨어뜨리고, temporaryState 2(취소)로 바꾸고, 결제일 Date 바꾸면 됨
+              break;
+            default: break; 
+          }
+        } else {
+          throw {status: "forgery", message: "위조된 결제시도!!!"}
+        }
       }
-    } else { // 결제 금액 불일치. 위/변조 된 결제
-      throw { status: 'forgery', message: '위조된 결제시도' };
-    }
+    }).catch((err) => {
+      console.log(err);
+      res.end();
+    })  
   } catch (e) {
     res.status(400).send(e);
   }
+});
+
+router.post('/vbankCancle', (req, res) => {
+  const marketerId = req._passport.session.user.userid;
+
+  const vbankCancleQuery = `
+  UPDATE marketerCharge
+  SET temporaryState = 2
+  WHERE marketerId = ? AND type = ? AND (NOW() > vbankDueDate) AND temporaryState = 0
+  `;
+
+  const vbankCancleArray = [marketerId, "vbank"]
+
+  doQuery(vbankCancleQuery, vbankCancleArray)
+  .then(() => {
+    res.send(true);
+  })
 });
 
 module.exports = router;

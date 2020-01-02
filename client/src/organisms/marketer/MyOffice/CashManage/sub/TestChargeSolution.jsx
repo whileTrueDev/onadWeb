@@ -156,7 +156,7 @@ const TestChargeSolution = (props) => {
           <Grid item className={classes.warning}>
             <Grid container>
               <Grid item className={classes.content}>
-                결제방법을 선택해주세요, 차후에 다양한 결제방법 도입예정입니다.
+                자동 충전 금액에는 부가세가 적용되며 '계좌이체'의 경우 1인 1계좌 하루 최대 50만원까지 결제 가능합니다
               </Grid>
             </Grid>
           </Grid>
