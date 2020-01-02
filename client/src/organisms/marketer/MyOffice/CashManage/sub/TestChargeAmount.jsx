@@ -129,24 +129,6 @@ const TestChargeAmount = (props) => {
                   onChange={handleChange}
                 >
                   <FormControlLabel
-                    value="10000"
-                    control={<Radio color="primary" />}
-                    label={(
-                      <Typography variant="subtitle1" className={classes.selectValue}>
-                        10,000 원
-                      </Typography>
-                    )}
-                  />
-                  <FormControlLabel
-                    value="30000"
-                    control={<Radio color="primary" />}
-                    label={(
-                      <Typography variant="subtitle1" className={classes.selectValue}>
-                        30,000 원
-                      </Typography>
-                    )}
-                  />
-                  <FormControlLabel
                     value="50000"
                     control={<Radio color="primary" />}
                     label={(
@@ -161,6 +143,24 @@ const TestChargeAmount = (props) => {
                     label={(
                       <Typography variant="subtitle1" className={classes.selectValue}>
                         100,000 원
+                      </Typography>
+                    )}
+                  />
+                  <FormControlLabel
+                    value="300000"
+                    control={<Radio color="primary" />}
+                    label={(
+                      <Typography variant="subtitle1" className={classes.selectValue}>
+                        300,000 원
+                      </Typography>
+                    )}
+                  />
+                  <FormControlLabel
+                    value="500000"
+                    control={<Radio color="primary" />}
+                    label={(
+                      <Typography variant="subtitle1" className={classes.selectValue}>
+                        500,000 원
                       </Typography>
                     )}
                   />
@@ -182,6 +182,8 @@ const TestChargeAmount = (props) => {
                       onChange={handleChange}
                       margin="normal"
                       variant="outlined"
+                      error={!selectValue > 5000}
+                      helperText={selectValue > 5000 ? null : '5000원 이상 충전가능'} 
                     />
                   </Tooltip>
                 </div>
