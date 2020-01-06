@@ -609,10 +609,10 @@ router.post('/iamportWebhook', async (req, res) => {
             // 가상계좌 입금시 marketerCharge 테이블 temporaryState값 1로 바꾸기 및 date 업뎃
             const vbankChargeUpdateQuery = `
             UPDATE marketerCharge
-            SET temporaryState = 1, date = ?
+            SET temporaryState = 1, date = NOW()
             WHERE imp_uid = ?
             `;
-            const vbankChargeUpdateArray = [new Date().toLocaleString(), imp_uid]
+            const vbankChargeUpdateArray = [imp_uid]
 
             doQuery(vbankCurrentDebitQuery, vbankCurrentDebitArray)
             .then((row) => {
