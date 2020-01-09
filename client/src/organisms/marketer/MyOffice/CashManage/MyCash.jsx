@@ -108,14 +108,15 @@ function MyCash(props) {
 
       {!accountData.loading
       && !accountData.error
-      && accountData.payload.accountNumber && (
+      && accountData.payload.accountNumber
+      && !cashData.loading
+      && !accountData.error && (
         <RefundDialog
           open={refundDialog.open}
           handleClose={refundDialog.handleClose}
           accountNumber={accountData.payload.accountNumber}
           accountHolder={accountData.payload.accountHolder}
-          currentCash={!cashData.loading && !cashData.error
-            ? cashData.payload.cashAmount : 0}
+          currentCash={cashData.payload.cashAmount}
         />
       )}
 

@@ -361,10 +361,12 @@ function TestChargeDialog() {
   }
 
   useEffect(() => {
-    axios.get(`${HOST}/api/dashboard/marketer/cash`)
+    axios.get(`${HOST}/api/dashboard/marketer/cash/defaultCash`)
     .then((res) => {
-      const currentCashNumber = res.data.cashAmount.replace(",", "");
+      if (res.data){
+      const currentCashNumber = res.data;
       stepDispatch({key:'currentCash', value: currentCashNumber})
+      }
     }
     )
   }, [])
