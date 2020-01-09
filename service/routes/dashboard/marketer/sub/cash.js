@@ -30,6 +30,29 @@ router.get('/', (req, res) => {
     });
 });
 
+router.get('/defaultCash', (req, res) => {
+  const marketerId = req._passport.session.user.userid;
+  const debitQuery = `
+  SELECT FORMAT(cashAmount, 0) as cashAmount,
+    DATE_FORMAT(date, '%y년 %m월 %d일 %T') as date
+  FROM marketerDebit
+  WHERE marketerId = ?
+  ORDER BY date DESC
+  LIMIT 1`;
+
+  doQuery(debitQuery, [marketerId])
+    .then((row) => {
+      if (!row.error) {
+        console.log(row.result[0].cashAmount)
+        res.send(row.result[0].cashAmount.replace(",",""));
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+      res.end();
+    });
+});
+
 // 마케터 캐시 충전
 // marketerDebit, marketerCharge
 router.post('/charge', (req, res) => {
@@ -463,7 +486,8 @@ router.post('/testcharge', async (req, res) => {
                             cashAmount: amount,
                             vbankName: vbank_name,
                             vbankNum: vbank_num,
-                          }
+                          },
+                          vbankDate: vbank_date
                         }
                       )]
                     }
