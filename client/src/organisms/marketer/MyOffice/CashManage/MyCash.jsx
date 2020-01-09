@@ -46,7 +46,7 @@ function MyCash(props) {
           display: 'flex', alignItems: 'center', flexDirection: 'row-reverse', padding: 5
         }}
         >
-          {!userData.loading && !userData.error && userData.payload.marketerId === 'admin'
+          {!userData.loading && !userData.error
             && <Button color="info" onClick={() => { window.open(`${FRONT_HOST}/marketer/charge`, "_blank", `width=${POPUP_WIDTH}, height=${POPUP_HEIGHT}, left=${POPUP_X}, top=${POPUP_Y}`) }}>캐시충전(전자결제)</Button>
           }
           {!userData.loading && !userData.error
