@@ -5,7 +5,6 @@ import makeStyles from '@material-ui/core/styles/makeStyles';
 import Dialog from '../../../../atoms/Dialog/Dialog';
 import useFetchData from '../../../../utils/lib/hooks/useFetchData';
 import Table from '../../../../atoms/Table/CashUsageTable';
-import NoTaxBillTooltip from '../../../../atoms/Tooltip/NoTaxBillTooltip';
 
 const initialData = {
   data: [['-', '-', '-']]
@@ -36,13 +35,6 @@ export default function CashUsageDialog(props) {
             집행 금액:&emsp;
           </Typography>
           <Typography variant="h6" gutterBottom>{`${data[1]} 원`}</Typography>
-          <Typography variant="body1" gutterBottom>
-            &emsp;세금 계산서 발행:&emsp;
-          </Typography>
-          <Typography variant="h6" gutterBottom>{data[2]}</Typography>
-          {data[2] === '미발행' && (
-            <NoTaxBillTooltip />
-          )}
         </div>
 
         {!usagePerMonthData.loading && (

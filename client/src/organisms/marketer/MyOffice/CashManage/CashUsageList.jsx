@@ -11,9 +11,9 @@ import useDialog from '../../../../utils/lib/hooks/useDialog';
 import useFetchData from '../../../../utils/lib/hooks/useFetchData';
 
 const initialData = {
-  columns: ['집행 날짜', '집행 금액', '세금계산서', '상세보기'],
+  columns: ['집행 날짜', '집행 금액', '상세보기'],
   data: [
-    ['-', '-', '-'],
+    ['-', '-'],
   ],
 };
 

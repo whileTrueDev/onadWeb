@@ -9,6 +9,9 @@ import CashHistoryTable from '../../organisms/marketer/MyOffice/CashManage/CashH
 import RefundHistoryTable from '../../organisms/marketer/MyOffice/CashManage/RefundHistoryTable';
 import BusinessRegistration from '../../organisms/marketer/MyOffice/UserManage/BusinessRegistrationUploadForm';
 import SignOut from '../../organisms/marketer/MyOffice/UserManage/SignOut';
+import MyOffceLoading from '../../organisms/marketer/MyOffice/MyOfficeLoading';
+import TaxBill from '../../organisms/marketer/MyOffice/TaxBill/TaxBill';
+
 // hook for data fetching
 import useFetchData from '../../utils/lib/hooks/useFetchData';
 
@@ -22,6 +25,33 @@ export default function MyOffice() {
 
   return (
     <div>
+
+      <Typography variant="h5" style={{ marginTop: 35 }}>내정보관리</Typography>
+      {/* 계정 관리 */}
+      {userData.loading && (
+        <MyOffceLoading />
+      )}
+      {!userData.loading && userData.payload && (
+      <GridContainer>
+        <GridItem xs={12} sm={12} md={12} lg={6} xl={3}>
+          <UserDataForm userData={userData.payload} reCall={userData.callUrl} />
+        </GridItem>
+
+        <GridItem xs={12} lg={6} xl={3}>
+          <GridContainer>
+            {userData.payload.marketerUserType ? (
+              <GridItem xs={12}>
+                <BusinessRegistration businessRegistrationData={businessRegistrationData} />
+              </GridItem>
+            ) : (null)}
+            <GridItem xs={12}>
+              <RefundAccountForm accountData={accountData} />
+            </GridItem>
+          </GridContainer>
+        </GridItem>
+
+      </GridContainer>
+      )}
 
       <Typography variant="h5" style={{ marginTop: 35 }}>광고캐시 관리</Typography>
       {/* 광고캐시 충전 및 환불, 관리 */}
@@ -40,29 +70,16 @@ export default function MyOffice() {
         </GridItem>
       </GridContainer>
 
+      <Typography variant="h5" style={{ marginTop: 35 }}>세금계산서 관리</Typography>
+      <GridContainer>
+        <GridItem xs={12} md={12} lg={8} xl={6}>
+          <TaxBill />
+        </GridItem>
+      </GridContainer>
 
-      <Typography variant="h5" style={{ marginTop: 35 }}>내정보관리</Typography>
-      {/* 계정 관리 */}
+      {/* 회원탈퇴 */}
       {!userData.loading && userData.payload && (
       <GridContainer>
-        <GridItem xs={12} sm={12} md={8} lg={6} xl={3}>
-          <UserDataForm userData={userData.payload} reCall={userData.callUrl} />
-        </GridItem>
-
-        <GridItem xs={12} lg={6} xl={3}>
-          <GridContainer>
-            {userData.payload.marketerUserType ? (
-              <GridItem xs={12}>
-                <BusinessRegistration businessRegistrationData={businessRegistrationData} />
-              </GridItem>
-            ) : (null)}
-            <GridItem xs={12}>
-              <RefundAccountForm accountData={accountData} />
-            </GridItem>
-
-
-          </GridContainer>
-        </GridItem>
         <GridItem xs={12}>
           <SignOut userData={userData.payload} />
         </GridItem>
