@@ -47,10 +47,10 @@ function MyCash(props) {
         }}
         >
           {!userData.loading && !userData.error && userData.payload.marketerId === 'admin'
-            && <Button color="info" onClick={() => { window.open(`${FRONT_HOST}/marketer/charge`, "_blank", `width=${POPUP_WIDTH}, height=${POPUP_HEIGHT}, left=${POPUP_X}, top=${POPUP_Y}`) }}>캐시충전</Button>
+            && <Button color="info" onClick={() => { window.open(`${FRONT_HOST}/marketer/charge`, "_blank", `width=${POPUP_WIDTH}, height=${POPUP_HEIGHT}, left=${POPUP_X}, top=${POPUP_Y}`) }}>캐시충전(전자결제)</Button>
           }
           {!userData.loading && !userData.error
-            && <Button color="info" onClick={() => { chargeDialog.handleOpen(); }}>충전</Button>
+            && <Button color="info" onClick={() => { chargeDialog.handleOpen(); }}>캐시충전(무통장)</Button>
           }
            
           {!accountData.loading && !accountData.error

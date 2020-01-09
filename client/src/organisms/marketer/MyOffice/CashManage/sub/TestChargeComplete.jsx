@@ -4,10 +4,7 @@ import {
   Grid
 } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
-
 import Divider from '@material-ui/core/Divider';
-
-
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -53,7 +50,10 @@ const useStyles = makeStyles(theme => ({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-  }
+  },
+  completeContent: {
+    fontWeight: 'bold',
+    fontFamily: 'Noto Sans KR'}
 }));
 
 const TestChargeComplete = (props) => {
@@ -94,22 +94,22 @@ const TestChargeComplete = (props) => {
               </Typography>
             </Grid>
             <Grid item>
-              <Typography variant="h5" style={{fontWeight: 'bold', fontFamily: 'Noto Sans KR'}}>
+              <Typography variant="h5" className={classes.completeContent}>
                 입금은행 : {vbankInfo.vbankName}
               </Typography>
-              <Typography variant="h5" style={{fontWeight: 'bold', fontFamily: 'Noto Sans KR'}}>
+              <Typography variant="h5" className={classes.completeContent}>
                 가상계좌번호 : {vbankInfo.vbankNum}
               </Typography>
-              <Typography variant="h5" style={{fontWeight: 'bold', fontFamily: 'Noto Sans KR'}}>
+              <Typography variant="h5" className={classes.completeContent}>
                 입금기한 : {vbankInfo.vbanDate} 까지
               </Typography>
-              <Typography variant="h5" style={{fontWeight: 'bold', fontFamily: 'Noto Sans KR'}}>
+              <Typography variant="h5" className={classes.completeContent}>
                 입금금액 : {vbankInfo.vbankAmount}원
               </Typography>
-              <Typography variant="subtitle1" style={{fontWeight: 'bold', fontFamily: 'Noto Sans KR', marginTop: 20}}>
+              <Typography variant="subtitle1" className={classes.completeContent} style={{marginTop: 20}}>
                 * 가상계좌에 대한 정보는 우측상단 알림 및 이메일에서 확인 가능합니다
               </Typography>
-              <Typography variant="subtitle1" style={{fontWeight: 'bold', fontFamily: 'Noto Sans KR'}}>
+              <Typography variant="subtitle1" className={classes.completeContent}>
                 * 가상계좌 입금 확인에 대해서 최대 하루까지 소요됩니다.
               </Typography>
               <Typography variant="subtitle1" style={{fontWeight: 'bold', fontFamily: 'Noto Sans KR'}}>

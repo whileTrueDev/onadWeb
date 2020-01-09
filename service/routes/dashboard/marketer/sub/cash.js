@@ -43,7 +43,6 @@ router.get('/defaultCash', (req, res) => {
   doQuery(debitQuery, [marketerId])
     .then((row) => {
       if (!row.error) {
-        console.log(row.result[0].cashAmount)
         res.send(row.result[0].cashAmount.replace(",",""));
       }
     })
@@ -463,10 +462,6 @@ router.post('/testcharge', async (req, res) => {
           doQuery(vbankCurrentDebitQuery, vbankCurrentDebitArray)
             .then((row) => {
               if (!row.error) {
-                let currentCashAmount = 0;
-                if (row.result[0]) { // 기존에 marketerDebit에 데이터가 있는 경우
-                  currentCashAmount = Number(row.result[0].cashAmount);
-                }
                   doQuery(vbankCashChargeInsertQuery, vbankCashChargeArray)
                   .then((secondrow) => {
                     // 마케터 캐시 충전 쿼리 완료
@@ -608,8 +603,9 @@ router.post('/iamportWebhook', async (req, res) => {
     doQuery(marketerDBdata, marketerDBdataArray)
     .then((row) => {
       if (!row.error) {
-        if (parseInt(Number(row.result[0].cash)*1.1) === parseInt(amount)) {
-          const { marketerId, cash } = row.result[0]
+        const cash = row.result[0].cash.replace(",","");
+        if (parseInt(Number(cash)*1.1) === parseInt(amount)) {
+          const { marketerId} = row.result[0]
 
           switch(status) {
             case 'paid' : 
