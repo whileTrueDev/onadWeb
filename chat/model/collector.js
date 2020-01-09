@@ -56,6 +56,12 @@ class TwitchChatCollectorV2 {
           const channelName = channel.replace('#', '');
           console.log(`[${new Date().toLocaleString()}] join channel: ${channelName}`);
           this.joinedChannels.push(channelName);
+
+          // 새로 조인한 채널이 stoppedChannels에 있는 경우 stoppedChannels 에서 제외
+          const idx = this.stoppedChannels.indexOf(channel);
+          if (idx > -1) {
+            this.stoppedChannels.splice([idx], 1); // joinedChannel에서 제외
+          }
         }
       },
       // Called when client reconnected
@@ -92,11 +98,16 @@ class TwitchChatCollectorV2 {
   addNewCreator() { // 새로운/정지된 크리에이터 채널에 입장 - 매일 0시 1분.
     console.log('=============== AddNewCreator ===============');
     connectDB.getContratedCreators()
-      .then((creators) => {
+      .then((allCreator) => {
         // 새로운 크리에이터 채널 입장
-        let newCreators = creators.map(creator => creator.creatorTwitchId);
+        let newCreators = allCreator.map(creator => creator.creatorTwitchId);
         newCreators = newCreators.filter(
-          creator => !this.joinedChannels.includes(creator)
+          creator => !(this.joinedChannels.includes(creator))
+        );
+
+        // 새로 입장한 채널을 stoppedChannels에서 제외
+        this.stoppedChannels = this.stoppedChannels.filter(
+          stoppedChannel => !(this.joinedChannels.includes(stoppedChannel))
         );
 
         newCreators.forEach((creator, idx) => {
