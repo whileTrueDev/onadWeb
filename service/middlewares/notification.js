@@ -67,7 +67,7 @@ const messageDict = {
     },
     vbankChargeReady: {
       selectQuery: `
-      SELECT marketerName , (SELECT DATE_FORMAT(FROM_UNIXTIME(vbankDueDate, "%Y-%m-%d %h:%i:%s"), "%Y-%m-%d %h시%i분%s초")) AS date
+      SELECT marketerName , (SELECT DATE_FORMAT(FROM_UNIXTIME(vbankDueDate, "%Y-%m-%d %h:%i:%s"), "%Y-%m-%d %h:%i:%s")) AS date
       FROM marketerInfo AS mI
       LEFT JOIN marketerCharge AS mC
       ON mC.marketerId = ?
@@ -85,7 +85,7 @@ const messageDict = {
       WHERE marketerId = ? 
      `,
       getTitle: ({ marketerName }) => `${marketerName}님, 가상계좌 결제가 완료되었습니다.`,
-      getMessage: ({ marketerName, cashAmount }) => `${marketerName}님, 가상계좌 결제가 완료되어 ONAD캐시 ${cashAmount}이 충전되었습니다.
+      getMessage: ({ marketerName, cashAmount }) => `${marketerName}님, 가상계좌 결제가 완료되어 ONAD캐시 ${cashAmount}원이 충전되었습니다.
       `,
     }
   },

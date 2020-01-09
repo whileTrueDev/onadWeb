@@ -28,8 +28,10 @@ function MyCash(props) {
   const cashData = useFetchData('/api/dashboard/marketer/cash');
 
   const { classes, accountData, userData } = props;
-  const POPUP_X = (window.screen.width/2) - 350;
-  const POPUP_Y = (window.screen.height/2) - 325;
+  const POPUP_WIDTH = process.env.NODE_ENV === 'production'? 900 : 700; 
+  const POPUP_HEIGHT = process.env.NODE_ENV === 'production'? 800 : 700; 
+  const POPUP_X = process.env.NODE_ENV === 'production' ? (window.screen.width/2) - 450: (window.screen.width/2) - 350;
+  const POPUP_Y = process.env.NODE_ENV === 'production' ? (window.screen.height/2) - 400: (window.screen.height/2) - 350;
   // front HOST
   const FRONT_HOST = process.env.NODE_ENV === 'production' ? 'https://onad.io' : 'http://localhost:3001';
 
@@ -45,7 +47,7 @@ function MyCash(props) {
         }}
         >
           {!userData.loading && !userData.error && userData.payload.marketerId === 'admin'
-            && <Button color="info" onClick={() => { window.open(`${FRONT_HOST}/marketer/charge`, "_blank", `width=700, height=650, left=${POPUP_X}, top=${POPUP_Y}`) }}>캐시충전</Button>
+            && <Button color="info" onClick={() => { window.open(`${FRONT_HOST}/marketer/charge`, "_blank", `width=${POPUP_WIDTH}, height=${POPUP_HEIGHT}, left=${POPUP_X}, top=${POPUP_Y}`) }}>캐시충전</Button>
           }
           {!userData.loading && !userData.error
             && <Button color="info" onClick={() => { chargeDialog.handleOpen(); }}>충전</Button>
