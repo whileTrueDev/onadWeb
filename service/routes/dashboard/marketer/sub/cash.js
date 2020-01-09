@@ -511,6 +511,7 @@ router.post('/testcharge', async (req, res) => {
                 let currentCashAmount = 0;
                 if (row.result[0]) { // 기존에 marketerDebit에 데이터가 있는 경우
                   currentCashAmount = Number(row.result[0].cashAmount);
+                  console.log(row.result[0].cashAmount)
                 }
                 Promise.all([
                   doQuery(cashChargeInsertQuery, cashChargeArray),
@@ -542,7 +543,7 @@ router.post('/testcharge', async (req, res) => {
 });
 
 
-// "/iamportWebhook"에 대한 POST 요청을 처리
+// "/iamportWebhook"에 대한 웹훅 POST 요청을 처리
 router.post('/iamportWebhook', async (req, res) => {
   try {
     const { imp_uid, merchant_uid } = req.body;
@@ -583,8 +584,8 @@ router.post('/iamportWebhook', async (req, res) => {
     doQuery(marketerDBdata, marketerDBdataArray)
     .then((row) => {
       if (!row.error) {
-        if (parseInt(row.result[0].cash) === parseInt(amount)) {
-          const {marketerId, cash } = row.result[0]
+        if (parseInt(Number(row.result[0].cash)*1.1) === parseInt(amount)) {
+          const { marketerId, cash } = row.result[0]
 
           switch(status) {
             case 'paid' : 
