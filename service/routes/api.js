@@ -185,7 +185,7 @@ router.post('/iamportWebhook', async (req, res) => {
                       type: 'vbankChargeComplete',
                       targetId: marketerId,
                       params: {
-                        cashAmount: amount
+                        cashAmount: cash
                       }
                     }
                   )
