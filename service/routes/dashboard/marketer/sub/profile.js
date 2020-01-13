@@ -150,7 +150,7 @@ router.get('/taxbill', (req, res) => {
   const marketerId = req._passport.session.user.userid;
 
   const query = `
-  SELECT date, state FROM marketerTaxBill
+  SELECT date, cashAmount, state FROM marketerTaxBill
   WHERE marketerId = ?`;
 
   const queryArray = [marketerId];
@@ -168,7 +168,9 @@ router.get('/taxbill', (req, res) => {
           case 2: taxBillState = '미발행'; break;
           default: throw Error('tax bill state');
         }
+
         object.state = taxBillState;
+        object.cashAmount = object.cashAmount.toString();
         sendArray.push(Object.values(object));
       });
       res.send(sendArray);

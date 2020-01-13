@@ -79,7 +79,7 @@ function getInsertData() {
 function updateFail() {
   // 전전월의 '발행대기' 상태를 '미발행' 상태로 바꾸는 쿼리
   const failUpdateQuery = `
-  UPDATE marketerTaxBill_copy
+  UPDATE marketerTaxBill
   SET state = ?
   WHERE 
     date = DATE_FORMAT(DATE_SUB(now(), INTERVAL 2 MONTH), '%Y-%m-00')
@@ -94,17 +94,27 @@ function updateFail() {
     });
 }
 
-const scheduler = schedule.scheduleJob('a', '* * * * *', () => {
+const scheduler = schedule.scheduleJob(
+  'Marketer taxbill scheduler', '1 10 1 * *', () => {
   // 삽입할 데이터 가져오기
-  getInsertData().then((data) => {
-    const q = makeInsertQuery(data);
-    doQuery(q.queryString, q.queryArray).then((row) => {
-      console.log(row.result);
-    }).catch((err) => {
-      console.log(err);
+    getInsertData().then((data) => {
+      const q = makeInsertQuery(data);
+      doQuery(q.queryString, q.queryArray).then(() => {
+        slack.push('마케터 세금계산서 데이터 Insert 완료.', '마케터 세금계산서');
+      }).catch((err) => {
+        console.log(err);
+        slack.push('마케터 세금계산서 데이터 Insert 중 오류발생함.', '마케터 세금계산서');
+      });
     });
-  });
 
-  updateFail();
-});
+    updateFail()
+      .then(() => {
+        slack.push('마케터 세금계산서 미발행처리 완료.', '마케터 세금계산서');
+      })
+      .catch((err) => {
+        console.log(err);
+        slack.push('마케터 세금계산서 미발행처리 중 오류발생함.', '마케터 세금계산서');
+      });
+  }
+);
 module.exports = scheduler;

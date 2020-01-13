@@ -1,7 +1,7 @@
 function getInsertQuery(data) {
   let queryString = `
   INSERT INTO
-  marketerTaxBill_copy (marketerId, date, state, cashAmount)
+  marketerTaxBill (marketerId, date, state, cashAmount)
   VALUES
   `;
 

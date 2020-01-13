@@ -4,7 +4,8 @@ const url = process.env.SLACK_ALARM_URL;
 
 /**
  * slack onad_alarm 채널에 메시지를 보내는 함수.
- * @param {string} text 보낼 메시지를 입력한다.
+ * @param {string} text text: 보낼 메시지
+ * @param {string} task task: 작업을 명시
  * @param {string} type 보내는 서비스의 Docker container 이름.
  * - onad_landing_api
  * - onad_landing

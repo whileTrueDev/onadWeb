@@ -20,7 +20,7 @@ export default function TaxBill() {
   return (
     <Card>
       <CardHeader color="blueGray">
-        <h4>
+        <h4 style={{ display: 'flex', justifyContent: 'center', margin: '0px 0px 3px' }}>
           환불 처리 내역
         </h4>
       </CardHeader>
