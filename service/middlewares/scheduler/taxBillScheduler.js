@@ -1,5 +1,6 @@
 const schedule = require('node-schedule');
 const doQuery = require('../../model/doQuery');
+const makeInsertQuery = require('./util/makeInsertQuery');
 const slack = require('../slack/message');
 
 const WAIT_STATE = 0; // '발행대기' 상태값
@@ -85,7 +86,7 @@ function updateFail() {
     AND state = ?`;
   const failUpdateArray = [FAIL_STATE, WAIT_STATE];
 
-  doQuery(failUpdateQuery, failUpdateArray)
+  return doQuery(failUpdateQuery, failUpdateArray)
     .then((row) => {
       if (!row.error && row.result) {
         console.log(row.result);
@@ -93,81 +94,17 @@ function updateFail() {
     });
 }
 
-function getInsertQuery(data) {
-  let queryString = `
-  INSERT INTO
-  marketerTaxBill_copy (marketerId, date, state, cashAmount)
-  VALUES
-  `;
-
-  const valuesString = '(?, ?, ?, ?)';
-  const comma = ',\n';
-
-  const queryArray = [];
-  data.forEach((d, index) => {
-    queryString += valuesString;
-    if (index !== data.length - 1) {
-      queryString += comma;
-    }
-    queryArray.push(d.marketerId, d.date, 0, d.cashAmount);
-  });
-
-  return { queryString, queryArray };
-}
-
 const scheduler = schedule.scheduleJob('a', '* * * * *', () => {
+  // 삽입할 데이터 가져오기
   getInsertData().then((data) => {
-    const q = getInsertQuery(data);
+    const q = makeInsertQuery(data);
     doQuery(q.queryString, q.queryArray).then((row) => {
       console.log(row.result);
     }).catch((err) => {
       console.log(err);
     });
   });
+
+  updateFail();
 });
-
-// // 매 달 1일에 0시 1분에 실행.
-// const scheduler = schedule.scheduleJob('taxbillScheduler', '1 9 1,4,7,10,13,16,19,22,25,28 * *', () => {
-//   console.log(`[${new Date().toLocaleString()}] START SCHEDULER JOB - [taxbillScheduler]`);
-
-//   // tax bill issue fail job
-//   taxBillFailJob().then((failjobResult) => {
-//     console.log(`START [WAIT => FAIL] [${THIS_MONTH}] JOB...`);
-//     const { insert } = failjobResult;
-//     if (insert.success) {
-//       console.log(`SUCCESS [WAIT => FAIL] [${THIS_MONTH}] JOB SUCCESS!!`);
-//     }
-
-//     // insert default value job
-//     taxBillDefaultJob().then((result) => {
-//       console.log(`START [INSERT DEFAULT VALUE] [${THIS_MONTH}] JOB...`);
-//       if (result.select.success && result.existsCheck.success && result.insert.success) {
-//         console.log(`SUCCESS [INSERT DEFAULT VALUE] [${THIS_MONTH}] JOB SUCCESS!!`);
-
-//         // notification function
-//         slack.push(
-//           `[SUCCESS] marketerTaxBill 테이블의 ${THIS_MONTH} 기본값 설정이 올바르게 완료되었습니다.`,
-//           'SCHEDULER JOB - [taxbillScheduler]', 'onad_web_api'
-//         );
-//       }
-//     }).catch((err) => {
-//       console.log('ERROR occurred! check taxBillScheduler - defaultJob');
-//       console.log(err);
-
-//       // notification function
-//       slack.push(`[ERROR] marketerTaxBill 테이블의 ${THIS_MONTH} 기본값 설정이 실패했습니다.
-//       에러메시지 :
-//       ${err}`, 'SCHEDULER JOB - [taxbillScheduler]', 'onad_web_api');
-//     });
-//   }).catch((err) => {
-//     console.log('ERROR occurred! check taxBillScheduler - taxBillFailJob');
-//     console.log(err);
-
-//     // notification function
-//     slack.push(`[ERROR] marketerTaxBill 테이블의 ${THIS_MONTH} 기본값 설정이 실패했습니다.
-//     에러메시지 :
-//     ${err}`, 'SCHEDULER JOB - [taxbillScheduler]', 'onad_web_api');
-//   });
-// });
-
 module.exports = scheduler;
