@@ -39,7 +39,7 @@ function HeaderLinks() {
     });
   }
 
-  const {anchorEl, handleClick, setAnchorEl } = useMenu();
+  const {anchorEl, handleClick } = useMenu();
 
   return (
     <div>
