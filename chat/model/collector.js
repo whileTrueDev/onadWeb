@@ -13,7 +13,6 @@ const JOIN_TIMEOUT = 8000;
 class TwitchChatCollectorV2 {
   constructor() { // 인스턴스 속성 정의
     this.joinedChannels = []; // join 채널
-    this.stoppedChannels = []; // timeout된 채널
     this.chatContainer = {
       chatCount: 0,
       chatBuffer: [
@@ -56,12 +55,6 @@ class TwitchChatCollectorV2 {
           const channelName = channel.replace('#', '');
           console.log(`[${new Date().toLocaleString()}] join channel: ${channelName}`);
           this.joinedChannels.push(channelName);
-
-          // 새로 조인한 채널이 stoppedChannels에 있는 경우 stoppedChannels 에서 제외
-          const idx = this.stoppedChannels.indexOf(channel);
-          if (idx > -1) {
-            this.stoppedChannels.splice([idx], 1); // joinedChannel에서 제외
-          }
         }
       },
       // Called when client reconnected
@@ -70,10 +63,7 @@ class TwitchChatCollectorV2 {
       },
       // Called when channel timeout
       onTimeoutHandler: (channel, username, reason, duration) => {
-        console.log(channel, reason, duration);
-        const idx = this.joinedChannels.indexOf(channel);
-        this.joinedChannels.splice([idx], 1); // joinedChannel에서 제외
-        this.stoppedChannels.push(channel); // stoppedChannel에 추가
+        console.log(`timeout: ${channel}, ${reason}, ${duration}`);
       },
       onPingHandler: () => {
         console.log('pingcheck');
@@ -88,7 +78,6 @@ class TwitchChatCollectorV2 {
     console.log('=================== healthCheck ====================');
     console.log('[TIME]: ', new Date().toLocaleString());
     console.log(`[Collecting channels]: ${this.joinedChannels.length}`);
-    console.log(`[Stopped channels]: ${this.stoppedChannels.length}`);
     console.log('[All chats on client]: ', this.chatContainer.chatCount);
     console.log('[Chats on collector buffer]: ', this.chatContainer.chatBuffer.length);
     console.log(`[Chats inserted]: ${this.chatContainer.insertedChatCount}`);
@@ -103,11 +92,6 @@ class TwitchChatCollectorV2 {
         let newCreators = allCreator.map(creator => creator.creatorTwitchId);
         newCreators = newCreators.filter(
           creator => !(this.joinedChannels.includes(creator))
-        );
-
-        // 새로 입장한 채널을 stoppedChannels에서 제외
-        this.stoppedChannels = this.stoppedChannels.filter(
-          stoppedChannel => !(this.joinedChannels.includes(stoppedChannel))
         );
 
         newCreators.forEach((creator, idx) => {
@@ -162,9 +146,9 @@ class TwitchChatCollectorV2 {
             username: BOT_NAME,
             password: BOT_OAUTH_TOKEN
           },
-          channels: contractedChannels
+          // channels: contractedChannels
           // // test
-          // channels: ['iamsupermazinga']
+          channels: ['iamsupermazinga']
         };
 
         const client = new tmi.Client(OPTION);
@@ -177,6 +161,8 @@ class TwitchChatCollectorV2 {
         this.client.on('ping', this.handlers.onPingHandler);
         this.client.on('timeout', this.handlers.onTimeoutHandler);
         this.client.connect();
+        this.client.getChannels();
+        this.client.listenerCount();
       });
   }
 
