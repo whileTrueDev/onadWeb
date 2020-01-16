@@ -1,4 +1,5 @@
 import React from 'react';
+import axios from 'axios';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import Grid from '@material-ui/core/Grid';
 import Grow from '@material-ui/core/Grow';
@@ -34,6 +35,15 @@ export default function Dashboard() {
 
   return (
     <div className={classes.root}>
+      <button
+        type="button"
+        onClick={() => {
+          console.log('알림톡 요청');
+          axios.get('http://localhost:3000/api/alimtalk/marketer/cash/burn?marketerId=iamsupermazinga');
+        }}
+      >
+        강화수에게 알림톡 보내기
+      </button>
       {(normalData.loading || campaignData.loading
         || onOffData.loading || creatorsData.loading
         || bannerData.loading || valueChartData.loading
