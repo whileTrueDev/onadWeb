@@ -39,7 +39,8 @@ export default function Dashboard() {
         type="button"
         onClick={() => {
           console.log('알림톡 요청');
-          axios.get('http://localhost:3000/api/alimtalk/marketer/cash/burn?marketerId=iamsupermazinga');
+          axios.get('http://localhost:3000/api/alimtalk/marketer/cash/burn?marketerId=iamsupermazinga')
+            .then((d) => { console.log(d); });
         }}
       >
         강화수에게 알림톡 보내기
