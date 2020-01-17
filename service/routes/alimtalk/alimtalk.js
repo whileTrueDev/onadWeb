@@ -17,8 +17,8 @@ const ALIM_TALK_SERVICE_URL = `/alimtalk/v2/services/${SERVICE_ID}/messages`; //
 
 // marketer 의 캐시 소진 알림톡을 위한 라우터. (from 계산프로그램)
 router.get('/marketer/cash/burn', (req, res) => {
+  // Get marketerId
   const { marketerId } = req.query;
-
 
   /** ********************
    * Setting Headers
