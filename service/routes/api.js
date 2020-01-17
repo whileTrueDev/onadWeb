@@ -98,6 +98,11 @@ router.route('/streams').get((req, res) => {
   });
 });
 
+
+// router.get('/alimtalk/marketer/cash/burn', async (req, res) => {
+//   console.log(req.query);
+// });
+
 // socket과 통신할 router를 하나 만들자.
 
 module.exports = router;

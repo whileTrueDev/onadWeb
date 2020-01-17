@@ -144,4 +144,10 @@ router.post('/business/upload', (req, res) => {
     });
 });
 
+router.get('/google', (req, res) => {
+  const { user } = req._passport.session;
+  res.send(user);
+});
+
+
 module.exports = router;

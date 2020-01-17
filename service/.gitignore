@@ -16,3 +16,5 @@ calculationLog/*
 */calculationLog
 /middlewares/bin/calculationLog
 /bin/calculationLog
+
+/banners/*

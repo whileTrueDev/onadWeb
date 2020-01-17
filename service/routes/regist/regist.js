@@ -67,6 +67,56 @@ router.post('/marketer', (req, res, next) => {
     });
 }, sendEmailAuth);
 
+
+router.post('/marketer/platform', (req, res) => {
+  const {
+    marketerId, marketerName,
+    marketerMail, marketerPhoneNum,
+    marketerBusinessRegNum, marketerUserType,
+    platformType
+  } = req.body;
+
+  const infoQuery = `
+  INSERT INTO marketerInfo 
+  (marketerId, marketerName, marketerMail, 
+  marketerPhoneNum, marketerBusinessRegNum, marketerUserType, platformType, marketerEmailAuth) 
+  VALUES (?, ?, ?, ?, ?, ?, ?, ?) `;
+
+  const infoQueryArray = [marketerId, marketerName, marketerMail,
+    marketerPhoneNum, marketerBusinessRegNum, marketerUserType, platformType, 1];
+
+  const cashQuery = `
+  INSERT INTO marketerDebit
+  (marketerId, cashAmount)
+  VALUES (?, ?)`;
+
+  // marketerTaxBill 신규값 초기화 쿼리
+  const taxBillQuery = `
+  INSERT INTO marketerTaxBill
+  (marketerId, date, state)
+  VALUES (?, ?, ?)`;
+  let THIS_MONTH = '';
+  const DATE = new Date();
+  if ((DATE.getMonth() + 1).toString().length < 2) {
+    THIS_MONTH = `${DATE.getFullYear()}-0${(DATE.getMonth() + 1)}-00`;
+  } else {
+    THIS_MONTH = `${DATE.getFullYear()}-${(DATE.getMonth() + 1)}-00`;
+  }
+
+  Promise.all([
+    doQuery(infoQuery, infoQueryArray),
+    doQuery(cashQuery, [marketerId, 0]),
+    doQuery(taxBillQuery, [marketerId, THIS_MONTH, 0])
+  ])
+    .then(() => {
+      res.send({ error: false });
+    })
+    .catch((error) => {
+      res.send({ error });
+    });
+});
+
+
 // 쿼리관련 에러 핸들링 완료.
 router.post('/checkId', (req, res) => {
   console.log('checkId로 중복확인 합니다.');
