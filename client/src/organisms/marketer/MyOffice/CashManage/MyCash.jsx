@@ -28,10 +28,12 @@ function MyCash(props) {
   const cashData = useFetchData('/api/dashboard/marketer/cash');
 
   const { classes, accountData, userData } = props;
-  const POPUP_X = (window.screen.width/2) - 300;
-  const POPUP_Y = (window.screen.height/2) - 275;
+  const POPUP_WIDTH = process.env.NODE_ENV === 'production'? 900 : 700; 
+  const POPUP_HEIGHT = process.env.NODE_ENV === 'production'? 800 : 700; 
+  const POPUP_X = process.env.NODE_ENV === 'production' ? (window.screen.width/2) - 450: (window.screen.width/2) - 350;
+  const POPUP_Y = process.env.NODE_ENV === 'production' ? (window.screen.height/2) - 400: (window.screen.height/2) - 350;
   // front HOST
-  const FRONT_HOST = process.env.NODE_ENV === 'production' ? 'https://onad.io' : 'https://localhost:3001';
+  const FRONT_HOST = process.env.NODE_ENV === 'production' ? 'https://onad.io' : 'http://localhost:3001';
 
   return(
     <Card>
@@ -44,11 +46,11 @@ function MyCash(props) {
           display: 'flex', alignItems: 'center', flexDirection: 'row-reverse', padding: 5
         }}
         >
-          {!userData.loading && !userData.error && userData.payload.marketerId === 'admin'
-            && <Button color="info" onClick={() => { window.open(`${FRONT_HOST}/marketer/charge`, "_blank", `width=600, height=550, left=${POPUP_X}, top=${POPUP_Y}`) }}>캐시충전</Button>
+          {!userData.loading && !userData.error
+            && <Button color="info" onClick={() => { window.open(`${FRONT_HOST}/marketer/charge`, "_blank", `width=${POPUP_WIDTH}, height=${POPUP_HEIGHT}, left=${POPUP_X}, top=${POPUP_Y}`) }}>캐시충전(전자결제)</Button>
           }
           {!userData.loading && !userData.error
-            && <Button color="info" onClick={() => { chargeDialog.handleOpen(); }}>충전</Button>
+            && <Button color="info" onClick={() => { chargeDialog.handleOpen(); }}>캐시충전(무통장)</Button>
           }
            
           {!accountData.loading && !accountData.error
@@ -106,14 +108,15 @@ function MyCash(props) {
 
       {!accountData.loading
       && !accountData.error
-      && accountData.payload.accountNumber && (
+      && accountData.payload.accountNumber
+      && !cashData.loading
+      && !accountData.error && (
         <RefundDialog
           open={refundDialog.open}
           handleClose={refundDialog.handleClose}
           accountNumber={accountData.payload.accountNumber}
           accountHolder={accountData.payload.accountHolder}
-          currentCash={!cashData.loading && !cashData.error
-            ? cashData.payload.cashAmount : 0}
+          currentCash={cashData.payload.cashAmount}
         />
       )}
 
