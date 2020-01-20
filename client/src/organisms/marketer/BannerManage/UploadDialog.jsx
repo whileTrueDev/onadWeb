@@ -99,9 +99,9 @@ const UploadDialog = (props) => {
     // text format을 사용하기 위해 state로 사용한다.
 
     const landingUrl = document.getElementById('url').value || null;
-
+    const confirm = 1
     axios.post(`${HOST}/api/dashboard/marketer/banner/push`, {
-      bannerSrc: state.imageUrl, bannerDescription, landingUrl,
+      bannerSrc: state.imageUrl, bannerDescription, landingUrl, confirm
     })
       .then((res) => {
         if (res.data[0]) {

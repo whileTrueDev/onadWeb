@@ -7,6 +7,7 @@ import {
   Switch, Snackbar
 } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
+
 import CampaignCreateDialog from './campaign/CampaignCreateDialog';
 import CampaignDeleteConfirmDialog from './campaign/CampaignDeleteConfirmDialog';
 import useUpdateData from '../../../utils/lib/hooks/useUpdateData';
@@ -80,7 +81,7 @@ export default function CampaignList(props) {
         <Typography variant="h6">
           캠페인 목록
         </Typography>
-        <Button variant="contained" color="primary" onClick={campaignCreateDialog.handleOpen}>
+        <Button variant="contained" color="primary" onClick={() => { window.location.href = '/dashboard/marketer/campaigncreate'; }}>
           캠페인 등록하기
         </Button>
       </div>
