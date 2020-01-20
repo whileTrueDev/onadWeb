@@ -1,11 +1,11 @@
-import React, {useReducer} from 'react';
+import React, { useReducer } from 'react';
 import PropTypes from 'prop-types';
 // material ui core
 import { makeStyles } from '@material-ui/core/styles';
-import axios from '../../../../utils/axios';
 import {
   Grid, Slide, Collapse
 } from '@material-ui/core';
+import axios from '../../../../utils/axios';
 // customized component
 import Dialog from './sub/Dialog';
 import Button from '../../../../atoms/CustomButtons/Button';
@@ -72,7 +72,7 @@ const stepReducer = (state, action) => {
       return { ...state, totalDebit: action.value };
     }
     case 'reset': {
-      return { ...state, selectValue: '0', checked: false};
+      return { ...state, selectValue: '0', checked: false };
     }
     default: {
       return state;
@@ -86,7 +86,7 @@ function RefundDialog(props) {
     open, handleClose, currentCash, accountNumber, accountHolder
   } = props;
 
-  const currentCashNumber = Number(currentCash.replace(",",""))
+  const currentCashNumber = Number(currentCash.replace(',', ''));
 
   // 환불 요청 절차에서 사용할(step2) State.
   const [stepState, stepDispatch] = useReducer(
@@ -114,7 +114,7 @@ function RefundDialog(props) {
       history.push('/dashboard/marketer/myoffice');
     });
   }
-  
+
 
   const [stepComplete, setStepComplete] = React.useState(false); // 현재 step에서 다음 step으로 넘어가기위한 state
   const [paperSwitch, setPaperSwitch] = React.useState(true); // animation을 위한 state
@@ -128,7 +128,7 @@ function RefundDialog(props) {
     if (index === 1) {
       if (currentCashNumber - selectValue < 0 || selectValue <= 1000) {
         alert('환불 신청 금액은 1000원 이하에서는 불가하며 환불 신청 금액이 보유 캐시보다 클 수 없습니다.');
-        history.push('/dashboard/marketer/myoffice')
+        history.push('/dashboard/marketer/myoffice');
       } else {
         setTimeout(() => {
           if (go) {
@@ -155,7 +155,7 @@ function RefundDialog(props) {
     event.preventDefault();
     setStepComplete(false);
     setPaperSwitch(false);
-    if (index === 0 || index === 1 || index === 2 ) {
+    if (index === 0 || index === 1 || index === 2) {
       stepDispatch({ key: 'reset' });
     }
     setTimeout(() => {
@@ -227,7 +227,7 @@ function RefundDialog(props) {
             {index === 2
               && (
               <Grid item>
-                <Collapse in={true}>
+                <Collapse in>
                   <Button
                     variant="contained"
                     color="info"
@@ -276,7 +276,8 @@ function RefundDialog(props) {
           <div style={{ fontSize: 18, paddingTop: 15 }}>
               OnAD 환불요청 Step
             {' '}
-            {index + 1}/4
+            {index + 1}
+/4
           </div>
           <h4 className={classes.title}>{sources.titleRefund[index]}</h4>
         </div>
