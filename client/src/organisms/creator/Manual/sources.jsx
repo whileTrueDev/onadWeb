@@ -272,38 +272,3 @@ const manualSources = {
 };
 
 export default manualSources;
-// bannerError: {
-//   card: {
-//     title: '배너 오류 해결 방법',
-//     subtitle: '배너송출 창의 오류 해결 방법입니다.',
-//   },
-//   source: [
-//     {
-//       image: null,
-//       description: '< IP 관련 오류 >',
-//     },
-//     {
-//       image: '/pngs/dashboard/manual/creator/bannerError_1.png',
-//       description: '오류창이 뜰 시, 계정관리로 이동합니다.',
-//     },
-//     {
-//       image: '/pngs/dashboard/manual/creator/bannerError_2.png',
-//       description: 'IP 변경하기를 클릭합니다.',
-//     },
-//     {
-//       image: '/pngs/dashboard/manual/creator/bannerError_3.png',
-//       description: '현재 PC의 IP를 바로 등록할 수 있습니다.',
-//     },
-//     {
-//       image: '/pngs/dashboard/manual/creator/bannerError_4.png',
-//       description: '직접 입력도 가능합니다. (방송 송출용 PC의 IP)',
-//     },
-//     {
-//       image: null,
-//       description: '< 오버레이 URL 관련 오류 >',
-//     },
-//     {
-//       image: '/pngs/dashboard/manual/creator/bannerError_5.png',
-//       description: '주소보기 클릭 후, 클립보드에 복사합니다.\n이후 과정은 2. 광고 배너 송출탭의 내용을 기반으로 진행하시면 됩니다.',
-//     }, ],
-// },

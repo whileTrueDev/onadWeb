@@ -10,7 +10,6 @@ import {
 import CustomTableFooter from './TableFooter';
 import Button from '../CustomButtons/Button';
 import tableStyle from '../../assets/jss/onad/components/tableStyle';
-import NoTaxBillTooltip from '../Tooltip/NoTaxBillTooltip';
 // import CpcCpmTooltip from '../Tooltip/CpcCpmTooltip';
 
 function CustomTable({ ...props }) {
@@ -57,9 +56,6 @@ function CustomTable({ ...props }) {
                   {!perMonth ? (
                     <div style={{ display: 'flex' }}>
                       <span>{value}</span>
-                      {value === '미발행' && (
-                        <NoTaxBillTooltip />
-                      )}
                     </div>
                   ) : (
                     <div>

@@ -14,7 +14,6 @@ const SignOut = (props) => {
       display: 'flex',
       flexDirection: 'row-reverse',
       alignItems: 'center',
-
     },
   };
 
@@ -37,7 +36,7 @@ const SignOut = (props) => {
   return (
 
     <div style={{ display: 'flex' }}>
-      <Typography style={{ margin: '5px', border: '5px' }}>
+      <Typography variant="body2" style={{ margin: '5px', border: '5px' }}>
         더 이상 온애드를 사용하시지 않나요?
       </Typography>
       <Typography

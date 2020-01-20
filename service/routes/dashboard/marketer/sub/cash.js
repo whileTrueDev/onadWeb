@@ -215,24 +215,24 @@ router.get('/charge/list', (req, res) => {
           const object = obj;
           object.cash = String(obj.cash);
           if (object.type === 'vbank') {
-            object.type = '가상계좌'
+            object.type = '가상계좌';
           } else if (object.type === 'trans') {
-            object.type = '계좌이체'
-          } else if (object.type === 'card'){
-            object.type = '신용카드'
+            object.type = '계좌이체';
+          } else if (object.type === 'card') {
+            object.type = '신용카드';
           }
-          switch(object.temporaryState) {
-            case 1 :
-              object.temporaryState = '완료됨'
+          switch (object.temporaryState) {
+            case 1:
+              object.temporaryState = '완료됨';
               break;
-            case 2 :
-              object.temporaryState = '취소됨'
+            case 2:
+              object.temporaryState = '취소됨';
               break;
-            default :
-              object.temporaryState = '진행중'
+            default:
+              object.temporaryState = '진행중';
               break;
           }
-          
+
           sendArray.push(Object.values(object));
         });
         const result = {
@@ -253,7 +253,7 @@ router.get('/refund/list', (req, res) => {
   // marketerID 가져오기
   const marketerId = req._passport.session.user.userid;
   const selectQuery = `
-  SELECT 
+  SELECT
     DATE_FORMAT(date, '%y년 %m월 %d일 %T') as date,
     FORMAT(cash, 0) as cash, marketerRefund.check
   FROM marketerRefund
@@ -292,12 +292,8 @@ router.get('/usage', (req, res) => {
   const selectQuery = `
   SELECT
     DATE_FORMAT(cl.date, "%y년 %m월") as date,
-    FORMAT(sum(cashFromMarketer), 0) as cash,
-    state
+    FORMAT(sum(cashFromMarketer), 0) as cash
   FROM campaignLog AS cl
-  JOIN marketerTaxBill AS mtb
-  ON SUBSTRING_INDEX(cl.campaignId, '_', 1) = mtb.marketerId
-  AND DATE_FORMAT(cl.date, "%y%m") = DATE_FORMAT(mtb.date, "%y%m") 
   WHERE SUBSTRING_INDEX(cl.campaignId, '_', 1) = ?
   GROUP BY month(cl.date)
   ORDER BY cl.date DESC
@@ -362,7 +358,7 @@ router.get('/usage/month', (req, res) => {
   const selectMetaArray = [marketerId, month];
 
   const sendArray = [];
-  const sendMetaArray = [];
+  let sendMetaArray = [];
   Promise.all([
     doQuery(selectQuery, selectArray)
       .then((row) => {
@@ -378,9 +374,7 @@ router.get('/usage/month', (req, res) => {
       .then((row) => {
         if (!row.error) {
           if (row.result) {
-            row.result.forEach((obj) => {
-              sendMetaArray.push(Object.values(obj));
-            });
+            sendMetaArray = row.result;
           }
         }
       })
@@ -427,15 +421,16 @@ router.post('/testcharge', async (req, res) => {
 
     const { amount, status } = paymentData; // 실제로 사용자가 전송한 금액과 그 상태
 
-    
+
     // 우리 DB에서 결제되어야 하는 금액과 실제로 사용자가 입금한 금액 대조하기
     if (parseInt(chargeCash * 1.1) === parseInt(amount)) {
-
-      switch(status) {
-        case 'ready' :
+      switch (status) {
+        case 'ready':
           // 가상계좌 발급 시 로직
           // DB에 가상계좌 발급 정보 저장
-          const { vbank_num, vbank_date, vbank_name, vbank_holder } = paymentData;
+          const {
+            vbank_num, vbank_date, vbank_name, vbank_holder
+          } = paymentData;
 
           // 현재 마케터 보유 금액 조회
           const vbankCurrentDebitQuery = `
@@ -445,20 +440,20 @@ router.post('/testcharge', async (req, res) => {
           ORDER BY date DESC
           LIMIT 1
           `;
-  
+
           // 현재 마케터 보유 금액 조회
           const vbankCurrentDebitArray = [marketerId];
-  
+
           // 충전 금액 row 한 줄 추가
           const vbankCashChargeInsertQuery = `
           INSERT INTO marketerCharge
           (marketerId, cash, type, merchant_uid, imp_uid, temporaryState, vbanknum, vbankDueDate, vbankName)
           VALUES (?, ?, ?, ?, ?, 0, ?, (SELECT FROM_UNIXTIME(${vbank_date}, "%Y-%m-%d %h:%i:%s")), ? )
           `;
-  
+
           // 충전 금액 row 한 줄 추가
-          const vbankCashChargeArray = [marketerId, chargeCash, chargeType, merchant_uid, imp_uid, vbank_num, vbank_name ] ;
-          
+          const vbankCashChargeArray = [marketerId, chargeCash, chargeType, merchant_uid, imp_uid, vbank_num, vbank_name ];
+
           doQuery(vbankCurrentDebitQuery, vbankCurrentDebitArray)
             .then((row) => {
               if (!row.error) {
@@ -466,9 +461,12 @@ router.post('/testcharge', async (req, res) => {
                   .then((secondrow) => {
                     // 마케터 캐시 충전 쿼리 완료
                     if (!secondrow.error) {
-                      res.send({ status: 'vbankIssued',
-                      vbank_num: `${vbank_num}`, vbank_date: `${vbank_date}`,
-                      vbank_name: `${vbank_name}`, vbank_holder: `${vbank_holder}`,
+                      res.send({
+                        status: 'vbankIssued',
+                        vbank_num: `${vbank_num}`,
+                        vbank_date: `${vbank_date}`,
+                        vbank_name: `${vbank_name}`,
+                        vbank_holder: `${vbank_holder}`,
                       });
 
                       // 가상계좌에 대한 알림 발송
@@ -484,19 +482,19 @@ router.post('/testcharge', async (req, res) => {
                           },
                           vbankDate: vbank_date
                         }
-                      )]
+                      )];
                     }
                   })
                   .catch((err) => {
                     console.log(err);
                     res.end();
                   });
-              } 
+              }
             });
           break;
 
-        case 'paid' :
-            // 계좌이체 및 신용카드 결제 로직
+        case 'paid':
+          // 계좌이체 및 신용카드 결제 로직
           // 현재 마케터 보유 캐시량 조회
           const currentDebitQuery = `
           SELECT cashAmount as cashAmount
@@ -507,7 +505,7 @@ router.post('/testcharge', async (req, res) => {
           `;
           // 현재 마케터 보유 캐시량 조회
           const currentDebitArray = [marketerId];
-  
+
           // 신용카드 및 계좌이체로 row 한줄 생성
           const cashChargeInsertQuery = `
           INSERT INTO marketerCharge
@@ -517,13 +515,13 @@ router.post('/testcharge', async (req, res) => {
 
           // 신용카드 및 계좌이체로 row 한줄 생성
           const cashChargeArray = [marketerId, chargeCash, chargeType, merchant_uid, imp_uid];
-  
+
           // 충전시 기존의 캐시량 + 캐시충전량으로 바로 update
           const debitUpdateQuery = `
           UPDATE marketerDebit
           SET cashAmount = ? 
           WHERE marketerId = ?`;
-  
+
           doQuery(currentDebitQuery, currentDebitArray)
             .then((row) => {
               if (!row.error) {
@@ -537,10 +535,10 @@ router.post('/testcharge', async (req, res) => {
                   doQuery(debitUpdateQuery, [currentCashAmount + chargeCash, marketerId])
                 ])
                   .then((secondrow) => {
-                    console.log(secondrow)
+                    console.log(secondrow);
                     // 마케터 캐시 충전 쿼리 완료
                     if (!secondrow.error) {
-                        res.send({ status: 'success', message: '일반 결제 성공' });
+                      res.send({ status: 'success', message: '일반 결제 성공' });
                     }
                   })
                   .catch((err) => {
@@ -554,8 +552,8 @@ router.post('/testcharge', async (req, res) => {
         default: break;
       }
     } else {
-      throw {status: "forgery", message: "위조된 결제시도!!!"}
-    }    
+      throw { status: 'forgery', message: '위조된 결제시도!!!' };
+    }
   } catch (e) {
     res.status(400).send(e);
   }
@@ -570,12 +568,12 @@ router.post('/vbankCancle', (req, res) => {
   WHERE marketerId = ? AND type = ? AND (NOW() > vbankDueDate) AND temporaryState = 0
   `;
 
-  const vbankCancleArray = [marketerId, "vbank"]
+  const vbankCancleArray = [marketerId, 'vbank'];
 
   doQuery(vbankCancleQuery, vbankCancleArray)
-  .then(() => {
-    res.send(true);
-  })
+    .then(() => {
+      res.send(true);
+    });
 });
 
 module.exports = router;

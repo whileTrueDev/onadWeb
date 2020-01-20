@@ -8,12 +8,14 @@ const registRouter = require('./regist/regist');
 const dashboardRouter = require('./dashboard/dashboard');
 const payRouter = require('./payment/pay');
 const socketRouter = require('./socket/socket');
+const alimtalkRouter = require('./alimtalk/alimtalk');
 
 router.use('/login', loginRouter);
 router.use('/regist', registRouter);
 router.use('/dashboard', dashboardRouter);
 router.use('/pay', payRouter);
 router.use('/socket', socketRouter);
+router.use('/alimtalk', alimtalkRouter);
 
 const getStreamerList = () => {
   const currentTimeQuery = `

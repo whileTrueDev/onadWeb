@@ -28,6 +28,7 @@ function MyCash(props) {
   const cashData = useFetchData('/api/dashboard/marketer/cash');
 
   const { classes, accountData, userData } = props;
+
   const POPUP_WIDTH = process.env.NODE_ENV === 'production'? 900 : 700; 
   const POPUP_HEIGHT = process.env.NODE_ENV === 'production'? 800 : 700; 
   const POPUP_X = process.env.NODE_ENV === 'production' ? (window.screen.width/2) - 450: (window.screen.width/2) - 350;
@@ -35,7 +36,7 @@ function MyCash(props) {
   // front HOST
   const FRONT_HOST = process.env.NODE_ENV === 'production' ? 'https://onad.io' : 'http://localhost:3001';
 
-  return(
+  return (
     <Card>
       <CardHeader color="blueGray" stats icon>
         <CardIcon color="blueGray">
@@ -46,13 +47,14 @@ function MyCash(props) {
           display: 'flex', alignItems: 'center', flexDirection: 'row-reverse', padding: 5
         }}
         >
+
           {!userData.loading && !userData.error
             && <Button color="info" onClick={() => { window.open(`${FRONT_HOST}/marketer/charge`, "_blank", `width=${POPUP_WIDTH}, height=${POPUP_HEIGHT}, left=${POPUP_X}, top=${POPUP_Y}`) }}>캐시충전(전자결제)</Button>
           }
           {!userData.loading && !userData.error
             && <Button color="info" onClick={() => { chargeDialog.handleOpen(); }}>캐시충전(무통장)</Button>
           }
-           
+
           {!accountData.loading && !accountData.error
               && !accountData.payload.accountNumber ? (
                 <Tooltip title="환불계좌가 등록되지 않아 진행이 불가합니다.">
