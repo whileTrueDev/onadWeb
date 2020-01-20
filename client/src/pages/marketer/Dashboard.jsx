@@ -2,7 +2,7 @@ import React from 'react';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import Grid from '@material-ui/core/Grid';
 import Grow from '@material-ui/core/Grow';
-
+import { Hidden } from '@material-ui/core';
 import BannerList from '../../organisms/marketer/Dashboard/BannerList';
 import CampaignList from '../../organisms/marketer/Dashboard/CampaignList';
 import CanvasForChart from '../../organisms/marketer/Dashboard/CanvasForChart';
@@ -90,11 +90,13 @@ export default function Dashboard() {
                   <OnOffSwitch onOffData={onOffData} />
                 </Grid>
                 <Grid item xs={12}>
-                  <CampaignList campaignData={campaignData} />
-                </Grid>
-                <Grid item xs={12}>
                   <BannerList bannerData={bannerData} />
                 </Grid>
+                {/* <Grid item xs={12}>
+                  <IssueTable
+                    actionLogData={actionLogData}
+                  />
+                </Grid> */}
               </Grid>
             </Grid>
 
@@ -108,15 +110,22 @@ export default function Dashboard() {
                   />
                 </Grid>
                 <Grid item xs={12}>
-                  <IssueTable
-                    actionLogData={actionLogData}
-                  />
+                  <Grid container direction="row" spacing={2}>
+                    <Grid item xs={12} lg={8}>
+                      <CampaignList campaignData={campaignData} />
+                    </Grid>
+                    <Hidden mdDown>
+                      <Grid item lg={4}>
+                        {/* <BannerList bannerData={bannerData} /> */}
+                        <IssueTable
+                          actionLogData={actionLogData}
+                        />
+                      </Grid>
+                    </Hidden>
+                  </Grid>
                 </Grid>
-
               </Grid>
             </Grid>
-
-
           </Grid>
         )}
     </div>
