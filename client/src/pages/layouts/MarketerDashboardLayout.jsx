@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
-
 import withStyles from '@material-ui/core/styles/withStyles';
 import { Switch, Route } from 'react-router-dom';
 import Navbar from '../../atoms/Navbars/Navbar';
@@ -30,6 +29,7 @@ const MarketerRoutes = ({ pannelRef, ...rest }) => (
 );
 
 const MarketerDashboard = ({ classes, match, ...rest }) => {
+
   const [mobileOpen, setMobileOpen] = useState(false);
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -60,6 +60,7 @@ const MarketerDashboard = ({ classes, match, ...rest }) => {
         handleDrawerToggle={handleDrawerToggle}
         {...rest}
       />
+      
       <div className={classes.mainPanel} ref={mainPanel}>
         {/* ref="mainPanel" */}
         <Navbar
