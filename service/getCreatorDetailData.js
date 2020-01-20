@@ -765,7 +765,7 @@ async function calculation() {
 // 0. 구독자 수를 갱신하는 함수.
 // creatorId에 대해 API요청으로 data를 가져온다.
 const UpdateFollower = ({ creatorId, connection }) => new Promise((resolve, reject) => {
-  const clientID = '7197nobf8rsf7aqqk4nf7a22dtyu93';
+  const clientID = process.env.PRODUCTION_CLIENT_ID;
   // connection을 받아서 update query를 수행하는 함수 정의
   const config = {
     headers: {

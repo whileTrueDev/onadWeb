@@ -41,23 +41,9 @@ router.post('/marketer', (req, res, next) => {
   (marketerId, cashAmount)
   VALUES (?, ?)`;
 
-  // marketerTaxBill 신규값 초기화 쿼리
-  const taxBillQuery = `
-  INSERT INTO marketerTaxBill
-  (marketerId, date, state)
-  VALUES (?, ?, ?)`;
-  let THIS_MONTH = '';
-  const DATE = new Date();
-  if ((DATE.getMonth() + 1).toString().length < 2) {
-    THIS_MONTH = `${DATE.getFullYear()}-0${(DATE.getMonth() + 1)}-00`;
-  } else {
-    THIS_MONTH = `${DATE.getFullYear()}-${(DATE.getMonth() + 1)}-00`;
-  }
-
   Promise.all([
     doQuery(infoQuery, infoQueryArray),
     doQuery(cashQuery, [marketerId, 0]),
-    doQuery(taxBillQuery, [marketerId, THIS_MONTH, 0])
   ])
     .then(() => {
       next();
@@ -287,9 +273,6 @@ router.post('/certifications', async (req, res) => {
       name, birth
     } = certificationsInfo;
 
-    // if (new Date(birth).getFullYear() <= 2001) {
-    //   res.send({ error: true, data: { msg: '19세 미만이므로 회원가입을 할 수 없습니다.' } });
-    // }
     res.send({ error: false, data: { name } });
   } catch (e) {
     console.error(e);
