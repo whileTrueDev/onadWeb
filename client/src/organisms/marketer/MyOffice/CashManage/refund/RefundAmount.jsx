@@ -10,13 +10,13 @@ import RadioGroup from '@material-ui/core/RadioGroup';
 import Radio from '@material-ui/core/Radio';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import TextField from '@material-ui/core/TextField';
-import sources from '../../source/sources'
+import sources from '../../source/sources';
 
 
 const useStyles = makeStyles(theme => ({
   root: {
-    width: `85%`,
-    margin: `5px auto`
+    width: '85%',
+    margin: '5px auto'
   },
   contentTitle: {
     fontWeight: 'bold',
@@ -54,7 +54,7 @@ const useStyles = makeStyles(theme => ({
   content: {
     color: 'black',
     paddingLeft: 5,
-    marginTop:3,
+    marginTop: 3,
     fontSize: 12,
     fontStyle: 'inherit',
     fontFamily: 'Noto Sans KR',
@@ -67,17 +67,18 @@ const useStyles = makeStyles(theme => ({
 }));
 
 
-
 const RefundAmount = (props) => {
-  const { setStepComplete, state, dispatch, stepComplete, accountNumber, accountHolder} = props;
+  const {
+    setStepComplete, state, dispatch, stepComplete, accountNumber, accountHolder
+  } = props;
   const classes = useStyles();
-  const {currentCash, selectValue, totalDebit } = state
+  const { currentCash, selectValue, totalDebit } = state;
 
   const handleChange = (event) => {
-    dispatch({ key: 'selectValue', value: event.target.value})
-    setStepComplete(true)
-    dispatch({ key: 'totalDebit', value: Number(currentCash)-Number(event.target.value)})
-  }
+    dispatch({ key: 'selectValue', value: event.target.value });
+    setStepComplete(true);
+    dispatch({ key: 'totalDebit', value: Number(currentCash) - Number(event.target.value) });
+  };
 
   return (
     <div>
@@ -91,7 +92,7 @@ const RefundAmount = (props) => {
             </Grid>
             <Grid item className={classes.contentTitle}>
               <Typography className={classes.contentTitle} variant="h6">
-              {`${accountNumber.split('_')[0]} ${accountNumber.split('_')[1]}`}
+                {`${accountNumber.split('_')[0]} ${accountNumber.split('_')[1]}`}
               </Typography>
             </Grid>
           </Grid>
@@ -106,7 +107,7 @@ const RefundAmount = (props) => {
             </Grid>
             <Grid item className={classes.contentTitle}>
               <Typography className={classes.contentTitle} variant="h6">
-              {accountHolder}
+                {accountHolder}
               </Typography>
             </Grid>
           </Grid>
@@ -121,7 +122,7 @@ const RefundAmount = (props) => {
             </Grid>
             <Grid item className={classes.contentTitle}>
               <Typography className={classes.contentTitle} variant="h6">
-              {currentCash} 원
+                {`${currentCash} 원`}
               </Typography>
             </Grid>
           </Grid>
@@ -136,7 +137,7 @@ const RefundAmount = (props) => {
             </Grid>
             <Grid item className={classes.contentTitle}>
               <Typography className={classes.newContentTitle} variant="h6">
-                {totalDebit} 원
+                {`${totalDebit} 원`}
               </Typography>
             </Grid>
           </Grid>
@@ -146,8 +147,8 @@ const RefundAmount = (props) => {
         <Grid item>
           <Grid container direction="column" spacing={4}>
             <Grid item>
-              <Typography variant="h6" style={{fontWeight: 'bold', fontFamily: 'Noto Sans KR'}}>
-                환불 요청할 ONAD 캐시 
+              <Typography variant="h6" style={{ fontWeight: 'bold', fontFamily: 'Noto Sans KR' }}>
+                환불 요청할 ONAD 캐시
               </Typography>
             </Grid>
             <Grid container spacing={4} direction="row" justify="center">
@@ -166,12 +167,12 @@ const RefundAmount = (props) => {
                         <Typography variant="subtitle1" className={classes.selectValue}>
                           10,000 원
                         </Typography>
-                        )
+                      )
                         : (
-                        <Typography variant="subtitle1">
+                          <Typography variant="subtitle1">
                           10,000 원
-                        </Typography>
-                      ))}
+                          </Typography>
+                        ))}
                     disabled={!(currentCash >= 10000)}
                   />
                   <FormControlLabel
@@ -182,12 +183,12 @@ const RefundAmount = (props) => {
                         <Typography variant="subtitle1" className={classes.selectValue}>
                           30,000 원
                         </Typography>
-                        )
+                      )
                         : (
-                        <Typography variant="subtitle1">
+                          <Typography variant="subtitle1">
                           30,000 원
-                        </Typography>
-                      ))}
+                          </Typography>
+                        ))}
                     disabled={!(currentCash >= 30000)}
                   />
                   <FormControlLabel
@@ -198,12 +199,12 @@ const RefundAmount = (props) => {
                         <Typography variant="subtitle1" className={classes.selectValue}>
                           50,000 원
                         </Typography>
-                        )
+                      )
                         : (
-                        <Typography variant="subtitle1">
+                          <Typography variant="subtitle1">
                           50,000 원
-                        </Typography>
-                      ))}
+                          </Typography>
+                        ))}
                     disabled={!(currentCash >= 50000)}
                   />
                   <FormControlLabel
@@ -214,18 +215,18 @@ const RefundAmount = (props) => {
                         <Typography variant="subtitle1" className={classes.selectValue}>
                           100,000 원
                         </Typography>
-                        )
+                      )
                         : (
-                        <Typography variant="subtitle1">
+                          <Typography variant="subtitle1">
                           100,000 원
-                        </Typography>
-                      ))}
+                          </Typography>
+                        ))}
                     disabled={!(currentCash >= 100000)}
                   />
                 </RadioGroup>
               </Grid>
               <Grid item className={classes.valueContainer}>
-                <div >
+                <div>
                   <Tooltip title="직접입력 하십시오.">
                     <TextField
                       id="selectValue"
@@ -247,24 +248,23 @@ const RefundAmount = (props) => {
                 </div>
               </Grid>
             </Grid>
+          </Grid>
+        </Grid>
+        <Grid item className={classes.warning}>
+          <Grid container direction="column">
+            <Grid item>
+              <Typography className={classes.warningTitle} variant="h6">
+                  환불 요청 안내사항
+              </Typography>
+            </Grid>
+            <Grid item className={classes.content}>
+              {sources.contentRefund.warning}
             </Grid>
           </Grid>
-          <Grid item className={classes.warning}>
-            <Grid container direction="column">
-              <Grid item>
-                <Typography className={classes.warningTitle} variant="h6">
-                  환불 요청 안내사항
-                </Typography>
-              </Grid>
-              <Grid item className={classes.content}>
-                {sources.contentRefund.warning}
-              </Grid>
-          </Grid>
         </Grid>
-        </Grid>
+      </Grid>
     </div>
   );
-
 };
 
-export default RefundAmount
+export default RefundAmount;

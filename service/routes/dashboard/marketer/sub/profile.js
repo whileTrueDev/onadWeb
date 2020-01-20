@@ -1,5 +1,6 @@
 const express = require('express');
 const doQuery = require('../../../../model/doQuery');
+const encrypto = require('../../../../encryption');
 
 const router = express.Router();
 
@@ -88,8 +89,15 @@ router.get('/accountNumber', (req, res) => {
   WHERE marketerId = ?`;
   doQuery(accountQuery, [marketerId])
     .then((row) => {
-      const accountNumber = row.result[0].marketerAccountNumber;
-      const { accountHolder } = row.result[0];
+      const result = row.result[0];
+      let accountNumber;
+      if (result.marketerAccountNumber) {
+        accountNumber = encrypto.decipher(result.marketerAccountNumber);
+      } else {
+        accountNumber = '';
+      }
+      result.marketerAccountNumber = accountNumber;
+      const { accountHolder } = result;
       res.send({
         accountNumber, accountHolder
       });
