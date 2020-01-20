@@ -11,6 +11,7 @@ import Radio from '@material-ui/core/Radio';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import TextField from '@material-ui/core/TextField';
 import sources from '../source/sources';
+import shortid from 'shortid';
 
 
 const useStyles = makeStyles(theme => ({
@@ -78,6 +79,8 @@ const WithdrawalAmount = (props) => {
     setStepComplete(true)
     dispatch({ key: 'totalIncome', value: Number(currentCash)-Number(event.target.value)})
   }
+
+  const values = ["30000", "60000", "90000", "120000"]
 
   return (
     <div>
@@ -158,70 +161,27 @@ const WithdrawalAmount = (props) => {
                   value={selectValue}
                   onChange={handleChange}
                 >
-                  <FormControlLabel
-                    value="30000"
-                    control={<Radio color="primary" />}
-                    label={(
-                      currentCash >= 30000 ? (
-                        <Typography variant="subtitle1" className={classes.selectValue}>
-                          30,000 원
-                        </Typography>
-                        )
-                        : (
-                        <Typography variant="subtitle1">
-                          30,000 원
-                        </Typography>
-                      ))}
-                    disabled={!(currentCash >= 30000)}
-                  />
-                  <FormControlLabel
-                    value="60000"
-                    control={<Radio color="primary" />}
-                    label={(
-                      currentCash >= 60000 ? (
-                        <Typography variant="subtitle1" className={classes.selectValue}>
-                          60,000 원
-                        </Typography>
-                        )
-                        : (
-                        <Typography variant="subtitle1">
-                          60,000 원
-                        </Typography>
-                      ))}
-                    disabled={!(currentCash >= 60000)}
-                  />
-                  <FormControlLabel
-                    value="90000"
-                    control={<Radio color="primary" />}
-                    label={(
-                      currentCash >= 90000 ? (
-                        <Typography variant="subtitle1" className={classes.selectValue}>
-                          90,000 원
-                        </Typography>
-                        )
-                        : (
-                        <Typography variant="subtitle1">
-                          90,000 원
-                        </Typography>
-                      ))}
-                    disabled={!(currentCash >= 90000)}
-                  />
-                  <FormControlLabel
-                    value="120000"
-                    control={<Radio color="primary" />}
-                    label={(
-                      currentCash >= 120000 ? (
-                        <Typography variant="subtitle1" className={classes.selectValue}>
-                          120,000 원
-                        </Typography>
-                        )
-                        : (
-                        <Typography variant="subtitle1">
-                          120,000 원
-                        </Typography>
-                      ))}
-                    disabled={!(currentCash >= 120000)}
-                  />
+                  {values.map(value => 
+                    <FormControlLabel
+                      value={value}
+                      key={shortid.generate()}
+                      control={<Radio color="primary" />}
+                      label={(
+                        currentCash >= value ? (
+                          <Typography variant="subtitle1" className={classes.selectValue}>
+                            {value} 원
+                          </Typography>
+                          )
+                          : (
+                          <Typography variant="subtitle1">
+                            {value} 원
+                          </Typography>
+                        ))}
+                      disabled={!(currentCash >= value)}
+                    />
+                    )
+                  }
+                  
                 </RadioGroup>
               </Grid>
               <Grid item className={classes.valueContainer}>

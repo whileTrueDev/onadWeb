@@ -187,11 +187,13 @@ function WithdrawDialog(props) {
         );
       case 2:
         return (
-          <WithdrawalConfirm
-            state={stepState}
-            accountNumber={accountNumber}
-            realName={realName}
-          />
+          <div>
+            <WithdrawalConfirm
+              state={stepState}
+              accountNumber={accountNumber}
+              realName={realName}
+            />
+          </div>
         );
       case 3:
         return (
