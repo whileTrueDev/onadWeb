@@ -13,7 +13,9 @@
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const TwitchStrategy = require('passport-twitch-new').Strategy;
-
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
+const NaverStrategy = require('passport-naver').Strategy;
+const KakaoStrategy = require('passport-kakao').Strategy;
 // 암호화 체크 객체 생성
 const encrpyto = require('./encryption');
 const doQuery = require('./model/doQuery');
@@ -162,6 +164,7 @@ const clientID = process.env.NODE_ENV === 'production'
 const clientSecret = process.env.NODE_ENV === 'production'
   ? process.env.PRODUCTION_CLIENT_SECRET
   : process.env.DEV_CLIENT_SECRET;
+
 passport.use(new TwitchStrategy({
   clientID,
   clientSecret,
@@ -303,6 +306,177 @@ passport.use(new TwitchStrategy({
       console.log(errorData);
       done(errorData, false);
     });
+})));
+
+
+passport.use(new GoogleStrategy({
+  clientID: process.env.GOOGLE_CLIENT_ID,
+  clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+  callbackURL: `${HOST}/api/login/google/callback`
+},
+((accessToken, refreshToken, profile, done) => {
+  // 최초 로그인시를 정의한다. 존재할 때는 sub를 통해서 DB에서 값을 조회한다.
+  const jsonData = profile._json;
+  const {
+    sub, given_name, family_name, email
+  } = jsonData;
+
+  const checkQuery = `
+  SELECT marketerId, marketerName, marketerMail, marketerPhoneNum, marketerBusinessRegNum,
+  marketerUserType, marketerAccountNumber
+  FROM marketerInfo
+  WHERE marketerId = ?
+  AND platformType = 1 `;
+
+  doQuery(checkQuery, [sub])
+    .then((row) => {
+      if (row.result[0]) {
+      // ID가 존재할 경우.
+        const marketerData = row.result[0];
+        const user = {
+          userid: marketerData.marketerId,
+          userType: 'marketer',
+          marketerUserType: marketerData.marketerUserType,
+          marketerMail: marketerData.marketerMail,
+          marketerAccountNumber: marketerData.marketerAccountNumber,
+          marketerBusinessRegNum: marketerData.marketerBusinessRegNum,
+          marketerName: marketerData.marketerName,
+          marketerPhoneNum: marketerData.marketerPhoneNum,
+          registered: true
+        };
+        const stampQuery = `
+        INSERT INTO loginStamp(userId, userIp, userType) Values(?,?,?)`;
+        doQuery(stampQuery, [user.userid, '', '1']);
+        console.log('로그인이 완료되었습니다, ', marketerData.marketerName);
+
+        return done(null, user);
+      }
+
+      const user = {
+        userType: 'marketer',
+        marketerMail: email,
+        marketerName: family_name + given_name,
+        marketerPlatformData: sub,
+        registered: false
+      };
+      return done(null, user);
+    })
+    .catch(errorData => done(errorData));
+})));
+
+
+passport.use(new NaverStrategy({
+  clientID: process.env.NAVER_CLIENT_ID,
+  clientSecret: process.env.NAVER_CLIENT_SECRET,
+  callbackURL: `${HOST}/api/login/naver/callback`
+},
+((accessToken, refreshToken, profile, done) => {
+  const jsonData = profile._json;
+
+  const {
+    email, id
+  } = jsonData;
+
+
+  const checkQuery = `
+  SELECT marketerId, marketerName, marketerMail, marketerPhoneNum, marketerBusinessRegNum,
+  marketerUserType, marketerAccountNumber
+  FROM marketerInfo
+  WHERE marketerId = ?
+  AND platformType = 2 `;
+
+  doQuery(checkQuery, [id])
+    .then((row) => {
+      if (row.result[0]) {
+      // ID가 존재할 경우.
+        const marketerData = row.result[0];
+        const user = {
+          userid: marketerData.marketerId,
+          userType: 'marketer',
+          marketerUserType: marketerData.marketerUserType,
+          marketerMail: marketerData.marketerMail,
+          marketerAccountNumber: marketerData.marketerAccountNumber,
+          marketerBusinessRegNum: marketerData.marketerBusinessRegNum,
+          marketerName: marketerData.marketerName,
+          marketerPhoneNum: marketerData.marketerPhoneNum,
+          registered: true
+        };
+        const stampQuery = `
+        INSERT INTO loginStamp(userId, userIp, userType) Values(?,?,?)`;
+        doQuery(stampQuery, [user.userid, '', '1']);
+        console.log('로그인이 완료되었습니다, ', marketerData.marketerName);
+
+        return done(null, user);
+      }
+
+      const user = {
+        userType: 'marketer',
+        marketerPlatformData: id,
+        registered: false,
+        marketerMail: email
+      };
+      return done(null, user);
+    })
+    .catch(errorData => done(errorData));
+})));
+
+
+passport.use(new KakaoStrategy({
+  clientID: process.env.KAKAO_CLIENT_ID,
+  callbackURL: `${HOST}/api/login/kakao/callback`
+},
+((accessToken, refreshToken, profile, done) => {
+  const jsonData = profile._json;
+
+  const {
+    id, kakao_account
+  } = jsonData;
+
+
+  const checkQuery = `
+  SELECT marketerId, marketerName, marketerMail, marketerPhoneNum, marketerBusinessRegNum,
+  marketerUserType, marketerAccountNumber
+  FROM marketerInfo
+  WHERE marketerId = ?
+  AND platformType = 3 `;
+
+  doQuery(checkQuery, [id])
+    .then((row) => {
+      if (row.result[0]) {
+      // ID가 존재할 경우.
+        const marketerData = row.result[0];
+        const user = {
+          userid: marketerData.marketerId,
+          userType: 'marketer',
+          marketerUserType: marketerData.marketerUserType,
+          marketerMail: marketerData.marketerMail,
+          marketerAccountNumber: marketerData.marketerAccountNumber,
+          marketerBusinessRegNum: marketerData.marketerBusinessRegNum,
+          marketerName: marketerData.marketerName,
+          marketerPhoneNum: marketerData.marketerPhoneNum,
+          registered: true
+        };
+        const stampQuery = `
+        INSERT INTO loginStamp(userId, userIp, userType) Values(?,?,?)`;
+        doQuery(stampQuery, [user.userid, '', '1']);
+        console.log('로그인이 완료되었습니다, ', marketerData.marketerName);
+
+        return done(null, user);
+      }
+
+      const user = {
+        userType: 'marketer',
+        marketerPlatformData: id,
+        registered: false
+      };
+
+      if (kakao_account.has_email) {
+        user.marketerMail = kakao_account.email;
+      }
+
+      return done(null, user);
+    })
+    .catch(errorData => done(errorData));
 })));
 
 module.exports = passport;

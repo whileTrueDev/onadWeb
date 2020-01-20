@@ -11,7 +11,6 @@ import RegistPage from './pages/main/Regist';
 import CreatorDashboard from './pages/layouts/CreatorDashboardLayout';
 import CreatorDashboardDoor from './pages/layouts/CreatorDashboardDoor';
 import MarketerDashboard from './pages/layouts/MarketerDashboardLayout';
-// import CampaignCreateLayout from './organisms/marketer/Dashboard/campaign/CampaignCreateLayout';
 import NotFound from './pages/others/NotFound';
 import Notice from './pages/others/Notice';
 import Policy from './pages/main/Policy';
@@ -29,13 +28,13 @@ const developRouter = (
   <Router history={history}>
     <Switch>
       <Route exact path="/" component={Main} />
+      <Route path="/regist/:platform" component={RegistPage} />
       <Route exact path="/regist" component={RegistPage} />
       <Route exact path="/introduction" component={Introduction} />
       <Route exact path="/policy" component={Policy} />
       <Route exact path="/policy/:privacy" component={Policy} />
       <Route exact path="/notice" component={Notice} />
       <Route exact path="/marketer/charge" component={TestChargeDialog} />
-      {/* <Route exact path="/dashboard/marketer/campaignCreate" component={CampaignCreateLayout} /> */}
       <Route path="/notice/:code" component={Notice} />
       <ThemeProvider theme={theme}>
         <Route exact path="/dashboard/creator/door" component={CreatorDashboardDoor} />
@@ -52,6 +51,7 @@ const productionRouter = (
   <Router history={history}>
     <Switch>
       <Route exact path="/" component={Main} />
+      <Route path="/regist/:platform" component={RegistPage} />
       <Route exact path="/regist" component={RegistPage} />
       <Route exact path="/introduction" component={Introduction} />
       <Route exact path="/policy" component={Policy} />

@@ -2,7 +2,7 @@ import React, { useEffect, useCallback } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Fingerprint from '@material-ui/icons/Fingerprint';
 import {
-  Grid, Button
+  Grid, Button, Typography
 } from '@material-ui/core';
 import axios from '../../../utils/axios';
 import HOST from '../../../utils/config';
@@ -47,6 +47,20 @@ const useStyles = makeStyles(({
   level: {
     fontWeight: '700',
     marginLeft: '1px'
+  },
+  text1: {
+    fontWeight: '500',
+    // color: 'rgba(0, 0, 0, 0.54)',
+    fontSize: '14px',
+    margin: '16px',
+    marginBottom: '3px'
+  },
+  text2: {
+    fontWeight: '500',
+    // color: 'rgba(0, 0, 0, 0.54)',
+    fontSize: '14px',
+    margin: '16px',
+    marginTop: 0
   }
 }));
 
@@ -108,7 +122,11 @@ const IndentityVerification = (props) => {
               secondary="만 19세 미만인 경우 온애드를 사용할 수 없습니다."
             />
       )}
-        />
+        >
+          <Typography align="right" className={classes.text1}>대한민국 민법상, 만 19세에 달하지 않은자는 회원가입이 불가능 합니다.</Typography>
+          <Typography align="right" className={classes.text2}>미성년자가 아닌경우, 다음버튼을 클릭해 본인인증을 진행하세요.</Typography>
+
+        </CustomCard>
       </Grid>
       <Grid item style={{ marginTop: '16px' }} xs={6}>
         <div>
@@ -117,6 +135,14 @@ const IndentityVerification = (props) => {
             className={classes.button}
           >
               뒤로
+          </Button>
+          <Button
+            variant="contained"
+            color="primary"
+            className={classes.button}
+            onClick={() => { setOpen(1); }}
+          >
+              다음
           </Button>
         </div>
       </Grid>

@@ -20,7 +20,6 @@ import MarketerDashboard from './marketer/Dashboard';
 import MarketerBannerManage from './marketer/BannerManage';
 import MarketerManual from './marketer/Manual';
 import MarketerMyOffice from './marketer/MyOffice';
-import CampaignCreateStepper from '../organisms/marketer/Dashboard/CampaignCreation';
 
 const dashboardRoutes = {
   creator: [
@@ -88,14 +87,6 @@ const dashboardRoutes = {
       icon: Work,
       component: MarketerMyOffice,
       layout: '/dashboard/marketer'
-    },
-    {
-      path: '/campaigncreate',
-      name: '캠페인생성',
-      icon: Work,
-      component: CampaignCreateStepper,
-      layout: '/dashboard/marketer',
-      noTab: true
     },
   ],
 };

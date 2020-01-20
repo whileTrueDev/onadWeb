@@ -52,7 +52,7 @@ const MarketerDashboard = ({ classes, match, ...rest }) => {
   return (
     <div className={classes.wrapper}>
       <Sidebar
-        routes={allRoutes.marketer.filter(r => !r.noTab)}
+        routes={allRoutes.marketer}
         logoText="OnAD"
         color="info"
         logo="/pngs/logo/onad_logo_vertical_white.png"
