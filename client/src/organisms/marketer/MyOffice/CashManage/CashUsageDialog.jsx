@@ -5,7 +5,6 @@ import makeStyles from '@material-ui/core/styles/makeStyles';
 import Dialog from '../../../../atoms/Dialog/Dialog';
 import useFetchData from '../../../../utils/lib/hooks/useFetchData';
 import Table from '../../../../atoms/Table/CashUsageTable';
-import NoTaxBillTooltip from '../../../../atoms/Tooltip/NoTaxBillTooltip';
 
 const initialData = {
   data: [['-', '-', '-']]
@@ -19,14 +18,14 @@ export default function CashUsageDialog(props) {
   const classes = useStyles();
   const { open, handleClose, data } = props;
   const usagePerMonthData = useFetchData('/api/dashboard/marketer/cash/usage/month', {
-    month: data[0]
+    month: data[0] // data[0] = "00년 00월"
   });
 
   return (
     <Dialog
       open={open}
       onClose={handleClose}
-      title={`${data[0]} 상세보기`}
+      title={`${data[0]} 상세보기`} // data[0] = "00년 00월"
       maxWidth="sm"
       fullWidth
     >
@@ -35,14 +34,8 @@ export default function CashUsageDialog(props) {
           <Typography variant="body1" gutterBottom>
             집행 금액:&emsp;
           </Typography>
+          {/* data[1] = 해당 월의 총 광고 집행 금액 */}
           <Typography variant="h6" gutterBottom>{`${data[1]} 원`}</Typography>
-          <Typography variant="body1" gutterBottom>
-            &emsp;세금 계산서 발행:&emsp;
-          </Typography>
-          <Typography variant="h6" gutterBottom>{data[2]}</Typography>
-          {data[2] === '미발행' && (
-            <NoTaxBillTooltip />
-          )}
         </div>
 
         {!usagePerMonthData.loading && (
@@ -51,9 +44,9 @@ export default function CashUsageDialog(props) {
               <div key={meta[1]} className={classes.flex}>
                 <Typography variant="body1" gutterBottom>
                   &emsp;
-                  {`${meta[0]}: `}
+                  {`${meta.type}: `}
                 </Typography>
-                <Typography variant="h6" gutterBottom>{` ${meta[1]} 원`}</Typography>
+                <Typography variant="h6" gutterBottom>{` ${meta.cash} 원`}</Typography>
               </div>
             ))}
         </div>

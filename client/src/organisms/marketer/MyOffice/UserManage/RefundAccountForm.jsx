@@ -48,12 +48,14 @@ function RefundAccountForm(props) {
             환불계좌 변경
             </Button>
           </div>
-          <div className={myClasses.textBox} style={{ marginTop: 10 }}>
-            <Typography gutterBottom variant="body1">등록된 계좌</Typography>
+          <div className={myClasses.textBox} style={{ marginBottom: 10 }}>
+            <Typography gutterBottom variant="body1">
+              계좌번호 : {accountData.payload.accountNumber}
+            </Typography>
           </div>
           <div className={myClasses.textBox} style={{ marginBottom: 10 }}>
             <Typography gutterBottom variant="body1">
-              {accountData.payload.accountNumber}
+              예금주 : {accountData.payload.accountHolder}
             </Typography>
           </div>
         </CardBody>

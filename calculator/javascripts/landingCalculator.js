@@ -217,6 +217,7 @@ const creatorExpCalcuate = ({ creatorId, exp }) => {
   });
 };
 
+// 0이면 스킵한다.
 const marketerCalculate = ({ marketerId, exp }) => {
   console.log(`${marketerId}에 대한 정산을 시작합니다.`);
 
@@ -225,14 +226,34 @@ const marketerCalculate = ({ marketerId, exp }) => {
   SET cashAmount = cashAmount - ? 
   WHERE marketerId = ? `;
 
+  const selectQuery = `
+  SELECT cashAmount
+  FROM marketerDebit
+  WHERE marketerId = ?
+  `;
+
   const price = exp * COST;
 
   return new Promise((resolve, reject) => {
-    doQuery(calculateQuery, [price, marketerId])
-      .then(() => {
-        logger.info(`${price}원을 ${marketerId} 에게서 지급받았습니다.`);
-        console.log(`${price}원을 ${marketerId} 에게서 지급받았습니다.`);
-        resolve();
+    doQuery(selectQuery, [marketerId])
+      .then((row) => {
+        const debit = row.result[0].cashAmount;
+        if (debit >= price) {
+          doQuery(calculateQuery, [price, marketerId])
+            .then(() => {
+              logger.info(`${price}원을 ${marketerId} 에게서 지급받았습니다.`);
+              console.log(`${price}원을 ${marketerId} 에게서 지급받았습니다.`);
+              resolve();
+            })
+            .catch((errorData) => {
+              errorData.point = 'marketerCalculate()';
+              errorData.description = `${price}원을 ${marketerId} 에게서 지급받는 과정.`;
+              reject(errorData);
+            });
+        } else {
+          console.log(`CPC를 계산하는 과정에서 ${marketerId}의 잔액이 존재하지 않습니다.`);
+          resolve();
+        }
       })
       .catch((errorData) => {
         errorData.point = 'marketerCalculate()';

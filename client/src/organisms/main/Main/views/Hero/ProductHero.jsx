@@ -191,20 +191,20 @@ const styles = makeStyles(theme => ({
   },
   h3: {
     [theme.breakpoints.up('md')]: {
-      marginTop: theme.spacing(8),
+      
       width: 1024,
       color: 'black',
       fontSize: 37,
     },
     [theme.breakpoints.up('sm')]: {
-      marginTop: theme.spacing(8),
+      
       width: 800,
       color: 'black',
       fontSize: 30,
       wordBreak: 'keep-all'
     },
     [theme.breakpoints.down('sm')]: {
-      marginTop: theme.spacing(8),
+      
       width: '320px',
       fontSize: 25,
       wordBreak: 'keep-all'
@@ -500,8 +500,7 @@ function ProductHero(props) {
         </Grow>
 
       )}
-
-
+      
       <LoginForm
         open={open}
         isMarketer={isMarketer}

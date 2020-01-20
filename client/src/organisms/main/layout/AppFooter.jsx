@@ -107,7 +107,7 @@ function AppFooter() {
               <ul className={classes.list}>
                 <li className={classes.listItem}>
                   <Link
-                    href="/"
+                    href="/policy"
                     color="inherit"
                     underline="none"
                   >
@@ -116,20 +116,12 @@ function AppFooter() {
                 </li>
                 <li className={classes.listItem}>
                   <Link
-                    href="/"
+                    href="/policy/privacy"
                     color="inherit"
                     underline="none"
+                    style={{ fontWeight: 'bold' }}
                   >
                     개인정보 처리방침
-                  </Link>
-                </li>
-                <li className={classes.listItem}>
-                  <Link
-                    href="https://on-ad.github.io"
-                    color="inherit"
-                    underline="none"
-                  >
-                기술블로그
                   </Link>
                 </li>
               </ul>
@@ -139,7 +131,7 @@ function AppFooter() {
                 <img src="/pngs/logo/whileTrue_final.png" id="logo" alt="WhileTrueLogo" height={30} />
               </a>
               <Typography className={classes.name} variant="body2">
-                {'While True:'}
+                While True:
               </Typography>
               <br />
             </Grid>
@@ -147,22 +139,34 @@ function AppFooter() {
           </Grid>
           <Grid container>
             <Typography variant="caption" className={classes.addressLocation}>
-              {'부산광역시 금정구 장전온천천로 51 테라스파크 3층 313호 와일트루 '}
+              부산광역시 금정구 장전온천천로 51 테라스파크 3층 313호 와일트루
             </Typography>
           </Grid>
           <Grid container>
             <Typography variant="caption" className={classes.addressTitle}>
               <div>
-                {'대표명'}
+                대표명
                 <span className={classes.address}>강동기</span>
               </div>
               <div>
-                {'이메일'}
+                이메일
                 <span className={classes.address}>support@onad.io</span>
               </div>
               <div>
-                {'사업자등록번호'}
+                사업자등록번호
                 <span className={classes.address}>659-03-01549</span>
+              </div>
+              <div>
+                통신판매업 신고번호
+                <span className={classes.address}>제2019-부산금정-0581호</span>
+              </div>
+              <div>
+                개인정보보호책임자
+                <span className={classes.address}>전민관</span>
+              </div>
+              <div>
+                고객센터
+                <span className={classes.address}>051-515-6309</span>
               </div>
             </Typography>
           </Grid>
@@ -170,9 +174,9 @@ function AppFooter() {
           <Typography variant="caption" className={classes.corp}>
             <strong>
               &copy;
-              {'while True Corp.'}
+              while True Corp.
             </strong>
-            {' All right Reserved'}
+            {' All rights Reserved'}
           </Typography>
         </Grid>
       </Container>

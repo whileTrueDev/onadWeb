@@ -23,7 +23,6 @@ export default function BannerTable(props) {
         />
       )
     },
-    { title: '회사 소개', field: 'companyDescription', },
     { title: '배너 소개', field: 'bannerDescription', },
     {
       title: '배너 링크',

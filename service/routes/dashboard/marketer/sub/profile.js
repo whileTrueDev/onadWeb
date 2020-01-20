@@ -3,7 +3,7 @@ const doQuery = require('../../../../model/doQuery');
 
 const router = express.Router();
 
-// 유저정보 조회
+// 마케터 정보 조회
 // marketerInfo
 router.get('/', (req, res) => {
   const marketerId = req._passport.session.user.userid;
@@ -25,7 +25,7 @@ router.get('/', (req, res) => {
     });
 });
 
-// 유저 정보 변경
+// 마케터 정보 변경
 // marketerInfo
 router.post('/change', (req, res) => {
   const marketerId = req._passport.session.user.userid;
@@ -45,19 +45,53 @@ router.post('/change', (req, res) => {
     });
 });
 
+// 마케터 회원탈퇴
+router.post('/signout', (req, res) => {
+  const marketerId = req._passport.session.user.userid;
+  const deleteQuery = ` UPDATE marketerInfo SET
+                        marketerPasswd = null,
+                        marketerSalt= null,
+                        marketerName= null,
+                        marketerMail= null,
+                        marketerPhoneNum= null,
+                        marketerBusinessRegNum= null,
+                        marketerBusinessRegSrc= null,
+                        marketerUserType= null,
+                        marketerContraction= null,
+                        marketerAlarmAgreement= null,
+                        marketerEmailAuth= null,
+                        date= null,
+                        temporaryLogin= null,
+                        marketerAccountNumber= null,
+                        accountHolder= null,
+                        signOutState =2,
+                        signOutDate = NOW()
+                        WHERE marketerId = ?`;
+  doQuery(deleteQuery, marketerId)
+    .then(() => {
+      req.logout();
+      req.session.destroy(() => {
+        console.log(`${marketerId}님 회원탈퇴`);
+      });
+      res.send(true);
+    })
+    .catch((err) => { console.log(` 회원탈퇴 에러 : ${err}`); });
+});
+
 // 마케터 계좌정보 조회
 // marketerInfo
 router.get('/accountNumber', (req, res) => {
   const marketerId = req._passport.session.user.userid;
   const accountQuery = `
-  SELECT marketerAccountNumber
+  SELECT marketerAccountNumber, accountHolder
   FROM marketerInfo
   WHERE marketerId = ?`;
   doQuery(accountQuery, [marketerId])
     .then((row) => {
       const accountNumber = row.result[0].marketerAccountNumber;
+      const { accountHolder } = row.result[0];
       res.send({
-        accountNumber
+        accountNumber, accountHolder
       });
     })
     .catch((error) => {
@@ -110,5 +144,44 @@ router.post('/business/upload', (req, res) => {
       res.end();
     });
 });
+
+// 마케터 세금계산 정보 조회
+router.get('/taxbill', (req, res) => {
+  const marketerId = req._passport.session.user.userid;
+
+  const query = `
+  SELECT date, cashAmount, state FROM marketerTaxBill
+  WHERE marketerId = ?`;
+
+  const queryArray = [marketerId];
+
+  doQuery(query, queryArray).then((row) => {
+    const sendArray = [];
+    if (!row.error && row.result) {
+      row.result.forEach((obj) => {
+        const object = obj;
+
+        let taxBillState = '';
+        switch (object.state) {
+          case 0: taxBillState = '발행대기'; break;
+          case 1: taxBillState = '발행완료'; break;
+          case 2: taxBillState = '미발행'; break;
+          default: throw Error('tax bill state');
+        }
+
+        object.state = taxBillState;
+        object.cashAmount = object.cashAmount.toString();
+        sendArray.push(Object.values(object));
+      });
+      res.send(sendArray);
+    }
+  });
+});
+
+router.get('/google', (req, res) => {
+  const { user } = req._passport.session;
+  res.send(user);
+});
+
 
 module.exports = router;

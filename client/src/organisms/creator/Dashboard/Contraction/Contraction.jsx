@@ -103,7 +103,7 @@ function Contraction(props) {
       axios.post(`${HOST}/api/dashboard/creator/contraction`, {
       })
         .then((res) => {
-          if (res.data === true) {
+          if (res.data[0] === true) {
             setSnackOpen(true);
           }
         })

@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { capitalize } from '@material-ui/core/utils/helpers';
 import MuiTypography from '@material-ui/core/Typography';
 
 const styles = theme => ({
@@ -59,6 +58,10 @@ const variantMapping = {
   subtitle1: 'h3',
 };
 
+function capitalizeFirstLetter(string) {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
 function Typography(props) {
   const {
     children, classes, marked, variant, ...other
@@ -68,7 +71,9 @@ function Typography(props) {
     <MuiTypography variantMapping={variantMapping} variant={variant} {...other}>
       {children}
       {marked ? (
-        <span className={classes[`marked${capitalize(variant) + capitalize(marked)}`]} />
+        <span
+          className={classes[`marked${capitalizeFirstLetter(variant) + capitalizeFirstLetter(marked)}`]}
+        />
       ) : null}
     </MuiTypography>
   );

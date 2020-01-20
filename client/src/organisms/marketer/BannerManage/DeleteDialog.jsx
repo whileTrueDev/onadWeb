@@ -44,7 +44,7 @@ const DeleteDialog = (props) => {
       maxWidth="sm"
       buttons={(
         <div style={{ display: 'flex' }}>
-          {!connectedCampaign.loading && connectedCampaign.payload.length > 0 ? (
+          {!connectedCampaign.loading && connectedCampaign.payload.length > 0 && (
             <Tooltip title={<Typography>배너가 캠페인에 할당되어 있어 삭제가 불가능합니다.</Typography>}>
               <div>
                 <CustomButton
@@ -55,7 +55,8 @@ const DeleteDialog = (props) => {
                 </CustomButton>
               </div>
             </Tooltip>
-          ) : (
+          )}
+          {!connectedCampaign.loading && connectedCampaign.payload.length === 0 && (
             <CustomButton
               color="info"
               onClick={() => {
@@ -93,7 +94,7 @@ const DeleteDialog = (props) => {
           <Typography variant="body2" className={classes.typo}>
             <span role="img" aria-label="warning">⚠️</span>
             {' '}
-            배너가 현재 ON 상태인 캠페인에 할당되어 있는 경우 삭제가 불가능합니다.
+            배너가 캠페인에 할당되어 있는 경우 삭제가 불가능합니다. 캠페인을 먼저 정리하신 후 삭제해주세요.
           </Typography>
           <Typography variant="body2">
             <span role="img" aria-label="calling">📞</span>

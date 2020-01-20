@@ -44,7 +44,7 @@ Creator 및 Marketer에 대해 계산시 필요한 table 고려후 초기값 삽
   error : '에러에 대한 내용'
 }
 */
-const FEERATE = 0.6;
+const FEERATE = 0.5;
 
 const getStreamerList = () => {
   const currentTimeQuery = `
@@ -208,18 +208,30 @@ const getViewer = ({ creatorId }) => {
   });
 };
 
-const getPrice = ({ creatorId }) => {
+const getPrice = ({ creatorId, campaignId }) => {
   console.log(`${creatorId}의 단위 가격을 계산합니다.`);
   const priceQuery = `
   SELECT unitPrice 
   FROM creatorPrice 
   WHERE creatorId = ?`;
 
+  const marketerPriceQuery = `
+  SELECT md.unitPrice
+  FROM campaign
+  LEFT JOIN marketerDebit AS md
+  ON campaign.marketerId = md.marketerId
+  WHERE campaign.campaignId = ?
+  `;
+
   return new Promise((resolve, reject) => {
-    doQuery(priceQuery, [creatorId])
-      .then((row) => {
+    Promise.all([
+      doQuery(priceQuery, [creatorId]),
+      doQuery(marketerPriceQuery, [campaignId])
+    ])
+      .then(([row, rrow]) => {
         const price = row.result[0].unitPrice;
-        resolve(price);
+        const marketerPrice = rrow.result[0].unitPrice;
+        resolve(Math.round(Number(price * marketerPrice)));
       })
       .catch((errorData) => {
         errorData.point = 'getPrice()';
@@ -231,7 +243,6 @@ const getPrice = ({ creatorId }) => {
 
 /* 2019-10-08 박찬우
   contractionList -> campaignList로 변경.
-
 */
 const getPriceList = ([creatorList, campaignList]) => {
   console.log('각 creator 마다 단가를 계산합니다');
@@ -470,6 +481,7 @@ async function calculation() {
     return;
   }
 
+  // 아래의 크리에이터 - 마케터의 계산의 차이를 통한 수수료 책정.
   await Promise.all(
     priceList.map(({ creatorId, campaignId, price }) => Promise.all([
       creatorCalcuate({ creatorId, price: Math.round(Number(price) * FEERATE) }),

@@ -1,6 +1,7 @@
 // import
 const express = require('express');
 const doQuery = require('../../../model/doQuery');
+const encrypto = require('../../../encryption');
 
 const router = express.Router();
 
@@ -24,18 +25,24 @@ router.get('/income', (req, res) => {
   SELECT 
   creatorTotalIncome as creatorTotalIncome,
   creatorReceivable as creatorReceivable,
-  creatorAccountNumber, creatorIncome.date, creatorContractionAgreement
+  creatorAccountNumber, creatorIncome.date, creatorContractionAgreement, realName
   FROM creatorInfo as ci
   JOIN creatorIncome 
   ON ci.creatorId = creatorIncome.creatorId
   WHERE ci.creatorId= ? 
   ORDER BY date desc
   LIMIT 1`;
-
   doQuery(dataQuery, [creatorId])
     .then((row) => {
       const result = row.result[0];
       result.date = result.date.toLocaleString();
+      let deciphedAccountNum;
+      if (result.creatorAccountNumber) {
+        deciphedAccountNum = encrypto.decipher(result.creatorAccountNumber);
+      } else {
+        deciphedAccountNum = '';
+      }
+      result.creatorAccountNumber = deciphedAccountNum;
       res.json(result);
     })
     .catch((errorData) => {
@@ -91,8 +98,8 @@ router.post('/contraction', (req, res) => {
   // `;
   const campaignQuery = `
   INSERT INTO creatorCampaign
-  (creatorId, campaignList)
-  VALUES (?, ?)
+  (creatorId, campaignList, banList)
+  VALUES (?, ?, ?)
   `;
 
   // landing 기본값 쿼리 추가
@@ -108,12 +115,12 @@ router.post('/contraction', (req, res) => {
 
   Promise.all([
     // doQuery(insertQuery, [creatorId, dateCode]),
-    doQuery(campaignQuery, [creatorId, campaignList]),
+    doQuery(campaignQuery, [creatorId, campaignList, campaignList]),
     doQuery(landingQuery, [creatorId, creatorName]),
     doQuery(updateQuery, [1, creatorId])
   ])
     .then(() => {
-      res.send(true);
+      res.send([true]);
     })
     .catch(() => {
       res.end();
@@ -125,7 +132,7 @@ router.get('/profile', (req, res) => {
   const profileQuery = `
   SELECT 
   creatorId, creatorName, creatorIp, creatorMail, 
-  creatorAccountNumber, creatorContractionAgreement, creatorTwitchId
+  creatorAccountNumber, creatorContractionAgreement, creatorTwitchId, realName
   FROM creatorInfo 
   WHERE creatorId = ?`;
 
@@ -140,12 +147,17 @@ router.get('/profile', (req, res) => {
     doQuery(profileQuery, [creatorId])
       .then((data) => {
         const userData = data.result[0];
+        // 받은 데이터에 대한 복호화 실시.
+        const rawAccount = data.result[0].creatorAccountNumber || '';
+        const deciphedAccountNum = encrypto.decipher(rawAccount);
         userData.creatorLogo = req._passport.session.user.creatorLogo;
+        userData.creatorAccountNumber = deciphedAccountNum;
+        // userData.creatorAccountNumber = rawAccount;
         res.send({
           error: false,
           result: {
             ...userData,
-            NowIp
+            NowIp,
           }
         });
       })

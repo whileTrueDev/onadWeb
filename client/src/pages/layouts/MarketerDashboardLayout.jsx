@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
-
 import withStyles from '@material-ui/core/styles/withStyles';
 import { Switch, Route } from 'react-router-dom';
 import Navbar from '../../atoms/Navbars/Navbar';
@@ -11,21 +10,26 @@ import Footer from '../../atoms/Footer/Footer';
 import '../../assets/css/onad.css';
 import history from '../../history';
 
-const MarketerRoutes = ({ pannelRef }) => (
+const MarketerRoutes = ({ pannelRef, ...rest }) => (
   <Switch>
     {allRoutes.marketer.map(prop => (
       <Route
         path={prop.layout + prop.path}
-        component={() => <prop.component history={history} pannelRef={pannelRef} />}
+        component={() => (
+          <prop.component
+            history={history}
+            pannelRef={pannelRef}
+            {...rest}
+          />
+        )}
         key={prop.name}
       />
     ))}
   </Switch>
 );
 
-const MarketerDashboard = ({
-  classes, ...rest
-}) => {
+const MarketerDashboard = ({ classes, match, ...rest }) => {
+
   const [mobileOpen, setMobileOpen] = useState(false);
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -56,6 +60,7 @@ const MarketerDashboard = ({
         handleDrawerToggle={handleDrawerToggle}
         {...rest}
       />
+      
       <div className={classes.mainPanel} ref={mainPanel}>
         {/* ref="mainPanel" */}
         <Navbar
@@ -65,7 +70,7 @@ const MarketerDashboard = ({
         />
         <div className={classes.content}>
           <div className={classes.container}>
-            <MarketerRoutes history={history} pannelRef={mainPanel} />
+            <MarketerRoutes history={history} pannelRef={mainPanel} {...rest} />
           </div>
         </div>
         <Footer />

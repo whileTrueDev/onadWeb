@@ -11,10 +11,6 @@ const pool = mysql.createPool({
      * before returning an error from getConnection.
      * If set to 0, there is no limit to the number of queued connection requests. (Default: 0)
      */
-  connectionLimit: 1000,
-  connectTimeout: 60 * 60 * 1000,
-  acquireTimeout: 60 * 60 * 1000,
-  timeout: 60 * 60 * 1000,
 });
 
 console.log('create pool!');

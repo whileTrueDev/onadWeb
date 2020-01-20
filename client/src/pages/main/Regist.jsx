@@ -11,12 +11,16 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-export default function Regist() {
+const Regist = (props) => {
   const classes = useStyles();
+  const { match } = props;
   return (
     <div className={classes.root}>
       <AppAppBar unuse={false} />
-      <RegistStepper />
+      <RegistStepper platform={match.params.platform} />
     </div>
   );
-}
+};
+
+
+export default Regist;

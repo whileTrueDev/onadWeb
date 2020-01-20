@@ -101,28 +101,6 @@ const BannerDescPopover = (props) => {
           <Grid container direction="column" spacing={4}>
             <Grid item>
               <Typography style={{ fontSize: '16px', color: '#00acc1', fontWeight: '700' }}>
-                광고주 소개
-              </Typography>
-            </Grid>
-            <Grid container direction="row">
-              <Grid item md={1} />
-              <Grid container direction="column" className={classes.text}>
-                {currentBannerData.payload && currentBannerData.payload[descIndex].companyDescription.split('\n').map(row => (
-                  <Grid item key={shortid.generate()}>
-                    <Typography variant="body2">
-                      {row}
-                    </Typography>
-                  </Grid>
-                ))}
-                <Divider component="hr" variant="middle" />
-              </Grid>
-            </Grid>
-          </Grid>
-        </Grid>
-        <Grid item className={classes.text}>
-          <Grid container direction="column" spacing={4}>
-            <Grid item>
-              <Typography style={{ fontSize: '16px', color: '#00acc1', fontWeight: '700' }}>
                배너소개
               </Typography>
             </Grid>

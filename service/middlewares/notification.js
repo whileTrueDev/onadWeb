@@ -64,6 +64,29 @@ const messageDict = {
       getTitle: ({ marketerName }) => `${marketerName}님, 세금 계산서가 발행되었습니다.`,
       getMessage: ({ marketerName }) => `${marketerName}님이 신청하신 세금 계산서가 발행되었습니다.
       마이 오피스에서 확인하세요.`
+    },
+    vbankChargeReady: {
+      selectQuery: `
+      SELECT marketerName, (SELECT FROM_UNIXTIME(?, "%Y-%m-%d 오후 %h시 %i분 %s초")) as duedate
+      FROM marketerInfo AS mI
+      LEFT JOIN marketerCharge AS mC
+      ON mC.marketerId = ?
+      WHERE mC.marketerId = mI.marketerId
+     `
+     ,
+      getTitle: ({ marketerName }) => `${marketerName}님, 가상계좌 발급이 완료되었습니다.`,
+      getMessage: ({ marketerName, cashAmount, duedate, vbankName, vbankNum }) => `${marketerName}님, ${vbankName} ${vbankNum}으로 ${duedate}까지 ${cashAmount}원을 입금해주세요.
+      `,
+    },
+    vbankChargeComplete: {
+      selectQuery: `
+      SELECT marketerName
+      FROM marketerInfo
+      WHERE marketerId = ? 
+     `,
+      getTitle: ({ marketerName }) => `${marketerName}님, 가상계좌 결제가 완료되었습니다.`,
+      getMessage: ({ marketerName, cashAmount }) => `${marketerName}님, 가상계좌 결제가 완료되어 ONAD캐시 ${cashAmount}원이 충전되었습니다.
+      `,
     }
   },
   creator: {
@@ -90,15 +113,23 @@ const messageDict = {
 
 // 개인 알림 함수.
 const Notification = async ({
-  userType, type, targetId, params
+  userType, type, targetId, params, vbankDate
 }) => {
   // 날짜 수집.
   const dateCode = new Date().toLocaleString();
+
   const { selectQuery, getTitle, getMessage } = messageDict[userType][type];
 
+  let queryArray;
+  if (vbankDate) {
+    queryArray = [vbankDate, targetId]
+  } else {
+    queryArray = [targetId]
+  }
+
   // 일단 해당 target의 기본정보 및 개인알림 등록에 필요한 데이터 수집.
-  const row = await doQuery(selectQuery, [targetId]);
-  const data = { ...row.result[0], date: dateCode, ...params };
+  const row = await doQuery(selectQuery, queryArray);
+  const data = { ...row.result[0], date: dateCode, ...params};
   const title = getTitle(data);
   const message = getMessage(data);
   const sendQuery = userType === 'creator'
@@ -111,4 +142,4 @@ const Notification = async ({
   return doQuery(sendQuery, [targetId, title, message]);
 };
 
-export default Notification;
+module.exports = Notification;

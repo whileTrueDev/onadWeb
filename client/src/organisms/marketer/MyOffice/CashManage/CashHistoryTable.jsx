@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 // core
 import withStyles from '@material-ui/core/styles/withStyles';
@@ -10,6 +10,8 @@ import Table from '../../../../atoms/Table/Table';
 import DashboardStyle from '../../../../assets/jss/onad/views/dashboardStyle';
 // hooks
 import useFetchData from '../../../../utils/lib/hooks/useFetchData';
+import axios from '../../../../utils/axios';
+import HOST from '../../../../utils/config';
 
 const initialData = {
   columns: ['날짜', '충전금액', '결제수단', '진행상황'],
@@ -20,8 +22,16 @@ const initialData = {
 
 function CashHistory(props) {
   const { classes } = props;
+  const [vbankload, setVbankload] = useState(false);
 
   const { payload, loading } = useFetchData('/api/dashboard/marketer/cash/charge/list');
+
+  useEffect(() => {
+    axios.post(`${HOST}/api/dashboard/marketer/cash/vbankCancle`)
+      .then((row) => {
+        setVbankload(row.data);
+      });
+  }, [setVbankload, vbankload]);
 
   return (
     <Card>

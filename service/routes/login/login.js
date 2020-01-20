@@ -18,6 +18,7 @@ router.get('/check', (req, res) => {
     SELECT temporaryLogin
     FROM marketerInfo
     WHERE marketerId = ?`;
+
     doQuery(checkQuery, [req.session.passport.user.userid])
       .then((row) => {
         const { temporaryLogin } = row.result[0];
@@ -84,10 +85,55 @@ router.post('/changePw', (req, res, next) => {
 router.get('/twitch', passport.authenticate('twitch'));
 
 router.get('/twitch/callback', passport.authenticate('twitch'),
-  (req, res, next) => {
+  (req, res) => {
     console.log('success in server');
     res.redirect(`${HOST}/dashboard/creator/door`);
+  });
+
+router.get('/google',
+  passport.authenticate('google', { scope: ['email', 'profile'] }));
+
+router.get('/google/callback', passport.authenticate('google'),
+  (req, res) => {
+    console.log('success in server');
+    // req의 passport data를 확인하여 미존재시는 회원가입으로, 존재시는 dashboard로
+    const { registered } = req.session.passport.user;
+    if (registered) {
+      res.redirect(`${HOST}/dashboard/marketer/main`);
+    } else {
+      res.redirect(`${HOST}/regist/google`);
+    }
     // res.send({userType: userType});
+  });
+
+
+router.get('/naver', passport.authenticate('naver'));
+
+router.get('/naver/callback', passport.authenticate('naver'),
+  (req, res) => {
+    console.log('success in server');
+    // req의 passport data를 확인하여 미존재시는 회원가입으로, 존재시는 dashboard로
+    const { registered } = req.session.passport.user;
+    if (registered) {
+      res.redirect(`${HOST}/dashboard/marketer/main`);
+    } else {
+      res.redirect(`${HOST}/regist/naver`);
+    }
+  });
+
+
+router.get('/kakao', passport.authenticate('kakao'));
+
+router.get('/kakao/callback', passport.authenticate('kakao'),
+  (req, res) => {
+    console.log('success in server');
+    // req의 passport data를 확인하여 미존재시는 회원가입으로, 존재시는 dashboard로
+    const { registered } = req.session.passport.user;
+    if (registered) {
+      res.redirect(`${HOST}/dashboard/marketer/main`);
+    } else {
+      res.redirect(`${HOST}/regist/kakao`);
+    }
   });
 
 module.exports = router;

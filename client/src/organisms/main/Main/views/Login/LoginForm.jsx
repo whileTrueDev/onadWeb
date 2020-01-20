@@ -10,6 +10,9 @@ import {
   Button,
   TextField,
   withStyles,
+  Grid,
+  Divider,
+  Typography
 } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import axios from '../../../../../utils/axios';
@@ -32,6 +35,13 @@ const styles = () => ({
     width: '100%',
     fontFamily: 'Noto Sans KR',
   },
+  image: {
+    width: '50px',
+    height: '50px',
+    objectFit: 'cover',
+    objectPosition: 'top',
+    borderRadius: '50%'
+  },
   imageSrc: {
     display: 'flex',
     backgroundSize: 'cover',
@@ -42,6 +52,17 @@ const styles = () => ({
     maxHeight: '130px',
     margin: '0 auto',
   },
+  // loginButtion: {
+  //   width: '80%',
+  //   height: '50px',
+  // },
+  // image: {
+  //   width: '100%',
+  //   height: '50px',
+  //   // objectFit: 'cover',
+  //   // objectPosition: 'top',
+  //   // borderRadius: '50%'
+  // }
 });
 
 // TODO: 비밀번호 암호화하여 전달하기.
@@ -143,6 +164,42 @@ const LoginForm = (props) => {
               }}
             />
           </form>
+          <Typography style={{ fontSize: 15, fontFamily: 'Noto Sans kr', marginTop: '20px', color: 'rgba(0, 0, 0, 0.54)', marginBottom: '3px' }}>소셜 계정으로 온애드 서비스 이용</Typography>
+          <Divider component="hr" orientation="horizental" width="60%" />
+          <Grid container direction="row" align="right">
+            <Grid item>
+              <Button href={`${HOST}/api/login/google`}>
+                <img src="pngs/logo/google.png" alt="google" className={classes.image} />
+              </Button>
+            </Grid>
+            <Grid item>
+              <Button href={`${HOST}/api/login/naver`}>
+                <img src="pngs/logo/naver2.png" alt="naver" className={classes.image} />
+              </Button>
+            </Grid>
+            <Grid item>
+              <Button href={`${HOST}/api/login/kakao`}>
+                <img src="pngs/logo/kakao.png" alt="kakao" className={classes.image} />
+              </Button>
+            </Grid>
+          </Grid>
+          {/* <Grid container direction="column" style={{ marginTop: '20px' }}>
+            <Grid item>
+              <Button href={`${HOST}/api/login/google`} className={classes.loginButtion}>
+                <img src="pngs/main/google.png" alt="google" className={classes.image} />
+              </Button>
+            </Grid>
+            <Grid item>
+              <Button href={`${HOST}/api/login/naver`} className={classes.loginButtion}>
+                <img src="pngs/main/naver.png" alt="naver" className={classes.image} />
+              </Button>
+            </Grid>
+            <Grid item>
+              <Button href={`${HOST}/api/login/kakao`} className={classes.loginButtion}>
+                <img src="pngs/main/kakao.png" alt="kakao" className={classes.image} />
+              </Button>
+            </Grid>
+          </Grid> */}
           <Button
             underline="always"
             style={{ fontSize: 11, marginTop: 10 }}
@@ -203,9 +260,7 @@ const LoginForm = (props) => {
                 backgroundImage: 'url("pngs/logo/twitch.png")',
               }}
               className={classes.imageSrc}
-            >
-              {''}
-            </Button>
+            />
           </Tooltip>
         </DialogContent>
       </Dialog>
