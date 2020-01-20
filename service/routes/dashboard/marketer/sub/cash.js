@@ -336,7 +336,7 @@ router.get('/usage/month', (req, res) => {
   const selectMetaArray = [marketerId, month];
 
   const sendArray = [];
-  const sendMetaArray = [];
+  let sendMetaArray = [];
   Promise.all([
     doQuery(selectQuery, selectArray)
       .then((row) => {
@@ -352,9 +352,7 @@ router.get('/usage/month', (req, res) => {
       .then((row) => {
         if (!row.error) {
           if (row.result) {
-            row.result.forEach((obj) => {
-              sendMetaArray.push(Object.values(obj));
-            });
+            sendMetaArray = row.result;
           }
         }
       })
