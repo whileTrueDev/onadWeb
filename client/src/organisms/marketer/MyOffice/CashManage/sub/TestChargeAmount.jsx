@@ -182,8 +182,8 @@ const TestChargeAmount = (props) => {
                       onChange={handleChange}
                       margin="normal"
                       variant="outlined"
-                      error={!selectValue > 5000}
-                      helperText={selectValue > 5000 ? null : '5000원 이상 충전가능'} 
+                      error={!selectValue > 10000}
+                      helperText={selectValue > 10000 ? null : '10000원 이상 충전가능'} 
                     />
                   </Tooltip>
                 </div>

@@ -67,15 +67,15 @@ const messageDict = {
     },
     vbankChargeReady: {
       selectQuery: `
-      SELECT marketerName , (SELECT DATE_FORMAT(FROM_UNIXTIME(vbankDueDate, "%Y-%m-%d %h:%i:%s"), "%Y-%m-%d %h시%i분%s초")) AS date
+      SELECT marketerName, (SELECT FROM_UNIXTIME(?, "%Y-%m-%d 오후 %h시 %i분 %s초")) as duedate
       FROM marketerInfo AS mI
       LEFT JOIN marketerCharge AS mC
       ON mC.marketerId = ?
-      WHERE mI.marketerId = mC.marketerId
+      WHERE mC.marketerId = mI.marketerId
      `
      ,
       getTitle: ({ marketerName }) => `${marketerName}님, 가상계좌 발급이 완료되었습니다.`,
-      getMessage: ({ marketerName, cashAmount, date, vbankName, vbankNum }) => `${marketerName}님, ${vbankName} ${vbankNum}으로 ${date}까지 ${cashAmount}원을 입금해주세요.
+      getMessage: ({ marketerName, cashAmount, duedate, vbankName, vbankNum }) => `${marketerName}님, ${vbankName} ${vbankNum}으로 ${duedate}까지 ${cashAmount}원을 입금해주세요.
       `,
     },
     vbankChargeComplete: {
@@ -85,7 +85,7 @@ const messageDict = {
       WHERE marketerId = ? 
      `,
       getTitle: ({ marketerName }) => `${marketerName}님, 가상계좌 결제가 완료되었습니다.`,
-      getMessage: ({ marketerName, cashAmount }) => `${marketerName}님, 가상계좌 결제가 완료되어 ONAD캐시 ${cashAmount}이 충전되었습니다.
+      getMessage: ({ marketerName, cashAmount }) => `${marketerName}님, 가상계좌 결제가 완료되어 ONAD캐시 ${cashAmount}원이 충전되었습니다.
       `,
     }
   },
@@ -113,14 +113,22 @@ const messageDict = {
 
 // 개인 알림 함수.
 const Notification = async ({
-  userType, type, targetId, params
+  userType, type, targetId, params, vbankDate
 }) => {
   // 날짜 수집.
   const dateCode = new Date().toLocaleString();
+
   const { selectQuery, getTitle, getMessage } = messageDict[userType][type];
 
+  let queryArray;
+  if (vbankDate) {
+    queryArray = [vbankDate, targetId]
+  } else {
+    queryArray = [targetId]
+  }
+
   // 일단 해당 target의 기본정보 및 개인알림 등록에 필요한 데이터 수집.
-  const row = await doQuery(selectQuery, [targetId]);
+  const row = await doQuery(selectQuery, queryArray);
   const data = { ...row.result[0], date: dateCode, ...params};
   const title = getTitle(data);
   const message = getMessage(data);

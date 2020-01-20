@@ -218,8 +218,8 @@ function TestChargeDialog() {
     setStepComplete(false);
 
     if (index === 1) {
-      if (selectValue < 5000) {
-        alert('충전 최소 금액은 5000원 입니다')
+      if (selectValue < 10000) {
+        alert('충전 최소 금액은 10000원 입니다')
         window.close();
       } else {
         setTimeout(() => {
@@ -361,10 +361,12 @@ function TestChargeDialog() {
   }
 
   useEffect(() => {
-    axios.get(`${HOST}/api/dashboard/marketer/cash`)
+    axios.get(`${HOST}/api/dashboard/marketer/cash/defaultCash`)
     .then((res) => {
-      const currentCashNumber = res.data.cashAmount.replace(',', '');
+      if (res.data){
+      const currentCashNumber = res.data;
       stepDispatch({key:'currentCash', value: currentCashNumber})
+      }
     }
     )
   }, [])
