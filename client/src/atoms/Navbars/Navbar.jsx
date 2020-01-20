@@ -47,7 +47,7 @@ function Header(props) {
 
         </div>
 
-        <AdminNavbarLinks/>
+        <AdminNavbarLinks />
 
         <Hidden mdUp implementation="css">
           <IconButton

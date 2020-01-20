@@ -1,5 +1,4 @@
 import React from 'react';
-import axios from 'axios';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import Grid from '@material-ui/core/Grid';
 import Grow from '@material-ui/core/Grow';

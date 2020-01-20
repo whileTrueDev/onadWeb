@@ -8,7 +8,6 @@ import {
   FormHelperText,
   InputAdornment,
   Button,
-  Divider,
   withStyles,
   MenuItem,
   TextField,
@@ -16,12 +15,8 @@ import {
   Paper,
   Typography,
 } from '@material-ui/core';
-import useFetchData from '../../../utils/lib/hooks/useFetchData';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import Done from '@material-ui/icons/Done';
-import axios from '../../../utils/axios';
-import SuccessTypo from '../../../atoms/Typography/Success';
-import HOST from '../../../utils/config';
+import useFetchData from '../../../utils/lib/hooks/useFetchData';
 
 // Style Overriding용.
 const styles = theme => ({
@@ -53,8 +48,8 @@ const styles = theme => ({
     marginTop: theme.spacing(1),
     marginRight: theme.spacing(1),
   },
-  adornment:{
-    fontSize : '20px',
+  adornment: {
+    fontSize: '20px',
     fontWeight: 900
   }
 });
@@ -116,16 +111,16 @@ const PlatformRegistForm = (props) => {
 
   // useEffect로 profileData가 받아지는지 확인
 
-  useEffect(()=>{
-    if(!profileData.loading){
-      const {marketerPlatformData, marketerMail} = profileData.payload;
-     
-      dispatch({ type: "domain", value: marketerMail.split('@')[1] });
-      dispatch({ type: "email", value: marketerMail.split('@')[0] });
-      setMarketerId(marketerPlatformData)
+  useEffect(() => {
+    if (!profileData.loading) {
+      const { marketerPlatformData, marketerMail } = profileData.payload;
+
+      dispatch({ type: 'domain', value: marketerMail.split('@')[1] });
+      dispatch({ type: 'email', value: marketerMail.split('@')[0] });
+      setMarketerId(marketerPlatformData);
       dispatch({ type: 'checkDuplication', value: false });
     }
-  },[profileData.loading]);
+  }, [dispatch, profileData.loading, profileData.payload]);
   // handle을 전달.
   const handleCustom = (event) => {
     setCustomDomain(event.target.value);
@@ -137,10 +132,8 @@ const PlatformRegistForm = (props) => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    
-    const {
-      email, domain
-    } = state;
+
+    const { email } = state;
     // 모든 state가 false가 되어야한다.
     const marketerName = document.getElementById('name').value;
     const marketerBusinessRegNum = (document.getElementById('marketerBusinessRegNum') ? document.getElementById('marketerBusinessRegNum').value : '');
@@ -166,7 +159,7 @@ const PlatformRegistForm = (props) => {
 
   return (
     <div>
-    {loading
+      {loading
         ? (
           <Paper className={classes.root} elevation={1}>
             <Typography variant="h6" component="h6" style={{ textAlign: 'center' }}>
@@ -176,146 +169,138 @@ const PlatformRegistForm = (props) => {
           </Paper>
         )
         : (
-      <form autoComplete="off" onSubmit={handleSubmit} id="form">
-        <Grid container direction="column" spacing={1}>   
-          <Grid item container direction="row">
-            <Grid item>
-              <TextField
-                required
-                label="회사명(브랜드명)"
-                id="name"
-                className={classes.textField}
-                placeholder="회사명(브랜드명)을 입력하세요"
-                margin="normal"
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                helperText="크리에이터와 시청자들에게 보여질 이름입니다!"
-              />
-            </Grid>
-            <Grid item>
-              <FormControl
-                className={classes.phoneField}
-                required
-                margin="normal"
-              >
-                <InputLabel shrink htmlFor="phoneNumber">전화번호</InputLabel>
-                <Input
-                  value={state.phoneNum}
-                  onChange={handleChange('phoneNum')}
-                  id="phoneNumber"
-                  inputComponent={TextMaskCustom}
-                />
-                <FormHelperText>전화번호를 입력하세요.</FormHelperText>
-              </FormControl>
-            </Grid>
-          </Grid>
-          <Grid item>
-            {userType
-              ? (
-                <FormControl style={{ marginTop: '8px', marginBottom: '16px' }}>
-                  <InputLabel shrink>사업자등록번호</InputLabel>
-                  <Input
-                // onChange={handleChange('businessRegNum')}
-                    name="businessRegNum"
-                  //   endAdornment={(
-                  //     <InputAdornment position="end">
-                  //       <Divider className={classes.divider} />
-                  //       <Button onClick={checkBusinessRegNum}>
-                  //       조회
-                  //       </Button>
-                  //     </InputAdornment>
-                  // )}
-                  />
-                  <FormHelperText>사업자 번호를 입력하세요.</FormHelperText>
-                </FormControl>
-              )
-              : <div />
-          }
-          </Grid>
-          <Grid container direction="row">
-            <Grid item>
-              <TextField
-                required
-                label="EMAIL ID"
-                value={state.email}
-                className={classes.textField}
-                onChange={handleChange('email')}
-                helperText='EMAIL ID을 입력하세요.'
-                margin="normal"
-                id="email"
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                InputProps={{
-                  endAdornment: <InputAdornment position="end" className={classes.adornment}><div>@</div></InputAdornment>,
-                }}
-              />
-            </Grid>
-            <Grid item>
-              {state.domain !== '직접입력' ? (
-                <TextField
-                  required
-                  select
-                  label="Domain"
-                  className={classes.textField}
-                  value={state.domain}
-                  onChange={handleChange('domain')}
-                  helperText="EMAIL Domain을 선택하세요."
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                  margin="normal"
-                >
-                  {domains.map(option => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.value}
-                    </MenuItem>
-                  ))}
-                </TextField>
-
-              )
-                : (
+          <form autoComplete="off" onSubmit={handleSubmit} id="form">
+            <Grid container direction="column" spacing={1}>
+              <Grid item container direction="row">
+                <Grid item>
                   <TextField
                     required
-                    autoFocus
-                    label="Domain"
+                    label="회사명(브랜드명)"
+                    id="name"
                     className={classes.textField}
-                    value={marketerCustomDomain}
-                    onChange={handleCustom}
-                    helperText="EMAIL Domain을 입력하세요."
+                    placeholder="회사명(브랜드명)을 입력하세요"
+                    margin="normal"
                     InputLabelProps={{
                       shrink: true,
                     }}
-                    margin="normal"
+                    helperText="크리에이터와 시청자들에게 보여질 이름입니다!"
                   />
-                )}
-            </Grid>
-          </Grid>
-          <Grid item style={{ marginTop: '16px' }}>
-            <div>
-              <Button
-                onClick={handleBack}
-                className={classes.button}
-              >
+                </Grid>
+                <Grid item>
+                  <FormControl
+                    className={classes.phoneField}
+                    required
+                    margin="normal"
+                  >
+                    <InputLabel shrink htmlFor="phoneNumber">전화번호</InputLabel>
+                    <Input
+                      value={state.phoneNum}
+                      onChange={handleChange('phoneNum')}
+                      id="phoneNumber"
+                      inputComponent={TextMaskCustom}
+                    />
+                    <FormHelperText>전화번호를 입력하세요.</FormHelperText>
+                  </FormControl>
+                </Grid>
+              </Grid>
+              <Grid item>
+                {userType
+                  ? (
+                    <FormControl style={{ marginTop: '8px', marginBottom: '16px' }}>
+                      <InputLabel shrink>사업자등록번호</InputLabel>
+                      <Input
+                // onChange={handleChange('businessRegNum')}
+                        name="businessRegNum"
+                      />
+                      <FormHelperText>사업자 번호를 입력하세요.</FormHelperText>
+                    </FormControl>
+                  )
+                  : <div />
+          }
+              </Grid>
+              <Grid container direction="row">
+                <Grid item>
+                  <TextField
+                    required
+                    label="EMAIL ID"
+                    value={state.email}
+                    className={classes.textField}
+                    onChange={handleChange('email')}
+                    helperText="EMAIL ID을 입력하세요."
+                    margin="normal"
+                    id="email"
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    InputProps={{
+                      endAdornment: <InputAdornment position="end" className={classes.adornment}><div>@</div></InputAdornment>,
+                    }}
+                  />
+                </Grid>
+                <Grid item>
+                  {state.domain !== '직접입력' ? (
+                    <TextField
+                      required
+                      select
+                      label="Domain"
+                      className={classes.textField}
+                      value={state.domain}
+                      onChange={handleChange('domain')}
+                      helperText="EMAIL Domain을 선택하세요."
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                      margin="normal"
+                    >
+                      {domains.map(option => (
+                        <MenuItem key={option.value} value={option.value}>
+                          {option.value}
+                        </MenuItem>
+                      ))}
+                    </TextField>
+
+                  )
+                    : (
+                      <TextField
+                        required
+                        autoFocus
+                        label="Domain"
+                        className={classes.textField}
+                        value={marketerCustomDomain}
+                        onChange={handleCustom}
+                        helperText="EMAIL Domain을 입력하세요."
+                        InputLabelProps={{
+                          shrink: true,
+                        }}
+                        margin="normal"
+                      />
+                    )}
+                </Grid>
+              </Grid>
+              <Grid item style={{ marginTop: '16px' }}>
+                <div>
+                  <Button
+                    onClick={handleBack}
+                    className={classes.button}
+                  >
               뒤로
-              </Button>
-              <Button
-                variant="contained"
-                color="primary"
-                className={classes.button}
-                type="submit"
-                value="submit"
-              >
+                  </Button>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    className={classes.button}
+                    type="submit"
+                    value="submit"
+                  >
               다음
-              </Button>
-            </div>
-          </Grid>
-        </Grid>
-      </form>
-      )
+                  </Button>
+                </div>
+              </Grid>
+            </Grid>
+          </form>
+        )
     }
-    </div>   
+    </div>
   );
 };
 

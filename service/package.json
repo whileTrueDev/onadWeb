@@ -31,6 +31,7 @@
     "nodemon": "^1.19.0",
     "passport": "^0.4.0",
     "passport-google-oauth20": "^2.0.0",
+    "passport-kakao": "^1.0.0",
     "passport-local": "^1.0.0",
     "passport-naver": "^1.0.6",
     "passport-twitch": "^1.0.3",

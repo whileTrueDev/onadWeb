@@ -11,8 +11,6 @@ import StyledSelectText from '../../../atoms/StyledSelectText';
 import GreenCheckbox from '../../../atoms/GreenCheckBox';
 import StyledInput from '../../../atoms/StyledInput';
 import DangerTypography from '../../../atoms/Typography/Danger';
-import axios from '../../../utils/axios';
-import HOST from '../../../utils/config';
 
 
 const useStyles = makeStyles(theme => ({
@@ -71,7 +69,7 @@ const useStyles = makeStyles(theme => ({
 const OptionPaper = (props) => {
   const classes = useStyles();
   const {
-    handleSubmitCheck, state, dispatch, selectedCategory, step2State
+    handleSubmitCheck, state, dispatch, step2State
   } = props;
 
   const [anchorEl, setAnchorEl] = React.useState(null);

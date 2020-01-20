@@ -12,7 +12,6 @@ import PlatformRegistForm from './PlatformRegistForm';
 import Usertype from './Usertype';
 import RegistForm from './RegistForm';
 import PaperSheet from './Paper';
-import IndentityVerification from './IdentityVerification';
 import HOST from '../../../utils/config';
 import withRoot from '../Main/withRoot';
 import history from '../../../history';
@@ -109,8 +108,8 @@ const RegistStepper = withRoot((props) => {
   const [userType, setType] = useState(0);
   const [state, dispatch] = useReducer(myReducer, initialState);
   const [loading, setLoading] = useState(0);
-  const [open, setOpen] = useState(0);
-  const [defaultName, setDefaultName] = useState('');
+  // const [open, setOpen] = useState(0);
+  // const [defaultName, setDefaultName] = useState('');
   const platformList = ['', 'google', 'naver', 'kakao'];
   useEffect(() => {
     if (platform !== undefined) {

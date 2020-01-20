@@ -8,7 +8,6 @@ import MenuItem from '@material-ui/core/MenuItem';
 import useUpdateData from '../../utils/lib/hooks/useUpdateData';
 
 
-
 const useStyles = makeStyles(() => ({
   contents: {
     width: 420,
@@ -16,7 +15,7 @@ const useStyles = makeStyles(() => ({
     zIndex: '1300',
     opacity: 1,
     backgroundColor: 'white',
-    border: `1px solid #90909090`,
+    boxShadow: '1px 1px 1px 1px gray',
     overflowX: 'hidden',
     overflowY: 'auto'
   },
@@ -56,7 +55,7 @@ function Notification(props) {
       placement="top-end"
       anchorEl={anchorEl}
       open={Boolean(anchorEl)}
-      disablePortal={true}
+      disablePortal
       modifiers={{
         flip: {
           enabled: true,
@@ -65,7 +64,7 @@ function Notification(props) {
           enabled: false,
           boundariesElement: 'scrollParent',
         }
-      }} 
+      }}
     >
       {/* 공지 메뉴 컴포넌트 */}
       <div className={classes.contents}>

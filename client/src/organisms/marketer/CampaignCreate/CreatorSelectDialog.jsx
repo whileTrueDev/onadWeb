@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useReducer } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import {
-  Grid, Divider, Slide, Collapse, Typography, Paper
+  Grid, Divider, Slide, Collapse, Paper
 } from '@material-ui/core';
 import Button from '../../../atoms/CustomButtons/Button';
 import Dialog from '../../../atoms/Dialog/Dialog';
