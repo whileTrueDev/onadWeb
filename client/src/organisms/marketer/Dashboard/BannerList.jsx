@@ -92,12 +92,27 @@ export default function BannerList(props) {
               )}
             </div>
           </div>
-
           <Divider />
-          <Paper square elevation={0} style={{ padding: 20 }}>
-            <Grid container direction="column" alignItems="flex-start" spacing={2}>
-              <Typography variant="body2">{bannerData.payload[activeStep].bannerDescription}</Typography>
-              <Typography variant="caption">{bannerData.payload[activeStep].landingUrl}</Typography>
+
+          <Paper square elevation={0} alignitems="center" style={{ padding: 20 }}>
+            <Grid container direction="column" spacing={1}>
+              <Grid item>
+                <Typography variant="body2">{bannerData.payload[activeStep].bannerDescription}</Typography>
+              </Grid>
+              <Grid item>
+                <Typography
+                  variant="body2"
+                  style={{ textDecoration: 'underline', color: '#00acc1', cursor: 'pointer' }}
+                  onClick={() => { window.open(bannerData.payload[activeStep].landingUrl); }}
+                  component="a"
+                  align="right"
+                >
+                  랜딩 페이지 URL 바로가기
+                </Typography>
+              </Grid>
+              {/* <Grid item>
+                <Typography variant="body2" style={{ fontSize: '0.3rem' }} display="block">{bannerData.payload[activeStep].landingUrl}</Typography>
+              </Grid> */}
             </Grid>
           </Paper>
           <MobileStepper

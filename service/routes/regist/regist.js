@@ -43,7 +43,7 @@ router.post('/marketer', (req, res, next) => {
 
   Promise.all([
     doQuery(infoQuery, infoQueryArray),
-    doQuery(cashQuery, [marketerId, 0])
+    doQuery(cashQuery, [marketerId, 0]),
   ])
     .then(() => {
       next();
@@ -52,6 +52,42 @@ router.post('/marketer', (req, res, next) => {
       res.send([false, error]);
     });
 }, sendEmailAuth);
+
+
+router.post('/marketer/platform', (req, res) => {
+  const {
+    marketerId, marketerName,
+    marketerMail, marketerPhoneNum,
+    marketerBusinessRegNum, marketerUserType,
+    platformType
+  } = req.body;
+
+  const infoQuery = `
+  INSERT INTO marketerInfo 
+  (marketerId, marketerName, marketerMail, 
+  marketerPhoneNum, marketerBusinessRegNum, marketerUserType, platformType, marketerEmailAuth) 
+  VALUES (?, ?, ?, ?, ?, ?, ?, ?) `;
+
+  const infoQueryArray = [marketerId, marketerName, marketerMail,
+    marketerPhoneNum, marketerBusinessRegNum, marketerUserType, platformType, 1];
+
+  const cashQuery = `
+  INSERT INTO marketerDebit
+  (marketerId, cashAmount)
+  VALUES (?, ?)`;
+
+  Promise.all([
+    doQuery(infoQuery, infoQueryArray),
+    doQuery(cashQuery, [marketerId, 0])
+  ])
+    .then(() => {
+      res.send({ error: false });
+    })
+    .catch((error) => {
+      res.send({ error });
+    });
+});
+
 
 // 쿼리관련 에러 핸들링 완료.
 router.post('/checkId', (req, res) => {
@@ -223,9 +259,6 @@ router.post('/certifications', async (req, res) => {
       name, birth
     } = certificationsInfo;
 
-    // if (new Date(birth).getFullYear() <= 2001) {
-    //   res.send({ error: true, data: { msg: '19세 미만이므로 회원가입을 할 수 없습니다.' } });
-    // }
     res.send({ error: false, data: { name } });
   } catch (e) {
     console.error(e);

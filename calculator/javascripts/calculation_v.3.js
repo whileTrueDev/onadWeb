@@ -1,7 +1,7 @@
 const schedule = require('node-schedule');
 const Notification = require('./notification');
 const pool = require('../model/connectionPool');
-
+const sendAlimtalk = require('./alimtalk');
 const PPP = 2;
 const FEERATE = 0.5;
 
@@ -360,7 +360,8 @@ const marketerZeroCalculate = ({ connection, marketerId }) => {
               userType: 'marketer',
               type: 'readyTorunOut',
               targetId: marketerId
-            })
+            }),
+            sendAlimtalk(marketerId)
           ]).then(() => {
             resolve();
           });

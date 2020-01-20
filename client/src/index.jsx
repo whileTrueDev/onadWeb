@@ -28,6 +28,7 @@ const developRouter = (
   <Router history={history}>
     <Switch>
       <Route exact path="/" component={Main} />
+      <Route path="/regist/:platform" component={RegistPage} />
       <Route exact path="/regist" component={RegistPage} />
       <Route exact path="/introduction" component={Introduction} />
       <Route exact path="/policy" component={Policy} />
@@ -50,10 +51,12 @@ const productionRouter = (
   <Router history={history}>
     <Switch>
       <Route exact path="/" component={Main} />
+      <Route path="/regist/:platform" component={RegistPage} />
       <Route exact path="/regist" component={RegistPage} />
       <Route exact path="/introduction" component={Introduction} />
       <Route exact path="/policy" component={Policy} />
       <Route exact path="/policy/:privacy" component={Policy} />
+      <Route exact path="/marketer/charge" component={TestChargeDialog} />
       <Route exact path="/notice" component={Notice} />
       <Route path="/notice/:code" component={Notice} />
       <ThemeProvider theme={theme}>
