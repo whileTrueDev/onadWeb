@@ -197,24 +197,6 @@ function CashDialog(props) {
               onChange={handleChange}
             >
               <FormControlLabel
-                value="10000"
-                control={<Radio color="primary" />}
-                label={(
-                  <Typography variant="subtitle1" className={classes.selectValue}>
-                    10,000 원
-                  </Typography>
-                )}
-              />
-              <FormControlLabel
-                value="30000"
-                control={<Radio color="primary" />}
-                label={(
-                  <Typography variant="subtitle1" className={classes.selectValue}>
-                    30,000 원
-                  </Typography>
-                )}
-              />
-              <FormControlLabel
                 value="50000"
                 control={<Radio color="primary" />}
                 label={(
@@ -229,6 +211,24 @@ function CashDialog(props) {
                 label={(
                   <Typography variant="subtitle1" className={classes.selectValue}>
                     100,000 원
+                  </Typography>
+                )}
+              />
+              <FormControlLabel
+                value="300000"
+                control={<Radio color="primary" />}
+                label={(
+                  <Typography variant="subtitle1" className={classes.selectValue}>
+                    300,000 원
+                  </Typography>
+                )}
+              />
+              <FormControlLabel
+                value="500000"
+                control={<Radio color="primary" />}
+                label={(
+                  <Typography variant="subtitle1" className={classes.selectValue}>
+                    500,000 원
                   </Typography>
                 )}
               />
@@ -278,14 +278,18 @@ function CashDialog(props) {
             <Typography variant="h6" marked="center">
               {`충전 이후 보유 광고캐시 : ${totalDebit}`}
             </Typography>
-            <Typography variant="subtitle1" marked="center" style={{ fontWeight: '600', color: 'red', marginTop: 10 }}>
+            <Divider/>
+            <Typography variant="h6" marked="center" style={{ fontWeight: '600', color: 'red', marginTop: 10}}>
+            {`무통장 입금액 : ${parseInt(selectValue*1.1)}`}원(부가세포함)을
+            </Typography>
+            <Typography variant="h6" marked="center" style={{ fontWeight: '600', color: 'red'}}>
               부산은행 : 101 - 2064 - 1964 - 03 (와일트루강동기)
+            </Typography>
+            <Typography variant="h6" marked="center" style={{ fontWeight: '600', color: 'red', }}>
+              회원가입시 이름(회사명) 명의로 입금해주십시오.
             </Typography>
             <Typography variant="subtitle1" marked="center" style={{ fontWeight: '600' }}>
               입금 확인이 되면 캐시가 충전됩니다.
-            </Typography>
-            <Typography variant="subtitle1" marked="center" style={{ fontWeight: '600', color: 'red', }}>
-              회원가입시 이름(회사명) 명의로 입금해주십시오.
             </Typography>
             <Typography variant="subtitle1" marked="center" style={{ fontWeight: '600' }}>
               세금계산서 발행은 화면 왼쪽의 사용방법에서 안내합니다.

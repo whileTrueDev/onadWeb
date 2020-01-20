@@ -63,22 +63,6 @@ app.use(require('./middlewares/checkAuthOnReq'));
 // use CORS
 const corsOptions = { origin: FRONT_HOST, credentials: true };
 
-// const orginList = [
-//   'http://onad.io',
-//   'https://api.iamport.kr',
-//   'http://localhost:3001',
-//   'https://admin.iamport.kr']
-
-// const corsOptions = {
-//   origin: function (origin, callback) {
-//     if (orginList.indexOf(origin) !== -1) {
-//       callback(null, true)
-//     } else {
-//       callback(new Error('Not allowed by CORS'))
-//     }
-//   },
-//   credentials: true
-// }
 app.use(cors(corsOptions));
 
 // for aws ELB health check

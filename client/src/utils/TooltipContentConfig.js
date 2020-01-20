@@ -62,7 +62,7 @@ const landingManageConfig = [
     image: '/pngs/landing/description_sample.png'
   },
   {
-    title: '광고페이지의 테마를 설정하세요',
+    title: '광고페이지의 테마를 설정하세요',
     text: `  
     - 밝은 테마와 어두운 테마로 자신의 페이지를 설정할 수 있습니다.`,
   },
