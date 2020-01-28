@@ -36,6 +36,7 @@ function getInsertData() {
     WHERE mc.temporaryState = 1
       AND DATE_FORMAT(mc.date, '%Y-%m') = DATE_FORMAT(DATE_SUB(now(), INTERVAL 1 MONTH), '%Y-%m')
       AND type != '신용카드'
+      AND temporaryState != 2
       
     GROUP BY DATE_FORMAT(mc.date, '%Y-%m'), marketerId
     `;
