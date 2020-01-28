@@ -6,7 +6,6 @@ const slack = require('../slack/message');
 const WAIT_STATE = 0; // '발행대기' 상태값
 const FAIL_STATE = 2; // '미발행' 상태값
 
-
 /**
  * 1. 매 월 1일, marketerTaxBill 테이블에 모든 마케터 Row - 전월의 데이터를 생성한다.
  * 2. 캐시 충전 내역이 있는 경우 마케터당 전월 총 캐시 충전량을 적재한다.
@@ -24,17 +23,19 @@ function getInsertData() {
   }
 
   return new Promise((resolve, reject) => {
-    // 모든 마테터를 가져오는 쿼리.
+    // 모든 마케터를 가져오는 쿼리.
     const getMarketersQuery = 'SELECT marketerId FROM marketerInfo';
-    // 전월의 충전내역을 가져오는 쿼리.
+
+    // 전월의 충전내역을 가져오는 쿼리. ( 카드 결제 제외 )
     const checkChargeQuery = `
     SELECT
     mc.marketerId, SUM(cash) AS cashAmount,
     DATE_FORMAT(mc.date, '%Y-%m') AS date
     
-    FROM marketerCharge_copy AS mc
+    FROM marketerCharge AS mc
     WHERE mc.temporaryState = 1
       AND DATE_FORMAT(mc.date, '%Y-%m') = DATE_FORMAT(DATE_SUB(now(), INTERVAL 1 MONTH), '%Y-%m')
+      AND type != '신용카드'
       
     GROUP BY DATE_FORMAT(mc.date, '%Y-%m'), marketerId
     `;
@@ -74,7 +75,7 @@ function getInsertData() {
 }
 
 /**
- * 전전월의 '발행대기' state를 '미발행' state 로 수정한다.
+ * 전전월의 '발행대기' state를 '미발행' state 로 수정하는 작업.
  */
 function updateFail() {
   // 전전월의 '발행대기' 상태를 '미발행' 상태로 바꾸는 쿼리
@@ -98,7 +99,10 @@ const scheduler = schedule.scheduleJob(
   'Marketer taxbill scheduler', '1 10 1 * *', () => {
   // 삽입할 데이터 가져오기
     getInsertData().then((data) => {
+      // 삽입 쿼리 생성
       const q = makeInsertQuery(data);
+
+      // 이전 월, '발행 대기', 삽입 작업.
       doQuery(q.queryString, q.queryArray).then(() => {
         slack.push('마케터 세금계산서 데이터 Insert 완료.', '마케터 세금계산서');
       }).catch((err) => {
@@ -107,6 +111,7 @@ const scheduler = schedule.scheduleJob(
       });
     });
 
+    // 전전월의 발행대기 => 미발행으로 변경 작업.
     updateFail()
       .then(() => {
         slack.push('마케터 세금계산서 미발행처리 완료.', '마케터 세금계산서');
