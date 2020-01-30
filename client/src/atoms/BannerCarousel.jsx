@@ -111,7 +111,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-function BannerCarousel(props) {
+const BannerCarousel = (props) => {
   const { steps, handleBannerId } = props;
   const classes = useStyles();
   const theme = useTheme();
@@ -193,7 +193,7 @@ function BannerCarousel(props) {
       />
     </div>
   );
-}
+};
 
 BannerCarousel.propTypes = {
   steps: PropTypes.array,

@@ -3,7 +3,7 @@ import { withStyles } from '@material-ui/core/styles';
 import {
   Grid, InputLabel, Input, FormHelperText, FormControl, Divider
 } from '@material-ui/core';
-import StyledItemText from '../../../atoms/StyledItemText';
+import AddBox from '@material-ui/icons/AddBox';
 
 const formStyle = theme => ({
   // imgPreview: {
@@ -47,9 +47,10 @@ const CssFormControl = withStyles({
 })(FormControl);
 
 const LandingUrlInput = (props) => {
-  const { classes } = props;
+  const { classes, handleSetLandingUrlState } = props;
+  const index = 0;
   return (
-    <Grid container direction="column" spacing={3}>
+    <Grid container direction="row" spacing={3}>
       <Grid item>
         <CssFormControl
           required
@@ -65,6 +66,12 @@ const LandingUrlInput = (props) => {
 
           <FormHelperText>랜딩페이지를 통해 접속할 웹페이지를 작성해주세요</FormHelperText>
         </CssFormControl>
+      </Grid>
+      <Grid item>
+        <AddBox
+          style={{ cursor: 'pointer' }}
+          onClick={handleSetLandingUrlState(index)}
+        />
       </Grid>
       <Divider component="hr" style={{ height: '2px' }} />
 

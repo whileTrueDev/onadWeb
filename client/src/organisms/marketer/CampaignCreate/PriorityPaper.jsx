@@ -62,7 +62,7 @@ const useStyles = makeStyles(theme => ({
 const PriorityPaper = (props) => {
   const {
     handleNext, state, dispatch, setStepComplete, creatorList, checkedCreators,
-    checkedCreatorsDispatch, handleBack, stepComplete, categoryList, checkedCategories, checkedCategoriesDispatch, creationOpen
+    checkedCreatorsDispatch, handleBack, stepComplete, categoryList, checkedCategories, checkedCategoriesDispatch, priorityOpen, createPaperOpen
   } = props;
   const classes = useStyles();
   // const [state, dispatch] = useReducer(myReducer, { choose: 0, type: 0 });
@@ -73,7 +73,12 @@ const PriorityPaper = (props) => {
   const handleChange = (event) => {
     if (event.target.checked) {
       dispatch({ type: event.target.name });
+      setStepComplete(true);
       console.log(event.target.name);
+    } else {
+      console.log('체크 해제', event.target.name);
+      dispatch({ type: 'reset' });
+      setStepComplete(false);
     }
   };
 
@@ -129,7 +134,7 @@ const PriorityPaper = (props) => {
             <StyledItemText primary="둘째,&nbsp;&nbsp; 광고 송출방식 선택" secondary="해당 캠페인의 송출방식을 선택하세요." />
             <Divider component="hr" style={{ height: '2px' }} />
           </Grid>
-          {creationOpen ? (
+          {createPaperOpen ? (
             <Grid item className={classes.item}>
               {checkedPriorityRender(state.priorityType)}
             </Grid>
@@ -160,7 +165,6 @@ const PriorityPaper = (props) => {
                               name="type0"
                               checked={state.priorityType === 'type0'}
                               onChange={handleChange}
-                              // onClick={handleNext(true, 1)}
                               fontSize="large"
                               // disabled
                             />
@@ -206,7 +210,6 @@ const PriorityPaper = (props) => {
                               name="type1"
                               checked={state.priorityType === 'type1'}
                               onChange={handleChange}
-                              // onClick={handleNext(true, 2)}
                               fontSize="large"
                             />
                           </Grid>

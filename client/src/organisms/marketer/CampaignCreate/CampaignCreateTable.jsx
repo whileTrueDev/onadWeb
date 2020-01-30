@@ -12,7 +12,8 @@ import {
   FormControl
 } from '@material-ui/core';
 
-
+import StyledItemText from '../../../atoms/StyledItemText';
+import Button from '../../../atoms/CustomButtons/Button';
 import CampaignNaming from './CampaignNaming';
 import CampaignBannerReg from './CampaignBannerReg';
 import LandingUrlInput from './LandingUrlInput';
@@ -64,8 +65,8 @@ const useStyles = makeStyles({
 const CampaignCreateTable = (props) => {
   const classes = useStyles();
   const {
-    bannerList, handleBannerId, handleDetailOpen, detailOpen,
-    state, dispatch, handleDateOpen, dateOpen
+    bannerList, handleBannerId, handleDetailOpen, detailOpen, step1State,
+    state, dispatch, handleDateOpen, dateOpen, handleSetLandingUrlState, datePickerOpen, handleDatePickerOpen
   } = props;
   return (
     <TableContainer component={Paper}>
@@ -91,16 +92,26 @@ const CampaignCreateTable = (props) => {
                 handleBannerId={handleBannerId}
                 dispatch={dispatch}
               />
+              <StyledItemText>새로운 배너를 등록하고 싶으신가요?</StyledItemText>
+              <Button
+                onClick={() => { window.open(`${window.location.protocol}//${window.location.host}/dashboard/marketer/banner`); }}
+              >
+                나의 인벤토리
+              </Button>
             </StyledTableCell>
           </StyledTableRow>
-          <StyledTableRow>
-            <TableCell>
+          {step1State.option !== 'option0' ? (
+            <StyledTableRow>
+              <TableCell>
               랜딩페이지 URL
-            </TableCell>
-            <StyledTableCell>
-              <LandingUrlInput />
-            </StyledTableCell>
-          </StyledTableRow>
+              </TableCell>
+              <StyledTableCell>
+                <LandingUrlInput
+                  handleSetLandingUrlState={handleSetLandingUrlState}
+                />
+              </StyledTableCell>
+            </StyledTableRow>
+          ) : (<div />) }
           <StyledTableRow>
             <TableCell>
               예산설정

@@ -59,16 +59,16 @@ const step1Reducer = (state, action) => {
 const step2Reducer = (state, action) => {
   switch (action.type) {
     case 'type0': {
-      return { choose: 1, priorityType: 'type0' };
+      return { priorityType: 'type0' };
     }
     case 'type1': {
-      return { choose: 1, priorityType: 'type1' };
+      return { priorityType: 'type1' };
     }
     case 'type2': {
-      return { choose: 1, priorityType: 'type2' };
+      return { priorityType: 'type2' };
     }
     case 'reset': {
-      return { choose: 0, priorityType: null };
+      return { priorityType: null };
     }
     default: {
       return state;
@@ -104,111 +104,54 @@ const step3Reducer = (state, action) => {
   }
 };
 
-// const step4Reducer = (state, action) => {
-//   switch (action.key) {
-//     case 'option0': {
-//       return { ...state, choose: 1, option: 0 };
-//     }
-//     case 'option1': {
-//       return { ...state, choose: 1, option: 1 };
-//     }
-//     case 'option2': {
-//       return { ...state, choose: 1, option: 2 };
-//     }
-//     case 'noBudget': {
-//       return { ...state, noBudget: !state.noBudget };
-//     }
-//     case 'budget': {
-//       return { ...state, budget: action.value };
-//     }
-//     case 'reset': {
-//       return {
-//         choose: 0, option: null, noBudget: false, budget: ''
-//       };
-//     }
-//     default: {
-//       return state;
-//     }
-//   }
-// };
-
 // 생성 버튼을 누를 때 axios 요청 후 props로 전달받음. (bannerList)
 const CampaignCreateStepper = (props) => {
   const { open, handleClose } = props;
   const classes = useStyles();
-  // const { bannerList } = props;
-  const [priorityOpen, setPriorityOpen] = React.useState(false);
-  const [creationOpen, setCreationOpen] = React.useState(false);
-  const [bannerList, setbannerList] = React.useState([]);
   // 0번째 step에서 사용할 State.
   const [step1State, step1Dispatch] = useReducer(step1Reducer, { option: '' });
 
   // 1 번째 step에서 사용할 State.
-  // const [step2State, step2Dispatch] = useReducer(step2Reducer, { choose: 0, type: null });
-  const [step2State, step2Dispatch] = useReducer(step2Reducer, { choose: '', priorityType: '' });
+  const [step2State, step2Dispatch] = useReducer(step2Reducer, { priorityType: '' });
 
   // 2 번째 prioritystep에서 사용할 State.
   const [creatorList, setCreatorList] = React.useState([]);
   const [checkedCreators, checkedCreatorsDispatch] = useReducer(step2InnerReducer, []);
   const [categoryList, setCategoryList] = React.useState([]);
   const [checkedCategories, checkedCategoriesDispatch] = useReducer(step2InnerReducer, []);
-
   // 캠페인 기본정보
   const [step3State, step3Dispatch] = useReducer(step3Reducer, { campaignName: '', bannerId: '' });
   // 4번 쨰 step에서 사용할 State1
-  // const [step4State, step4Dispatch] = useReducer(step4Reducer, {
-  //   choose: 0, option: null, noBudget: false, budget: ''
-  // });
 
   // 최종 step에서 handleSubmit을 하기위한 signal
+  const [priorityOpen, setPriorityOpen] = React.useState(false);
+  const [creationOpen, setCreationOpen] = React.useState(false);
+  const [bannerList, setbannerList] = React.useState([]);
   const [submitCheck, handleSubmitCheck] = React.useState(false);
   const [stepComplete, setStepComplete] = React.useState(false); // 현재 step에서 다음 step으로 넘어가기위한 state
-  const [paperSwitch, setPaperSwitch] = React.useState(true); // animation을 위한 state
   const [createPaperOpen, setCreatePaperOpen] = React.useState(false);
   const [datePickerOpen, setDatePickerOpen] = React.useState(false);
   const [detailOpen, setDetailOpen] = React.useState(false);
   const [dateOpen, setDateOpen] = React.useState(false);
   const [step, setStep] = React.useState(0);
+  const [landingUrlState, setLandingUrlState] = React.useState(0);
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    const priorityList = ((priorityType) => {
-      switch (priorityType) {
-        case 0: {
-          // 선택된 크리에이터
-          return checkedCreators;
-        }
-        case 1: {
-          // 선택된 카테고리
-          return checkedCategories;
-        }
-        case 2: {
-          // 카테고리 무관인 카테고리 ID
-          return ['무관'];
-        }
-        default: {
-          return [];
-        }
-      }
-    })(step2State.type);
-
-    if (submitCheck) {
-      // categorie에서 creator로 변경되어야함.
-      axios.post(`${HOST}/api/dashboard/marketer/campaign/push`, {
-        // ...step1State,
-        // dailyLimit: step4State.budget,
-        priorityType: step2State.type,
-        // optionType: step4State.option,
-        // noBudget: step4State.noBudget,
-        priorityList
-      })
-        .then((res) => {
-          alert(res.data[1]);
-          history.push('/dashboard/marketer/main');
-        });
-    } else {
-      alert('제출불가');
-    }
+    console.log(step1State, step2State, checkedCreators, categoryList, step3State);
+    // if(detailOpen){console.log()}
+    // axios.post(`${HOST}/api/dashboard/marketer/campaign/push`, {
+    //   optyionType: step1State.option,
+    //   // dailyLimit: step4State.budget,
+    //   priorityType: step2State.priorityType,
+    //   // optionType: step4State.option,
+    //   // noBudget: step4State.noBudget,
+    //   // priorityList
+    // })
+    //   .then((res) => {
+    //     alert(res.data[1]);
+    //     history.push('/dashboard/marketer/main');
+    //   });
   };
 
 
@@ -254,6 +197,7 @@ const CampaignCreateStepper = (props) => {
     getBannerList();
     getCreatorList();
   }, []);
+
   const handleDatePickerOpen = () => {
     setDatePickerOpen(!datePickerOpen);
   };
@@ -299,35 +243,6 @@ const CampaignCreateStepper = (props) => {
         return false;
       }
     }
-    // if (_step === 0) {
-    //   setPriorityOpen(true);
-    //   setStep(1);
-    //   console.log('campaignCreation line 252');
-    //   return false;
-    // }
-
-    // setTimeout(() => {
-    //   if (go === 1) {
-    //     setPaperSwitch(false);
-    //     setStepComplete(false);
-    //     console.log('campaignCreation 259 line', go);
-    //     setIndex(go + 1);
-    //   } else {
-    //     setPaperSwitch(false);
-    //     setStepComplete(false);
-    //     console.log('campaignCreation line 265', _step);
-    //     console.log(step1State, step2State);
-    //     setIndex(preIndex => preIndex + 1);
-    //   }
-    //   setPaperSwitch(true);
-    // }, 500);
-
-    // if (!additional) {
-    //   setActiveStep(prevActiveStep => prevActiveStep + 1);
-    //   setPaperSwitch(false);
-    //   setStepComplete(false);
-    //   console.log('너니?');
-    // }
   };
   const handleDetailOpen = () => {
     console.log('budgetinput 147');
@@ -340,30 +255,32 @@ const CampaignCreateStepper = (props) => {
 
   const handleBack = (event) => {
     event.preventDefault();
-    setStepComplete(false);
-    // setPaperSwitch(false);
-    // if (index === 0) {
-    //   step1Dispatch({ key: 'option', value: '' });
-    //   history.push('/dashboard/marketer/main');
-    // }
-    // if (index === 1) {
-    //   step1Dispatch({ key: 'option', value: '' });
-    // }
-    // if (index !== 2 && index !== 3) {
-    //   setActiveStep(prevActiveStep => prevActiveStep - 1);
-    // }
-    setTimeout(() => {
-      if (step === 0) {
+    setStepComplete(true);
+    switch (step) {
+      case 0: {
         history.push('/dashboard/marketer/main');
-      } else if (step !== 0) {
+        return false;
+      }
+      case 1: {
         setStep(step - 1);
         setPriorityOpen(false);
-        step2Dispatch({ key: 'priorityType', value: '' });
+        return false;
       }
-      // setPaperSwitch(true);
-    }, 500);
+      case 2: {
+        console.log('campaigncreation 348line');
+        setStep(step - 1);
+        setPriorityOpen(true);
+        setCreationOpen(false);
+        setCreatePaperOpen(false);
+        return false;
+      }
+      default: return false;
+    }
   };
 
+  const handleSetLandingUrlState = (index) => {
+    setLandingUrlState(index + 1);
+  };
 
   const nextButton = (_step) => {
     switch (_step) {
@@ -404,10 +321,10 @@ const CampaignCreateStepper = (props) => {
               <Button
                 variant="contained"
                 color="info"
-                onClick={handleNext(_step)}
+                onClick={handleSubmit}
                 className={classes.end}
               >
-                다음
+                완료
               </Button>
             </Grid>
           </Collapse>
@@ -416,31 +333,16 @@ const CampaignCreateStepper = (props) => {
         return <div />;
     }
   };
-  // bannerId, campaignName이 변경됨에 따라 다음 step으로 넘어가는 state가 자동으로 변경되도록 함.
-  useEffect(() => {
-    if (step1State.option) {
-      console.log('campaignCration line 421');
-      setStepComplete(true);
-    } else {
-      console.log('useeffect else');
-      console.log(step1State.option, step2State.priorityType);
-      setStepComplete(false);
-    }
-  }, [step1State.option, step1State.type, step2State.priorityType]);
-
-  // 해당 다이얼로그를 클로즈할 때, 여러가지 setup들을 갱신한다.
-  // const wrapHandleClose = (event) => {
-  //   event.preventDefault();
-  //   setIndex(0);
-  //   setActiveStep(0);
-  //   step1Dispatch({ type: 'reset' });
-  //   setStepComplete(false);
-  //   checkedCategoriesDispatch({ type: 'reset' });
-  //   checkedCreatorsDispatch({ type: 'reset' });
-  //   step2Dispatch({ type: 'reset' });
-  //   step4Dispatch({ type: 'reset' });
-  //   handleClose();
-  // };
+  // useEffect(() => {
+  //   if (step1State.option) {
+  //     console.log('campaignCration line 421');
+  //     setStepComplete(true);
+  //   } else {
+  //     console.log('useeffect else');
+  //     console.log(step1State.option, step2State.priorityType);
+  //     setStepComplete(false);
+  //   }
+  // }, [step1State.option, step2State.priorityType]);
 
   return (
     <Grid container direction="row" spacing={2} wrap="wrap">
@@ -479,6 +381,8 @@ const CampaignCreateStepper = (props) => {
                       categoryList={categoryList}
                       checkedCategories={checkedCategories}
                       checkedCategoriesDispatch={checkedCategoriesDispatch}
+                      priorityOpen={priorityOpen}
+                      createPaperOpen={createPaperOpen}
                     />
                   </div>
                 ) : <div />}
@@ -496,6 +400,9 @@ const CampaignCreateStepper = (props) => {
                       handleDetailOpen={handleDetailOpen}
                       handleDateOpen={handleDateOpen}
                       dateOpen={dateOpen}
+                      handleSetLandingUrlState={handleSetLandingUrlState}
+                      handleDatePickerOpen={handleDatePickerOpen}
+                      datePickerOpen={datePickerOpen}
                     />
                   </div>
                 ) : <div />}

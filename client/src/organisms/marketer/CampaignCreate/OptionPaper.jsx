@@ -88,7 +88,6 @@ const OptionPaper = (props) => {
 
   const open = Boolean(anchorEl);
 
-
   const handleNoBudgetChange = () => {
     dispatch({ key: 'noBudget' });
   };
@@ -112,6 +111,7 @@ const OptionPaper = (props) => {
   const handleChange = (event) => {
     if (event.target.checked) {
       dispatch({ key: event.target.name });
+      setStepComplete(true);
       console.log('이벤트 타겟 네임', event.target.name);
     } else {
       console.log('체크 해제', event.target.name);
@@ -127,25 +127,9 @@ const OptionPaper = (props) => {
     setAnchorEl(event.currentTarget);
   };
 
-  const handleBudgetPopoverOpen = (event) => {
-    setBudgetAnchorEl(event.currentTarget);
-  };
-
   const handlePopoverClose = () => {
     setAnchorEl(null);
     setBudgetAnchorEl(null);
-  };
-
-  // budget을 입력하였을 때 event listener
-  const onChange = (value) => {
-    dispatch({ key: 'budget', value: value.value });
-    if (Number(value.value) < 5000 && value.value !== '') {
-      setError(true);
-    } else {
-      // setExcpectedDay(parseInt(Number(value.value) / Number(total / 30), 10));
-      // setExcpectedViews(parseInt(Number(value.value) / 2, 10));
-      setError(false);
-    }
   };
 
   const checkedOptionRender = (_option) => {
@@ -218,7 +202,6 @@ const OptionPaper = (props) => {
                               checked={state.option === 'option0'}
                               onChange={handleChange}
                               fontSize="large"
-                              // disabled
                             />
                           </Grid>
                         </Grid>
@@ -250,7 +233,6 @@ const OptionPaper = (props) => {
                               checked={state.option === 'option2'}
                               onChange={handleChange}
                               fontSize="large"
-                              // disabled={step2State.type === 1}
                             />
                           </Grid>
                         </Grid>
@@ -294,23 +276,6 @@ const OptionPaper = (props) => {
           )}
         </Grid>
       </Grid>
-
-      <DescPopover open={open} anchorEl={anchorEl} handlePopoverClose={handlePopoverClose} descIndex={descIndex} contentType="option" />
-      <DescPopover
-        open={Boolean(budgetAnchorEl)}
-        anchorEl={budgetAnchorEl}
-        handlePopoverClose={handlePopoverClose}
-        descIndex={0}
-        contentType="budget"
-        anchorOrigin={{
-          vertical: 'center',
-          horizontal: 'right',
-        }}
-        transformOrigin={{
-          vertical: 'center',
-          horizontal: 'left',
-        }}
-      />
     </Grid>
   );
 };

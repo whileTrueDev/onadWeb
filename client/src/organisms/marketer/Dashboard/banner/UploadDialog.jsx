@@ -7,7 +7,7 @@ import {
 import classnames from 'classnames';
 import Check from '@material-ui/icons/Check';
 import Dialog from '../../../../atoms/Dialog/Dialog';
-import BannerDescrForm from './BannerDescForm';
+import BannerDescForm from './BannerDescForm';
 import './upload.css';
 import ImageUpload from './ImageUpload';
 import HOST from '../../../../utils/config';
@@ -95,13 +95,12 @@ const UploadDialog = (props) => {
   // url을 제출.
   const handleSubmit = (event) => {
     event.preventDefault();
-    const bannerDescription = document.getElementById('banner').value || null;
+    // const bannerDescription = document.getElementById('banner').value || null;
     // text format을 사용하기 위해 state로 사용한다.
-
-    const landingUrl = document.getElementById('url').value || null;
+    const confirm = 0;
 
     axios.post(`${HOST}/api/dashboard/marketer/banner/push`, {
-      bannerSrc: state.imageUrl, bannerDescription, landingUrl,
+      bannerSrc: state.imageUrl, confirm
     })
       .then((res) => {
         if (res.data[0]) {
@@ -142,7 +141,7 @@ const UploadDialog = (props) => {
             배너 상세정보 입력
           </StepLabel>
           <StepContent className={classes.formRoot}>
-            <BannerDescrForm
+            <BannerDescForm
               handleNext={handleNext}
               state={state}
               handleSubmit={handleSubmit}
