@@ -80,7 +80,7 @@ export default function CampaignList(props) {
         <Typography variant="h6">
           캠페인 목록
         </Typography>
-        <Button variant="contained" color="primary" onClick={campaignCreateDialog.handleOpen}>
+        <Button variant="contained" color="primary" onClick={() => { window.location.href = '/dashboard/marketer/campaigncreate'; }}>
           캠페인 등록하기
         </Button>
       </div>

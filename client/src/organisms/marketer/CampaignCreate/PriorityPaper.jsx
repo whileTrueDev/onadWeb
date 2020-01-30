@@ -8,6 +8,8 @@ import DescPopover from '../../../atoms/DescPopover';
 import StyledItemText from '../../../atoms/StyledItemText';
 import StyledSelectText from '../../../atoms/StyledSelectText';
 import GreenCheckbox from '../../../atoms/GreenCheckBox';
+import CreatorSelect from './CreatorSelectCollapse';
+import CategorySelect from './CategorySelect';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -48,12 +50,18 @@ const useStyles = makeStyles(theme => ({
   popover: {
     pointerEvents: 'none',
   },
-
+  selected: {
+    padding: theme.spacing(3),
+    [theme.breakpoints.down('sm')]: {
+      padding: theme.spacing(1),
+    },
+    backgroundColor: '#B3FAC8'
+  }
 }));
 
 const PriorityPaper = (props) => {
   const {
-    handleNext, state, dispatch, setStepComplete, creatorList, checkedCreators, checkedPriorityRender
+    handleNext, state, dispatch, setStepComplete, creatorList, checkedCreators,
     checkedCreatorsDispatch, handleBack, stepComplete, categoryList, checkedCategories, checkedCategoriesDispatch, priorityOpen, createPaperOpen
   } = props;
   const classes = useStyles();
@@ -83,13 +91,47 @@ const PriorityPaper = (props) => {
     setAnchorEl(null);
   };
 
-
+  const checkedPriorityRender = (_priority) => {
+    switch (_priority) {
+      case 'type0':
+        return (
+          <Paper className={classes.selected}>
+            <StyledSelectText primary="1. 크리에이터 우선형" secondary="원하는 크리에이터에게 광고를 넣을 수 있어요." />
+            <Grid item>
+              {checkedCreators.map(creator => (`${creator}  `))}
+            </Grid>
+            선택됨
+          </Paper>
+        );
+      case 'type1':
+        return (
+          <Paper className={classes.selected}>
+            <StyledSelectText primary="2. 카테고리 우선형" secondary="제품에 맞는 카테고리에 광고를 넣고 싶어요." />
+            <Grid item>
+              {checkedCategories.map(category => (`${category}  `))}
+            </Grid>
+            선택됨
+          </Paper>
+        );
+      case 'type2':
+        return (
+          <Paper className={classes.selected}>
+            <StyledSelectText primary="3. 노출 우선형" secondary="단기간에 노출을 많이 하고 싶어요." />
+            선택됨
+          </Paper>
+        );
+      default:
+        return (
+          <div />
+        );
+    }
+  };
   return (
     <Grid container direction="column" spacing={2} className={classes.root}>
       <Grid item>
         <Grid container direction="column" spacing={3}>
           <Grid item className={classes.item}>
-            <StyledItemText primary="셋째,&nbsp;&nbsp; 광고 송출방식 선택" secondary="해당 캠페인의 송출방식을 선택하세요." />
+            <StyledItemText primary="둘째,&nbsp;&nbsp; 광고 송출방식 선택" secondary="해당 캠페인의 송출방식을 선택하세요." />
             <Divider component="hr" style={{ height: '2px' }} />
           </Grid>
           {createPaperOpen ? (
@@ -174,49 +216,55 @@ const PriorityPaper = (props) => {
                         </Grid>
                       </Grid>
                     </Grid>
+                    <Collapse in={state.priorityType === 'type1'}>
+                      <CategorySelect
+                        setStepComplete={setStepComplete}
+                        categoryList={categoryList}
+                        checkedCategories={checkedCategories}
+                        checkedCategoriesDispatch={checkedCategoriesDispatch}
+                      />
+                    </Collapse>
                   </Paper>
                 </Grid>
-
-              </Grid>
-              <Grid item>
-                <Paper className={classes.choice}>
-                  <Grid container direction="row" justify="space-between">
-                    <Grid item>
-                      <StyledSelectText primary="3. 노출 우선형" secondary="단기간에 노출을 많이 하고 싶어요." />
-                    </Grid>
-                    <Grid item className={classes.icon}>
-                      <Grid container direction="row">
-                        <Grid item className={classes.icon}>
-                          <Help
-                            fontSize="large"
-                            color="disabled"
-                            onMouseEnter={handlePopoverOpen(2)}
-                            onMouseLeave={handlePopoverClose}
-                            aria-owns={open ? 'send-desc-popover' : undefined}
-                            aria-haspopup="true"
-                            name="type3"
-                          />
-                        </Grid>
-                        <Grid item>
-                          <GreenCheckbox
-                            name="type2"
-                            checked={state.type === 2}
-                            onChange={handleChange}
-                            onClick={handleNext(false, 4)}
-                            fontSize="large"
-                          />
+                <Grid item>
+                  <Paper className={classes.choice}>
+                    <Grid container direction="row" justify="space-between">
+                      <Grid item>
+                        <StyledSelectText primary="3. 노출 우선형" secondary="단기간에 노출을 많이 하고 싶어요." />
+                      </Grid>
+                      <Grid item className={classes.icon}>
+                        <Grid container direction="row">
+                          <Grid item className={classes.icon}>
+                            <Help
+                              fontSize="large"
+                              color="disabled"
+                              onMouseEnter={handlePopoverOpen(2)}
+                              onMouseLeave={handlePopoverClose}
+                              aria-owns={open ? 'send-desc-popover' : undefined}
+                              aria-haspopup="true"
+                              name="type3"
+                            />
+                          </Grid>
+                          <Grid item>
+                            <GreenCheckbox
+                              name="type2"
+                              checked={state.priorityType === 'type2'}
+                              onChange={handleChange}
+                              // onClick={handleNext(false, 3)}
+                              fontSize="large"
+                            />
+                          </Grid>
                         </Grid>
                       </Grid>
                     </Grid>
-                  </Grid>
-                </Paper>
+                  </Paper>
+                </Grid>
               </Grid>
             </Grid>
           )}
         </Grid>
       </Grid>
       <DescPopover open={open} anchorEl={anchorEl} handlePopoverClose={handlePopoverClose} descIndex={descIndex} contentType="priority" />
-
     </Grid>
   );
 };

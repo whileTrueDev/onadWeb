@@ -1,5 +1,6 @@
 import React from 'react';
 import makeStyles from '@material-ui/core/styles/makeStyles';
+import PropTypes from 'prop-types';
 import {
   Typography, Avatar, Grid,
 } from '@material-ui/core';
@@ -86,7 +87,7 @@ export default function CreatorTable(props) {
       render: rowData => (
         <Grid container direction="row">
           <Grid item>
-            <Avatar variant="round" className={classes.image}>
+            <Avatar variant="rounded" className={classes.image}>
               <img
                 src={rowData.creatorLogo}
                 alt={rowData.creatorName}
@@ -188,8 +189,8 @@ export default function CreatorTable(props) {
               ),
               tooltip: '그래프보기',
               render: rowData => (
-                <Grid container direction="row" justify="center" style={{ marginTop: 10 }}>
-                  <Grid item xs={5}>
+                 <Grid container direction = "row" justify="center" style={{marginTop : 10}}>
+                   <Grid item xs={5}>
                     <Grid container direction="column" spacing={1}>
                       <Grid item>
                         <StyledSelectText
@@ -201,8 +202,8 @@ export default function CreatorTable(props) {
                         <ContentsPie selectedChartData={JSON.parse(rowData.contentsGraphData)} />
                       </Grid>
                     </Grid>
-                  </Grid>
-                  <Grid item xs={5}>
+                   </Grid>
+                   <Grid item xs={5}>
                     <Grid container direction="column" spacing={1}>
                       <Grid item>
                         <StyledSelectText primary="시간대별 방송시간" className={classes.label} />
@@ -211,8 +212,8 @@ export default function CreatorTable(props) {
                         <TimeChart selectedChartData={JSON.parse(rowData.timeGraphData)} />
                       </Grid>
                     </Grid>
-                  </Grid>
-                </Grid>
+                   </Grid>
+                 </Grid>
               ),
             }
           ]}

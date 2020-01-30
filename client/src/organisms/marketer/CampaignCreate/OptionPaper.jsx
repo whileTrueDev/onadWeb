@@ -1,16 +1,13 @@
 import React, { useEffect } from 'react';
 import {
-  Grid, Paper, Divider, Collapse, Checkbox, FormControlLabel
+  Grid, Paper, Divider
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import Help from '@material-ui/icons/Help';
-import NumberFormat from 'react-number-format';
 import DescPopover from '../../../atoms/DescPopover';
 import StyledItemText from '../../../atoms/StyledItemText';
 import StyledSelectText from '../../../atoms/StyledSelectText';
 import GreenCheckbox from '../../../atoms/GreenCheckBox';
-import StyledInput from '../../../atoms/StyledInput';
-import DangerTypography from '../../../atoms/Typography/Danger';
 
 
 const useStyles = makeStyles(theme => ({
@@ -63,13 +60,20 @@ const useStyles = makeStyles(theme => ({
   error: {
     fontWeight: '700',
     fontSize: '12px'
+  },
+  selected: {
+    padding: theme.spacing(3),
+    [theme.breakpoints.down('sm')]: {
+      padding: theme.spacing(1),
+    },
+    backgroundColor: '#B3FAC8'
   }
 }));
 
 const OptionPaper = (props) => {
   const classes = useStyles();
   const {
-    handleSubmitCheck, state, dispatch, step2State, priorityOpen, setStepComplete
+    handleSubmitCheck, state, dispatch, setStepComplete, setPriorityOpen, priorityOpen
   } = props;
 
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -90,9 +94,9 @@ const OptionPaper = (props) => {
 
   useEffect(() => {
     // type 1 - 예산 미설정
-    if (state.option === 0 && state.noBudget) {
+    if (state.option === 0) {
       handleSubmitCheck(true);
-    } else if (state.option === 0 && !error && state.budget.length !== 0) {
+    } else if (state.option === 0 && !error) {
       handleSubmitCheck(true);
     } else if (state.option === 1) {
       handleSubmitCheck(true);
@@ -101,18 +105,19 @@ const OptionPaper = (props) => {
     } else {
       handleSubmitCheck(false);
     }
-  }, [error, handleSubmitCheck, state.option, state.noBudget, state.budget.length]);
+  }, [error, handleSubmitCheck, state.option]);
 
   // option을 선택하였을 때 event listener
   const handleChange = (event) => {
-    // event.preventDefault();
     if (event.target.checked) {
       dispatch({ key: event.target.name });
       setStepComplete(true);
       console.log('이벤트 타겟 네임', event.target.name);
     } else {
+      console.log('체크 해제', event.target.name);
       dispatch({ key: 'reset' });
-      setBudgetOpen(false);
+      setStepComplete(false);
+      setPriorityOpen(false);
       setError(false);
     }
   };
@@ -162,7 +167,7 @@ const OptionPaper = (props) => {
       <Grid item>
         <Grid container direction="column" spacing={3}>
           <Grid item className={classes.item}>
-            <StyledItemText primary="다섯째, &nbsp;&nbsp; 광고 유형 선택" secondary="해당 광고 캠페인의 유형을 선택하세요." />
+            <StyledItemText primary="첫째, &nbsp;&nbsp; 광고 유형 선택" secondary="해당 광고 캠페인의 유형을 선택하세요." />
             <Divider component="hr" style={{ height: '2px' }} />
           </Grid>
           {priorityOpen ? (
@@ -235,38 +240,37 @@ const OptionPaper = (props) => {
                     </Grid>
                   </Paper>
                 </Grid>
-
-              </Grid>
-              <Grid item>
-                <Paper className={classes.choice}>
-                  <Grid container direction="row" justify="space-between">
-                    <Grid item>
-                      <StyledSelectText primary="2. 배너 광고 + 클릭 광고" secondary="상품, 브랜드 홍보 뿐 아니라 구매 전환까지 하고 싶어요." />
-                    </Grid>
-                    <Grid item className={classes.icon}>
-                      <Grid container direction="row">
-                        <Grid item className={classes.icon}>
-                          <Help
-                            fontSize="large"
-                            color="disabled"
-                            onMouseEnter={handlePopoverOpen(1)}
-                            onMouseLeave={handlePopoverClose}
-                            aria-owns={open ? 'send-desc-popover' : undefined}
-                            aria-haspopup="true"
-                          />
-                        </Grid>
-                        <Grid item>
-                          <GreenCheckbox
-                            name="option1"
-                            checked={state.option === 1}
-                            onChange={handleChange}
-                            fontSize="large"
-                          />
+                <Grid item>
+                  <Paper className={classes.choice}>
+                    <Grid container direction="column" justify="space-between">
+                      <Grid item>
+                        <StyledSelectText primary="2. 배너 광고 + 클릭 광고" secondary="상품, 브랜드 홍보 뿐 아니라 구매 전환까지 하고 싶어요." />
+                      </Grid>
+                      <Grid item className={classes.icon}>
+                        <Grid container direction="row">
+                          <Grid item className={classes.icon}>
+                            <Help
+                              fontSize="large"
+                              color="disabled"
+                              onMouseEnter={handlePopoverOpen(1)}
+                              onMouseLeave={handlePopoverClose}
+                              aria-owns={open ? 'send-desc-popover' : undefined}
+                              aria-haspopup="true"
+                            />
+                          </Grid>
+                          <Grid item>
+                            <GreenCheckbox
+                              name="option1"
+                              checked={state.option === 'option1'}
+                              onChange={handleChange}
+                              fontSize="large"
+                            />
+                          </Grid>
                         </Grid>
                       </Grid>
                     </Grid>
-                  </Grid>
-                </Paper>
+                  </Paper>
+                </Grid>
               </Grid>
             </Grid>
           )}
