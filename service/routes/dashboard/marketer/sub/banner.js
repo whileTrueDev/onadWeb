@@ -74,7 +74,7 @@ router.get('/registed', (req, res) => {
 router.post('/push', (req, res) => {
   const marketerId = req._passport.session.user.userid;
   const {
-    bannerSrc, bannerDescription, landingUrl
+    bannerSrc, confirm
   } = req.body;
 
   const searchQuery = `
@@ -86,8 +86,8 @@ router.post('/push', (req, res) => {
 
   const saveQuery = `
   INSERT INTO bannerRegistered 
-  (bannerId, marketerId, bannerSrc, bannerDescription, landingUrl) 
-  VALUES (?, ?, ?, ?, ?)`;
+  (bannerId, marketerId, bannerSrc, confirmState) 
+  VALUES (?, ?, ?, ?)`;
 
   doQuery(searchQuery, [marketerId])
     .then((row) => {
@@ -105,8 +105,8 @@ router.post('/push', (req, res) => {
         bannerId = `${marketerId}_01`;
       }
       doQuery(saveQuery,
-        [bannerId, marketerId, bannerSrc, bannerDescription,
-          landingUrl])
+        [bannerId, marketerId, bannerSrc,
+          confirm])
         .then(() => {
           res.send([true, '배너가 등록되었습니다']);
 

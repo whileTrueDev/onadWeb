@@ -59,53 +59,6 @@ const BannerDescFrom = (props) => {
           <img id="preview" src={state.imageUrl} className={classes.imgPreview} alt="배너이미지" />
         </div>
       </Grid>
-
-      <Grid item>
-        <CssFormControl
-          required
-          fullWidth
-        >
-          <InputLabel shrink htmlFor="company" className={classes.label}>회사소개</InputLabel>
-          <Input
-            required
-            id="company"
-            multiline
-            className={classes.input}
-          />
-          <FormHelperText>배너를 게시할 크리에이터에게 회사를 소개해주세요.(30자 이내)</FormHelperText>
-        </CssFormControl>
-      </Grid>
-      <Grid item>
-        <CssFormControl
-          required
-          fullWidth
-        >
-          <InputLabel shrink htmlFor="company" className={classes.label}>배너소개</InputLabel>
-          <Input
-            required
-            id="banner"
-            multiline
-            className={classes.input}
-          />
-          <FormHelperText>배너를 게시할 크리에이터에게 배너를 설명해주세요.(30자 이내)</FormHelperText>
-        </CssFormControl>
-      </Grid>
-      <Grid item>
-        <CssFormControl
-          required
-        >
-          <InputLabel shrink htmlFor="company" className={classes.label}>URL</InputLabel>
-          <Input
-            required
-            defaultValue="http://"
-            type="url"
-            id="url"
-            className={classes.input}
-          />
-
-          <FormHelperText>랜딩페이지를 통해 접속할 웹페이지를 작성해주세요</FormHelperText>
-        </CssFormControl>
-      </Grid>
       <Grid item>
         <div style={{ maginTop: '16px' }}>
           <CustomButton

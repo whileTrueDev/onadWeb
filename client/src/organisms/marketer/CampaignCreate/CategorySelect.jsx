@@ -95,7 +95,6 @@ const CategorySelect = (props) => {
                     </Paper>
                   </Button>
                 </Grid>
-
               ))}
             </Grid>
           </Grid>
