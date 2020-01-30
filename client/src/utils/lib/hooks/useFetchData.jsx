@@ -1,4 +1,6 @@
-import { useState, useEffect, useCallback } from 'react';
+import {
+  useState, useEffect, useCallback, useRef
+} from 'react';
 import axios from '../../axios';
 import host from '../../config';
 import querify from '../querify';
@@ -23,6 +25,7 @@ export default function useFetchData(url, params) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
+  const didCancle = useRef(false);
   // get data function
   const callUrl = useCallback(async () => {
     try {
@@ -31,14 +34,16 @@ export default function useFetchData(url, params) {
       if (res.data) {
         if (res.data === SESSION_NOT_EXISTS) {
           history.push('/');
-        } else {
+        } else if (!didCancle.current) {
           setPayload(res.data);
         }
       } else {
         throw new Error('데이터가 존재하지 않습니다');
       }
     } catch {
-      setError(`데이터가 없습니다.${url}`);
+      if (!didCancle.current) {
+        setError(`데이터가 없습니다.${url}`);
+      }
     } finally {
       setLoading(false);
     }
@@ -46,6 +51,11 @@ export default function useFetchData(url, params) {
 
   useEffect(() => {
     callUrl();
+
+    // cleanup function
+    return () => {
+      didCancle.current = true;
+    };
   }, [callUrl]);
 
   return {

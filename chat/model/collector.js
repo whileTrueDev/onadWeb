@@ -146,9 +146,9 @@ class TwitchChatCollectorV2 {
             username: BOT_NAME,
             password: BOT_OAUTH_TOKEN
           },
-          // channels: contractedChannels
-          // // test
-          channels: ['iamsupermazinga']
+          channels: contractedChannels
+          // test
+          // channels: ['iamsupermazinga']
         };
 
         const client = new tmi.Client(OPTION);

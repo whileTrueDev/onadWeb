@@ -63,6 +63,12 @@ function makeContents(typeNumber, detail) {
     case 12:
       content = `${details.campaignName} 캠페인 삭제`;
       return content;
+    case 13:
+      content = `${details.linkTo} 링크 심사 거절됨`;
+      return content;
+    case 14:
+      content = `${details.linkTo} 링크 심사 승인됨`;
+      return content;
     default:
       throw Error('typeNumber must be need');
   }
