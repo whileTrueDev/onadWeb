@@ -1,4 +1,4 @@
-import React, { useReducer, useEffect, useState} from 'react';
+import React, { useReducer, useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import {
   Grid, Slide, Collapse
@@ -94,7 +94,7 @@ const stepReducer = (state, action) => {
 function TestChargeDialog() {
   const marketerProfileData = useFetchData('/api/dashboard/marketer/profile');
   const classes = useStyles();
-  const [vbankInfo, setVbankInfo] = useState({})
+  const [vbankInfo, setVbankInfo] = useState({});
 
   // 충전금액, 결제방법에서 사용할(step2,3) State.
   const [stepState, stepDispatch] = useReducer(
@@ -110,7 +110,7 @@ function TestChargeDialog() {
   const { selectValue, chargeType } = stepState;
 
 
-  // 전자 결제시스템 
+  // 전자 결제시스템
   function handleSubmitClick(e) {
     e.preventDefault();
 
@@ -130,54 +130,53 @@ function TestChargeDialog() {
     IMP.init('imp00026649');
 
     let buyerName;
-    // 가상계좌 경우(와일트루)와 신용카드/계좌이체(마케터 이름) 경우 분기처리 
-    switch(chargeType) {
+    // 가상계좌 경우(와일트루)와 신용카드/계좌이체(마케터 이름) 경우 분기처리
+    switch (chargeType) {
       case 'vbank':
-        buyerName = '와일트루'
+        buyerName = '와일트루';
         break;
       case 'card':
-        buyerName = marketerProfileData.payload.marketerName
+        buyerName = marketerProfileData.payload.marketerName;
         break;
       case 'trans':
-        buyerName = marketerProfileData.payload.marketerName
+        buyerName = marketerProfileData.payload.marketerName;
+        break;
       default: break;
     }
 
     // import 서버로 보낼 초기 데이터
     const paydata = {
-      pg: "danal_tpay",
-      pay_method: chargeType , // 가상계좌 or 신용카드 or 계좌이체
+      pg: 'danal_tpay',
+      pay_method: chargeType, // 가상계좌 or 신용카드 or 계좌이체
       merchant_uid: marketerProfileData.payload.marketerId + currentDateFormat,
       name: 'ONAD캐시',
-      amount: parseInt(selectValue * 1.1),
+      amount: parseInt(selectValue * 1.1, 10),
       buyer_email: marketerProfileData.payload.marketerMail,
       buyer_name: buyerName,
       buyer_tel: marketerProfileData.payload.marketerPhoneNum,
       biz_num: '6590301549'
-    }
+    };
 
     // 결제 완료 시 호출될 콜백함수
     const payCallback = (rsp) => {
       if (rsp.success) { // 결제 성공 시: 결제 승인 또는 가상계좌 발급에 성공한 경우
-        
         axios.post(`${HOST}/api/dashboard/marketer/cash/testcharge`, {
           chargeCash: selectValue,
-          chargeType: chargeType,
+          chargeType,
           imp_uid: rsp.imp_uid,
           merchant_uid: rsp.merchant_uid
         }).then((data) => { // 결제 완료에 대한 응답처리
           switch (data.data.status) {
-
             // 가상계좌 발급 완료시 로직
             case 'vbankIssued':
-             // 가상계좌 안내에 대한 데이터를 마케터에게 표시하기 위해 state에 담는다.
+              // 가상계좌 안내에 대한 데이터를 마케터에게 표시하기 위해 state에 담는다.
               setVbankInfo({
                 vbankNum: `${rsp.vbank_num}`,
                 vbankHolder: `${rsp.vbank_holder}`,
                 vbankName: `${rsp.vbank_name}`,
                 vbanDate: `${rsp.vbank_date}`,
                 vbankAmount: `${rsp.paid_amount}`,
-              })
+              });
               setIndex(preIndex => preIndex + 1);
               break;
 
@@ -185,7 +184,6 @@ function TestChargeDialog() {
             case 'success':
               if (!data[0]) {
                 setIndex(preIndex => preIndex + 1);
-
               } else {
                 console.log('cash - charge - error!');
               }
@@ -198,11 +196,11 @@ function TestChargeDialog() {
         });
       } else {
         // 결제 실패시
-        let msg = '결제가 실패하였습니다. 다시 시도해 주세요';
+        const msg = '결제가 실패하였습니다. 다시 시도해 주세요';
         alert(msg);
         window.close();
       }
-    }
+    };
 
     // 결제창 호출
     IMP.request_pay(paydata, payCallback);
@@ -218,8 +216,8 @@ function TestChargeDialog() {
     setStepComplete(false);
 
     if (index === 1) {
-      if (selectValue < 5000) {
-        alert('충전 최소 금액은 5000원 입니다')
+      if (selectValue < 10000) {
+        alert('충전 최소 금액은 10000원 입니다');
         window.close();
       } else {
         setTimeout(() => {
@@ -298,21 +296,20 @@ function TestChargeDialog() {
   const DefaultIndex = () => {
     setIndex(0);
     stepDispatch({ key: 'reset' });
-    window.close()
+    window.close();
   };
 
   // 완료 버튼 누를 시
   const finishIndex = () => {
     window.opener.location.reload();
-    window.close()
+    window.close();
   };
 
   // 하단 step 조절 버튼
-  const BottomButton = () => {
-    return (
-      <div className={classes.buttonContainer}>
-          <Grid container direction="row" justify="flex-end">
-            {index === 2
+  const BottomButton = () => (
+    <div className={classes.buttonContainer}>
+      <Grid container direction="row" justify="flex-end">
+        {index === 2
               && (
               <Grid item>
                 <Collapse in={stepComplete}>
@@ -327,7 +324,7 @@ function TestChargeDialog() {
                 </Collapse>
               </Grid>
               )}
-            { (index === 0 || index === 1)
+        { (index === 0 || index === 1)
               && (
               <Grid item>
                 <Collapse in={stepComplete}>
@@ -342,50 +339,51 @@ function TestChargeDialog() {
                 </Collapse>
               </Grid>
               )}
-            {index === 1 || index === 2 ? (
-              <Grid item>
-                <Button onClick={handleBack} className={classes.button}>
+        {index === 1 || index === 2 ? (
+          <Grid item>
+            <Button onClick={handleBack} className={classes.button}>
                 뒤로
-                </Button>
-              </Grid>
-            ) : null }
-            {index !== 3
+            </Button>
+          </Grid>
+        ) : null }
+        {index !== 3
           && <Grid item><Button onClick={DefaultIndex}>취소</Button></Grid>
           }
-            {index === 3
+        {index === 3
           && <Grid item><Button onClick={finishIndex}>완료</Button></Grid>
           }
-          </Grid>
-        </div>
-    )
-  }
+      </Grid>
+    </div>
+  );
 
   useEffect(() => {
-    axios.get(`${HOST}/api/dashboard/marketer/cash`)
-    .then((res) => {
-      const currentCashNumber = res.data.cashAmount.replace(',', '');
-      stepDispatch({key:'currentCash', value: currentCashNumber})
-    }
-    )
-  }, [])
+    axios.get(`${HOST}/api/dashboard/marketer/cash/defaultCash`)
+      .then((res) => {
+        if (res.data) {
+          const currentCashNumber = res.data;
+          stepDispatch({ key: 'currentCash', value: currentCashNumber });
+        }
+      });
+  }, []);
 
   return (
-      <div className={classes.container}>
-        <div className={classes.titleWrap}>
-          <div style={{ fontSize: 18, paddingTop: 15 }}>
+    <div className={classes.container}>
+      <div className={classes.titleWrap}>
+        <div style={{ fontSize: 18, paddingTop: 15 }}>
               OnAD 캐시 충전하기 Step
-            {' '}
-            {index + 1}/4
-          </div>
-          <h4 className={classes.title}>{sources.title[index]}</h4>
+          {' '}
+          {index + 1}
+/4
         </div>
-        <Slide direction="right" in={paperSwitch} mountOnEnter unmountOnExit timeout={{ exit: 500 }}>
-          <div>
-            {setSteps(index)}
-          </div>
-        </Slide>
-        <BottomButton />
+        <h4 className={classes.title}>{sources.title[index]}</h4>
       </div>
+      <Slide direction="right" in={paperSwitch} mountOnEnter unmountOnExit timeout={{ exit: 500 }}>
+        <div>
+          {setSteps(index)}
+        </div>
+      </Slide>
+      <BottomButton />
+    </div>
   );
 }
 

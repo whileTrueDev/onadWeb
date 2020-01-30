@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React from 'react';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import Dialog from '@material-ui/core/Dialog';
 import Paper from '@material-ui/core/Paper';
@@ -51,9 +50,19 @@ const SignOutDialog = (props) => {
           <p>사업자 등록증 이미지, 개인식별자, 등록한 배너, 등록한 캠페인, 충전된 캐시</p>
         </Typography>
         <Button color="info" onClick={handleOpen}>
-          환불하기
+          취소
         </Button>
-        <Button color="danger" onClick={() => signOutFunc()}>
+        <Button
+          color="danger"
+          onClick={() => {
+            if (window.confirm('정말로 탈퇴하십니까?')) {
+              signOutFunc();
+            } else {
+              // 취소시 다이얼로그 꺼지게
+              handleOpen();
+            }
+          }}
+        >
           탈퇴하기
         </Button>
       </Paper>

@@ -23,7 +23,6 @@ const useStyles = makeStyles(theme => ({
     pointerEvents: 'none',
   },
   choice: props => ({
-    // padding: theme.spacing(3),
     padding: props.padding === 0 ? 0 : theme.spacing(3),
     paddingBottom: theme.spacing(3),
     [theme.breakpoints.down('sm')]: {

@@ -6,17 +6,16 @@ import SignOutDialog from './SignOutDialog';
 import HOST from '../../../../utils/config';
 
 const SignOut = (props) => {
-  const { classes, userData } = props;
+  const { userData } = props;
   const [open, openState] = useState(false);
   const [marketerId, setMarketerId] = useState();
-  const myClass = {
-    buttonWrapper: {
-      display: 'flex',
-      flexDirection: 'row-reverse',
-      alignItems: 'center',
-
-    },
-  };
+  // const myClass = {
+  //   buttonWrapper: {
+  //     display: 'flex',
+  //     flexDirection: 'row-reverse',
+  //     alignItems: 'center',
+  //   },
+  // };
 
   function handleOpen() {
     openState(!open);
@@ -37,7 +36,7 @@ const SignOut = (props) => {
   return (
 
     <div style={{ display: 'flex' }}>
-      <Typography style={{ margin: '5px', border: '5px' }}>
+      <Typography variant="body2" style={{ margin: '5px', border: '5px' }}>
         더 이상 온애드를 사용하시지 않나요?
       </Typography>
       <Typography

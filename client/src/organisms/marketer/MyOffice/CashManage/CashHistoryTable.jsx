@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 // core
 import withStyles from '@material-ui/core/styles/withStyles';
@@ -29,9 +29,9 @@ function CashHistory(props) {
   useEffect(() => {
     axios.post(`${HOST}/api/dashboard/marketer/cash/vbankCancle`)
       .then((row) => {
-        setVbankload(row.data)
-      })
-  }, [setVbankload, vbankload])
+        setVbankload(row.data);
+      });
+  }, [setVbankload, vbankload]);
 
   return (
     <Card>

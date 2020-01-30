@@ -1,41 +1,25 @@
-import React from 'react';
+import React, {useReducer} from 'react';
 import PropTypes from 'prop-types';
 // material ui core
 import { makeStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-import Tooltip from '@material-ui/core/Tooltip';
-import Divider from '@material-ui/core/Divider';
-import RadioGroup from '@material-ui/core/RadioGroup';
-import Radio from '@material-ui/core/Radio';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import TextField from '@material-ui/core/TextField';
-import DialogContent from '@material-ui/core/DialogContent';
 import axios from '../../../utils/axios';
+import {
+  Grid, Slide, Collapse
+} from '@material-ui/core';
 // customized component
 import Button from '../../../atoms/CustomButtons/Button';
-import Dialog from '../../../atoms/Dialog/Dialog';
-import Warning from '../../../atoms/Typography/Warning';
+import Dialog from './Withdrawal/Dialog';
 import HOST from '../../../utils/config';
 import history from '../../../history';
+import WithdrawalAgreement from './Withdrawal/WithdrawalAgreement'
+import WithdrawalAmount from './Withdrawal/WithdrawalAmount'
+import WithdrawalConfirm from './Withdrawal/WithdrawalConfirm'
+import WithdrawalComplete from './Withdrawal/WithdrawalComplete'
+import sources from './source/sources';
 
 const useStyles = makeStyles(theme => ({
-  inDialogContent: {
-    padding: theme.spacing(1),
-    marginLeft: 30,
-    marginRight: 55,
-    outline: 'none',
-  },
-  contentWrapper: {
-    margin: '20px 0px 20px 0px',
-  },
   contentTitle: {
     fontWeight: 'bold',
-  },
-  contentDetail: {
-    marginTop: theme.spacing(1),
-  },
-  inDialogButton: {
-    textAlign: 'center',
   },
   selectValue: {
     color: '#333',
@@ -46,311 +30,263 @@ const useStyles = makeStyles(theme => ({
     width: 250,
     fontSize: 16,
   },
-  dialog: {
-    marginTop: theme.spacing(2),
+  paper: {
+    maxWidth: '1200px',
+    width: '1200px',
+    [theme.breakpoints.down('sm')]: {
+      width: '100%'
+    }
+  },
+  button: {
     marginRight: theme.spacing(1),
-    marginLeft: theme.spacing(1),
   },
-  dialogContent: {
-    marginBottom: theme.spacing(1),
+  end: {
+    color: '#fff',
+    marginRight: theme.spacing(1),
   },
+  title: {
+    marginTop: 5,
+    paddingBottom: 10,
+    fontWeight: '600',
+  },
+  titleWrap: {
+    background: 'linear-gradient(45deg, #FFAA00 30%, #FF8E53 90%)',
+    color: 'white',
+    textAlign: 'center'
+  }
 }));
 
-function useWithdrawalConfirmDialog(handleClose) {
-  const [withdrawalConfirmDialog, setWithdrawalConfirmDialog] = React.useState(false);
-
-  function handleConfirmDialogClose() {
-    setWithdrawalConfirmDialog(false);
-    handleClose(); // 모달창까지 닫기
+// key ,value를 이용하여 state의 값에 접근
+const stepReducer = (state, action) => {
+  switch (action.key) {
+    case 'currentCash': {
+      return { ...state, currentCash: action.value };
+    }
+    case 'selectValue': {
+      return { ...state, selectValue: action.value };
+    }
+    case 'checked': {
+      return { ...state, checked: action.value };
+    }
+    case 'totalIncome': {
+      return { ...state, totalIncome: action.value };
+    }
+    case 'reset': {
+      return { ...state, selectValue: '0', checked: false};
+    }
+    default: {
+      return state;
+    }
   }
+};
 
-  function handleOnlyDialogClose() {
-    setWithdrawalConfirmDialog(false);
-  }
-
-  function handleConfirmDialogOpen() {
-    setWithdrawalConfirmDialog(true);
-  }
-
-  return {
-    withdrawalConfirmDialog,
-    handleConfirmDialogClose,
-    handleOnlyDialogClose,
-    handleConfirmDialogOpen,
-  };
-}
-
-function useValue(defaultValue) {
-  const [selectValue, setValue] = React.useState(defaultValue);
-
-  const handleChange = (event) => {
-    setValue(event.target.value);
-  };
-
-  return { selectValue, handleChange };
-}
 
 function WithdrawDialog(props) {
   const classes = useStyles();
   const {
     open, handleClose, accountNumber, receivable, realName
   } = props;
-  // select value
-  const { selectValue, handleChange } = useValue('0');
+  
+  const currentCashNumber = Number(receivable)
 
-  // 출금신청 스낵바
-  const {
-    withdrawalConfirmDialog, handleConfirmDialogClose,
-    handleOnlyDialogClose, handleConfirmDialogOpen,
-  } = useWithdrawalConfirmDialog(handleClose);
-
-  // 결제 진행 버튼 클릭
-  function handleClick() {
-    handleConfirmDialogOpen();
-  }
-
-  function handleSubmitClick() {
-    if (receivable - selectValue < 0) {
-      alert('장난치지마세요!!!');
-    } else if (selectValue < 30000) {
-      alert('3만원 이상부터 출금이 가능해요!');
-    } else {
-      // 해당 금액 만큼 출금 내역에 추가하는 요청
-      axios.post(`${HOST}/api/dashboard/creator/withdrawal`, {
-        withdrawalAmount: selectValue,
-      }).then((res) => {
-        if (!res.data.error) {
-          handleConfirmDialogClose();
-          alert('출금 신청이 완료되었습니다.');
-          history.push(window.location.pathname);
-        } else {
-          alert('현재는 출금 신청이 불가능하오니 잠시 후 시도해주시기 바랍니다.');
-          history.push(window.location.pathname);
-        }
-      }).catch((err) => {
-        alert('현재는 출금 신청이 불가능하오니 잠시 후 시도해주시기 바랍니다.');
-        history.push(window.location.pathname);
-      });
+  // 출금 신청 절차에서 사용할 (step) state
+  const [stepState, stepDispatch] = useReducer(
+    stepReducer,
+    {
+      currentCash: currentCashNumber,
+      selectValue: '',
+      checked: false,
+      totalIncome: ''
     }
+  );
+
+  const { selectValue, checked } = stepState;
+
+  function handleSubmitClick(event) {
+    event.preventDefault();
+
+    // 해당 금액 만큼 출금 내역에 추가하는 요청
+    axios.post(`${HOST}/api/dashboard/creator/withdrawal`, {
+      withdrawalAmount: selectValue,
+    }).then((res) => {
+      setIndex(preIndex => preIndex + 1);
+    }).catch((err) => {
+      console.log(err);
+      history.push('/dashboard/creator/main');
+    });
   }
+
+  const [stepComplete, setStepComplete] = React.useState(false); // 현재 step에서 다음 step으로 넘어가기위한 state
+  const [paperSwitch, setPaperSwitch] = React.useState(true); // animation을 위한 state
+  const [index, setIndex] = React.useState(0); // 각 step을 정의하는  state
+
+  const handleNext = go => (event) => {
+    event.preventDefault();
+    setPaperSwitch(false);
+    setStepComplete(false);
+
+    if (index === 1) {
+      if (currentCashNumber - selectValue < 0 || selectValue < 30000) {
+        alert('출금 신청 금액은 30000원 미만에서는 불가하며 출금 신청 금액이 보유 수익금보다 클 수 없습니다.');
+        history.push('/dashboard/creator/main')
+      } else {
+        setTimeout(() => {
+          if (go) {
+            setIndex(go);
+          } else {
+            setIndex(preIndex => preIndex + 1);
+          }
+          setPaperSwitch(true);
+        }, 500);
+      }
+    } else {
+      setTimeout(() => {
+        if (go) {
+          setIndex(go);
+        } else {
+          setIndex(preIndex => preIndex + 1);
+        }
+        setPaperSwitch(true);
+      }, 500);
+    }
+  };
+
+  const handleBack = (event) => {
+    event.preventDefault();
+    setStepComplete(false);
+    setPaperSwitch(false);
+    if (index === 0 || index === 1 || index === 2 ) {
+      stepDispatch({ key: 'reset' });
+    }
+    setTimeout(() => {
+      setIndex(preIndex => preIndex - 1);
+      setPaperSwitch(true);
+    }, 500);
+  };
+
+  const setSteps = (_index) => {
+    switch (_index) {
+      case 0:
+        return (
+          <WithdrawalAgreement
+            setStepComplete={setStepComplete}
+            checked={checked}
+            dispatch={stepDispatch}
+          />
+        );
+      case 1:
+        return (
+          <WithdrawalAmount
+            setStepComplete={setStepComplete}
+            state={stepState}
+            dispatch={stepDispatch}
+            stepComplete={stepComplete}
+            accountNumber={accountNumber}
+            realName={realName}
+          />
+        );
+      case 2:
+        return (
+          <div>
+            <WithdrawalConfirm
+              state={stepState}
+              accountNumber={accountNumber}
+              realName={realName}
+            />
+          </div>
+        );
+      case 3:
+        return (
+          <WithdrawalComplete
+            state={stepState}
+          />
+        );
+      default:
+        return <div />;
+    }
+  };
+
+  const DefaultIndex = () => {
+    handleClose();
+    setIndex(0);
+    stepDispatch({ key: 'reset' });
+  };
+
+  const finishIndex = () => {
+    handleClose();
+    history.push('/dashboard/creator/main');
+  };
 
   return (
     <Dialog
       open={open}
-      onClose={handleClose}
-      title="출금 신청"
+      onClose={index !== 3 ? (DefaultIndex) : (finishIndex)}
       maxWidth="sm"
       fullWidth
       buttons={(
         <div>
-          <Button
-            color="info"
-            onClick={handleClick}
-            disabled={(!(receivable >= selectValue)) || !(selectValue > 0)}
-          >
-              진행
-          </Button>
-          <Button onClick={handleClose}>
-              취소
-          </Button>
-
+          <Grid container direction="row">
+            {index === 2
+              && (
+              <Grid item>
+                <Collapse in={true}>
+                  <Button
+                    variant="contained"
+                    color="info"
+                    onClick={handleSubmitClick}
+                    className={classes.end}
+                  >
+                    신청
+                  </Button>
+                </Collapse>
+              </Grid>
+              )}
+            { (index === 0 || index === 1)
+              && (
+              <Grid item>
+                <Collapse in={stepComplete}>
+                  <Button
+                    variant="contained"
+                    color="info"
+                    onClick={handleNext()}
+                    className={classes.end}
+                  >
+                    다음
+                  </Button>
+                </Collapse>
+              </Grid>
+              )}
+            { (index === 1 || index === 2) ? (
+              <Grid item>
+                <Button onClick={handleBack} className={classes.button}>
+                뒤로
+                </Button>
+              </Grid>
+            ) : null }
+            {index !== 3
+          && <Grid item><Button onClick={DefaultIndex}>취소</Button></Grid>
+          }
+            {index === 3
+          && <Grid item><Button onClick={finishIndex}>완료</Button></Grid>
+          }
+          </Grid>
         </div>
       )}
     >
-      <div className={classes.Dialog}>
-
-        {/* 모달내용 */}
-        <div className={classes.inDialogContent}>
-          {/* 출금계좌 */}
-          <div className={classes.contentWrapper}>
-            <Typography variant="subtitle1" id="select-account" className={classes.contentTitle}>
-            입금 계좌
-            </Typography>
-            <Typography
-              variant="h5"
-              id="select-account"
-              className={classes.contentDetail}
-            >
-              {`${accountNumber.split('_')[0]}   ${accountNumber.split('_')[1]}`}
-            </Typography>
+      <div>
+        <div className={classes.titleWrap}>
+          <div style={{ fontSize: 18, paddingTop: 15 }}>
+              OnAD 출금신청 Step
+            {' '}
+            {index + 1}/4
           </div>
-          <Divider />
-
-          {/* 예금주 */}
-          <div className={classes.contentWrapper}>
-            <Typography variant="subtitle1" id="select-account" className={classes.contentTitle}>
-            예금주
-            </Typography>
-            <Typography
-              variant="h5"
-              id="select-account"
-              className={classes.contentDetail}
-            >
-              {`${realName}`}
-            </Typography>
-          </div>
-          <Divider />
-
-          {/* 출금가능금액 */}
-          <div className={classes.contentWrapper}>
-            <Typography className={classes.contentTitle} variant="subtitle1">
-            출금 가능 금액
-            </Typography>
-            <Typography
-              variant="h4"
-              id="select-account"
-              className={classes.contentDetail}
-            >
-              {`${receivable} 원`}
-            </Typography>
-          </div>
-          <Divider />
-
-          <div>
-            <Typography variant="caption" gutterBottom>
-            * 출금은 최소 3만원 이상부터 가능합니다.
-            </Typography>
-            <br />
-            <Typography variant="caption" gutterBottom>
-            * 매달 10일 기준으로 정산하여 입급합니다.
-            </Typography>
-            <br />
-            <Typography variant="caption" gutterBottom>
-            * 사업소득 원천신고액 3.3%를 제한 금액이 입금됩니다.
-            </Typography>
-            <br />
-            <Typography variant="caption" gutterBottom>
-            * 계좌번호와 예금주가 일치하지 않을 경우 출금 요청이 거절될 수 있으니 정확히 입력해주세요.
-            </Typography>
-          </div>
-
-          {/* 출금금액입력 */}
-          <div className={classes.contentWrapper} style={{ position: 'relative', width: 150 }}>
-            <Typography className={classes.contentTitle} variant="subtitle1">
-              출금 금액
-            </Typography>
-            <RadioGroup
-              name="howmuch"
-              className={classes.contentDetail}
-              value={selectValue}
-              onChange={handleChange}
-            >
-              <FormControlLabel
-                value="30000"
-                control={<Radio color="primary" />}
-                label={
-                  receivable >= 30000
-                    ? (
-                      <Typography variant="h6" className={classes.selectValue}>
-                    30,000 원
-                      </Typography>
-                    )
-                    : (
-                      <Typography variant="h6">
-                    30,000 원
-                      </Typography>
-                    )
-                }
-                disabled={!(receivable >= 30000)}
-              />
-              <FormControlLabel
-                value="50000"
-                control={<Radio color="primary" />}
-                label={
-                  receivable >= 50000
-                    ? (
-                      <Typography variant="h6" className={classes.selectValue}>
-                    50,000 원
-                      </Typography>
-                    )
-                    : (
-                      <Typography variant="h6">
-                    50,000 원
-                      </Typography>
-                    )
-                }
-                disabled={!(receivable >= 50000)}
-              />
-              <FormControlLabel
-                value="100000"
-                control={<Radio color="primary" />}
-                label={
-                  receivable >= 100000
-                    ? (
-                      <Typography variant="h6" className={classes.selectValue}>
-                    100,000 원
-                      </Typography>
-                    )
-                    : (
-                      <Typography variant="h6">
-                    100,000 원
-                      </Typography>
-                    )
-                }
-                disabled={!(receivable >= 100000)}
-              />
-            </RadioGroup>
-            <div style={{ position: 'absolute', top: 50, left: 200 }}>
-              <Tooltip title="직접입력도 가능합니다.">
-                <TextField
-                  id="selectValue"
-                  label={(
-                    <Typography variant="h6" className={classes.selectValue}>
-                    출금할 금액을 입력하세요
-                    </Typography>
-                  )}
-                  type="number"
-                  className={classes.textField}
-                  value={selectValue}
-                  onChange={handleChange}
-                  margin="normal"
-                  error={(!(receivable >= selectValue)) || !(selectValue >= 0)}
-                  variant="outlined"
-                  helperText={((receivable >= selectValue) && (selectValue >= 0)) ? '' : '입력이 잘못되었어요!'}
-                />
-              </Tooltip>
-            </div>
-          </div>
+          <h4 className={classes.title}>{sources.titleWithdrawal[index]}</h4>
         </div>
-        {/* 출금 신청 완료 시의 notification */}
-        <Dialog
-          open={withdrawalConfirmDialog}
-          onClose={handleConfirmDialogClose}
-          buttons={(
-            <div>
-              <Button onClick={handleSubmitClick} color="info">
-              확인
-              </Button>
-              <Button onClick={handleOnlyDialogClose}>
-              취소
-              </Button>
-            </div>
-          )}
-        >
-          <DialogContent className={classes.dialog}>
-            <Typography className={classes.dialogContent} variant="h5" marked="center">
-              {`계좌번호 : ${accountNumber}`}
-            </Typography>
-            <Typography className={classes.dialogContent} variant="h5" marked="center">
-              {`예금주 : ${realName}`}
-            </Typography>
-            <Typography className={classes.dialogContent} variant="h5" marked="center">
-              {`출금 신청액 : ${selectValue}`}
-            </Typography>
-            <Typography className={classes.dialogContent} variant="h5" marked="center">
-              {`출금 이후 잔여 출금 가능 금액 : ${receivable - selectValue}`}
-            </Typography>
-            <Warning>
-            <Typography variant="h6" marked="center">
-              {'해당 내용이 확실한가요?'}
-            </Typography>
-            <Typography variant="h6" marked="center">
-              {'입금까지 하루 또는 이틀이 소요되어요!!'}
-            </Typography>
-            </Warning>
-          </DialogContent>
-        </Dialog>
-
+        <Slide direction="right" in={paperSwitch} mountOnEnter unmountOnExit timeout={{ exit: 500 }}>
+          <div>
+            {setSteps(index)}
+          </div>
+        </Slide>
       </div>
     </Dialog>
   );

@@ -1,4 +1,4 @@
-import React, { useState, useReducer } from 'react';
+import React, { useState, useEffect, useReducer } from 'react';
 import PropTypes from 'prop-types';
 import {
   withStyles,
@@ -8,11 +8,10 @@ import {
   StepContent,
 } from '@material-ui/core';
 import axios from '../../../utils/axios';
-
+import PlatformRegistForm from './PlatformRegistForm';
 import Usertype from './Usertype';
 import RegistForm from './RegistForm';
 import PaperSheet from './Paper';
-import IndentityVerification from './IdentityVerification';
 import HOST from '../../../utils/config';
 import withRoot from '../Main/withRoot';
 import history from '../../../history';
@@ -46,7 +45,7 @@ const initialState = {
   password: false,
   repasswd: false,
   checkDuplication: true,
-  email: false,
+  email: '',
   phoneNum: '',
   domain: '',
 };
@@ -79,7 +78,7 @@ const myReducer = (state, action) => {
       //   return { ...state, email: false };
       // }
       // return { ...state, email: true };
-      return { ...state, email: false };
+      return { ...state, email: action.value };
     }
     case 'phoneNum': {
       return { ...state, phoneNum: action.value };
@@ -104,19 +103,25 @@ const myReducer = (state, action) => {
 };
 
 const RegistStepper = withRoot((props) => {
-  const { classes } = props;
+  const { classes, platform } = props;
   const [activeStep, setStep] = useState(0);
   const [userType, setType] = useState(0);
   const [state, dispatch] = useReducer(myReducer, initialState);
   const [loading, setLoading] = useState(0);
-  const [open, setOpen] = useState(0);
-  const [defaultName, setDefaultName] = useState('');
+  // const [open, setOpen] = useState(0);
+  // const [defaultName, setDefaultName] = useState('');
+  const platformList = ['', 'google', 'naver', 'kakao'];
+  useEffect(() => {
+    if (platform !== undefined) {
+      alert('최초 로그인 이므로 회원가입을 시작합니다.');
+    }
+  }, [platform]);
 
   const handleNext = () => {
     setStep(activeStep + 1);
-    if (activeStep === 0) {
-      setOpen(1);
-    }
+    // if (activeStep === 0) {
+    //   setOpen(1);
+    // }
   };
 
   const handleBack = () => {
@@ -133,27 +138,78 @@ const RegistStepper = withRoot((props) => {
     setType(type);
   };
 
-
   const handleUserSubmit = (user) => {
-    console.log(user);
-    axios.post(`${HOST}/api/regist/marketer`, user)
-      .then((res) => {
-        const { error } = res.data;
-        if (!error) {
-          alert('등록한 이메일로 인증메일을 발송하였습니다. 이메일을 확인하세요!');
-          setLoading(0);
-          history.push('/');
-        } else {
+    const platformType = platformList.indexOf(platform);
+    const returnUser = {
+      ...user,
+      platformType
+    };
+    if (platform === undefined) {
+      axios.post(`${HOST}/api/regist/marketer`, user)
+        .then((res) => {
+          const { error } = res.data;
+          if (!error) {
+            alert('등록한 이메일로 인증메일을 발송하였습니다. 이메일을 확인하세요!');
+            setLoading(0);
+            history.push('/');
+          } else {
+            alert('등록중 오류가 났습니다. 본사로 문의해주세요.');
+            setLoading(0);
+            history.push('/');
+          }
+        })
+        .catch(() => {
           alert('등록중 오류가 났습니다. 본사로 문의해주세요.');
           setLoading(0);
           history.push('/');
-        }
-      })
-      .catch(() => {
-        alert('등록중 오류가 났습니다. 본사로 문의해주세요.');
-        setLoading(0);
-        history.push('/');
-      });
+        });
+    } else {
+      axios.post(`${HOST}/api/regist/marketer/platform`, returnUser)
+        .then((res) => {
+          const { error } = res.data;
+          if (!error) {
+            alert('회원가입이 완료되었습니다. 다시 로그인 하세요.');
+            setLoading(0);
+            history.push('/');
+          } else {
+            alert('등록중 오류가 났습니다. 본사로 문의해주세요.');
+            setLoading(0);
+            history.push('/');
+          }
+        })
+        .catch(() => {
+          alert('등록중 오류가 났습니다. 본사로 문의해주세요.');
+          setLoading(0);
+          history.push('/');
+        });
+    }
+  };
+
+  const getRegistComponent = () => {
+    if (platform === undefined) {
+      return (
+        <RegistForm
+          userType={userType}
+          handleUserSubmit={handleUserSubmit}
+          handleBack={handleBack}
+          state={state}
+          dispatch={dispatch}
+          loading={loading}
+          setLoading={setLoading}
+        />
+      );
+    }
+    return (
+      <PlatformRegistForm
+        userType={userType}
+        handleUserSubmit={handleUserSubmit}
+        handleBack={handleBack}
+        state={state}
+        dispatch={dispatch}
+        loading={loading}
+        setLoading={setLoading}
+      />
+    );
   };
 
   return (
@@ -167,13 +223,13 @@ const RegistStepper = withRoot((props) => {
             <Usertype typeChange={typeChange} handleNext={handleNext} />
           </StepContent>
         </Step>
-        <Step key="1">
+        {/* <Step key="1">
           <StepLabel>미성년자 확인</StepLabel>
           <StepContent>
             <IndentityVerification handleNext={handleNext} handleBack={handleBack} open={open} setOpen={setOpen} setDefaultName={setDefaultName} />
           </StepContent>
-        </Step>
-        <Step key="2">
+        </Step> */}
+        <Step key="1">
           <StepLabel>정보 동의 및 계약</StepLabel>
           <StepContent>
             <PaperSheet
@@ -185,16 +241,7 @@ const RegistStepper = withRoot((props) => {
         <Step key="3">
           <StepLabel>개인정보 입력</StepLabel>
           <StepContent>
-            <RegistForm
-              userType={userType}
-              handleUserSubmit={handleUserSubmit}
-              handleBack={handleBack}
-              state={state}
-              dispatch={dispatch}
-              loading={loading}
-              setLoading={setLoading}
-              // defaultName={defaultName}
-            />
+            { getRegistComponent()}
           </StepContent>
         </Step>
       </Stepper>

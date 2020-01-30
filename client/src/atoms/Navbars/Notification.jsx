@@ -2,16 +2,22 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import {
-  Typography, Divider, Badge
+  Typography, Divider, Badge, Popper
 } from '@material-ui/core';
-import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import useUpdateData from '../../utils/lib/hooks/useUpdateData';
+
 
 const useStyles = makeStyles(() => ({
   contents: {
     width: 420,
     maxHeight: 540,
+    zIndex: '1300',
+    opacity: 1,
+    backgroundColor: 'white',
+    boxShadow: '1px 1px 1px 1px gray',
+    overflowX: 'hidden',
+    overflowY: 'auto'
   },
   title: {
     padding: 8, display: 'flex', justifyContent: 'space-between'
@@ -27,12 +33,11 @@ const useStyles = makeStyles(() => ({
 const UNREAD_STATE = 0; // 읽지않음 상태값
 
 function Notification(props) {
+  const userType = window.location.pathname.split('/')[2];
   const classes = useStyles();
   const {
-    anchorEl, handleMenuClose, notificationData,
+    anchorEl, notificationData
   } = props;
-
-  const userType = window.location.pathname.split('/')[2];
   const updateRequest = useUpdateData(`/api/dashboard/${userType}/notification/update/read`);
 
   function updateNotifications(notiArray, targetIndex) {
@@ -46,17 +51,20 @@ function Notification(props) {
   }
 
   return (
-    <Menu
-      elevation={0}
-      transformOrigin={{
-        vertical: 'top',
-        horizontal: 'right',
-      }}
-      id="notification-menu"
-      keepMounted
+    <Popper
+      placement="top-end"
       anchorEl={anchorEl}
       open={Boolean(anchorEl)}
-      onClose={handleMenuClose}
+      disablePortal
+      modifiers={{
+        flip: {
+          enabled: true,
+        },
+        preventOverflow: {
+          enabled: false,
+          boundariesElement: 'scrollParent',
+        }
+      }}
     >
       {/* 공지 메뉴 컴포넌트 */}
       <div className={classes.contents}>
@@ -114,15 +122,12 @@ function Notification(props) {
         </div>
         )}
       </div>
-
-
-    </Menu>
+    </Popper>
   );
 }
 
 Notification.propTypes = {
   anchorEl: PropTypes.oneOfType([PropTypes.node, PropTypes.string, PropTypes.object]),
-  handleMenuClose: PropTypes.func.isRequired,
   notificationData: PropTypes.object.isRequired,
 };
 

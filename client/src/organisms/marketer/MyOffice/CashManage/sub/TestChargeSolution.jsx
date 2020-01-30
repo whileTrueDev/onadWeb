@@ -156,7 +156,8 @@ const TestChargeSolution = (props) => {
           <Grid item className={classes.warning}>
             <Grid container>
               <Grid item className={classes.content}>
-                자동 충전 금액에는 부가세가 적용되며 '계좌이체'의 경우 1인 1계좌 하루 최대 50만원까지 결제 가능합니다
+                자동 충전 금액에는 부가세가 적용되며 '계좌이체'의 경우 1인 1계좌 하루 최대 50만원까지 결제 가능합니다.
+                또한, 신용카드 결제시 및 프로모션 이벤트 금액에 대한 세금계산서 발급은 불가합니다.
               </Grid>
             </Grid>
           </Grid>

@@ -40,13 +40,13 @@ const makeContents = reportData => ({
       unit: '회'
     },
     {
-      title: '배너 총 클릭 수',
-      value: Number(reportData.totalClick) || 0,
-      unit: '회'
+      title: '배너 총 노출 시간',
+      value: Number(reportData.totalTime) || 0,
+      unit: '시간'
     },
     {
-      title: '홈페이지 이동 수',
-      value: Number(reportData.totalTransfer) || 0,
+      title: '배너 총 클릭 수',
+      value: Number(reportData.totalClick) || 0,
       unit: '회'
     },
   ],
