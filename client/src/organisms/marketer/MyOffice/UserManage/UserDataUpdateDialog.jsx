@@ -1,0 +1,673 @@
+import React from 'react';
+import PropTypes from 'prop-types';
+import Typography from '@material-ui/core/Typography';
+import {
+  Grid, Checkbox, FormControlLabel, Divider, Snackbar, IconButton, TextField, InputAdornment, MenuItem
+} from '@material-ui/core';
+import Check from '@material-ui/icons/Check';
+import CloseIcon from '@material-ui/icons/Close';
+
+import { makeStyles } from '@material-ui/core/styles';
+import NumberFormat from 'react-number-format';
+import Dialog from '../../../../atoms/Dialog/Dialog';
+import Button from '../../../../atoms/CustomButtons/Button';
+import StyledInput from '../../../../atoms/StyledInput';
+import DangerTypography from '../../../../atoms/Typography/Danger';
+import axios from '../../../../utils/axios';
+import history from '../../../../history';
+import HOST from '../../../../utils/config';
+import Success from '../../../../atoms/Success';
+import useDialog from '../../../../utils/lib/hooks/useDialog';
+
+const useStyles = makeStyles(theme => ({
+  item: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  textField: {
+    [theme.breakpoints.down('xs')]: {
+      minWidth: '200px',
+      marginRight: 0,
+    },
+    [theme.breakpoints.up('sm')]: {
+      minWidth: '300px',
+      marginRight: '10px',
+    },
+  },
+  emailField: {
+    width: '100%'
+  },
+  text: {
+    marginTop: theme.spacing(2),
+    minHeight: '90px'
+  },
+  input: {
+    width: '300px',
+    [theme.breakpoints.down('sm')]: {
+      width: '100%',
+      fontSize: '12px',
+      margin: 0,
+    },
+  },
+  campaign: {
+    fontSize: '16px',
+    fontWeight: 700,
+    color: '#3c4858'
+  },
+  contents: {
+    marginTop: theme.spacing(2),
+    padding: theme.spacing(3),
+    backgroundColor: '#f9f9f9'
+  }
+}));
+
+const initialState = {
+  passwordValue: '',
+  id: false,
+  password: false,
+  repasswd: false,
+  checkDuplication: true,
+  email: '',
+  phoneNum: '',
+  domain: '',
+};
+
+const domains = [
+  { value: 'naver.com' },
+  { value: 'daum.net' },
+  { value: 'nate.com' },
+  { value: 'gmail.com' },
+  { value: 'hotmail.com' },
+  { value: 'yahoo.co.kr' },
+  { value: '직접입력' },
+];
+
+
+// reducer를 사용하여 Error를 handling하자
+const reducer = (state, action) => {
+  switch (action.type) {
+    case 'name': {
+      return { ...state, name: action.value };
+    }
+    case 'password': {
+      const regx = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,20}$/;
+      if (regx.test(action.value)) {
+        return { ...state, passwordValue: action.value, password: false };
+      }
+      return { ...state, passwordValue: action.value, password: true };
+    }
+    // repasswd는 패스워드와 동일한지 여부를 체크하는 action
+    case 'repasswd': {
+      if (state.passwordValue === action.value) {
+        return { ...state, repasswd: false };
+      }
+      return { ...state, repasswd: true };
+    }
+    case 'email': {
+      return { ...state, email: action.value };
+    }
+    case 'phoneNum': {
+      return { ...state, phoneNum: action.value };
+    }
+    case 'domain': {
+      return { ...state, domain: action.value };
+    }
+    // case 'businessRegNum': {
+    //   return { ...state, businessRegNum: action.value };
+    // }
+    case 'checkDuplication': {
+      return { ...state, checkDuplication: action.value };
+    }
+    case 'reset': {
+      console.log('모든 State를 reset합니다');
+      return initialState;
+    }
+    default: {
+      return state;
+    }
+  }
+};
+
+const CampaignUpdateDialog = (props) => {
+  const classes = useStyles();
+  const {
+    open, handleClose, userData
+  } = props;
+  const snack = useDialog();
+  const [marketerCustomDomain, setCustomDomain] = React.useState('');
+
+  const [error, setError] = React.useState(false); // budget 작성시 한도 체크용 State
+  const [checkName, setCheckName] = React.useState(false);
+  const [duplicate, setDuplicate] = React.useState(false);
+  const [inputPhoneNum, setPhoneNum] = React.useState(null);
+  // const [state, dispatch] = React.useReducer(reducer, {
+  //   noBudget: false, budget: '', campaignName: ''
+  // });
+  const [state, dispatch] = React.useReducer(reducer, initialState);
+
+  const handleChange = name => (event) => {
+    dispatch({ type: name, value: event.target.value });
+  };
+
+  const handleCustom = (event) => {
+    setCustomDomain(event.target.value);
+  };
+
+  const handlePhoneNum = (value) => {
+    setPhoneNum(value.value);
+  };
+
+  const submitPasswd = () => {
+    // state.passwd가 거짓 (형식 에러일경우, 참)
+    // state.repasswd가 거짓 (state.passwordValue와 동일하지 않은경우)
+    const { passwordValue } = state;
+    // type과 값을 전달하여 router에서 query문을 변경한다.
+    axios.post(`${HOST}/api/dashboard/marketer/profile/change`, { type: 'password', value: passwordValue })
+      .then((res) => {
+      // 올바른 데이터가 전달되었다.
+        // if (res.data) {
+        //   setCheckName(false);
+        //   dispatch({ key: 'campaignName', value: '' });
+        //   setDuplicate(true);
+        // } else {
+        //   setCheckName(true);
+        //   dispatch({ key: 'campaignName', value });
+        //   setDuplicate(false);
+        // }
+      });
+  };
+  // const checkCampaignName = (value) => {
+  //   axios.post(`${HOST}/api/dashboard/marketer/campaign/checkName`, { campaignName: value })
+  //     .then((res) => {
+  //     // 올바른 데이터가 전달되었다.
+  //       if (res.data) {
+  //         setCheckName(false);
+  //         dispatch({ key: 'campaignName', value: '' });
+  //         setDuplicate(true);
+  //       } else {
+  //         setCheckName(true);
+  //         dispatch({ key: 'campaignName', value });
+  //         setDuplicate(false);
+  //       }
+  //     });
+  // };
+
+  // const handleChangeName = (event) => {
+  //   if (event.target.value.length === 0) {
+  //     setDuplicate(false);
+  //   }
+  //   if (event.target.value.length >= 3) {
+  //     checkCampaignName(event.target.value);
+  //   } else {
+  //     setCheckName(false);
+  //     dispatch({ key: 'campaignName', value: '' });
+  //   }
+  // };
+
+  // const handleNoBudgetChange = () => {
+  //   setError(false);
+  //   dispatch({ key: 'noBudget' });
+  // };
+
+  // const handleChangeBudget = (value) => {
+  //   dispatch({ key: 'budget', value: value.value });
+  //   if (Number(value.value) < 5000 && value.value !== '') {
+  //     setError(true);
+  //   } else {
+  //     setError(false);
+  //   }
+  // };
+
+  // const handleNameUpdate = () => {
+  //   const data = { campaignId: selectedCampaign.campaignId, ...state };
+  //   axios.post(`${HOST}/api/dashboard/marketer/campaign/changeName`, data)
+  //     .then((res) => {
+  //     // 성공적으로 완료
+  //       if (res.data[0]) {
+  //         snack.handleOpen();
+  //       } else {
+  //         alert('오류입니다. 본사에 문의하세요');
+  //         history.push('/dashboard/marketer/main');
+  //       }
+  //     });
+  // };
+
+  // const handleBudgetUpdate = () => {
+  //   const data = { campaignId: selectedCampaign.campaignId, ...state };
+  //   axios.post(`${HOST}/api/dashboard/marketer/campaign/changeBudget`, data)
+  //     .then((res) => {
+  //     // 성공적으로 완료
+  //       if (res.data[0]) {
+  //         snack.handleOpen();
+  //       } else {
+  //         alert('오류입니다. 본사에 문의하세요');
+  //         history.push('/dashboard/marketer/main');
+  //       }
+  //     });
+  // };
+
+  return (
+    <Dialog
+      open={Boolean(open)}
+      onClose={handleClose}
+      maxWidth="md"
+      fullWidth
+      title="내 정보 변경"
+    >
+      <Grid container direction="column">
+
+        <Grid item className={classes.contents}>
+          <Grid container direction="row" justify="space-evenly" style={{ minHeight: '180px' }}>
+            <Grid item container direction="row" justify="space-evenly" xs={2}>
+              <Grid item className={classes.item}>
+                <Typography gutterBottom variant="body1" style={{ fontWeight: 700 }}>
+                  비밀번호 변경
+                </Typography>
+              </Grid>
+              <Grid item>
+                <Divider orientation="vertical" variant="fullWidth" />
+              </Grid>
+            </Grid>
+            <Grid item xs={10}>
+              <Grid container direction="row" justify="space-evenly" xs={12}>
+                <Grid item xs={5} className={classes.item}>
+                  <Grid item className={classes.text}>
+                    <TextField
+                      required
+                      label="PASSWORD"
+                      type="password"
+                      id="password"
+                      placeholder="비밀번호를 입력하세요."
+                      onChange={handleChange('password')}
+                      helperText={state.password ? '특수문자를 포함한 영문/숫자 혼합 8자리 이상입니다.' : ' '}
+                      error={state.password}
+                      className={classes.textField}
+                      margin="normal"
+                      autoFocus
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                    />
+                  </Grid>
+                </Grid>
+                <Grid item xs={5}>
+                  <Grid container direction="column">
+                    <Grid item className={classes.text}>
+                      <Grid container direction="column" spacing={1} className={classes.item}>
+                        <Grid item>
+                          <TextField
+                            required
+                            label="RE-PASSWORD"
+                            type="password"
+                            placeholder="비밀번호를 재입력하세요."
+                            helperText={state.repasswd ? '비밀번호와 동일하지 않습니다.' : ' '}
+                            error={state.repasswd}
+                            className={classes.textField}
+                            onChange={handleChange('repasswd')}
+                            margin="normal"
+                            InputLabelProps={{
+                              shrink: true,
+                            }}
+                          />
+                        </Grid>
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                </Grid>
+              </Grid>
+              <Grid item container direction="row" justify="flex-end">
+                <Grid item>
+                  <Button
+                    color="info"
+                    size="sm"
+                    onClick={() => {
+                      // state체크 및 error 분기화
+                      if (!(state.password || state.repasswd)) {
+                        submitPasswd();
+                      } else {
+                        alert('입력이 올바르지 않습니다.');
+                      }
+                    }}
+                  >
+                    변경
+                  </Button>
+                  <Button size="sm" onClick={handleClose}>
+                    취소
+                  </Button>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid item>
+            <Divider orientation="horizontal" />
+          </Grid>
+        </Grid>
+
+        <Grid item className={classes.contents}>
+          <Grid container direction="row" justify="space-evenly" style={{ minHeight: '100px' }}>
+            <Grid item container direction="row" justify="space-evenly" xs={2}>
+              <Grid item className={classes.item}>
+                <Typography gutterBottom variant="body1" style={{ fontWeight: 700 }}>
+                  이름 변경
+                </Typography>
+              </Grid>
+              <Grid item>
+                <Divider orientation="vertical" variant="fullWidth" />
+              </Grid>
+            </Grid>
+            <Grid item xs={5}>
+              <Grid container direction="column">
+                <Grid item className={classes.item}>
+                  <Typography gutterBottom variant="body1" style={{ fontWeight: 700 }}>
+                    현재 마케터의 이름
+                  </Typography>
+                </Grid>
+                <Grid item>
+                  <Divider orientation="horizontal" variant="middle" />
+                </Grid>
+                <Grid item className={classes.text}>
+                  <Typography align="center" className={classes.campaign}>
+                    {userData.marketerName || ''}
+                  </Typography>
+                </Grid>
+              </Grid>
+            </Grid>
+            <Grid item xs={5}>
+              <Grid container direction="column">
+                <Grid item className={classes.item}>
+                  <Typography gutterBottom variant="body1" style={{ fontWeight: 700 }}>
+                    변경할 이름
+                  </Typography>
+                </Grid>
+                <Grid item>
+                  <Divider orientation="horizontal" variant="middle" />
+                </Grid>
+                <Grid item className={classes.text}>
+                  <Grid container direction="column" spacing={1} className={classes.item}>
+                    <Grid item>
+                      <StyledInput onChange={handleChange('name')} style={{ width: '200px' }} />
+                    </Grid>
+                  </Grid>
+                </Grid>
+                <Grid item container direction="row" justify="flex-end">
+                  <Grid item>
+                    <Button
+                      color="info"
+                      size="sm"
+                      onClick={() => {
+                        // state체크 및 error 분기화
+                        if (checkName && state.campaignName !== '') {
+                          // handleNameUpdate();
+                        } else {
+                          alert('입력이 올바르지 않습니다.');
+                        }
+                      }}
+                    >
+                      변경
+                    </Button>
+                    <Button size="sm" onClick={handleClose}>
+                      취소
+                    </Button>
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid item>
+            <Divider orientation="horizontal" />
+          </Grid>
+        </Grid>
+
+        <Grid item container className={classes.contents} direction="row" justify="space-evenly" style={{ minHeight: '100px' }}>
+          <Grid item container direction="row" justify="space-evenly" xs={2}>
+            <Grid item className={classes.item}>
+              <Typography gutterBottom variant="body1" style={{ fontWeight: 700 }}>
+                이메일 변경
+              </Typography>
+            </Grid>
+            <Grid item>
+              <Divider orientation="vertical" variant="fullWidth" />
+            </Grid>
+          </Grid>
+          <Grid item xs={3}>
+            <Grid container direction="column">
+              <Grid item className={classes.item}>
+                <Typography gutterBottom variant="body1" style={{ fontWeight: 700 }}>
+                  현재 이메일
+                </Typography>
+              </Grid>
+              <Grid item>
+                <Divider orientation="horizontal" variant="middle" />
+              </Grid>
+              <Grid item style={{ marginTop: '16px' }}>
+                <Typography align="center" className={classes.campaign} style={{ marginTop: '20px' }}>
+                  {userData.marketerMail || ''}
+                </Typography>
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid item xs={7}>
+            <Grid container direction="column">
+              <Grid item className={classes.item}>
+                <Typography gutterBottom variant="body1" style={{ fontWeight: 700 }}>
+                  변경할 이메일
+                </Typography>
+              </Grid>
+              <Grid item>
+                <Divider orientation="horizontal" variant="middle" />
+              </Grid>
+              <Grid item className={classes.text}>
+                <Grid container direction="row" className={classes.item} spacing={1}>
+                  <Grid item>
+                    <TextField
+                      required
+                      label="EMAIL ID"
+                      className={classes.emailField}
+                      onChange={handleChange('email')}
+                      helperText="EMAIL ID을 입력하세요."
+                      margin="normal"
+                      id="email"
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                      InputProps={{
+                        endAdornment: <InputAdornment position="end" className={classes.adornment}><div>@</div></InputAdornment>,
+                      }}
+                    />
+                  </Grid>
+                  <Grid item>
+                    {state.domain !== '직접입력' ? (
+                      <TextField
+                        required
+                        select
+                        label="Domain"
+                        className={classes.emailField}
+                        value={state.domain}
+                        onChange={handleChange('domain')}
+                        helperText="EMAIL Domain을 선택하세요."
+                        InputLabelProps={{
+                          shrink: true,
+                        }}
+                        margin="normal"
+                      >
+                        {domains.map(option => (
+                          <MenuItem key={option.value} value={option.value}>
+                            {option.value}
+                          </MenuItem>
+                        ))}
+                      </TextField>
+
+                    )
+                      : (
+                        <TextField
+                          required
+                          autoFocus
+                          label="Domain"
+                          className={classes.emailField}
+                          value={marketerCustomDomain}
+                          onChange={handleCustom}
+                          helperText="EMAIL Domain을 입력하세요."
+                          InputLabelProps={{
+                            shrink: true,
+                          }}
+                          margin="normal"
+                        />
+                      )}
+                  </Grid>
+                </Grid>
+              </Grid>
+              <Grid item container direction="row" justify="flex-end">
+                <Grid item>
+                  <Button
+                    color="info"
+                    size="sm"
+                    onClick={() => {
+                      // state체크 및 error 분기화
+                      if (checkName && state.campaignName !== '') {
+                        // handleNameUpdate();
+                      } else {
+                        alert('입력이 올바르지 않습니다.');
+                      }
+                    }}
+                  >
+                    변경
+                  </Button>
+                  <Button size="sm" onClick={handleClose}>
+                    취소
+                  </Button>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid item xs={12}>
+            <Divider orientation="horizontal" />
+          </Grid>
+        </Grid>
+
+        <Grid item className={classes.contents}>
+          <Grid container direction="row" justify="space-evenly" style={{ minHeight: '100px' }}>
+            <Grid item container direction="row" justify="space-evenly" xs={2}>
+              <Grid item className={classes.item}>
+                <Typography gutterBottom variant="body1" style={{ fontWeight: 700 }}>
+                  전화번호 변경
+                </Typography>
+              </Grid>
+              <Grid item>
+                <Divider orientation="vertical" variant="fullWidth" />
+              </Grid>
+            </Grid>
+            <Grid item xs={5}>
+              <Grid container direction="column">
+                <Grid item className={classes.item}>
+                  <Typography gutterBottom variant="body1" style={{ fontWeight: 700 }}>
+                    현재 전화번호
+                  </Typography>
+                </Grid>
+                <Grid item>
+                  <Divider orientation="horizontal" variant="middle" />
+                </Grid>
+                <Grid item className={classes.text}>
+                  <Typography align="center" className={classes.campaign}>
+                    {userData.marketerPhoneNum || ''}
+                  </Typography>
+                </Grid>
+              </Grid>
+            </Grid>
+            <Grid item xs={5}>
+              <Grid container direction="column">
+                <Grid item className={classes.item}>
+                  <Typography gutterBottom variant="body1" style={{ fontWeight: 700 }}>
+                    변경할 전화번호
+                  </Typography>
+                </Grid>
+                <Grid item>
+                  <Divider orientation="horizontal" variant="middle" />
+                </Grid>
+                <Grid item className={classes.text}>
+                  <Grid container direction="column" spacing={1} className={classes.item}>
+                    <Grid item>
+                      <NumberFormat
+                        placeholder="(___) - ____ - ____"
+                        value={inputPhoneNum}
+                        onValueChange={handlePhoneNum}
+                        customInput={StyledInput}
+                        format="(###) - #### - ####"
+                        mask="_"
+                        style={{ width: '150px' }}
+                        allowNegative={false}
+                      />
+                    </Grid>
+                  </Grid>
+                </Grid>
+                <Grid item container direction="row" justify="flex-end">
+                  <Grid item>
+                    <Button
+                      color="info"
+                      size="sm"
+                      onClick={() => {
+                        // state체크 및 error 분기화
+                        if (checkName && state.campaignName !== '') {
+                          // handleNameUpdate();
+                        } else {
+                          alert('입력이 올바르지 않습니다.');
+                        }
+                      }}
+                    >
+                      변경
+                    </Button>
+                    <Button size="sm" onClick={handleClose}>
+                      취소
+                    </Button>
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid item>
+            <Divider orientation="horizontal" />
+          </Grid>
+        </Grid>
+      </Grid>
+      <Snackbar
+        anchorOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
+        open={snack.open}
+        autoHideDuration={2000}
+        onClose={() => {
+          snack.handleClose();
+          history.push('/dashboard/marketer/main');
+        }}
+        ContentProps={{
+          'aria-describedby': 'message-id',
+        }}
+        variant="success"
+        message={<Typography id="message-id">성공적으로 반영되었습니다.</Typography>}
+        action={[
+          <IconButton
+            key="close"
+            aria-label="close"
+            color="inherit"
+            className={classes.close}
+            onClick={() => {
+              snack.handleClose();
+              history.push('/dashboard/marketer/main');
+            }}
+          >
+            <CloseIcon />
+          </IconButton>,
+        ]}
+      />
+    </Dialog>
+  );
+};
+
+CampaignUpdateDialog.propTypes = {
+  open: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]).isRequired,
+  handleClose: PropTypes.func.isRequired,
+  selectedCampaign: PropTypes.object.isRequired
+};
+
+export default CampaignUpdateDialog;

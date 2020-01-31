@@ -78,6 +78,7 @@ const myReducer = (state, action) => {
       //   return { ...state, email: false };
       // }
       // return { ...state, email: true };
+      // 오류가 존재하지 않으면 email이 false가 되어야한다.
       return { ...state, email: action.value };
     }
     case 'phoneNum': {

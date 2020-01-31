@@ -2,21 +2,23 @@ import React from 'react';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import {
   Grid, Paper, Divider, Button,
-  Avatar, Typography, IconButton,
-  ListItem, List, Grow, FormControlLabel,
-  Switch, Snackbar
+  Typography, IconButton,
+  ListItem, List, FormControlLabel,
+  Snackbar
 } from '@material-ui/core';
+import Countup from 'react-countup';
+
 import { Assessment, Delete as DeleteIcon, Build } from '@material-ui/icons';
 import CloseIcon from '@material-ui/icons/Close';
 import IOSSwitch from '../../../atoms/Switch/IOSSwitch';
 
 import CampaignCreateDialog from './campaign/CampaignCreateDialog';
 import CampaignDeleteConfirmDialog from './campaign/CampaignDeleteConfirmDialog';
+import CampaignUpdateDialog from './campaign/CampaignUpdateDialog';
+
 import useUpdateData from '../../../utils/lib/hooks/useUpdateData';
 import useDialog from '../../../utils/lib/hooks/useDialog';
 import useDeleteData from '../../../utils/lib/hooks/useDeleteData';
-import useAnchorEl from '../../../utils/lib/hooks/useAnchorEl';
-import CampaignPopover from './campaign/CampaignPopover';
 import CampaignAnalysisDialog from './report/CampaignReportDialog';
 
 const SLIDE_TIMEOUT = 500;
@@ -59,29 +61,22 @@ export default function CampaignList(props) {
   const priorityTypeList = ['크리에이터 우선', '카테고리 우선', '노출 우선'];
 
   // For campaign On/ Off
+  const { handleDelete } = useDeleteData('/api/dashboard/marketer/campaign');
   const { handleUpdateRequest } = useUpdateData(
     '/api/dashboard/marketer/campaign/onoff',
     campaignData.callUrl
   );
+
+  const [selectedCampaign, setSelectedCampaign] = React.useState(null);
 
   // For reaction to on/off completed
   const snack = useDialog();
 
   // To open campaign create dialog
   const campaignCreateDialog = useDialog();
-
-  // To open campaign Menu
-  const campaignMenuAnchor = useAnchorEl();
-
-  // 선택된 캠페인이 무엇인지
-  const [selectedCampaign, setSelectedCampaign] = React.useState(null);
-
-  // To delete campaigns
+  const campaignUpdateDialog = useDialog();
   const campaignDeleteDialog = useDialog();
-  const { handleDelete } = useDeleteData('/api/dashboard/marketer/campaign');
-
-  // For Campaign analysis
-  const CampaignReportDialog = useDialog();
+  const campaignReportDialog = useDialog();
 
   return (
     <Paper style={{ minHeight: 220 }}>
@@ -146,13 +141,52 @@ export default function CampaignList(props) {
                       </Grid>
                     </Grid>
                   </Grid>
+                  <Grid item style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <Grid container direction="column">
+                      <Grid item>
+                        <Typography gutterBottom variant="body2">
+                          오늘 집행된 예산
+                        </Typography>
+                      </Grid>
+                      <Grid>
+                        <Divider orientation="horizontal" />
+                      </Grid>
+                      <Grid item>
+                        <Typography variant="h5" color="secondary" align="center">
+                          <Countup duration={2} end={detail.dailysum ? detail.dailysum : 0} separator="," />
+                        </Typography>
+                      </Grid>
+                      <Grid item>
+                        {(detail.dailyLimit !== -1)
+                          ? (
+                            <Typography variant="body1" align="center" style={{ fontWeight: 700 }}>
+                              {new Intl.NumberFormat().format(detail.dailyLimit)}
+                            </Typography>
+                          )
+                          : (
+                            <Typography variant="h4" align="center" style={{ fontWeight: 700 }}>
+                              ∞
+                            </Typography>
+                          )
+                      }
+                      </Grid>
+                      <Grid>
+                        <Divider orientation="horizontal" />
+                      </Grid>
+                      <Grid item>
+                        <Typography gutterBottom variant="body2" align="center">
+                          일일 예산
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                  </Grid>
                   <Grid item>
                     <List>
                       <ListItem
                         button
                         onClick={() => {
                           setSelectedCampaign(detail);
-                          CampaignReportDialog.handleOpen();
+                          campaignReportDialog.handleOpen();
                         }}
                       >
                         <Assessment />
@@ -161,7 +195,8 @@ export default function CampaignList(props) {
                       <ListItem
                         button
                         onClick={() => {
-                          campaignDeleteDialog.handleOpen(detail.campaignId);
+                          setSelectedCampaign(detail);
+                          campaignUpdateDialog.handleOpen();
                         }}
                       >
                         <Build color="action" />
@@ -228,14 +263,24 @@ export default function CampaignList(props) {
       {selectedCampaign && (
       <CampaignAnalysisDialog
         SLIDE_TIMEOUT={SLIDE_TIMEOUT} // 슬라이드 트랜지션 타임아웃
-        open={CampaignReportDialog.open}
+        open={campaignReportDialog.open}
         selectedCampaign={selectedCampaign}
         handleClose={() => {
-          CampaignReportDialog.handleClose();
+          campaignReportDialog.handleClose();
           setTimeout(() => {
             setSelectedCampaign(null);
             // 트랜지션 만큼 뒤에 실행. (먼저 실행하면 트랜지션 발동 안됨)
           }, SLIDE_TIMEOUT);
+        }}
+      />
+      )}
+
+      {selectedCampaign && (
+      <CampaignUpdateDialog
+        open={campaignUpdateDialog.open}
+        selectedCampaign={selectedCampaign}
+        handleClose={() => {
+          campaignUpdateDialog.handleClose();
         }}
       />
       )}
