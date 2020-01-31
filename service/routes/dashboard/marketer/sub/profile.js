@@ -30,11 +30,46 @@ router.get('/', (req, res) => {
 // marketerInfo
 router.post('/change', (req, res) => {
   const marketerId = req._passport.session.user.userid;
-  const { marketerName, marketerMail, marketerPhoneNum } = req.body;
-  const updateQuery = `
-  UPDATE marketerInfo 
-  SET marketerName = ? , marketerMail = ? , marketerPhoneNum = ? 
-  WHERE marketerId = ? `;
+  const { type, value } = req.body;
+  let key;
+  let salt;
+
+  const getQuery = (intype) => {
+    switch (intype) {
+      case 'password':
+        return `
+        UPDATE marketerInfo 
+        SET marketerSalt = ?, marketerPasswd = ?
+        WHERE marketerId = ? 
+        `;
+      case 'name':
+        return `
+        UPDATE marketerInfo 
+        SET marketerName = ?
+        WHERE marketerId = ? 
+        `;
+      case 'phone':
+        return `
+        UPDATE marketerInfo 
+        SET marketerPhoneNum = ?
+        WHERE marketerId = ? 
+        `;
+      case 'mail':
+        return `
+        UPDATE marketerInfo 
+        SET marketerMail = ?
+        WHERE marketerId = ? 
+        `;
+      default:
+        return '';
+    }
+  };
+
+  const updateQuery = getQuery(type);
+  if (type === 'password') {
+    [key, salt] = encrypto.make(value);
+  }
+
 
   doQuery(updateQuery, [marketerName, marketerMail, marketerPhoneNum, marketerId])
     .then(() => {

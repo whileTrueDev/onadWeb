@@ -131,10 +131,15 @@ const RegistForm = (props) => {
     const {
       id, password, repasswd, checkDuplication, email,
     } = state;
+    const marketerMailId = document.getElementById('email').value;
+
+    if(marketerMailId === ''){
+      alert('입력이 올바르지 않습니다.');
+      return
+    }
     // 모든 state가 false가 되어야한다.
-    if (!(id || password || repasswd || checkDuplication || email)) {
+    if (!(id || password || repasswd || checkDuplication)) {
       const marketerId = document.getElementById('id').value;
-      const marketerMailId = document.getElementById('email').value;
       const marketerName = document.getElementById('name').value;
       const marketerBusinessRegNum = (document.getElementById('marketerBusinessRegNum') ? document.getElementById('marketerBusinessRegNum').value : '');
       const marketerPhoneNum = state.phoneNum;
@@ -313,8 +318,6 @@ const RegistForm = (props) => {
                     label="EMAIL ID"
                     className={classes.textField}
                     onChange={handleChange('email')}
-                // helperText={state.email ? 'ID의 형식이 올바르지 않습니다.' : 'EMAIL ID을 입력하세요.'}
-                // error={state.email}
                     helperText="EMAIL ID을 입력하세요."
                     margin="normal"
                     id="email"

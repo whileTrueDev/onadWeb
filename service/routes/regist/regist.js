@@ -46,7 +46,7 @@ router.post('/marketer', (req, res, next) => {
     doQuery(cashQuery, [marketerId, 0]),
   ])
     .then(() => {
-      next();
+      res.send([true, null]);
     })
     .catch((error) => {
       res.send([false, error]);

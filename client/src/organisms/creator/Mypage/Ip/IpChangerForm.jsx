@@ -37,6 +37,7 @@ const IpChangerForm = (props) => {
   const selfButton = () => {
     setState(true);
   };
+
   const autoButton = () => {
     //  newIp의 값에 지금 IP 주소값을 넣어야한다.
     setIp(NowIp);
