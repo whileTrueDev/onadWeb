@@ -441,7 +441,7 @@ router.post('/push', (req, res) => {
 
   // 현재까지 중에서 최신으로 등록된 켐페인 명을 가져와서 번호를 증가시켜 추가하기 위함.
   const searchQuery = `
-  SELECT campaignId 
+  SELECT campaignId
   FROM campaign 
   WHERE marketerId = ?  
   ORDER BY regiDate DESC
