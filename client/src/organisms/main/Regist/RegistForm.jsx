@@ -132,7 +132,7 @@ const RegistForm = (props) => {
       id, password, repasswd, checkDuplication, email,
     } = state;
     // 모든 state가 false가 되어야한다.
-    if (!(id || password || repasswd || checkDuplication || email)) {
+    if (!(id || password || repasswd || checkDuplication )) {
       const marketerId = document.getElementById('id').value;
       const marketerMailId = document.getElementById('email').value;
       const marketerName = document.getElementById('name').value;

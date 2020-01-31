@@ -15,6 +15,7 @@ import PaperSheet from './Paper';
 import HOST from '../../../utils/config';
 import withRoot from '../Main/withRoot';
 import history from '../../../history';
+import IdentityVerification from './IdentityVerification';
 
 const styles = theme => ({
   container: {
@@ -108,7 +109,7 @@ const RegistStepper = withRoot((props) => {
   const [userType, setType] = useState(0);
   const [state, dispatch] = useReducer(myReducer, initialState);
   const [loading, setLoading] = useState(0);
-  // const [open, setOpen] = useState(0);
+  const [open, setOpen] = useState(0);
   // const [defaultName, setDefaultName] = useState('');
   const platformList = ['', 'google', 'naver', 'kakao'];
   useEffect(() => {
@@ -226,7 +227,7 @@ const RegistStepper = withRoot((props) => {
         {/* <Step key="1">
           <StepLabel>미성년자 확인</StepLabel>
           <StepContent>
-            <IndentityVerification handleNext={handleNext} handleBack={handleBack} open={open} setOpen={setOpen} setDefaultName={setDefaultName} />
+            <IdentityVerification handleNext={handleNext} handleBack={handleBack} open={open} setOpen={setOpen} />
           </StepContent>
         </Step> */}
         <Step key="1">
@@ -238,7 +239,7 @@ const RegistStepper = withRoot((props) => {
             />
           </StepContent>
         </Step>
-        <Step key="3">
+        <Step key="2">
           <StepLabel>개인정보 입력</StepLabel>
           <StepContent>
             { getRegistComponent()}
