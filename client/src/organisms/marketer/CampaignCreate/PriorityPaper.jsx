@@ -191,7 +191,7 @@ const PriorityPaper = (props) => {
                   <Paper className={classes.choice}>
                     <Grid container direction="row" justify="space-between">
                       <Grid item>
-                        <StyledSelectText primary="2. 특정게임 집중형" secondary="광고를 넣고싶은 특정 게임이 있어요." />
+                        <StyledSelectText primary="2. 특정게임 선택형" secondary="광고를 넣고싶은 특정 게임이 있어요." />
                       </Grid>
                       <Grid item className={classes.icon}>
                         <Grid container direction="row">

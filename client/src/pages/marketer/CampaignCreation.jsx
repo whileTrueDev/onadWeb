@@ -4,14 +4,14 @@ import { makeStyles } from '@material-ui/core/styles';
 import {
   Grid, Paper, Collapse
 } from '@material-ui/core';
-import Button from '../../../atoms/CustomButtons/Button';
-import ProrityPaper from '../CampaignCreate/PriorityPaper';
-import OptionPaper from '../CampaignCreate/OptionPaper';
-import Selector from '../CampaignCreate/StepSelector';
-import CampaignCreateTable from '../CampaignCreate/CampaignCreateTable';
-import HOST from '../../../utils/config';
-import axios from '../../../utils/axios';
-import history from '../../../history';
+import Button from '../../atoms/CustomButtons/Button';
+import ProrityPaper from '../../organisms/marketer/CampaignCreate/PriorityPaper';
+import OptionPaper from '../../organisms/marketer/CampaignCreate/OptionPaper';
+import Selector from '../../organisms/marketer/CampaignCreate/StepSelector';
+import CampaignCreateTable from '../../organisms/marketer/CampaignCreate/CampaignCreateTable';
+import HOST from '../../utils/config';
+import axios from '../../utils/axios';
+import history from '../../history';
 
 const useStyles = makeStyles(_theme => ({
   paper: {
