@@ -4,7 +4,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import {
   Grid, Typography, Divider
 } from '@material-ui/core';
-import Help from '@material-ui/icons/Help';
 import BarChart from '@material-ui/icons/BarChart';
 import DateRange from '@material-ui/icons/DateRange';
 import CustomCard from '../../../atoms/CustomCard';
@@ -172,17 +171,6 @@ const IncomeCard = () => {
             <Grid container className={classes.flex}>
               <Grid item>
                 <Typography gutterBottom variant="body1" className={classes.head}>총 구매 이동수</Typography>
-              </Grid>
-              <Grid item>
-
-                <Help
-                  fontSize="small"
-                // onMouseEnter={handlePopoverOpen(i)}
-                // onMouseLeave={handlePopoverClose}
-                // aria-owns={anchorEl ? 'send-desc-popover' : undefined}
-                  aria-haspopup="true"
-                  color="disabled"
-                />
               </Grid>
             </Grid>
             {landingData.loading && (<CircularProgress small />)}

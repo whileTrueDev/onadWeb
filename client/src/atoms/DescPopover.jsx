@@ -5,7 +5,8 @@ import {
 import { makeStyles } from '@material-ui/core/styles';
 import shortid from 'shortid';
 import {
-  sendTypeConfig, optionConfig, budgetConfig, landingManageConfig
+  sendTypeConfig, optionConfig, budgetConfig,
+  landingManageConfig, reportConfig, reportCardConfig
 } from '../utils/TooltipContentConfig';
 import StyledSelectText from './StyledSelectText';
 
@@ -22,7 +23,6 @@ const useStyles = makeStyles(theme => ({
     pointerEvents: 'none',
   },
   choice: props => ({
-    // padding: theme.spacing(3),
     padding: props.padding === 0 ? 0 : theme.spacing(3),
     paddingBottom: theme.spacing(3),
     [theme.breakpoints.down('sm')]: {
@@ -32,6 +32,10 @@ const useStyles = makeStyles(theme => ({
   text: {
     fontSize: '14px',
   },
+  cardText: {
+    fontSize: '14px',
+    fontWeight: 'bold'
+  }
 }));
 
 function DescPopover(props) {
@@ -113,6 +117,44 @@ function DescPopover(props) {
                 alt={landingManageConfig[descIndex].image}
               />
             ) : null}
+          </Grid>
+        );
+
+      case 'reportTooltip':
+        return (
+          <Grid container direction="column" spacing={1}>
+            <Grid item>
+              <StyledSelectText
+                primary={reportConfig[descIndex].title}
+                className={classes.label}
+              />
+            </Grid>
+            {reportConfig[descIndex].text.split('\n').map(row => (
+              <Grid item key={shortid.generate()}>
+                <Typography className={classes.text}>
+                  {row}
+                </Typography>
+              </Grid>
+            ))}
+          </Grid>
+        );
+
+      case 'reportCardTooltip':
+        return (
+          <Grid container direction="column" spacing={1}>
+            <Grid item>
+              <StyledSelectText
+                primary={reportCardConfig[descIndex].title}
+                className={classes.title}
+              />
+            </Grid>
+            {reportCardConfig[descIndex].text.split('\n').map(row => (
+              <Grid item key={shortid.generate()}>
+                <Typography className={classes.cardText}>
+                  {row}
+                </Typography>
+              </Grid>
+            ))}
           </Grid>
         );
       default:

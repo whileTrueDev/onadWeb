@@ -13,6 +13,7 @@ import useFetchData from '../../../utils/lib/hooks/useFetchData';
 import WithdrawalDialog from './WithdrawDialog';
 import history from '../../../history';
 
+
 const useStyles = makeStyles(() => ({
   stats: {
     color: '#999',
@@ -123,6 +124,7 @@ const IncomeCard = () => {
           open={open}
           handleOpen={handleOpen}
           handleClose={handleClose}
+          realName={cashData.payload.realName}
           accountNumber={cashData.payload.creatorAccountNumber}
           receivable={cashData.payload.creatorReceivable}
         />

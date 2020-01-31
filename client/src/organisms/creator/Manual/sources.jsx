@@ -121,6 +121,12 @@ const manualSources = {
         },
         {
           image: null,
+          description: `${colorize('배너 크기를 변경하고자 하는 경우', 'red')}에는  
+          해당 배너 소스를 ${colorize('삭제', 'red')}한 이후 다시 생성하여  
+          배너 해상도는 **< 320 x 160 >** 이상으로 지정하여야 합니다.  `,
+        },
+        {
+          image: null,
           description: '이제 매칭된 광고가 방송화면에 나타납니다.',
         },
       ],
@@ -151,7 +157,13 @@ const manualSources = {
           image: '/pngs/dashboard/manual/creator/3_9.png',
           description: `추가된 소스를 드래그하여 **맨 위에 둡니다.**  
           빨간 영역을 드래그 하여 위치를 조절합니다.  
-          크기는 **< 320 x 160 >** 으로 설정합니다.`,
+          해상 소스의 크기는 필히, **< 320 x 160 >** 으로 설정합니다.`,
+        },
+        {
+          image: null,
+          description: `${colorize('배너 크기를 변경하고자 하는 경우', 'red')}에는  
+          해당 배너 소스를 ${colorize('삭제', 'red')}한 이후 다시 생성하여  
+          배너 해상도는 **< 320 x 160 >** 이상으로 지정하여야 합니다.  `,
         },
         {
           image: null,
@@ -231,7 +243,7 @@ const manualSources = {
       {
         image: '/pngs/dashboard/manual/new_creator/creator-banner-01.png',
         description: `[**<배너관리>**](${HOST_URL}/banner)에서 지금까지 진행한 모든 배너와,  
-        해당 배너 및 광고주의 정보, 해당 배너로 인한 수익정보를 확인할 수 있습니다.`
+        해당 배너 정보, 해당 배너로 인한 수익정보를 확인할 수 있습니다.`
       },
     ]
   },
@@ -260,38 +272,3 @@ const manualSources = {
 };
 
 export default manualSources;
-// bannerError: {
-//   card: {
-//     title: '배너 오류 해결 방법',
-//     subtitle: '배너송출 창의 오류 해결 방법입니다.',
-//   },
-//   source: [
-//     {
-//       image: null,
-//       description: '< IP 관련 오류 >',
-//     },
-//     {
-//       image: '/pngs/dashboard/manual/creator/bannerError_1.png',
-//       description: '오류창이 뜰 시, 계정관리로 이동합니다.',
-//     },
-//     {
-//       image: '/pngs/dashboard/manual/creator/bannerError_2.png',
-//       description: 'IP 변경하기를 클릭합니다.',
-//     },
-//     {
-//       image: '/pngs/dashboard/manual/creator/bannerError_3.png',
-//       description: '현재 PC의 IP를 바로 등록할 수 있습니다.',
-//     },
-//     {
-//       image: '/pngs/dashboard/manual/creator/bannerError_4.png',
-//       description: '직접 입력도 가능합니다. (방송 송출용 PC의 IP)',
-//     },
-//     {
-//       image: null,
-//       description: '< 오버레이 URL 관련 오류 >',
-//     },
-//     {
-//       image: '/pngs/dashboard/manual/creator/bannerError_5.png',
-//       description: '주소보기 클릭 후, 클립보드에 복사합니다.\n이후 과정은 2. 광고 배너 송출탭의 내용을 기반으로 진행하시면 됩니다.',
-//     }, ],
-// },

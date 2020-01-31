@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Delete from '@material-ui/icons/DeleteRounded';
 import MaterialTable from '../../../../atoms/Table/MaterialTable';
+import Button from '../../../../atoms/CustomButtons/Button';
 // icons
 // own components
 import IOSSwitch from '../../../../atoms/Switch/IOSSwitch';
@@ -50,7 +51,7 @@ function CampaignTable({ ...props }) {
       field: 'priorityType',
       lookup: { 0: '크리에이터 우선', 1: '카테고리 우선', 2: '노출우선' },
     },
-    { title: '광고유형', field: 'optionType', lookup: { 0: 'CPM', 1: 'CPC + CPM', } },
+    { title: '광고유형', field: 'optionType', lookup: { 0: '배너광고', 1: '배너광고 + 클릭광고', } },
     {
       title: '등록된 배너',
       field: 'bannerSrc',
@@ -58,11 +59,27 @@ function CampaignTable({ ...props }) {
         if (rowData.bannerSrc) {
           return (<img src={rowData.bannerSrc} alt="banner" style={{ width: 'auto', maxHeight: 200 }} />);
         }
-        return '배너가 없삽니다.';
+        return '배너가 없습니다.';
       },
       editable: 'never'
     },
     { title: '등록일', field: 'regiDate', editable: 'never' },
+    {
+      title: '효과 보고서',
+      field: '보고서 버튼',
+      render: rowData => (
+        <Button
+          color="danger"
+          onClick={() => {
+            const path = `/dashboard/marketer/report/${rowData.campaignId}`;
+            // history.push(path);
+            alert('준비중입니다.');
+          }}
+        >
+        보고서
+        </Button>
+      )
+    }
   ];
 
   const [state] = React.useState({ columns: [...columns], data: [...dataSet] });

@@ -15,18 +15,13 @@ function Footer({ ...props }) {
         <div className={classes.left}>
           <List className={classes.list}>
             <ListItem className={classes.inlineBlock}>
-              <a href="/" className={classes.block}>
+              <a href="/policy/privacy" className={classes.block} style={{ fontWeight: 'bold' }}>
                 개인정보 처리방침
               </a>
             </ListItem>
             <ListItem className={classes.inlineBlock}>
-              <a href="/" className={classes.block}>
+              <a href="/policy" className={classes.block}>
                 이용약관
-              </a>
-            </ListItem>
-            <ListItem className={classes.inlineBlock}>
-              <a href="https://on-ad.github.io" className={classes.block}>
-                블로그
               </a>
             </ListItem>
           </List>
@@ -34,7 +29,7 @@ function Footer({ ...props }) {
         <p className={classes.right}>
           <span>
             &copy;
-            {`${1900 + new Date().getYear()} while True Corp. All right Reserved`}
+            {`${1900 + new Date().getYear()} while True Corp. All rights Reserved`}
           </span>
         </p>
       </div>

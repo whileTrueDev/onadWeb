@@ -58,7 +58,6 @@ const dashboardRoutes = {
       component: CreatorMyPage,
       layout: '/dashboard/creator',
     },
-
   ],
   marketer: [
     {

@@ -21,7 +21,7 @@ const manualSources = {
     },
     {
       icon: InsertChart,
-      label: '성과차트',
+      label: '광고 성과 확인',
     },
     {
       icon: Money,
@@ -91,15 +91,30 @@ const manualSources = {
   },
   seeChart: {
     card: {
-      title: '광고 성과차트',
-      subtitle: '광고집행에 대한 성과차트를 볼 수 있습니다.',
+      title: '광고 성과 확인',
+      subtitle: '광고집행에 대한 성과차트와 광고효과보고서를 볼 수 있습니다.',
     },
     source: [
       {
-        image: '/pngs/dashboard/manual/new_marketer/marketer-campaign-05.png',
+        image: '/pngs/dashboard/manual/new_marketer/marketer_costChart.PNG',
         description: `광고 비용에 대한 차트는 [**<대시보드 >**](${HOST_URL}/main)에서 확인할 수 있습니다.  
-        향후 차트 제어 기능과, 더욱 활용성 있는 지표들에 대한 분석 기능을 도입할 예정입니다.`,
+        `,
       },
+      {
+        image: '/pngs/dashboard/manual/new_marketer/marketer_broadcastCreator.PNG',
+        description: `또한 마케터님의 광고를 송출한 크리에이터를 [**<대시보드 >**](${HOST_URL}/main)의 <송출크리에이터>에서 확인할 수 있습니다.  
+        `,
+      },
+      {
+        image: '/pngs/dashboard/manual/new_marketer/marketer-chart-01.png',
+        description: `광고 효과보고서에 대한 차트는 [**<대시보드 >**](${HOST_URL}/main)의 <캠페인목록>을 클릭하면 광고효과 보고서 탭으로 이동하실 수 있습니다.`
+      },
+      {
+        image: '/pngs/dashboard/manual/new_marketer/marketer-chart-02.png',
+        description: `캠페인 상태 및 광고비용 그래프, 광고비용 비율, 배너 송출 크리에이터,
+        지역별, 날짜별 상호작용을 한 눈에 확인하실 수 있습니다.`
+      }
+
     ],
   },
   cash: {
@@ -128,10 +143,10 @@ const manualSources = {
       {
         image: '',
         description: `세금계산서는  
-        **발행 기준** : OnAD를 통해 구매한 모든 상품의 당월 총 광고캐시 소진 금액  
-        **발행 주기** : 익월 중, 월 1회 세금계산서 발행  
-        **발행 단위** : ${colorize('**사업자 등록증을 업로드한 사업자 계정에 한해**', 'red')}, 월 소진 총 금액에 대하여 한장의 세금계산서로 발행  
-        의 기준에 따라, 회원가입시 입력한 메일로 전송됩니다.`
+        **발행 기준** : 당월 캐시 충전 금액의 총 합
+        **발행 주기** : 익월 중, 월 1회 일괄 발행
+        **발행 단위** : ${colorize('**사업자 등록증을 업로드한 사업자 계정에 한해**', 'red')}, 월 캐시 충전 금액의 총합에 대하여 한장의 세금계산서로 발행  
+        의 기준에 따라, 회원가입시 입력한 메일로 전송`
       },
       {
         image: '/pngs/dashboard/manual/new_marketer/marketer-taxbill-01.png',

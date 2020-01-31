@@ -47,7 +47,7 @@ router.post('/update/read', (req, res) => {
     WHERE cn.index = ${index}`;
   doQuery(callQuery, [index])
     .then(() => {
-      res.send(true);
+      res.send([true]);
     }).catch((err) => {
       console.log('readState 에러발생');
       console.log(err);

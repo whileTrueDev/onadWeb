@@ -1,22 +1,21 @@
-import React from 'react';
+import React, { useReducer } from 'react';
 import PropTypes from 'prop-types';
 // material ui core
 import { makeStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-import Tooltip from '@material-ui/core/Tooltip';
-import Divider from '@material-ui/core/Divider';
-import RadioGroup from '@material-ui/core/RadioGroup';
-import Radio from '@material-ui/core/Radio';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import TextField from '@material-ui/core/TextField';
-import DialogContent from '@material-ui/core/DialogContent';
+import {
+  Grid, Slide, Collapse
+} from '@material-ui/core';
 import axios from '../../../../utils/axios';
 // customized component
-import Dialog from '../../../../atoms/Dialog/Dialog';
+import Dialog from './sub/Dialog';
 import Button from '../../../../atoms/CustomButtons/Button';
-import Warning from '../../../../atoms/Typography/Warning';
 import HOST from '../../../../utils/config';
 import history from '../../../../history';
+import RefundAgreement from './refund/RefundAgreement';
+import RefundConfirm from './refund/RefundConfirm';
+import RefundAmount from './refund/RefundAmount';
+import RefundComplete from './refund/RefundComplete';
+import sources from '../source/sources';
 
 const useStyles = makeStyles(theme => ({
   contentTitle: {
@@ -31,259 +30,262 @@ const useStyles = makeStyles(theme => ({
     width: 250,
     fontSize: 16,
   },
+  paper: {
+    maxWidth: '1200px',
+    width: '1200px',
+    [theme.breakpoints.down('sm')]: {
+      width: '100%'
+    }
+  },
+  button: {
+    marginRight: theme.spacing(1),
+  },
+  end: {
+    color: '#fff',
+    marginRight: theme.spacing(1),
+  },
+  title: {
+    marginTop: 5,
+    paddingBottom: 10,
+    fontWeight: '600',
+  },
+  titleWrap: {
+    background: 'linear-gradient(45deg, #00DBE0 30%, #21CBF3 90%)',
+    color: 'white',
+    textAlign: 'center'
+  }
 }));
 
-function useRefundConfirmDialog(handleClose) {
-  const [RefundConfirmDialog, setRefundConfirmDialog] = React.useState(false);
-
-  function handleDialogClose() {
-    setRefundConfirmDialog(false);
-    handleClose(); // 모달창까지 닫기
+// key ,value를 이용하여 state의 값에 접근
+const stepReducer = (state, action) => {
+  switch (action.key) {
+    case 'currentCash': {
+      return { ...state, currentCash: action.value };
+    }
+    case 'selectValue': {
+      return { ...state, selectValue: action.value };
+    }
+    case 'checked': {
+      return { ...state, checked: action.value };
+    }
+    case 'totalDebit': {
+      return { ...state, totalDebit: action.value };
+    }
+    case 'reset': {
+      return { ...state, selectValue: '0', checked: false };
+    }
+    default: {
+      return state;
+    }
   }
-
-  function handleOnlyConfirmDialogClose() {
-    setRefundConfirmDialog(false);
-  }
-
-  function handleConfirmDialogOpen() {
-    setRefundConfirmDialog(true);
-  }
-
-  return {
-    RefundConfirmDialog,
-    handleDialogClose,
-    handleOnlyConfirmDialogClose,
-    handleConfirmDialogOpen,
-  };
-}
-
-function useValue(defaultValue) {
-  const [selectValue, setValue] = React.useState(defaultValue);
-
-  const handleChange = (event) => {
-    setValue(event.target.value);
-  };
-
-  return { selectValue, handleChange };
-}
+};
 
 function RefundDialog(props) {
   const classes = useStyles();
   const {
-    open, handleClose, accountNumber, currentCash,
+    open, handleClose, currentCash, accountNumber, accountHolder
   } = props;
 
+  const currentCashNumber = Number(currentCash.replace(',', ''));
 
-  const currentCashNumber = Number(currentCash.replace(",",""))
-  
-  // select value
-  const { selectValue, handleChange } = useValue('0');
-
-  // 캐쉬 환불신청 스낵바
-  const {
-    RefundConfirmDialog, handleDialogClose, handleOnlyConfirmDialogClose,
-    handleConfirmDialogOpen,
-  } = useRefundConfirmDialog(handleClose);
-
-  function handleSubmitClick() {
-    if (currentCashNumber - selectValue < 0) {
-      alert('불가합니다');
-    } else {
-      // 해당 금액 만큼 환불 내역에 추가하는 요청
-      axios.post(`${HOST}/api/dashboard/marketer/cash/refund`, {
-        withdrawCash: selectValue,
-      }).then((res) => {
-        handleDialogClose();
-        history.push('/dashboard/marketer/myoffice');
-      }).catch((err) => {
-        console.log(err);
-      });
+  // 환불 요청 절차에서 사용할(step2) State.
+  const [stepState, stepDispatch] = useReducer(
+    stepReducer,
+    {
+      currentCash: currentCashNumber,
+      selectValue: '',
+      checked: false,
+      totalDebit: ''
     }
+  );
+
+  const { selectValue, checked } = stepState;
+
+  function handleSubmitClick(event) {
+    event.preventDefault();
+
+    // 해당 금액 만큼 환불 내역에 추가하는 요청
+    axios.post(`${HOST}/api/dashboard/marketer/cash/refund`, {
+      withdrawCash: selectValue,
+    }).then((res) => {
+      setIndex(preIndex => preIndex + 1);
+    }).catch((err) => {
+      console.log(err);
+      history.push('/dashboard/marketer/myoffice');
+    });
   }
+
+
+  const [stepComplete, setStepComplete] = React.useState(false); // 현재 step에서 다음 step으로 넘어가기위한 state
+  const [paperSwitch, setPaperSwitch] = React.useState(true); // animation을 위한 state
+  const [index, setIndex] = React.useState(0); // 각 step을 정의하는  state
+
+  const handleNext = go => (event) => {
+    event.preventDefault();
+    setPaperSwitch(false);
+    setStepComplete(false);
+
+    if (index === 1) {
+      if (currentCashNumber - selectValue < 0 || selectValue <= 1000) {
+        alert('환불 신청 금액은 1000원 이하에서는 불가하며 환불 신청 금액이 보유 캐시보다 클 수 없습니다.');
+        history.push('/dashboard/marketer/myoffice');
+      } else {
+        setTimeout(() => {
+          if (go) {
+            setIndex(go);
+          } else {
+            setIndex(preIndex => preIndex + 1);
+          }
+          setPaperSwitch(true);
+        }, 500);
+      }
+    } else {
+      setTimeout(() => {
+        if (go) {
+          setIndex(go);
+        } else {
+          setIndex(preIndex => preIndex + 1);
+        }
+        setPaperSwitch(true);
+      }, 500);
+    }
+  };
+
+  const handleBack = (event) => {
+    event.preventDefault();
+    setStepComplete(false);
+    setPaperSwitch(false);
+    if (index === 0 || index === 1 || index === 2) {
+      stepDispatch({ key: 'reset' });
+    }
+    setTimeout(() => {
+      setIndex(preIndex => preIndex - 1);
+      setPaperSwitch(true);
+    }, 500);
+  };
+
+  const setSteps = (_index) => {
+    switch (_index) {
+      case 0:
+        return (
+          <RefundAgreement
+            setStepComplete={setStepComplete}
+            checked={checked}
+            dispatch={stepDispatch}
+          />
+        );
+      case 1:
+        return (
+          <RefundAmount
+            setStepComplete={setStepComplete}
+            state={stepState}
+            dispatch={stepDispatch}
+            stepComplete={stepComplete}
+            accountNumber={accountNumber}
+            accountHolder={accountHolder}
+          />
+        );
+      case 2:
+        return (
+          <RefundConfirm
+            state={stepState}
+            accountNumber={accountNumber}
+            accountHolder={accountHolder}
+          />
+        );
+      case 3:
+        return (
+          <RefundComplete
+            state={stepState}
+          />
+        );
+      default:
+        return <div />;
+    }
+  };
+
+  const DefaultIndex = () => {
+    handleClose();
+    setIndex(0);
+    stepDispatch({ key: 'reset' });
+  };
+
+  const finishIndex = () => {
+    handleClose();
+    history.push('/dashboard/marketer/myoffice');
+  };
 
   return (
     <Dialog
       open={open}
-      onClose={handleClose}
-      title="광고캐시 환불"
+      onClose={index !== 3 ? (DefaultIndex) : (finishIndex)}
       maxWidth="sm"
       fullWidth
       buttons={(
         <div>
-          <Button
-            color="info"
-            onClick={!(!(currentCashNumber >= selectValue)) || !(selectValue > 0)
-              ? handleConfirmDialogOpen
-              : null}
-            disabled={(!(currentCashNumber >= selectValue)) || !(selectValue > 0)}
-          >
-                진행
-          </Button>
-          <Button onClick={handleClose}>
-              취소
-          </Button>
+          <Grid container direction="row">
+            {index === 2
+              && (
+              <Grid item>
+                <Collapse in>
+                  <Button
+                    variant="contained"
+                    color="info"
+                    onClick={handleSubmitClick}
+                    className={classes.end}
+                  >
+                    신청
+                  </Button>
+                </Collapse>
+              </Grid>
+              )}
+            { (index === 0 || index === 1)
+              && (
+              <Grid item>
+                <Collapse in={stepComplete}>
+                  <Button
+                    variant="contained"
+                    color="info"
+                    onClick={handleNext()}
+                    className={classes.end}
+                  >
+                    다음
+                  </Button>
+                </Collapse>
+              </Grid>
+              )}
+            { (index === 1 || index === 2) ? (
+              <Grid item>
+                <Button onClick={handleBack} className={classes.button}>
+                뒤로
+                </Button>
+              </Grid>
+            ) : null }
+            {index !== 3
+          && <Grid item><Button onClick={DefaultIndex}>취소</Button></Grid>
+          }
+            {index === 3
+          && <Grid item><Button onClick={finishIndex}>완료</Button></Grid>
+          }
+          </Grid>
         </div>
       )}
     >
       <div>
-        {/* 모달내용 */}
-        {/* 보유한 광고캐시 금액 */}
-        <div>
-          <Typography variant="subtitle1" className={classes.contentTitle}>
-            환불 계좌
-          </Typography>
-          <Typography variant="h5">
-            {`${accountNumber.split('_')[0]}   ${accountNumber.split('_')[1]}`}
-          </Typography>
-        </div>
-        <Divider />
-
-        {/* 출금가능금액 */}
-        <div>
-          <Typography variant="subtitle1" className={classes.contentTitle}>
-            환불 가능 금액
-          </Typography>
-          <Typography variant="h4">
-            {`${currentCash} 원`}
-          </Typography>
-        </div>
-        <Divider />
-
-        {/* 출금금액입력 */}
-        <div style={{ position: 'relative', width: 150 }}>
-          <Typography variant="subtitle1" className={classes.contentTitle}>
-              광고캐시 환불 금액
-          </Typography>
-          <RadioGroup
-            name="howmuch"
-            value={selectValue}
-            onChange={handleChange}
-          >
-            <FormControlLabel
-              value="10000"
-              control={<Radio color="primary" />}
-              label={
-                  currentCashNumber >= 10000
-                    ? (
-                      <Typography variant="subtitle1" className={classes.selectValue}>
-                    10,000 원
-                      </Typography>
-                    )
-                    : (
-                      <Typography variant="subtitle1">
-                    10,000 원
-                      </Typography>
-                    )
-                  }
-              disabled={!(currentCashNumber >= 10000)}
-            />
-            <FormControlLabel
-              value="30000"
-              control={<Radio color="primary" />}
-              label={
-                  currentCashNumber >= 30000
-                    ? (
-                      <Typography variant="subtitle1" className={classes.selectValue}>
-                    30,000 원
-                      </Typography>
-                    )
-                    : (
-                      <Typography variant="subtitle1">
-                    30,000 원
-                      </Typography>
-                    )
-                  }
-              disabled={!(currentCashNumber >= 30000)}
-            />
-            <FormControlLabel
-              value="50000"
-              control={<Radio color="primary" />}
-              label={
-                  currentCashNumber >= 50000
-                    ? (
-                      <Typography variant="subtitle1" className={classes.selectValue}>
-                    50,000 원
-                      </Typography>
-                    )
-                    : (
-                      <Typography variant="subtitle1">
-                    50,000 원
-                      </Typography>
-                    )
-                  }
-              disabled={!(currentCashNumber >= 50000)}
-            />
-            <FormControlLabel
-              value="100000"
-              control={<Radio color="primary" />}
-              label={
-                  currentCashNumber >= 100000
-                    ? (
-                      <Typography variant="subtitle1" className={classes.selectValue}>
-                    100,000 원
-                      </Typography>
-                    )
-                    : (
-                      <Typography variant="subtitle1">
-                    100,000 원
-                      </Typography>
-                    )
-                  }
-              disabled={!(currentCashNumber >= 100000)}
-            />
-          </RadioGroup>
-          <div style={{ position: 'absolute', top: 50, left: 200 }}>
-            <Tooltip title="직접입력 하십시오.">
-              <TextField
-                id="selectValue"
-                label={(
-                  <Typography variant="subtitle1" className={classes.selectValue}>
-                    환불할 금액을 입력하세요
-                  </Typography>
-                  )}
-                type="number"
-                className={classes.textField}
-                value={selectValue}
-                onChange={handleChange}
-                margin="normal"
-                error={!((currentCashNumber >= selectValue)) || !(selectValue >= 0)}
-                variant="outlined"
-                helperText={((currentCashNumber >= selectValue) && (selectValue >= 0)) ? null : '입력이 잘못되었어요!'}
-              />
-            </Tooltip>
+        <div className={classes.titleWrap}>
+          <div style={{ fontSize: 18, paddingTop: 15 }}>
+              OnAD 환불요청 Step
+            {' '}
+            {index + 1}
+/4
           </div>
+          <h4 className={classes.title}>{sources.titleRefund[index]}</h4>
         </div>
-
-        {/* 환불 신청 완료 시의 notification */}
-        <Dialog
-          open={RefundConfirmDialog}
-          onClose={handleOnlyConfirmDialogClose}
-          title="입력하신대로 환불 진행하시겠어요?"
-          buttons={(
-            <div>
-              <Button onClick={handleSubmitClick} color="info">
-              진행
-              </Button>
-              <Button onClick={handleOnlyConfirmDialogClose}>
-              취소
-              </Button>
-            </div>
-          )}
-        >
-          <DialogContent>
-            <Typography variant="h5" marked="center">
-              {`환불 신청액 : ${selectValue}`}
-            </Typography>
-            <Typography variant="h5" marked="center">
-              {`환불 이후 잔여 출금 가능 금액 : ${currentCashNumber - selectValue}`}
-            </Typography>
-            <Warning>
-              <Typography variant="subtitle1" marked="center">
-                {'환불까지 하루 또는 이틀이 소요되어요!!'}
-              </Typography>
-            </Warning>
-          </DialogContent>
-        </Dialog>
+        <Slide direction="right" in={paperSwitch} mountOnEnter unmountOnExit timeout={{ exit: 500 }}>
+          <div>
+            {setSteps(index)}
+          </div>
+        </Slide>
       </div>
     </Dialog>
   );

@@ -45,7 +45,7 @@ function monthDiff(date1, date2) {
  */
 function datefy(dateObject) {
   if (typeof dateObject === 'string') {
-    return dateObject.split('T')[0];
+    return dateObject.split(' ')[0];
   }
   return `${dateObject.getMonth() + 1}월 ${dateObject.getDate()}일`;
 }
@@ -68,14 +68,13 @@ function setUpData(dataPacket, dateDiffFunc) {
         const currentDate = datefy(obj.date);
         const datediff = dateDiffFunc(new Date(previousDate), new Date(currentDate));
 
-        // 이전날짜와 지금날짜의 날짜차이가 있다면 ( 빈 데이터가 존재한다면 )
+        // 앞의날짜와 지금날짜의 날짜차이가 있다면 ( 빈 데이터가 존재한다면 )
         if (datediff > 1) {
           const emptyDate = new Date(previousDate);
           for (let i = 1; i < datediff; i += 1) {
             // 빠진 날짜만큼 반복
             emptyDate.setDate(emptyDate.getDate() - 1);
 
-            // console.log(emptyDate.toISOString().split('T')[0]);
             setUpLabels.push(emptyDate.toISOString().split('T')[0]);
             CPM.push(DEFAULT_VALUE);
             CPC.push(DEFAULT_VALUE);
@@ -130,6 +129,7 @@ function createStackBarDataSet(dataPacket, DATE_RANGE = 15) {
   if (dataPacket.length > 0) {
     const { setUpLabels, CPM, CPC } = setUpData(dataPacket, dateDiff);
 
+
     const labels = setUpLabels.map(day => `${day.split('-')[1]}월 ${day.split('-')[2]}일`);
     const firstTime = new Date(dataPacket[0].date.split('T')[0]); // 마지막 날짜
     const lastTime = new Date(dataPacket[dataPacket.length - 1].date.split('T')[0]); // 현재 날짜 수
@@ -161,6 +161,7 @@ function createStackBarDataSet(dataPacket, DATE_RANGE = 15) {
     CPM.push(0);
     CPC.push(0);
   }
+
   return { labels, CPC, CPM };
 }
 
@@ -176,7 +177,9 @@ function createStackBarDataSetPerMonth(dataPacket) {
   if (dataPacket.length > 0) {
     const { setUpLabels, CPM, CPC } = setUpData(dataPacket, monthDiff);
 
-    const labels = setUpLabels.map(day => `${day.split('-')[0]}년 ${day.split('-')[1]}월`);
+    const labels = setUpLabels.map(
+      day => `${day.split('-')[0]}년 ${day.split('-')[1]}월`
+    ).reverse();
     const firstTime = new Date(dataPacket[0].date.split('T')[0]); // 처음 날짜
     const lastTime = new Date(dataPacket[dataPacket.length - 1].date.split('T')[0]); // 마지막 날짜
 
@@ -191,11 +194,13 @@ function createStackBarDataSetPerMonth(dataPacket) {
       }
     }
 
-    // 2주일의 데이터보다 적다면, 2주(14일)의 데이터만큼 day를 채운다.
+    // 12개월 데이터보다 적다면, 12개월의 데이터만큼 month를 채운다.
     if (labels.length < MONTH_LENGTH) {
       for (let i = MONTH_LENGTH - labels.length; i > 0; i -= 1) {
         lastTime.setMonth(lastTime.getMonth() - 1);
         labels.push(`${lastTime.getFullYear()}년 ${lastTime.getMonth() + 1}월`);
+        CPM.unshift(0);
+        CPC.unshift(0);
       }
     }
 
@@ -209,6 +214,7 @@ function createStackBarDataSetPerMonth(dataPacket) {
     CPM.push(0);
     CPC.push(0);
   }
+
   return { labels, CPC, CPM };
 }
 

@@ -22,7 +22,6 @@ function RefundHistory(props) {
   const { payload, loading } = useFetchData('/api/dashboard/marketer/cash/refund/list');
   // 충전 및 환불 페이지네이션
 
-
   return (
     <Card>
       <CardHeader color="blueGray">
@@ -38,8 +37,6 @@ function RefundHistory(props) {
           pagination
         />
       </CardBody>
-
-
     </Card>
   );
 }

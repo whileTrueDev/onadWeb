@@ -6,6 +6,8 @@ module.exports = function (sql, socket, msg) {
   const cutUrl = `/${fullUrl.split('/')[4]}`;
   const prevBannerName = msg[1];
   const getTime = new Date().toLocaleString();
+  const campaignObject = {};
+
   let myCreatorId;
   let myCampaignId;
   let myGameId;
@@ -14,10 +16,10 @@ module.exports = function (sql, socket, msg) {
     console.log(`${creatorId}에게 계약된 creatorCampaign의 campaignList를 가져옵니다.`);
 
     const campaignListQuery = `
-                                SELECT campaignList 
-                                FROM creatorCampaign
-                                WHERE creatorId = ? 
-                                `;
+    SELECT campaignList 
+    FROM creatorCampaign
+    WHERE creatorId = ? 
+    `;
 
     return new Promise((resolve, reject) => {
       doQuery(campaignListQuery, [creatorId])
@@ -39,16 +41,26 @@ module.exports = function (sql, socket, msg) {
     console.log('현재 ON되어있는 campaign List를 조회한다.');
 
     const campaignListQuery = `
-                              SELECT campaignId 
-                              FROM campaign
-                              WHERE onOff = 1
+    SELECT campaignId, optionType
+    FROM campaign
+    LEFT JOIN marketerInfo
+    ON campaign.marketerId = marketerInfo.marketerId
+    WHERE NOT marketerInfo.marketerContraction = 0
+    AND campaign.onOff = 1
+    AND NOT campaign.optionType = 2
+    AND campaign.limitState = 0
                               `;
 
     return new Promise((resolve, reject) => {
       doQuery(campaignListQuery)
         .then((row) => {
-          const list = row.result.map(data => data.campaignId);
-          resolve(list);
+          const campaignIdlist = row.result.map(data => data.campaignId);
+          row.result.map((data) => {
+            const campId = Object.values(data)[0];
+            const optionType = Object.values(data)[1];
+            campaignObject[campId] = optionType;
+          });
+          resolve(campaignIdlist);
         })
         .catch((errorData) => {
           errorData.point = 'getOnCampaignList()';
@@ -61,10 +73,11 @@ module.exports = function (sql, socket, msg) {
   // 하나의 categoryId 에 해당하는 캠페인 리스트를 반환하는 Promise
   const getCategoryCampaignList = (categoryId) => {
     const campaignListQuery = `
-                              SELECT campaignList 
-                              FROM categoryCampaign
-                              WHERE categoryId = ? 
-                              `;
+    SELECT campaignList 
+    FROM categoryCampaign
+    WHERE categoryId = ? 
+    `;
+
     return new Promise((resolve, reject) => {
       doQuery(campaignListQuery, [categoryId])
         .then((row) => {
@@ -143,6 +156,27 @@ module.exports = function (sql, socket, msg) {
     return Array.from(new Set(returnList));
   };
 
+  const getBanList = (creatorId) => {
+    const selectQuery = `
+    SELECT banList 
+    FROM creatorCampaign
+    WHERE creatorId = ?
+    `;
+
+    return new Promise((resolve, reject) => {
+      doQuery(selectQuery, [creatorId])
+        .then((row) => {
+          const banList = JSON.parse(row.result[0].banList).campaignList;
+          resolve(banList);
+        })
+        .catch((errorData) => {
+          errorData.point = 'getBanList()';
+          errorData.description = '해당 creator의 banList를 가져오는 과정';
+          reject(errorData);
+        });
+    });
+  };
+
   const getBannerSrc = (campaignId) => {
     const selectQuery = `
                         SELECT br.bannerSrc
@@ -170,6 +204,11 @@ module.exports = function (sql, socket, msg) {
   };
 
   const insertLandingPage = (campaignId, creatorId) => {
+     // campaignId를 가져와서 optionType 0,1check후 삽입.
+    const optionType = campaignObject[campaignId];
+    if (optionType === 0) {
+      return false;
+    }
     const insertLandingQuery = 'INSERT IGNORE INTO landingClick(campaignId, creatorId) values(?,?);';
     return new Promise((resolve, reject) => {
       doQuery(insertLandingQuery, [campaignId, creatorId])
@@ -186,17 +225,19 @@ module.exports = function (sql, socket, msg) {
 
   async function getBanner([creatorId, gameId]) {
     console.log(`-----------------------Id : ${creatorId} / ${getTime}---------------------------`);
-    const [creatorCampaignList, onCampaignList] = await Promise.all(
+    const [creatorCampaignList, onCampaignList, banList] = await Promise.all(
       [
         getCreatorCampaignList(creatorId),
         getOnCampaignList(),
+        getBanList(creatorId)
       ]
     );
     const categoryCampaignList = await getGameCampaignList(gameId, creatorId);
     const onCreatorcampaignList = creatorCampaignList.filter(campaignId => onCampaignList.includes(campaignId));
     const onCategorycampaignList = categoryCampaignList.filter(campaignId => onCampaignList.includes(campaignId));
     const campaignList = Array.from(new Set(onCreatorcampaignList.concat(onCategorycampaignList)));
-    const campaignId = campaignList[getRandomInt(campaignList.length)];
+    const cutCampaignList = campaignList.filter(campaignId => !banList.includes(campaignId)); // 마지막에 banList를 통해 거르기.
+    const campaignId = cutCampaignList[getRandomInt(cutCampaignList.length)];
     myCampaignId = campaignId;
     if (myCampaignId) {
       console.log(`${creatorId} : 광고될 캠페인은 ${myCampaignId} 입니다. at : ${getTime}`);

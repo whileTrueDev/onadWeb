@@ -1,12 +1,11 @@
 const mysql = require('mysql');
-const config = require('./dbInfo');
 
 module.exports = (function () {
   const pool = mysql.createPool({
-    host: config.host,
-    user: config.user,
-    password: config.password,
-    database: config.database
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_DATABASE
   });
 
   return {

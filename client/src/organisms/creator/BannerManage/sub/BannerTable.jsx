@@ -5,10 +5,11 @@ import classnames from 'classnames';
 // @material-ui/core components
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import {
-  Table, TableHead, TableRow, TableBody, TableCell, Grid, Typography, Divider, Hidden
+  Table, TableHead, TableRow, TableBody, TableCell, Grid, Typography, Divider, Hidden, IconButton
 } from '@material-ui/core';
 // custom table component
 import DateRange from '@material-ui/icons/DateRange';
+import DeleteIcon from '@material-ui/icons/Delete';
 import CustomTableFooter from '../../../../atoms/Table/TableFooter';
 // core components
 import tableStyle from '../../../../assets/jss/onad/components/tableStyle';
@@ -74,9 +75,10 @@ const stateDic = {
   1: '⏱ 진행중',
   0: '✔️ 완료',
 };
+
 function BannerTable({ ...props }) {
   const {
-    classes, tableData, tableHeaderColor,
+    classes, tableData, tableHeaderColor, setOpen, setCampaign
   } = props;
   const innerClasses = useStyles();
   const [page, setPage] = React.useState(0); // 테이블 페이지
@@ -94,7 +96,12 @@ function BannerTable({ ...props }) {
     setRowsPerPage(parseInt(event.target.value, 10));
   }
 
-  const tableHead = ['광고주 / 시작일', '배너이미지', '수익', '배너 및 광고주 설명', ''];
+  const handleBan = campaign => () => {
+    setCampaign(campaign);
+    setOpen(true);
+  };
+
+  const tableHead = ['광고주 / 시작일', '배너이미지', '수익', '배너 설명', ''];
   return (
     <div className={classes.tableResponsive}>
       <Table className={classes.table}>
@@ -194,17 +201,6 @@ function BannerTable({ ...props }) {
                 <TableCell className={classes.tableCell}>
                   <Grid container direction="column" spacing={1}>
                     <Grid item className={innerClasses.textCell}>
-                      <StyledItemText primary="광고주 소개" fontSize="15px" />
-                      {bannerData.companyDescription.split('\n').map(row => (
-                        <Typography variant="body2" key={shortid.generate()}>
-                          {row}
-                        </Typography>
-                      ))}
-                    </Grid>
-                    <Grid item>
-                      <Divider component="hr" orientation="horizontal" width="90%" />
-                    </Grid>
-                    <Grid item className={innerClasses.textCell}>
                       <StyledItemText primary="배너 소개" fontSize="15px" />
                       {bannerData.bannerDescription.split('\n').map(row => (
                         <Typography variant="body2" key={shortid.generate()}>
@@ -215,6 +211,17 @@ function BannerTable({ ...props }) {
                   </Grid>
                 </TableCell>
               </Hidden>
+              {bannerData.state === 1
+              && (
+              <Hidden mdDown>
+                <TableCell className={classes.tableCell}>
+                  <IconButton aria-label="delete" onClick={handleBan(bannerData)}>
+                    <DeleteIcon />
+                  </IconButton>
+                </TableCell>
+              </Hidden>
+              )
+              }
             </TableRow>
           ))}
           {emptyRows > 0 && (

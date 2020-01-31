@@ -13,7 +13,6 @@ import Home from '@material-ui/icons/Home';
 import SpeakerNotes from '@material-ui/icons/SpeakerNotes';
 import PowerSettingsNew from '@material-ui/icons/PowerSettingsNew';
 // core components
-// import Dialog from '../Dialog/Dialog';
 import headerLinksStyle from '../../assets/jss/onad/components/headerLinksStyle';
 import Notification from './Notification';
 import HOST from '../../utils/config';
@@ -23,26 +22,24 @@ import useFetchData from '../../utils/lib/hooks/useFetchData';
 
 const useMenu = () => {
   const [anchorEl, setAnchorEl] = useState(null);
-  function handleMenuOpen(event) {
-    setAnchorEl(event.currentTarget);
+  
+  function handleClick(e) {
+    setAnchorEl(anchorEl ? null : e.currentTarget);
   }
-  function handleMenuClose() {
-    setAnchorEl(null);
-  }
-  return { anchorEl, handleMenuOpen, handleMenuClose };
+
+  return { anchorEl, setAnchorEl, handleClick };
 };
 
 function HeaderLinks() {
   const userType = window.location.pathname.split('/')[2];
   const NotificationData = useFetchData(`/api/dashboard/${userType}/notification`);
-
   function handleLogoutClick() {
     axios.get(`${HOST}/api/login/logout`).then(() => {
       history.push('/');
     });
   }
 
-  const { anchorEl, handleMenuOpen, handleMenuClose } = useMenu();
+  const {anchorEl, handleClick } = useMenu();
 
   return (
     <div>
@@ -50,7 +47,7 @@ function HeaderLinks() {
       <Tooltip title="알림">
         <IconButton
           aria-label="notifications"
-          onClick={handleMenuOpen}
+          onClick={handleClick}
         >
           <Badge
             badgeContent={!NotificationData.loading && NotificationData.payload
@@ -62,9 +59,10 @@ function HeaderLinks() {
           </Badge>
         </IconButton>
       </Tooltip>
+
       <Notification
         anchorEl={anchorEl}
-        handleMenuClose={handleMenuClose}
+        handleClick={handleClick}
         notificationData={NotificationData}
       />
 
@@ -89,7 +87,12 @@ function HeaderLinks() {
             to="/notice"
             component={Link}
           >
-            <SpeakerNotes fontSize="large" />
+            <Badge
+              variant="dot"
+              color="secondary"
+            >
+              <SpeakerNotes fontSize="large" />
+            </Badge>
           </IconButton>
         </Tooltip>
       </Hidden>

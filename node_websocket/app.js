@@ -1,3 +1,4 @@
+require('dotenv').config(); // 환경변수를 위해. dev환경: .env 파일 / production환경: docker run의 --env-file인자로 넘김.
 const express = require('express');
 const app = require('express')();
 const http = require('http').createServer(app);
@@ -6,19 +7,13 @@ const schedule = require('node-schedule');
 const sql = require('./public/models/select');
 const pool = require('./public/models/connect');
 const requestImg = require('./public/requestImg.js');
-const config = require('./config.json');
 
 // port 설정 및 hostname 설정
 const PORT = 3002;
 process.env.NODE_ENV = (process.env.NODE_ENV && (process.env.NODE_ENV).trim().toLowerCase() === 'production') ? 'production' : 'development';
-let BACK_HOST = config.dev.apiHostName;
-let FRONT_HOST = config.dev.reactHostName;
-let SOCKET_HOST = config.dev.socketHostName;
+let SOCKET_HOST = process.env.DEV_SOCKET_HOSTNAME;
 if (process.env.NODE_ENV === 'production') {
-  console.log(`now listening on ${PORT} PORT with ${process.env.NODE_ENV} environment!`);
-  BACK_HOST = config.production.apiHostName;
-  FRONT_HOST = config.production.reactHostName;
-  SOCKET_HOST = config.production.socketHostName;
+  SOCKET_HOST = process.env.PRODUCTION_SOCKET_HOSTNAME;
 }
 // view engine
 app.set('views', `${__dirname}/views`);
@@ -27,6 +22,7 @@ app.engine('html', require('ejs').renderFile);
 
 // static
 app.use('/public', express.static(`${__dirname}/public`)); // 디렉토리 정적으로 고정하는 부분
+app.use(express.static(`${__dirname}/public`)); // 디렉토리 정적으로 고정하는 부분
 
 app.get('/wrongurl', (req, res) => {
   res.render('wrongUrl.ejs');
@@ -44,11 +40,20 @@ app.get('/error', (req, res) => {
   res.render('error.ejs');
 });
 
-app.get('/test', (req, res) => {
-  res.render('testpage.ejs');
+app.get('/text/:id', (req, res) => {
+  res.render('text.ejs');
 });
+
 app.get('/banner/:id', (req, res, next) => { // /banner/:id로 라우팅
   res.render('client.ejs');
+});
+
+app.get('/check', (req, res, next) => { // /banner/:id로 라우팅
+  res.render('browsercheck.ejs');
+});
+
+app.get('/test', (req, res, next) => { // /banner/:id로 라우팅
+  res.render('test.ejs');
 });
 
 (function () {
@@ -62,7 +67,6 @@ app.get('/banner/:id', (req, res, next) => { // /banner/:id로 라우팅
     const rule = new schedule.RecurrenceRule(); // 스케쥴러 객체 생성
     rule.hour = new schedule.Range(0, 23); // cronTask 시간지정
     rule.minute = [0, 10, 20, 30, 40, 50]; // cronTask 실행되는 분(minute)
-
     console.log(roomInfo);
     const cronTask = schedule.scheduleJob(rule, () => { // 스케쥴러를 통해 1분마다 db에 배너정보 전송
       socket.emit('response banner data to server', {}); // client로 emit
@@ -78,7 +82,13 @@ app.get('/banner/:id', (req, res, next) => { // /banner/:id로 라우팅
       console.log(`- 새 접속 ip : ${ip}`);
       console.log(`- 클라이언트 소켓 아이디 : ${clientId}`);
 
-      if (history !== 1) { /* 이 부분 !=로 바꾸기 */
+      if (process.env.NODE_ENV === 'development') {
+        socket.join('banner room');
+        socket.emit('host pass', SOCKET_HOST);
+        console.log('banner socketinfo : ', socketsInfo);
+        socketsInfo[Object.keys(roomInfo).pop()] = _url; // roomInfo에서 소켓아이디 불러와서 socketsInfo 객체에 {'id' : url} 형태로 저장
+        requestImg(sql, socket, [_url, false]);
+      } else if (history !== 1) { /* 이 부분 !=로 바꾸기 */
         const destination = `${SOCKET_HOST}/browserWarn`;
         socket.emit('browser warning', destination);
       } else if (urlArray.includes(_url)) {
@@ -86,11 +96,20 @@ app.get('/banner/:id', (req, res, next) => { // /banner/:id로 라우팅
         const destination = `${SOCKET_HOST}/duplicate`;
         socket.emit('duplicate warn', destination);
       } else {
+        socket.join('banner room');
         socket.emit('host pass', SOCKET_HOST);
+
+        console.log('banner socketinfo : ', socketsInfo);
+
         socketsInfo[Object.keys(roomInfo).pop()] = _url; // roomInfo에서 소켓아이디 불러와서 socketsInfo 객체에 {'id' : url} 형태로 저장
         requestImg(sql, socket, [_url, false]);
       }
       console.log(socketsInfo); // 접속중인 url 저장된 부분
+    });
+
+    socket.on('new marquee', () => {
+      socket.join('marquee room');
+      console.log('text socketinfo : ', socketsInfo);
     });
 
     socket.on('disconnect', () => { // 접속종료시
@@ -140,5 +159,5 @@ app.get('/banner/:id', (req, res, next) => { // /banner/:id로 라우팅
 }());
 
 http.listen(PORT, () => {
-  console.log('node_websocket server on');
+  console.log(`node_websocket server on ${process.env.NODE_ENV} mode`);
 });

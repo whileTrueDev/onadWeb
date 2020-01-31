@@ -4,10 +4,10 @@ const encrypto = require('../../encryption');
 const doQuery = require('../../model/doQuery');
 const setTemporaryPassword = require('../../middlewares/setTemporyPassword');
 const sendEmailAuth = require('../../middlewares/sendEmailAuth');
-const config = require('../../config.json');
 
-const HOST = process.env.NODE_ENV === 'production' ? config.production.reactHostName : config.dev.reactHostName;
-
+const HOST = process.env.NODE_ENV === 'production'
+  ? process.env.PRODUCTION_REACT_HOSTNAME
+  : process.env.DEV_REACT_HOSTNAME;
 
 const router = express.Router();
 
@@ -41,23 +41,9 @@ router.post('/marketer', (req, res, next) => {
   (marketerId, cashAmount)
   VALUES (?, ?)`;
 
-  // marketerTaxBill 신규값 초기화 쿼리
-  const taxBillQuery = `
-  INSERT INTO marketer
-  (marketerId, date, state)
-  VALUES (?, ?, ?)`;
-  let THIS_MONTH = '';
-  const DATE = new Date();
-  if ((DATE.getMonth() + 1).toString().length < 2) {
-    THIS_MONTH = `${DATE.getFullYear()}-0${(DATE.getMonth() + 1)}-00`;
-  } else {
-    THIS_MONTH = `${DATE.getFullYear()}-${(DATE.getMonth() + 1)}-00`;
-  }
-
   Promise.all([
     doQuery(infoQuery, infoQueryArray),
     doQuery(cashQuery, [marketerId, 0]),
-    doQuery(taxBillQuery, [marketerId, THIS_MONTH, 0])
   ])
     .then(() => {
       next();
@@ -66,6 +52,42 @@ router.post('/marketer', (req, res, next) => {
       res.send([false, error]);
     });
 }, sendEmailAuth);
+
+
+router.post('/marketer/platform', (req, res) => {
+  const {
+    marketerId, marketerName,
+    marketerMail, marketerPhoneNum,
+    marketerBusinessRegNum, marketerUserType,
+    platformType
+  } = req.body;
+
+  const infoQuery = `
+  INSERT INTO marketerInfo 
+  (marketerId, marketerName, marketerMail, 
+  marketerPhoneNum, marketerBusinessRegNum, marketerUserType, platformType, marketerEmailAuth) 
+  VALUES (?, ?, ?, ?, ?, ?, ?, ?) `;
+
+  const infoQueryArray = [marketerId, marketerName, marketerMail,
+    marketerPhoneNum, marketerBusinessRegNum, marketerUserType, platformType, 1];
+
+  const cashQuery = `
+  INSERT INTO marketerDebit
+  (marketerId, cashAmount)
+  VALUES (?, ?)`;
+
+  Promise.all([
+    doQuery(infoQuery, infoQueryArray),
+    doQuery(cashQuery, [marketerId, 0])
+  ])
+    .then(() => {
+      res.send({ error: false });
+    })
+    .catch((error) => {
+      res.send({ error });
+    });
+});
+
 
 // 쿼리관련 에러 핸들링 완료.
 router.post('/checkId', (req, res) => {
@@ -159,19 +181,21 @@ router.get('/auth/:id', (req, res) => {
 // 크리에이터 마케터 계좌 정보 입력
 router.post('/accountNum', (req, res, next) => {
   const { userType } = req.session.passport.user;
-  let userId; let
-    query;
+  let userId;
+  let query;
   if (userType === 'creator') {
     userId = req.session.passport.user.creatorId;
-    query = 'UPDATE creatorInfo SET creatorAccountNumber = ? WHERE creatorId = ?';
+    query = 'UPDATE creatorInfo SET creatorAccountNumber = ?, realName = ?  WHERE creatorId = ?';
   } else {
     userId = req.session.passport.user.userid;
-    query = 'UPDATE marketerInfo SET marketerAccountNumber = ? WHERE marketerId = ?';
+    query = 'UPDATE marketerInfo SET marketerAccountNumber = ?, accountHolder = ? WHERE marketerId = ?';
   }
 
-  const { bankName, bankAccount } = req.body;
+  const { bankName, bankRealName, bankAccount } = req.body;
   const AccountNumber = `${bankName}_${bankAccount}`;
-  doQuery(query, [AccountNumber, userId])
+  // 계좌정보 변경시 암호화하여 저장한다.
+  const enciphedAccountNum = encrypto.encipher(AccountNumber);
+  doQuery(query, [enciphedAccountNum, bankRealName, userId])
     .then((data) => {
       res.send(data);
     })
@@ -207,5 +231,40 @@ router.get('/account/callback', (req, res) => {
   console.log(req.body);
   res.send('');
 });
+
+router.post('/certifications', async (req, res) => {
+  const { imp_uid } = req.body; // request의 body에서 imp_uid 추출
+  try {
+    // 인증 토큰 발급 받기
+    const getToken = await axios({
+      url: 'https://api.iamport.kr/users/getToken',
+      method: 'post', // POST method
+      headers: { 'Content-Type': 'application/json' }, // "Content-Type": "application/json"
+      data: {
+        imp_key: '2306149701563593', // REST API키
+        imp_secret: 'Oc6uNyT5UYJ1oGNoQn6aV3xZ5AdJeGJ2TPwGnqMipvkNc7c2uicqlKprlCbzjUBcK8T8yFqXbKLoSXqn' // REST API Secret
+      }
+    });
+
+    const { access_token } = getToken.data.response; // 인증 토큰
+    // imp_uid로 인증 정보 조회
+    const getCertifications = await axios({
+      url: `https://api.iamport.kr/certifications/${imp_uid}`, // imp_uid 전달
+      method: 'get', // GET method
+      headers: { Authorization: access_token } // 인증 토큰 Authorization header에 추가
+    });
+    const certificationsInfo = getCertifications.data.response; // 조회한 인증 정보
+    // 인증정보에 대한 데이터를 저장하거나 사용한다.
+    const {
+      name, birth
+    } = certificationsInfo;
+
+    res.send({ error: false, data: { name } });
+  } catch (e) {
+    console.error(e);
+    res.send({ error: true, data: { msg: '서버오류입니다. 잠시후 다시 진행해주세요.' } });
+  }
+});
+
 
 module.exports = router;

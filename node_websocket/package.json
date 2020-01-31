@@ -1,9 +1,10 @@
 {
     "name": "socket-node",
-    "version": "0.0.1",
+    "version": "1.0.0",
     "description": "웹소켓을 통한 배너 실시간 전송",
     "dependencies": {
         "create-react-app": "^3.0.0",
+        "dotenv": "^8.2.0",
         "ejs": "^2.6.1",
         "express": "^4.16.4",
         "express-session": "^1.16.1",
@@ -15,7 +16,7 @@
         "winston-daily-rotate-file": "^4.2.1"
     },
     "scripts": {
-        "start": "nodemon app.js",
-        "start:production": "node app.js"
+        "start": "NODE_ENV=$NODE_ENV nodemon app.js",
+        "start:production": "NODE_ENV=production node app.js"
     }
 }

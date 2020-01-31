@@ -1,5 +1,7 @@
 const express = require('express');
 const doQuery = require('../../../../model/doQuery');
+// marketer action log
+const marketerActionLogging = require('../../../../middlewares/marketerActionLog');
 
 const router = express.Router();
 
@@ -29,12 +31,12 @@ router.get('/all', (req, res) => {
   const bannerQuery = `
   SELECT bannerSrc, confirmState, bannerId, 
     bannerDenialReason, bannerDescription, 
-    companyDescription, landingUrl,
+    landingUrl,
     DATE_FORMAT(date, "%Y년% %m월 %d일") as date,
     DATE_FORMAT(regiDate, "%Y년% %m월 %d일") as regiDate
   FROM bannerRegistered
   WHERE marketerId = ?
-  ORDER BY confirmState DESC, regiDate DESC`;
+  ORDER BY confirmState ASC, regiDate DESC`;
   doQuery(bannerQuery, [marketerId])
     .then((row) => {
       if (row.result.length > 0) {
@@ -67,42 +69,25 @@ router.get('/registed', (req, res) => {
     });
 });
 
-// 배너 삭제
-// bannerRegistered
-router.post('/delete', (req, res) => {
-  const { bannerId } = req.body;
-  const bannerQuery = `
-  DELETE FROM bannerRegistered 
-  WHERE bannerId = ? `;
-  doQuery(bannerQuery, [bannerId])
-    .then(() => {
-      res.send([true, '배너가 성공적으로 삭제되었습니다.']);
-    })
-    .catch((errorData) => {
-      console.log(errorData);
-      res.send([false, '배너 삭제에 실패하였습니다 잠시후 시도해주세요.']);
-    });
-});
-
 // 배너 등록
 // bannerRegistered
 router.post('/push', (req, res) => {
   const marketerId = req._passport.session.user.userid;
   const {
-    bannerSrc, bannerDescription, companyDescription, landingUrl
+    bannerSrc, bannerDescription, landingUrl
   } = req.body;
 
   const searchQuery = `
   SELECT bannerId 
   FROM bannerRegistered 
   WHERE marketerId = ?  
-  ORDER BY date DESC
+  ORDER BY regiDate DESC
   LIMIT 1`;
 
   const saveQuery = `
   INSERT INTO bannerRegistered 
-  (bannerId, marketerId, bannerSrc, bannerDescription, companyDescription, landingUrl) 
-  VALUES (?, ?, ?, ?, ?, ?)`;
+  (bannerId, marketerId, bannerSrc, bannerDescription, landingUrl) 
+  VALUES (?, ?, ?, ?, ?)`;
 
   doQuery(searchQuery, [marketerId])
     .then((row) => {
@@ -110,7 +95,7 @@ router.post('/push', (req, res) => {
       let bannerId = '';
       if (row.result[0]) {
         const lastBannerId = row.result[0].bannerId;
-        const count = parseInt(lastBannerId.split('_')[1]) + 1;
+        const count = parseInt(lastBannerId.split('_')[1], 10) + 1; // 10 진수
         if (count < 10) {
           bannerId = `${marketerId}_0${count}`;
         } else {
@@ -121,9 +106,15 @@ router.post('/push', (req, res) => {
       }
       doQuery(saveQuery,
         [bannerId, marketerId, bannerSrc, bannerDescription,
-          companyDescription, landingUrl])
+          landingUrl])
         .then(() => {
           res.send([true, '배너가 등록되었습니다']);
+
+          // marketer action log 데이터 적재
+          const MARKETER_ACTION_LOG_TYPE = 2; // <배너 등록> 의 상태값 : 2
+          marketerActionLogging([
+            marketerId, MARKETER_ACTION_LOG_TYPE, JSON.stringify({ bannerId })
+          ]);
         })
         .catch((errorData) => {
           console.log(errorData);
@@ -136,7 +127,31 @@ router.post('/push', (req, res) => {
     });
 });
 
-// 전달된 해당 배너와 연결된 캠페인이 있는지 조회
+
+// 배너 삭제
+// bannerRegistered
+router.post('/delete', (req, res) => {
+  const marketerId = req._passport.session.user.userid;
+  const { bannerId } = req.body;
+  const bannerQuery = `
+  DELETE FROM bannerRegistered 
+  WHERE bannerId = ? `;
+  doQuery(bannerQuery, [bannerId])
+    .then(() => {
+      res.send([true, '배너가 성공적으로 삭제되었습니다.']);
+
+      // marketer action log 데이터 적재
+      const MARKETER_ACTION_LOG_TYPE = 11; // <배너 삭제>의 상태값 : 11
+      marketerActionLogging([marketerId,
+        MARKETER_ACTION_LOG_TYPE, JSON.stringify({ bannerId })]);
+    })
+    .catch((errorData) => {
+      console.log(errorData);
+      res.send([false, '배너 삭제에 실패하였습니다 잠시후 시도해주세요.']);
+    });
+});
+
+// (배너 삭제시) 전달된 해당 배너와 연결된 캠페인이 있는지 조회
 router.get('/connectedcampaign', (req, res) => {
   const { bannerId } = req.query;
   const query = `
