@@ -12,7 +12,7 @@ router.get('/', (req, res) => {
   SELECT 
   marketerId, marketerName, marketerMail, 
   marketerPhoneNum, marketerBusinessRegNum,
-  marketerUserType, marketerContraction
+  marketerUserType, marketerContraction, platformType
   FROM marketerInfo
   WHERE marketerId = ? `;
 
@@ -31,53 +31,51 @@ router.get('/', (req, res) => {
 router.post('/change', (req, res) => {
   const marketerId = req._passport.session.user.userid;
   const { type, value } = req.body;
-  let key;
-  let salt;
 
   const getQuery = (intype) => {
     switch (intype) {
-      case 'password':
-        return `
+      case 'password': {
+        const [key, salt] = encrypto.make(value);
+        return [`
         UPDATE marketerInfo 
         SET marketerSalt = ?, marketerPasswd = ?
         WHERE marketerId = ? 
-        `;
-      case 'name':
-        return `
+        `, [salt, key, marketerId]];
+      }
+      case 'name': {
+        return [`
         UPDATE marketerInfo 
         SET marketerName = ?
         WHERE marketerId = ? 
-        `;
-      case 'phone':
-        return `
+        `, [value, marketerId]];
+      }
+      case 'phone': {
+        return [`
         UPDATE marketerInfo 
         SET marketerPhoneNum = ?
         WHERE marketerId = ? 
-        `;
-      case 'mail':
-        return `
+        `, [value, marketerId]];
+      }
+      case 'mail': {
+        return [`
         UPDATE marketerInfo 
         SET marketerMail = ?
         WHERE marketerId = ? 
-        `;
+        `, [value, marketerId]];
+      }
       default:
-        return '';
+        return ['', []];
     }
   };
 
-  const updateQuery = getQuery(type);
-  if (type === 'password') {
-    [key, salt] = encrypto.make(value);
-  }
-
-
-  doQuery(updateQuery, [marketerName, marketerMail, marketerPhoneNum, marketerId])
+  const [updateQuery, params] = getQuery(type);
+  doQuery(updateQuery, params)
     .then(() => {
       res.send(true);
     })
     .catch((errorData) => {
       console.log(errorData);
-      res.end();
+      res.send(false);
     });
 });
 

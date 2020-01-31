@@ -129,8 +129,9 @@ const RegistForm = (props) => {
       return;
     }
     const {
-      id, password, repasswd, checkDuplication, email,
+      id, password, repasswd, checkDuplication,
     } = state;
+    
     const marketerMailId = document.getElementById('email').value;
 
     if(marketerMailId === ''){

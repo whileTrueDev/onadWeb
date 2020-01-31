@@ -165,7 +165,7 @@ const LoginForm = (props) => {
             />
           </form>
           <Typography style={{ fontSize: 15, fontFamily: 'Noto Sans kr', marginTop: '20px', color: 'rgba(0, 0, 0, 0.54)', marginBottom: '3px' }}>소셜 계정으로 온애드 서비스 이용</Typography>
-          <Divider component="hr" orientation="horizental" width="60%" />
+          <Divider component="hr" orientation="horizontal" width="60%" />
           <Grid container direction="row" align="right">
             <Grid item>
               <Button href={`${HOST}/api/login/google`}>

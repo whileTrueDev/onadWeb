@@ -2,22 +2,19 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
 import {
-  Grid, Checkbox, FormControlLabel, Divider, Snackbar, IconButton, TextField, InputAdornment, MenuItem
+  Grid, Divider, Snackbar, IconButton, TextField, InputAdornment, MenuItem, Hidden
 } from '@material-ui/core';
-import Check from '@material-ui/icons/Check';
 import CloseIcon from '@material-ui/icons/Close';
-
 import { makeStyles } from '@material-ui/core/styles';
 import NumberFormat from 'react-number-format';
 import Dialog from '../../../../atoms/Dialog/Dialog';
 import Button from '../../../../atoms/CustomButtons/Button';
 import StyledInput from '../../../../atoms/StyledInput';
-import DangerTypography from '../../../../atoms/Typography/Danger';
 import axios from '../../../../utils/axios';
 import history from '../../../../history';
 import HOST from '../../../../utils/config';
-import Success from '../../../../atoms/Success';
 import useDialog from '../../../../utils/lib/hooks/useDialog';
+
 
 const useStyles = makeStyles(theme => ({
   item: {
@@ -64,13 +61,12 @@ const useStyles = makeStyles(theme => ({
 
 const initialState = {
   passwordValue: '',
-  id: false,
   password: false,
   repasswd: false,
-  checkDuplication: true,
   email: '',
   phoneNum: '',
   domain: '',
+  name: ''
 };
 
 const domains = [
@@ -113,12 +109,6 @@ const reducer = (state, action) => {
     case 'domain': {
       return { ...state, domain: action.value };
     }
-    // case 'businessRegNum': {
-    //   return { ...state, businessRegNum: action.value };
-    // }
-    case 'checkDuplication': {
-      return { ...state, checkDuplication: action.value };
-    }
     case 'reset': {
       console.log('모든 State를 reset합니다');
       return initialState;
@@ -136,14 +126,8 @@ const CampaignUpdateDialog = (props) => {
   } = props;
   const snack = useDialog();
   const [marketerCustomDomain, setCustomDomain] = React.useState('');
-
-  const [error, setError] = React.useState(false); // budget 작성시 한도 체크용 State
-  const [checkName, setCheckName] = React.useState(false);
-  const [duplicate, setDuplicate] = React.useState(false);
+  const [formattedPhone, setFomattedPhone] = React.useState(null);
   const [inputPhoneNum, setPhoneNum] = React.useState(null);
-  // const [state, dispatch] = React.useReducer(reducer, {
-  //   noBudget: false, budget: '', campaignName: ''
-  // });
   const [state, dispatch] = React.useReducer(reducer, initialState);
 
   const handleChange = name => (event) => {
@@ -156,96 +140,38 @@ const CampaignUpdateDialog = (props) => {
 
   const handlePhoneNum = (value) => {
     setPhoneNum(value.value);
+    setFomattedPhone(value.formattedValue);
   };
 
-  const submitPasswd = () => {
-    // state.passwd가 거짓 (형식 에러일경우, 참)
-    // state.repasswd가 거짓 (state.passwordValue와 동일하지 않은경우)
-    const { passwordValue } = state;
+  const handleSubmit = (type) => {
+    const getValue = (intype) => {
+      switch (intype) {
+        case 'password':
+          return state.passwordValue;
+        case 'phone':
+          return formattedPhone;
+        case 'mail':
+          return `${state.email}@${state.domain}`;
+        case 'name':
+          return state.name;
+        default:
+          return '';
+      }
+    };
+    const value = getValue(type);
+
     // type과 값을 전달하여 router에서 query문을 변경한다.
-    axios.post(`${HOST}/api/dashboard/marketer/profile/change`, { type: 'password', value: passwordValue })
+    axios.post(`${HOST}/api/dashboard/marketer/profile/change`, { type, value })
       .then((res) => {
       // 올바른 데이터가 전달되었다.
-        // if (res.data) {
-        //   setCheckName(false);
-        //   dispatch({ key: 'campaignName', value: '' });
-        //   setDuplicate(true);
-        // } else {
-        //   setCheckName(true);
-        //   dispatch({ key: 'campaignName', value });
-        //   setDuplicate(false);
-        // }
+        if (res.data) {
+          snack.handleOpen();
+        } else {
+          alert('오류입니다. 본사에 문의하세요');
+          history.push('/dashboard/marketer/myoffice');
+        }
       });
   };
-  // const checkCampaignName = (value) => {
-  //   axios.post(`${HOST}/api/dashboard/marketer/campaign/checkName`, { campaignName: value })
-  //     .then((res) => {
-  //     // 올바른 데이터가 전달되었다.
-  //       if (res.data) {
-  //         setCheckName(false);
-  //         dispatch({ key: 'campaignName', value: '' });
-  //         setDuplicate(true);
-  //       } else {
-  //         setCheckName(true);
-  //         dispatch({ key: 'campaignName', value });
-  //         setDuplicate(false);
-  //       }
-  //     });
-  // };
-
-  // const handleChangeName = (event) => {
-  //   if (event.target.value.length === 0) {
-  //     setDuplicate(false);
-  //   }
-  //   if (event.target.value.length >= 3) {
-  //     checkCampaignName(event.target.value);
-  //   } else {
-  //     setCheckName(false);
-  //     dispatch({ key: 'campaignName', value: '' });
-  //   }
-  // };
-
-  // const handleNoBudgetChange = () => {
-  //   setError(false);
-  //   dispatch({ key: 'noBudget' });
-  // };
-
-  // const handleChangeBudget = (value) => {
-  //   dispatch({ key: 'budget', value: value.value });
-  //   if (Number(value.value) < 5000 && value.value !== '') {
-  //     setError(true);
-  //   } else {
-  //     setError(false);
-  //   }
-  // };
-
-  // const handleNameUpdate = () => {
-  //   const data = { campaignId: selectedCampaign.campaignId, ...state };
-  //   axios.post(`${HOST}/api/dashboard/marketer/campaign/changeName`, data)
-  //     .then((res) => {
-  //     // 성공적으로 완료
-  //       if (res.data[0]) {
-  //         snack.handleOpen();
-  //       } else {
-  //         alert('오류입니다. 본사에 문의하세요');
-  //         history.push('/dashboard/marketer/main');
-  //       }
-  //     });
-  // };
-
-  // const handleBudgetUpdate = () => {
-  //   const data = { campaignId: selectedCampaign.campaignId, ...state };
-  //   axios.post(`${HOST}/api/dashboard/marketer/campaign/changeBudget`, data)
-  //     .then((res) => {
-  //     // 성공적으로 완료
-  //       if (res.data[0]) {
-  //         snack.handleOpen();
-  //       } else {
-  //         alert('오류입니다. 본사에 문의하세요');
-  //         history.push('/dashboard/marketer/main');
-  //       }
-  //     });
-  // };
 
   return (
     <Dialog
@@ -256,20 +182,26 @@ const CampaignUpdateDialog = (props) => {
       title="내 정보 변경"
     >
       <Grid container direction="column">
-
+        {(userData.platformType === 0)
+        && (
         <Grid item className={classes.contents}>
           <Grid container direction="row" justify="space-evenly" style={{ minHeight: '180px' }}>
-            <Grid item container direction="row" justify="space-evenly" xs={2}>
+            <Grid item container direction="row" justify="space-evenly" xs={12} sm={2}>
               <Grid item className={classes.item}>
                 <Typography gutterBottom variant="body1" style={{ fontWeight: 700 }}>
                   비밀번호 변경
                 </Typography>
               </Grid>
               <Grid item>
-                <Divider orientation="vertical" variant="fullWidth" />
+                <Hidden smDown>
+                  <Divider orientation="vertical" variant="fullWidth" />
+                </Hidden>
+                <Hidden mdUp>
+                  <Divider orientation="horizontal" variant="fullWidth" />
+                </Hidden>
               </Grid>
             </Grid>
-            <Grid item xs={10}>
+            <Grid item xs={12} sm={10}>
               <Grid container direction="row" justify="space-evenly" xs={12}>
                 <Grid item xs={5} className={classes.item}>
                   <Grid item className={classes.text}>
@@ -323,8 +255,8 @@ const CampaignUpdateDialog = (props) => {
                     size="sm"
                     onClick={() => {
                       // state체크 및 error 분기화
-                      if (!(state.password || state.repasswd)) {
-                        submitPasswd();
+                      if (!(state.password || state.repasswd) && state.passwordValue !== '') {
+                        handleSubmit('password');
                       } else {
                         alert('입력이 올바르지 않습니다.');
                       }
@@ -343,6 +275,7 @@ const CampaignUpdateDialog = (props) => {
             <Divider orientation="horizontal" />
           </Grid>
         </Grid>
+        )}
 
         <Grid item className={classes.contents}>
           <Grid container direction="row" justify="space-evenly" style={{ minHeight: '100px' }}>
@@ -397,8 +330,8 @@ const CampaignUpdateDialog = (props) => {
                       size="sm"
                       onClick={() => {
                         // state체크 및 error 분기화
-                        if (checkName && state.campaignName !== '') {
-                          // handleNameUpdate();
+                        if (state.name !== '' && state.name !== null) {
+                          handleSubmit('name');
                         } else {
                           alert('입력이 올바르지 않습니다.');
                         }
@@ -419,6 +352,8 @@ const CampaignUpdateDialog = (props) => {
           </Grid>
         </Grid>
 
+        {(userData.platformType === 0)
+        && (
         <Grid item container className={classes.contents} direction="row" justify="space-evenly" style={{ minHeight: '100px' }}>
           <Grid item container direction="row" justify="space-evenly" xs={2}>
             <Grid item className={classes.item}>
@@ -524,8 +459,8 @@ const CampaignUpdateDialog = (props) => {
                     size="sm"
                     onClick={() => {
                       // state체크 및 error 분기화
-                      if (checkName && state.campaignName !== '') {
-                        // handleNameUpdate();
+                      if (state.email !== '' && state.domain !== '') {
+                        handleSubmit('mail');
                       } else {
                         alert('입력이 올바르지 않습니다.');
                       }
@@ -544,6 +479,7 @@ const CampaignUpdateDialog = (props) => {
             <Divider orientation="horizontal" />
           </Grid>
         </Grid>
+        )}
 
         <Grid item className={classes.contents}>
           <Grid container direction="row" justify="space-evenly" style={{ minHeight: '100px' }}>
@@ -607,8 +543,8 @@ const CampaignUpdateDialog = (props) => {
                       size="sm"
                       onClick={() => {
                         // state체크 및 error 분기화
-                        if (checkName && state.campaignName !== '') {
-                          // handleNameUpdate();
+                        if (inputPhoneNum !== '' && inputPhoneNum !== null) {
+                          handleSubmit('phone');
                         } else {
                           alert('입력이 올바르지 않습니다.');
                         }
@@ -638,7 +574,7 @@ const CampaignUpdateDialog = (props) => {
         autoHideDuration={2000}
         onClose={() => {
           snack.handleClose();
-          history.push('/dashboard/marketer/main');
+          history.push('/dashboard/marketer/myoffice');
         }}
         ContentProps={{
           'aria-describedby': 'message-id',
@@ -653,7 +589,7 @@ const CampaignUpdateDialog = (props) => {
             className={classes.close}
             onClick={() => {
               snack.handleClose();
-              history.push('/dashboard/marketer/main');
+              history.push('/dashboard/marketer/myoffice');
             }}
           >
             <CloseIcon />
@@ -667,7 +603,6 @@ const CampaignUpdateDialog = (props) => {
 CampaignUpdateDialog.propTypes = {
   open: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]).isRequired,
   handleClose: PropTypes.func.isRequired,
-  selectedCampaign: PropTypes.object.isRequired
 };
 
 export default CampaignUpdateDialog;

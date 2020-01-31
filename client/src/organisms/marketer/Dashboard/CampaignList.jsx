@@ -4,7 +4,7 @@ import {
   Grid, Paper, Divider, Button,
   Typography, IconButton,
   ListItem, List, FormControlLabel,
-  Snackbar
+  Snackbar, Hidden
 } from '@material-ui/core';
 import Countup from 'react-countup';
 
@@ -45,12 +45,18 @@ const useStyles = makeStyles(theme => ({
   img: {
     width: 240,
     height: 120,
-    // marginRight: theme.spacing(3),
-    margin: 'auto',
-    // display: 'block',
+    [theme.breakpoints.down('md')]: {
+      width: 120,
+      height: 60
+    },
     maxWidth: '100%',
-    maxHeight: '100%',
+    // maxHeight: '100%',
   },
+  contents: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center'
+  }
 }));
 
 export default function CampaignList(props) {
@@ -93,13 +99,13 @@ export default function CampaignList(props) {
       {!campaignData.loading && campaignData.payload && (
         <List style={{ maxHeight: 380, overflowY: 'auto' }}>
           {campaignData.payload.map((detail, index) => (
-            <div>
+            <div key={detail.campaignId}>
               <ListItem
                 className={classes.list}
               >
                 <Grid container direction="row" justify="space-between">
-                  <Grid item>
-                    <Grid container direction="row" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }} spacing={3}>
+                  <Grid item className={classes.contents}>
+                    <Grid container direction="row" className={classes.contents} spacing={3}>
                       <Grid item>
                         <FormControlLabel
                           control={(
@@ -123,97 +129,103 @@ export default function CampaignList(props) {
                       <Grid item>
                         <img className={classes.img} alt="campaign-logo" src={detail.bannerSrc} />
                       </Grid>
-                      <Grid item>
-                        <Grid container direction="column" spacing={2}>
+                      <Hidden xsDown>
+                        <Grid item>
+                          <Grid container direction="column" spacing={2}>
+                            <Typography gutterBottom variant="body2">
+                              {detail.campaignName}
+                            </Typography>
+                            <Typography variant="caption" gutterBottom>
+                              {optionTypeList[detail.optionType]}
+                            </Typography>
+                            <Typography variant="caption" gutterBottom>
+                              {priorityTypeList[detail.priorityType]}
+                            </Typography>
+                            <Typography variant="caption" color="textSecondary">
+                              {new Date(detail.regiDate).toLocaleDateString()}
+                            </Typography>
+                          </Grid>
+                        </Grid>
+                      </Hidden>
+                    </Grid>
+                  </Grid>
+                  <Hidden xsDown>
+                    <Grid item style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <Grid container direction="column">
+                        <Grid item>
                           <Typography gutterBottom variant="body2">
-                            {detail.campaignName}
+                            오늘 집행된 예산
                           </Typography>
-                          <Typography variant="caption" gutterBottom>
-                            {optionTypeList[detail.optionType]}
+                        </Grid>
+                        <Grid>
+                          <Divider orientation="horizontal" />
+                        </Grid>
+                        <Grid item>
+                          <Typography variant="h5" color="secondary" align="center">
+                            <Countup duration={2} end={detail.dailysum ? detail.dailysum : 0} separator="," />
                           </Typography>
-                          <Typography variant="caption" gutterBottom>
-                            {priorityTypeList[detail.priorityType]}
-                          </Typography>
-                          <Typography variant="caption" color="textSecondary">
-                            {new Date(detail.regiDate).toLocaleDateString()}
+                        </Grid>
+                        <Grid item>
+                          {(detail.dailyLimit !== -1)
+                            ? (
+                              <Typography variant="body1" align="center" style={{ fontWeight: 700 }}>
+                                {new Intl.NumberFormat().format(detail.dailyLimit)}
+                              </Typography>
+                            )
+                            : (
+                              <Typography variant="h4" align="center" style={{ fontWeight: 700 }}>
+                                ∞
+                              </Typography>
+                            )
+                        }
+                        </Grid>
+                        <Grid>
+                          <Divider orientation="horizontal" />
+                        </Grid>
+                        <Grid item>
+                          <Typography gutterBottom variant="body2" align="center">
+                            일일 예산
                           </Typography>
                         </Grid>
                       </Grid>
                     </Grid>
-                  </Grid>
-                  <Grid item style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <Grid container direction="column">
-                      <Grid item>
-                        <Typography gutterBottom variant="body2">
-                          오늘 집행된 예산
-                        </Typography>
-                      </Grid>
-                      <Grid>
-                        <Divider orientation="horizontal" />
-                      </Grid>
-                      <Grid item>
-                        <Typography variant="h5" color="secondary" align="center">
-                          <Countup duration={2} end={detail.dailysum ? detail.dailysum : 0} separator="," />
-                        </Typography>
-                      </Grid>
-                      <Grid item>
-                        {(detail.dailyLimit !== -1)
-                          ? (
-                            <Typography variant="body1" align="center" style={{ fontWeight: 700 }}>
-                              {new Intl.NumberFormat().format(detail.dailyLimit)}
-                            </Typography>
-                          )
-                          : (
-                            <Typography variant="h4" align="center" style={{ fontWeight: 700 }}>
-                              ∞
-                            </Typography>
-                          )
-                      }
-                      </Grid>
-                      <Grid>
-                        <Divider orientation="horizontal" />
-                      </Grid>
-                      <Grid item>
-                        <Typography gutterBottom variant="body2" align="center">
-                          일일 예산
-                        </Typography>
-                      </Grid>
+                    <Grid item>
+                      <List>
+                        <ListItem
+                          button
+                          onClick={() => {
+                            setSelectedCampaign(detail);
+                            campaignReportDialog.handleOpen();
+                          }}
+                        >
+                          <Assessment />
+                          <Typography>분석</Typography>
+                        </ListItem>
+                        <ListItem
+                          button
+                          onClick={() => {
+                            setSelectedCampaign(detail);
+                            campaignUpdateDialog.handleOpen();
+                          }}
+                        >
+                          <Build color="action" />
+                          <Typography>수정</Typography>
+                        </ListItem>
+                        <ListItem
+                          button
+                          onClick={() => {
+                            campaignDeleteDialog.handleOpen(detail.campaignId);
+                          }}
+                        >
+                          <DeleteIcon color="error" />
+                          <Typography color="error">삭제</Typography>
+                        </ListItem>
+                      </List>
                     </Grid>
-                  </Grid>
-                  <Grid item>
-                    <List>
-                      <ListItem
-                        button
-                        onClick={() => {
-                          setSelectedCampaign(detail);
-                          campaignReportDialog.handleOpen();
-                        }}
-                      >
-                        <Assessment />
-                        <Typography>분석</Typography>
-                      </ListItem>
-                      <ListItem
-                        button
-                        onClick={() => {
-                          setSelectedCampaign(detail);
-                          campaignUpdateDialog.handleOpen();
-                        }}
-                      >
-                        <Build color="action" />
-                        <Typography color="action">수정</Typography>
-                      </ListItem>
-                      <ListItem
-                        button
-                        onClick={() => {
-                          campaignDeleteDialog.handleOpen(detail.campaignId);
-                        }}
-                      >
-                        <DeleteIcon color="error" />
-                        <Typography color="error">삭제</Typography>
-                      </ListItem>
-                    </List>
-                  </Grid>
+                  </Hidden>
+
                 </Grid>
+
               </ListItem>
               {!(campaignData.payload.length - 1 === index) && (<Divider light />)}
             </div>

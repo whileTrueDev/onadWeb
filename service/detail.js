@@ -72,7 +72,16 @@ const getcreatorList = ({ date }) => {
   });
 };
 
-const date = new Date();
-date.setMinutes(date.getMinutes() - 10);
+// const date = new Date('1994-01-19');
+const date = new Date('2002-02-01');
 
-getcreatorList({ date });
+const now = new Date();
+now.setFullYear(now.getFullYear() - 19);
+
+const minor = now < date;
+if (minor) {
+  console.log('미성년자임');
+}
+// date.setFullYear(date.getFullYear());
+
+// getcreatorList({ date });

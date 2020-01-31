@@ -2,7 +2,6 @@ import React from 'react';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import Grid from '@material-ui/core/Grid';
 import Grow from '@material-ui/core/Grow';
-import { Hidden } from '@material-ui/core';
 import CampaignList from '../../organisms/marketer/Dashboard/CampaignList';
 import CanvasForChart from '../../organisms/marketer/Dashboard/CanvasForChart';
 import DescCard from '../../organisms/marketer/Dashboard/DescCard';
@@ -39,9 +38,9 @@ export default function Dashboard() {
           <ReportLoading />
         ) : (
           <Grid container spacing={2}>
-            <Grid item xs={12} md={6} lg={12}>
+            <Grid item xs={12} md={6} lg={3}>
               <Grid container spacing={2}>
-                <Grid item xs={3}>
+                <Grid item xs={12}>
                   <OnOffSwitch onOffData={onOffData} />
                 </Grid>
               </Grid>
@@ -90,7 +89,7 @@ export default function Dashboard() {
               </Grid>
             </Grid>
             )}
-            <Grid item xs={12} md={6} lg={9}>
+            <Grid item xs={12} md={12} lg={9}>
               <Grid container spacing={2}>
                 <Grid item xs={12}>
                   <CampaignList campaignData={campaignData} />
@@ -104,7 +103,7 @@ export default function Dashboard() {
                 </Grid>
               </Grid>
             </Grid>
-            <Grid item lg={3}>
+            <Grid item xs={12} md={12} lg={3}>
               <IssueTable
                 actionLogData={actionLogData}
               />
