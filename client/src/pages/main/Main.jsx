@@ -9,7 +9,7 @@ import withRoot from '../../organisms/main/Main/withRoot';
 import sources from '../../organisms/main/Main/source/sources';
 import useLoginValue from '../../utils/lib/hooks/useLoginValue';
 import MainCarousel from '../../organisms/main/Main/views/Carousel/MainCarousel';
-import Inqurie from '../../organisms/main/Main/views/Inquire/Inqurie'
+import Inqurie from '../../organisms/main/Main/views/Inquire/Inqurie';
 
 export default withRoot((props) => {
   // if located here, set the scroll to top of the page
@@ -33,7 +33,7 @@ export default withRoot((props) => {
       />
       <ProductCategories />
       <ProductHowItWorks isLogin={isLogin} source={sources.howitworks} />
-      
+
       <Inqurie />
 
       <AppFooter />

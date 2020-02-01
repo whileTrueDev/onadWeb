@@ -6,6 +6,7 @@ import { Router, Switch, Route } from 'react-router-dom';
 import { MuiThemeProvider as ThemeProvider } from '@material-ui/core/styles';
 // page
 import Main from './pages/main/Main';
+import Door from './pages/main/Door';
 import Introduction from './pages/main/Introduction';
 import RegistPage from './pages/main/Regist';
 import CreatorDashboard from './pages/layouts/CreatorDashboardLayout';
@@ -27,7 +28,8 @@ dotenv.config();
 const developRouter = (
   <Router history={history}>
     <Switch>
-      <Route exact path="/" component={Main} />
+      <Route exact path="/" component={Door} />
+      <Route exact path="/main" component={Main} />
       <Route path="/regist/:platform" component={RegistPage} />
       <Route exact path="/regist" component={RegistPage} />
       <Route exact path="/introduction" component={Introduction} />
