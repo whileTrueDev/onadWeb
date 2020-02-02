@@ -39,13 +39,13 @@ router.get('/marketer/cash/burn', (req, res) => {
    * Setting seding data
    ******************** */
   const TEMPLATE_CODE = 'onadcash1'; // cash burn template code
-  const TEMPLATE_CONTENT = `안녕하세요! ${'강화수'} 님\nOnAD 광고캐시가 거의 다 소진되었음을 알려드립니다. \n자세한 정보는 온애드에서 확인하세요.`;
   const BUTTON_TYPE = 'WL'; // Web Link button type
   const BUTTON_NAME = '온애드에서 확인하세요'; // Button name
   const LINK_MOBILE = 'https://onad.io';
   const LINK_PC = 'https://onad.io';
 
   function createSendingData(phonenum) {
+    const TEMPLATE_CONTENT = `안녕하세요! ${marketerName} 님\nOnAD 광고캐시가 거의 다 소진되었음을 알려드립니다. \n자세한 정보는 온애드에서 확인하세요.`;
     const sendingData = {
       templateCode: TEMPLATE_CODE,
       plusFriendId: PLUS_FRIEND_ID,
@@ -68,15 +68,16 @@ router.get('/marketer/cash/burn', (req, res) => {
     return sendingData;
   }
 
-  const phoneNumQuery = 'SELECT marketerPhoneNum FROM marketerInfo WHERE marketerId = ?';
+  const phoneNumQuery = 'SELECT marketerPhoneNum, marketerName FROM marketerInfo WHERE marketerId = ?';
   const phoneNumArray = [marketerId];
 
   doQuery(phoneNumQuery, phoneNumArray).then((row) => {
     if (!row.error && row.result.length > 0) {
       const phonnum = row.result[0].marketerPhoneNum.replace(/[^0-9]/g, '');
+      const marketerName = row.result[0].marketerPhoneNum;
 
       axios.post(NAVER_CLOUD_SENS_URL + ALIM_TALK_SERVICE_URL,
-        createSendingData(phonnum),
+        createSendingData(phonnum, marketerName),
         {
           headers: sendingHeader
         })
