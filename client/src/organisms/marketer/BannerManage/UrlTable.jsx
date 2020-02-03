@@ -10,7 +10,6 @@ export default function UrlTable(props) {
   const fetchData = useFetchData('/api/dashboard/marketer/inventory/landingurl/all');
 
   const columns = [
-    { title: '링크세트' },
     {
       title: '심의 결과',
       field: 'confirmState',
@@ -35,17 +34,6 @@ export default function UrlTable(props) {
         <div>
           {rowData.links.links.map(link => (
             <div key={link.linkTo}>
-              <span>
-                  이름:
-                {' <'}
-                {link.linkName ? link.linkName : '이름없음' }
-                {'> '}
-              </span>
-              <span>
-                {' '}
-                링크 주소:
-                {' '}
-              </span>
               <a
                 href={link.linkTo}
                 onClick={(e) => {
@@ -53,14 +41,12 @@ export default function UrlTable(props) {
                   window.open(link.linkTo);
                 }}
               >
-                {link.linkTo}
+                {link.linkName ? link.linkName : link.linkTo }
               </a>
-              <OpenInNew onClick={() => { window.open(link.linkTo); }} />
               {link.primary && (
                 <Tooltip title={(
                   <Typography>
                   primary링크로, 배너이미지 클릭시 곧바로 연결되는 링크입니다.
-                  primary링크가 아닌 링크들은 배너가 아닌 링크이름을 클릭했을 때 이동합니다.
                   </Typography>
                 )}
                 >
@@ -72,7 +58,7 @@ export default function UrlTable(props) {
         </div>
       ),
     },
-    { title: '링크 등록 일자', field: 'regiDate' },
+    { title: '링크 등록 일자', render: rowData => (<span>{rowData.regiDate}</span>) },
   ];
 
   return (
@@ -92,7 +78,8 @@ export default function UrlTable(props) {
             }
           ]}
           options={{
-            actionsColumnIndex: -1
+            actionsColumnIndex: -1,
+            search: false
           }}
           localization={{
             body: {

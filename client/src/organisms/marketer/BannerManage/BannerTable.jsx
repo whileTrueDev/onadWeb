@@ -62,7 +62,8 @@ export default function BannerTable(props) {
             }
           ]}
           options={{
-            actionsColumnIndex: -1
+            actionsColumnIndex: -1,
+            search: false
           }}
           localization={{
             body: {

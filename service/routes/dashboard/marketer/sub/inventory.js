@@ -8,7 +8,8 @@ router.get('/landingurl/all', (req, res) => {
   const query = `
   SELECT
     linkId, marketerId, confirmState, denialReason,
-    links, regiDate, updateDate FROM linkRegistered
+    links, DATE_FORMAT(regiDate, "%Y년 %m월 %d일") as regiDate, updateDate
+  FROM linkRegistered
   WHERE marketerId = ?
   `;
   const queryArray = [marketerId];
@@ -23,7 +24,26 @@ router.get('/landingurl/all', (req, res) => {
       } else if (row.result.length === 0) {
         res.send('nourldata');
       }
+    }).catch((err) => {
+      console.log('/landingurl/connectedcampaign - err ', err)
     });
 });
+
+router.get('/landingurl/connectedcampaign', (req, res) => {
+  const { linkId } = req.query;
+  const query = `
+  SELECT campaignId
+  FROM campaign
+  WHERE connectedlinkId = ? AND deletedState = 0`;
+
+  const queryArray = [linkId];
+  doQuery(query, queryArray).then((row) => {
+    if (!row.error) {
+      res.send(row.result)
+    }
+  }).catch((err) => {
+    console.log('/landingurl/connectedcampaign - err ', err)
+  })
+})
 
 module.exports = router;

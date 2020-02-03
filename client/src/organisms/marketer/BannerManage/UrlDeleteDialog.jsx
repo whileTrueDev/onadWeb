@@ -34,7 +34,7 @@ const DeleteDialog = (props) => {
   const deleteRequest = useUpdateData('/api/dashboard/marketer/inventory/landingurl/delete');
   const connectedCampaign = useFetchData(
     '/api/dashboard/marketer/inventory/landingurl/connectedcampaign', {
-      bannerId: selectedUrl.bannerId
+      linkId: selectedUrl.linkId
     }
   );
 
@@ -63,7 +63,7 @@ const DeleteDialog = (props) => {
             <CustomButton
               color="info"
               onClick={() => {
-                deleteRequest.handleUpdateRequest({ bannerId: selectedUrl.linkId });
+                deleteRequest.handleUpdateRequest({ linkId: selectedUrl.linkId });
                 setTimeout(() => {
                   handleClose();
                   history.push(window.location.pathname);
@@ -79,13 +79,23 @@ const DeleteDialog = (props) => {
     >
       <Grid container direction="column" spacing={2}>
         <Grid item className={classes.center}>
-          url 보여주기.
+          {selectedUrl.links.links.map((url) => (
+            <span
+              style={{ overflow: 'hidden', color: 'red', cursor:'pointer', 'textDecoration': 'underline'}}
+              onClick={(e) => {
+                e.preventDefault();
+                window.open(url.linkTo);
+              }}
+            >
+              {url.linkName ? url.linkName : url.linkTo }
+            </span>
+          ))}
         </Grid>
         {selectedUrl.bannerDenialReason && (
         <Grid item>
           <div>
             <StyledItemText primary="거절 사유:" fontSize="18px" />
-            <Typography variant="body1" className={classes.reasonText}>{selectedUrl.bannerDenialReason}</Typography>
+            <Typography variant="body1" className={classes.reasonText}>{selectedUrl.denialReason}</Typography>
           </div>
         </Grid>
         )}
@@ -98,7 +108,7 @@ const DeleteDialog = (props) => {
           <Typography variant="body2">
             <span role="img" aria-label="calling">📞</span>
             {' '}
-            URL 등록 관련 도움은 support@onad.io 로 메일을 보내주시거나, onad 카카오톡 채널에서 상담가능합니다.
+            URL 등록 및 삭제 관련 도움은 support@onad.io 로 메일을 보내주시거나, onad 카카오톡 채널에서 상담가능합니다.
           </Typography>
         </Grid>
       </Grid>

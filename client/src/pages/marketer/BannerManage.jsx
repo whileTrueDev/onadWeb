@@ -16,6 +16,8 @@ import BannerTable from '../../organisms/marketer/BannerManage/BannerTable';
 import UploadDialog from '../../organisms/marketer/BannerManage/UploadDialog';
 import DeleteDialog from '../../organisms/marketer/BannerManage/DeleteDialog';
 import UrlTable from '../../organisms/marketer/BannerManage/UrlTable';
+import UrlUploadDialog from '../../organisms/marketer/BannerManage/UrlUploadDialog';
+import UrlDeleteDialog from '../../organisms/marketer/BannerManage/UrlDeleteDialog';
 
 // core ../../atoms
 import dashboardStyle from '../../assets/jss/onad/views/dashboardStyle';
@@ -56,8 +58,13 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const BannerManage = () => {
+  // banner
   const deleteDialog = useDialog();
   const uploadDialog = useDialog();
+  // landing url
+  const urlDeleteDialog = useDialog();
+  const urlUploadDialog = useDialog();
+
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
 
@@ -85,11 +92,12 @@ const BannerManage = () => {
             <CustomButton color="info" size="lg" onClick={() => { uploadDialog.handleOpen(); }}>
               + 새 URL 등록
             </CustomButton>
-            <UrlTable />
+            <UrlTable handleDeleteOpen={urlDeleteDialog.handleOpen} />
           </TabPanel>
         </div>
       </GridItem>
 
+    {/* banner upload, delete dialog */}
       <UploadDialog
         open={uploadDialog.open}
         onClose={uploadDialog.handleClose}
@@ -99,6 +107,19 @@ const BannerManage = () => {
           open={Boolean(deleteDialog.open)}
           selectedBanner={deleteDialog.open}
           handleClose={deleteDialog.handleClose}
+        />
+      )}
+
+    {/* landing url upload, delete dialog */}
+    <UrlUploadDialog
+        open={urlUploadDialog.open}
+        onClose={urlUploadDialog.handleClose}
+      />
+      {Boolean(urlDeleteDialog.open) && (
+        <UrlDeleteDialog
+          open={Boolean(urlDeleteDialog.open)}
+          selectedUrl={urlDeleteDialog.open}
+          handleClose={urlDeleteDialog.handleClose}
         />
       )}
 
