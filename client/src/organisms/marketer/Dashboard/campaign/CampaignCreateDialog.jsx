@@ -305,15 +305,17 @@ const CampaignCreateStepper = (props) => {
           />
         );
       case 2:
-        return <CreatorSelectDialog 
-        setStepComplete={setStepComplete} 
-        creatorList={creatorList}
-        checkedCreators={checkedCreators}
-        checkedCreatorsDispatch={checkedCreatorsDispatch}
-        handleBack={handleBack}
-        handleNext={handleNext}
-        stepComplete={stepComplete}
-        />;
+        return (
+          <CreatorSelectDialog
+            setStepComplete={setStepComplete}
+            creatorList={creatorList}
+            checkedCreators={checkedCreators}
+            checkedCreatorsDispatch={checkedCreatorsDispatch}
+            handleBack={handleBack}
+            handleNext={handleNext}
+            stepComplete={stepComplete}
+          />
+        );
       case 3:
         return (
           <CategorySelect
@@ -347,9 +349,9 @@ const CampaignCreateStepper = (props) => {
       setStepComplete(false);
     }
   }, [step1State.bannerId, step1State.campaignName, step1State.checkedBannerId]);
- 
+
   // 해당 다이얼로그를 클로즈할 때, 여러가지 setup들을 갱신한다.
-  const wrapHandleClose = (event) =>{
+  const wrapHandleClose = (event) => {
     event.preventDefault();
     setIndex(0);
     setActiveStep(0);

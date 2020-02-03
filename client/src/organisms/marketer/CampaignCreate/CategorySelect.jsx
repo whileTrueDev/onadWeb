@@ -4,9 +4,8 @@ import { makeStyles, useTheme } from '@material-ui/core/styles';
 import {
   Grid, Divider, Paper, CircularProgress, Typography,
   ButtonBase, Select, FormControl, Input,
-  InputLabel, MenuItem, Chip
+  InputLabel, Chip
 } from '@material-ui/core';
-import { Close } from '@material-ui/icons';
 import StyledItemText from '../../../atoms/StyledItemText';
 import useFetchData from '../../../utils/lib/hooks/useFetchData';
 
