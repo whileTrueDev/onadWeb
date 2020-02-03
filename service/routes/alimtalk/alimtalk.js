@@ -74,10 +74,10 @@ router.get('/marketer/cash/burn', (req, res) => {
   doQuery(marketerInfoQuery, marketerInfoArray).then((row) => {
     if (!row.error && row.result.length > 0) {
       const { marketerName } = row.result[0];
-      const phonnum = row.result[0].marketerPhoneNum.replace(/[^0-9]/g, '');
+      const phonenum = row.result[0].marketerPhoneNum.replace(/[^0-9]/g, '');
 
       axios.post(NAVER_CLOUD_SENS_URL + ALIM_TALK_SERVICE_URL,
-        createSendingData({ marketerName, phonnum }),
+        createSendingData({ marketerName, phonenum }),
         {
           headers: sendingHeader
         })
