@@ -66,7 +66,6 @@ export default function CampaignList(props) {
   const optionTypeList = ['배너 광고', '배너 + 클릭 광고', '클릭 광고'];
   const priorityTypeList = ['크리에이터 우선', '카테고리 우선', '노출 우선'];
 
-  // For campaign On/ Off
   const { handleDelete } = useDeleteData('/api/dashboard/marketer/campaign');
   const { handleUpdateRequest } = useUpdateData(
     '/api/dashboard/marketer/campaign/onoff',
