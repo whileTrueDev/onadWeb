@@ -20,7 +20,7 @@ import MarketerDashboard from './marketer/Dashboard';
 import MarketerBannerManage from './marketer/BannerManage';
 import MarketerManual from './marketer/Manual';
 import MarketerMyOffice from './marketer/MyOffice';
-import CampaignCreateStepper from '../organisms/marketer/Dashboard/CampaignCreation';
+import CampaignCreateStepper from './marketer/CampaignCreation';
 
 const dashboardRoutes = {
   creator: [

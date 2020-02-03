@@ -1,6 +1,7 @@
 import React from 'react';
 import {
-  Grid, Paper, Divider, Collapse
+  Grid, Paper, Divider, Collapse,
+  Chip,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import Help from '@material-ui/icons/Help';
@@ -62,7 +63,8 @@ const useStyles = makeStyles(theme => ({
 const PriorityPaper = (props) => {
   const {
     handleNext, state, dispatch, setStepComplete, creatorList, checkedCreators,
-    checkedCreatorsDispatch, handleBack, stepComplete, categoryList, checkedCategories, checkedCategoriesDispatch, priorityOpen, createPaperOpen
+    checkedCreatorsDispatch, handleBack, stepComplete,
+    checkedGames, checkedGamesDispatch, createPaperOpen
   } = props;
   const classes = useStyles();
   // const [state, dispatch] = useReducer(myReducer, { choose: 0, type: 0 });
@@ -106,9 +108,17 @@ const PriorityPaper = (props) => {
       case 'type1':
         return (
           <Paper className={classes.selected}>
-            <StyledSelectText primary="2. 카테고리 우선형" secondary="제품에 맞는 카테고리에 광고를 넣고 싶어요." />
+            <StyledSelectText primary="2. 특정게임 집중형" secondary="광고를 넣고싶은 특정 게임이 있어요." />
             <Grid item>
-              {checkedCategories.map(category => (`${category}  `))}
+              {checkedGames.map(game => (
+                <Chip
+                  key={game}
+                  label={game}
+                  color="primary"
+                  variant="outlined"
+                  style={{ margin: 4 }}
+                />
+              ))}
             </Grid>
             선택됨
           </Paper>
@@ -190,7 +200,7 @@ const PriorityPaper = (props) => {
                   <Paper className={classes.choice}>
                     <Grid container direction="row" justify="space-between">
                       <Grid item>
-                        <StyledSelectText primary="2. 카테고리 우선형" secondary="제품에 맞는 카테고리에 광고를 넣고 싶어요." />
+                        <StyledSelectText primary="2. 특정게임 선택형" secondary="특정 게임에만 광고를 송출하고 싶으신가요?" />
                       </Grid>
                       <Grid item className={classes.icon}>
                         <Grid container direction="row">
@@ -219,9 +229,8 @@ const PriorityPaper = (props) => {
                     <Collapse in={state.priorityType === 'type1'}>
                       <CategorySelect
                         setStepComplete={setStepComplete}
-                        categoryList={categoryList}
-                        checkedCategories={checkedCategories}
-                        checkedCategoriesDispatch={checkedCategoriesDispatch}
+                        checkedGames={checkedGames}
+                        checkedGamesDispatch={checkedGamesDispatch}
                       />
                     </Collapse>
                   </Paper>

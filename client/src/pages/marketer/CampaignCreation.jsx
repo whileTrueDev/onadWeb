@@ -4,14 +4,14 @@ import { makeStyles } from '@material-ui/core/styles';
 import {
   Grid, Paper, Collapse
 } from '@material-ui/core';
-import Button from '../../../atoms/CustomButtons/Button';
-import ProrityPaper from '../CampaignCreate/PriorityPaper';
-import OptionPaper from '../CampaignCreate/OptionPaper';
-import Selector from '../CampaignCreate/StepSelector';
-import CampaignCreateTable from '../CampaignCreate/CampaignCreateTable';
-import HOST from '../../../utils/config';
-import axios from '../../../utils/axios';
-import history from '../../../history';
+import Button from '../../atoms/CustomButtons/Button';
+import ProrityPaper from '../../organisms/marketer/CampaignCreate/PriorityPaper';
+import OptionPaper from '../../organisms/marketer/CampaignCreate/OptionPaper';
+import Selector from '../../organisms/marketer/CampaignCreate/StepSelector';
+import CampaignCreateTable from '../../organisms/marketer/CampaignCreate/CampaignCreateTable';
+import HOST from '../../utils/config';
+import axios from '../../utils/axios';
+import history from '../../history';
 
 const useStyles = makeStyles(_theme => ({
   paper: {
@@ -80,6 +80,11 @@ const step2Reducer = (state, action) => {
 const step2InnerReducer = (state, action) => {
   switch (action.type) {
     case 'push':
+      if (action.value instanceof Array) {
+        // 기존 state와 중복되지 않은 value만 선택
+        const values = action.value.filter(v => !state.includes(v));
+        return [...state, ...values];
+      }
       return [...state, action.value];
     case 'delete':
       return state.filter(item => item !== action.value);
@@ -117,8 +122,7 @@ const CampaignCreateStepper = (props) => {
   // 2 번째 prioritystep에서 사용할 State.
   const [creatorList, setCreatorList] = React.useState([]);
   const [checkedCreators, checkedCreatorsDispatch] = useReducer(step2InnerReducer, []);
-  const [categoryList, setCategoryList] = React.useState([]);
-  const [checkedCategories, checkedCategoriesDispatch] = useReducer(step2InnerReducer, []);
+  const [checkedGames, checkedGamesDispatch] = useReducer(step2InnerReducer, []);
   // 캠페인 기본정보
   const [step3State, step3Dispatch] = useReducer(step3Reducer, { campaignName: '', bannerId: '' });
   // 4번 쨰 step에서 사용할 State1
@@ -138,7 +142,7 @@ const CampaignCreateStepper = (props) => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log(step1State, step2State, checkedCreators, categoryList, step3State);
+    console.log(step1State, step2State, checkedCreators, step3State);
     // if(detailOpen){console.log()}
     // axios.post(`${HOST}/api/dashboard/marketer/campaign/push`, {
     //   optyionType: step1State.option,
@@ -154,16 +158,6 @@ const CampaignCreateStepper = (props) => {
     //   });
   };
 
-
-  const getCategoryList = () => {
-    axios.get(`${HOST}/api/dashboard/marketer/category`,)
-      .then((res) => {
-        setCategoryList(res.data);
-      })
-      .catch((errorData) => {
-        console.log('오류');
-      });
-  };
 
   // 오래걸리므로 props로 전달.
   const getBannerList = () => {
@@ -193,7 +187,6 @@ const CampaignCreateStepper = (props) => {
   };
 
   useEffect(() => {
-    getCategoryList();
     getBannerList();
     getCreatorList();
   }, []);
@@ -361,7 +354,7 @@ const CampaignCreateStepper = (props) => {
                 priorityOpen={priorityOpen}
                 state={step1State}
                 dispatch={step1Dispatch}
-                selectedCategory={checkedCategories}
+                selectedCategory={checkedGames}
                 setPriorityOpen={setPriorityOpen}
               />
               {priorityOpen
@@ -378,9 +371,8 @@ const CampaignCreateStepper = (props) => {
                       checkedCreatorsDispatch={checkedCreatorsDispatch}
                       handleBack={handleBack}
                       stepComplete={stepComplete}
-                      categoryList={categoryList}
-                      checkedCategories={checkedCategories}
-                      checkedCategoriesDispatch={checkedCategoriesDispatch}
+                      checkedGames={checkedGames}
+                      checkedGamesDispatch={checkedGamesDispatch}
                       priorityOpen={priorityOpen}
                       createPaperOpen={createPaperOpen}
                     />
