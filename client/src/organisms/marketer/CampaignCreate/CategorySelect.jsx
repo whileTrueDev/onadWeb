@@ -113,16 +113,19 @@ const CategorySelect = (props) => {
                               ? theme.palette.common.white : 'inherit',
                           }}
                         >
-                          <Grid item>
-                            <Typography variant="h6">{game.gameNameKr ? game.gameNameKr : game.gameName}</Typography>
+                          <Grid>
+                            <Typography variant="h6" style={{ fontWeight: 'bold' }}>
+                              {game.gameNameKr ? game.gameNameKr : game.gameName}
+
+                            </Typography>
                           </Grid>
                           <Grid item style={{ textOverflow: 'ellipsis', overflow: 'hidden' }}>
-                            <Typography variant="body2">{game.gameNameKr ? game.gameName : ''}</Typography>
+                            <Typography variant="body2" style={{ fontWeight: 500 }}>
+                              {game.gameNameKr ? game.gameName : ''}
+                            </Typography>
                             <Typography variant="caption">
-                            주로 이 게임을 방송:
-                              {' '}
                               {game.count}
-                              {' 명'}
+                              명이 주로 이 게임을 방송중
                             </Typography>
                           </Grid>
                         </Grid>
