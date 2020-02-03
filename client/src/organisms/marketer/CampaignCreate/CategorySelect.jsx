@@ -120,7 +120,7 @@ const CategorySelect = (props) => {
                             </Typography>
                           </Grid>
                           <Grid item style={{ textOverflow: 'ellipsis', overflow: 'hidden' }}>
-                            <Typography variant="body2" style={{ fontWeight: 500 }}>
+                            <Typography variant="body2" style={{ fontWeight: 'bold' }}>
                               {game.gameNameKr ? game.gameName : ''}
                             </Typography>
                             <Typography variant="caption">
