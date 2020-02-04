@@ -16,10 +16,12 @@ import CampaignCreateDialog from './campaign/CampaignCreateDialog';
 import CampaignDeleteConfirmDialog from './campaign/CampaignDeleteConfirmDialog';
 import CampaignUpdateDialog from './campaign/CampaignUpdateDialog';
 
-import useUpdateData from '../../../utils/lib/hooks/useUpdateData';
 import useDialog from '../../../utils/lib/hooks/useDialog';
 import useDeleteData from '../../../utils/lib/hooks/useDeleteData';
 import CampaignAnalysisDialog from './report/CampaignReportDialog';
+import axios from '../../../utils/axios';
+import HOST from '../../../utils/config';
+import history from '../../../history';
 
 const SLIDE_TIMEOUT = 500;
 const useStyles = makeStyles(theme => ({
@@ -67,16 +69,21 @@ export default function CampaignList(props) {
   const priorityTypeList = ['크리에이터 우선', '카테고리 우선', '노출 우선'];
 
   const { handleDelete } = useDeleteData('/api/dashboard/marketer/campaign');
-  const { handleUpdateRequest } = useUpdateData(
-    '/api/dashboard/marketer/campaign/onoff',
-    campaignData.callUrl
-  );
-
   const [selectedCampaign, setSelectedCampaign] = React.useState(null);
-
   // For reaction to on/off completed
   const snack = useDialog();
 
+
+  const handleUpdateState = ({ onoffState, campaignId }) => () => {
+    axios.post(`${HOST}/api/dashboard/marketer/campaign/onoff`, { onoffState, campaignId })
+      .then((res) => {
+        if (res.data) {
+          snack.handleOpen();
+        } else {
+          alert('배너 및 URL승인 완료 후 캠페인 ON이 가능합니다.');
+        }
+      });
+  };
   // To open campaign create dialog
   const campaignCreateDialog = useDialog();
   const campaignUpdateDialog = useDialog();
@@ -95,142 +102,133 @@ export default function CampaignList(props) {
       </div>
 
       <Divider />
-      {!campaignData.loading && campaignData.payload && (
-        <List style={{ maxHeight: 380, overflowY: 'auto' }}>
-          {campaignData.payload.map((detail, index) => (
-            <div key={detail.campaignId}>
-              <ListItem
-                className={classes.list}
-              >
-                <Grid container direction="row" justify="space-between">
-                  <Grid item className={classes.contents}>
-                    <Grid container direction="row" className={classes.contents} spacing={3}>
-                      <Grid item>
-                        <FormControlLabel
-                          control={(
-                            <IOSSwitch
-                              id="onoff-switch"
-                              checked={Boolean(detail.onOff)}
-                              onChange={async () => {
-                              // update 요청
-                                await handleUpdateRequest({
-                                  onoffState: !detail.onOff,
-                                  campaignId: detail.campaignId
-                                });
-                                snack.handleOpen();
-                              }}
-                            />
-                          )}
-                          label={detail.onOff ? (<div style={{ color: '#52d869', fontWeight: 700 }}>활성화</div>) : (<div>비활성화</div>)}
-                          labelPlacement="bottom"
-                        />
-                      </Grid>
-                      <Grid item>
-                        <img className={classes.img} alt="campaign-logo" src={detail.bannerSrc} />
-                      </Grid>
-                      <Hidden xsDown>
-                        <Grid item>
-                          <Grid container direction="column" spacing={2}>
-                            <Typography gutterBottom variant="body2">
-                              {detail.campaignName}
-                            </Typography>
-                            <Typography variant="caption" gutterBottom>
-                              {optionTypeList[detail.optionType]}
-                            </Typography>
-                            <Typography variant="caption" gutterBottom>
-                              {priorityTypeList[detail.priorityType]}
-                            </Typography>
-                            <Typography variant="caption" color="textSecondary">
-                              {new Date(detail.regiDate).toLocaleDateString()}
-                            </Typography>
-                          </Grid>
-                        </Grid>
-                      </Hidden>
-                    </Grid>
-                  </Grid>
-                  <Hidden xsDown>
-                    <Grid item style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                      <Grid container direction="column">
-                        <Grid item>
-                          <Typography gutterBottom variant="body2">
-                            오늘 집행된 예산
-                          </Typography>
-                        </Grid>
-                        <Grid>
-                          <Divider orientation="horizontal" />
-                        </Grid>
-                        <Grid item>
-                          <Typography variant="h5" color="secondary" align="center">
-                            <Countup duration={2} end={detail.dailysum ? detail.dailysum : 0} separator="," />
-                          </Typography>
-                        </Grid>
-                        <Grid item>
-                          {(detail.dailyLimit !== -1)
-                            ? (
-                              <Typography variant="body1" align="center" style={{ fontWeight: 700 }}>
-                                {new Intl.NumberFormat().format(detail.dailyLimit)}
-                              </Typography>
-                            )
-                            : (
-                              <Typography variant="h4" align="center" style={{ fontWeight: 700 }}>
-                                ∞
-                              </Typography>
-                            )
-                        }
-                        </Grid>
-                        <Grid>
-                          <Divider orientation="horizontal" />
-                        </Grid>
-                        <Grid item>
-                          <Typography gutterBottom variant="body2" align="center">
-                            일일 예산
-                          </Typography>
-                        </Grid>
-                      </Grid>
+      <List style={{ maxHeight: 380, overflowY: 'auto' }}>
+        {campaignData.payload.map((detail, index) => (
+          <div key={detail.campaignId}>
+            <ListItem
+              className={classes.list}
+            >
+              <Grid container direction="row" justify="space-between">
+                <Grid item className={classes.contents}>
+                  <Grid container direction="row" className={classes.contents} spacing={3}>
+                    <Grid item>
+                      <FormControlLabel
+                        control={(
+                          <IOSSwitch
+                            id="onoff-switch"
+                            checked={Boolean(detail.onOff)}
+                            onChange={handleUpdateState({ onoffState: !detail.onOff, campaignId: detail.campaignId })}
+                          />
+                        )}
+                        label={detail.onOff ? (<div style={{ color: '#52d869', fontWeight: 700 }}>활성화</div>) : (<div>비활성화</div>)}
+                        labelPlacement="bottom"
+                      />
                     </Grid>
                     <Grid item>
-                      <List>
-                        <ListItem
-                          button
-                          onClick={() => {
-                            setSelectedCampaign(detail);
-                            campaignReportDialog.handleOpen();
-                          }}
-                        >
-                          <Assessment />
-                          <Typography>분석</Typography>
-                        </ListItem>
-                        <ListItem
-                          button
-                          onClick={() => {
-                            setSelectedCampaign(detail);
-                            campaignUpdateDialog.handleOpen();
-                          }}
-                        >
-                          <Build color="action" />
-                          <Typography>수정</Typography>
-                        </ListItem>
-                        <ListItem
-                          button
-                          onClick={() => {
-                            campaignDeleteDialog.handleOpen(detail.campaignId);
-                          }}
-                        >
-                          <DeleteIcon color="error" />
-                          <Typography color="error">삭제</Typography>
-                        </ListItem>
-                      </List>
+                      <img className={classes.img} alt="campaign-logo" src={detail.bannerSrc} />
                     </Grid>
-                  </Hidden>
-
+                    <Hidden xsDown>
+                      <Grid item>
+                        <Grid container direction="column" spacing={2}>
+                          <Typography gutterBottom variant="body2">
+                            {detail.campaignName}
+                          </Typography>
+                          <Typography variant="caption" gutterBottom>
+                            {optionTypeList[detail.optionType]}
+                          </Typography>
+                          <Typography variant="caption" gutterBottom>
+                            {priorityTypeList[detail.priorityType]}
+                          </Typography>
+                          <Typography variant="caption" color="textSecondary">
+                            {new Date(detail.regiDate).toLocaleDateString()}
+                          </Typography>
+                        </Grid>
+                      </Grid>
+                    </Hidden>
+                  </Grid>
                 </Grid>
+                <Hidden xsDown>
+                  <Grid item style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <Grid container direction="column">
+                      <Grid item>
+                        <Typography gutterBottom variant="body2">
+                          오늘 집행된 예산
+                        </Typography>
+                      </Grid>
+                      <Grid>
+                        <Divider orientation="horizontal" />
+                      </Grid>
+                      <Grid item>
+                        <Typography variant="h5" color="secondary" align="center">
+                          <Countup duration={2} end={detail.dailysum ? detail.dailysum : 0} separator="," />
+                        </Typography>
+                      </Grid>
+                      <Grid item>
+                        {(detail.dailyLimit !== -1)
+                          ? (
+                            <Typography variant="body1" align="center" style={{ fontWeight: 700 }}>
+                              {new Intl.NumberFormat().format(detail.dailyLimit)}
+                            </Typography>
+                          )
+                          : (
+                            <Typography variant="h4" align="center" style={{ fontWeight: 700 }}>
+                              ∞
+                            </Typography>
+                          )
+                      }
+                      </Grid>
+                      <Grid>
+                        <Divider orientation="horizontal" />
+                      </Grid>
+                      <Grid item>
+                        <Typography gutterBottom variant="body2" align="center">
+                          일일 예산
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                  <Grid item>
+                    <List>
+                      <ListItem
+                        button
+                        onClick={() => {
+                          setSelectedCampaign(detail);
+                          campaignReportDialog.handleOpen();
+                        }}
+                      >
+                        <Assessment />
+                        <Typography>분석</Typography>
+                      </ListItem>
+                      <ListItem
+                        button
+                        onClick={() => {
+                          setSelectedCampaign(detail);
+                          campaignUpdateDialog.handleOpen();
+                        }}
+                      >
+                        <Build color="action" />
+                        <Typography>수정</Typography>
+                      </ListItem>
+                      <ListItem
+                        button
+                        onClick={() => {
+                          campaignDeleteDialog.handleOpen(detail.campaignId);
+                        }}
+                      >
+                        <DeleteIcon color="error" />
+                        <Typography color="error">삭제</Typography>
+                      </ListItem>
+                    </List>
+                  </Grid>
+                </Hidden>
 
-              </ListItem>
-              {!(campaignData.payload.length - 1 === index) && (<Divider light />)}
-            </div>
-          ))}
-        </List>
-      )}
+              </Grid>
+
+            </ListItem>
+            {!(campaignData.payload.length - 1 === index) && (<Divider light />)}
+          </div>
+        ))}
+      </List>
       {!campaignData.loading && campaignData.payload.length === 0 && (
         <Grid container justify="center" alignItems="center" direction="column" style={{ marginTop: 40 }}>
           <Typography variant="body1">생성된 캠페인이 없습니다.</Typography>
@@ -245,7 +243,10 @@ export default function CampaignList(props) {
         }}
         open={snack.open}
         autoHideDuration={2000}
-        onClose={snack.handleClose}
+        onClose={() => {
+          snack.handleClose();
+          history.push('/dashboard/marketer/main');
+        }}
         ContentProps={{
           'aria-describedby': 'message-id',
         }}

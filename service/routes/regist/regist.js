@@ -48,7 +48,8 @@ router.post('/marketer', (req, res, next) => {
     doQuery(cashQuery, [marketerId, 0]),
   ])
     .then(() => {
-      res.send([true, null]);
+      // res.send([true, null]);
+      next();
     })
     .catch((error) => {
       res.send([false, error]);
@@ -86,6 +87,7 @@ router.post('/marketer/platform', (req, res) => {
       res.send({ error: false });
     })
     .catch((error) => {
+      console.log(error);
       res.send({ error });
     });
 });
