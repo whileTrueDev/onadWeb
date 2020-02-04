@@ -15,7 +15,7 @@ import CustomButton from '../../atoms/CustomButtons/Button';
 import BannerTable from '../../organisms/marketer/BannerManage/BannerTable';
 import UploadDialog from '../../organisms/marketer/BannerManage/UploadDialog';
 import DeleteDialog from '../../organisms/marketer/BannerManage/DeleteDialog';
-
+import UrlInventory from '../../organisms/marketer/CampaignCreate/UrlInventory';
 // core ../../atoms
 import dashboardStyle from '../../assets/jss/onad/views/dashboardStyle';
 
@@ -81,7 +81,7 @@ const BannerManage = () => {
             <BannerTable handleDeleteOpen={deleteDialog.handleOpen} />
           </TabPanel>
           <TabPanel value={value} index={1}>
-            URL 인벤토리
+            <UrlInventory />
           </TabPanel>
         </div>
       </GridItem>

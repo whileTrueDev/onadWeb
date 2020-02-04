@@ -5,11 +5,10 @@ import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import {
-  FormControl
+  Divider
 } from '@material-ui/core';
 
 import StyledItemText from '../../../atoms/StyledItemText';
@@ -21,6 +20,9 @@ import CampaignBudgetSet from './CampaignBudgetSet';
 import BudgetInput from './BudgetInput';
 import CampaignTimeSet from './CampaignTimeSet';
 import DatePicker from './DatePicker';
+import KeywordInput from './KeywordInput';
+import TimeSelector from './TimeSelector';
+import TimeSelectorSet from './TimeSelectorSet';
 
 const StyledTableCell = withStyles(theme => ({
   head: {
@@ -40,22 +42,6 @@ const StyledTableRow = withStyles(theme => ({
   },
 }))(TableRow);
 
-const CssFormControl = withStyles({
-  root: {
-    '& label.Mui-focused': {
-      color: '#00acc1',
-    },
-    '& .MuiInput-underline:after': {
-      borderBottomColor: '#00acc1',
-    },
-    '& .MuiOutlinedInput-root': {
-      '&:hover fieldset': {
-        borderColor: '#00acc1',
-      },
-    },
-  },
-})(FormControl);
-
 const useStyles = makeStyles({
   table: {
     minWidth: 700,
@@ -66,8 +52,13 @@ const CampaignCreateTable = (props) => {
   const classes = useStyles();
   const {
     bannerList, handleBannerId, handleDetailOpen, detailOpen, step1State,
-    state, dispatch, handleDateOpen, dateOpen, handleSetLandingUrlState, datePickerOpen, handleDatePickerOpen
+    state, dispatch, handleDateOpen, dateOpen, setCheckName, checkName
   } = props;
+  const [timeSelectorOpen, setTimeSelectorOpen] = React.useState(false);
+
+  const handleTimeSelectorOpen = () => {
+    setTimeSelectorOpen(!timeSelectorOpen);
+  };
   return (
     <TableContainer component={Paper}>
       <Table className={classes.table} aria-label="customized table">
@@ -79,6 +70,8 @@ const CampaignCreateTable = (props) => {
             <StyledTableCell>
               <CampaignNaming
                 dispatch={dispatch}
+                setCheckName={setCheckName}
+                checkName={checkName}
               />
             </StyledTableCell>
           </StyledTableRow>
@@ -107,11 +100,31 @@ const CampaignCreateTable = (props) => {
               </TableCell>
               <StyledTableCell>
                 <LandingUrlInput
-                  handleSetLandingUrlState={handleSetLandingUrlState}
+                  dispatch={dispatch}
+                  state={state}
                 />
+                <StyledItemText>등록된 URL을 보고싶으신가요?</StyledItemText>
+                <Button
+                  onClick={() => { window.open(`${window.location.protocol}//${window.location.host}/dashboard/marketer/banner`); }}
+                >
+                나의 인벤토리
+                </Button>
+                <Divider component="hr" style={{ height: '2px' }} />
+
               </StyledTableCell>
             </StyledTableRow>
           ) : (<div />) }
+          <StyledTableRow>
+            <TableCell>
+              키워드 입력
+            </TableCell>
+            <TableCell>
+              <KeywordInput
+                dispatch={dispatch}
+                state={state}
+              />
+            </TableCell>
+          </StyledTableRow>
           <StyledTableRow>
             <TableCell>
               예산설정
@@ -133,14 +146,38 @@ const CampaignCreateTable = (props) => {
           </StyledTableRow>
           <StyledTableRow>
             <TableCell>
-              기간설정
+              기간 설정
             </TableCell>
             <StyledTableCell>
               <CampaignTimeSet
                 handleDateOpen={handleDateOpen}
                 dateOpen={dateOpen}
               />
-              {dateOpen ? (<DatePicker />) : (<div />)}
+              {dateOpen ? (
+                <DatePicker
+                  dispatch={dispatch}
+                  state={state}
+                />
+              ) : (<div />)}
+            </StyledTableCell>
+          </StyledTableRow>
+          <StyledTableRow>
+            <TableCell>
+              시간대 설정
+            </TableCell>
+            <StyledTableCell>
+              <TimeSelectorSet
+                handleTimeSelectorOpen={handleTimeSelectorOpen}
+                timeSelectorOpen={timeSelectorOpen}
+              />
+
+              {timeSelectorOpen ? (
+                <TimeSelector
+                  dispatch={dispatch}
+                  state={state}
+                />
+              ) : <div />}
+
             </StyledTableCell>
           </StyledTableRow>
         </TableBody>

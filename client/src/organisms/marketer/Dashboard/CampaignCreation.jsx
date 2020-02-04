@@ -7,7 +7,6 @@ import {
 import Button from '../../../atoms/CustomButtons/Button';
 import ProrityPaper from '../CampaignCreate/PriorityPaper';
 import OptionPaper from '../CampaignCreate/OptionPaper';
-import Selector from '../CampaignCreate/StepSelector';
 import CampaignCreateTable from '../CampaignCreate/CampaignCreateTable';
 import HOST from '../../../utils/config';
 import axios from '../../../utils/axios';
@@ -17,7 +16,7 @@ const useStyles = makeStyles(_theme => ({
   paper: {
     [_theme.breakpoints.down('sm')]: {
       width: '100%'
-    }
+    },
   },
   root: {
     width: '100%',
@@ -91,22 +90,60 @@ const step2InnerReducer = (state, action) => {
 };
 
 const step3Reducer = (state, action) => {
+  const todayDate = new Date(`${new Date().toString().split('GMT')[0]} UTC`).toISOString().split('.')[0];
+
   switch (action.key) {
     case 'campaignName':
       return { ...state, campaignName: action.value };
     case 'bannerId':
       return { ...state, bannerId: action.value };
+    case 'budget':
+      return { ...state, budget: action.value };
+    case 'startDate':
+      return { ...state, startDate: action.value };
+    case 'finDate':
+      return { ...state, finDate: action.value };
+    case 'keyword0':
+      return { ...state, keyword0: action.value };
+    case 'keyword1':
+      return { ...state, keyword1: action.value };
+    case 'keyword2':
+      return { ...state, keyword2: action.value };
+    case 'mainLandingUrl':
+      return { ...state, mainLandingUrl: action.value };
+    case 'sub1LandingUrl':
+      return { ...state, sub1LandingUrl: action.value };
+    case 'sub2LandingUrl':
+      return { ...state, sub2LandingUrl: action.value };
+    case 'time':
+      return { ...state, time: action.value };
+    case 'budgetReset':
+      return { ...state, budget: '' };
+    case 'dateReset':
+      return { ...state, finDate: '' };
     case 'reset': {
-      return { campaignName: '', bannerId: '' };
+      return {
+        campaignName: '',
+        bannerId: '',
+        budget: '',
+        startDate: new Date(todayDate),
+        finDate: '',
+        links: []
+      };
     }
     default:
       return state;
   }
 };
 
+function typeToNum(type) {
+  const NUM = type.replace(/[^0-9]/g, '');
+  return NUM;
+}
+
 // 생성 버튼을 누를 때 axios 요청 후 props로 전달받음. (bannerList)
-const CampaignCreateStepper = (props) => {
-  const { open, handleClose } = props;
+const CampaignCreateStepper = () => {
+  const todayDate = new Date(`${new Date().toString().split('GMT')[0]} UTC`).toISOString().split('.')[0];
   const classes = useStyles();
   // 0번째 step에서 사용할 State.
   const [step1State, step1Dispatch] = useReducer(step1Reducer, { option: '' });
@@ -120,7 +157,19 @@ const CampaignCreateStepper = (props) => {
   const [categoryList, setCategoryList] = React.useState([]);
   const [checkedCategories, checkedCategoriesDispatch] = useReducer(step2InnerReducer, []);
   // 캠페인 기본정보
-  const [step3State, step3Dispatch] = useReducer(step3Reducer, { campaignName: '', bannerId: '' });
+  const [step3State, step3Dispatch] = useReducer(step3Reducer, {
+    campaignName: '',
+    bannerId: '',
+    budget: '',
+    startDate: new Date(todayDate),
+    finDate: '',
+    keyword0: '',
+    keyword1: '',
+    keyword2: '',
+    links: [],
+    keywords: [],
+    time: []
+  });
   // 4번 쨰 step에서 사용할 State1
 
   // 최종 step에서 handleSubmit을 하기위한 signal
@@ -134,26 +183,110 @@ const CampaignCreateStepper = (props) => {
   const [detailOpen, setDetailOpen] = React.useState(false);
   const [dateOpen, setDateOpen] = React.useState(false);
   const [step, setStep] = React.useState(0);
-  const [landingUrlState, setLandingUrlState] = React.useState(0);
+  const [checkName, setCheckName] = React.useState(false);
 
+  // const isTrue = currentValue => currentValue === true;
+
+  const checkEmpty = (input) => {
+    if (input[0].length === 0) {
+      alert('광고 유형이 입력되지 않았습니다.');
+      return false;
+    }
+    if (input[1].length === 0) {
+      alert('우선형 유형이 입력되지 않았습니다.');
+      return false;
+    }
+    if (checkName === false) {
+      alert('캠페인 이름이 입력되지 않았습니다.');
+      return false;
+    }
+    if (input[4].length === 0) {
+      alert('배너가 선택되지 않았습니다.');
+      return false;
+    }
+    if (input[0] !== 'type0' && (input[10].replace('https://').length === 0 || input[10].replace('http://').length === 0)) {
+      alert('랜딩페이지 URL이 입력되지 않았습니다.');
+      return false;
+    }
+  };
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log(step1State, step2State, checkedCreators, categoryList, step3State);
-    // if(detailOpen){console.log()}
-    // axios.post(`${HOST}/api/dashboard/marketer/campaign/push`, {
-    //   optyionType: step1State.option,
-    //   // dailyLimit: step4State.budget,
-    //   priorityType: step2State.priorityType,
-    //   // optionType: step4State.option,
-    //   // noBudget: step4State.noBudget,
-    //   // priorityList
-    // })
-    //   .then((res) => {
-    //     alert(res.data[1]);
-    //     history.push('/dashboard/marketer/main');
-    //   });
-  };
+    const priorityNum = typeToNum(step2State.priorityType);
+    console.log({
+      optionType: step1State.option,
+      priorityType: priorityNum,
+      campaignName: step3State.campaignName,
+      bannerId: step3State.bannerId,
+      budget: step3State.budget,
+      startDate: step3State.startDate,
+      finDate: step3State.finDate,
+      keyword0: step3State.keyword0,
+      keyword1: step3State.keyword1,
+      keyword2: step3State.keyword2,
+      time: step3State.time
+    });
 
+    const priorityList = ((priorityType) => {
+      switch (priorityType) {
+        case 'type0': {
+          // 선택된 크리에이터
+          return checkedCreators;
+        }
+        case 'type1': {
+          // 선택된 카테고리
+          return checkedCategories;
+        }
+        case 'type2': {
+          // 카테고리 무관인 카테고리 ID
+          return ['무관'];
+        }
+        default: {
+          return [];
+        }
+      }
+    })(step2State.priorityType);
+
+    const validateArray = [
+      step1State.option,
+      priorityNum,
+      step3State.campaignName,
+      step3State.budget,
+      step3State.bannerId,
+      step3State.startDate,
+      step3State.finDate,
+      step3State.keyword0,
+      step3State.keyword1,
+      step3State.keyword2,
+      step3State.mainLandingUrl,
+      step3State.sub1LandingUrl,
+      step3State.sub2LandingUrl,
+      priorityList,
+      step3State.time
+    ];
+
+    checkEmpty(validateArray);
+
+    axios.post(`${HOST}/api/dashboard/marketer/campaign/push`, {
+      optionType: step1State.option,
+      priorityType: priorityNum,
+      campaignName: step3State.campaignName,
+      bannerId: step3State.bannerId,
+      budget: step3State.budget,
+      startDate: step3State.startDate,
+      finDate: step3State.finDate,
+      keyword0: step3State.keyword0,
+      keyword1: step3State.keyword1,
+      keyword2: step3State.keyword2,
+      mainLandingUrl: step3State.mainLandingUrl,
+      sub1LandingUrl: step3State.sub1LandingUrl,
+      sub2LandingUrl: step3State.sub2LandingUrl,
+      priorityList
+    })
+      .then((res) => {
+        alert(res.data[1]);
+        // history.push('/dashboard/marketer/main');
+      });
+  };
 
   const getCategoryList = () => {
     axios.get(`${HOST}/api/dashboard/marketer/category`,)
@@ -199,29 +332,36 @@ const CampaignCreateStepper = (props) => {
   }, []);
 
   const handleDatePickerOpen = () => {
+    step3Dispatch({ key: 'dateReset' });
     setDatePickerOpen(!datePickerOpen);
   };
 
-  const handleButton = (_step) => {
-    switch (_step) {
-      case 0: {
-        setPriorityOpen(false);
-        setCreationOpen(false);
-        setCreatePaperOpen(false);
-        setStep(0);
-        console.log('campaignCreation line 256');
-        return false;
-      }
-      case 1: {
-        setPriorityOpen(true);
-        setStep(1);
-        console.log('campaignCreation line 261');
-        return false;
-      }
-      default: {
-        return false; }
-    }
-  };
+  // const handleButton = (_step) => {
+  //   switch (_step) {
+  //     case 0: {
+  //       setPriorityOpen(false);
+  //       setCreationOpen(false);
+  //       setCreatePaperOpen(false);
+  //       setStep(0);
+  //       console.log('campaignCreation line 256');
+  //       return false;
+  //     }
+  //     case 1: {
+  //       setPriorityOpen(true);
+  //       setCreatePaperOpen(false);
+  //       setStep(1);
+  //       console.log('campaignCreation line 261');
+  //       return false;
+  //     }
+  //     case 2: {
+  //       setCreatePaperOpen(true);
+  //       setStep(2);
+  //       return false;
+  //     }
+  //     default: {
+  //       return false; }
+  //   }
+  // };
 
   const handleNext = _step => (event) => {
     event.preventDefault();
@@ -244,10 +384,12 @@ const CampaignCreateStepper = (props) => {
       }
     }
   };
+
   const handleDetailOpen = () => {
-    console.log('budgetinput 147');
+    step3Dispatch({ key: 'budgetReset' });
     setDetailOpen(!detailOpen);
   };
+
   const handleDateOpen = () => {
     console.log('campaignCreation 346');
     setDateOpen(!dateOpen);
@@ -276,10 +418,6 @@ const CampaignCreateStepper = (props) => {
       }
       default: return false;
     }
-  };
-
-  const handleSetLandingUrlState = (index) => {
-    setLandingUrlState(index + 1);
   };
 
   const nextButton = (_step) => {
@@ -346,12 +484,12 @@ const CampaignCreateStepper = (props) => {
 
   return (
     <Grid container direction="row" spacing={2} wrap="wrap">
-      <Grid item xs={2}>
+      {/* <Grid item>
         <Selector
           handleButton={handleButton}
         />
-      </Grid>
-      <Grid item xs={10}>
+      </Grid> */}
+      <Grid item>
         <Paper className={classes.paper}>
           <Grid container direction="column" className={classes.root}>
             <Grid item>
@@ -363,6 +501,7 @@ const CampaignCreateStepper = (props) => {
                 dispatch={step1Dispatch}
                 selectedCategory={checkedCategories}
                 setPriorityOpen={setPriorityOpen}
+                step={step}
               />
               {priorityOpen
                 ? (
@@ -390,6 +529,8 @@ const CampaignCreateStepper = (props) => {
                 ? (
                   <div>
                     <CampaignCreateTable
+                      checkName={checkName}
+                      setCheckName={setCheckName}
                       bannerList={bannerList}
                       dispatch={step3Dispatch}
                       setStepComplete={setStepComplete}
@@ -400,7 +541,6 @@ const CampaignCreateStepper = (props) => {
                       handleDetailOpen={handleDetailOpen}
                       handleDateOpen={handleDateOpen}
                       dateOpen={dateOpen}
-                      handleSetLandingUrlState={handleSetLandingUrlState}
                       handleDatePickerOpen={handleDatePickerOpen}
                       datePickerOpen={datePickerOpen}
                     />

@@ -1,21 +1,10 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import {
-  Grid, InputLabel, Input, FormHelperText, FormControl, Divider
+  Grid, InputLabel, Input, FormHelperText, FormControl, FormControlLabel, Checkbox
 } from '@material-ui/core';
-import AddBox from '@material-ui/icons/AddBox';
 
 const formStyle = theme => ({
-  // imgPreview: {
-  //   width: '100%',
-  //   [theme.breakpoints.down('xs')]: {
-  //     maxHeight: '200px',
-  //   },
-  //   [theme.breakpoints.up('sm')]: {
-  //     maxWidth: '350px',
-  //     maxHeight: '300px',
-  //   },
-  // },
   input: {
     fontSize: '14px',
     fontWeight: '700',
@@ -47,33 +36,118 @@ const CssFormControl = withStyles({
 })(FormControl);
 
 const LandingUrlInput = (props) => {
-  const { classes, handleSetLandingUrlState } = props;
-  const index = 0;
+  const { classes, dispatch, } = props;
+  const [sub1CloseState, setSub1CloseState] = React.useState(true);
+  const [sub2CloseState, setSub2CloseState] = React.useState(true);
+
+  const handleCloseState = (event) => {
+    const targetId = event.target.id;
+    switch (targetId) {
+      case 'sub-url1-checkbox': {
+        setSub1CloseState(!sub1CloseState);
+        return false;
+      }
+      case 'sub-url2-checkbox': {
+        setSub2CloseState(!sub2CloseState);
+        return false;
+      }
+      default: { return false; }
+    }
+  };
+
+  const handleUrlChange = (event) => {
+    switch (event.target.id) {
+      case 'main-url':
+      { dispatch({ key: 'mainLandingUrl', value: event.target.value });
+        return false;
+      }
+      case 'sub-url1':
+      { dispatch({ key: 'sub1LandingUrl', value: event.target.value });
+        return false;
+      }
+      case 'sub-url2':
+      {
+        dispatch({ key: 'sub2LandingUrl', value: event.target.value });
+        return false;
+      }
+      default:
+      { return false; }
+    }
+  };
+
+
   return (
-    <Grid container direction="row" spacing={3}>
+    <Grid container direction="column" spacing={3}>
       <Grid item>
         <CssFormControl
           required
         >
-          <InputLabel shrink htmlFor="company" className={classes.label}>URL</InputLabel>
+          <InputLabel shrink htmlFor="company" className={classes.label}> MAIN URL</InputLabel>
           <Input
             required
             defaultValue="https://"
             type="url"
-            id="url"
+            id="main-url"
             className={classes.input}
+            onChange={handleUrlChange}
           />
 
           <FormHelperText>랜딩페이지를 통해 접속할 웹페이지를 작성해주세요</FormHelperText>
         </CssFormControl>
       </Grid>
+
       <Grid item>
-        <AddBox
-          style={{ cursor: 'pointer' }}
-          onClick={handleSetLandingUrlState(index)}
+        <InputLabel shrink htmlFor="company" className={classes.label}> SUB URL</InputLabel>
+
+        Sub1.
+        <Input
+          defaultValue="https://"
+          type="url"
+          id="sub-url1"
+          className={classes.input}
+          onChange={handleUrlChange}
+          disabled={sub1CloseState}
+        />
+        <FormControlLabel
+          control={(
+            <Checkbox
+              color="primary"
+              id="sub-url1-checkbox"
+              checked={sub1CloseState}
+              onChange={handleCloseState}
+              fontSize="small"
+              style={{ padding: '3px' }}
+            />
+                  )}
+          label="미설정"
+          labelPlacement="start"
         />
       </Grid>
-      <Divider component="hr" style={{ height: '2px' }} />
+      <Grid item>
+        Sub2.
+        <Input
+          defaultValue="https://"
+          type="url"
+          id="sub-url2"
+          className={classes.input}
+          onChange={handleUrlChange}
+          disabled={sub2CloseState}
+        />
+        <FormControlLabel
+          control={(
+            <Checkbox
+              color="primary"
+              id="sub-url2-checkbox"
+              checked={sub2CloseState}
+              onChange={handleCloseState}
+              fontSize="small"
+              style={{ padding: '3px' }}
+            />
+                  )}
+          label="미설정"
+          labelPlacement="start"
+        />
+      </Grid>
 
     </Grid>
   );

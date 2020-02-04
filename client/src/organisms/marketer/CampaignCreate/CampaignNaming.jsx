@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  Grid, Divider, Typography
+  Grid
 } from '@material-ui/core';
 import Check from '@material-ui/icons/Check';
 import { makeStyles } from '@material-ui/core/styles';
@@ -50,9 +50,8 @@ const useStyles = makeStyles(theme => ({
 
 
 const CampaignNaming = (props) => {
-  const { dispatch } = props;
+  const { dispatch, checkName, setCheckName } = props;
   const classes = useStyles();
-  const [checkName, setCheckName] = React.useState(false);
   const [duplicate, setDuplicate] = React.useState(false);
   const checkCampaignName = (value) => {
     axios.post(`${HOST}/api/dashboard/marketer/campaign/checkName`, { campaignName: value })

@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import {
-  Grid, FormControl, InputLabel, Input, FormHelperText
+  Grid
 } from '@material-ui/core';
 import CustomButton from '../../../../atoms/CustomButtons/Button';
 
@@ -29,23 +29,6 @@ const formStyle = theme => ({
     marginBottom: '7px',
   },
 });
-
-const CssFormControl = withStyles({
-  root: {
-    '& label.Mui-focused': {
-      color: '#00acc1',
-    },
-    '& .MuiInput-underline:after': {
-      borderBottomColor: '#00acc1',
-    },
-    '& .MuiOutlinedInput-root': {
-      '&:hover fieldset': {
-        borderColor: '#00acc1',
-      },
-    },
-  },
-})(FormControl);
-
 
 const BannerDescFrom = (props) => {
   const {
