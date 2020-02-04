@@ -4,20 +4,22 @@ import { Grid, FormControlLabel, Checkbox } from '@material-ui/core';
 import DateFnsUtils from '@date-io/date-fns';
 import {
   MuiPickersUtilsProvider,
-  KeyboardTimePicker,
   KeyboardDatePicker,
 } from '@material-ui/pickers';
 
-function MaterialUIPickers() {
+function MaterialUIPickers(props) {
   // The first commit of Material-UI
+  const { dispatch, } = props;
   const todayDate = new Date(`${new Date().toString().split('GMT')[0]} UTC`).toISOString().split('.')[0];
   const [selectedOpenDate, setSelectedOpenDate] = React.useState(new Date(todayDate));
   const [selectedFinDate, setSelectedFinDate] = React.useState(new Date(todayDate));
   const [finOpen, setFinOpen] = React.useState(true);
   const handleOpenDateChange = (date) => {
+    dispatch({ key: 'startDate', value: date });
     setSelectedOpenDate(date);
   };
   const handleFinDateChange = (date) => {
+    dispatch({ key: 'finDate', value: date });
     setSelectedFinDate(date);
   };
   const handleEndChange = () => {

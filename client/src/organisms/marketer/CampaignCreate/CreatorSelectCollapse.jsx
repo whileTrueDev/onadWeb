@@ -1,10 +1,8 @@
 import React, { useEffect, useState, useReducer } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import {
-  Grid, Divider, Slide, Collapse, Typography, Paper
+  Grid, Paper
 } from '@material-ui/core';
-import Button from '../../../atoms/CustomButtons/Button';
-import Dialog from '../../../atoms/Dialog/Dialog';
 import StyledItemText from '../../../atoms/StyledItemText';
 import CreatorTable from './sub/CreatorTable';
 
@@ -47,20 +45,9 @@ const reducer = (state, action) => {
   }
 };
 
-const SLIDE_TIMEOUT = 500;
-
-const Transition = React.forwardRef((props, ref) => (
-  <Slide
-    direction="up"
-    ref={ref}
-    {...props}
-  />
-));
-
 const CreatorSelect = (props) => {
   const {
     setStepComplete, creatorList, checkedCreators, checkedCreatorsDispatch,
-    handleBack, handleNext, stepComplete
   } = props;
 
   const classes = useStyles();

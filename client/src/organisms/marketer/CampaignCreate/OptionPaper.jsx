@@ -1,10 +1,9 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import {
   Grid, Paper, Divider
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import Help from '@material-ui/icons/Help';
-import DescPopover from '../../../atoms/DescPopover';
 import StyledItemText from '../../../atoms/StyledItemText';
 import StyledSelectText from '../../../atoms/StyledSelectText';
 import GreenCheckbox from '../../../atoms/GreenCheckBox';
@@ -73,14 +72,13 @@ const useStyles = makeStyles(theme => ({
 const OptionPaper = (props) => {
   const classes = useStyles();
   const {
-    handleSubmitCheck, state, dispatch, setStepComplete, setPriorityOpen, priorityOpen
+    state, dispatch, setStepComplete, step, setPriorityOpen,
   } = props;
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [budgetAnchorEl, setBudgetAnchorEl] = React.useState(null);
   const [descIndex, setDescIndex] = React.useState(0); // popover의 내용 Index
 
-  const [budgetOpen, setBudgetOpen] = React.useState(false); // budget 입력창 띄우는 State
   const [error, setError] = React.useState(false); // budget 작성시 한도 체크용 State
   // const [total, setTotal] = React.useState();
   // const [exepectedDay, setExcpectedDay] = React.useState(0);
@@ -88,33 +86,12 @@ const OptionPaper = (props) => {
 
   const open = Boolean(anchorEl);
 
-  const handleNoBudgetChange = () => {
-    dispatch({ key: 'noBudget' });
-  };
-
-  useEffect(() => {
-    // type 1 - 예산 미설정
-    if (state.option === 0) {
-      handleSubmitCheck(true);
-    } else if (state.option === 0 && !error) {
-      handleSubmitCheck(true);
-    } else if (state.option === 1) {
-      handleSubmitCheck(true);
-    } else if (state.option === 2) {
-      handleSubmitCheck(true);
-    } else {
-      handleSubmitCheck(false);
-    }
-  }, [error, handleSubmitCheck, state.option]);
-
   // option을 선택하였을 때 event listener
   const handleChange = (event) => {
     if (event.target.checked) {
       dispatch({ key: event.target.name });
       setStepComplete(true);
-      console.log('이벤트 타겟 네임', event.target.name);
     } else {
-      console.log('체크 해제', event.target.name);
       dispatch({ key: 'reset' });
       setStepComplete(false);
       setPriorityOpen(false);
@@ -170,7 +147,7 @@ const OptionPaper = (props) => {
             <StyledItemText primary="첫째, &nbsp;&nbsp; 광고 유형 선택" secondary="해당 광고 캠페인의 유형을 선택하세요." />
             <Divider component="hr" style={{ height: '2px' }} />
           </Grid>
-          {priorityOpen ? (
+          {step !== 0 ? (
             <Grid item className={classes.item}>
               {checkedOptionRender(state.option)}
             </Grid>

@@ -298,7 +298,7 @@ router.post('/getcategory', (req, res) => {
             resolve(true);
           })
           .catch((err) => {
-            console.log('위 에러 삐빅', err);
+            console.log('campaignjs 226 line', err);
             reject();
           });
       }))
@@ -507,13 +507,60 @@ const getCampaignId = (result, marketerId) => {
   return campaignId;
 };
 
+const getUrlId = marketerId => new Promise((resolve, reject) => {
+  let urlId = '';
+  const getLandingUrlQuery = `SELECT linkId
+                              FROM linkRegistered
+                              WHERE marketerId = ?
+                              ORDER BY regiDate DESC
+                              LIMIT 1`;
+  doQuery(getLandingUrlQuery, marketerId)
+    .then((row) => {
+      if (row.result[0]) {
+        const lastlinkId = row.result[0].linkId;
+        const count = parseInt(lastlinkId.split('_')[2], 10) + 1;
+        if (count < 10) {
+          urlId = `${marketerId}_0${count}`;
+          resolve(urlId);
+        } else {
+          urlId = `${marketerId}_${count}`;
+          resolve(urlId);
+        }
+      } else {
+        urlId = `${marketerId}_01`;
+        resolve(urlId);
+      }
+    }).catch((err) => {
+      reject();
+      console.log(err);
+    });
+});
+
+router.get('/geturl', (req, res) => {
+  const marketerId = req._passport.session.user.userid;
+  const getLandingUrlQuery = `SELECT linkId
+                              FROM linkRegistered
+                              WHERE marketerId = ?
+                              ORDER BY regiDate DESC
+                            `;
+  doQuery(getLandingUrlQuery, marketerId)
+    .then((row) => {
+      if (row.result) {
+        res.send(row.result);
+      }
+    }).catch((err) => {
+      console.log(err);
+    });
+});
+
 router.post('/push', (req, res) => {
   const marketerId = req._passport.session.user.userid;
   const { marketerName } = req._passport.session.user;
   const {
-    bannerId, campaignName, dailyLimit, priorityType, optionType, priorityList, noBudget
+    optionType, priorityType, campaignName, bannerId, budget, startDate, finDate,
+    keyword0, keyword1, keyword2, mainLandingUrl, sub1LandingUrl, sub2LandingUrl,
+    priorityList, selectedTime
   } = req.body;
-
   // 현재까지 중에서 최신으로 등록된 켐페인 명을 가져와서 번호를 증가시켜 추가하기 위함.
   const searchQuery = `
   SELECT campaignId
@@ -524,42 +571,90 @@ router.post('/push', (req, res) => {
 
   const saveQuery = `
   INSERT INTO campaign 
-  (campaignId, campaignName, marketerId, bannerId, dailyLimit, priorityType, optionType, onOff, targetList, marketerName) 
-  VALUES (?, ?, ?, ?, ?, ?, ?, 0, ?, ?)`;
+  (campaignId, campaignName, marketerId, 
+    bannerId, connectedLinkId, dailyLimit, priorityType, 
+    optionType, onOff, targetList, marketerName, 
+    keyword, startDate, finDate, selectedTime) 
+  VALUES (?, ?, ?, ?, ?, ?, ?, ?, 0, ?, ?, ?, ?, ?, ?)`;
+
+  const saveToLinkRegistered = `
+  INSERT INTO linkRegistered
+  (linkId, marketerId, confirmState, links)
+  VALUES (?, ?, ?, ?)
+  `;
 
   // 캠페인 등록.
-  doQuery(searchQuery, [marketerId])
-    .then((row) => {
-      const campaignId = getCampaignId(row.result[0], marketerId);
-      const limit = (optionType === 0 && noBudget) || optionType === 1 ? -1 : dailyLimit;
-      const targetJsonData = JSON.stringify({ targetList: priorityList });
-      // 마케터 활동내역 로깅 테이블에서, 캠페인 생성의 상태값
-      const MARKETER_ACTION_LOG_TYPE = 5;
-      Promise.all([
-        doQuery(saveQuery,
-          [campaignId, campaignName, marketerId, bannerId, limit,
-            priorityType, optionType, targetJsonData, marketerName]),
-        PriorityDoquery({
-          campaignId, priorityType, priorityList, optionType
-        }),
-        LandingDoQuery({
-          campaignId, optionType, priorityType, priorityList
-        }),
-        // 마케터 활동내역 테이블 적재.
-        marketerActionLogging([
-          marketerId, MARKETER_ACTION_LOG_TYPE, JSON.stringify({ campaignName })
+  getUrlId(marketerId).then((urlId) => {
+    doQuery(searchQuery, [marketerId])
+      .then((row) => {
+        const linkId = `link_${urlId}`;
+        const campaignId = getCampaignId(row.result[0], marketerId);
+        const limit = budget || -1;
+        const targetJsonData = JSON.stringify({ targetList: priorityList });
+        const landingUrlJsonData = JSON.stringify(
+          {
+            links:
+            [{
+              linkName: '',
+              linkTo: mainLandingUrl,
+              primary: true,
+            },
+            (sub1LandingUrl
+              ? {
+                linkName: '',
+                linkTo: sub1LandingUrl,
+                primary: false,
+              } : null
+            ),
+            (sub2LandingUrl
+              ? {
+                linkName: '',
+                linkTo: sub2LandingUrl,
+                primary: false,
+              } : null
+            ),
+            ]
+          }
+        );
+        const keywordsJsonData = JSON.stringify(
+          { keywords: [keyword0, keyword1, keyword2] }
+        );
+        // 마케터 활동내역 로깅 테이블에서, 캠페인 생성의 상태값
+        const MARKETER_ACTION_LOG_TYPE = 5;
+        Promise.all([
+          doQuery(saveQuery,
+            [campaignId, campaignName, marketerId, bannerId, linkId, limit,
+              priorityType, optionType, targetJsonData, marketerName, keywordsJsonData,
+              startDate, finDate, selectedTime]),
+          (priorityType !== 0
+            ? doQuery(saveToLinkRegistered, [linkId, marketerId, 0, landingUrlJsonData]) : null),
+          PriorityDoquery({
+            campaignId, priorityType, priorityList, optionType
+          }),
+          LandingDoQuery({
+            campaignId, optionType, priorityType, priorityList
+          }),
+          // 마케터 활동내역 테이블 적재.
+          marketerActionLogging([
+            marketerId, MARKETER_ACTION_LOG_TYPE, JSON.stringify({ campaignName })
+          ]),
         ])
-      ])
-        .then(() => {
-          res.send([true, '캠페인이 등록되었습니다']);
-        })
-        .catch(() => {
-          res.send([false]);
-        });
-    })
-    .catch(() => {
-      res.send([false]);
-    });
+          .then(() => {
+            res.send([true, '캠페인이 등록되었습니다']);
+          })
+          .catch((err) => {
+            console.log(err);
+            res.send([false, '일시적인 오류가 발생하였습니다. 나중에 다시 시도해주세요.']);
+          });
+      })
+      .catch((err) => {
+        console.log(err);
+        res.send([false, '일시적인 오류가 발생하였습니다. 나중에 다시 시도해주세요.']);
+      });
+  }).catch((err) => {
+    console.log(err);
+    res.send([false, '일시적인 오류가 발생하였습니다. 나중에 다시 시도해주세요.']);
+  });
 });
 
 module.exports = router;

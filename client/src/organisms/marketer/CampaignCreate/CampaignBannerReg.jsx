@@ -2,15 +2,9 @@ import React from 'react';
 import {
   Grid, Divider, Typography
 } from '@material-ui/core';
-import Check from '@material-ui/icons/Check';
 import { makeStyles } from '@material-ui/core/styles';
 
 import StyledItemText from '../../../atoms/StyledItemText';
-import Success from '../../../atoms/Success';
-import DangerTypography from '../../../atoms/Typography/Danger';
-import StyledInput from '../../../atoms/StyledInput';
-import axios from '../../../utils/axios';
-import HOST from '../../../utils/config';
 import BannerCarousel from '../../../atoms/BannerCarousel';
 import Button from '../../../atoms/CustomButtons/Button';
 

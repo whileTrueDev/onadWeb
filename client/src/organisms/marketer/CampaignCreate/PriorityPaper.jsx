@@ -63,8 +63,8 @@ const useStyles = makeStyles(theme => ({
 const PriorityPaper = (props) => {
   const {
     handleNext, state, dispatch, setStepComplete, creatorList, checkedCreators,
-    checkedCreatorsDispatch, handleBack, stepComplete,
-    checkedGames, checkedGamesDispatch, createPaperOpen
+    checkedCreatorsDispatch, handleBack, stepComplete, createPaperOpen,
+    checkedGames, checkedGamesDispatch
   } = props;
   const classes = useStyles();
   // const [state, dispatch] = useReducer(myReducer, { choose: 0, type: 0 });

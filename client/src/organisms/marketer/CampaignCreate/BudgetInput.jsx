@@ -1,19 +1,12 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import {
-  Grid, Paper, Divider, Collapse, Checkbox, FormControlLabel
+  Grid
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import Help from '@material-ui/icons/Help';
 import NumberFormat from 'react-number-format';
-import DescPopover from '../../../atoms/DescPopover';
-import StyledItemText from '../../../atoms/StyledItemText';
-import StyledSelectText from '../../../atoms/StyledSelectText';
-import GreenCheckbox from '../../../atoms/GreenCheckBox';
 import StyledInput from '../../../atoms/StyledInput';
 import DangerTypography from '../../../atoms/Typography/Danger';
-import axios from '../../../utils/axios';
-import HOST from '../../../utils/config';
-
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -70,26 +63,15 @@ const useStyles = makeStyles(theme => ({
 
 const BudgetInput = (props) => {
   const classes = useStyles();
-  const {
-    handleSubmitCheck, state, dispatch, selectedCategory, step2State, detailOpen, setDetailOpen
-  } = props;
+  const { state, dispatch } = props;
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [budgetAnchorEl, setBudgetAnchorEl] = React.useState(null);
-  const [descIndex, setDescIndex] = React.useState(0); // popover의 내용 Index
 
-  const [budgetOpen, setBudgetOpen] = React.useState(false); // budget 입력창 띄우는 State
   const [error, setError] = React.useState(false); // budget 작성시 한도 체크용 State
   // const [total, setTotal] = React.useState();
   // const [exepectedDay, setExcpectedDay] = React.useState(0);
   // const [exepectedViews, setExcpectedViews] = React.useState(0);
-
-  const open = Boolean(anchorEl);
-
-
-  const handleNoBudgetChange = () => {
-    dispatch({ key: 'noBudget' });
-  };
 
   // useEffect(() => {
   //   // type 1 - 예산 미설정
@@ -109,30 +91,8 @@ const BudgetInput = (props) => {
   // option을 선택하였을 때 event listener
   // const handleChange = (event) => {
   //   // event.preventDefault();
-  //   if (event.target.checked) {
-  //     dispatch({ key: event.target.name });
-  //     if (event.target.name === 'option0') {
-  //       // axios.post(`${HOST}/api/dashboard/marketer/campaign/getcategory`, selectedCategory)
-  //       //   .then((res) => {
-  //       //     if (res) {
-  //       //       setTotal(res.data.result);
-  //       //     }
-  //       //   }).catch((errorData) => { alert('오류가 발생하였습니다. 나중에 다시 시도해주세요.'); });
-  //       setBudgetOpen(true);
-  //     } else {
-  //       setBudgetOpen(false);
-  //     }
-  //   } else {
-  //     dispatch({ key: 'reset' });
-  //     setBudgetOpen(false);
-  //     setError(false);
-  //   }
+  //   dispatch({ key: event.target.name });
   // };
-
-  const handlePopoverOpen = index => (event) => {
-    setDescIndex(index);
-    setAnchorEl(event.currentTarget);
-  };
 
   const handleBudgetPopoverOpen = (event) => {
     setBudgetAnchorEl(event.currentTarget);
@@ -143,10 +103,6 @@ const BudgetInput = (props) => {
     setBudgetAnchorEl(null);
   };
 
-  const handleDetailOpen = () => {
-    console.log('budgetinput 147');
-    setDetailOpen(!detailOpen);
-  };
   // budget을 입력하였을 때 event listener
   const onChange = (value) => {
     dispatch({ key: 'budget', value: value.value });
@@ -176,7 +132,6 @@ const BudgetInput = (props) => {
                       id="formatted-numberformat-input"
                       margin="dense"
                       style={{ width: '150px' }}
-                      disabled={state.noBudget}
                       thousandSeparator
                       prefix="₩ "
                       allowNegative={false}

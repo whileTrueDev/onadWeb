@@ -1,42 +1,42 @@
 import React from 'react';
 import {
-  Grid,
+  Grid
 } from '@material-ui/core';
 
 import GreenCheckbox from '../../../atoms/GreenCheckBox';
 import StyledSelectText from '../../../atoms/StyledSelectText';
 
-const CampaignBudgetSet = (props) => {
-  const { handleDetailOpen, detailOpen } = props;
+const TimeSelectorSet = (props) => {
+  const { timeSelectorOpen, handleTimeSelectorOpen } = props;
   return (
     <Grid container direction="column">
       <Grid item>
         <Grid container direction="row">
           <GreenCheckbox
             name="no-limit"
-            checked={detailOpen === false}
+            checked={timeSelectorOpen === false}
             // onChange={handleChange}
-            onClick={handleDetailOpen}
+            onClick={handleTimeSelectorOpen}
             fontSize="large"
             // disabled
           />
-          <StyledSelectText onClick={handleDetailOpen} style={{ cursor: 'pointer' }} primary="일예산제한 없이 계속 집행" />
+          <StyledSelectText onClick={handleTimeSelectorOpen} style={{ cursor: 'pointer' }} primary="시간대 설정 없이 계속 진행" />
         </Grid>
       </Grid>
       <Grid item>
         <Grid container direction="row">
           <GreenCheckbox
             name="set-limit"
-            checked={detailOpen === true}
+            checked={timeSelectorOpen === true}
             // onChange={handleChange}
-            onClick={handleDetailOpen}
+            onClick={handleTimeSelectorOpen}
             fontSize="large"
           />
-          <StyledSelectText onClick={handleDetailOpen} style={{ cursor: 'pointer' }} primary="일예산 설정" />
+          <StyledSelectText onClick={handleTimeSelectorOpen} style={{ cursor: 'pointer' }} primary="송출 시간대 설정" />
         </Grid>
       </Grid>
     </Grid>
   );
 };
 
-export default CampaignBudgetSet;
+export default TimeSelectorSet;

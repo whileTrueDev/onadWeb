@@ -64,80 +64,12 @@ const Select = (props) => {
                   }}
                   onClick={() => handleButton(index)}
                 >
-                  {/* <source.icon style={{ marginTop: 10 }} /> */}
                   <p>{source}</p>
                 </Button>
               </StepLabel>
             </Step>
           ))}
-
         </Stepper>
-
-        {/* <Button
-          onClick={() => handleButton(index + 1)}
-          variant="outlined"
-          classes={{
-            root: buttonClasses.root, // class name, e.g. `classes-nesting-root-x`
-            label: buttonClasses.label, // class name, e.g. `classes-nesting-label-x`
-          }}
-        >
-          1. 광고 유형 선택
-        </Button>
-        <Button
-          onClick={() => handleButton(index + 1)}
-          variant="outlined"
-          classes={{
-            root: buttonClasses.root, // class name, e.g. `classes-nesting-root-x`
-            label: buttonClasses.label, // class name, e.g. `classes-nesting-label-x`
-          }}
-        >
-          2. 우선 옵션 선택
-        </Button>
-        <Button
-          onClick={() => handleButton(index + 1)}
-          variant="outlined"
-          classes={{
-            root: buttonClasses.root, // class name, e.g. `classes-nesting-root-x`
-            label: buttonClasses.label, // class name, e.g. `classes-nesting-label-x`
-          }}
-        >
-          3. 캠페인 기본정보 등록
-        </Button>
-        <Button
-          onClick={() => handleButton(index + 1)}
-          variant="outlined"
-          classes={{
-            root: buttonClasses.root, // class name, e.g. `classes-nesting-root-x`
-            label: buttonClasses.label, // class name, e.g. `classes-nesting-label-x`
-          }}
-        >
-              4
-        </Button> */}
-
-        {/*
-        <Stepper orientation="vertical" activeStep={doneIndex}>
-          { sources.map((source, index) => (
-            <Step key={shortid.generate()}>
-              <StepLabel>
-                <Button
-                  onClick={() => handleButton(index + 1)}
-                  variant="outlined"
-                  classes={{
-                    root: buttonClasses.root, // class name, e.g. `classes-nesting-root-x`
-                    label: buttonClasses.label, // class name, e.g. `classes-nesting-label-x`
-                  }}
-                >
-
-                  <source.icon style={{ marginTop: 10 }} />
-
-                  <p>{source.label}</p>
-                </Button>
-              </StepLabel>
-            </Step>
-          ))}
-
-        </Stepper> */}
-
       </Card>
     </div>
   );
