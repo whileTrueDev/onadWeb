@@ -2,18 +2,23 @@ import React from 'react';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import {
   Grid, Paper, Divider, Button,
-  Avatar, Typography, IconButton,
-  ListItem, List, Grow, FormControlLabel,
-  Switch, Snackbar
+  Typography, IconButton,
+  ListItem, List, FormControlLabel,
+  Snackbar, Hidden
 } from '@material-ui/core';
+import Countup from 'react-countup';
+
+import { Assessment, Delete as DeleteIcon, Build } from '@material-ui/icons';
 import CloseIcon from '@material-ui/icons/Close';
+import IOSSwitch from '../../../atoms/Switch/IOSSwitch';
+
 import CampaignCreateDialog from './campaign/CampaignCreateDialog';
 import CampaignDeleteConfirmDialog from './campaign/CampaignDeleteConfirmDialog';
+import CampaignUpdateDialog from './campaign/CampaignUpdateDialog';
+
 import useUpdateData from '../../../utils/lib/hooks/useUpdateData';
 import useDialog from '../../../utils/lib/hooks/useDialog';
 import useDeleteData from '../../../utils/lib/hooks/useDeleteData';
-import useAnchorEl from '../../../utils/lib/hooks/useAnchorEl';
-import CampaignPopover from './campaign/CampaignPopover';
 import CampaignAnalysisDialog from './report/CampaignReportDialog';
 
 const SLIDE_TIMEOUT = 500;
@@ -38,41 +43,45 @@ const useStyles = makeStyles(theme => ({
     }
   },
   img: {
-    margin: 'auto',
-    display: 'block',
+    width: 240,
+    height: 120,
+    [theme.breakpoints.down('md')]: {
+      width: 120,
+      height: 60
+    },
     maxWidth: '100%',
-    maxHeight: '100%',
+    // maxHeight: '100%',
   },
+  contents: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center'
+  }
 }));
 
 export default function CampaignList(props) {
   const classes = useStyles();
   const { campaignData } = props;
 
-  // For campaign On/ Off
+  const optionTypeList = ['배너 광고', '배너 + 클릭 광고', '클릭 광고'];
+  const priorityTypeList = ['크리에이터 우선', '카테고리 우선', '노출 우선'];
+
+  const { handleDelete } = useDeleteData('/api/dashboard/marketer/campaign');
   const { handleUpdateRequest } = useUpdateData(
     '/api/dashboard/marketer/campaign/onoff',
     campaignData.callUrl
   );
+
+  const [selectedCampaign, setSelectedCampaign] = React.useState(null);
 
   // For reaction to on/off completed
   const snack = useDialog();
 
   // To open campaign create dialog
   const campaignCreateDialog = useDialog();
-
-  // To open campaign Menu
-  const campaignMenuAnchor = useAnchorEl();
-
-  // 선택된 캠페인이 무엇인지
-  const [selectedCampaign, setSelectedCampaign] = React.useState(null);
-
-  // To delete campaigns
+  const campaignUpdateDialog = useDialog();
   const campaignDeleteDialog = useDialog();
-  const { handleDelete } = useDeleteData('/api/dashboard/marketer/campaign');
-
-  // For Campaign analysis
-  const CampaignReportDialog = useDialog();
+  const campaignReportDialog = useDialog();
 
   return (
     <Paper style={{ minHeight: 220 }}>
@@ -88,74 +97,137 @@ export default function CampaignList(props) {
       <Divider />
       {!campaignData.loading && campaignData.payload && (
         <List style={{ maxHeight: 380, overflowY: 'auto' }}>
-          {campaignData.payload.map((d, index) => (
-            <Grow in timeout={{ enter: d.timein }} key={d.campaignName}>
-              <div>
-                <ListItem
-                  className={classes.list}
-                  button
-                  onClick={(e) => {
-                    if (e.target.id !== 'onoff-switch') {
-                      campaignMenuAnchor.handleClick(e);
-                      setSelectedCampaign(d);
-                    }
-                  }}
-                >
-                  <Grid container spacing={2} justify="space-between">
-                    <Grid item xs={4}>
-                      <Avatar variant="square" className={classes.image}>
-                        {/* 등록된 배너 */}
-                        <img className={classes.img} alt="campaign-logo" src={d.bannerSrc} />
-                      </Avatar>
-                      <FormControlLabel
-                        control={(
-                          <Switch
-                            id="onoff-switch"
-                            color="secondary"
-                            checked={Boolean(d.onOff)}
-                            onChange={async () => {
+          {campaignData.payload.map((detail, index) => (
+            <div key={detail.campaignId}>
+              <ListItem
+                className={classes.list}
+              >
+                <Grid container direction="row" justify="space-between">
+                  <Grid item className={classes.contents}>
+                    <Grid container direction="row" className={classes.contents} spacing={3}>
+                      <Grid item>
+                        <FormControlLabel
+                          control={(
+                            <IOSSwitch
+                              id="onoff-switch"
+                              checked={Boolean(detail.onOff)}
+                              onChange={async () => {
                               // update 요청
-                              await handleUpdateRequest({
-                                onoffState: !d.onOff,
-                                campaignId: d.campaignId
-                              });
-
-                              snack.handleOpen();
-                            }}
-                          />
-                                )}
-                        label={d.onOff ? 'ON' : 'OFF'}
-                        labelPlacement="bottom"
-                      />
-                    </Grid>
-
-                    <Grid item xs={8} container>
-                      <Grid item xs container direction="column" alignItems="flex-start" spacing={2} style={{ padding: '8px 0px 8px 8px' }}>
-                        <Typography gutterBottom variant="body2">
-                          {d.campaignName}
-                        </Typography>
-                        <Typography variant="caption" gutterBottom>
-                          {/* 0: 'CPM', 1: 'CPC + CPM' */}
-                          {d.optionType === 0 && '배너 광고'}
-                          {d.optionType === 1 && '배너 + 클릭 광고'}
-                          {d.optionType === 2 && '클릭 광고'}
-                        </Typography>
-                        <Typography variant="caption" gutterBottom>
-                          {/* 0: '크리에이터 우선', 1: '카테고리 우선', 2: '노출우선' */}
-                          {d.priorityType === 0 && '크리에이터 우선'}
-                          {d.priorityType === 1 && '카테고리 우선'}
-                          {d.priorityType === 2 && '노출 우선'}
-                        </Typography>
-                        <Typography variant="caption" color="textSecondary">
-                          {new Date(d.regiDate).toLocaleDateString()}
-                        </Typography>
+                                await handleUpdateRequest({
+                                  onoffState: !detail.onOff,
+                                  campaignId: detail.campaignId
+                                });
+                                snack.handleOpen();
+                              }}
+                            />
+                          )}
+                          label={detail.onOff ? (<div style={{ color: '#52d869', fontWeight: 700 }}>활성화</div>) : (<div>비활성화</div>)}
+                          labelPlacement="bottom"
+                        />
                       </Grid>
+                      <Grid item>
+                        <img className={classes.img} alt="campaign-logo" src={detail.bannerSrc} />
+                      </Grid>
+                      <Hidden xsDown>
+                        <Grid item>
+                          <Grid container direction="column" spacing={2}>
+                            <Typography gutterBottom variant="body2">
+                              {detail.campaignName}
+                            </Typography>
+                            <Typography variant="caption" gutterBottom>
+                              {optionTypeList[detail.optionType]}
+                            </Typography>
+                            <Typography variant="caption" gutterBottom>
+                              {priorityTypeList[detail.priorityType]}
+                            </Typography>
+                            <Typography variant="caption" color="textSecondary">
+                              {new Date(detail.regiDate).toLocaleDateString()}
+                            </Typography>
+                          </Grid>
+                        </Grid>
+                      </Hidden>
                     </Grid>
                   </Grid>
-                </ListItem>
-                {!(campaignData.payload.length - 1 === index) && (<Divider light />)}
-              </div>
-            </Grow>
+                  <Hidden xsDown>
+                    <Grid item style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <Grid container direction="column">
+                        <Grid item>
+                          <Typography gutterBottom variant="body2">
+                            오늘 집행된 예산
+                          </Typography>
+                        </Grid>
+                        <Grid>
+                          <Divider orientation="horizontal" />
+                        </Grid>
+                        <Grid item>
+                          <Typography variant="h5" color="secondary" align="center">
+                            <Countup duration={2} end={detail.dailysum ? detail.dailysum : 0} separator="," />
+                          </Typography>
+                        </Grid>
+                        <Grid item>
+                          {(detail.dailyLimit !== -1)
+                            ? (
+                              <Typography variant="body1" align="center" style={{ fontWeight: 700 }}>
+                                {new Intl.NumberFormat().format(detail.dailyLimit)}
+                              </Typography>
+                            )
+                            : (
+                              <Typography variant="h4" align="center" style={{ fontWeight: 700 }}>
+                                ∞
+                              </Typography>
+                            )
+                        }
+                        </Grid>
+                        <Grid>
+                          <Divider orientation="horizontal" />
+                        </Grid>
+                        <Grid item>
+                          <Typography gutterBottom variant="body2" align="center">
+                            일일 예산
+                          </Typography>
+                        </Grid>
+                      </Grid>
+                    </Grid>
+                    <Grid item>
+                      <List>
+                        <ListItem
+                          button
+                          onClick={() => {
+                            setSelectedCampaign(detail);
+                            campaignReportDialog.handleOpen();
+                          }}
+                        >
+                          <Assessment />
+                          <Typography>분석</Typography>
+                        </ListItem>
+                        <ListItem
+                          button
+                          onClick={() => {
+                            setSelectedCampaign(detail);
+                            campaignUpdateDialog.handleOpen();
+                          }}
+                        >
+                          <Build color="action" />
+                          <Typography>수정</Typography>
+                        </ListItem>
+                        <ListItem
+                          button
+                          onClick={() => {
+                            campaignDeleteDialog.handleOpen(detail.campaignId);
+                          }}
+                        >
+                          <DeleteIcon color="error" />
+                          <Typography color="error">삭제</Typography>
+                        </ListItem>
+                      </List>
+                    </Grid>
+                  </Hidden>
+
+                </Grid>
+
+              </ListItem>
+              {!(campaignData.payload.length - 1 === index) && (<Divider light />)}
+            </div>
           ))}
         </List>
       )}
@@ -192,15 +264,6 @@ export default function CampaignList(props) {
         ]}
       />
 
-      {/* 캠페인 클릭시 메뉴 팝오버 */}
-      <CampaignPopover
-        anchorEl={campaignMenuAnchor.anchorEl}
-        handleClose={campaignMenuAnchor.handleClose}
-        selectedCampaign={selectedCampaign}
-        handleDeleteDialogOpen={campaignDeleteDialog.handleOpen}
-        handleCampaignReportOpen={CampaignReportDialog.handleOpen}
-      />
-
       {/* 캠페인 생성 클릭시 다이얼로그 */}
       <CampaignCreateDialog
         open={campaignCreateDialog.open}
@@ -211,14 +274,24 @@ export default function CampaignList(props) {
       {selectedCampaign && (
       <CampaignAnalysisDialog
         SLIDE_TIMEOUT={SLIDE_TIMEOUT} // 슬라이드 트랜지션 타임아웃
-        open={CampaignReportDialog.open}
+        open={campaignReportDialog.open}
         selectedCampaign={selectedCampaign}
         handleClose={() => {
-          CampaignReportDialog.handleClose();
+          campaignReportDialog.handleClose();
           setTimeout(() => {
             setSelectedCampaign(null);
             // 트랜지션 만큼 뒤에 실행. (먼저 실행하면 트랜지션 발동 안됨)
           }, SLIDE_TIMEOUT);
+        }}
+      />
+      )}
+
+      {selectedCampaign && (
+      <CampaignUpdateDialog
+        open={campaignUpdateDialog.open}
+        selectedCampaign={selectedCampaign}
+        handleClose={() => {
+          campaignUpdateDialog.handleClose();
         }}
       />
       )}

@@ -31,12 +31,18 @@ router.get('/', (req, res) => {
 
 // 2019-12-06 새로운 대시보드(분석)을 위한 요청
 // 캠페인 리스트 조회
+// 2020-01-21 일일예산이 존재하는 경우 일일 현재까지 해당 캠페인을 통한 소비 계산하여 리턴
 router.get('/new', (req, res) => {
   const marketerId = req._passport.session.user.userid;
+  const date = new Date();
+  date.setHours(0);
+  date.setMinutes(0);
+  date.setSeconds(0);
+  date.setMilliseconds(0);
 
   const query = `
   SELECT
-  campaignId, campaignName, optionType, priorityType, campaign.regiDate, onOff, bannerSrc
+  campaignId, campaignName, optionType, priorityType, campaign.regiDate, onOff, bannerSrc, dailyLimit
   FROM campaign
   JOIN bannerRegistered AS br
   ON br.bannerId = campaign.bannerId
@@ -44,11 +50,25 @@ router.get('/new', (req, res) => {
   AND deletedState = 0
   ORDER BY br.regiDate DESC
   `;
-  const queryArray = [marketerId];
 
-  doQuery(query, queryArray).then((row) => {
+  const sumQuery = `
+  select sum(cashFromMarketer) as dailysum
+  from campaignLog
+  where campaignId = ?
+  and date > ?
+  `;
+
+  doQuery(query, [marketerId]).then((row) => {
     if (row.result && !row.error) {
-      res.send(row.result);
+      Promise.all(
+        row.result.map(campaignData => doQuery(sumQuery, [campaignData.campaignId, date])
+          .then((inrow) => {
+            const { dailysum } = inrow.result[0];
+            return { ...campaignData, dailysum };
+          }))
+      ).then((campaignList) => {
+        res.send(campaignList);
+      });
     }
   }).catch((err) => {
     console.log('err in /campaign/new', err);
@@ -202,6 +222,40 @@ router.post('/checkName', (req, res) => {
     })
     .catch(() => {
       res.send(false);
+    });
+});
+
+
+router.post('/changeName', (req, res) => {
+  const { campaignId, campaignName } = req.body;
+  const updateQuery = `
+  UPDATE campaign 
+  SET campaignName = ? 
+  WHERE campaignId = ? `;
+  doQuery(updateQuery, [campaignName, campaignId])
+    .then(() => {
+      res.send([true, null]);
+    })
+    .catch((error) => {
+      res.send([false, error]);
+    });
+});
+
+
+router.post('/changeBudget', (req, res) => {
+  const { campaignId, noBudget, budget } = req.body;
+  const updateBudget = noBudget ? -1 : budget;
+  const updateQuery = `
+  UPDATE campaign 
+  SET dailyLimit = ? 
+  WHERE campaignId = ? `;
+
+  doQuery(updateQuery, [updateBudget, campaignId])
+    .then(() => {
+      res.send([true, null]);
+    })
+    .catch((error) => {
+      res.send([false, error]);
     });
 });
 
@@ -488,7 +542,7 @@ router.post('/push', (req, res) => {
   } = req.body;
   // 현재까지 중에서 최신으로 등록된 켐페인 명을 가져와서 번호를 증가시켜 추가하기 위함.
   const searchQuery = `
-  SELECT campaignId 
+  SELECT campaignId
   FROM campaign 
   WHERE marketerId = ?  
   ORDER BY regiDate DESC

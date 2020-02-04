@@ -56,7 +56,7 @@ const ReportCard = (props) => {
                 <Typography variant="body1" className={classes.title}>
                   {content.title}
                 </Typography>
-
+                {/*
                 <Help
                   fontSize="small"
                   color="disabled"
@@ -66,7 +66,7 @@ const ReportCard = (props) => {
                   onMouseLeave={handleTooltipClose}
                   aria-owns={anchorEl ? 'send-desc-popover' : undefined}
                   aria-haspopup="true"
-                />
+                /> */}
 
               </div>
 

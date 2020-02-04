@@ -2,8 +2,6 @@ import React from 'react';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import Grid from '@material-ui/core/Grid';
 import Grow from '@material-ui/core/Grow';
-
-import BannerList from '../../organisms/marketer/Dashboard/BannerList';
 import CampaignList from '../../organisms/marketer/Dashboard/CampaignList';
 import CanvasForChart from '../../organisms/marketer/Dashboard/CanvasForChart';
 import DescCard from '../../organisms/marketer/Dashboard/DescCard';
@@ -27,7 +25,6 @@ export default function Dashboard() {
   const onOffData = useFetchData('/api/dashboard/marketer/onoff');
   const normalData = useFetchData('/api/dashboard/marketer/normal');
   const creatorsData = useFetchData('/api/dashboard/marketer/report/creators');
-  const bannerData = useFetchData('/api/dashboard/marketer/banner/all');
   const valueChartData = useFetchData('/api/dashboard/marketer/campaign/chart');
   const broadCreatorData = useFetchData('/api/dashboard/marketer/broadcast/creator');
   const actionLogData = useFetchData('/api/dashboard/marketer/actionlog');
@@ -36,13 +33,22 @@ export default function Dashboard() {
     <div className={classes.root}>
       {(normalData.loading || campaignData.loading
         || onOffData.loading || creatorsData.loading
-        || bannerData.loading || valueChartData.loading
+        || valueChartData.loading
         || actionLogData.loading) ? (
           <ReportLoading />
         ) : (
           <Grid container spacing={2}>
+            <Grid item xs={12} md={6} lg={3}>
+              <Grid container spacing={2}>
+                <Grid item xs={12}>
+                  <OnOffSwitch onOffData={onOffData} />
+                </Grid>
+              </Grid>
+            </Grid>
+
             {normalData.payload && campaignData.payload
-            && creatorsData.payload && bannerData.payload
+            && creatorsData.payload
+            && broadCreatorData.payload
             && valueChartData.payload && (
             <Grid item xs={12}>
               <Grid container spacing={2}>
@@ -83,23 +89,11 @@ export default function Dashboard() {
               </Grid>
             </Grid>
             )}
-
-            <Grid item xs={12} md={6} lg={3}>
+            <Grid item xs={12} md={12} lg={9}>
               <Grid container spacing={2}>
-                <Grid item xs={12}>
-                  <OnOffSwitch onOffData={onOffData} />
-                </Grid>
                 <Grid item xs={12}>
                   <CampaignList campaignData={campaignData} />
                 </Grid>
-                <Grid item xs={12}>
-                  <BannerList bannerData={bannerData} />
-                </Grid>
-              </Grid>
-            </Grid>
-
-            <Grid item xs={12} md={6} lg={9}>
-              <Grid container spacing={2}>
                 <Grid item xs={12}>
                   <CanvasForChart
                     valueChartData={valueChartData}
@@ -107,16 +101,13 @@ export default function Dashboard() {
                     broadCreatorData={broadCreatorData}
                   />
                 </Grid>
-                <Grid item xs={12}>
-                  <IssueTable
-                    actionLogData={actionLogData}
-                  />
-                </Grid>
-
               </Grid>
             </Grid>
-
-
+            <Grid item xs={12} md={12} lg={3}>
+              <IssueTable
+                actionLogData={actionLogData}
+              />
+            </Grid>
           </Grid>
         )}
     </div>
