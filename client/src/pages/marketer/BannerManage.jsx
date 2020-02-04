@@ -89,7 +89,7 @@ const BannerManage = () => {
             <BannerTable handleDeleteOpen={deleteDialog.handleOpen} />
           </TabPanel>
           <TabPanel value={value} index={1}>
-            <CustomButton color="info" size="lg" onClick={() => { uploadDialog.handleOpen(); }}>
+            <CustomButton color="info" size="lg" onClick={() => { urlUploadDialog.handleOpen(); }}>
               + 새 URL 등록
             </CustomButton>
             <UrlTable handleDeleteOpen={urlDeleteDialog.handleOpen} />
@@ -97,7 +97,7 @@ const BannerManage = () => {
         </div>
       </GridItem>
 
-    {/* banner upload, delete dialog */}
+      {/* banner upload, delete dialog */}
       <UploadDialog
         open={uploadDialog.open}
         onClose={uploadDialog.handleClose}
@@ -110,10 +110,10 @@ const BannerManage = () => {
         />
       )}
 
-    {/* landing url upload, delete dialog */}
-    <UrlUploadDialog
+      {/* landing url upload, delete dialog */}
+      <UrlUploadDialog
         open={urlUploadDialog.open}
-        onClose={urlUploadDialog.handleClose}
+        handleClose={urlUploadDialog.handleClose}
       />
       {Boolean(urlDeleteDialog.open) && (
         <UrlDeleteDialog

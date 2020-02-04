@@ -1,7 +1,21 @@
 import React from 'react';
 
-export default function UrlUploadDialog() {
+import Dialog from '../../../atoms/Dialog/Dialog';
+
+export default function UrlUploadDialog(props) {
+  const { open, handleClose } = props;
+
   return (
-    <div />
+    <Dialog
+      onClose={handleClose}
+      open={open}
+      maxWidth="sm"
+      fullWidth
+      title="URL 등록"
+    >
+      <div>
+        url 생성 폼
+      </div>
+    </Dialog>
   );
 }
