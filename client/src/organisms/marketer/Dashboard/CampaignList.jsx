@@ -80,7 +80,7 @@ export default function CampaignList(props) {
         if (res.data) {
           snack.handleOpen();
         } else {
-          alert('배너 및 URL승인 완료 후 캠페인 ON이 가능합니다.');
+          alert('배너 및 URL승인 완료 후 캠페인 활성화가 가능합니다.');
         }
       });
   };
