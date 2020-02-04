@@ -79,7 +79,7 @@ const CategorySelect = (props) => {
             <Grid container direction="row" spacing={2}>
 
                 {gamesData.payload.slice(0, 12).map(game => (
-                  <Grid item xs={12} sm={4} lg={3} xl={2} key={shortid.generate()}>
+                  <Grid item xs={6} sm={4} lg={3} xl={2} key={shortid.generate()}>
                     <Paper>
                       <ButtonBase
                         key={game.gameId}

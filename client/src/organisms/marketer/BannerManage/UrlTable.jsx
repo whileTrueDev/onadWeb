@@ -1,28 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Typography, Tooltip } from '@material-ui/core';
-import Delete from '@material-ui/icons/Delete';
+import { Delete, Star } from '@material-ui/icons';
 import MaterialTable from '../../../atoms/Table/MaterialTable';
 import useFetchData from '../../../utils/lib/hooks/useFetchData';
 
-const BANNER_MAX_WIDTH = 320;
-const BANNER_MAX_HEIGHT = 200;
-
-export default function BannerTable(props) {
+export default function UrlTable(props) {
   const { handleDeleteOpen } = props;
-  const fetchData = useFetchData('/api/dashboard/marketer/banner/all');
+  const fetchData = useFetchData('/api/dashboard/marketer/inventory/landingurl/all');
 
   const columns = [
-    {
-      title: '배너 이미지',
-      render: rowData => (
-        <img
-          src={rowData.bannerSrc}
-          alt={rowData.bannerId}
-          style={{ maxHeight: BANNER_MAX_HEIGHT, maxWidth: BANNER_MAX_WIDTH }}
-        />
-      )
-    },
     {
       title: '심의 결과',
       field: 'confirmState',
@@ -40,9 +27,43 @@ export default function BannerTable(props) {
           default: throw new Error('you need confirmState for table');
         }
       },
-
     },
-    { title: '배너 등록 일자', field: 'regiDate', },
+    {
+      title: '링크이름 및 주소',
+      render: rowData => (
+        <div>
+          {rowData.links.links.map((link) => {
+            if (link) {
+              return (
+                <div key={link.linkTo}>
+                  <a
+                    href={link.linkTo}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      window.open(link.linkTo);
+                    }}
+                  >
+                    {link.linkName ? link.linkName : link.linkTo }
+                  </a>
+                  {link.primary && (
+                  <Tooltip title={(
+                    <Typography>
+                      primary링크로, 배너이미지 클릭시 곧바로 연결되는 링크입니다.
+                    </Typography>
+                  )}
+                  >
+                    <Star color="secondary" />
+                  </Tooltip>
+                  )}
+                </div>
+              );
+            }
+            return null;
+          })}
+        </div>
+      ),
+    },
+    { title: '링크 등록 일자', render: rowData => (<span>{rowData.regiDate}</span>) },
   ];
 
   return (
@@ -57,7 +78,7 @@ export default function BannerTable(props) {
           actions={[
             {
               icon: () => (<Delete />),
-              tooltip: '배너삭제',
+              tooltip: '링크 삭제',
               onClick: (e, rowData) => { handleDeleteOpen(rowData); }
             }
           ]}
@@ -67,7 +88,7 @@ export default function BannerTable(props) {
           }}
           localization={{
             body: {
-              emptyDataSourceMessage: '등록된 배너가 없습니다.'
+              emptyDataSourceMessage: '등록된 랜딩페이지 URL이 없습니다.'
             },
             header: {
               actions: '삭제'
@@ -80,6 +101,6 @@ export default function BannerTable(props) {
   );
 }
 
-BannerTable.propTypes = {
+UrlTable.propTypes = {
   handleDeleteOpen: PropTypes.func.isRequired
 };

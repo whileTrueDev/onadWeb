@@ -104,6 +104,8 @@ router.delete('/', (req, res) => {
               MARKETER_ACTION_LOG_TYPE, JSON.stringify({ campaignName })]);
           }
         });
+      } else {
+        res.send([false, '캠페인 삭제 오류입니다. 본사에 문의하세요.']);
       }
     })
     .catch((err) => {
@@ -146,7 +148,10 @@ router.get('/list', (req, res) => {
 
 // 캠페인 광고 켜기 / 끄기
 router.post('/onoff', (req, res) => {
-  const { onoffState, campaignId } = req.body; // boolean값
+  const {
+    onoffState, campaignId
+  } = req.body; // boolean값
+
   const query = `
   UPDATE campaign
   SET onOff = ?
@@ -155,23 +160,39 @@ router.post('/onoff', (req, res) => {
   const queryArray = [onoffState, campaignId];
 
   const selectQuery = `
-  SELECT campaignName FROM campaign WHERE campaignId = ?`;
+  SELECT campaignName, CPB.bannerId, CPB.bannerConfirm, IR.confirmState as linkConfirm
+  FROM
+  (SELECT campaignName, CP.bannerId, connectedLinkId, confirmState as bannerConfirm
+  FROM 
+  (SELECT campaignName, bannerId, connectedLinkId 
+  FROM campaign 
+  WHERE campaignId = ?
+  ) AS CP
+  LEFT JOIN bannerRegistered as BR
+  ON BR.bannerId = CP.bannerId
+  ) AS CPB
+  LEFT JOIN linkRegistered as IR
+  ON CPB.connectedLinkId = IR.linkId`;
 
-  doQuery(query, queryArray)
+  doQuery(selectQuery, [campaignId])
     .then((row) => {
-      if (row.result) {
-        res.send([true]);
-      }
-
-      doQuery(selectQuery, [campaignId]).then((row1) => {
-        if (!row1.error) {
-          const { campaignName } = row1.result[0];
-          // 마케터 활동내역 테이블 적재
-          const MARKETER_ACTION_LOG_TYPE = 6; // 마케터 활동내역 - 캠페인 on off상태값
-          marketerActionLogging([campaignId.split('_')[0], MARKETER_ACTION_LOG_TYPE,
-            JSON.stringify({ campaignName, onoffState })]);
+      if (!row.error) {
+        const { campaignName, bannerConfirm, linkConfirm } = row.result[0];
+        // 마케터 활동내역 테이블 적재
+        if (bannerConfirm === 1 && linkConfirm === 1) {
+          doQuery(query, queryArray)
+            .then((inrow) => {
+              const MARKETER_ACTION_LOG_TYPE = 6; // 마케터 활동내역 - 캠페인 on off상태값
+              marketerActionLogging([campaignId.split('_')[0], MARKETER_ACTION_LOG_TYPE,
+                JSON.stringify({ campaignName, onoffState })]);
+              if (inrow.result) {
+                res.send(true);
+              }
+            });
+        } else {
+          res.end();
         }
-      });
+      }
     })
     .catch((err) => {
       console.log(err);
