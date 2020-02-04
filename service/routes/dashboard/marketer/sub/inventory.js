@@ -25,8 +25,28 @@ router.get('/landingurl/all', (req, res) => {
         res.send('nourldata');
       }
     }).catch((err) => {
-      console.log('/landingurl/connectedcampaign - err ', err)
+      console.log('/landingurl/connectedcampaign - err ', err);
     });
+});
+
+router.delete('/landingurl', (req, res) => {
+  const { linkId } = req.body.data;
+  const deleteQuery = `
+  DELETE FROM linkRegistered 
+  WHERE linkId = ?`;
+
+  const deleteQueryArray = [linkId];
+
+  doQuery(deleteQuery, deleteQueryArray)
+    .then((row) => {
+      if (!row.error && row.result.affectedRows > 0) {
+        console.log(`DELETE - landingurl ${linkId}`, row.result);
+        res.send([true]);
+      } else if (row.error || (row.result && row.result.affectedRows) === 0) {
+        res.send([false, '링크 삭제과정 중 오류가 발생했습니다. 본사에 문의하세요.']);
+      }
+    })
+    .catch((err) => { console.log(`Error in DELETE - /landingurl ${err}`); });
 });
 
 router.get('/landingurl/connectedcampaign', (req, res) => {
@@ -34,16 +54,16 @@ router.get('/landingurl/connectedcampaign', (req, res) => {
   const query = `
   SELECT campaignId
   FROM campaign
-  WHERE connectedlinkId = ? AND deletedState = 0`;
+  WHERE connectedlinkId = ?`;
 
   const queryArray = [linkId];
   doQuery(query, queryArray).then((row) => {
     if (!row.error) {
-      res.send(row.result)
+      res.send(row.result);
     }
   }).catch((err) => {
-    console.log('/landingurl/connectedcampaign - err ', err)
-  })
-})
+    console.log('/landingurl/connectedcampaign - err ', err);
+  });
+});
 
 module.exports = router;

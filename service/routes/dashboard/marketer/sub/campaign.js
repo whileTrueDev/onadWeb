@@ -104,6 +104,8 @@ router.delete('/', (req, res) => {
               MARKETER_ACTION_LOG_TYPE, JSON.stringify({ campaignName })]);
           }
         });
+      } else {
+        res.send([false, '캠페인 삭제 오류입니다. 본사에 문의하세요.']);
       }
     })
     .catch((err) => {

@@ -6,7 +6,7 @@ import CustomButton from '../../../atoms/CustomButtons/Button';
 import StyledItemText from '../../../atoms/StyledItemText';
 import Dialog from '../../../atoms/Dialog/Dialog';
 import useFetchData from '../../../utils/lib/hooks/useFetchData';
-import useUpdateData from '../../../utils/lib/hooks/useUpdateData';
+import useDeleteData from '../../../utils/lib/hooks/useDeleteData';
 import history from '../../../history';
 
 const useStyles = makeStyles(theme => ({
@@ -31,7 +31,7 @@ const DeleteDialog = (props) => {
   const {
     open, selectedUrl, handleClose
   } = props;
-  const deleteRequest = useUpdateData('/api/dashboard/marketer/inventory/landingurl/delete');
+  const deleteRequest = useDeleteData('/api/dashboard/marketer/inventory/landingurl');
   const connectedCampaign = useFetchData(
     '/api/dashboard/marketer/inventory/landingurl/connectedcampaign', {
       linkId: selectedUrl.linkId
@@ -63,7 +63,7 @@ const DeleteDialog = (props) => {
             <CustomButton
               color="info"
               onClick={() => {
-                deleteRequest.handleUpdateRequest({ linkId: selectedUrl.linkId });
+                deleteRequest.handleDelete({ linkId: selectedUrl.linkId });
                 setTimeout(() => {
                   handleClose();
                   history.push(window.location.pathname);
@@ -78,19 +78,21 @@ const DeleteDialog = (props) => {
       )}
     >
       <Grid container direction="column" spacing={2}>
-        <Grid item className={classes.center}>
-          {selectedUrl.links.links.map((url) => (
-            <span
-              style={{ overflow: 'hidden', color: 'red', cursor:'pointer', 'textDecoration': 'underline'}}
+        {selectedUrl.links.links.map(url => (
+          <Grid item className={classes.center}>
+            <Typography
+              style={{
+                color: 'red', cursor: 'pointer', textDecoration: 'underline'
+              }}
               onClick={(e) => {
                 e.preventDefault();
                 window.open(url.linkTo);
               }}
             >
               {url.linkName ? url.linkName : url.linkTo }
-            </span>
-          ))}
-        </Grid>
+            </Typography>
+          </Grid>
+        ))}
         {selectedUrl.bannerDenialReason && (
         <Grid item>
           <div>

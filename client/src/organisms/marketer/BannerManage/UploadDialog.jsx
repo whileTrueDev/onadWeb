@@ -23,13 +23,13 @@ const dialogStyle = theme => ({
   },
 });
 
-const useQontoStepIconStyles = makeStyles({
+const useQontoStepIconStyles = makeStyles(theme => ({
   root: {
     color: '#eaeaf0',
     display: 'flex',
   },
   active: {
-    color: '#00acc1',
+    color: theme.palette.primary.main,
   },
   circle: {
     width: 11,
@@ -38,11 +38,11 @@ const useQontoStepIconStyles = makeStyles({
     backgroundColor: 'currentColor',
   },
   completed: {
-    color: '#00acc1',
+    color: theme.palette.primary.main,
     zIndex: 1,
     fontSize: 18,
   },
-});
+}));
 
 function QontoStepIcon(props) {
   const classes = useQontoStepIconStyles();

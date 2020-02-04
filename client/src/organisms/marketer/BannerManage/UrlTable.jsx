@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Typography, Tooltip } from '@material-ui/core';
-import { Delete, OpenInNew, Star } from '@material-ui/icons';
+import { Delete, Star } from '@material-ui/icons';
 import MaterialTable from '../../../atoms/Table/MaterialTable';
 import useFetchData from '../../../utils/lib/hooks/useFetchData';
 
@@ -32,29 +32,34 @@ export default function UrlTable(props) {
       title: '링크이름 및 주소',
       render: rowData => (
         <div>
-          {rowData.links.links.map(link => (
-            <div key={link.linkTo}>
-              <a
-                href={link.linkTo}
-                onClick={(e) => {
-                  e.preventDefault();
-                  window.open(link.linkTo);
-                }}
-              >
-                {link.linkName ? link.linkName : link.linkTo }
-              </a>
-              {link.primary && (
-                <Tooltip title={(
-                  <Typography>
-                  primary링크로, 배너이미지 클릭시 곧바로 연결되는 링크입니다.
-                  </Typography>
-                )}
-                >
-                  <Star color="secondary" />
-                </Tooltip>
-              )}
-            </div>
-          ))}
+          {rowData.links.links.map((link) => {
+            if (link) {
+              return (
+                <div key={link.linkTo}>
+                  <a
+                    href={link.linkTo}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      window.open(link.linkTo);
+                    }}
+                  >
+                    {link.linkName ? link.linkName : link.linkTo }
+                  </a>
+                  {link.primary && (
+                  <Tooltip title={(
+                    <Typography>
+                      primary링크로, 배너이미지 클릭시 곧바로 연결되는 링크입니다.
+                    </Typography>
+                  )}
+                  >
+                    <Star color="secondary" />
+                  </Tooltip>
+                  )}
+                </div>
+              );
+            }
+            return null;
+          })}
         </div>
       ),
     },
