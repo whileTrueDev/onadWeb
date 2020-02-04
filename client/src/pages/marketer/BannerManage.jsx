@@ -15,6 +15,9 @@ import CustomButton from '../../atoms/CustomButtons/Button';
 import BannerTable from '../../organisms/marketer/BannerManage/BannerTable';
 import UploadDialog from '../../organisms/marketer/BannerManage/UploadDialog';
 import DeleteDialog from '../../organisms/marketer/BannerManage/DeleteDialog';
+import UrlTable from '../../organisms/marketer/BannerManage/UrlTable';
+import UrlUploadDialog from '../../organisms/marketer/BannerManage/UrlUploadDialog';
+import UrlDeleteDialog from '../../organisms/marketer/BannerManage/UrlDeleteDialog';
 
 // core ../../atoms
 import dashboardStyle from '../../assets/jss/onad/views/dashboardStyle';
@@ -55,8 +58,13 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const BannerManage = () => {
+  // banner
   const deleteDialog = useDialog();
   const uploadDialog = useDialog();
+  // landing url
+  const urlDeleteDialog = useDialog();
+  const urlUploadDialog = useDialog();
+
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
 
@@ -67,9 +75,6 @@ const BannerManage = () => {
   return (
     <GridContainer>
       <GridItem xs={12} xl={11}>
-        <CustomButton color="info" size="lg" onClick={() => { uploadDialog.handleOpen(); }}>
-          + 새 배너 등록
-        </CustomButton>
         <div className={classes.root}>
           <AppBar position="static">
             <Tabs value={value} onChange={handleChange} aria-label="simple tabs example">
@@ -78,14 +83,21 @@ const BannerManage = () => {
             </Tabs>
           </AppBar>
           <TabPanel value={value} index={0}>
+            <CustomButton color="info" size="lg" onClick={() => { uploadDialog.handleOpen(); }}>
+              + 새 배너 등록
+            </CustomButton>
             <BannerTable handleDeleteOpen={deleteDialog.handleOpen} />
           </TabPanel>
           <TabPanel value={value} index={1}>
-            URL 인벤토리
+            <CustomButton color="info" size="lg" onClick={() => { urlUploadDialog.handleOpen(); }}>
+              + 새 URL 등록
+            </CustomButton>
+            <UrlTable handleDeleteOpen={urlDeleteDialog.handleOpen} />
           </TabPanel>
         </div>
       </GridItem>
 
+      {/* banner upload, delete dialog */}
       <UploadDialog
         open={uploadDialog.open}
         onClose={uploadDialog.handleClose}
@@ -95,6 +107,19 @@ const BannerManage = () => {
           open={Boolean(deleteDialog.open)}
           selectedBanner={deleteDialog.open}
           handleClose={deleteDialog.handleClose}
+        />
+      )}
+
+      {/* landing url upload, delete dialog */}
+      <UrlUploadDialog
+        open={urlUploadDialog.open}
+        handleClose={urlUploadDialog.handleClose}
+      />
+      {Boolean(urlDeleteDialog.open) && (
+        <UrlDeleteDialog
+          open={Boolean(urlDeleteDialog.open)}
+          selectedUrl={urlDeleteDialog.open}
+          handleClose={urlDeleteDialog.handleClose}
         />
       )}
 

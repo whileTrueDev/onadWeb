@@ -1,10 +1,11 @@
 import React, { useEffect, useReducer } from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 import {
-  Grid, Paper, Collapse
+  Grid, Paper, Collapse, Button
 } from '@material-ui/core';
-import Button from '../../atoms/CustomButtons/Button';
 import ProrityPaper from '../../organisms/marketer/CampaignCreate/PriorityPaper';
 import OptionPaper from '../../organisms/marketer/CampaignCreate/OptionPaper';
 import Selector from '../../organisms/marketer/CampaignCreate/StepSelector';
@@ -283,7 +284,7 @@ const CampaignCreateStepper = (props) => {
             <Grid item>
               <Button
                 variant="contained"
-                color="info"
+                color="primary"
                 onClick={handleNext(_step)}
                 className={classes.end}
               >
@@ -298,7 +299,7 @@ const CampaignCreateStepper = (props) => {
             <Grid item>
               <Button
                 variant="contained"
-                color="info"
+                color="primary"
                 onClick={handleNext(_step)}
                 className={classes.end}
               >
@@ -313,7 +314,7 @@ const CampaignCreateStepper = (props) => {
             <Grid item>
               <Button
                 variant="contained"
-                color="info"
+                color="primary"
                 onClick={handleSubmit}
                 className={classes.end}
               >
@@ -337,81 +338,105 @@ const CampaignCreateStepper = (props) => {
   //   }
   // }, [step1State.option, step2State.priorityType]);
 
+  const isDesktop = useMediaQuery(theme => theme.breakpoints.up('md'));
+
   return (
     <Grid container direction="row" spacing={2} wrap="wrap">
-      <Grid item xs={2}>
-        <Selector
-          handleButton={handleButton}
-        />
-      </Grid>
-      <Grid item xs={10}>
-        <Paper className={classes.paper}>
-          <Grid container direction="column" className={classes.root}>
-            <Grid item>
-              <OptionPaper
-                setStepComplete={setStepComplete}
-                handleSubmitCheck={handleSubmitCheck}
-                priorityOpen={priorityOpen}
-                state={step1State}
-                dispatch={step1Dispatch}
-                selectedCategory={checkedGames}
-                setPriorityOpen={setPriorityOpen}
-              />
-              {priorityOpen
-                ? (
-                  <div>
-                    <ProrityPaper
-                      handleNext={handleNext}
-                      state={step2State}
-                      dispatch={step2Dispatch}
-                      setStepComplete={setStepComplete}
-                      creationOpen={creationOpen}
-                      creatorList={creatorList}
-                      checkedCreators={checkedCreators}
-                      checkedCreatorsDispatch={checkedCreatorsDispatch}
-                      handleBack={handleBack}
-                      stepComplete={stepComplete}
-                      checkedGames={checkedGames}
-                      checkedGamesDispatch={checkedGamesDispatch}
-                      priorityOpen={priorityOpen}
-                      createPaperOpen={createPaperOpen}
-                    />
-                  </div>
-                ) : <div />}
-              {createPaperOpen
-                ? (
-                  <div>
-                    <CampaignCreateTable
-                      bannerList={bannerList}
-                      dispatch={step3Dispatch}
-                      setStepComplete={setStepComplete}
-                      state={step3State}
-                      setDetailOpen={setDetailOpen}
-                      detailOpen={detailOpen}
-                      step1State={step1State}
-                      handleDetailOpen={handleDetailOpen}
-                      handleDateOpen={handleDateOpen}
-                      dateOpen={dateOpen}
-                      handleSetLandingUrlState={handleSetLandingUrlState}
-                      handleDatePickerOpen={handleDatePickerOpen}
-                      datePickerOpen={datePickerOpen}
-                    />
-                  </div>
-                ) : <div />}
-            </Grid>
-            <Grid item>
-              <Grid container direction="row">
-                <Grid item>
-                  <Button onClick={handleBack} className={classes.button}>
-                  뒤로
-                  </Button>
-                </Grid>
-                {nextButton(step)}
-              </Grid>
-            </Grid>
+      {isDesktop ? (
+        <React.Fragment>
+          <Grid item xs={2}>
+            <Selector handleButton={handleButton} />
           </Grid>
-        </Paper>
-      </Grid>
+          <Grid item xs={isDesktop ? 10 : 12}>
+            <Paper className={classes.paper}>
+              <Grid container direction="column" className={classes.root}>
+                <Grid item>
+                  <OptionPaper
+                    setStepComplete={setStepComplete}
+                    handleSubmitCheck={handleSubmitCheck}
+                    priorityOpen={priorityOpen}
+                    state={step1State}
+                    dispatch={step1Dispatch}
+                    selectedCategory={checkedGames}
+                    setPriorityOpen={setPriorityOpen}
+                  />
+                  {priorityOpen
+                    ? (
+                      <div>
+                        <ProrityPaper
+                          handleNext={handleNext}
+                          state={step2State}
+                          dispatch={step2Dispatch}
+                          setStepComplete={setStepComplete}
+                          creationOpen={creationOpen}
+                          creatorList={creatorList}
+                          checkedCreators={checkedCreators}
+                          checkedCreatorsDispatch={checkedCreatorsDispatch}
+                          handleBack={handleBack}
+                          stepComplete={stepComplete}
+                          checkedGames={checkedGames}
+                          checkedGamesDispatch={checkedGamesDispatch}
+                          priorityOpen={priorityOpen}
+                          createPaperOpen={createPaperOpen}
+                        />
+                      </div>
+                    ) : <div />}
+                  {createPaperOpen
+                    ? (
+                      <div>
+                        <CampaignCreateTable
+                          bannerList={bannerList}
+                          dispatch={step3Dispatch}
+                          setStepComplete={setStepComplete}
+                          state={step3State}
+                          setDetailOpen={setDetailOpen}
+                          detailOpen={detailOpen}
+                          step1State={step1State}
+                          handleDetailOpen={handleDetailOpen}
+                          handleDateOpen={handleDateOpen}
+                          dateOpen={dateOpen}
+                          handleSetLandingUrlState={handleSetLandingUrlState}
+                          handleDatePickerOpen={handleDatePickerOpen}
+                          datePickerOpen={datePickerOpen}
+                        />
+                      </div>
+                    ) : <div />}
+                </Grid>
+                <Grid item>
+                  <Grid container direction="row">
+                    <Grid item>
+                      <Button onClick={handleBack} className={classes.button}>
+                        뒤로
+                      </Button>
+                    </Grid>
+                    {nextButton(step)}
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Paper>
+          </Grid>
+        </React.Fragment>
+      ) : (
+        <div style={{
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '80vh',
+          width: '100%'
+        }}
+        >
+          <h4>캠페인 생성은 데스크탑에서 진행해주세요.</h4>
+          <Button
+            variant="contained"
+            color="primary"
+            component={Link}
+            to="/dashboard/marketer/main"
+          >
+          대시보드로 이동
+          </Button>
+        </div>
+      )}
     </Grid>
   );
 };

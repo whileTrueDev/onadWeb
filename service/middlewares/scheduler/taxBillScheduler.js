@@ -14,14 +14,13 @@ const FAIL_STATE = 2; // '미발행' 상태값
 function getInsertData() {
   // 전월 날짜 구하기.
   const previousMonthObject = new Date();
-  previousMonthObject.setMonth(-1);
+  previousMonthObject.setMonth(previousMonthObject.getMonth() - 1);
   let previousMonth;
-  if ((previousMonthObject.getDate() + 1).toString().length < 2) {
+  if ((previousMonthObject.getMonth() + 1).toString().length < 2) {
     previousMonth = `${previousMonthObject.getFullYear()}-0${previousMonthObject.getMonth() + 1}-00`;
   } else {
     previousMonth = `${previousMonthObject.getFullYear()}-${previousMonthObject.getMonth() + 1}-00`;
   }
-
   return new Promise((resolve, reject) => {
     // 모든 마케터를 가져오는 쿼리.
     const getMarketersQuery = 'SELECT marketerId FROM marketerInfo';
@@ -54,8 +53,8 @@ function getInsertData() {
 
           marketerIds.forEach((id, index) => {
             // date에 전월 할당
-            marketerInfo[index].date = previousMonth;
-            marketerCharge.forEach((m) => {
+              marketerInfo[index].date = previousMonth;
+              marketerCharge.forEach((m) => {
               // 캐시내역 없는 경우 기본값 0 추가
               if (!marketerInfo[index].cashAmount) {
                 marketerInfo[index].cashAmount = 0;
@@ -98,29 +97,30 @@ function updateFail() {
 
 const scheduler = schedule.scheduleJob(
   'Marketer taxbill scheduler', '1 10 1 * *', () => {
-  // 삽입할 데이터 가져오기
-    getInsertData().then((data) => {
-      // 삽입 쿼리 생성
-      const q = makeInsertQuery(data);
-
-      // 이전 월, '발행 대기', 삽입 작업.
-      doQuery(q.queryString, q.queryArray).then(() => {
-        slack.push('마케터 세금계산서 데이터 Insert 완료.', '마케터 세금계산서');
-      }).catch((err) => {
-        console.log(err);
-        slack.push('마케터 세금계산서 데이터 Insert 중 오류발생함.', '마케터 세금계산서');
-      });
-    });
-
     // 전전월의 발행대기 => 미발행으로 변경 작업.
     updateFail()
-      .then(() => {
-        slack.push('마케터 세금계산서 미발행처리 완료.', '마케터 세금계산서');
-      })
-      .catch((err) => {
-        console.log(err);
-        slack.push('마케터 세금계산서 미발행처리 중 오류발생함.', '마케터 세금계산서');
+    .then(() => {
+      slack.push('마케터 세금계산서 미발행처리 완료.', '마케터 세금계산서');
+
+      // 삽입할 데이터 가져오기
+      getInsertData().then((data) => {
+        // 삽입 쿼리 생성
+        const q = makeInsertQuery(data);
+
+        // 이전 월, '발행 대기', 삽입 작업.
+        doQuery(q.queryString, q.queryArray).then(() => {
+          slack.push('마케터 세금계산서 데이터 Insert 완료.', '마케터 세금계산서');
+        }).catch((err) => {
+          console.log(err);
+          slack.push('마케터 세금계산서 데이터 Insert 중 오류발생함.', '마케터 세금계산서');
+        });
       });
+    })
+    .catch((err) => {
+      console.log(err);
+      slack.push('마케터 세금계산서 미발행처리 중 오류발생함.', '마케터 세금계산서');
+    });
+
   }
 );
 module.exports = scheduler;

@@ -12,7 +12,7 @@ const marketerActionLogging = require('../../../middlewares/marketerActionLog');
 const notificationRouter = require('./sub/notification');
 const reportRouter = require('./sub/report');
 const geoRouter = require('./sub/geo');
-
+const inventoryRoute = require('./sub/inventory');
 
 const router = express.Router();
 
@@ -30,6 +30,7 @@ router.use('/notification', notificationRouter);
 router.use('/report', reportRouter);
 router.use('/geo', geoRouter);
 router.use('/creatordetail', creatordetailRoute);
+router.use('/inventory', inventoryRoute);
 
 
 // 캠페인 온오프 조회
