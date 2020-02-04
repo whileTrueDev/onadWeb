@@ -74,7 +74,7 @@ export default function UrlTable(props) {
         <MaterialTable
           title={null}
           columns={columns}
-          data={fetchData.payload}
+          data={fetchData.payload === 'nourldata' ? [] : fetchData.payload}
           actions={[
             {
               icon: () => (<Delete />),
