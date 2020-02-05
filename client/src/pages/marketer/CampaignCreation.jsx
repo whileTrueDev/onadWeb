@@ -48,9 +48,8 @@ const step1Reducer = (state, action) => {
       return { ...state, option: 'option1' };
     case 'option2':
       return { ...state, option: 'option2' };
-    case 'reset': {
+    case 'reset':
       return { option: '' };
-    }
     default:
       return state;
   }
@@ -152,7 +151,7 @@ const CampaignCreateStepper = () => {
   const todayDate = new Date(`${new Date().toString().split('GMT')[0]} UTC`).toISOString().split('.')[0];
   const classes = useStyles();
   // 0번째 step에서 사용할 State.
-  const [step1State, step1Dispatch] = useReducer(step1Reducer, { option: '' });
+  const [step1State, step1Dispatch] = useReducer(step1Reducer, { option: 'option1' });
 
   // 1 번째 step에서 사용할 State.
   const [step2State, step2Dispatch] = useReducer(step2Reducer, { priorityType: '' });
