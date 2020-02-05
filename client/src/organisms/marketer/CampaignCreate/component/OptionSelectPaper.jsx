@@ -1,14 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { useTheme, makeStyles } from '@material-ui/core/styles';
 import { Grid, Paper, ButtonBase } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
 import StyledSelectText from '../../../../atoms/StyledSelectText';
 import GreenCheckbox from '../../../../atoms/GreenCheckBox';
 
 const useStyles = makeStyles(theme => ({
+  root: {
+    marginBottom: theme.spacing(3),
+  },
   choiceWrapper: {
     width: '100%',
-    marginBottom: theme.spacing(3),
   },
   choice: {
     width: '100%',
@@ -21,30 +23,49 @@ const useStyles = makeStyles(theme => ({
 
 export default function OptionSelectPaper(props) {
   const {
-    name, checked, handleOptionSelect,
-    primaryText, secondaryText, fontColor, ...rest
+    name, checked, handleSelect,
+    primaryText, secondaryText, disabled, children
   } = props;
   const classes = useStyles();
+  const theme = useTheme();
 
 
   return (
-    <ButtonBase
-      name={name}
-      checked={checked}
-      className={classes.choiceWrapper}
-      onClick={handleOptionSelect}
-    >
-      <Paper className={classes.choice} {...rest}>
-        <Grid container alignItems="center" direction="column">
-          <GreenCheckbox
-            name={name}
-            checked={checked}
-            onChange={handleOptionSelect}
-          />
-          <StyledSelectText primary={primaryText} secondary={secondaryText} color={fontColor} />
-        </Grid>
-      </Paper>
-    </ButtonBase>
+    <div className={classes.root}>
+      <ButtonBase
+        name={name}
+        checked={checked}
+        className={classes.choiceWrapper}
+        onClick={handleSelect}
+        disabled={disabled}
+      >
+        <Paper
+          className={classes.choice}
+          style={{
+            backgroundColor: checked ? theme.palette.primary.light : 'inherit',
+            color: checked ? theme.palette.common.white : 'inherit'
+          }}
+          elevation={checked ? 1 : 4}
+        >
+          <div style={{ alignItems: 'center', flexDirection: 'column' }}>
+            <GreenCheckbox
+              name={name}
+              checked={checked}
+              onChange={handleSelect}
+            />
+            <StyledSelectText
+              primary={primaryText}
+              secondary={secondaryText}
+              color={checked ? theme.palette.common.white : 'inherit'}
+            />
+          </div>
+        </Paper>
+      </ButtonBase>
+
+      <div style={{ width: '100%' }}>
+        {children}
+      </div>
+    </div>
   );
 }
 
@@ -52,12 +73,13 @@ OptionSelectPaper.propTypes = {
   name: PropTypes.string.isRequired,
   primaryText: PropTypes.string.isRequired,
   secondaryText: PropTypes.string.isRequired,
-  handleOptionSelect: PropTypes.func.isRequired,
+  handleSelect: PropTypes.func,
   checked: PropTypes.bool,
-  fontColor: PropTypes.string
+  disabled: PropTypes.bool,
 };
 
 OptionSelectPaper.defaultProps = {
   checked: false,
-  fontColor: null,
+  handleSelect() {},
+  disabled: false,
 };
