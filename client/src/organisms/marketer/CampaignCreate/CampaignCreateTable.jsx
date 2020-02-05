@@ -8,11 +8,11 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import {
-  Divider
+  Divider, Grid, Typography
 } from '@material-ui/core';
+import Button from '@material-ui/core/Button';
 
 import StyledItemText from '../../../atoms/StyledItemText';
-import Button from '../../../atoms/CustomButtons/Button';
 import CampaignNaming from './CampaignNaming';
 import CampaignBannerReg from './CampaignBannerReg';
 import LandingUrlInput from './LandingUrlInput';
@@ -89,7 +89,7 @@ const CampaignCreateTable = (props) => {
               <Button
                 onClick={() => { window.open(`${window.location.protocol}//${window.location.host}/dashboard/marketer/banner`); }}
               >
-                나의 인벤토리
+                + 나의 인벤토리
               </Button>
             </StyledTableCell>
           </StyledTableRow>
@@ -103,12 +103,16 @@ const CampaignCreateTable = (props) => {
                   dispatch={dispatch}
                   state={state}
                 />
-                <StyledItemText>등록된 URL을 보고싶으신가요?</StyledItemText>
-                <Button
-                  onClick={() => { window.open(`${window.location.protocol}//${window.location.host}/dashboard/marketer/banner`); }}
-                >
-                나의 인벤토리
-                </Button>
+                <Grid container direction="row" spacing={3}>
+                  <Grid item>
+                    <StyledItemText>등록된 URL을 보고싶으신가요?</StyledItemText>
+                    <Button
+                      onClick={() => { window.open(`${window.location.protocol}//${window.location.host}/dashboard/marketer/banner`); }}
+                    >
+                      + 나의 인벤토리
+                    </Button>
+                  </Grid>
+                </Grid>
                 <Divider component="hr" style={{ height: '2px' }} />
 
               </StyledTableCell>

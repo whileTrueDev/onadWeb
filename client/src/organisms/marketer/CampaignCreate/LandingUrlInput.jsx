@@ -1,11 +1,17 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import {
-  Grid, InputLabel, Input, FormHelperText, FormControl, FormControlLabel, Checkbox
+  Grid, InputLabel, Input, FormHelperText, FormControl, FormControlLabel, Checkbox, TextField, Collapse
 } from '@material-ui/core';
 
 const formStyle = theme => ({
   input: {
+    fontSize: '14px',
+    fontWeight: '700',
+    color: '#3c4858',
+    margin: '4px'
+  },
+  inputName: {
     fontSize: '14px',
     fontWeight: '700',
     color: '#3c4858',
@@ -14,7 +20,7 @@ const formStyle = theme => ({
     fontSize: '20px',
     fontWeight: '700',
     color: '#00acc1',
-    marginBottom: '7px',
+    margin: '3px',
   },
 });
 
@@ -37,8 +43,13 @@ const CssFormControl = withStyles({
 
 const LandingUrlInput = (props) => {
   const { classes, dispatch, } = props;
+  const [subOpen, setSubOpen] = React.useState(false);
   const [sub1CloseState, setSub1CloseState] = React.useState(true);
   const [sub2CloseState, setSub2CloseState] = React.useState(true);
+
+  const handleSubOpen = () => {
+    setSubOpen(!subOpen);
+  };
 
   const handleCloseState = (event) => {
     const targetId = event.target.id;
@@ -54,7 +65,25 @@ const LandingUrlInput = (props) => {
       default: { return false; }
     }
   };
-
+  const handleUrlName = (event) => {
+    switch (event.target.id) {
+      case 'main-url-name':
+      { dispatch({ key: 'mainLandingUrlName', value: event.target.value });
+        return false;
+      }
+      case 'sub-url1-name':
+      { dispatch({ key: 'sub1LandingUrlName', value: event.target.value });
+        return false;
+      }
+      case 'sub-url2-name':
+      {
+        dispatch({ key: 'sub2LandingUrlName', value: event.target.value });
+        return false;
+      }
+      default:
+      { return false; }
+    }
+  };
   const handleUrlChange = (event) => {
     switch (event.target.id) {
       case 'main-url':
@@ -78,77 +107,127 @@ const LandingUrlInput = (props) => {
 
   return (
     <Grid container direction="column" spacing={3}>
+      <InputLabel shrink htmlFor="company" className={classes.label}>MAIN URL</InputLabel>
       <Grid item>
-        <CssFormControl
+        <InputLabel shrink htmlFor="company">URL 이름</InputLabel>
+        <Input
           required
-        >
-          <InputLabel shrink htmlFor="company" className={classes.label}> MAIN URL</InputLabel>
-          <Input
-            required
-            defaultValue="https://"
-            type="url"
-            id="main-url"
-            className={classes.input}
-            onChange={handleUrlChange}
-          />
-
-          <FormHelperText>랜딩페이지를 통해 접속할 웹페이지를 작성해주세요</FormHelperText>
-        </CssFormControl>
-      </Grid>
-
-      <Grid item>
-        <InputLabel shrink htmlFor="company" className={classes.label}> SUB URL</InputLabel>
-
-        Sub1.
+          label="Url 이름"
+          id="main-url-name"
+          className={classes.input}
+          onChange={handleUrlName}
+        />
+        <InputLabel shrink htmlFor="company">URL 주소*</InputLabel>
         <Input
+          required
+          label="Url 주소"
           defaultValue="https://"
           type="url"
-          id="sub-url1"
+          id="main-url"
           className={classes.input}
           onChange={handleUrlChange}
-          disabled={sub1CloseState}
         />
+        <FormHelperText>랜딩페이지를 통해 접속할 웹페이지를 작성해주세요</FormHelperText>
+      </Grid>
+
+      <Grid item style={{ margin: '10px' }}>
         <FormControlLabel
           control={(
             <Checkbox
               color="primary"
-              id="sub-url1-checkbox"
-              checked={sub1CloseState}
-              onChange={handleCloseState}
+              checked={!subOpen}
+              onChange={handleSubOpen}
               fontSize="small"
               style={{ padding: '3px' }}
             />
                   )}
-          label="미설정"
-          labelPlacement="start"
-        />
-      </Grid>
-      <Grid item>
-        Sub2.
-        <Input
-          defaultValue="https://"
-          type="url"
-          id="sub-url2"
-          className={classes.input}
-          onChange={handleUrlChange}
-          disabled={sub2CloseState}
-        />
-        <FormControlLabel
-          control={(
-            <Checkbox
-              color="primary"
-              id="sub-url2-checkbox"
-              checked={sub2CloseState}
-              onChange={handleCloseState}
-              fontSize="small"
-              style={{ padding: '3px' }}
-            />
-                  )}
-          label="미설정"
-          labelPlacement="start"
+          label="SUB URL 설정"
+          labelPlacement="end"
         />
       </Grid>
 
+      <Collapse in={subOpen}>
+        <Grid item>
+          <InputLabel shrink htmlFor="company" className={classes.label}>SUB URL</InputLabel>
+          <Grid container direction="row">
+            <Grid item>
+              <InputLabel shrink htmlFor="company">Sub1 URL 이름</InputLabel>
+              <Input
+                required
+                label="Url 이름"
+                id="sub-url1-name"
+                className={classes.input}
+                onChange={handleUrlName}
+                disabled={sub1CloseState}
+              />
+            </Grid>
+            <Grid item>
+              <InputLabel shrink htmlFor="company">Sub1 URL 주소</InputLabel>
+              <Input
+                defaultValue="https://"
+                type="url"
+                id="sub-url1"
+                className={classes.input}
+                onChange={handleUrlChange}
+                disabled={sub1CloseState}
+              />
+            </Grid>
+            <FormControlLabel
+              control={(
+                <Checkbox
+                  color="primary"
+                  id="sub-url1-checkbox"
+                  checked={sub1CloseState}
+                  onChange={handleCloseState}
+                  fontSize="small"
+                  style={{ padding: '3px' }}
+                />
+                  )}
+              label="미설정"
+              labelPlacement="start"
+            />
+          </Grid>
+
+          <Grid container direction="row">
+            <Grid item>
+              <InputLabel shrink htmlFor="company">Sub2 URL 이름</InputLabel>
+              <Input
+                required
+                label="Url 이름"
+                id="sub-url2-name"
+                className={classes.input}
+                onChange={handleUrlName}
+                disabled={sub2CloseState}
+              />
+            </Grid>
+            <Grid item>
+              <InputLabel shrink htmlFor="company">Sub2 URL 주소</InputLabel>
+              <Input
+                defaultValue="https://"
+                type="url"
+                id="sub-url2"
+                className={classes.input}
+                onChange={handleUrlChange}
+                disabled={sub2CloseState}
+              />
+            </Grid>
+            <FormControlLabel
+              control={(
+                <Checkbox
+                  color="primary"
+                  id="sub-url2-checkbox"
+                  checked={sub2CloseState}
+                  onChange={handleCloseState}
+                  fontSize="small"
+                  style={{ padding: '3px' }}
+                />
+                  )}
+              label="미설정"
+              labelPlacement="start"
+            />
+          </Grid>
+        </Grid>
+      </Collapse>
     </Grid>
   );
 };

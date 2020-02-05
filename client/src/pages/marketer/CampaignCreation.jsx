@@ -115,6 +115,12 @@ const step3Reducer = (state, action) => {
       return { ...state, keyword1: action.value };
     case 'keyword2':
       return { ...state, keyword2: action.value };
+    case 'mainLandingUrlName':
+      return { ...state, mainLandingUrlName: action.value };
+    case 'sub1LandingUrlName':
+      return { ...state, sub1LandingUrlName: action.value };
+    case 'sub2LandingUrlName':
+      return { ...state, sub2LandingUrlName: action.value };
     case 'mainLandingUrl':
       return { ...state, mainLandingUrl: action.value };
     case 'sub1LandingUrl':
@@ -171,7 +177,12 @@ const CampaignCreateStepper = () => {
     keyword0: '',
     keyword1: '',
     keyword2: '',
-    links: [],
+    mainLandingUrlName: '',
+    sub1LandingUrlName: '',
+    sub2LandingUrlName: '',
+    mainLandingUrl: '',
+    sub1LandingUrl: '',
+    sub2LandingUrl: '',
     keywords: [],
     time: []
   });
@@ -223,6 +234,12 @@ const CampaignCreateStepper = () => {
       campaignName: step3State.campaignName,
       bannerId: step3State.bannerId,
       budget: step3State.budget,
+      mainLandingUrlName: step3State.mainLandingUrlName,
+      sub1LandingUrlName: step3State.sub1LandingUrlName,
+      sub2LandingUrlName: step3State.sub2LandingUrlName,
+      mainUrl: step3State.mainLandingUrl,
+      sub1Url: step3State.sub1LandingUrl,
+      sub2Url: step3State.sub2LandingUrl,
       startDate: step3State.startDate,
       finDate: step3State.finDate,
       keyword0: step3State.keyword0,
@@ -268,7 +285,6 @@ const CampaignCreateStepper = () => {
       priorityList,
       step3State.time
     ];
-
     checkEmpty(validateArray);
 
     axios.post(`${HOST}/api/dashboard/marketer/campaign/push`, {
@@ -282,10 +298,14 @@ const CampaignCreateStepper = () => {
       keyword0: step3State.keyword0,
       keyword1: step3State.keyword1,
       keyword2: step3State.keyword2,
+      mainLandingUrlName: step3State.mainLandingUrlName,
+      sub1LandingUrlName: step3State.sub1LandingUrlName,
+      sub2LandingUrlName: step3State.sub2LandingUrlName,
       mainLandingUrl: step3State.mainLandingUrl,
       sub1LandingUrl: step3State.sub1LandingUrl,
       sub2LandingUrl: step3State.sub2LandingUrl,
-      priorityList
+      priorityList,
+      selectedTime: step3State.time
     })
       .then((res) => {
         alert(res.data[1]);
@@ -501,6 +521,7 @@ const CampaignCreateStepper = () => {
                       <div>
                         <ProrityPaper
                           handleNext={handleNext}
+                          step1State={step1State}
                           state={step2State}
                           dispatch={step2Dispatch}
                           setStepComplete={setStepComplete}
