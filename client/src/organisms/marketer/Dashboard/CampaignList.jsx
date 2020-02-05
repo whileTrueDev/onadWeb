@@ -12,7 +12,6 @@ import { Assessment, Delete as DeleteIcon, Build } from '@material-ui/icons';
 import CloseIcon from '@material-ui/icons/Close';
 import IOSSwitch from '../../../atoms/Switch/IOSSwitch';
 
-import CampaignCreateDialog from './campaign/CampaignCreateDialog';
 import CampaignDeleteConfirmDialog from './campaign/CampaignDeleteConfirmDialog';
 import CampaignUpdateDialog from './campaign/CampaignUpdateDialog';
 
@@ -85,7 +84,6 @@ export default function CampaignList(props) {
       });
   };
   // To open campaign create dialog
-  const campaignCreateDialog = useDialog();
   const campaignUpdateDialog = useDialog();
   const campaignDeleteDialog = useDialog();
   const campaignReportDialog = useDialog();
@@ -263,12 +261,6 @@ export default function CampaignList(props) {
             <CloseIcon />
           </IconButton>,
         ]}
-      />
-
-      {/* 캠페인 생성 클릭시 다이얼로그 */}
-      <CampaignCreateDialog
-        open={campaignCreateDialog.open}
-        handleClose={campaignCreateDialog.handleClose}
       />
 
       {/* 캠페인 분석 다이얼로그 (full screen) */}
