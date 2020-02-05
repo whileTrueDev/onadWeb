@@ -200,7 +200,7 @@ const CampaignCreateStepper = () => {
   const [dateOpen, setDateOpen] = React.useState(false);
   const [step, setStep] = React.useState(0);
   const [checkName, setCheckName] = React.useState(false);
-
+  const [budgetError, setBudgetError] = React.useState(false);
   // const isTrue = currentValue => currentValue === true;
 
   const checkEmpty = (input) => {
@@ -222,6 +222,10 @@ const CampaignCreateStepper = () => {
     }
     if (input[0] !== 'type0' && (input[10].replace('https://').length === 0 || input[10].replace('http://').length === 0)) {
       alert('랜딩페이지 URL이 입력되지 않았습니다.');
+      return false;
+    }
+    if (budgetError) {
+      alert('일예산이 입력되지 않았습니다.');
       return false;
     }
     return true;
@@ -247,8 +251,9 @@ const CampaignCreateStepper = () => {
       keyword0: step3State.keyword0,
       keyword1: step3State.keyword1,
       keyword2: step3State.keyword2,
-      time: step3State.time
-    });
+      time: step3State.time,
+    },
+    detailOpen === budgetError);
 
     const priorityList = ((type) => {
       switch (type) {
@@ -560,6 +565,8 @@ const CampaignCreateStepper = () => {
                           handleDatePickerOpen={handleDatePickerOpen}
                           datePickerOpen={datePickerOpen}
                           getBannerList={getBannerList}
+                          budgetError={budgetError}
+                          setBudgetError={setBudgetError}
                         />
                       </div>
                     ) : <div />}

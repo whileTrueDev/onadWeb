@@ -54,7 +54,8 @@ const CampaignCreateTable = (props) => {
   const classes = useStyles();
   const {
     bannerList, handleBannerId, handleDetailOpen, detailOpen, step1State,
-    state, dispatch, handleDateOpen, dateOpen, setCheckName, checkName, getBannerList
+    state, dispatch, handleDateOpen, dateOpen, setCheckName, checkName, getBannerList,
+    budgetError, setBudgetError
   } = props;
   const [timeSelectorOpen, setTimeSelectorOpen] = React.useState(false);
   const createPage = true;
@@ -144,6 +145,8 @@ const CampaignCreateTable = (props) => {
                   <BudgetInput
                     state={state}
                     dispatch={dispatch}
+                    budgetError={budgetError}
+                    setBudgetError={setBudgetError}
                   />
                 ) : (<div />)
               }

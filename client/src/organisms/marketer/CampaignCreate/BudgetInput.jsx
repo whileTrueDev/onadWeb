@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   Grid
 } from '@material-ui/core';
@@ -63,12 +63,14 @@ const useStyles = makeStyles(theme => ({
 
 const BudgetInput = (props) => {
   const classes = useStyles();
-  const { state, dispatch } = props;
+  const {
+    state, dispatch, budgetError, setBudgetError
+  } = props;
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [budgetAnchorEl, setBudgetAnchorEl] = React.useState(null);
 
-  const [error, setError] = React.useState(false); // budget 작성시 한도 체크용 State
+  // const [error, setError] = React.useState(false); // budget 작성시 한도 체크용 State
   // const [total, setTotal] = React.useState();
   // const [exepectedDay, setExcpectedDay] = React.useState(0);
   // const [exepectedViews, setExcpectedViews] = React.useState(0);
@@ -107,14 +109,13 @@ const BudgetInput = (props) => {
   const onChange = (value) => {
     dispatch({ key: 'budget', value: value.value });
     if (Number(value.value) < 5000 && value.value !== '') {
-      setError(true);
+      setBudgetError(true);
     } else {
       // setExcpectedDay(parseInt(Number(value.value) / Number(total / 30), 10));
       // setExcpectedViews(parseInt(Number(value.value) / 2, 10));
-      setError(false);
+      setBudgetError(false);
     }
   };
-
 
   return (
     <Grid container direction="row" spacing={2} className={classes.root}>
@@ -152,7 +153,7 @@ const BudgetInput = (props) => {
               </Grid>
               <Grid item>
                 <DangerTypography>
-                  {error
+                  {budgetError
                     && ('최소 금액보다 작습니다.')
                   }
                 </DangerTypography>
