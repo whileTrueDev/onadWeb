@@ -224,13 +224,15 @@ const CampaignCreateStepper = () => {
       alert('랜딩페이지 URL이 입력되지 않았습니다.');
       return false;
     }
+    return true;
   };
   const handleSubmit = (event) => {
     event.preventDefault();
-    const priorityNum = typeToNum(step2State.priorityType);
+    const priorityType = typeToNum(step2State.priorityType);
+    const optionNumType = typeToNum(step1State.option);
     console.log({
-      optionType: step1State.option,
-      priorityType: priorityNum,
+      optionType: optionNumType,
+      priorityType,
       campaignName: step3State.campaignName,
       bannerId: step3State.bannerId,
       budget: step3State.budget,
@@ -248,8 +250,8 @@ const CampaignCreateStepper = () => {
       time: step3State.time
     });
 
-    const priorityList = ((priorityType) => {
-      switch (priorityType) {
+    const priorityList = ((type) => {
+      switch (type) {
         case 'type0': {
           // 선택된 크리에이터
           return checkedCreators;
@@ -270,7 +272,7 @@ const CampaignCreateStepper = () => {
 
     const validateArray = [
       step1State.option,
-      priorityNum,
+      priorityType,
       step3State.campaignName,
       step3State.budget,
       step3State.bannerId,
@@ -285,32 +287,33 @@ const CampaignCreateStepper = () => {
       priorityList,
       step3State.time
     ];
-    checkEmpty(validateArray);
 
-    axios.post(`${HOST}/api/dashboard/marketer/campaign/push`, {
-      optionType: step1State.option,
-      priorityType: priorityNum,
-      campaignName: step3State.campaignName,
-      bannerId: step3State.bannerId,
-      budget: step3State.budget,
-      startDate: step3State.startDate,
-      finDate: step3State.finDate,
-      keyword0: step3State.keyword0,
-      keyword1: step3State.keyword1,
-      keyword2: step3State.keyword2,
-      mainLandingUrlName: step3State.mainLandingUrlName,
-      sub1LandingUrlName: step3State.sub1LandingUrlName,
-      sub2LandingUrlName: step3State.sub2LandingUrlName,
-      mainLandingUrl: step3State.mainLandingUrl,
-      sub1LandingUrl: step3State.sub1LandingUrl,
-      sub2LandingUrl: step3State.sub2LandingUrl,
-      priorityList,
-      selectedTime: step3State.time
-    })
-      .then((res) => {
-        alert(res.data[1]);
-        // history.push('/dashboard/marketer/main');
-      });
+    if (checkEmpty(validateArray)) {
+      axios.post(`${HOST}/api/dashboard/marketer/campaign/push`, {
+        optionType: optionNumType,
+        priorityType,
+        campaignName: step3State.campaignName,
+        bannerId: step3State.bannerId,
+        budget: step3State.budget,
+        startDate: step3State.startDate,
+        finDate: step3State.finDate,
+        keyword0: step3State.keyword0,
+        keyword1: step3State.keyword1,
+        keyword2: step3State.keyword2,
+        mainLandingUrlName: step3State.mainLandingUrlName,
+        sub1LandingUrlName: step3State.sub1LandingUrlName,
+        sub2LandingUrlName: step3State.sub2LandingUrlName,
+        mainLandingUrl: step3State.mainLandingUrl,
+        sub1LandingUrl: step3State.sub1LandingUrl,
+        sub2LandingUrl: step3State.sub2LandingUrl,
+        priorityList,
+        selectedTime: step3State.time
+      })
+        .then((res) => {
+          alert(res.data[1]);
+          // history.push('/dashboard/marketer/main');
+        });
+    }
   };
 
   // 오래걸리므로 props로 전달.
