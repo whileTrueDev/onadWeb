@@ -108,27 +108,31 @@ const LandingUrlInput = (props) => {
   return (
     <Grid container direction="column" spacing={3}>
       <InputLabel shrink htmlFor="company" className={classes.label}>MAIN URL</InputLabel>
-      <Grid item>
-        <InputLabel shrink htmlFor="company">URL 이름</InputLabel>
-        <Input
-          required
-          label="Url 이름"
-          id="main-url-name"
-          className={classes.input}
-          onChange={handleUrlName}
-        />
-        <InputLabel shrink htmlFor="company">URL 주소*</InputLabel>
-        <Input
-          required
-          label="Url 주소"
-          defaultValue="https://"
-          type="url"
-          id="main-url"
-          className={classes.input}
-          onChange={handleUrlChange}
-        />
-        <FormHelperText>랜딩페이지를 통해 접속할 웹페이지를 작성해주세요</FormHelperText>
+      <Grid container direction="row">
+        <Grid item>
+          <InputLabel shrink htmlFor="company">URL 이름</InputLabel>
+          <Input
+            required
+            label="Url 이름"
+            id="main-url-name"
+            className={classes.input}
+            onChange={handleUrlName}
+          />
+        </Grid>
+        <Grid item>
+          <InputLabel shrink htmlFor="company">URL 주소*</InputLabel>
+          <Input
+            required
+            label="Url 주소"
+            defaultValue="https://"
+            type="url"
+            id="main-url"
+            className={classes.input}
+            onChange={handleUrlChange}
+          />
+        </Grid>
       </Grid>
+      <FormHelperText>랜딩페이지를 통해 접속할 웹페이지를 작성해주세요</FormHelperText>
 
       <Grid item style={{ margin: '10px' }}>
         <FormControlLabel
