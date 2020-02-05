@@ -58,6 +58,7 @@ router.get('/registered', (req, res) => {
   SELECT bannerId, bannerSrc
   FROM bannerRegistered
   WHERE marketerId = ? AND (confirmState = 0 OR confirmState = 1)
+  ORDER BY regiDate DESC 
   `;
   doQuery(bannerQuery, [marketerId])
     .then((row) => {
