@@ -559,6 +559,7 @@ router.post('/push', (req, res) => {
   const {
     optionType, priorityType, campaignName, bannerId, budget, startDate, finDate,
     keyword0, keyword1, keyword2, mainLandingUrl, sub1LandingUrl, sub2LandingUrl,
+    mainLandingUrlName, sub1LandingUrlName, sub2LandingUrlName,
     priorityList, selectedTime
   } = req.body;
   // 현재까지 중에서 최신으로 등록된 켐페인 명을 가져와서 번호를 증가시켜 추가하기 위함.
@@ -590,25 +591,27 @@ router.post('/push', (req, res) => {
         const linkId = `link_${urlId}`;
         const campaignId = getCampaignId(row.result[0], marketerId);
         const limit = budget || -1;
+        const finDateNull = finDate.length !== 0 ? finDate : null;
         const targetJsonData = JSON.stringify({ targetList: priorityList });
+        const timeJsonData = JSON.stringify({ time: selectedTime });
         const landingUrlJsonData = JSON.stringify(
           {
             links:
             [{
-              linkName: '',
+              linkName: mainLandingUrlName,
               linkTo: mainLandingUrl,
               primary: true,
             },
             (sub1LandingUrl
               ? {
-                linkName: '',
+                linkName: sub1LandingUrlName,
                 linkTo: sub1LandingUrl,
                 primary: false,
               } : null
             ),
             (sub2LandingUrl
               ? {
-                linkName: '',
+                linkName: sub2LandingUrlName,
                 linkTo: sub2LandingUrl,
                 primary: false,
               } : null
@@ -625,7 +628,7 @@ router.post('/push', (req, res) => {
           doQuery(saveQuery,
             [campaignId, campaignName, marketerId, bannerId, linkId, limit,
               priorityType, optionType, targetJsonData, marketerName, keywordsJsonData,
-              startDate, finDate, selectedTime]),
+              startDate, finDateNull, timeJsonData]),
           (priorityType !== 0
             ? doQuery(saveToLinkRegistered, [linkId, marketerId, 0, landingUrlJsonData]) : null),
           PriorityDoquery({

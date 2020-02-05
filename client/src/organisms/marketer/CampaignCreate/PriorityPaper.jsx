@@ -64,7 +64,7 @@ const PriorityPaper = (props) => {
   const {
     handleNext, state, dispatch, setStepComplete, creatorList, checkedCreators,
     checkedCreatorsDispatch, handleBack, stepComplete, createPaperOpen,
-    checkedGames, checkedGamesDispatch
+    checkedGames, checkedGamesDispatch, step1State
   } = props;
   const classes = useStyles();
   // const [state, dispatch] = useReducer(myReducer, { choose: 0, type: 0 });
@@ -155,7 +155,7 @@ const PriorityPaper = (props) => {
                   <Paper className={classes.choice}>
                     <Grid container direction="row" justify="space-between">
                       <Grid item>
-                        <StyledSelectText primary="1. 크리에이터 우선형" secondary="원하는 크리에이터에게 광고를 넣을 수 있어요." />
+                        <StyledSelectText primary="크리에이터 우선형" secondary="원하는 크리에이터에게 광고를 넣을 수 있어요." />
                         {/* 광고를 넣고 싶은 크리에이터가 있어요. */}
                       </Grid>
                       <Grid item className={classes.icon}>
@@ -197,49 +197,52 @@ const PriorityPaper = (props) => {
                 </Grid>
 
                 <Grid item>
-                  <Paper className={classes.choice}>
-                    <Grid container direction="row" justify="space-between">
-                      <Grid item>
-                        <StyledSelectText primary="2. 특정게임 선택형" secondary="특정 게임에만 광고를 송출하고 싶으신가요?" />
-                      </Grid>
-                      <Grid item className={classes.icon}>
-                        <Grid container direction="row">
-                          <Grid item className={classes.icon}>
-                            <Help
-                              fontSize="large"
-                              color="disabled"
-                              onMouseEnter={handlePopoverOpen(1)}
-                              onMouseLeave={handlePopoverClose}
-                              aria-owns={open ? 'send-desc-popover' : undefined}
-                              aria-haspopup="true"
-                              name="type2"
-                            />
-                          </Grid>
-                          <Grid item>
-                            <GreenCheckbox
-                              name="type1"
-                              checked={state.priorityType === 'type1'}
-                              onChange={handleChange}
-                              fontSize="large"
-                            />
+                  <Collapse in={step1State.option !== 'option2'}>
+                    <Paper className={classes.choice}>
+                      <Grid container direction="row" justify="space-between">
+                        <Grid item>
+                          <StyledSelectText primary="특정게임 선택형" secondary="특정 게임에만 광고를 송출하고 싶으신가요?" />
+                        </Grid>
+                        <Grid item className={classes.icon}>
+                          <Grid container direction="row">
+                            <Grid item className={classes.icon}>
+                              <Help
+                                fontSize="large"
+                                color="disabled"
+                                onMouseEnter={handlePopoverOpen(1)}
+                                onMouseLeave={handlePopoverClose}
+                                aria-owns={open ? 'send-desc-popover' : undefined}
+                                aria-haspopup="true"
+                                name="type2"
+                              />
+                            </Grid>
+                            <Grid item>
+                              <GreenCheckbox
+                                name="type1"
+                                checked={state.priorityType === 'type1'}
+                                onChange={handleChange}
+                                fontSize="large"
+                              />
+                            </Grid>
                           </Grid>
                         </Grid>
                       </Grid>
-                    </Grid>
-                    <Collapse in={state.priorityType === 'type1'}>
-                      <CategorySelect
-                        setStepComplete={setStepComplete}
-                        checkedGames={checkedGames}
-                        checkedGamesDispatch={checkedGamesDispatch}
-                      />
-                    </Collapse>
-                  </Paper>
+                      <Collapse in={state.priorityType === 'type1'}>
+                        <CategorySelect
+                          setStepComplete={setStepComplete}
+                          checkedGames={checkedGames}
+                          checkedGamesDispatch={checkedGamesDispatch}
+                        />
+                      </Collapse>
+                    </Paper>
+                  </Collapse>
                 </Grid>
+
                 <Grid item>
                   <Paper className={classes.choice}>
                     <Grid container direction="row" justify="space-between">
                       <Grid item>
-                        <StyledSelectText primary="3. 노출 우선형" secondary="단기간에 노출을 많이 하고 싶어요." />
+                        <StyledSelectText primary="노출 우선형" secondary="단기간에 노출을 많이 하고 싶어요." />
                       </Grid>
                       <Grid item className={classes.icon}>
                         <Grid container direction="row">
