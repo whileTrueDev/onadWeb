@@ -318,7 +318,7 @@ const CampaignCreateStepper = () => {
 
   // 오래걸리므로 props로 전달.
   const getBannerList = () => {
-    axios.get(`${HOST}/api/dashboard/marketer/banner/registed`)
+    axios.get(`${HOST}/api/dashboard/marketer/banner/registered`)
       .then((res) => {
         // 올바른 데이터가 전달되었다.
         if (res.data[0]) {
@@ -559,6 +559,7 @@ const CampaignCreateStepper = () => {
                           dateOpen={dateOpen}
                           handleDatePickerOpen={handleDatePickerOpen}
                           datePickerOpen={datePickerOpen}
+                          getBannerList={getBannerList}
                         />
                       </div>
                     ) : <div />}

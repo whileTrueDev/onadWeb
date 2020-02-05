@@ -23,6 +23,8 @@ import DatePicker from './DatePicker';
 import KeywordInput from './KeywordInput';
 import TimeSelector from './TimeSelector';
 import TimeSelectorSet from './TimeSelectorSet';
+import UploadDialog from '../BannerManage/UploadDialog';
+import useDialog from '../../../utils/lib/hooks/useDialog';
 
 const StyledTableCell = withStyles(theme => ({
   head: {
@@ -52,9 +54,12 @@ const CampaignCreateTable = (props) => {
   const classes = useStyles();
   const {
     bannerList, handleBannerId, handleDetailOpen, detailOpen, step1State,
-    state, dispatch, handleDateOpen, dateOpen, setCheckName, checkName
+    state, dispatch, handleDateOpen, dateOpen, setCheckName, checkName, getBannerList
   } = props;
   const [timeSelectorOpen, setTimeSelectorOpen] = React.useState(false);
+  const createPage = true;
+
+  const uploadDialog = useDialog();
 
   const handleTimeSelectorOpen = () => {
     setTimeSelectorOpen(!timeSelectorOpen);
@@ -84,13 +89,9 @@ const CampaignCreateTable = (props) => {
                 bannerList={bannerList}
                 handleBannerId={handleBannerId}
                 dispatch={dispatch}
+                uploadDialog={uploadDialog}
+                getBannerList={getBannerList}
               />
-              <StyledItemText>새로운 배너를 등록하고 싶으신가요?</StyledItemText>
-              <Button
-                onClick={() => { window.open(`${window.location.protocol}//${window.location.host}/dashboard/marketer/banner`); }}
-              >
-                + 나의 인벤토리
-              </Button>
             </StyledTableCell>
           </StyledTableRow>
           {step1State.option !== 'option0' ? (
@@ -186,6 +187,12 @@ const CampaignCreateTable = (props) => {
           </StyledTableRow>
         </TableBody>
       </Table>
+      <UploadDialog
+        open={uploadDialog.open}
+        onClose={uploadDialog.handleClose}
+        createPage={createPage}
+        getBannerList={getBannerList}
+      />
     </TableContainer>
   );
 };

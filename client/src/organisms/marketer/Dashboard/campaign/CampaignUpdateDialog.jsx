@@ -136,7 +136,7 @@ const CampaignUpdateDialog = (props) => {
         if (res.data[0]) {
           snack.handleOpen();
         } else {
-          alert('오류입니다. 본사에 문의하세요');
+          alert('오류입니다. 잠시 후 다시 시도해주세요.');
           history.push('/dashboard/marketer/main');
         }
       });
@@ -150,7 +150,7 @@ const CampaignUpdateDialog = (props) => {
         if (res.data[0]) {
           snack.handleOpen();
         } else {
-          alert('오류입니다. 본사에 문의하세요');
+          alert('오류입니다. 잠시 후 다시 시도해주세요.');
           history.push('/dashboard/marketer/main');
         }
       });

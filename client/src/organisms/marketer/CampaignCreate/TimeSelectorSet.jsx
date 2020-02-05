@@ -20,7 +20,7 @@ const TimeSelectorSet = (props) => {
             fontSize="large"
             // disabled
           />
-          <StyledSelectText onClick={handleTimeSelectorOpen} style={{ cursor: 'pointer' }} primary="시간대 설정 없이 계속 진행" />
+          <StyledSelectText onClick={handleTimeSelectorOpen} style={{ cursor: 'pointer' }} primary="시간대 설정 없이 계속 집행" />
         </Grid>
       </Grid>
       <Grid item>

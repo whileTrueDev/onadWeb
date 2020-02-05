@@ -3,10 +3,10 @@ import {
   Grid, Divider, Typography
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button';
 
 import StyledItemText from '../../../atoms/StyledItemText';
 import BannerCarousel from '../../../atoms/BannerCarousel';
-import Button from '../../../atoms/CustomButtons/Button';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -46,9 +46,10 @@ const useStyles = makeStyles(theme => ({
 
 
 const CampaignBannerReg = (props) => {
-  const { dispatch, bannerList } = props;
+  const {
+    dispatch, bannerList, uploadDialog,
+  } = props;
   const classes = useStyles();
-
   const handleBannerId = (bannerId) => {
     dispatch({ key: 'bannerId', value: bannerId });
   };
@@ -65,17 +66,24 @@ const CampaignBannerReg = (props) => {
             <BannerCarousel steps={bannerList} handleBannerId={handleBannerId} />
           ) : (
             <div>
-              <Typography variant="body1">저장된 배너가 없어요! 먼저 배너를 저장한 이후, 캠페인을 생성해주세요!</Typography>
+              <Typography variant="body1">등록된 배너가 없어요! 먼저 배너를 저장한 이후, 캠페인을 생성해주세요!</Typography>
               <Button
                 color="info"
-                onClick={() => { window.open('/dashboard/marketer/banner'); }}
+                onClick={() => { uploadDialog.handleOpen(); }}
               >
-                  배너등록하러 가기
+                  + 배너 등록하기
               </Button>
             </div>
           )}
         </Grid>
       </Grid>
+      <StyledItemText>새로운 배너를 등록하고 싶으신가요?</StyledItemText>
+
+      <Button
+        onClick={() => { uploadDialog.handleOpen(); }}
+      >
+          + 배너 등록하기
+      </Button>
     </Grid>
   );
 };

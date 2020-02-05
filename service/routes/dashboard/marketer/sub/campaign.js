@@ -105,7 +105,7 @@ router.delete('/', (req, res) => {
           }
         });
       } else {
-        res.send([false, '캠페인 삭제 오류입니다. 본사에 문의하세요.']);
+        res.send([false, '캠페인 삭제 오류입니다. 잠시 후 다시 시도해주세요..']);
       }
     })
     .catch((err) => {
@@ -348,7 +348,6 @@ router.post('/getcategory', (req, res) => {
 const PriorityDoquery = ({
   campaignId, priorityType, priorityList, optionType
 }) => {
-  console.log(campaignId, priorityType, priorityList, optionType);
   const getSearchQuery = (type) => {
     switch (type) {
       case '0': {
@@ -403,7 +402,6 @@ const PriorityDoquery = ({
 
   return Promise.all(
     priorityList.map(async targetId => new Promise((resolve, reject) => {
-      console.log(searchQuery);
       doQuery(searchQuery, [targetId])
         .then((row) => {
           const jsonData = JSON.parse(row.result[0].campaignList);
