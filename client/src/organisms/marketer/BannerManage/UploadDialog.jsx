@@ -2,7 +2,7 @@ import React, { useReducer, useState } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import {
-  Stepper, Step, StepLabel, StepContent, TextField, Typography,
+  Stepper, Step, StepLabel, StepContent,
 } from '@material-ui/core';
 import classnames from 'classnames';
 import Check from '@material-ui/icons/Check';

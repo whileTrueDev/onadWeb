@@ -42,7 +42,7 @@ const CssFormControl = withStyles({
 })(FormControl);
 
 const LandingUrlInput = (props) => {
-  const { classes, dispatch, } = props;
+  const { classes, dispatch, state } = props;
   const [subOpen, setSubOpen] = React.useState(false);
   const [sub1CloseState, setSub1CloseState] = React.useState(true);
   const [sub2CloseState, setSub2CloseState] = React.useState(true);
@@ -115,6 +115,7 @@ const LandingUrlInput = (props) => {
             required
             label="Url 이름"
             id="main-url-name"
+            value={state.mainLandingUrlName}
             className={classes.input}
             onChange={handleUrlName}
           />
@@ -125,6 +126,7 @@ const LandingUrlInput = (props) => {
             required
             label="Url 주소"
             defaultValue="https://"
+            value={state.mainLandingUrl}
             type="url"
             id="main-url"
             className={classes.input}
@@ -160,6 +162,7 @@ const LandingUrlInput = (props) => {
                 required
                 label="Url 이름"
                 id="sub-url1-name"
+                value={state.sub1LandingUrlName}
                 className={classes.input}
                 onChange={handleUrlName}
                 disabled={sub1CloseState}
@@ -171,6 +174,7 @@ const LandingUrlInput = (props) => {
                 defaultValue="https://"
                 type="url"
                 id="sub-url1"
+                value={state.sub1LandingUrl}
                 className={classes.input}
                 onChange={handleUrlChange}
                 disabled={sub1CloseState}
@@ -199,6 +203,7 @@ const LandingUrlInput = (props) => {
                 required
                 label="Url 이름"
                 id="sub-url2-name"
+                value={state.sub2LandingUrlName}
                 className={classes.input}
                 onChange={handleUrlName}
                 disabled={sub2CloseState}
@@ -210,6 +215,7 @@ const LandingUrlInput = (props) => {
                 defaultValue="https://"
                 type="url"
                 id="sub-url2"
+                value={state.sub2LandingUrl}
                 className={classes.input}
                 onChange={handleUrlChange}
                 disabled={sub2CloseState}

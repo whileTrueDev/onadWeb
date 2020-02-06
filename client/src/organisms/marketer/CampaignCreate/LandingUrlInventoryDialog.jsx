@@ -64,24 +64,50 @@ const LandingUrlInventoryDialog = (props) => {
     open, onClose, classes, createPage, getBannerList, fetchData, dispatch, state
   } = props;
 
-  const [indexNum, setIndexNum] = React.useState('');
+  const [indexId, setindexId] = React.useState('');
+  const [tmpMainUrl, setTmpMainUrl] = React.useState('');
+  const [tmpSub1Url, setTmpSub1Url] = React.useState('');
+  const [tmpSub2Url, setTmpSub2Url] = React.useState('');
+  const [tmpMainUrlName, setTmpMainUrlName] = React.useState('');
+  const [tmpSub1UrlName, setTmpSub1UrlName] = React.useState('');
+  const [tmpSub2UrlName, setTmpSub2UrlName] = React.useState('');
 
-  const handleCheck = (index, rowData) => {
-    setIndexNum(index);
-    dispatch({ key: 'mainLandingUrl', value: rowData.links.links[0].linkTo });
-    if (rowData.links.links[1]) { dispatch({ key: 'sub1LandingUrl', value: rowData.links.links[1].linkTo }); }
-    if (rowData.links.links[2]) { dispatch({ key: 'sub2LandingUrl', value: rowData.links.links[2].linkTo }); }
+  const handleCheck = (event, rowData) => {
+    setindexId(event.target.id);
+    console.log(rowData);
+    setTmpMainUrl(rowData.links[0].linkTo);
+    if (rowData.links[1]) {
+      setTmpSub1Url(rowData.links[1].linkTo);
+    }
+    if (rowData.links[2]) {
+      setTmpSub2Url(rowData.links[2].linkTo);
+    }
+    setTmpMainUrlName(rowData.links[0].linkName);
+    if (rowData.links[1]) {
+      setTmpSub1UrlName(rowData.links[1].linkName);
+    }
+    if (rowData.links[2]) {
+      setTmpSub2UrlName(rowData.links[2].linkName);
+    }
   };
 
-  const handleClose = () => {
-    dispatch({ type: 'reset' });
+  const handleClose = (click) => {
+    if (click === 'click') {
+      dispatch({ key: 'mainLandingUrl', value: tmpMainUrl });
+      if (tmpSub1Url) { dispatch({ key: 'sub1LandingUrl', value: tmpSub1Url }); }
+      if (tmpSub2Url) { dispatch({ key: 'sub2LandingUrl', value: tmpSub2Url }); }
+      dispatch({ key: 'mainLandingUrlName', value: tmpMainUrlName });
+      if (tmpSub1UrlName) { dispatch({ key: 'sub1LandingUrlName', value: tmpSub1UrlName }); }
+      if (tmpSub2UrlName) { dispatch({ key: 'sub2LandingUrlName', value: tmpSub2UrlName }); }
+    }
+    setindexId('');
+    setTmpMainUrl('');
+    setTmpSub1Url('');
+    setTmpSub2Url('');
+    setTmpMainUrlName('');
+    setTmpSub1UrlName('');
+    setTmpSub2UrlName('');
     onClose();
-  };
-
-  // url을 제출.
-  const handleSubmit = (event, value) => {
-    event.preventDefault();
-    dispatch({ key: 'mainLandingUrl', value: value.value });
   };
 
   const columns = [
@@ -139,6 +165,19 @@ const LandingUrlInventoryDialog = (props) => {
       ),
     },
     { title: '링크 등록 일자', render: rowData => (<span>{rowData.regiDate}</span>) },
+    {
+      title: '선택',
+      render: rowData => (
+        <div>
+          <GreenCheckbox
+            fontSize="large"
+            id={rowData.linkId}
+            checked={indexId === rowData.linkId}
+            onClick={(event) => { handleCheck(event, rowData.links); }}
+          />
+        </div>
+      ),
+    }
   ];
 
   return (
@@ -163,17 +202,6 @@ const LandingUrlInventoryDialog = (props) => {
                 title={null}
                 columns={columns}
                 data={fetchData.payload}
-                actions={[
-                  {
-                    icon: () => (
-                      <GreenCheckbox
-                        fontSize="large"
-                      />
-                    ),
-                    tooltip: '선택',
-                    onClick: (e, rowData) => { handleCheck(rowData); }
-                  }
-                ]}
                 options={{
                   actionsColumnIndex: -1,
                   search: false
@@ -193,12 +221,13 @@ const LandingUrlInventoryDialog = (props) => {
           </StepContent>
           <Button
             color="primary"
+            onClick={handleClose}
           >
           닫기
           </Button>
           <Button
             color="primary"
-            onClick={() => { console.log(state.mainLandingUrl); }}
+            onClick={() => { handleClose('click'); }}
           >
           확인
           </Button>
