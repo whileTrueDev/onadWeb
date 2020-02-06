@@ -20,8 +20,7 @@ const CampaignTimeSet = (props) => {
             // disabled
           />
           <StyledSelectText
-            onClick={handleDateOpen}
-            style={{ cursor: 'pointer' }}
+            // onClick={handleDateOpen}
             primary="승인일부터 종료일 없이 계속 집행"
           />
         </Grid>
@@ -33,7 +32,7 @@ const CampaignTimeSet = (props) => {
           <GreenCheckbox
             name="set-limit"
             checked={dateOpen === true}
-            onClick={handleDateOpen}
+            // onClick={handleDateOpen}
             fontSize="large"
             disabled // 기능 구현이후 disabled prop 삭제
           />

@@ -18,7 +18,10 @@ const TimeSelectorSet = (props) => {
             // onClick={handleTimeSelectorOpen} // 기능 구현 이후 주석 제거
             fontSize="large"
           />
-          <StyledSelectText onClick={handleTimeSelectorOpen} style={{ cursor: 'pointer' }} primary="시간대 설정 없이 계속 집행" />
+          <StyledSelectText
+            // onClick={handleTimeSelectorOpen}
+            primary="시간대 설정 없이 계속 집행"
+          />
         </Grid>
       </Grid>
       <Grid item>
@@ -30,7 +33,7 @@ const TimeSelectorSet = (props) => {
             name="set-limit"
             checked={timeSelectorOpen === true}
             // onChange={handleChange}
-            onClick={handleTimeSelectorOpen}
+            // onClick={handleTimeSelectorOpen}
             fontSize="large"
             disabled // 기능 구현 이후 disabled prop 삭제
           />
