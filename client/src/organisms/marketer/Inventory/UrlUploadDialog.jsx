@@ -2,7 +2,7 @@ import React from 'react';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import {
   Grid, InputLabel, Input, FormHelperText,
-  FormControlLabel, Checkbox, Collapse, Tooltip
+  FormControlLabel, Checkbox, Collapse
 } from '@material-ui/core';
 import Dialog from '../../../atoms/Dialog/Dialog';
 import Button from '../../../atoms/CustomButtons/Button';
@@ -72,25 +72,21 @@ export default function UrlUploadDialog(props) {
       title="URL 등록"
       buttons={(
         <div style={{ display: 'flex' }}>
-          <Tooltip
-            title="올바른 URL 형식을 적어주세요."
-            open={!(/^(https?|chrome):\/\/[^\s$.?#].[^\s]*$/
-              .test(mainUrl.value))
-            }
+          <Collapse
+            in={(/^(https?|chrome):\/\/[^\s$.?#].[^\s]*$/
+              .test(mainUrl.value))}
           >
-            <div>
-              <Button
-                color="info"
-                disabled={// from https://regexr.com/3um70
+            <Button
+              color="info"
+              disabled={// from https://regexr.com/3um70
                 !(/^(https?|chrome):\/\/[^\s$.?#].[^\s]*$/
                   .test(mainUrl.value))
                 }
-                onClick={handleSubmit} // api 서버에 데이터 전송 | 적재
-              >
+              onClick={handleSubmit}
+            >
               등록
-              </Button>
-            </div>
-          </Tooltip>
+            </Button>
+          </Collapse>
           <Button onClick={handleClose}>취소</Button>
         </div>
       )}
