@@ -85,7 +85,7 @@ router.post('/landingurl/regist', (req, res) => {
   SELECT linkId
     FROM linkRegistered
     WHERE marketerId = ?
-    ORDER BY regiDate DESC
+    ORDER BY linkId DESC
     LIMIT 1`;
   const getLandingUrlArray = [marketerId];
 

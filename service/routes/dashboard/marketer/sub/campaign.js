@@ -509,11 +509,12 @@ const getCampaignId = (result, marketerId) => {
 
 const getUrlId = marketerId => new Promise((resolve, reject) => {
   let urlId = '';
-  const getLandingUrlQuery = `SELECT linkId
-                              FROM linkRegistered
-                              WHERE marketerId = ?
-                              ORDER BY regiDate DESC
-                              LIMIT 1`;
+  const getLandingUrlQuery = `
+  SELECT linkId
+  FROM linkRegistered
+  WHERE marketerId = ?
+  ORDER BY linkId DESC
+  LIMIT 1`;
   doQuery(getLandingUrlQuery, marketerId)
     .then((row) => {
       if (row.result[0]) {
