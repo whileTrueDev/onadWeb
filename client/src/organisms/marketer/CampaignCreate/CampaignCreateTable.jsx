@@ -10,6 +10,7 @@ import Paper from '@material-ui/core/Paper';
 import { Divider } from '@material-ui/core';
 
 import StyledItemText from '../../../atoms/StyledItemText';
+import Button from '../../../atoms/CustomButtons/Button';
 import CampaignNaming from './CampaignNaming';
 import CampaignBannerReg from './CampaignBannerReg';
 import LandingUrlInput from './LandingUrlInput';
@@ -118,7 +119,6 @@ const CampaignCreateTable = (props) => {
                   >
                 나의 인벤토리
                   </Button>
-                  <Divider component="hr" style={{ height: '2px' }} />
 
                 </StyledTableCell>
               </StyledTableRow>

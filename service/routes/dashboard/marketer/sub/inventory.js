@@ -98,16 +98,16 @@ router.post('/landingurl/regist', (req, res) => {
           const lastlinkId = row.result[0].linkId;
           const count = parseInt(lastlinkId.split('_')[2], 10) + 1;
           if (count < 10) {
-            linkId = `${marketerId}_0${count}`;
+            linkId = `link_${marketerId}_0${count}`;
           } else {
-            linkId = `${marketerId}_${count}`;
+            linkId = `link_${marketerId}_${count}`;
           }
         } else { // 해당 마케터가 업로드한 첫 url인 경우
-          linkId = `${marketerId}_01`;
+          linkId = `link_${marketerId}_01`;
         }
 
         // 랜딩페이지URL 적재
-        doQuery(insertQuery, [linkId, marketerId, DEFAULT_CONFIRM_STATE, links])
+        doQuery(insertQuery, [linkId, marketerId, DEFAULT_CONFIRM_STATE, JSON.stringify({ links })])
           .then((row1) => {
             if (!row1.error) {
               res.send([true]);
