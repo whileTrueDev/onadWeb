@@ -73,7 +73,7 @@ const myReducer = (state, action) => {
 
 const UploadDialog = (props) => {
   const {
-    open, onClose, classes, createPage, getBannerList
+    open, onClose, classes, isCampaignPage, recallRequest
   } = props;
   const [state, dispatch] = useReducer(myReducer, { imageName: '', imageUrl: DEFAULT_IMAGE_PATH });
   const [activeStep, setStep] = useState(0);
@@ -104,9 +104,9 @@ const UploadDialog = (props) => {
       .then((res) => {
         if (res.data[0]) {
           alert(res.data[1]);
-          if (!createPage) {
+          if (!isCampaignPage) {
             history.push(window.location.pathname);
-          } else { getBannerList(); }
+          } else { recallRequest(); }
         } else {
           alert('현재는 등록할 수 없습니다. 잠시 후 다시 시도해주세요.');
         }

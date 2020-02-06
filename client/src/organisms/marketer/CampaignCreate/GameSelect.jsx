@@ -67,7 +67,7 @@ const GameSelect = (props) => {
 
         <Grid container spacing={2} style={{ flexWrap: 'wrap' }}>
           {gamesData.payload.slice(0, 12).map(game => (
-            <Grid item xs={4} md={3} xl={2}>
+            <Grid key={game.gameId} item xs={4} md={3} xl={2}>
               <GameCard
                 gameName={game.gameName}
                 gameNameKr={game.gameNameKr}
@@ -98,7 +98,7 @@ const GameSelect = (props) => {
                 }}
               >
                 {gamesData.payload.slice(12, gamesData.payload.length).map(game => (
-                  <option value={game.gameName}>{game.gameNameKr}</option>
+                  <option key={game.gameId} value={game.gameName}>{game.gameNameKr}</option>
                 ))}
               </Select>
             </FormControl>

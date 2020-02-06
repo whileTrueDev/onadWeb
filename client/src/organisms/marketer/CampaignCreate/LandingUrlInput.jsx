@@ -4,6 +4,8 @@ import {
   Grid, InputLabel, Input, FormHelperText,
   FormControlLabel, Checkbox, Collapse
 } from '@material-ui/core';
+import StyledItemText from '../../../atoms/StyledItemText';
+import Button from '../../../atoms/CustomButtons/Button';
 
 const formStyle = theme => ({
   input: {
@@ -26,8 +28,10 @@ const formStyle = theme => ({
 });
 
 const LandingUrlInput = (props) => {
-  const { classes, dispatch, state } = props;
-  const [subOpen, setSubOpen] = React.useState(false);
+  const {
+    classes, handleDialogOpen, dispatch, state
+  } = props;
+  const [subOpen, setSubOpen] = React.useState(true);
   // const [sub1CloseState, setSub1CloseState] = React.useState(true);
   // const [sub2CloseState, setSub2CloseState] = React.useState(true);
 
@@ -219,6 +223,13 @@ const LandingUrlInput = (props) => {
           </Grid>
         </Grid>
       </Collapse>
+
+      <Grid item>
+        <StyledItemText>등록된 URL을 보고싶으신가요?</StyledItemText>
+        <Button onClick={handleDialogOpen}>
+          나의 인벤토리
+        </Button>
+      </Grid>
     </Grid>
   );
 };

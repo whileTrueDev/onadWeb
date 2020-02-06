@@ -7,9 +7,6 @@ import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-
-import StyledItemText from '../../../atoms/StyledItemText';
-import Button from '../../../atoms/CustomButtons/Button';
 import CampaignNaming from './CampaignNaming';
 import CampaignBannerReg from './CampaignBannerReg';
 import LandingUrlInput from './LandingUrlInput';
@@ -20,7 +17,7 @@ import DatePicker from './DatePicker';
 import KeywordInput from './KeywordInput';
 import TimeSelector from './TimeSelector';
 import TimeSelectorSet from './TimeSelectorSet';
-import UploadDialog from '../Inventory/UploadDialog';
+import BannerUploadDialog from '../Inventory/UploadDialog';
 import LandingUrlInventoryDialog from './LandingUrlInventoryDialog';
 import useDialog from '../../../utils/lib/hooks/useDialog';
 import useFetchData from '../../../utils/lib/hooks/useFetchData';
@@ -96,14 +93,8 @@ const CampaignCreateTable = (props) => {
                 <CampaignBannerReg
                   bannerData={bannerData}
                   dispatch={dispatch}
-                  uploadDialog={uploadDialog}
+                  handleDialogOpen={uploadDialog.handleOpen}
                 />
-                <StyledItemText>새로운 배너를 등록하고 싶으신가요?</StyledItemText>
-                <Button
-                  onClick={uploadDialog.handleOpen}
-                >
-                나의 인벤토리
-                </Button>
               </StyledTableCell>
             </StyledTableRow>
             {step1State.option !== 'option0' ? (
@@ -115,11 +106,8 @@ const CampaignCreateTable = (props) => {
                   <LandingUrlInput
                     dispatch={dispatch}
                     state={state}
+                    handleDialogOpen={landingUrlInventoryDialog.handleOpen}
                   />
-                  <StyledItemText>등록된 URL을 보고싶으신가요?</StyledItemText>
-                  <Button onClick={landingUrlInventoryDialog.handleOpen}>
-                  나의 인벤토리
-                  </Button>
 
                 </StyledTableCell>
               </StyledTableRow>
@@ -196,19 +184,20 @@ const CampaignCreateTable = (props) => {
           </TableBody>
         </Table>
       </TableContainer>
-      <UploadDialog
+      {/* 배너 생성 다이얼로그 */}
+      <BannerUploadDialog
         open={uploadDialog.open}
         onClose={uploadDialog.handleClose}
-        createPage={IS_CAMPAIGN_CREATE_PAGE}
-        getBannerList={bannerData.callUrl} // 배너 데이터 재요청
+        isCampaignPage={IS_CAMPAIGN_CREATE_PAGE}
+        recallRequest={bannerData.callUrl} // 배너 데이터 재요청
       />
 
+      {/* 랜딩페이지URL 생성 다이얼로그 */}
       <LandingUrlInventoryDialog
         open={landingUrlInventoryDialog.open}
         onClose={landingUrlInventoryDialog.handleClose}
         landingUrlData={landingUrlData}
         dispatch={dispatch}
-        state={state}
       />
     </CampaignCreateStepLayout>
   );

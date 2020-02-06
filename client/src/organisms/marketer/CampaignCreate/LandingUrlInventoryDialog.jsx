@@ -2,11 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import {
-  Stepper, Step, StepLabel, StepContent, Tooltip, Typography, Button
+  Tooltip, Typography, Button
 } from '@material-ui/core';
 import { Star } from '@material-ui/icons';
 import Dialog from '../../../atoms/Dialog/Dialog';
-import '../BannerManage/upload.css';
+import '../Inventory/upload.css';
 import MaterialTable from '../../../atoms/Table/MaterialTable';
 
 import GreenCheckbox from '../../../atoms/GreenCheckBox';
@@ -20,7 +20,7 @@ const dialogStyle = theme => ({
 
 const LandingUrlInventoryDialog = (props) => {
   const {
-    open, onClose, fetchData, dispatch,
+    open, onClose, landingUrlData, dispatch,
   } = props;
   const [indexId, setindexId] = React.useState('');
   const [tmpMainUrl, setTmpMainUrl] = React.useState('');
@@ -141,59 +141,52 @@ const LandingUrlInventoryDialog = (props) => {
     <Dialog
       onClose={handleClose}
       open={open}
-      maxWidth="sm"
+      maxWidth="md"
       fullWidth
       title="URL 선택"
-    >
-      <Stepper orientation="vertical" style={{ padding: 0 }}>
-        <Step key="0">
-          <StepLabel>
-            랜딩페이지 URL 선택
-          </StepLabel>
-          <StepContent>
-            <div>
-              {fetchData.loading && (<MaterialTable columns={columns} isLoading />)}
-              {!fetchData.loading && fetchData.error && (<span>Error</span>)}
-              {!fetchData.loading && fetchData.payload && (
-              <MaterialTable
-                title={null}
-                columns={columns}
-                data={fetchData.payload}
-                options={{
-                  actionsColumnIndex: -1,
-                  search: false
-                }}
-                localization={{
-                  body: {
-                    emptyDataSourceMessage: '등록된 랜딩페이지 URL이 없습니다.'
-                  },
-                  header: {
-                    actions: '선택'
-                  }
-                }}
-              />
-              )}
-
-            </div>
-          </StepContent>
-          <div style={{ margin: '5px', float: 'right' }}>
-            <Button
-              variant="contained"
-              onClick={handleClose}
-            >
+      buttons={(
+        <div style={{ margin: '5px' }}>
+          <Button
+            variant="contained"
+            onClick={handleClose}
+          >
               닫기
-            </Button>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={() => { handleClose('click'); }}
-            >
+          </Button>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => { handleClose('click'); }}
+          >
               확인
-            </Button>
-          </div>
-        </Step>
+          </Button>
+        </div>
+)}
+    >
+      <div>
+        {!landingUrlData.loading && landingUrlData.error && (<span>Error</span>)}
+        {!landingUrlData.loading && landingUrlData.payload && (
+        <MaterialTable
+          title={null}
+          columns={columns}
+          data={landingUrlData.payload === 'nourldata' ? [] : landingUrlData.payload}
+          isLoading={landingUrlData.loading}
+          options={{
+            actionsColumnIndex: -1,
+            search: false
+          }}
+          localization={{
+            body: {
+              emptyDataSourceMessage: '등록된 랜딩페이지 URL이 없습니다.'
+            },
+            header: {
+              actions: '선택'
+            }
+          }}
+        />
+        )}
 
-      </Stepper>
+      </div>
+
     </Dialog>
   );
 };
