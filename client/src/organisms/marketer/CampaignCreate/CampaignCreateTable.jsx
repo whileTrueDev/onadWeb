@@ -89,7 +89,11 @@ const CampaignCreateTable = (props) => {
                 />
                 <StyledItemText>새로운 배너를 등록하고 싶으신가요?</StyledItemText>
                 <Button
-                  onClick={() => { window.open(`${window.location.protocol}//${window.location.host}/dashboard/marketer/banner`); }}
+                  onClick={() => {
+                    window.open(
+                      `${window.location.protocol}//${window.location.host}/dashboard/marketer/inventory`
+                    );
+                  }}
                 >
                 나의 인벤토리
                 </Button>
@@ -107,7 +111,11 @@ const CampaignCreateTable = (props) => {
                   />
                   <StyledItemText>등록된 URL을 보고싶으신가요?</StyledItemText>
                   <Button
-                    onClick={() => { window.open(`${window.location.protocol}//${window.location.host}/dashboard/marketer/banner`); }}
+                    onClick={() => {
+                      window.open(
+                        `${window.location.protocol}//${window.location.host}/dashboard/marketer/inventory`
+                      );
+                    }}
                   >
                 나의 인벤토리
                   </Button>

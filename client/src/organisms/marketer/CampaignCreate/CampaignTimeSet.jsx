@@ -15,7 +15,7 @@ const CampaignTimeSet = (props) => {
           <GreenCheckbox
             name="no-limit"
             checked={dateOpen === false}
-            onClick={handleDateOpen}
+            // onClick={handleDateOpen}
             fontSize="large"
             // disabled
           />

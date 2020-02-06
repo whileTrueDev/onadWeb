@@ -17,7 +17,7 @@ import CreatorManual from './creator/Manual';
 
 // 마케터 라우터
 import MarketerDashboard from './marketer/Dashboard';
-import MarketerBannerManage from './marketer/BannerManage';
+import MarketerInventory from './marketer/Inventory';
 import MarketerManual from './marketer/Manual';
 import MarketerMyOffice from './marketer/MyOffice';
 import CampaignCreateStepper from './marketer/CampaignCreation';
@@ -69,10 +69,10 @@ const dashboardRoutes = {
       layout: '/dashboard/marketer',
     },
     {
-      path: '/banner',
+      path: '/inventory',
       name: '내 배너',
       icon: BrandingWatermark,
-      component: MarketerBannerManage, // 마케터 대시보드 컴포넌트로 수정
+      component: MarketerInventory, // 마케터 대시보드 컴포넌트로 수정
       layout: '/dashboard/marketer',
     },
     {

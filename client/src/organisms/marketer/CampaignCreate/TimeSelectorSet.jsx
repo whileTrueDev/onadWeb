@@ -15,7 +15,7 @@ const TimeSelectorSet = (props) => {
           <GreenCheckbox
             name="no-limit"
             checked={timeSelectorOpen === false}
-            onClick={handleTimeSelectorOpen}
+            // onClick={handleTimeSelectorOpen} // 기능 구현 이후 주석 제거
             fontSize="large"
           />
           <StyledSelectText onClick={handleTimeSelectorOpen} style={{ cursor: 'pointer' }} primary="시간대 설정 없이 계속 진행" />
