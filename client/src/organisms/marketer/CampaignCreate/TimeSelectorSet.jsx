@@ -15,15 +15,16 @@ const TimeSelectorSet = (props) => {
           <GreenCheckbox
             name="no-limit"
             checked={timeSelectorOpen === false}
-            // onChange={handleChange}
-            onClick={handleTimeSelectorOpen}
+            // onClick={handleTimeSelectorOpen} // 기능 구현 이후 주석 제거
             fontSize="large"
-            // disabled
           />
           <StyledSelectText onClick={handleTimeSelectorOpen} style={{ cursor: 'pointer' }} primary="시간대 설정 없이 계속 진행" />
         </Grid>
       </Grid>
       <Grid item>
+        {/* ***************** NOTICE ***************** */}
+        {/* SOCKET 광고 송출 서버 기능 구현 이후 disabled 삭제 */}
+
         <Grid container direction="row">
           <GreenCheckbox
             name="set-limit"
@@ -31,9 +32,18 @@ const TimeSelectorSet = (props) => {
             // onChange={handleChange}
             onClick={handleTimeSelectorOpen}
             fontSize="large"
+            disabled // 기능 구현 이후 disabled prop 삭제
           />
-          <StyledSelectText onClick={handleTimeSelectorOpen} style={{ cursor: 'pointer' }} primary="송출 시간대 설정" />
+          <StyledSelectText
+            primary="송출 시간대 설정"
+            // onClick={handleTimeSelectorOpen} // 기능 구현 이후 주석 제거
+            // style={{ cursor: 'pointer' }} // 기능 구현 이후 주석 제거
+            secondary="곧 지원 예정입니다."
+          />
         </Grid>
+
+        {/* SOCKET 광고 송출 서버 기능 구현 이후 disabled 삭제 */}
+        {/* ***************** NOTICE ***************** */}
       </Grid>
     </Grid>
   );

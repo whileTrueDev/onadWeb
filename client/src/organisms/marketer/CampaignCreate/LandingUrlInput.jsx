@@ -1,7 +1,8 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import {
-  Grid, InputLabel, Input, FormHelperText, FormControl, FormControlLabel, Checkbox, TextField, Collapse
+  Grid, InputLabel, Input, FormHelperText,
+  FormControlLabel, Checkbox, Collapse
 } from '@material-ui/core';
 
 const formStyle = theme => ({
@@ -19,27 +20,10 @@ const formStyle = theme => ({
   label: {
     fontSize: '20px',
     fontWeight: '700',
-    color: '#00acc1',
+    color: theme.palette.primary.light,
     margin: '3px',
   },
 });
-
-
-const CssFormControl = withStyles({
-  root: {
-    '& label.Mui-focused': {
-      color: '#00acc1',
-    },
-    '& .MuiInput-underline:after': {
-      borderBottomColor: '#00acc1',
-    },
-    '& .MuiOutlinedInput-root': {
-      '&:hover fieldset': {
-        borderColor: '#00acc1',
-      },
-    },
-  },
-})(FormControl);
 
 const LandingUrlInput = (props) => {
   const { classes, dispatch, } = props;
@@ -106,7 +90,7 @@ const LandingUrlInput = (props) => {
 
 
   return (
-    <Grid container direction="column" spacing={3}>
+    <Grid container direction="column" spacing={3} style={{ marginBottom: 20 }}>
       <InputLabel shrink htmlFor="company" className={classes.label}>MAIN URL</InputLabel>
       <Grid container direction="row">
         <Grid item>
@@ -134,17 +118,17 @@ const LandingUrlInput = (props) => {
       </Grid>
       <FormHelperText>랜딩페이지를 통해 접속할 웹페이지를 작성해주세요</FormHelperText>
 
-      <Grid item style={{ margin: '10px' }}>
+      <Grid item>
         <FormControlLabel
           control={(
             <Checkbox
               color="primary"
-              checked={!subOpen}
+              checked={subOpen}
               onChange={handleSubOpen}
               fontSize="small"
               style={{ padding: '3px' }}
             />
-                  )}
+          )}
           label="SUB URL 설정"
           labelPlacement="end"
         />
@@ -186,7 +170,7 @@ const LandingUrlInput = (props) => {
                   fontSize="small"
                   style={{ padding: '3px' }}
                 />
-                  )}
+              )}
               label="미설정"
               labelPlacement="start"
             />
