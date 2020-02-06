@@ -7,7 +7,10 @@ import GreenCheckbox from '../../../atoms/GreenCheckBox';
 import StyledSelectText from '../../../atoms/StyledSelectText';
 
 const CampaignTimeSet = (props) => {
-  const { handleDateOpen, dateOpen } = props;
+  const {
+    // handleDateOpen,
+    dateOpen
+  } = props;
   return (
     <Grid container direction="column">
       <Grid item>

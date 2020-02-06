@@ -7,7 +7,10 @@ import GreenCheckbox from '../../../atoms/GreenCheckBox';
 import StyledSelectText from '../../../atoms/StyledSelectText';
 
 const TimeSelectorSet = (props) => {
-  const { timeSelectorOpen, handleTimeSelectorOpen } = props;
+  const {
+    timeSelectorOpen,
+    // handleTimeSelectorOpen
+  } = props;
   return (
     <Grid container direction="column">
       <Grid item>
