@@ -135,7 +135,7 @@ router.post('/findId', (req, res) => {
       res.send(JSON.stringify(json));
     })
     .catch(() => {
-      json.message = 'DB 관련 오류입니다. 본사에 문의하세요.';
+      json.message = 'DB 관련 오류입니다. 잠시 후 다시 시도해주세요..';
       res.send(JSON.stringify(json));
     });
 });
@@ -162,7 +162,7 @@ router.post('/findPw', (req, res, next) => {
       }
     })
     .catch(() => {
-      json.message = 'DB 관련 오류입니다. 본사에 문의하세요.';
+      json.message = 'DB 관련 오류입니다. 잠시 후 다시 시도해주세요..';
       res.send(JSON.stringify(json));
     });
 }, setTemporaryPassword);

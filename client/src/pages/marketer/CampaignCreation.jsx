@@ -176,15 +176,15 @@ const CampaignCreateStepper = () => {
   const [dateOpen, setDateOpen] = React.useState(false);
   const [step, setStep] = React.useState(0);
   const [checkName, setCheckName] = React.useState(false);
-
+  const [budgetError, setBudgetError] = React.useState(false);
   // const isTrue = currentValue => currentValue === true;
 
   const checkEmpty = (input) => {
-    if (input[0].length === 0) {
+    if (input.option.length === 0) {
       alert('광고 유형이 입력되지 않았습니다.');
       return false;
     }
-    if (input[1].length === 0) {
+    if (input.type.length === 0) {
       alert('우선형 유형이 입력되지 않았습니다.');
       return false;
     }
@@ -192,14 +192,19 @@ const CampaignCreateStepper = () => {
       alert('캠페인 이름이 입력되지 않았습니다.');
       return false;
     }
-    if (input[4].length === 0) {
+    if (input.bannerId.length === 0) {
       alert('배너가 선택되지 않았습니다.');
       return false;
     }
-    if (input[0] !== 'type0' && (input[10].replace('https://').length === 0 || input[10].replace('http://').length === 0)) {
+    if (input.option !== 'type0' && (input.mainLandingUrl.replace(/ /gi, '').length === 0)) {
       alert('랜딩페이지 URL이 입력되지 않았습니다.');
       return false;
     }
+    if (budgetError) {
+      alert('일예산이 입력되지 않았습니다.');
+      return false;
+    }
+    return true;
   };
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -209,6 +214,7 @@ const CampaignCreateStepper = () => {
       return NUM;
     }
     const priorityNum = typeToNum(step2State.priorityType);
+    const optionNumType = typeToNum(step1State.option);
 
     const priorityList = ((priorityType) => {
       switch (priorityType) {
@@ -222,31 +228,12 @@ const CampaignCreateStepper = () => {
       }
     })(step2State.priorityType);
 
-    const validateArray = [
-      step1State.option,
-      priorityNum,
-      step3State.campaignName,
-      step3State.budget,
-      step3State.bannerId,
-      step3State.startDate,
-      step3State.finDate,
-      step3State.keyword0,
-      step3State.keyword1,
-      step3State.keyword2,
-      step3State.mainLandingUrl,
-      step3State.sub1LandingUrl,
-      step3State.sub2LandingUrl,
-      priorityList,
-      step3State.time
-    ];
-    checkEmpty(validateArray);
-
-    axios.post(`${HOST}/api/dashboard/marketer/campaign/push`, {
-      optionType: step1State.option,
-      priorityType: priorityNum,
+    const validateObject = {
+      option: step1State.option,
+      type: priorityNum,
       campaignName: step3State.campaignName,
-      bannerId: step3State.bannerId,
       budget: step3State.budget,
+      bannerId: step3State.bannerId,
       startDate: step3State.startDate,
       finDate: step3State.finDate,
       keyword0: step3State.keyword0,
@@ -258,13 +245,35 @@ const CampaignCreateStepper = () => {
       mainLandingUrl: step3State.mainLandingUrl,
       sub1LandingUrl: step3State.sub1LandingUrl,
       sub2LandingUrl: step3State.sub2LandingUrl,
-      priorityList,
-      selectedTime: step3State.time
-    })
-      .then((res) => {
-        alert(res.data[1]);
-        // history.push('/dashboard/marketer/main');
-      });
+      priority: priorityList,
+      time: step3State.time
+    };
+    if (checkEmpty(validateObject)) {
+      axios.post(`${HOST}/api/dashboard/marketer/campaign/push`, {
+        optionType: optionNumType,
+        priorityType: priorityNum,
+        campaignName: step3State.campaignName,
+        bannerId: step3State.bannerId,
+        budget: step3State.budget,
+        startDate: step3State.startDate,
+        finDate: step3State.finDate,
+        keyword0: step3State.keyword0,
+        keyword1: step3State.keyword1,
+        keyword2: step3State.keyword2,
+        mainLandingUrlName: step3State.mainLandingUrlName,
+        sub1LandingUrlName: step3State.sub1LandingUrlName,
+        sub2LandingUrlName: step3State.sub2LandingUrlName,
+        mainLandingUrl: step3State.mainLandingUrl,
+        sub1LandingUrl: step3State.sub1LandingUrl,
+        sub2LandingUrl: step3State.sub2LandingUrl,
+        priorityList,
+        selectedTime: step3State.time
+      })
+        .then((res) => {
+          alert(res.data[1]);
+          history.push('/dashboard/marketer/main');
+        });
+    }
   };
 
   const handleDatePickerOpen = () => {
@@ -331,18 +340,16 @@ const CampaignCreateStepper = () => {
     switch (_step) {
       case 2:
         return (
-          <Collapse in={stepComplete}>
-            <Grid item>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={handleSubmit}
-                className={classes.end}
-              >
-                완료
-              </Button>
-            </Grid>
-          </Collapse>
+          <Grid item>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleSubmit}
+              className={classes.end}
+            >
+              완료
+            </Button>
+          </Grid>
         );
       case 0:
       case 1:
@@ -397,9 +404,10 @@ const CampaignCreateStepper = () => {
                     checkName={checkName}
                     setCheckName={setCheckName}
                     dispatch={step3Dispatch}
-                    setStepComplete={setStepComplete}
                     state={step3State}
                     setDetailOpen={setDetailOpen}
+                    budgetError={budgetError}
+                    setBudgetError={setBudgetError}
                     detailOpen={detailOpen}
                     step1State={step1State}
                     handleDetailOpen={handleDetailOpen}

@@ -4,6 +4,8 @@ import {
   Grid, InputLabel, Input, FormHelperText,
   FormControlLabel, Checkbox, Collapse
 } from '@material-ui/core';
+import StyledItemText from '../../../atoms/StyledItemText';
+import Button from '../../../atoms/CustomButtons/Button';
 
 const formStyle = theme => ({
   input: {
@@ -26,42 +28,44 @@ const formStyle = theme => ({
 });
 
 const LandingUrlInput = (props) => {
-  const { classes, dispatch, } = props;
-  const [subOpen, setSubOpen] = React.useState(false);
-  const [sub1CloseState, setSub1CloseState] = React.useState(true);
-  const [sub2CloseState, setSub2CloseState] = React.useState(true);
+  const {
+    classes, handleDialogOpen, dispatch, state
+  } = props;
+  const [subOpen, setSubOpen] = React.useState(true);
+  // const [sub1CloseState, setSub1CloseState] = React.useState(true);
+  // const [sub2CloseState, setSub2CloseState] = React.useState(true);
 
   const handleSubOpen = () => {
     setSubOpen(!subOpen);
   };
 
-  const handleCloseState = (event) => {
-    const targetId = event.target.id;
-    switch (targetId) {
-      case 'sub-url1-checkbox': {
-        setSub1CloseState(!sub1CloseState);
-        return false;
-      }
-      case 'sub-url2-checkbox': {
-        setSub2CloseState(!sub2CloseState);
-        return false;
-      }
-      default: { return false; }
-    }
-  };
+  // const handleCloseState = (event) => {
+  //   const targetId = event.target.id;
+  //   switch (targetId) {
+  //     case 'sub-url1-checkbox': {
+  //       setSub1CloseState(!sub1CloseState);
+  //       return false;
+  //     }
+  //     case 'sub-url2-checkbox': {
+  //       setSub2CloseState(!sub2CloseState);
+  //       return false;
+  //     }
+  //     default: { return false; }
+  //   }
+  // };
   const handleUrlName = (event) => {
     switch (event.target.id) {
       case 'main-url-name':
-      { dispatch({ key: 'mainLandingUrlName', value: event.target.value });
+      { dispatch({ key: 'mainLandingUrlName', value: event.target.value.replace(/ /gi, '') });
         return false;
       }
       case 'sub-url1-name':
-      { dispatch({ key: 'sub1LandingUrlName', value: event.target.value });
+      { dispatch({ key: 'sub1LandingUrlName', value: event.target.value.replace(/ /gi, '') });
         return false;
       }
       case 'sub-url2-name':
       {
-        dispatch({ key: 'sub2LandingUrlName', value: event.target.value });
+        dispatch({ key: 'sub2LandingUrlName', value: event.target.value.replace(/ /gi, '') });
         return false;
       }
       default:
@@ -71,16 +75,16 @@ const LandingUrlInput = (props) => {
   const handleUrlChange = (event) => {
     switch (event.target.id) {
       case 'main-url':
-      { dispatch({ key: 'mainLandingUrl', value: event.target.value });
+      { dispatch({ key: 'mainLandingUrl', value: event.target.value.replace(/ /gi, '') });
         return false;
       }
       case 'sub-url1':
-      { dispatch({ key: 'sub1LandingUrl', value: event.target.value });
+      { dispatch({ key: 'sub1LandingUrl', value: event.target.value.replace(/ /gi, '') });
         return false;
       }
       case 'sub-url2':
       {
-        dispatch({ key: 'sub2LandingUrl', value: event.target.value });
+        dispatch({ key: 'sub2LandingUrl', value: event.target.value.replace(/ /gi, '') });
         return false;
       }
       default:
@@ -99,6 +103,7 @@ const LandingUrlInput = (props) => {
             required
             label="Url 이름"
             id="main-url-name"
+            value={state.mainLandingUrlName}
             className={classes.input}
             onChange={handleUrlName}
           />
@@ -108,7 +113,7 @@ const LandingUrlInput = (props) => {
           <Input
             required
             label="Url 주소"
-            defaultValue="https://"
+            value={state.mainLandingUrl}
             type="url"
             id="main-url"
             className={classes.input}
@@ -144,23 +149,24 @@ const LandingUrlInput = (props) => {
                 required
                 label="Url 이름"
                 id="sub-url1-name"
+                value={state.sub1LandingUrlName}
                 className={classes.input}
                 onChange={handleUrlName}
-                disabled={sub1CloseState}
+                // disabled={sub1CloseState}
               />
             </Grid>
             <Grid item>
               <InputLabel shrink htmlFor="company">Sub1 URL 주소</InputLabel>
               <Input
-                defaultValue="https://"
                 type="url"
                 id="sub-url1"
+                value={state.sub1LandingUrl}
                 className={classes.input}
                 onChange={handleUrlChange}
-                disabled={sub1CloseState}
+                // disabled={sub1CloseState}
               />
             </Grid>
-            <FormControlLabel
+            {/* <FormControlLabel
               control={(
                 <Checkbox
                   color="primary"
@@ -173,7 +179,7 @@ const LandingUrlInput = (props) => {
               )}
               label="미설정"
               labelPlacement="start"
-            />
+            /> */}
           </Grid>
 
           <Grid container direction="row">
@@ -183,23 +189,24 @@ const LandingUrlInput = (props) => {
                 required
                 label="Url 이름"
                 id="sub-url2-name"
+                value={state.sub2LandingUrlName}
                 className={classes.input}
                 onChange={handleUrlName}
-                disabled={sub2CloseState}
+                // disabled={sub2CloseState}
               />
             </Grid>
             <Grid item>
               <InputLabel shrink htmlFor="company">Sub2 URL 주소</InputLabel>
               <Input
-                defaultValue="https://"
                 type="url"
                 id="sub-url2"
+                value={state.sub2LandingUrl}
                 className={classes.input}
                 onChange={handleUrlChange}
-                disabled={sub2CloseState}
+                // disabled={sub2CloseState}
               />
             </Grid>
-            <FormControlLabel
+            {/* <FormControlLabel
               control={(
                 <Checkbox
                   color="primary"
@@ -212,10 +219,17 @@ const LandingUrlInput = (props) => {
                   )}
               label="미설정"
               labelPlacement="start"
-            />
+            /> */}
           </Grid>
         </Grid>
       </Collapse>
+
+      <Grid item>
+        <StyledItemText>등록된 URL을 보고싶으신가요?</StyledItemText>
+        <Button onClick={handleDialogOpen}>
+          나의 인벤토리
+        </Button>
+      </Grid>
     </Grid>
   );
 };

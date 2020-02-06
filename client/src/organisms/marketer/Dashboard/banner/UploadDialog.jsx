@@ -107,7 +107,7 @@ const UploadDialog = (props) => {
           alert(res.data[1]);
           history.push(window.location.pathname);
         } else {
-          alert('현재는 등록할 수 없습니다. 본사에 문의하세요');
+          alert('현재는 등록할 수 없습니다. 잠시 후 다시 시도해주세요.');
         }
         handleClose();
       });

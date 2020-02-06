@@ -25,7 +25,6 @@ const priorityTypes = [
           <Chip
             key={creator}
             label={creator}
-            color="primary"
             variant="outlined"
             style={{ margin: 4 }}
           />
@@ -122,6 +121,7 @@ const PriorityPaper = (props) => {
         <React.Fragment>
           {priorityTypes.map(type => (
             <OptionSelectPaper
+              key={type.id}
               name={type.id}
               primaryText={type.primaryText}
               secondaryText={type.secondaryText}
@@ -149,6 +149,8 @@ const PriorityPaper = (props) => {
           {priorityTypes.filter(type => state.priorityType === type.id)
             .map(selectedPriorityType => (
               <OptionSelectPaper
+                key={selectedPriorityType.id}
+                name={selectedPriorityType.id}
                 primaryText={selectedPriorityType.primaryText}
                 secondaryText={selectedPriorityType.secondaryText}
                 checked

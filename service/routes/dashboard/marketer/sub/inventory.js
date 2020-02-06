@@ -45,7 +45,7 @@ router.delete('/landingurl', (req, res) => {
         console.log(`DELETE - landingurl ${linkId}`, row.result);
         res.send([true]);
       } else if (row.error || (row.result && row.result.affectedRows) === 0) {
-        res.send([false, '링크 삭제과정 중 오류가 발생했습니다. 본사에 문의하세요.']);
+        res.send([false, '링크 삭제과정 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요..']);
       }
     })
     .catch((err) => { console.log(`Error in DELETE - /landingurl ${err}`); });

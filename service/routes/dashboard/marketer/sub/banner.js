@@ -57,7 +57,8 @@ router.get('/registered', (req, res) => {
   const bannerQuery = `
   SELECT bannerId, bannerSrc
   FROM bannerRegistered
-  WHERE marketerId = ? AND (confirmState = 1 OR confirmState = 3)
+  WHERE marketerId = ? AND (confirmState = 0 OR confirmState = 1)
+  ORDER BY regiDate DESC 
   `;
   doQuery(bannerQuery, [marketerId])
     .then((row) => {
@@ -74,7 +75,7 @@ router.get('/registered', (req, res) => {
 router.post('/push', (req, res) => {
   const marketerId = req._passport.session.user.userid;
   const {
-    bannerSrc, confirm
+    bannerSrc, bannerDescription
   } = req.body;
 
   const searchQuery = `
@@ -86,8 +87,8 @@ router.post('/push', (req, res) => {
 
   const saveQuery = `
   INSERT INTO bannerRegistered 
-  (bannerId, marketerId, bannerSrc, confirmState) 
-  VALUES (?, ?, ?, ?)`;
+  (bannerId, marketerId, bannerSrc, bannerDescription, confirmState) 
+  VALUES (?, ?, ?, ?, 0)`;
 
   doQuery(searchQuery, [marketerId])
     .then((row) => {
@@ -106,7 +107,7 @@ router.post('/push', (req, res) => {
       }
       doQuery(saveQuery,
         [bannerId, marketerId, bannerSrc,
-          confirm])
+          bannerDescription])
         .then(() => {
           res.send([true, '배너가 등록되었습니다']);
 

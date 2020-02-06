@@ -105,7 +105,7 @@ router.delete('/', (req, res) => {
           }
         });
       } else {
-        res.send([false, '캠페인 삭제 오류입니다. 본사에 문의하세요.']);
+        res.send([false, '캠페인 삭제 오류입니다. 잠시 후 다시 시도해주세요..']);
       }
     })
     .catch((err) => {
@@ -320,7 +320,7 @@ router.post('/getcategory', (req, res) => {
             resolve();
           })
           .catch((err) => {
-            console.log('밑 에러 삐빅', err);
+            console.log('323', err);
             reject();
           });
       }))
@@ -350,13 +350,13 @@ const PriorityDoquery = ({
 }) => {
   const getSearchQuery = (type) => {
     switch (type) {
-      case 0: {
+      case '0': {
         return 'SELECT campaignList FROM creatorCampaign WHERE creatorId = ?';
       }
-      case 1: {
+      case '1': {
         return 'SELECT campaignList FROM categoryCampaign WHERE categoryName = ?';
       }
-      case 2: {
+      case '2': {
         return 'SELECT campaignList FROM categoryCampaign WHERE categoryName = ?';
       }
       default: {
@@ -367,19 +367,19 @@ const PriorityDoquery = ({
 
   const getSaveQuery = (type) => {
     switch (type) {
-      case 0: {
+      case '0': {
         return `
         UPDATE creatorCampaign 
         SET campaignList = ? 
         WHERE creatorId = ?`;
       }
-      case 1: {
+      case '1': {
         return `
-        UPDATE categoryCampaign 
-        SET campaignList = ? 
+        UPDATE categoryCampaign
+        SET campaignList = ?
         WHERE categoryName = ?`;
       }
-      case 2: {
+      case '2': {
         return `
         UPDATE categoryCampaign 
         SET campaignList = ?
@@ -417,7 +417,7 @@ const PriorityDoquery = ({
             });
         })
         .catch((errorData) => {
-          console.log(errorData);
+          console.log(errorData, '420');
           reject(errorData);
         });
     }))
@@ -467,7 +467,7 @@ const LandingDoQuery = async ({
             resolve();
           })
           .catch((errorData) => {
-            console.log(errorData);
+            console.log(errorData, '470');
             reject(errorData);
           });
       }))
@@ -483,7 +483,7 @@ const LandingDoQuery = async ({
             resolve();
           })
           .catch((errorData) => {
-            console.log(errorData);
+            console.log(errorData, '486');
             reject(errorData);
           });
       }))
@@ -532,7 +532,7 @@ const getUrlId = marketerId => new Promise((resolve, reject) => {
       }
     }).catch((err) => {
       reject();
-      console.log(err);
+      console.log(err, '535');
     });
 });
 
@@ -549,7 +549,7 @@ router.get('/geturl', (req, res) => {
         res.send(row.result);
       }
     }).catch((err) => {
-      console.log(err);
+      console.log(err, '552');
     });
 });
 
@@ -593,7 +593,7 @@ router.post('/push', (req, res) => {
         const limit = budget || -1;
         const finDateNull = finDate.length !== 0 ? finDate : null;
         const targetJsonData = JSON.stringify({ targetList: priorityList });
-        const timeJsonData = JSON.stringify({ time: selectedTime });
+        const timeJsonData = JSON.stringify({ time: (selectedTime || null) });
         const landingUrlJsonData = JSON.stringify(
           {
             links:
@@ -646,16 +646,16 @@ router.post('/push', (req, res) => {
             res.send([true, '캠페인이 등록되었습니다']);
           })
           .catch((err) => {
-            console.log(err);
+            console.log(err, 'at 649 line');
             res.send([false, '일시적인 오류가 발생하였습니다. 나중에 다시 시도해주세요.']);
           });
       })
       .catch((err) => {
-        console.log(err);
+        console.log(err, 'at 654line');
         res.send([false, '일시적인 오류가 발생하였습니다. 나중에 다시 시도해주세요.']);
       });
   }).catch((err) => {
-    console.log(err);
+    console.log(err, 'at 659 line');
     res.send([false, '일시적인 오류가 발생하였습니다. 나중에 다시 시도해주세요.']);
   });
 });

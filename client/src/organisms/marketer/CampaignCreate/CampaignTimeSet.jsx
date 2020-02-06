@@ -22,7 +22,7 @@ const CampaignTimeSet = (props) => {
           <StyledSelectText
             onClick={handleDateOpen}
             style={{ cursor: 'pointer' }}
-            primary="승인일부터 종료일 없이 계속 진행"
+            primary="승인일부터 종료일 없이 계속 집행"
           />
         </Grid>
       </Grid>
