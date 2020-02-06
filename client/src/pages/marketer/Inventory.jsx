@@ -12,12 +12,12 @@ import GridContainer from '../../atoms/Grid/GridContainer';
 import GridItem from '../../atoms/Grid/GridItem';
 import CustomButton from '../../atoms/CustomButtons/Button';
 
-import BannerTable from '../../organisms/marketer/BannerManage/BannerTable';
-import UploadDialog from '../../organisms/marketer/BannerManage/UploadDialog';
-import DeleteDialog from '../../organisms/marketer/BannerManage/DeleteDialog';
-import UrlTable from '../../organisms/marketer/BannerManage/UrlTable';
-import UrlUploadDialog from '../../organisms/marketer/BannerManage/UrlUploadDialog';
-import UrlDeleteDialog from '../../organisms/marketer/BannerManage/UrlDeleteDialog';
+import BannerTable from '../../organisms/marketer/Inventory/BannerTable';
+import UploadDialog from '../../organisms/marketer/Inventory/UploadDialog';
+import DeleteDialog from '../../organisms/marketer/Inventory/DeleteDialog';
+import UrlTable from '../../organisms/marketer/Inventory/UrlTable';
+import UrlUploadDialog from '../../organisms/marketer/Inventory/UrlUploadDialog';
+import UrlDeleteDialog from '../../organisms/marketer/Inventory/UrlDeleteDialog';
 
 // core ../../atoms
 import dashboardStyle from '../../assets/jss/onad/views/dashboardStyle';

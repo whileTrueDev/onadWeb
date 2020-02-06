@@ -1,10 +1,11 @@
 import React, { useEffect, useState, useReducer } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import {
-  Grid, Paper
+  Grid, Paper, CircularProgress
 } from '@material-ui/core';
 import StyledItemText from '../../../atoms/StyledItemText';
 import CreatorTable from './sub/CreatorTable';
+import useFetchData from '../../../utils/lib/hooks/useFetchData';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -22,13 +23,6 @@ const useStyles = makeStyles(theme => ({
       padding: theme.spacing(1),
     },
   },
-  button: {
-    marginRight: theme.spacing(1),
-  },
-  end: {
-    color: '#fff',
-    marginRight: theme.spacing(1),
-  }
 }));
 
 // array State를 사용하는 Reducer
@@ -47,12 +41,14 @@ const reducer = (state, action) => {
 
 const CreatorSelect = (props) => {
   const {
-    setStepComplete, creatorList, checkedCreators, checkedCreatorsDispatch,
+    setStepComplete, checkedCreators, checkedCreatorsDispatch,
   } = props;
 
   const classes = useStyles();
   const [creatorsText, setText] = useState('');
   const [creatorNames, creatorNamesDispatch] = useReducer(reducer, []);
+
+  const creatorsData = useFetchData('/api/dashboard/creator/list');
 
   useEffect(() => {
     const texts = creatorNames.reduce((text, creatorName) => {
@@ -77,12 +73,19 @@ const CreatorSelect = (props) => {
             </Paper>
           </Grid>
           <Grid item>
-            <CreatorTable
-              creatorList={creatorList}
-              checkedCreators={checkedCreators}
-              checkedCreatorsDispatch={checkedCreatorsDispatch}
-              creatorNamesDispatch={creatorNamesDispatch}
-            />
+            {creatorsData.loading && (
+            <div style={{ padding: 72, textAlign: 'center' }}>
+              <CircularProgress size={100} disableShrink />
+            </div>
+            )}
+            {!creatorsData.loading && creatorsData.payload && (
+              <CreatorTable
+                creatorList={creatorsData.payload.map(creator => creator.creatorId)}
+                checkedCreators={checkedCreators}
+                checkedCreatorsDispatch={checkedCreatorsDispatch}
+                creatorNamesDispatch={creatorNamesDispatch}
+              />
+            )}
           </Grid>
         </Grid>
       </Grid>

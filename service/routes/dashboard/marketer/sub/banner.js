@@ -62,10 +62,10 @@ router.get('/registered', (req, res) => {
   `;
   doQuery(bannerQuery, [marketerId])
     .then((row) => {
-      res.send([true, row.result]);
+      res.send(row.result);
     })
     .catch((errorData) => {
-      console.log(errorData);
+      console.log('Error in /banner/registered - ', errorData);
       res.send([null, errorData]);
     });
 });

@@ -1,12 +1,12 @@
 import React from 'react';
 import {
-  Grid, Divider, Typography
+  Grid, Divider, Typography, CircularProgress
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
-
 import StyledItemText from '../../../atoms/StyledItemText';
 import BannerCarousel from '../../../atoms/BannerCarousel';
+import Button from '../../../atoms/CustomButtons/Button';
+import useFetchData from '../../../utils/lib/hooks/useFetchData';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -46,10 +46,11 @@ const useStyles = makeStyles(theme => ({
 
 
 const CampaignBannerReg = (props) => {
-  const {
-    dispatch, bannerList, uploadDialog,
-  } = props;
+  const { dispatch, uploadDialog } = props;
   const classes = useStyles();
+
+  const bannerData = useFetchData('/api/dashboard/marketer/banner/registered');
+
   const handleBannerId = (bannerId) => {
     dispatch({ key: 'bannerId', value: bannerId });
   };
@@ -62,8 +63,13 @@ const CampaignBannerReg = (props) => {
           <Divider component="hr" style={{ marginBottom: '10px', width: '300px' }} />
         </Grid>
         <Grid item>
-          {bannerList.length > 0 ? (
-            <BannerCarousel steps={bannerList} handleBannerId={handleBannerId} />
+          {bannerData.loading && (
+            <div style={{ padding: 72 }}>
+              <CircularProgress size={100} disableShrink />
+            </div>
+          )}
+          {!bannerData.loading && bannerData.payload.length > 0 ? (
+            <BannerCarousel steps={bannerData.payload} handleBannerId={handleBannerId} />
           ) : (
             <div>
               <Typography variant="body1">등록된 배너가 없어요! 먼저 배너를 저장한 이후, 캠페인을 생성해주세요!</Typography>

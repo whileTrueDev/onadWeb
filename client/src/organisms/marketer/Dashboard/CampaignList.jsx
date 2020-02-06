@@ -83,7 +83,7 @@ export default function CampaignList(props) {
         }
       });
   };
-  // To open campaign create dialog
+  // To open campaign control dialog
   const campaignUpdateDialog = useDialog();
   const campaignDeleteDialog = useDialog();
   const campaignReportDialog = useDialog();
@@ -94,7 +94,11 @@ export default function CampaignList(props) {
         <Typography variant="h6">
           캠페인 목록
         </Typography>
-        <Button variant="contained" color="primary" onClick={() => { window.location.href = '/dashboard/marketer/campaigncreate'; }}>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => { history.push('/dashboard/marketer/campaigncreate'); }}
+        >
           캠페인 등록하기
         </Button>
       </div>
@@ -115,7 +119,10 @@ export default function CampaignList(props) {
                           <IOSSwitch
                             id="onoff-switch"
                             checked={Boolean(detail.onOff)}
-                            onChange={handleUpdateState({ onoffState: !detail.onOff, campaignId: detail.campaignId })}
+                            onChange={handleUpdateState({
+                              onoffState: !detail.onOff,
+                              campaignId: detail.campaignId
+                            })}
                           />
                         )}
                         label={detail.onOff ? (<div style={{ color: '#52d869', fontWeight: 700 }}>활성화</div>) : (<div>비활성화</div>)}
@@ -279,6 +286,7 @@ export default function CampaignList(props) {
       />
       )}
 
+      {/* 캠페인 업데이트 다이얼로그 */}
       {selectedCampaign && (
       <CampaignUpdateDialog
         open={campaignUpdateDialog.open}

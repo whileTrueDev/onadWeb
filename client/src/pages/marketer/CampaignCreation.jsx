@@ -1,5 +1,4 @@
-import React, { useEffect, useReducer } from 'react';
-import PropTypes from 'prop-types';
+import React, { useReducer } from 'react';
 import { Link } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
@@ -14,11 +13,6 @@ import axios from '../../utils/axios';
 import history from '../../history';
 
 const useStyles = makeStyles(_theme => ({
-  paper: {
-    [_theme.breakpoints.down('sm')]: {
-      width: '100%'
-    },
-  },
   root: {
     width: '100%',
     height: '100%',
@@ -48,9 +42,8 @@ const step1Reducer = (state, action) => {
       return { ...state, option: 'option1' };
     case 'option2':
       return { ...state, option: 'option2' };
-    case 'reset': {
+    case 'reset':
       return { option: '' };
-    }
     default:
       return state;
   }
@@ -58,21 +51,16 @@ const step1Reducer = (state, action) => {
 
 const step2Reducer = (state, action) => {
   switch (action.type) {
-    case 'type0': {
+    case 'type0':
       return { priorityType: 'type0' };
-    }
-    case 'type1': {
+    case 'type1':
       return { priorityType: 'type1' };
-    }
-    case 'type2': {
+    case 'type2':
       return { priorityType: 'type2' };
-    }
-    case 'reset': {
-      return { priorityType: null };
-    }
-    default: {
+    case 'reset':
+      return { priorityType: '' };
+    default:
       return state;
-    }
   }
 };
 
@@ -96,8 +84,6 @@ const step2InnerReducer = (state, action) => {
 };
 
 const step3Reducer = (state, action) => {
-  const todayDate = new Date(`${new Date().toString().split('GMT')[0]} UTC`).toISOString().split('.')[0];
-
   switch (action.key) {
     case 'campaignName':
       return { ...state, campaignName: action.value };
@@ -138,7 +124,7 @@ const step3Reducer = (state, action) => {
         campaignName: '',
         bannerId: '',
         budget: '',
-        startDate: new Date(todayDate),
+        startDate: new Date(),
         finDate: '',
         links: []
       };
@@ -148,31 +134,25 @@ const step3Reducer = (state, action) => {
   }
 };
 
-function typeToNum(type) {
-  const NUM = type.replace(/[^0-9]/g, '');
-  return NUM;
-}
-
 // 생성 버튼을 누를 때 axios 요청 후 props로 전달받음. (bannerList)
 const CampaignCreateStepper = () => {
-  const todayDate = new Date(`${new Date().toString().split('GMT')[0]} UTC`).toISOString().split('.')[0];
   const classes = useStyles();
   // 0번째 step에서 사용할 State.
-  const [step1State, step1Dispatch] = useReducer(step1Reducer, { option: '' });
+  const [step1State, step1Dispatch] = useReducer(step1Reducer, { option: 'option1' });
 
   // 1 번째 step에서 사용할 State.
-  const [step2State, step2Dispatch] = useReducer(step2Reducer, { priorityType: '' });
+  const [step2State, step2Dispatch] = useReducer(step2Reducer, { priorityType: 'option2' });
 
   // 2 번째 prioritystep에서 사용할 State.
-  const [creatorList, setCreatorList] = React.useState([]);
   const [checkedCreators, checkedCreatorsDispatch] = useReducer(step2InnerReducer, []);
   const [checkedGames, checkedGamesDispatch] = useReducer(step2InnerReducer, []);
-  // 캠페인 기본정보
+
+  // 3 번째 캠페인 기본정보에서 사용할 State
   const [step3State, step3Dispatch] = useReducer(step3Reducer, {
     campaignName: '',
     bannerId: '',
     budget: '',
-    startDate: new Date(todayDate),
+    startDate: new Date(),
     finDate: '',
     keyword0: '',
     keyword1: '',
@@ -186,14 +166,11 @@ const CampaignCreateStepper = () => {
     keywords: [],
     time: []
   });
-  // 4번 쨰 step에서 사용할 State1
 
   // 최종 step에서 handleSubmit을 하기위한 signal
-  const [priorityOpen, setPriorityOpen] = React.useState(false);
-  const [creationOpen, setCreationOpen] = React.useState(false);
-  const [bannerList, setbannerList] = React.useState([]);
-  const [stepComplete, setStepComplete] = React.useState(false); // 현재 step에서 다음 step으로 넘어가기위한 state
-  const [createPaperOpen, setCreatePaperOpen] = React.useState(false);
+  const [step2PaperOpen, setStep2PaperOpen] = React.useState(false); // step2를 열거나 닫는 state
+  const [step3PaperOpen, setStep3PaperOpen] = React.useState(false); // step3를 열거나 닫는 state
+  const [stepComplete, setStepComplete] = React.useState(true); // 현재 step에서 다음 step으로 넘어가기위한 state
   const [datePickerOpen, setDatePickerOpen] = React.useState(false);
   const [detailOpen, setDetailOpen] = React.useState(false);
   const [dateOpen, setDateOpen] = React.useState(false);
@@ -231,32 +208,29 @@ const CampaignCreateStepper = () => {
   };
   const handleSubmit = (event) => {
     event.preventDefault();
-    const priorityType = typeToNum(step2State.priorityType);
+
+    function typeToNum(type) {
+      const NUM = type.replace(/[^0-9]/g, '');
+      return NUM;
+    }
+    const priorityNum = typeToNum(step2State.priorityType);
     const optionNumType = typeToNum(step1State.option);
 
-    const priorityList = ((type) => {
-      switch (type) {
-        case 'type0': {
-          // 선택된 크리에이터
-          return checkedCreators;
-        }
-        case 'type1': {
-          // 선택된 카테고리
-          return checkedGames;
-        }
-        case 'type2': {
-          // 카테고리 무관인 카테고리 ID
-          return ['무관'];
-        }
-        default: {
-          return [];
-        }
+    const priorityList = ((priorityType) => {
+      switch (priorityType) {
+        case 'type0':
+          return checkedCreators; // 선택된 크리에이터
+        case 'type1':
+          return checkedGames; // 선택된 게임
+        case 'type2':
+        default:
+          return ['무관']; // 카테고리 무관인 카테고리 ID
       }
     })(step2State.priorityType);
 
     const validateObject = {
       option: step1State.option,
-      type: priorityType,
+      type: priorityNum,
       campaignName: step3State.campaignName,
       budget: step3State.budget,
       bannerId: step3State.bannerId,
@@ -277,7 +251,7 @@ const CampaignCreateStepper = () => {
     if (checkEmpty(validateObject)) {
       axios.post(`${HOST}/api/dashboard/marketer/campaign/push`, {
         optionType: optionNumType,
-        priorityType,
+        priorityType: priorityNum,
         campaignName: step3State.campaignName,
         bannerId: step3State.bannerId,
         budget: step3State.budget,
@@ -302,38 +276,6 @@ const CampaignCreateStepper = () => {
     }
   };
 
-  // 오래걸리므로 props로 전달.
-  const getBannerList = () => {
-    axios.get(`${HOST}/api/dashboard/marketer/banner/registered`)
-      .then((res) => {
-        // 올바른 데이터가 전달되었다.
-        if (res.data[0]) {
-          setbannerList(res.data[1]);
-        } else {
-          alert(res.data[1]);
-        }
-      });
-  };
-
-  const getCreatorList = () => {
-    axios.get(`${HOST}/api/dashboard/creator/list`)
-      .then((res) => {
-      // 올바른 데이터가 전달되었다.
-        if (res.data[0]) {
-          // {creatorId, creatorName, creatorLogo}의 형태이므로 creatorId만 남도록 재 array화.
-          const creators = res.data[1].map(data => data.creatorId);
-          setCreatorList(creators);
-        } else {
-          alert(res.data[1]);
-        }
-      });
-  };
-
-  useEffect(() => {
-    getBannerList();
-    getCreatorList();
-  }, []);
-
   const handleDatePickerOpen = () => {
     step3Dispatch({ key: 'dateReset' });
     setDatePickerOpen(!datePickerOpen);
@@ -343,14 +285,15 @@ const CampaignCreateStepper = () => {
     event.preventDefault();
     switch (_step) {
       case 0: {
-        setPriorityOpen(true);
-        setStep(1);
+        setStep2PaperOpen(true);
+        setStep(1); // step 넘기기
+        setStepComplete(false); // '다음' 버튼 없애기 (올바른 입력 전까지)
         return false;
       }
       case 1: {
-        setCreationOpen(true);
-        setCreatePaperOpen(true);
-        setStep(2);
+        setStep3PaperOpen(true);
+        setStep(2); // step 넘기기
+        setStepComplete(false); // '완료' 버튼 없애기 (올바른 입력 전까지)
         return false;
       }
       default: {
@@ -368,6 +311,7 @@ const CampaignCreateStepper = () => {
     setDateOpen(!dateOpen);
   };
 
+  // '뒤로' 버튼 핸들러
   const handleBack = (event) => {
     event.preventDefault();
     setStepComplete(true);
@@ -378,69 +322,52 @@ const CampaignCreateStepper = () => {
       }
       case 1: {
         setStep(step - 1);
-        setPriorityOpen(false);
+        setStep2PaperOpen(false);
         return false;
       }
       case 2: {
         setStep(step - 1);
-        setPriorityOpen(true);
-        setCreationOpen(false);
-        setCreatePaperOpen(false);
+        setStep2PaperOpen(true);
+        setStep3PaperOpen(false);
         return false;
       }
       default: return false;
     }
   };
 
+  // '다음' 또는 '완료' 버튼 핸들러
   const nextButton = (_step) => {
     switch (_step) {
-      case 0:
-        return (
-          <Collapse in={stepComplete}>
-            <Grid item>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={handleNext(_step)}
-                className={classes.end}
-              >
-                다음
-              </Button>
-            </Grid>
-          </Collapse>
-        );
-      case 1:
-        return (
-          <Collapse in={stepComplete}>
-            <Grid item>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={handleNext(_step)}
-                className={classes.end}
-              >
-                다음
-              </Button>
-            </Grid>
-          </Collapse>
-        );
       case 2:
         return (
+          <Grid item>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleSubmit}
+              className={classes.end}
+            >
+              완료
+            </Button>
+          </Grid>
+        );
+      case 0:
+      case 1:
+      default:
+        return (
           <Collapse in={stepComplete}>
             <Grid item>
               <Button
                 variant="contained"
                 color="primary"
-                onClick={handleSubmit}
+                onClick={handleNext(_step)}
                 className={classes.end}
               >
-                완료
+                다음
               </Button>
             </Grid>
           </Collapse>
         );
-      default:
-        return <div />;
     }
   };
 
@@ -450,74 +377,55 @@ const CampaignCreateStepper = () => {
     <Grid container direction="row" spacing={2} wrap="wrap">
       {isDesktop ? (
         <React.Fragment>
-          <Grid item xs={isDesktop ? 10 : 12}>
-            <Paper className={classes.paper}>
+          <Grid item xs={12} lg={10} xl={8}>
+            <Paper>
               <Grid container direction="column" className={classes.root}>
-                <Grid item>
+                <Grid item xs={12}>
                   <OptionPaper
                     setStepComplete={setStepComplete}
-                    priorityOpen={priorityOpen}
                     state={step1State}
                     dispatch={step1Dispatch}
-                    selectedCategory={checkedGames}
-                    setPriorityOpen={setPriorityOpen}
                     step={step}
                   />
-                  {priorityOpen
-                    ? (
-                      <div>
-                        <ProrityPaper
-                          handleNext={handleNext}
-                          step1State={step1State}
-                          state={step2State}
-                          dispatch={step2Dispatch}
-                          setStepComplete={setStepComplete}
-                          creationOpen={creationOpen}
-                          creatorList={creatorList}
-                          checkedCreators={checkedCreators}
-                          checkedCreatorsDispatch={checkedCreatorsDispatch}
-                          handleBack={handleBack}
-                          stepComplete={stepComplete}
-                          checkedGames={checkedGames}
-                          checkedGamesDispatch={checkedGamesDispatch}
-                          priorityOpen={priorityOpen}
-                          createPaperOpen={createPaperOpen}
-                        />
-                      </div>
-                    ) : <div />}
-                  {createPaperOpen
-                    ? (
-                      <div>
-                        <CampaignCreateTable
-                          checkName={checkName}
-                          setCheckName={setCheckName}
-                          bannerList={bannerList}
-                          dispatch={step3Dispatch}
-                          setStepComplete={setStepComplete}
-                          state={step3State}
-                          setDetailOpen={setDetailOpen}
-                          detailOpen={detailOpen}
-                          step1State={step1State}
-                          handleDetailOpen={handleDetailOpen}
-                          handleDateOpen={handleDateOpen}
-                          dateOpen={dateOpen}
-                          handleDatePickerOpen={handleDatePickerOpen}
-                          datePickerOpen={datePickerOpen}
-                          getBannerList={getBannerList}
-                          budgetError={budgetError}
-                          setBudgetError={setBudgetError}
-                        />
-                      </div>
-                    ) : <div />}
+                  {step2PaperOpen && (
+                  <ProrityPaper
+                    state={step2State}
+                    dispatch={step2Dispatch}
+                    setStepComplete={setStepComplete}
+                    checkedCreators={checkedCreators}
+                    checkedCreatorsDispatch={checkedCreatorsDispatch}
+                    checkedGames={checkedGames}
+                    checkedGamesDispatch={checkedGamesDispatch}
+                    step3PaperOpen={step3PaperOpen}
+                  />
+                  )}
+                  {step3PaperOpen && (
+                  <CampaignCreateTable
+                    checkName={checkName}
+                    setCheckName={setCheckName}
+                    dispatch={step3Dispatch}
+                    state={step3State}
+                    setDetailOpen={setDetailOpen}
+                    budgetError={budgetError}
+                    setBudgetError={setBudgetError}
+                    detailOpen={detailOpen}
+                    step1State={step1State}
+                    handleDetailOpen={handleDetailOpen}
+                    dateOpen={dateOpen}
+                    handleDateOpen={handleDateOpen}
+                    handleDatePickerOpen={handleDatePickerOpen}
+                    datePickerOpen={datePickerOpen}
+                  />
+                  )}
                 </Grid>
                 <Grid item>
-                  <Grid container direction="row">
+                  <Grid container direction="row-reverse">
+                    {nextButton(step)}
                     <Grid item>
                       <Button onClick={handleBack} className={classes.button}>
                         뒤로
                       </Button>
                     </Grid>
-                    {nextButton(step)}
                   </Grid>
                 </Grid>
               </Grid>
@@ -550,8 +458,3 @@ const CampaignCreateStepper = () => {
 };
 
 export default CampaignCreateStepper;
-
-CampaignCreateStepper.propTypes = {
-  // open: PropTypes.object,
-  handleClose: PropTypes.func,
-};

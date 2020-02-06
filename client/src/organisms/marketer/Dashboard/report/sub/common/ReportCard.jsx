@@ -3,11 +3,10 @@ import PropTypes from 'prop-types';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import CountUp from 'react-countup';
 import { Grid, Typography } from '@material-ui/core';
-import Help from '@material-ui/icons/Help';
 import Card from '../../../../../../atoms/Card/Card';
 import CardBody from '../../../../../../atoms/Card/CardBody';
-import Tooltip from '../../../../../../atoms/DescPopover';
-import useTooltip from '../../../../../../utils/lib/hooks/useTooltip';
+// import Tooltip from '../../../../../../atoms/DescPopover';
+// import useTooltip from '../../../../../../utils/lib/hooks/useTooltip';
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -31,16 +30,12 @@ const useStyles = makeStyles(theme => ({
     }
   },
   value: {
-    color: '#00acc1', fontWeight: 700
+    color: theme.palette.primary.light, fontWeight: 700
   }
 }));
 
 const ReportCard = (props) => {
   const { data, ...rest } = props;
-
-  const {
-    tooltipIndex, anchorEl, handleTooltipOpen, handleTooltipClose
-  } = useTooltip();
 
   const classes = useStyles();
 
@@ -94,7 +89,7 @@ const ReportCard = (props) => {
         </Grid>
       ))}
 
-      <Tooltip
+      {/* <Tooltip
         open={Boolean(anchorEl)}
         anchorEl={anchorEl}
         handlePopoverClose={handleTooltipClose}
@@ -108,7 +103,7 @@ const ReportCard = (props) => {
           vertical: 'bottom',
           horizontal: 'left',
         }}
-      />
+      /> */}
     </Grid>
   );
 };

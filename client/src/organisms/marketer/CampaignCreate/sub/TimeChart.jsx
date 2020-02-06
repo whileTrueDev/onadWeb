@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import Skeleton from '@material-ui/lab/Skeleton';
 import ReChartBar from '../../../../atoms/Chart/ReChartBar';
 
