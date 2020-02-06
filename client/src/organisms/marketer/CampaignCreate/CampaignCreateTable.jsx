@@ -24,7 +24,10 @@ import KeywordInput from './KeywordInput';
 import TimeSelector from './TimeSelector';
 import TimeSelectorSet from './TimeSelectorSet';
 import UploadDialog from '../BannerManage/UploadDialog';
+import LandingUrlInventoryDialog from './LandingUrlInventoryDialog';
 import useDialog from '../../../utils/lib/hooks/useDialog';
+import useFetchData from '../../../utils/lib/hooks/useFetchData';
+
 
 const StyledTableCell = withStyles(theme => ({
   head: {
@@ -59,8 +62,10 @@ const CampaignCreateTable = (props) => {
   } = props;
   const [timeSelectorOpen, setTimeSelectorOpen] = React.useState(false);
   const createPage = true;
+  const fetchData = useFetchData('/api/dashboard/marketer/inventory/landingurl/all');
 
   const uploadDialog = useDialog();
+  const landingUrlInventoryDialog = useDialog();
 
   const handleTimeSelectorOpen = () => {
     setTimeSelectorOpen(!timeSelectorOpen);
@@ -109,14 +114,13 @@ const CampaignCreateTable = (props) => {
                   <Grid item>
                     <StyledItemText>등록된 URL을 보고싶으신가요?</StyledItemText>
                     <Button
-                      onClick={() => { window.open(`${window.location.protocol}//${window.location.host}/dashboard/marketer/banner`); }}
+                      onClick={() => { landingUrlInventoryDialog.handleOpen(); }}
                     >
                       + 나의 인벤토리
                     </Button>
                   </Grid>
                 </Grid>
                 <Divider component="hr" style={{ height: '2px' }} />
-
               </StyledTableCell>
             </StyledTableRow>
           ) : (<div />) }
@@ -195,6 +199,16 @@ const CampaignCreateTable = (props) => {
         onClose={uploadDialog.handleClose}
         createPage={createPage}
         getBannerList={getBannerList}
+      />
+
+      <LandingUrlInventoryDialog
+        open={landingUrlInventoryDialog.open}
+        onClose={landingUrlInventoryDialog.handleClose}
+        createPage={createPage}
+        getBannerList={getBannerList}
+        fetchData={fetchData}
+        dispatch={dispatch}
+        state={state}
       />
     </TableContainer>
   );

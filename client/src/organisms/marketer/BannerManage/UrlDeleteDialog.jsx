@@ -54,7 +54,7 @@ const DeleteDialog = (props) => {
                   color="info"
                   disabled
                 >
-                  {'확인'}
+                  확인
                 </CustomButton>
               </div>
             </Tooltip>
@@ -70,7 +70,7 @@ const DeleteDialog = (props) => {
                 }, 1000);
               }}
             >
-              {'확인'}
+              확인
             </CustomButton>
           )}
           <CustomButton onClick={handleClose}>취소</CustomButton>

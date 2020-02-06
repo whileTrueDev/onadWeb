@@ -70,12 +70,12 @@ const CategorySelect = (props) => {
           </Grid>
 
           <Grid item>
-            {gamesData.loaidng && (
+            {gamesData.loading && (
             <div style={{ padding: 72, textAlign: 'center' }}>
               <CircularProgress size={100} disableShrink />
             </div>
             )}
-            {!gamesData.loaidng && gamesData.payload && (
+            {!gamesData.loading && gamesData.payload && (
             <Grid container direction="row" spacing={2}>
 
                 {gamesData.payload.slice(0, 12).map(game => (

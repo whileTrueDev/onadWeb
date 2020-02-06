@@ -204,11 +204,11 @@ const CampaignCreateStepper = () => {
   // const isTrue = currentValue => currentValue === true;
 
   const checkEmpty = (input) => {
-    if (input[0].length === 0) {
+    if (input.option.length === 0) {
       alert('광고 유형이 입력되지 않았습니다.');
       return false;
     }
-    if (input[1].length === 0) {
+    if (input.type.length === 0) {
       alert('우선형 유형이 입력되지 않았습니다.');
       return false;
     }
@@ -216,11 +216,11 @@ const CampaignCreateStepper = () => {
       alert('캠페인 이름이 입력되지 않았습니다.');
       return false;
     }
-    if (input[4].length === 0) {
+    if (input.bannerId.length === 0) {
       alert('배너가 선택되지 않았습니다.');
       return false;
     }
-    if (input[0] !== 'type0' && (input[10].replace('https://').length === 0 || input[10].replace('http://').length === 0)) {
+    if (input.option !== 'type0' && (input.mainLandingUrl.replace('https://').length === 0 || input.mainLandingUrl.replace('http://').length === 0)) {
       alert('랜딩페이지 URL이 입력되지 않았습니다.');
       return false;
     }
@@ -234,26 +234,6 @@ const CampaignCreateStepper = () => {
     event.preventDefault();
     const priorityType = typeToNum(step2State.priorityType);
     const optionNumType = typeToNum(step1State.option);
-    console.log({
-      optionType: optionNumType,
-      priorityType,
-      campaignName: step3State.campaignName,
-      bannerId: step3State.bannerId,
-      budget: step3State.budget,
-      mainLandingUrlName: step3State.mainLandingUrlName,
-      sub1LandingUrlName: step3State.sub1LandingUrlName,
-      sub2LandingUrlName: step3State.sub2LandingUrlName,
-      mainUrl: step3State.mainLandingUrl,
-      sub1Url: step3State.sub1LandingUrl,
-      sub2Url: step3State.sub2LandingUrl,
-      startDate: step3State.startDate,
-      finDate: step3State.finDate,
-      keyword0: step3State.keyword0,
-      keyword1: step3State.keyword1,
-      keyword2: step3State.keyword2,
-      time: step3State.time,
-    },
-    detailOpen === budgetError);
 
     const priorityList = ((type) => {
       switch (type) {
@@ -275,25 +255,49 @@ const CampaignCreateStepper = () => {
       }
     })(step2State.priorityType);
 
-    const validateArray = [
-      step1State.option,
+    console.log({
+      optionType: optionNumType,
       priorityType,
-      step3State.campaignName,
-      step3State.budget,
-      step3State.bannerId,
-      step3State.startDate,
-      step3State.finDate,
-      step3State.keyword0,
-      step3State.keyword1,
-      step3State.keyword2,
-      step3State.mainLandingUrl,
-      step3State.sub1LandingUrl,
-      step3State.sub2LandingUrl,
-      priorityList,
-      step3State.time
-    ];
+      campaignName: step3State.campaignName,
+      bannerId: step3State.bannerId,
+      budget: step3State.budget,
+      mainLandingUrlName: step3State.mainLandingUrlName,
+      sub1LandingUrlName: step3State.sub1LandingUrlName,
+      sub2LandingUrlName: step3State.sub2LandingUrlName,
+      mainUrl: step3State.mainLandingUrl,
+      sub1Url: step3State.sub1LandingUrl,
+      sub2Url: step3State.sub2LandingUrl,
+      startDate: step3State.startDate,
+      finDate: step3State.finDate,
+      keyword0: step3State.keyword0,
+      keyword1: step3State.keyword1,
+      keyword2: step3State.keyword2,
+      time: step3State.time,
+      priorityList
+    },
+    detailOpen === budgetError);
 
-    if (checkEmpty(validateArray)) {
+    const validateObject = {
+      option: step1State.option,
+      type: priorityType,
+      campaignName: step3State.campaignName,
+      budget: step3State.budget,
+      bannerId: step3State.bannerId,
+      startDate: step3State.startDate,
+      finDate: step3State.finDate,
+      keyword0: step3State.keyword0,
+      keyword1: step3State.keyword1,
+      keyword2: step3State.keyword2,
+      mainLandingUrlName: step3State.mainLandingUrlName,
+      sub1LandingUrlName: step3State.sub1LandingUrlName,
+      sub2LandingUrlName: step3State.sub2LandingUrlName,
+      mainLandingUrl: step3State.mainLandingUrl,
+      sub1LandingUrl: step3State.sub1LandingUrl,
+      sub2LandingUrl: step3State.sub2LandingUrl,
+      priority: priorityList,
+      time: step3State.time
+    };
+    if (checkEmpty(validateObject)) {
       axios.post(`${HOST}/api/dashboard/marketer/campaign/push`, {
         optionType: optionNumType,
         priorityType,
