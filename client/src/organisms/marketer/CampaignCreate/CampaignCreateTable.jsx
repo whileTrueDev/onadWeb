@@ -10,7 +10,6 @@ import Paper from '@material-ui/core/Paper';
 import { Divider } from '@material-ui/core';
 
 import StyledItemText from '../../../atoms/StyledItemText';
-import Button from '../../../atoms/CustomButtons/Button';
 import CampaignNaming from './CampaignNaming';
 import CampaignBannerReg from './CampaignBannerReg';
 import LandingUrlInput from './LandingUrlInput';
