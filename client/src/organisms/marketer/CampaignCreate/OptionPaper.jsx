@@ -76,10 +76,7 @@ const OptionPaper = (props) => {
   } = props;
 
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const [budgetAnchorEl, setBudgetAnchorEl] = React.useState(null);
-  const [descIndex, setDescIndex] = React.useState(0); // popover의 내용 Index
 
-  const [error, setError] = React.useState(false); // budget 작성시 한도 체크용 State
   // const [total, setTotal] = React.useState();
   // const [exepectedDay, setExcpectedDay] = React.useState(0);
   // const [exepectedViews, setExcpectedViews] = React.useState(0);
@@ -95,18 +92,15 @@ const OptionPaper = (props) => {
       dispatch({ key: 'reset' });
       setStepComplete(false);
       setPriorityOpen(false);
-      setError(false);
     }
   };
 
   const handlePopoverOpen = index => (event) => {
-    setDescIndex(index);
     setAnchorEl(event.currentTarget);
   };
 
   const handlePopoverClose = () => {
     setAnchorEl(null);
-    setBudgetAnchorEl(null);
   };
 
   const checkedOptionRender = (_option) => {

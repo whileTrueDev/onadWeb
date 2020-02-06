@@ -375,8 +375,8 @@ const PriorityDoquery = ({
       }
       case '1': {
         return `
-        UPDATE categoryCampaign 
-        SET campaignList = ? 
+        UPDATE categoryCampaign
+        SET campaignList = ?
         WHERE categoryName = ?`;
       }
       case '2': {

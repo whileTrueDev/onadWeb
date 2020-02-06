@@ -76,9 +76,7 @@ const PriorityPaper = (props) => {
     if (event.target.checked) {
       dispatch({ type: event.target.name });
       setStepComplete(true);
-      console.log(event.target.name);
     } else {
-      console.log('체크 해제', event.target.name);
       dispatch({ type: 'reset' });
       setStepComplete(false);
     }

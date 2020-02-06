@@ -192,7 +192,6 @@ const CampaignCreateStepper = () => {
   const [priorityOpen, setPriorityOpen] = React.useState(false);
   const [creationOpen, setCreationOpen] = React.useState(false);
   const [bannerList, setbannerList] = React.useState([]);
-  const [submitCheck, handleSubmitCheck] = React.useState(false);
   const [stepComplete, setStepComplete] = React.useState(false); // 현재 step에서 다음 step으로 넘어가기위한 state
   const [createPaperOpen, setCreatePaperOpen] = React.useState(false);
   const [datePickerOpen, setDatePickerOpen] = React.useState(false);
@@ -220,7 +219,7 @@ const CampaignCreateStepper = () => {
       alert('배너가 선택되지 않았습니다.');
       return false;
     }
-    if (input.option !== 'type0' && (input.mainLandingUrl.replace('https://').length === 0 || input.mainLandingUrl.replace('http://').length === 0)) {
+    if (input.option !== 'type0' && (input.mainLandingUrl.replace(/ /gi, '').length === 0)) {
       alert('랜딩페이지 URL이 입력되지 않았습니다.');
       return false;
     }
@@ -254,28 +253,6 @@ const CampaignCreateStepper = () => {
         }
       }
     })(step2State.priorityType);
-
-    console.log({
-      optionType: optionNumType,
-      priorityType,
-      campaignName: step3State.campaignName,
-      bannerId: step3State.bannerId,
-      budget: step3State.budget,
-      mainLandingUrlName: step3State.mainLandingUrlName,
-      sub1LandingUrlName: step3State.sub1LandingUrlName,
-      sub2LandingUrlName: step3State.sub2LandingUrlName,
-      mainUrl: step3State.mainLandingUrl,
-      sub1Url: step3State.sub1LandingUrl,
-      sub2Url: step3State.sub2LandingUrl,
-      startDate: step3State.startDate,
-      finDate: step3State.finDate,
-      keyword0: step3State.keyword0,
-      keyword1: step3State.keyword1,
-      keyword2: step3State.keyword2,
-      time: step3State.time,
-      priorityList
-    },
-    detailOpen === budgetError);
 
     const validateObject = {
       option: step1State.option,
@@ -320,7 +297,7 @@ const CampaignCreateStepper = () => {
       })
         .then((res) => {
           alert(res.data[1]);
-          // history.push('/dashboard/marketer/main');
+          history.push('/dashboard/marketer/main');
         });
     }
   };
@@ -362,47 +339,18 @@ const CampaignCreateStepper = () => {
     setDatePickerOpen(!datePickerOpen);
   };
 
-  // const handleButton = (_step) => {
-  //   switch (_step) {
-  //     case 0: {
-  //       setPriorityOpen(false);
-  //       setCreationOpen(false);
-  //       setCreatePaperOpen(false);
-  //       setStep(0);
-  //       console.log('campaignCreation line 256');
-  //       return false;
-  //     }
-  //     case 1: {
-  //       setPriorityOpen(true);
-  //       setCreatePaperOpen(false);
-  //       setStep(1);
-  //       console.log('campaignCreation line 261');
-  //       return false;
-  //     }
-  //     case 2: {
-  //       setCreatePaperOpen(true);
-  //       setStep(2);
-  //       return false;
-  //     }
-  //     default: {
-  //       return false; }
-  //   }
-  // };
-
   const handleNext = _step => (event) => {
     event.preventDefault();
     switch (_step) {
       case 0: {
         setPriorityOpen(true);
         setStep(1);
-        console.log('campaignCreation line 249');
         return false;
       }
       case 1: {
         setCreationOpen(true);
         setCreatePaperOpen(true);
         setStep(2);
-        console.log('campaignCreation line 255');
         return false;
       }
       default: {
@@ -417,7 +365,6 @@ const CampaignCreateStepper = () => {
   };
 
   const handleDateOpen = () => {
-    console.log('campaignCreation 346');
     setDateOpen(!dateOpen);
   };
 
@@ -435,7 +382,6 @@ const CampaignCreateStepper = () => {
         return false;
       }
       case 2: {
-        console.log('campaigncreation 348line');
         setStep(step - 1);
         setPriorityOpen(true);
         setCreationOpen(false);
@@ -497,16 +443,6 @@ const CampaignCreateStepper = () => {
         return <div />;
     }
   };
-  // useEffect(() => {
-  //   if (step1State.option) {
-  //     console.log('campaignCration line 421');
-  //     setStepComplete(true);
-  //   } else {
-  //     console.log('useeffect else');
-  //     console.log(step1State.option, step2State.priorityType);
-  //     setStepComplete(false);
-  //   }
-  // }, [step1State.option, step2State.priorityType]);
 
   const isDesktop = useMediaQuery(theme => theme.breakpoints.up('md'));
 
@@ -520,7 +456,6 @@ const CampaignCreateStepper = () => {
                 <Grid item>
                   <OptionPaper
                     setStepComplete={setStepComplete}
-                    handleSubmitCheck={handleSubmitCheck}
                     priorityOpen={priorityOpen}
                     state={step1State}
                     dispatch={step1Dispatch}

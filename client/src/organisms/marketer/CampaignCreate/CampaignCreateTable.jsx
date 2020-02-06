@@ -7,9 +7,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-import {
-  Divider, Grid, Typography
-} from '@material-ui/core';
+import { Divider, Grid } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 
 import StyledItemText from '../../../atoms/StyledItemText';

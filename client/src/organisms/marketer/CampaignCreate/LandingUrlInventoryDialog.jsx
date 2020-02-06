@@ -1,22 +1,15 @@
-import React, { useReducer, useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
-import { makeStyles, withStyles } from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core/styles';
 import {
   Stepper, Step, StepLabel, StepContent, Tooltip, Typography, Button
 } from '@material-ui/core';
-import { Delete, Star } from '@material-ui/icons';
-import classnames from 'classnames';
-import Check from '@material-ui/icons/Check';
+import { Star } from '@material-ui/icons';
 import Dialog from '../../../atoms/Dialog/Dialog';
 import '../BannerManage/upload.css';
 import MaterialTable from '../../../atoms/Table/MaterialTable';
 
-import HOST from '../../../utils/config';
-import axios from '../../../utils/axios';
-import history from '../../../history';
 import GreenCheckbox from '../../../atoms/GreenCheckBox';
-
-const DEFAULT_IMAGE_PATH = '/pngs/dashboard/banner_upload_manual.png';
 
 const dialogStyle = theme => ({
   formRoot: {
@@ -25,45 +18,10 @@ const dialogStyle = theme => ({
   },
 });
 
-const useQontoStepIconStyles = makeStyles(theme => ({
-  root: {
-    color: '#eaeaf0',
-    display: 'flex',
-  },
-  active: {
-    color: theme.palette.primary.main,
-  },
-  circle: {
-    width: 11,
-    height: 11,
-    borderRadius: '50%',
-    backgroundColor: 'currentColor',
-  },
-  completed: {
-    color: theme.palette.primary.main,
-    zIndex: 1,
-    fontSize: 18,
-  },
-}));
-
-// function QontoStepIcon(props) {
-//   const classes = useQontoStepIconStyles();
-//   const { active, completed } = props;
-
-//   return (
-//     <div
-//       className={classnames(classes.root, { [classes.active]: active })}
-//     >
-//       {completed ? <Check className={classes.completed} /> : <div className={classes.circle} />}
-//     </div>
-//   );
-// }
-
 const LandingUrlInventoryDialog = (props) => {
   const {
-    open, onClose, classes, createPage, getBannerList, fetchData, dispatch, state
+    open, onClose, fetchData, dispatch,
   } = props;
-
   const [indexId, setindexId] = React.useState('');
   const [tmpMainUrl, setTmpMainUrl] = React.useState('');
   const [tmpSub1Url, setTmpSub1Url] = React.useState('');
@@ -74,7 +32,6 @@ const LandingUrlInventoryDialog = (props) => {
 
   const handleCheck = (event, rowData) => {
     setindexId(event.target.id);
-    console.log(rowData);
     setTmpMainUrl(rowData.links[0].linkTo);
     if (rowData.links[1]) {
       setTmpSub1Url(rowData.links[1].linkTo);
@@ -219,18 +176,21 @@ const LandingUrlInventoryDialog = (props) => {
 
             </div>
           </StepContent>
-          <Button
-            color="primary"
-            onClick={handleClose}
-          >
-          닫기
-          </Button>
-          <Button
-            color="primary"
-            onClick={() => { handleClose('click'); }}
-          >
-          확인
-          </Button>
+          <div style={{ margin: '5px', float: 'right' }}>
+            <Button
+              variant="contained"
+              onClick={handleClose}
+            >
+              닫기
+            </Button>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => { handleClose('click'); }}
+            >
+              확인
+            </Button>
+          </div>
         </Step>
 
       </Stepper>
@@ -240,7 +200,6 @@ const LandingUrlInventoryDialog = (props) => {
 
 
 LandingUrlInventoryDialog.propTypes = {
-  classes: PropTypes.object.isRequired,
   onClose: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
 };

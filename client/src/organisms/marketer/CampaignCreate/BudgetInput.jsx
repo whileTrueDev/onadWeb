@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import {
   Grid
 } from '@material-ui/core';
@@ -67,7 +67,6 @@ const BudgetInput = (props) => {
     state, dispatch, budgetError, setBudgetError
   } = props;
 
-  const [anchorEl, setAnchorEl] = React.useState(null);
   const [budgetAnchorEl, setBudgetAnchorEl] = React.useState(null);
 
   // const [error, setError] = React.useState(false); // budget 작성시 한도 체크용 State
@@ -101,7 +100,6 @@ const BudgetInput = (props) => {
   };
 
   const handlePopoverClose = () => {
-    setAnchorEl(null);
     setBudgetAnchorEl(null);
   };
 
