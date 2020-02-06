@@ -31,7 +31,6 @@ router.get('/all', (req, res) => {
   const bannerQuery = `
   SELECT bannerSrc, confirmState, bannerId, 
     bannerDenialReason, bannerDescription, 
-    landingUrl,
     DATE_FORMAT(date, "%Y년% %m월 %d일") as date,
     DATE_FORMAT(regiDate, "%Y년% %m월 %d일") as regiDate
   FROM bannerRegistered
