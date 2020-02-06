@@ -177,22 +177,22 @@ const getCash = async ({ campaignList, banList }) => {
 router.get('/list', (req, res) => {
   const { creatorId } = req._passport.session.user;
   const listQuery = `
-  SELECT CT.campaignId, CT.date, BR.bannerSrc, CT.creatorId,
+  SELECT CT.campaignId, CT.date, BR.bannerSrc, CT.creatorId, campaign.connectedLinkId,
   campaign.onOff as state, campaign.marketerName, 
-  bannerDescription,
-  landingUrl
+  bannerDescription, IR.links
   FROM 
   (
-  SELECT creatorId, campaignId , min(date) as date FROM campaignTimestamp
+  SELECT creatorId, campaignId , min(date) as date 
+  FROM campaignTimestamp
   WHERE creatorId = ?
   GROUP BY campaignId
   ) AS CT 
-
   JOIN campaign 
   ON CT.campaignId = campaign.campaignId
-
   JOIN bannerRegistered AS BR
   ON campaign.bannerId = BR.bannerId
+  LEFT JOIN linkRegistered AS IR
+  ON connectedLinkId = IR.linkId
   `;
 
   const banQuery = `
