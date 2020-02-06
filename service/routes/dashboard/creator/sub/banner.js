@@ -207,6 +207,7 @@ router.get('/list', (req, res) => {
   ])
     .then(async ([row, ban]) => {
     // banList를 통해 캠페인의 완료를 체크하여 전달한다.
+    // link를 parse하여 활용하는 방안을 생각해야한다.
       const banList = JSON.parse(ban.result[0].banList).campaignList;
       const campaignList = await getCash({ campaignList: row.result, banList });
       res.send(campaignList);
