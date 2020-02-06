@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useTheme, makeStyles } from '@material-ui/core/styles';
-import { Grid, Paper, ButtonBase } from '@material-ui/core';
+import { Paper, ButtonBase } from '@material-ui/core';
 import StyledSelectText from '../../../../atoms/StyledSelectText';
 import GreenCheckbox from '../../../../atoms/GreenCheckBox';
 
@@ -24,11 +24,20 @@ const useStyles = makeStyles(theme => ({
 export default function OptionSelectPaper(props) {
   const {
     name, checked, handleSelect,
-    primaryText, secondaryText, disabled, children
+    primaryText, secondaryText, disabled, children,
+    innerPaperChildren
   } = props;
   const classes = useStyles();
   const theme = useTheme();
 
+  function getBackgroudColor() {
+    if (checked) {
+      return theme.palette.primary.light;
+    } if (!checked && disabled) {
+      return theme.palette.grey[300];
+    }
+    return 'inherit';
+  }
 
   return (
     <div className={classes.root}>
@@ -42,7 +51,7 @@ export default function OptionSelectPaper(props) {
         <Paper
           className={classes.choice}
           style={{
-            backgroundColor: checked ? theme.palette.primary.light : 'inherit',
+            backgroundColor: getBackgroudColor(),
             color: checked ? theme.palette.common.white : 'inherit'
           }}
           elevation={checked ? 1 : 4}
@@ -58,6 +67,7 @@ export default function OptionSelectPaper(props) {
               secondary={secondaryText}
               color={checked ? theme.palette.common.white : 'inherit'}
             />
+            {innerPaperChildren || null}
           </div>
         </Paper>
       </ButtonBase>
@@ -76,10 +86,12 @@ OptionSelectPaper.propTypes = {
   handleSelect: PropTypes.func,
   checked: PropTypes.bool,
   disabled: PropTypes.bool,
+  innerPaperChildren: PropTypes.node,
 };
 
 OptionSelectPaper.defaultProps = {
   checked: false,
   handleSelect() {},
   disabled: false,
+  innerPaperChildren: null
 };

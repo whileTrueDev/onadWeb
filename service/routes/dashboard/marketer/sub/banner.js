@@ -52,7 +52,7 @@ router.get('/all', (req, res) => {
 });
 
 // 특정 마케터의 승인된 배너를 조회
-router.get('/registed', (req, res) => {
+router.get('/registered', (req, res) => {
   const marketerId = req._passport.session.user.userid;
   const bannerQuery = `
   SELECT bannerId, bannerSrc
@@ -61,10 +61,10 @@ router.get('/registed', (req, res) => {
   `;
   doQuery(bannerQuery, [marketerId])
     .then((row) => {
-      res.send([true, row.result]);
+      res.send(row.result);
     })
     .catch((errorData) => {
-      console.log(errorData);
+      console.log('Error in /banner/registered - ', errorData);
       res.send([null, errorData]);
     });
 });

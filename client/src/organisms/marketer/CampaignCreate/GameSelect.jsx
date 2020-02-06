@@ -58,12 +58,12 @@ const GameSelect = (props) => {
       </Grid>
 
       <Grid item xs={12}>
-        {gamesData.loaidng && (
+        {gamesData.loading && (
         <div style={{ padding: 72, textAlign: 'center' }}>
           <CircularProgress size={100} disableShrink />
         </div>
         )}
-        {!gamesData.loaidng && gamesData.payload && (
+        {!gamesData.loading && gamesData.payload && (
 
         <Grid container spacing={2} style={{ flexWrap: 'wrap' }}>
           {gamesData.payload.slice(0, 12).map(game => (

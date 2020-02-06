@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer } from 'react';
+import React, { useReducer } from 'react';
 import { Link } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
@@ -58,7 +58,7 @@ const step2Reducer = (state, action) => {
     case 'type2':
       return { priorityType: 'type2' };
     case 'reset':
-      return { priorityType: null };
+      return { priorityType: '' };
     default:
       return state;
   }
@@ -138,10 +138,10 @@ const CampaignCreateStepper = () => {
   const [step2State, step2Dispatch] = useReducer(step2Reducer, { priorityType: 'option2' });
 
   // 2 번째 prioritystep에서 사용할 State.
-  const [creatorList, setCreatorList] = React.useState([]);
   const [checkedCreators, checkedCreatorsDispatch] = useReducer(step2InnerReducer, []);
   const [checkedGames, checkedGamesDispatch] = useReducer(step2InnerReducer, []);
-  // 캠페인 기본정보
+
+  // 3 번째 캠페인 기본정보에서 사용할 State
   const [step3State, step3Dispatch] = useReducer(step3Reducer, {
     campaignName: '',
     bannerId: '',
@@ -159,7 +159,6 @@ const CampaignCreateStepper = () => {
   // 최종 step에서 handleSubmit을 하기위한 signal
   const [step2PaperOpen, setStep2PaperOpen] = React.useState(false); // step2를 열거나 닫는 state
   const [step3PaperOpen, setStep3PaperOpen] = React.useState(false); // step3를 열거나 닫는 state
-  const [bannerList, setbannerList] = React.useState([]);
   const [stepComplete, setStepComplete] = React.useState(true); // 현재 step에서 다음 step으로 넘어가기위한 state
   const [datePickerOpen, setDatePickerOpen] = React.useState(false);
   const [detailOpen, setDetailOpen] = React.useState(false);
@@ -253,38 +252,6 @@ const CampaignCreateStepper = () => {
         // history.push('/dashboard/marketer/main');
       });
   };
-
-  // 오래걸리므로 props로 전달.
-  const getBannerList = () => {
-    axios.get(`${HOST}/api/dashboard/marketer/banner/registed`)
-      .then((res) => {
-        // 올바른 데이터가 전달되었다.
-        if (res.data[0]) {
-          setbannerList(res.data[1]);
-        } else {
-          alert(res.data[1]);
-        }
-      });
-  };
-
-  const getCreatorList = () => {
-    axios.get(`${HOST}/api/dashboard/creator/list`)
-      .then((res) => {
-      // 올바른 데이터가 전달되었다.
-        if (res.data[0]) {
-          // {creatorId, creatorName, creatorLogo}의 형태이므로 creatorId만 남도록 재 array화.
-          const creators = res.data[1].map(data => data.creatorId);
-          setCreatorList(creators);
-        } else {
-          alert(res.data[1]);
-        }
-      });
-  };
-
-  useEffect(() => {
-    getBannerList();
-    getCreatorList();
-  }, []);
 
   const handleDatePickerOpen = () => {
     step3Dispatch({ key: 'dateReset' });
@@ -404,10 +371,8 @@ const CampaignCreateStepper = () => {
                     state={step2State}
                     dispatch={step2Dispatch}
                     setStepComplete={setStepComplete}
-                    creatorList={creatorList}
                     checkedCreators={checkedCreators}
                     checkedCreatorsDispatch={checkedCreatorsDispatch}
-                    stepComplete={stepComplete}
                     checkedGames={checkedGames}
                     checkedGamesDispatch={checkedGamesDispatch}
                     step3PaperOpen={step3PaperOpen}
@@ -417,7 +382,6 @@ const CampaignCreateStepper = () => {
                   <CampaignCreateTable
                     checkName={checkName}
                     setCheckName={setCheckName}
-                    bannerList={bannerList}
                     dispatch={step3Dispatch}
                     setStepComplete={setStepComplete}
                     state={step3State}
@@ -433,13 +397,13 @@ const CampaignCreateStepper = () => {
                   )}
                 </Grid>
                 <Grid item>
-                  <Grid container direction="row">
+                  <Grid container direction="row-reverse">
+                    {nextButton(step)}
                     <Grid item>
                       <Button onClick={handleBack} className={classes.button}>
                         뒤로
                       </Button>
                     </Grid>
-                    {nextButton(step)}
                   </Grid>
                 </Grid>
               </Grid>
