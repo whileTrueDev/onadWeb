@@ -58,6 +58,24 @@ router.get('/new', (req, res) => {
   and date > ?
   `;
 
+  // const mergedQuery = `
+  // select CL.campaignId, campaignName, optionType, priorityType, regiDate, onOff, bannerSrc, dailyLimit,  CL.campaignId, sum(cashFromMarketer) as dailysum
+  // from campaignLog
+  // right join
+  // (
+  // SELECT campaign.campaignId, campaignName, optionType, priorityType, campaign.regiDate, onOff, bannerSrc, dailyLimit
+  // FROM campaign
+  // JOIN bannerRegistered AS br
+  // ON br.bannerId = campaign.bannerId
+  // WHERE campaign.marketerId = ?
+  // AND deletedState = 0
+  // ) as CL
+  // on campaignLog.campaignId = CL.campaignId
+  // and date > ?
+  // group by campaignLog.campaignId
+  // ORDER BY CL.regiDate DESC
+  // `;
+
   doQuery(query, [marketerId]).then((row) => {
     if (row.result && !row.error) {
       Promise.all(

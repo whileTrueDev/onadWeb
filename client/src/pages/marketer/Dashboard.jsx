@@ -24,7 +24,8 @@ export default function Dashboard() {
   const campaignData = useFetchData('/api/dashboard/marketer/campaign/new');
   const onOffData = useFetchData('/api/dashboard/marketer/onoff');
   const normalData = useFetchData('/api/dashboard/marketer/normal');
-  const creatorsData = useFetchData('/api/dashboard/marketer/report/creators');
+  const countsData = useFetchData('/api/dashboard/marketer/report/counts');
+
   const valueChartData = useFetchData('/api/dashboard/marketer/campaign/chart');
   const broadCreatorData = useFetchData('/api/dashboard/marketer/broadcast/creator');
   const actionLogData = useFetchData('/api/dashboard/marketer/actionlog');
@@ -32,14 +33,13 @@ export default function Dashboard() {
   return (
     <div className={classes.root}>
       {(normalData.loading || campaignData.loading
-        || onOffData.loading || creatorsData.loading
+        || onOffData.loading
         || valueChartData.loading
         || actionLogData.loading) ? (
           <ReportLoading />
         ) : (
           <div>
             {normalData.payload && campaignData.payload
-          && creatorsData.payload
           && valueChartData.payload && (
           <Grid container spacing={2}>
             <Grid item xs={12} md={6} lg={3}>
@@ -80,7 +80,7 @@ export default function Dashboard() {
                 <Grid item xs={12} sm={6} lg={3}>
                   <Grow in timeout={{ enter: 1500 }}>
                     <DescCard data={{
-                      title: '송출크리에이터수', value: creatorsData.payload.length, unit: '명'
+                      title: '송출크리에이터수', value: countsData.payload.counts, unit: '명'
                     }}
                     />
                   </Grow>
@@ -95,7 +95,6 @@ export default function Dashboard() {
                 <Grid item xs={12}>
                   <CanvasForChart
                     valueChartData={valueChartData}
-                    creatorsData={creatorsData}
                     broadCreatorData={broadCreatorData}
                   />
                 </Grid>
