@@ -2,9 +2,7 @@ import React, { useState, useCallback } from 'react';
 import shortid from 'shortid';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import Container from '@material-ui/core/Container';
-import grey from '@material-ui/core/colors/grey';
-import { Button } from '@material-ui/core';
+import { Button, Grid, Hidden } from '@material-ui/core';
 import Typography from '../../components/Typography';
 import LoginForm from '../Login/LoginForm';
 import axios from '../../../../../utils/axios';
@@ -13,17 +11,11 @@ import history from '../../../../../history';
 
 const styles = theme => ({
   root: {
-    display: 'flex',
-    backgroundColor: grey[100],
-    overflow: 'hidden',
-  },
-  root2: {
-    display: 'flex',
     backgroundColor: 'white',
-    overflow: 'hidden',
+    marginBottom: theme.spacing(8)
   },
   bottomSpace: {
-    marginBottom: theme.spacing(12),
+    marginBottom: theme.spacing(8),
     marginTop: 12,
     fontFamily: 'Noto Sans KR',
     fontSize: 22,
@@ -43,7 +35,7 @@ const styles = theme => ({
   },
   mainBottom: {
     display: 'flex',
-    marginTop: theme.spacing(12),
+    marginTop: theme.spacing(8),
     marginBottom: theme.spacing(4),
     [theme.breakpoints.down('md')]: {
       marginTop: theme.spacing(10),
@@ -58,8 +50,9 @@ const styles = theme => ({
     },
   },
   mainBottomtitle: {
-
     fontSize: 48,
+    fontFamily: 'Noto Sans Kr',
+    fontWeight: 600,
     [theme.breakpoints.down('md')]: {
       fontSize: 40,
     },
@@ -72,40 +65,6 @@ const styles = theme => ({
       fontSize: 20,
       wordBreak: 'keep-all',
       textAlign: 'center'
-    },
-  },
-  titleLeft: {
-    width: '40px',
-    height: '60px',
-    marginRight: theme.spacing(1),
-    [theme.breakpoints.down('md')]: {
-      width: '32px',
-      height: '48px',
-    },
-    [theme.breakpoints.down('sm')]: {
-      width: '24px',
-      height: '36px'
-    },
-    [theme.breakpoints.down('xs')]: {
-      width: '18px',
-      height: '27px',
-    },
-  },
-  titleRight: {
-    width: '40px',
-    height: '60px',
-    marginLeft: theme.spacing(1),
-    [theme.breakpoints.down('md')]: {
-      width: '32px',
-      height: '48px',
-    },
-    [theme.breakpoints.down('sm')]: {
-      width: '24px',
-      height: '36px',
-    },
-    [theme.breakpoints.down('xs')]: {
-      width: '18px',
-      height: '27px',
     },
   },
   bottomText: {
@@ -125,7 +84,7 @@ const styles = theme => ({
       textAlign: 'center',
     },
   },
-  bottomButton: {
+  bottomButtom: {
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'left',
@@ -144,83 +103,49 @@ const styles = theme => ({
       justifyContent: 'center',
     },
   },
-  plusLink: {
-    background: 'linear-gradient(45deg, #FFAA00 30%, #FF8E53 90%)',
-    color: 'white',
+  mainBottomImg: {
+    width: '650px',
+    height: '440px',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  wrapper: {
+    wordBreak: 'keep-all',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  button: {
+    width: 200,
+    height: 60,
     fontSize: 20,
-    height: 50,
-    marginLeft: theme.spacing(4),
-    fontFamily: 'Noto Sans KR',
-    [theme.breakpoints.down('md')]: {
-      fontSize: 18,
-      height: 46,
-    },
-    [theme.breakpoints.down('sm')]: {
-      fontSize: 16,
-      height: 44,
-    },
-    [theme.breakpoints.down('xs')]: {
-      fontSize: 14,
-      height: 42,
-    },
-  },
-  plusLink2: {
-    background: 'linear-gradient(45deg, #00DBE0 30%, #21CBF3 90%)',
+    fontFamily: 'Noto sans KR',
+    fontWeight: 500,
     color: 'white',
-    fontSize: 20,
-    height: 50,
-    marginLeft: theme.spacing(4),
-    fontFamily: 'Noto Sans KR',
+    margin: 20,
+    borderRadius: 5,
+    wordBreak: 'keep-all',
+    backgroundColor: '#3154EB',
     [theme.breakpoints.down('md')]: {
+      width: 190,
       fontSize: 18,
-      height: 46,
     },
     [theme.breakpoints.down('sm')]: {
-      fontSize: 16,
-      height: 44,
+      width: 180,
+      fontSize: 18,
     },
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
+      margin: 10,
+      width: 140,
       fontSize: 14,
-      height: 42,
-    },
-  },
-  callImage: {
-    width: 30,
-    height: 55,
-    marginLeft: theme.spacing(4),
-    [theme.breakpoints.down('sm')]: {
-      fontSize: 16,
-      height: 44,
-    },
-  },
-  callNumber: {
-    color: '#00DBE0',
-    marginLeft: theme.spacing(2),
-    fontFamily: 'Noto Sans KR',
-    [theme.breakpoints.down('md')]: {
-      fontSize: 20,
-    },
-    [theme.breakpoints.down('sm')]: {
-      fontSize: 18,
-      wordBreak: 'keep-all',
-      textAlign: 'center',
-    },
-    [theme.breakpoints.down('xs')]: {
-      fontSize: 16,
-      wordBreak: 'keep-all',
-      textAlign: 'center',
-    },
-  },
-  bottomButtonDisplay: {
-    [theme.breakpoints.down('xs')]: {
-      display: 'none'
     },
   }
 });
 
 const ProductHowItWorks = (props) => {
   const {
-    classes, source, tabValue
+    classes, source
   } = props;
 
   function useDialog() {
@@ -264,71 +189,58 @@ const ProductHowItWorks = (props) => {
   }, [handleOpen]);
 
   return (
-    <section className={source.content.location === 'mainpageLogin' ? (classes.root) : (classes.root2)}>
-      <Container
-        maxWidth="lg"
-        component="section"
-      >
-        <div className={classes.mainBottom}>
-          <img src="/pngs/main/mainBenefitTitleLeft.png" alt="middleTitleLeft" className={classes.titleLeft} />
-          <Typography component="h2" style={{ fontFamily: 'Noto Sans Kr' }} className={classes.mainBottomtitle}>
-            {source.content.title}
-          </Typography>
-          <img src="/pngs/main/mainBenefitTitleRight.png" alt="middleTitleRight" className={classes.titleRight} />
-        </div>
-
+    <section className={classes.root}>
+      <div className={classes.wrapper}>
+        <Hidden mdDown>
+          <div style={{ marginRight: '80px' }}>
+            <img src="/pngs/main/mainBottomImage.png" className={classes.mainBottomImg} alt="mainBottomImage" />
+          </div>
+        </Hidden>
         <div>
-          {source.content.text.split('\n').map(row => (
-            <Typography
-              key={shortid.generate()}
-              component="h2"
-              style={{ marginTop: 12, marginBottom: 12, fontFamily: 'Noto Sans Kr' }}
-              className={classes.bottomText}
-            >
-              {`${row}`}
-
+          <div className={classes.mainBottom}>
+            <Typography component="h2" className={classes.mainBottomtitle}>
+              {source.content.title}
             </Typography>
-          ))}
-        </div>
-
-        <div className={classes.bottomButton}>
-          { source.content.location !== 'mainpageLogin' ? (
-            <div className={classes.bottomButtonDisplay}>
-              <Button
-                className={tabValue ? (classes.plusLink) : (classes.plusLink2)}
-                onClick={tabValue ? (() => handleClick('creator')) : (() => handleClick('marketer'))}
+          </div>
+          <div>
+            {source.content.text.split('\n').map(row => (
+              <Typography
+                key={shortid.generate()}
+                component="h2"
+                style={{ marginTop: 12, marginBottom: 12, fontFamily: 'Noto Sans Kr' }}
+                className={classes.bottomText}
               >
-                <div style={{ fontFamily: 'Noto Sans Kr', fontWeight: '500' }}>바로 시작하기</div>
-              </Button>
+                {`${row}`}
+              </Typography>
+            ))}
+          </div>
+          <div className={classes.bottomButtom}>
+            <Button
+              className={classes.button}
+              onClick={() => handleClick('marketer')}
+            >
+              바로 시작하기
+            </Button>
 
-            </div>
-          ) : (null) }
+            <Button
+              className={classes.button}
+              onClick={() => { window.open('http://pf.kakao.com/_xoyxmfT/chat'); }}
+            >
+              플러스친구 문의
+            </Button>
 
-
-          <Button
-            className={tabValue ? (classes.plusLink2) : (classes.plusLink)}
-            onClick={() => { window.open('http://pf.kakao.com/_xoyxmfT/chat'); }}
-          >
-            <div style={{ fontFamily: 'Noto Sans Kr', fontWeight: '500' }}>플러스친구 문의</div>
-          </Button>
-
-          <img src="/pngs/main/call.png" alt="callimage" className={classes.callImage} />
-
-          <Typography variant="h5" component="h2" className={classes.callNumber}>
-            051-515-6309
+          </div>
+          <Typography component="h2" className={classes.bottomSpace}>
+              전화지원 및 플러스친구 답변은 월~금 (10:00~19:00)동안 운영됩니다.
           </Typography>
         </div>
-
-        <Typography component="h2" className={classes.bottomSpace}>
-            전화지원 및 플러스친구 답변은 월~금 (09:00~18:00)동안 운영됩니다.
-        </Typography>
         <LoginForm
           open={open}
           isMarketer={isMarketer}
           history={history}
           handleClose={handleClose}
         />
-      </Container>
+      </div>
     </section>
   );
 };

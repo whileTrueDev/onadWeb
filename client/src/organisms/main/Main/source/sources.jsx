@@ -8,57 +8,26 @@ import BarChart from '@material-ui/icons/BarChart';
 const sources = {
   hero: {
     text: {
-      title: '1인 미디어 실시간 방송에',
-      subTitle: '배너광고 넣으실래요?',
-      marketer: '마케터 고객님',
-      marketerTail: '광고를 한 시간만큼\n광고 하고 싶은 금액만큼만\n원하는대로, 하고 싶은대로',
-      creator: '크리에이터 고객님',
+      title: '실시간 광고매칭',
+      subTitle: '플랫폼 온애드',
+      marketerTail: '1인 미디어 컨텐츠 속 광고,\n복잡한 절차없이 배너만 등록하세요\n함께 하고있는 크리에이터들의 방송에\n즉시 송출 할 수 있습니다.',
       creatorTail: '간단한 설정만으로\n배너를 송출하고, 방송한 만큼\n 추가수익을 가져가세요'
     },
   },
-  categories: [
-    {
-      url: '/pngs/main/mainBenefit1.png',
-      title: '누구나 1인 미디어 마케팅',
-      fullDescription: '1인 미디어에 광고를 올리고 싶지만 크리에이터에 \n 대해 모르거나, 일일이 계약하기 힘든 광고주.\n광고주를 찾기 힘든 크리에이터 모두에게 \n 광고를 유치하고 집행할 수 있는 기회를 제공합니다.',
-      trigger: {
-        threshold: 0,
-        timeout: 500,
-      }
-    },
-    {
-      url: '/pngs/main/mainBenefit2.png',
-      title: '비용, 수익에 대한 실시간 분석',
-      fullDescription: '광고 집행으로 발생하는 비용과 수익을 실시간으로\n 볼 수 있으며, 어떻게 그 금액이 발생하였는지에 대한\n광고 시간, 노출량 등을 분석하여 확인할 수 있습니다.',
-      trigger: {
-        threshold: 0,
-        timeout: 1000,
-      }
-    },
-    {
-      url: '/pngs/main/mainBenefit3.png',
-      title: '자유로운 금액설정',
-      fullDescription: '광고주는 목표 노출량과 광고예산을 정할 수 있고, \n크리에이터는 정산 기간에 광고수익 한도 내에서\n원하는 금액을 정산 받을 수 있습니다.',
-      trigger: {
-        threshold: 200,
-        timeout: 500,
-      }
-    },
-    {
-      url: '/pngs/main/mainBenefit4.png',
-      title: '합리적 가격 책정',
-      fullDescription: '광고를 송출한 시간과 노출량만큼 금액을 책정하기\n때문에 \'부르는게 값\'이 아닌 합리적인 이익 배분을\n가능하게 합니다.',
-      trigger: {
-        threshold: 200,
-        timeout: 1000,
-      }
-    },
-  ],
-
+  howTo: {
+    title: '쉽고 간단한',
+    subTitle: '이용방법',
+    text: '광고할 배너 이미지 파일을 업로드하여 관리자승인을 요청하세요.\n승인된 배너이미지는 광고캠페인에 등록하여 크리에이터 방송에 송출할 수 있어요.\n간단하게 1인 미디어 방송에 광고를 내보내세요.'
+  },
+  advantage: {
+    first: '기존의 1인 미디어에 광고하기 위해 광고주 분들이\n개개인의 크리에이터와 했던 길고 복잡한 계약을 미리 완료하였습니다.\n온애드는 가장 간편하게 광고할 수 있는 방법입니다.',
+    second: '나의 광고가 어떤 방송에서 송출되고 있는지,\n얼마의 비용이 발생된 상태인지, 노출량은 어느정도인지 등\n다양한 수치적 정보들을 실시간으로 확인할 수 있는\n광고효과 보고서를 제공합니다. ',
+    third: '온애드에서는 정확히 노출된 만큼만 요금이 부과되며\n충전한 예치금(예산)에 맞게 광고가 진행되는\n시스템이므로 합리적입니다!'
+  },
   howitworks: {
     content: {
-      title: '지금 당장 시작하기',
-      text: '도움이 필요하신 경우 바로 카카오 플러스 친구추가 및\n전화로 연결해주십시오. 소중한 고객 놓지 않겠습니다.\n고객센터와 전화로 연결해주세요',
+      title: '바로 지금 온애드와 함께하세요',
+      text: '대한민국 1등, 1인 미디어 배너 광고 플랫폼의 대표 주자 온애드!\n성공적인 광고 송출을 위해 항상 노력하겠습니다.\n궁금하신 것 무엇이든 문의남겨주세요.',
       location: 'mainpageLogin'
     },
     creator: {

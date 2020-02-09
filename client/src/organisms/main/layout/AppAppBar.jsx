@@ -7,10 +7,9 @@ import { withStyles } from '@material-ui/core/styles';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import {
   Menu, MenuItem, IconButton, Button,
-  Tooltip
+  Tooltip, useScrollTrigger
 } from '@material-ui/core';
 import { Domain, Dashboard } from '@material-ui/icons';
-import AppBar from '../Main/components/AppBar';
 import Toolbar from '../Main/components/Toolbar';
 import LoginPopover from '../Main/views/Login/LoginPopover';
 import HOST from '../../../utils/config';
@@ -19,14 +18,25 @@ import history from '../../../history';
 
 const styles = theme => ({
   root: {
-    backgroundColor: theme.palette.common.white,
+    backgroundColor: 'rgb( 255, 255, 255, 0)',
+    position: 'fixed',
+    width: '100%',
+    height: 70,
+    zIndex: '100',
+  },
+  root2: {
+    backgroundColor: 'white',
+    position: 'fixed',
+    width: '100%',
+    height: 70,
+    zIndex: '100',
   },
   title: {
     fontSize: 24,
   },
   toolbar: {
     justifyContent: 'space-between',
-    boxShadow: '0 1px 10px gainsboro'
+    padding: '0px 0px'
   },
   left: {
     flex: 0,
@@ -36,6 +46,17 @@ const styles = theme => ({
     flex: 1,
     display: 'none',
     justifyContent: 'flex-end',
+    alignItems: 'center',
+    [theme.breakpoints.up('md')]: {
+      display: 'flex',
+    },
+  },
+  rightDesktop2: {
+    height: '100%',
+    flex: 1,
+    display: 'none',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
     [theme.breakpoints.up('md')]: {
       display: 'flex',
     },
@@ -47,11 +68,58 @@ const styles = theme => ({
     },
   },
   rightLink: {
+    color: theme.palette.common.white,
+    fontWeight: theme.typography.fontWeightRegular,
+    marginLeft: 0,
+    marginRight: 20,
+    fontSize: 20,
+    borderRadius: 0,
+    fontFamily: 'Noto Sans KR',
+    [theme.breakpoints.up('md')]: {
+      fontWeight: 'bold',
+      color: theme.palette.common.white,
+      marginLeft: theme.spacing(3),
+    },
+  },
+  rightLink2: {
     color: theme.palette.common.black,
     fontWeight: theme.typography.fontWeightRegular,
     marginLeft: 0,
-    fontSize: 16,
+    marginRight: 20,
+    fontSize: 20,
     borderRadius: 0,
+    fontFamily: 'Noto Sans KR',
+    [theme.breakpoints.up('md')]: {
+      fontWeight: 'bold',
+      color: theme.palette.common.black,
+      marginLeft: theme.spacing(3),
+    },
+  },
+  rightLink3: {
+    color: theme.palette.common.white,
+    fontWeight: theme.typography.fontWeightRegular,
+    marginLeft: 0,
+    marginRight: 20,
+    fontSize: 20,
+    height: 50,
+    borderRadius: 5,
+    border: '1px solid white',
+    fontFamily: 'Noto Sans KR',
+    [theme.breakpoints.up('md')]: {
+      fontWeight: 'bold',
+      color: theme.palette.common.white,
+      marginLeft: theme.spacing(3),
+    },
+  },
+  rightLink4: {
+    color: theme.palette.common.black,
+    fontWeight: theme.typography.fontWeightRegular,
+    marginLeft: 0,
+    marginRight: 20,
+    fontSize: 20,
+    height: 50,
+    borderRadius: 5,
+    border: '1px solid black',
     fontFamily: 'Noto Sans KR',
     [theme.breakpoints.up('md')]: {
       fontWeight: 'bold',
@@ -61,11 +129,6 @@ const styles = theme => ({
   },
   coloredLink: {
     color: theme.palette.primary.main,
-  },
-  active: {
-    fontWeight: theme.typography.fontWeightMedium,
-    borderBottom: '1.2px solid',
-    borderBottomColor: theme.palette.primary.main,
   },
   buttonIcon: {
     marginRight: 10,
@@ -79,8 +142,8 @@ const styles = theme => ({
       cursor: 'pointer',
     },
     '&>img': {
-      width: 100,
-      height: 70
+      width: 160,
+      height: 45
     }
   },
   noButtonIcon: {
@@ -101,9 +164,10 @@ const styles = theme => ({
 function AppAppBar(props) {
   const {
     classes, isLogin, logout, tabValue,
-    handleTabChange, noButtons
+    handleTabChange, noButtons, MainUserType
   } = props;
 
+  const trigger = useScrollTrigger({ threshold: 100, disableHysteresis: true });
 
   // 앱바의 선택 여부를 파악하여 state 로 설정한다.
   const [selected, setSelected] = React.useState();
@@ -145,10 +209,12 @@ function AppAppBar(props) {
     return (
       <LoginPopover
         type="로그인"
+        MainUserType={MainUserType}
         history={history}
         logout={logout}
         tabValue={tabValue}
         onChange={handleTabChange}
+        trigger={trigger}
       />
     );
   };
@@ -160,11 +226,11 @@ function AppAppBar(props) {
           className={classNames(classes.rightLink, classes.coloredLink)}
           onClick={handleClick}
         >
-        대시보드이동
+          My광고
         </Button>
       );
     }
-    return <LoginPopover type="회원가입" history={history} />;
+    return <LoginPopover type="회원가입" history={history} trigger={trigger} />;
   };
 
   /** 모바일 메뉴 ********************************************* */
@@ -197,7 +263,7 @@ function AppAppBar(props) {
           to="/introduction"
         >
           <Domain className={classes.buttonIcon} />
-          {'서비스 소개'}
+          서비스 소개
         </Button>
       </MenuItem>
 
@@ -208,7 +274,7 @@ function AppAppBar(props) {
             onClick={handleClick}
           >
             <Dashboard className={classes.buttonIcon} />
-            대시보드이동
+            My광고
           </Button>
         )
           : <LoginPopover type="회원가입" />
@@ -230,39 +296,43 @@ function AppAppBar(props) {
 
   return (
     <div>
-      <AppBar className={classes.root} position="fixed">
+      <div className={!trigger ? (classes.root) : (classes.root2)} position="fixed">
         <Toolbar className={classes.toolbar}>
           <div className={classes.left} />
           <a href="/" className={noButtons ? classes.noButtonIcon : classes.icon}>
             <img
-              src="/pngs/logo/onad_logo_vertical_black.png"
+              src={!trigger ? ('/pngs/logo/onad_white.png') : ('/pngs/logo/onad_black.png')}
               id="logo"
               alt="OnADLogo"
-              style={{ padding: '10px 18px 10px 18px' }}
+              style={{ padding: '10px 18px' }}
             />
           </a>
 
           {noButtons ? (
             <div className={classes.rightDesktop}>
-              <Tooltip title="대시보드로 이동">
+              <Tooltip title="My광고">
                 <IconButton className={classes.rightLink} onClick={handleClick}>
                   <Dashboard color="action" />
                 </IconButton>
               </Tooltip>
             </div>
           ) : (
-
             <div className={classes.rightDesktop}>
               <Button
-                className={classNames(
-                  { [classes.rightLink]: true, [classes.active]: selected === 'introduction' },
-                )}
+                className={!trigger ? (classes.rightLink) : (classes.rightLink2)}
                 component={Link}
                 to="/introduction"
               >
-                {'서비스 소개'}
+                서비스소개
               </Button>
               <RegButton history={history} logout={logout} />
+              <Button
+                className={!trigger ? (classes.rightLink3) : (classes.rightLink4)}
+                component={Link}
+                to="/creatorlist"
+              >
+                크리에이터 리스트
+              </Button>
               <LogButton
                 history={history}
                 logout={logout}
@@ -277,7 +347,7 @@ function AppAppBar(props) {
             </IconButton>
           </div>
         </Toolbar>
-      </AppBar>
+      </div>
       {renderMobileMenu}
     </div>
   );

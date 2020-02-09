@@ -1,6 +1,7 @@
 const express = require('express');
-const doQuery = require('../model/doQuery');
 const axios = require('axios');
+const doQuery = require('../model/doQuery');
+
 const router = express.Router();
 const Notification = require('../middlewares/notification');
 const loginRouter = require('./login/login');
@@ -64,46 +65,55 @@ router.get('/creators', async (req, res) => {
   res.send(creatorList);
 });
 
-// 계약되어있는 크리에이터인지 확인된 리스트
+// 계약+방송중+광고송출중 되어있는 크리에이터인지 확인된 리스트
 router.route('/streams').get((req, res) => {
   const date = new Date();
-  // date.setHours(date.getHours() + 9);
   date.setMinutes(date.getMinutes() - 10);
-  // const selectQuery = `
-  // SELECT creatorTwitchId
-  // FROM creatorInfo as CI
-  // JOIN
-  // (SELECT streamerName
-  //   FROM twitchStreamDetail
-  //   WHERE time > ?) as A
-  //   ON CI.creatorName = A.streamerName
-  //   WHERE creatorContractionAgreement  = 1`;
+
   // 현재방송중이면서, 배너를 띄우고있는 스트리머 (시청자 많은 순)
   const selectQuery = `SELECT creatorTwitchId
   FROM creatorInfo as CI
+
   LEFT JOIN
   (SELECT streamerName, viewer
   FROM twitchStreamDetail
   WHERE time > ?
   GROUP BY streamerName) as A
   ON CI.creatorName = A.streamerName
+
   JOIN (
-  SELECT creatorId FROM campaignTimestamp
+  SELECT creatorId
+  FROM campaignTimestamp
   WHERE date > ?
   ) AS B ON CI.creatorId = B.creatorId
   WHERE creatorContractionAgreement  = 1
   ORDER BY viewer DESC`;
+
   doQuery(selectQuery, [date, date]).then((row) => {
     const retultList = row.result.map(creator => creator.creatorTwitchId);
-    const resultList = retultList.slice(0, 10);
-    res.send(resultList);
+    res.send(retultList);
+  });
+});
+
+// 계약된 스트리머 인지만
+router.route('/contracted').get((req, res) => {
+  // 계약된 스트리머만
+  const contractedQuery = `SELECT creatorTwitchId, creatorName, creatorLogo
+  FROM creatorInfo
+  WHERE creatorContractionAgreement  = 1
+  ORDER BY date DESC
+  `;
+
+  doQuery(contractedQuery).then((row) => {
+    const contracted = row.result;
+    res.send(contracted);
   });
 });
 
 // "/iamportWebhook"에 대한 웹훅 POST 요청을 처리(얘는 무조건 여기에 위치해야함 지우지 마셈!)
 router.post('/iamportWebhook', async (req, res) => {
   try {
-    const { imp_uid, merchant_uid} = req.body;
+    const { imp_uid, merchant_uid } = req.body;
     const webhookStatus = req.body.status;
     console.log(`/api/iamportWebhook - imp_uid: ${imp_uid} | merchant_uid: ${merchant_uid} | status: ${webhookStatus}`);
 
@@ -117,7 +127,7 @@ router.post('/iamportWebhook', async (req, res) => {
         imp_secret: 'Oc6uNyT5UYJ1oGNoQn6aV3xZ5AdJeGJ2TPwGnqMipvkNc7c2uicqlKprlCbzjUBcK8T8yFqXbKLoSXqn' // REST API Secret => import 관리자 페이지에 있음
       }
     });
-  
+
     const { access_token } = getToken.data.response; // 접속 인증 토큰
 
     // imp_uid로 아임포트 서버에서 결제 정보 조회
@@ -135,97 +145,130 @@ router.post('/iamportWebhook', async (req, res) => {
     SELECT marketerId, cash
     FROM marketerCharge
     WHERE imp_uid = ?
-    `
-    const marketerDBdataArray = [imp_uid]
-  
+    `;
+    const marketerDBdataArray = [imp_uid];
+
     doQuery(marketerDBdata, marketerDBdataArray)
-    .then((row) => {
-      if (!row.error) {
-        const cash = row.result[0].cash;
-        if (parseInt(Number(cash)*1.1) === parseInt(Number(amount))) {
-          const { marketerId } = row.result[0]
+      .then((row) => {
+        if (!row.error) {
+          const { cash } = row.result[0];
+          if (parseInt(Number(cash) * 1.1) === parseInt(Number(amount))) {
+            const { marketerId } = row.result[0];
 
-          switch(webhookStatus) {
-            case 'paid' : 
+            switch (webhookStatus) {
+              case 'paid':
 
-            // 현재 마케터 보유 금액 조회
-            const vbankCurrentDebitQuery = `
+                // 현재 마케터 보유 금액 조회
+                const vbankCurrentDebitQuery = `
             SELECT cashAmount as cashAmount
             FROM marketerDebit
             WHERE marketerId = ?
             ORDER BY date DESC
             LIMIT 1
             `;
-            // 현재 마케터 보유 금액 조회
-            const vbankCurrentDebitArray = [marketerId];
+                // 현재 마케터 보유 금액 조회
+                const vbankCurrentDebitArray = [marketerId];
 
-            // 가상계좌 입금시 기존의 캐시량 + 캐시충전량으로 update
-            const vbankDebitUpdateQuery = `
+                // 가상계좌 입금시 기존의 캐시량 + 캐시충전량으로 update
+                const vbankDebitUpdateQuery = `
             UPDATE marketerDebit
             SET cashAmount = ? 
             WHERE marketerId = ?`;
 
-            // 가상계좌 입금시 marketerCharge 테이블 temporaryState값 1로 바꾸기 및 date 업뎃
-            const vbankChargeUpdateQuery = `
+                // 가상계좌 입금시 marketerCharge 테이블 temporaryState값 1로 바꾸기 및 date 업뎃
+                const vbankChargeUpdateQuery = `
             UPDATE marketerCharge
             SET temporaryState = 1, date = NOW()
             WHERE imp_uid = ?
             `;
-            const vbankChargeUpdateArray = [imp_uid]
+                const vbankChargeUpdateArray = [imp_uid];
 
-            doQuery(vbankCurrentDebitQuery, vbankCurrentDebitArray)
-            .then((secondrow) => {
-              if (!secondrow.error) {
-                const currentCashAmount = Number(secondrow.result[0].cashAmount);
-                
-                Promise.all([
-                  doQuery(vbankChargeUpdateQuery, vbankChargeUpdateArray),
-                  doQuery(vbankDebitUpdateQuery, [currentCashAmount + cash, marketerId]),
-                  Notification(
-                    {
-                      userType: 'marketer',
-                      type: 'vbankChargeComplete',
-                      targetId: marketerId,
-                      params: {
-                        cashAmount: cash
-                      }
+                doQuery(vbankCurrentDebitQuery, vbankCurrentDebitArray)
+                  .then((secondrow) => {
+                    if (!secondrow.error) {
+                      const currentCashAmount = Number(secondrow.result[0].cashAmount);
+
+                      Promise.all([
+                        doQuery(vbankChargeUpdateQuery, vbankChargeUpdateArray),
+                        doQuery(vbankDebitUpdateQuery, [currentCashAmount + cash, marketerId]),
+                        Notification(
+                          {
+                            userType: 'marketer',
+                            type: 'vbankChargeComplete',
+                            targetId: marketerId,
+                            params: {
+                              cashAmount: cash
+                            }
+                          }
+                        )
+                      ]).then((thirdrow) => {
+                        // 마케터 캐시 충전 쿼리 완료
+                        if (!thirdrow.error) {
+                          res.send({ status: 'success', message: '가상계좌 결제 성공!' });
+                          console.log('가상계좌 입금 완료!');
+                        }
+                      }).catch((err) => {
+                        console.log(err);
+                        res.end();
+                      });
                     }
-                  )
-                ]).then((thirdrow) => {
-                  // 마케터 캐시 충전 쿼리 완료
-                  if (!thirdrow.error) {
-                    res.send({ status: 'success', message: '가상계좌 결제 성공!'});
-                    console.log('가상계좌 입금 완료!')
-                  }
-                  }).catch((err) => {
-                    console.log(err);
-                    res.end();
-                    });;
-                  }})
-                
-              break;
+                  });
 
-            case 'cancelled' :
+                break;
+
+              case 'cancelled':
               // 추후 업뎃 예정
               // 금액 다시 떨어뜨리고, temporaryState 2(취소)로 바꾸고, 결제일 Date 바꾸면 됨
-              break;
-            default: break; 
+                break;
+              default: break;
+            }
+          } else {
+            throw { status: 'forgery', message: '위조된 결제시도!!!' };
           }
-
-        } else {
-          throw {status: "forgery", message: "위조된 결제시도!!!"}
         }
-      }
-    }).catch((err) => {
-      console.log(err);
-      res.end();
-    })  
+      }).catch((err) => {
+        console.log(err);
+        res.end();
+      });
   } catch (e) {
     res.status(400).send(e);
-    console.log('가상계좌 결제 완료 실패')
+    console.log('가상계좌 결제 완료 실패');
   }
 });
 
+router.route('/mainIndicator').get((req, res) => {
+  const dataString = 'DATE_SUB(NOW(), INTERVAL 60 MONTH)';
+
+  const query = `
+  SELECT
+    (SELECT SUM(cL.cashFromMarketer / (4 * mD.unitPrice))
+      FROM campaignLog AS cL
+        LEFT JOIN campaign AS cp
+        ON cL.campaignId = cp.campaignId
+          LEFT JOIN marketerDebit AS mD
+          ON cp.marketerId = mD.marketerId
+      WHERE type="CPM" AND cL.date > ${dataString}) AS BannerView,
+
+    (SELECT SUM(clickCount)
+      FROM landingClick as lc
+      WHERE lc.regidate > ${dataString}) AS BannerClick,
+
+    (SELECT count(*)
+      FROM creatorInfo as ci
+      WHERE ci.creatorContractionAgreement = 1) AS contactedCreator
+  `;
+
+  doQuery(query)
+    .then((row) => {
+      if (!row.error && row.result) {
+        res.send(row.result[0]);
+      }
+    })
+    .catch((err) => {
+      console.log('Indicator: ', err);
+      res.end();
+    });
+});
 
 // socket과 통신할 router를 하나 만들자.
 

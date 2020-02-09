@@ -1,0 +1,201 @@
+import React from 'react';
+import makeStyles from '@material-ui/core/styles/makeStyles';
+import { Grow, Grid } from '@material-ui/core';
+import shortid from 'shortid';
+import AppAppBar from '../../organisms/main/layout/AppAppBar';
+import AppFooter from '../../organisms/main/layout/AppFooter';
+import RePasswordDialog from '../../organisms/main/Main/views/Login/RePassword';
+import withRoot from '../../organisms/main/Main/withRoot';
+import useLoginValue from '../../utils/lib/hooks/useLoginValue';
+import useFetchData from '../../utils/lib/hooks/useFetchData';
+import textSource from '../../organisms/main/Introduction/source/textSource';
+import Card from '../../atoms/Card/Card';
+import CardAvatar from '../../atoms/Card/CardAvatar';
+import CardBody from '../../atoms/Card/CardBody';
+import CircularProgress from '../../atoms/Progress/CircularProgress';
+
+const useStyles = makeStyles(theme => ({
+  root: {
+    background: 'url(\'/pngs/main/loading.gif\') no-repeat center center',
+    backgroundSize: 'cover',
+    width: '100%',
+    height: '800px',
+    [theme.breakpoints.up('sm')]: {
+    },
+    [theme.breakpoints.down('md')]: {
+    }
+  },
+  containerWrap: {
+    backgroundColor: 'rgb(0,0,0, 0.6)',
+    width: '100%',
+    height: '100%',
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+  },
+  loginMiddle: {
+    color: 'white',
+    textAlign: 'left',
+    width: '50%',
+    fontSize: '20px',
+    fontFamily: 'Noto Sans KR',
+    marginRight: 30,
+    [theme.breakpoints.down('md')]: {
+    },
+    [theme.breakpoints.down('sm')]: {
+
+    },
+    [theme.breakpoints.down('xs')]: {
+    },
+  },
+  h1: {
+    marginTop: '10px',
+    marginBottom: '5px',
+    fontSize: 45,
+    fontWeight: 600,
+    [theme.breakpoints.up('md')]: {
+    },
+    [theme.breakpoints.up('sm')]: {
+      wordBreak: 'keep-all'
+    },
+    [theme.breakpoints.down('sm')]: {
+      wordBreak: 'keep-all'
+    },
+  },
+  h1sub: {
+    marginTop: 40,
+    marginBottom: 40,
+    [theme.breakpoints.up('md')]: {
+    },
+    [theme.breakpoints.up('sm')]: {
+    },
+    [theme.breakpoints.down('sm')]: {
+    },
+  },
+  maintop: {
+    width: '100%',
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    [theme.breakpoints.down('sm')]: {
+    },
+    [theme.breakpoints.down('xs')]: {
+      // display: 'grid',
+      // gridTemplateColumns: 'repeat(4, 110px)',
+      // gridTemplateRows: 'repeat(2, 250px)'
+    },
+  },
+  mainList: {
+    padding: '80px 10%'
+  },
+  listWrapper: {
+    padding: 20,
+  },
+  cardTitle: {
+    fontFamily: 'S-CoreDream-8Heavy',
+    fontSize: 22,
+    margin: 0
+  },
+  liveTitle: {
+    fontFamily: 'S-CoreDream-8Heavy',
+    fontSize: 22,
+    margin: 0,
+    background: 'red',
+    color: 'white'
+  },
+  live: {
+    borderRadius: '10px',
+    height: 200,
+    boxShadow: '0px 0px 15px 3px red',
+    '&:hover': {
+      boxShadow: '0px 0px 30px 5px red'
+    }
+  },
+  notlive: {
+    borderRadius: '10px',
+    height: 200,
+    boxShadow: '0px 0px 15px 0px rgba(0, 0, 0, 0.1)',
+    '&:hover': {
+      boxShadow: '0px 0px 30px 5px rgba(0, 0, 255, 0.7)'
+    }
+  },
+  loadingTitle: {
+    fontFamily: 'Noto Sans KR',
+    fontSize: 40,
+    fontWeight: 580
+  }
+}));
+
+export default withRoot((props) => {
+  // if located here, set the scroll to top of the page
+  const { history, location } = props;
+  const {
+    isLogin, repasswordOpen, logout, setRepassword
+  } = useLoginValue(history, location);
+  const classes = useStyles();
+  const ContractedCreatorList = useFetchData('/api/contracted');
+  const LiveCreatorList = useFetchData('/api/streams');
+
+  React.useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location]);
+
+  return (
+    <div className={classes.root}>
+      <div className={classes.containerWrap}>
+        <AppAppBar isLogin={isLogin} logout={logout} MainUserType="marketer" />
+        <div className={classes.maintop}>
+          <div className={classes.loginMiddle}>
+            <Grow in timeout={1500}>
+              <h1 className={classes.h1}>
+                {textSource.heroSector.creatorList.title}
+              </h1>
+            </Grow>
+            <div className={classes.h1sub}>
+              {textSource.heroSector.creatorList.content.split('\n').map(row => (
+                <p key={row}>{`${row}`}</p>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className={classes.mainList}>
+        <Grid container justify="center" alignItems="center">
+          {LiveCreatorList.loading && (
+            <div>
+              <CircularProgress small />
+              <h1 className={classes.loadingTitle}>크리에이터의 방송을 확인해보세요</h1>
+            </div>
+          )}
+          {!ContractedCreatorList.loading && !LiveCreatorList.loading && LiveCreatorList.payload
+          && ContractedCreatorList.payload.map(row => (
+            <Grid item xs={3} sm={2} className={classes.listWrapper} key={shortid.generate()}>
+              <Card profile className={LiveCreatorList.payload.includes(row.creatorTwitchId) ? (classes.live) : (classes.notlive)}>
+                <CardAvatar profile>
+                  <a href={`https://www.twitch.tv/${row.creatorTwitchId}`}>
+                    <img src={row.creatorLogo} alt="creatorLogo" />
+                  </a>
+                </CardAvatar>
+                <CardBody profile>
+                  {LiveCreatorList.payload.includes(row.creatorTwitchId) && (
+                    <h4 className={classes.liveTitle}>LIVE!!!</h4>
+                  )}
+                  <h4 className={classes.cardTitle}>
+                    {`${row.creatorName}`}
+                  </h4>
+                </CardBody>
+              </Card>
+            </Grid>
+          ))}
+        </Grid>
+      </div>
+      <AppFooter />
+      <RePasswordDialog
+        repasswordOpen={repasswordOpen}
+        setRepassword={setRepassword}
+        logout={logout}
+      />
+    </div>
+  );
+});

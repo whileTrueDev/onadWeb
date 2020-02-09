@@ -14,7 +14,7 @@ import PolicyPrivacy from '../../organisms/main/Policy/PolicyPrivacy';
 
 const useStyles = makeStyles(() => ({
   root: {
-    marginTop: 70
+    paddingTop: 70
   },
   contentBox: {
     width: '80%',
