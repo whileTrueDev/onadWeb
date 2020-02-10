@@ -87,12 +87,10 @@ app.get('/test', (req, res, next) => { // /banner/:id로 라우팅
         console.log('banner socketinfo : ', socketsInfo);
         socketsInfo[Object.keys(roomInfo).pop()] = _url; // roomInfo에서 소켓아이디 불러와서 socketsInfo 객체에 {'id' : url} 형태로 저장
         requestImg(sql, socket, [_url, false]);
-      }
-      // else if (history !== 1) { /* 이 부분 !=로 바꾸기 */
-      //   const destination = `${SOCKET_HOST}/browserWarn`;
-      //   socket.emit('browser warning', destination);
-      // }
-      else if (urlArray.includes(_url)) {
+      } else if (history !== 1) {
+        const destination = `${SOCKET_HOST}/browserWarn`;
+        socket.emit('browser warning', destination);
+      } else if (urlArray.includes(_url)) {
         console.log(`${_url} 중복접속`);
         const destination = `${SOCKET_HOST}/duplicate`;
         socket.emit('duplicate warn', destination);
