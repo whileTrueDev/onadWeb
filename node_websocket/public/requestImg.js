@@ -39,14 +39,13 @@ module.exports = function (sql, socket, msg) {
 
   const getOnCampaignList = () => {
     console.log('현재 ON되어있는 campaign List를 조회한다.');
-    // 쿼리 onoffstate 1로 변경하고 푸쉬하기
     const campaignListQuery = `
     SELECT campaignId, optionType, startDate, finDate, selectedTime
     FROM campaign
     LEFT JOIN marketerInfo
     ON campaign.marketerId = marketerInfo.marketerId
     WHERE NOT marketerInfo.marketerContraction = 1
-    AND campaign.onOff = 0
+    AND campaign.onOff = 1
     AND NOT campaign.optionType = 2
     AND campaign.limitState = 0
     `;
