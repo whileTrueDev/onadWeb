@@ -16,13 +16,15 @@ const Styles = makeStyles(theme => ({
     marginBottom: '20px',
     fontSize: 45,
     fontWeight: 600,
-    [theme.breakpoints.up('md')]: {
-    },
-    [theme.breakpoints.up('sm')]: {
-      wordBreak: 'keep-all'
+    [theme.breakpoints.down('md')]: {
+      fontSize: '30px',
     },
     [theme.breakpoints.down('sm')]: {
-      wordBreak: 'keep-all'
+      fontSize: '25px',
+    },
+    [theme.breakpoints.down('xs')]: {
+      marginTop: 20,
+      fontSize: '20px',
     },
     color: '#0D93BF',
     fontFamily: 'Noto Sans KR',
@@ -31,7 +33,10 @@ const Styles = makeStyles(theme => ({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center'
+    alignItems: 'center',
+    [theme.breakpoints.down('xs')]: {
+      flexDirection: 'column',
+    },
   },
   question: {
     width: '35%',
@@ -40,7 +45,22 @@ const Styles = makeStyles(theme => ({
     flexDirection: 'column',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginRight: '30px'
+    marginRight: '30px',
+    [theme.breakpoints.down('md')]: {
+      width: '45%',
+      height: 350,
+      marginRight: '20px',
+    },
+    [theme.breakpoints.down('sm')]: {
+      width: '45%',
+      height: 300,
+      marginRight: '10px',
+    },
+    [theme.breakpoints.down('xs')]: {
+      width: '100%',
+      height: 200,
+      marginRight: '0px',
+    },
   },
   questionText: {
     width: '100%',
@@ -53,7 +73,10 @@ const Styles = makeStyles(theme => ({
     padding: '10px 25px',
     '&:hover': {
       cursor: 'pointer'
-    }
+    },
+    [theme.breakpoints.down('xs')]: {
+      padding: '8px 8px',
+    },
   },
   questionTextClicked: {
     width: '100%',
@@ -70,39 +93,86 @@ const Styles = makeStyles(theme => ({
     backgroundColor: '#3154EB',
     '&>*': {
       color: 'white !important'
-    }
+    },
+    [theme.breakpoints.down('xs')]: {
+      padding: '8px 8px',
+    },
   },
   qicon: {
     width: '12%',
     fontFamily: 'S-CoreDream-8Heavy',
     fontSize: 25,
     color: '#3154EB',
+    [theme.breakpoints.down('md')]: {
+      fontSize: 18,
+    },
+    [theme.breakpoints.down('sm')]: {
+      fontSize: 14,
+    },
+    [theme.breakpoints.down('xs')]: {
+      fontSize: 11,
+    },
   },
   qText: {
     width: '86%',
     fontFamily: 'Noto Sans KR',
     fontSize: 20,
     color: 'black',
+    [theme.breakpoints.down('md')]: {
+      fontSize: 18,
+    },
+    [theme.breakpoints.down('sm')]: {
+      fontSize: 14,
+    },
+    [theme.breakpoints.down('xs')]: {
+      fontSize: 11,
+    },
   },
   questionArrow: {
     width: '12%',
     fontFamily: 'S-CoreDream-5Heavy',
     fontSize: 20,
     color: '#3154EB',
-    textAlign: 'right'
+    textAlign: 'right',
+    [theme.breakpoints.down('md')]: {
+      fontSize: 18,
+    },
+    [theme.breakpoints.down('sm')]: {
+      fontSize: 14,
+    },
+    [theme.breakpoints.down('xs')]: {
+      fontSize: 11,
+    },
   },
   answer: {
     width: '65%',
     boxShadow: '0px 0px 5px 1px rgba(0,0,0,0.2)',
     height: 400,
     padding: 30,
+    [theme.breakpoints.down('md')]: {
+      width: '50%',
+      height: 350,
+      padding: 10,
+    },
+    [theme.breakpoints.down('sm')]: {
+      width: '50%',
+      height: 300,
+    },
+    [theme.breakpoints.down('xs')]: {
+      width: '100%',
+      height: 300,
+      marginTop: '20px',
+    },
   },
   answerTop: {
     width: '100%',
     height: 50,
     borderBottom: '1px solid rgba(0,0,0,0.2)',
     display: 'flex',
-    flexDirection: 'row'
+    flexDirection: 'row',
+    [theme.breakpoints.down('xs')]: {
+      height: 35,
+    },
   },
   answerBottom: {
     width: '100%',
@@ -111,18 +181,46 @@ const Styles = makeStyles(theme => ({
     fontFamily: 'Noto Sans KR',
     fontSize: 25,
     color: 'black',
+    [theme.breakpoints.down('md')]: {
+      fontSize: 20,
+    },
+    [theme.breakpoints.down('sm')]: {
+      fontSize: 17,
+    },
+    [theme.breakpoints.down('xs')]: {
+      fontSize: 14,
+    },
   },
   aicon: {
     width: 50,
     fontFamily: 'S-CoreDream-8Heavy',
     fontSize: 30,
     color: '#3154EB',
+    [theme.breakpoints.down('md')]: {
+      fontSize: 22,
+    },
+    [theme.breakpoints.down('sm')]: {
+      fontSize: 20,
+    },
+    [theme.breakpoints.down('xs')]: {
+      fontSize: 18,
+    },
   },
   aText: {
     width: '90%',
     fontFamily: 'Noto Sans KR',
+    fontWeight: 600,
     fontSize: 30,
     color: 'black',
+    [theme.breakpoints.down('md')]: {
+      fontSize: 20,
+    },
+    [theme.breakpoints.down('sm')]: {
+      fontSize: 17,
+    },
+    [theme.breakpoints.down('xs')]: {
+      fontSize: 14,
+    },
   }
 
 }));

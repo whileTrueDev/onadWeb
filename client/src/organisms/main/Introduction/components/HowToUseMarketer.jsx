@@ -23,7 +23,16 @@ const useStyles = makeStyles(theme => ({
     fontFamily: 'Noto Sans kr',
     color: 'white',
     margin: theme.spacing(2, 0),
-    fontWeight: '600'
+    fontWeight: '600',
+    [theme.breakpoints.down('md')]: {
+      fontSize: 35,
+    },
+    [theme.breakpoints.down('sm')]: {
+      fontSize: 27,
+    },
+    [theme.breakpoints.down('sm')]: {
+      fontSize: 25,
+    },
   },
   numbertable: {
     marginTop: theme.spacing(2),

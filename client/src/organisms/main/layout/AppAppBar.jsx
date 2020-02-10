@@ -30,6 +30,7 @@ const styles = theme => ({
     width: '100%',
     height: 70,
     zIndex: '100',
+    boxShadow: '0 1px 10px gainsboro'
   },
   title: {
     fontSize: 24,
@@ -155,8 +156,8 @@ const styles = theme => ({
       cursor: 'pointer',
     },
     '&>img': {
-      width: 64,
-      height: 50
+      width: 124,
+      height: 25
     }
   }
 });
@@ -168,12 +169,6 @@ function AppAppBar(props) {
   } = props;
 
   const trigger = useScrollTrigger({ threshold: 100, disableHysteresis: true });
-
-  // 앱바의 선택 여부를 파악하여 state 로 설정한다.
-  const [selected, setSelected] = React.useState();
-  React.useEffect(() => {
-    setSelected(window.location.pathname.replace('/', ''));
-  }, []); // 무한루프를 야기하지 않도록 하기 위해 두번째 인수로 빈 배열을 넣는다.
 
   // 대시보드로 이동 버튼 클릭
   const handleClick = useCallback((buttonType) => {
@@ -198,7 +193,7 @@ function AppAppBar(props) {
     if (isLogin) {
       return (
         <Button
-          className={classes.rightLink}
+          className={!trigger ? (classes.rightLink) : (classes.rightLink2)}
           color="inherit"
           onClick={logout}
         >
@@ -258,7 +253,7 @@ function AppAppBar(props) {
     >
       <MenuItem>
         <Button
-          className={classes.rightLink}
+          className={classes.rightLink2}
           component={Link}
           to="/introduction"
         >
@@ -270,20 +265,20 @@ function AppAppBar(props) {
       <MenuItem>
         {isLogin ? (
           <Button
-            className={classNames(classes.rightLink, classes.coloredLink)}
+            className={classNames(classes.rightLink2, classes.coloredLink)}
             onClick={handleClick}
           >
             <Dashboard className={classes.buttonIcon} />
             My광고
           </Button>
         )
-          : <LoginPopover type="회원가입" />
+          : <LoginPopover type="회원가입" mode="mobile" />
         }
       </MenuItem>
 
       <MenuItem>
         {isLogin ? (
-          <Button className={classes.rightLink} onClick={logout}>
+          <Button className={classes.rightLink2} onClick={logout}>
               로그아웃
           </Button>
         ) : (
@@ -301,7 +296,7 @@ function AppAppBar(props) {
           <div className={classes.left} />
           <a href="/" className={noButtons ? classes.noButtonIcon : classes.icon}>
             <img
-              src={!trigger ? ('/pngs/logo/onad_white.png') : ('/pngs/logo/onad_black.png')}
+              src={!trigger || !noButtons ? ('/pngs/logo/onad_white.png') : ('/pngs/logo/onad_black.png')}
               id="logo"
               alt="OnADLogo"
               style={{ padding: '10px 18px' }}

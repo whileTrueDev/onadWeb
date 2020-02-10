@@ -7,7 +7,7 @@ import Typography from '../Main/components/Typography';
 
 const useStyles = makeStyles(theme => ({
   root: {
-    width: '80%',
+    width: '90%',
     display: 'flex',
     flexDirection: 'column',
     margin: '20px auto'
@@ -65,6 +65,7 @@ const useStyles = makeStyles(theme => ({
     listStyle: 'none',
     display: 'flex',
     flexDirection: 'row',
+    padding: 0
   },
   listItem: {
     paddingTop: theme.spacing(2),

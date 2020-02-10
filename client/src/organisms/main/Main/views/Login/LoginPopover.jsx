@@ -93,13 +93,14 @@ class LoginPopover extends Component {
 
   render() {
     const {
-      classes, type, logout, tabValue, MainUserType, trigger
+      classes, type, logout, tabValue, MainUserType, trigger, mode
     } = this.props;
     const { loginValue } = this.state;
+    console.log(mode);
 
     return (
       <React.Fragment>
-        { type === '로그인'
+        {type === '로그인'
           ? (
             <React.Fragment>
               <Button
@@ -138,29 +139,60 @@ class LoginPopover extends Component {
           : (
             <React.Fragment>
               { MainUserType === 'marketer' ? (
-                <Button
-                  className={!trigger ? (classes.rightLink) : (classes.rightLink2)}
-                  component={Link}
-                  to="/regist"
-                >
-                  <Hidden mdUp>
-                    <SupervisedUserCircle style={{ marginRight: 10, }} />
-                  </Hidden>
-                  회원가입
-                </Button>
+                <div>
+                  { mode ? (
+                    <Button
+                      className={classes.rightLink2}
+                      component={Link}
+                      to="/regist"
+                    >
+                      <Hidden mdUp>
+                        <SupervisedUserCircle style={{ marginRight: 10 }} />
+                      </Hidden>
+                      회원가입
+                    </Button>
+                  ) : (
+                    <Button
+                      className={!trigger ? (classes.rightLink) : (classes.rightLink2)}
+                      component={Link}
+                      to="/regist"
+                    >
+                      <Hidden mdUp>
+                        <SupervisedUserCircle style={{ marginRight: 10 }} />
+                      </Hidden>
+                      회원가입
+                    </Button>
+                  )}
+                </div>
+
               ) : (
-                <Button
-                  className={!trigger ? (classes.rightLink) : (classes.rightLink2)}
-                  onClick={() => {
-                    alert('현재, Twitch 아이디로 로그인할 수 있어요! 확인 이후 로그인하세요!');
-                    this.handleDialogOpenClick('creator');
-                  }}
-                >
-                  <Hidden mdUp>
-                    <SupervisedUserCircle style={{ marginRight: 10 }} />
-                  </Hidden>
-                  회원가입
-                </Button>
+                <div>
+                  { mode ? (
+                    <Button
+                      className={classes.rightLink2}
+                      component={Link}
+                      to="/regist"
+                    >
+                      <Hidden mdUp>
+                        <SupervisedUserCircle style={{ marginRight: 10 }} />
+                      </Hidden>
+                      회원가입
+                    </Button>
+                  ) : (
+                    <Button
+                      className={!trigger ? (classes.rightLink) : (classes.rightLink2)}
+                      onClick={() => {
+                        alert('현재, Twitch 아이디로 로그인할 수 있어요! 확인 이후 로그인하세요!');
+                        this.handleDialogOpenClick('creator');
+                      }}
+                    >
+                      <Hidden mdUp>
+                        <SupervisedUserCircle style={{ marginRight: 10 }} />
+                      </Hidden>
+                      회원가입
+                    </Button>
+                  )}
+                </div>
               )
               }
 
