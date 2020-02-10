@@ -69,7 +69,7 @@ app.get('/test', (req, res, next) => { // /banner/:id로 라우팅
     rule.minute = [0, 10, 20, 30, 40, 50]; // cronTask 실행되는 분(minute)
     console.log(roomInfo);
     const cronTask = schedule.scheduleJob(rule, () => { // 스케쥴러를 통해 1분마다 db에 배너정보 전송
-      // socket.emit('response banner data to server', {}); // client로 emit
+      socket.emit('response banner data to server', {}); // client로 emit
       socket.emit('re-render at client', {});
     });
 

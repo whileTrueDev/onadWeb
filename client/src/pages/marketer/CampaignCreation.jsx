@@ -184,7 +184,6 @@ const CampaignCreateStepper = () => {
   const times = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23];
   const defaultList = times.map(() => true);
   const [checkList, setCheckList] = React.useState(defaultList);
-  // const isTrue = currentValue => currentValue === true;
 
   const checkEmpty = (input) => {
     if (input.option.length === 0) {
@@ -217,6 +216,7 @@ const CampaignCreateStepper = () => {
     if (ele) { acc.push(index); }
     return acc;
   }, []));
+
   const handleSubmit = (event) => {
     event.preventDefault();
 
@@ -243,45 +243,15 @@ const CampaignCreateStepper = () => {
       option: step1State.option,
       type: priorityNum,
       ...step3State,
-      // campaignName: step3State.campaignName,
-      // budget: step3State.budget,
-      // bannerId: step3State.bannerId,
-      // startDate: step3State.startDate,
-      // finDate: step3State.finDate,
-      // keyword0: step3State.keyword0,
-      // keyword1: step3State.keyword1,
-      // keyword2: step3State.keyword2,
-      // mainLandingUrlName: step3State.mainLandingUrlName,
-      // sub1LandingUrlName: step3State.sub1LandingUrlName,
-      // sub2LandingUrlName: step3State.sub2LandingUrlName,
-      // mainLandingUrl: step3State.mainLandingUrl,
-      // sub1LandingUrl: step3State.sub1LandingUrl,
-      // sub2LandingUrl: step3State.sub2LandingUrl,
-      // time: step3State.time
       priority: priorityList,
 
     };
     getIndexArray(checkList);
-    // console.log(validateObject);
     if (checkEmpty(validateObject)) {
       axios.post(`${HOST}/api/dashboard/marketer/campaign/push`, {
         optionType: optionNumType,
         priorityType: priorityNum,
         ...step3State,
-        // campaignName: step3State.campaignName,
-        // bannerId: step3State.bannerId,
-        // budget: step3State.budget,
-        // startDate: step3State.startDate,
-        // finDate: step3State.finDate,
-        // keyword0: step3State.keyword0,
-        // keyword1: step3State.keyword1,
-        // keyword2: step3State.keyword2,
-        // mainLandingUrlName: step3State.mainLandingUrlName,
-        // sub1LandingUrlName: step3State.sub1LandingUrlName,
-        // sub2LandingUrlName: step3State.sub2LandingUrlName,
-        // mainLandingUrl: step3State.mainLandingUrl,
-        // sub1LandingUrl: step3State.sub1LandingUrl,
-        // sub2LandingUrl: step3State.sub2LandingUrl,
         priorityList,
         selectedTime: getIndexArray(checkList)
       })
