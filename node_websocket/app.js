@@ -7,7 +7,6 @@ const schedule = require('node-schedule');
 const sql = require('./public/models/select');
 const pool = require('./public/models/connect');
 const requestImg = require('./public/requestImg.js');
-const testFile = require('./public/testrequestImg.js');
 // port 설정 및 hostname 설정
 const PORT = 3002;
 process.env.NODE_ENV = (process.env.NODE_ENV && (process.env.NODE_ENV).trim().toLowerCase() === 'production') ? 'production' : 'development';
