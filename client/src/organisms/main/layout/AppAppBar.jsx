@@ -294,14 +294,30 @@ function AppAppBar(props) {
       <div className={!trigger ? (classes.root) : (classes.root2)} position="fixed">
         <Toolbar className={classes.toolbar}>
           <div className={classes.left} />
-          <a href="/" className={noButtons ? classes.noButtonIcon : classes.icon}>
-            <img
-              src={!trigger || !noButtons ? ('/pngs/logo/onad_white.png') : ('/pngs/logo/onad_black.png')}
-              id="logo"
-              alt="OnADLogo"
-              style={{ padding: '10px 18px' }}
-            />
-          </a>
+          { noButtons ? (
+            <>
+              <a href="/" className={classes.noButtonIcon}>
+                <img
+                  src="/pngs/logo/onad_black.png"
+                  id="logo"
+                  alt="OnADLogo"
+                  style={{ padding: '10px 18px' }}
+                />
+              </a>
+            </>
+          ) : (
+            <div>
+              <a href="/" className={classes.icon}>
+                <img
+                  src={!trigger ? ('/pngs/logo/onad_white.png') : ('/pngs/logo/onad_black.png')}
+                  id="logo"
+                  alt="OnADLogo"
+                  style={{ padding: '10px 18px' }}
+                />
+              </a>
+            </div>
+          )}
+
 
           {noButtons ? (
             <div className={classes.rightDesktop}>
