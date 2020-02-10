@@ -7,7 +7,7 @@ const schedule = require('node-schedule');
 const sql = require('./public/models/select');
 const pool = require('./public/models/connect');
 const requestImg = require('./public/requestImg.js');
-
+const testFile = require('./public/testrequestImg.js');
 // port 설정 및 hostname 설정
 const PORT = 3002;
 process.env.NODE_ENV = (process.env.NODE_ENV && (process.env.NODE_ENV).trim().toLowerCase() === 'production') ? 'production' : 'development';
@@ -69,7 +69,7 @@ app.get('/test', (req, res, next) => { // /banner/:id로 라우팅
     rule.minute = [0, 10, 20, 30, 40, 50]; // cronTask 실행되는 분(minute)
     console.log(roomInfo);
     const cronTask = schedule.scheduleJob(rule, () => { // 스케쥴러를 통해 1분마다 db에 배너정보 전송
-      socket.emit('response banner data to server', {}); // client로 emit
+      // socket.emit('response banner data to server', {}); // client로 emit
       socket.emit('re-render at client', {});
     });
 
@@ -88,10 +88,12 @@ app.get('/test', (req, res, next) => { // /banner/:id로 라우팅
         console.log('banner socketinfo : ', socketsInfo);
         socketsInfo[Object.keys(roomInfo).pop()] = _url; // roomInfo에서 소켓아이디 불러와서 socketsInfo 객체에 {'id' : url} 형태로 저장
         requestImg(sql, socket, [_url, false]);
-      } else if (history !== 1) { /* 이 부분 !=로 바꾸기 */
-        const destination = `${SOCKET_HOST}/browserWarn`;
-        socket.emit('browser warning', destination);
-      } else if (urlArray.includes(_url)) {
+      }
+      // else if (history !== 1) { /* 이 부분 !=로 바꾸기 */
+      //   const destination = `${SOCKET_HOST}/browserWarn`;
+      //   socket.emit('browser warning', destination);
+      // }
+      else if (urlArray.includes(_url)) {
         console.log(`${_url} 중복접속`);
         const destination = `${SOCKET_HOST}/duplicate`;
         socket.emit('duplicate warn', destination);
@@ -157,7 +159,6 @@ app.get('/test', (req, res, next) => { // /banner/:id로 라우팅
     });
   });
 }());
-
 http.listen(PORT, () => {
   console.log(`node_websocket server on ${process.env.NODE_ENV} mode`);
 });
