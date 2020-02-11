@@ -44,7 +44,7 @@ module.exports = function (sql, socket, msg) {
     FROM campaign
     LEFT JOIN marketerInfo
     ON campaign.marketerId = marketerInfo.marketerId
-    WHERE NOT marketerInfo.marketerContraction = 1
+    WHERE marketerInfo.marketerContraction = 1
     AND campaign.onOff = 1
     AND NOT campaign.optionType = 2
     AND campaign.limitState = 0
