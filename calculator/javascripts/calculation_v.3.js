@@ -2,6 +2,7 @@ const schedule = require('node-schedule');
 const Notification = require('./notification');
 const pool = require('../model/connectionPool');
 const sendAlimtalk = require('./alimtalk');
+
 const PPP = 2;
 const FEERATE = 0.5;
 
@@ -24,9 +25,17 @@ const getcreatorList = ({ date }) => {
   ON A.streamId = B.streamId `;
 
   const bannerListQuery = `
+  SELECT CT.creatorId, campaignId
+  FROM 
+  (
   SELECT creatorId, campaignId
   FROM campaignTimestamp
-  WHERE date > ?`;
+  WHERE date > ?
+  ) AS CT
+  LEFT JOIN
+  creatorInfo
+  ON CT.creatorId = creatorInfo.creatorId
+  WHERE creatorInfo.arrested = 0`;
 
   return new Promise((resolve, reject) => {
     pool.getConnection((err, connection) => {
