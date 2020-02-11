@@ -52,7 +52,7 @@ const CampaignCreateTable = (props) => {
   const {
     handleDetailOpen, detailOpen, step1State,
     state, dispatch, handleDateOpen, dateOpen, setCheckName, checkName,
-    budgetError, setBudgetError
+    budgetError, setBudgetError, checkState, setCheckState
   } = props;
   const [timeSelectorOpen, setTimeSelectorOpen] = React.useState(false);
   const IS_CAMPAIGN_CREATE_PAGE = true; // 캠페인생성 페이지 구분을 위한 변수
@@ -175,8 +175,8 @@ const CampaignCreateTable = (props) => {
                 />
                 {timeSelectorOpen ? (
                   <TimeSelector
-                    dispatch={dispatch}
-                    state={state}
+                    checkState={checkState}
+                    setCheckState={setCheckState}
                   />
                 ) : null}
               </StyledTableCell>

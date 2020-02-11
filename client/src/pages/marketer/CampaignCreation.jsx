@@ -126,7 +126,13 @@ const step3Reducer = (state, action) => {
         budget: '',
         startDate: new Date(),
         finDate: '',
-        links: []
+        mainLandingUrl: '',
+        sub1LandingUrl: '',
+        sub2LandingUrl: '',
+        mainLandingUrlName: '',
+        sub1LandingUrlName: '',
+        sub2LandingUrlName: '',
+        time: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23],
       };
     }
     default:
@@ -163,10 +169,8 @@ const CampaignCreateStepper = () => {
     mainLandingUrl: '',
     sub1LandingUrl: '',
     sub2LandingUrl: '',
-    keywords: [],
-    time: []
+    time: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]
   });
-
   // 최종 step에서 handleSubmit을 하기위한 signal
   const [step2PaperOpen, setStep2PaperOpen] = React.useState(false); // step2를 열거나 닫는 state
   const [step3PaperOpen, setStep3PaperOpen] = React.useState(false); // step3를 열거나 닫는 state
@@ -177,7 +181,9 @@ const CampaignCreateStepper = () => {
   const [step, setStep] = React.useState(0);
   const [checkName, setCheckName] = React.useState(false);
   const [budgetError, setBudgetError] = React.useState(false);
-  // const isTrue = currentValue => currentValue === true;
+  const times = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23];
+  const defaultList = times.map(() => true);
+  const [checkList, setCheckList] = React.useState(defaultList);
 
   const checkEmpty = (input) => {
     if (input.option.length === 0) {
@@ -206,6 +212,11 @@ const CampaignCreateStepper = () => {
     }
     return true;
   };
+  const getIndexArray = array => (array.reduce((acc, ele, index) => {
+    if (ele) { acc.push(index); }
+    return acc;
+  }, []));
+
   const handleSubmit = (event) => {
     event.preventDefault();
 
@@ -231,43 +242,18 @@ const CampaignCreateStepper = () => {
     const validateObject = {
       option: step1State.option,
       type: priorityNum,
-      campaignName: step3State.campaignName,
-      budget: step3State.budget,
-      bannerId: step3State.bannerId,
-      startDate: step3State.startDate,
-      finDate: step3State.finDate,
-      keyword0: step3State.keyword0,
-      keyword1: step3State.keyword1,
-      keyword2: step3State.keyword2,
-      mainLandingUrlName: step3State.mainLandingUrlName,
-      sub1LandingUrlName: step3State.sub1LandingUrlName,
-      sub2LandingUrlName: step3State.sub2LandingUrlName,
-      mainLandingUrl: step3State.mainLandingUrl,
-      sub1LandingUrl: step3State.sub1LandingUrl,
-      sub2LandingUrl: step3State.sub2LandingUrl,
+      ...step3State,
       priority: priorityList,
-      time: step3State.time
+
     };
+    getIndexArray(checkList);
     if (checkEmpty(validateObject)) {
       axios.post(`${HOST}/api/dashboard/marketer/campaign/push`, {
         optionType: optionNumType,
         priorityType: priorityNum,
-        campaignName: step3State.campaignName,
-        bannerId: step3State.bannerId,
-        budget: step3State.budget,
-        startDate: step3State.startDate,
-        finDate: step3State.finDate,
-        keyword0: step3State.keyword0,
-        keyword1: step3State.keyword1,
-        keyword2: step3State.keyword2,
-        mainLandingUrlName: step3State.mainLandingUrlName,
-        sub1LandingUrlName: step3State.sub1LandingUrlName,
-        sub2LandingUrlName: step3State.sub2LandingUrlName,
-        mainLandingUrl: step3State.mainLandingUrl,
-        sub1LandingUrl: step3State.sub1LandingUrl,
-        sub2LandingUrl: step3State.sub2LandingUrl,
+        ...step3State,
         priorityList,
-        selectedTime: step3State.time
+        selectedTime: getIndexArray(checkList)
       })
         .then((res) => {
           alert(res.data[1]);
@@ -415,6 +401,8 @@ const CampaignCreateStepper = () => {
                     handleDateOpen={handleDateOpen}
                     handleDatePickerOpen={handleDatePickerOpen}
                     datePickerOpen={datePickerOpen}
+                    checkState={checkList}
+                    setCheckState={setCheckList}
                   />
                   )}
                 </Grid>
