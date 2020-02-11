@@ -1,7 +1,9 @@
 {
+  "name": "server",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
   "devDependencies": {
-    "babel-eslint": "10.0.2",
-    "express-generator": "^4.16.0",
     "eslint-config-airbnb": "^18.0.1",
     "eslint-plugin-jest": "^23.7.0",
     "eslint-plugin-jsx-a11y": "^6.2.3",
@@ -17,20 +19,7 @@
     "eslint-plugin-prettier": "^3.1.2",
     "eslint-plugin-react": "^7.17.0"
   },
-  "prettier": {
-    "singleQuote": true,
-    "semi": true,
-    "useTabs": false,
-    "tabWidth": 2,
-    "trailingComma": "all",
-    "printWidth": 80
-  },
-  "scripts": {
-    "service": "cd service && node bin/www",
-    "client": "cd client && yarn start"
-  },
   "dependencies": {
-    "ngrok": "^3.2.7",
-    "node-sass": "^4.13.0"
+    "@types/node": "^13.7.0"
   }
 }
