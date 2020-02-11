@@ -5,6 +5,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import withRoot from '../../organisms/main/Main/withRoot';
 import useLoginValue from '../../utils/lib/hooks/useLoginValue';
 import AppAppBar from '../../organisms/main/layout/AppAppBar';
+import HowToUseCreator from '../../organisms/main/Introduction/components/HowToUseCreator';
 import HowToUseMarketer from '../../organisms/main/Introduction/components/HowToUseMarketer';
 import IntroduceMiddle from '../../organisms/main/Introduction/components/IntroduceMiddle';
 import ProductHowItWorks from '../../organisms/main/Main/views/HowItWorks/ProductHowItWorks';
@@ -132,6 +133,7 @@ export default withRoot((props) => {
   const { history } = props;
   const { isLogin, logout } = useLoginValue(history);
   const classes = styles();
+  const MainUserType = history.location.pathname;
 
   // if Link here, set the scroll to top of the page
   React.useEffect(() => {
@@ -140,40 +142,81 @@ export default withRoot((props) => {
 
   return (
     <div>
-      <div className={classes.rootWrap}>
-        <div className={classes.containerWrap}>
-          <AppAppBar
-            isLogin={isLogin}
-            logout={logout}
-            MainUserType="marketer"
-          />
-          <div className={classes.maintop}>
-            <div className={classes.loginMiddle}>
-              <Grow in timeout={1500}>
-                <h1 className={classes.h1}>
-                  {textSource.heroSector.marketer.text.title}
-                </h1>
-              </Grow>
-              <div className={classes.h1sub}>
-                {textSource.heroSector.marketer.text.content.split('\n').map(row => (
-                  <p key={row}>{`${row}`}</p>
-                ))}
+      {MainUserType === '/introMarketer' ? (
+        <div>
+          <div className={classes.rootWrap}>
+            <div className={classes.containerWrap}>
+              <AppAppBar
+                isLogin={isLogin}
+                logout={logout}
+                MainUserType="marketer"
+              />
+              <div className={classes.maintop}>
+                <div className={classes.loginMiddle}>
+                  <Grow in timeout={1500}>
+                    <h1 className={classes.h1}>
+                      {textSource.heroSector.marketer.text.title}
+                    </h1>
+                  </Grow>
+                  <div className={classes.h1sub}>
+                    {textSource.heroSector.marketer.text.content.split('\n').map(row => (
+                      <p key={row}>{`${row}`}</p>
+                    ))}
+                  </div>
+                </div>
               </div>
             </div>
           </div>
+          <section style={{ background: 'linear-gradient(60deg, #0D93BF 30%, #3154EB 90%)' }}>
+            <HowToUseMarketer source={textSource.marketer.secondSector} />
+          </section>
+
+          <IntroduceMiddle source={textSource.topSector} />
+
+          <ProductHowItWorks
+            source={sources.howitworks}
+          />
+          <Question MainUserType="marketer" />
+          <AppFooter />
         </div>
-      </div>
-      <section style={{ background: 'linear-gradient(60deg, #0D93BF 30%, #3154EB 90%)' }}>
-        <HowToUseMarketer source={textSource.marketer.secondSector} />
-      </section>
+      ) : (
+        <div>
+          <div className={classes.rootWrap}>
+            <div className={classes.containerWrap}>
+              <AppAppBar
+                isLogin={isLogin}
+                logout={logout}
+                MainUserType="creator"
+              />
+              <div className={classes.maintop}>
+                <div className={classes.loginMiddle}>
+                  <Grow in timeout={1500}>
+                    <h1 className={classes.h1}>
+                      {textSource.heroSector.creator.text.title}
+                    </h1>
+                  </Grow>
+                  <div className={classes.h1sub}>
+                    {textSource.heroSector.creator.text.content.split('\n').map(row => (
+                      <p key={row}>{`${row}`}</p>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <section style={{ background: 'linear-gradient(45deg, #FFAA00 30%, #FF8E53 90%)' }}>
+            <HowToUseCreator source={textSource.creator.secondSector} />
+          </section>
 
-      <IntroduceMiddle source={textSource.topSector} />
+          <IntroduceMiddle source={textSource.topSector} />
 
-      <ProductHowItWorks
-        source={sources.howitworks}
-      />
-      <Question />
-      <AppFooter />
+          <ProductHowItWorks
+            source={sources.howitworks}
+          />
+          <Question MainUserType="creator" />
+          <AppFooter />
+        </div>
+      )}
     </div>
   );
 });

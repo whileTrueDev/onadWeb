@@ -1,8 +1,9 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import {
-  Grow, Slide, useScrollTrigger, Hidden, Grid
+  Grow, Slide, useScrollTrigger, Grid
 } from '@material-ui/core';
+import { Link } from 'react-router-dom';
 import Button from '../../components/Button';
 
 const styles = makeStyles(theme => ({
@@ -177,54 +178,102 @@ const styles = makeStyles(theme => ({
 
 function HowToUse(props) {
   const {
-    source, slideTime
+    source, slideTime, MainUserType
   } = props;
   const classes = styles();
   const trigger = useScrollTrigger({ threshold: 850, disableHysteresis: true });
 
   return (
     <div className={classes.root}>
-      <div className={classes.mainMiddle}>
-        <Slide
-          in={trigger}
-          direction="right"
-          {...(trigger
-          // trigger -> true
-            ? { timeout: slideTime }
-          // trigger -> false
-            : { timeout: slideTime })}
-        >
-          <Grid item className={classes.slide}>
-            <video className={classes.mainMiddleLeftVideo} autoPlay loop>
-              <source src="/video/main/mainMarketer.mp4" type="video/mp4" />
-              <track />
-            </video>
-          </Grid>
-        </Slide>
-        <div className={classes.loginButtonRight}>
-          <Grow in timeout={1500}>
-            <h1 className={classes.h1}>
-              {source.title}
-            </h1>
-          </Grow>
-          <Grow in timeout={1500}>
-            <h1 className={classes.h2}>
-              {source.subTitle}
-            </h1>
-          </Grow>
-          <img src="/pngs/main/howToUseMarketer.png" alt="Howto" className={classes.step} />
-          <div className={classes.h1sub}>
-            {source.text.split('\n').map(row => (
-              <p key={row} className={classes.text}>{`${row}`}</p>
-            ))}
-          </div>
-          <Button
-            className={classes.buttonRight}
+      {MainUserType === 'marketer' ? (
+        <div className={classes.mainMiddle}>
+          <Slide
+            in={trigger}
+            direction="right"
+            {...(trigger
+            // trigger -> true
+              ? { timeout: slideTime }
+            // trigger -> false
+              : { timeout: slideTime })}
           >
-            &rarr; 이용방법 자세히보기
-          </Button>
+            <Grid item className={classes.slide}>
+              <video className={classes.mainMiddleLeftVideo} autoPlay loop>
+                <source src="/video/main/howtouseMarketer.mp4" type="video/mp4" />
+                <track />
+              </video>
+            </Grid>
+          </Slide>
+          <div className={classes.loginButtonRight}>
+            <Grow in timeout={1500}>
+              <h1 className={classes.h1}>
+                {source.title}
+              </h1>
+            </Grow>
+            <Grow in timeout={1500}>
+              <h1 className={classes.h2}>
+                {source.subTitle}
+              </h1>
+            </Grow>
+            <img src="/pngs/main/howToUseMarketer.png" alt="Howto" className={classes.step} />
+            <div className={classes.h1sub}>
+              {source.textMarketer.split('\n').map(row => (
+                <p key={row} className={classes.text}>{`${row}`}</p>
+              ))}
+            </div>
+            <Button
+              className={classes.buttonRight}
+              component={Link}
+              to="/introMarketer"
+            >
+              &rarr; 이용방법 자세히보기
+            </Button>
+          </div>
         </div>
-      </div>
+      ) : (
+        <div className={classes.mainMiddle}>
+          <Slide
+            in={trigger}
+            direction="right"
+            {...(trigger
+            // trigger -> true
+              ? { timeout: slideTime }
+            // trigger -> false
+              : { timeout: slideTime })}
+          >
+            <Grid item className={classes.slide}>
+              <video className={classes.mainMiddleLeftVideo} autoPlay loop>
+                <source src="/video/main/howtouseCreator.mp4" type="video/mp4" />
+                <track />
+              </video>
+            </Grid>
+          </Slide>
+          <div className={classes.loginButtonRight}>
+            <Grow in timeout={1500}>
+              <h1 className={classes.h1}>
+                {source.title}
+              </h1>
+            </Grow>
+            <Grow in timeout={1500}>
+              <h1 className={classes.h2}>
+                {source.subTitle}
+              </h1>
+            </Grow>
+            <img src="/pngs/main/howToUseCreator.png" alt="Howto" className={classes.step} />
+            <div className={classes.h1sub}>
+              {source.textCreator.split('\n').map(row => (
+                <p key={row} className={classes.text}>{`${row}`}</p>
+              ))}
+            </div>
+            <Button
+              className={classes.buttonRight}
+              component={Link}
+              to="/introCreator"
+            >
+              &rarr; 이용방법 자세히보기
+            </Button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

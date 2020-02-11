@@ -19,10 +19,15 @@ const useStyles = makeStyles(theme => ({
     background: 'url(\'/pngs/main/loading.gif\') no-repeat center center',
     backgroundSize: 'cover',
     width: '100%',
-    height: '800px',
-    [theme.breakpoints.up('sm')]: {
-    },
+    height: '700px',
     [theme.breakpoints.down('md')]: {
+      height: '600px',
+    },
+    [theme.breakpoints.down('sm')]: {
+      height: '500px'
+    },
+    [theme.breakpoints.down('xs')]: {
+      height: '600px'
     }
   },
   containerWrap: {
@@ -53,23 +58,33 @@ const useStyles = makeStyles(theme => ({
     marginBottom: '5px',
     fontSize: 45,
     fontWeight: 600,
-    [theme.breakpoints.up('md')]: {
-    },
-    [theme.breakpoints.up('sm')]: {
-      wordBreak: 'keep-all'
+    [theme.breakpoints.down('md')]: {
+      fontSize: 35,
     },
     [theme.breakpoints.down('sm')]: {
-      wordBreak: 'keep-all'
+      fontSize: 27,
+    },
+    [theme.breakpoints.down('sm')]: {
+      fontSize: 25,
     },
   },
   h1sub: {
     marginTop: 40,
     marginBottom: 40,
-    [theme.breakpoints.up('md')]: {
-    },
-    [theme.breakpoints.up('sm')]: {
+    [theme.breakpoints.down('md')]: {
+      fontSize: 18,
+      marginTop: 35,
+      marginBottom: 35,
     },
     [theme.breakpoints.down('sm')]: {
+      fontSize: 15,
+      marginTop: 30,
+      marginBottom: 30,
+    },
+    [theme.breakpoints.down('xs')]: {
+      fontSize: 12,
+      marginTop: 20,
+      marginBottom: 20,
     },
   },
   maintop: {
@@ -142,20 +157,22 @@ export default withRoot((props) => {
   }, [location]);
 
   return (
-    <div className={classes.root}>
-      <div className={classes.containerWrap}>
-        <AppAppBar isLogin={isLogin} logout={logout} MainUserType="marketer" />
-        <div className={classes.maintop}>
-          <div className={classes.loginMiddle}>
-            <Grow in timeout={1500}>
-              <h1 className={classes.h1}>
-                {textSource.heroSector.creatorList.title}
-              </h1>
-            </Grow>
-            <div className={classes.h1sub}>
-              {textSource.heroSector.creatorList.content.split('\n').map(row => (
-                <p key={row}>{`${row}`}</p>
-              ))}
+    <div>
+      <div className={classes.root}>
+        <div className={classes.containerWrap}>
+          <AppAppBar isLogin={isLogin} logout={logout} MainUserType="marketer" />
+          <div className={classes.maintop}>
+            <div className={classes.loginMiddle}>
+              <Grow in timeout={1500}>
+                <h1 className={classes.h1}>
+                  {textSource.heroSector.creatorList.title}
+                </h1>
+              </Grow>
+              <div className={classes.h1sub}>
+                {textSource.heroSector.creatorList.content.split('\n').map(row => (
+                  <p key={row}>{`${row}`}</p>
+                ))}
+              </div>
             </div>
           </div>
         </div>
@@ -170,7 +187,7 @@ export default withRoot((props) => {
           )}
           {!ContractedCreatorList.loading && !LiveCreatorList.loading && LiveCreatorList.payload
           && ContractedCreatorList.payload.map(row => (
-            <Grid item xs={3} sm={2} className={classes.listWrapper} key={shortid.generate()}>
+            <Grid item xs={12} sm={5} md={2} className={classes.listWrapper} key={shortid.generate()}>
               <Card profile className={LiveCreatorList.payload.includes(row.creatorTwitchId) ? (classes.live) : (classes.notlive)}>
                 <CardAvatar profile>
                   <a href={`https://www.twitch.tv/${row.creatorTwitchId}`}>
@@ -179,7 +196,7 @@ export default withRoot((props) => {
                 </CardAvatar>
                 <CardBody profile>
                   {LiveCreatorList.payload.includes(row.creatorTwitchId) && (
-                    <h4 className={classes.liveTitle}>LIVE!!!</h4>
+                  <h4 className={classes.liveTitle}>LIVE</h4>
                   )}
                   <h4 className={classes.cardTitle}>
                     {`${row.creatorName}`}

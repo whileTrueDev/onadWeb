@@ -18,6 +18,21 @@ const styles = theme => ({
       height: '600px'
     }
   },
+  root2: {
+    background: 'url(\'/pngs/main/creatorMain.PNG\') no-repeat center center',
+    backgroundSize: 'cover',
+    width: '100%',
+    height: '700px',
+    [theme.breakpoints.down('md')]: {
+      height: '600px',
+    },
+    [theme.breakpoints.down('sm')]: {
+      height: '500px'
+    },
+    [theme.breakpoints.down('xs')]: {
+      height: '600px'
+    }
+  },
   containerWrap: {
     backgroundColor: 'rgb(0,0,0, 0.6)',
     width: '100%',
@@ -30,11 +45,11 @@ const styles = theme => ({
 
 function ProductHeroLayout(props) {
   const {
-    children, classes,
+    children, classes, MainUserType
   } = props;
 
   return (
-    <section className={classes.root}>
+    <section className={MainUserType === 'marketer' ? (classes.root) : (classes.root2)}>
       <div className={classes.containerWrap}>
         {children}
       </div>

@@ -35,7 +35,8 @@ const developRouter = (
       <Route exact path="/creatorlist" component={CreatorList} />
       <Route path="/regist/:platform" component={RegistPage} />
       <Route exact path="/regist" component={RegistPage} />
-      <Route exact path="/introduction" component={Introduction} />
+      <Route exact path="/introMarketer" component={Introduction} />
+      <Route exact path="/introCreator" component={Introduction} />
       <Route exact path="/policy" component={Policy} />
       <Route exact path="/policy/:privacy" component={Policy} />
       <Route exact path="/notice" component={Notice} />
@@ -60,7 +61,8 @@ const productionRouter = (
       <Route exact path="/creator" component={Main} />
       <Route exact path="/creatorlist" component={CreatorList} />
       <Route exact path="/regist" component={RegistPage} />
-      <Route exact path="/introduction" component={Introduction} />
+      <Route exact path="/introMarketer" component={Introduction} />
+      <Route exact path="/introCreator" component={Introduction} />
       <Route exact path="/policy" component={Policy} />
       <Route exact path="/policy/:privacy" component={Policy} />
       <Route exact path="/marketer/charge" component={TestChargeDialog} />

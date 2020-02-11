@@ -266,7 +266,7 @@ const Inquire = (props) => {
       <Dialog
         open={Boolean(confirmDialog.open)}
         onClose={confirmDialog.handleClose}
-        fullWidth="true"
+        fullWidth
         maxWidth="xs"
         buttons={(
           <div>

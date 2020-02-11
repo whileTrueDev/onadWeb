@@ -17,7 +17,7 @@ export default withRoot((props) => {
   // if located here, set the scroll to top of the page
   const { history, location } = props;
   const {
-    isLogin, repasswordOpen, logout, setRepassword, userType
+    isLogin, repasswordOpen, logout, setRepassword
   } = useLoginValue(history, location);
 
   React.useEffect(() => {
@@ -33,13 +33,15 @@ export default withRoot((props) => {
           <AppAppBar isLogin={isLogin} logout={logout} MainUserType="marketer" />
           <ProductHero
             source={sources.hero}
+            MainUserType="marketer"
           />
           <Indicator />
           <HowToUse
             source={sources.howTo}
             slideTime={1000}
+            MainUserType="marketer"
           />
-          <Advantage source={sources.advantage} />
+          <Advantage source={sources.advantage} MainUserType="marketer" />
           <IntroService />
           <ProductHowItWorks source={sources.howitworks} />
           <Inqurie />
@@ -54,10 +56,16 @@ export default withRoot((props) => {
         <div>
           <AppAppBar isLogin={isLogin} logout={logout} MainUserType="creator" />
           <ProductHero
-            isLogin={isLogin}
             source={sources.hero}
-            userType={userType}
+            MainUserType="creator"
           />
+          <Indicator />
+          <HowToUse
+            source={sources.howTo}
+            slideTime={1000}
+            MainUserType="creator"
+          />
+          <Advantage source={sources.advantage} MainUserType="creator" />
           <ProductHowItWorks source={sources.howitworks} />
           <Inqurie />
           <AppFooter />

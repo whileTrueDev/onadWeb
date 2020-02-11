@@ -226,18 +226,41 @@ const Styles = makeStyles(theme => ({
 }));
 
 
-const Question = () => {
+const Question = (props) => {
   const classes = Styles();
-  const defaultQuestion = {
-    id: 'one',
-    text: '요금에 대한 정보가 알고 싶어요.',
-    ans: textSource.answer.one,
-  };
+  const { MainUserType } = props;
+
+  let defaultQuestion;
+  if (MainUserType === 'marketer') {
+    defaultQuestion = {
+      id: 'one',
+      text: '마케터 기본 질문 1',
+      ans: textSource.answerMarketer.one,
+    };
+  } else {
+    defaultQuestion = {
+      id: 'one',
+      text: '크리에이터 기본 질문 1',
+      ans: textSource.answerCreator.one,
+    };
+  }
+
+  let source;
+  if (MainUserType === 'marketer') {
+    source = textSource.questionMarketer;
+  } else {
+    source = textSource.questionCreator;
+  }
 
   const [questionNum, setQuestionNum] = React.useState(defaultQuestion);
 
+
   function handleClick(row) {
-    setQuestionNum({ id: row.id, text: row.text, ans: textSource.answer[row.id] });
+    if (MainUserType === 'marketer') {
+      setQuestionNum({ id: row.id, text: row.text, ans: textSource.answerMarketer[row.id] });
+    } else {
+      setQuestionNum({ id: row.id, text: row.text, ans: textSource.answerCreator[row.id] });
+    }
   }
 
   return (
@@ -247,7 +270,7 @@ const Question = () => {
       </h1>
       <div className={classes.QnAWrapper}>
         <div className={classes.question}>
-          {textSource.question.map(row => (
+          {source.map(row => (
             <div
               className={questionNum.id === row.id ? (classes.questionTextClicked) : (classes.questionText)}
               key={shortid.generate()}

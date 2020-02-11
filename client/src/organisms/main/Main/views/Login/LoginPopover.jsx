@@ -93,10 +93,9 @@ class LoginPopover extends Component {
 
   render() {
     const {
-      classes, type, logout, tabValue, MainUserType, trigger, mode
+      classes, type, logout, MainUserType, trigger, mode
     } = this.props;
     const { loginValue } = this.state;
-    console.log(mode);
 
     return (
       <React.Fragment>
@@ -170,8 +169,10 @@ class LoginPopover extends Component {
                   { mode ? (
                     <Button
                       className={classes.rightLink2}
-                      component={Link}
-                      to="/regist"
+                      onClick={() => {
+                        alert('현재, Twitch 아이디로 로그인할 수 있어요! 확인 이후 로그인하세요!');
+                        this.handleDialogOpenClick('creator');
+                      }}
                     >
                       <Hidden mdUp>
                         <SupervisedUserCircle style={{ marginRight: 10 }} />

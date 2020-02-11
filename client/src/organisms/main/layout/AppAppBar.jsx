@@ -32,15 +32,22 @@ const styles = theme => ({
     zIndex: '100',
     boxShadow: '0 1px 10px gainsboro'
   },
+  left: {
+    [theme.breakpoints.up('sm')]: {
+      width: 48,
+      height: 48
+    },
+    [theme.breakpoints.up('xs')]: {
+      width: 48,
+      height: 48
+    },
+  },
   title: {
     fontSize: 24,
   },
   toolbar: {
     justifyContent: 'space-between',
     padding: '0px 0px'
-  },
-  left: {
-    flex: 0,
   },
   rightDesktop: {
     height: '100%',
@@ -225,7 +232,7 @@ function AppAppBar(props) {
         </Button>
       );
     }
-    return <LoginPopover type="회원가입" history={history} trigger={trigger} />;
+    return <LoginPopover type="회원가입" history={history} trigger={trigger} MainUserType={MainUserType} />;
   };
 
   /** 모바일 메뉴 ********************************************* */
@@ -255,7 +262,7 @@ function AppAppBar(props) {
         <Button
           className={classes.rightLink2}
           component={Link}
-          to="/introduction"
+          to={MainUserType === 'marketer' ? ('/introMarketer') : ('/introCreator')}
         >
           <Domain className={classes.buttonIcon} />
           서비스 소개
@@ -272,7 +279,7 @@ function AppAppBar(props) {
             My광고
           </Button>
         )
-          : <LoginPopover type="회원가입" mode="mobile" />
+          : <LoginPopover type="회원가입" mode="mobile" MainUserType={MainUserType} />
         }
       </MenuItem>
 
@@ -282,7 +289,7 @@ function AppAppBar(props) {
               로그아웃
           </Button>
         ) : (
-          <LoginPopover type="로그인" />
+          <LoginPopover type="로그인" MainUserType={MainUserType} />
         )}
       </MenuItem>
 
@@ -332,11 +339,12 @@ function AppAppBar(props) {
               <Button
                 className={!trigger ? (classes.rightLink) : (classes.rightLink2)}
                 component={Link}
-                to="/introduction"
+                to={MainUserType === 'marketer' ? ('/introMarketer') : ('/introCreator')}
               >
                 서비스소개
               </Button>
               <RegButton history={history} logout={logout} />
+
               <Button
                 className={!trigger ? (classes.rightLink3) : (classes.rightLink4)}
                 component={Link}
@@ -348,7 +356,6 @@ function AppAppBar(props) {
                 history={history}
                 logout={logout}
               />
-
             </div>
           )}
 
