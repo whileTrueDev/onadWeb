@@ -1,10 +1,3 @@
-import BrandingWatermark from '@material-ui/icons/BrandingWatermark';
-import BrandingWatermarkOutlined from '@material-ui/icons/BrandingWatermarkOutlined';
-import Subscriptions from '@material-ui/icons/Subscriptions';
-import ShowChart from '@material-ui/icons/ShowChart';
-import Router from '@material-ui/icons/Router';
-import BarChart from '@material-ui/icons/BarChart';
-
 const sources = {
   hero: {
     text: {

@@ -2,7 +2,7 @@ import React, { useState, useCallback } from 'react';
 import shortid from 'shortid';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { Button, Grid, Hidden } from '@material-ui/core';
+import { Button, Hidden } from '@material-ui/core';
 import Typography from '../../components/Typography';
 import LoginForm from '../Login/LoginForm';
 import axios from '../../../../../utils/axios';

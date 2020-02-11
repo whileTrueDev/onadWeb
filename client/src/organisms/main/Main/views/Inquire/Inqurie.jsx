@@ -10,10 +10,8 @@ import {
   Container,
   Grid,
 } from '@material-ui/core';
-import { green } from '@material-ui/core/colors';
 import HOST from '../../../../../utils/config';
 import axios from '../../../../../utils/axios';
-import history from '../../../../../history';
 import useDialog from '../../../../../utils/lib/hooks/useDialog';
 import Dialog from '../../../Introduction/components/Dialog';
 

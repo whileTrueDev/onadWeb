@@ -1,8 +1,6 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import {
-  useScrollTrigger, Hidden
-} from '@material-ui/core';
+import { useScrollTrigger } from '@material-ui/core';
 
 const styles = makeStyles(theme => ({
   root: {

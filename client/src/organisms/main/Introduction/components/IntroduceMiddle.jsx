@@ -261,20 +261,9 @@ const useStyles = makeStyles(theme => ({
     fontWeight: 550,
     textAlign: 'center',
   },
-  // texBox: {
-  //   marginLeft: 40
-  // },
-  // texBox2: {
-  //   marginLeft: 150
-  // },
-  // texBox3: {
-  //   marginLeft: 170
-  // },
-
 }));
 
-export default function IntroduceTop(props) {
-  const { source } = props;
+export default function IntroduceTop() {
   const classes = useStyles();
   const trigger = useScrollTrigger({ threshold: 850, disableHysteresis: true });
   const trigger2 = useScrollTrigger({ threshold: 1650, disableHysteresis: true });

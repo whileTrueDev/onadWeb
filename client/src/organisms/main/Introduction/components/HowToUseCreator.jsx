@@ -147,7 +147,7 @@ const HowToUseCreator = (props) => {
       <Dialog
         open={Boolean(UseStep.open)}
         onClose={UseStep.handleClose}
-        fullWidth="true"
+        fullWidth
         maxWidth="md"
       >
         <img src={`./pngs/introduction/${imgStep}.png`} className={classes.contentImg} alt="sample" />

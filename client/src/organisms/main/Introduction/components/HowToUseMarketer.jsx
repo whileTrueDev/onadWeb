@@ -2,7 +2,6 @@ import React from 'react';
 import shortid from 'shortid';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
-import { Link } from 'react-router-dom';
 import { Grid, Button } from '@material-ui/core';
 import Container from '@material-ui/core/Container';
 import Typography from '../../Main/components/Typography';
