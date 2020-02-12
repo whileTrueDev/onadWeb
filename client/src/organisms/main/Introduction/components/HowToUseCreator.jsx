@@ -2,24 +2,36 @@ import React from 'react';
 import shortid from 'shortid';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
+import { Grid, Button } from '@material-ui/core';
 import Container from '@material-ui/core/Container';
 import Typography from '../../Main/components/Typography';
+import useDialog from '../../../../utils/lib/hooks/useDialog';
+import Dialog from './Dialog';
 
 const useStyles = makeStyles(theme => ({
   root: {
     marginBottom: theme.spacing(0),
   },
   creatorUse: {
-    paddingTop: theme.spacing(8),
+    paddingTop: theme.spacing(2),
     color: 'white',
-    wordBreak: 'keep-all'
+    wordBreak: 'keep-all',
+    hegiht: 300
   },
   head: {
-    fontFamily: 'Noto Sans KR',
+    fontFamily: 'Noto Sans kr',
     color: 'white',
     margin: theme.spacing(2, 0),
-    fontWeight: '600'
+    fontWeight: '600',
+    [theme.breakpoints.down('md')]: {
+      fontSize: 35,
+    },
+    [theme.breakpoints.down('sm')]: {
+      fontSize: 27,
+    },
+    [theme.breakpoints.down('sm')]: {
+      fontSize: 25,
+    },
   },
   numbertable: {
     marginTop: theme.spacing(2),
@@ -45,6 +57,21 @@ const useStyles = makeStyles(theme => ({
     marginTop: theme.spacing(2),
     fontSize: 15
   },
+  sampleLink: {
+    color: 'white',
+    fontFamily: 'Noto Sans kr',
+    border: '1px solid white',
+    padding: '5px 10px',
+    fontSize: 16,
+    marginTop: 20
+  },
+  contentImg: {
+    width: '100%',
+    height: '100%',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  }
 }));
 
 const HowToUseCreator = (props) => {
@@ -52,72 +79,79 @@ const HowToUseCreator = (props) => {
     source
   } = props;
   const classes = useStyles();
+  const [imgStep, setImgStep] = React.useState('banner');
+  const UseStep = useDialog();
 
   return (
     <Container className={classes.root} component="section">
       <Grid className={classes.creatorUse}>
-
-        <Typography variant="h4" component="h2" align="center" className={classes.head}>
-          {source.head}
-        </Typography>
-        <Typography variant="h5" component="h2" className={classes.subTitle}>
-          {source.subTitle}
-        </Typography>
         <Grid container className={classes.numbertable}>
           <Grid item xs={12} md={3} className={classes.creatorUse}>
             <div className={classes.useNumber}>1</div>
             <Typography variant="h5" component="h2" style={{ color: 'white', fontFamily: 'Noto Sans kr', fontWeight: '600' }}>
-              {'회원가입'}
+              계약하기
             </Typography>
             <div className={classes.Content}>
               {source.firstContent.split('\n').map(row => (
                 <Typography variant="body1" key={shortid.generate()}>{`${row}`}</Typography>
               ))}
             </div>
+            <Button className={classes.sampleLink} onClick={() => { setImgStep('contract'); UseStep.handleOpen(); }}>
+              &gt;&nbsp;샘플보기
+            </Button>
           </Grid>
           <Grid item xs={12} md={3} className={classes.creatorUse}>
             <div className={classes.useNumber}>2</div>
             <Typography variant="h5" component="h2" style={{ color: 'white', fontFamily: 'Noto Sans kr', fontWeight: '600' }}>
-              {'URL복사'}
+              광고페이지설정
             </Typography>
             <div className={classes.Content}>
               {source.secondContent.split('\n').map(row => (
                 <Typography variant="body1" key={shortid.generate()}>{`${row}`}</Typography>
               ))}
             </div>
+            <Button className={classes.sampleLink} onClick={() => { setImgStep('landingpage'); UseStep.handleOpen(); }}>
+              &gt;&nbsp;샘플보기
+            </Button>
           </Grid>
           <Grid item xs={12} md={3} className={classes.creatorUse}>
             <div className={classes.useNumber}>3</div>
             <Typography variant="h5" component="h2" style={{ color: 'white', fontFamily: 'Noto Sans kr', fontWeight: '600' }}>
-              {'방송송출적용'}
+              광고송출설정
             </Typography>
             <div className={classes.Content}>
               {source.thirdContent.split('\n').map(row => (
                 <Typography variant="body1" key={shortid.generate()}>{`${row}`}</Typography>
               ))}
             </div>
+            <Button className={classes.sampleLink} onClick={() => { setImgStep('broadcast'); UseStep.handleOpen(); }}>
+              &gt;&nbsp;샘플보기
+            </Button>
           </Grid>
           <Grid item xs={12} md={3} className={classes.creatorUse}>
             <div className={classes.useNumber}>4</div>
             <Typography variant="h5" component="h2" style={{ color: 'white', fontFamily: 'Noto Sans kr', fontWeight: '600' }}>
-              {'수익정산'}
+              수익정산
             </Typography>
             <div className={classes.Content}>
               {source.fourthContent.split('\n').map(row => (
                 <Typography variant="body1" key={shortid.generate()}>{`${row}`}</Typography>
               ))}
             </div>
+            <Button className={classes.sampleLink} onClick={() => { setImgStep('benefit'); UseStep.handleOpen(); }}>
+              &gt;&nbsp;샘플보기
+            </Button>
           </Grid>
         </Grid>
-        {/* <Typography variant="body1">
-                  {source.body.split('\n').map((row, index) => (
-                    <p key={source.body+index} style={{fontFamily:'Noto Sans kr'}}>{`${row}`}</p>
-                  ))}
-                </Typography> */}
-        {/* </div> */}
-        {/* </div> */}
       </Grid>
-      {/* </Grid> */}
+      <Dialog
+        open={Boolean(UseStep.open)}
+        onClose={UseStep.handleClose}
+        fullWidth
+        maxWidth="md"
+      >
+        <img src={`./pngs/introduction/${imgStep}.png`} className={classes.contentImg} alt="sample" />
+      </Dialog>
     </Container>
   );
 };

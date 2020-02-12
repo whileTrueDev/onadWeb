@@ -1,7 +1,5 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import axios from '../../../../../utils/axios';
-import HOST from '../../../../../utils/config';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import {
   Checkbox,
@@ -10,20 +8,23 @@ import {
   Typography,
   Input,
   Container,
-  Grid} from '@material-ui/core';
-import { green } from '@material-ui/core/colors';
-import history from '../../../../../history';
+  Grid,
+} from '@material-ui/core';
+import HOST from '../../../../../utils/config';
+import axios from '../../../../../utils/axios';
+import useDialog from '../../../../../utils/lib/hooks/useDialog';
+import Dialog from '../../../Introduction/components/Dialog';
 
 const useStyles = makeStyles(theme => ({
   root: {
-    marginTop: theme.spacing(8),
+    marginTop: theme.spacing(12),
     marginBottom: theme.spacing(5),
   },
   title: {
     fontFamily: 'Noto Sans KR',
-    marginTop:  '20px',
+    marginTop: '20px',
     marginBottom: '30px',
-    fontWeight: '500',
+    fontWeight: '600',
     wordBreak: 'keep-all',
     [theme.breakpoints.down('sm')]: {
       fontSize: '25px',
@@ -37,7 +38,7 @@ const useStyles = makeStyles(theme => ({
     }
   },
   contentWraper: {
-    margin: `20px auto`,
+    margin: '20px auto',
     wordBreak: 'keep-all',
     // 브레이크 포인트 나눠서 반응형 내용추가 => 폭 너비 및 폰트크기
   },
@@ -46,11 +47,14 @@ const useStyles = makeStyles(theme => ({
     width: '100%'
   },
   card: {
-    margin: `20px auto`,
-    border: `2px solid #00DBE0`,
+    margin: '20px auto',
+    border: '2px solid #3154EB',
     borderRadius: '10px',
     padding: theme.spacing(8, 3),
-    width: '70%'
+    width: '70%',
+    [theme.breakpoints.down('xs')]: {
+      width: '100%',
+    }
   },
   cardContent: {
     marginBottom: theme.spacing(5),
@@ -59,10 +63,10 @@ const useStyles = makeStyles(theme => ({
     minWidth: 30,
     marginTop: theme.spacing(2),
     borderRadius: 3,
-    border: `1px solid #dddd`,
+    border: '1px solid #dddd',
     width: '100%',
     '&:hover': {
-      border: `1px solid #007be0`
+      border: '1px solid #3154EB'
     }
   },
   textField: {
@@ -71,85 +75,89 @@ const useStyles = makeStyles(theme => ({
     marginBottom: theme.spacing(2),
   },
   checkboxRoot: {
-    color: green[600],
+    color: '#3154EB',
     '&$checked': {
-      color: green[500],
+      color: '#3154EB',
     },
   },
   detailWrap: {
-    padding: `0 16px`
+    padding: '0 16px',
+    [theme.breakpoints.down('xs')]: {
+      padding: '0 10px',
+    }
   },
   checked: {},
   button: {
-    width: '28%',
-    background: 'linear-gradient(45deg, #00DBE0 30%, #21CBF3 90%)',
+    width: '200px',
+    background: '#3154EB',
     color: 'white',
     height: '50px',
-    fontSize: "20px",
-    fontFamily: 'Noto Sans KR'
+    fontSize: '20px',
+    fontFamily: 'Noto Sans KR',
+    [theme.breakpoints.down('xs')]: {
+      width: '150px',
+    }
   },
   detailTitle: {
     fontFamily: 'Noto Sans KR',
     fontWeight: 600,
-    color: '#00DBE0',
+    color: '#3154EB',
     [theme.breakpoints.down('sm')]: {
       fontSize: '15px',
     }
   },
   inputStyle: {
-    boxShadow: `0px 0px 5px #00ace0`,
-    border: `1px solid #007be0`
+    boxShadow: '0px 0px 5px #00ace0',
+    border: '1px solid #3154EB'
   }
 }));
 
-const Inquire = () => {
-  
+const Inquire = (props) => {
   const classes = useStyles();
   const [checked, setChecked] = useState(false);
+  const confirmDialog = useDialog();
+  const { confirmClose } = props;
 
   function handleChange() {
-    setChecked(!checked)
-  };
-
-  
+    setChecked(!checked);
+  }
 
   function handleSubmit(e) {
     e.preventDefault();
 
-    const formContent = document.forms["inqurireForm"]
+    const formContent = document.forms.inqurireForm;
 
     const AnonymousUser = {
-      name: formContent["name"].value,
-      email: formContent["email"].value,
-      contactNumber: formContent["contactNumber"].value,
-      brandName: formContent["brandName"].value,
-      content: formContent["content"].value,
-    }
+      name: formContent.name.value,
+      email: formContent.email.value,
+      contactNumber: formContent.contactNumber.value,
+      brandName: formContent.brandName.value,
+      content: formContent.content.value,
+    };
 
     if (checked) {
       axios.post(`${HOST}/mailer/inqurie`, AnonymousUser)
-      .then(() => {
-        alert('캠페인 문의가 요청 되었습니다. 빠른 답변 드리겠습니다!')
-        formContent["name"].value = ''
-        formContent["email"].value = ''
-        formContent["contactNumber"].value = ''
-        formContent["brandName"].value = ''
-        formContent["content"].value = ''
-        setChecked(false)
-        history.push('/')
-      })
+        .then(() => {
+          confirmDialog.handleOpen();
+          formContent.name.value = '';
+          formContent.email.value = '';
+          formContent.contactNumber.value = '';
+          formContent.brandName.value = '';
+          formContent.content.value = '';
+          setChecked(false);
+        });
     } else {
-      alert('개인정보수집 및 이용안내에 동의해주세요')
+      alert('개인정보수집 및 이용안내에 동의해주세요');
     }
-  };
+  }
 
   return (
     <Container className={classes.root}>
       <Typography variant="h3" align="center" component="h2" className={classes.title}>
-        캠페인 문의하기
+        광고 문의하기
       </Typography>
       <Typography variant="h5" align="center" component="h2" className={classes.subTitle}>
-        캠페인 제휴 문의를 남겨주시면 상담해드립니다
+        광고 관련 문의를 남겨주시면 상담해드립니다
       </Typography>
       <Grid container className={classes.contentWraper} direction="column">
         <form onSubmit={handleSubmit} className={classes.cardWrapper} name="inqurireForm">
@@ -162,9 +170,9 @@ const Inquire = () => {
                 </Typography>
                 <Input
                   className={classes.datailContent}
-                  classes={{focused: classes.inputStyle}}
-                  disableUnderline={true}
-                  required={true}
+                  classes={{ focused: classes.inputStyle }}
+                  disableUnderline
+                  required
                   name="name"
                 />
               </Grid>
@@ -174,9 +182,9 @@ const Inquire = () => {
                 </Typography>
                 <Input
                   className={classes.datailContent}
-                  classes={{focused: classes.inputStyle}}
-                  disableUnderline={true}
-                  required={true}
+                  classes={{ focused: classes.inputStyle }}
+                  disableUnderline
+                  required
                   name="email"
                 />
               </Grid>
@@ -189,9 +197,9 @@ const Inquire = () => {
                 </Typography>
                 <Input
                   className={classes.datailContent}
-                  classes={{focused: classes.inputStyle}}
-                  disableUnderline={true}
-                  required={true}
+                  classes={{ focused: classes.inputStyle }}
+                  disableUnderline
+                  required
                   name="contactNumber"
                 />
               </Grid>
@@ -201,8 +209,8 @@ const Inquire = () => {
                 </Typography>
                 <Input
                   className={classes.datailContent}
-                  classes={{focused: classes.inputStyle}}
-                  disableUnderline={true}
+                  classes={{ focused: classes.inputStyle }}
+                  disableUnderline
                   name="brandName"
                 />
               </Grid>
@@ -211,15 +219,15 @@ const Inquire = () => {
             <Grid container className={classes.cardContent}>
               <Grid item xs={12} sm={12} className={classes.detailWrap}>
                 <Typography className={classes.detailTitle}>
-                  * 상세내용
+                  * 상세내용 (배너제작에 관한 내용도 질문바랍니다)
                 </Typography>
                 <Input
-                  classes={{focused: classes.inputStyle}}
+                  classes={{ focused: classes.inputStyle }}
                   className={classes.datailContent}
-                  disableUnderline={true}
-                  multiline={true}
-                  required={true}
-                  rows={10}
+                  disableUnderline
+                  multiline
+                  required
+                  rows={5}
                   name="content"
                 />
               </Grid>
@@ -239,23 +247,43 @@ const Inquire = () => {
                     />
                   )}
                   label="개인정보수집 및 이용안내에 동의합니다."
-                  style={{margin: `20px auto`}}
+                  style={{ margin: '20px auto' }}
                 />
               </Grid>
-              
+
               <Button
                 className={classes.button}
                 type="submit"
-              >문의요청
+              >
+                문의 남기기
               </Button>
             </Grid>
           </Grid>
         </form>
       </Grid>
+      <Dialog
+        open={Boolean(confirmDialog.open)}
+        onClose={confirmDialog.handleClose}
+        fullWidth
+        maxWidth="xs"
+        buttons={(
+          <div>
+            <Button onClick={() => {
+              confirmDialog.handleClose();
+              if (confirmClose) { confirmClose(); }
+            }}
+            >
+              확인
+            </Button>
+          </div>
+          )}
+      >
+        <p style={{ textAlign: 'center', fontSize: '20px', marginTop: 30 }}>문의 요청 완료되었습니다.</p>
+        <p style={{ textAlign: 'center', fontSize: '20px' }}>빠른 답변 드리겠습니다.</p>
+      </Dialog>
     </Container>
   );
-
-}
+};
 
 Inquire.propTypes = {
   classes: PropTypes.object,

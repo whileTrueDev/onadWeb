@@ -52,17 +52,6 @@ const styles = () => ({
     maxHeight: '130px',
     margin: '0 auto',
   },
-  // loginButtion: {
-  //   width: '80%',
-  //   height: '50px',
-  // },
-  // image: {
-  //   width: '100%',
-  //   height: '50px',
-  //   // objectFit: 'cover',
-  //   // objectPosition: 'top',
-  //   // borderRadius: '50%'
-  // }
 });
 
 // TODO: 비밀번호 암호화하여 전달하기.
