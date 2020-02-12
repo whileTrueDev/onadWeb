@@ -21,7 +21,7 @@ export default function TaxBill() {
     <Card>
       <CardHeader color="blueGray">
         <h4 style={{ display: 'flex', justifyContent: 'center', margin: '0px 0px 3px' }}>
-          환불 처리 내역
+          세금계산서 발행 내역
         </h4>
       </CardHeader>
       <CardBody>

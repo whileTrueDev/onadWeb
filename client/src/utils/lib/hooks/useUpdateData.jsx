@@ -8,7 +8,7 @@ import host from '../../config';
  * @param {Function} callUrl 데이터 조회 요청
  * @author hwasurr
  */
-export default function useUpdateData(url, callUrl = null) {
+export default function useUpdateData(url, successCallback = null) {
   const [success, setSuccess] = React.useState(null);
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState('');
@@ -26,8 +26,8 @@ export default function useUpdateData(url, callUrl = null) {
         setLoading(false);
         setSuccess(res.data);
         if (res.data[0]) {
-          if (callUrl) {
-            callUrl();
+          if (successCallback) {
+            successCallback();
           }
         } else if (res.data[1]) {
           alert(res.data[1]);

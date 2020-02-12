@@ -23,20 +23,6 @@ export default function BannerTable(props) {
         />
       )
     },
-    { title: '배너 소개', field: 'bannerDescription', },
-    {
-      title: '배너 링크',
-      render: rowData => (
-        <Typography
-          style={{ textDecoration: 'underline', color: '#00acc1', cursor: 'pointer' }}
-          onClick={() => { window.open(rowData.landingUrl); }}
-          component="a"
-        >
-          {rowData.landingUrl}
-        </Typography>
-      ),
-
-    },
     {
       title: '심의 결과',
       field: 'confirmState',
@@ -56,8 +42,7 @@ export default function BannerTable(props) {
       },
 
     },
-    { title: '최근 업데이트', field: 'date', },
-    { title: '배너 생성 일자', field: 'regiDate', },
+    { title: '배너 등록 일자', field: 'regiDate', },
   ];
 
   return (
@@ -66,7 +51,7 @@ export default function BannerTable(props) {
       {!fetchData.loading && fetchData.error && (<span>Error</span>)}
       {!fetchData.loading && fetchData.payload && (
         <MaterialTable
-          title="나의 배너 리스트"
+          title={null}
           columns={columns}
           data={fetchData.payload}
           actions={[
@@ -77,14 +62,15 @@ export default function BannerTable(props) {
             }
           ]}
           options={{
-            actionsColumnIndex: -1
+            actionsColumnIndex: -1,
+            search: false
           }}
           localization={{
             body: {
               emptyDataSourceMessage: '등록된 배너가 없습니다.'
             },
             header: {
-              actions: '기타'
+              actions: '삭제'
             }
           }}
         />

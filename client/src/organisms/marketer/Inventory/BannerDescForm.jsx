@@ -72,23 +72,7 @@ const BannerDescFrom = (props) => {
             multiline
             className={classes.input}
           />
-          <FormHelperText>시청자들에게 배너에 대해 간략히 설명해주세요.</FormHelperText>
-        </CssFormControl>
-      </Grid>
-      <Grid item>
-        <CssFormControl
-          required
-        >
-          <InputLabel shrink htmlFor="company" className={classes.label}>URL</InputLabel>
-          <Input
-            required
-            defaultValue="https://"
-            type="url"
-            id="url"
-            className={classes.input}
-          />
-
-          <FormHelperText>랜딩페이지를 통해 접속할 웹페이지를 작성해주세요</FormHelperText>
+          <FormHelperText>시청자들에게 간략히 설명해주세요.</FormHelperText>
         </CssFormControl>
       </Grid>
       <Grid item>

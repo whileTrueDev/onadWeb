@@ -69,7 +69,7 @@ const useStyles = makeStyles(({
 const IndentityVerification = (props) => {
   const classes = useStyles();
   const {
-    handleBack, handleNext, open, setOpen, setDefaultName
+    handleBack, handleNext, open, setOpen,
   } = props;
 
   const submitImpUid = useCallback(({ impUid }) => {
@@ -79,8 +79,10 @@ const IndentityVerification = (props) => {
         if (error) {
           alert(data.msg);
           handleBack();
+        } else if (data.minor) {
+          alert('미성년자는 이용할 수 없습니다.');
+          handleBack();
         } else {
-          setDefaultName(data.name);
           alert('본인인증이 성공하였습니다.');
           handleNext();
         }
@@ -89,7 +91,7 @@ const IndentityVerification = (props) => {
         alert('본인인증이 실패하였습니다.');
         handleBack();
       });
-  }, [handleBack, handleNext, setDefaultName]);
+  }, [handleBack, handleNext]);
 
   useEffect(() => {
     if (open) {

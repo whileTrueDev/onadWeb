@@ -132,6 +132,31 @@ router.get('/cpm', (res, req) => {
     });
 });
 
+router.get('/counts', (req, res) => {
+  const marketerId = req._passport.session.user.userid;
+  const query = `
+  select count( DISTINCT creatorId ) as counts
+  from 
+  campaignLog as CL
+  inner join
+  (select  campaignId
+  from campaign
+  where marketerId= ?
+  ) as CP
+  on CL.campaignId = CP.campaignId
+  `;
+
+  doQuery(query, [marketerId])
+    .then((row) => {
+      if (!row.error && row.result) {
+        res.send({ counts: row.result[0].counts });
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+});
+
 // creator 정보 - CPM: 송출 크리에이터
 router.get('/creators', (req, res) => {
   const marketerId = req._passport.session.user.userid;

@@ -54,9 +54,9 @@ router.post('/update', (req, res) => {
 });
 
 router.post('/image/upload', (req, res) => {
-  console.log('/image/upload requested');
   const { creatorId } = req._passport.session.user;
   const creatorBackgroundImage = req.body.imageUrl;
+  console.log('landingpage - /image/upload requested, ', creatorId);
 
   const businessRegiQuery = `
   UPDATE creatorLanding

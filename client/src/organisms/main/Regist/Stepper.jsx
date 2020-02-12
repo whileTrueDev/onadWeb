@@ -15,7 +15,7 @@ import PaperSheet from './Paper';
 import HOST from '../../../utils/config';
 import withRoot from '../Main/withRoot';
 import history from '../../../history';
-
+import IdentityVerification from './IdentityVerification';
 const styles = theme => ({
   container: {
     [theme.breakpoints.down('sm')]: {
@@ -78,6 +78,7 @@ const myReducer = (state, action) => {
       //   return { ...state, email: false };
       // }
       // return { ...state, email: true };
+      // 오류가 존재하지 않으면 email이 false가 되어야한다.
       return { ...state, email: action.value };
     }
     case 'phoneNum': {
@@ -108,8 +109,7 @@ const RegistStepper = withRoot((props) => {
   const [userType, setType] = useState(0);
   const [state, dispatch] = useReducer(myReducer, initialState);
   const [loading, setLoading] = useState(0);
-  // const [open, setOpen] = useState(0);
-  // const [defaultName, setDefaultName] = useState('');
+  const [open, setOpen] = useState(0);
   const platformList = ['', 'google', 'naver', 'kakao'];
   useEffect(() => {
     if (platform !== undefined) {
@@ -153,13 +153,13 @@ const RegistStepper = withRoot((props) => {
             setLoading(0);
             history.push('/');
           } else {
-            alert('등록중 오류가 났습니다. 본사로 문의해주세요.');
+            alert('등록중 오류가 났습니다. 잠시 후 다시 시도해주세요.');
             setLoading(0);
             history.push('/');
           }
         })
         .catch(() => {
-          alert('등록중 오류가 났습니다. 본사로 문의해주세요.');
+          alert('등록중 오류가 났습니다. 잠시 후 다시 시도해주세요.');
           setLoading(0);
           history.push('/');
         });
@@ -172,13 +172,13 @@ const RegistStepper = withRoot((props) => {
             setLoading(0);
             history.push('/');
           } else {
-            alert('등록중 오류가 났습니다. 본사로 문의해주세요.');
+            alert('등록중 오류가 났습니다. 잠시 후 다시 시도해주세요.');
             setLoading(0);
             history.push('/');
           }
         })
         .catch(() => {
-          alert('등록중 오류가 났습니다. 본사로 문의해주세요.');
+          alert('등록중 오류가 났습니다. 잠시 후 다시 시도해주세요.');
           setLoading(0);
           history.push('/');
         });
@@ -223,13 +223,13 @@ const RegistStepper = withRoot((props) => {
             <Usertype typeChange={typeChange} handleNext={handleNext} />
           </StepContent>
         </Step>
-        {/* <Step key="1">
+        <Step key="1">
           <StepLabel>미성년자 확인</StepLabel>
           <StepContent>
-            <IndentityVerification handleNext={handleNext} handleBack={handleBack} open={open} setOpen={setOpen} setDefaultName={setDefaultName} />
+            <IdentityVerification handleNext={handleNext} handleBack={handleBack} open={open} setOpen={setOpen}/>
           </StepContent>
-        </Step> */}
-        <Step key="1">
+        </Step>
+        <Step key="2">
           <StepLabel>정보 동의 및 계약</StepLabel>
           <StepContent>
             <PaperSheet

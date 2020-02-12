@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { Grid, Hidden } from '@material-ui/core';
+import { Grid, Hidden, Typography } from '@material-ui/core';
 import CustomButton from '../../../atoms/CustomButtons/Button';
 
 
@@ -75,6 +75,7 @@ const ImageUpload = (props) => {
           </Grid>
         </Grid>
       </div>
+      <Typography variant="h6">* 배너이미지는 배경이 존재해야 합니다.</Typography>
 
       <div style={{ maginTop: '16px' }}>
         <CustomButton

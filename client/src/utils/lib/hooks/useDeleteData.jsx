@@ -17,13 +17,15 @@ export default function useDeleteData(url, callUrl = null) {
     axios.delete(`${host}${url}`, { data: { data } })
       .then((res) => {
         setLoading(false);
-        setSuccess(res.data);
-        if (res.data) {
-          if (callUrl) {
-            callUrl();
-          }
+
+        const isSuccess = res.data[0];
+        const failMessage = res.data[1];
+
+        if (isSuccess) {
+          setSuccess(res.data);
+          if (callUrl) { callUrl(); }
         } else {
-          alert('잔액이 충분하지 않습니다.');
+          alert(failMessage);
         }
       }).catch((err) => {
         setError(err);

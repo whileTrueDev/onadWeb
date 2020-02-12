@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
 import {
   Button, Hidden,
 } from '@material-ui/core';
@@ -8,6 +7,8 @@ import LockOpen from '@material-ui/icons/LockOpen';
 import SupervisedUserCircle from '@material-ui/icons/SupervisedUserCircle';
 import { withStyles } from '@material-ui/core/styles';
 import LoginForm from './LoginForm';
+import RegistDialog from '../../../Regist/RegistDialog';
+
 import history from '../../../../../history';
 
 const styles = theme => ({
@@ -69,11 +70,13 @@ const styles = theme => ({
 
 // login
 // regist가 다르게 렌더링 되어야함.
+// RegistDialog 열기
 class LoginPopover extends Component {
   constructor(props) {
     super(props);
     this.state = {
       loginValue: null,
+      registOpen: false
     };
   }
 
@@ -89,11 +92,23 @@ class LoginPopover extends Component {
     });
   }
 
+  handleDialogClose = () => {
+    this.setState({
+      loginValue: null,
+    });
+  }
+
+  handleRegistClose = () => {
+    this.setState({
+      registOpen: false,
+    });
+  }
 
   render() {
     const {
       classes, type, logout, MainUserType, trigger, mode
     } = this.props;
+
     const { loginValue } = this.state;
 
     return (
@@ -131,7 +146,6 @@ class LoginPopover extends Component {
                 handleClose={this.handleDialogClose}
                 logout={logout}
               />
-
             </React.Fragment>
           )
           : (
@@ -203,6 +217,10 @@ class LoginPopover extends Component {
                 handleClose={this.handleDialogClose}
                 logout={logout}
               />
+              <RegistDialog
+                open={registOpen}
+                handleClose={this.handleRegistClose}
+              />
             </React.Fragment>
           )
         }
@@ -214,6 +232,7 @@ class LoginPopover extends Component {
 LoginPopover.propTypes = {
   classes: PropTypes.object,
   type: PropTypes.string,
+
 };
 
 LoginPopover.defaultProps = {

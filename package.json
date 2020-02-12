@@ -27,7 +27,6 @@
   },
   "dependencies": {
     "ngrok": "^3.2.7",
-    "node-sass": "^4.13.0",
-    "passport-kakao": "^1.0.0"
+    "node-sass": "^4.13.0"
   }
 }
