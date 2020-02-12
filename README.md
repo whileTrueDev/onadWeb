@@ -100,6 +100,7 @@ WhileTrue 개발자 [강동기](https://github.com/GoMotiv), [강화수](https:/
         }
     },
     "rules": {
+        "@typescript-eslint/no-var-requires": "warn", // please use import
         "react-hooks/rules-of-hooks": "error", // Checks rules of Hooks
         "react-hooks/exhaustive-deps": "warn", // Checks effect dependencies
         "no-underscore-dangle": "off",
@@ -137,6 +138,6 @@ WhileTrue 개발자 [강동기](https://github.com/GoMotiv), [강화수](https:/
         "browser": true,
         "jest": true,
         "es6": true
-        }
     }
+}
     ~~~
