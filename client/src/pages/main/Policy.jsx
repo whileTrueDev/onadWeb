@@ -33,7 +33,7 @@ export default withRoot((props) => {
   // if located here, set the scroll to top of the page
   const { history, location } = props;
   const {
-    isLogin, repasswordOpen, logout, setRepassword
+    repasswordOpen, logout, setRepassword
   } = useLoginValue(history, location);
 
   const { match } = props;
