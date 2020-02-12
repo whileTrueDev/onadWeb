@@ -256,8 +256,12 @@ const CampaignCreateStepper = () => {
         selectedTime: getIndexArray(checkList)
       })
         .then((res) => {
-          alert(res.data[1]);
-          history.push('/dashboard/marketer/main');
+          if (res.data[0]) {
+            alert(res.data[1]);
+            history.push('/dashboard/marketer/main');
+          } else {
+            alert(res.data[1]);
+          }
         });
     }
   };
