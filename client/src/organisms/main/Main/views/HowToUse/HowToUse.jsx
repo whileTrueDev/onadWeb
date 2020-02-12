@@ -8,8 +8,8 @@ import Button from '../../components/Button';
 
 const styles = makeStyles(theme => ({
   root: {
-    marginTop: theme.spacing(10),
-    marginBottom: theme.spacing(10),
+    paddingTop: theme.spacing(10),
+    paddingBottom: theme.spacing(10),
   },
   loginButtonRight: {
     color: 'black',
