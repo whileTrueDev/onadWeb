@@ -47,7 +47,6 @@ export default withRoot((props) => {
 
   return (
     <div>
-      <AppAppBar isLogin={isLogin} logout={logout} />
       <div className={classes.root}>
         <div className={classes.contentBox}>
           <Grid container direction="row" alignItems="center" justify="space-between">
