@@ -9,6 +9,6 @@ const pool = mysql.createPool({
   charset: process.env.DB_CHARSET,
 });
 
-console.log('SUCESS - CREATE POOL!');
+console.log('DB Connection Pool: successfully created!');
 
 module.exports = pool;

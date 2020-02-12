@@ -138,6 +138,6 @@ WhileTrue 개발자 [강동기](https://github.com/GoMotiv), [강화수](https:/
         "browser": true,
         "jest": true,
         "es6": true
+        }
     }
-}
     ~~~

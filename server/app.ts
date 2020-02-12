@@ -4,18 +4,20 @@ import cookieParser from 'cookie-parser';
 import path from 'path';
 import cors from 'cors';
 import createError from 'http-errors';
-import session from 'express-session';
+import session from 'express-session'; // 환경변수를 위해. dev환경: .env 파일 / production환경: docker run의 --env-file인자로 넘김.
+import dotenv from 'dotenv';
+// middlewares
+import checkAuthOnReq from './middlewares/checkAuthOnReq';
+import passport from './passportStrategy';
+import taxBillScheduler from './middlewares/scheduler/taxBillScheduler';
+// // Router 정의
+import mailerRouter from './routes/mailer';
+import apiRouter from './routes/api';
 
-require('dotenv').config(); // 환경변수를 위해. dev환경: .env 파일 / production환경: docker run의 --env-file인자로 넘김.
+dotenv.config();
 
 const MySQLStore = require('express-mysql-session')(session);
-// const passport = require('./passportStrategy');
-// const checkAuthOnReq = require('./middlewares/checkAuthOnReq');
-// const taxBillScheduler = require('./middlewares/scheduler/taxBillScheduler');
 
-// // Router 정의
-// const mailerRouter = require('./routes/mailer');
-// const apiRouter = require('./routes/api');
 
 const app = express();
 
@@ -54,15 +56,23 @@ app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 // cookie parser 설정
 app.use(cookieParser());
 // 인증 method를 req에 추가한다.
-// app.use(checkAuthOnReq);
+app.use(checkAuthOnReq);
 
 // use CORS
 const corsOptions = { origin: FRONT_HOST, credentials: true };
 app.use(cors(corsOptions));
 
 // passport 초기화를 통해 'local' 전략이 수립된다.
-// app.use(passport.initialize());
-// app.use(passport.session());
+app.use(passport.initialize());
+app.use(passport.session());
+
+// For aws ELB health check
+app.get('/', (req, res, next) => {
+  res.sendStatus(200);
+});
+// Router 추가
+app.use('/mailer', mailerRouter);
+app.use('/api', apiRouter);
 
 // Error handling
 interface Err extends Error {
@@ -86,14 +96,9 @@ app.use((err: Err, req: express.Request, res: express.Response) => {
   }
 });
 
-// console.log('ENVIRONMENT: ', process.env.NODE_ENV);
-// console.log(`SCHEDULER: [${taxBillScheduler.name}] - ON `);
-// console.log('===========================================');
-// 선언만 하고 start는 bin에서 시작
-// module.exports = app;
 
-console.log(app);
-const PORT = 3000;
-app.listen(PORT, () => {
-  console.log('server running on ', PORT);
-});
+console.log('ENVIRONMENT: ', process.env.NODE_ENV);
+console.log(`SCHEDULER: [${taxBillScheduler.name}] - ON `);
+
+// 선언만 하고 start는 bin에서 시작
+module.exports = app;
