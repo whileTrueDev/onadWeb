@@ -39,8 +39,12 @@ const useStyles = makeStyles(theme => ({
   },
   exBanner: {
     boxShadow: '0px 0px 10px 0px rgba(0,0,0,0.75)',
-    width: '600px',
-    height: '420px',
+    width: '900px',
+    height: '700px',
+    [theme.breakpoints.down('lg')]: {
+      width: '700px',
+      height: '500px',
+    },
     [theme.breakpoints.down('md')]: {
       width: '500px',
       height: '400px',
@@ -96,26 +100,12 @@ const useStyles = makeStyles(theme => ({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    [theme.breakpoints.down('sm')]: {
-    },
-    [theme.breakpoints.down('xs')]: {
-      // display: 'grid',
-      // gridTemplateColumns: 'repeat(4, 110px)',
-      // gridTemplateRows: 'repeat(2, 250px)'
-    },
   },
   mainMiddle2: {
     width: '100%',
     display: 'flex',
     flexDirection: 'column',
     marginTop: 80,
-    [theme.breakpoints.down('sm')]: {
-    },
-    [theme.breakpoints.down('xs')]: {
-      // display: 'grid',
-      // gridTemplateColumns: 'repeat(4, 110px)',
-      // gridTemplateRows: 'repeat(2, 250px)'
-    },
   },
   costContent: {
     width: '40%',

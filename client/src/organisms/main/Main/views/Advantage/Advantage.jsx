@@ -10,13 +10,23 @@ const styles = makeStyles(theme => ({
   loginButtonRight: {
     color: 'black',
     textAlign: 'left',
-    width: '40%',
+    width: '20%',
     fontSize: '20px',
     fontFamily: 'Noto Sans KR',
     wordBreak: 'keep-all',
     marginLeft: 40,
     [theme.breakpoints.down('xs')]: {
       width: '80%',
+      marginLeft: 0,
+      textAlign: 'left',
+    },
+    [theme.breakpoints.down('md')]: {
+      width: '40%',
+      marginLeft: 0,
+      textAlign: 'left',
+    },
+    [theme.breakpoints.down('sm')]: {
+      width: '40%',
       marginLeft: 0,
       textAlign: 'left',
     },
