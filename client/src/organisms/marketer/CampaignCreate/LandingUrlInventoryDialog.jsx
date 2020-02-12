@@ -166,6 +166,7 @@ const LandingUrlInventoryDialog = (props) => {
         {!landingUrlData.loading && landingUrlData.error && (<span>Error</span>)}
         {!landingUrlData.loading && landingUrlData.payload && (
         <MaterialTable
+          style={{ boxShadow: 'none' }}
           title={null}
           columns={columns}
           data={landingUrlData.payload === 'nourldata' ? [] : landingUrlData.payload}

@@ -363,7 +363,7 @@ const CampaignCreateStepper = () => {
     <Grid container direction="row" spacing={2} wrap="wrap">
       {isDesktop ? (
         <React.Fragment>
-          <Grid item xs={12} lg={10} xl={8}>
+          <Grid item xs={12} lg={10} xl={12}>
             <Paper>
               <Grid container direction="column" className={classes.root}>
                 <Grid item xs={12}>

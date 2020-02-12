@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import {
-  Grid, FormControl, InputLabel, Input, FormHelperText
+  Grid, FormControl, InputLabel, Input, FormHelperText, CircularProgress
 } from '@material-ui/core';
 import CustomButton from '../../../atoms/CustomButtons/Button';
 
@@ -28,6 +28,14 @@ const formStyle = theme => ({
     color: '#00acc1',
     marginBottom: '7px',
   },
+  buttonProgress: {
+    color: theme.palette.primary.main,
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    marginTop: -12,
+    marginLeft: -12,
+  },
 });
 
 const CssFormControl = withStyles({
@@ -51,6 +59,12 @@ const BannerDescFrom = (props) => {
   const {
     handleNext, classes, state, handleSubmit,
   } = props;
+  const [value, setValue] = React.useState('');
+  const [inProgress, setInProgress] = React.useState(false);
+
+  const handleChange = (e) => {
+    setValue(e.target.value);
+  };
 
   return (
     <Grid container direction="column" spacing={3}>
@@ -65,14 +79,20 @@ const BannerDescFrom = (props) => {
           required
           fullWidth
         >
-          <InputLabel shrink htmlFor="company" className={classes.label}>배너소개</InputLabel>
+          <InputLabel shrink htmlFor="company" className={classes.label}>홍보문구 입력</InputLabel>
           <Input
             required
             id="banner"
             multiline
             className={classes.input}
+            value={value}
+            onChange={handleChange}
           />
-          <FormHelperText>시청자들에게 간략히 설명해주세요.</FormHelperText>
+          <FormHelperText>
+            {' '}
+            {'랜딩페이지 클릭 시 보일 홍보문구를 입력해주세요. <* 이벤트 / 할인정보 등>'}
+            {' '}
+          </FormHelperText>
         </CssFormControl>
       </Grid>
       <Grid item>
@@ -87,10 +107,23 @@ const BannerDescFrom = (props) => {
             variant="contained"
             color="info"
             size="sm"
-            onClick={handleSubmit}
+            onClick={() => {
+              setInProgress(true);
+              handleSubmit();
+            }}
+            disabled={value.length === 0 || inProgress}
           >
           완료
           </CustomButton>
+          {inProgress && (
+            <CircularProgress
+              disableShrink
+              size={16}
+              thickness={5}
+              variant="indeterminate"
+              className={classes.buttonProgress}
+            />
+          )}
         </div>
       </Grid>
     </Grid>
