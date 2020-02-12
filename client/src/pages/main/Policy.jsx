@@ -3,7 +3,6 @@ import makeStyles from '@material-ui/core/styles/makeStyles';
 import { Grid } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import { Link } from 'react-router-dom';
-import AppAppBar from '../../organisms/main/layout/AppAppBar';
 import AppFooter from '../../organisms/main/layout/AppFooter';
 import RePasswordDialog from '../../organisms/main/Main/views/Login/RePassword';
 import withRoot from '../../organisms/main/Main/withRoot';
