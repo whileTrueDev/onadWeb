@@ -9,7 +9,7 @@ const Styles = makeStyles(theme => ({
     marginTop: theme.spacing(12),
     marginBottom: theme.spacing(12),
     backgroundColor: 'white',
-    padding: '0 10%',
+    padding: '0 5%',
   },
   h1: {
     marginTop: '20px',
@@ -39,7 +39,7 @@ const Styles = makeStyles(theme => ({
     },
   },
   question: {
-    width: '35%',
+    width: '45%',
     height: 400,
     display: 'flex',
     flexDirection: 'column',
@@ -99,7 +99,7 @@ const Styles = makeStyles(theme => ({
     },
   },
   qicon: {
-    width: '12%',
+    width: '8%',
     fontFamily: 'S-CoreDream-8Heavy',
     fontSize: 25,
     color: '#3154EB',
@@ -145,10 +145,11 @@ const Styles = makeStyles(theme => ({
     },
   },
   answer: {
-    width: '65%',
+    width: '55%',
     boxShadow: '0px 0px 5px 1px rgba(0,0,0,0.2)',
-    height: 400,
+    height: '400px',
     padding: 30,
+    overflow: 'scroll',
     [theme.breakpoints.down('md')]: {
       width: '50%',
       height: 350,
@@ -161,34 +162,35 @@ const Styles = makeStyles(theme => ({
     [theme.breakpoints.down('xs')]: {
       width: '100%',
       height: 300,
-      marginTop: '20px',
+      marginTop: '30px',
     },
   },
   answerTop: {
     width: '100%',
-    height: 50,
+    height: 'auto',
     borderBottom: '1px solid rgba(0,0,0,0.2)',
     display: 'flex',
     flexDirection: 'row',
     [theme.breakpoints.down('xs')]: {
-      height: 35,
+      height: 'auto',
     },
   },
   answerBottom: {
     width: '100%',
-    height: 350,
+    height: '100%',
     paddingTop: 30,
     fontFamily: 'Noto Sans KR',
-    fontSize: 25,
+    fontSize: 18,
     color: 'black',
+    wordBreak: 'keep-all',
     [theme.breakpoints.down('md')]: {
-      fontSize: 20,
+      fontSize: 16,
     },
     [theme.breakpoints.down('sm')]: {
-      fontSize: 17,
+      fontSize: 14,
     },
     [theme.breakpoints.down('xs')]: {
-      fontSize: 14,
+      fontSize: 12,
     },
   },
   aicon: {
@@ -210,19 +212,33 @@ const Styles = makeStyles(theme => ({
     width: '90%',
     fontFamily: 'Noto Sans KR',
     fontWeight: 600,
-    fontSize: 30,
+    fontSize: 23,
     color: 'black',
     [theme.breakpoints.down('md')]: {
       fontSize: 20,
     },
     [theme.breakpoints.down('sm')]: {
-      fontSize: 17,
+      fontSize: 16,
     },
     [theme.breakpoints.down('xs')]: {
+      fontSize: 13,
+    },
+  },
+  answerText: {
+    fontFamily: 'Noto Sans KR',
+    fontSize: 18,
+    color: 'black',
+    margin: '10px 0px',
+    [theme.breakpoints.down('md')]: {
+      fontSize: 16,
+    },
+    [theme.breakpoints.down('sm')]: {
       fontSize: 14,
     },
+    [theme.breakpoints.down('xs')]: {
+      fontSize: 12,
+    },
   }
-
 }));
 
 
@@ -234,13 +250,13 @@ const Question = (props) => {
   if (MainUserType === 'marketer') {
     defaultQuestion = {
       id: 'one',
-      text: '마케터 기본 질문 1',
+      text: '온애드에서 진행가능한 광고 유형은 무엇인가요?',
       ans: textSource.answerMarketer.one,
     };
   } else {
     defaultQuestion = {
       id: 'one',
-      text: '크리에이터 기본 질문 1',
+      text: '온애드 가입 조건은 어떻게 되나요?',
       ans: textSource.answerCreator.one,
     };
   }
@@ -290,7 +306,9 @@ const Question = (props) => {
             </div>
           </div>
           <div className={classes.answerBottom}>
-            {questionNum.ans}
+            {questionNum.ans.split('\n').map(row => (
+              <p key={shortid.generate()} className={classes.answerText}>{`${row}`}</p>
+            ))}
           </div>
         </div>
       </div>

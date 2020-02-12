@@ -88,7 +88,7 @@ const styles = makeStyles(theme => ({
   mainMiddleimg: {
     position: 'relative',
     width: '500px',
-    height: '350px',
+    height: '320px',
     margin: '20px 0px',
     '&>*': {
       transition: 'all 1.5s ease',
@@ -615,9 +615,9 @@ function Advantage(props) {
                 <p className={classes.subAdtitle3}>온애드의 장점 세번째</p>
                 <h1 className={classes.h1}>
                   광고 수익에 대한&nbsp;
+                  <span className={classes.subAdSub3}>실시간 보고서 제공</span>
                 </h1>
               </div>
-              <div><span className={classes.subAdSub3}>실시간 보고서 제공</span></div>
               <div className={classes.h1sub}>
                 {source.creator.third.split('\n').map(row => (
                   <p key={row} className={classes.text}>{`${row}`}</p>

@@ -233,12 +233,6 @@ const useStyles = makeStyles(theme => ({
       width: '85%',
     },
   },
-  titleSub: {
-    color: '#3154EB',
-    fontFamily: 'Noto Sans KR',
-    fontSize: 15,
-    fontWeight: 600,
-  },
   textWrapper: {
     width: 1200,
     display: 'flex',
@@ -286,7 +280,6 @@ export default function IntroduceTop() {
           <div className={classes.costCard}>
             <h3 className={classes.costCardTitle}>
               과금기준&nbsp;
-              <span className={classes.titleSub}>(*시간대에 따라 변동될 수 있습니다.)</span>
             </h3>
             <p className={classes.costCardCon}>시청자 수(1명) X 방송시간(10분) X 2원</p>
             <p className={classes.costCardCon}>2000cpm(1,000회 노출당 비용 = 2,000원/1,000원)</p>

@@ -137,10 +137,10 @@ const styles = makeStyles(theme => ({
   },
   step: {
     width: 400,
-    height: 150,
+    height: 120,
     [theme.breakpoints.down('md')]: {
       width: '300px',
-      height: '110px',
+      height: '100px',
     },
     [theme.breakpoints.down('sm')]: {
       width: '250px',

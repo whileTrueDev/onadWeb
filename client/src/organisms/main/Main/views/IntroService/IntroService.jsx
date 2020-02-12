@@ -2,6 +2,7 @@ import React from 'react';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import grey from '@material-ui/core/colors/grey';
 import { Button } from '@material-ui/core';
+import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -100,10 +101,12 @@ const Indicator = () => {
         <Button
           className={classes.button}
         >
-          <a href="IntroService/introService.pdf" download="introService" className={classes.down}>소개자료 다운로드</a>
+          <a href="IntroService/ONAD서비스소개서.pdf" download="introService" className={classes.down}>소개자료 다운로드</a>
         </Button>
         <Button
           className={classes.button}
+          component={Link}
+          to="/introMarketer"
         >
           서비스소개 페이지
         </Button>

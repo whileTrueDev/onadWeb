@@ -12,7 +12,14 @@ import history from '../../../../../history';
 const styles = theme => ({
   root: {
     backgroundColor: 'white',
-    marginBottom: theme.spacing(8)
+    marginBottom: theme.spacing(8),
+    padding: '80px 0px',
+    [theme.breakpoints.down('sm')]: {
+      padding: '4px 0px',
+    },
+    [theme.breakpoints.down('xs')]: {
+      padding: '30px 0px',
+    },
   },
   bottomSpace: {
     marginBottom: theme.spacing(8),
