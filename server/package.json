@@ -4,8 +4,9 @@
   "main": "app.js",
   "license": "MIT",
   "scripts": {
-    "start": "set PORT=3000 && node ./bin/www",
-    "start:debug": "set PORT=3000 && nodemon ./bin/www"
+    "start": "ts-node app.ts",
+    "start:production": "tsc && set PORT=3000 && node ./dist/app.js",
+    "start:debug": "nodemon --watch '*.ts' --exec ts-node app.ts"
   },
   "devDependencies": {
     "@types/body-parser": "^1.19.0",
@@ -16,7 +17,9 @@
     "@types/express-session": "^1.15.16",
     "@types/http-errors": "^1.6.3",
     "@types/node": "^13.7.1",
-    "nodemon": "^2.0.2"
+    "nodemon": "^2.0.2",
+    "ts-node": "^8.6.2",
+    "typescript": "^3.7.5"
   },
   "dependencies": {
     "@types/debug": "^4.1.5",
@@ -41,7 +44,6 @@
     "passport-local": "^1.0.0",
     "passport-naver": "^1.0.6",
     "passport-twitch-new": "^0.0.1",
-    "typescript": "^3.7.5",
     "winston": "^3.2.1",
     "winston-daily-rotate-file": "^4.4.2"
   }
