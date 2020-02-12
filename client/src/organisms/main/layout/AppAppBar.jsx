@@ -345,13 +345,17 @@ function AppAppBar(props) {
               </Button>
               <RegButton history={history} logout={logout} />
 
-              <Button
-                className={!trigger ? (classes.rightLink3) : (classes.rightLink4)}
-                component={Link}
-                to="/creatorlist"
-              >
-                크리에이터 리스트
-              </Button>
+              { MainUserType === 'marketer' ? (
+                <div>
+                  <Button
+                    className={!trigger ? (classes.rightLink3) : (classes.rightLink4)}
+                    component={Link}
+                    to="/creatorlist"
+                  >
+                    크리에이터 리스트
+                  </Button>
+                </div>
+              ) : null }
               <LogButton
                 history={history}
                 logout={logout}

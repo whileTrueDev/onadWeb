@@ -79,7 +79,7 @@ const HowToUseCreator = (props) => {
     source
   } = props;
   const classes = useStyles();
-  const [imgStep, setImgStep] = React.useState('banner');
+  const [imgStep, setImgStep] = React.useState('contract');
   const UseStep = useDialog();
 
   return (
@@ -150,7 +150,7 @@ const HowToUseCreator = (props) => {
         fullWidth
         maxWidth="md"
       >
-        <img src={`./pngs/introduction/${imgStep}.png`} className={classes.contentImg} alt="sample" />
+        <img src={`/pngs/introduction/${imgStep}.png`} className={classes.contentImg} alt="sample" />
       </Dialog>
     </Container>
   );

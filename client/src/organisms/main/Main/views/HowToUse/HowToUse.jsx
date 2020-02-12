@@ -8,17 +8,27 @@ import Button from '../../components/Button';
 
 const styles = makeStyles(theme => ({
   root: {
-    marginTop: theme.spacing(10),
-    marginBottom: theme.spacing(10),
+    paddingTop: theme.spacing(10),
+    paddingBottom: theme.spacing(10),
   },
   loginButtonRight: {
     color: 'black',
     textAlign: 'left',
-    width: '30%',
+    width: '20%',
     fontSize: '20px',
     fontFamily: 'Noto Sans KR',
     [theme.breakpoints.down('xs')]: {
       width: '80%',
+    },
+    [theme.breakpoints.down('md')]: {
+      width: '40%',
+      marginLeft: 0,
+      textAlign: 'left',
+    },
+    [theme.breakpoints.down('sm')]: {
+      width: '40%',
+      marginLeft: 0,
+      textAlign: 'left',
     },
   },
   h1: {

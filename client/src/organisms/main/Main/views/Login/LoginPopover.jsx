@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 import {
   Button, Hidden,
 } from '@material-ui/core';
@@ -109,7 +110,7 @@ class LoginPopover extends Component {
       classes, type, logout, MainUserType, trigger, mode
     } = this.props;
 
-    const { loginValue } = this.state;
+    const { loginValue, registOpen } = this.state;
 
     return (
       <React.Fragment>

@@ -178,7 +178,7 @@ const HowToUsemarketer = (props) => {
         fullWidth
         maxWidth="md"
       >
-        <img src={`./pngs/introduction/${imgStep}.png`} className={classes.contentImg} alt="sample" />
+        <img src={`/pngs/introduction/${imgStep}.png`} className={classes.contentImg} alt="sample" />
       </Dialog>
     </Container>
   );

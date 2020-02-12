@@ -3,7 +3,6 @@ import makeStyles from '@material-ui/core/styles/makeStyles';
 import { Grid } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import { Link } from 'react-router-dom';
-import AppAppBar from '../../organisms/main/layout/AppAppBar';
 import AppFooter from '../../organisms/main/layout/AppFooter';
 import RePasswordDialog from '../../organisms/main/Main/views/Login/RePassword';
 import withRoot from '../../organisms/main/Main/withRoot';
@@ -34,7 +33,7 @@ export default withRoot((props) => {
   // if located here, set the scroll to top of the page
   const { history, location } = props;
   const {
-    isLogin, repasswordOpen, logout, setRepassword
+    repasswordOpen, logout, setRepassword
   } = useLoginValue(history, location);
 
   const { match } = props;
@@ -47,7 +46,6 @@ export default withRoot((props) => {
 
   return (
     <div>
-      <AppAppBar isLogin={isLogin} logout={logout} />
       <div className={classes.root}>
         <div className={classes.contentBox}>
           <Grid container direction="row" alignItems="center" justify="space-between">
