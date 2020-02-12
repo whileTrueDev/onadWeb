@@ -129,10 +129,10 @@ const styles = makeStyles(theme => ({
 }));
 // this is layout compoent
 export default withRoot((props) => {
-  const { history } = props;
+  const { history, match } = props;
   const { isLogin, logout } = useLoginValue(history);
   const classes = styles();
-  const MainUserType = history.location.pathname;
+  const { userType } = match.params;
 
   // if Link here, set the scroll to top of the page
   React.useEffect(() => {
@@ -141,7 +141,7 @@ export default withRoot((props) => {
 
   return (
     <div>
-      {MainUserType === '/introMarketer' ? (
+      {userType === 'marketer' ? (
         <div>
           <div className={classes.rootWrap}>
             <div className={classes.containerWrap}>

@@ -262,7 +262,7 @@ function AppAppBar(props) {
         <Button
           className={classes.rightLink2}
           component={Link}
-          to={MainUserType === 'marketer' ? ('/introMarketer') : ('/introCreator')}
+          to={MainUserType === 'marketer' ? ('/introduce/marketer') : ('/introduce/creator')}
         >
           <Domain className={classes.buttonIcon} />
           서비스 소개
@@ -339,7 +339,7 @@ function AppAppBar(props) {
               <Button
                 className={!trigger ? (classes.rightLink) : (classes.rightLink2)}
                 component={Link}
-                to={MainUserType === 'marketer' ? ('/introMarketer') : ('/introCreator')}
+                to={MainUserType === 'marketer' ? ('/introduce/marketer') : ('/introduce/creator')}
               >
                 서비스소개
               </Button>

@@ -223,7 +223,7 @@ function HowToUse(props) {
             <Button
               className={classes.buttonRight}
               component={Link}
-              to="/introMarketer"
+              to="/introduce/marketer"
             >
               &rarr; 이용방법 자세히보기
             </Button>
@@ -267,7 +267,7 @@ function HowToUse(props) {
             <Button
               className={classes.buttonRight}
               component={Link}
-              to="/introCreator"
+              to="/introduce/creator"
             >
               &rarr; 이용방법 자세히보기
             </Button>

@@ -43,7 +43,7 @@ export default withRoot((props) => {
           />
           <Advantage source={sources.advantage} MainUserType="marketer" />
           <IntroService />
-          <ProductHowItWorks source={sources.howitworks} />
+          <ProductHowItWorks source={sources.howitworks} MainUserType="marketer" />
           <Inqurie />
           <AppFooter />
           <RePasswordDialog
@@ -66,7 +66,7 @@ export default withRoot((props) => {
             MainUserType="creator"
           />
           <Advantage source={sources.advantage} MainUserType="creator" />
-          <ProductHowItWorks source={sources.howitworks} />
+          <ProductHowItWorks source={sources.howitworks} MainUserType="creator" />
           <Inqurie />
           <AppFooter />
           <RePasswordDialog

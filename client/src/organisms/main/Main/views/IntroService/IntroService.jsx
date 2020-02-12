@@ -106,7 +106,7 @@ const Indicator = () => {
         <Button
           className={classes.button}
           component={Link}
-          to="/introMarketer"
+          to="/introduce/marketer"
         >
           서비스소개 페이지
         </Button>

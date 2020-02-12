@@ -153,7 +153,7 @@ function ProductHero(props) {
             <Button
               className={classes.buttonLeft}
               component={Link}
-              to="/introMarketer"
+              to="/introduce/marketer"
             >
               + 자세히보기
             </Button>
@@ -191,7 +191,7 @@ function ProductHero(props) {
             <Button
               className={classes.buttonLeft}
               component={Link}
-              to="/introCreator"
+              to="/introduce/creator"
             >
               + 자세히보기
             </Button>

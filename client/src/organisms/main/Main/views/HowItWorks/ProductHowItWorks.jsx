@@ -152,7 +152,7 @@ const styles = theme => ({
 
 const ProductHowItWorks = (props) => {
   const {
-    classes, source
+    classes, source, MainUserType
   } = props;
 
   function useDialog() {
@@ -171,7 +171,7 @@ const ProductHowItWorks = (props) => {
   }
 
   const {
-    open, isMarketer, handleOpen, handleClose,
+    open, isMarketer, handleOpen, handleClose
   } = useDialog();
 
   const handleClick = useCallback((buttonType) => {
@@ -224,7 +224,7 @@ const ProductHowItWorks = (props) => {
           <div className={classes.bottomButtom}>
             <Button
               className={classes.button}
-              onClick={() => handleClick('marketer')}
+              onClick={MainUserType === 'marketer' ? (() => handleClick('marketer')) : (() => { handleClick('creator'); })}
             >
               바로 시작하기
             </Button>
