@@ -93,13 +93,6 @@ const useStyles = makeStyles(theme => ({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    [theme.breakpoints.down('sm')]: {
-    },
-    [theme.breakpoints.down('xs')]: {
-      // display: 'grid',
-      // gridTemplateColumns: 'repeat(4, 110px)',
-      // gridTemplateRows: 'repeat(2, 250px)'
-    },
   },
   mainList: {
     padding: '80px 10%'
