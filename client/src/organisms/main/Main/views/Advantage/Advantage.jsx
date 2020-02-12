@@ -439,7 +439,23 @@ const styles = makeStyles(theme => ({
       width: '300px',
       height: '280px',
     },
-  }
+  },
+  AdImg2: {
+    width: '650px',
+    textAlign: 'center',
+    [theme.breakpoints.down('md')]: {
+      width: '540px',
+      height: '380px',
+    },
+    [theme.breakpoints.down('sm')]: {
+      width: '380px',
+      height: '340px',
+    },
+    [theme.breakpoints.down('xs')]: {
+      width: '300px',
+      height: '280px',
+    },
+  },
 }));
 
 function Advantage(props) {
@@ -541,7 +557,7 @@ function Advantage(props) {
                 ))}
               </div>
             </div>
-            <div className={classes.AdImg}>
+            <div className={classes.AdImg2}>
               <img src="/pngs/main/advantage3.png" className={classes.mainMiddleimg} alt="ThirdAdvantage" />
             </div>
           </div>
@@ -634,7 +650,7 @@ function Advantage(props) {
                 ))}
               </div>
             </div>
-            <div className={classes.AdImg}>
+            <div className={classes.AdImg2}>
               <img src="/pngs/main/advantageCreator3.png" className={classes.mainMiddleimg} alt="ThirdAdvantage" />
             </div>
           </div>
