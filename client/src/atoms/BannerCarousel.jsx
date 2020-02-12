@@ -98,20 +98,9 @@ const useStyles = makeStyles(theme => ({
     justifyContent: 'center',
     padding: `${theme.spacing(2)}px ${theme.spacing(4)}px ${theme.spacing(1) + 6}px`,
   },
-  imageCheck: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    top: 0,
-    bottom: 0,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: `${theme.spacing(2)}px ${theme.spacing(4)}px ${theme.spacing(1) + 6}px`,
-  }
 }));
 
-function BannerCarousel(props) {
+const BannerCarousel = (props) => {
   const { steps, handleBannerId } = props;
   const classes = useStyles();
   const theme = useTheme();
@@ -193,7 +182,7 @@ function BannerCarousel(props) {
       />
     </div>
   );
-}
+};
 
 BannerCarousel.propTypes = {
   steps: PropTypes.array,

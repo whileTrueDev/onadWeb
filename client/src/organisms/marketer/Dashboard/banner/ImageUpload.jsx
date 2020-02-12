@@ -89,7 +89,7 @@ const ImageUpload = (props) => {
           size="sm"
           onClick={handleNext(1)}
         >
-              다음
+          다음
         </CustomButton>
       </div>
 

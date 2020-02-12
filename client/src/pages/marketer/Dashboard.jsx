@@ -2,8 +2,6 @@ import React from 'react';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import Grid from '@material-ui/core/Grid';
 import Grow from '@material-ui/core/Grow';
-
-import BannerList from '../../organisms/marketer/Dashboard/BannerList';
 import CampaignList from '../../organisms/marketer/Dashboard/CampaignList';
 import CanvasForChart from '../../organisms/marketer/Dashboard/CanvasForChart';
 import DescCard from '../../organisms/marketer/Dashboard/DescCard';
@@ -26,8 +24,8 @@ export default function Dashboard() {
   const campaignData = useFetchData('/api/dashboard/marketer/campaign/new');
   const onOffData = useFetchData('/api/dashboard/marketer/onoff');
   const normalData = useFetchData('/api/dashboard/marketer/normal');
-  const creatorsData = useFetchData('/api/dashboard/marketer/report/creators');
-  const bannerData = useFetchData('/api/dashboard/marketer/banner/all');
+  const countsData = useFetchData('/api/dashboard/marketer/report/counts');
+
   const valueChartData = useFetchData('/api/dashboard/marketer/campaign/chart');
   const broadCreatorData = useFetchData('/api/dashboard/marketer/broadcast/creator');
   const actionLogData = useFetchData('/api/dashboard/marketer/actionlog');
@@ -35,15 +33,22 @@ export default function Dashboard() {
   return (
     <div className={classes.root}>
       {(normalData.loading || campaignData.loading
-        || onOffData.loading || creatorsData.loading
-        || bannerData.loading || valueChartData.loading
+        || onOffData.loading
+        || valueChartData.loading
         || actionLogData.loading) ? (
           <ReportLoading />
         ) : (
-          <Grid container spacing={2}>
+          <div>
             {normalData.payload && campaignData.payload
-            && creatorsData.payload && bannerData.payload
-            && valueChartData.payload && (
+          && valueChartData.payload && (
+          <Grid container spacing={2}>
+            <Grid item xs={12} md={6} lg={3}>
+              <Grid container spacing={2}>
+                <Grid item xs={12}>
+                  <OnOffSwitch onOffData={onOffData} />
+                </Grid>
+              </Grid>
+            </Grid>
             <Grid item xs={12}>
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={6} lg={3}>
@@ -75,49 +80,34 @@ export default function Dashboard() {
                 <Grid item xs={12} sm={6} lg={3}>
                   <Grow in timeout={{ enter: 1500 }}>
                     <DescCard data={{
-                      title: '송출크리에이터수', value: creatorsData.payload.length, unit: '명'
+                      title: '송출크리에이터수', value: countsData.payload.counts, unit: '명'
                     }}
                     />
                   </Grow>
                 </Grid>
               </Grid>
             </Grid>
-            )}
-
-            <Grid item xs={12} md={6} lg={3}>
+            <Grid item xs={12} md={12} lg={9}>
               <Grid container spacing={2}>
-                <Grid item xs={12}>
-                  <OnOffSwitch onOffData={onOffData} />
-                </Grid>
                 <Grid item xs={12}>
                   <CampaignList campaignData={campaignData} />
                 </Grid>
                 <Grid item xs={12}>
-                  <BannerList bannerData={bannerData} />
-                </Grid>
-              </Grid>
-            </Grid>
-
-            <Grid item xs={12} md={6} lg={9}>
-              <Grid container spacing={2}>
-                <Grid item xs={12}>
                   <CanvasForChart
                     valueChartData={valueChartData}
-                    creatorsData={creatorsData}
                     broadCreatorData={broadCreatorData}
                   />
                 </Grid>
-                <Grid item xs={12}>
-                  <IssueTable
-                    actionLogData={actionLogData}
-                  />
-                </Grid>
-
               </Grid>
             </Grid>
-
-
+            <Grid item xs={12} md={12} lg={3}>
+              <IssueTable
+                actionLogData={actionLogData}
+              />
+            </Grid>
           </Grid>
+            )}
+          </div>
         )}
     </div>
   );

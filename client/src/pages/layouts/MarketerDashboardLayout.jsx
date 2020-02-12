@@ -29,7 +29,6 @@ const MarketerRoutes = ({ pannelRef, ...rest }) => (
 );
 
 const MarketerDashboard = ({ classes, match, ...rest }) => {
-
   const [mobileOpen, setMobileOpen] = useState(false);
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -52,7 +51,7 @@ const MarketerDashboard = ({ classes, match, ...rest }) => {
   return (
     <div className={classes.wrapper}>
       <Sidebar
-        routes={allRoutes.marketer}
+        routes={allRoutes.marketer.filter(r => !r.noTab)}
         logoText="OnAD"
         color="info"
         logo="/pngs/logo/onad_logo_vertical_white.png"
@@ -60,7 +59,7 @@ const MarketerDashboard = ({ classes, match, ...rest }) => {
         handleDrawerToggle={handleDrawerToggle}
         {...rest}
       />
-      
+
       <div className={classes.mainPanel} ref={mainPanel}>
         {/* ref="mainPanel" */}
         <Navbar

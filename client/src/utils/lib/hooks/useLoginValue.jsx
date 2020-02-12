@@ -10,7 +10,7 @@ const useLoginValue = () => {
 
   // logout function
   const logout = () => {
-    setisLogin(false);
+    // setisLogin(false);
     axios.get(`${HOST}/api/login/logout`)
       .then(() => {
         history.push('/');
@@ -30,6 +30,8 @@ const useLoginValue = () => {
           }
           setisLogin(true);
           setUserType(res.data.userType);
+        } else {
+          setisLogin(false);
         }
       })
       .catch((err) => {

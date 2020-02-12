@@ -31,7 +31,6 @@ router.get('/all', (req, res) => {
   const bannerQuery = `
   SELECT bannerSrc, confirmState, bannerId, 
     bannerDenialReason, bannerDescription, 
-    landingUrl,
     DATE_FORMAT(date, "%Y년% %m월 %d일") as date,
     DATE_FORMAT(regiDate, "%Y년% %m월 %d일") as regiDate
   FROM bannerRegistered
@@ -52,19 +51,20 @@ router.get('/all', (req, res) => {
 });
 
 // 특정 마케터의 승인된 배너를 조회
-router.get('/registed', (req, res) => {
+router.get('/registered', (req, res) => {
   const marketerId = req._passport.session.user.userid;
   const bannerQuery = `
   SELECT bannerId, bannerSrc
   FROM bannerRegistered
-  WHERE marketerId = ? AND (confirmState = 1 OR confirmState = 3)
+  WHERE marketerId = ? AND (confirmState = 0 OR confirmState = 1)
+  ORDER BY regiDate DESC 
   `;
   doQuery(bannerQuery, [marketerId])
     .then((row) => {
-      res.send([true, row.result]);
+      res.send(row.result);
     })
     .catch((errorData) => {
-      console.log(errorData);
+      console.log('Error in /banner/registered - ', errorData);
       res.send([null, errorData]);
     });
 });
@@ -74,7 +74,7 @@ router.get('/registed', (req, res) => {
 router.post('/push', (req, res) => {
   const marketerId = req._passport.session.user.userid;
   const {
-    bannerSrc, bannerDescription, landingUrl
+    bannerSrc, bannerDescription
   } = req.body;
 
   const searchQuery = `
@@ -86,8 +86,8 @@ router.post('/push', (req, res) => {
 
   const saveQuery = `
   INSERT INTO bannerRegistered 
-  (bannerId, marketerId, bannerSrc, bannerDescription, landingUrl) 
-  VALUES (?, ?, ?, ?, ?)`;
+  (bannerId, marketerId, bannerSrc, bannerDescription, confirmState) 
+  VALUES (?, ?, ?, ?, 0)`;
 
   doQuery(searchQuery, [marketerId])
     .then((row) => {
@@ -105,8 +105,8 @@ router.post('/push', (req, res) => {
         bannerId = `${marketerId}_01`;
       }
       doQuery(saveQuery,
-        [bannerId, marketerId, bannerSrc, bannerDescription,
-          landingUrl])
+        [bannerId, marketerId, bannerSrc,
+          bannerDescription])
         .then(() => {
           res.send([true, '배너가 등록되었습니다']);
 

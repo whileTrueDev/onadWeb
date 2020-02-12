@@ -16,7 +16,7 @@
         "winston-daily-rotate-file": "^4.2.1"
     },
     "scripts": {
-        "start": "NODE_ENV=$NODE_ENV nodemon app.js",
-        "start:production": "NODE_ENV=production node app.js"
+        "start": "nodemon app.js",
+        "start:production": "node app.js"
     }
 }

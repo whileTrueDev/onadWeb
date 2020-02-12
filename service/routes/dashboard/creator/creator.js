@@ -177,10 +177,10 @@ router.get('/list', (req, res) => {
   WHERE creatorContractionAgreement = 1 `;
   doQuery(searchQuery)
     .then((row) => {
-      res.send([true, row.result]);
+      res.send(row.result);
     })
     .catch((errorData) => {
-      console.log(errorData);
+      console.log('Error in /creator/list - ', errorData);
       res.send([null, errorData]);
     });
 });
