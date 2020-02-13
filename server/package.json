@@ -18,12 +18,12 @@
     "@types/http-errors": "^1.6.3",
     "@types/node": "^13.7.1",
     "@types/nodemailer": "^6.4.0",
+    "@types/debug": "^4.1.5",
     "nodemon": "^2.0.2",
     "ts-node": "^8.6.2",
     "typescript": "^3.7.5"
   },
   "dependencies": {
-    "@types/debug": "^4.1.5",
     "axios": "^0.19.2",
     "body-parser": "^1.19.0",
     "cookie-parser": "^1.4.4",
