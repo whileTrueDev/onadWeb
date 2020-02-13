@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
 import {
   Button, Hidden,
 } from '@material-ui/core';
@@ -105,6 +104,13 @@ class LoginPopover extends Component {
     });
   }
 
+  handleRegistOpen = () => {
+    this.setState({
+      registOpen: true,
+    });
+  }
+
+
   render() {
     const {
       classes, type, logout, MainUserType, trigger, mode
@@ -156,8 +162,7 @@ class LoginPopover extends Component {
                   { mode ? (
                     <Button
                       className={classes.rightLink2}
-                      component={Link}
-                      to="/regist"
+                      onClick={this.handleRegistOpen}
                     >
                       <Hidden mdUp>
                         <SupervisedUserCircle style={{ marginRight: 10 }} />
@@ -167,8 +172,7 @@ class LoginPopover extends Component {
                   ) : (
                     <Button
                       className={!trigger ? (classes.rightLink) : (classes.rightLink2)}
-                      component={Link}
-                      to="/regist"
+                      onClick={this.handleRegistOpen}
                     >
                       <Hidden mdUp>
                         <SupervisedUserCircle style={{ marginRight: 10 }} />
