@@ -15,18 +15,18 @@ const styles = makeStyles(theme => ({
     fontFamily: 'Noto Sans KR',
     wordBreak: 'keep-all',
     marginLeft: 40,
-    [theme.breakpoints.down('xs')]: {
-      width: '80%',
-      marginLeft: 0,
-      textAlign: 'left',
-    },
     [theme.breakpoints.down('md')]: {
       width: '40%',
       marginLeft: 0,
       textAlign: 'left',
     },
     [theme.breakpoints.down('sm')]: {
-      width: '90%',
+      width: '40%',
+      marginLeft: 0,
+      textAlign: 'left',
+    },
+    [theme.breakpoints.down('xs')]: {
+      width: '80%',
       marginLeft: 0,
       textAlign: 'left',
     },
