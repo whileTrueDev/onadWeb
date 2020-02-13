@@ -28,7 +28,7 @@ const styles = makeStyles(theme => ({
       textAlign: 'left',
     },
     [theme.breakpoints.down('xs')]: {
-      width: '90%',
+      width: '80%',
     },
   },
   h1: {

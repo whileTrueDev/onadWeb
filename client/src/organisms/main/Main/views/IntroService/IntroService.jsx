@@ -35,7 +35,7 @@ const useStyles = makeStyles(theme => ({
     [theme.breakpoints.down('sm')]: {
       fontSize: 25,
     },
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('xs')]: {
       fontSize: 23,
       textAlign: 'center'
     },
@@ -59,7 +59,7 @@ const useStyles = makeStyles(theme => ({
       width: 180,
       fontSize: 18,
     },
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('xs')]: {
       width: 140,
       fontSize: 14,
     },
@@ -79,7 +79,7 @@ const useStyles = makeStyles(theme => ({
     [theme.breakpoints.down('sm')]: {
       fontSize: 22,
     },
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('xs')]: {
       fontSize: 20,
       textAlign: 'center'
     },
