@@ -210,6 +210,11 @@ const CampaignCreateStepper = () => {
       alert('일예산이 입력되지 않았습니다.');
       return false;
     }
+    if (input.finDate && (input.finDate < input.startDate)) {
+      alert('시작일은 종료일보다 빠를 수 없습니다.');
+      return false;
+    }
+
     return true;
   };
   const getIndexArray = array => (array.reduce((acc, ele, index) => {

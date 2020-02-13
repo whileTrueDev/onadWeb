@@ -22,8 +22,11 @@ function MaterialUIPickers(props) {
     dispatch({ key: 'finDate', value: date });
     setSelectedFinDate(date);
   };
-  const handleEndChange = () => {
+  const handleFinChange = () => {
     setFinOpen(!finOpen);
+    if (finOpen === false) {
+      dispatch({ key: 'finDate', value: '' });
+    } else { dispatch({ key: 'finDate', value: new Date() }); }
   };
 
   return (
@@ -63,7 +66,7 @@ function MaterialUIPickers(props) {
             <Checkbox
               color="primary"
               checked={finOpen}
-              onChange={handleEndChange}
+              onChange={handleFinChange}
               fontSize="small"
               style={{ padding: '3px' }}
             />
