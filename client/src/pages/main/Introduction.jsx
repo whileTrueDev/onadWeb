@@ -170,7 +170,7 @@ export default withRoot((props) => {
             <HowToUseMarketer source={textSource.marketer.secondSector} />
           </section>
 
-          <IntroduceMiddle source={textSource.topSector} />
+          <IntroduceMiddle source={textSource.topSector} userType />
 
           <ProductHowItWorks
             source={sources.howitworks}

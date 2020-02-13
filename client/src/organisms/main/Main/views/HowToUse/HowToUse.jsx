@@ -191,7 +191,7 @@ function HowToUse(props) {
     source, slideTime, MainUserType
   } = props;
   const classes = styles();
-  const trigger = useScrollTrigger({ threshold: 850, disableHysteresis: true });
+  const trigger = useScrollTrigger({ threshold: 550, disableHysteresis: true });
 
   return (
     <div className={classes.root}>
