@@ -30,7 +30,7 @@ function MaterialUIPickers(props) {
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
       <Grid container>
         <KeyboardDatePicker
-          disableToolbar
+          autoOk
           disablePast
           variant="inline"
           format="yyyy/MM/dd"
@@ -44,7 +44,7 @@ function MaterialUIPickers(props) {
           }}
         />
         <KeyboardDatePicker
-          disableToolbar
+          autoOk
           disablePast
           disabled={finOpen}
           variant="inline"
