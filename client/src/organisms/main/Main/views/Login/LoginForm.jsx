@@ -158,17 +158,17 @@ const LoginForm = (props) => {
           <Grid container direction="row" align="right">
             <Grid item>
               <Button href={`${HOST}/api/login/google`}>
-                <img src="pngs/logo/google.png" alt="google" className={classes.image} />
+                <img src="/pngs/logo/google.png" alt="google" className={classes.image} />
               </Button>
             </Grid>
             <Grid item>
               <Button href={`${HOST}/api/login/naver`}>
-                <img src="pngs/logo/naver2.png" alt="naver" className={classes.image} />
+                <img src="/pngs/logo/naver2.png" alt="naver" className={classes.image} />
               </Button>
             </Grid>
             <Grid item>
               <Button href={`${HOST}/api/login/kakao`}>
-                <img src="pngs/logo/kakao.png" alt="kakao" className={classes.image} />
+                <img src="/pngs/logo/kakao.png" alt="kakao" className={classes.image} />
               </Button>
             </Grid>
           </Grid>
