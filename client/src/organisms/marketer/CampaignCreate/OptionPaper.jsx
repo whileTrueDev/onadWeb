@@ -1,6 +1,33 @@
 import React from 'react';
+import {
+  Grid, Button
+} from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
 import OptionSelectPaper from './component/OptionSelectPaper';
 import CampaignCreateStepLayout from './component/CampaignCreateStepLayout';
+import ButtonSet from './component/ButtonSet';
+
+
+const useStyles = makeStyles(theme => ({
+  root: {
+    width: '100%',
+    height: '100%',
+    margin: '12px',
+    marginTop: '0px',
+    padding: theme.spacing(4),
+    [theme.breakpoints.down('sm')]: {
+      margin: 0,
+      padding: theme.spacing(1),
+    },
+  },
+  button: {
+    marginRight: theme.spacing(1),
+  },
+  end: {
+    color: '#fff',
+    marginRight: theme.spacing(1),
+  }
+}));
 
 const options = [
   {
@@ -22,16 +49,13 @@ const options = [
 
 const OptionPaper = (props) => {
   const {
-    state, dispatch,
-    setStepComplete, step, // for '다음' 버튼 관리
+    state, dispatch, step, handleNext, handleBack // for '다음' 버튼 관리
   } = props;
+  const classes = useStyles();
 
   // option을 선택하였을 때 event listener
   const handleChange = (event) => {
-    // optionType 값 변경을 위해.
     dispatch({ key: event.currentTarget.name });
-    // for '다음' 버튼
-    setStepComplete(true);
   };
 
   return (
@@ -53,6 +77,7 @@ const OptionPaper = (props) => {
               checked={state.option === opt.id}
             />
           ))}
+          <ButtonSet handleNext={handleNext} handleBack={handleBack} step={0} set={Boolean(1)} />
         </div>
       )}
 

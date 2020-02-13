@@ -21,7 +21,6 @@ import * as serviceWorker from './utils/serviceWorker';
 import history from './history';
 import theme from './theme';
 
-
 dotenv.config();
 
 const developRouter = (

@@ -41,7 +41,7 @@ const reducer = (state, action) => {
 
 const CreatorSelect = (props) => {
   const {
-    setStepComplete, checkedCreators, checkedCreatorsDispatch,
+    setStepComplete, checkedCreators, checkedCreatorsDispatch, priorityType, setSelectedNames
   } = props;
 
   const classes = useStyles();
@@ -56,12 +56,16 @@ const CreatorSelect = (props) => {
       return newText;
     }, '현재까지 선택된 크리에이터 :  ');
     setText(texts);
+    if (priorityType !== 'type0') {
+      return;
+    }
     if (checkedCreators.length >= 3) {
       setStepComplete(true);
+      setSelectedNames(creatorNames);
     } else {
       setStepComplete(false);
     }
-  }, [checkedCreators, creatorNames, setStepComplete]);
+  }, [checkedCreators, creatorNames, priorityType, setSelectedNames, setStepComplete]);
 
   return (
     <Grid container direction="column" spacing={2} className={classes.root}>
