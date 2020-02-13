@@ -26,7 +26,7 @@ const styles = makeStyles(theme => ({
       textAlign: 'left',
     },
     [theme.breakpoints.down('sm')]: {
-      width: '40%',
+      width: '90%',
       marginLeft: 0,
       textAlign: 'left',
     },

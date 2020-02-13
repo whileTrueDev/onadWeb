@@ -43,6 +43,10 @@ const useStyles = makeStyles(theme => ({
   },
   buttons: {
     marginBottom: theme.spacing(4),
+  },
+  container: {
+    paddingLeft: theme.spacing(4),
+    paddingRight: theme.spacing(4),
   }
 }));
 
@@ -62,6 +66,7 @@ const RegistDialog = (props) => {
       onClose={handleClose}
       maxWidth="xs"
       fullWidth
+
     >
       <DialogTitle className={classes.title}>REGIST</DialogTitle>
       <DialogContent>
@@ -70,7 +75,6 @@ const RegistDialog = (props) => {
             <CustonButton
               color="info"
               component={Link}
-              fullWidth
               size="lg"
               to="/regist"
             >
