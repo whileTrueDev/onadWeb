@@ -4,10 +4,12 @@
   "main": "app.js",
   "license": "MIT",
   "scripts": {
-    "start": "set PORT=3000 && ts-node ./bin/www.ts",
+    "start": "set PORT=3000 && ts-node ./bin/www.js",
     "start:mac": "PORT=3000 ts-node ./bin/www.ts",
     "start:debug": "set PORT=3000 && nodemon --watch '*.ts' --exec ts-node ./bin/www.ts",
-    "build": "webpack --config webpack.config.js"
+    "prebuild": "rimraf dist",
+    "build": "webpack --config webpack.config.js",
+    "test": "jest --config jest.config.json --coverage"
   },
   "devDependencies": {
     "@types/body-parser": "^1.19.0",
@@ -18,14 +20,18 @@
     "@types/express-mysql-session": "^1.2.2",
     "@types/express-session": "^1.15.16",
     "@types/http-errors": "^1.6.3",
+    "@types/jest": "^25.1.2",
     "@types/node": "^13.7.1",
     "@types/nodemailer": "^6.4.0",
+    "jest": "^25.1.0",
     "nodemon": "^2.0.2",
+    "rimraf": "^3.0.2",
     "ts-loader": "^6.2.1",
     "ts-node": "^8.6.2",
     "typescript": "^3.7.5",
     "webpack": "^4.41.6",
-    "webpack-cli": "^3.3.11"
+    "webpack-cli": "^3.3.11",
+    "webpack-node-externals": "^1.7.2"
   },
   "dependencies": {
     "axios": "^0.19.2",

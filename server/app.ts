@@ -22,9 +22,6 @@ const MySQLStore = require('express-mysql-session')(session);
 const app = express();
 
 process.env.ROOT_PATH = __dirname;
-process.env.NODE_ENV = (process.env.NODE_ENV
-  && (process.env.NODE_ENV).trim().toLowerCase() === 'production')
-  ? 'production' : 'development';
 let FRONT_HOST = process.env.DEV_REACT_HOSTNAME;
 if (process.env.NODE_ENV === 'production') {
   FRONT_HOST = process.env.PRODUCTION_REACT_HOSTNAME;
