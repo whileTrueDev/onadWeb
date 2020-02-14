@@ -382,7 +382,7 @@ export default function IntroduceTop(props) {
                     수익금
                   </h3>
                   <p className={classes.costCardCon}>시청자의 참여도(클릭, 다운로드, 구매 등)에 따라 수익이 쌓입니다</p>
-                  <p className={classes.costCardCon}>배너광고와 별도로 적립되요!</p>
+                  <p className={classes.costCardCon}>배너광고와 별도로 적립돼요!</p>
                 </div>
               </div>
             </div>
