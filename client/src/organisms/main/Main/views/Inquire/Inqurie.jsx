@@ -9,6 +9,7 @@ import {
   Input,
   Container,
   Grid,
+  CircularProgress
 } from '@material-ui/core';
 import HOST from '../../../../../utils/config';
 import axios from '../../../../../utils/axios';
@@ -109,7 +110,15 @@ const useStyles = makeStyles(theme => ({
   inputStyle: {
     boxShadow: '0px 0px 5px #00ace0',
     border: '1px solid #3154EB'
-  }
+  },
+  buttonProgress: {
+    color: theme.palette.primary.main,
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    marginTop: -12,
+    marginLeft: -12,
+  },
 }));
 
 const Inquire = (props) => {
@@ -117,6 +126,7 @@ const Inquire = (props) => {
   const [checked, setChecked] = useState(false);
   const confirmDialog = useDialog();
   const { confirmClose } = props;
+  const [loading, setLoading] = React.useState(false);
 
   function handleChange() {
     setChecked(!checked);
@@ -134,7 +144,7 @@ const Inquire = (props) => {
       brandName: formContent.brandName.value,
       content: formContent.content.value,
     };
-
+    setLoading(true);
     if (checked) {
       axios.post(`${HOST}/mailer/inqurie`, AnonymousUser)
         .then(() => {
@@ -145,8 +155,10 @@ const Inquire = (props) => {
           formContent.brandName.value = '';
           formContent.content.value = '';
           setChecked(false);
+          setLoading(false);
         });
     } else {
+      setLoading(false);
       alert('개인정보수집 및 이용안내에 동의해주세요');
     }
   }
@@ -254,8 +266,18 @@ const Inquire = (props) => {
               <Button
                 className={classes.button}
                 type="submit"
+                disabled={loading}
               >
                 문의 남기기
+                {loading && (
+                  <CircularProgress
+                    disableShrink
+                    size={16}
+                    thickness={5}
+                    variant="indeterminate"
+                    className={classes.buttonProgress}
+                  />
+                )}
               </Button>
             </Grid>
           </Grid>

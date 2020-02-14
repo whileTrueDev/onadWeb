@@ -227,7 +227,7 @@ function AppAppBar(props) {
           className={classNames(classes.rightLink, classes.coloredLink)}
           onClick={handleClick}
         >
-          My광고
+          마이페이지
         </Button>
       );
     }
@@ -275,7 +275,7 @@ function AppAppBar(props) {
             onClick={handleClick}
           >
             <Dashboard className={classes.buttonIcon} />
-            My광고
+            마이페이지
           </Button>
         )
           : <LoginPopover type="회원가입" mode="mobile" MainUserType={MainUserType} />
@@ -327,7 +327,7 @@ function AppAppBar(props) {
 
           {noButtons ? (
             <div className={classes.rightDesktop}>
-              <Tooltip title="My광고">
+              <Tooltip title="마이페이지">
                 <IconButton className={classes.rightLink} onClick={handleClick}>
                   <Dashboard color="action" />
                 </IconButton>

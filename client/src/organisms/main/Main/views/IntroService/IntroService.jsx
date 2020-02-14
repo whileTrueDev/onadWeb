@@ -1,7 +1,7 @@
 import React from 'react';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import grey from '@material-ui/core/colors/grey';
-import { Button } from '@material-ui/core';
+import { Button, CircularProgress } from '@material-ui/core';
 import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles(theme => ({
@@ -89,6 +89,14 @@ const useStyles = makeStyles(theme => ({
 
 const Indicator = () => {
   const classes = useStyles();
+  const [loading, setLoading] = React.useState(false);
+
+  function handleClick() {
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+    }, 1000);
+  }
 
   return (
     <div className={classes.container}>
@@ -101,8 +109,19 @@ const Indicator = () => {
       <div className={classes.wrapper}>
         <Button
           className={classes.button}
+          disabled={loading}
+          onClick={() => { handleClick(); }}
         >
-          <a href="IntroService/ONAD서비스소개서.pdf" download="introService" className={classes.down}>소개자료 다운로드</a>
+          <a href="IntroService/ONAD서비스소개서.pdf" download="ONAD서비스소개서" className={classes.down}>소개자료 다운로드</a>
+          {loading && (
+            <CircularProgress
+              disableShrink
+              size={16}
+              thickness={5}
+              variant="indeterminate"
+              className={classes.buttonProgress}
+            />
+          )}
         </Button>
         <Button
           className={classes.button}
