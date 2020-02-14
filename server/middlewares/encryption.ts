@@ -1,7 +1,6 @@
-const crypto = require('crypto');
-require('dotenv').config();
+import crypto from 'crypto';
 
-const makeEncryption = function (passwd) {
+const makeEncryption = function (passwd: string): string[] {
   const salt = crypto.randomBytes(64).toString('base64');
   const key = crypto.pbkdf2Sync(passwd, salt, 100202, 64, 'sha512').toString('base64');
   return [key, salt];
@@ -9,7 +8,7 @@ const makeEncryption = function (passwd) {
 
 // 입력된 passwd를 salt로 돌려서
 // 생성되는 key와 db의 key값과 비교
-const checkEncryption = function (passwd, key, salt) {
+const checkEncryption = function (passwd: string, key: string, salt: string): boolean {
   const newkey = crypto.pbkdf2Sync(passwd, salt, 100202, 64, 'sha512').toString('base64');
   if (key === newkey) {
     return true;
@@ -17,13 +16,16 @@ const checkEncryption = function (passwd, key, salt) {
   return false;
 };
 
-const makeDecipherText = (account) => {
+const makeDecipherText = (account: string): string => {
   //  base64로 되어있는 string을 buffer화 한다.
   if (account === '') {
     return '';
   }
 
   const accountBuffer = Buffer.from(account, 'base64');
+  if (!process.env.CIPHER_KEY) {
+    throw Error('CIPHER_KEY is not defined in envfile');
+  }
   const secret = process.env.CIPHER_KEY;
   const cryptkey = crypto.createHash('sha256').update(secret).digest();
   const iv = Buffer.alloc(16, process.env.CIPHER_IV, 'base64');
@@ -33,16 +35,17 @@ const makeDecipherText = (account) => {
     decipher.update(accountBuffer),
     decipher.final()
   ]);
-
   return buffer.toString('utf-8');
 };
 
 
-const makeCipherText = (account) => {
+const makeCipherText = (account: string) => {
   if (account === '') {
     return '';
   }
-
+  if (!process.env.CIPHER_KEY) {
+    throw Error('CIPHER_KEY is not defined in envfile');
+  }
   const secret = process.env.CIPHER_KEY;
   const iv = Buffer.alloc(16, process.env.CIPHER_IV, 'base64');
   const cryptkey = crypto.createHash('sha256').update(secret).digest();
@@ -62,4 +65,4 @@ const encrypto = {
   decipher: makeDecipherText
 };
 
-module.exports = encrypto;
+export default encrypto;

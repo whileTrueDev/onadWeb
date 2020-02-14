@@ -1,5 +1,4 @@
-const Crypto = require('crypto-js');
-const d = require('crypto-js/hmac-sha256');
+import Crypto from 'crypto-js';
 
 function makeSignature(method = 'GET',
   url = '/photos/puppy.jpg?query1=&query2',
@@ -7,8 +6,13 @@ function makeSignature(method = 'GET',
   const space = ' '; // one space
   const newLine = '\n'; // new line
   const timestamp = nowtime; // current timestamp (epoch)
+
   const accessKey = process.env.NAVER_CLOUD_ACCESS_KEY; // access key id
   const secretKey = process.env.NAVER_CLOUD_SECRET_KEY; // secret key
+
+  if (!(accessKey && secretKey)) {
+    throw Error('accesskey and secretkey is needed');
+  }
 
   const hmac = Crypto.algo.HMAC.create(Crypto.algo.SHA256, secretKey);
 
@@ -25,4 +29,4 @@ function makeSignature(method = 'GET',
   return hash.toString(Crypto.enc.Base64);
 }
 
-module.exports = makeSignature;
+export default makeSignature;

@@ -1,8 +1,40 @@
-const express = require('express');
-const axios = require('axios').default;
-const doQuery = require('../../model/doQuery');
-const { makeSignature } = require('../../middlewares/naverCloud');
-const slack = require('../../middlewares/slack/message');
+
+import express from 'express';
+import axios from 'axios';
+
+import doQuery from '../../model/doQuery';
+import makeSignature from './makeSignature';
+// import slack from '../../middlewares/slack/message';
+
+interface NaverCloudButton {
+  type: string;
+  name: string;
+  linkMobile: string;
+  linkPc: string;
+}
+
+interface NaverCloudMessage {
+  countryCode: string;
+  to: string; // marketer phone number
+  content: string;
+  buttons: NaverCloudButton[];
+}
+
+interface NaverCloudMessageResponse {
+  messageId: string;
+  countryCode: string;
+  to: string;
+  content: string;
+  requestStatusCode: string;
+  requestStatusName: string;
+  requestStatusDesc: string;
+}
+
+interface NaverCloudSendingData {
+  templateCode: string;
+  plusFriendId: string;
+  messages: NaverCloudMessage[];
+}
 
 const router = express.Router();
 
@@ -13,9 +45,28 @@ const COUNTRY_CODE_KR = '82';
 const SERVICE_ID = process.env.NAVER_CLOUD_BIZMESSAGE_SERVICE_ID;
 const PLUS_FRIEND_ID = '@onad'; // kakao plus friends id
 const NAVER_CLOUD_SENS_URL = 'https://sens.apigw.ntruss.com';
-const ALIM_TALK_SERVICE_URL = `/alimtalk/v2/services/${SERVICE_ID}/messages`; // for request
+// for request
+const ALIM_TALK_SERVICE_URL = `/alimtalk/v2/services/${SERVICE_ID}/messages`;
 
-// marketer 의 캐시 소진 알림톡을 위한 라우터. (from 계산프로그램)
+/**
+ * @name 마케터캐시소진알림톡전송
+ * @swagger
+ *
+ * /alimtalk/marketer/cash/burn:
+ *   post:
+ *     tags: [Alimtalk]
+ *     description: 마케터 캐시소진 알림톡 전송
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: marketerId
+ *         description: 알림톡을 전송할 마케터 고유 ID
+ *         required: true
+ *         type: string
+ *     responses:
+ *       200:
+ *         description: 알림톡 전송 완료
+ */
 router.get('/marketer/cash/burn', (req, res) => {
   // Get marketerId
   const { marketerId } = req.query;
@@ -44,7 +95,8 @@ router.get('/marketer/cash/burn', (req, res) => {
   const LINK_MOBILE = 'https://onad.io';
   const LINK_PC = 'https://onad.io';
 
-  function createSendingData({ marketerName, phonenum }) {
+  function createSendingData({ marketerName, phonenum }:
+    {marketerName: string; phonenum: string}): NaverCloudSendingData {
     const TEMPLATE_CONTENT = `안녕하세요! ${marketerName} 님\nOnAD 광고캐시가 거의 다 소진되었음을 알려드립니다. \n자세한 정보는 온애드에서 확인하세요.`;
     const sendingData = {
       templateCode: TEMPLATE_CODE,
@@ -87,7 +139,7 @@ router.get('/marketer/cash/burn', (req, res) => {
             requestId, requestTime, statusCode, statusName, messages
           } = data.data; // 요청 데이터 추출
 
-          messages.forEach((message) => {
+          messages.forEach((message: NaverCloudMessageResponse) => {
             const {
               messageId, countryCode, to, content, requestStatusCode,
               requestStatusName, requestStatusDesc
@@ -115,9 +167,9 @@ router.get('/marketer/cash/burn', (req, res) => {
                 console.log(`마케터 알림톡 전송 - ${marketerId} db 적재 에러`);
               } else {
                 // slack push
-                slack.push(`${marketerId} ${TEMPLATE_CODE} 알림톡 전송 완료`, '마케터 캐시소진 알림톡');
+                // slack.push(`${marketerId} ${TEMPLATE_CODE} 알림톡 전송 완료`, '마케터 캐시소진 알림톡');
               }
-              // res.send(data.data);
+              res.sendStatus(201).send('successfully posted');
             });
           });
         }).catch((err) => {
@@ -125,9 +177,9 @@ router.get('/marketer/cash/burn', (req, res) => {
           console.log(`err in alimtalk - ${marketerId} `, err.response.data.error);
           const { errorCode, message, details } = err.response.data.error;
           // slack push
-          slack.push(`${marketerId} ${TEMPLATE_CODE} 알림톡 전송 실패 - 오류:\n\nerror-code: ${
-            errorCode} error-message: ${message} error-details: ${details}`,
-          '마케터 캐시소진 알림톡');
+          // slack.push(`${marketerId} ${TEMPLATE_CODE} 알림톡 전송 실패 - 오류:\n\nerror-code: ${
+          //   errorCode} error-message: ${message} error-details: ${details}`,
+          // '마케터 캐시소진 알림톡');
         });
     } else {
       // invalid marketerId
@@ -136,4 +188,4 @@ router.get('/marketer/cash/burn', (req, res) => {
   });
 });
 
-module.exports = router;
+export default router;
