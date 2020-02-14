@@ -3,11 +3,10 @@ import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
-// import { blueGrey } from '@material-ui/core/colors';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import {
   Menu, MenuItem, IconButton, Button,
-  Tooltip, useScrollTrigger
+  Tooltip, useScrollTrigger, AppBar
 } from '@material-ui/core';
 import { Domain, Dashboard } from '@material-ui/icons';
 import Toolbar from '../Main/components/Toolbar';
@@ -22,14 +21,14 @@ const styles = theme => ({
     position: 'fixed',
     width: '100%',
     height: 70,
-    zIndex: '100',
+    zIndex: 100,
   },
   root2: {
     backgroundColor: 'white',
     position: 'fixed',
     width: '100%',
     height: 70,
-    zIndex: '100',
+    zIndex: 100,
     boxShadow: '0 1px 10px gainsboro'
   },
   left: {
@@ -228,7 +227,7 @@ function AppAppBar(props) {
           className={classNames(classes.rightLink, classes.coloredLink)}
           onClick={handleClick}
         >
-          My광고
+          마이페이지
         </Button>
       );
     }
@@ -276,7 +275,7 @@ function AppAppBar(props) {
             onClick={handleClick}
           >
             <Dashboard className={classes.buttonIcon} />
-            My광고
+            마이페이지
           </Button>
         )
           : <LoginPopover type="회원가입" mode="mobile" MainUserType={MainUserType} />
@@ -298,7 +297,7 @@ function AppAppBar(props) {
 
   return (
     <div>
-      <div className={!trigger ? (classes.root) : (classes.root2)} position="fixed">
+      <AppBar className={!trigger ? (classes.root) : (classes.root2)} position="fixed">
         <Toolbar className={classes.toolbar}>
           <div className={classes.left} />
           { noButtons ? (
@@ -328,7 +327,7 @@ function AppAppBar(props) {
 
           {noButtons ? (
             <div className={classes.rightDesktop}>
-              <Tooltip title="My광고">
+              <Tooltip title="마이페이지">
                 <IconButton className={classes.rightLink} onClick={handleClick}>
                   <Dashboard color="action" />
                 </IconButton>
@@ -369,7 +368,7 @@ function AppAppBar(props) {
             </IconButton>
           </div>
         </Toolbar>
-      </div>
+      </AppBar>
       {renderMobileMenu}
     </div>
   );

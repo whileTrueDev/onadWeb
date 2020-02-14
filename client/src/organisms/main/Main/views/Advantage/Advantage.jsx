@@ -98,18 +98,18 @@ const styles = makeStyles(theme => ({
   mainMiddleimg: {
     position: 'relative',
     width: '500px',
-    height: '320px',
+    height: '300px',
     margin: '20px 0px',
     '&>*': {
       transition: 'all 1.5s ease',
     },
     [theme.breakpoints.down('md')]: {
       width: '400px',
-      height: '300px',
+      height: '240px',
     },
     [theme.breakpoints.down('sm')]: {
       width: '300px',
-      height: '250px',
+      height: '200px',
     },
     [theme.breakpoints.down('xs')]: {
       width: '300px',
@@ -442,7 +442,10 @@ const styles = makeStyles(theme => ({
   },
   AdImg2: {
     width: '650px',
-    textAlign: 'center',
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
     [theme.breakpoints.down('md')]: {
       width: '540px',
       height: '380px',
@@ -558,7 +561,7 @@ function Advantage(props) {
               </div>
             </div>
             <div className={classes.AdImg2}>
-              <img src="/pngs/main/advantage3.png" className={classes.mainMiddleimg} alt="ThirdAdvantage" />
+              <img src="/pngs/main/advantage3.gif" className={classes.mainMiddleimg} alt="ThirdAdvantage" />
             </div>
           </div>
         </div>

@@ -123,8 +123,8 @@ router.post('/iamportWebhook', async (req, res) => {
       method: 'post',
       headers: { 'Content-Type': 'application/json' },
       data: {
-        imp_key: '2306149701563593', // REST API키 => import 관리자 페이지에 있음
-        imp_secret: 'Oc6uNyT5UYJ1oGNoQn6aV3xZ5AdJeGJ2TPwGnqMipvkNc7c2uicqlKprlCbzjUBcK8T8yFqXbKLoSXqn' // REST API Secret => import 관리자 페이지에 있음
+        imp_key: process.env.IMP_KEY, // REST API키 => import 관리자 페이지에 있음
+        imp_secret: process.env.IMP_SECRET // REST API Secret => import 관리자 페이지에 있음
       }
     });
 

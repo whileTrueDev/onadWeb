@@ -150,6 +150,7 @@ const Styles = makeStyles(theme => ({
     height: '400px',
     padding: 30,
     overflow: 'scroll',
+    overflowX: 'hidden',
     [theme.breakpoints.down('md')]: {
       width: '50%',
       height: 350,

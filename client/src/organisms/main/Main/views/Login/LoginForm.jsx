@@ -117,7 +117,6 @@ const LoginForm = (props) => {
         open={open}
         onClose={handleClose}
         maxWidth="xs"
-        fullWidth
       >
         <DialogTitle className={classes.title}>LOGIN</DialogTitle>
         <DialogContent>
@@ -153,7 +152,12 @@ const LoginForm = (props) => {
               }}
             />
           </form>
-          <Typography style={{ fontSize: 15, fontFamily: 'Noto Sans kr', marginTop: '20px', color: 'rgba(0, 0, 0, 0.54)', marginBottom: '3px' }}>소셜 계정으로 온애드 서비스 이용</Typography>
+          <Typography style={{
+            fontSize: 15, fontFamily: 'Noto Sans kr', marginTop: '20px', color: 'rgba(0, 0, 0, 0.54)', marginBottom: '3px'
+          }}
+          >
+            소셜 계정으로 온애드 서비스 이용
+          </Typography>
           <Divider component="hr" orientation="horizontal" width="60%" />
           <Grid container direction="row" align="right">
             <Grid item>
