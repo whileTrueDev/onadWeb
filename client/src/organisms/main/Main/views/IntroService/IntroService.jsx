@@ -51,6 +51,7 @@ const useStyles = makeStyles(theme => ({
     borderRadius: 5,
     wordBreak: 'keep-all',
     backgroundColor: '#3154EB',
+    textAlign: 'center',
     [theme.breakpoints.down('md')]: {
       width: 190,
       fontSize: 18,

@@ -126,7 +126,9 @@ const styles = makeStyles(theme => ({
 }));
 
 function ProductHero(props) {
-  const { source, MainUserType } = props;
+  const {
+    source, MainUserType
+  } = props;
 
   const classes = styles();
 
@@ -155,13 +157,13 @@ function ProductHero(props) {
               component={Link}
               to="/introduce/marketer"
             >
-              + 자세히보기
+            + 자세히보기
             </Button>
             <Button
               className={classes.buttonRight}
               onClick={() => { window.open('http://pf.kakao.com/_xoyxmfT/chat'); }}
             >
-              실시간 문의하기
+            실시간 문의하기
             </Button>
           </div>
 

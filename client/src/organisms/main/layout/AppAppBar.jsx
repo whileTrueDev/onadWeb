@@ -3,7 +3,6 @@ import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
-// import { blueGrey } from '@material-ui/core/colors';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import {
   Menu, MenuItem, IconButton, Button,
@@ -22,14 +21,14 @@ const styles = theme => ({
     position: 'fixed',
     width: '100%',
     height: 70,
-    zIndex: '100',
+    zIndex: 100,
   },
   root2: {
     backgroundColor: 'white',
     position: 'fixed',
     width: '100%',
     height: 70,
-    zIndex: '100',
+    zIndex: 100,
     boxShadow: '0 1px 10px gainsboro'
   },
   left: {
@@ -298,7 +297,7 @@ function AppAppBar(props) {
 
   return (
     <div>
-      <div className={!trigger ? (classes.root) : (classes.root2)} position="fixed">
+      <div className={!trigger ? (classes.root) : (classes.root2)}>
         <Toolbar className={classes.toolbar}>
           <div className={classes.left} />
           { noButtons ? (

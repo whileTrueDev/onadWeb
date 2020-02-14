@@ -214,7 +214,6 @@ class LoginPopover extends Component {
                 </div>
               )
               }
-
               <LoginForm
                 open={loginValue === 'creator'}
                 isMarketer={false}
