@@ -108,7 +108,7 @@ const LandingUrlInventoryDialog = (props) => {
           {rowData.links.links.map((link, index) => {
             if (link) {
               return (
-                <div key={link.linkName}>
+                <div key={titleArray[index] + link.linkName}>
                   <p className={classes.title}>
                     {titleArray[index]}
                   </p>
@@ -129,7 +129,7 @@ const LandingUrlInventoryDialog = (props) => {
           {rowData.links.links.map((link, index) => {
             if (link) {
               return (
-                <div key={link.linkTo} className={classes.url}>
+                <div key={titleArray[index] + link.linkTo} className={classes.url}>
                   <p className={classes.title}>
                     {titleArray[index]}
                     {link.primary && (
