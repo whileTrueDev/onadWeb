@@ -6,7 +6,7 @@ import { withStyles } from '@material-ui/core/styles';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import {
   Menu, MenuItem, IconButton, Button,
-  Tooltip, useScrollTrigger
+  Tooltip, useScrollTrigger, AppBar
 } from '@material-ui/core';
 import { Domain, Dashboard } from '@material-ui/icons';
 import Toolbar from '../Main/components/Toolbar';
@@ -297,7 +297,7 @@ function AppAppBar(props) {
 
   return (
     <div>
-      <div className={!trigger ? (classes.root) : (classes.root2)}>
+      <AppBar className={!trigger ? (classes.root) : (classes.root2)} position="fixed">
         <Toolbar className={classes.toolbar}>
           <div className={classes.left} />
           { noButtons ? (
@@ -368,7 +368,7 @@ function AppAppBar(props) {
             </IconButton>
           </div>
         </Toolbar>
-      </div>
+      </AppBar>
       {renderMobileMenu}
     </div>
   );
