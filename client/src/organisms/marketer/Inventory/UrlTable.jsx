@@ -29,13 +29,48 @@ export default function UrlTable(props) {
       },
     },
     {
-      title: '링크이름 및 주소',
+      title: '링크 이름',
       render: rowData => (
         <div>
           {rowData.links.links.map((link) => {
             if (link) {
               return (
                 <div key={link.linkTo}>
+                  {/* <a
+                    href={link.linkTo}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      window.open(link.linkTo);
+                    }}
+                  > */}
+                  {link.linkName ? link.linkName : link.linkTo }
+                  {/* </a> */}
+                  {/* {link.primary && (
+                  <Tooltip title={(
+                    <Typography>
+                      기본 링크로, 배너이미지 클릭시 곧바로 연결되는 링크입니다.
+                    </Typography>
+                  )}
+                  >
+                    <Star color="secondary" />
+                  </Tooltip>
+                  )} */}
+                </div>
+              );
+            }
+            return null;
+          })}
+        </div>
+      ),
+    },
+    {
+      title: '링크 주소',
+      render: rowData => (
+        <div>
+          {rowData.links.links.map((link) => {
+            if (link) {
+              return (
+                <div key={link.linkTo} style={{ overflow: 'hidden', textOverflow: 'ellipsis', width: '200px' }}>
                   <a
                     href={link.linkTo}
                     onClick={(e) => {
@@ -43,12 +78,12 @@ export default function UrlTable(props) {
                       window.open(link.linkTo);
                     }}
                   >
-                    {link.linkName ? link.linkName : link.linkTo }
+                    {link.linkTo}
                   </a>
                   {link.primary && (
                   <Tooltip title={(
                     <Typography>
-                      primary링크로, 배너이미지 클릭시 곧바로 연결되는 링크입니다.
+                      기본 링크로, 배너이미지 클릭시 곧바로 연결되는 링크입니다.
                     </Typography>
                   )}
                   >

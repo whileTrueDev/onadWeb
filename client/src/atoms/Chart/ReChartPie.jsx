@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  PieChart, Pie, Sector, Cell, ResponsiveContainer
+  PieChart, Pie, Sector, Cell, ResponsiveContainer, Legend,
 } from 'recharts';
 import COLORS from './chartTheme';
 
@@ -93,6 +93,7 @@ export default function CustomPieChart(props) {
               )
             )}
           </Pie>
+          <Legend />
         </PieChart>
       </ResponsiveContainer>
     </div>
