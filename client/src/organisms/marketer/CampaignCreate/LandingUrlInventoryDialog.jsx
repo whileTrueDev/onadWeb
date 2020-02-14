@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import {
-  Tooltip, Typography, Button
+  Tooltip, Typography, Button, Divider, makeStyles
 } from '@material-ui/core';
 import { Star } from '@material-ui/icons';
 import Dialog from '../../../atoms/Dialog/Dialog';
@@ -18,10 +18,23 @@ const dialogStyle = theme => ({
   },
 });
 
+
+const useStyles = makeStyles(theme => ({
+  title: {
+    fontWeight: 'bold'
+  },
+  url: {
+    overflow: 'hidden', textOverflow: 'ellipsis', width: '200px'
+  },
+}));
+
+
 const LandingUrlInventoryDialog = (props) => {
   const {
     open, onClose, landingUrlData, dispatch,
   } = props;
+  const classes = useStyles();
+
   const [indexId, setindexId] = React.useState('');
   const [tmpMainUrl, setTmpMainUrl] = React.useState('');
   const [tmpSub1Url, setTmpSub1Url] = React.useState('');
@@ -29,6 +42,8 @@ const LandingUrlInventoryDialog = (props) => {
   const [tmpMainUrlName, setTmpMainUrlName] = React.useState('');
   const [tmpSub1UrlName, setTmpSub1UrlName] = React.useState('');
   const [tmpSub2UrlName, setTmpSub2UrlName] = React.useState('');
+
+  const titleArray = ['MAIN', 'SUB1', 'SUB2'];
 
   const handleCheck = (event, rowData) => {
     setindexId(event.target.id);
@@ -87,13 +102,47 @@ const LandingUrlInventoryDialog = (props) => {
       },
     },
     {
-      title: '링크이름 및 주소',
+      title: '링크 이름',
       render: rowData => (
         <div>
-          {rowData.links.links.map((link) => {
+          {rowData.links.links.map((link, index) => {
             if (link) {
               return (
-                <div key={link.linkTo}>
+                <div key={link.linkName}>
+                  <p className={classes.title}>
+                    {titleArray[index]}
+                  </p>
+                  {link.linkName}
+                  <Divider />
+                </div>
+              );
+            }
+            return null;
+          })}
+        </div>
+      ),
+    },
+    {
+      title: '링크 주소',
+      render: rowData => (
+        <div>
+          {rowData.links.links.map((link, index) => {
+            if (link) {
+              return (
+                <div key={link.linkTo} className={classes.url}>
+                  <p className={classes.title}>
+                    {titleArray[index]}
+                    {link.primary && (
+                    <Tooltip title={(
+                      <Typography>
+                      기본 링크로, 배너이미지 클릭시 곧바로 연결되는 링크입니다.
+                      </Typography>
+                  )}
+                    >
+                      <Star color="secondary" />
+                    </Tooltip>
+                    )}
+                  </p>
                   <a
                     href={link.linkTo}
                     onClick={(e) => {
@@ -101,18 +150,10 @@ const LandingUrlInventoryDialog = (props) => {
                       window.open(link.linkTo);
                     }}
                   >
-                    {link.linkName ? link.linkName : link.linkTo }
+                    {link.linkTo}
                   </a>
-                  {link.primary && (
-                  <Tooltip title={(
-                    <Typography>
-                      primary링크로, 배너이미지 클릭시 곧바로 연결되는 링크입니다.
-                    </Typography>
-                  )}
-                  >
-                    <Star color="secondary" />
-                  </Tooltip>
-                  )}
+
+                  <Divider />
                 </div>
               );
             }
