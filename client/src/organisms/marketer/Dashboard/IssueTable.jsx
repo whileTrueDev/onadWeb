@@ -6,7 +6,7 @@ import {
   IconButton, CircularProgress,
 } from '@material-ui/core';
 import Refresh from '@material-ui/icons/Refresh';
-
+import makeStyles from '@material-ui/core/styles/makeStyles';
 
 function makeContents(typeNumber, detail) {
   const details = JSON.parse(detail);
@@ -77,17 +77,47 @@ function makeContents(typeNumber, detail) {
   }
 }
 
+const styles = makeStyles(theme => ({
+  activityTitle: {
+    fontSize: 14,
+    fontWeight: 550,
+    [theme.breakpoints.down('md')]: {
+      fontSize: '13px',
+    },
+    [theme.breakpoints.down('sm')]: {
+      fontSize: '13px',
+    },
+    [theme.breakpoints.down('xs')]: {
+      fontSize: '11px',
+    }
+  },
+  activitySub: {
+    fontSize: 10,
+    color: 'grey',
+    [theme.breakpoints.down('md')]: {
+      fontSize: '10px',
+    },
+    [theme.breakpoints.down('sm')]: {
+      fontSize: '10px',
+    },
+    [theme.breakpoints.down('xs')]: {
+      fontSize: '9px',
+    }
+  }
+}));
+
 export default function issueTable(props) {
   const { actionLogData } = props;
+  const classes = styles();
 
   return (
     <Paper style={{ height: 'auto' }}>
       <div style={{ padding: 16, display: 'flex', justifyContent: 'space-between' }}>
         <div style={{ display: 'flex', alignItems: 'center' }}>
-          <Typography className={classes.}>활동</Typography>
-          <Typography variant="caption" className={classes.}>
+          <Typography className={classes.activityTitle}>활동</Typography>
+          <Typography className={classes.activitySub}>
             &emsp;
-            (목록 갱신은 새로고침을 눌러주세요.)
+            (목록 갱신은 새로고침을 눌러주세요)
           </Typography>
         </div>
 
