@@ -12,7 +12,9 @@ const useStyles = makeStyles(theme => ({
     fontWeight: 'bold'
   },
   url: {
-    overflow: 'hidden', textOverflow: 'ellipsis', width: '200px'
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    width: '240px'
   },
 }));
 
@@ -48,11 +50,27 @@ export default function UrlTable(props) {
             if (link) {
               return (
                 <div key={titleArray[index] + link.linkName}>
-                  <p className={classes.title}>
-                    {titleArray[index]}
-                  </p>
-                  {link.linkName}
-                  <Divider />
+                  {link.primary ? (
+                    <div>
+                      <p className={classes.title}>
+                        MAIN
+                      </p>
+                      <span>
+                        {link.linkName}
+                      </span>
+                      <Divider />
+                    </div>
+                  ) : (
+                    <div>
+                      <p className={classes.title}>
+                        SUB
+                      </p>
+                      <span>
+                        {link.linkName}
+                      </span>
+                      <Divider />
+                    </div>
+                  )}
                 </div>
               );
             }
@@ -69,19 +87,27 @@ export default function UrlTable(props) {
             if (link) {
               return (
                 <div key={titleArray[index] + link.linkTo} className={classes.url}>
-                  <p className={classes.title}>
-                    {titleArray[index]}
-                    {link.primary && (
-                    <Tooltip title={(
-                      <Typography>
-                      기본 링크로, 배너이미지 클릭시 곧바로 연결되는 링크입니다.
-                      </Typography>
+                  {link.primary ? (
+                    <div>
+                      <p className={classes.title}>
+                        MAIN
+                        <Tooltip title={(
+                          <Typography>
+                            기본 링크로, 배너이미지 클릭시 곧바로 연결되는 링크입니다.
+                          </Typography>
+                      )}
+                        >
+                          <Star color="secondary" />
+                        </Tooltip>
+                      </p>
+                    </div>
+                  ) : (
+                    <div>
+                      <p className={classes.title}>
+                        SUB
+                      </p>
+                    </div>
                   )}
-                    >
-                      <Star color="secondary" />
-                    </Tooltip>
-                    )}
-                  </p>
                   <a
                     href={link.linkTo}
                     onClick={(e) => {
@@ -91,7 +117,6 @@ export default function UrlTable(props) {
                   >
                     {link.linkTo}
                   </a>
-
                   <Divider />
                 </div>
               );
