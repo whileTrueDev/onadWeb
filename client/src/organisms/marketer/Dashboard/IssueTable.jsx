@@ -7,6 +7,7 @@ import {
 } from '@material-ui/core';
 import Refresh from '@material-ui/icons/Refresh';
 
+
 function makeContents(typeNumber, detail) {
   const details = JSON.parse(detail);
   // 0 - 이벤트 캐시충전 (온애드에서 제공되는)
@@ -79,16 +80,14 @@ function makeContents(typeNumber, detail) {
 export default function issueTable(props) {
   const { actionLogData } = props;
 
-  // console.log(actionLogData);
-
   return (
-    <Paper style={{ height: 400 }}>
+    <Paper style={{ height: 'auto' }}>
       <div style={{ padding: 16, display: 'flex', justifyContent: 'space-between' }}>
         <div style={{ display: 'flex', alignItems: 'center' }}>
-          <Typography variant="h6">활동</Typography>
-          <Typography variant="caption">
+          <Typography className={classes.}>활동</Typography>
+          <Typography variant="caption" className={classes.}>
             &emsp;
-            {'(목록 갱신은 새로고침을 눌러주세요.)'}
+            (목록 갱신은 새로고침을 눌러주세요.)
           </Typography>
         </div>
 
@@ -104,7 +103,7 @@ export default function issueTable(props) {
 
       <Divider />
 
-      <Grid container style={{ height: 330, overflow: 'auto' }}>
+      <Grid container style={{ height: '350px', overflow: 'auto' }}>
         {/* 데이터 있는 경우 */}
         {actionLogData.loading && (<CircularProgress />)}
         {actionLogData.payload.length > 0 ? (
