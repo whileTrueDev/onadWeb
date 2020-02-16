@@ -126,3 +126,6 @@ ex. 캠페인을 생성(create), 캠페인 목록을 조회(read), 캠페인을 
 |405|클라이언트가 요청한 리소스에서는 사용 불가능한 Method를 이용했을 경우 사용하는 응답 코드|
 |301|클라이언트가 요청한 리소스에 대한 URI가 변경 되었을 때 사용하는 응답 코드(응답 시, Location header에 변경된 URI를 적어줘야한다.)|
 |500|서버에 문제가 있을 경우 사용하는 응답 코드|
+
+---
+references: https://meetup.toast.com/posts/92, https://www.youtube.com/watch?v=RP_f5dMoHFc&t=1s, https://ko.wikipedia.org/wiki/REST
