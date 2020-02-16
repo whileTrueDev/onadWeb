@@ -1,29 +1,31 @@
-const axios = require('axios');
-const doQuery = require('../model/doQuery');
-const encrypto = require('../encryption');
+import { Request, Response } from 'express';
+import axios from 'axios';
+import encrypto from './encryption';
+import doQuery from '../model/doQuery';
 
 const HOST = process.env.NODE_ENV === 'production'
   ? process.env.PRODUCTION_API_HOSTNAME
   : process.env.DEV_API_HOSTNAME;
 
-const setTemporaryPassword = (req, res, next) => {
+const setTemporaryPassword = (
+  req: Request, res: Response
+): void => {
   // 임시비밀번호 생성.
   let password = '';
-  let key; let
-    salt;
 
-  for (let i = 0; i < 8; i++) {
+  for (let i = 0; i < 8; i += 1) {
     const lowerStr = String.fromCharCode(Math.floor(Math.random() * 26 + 97));
-    if (i % 2 == 0) {
+    if (i % 2 === 0) {
       password += String(Math.floor(Math.random() * 10));
     } else {
       password += lowerStr;
     }
   }
 
-  [key, salt] = encrypto.make(password);
+  const [key, salt] = encrypto.make(password);
 
-  doQuery('UPDATE marketerInfo SET marketerSalt = ?, marketerPasswd = ?, temporaryLogin = 1 WHERE marketerId = ? ', [salt, key, req.body.marketerId])
+  doQuery('UPDATE marketerInfo SET marketerSalt = ?, marketerPasswd = ?, temporaryLogin = 1 WHERE marketerId = ? ',
+    [salt, key, req.body.marketerId])
     .then(() => {
       const user = {
         marketerId: req.body.marketerId,
@@ -38,7 +40,7 @@ const setTemporaryPassword = (req, res, next) => {
         });
     })
     .catch((data) => {
-    // 쿼리문이나 커넥션에 대한 에러
+      // 쿼리문이나 커넥션에 대한 에러
       res.send(data);
     });
 };

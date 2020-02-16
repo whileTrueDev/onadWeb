@@ -1,11 +1,13 @@
-// DB 커넥션 가져오기.
-const pool = require('./connectionPool');
+import { MysqlError, PoolConnection } from 'mysql';
+import pool from './connectinoPool'; // DB 커넥션 가져오기.
 // const logger = require('../middlewares/logger');
 
+// type정의 for Query Result
+interface QueryResult {
+  error?: MysqlError | null;
+  result: any;
+}
 
-/* 2019-07-02 박찬우
-
-*/
 /**
  * @description
   Promise API를 이용한 비동기식 DB접근을 동기식화 하여 쿼리의 결과값을 리턴하는 함수,
@@ -16,37 +18,33 @@ const pool = require('./connectionPool');
   2. 필수사항
     - 쿼리 내부의 가변적 변수는 무.조.건 `?` 로 선언 이후, queryArray 로 넣는다.
 
- * @param {*} query 쿼리 string
- * @param {*} queryArray ? 에 해당하는 변수들을 요소로 가지는 array
+ * @param {string} query 쿼리 string
+ * @param {array} queryArray ? 에 해당하는 변수들을 요소로 가지는 array
  * @author 박찬우
  */
-const doQuery = (query, queryArray = []) => new Promise((resolve, reject) => {
-  pool.getConnection((err, conn) => {
+const doQuery = (
+  query: string,
+  queryArray: any[]
+): Promise<QueryResult> => new Promise((resolve, reject) => {
+  pool.getConnection((err: MysqlError, conn: PoolConnection) => {
     // 커넥션 시 에러발생
     if (err) {
       console.log('conn in err - getConnection 함수', conn);
       console.log(`DB연결 오류 ${err.message}`);
       // logger.error(`DB연결 관련 오류${err}`);
-      reject({ error: err });
+      reject(Error(err.message));
     } else {
       conn.query(query, queryArray, (error, result) => {
         if (error) {
           conn.release();
-          // logger.error(`query 관련 오류 : ${error}`);
-          reject({
-            error: error.sqlMessage,
-          });
+          reject(Error(error.sqlMessage));
         } else {
           conn.release();
-          // logger.info(query);
-          resolve({
-            error: null,
-            result,
-          });
+          resolve({ result });
         }
       });
     }
   });
 });
 
-module.exports = doQuery;
+export default doQuery;

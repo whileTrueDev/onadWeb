@@ -5,10 +5,12 @@
 
 const debug = require('debug')('service:server');
 const http = require('http');
-const app = require('../app');
+const OnadWebApi = require('../app');
+
+const onadapp = new OnadWebApi();
 
 // Create HTTP server.
-const server = http.createServer(app);
+const server = http.createServer(onadapp.app);
 
 const DEFAULT_PORT = 3000;
 // Normalize a port into a number, string, or false.
@@ -22,7 +24,7 @@ function normalizePort(val: string): number {
 }
 // Get port from environment and store in Express.
 const PORT = normalizePort(process.env.PORT || '3000');
-app.set('port', PORT);
+onadapp.app.set('port', PORT);
 
 // Event listener for HTTP server "error" event.
 function onError(error: any): void {
