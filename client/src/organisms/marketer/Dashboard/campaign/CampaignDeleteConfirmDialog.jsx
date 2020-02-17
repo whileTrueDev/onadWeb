@@ -25,7 +25,7 @@ export default function CampaignDeleteConfirmDialog(props) {
               );
             }}
           >
-            진행
+            삭제
           </Button>
           <Button onClick={handleClose}>
             취소

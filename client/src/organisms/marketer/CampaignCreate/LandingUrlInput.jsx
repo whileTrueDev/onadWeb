@@ -31,7 +31,7 @@ const LandingUrlInput = (props) => {
   const {
     classes, handleDialogOpen, dispatch, state
   } = props;
-  const [subOpen, setSubOpen] = React.useState(true);
+  const [subOpen, setSubOpen] = React.useState(false);
   // const [sub1CloseState, setSub1CloseState] = React.useState(true);
   // const [sub2CloseState, setSub2CloseState] = React.useState(true);
 

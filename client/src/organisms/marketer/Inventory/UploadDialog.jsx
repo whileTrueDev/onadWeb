@@ -7,7 +7,7 @@ import {
 import classnames from 'classnames';
 import Check from '@material-ui/icons/Check';
 import Dialog from '../../../atoms/Dialog/Dialog';
-import BannerDescrForm from './BannerDescForm';
+import BannerDescForm from './BannerDescForm';
 import './upload.css';
 import ImageUpload from './ImageUpload';
 import HOST from '../../../utils/config';
@@ -93,8 +93,7 @@ const UploadDialog = (props) => {
   };
 
   // url을 제출.
-  const handleSubmit = (event) => {
-    event.preventDefault();
+  const handleSubmit = () => {
     const bannerDescription = document.getElementById('banner').value || null;
     // text format을 사용하기 위해 state로 사용한다.
 
@@ -139,10 +138,10 @@ const UploadDialog = (props) => {
         </Step>
         <Step key="1">
           <StepLabel StepIconComponent={QontoStepIcon}>
-            이벤트정보 / 할인정보 입력
+            홍보문구 입력
           </StepLabel>
           <StepContent className={classes.formRoot}>
-            <BannerDescrForm
+            <BannerDescForm
               handleNext={handleNext}
               state={state}
               handleSubmit={handleSubmit}

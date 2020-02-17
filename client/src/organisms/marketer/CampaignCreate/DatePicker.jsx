@@ -22,15 +22,18 @@ function MaterialUIPickers(props) {
     dispatch({ key: 'finDate', value: date });
     setSelectedFinDate(date);
   };
-  const handleEndChange = () => {
+  const handleFinChange = () => {
     setFinOpen(!finOpen);
+    if (finOpen === false) {
+      dispatch({ key: 'finDate', value: '' });
+    } else { dispatch({ key: 'finDate', value: new Date() }); }
   };
 
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
       <Grid container>
         <KeyboardDatePicker
-          disableToolbar
+          autoOk
           disablePast
           variant="inline"
           format="yyyy/MM/dd"
@@ -44,7 +47,7 @@ function MaterialUIPickers(props) {
           }}
         />
         <KeyboardDatePicker
-          disableToolbar
+          autoOk
           disablePast
           disabled={finOpen}
           variant="inline"
@@ -63,7 +66,7 @@ function MaterialUIPickers(props) {
             <Checkbox
               color="primary"
               checked={finOpen}
-              onChange={handleEndChange}
+              onChange={handleFinChange}
               fontSize="small"
               style={{ padding: '3px' }}
             />

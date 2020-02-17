@@ -210,6 +210,11 @@ const CampaignCreateStepper = () => {
       alert('일예산이 입력되지 않았습니다.');
       return false;
     }
+    if (input.finDate && (input.finDate < input.startDate)) {
+      alert('시작일은 종료일보다 빠를 수 없습니다.');
+      return false;
+    }
+
     return true;
   };
   const getIndexArray = array => (array.reduce((acc, ele, index) => {
@@ -256,8 +261,12 @@ const CampaignCreateStepper = () => {
         selectedTime: getIndexArray(checkList)
       })
         .then((res) => {
-          alert(res.data[1]);
-          history.push('/dashboard/marketer/main');
+          if (res.data[0]) {
+            alert(res.data[1]);
+            history.push('/dashboard/marketer/main');
+          } else {
+            alert(res.data[1]);
+          }
         });
     }
   };
@@ -363,7 +372,7 @@ const CampaignCreateStepper = () => {
     <Grid container direction="row" spacing={2} wrap="wrap">
       {isDesktop ? (
         <React.Fragment>
-          <Grid item xs={12} lg={10} xl={8}>
+          <Grid item xs={12} lg={12} xl={12}>
             <Paper>
               <Grid container direction="column" className={classes.root}>
                 <Grid item xs={12}>
