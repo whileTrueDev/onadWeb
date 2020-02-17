@@ -250,7 +250,7 @@ const LoginForm = (props) => {
             <Button
               href={`${HOST}/api/login/twitch`}
               style={{
-                backgroundImage: 'url("pngs/logo/twitch.png")',
+                backgroundImage: 'url("/pngs/logo/twitch.png")',
               }}
               className={classes.imageSrc}
             />

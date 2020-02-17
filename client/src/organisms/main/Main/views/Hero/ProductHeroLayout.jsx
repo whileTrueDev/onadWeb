@@ -4,7 +4,7 @@ import { withStyles } from '@material-ui/core/styles';
 
 const styles = theme => ({
   root: {
-    background: 'url(\'/pngs/main/creatorDoor.PNG\') no-repeat center center',
+    background: 'url(\'/pngs/main/creatorDoor.png\') no-repeat center center',
     backgroundSize: 'cover',
     width: '100%',
     height: '700px',
@@ -19,7 +19,7 @@ const styles = theme => ({
     }
   },
   root2: {
-    background: 'url(\'/pngs/main/creatorMain.PNG\') no-repeat center center',
+    background: 'url(\'/pngs/main/creatorMain.png\') no-repeat center center',
     backgroundSize: 'cover',
     width: '100%',
     height: '700px',
