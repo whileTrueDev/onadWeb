@@ -21,7 +21,9 @@ function makeContents(typeNumber, detail) {
   // 9 - 환불요청  v-191226
   // 10 - 환불요청결과
   // 11 - 배너 삭제 v-191227
-  // 11 - 캠페인 삭제 v-191227
+  // 12 - 캠페인 삭제 v-191227
+  // 13 - 링크 심사 거절 v-200129
+  // 14 - 링크 심사 승인 v-200129
   let content = '';
   switch (typeNumber) {
     case 0:
@@ -62,6 +64,12 @@ function makeContents(typeNumber, detail) {
       return content;
     case 12:
       content = `${details.campaignName} 캠페인 삭제`;
+      return content;
+    case 13:
+      content = `${details.linkTo} URL 심사 거절됨`;
+      return content;
+    case 14:
+      content = `${details.linkTo} URL 심사 승인됨`;
       return content;
     default:
       throw Error('typeNumber must be need');

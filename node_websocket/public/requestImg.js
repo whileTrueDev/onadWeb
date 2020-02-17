@@ -39,28 +39,37 @@ module.exports = function (sql, socket, msg) {
 
   const getOnCampaignList = () => {
     console.log('현재 ON되어있는 campaign List를 조회한다.');
-
     const campaignListQuery = `
-    SELECT campaignId, optionType
+    SELECT campaignId, optionType, startDate, finDate, selectedTime
     FROM campaign
     LEFT JOIN marketerInfo
     ON campaign.marketerId = marketerInfo.marketerId
-    WHERE NOT marketerInfo.marketerContraction = 0
+    WHERE marketerInfo.marketerContraction = 1
     AND campaign.onOff = 1
     AND NOT campaign.optionType = 2
     AND campaign.limitState = 0
-                              `;
+    `;
 
     return new Promise((resolve, reject) => {
       doQuery(campaignListQuery)
         .then((row) => {
-          const campaignIdlist = row.result.map(data => data.campaignId);
-          row.result.map((data) => {
-            const campId = Object.values(data)[0];
-            const optionType = Object.values(data)[1];
-            campaignObject[campId] = optionType;
+          const filteredDate = {};
+          const campaignIdList = [];
+          const nowDate = new Date();
+          row.result.map(
+            (data) => {
+              if (data.startDate && data.startDate < nowDate && (data.findate > nowDate || !data.finDate)) {
+                filteredDate[data.campaignId] = data.selectedTime;
+              }
+            }
+          );
+          Object.values(filteredDate).map((value, index) => {
+            const jsonData = JSON.parse(value);
+            if (jsonData.time.includes(nowDate.getHours())) {
+              campaignIdList.push(Object.keys(filteredDate)[index]);
+            }
           });
-          resolve(campaignIdlist);
+          resolve(campaignIdList);
         })
         .catch((errorData) => {
           errorData.point = 'getOnCampaignList()';
@@ -69,7 +78,6 @@ module.exports = function (sql, socket, msg) {
         });
     });
   };
-
   // 하나의 categoryId 에 해당하는 캠페인 리스트를 반환하는 Promise
   const getCategoryCampaignList = (categoryId) => {
     const campaignListQuery = `
@@ -204,7 +212,7 @@ module.exports = function (sql, socket, msg) {
   };
 
   const insertLandingPage = (campaignId, creatorId) => {
-     // campaignId를 가져와서 optionType 0,1check후 삽입.
+    // campaignId를 가져와서 optionType 0,1check후 삽입.
     const optionType = campaignObject[campaignId];
     if (optionType === 0) {
       return false;

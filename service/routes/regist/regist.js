@@ -1,3 +1,5 @@
+require('dotenv').config(); // 환경변수를 위해. dev환경: .env 파일 / production환경: docker run의 --env-file인자로 넘김.
+
 const express = require('express');
 const axios = require('axios');
 const encrypto = require('../../encryption');
@@ -46,6 +48,7 @@ router.post('/marketer', (req, res, next) => {
     doQuery(cashQuery, [marketerId, 0]),
   ])
     .then(() => {
+      // res.send([true, null]);
       next();
     })
     .catch((error) => {
@@ -84,6 +87,7 @@ router.post('/marketer/platform', (req, res) => {
       res.send({ error: false });
     })
     .catch((error) => {
+      console.log(error);
       res.send({ error });
     });
 });
@@ -131,7 +135,7 @@ router.post('/findId', (req, res) => {
       res.send(JSON.stringify(json));
     })
     .catch(() => {
-      json.message = 'DB 관련 오류입니다. 본사에 문의하세요.';
+      json.message = 'DB 관련 오류입니다. 잠시 후 다시 시도해주세요..';
       res.send(JSON.stringify(json));
     });
 });
@@ -158,7 +162,7 @@ router.post('/findPw', (req, res, next) => {
       }
     })
     .catch(() => {
-      json.message = 'DB 관련 오류입니다. 본사에 문의하세요.';
+      json.message = 'DB 관련 오류입니다. 잠시 후 다시 시도해주세요..';
       res.send(JSON.stringify(json));
     });
 }, setTemporaryPassword);
@@ -241,8 +245,8 @@ router.post('/certifications', async (req, res) => {
       method: 'post', // POST method
       headers: { 'Content-Type': 'application/json' }, // "Content-Type": "application/json"
       data: {
-        imp_key: '2306149701563593', // REST API키
-        imp_secret: 'Oc6uNyT5UYJ1oGNoQn6aV3xZ5AdJeGJ2TPwGnqMipvkNc7c2uicqlKprlCbzjUBcK8T8yFqXbKLoSXqn' // REST API Secret
+        imp_key: process.env.IMP_KEY, // REST API키
+        imp_secret: process.env.IMP_SECRET // REST API Secret
       }
     });
 
@@ -255,11 +259,17 @@ router.post('/certifications', async (req, res) => {
     });
     const certificationsInfo = getCertifications.data.response; // 조회한 인증 정보
     // 인증정보에 대한 데이터를 저장하거나 사용한다.
+
     const {
-      name, birth
+      birth
     } = certificationsInfo;
 
-    res.send({ error: false, data: { name } });
+    const date = new Date(birth);
+    const now = new Date();
+    now.setFullYear(now.getFullYear() - 19);
+
+    const minor = now < date;
+    res.send({ error: false, data: { minor } });
   } catch (e) {
     console.error(e);
     res.send({ error: true, data: { msg: '서버오류입니다. 잠시후 다시 진행해주세요.' } });

@@ -1,9 +1,13 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Skeleton from '@material-ui/lab/Skeleton';
 import ReChartPie from '../../../../atoms/Chart/ReChartPie';
 
 export default function ContentsPie(props) {
-  const { selectedChartData } = props;
+  const {
+    // creatorId,
+    selectedChartData
+  } = props;
   // const data = useFetchData('/api/dashboard/marketer/creatordetail/contents', { creatorId });
   // 마우스오버 핸들러
   const [activeIndex, setActiveIndex] = React.useState(0);
@@ -30,3 +34,7 @@ export default function ContentsPie(props) {
     </div>
   );
 }
+
+ContentsPie.propTypes = {
+  creatorId: PropTypes.string.isRequired
+};

@@ -31,12 +31,18 @@ router.get('/', (req, res) => {
 
 // 2019-12-06 새로운 대시보드(분석)을 위한 요청
 // 캠페인 리스트 조회
+// 2020-01-21 일일예산이 존재하는 경우 일일 현재까지 해당 캠페인을 통한 소비 계산하여 리턴
 router.get('/new', (req, res) => {
   const marketerId = req._passport.session.user.userid;
+  const date = new Date();
+  date.setHours(0);
+  date.setMinutes(0);
+  date.setSeconds(0);
+  date.setMilliseconds(0);
 
   const query = `
   SELECT
-  campaignId, campaignName, optionType, priorityType, campaign.regiDate, onOff, bannerSrc
+  campaignId, campaignName, optionType, priorityType, campaign.regiDate, onOff, bannerSrc, dailyLimit
   FROM campaign
   JOIN bannerRegistered AS br
   ON br.bannerId = campaign.bannerId
@@ -44,11 +50,43 @@ router.get('/new', (req, res) => {
   AND deletedState = 0
   ORDER BY br.regiDate DESC
   `;
-  const queryArray = [marketerId];
 
-  doQuery(query, queryArray).then((row) => {
+  const sumQuery = `
+  select sum(cashFromMarketer) as dailysum
+  from campaignLog
+  where campaignId = ?
+  and date > ?
+  `;
+
+  // const mergedQuery = `
+  // select CL.campaignId, campaignName, optionType, priorityType, regiDate, onOff, bannerSrc, dailyLimit,  CL.campaignId, sum(cashFromMarketer) as dailysum
+  // from campaignLog
+  // right join
+  // (
+  // SELECT campaign.campaignId, campaignName, optionType, priorityType, campaign.regiDate, onOff, bannerSrc, dailyLimit
+  // FROM campaign
+  // JOIN bannerRegistered AS br
+  // ON br.bannerId = campaign.bannerId
+  // WHERE campaign.marketerId = ?
+  // AND deletedState = 0
+  // ) as CL
+  // on campaignLog.campaignId = CL.campaignId
+  // and date > ?
+  // group by campaignLog.campaignId
+  // ORDER BY CL.regiDate DESC
+  // `;
+
+  doQuery(query, [marketerId]).then((row) => {
     if (row.result && !row.error) {
-      res.send(row.result);
+      Promise.all(
+        row.result.map(campaignData => doQuery(sumQuery, [campaignData.campaignId, date])
+          .then((inrow) => {
+            const { dailysum } = inrow.result[0];
+            return { ...campaignData, dailysum };
+          }))
+      ).then((campaignList) => {
+        res.send(campaignList);
+      });
     }
   }).catch((err) => {
     console.log('err in /campaign/new', err);
@@ -84,6 +122,8 @@ router.delete('/', (req, res) => {
               MARKETER_ACTION_LOG_TYPE, JSON.stringify({ campaignName })]);
           }
         });
+      } else {
+        res.send([false, '캠페인 삭제 오류입니다. 잠시 후 다시 시도해주세요..']);
       }
     })
     .catch((err) => {
@@ -126,7 +166,10 @@ router.get('/list', (req, res) => {
 
 // 캠페인 광고 켜기 / 끄기
 router.post('/onoff', (req, res) => {
-  const { onoffState, campaignId } = req.body; // boolean값
+  const {
+    onoffState, campaignId
+  } = req.body; // boolean값
+
   const query = `
   UPDATE campaign
   SET onOff = ?
@@ -135,23 +178,39 @@ router.post('/onoff', (req, res) => {
   const queryArray = [onoffState, campaignId];
 
   const selectQuery = `
-  SELECT campaignName FROM campaign WHERE campaignId = ?`;
+  SELECT campaignName, CPB.bannerId, CPB.bannerConfirm, IR.confirmState as linkConfirm
+  FROM
+  (SELECT campaignName, CP.bannerId, connectedLinkId, confirmState as bannerConfirm
+  FROM 
+  (SELECT campaignName, bannerId, connectedLinkId 
+  FROM campaign 
+  WHERE campaignId = ?
+  ) AS CP
+  LEFT JOIN bannerRegistered as BR
+  ON BR.bannerId = CP.bannerId
+  ) AS CPB
+  LEFT JOIN linkRegistered as IR
+  ON CPB.connectedLinkId = IR.linkId`;
 
-  doQuery(query, queryArray)
+  doQuery(selectQuery, [campaignId])
     .then((row) => {
-      if (row.result) {
-        res.send([true]);
-      }
-
-      doQuery(selectQuery, [campaignId]).then((row1) => {
-        if (!row1.error) {
-          const { campaignName } = row1.result[0];
-          // 마케터 활동내역 테이블 적재
-          const MARKETER_ACTION_LOG_TYPE = 6; // 마케터 활동내역 - 캠페인 on off상태값
-          marketerActionLogging([campaignId.split('_')[0], MARKETER_ACTION_LOG_TYPE,
-            JSON.stringify({ campaignName, onoffState })]);
+      if (!row.error) {
+        const { campaignName, bannerConfirm, linkConfirm } = row.result[0];
+        // 마케터 활동내역 테이블 적재
+        if (bannerConfirm === 1 && linkConfirm === 1) {
+          doQuery(query, queryArray)
+            .then((inrow) => {
+              const MARKETER_ACTION_LOG_TYPE = 6; // 마케터 활동내역 - 캠페인 on off상태값
+              marketerActionLogging([campaignId.split('_')[0], MARKETER_ACTION_LOG_TYPE,
+                JSON.stringify({ campaignName, onoffState })]);
+              if (inrow.result) {
+                res.send(true);
+              }
+            });
+        } else {
+          res.end();
         }
-      });
+      }
     })
     .catch((err) => {
       console.log(err);
@@ -205,6 +264,40 @@ router.post('/checkName', (req, res) => {
     });
 });
 
+
+router.post('/changeName', (req, res) => {
+  const { campaignId, campaignName } = req.body;
+  const updateQuery = `
+  UPDATE campaign 
+  SET campaignName = ? 
+  WHERE campaignId = ? `;
+  doQuery(updateQuery, [campaignName, campaignId])
+    .then(() => {
+      res.send([true, null]);
+    })
+    .catch((error) => {
+      res.send([false, error]);
+    });
+});
+
+
+router.post('/changeBudget', (req, res) => {
+  const { campaignId, noBudget, budget } = req.body;
+  const updateBudget = noBudget ? -1 : budget;
+  const updateQuery = `
+  UPDATE campaign 
+  SET dailyLimit = ? 
+  WHERE campaignId = ? `;
+
+  doQuery(updateQuery, [updateBudget, campaignId])
+    .then(() => {
+      res.send([true, null]);
+    })
+    .catch((error) => {
+      res.send([false, error]);
+    });
+});
+
 router.post('/getcategory', (req, res) => {
   const getCategoryQuery = 'SELECT * FROM categoryCampaign WHERE categoryName = ?';
   const categoryArray = req.body;
@@ -223,7 +316,7 @@ router.post('/getcategory', (req, res) => {
             resolve(true);
           })
           .catch((err) => {
-            console.log('위 에러 삐빅', err);
+            console.log('campaignjs 226 line', err);
             reject();
           });
       }))
@@ -245,7 +338,7 @@ router.post('/getcategory', (req, res) => {
             resolve();
           })
           .catch((err) => {
-            console.log('밑 에러 삐빅', err);
+            console.log('323', err);
             reject();
           });
       }))
@@ -275,13 +368,13 @@ const PriorityDoquery = ({
 }) => {
   const getSearchQuery = (type) => {
     switch (type) {
-      case 0: {
+      case '0': {
         return 'SELECT campaignList FROM creatorCampaign WHERE creatorId = ?';
       }
-      case 1: {
+      case '1': {
         return 'SELECT campaignList FROM categoryCampaign WHERE categoryName = ?';
       }
-      case 2: {
+      case '2': {
         return 'SELECT campaignList FROM categoryCampaign WHERE categoryName = ?';
       }
       default: {
@@ -292,19 +385,19 @@ const PriorityDoquery = ({
 
   const getSaveQuery = (type) => {
     switch (type) {
-      case 0: {
+      case '0': {
         return `
         UPDATE creatorCampaign 
         SET campaignList = ? 
         WHERE creatorId = ?`;
       }
-      case 1: {
+      case '1': {
         return `
-        UPDATE categoryCampaign 
-        SET campaignList = ? 
+        UPDATE categoryCampaign
+        SET campaignList = ?
         WHERE categoryName = ?`;
       }
-      case 2: {
+      case '2': {
         return `
         UPDATE categoryCampaign 
         SET campaignList = ?
@@ -342,7 +435,7 @@ const PriorityDoquery = ({
             });
         })
         .catch((errorData) => {
-          console.log(errorData);
+          console.log(errorData, '420');
           reject(errorData);
         });
     }))
@@ -392,7 +485,7 @@ const LandingDoQuery = async ({
             resolve();
           })
           .catch((errorData) => {
-            console.log(errorData);
+            console.log(errorData, '470');
             reject(errorData);
           });
       }))
@@ -408,7 +501,7 @@ const LandingDoQuery = async ({
             resolve();
           })
           .catch((errorData) => {
-            console.log(errorData);
+            console.log(errorData, '486');
             reject(errorData);
           });
       }))
@@ -432,16 +525,65 @@ const getCampaignId = (result, marketerId) => {
   return campaignId;
 };
 
+const getUrlId = marketerId => new Promise((resolve, reject) => {
+  let urlId = '';
+  const getLandingUrlQuery = `
+  SELECT linkId
+  FROM linkRegistered
+  WHERE marketerId = ?
+  ORDER BY linkId DESC
+  LIMIT 1`;
+  doQuery(getLandingUrlQuery, marketerId)
+    .then((row) => {
+      if (row.result[0]) {
+        const lastlinkId = row.result[0].linkId;
+        const count = parseInt(lastlinkId.split('_')[2], 10) + 1;
+        if (count < 10) {
+          urlId = `${marketerId}_0${count}`;
+          resolve(urlId);
+        } else {
+          urlId = `${marketerId}_${count}`;
+          resolve(urlId);
+        }
+      } else {
+        urlId = `${marketerId}_01`;
+        resolve(urlId);
+      }
+    }).catch((err) => {
+      reject();
+      console.log(err, '535');
+    });
+});
+
+router.get('/geturl', (req, res) => {
+  const marketerId = req._passport.session.user.userid;
+  const getLandingUrlQuery = `SELECT linkId
+                              FROM linkRegistered
+                              WHERE marketerId = ?
+                              ORDER BY regiDate DESC
+                            `;
+  doQuery(getLandingUrlQuery, marketerId)
+    .then((row) => {
+      if (row.result) {
+        res.send(row.result);
+      }
+    }).catch((err) => {
+      console.log(err, '552');
+    });
+});
+
 router.post('/push', (req, res) => {
   const marketerId = req._passport.session.user.userid;
   const { marketerName } = req._passport.session.user;
   const {
-    bannerId, campaignName, dailyLimit, priorityType, optionType, priorityList, noBudget
+    optionType, priorityType, campaignName, bannerId, budget, startDate, finDate,
+    keyword0, keyword1, keyword2, mainLandingUrl, sub1LandingUrl, sub2LandingUrl,
+    mainLandingUrlName, sub1LandingUrlName, sub2LandingUrlName,
+    priorityList, selectedTime
   } = req.body;
-
   // 현재까지 중에서 최신으로 등록된 켐페인 명을 가져와서 번호를 증가시켜 추가하기 위함.
   const searchQuery = `
-  SELECT campaignId 
+  SELECT campaignId
   FROM campaign 
   WHERE marketerId = ?  
   ORDER BY regiDate DESC
@@ -449,42 +591,92 @@ router.post('/push', (req, res) => {
 
   const saveQuery = `
   INSERT INTO campaign 
-  (campaignId, campaignName, marketerId, bannerId, dailyLimit, priorityType, optionType, onOff, targetList, marketerName) 
-  VALUES (?, ?, ?, ?, ?, ?, ?, 0, ?, ?)`;
+  (campaignId, campaignName, marketerId, 
+    bannerId, connectedLinkId, dailyLimit, priorityType, 
+    optionType, onOff, targetList, marketerName, 
+    keyword, startDate, finDate, selectedTime) 
+  VALUES (?, ?, ?, ?, ?, ?, ?, ?, 0, ?, ?, ?, ?, ?, ?)`;
+
+  const saveToLinkRegistered = `
+  INSERT INTO linkRegistered
+  (linkId, marketerId, confirmState, links)
+  VALUES (?, ?, ?, ?)
+  `;
 
   // 캠페인 등록.
-  doQuery(searchQuery, [marketerId])
-    .then((row) => {
-      const campaignId = getCampaignId(row.result[0], marketerId);
-      const limit = (optionType === 0 && noBudget) || optionType === 1 ? -1 : dailyLimit;
-      const targetJsonData = JSON.stringify({ targetList: priorityList });
-      // 마케터 활동내역 로깅 테이블에서, 캠페인 생성의 상태값
-      const MARKETER_ACTION_LOG_TYPE = 5;
-      Promise.all([
-        doQuery(saveQuery,
-          [campaignId, campaignName, marketerId, bannerId, limit,
-            priorityType, optionType, targetJsonData, marketerName]),
-        PriorityDoquery({
-          campaignId, priorityType, priorityList, optionType
-        }),
-        LandingDoQuery({
-          campaignId, optionType, priorityType, priorityList
-        }),
-        // 마케터 활동내역 테이블 적재.
-        marketerActionLogging([
-          marketerId, MARKETER_ACTION_LOG_TYPE, JSON.stringify({ campaignName })
+  getUrlId(marketerId).then((urlId) => {
+    doQuery(searchQuery, [marketerId])
+      .then((row) => {
+        const linkId = `link_${urlId}`;
+        const campaignId = getCampaignId(row.result[0], marketerId);
+        const limit = budget || -1;
+        const finDateNull = finDate.length !== 0 ? finDate : null;
+        const targetJsonData = JSON.stringify({ targetList: priorityList });
+        const timeJsonData = JSON.stringify({ time: (selectedTime || null) });
+        const landingUrlJsonData = JSON.stringify(
+          {
+            links:
+            [{
+              linkName: mainLandingUrlName,
+              linkTo: mainLandingUrl,
+              primary: true,
+            },
+            (sub1LandingUrl
+              ? {
+                linkName: sub1LandingUrlName,
+                linkTo: sub1LandingUrl,
+                primary: false,
+              } : null
+            ),
+            (sub2LandingUrl
+              ? {
+                linkName: sub2LandingUrlName,
+                linkTo: sub2LandingUrl,
+                primary: false,
+              } : null
+            ),
+            ].filter(Boolean)
+          }
+        );
+        const keywordsJsonData = JSON.stringify(
+          { keywords: [keyword0, keyword1, keyword2] }
+        );
+        // 마케터 활동내역 로깅 테이블에서, 캠페인 생성의 상태값
+        const MARKETER_ACTION_LOG_TYPE = 5;
+        Promise.all([
+          doQuery(saveQuery,
+            [campaignId, campaignName, marketerId, bannerId, linkId, limit,
+              priorityType, optionType, targetJsonData, marketerName, keywordsJsonData,
+              startDate, finDateNull, timeJsonData]),
+          (priorityType !== 0
+            ? doQuery(saveToLinkRegistered, [linkId, marketerId, 0, landingUrlJsonData]) : null),
+          PriorityDoquery({
+            campaignId, priorityType, priorityList, optionType
+          }),
+          LandingDoQuery({
+            campaignId, optionType, priorityType, priorityList
+          }),
+          // 마케터 활동내역 테이블 적재.
+          marketerActionLogging([
+            marketerId, MARKETER_ACTION_LOG_TYPE, JSON.stringify({ campaignName })
+          ]),
         ])
-      ])
-        .then(() => {
-          res.send([true, '캠페인이 등록되었습니다']);
-        })
-        .catch(() => {
-          res.send([false]);
-        });
-    })
-    .catch(() => {
-      res.send([false]);
-    });
+          .then(() => {
+            res.send([true, '캠페인이 등록되었습니다']);
+          })
+          .catch((err) => {
+            console.log(err, 'at 649 line');
+            res.send([false, '일시적인 오류가 발생하였습니다. 나중에 다시 시도해주세요.']);
+          });
+      })
+      .catch((err) => {
+        console.log(err, 'at 654line');
+        res.send([false, '일시적인 오류가 발생하였습니다. 나중에 다시 시도해주세요.']);
+      });
+  }).catch((err) => {
+    console.log(err, 'at 659 line');
+    res.send([false, '일시적인 오류가 발생하였습니다. 나중에 다시 시도해주세요.']);
+  });
 });
 
 module.exports = router;

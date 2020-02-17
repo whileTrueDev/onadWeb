@@ -52,17 +52,6 @@ const styles = () => ({
     maxHeight: '130px',
     margin: '0 auto',
   },
-  // loginButtion: {
-  //   width: '80%',
-  //   height: '50px',
-  // },
-  // image: {
-  //   width: '100%',
-  //   height: '50px',
-  //   // objectFit: 'cover',
-  //   // objectPosition: 'top',
-  //   // borderRadius: '50%'
-  // }
 });
 
 // TODO: 비밀번호 암호화하여 전달하기.
@@ -128,7 +117,6 @@ const LoginForm = (props) => {
         open={open}
         onClose={handleClose}
         maxWidth="xs"
-        fullWidth
       >
         <DialogTitle className={classes.title}>LOGIN</DialogTitle>
         <DialogContent>
@@ -164,22 +152,27 @@ const LoginForm = (props) => {
               }}
             />
           </form>
-          <Typography style={{ fontSize: 15, fontFamily: 'Noto Sans kr', marginTop: '20px', color: 'rgba(0, 0, 0, 0.54)', marginBottom: '3px' }}>소셜 계정으로 온애드 서비스 이용</Typography>
-          <Divider component="hr" orientation="horizental" width="60%" />
+          <Typography style={{
+            fontSize: 15, fontFamily: 'Noto Sans kr', marginTop: '20px', color: 'rgba(0, 0, 0, 0.54)', marginBottom: '3px'
+          }}
+          >
+            소셜 계정으로 온애드 서비스 이용
+          </Typography>
+          <Divider component="hr" orientation="horizontal" width="60%" />
           <Grid container direction="row" align="right">
             <Grid item>
               <Button href={`${HOST}/api/login/google`}>
-                <img src="pngs/logo/google.png" alt="google" className={classes.image} />
+                <img src="/pngs/logo/google.png" alt="google" className={classes.image} />
               </Button>
             </Grid>
             <Grid item>
               <Button href={`${HOST}/api/login/naver`}>
-                <img src="pngs/logo/naver2.png" alt="naver" className={classes.image} />
+                <img src="/pngs/logo/naver2.png" alt="naver" className={classes.image} />
               </Button>
             </Grid>
             <Grid item>
               <Button href={`${HOST}/api/login/kakao`}>
-                <img src="pngs/logo/kakao.png" alt="kakao" className={classes.image} />
+                <img src="/pngs/logo/kakao.png" alt="kakao" className={classes.image} />
               </Button>
             </Grid>
           </Grid>
