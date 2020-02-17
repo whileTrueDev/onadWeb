@@ -75,7 +75,6 @@ export default function CustomPieChart(props) {
             data={data}
             cx="50%"
             cy="50%"
-            s
             innerRadius={80}
             outerRadius={100}
             nameKey={nameKey || 'name'}
