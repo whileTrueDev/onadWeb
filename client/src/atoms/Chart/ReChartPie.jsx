@@ -56,7 +56,7 @@ const renderActiveShape = (props) => {
 export default function CustomPieChart(props) {
   const {
     data, height, dataKey, nameKey,
-    activeIndex, onPieEnter, TooltipLabelText, underText
+    activeIndex, onPieEnter, TooltipLabelText, underText, legend
   } = props;
 
   const [defaultActiveIndex, setActiveIndex] = React.useState(0);
@@ -93,7 +93,9 @@ export default function CustomPieChart(props) {
               )
             )}
           </Pie>
-          <Legend />
+
+          {legend ? (<Legend />) : null}
+
         </PieChart>
       </ResponsiveContainer>
     </div>
