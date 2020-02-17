@@ -53,7 +53,7 @@ const styles = theme => ({
     padding: '0px 10px',
     fontWeight: 'bold',
     '&:hover': {
-      color: 'black'
+      background: '#3154EB',
     },
     [theme.breakpoints.up('md')]: {
       color: theme.palette.common.white,
