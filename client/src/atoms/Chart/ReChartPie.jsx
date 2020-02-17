@@ -9,7 +9,7 @@ const renderActiveShape = (props) => {
   const RADIAN = Math.PI / 180;
   const {
     cx, cy, midAngle, innerRadius, outerRadius, startAngle, endAngle,
-    fill, percent, value, name, TooltipLabelText, underText,
+    fill, percent, value, name, TooltipLabelText, underText
   } = props;
   const sin = Math.sin(-RADIAN * midAngle);
   const cos = Math.cos(-RADIAN * midAngle);
@@ -56,7 +56,7 @@ const renderActiveShape = (props) => {
 export default function CustomPieChart(props) {
   const {
     data, height, dataKey, nameKey,
-    activeIndex, onPieEnter, TooltipLabelText, underText, legend
+    activeIndex, onPieEnter, TooltipLabelText, underText
   } = props;
 
   const [defaultActiveIndex, setActiveIndex] = React.useState(0);
@@ -93,8 +93,7 @@ export default function CustomPieChart(props) {
               )
             )}
           </Pie>
-          {legend ? (<Legend />) : null}
-
+          <Legend />
         </PieChart>
       </ResponsiveContainer>
     </div>
