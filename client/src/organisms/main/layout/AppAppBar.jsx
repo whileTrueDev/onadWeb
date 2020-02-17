@@ -171,10 +171,16 @@ const styles = theme => ({
 function AppAppBar(props) {
   const {
     classes, isLogin, logout, tabValue,
-    handleTabChange, noButtons, MainUserType
+    handleTabChange, noButtons, MainUserType, noTrigger
   } = props;
 
-  const trigger = useScrollTrigger({ threshold: 100, disableHysteresis: true });
+  // 스크롤 100위치에 다른 네비게이션 바 css 변경
+  let trigger = useScrollTrigger({ threshold: 100, disableHysteresis: true });
+
+  // 스크롤 트리거 사용하지 않는 네비게이션 바의 경우 사용하는 변수
+  if (noTrigger) {
+    trigger = true;
+  }
 
   // 대시보드로 이동 버튼 클릭
   const handleClick = useCallback((buttonType) => {
