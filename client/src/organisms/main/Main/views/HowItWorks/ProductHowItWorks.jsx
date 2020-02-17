@@ -200,7 +200,7 @@ const ProductHowItWorks = (props) => {
       <div className={classes.wrapper}>
         <Hidden mdDown>
           <div style={{ marginRight: '80px' }}>
-            <img src="/pngs/main/mainBottomImage.png" className={classes.mainBottomImg} alt="mainBottomImage" />
+            <img src="/pngs/main/mainBottomImage.PNG" className={classes.mainBottomImg} alt="mainBottomImage" />
           </div>
         </Hidden>
         <div>
