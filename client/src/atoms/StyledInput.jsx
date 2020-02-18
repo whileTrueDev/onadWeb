@@ -1,4 +1,5 @@
 
+import React from 'react';
 import {
   Input
 } from '@material-ui/core';
@@ -22,6 +23,10 @@ const StyledInput = withStyles(theme => ({
     },
     color: '#3c4858'
   },
-}))(Input);
+}))(props => (
+  <Input
+    {...props}
+  />
+));
 
 export default StyledInput;

@@ -1,6 +1,7 @@
 import React from 'react';
-
 import { withStyles, makeStyles } from '@material-ui/core/styles';
+import PropTypes from 'prop-types';
+
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -11,11 +12,8 @@ import CampaignNaming from './CampaignNaming';
 import CampaignBannerReg from './CampaignBannerReg';
 import LandingUrlInput from './LandingUrlInput';
 import CampaignBudgetSet from './CampaignBudgetSet';
-import BudgetInput from './BudgetInput';
 import CampaignTimeSet from './CampaignTimeSet';
-import DatePicker from './DatePicker';
-import KeywordInput from './KeywordInput';
-import TimeSelector from './TimeSelector';
+// import KeywordInput from './KeywordInput';
 import TimeSelectorSet from './TimeSelectorSet';
 import BannerUploadDialog from '../Inventory/UploadDialog';
 import LandingUrlInventoryDialog from './LandingUrlInventoryDialog';
@@ -50,11 +48,11 @@ const useStyles = makeStyles({
 const CampaignCreateTable = (props) => {
   const classes = useStyles();
   const {
-    handleDetailOpen, detailOpen, step1State,
-    state, dispatch, handleDateOpen, dateOpen, setCheckName, checkName,
-    budgetError, setBudgetError, checkState, setCheckState
+    state, dispatch, budgetState, budgetDispatch, termState, termDispatch, timeState, timeDispatch,
+    optionType, step,
+    nameState, nameDispatch
   } = props;
-  const [timeSelectorOpen, setTimeSelectorOpen] = React.useState(false);
+
   const IS_CAMPAIGN_CREATE_PAGE = true; // 캠페인생성 페이지 구분을 위한 변수
   const landingUrlData = useFetchData('/api/dashboard/marketer/inventory/landingurl/all');
   const bannerData = useFetchData('/api/dashboard/marketer/banner/registered');
@@ -62,9 +60,78 @@ const CampaignCreateTable = (props) => {
   const uploadDialog = useDialog();
   const landingUrlInventoryDialog = useDialog();
 
-  const handleTimeSelectorOpen = () => {
-    setTimeSelectorOpen(!timeSelectorOpen);
-  };
+  const inputsteps = [
+    {
+      title: '캠페인 이름 입력',
+      component: (
+        <CampaignNaming
+          nameState={nameState}
+          nameDispatch={nameDispatch}
+        />
+      )
+    },
+    {
+      title: '배너 선택',
+      component: (
+        <CampaignBannerReg
+          bannerData={bannerData}
+          dispatch={dispatch}
+          handleDialogOpen={uploadDialog.handleOpen}
+          step={step}
+        />
+      )
+    }, // check 완료
+    (optionType !== 'option0')
+      && {
+        title: '랜딩페이지 URL',
+        component: (
+          <LandingUrlInput
+            dispatch={dispatch}
+            state={state}
+            handleDialogOpen={landingUrlInventoryDialog.handleOpen}
+          />
+        )
+      }, // react-hooks-form 사용.
+
+    // {
+    //   title: '키워드 입력',
+    //   component: (
+    //     <KeywordInput
+    //       dispatch={dispatch}
+    //       state={state}
+    //     />
+    //   )
+    // },
+    {
+      title: '예산설정',
+      component: (
+        <CampaignBudgetSet
+          state={budgetState}
+          dispatch={budgetDispatch}
+        />
+      )
+    },
+    {
+      title: '기간 설정',
+      component: (
+        <CampaignTimeSet
+          dispatch={termDispatch}
+          state={termState}
+        />
+      )
+    },
+    {
+      title: '시간대 설정',
+      component: (
+        <TimeSelectorSet
+          state={timeState}
+          dispatch={timeDispatch}
+        />
+      )
+    },
+  ];
+
+
   return (
     <CampaignCreateStepLayout
       primaryText="셋째,&nbsp;&nbsp; 캠페인 정보 입력"
@@ -73,114 +140,16 @@ const CampaignCreateTable = (props) => {
       <TableContainer component={Paper}>
         <Table className={classes.table} aria-label="customized table">
           <TableBody>
-            <StyledTableRow>
-              <StyledTableCell>
-              캠페인 이름 입력
-              </StyledTableCell>
-              <StyledTableCell>
-                <CampaignNaming
-                  dispatch={dispatch}
-                  setCheckName={setCheckName}
-                  checkName={checkName}
-                />
-              </StyledTableCell>
-            </StyledTableRow>
-            <StyledTableRow>
-              <StyledTableCell>
-              배너 선택
-              </StyledTableCell>
-              <StyledTableCell>
-                <CampaignBannerReg
-                  bannerData={bannerData}
-                  dispatch={dispatch}
-                  handleDialogOpen={uploadDialog.handleOpen}
-                />
-              </StyledTableCell>
-            </StyledTableRow>
-            {step1State.option !== 'option0' ? (
-              <StyledTableRow>
-                <TableCell>
-              랜딩페이지 URL
-                </TableCell>
+            {inputsteps.map(_step => (
+              <StyledTableRow key={_step.title}>
                 <StyledTableCell>
-                  <LandingUrlInput
-                    dispatch={dispatch}
-                    state={state}
-                    handleDialogOpen={landingUrlInventoryDialog.handleOpen}
-                  />
-
+                  {_step.title}
+                </StyledTableCell>
+                <StyledTableCell>
+                  {_step.component}
                 </StyledTableCell>
               </StyledTableRow>
-            ) : null }
-            <StyledTableRow>
-              <TableCell>
-              키워드 입력
-              </TableCell>
-              <TableCell>
-                <KeywordInput
-                  dispatch={dispatch}
-                  state={state}
-                />
-              </TableCell>
-            </StyledTableRow>
-
-            <StyledTableRow>
-              <TableCell>
-              예산설정
-              </TableCell>
-              <StyledTableCell>
-                <CampaignBudgetSet
-                  handleDetailOpen={handleDetailOpen}
-                  detailOpen={detailOpen}
-                />
-                {detailOpen
-                  ? (
-                    <BudgetInput
-                      state={state}
-                      dispatch={dispatch}
-                      budgetError={budgetError}
-                      setBudgetError={setBudgetError}
-                    />
-                  ) : null
-              }
-              </StyledTableCell>
-            </StyledTableRow>
-
-            <StyledTableRow>
-              <TableCell>
-              기간 설정
-              </TableCell>
-              <StyledTableCell>
-                <CampaignTimeSet
-                  handleDateOpen={handleDateOpen}
-                  dateOpen={dateOpen}
-                />
-                {dateOpen ? (
-                  <DatePicker
-                    dispatch={dispatch}
-                    state={state}
-                  />
-                ) : null}
-              </StyledTableCell>
-            </StyledTableRow>
-
-            <StyledTableRow>
-              <TableCell>
-              시간대 설정
-              </TableCell>
-              <StyledTableCell>
-                <TimeSelectorSet
-                  handleTimeSelectorOpen={handleTimeSelectorOpen}
-                  timeSelectorOpen={timeSelectorOpen}
-                />
-                {timeSelectorOpen ? (
-                  <TimeSelector
-                    checkState={checkState}
-                    setCheckState={setCheckState}
-                  />
-                ) : null}
-              </StyledTableCell>
-            </StyledTableRow>
+            ))}
           </TableBody>
         </Table>
       </TableContainer>
@@ -201,6 +170,42 @@ const CampaignCreateTable = (props) => {
       />
     </CampaignCreateStepLayout>
   );
+};
+
+
+/**
+ * @description
+ 해당 캠페인의 입력값을 저장하는 컴포넌트
+ 모든 state에 대한 초기값 및 reducer는 campaignReducer.js 내부에 저장.
+
+ * @param {*} state ? bannerId를 저장하는 object
+ * @param {*} dispatch ? bannerId를 변경하는 func
+ * @param {*} budgetState ? budget을 저장하는 object
+ * @param {*} budgetDispatch ? budget을 변경하는 func
+ * @param {*} termState ? 기간을 저장하는 object
+ * @param {*} termDispatch ? 기간을 변경하는 func
+ * @param {*} timeState ? 시간대를 저장하는 object
+ * @param {*} timeDispatch ? 시간대를 변경하는 func
+ * @param {*} nameState ? 이름를 저장하는 object
+ * @param {*} nameDispatch ? 이름를 변경하는 func
+ * @param {*} optionType ? 송출옵션에 대한 state, 배너광고의 경우 랜딩페이지 입력을 제거하기 위한 용도
+ * @param {*} step ? 현재의 회원가입 진행상태, 다음 step으로 진행될 때, 선택된 옵션에 대한 렌더링을 위함.
+ *
+ * @author 박찬우
+ */
+CampaignCreateTable.propTypes = {
+  state: PropTypes.object.isRequired,
+  dispatch: PropTypes.func.isRequired,
+  budgetState: PropTypes.object.isRequired,
+  budgetDispatch: PropTypes.func.isRequired,
+  termState: PropTypes.object.isRequired,
+  termDispatch: PropTypes.func.isRequired,
+  timeState: PropTypes.object.isRequired,
+  timeDispatch: PropTypes.func.isRequired,
+  nameState: PropTypes.object.isRequired,
+  nameDispatch: PropTypes.func.isRequired,
+  optionType: PropTypes.string.isRequired,
+  step: PropTypes.number.isRequired
 };
 
 export default CampaignCreateTable;

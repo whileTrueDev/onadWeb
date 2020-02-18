@@ -2,6 +2,8 @@ import React from 'react';
 import {
   Grid
 } from '@material-ui/core';
+import PropTypes from 'prop-types';
+
 import { makeStyles } from '@material-ui/core/styles';
 import NumberFormat from 'react-number-format';
 import StyledInput from '../../../atoms/StyledInput';
@@ -63,16 +65,16 @@ const useStyles = makeStyles(theme => ({
 const BudgetInput = (props) => {
   const classes = useStyles();
   const {
-    state, dispatch, budgetError, setBudgetError
+    state, dispatch
   } = props;
+
+  const [budgetError, setBudgetError] = React.useState(false);
 
   // budget을 입력하였을 때 event listener
   const onChange = (value) => {
     dispatch({ key: 'budget', value: value.value });
     if (Number(value.value) < 5000 && value.value !== '') {
-      console.log(value.value);
       setBudgetError(true);
-      console.log('if 5000', budgetError);
     } else {
       // setExcpectedDay(parseInt(Number(value.value) / Number(total / 30), 10));
       // setExcpectedViews(parseInt(Number(value.value) / 2, 10));
@@ -91,7 +93,7 @@ const BudgetInput = (props) => {
                 <Grid container spacing={1}>
                   <Grid item>
                     <NumberFormat
-                      value={state.budget}
+                      value={state.value}
                       onValueChange={onChange}
                       customInput={StyledInput}
                       id="formatted-numberformat-input"
@@ -118,6 +120,21 @@ const BudgetInput = (props) => {
       </Grid>
     </Grid>
   );
+};
+
+
+/**
+ * @description
+  해당 캠페인의 budget을 변경하는 컴포넌트
+
+ * @param {*} state ? budget을 저장하는 object
+ * @param {*} dispatch ? budget을 변경하는 func
+
+ * @author 박찬우
+ */
+BudgetInput.propTypes = {
+  state: PropTypes.object.isRequired,
+  dispatch: PropTypes.func.isRequired
 };
 
 export default BudgetInput;

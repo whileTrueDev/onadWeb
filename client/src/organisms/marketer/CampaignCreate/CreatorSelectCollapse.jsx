@@ -3,6 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import {
   Grid, Paper, CircularProgress
 } from '@material-ui/core';
+import PropTypes from 'prop-types';
 import StyledItemText from '../../../atoms/StyledItemText';
 import CreatorTable from './sub/CreatorTable';
 import useFetchData from '../../../utils/lib/hooks/useFetchData';
@@ -41,7 +42,7 @@ const reducer = (state, action) => {
 
 const CreatorSelect = (props) => {
   const {
-    setStepComplete, checkedCreators, checkedCreatorsDispatch,
+    setStepComplete, checkedCreators, checkedCreatorsDispatch, priorityType, setSelectedNames
   } = props;
 
   const classes = useStyles();
@@ -56,12 +57,16 @@ const CreatorSelect = (props) => {
       return newText;
     }, '현재까지 선택된 크리에이터 :  ');
     setText(texts);
+    if (priorityType !== 'type0') {
+      return;
+    }
     if (checkedCreators.length >= 3) {
       setStepComplete(true);
+      setSelectedNames(creatorNames);
     } else {
       setStepComplete(false);
     }
-  }, [checkedCreators, creatorNames, setStepComplete]);
+  }, [checkedCreators, creatorNames, priorityType, setSelectedNames, setStepComplete]);
 
   return (
     <Grid container direction="column" spacing={2} className={classes.root}>
@@ -92,5 +97,26 @@ const CreatorSelect = (props) => {
     </Grid>
   );
 };
+
+/**
+ * @description
+  해당 캠페인의 우선형을 크리에이터 우선형으로 선택하여 송출될 크리에이터의 데이터를 확인하고 선택하기 위한 컴포넌트
+
+ * @param {*} setStepComplete ? 다음 순서로 진행하기 위해 선택된 크리에이터의 수를 체크하는 func
+ * @param {*} checkedCreators ? 상위 컴포넌트로 넘기기 위한 선택된 크리에이터의 list
+ * @param {*} checkedCreatorsDispatch ? 상위 컴포넌트로 넘기기 위한 선택된 크리에이터를 저장하는 func
+ * @param {*} setSelectedNames ? 선택된 크리에이터를 보여주기 위한 크리에이터 이름 list를 저장하는 func
+ * @param {*} priorityType ? 노출 우선형일 경우 list의 저장을 continue하기 위한 state
+
+ * @author 박찬우
+ */
+CreatorSelect.propTypes = {
+  setStepComplete: PropTypes.func.isRequired,
+  checkedCreators: PropTypes.array.isRequired,
+  checkedCreatorsDispatch: PropTypes.func.isRequired,
+  priorityType: PropTypes.string,
+  setSelectedNames: PropTypes.func.isRequired
+};
+
 
 export default CreatorSelect;

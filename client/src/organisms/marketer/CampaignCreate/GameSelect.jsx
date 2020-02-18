@@ -27,7 +27,7 @@ const useStyles = makeStyles(theme => ({
 
 const GameSelect = (props) => {
   const {
-    setStepComplete, checkedGames, checkedGamesDispatch
+    setStepComplete, checkedGames, checkedGamesDispatch, priorityType
   } = props;
   const classes = useStyles();
   const theme = useTheme();
@@ -35,12 +35,15 @@ const GameSelect = (props) => {
   const gamesData = useFetchData('/api/dashboard/marketer/creatordetail/games/top');
 
   useEffect(() => {
+    if (priorityType !== 'type1') {
+      return;
+    }
     if (checkedGames.length > 0) {
       setStepComplete(true);
     } else {
       setStepComplete(false);
     }
-  }, [checkedGames.length, setStepComplete]);
+  }, [checkedGames.length, priorityType, setStepComplete]);
 
   function handleGameClick(game) {
     if (checkedGames.includes(game.gameName)) {
@@ -112,14 +115,11 @@ const GameSelect = (props) => {
           <div style={{ padding: 16 }}>
             {checkedGames.map(game => (
               <Chip
-                key={game.gameId}
+                key={`selected_${game}`}
                 label={game}
                 color="primary"
                 variant="outlined"
                 style={{ margin: 4 }}
-                onDelete={() => {
-                  checkedGamesDispatch({ type: 'delete', value: game });
-                }}
               />
             ))}
           </div>
