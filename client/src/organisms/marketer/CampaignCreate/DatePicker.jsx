@@ -25,6 +25,7 @@ function MaterialUIPickers(props) {
 
   const handleEndChange = () => {
     setFinOpen(!finOpen);
+    dispatch({ key: 'finDate', value: null });
   };
 
   return (

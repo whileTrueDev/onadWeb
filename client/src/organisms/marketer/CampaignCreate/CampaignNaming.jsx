@@ -71,7 +71,7 @@ const CampaignNaming = (props) => {
   const getName = () => {
     const nameTag = document.getElementsByName('name')[0];
     if (nameTag) {
-      if (nameTag.value === '') {
+      if (nameTag.value.length < 2) {
         nameDispatch({ key: 'min' });
       }
       return nameTag.value;
