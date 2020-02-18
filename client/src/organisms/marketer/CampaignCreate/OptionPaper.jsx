@@ -1,33 +1,9 @@
 import React from 'react';
-import {
-  Grid, Button
-} from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
+import PropTypes from 'prop-types';
 import OptionSelectPaper from './component/OptionSelectPaper';
 import CampaignCreateStepLayout from './component/CampaignCreateStepLayout';
 import ButtonSet from './component/ButtonSet';
 
-
-const useStyles = makeStyles(theme => ({
-  root: {
-    width: '100%',
-    height: '100%',
-    margin: '12px',
-    marginTop: '0px',
-    padding: theme.spacing(4),
-    [theme.breakpoints.down('sm')]: {
-      margin: 0,
-      padding: theme.spacing(1),
-    },
-  },
-  button: {
-    marginRight: theme.spacing(1),
-  },
-  end: {
-    color: '#fff',
-    marginRight: theme.spacing(1),
-  }
-}));
 
 const options = [
   {
@@ -51,7 +27,6 @@ const OptionPaper = (props) => {
   const {
     state, dispatch, step, handleNext, handleBack // for '다음' 버튼 관리
   } = props;
-  const classes = useStyles();
 
   // option을 선택하였을 때 event listener
   const handleChange = (event) => {
@@ -77,7 +52,7 @@ const OptionPaper = (props) => {
               checked={state.option === opt.id}
             />
           ))}
-          <ButtonSet handleNext={handleNext} handleBack={handleBack} step={0} set={Boolean(1)} />
+          <ButtonSet handleNext={handleNext} handleBack={handleBack} set={Boolean(1)} />
         </div>
       )}
 
@@ -100,6 +75,30 @@ const OptionPaper = (props) => {
       )}
     </CampaignCreateStepLayout>
   );
+};
+
+
+/**
+ * @description
+  해당 캠페인의 송출옵션을 선택한다.
+  0: CPM
+  1: CPM + CPC
+  2: CPC
+
+ * @param {*} state ? 송출옵션을 저장하는 object
+ * @param {*} dispatch ? 송출옵션을 변경하는 func
+ * @param {*} handleBack ? 뒤로 버튼에 연결
+ * @param {*} handleNext ? 다음 버튼에 연결
+ * @param {*} step ? 현재의 회원가입 진행상태, 다음 step으로 진행될 때, 선택된 옵션에 대한 렌더링을 위함.
+ *
+ * @author 박찬우
+ */
+OptionPaper.propTypes = {
+  state: PropTypes.object.isRequired,
+  dispatch: PropTypes.func.isRequired,
+  handleBack: PropTypes.func.isRequired,
+  handleNext: PropTypes.func.isRequired,
+  step: PropTypes.number.isRequired
 };
 
 export default OptionPaper;

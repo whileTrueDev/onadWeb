@@ -6,23 +6,25 @@ import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker,
 } from '@material-ui/pickers';
+import PropTypes from 'prop-types';
+
 
 function MaterialUIPickers(props) {
   // The first commit of Material-UI
-  const { dispatch, } = props;
+  const { state, dispatch } = props;
   const todayDate = new Date(`${new Date().toString().split('GMT')[0]} UTC`).toISOString().split('.')[0];
-  const [selectedOpenDate, setSelectedOpenDate] = React.useState(new Date(todayDate));
-  const [selectedFinDate, setSelectedFinDate] = React.useState(new Date(todayDate));
   const [finOpen, setFinOpen] = React.useState(true);
+
   const handleOpenDateChange = (date) => {
     dispatch({ key: 'startDate', value: date });
-    setSelectedOpenDate(date);
   };
+
   const handleFinDateChange = (date) => {
     dispatch({ key: 'finDate', value: date });
-    setSelectedFinDate(date);
   };
+
   const handleEndChange = () => {
+    dispatch({ key: 'finDate', value: null });
     setFinOpen(!finOpen);
   };
 
@@ -32,12 +34,14 @@ function MaterialUIPickers(props) {
         <KeyboardDatePicker
           disableToolbar
           disablePast
+          autoOk
           variant="inline"
           format="yyyy/MM/dd"
           margin="normal"
           id="start-date-picker"
           label="시작일"
-          value={selectedOpenDate}
+          minDate={todayDate}
+          value={state.startDate}
           onChange={handleOpenDateChange}
           KeyboardButtonProps={{
             'aria-label': 'change date',
@@ -47,12 +51,14 @@ function MaterialUIPickers(props) {
           disableToolbar
           disablePast
           disabled={finOpen}
+          autoOk
           variant="inline"
           format="yyyy/MM/dd"
           margin="normal"
           id="end-date-picker"
           label="종료일"
-          value={selectedFinDate}
+          minDate={state.startDate}
+          value={state.finDate}
           onChange={handleFinDateChange}
           KeyboardButtonProps={{
             'aria-label': 'change date',
@@ -76,5 +82,19 @@ function MaterialUIPickers(props) {
   );
 }
 
+
+/**
+ * @description
+  해당 캠페인의 기간을 선택하는 컴포넌트
+
+ * @param {*} state ? 기간을 저장하는 object
+ * @param {*} dispatch ? 기간을 변경하는 func
+
+ * @author 박찬우
+ */
+MaterialUIPickers.propTypes = {
+  state: PropTypes.object.isRequired,
+  dispatch: PropTypes.func.isRequired
+};
 
 export default MaterialUIPickers;

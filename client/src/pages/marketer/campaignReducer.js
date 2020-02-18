@@ -50,22 +50,8 @@ const step2SelectReducer = (state, action) => {
 
 const step3Reducer = (state, action) => {
   switch (action.key) {
-    case 'campaignName':
-      return { ...state, campaignName: action.value };
     case 'bannerId':
       return { ...state, bannerId: action.value };
-    case 'budget':
-      return { ...state, budget: action.value };
-    case 'startDate':
-      return { ...state, startDate: action.value };
-    case 'finDate':
-      return { ...state, finDate: action.value };
-    case 'keyword0':
-      return { ...state, keyword0: action.value };
-    case 'keyword1':
-      return { ...state, keyword1: action.value };
-    case 'keyword2':
-      return { ...state, keyword2: action.value };
     case 'mainLandingUrlName':
       return { ...state, mainLandingUrlName: action.value };
     case 'sub1LandingUrlName':
@@ -78,28 +64,79 @@ const step3Reducer = (state, action) => {
       return { ...state, sub1LandingUrl: action.value };
     case 'sub2LandingUrl':
       return { ...state, sub2LandingUrl: action.value };
-    case 'time':
-      return { ...state, time: action.value };
-    case 'budgetReset':
-      return { ...state, budget: '' };
-    case 'dateReset':
-      return { ...state, finDate: '' };
     case 'reset': {
       return {
-        campaignName: '',
         bannerId: '',
-        budget: '',
-        startDate: new Date(),
-        finDate: '',
         mainLandingUrl: '',
         sub1LandingUrl: '',
         sub2LandingUrl: '',
         mainLandingUrlName: '',
         sub1LandingUrlName: '',
         sub2LandingUrlName: '',
-        time: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23],
       };
     }
+    // case 'keyword0':
+    //   return { ...state, keyword0: action.value };
+    // case 'keyword1':
+    //   return { ...state, keyword1: action.value };
+    // case 'keyword2':
+    //   return { ...state, keyword2: action.value };
+    default:
+      return state;
+  }
+};
+
+const nameReducer = (state, action) => {
+  switch (action.key) {
+    case 'set':
+      return { error: false, name: action.value };
+    case 'duplicate':
+      return { error: true, msg: '캠페인 이름이 중복되었습니다.' };
+    case 'min':
+      return { error: true, msg: '2자 이상 입력하세요.' };
+    default:
+      return state;
+  }
+};
+
+// 일일예산 설정 - 캠페인 일일예산 설정시 필요한 데이터
+const budgetReducer = (state, action) => {
+  switch (action.key) {
+    case 'noBudget':
+      return { budget: false, value: 0 };
+    case 'budget':
+      return { budget: true, value: action.value };
+    default:
+      return state;
+  }
+};
+
+const termReducer = (state, action) => {
+  switch (action.key) {
+    case 'noTerm':
+      return { ...state, term: false };
+    case 'term':
+      return { ...state, term: true };
+    case 'startDate':
+      return { ...state, startDate: action.value };
+    case 'finDate':
+      return { ...state, finDate: action.value };
+    case 'reset':
+      return { term: false, startDate: null, finDate: null };
+    default:
+      return state;
+  }
+};
+
+
+const timeReducer = (state, action) => {
+  switch (action.key) {
+    case 'noTime':
+      return { time: false };
+    case 'time':
+      return { time: true, timeList: [...Array(24).keys()].map(() => true) };
+    case 'settime':
+      return { time: true, timeList: action.value };
     default:
       return state;
   }
@@ -110,5 +147,9 @@ export {
   step1Reducer,
   step2Reducer,
   step2SelectReducer,
-  step3Reducer
+  step3Reducer,
+  termReducer,
+  timeReducer,
+  nameReducer,
+  budgetReducer
 };

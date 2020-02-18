@@ -572,14 +572,23 @@ router.get('/geturl', (req, res) => {
     });
 });
 
+// 캠페인 생성시 구동되는 query 문
 router.post('/push', (req, res) => {
   const marketerId = req._passport.session.user.userid;
   const { marketerName } = req._passport.session.user;
   const {
-    optionType, priorityType, campaignName, bannerId, budget, startDate, finDate,
-    keyword0, keyword1, keyword2, mainLandingUrl, sub1LandingUrl, sub2LandingUrl,
+    campaignName,
+    optionType,
+    priorityType,
+    priorityList,
+    selectedTime,
+    dailyLimit,
+    startDate,
+    finDate,
+    keyword,
+    bannerId,
+    mainLandingUrl, sub1LandingUrl, sub2LandingUrl,
     mainLandingUrlName, sub1LandingUrlName, sub2LandingUrlName,
-    priorityList, selectedTime
   } = req.body;
   // 현재까지 중에서 최신으로 등록된 켐페인 명을 가져와서 번호를 증가시켜 추가하기 위함.
   const searchQuery = `
@@ -607,12 +616,10 @@ router.post('/push', (req, res) => {
   getUrlId(marketerId).then((urlId) => {
     doQuery(searchQuery, [marketerId])
       .then((row) => {
-        const linkId = `link_${urlId}`;
+        const linkId = optionType !== '0' ? `link_${urlId}` : null;
         const campaignId = getCampaignId(row.result[0], marketerId);
-        const limit = budget || -1;
-        const finDateNull = finDate.length !== 0 ? finDate : null;
         const targetJsonData = JSON.stringify({ targetList: priorityList });
-        const timeJsonData = JSON.stringify({ time: (selectedTime || null) });
+        const timeJsonData = JSON.stringify({ time: selectedTime });
         const landingUrlJsonData = JSON.stringify(
           {
             links:
@@ -639,16 +646,17 @@ router.post('/push', (req, res) => {
           }
         );
         const keywordsJsonData = JSON.stringify(
-          { keywords: [keyword0, keyword1, keyword2] }
+          { keywords: keyword }
         );
+
         // 마케터 활동내역 로깅 테이블에서, 캠페인 생성의 상태값
         const MARKETER_ACTION_LOG_TYPE = 5;
         Promise.all([
           doQuery(saveQuery,
-            [campaignId, campaignName, marketerId, bannerId, linkId, limit,
+            [campaignId, campaignName, marketerId, bannerId, linkId, dailyLimit,
               priorityType, optionType, targetJsonData, marketerName, keywordsJsonData,
-              startDate, finDateNull, timeJsonData]),
-          (priorityType !== 0
+              startDate, finDate, timeJsonData]),
+          (optionType !== '0'
             ? doQuery(saveToLinkRegistered, [linkId, marketerId, 0, landingUrlJsonData]) : null),
           PriorityDoquery({
             campaignId, priorityType, priorityList, optionType

@@ -3,6 +3,7 @@ import {
   Grid, Divider, CircularProgress
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
+import PropTypes from 'prop-types';
 import StyledItemText from '../../../atoms/StyledItemText';
 import BannerCarousel from '../../../atoms/BannerCarousel';
 import Button from '../../../atoms/CustomButtons/Button';
@@ -45,7 +46,9 @@ const useStyles = makeStyles(theme => ({
 
 
 const CampaignBannerReg = (props) => {
-  const { dispatch, handleDialogOpen, bannerData } = props;
+  const {
+    dispatch, handleDialogOpen, bannerData, step
+  } = props;
   const classes = useStyles();
 
   const handleBannerId = (bannerId) => {
@@ -66,7 +69,7 @@ const CampaignBannerReg = (props) => {
             </div>
           )}
           {!bannerData.loading && bannerData.payload.length > 0 ? (
-            <BannerCarousel steps={bannerData.payload} handleBannerId={handleBannerId} />
+            <BannerCarousel steps={bannerData.payload} handleBannerId={handleBannerId} registStep={step} />
           ) : (null)}
         </Grid>
       </Grid>
@@ -80,5 +83,24 @@ const CampaignBannerReg = (props) => {
     </Grid>
   );
 };
+
+/**
+ * @description
+ 해당 캠페인의 배너를 저장하는 컴포넌트.
+
+ * @param {*} dispatch ? bannerId를 변경하는 func
+ * @param {*} handleDialogOpen ? 배너를 등록하는 Dialog를 띄우는 state
+ * @param {*} bannerData ? server를 통해 fetch한 bannerList Data
+ * @param {*} step ? 현재의 회원가입 진행상태, 다음 step으로 진행될 때, 선택된 옵션에 대한 렌더링을 위함.
+ *
+ * @author 박찬우
+ */
+CampaignBannerReg.propTypes = {
+  dispatch: PropTypes.func.isRequired,
+  handleDialogOpen: PropTypes.func.isRequired,
+  bannerData: PropTypes.object.isRequired,
+  step: PropTypes.number.isRequired
+};
+
 
 export default CampaignBannerReg;
