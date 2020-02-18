@@ -60,7 +60,7 @@ const CampaignCreateTable = (props) => {
   const uploadDialog = useDialog();
   const landingUrlInventoryDialog = useDialog();
 
-  const steps = [
+  const inputsteps = [
     {
       title: '캠페인 이름 입력',
       component: (
@@ -140,7 +140,7 @@ const CampaignCreateTable = (props) => {
       <TableContainer component={Paper}>
         <Table className={classes.table} aria-label="customized table">
           <TableBody>
-            {steps.map(_step => (
+            {inputsteps.map(_step => (
               <StyledTableRow key={_step.title}>
                 <StyledTableCell>
                   {_step.title}

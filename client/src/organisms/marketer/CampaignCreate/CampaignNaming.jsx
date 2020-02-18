@@ -5,13 +5,11 @@ import {
 import PropTypes from 'prop-types';
 import Check from '@material-ui/icons/Check';
 import { makeStyles } from '@material-ui/core/styles';
-
+import useFetchData from '../../../utils/lib/hooks/useFetchData';
 import StyledItemText from '../../../atoms/StyledItemText';
 import Success from '../../../atoms/Success';
 import DangerTypography from '../../../atoms/Typography/Danger';
 import StyledInput from '../../../atoms/StyledInput';
-import axios from '../../../utils/axios';
-import HOST from '../../../utils/config';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -55,17 +53,16 @@ const CampaignNaming = (props) => {
     nameState, nameDispatch
   } = props;
   const classes = useStyles();
+  const nameData = useFetchData('/api/dashboard/marketer/campaign/names');
 
   const checkCampaignName = (value) => {
-    axios.post(`${HOST}/api/dashboard/marketer/campaign/checkName`, { campaignName: value })
-      .then((res) => {
-      // 올바른 데이터가 전달되었다.
-        if (res.data) {
-          nameDispatch({ key: 'duplicate' });
-        } else {
-          nameDispatch({ key: 'set', value });
-        }
-      });
+    if (!nameData.loading && !nameData.error) {
+      if (nameData.payload.includes(value)) {
+        nameDispatch({ key: 'duplicate' });
+      } else {
+        nameDispatch({ key: 'set', value });
+      }
+    }
   };
 
   const getName = () => {

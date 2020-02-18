@@ -195,7 +195,7 @@ const BannerCarousel = (props) => {
  * @description
  해당 캠페인의 배너를 저장하기 위해 배너를 보여주고 체크하는 컴포넌트
 
- * @param {*} dispatch ? bannerId를 변경하는 func
+ * @param {*} steps ? 배너 list가 저장된 array
  * @param {*} handleBannerId ? 배너를 등록하는 Dialog를 띄우는 state
  * @param {*} registStep ? 현재의 회원가입 진행상태, 다음 step으로 진행될 때, 선택된 옵션에 대한 렌더링을 위함.
  *

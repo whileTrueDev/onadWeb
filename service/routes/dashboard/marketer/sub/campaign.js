@@ -248,16 +248,12 @@ router.get('/chart', (req, res) => {
     });
 });
 
-router.post('/checkName', (req, res) => {
-  doQuery('SELECT campaignId FROM campaign WHERE campaignName = ? ', [req.body.campaignName])
+router.get('/names', (req, res) => {
+  doQuery('SELECT campaignName FROM campaign', [])
     .then((row) => {
       const { result } = row;
-      if (result[0]) {
-        // ID가 존재합니다.
-        res.send(true);
-      } else {
-        res.send(false);
-      }
+      const nameList = result.map(inrow => inrow.campaignName);
+      res.send(nameList);
     })
     .catch(() => {
       res.send(false);

@@ -4,7 +4,7 @@ import {
 } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import CreatorSelect from './CreatorSelectCollapse';
-// import GameSelect from './GameSelect';
+import GameSelect from './GameSelect';
 import OptionSelectPaper from './component/OptionSelectPaper';
 import CampaignCreateStepLayout from './component/CampaignCreateStepLayout';
 import ButtonSet from './component/ButtonSet';
@@ -41,39 +41,40 @@ const priorityTypes = [
   {
 
     // *****************************  임시 제거  **********************************
-    disabled: true, // 소켓서버 게임 기반 광고 송출 적용 이후 삭제.
+    // disabled: true, // 소켓서버 게임 기반 광고 송출 적용 이후 삭제.
     // **************************************************************************
 
     id: 'type1',
     primaryText: '특정 게임에만 광고 송출',
-    secondaryText: '특정 게임에만 광고를 송출할 수 있어요. (곧 지원예정입니다.)',
-    // defaultChildren: (state, setStepComplete, checkedPriorities, checkedPrioritiesDispatch) => (
-    //   <Collapse in={state.priorityType === 'type1'}>
-    //     <GameSelect
-    //       setStepComplete={setStepComplete}
-    //       checkedGames={checkedPriorities}
-    //       checkedGamesDispatch={checkedPrioritiesDispatch}
-    //       priorityType={state.priorityType}
-    //     />
-    //   </Collapse>
-    // ),
-    // completeChildren: ({ checkedPriorities }) => (
-    //   <div>
-    //     {checkedPriorities.map(game => (
-    //       <Chip
-    //         key={game}
-    //         label={game}
-    //         variant="outlined"
-    //         style={{ margin: 4 }}
-    //       />
-    //     ))}
-    //   </div>
-    // ),
+    secondaryText: '특정 게임에만 광고를 송출할 수 있어요.',
+    defaultChildren: (state, setStepComplete, checkedPriorities, checkedPrioritiesDispatch) => (
+      <Collapse in={state.priorityType === 'type1'}>
+        <GameSelect
+          setStepComplete={setStepComplete}
+          checkedGames={checkedPriorities}
+          checkedGamesDispatch={checkedPrioritiesDispatch}
+          priorityType={state.priorityType}
+        />
+      </Collapse>
+    ),
+    completeChildren: ({ checkedPriorities }) => (
+      <div>
+        {checkedPriorities.map(game => (
+          <Chip
+            key={game}
+            label={game}
+            variant="outlined"
+            style={{ margin: 4 }}
+          />
+        ))}
+      </div>
+    ),
   },
   {
     id: 'type2',
     primaryText: '노출 우선',
-    secondaryText: '별다른 설정없이 노출을 많이 하고 싶어요.',
+    secondaryText: ` 최대한 많은 시청자들에게 브랜드를 인지시키고 싶은 광고주님께 추천드립니다. 
+    `,
     defaultChildren: null,
     customHandleSelect: (state, setStepComplete) => {
       setStepComplete(state.priorityType !== 'type2');

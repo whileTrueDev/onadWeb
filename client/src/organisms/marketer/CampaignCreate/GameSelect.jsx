@@ -115,7 +115,7 @@ const GameSelect = (props) => {
           <div style={{ padding: 16 }}>
             {checkedGames.map(game => (
               <Chip
-                key={`selected_${game.gameId}`}
+                key={`selected_${game}`}
                 label={game}
                 color="primary"
                 variant="outlined"
