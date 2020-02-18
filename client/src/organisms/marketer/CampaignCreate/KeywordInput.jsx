@@ -79,15 +79,15 @@ const KeywordInput = (props) => {
           <Grid container direction="column" spacing={1}>
             <Grid item>
               1.
-              <StyledInput autoFocus className={classes.input} id="keyword0" onChange={handleChangeName} />
+              <StyledInput className={classes.input} id="keyword0" onChange={handleChangeName} />
             </Grid>
             <Grid item>
               2.
-              <StyledInput autoFocus className={classes.input} id="keyword1" onChange={handleChangeName} />
+              <StyledInput className={classes.input} id="keyword1" onChange={handleChangeName} />
             </Grid>
             <Grid item>
               3.
-              <StyledInput autoFocus className={classes.input} id="keyword2" onChange={handleChangeName} />
+              <StyledInput className={classes.input} id="keyword2" onChange={handleChangeName} />
             </Grid>
           </Grid>
         </Grid>

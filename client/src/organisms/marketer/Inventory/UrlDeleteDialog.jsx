@@ -89,7 +89,7 @@ const DeleteDialog = (props) => {
                 window.open(url.linkTo);
               }}
             >
-              {url.linkName ? url.linkName : url.linkTo }
+              {url && url.linkName ? url.linkName : url.linkTo }
             </Typography>
           </Grid>
         ))}

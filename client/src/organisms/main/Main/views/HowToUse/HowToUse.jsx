@@ -28,7 +28,7 @@ const styles = makeStyles(theme => ({
       textAlign: 'left',
     },
     [theme.breakpoints.down('xs')]: {
-      width: '90%',
+      width: '80%',
     },
   },
   h1: {
@@ -268,7 +268,7 @@ function HowToUse(props) {
                 {source.subTitle}
               </h1>
             </Grow>
-            <img src="/pngs/main/howToUseCreator.png" alt="Howto" className={classes.step} />
+            <img src="/pngs/main/howtouseCreator.png" alt="Howto" className={classes.step} />
             <div className={classes.h1sub}>
               {source.textCreator.split('\n').map(row => (
                 <p key={row} className={classes.text}>{`${row}`}</p>

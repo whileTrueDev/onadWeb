@@ -2,7 +2,7 @@ import React from 'react';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import {
   Grid, InputLabel, Input, FormHelperText,
-  FormControlLabel, Checkbox, Collapse
+  FormControlLabel, Checkbox, Collapse,
 } from '@material-ui/core';
 import Dialog from '../../../atoms/Dialog/Dialog';
 import Button from '../../../atoms/CustomButtons/Button';
@@ -55,10 +55,10 @@ export default function UrlUploadDialog(props) {
     const linkResult = [];
     linkResult.push({ primary: true, linkName: mainUrlName.value, linkTo: mainUrl.value });
     if (!subUrlCheck.toggle) {
-      linkResult.push([{ primary: false, linkName: subUrlName.value, linkTo: subUrl.value }]);
+      linkResult.push({ primary: false, linkName: subUrlName.value, linkTo: subUrl.value });
     }
     if (!sub2UrlCheck.toggle) {
-      linkResult.push([{ primary: false, linkName: sub2UrlName.value, linkTo: sub2Url.value }]);
+      linkResult.push({ primary: false, linkName: sub2UrlName.value, linkTo: sub2Url.value });
     }
     urlUpload.handleUpdateRequest({ links: linkResult });
   }

@@ -55,6 +55,7 @@ const developRouter = (
 const productionRouter = (
   <Router history={history}>
     <Switch>
+      <Route exact path="/" component={Door} />
       <Route path="/regist/:platform" component={RegistPage} />
       <Route exact path="/marketer" component={Main} />
       <Route exact path="/creator" component={Main} />

@@ -57,7 +57,9 @@ router.get('/landingurl/connectedcampaign', (req, res) => {
   const query = `
   SELECT campaignId
   FROM campaign
-  WHERE connectedlinkId = ?`;
+  WHERE connectedlinkId = ?
+  AND deletedState = 0
+  `;
 
   const queryArray = [linkId];
   doQuery(query, queryArray).then((row) => {
