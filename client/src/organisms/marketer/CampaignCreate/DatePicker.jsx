@@ -12,7 +12,6 @@ import PropTypes from 'prop-types';
 function MaterialUIPickers(props) {
   // The first commit of Material-UI
   const { state, dispatch } = props;
-  const todayDate = new Date(`${new Date().toString().split('GMT')[0]} UTC`).toISOString().split('.')[0];
   const [finOpen, setFinOpen] = React.useState(true);
 
   const handleOpenDateChange = (date) => {
@@ -39,7 +38,7 @@ function MaterialUIPickers(props) {
           margin="normal"
           id="start-date-picker"
           label="시작일"
-          minDate={todayDate}
+          minDate={state.startDate}
           value={state.startDate}
           onChange={handleOpenDateChange}
           KeyboardButtonProps={{

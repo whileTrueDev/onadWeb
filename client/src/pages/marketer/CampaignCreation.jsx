@@ -54,7 +54,7 @@ const CampaignCreateStepper = () => {
 
   // 3 번째 캠페인 기본정보에서 사용할 State
   const [budgetState, budgetDispatch] = useReducer(budgetReducer, { budget: false, value: 0 });
-  const [termState, termDispatch] = useReducer(termReducer, { term: false, startDate: null, finDate: null });
+  const [termState, termDispatch] = useReducer(termReducer, { term: false, startDate: new Date(), finDate: null });
   const [nameState, nameDispatch] = useReducer(nameReducer, { error: true, name: '' });
 
   const [timeState, timeDispatch] = useReducer(timeReducer, { time: false });
@@ -94,10 +94,10 @@ const CampaignCreateStepper = () => {
       alert('일일예산이 올바르게 입력되지 않았습니다.');
       return false;
     }
-    if (input.term && input.startDate === null) {
-      alert('시작일이 입력되지 않았습니다.');
-      return false;
-    }
+    // if (input.term && input.startDate === null) {
+    //   alert('시작일이 입력되지 않았습니다.');
+    //   return false;
+    // }
     if (input.finDate && (input.finDate < input.startDate)) {
       alert('시작일은 종료일보다 빠를 수 없습니다.');
       return false;
@@ -141,9 +141,9 @@ const CampaignCreateStepper = () => {
       optionType,
       priorityType,
       priorityList,
-      selectedTime: time ? getIndexArray(timeList) : [],
+      selectedTime: time ? getIndexArray(timeList) : [...Array(24).keys()],
       dailyLimit: budget ? value : -1,
-      startDate: term ? startDate : null,
+      startDate,
       finDate,
       budget,
       term,
