@@ -29,6 +29,7 @@ export default function ContentsPie(props) {
           nameKey="gameName"
           dataKey="percent"
           underText
+          legend
         />
       )}
     </div>

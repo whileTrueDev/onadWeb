@@ -642,7 +642,7 @@ router.post('/push', (req, res) => {
                 primary: false,
               } : null
             ),
-            ]
+            ].filter(Boolean)
           }
         );
         const keywordsJsonData = JSON.stringify(

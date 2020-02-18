@@ -1,7 +1,7 @@
 import React from 'react';
 import makeStyles from '@material-ui/core/styles/makeStyles';
-import AppAppBar from '../../organisms/main/layout/AppAppBar';
 import RegistStepper from '../../organisms/main/Regist/Stepper';
+import AppAppBar from '../../organisms/main/layout/AppAppBar';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -16,7 +16,7 @@ const Regist = (props) => {
   const { match } = props;
   return (
     <div className={classes.root}>
-      <AppAppBar unuse={false} />
+      <AppAppBar MainUserType="marketer" noTrigger />
       <RegistStepper platform={match.params.platform} />
     </div>
   );

@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import {
-  Tooltip, Typography, Button
+  Tooltip, Typography, Button, Divider, makeStyles
 } from '@material-ui/core';
 import { Star } from '@material-ui/icons';
 import Dialog from '../../../atoms/Dialog/Dialog';
@@ -18,10 +18,25 @@ const dialogStyle = theme => ({
   },
 });
 
+
+const useStyles = makeStyles(theme => ({
+  title: {
+    fontWeight: 'bold'
+  },
+  url: {
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    width: '240px'
+  },
+}));
+
+
 const LandingUrlInventoryDialog = (props) => {
   const {
     open, onClose, landingUrlData, dispatch,
   } = props;
+  const classes = useStyles();
+
   const [indexId, setindexId] = React.useState('');
   const [tmpMainUrl, setTmpMainUrl] = React.useState('');
   const [tmpSub1Url, setTmpSub1Url] = React.useState('');
@@ -29,6 +44,8 @@ const LandingUrlInventoryDialog = (props) => {
   const [tmpMainUrlName, setTmpMainUrlName] = React.useState('');
   const [tmpSub1UrlName, setTmpSub1UrlName] = React.useState('');
   const [tmpSub2UrlName, setTmpSub2UrlName] = React.useState('');
+
+  const titleArray = ['MAIN', 'SUB1', 'SUB2'];
 
   const handleCheck = (event, rowData) => {
     setindexId(event.target.id);
@@ -87,13 +104,71 @@ const LandingUrlInventoryDialog = (props) => {
       },
     },
     {
-      title: '링크이름 및 주소',
+      title: '링크 이름',
       render: rowData => (
         <div>
-          {rowData.links.links.map((link) => {
+          {rowData.links.links.map((link, index) => {
             if (link) {
               return (
-                <div key={link.linkTo}>
+                <div key={titleArray[index] + link.linkName}>
+                  {link.primary ? (
+                    <div>
+                      <p className={classes.title}>
+                        MAIN
+                      </p>
+                      <span>
+                        {link.linkName}
+                      </span>
+                      <Divider />
+                    </div>
+                  ) : (
+                    <div>
+                      <p className={classes.title}>
+                        SUB
+                      </p>
+                      <span>
+                        {link.linkName}
+                      </span>
+                      <Divider />
+                    </div>
+                  )}
+                </div>
+              );
+            }
+            return null;
+          })}
+        </div>
+      ),
+    },
+    {
+      title: '링크 주소',
+      render: rowData => (
+        <div>
+          {rowData.links.links.map((link, index) => {
+            if (link) {
+              return (
+                <div key={titleArray[index] + link.linkTo} className={classes.url}>
+                  {link.primary ? (
+                    <div>
+                      <p className={classes.title}>
+                        MAIN
+                        <Tooltip title={(
+                          <Typography>
+                            기본 링크로, 배너이미지 클릭시 곧바로 연결되는 링크입니다.
+                          </Typography>
+                      )}
+                        >
+                          <Star color="secondary" />
+                        </Tooltip>
+                      </p>
+                    </div>
+                  ) : (
+                    <div>
+                      <p className={classes.title}>
+                        SUB
+                      </p>
+                    </div>
+                  )}
                   <a
                     href={link.linkTo}
                     onClick={(e) => {
@@ -101,18 +176,9 @@ const LandingUrlInventoryDialog = (props) => {
                       window.open(link.linkTo);
                     }}
                   >
-                    {link.linkName ? link.linkName : link.linkTo }
+                    {link.linkTo}
                   </a>
-                  {link.primary && (
-                  <Tooltip title={(
-                    <Typography>
-                      primary링크로, 배너이미지 클릭시 곧바로 연결되는 링크입니다.
-                    </Typography>
-                  )}
-                  >
-                    <Star color="secondary" />
-                  </Tooltip>
-                  )}
+                  <Divider />
                 </div>
               );
             }
@@ -166,6 +232,7 @@ const LandingUrlInventoryDialog = (props) => {
         {!landingUrlData.loading && landingUrlData.error && (<span>Error</span>)}
         {!landingUrlData.loading && landingUrlData.payload && (
         <MaterialTable
+          style={{ boxShadow: 'none' }}
           title={null}
           columns={columns}
           data={landingUrlData.payload === 'nourldata' ? [] : landingUrlData.payload}

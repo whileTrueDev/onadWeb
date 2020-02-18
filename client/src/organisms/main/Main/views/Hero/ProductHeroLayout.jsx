@@ -1,44 +1,58 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import Container from '@material-ui/core/Container';
-
 
 const styles = theme => ({
   root: {
-    marginTop: theme.spacing(5),
-    color: theme.palette.common.white,
-    position: 'relative',
-    display: 'flex',
-    alignItems: 'center',
-    [theme.breakpoints.up('sm')]: {
-      height: 'auto',
-      minHeight: 500,
-      maxHeight: 1300,
-    },
+    background: 'url(\'/pngs/main/creatorDoor.png\') no-repeat center center',
+    backgroundSize: 'cover',
+    width: '100%',
+    height: '700px',
     [theme.breakpoints.down('md')]: {
-      marginTop: theme.spacing(10),
+      height: '600px',
+    },
+    [theme.breakpoints.down('sm')]: {
+      height: '500px'
+    },
+    [theme.breakpoints.down('xs')]: {
+      height: '600px'
     }
   },
-  container: {
-    marginTop: theme.spacing(2),
-    marginBottom: theme.spacing(5),
+  root2: {
+    background: 'url(\'/pngs/main/creatorMain.png\') no-repeat center center',
+    backgroundSize: 'cover',
+    width: '100%',
+    height: '700px',
+    [theme.breakpoints.down('md')]: {
+      height: '600px',
+    },
+    [theme.breakpoints.down('sm')]: {
+      height: '500px'
+    },
+    [theme.breakpoints.down('xs')]: {
+      height: '600px'
+    }
+  },
+  containerWrap: {
+    backgroundColor: 'rgb(0,0,0, 0.6)',
+    width: '100%',
+    height: '100%',
     display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'center',
   },
 });
 
 function ProductHeroLayout(props) {
   const {
-    children, classes,
+    children, classes, MainUserType
   } = props;
 
   return (
-    <section className={classes.root}>
-      <Container className={classes.container}>
+    <section className={MainUserType === 'marketer' ? (classes.root) : (classes.root2)}>
+      <div className={classes.containerWrap}>
         {children}
-      </Container>
+      </div>
     </section>
   );
 }

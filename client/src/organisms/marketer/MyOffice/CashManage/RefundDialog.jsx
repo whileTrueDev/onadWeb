@@ -82,6 +82,10 @@ const stepReducer = (state, action) => {
 
 function RefundDialog(props) {
   const classes = useStyles();
+  const [stepComplete, setStepComplete] = React.useState(false); // 현재 step에서 다음 step으로 넘어가기위한 state
+  const [paperSwitch, setPaperSwitch] = React.useState(true); // animation을 위한 state
+  const [index, setIndex] = React.useState(0); // 각 step을 정의하는  state
+
   const {
     open, handleClose, currentCash, accountNumber, accountHolder
   } = props;
@@ -114,11 +118,6 @@ function RefundDialog(props) {
       history.push('/dashboard/marketer/myoffice');
     });
   }
-
-
-  const [stepComplete, setStepComplete] = React.useState(false); // 현재 step에서 다음 step으로 넘어가기위한 state
-  const [paperSwitch, setPaperSwitch] = React.useState(true); // animation을 위한 state
-  const [index, setIndex] = React.useState(0); // 각 step을 정의하는  state
 
   const handleNext = go => (event) => {
     event.preventDefault();

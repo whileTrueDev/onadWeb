@@ -24,7 +24,6 @@ function MaterialUIPickers(props) {
   };
 
   const handleEndChange = () => {
-    dispatch({ key: 'finDate', value: null });
     setFinOpen(!finOpen);
   };
 
@@ -32,9 +31,8 @@ function MaterialUIPickers(props) {
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
       <Grid container>
         <KeyboardDatePicker
-          disableToolbar
-          disablePast
           autoOk
+          disablePast
           variant="inline"
           format="yyyy/MM/dd"
           margin="normal"
@@ -48,10 +46,9 @@ function MaterialUIPickers(props) {
           }}
         />
         <KeyboardDatePicker
-          disableToolbar
+          autoOk
           disablePast
           disabled={finOpen}
-          autoOk
           variant="inline"
           format="yyyy/MM/dd"
           margin="normal"
