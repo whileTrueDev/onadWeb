@@ -6,6 +6,37 @@ import {
   IconButton, CircularProgress,
 } from '@material-ui/core';
 import Refresh from '@material-ui/icons/Refresh';
+import makeStyles from '@material-ui/core/styles/makeStyles';
+
+const styles = makeStyles(theme => ({
+  title: {
+    fontSize: '14px',
+    fontWeight: 550,
+    [theme.breakpoints.down('md')]: {
+      fontSize: '18px',
+    },
+    [theme.breakpoints.down('sm')]: {
+      fontSize: '18px',
+    },
+    [theme.breakpoints.down('xs')]: {
+      fontSize: '12px',
+    },
+  },
+  caption: {
+    fontSize: '10px',
+    color: 'grey',
+    fontWeight: 500,
+    [theme.breakpoints.down('md')]: {
+      fontSize: '13px',
+    },
+    [theme.breakpoints.down('sm')]: {
+      fontSize: '13px',
+    },
+    [theme.breakpoints.down('xs')]: {
+      fontSize: '9px',
+    },
+  }
+}));
 
 function makeContents(typeNumber, detail) {
   const details = JSON.parse(detail);
@@ -79,16 +110,16 @@ function makeContents(typeNumber, detail) {
 export default function issueTable(props) {
   const { actionLogData } = props;
 
-  // console.log(actionLogData);
+  const classes = styles();
 
   return (
-    <Paper style={{ height: 400 }}>
+    <Paper style={{ height: 'auto' }}>
       <div style={{ padding: 16, display: 'flex', justifyContent: 'space-between' }}>
         <div style={{ display: 'flex', alignItems: 'center' }}>
-          <Typography variant="h6">활동</Typography>
-          <Typography variant="caption">
+          <Typography className={classes.title}>활동</Typography>
+          <Typography className={classes.caption}>
             &emsp;
-            {'(목록 갱신은 새로고침을 눌러주세요.)'}
+            목록갱신은 새로고침을 눌러주세요
           </Typography>
         </div>
 
