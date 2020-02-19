@@ -10,7 +10,6 @@ import NumberFormat from 'react-number-format';
 import Dialog from '../../../../atoms/Dialog/Dialog';
 import Button from '../../../../atoms/CustomButtons/Button';
 import StyledInput from '../../../../atoms/StyledInput';
-import history from '../../../../history';
 import useDialog from '../../../../utils/lib/hooks/useDialog';
 import useUpdateData from '../../../../utils/lib/hooks/useUpdateData';
 
