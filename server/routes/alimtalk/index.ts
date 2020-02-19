@@ -51,7 +51,6 @@ const ALIM_TALK_SERVICE_URL = `/alimtalk/v2/services/${SERVICE_ID}/messages`;
 /**
  * @name 마케터캐시소진알림톡전송
  * @swagger
- *
  * /alimtalk/marketer/cash/burn:
  *   post:
  *     tags: [Alimtalk]
