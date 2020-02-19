@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useReducer } from 'react';
 import PropTypes from 'prop-types';
 import green from '@material-ui/core/colors/green';
 
@@ -71,35 +71,44 @@ const styles = theme => ({
       fontWeight: 700,
     },
   },
+  end: {
+    fontSize: '12px'
+  }
 });
 
+const reducer = (state, action) => {
+  switch (action.key) {
+    case 'checkedA':
+      return { ...state, checkedA: !state.checkedA };
+    case 'checkedB':
+      return { ...state, checkedB: !state.checkedB };
+    case 'checkedC':
+      return { ...state, checkedC: !state.checkedC };
+    case 'reset':
+      return { checkedA: false, checkedB: false, checkedC: false };
+    default:
+      return state;
+  }
+};
 
 const PaperSheet = (props) => {
   const {
     handleBack, handleNext, classes,
   } = props;
-  const [checkedA, setA] = useState(false);
-  const [checkedB, setB] = useState(false);
-  const [checkedC, setC] = useState(false);
+  const [state, dispatch] = useReducer(reducer, { checkedA: false, checkedB: false, checkedC: false });
   const [selectTerm, setTerm] = useState({
     text: '',
   });
   const [open, setOpen] = useState(false);
 
   const handleChange = name => () => {
-    if (name === 'checkedA') {
-      setA(!checkedA);
-    } else if (name === 'checkedB') {
-      setB(!checkedB);
-    } else {
-      setC(!checkedC);
-    }
+    dispatch({ key: name });
+    setOpen(false);
   };
 
   const handleClose = () => {
     setOpen(false);
   };
-  // const getChange = name => this.state.name;
 
   const handleOpen = term => () => {
     setTerm(term);
@@ -107,7 +116,7 @@ const PaperSheet = (props) => {
   };
 
   const finishReg = () => {
-    if (checkedA && checkedB) {
+    if (state.checkedA && state.checkedB) {
       handleNext();
     } else {
       alert('모든 약관에 동의하지 않으면 회원가입이 완료되지 않습니다.');
@@ -149,9 +158,8 @@ const PaperSheet = (props) => {
                     <FormControlLabel
                       control={(
                         <Checkbox
-                // checked={this.getChange(term.state)}
-                          onChange={handleChange(term.state)}
-                          value={term.state}
+                          onChange={() => { alert('약관보기를 통해 약관을 모두 읽어야 동의가 가능합니다.'); }}
+                          checked={state[term.state]}
                           classes={{
                             root: classes.checkboxRoot,
                             checked: classes.checked,
@@ -169,8 +177,6 @@ const PaperSheet = (props) => {
 
         ))}
       </Paper>
-
-
       <div className={classes.actionsContainer}>
         <div>
           <Button
@@ -194,19 +200,31 @@ const PaperSheet = (props) => {
         onClose={handleClose}
         title={selectTerm.title}
         maxWidth="md"
-        buttons={(
-          <div>
-            <Button onClick={handleClose}>
-                    취소
-            </Button>
-          </div>
-            )}
       >
         {/* 계약 내용 */}
         <div className={classes.inDialogContent}>
           {selectTerm.text.split('\n').map(sentence => (
             <p key={shortid.generate()} className={classes.names}>{sentence}</p>
           ))}
+          <Divider />
+          <Grid container direction="row" alignContent="center" justify="center">
+            <Grid item>
+              <p className={classes.names}>위의 내용을 올바르게 이해하셨습니까? 아래 버튼을 클릭하여 약관에 동의해주세요.</p>
+            </Grid>
+          </Grid>
+          <Grid container direction="row" alignContent="center" justify="center">
+            <Grid item>
+              <Button
+                variant="contained"
+                color="primary"
+                size="small"
+                onClick={handleChange(selectTerm.state)}
+                className={classes.end}
+              >
+                {state[selectTerm.state] ? '취소' : '동의'}
+              </Button>
+            </Grid>
+          </Grid>
         </div>
       </Dialog>
     </div>
@@ -216,6 +234,7 @@ const PaperSheet = (props) => {
 PaperSheet.propTypes = {
   classes: PropTypes.object.isRequired,
   handleNext: PropTypes.func.isRequired,
+  handleBack: PropTypes.func.isRequired,
 };
 
 export default withStyles(styles)(PaperSheet);

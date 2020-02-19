@@ -210,7 +210,7 @@ const CampaignUpdateDialog = (props) => {
                       label="PASSWORD"
                       type="password"
                       id="password"
-                      placeholder="비밀번호를 입력하세요."
+                      placeholder="변경할 비밀번호를 입력하세요."
                       onChange={handleChange('password')}
                       helperText={state.password ? '특수문자를 포함한 영문/숫자 혼합 8자리 이상입니다.' : ' '}
                       error={state.password}
@@ -232,7 +232,7 @@ const CampaignUpdateDialog = (props) => {
                             required
                             label="RE-PASSWORD"
                             type="password"
-                            placeholder="비밀번호를 재입력하세요."
+                            placeholder="변경할 비밀번호를 재입력하세요."
                             helperText={state.repasswd ? '비밀번호와 동일하지 않습니다.' : ' '}
                             error={state.repasswd}
                             className={classes.textField}
@@ -571,7 +571,7 @@ const CampaignUpdateDialog = (props) => {
           horizontal: 'right',
         }}
         open={snack.open}
-        autoHideDuration={2000}
+        autoHideDuration={500}
         onClose={() => {
           snack.handleClose();
           history.push('/dashboard/marketer/myoffice');
