@@ -225,12 +225,12 @@ const RegistStepper = withRoot((props) => {
             <Usertype typeChange={typeChange} handleNext={handleNext} />
           </StepContent>
         </Step>
-        {/* <Step key="1">
+        <Step key="1">
           <StepLabel>미성년자 확인</StepLabel>
           <StepContent>
-            <IdentityVerification handleNext={handleNext} handleBack={handleBack} open={open} setOpen={setOpen}/>
+            <IdentityVerification handleNext={handleNext} handleBack={handleBack} open={open} setOpen={setOpen} />
           </StepContent>
-        </Step> */}
+        </Step>
         <Step key="2">
           <StepLabel>정보 동의 및 계약</StepLabel>
           <StepContent>

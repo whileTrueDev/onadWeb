@@ -172,9 +172,9 @@ const RegistForm = (props) => {
     }
   };
 
-  const checkBusinessRegNum = () => {
-    alert('준비 중입니다. 회원가입을 진행해 주세요.');
-  };
+  // const checkBusinessRegNum = () => {
+  //   alert('준비 중입니다. 회원가입을 진행해 주세요.');
+  // };
 
   const checkDuplicateID = () => {
     const id = document.getElementById('id').value;

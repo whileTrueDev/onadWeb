@@ -31,7 +31,7 @@ dashboardStyle.textField = {
 };
 
 const UserDataForm = (props) => {
-  const { classes, userData } = props;
+  const { classes, userData, callUrl } = props;
 
   const userDataUpdateDialog = useDialog();
 
@@ -141,6 +141,7 @@ const UserDataForm = (props) => {
       <UserDataUpdateDialog
         open={userDataUpdateDialog.open}
         userData={userData}
+        callUrl={callUrl}
         handleClose={() => {
           userDataUpdateDialog.handleClose();
         }}

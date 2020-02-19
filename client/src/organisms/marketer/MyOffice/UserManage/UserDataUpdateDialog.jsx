@@ -10,10 +10,9 @@ import NumberFormat from 'react-number-format';
 import Dialog from '../../../../atoms/Dialog/Dialog';
 import Button from '../../../../atoms/CustomButtons/Button';
 import StyledInput from '../../../../atoms/StyledInput';
-import axios from '../../../../utils/axios';
 import history from '../../../../history';
-import HOST from '../../../../utils/config';
 import useDialog from '../../../../utils/lib/hooks/useDialog';
+import useUpdateData from '../../../../utils/lib/hooks/useUpdateData';
 
 
 const useStyles = makeStyles(theme => ({
@@ -122,13 +121,15 @@ const reducer = (state, action) => {
 const CampaignUpdateDialog = (props) => {
   const classes = useStyles();
   const {
-    open, handleClose, userData
+    open, handleClose, userData, callUrl
   } = props;
   const snack = useDialog();
   const [marketerCustomDomain, setCustomDomain] = React.useState('');
   const [formattedPhone, setFomattedPhone] = React.useState(null);
   const [inputPhoneNum, setPhoneNum] = React.useState(null);
   const [state, dispatch] = React.useReducer(reducer, initialState);
+  const { handleUpdateRequest } = useUpdateData('/api/dashboard/marketer/profile/change', callUrl);
+
 
   const handleChange = name => (event) => {
     dispatch({ type: name, value: event.target.value });
@@ -159,18 +160,8 @@ const CampaignUpdateDialog = (props) => {
       }
     };
     const value = getValue(type);
-
-    // type과 값을 전달하여 router에서 query문을 변경한다.
-    axios.post(`${HOST}/api/dashboard/marketer/profile/change`, { type, value })
-      .then((res) => {
-      // 올바른 데이터가 전달되었다.
-        if (res.data) {
-          snack.handleOpen();
-        } else {
-          alert('오류입니다. 잠시 후 다시 시도해주세요.');
-          history.push('/dashboard/marketer/myoffice');
-        }
-      });
+    handleUpdateRequest({ type, value });
+    snack.handleOpen();
   };
 
   return (
@@ -574,7 +565,8 @@ const CampaignUpdateDialog = (props) => {
         autoHideDuration={500}
         onClose={() => {
           snack.handleClose();
-          history.push('/dashboard/marketer/myoffice');
+          handleClose();
+          // history.push('/dashboard/marketer/myoffice');
         }}
         ContentProps={{
           'aria-describedby': 'message-id',
@@ -589,7 +581,7 @@ const CampaignUpdateDialog = (props) => {
             className={classes.close}
             onClick={() => {
               snack.handleClose();
-              history.push('/dashboard/marketer/myoffice');
+              handleClose();
             }}
           >
             <CloseIcon />

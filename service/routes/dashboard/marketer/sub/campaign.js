@@ -204,7 +204,7 @@ router.post('/onoff', (req, res) => {
               marketerActionLogging([campaignId.split('_')[0], MARKETER_ACTION_LOG_TYPE,
                 JSON.stringify({ campaignName, onoffState })]);
               if (inrow.result) {
-                res.send(true);
+                res.send([true]);
               }
             });
         } else {
