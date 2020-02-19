@@ -405,6 +405,7 @@ const PriorityDoquery = ({
     }
   };
 
+  const insertQuery = 'INSERT INTO categoryCampaign (categoryName, campaignList, state) VALUES(?, ?, 1)';
   const searchQuery = getSearchQuery(priorityType);
   const saveQuery = getSaveQuery(priorityType);
 
@@ -418,20 +419,32 @@ const PriorityDoquery = ({
     priorityList.map(async targetId => new Promise((resolve, reject) => {
       doQuery(searchQuery, [targetId])
         .then((row) => {
-          const jsonData = JSON.parse(row.result[0].campaignList);
-          const newCampaignList = jsonData.campaignList.concat(campaignId);
-          jsonData.campaignList = newCampaignList;
-          doQuery(saveQuery, [JSON.stringify(jsonData), targetId])
-            .then(() => {
-              resolve();
-            })
-            .catch((errorData) => {
-              console.log(errorData);
-              reject(errorData);
-            });
+          if (row.result.length === 0) {
+            const newJsonData = JSON.stringify({ campaignList: [campaignId] });
+            doQuery(insertQuery, [targetId, newJsonData])
+              .then(() => {
+                resolve();
+              })
+              .catch((errorData) => {
+                console.log(errorData, '429');
+                reject(errorData);
+              });
+          } else {
+            const jsonData = JSON.parse(row.result[0].campaignList);
+            const newCampaignList = jsonData.campaignList.concat(campaignId);
+            jsonData.campaignList = newCampaignList;
+            doQuery(saveQuery, [JSON.stringify(jsonData), targetId])
+              .then(() => {
+                resolve();
+              })
+              .catch((errorData) => {
+                console.log(errorData);
+                reject(errorData);
+              });
+          }
         })
         .catch((errorData) => {
-          console.log(errorData, '420');
+          console.log(errorData, '447');
           reject(errorData);
         });
     }))

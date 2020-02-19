@@ -72,7 +72,6 @@ app.get('/test', (req, res, next) => { // /banner/:id로 라우팅
       socket.emit('re-render at client', {});
     });
 
-
     socket.on('new client', (msg) => { // 새로운 클라이언트 접속 시 발생
       const _url = msg[0];
       const history = msg[1];
@@ -156,6 +155,7 @@ app.get('/test', (req, res, next) => { // /banner/:id로 라우팅
     });
   });
 }());
+
 http.listen(PORT, () => {
   console.log(`node_websocket server on ${process.env.NODE_ENV} mode`);
 });
