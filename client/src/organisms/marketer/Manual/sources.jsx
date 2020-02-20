@@ -5,9 +5,16 @@ import AccountBox from '@material-ui/icons/AccountBox';
 import Money from '@material-ui/icons/Money';
 
 const HOST_URL = `${window.location.protocol}//${window.location.host}/dashboard/marketer`;
-function colorize(string, color) {
-  return `<span style="color:${color}">${string}</span>`;
+
+function LinkText(string, link) {
+  return `<a href="${HOST_URL}/${link}" style="background-color: #FF00FF; color: #eeeeee; padding: 3px">${string}</a>`;
 }
+
+function styledText(string) {
+  return `<span style="background-color: #00B7E2; color:#eeeeee; padding: 3px">${string}</span>`;
+}
+
+const styledBlock = string => `<div style="background-color: #FFECC5; border-radius: 5px; padding: 10px;">${string}</div>`;
 
 const manualSources = {
   selectComponent: [
@@ -40,7 +47,7 @@ const manualSources = {
     source: [
       {
         image: '/pngs/dashboard/manual/new_marketer/marketer-banner-01.png',
-        description: `[**<내 배너>**](${HOST_URL}/inventory) 탭에서 "새 배너 등록" 버튼을 클릭하여,  
+        description: `[**<내 배너>**](${HOST_URL}/inventory) 탭에서 "새 배너 등록" 버튼을 클릭하여,  
         규정에 맞는 배너를 업로드합니다.  
         **등록된 배너는 검수과정을 거쳐 승인/거절 됩니다.** (최대 7일 이내)`,
       },
