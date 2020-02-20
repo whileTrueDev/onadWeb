@@ -101,24 +101,13 @@ WhileTrue 개발자 [강동기](https://github.com/GoMotiv), [강화수](https:/
     },
     "rules": {
         "@typescript-eslint/no-var-requires": "warn", // please use import
-        "no-case-declarations": "warn", // please use import
-        "import/extensions": [
-            "error",
-            "ignorePackages",
-            {
-                "js": "never",
-                "jsx": "never",
-                "ts": "never",
-                "tsx": "never"
-            }
-        ],
         "react-hooks/rules-of-hooks": "error", // Checks rules of Hooks
         "react-hooks/exhaustive-deps": "warn", // Checks effect dependencies
         "no-underscore-dangle": "off",
         "comma-dangle": "off",
         "linebreak-style": [
             "error",
-            // "windows" // if you use UNIX OS, remove this
+            "windows" // if you use UNIX OS, remove this
         ],
         "react/require-default-props": 1,
         "no-unused-vars": "warn",
@@ -143,7 +132,17 @@ WhileTrue 개발자 [강동기](https://github.com/GoMotiv), [강화수](https:/
                     "location*"
                 ]
             }
-        ]
+        ],
+        "import/extensions": [
+            "error",
+            "ignorePackages",
+            {
+              "js": "never",
+              "jsx": "never",
+              "ts": "never",
+              "tsx": "never"
+            }
+         ]
     },
     "env": {
         "browser": true,

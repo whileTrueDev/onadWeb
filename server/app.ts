@@ -14,7 +14,7 @@ import passport from './middlewares/passport';
 import checkAuthOnReq from './middlewares/auth/checkAuthOnReq';
 import alimtalkRouter from './routes/alimtalk';
 import testrouter from './routes/testrouter';
-import loginRouter from './routes/login';
+import apiRouter from './routes/api';
 
 const MySQLStore = require('express-mysql-session')(session);
 
@@ -93,7 +93,6 @@ class OnadWebApi {
     // passport 초기화를 통해 'local' 전략이 수립된다.
     this.app.use(passport.initialize());
     this.app.use(passport.session());
-    // this.app.use(checkAuthOnReq); // 인증 method를 req에 추가한다.
 
     // For aws ELB health check
     this.app.get('/', (req, res, next) => {
@@ -104,22 +103,30 @@ class OnadWebApi {
     this.app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 
+    this.app.use(checkAuthOnReq); // 인증 method를 req에 추가한다.
     // middleware - Authorizer
     this.app.use((req, res, next) => {
       console.log('middleware - authorizer');
+      // req.session.user 가 있는지 없는지 체크
+      // 심화 : 현 db에 존재하는 user인지 체크 (필요성 고려.. session자체가 id, pw 비교 이후 발급하는 것.)
       next();
+      // session 없을시 Unauthorized 에러 (403)
+      // next(createError(403));
     });
     // Router 추가
-    // app.use('/mailer', mailerRouter);
+    // this.app.use('/mailer', mailerRouter);
     this.app.use('/alimtalk', alimtalkRouter);
 
     this.app.use('/testrouter', testrouter);
 
-    this.app.use('/api/login', loginRouter);
+    this.app.use('/api', apiRouter);
 
     // Error handling
     // catch 404 and forward to error handler
     this.app.use((req, res, next) => {
+      // next() 함수로 어떠한 내용을 전달하는 경우('route'라는 문자열 제외),
+      // Express는 현재의 요청에 오류가 있는 것으로 간주
+      // 오류 처리와 관련되지 않은 나머지 라우팅 및 미들웨어 함수를 건너뜁니다.
       next(createError(404));
     });
 

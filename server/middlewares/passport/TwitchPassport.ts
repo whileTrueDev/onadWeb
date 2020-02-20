@@ -5,7 +5,9 @@ class Strategy extends OAuth2Strategy {
     options: OAuth2Strategy.StrategyOptionsWithRequest,
     verify: OAuth2Strategy.VerifyFunctionWithRequest
   ) {
+    console.log('super(options, verify)');
     super(options, verify);
+    console.log('done super(options, verify)');
 
     this.name = 'twitch';
 
@@ -31,11 +33,8 @@ class Strategy extends OAuth2Strategy {
       accessToken,
       (err, body, res): void => {
         if (err) {
-          console.log(err);
           return done(new OAuth2Strategy.InternalOAuthError('failed to fetch user profile', err));
         }
-
-        console.log(body);
 
         try {
           if (typeof body === 'string') {
@@ -45,13 +44,13 @@ class Strategy extends OAuth2Strategy {
             });
           }
         } catch (e) {
-          return done(e);
+          done(e);
         }
       }
     );
   }
 
-  authorizationParams(options: any): object {
+  authorizationParams(options: any): any {
     console.log(this.name);
     const params: {[key: string]: any} = {};
     if (options.forceVerify) {

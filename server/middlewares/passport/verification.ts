@@ -23,7 +23,7 @@ import encrpyto from '../encryption';
 3. 구동방식
 추후에 비밀번호 및 ID에 대한 오류 수정.
 */
-const local = (
+const marketerLocal = (
   userid: string, passwd: string,
   done: (error: any, user?: any, options?: any) => void
 ): void => {
@@ -69,5 +69,5 @@ const local = (
 };
 
 export default {
-  marketerLocal: local
+  marketerLocal
 };

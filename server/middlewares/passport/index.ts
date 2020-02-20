@@ -19,9 +19,11 @@ import Google from 'passport-google-oauth20';
 import Naver from 'passport-naver';
 import Kakao from 'passport-kakao';
 
-import Twitch from './TwitchPassport';
+// import Twitch from './TwitchPassport';
 import verification from './verification';
 import doQuery from '../../model/doQuery';
+
+const Twitch = require('passport-twitch-new');
 
 const LocalStrategy = Local.Strategy;
 const TwitchStrategy = Twitch.Strategy;
@@ -43,7 +45,6 @@ passport.deserializeUser((user, done) => {
   // db에서 추가로 데이터를 req.user에 저장.
   done(null, user);
 });
-
 
 passport.use(new LocalStrategy(
   {
@@ -88,7 +89,7 @@ passport.use(new LocalStrategy(
 3. clientID, clientSecret은 초기화 및 파일화하여 배포.
 */
 
-const makeUrl = () => {
+const makeUrl = (): string => {
   let password = '';
 
   for (let i = 0; i < 8; i += 1) {
@@ -122,7 +123,7 @@ interface CreatorSession {
 passport.use(new TwitchStrategy({
   clientID: clientID || '',
   clientSecret: clientSecret || '',
-  callbackURL: `${HOST}/login/twitch/callback`,
+  callbackURL: `${HOST}/api/login/twitch/callback`,
   scope: 'user:read:email', // user:read:email
   authorizationURL: 'https://id.twitch.tv/oauth2/authorize',
   tokenURL: 'https://id.twitch.tv/oauth2/token',
@@ -132,7 +133,7 @@ passport.use(new TwitchStrategy({
 ((req: express.Request, accessToken: string,
   refreshToken: string, profile: any,
   done: OAuth2Strategy.VerifyCallback) => {
-  console.log(req);
+  console.log(profile);
   const user: CreatorSession = {
     creatorId: profile.id,
     creatorDisplayName: profile.display_name,
