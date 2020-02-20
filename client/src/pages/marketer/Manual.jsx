@@ -47,7 +47,7 @@ const MarketerManual = (props) => {
 
   return (
     <GridContainer>
-      <GridItem xs={12} sm={12} md={6} lg={4} xl={2}>
+      <GridItem xs={12} sm={12} md={6} lg={4} xl={3}>
         <ManualSelect
           handleButton={handleButton}
           activeStep={manual}
