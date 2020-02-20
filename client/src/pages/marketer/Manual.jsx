@@ -60,10 +60,11 @@ const MarketerManual = (props) => {
         <GridItem xs={12} sm={12} md={6} lg={8} xl={6}>
           {(() => {
             if (manual === 1) { return (<ManualDetail source={sources.bannerRegist} />); }
-            if (manual === 2) { return (<ManualDetail source={sources.campaignStart} />); }
-            if (manual === 3) { return (<ManualDetail source={sources.seeChart} />); }
-            if (manual === 4) { return (<ManualDetail source={sources.cash} />); }
-            if (manual === 5) { return (<ManualDetail source={sources.business} />); }
+            if (manual === 2) { return (<ManualDetail source={sources.bannerUpload} />); }
+            if (manual === 3) { return (<ManualDetail source={sources.campaignStart} />); }
+            if (manual === 4) { return (<ManualDetail source={sources.seeChart} />); }
+            if (manual === 5) { return (<ManualDetail source={sources.cash} />); }
+            if (manual === 6) { return (<ManualDetail source={sources.business} />); }
             return null;
           })()}
         </GridItem>
