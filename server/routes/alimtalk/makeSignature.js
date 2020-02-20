@@ -1,5 +1,7 @@
 import Crypto from 'crypto-js';
 
+// MUST BE JS
+
 function makeSignature(method = 'GET',
   url = '/photos/puppy.jpg?query1=&query2',
   nowtime = new Date().getTime().toString()) {

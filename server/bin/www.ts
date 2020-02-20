@@ -3,9 +3,13 @@
  * Module dependencies.
  */
 
+import dotenv from 'dotenv';
+
+dotenv.config();
+
 const debug = require('debug')('service:server');
 const http = require('http');
-const OnadWebApi = require('../app');
+const OnadWebApi = require('../app');// 환경변수를 위해. dev환경: .env 파일 / production환경: docker run의 --env-file인자로 넘김.
 
 const onadapp = new OnadWebApi();
 

@@ -17,8 +17,8 @@ const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const NaverStrategy = require('passport-naver').Strategy;
 const KakaoStrategy = require('passport-kakao').Strategy;
 // 암호화 체크 객체 생성
-const encrpyto = require('./encryption');
-const doQuery = require('./model/doQuery');
+const encrpyto = require('../encryption');
+const doQuery = require('../../model/doQuery');
 
 const HOST = process.env.NODE_ENV === 'production'
   ? process.env.PRODUCTION_API_HOSTNAME
