@@ -8,6 +8,37 @@ import {
 import Refresh from '@material-ui/icons/Refresh';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 
+const styles = makeStyles(theme => ({
+  title: {
+    fontSize: '14px',
+    fontWeight: 550,
+    [theme.breakpoints.down('md')]: {
+      fontSize: '18px',
+    },
+    [theme.breakpoints.down('sm')]: {
+      fontSize: '18px',
+    },
+    [theme.breakpoints.down('xs')]: {
+      fontSize: '12px',
+    },
+  },
+  caption: {
+    fontSize: '10px',
+    color: 'grey',
+    fontWeight: 500,
+    [theme.breakpoints.down('md')]: {
+      fontSize: '13px',
+    },
+    [theme.breakpoints.down('sm')]: {
+      fontSize: '13px',
+    },
+    [theme.breakpoints.down('xs')]: {
+      fontSize: '9px',
+    },
+  }
+}));
+
+
 function makeContents(typeNumber, detail) {
   const details = JSON.parse(detail);
   // 0 - 이벤트 캐시충전 (온애드에서 제공되는)
@@ -77,35 +108,6 @@ function makeContents(typeNumber, detail) {
   }
 }
 
-const styles = makeStyles(theme => ({
-  activityTitle: {
-    fontSize: 14,
-    fontWeight: 550,
-    [theme.breakpoints.down('md')]: {
-      fontSize: '13px',
-    },
-    [theme.breakpoints.down('sm')]: {
-      fontSize: '13px',
-    },
-    [theme.breakpoints.down('xs')]: {
-      fontSize: '11px',
-    }
-  },
-  activitySub: {
-    fontSize: 10,
-    color: 'grey',
-    [theme.breakpoints.down('md')]: {
-      fontSize: '10px',
-    },
-    [theme.breakpoints.down('sm')]: {
-      fontSize: '10px',
-    },
-    [theme.breakpoints.down('xs')]: {
-      fontSize: '9px',
-    }
-  }
-}));
-
 export default function issueTable(props) {
   const { actionLogData } = props;
   const classes = styles();
@@ -114,10 +116,10 @@ export default function issueTable(props) {
     <Paper style={{ height: 'auto' }}>
       <div style={{ padding: 16, display: 'flex', justifyContent: 'space-between' }}>
         <div style={{ display: 'flex', alignItems: 'center' }}>
-          <Typography className={classes.activityTitle}>활동</Typography>
-          <Typography className={classes.activitySub}>
+          <Typography className={classes.title}>활동</Typography>
+          <Typography className={classes.caption}>
             &emsp;
-            (목록 갱신은 새로고침을 눌러주세요)
+            목록갱신은 새로고침을 눌러주세요
           </Typography>
         </div>
 
