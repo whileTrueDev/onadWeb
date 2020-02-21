@@ -5,9 +5,7 @@ class Strategy extends OAuth2Strategy {
     options: OAuth2Strategy.StrategyOptionsWithRequest,
     verify: OAuth2Strategy.VerifyFunctionWithRequest
   ) {
-    console.log('super(options, verify)');
     super(options, verify);
-    console.log('done super(options, verify)');
 
     this.name = 'twitch';
 
@@ -51,7 +49,6 @@ class Strategy extends OAuth2Strategy {
   }
 
   authorizationParams(options: any): any {
-    console.log(this.name);
     const params: {[key: string]: any} = {};
     if (options.forceVerify) {
       params.force_verify = !!options.forceVerify;

@@ -11,7 +11,7 @@ import swaggerJsDoc from 'swagger-jsdoc';
 // Routers
 // import passport from './middlewares/passport/passportStrategy';
 import passport from './middlewares/passport';
-import checkAuthOnReq from './middlewares/auth/checkAuthOnReq';
+// import checkAuthOnReq from './middlewares/auth/checkAuthOnReq';
 import alimtalkRouter from './routes/alimtalk';
 import testrouter from './routes/testrouter';
 import apiRouter from './routes/api';
@@ -30,7 +30,7 @@ const swaggerOptions = {
     info: {
       version: '1.0.0',
       title: 'OnAD web API',
-      description: 'A API server for OnAD platform in nodeJS using typescript',
+      description: 'An API server for OnAD platform in nodeJS using typescript',
       license: {
         name: 'MIT',
         url: 'https://opensource.org/licenses/MIT'
@@ -103,7 +103,7 @@ class OnadWebApi {
     this.app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 
-    this.app.use(checkAuthOnReq); // 인증 method를 req에 추가한다.
+    // this.app.use(checkAuthOnReq); // 인증 method를 req에 추가한다.
     // middleware - Authorizer
     this.app.use((req, res, next) => {
       console.log('middleware - authorizer');
