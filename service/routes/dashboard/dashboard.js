@@ -89,7 +89,6 @@ router.get('/noticereadstate', (req, res) => {
 router.post('/noticereadstateupdate', (req, res) => {
   const { userType } = req.body;
   let userId;
-  console.log({ userType });
   if (userType === 'marketer') {
     userId = req._passport.session.user.userid;
   } else { userId = req._passport.session.user.creatorId; }
