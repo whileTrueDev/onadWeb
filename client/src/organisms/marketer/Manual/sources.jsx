@@ -102,9 +102,9 @@ const manualSources = {
       },
       {
         image: '/pngs/dashboard/manual/new_marketer/marketer-campaign-03.png',
-        description: `원하는 송출 방식을 선택하고 ${styledText('다음')}을 눌러주세요. ${styledBlock(`특정 크리에이터에게만 광고 송출 : 원하는 크리에이터에게만 송출을 원하는 경우<br>
-        특정 게임에만 광고 송출 : 특정 게임 시청자들을 타겟팅 하는 경우<br>
-        노출 우선 : 많은 시청자들에게 노출되는 것을 우선하는 경우(노출 수 가장 높음)`)}`
+        description: `원하는 송출 방식을 선택하고 ${styledText('다음')}을 눌러주세요. ${styledBlock(`- 특정 크리에이터에게만 광고 송출 : 원하는 크리에이터에게만 송출을 원하는 경우<br>
+        - 특정 게임에만 광고 송출 : 특정 게임 시청자들을 타겟팅 하는 경우<br>
+        - 노출 우선 : 많은 시청자들에게 노출되는 것을 우선하는 경우(노출 수 가장 높음)`)}`
       },
       {
         image: '/pngs/dashboard/manual/new_marketer/marketer-campaign-04.png',
