@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import MaskedInput from 'react-text-mask';
+import NumberFormat from 'react-number-format';
+
 import {
   FormControl,
   InputLabel,
@@ -14,9 +15,12 @@ import {
   Grid,
   Paper,
   Typography,
+  FormControlLabel,
+  Radio
 } from '@material-ui/core';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import useFetchData from '../../../utils/lib/hooks/useFetchData';
+import StyledInput from '../../../atoms/StyledInput';
 
 // Style Overriding용.
 const styles = theme => ({
@@ -51,6 +55,21 @@ const styles = theme => ({
   adornment: {
     fontSize: '20px',
     fontWeight: 900
+  },
+  switchbox: {
+    marginLeft: theme.spacing(1),
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  switch: {
+    label: {
+      fontSize: '11px',
+      color: 'black'
+    },
+    margin: 0,
+    marginTop: theme.spacing(3),
+    padding: 0,
   }
 });
 
@@ -80,36 +99,17 @@ const domains = [
   - 3. passwordValue
 */
 
-const TextMaskCustom = (props) => {
-  const { inputRef, ...other } = props;
-  return (
-    <MaskedInput
-      {...other}
-      ref={(ref) => {
-        inputRef(ref ? ref.inputElement : null);
-      }}
-      mask={['(', ' ', /\d/, /\d/, /\d/, ' ', ')', ' ', '-', ' ', /\d/, /\d/, /\d/, /\d/, ' ', '-', ' ', /\d/, /\d/, /\d/, /\d/]}
-      placeholderChar={'\u2000'}
-      showMask
-      style={{
-        fontSize: 17,
-        width: 200,
-      }}
-    />
-  );
-};
-
 const PlatformRegistForm = (props) => {
   const {
     classes, userType, handleBack, handleUserSubmit, state, dispatch, loading, setLoading
   } = props;
 
+  const [numberType, setNumberType] = useState(true);
   const [marketerCustomDomain, setCustomDomain] = useState('');
   const [marketerId, setMarketerId] = useState('');
+
   // user 데이터를 전달 받는 hook 사용하여 기본 값을 가져온다.
   const profileData = useFetchData('/api/dashboard/marketer/profile/google');
-
-  // useEffect로 profileData가 받아지는지 확인
 
   useEffect(() => {
     if (!profileData.loading) {
@@ -121,13 +121,21 @@ const PlatformRegistForm = (props) => {
       dispatch({ type: 'checkDuplication', value: false });
     }
   }, [dispatch, profileData.loading, profileData.payload]);
-  // handle을 전달.
+
   const handleCustom = (event) => {
     setCustomDomain(event.target.value);
   };
 
+  const handleTypeToogle = () => {
+    setNumberType(!numberType);
+  };
+
   const handleChange = name => (event) => {
     dispatch({ type: name, value: event.target.value });
+  };
+
+  const handleChangePhone = (value) => {
+    dispatch({ type: 'phoneNum', value: value.formattedValue });
   };
 
   const handleSubmit = (event) => {
@@ -187,20 +195,65 @@ const PlatformRegistForm = (props) => {
                   />
                 </Grid>
                 <Grid item>
-                  <FormControl
-                    className={classes.phoneField}
-                    required
-                    margin="normal"
-                  >
-                    <InputLabel shrink htmlFor="phoneNumber">전화번호</InputLabel>
-                    <Input
-                      value={state.phoneNum}
-                      onChange={handleChange('phoneNum')}
-                      id="phoneNumber"
-                      inputComponent={TextMaskCustom}
-                    />
-                    <FormHelperText>전화번호를 입력하세요.</FormHelperText>
-                  </FormControl>
+                  <Grid container diretion="row">
+                    <Grid item>
+                      <FormControl
+                        className={classes.phoneField}
+                        required
+                        margin="normal"
+                      >
+                        <InputLabel shrink htmlFor="phoneNumber">전화번호</InputLabel>
+                        <NumberFormat
+                          placeholder="( ___ ) - ____ - ____"
+                          value={state.phoneNum}
+                          onValueChange={handleChangePhone}
+                          customInput={StyledInput}
+                          format={numberType ? '( ### ) - #### - ####' : '( ### ) - ### - ####'}
+                          className={classes.phoneField}
+                          allowNegative={false}
+                        />
+                        <FormHelperText>온애드와 연락할 전화번호를 입력하세요.</FormHelperText>
+                      </FormControl>
+                    </Grid>
+                    <Grid item className={classes.switchbox}>
+                      <Grid container direction="row">
+                        <Grid item>
+                          <FormControlLabel
+                            value="phone"
+                            control={(
+                              <Radio
+                                checked={numberType}
+                                onChange={handleTypeToogle}
+                                inputProps={{ 'aria-label': 'A' }}
+                                size="small"
+                                color="primary"
+                              />
+  )}
+                            className={classes.switch}
+                            label="휴대폰"
+                            labelPlacement="bottom"
+                          />
+                        </Grid>
+                        <Grid item>
+                          <FormControlLabel
+                            value="tel"
+                            control={(
+                              <Radio
+                                checked={!numberType}
+                                onChange={handleTypeToogle}
+                                inputProps={{ 'aria-label': 'A' }}
+                                size="small"
+                                color="primary"
+                              />
+  )}
+                            className={classes.switch}
+                            label="회사"
+                            labelPlacement="bottom"
+                          />
+                        </Grid>
+                      </Grid>
+                    </Grid>
+                  </Grid>
                 </Grid>
               </Grid>
               <Grid item>
@@ -209,7 +262,7 @@ const PlatformRegistForm = (props) => {
                     <FormControl style={{ marginTop: '8px', marginBottom: '16px' }}>
                       <InputLabel shrink>사업자등록번호</InputLabel>
                       <Input
-                // onChange={handleChange('businessRegNum')}
+                        // onChange={handleChange('businessRegNum')}
                         name="businessRegNum"
                       />
                       <FormHelperText>사업자 번호를 입력하세요.</FormHelperText>

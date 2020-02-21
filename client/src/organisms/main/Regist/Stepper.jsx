@@ -16,6 +16,7 @@ import HOST from '../../../utils/config';
 import withRoot from '../Main/withRoot';
 import history from '../../../history';
 import IdentityVerification from './IdentityVerification';
+
 const styles = theme => ({
   container: {
     [theme.breakpoints.down('sm')]: {
@@ -60,8 +61,9 @@ const myReducer = (state, action) => {
       }
       return { ...state, id: true, checkDuplication: true };
     }
+    // (?=.*[0-9])
     case 'password': {
-      const regx = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,20}$/;
+      const regx = /^(?=.*[a-zA-Z0-9])(?=.*[!@#$%^*+=-]).{8,20}$/;
       if (regx.test(action.value)) {
         return { ...state, passwordValue: action.value, password: false };
       }
@@ -226,7 +228,7 @@ const RegistStepper = withRoot((props) => {
         <Step key="1">
           <StepLabel>미성년자 확인</StepLabel>
           <StepContent>
-            <IdentityVerification handleNext={handleNext} handleBack={handleBack} open={open} setOpen={setOpen}/>
+            <IdentityVerification handleNext={handleNext} handleBack={handleBack} open={open} setOpen={setOpen} />
           </StepContent>
         </Step>
         <Step key="2">

@@ -71,11 +71,11 @@ router.post('/change', (req, res) => {
   const [updateQuery, params] = getQuery(type);
   doQuery(updateQuery, params)
     .then(() => {
-      res.send(true);
+      res.send([true]);
     })
     .catch((errorData) => {
       console.log(errorData);
-      res.send(false);
+      res.send([false, errorData]);
     });
 });
 

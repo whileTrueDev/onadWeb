@@ -13,11 +13,11 @@ import Dialog from '../../../../atoms/Dialog/Dialog';
 import Button from '../../../../atoms/CustomButtons/Button';
 import StyledInput from '../../../../atoms/StyledInput';
 import DangerTypography from '../../../../atoms/Typography/Danger';
-import axios from '../../../../utils/axios';
-import history from '../../../../history';
-import HOST from '../../../../utils/config';
 import Success from '../../../../atoms/Success';
 import useDialog from '../../../../utils/lib/hooks/useDialog';
+import useFetchData from '../../../../utils/lib/hooks/useFetchData';
+import useUpdateData from '../../../../utils/lib/hooks/useUpdateData';
+
 
 const useStyles = makeStyles(theme => ({
   item: {
@@ -62,7 +62,7 @@ const reducer = (state, action) => {
     }
     case 'reset': {
       return {
-        noBudget: false, budget: ''
+        noBudget: false, budget: '', campaignName: ''
       };
     }
     default: {
@@ -74,7 +74,7 @@ const reducer = (state, action) => {
 const CampaignUpdateDialog = (props) => {
   const classes = useStyles();
   const {
-    open, selectedCampaign, handleClose,
+    open, selectedCampaign, handleClose, callUrl
   } = props;
   const snack = useDialog();
 
@@ -86,20 +86,23 @@ const CampaignUpdateDialog = (props) => {
     noBudget: false, budget: '', campaignName: ''
   });
 
+  const nameData = useFetchData('/api/dashboard/marketer/campaign/names');
+  const updateName = useUpdateData('/api/dashboard/marketer/campaign/changeName', callUrl);
+  const updateBudget = useUpdateData('/api/dashboard/marketer/campaign/changeBudget', callUrl);
+
+
   const checkCampaignName = (value) => {
-    axios.post(`${HOST}/api/dashboard/marketer/campaign/checkName`, { campaignName: value })
-      .then((res) => {
-      // 올바른 데이터가 전달되었다.
-        if (res.data) {
-          setCheckName(false);
-          dispatch({ key: 'campaignName', value: '' });
-          setDuplicate(true);
-        } else {
-          setCheckName(true);
-          dispatch({ key: 'campaignName', value });
-          setDuplicate(false);
-        }
-      });
+    if (!nameData.loading && !nameData.error) {
+      if (nameData.payload.includes(value)) {
+        setCheckName(false);
+        dispatch({ key: 'campaignName', value: '' });
+        setDuplicate(true);
+      } else {
+        setCheckName(true);
+        dispatch({ key: 'campaignName', value });
+        setDuplicate(false);
+      }
+    }
   };
 
   const handleChangeName = (event) => {
@@ -130,31 +133,18 @@ const CampaignUpdateDialog = (props) => {
 
   const handleNameUpdate = () => {
     const data = { campaignId: selectedCampaign.campaignId, ...state };
-    axios.post(`${HOST}/api/dashboard/marketer/campaign/changeName`, data)
-      .then((res) => {
-      // 성공적으로 완료
-        if (res.data[0]) {
-          snack.handleOpen();
-        } else {
-          alert('오류입니다. 잠시 후 다시 시도해주세요.');
-          history.push('/dashboard/marketer/main');
-        }
-      });
+    const { handleUpdateRequest } = updateName;
+    handleUpdateRequest(data);
+    dispatch({ key: 'reset' });
+    snack.handleOpen();
   };
 
   const handleBudgetUpdate = () => {
     const data = { campaignId: selectedCampaign.campaignId, ...state };
-    axios.post(`${HOST}/api/dashboard/marketer/campaign/changeBudget`, data)
-      .then((res) => {
-      // 성공적으로 완료
-        if (res.data[0]) {
-          snack.handleOpen();
-        } else {
-          alert('오류입니다. 잠시 후 다시 시도해주세요.');
-          history.push('/dashboard/marketer/main');
-        }
-      });
-    // state의 noBudget체크
+    const { handleUpdateRequest } = updateBudget;
+    handleUpdateRequest(data);
+    dispatch({ key: 'reset' });
+    snack.handleOpen();
   };
 
   return (
@@ -395,10 +385,10 @@ const CampaignUpdateDialog = (props) => {
           horizontal: 'right',
         }}
         open={snack.open}
-        autoHideDuration={2000}
+        autoHideDuration={400}
         onClose={() => {
           snack.handleClose();
-          history.push('/dashboard/marketer/main');
+          handleClose();
         }}
         ContentProps={{
           'aria-describedby': 'message-id',
@@ -413,7 +403,7 @@ const CampaignUpdateDialog = (props) => {
             className={classes.close}
             onClick={() => {
               snack.handleClose();
-              history.push('/dashboard/marketer/main');
+              handleClose();
             }}
           >
             <CloseIcon />
@@ -427,7 +417,8 @@ const CampaignUpdateDialog = (props) => {
 CampaignUpdateDialog.propTypes = {
   open: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]).isRequired,
   handleClose: PropTypes.func.isRequired,
-  selectedCampaign: PropTypes.object.isRequired
+  selectedCampaign: PropTypes.object.isRequired,
+  callUrl: PropTypes.func.isRequired
 };
 
 export default CampaignUpdateDialog;

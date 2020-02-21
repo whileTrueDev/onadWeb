@@ -14,12 +14,12 @@ import IOSSwitch from '../../../atoms/Switch/IOSSwitch';
 
 import CampaignDeleteConfirmDialog from './campaign/CampaignDeleteConfirmDialog';
 import CampaignUpdateDialog from './campaign/CampaignUpdateDialog';
+import CampaignAnalysisDialog from './report/CampaignReportDialog';
 
 import useDialog from '../../../utils/lib/hooks/useDialog';
 import useDeleteData from '../../../utils/lib/hooks/useDeleteData';
-import CampaignAnalysisDialog from './report/CampaignReportDialog';
-import axios from '../../../utils/axios';
-import HOST from '../../../utils/config';
+import useUpdateData from '../../../utils/lib/hooks/useUpdateData';
+
 import history from '../../../history';
 
 const SLIDE_TIMEOUT = 500;
@@ -51,7 +51,6 @@ const useStyles = makeStyles(theme => ({
       height: 60
     },
     maxWidth: '100%',
-    // maxHeight: '100%',
   },
   contents: {
     display: 'flex',
@@ -64,29 +63,25 @@ export default function CampaignList(props) {
   const classes = useStyles();
   const { campaignData } = props;
 
+  const [selectedCampaign, setSelectedCampaign] = React.useState(null);
   const optionTypeList = ['배너 광고', '배너 + 클릭 광고', '클릭 광고'];
   const priorityTypeList = ['크리에이터 우선', '카테고리 우선', '노출 우선'];
 
-  const { handleDelete } = useDeleteData('/api/dashboard/marketer/campaign');
-  const [selectedCampaign, setSelectedCampaign] = React.useState(null);
-  // For reaction to on/off completed
-  const snack = useDialog();
-
-
-  const handleUpdateState = ({ onoffState, campaignId }) => () => {
-    axios.post(`${HOST}/api/dashboard/marketer/campaign/onoff`, { onoffState, campaignId })
-      .then((res) => {
-        if (res.data) {
-          snack.handleOpen();
-        } else {
-          alert('배너 및 URL승인 완료 후 캠페인 활성화가 가능합니다.');
-        }
-      });
-  };
   // To open campaign control dialog
   const campaignUpdateDialog = useDialog();
   const campaignDeleteDialog = useDialog();
   const campaignReportDialog = useDialog();
+  const snack = useDialog();
+
+  const { handleDelete } = useDeleteData('/api/dashboard/marketer/campaign');
+  const { handleUpdateRequest } = useUpdateData('/api/dashboard/marketer/campaign/onoff', campaignData.callUrl);
+  // useUpdateData를 사용할 때, 전달되는 url router의 response data의 형태가 array여야함을 고려한다.
+
+  const handleUpdateState = ({ onoffState, campaignId }) => (event) => {
+    event.preventDefault();
+    handleUpdateRequest({ onoffState, campaignId });
+    snack.handleOpen();
+  };
 
   return (
     <Paper style={{ minHeight: 220 }}>
@@ -247,10 +242,9 @@ export default function CampaignList(props) {
           horizontal: 'left',
         }}
         open={snack.open}
-        autoHideDuration={2000}
+        autoHideDuration={400}
         onClose={() => {
           snack.handleClose();
-          history.push('/dashboard/marketer/main');
         }}
         ContentProps={{
           'aria-describedby': 'message-id',
@@ -291,6 +285,7 @@ export default function CampaignList(props) {
       <CampaignUpdateDialog
         open={campaignUpdateDialog.open}
         selectedCampaign={selectedCampaign}
+        callUrl={campaignData.callUrl}
         handleClose={() => {
           campaignUpdateDialog.handleClose();
         }}
