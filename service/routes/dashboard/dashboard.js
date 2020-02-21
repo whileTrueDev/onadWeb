@@ -43,4 +43,67 @@ router.get('/notice', (req, res) => {
     });
 });
 
+function getQuery(userType) {
+  switch (userType) {
+    case 'marketerSelect': {
+      return (`SELECT noticeReadState 
+                FROM marketerInfo 
+                WHERE marketerId = ?`); }
+    case 'creatorSelect': {
+      return (`SELECT noticeReadState 
+                FROM creatorInfo 
+                WHERE creatorId = ?`); }
+    case 'marketerUpdate': {
+      return (`UPDATE marketerInfo
+                SET noticeReadState = 1
+                WHERE marketerId = ?`); }
+    case 'creatorUpdate': {
+      return (`UPDATE creatorInfo
+                SET noticeReadState = 1
+                WHERE creatorId = ?`); }
+    default: { return ''; }
+  }
+}
+
+router.get('/noticereadstate', (req, res) => {
+  const userType = req.query.type;
+  let userId;
+
+  if (userType === 'marketer') {
+    userId = req._passport.session.user.userid;
+  } else { userId = req._passport.session.user.creatorId; }
+
+  const query = getQuery(`${userType}Select`);
+  doQuery(query, userId)
+    .then((row) => {
+      if (!row.error) {
+        res.send(row.result[0]);
+      }
+    })
+    .catch((err) => {
+      console.log('/noticereadstate ERROR - ', err);
+      res.end();
+    });
+});
+
+router.post('/noticereadstateupdate', (req, res) => {
+  const { userType } = req.body;
+  let userId;
+  if (userType === 'marketer') {
+    userId = req._passport.session.user.userid;
+  } else { userId = req._passport.session.user.creatorId; }
+
+  const query = getQuery(`${userType}Update`);
+  doQuery(query, userId)
+    .then((row) => {
+      if (!row.error) {
+        res.send([true, '공지사항 확인 완료']);
+      }
+    })
+    .catch((err) => {
+      console.log('/noticereadcheck ERROR - ', err);
+      res.end();
+    });
+});
+
 module.exports = router;
