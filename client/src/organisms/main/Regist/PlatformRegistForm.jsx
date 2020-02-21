@@ -63,7 +63,7 @@ const styles = theme => ({
     alignItems: 'center',
   },
   switch: {
-    '& .MuiFormControlLabel-label': {
+    label: {
       fontSize: '11px',
       color: 'black'
     },
@@ -107,10 +107,9 @@ const PlatformRegistForm = (props) => {
   const [numberType, setNumberType] = useState(true);
   const [marketerCustomDomain, setCustomDomain] = useState('');
   const [marketerId, setMarketerId] = useState('');
+
   // user 데이터를 전달 받는 hook 사용하여 기본 값을 가져온다.
   const profileData = useFetchData('/api/dashboard/marketer/profile/google');
-
-  // useEffect로 profileData가 받아지는지 확인
 
   useEffect(() => {
     if (!profileData.loading) {
@@ -122,12 +121,12 @@ const PlatformRegistForm = (props) => {
       dispatch({ type: 'checkDuplication', value: false });
     }
   }, [dispatch, profileData.loading, profileData.payload]);
-  // handle을 전달.
+
   const handleCustom = (event) => {
     setCustomDomain(event.target.value);
   };
 
-  const handleTypeChange = () => {
+  const handleTypeToogle = () => {
     setNumberType(!numberType);
   };
 
@@ -137,7 +136,6 @@ const PlatformRegistForm = (props) => {
 
   const handleChangePhone = (value) => {
     dispatch({ type: 'phoneNum', value: value.formattedValue });
-    // setFomattedPhone(value.formattedValue);
   };
 
   const handleSubmit = (event) => {
@@ -225,7 +223,7 @@ const PlatformRegistForm = (props) => {
                             control={(
                               <Radio
                                 checked={numberType}
-                                onChange={handleTypeChange}
+                                onChange={handleTypeToogle}
                                 inputProps={{ 'aria-label': 'A' }}
                                 size="small"
                                 color="primary"
@@ -242,7 +240,7 @@ const PlatformRegistForm = (props) => {
                             control={(
                               <Radio
                                 checked={!numberType}
-                                onChange={handleTypeChange}
+                                onChange={handleTypeToogle}
                                 inputProps={{ 'aria-label': 'A' }}
                                 size="small"
                                 color="primary"

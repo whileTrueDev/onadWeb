@@ -78,7 +78,6 @@ const domains = [
 ];
 
 
-// reducer를 사용하여 Error를 handling하자
 const reducer = (state, action) => {
   switch (action.type) {
     case 'name': {
@@ -223,7 +222,7 @@ const CampaignUpdateDialog = (props) => {
                             label="RE-PASSWORD"
                             type="password"
                             placeholder="변경할 비밀번호를 재입력하세요."
-                            helperText={state.repasswd ? '비밀번호와 동일하지 않습니다.' : ' '}
+                            helperText={state.repasswd ? '비밀번호가 동일하지 않습니다.' : ' '}
                             error={state.repasswd}
                             className={classes.textField}
                             onChange={handleChange('repasswd')}
