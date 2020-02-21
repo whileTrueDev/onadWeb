@@ -13,7 +13,6 @@ import swaggerJsDoc from 'swagger-jsdoc';
 import passport from './middlewares/passport';
 // import checkAuthOnReq from './middlewares/auth/checkAuthOnReq';
 import alimtalkRouter from './routes/alimtalk';
-import testrouter from './routes/testrouter';
 import apiRouter from './routes/api';
 
 const MySQLStore = require('express-mysql-session')(session);
@@ -48,11 +47,10 @@ const swaggerOptions = {
 // swagger를 주석으로 작성할 수 있도록.
 const swaggerDocs = swaggerJsDoc(swaggerOptions);
 
-// Express 에러 타입이 정의되어 있지 않아, 정의.
-interface Err extends Error {
-  status: number;
-  data?: any;
-  [key: string]: any;
+interface Err {
+  status?: number;
+  stack?: string;
+  message?: string;
 }
 
 class OnadWebApi {
@@ -116,8 +114,6 @@ class OnadWebApi {
     // Router 추가
     // this.app.use('/mailer', mailerRouter);
     this.app.use('/alimtalk', alimtalkRouter);
-
-    this.app.use('/testrouter', testrouter);
 
     this.app.use('/api', apiRouter);
 
