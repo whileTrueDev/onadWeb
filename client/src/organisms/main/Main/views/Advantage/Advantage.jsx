@@ -98,7 +98,7 @@ const styles = makeStyles(theme => ({
   mainMiddleimg: {
     position: 'relative',
     width: '500px',
-    height: '300px',
+    height: '280px',
     margin: '20px 0px',
     '&>*': {
       transition: 'all 1.5s ease',
@@ -109,11 +109,11 @@ const styles = makeStyles(theme => ({
     },
     [theme.breakpoints.down('sm')]: {
       width: '300px',
-      height: '200px',
+      height: '170px',
     },
     [theme.breakpoints.down('xs')]: {
       width: '300px',
-      height: '200px',
+      height: '180px',
     },
   },
   mainMiddleCon1: {
@@ -654,7 +654,7 @@ function Advantage(props) {
               </div>
             </div>
             <div className={classes.AdImg2}>
-              <img src="/pngs/main/advantageCreator3.png" className={classes.mainMiddleimg} alt="ThirdAdvantage" />
+              <img src="/pngs/main/advantageCreator3.gif" className={classes.mainMiddleimg} alt="ThirdAdvantage" />
             </div>
           </div>
         </div>

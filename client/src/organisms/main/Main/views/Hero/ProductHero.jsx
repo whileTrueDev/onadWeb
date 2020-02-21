@@ -30,6 +30,7 @@ const styles = makeStyles(theme => ({
   h1: {
     marginTop: '10px',
     marginBottom: '5px',
+    fontFamily: 'Noto Sans KR',
     fontSize: 45,
     fontWeight: 600,
     [theme.breakpoints.down('md')]: {
@@ -43,6 +44,7 @@ const styles = makeStyles(theme => ({
     },
   },
   h1sub: {
+    fontFamily: 'Noto Sans KR',
     marginTop: 40,
     marginBottom: 40,
     [theme.breakpoints.down('md')]: {
