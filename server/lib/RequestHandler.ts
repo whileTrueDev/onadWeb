@@ -33,5 +33,9 @@ interface RequestHandler {
 }
 // ( 1. 요청을 받는다. req 필요시 요청으로부터 온 데이터를 변수로 설정한다)
 const checkAuth: RequestHandler = (req, res, next) => {
-
+  if (req && req.session && req.session.user) {
+    next();
+  } else {
+    res.send('session not exists');
+  }
 };

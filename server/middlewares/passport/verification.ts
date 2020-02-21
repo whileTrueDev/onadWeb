@@ -10,17 +10,17 @@ import doQuery from '../../model/doQuery';
 import encrpyto from '../encryption';
 
 interface CreatorSession {
+  userType: 'creator';
   creatorId: string;
   creatorDisplayName: string;
   creatorName: string;
   creatorMail: string;
   creatorLogo: string;
-  userType: 'creator';
   creatorIp?: string | string[];
 }
 
 interface MarketerSession {
-  userType: string;
+  userType: 'marketer';
   userid?: string;
   marketerUserType?: string;
   marketerMail?: string;
@@ -72,7 +72,6 @@ const marketerLocal = (
   userid: string, passwd: string,
   done: (error: any, user?: any, options?: any) => void
 ): void => {
-  console.log(`${userid} 로그인 수행`);
   const checkQuery = `
       SELECT
         marketerPasswd, marketerSalt,
@@ -183,8 +182,7 @@ const creatorTwitch = (
     .then((row): void => {
       const creatorData = row.result[0];
       if (creatorData) {
-        console.log('creatorData', creatorData);
-        console.log(`[${new Date().toLocaleString()}] [로그인] ${user.creatorDisplayName}`);
+        console.log(`[${new Date().toLocaleString()}] [크리에이터로그인] ${user.creatorDisplayName}`);
         user.creatorIp = creatorData.creatorIp;
 
         // Data 변경시에 변경된 값을 반영하는 영역.
@@ -332,7 +330,7 @@ const marketerGoogle = (
       if (row.result[0]) {
       // ID가 존재할 경우.
         const marketerData = row.result[0];
-        const user = {
+        const user: MarketerSession = {
           userid: marketerData.marketerId,
           userType: 'marketer',
           marketerUserType: marketerData.marketerUserType,
@@ -346,11 +344,11 @@ const marketerGoogle = (
         const stampQuery = `
         INSERT INTO loginStamp(userId, userIp, userType) Values(?,?,?)`;
         doQuery(stampQuery, [user.userid, '', '1']);
-        console.log('로그인이 완료되었습니다, ', marketerData.marketerName);
+        console.log(`[${new Date().toLocaleString()}] [마케터로그인] ${user.marketerName}`);
 
         // passport-google-oauth20의 done function 타입
         // done(null, user) X done(undefined, user)
-        return done(null, user);
+        return done(undefined, user);
       }
 
       const user = {
@@ -362,7 +360,7 @@ const marketerGoogle = (
       };
       // passport-google-oauth20의 done function 타입
       // done(null, user) X done(undefined, user)
-      return done(null, user);
+      return done(undefined, user);
     })
     .catch((errorData) => done(errorData));
 };

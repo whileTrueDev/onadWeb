@@ -5,9 +5,9 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import createError from 'http-errors';
-import session from 'express-session';
-import swaggerUi from 'swagger-ui-express';
 import swaggerJsDoc from 'swagger-jsdoc';
+import swaggerUi from 'swagger-ui-express';
+import session from 'express-session';
 // Routers
 // import passport from './middlewares/passport/passportStrategy';
 import passport from './middlewares/passport';
@@ -59,6 +59,9 @@ class OnadWebApi {
   constructor() {
     this.app = express();
 
+    this.app.set('views', path.join(__dirname, 'views'));
+    this.app.set('view engine', 'ejs');
+
     // session 처리
     this.app.use(session({
       secret: '@#@$MYSIGN#@$#$',
@@ -71,17 +74,18 @@ class OnadWebApi {
         user: process.env.SESSION_STORE_DB_USER,
         password: process.env.SESSION_STORE_DB_PASSWORD,
         database: process.env.SESSION_STORE_DB_DATABASE,
+        // expiration: 86400000 // 세션 만료 시간 86400000 = 24h
       }),
       cookie: {
-        secure: false
+        secure: process.env.NODE_ENV === 'production', // production환경 ? true : false
+        // maxAge: Date.now() + (30 * 86400 * 1000), // 만료 날짜 설정
       }
     }));
 
     this.app.use(helmet());
-
     this.app.use(express.static(path.join(__dirname, 'public'))); // 정적리소스 처리
-    this.app.use(bodyParser.json({ limit: '50mb' })); // body parser 설정
     this.app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
+    this.app.use(bodyParser.json({ limit: '50mb' })); // body parser 설정
     this.app.use(cookieParser()); // cookie parser 설정
 
     // use CORS
@@ -102,15 +106,7 @@ class OnadWebApi {
 
 
     // this.app.use(checkAuthOnReq); // 인증 method를 req에 추가한다.
-    // middleware - Authorizer
-    this.app.use((req, res, next) => {
-      console.log('middleware - authorizer');
-      // req.session.user 가 있는지 없는지 체크
-      // 심화 : 현 db에 존재하는 user인지 체크 (필요성 고려.. session자체가 id, pw 비교 이후 발급하는 것.)
-      next();
-      // session 없을시 Unauthorized 에러 (403)
-      // next(createError(403));
-    });
+
     // Router 추가
     // this.app.use('/mailer', mailerRouter);
     this.app.use('/alimtalk', alimtalkRouter);
@@ -130,7 +126,6 @@ class OnadWebApi {
     this.app.use((
       err: Err, req: express.Request, res: express.Response, next: express.NextFunction
     ) => {
-      console.error('errstack: ', err.stack);
       // set locals, only providing error in development
       res.locals.message = err.message;
       res.locals.error = req.app.get('env') === 'development' ? err : {};

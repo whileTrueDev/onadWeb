@@ -4,7 +4,7 @@
   "main": "app.js",
   "license": "MIT",
   "scripts": {
-    "start": "set PORT=3000 && ts-node ./bin/www.js",
+    "start": "set PORT=3000 && ts-node ./bin/www.ts",
     "start:mac": "PORT=3000 ts-node ./bin/www.ts",
     "start:debug": "set PORT=3000 && nodemon --watch '*.ts' --exec ts-node ./bin/www.ts",
     "start:debug:mac": "PORT=3000 && nodemon --watch '*.ts' --exec ts-node ./bin/www.ts",

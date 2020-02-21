@@ -129,4 +129,4 @@ ex. 캠페인을 생성(create), 캠페인 목록을 조회(read), 캠페인을 
 | 500  | 서버에 문제가 있을 경우 사용하는 응답 코드                                                                                          |
 
 ---
-references: https://meetup.toast.com/posts/92, https://www.youtube.com/watch?v=RP_f5dMoHFc&t=1s, https://ko.wikipedia.org/wiki/REST https://sanghaklee.tistory.com/57
+references: https://meetup.toast.com/posts/92, https://www.youtube.com/watch?v=RP_f5dMoHFc&t=1s, https://ko.wikipedia.org/wiki/REST https://sanghaklee.tistory.com/57 https://www.a-mean-blog.com/ko/blog/Node-JS-API/_/JWT-JSON-Web-Token-%EB%A1%9C-%EB%A1%9C%EA%B7%B8%EC%9D%B8-REST-API-%EB%A7%8C%EB%93%A4%EA%B8%B0

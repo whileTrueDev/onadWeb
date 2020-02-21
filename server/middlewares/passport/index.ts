@@ -17,10 +17,8 @@ import Google from 'passport-google-oauth20';
 import Naver from 'passport-naver';
 import Kakao from 'passport-kakao';
 
-// import Twitch from './TwitchPassport';
+import Twitch from './TwitchPassport';
 import verification from './verification';
-
-const Twitch = require('passport-twitch-new');
 
 const LocalStrategy = Local.Strategy;
 const TwitchStrategy = Twitch.Strategy;
@@ -41,14 +39,13 @@ const clientSecret = process.env.NODE_ENV === 'production'
 
 // serializeUser를 정의한다. session에 저장해둘 data를 구현하는 것.
 passport.serializeUser((user, done) => {
-  console.log('serialize');
   done(null, user);
 });
 
 // 로그인이 되었을 때 매 요청시마다 자동으로 수행되는 session에서 인증된 req.user의 영역으로 저장하기.
 passport.deserializeUser((user, done) => {
   // db에서 추가로 데이터를 req.user에 저장.
-  done(null, user);
+  done(null, user); // 여기의 user가 req.user가 됨
 });
 
 // 마케터 - Onad로 로그인
@@ -87,12 +84,12 @@ passport.use(new NaverStrategy({
   callbackURL: `${HOST}/api/login/naver/callback`
 }, verification.marketerNaver));
 
-passport.use(new KakaoStrategy({
-  clientID: process.env.KAKAO_CLIENT_ID || '',
-  // clientSecret을 사용하지 않는다면 넘기지 말거나 빈 스트링을 넘길 것
-  // from https://github.com/rotoshine/passport-kakao#readme
-  clientSecret: '',
-  callbackURL: `${HOST}/api/login/kakao/callback`
-}, verification.marketerKakao));
+// passport.use(new KakaoStrategy({
+//   clientID: process.env.KAKAO_CLIENT_ID || '',
+//   // clientSecret을 사용하지 않는다면 넘기지 말거나 빈 스트링을 넘길 것
+//   // from https://github.com/rotoshine/passport-kakao#readme
+//   clientSecret: '',
+//   callbackURL: `${HOST}/api/login/kakao/callback`
+// }, verification.marketerKakao));
 
 export default passport;
