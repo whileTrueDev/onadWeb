@@ -196,6 +196,7 @@ router.post('/onoff', (req, res) => {
     .then((row) => {
       if (!row.error) {
         const { campaignName, bannerConfirm, linkConfirm } = row.result[0];
+        // link banner confirm에 대한 세분화.
         // 마케터 활동내역 테이블 적재
         if (bannerConfirm === 1 && linkConfirm === 1) {
           doQuery(query, queryArray)
@@ -207,8 +208,12 @@ router.post('/onoff', (req, res) => {
                 res.send([true]);
               }
             });
+        } else if (bannerConfirm === 1) {
+          res.send([false, 'URL에 대한 승인이 완료되지 않았습니다.']);
+        } else if (linkConfirm === 1) {
+          res.send([false, '배너에 대한 승인이 완료되지 않았습니다.']);
         } else {
-          res.end();
+          res.send([false, '배너, URL에 대한 승인이 완료되지 않았습니다.']);
         }
       }
     })

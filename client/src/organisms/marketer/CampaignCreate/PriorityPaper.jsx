@@ -94,6 +94,10 @@ const PriorityPaper = (props) => {
     setStepComplete(false);
   }, [step]);
 
+  useEffect(() => {
+    checkedPrioritiesDispatch({ type: 'reset' });
+  }, [checkedPrioritiesDispatch, state.priorityType]);
+
   const [selectedNames, setSelectedNames] = React.useState([]);
 
   const handleChange = (event) => {

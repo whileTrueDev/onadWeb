@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
 import Dialog from '../../../../atoms/Dialog/Dialog';
 import Button from '../../../../atoms/CustomButtons/Button';
-import history from '../../../../history';
 
 export default function CampaignDeleteConfirmDialog(props) {
   const { open, handleClose, handleDelete } = props;
@@ -19,10 +18,7 @@ export default function CampaignDeleteConfirmDialog(props) {
             color="info"
             onClick={() => {
               handleDelete({ campaignId: open });
-              setTimeout(
-                () => history.push(`${window.location.pathname}`),
-                500
-              );
+              handleClose();
             }}
           >
             삭제
