@@ -116,6 +116,8 @@ class OnadWebApi {
     // Error handling
     // catch 404 and forward to error handler
     this.app.use((req, res, next) => {
+      // 위의 모든 라우터에도 해당하지 않는 경우 = 없는 페이지
+
       // next() 함수로 어떠한 내용을 전달하는 경우('route'라는 문자열 제외),
       // Express는 현재의 요청에 오류가 있는 것으로 간주
       // 오류 처리와 관련되지 않은 나머지 라우팅 및 미들웨어 함수를 건너뜁니다.
@@ -126,13 +128,19 @@ class OnadWebApi {
     this.app.use((
       err: Err, req: express.Request, res: express.Response, next: express.NextFunction
     ) => {
+      /** **********************
+       * Production Environment
+       ********************** */
       // set locals, only providing error in development
       res.locals.message = err.message;
       res.locals.error = req.app.get('env') === 'development' ? err : {};
       if (err) {
         // render the error page
         res.status(err.status || 500);
-        res.render('error');
+        res.send({
+          code: err.status,
+          message: err.message || 'Internal Server Error'
+        });
       }
     });
   }

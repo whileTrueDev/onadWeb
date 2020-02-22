@@ -100,6 +100,7 @@ WhileTrue 개발자 [강동기](https://github.com/GoMotiv), [강화수](https:/
         }
     },
     "rules": {
+        "no-trailing-spaces": ["error", {"ignoreComments": true}],
         "class-methods-use-this": [
             "error",
             {
@@ -127,7 +128,7 @@ WhileTrue 개발자 [강동기](https://github.com/GoMotiv), [강화수](https:/
         "comma-dangle": "off",
         "linebreak-style": [
             "error",
-            // "windows" // if you use UNIX OS, remove this
+            "windows" // if you use UNIX OS, remove this
         ],
         "react/require-default-props": 1,
         "no-unused-vars": "warn",

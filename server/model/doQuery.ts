@@ -1,4 +1,5 @@
 import { MysqlError, PoolConnection } from 'mysql';
+import createError from 'http-errors';
 import pool from './connectinoPool'; // DB 커넥션 가져오기.
 // const logger = require('../middlewares/logger');
 
@@ -24,7 +25,7 @@ interface QueryResult {
  */
 const doQuery = (
   query: string,
-  queryArray: any[]
+  queryArray: string[]
 ): Promise<QueryResult> => new Promise((resolve, reject) => {
   pool.getConnection((err: MysqlError, conn: PoolConnection) => {
     // 커넥션 시 에러발생
@@ -32,12 +33,12 @@ const doQuery = (
       console.log('conn in err - getConnection 함수', conn);
       console.log(`DB연결 오류 ${err.message}`);
       // logger.error(`DB연결 관련 오류${err}`);
-      reject(Error(err.message));
+      reject(new createError[500](err.message));
     } else {
       conn.query(query, queryArray, (error, result) => {
         if (error) {
           conn.release();
-          reject(Error(error.sqlMessage));
+          reject(new createError[500](error.sqlMessage));
         } else {
           conn.release();
           resolve({ result });
