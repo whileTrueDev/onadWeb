@@ -113,15 +113,6 @@ const marketerLocal = (
     .catch((errorData) => done(errorData));
 };
 
-interface CreatorSession {
-  creatorId: string;
-  creatorDisplayName: string;
-  creatorName: string;
-  creatorMail: string;
-  creatorLogo: string;
-  userType: 'creator';
-  creatorIp?: string | string[];
-}
 /**
  * @author 박찬우
  * @date 2019-07-02
@@ -304,7 +295,6 @@ const creatorTwitch = (
       done(errorData);
     });
 };
-
 
 const marketerGoogle = (
   accessToken: string,
