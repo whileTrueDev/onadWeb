@@ -56,7 +56,7 @@ ex. 캠페인을 생성(create), 캠페인 목록을 조회(read), 캠페인을 
 - 인터페이스의 범용성: 일관화된 형식을 통해 쉽게 이해가능
 - *계층구조를 통한 보안강화, 응답지연감소*
 
-## REST API.
+## REST API
 
 - REST 구조를 따르는 API
 - REST구조를 잘 따른다 = RESTful하다.
@@ -99,7 +99,8 @@ ex. 캠페인을 생성(create), 캠페인 목록을 조회(read), 캠페인을 
 | ------ | ------ |
 | GET    | 데이터 조회 |
 | POST   | 데이터 생성 |
-| PUT    | 데이터 수정 |
+| PUT    | 데이터 수정(데이터 전체를 갈아 끼우기) |
+| PATCH  | 데이터 수정(데이터의 부분만 변경) |
 | DELETE | 자원 삭제  |
 
 해당 규칙을 지키지 않은 API = REST API가 아닌, just HTTP API
@@ -128,5 +129,22 @@ ex. 캠페인을 생성(create), 캠페인 목록을 조회(read), 캠페인을 
 | 301  | 클라이언트가 요청한 리소스에 대한 URI가 변경 되었을 때 사용하는 응답 코드(응답 시, Location header에 변경된 URI를 적어줘야한다.)                              |
 | 500  | 서버에 문제가 있을 경우 사용하는 응답 코드                                                                                          |
 
+## REST API 의 인증체계
+
+## REST API 의 페이징처리
+
+## REST API 의 부분응답 (Partial Response)
+
+## REST API 의 버저닝
+
 ---
-references: https://meetup.toast.com/posts/92, https://www.youtube.com/watch?v=RP_f5dMoHFc&t=1s, https://ko.wikipedia.org/wiki/REST https://sanghaklee.tistory.com/57 https://www.a-mean-blog.com/ko/blog/Node-JS-API/_/JWT-JSON-Web-Token-%EB%A1%9C-%EB%A1%9C%EA%B7%B8%EC%9D%B8-REST-API-%EB%A7%8C%EB%93%A4%EA%B8%B0
+references:
+[REST API 제대로 알고 사용하기 - TOAST Meetup](https://meetup.toast.com/posts/92)  
+[Youtube:NaverD2:DEVIEW2017 - 그런 REST API로 괜찮은가](https://www.youtube.com/watch?v=RP_f5dMoHFc&t=1s)  
+[Wikipedia - REST](https://ko.wikipedia.org/wiki/REST)  
+[RESTful API 설계 가이드 - 이상학의블로그](https://sanghaklee.tistory.com/57)  
+[조대협의 블로그 - REST API 디자인 가이드 - version1](https://bcho.tistory.com/914)
+[조대협의 블로그 - REST API 개념 잡기](https://bcho.tistory.com/953)
+[조대협의 블로그 - REST API 디자인 가이드 - version2](https://bcho.tistory.com/954)
+[조대협의 블로그 - REST API 보안 가이드](https://bcho.tistory.com/955)
+[JWT(JSON Web Token)로 로그인 REST API 만들기](https://www.a-mean-blog.com/ko/blog/Node-JS-API/_/JWT-JSON-Web-Token-%EB%A1%9C-%EB%A1%9C%EA%B7%B8%EC%9D%B8-REST-API-%EB%A7%8C%EB%93%A4%EA%B8%B0)

@@ -8,10 +8,11 @@ import createError from 'http-errors';
 import swaggerJsDoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
 import session from 'express-session';
-// Routers
-// import passport from './middlewares/passport/passportStrategy';
-import passport from './middlewares/passport';
+
 // import checkAuthOnReq from './middlewares/auth/checkAuthOnReq';
+import passport from './middlewares/passport';
+
+// Routers
 import alimtalkRouter from './routes/alimtalk';
 import apiRouter from './routes/api';
 
@@ -130,6 +131,13 @@ class OnadWebApi {
     ) => {
       /** **********************
        * Production Environment
+       * 에러메세지에서 Error Stack 정보를 출력하는 것은 대단히 위험한 일이다.
+       * 내부적인 코드 구조와 프레임웍 구조를 외부에 노출함으로써, 해커들에게, 해킹을 할 수 있는 정보를 제공하기 때문이다.
+       * 일반적인 서비스 구조에서는 아래와 같은 에러 스택정보를 API 에러 메세지에 포함 시키지 않는 것이 바람직 하다.
+       * 그렇지만, 내부 개발중이거나 디버깅 시에는 매우 유용한데, API 서비스를 개발시,
+       * 서버의 모드를 production과 dev 모드로 분리해서, 옵션에 따라 dev 모드등으로 기동시,
+       * REST API의 에러 응답 메세지에 에러 스택 정보를 포함해서 리턴하도록 하면, 디버깅에 매우 유용하게 사용할 수 있다.
+       * from https://bcho.tistory.com/914
        ********************** */
       // set locals, only providing error in development
       res.locals.message = err.message;

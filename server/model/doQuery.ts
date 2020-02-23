@@ -25,7 +25,7 @@ interface QueryResult {
  */
 const doQuery = (
   query: string,
-  queryArray: string[]
+  queryArray: any[]
 ): Promise<QueryResult> => new Promise((resolve, reject) => {
   pool.getConnection((err: MysqlError, conn: PoolConnection) => {
     // 커넥션 시 에러발생
