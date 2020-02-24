@@ -198,7 +198,7 @@ router.post('/onoff', (req, res) => {
         const { campaignName, bannerConfirm, linkConfirm } = row.result[0];
         // link banner confirm에 대한 세분화.
         // 마케터 활동내역 테이블 적재
-        if (bannerConfirm === 1 && linkConfirm === 1) {
+        if ((bannerConfirm === 1 && linkConfirm === 1) || (bannerConfirm === 1 && linkConfirm === null)) {
           doQuery(query, queryArray)
             .then((inrow) => {
               const MARKETER_ACTION_LOG_TYPE = 6; // 마케터 활동내역 - 캠페인 on off상태값
