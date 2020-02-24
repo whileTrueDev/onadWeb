@@ -73,14 +73,16 @@ export default function CampaignList(props) {
   const campaignReportDialog = useDialog();
   const snack = useDialog();
 
-  const { handleDelete } = useDeleteData('/api/dashboard/marketer/campaign');
-  const { handleUpdateRequest } = useUpdateData('/api/dashboard/marketer/campaign/onoff', campaignData.callUrl);
+  const { handleDelete } = useDeleteData('/api/dashboard/marketer/campaign', campaignData.callUrl);
+  const { handleUpdateRequest } = useUpdateData('/api/dashboard/marketer/campaign/onoff', () => {
+    snack.handleOpen();
+    campaignData.callUrl();
+  });
   // useUpdateData를 사용할 때, 전달되는 url router의 response data의 형태가 array여야함을 고려한다.
 
   const handleUpdateState = ({ onoffState, campaignId }) => (event) => {
     event.preventDefault();
     handleUpdateRequest({ onoffState, campaignId });
-    snack.handleOpen();
   };
 
   return (
