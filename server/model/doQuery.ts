@@ -1,13 +1,8 @@
-import { MysqlError, PoolConnection } from 'mysql';
 import createError from 'http-errors';
+import { MysqlError, PoolConnection } from 'mysql';
+import { QueryResult } from '../@types/db';
 import pool from './connectinoPool'; // DB 커넥션 가져오기.
 // const logger = require('../middlewares/logger');
-
-// type정의 for Query Result
-interface QueryResult {
-  error?: MysqlError | null;
-  result: any;
-}
 
 /**
  * @description

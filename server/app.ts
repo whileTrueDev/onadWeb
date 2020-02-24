@@ -8,6 +8,7 @@ import createError from 'http-errors';
 import swaggerJsDoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
 import session from 'express-session';
+import morgan from 'morgan';
 
 // import checkAuthOnReq from './middlewares/auth/checkAuthOnReq';
 import passport from './middlewares/passport';
@@ -18,7 +19,11 @@ import apiRouter from './routes/api';
 
 const MySQLStore = require('express-mysql-session')(session);
 
+// 환경변수 설정
 process.env.ROOT_PATH = __dirname;
+process.env.NODE_ENV = (process.env.NODE_ENV
+  && (process.env.NODE_ENV).trim().toLowerCase() === 'production')
+  ? 'production' : 'development';
 let FRONT_HOST = process.env.DEV_REACT_HOSTNAME;
 if (process.env.NODE_ENV === 'production') {
   FRONT_HOST = process.env.PRODUCTION_REACT_HOSTNAME;
@@ -88,6 +93,7 @@ class OnadWebApi {
     this.app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
     this.app.use(bodyParser.json({ limit: '50mb' })); // body parser 설정
     this.app.use(cookieParser()); // cookie parser 설정
+    this.app.use(morgan(process.env.NODE_ENV === 'development' ? 'dev' : 'common'));
 
     // use CORS
     const corsOptions = { origin: FRONT_HOST, credentials: true };
@@ -140,14 +146,22 @@ class OnadWebApi {
        * from https://bcho.tistory.com/914
        ********************** */
       // set locals, only providing error in development
+      const serverErrorMessage = 'Internal Server Error';
       res.locals.message = err.message;
       res.locals.error = req.app.get('env') === 'development' ? err : {};
       if (err) {
+        const ENVIRONMENT = process.env.NODE_ENV;
+        console.log(ENVIRONMENT);
+        if (ENVIRONMENT === 'development') {
+          console.log(err.stack);
+        }
         // render the error page
         res.status(err.status || 500);
         res.send({
           code: err.status,
-          message: err.message || 'Internal Server Error'
+          message: ENVIRONMENT === 'development'
+            ? err.message || serverErrorMessage
+            : serverErrorMessage,
         });
       }
     });

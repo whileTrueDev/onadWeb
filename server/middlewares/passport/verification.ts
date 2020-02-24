@@ -8,29 +8,8 @@ import Kakao from 'passport-kakao';
 import doQuery from '../../model/doQuery';
 // 암호화 체크 객체 생성
 import encrpyto from '../encryption';
-
-interface CreatorSession {
-  userType: 'creator';
-  creatorId: string;
-  creatorDisplayName: string;
-  creatorName: string;
-  creatorMail: string;
-  creatorLogo: string;
-  creatorIp?: string | string[];
-}
-
-interface MarketerSession {
-  userType: 'marketer';
-  userid?: string;
-  marketerUserType?: string;
-  marketerMail?: string;
-  marketerAccountNumber?: string;
-  marketerBusinessRegNum?: string;
-  marketerName?: string;
-  marketerPhoneNum?: string;
-  registered?: boolean;
-  marketerPlatformData?: string;
-}
+// type
+import { CreatorSession, MarketerSession } from '../../@types/session';
 
 /**
  * @name 배너URL생성함수
@@ -54,10 +33,10 @@ const makeUrl = (): string => {
  * @description
  * 1. session에 저장할 값 (변경되지 않는 영속적인 값)
  *   - useType
- *   - userId
+ *   - marketerId
  *   - marketerUserType
  * 2. context에 저장할 값 (User의 기본적인 정보.)
- *   - userid : userid,
+ *   - marketerId : userid,
  *   - userType: 'marketer',
  *   - marketerName
  *   - marketerEmail
@@ -85,8 +64,8 @@ const marketerLocal = (
       if (row.result[0]) {
         const marketerData = row.result[0];
         if (encrpyto.check(passwd, marketerData.marketerPasswd, marketerData.marketerSalt)) {
-          const user = {
-            userid,
+          const user: MarketerSession = {
+            marketerId: userid,
             userType: 'marketer',
             marketerUserType: marketerData.marketerUserType,
             marketerMail: marketerData.marketerMail,
@@ -97,7 +76,7 @@ const marketerLocal = (
           };
           const stampQuery = `
             INSERT INTO loginStamp(userId, userIp, userType) Values(?,?,?)`;
-          doQuery(stampQuery, [user.userid, '', '1']);
+          doQuery(stampQuery, [user.marketerId, '', '1']);
           console.log(`${marketerData.marketerName} 로그인 하였습니다.`);
 
           return done(null, user);
@@ -321,7 +300,7 @@ const marketerGoogle = (
       // ID가 존재할 경우.
         const marketerData = row.result[0];
         const user: MarketerSession = {
-          userid: marketerData.marketerId,
+          marketerId: marketerData.marketerId,
           userType: 'marketer',
           marketerUserType: marketerData.marketerUserType,
           marketerMail: marketerData.marketerMail,
@@ -333,7 +312,7 @@ const marketerGoogle = (
         };
         const stampQuery = `
         INSERT INTO loginStamp(userId, userIp, userType) Values(?,?,?)`;
-        doQuery(stampQuery, [user.userid, '', '1']);
+        doQuery(stampQuery, [user.marketerId, '', '1']);
         console.log(`[${new Date().toLocaleString()}] [마케터로그인] ${user.marketerName}`);
 
         // passport-google-oauth20의 done function 타입
@@ -373,8 +352,8 @@ const marketerNaver: Naver.VerifyFunction = (accessToken, refreshToken, profile,
       if (row.result[0]) {
       // ID가 존재할 경우.
         const marketerData = row.result[0];
-        const user = {
-          userid: marketerData.marketerId,
+        const user: MarketerSession = {
+          marketerId: marketerData.marketerId,
           userType: 'marketer',
           marketerUserType: marketerData.marketerUserType,
           marketerMail: marketerData.marketerMail,
@@ -386,7 +365,7 @@ const marketerNaver: Naver.VerifyFunction = (accessToken, refreshToken, profile,
         };
         const stampQuery = `
         INSERT INTO loginStamp(userId, userIp, userType) Values(?,?,?)`;
-        doQuery(stampQuery, [user.userid, '', '1']);
+        doQuery(stampQuery, [user.marketerId, '', '1']);
         console.log('로그인이 완료되었습니다, ', marketerData.marketerName);
 
         return done(null, user);
@@ -420,7 +399,7 @@ const marketerKakao: Kakao.VerifyFunction = (accessToken, refreshToken, profile,
       if (row.result[0]) { // ID가 존재할 경우.
         const marketerData = row.result[0];
         const user: MarketerSession = {
-          userid: marketerData.marketerId,
+          marketerId: marketerData.marketerId,
           userType: 'marketer',
           marketerUserType: marketerData.marketerUserType,
           marketerMail: marketerData.marketerMail,
@@ -432,7 +411,7 @@ const marketerKakao: Kakao.VerifyFunction = (accessToken, refreshToken, profile,
         };
         const stampQuery = `
         INSERT INTO loginStamp(userId, userIp, userType) Values(?,?,?)`;
-        doQuery(stampQuery, [user.userid, '', '1']);
+        doQuery(stampQuery, [user.marketerId, '', '1']);
         console.log('로그인이 완료되었습니다, ', marketerData.marketerName);
 
         return done(null, user);

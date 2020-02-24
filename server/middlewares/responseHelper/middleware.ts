@@ -20,7 +20,7 @@ export interface RequestPromiseHandler {
  * @param next `express.NextFunction`
  * @author hwasurr
  */
-const checkSession: RequestHandler = (req, res, next) => {
+const checkSessionExists: RequestHandler = (req, res, next) => {
   /** ******************
    * Session Check
    ****************** */
@@ -97,5 +97,5 @@ const unusedMethod: RequestHandler = (req, res, next) => {
 };
 
 export default {
-  unusedMethod, checkAuth, checkSession, withErrorCatch
+  unusedMethod, checkAuth, checkSessionExists, withErrorCatch
 };
