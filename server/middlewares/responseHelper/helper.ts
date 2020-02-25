@@ -119,13 +119,13 @@ const send = (
   const CREATED = 2001;
   switch (method.toLowerCase()) {
     case 'post':
-      res.sendStatus(CREATED).send(resultData);
+      res.sendStatus(CREATED).json(resultData);
       break;
     case 'get':
     case 'put':
     case 'patch':
     case 'delete':
-      res.sendStatus(OK).send(resultData);
+      res.sendStatus(OK).json(resultData);
       break;
     default:
       throw new Error('send함수에 올바른 Method 명을 입력하지 않았습니다.');
