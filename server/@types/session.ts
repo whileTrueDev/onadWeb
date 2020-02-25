@@ -1,10 +1,10 @@
 export interface CreatorSession {
   userType: 'creator';
-  creatorId: string;
-  creatorDisplayName: string;
-  creatorName: string;
-  creatorMail: string;
-  creatorLogo: string;
+  creatorId?: string;
+  creatorDisplayName?: string;
+  creatorName?: string;
+  creatorMail?: string;
+  creatorLogo?: string;
   creatorIp?: string | string[];
 }
 
