@@ -131,7 +131,7 @@ ex. 캠페인을 생성(create), 캠페인 목록을 조회(read), 캠페인을 
 
 ## REST API 의 인증체계
 
-## REST API 의 페이징처리
+## REST API 의 응답 페이징처리
 
 ## REST API 의 부분응답 (Partial Response)
 
