@@ -20,7 +20,7 @@ services:
 script:
   - cd client && yarn install --prod && CI="false" yarn build && cd -
   - cd service && yarn && cd -
-  - cd server && yarn install --prod && yarn build && cd -
+  - cd server && yarn install && yarn build && cd -
   - cd node_websocket && yarn && cd -
   - cd calculator && yarn && cd -
   - cd chat && yarn && cd -
