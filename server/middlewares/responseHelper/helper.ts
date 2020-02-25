@@ -132,6 +132,21 @@ const send = (
   }
 };
 
+
+/**
+ * doQuery를 Promise chain으로 구현할 떄 내부 에러가 발생하면 해당 error를 http-error로 변환하는 
+ * 올바른 HTTP status와 함께 전송하도록 도와준다.
+ * @param error doQuery의 catch로 전달받는 error 객체
+ * @param next withErrorCatch의 인자로 전달되는 next function
+ */
+const promiseError = (
+  error: Error,
+  next: Function,
+): void => {
+  next(new createError[400](error.message));
+};
+
+
 export default {
-  getParam, getSessionData, paramValidationCheck, send
+  getParam, getSessionData, paramValidationCheck, send, promiseError
 };
