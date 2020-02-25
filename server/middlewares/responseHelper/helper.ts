@@ -78,7 +78,7 @@ const getParam = (paramField: string | string[],
  * 
  * @author hwasurr
  */
-const getSessionData = (req: express.Request): CreatorSession | MarketerSession => {
+const getSessionData = (req: express.Request): CreatorSession & MarketerSession => {
   if (req && req.session && req.session.passport && req.session.passport.user) {
     return req.session.passport.user;
   }
@@ -94,7 +94,7 @@ const getSessionData = (req: express.Request): CreatorSession | MarketerSession 
  * @return `true` | `createError[405]('Forbidden')`
  * @author hwasurr
  */
-const paramValidationCheck = (param: string | number,
+const paramValidationCheck = (param: string | number | undefined,
   field: keyof CreatorSession | keyof MarketerSession,
   req: express.Request): true => {
   if (req.session && param === req.session.passport.user[field]) {
@@ -119,13 +119,13 @@ const send = (
   const CREATED = 2001;
   switch (method.toLowerCase()) {
     case 'post':
-      res.sendStatus(CREATED).json(resultData);
+      res.status(CREATED).json(resultData);
       break;
     case 'get':
     case 'put':
     case 'patch':
     case 'delete':
-      res.sendStatus(OK).json(resultData);
+      res.status(OK).json(resultData);
       break;
     default:
       throw new Error('send함수에 올바른 Method 명을 입력하지 않았습니다.');
