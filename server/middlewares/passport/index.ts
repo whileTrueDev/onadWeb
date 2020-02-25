@@ -57,7 +57,7 @@ passport.use(new Twitch.Strategy(
   {
     clientID: clientID || '',
     clientSecret: clientSecret || '',
-    callbackURL: `${HOST}/login/twitch/callback`,
+    callbackURL: `${HOST}/api/login/twitch/callback`,
     scope: 'user:read:email', // user:read:email
     authorizationURL: 'https://id.twitch.tv/oauth2/authorize',
     tokenURL: 'https://id.twitch.tv/oauth2/token',
@@ -70,7 +70,7 @@ passport.use(new Twitch.Strategy(
 passport.use(new Google.Strategy({
   clientID: process.env.GOOGLE_CLIENT_ID || '',
   clientSecret: process.env.GOOGLE_CLIENT_SECRET || '',
-  callbackURL: `${HOST}/login/google/callback`,
+  callbackURL: `${HOST}/api/login/google/callback`,
 }, verification.marketerGoogle));
 
 passport.use(new Kakao.Strategy({
@@ -78,13 +78,13 @@ passport.use(new Kakao.Strategy({
   // clientSecret을 사용하지 않는다면 넘기지 말거나 빈 스트링을 넘길 것
   // from https://github.com/rotoshine/passport-kakao#readme
   clientSecret: '',
-  callbackURL: `${HOST}/login/kakao/callback`
+  callbackURL: `${HOST}/api/login/kakao/callback`
 }, verification.marketerKakao));
 
 passport.use(new Naver.Strategy({
   clientID: process.env.NAVER_CLIENT_ID || '',
   clientSecret: process.env.NAVER_CLIENT_SECRET || '',
-  callbackURL: `${HOST}/login/naver/callback`
+  callbackURL: `${HOST}/api/login/naver/callback`
 }, verification.marketerNaver));
 
 export default passport;
