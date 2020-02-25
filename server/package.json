@@ -10,7 +10,8 @@
     "start:debug:mac": "PORT=3000 && nodemon --watch *.ts --exec ts-node ./bin/www.ts",
     "prebuild": "rimraf dist",
     "build": "webpack --config webpack.config.js",
-    "start:production": "node ./dist/bundle.js",
+    "start:production": "NODE_ENV=production node ./dist/bundle.js",
+    "start:production:window": "set NODE_ENV=production && node ./dist/bundle.js",
     "test": "jest --config jest.config.json --coverage"
   },
   "devDependencies": {

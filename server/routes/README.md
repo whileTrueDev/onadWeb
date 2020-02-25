@@ -115,5 +115,5 @@
 4. /mail
 5. /marketer
 6. /creator
-7. /login
-8. /logout
+7. /login   (auth폴더)
+8. /logout  (auth폴더)
