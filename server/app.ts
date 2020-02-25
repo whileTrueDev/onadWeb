@@ -151,7 +151,6 @@ class OnadWebApi {
       res.locals.error = req.app.get('env') === 'development' ? err : {};
       if (err) {
         const ENVIRONMENT = process.env.NODE_ENV;
-        console.log(ENVIRONMENT);
         if (ENVIRONMENT === 'development') {
           console.log(err.stack);
         }
@@ -159,9 +158,7 @@ class OnadWebApi {
         res.status(err.status || 500);
         res.send({
           code: err.status,
-          message: ENVIRONMENT === 'development'
-            ? err.message || serverErrorMessage
-            : serverErrorMessage,
+          message: err.message || serverErrorMessage
         });
       }
     });

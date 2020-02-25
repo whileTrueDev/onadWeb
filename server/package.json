@@ -10,6 +10,7 @@
     "start:debug:mac": "PORT=3000 && nodemon --watch *.ts --exec ts-node ./bin/www.ts",
     "prebuild": "rimraf dist",
     "build": "webpack --config webpack.config.js",
+    "start:production": "node ./dist/bundle.js",
     "test": "jest --config jest.config.json --coverage"
   },
   "devDependencies": {
@@ -35,6 +36,7 @@
     "@types/passport-oauth2": "^1.4.8",
     "@types/swagger-jsdoc": "^3.0.2",
     "@types/swagger-ui-express": "^4.1.1",
+    "dotenv-webpack": "^1.7.0",
     "jest": "^25.1.0",
     "nodemon": "^2.0.2",
     "rimraf": "^3.0.2",

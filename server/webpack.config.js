@@ -1,5 +1,9 @@
 const nodeExternals = require('webpack-node-externals');
 const path = require('path');
+const Dotenv = require('dotenv-webpack');
+const dotenv = require('dotenv');
+
+dotenv.config();
 
 module.exports = {
   entry: './bin/www.ts',
@@ -25,5 +29,8 @@ module.exports = {
   externals: [nodeExternals()],
   optimization: {
     nodeEnv: false // process.env.NODE_ENV를 문자열로 치환하는 기능을 비활성화
-  }
+  },
+  plugins: [
+    new Dotenv()
+  ]
 };
