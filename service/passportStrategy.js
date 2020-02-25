@@ -105,7 +105,7 @@ passport.use(new LocalStrategy(
         console.log('회원이 아닙니다.');
         return done('회원이 아닙니다.');
       })
-      .catch(errorData => done(errorData));
+      .catch((errorData) => done(errorData));
   }
 ));
 
@@ -361,7 +361,7 @@ passport.use(new GoogleStrategy({
       };
       return done(null, user);
     })
-    .catch(errorData => done(errorData));
+    .catch((errorData) => done(errorData));
 })));
 
 
@@ -417,7 +417,7 @@ passport.use(new NaverStrategy({
       };
       return done(null, user);
     })
-    .catch(errorData => done(errorData));
+    .catch((errorData) => done(errorData));
 })));
 
 
@@ -476,7 +476,7 @@ passport.use(new KakaoStrategy({
 
       return done(null, user);
     })
-    .catch(errorData => done(errorData));
+    .catch((errorData) => done(errorData));
 })));
 
 module.exports = passport;
