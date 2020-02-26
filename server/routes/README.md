@@ -1,6 +1,80 @@
-# OnAD의 Resources
+# OnAD의 API router 
 
-## GET
+## URI
+
+1. /chart
+2. /creators
+3. /banners
+4. /mail
+5. /marketer
+6. /creator
+7. /login   (auth폴더)
+8. /logout  (auth폴더)
+
+각 엔드포인트에 대한 라우터를 생성한다
+
+### routes 폴더 구조
+
+1. /chart
+2. /creators
+3. /banners
+4. /mail
+5. /marketer
+6. /creator
+7. /auth/login
+8. /auth/logout
+
+### 작업 과정
+
+1. 각라우터 생성
+2. 안쓰는 메소드 처리(responseHelper.middleware.unusedMethod)
+3. 각 라우터의 메소드에 대한 요청처리
+  (`responseHelper.checkSessionExists`, `responseHelper.withErrorCatch`, `responseHelper.getParam`, `responseHelper.paramValidationCheck`, `responseHelper.send`  
+  요청처리함수 내부에서 에러발생하고싶다 => `import createError from 'http-errors';` 한뒤 `throw new createError[에러코드](에러메시지)`  
+  에러메시지는 `./lib/responseMessages` 에 따로 정의해 둔 것이 있으니 참고.
+4. swagger 주석 생성 (해당 엔드포인트 router위에 바로 생성)
+
+### 참고점
+
+#### 1. uri의 하위계층이 여럿인경우
+
+ex) marketer/cash | marketer/cash/expenditure | marketer/cash/charge-history | marketer/cash/refund-history  
+이런 경우는 하위폴더 cash 생성 이후 cash폴더에 `index.ts` 만들고, /marketer에서 `import cashRouter from './cash';` 한이후 `router.use('/cash', cashRouter);` 로 생성 (해당 라우터에 대한 내용만)
+
+#### 2. '포함관계'의 경우
+
+예를들어,
+마케터의 캠페인1에 대한 모든 정보가 필요한 경우 => /marketer/campaign  
+마케터의 캠페인1에 대한 활성화/비활성화 정보만 필요한경우 => /marketer/campaign  
+그냥 불러와도 안쓴느 데이터가 있어도 이렇게 합시당.
+
+#### 3. 세션 검사 및 안쓰는 메소드 핸들링 방법
+
+예를들어 `/` 엔드포인트에 모든 메소드 **세션검사**가 필요하고, **get메소드만 허락**한다면,
+
+~~~js
+router.route('/')
+  .all(responseHelper.checkSession) // 모든 메소드에 대해 세션체크
+  .get(withErrorCheck((req, res, next) => { responseHelper.send('보낼데이터', res) } )) // 사용하는 메소드 안에서는 무조건  responseHelper.send() 필요
+  .all(responseHelper.unusedMethod) //안쓰는 메소드 모두 unsed 표시
+~~~
+
+#### 4. session 데이터가 필요한 경우
+
+responseHelper의 `getSessionData` 함수를 사용.
+
+~~~js
+router.route('/some-end-point')
+  .get((req, res, next) => {
+    const session = responseHelper.getSessionData(req);
+    const { marketerId } = responseHelper.getSessionData(req);
+    const { creatorId } = responseHelper.getSessionData(req);
+  })
+~~~
+
+---
+
+## 부록
 
 ### 필요한 기능 (GET) - common
 
@@ -106,14 +180,3 @@
 - 배너 삭제
 - 랜딩URL 삭제
 - 유저 삭제(탈퇴)
-
-## URI
-
-1. /chart
-2. /creators
-3. /banners
-4. /mail
-5. /marketer
-6. /creator
-7. /login   (auth폴더)
-8. /logout  (auth폴더)
