@@ -4,6 +4,8 @@ import {
   Grid, InputLabel, Input, FormHelperText,
   FormControlLabel, Checkbox, Collapse
 } from '@material-ui/core';
+import PropTypes from 'prop-types';
+
 import StyledItemText from '../../../atoms/StyledItemText';
 import Button from '../../../atoms/CustomButtons/Button';
 
@@ -32,27 +34,11 @@ const LandingUrlInput = (props) => {
     classes, handleDialogOpen, dispatch, state
   } = props;
   const [subOpen, setSubOpen] = React.useState(false);
-  // const [sub1CloseState, setSub1CloseState] = React.useState(true);
-  // const [sub2CloseState, setSub2CloseState] = React.useState(true);
 
   const handleSubOpen = () => {
     setSubOpen(!subOpen);
   };
 
-  // const handleCloseState = (event) => {
-  //   const targetId = event.target.id;
-  //   switch (targetId) {
-  //     case 'sub-url1-checkbox': {
-  //       setSub1CloseState(!sub1CloseState);
-  //       return false;
-  //     }
-  //     case 'sub-url2-checkbox': {
-  //       setSub2CloseState(!sub2CloseState);
-  //       return false;
-  //     }
-  //     default: { return false; }
-  //   }
-  // };
   const handleUrlName = (event) => {
     switch (event.target.id) {
       case 'main-url-name':
@@ -121,7 +107,7 @@ const LandingUrlInput = (props) => {
           />
         </Grid>
       </Grid>
-      <FormHelperText>랜딩페이지를 통해 접속할 웹페이지를 작성해주세요</FormHelperText>
+      <FormHelperText>랜딩페이지를 통해 시청자들에게 보여질 이름과 접속할 웹페이지를 작성해주세요</FormHelperText>
 
       <Grid item>
         <FormControlLabel
@@ -232,6 +218,24 @@ const LandingUrlInput = (props) => {
       </Grid>
     </Grid>
   );
+};
+
+/**
+ * @description
+ 해당 캠페인의 landingUrl을 변경하기 위한 컴포넌트
+
+ * @param {*} state ? landingUrl을 저장하기 위한 object
+ * @param {*} dispatch ? landingUrl을 변경하는 func
+ * @param {*} handleDialogOpen ? landingUrl을 기존에 저장되어있는 URL을 선택하기 위한 state
+ * @param {*} classes ? style
+
+ * @author 박찬우
+ */
+LandingUrlInput.propTypes = {
+  classes: PropTypes.object.isRequired,
+  handleDialogOpen: PropTypes.func.isRequired,
+  state: PropTypes.object.isRequired,
+  dispatch: PropTypes.func.isRequired,
 };
 
 export default withStyles(formStyle)(LandingUrlInput);

@@ -1,6 +1,9 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import OptionSelectPaper from './component/OptionSelectPaper';
 import CampaignCreateStepLayout from './component/CampaignCreateStepLayout';
+import ButtonSet from './component/ButtonSet';
+
 
 const options = [
   {
@@ -22,16 +25,12 @@ const options = [
 
 const OptionPaper = (props) => {
   const {
-    state, dispatch,
-    setStepComplete, step, // for '다음' 버튼 관리
+    state, dispatch, step, handleNext, handleBack // for '다음' 버튼 관리
   } = props;
 
   // option을 선택하였을 때 event listener
   const handleChange = (event) => {
-    // optionType 값 변경을 위해.
     dispatch({ key: event.currentTarget.name });
-    // for '다음' 버튼
-    setStepComplete(true);
   };
 
   return (
@@ -53,6 +52,7 @@ const OptionPaper = (props) => {
               checked={state.option === opt.id}
             />
           ))}
+          <ButtonSet handleNext={handleNext} handleBack={handleBack} set={Boolean(1)} />
         </div>
       )}
 
@@ -75,6 +75,30 @@ const OptionPaper = (props) => {
       )}
     </CampaignCreateStepLayout>
   );
+};
+
+
+/**
+ * @description
+  해당 캠페인의 송출옵션을 선택한다.
+  0: CPM
+  1: CPM + CPC
+  2: CPC
+
+ * @param {*} state ? 송출옵션을 저장하는 object
+ * @param {*} dispatch ? 송출옵션을 변경하는 func
+ * @param {*} handleBack ? 뒤로 버튼에 연결
+ * @param {*} handleNext ? 다음 버튼에 연결
+ * @param {*} step ? 현재의 회원가입 진행상태, 다음 step으로 진행될 때, 선택된 옵션에 대한 렌더링을 위함.
+ *
+ * @author 박찬우
+ */
+OptionPaper.propTypes = {
+  state: PropTypes.object.isRequired,
+  dispatch: PropTypes.func.isRequired,
+  handleBack: PropTypes.func.isRequired,
+  handleNext: PropTypes.func.isRequired,
+  step: PropTypes.number.isRequired
 };
 
 export default OptionPaper;

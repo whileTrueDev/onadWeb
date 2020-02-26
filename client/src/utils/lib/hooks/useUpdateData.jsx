@@ -30,11 +30,13 @@ export default function useUpdateData(url, successCallback = null) {
             successCallback();
           }
         } else if (res.data[1]) {
+          // 요청에 대한 update가 진행되던 중 오류가 발생.
           alert(res.data[1]);
         } else {
           alert('오류가 발생했습니다.');
         }
       }).catch((err) => {
+        // 요청을 전달할 수 없음.
         setError(err);
         console.log(err);
       });

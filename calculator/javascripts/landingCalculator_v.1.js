@@ -35,7 +35,7 @@ const getCreatorCash = ({ count, type }) => {
 const getCreatorExp = ({ count, type }) => {
   switch (type) {
     case 0:
-      return count;
+      return 0;
     case 1:
       return count * 2;
     case 2:

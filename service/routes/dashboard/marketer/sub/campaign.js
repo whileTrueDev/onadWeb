@@ -196,19 +196,24 @@ router.post('/onoff', (req, res) => {
     .then((row) => {
       if (!row.error) {
         const { campaignName, bannerConfirm, linkConfirm } = row.result[0];
+        // link banner confirm에 대한 세분화.
         // 마케터 활동내역 테이블 적재
-        if (bannerConfirm === 1 && linkConfirm === 1) {
+        if ((bannerConfirm === 1 && linkConfirm === 1) || (bannerConfirm === 1 && linkConfirm === null)) {
           doQuery(query, queryArray)
             .then((inrow) => {
               const MARKETER_ACTION_LOG_TYPE = 6; // 마케터 활동내역 - 캠페인 on off상태값
               marketerActionLogging([campaignId.split('_')[0], MARKETER_ACTION_LOG_TYPE,
                 JSON.stringify({ campaignName, onoffState })]);
               if (inrow.result) {
-                res.send(true);
+                res.send([true]);
               }
             });
+        } else if (bannerConfirm === 1) {
+          res.send([false, 'URL에 대한 승인이 완료되지 않았습니다.']);
+        } else if (linkConfirm === 1) {
+          res.send([false, '배너에 대한 승인이 완료되지 않았습니다.']);
         } else {
-          res.end();
+          res.send([false, '배너, URL에 대한 승인이 완료되지 않았습니다.']);
         }
       }
     })
@@ -248,16 +253,12 @@ router.get('/chart', (req, res) => {
     });
 });
 
-router.post('/checkName', (req, res) => {
-  doQuery('SELECT campaignId FROM campaign WHERE campaignName = ? ', [req.body.campaignName])
+router.get('/names', (req, res) => {
+  doQuery('SELECT campaignName FROM campaign', [])
     .then((row) => {
       const { result } = row;
-      if (result[0]) {
-        // ID가 존재합니다.
-        res.send(true);
-      } else {
-        res.send(false);
-      }
+      const nameList = result.map(inrow => inrow.campaignName);
+      res.send(nameList);
     })
     .catch(() => {
       res.send(false);
@@ -409,6 +410,7 @@ const PriorityDoquery = ({
     }
   };
 
+  const insertQuery = 'INSERT INTO categoryCampaign (categoryName, campaignList, state) VALUES(?, ?, 1)';
   const searchQuery = getSearchQuery(priorityType);
   const saveQuery = getSaveQuery(priorityType);
 
@@ -422,20 +424,32 @@ const PriorityDoquery = ({
     priorityList.map(async targetId => new Promise((resolve, reject) => {
       doQuery(searchQuery, [targetId])
         .then((row) => {
-          const jsonData = JSON.parse(row.result[0].campaignList);
-          const newCampaignList = jsonData.campaignList.concat(campaignId);
-          jsonData.campaignList = newCampaignList;
-          doQuery(saveQuery, [JSON.stringify(jsonData), targetId])
-            .then(() => {
-              resolve();
-            })
-            .catch((errorData) => {
-              console.log(errorData);
-              reject(errorData);
-            });
+          if (row.result.length === 0) {
+            const newJsonData = JSON.stringify({ campaignList: [campaignId] });
+            doQuery(insertQuery, [targetId, newJsonData])
+              .then(() => {
+                resolve();
+              })
+              .catch((errorData) => {
+                console.log(errorData, '429');
+                reject(errorData);
+              });
+          } else {
+            const jsonData = JSON.parse(row.result[0].campaignList);
+            const newCampaignList = jsonData.campaignList.concat(campaignId);
+            jsonData.campaignList = newCampaignList;
+            doQuery(saveQuery, [JSON.stringify(jsonData), targetId])
+              .then(() => {
+                resolve();
+              })
+              .catch((errorData) => {
+                console.log(errorData);
+                reject(errorData);
+              });
+          }
         })
         .catch((errorData) => {
-          console.log(errorData, '420');
+          console.log(errorData, '447');
           reject(errorData);
         });
     }))
@@ -572,14 +586,23 @@ router.get('/geturl', (req, res) => {
     });
 });
 
+// 캠페인 생성시 구동되는 query 문
 router.post('/push', (req, res) => {
   const marketerId = req._passport.session.user.userid;
   const { marketerName } = req._passport.session.user;
   const {
-    optionType, priorityType, campaignName, bannerId, budget, startDate, finDate,
-    keyword0, keyword1, keyword2, mainLandingUrl, sub1LandingUrl, sub2LandingUrl,
+    campaignName,
+    optionType,
+    priorityType,
+    priorityList,
+    selectedTime,
+    dailyLimit,
+    startDate,
+    finDate,
+    keyword,
+    bannerId,
+    mainLandingUrl, sub1LandingUrl, sub2LandingUrl,
     mainLandingUrlName, sub1LandingUrlName, sub2LandingUrlName,
-    priorityList, selectedTime
   } = req.body;
   // 현재까지 중에서 최신으로 등록된 켐페인 명을 가져와서 번호를 증가시켜 추가하기 위함.
   const searchQuery = `
@@ -607,12 +630,10 @@ router.post('/push', (req, res) => {
   getUrlId(marketerId).then((urlId) => {
     doQuery(searchQuery, [marketerId])
       .then((row) => {
-        const linkId = `link_${urlId}`;
+        const linkId = optionType !== '0' ? `link_${urlId}` : null;
         const campaignId = getCampaignId(row.result[0], marketerId);
-        const limit = budget || -1;
-        const finDateNull = finDate.length !== 0 ? finDate : null;
         const targetJsonData = JSON.stringify({ targetList: priorityList });
-        const timeJsonData = JSON.stringify({ time: (selectedTime || null) });
+        const timeJsonData = JSON.stringify({ time: selectedTime });
         const landingUrlJsonData = JSON.stringify(
           {
             links:
@@ -639,16 +660,17 @@ router.post('/push', (req, res) => {
           }
         );
         const keywordsJsonData = JSON.stringify(
-          { keywords: [keyword0, keyword1, keyword2] }
+          { keywords: keyword }
         );
+
         // 마케터 활동내역 로깅 테이블에서, 캠페인 생성의 상태값
         const MARKETER_ACTION_LOG_TYPE = 5;
         Promise.all([
           doQuery(saveQuery,
-            [campaignId, campaignName, marketerId, bannerId, linkId, limit,
+            [campaignId, campaignName, marketerId, bannerId, linkId, dailyLimit,
               priorityType, optionType, targetJsonData, marketerName, keywordsJsonData,
-              startDate, finDateNull, timeJsonData]),
-          (priorityType !== 0
+              startDate, finDate, timeJsonData]),
+          (optionType !== '0'
             ? doQuery(saveToLinkRegistered, [linkId, marketerId, 0, landingUrlJsonData]) : null),
           PriorityDoquery({
             campaignId, priorityType, priorityList, optionType

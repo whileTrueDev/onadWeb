@@ -2,15 +2,14 @@ import React from 'react';
 import {
   Grid
 } from '@material-ui/core';
+import PropTypes from 'prop-types';
 import Check from '@material-ui/icons/Check';
 import { makeStyles } from '@material-ui/core/styles';
-
+import useFetchData from '../../../utils/lib/hooks/useFetchData';
 import StyledItemText from '../../../atoms/StyledItemText';
 import Success from '../../../atoms/Success';
 import DangerTypography from '../../../atoms/Typography/Danger';
 import StyledInput from '../../../atoms/StyledInput';
-import axios from '../../../utils/axios';
-import HOST from '../../../utils/config';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -50,36 +49,43 @@ const useStyles = makeStyles(theme => ({
 
 
 const CampaignNaming = (props) => {
-  const { dispatch, checkName, setCheckName } = props;
+  const {
+    nameState, nameDispatch
+  } = props;
   const classes = useStyles();
-  const [duplicate, setDuplicate] = React.useState(false);
+  const nameData = useFetchData('/api/dashboard/marketer/campaign/names');
+
   const checkCampaignName = (value) => {
-    axios.post(`${HOST}/api/dashboard/marketer/campaign/checkName`, { campaignName: value })
-      .then((res) => {
-      // 올바른 데이터가 전달되었다.
-        if (res.data) {
-          setCheckName(false);
-          dispatch({ key: 'campaignName', value: '' });
-          setDuplicate(true);
-        } else {
-          setCheckName(true);
-          dispatch({ key: 'campaignName', value });
-          setDuplicate(false);
-        }
-      });
-  };
-  const handleChangeName = (event) => {
-    if (event.target.value.length === 0) {
-      setDuplicate(false);
-    }
-    if (event.target.value.length >= 3) {
-      checkCampaignName(event.target.value);
-    } else {
-      setCheckName(false);
-      dispatch({ key: 'campaignName', value: '' });
+    if (!nameData.loading && !nameData.error) {
+      if (nameData.payload.includes(value)) {
+        nameDispatch({ key: 'duplicate' });
+      } else {
+        nameDispatch({ key: 'set', value });
+      }
     }
   };
 
+  const getName = () => {
+    const nameTag = document.getElementsByName('name')[0];
+    if (nameTag) {
+      if (nameTag.value.length < 2) {
+        nameDispatch({ key: 'min' });
+      }
+      return nameTag.value;
+    }
+    nameDispatch({ key: 'min' });
+    return '';
+  };
+
+  const handleChangeName = () => {
+    const inputName = getName();
+    if (inputName.length >= 2) {
+      checkCampaignName(inputName);
+    }
+    // else {
+    //   nameDispatch({ key: 'min' });
+    // }
+  };
 
   return (
     <Grid item>
@@ -90,10 +96,15 @@ const CampaignNaming = (props) => {
         <Grid item>
           <Grid container direction="row">
             <Grid item>
-              <StyledInput autoFocus className={classes.input} onChange={handleChangeName} />
+              <StyledInput
+                autoFocus
+                name="name"
+                className={classes.input}
+                onChange={handleChangeName}
+              />
             </Grid>
             <Grid item>
-              {checkName
+              {(!nameState.error && getName() !== '')
             && (
             <Success>
               <Check />
@@ -104,14 +115,26 @@ const CampaignNaming = (props) => {
         </Grid>
         <Grid item>
           <DangerTypography>
-            {duplicate
-          && ('캠페인명이 중복되었습니다.')
-          }
+            {nameState.error && nameState.msg}
           </DangerTypography>
         </Grid>
       </Grid>
     </Grid>
   );
 };
+
+/**
+ * @description
+ 해당 캠페인의 이름을 설정하는 컴포넌트
+
+ * @param {*} nameDispatch ? campaignName에 대한 error와 data를 설정하는 func
+ * @param {*} nameState ? campaignName에 대한 error와 data를 저장하는 object
+ * @author 박찬우
+ */
+CampaignNaming.propTypes = {
+  nameDispatch: PropTypes.func.isRequired,
+  nameState: PropTypes.object.isRequired,
+};
+
 
 export default CampaignNaming;

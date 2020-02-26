@@ -7,7 +7,7 @@ const pool = mysql.createPool({
   password: process.env.DB_PASSWORD,
   database: process.env.DB_DATABASE,
   charset: process.env.DB_CHARSET,
-  // connectTimeout: 10000
+  // connectionLimit: 30
   /**
      * The maximum number of connection requests the pool will queue
      * before returning an error from getConnection.

@@ -90,7 +90,7 @@ const BannerDescFrom = (props) => {
           />
           <FormHelperText>
             {' '}
-            {'랜딩페이지 클릭 시 보일 홍보문구를 입력해주세요. <* 이벤트 / 할인정보 등>'}
+            {'랜딩페이지 클릭 시 보일 홍보문구를 입력해주세요. < 이벤트 / 할인정보 등>'}
             {' '}
           </FormHelperText>
         </CssFormControl>

@@ -67,7 +67,6 @@ export default withRoot((props) => {
           />
           <Advantage source={sources.advantage} MainUserType="creator" />
           <ProductHowItWorks source={sources.howitworks} MainUserType="creator" />
-          <Inqurie />
           <AppFooter />
           <RePasswordDialog
             repasswordOpen={repasswordOpen}
