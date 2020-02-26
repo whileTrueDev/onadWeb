@@ -6,6 +6,7 @@ import { Router, Switch, Route } from 'react-router-dom';
 import { MuiThemeProvider as ThemeProvider } from '@material-ui/core/styles';
 // page
 import Main from './pages/main/Main';
+import Door from './pages/main/Door';
 import Introduction from './pages/main/Introduction';
 import RegistPage from './pages/main/Regist';
 import CreatorDashboard from './pages/layouts/CreatorDashboardLayout';
@@ -14,6 +15,7 @@ import MarketerDashboard from './pages/layouts/MarketerDashboardLayout';
 import NotFound from './pages/others/NotFound';
 import Notice from './pages/others/Notice';
 import Policy from './pages/main/Policy';
+import CreatorList from './pages/main/CreatorList';
 import TestChargeDialog from './organisms/marketer/MyOffice/CashManage/TestChargeDialog';
 // import ShutDownCloseBeta from './pages/others/ShutDownCloseBeta';
 // import KakaoPay from './pages/Common/KakaoPay';
@@ -21,16 +23,18 @@ import * as serviceWorker from './utils/serviceWorker';
 import history from './history';
 import theme from './theme';
 
-
 dotenv.config();
 
 const developRouter = (
   <Router history={history}>
     <Switch>
-      <Route exact path="/" component={Main} />
+      <Route exact path="/" component={Door} />
+      <Route exact path="/marketer" component={Main} />
+      <Route exact path="/creator" component={Main} />
+      <Route exact path="/creatorlist" component={CreatorList} />
       <Route path="/regist/:platform" component={RegistPage} />
       <Route exact path="/regist" component={RegistPage} />
-      <Route exact path="/introduction" component={Introduction} />
+      <Route exact path="/introduce/:userType" component={Introduction} />
       <Route exact path="/policy" component={Policy} />
       <Route exact path="/policy/:privacy" component={Policy} />
       <Route exact path="/notice" component={Notice} />
@@ -50,10 +54,13 @@ const developRouter = (
 const productionRouter = (
   <Router history={history}>
     <Switch>
-      <Route exact path="/" component={Main} />
+      <Route exact path="/" component={Door} />
       <Route path="/regist/:platform" component={RegistPage} />
+      <Route exact path="/marketer" component={Main} />
+      <Route exact path="/creator" component={Main} />
+      <Route exact path="/creatorlist" component={CreatorList} />
       <Route exact path="/regist" component={RegistPage} />
-      <Route exact path="/introduction" component={Introduction} />
+      <Route exact path="/introduce/:userType" component={Introduction} />
       <Route exact path="/policy" component={Policy} />
       <Route exact path="/policy/:privacy" component={Policy} />
       <Route exact path="/marketer/charge" component={TestChargeDialog} />

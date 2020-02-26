@@ -5,8 +5,10 @@ import ChartTabs from './chart/ChartTabs';
 import CreatorsChart from './chart/CreatorsChart';
 import ReChartBar from '../../../atoms/Chart/ReChartBar';
 
+
 export default function CanvasForChart(props) {
-  const { creatorsData, valueChartData, broadCreatorData } = props;
+  const { valueChartData, broadCreatorData } = props;
+
   const [tabValue, setTabValue] = React.useState(0);
   function handleTabChange(event, newValue) {
     setTabValue(newValue);
@@ -26,7 +28,10 @@ export default function CanvasForChart(props) {
           <ReChartBar data={valueChartData.payload} />
           )}
           {tabValue === 1 && (
-            <CreatorsChart creatorsData={creatorsData} broadCreatorData={broadCreatorData} />
+            (!broadCreatorData.loading && broadCreatorData.payload)
+              && (
+                <CreatorsChart broadCreatorData={broadCreatorData} />
+              )
           )}
         </div>
 

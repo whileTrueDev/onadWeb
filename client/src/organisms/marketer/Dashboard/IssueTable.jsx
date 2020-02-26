@@ -6,6 +6,38 @@ import {
   IconButton, CircularProgress,
 } from '@material-ui/core';
 import Refresh from '@material-ui/icons/Refresh';
+import makeStyles from '@material-ui/core/styles/makeStyles';
+
+const styles = makeStyles(theme => ({
+  title: {
+    fontSize: '14px',
+    fontWeight: 550,
+    [theme.breakpoints.down('md')]: {
+      fontSize: '18px',
+    },
+    [theme.breakpoints.down('sm')]: {
+      fontSize: '18px',
+    },
+    [theme.breakpoints.down('xs')]: {
+      fontSize: '12px',
+    },
+  },
+  caption: {
+    fontSize: '10px',
+    color: 'grey',
+    fontWeight: 500,
+    [theme.breakpoints.down('md')]: {
+      fontSize: '13px',
+    },
+    [theme.breakpoints.down('sm')]: {
+      fontSize: '13px',
+    },
+    [theme.breakpoints.down('xs')]: {
+      fontSize: '9px',
+    },
+  }
+}));
+
 
 function makeContents(typeNumber, detail) {
   const details = JSON.parse(detail);
@@ -21,7 +53,9 @@ function makeContents(typeNumber, detail) {
   // 9 - 환불요청  v-191226
   // 10 - 환불요청결과
   // 11 - 배너 삭제 v-191227
-  // 11 - 캠페인 삭제 v-191227
+  // 12 - 캠페인 삭제 v-191227
+  // 13 - 링크 심사 거절 v-200129
+  // 14 - 링크 심사 승인 v-200129
   let content = '';
   switch (typeNumber) {
     case 0:
@@ -63,6 +97,12 @@ function makeContents(typeNumber, detail) {
     case 12:
       content = `${details.campaignName} 캠페인 삭제`;
       return content;
+    case 13:
+      content = `${details.linkTo} URL 심사 거절됨`;
+      return content;
+    case 14:
+      content = `${details.linkTo} URL 심사 승인됨`;
+      return content;
     default:
       throw Error('typeNumber must be need');
   }
@@ -70,17 +110,16 @@ function makeContents(typeNumber, detail) {
 
 export default function issueTable(props) {
   const { actionLogData } = props;
-
-  // console.log(actionLogData);
+  const classes = styles();
 
   return (
-    <Paper style={{ height: 400 }}>
+    <Paper style={{ height: 'auto' }}>
       <div style={{ padding: 16, display: 'flex', justifyContent: 'space-between' }}>
         <div style={{ display: 'flex', alignItems: 'center' }}>
-          <Typography variant="h6">활동</Typography>
-          <Typography variant="caption">
+          <Typography className={classes.title}>활동</Typography>
+          <Typography className={classes.caption}>
             &emsp;
-            {'(목록 갱신은 새로고침을 눌러주세요.)'}
+            목록갱신은 새로고침을 눌러주세요
           </Typography>
         </div>
 
@@ -96,7 +135,7 @@ export default function issueTable(props) {
 
       <Divider />
 
-      <Grid container style={{ height: 330, overflow: 'auto' }}>
+      <Grid container style={{ height: '350px', overflow: 'auto' }}>
         {/* 데이터 있는 경우 */}
         {actionLogData.loading && (<CircularProgress />)}
         {actionLogData.payload.length > 0 ? (

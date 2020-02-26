@@ -13,6 +13,8 @@ import Menu from '@material-ui/icons/Menu';
 import headerStyle from '../../assets/jss/onad/components/headerStyle';
 import Button from '../CustomButtons/Button';
 import AdminNavbarLinks from './AdminNavbarLinks';
+//
+import useFetchData from '../../utils/lib/hooks/useFetchData';
 
 function Header(props) {
   const {
@@ -33,6 +35,8 @@ function Header(props) {
   const appBarClasses = classNames({
     [` ${classes[color]}`]: color,
   });
+  const userType = window.location.pathname.split('/')[2];
+  const noticeReadState = useFetchData('/api/dashboard/noticereadstate', { type: userType });
   return (
     <AppBar className={classes.appBar + appBarClasses}>
       <Toolbar className={classes.container}>
@@ -46,8 +50,16 @@ function Header(props) {
           )}
 
         </div>
-
-        <AdminNavbarLinks />
+        {!noticeReadState.loading && noticeReadState.payload
+          ? (
+            <AdminNavbarLinks
+              noticeReadState={noticeReadState.payload.noticeReadState}
+            />
+          ) : (
+            <AdminNavbarLinks
+              noticeReadState
+            />
+          )}
 
         <Hidden mdUp implementation="css">
           <IconButton

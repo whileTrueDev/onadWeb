@@ -43,7 +43,7 @@ router.get('/defaultCash', (req, res) => {
   doQuery(debitQuery, [marketerId])
     .then((row) => {
       if (!row.error) {
-        res.send(row.result[0].cashAmount.replace(",",""));
+        res.send(row.result[0].cashAmount.replace(',', ''));
       }
     })
     .catch((err) => {
@@ -403,8 +403,8 @@ router.post('/testcharge', async (req, res) => {
       method: 'post',
       headers: { 'Content-Type': 'application/json' },
       data: {
-        imp_key: '2306149701563593', // REST API키 => import 관리자 페이지에 있음
-        imp_secret: 'Oc6uNyT5UYJ1oGNoQn6aV3xZ5AdJeGJ2TPwGnqMipvkNc7c2uicqlKprlCbzjUBcK8T8yFqXbKLoSXqn' // REST API Secret => import 관리자 페이지에 있음
+        imp_key: process.env.IMP_KEY, // REST API키 => import 관리자 페이지에 있음
+        imp_secret: process.env.IMP_SECRET // REST API Secret => import 관리자 페이지에 있음
       }
     });
 
@@ -452,12 +452,12 @@ router.post('/testcharge', async (req, res) => {
           `;
 
           // 충전 금액 row 한 줄 추가
-          const vbankCashChargeArray = [marketerId, chargeCash, chargeType, merchant_uid, imp_uid, vbank_num, vbank_name ];
+          const vbankCashChargeArray = [marketerId, chargeCash, chargeType, merchant_uid, imp_uid, vbank_num, vbank_name];
 
           doQuery(vbankCurrentDebitQuery, vbankCurrentDebitArray)
             .then((row) => {
               if (!row.error) {
-                  doQuery(vbankCashChargeInsertQuery, vbankCashChargeArray)
+                doQuery(vbankCashChargeInsertQuery, vbankCashChargeArray)
                   .then((secondrow) => {
                     // 마케터 캐시 충전 쿼리 완료
                     if (!secondrow.error) {
@@ -528,7 +528,7 @@ router.post('/testcharge', async (req, res) => {
                 let currentCashAmount = 0;
                 if (row.result[0]) { // 기존에 marketerDebit에 데이터가 있는 경우
                   currentCashAmount = Number(row.result[0].cashAmount);
-                  console.log(row.result[0].cashAmount)
+                  console.log(row.result[0].cashAmount);
                 }
                 Promise.all([
                   doQuery(cashChargeInsertQuery, cashChargeArray),

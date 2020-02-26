@@ -17,7 +17,7 @@ import useFetchData from '../../utils/lib/hooks/useFetchData';
 
 const useStyles = makeStyles(() => ({
   root: {
-    marginTop: 70
+    paddingTop: 70
   },
   contentBox: {
     width: 980,

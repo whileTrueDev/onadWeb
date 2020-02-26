@@ -107,4 +107,27 @@ router.get('/viewerheatmap', (req, res) => {
   });
 });
 
+router.get('/games/top', (req, res) => {
+  const query = `
+  SELECT
+    count(content) AS count,
+    content, gameId, gameName, gameNameKr, boxArt
+  FROM creatorDetail
+  JOIN twitchGame ON content = gameName
+  WHERE content IS NOT NULL
+  GROUP BY content ORDER BY count(content) DESC
+  `;
+
+  doQuery(query)
+    .then((row) => {
+      if (!row.error) {
+        res.send(row.result);
+      }
+    })
+    .catch((err) => {
+      console.log('Err in /creatordetail/games/top - ', err);
+    });
+});
+
+
 module.exports = router;

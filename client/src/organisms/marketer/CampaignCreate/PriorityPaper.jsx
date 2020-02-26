@@ -1,199 +1,206 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
-  Grid, Paper, Divider,
+  Collapse, Chip
 } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
-import Help from '@material-ui/icons/Help';
-import DescPopover from '../../../atoms/DescPopover';
-import StyledItemText from '../../../atoms/StyledItemText';
-import StyledSelectText from '../../../atoms/StyledSelectText';
-import GreenCheckbox from '../../../atoms/GreenCheckBox';
+import PropTypes from 'prop-types';
+import CreatorSelect from './CreatorSelectCollapse';
+import GameSelect from './GameSelect';
+import OptionSelectPaper from './component/OptionSelectPaper';
+import CampaignCreateStepLayout from './component/CampaignCreateStepLayout';
+import ButtonSet from './component/ButtonSet';
 
-const useStyles = makeStyles(theme => ({
-  root: {
-    width: '100%',
-    marginTop: '0px',
-    alignItem: 'center',
-    [theme.breakpoints.down('sm')]: {
-      margin: 0,
-    },
+const priorityTypes = [
+  {
+    id: 'type0',
+    primaryText: '특정 크리에이터에게만 광고 송출',
+    secondaryText: '특정 크리에이터에게만 광고를 송출할 수 있어요',
+    defaultChildren: (state, setStepComplete, checkedPriorities, checkedPrioritiesDispatch, setSelectedNames) => (
+      <Collapse in={state.priorityType === 'type0'}>
+        <CreatorSelect
+          setStepComplete={setStepComplete}
+          checkedCreators={checkedPriorities}
+          checkedCreatorsDispatch={checkedPrioritiesDispatch}
+          priorityType={state.priorityType}
+          setSelectedNames={setSelectedNames}
+        />
+      </Collapse>
+    ),
+    completeChildren: ({ selectedNames }) => (
+      <div>
+        {selectedNames.map(creator => (
+          <Chip
+            key={creator}
+            label={creator}
+            variant="outlined"
+            style={{ margin: 4 }}
+          />
+        ))}
+      </div>
+    ),
   },
-  item: {
-    marginBottom: '15px',
-    [theme.breakpoints.down('sm')]: {
-      width: '100%',
-      margin: 0,
-      padding: 0,
-    },
-  },
-  choice: {
-    padding: theme.spacing(3),
-    [theme.breakpoints.down('sm')]: {
-      padding: theme.spacing(1),
-    },
-  },
-  ready: {
-    padding: theme.spacing(3),
-    [theme.breakpoints.down('sm')]: {
-      padding: theme.spacing(1),
-    },
-    color: 'rgba(0, 0, 0, 0.26)',
-    backgroundColor: 'rgba(0, 0, 0, 0.15)',
-  },
-  icon: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  popover: {
-    pointerEvents: 'none',
-  },
+  {
 
-}));
+    // *****************************  임시 제거  **********************************
+    // disabled: true, // 소켓서버 게임 기반 광고 송출 적용 이후 삭제.
+    // **************************************************************************
+
+    id: 'type1',
+    primaryText: '특정 게임에만 광고 송출',
+    secondaryText: '특정 게임에만 광고를 송출할 수 있어요.',
+    defaultChildren: (state, setStepComplete, checkedPriorities, checkedPrioritiesDispatch) => (
+      <Collapse in={state.priorityType === 'type1'}>
+        <GameSelect
+          setStepComplete={setStepComplete}
+          checkedGames={checkedPriorities}
+          checkedGamesDispatch={checkedPrioritiesDispatch}
+          priorityType={state.priorityType}
+        />
+      </Collapse>
+    ),
+    completeChildren: ({ checkedPriorities }) => (
+      <div>
+        {checkedPriorities.map(game => (
+          <Chip
+            key={game}
+            label={game}
+            variant="outlined"
+            style={{ margin: 4 }}
+          />
+        ))}
+      </div>
+    ),
+  },
+  {
+    id: 'type2',
+    primaryText: '노출 우선',
+    secondaryText: ` 최대한 많은 시청자들에게 브랜드를 인지시키고 싶은 광고주님께 추천드립니다. 
+    `,
+    defaultChildren: null,
+    customHandleSelect: (state, setStepComplete) => {
+      setStepComplete(state.priorityType !== 'type2');
+    }
+  }
+];
 
 const PriorityPaper = (props) => {
-  const { handleNext, state, dispatch } = props;
-  const classes = useStyles();
-  // const [state, dispatch] = useReducer(myReducer, { choose: 0, type: 0 });
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const [descIndex, setDescIndex] = React.useState(0);
-  const open = Boolean(anchorEl);
+  const {
+    state, dispatch, // 우선형 타입 선택
+    checkedPriorities, checkedPrioritiesDispatch, // 선택된 크리에이터
+    handleBack, handleNext, step
+  } = props;
+  const [complete, setStepComplete] = React.useState(false);
+
+  useEffect(() => {
+    setStepComplete(false);
+  }, [step]);
+
+  useEffect(() => {
+    checkedPrioritiesDispatch({ type: 'reset' });
+  }, [checkedPrioritiesDispatch, state.priorityType]);
+
+  const [selectedNames, setSelectedNames] = React.useState([]);
 
   const handleChange = (event) => {
-    if (event.target.checked) {
-      dispatch({ type: event.target.name });
-    } else {
+    // 이미 체크되어있는 경우
+    event.preventDefault();
+    if (state.priorityType === event.currentTarget.name) {
+      setStepComplete(false);
       dispatch({ type: 'reset' });
+      checkedPrioritiesDispatch({ type: 'reset' });
+    } else {
+      // 새로 체크하는 경우
+      dispatch({ type: event.currentTarget.name });
     }
   };
 
-  const handlePopoverOpen = index => (event) => {
-    setDescIndex(index);
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handlePopoverClose = () => {
-    setAnchorEl(null);
-  };
-
-
   return (
-    <Grid container direction="column" spacing={2} className={classes.root}>
-      <Grid item>
-        <Grid container direction="column" spacing={3}>
-          <Grid item className={classes.item}>
-            <StyledItemText primary="셋째,&nbsp;&nbsp; 광고 송출방식 선택" secondary="해당 캠페인의 송출방식을 선택하세요." />
-            <Divider component="hr" style={{ height: '2px' }} />
-          </Grid>
-          <Grid item className={classes.item}>
-            <Grid container direction="column" spacing={2}>
-              <Grid item>
-                <Paper className={classes.choice}>
-                  <Grid container direction="row" justify="space-between">
-                    <Grid item>
-                      <StyledSelectText primary="1. 크리에이터 우선형" secondary="원하는 크리에이터에게 광고를 넣을 수 있어요." />
-                      {/* 광고를 넣고 싶은 크리에이터가 있어요. */}
-                    </Grid>
-                    <Grid item className={classes.icon}>
-                      <Grid container direction="row">
-                        <Grid item className={classes.icon}>
-                          <Help
-                            fontSize="large"
-                            color="disabled"
-                            onMouseEnter={handlePopoverOpen(0)}
-                            onMouseLeave={handlePopoverClose}
-                            aria-owns={open ? 'send-desc-popover' : undefined}
-                            aria-haspopup="true"
-                          />
-                        </Grid>
-                        <Grid item>
-                          <GreenCheckbox
-                            name="type0"
-                            checked={state.type === 0}
-                            onChange={handleChange}
-                            onClick={handleNext(true, 2)}
-                            fontSize="large"
-                            // disabled
-                          />
-                        </Grid>
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                </Paper>
-              </Grid>
-              <Grid item>
-                <Paper className={classes.choice}>
-                  <Grid container direction="row" justify="space-between">
-                    <Grid item>
-                      <StyledSelectText primary="2. 카테고리 우선형" secondary="제품에 맞는 카테고리에 광고를 넣고 싶어요." />
-                    </Grid>
-                    <Grid item className={classes.icon}>
-                      <Grid container direction="row">
-                        <Grid item className={classes.icon}>
-                          <Help
-                            fontSize="large"
-                            color="disabled"
-                            onMouseEnter={handlePopoverOpen(1)}
-                            onMouseLeave={handlePopoverClose}
-                            aria-owns={open ? 'send-desc-popover' : undefined}
-                            aria-haspopup="true"
-                            name="type2"
-                          />
-                        </Grid>
-                        <Grid item>
-                          <GreenCheckbox
-                            name="type1"
-                            checked={state.type === 1}
-                            onChange={handleChange}
-                            onClick={handleNext(true, 3)}
-                            fontSize="large"
-                          />
-                        </Grid>
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                </Paper>
-              </Grid>
-              <Grid item>
-                <Paper className={classes.choice}>
-                  <Grid container direction="row" justify="space-between">
-                    <Grid item>
-                      <StyledSelectText primary="3. 노출 우선형" secondary="단기간에 노출을 많이 하고 싶어요." />
-                    </Grid>
-                    <Grid item className={classes.icon}>
-                      <Grid container direction="row">
-                        <Grid item className={classes.icon}>
-                          <Help
-                            fontSize="large"
-                            color="disabled"
-                            onMouseEnter={handlePopoverOpen(2)}
-                            onMouseLeave={handlePopoverClose}
-                            aria-owns={open ? 'send-desc-popover' : undefined}
-                            aria-haspopup="true"
-                            name="type3"
-                          />
-                        </Grid>
-                        <Grid item>
-                          <GreenCheckbox
-                            name="type2"
-                            checked={state.type === 2}
-                            onChange={handleChange}
-                            onClick={handleNext(false, 4)}
-                            fontSize="large"
-                          />
-                        </Grid>
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                </Paper>
-              </Grid>
-            </Grid>
-          </Grid>
-        </Grid>
-      </Grid>
-      <DescPopover open={open} anchorEl={anchorEl} handlePopoverClose={handlePopoverClose} descIndex={descIndex} contentType="priority" />
-    </Grid>
+    <CampaignCreateStepLayout
+      primaryText="둘째,&nbsp;&nbsp; 광고 송출방식 선택"
+      secondaryText="해당 캠페인의 송출방식을 선택하세요."
+    >
+      {/* 아직 선택되지 않은 경우 */}
+      {step === 1 && (
+        <React.Fragment>
+          {priorityTypes.map(type => (
+            <OptionSelectPaper
+              key={type.id}
+              name={type.id}
+              primaryText={type.primaryText}
+              secondaryText={type.secondaryText}
+              disabled={type.disabled}
+              handleSelect={(evt) => {
+                handleChange(evt);
+                if (type.customHandleSelect) {
+                  type.customHandleSelect(state, setStepComplete);
+                }
+              }}
+              checked={state.priorityType === type.id}
+            >
+              {type.defaultChildren ? type.defaultChildren(
+                state, setStepComplete,
+                checkedPriorities, checkedPrioritiesDispatch,
+                setSelectedNames
+              ) : null}
+            </OptionSelectPaper>
+          ))}
+          <ButtonSet handleNext={handleNext} handleBack={handleBack} set={complete} />
+        </React.Fragment>
+      )}
+
+      {/* 선택된 경우 (step3으로 넘어간 경우) */}
+      {step > 1 && (
+        <div>
+          {priorityTypes.filter(type => state.priorityType === type.id)
+            .map(selectedPriorityType => (
+              <OptionSelectPaper
+                key={selectedPriorityType.id}
+                name={selectedPriorityType.id}
+                primaryText={selectedPriorityType.primaryText}
+                secondaryText={selectedPriorityType.secondaryText}
+                checked
+                disabled
+                innerPaperChildren={(
+                  <div>
+                    {selectedPriorityType.completeChildren
+                      ? selectedPriorityType.completeChildren({ checkedPriorities, checkedPrioritiesDispatch, selectedNames })
+                      : null}
+                  </div>
+                )}
+              />
+            ))
+          }
+        </div>
+      )}
+    </CampaignCreateStepLayout>
   );
+};
+
+
+/**
+ * @description
+  해당 캠페인의 우선형을 선택한다.
+  0: 크리에이터 우선형
+  1: 게임 우선형
+  2: 노출 우선형
+
+ * @param {*} state ? 우선형을 저장하는 object
+ * @param {*} dispatch ? 우선형을 변경하는 func
+ * @param {*} checkedPriorities ? 선택된 크리에이터, 카테고리를 가진 array
+ * @param {*} checkedPrioritiesDispatch ? 크리에이터, 카테고리 선택을 변경하는 func
+ * @param {*} handleBack ? 뒤로 버튼에 연결
+ * @param {*} handleNext ? 다음 버튼에 연결
+ * @param {*} step ? 현재의 회원가입 진행상태, 다음 step으로 진행될 때, 선택된 옵션에 대한 렌더링을 위함.
+ *
+ * @author 박찬우
+ */
+PriorityPaper.propTypes = {
+  state: PropTypes.object.isRequired,
+  dispatch: PropTypes.func.isRequired,
+  checkedPriorities: PropTypes.array.isRequired,
+  checkedPrioritiesDispatch: PropTypes.func.isRequired,
+  handleBack: PropTypes.func.isRequired,
+  handleNext: PropTypes.func.isRequired,
+  step: PropTypes.number.isRequired
 };
 
 export default PriorityPaper;

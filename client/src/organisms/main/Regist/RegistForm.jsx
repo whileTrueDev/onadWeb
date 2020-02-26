@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
+import NumberFormat from 'react-number-format';
 import PropTypes from 'prop-types';
-import MaskedInput from 'react-text-mask';
 import {
   FormControl,
   InputLabel,
@@ -15,6 +15,8 @@ import {
   Grid,
   Paper,
   Typography,
+  Radio,
+  FormControlLabel
 } from '@material-ui/core';
 
 import CircularProgress from '@material-ui/core/CircularProgress';
@@ -22,6 +24,7 @@ import Done from '@material-ui/icons/Done';
 import axios from '../../../utils/axios';
 import SuccessTypo from '../../../atoms/Typography/Success';
 import HOST from '../../../utils/config';
+import StyledInput from '../../../atoms/StyledInput';
 
 // Style Overriding용.
 const styles = theme => ({
@@ -36,6 +39,7 @@ const styles = theme => ({
     },
   },
   phoneField: {
+    fontSize: '17px',
     [theme.breakpoints.down('xs')]: {
       minWidth: '200px',
       marginRight: 0,
@@ -56,6 +60,21 @@ const styles = theme => ({
   adornment: {
     fontSize: '20px',
     fontWeight: 900
+  },
+  switchbox: {
+    marginLeft: theme.spacing(1),
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  switch: {
+    '& .MuiFormControlLabel-label': {
+      fontSize: '11px',
+      color: 'black'
+    },
+    margin: 0,
+    marginTop: theme.spacing(3),
+    padding: 0,
   }
 });
 
@@ -85,25 +104,6 @@ const domains = [
   - 3. passwordValue
 */
 
-const TextMaskCustom = (props) => {
-  const { inputRef, ...other } = props;
-  return (
-    <MaskedInput
-      {...other}
-      ref={(ref) => {
-        inputRef(ref ? ref.inputElement : null);
-      }}
-      mask={['(', ' ', /\d/, /\d/, /\d/, ' ', ')', ' ', '-', ' ', /\d/, /\d/, /\d/, /\d/, ' ', '-', ' ', /\d/, /\d/, /\d/, /\d/]}
-      placeholderChar={'\u2000'}
-      showMask
-      style={{
-        fontSize: 17,
-        width: 200,
-      }}
-    />
-  );
-};
-
 const RegistForm = (props) => {
   const {
     classes, userType, handleBack, handleUserSubmit,
@@ -111,7 +111,11 @@ const RegistForm = (props) => {
   } = props;
 
   const [marketerCustomDomain, setCustomDomain] = useState('');
+  const [numberType, setNumberType] = useState(true);
 
+  const handleTypeChange = () => {
+    setNumberType(!numberType);
+  };
   // handle을 전달.
   const handleCustom = (event) => {
     setCustomDomain(event.target.value);
@@ -119,6 +123,11 @@ const RegistForm = (props) => {
 
   const handleChange = name => (event) => {
     dispatch({ type: name, value: event.target.value });
+  };
+
+  const handleChangePhone = (value) => {
+    dispatch({ type: 'phoneNum', value: value.formattedValue });
+    // setFomattedPhone(value.formattedValue);
   };
 
   const handleSubmit = (event) => {
@@ -129,12 +138,18 @@ const RegistForm = (props) => {
       return;
     }
     const {
-      id, password, repasswd, checkDuplication, email,
+      id, password, repasswd, checkDuplication,
     } = state;
+
+    const marketerMailId = document.getElementById('email').value;
+
+    if (marketerMailId === '') {
+      alert('입력이 올바르지 않습니다.');
+      return;
+    }
     // 모든 state가 false가 되어야한다.
-    if (!(id || password || repasswd || checkDuplication || email)) {
+    if (!(id || password || repasswd || checkDuplication)) {
       const marketerId = document.getElementById('id').value;
-      const marketerMailId = document.getElementById('email').value;
       const marketerName = document.getElementById('name').value;
       const marketerBusinessRegNum = (document.getElementById('marketerBusinessRegNum') ? document.getElementById('marketerBusinessRegNum').value : '');
       const marketerPhoneNum = state.phoneNum;
@@ -157,9 +172,9 @@ const RegistForm = (props) => {
     }
   };
 
-  const checkBusinessRegNum = () => {
-    alert('준비 중입니다. 회원가입을 진행해 주세요.');
-  };
+  // const checkBusinessRegNum = () => {
+  //   alert('준비 중입니다. 회원가입을 진행해 주세요.');
+  // };
 
   const checkDuplicateID = () => {
     const id = document.getElementById('id').value;
@@ -268,20 +283,65 @@ const RegistForm = (props) => {
                   />
                 </Grid>
                 <Grid item>
-                  <FormControl
-                    className={classes.phoneField}
-                    required
-                    margin="normal"
-                  >
-                    <InputLabel shrink htmlFor="phoneNumber">전화번호</InputLabel>
-                    <Input
-                      value={state.phoneNum}
-                      onChange={handleChange('phoneNum')}
-                      id="phoneNumber"
-                      inputComponent={TextMaskCustom}
-                    />
-                    <FormHelperText>전화번호를 입력하세요.</FormHelperText>
-                  </FormControl>
+                  <Grid container diretion="row">
+                    <Grid item>
+                      <FormControl
+                        className={classes.phoneField}
+                        required
+                        margin="normal"
+                      >
+                        <InputLabel shrink htmlFor="phoneNumber">전화번호</InputLabel>
+                        <NumberFormat
+                          placeholder="( ___ ) - ____ - ____"
+                          value={state.phoneNum}
+                          onValueChange={handleChangePhone}
+                          customInput={StyledInput}
+                          format={numberType ? '( ### ) - #### - ####' : '( ### ) - ### - ####'}
+                          className={classes.phoneField}
+                          allowNegative={false}
+                        />
+                        <FormHelperText>온애드와 연락할 전화번호를 입력하세요.</FormHelperText>
+                      </FormControl>
+                    </Grid>
+                    <Grid item className={classes.switchbox}>
+                      <Grid container direction="row">
+                        <Grid item>
+                          <FormControlLabel
+                            value="phone"
+                            control={(
+                              <Radio
+                                checked={numberType}
+                                onChange={handleTypeChange}
+                                inputProps={{ 'aria-label': 'A' }}
+                                size="small"
+                                color="primary"
+                              />
+)}
+                            className={classes.switch}
+                            label="휴대폰"
+                            labelPlacement="bottom"
+                          />
+                        </Grid>
+                        <Grid item>
+                          <FormControlLabel
+                            value="tel"
+                            control={(
+                              <Radio
+                                checked={!numberType}
+                                onChange={handleTypeChange}
+                                inputProps={{ 'aria-label': 'A' }}
+                                size="small"
+                                color="primary"
+                              />
+                            )}
+                            className={classes.switch}
+                            label="회사"
+                            labelPlacement="bottom"
+                          />
+                        </Grid>
+                      </Grid>
+                    </Grid>
+                  </Grid>
                 </Grid>
               </Grid>
               <Grid item>
@@ -290,16 +350,16 @@ const RegistForm = (props) => {
                     <FormControl style={{ marginTop: '8px', marginBottom: '16px' }}>
                       <InputLabel shrink>사업자등록번호</InputLabel>
                       <Input
-                // onChange={handleChange('businessRegNum')}
+                        // onChange={handleChange('businessRegNum')}
                         name="businessRegNum"
-                        endAdornment={(
-                          <InputAdornment position="end">
-                            <Divider className={classes.divider} />
-                            <Button onClick={checkBusinessRegNum}>
-                              조회
-                            </Button>
-                          </InputAdornment>
-                        )}
+                        // endAdornment={(
+                        //   <InputAdornment position="end">
+                        //     <Divider className={classes.divider} />
+                        //     <Button onClick={checkBusinessRegNum}>
+                        //       조회
+                        //     </Button>
+                        //   </InputAdornment>
+                        // )}
                       />
                       <FormHelperText>사업자 번호를 입력후 조회버튼을 누르세요.</FormHelperText>
                     </FormControl>
@@ -313,8 +373,6 @@ const RegistForm = (props) => {
                     label="EMAIL ID"
                     className={classes.textField}
                     onChange={handleChange('email')}
-                // helperText={state.email ? 'ID의 형식이 올바르지 않습니다.' : 'EMAIL ID을 입력하세요.'}
-                // error={state.email}
                     helperText="EMAIL ID을 입력하세요."
                     margin="normal"
                     id="email"

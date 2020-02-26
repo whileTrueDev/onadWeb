@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import MobileStepper from '@material-ui/core/MobileStepper';
@@ -9,6 +9,7 @@ import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import SwipeableViews from 'react-swipeable-views';
 import Check from '@material-ui/icons/Check';
 import Success from './Success';
+
 
 const tutorialSteps = [
   {
@@ -98,26 +99,20 @@ const useStyles = makeStyles(theme => ({
     justifyContent: 'center',
     padding: `${theme.spacing(2)}px ${theme.spacing(4)}px ${theme.spacing(1) + 6}px`,
   },
-  imageCheck: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    top: 0,
-    bottom: 0,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: `${theme.spacing(2)}px ${theme.spacing(4)}px ${theme.spacing(1) + 6}px`,
-  }
 }));
 
-function BannerCarousel(props) {
-  const { steps, handleBannerId } = props;
+const BannerCarousel = (props) => {
+  const { steps, handleBannerId, registStep } = props;
   const classes = useStyles();
   const theme = useTheme();
   const [activeStep, setActiveStep] = useState(0);
   const [checkImage, setCheckImage] = useState({ step: 0, check: 0 });
   const maxSteps = steps.length;
+
+  useEffect(() => {
+    setCheckImage({ step: 0, check: 0 });
+    setActiveStep(0);
+  }, [registStep]);
 
   function handleNext() {
     setCheckImage({});
@@ -193,11 +188,23 @@ function BannerCarousel(props) {
       />
     </div>
   );
-}
+};
 
+
+/**
+ * @description
+ 해당 캠페인의 배너를 저장하기 위해 배너를 보여주고 체크하는 컴포넌트
+
+ * @param {*} steps ? 배너 list가 저장된 array
+ * @param {*} handleBannerId ? 배너를 등록하는 Dialog를 띄우는 state
+ * @param {*} registStep ? 현재의 회원가입 진행상태, 다음 step으로 진행될 때, 선택된 옵션에 대한 렌더링을 위함.
+ *
+ * @author 박찬우
+ */
 BannerCarousel.propTypes = {
   steps: PropTypes.array,
-
+  handleBannerId: PropTypes.func.isRequired,
+  registStep: PropTypes.number.isRequired
 };
 
 // steps는 bannerId, bannerSrc 라는 col이 존재해야한다.

@@ -12,7 +12,7 @@ router.get('/', (req, res) => {
   SELECT 
   marketerId, marketerName, marketerMail, 
   marketerPhoneNum, marketerBusinessRegNum,
-  marketerUserType, marketerContraction
+  marketerUserType, marketerContraction, platformType
   FROM marketerInfo
   WHERE marketerId = ? `;
 
@@ -30,19 +30,52 @@ router.get('/', (req, res) => {
 // marketerInfo
 router.post('/change', (req, res) => {
   const marketerId = req._passport.session.user.userid;
-  const { marketerName, marketerMail, marketerPhoneNum } = req.body;
-  const updateQuery = `
-  UPDATE marketerInfo 
-  SET marketerName = ? , marketerMail = ? , marketerPhoneNum = ? 
-  WHERE marketerId = ? `;
+  const { type, value } = req.body;
 
-  doQuery(updateQuery, [marketerName, marketerMail, marketerPhoneNum, marketerId])
+  const getQuery = (intype) => {
+    switch (intype) {
+      case 'password': {
+        const [key, salt] = encrypto.make(value);
+        return [`
+        UPDATE marketerInfo 
+        SET marketerSalt = ?, marketerPasswd = ?
+        WHERE marketerId = ? 
+        `, [salt, key, marketerId]];
+      }
+      case 'name': {
+        return [`
+        UPDATE marketerInfo 
+        SET marketerName = ?
+        WHERE marketerId = ? 
+        `, [value, marketerId]];
+      }
+      case 'phone': {
+        return [`
+        UPDATE marketerInfo 
+        SET marketerPhoneNum = ?
+        WHERE marketerId = ? 
+        `, [value, marketerId]];
+      }
+      case 'mail': {
+        return [`
+        UPDATE marketerInfo 
+        SET marketerMail = ?
+        WHERE marketerId = ? 
+        `, [value, marketerId]];
+      }
+      default:
+        return ['', []];
+    }
+  };
+
+  const [updateQuery, params] = getQuery(type);
+  doQuery(updateQuery, params)
     .then(() => {
-      res.send(true);
+      res.send([true]);
     })
     .catch((errorData) => {
       console.log(errorData);
-      res.end();
+      res.send([false, errorData]);
     });
 });
 

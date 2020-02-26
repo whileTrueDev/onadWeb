@@ -7,9 +7,16 @@ import Contactless from '@material-ui/icons/Contactless';
 
 const HOST_URL = `${window.location.protocol}//${window.location.host}/dashboard/creator`;
 
-function colorize(string, color) {
-  return `<span style="color:${color}">${string}</span>`;
+function LinkText(string, link) {
+  return `<a href="${HOST_URL}/${link}" style="background-color: #FF00FF; color: #eeeeee; padding: 3px">${string}</a>`;
 }
+
+function styledText(string) {
+  return `<span style="background-color: #00B7E2; color:#eeeeee; padding: 3px">${string}</span>`;
+}
+
+const styledBlock = string => `<div style="background-color: #FFECC5; border-radius: 5px; padding: 10px;">${string}</div>`;
+
 
 const manualSources = {
   selectComponent: [
@@ -23,7 +30,7 @@ const manualSources = {
     },
     {
       icon: InsertChart,
-      label: '수익 방식 및 수익 확인',
+      label: '수익방식 및 수익확인',
     },
     {
       icon: Public,
@@ -42,7 +49,6 @@ const manualSources = {
     //   label: '배너 오류 해결 방법',
     // },
   ],
-
   contract: {
     subType: false,
     card: {
@@ -52,17 +58,17 @@ const manualSources = {
     source: [
       {
         image: '/pngs/dashboard/manual/new_creator/creator-contraction-01.png',
-        description: `[**<대시보드>**](${HOST_URL}/main)의 상단에 있는 **서비스 이용 및 출금 계약하기**의  
-        서비스 이용약관과 개인 정보 수집 및 동의 약관보기를 클릭합니다.  
-        내용을 읽고 모두 동의를 클릭합니다.  `,
+        description: `${LinkText('<대시보드>', 'main')}로 이동하여 상단에 있는 서비스 이용 및 출금 계약하기의 ${styledText('약관보기')}를 클릭합니다.  
+        내용을 읽고 모두 ${styledText('동의')}를 클릭합니다.
+        `,
       },
       {
         image: null,
-        description: '동의 이후, 체크박스가 생성된 것을 확인하세요.\n진행을 위해 확인 버튼을 클릭해 주세요.',
+        description: `동의 이후, 체크표시 <img src='/pngs/dashboard/manual/new_creator/creator-contraction-02.png' style="width: 120px; height: 40px; vertical-align: middle"/>가 생성된 것을 확인하세요.진행을 위해 ${styledText('확인')} 버튼을 클릭해 주세요.`,
       },
       {
-        image: '/pngs/dashboard/manual/new_creator/creator-contraction-02.png',
-        description: '계약 상태 및 계약서 확인은 **내 계정** 크리에이터님의 정보란에서 확인 가능합니다.',
+        image: null,
+        description: `계약 상태 및 계약서 확인은 ${LinkText('<내 계정>', 'user')} 크리에이터님의 정보란에서 확인 가능합니다.`,
       },
     ],
   },
@@ -86,48 +92,50 @@ const manualSources = {
       source: [
         {
           image: null,
-          description: `권장사항 : **Chrome(75 버전 이상)**을 ${colorize('기본 브라우저으로 사용하셔야 광고가 올바르게 송출 됩니다.', 'red')}  
-          크롬 버전 확인은 크롬 오른쪽 상단에 있는 아이콘 클릭 < 도움말 > - < Chrome 정보 >를 눌러 확인 가능합니다.`,
+          description: `${styledBlock(`권장사항: Chrome(75 버전 이상)을 기본 브라우저로 사용하셔야 광고가 올바르게 송출됩니다.</br>
+          크롬 버전 확인은 크롬 오른쪽 상단에 있는 아이콘 클릭 ${styledText('도움말')} > ${styledText('Chrome 정보')}를 눌러 확인 가능합니다.`)}`,
         },
         {
           image: '/pngs/dashboard/manual/new_creator/creator-setBanner-01.png',
-          description: `배너를 송출하기 위해 [**<대시보드>**](${HOST_URL}/main)에서 **<배너 오버레이 주소>**를 확인하고, 복사하세요.`,
+          description: `배너를 송출하기 위해 ${LinkText('<대시보드>', 'main')}에서 배너 오버레이 URL의 ${styledText('주소보기')}를 누르고 ${styledText('복사')}를 눌려주세요.`,
         },
         {
-          image: '/pngs/dashboard/manual/creator/3_2.png',
-          description: `XSplit Broadcaster를 실행시키 이후,  
-          하단에 있는 추가를 누른 후, **< Webpage >** 를 클릭합니다.  
-          (참고 : XSplit 2.9 이하의 버전에서는 기타(Others) - Webpage에 있습니다. XSplit 3.0 버전 이상을 사용하는 것을 권장합니다.)`,
+          image: '/pngs/dashboard/manual/new_creator/creator-setBanner-02.png',
+          description: `XSplit Broadcaster를 실행시키 뒤,  
+          하단에 있는 ${styledText('추가')}를 누른 후, ${styledText('Webpage')}를 클릭합니다. ${styledBlock('(참고 : XSplit 2.9 이하의 버전에서는 기타(Others) - Webpage에 있습니다.</br>XSplit 3.0 버전 이상을 사용하는 것을 권장합니다.)')}`,
         },
         {
-          image: '/pngs/dashboard/manual/creator/3_3.png',
-          description: '복사해둔 오버레이 주소를 Ctrl + V 를 눌러 붙여넣고, OK를 클릭합니다.',
+          image: '/pngs/dashboard/manual/new_creator/creator-setBanner-03.png',
+          description: `복사해둔 오버레이 주소를 ${styledText('Ctrl + V')}를 눌러 붙여넣고, ${styledText('OK')}를 클릭합니다.`,
         },
         {
-          image: '/pngs/dashboard/manual/creator/3_4.png',
-          description: `(오른쪽 이미지를 클릭하여 참고해주세요.)  
-          추가된 URL을 드래그 하여 맨 위에 둡니다.  
-          이후, 추가된 URL에 커서를 올리면 방송 화면에 흰 테두리가 보입니다.  
-          테두리를 드래그하여 알맞은 위치로 조절하세요.`,
+          image: '/pngs/dashboard/manual/new_creator/creator-setBanner-04.png',
+          description: `추가된 추가된 ${styledText('URL')}을 드래그하여 맨 위에 둡니다.
+          `,
         },
         {
-          image: '/pngs/dashboard/manual/creator/3_5.png',
-          description: `배너 소스를 우클릭합니다. 환경설정 창이 뜨면  
-          1. ${colorize('스크롤바 숨기기에 체크', 'red')}에 체크합니다.  
-          2. ${colorize('메모리 소스 유지', 'red')}에 체크합니다.  
-          해상도는 custom 선택 이후 **< 320 x 160 >** 으로 지정하세요.  
-          해상도를 설정 후 크기를 줄여도 비율은 유지됩니다.  
-          모든 설정이 끝나면 창 밖을 마우스로 클릭하여 환경설정 창을 닫습니다.`,
+          image: '/pngs/dashboard/manual/new_creator/creator-setBanner-05.png',
+          description: `배너 소스를 우클릭합니다. 환경설정 창이 뜨면 ${styledText('HTML')}을 클릭하고  
+          1. 스크롤바 숨기기에 체크에 합니다.  
+          2. 메모리 소스유지에 체크합니다.  
+          3. 해상도를 ${styledText('custom')} 선택 이후 < 320 X 160 >으로 지정하세요. 해상도를 설정 후 크기를 줄여도 비율은 유지됩니다.`,
+        },
+        {
+          image: '/pngs/dashboard/manual/new_creator/creator-setBanner-06.png',
+          description: `환경설정 창의 레이아웃을 클릭하고  
+          내 방송의 해상도가 (1080p)이상이면 배너 크기를 width: 320, height: 160  
+          내 방송의 해상오가 (720p)이면 배너크기를 width: 214, height: 107로 설정해 줍니다.`,
+        },
+        {
+          image: '/pngs/dashboard/manual/new_creator/creator-setBanner-07.png',
+          description: `${styledBlock('내 방송의 해상도 확인은 오른쪽 위를 클릭하여 확인할 수 있습니다.')}`,
         },
         {
           image: null,
-          description: `${colorize('배너 크기를 변경하고자 하는 경우', 'red')}에는  
-          해당 배너 소스를 ${colorize('삭제', 'red')}한 이후 다시 생성하여  
-          배너 해상도는 **< 320 x 160 >** 이상으로 지정하여야 합니다.  `,
-        },
-        {
-          image: null,
-          description: '이제 매칭된 광고가 방송화면에 나타납니다.',
+          description: `배너 크기를 변경하고자 하는 경우에는  
+          해당 배너소스를 삭제한 이후 다시 생성하여야 합니다.  
+          매칭된 광고가 있으면 배너광고가 송출됩니다.(매칭된 광고가 없으면 배너광고가 비어있을 수 있습니다.)
+          `,
         },
       ],
     },
@@ -135,39 +143,41 @@ const manualSources = {
       source: [
         {
           image: null,
-          description: `권장사항 : **Chrome(75 버전 이상)**을 ${colorize('기본 브라우저으로 사용하셔야 광고가 올바르게 송출 됩니다.', 'red')}  
-          크롬 버전 확인은 크롬 오른쪽 상단에 있는 아이콘 클릭 < 도움말 > - < Chrome 정보 >를 눌러 확인 가능합니다.`,
+          description: `${styledBlock(`권장사항: Chrome(75 버전 이상)을 기본 브라우저로 사용하셔야 광고가 올바르게 송출됩니다.</br>크롬 버전 확인은 크롬 오른쪽 상단에 있는 아이콘 클릭 ${styledText('도움말')} > ${styledText('Chrome 정보')}를 눌러 확인 가능합니다.`)}`,
         },
         {
           image: '/pngs/dashboard/manual/new_creator/creator-setBanner-01.png',
-          description: `배너를 송출하기 위해 [**<대시보드>**](${HOST_URL}/main)에서 <배너 오버레이 주소>를 확인하고, 복사하세요.`,
+          description: `배너를 송출하기 위해 ${LinkText('<대시보드>', 'main')}에서 배너 오버레이 URL의 ${styledText('주소보기')}를 누르고 ${styledText('복사')}를 눌려주세요.`,
         },
         {
-          image: '/pngs/dashboard/manual/creator/3_7.png',
-          description: `OBS Studio를 실행시킨 이후,  
-          하단에 있는 **소스 목록**에서 **+ 버튼** 을 누른 후,  **BrowserSource** 를 클릭합니다.  
-          (참고 : OBS Studio 19 버전 이상 사용을 권장합니다.)`,
+          image: '/pngs/dashboard/manual/new_creator/creator-setBanner-08.png',
+          description: `OBS Studio를 실행시키 뒤,  
+          하단에 있는 소스목록에서 ${styledText('+')}버튼을 누른 후, ${styledText('브라우저')}(BrowserSource)를 클릭합니다.${styledBlock('(권장사항: OBS Studio 19 이상 사용을 권장합니다.)')}`,
         },
         {
-          image: '/pngs/dashboard/manual/creator/3_8.png',
-          description: `새로 만들기를 클릭하여 확인을 클릭합니다.  
-          (어떤 소스인지 구분하려면 **BrowserSource**를 **"온애드광고박스"**와 같이 원하는 이름으로 변경 후 확인 버튼을 클릭하면 됩니다.)`,
+          image: '/pngs/dashboard/manual/new_creator/creator-setBanner-09.png',
+          description: `${styledText('새로 만들기')}를 클릭하여 ${styledText('확인')}을 클릭합니다.  
+          (어떤 소스인지 구분하려면 BrowserSource를 "온애드 배너"와 같이 원하는 이름으로 변경 후 확인 버튼을 클릭하면 됩니다.)`,
         },
         {
-          image: '/pngs/dashboard/manual/creator/3_9.png',
-          description: `추가된 소스를 드래그하여 **맨 위에 둡니다.**  
-          빨간 영역을 드래그 하여 위치를 조절합니다.  
-          해상 소스의 크기는 필히, **< 320 x 160 >** 으로 설정합니다.`,
+          image: '/pngs/dashboard/manual/new_creator/creator-setBanner-10.png',
+          description: `속성창이 뜨면
+          URL에 복사해둔 오버레이 주소를 ${styledText('Ctrl + V')}를 눌러서 붙여 넣습니다.  
+          내 방송에 해상도가 1920 X 1080(1080p) 이상이면 너비를 320, 높이로 160 설정해주시고  
+          내 방송의 해상도가 1280 X 720(720p)이면 너비를 214, 높이를 107으로 설정해줍니다.${styledBlock(`내 방송의 해상도 확인은 우측아래 ${styledText('설정')}의 ${styledText('비디오')} 탭에서 확인할 수 있습니다.`)}
+          `,
+        },
+        {
+          image: '/pngs/dashboard/manual/new_creator/creator-setBanner-11.png',
+          description: `추가된 소스를 드래그하여 맨 뒤에 둡니다.  
+          빨간 영역을 드래그하여 위치를 조절합니다.`,
         },
         {
           image: null,
-          description: `${colorize('배너 크기를 변경하고자 하는 경우', 'red')}에는  
-          해당 배너 소스를 ${colorize('삭제', 'red')}한 이후 다시 생성하여  
-          배너 해상도는 **< 320 x 160 >** 이상으로 지정하여야 합니다.  `,
-        },
-        {
-          image: null,
-          description: '이제 매칭된 광고가 방송화면에 나타납니다.',
+          description: `배너 크기를 변경하고자 하는 경우에는  
+          해당 배너소스를 삭제한 이후 다시 생성하여야 합니다.  
+          매칭된 광고가 있으면 배너광고가 송출됩니다.(매칭된 광고가 없으면 배너광고가 비어있을 수 있습니다.)
+          `,
         },
       ],
     },
@@ -181,20 +191,20 @@ const manualSources = {
     source: [
       {
         image: '/pngs/dashboard/manual/new_creator/creator-income-00.png',
-        description: `배너광고는 광고송출 알고리즘에 따라 **자동적으로 송출됩니다.**  
-        상황에 따라, 곧바로 광고가 송출되지 않을 수 있습니다.`,
+        description: `배너광고는 광고 송출 알고리즘에 따라 자동적으로 송출됩니다.  
+        송출되고 있는 광고의 정보는 ${LinkText('<대시보드>', 'main')}의 현재 송출중인 배너에서 확인할 수 있습니다.`,
       },
       {
         image: '/pngs/dashboard/manual/new_creator/creator-income-01.png',
-        description: `방송 중, 광고가 송출되면 **수익금이 자동적으로 누적됩니다.**  
-        수익금은 송출시간 및 시청인원, 광고레벨 등 여러 변수에 의해 결정됩니다.  
-        누적되는 수익금은 대시보드에서 확인할 수 있습니다.`,
+        description: `방송 중, 광고가 송출되면 수익금이 자동적으로 누적됩니다.  
+        수익금은 송출 시간 및 시청 인원, 광고 레벨 등 여러 변수에 의해 결정됩니다.   
+        누적되는 수익금은 ${LinkText('<대시보드>', 'main')}에서 확인할 수 있습니다.`,
       },
       {
         image: '/pngs/dashboard/manual/new_creator/creator-income-02.png',
-        description: `송출된 광고는 크리에이터님의 **광고페이지**에도 게시됩니다.  
-        게시된 광고페이지의 **상호작용(광고 조회, 상품 및 브랜드 페이지 이동 등)에 따라 수익은 추가적으로 발생합니다.**  
-        또한, 광고페이지 상호작용에 따라 크리에이터님의 **광고 레벨**도 상승합니다.  
+        description: `송출된 광고는 크리에이터님의 ${LinkText('<내 광고페이지>', 'landing')}에도 게시됩니다.  
+        게시된 광고페이지의 상호작용(광고 조회, 상품 및 브랜드 페이지 이동 등)에 따라 수익은 추가적으로 발생합니다.  
+        또한, 광고페이지 상호작용에 따라 크리에이터님의 광고 레벨도 상승합니다.  
         광고 단가 책정, 이벤트 및 광고 선정 우선순위에 가산점으로 작용할 수 있습니다.`
       },
     ],
@@ -208,30 +218,31 @@ const manualSources = {
     source: [
       {
         image: null,
-        description: `자신의 방송 채널에 **광고페이지 바로가기 배너**를 게시해 더욱 많은 광고 수익을 얻어보세요.  
+        description: `자신의 방송 채널에 광고페이지 바로가기 배너를 게시해 더욱 많은 광고 수익을 얻어보세요.  
         시청자들의 상호작용에 의해 추가적 광고 수익이 발생할 수 있습니다.  
         `
       },
       {
-        image: '/pngs/dashboard/manual/new_creator/creator-landing-00.png',
-        description: `자신의 트위치 방송채널에서, 패널 편집을 ON 으로 바꾼 후,  
-        **텍스트나 이미지 패널 추가**를 클릭하세요.`
+        image: '/pngs/dashboard/manual/new_creator/creator-landing-01.png',
+        description: `자신의 트위치 방송채널에서, 패널 편집을 ${styledText('ON')}으로 바꾼 후,  
+        ${styledText('텍스트나 이미지 패널 추가')}를 클릭하세요.`
       },
       {
-        image: '',
+        image: '/pngs/dashboard/manual/new_creator/creator-landing-02.png',
         description: `자신만의 광고페이지 이동 배너를 업로드하거나,  
-        [**<내 광고페이지>**](${HOST_URL}/landing)에서 기본이미지를 다운로드 받아 업로드하세요.  
-        이와 함께, ${colorize('**이미지 링크에는 자신의 광고페이지 주소를 입력**', 'red')}하세요`
-      },
-      {
-        image: null,
-        description: `[**<내 광고페이지>**](${HOST_URL}/landing) 에서 광고페이지의 **소개글**과  
-        **라이트 / 다크모드**, **배경이미지** 등을설정하세요. 커스텀 기능은 점차적으로 업데이트 됩니다.  
+        ${LinkText('<내 광고페이지>', 'landing')}에서 기본이미지를 다운로드 받아 업로드하세요.  
+        이미지 링크에는 자신의 광고페이지 주소를 입력하세요.
         `
       },
       {
-        image: '/pngs/dashboard/manual/new_creator/creator-landing-01.png',
-        description: `대시보드 또는 내 광고페이지에서 현황을 확인할 수 있습니다.  
+        image: null,
+        description: `${LinkText('<내 광고페이지>', 'landing')}에서 광고페이지의 소개글과  
+        라이트 / 다크모드, 배경이미지 등을설정하세요. 커스텀 기능은 점차적으로 업데이트 됩니다.  
+        `
+      },
+      {
+        image: '/pngs/dashboard/manual/new_creator/creator-landing-03.png',
+        description: `${LinkText('<대시보드>', 'landing')} 또는 ${LinkText('<내 광고페이지>', 'landing')}에서 현황을 확인할 수 있습니다.  
         `
       },
     ]
@@ -242,7 +253,7 @@ const manualSources = {
     source: [
       {
         image: '/pngs/dashboard/manual/new_creator/creator-banner-01.png',
-        description: `[**<배너관리>**](${HOST_URL}/banner)에서 지금까지 진행한 모든 배너와,  
+        description: `${LinkText('<내 배너>', 'banner')}에서 지금까지 진행한 모든 배너와,  
         해당 배너 정보, 해당 배너로 인한 수익정보를 확인할 수 있습니다.`
       },
     ]
@@ -252,20 +263,21 @@ const manualSources = {
     source: [
       {
         image: '/pngs/dashboard/manual/new_creator/creator-withdrawal-01.png',
-        description: `[**<내 계정>**](${HOST_URL}/user)으로 이동하여 출금계좌를 등록하세요.`,
-      },
-      {
-        image: '/pngs/dashboard/manual/new_creator/creator-withdrawal-03.png',
-        description: `[**<대시보드>**](${HOST_URL}/main)에서 <출금신청> 버튼을 클릭하여  
-        **출금 가능 금액 이하의 금액**을 입력하여 신청할 수 있습니다.  
-        **최소 출금 가능 금액**은 3만원입니다.  
-        출금 신청된 금액은 신청한 달의 다음달 10일에 등록한 계좌로 정산됩니다.`,
+        description: `${LinkText('<내 계정>', 'user')}으로 이동하여 출금계좌를 등록하세요.
+        `,
       },
       {
         image: '/pngs/dashboard/manual/new_creator/creator-withdrawal-02.png',
+        description: `${LinkText('<대시보드>', 'main')}에서 ${styledText('출금신청')} 버튼을 클릭하여  
+        출금 가능 금액 이하의 금액을 입력하여 신청할 수 있습니다.  
+        최소 출금 가능 금액은 3만원입니다.  
+        출금 신청된 금액은 신청한 달의 다음달 10일에 등록한 계좌로 정산됩니다.`,
+      },
+      {
+        image: '/pngs/dashboard/manual/new_creator/creator-withdrawal-03.png',
         description: `출금신청 내역은 다음과 같이 확인 가능합니다.  
-        입금이 완료된 내역은 **<완료됨>** 으로 표시됩니다.  
-        입금 진행 중인 내역은 **<정산대기>** 로 표시됩니다.`,
+        입금이 완료된 내역은 ${styledText('완료됨')} 으로 표시됩니다.  
+        입금 진행 중인 내역은 ${styledText('정산대기')}로 표시됩니다.`,
       },
     ],
   },

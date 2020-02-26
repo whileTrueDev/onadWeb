@@ -30,7 +30,7 @@ const checkEmailAuth = (req, res) => {
         }
       })
       .catch(() => {
-        res.send([true, '일시적인 DB오류입니다. 로그인이 불가하오니 본사에 문의하세요.']);
+        res.send([true, '일시적인 DB오류입니다. 로그인이 불가하오니 잠시 후 다시 시도해주세요..']);
       });
   }
 

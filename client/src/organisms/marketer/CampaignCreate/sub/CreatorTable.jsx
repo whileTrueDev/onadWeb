@@ -17,7 +17,7 @@ const BANNER_MAX_HEIGHT = 48;
 const useStyles = makeStyles(theme => ({
   name: {
     fontWeight: '700',
-    fontSize: '12px'
+    fontSize: '12px',
   },
   image: {
     width: 48,
@@ -36,7 +36,7 @@ const useStyles = makeStyles(theme => ({
   },
   unit: {
     fontWeight: '700',
-    marginLeft: '3px'
+    marginLeft: '2px'
   },
 
 }));
@@ -64,7 +64,7 @@ export default function CreatorTable(props) {
 
   const makeValueComponent = ({ value, unit }) => (
     <div className={classes.flex}>
-      <Typography gutterBottom variant="h5">
+      <Typography gutterBottom variant="h6">
         {value}
       </Typography>
       <Typography variant="body2" gutterBottom className={classes.unit}>{unit}</Typography>
@@ -73,7 +73,7 @@ export default function CreatorTable(props) {
 
   const makeChartComponent = ({ value }) => (
     <div className={classes.flex}>
-      <Typography gutterBottom variant="body2" style={{ fontWeight: 700 }}>
+      <Typography gutterBottom variant="body1" style={{ fontWeight: 500 }}>
         {value}
       </Typography>
     </div>
@@ -84,9 +84,9 @@ export default function CreatorTable(props) {
       title: '',
       field: 'creatorName',
       render: rowData => (
-        <Grid container direction="row">
+        <Grid container direction="row" onClick={handleChecked(rowData)} style={{ cursor: 'pointer' }}>
           <Grid item>
-            <Avatar variant="round" className={classes.image}>
+            <Avatar variant="rounded" className={classes.image}>
               <img
                 src={rowData.creatorLogo}
                 alt={rowData.creatorName}
@@ -176,6 +176,7 @@ export default function CreatorTable(props) {
       {!fetchData.loading && fetchData.error && (<span>Error</span>)}
       {!fetchData.loading && fetchData.payload && (
         <MaterialTable
+          style={{ boxShadow: 'none', overflow: 'hidden' }}
           title=""
           columns={columns}
           data={fetchData.payload}
@@ -230,7 +231,7 @@ export default function CreatorTable(props) {
             },
             header: {
               actions: ''
-            }
+            },
           }}
         />
       )}
