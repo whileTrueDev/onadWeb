@@ -10,7 +10,7 @@ import {
 } from '../utils/TooltipContentConfig';
 import StyledSelectText from './StyledSelectText';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   label: {
     color: '#455a64',
     fontWeight: '700',
@@ -22,7 +22,7 @@ const useStyles = makeStyles(theme => ({
   popover: {
     pointerEvents: 'none',
   },
-  choice: props => ({
+  choice: (props) => ({
     padding: props.padding === 0 ? 0 : theme.spacing(3),
     paddingBottom: theme.spacing(3),
     [theme.breakpoints.down('sm')]: {
@@ -55,7 +55,7 @@ function DescPopover(props) {
                 className={classes.label}
               />
             </Grid>
-            {sendTypeConfig[descIndex].text.split('\n').map(row => (
+            {sendTypeConfig[descIndex].text.split('\n').map((row) => (
               <Grid item key={shortid.generate()}>
                 <Typography className={classes.text}>
                   {row}
@@ -70,7 +70,7 @@ function DescPopover(props) {
             <Grid item>
               <StyledSelectText primary={optionConfig[descIndex].title} className={classes.label} />
             </Grid>
-            {optionConfig[descIndex].text.split('\n').map(row => (
+            {optionConfig[descIndex].text.split('\n').map((row) => (
               <Grid item key={shortid.generate()}>
                 <Typography className={classes.text}>
                   {row}
@@ -85,7 +85,7 @@ function DescPopover(props) {
             <Grid item>
               <StyledSelectText primary={budgetConfig[descIndex].title} className={classes.label} />
             </Grid>
-            {budgetConfig[descIndex].text.split('\n').map(row => (
+            {budgetConfig[descIndex].text.split('\n').map((row) => (
               <Grid item key={shortid.generate()}>
                 <Typography className={classes.text}>
                   {row}
@@ -103,7 +103,7 @@ function DescPopover(props) {
                 className={classes.label}
               />
             </Grid>
-            {landingManageConfig[descIndex].text.split('\n').map(row => (
+            {landingManageConfig[descIndex].text.split('\n').map((row) => (
               <Grid item key={shortid.generate()}>
                 <Typography className={classes.text}>
                   {row}
@@ -129,7 +129,7 @@ function DescPopover(props) {
                 className={classes.label}
               />
             </Grid>
-            {reportConfig[descIndex].text.split('\n').map(row => (
+            {reportConfig[descIndex].text.split('\n').map((row) => (
               <Grid item key={shortid.generate()}>
                 <Typography className={classes.text}>
                   {row}
@@ -148,7 +148,7 @@ function DescPopover(props) {
                 className={classes.title}
               />
             </Grid>
-            {reportCardConfig[descIndex].text.split('\n').map(row => (
+            {reportCardConfig[descIndex].text.split('\n').map((row) => (
               <Grid item key={shortid.generate()}>
                 <Typography className={classes.cardText}>
                   {row}

@@ -1,16 +1,12 @@
-export interface CreatorSession {
-  userType: 'creator';
+export interface Session {
+  userType: 'creator' | 'marketer';
   creatorId?: string;
   creatorDisplayName?: string;
   creatorName?: string;
   creatorMail?: string;
   creatorLogo?: string;
   creatorIp?: string | string[];
-}
-
-export interface MarketerSession {
-  userType: 'marketer';
-  marketerId?: string;
+  marketerId: string;
   marketerUserType?: string;
   marketerMail?: string;
   marketerAccountNumber?: string;

@@ -67,9 +67,6 @@
     "@types/recompose": "^0.30.7",
     "@types/shortid": "^0.0.29"
   },
-  "eslintConfig": {
-    "extends": "react-app"
-  },
   "browserslist": {
     "production": [
       ">0.2%",

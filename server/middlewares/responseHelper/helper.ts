@@ -1,7 +1,7 @@
 import express from 'express';
 import createError from 'http-errors';
 import responseMessages from '../../lib/responseMessages';
-import { CreatorSession, MarketerSession } from '../../@types/session';
+import { Session } from '../../@types/session';
 
 /**
  * 제공된 필드명의 파라미터를 반환하는 함수.  
@@ -78,7 +78,7 @@ const getParam = (paramField: string | string[],
  * 
  * @author hwasurr
  */
-const getSessionData = (req: express.Request): CreatorSession & MarketerSession => {
+const getSessionData = (req: express.Request): Session => {
   if (req && req.session && req.session.passport && req.session.passport.user) {
     return req.session.passport.user;
   }

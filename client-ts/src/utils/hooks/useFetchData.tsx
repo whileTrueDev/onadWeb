@@ -1,16 +1,24 @@
-import {
+import React, {
   useState, useEffect, useCallback, useRef
 } from 'react';
-import axios from '../../axios';
+import axios from '../axios';
 import host from '../../config';
 import querify from '../querify';
-import history from '../../../history';
+import history from '../../history';
+
+interface FetchData {
+  payload: null;
+  loading: boolean;
+  error: string;
+  callUrl: () => Promise<void>;
+  setPayload: React.Dispatch<React.SetStateAction<null>>;
+}
 
 const SESSION_NOT_EXISTS = 'session not exists';
 
 /**
+ * api 서버와의 통신을 통해 데이터를 가져오는 훅. ( only get 방식)
  * @author hwasurr
- * @description api 서버와의 통신을 통해 데이터를 가져오는 훅. ( only get 방식)
  * @param {string} url 데이터를 받아 올 api 엔드포인트
  * @param {object} params fetch를 위한 데이터
  * @returns { object, bool, string, func}
@@ -19,7 +27,7 @@ const SESSION_NOT_EXISTS = 'session not exists';
  * error: 에러의 종류 문자열,
  * callUrl: 재요청이 필요한 작업에서 사용하기위한, 데이터 요청함수
  */
-export default function useFetchData(url, params) {
+export default function useFetchData(url: string, params?: object) {
   const [param] = useState(params);
   const [payload, setPayload] = useState(null);
   const [loading, setLoading] = useState(true);

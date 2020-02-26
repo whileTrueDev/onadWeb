@@ -11,6 +11,10 @@ const useLoginValue = () => {
   // logout function
   const logout = () => {
     // setisLogin(false);
+
+    // ****************************************
+    // ONAD API v2에서 POST요청으로 바꾸어야 한다.
+    // ****************************************
     axios.get(`${HOST}/api/login/logout`)
       .then(() => {
         history.push('/');
