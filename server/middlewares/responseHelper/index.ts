@@ -10,6 +10,7 @@ export default {
   getSessionData: helper.getSessionData,
   paramValidationCheck: helper.paramValidationCheck,
   send: helper.send,
+  promiseError: helper.promiseError,
   /**
    * 에러처리 및 요청처리를 돕는 미들웨어들을 프로퍼티로 갖는 객체
    */
