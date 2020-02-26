@@ -141,9 +141,9 @@ const send = (
  */
 const promiseError = (
   error: Error,
-  next: Function,
+  next: express.NextFunction,
 ): void => {
-  next(new createError[400](error.message));
+  next(new createError[500](error.message));
 };
 
 
