@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- 결제모듈('iamport'서비스 이용) -->
+  <!-- jQuery -->
+  <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+  <!-- iamport.payment.js -->
+  <script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.1.5.js"></script>
+
+  <!-- google analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-145090330-1"></script>
+  <script>
+    if (document.location.hostname.search("onad.io") !== -1) {
+      //google analytics code goes here
+      window.dataLayer = window.dataLayer || [];
+      function gtag() { dataLayer.push(arguments); }
+      gtag('js', new Date());
+
+      gtag('config', 'UA-145090330-1');
+    }
+  </script>
+  <!-- google adsense -->
+  <script data-ad-client="ca-pub-4320356355619389" async
+    src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+
+  <!-- font -->
+  <link href="https://fonts.googleapis.com/css?family=Gothic+A1|Noto+Sans+KR|Nanum+Gothic&display=swap"
+    rel="stylesheet">
+  
+  <style>
+    @font-face {
+      font-family: 'S-CoreDream-8Heavy';
+      src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/S-CoreDream-8Heavy.woff') format('woff');
+      font-weight: normal;
+      font-style: normal;
+    }
+  </style>
+
+  <!-- For naver search engine -->
+  <meta name="naver-site-verification" content="6a8fd4dd0f383a9a5d31e89d7b05586f91b9dbaa" />
+  <meta name="canonical" href="%PUBLIC_URL%" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#000000" />
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <!--   
+      manifest.json provides metadata used when your web app is installed on a
+      user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
+    -->
+  <!-- <link rel="manifest" href="%PUBLIC_URL%/manifest.json" /> -->
+  <link rel="icon" href="%PUBLIC_URL%/favicon.ico">
+  <!--   
+      Notice the use of %PUBLIC_URL% in the tags above.
+      It will be replaced with the URL of the `public` folder during the build.
+      Only files inside the `public` folder can be referenced from the HTML.
+
+      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
+      work correctly both with client-side routing and a non-root public URL.
+      Learn how to configure a non-root public URL by running `npm run build`.
+    -->
+
+  <!-- 메타데이터 및 검색 엔진 크롤러를 위한 데이터 -->
+  <title>온애드 | 1인 미디어 실시간 광고 플랫폼</title>
+  <meta name="description"
+    content="OnAD는 1인 미디어 실시간 방송에 배너광고를 송출하는 플랫폼입니다. 크리에이터는 OnAD를 통해 추가 수익을, 광고주는 온애드를 통해 효율적인 광고 채널을 확보할 수 있습니다." />
+  <meta name="og:title" content="OnAd | 광고 플랫폼" />
+  <meta name="og:description"
+    content="OnAD는 1인 미디어 실시간 방송에 배너광고를 송출하는 플랫폼입니다. 크리에이터는 OnAD를 통해 추가 수익을, 광고주는 온애드를 통해 효율적인 광고 채널을 확보할 수 있습니다." />
+</head>
+
+<body>
+  <div id="root"></div>
+</body>
+
+</html>

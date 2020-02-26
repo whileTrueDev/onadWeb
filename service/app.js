@@ -67,7 +67,6 @@ app.use(cors(corsOptions));
 
 // for aws ELB health check
 app.get('/', (req, res, next) => {
-  console.log(req.session);
   res.sendStatus(200);
 });
 
