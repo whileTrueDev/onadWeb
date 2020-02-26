@@ -1,8 +1,5 @@
 import express from 'express';
-import loginRouter from '../../auth/login';
-import logoutRouter from '../../auth/logout';
 import responseHelper from '../../../middlewares/responseHelper';
-import dataProcessing from '../../../lib/dataProcessing';
 import doQuery from '../../../model/doQuery';
 import encrypto from '../../../middlewares/encryption';
 
