@@ -95,7 +95,7 @@ const getSessionData = (req: express.Request): Session => {
  * @author hwasurr
  */
 const paramValidationCheck = (param: string | number | undefined,
-  field: keyof CreatorSession | keyof MarketerSession,
+  field: keyof Session,
   req: express.Request): true => {
   if (req.session && param === req.session.passport.user[field]) {
     return true;

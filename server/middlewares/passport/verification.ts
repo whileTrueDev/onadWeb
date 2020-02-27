@@ -9,7 +9,7 @@ import doQuery from '../../model/doQuery';
 // 암호화 체크 객체 생성
 import encrpyto from '../encryption';
 // type
-import { CreatorSession, MarketerSession } from '../../@types/session';
+import { Session } from '../../@types/session';
 
 /**
  * @name 배너URL생성함수
@@ -64,7 +64,7 @@ const marketerLocal = (
       if (row.result[0]) {
         const marketerData = row.result[0];
         if (encrpyto.check(passwd, marketerData.marketerPasswd, marketerData.marketerSalt)) {
-          const user: MarketerSession = {
+          const user: Session = {
             marketerId: userid,
             userType: 'marketer',
             marketerUserType: marketerData.marketerUserType,
@@ -134,7 +134,7 @@ const creatorTwitch = (
   refreshToken: string, profile: any,
   done: OAuth2Strategy.VerifyCallback
 ): void => {
-  const user: CreatorSession = {
+  const user: Session = {
     creatorId: profile.id,
     creatorDisplayName: profile.display_name,
     creatorName: profile.login,
@@ -299,7 +299,7 @@ const marketerGoogle = (
       if (row.result[0]) {
       // ID가 존재할 경우.
         const marketerData = row.result[0];
-        const user: MarketerSession = {
+        const user: Session = {
           marketerId: marketerData.marketerId,
           userType: 'marketer',
           marketerUserType: marketerData.marketerUserType,
@@ -352,7 +352,7 @@ const marketerNaver: Naver.VerifyFunction = (accessToken, refreshToken, profile,
       if (row.result[0]) {
       // ID가 존재할 경우.
         const marketerData = row.result[0];
-        const user: MarketerSession = {
+        const user: Session = {
           marketerId: marketerData.marketerId,
           userType: 'marketer',
           marketerUserType: marketerData.marketerUserType,
@@ -398,7 +398,7 @@ const marketerKakao: Kakao.VerifyFunction = (accessToken, refreshToken, profile,
     .then((row) => {
       if (row.result[0]) { // ID가 존재할 경우.
         const marketerData = row.result[0];
-        const user: MarketerSession = {
+        const user: Session = {
           marketerId: marketerData.marketerId,
           userType: 'marketer',
           marketerUserType: marketerData.marketerUserType,
@@ -417,7 +417,7 @@ const marketerKakao: Kakao.VerifyFunction = (accessToken, refreshToken, profile,
         return done(null, user);
       }
 
-      const user: MarketerSession = {
+      const user: Session = {
         userType: 'marketer',
         marketerPlatformData: id,
         registered: false

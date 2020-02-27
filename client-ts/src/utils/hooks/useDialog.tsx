@@ -13,7 +13,7 @@ export default function useDialog(): {
   handleOpen: (v?: boolean) => void;
   handleClose: () => void;
   } {
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = React.useState<boolean>(false);
 
   function handleOpen(v = true): void {
     setOpen(v);

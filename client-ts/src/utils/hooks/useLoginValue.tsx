@@ -1,15 +1,25 @@
 import React from 'react';
-import axios from '../../axios';
+import axios from '../axios';
 import HOST from '../../config';
-import history from '../../../history';
+import history from '../../history';
 
-const useLoginValue = () => {
-  const [isLogin, setisLogin] = React.useState(false);
-  const [repasswordOpen, setRepassword] = React.useState(false);
+interface LoginCheckResponse {
+  error: boolean; state?: number; userType: string;
+}
+
+const useLoginValue = (): {
+  isLogin: boolean;
+  repasswordOpen: boolean;
+  logout: () => void;
+  setRepassword: React.Dispatch<React.SetStateAction<boolean>>;
+  userType: string;
+} => {
+  const [isLogin, setisLogin] = React.useState<boolean>(false);
+  const [repasswordOpen, setRepassword] = React.useState<boolean>(false);
   const [userType, setUserType] = React.useState('');
 
   // logout function
-  const logout = () => {
+  const logout = (): void => {
     // setisLogin(false);
 
     // ****************************************
@@ -19,13 +29,13 @@ const useLoginValue = () => {
       .then(() => {
         history.push('/');
       })
-      .catch((error) => {
+      .catch((error: any) => {
         console.log(error);
       });
   };
 
   React.useLayoutEffect(() => {
-    axios.get(`${HOST}/api/login/check`)
+    axios.get<LoginCheckResponse>(`${HOST}/api/login/check`)
       .then((res) => {
         if (!res.data.error) {
           if (res.data.state) {
