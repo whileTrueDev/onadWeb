@@ -20,7 +20,7 @@ services:
 script:
   - cd client && yarn install --prod && CI="false" yarn build && cd -
   - cd service && yarn && cd -
-  - cd server && yarn install --prod && yarn build && cd -
+  # - cd server && yarn && yarn build && cd -
   - cd node_websocket && yarn && cd -
   - cd calculator && yarn && cd -
   - cd chat && yarn && cd -
@@ -32,19 +32,19 @@ after_success:
   - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
   - docker build -t $DOCKER_USERNAME/onad_web ./client
   - docker build -t $DOCKER_USERNAME/onad_web_api ./service
-  - docker build -t $DOCKER_USERNAME/onad_web_api-v2 ./server
+  # - docker build -t $DOCKER_USERNAME/onad_web_api-v2 ./server
   - docker build -t $DOCKER_USERNAME/onad_socket ./node_websocket
   - docker build -t $DOCKER_USERNAME/onad_calculator ./calculator
   - docker build -t $DOCKER_USERNAME/onad_twitch_chat ./chat
   - docker tag $DOCKER_USERNAME/onad_web $DOCKER_USERNAME/onad_web:0.$TRAVIS_JOB_NUMBER
   - docker tag $DOCKER_USERNAME/onad_web_api $DOCKER_USERNAME/onad_web_api:0.$TRAVIS_JOB_NUMBER
-  - docker tag $DOCKER_USERNAME/onad_web_api-v2 $DOCKER_USERNAME/onad_web_api-v2:0.$TRAVIS_JOB_NUMBER
+  # - docker tag $DOCKER_USERNAME/onad_web_api-v2 $DOCKER_USERNAME/onad_web_api-v2:0.$TRAVIS_JOB_NUMBER
   - docker tag $DOCKER_USERNAME/onad_socket $DOCKER_USERNAME/onad_socket:0.$TRAVIS_JOB_NUMBER
   - docker tag $DOCKER_USERNAME/onad_calculator $DOCKER_USERNAME/onad_calculator:0.$TRAVIS_JOB_NUMBER
   - docker tag $DOCKER_USERNAME/onad_twitch_chat $DOCKER_USERNAME/onad_twitch_chat:0.$TRAVIS_JOB_NUMBER
   - docker push $DOCKER_USERNAME/onad_web
   - docker push $DOCKER_USERNAME/onad_web_api
-  - docker push $DOCKER_USERNAME/onad_web_api-v2
+  # - docker push $DOCKER_USERNAME/onad_web_api-v2
   - docker push $DOCKER_USERNAME/onad_socket
   - docker push $DOCKER_USERNAME/onad_calculator
   - docker push $DOCKER_USERNAME/onad_twitch_chat

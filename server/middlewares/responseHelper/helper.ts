@@ -78,7 +78,7 @@ const getParam = (paramField: string | string[],
  * 
  * @author hwasurr
  */
-const getSessionData = (req: express.Request): CreatorSession | MarketerSession => {
+const getSessionData = (req: express.Request): CreatorSession & MarketerSession => {
   if (req && req.session && req.session.passport && req.session.passport.user) {
     return req.session.passport.user;
   }
@@ -94,7 +94,7 @@ const getSessionData = (req: express.Request): CreatorSession | MarketerSession 
  * @return `true` | `createError[405]('Forbidden')`
  * @author hwasurr
  */
-const paramValidationCheck = (param: string | number,
+const paramValidationCheck = (param: string | number | undefined,
   field: keyof CreatorSession | keyof MarketerSession,
   req: express.Request): true => {
   if (req.session && param === req.session.passport.user[field]) {
@@ -119,19 +119,34 @@ const send = (
   const CREATED = 2001;
   switch (method.toLowerCase()) {
     case 'post':
-      res.sendStatus(CREATED).send(resultData);
+      res.status(CREATED).json(resultData);
       break;
     case 'get':
     case 'put':
     case 'patch':
     case 'delete':
-      res.sendStatus(OK).send(resultData);
+      res.status(OK).json(resultData);
       break;
     default:
       throw new Error('send함수에 올바른 Method 명을 입력하지 않았습니다.');
   }
 };
 
+
+/**
+ * doQuery를 Promise chain으로 구현할 떄 내부 에러가 발생하면 해당 error를 http-error로 변환하는 
+ * 올바른 HTTP status와 함께 전송하도록 도와준다.
+ * @param error doQuery의 catch로 전달받는 error 객체
+ * @param next withErrorCatch의 인자로 전달되는 next function
+ */
+const promiseError = (
+  error: Error,
+  next: express.NextFunction,
+): void => {
+  next(new createError[500](error.message));
+};
+
+
 export default {
-  getParam, getSessionData, paramValidationCheck, send
+  getParam, getSessionData, paramValidationCheck, send, promiseError
 };

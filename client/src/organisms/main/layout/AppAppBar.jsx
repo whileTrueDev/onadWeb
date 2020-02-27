@@ -15,7 +15,7 @@ import HOST from '../../../utils/config';
 import axios from '../../../utils/axios';
 import history from '../../../history';
 
-const styles = theme => ({
+const styles = (theme) => ({
   root: {
     backgroundColor: 'rgb( 255, 255, 255, 0)',
     position: 'fixed',
@@ -209,7 +209,7 @@ function AppAppBar(props) {
           color="inherit"
           onClick={logout}
         >
-        로그아웃
+          로그아웃
         </Button>
       );
     }
@@ -284,14 +284,13 @@ function AppAppBar(props) {
             마이페이지
           </Button>
         )
-          : <LoginPopover type="회원가입" mode="mobile" MainUserType={MainUserType} />
-        }
+          : <LoginPopover type="회원가입" mode="mobile" MainUserType={MainUserType} />}
       </MenuItem>
 
       <MenuItem>
         {isLogin ? (
           <Button className={classes.rightLink2} onClick={logout}>
-              로그아웃
+            로그아웃
           </Button>
         ) : (
           <LoginPopover type="로그인" MainUserType={MainUserType} />

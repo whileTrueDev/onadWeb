@@ -15,8 +15,16 @@ import passport from './middlewares/passport';
 
 // Routers
 import alimtalkRouter from './routes/alimtalk';
-import apiRouter from './routes/api';
+// import apiRouter from './routes/api';
 import creatorsRouter from './routes/creators'
+import loginRouter from './routes/auth/login';
+import logoutRouter from './routes/auth/logout';
+import creatorRouter from './routes/creator';
+import marketerRouter from './routes/marketer';
+import chartRouter from './routes/chart';
+import bannersRouter from './routes/banners';
+import mailRouter from './routes/mail';
+import testRouter from './routes/test';
 
 const MySQLStore = require('express-mysql-session')(session);
 
@@ -117,8 +125,19 @@ class OnadWebApi {
     // Router 추가
     // this.app.use('/mailer', mailerRouter);
     this.app.use('/alimtalk', alimtalkRouter);
-
-    this.app.use('/api', apiRouter);
+    // *********************************
+    // 각 로그인 플랫폼 callbackURL 변경 이후 
+    // /auth로 변경
+    // *********************************
+    this.app.use('/api/login', loginRouter);
+    this.app.use('/logout', logoutRouter);
+    this.app.use('/creator', creatorRouter);
+    this.app.use('/marketer', marketerRouter);
+    this.app.use('/chart', chartRouter);
+    this.app.use('/creators', creatorsRouter);
+    this.app.use('/banner', bannersRouter);
+    this.app.use('/mail', mailRouter);
+    this.app.use('/test', testRouter);
 
     this.app.use('/creators', creatorsRouter)
     // Error handling
@@ -146,13 +165,13 @@ class OnadWebApi {
        * REST API의 에러 응답 메세지에 에러 스택 정보를 포함해서 리턴하도록 하면, 디버깅에 매우 유용하게 사용할 수 있다.
        * from https://bcho.tistory.com/914
        ********************** */
+
       // set locals, only providing error in development
       const serverErrorMessage = 'Internal Server Error';
       res.locals.message = err.message;
       res.locals.error = req.app.get('env') === 'development' ? err : {};
       if (err) {
-        const ENVIRONMENT = process.env.NODE_ENV;
-        if (ENVIRONMENT === 'development') {
+        if (process.env.NODE_ENV === 'development') {
           console.log(err.stack);
         }
         // render the error page
