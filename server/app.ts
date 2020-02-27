@@ -16,6 +16,7 @@ import passport from './middlewares/passport';
 // Routers
 import alimtalkRouter from './routes/alimtalk';
 import apiRouter from './routes/api';
+import creatorsRouter from './routes/creators'
 
 const MySQLStore = require('express-mysql-session')(session);
 
@@ -111,7 +112,6 @@ class OnadWebApi {
     // Swagger UI 추가.
     this.app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
-
     // this.app.use(checkAuthOnReq); // 인증 method를 req에 추가한다.
 
     // Router 추가
@@ -120,6 +120,7 @@ class OnadWebApi {
 
     this.app.use('/api', apiRouter);
 
+    this.app.use('/creators', creatorsRouter)
     // Error handling
     // catch 404 and forward to error handler
     this.app.use((req, res, next) => {
