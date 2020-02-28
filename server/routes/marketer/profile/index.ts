@@ -33,9 +33,7 @@ router.route('/history')
     .all(responseHelper.middleware.unusedMethod)
 
 
-
-
-// marketer/sub/profile => /accountNuber에서 가져옴.
+// marketer/sub/profile =>/accountNuber에서 가져옴.
 router.route('/account')
     .get(
         responseHelper.middleware.checkSessionExists, // session 확인이 필요한 경우.
@@ -151,43 +149,43 @@ router.route('/tax-bills')
     )
     .all(responseHelper.middleware.unusedMethod)
 
+// marketer/sub/notification =>/
+// marketer/sub/notification =>/update/read
 router.route('/notification')
     .get(
         responseHelper.middleware.checkSessionExists, // session 확인이 필요한 경우.
         responseHelper.middleware.withErrorCatch(async (req, res, next) => {
             const { marketerId } = responseHelper.getSessionData(req);
-            if (responseHelper.paramValidationCheck(marketerId, 'marketerId', req)) {
-                const callQuery = `
-                SELECT 
-                mn.index, title, content,
-                date_format(date,'%y년 %m월 %d일') AS dateform,
-                readState
-                FROM marketerNotification AS mn
-                WHERE marketerId = ?
-                ORDER BY date DESC, readState ASC`;
+            const callQuery = `
+            SELECT 
+            mn.index, title, content,
+            date_format(date,'%y년 %m월 %d일') AS dateform,
+            readState
+            FROM marketerNotification AS mn
+            WHERE marketerId = ?
+            ORDER BY date DESC, readState ASC`;
 
-                const countQuery = `
-                SELECT count(*) as count
-                FROM marketerNotification
-                WHERE marketerId = ? AND readState = 0`;
-                const result = { notifications: [{}], unReadCount: 0 };
+            const countQuery = `
+            SELECT count(*) as count
+            FROM marketerNotification
+            WHERE marketerId = ? AND readState = 0`;
+            const result = { notifications: [{}], unReadCount: 0 };
 
-                doQuery(callQuery, [marketerId])
-                    .then((data) => {
-                        result.notifications = data.result;
-                        doQuery(countQuery, [marketerId])
-                            .then((row) => {
-                                if (row.result) {
-                                    const { count } = row.result[0];
-                                    result.unReadCount = count;
-                                }
-                                responseHelper.send(result, 'get', res);
-                            });
-                    })
-                    .catch((error) => {
-                        responseHelper.promiseError(error, next);
-                    });
-            }
+            doQuery(callQuery, [marketerId])
+                .then((data) => {
+                    result.notifications = data.result;
+                    doQuery(countQuery, [marketerId])
+                        .then((row) => {
+                            if (row.result) {
+                                const { count } = row.result[0];
+                                result.unReadCount = count;
+                            }
+                            responseHelper.send(result, 'get', res);
+                        });
+                })
+                .catch((error) => {
+                    responseHelper.promiseError(error, next);
+                });
         })
     )
     .patch(
@@ -213,9 +211,6 @@ router.route('/notification')
     )
     .all(responseHelper.middleware.unusedMethod)
 
-
-// marketer/sub/profile => /accountNuber에서 가져옴.
-
 interface Notification {
     title: string;
     content: string;
@@ -223,31 +218,30 @@ interface Notification {
     readState: number | string;
 }
 
-router.route('/notifications')
+// marketer/sub/notification => /list
+router.route('/notification/list')
     .get(
         responseHelper.middleware.checkSessionExists, // session 확인이 필요한 경우.
         responseHelper.middleware.withErrorCatch(async (req, res, next) => {
             const { marketerId } = responseHelper.getSessionData(req);
-            if (responseHelper.paramValidationCheck(marketerId, 'marketerId', req)) {
-                const query = `
-                SELECT title, content, date_format(date,'%y. %m. %d') as date, readState
-                FROM marketerNotification AS mn
-                WHERE marketerId = ?
-                ORDER BY readState`;
+            const query = `
+            SELECT title, content, date_format(date,'%y. %m. %d') as date, readState
+            FROM marketerNotification AS mn
+            WHERE marketerId = ?
+            ORDER BY readState`;
 
-                doQuery(query, [marketerId])
-                    .then((data) => {
-                        const dataArray = data.result.map((value: Notification) => {
-                            const returnValue: Notification = { ...value };
-                            returnValue.readState = returnValue.readState ? '읽음' : '안읽음';
-                            return Object.values(returnValue)
-                        });
-                        responseHelper.send(dataArray, 'get', res);
-                    })
-                    .catch((error) => {
-                        responseHelper.promiseError(error, next);
-                    })
-            }
+            doQuery(query, [marketerId])
+                .then((data) => {
+                    const dataArray = data.result.map((value: Notification) => {
+                        const returnValue: Notification = { ...value };
+                        returnValue.readState = returnValue.readState ? '읽음' : '안읽음';
+                        return Object.values(returnValue)
+                    });
+                    responseHelper.send(dataArray, 'get', res);
+                })
+                .catch((error) => {
+                    responseHelper.promiseError(error, next);
+                })
         }),
     )
     .all(responseHelper.middleware.unusedMethod)

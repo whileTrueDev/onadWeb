@@ -53,7 +53,6 @@ router.get('/onoff', (req, res) => {
     });
 });
 
-// 캠페인 On & Off 기능
 // 잔액이 0원일 때는 불가능 하도록 정의.
 router.post('/onoff', (req, res) => {
   const contractionState = req.body.onOffState === false ? 0 : 1;
