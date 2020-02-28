@@ -1,11 +1,12 @@
 import {
   useState, useEffect, useCallback
 } from 'react';
-import axios from 'axios';
+import axios, { cancelToken, isCancel as isAxiosCancel } from '../axios';
 import host from '../../config';
 import querify from '../querify';
 import history from '../../history';
 
+const DEFAULT_ERROR_MESSAGE = '죄송합니다.. 데이터 조회중 오류가 발생했습니다..';
 const UNAUTHORIZED = 401;
 
 /**
@@ -30,7 +31,7 @@ const UNAUTHORIZED = 401;
  *   () => { console.log('success callback done'); handleOpen(); }  
  * );
  */
-export default function useGet<PARAM_TYPE={[key: string]: any}, RES_DATA_TYPE = any>(
+export default function useGetRequest<PARAM_TYPE={[key: string]: any}, RES_DATA_TYPE = any>(
   url: string, params?: PARAM_TYPE
 ): {
   data: RES_DATA_TYPE | null;
@@ -45,9 +46,10 @@ export default function useGet<PARAM_TYPE={[key: string]: any}, RES_DATA_TYPE = 
   const [error, setError] = useState<string>('');
 
   const [unmounted, setUnmounted] = useState(false);
-  const [source] = useState(axios.CancelToken.source());
+  const [source] = useState(cancelToken.source());
 
   const doGetRequest = useCallback(() => {
+    setLoading(true);
     axios.get<RES_DATA_TYPE>(`${host}${url}${querify(param)}`, {
       cancelToken: source.token,
       withCredentials: true
@@ -61,23 +63,26 @@ export default function useGet<PARAM_TYPE={[key: string]: any}, RES_DATA_TYPE = 
       .catch((err) => { // 상태코드 300~
         if (!unmounted) { // 컴포넌트가 unmount 되지 않은 경우
           setLoading(false); // 로딩 완료
+
           if (err && err.isAxiosError) {
-            // 요청 캔슬된 경우
-            if (axios.isCancel(err)) {
-              console.log(`request cancelled:${err.message}`);
+            if (isAxiosCancel(err)) { // 요청 캔슬된 경우
+              console.error(`request cancelled:${err.message}`);
             }
-            if (err.response && err.response.status) {
-              // 세션없는 요청의 경우
-              if (err.response.status === UNAUTHORIZED) {
+
+            if (err && err.response) {
+              if (err.response.status === UNAUTHORIZED) { // 세션없는 요청의 경우
+                setError(err.response.data.mesage);
                 history.push('/');
               } else {
-                console.log('statuscode: ', err.response.status, err.response.data);
-                setError(err.response.data.message || '죄송합니다.. 오류입니다..');
+                console.error('statuscode: ', err.response.status, err.response.data);
+                setError(err.response.data.message || DEFAULT_ERROR_MESSAGE);
               }
+            } else {
+              setError(err.message);
             }
           } else {
             // axios 에러가 아닌 경우
-            console.log('not axios error - ', err);
+            console.error('not axios error - ', err);
           }
         }
       });

@@ -2,31 +2,32 @@ import React, { useCallback } from 'react';
 import axios from '../axios';
 import host from '../../config';
 
-const DEFAULT_ERROR_MESSAGE = '죄송합니다.. 오류입니다..';
+const DEFAULT_ERROR_MESSAGE = '죄송합니다.. 수정중 오류가 발생했습니다..';
+
 /**
- * API서버로 `DELETE` 요청을 보낼 때 사용하는 react **hook**.
+ * API서버로 `PATCH` 요청을 보낼 때 사용하는 react **hook**.
  * ## 타입파라미터 (제네릭)
  * @type `PARAM_TYPE` API서버로 보낼 파라미터의 타입
  * @type `RES_DATA_TYPE` API서버로부터 전달받을 데이터 타입
  * 
  * ## 파라미터
- * @param {*} url 데이터를 삭제할 API 서버 endpoint
- * @param {*} successCallback 데이터 삭제 성공시 callback함수. (스낵바오픈 or 새로고침 or 등등)
+ * @param {*} url 데이터를 부분수정할 API 서버 endpoint
+ * @param {*} successCallback 데이터 부분수정 성공시 callback함수. (스낵바오픈 or 새로고침 or 등등)
  * 
  * ## 반환값
  * @return 성공여부 `success`
  * @return 로딩여부 `loading`
  * @return 에러메시지문자열 `error`
  * @return 전달받은데이터 `data`
- * @return DELETE요청함수 `doDeleteRequest`
+ * @return PATCH요청함수 `doPatchRequest`
  * @example
  * const {
- *   success, loading, error, doDeleteRequest
- * } = useDeleteData<ParameterType, ResponseDataType>('/test',
+ *   success, loading, error, doPatchRequest
+ * } = usePatchData<ParameterType, ResponseDataType>('/test',
  *   () => { console.log('success callback done'); handleOpen(); }  
  * );
  */
-export default function useDeleteRequest<PARAM_TYPE = {[key: string]: any}, RES_DATA_TYPE = any>(
+export default function usePatchRequest<PARAM_TYPE = {[key: string]: any}, RES_DATA_TYPE = any>(
   url: string,
   successCallback?: () => void
 ): {
@@ -34,16 +35,16 @@ export default function useDeleteRequest<PARAM_TYPE = {[key: string]: any}, RES_
   loading: boolean | null;
   error: string;
   data: RES_DATA_TYPE | null;
-  doDeleteRequest: (param: PARAM_TYPE) => void;
+  doPatchRequest: (param: PARAM_TYPE) => void;
 } {
   const [success, setSuccess] = React.useState<true | null>(null);
   const [data, setData] = React.useState<RES_DATA_TYPE | null>(null);
   const [loading, setLoading] = React.useState<boolean | null>(null);
   const [error, setError] = React.useState('');
 
-  const doDeleteRequest = useCallback((param: PARAM_TYPE): void => {
+  const doPatchRequest = useCallback((param: PARAM_TYPE): void => {
     setLoading(true); // 로딩 시작
-    axios.delete<RES_DATA_TYPE>(`${host}${url}`,
+    axios.patch<RES_DATA_TYPE>(`${host}${url}`,
       { data: { ...param } })
       .then((res) => {
         setLoading(false); // 로딩 완료
@@ -59,7 +60,7 @@ export default function useDeleteRequest<PARAM_TYPE = {[key: string]: any}, RES_
         setLoading(false); // 로딩 완료
         setSuccess(null);
 
-        console.error(`error in DELETE ${url}: `, err.response.status, err.response.data);
+        console.error(`error in PATCH ${url}: `, err.response.status, err.response.data);
         if (err.response) {
           // 요청이 이루어졌으며 서버가 2xx의 범위를 벗어나는 상태 코드로 응답한 경우.
           console.log('2xx의 범위를 벗어나는 상태 코드로 응답한 경우');
@@ -78,6 +79,6 @@ export default function useDeleteRequest<PARAM_TYPE = {[key: string]: any}, RES_
 
 
   return {
-    success, loading, error, data, doDeleteRequest,
+    success, loading, error, data, doPatchRequest,
   };
 }

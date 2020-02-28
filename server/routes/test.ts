@@ -17,6 +17,8 @@ router.route('/')
           creatorId: row.result[0].creatorId,
           message: '성공'
         }, 'get', res);
+      } else {
+        throw new Error('not creator session');
       }
     }),
   )

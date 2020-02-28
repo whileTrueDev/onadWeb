@@ -1,48 +1,84 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import axios from '../axios';
 import host from '../../config';
 
+const DEFAULT_ERROR_MESSAGE = '죄송합니다.. 생성중 오류가 발생했습니다..';
+
 /**
- * update 요청을 위한 hook
- * @param {String} url 데이터를 수정 또는 삽입요청할 라우터
- * @param {Function} callUrl 데이터 조회 요청
- * @author hwasurr
+ * API서버로 `POST` 요청을 보낼 때 사용하는 react **hook**.
+ * ## 타입파라미터 (제네릭)
+ * @type `PARAM_TYPE` API서버로 보낼 파라미터의 타입
+ * @type `RES_DATA_TYPE` API서버로부터 전달받을 데이터 타입
+ * 
+ * ## 파라미터
+ * @param {*} url 데이터를 삽입할 API 서버 endpoint
+ * @param {*} successCallback 데이터 삽입 성공시 callback함수. (스낵바오픈 or 새로고침 or 등등)
+ * 
+ * ## 반환값
+ * @return 성공여부 `success`
+ * @return 로딩여부 `loading`
+ * @return 에러메시지문자열 `error`
+ * @return 전달받은데이터 `data`
+ * @return POST요청함수 `doPostRequest`
+ * @example
+ * const {
+ *   success, loading, error, doPostRequest
+ * } = usePostData<ParameterType, ResponseDataType>('/test',
+ *   () => { console.log('success callback done'); handleOpen(); }  
+ * );
  */
-export default function useUpdateData(url, successCallback = null) {
-  const [success, setSuccess] = React.useState(null);
-  const [loading, setLoading] = React.useState(true);
+export default function usePostRequest<PARAM_TYPE = {[key: string]: any}, RES_DATA_TYPE = any>(
+  url: string,
+  successCallback?: () => void
+): {
+  success: true | null;
+  loading: boolean | null;
+  error: string;
+  data: RES_DATA_TYPE | null;
+  doPostRequest: (param: PARAM_TYPE) => void;
+} {
+  const [success, setSuccess] = React.useState<true | null>(null);
+  const [data, setData] = React.useState<RES_DATA_TYPE | null>(null);
+  const [loading, setLoading] = React.useState<boolean | null>(null);
   const [error, setError] = React.useState('');
 
-  /**
-   * api 서버에 데이터를 업데이트 요청하는 함수로, 인자로 업데이트를 진행할 데이터(객체형태)를 받는다.
-   * 요청시, 해당 라우터에 데이터를 보내고, api서버로부터 응답이 도착한 이후 훅의 두번쨰 인자로 넘겨준
-   * 데이터 요청 함수를 실행한다. 만일 데이터 요청 함수를 인자로 넘겨주지 않은 경우 재요청을 실행하지 않는다.
-   * @param {object} data { 데이터 명: 데이터 } 와 같은
-   * @author hwasurr
-   */
-  function handleUpdateRequest(data) {
-    axios.post(`${host}${url}`, data)
+  const doPostRequest = useCallback((param: PARAM_TYPE): void => {
+    setLoading(true); // 로딩 시작
+    axios.post<RES_DATA_TYPE>(`${host}${url}`,
+      { data: { ...param } })
       .then((res) => {
-        setLoading(false);
-        setSuccess(res.data);
-        if (res.data[0]) {
-          if (successCallback) {
-            successCallback();
-          }
-        } else if (res.data[1]) {
-          // 요청에 대한 update가 진행되던 중 오류가 발생.
-          alert(res.data[1]);
-        } else {
-          alert('오류가 발생했습니다.');
+        setLoading(false); // 로딩 완료
+
+        const { status } = res;
+        setData(res.data);
+        if (Math.floor(status / 100) === 2) {
+          setSuccess(true);
+          if (successCallback) { successCallback(); }
         }
-      }).catch((err) => {
-        // 요청을 전달할 수 없음.
-        setError(err);
-        console.log(err);
+      })
+      .catch((err) => {
+        setLoading(false); // 로딩 완료
+        setSuccess(null);
+
+        console.error(`error in POST ${url}: `, err.response.status, err.response.data);
+        if (err.response) {
+          // 요청이 이루어졌으며 서버가 2xx의 범위를 벗어나는 상태 코드로 응답한 경우.
+          console.log('2xx의 범위를 벗어나는 상태 코드로 응답한 경우');
+          setError(err.response.data.message || DEFAULT_ERROR_MESSAGE);
+        } else if (err.request) {
+          // 요청이 이루어 졌으나 응답을 받지 못한 경우.
+          console.log('요청이 이루어 졌으나 응답을 받지 못한 경우: ', err.request);
+          setError(DEFAULT_ERROR_MESSAGE);
+        } else {
+          // 오류를 발생시킨 요청을 설정하는 중에 문제가 발생
+          console.log('오류를 발생시킨 요청을 설정하는 중에 문제가 발생했습니다');
+          setError(DEFAULT_ERROR_MESSAGE);
+        }
       });
-  }
+  }, [successCallback, url]);
+
 
   return {
-    success, loading, error, handleUpdateRequest,
+    success, loading, error, data, doPostRequest,
   };
 }
