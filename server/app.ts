@@ -16,10 +16,10 @@ import passport from './middlewares/passport';
 // Routers
 import alimtalkRouter from './routes/alimtalk';
 // import apiRouter from './routes/api';
+import creatorRouter from './routes/creator'
 import creatorsRouter from './routes/creators'
 import loginRouter from './routes/auth/login';
 import logoutRouter from './routes/auth/logout';
-import creatorRouter from './routes/creator';
 import marketerRouter from './routes/marketer';
 import chartRouter from './routes/chart';
 import bannersRouter from './routes/banners';
@@ -135,11 +135,10 @@ class OnadWebApi {
     this.app.use('/marketer', marketerRouter);
     this.app.use('/chart', chartRouter);
     this.app.use('/creators', creatorsRouter);
-    this.app.use('/banner', bannersRouter);
+    this.app.use('/banners', bannersRouter);
     this.app.use('/mail', mailRouter);
     this.app.use('/test', testRouter);
 
-    this.app.use('/creators', creatorsRouter)
     // Error handling
     // catch 404 and forward to error handler
     this.app.use((req, res, next) => {
