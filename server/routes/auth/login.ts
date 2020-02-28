@@ -1,10 +1,13 @@
 
-import express, { response } from 'express';
+import express from 'express';
 import passport from 'passport';
 // import checkEmailAuth from '../../middlewares/checkEmailAuth';
 import responseHelper from '../../middlewares/responseHelper';
 import doQuery from '../../model/doQuery';
 
+const HOST = process.env.NODE_ENV === 'production'
+  ? process.env.PRODUCTION_REACT_HOSTNAME
+  : process.env.DEV_REACT_HOSTNAME;
 const router = express.Router();
 
 // local 로그인
@@ -13,29 +16,50 @@ router.get('/', passport.authenticate('local')); // checkEmailAuth 추가
 // marketer - google 로그인
 router.get('/google', passport.authenticate('google', { scope: ['email', 'profile'] }));
 router.get('/google/callback', passport.authenticate('google'),
-  (req, res, next) => {
-    res.send('success google login');
+  (req, res) => {
+    const session = responseHelper.getSessionData(req);
+    if (session.registered) {
+      console.log('success google login');
+      res.redirect(`${HOST}/dashboard/marketer/main`);
+    } else {
+      console.log('success google login - 정보입력');
+      res.redirect(`${HOST}/regist/google`);
+    }
   });
 
 // marketer - naver
 router.get('/naver', passport.authenticate('naver'));
 router.get('/naver/callback', passport.authenticate('naver'),
-  (req, res, next) => {
-    res.send('success naver login');
+  (req, res) => {
+    const session = responseHelper.getSessionData(req);
+    if (session.registered) {
+      console.log('success naver login');
+      res.redirect(`${HOST}/dashboard/marketer/main`);
+    } else {
+      console.log('success naver login - 정보입력');
+      res.redirect(`${HOST}/regist/naver`);
+    }
   });
 
 // marketer - kakao
 router.get('/kakao', passport.authenticate('kakao'));
 router.get('/kakao/callback', passport.authenticate('kakao'),
-  (req, res, next) => {
-    res.send('success kakao login');
+  (req, res) => {
+    const session = responseHelper.getSessionData(req);
+    if (session.registered) {
+      console.log('success kakao login');
+      res.redirect(`${HOST}/dashboard/marketer/main`);
+    } else {
+      console.log('success kakao login - 정보입력');
+      res.redirect(`${HOST}/regist/naver`);
+    }
   });
 
 // creator - twitch 로그인
 router.get('/twitch', passport.authenticate('twitch'));
 router.get('/twitch/callback', passport.authenticate('twitch'),
-  (req, res, next) => {
-    res.send('success twitch login');
+  (req, res) => {
+    res.redirect(`${HOST}/`);
   });
 
 

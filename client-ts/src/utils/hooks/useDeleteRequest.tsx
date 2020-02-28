@@ -2,6 +2,7 @@ import React, { useCallback } from 'react';
 import axios from '../axios';
 import host from '../../config';
 
+
 /**
  * API서버로 `DELETE` 요청을 보낼 때 사용하는 react **hook**.
  * ## 타입파라미터 (제네릭)
@@ -25,7 +26,7 @@ import host from '../../config';
  *   () => { console.log('success callback done'); handleOpen(); }  
  * );
  */
-export default function useDeleteData<PARAM_TYPE = {[key: string]: any}, RES_DATA_TYPE = any>(
+export default function useDelete<PARAM_TYPE = {[key: string]: any}, RES_DATA_TYPE = any>(
   url: string,
   successCallback?: () => void
 ): {
@@ -47,14 +48,11 @@ export default function useDeleteData<PARAM_TYPE = {[key: string]: any}, RES_DAT
       .then((res) => {
         setLoading(false); // 로딩 완료
 
-        const { status, statusText } = res;
+        const { status } = res;
         setData(res.data);
         if (Math.floor(status / 100) === 2) {
           setSuccess(true);
           if (successCallback) { successCallback(); }
-        } else {
-          setSuccess(null);
-          setError(statusText);
         }
       })
       .catch((err) => {

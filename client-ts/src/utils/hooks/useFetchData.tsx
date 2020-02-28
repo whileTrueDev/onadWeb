@@ -17,6 +17,9 @@ interface FetchData {
 const SESSION_NOT_EXISTS = 'session not exists';
 
 /**
+ * ********************
+ *      DEPRECATED
+ * ********************
  * api 서버와의 통신을 통해 데이터를 가져오는 훅. ( only get 방식)
  * @author hwasurr
  * @param {string} url 데이터를 받아 올 api 엔드포인트

@@ -152,7 +152,7 @@ const creatorTwitch = (
     .then((row): void => {
       const creatorData = row.result[0];
       if (creatorData) {
-        console.log(`[${new Date().toLocaleString()}] [크리에이터로그인] ${user.creatorDisplayName}`);
+        console.log(`[${new Date().toLocaleString()}] [크리에이터트위치로그인] ${user.creatorDisplayName}`);
         user.creatorIp = creatorData.creatorIp;
 
         // Data 변경시에 변경된 값을 반영하는 영역.
@@ -179,7 +179,7 @@ const creatorTwitch = (
             .then(() => done(null, user))
             .catch((errorData) => {
               console.log(errorData);
-              done(errorData);
+              return done(errorData);
             });
         } else if (!(creatorData.creatorLogo === user.creatorLogo)) {
           // 크리에이터의 로고가 바뀐 경우 재설정
@@ -193,7 +193,7 @@ const creatorTwitch = (
             .then(() => done(null, user))
             .catch((errorData) => {
               console.log(errorData);
-              done(errorData);
+              return done(errorData);
             });
         } else if (!(creatorData.creatorTwitchId === user.creatorName)) {
           // 크리에이터의 twitch id가 바뀐 경우 재 설정
@@ -211,63 +211,62 @@ const creatorTwitch = (
               .then(() => done(null, user))
               .catch((errorData) => {
                 console.log(errorData);
-                done(errorData);
+                return done(errorData);
               }),
             doQuery(landingClickUpdateQuery, [user.creatorName, user.creatorId])
               .then(() => done(null, user))
               .catch((errorData) => {
                 console.log(errorData);
-                done(errorData);
+                return done(errorData);
               })
           ]);
-        } else {
-          return done(null, user);
         }
-      } else {
-        console.log(`${user.creatorDisplayName} 님이 최초 로그인 하셨습니다.`);
-        const creatorIp = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-        const campaignList = JSON.stringify({ campaignList: [] });
+        return done(null, user);
+      }
+      console.log(`${user.creatorDisplayName} 님이 최초 로그인 하셨습니다.`);
+      const creatorIp = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+      const campaignList = JSON.stringify({ campaignList: [] });
 
-        const creatorBannerUrl = makeUrl();
-        user.creatorIp = creatorIp;
+      const creatorBannerUrl = makeUrl();
+      user.creatorIp = creatorIp;
 
-        const infoQuery = `
+      const infoQuery = `
                 INSERT INTO creatorInfo
                 (creatorId, creatorName, creatorMail, creatorIp, advertiseUrl, creatorTwitchId, creatorLogo)
                 VALUES (?, ?, ?, ?, ?, ?, ?)`;
 
-        const incomeQuery = `
+      const incomeQuery = `
                 INSERT INTO creatorIncome 
                 (creatorId, creatorTotalIncome, creatorReceivable) 
                 VALUES (?, ?, ?)`;
 
-        const priceQuery = `
+      const priceQuery = `
                 INSERT INTO creatorPrice
                 (creatorId, grade, viewerAverageCount, unitPrice)
                 VALUES (?, ?, ?, ?)
                 `;
 
-        const royaltyQuery = `
+      const royaltyQuery = `
                 INSERT INTO creatorRoyaltyLevel
                 (creatorId, level, exp, visitCount)
                 VALUES (?, 1, 0, 0)
                 `;
 
 
-        Promise.all([
-          doQuery(infoQuery, [user.creatorId, user.creatorDisplayName,
-            user.creatorMail, creatorIp, `/${creatorBannerUrl}`,
-            user.creatorName, user.creatorLogo]),
-          doQuery(royaltyQuery, [user.creatorId]),
-          doQuery(incomeQuery, [user.creatorId, 0, 0]),
-          doQuery(priceQuery, [user.creatorId, 1, 0, 2]),
-        ])
-          .then(() => done(null, user))
-          .catch((errorData) => {
-            console.log(errorData);
-            done(errorData);
-          });
-      }
+      Promise.all([
+        doQuery(infoQuery, [user.creatorId, user.creatorDisplayName,
+          user.creatorMail, creatorIp, `/${creatorBannerUrl}`,
+          user.creatorName, user.creatorLogo]),
+        doQuery(royaltyQuery, [user.creatorId]),
+        doQuery(incomeQuery, [user.creatorId, 0, 0]),
+        doQuery(priceQuery, [user.creatorId, 1, 0, 2]),
+      ])
+        .then(() => done(null, user))
+        .catch((errorData) => {
+          console.log(errorData);
+          done(errorData);
+        });
+      return done(null, user);
     })
     .catch((errorData) => {
       console.log(errorData);
@@ -313,7 +312,7 @@ const marketerGoogle = (
         const stampQuery = `
         INSERT INTO loginStamp(userId, userIp, userType) Values(?,?,?)`;
         doQuery(stampQuery, [user.marketerId, '', '1']);
-        console.log(`[${new Date().toLocaleString()}] [마케터로그인] ${user.marketerName}`);
+        console.log(`[${new Date().toLocaleString()}] [마케터구글로그인] ${user.marketerName}`);
 
         // passport-google-oauth20의 done function 타입
         // done(null, user) X done(undefined, user)
@@ -366,7 +365,7 @@ const marketerNaver: Naver.VerifyFunction = (accessToken, refreshToken, profile,
         const stampQuery = `
         INSERT INTO loginStamp(userId, userIp, userType) Values(?,?,?)`;
         doQuery(stampQuery, [user.marketerId, '', '1']);
-        console.log('로그인이 완료되었습니다, ', marketerData.marketerName);
+        console.log(`[${new Date().toLocaleString()}] [마케터네이버로그인] ${user.marketerName}`);
 
         return done(null, user);
       }
@@ -412,7 +411,7 @@ const marketerKakao: Kakao.VerifyFunction = (accessToken, refreshToken, profile,
         const stampQuery = `
         INSERT INTO loginStamp(userId, userIp, userType) Values(?,?,?)`;
         doQuery(stampQuery, [user.marketerId, '', '1']);
-        console.log('로그인이 완료되었습니다, ', marketerData.marketerName);
+        console.log(`[${new Date().toLocaleString()}] [마케터카카오로그인] ${user.marketerName}`);
 
         return done(null, user);
       }
