@@ -31,6 +31,8 @@ const getParam = (paramField: string | string[],
       case 'put':
       case 'patch':
       case 'delete':
+        console.log(req.body);
+        console.log(req.body[paramField]);
         if (!(req.body[paramField])) {
           throw new createError[400](responseMessages.ERROR_400);
         }
@@ -116,7 +118,7 @@ const send = (
   res: express.Response
 ): void => {
   const OK = 200;
-  const CREATED = 2001;
+  const CREATED = 201;
   switch (method.toLowerCase()) {
     case 'post':
       res.status(CREATED).json(resultData);

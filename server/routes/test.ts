@@ -12,7 +12,7 @@ router.route('/')
       const session = responseHelper.getSessionData(req);
       if (session.creatorId) {
         const row = await doQuery('SELECT * from creatorInfo where creatorId = ?', [session.creatorId]);
-        const someResult = await dataProcessing.someDataProcessingFunction(row); // 에러핸들링 포함 함수
+        // const someResult = await dataProcessing.someDataProcessingFunction(row); // 에러핸들링 포함 함수
         responseHelper.send({
           creatorId: row.result[0].creatorId,
           message: '성공'
@@ -22,12 +22,15 @@ router.route('/')
       }
     }),
   )
-  .post(responseHelper.middleware.unusedMethod)
-  .put(responseHelper.middleware.unusedMethod)
-  .patch(responseHelper.middleware.unusedMethod)
-  .delete((req, res, next) => {
-    console.log('test/delete success');
-    res.json({ hi: 'hi' });
-  });
+  .post(
+    responseHelper.middleware.checkSessionExists, // session 확인이 필요한 경우.
+    responseHelper.middleware.withErrorCatch(async (req, res, next) => {
+      const creatorId = responseHelper.getParam('creatorId', 'post', req);
+      responseHelper.send({
+        creatorId
+      }, 'post', res);
+    })
+  )
+  .all(responseHelper.middleware.unusedMethod);
 
 export default router;

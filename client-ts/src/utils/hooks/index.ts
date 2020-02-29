@@ -1,8 +1,8 @@
 import useGetRequest from './useGetRequest';
 import useDeleteRequest from './useDeleteRequest';
-// import usePostRequest from './usePostRequest';
-// import usePutRequest from './usePutRequest';
-// import usePatchRequest from './usePatchRequest';
+import usePostRequest from './usePostRequest';
+import usePutRequest from './usePutRequest';
+import usePatchRequest from './usePatchRequest';
 import useAnchorEl from './useAnchorEl';
 import useDialog from './useDialog';
 import useEventTargetValue from './useEventTargetValue';
@@ -15,9 +15,9 @@ import useTooltip from './useTooltip';
 export {
   useGetRequest,
   useDeleteRequest,
-  // usePostRequest,
-  // usePutRequest,
-  // usePatchRequest,
+  usePostRequest,
+  usePutRequest,
+  usePatchRequest,
   useAnchorEl,
   useDialog,
   useEventTargetValue,

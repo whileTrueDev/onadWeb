@@ -45,7 +45,7 @@ export default function usePostRequest<PARAM_TYPE = {[key: string]: any}, RES_DA
   const doPostRequest = useCallback((param: PARAM_TYPE): void => {
     setLoading(true); // 로딩 시작
     axios.post<RES_DATA_TYPE>(`${host}${url}`,
-      { data: { ...param } })
+      { ...param })
       .then((res) => {
         setLoading(false); // 로딩 완료
 
@@ -60,10 +60,9 @@ export default function usePostRequest<PARAM_TYPE = {[key: string]: any}, RES_DA
         setLoading(false); // 로딩 완료
         setSuccess(null);
 
-        console.error(`error in POST ${url}: `, err.response.status, err.response.data);
         if (err.response) {
           // 요청이 이루어졌으며 서버가 2xx의 범위를 벗어나는 상태 코드로 응답한 경우.
-          console.log('2xx의 범위를 벗어나는 상태 코드로 응답한 경우');
+          console.error(`error in POST ${url}: `, err.response.status, err.response.data);
           setError(err.response.data.message || DEFAULT_ERROR_MESSAGE);
         } else if (err.request) {
           // 요청이 이루어 졌으나 응답을 받지 못한 경우.
@@ -71,7 +70,7 @@ export default function usePostRequest<PARAM_TYPE = {[key: string]: any}, RES_DA
           setError(DEFAULT_ERROR_MESSAGE);
         } else {
           // 오류를 발생시킨 요청을 설정하는 중에 문제가 발생
-          console.log('오류를 발생시킨 요청을 설정하는 중에 문제가 발생했습니다');
+          console.log('오류를 발생시킨 요청을 설정하는 중에 문제가 발생');
           setError(DEFAULT_ERROR_MESSAGE);
         }
       });

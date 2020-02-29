@@ -59,10 +59,9 @@ export default function useDeleteRequest<PARAM_TYPE = {[key: string]: any}, RES_
         setLoading(false); // 로딩 완료
         setSuccess(null);
 
-        console.error(`error in DELETE ${url}: `, err.response.status, err.response.data);
         if (err.response) {
           // 요청이 이루어졌으며 서버가 2xx의 범위를 벗어나는 상태 코드로 응답한 경우.
-          console.log('2xx의 범위를 벗어나는 상태 코드로 응답한 경우');
+          console.error(`error in DELETE ${url}: `, err.response.status, err.response.data);
           setError(err.response.data.message || DEFAULT_ERROR_MESSAGE);
         } else if (err.request) {
           // 요청이 이루어 졌으나 응답을 받지 못한 경우.
