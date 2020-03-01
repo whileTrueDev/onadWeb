@@ -21,7 +21,7 @@ interface CampaignData {
 // 모든 캠페인에 대한 목록을 의미한다.
 router.route('/list')
     .get(
-        responseHelper.middleware.checkSessionExists, // session 확인이 필요한 경우.
+        responseHelper.middleware.checkSessionExists,
         responseHelper.middleware.withErrorCatch(async (req, res, next) => {
             const { marketerId } = responseHelper.getSessionData(req);
             const date = new Date();
@@ -43,7 +43,7 @@ router.route('/list')
 
             const sumQuery = `
             select sum(cashFromMarketer) as dailysum
-            from campaignLog
+            from campaignLo
             where campaignId = ?
             and date > ?
             `;
@@ -58,6 +58,8 @@ router.route('/list')
                                 }))
                         ).then((campaignList) => {
                             responseHelper.send(campaignList, 'get', res);
+                        }).catch((error) => {
+                            responseHelper.promiseError(error, next);
                         });
                     }
                 }).catch((error) => {
@@ -118,10 +120,12 @@ router.route('/on-off')
                                 // marketerActionLogging([campaignId.split('_')[0], MARKETER_ACTION_LOG_TYPE,
                                 // JSON.stringify({ campaignName, onoffState })]);
                                 responseHelper.send([true], 'PATCH', res);
-                            });
+                            })
+                            .catch((error) => {
+                                responseHelper.promiseError(error, next);
+                            })
                     } else if (bannerConfirm === 1) {
                         responseHelper.send([false, 'URL에 대한 승인이 완료되지 않았습니다.'], 'PATCH', res);
-                        res.send();
                     } else if (linkConfirm === 1) {
                         responseHelper.send([false, '배너에 대한 승인이 완료되지 않았습니다.'], 'PATCH', res);
                     } else {
@@ -296,13 +300,16 @@ router.route('/')
                 doQuery(query, [campaignId])
                     .then(() => {
                         doQuery(selectQuery, [campaignId])
-                            .then((row1) => {
+                            .then(() => {
                                 responseHelper.send([true], 'DELETE', res);
                                 // const { campaignName } = row1.result[0];
                                 // marketer action log 테이블 적재
                                 // const MARKETER_ACTION_LOG_TYPE = 12; // <캠페인 삭제> 상태값
                                 // marketerActionLogging([marketerId,
                                 // MARKETER_ACTION_LOG_TYPE, JSON.stringify({ campaignName })]);
+                            })
+                            .catch((error) => {
+                                responseHelper.promiseError(error, next);
                             });
                     })
                     .catch((error) => {

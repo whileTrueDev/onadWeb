@@ -100,7 +100,8 @@ router.post('/onoff', (req, res) => {
     });
 });
 
-// doQuery 수정
+// doQuery 수정 
+//안씀
 router.get('/creatorlist', (req, res) => {
   const listQuery = `
   SELECT ts.streamerName, avg(viewer) as avgViewer
@@ -125,6 +126,7 @@ router.get('/creatorlist', (req, res) => {
 });
 
 // bannerMatched의 특정 배너와 계약된 크리에이터 조회
+// 안씀
 router.get('/contraction/creatorList', (req, res) => {
   const { bannerId } = req.query;
 
