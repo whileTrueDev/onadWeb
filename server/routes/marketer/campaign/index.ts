@@ -19,6 +19,7 @@ interface CampaignData {
 }
 
 // 모든 캠페인에 대한 목록을 의미한다.
+// marketer/sub/campaign =>/new
 router.route('/list')
     .get(
         responseHelper.middleware.checkSessionExists,
@@ -86,6 +87,7 @@ router.route('/names')
     .all(responseHelper.middleware.unusedMethod)
 
 // 캠페인 온오프 버튼에 대한 라우트
+//(PATCH) marketer/sub/campaign =>/onoff
 router.route('/on-off')
     .patch(
         responseHelper.middleware.withErrorCatch(async (req, res, next) => {
@@ -140,6 +142,9 @@ router.route('/on-off')
     .all(responseHelper.middleware.unusedMethod)
 
 // 캠페인 생성 및 삭제에 대한 라우트
+//(POST) marketer/sub/campaign =>/push 
+//(PATCH) marketer/sub/campaign =>/changeName marketer/sub/campaign =>/changeBudget
+//(DELETE)  marketer/sub/campaign => /
 router.route('/')
     .all(responseHelper.middleware.checkSessionExists)
     .patch(

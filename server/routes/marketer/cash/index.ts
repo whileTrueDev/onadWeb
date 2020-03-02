@@ -34,6 +34,7 @@ router.route('/')
     )
     .all(responseHelper.middleware.unusedMethod)
 
+// marketer/sub/cash =>/refund
 router.route('/refund')
     .post(
         responseHelper.middleware.checkSessionExists, // session 확인이 필요한 경우.
@@ -244,6 +245,7 @@ router.route('/charge/card')
     .all(responseHelper.middleware.unusedMethod)
 
 
+// marketer/sub/cash =>/charge
 router.route('/charge')
     .post(
         responseHelper.middleware.checkSessionExists, // session 확인이 필요한 경우.

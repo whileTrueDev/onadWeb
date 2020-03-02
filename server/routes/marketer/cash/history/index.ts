@@ -14,6 +14,7 @@ interface ChargeData {
     temporaryState: number | string;
 }
 
+// marketer/sub/cash =>/charge/list
 router.route('/charge')
     .get(
         responseHelper.middleware.checkSessionExists, // session 확인이 필요한 경우.

@@ -10,6 +10,7 @@ app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 
 // 캠페인 정보 조회 - 캠페인 리스트 테이블
+// 안씀
 router.get('/', (req, res) => {
   const marketerId = req._passport.session.user.userid;
   const query = `

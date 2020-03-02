@@ -113,7 +113,7 @@ interface Taxbill {
     state: string | number;
     cashAmount: string;
 }
-// marketer/sub/profile => /accountNuber에서 가져옴.
+
 router.route('/tax-bills')
     .get(
         responseHelper.middleware.checkSessionExists, // session 확인이 필요한 경우.
