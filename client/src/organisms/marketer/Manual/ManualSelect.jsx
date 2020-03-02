@@ -12,7 +12,7 @@ import CardHeader from '../../../atoms/Card/CardHeader';
 // style and images
 import dashboardStyle from '../../../assets/jss/onad/views/dashboardStyle';
 
-const useButtonStyle = makeStyles(theme => ({
+const useButtonStyle = makeStyles((theme) => ({
   fixedCard: {
     position: 'static',
   },
@@ -43,9 +43,9 @@ const Select = (props) => {
   return (
     <div className={buttonClasses.fixedCard}>
       <Card>
-        <CardHeader color="blueGray" stats>
+        <CardHeader color="blueGray">
           <h4 className={classes.cardTitleWhite}>
-          이용 안내
+            이용 안내
           </h4>
           <p className={classes.cardCategoryWhite}>처음이시라면, 순서대로 진행해주세요.</p>
         </CardHeader>

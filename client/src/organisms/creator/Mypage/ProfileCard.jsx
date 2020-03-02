@@ -17,7 +17,7 @@ import history from '../../../history';
 import axios from '../../../utils/axios';
 import HOST from '../../../utils/config';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   textField: {
     width: '100%',
     borderColor: 'linear-gradient(60deg, #00acc1, #26c6da)',
@@ -83,7 +83,7 @@ const ProfileCard = (props) => {
       <CardAvatar profile>
         {profileData.loading && (<CircularProgress small />)}
         {!profileData.loading && !profileData.error && (
-        <a href="#pablo" onClick={e => e.preventDefault()}>
+        <a href="#pablo" onClick={(e) => e.preventDefault()}>
           <img src={profileData.payload.result.creatorLogo} alt="..." />
         </a>
         )}
@@ -122,10 +122,11 @@ const ProfileCard = (props) => {
                 <Grid item sm={12} md={6}>
                   <Button
                     color="blueGray"
+                    size="medium"
                     style={{ marginTop: 20, float: 'left' }}
                     onClick={handleIpChangerOpen}
                   >
-              IP 변경하기
+                    IP 변경하기
                   </Button>
                 </Grid>
               </Grid>
@@ -146,10 +147,11 @@ const ProfileCard = (props) => {
                 <Grid item sm={6} md={6}>
                   <Button
                     color="blueGray"
+                    size="medium"
                     style={{ marginTop: 20, float: 'left' }}
                     onClick={handleContractionOpen}
                   >
-                  계약서 보기
+                    계약서 보기
                   </Button>
                 </Grid>
               </Grid>
@@ -184,8 +186,13 @@ const ProfileCard = (props) => {
                   </Grid>
                 </Grid>
                 <Grid item sm={12} md={6}>
-                  <Button style={{ marginTop: 20, float: 'left' }} color="blueGray" onClick={() => { alert('준비중입니다.'); }}>
-                  카테고리 변경
+                  <Button
+                    size="medium"
+                    style={{ marginTop: 20, float: 'left' }}
+                    color="blueGray"
+                    onClick={() => { alert('준비중입니다.'); }}
+                  >
+                    카테고리 변경
                   </Button>
                 </Grid>
               </Grid>
@@ -193,7 +200,7 @@ const ProfileCard = (props) => {
 
             <Grid item sm={12} md={9}>
               <Button color="primary" onClick={handleProfileChange}>
-                  정보 변경하러가기
+                정보 변경하러가기
               </Button>
             </Grid>
           </Grid>

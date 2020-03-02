@@ -5,9 +5,9 @@ import classNames from 'classnames'; // nodejs library that concatenates classes
 import withStyles from '@material-ui/core/styles/withStyles';
 import Button from '@material-ui/core/Button';
 
-import buttonStyle from '../../assets/jss/onad/components/buttonStyle';
+import buttonStyle from './Button.style';
 
-function Button({ ...props }) {
+export default function CustomButton({ ...props }) {
   const {
     classes, color, round, children, disabled, simple,
     size, block, link, justIcon, className, muiClasses,
@@ -32,30 +32,3 @@ function Button({ ...props }) {
     </Button>
   );
 }
-
-Button.propTypes = {
-  classes: PropTypes.object.isRequired,
-  color: PropTypes.oneOf([
-    'primary',
-    'info',
-    'success',
-    'warning',
-    'danger',
-    'rose',
-    'white',
-    'blueGray',
-    'transparent',
-  ]),
-  size: PropTypes.oneOf(['sm', 'lg']),
-  simple: PropTypes.bool,
-  round: PropTypes.bool,
-  disabled: PropTypes.bool,
-  block: PropTypes.bool,
-  link: PropTypes.bool,
-  justIcon: PropTypes.bool,
-  className: PropTypes.string,
-  // use this to pass the classes props from Material-UI
-  muiClasses: PropTypes.object,
-};
-
-export default withStyles(buttonStyle)(RegularButton);

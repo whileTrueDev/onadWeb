@@ -26,6 +26,7 @@ router.route('/')
     responseHelper.middleware.checkSessionExists, // session 확인이 필요한 경우.
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
       const creatorId = responseHelper.getParam('creatorId', 'post', req);
+      console.log(creatorId, ' in POST');
       responseHelper.send({
         creatorId
       }, 'post', res);

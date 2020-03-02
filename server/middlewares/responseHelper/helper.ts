@@ -23,7 +23,7 @@ const getParam = (paramField: string | string[],
   if (typeof paramField === 'string') {
     switch (method.toLowerCase()) {
       case 'get':
-        if (!(req.query[paramField])) {
+        if (!(Object.keys(req.query).find((x) => x === paramField))) {
           throw new createError[400](responseMessages.ERROR_400);
         }
         return req.query[paramField];
@@ -31,9 +31,7 @@ const getParam = (paramField: string | string[],
       case 'put':
       case 'patch':
       case 'delete':
-        console.log(req.body);
-        console.log(req.body[paramField]);
-        if (!(req.body[paramField])) {
+        if (!(Object.keys(req.body).find((x) => x === paramField))) {
           throw new createError[400](responseMessages.ERROR_400);
         }
         return req.body[paramField];
@@ -45,7 +43,7 @@ const getParam = (paramField: string | string[],
   switch (method.toLowerCase()) {
     case 'get':
       return paramField.map((param) => {
-        if (!(req.query[param])) {
+        if (!(Object.keys(req.query).find((x) => x === param))) {
           throw new createError[400](responseMessages.ERROR_400);
         }
         return req.query[param];
@@ -55,7 +53,7 @@ const getParam = (paramField: string | string[],
     case 'patch':
     case 'delete':
       return paramField.map((param) => {
-        if (!(req.body[param])) {
+        if (!(Object.keys(req.body).find((x) => x === param))) {
           throw new createError[400](responseMessages.ERROR_400);
         }
         return req.body[param];

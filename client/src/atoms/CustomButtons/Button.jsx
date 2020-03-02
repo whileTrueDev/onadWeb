@@ -10,11 +10,11 @@ import buttonStyle from './Button.style';
 
 function RegularButton({ ...props }) {
   const {
-    classes, color, children, variant, ...rest
+    classes, color, size, children, variant, ...rest
   } = props;
 
   return (
-    <Button {...rest} variant={variant} color={color} className={classes.button}>
+    <Button {...rest} size={size} variant={variant} color={color} className={classes.button}>
       {children}
     </Button>
   );
@@ -24,14 +24,14 @@ RegularButton.propTypes = {
   classes: PropTypes.object.isRequired,
   color: PropTypes.oneOf([
     'primary',
-    'info',
-    'success',
-    'warning',
-    'danger',
-    'rose',
-    'white',
-    'blueGray',
-    'transparent',
+    'secondary',
+    'default',
+    'inherit',
+  ]),
+  size: PropTypes.oneOf([
+    'small',
+    'medium',
+    'large',
   ]),
   variant: PropTypes.string,
   className: PropTypes.string,
@@ -39,7 +39,8 @@ RegularButton.propTypes = {
 
 RegularButton.defaultProps = {
   color: 'primary',
-  variant: 'contained'
+  variant: 'contained',
+  size: 'large'
 };
 
 export default withStyles(buttonStyle)(RegularButton);

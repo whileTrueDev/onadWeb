@@ -11,7 +11,7 @@ import useDialog from '../../../utils/lib/hooks/useDialog';
 import UploadDialog from './banner/UploadDialog';
 
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
   },
@@ -38,11 +38,11 @@ export default function BannerList(props) {
   const maxSteps = bannerData.payload.length;
 
   const handleNext = () => {
-    setActiveStep(prevActiveStep => prevActiveStep + 1);
+    setActiveStep((prevActiveStep) => prevActiveStep + 1);
   };
 
   const handleBack = () => {
-    setActiveStep(prevActiveStep => prevActiveStep - 1);
+    setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
   const bannerUploadDialog = useDialog();
@@ -83,11 +83,11 @@ export default function BannerList(props) {
             >
               {bannerData.payload[activeStep].confirmState === CONFIRMED ? (
                 <Typography variant="body1" style={{ color: '#fff' }}>
-                승인됨
+                  승인됨
                 </Typography>
               ) : (
                 <Typography variant="body1" style={{ color: 'red' }}>
-                미승인
+                  미승인
                 </Typography>
               )}
             </div>
@@ -122,14 +122,14 @@ export default function BannerList(props) {
             activeStep={activeStep}
             nextButton={(
               <Button size="small" onClick={handleNext} disabled={activeStep === maxSteps - 1}>
-              다음
+                다음
                 <KeyboardArrowRight />
               </Button>
           )}
             backButton={(
               <Button size="small" onClick={handleBack} disabled={activeStep === 0}>
                 <KeyboardArrowLeft />
-              이전
+                이전
               </Button>
             )}
           />

@@ -13,7 +13,7 @@ import Dialog from '../../../../atoms/Dialog/Dialog';
 import Button from '../../../../atoms/CustomButtons/Button';
 import StyledInput from '../../../../atoms/StyledInput';
 import DangerTypography from '../../../../atoms/Typography/Danger';
-import Success from '../../../../atoms/Success';
+import Success from '../../../../atoms/Typography/Success';
 import useDialog from '../../../../utils/lib/hooks/useDialog';
 import useFetchData from '../../../../utils/lib/hooks/useFetchData';
 import useUpdateData from '../../../../utils/lib/hooks/useUpdateData';

@@ -1,23 +1,6 @@
-import {
-  hexToRgb,
-} from '../../onad';
+import { hexToRgb } from '../../onad';
 
 const dashboardStyle = (theme) => ({
-  successText: {
-    color: theme.palette.success.main,
-  },
-  dangerText: {
-    color: theme.palette.error.main,
-    fontWeight: 'bold',
-  },
-  infoText: {
-    color: theme.palette.info.main,
-    fontWeight: 'bold',
-  },
-  upArrowCardCategory: {
-    width: '16px',
-    height: '16px',
-  },
   stats: {
     color: theme.palette.grey[500],
     display: 'inline-flex',
@@ -85,12 +68,6 @@ const dashboardStyle = (theme) => ({
       fontWeight: '400',
       lineHeight: '1',
     },
-  },
-  spanText: {
-    marginLeft: '8px',
-    color: theme.palette.info.main,
-    fontWeight: 'bold',
-
   },
 });
 

@@ -1,4 +1,3 @@
-import { container } from '../../assets/jss/onad';
 
 const footerStyle = (theme) => ({
   block: {
@@ -27,7 +26,12 @@ const footerStyle = (theme) => ({
     borderTop: `1px solid ${theme.palette.grey[300]}`,
     padding: '15px 0',
   },
-  container,
+  container: {
+    paddingRight: '15px',
+    paddingLeft: '15px',
+    marginRight: 'auto',
+    marginLeft: 'auto',
+  },
   a: {
     color: theme.palette.primary.main,
     textDecoration: 'none',

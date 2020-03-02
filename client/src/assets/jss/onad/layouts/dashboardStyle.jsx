@@ -1,7 +1,5 @@
 import {
   drawerWidth,
-  transition,
-  container,
 } from '../../onad';
 
 const appStyle = (theme) => ({
@@ -17,7 +15,7 @@ const appStyle = (theme) => ({
     overflow: 'auto',
     position: 'relative',
     float: 'right',
-    ...transition,
+    transition: 'all 0.33s cubic-bezier(0.685, 0.0473, 0.346, 1)',
     maxHeight: '100%',
     width: '100%',
     overflowScrolling: 'touch',
@@ -27,7 +25,12 @@ const appStyle = (theme) => ({
     padding: '15px 15px',
     minHeight: 'calc(100vh - 123px)',
   },
-  container,
+  container: {
+    paddingRight: '15px',
+    paddingLeft: '15px',
+    marginRight: 'auto',
+    marginLeft: 'auto',
+  },
 });
 
 export default appStyle;

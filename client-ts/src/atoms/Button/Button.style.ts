@@ -1,4 +1,6 @@
-const buttonStyle = (theme) => ({
+import { Theme } from '@material-ui/core/styles';
+
+const buttonStyle = (theme: Theme) => ({
   button: {
     border: 'none',
     margin: '.3125rem 1px',

@@ -79,7 +79,7 @@ export default function LandingPanelBanner(props) {
                     }}
                     variant="outlined"
                   />
-                  <Button onClick={copyToClipboard} size="sm">
+                  <Button onClick={copyToClipboard} size="small">
                     <InsertLinkOutlined />
                     복사
                   </Button>
@@ -91,12 +91,12 @@ export default function LandingPanelBanner(props) {
           <div>
             <div className={classes.flex}>
               <Typography variant="h6">
-              기본 이미지
+                기본 이미지
               </Typography>
               <Help
                 fontSize="small"
                 color="disabled"
-                onMouseEnter={evt => handleTooltipOpen(evt, 3)}
+                onMouseEnter={(evt) => handleTooltipOpen(evt, 3)}
                 onMouseLeave={handleTooltipClose}
                 aria-owns={anchorEl ? 'send-desc-popover' : undefined}
                 aria-haspopup="true"

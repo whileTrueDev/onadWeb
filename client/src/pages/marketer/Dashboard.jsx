@@ -35,7 +35,8 @@ export default function Dashboard() {
       {(normalData.loading || campaignData.loading
         || onOffData.loading
         || valueChartData.loading
-        || actionLogData.loading) ? (
+        || actionLogData.loading
+        || countsData.loading) ? (
           <ReportLoading />
         ) : (
           <div>

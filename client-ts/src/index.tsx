@@ -23,7 +23,7 @@ dotenv.config();
 const developmentRouter = (
   <Router history={history}>
     <Switch>
-      <Route exact path="/" component={Door} />
+      <Route exact path="/" component={Test} />
     </Switch>
   </Router>
 );

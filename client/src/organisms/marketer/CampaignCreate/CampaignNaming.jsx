@@ -7,11 +7,11 @@ import Check from '@material-ui/icons/Check';
 import { makeStyles } from '@material-ui/core/styles';
 import useFetchData from '../../../utils/lib/hooks/useFetchData';
 import StyledItemText from '../../../atoms/StyledItemText';
-import Success from '../../../atoms/Success';
+import Success from '../../../atoms/Typography/Success';
 import DangerTypography from '../../../atoms/Typography/Danger';
 import StyledInput from '../../../atoms/StyledInput';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     width: '100%',
     marginTop: '0px',

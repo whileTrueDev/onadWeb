@@ -1,7 +1,3 @@
-import {
-  container,
-} from '../../assets/jss/onad';
-
 const headerStyle = (theme) => ({
   appBar: {
     backgroundColor: 'transparent',
@@ -21,7 +17,10 @@ const headerStyle = (theme) => ({
     display: 'block',
   },
   container: {
-    ...container,
+    paddingRight: '15px',
+    paddingLeft: '15px',
+    marginRight: 'auto',
+    marginLeft: 'auto',
     minHeight: '50px',
   },
   flex: {

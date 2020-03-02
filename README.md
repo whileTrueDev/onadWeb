@@ -56,6 +56,7 @@ WhileTrue 개발자 [강동기](https://github.com/GoMotiv), [강화수](https:/
     {
     "parser": "@typescript-eslint/parser",
     "plugins": [
+        "react",
         "prettier",
         "jest",
         "react-hooks"
@@ -63,6 +64,7 @@ WhileTrue 개발자 [강동기](https://github.com/GoMotiv), [강화수](https:/
     "extends": [
         "airbnb",
         "eslint:recommended",
+        "plugin:react/recommended",
         "plugin:@typescript-eslint/eslint-recommended",
         "plugin:@typescript-eslint/recommended"
     ],
@@ -84,6 +86,8 @@ WhileTrue 개발자 [강동기](https://github.com/GoMotiv), [강화수](https:/
         ],
         "import/parsers": {
             "@typescript-eslint/parser": [
+                ".js",
+                ".jsx",
                 ".ts",
                 ".tsx"
             ]
@@ -100,6 +104,8 @@ WhileTrue 개발자 [강동기](https://github.com/GoMotiv), [강화수](https:/
         }
     },
     "rules": {
+        "react/jsx-props-no-spreading": "warn",
+        "react/jsx-filename-extension": [1, { "extensions": [".tsx", ".jsx"] }] ,
         "no-trailing-spaces": ["error", {"ignoreComments": true}],
         "class-methods-use-this": [
             "error",
@@ -126,10 +132,7 @@ WhileTrue 개발자 [강동기](https://github.com/GoMotiv), [강화수](https:/
         "react-hooks/exhaustive-deps": "warn", // Checks effect dependencies
         "no-underscore-dangle": "off",
         "comma-dangle": "off",
-        "linebreak-style": [
-            "error",
-            "windows" // if you use UNIX OS, remove this
-        ],
+        "linebreak-style": "off",
         "react/require-default-props": 1,
         "no-unused-vars": "warn",
         "button-has-type": 0,

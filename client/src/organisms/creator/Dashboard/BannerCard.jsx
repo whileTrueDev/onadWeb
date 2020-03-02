@@ -10,7 +10,7 @@ import CircularProgress from '../../../atoms/Progress/CircularProgress';
 import StyledItemText from '../../../atoms/StyledItemText';
 import history from '../../../history';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   area: {
     marginTop: theme.spacing(4),
     marginBottom: theme.spacing(4),
@@ -29,7 +29,7 @@ const BannerManageButton = () => (
       history.push('/dashboard/creator/banner');
     }}
   >
-  배너내역
+    배너내역
   </Button>
 );
 
@@ -44,7 +44,7 @@ const BannerCard = () => {
     setAnchorEl(null);
   };
 
-  const handlePopoverOpen = index => (event) => {
+  const handlePopoverOpen = (index) => (event) => {
     if (index !== descIndex) {
       handlePopoverClose();
     }
@@ -52,7 +52,7 @@ const BannerCard = () => {
     setAnchorEl(event.currentTarget);
   };
 
-  const handlePopoverClick = index => (event) => {
+  const handlePopoverClick = (index) => (event) => {
     if (anchorEl) {
       setAnchorEl(null);
     } else {
@@ -89,8 +89,7 @@ const BannerCard = () => {
                 />
               </Grid>
             ))
-          )
-          }
+          )}
           {!currentBannerData.loading && currentBannerData.payload.length === 0 && (
           <div className={classes.area}>
             <Typography variant="h6" className={classes.head}>

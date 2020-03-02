@@ -16,7 +16,7 @@ import HOST from '../../../../utils/config';
 import history from '../../../../history';
 import StyledItemText from '../../../../atoms/StyledItemText';
 
-const style = theme => ({
+const style = (theme) => ({
   divider: {
     width: 2,
     height: 28,
@@ -128,7 +128,7 @@ const bankReducer = (state, action) => {
     case 'set': {
       return {
         name: action.name,
-        code: banks.find(_bank => _bank.bankName === action.name).bankCode
+        code: banks.find((_bank) => _bank.bankName === action.name).bankCode
       };
     }
     default: {
@@ -277,7 +277,7 @@ const AccountNumberForm = (props) => {
               margin="dense"
               style={{ width: '200px' }}
               allowNegative={false}
-              allowLeadingZeros={true}
+              allowLeadingZeros
             />
           </Grid>
         </Grid>
@@ -286,7 +286,7 @@ const AccountNumberForm = (props) => {
             <Grid item className={classes.item}>
               <StyledItemText primary="계좌번호" secondary=" (-)을 제외한 계좌번호를 입력하세요" fontSize="14px" />
             </Grid>
-            <Grid container direction="row" className={classes.item}>
+            <Grid container direction="row" alignItems="center" className={classes.item}>
               <Grid item>
                 <NumberFormat
                   required
@@ -301,7 +301,7 @@ const AccountNumberForm = (props) => {
                 />
               </Grid>
               <Grid item>
-                <Button size="sm" color="blueGray" onClick={accountValidation}>조회</Button>
+                <Button size="medium" color="blueGray" onClick={accountValidation}>조회</Button>
               </Grid>
             </Grid>
           </Grid>
@@ -311,6 +311,7 @@ const AccountNumberForm = (props) => {
             <Button
               type="submit"
               value="Submit"
+              size="medium"
               color="primary"
               className={
             !handleClose
@@ -318,12 +319,12 @@ const AccountNumberForm = (props) => {
               : ''
             }
             >
-          등록
+              등록
             </Button>
             {handleClose
           && (
-          <Button onClick={handleClose}>
-              취소
+          <Button size="medium" onClick={handleClose}>
+            취소
           </Button>
           )}
           </DialogActions>
