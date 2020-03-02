@@ -14,32 +14,30 @@ router.route('/')
       const { creatorId } = responseHelper.getSessionData(req);
       const NowIp: any = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
 
-      if (responseHelper.paramValidationCheck(creatorId, 'creatorId', req)) {
 
-        const query = `
-        SELECT creatorId, creatorName, creatorIp, creatorMail, 
-        creatorAccountNumber, creatorContractionAgreement, creatorTwitchId, realName
-        FROM creatorInfo
-        WHERE creatorId = ?
-        `;
+      const query = `
+      SELECT creatorId, creatorName, creatorIp, creatorMail, 
+      creatorAccountNumber, creatorContractionAgreement, creatorTwitchId, realName
+      FROM creatorInfo
+      WHERE creatorId = ?
+      `;
 
-        doQuery(query, [creatorId])
-          .then(row => {
-            const userData = row.result[0];
-            const rawAccount: string = row.result[0].creatorAccountNumber || '';
-            const deciphedAccountNum: string = encrypto.decipher(rawAccount);
-            userData.creatorLogo = session.creatorLogo;
-            userData.creatorAccountNumber = deciphedAccountNum;
-            const result: object = {
-              ...userData,
-              NowIp
-            }
-            responseHelper.send(result, 'get', res);
-          }).catch((error) => {
-            responseHelper.promiseError(error, next)
+      doQuery(query, [creatorId])
+        .then(row => {
+          const userData = row.result[0];
+          const rawAccount: string = row.result[0].creatorAccountNumber || '';
+          const deciphedAccountNum: string = encrypto.decipher(rawAccount);
+          userData.creatorLogo = session.creatorLogo;
+          userData.creatorAccountNumber = deciphedAccountNum;
+          const result: object = {
+            ...userData,
+            NowIp
           }
-          )
-      }
+          responseHelper.send(result, 'get', res);
+        }).catch((error) => {
+          responseHelper.promiseError(error, next)
+        }
+        )
     }),
 
   )
