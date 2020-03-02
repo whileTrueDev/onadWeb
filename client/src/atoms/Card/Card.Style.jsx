@@ -1,18 +1,16 @@
 import {
-  blackColor,
-  whiteColor,
   hexToRgb,
-} from '../../onad';
+} from '../../assets/jss/onad';
 
-const cardStyle = {
+const cardStyle = (theme) => ({
   card: {
     border: '0',
     marginBottom: '30px',
     marginTop: '30px',
-    color: `rgba(${hexToRgb(blackColor)}, 0.87)`,
-    background: whiteColor,
+    color: `rgba(${hexToRgb(theme.palette.common.black)}, 0.87)`,
+    background: theme.palette.common.white,
     width: '100%',
-    boxShadow: `0 1px 4px 0 rgba(${hexToRgb(blackColor)}, 0.14)`,
+    boxShadow: `0 1px 4px 0 rgba(${hexToRgb(theme.palette.common.black)}, 0.14)`,
     position: 'relative',
     display: 'flex',
     flexDirection: 'column',
@@ -34,6 +32,6 @@ const cardStyle = {
       paddingTop: '0px',
     },
   },
-};
+});
 
 export default cardStyle;

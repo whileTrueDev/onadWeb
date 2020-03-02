@@ -50,7 +50,7 @@ function a11yProps(index) {
   };
 }
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
     backgroundColor: theme.palette.background.paper,
@@ -83,13 +83,13 @@ const BannerManage = () => {
             </Tabs>
           </AppBar>
           <TabPanel value={value} index={0}>
-            <CustomButton color="info" size="lg" onClick={() => { uploadDialog.handleOpen(); }}>
+            <CustomButton color="primary" size="lg" onClick={() => { uploadDialog.handleOpen(); }}>
               + 새 배너 등록
             </CustomButton>
             <BannerTable handleDeleteOpen={deleteDialog.handleOpen} />
           </TabPanel>
           <TabPanel value={value} index={1}>
-            <CustomButton color="info" size="lg" onClick={() => { urlUploadDialog.handleOpen(); }}>
+            <CustomButton color="primary" size="lg" onClick={() => { urlUploadDialog.handleOpen(); }}>
               + 새 URL 등록
             </CustomButton>
             <UrlTable handleDeleteOpen={urlDeleteDialog.handleOpen} />

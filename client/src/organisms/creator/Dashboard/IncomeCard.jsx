@@ -49,7 +49,7 @@ const useStyles = makeStyles(() => ({
 
 const WithdrawalButton = (props) => {
   const { handleOpen } = props;
-  return (<Button color="info" onClick={() => { handleOpen(); }}>출금신청</Button>);
+  return (<Button color="primary" onClick={() => { handleOpen(); }}>출금신청</Button>);
 };
 
 const IncomeCard = () => {

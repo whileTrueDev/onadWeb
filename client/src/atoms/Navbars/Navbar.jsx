@@ -10,7 +10,7 @@ import Hidden from '@material-ui/core/Hidden';
 // @material-ui/icons
 import Menu from '@material-ui/icons/Menu';
 // core components
-import headerStyle from '../../assets/jss/onad/components/headerStyle';
+import headerStyle from './Navbar.style';
 import Button from '../CustomButtons/Button';
 import AdminNavbarLinks from './AdminNavbarLinks';
 //
@@ -42,7 +42,7 @@ function Header(props) {
       <Toolbar className={classes.container}>
         <div className={classes.flex}>
           {makeBrand() ? (
-            <Button color="transparent" href="#" className={classes.title}>
+            <Button color="default" variant="text" href="#" className={classes.title}>
               {makeBrand()}
             </Button>
           ) : (

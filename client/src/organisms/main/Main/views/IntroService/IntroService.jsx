@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles(theme => ({
   container: {
-    backgroundColor: grey[100],
+    backgroundColor: grey[300],
     width: '100%',
     height: '400px',
     color: 'black',

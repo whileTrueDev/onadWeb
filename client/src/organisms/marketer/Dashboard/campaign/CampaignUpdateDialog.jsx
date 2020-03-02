@@ -221,7 +221,7 @@ const CampaignUpdateDialog = (props) => {
                 <Grid item container direction="row" justify="flex-end">
                   <Grid item>
                     <Button
-                      color="info"
+                      color="primary"
                       size="sm"
                       onClick={() => {
                         // state체크 및 error 분기화
@@ -354,7 +354,7 @@ const CampaignUpdateDialog = (props) => {
                 <Grid item container direction="row" justify="flex-end">
                   <Grid item>
                     <Button
-                      color="info"
+                      color="primary"
                       size="sm"
                       onClick={() => {
                         if ((!error && state.budget !== '') || state.noBudget) {

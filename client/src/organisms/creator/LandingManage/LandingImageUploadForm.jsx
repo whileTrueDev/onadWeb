@@ -60,7 +60,7 @@ const Buttons = (props) => {
   return (
     <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
       <Button
-        color="info"
+        color="primary"
         disabled={imageUrl === userImage}
         onClick={() => { handleUploadClick(); }}
       >
@@ -114,7 +114,7 @@ export default function LandingImageUploadForm(props) {
         />
 
         <div>
-          <Button className={classes.imageButton} component="label" size="lg" color="info">
+          <Button className={classes.imageButton} component="label" size="lg" color="primary">
             <input
               style={{ padding: 0 }}
               type="file"

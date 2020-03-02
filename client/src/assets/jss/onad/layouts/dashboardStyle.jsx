@@ -4,7 +4,7 @@ import {
   container,
 } from '../../onad';
 
-const appStyle = theme => ({
+const appStyle = (theme) => ({
   wrapper: {
     position: 'relative',
     top: '0',

@@ -5,7 +5,7 @@ import withStyles from '@material-ui/core/styles/withStyles';
 import ListItem from '@material-ui/core/ListItem';
 import List from '@material-ui/core/List';
 // core components
-import footerStyle from '../../assets/jss/onad/components/footerStyle';
+import footerStyle from './Footer.style';
 
 function Footer({ ...props }) {
   const { classes } = props;

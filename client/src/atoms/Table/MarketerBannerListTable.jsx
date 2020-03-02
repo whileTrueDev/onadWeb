@@ -10,7 +10,7 @@ import {
 import CustomTableFooter from './TableFooter';
 
 // core components
-import tableStyle from '../../assets/jss/onad/components/tableStyle';
+import tableStyle from './Table.style';
 import CustomButton from '../CustomButtons/Button';
 
 function CustomTable({ ...props }) {

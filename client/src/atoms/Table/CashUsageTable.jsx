@@ -9,7 +9,7 @@ import {
 // custom table component
 import CustomTableFooter from './TableFooter';
 import Button from '../CustomButtons/Button';
-import tableStyle from '../../assets/jss/onad/components/tableStyle';
+import tableStyle from './Table.style';
 // import CpcCpmTooltip from '../Tooltip/CpcCpmTooltip';
 
 function CustomTable({ ...props }) {

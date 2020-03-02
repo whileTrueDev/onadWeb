@@ -1,6 +1,5 @@
-import { grayColor } from '../../onad';
 
-const cardFooterStyle = {
+const cardFooterStyle = (theme) => ({
   cardFooter: {
     padding: '0',
     paddingTop: '10px',
@@ -21,7 +20,7 @@ const cardFooterStyle = {
     backgroundColor: 'transparent',
   },
   cardFooterStats: {
-    borderTop: `1px solid ${grayColor[10]}`,
+    borderTop: `1px solid ${theme.palette.grey[300]}`,
     marginTop: '20px',
     '& svg': {
       position: 'relative',
@@ -40,8 +39,8 @@ const cardFooterStyle = {
     },
   },
   cardFooterChart: {
-    borderTop: `1px solid ${grayColor[10]}`,
+    borderTop: `1px solid ${theme.palette.grey[300]}`,
   },
-};
+});
 
 export default cardFooterStyle;

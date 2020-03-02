@@ -73,7 +73,7 @@ export default function LandingSetting(props) {
       buttonComponent={(
         <div className={classnames(classes.flex, classes.flexEnd)}>
           <Button
-            color="info"
+            color="primary"
             disabled={
             (userData.payload.creatorDesc === description)
             && (userData.payload.creatorTheme === darkTheme.theme)

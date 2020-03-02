@@ -1,11 +1,6 @@
-import {
-  defaultFont,
-  container,
-  primaryColor,
-  grayColor,
-} from '../../onad';
+import { container } from '../../assets/jss/onad';
 
-const footerStyle = {
+const footerStyle = (theme) => ({
   block: {
     color: 'inherit',
     padding: '15px',
@@ -14,7 +9,6 @@ const footerStyle = {
     textDecoration: 'none',
     position: 'relative',
     display: 'block',
-    ...defaultFont,
     fontWeight: '500',
     fontSize: '12px',
   },
@@ -30,13 +24,12 @@ const footerStyle = {
   },
   footer: {
     bottom: '0',
-    borderTop: `1px solid ${grayColor[11]}`,
+    borderTop: `1px solid ${theme.palette.grey[300]}`,
     padding: '15px 0',
-    ...defaultFont,
   },
   container,
   a: {
-    color: primaryColor,
+    color: theme.palette.primary.main,
     textDecoration: 'none',
     backgroundColor: 'transparent',
   },
@@ -50,5 +43,5 @@ const footerStyle = {
     padding: '0px',
     width: 'auto',
   },
-};
+});
 export default footerStyle;

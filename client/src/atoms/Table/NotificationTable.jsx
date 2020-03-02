@@ -10,7 +10,7 @@ import {
 import CustomTableFooter from './TableFooter';
 
 // core components
-import tableStyle from '../../assets/jss/onad/components/tableStyle';
+import tableStyle from './Table.style';
 
 function CustomTable({ ...props }) {
   const {
@@ -37,7 +37,7 @@ function CustomTable({ ...props }) {
         {tableHead !== undefined ? (
           <TableHead className={classes[`${tableHeaderColor}TableHeader`]}>
             <TableRow>
-              {tableHead.map(value => (
+              {tableHead.map((value) => (
                 <TableCell
                   className={`${classes.tableCell} ${classes.tableHeadCell}`}
                   key={shortid.generate()}
@@ -51,9 +51,9 @@ function CustomTable({ ...props }) {
         {pagination ? (
           <TableBody>
             {/** 페이지네이션 있는 경우 */}
-            {tableData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(prop => (
+            {tableData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((prop) => (
               <TableRow hover key={shortid.generate()}>
-                {prop.map(value => (
+                {prop.map((value) => (
 
                   <TableCell className={classes.tableCell} key={shortid.generate()}>
                     {value}
@@ -73,7 +73,7 @@ function CustomTable({ ...props }) {
         ) : (
           <TableBody>
             {/** 페이지네이션 없는경우 */}
-            {tableData.map(prop => (
+            {tableData.map((prop) => (
               <TableRow hover key={shortid.generate()}>
                 {prop.map((value, i) => (
                   typeof (value) === 'string'

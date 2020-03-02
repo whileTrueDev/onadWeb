@@ -6,11 +6,6 @@ import Check from '@material-ui/icons/Check';
 import { makeStyles } from '@material-ui/core/styles';
 
 import StyledItemText from '../../../atoms/StyledItemText';
-import Success from '../../../atoms/Success';
-import DangerTypography from '../../../atoms/Typography/Danger';
-import StyledInput from '../../../atoms/StyledInput';
-import axios from '../../../utils/axios';
-import HOST from '../../../utils/config';
 import BannerCarousel from '../../../atoms/BannerCarousel';
 import Button from '../../../atoms/CustomButtons/Button';
 
@@ -73,7 +68,7 @@ const CampaignBannerReg = (props) => {
             <div>
               <Typography variant="body1">저장된 배너가 없어요! 먼저 배너를 저장한 이후, 캠페인을 생성해주세요!</Typography>
               <Button
-                color="info"
+                color="primary"
                 onClick={() => { window.open('/dashboard/marketer/banner'); }}
               >
                   배너등록하러 가기

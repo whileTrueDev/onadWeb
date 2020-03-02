@@ -1,9 +1,8 @@
 import { createMuiTheme, responsiveFontSizes } from '@material-ui/core/styles';
-import { orange, cyan } from '@material-ui/core/colors';
+import { cyan } from '@material-ui/core/colors';
 import { darken, lighten } from '@material-ui/core/styles/colorManipulator';
 
-const defaultTheme = createMuiTheme();
-
+const defaultMuiTheme = createMuiTheme();
 const rawTheme = createMuiTheme({
   palette: {
     primary: {
@@ -11,15 +10,11 @@ const rawTheme = createMuiTheme({
       main: cyan[600],
       dark: darken(cyan[600], 0.07),
       // contrastText: will be calculated to contrast with palette.primary.main
-      contrastText: defaultTheme.palette.getContrastText(cyan[700]),
+      contrastText: defaultMuiTheme.palette.getContrastText(cyan[700]),
     },
-    secondary: {
-      light: lighten(orange[600], 0.07),
-      main: orange[600],
-      dark: darken(orange[600], 0.07),
-      // contrastText: will be calculated to contrast with palette.primary.main
-      contrastText: defaultTheme.palette.getContrastText(orange[700]),
-    },
+    secondary: defaultMuiTheme.palette.warning,
+    info: defaultMuiTheme.palette.primary,
+    warning: defaultMuiTheme.palette.secondary,
   },
   // typography: {
   //   fontFamily: [

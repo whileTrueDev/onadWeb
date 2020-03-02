@@ -24,7 +24,7 @@ const useStyles = makeStyles(theme => ({
 
 const BannerManageButton = () => (
   <Button
-    color="info"
+    color="primary"
     onClick={() => {
       history.push('/dashboard/creator/banner');
     }}

@@ -189,7 +189,7 @@ const AccountDialog = (props) => {
         <Content />
 
         <DialogActions>
-          <Button type="submit" value="Submit" color="info">
+          <Button type="submit" value="Submit" color="primary">
             확인
           </Button>
           <Button onClick={handleDialogClose}>

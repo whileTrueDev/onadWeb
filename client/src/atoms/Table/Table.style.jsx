@@ -1,35 +1,22 @@
-import {
-  warningColor,
-  primaryColor,
-  dangerColor,
-  successColor,
-  infoColor,
-  roseColor,
-  grayColor,
-  defaultFont,
-} from '../../onad';
 
-const tableStyle = theme => ({
+const tableStyle = (theme) => ({
   warningTableHeader: {
-    color: warningColor[0],
+    color: theme.palette.warning.main,
   },
   primaryTableHeader: {
-    color: primaryColor[0],
+    color: theme.palette.primary.main,
   },
   dangerTableHeader: {
-    color: dangerColor[0],
+    color: theme.palette.error.main,
   },
   successTableHeader: {
-    color: successColor[0],
+    color: theme.palette.success.main,
   },
   infoTableHeader: {
-    color: infoColor[0],
-  },
-  roseTableHeader: {
-    color: roseColor[0],
+    color: theme.palette.info.main,
   },
   grayTableHeader: {
-    color: grayColor[0],
+    color: theme.palette.grey[300],
   },
   table: {
     marginBottom: '0',
@@ -41,12 +28,10 @@ const tableStyle = theme => ({
   },
   tableHeadCell: {
     color: 'inherit',
-    ...defaultFont,
     fontSize: '1em',
     textAlign: 'center'
   },
   tableCell: {
-    ...defaultFont,
     lineHeight: '1.42857143',
     padding: '10px 8px',
     // padding: 0,
@@ -56,11 +41,9 @@ const tableStyle = theme => ({
     textAlign: 'center'
   },
   tableFooter: {
-    ...defaultFont,
     borderBottom: 'none',
   },
   tableFooterPagination: {
-    ...defaultFont,
     borderBottom: 'none',
   },
   tableResponsive: {

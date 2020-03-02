@@ -11,13 +11,12 @@ import Done from '@material-ui/icons/Done';
 import CustomTableFooter from './TableFooter';
 
 // core components
-import tableStyle from '../../assets/jss/onad/components/tableStyle';
+import tableStyle from './Table.style';
 import CustomButton from '../CustomButtons/Button';
 
 function CustomTable({ ...props }) {
   const {
-    classes, tableHead, tableData, tableHeaderColor, pagination,
-    buttonSet, handleDescDialog, handleBannerDelete,
+    classes, tableHead, tableData, tableHeaderColor, pagination, buttonSet
   } = props;
 
 
@@ -42,7 +41,7 @@ function CustomTable({ ...props }) {
           {tableHead !== undefined ? (
             <TableHead className={classes[`${tableHeaderColor}TableHeader`]}>
               <TableRow>
-                {tableHead.map(value => (
+                {tableHead.map((value) => (
                   <TableCell
                     className={`${classes.tableCell} ${classes.tableHeadCell}`}
                     key={shortid.generate()}
@@ -67,7 +66,7 @@ function CustomTable({ ...props }) {
               page * rowsPerPage, page * rowsPerPage + rowsPerPage
             ).map((prop, i) => (
               <TableRow key={shortid.generate()}>
-                {prop.map(value => (
+                {prop.map((value) => (
                   value.indexOf('data:image/') === -1 // 없는 경우
                     ? (
                       <Hidden smDown key={shortid.generate()}>
@@ -95,7 +94,7 @@ function CustomTable({ ...props }) {
                       <CustomButton
                         variant="contained"
                         color="success"
-                        size="sm"
+                        size="small"
                         className={classes.tableButton}
                       >
                         상세정보
@@ -105,7 +104,7 @@ function CustomTable({ ...props }) {
                       <CustomButton
                         variant="contained"
                         color="danger"
-                        size="sm"
+                        size="small"
                         className={classes.tableButton}
                       >
                         배너삭제
@@ -127,7 +126,7 @@ function CustomTable({ ...props }) {
         ) : (
           <TableBody>
             {/** 페이지네이션 없는경우 */}
-            {tableData.map(prop => (
+            {tableData.map((prop) => (
               <TableRow key={shortid.generate()}>
                 {prop.map((value, i) => (
                   typeof (value) === 'string'

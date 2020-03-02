@@ -9,10 +9,10 @@ import {
 } from '@material-ui/core';
 // custom table component
 import Help from '@material-ui/icons/Help';
-import GreenCheckbox from './GreenCheckBox';
+import GreenCheckbox from '../GreenCheckBox';
 import TableFooter from './TableFooter';
 // core components
-import tableStyle from '../assets/jss/onad/components/tableStyle';
+import tableStyle from './Table.style';
 
 const useStyles = makeStyles({
   tableHeadCell: {
@@ -81,15 +81,14 @@ function CustomTable({ ...props }) {
           </TableHead>
         ) : null}
         <TableBody>
-          {tableData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(prop => (
+          {tableData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((prop) => (
             <TableRow key={shortid.generate()}>
               {banner
               && (
               <TableCell key={shortid.generate()}>
                 <img src="/pngs/logo/onad_logo.png" alt="banner" style={{ width: '100%', height: 'auto', maxWidth: '50px' }} key={shortid.generate()} />
               </TableCell>
-              )
-              }
+              )}
               {prop.map((value, i) => (
                 <TableCell className={classes.tableCell} key={shortid.generate()}>
                   {value}
@@ -100,8 +99,7 @@ function CustomTable({ ...props }) {
               <TableCell className={classes.tableCell}>
                 <GreenCheckbox fontSize="small" checked />
               </TableCell>
-              )
-              }
+              )}
             </TableRow>
           ))}
 

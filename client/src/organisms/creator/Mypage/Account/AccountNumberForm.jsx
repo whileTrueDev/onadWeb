@@ -311,7 +311,7 @@ const AccountNumberForm = (props) => {
             <Button
               type="submit"
               value="Submit"
-              color="info"
+              color="primary"
               className={
             !handleClose
               ? 'MuiButtonBase-root MuiButton-root RegularButton-button-133 RegularButton-primary-136 MuiButton-text'

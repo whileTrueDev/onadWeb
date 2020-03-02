@@ -192,7 +192,7 @@ const ProfileCard = (props) => {
             </Grid>
 
             <Grid item sm={12} md={9}>
-              <Button color="info" onClick={handleProfileChange}>
+              <Button color="primary" onClick={handleProfileChange}>
                   정보 변경하러가기
               </Button>
             </Grid>

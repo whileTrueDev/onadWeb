@@ -13,7 +13,7 @@ import '../../assets/css/onad.css';
 
 const CreatorRoutes = ({ pannelRef }) => (
   <Switch>
-    {allRoutes.creator.map(prop => (
+    {allRoutes.creator.map((prop) => (
       <Route
         path={prop.layout + prop.path}
         component={() => <prop.component pannelRef={pannelRef} />}
@@ -53,7 +53,6 @@ const CreatorDashboard = (props) => {
       <Sidebar
         routes={allRoutes.creator}
         logoText="OnAD"
-        color="info"
         logo="/pngs/logo/onad_logo_vertical_white.png"
         mobileOpen={mobileOpen}
         handleDrawerToggle={handleDrawerToggle}

@@ -8,15 +8,14 @@ const defaultFont = {
   fontWeight: '300',
   lineHeight: '1.5em',
 };
-const successColor = ['#4caf50', '#66bb6a', '#43a047', '#5cb860'];
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   defaultFontStyle: {
     ...defaultFont,
     fontSize: '14px',
   },
   successText: {
-    color: successColor[0],
+    color: theme.palette.success.main,
   },
 }));
 

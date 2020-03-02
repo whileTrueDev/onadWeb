@@ -23,7 +23,7 @@ const useStyles = makeStyles(theme => ({
     width: 48,
     height: 48,
     marginRight: theme.spacing(3),
-    backgroundColor: theme.palette.grey[100],
+    backgroundColor: theme.palette.grey[300],
     [theme.breakpoints.only('lg')]: {
       width: 48,
       height: 48

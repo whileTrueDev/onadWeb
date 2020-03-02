@@ -13,7 +13,7 @@ import Home from '@material-ui/icons/Home';
 import SpeakerNotes from '@material-ui/icons/SpeakerNotes';
 import PowerSettingsNew from '@material-ui/icons/PowerSettingsNew';
 // core components
-import headerLinksStyle from '../../assets/jss/onad/components/headerLinksStyle';
+import headerLinksStyle from './AdminNavbarLinks.style';
 import Notification from './Notification';
 import HOST from '../../utils/config';
 import axios from '../../utils/axios';
@@ -113,8 +113,7 @@ function HeaderLinks(props) {
               >
                 <SpeakerNotes fontSize="large" />
               </IconButton>
-            )
-          }
+            )}
         </Tooltip>
       </Hidden>
 

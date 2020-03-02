@@ -23,7 +23,7 @@ const styles = theme => ({
     position: 'absolute',
     right: theme.spacing(1),
     top: theme.spacing(1),
-    color: theme.palette.grey[100],
+    color: theme.palette.grey[300],
   },
   title: {
     [theme.breakpoints.down('xs')]: {

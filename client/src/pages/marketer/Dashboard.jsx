@@ -11,7 +11,7 @@ import IssueTable from '../../organisms/marketer/Dashboard/IssueTable';
 // hooks
 import useFetchData from '../../utils/lib/hooks/useFetchData';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     [theme.breakpoints.up('xl')]: {
       margin: '0px 160px'
@@ -40,7 +40,7 @@ export default function Dashboard() {
         ) : (
           <div>
             {normalData.payload && campaignData.payload
-          && valueChartData.payload && (
+          && valueChartData.payload && countsData.payload && (
           <Grid container spacing={2}>
             <Grid item xs={12} md={6} lg={3}>
               <Grid container spacing={2}>
@@ -71,7 +71,7 @@ export default function Dashboard() {
                   <Grow in timeout={{ enter: 1100 }}>
                     <DescCard data={{
                       title: '운용중 캠페인',
-                      value: campaignData.payload.filter(c => c.onOff === 1).length,
+                      value: campaignData.payload.filter((c) => c.onOff === 1).length,
                       unit: '캠페인'
                     }}
                     />

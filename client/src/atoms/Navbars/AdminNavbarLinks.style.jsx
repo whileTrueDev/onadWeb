@@ -1,5 +1,5 @@
 
-const headerLinksStyle = theme => ({
+const headerLinksStyle = (theme) => ({
   buttonLink: {
     [theme.breakpoints.down('sm')]: {
       display: 'flex',
