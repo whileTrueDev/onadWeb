@@ -4,19 +4,36 @@ import doQuery from '../../../model/doQuery';
 
 const router = express.Router();
 
+interface CampaignData {
+  creatorId: string,
+  state: number,
+  campaignId: string,
+  date: string,
+  bannerSrc: string,
+  connectedLinkId?: string,
+  marketerName: string,
+  bannerDescription?: string,
+  links?: string,
+}
+
+interface CreatorCampaignList {
+  campaignList: CampaignData[],
+  banList: string[]
+};
+
 // 캠페인 ID array 를 통해 각 캠페인 ID에 따른 cash를 구하는 함수.
 // banList에 존재할 때 state 또한 변경하는 함수.
-const getCash = async ({ campaignList: , banList }) => {
+const getCash = async ({ campaignList, banList }: CreatorCampaignList) => {
   const cashQuery = `
   SELECT campaignId, type, sum(cashToCreator)  as cash
   FROM campaignLog
   WHERE campaignId = ?  AND creatorId = ?
   GROUP by campaignLog.type
   `;
-  const newList = [];
+  const newList: CampaignData[] = [];
   await Promise.all(
     campaignList.map((campaignData) => {
-      const newCampaignData = { ...campaignData, CPC: 0, CPM: 0 };
+      const newCampaignData: any = { ...campaignData, CPC: 0, CPM: 0 };
       return doQuery(cashQuery, [campaignData.campaignId, campaignData.creatorId])
         .then((row) => {
           if (row.result) {
@@ -24,7 +41,7 @@ const getCash = async ({ campaignList: , banList }) => {
               newCampaignData.state = 0;
             }
             let cash = 0;
-            row.result.forEach((cashData) => {
+            row.result.forEach((cashData: { campaignId: string, type: string, cash: number }) => {
               newCampaignData[cashData.type] = cashData.cash;
               cash += cashData.cash;
             });
@@ -93,9 +110,74 @@ router.route('/list')
         doQuery(bannerQuery, [creatorId])
       ])
         .then(async ([row, ban]) => {
-          const banList = JSON.parse(ban.result[0].banList).campaignList;
+          const banList: string[] = JSON.parse(ban.result[0].banList).campaignList;
           const campaignList = await getCash({ campaignList: row.result, banList });
           responseHelper.send(campaignList, 'get', res);
+        })
+        .catch((error) => {
+          responseHelper.promiseError(error, next)
+        });
+    }),
+  )
+  .all(responseHelper.middleware.unusedMethod);
+
+
+router.route('/overlay')
+  // 크리에이터 배너 오버레이 주소 조회
+  .get(
+    responseHelper.middleware.checkSessionExists,
+    responseHelper.middleware.withErrorCatch(async (req, res, next) => {
+      const { creatorId } = responseHelper.getSessionData(req);
+      const query = `
+      SELECT advertiseUrl, creatorContractionAgreement
+      FROM creatorInfo
+      WHERE creatorId = ?
+      `;
+
+      doQuery(query, [creatorId])
+        .then(row => {
+          const result = row.result[0];
+          result.advertiseUrl = `https://banner.onad.io/banner${result.advertiseUrl}`;
+          responseHelper.send(result, 'get', res);
+        })
+        .catch((error) => {
+          responseHelper.promiseError(error, next)
+        });
+    }),
+  )
+  .all(responseHelper.middleware.unusedMethod);
+
+router.route('/active')
+  // 크리에이터 현재 송출중 배너
+  .get(
+    responseHelper.middleware.checkSessionExists,
+    responseHelper.middleware.withErrorCatch(async (req, res, next) => {
+      const { creatorId } = responseHelper.getSessionData(req);
+      const query = `
+      SELECT mi.marketerName, br.bannerSrc, br.bannerDescription
+      FROM campaign as cp
+
+      JOIN bannerRegistered as br
+      ON cp.bannerId = br.bannerId
+
+      JOIN marketerInfo as mi
+      ON cp.marketerId = mi.marketerId
+
+      JOIN campaignTimestamp as ct
+      ON  cp.campaignId = ct.campaignId
+      
+      WHERE cp.onOff = 1
+      AND ct.creatorId = ?
+      AND ct.date >= NOW() - INTERVAL 10 MINUTE
+      ORDER BY ct.date DESC
+      LIMIT 2
+      `;
+
+      doQuery(query, [creatorId])
+        .then(row => {
+          const { result } = row
+          result.advertiseUrl = `https://banner.onad.io/banner${result.advertiseUrl}`;
+          responseHelper.send(result, 'get', res);
         })
         .catch((error) => {
           responseHelper.promiseError(error, next)

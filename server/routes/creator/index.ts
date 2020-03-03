@@ -15,7 +15,7 @@ router.use('/notification', notificationRouter);
 
 router.route('/')
   .all(responseHelper.middleware.checkSessionExists)
-  // 크리에이터 유저정보(암호화 해제하여 전송) 조회
+  // 크리에이터 유저정보(계좌암호화 해제하여 전송) 조회
   .get(
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
       const session = responseHelper.getSessionData(req);
@@ -61,7 +61,7 @@ router.route('/')
       `;
 
       doQuery(query, [enciphedAccountNum, bankRealName, creatorId])
-        .then((row) => {
+        .then(row => {
           responseHelper.send(row, 'POST', res);
         }).catch((error) => {
           responseHelper.promiseError(error, next)
@@ -70,20 +70,67 @@ router.route('/')
     }),
   )
   .patch(
+    // 크리에이터 계약 및 IP 업데이트
+    responseHelper.middleware.withErrorCatch(async (req, res, next) => {
 
+      const { creatorId, creatorName } = responseHelper.getSessionData(req);
+      const newIp: string | undefined = responseHelper.getParam('newIp', 'PATCH', req);
+
+      if (typeof newIp === 'string') {
+        //IP update
+        const ipQuery = 'UPDATE creatorInfo SET creatorIp = ? WHERE creatorId = ?';
+        doQuery(ipQuery, [newIp, creatorId])
+          .then(() => {
+            responseHelper.send(`${creatorId}님 IP변경완료`, 'PATCH', res);
+          }).catch((error) => {
+            responseHelper.promiseError(error, next)
+          }
+          )
+      } else {
+        //contraction update
+        const campaignList = JSON.stringify({ campaignList: [] });
+
+        const campaignQuery = `
+        INSERT INTO creatorCampaign
+        (creatorId, campaignList, banList)
+        VALUES (?, ?, ?)
+        `;
+
+        const landingQuery = `
+        INSERT INTO creatorLanding
+        (creatorId, creatorTwitchId)
+        VALUES (?, ?)`;
+
+        const updateQuery = `
+        UPDATE creatorInfo
+        SET creatorContractionAgreement = ?
+        WHERE creatorInfo.creatorId = ?`;
+
+        Promise.all([
+          doQuery(campaignQuery, [creatorId, campaignList, campaignList]),
+          doQuery(landingQuery, [creatorId, creatorName]),
+          doQuery(updateQuery, [1, creatorId])
+        ])
+          .then(() => {
+            responseHelper.send([true], 'PATCH', res);
+          })
+          .catch((error) => {
+            responseHelper.promiseError(error, next)
+          });
+      }
+    }),
   )
   .all(responseHelper.middleware.unusedMethod);
 
 router.route('/ad-page')
-  // 크리에이터 광고 페이지 정보
+  .all(responseHelper.middleware.checkSessionExists)
   .get(
-    responseHelper.middleware.checkSessionExists,
+    // 크리에이터 광고 페이지 정보
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
-      // const session = responseHelper.getSessionData(req);
       const { creatorId } = responseHelper.getSessionData(req);
 
       const query = `
-      SELECT  CL.creatorTwitchId, CL.creatorDesc, CL.creatorBackgroundImage, CL.creatorTheme, CR.visitCount
+      SELECT CL.creatorTwitchId, CL.creatorDesc, CL.creatorBackgroundImage, CL.creatorTheme, CR.visitCount
       FROM creatorLanding as CL
       JOIN creatorRoyaltyLevel as CR
       ON CL.creatorId = CR.creatorId 
@@ -98,6 +145,76 @@ router.route('/ad-page')
             res.end()
           }
 
+        }).catch((error) => {
+          responseHelper.promiseError(error, next)
+        }
+        )
+    }),
+  )
+  .patch(
+    responseHelper.middleware.withErrorCatch(async (req, res, next) => {
+      const { creatorId } = responseHelper.getSessionData(req);
+      const [description, creatorTheme]: [string | undefined, string | undefined] = responseHelper.getParam(['description', 'creatorTheme'], 'PATCH', req);
+      const imageUrl: string | undefined = responseHelper.getParam('imageUrl', 'PATCH', req);
+
+      if (typeof description === 'string' || typeof creatorTheme === 'string') {
+        // 소개글 관리 변경
+        const query = `
+          UPDATE creatorLanding
+          SET creatorDesc = ?, creatorTheme = ?
+          WHERE creatorId = ?
+          `;
+        const queryArray = [description, creatorTheme, creatorId];
+        doQuery(query, queryArray)
+          .then((row) => {
+            if (!row.error && row.result) {
+              responseHelper.send([true], 'PATCH', res);
+            }
+          })
+          .catch((err) => {
+            responseHelper.promiseError(err, next)
+          });
+      } else {
+        // 이미지 변경
+        const businessRegiQuery = `
+          UPDATE creatorLanding
+          SET creatorBackgroundImage = ?
+          WHERE creatorId = ?`;
+        const businessRegiArray = [imageUrl, creatorId];
+        doQuery(businessRegiQuery, businessRegiArray)
+          .then((row) => {
+            if (!row.error) {
+              responseHelper.send([true, '등록되었습니다.'], 'PATCH', res);
+            }
+          })
+          .catch((err) => {
+            responseHelper.promiseError(err, next)
+          });
+      }
+    }),
+  )
+  .all(responseHelper.middleware.unusedMethod);
+
+router.route('/landing-url')
+  // 크리에이터 광고 페이지 정보
+  .get(
+    responseHelper.middleware.checkSessionExists,
+    responseHelper.middleware.withErrorCatch(async (req, res, next) => {
+      // const session = responseHelper.getSessionData(req);
+      const { creatorId } = responseHelper.getSessionData(req);
+
+      const query = `
+      SELECT 
+      creatorTwitchId 
+      FROM creatorInfo
+      WHERE creatorId = ?
+      `;
+
+      doQuery(query, [creatorId])
+        .then(row => {
+          const { creatorTwitchId } = row.result[0];
+          const result = `http://l.onad.io/${creatorTwitchId}`
+          responseHelper.send(result, 'get', res);
         }).catch((error) => {
           responseHelper.promiseError(error, next)
         }
