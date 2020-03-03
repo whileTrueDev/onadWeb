@@ -10,7 +10,6 @@ import ReportLoading from '../../organisms/marketer/Dashboard/ReportLoading';
 import IssueTable from '../../organisms/marketer/Dashboard/IssueTable';
 // hooks
 import useFetchData from '../../utils/lib/hooks/useFetchData';
-import useTestData from '../../utils/lib/hooks/useTestData';
 
 
 const useStyles = makeStyles(theme => ({
@@ -23,26 +22,19 @@ const useStyles = makeStyles(theme => ({
 
 export default function Dashboard() {
   const classes = useStyles();
-  // const campaignData = useFetchData('/api/dashboard/marketer/campaign/new');
-  const campaignData = useTestData('/marketer/campaign/list');
+  const campaignData = useFetchData('/api/dashboard/marketer/campaign/new');
 
-  // const onOffData = useFetchData('/api/dashboard/marketer/onoff');
-  const onOffData = useTestData('/marketer/ad/on-off');
+  const onOffData = useFetchData('/api/dashboard/marketer/onoff');
 
-  // const normalData = useFetchData('/api/dashboard/marketer/normal');
-  const normalData = useTestData('/marketer/ad');
+  const normalData = useFetchData('/api/dashboard/marketer/normal');
 
-  // const countsData = useFetchData('/api/dashboard/marketer/report/counts');
-  const countsData = useTestData('/marketer/ad/analysis/creator-count');
+  const countsData = useFetchData('/api/dashboard/marketer/report/counts');
 
-  // const valueChartData = useFetchData('/api/dashboard/marketer/campaign/chart');
-  const valueChartData = useTestData('/marketer/ad/analysis/expenditure');
+  const valueChartData = useFetchData('/api/dashboard/marketer/campaign/chart');
 
-  // const broadCreatorData = useFetchData('/api/dashboard/marketer/broadcast/creator');
-  const broadCreatorData = useTestData('/marketer/ad/creator/list');
+  const broadCreatorData = useFetchData('/api/dashboard/marketer/broadcast/creator');
 
-  // const actionLogData = useFetchData('/api/dashboard/marketer/actionlog');
-  const actionLogData = useTestData('/marketer/history');
+  const actionLogData = useFetchData('/api/dashboard/marketer/actionlog');
 
 
   return (

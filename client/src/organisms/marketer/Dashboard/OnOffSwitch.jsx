@@ -3,17 +3,13 @@ import {
   Paper, Typography, FormControlLabel, Switch
 } from '@material-ui/core';
 import useUpdateData from '../../../utils/lib/hooks/useUpdateData';
-import useTSUpdateData from '../../../utils/lib/hooks/useTSUpdateData';
 
 
 export default function OnOffSwitch(props) {
   const { onOffData } = props;
-  // const { handleUpdateRequest } = useUpdateData(
-  //   '/api/dashboard/marketer/onoff', onOffData.callUrl
-  // );
-  const { handleUpdateRequest } = useTSUpdateData(
-      '/marketer/ad/on-off', onOffData.callUrl
-    );
+  const { handleUpdateRequest } = useUpdateData(
+    '/api/dashboard/marketer/onoff', onOffData.callUrl
+  );
 
   return (
     <Paper style={{ maxheight: 100 }}>

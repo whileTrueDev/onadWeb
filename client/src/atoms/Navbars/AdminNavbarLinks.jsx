@@ -19,10 +19,8 @@ import HOST from '../../utils/config';
 import axios from '../../utils/axios';
 import history from '../../history';
 import useFetchData from '../../utils/lib/hooks/useFetchData';
-import useTSPatchData from '../../utils/lib/hooks/useTSPatchData';
 
 import useUpdateData from '../../utils/lib/hooks/useUpdateData';
-import useTestData from '../../utils/lib/hooks/useTestData';
 
 const useMenu = () => {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -37,11 +35,9 @@ const useMenu = () => {
 function HeaderLinks(props) {
   const { noticeReadState } = props;
   const userType = window.location.pathname.split('/')[2];
-  // const NotificationData = useFetchData(`/api/dashboard/${userType}/notification`);
-  const NotificationData = useTestData('/marketer/notification');
+  const NotificationData = useFetchData(`/api/dashboard/${userType}/notification`);
 
-  // const updateRequest = useUpdateData('/api/dashboard/noticereadstateupdate');
-  const updateRequest = useTSPatchData(`marketer/notification`);
+  const updateRequest = useUpdateData('/api/dashboard/noticereadstateupdate');
 
 
   function handleLogoutClick() {

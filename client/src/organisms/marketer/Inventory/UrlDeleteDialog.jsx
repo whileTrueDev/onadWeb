@@ -7,8 +7,6 @@ import StyledItemText from '../../../atoms/StyledItemText';
 import Dialog from '../../../atoms/Dialog/Dialog';
 import useFetchData from '../../../utils/lib/hooks/useFetchData';
 import useDeleteData from '../../../utils/lib/hooks/useDeleteData';
-import useTSDeleteData from '../../../utils/lib/hooks/useTSDeleteData';
-import useTestData from '../../../utils/lib/hooks/useTestData';
 
 
 import history from '../../../history';
@@ -35,20 +33,14 @@ const DeleteDialog = (props) => {
   const {
     open, selectedUrl, handleClose
   } = props;
-  // const deleteRequest = useDeleteData('/api/dashboard/marketer/inventory/landingurl');
-  const deleteRequest = useTSDeleteData('/marketer/landing-url');
+  const deleteRequest = useDeleteData('/api/dashboard/marketer/inventory/landingurl');
 
-  // const connectedCampaign = useFetchData(
-  //   '/api/dashboard/marketer/inventory/landingurl/connectedcampaign', {
-  //     linkId: selectedUrl.linkId
-  //   }
-  // );
-  
-  const connectedCampaign = useTestData(
-    '/marketer/landing-url/campaigns', {
+  const connectedCampaign = useFetchData(
+    '/api/dashboard/marketer/inventory/landingurl/connectedcampaign', {
       linkId: selectedUrl.linkId
     }
   );
+  
 
   return (
     <Dialog

@@ -6,7 +6,6 @@ import {
 } from '@material-ui/core';
 import Check from '@material-ui/icons/Check';
 import CloseIcon from '@material-ui/icons/Close';
-
 import { makeStyles } from '@material-ui/core/styles';
 import NumberFormat from 'react-number-format';
 import Dialog from '../../../../atoms/Dialog/Dialog';
@@ -17,10 +16,6 @@ import Success from '../../../../atoms/Success';
 import useDialog from '../../../../utils/lib/hooks/useDialog';
 import useFetchData from '../../../../utils/lib/hooks/useFetchData';
 import useUpdateData from '../../../../utils/lib/hooks/useUpdateData';
-import useTSPatchData from '../../../../utils/lib/hooks/useTSPatchData';
-
-
-
 const useStyles = makeStyles(theme => ({
   item: {
     display: 'flex',
@@ -50,8 +45,6 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: '#f9f9f9'
   }
 }));
-
-
 const reducer = (state, action) => {
   switch (action.key) {
     case 'campaignName':
@@ -72,29 +65,21 @@ const reducer = (state, action) => {
     }
   }
 };
-
 const CampaignUpdateDialog = (props) => {
   const classes = useStyles();
   const {
     open, selectedCampaign, handleClose, callUrl
   } = props;
   const snack = useDialog();
-
   const [error, setError] = React.useState(false); // budget 작성시 한도 체크용 State
   const [checkName, setCheckName] = React.useState(false);
   const [duplicate, setDuplicate] = React.useState(false);
-
   const [state, dispatch] = React.useReducer(reducer, {
     noBudget: false, budget: '', campaignName: ''
   });
-
   const nameData = useFetchData('/api/dashboard/marketer/campaign/names');
-  // const updateName = useUpdateData('/api/dashboard/marketer/campaign/changeName', callUrl);
-  // const updateBudget = useUpdateData('/api/dashboard/marketer/campaign/changeBudget', callUrl);
-
-  const updateData = useTSPatchData('/marketer/campaign', callUrl);
-
-
+  const updateName = useUpdateData('/api/dashboard/marketer/campaign/changeName', callUrl);
+  const updateBudget = useUpdateData('/api/dashboard/marketer/campaign/changeBudget', callUrl);
   const checkCampaignName = (value) => {
     if (!nameData.loading && !nameData.error) {
       if (nameData.payload.includes(value)) {
@@ -108,7 +93,6 @@ const CampaignUpdateDialog = (props) => {
       }
     }
   };
-
   const handleChangeName = (event) => {
     if (event.target.value.length === 0) {
       setDuplicate(false);
@@ -120,12 +104,10 @@ const CampaignUpdateDialog = (props) => {
       dispatch({ key: 'campaignName', value: '' });
     }
   };
-
   const handleNoBudgetChange = () => {
     setError(false);
     dispatch({ key: 'noBudget' });
   };
-
   const handleChangeBudget = (value) => {
     dispatch({ key: 'budget', value: value.value });
     if (Number(value.value) < 5000 && value.value !== '') {
@@ -134,26 +116,20 @@ const CampaignUpdateDialog = (props) => {
       setError(false);
     }
   };
-
   const handleNameUpdate = () => {
-    const data = { campaignId: selectedCampaign.campaignId, data: {...state}, type: 'name' };
-    const { handleUpdateRequest } = updateData;
-    // const { handleUpdateRequest } = updateName;
-
+    const data = { campaignId: selectedCampaign.campaignId, ...state };
+    const { handleUpdateRequest } = updateName;
     handleUpdateRequest(data);
     dispatch({ key: 'reset' });
     snack.handleOpen();
   };
-
   const handleBudgetUpdate = () => {
-    const data = { campaignId: selectedCampaign.campaignId, data: {...state}, type: 'budget' };
-    const { handleUpdateRequest } = updateData;
-    // const { handleUpdateRequest } = updateBudget
+    const data = { campaignId: selectedCampaign.campaignId, ...state };
+    const { handleUpdateRequest } = updateBudget;
     handleUpdateRequest(data);
     dispatch({ key: 'reset' });
     snack.handleOpen();
   };
-
   return (
     <Dialog
       open={Boolean(open)}
@@ -163,7 +139,6 @@ const CampaignUpdateDialog = (props) => {
       title="배너정보 변경"
     >
       <Grid container direction="column">
-
         <Grid item className={classes.contents}>
           <Grid container direction="row" justify="space-evenly" style={{ minHeight: '180px' }}>
             <Grid item container direction="row" justify="space-evenly" xs={2}>
@@ -253,7 +228,6 @@ const CampaignUpdateDialog = (props) => {
             <Divider orientation="horizontal" />
           </Grid>
         </Grid>
-
         <Grid item className={classes.contents}>
           <Grid container direction="row" justify="space-evenly" style={{ minHeight: '200px' }}>
             <Grid item container direction="row" justify="space-evenly" xs={2}>
@@ -420,12 +394,10 @@ const CampaignUpdateDialog = (props) => {
     </Dialog>
   );
 };
-
 CampaignUpdateDialog.propTypes = {
   open: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]).isRequired,
   handleClose: PropTypes.func.isRequired,
   selectedCampaign: PropTypes.object.isRequired,
   callUrl: PropTypes.func.isRequired
 };
-
 export default CampaignUpdateDialog;

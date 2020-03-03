@@ -9,7 +9,6 @@ import CashUsageDialog from './CashUsageDialog';
 // hooks
 import useDialog from '../../../../utils/lib/hooks/useDialog';
 import useFetchData from '../../../../utils/lib/hooks/useFetchData';
-import useTestData from '../../../../utils/lib/hooks/useTestData';
 
 const initialData = {
   columns: ['집행 날짜', '집행 금액', '상세보기'],
@@ -27,8 +26,7 @@ const useStyles = makeStyles(() => ({
 export default function CashUsageList() {
   const classes = useStyles();
   const detailDialog = useDialog();
-  // const usageData = useFetchData('/api/dashboard/marketer/cash/usage');
-  const usageData = useTestData('/marketer/cash/history/usage');
+  const usageData = useFetchData('/api/dashboard/marketer/cash/usage');
 
 
   return (

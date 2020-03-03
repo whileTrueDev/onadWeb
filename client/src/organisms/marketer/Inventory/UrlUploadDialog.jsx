@@ -9,8 +9,6 @@ import Button from '../../../atoms/CustomButtons/Button';
 import useToggle from '../../../utils/lib/hooks/useToggle';
 import useEventTargetValue from '../../../utils/lib/hooks/useEventTargetValue';
 import useUpdateData from '../../../utils/lib/hooks/useUpdateData';
-import useTSUpdateData from '../../../utils/lib/hooks/useTSUpdateData';
-
 import history from '../../../history';
 
 const useStyles = makeStyles(theme => ({
@@ -47,14 +45,8 @@ export default function UrlUploadDialog(props) {
   const sub2UrlName = useEventTargetValue(); // Sub url2 name
   const sub2UrlCheck = useToggle(true); // Sub url2 설정/미설정
 
-  // const urlUpload = useUpdateData(
-  //   '/api/dashboard/marketer/inventory/landingurl/regist',
-  //   // success callback function
-  //   () => { handleClose(); history.push('/dashboard/marketer/inventory'); }
-  // );
-
-  const urlUpload = useTSUpdateData(
-    '/marketer/landing-url',
+  const urlUpload = useUpdateData(
+    '/api/dashboard/marketer/inventory/landingurl/regist',
     // success callback function
     () => { handleClose(); history.push('/dashboard/marketer/inventory'); }
   );

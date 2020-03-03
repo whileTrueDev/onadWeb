@@ -21,13 +21,11 @@ import CashUsageList from './CashUsageList';
 // hooks
 import useFetchData from '../../../../utils/lib/hooks/useFetchData';
 import useDialog from '../../../../utils/lib/hooks/useDialog';
-import useTestData from '../../../../utils/lib/hooks/useTestData';
 
 function MyCash(props) {
   const chargeDialog = useDialog();
   const refundDialog = useDialog();
-  // const cashData = useFetchData('/api/dashboard/marketer/cash');
-  const cashData = useTestData('/marketer/cash');
+  const cashData = useFetchData('/api/dashboard/marketer/cash');
 
 
   const { classes, accountData, userData } = props;
