@@ -7,6 +7,10 @@ import StyledItemText from '../../../atoms/StyledItemText';
 import Dialog from '../../../atoms/Dialog/Dialog';
 import useFetchData from '../../../utils/lib/hooks/useFetchData';
 import useUpdateData from '../../../utils/lib/hooks/useUpdateData';
+import useTSDeleteData from '../../../utils/lib/hooks/useTSDeleteData';
+import useTestData from '../../../utils/lib/hooks/useTestData';
+
+
 import history from '../../../history';
 
 const useStyles = makeStyles(theme => ({
@@ -31,10 +35,17 @@ const DeleteDialog = (props) => {
   const {
     open, selectedBanner, handleClose
   } = props;
-  const deleteRequest = useUpdateData('/api/dashboard/marketer/banner/delete');
-  const connectedCampaign = useFetchData('/api/dashboard/marketer/banner/connectedcampaign', {
+  // const deleteRequest = useUpdateData('/api/dashboard/marketer/banner/delete');
+  const deleteRequest = useTSDeleteData('/marketer/banner');
+
+  // const connectedCampaign = useFetchData('/api/dashboard/marketer/banner/connectedcampaign', {
+  //   bannerId: selectedBanner.bannerId
+  // });
+
+  const connectedCampaign = useTestData('/marketer/banner/campaigns', {
     bannerId: selectedBanner.bannerId
   });
+
   return (
     <Dialog
       open={open}
@@ -60,7 +71,7 @@ const DeleteDialog = (props) => {
             <CustomButton
               color="info"
               onClick={() => {
-                deleteRequest.handleUpdateRequest({ bannerId: selectedBanner.bannerId });
+                deleteRequest.handleDelete({ bannerId: selectedBanner.bannerId });
                 setTimeout(() => {
                   handleClose();
                   history.push(window.location.pathname);

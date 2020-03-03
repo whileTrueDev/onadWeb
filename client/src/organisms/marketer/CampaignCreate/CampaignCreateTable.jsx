@@ -20,6 +20,7 @@ import LandingUrlInventoryDialog from './LandingUrlInventoryDialog';
 import useDialog from '../../../utils/lib/hooks/useDialog';
 import useFetchData from '../../../utils/lib/hooks/useFetchData';
 import CampaignCreateStepLayout from './component/CampaignCreateStepLayout';
+import useTestData from '../../../utils/lib/hooks/useTestData';
 
 const StyledTableCell = withStyles(theme => ({
   head: {
@@ -54,8 +55,13 @@ const CampaignCreateTable = (props) => {
   } = props;
 
   const IS_CAMPAIGN_CREATE_PAGE = true; // 캠페인생성 페이지 구분을 위한 변수
-  const landingUrlData = useFetchData('/api/dashboard/marketer/inventory/landingurl/all');
-  const bannerData = useFetchData('/api/dashboard/marketer/banner/registered');
+  // const landingUrlData = useFetchData('/api/dashboard/marketer/inventory/landingurl/all');
+  const landingUrlData = useTestData('/marketer/landing-url/list');
+
+
+  // const bannerData = useFetchData('/api/dashboard/marketer/banner/registered');
+  const bannerData = useTestData('/marketer/banner/list/active');
+
 
   const uploadDialog = useDialog();
   const landingUrlInventoryDialog = useDialog();

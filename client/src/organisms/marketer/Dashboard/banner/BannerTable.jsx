@@ -4,13 +4,15 @@ import { Typography, Tooltip } from '@material-ui/core';
 import Delete from '@material-ui/icons/Delete';
 import MaterialTable from '../../../atoms/Table/MaterialTable';
 import useFetchData from '../../../utils/lib/hooks/useFetchData';
+import useTestData from '../../../utils/lib/hooks/useTestData';
 
 const BANNER_MAX_WIDTH = 320;
 const BANNER_MAX_HEIGHT = 200;
 
 export default function BannerTable(props) {
   const { handleDeleteOpen } = props;
-  const fetchData = useFetchData('/api/dashboard/marketer/banner/all');
+  // const fetchData = useFetchData('/api/dashboard/marketer/banner/all');
+  const fetchData = useTestData('/marketer/banner/list');
 
   const columns = [
     {

@@ -8,6 +8,7 @@ import Table from '../../../../atoms/Table/Table';
 // import NoTaxBillTolltip from '../../../../atoms/Tooltip/NoTaxBillTooltip';
 // hooks
 import useFetchData from '../../../../utils/lib/hooks/useFetchData';
+import useTestData from '../../../../utils/lib/hooks/useTestData';
 
 const initialData = {
   columns: ['날짜', '금액', '발행상태'],
@@ -15,7 +16,9 @@ const initialData = {
 };
 
 export default function TaxBill() {
-  const { payload, loading } = useFetchData('/api/dashboard/marketer/profile/taxbill');
+  // const { payload, loading } = useFetchData('/api/dashboard/marketer/profile/taxbill');
+  const { payload, loading } = useTestData('/marketer/tax-bills');
+
 
   return (
     <Card>

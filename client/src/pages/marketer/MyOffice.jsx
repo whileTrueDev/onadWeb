@@ -14,14 +14,23 @@ import TaxBill from '../../organisms/marketer/MyOffice/TaxBill/TaxBill';
 
 // hook for data fetching
 import useFetchData from '../../utils/lib/hooks/useFetchData';
+import useTestData from '../../utils/lib/hooks/useTestData';
+
 
 export default function MyOffice() {
   // 계좌 정보
-  const accountData = useFetchData('/api/dashboard/marketer/profile/accountNumber');
+  // const accountData = useFetchData('/api/dashboard/marketer/profile/accountNumber');
+  const accountData = useTestData('/marketer/account');
+
+
   // 마케터 유저타입이 사업체인 경우와 개인인 경우의 분기처리를 위해
-  const userData = useFetchData('/api/dashboard/marketer/profile');
+  // const userData = useFetchData('/api/dashboard/marketer/profile');
+  const userData = useTestData('/marketer/profile');
+
   // 사업자 등록증 정보
-  const businessRegistrationData = useFetchData('/api/dashboard/marketer/profile/business');
+  // const businessRegistrationData = useFetchData('/api/dashboard/marketer/profile/business');
+  const businessRegistrationData = useTestData('/marketer/business');
+
 
   return (
     <div>

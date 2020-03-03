@@ -17,6 +17,8 @@ import Success from '../../../../atoms/Success';
 import useDialog from '../../../../utils/lib/hooks/useDialog';
 import useFetchData from '../../../../utils/lib/hooks/useFetchData';
 import useUpdateData from '../../../../utils/lib/hooks/useUpdateData';
+import useTSPatchData from '../../../../utils/lib/hooks/useTSPatchData';
+
 
 
 const useStyles = makeStyles(theme => ({
@@ -87,8 +89,10 @@ const CampaignUpdateDialog = (props) => {
   });
 
   const nameData = useFetchData('/api/dashboard/marketer/campaign/names');
-  const updateName = useUpdateData('/api/dashboard/marketer/campaign/changeName', callUrl);
-  const updateBudget = useUpdateData('/api/dashboard/marketer/campaign/changeBudget', callUrl);
+  // const updateName = useUpdateData('/api/dashboard/marketer/campaign/changeName', callUrl);
+  // const updateBudget = useUpdateData('/api/dashboard/marketer/campaign/changeBudget', callUrl);
+
+  const updateData = useTSPatchData('/marketer/campaign', callUrl);
 
 
   const checkCampaignName = (value) => {
@@ -132,16 +136,19 @@ const CampaignUpdateDialog = (props) => {
   };
 
   const handleNameUpdate = () => {
-    const data = { campaignId: selectedCampaign.campaignId, ...state };
-    const { handleUpdateRequest } = updateName;
+    const data = { campaignId: selectedCampaign.campaignId, data: {...state}, type: 'name' };
+    const { handleUpdateRequest } = updateData;
+    // const { handleUpdateRequest } = updateName;
+
     handleUpdateRequest(data);
     dispatch({ key: 'reset' });
     snack.handleOpen();
   };
 
   const handleBudgetUpdate = () => {
-    const data = { campaignId: selectedCampaign.campaignId, ...state };
-    const { handleUpdateRequest } = updateBudget;
+    const data = { campaignId: selectedCampaign.campaignId, data: {...state}, type: 'budget' };
+    const { handleUpdateRequest } = updateData;
+    // const { handleUpdateRequest } = updateBudget
     handleUpdateRequest(data);
     dispatch({ key: 'reset' });
     snack.handleOpen();

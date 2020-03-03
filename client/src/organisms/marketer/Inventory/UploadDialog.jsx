@@ -97,9 +97,12 @@ const UploadDialog = (props) => {
     const bannerDescription = document.getElementById('banner').value || null;
     // text format을 사용하기 위해 state로 사용한다.
 
-    axios.post(`${HOST}/api/dashboard/marketer/banner/push`, {
+    axios.post(`http://localhost:3002/marketer/banner`, {
       bannerSrc: state.imageUrl, bannerDescription,
     })
+    // axios.post(`${HOST}/api/dashboard/marketer/banner/push`, {
+    //   bannerSrc: state.imageUrl, bannerDescription,
+    // })
       .then((res) => {
         if (res.data[0]) {
           alert(res.data[1]);

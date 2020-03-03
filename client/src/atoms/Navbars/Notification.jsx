@@ -6,6 +6,7 @@ import {
 } from '@material-ui/core';
 import MenuItem from '@material-ui/core/MenuItem';
 import useUpdateData from '../../utils/lib/hooks/useUpdateData';
+import useTSPatchData from '../../utils/lib/hooks/useTSPatchData';
 
 
 const useStyles = makeStyles(() => ({
@@ -38,7 +39,8 @@ function Notification(props) {
   const {
     anchorEl, notificationData
   } = props;
-  const updateRequest = useUpdateData(`/api/dashboard/${userType}/notification/update/read`);
+  // const updateRequest = useUpdateData(`/api/dashboard/${userType}/notification/update/read`);
+  const updateRequest = useTSPatchData(`/marketer/notification`);
 
   function updateNotifications(notiArray, targetIndex) {
     const arr = notiArray;
@@ -86,6 +88,7 @@ function Notification(props) {
           {notificationData.payload.notifications.map(noti => (
             <div key={noti.index}>
               <MenuItem onClick={() => {
+
                 updateRequest.handleUpdateRequest({ index: noti.index });
                 if (noti.readState === UNREAD_STATE) {
                   notificationData.setPayload({
