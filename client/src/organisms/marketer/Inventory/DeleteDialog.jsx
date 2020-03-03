@@ -64,7 +64,8 @@ const DeleteDialog = (props) => {
             <CustomButton
               color="info"
               onClick={() => {
-                deleteRequest.handleDelete({ bannerId: selectedBanner.bannerId });
+                // deleteRequest.handleDelete({ bannerId: selectedBanner.bannerId });
+                deleteRequest.handleUpdateRequest({ bannerId: selectedBanner.bannerId });
                 setTimeout(() => {
                   handleClose();
                   history.push(window.location.pathname);

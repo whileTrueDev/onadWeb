@@ -151,8 +151,7 @@ const CampaignCreateStepper = () => {
       ...step3State,
     };
     if (checkEmpty(validateObject)) {
-      axios.post(`http://localhost:3002/marketer/campaign`, validateObject)
-      // axios.post(`${HOST}/api/dashboard/marketer/campaign/push`, validateObject)
+      axios.post(`${HOST}/api/dashboard/marketer/campaign/push`, validateObject)
         .then((res) => {
           if (res.data[0]) {
             alert(res.data[1]);
