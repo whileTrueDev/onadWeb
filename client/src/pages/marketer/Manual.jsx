@@ -1,20 +1,20 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-// core ../../../atoms
+// material-ui
 import { makeStyles } from '@material-ui/core/styles';
 import Grow from '@material-ui/core/Grow';
 import Hidden from '@material-ui/core/Hidden';
 import ArrowUpward from '@material-ui/icons/ArrowUpward';
-// material-ui
+import Fab from '@material-ui/core/Fab';
+// core ../../../atoms
 import GridContainer from '../../atoms/Grid/GridContainer';
 import GridItem from '../../atoms/Grid/GridItem';
-import Fab from '../../atoms/Fab/Fab';
 
 import ManualSelect from '../../organisms/marketer/Manual/ManualSelect';
 import ManualDetail from '../../organisms/marketer/Manual/ManualDetail';
 import sources from '../../organisms/marketer/Manual/sources';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   upwardButton: {
     right: 25,
     bottom: 20,
@@ -71,7 +71,7 @@ const MarketerManual = (props) => {
       </Grow>
       {/* )} */}
       <Hidden xlUp>
-        <Fab color="info" size="medium" className={classes.upwardButton} onClick={handleUpward}>
+        <Fab color="primary" size="medium" className={classes.upwardButton} onClick={handleUpward}>
           <ArrowUpward />
         </Fab>
       </Hidden>

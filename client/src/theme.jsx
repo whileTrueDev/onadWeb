@@ -6,6 +6,7 @@ const defaultTheme = createMuiTheme();
 
 const rawTheme = createMuiTheme({
   palette: {
+    // type: 'dark',
     primary: {
       light: lighten(cyan[400], 0.07),
       main: cyan[600],
@@ -14,15 +15,14 @@ const rawTheme = createMuiTheme({
       contrastText: defaultTheme.palette.getContrastText(cyan[700]),
     },
     secondary: defaultTheme.palette.warning,
-    info: defaultTheme.palette.primary,
-    warning: defaultTheme.palette.secondary,
-    bluegrey: {
+    info: {
       light: lighten(blueGrey[400], 0.07),
-      main: blueGrey[600],
+      main: blueGrey[700],
       dark: darken(blueGrey[800], 0.07),
       // contrastText: will be calculated to contrast with palette.primary.main
       contrastText: defaultTheme.palette.getContrastText(blueGrey[700]),
-    }
+    },
+    warning: defaultTheme.palette.secondary,
   },
   // typography: {
   //   fontFamily: [

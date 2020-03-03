@@ -43,7 +43,7 @@ const useStyles = makeStyles((theme) => ({
   },
   head: {
     fontWeight: '500',
-    color: '#455a64',
+    color: theme.palette.info.main,
     [theme.breakpoints.down('sm')]: {
       fontSize: '0.80rem'
     }

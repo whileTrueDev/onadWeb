@@ -10,7 +10,6 @@ import {
 import CustomTableFooter from './TableFooter';
 import Button from '../CustomButtons/Button';
 import tableStyle from './Table.style';
-// import CpcCpmTooltip from '../Tooltip/CpcCpmTooltip';
 
 function CustomTable({ ...props }) {
   const {
@@ -37,7 +36,7 @@ function CustomTable({ ...props }) {
       <Table className={classes.table}>
         <TableHead className={classes[`${tableHeaderColor}TableHeader`]}>
           <TableRow>
-            {tableHead.map(value => (
+            {tableHead.map((value) => (
               <TableCell
                 className={`${classes.tableCell} ${classes.tableHeadCell}`}
                 key={shortid.generate()}
@@ -51,7 +50,7 @@ function CustomTable({ ...props }) {
         <TableBody>
           {tableData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((prop, i) => (
             <TableRow hover key={shortid.generate()}>
-              {prop.map(value => (
+              {prop.map((value) => (
                 <TableCell className={classes.tableCell} key={shortid.generate()}>
                   {!perMonth ? (
                     <div style={{ display: 'flex' }}>
@@ -59,11 +58,6 @@ function CustomTable({ ...props }) {
                     </div>
                   ) : (
                     <div>
-                      {/* {value.indexOf(',') >= 0 ? ( // 집행 금액 컬럼의 경우
-                        <CpcCpmTooltip value={value} />
-                      ) : (
-                      <span>{value}</span>
-                      )} */}
                       <span>{value}</span>
                     </div>
                   )}

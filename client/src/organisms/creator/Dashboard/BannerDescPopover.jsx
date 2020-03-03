@@ -7,7 +7,7 @@ import shortid from 'shortid';
 import StyledItemText from '../../../atoms/StyledItemText';
 import DescPopover from '../../../atoms/DescPopover';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     minWidth: '600px'
   },
@@ -17,7 +17,7 @@ const useStyles = makeStyles(theme => ({
   },
   head: {
     fontWeight: '700',
-    color: '#455a64',
+    color: theme.palette.info.main,
   },
   titleRoot: {
     margin: 0,
@@ -101,13 +101,13 @@ const BannerDescPopover = (props) => {
           <Grid container direction="column" spacing={4}>
             <Grid item>
               <Typography style={{ fontSize: '16px', color: '#00acc1', fontWeight: '700' }}>
-               배너소개
+                배너소개
               </Typography>
             </Grid>
             <Grid container direction="row">
               <Grid item md={1} />
               <Grid container direction="column" className={classes.text}>
-                {currentBannerData.payload && currentBannerData.payload[descIndex].bannerDescription.split('\n').map(row => (
+                {currentBannerData.payload && currentBannerData.payload[descIndex].bannerDescription.split('\n').map((row) => (
                   <Grid item key={shortid.generate()}>
                     <Typography variant="body2">
                       {row}

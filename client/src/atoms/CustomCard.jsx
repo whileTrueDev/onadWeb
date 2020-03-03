@@ -5,7 +5,7 @@ import CardIcon from './Card/CardIcon';
 import CardHeader from './Card/CardHeader';
 import CardBody from './Card/CardBody';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   buttonWrapper: {
     display: 'flex', alignItems: 'center', flexDirection: 'row-reverse', padding: 5
   },

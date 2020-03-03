@@ -9,7 +9,7 @@ import StyledItemText from '../../../atoms/StyledItemText';
 import BannerCarousel from '../../../atoms/BannerCarousel';
 import Button from '../../../atoms/CustomButtons/Button';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     width: '100%',
     marginTop: '0px',
@@ -36,7 +36,7 @@ const useStyles = makeStyles(theme => ({
     },
   },
   label: {
-    color: '#455a64',
+    color: theme.palette.info.main,
     fontWeight: '700',
     [theme.breakpoints.down('sm')]: {
       fontSize: '14px',
@@ -71,7 +71,7 @@ const CampaignBannerReg = (props) => {
                 color="primary"
                 onClick={() => { window.open('/dashboard/marketer/banner'); }}
               >
-                  배너등록하러 가기
+                배너등록하러 가기
               </Button>
             </div>
           )}

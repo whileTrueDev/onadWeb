@@ -4,6 +4,7 @@ import {
 } from '../utils/hooks';
 import HOST from '../config';
 import useDialog from '../utils/hooks/useDialog';
+import Snackbar from '../atoms/Snackbar/Snackbar';
 
 interface CreatorParam {
   creatorId: number;
@@ -95,6 +96,7 @@ export default function App(): React.ReactElement {
           )}
         </div>
       </div>
+
     </div>
   );
 }

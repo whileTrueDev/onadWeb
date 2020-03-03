@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import Typography from '@material-ui/core/Typography';
+import Switch from '@material-ui/core/Switch';
+import TextField from '@material-ui/core/TextField';
 // icons
 import Help from '@material-ui/icons/Help';
 import WbSunny from '@material-ui/icons/WbSunny';
@@ -10,17 +12,15 @@ import NightsStay from '@material-ui/icons/NightsStay';
 // atoms
 import StyledItemText from '../../../atoms/StyledItemText';
 import CustomCard from '../../../atoms/CustomCard';
-import TextField from '../../../atoms/TextField/TextField';
 import Button from '../../../atoms/CustomButtons/Button';
 import Snackbar from '../../../atoms/Snackbar/Snackbar';
-import DefaultSwitch from '../../../atoms/Switch/DefaultSwitch';
 import Tooltip from '../../../atoms/DescPopover';
 // hooks
 import useDialog from '../../../utils/lib/hooks/useDialog';
 import useUpdateData from '../../../utils/lib/hooks/useUpdateData';
 import useTooltip from '../../../utils/lib/hooks/useTooltip';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   flex: {
     display: 'flex'
   },
@@ -34,9 +34,6 @@ const useStyles = makeStyles(theme => ({
     },
     marginRight: theme.spacing(1)
   },
-  active: {
-    color: '#00acc1',
-  }
 }));
 
 
@@ -69,7 +66,7 @@ export default function LandingSetting(props) {
 
   return (
     <CustomCard
-      iconComponent={<StyledItemText primary="광고페이지 설정" style={{ color: '#fff' }} />}
+      iconComponent={<StyledItemText primary="광고페이지 설정" color="white" />}
       buttonComponent={(
         <div className={classnames(classes.flex, classes.flexEnd)}>
           <Button
@@ -88,7 +85,7 @@ export default function LandingSetting(props) {
               }
             }}
           >
-          변경 저장하기
+            변경 저장하기
           </Button>
         </div>
       )}
@@ -101,7 +98,7 @@ export default function LandingSetting(props) {
           <Help
             fontSize="small"
             color="disabled"
-            onMouseEnter={evt => handleTooltipOpen(evt, 0)}
+            onMouseEnter={(evt) => handleTooltipOpen(evt, 0)}
             onMouseLeave={handleTooltipClose}
             aria-owns={anchorEl ? 'send-desc-popover' : undefined}
             aria-haspopup="true"
@@ -129,12 +126,12 @@ export default function LandingSetting(props) {
         <div className={classes.flex}>
 
           <Typography variant="h6">
-          라이트모드 / 다크모드 관리
+            라이트모드 / 다크모드 관리
           </Typography>
           <Help
             fontSize="small"
             color="disabled"
-            onMouseEnter={evt => handleTooltipOpen(evt, 1)}
+            onMouseEnter={(evt) => handleTooltipOpen(evt, 1)}
             onMouseLeave={handleTooltipClose}
             aria-owns={anchorEl ? 'send-desc-popover' : undefined}
             aria-haspopup="true"
@@ -143,11 +140,13 @@ export default function LandingSetting(props) {
 
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <WbSunny
-            className={classnames({ [classes.icon]: true, [classes.active]: !darkTheme.bool })}
+            color={!darkTheme.bool ? 'secondary' : 'default'}
+            className={classes.icon}
           />
-          <DefaultSwitch checked={darkTheme.bool} onChange={() => { handleThemeChange(); }} />
+          <Switch color="default" checked={darkTheme.bool} onChange={() => { handleThemeChange(); }} />
           <NightsStay
-            className={classnames({ [classes.icon]: true, [classes.active]: darkTheme.bool })}
+            color={darkTheme.bool ? 'primary' : 'default'}
+            className={classes.icon}
           />
         </div>
       </div>

@@ -14,7 +14,7 @@ import WithdrawalDialog from './WithdrawDialog';
 import history from '../../../history';
 
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   stats: {
     color: '#999',
     display: 'inline-flex',
@@ -43,7 +43,7 @@ const useStyles = makeStyles(() => ({
   },
   head: {
     fontWeight: '500',
-    color: '#455a64',
+    color: theme.palette.info.main,
   }
 }));
 

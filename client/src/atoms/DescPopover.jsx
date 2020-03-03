@@ -12,7 +12,7 @@ import StyledSelectText from './StyledSelectText';
 
 const useStyles = makeStyles((theme) => ({
   label: {
-    color: '#455a64',
+    color: theme.palette.info.main,
     fontWeight: '700',
     [theme.breakpoints.down('sm')]: {
       fontSize: '14px',

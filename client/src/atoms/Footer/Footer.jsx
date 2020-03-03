@@ -29,7 +29,7 @@ function Footer({ ...props }) {
         <p className={classes.right}>
           <span>
             &copy;
-            {`${1900 + new Date().getYear()} while True Corp. All rights Reserved`}
+            2019 while True Corp. All rights Reserved
           </span>
         </p>
       </div>

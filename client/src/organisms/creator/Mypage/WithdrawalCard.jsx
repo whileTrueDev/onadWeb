@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
   },
   head: {
     fontWeight: '700',
-    color: '#455a64',
+    color: theme.palette.info.main,
   }
 }));
 

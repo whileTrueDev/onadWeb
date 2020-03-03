@@ -60,9 +60,7 @@ const Select = (props) => {
                     label: buttonClasses.label, // class name, e.g. `classes-nesting-label-x`
                   }}
                 >
-
                   <source.icon style={{ marginTop: 10 }} />
-
                   <p>{source.label}</p>
                 </Button>
               </StepLabel>

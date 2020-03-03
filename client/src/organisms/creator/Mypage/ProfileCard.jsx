@@ -1,18 +1,16 @@
 import React, { useState } from 'react';
-import {
-  Grid, Chip, Avatar, Typography
-} from '@material-ui/core';
+import { Grid, TextField } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '../../../atoms/Card/Card';
 import CardAvatar from '../../../atoms/Card/CardAvatar';
 import CardBody from '../../../atoms/Card/CardBody';
 import Button from '../../../atoms/CustomButtons/Button';
-import TextField from '../../../atoms/TextField/TextField';
 import CircularProgress from '../../../atoms/Progress/CircularProgress';
 import Contract from './Contract/Contract';
 import Dialog from '../../../atoms/Dialog/Dialog';
 import Snackbar from '../../../atoms/Snackbar/Snackbar';
 import IpChanger from './Ip/IpChanger';
+import StyledItemText from '../../../atoms/StyledItemText';
 import history from '../../../history';
 import axios from '../../../utils/axios';
 import HOST from '../../../utils/config';
@@ -20,21 +18,12 @@ import HOST from '../../../utils/config';
 const useStyles = makeStyles((theme) => ({
   textField: {
     width: '100%',
-    borderColor: 'linear-gradient(60deg, #00acc1, #26c6da)',
   },
   cardTitle: {
-    color: '#3C4858',
+    color: theme.palette.info.main,
     textAlign: 'center',
     marginTop: '0px',
-    minHeight: 'auto',
     fontWeight: '700',
-    marginBottom: '3px',
-    textDecoration: 'none',
-    '& small': {
-      color: '#777',
-      fontWeight: '400',
-      lineHeight: '1',
-    },
   },
 }));
 
@@ -91,9 +80,11 @@ const ProfileCard = (props) => {
       {profileData.loading && (<CircularProgress small />)}
       {!profileData.loading && !profileData.error && (
         <CardBody profile>
-          <h4 className={classes.cardTitle}>
-            {`${profileData.payload.result.creatorName} 님의 정보`}
-          </h4>
+          <StyledItemText
+            primary={`${profileData.payload.result.creatorName} 님의 정보`}
+            fontSize="18px"
+            style={{ margin: '16px 0' }}
+          />
           <Grid container direction="row" spacing={2} justify="center">
             <Grid item sm={12} md={9}>
               <TextField
@@ -101,9 +92,7 @@ const ProfileCard = (props) => {
                 value={profileData.payload.result.creatorMail || ''}
                 className={classes.textField}
                 margin="normal"
-                InputProps={{
-                  readOnly: true,
-                }}
+                InputProps={{ readOnly: true }}
               />
             </Grid>
             <Grid item sm={12} md={9}>
@@ -156,48 +145,6 @@ const ProfileCard = (props) => {
                 </Grid>
               </Grid>
             </Grid>
-            <Grid item sm={12} md={9}>
-              <Grid container direction="row" spacing={1}>
-                <Grid item sm={12} md={6}>
-                  <Grid container direction="column" style={{ textAlign: 'left' }}>
-                    <Grid item>
-                      <Typography style={{
-                        left: 0,
-                        right: 0,
-                        marginBottom: '5px',
-                        fontSize: '0.75rem',
-                        fontWeight: '400',
-                        color: '#00acc1',
-                      }}
-                      >
-                        카테고리
-                      </Typography>
-                    </Grid>
-                    <Grid item>
-                      <Grid container direction="row" className={classes.text} spacing={1}>
-                        <Grid item>
-                          <Chip variant="outlined" size="medium" label="게임" avatar={<Avatar><span role="img" aria-label="게임">🎲</span></Avatar>} />
-                        </Grid>
-                        <Grid item>
-                          <Chip variant="outlined" size="medium" label="소통" avatar={<Avatar><span role="img" aria-label="소통">🙋‍</span></Avatar>} />
-                        </Grid>
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                </Grid>
-                <Grid item sm={12} md={6}>
-                  <Button
-                    size="medium"
-                    style={{ marginTop: 20, float: 'left' }}
-                    color="blueGray"
-                    onClick={() => { alert('준비중입니다.'); }}
-                  >
-                    카테고리 변경
-                  </Button>
-                </Grid>
-              </Grid>
-            </Grid>
-
             <Grid item sm={12} md={9}>
               <Button color="primary" onClick={handleProfileChange}>
                 정보 변경하러가기

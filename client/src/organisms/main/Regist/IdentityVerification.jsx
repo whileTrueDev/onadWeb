@@ -9,7 +9,7 @@ import HOST from '../../../utils/config';
 import CustomCard from '../../../atoms/CustomCard';
 import StyledItemText from '../../../atoms/StyledItemText';
 
-const useStyles = makeStyles(({
+const useStyles = makeStyles((theme) => ({
   stats: {
     color: '#999',
     display: 'inline-flex',
@@ -38,7 +38,7 @@ const useStyles = makeStyles(({
   },
   head: {
     fontWeight: '500',
-    color: '#455a64',
+    color: theme.palette.info.main,
   },
   unit: {
     fontWeight: '700',
@@ -136,7 +136,7 @@ const IndentityVerification = (props) => {
             onClick={handleBack}
             className={classes.button}
           >
-              뒤로
+            뒤로
           </Button>
           <Button
             variant="contained"
@@ -144,7 +144,7 @@ const IndentityVerification = (props) => {
             className={classes.button}
             onClick={() => { setOpen(1); }}
           >
-              다음
+            다음
           </Button>
         </div>
       </Grid>

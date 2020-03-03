@@ -7,7 +7,7 @@ const cardHeaderStyle = (theme) => ({
     zIndex: '3 !important',
     color: theme.palette.common.white,
     '&:not($cardHeaderIcon)': {
-      background: `linear-gradient(60deg, ${theme.palette.bluegrey.main}, ${theme.palette.bluegrey.main})`,
+      background: `linear-gradient(60deg, ${theme.palette.info.main}, ${theme.palette.info.main})`,
       marginTop: '-20px',
       padding: '10px',
       margin: '0 15px',

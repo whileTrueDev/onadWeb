@@ -14,14 +14,14 @@ import TableFooter from './TableFooter';
 // core components
 import tableStyle from './Table.style';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   tableHeadCell: {
     fontSize: '15px',
     fontWeight: '700',
     textAlign: 'center',
-    color: '#455a64'
+    color: theme.palette.info.main
   },
-});
+}));
 
 function CustomTable({ ...props }) {
   const {

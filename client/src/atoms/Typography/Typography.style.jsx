@@ -2,10 +2,6 @@ const typographyStyle = (theme) => ({
   defaultFontStyle: {
     fontSize: '14px',
   },
-  defaultHeaderMargins: {
-    marginTop: '20px',
-    marginBottom: '10px',
-  },
   primaryText: {
     color: theme.palette.primary.main,
   },
