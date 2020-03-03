@@ -11,6 +11,7 @@ router.use('/history', historyRouter);
 
 //marekter/sub/cash => /
 //marekter/sub/cash => /defaultCash
+// 테스트 완료
 router.route('/')
     .get(
         responseHelper.middleware.checkSessionExists, // session 확인이 필요한 경우.
@@ -35,6 +36,7 @@ router.route('/')
     .all(responseHelper.middleware.unusedMethod)
 
 // marketer/sub/cash =>/refund
+// 테스트 완료
 router.route('/refund')
     .post(
         responseHelper.middleware.checkSessionExists, // session 확인이 필요한 경우.

@@ -31,7 +31,7 @@ const getParam = (paramField: string | string[],
       case 'put':
       case 'patch':
       case 'delete':
-        if (!(req.body[paramField])) {
+        if (!Object.keys(req.body).includes(paramField)) {
           throw new createError[400](responseMessages.ERROR_400);
         }
         return req.body[paramField];
@@ -53,7 +53,7 @@ const getParam = (paramField: string | string[],
     case 'patch':
     case 'delete':
       return paramField.map((param) => {
-        if (!(req.body[param])) {
+        if (!Object.keys(req.body).includes(param)) {
           throw new createError[400](responseMessages.ERROR_400);
         }
         return req.body[param];
@@ -80,7 +80,12 @@ const getParam = (paramField: string | string[],
  */
 const getSessionData = (req: express.Request): CreatorSession & MarketerSession => {
   if (req && req.session && req.session.passport && req.session.passport.user) {
-    return req.session.passport.user;
+    const { userType } = req.session.passport.user;
+    if (userType === 'creator') {
+      return { ...req.session.passport.user, creatorId: req.session.passport.user.userid }
+    } else {
+      return { ...req.session.passport.user, marketerId: req.session.passport.user.userid }
+    }
   }
   throw new createError[401](responseMessages.ERROR_401);
 };
@@ -116,7 +121,7 @@ const send = (
   res: express.Response
 ): void => {
   const OK = 200;
-  const CREATED = 2001;
+  const CREATED = 201;
   switch (method.toLowerCase()) {
     case 'post':
       res.status(CREATED).json(resultData);

@@ -15,6 +15,7 @@ interface UrlData {
 }
 
 //  marketer/sub/inventory =>/landingurl/all
+//test 완료
 router.route('/list')
     .get(
         responseHelper.middleware.checkSessionExists, // session 확인이 필요한 경우.
@@ -42,27 +43,10 @@ router.route('/list')
     .all(responseHelper.middleware.unusedMethod)
 
 
-//  marketer/sub/inventory =>/landingurl/connectedcampaign 
 //  marketer/sub/inventory =>/landingurl
 //  marketer/sub/inventory =>/landingurl/regist
+//test 완료
 router.route('/')
-    .get(
-        responseHelper.middleware.withErrorCatch(async (req, res, next) => {
-            const linkId = responseHelper.getParam("linkId", "GET", req);
-            const query = `
-            SELECT campaignId
-            FROM campaign
-            WHERE connectedlinkId = ?
-            AND deletedState = 0`;
-            doQuery(query, [linkId])
-                .then((row) => {
-                    responseHelper.send(row.result, 'get', res);
-                })
-                .catch((error) => {
-                    responseHelper.promiseError(error, next);
-                })
-        }),
-    )
     .all(responseHelper.middleware.checkSessionExists)
     .post(
         responseHelper.middleware.withErrorCatch(async (req, res, next) => {
@@ -127,6 +111,28 @@ router.route('/')
                 .catch((error) => {
                     responseHelper.promiseError(error, next);
                 });
+        }),
+    )
+    .all(responseHelper.middleware.unusedMethod)
+
+//  marketer/sub/inventory =>/landingurl/connectedcampaign 
+//test 완료
+router.route('/campaigns')
+    .get(
+        responseHelper.middleware.withErrorCatch(async (req, res, next) => {
+            const linkId = responseHelper.getParam("linkId", "GET", req);
+            const query = `
+            SELECT campaignId
+            FROM campaign
+            WHERE connectedlinkId = ?
+            AND deletedState = 0`;
+            doQuery(query, [linkId])
+                .then((row) => {
+                    responseHelper.send(row.result, 'get', res);
+                })
+                .catch((error) => {
+                    responseHelper.promiseError(error, next);
+                })
         }),
     )
     .all(responseHelper.middleware.unusedMethod)

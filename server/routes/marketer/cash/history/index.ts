@@ -97,7 +97,8 @@ router.route('/refund')
 
 //marekter/sub/cash => /usage/month
 // 마케터 광고 캐시 소진 내역
-// { columns: ['날짜', '소진금액', '세금계산서 발행 여부'], data: [ [], [] ] }
+// { columns: ['날짜', '소진금액', '세금계산서 발행 여부'], data: [ [], [] ] }]
+// 테스트 완료
 router.route('/usage/month')
     .get(
         responseHelper.middleware.checkSessionExists, // session 확인이 필요한 경우.
@@ -146,6 +147,7 @@ router.route('/usage/month')
 //marekter/sub/cash => /usage
 // 마케터 광고 캐시 소진 내역
 // { columns: ['날짜', '소진금액', '세금계산서 발행 여부'], data: [ [], [] ] }
+// 테스트 완료
 router.route('/usage')
     .get(
         responseHelper.middleware.checkSessionExists, // session 확인이 필요한 경우.
