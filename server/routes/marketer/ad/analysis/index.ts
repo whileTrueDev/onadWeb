@@ -6,6 +6,8 @@ import doQuery from '../../../../model/doQuery';
 const router = express.Router();
 
 // 마케터 대시보드의 비용에 대한 차트 데이터 제공
+// marketer/sub/campaign =>/chart
+// test 완료
 router.route('/expenditure')
     .get(
         responseHelper.middleware.checkSessionExists, // session 확인이 필요한 경우.
@@ -34,6 +36,7 @@ router.route('/expenditure')
 
 // 마케터 대시보드의 크리에이터 수를 체크하는 라우트
 // marketer/sub/report =>/counts
+// test 완료
 router.route('/creator-count')
     .get(
         responseHelper.middleware.checkSessionExists, // session 확인이 필요한 경우.

@@ -7,61 +7,80 @@ import encrypto from '../../../middlewares/encryption';
 const router = express.Router();
 
 // marketer/actionLog에서 가져옴.
+router.route('/profile')
+    .get(
+        responseHelper.middleware.checkSessionExists, // session 확인이 필요한 경우.
+        responseHelper.middleware.withErrorCatch(async (req, res, next) => {
+            const { marketerId } = responseHelper.getSessionData(req);
+            const query = `
+            SELECT 
+            marketerId, marketerName, marketerMail, 
+            marketerPhoneNum, marketerBusinessRegNum,
+            marketerUserType, marketerContraction, platformType
+            FROM marketerInfo
+            WHERE marketerId = ? `;
+            doQuery(query, [marketerId])
+                .then((row) => {
+                    responseHelper.send(row.result[0], 'get', res);
+                })
+                .catch((error) => {
+                    responseHelper.promiseError(error, next);
+                })
+        }),
+    )
+    .all(responseHelper.middleware.unusedMethod)
+
 router.route('/history')
     .get(
         responseHelper.middleware.checkSessionExists, // session 확인이 필요한 경우.
         responseHelper.middleware.withErrorCatch(async (req, res, next) => {
             const { marketerId } = responseHelper.getSessionData(req);
-            if (responseHelper.paramValidationCheck(marketerId, 'marketerId', req)) {
-                const query = `
-                SELECT *
-                FROM marketerActionLog
-                WHERE marketerId = ?
-                ORDER BY date DESC
-                LIMIT 100
-                `;
-                doQuery(query, [marketerId])
-                    .then((row) => {
-                        responseHelper.send(row.result, 'get', res);
-                    })
-                    .catch((error) => {
-                        responseHelper.promiseError(error, next);
-                    })
-            }
+            const query = `
+            SELECT *
+            FROM marketerActionLog
+            WHERE marketerId = ?
+            ORDER BY date DESC
+            LIMIT 100
+            `;
+            doQuery(query, [marketerId])
+                .then((row) => {
+                    responseHelper.send(row.result, 'get', res);
+                })
+                .catch((error) => {
+                    responseHelper.promiseError(error, next);
+                })
         }),
     )
     .all(responseHelper.middleware.unusedMethod)
 
 
-// marketer/sub/profile =>/accountNuber에서 가져옴.
+// marketer/sub/profile =>/accountNumber 가져옴.
 router.route('/account')
     .get(
         responseHelper.middleware.checkSessionExists, // session 확인이 필요한 경우.
         responseHelper.middleware.withErrorCatch(async (req, res, next) => {
             const { marketerId } = responseHelper.getSessionData(req);
-            if (responseHelper.paramValidationCheck(marketerId, 'marketerId', req)) {
-                const query = `
-                SELECT marketerAccountNumber, accountHolder
-                FROM marketerInfo
-                WHERE marketerId = ?`;
-                doQuery(query, [marketerId])
-                    .then((row) => {
-                        const { marketerAccountNumber, accountHolder } = row.result[0];
-                        let accountNumber;
-                        if (marketerAccountNumber) {
-                            accountNumber = encrypto.decipher(marketerAccountNumber);
-                        } else {
-                            accountNumber = '';
-                        }
+            const query = `
+            SELECT marketerAccountNumber, accountHolder
+            FROM marketerInfo
+            WHERE marketerId = ?`;
+            doQuery(query, [marketerId])
+                .then((row) => {
+                    const { marketerAccountNumber, accountHolder } = row.result[0];
+                    let accountNumber;
+                    if (marketerAccountNumber) {
+                        accountNumber = encrypto.decipher(marketerAccountNumber);
+                    } else {
+                        accountNumber = '';
+                    }
 
-                        responseHelper.send({
-                            accountNumber, accountHolder
-                        }, 'get', res);
-                    })
-                    .catch((error) => {
-                        responseHelper.promiseError(error, next);
-                    })
-            }
+                    responseHelper.send({
+                        accountNumber, accountHolder
+                    }, 'get', res);
+                })
+                .catch((error) => {
+                    responseHelper.promiseError(error, next);
+                })
         }),
     )
     .all(responseHelper.middleware.unusedMethod)
@@ -72,38 +91,34 @@ router.route('/business')
     .get(
         responseHelper.middleware.withErrorCatch(async (req, res, next) => {
             const { marketerId } = responseHelper.getSessionData(req);
-            if (responseHelper.paramValidationCheck(marketerId, 'marketerId', req)) {
-                const query = `
-                SELECT marketerBusinessRegNum, marketerBusinessRegSrc
-                FROM marketerInfo
-                WHERE marketerId = ?`;
-                doQuery(query, [marketerId])
-                    .then((row) => {
-                        responseHelper.send(row.result[0], 'get', res);
-                    })
-                    .catch((error) => {
-                        responseHelper.promiseError(error, next);
-                    })
-            }
+            const query = `
+            SELECT marketerBusinessRegNum, marketerBusinessRegSrc
+            FROM marketerInfo
+            WHERE marketerId = ?`;
+            doQuery(query, [marketerId])
+                .then((row) => {
+                    responseHelper.send(row.result[0], 'get', res);
+                })
+                .catch((error) => {
+                    responseHelper.promiseError(error, next);
+                })
         }),
     )
     .put(
         responseHelper.middleware.withErrorCatch(async (req, res, next) => {
             const businessImageSrc = responseHelper.getParam('imageUrl', 'PUT', req);
             const { marketerId } = responseHelper.getSessionData(req);
-            if (responseHelper.paramValidationCheck(marketerId, 'marketerId', req)) {
-                const query = `
-                UPDATE marketerInfo
-                SET marketerBusinessRegSrc = ?
-                WHERE marketerId = ?`;
-                doQuery(query, [businessImageSrc, marketerId])
-                    .then(() => {
-                        responseHelper.send([true], 'PUT', res);
-                    })
-                    .catch((error) => {
-                        responseHelper.promiseError(error, next);
-                    })
-            }
+            const query = `
+            UPDATE marketerInfo
+            SET marketerBusinessRegSrc = ?
+            WHERE marketerId = ?`;
+            doQuery(query, [businessImageSrc, marketerId])
+                .then(() => {
+                    responseHelper.send([true], 'PUT', res);
+                })
+                .catch((error) => {
+                    responseHelper.promiseError(error, next);
+                })
         }),
     )
     .all(responseHelper.middleware.unusedMethod)
@@ -114,37 +129,36 @@ interface Taxbill {
     cashAmount: string;
 }
 
+// marketer/sub/profile =>taxbill
 router.route('/tax-bills')
     .get(
         responseHelper.middleware.checkSessionExists, // session 확인이 필요한 경우.
         responseHelper.middleware.withErrorCatch(async (req, res, next) => {
             const { marketerId } = responseHelper.getSessionData(req);
-            if (responseHelper.paramValidationCheck(marketerId, 'marketerId', req)) {
-                const query = `
-                SELECT date, cashAmount, state FROM marketerTaxBill
-                WHERE marketerId = ?`;
-                doQuery(query, [marketerId])
-                    .then((row) => {
-                        const sendArray: any[] = [];
-                        row.result.forEach((obj: Taxbill) => {
-                            const object = obj;
-                            let taxBillState = '';
-                            switch (object.state) {
-                                case 0: taxBillState = '발행대기'; break;
-                                case 1: taxBillState = '발행완료'; break;
-                                case 2: taxBillState = '미발행'; break;
-                                default: throw Error('tax bill state');
-                            }
-                            object.state = taxBillState;
-                            object.cashAmount = object.cashAmount.toString();
-                            sendArray.push(Object.values(object));
-                        });
-                        responseHelper.send(sendArray, 'get', res);
-                    })
-                    .catch((error) => {
-                        responseHelper.promiseError(error, next);
-                    })
-            }
+            const query = `
+            SELECT date, cashAmount, state FROM marketerTaxBill
+            WHERE marketerId = ?`;
+            doQuery(query, [marketerId])
+                .then((row) => {
+                    const sendArray: any[] = [];
+                    row.result.forEach((obj: Taxbill) => {
+                        const object = obj;
+                        let taxBillState = '';
+                        switch (object.state) {
+                            case 0: taxBillState = '발행대기'; break;
+                            case 1: taxBillState = '발행완료'; break;
+                            case 2: taxBillState = '미발행'; break;
+                            default: throw Error('tax bill state');
+                        }
+                        object.state = taxBillState;
+                        object.cashAmount = object.cashAmount ? object.cashAmount.toString() : '0';
+                        sendArray.push(Object.values(object));
+                    });
+                    responseHelper.send(sendArray, 'get', res);
+                })
+                .catch((error) => {
+                    responseHelper.promiseError(error, next);
+                })
         }),
     )
     .all(responseHelper.middleware.unusedMethod)
@@ -193,20 +207,18 @@ router.route('/notification')
         responseHelper.middleware.withErrorCatch(async (req, res, next) => {
             const { marketerId } = responseHelper.getSessionData(req);
             const index = responseHelper.getParam("index", "PATCH", req);
-            if (responseHelper.paramValidationCheck(marketerId, 'marketerId', req)) {
-                const query = `
+            const query = `
                 UPDATE marketerNotification
                 SET readState = 1
                 WHERE marketerNotification.index = ? AND marketerId = ?`;
 
-                doQuery(query, [index, marketerId])
-                    .then(() => {
-                        responseHelper.send([true], 'PATCH', res);
-                    })
-                    .catch((error) => {
-                        responseHelper.promiseError(error, next);
-                    })
-            }
+            doQuery(query, [index, marketerId])
+                .then(() => {
+                    responseHelper.send([true], 'PATCH', res);
+                })
+                .catch((error) => {
+                    responseHelper.promiseError(error, next);
+                })
         })
     )
     .all(responseHelper.middleware.unusedMethod)
@@ -237,6 +249,7 @@ router.route('/notification/list')
                         returnValue.readState = returnValue.readState ? '읽음' : '안읽음';
                         return Object.values(returnValue)
                     });
+                    console.log(dataArray);
                     responseHelper.send(dataArray, 'get', res);
                 })
                 .catch((error) => {

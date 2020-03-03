@@ -5,6 +5,7 @@ import makeStyles from '@material-ui/core/styles/makeStyles';
 import Dialog from '../../../../atoms/Dialog/Dialog';
 import useFetchData from '../../../../utils/lib/hooks/useFetchData';
 import Table from '../../../../atoms/Table/CashUsageTable';
+import useTestData from '../../../../utils/lib/hooks/useTestData';
 
 const initialData = {
   data: [['-', '-', '-']]
@@ -17,9 +18,14 @@ const useStyles = makeStyles(() => ({
 export default function CashUsageDialog(props) {
   const classes = useStyles();
   const { open, handleClose, data } = props;
-  const usagePerMonthData = useFetchData('/api/dashboard/marketer/cash/usage/month', {
+
+  const usagePerMonthData = useTestData('/marketer/cash/history/usage/month', {
     month: data[0] // data[0] = "00년 00월"
   });
+
+  // const usagePerMonthData = useFetchData('/api/dashboard/marketer/cash/usage/month', {
+  //   month: data[0] // data[0] = "00년 00월"
+  // });
 
   return (
     <Dialog

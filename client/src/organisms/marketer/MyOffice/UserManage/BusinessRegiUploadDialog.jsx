@@ -6,6 +6,8 @@ import Dialog from '../../../../atoms/Dialog/Dialog';
 import GridContainer from '../../../../atoms/Grid/GridContainer';
 import GridItem from '../../../../atoms/Grid/GridItem';
 import useImageUpload from '../../../../utils/lib/hooks/useImageUpload';
+import useTSImageUpload from '../../../../utils/lib/hooks/useTSImageUpload';
+
 
 const useStyles = makeStyles(theme => ({
   imgInput: {
@@ -36,10 +38,15 @@ export default function BusinessRegiUploadDialog(props) {
   const classes = useStyles();
 
   const defaultImage = businessRegiImage || '/pngs/logo/onad_logo_vertical_small.png';
+  // const {
+  //   imageUrl, imageName, handleReset, readImage, handleUploadClick
+  // } = useImageUpload(defaultImage,
+  //   '/api/dashboard/marketer/profile/business/upload',
+  //   handleSnackOpen);
   const {
     imageUrl, imageName, handleReset, readImage, handleUploadClick
-  } = useImageUpload(defaultImage,
-    '/api/dashboard/marketer/profile/business/upload',
+  } = useTSImageUpload(defaultImage,
+    '/marketer/business',
     handleSnackOpen);
 
   return (

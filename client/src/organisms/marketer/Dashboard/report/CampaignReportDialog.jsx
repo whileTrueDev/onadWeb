@@ -8,6 +8,7 @@ import CampaignOnlyClickAd from './sub/CampaignOnlyClickAd';
 import CampaignOnlyBannerAd from './sub/CampaignOnlyBannerAd';
 // hooks
 import useFetchData from '../../../../utils/lib/hooks/useFetchData';
+import useTestData from '../../../../utils/lib/hooks/useTestData';
 
 const ONLY_BANNER_STATE = 0;
 const BANNER_WITH_CLICK_STATE = 1;
@@ -26,27 +27,48 @@ export default function CampaignReportDialog(props) {
     SLIDE_TIMEOUT, selectedCampaign, open, handleClose
   } = props;
 
-  const reportData = useFetchData(
-    '/api/dashboard/marketer/report',
+  // const reportData = useFetchData(
+  //   '/api/dashboard/marketer/report',
+  //   { campaignId: selectedCampaign.campaignId }
+  // );
+  
+  const reportData = useTestData(
+    '/marketer/campaign/analysis',
     { campaignId: selectedCampaign.campaignId }
   );
 
-  const valueChartData = useFetchData(
-    '/api/dashboard/marketer/report/totalSpendChart',
+  // const valueChartData = useFetchData(
+  //   '/api/dashboard/marketer/report/totalSpendChart',
+  //   { campaignId: selectedCampaign.campaignId }
+  // );
+
+  const valueChartData = useTestData(
+    '/marketer/campaign/analysis/expenditure',
     { campaignId: selectedCampaign.campaignId }
   );
+
   const ipToGeoData = useFetchData(
     '/api/dashboard/marketer/geo/campaign',
     { campaignId: selectedCampaign.campaignId }
   );
 
-  const creatorsData = useFetchData(
-    '/api/dashboard/marketer/report/creators',
+  // const creatorsData = useFetchData(
+  //   '/api/dashboard/marketer/report/creators',
+  //   { campaignId: selectedCampaign.campaignId }
+  // );
+
+  const creatorsData = useTestData(
+    '/marketer/campaign/analysis/creator-data',
     { campaignId: selectedCampaign.campaignId }
   );
 
-  const clickData = useFetchData(
-    '/api/dashboard/marketer/report/clicks',
+  // const clickData = useFetchData(
+  //   '/api/dashboard/marketer/report/clicks',
+  //   { campaignId: selectedCampaign.campaignId }
+  // );
+  
+  const clickData = useTestData(
+    '/marketer/campaign/analysis/heatmap',
     { campaignId: selectedCampaign.campaignId }
   );
 

@@ -56,23 +56,11 @@ router.route('/list')
     )
     .all(responseHelper.middleware.unusedMethod)
 
+
+// marketer/sub/banner => /connectedcampaign에서  가져옴
+// marketer/sub/banner => /push
+
 router.route('/')
-    .get(
-        responseHelper.middleware.withErrorCatch(async (req, res, next) => {
-            const bannerId = responseHelper.getParam("bannerId", "GET", req);
-            const query = `
-            SELECT *
-            FROM campaign
-            WHERE bannerId = ? AND deletedState = 0`;
-            doQuery(query, [bannerId])
-                .then((row) => {
-                    responseHelper.send(row.result, 'get', res);
-                })
-                .catch((error) => {
-                    responseHelper.promiseError(error, next);
-                })
-        }),
-    )
     .all(responseHelper.middleware.checkSessionExists)
     .post(
         responseHelper.middleware.withErrorCatch(async (req, res, next) => {
@@ -109,7 +97,7 @@ router.route('/')
                         [bannerId, marketerId, bannerSrc,
                             bannerDescription])
                         .then(() => {
-                            responseHelper.send([true], 'POST', res);
+                            responseHelper.send([true, '배너 등록이 완료되었습니다.'], 'POST', res);
                             const MARKETER_ACTION_LOG_TYPE = 2; // <배너 등록> 의 상태값 : 2
                             // marketerActionLogging([
                             //     marketerId, MARKETER_ACTION_LOG_TYPE, JSON.stringify({ bannerId })
@@ -145,6 +133,25 @@ router.route('/')
     )
     .all(responseHelper.middleware.unusedMethod)
 
+
+router.route('/campaigns')
+    .get(
+        responseHelper.middleware.withErrorCatch(async (req, res, next) => {
+            const bannerId = responseHelper.getParam("bannerId", "GET", req);
+            const query = `
+            SELECT *
+            FROM campaign
+            WHERE bannerId = ? AND deletedState = 0`;
+            doQuery(query, [bannerId])
+                .then((row) => {
+                    responseHelper.send(row.result, 'get', res);
+                })
+                .catch((error) => {
+                    responseHelper.promiseError(error, next);
+                })
+        }),
+    )
+    .all(responseHelper.middleware.unusedMethod)
 
 
 

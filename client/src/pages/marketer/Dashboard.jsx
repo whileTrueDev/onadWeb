@@ -10,6 +10,8 @@ import ReportLoading from '../../organisms/marketer/Dashboard/ReportLoading';
 import IssueTable from '../../organisms/marketer/Dashboard/IssueTable';
 // hooks
 import useFetchData from '../../utils/lib/hooks/useFetchData';
+import useTestData from '../../utils/lib/hooks/useTestData';
+
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -21,25 +23,40 @@ const useStyles = makeStyles(theme => ({
 
 export default function Dashboard() {
   const classes = useStyles();
-  const campaignData = useFetchData('/api/dashboard/marketer/campaign/new');
-  const onOffData = useFetchData('/api/dashboard/marketer/onoff');
-  const normalData = useFetchData('/api/dashboard/marketer/normal');
-  const countsData = useFetchData('/api/dashboard/marketer/report/counts');
+  // const campaignData = useFetchData('/api/dashboard/marketer/campaign/new');
+  const campaignData = useTestData('/marketer/campaign/list');
 
-  const valueChartData = useFetchData('/api/dashboard/marketer/campaign/chart');
-  const broadCreatorData = useFetchData('/api/dashboard/marketer/broadcast/creator');
-  const actionLogData = useFetchData('/api/dashboard/marketer/actionlog');
+  // const onOffData = useFetchData('/api/dashboard/marketer/onoff');
+  const onOffData = useTestData('/marketer/ad/on-off');
+
+  // const normalData = useFetchData('/api/dashboard/marketer/normal');
+  const normalData = useTestData('/marketer/ad');
+
+  // const countsData = useFetchData('/api/dashboard/marketer/report/counts');
+  const countsData = useTestData('/marketer/ad/analysis/creator-count');
+
+  // const valueChartData = useFetchData('/api/dashboard/marketer/campaign/chart');
+  const valueChartData = useTestData('/marketer/ad/analysis/expenditure');
+
+  // const broadCreatorData = useFetchData('/api/dashboard/marketer/broadcast/creator');
+  const broadCreatorData = useTestData('/marketer/ad/creator/list');
+
+  // const actionLogData = useFetchData('/api/dashboard/marketer/actionlog');
+  const actionLogData = useTestData('/marketer/history');
+
 
   return (
     <div className={classes.root}>
       {(normalData.loading || campaignData.loading
         || onOffData.loading
+        || countsData.loading
         || valueChartData.loading
         || actionLogData.loading) ? (
           <ReportLoading />
         ) : (
           <div>
             {normalData.payload && campaignData.payload
+            && countsData.payload
           && valueChartData.payload && (
           <Grid container spacing={2}>
             <Grid item xs={12} md={6} lg={3}>
