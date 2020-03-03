@@ -6,9 +6,9 @@ const defaultMuiTheme = createMuiTheme();
 const rawTheme = createMuiTheme({
   palette: {
     primary: {
-      light: lighten(cyan[600], 0.07),
+      light: lighten(cyan[400], 0.07),
       main: cyan[600],
-      dark: darken(cyan[600], 0.07),
+      dark: darken(cyan[800], 0.07),
       // contrastText: will be calculated to contrast with palette.primary.main
       contrastText: defaultMuiTheme.palette.getContrastText(cyan[700]),
     },
@@ -38,6 +38,19 @@ const rawTheme = createMuiTheme({
   // }
 });
 
-const theme = responsiveFontSizes(rawTheme);
+const lightTheme = responsiveFontSizes(createMuiTheme({
+  ...rawTheme,
+  palette: {
+    type: 'light',
+    ...rawTheme.palette
+  }
+}));
+const darkTheme = responsiveFontSizes(createMuiTheme({
+  ...rawTheme,
+  palette: {
+    type: 'dark',
+    ...rawTheme.palette
+  }
+}));
 
-export default theme;
+export default { lightTheme, darkTheme };

@@ -4,9 +4,8 @@ import { darken, lighten } from '@material-ui/core/styles/colorManipulator';
 
 const defaultTheme = createMuiTheme();
 
-const rawTheme = createMuiTheme({
+const rawTheme = {
   palette: {
-    // type: 'dark',
     primary: {
       light: lighten(cyan[400], 0.07),
       main: cyan[600],
@@ -24,22 +23,21 @@ const rawTheme = createMuiTheme({
     },
     warning: defaultTheme.palette.secondary,
   },
-  // typography: {
-  //   fontFamily: [
-  //     'Roboto',
-  //     '"Helvetica Neue"',
-  //     '-apple-system',
-  //     'BlinkMacSystemFont',
-  //     '"Segoe UI"',
-  //     'Arial',
-  //     'sans-serif',
-  //     '"Apple Color Emoji"',
-  //     '"Segoe UI Emoji"',
-  //     '"Segoe UI Symbol"',
-  //   ].join(','),
-  // }
-});
+};
 
-const theme = responsiveFontSizes(rawTheme);
+const lightTheme = responsiveFontSizes(createMuiTheme({
+  ...rawTheme,
+  palette: {
+    type: 'light',
+    ...rawTheme.palette
+  }
+}));
+const darkTheme = responsiveFontSizes(createMuiTheme({
+  ...rawTheme,
+  palette: {
+    type: 'dark',
+    ...rawTheme.palette
+  }
+}));
 
-export default theme;
+export default { lightTheme, darkTheme };
