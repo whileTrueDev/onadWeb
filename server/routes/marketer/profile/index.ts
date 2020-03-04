@@ -2,12 +2,29 @@ import express from 'express';
 import responseHelper from '../../../middlewares/responseHelper';
 import doQuery from '../../../model/doQuery';
 import encrypto from '../../../middlewares/encryption';
-
+import sendEmailAuth from '../../../middlewares/auth/sendEmailAuth';
 
 const router = express.Router();
 
 // marketer/actionLog에서 가져옴.
-router.route('/profile')
+/**
+ * @swagger
+ * paths:
+ *  /:
+ *     post:
+ *     summary: 마케터를 등록한다.
+ *     responses:
+ *       201:
+ *         description: 성공적으로 등록되었다. 
+ *         schema:
+ *           type: object
+ *           properties:
+ *             todos:
+ *               type: array
+ *               items:
+ *                 $ref: '#/definitions/Todo'
+ */
+router.route('/')
     .get(
         responseHelper.middleware.checkSessionExists, // session 확인이 필요한 경우.
         responseHelper.middleware.withErrorCatch(async (req, res, next) => {
@@ -27,6 +44,179 @@ router.route('/profile')
                     responseHelper.promiseError(error, next);
                 })
         }),
+    )
+    .post(
+        responseHelper.middleware.withErrorCatch(async (req, res, next) => {
+            const [
+                marketerId, marketerName,
+                marketerMail, marketerPhoneNum,
+                marketerBusinessRegNum, marketerUserType,
+                marketerRawPasswd
+            ] = responseHelper.getParam([
+                'marketerId', 'marketerName',
+                'marketerMail', 'marketerPhoneNum',
+                'marketerBusinessRegNum', 'marketerUserType',
+                'marketerRawPasswd'
+            ], "POST", req);
+            const [key, salt] = encrypto.make(marketerRawPasswd);
+
+            const infoQuery = `
+              INSERT INTO marketerInfo 
+              (marketerId, marketerPasswd, marketerSalt, marketerName, marketerMail, 
+              marketerPhoneNum, marketerBusinessRegNum, marketerUserType) 
+              VALUES (?, ?, ?, ?, ?, ?, ?, ?) `;
+            const infoQueryArray = [marketerId, key, salt, marketerName, marketerMail,
+                marketerPhoneNum, marketerBusinessRegNum, marketerUserType];
+
+            const cashQuery = `
+              INSERT INTO marketerDebit
+              (marketerId, cashAmount)
+              VALUES (?, ?)`;
+
+            Promise.all([
+                doQuery(infoQuery, infoQueryArray),
+                doQuery(cashQuery, [marketerId, 0]),
+            ])
+                .then(() => {
+                    next();
+                })
+                .catch((error) => {
+                    responseHelper.promiseError(error, next);
+                });
+        }),
+        sendEmailAuth
+    )
+    .patch(
+        responseHelper.middleware.checkSessionExists, // session 확인이 필요한 경우.
+        responseHelper.middleware.withErrorCatch(async (req, res, next) => {
+            const { marketerId } = responseHelper.getSessionData(req);
+            const [type, value] = responseHelper.getParam(['type', 'value'], "PATCH", req);
+            const getQuery = (intype: string): [string, any[]] => {
+                switch (intype) {
+                    case 'password': {
+                        const [key, salt] = encrypto.make(value);
+                        return [`
+                        UPDATE marketerInfo 
+                        SET marketerSalt = ?, marketerPasswd = ?
+                        WHERE marketerId = ? 
+                        `, [salt, key, marketerId]];
+                    }
+                    case 'name': {
+                        return [`
+                        UPDATE marketerInfo 
+                        SET marketerName = ?
+                        WHERE marketerId = ? 
+                        `, [value, marketerId]];
+                    }
+                    case 'phone': {
+                        return [`
+                        UPDATE marketerInfo 
+                        SET marketerPhoneNum = ?
+                        WHERE marketerId = ? 
+                        `, [value, marketerId]];
+                    }
+                    case 'mail': {
+                        return [`
+                        UPDATE marketerInfo 
+                        SET marketerMail = ?
+                        WHERE marketerId = ? 
+                        `, [value, marketerId]];
+                    }
+                    default:
+                        return ['', []];
+                }
+            };
+            const [updateQuery, params] = getQuery(type);
+            doQuery(updateQuery, params)
+                .then(() => {
+                    responseHelper.send([true], 'get', res);
+                })
+                .catch((error) => {
+                    responseHelper.promiseError(error, next);
+                });
+        })
+    )
+    .delete(
+        responseHelper.middleware.checkSessionExists, // session 확인이 필요한 경우.
+        responseHelper.middleware.withErrorCatch(async (req, res, next) => {
+            const { marketerId } = responseHelper.getSessionData(req);
+            const query = ` UPDATE marketerInfo SET
+                                    marketerPasswd = null,
+                                    marketerSalt= null,
+                                    marketerName= null,
+                                    marketerMail= null,
+                                    marketerPhoneNum= null,
+                                    marketerBusinessRegNum= null,
+                                    marketerBusinessRegSrc= null,
+                                    marketerUserType= null,
+                                    marketerContraction= null,
+                                    marketerAlarmAgreement= null,
+                                    marketerEmailAuth= null,
+                                    date= null,
+                                    temporaryLogin= null,
+                                    marketerAccountNumber= null,
+                                    accountHolder= null,
+                                    signOutState =2,
+                                    signOutDate = NOW()
+                                    WHERE marketerId = ?`;
+            doQuery(query, [marketerId])
+                .then(() => {
+                    req.logout();
+                    //session이 존재하지 않을 수 있다.
+                    if (req.session) {
+                        req.session.destroy(() => {
+                            console.log(`${marketerId}님 회원탈퇴`);
+                        });
+                    }
+                    responseHelper.send([true], 'get', res);
+                })
+                .catch((error) => {
+                    responseHelper.promiseError(error, next);
+                });
+        })
+    )
+    .all(responseHelper.middleware.unusedMethod)
+
+router.route('/platform')
+    .post(
+        responseHelper.middleware.withErrorCatch(async (req, res, next) => {
+            const [
+                marketerId, marketerName,
+                marketerMail, marketerPhoneNum,
+                marketerBusinessRegNum, marketerUserType,
+                platformType
+            ] = responseHelper.getParam([
+                'marketerId', 'marketerName',
+                'marketerMail', 'marketerPhoneNum',
+                'marketerBusinessRegNum', 'marketerUserType',
+                'platformType'
+            ], "POST", req);
+
+            const infoQuery = `
+            INSERT INTO marketerInfo 
+            (marketerId, marketerName, marketerMail, 
+            marketerPhoneNum, marketerBusinessRegNum, marketerUserType, platformType, marketerEmailAuth) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?) `;
+
+            const infoQueryArray = [marketerId, marketerName, marketerMail,
+                marketerPhoneNum, marketerBusinessRegNum, marketerUserType, platformType, 1];
+
+            const cashQuery = `
+            INSERT INTO marketerDebit
+            (marketerId, cashAmount)
+            VALUES (?, ?)`;
+
+            Promise.all([
+                doQuery(infoQuery, infoQueryArray),
+                doQuery(cashQuery, [marketerId, 0])
+            ])
+                .then(() => {
+                    responseHelper.send({ error: false }, 'get', res);
+                })
+                .catch((error) => {
+                    responseHelper.promiseError(error, next);
+                });
+        })
     )
     .all(responseHelper.middleware.unusedMethod)
 
