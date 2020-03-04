@@ -102,17 +102,6 @@ const BannerCard = () => {
         </Grid>
         <Grid item />
       </Grid>
-
-      {/* {!currentBannerData.loading && (
-      <BannerDescPopover
-        currentBannerData={currentBannerData}
-        open={open}
-        anchorEl={anchorEl}
-        handlePopoverClose={handlePopoverClose}
-        descIndex={descIndex}
-      />
-      )} */}
-
     </CustomCard>
   );
 };

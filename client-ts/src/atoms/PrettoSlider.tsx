@@ -1,16 +1,16 @@
-import { withStyles } from '@material-ui/core/styles';
+import { withStyles, Theme } from '@material-ui/core/styles';
 import Slider from '@material-ui/core/Slider';
 
 
-const PrettoSlider = withStyles({
+const PrettoSlider = withStyles((theme: Theme) => ({
   root: {
-    color: '#52af77',
+    color: theme.palette.success.main,
     height: 8,
   },
   thumb: {
     height: 24,
     width: 24,
-    backgroundColor: '#fff',
+    backgroundColor: theme.palette.common.white,
     border: '2px solid currentColor',
     marginTop: -8,
     marginLeft: -12,
@@ -31,6 +31,6 @@ const PrettoSlider = withStyles({
     height: 8,
     borderRadius: 4,
   },
-})(Slider);
+}))(Slider);
 
 export default PrettoSlider;

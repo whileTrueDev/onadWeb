@@ -5,7 +5,7 @@ import CardIcon from './Card/CardIcon';
 import CardHeader from './Card/CardHeader';
 import CardBody from './Card/CardBody';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   buttonWrapper: {
     display: 'flex', alignItems: 'center', flexDirection: 'row-reverse', padding: 5
   },
@@ -23,12 +23,18 @@ const useStyles = makeStyles(theme => ({
 /**
  * @param {} props iconComponent=왼쪽상단의 아이콘, buttonComponent=오른쪽 상단의 버튼
  */
-export default function CustomCard(props) {
+interface CustomCardProps {
+  iconComponent: React.ReactNode;
+  buttonComponent?: React.ReactNode;
+  children: React.ReactNode;
+}
+export default function CustomCard({
+  iconComponent, buttonComponent, children
+}: CustomCardProps): JSX.Element {
   const classes = useStyles();
-  const { iconComponent, buttonComponent, children } = props;
   return (
     <Card className={classes.root}>
-      <CardHeader color="blueGray" stats icon>
+      <CardHeader stats icon>
         <CardIcon color="blueGray">
           {iconComponent}
         </CardIcon>

@@ -97,7 +97,7 @@ function CustomTable({ ...props }) {
               {checkBox
               && (
               <TableCell className={classes.tableCell}>
-                <GreenCheckbox fontSize="small" checked />
+                <GreenCheckbox checked />
               </TableCell>
               )}
             </TableRow>

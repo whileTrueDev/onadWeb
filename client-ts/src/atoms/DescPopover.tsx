@@ -1,19 +1,18 @@
 import React from 'react';
-import {
-  Grid, Popover, Typography
-} from '@material-ui/core';
+import { Grid, Typography } from '@material-ui/core';
+import Popover, { PopoverProps } from '@material-ui/core/Popover';
 import { makeStyles } from '@material-ui/core/styles';
 import shortid from 'shortid';
 import {
   sendTypeConfig, optionConfig, budgetConfig,
   landingManageConfig, reportConfig, reportCardConfig
-} from '../utils/TooltipContentConfig';
+} from '../utils/tooltipContentConfig';
 import StyledSelectText from './StyledSelectText';
 
 const useStyles = makeStyles((theme) => ({
   label: {
-    color: 'theme.palette.info.main',
-    fontWeight: '700',
+    color: theme.palette.info.main,
+    fontWeight: 700,
     [theme.breakpoints.down('sm')]: {
       fontSize: '14px',
       marginBottom: '8px',
@@ -22,13 +21,13 @@ const useStyles = makeStyles((theme) => ({
   popover: {
     pointerEvents: 'none',
   },
-  choice: (props) => ({
-    padding: props.padding === 0 ? 0 : theme.spacing(3),
+  paper: {
+    padding: theme.spacing(3),
     paddingBottom: theme.spacing(3),
     [theme.breakpoints.down('sm')]: {
       padding: theme.spacing(2),
     },
-  }),
+  },
   text: {
     fontSize: '14px',
   },
@@ -38,13 +37,33 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-function DescPopover(props) {
-  const {
-    open, anchorEl, handlePopoverClose, descIndex, contentType, children, head, styleProps, ...rest
-  } = props;
-  const classes = useStyles(styleProps);
+interface DescPopoverProps extends PopoverProps {
+  contentType: string;
+  descIndex: number;
+  handlePopoverClose: () => void;
+}
 
-  const getContent = (type) => {
+function DescPopover({
+  open,
+  anchorEl,
+  handlePopoverClose,
+  anchorOrigin = {
+    vertical: 'center',
+    horizontal: 'left',
+  },
+  transformOrigin = {
+    vertical: 'center',
+    horizontal: 'right',
+  },
+  descIndex,
+  contentType,
+  children,
+  style,
+  ...rest
+}: DescPopoverProps): JSX.Element {
+  const classes = useStyles(style);
+
+  const getContent = (type: string) => {
     switch (type) {
       case 'priority':
         return (
@@ -145,7 +164,6 @@ function DescPopover(props) {
             <Grid item>
               <StyledSelectText
                 primary={reportCardConfig[descIndex].title}
-                className={classes.title}
               />
             </Grid>
             {reportCardConfig[descIndex].text.split('\n').map((row) => (
@@ -164,11 +182,11 @@ function DescPopover(props) {
   return (
     <Popover
       {...rest}
+      anchorOrigin={anchorOrigin}
+      transformOrigin={transformOrigin}
       id="send-desc-popover"
       className={classes.popover}
-      classes={{
-        paper: classes.choice
-      }}
+      classes={{ paper: classes.paper }}
       open={open}
       anchorEl={anchorEl}
       onClose={handlePopoverClose}
@@ -177,25 +195,5 @@ function DescPopover(props) {
     </Popover>
   );
 }
-
-
-// DescPopover.propTypes = {
-//   title: PropTypes.node,
-//   open: PropTypes.bool.isRequired,
-//   onClose: PropTypes.func,
-//   buttons: PropTypes.node,
-// };
-
-DescPopover.defaultProps = {
-  anchorOrigin:
-  {
-    vertical: 'center',
-    horizontal: 'left',
-  },
-  transformOrigin: {
-    vertical: 'center',
-    horizontal: 'right',
-  },
-};
 
 export default DescPopover;

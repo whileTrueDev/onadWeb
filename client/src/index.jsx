@@ -40,7 +40,7 @@ const developRouter = (
       <Route exact path="/notice" component={Notice} />
       <Route exact path="/marketer/charge" component={TestChargeDialog} />
       <Route path="/notice/:code" component={Notice} />
-      <ThemeProvider theme={theme.lightTheme}>
+      <ThemeProvider theme={theme.darkTheme}>
         <Route exact path="/dashboard/creator/door" component={CreatorDashboardDoor} />
         <Route path="/dashboard/creator" component={CreatorDashboard} />
         <Route path="/dashboard/marketer" component={MarketerDashboard} />

@@ -17,7 +17,7 @@ import Tooltip from '../../../atoms/DescPopover';
 import useTooltip from '../../../utils/lib/hooks/useTooltip';
 import useOpenValue from '../../../utils/lib/hooks/useOpenValue';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   flex: {
     display: 'flex',
   },
@@ -25,7 +25,7 @@ const useStyles = makeStyles(() => ({
     flexDirection: 'column',
   },
   site: {
-    color: '#00acc1',
+    color: theme.palette.primary.main,
   }
 }));
 
@@ -68,22 +68,20 @@ export default function LandingPanelBanner(props) {
             </Typography>
             <div>
               { !userData.loading && userData.payload && (
-                <div>
+                <>
                   <StyledInput
                     className={classes.site}
                     style={{ cursor: 'default' }}
                     id="landing_url"
                     value={`https://l.onad.io/${userData.payload.creatorTwitchId}`}
-                    inputprops={{
-                      readOnly: true,
-                    }}
+                    inputprops={{ readOnly: true }}
                     variant="outlined"
                   />
                   <Button onClick={copyToClipboard} size="small">
                     <InsertLinkOutlined />
                     복사
                   </Button>
-                </div>
+                </>
               )}
             </div>
           </div>

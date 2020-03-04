@@ -161,7 +161,6 @@ export default function CreatorTable(props) {
       render: (rowData) => (
         <GreenCheckBox
           checked={getChecked(rowData.creatorId)}
-          fontSize="large"
           style={{ fontSize: '20px', padding: 0 }}
           onClick={handleChecked(rowData)}
           name={rowData.creatorId}

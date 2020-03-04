@@ -9,9 +9,9 @@ import cardHeaderStyle from './CardHeader.style';
 interface CardHeaderProps {
   className?: string;
   children: React.ReactNode;
-  plain: boolean;
-  stats: boolean;
-  icon: boolean;
+  plain?: boolean;
+  stats?: boolean;
+  icon?: boolean;
 }
 
 function CardHeader({

@@ -5,10 +5,8 @@ import CountUp from 'react-countup';
 import { Grid, Typography } from '@material-ui/core';
 import Card from '../../../../../../atoms/Card/Card';
 import CardBody from '../../../../../../atoms/Card/CardBody';
-// import Tooltip from '../../../../../../atoms/DescPopover';
-// import useTooltip from '../../../../../../utils/lib/hooks/useTooltip';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   container: {
     padding: '28px 0px',
   },
@@ -51,17 +49,6 @@ const ReportCard = (props) => {
                 <Typography variant="body1" className={classes.title}>
                   {content.title}
                 </Typography>
-                {/*
-                <Help
-                  fontSize="small"
-                  color="disabled"
-                  onMouseEnter={(evt) => {
-                    if (!(content.value === '')) { handleTooltipOpen(evt, index); }
-                  }}
-                  onMouseLeave={handleTooltipClose}
-                  aria-owns={anchorEl ? 'send-desc-popover' : undefined}
-                  aria-haspopup="true"
-                /> */}
 
               </div>
 
@@ -88,22 +75,6 @@ const ReportCard = (props) => {
           </Card>
         </Grid>
       ))}
-
-      {/* <Tooltip
-        open={Boolean(anchorEl)}
-        anchorEl={anchorEl}
-        handlePopoverClose={handleTooltipClose}
-        descIndex={tooltipIndex}
-        contentType="reportCardTooltip"
-        anchorOrigin={{
-          vertical: 'top',
-          horizontal: 'right',
-        }}
-        transformOrigin={{
-          vertical: 'bottom',
-          horizontal: 'left',
-        }}
-      /> */}
     </Grid>
   );
 };

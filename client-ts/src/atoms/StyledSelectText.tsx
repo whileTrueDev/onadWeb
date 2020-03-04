@@ -2,7 +2,7 @@ import { ListItemText } from '@material-ui/core';
 import { withStyles, Theme } from '@material-ui/core/styles';
 
 const StyledSelectText = withStyles((theme: Theme) => ({
-  primary: ({ fontSize, color }: {fontSize: number|string; color: string}) => ({
+  primary: ({ fontSize, color }: {fontSize?: number|string; color?: string}) => ({
     fontSize: fontSize || '18px',
     fontWeight: 700,
     [theme.breakpoints.down('sm')]: {

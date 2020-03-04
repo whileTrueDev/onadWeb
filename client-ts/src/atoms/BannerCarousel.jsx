@@ -10,6 +10,15 @@ import SwipeableViews from 'react-swipeable-views';
 import Check from '@material-ui/icons/Check';
 import Success from './Typography/Success';
 
+/** ***********
+ * 만든 사람이 Ts로 정리바람.. 
+ * checkImage 타입을 number를썼다가 객체를썼다가 왔다리갔다리 뭐가 맞는지 알아서 체크해서 고쳐주세요
+ * activeStep 현재 스텝
+ * step ??
+ * registStep
+ * steps 배너들..
+ * 이름 다 헷갈리니 알아서 변경 바랍니다.
+ *********** */
 
 const tutorialSteps = [
   {
