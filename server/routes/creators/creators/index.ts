@@ -17,7 +17,7 @@ router.route('/')
           responseHelper.send(row.result, 'get', res);
         })
         .catch((errorData) => {
-          throw new Error(`Error in /creator/list - ${errorData}`)
+          throw new Error(`Error in /creators - ${errorData}`)
         });
     })
   )

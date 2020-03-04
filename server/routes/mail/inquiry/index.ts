@@ -21,19 +21,20 @@ const transporter = nodemailer.createTransport({
 interface InputForm {
   name?: string;
   email?: string;
+  contactNumber?: number;
+  brandName?: string;
+  content?: string;
 }
 
 router.route('/')
   .post(
-    // responseHelper.middleware.checkSessionExists,
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
-      const { name, email } = req.body;
       let inputForm: InputForm;
-      inputForm = { name: 'kevin2022', email: 'kevin2022@naver.com' }
+      //req.body는 x-www-form-urlencoded
+      inputForm = req.body;
       const mailOptions = {
         from: `${inputForm.email}`, // 발송 메일 주소
-        to: 'kevin2022@naver.com', // 수신 메일 주소부분
-        subject: `${name}님의 캠페인 문의 요청입니다.`, // 제목부분
+        subject: `${inputForm.name}님의 캠페인 문의 요청입니다.`, // 제목부분
         html: makeInqurie(inputForm),
         attachments: [{
           filename: 'onad_logo_vertical_small.png',
@@ -57,7 +58,6 @@ router.route('/')
           }, 'post', res);
         }
       });
-      // responseHelper.send(200, 'get', res);
     })
   )
   .all(responseHelper.middleware.unusedMethod);
