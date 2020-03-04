@@ -1,29 +1,18 @@
 
 const footerStyle = (theme) => ({
-  block: {
-    color: 'inherit',
-    padding: '15px',
-    textTransform: 'uppercase',
-    borderRadius: '3px',
-    textDecoration: 'none',
-    position: 'relative',
-    display: 'block',
-    fontWeight: '500',
-    fontSize: '12px',
-  },
   left: {
-    float: 'left!important',
+    float: 'left',
     display: 'block',
   },
   right: {
     padding: '15px 0',
     margin: '0',
     fontSize: '14px',
-    float: 'right!important',
+    float: 'right',
   },
   footer: {
     bottom: '0',
-    borderTop: `1px solid ${theme.palette.grey[300]}`,
+    borderTop: `1px solid ${theme.palette.divider}`,
     padding: '15px 0',
   },
   container: {

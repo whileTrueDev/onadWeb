@@ -3,14 +3,15 @@
 [(영문)Atomic Desing 이란?](https://bradfrost.com/blog/post/atomic-web-design/)  
 [(한글)Atomic Desing 이란?](https://brunch.co.kr/@ultra0034/63)  
 
-- atoms: 재사용이 가능한 최소단위의 컴포넌트 폴더.  
- 다른 어떤 컴포넌트도 import해서는 안됨. 다른 컴포넌트를 참고한다면 그것은 organisms임.  
- material-ui를 래핑하는 atoms컴포넌트는 material-ui컴포넌트 만을 import.  
+- atoms: 재사용이 가능한 최소단위의 컴포넌트를 모아두는 폴더.  
+  다른 어떤 컴포넌트도 import해서는 안됨. atoms의 다른 컴포넌트를 참고한다면 그것은 organisms임.  
+  material-ui를 래핑하는 atoms컴포넌트는 material-ui컴포넌트 만을 import.  
 
-- organisms: atom들의 모음으로 이룬 하나의 기능 단위 컴포넌트 폴더.  
-- pages: organism들의 모음으로 이룬 전체적 페이지 배치 레이아웃.  
+- organisms: atom들의 모음으로 이룬 하나의 기능 단위 컴포넌트를 모아두는 폴더.  
+- pages: organism들의 모음으로 이룬 전체적 페이지 배치 레이아웃 컴포넌트를 모아두는 폴더.  
   데이터 요청을 여기에서, organisms로 뿌려준다. ( 전체 페이지 로딩도 함께 관리 )  
-
+  prop drilling 문제.. 해결방법 생각 -> redux쓴다??
+  
 - assets: 디자인 관련 파일(css, 디자인 전역 변수, 등등) 폴더.  
 - config: 환경설정값이 있는 폴더.  
 - utils: axios, pdfgenerator, 등등 필요한 함수 및 모듈이 들어 있는 폴더.  
@@ -74,3 +75,7 @@
 ### 그림자
 
 `theme.palette.shadows[인덱스 0 ~ 24]`
+
+### Divider
+
+borderTop 등을 이용해 divider 처럼 사용하는 경우 => `theme.palette.divider`

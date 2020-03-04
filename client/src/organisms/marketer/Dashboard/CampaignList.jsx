@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
   list: {
     width: '100%',
     '&:hover': {
-      backgroundColor: theme.palette.grey[200]
+      backgroundColor: theme.palette.action.hover
     }
   },
   image: {
@@ -103,9 +103,7 @@ export default function CampaignList(props) {
       <List style={{ maxHeight: 380, overflowY: 'auto' }}>
         {campaignData.payload.map((detail, index) => (
           <div key={detail.campaignId}>
-            <ListItem
-              className={classes.list}
-            >
+            <ListItem className={classes.list}>
               <Grid container direction="row" justify="space-between">
                 <Grid item className={classes.contents}>
                   <Grid container direction="row" className={classes.contents} spacing={3}>

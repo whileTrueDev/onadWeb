@@ -16,10 +16,6 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  head: {
-    fontWeight: '700',
-    color: theme.palette.info.main,
-  }
 }));
 
 const tableHead = [
@@ -54,7 +50,7 @@ const Mypage = () => {
       )}
       {!withDrawalData.loading && withDrawalData.error && (
       <div className={classes.area}>
-        <Typography variant="h6" className={classes.head}>
+        <Typography variant="h6">
           출금 신청 내역이 존재하지 않습니다.
         </Typography>
       </div>

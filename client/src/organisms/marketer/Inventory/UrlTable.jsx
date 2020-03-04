@@ -7,7 +7,7 @@ import { Delete, Star } from '@material-ui/icons';
 import MaterialTable from '../../../atoms/Table/MaterialTable';
 import useFetchData from '../../../utils/lib/hooks/useFetchData';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   title: {
     fontWeight: 'bold'
   },
@@ -33,7 +33,7 @@ export default function UrlTable(props) {
           case 1: return '승인됨👌';
           case 2: return (
             <Tooltip
-              title={<Typography variant="body2">{`사유: ${rowData.bannerDenialReason}`}</Typography>}
+              title={<Typography variant="body2">{`사유: ${rowData.denialReason}`}</Typography>}
             >
               <Typography style={{ color: 'red' }}>거절됨</Typography>
             </Tooltip>
@@ -44,7 +44,7 @@ export default function UrlTable(props) {
     },
     {
       title: '링크 이름',
-      render: rowData => (
+      render: (rowData) => (
         <div>
           {rowData.links.links.map((link, index) => {
             if (link) {
@@ -81,7 +81,7 @@ export default function UrlTable(props) {
     },
     {
       title: '링크 주소',
-      render: rowData => (
+      render: (rowData) => (
         <div>
           {rowData.links.links.map((link, index) => {
             if (link) {
@@ -126,15 +126,16 @@ export default function UrlTable(props) {
         </div>
       ),
     },
-    { title: '링크 등록 일자', render: rowData => (<span>{rowData.regiDate}</span>) },
+    { title: '링크 등록 일자', render: (rowData) => (<span>{rowData.regiDate}</span>) },
   ];
 
   return (
     <div>
-      {fetchData.loading && (<MaterialTable columns={columns} isLoading />)}
+      {fetchData.loading && (<MaterialTable columns={columns} isLoading style={{ boxShadow: 'none' }} />)}
       {!fetchData.loading && fetchData.error && (<span>Error</span>)}
       {!fetchData.loading && fetchData.payload && (
         <MaterialTable
+          style={{ boxShadow: 'none' }}
           title={null}
           columns={columns}
           data={fetchData.payload === 'nourldata' ? [] : fetchData.payload}

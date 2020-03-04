@@ -20,7 +20,7 @@ const cardFooterStyle = (theme) => ({
     backgroundColor: 'transparent',
   },
   cardFooterStats: {
-    borderTop: `1px solid ${theme.palette.grey[300]}`,
+    borderTop: `1px solid ${theme.palette.divider}`,
     marginTop: '20px',
     '& svg': {
       position: 'relative',

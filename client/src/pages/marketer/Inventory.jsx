@@ -3,6 +3,7 @@ import React from 'react';
 // @material-ui/core
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
+import Paper from '@material-ui/core/Paper';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
@@ -31,7 +32,7 @@ function TabPanel(props) {
 
   return (
     <Typography
-      component="div"
+      component={Paper}
       role="tabpanel"
       hidden={value !== index}
       id={`simple-tabpanel-${index}`}

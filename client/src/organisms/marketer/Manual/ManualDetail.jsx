@@ -117,7 +117,7 @@ const ManualDetail = (props) => {
         </CardBody>
 
         <CardFooter stats>
-          <Typography variant="body2" />
+          <div />
           <Typography variant="subtitle2" style={{ textTransform: 'none' }}>
             이해가 잘 안되시거나, 문의사항이 있으시면 고객센터로 문의해주세요. E-mail : support@onad.io
           </Typography>

@@ -16,7 +16,7 @@ const tableStyle = (theme) => ({
     color: theme.palette.info.main,
   },
   grayTableHeader: {
-    color: theme.palette.grey[300],
+    color: theme.palette.grey[500],
   },
   table: {
     marginBottom: '0',

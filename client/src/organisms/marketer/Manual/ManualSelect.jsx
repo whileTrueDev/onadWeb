@@ -17,18 +17,16 @@ const useButtonStyle = makeStyles((theme) => ({
     position: 'static',
   },
   root: {
-    background: 'white',
+    background: theme.palette.background.paper,
     borderRadius: 3,
     border: 0,
-    color: 'black',
     padding: '0 30px',
-    boxShadow: '0 3px 3px 2px rgba(102, 102, 102, .3)',
+    boxShadow: theme.shadows[3],
     width: '100%',
     height: '100%',
     position: 'relative',
   },
   label: {
-    textTransform: 'capitalize',
     flexDirection: 'column',
   },
 }));
@@ -54,7 +52,6 @@ const Select = (props) => {
           {sources.map((source, index) => (
             <Step key={shortid.generate()}>
               <StepLabel>
-
                 <Button
                   size="large"
                   variant="outlined"

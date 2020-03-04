@@ -24,7 +24,7 @@ const useFooterStyle = makeStyles((theme: Theme) => ({
   },
   footer: {
     bottom: '0',
-    borderTop: `1px solid ${theme.palette.grey[300]}`,
+    borderTop: `1px solid ${theme.palette.divider}`,
     padding: '15px 0',
   },
   container: {
@@ -32,11 +32,6 @@ const useFooterStyle = makeStyles((theme: Theme) => ({
     paddingLeft: '15px',
     marginRight: 'auto',
     marginLeft: 'auto',
-  },
-  a: {
-    color: theme.palette.primary.main,
-    textDecoration: 'none',
-    backgroundColor: 'transparent',
   },
   list: {
     marginBottom: '0',
