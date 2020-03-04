@@ -26,6 +26,7 @@ router.route('/list')
         responseHelper.middleware.checkSessionExists,
         responseHelper.middleware.withErrorCatch(async (req, res, next) => {
             const { marketerId } = responseHelper.getSessionData(req);
+            // 오늘자 일일예산에 대한 예산소비량을 체크하기 위해 오늘의 맨처음 시간으로 설정
             const date = new Date();
             date.setHours(0);
             date.setMinutes(0);
@@ -95,6 +96,7 @@ router.route('/names')
 // 테스트 완료
 router.route('/on-off')
     .patch(
+        responseHelper.middleware.checkSessionExists,
         responseHelper.middleware.withErrorCatch(async (req, res, next) => {
             const [onoffState, campaignId] = responseHelper.getParam(['onoffState', 'campaignId'], 'PATCH', req);
             const query = `
@@ -152,8 +154,8 @@ router.route('/on-off')
 //(DELETE)  marketer/sub/campaign => /
 // 테스트 완료
 router.route('/')
-    .all(responseHelper.middleware.checkSessionExists)
     .patch(
+        responseHelper.middleware.checkSessionExists,
         // const data = { campaignId: selectedCampaign.campaignId, data: {...state}, type: 'name' }; req의 형태
         responseHelper.middleware.withErrorCatch(async (req, res, next) => {
             const [campaignId, value, type] = responseHelper.getParam(['campaignId', "data", "type"], 'PATCH', req);
@@ -187,6 +189,7 @@ router.route('/')
         }),
     )
     .post(
+        responseHelper.middleware.checkSessionExists,
         responseHelper.middleware.withErrorCatch(async (req, res, next) => {
             const { marketerId, marketerName } = responseHelper.getSessionData(req);
             const [campaignName, optionType, priorityType, priorityList, selectedTime, dailyLimit,
@@ -294,6 +297,7 @@ router.route('/')
         }),
     )
     .delete(
+        responseHelper.middleware.checkSessionExists,
         responseHelper.middleware.withErrorCatch(async (req, res, next) => {
             // const { marketerId } = responseHelper.getSessionData(req);
             const campaignId = responseHelper.getParam('campaignId', "DELETE", req);

@@ -1,9 +1,7 @@
 // 데이터 가공 함수가 위치할 것임.
 // 데이터 가공함수에서의 오류는 모두 throw new Error('에러메시지') 로 처리함.
 // 요청자에게는 500 에러 가 전송될 것임. (에러메시지는 develop 환경에서만 볼 수 있음.)
-
 import { QueryResult } from '../../@types/db';
-import express from 'express';
 import doQuery from '../../model/doQuery';
 
 interface PriorityData {
@@ -13,13 +11,34 @@ interface PriorityData {
   optionType: number,
 }
 
+/**
+ * @description
+  해당 캠페인의 생성시에 광고 타겟 선택유형에 맞게 DB에 저장하는 함수
+  각 선택유형에 따른 캠페인 리스트가 JSON형태로 되어있기 때문에 해당 캠페인 리스트를 찾는 search query,
+  캠페인 리스트 내부에 저장하는 insert query 2회 진행된다.
 
+  - 크리에이터 선택형일 경우
+      각 크리에이터의 계약된 캠페인 리스트 내부에 캠페인을 저장
+  - 게임 선택형일 경우
+      각 게임의 계약된 캠페인 리스트 내부에 캠페인을 저장
+  - 무관일 경우
+      쿼리실행을 하지 않는다.
+
+ * @param {string} campaignId ? 해당 캠페인 ID
+ * @param {string} priorityType ? 선택된 광고 타겟 유형
+ * @param {string} optionType ? 선택된 광고 송출 유형
+ * @param {array} priorityList ? 선택된 광고 타겟 ID 리스트(게임 ID 또는 크리에이터 ID) 
+ * @method getSearchQuery ? 캠페인의 우선순위 유형에 맞는 캠페인 리스트를 가져오기 위한 query 설정 함수
+ * @method getSaveQuery ? 캠페인의 우선순위 유형에 맞는 캠페인 리스트 내부에 저장하기 위한 query 설정 함수
+ * @author 박찬우
+ */
 const PriorityDoquery = ({
   campaignId,
   priorityType,
   priorityList,
   optionType
 }: PriorityData) => {
+
   const getSearchQuery = (type: string) => {
     switch (type) {
       case '0': {
@@ -107,10 +126,14 @@ const PriorityDoquery = ({
         });
     }))
   );
-
-  // 노출우선형일 경우, priorityList가 모든 creator에 해당되어야함.
 };
 
+/**
+ * @description
+  랜딩페이지 초기화를 위해서 현재 모든 계약된 크리에이터 리스트를 반환하는 함수.
+
+ * @author 박찬우
+ */
 const getCreatorList = () => new Promise<string[]>((resolve, reject) => {
   const creatorSelectQuery = `
     SELECT creatorId
@@ -128,10 +151,23 @@ const getCreatorList = () => new Promise<string[]>((resolve, reject) => {
     });
 });
 
-// optionType == 2이면 랜딩페이지를 초기화하지 않는다.
-// optionType === 1이면 노출우선형일때는 모든 크리에이터에게
-// 크리에이터 우선형일때는 priorityList에 대해 초기화한다.
 
+/**
+ * @description
+  캠페인을 생성하는 시점에 랜딩페이지 초기화를 진행하는 함수
+  priorityType : 배너 광고 우선순위 타입 ( 0: 크리에이터 우선형, 1: 카테고리 우선형 2: 노출 우선형)
+  optionType : 캠페인의 광고타입 ( 0: CPM, 1: CPM + CPC, 2: CPC )
+
+  - CPC이고 노출우선형일 경우에는 배너 광고 진행이 되지 않아 랜딩페이지에 초기화 되지 않으므로 모든 크리에이터의 랜딩페이지에 초기화
+  - CPC이고 크리에이터 우선형일 경우에는 선택된 크리에이터의 랜딩페이지에 초기화
+  - CPM일 경우에는 소켓에서 해당 배너 광고 진행시 크리에이터의 랜딩페이지에 초기화 진행됨.
+  
+ * @param {string} campaignId ? 해당 캠페인 ID
+ * @param {string} optionType ? 선택된 광고 송출 유형
+ * @param {string} priorityType ? 선택된 광고 타겟 유형
+ * @param {array} priorityList ? 선택된 광고 타겟 ID 리스트(게임 ID 또는 크리에이터 ID) 
+ * @author 박찬우
+ */
 const LandingDoQuery = async ({
   campaignId, optionType, priorityType, priorityList
 }: PriorityData) => {
@@ -176,6 +212,14 @@ const LandingDoQuery = async ({
   }
 };
 
+/**
+ * @description
+  캠페인을  등록하기 위해서 가장 최근 생성된 캠페인의 이름을 가져온다.
+  이름을 통해 다음 순번의 캠페인 이름을 생성하여 반환한다.
+  
+ * @param {string} marketerId ? 해당 마케터 ID
+ * @author 박찬우
+ */
 const getCampaignId = (result: any, marketerId: string | undefined) => {
   let campaignId = '';
   if (result) {
@@ -192,6 +236,14 @@ const getCampaignId = (result: any, marketerId: string | undefined) => {
   return campaignId;
 };
 
+/**
+ * @description
+  배너URL을  등록하기 위해서 가장 최근 생성된 배너URL의 이름을 가져온다.
+  이름을 통해 다음 순번의 배너URL 이름을 생성하여 반환한다.
+  
+ * @param {string} marketerId ? 해당 마케터 ID
+ * @author 박찬우
+ */
 const getUrlId = (marketerId: string | undefined) => new Promise((resolve, reject) => {
   let urlId = '';
   const getLandingUrlQuery = `

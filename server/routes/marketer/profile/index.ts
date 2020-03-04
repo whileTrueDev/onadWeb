@@ -46,6 +46,7 @@ router.route('/')
         }),
     )
     .post(
+        responseHelper.middleware.checkSessionExists, // session 확인이 필요한 경우.
         responseHelper.middleware.withErrorCatch(async (req, res, next) => {
             const [
                 marketerId, marketerName,
@@ -277,8 +278,8 @@ router.route('/account')
 
 // marketer/sub/profile => /business, /business/upload 가져옴.
 router.route('/business')
-    .all(responseHelper.middleware.checkSessionExists)
     .get(
+        responseHelper.middleware.checkSessionExists,
         responseHelper.middleware.withErrorCatch(async (req, res, next) => {
             const { marketerId } = responseHelper.getSessionData(req);
             const query = `
@@ -295,6 +296,7 @@ router.route('/business')
         }),
     )
     .put(
+        responseHelper.middleware.checkSessionExists,
         responseHelper.middleware.withErrorCatch(async (req, res, next) => {
             const businessImageSrc = responseHelper.getParam('imageUrl', 'PUT', req);
             const { marketerId } = responseHelper.getSessionData(req);

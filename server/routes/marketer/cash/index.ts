@@ -301,6 +301,7 @@ router.route('/vbank')
                 })
         }),
     )
+    .all(responseHelper.middleware.unusedMethod)
 
 
 export default router;

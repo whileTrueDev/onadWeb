@@ -47,8 +47,8 @@ router.route('/list')
 //  marketer/sub/inventory =>/landingurl/regist
 //test 완료
 router.route('/')
-    .all(responseHelper.middleware.checkSessionExists)
     .post(
+        responseHelper.middleware.checkSessionExists,
         responseHelper.middleware.withErrorCatch(async (req, res, next) => {
             const links = responseHelper.getParam('links', 'POST', req);
             const { marketerId } = responseHelper.getSessionData(req);
@@ -98,6 +98,7 @@ router.route('/')
         }),
     )
     .delete(
+        responseHelper.middleware.checkSessionExists,
         responseHelper.middleware.withErrorCatch(async (req, res, next) => {
             const linkId = responseHelper.getParam('linkId', 'DELETE', req);
             const query = `
@@ -116,9 +117,9 @@ router.route('/')
     .all(responseHelper.middleware.unusedMethod)
 
 //  marketer/sub/inventory =>/landingurl/connectedcampaign 
-//test 완료
 router.route('/campaigns')
     .get(
+        responseHelper.middleware.checkSessionExists,
         responseHelper.middleware.withErrorCatch(async (req, res, next) => {
             const linkId = responseHelper.getParam("linkId", "GET", req);
             const query = `

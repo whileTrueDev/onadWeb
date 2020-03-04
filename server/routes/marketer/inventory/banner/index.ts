@@ -5,30 +5,27 @@ import doQuery from '../../../../model/doQuery';
 const router = express.Router();
 
 // marketer/sub/banner => /registered에서  가져옴
-router.get('/list/:status',
-    responseHelper.middleware.checkSessionExists, // session 확인이 필요한 경우.
-    responseHelper.middleware.withErrorCatch(async (req, res, next) => {
-        const { marketerId } = responseHelper.getSessionData(req);
-        const status = req.param('status');
-        let query = '';
-        switch (status) {
-            case 'active':
-                query = `
-                SELECT bannerId, bannerSrc
-                FROM bannerRegistered
-                WHERE marketerId = ? AND (confirmState = 0 OR confirmState = 1)
-                ORDER BY regiDate DESC 
-                `;
-                break
-        }
-        doQuery(query, [marketerId])
-            .then((row) => {
-                responseHelper.send(row.result, 'get', res);
-            })
-            .catch((error) => {
-                responseHelper.promiseError(error, next);
-            })
-    }))
+router.route('/list/active')
+    .get(
+        responseHelper.middleware.checkSessionExists, // session 확인이 필요한 경우.
+        responseHelper.middleware.withErrorCatch(async (req, res, next) => {
+            const { marketerId } = responseHelper.getSessionData(req);
+            const query = `
+        SELECT bannerId, bannerSrc
+        FROM bannerRegistered
+        WHERE marketerId = ? AND (confirmState = 0 OR confirmState = 1)
+        ORDER BY regiDate DESC 
+        `;
+            doQuery(query, [marketerId])
+                .then((row) => {
+                    responseHelper.send(row.result, 'get', res);
+                })
+                .catch((error) => {
+                    responseHelper.promiseError(error, next);
+                })
+        }))
+    .all(responseHelper.middleware.unusedMethod)
+
 
 
 // marketer/sub/banner => /all에서  가져옴
@@ -36,6 +33,7 @@ router.route('/list')
     .get(
         responseHelper.middleware.checkSessionExists, // session 확인이 필요한 경우.
         responseHelper.middleware.withErrorCatch(async (req, res, next) => {
+            console.log('list입니다.')
             const { marketerId } = responseHelper.getSessionData(req);
             const query = `
             SELECT bannerSrc, confirmState, bannerId, 
@@ -61,8 +59,8 @@ router.route('/list')
 // marketer/sub/banner => /push
 
 router.route('/')
-    .all(responseHelper.middleware.checkSessionExists)
     .post(
+        responseHelper.middleware.checkSessionExists,
         responseHelper.middleware.withErrorCatch(async (req, res, next) => {
             const [bannerSrc, bannerDescription] = responseHelper.getParam(['bannerSrc', 'bannerDescription'], 'PUT', req);
             const { marketerId } = responseHelper.getSessionData(req);
@@ -113,6 +111,7 @@ router.route('/')
         }),
     )
     .delete(
+        responseHelper.middleware.checkSessionExists,
         responseHelper.middleware.withErrorCatch(async (req, res, next) => {
             const bannerId = responseHelper.getParam('bannerId', 'DELETE', req);
             const query = `
@@ -136,6 +135,7 @@ router.route('/')
 
 router.route('/campaigns')
     .get(
+        responseHelper.middleware.checkSessionExists,
         responseHelper.middleware.withErrorCatch(async (req, res, next) => {
             const bannerId = responseHelper.getParam("bannerId", "GET", req);
             const query = `

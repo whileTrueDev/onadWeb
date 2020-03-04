@@ -138,6 +138,7 @@ router.route('/creator/list')
                 });
         }),
     )
+    .all(responseHelper.middleware.unusedMethod)
 
 
 export default router;
