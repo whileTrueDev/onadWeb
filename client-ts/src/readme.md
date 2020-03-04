@@ -41,8 +41,8 @@
 
 ### 배경이 아닌 흰색, 검은색이 필요할 때
 
-`theme.palette.common.white`: #000
-`theme.palette.common.black`: #fff
+`theme.palette.common.white`: `#000`
+`theme.palette.common.black`: `#fff`
 
 ### 회색
 
@@ -56,20 +56,20 @@
 
 `theme.palette.text`
 
-| 변수        | 라이트테마색상          | 다크테마색상                 |
-| --------- | ---------------- | ---------------------- |
-| primary   | rgba(0,0,0,0.87) | #fff                   |
-| secondary | rgba(0,0,0,0.54) | rgba(255,255,255,0.7)  |
-| disabled  | rgba(0,0,0,0.38) | rgba(255,255,255,0.5)  |
-| hint      | rgba(0,0,0,0.87) | rgba(255,255,255,0.5)  |
-| icon      | 없음               | rgba(255,255,255,0.12) |
+| 변수        | 라이트테마색상            | 다크테마색상                   |
+| --------- | ------------------ | ------------------------ |
+| primary   | `rgba(0,0,0,0.87)` | `#fff`                   |
+| secondary | `rgba(0,0,0,0.54)` | `rgba(255,255,255,0.7)`  |
+| disabled  | `rgba(0,0,0,0.38)` | `rgba(255,255,255,0.5)`  |
+| hint      | `rgba(0,0,0,0.87)` | `rgba(255,255,255,0.5)`  |
+| icon      | 없음                 | `rgba(255,255,255,0.12)` |
 
 ### active, selected, hover, disabled 색상
 
-`theme.palette.action.active`
-`theme.palette.action.selected`
-`theme.palette.action.hover`
-`theme.palette.action.disabled`
+`theme.palette.action.active`  
+`theme.palette.action.selected`  
+`theme.palette.action.hover`  
+`theme.palette.action.disabled`  
 
 ### 그림자
 
