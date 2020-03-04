@@ -33,7 +33,7 @@ const setTemporaryPassword = (
         password,
         baseUrl: req.baseUrl
       };
-      axios.post(`${HOST}/mailer/auth`, user)
+      axios.post(`${HOST}/mail/tmp-auth`, user)
         .then((response) => {
           // 메일 전송 오류 및 성공.
           res.send(response.data);
@@ -45,4 +45,4 @@ const setTemporaryPassword = (
     });
 };
 
-module.exports = setTemporaryPassword;
+export default setTemporaryPassword;
