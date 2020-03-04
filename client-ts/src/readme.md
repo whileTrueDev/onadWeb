@@ -1,7 +1,7 @@
 # Atomic Design 차용한 리액트 프로젝트 구조
 
-[(영문)Atomic Desing 이란?](https://bradfrost.com/blog/post/atomic-web-design/)
-[(한글)Atomic Desing 이란?](https://brunch.co.kr/@ultra0034/63)
+[(영문)Atomic Desing 이란?](https://bradfrost.com/blog/post/atomic-web-design/)  
+[(한글)Atomic Desing 이란?](https://brunch.co.kr/@ultra0034/63)  
 
 - atoms: 재사용이 가능한 최소단위의 컴포넌트 폴더.  
  다른 어떤 컴포넌트도 import해서는 안됨. 다른 컴포넌트를 참고한다면 그것은 organisms임.  
@@ -18,14 +18,14 @@
 
 ## Theme
 
-[Mui Theme 기본 형태](https://material-ui.com/customization/default-theme/#default-theme)
-[Mui Theme palette 기본 색상](https://material-ui.com/customization/palette/)
+[Mui Theme 기본 형태](https://material-ui.com/customization/default-theme/#default-theme)  
+[Mui Theme palette 기본 색상](https://material-ui.com/customization/palette/)  
 
 ### onad palette 색상 오버라이딩
 
 | 색상        | light                                                                    | main                                                                     | dark                                                                     |
 | --------- | ------------------------------------------------------------------------ | ------------------------------------------------------------------------ | ------------------------------------------------------------------------ |
-| primary   | <div style="width: 30px; height: 30px; background-color: #26c6da"></div> | <div style="width: 30px; height: 30px; background-color: #00acc1"></div> | <div style="width: 30px; height: 30px; background-color: #0097a7"></div> |
+| primary   | #26c6da                                                                  | <div style="width: 30px; height: 30px; background-color: #00acc1"></div> | <div style="width: 30px; height: 30px; background-color: #0097a7"></div> |
 | secondary | <div style="width: 30px; height: 30px; background-color: #ffb74d"></div> | <div style="width: 30px; height: 30px; background-color: #ff9800"></div> | <div style="width: 30px; height: 30px; background-color: #f57c00"></div> |
 | info      | <div style="width: 30px; height: 30px; background-color: #78909c"></div> | <div style="width: 30px; height: 30px; background-color: #455a64"></div> | <div style="width: 30px; height: 30px; background-color: #37474f"></div> |
 | warning   | <div style="width: 30px; height: 30px; background-color: #f6a5c0"></div> | <div style="width: 30px; height: 30px; background-color: #f48fb1"></div> | <div style="width: 30px; height: 30px; background-color: #aa647b"></div> |
