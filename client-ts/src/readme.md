@@ -23,21 +23,21 @@
 
 ### onad palette 색상 오버라이딩
 
-| 색상        | light                                                                    | main                                                                     | dark                                                                     |
-| --------- | ------------------------------------------------------------------------ | ------------------------------------------------------------------------ | ------------------------------------------------------------------------ |
-| primary   | #26c6da                                                                  | <div style="width: 30px; height: 30px; background-color: #00acc1"></div> | <div style="width: 30px; height: 30px; background-color: #0097a7"></div> |
-| secondary | <div style="width: 30px; height: 30px; background-color: #ffb74d"></div> | <div style="width: 30px; height: 30px; background-color: #ff9800"></div> | <div style="width: 30px; height: 30px; background-color: #f57c00"></div> |
-| info      | <div style="width: 30px; height: 30px; background-color: #78909c"></div> | <div style="width: 30px; height: 30px; background-color: #455a64"></div> | <div style="width: 30px; height: 30px; background-color: #37474f"></div> |
-| warning   | <div style="width: 30px; height: 30px; background-color: #f6a5c0"></div> | <div style="width: 30px; height: 30px; background-color: #f48fb1"></div> | <div style="width: 30px; height: 30px; background-color: #aa647b"></div> |
-| error     | <div style="width: 30px; height: 30px; background-color: #e57373"></div> | <div style="width: 30px; height: 30px; background-color: #f44336"></div> | <div style="width: 30px; height: 30px; background-color: #d32f2f"></div> |
-| success   | <div style="width: 30px; height: 30px; background-color: #81c784"></div> | <div style="width: 30px; height: 30px; background-color: #4caf50"></div> | <div style="width: 30px; height: 30px; background-color: #388e3c"></div> |
+| 색상        | light                                                       | main                                                        | dark                                                        |
+| --------- | ----------------------------------------------------------- | ----------------------------------------------------------- | ----------------------------------------------------------- |
+| primary   | ![](https://placehold.it/15/26c6da/000000?text=+) `#26c6da` | ![](https://placehold.it/15/00acc1/000000?text=+) `#00acc1` | ![](https://placehold.it/15/0097a7/000000?text=+) `#0097a7` |
+| secondary | ![](https://placehold.it/15/ffb74d/000000?text=+) `#ffb74d` | ![](https://placehold.it/15/ff9800/000000?text=+) `#ff9800` | ![](https://placehold.it/15/f57c00/000000?text=+) `#f57c00` |
+| info      | ![](https://placehold.it/15/78909c/000000?text=+) `#78909c` | ![](https://placehold.it/15/455a64/000000?text=+) `#455a64` | ![](https://placehold.it/15/37474f/000000?text=+) `#37474f` |
+| warning   | ![](https://placehold.it/15/f6a5c0/000000?text=+) `#f6a5c0` | ![](https://placehold.it/15/f48fb1/000000?text=+) `#f48fb1` | ![](https://placehold.it/15/aa647b/000000?text=+) `#aa647b` |
+| error     | ![](https://placehold.it/15/e57373/000000?text=+) `#e57373` | ![](https://placehold.it/15/f44336/000000?text=+) `#f44336` | ![](https://placehold.it/15/d32f2f/000000?text=+) `#d32f2f` |
+| success   | ![](https://placehold.it/15/81c784/000000?text=+) `#81c784` | ![](https://placehold.it/15/4caf50/000000?text=+) `#4caf50` | ![](https://placehold.it/15/388e3c/000000?text=+) `#388e3c` |
 
 ### 배경색
 
-| 배경            | 변수                                 | 라이트테마                                                                    | 다크테마                                                                     |
-| ------------- | ---------------------------------- | ------------------------------------------------------------------------ | ------------------------------------------------------------------------ |
-| 뒷 배경          | `theme.palette.background.default` | <div style="width: 30px; height: 30px; background-color: #fff"></div>    | <div style="width: 30px; height: 30px; background-color: #fafafa"></div> |
-| 페이퍼,카드 등 컨테이너 | `theme.palette.background.paper`   | <div style="width: 30px; height: 30px; background-color: #424242"></div> | <div style="width: 30px; height: 30px; background-color: #303030"></div> |
+| 배경            | 변수                                 | 라이트테마                                                       | 다크테마                                                        |
+| ------------- | ---------------------------------- | ----------------------------------------------------------- | ----------------------------------------------------------- |
+| 뒷 배경          | `theme.palette.background.default` | ![](https://placehold.it/15/fff/000000?text=+) `#fff`       | ![](https://placehold.it/15/fafafa/000000?text=+) `#fafafa` |
+| 페이퍼,카드 등 컨테이너 | `theme.palette.background.paper`   | ![](https://placehold.it/15/424242/000000?text=+) `#424242` | ![](https://placehold.it/15/303030/000000?text=+) `#303030` |
 
 ### 배경이 아닌 흰색, 검은색이 필요할 때
 
@@ -48,21 +48,21 @@
 
 `theme.palette.grey[인덱스]`
 
-| 인덱스 | 50:                                                                     | 100:                                                                    | 200:                                                                    | 300:                                                                    | 400:                                                                    | 500:                                                                    | 600:                                                                    | 700:                                                                    | 800:                                                                    | 900:                                                                    | A100:                                                                   | A200:                                                                   | A400:                                                                   | A700:                                                                   |
-| --- | ----------------------------------------------------------------------- | ----------------------------------------------------------------------- | ----------------------------------------------------------------------- | ----------------------------------------------------------------------- | ----------------------------------------------------------------------- | ----------------------------------------------------------------------- | ----------------------------------------------------------------------- | ----------------------------------------------------------------------- | ----------------------------------------------------------------------- | ----------------------------------------------------------------------- | ----------------------------------------------------------------------- | ----------------------------------------------------------------------- | ----------------------------------------------------------------------- | ----------------------------------------------------------------------- |
-| 색상  | <div style="background-color: #fafafa; width:30px; height:30px;"></div> | <div style="background-color: #f5f5f5; width:30px; height:30px;"></div> | <div style="background-color: #eeeeee; width:30px; height:30px;"></div> | <div style="background-color: #e0e0e0; width:30px; height:30px;"></div> | <div style="background-color: #bdbdbd; width:30px; height:30px;"></div> | <div style="background-color: #9e9e9e; width:30px; height:30px;"></div> | <div style="background-color: #757575; width:30px; height:30px;"></div> | <div style="background-color: #616161; width:30px; height:30px;"></div> | <div style="background-color: #424242; width:30px; height:30px;"></div> | <div style="background-color: #212121; width:30px; height:30px;"></div> | <div style="background-color: #d5d5d5; width:30px; height:30px;"></div> | <div style="background-color: #aaaaaa; width:30px; height:30px;"></div> | <div style="background-color: #303030; width:30px; height:30px;"></div> | <div style="background-color: #616161; width:30px; height:30px;"></div> |
+| 인덱스 | 50:                                               | 100:                                              | 200:                                              | 300:                                              | 400:                                              | 500:                                              | 600:                                              | 700:                                              | 800:                                              | 900:                                              | A100:                                             | A200:                                             | A400:                                             | A700:                                             |
+| --- | ------------------------------------------------- | ------------------------------------------------- | ------------------------------------------------- | ------------------------------------------------- | ------------------------------------------------- | ------------------------------------------------- | ------------------------------------------------- | ------------------------------------------------- | ------------------------------------------------- | ------------------------------------------------- | ------------------------------------------------- | ------------------------------------------------- | ------------------------------------------------- | ------------------------------------------------- |
+| 색상  | ![](https://placehold.it/15/fafafa/000000?text=+) | ![](https://placehold.it/15/f5f5f5/000000?text=+) | ![](https://placehold.it/15/eeeeee/000000?text=+) | ![](https://placehold.it/15/e0e0e0/000000?text=+) | ![](https://placehold.it/15/bdbdbd/000000?text=+) | ![](https://placehold.it/15/9e9e9e/000000?text=+) | ![](https://placehold.it/15/757575/000000?text=+) | ![](https://placehold.it/15/616161/000000?text=+) | ![](https://placehold.it/15/424242/000000?text=+) | ![](https://placehold.it/15/212121/000000?text=+) | ![](https://placehold.it/15/d5d5d5/000000?text=+) | ![](https://placehold.it/15/aaaaaa/000000?text=+) | ![](https://placehold.it/15/303030/000000?text=+) | ![](https://placehold.it/15/616161/000000?text=+) |
 
 ### 텍스트 색상
 
 `theme.palette.text`
 
-| 변수        | 라이트테마색상                                                                         | 다크테마색상                                                                                                   |
-| --------- | -------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
-| primary   | <div style="background-color: rgba(0,0,0,0.87); width:30px; height:30px;"></div> | <div style="background-color: #333; color: #fff; width:30px; height:30px;">글자</div>                      |
-| secondary | <div style="background-color: rgba(0,0,0,0.54); width:30px; height:30px;"></div> | <div style="background-color: #333; color: rgba(255,255,255,0.7); width:30px; height:30px;">글자</div>     |
-| disabled  | <div style="background-color: rgba(0,0,0,0.38); width:30px; height:30px;"></div> | <div style="background-color: #333; color: rgba(255,255,255,0.5); width:30px; height:30px;">글자</div>     |
-| hint      | <div style="background-color: rgba(0,0,0,0.87); width:30px; height:30px;"></div> | <div style="background-color: #333; color: rgba(255,255,255,0.5); width:30px; height:30px;">글자</div>     |
-| icon      | 없음                                                                               | <div style="background-color: #424242; color: rgba(255,255,255,0.12); width:30px; height:30px;">글자</div> |
+| 변수        | 라이트테마색상                                   | 다크테마색상                                                                      |
+| --------- | ------------------------------------------ | --------------------------------------------------------------------------- |
+| primary   | <p style='color:rgba(0,0,0,0.87)'>text</p> | <p style='background-color: #424242; color:#fff'>text</p>                   |
+| secondary | <p style='color:rgba(0,0,0,0.54)'>text</p> | <p style='background-color: #424242; color:rgba(255,255,255,0.7)'>text</p>  |
+| disabled  | <p style='color:rgba(0,0,0,0.38)'>text</p> | <p style='background-color: #424242; color:rgba(255,255,255,0.5)'>text</p>  |
+| hint      | <p style='color:rgba(0,0,0,0.87)'>text</p> | <p style='background-color: #424242; color:rgba(255,255,255,0.5)'>text</p>  |
+| icon      | 없음                                         | <p style='background-color: #424242; color:rgba(255,255,255,0.12)'>text</p> |
 
 ### active, selected, hover, disabled 색상
 
