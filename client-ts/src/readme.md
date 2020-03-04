@@ -56,13 +56,13 @@
 
 `theme.palette.text`
 
-| 변수        | 라이트테마색상                                   | 다크테마색상                                                                      |
-| --------- | ------------------------------------------ | --------------------------------------------------------------------------- |
-| primary   | <p style='color:rgba(0,0,0,0.87)'>text</p> | <p style='background-color: #424242; color:#fff'>text</p>                   |
-| secondary | <p style='color:rgba(0,0,0,0.54)'>text</p> | <p style='background-color: #424242; color:rgba(255,255,255,0.7)'>text</p>  |
-| disabled  | <p style='color:rgba(0,0,0,0.38)'>text</p> | <p style='background-color: #424242; color:rgba(255,255,255,0.5)'>text</p>  |
-| hint      | <p style='color:rgba(0,0,0,0.87)'>text</p> | <p style='background-color: #424242; color:rgba(255,255,255,0.5)'>text</p>  |
-| icon      | 없음                                         | <p style='background-color: #424242; color:rgba(255,255,255,0.12)'>text</p> |
+| 변수        | 라이트테마색상          | 다크테마색상                 |
+| --------- | ---------------- | ---------------------- |
+| primary   | rgba(0,0,0,0.87) | #fff                   |
+| secondary | rgba(0,0,0,0.54) | rgba(255,255,255,0.7)  |
+| disabled  | rgba(0,0,0,0.38) | rgba(255,255,255,0.5)  |
+| hint      | rgba(0,0,0,0.87) | rgba(255,255,255,0.5)  |
+| icon      | 없음               | rgba(255,255,255,0.12) |
 
 ### active, selected, hover, disabled 색상
 
