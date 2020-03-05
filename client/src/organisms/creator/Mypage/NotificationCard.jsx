@@ -12,7 +12,7 @@ const NotificationCard = () => {
 
   return (
     <CustomCard
-      iconComponent={<StyledItemText primary="내 모든 알림내역" style={{ color: '#FFF' }} />}
+      iconComponent={<StyledItemText primary="내 모든 알림내역" color="white" />}
     >
       {notificationData.loading && (<CircularProgress small />)}
       {!notificationData.loading && !notificationData.error && (

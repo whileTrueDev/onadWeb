@@ -32,7 +32,7 @@ const ManualDetail = (props) => {
   return (
     <GridContainer>
       <Card>
-        <CardHeader color="blueGray" stats>
+        <CardHeader color="blueGray">
           <h4 className={classes.cardTitleWhite}>
             {source.card.title}
           </h4>
@@ -63,17 +63,14 @@ const ManualDetail = (props) => {
                 )}
               </div>
             )
-              : <ManualDetailDetail source={source.source} />
-            }
+              : <ManualDetailDetail source={source.source} />}
           </div>
         </CardBody>
 
         <CardFooter stats>
-          <Typography variant="body2">
-            {''}
-          </Typography>
+          <Typography variant="body2" />
           <Typography variant="subtitle2" style={{ textTransform: 'none' }}>
-          이해가 잘 안되시거나, 문의사항이 있으시면 고객센터로 문의해주세요. E-mail : support@onad.io
+            이해가 잘 안되시거나, 문의사항이 있으시면 고객센터로 문의해주세요. E-mail : support@onad.io
           </Typography>
         </CardFooter>
 

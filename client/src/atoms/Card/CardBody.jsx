@@ -8,7 +8,7 @@ import withStyles from '@material-ui/core/styles/withStyles';
 // @material-ui/icons
 
 // core components
-import cardBodyStyle from '../../assets/jss/onad/components/cardBodyStyle';
+import cardBodyStyle from './CardBody.style';
 
 function CardBody({ ...props }) {
   const {

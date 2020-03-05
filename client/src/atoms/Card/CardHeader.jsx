@@ -8,14 +8,13 @@ import withStyles from '@material-ui/core/styles/withStyles';
 // @material-ui/icons
 
 // core components
-import cardHeaderStyle from '../../assets/jss/onad/components/cardHeaderStyle';
+import cardHeaderStyle from './CardHeader.style';
 
 function CardHeader({ ...props }) {
   const {
     classes,
     className,
     children,
-    color,
     plain,
     stats,
     icon,
@@ -23,7 +22,6 @@ function CardHeader({ ...props }) {
   } = props;
   const cardHeaderClasses = classNames({
     [classes.cardHeader]: true,
-    [classes[`${color}CardHeader`]]: color,
     [classes.cardHeaderPlain]: plain,
     [classes.cardHeaderStats]: stats,
     [classes.cardHeaderIcon]: icon,
@@ -39,15 +37,6 @@ function CardHeader({ ...props }) {
 CardHeader.propTypes = {
   classes: PropTypes.object.isRequired,
   className: PropTypes.string,
-  color: PropTypes.oneOf([
-    'warning',
-    'success',
-    'danger',
-    'info',
-    'primary',
-    'rose',
-    'blueGray',
-  ]),
   plain: PropTypes.bool,
   stats: PropTypes.bool,
   icon: PropTypes.bool,

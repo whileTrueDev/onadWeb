@@ -107,25 +107,6 @@ const UserDataForm = (props) => {
               }}
             />
           </GridItem>
-          <GridItem xs={12} sm={12} md={9}>
-            {userData.marketerUserType
-              ? (
-                <TextField
-                  label="COMPANY REGISTRATION NUMBER"
-                  className={classes.textField}
-                  margin="normal"
-                  InputProps={{
-                    readOnly: true,
-                  }}
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                  value={userData.marketerBusinessRegNum}
-                />
-              )
-              : <div />
-          }
-          </GridItem>
         </GridContainer>
       </CardBody>
       <CardFooter>
@@ -133,9 +114,9 @@ const UserDataForm = (props) => {
           onClick={() => {
             userDataUpdateDialog.handleOpen();
           }}
-          color="info"
+          color="primary"
         >
-        정보변경
+          정보변경
         </Button>
       </CardFooter>
       <UserDataUpdateDialog

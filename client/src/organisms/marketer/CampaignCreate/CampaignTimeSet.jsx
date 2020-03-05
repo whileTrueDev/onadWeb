@@ -32,7 +32,6 @@ const CampaignTimeSet = (props) => {
             name="no-limit"
             checked={!state.term}
             onClick={setNoTerm}
-            fontSize="large"
           />
           <StyledSelectText
             onClick={setNoTerm}
@@ -46,7 +45,6 @@ const CampaignTimeSet = (props) => {
             name="set-limit"
             checked={state.term}
             onClick={setTerm}
-            fontSize="large"
           />
           <StyledSelectText
             primary="시작일 또는 종료일 설정"

@@ -9,7 +9,7 @@ import IconButton from '@material-ui/core/IconButton';
 import Close from '@material-ui/icons/Close';
 import Notification from '@material-ui/icons/Notifications';
 // core components
-import snackbarContentStyle from '../../assets/jss/onad/components/snackbarContentStyle';
+import snackbarContentStyle from './Snackbar.style';
 
 function Snackbar({ ...props }) {
   const {

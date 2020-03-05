@@ -49,7 +49,7 @@ const SignOutDialog = (props) => {
           <p>이름, 비밀번호, 메일, 전화번호, 사업자 등록번호, 계좌정보,</p>
           <p>사업자 등록증 이미지, 개인식별자, 등록한 배너, 등록한 캠페인, 충전된 캐시</p>
         </Typography>
-        <Button color="info" onClick={handleOpen}>
+        <Button color="primary" onClick={handleOpen}>
           취소
         </Button>
         <Button

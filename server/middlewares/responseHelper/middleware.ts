@@ -24,7 +24,8 @@ const checkSessionExists: RequestHandler = (req, res, next) => {
   /** ******************
    * Session Check
    ****************** */
-  if (req && req.session && req.session.passport && req.session.passport.user) {
+  if ((req && req.session && req.session.passport && req.session.passport.user)
+  || (req && req.user)) {
     next();
   } else {
     next(new createError[401](responseMessages.ERROR_401));

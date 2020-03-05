@@ -12,7 +12,7 @@ import history from '../../history';
 
 const MarketerRoutes = ({ pannelRef, ...rest }) => (
   <Switch>
-    {allRoutes.marketer.map(prop => (
+    {allRoutes.marketer.map((prop) => (
       <Route
         path={prop.layout + prop.path}
         component={() => (
@@ -51,9 +51,8 @@ const MarketerDashboard = ({ classes, match, ...rest }) => {
   return (
     <div className={classes.wrapper}>
       <Sidebar
-        routes={allRoutes.marketer.filter(r => !r.noTab)}
+        routes={allRoutes.marketer.filter((r) => !r.noTab)}
         logoText="OnAD"
-        color="info"
         logo="/pngs/logo/onad_logo_vertical_white.png"
         mobileOpen={mobileOpen}
         handleDrawerToggle={handleDrawerToggle}

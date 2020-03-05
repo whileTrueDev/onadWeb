@@ -59,7 +59,7 @@ function BanCheckDialog(props) {
       buttons={(
         <div>
           <Button
-            color="info"
+            color="primary"
             onClick={handleSubmit}
           >
               진행
