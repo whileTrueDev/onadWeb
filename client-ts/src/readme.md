@@ -37,8 +37,8 @@
 
 | 배경            | 변수                                 | 라이트테마                                                       | 다크테마                                                        |
 | ------------- | ---------------------------------- | ----------------------------------------------------------- | ----------------------------------------------------------- |
-| 뒷 배경          | `theme.palette.background.default` | ![](https://placehold.it/15/fff/000000?text=+) `#fff`       | ![](https://placehold.it/15/fafafa/000000?text=+) `#fafafa` |
-| 페이퍼,카드 등 컨테이너 | `theme.palette.background.paper`   | ![](https://placehold.it/15/424242/000000?text=+) `#424242` | ![](https://placehold.it/15/303030/000000?text=+) `#303030` |
+| 뒷 배경          | `theme.palette.background.default` | ![](https://placehold.it/15/fff/000000?text=+) `#fff`       | ![](https://placehold.it/15/303030/000000?text=+) `#303030` |
+| 페이퍼,카드 등 컨테이너 | `theme.palette.background.paper`   | ![](https://placehold.it/15/fafafa/000000?text=+) `#fafafa` | ![](https://placehold.it/15/424242/000000?text=+) `#424242` |
 
 ### 배경이 아닌 흰색, 검은색이 필요할 때
 
