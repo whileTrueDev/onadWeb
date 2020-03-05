@@ -14,12 +14,11 @@ router.use('/notification', notificationRouter);
 
 
 router.route('/')
-  .all(responseHelper.middleware.checkSessionExists)
   // 크리에이터 유저정보(계좌암호화 해제하여 전송) 조회
   .get(
+    responseHelper.middleware.checkSessionExists,
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
-      const session = responseHelper.getSessionData(req);
-      const { creatorId } = responseHelper.getSessionData(req);
+      const { creatorId, creatorLogo } = responseHelper.getSessionData(req);
       const NowIp: any = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
 
       const query = `
@@ -34,9 +33,9 @@ router.route('/')
           const userData = row.result[0];
           const rawAccount: string = row.result[0].creatorAccountNumber || '';
           const deciphedAccountNum: string = encrypto.decipher(rawAccount);
-          userData.creatorLogo = session.creatorLogo;
+          userData.creatorLogo = creatorLogo;
           userData.creatorAccountNumber = deciphedAccountNum;
-          const result: object = {
+          const result = {
             ...userData,
             NowIp
           }
@@ -49,6 +48,7 @@ router.route('/')
   )
   // 크리에이터 정산에 필요한 계좌 등록 / 변경
   .post(
+    responseHelper.middleware.checkSessionExists,
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
 
       const { creatorId } = responseHelper.getSessionData(req);
@@ -62,8 +62,7 @@ router.route('/')
 
       doQuery(query, [enciphedAccountNum, bankRealName, creatorId])
         .then(row => {
-          // 여기 왜 post 로 보내면 내부 서버 오류뜸?
-          responseHelper.send([true], 'get', res);
+          responseHelper.send([true], 'POST', res);
         }).catch((error) => {
           responseHelper.promiseError(error, next)
         }
@@ -72,6 +71,7 @@ router.route('/')
   )
   .patch(
     // 크리에이터 계약 OR IP 업데이트
+    responseHelper.middleware.checkSessionExists,
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
 
       const { creatorId, creatorName } = responseHelper.getSessionData(req);
@@ -124,9 +124,9 @@ router.route('/')
   .all(responseHelper.middleware.unusedMethod);
 
 router.route('/ad-page')
-  // .all(responseHelper.middleware.checkSessionExists)
   .get(
     // 크리에이터 광고 페이지 정보
+    responseHelper.middleware.checkSessionExists,
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
       const { creatorId } = responseHelper.getSessionData(req);
 
@@ -153,6 +153,7 @@ router.route('/ad-page')
     }),
   )
   .patch(
+    responseHelper.middleware.checkSessionExists,
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
       const { creatorId } = responseHelper.getSessionData(req);
       const { imageUrl, description, creatorTheme } = req.body
@@ -176,12 +177,12 @@ router.route('/ad-page')
           });
       } else {
         // 이미지 변경
-        const businessRegiQuery = `
+        const backgroundImageQuery = `
           UPDATE creatorLanding
           SET creatorBackgroundImage = ?
           WHERE creatorId = ?`;
-        const businessRegiArray = [imageUrl, creatorId];
-        doQuery(businessRegiQuery, businessRegiArray)
+        const backgroundImageArray = [imageUrl, creatorId];
+        doQuery(backgroundImageQuery, backgroundImageArray)
           .then((row) => {
             if (!row.error) {
               responseHelper.send([true, '등록되었습니다.'], 'PATCH', res);
@@ -200,7 +201,6 @@ router.route('/landing-url')
   .get(
     responseHelper.middleware.checkSessionExists,
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
-      // const session = responseHelper.getSessionData(req);
       const { creatorId } = responseHelper.getSessionData(req);
 
       const query = `

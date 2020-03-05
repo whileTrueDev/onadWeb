@@ -103,8 +103,7 @@ router.route('/withdrawal')
         doQuery(creatorIncomeQuery, [withdrawlAmount, creatorId])
       ])
         .then(() => {
-          // post로 하면 왜 InternalServerError 남?
-          responseHelper.send('done', 'get', res);
+          responseHelper.send('done', 'POST', res);
         })
         .catch((error) => {
           responseHelper.promiseError(error, next)
