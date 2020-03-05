@@ -5,7 +5,7 @@ import Button, { ButtonProps } from '@material-ui/core/Button';
 import useButtonStyles from './Button.style';
 
 function RegularButton({
-  color = 'primary',
+  color = 'default',
   size = 'large',
   variant = 'contained',
   children,

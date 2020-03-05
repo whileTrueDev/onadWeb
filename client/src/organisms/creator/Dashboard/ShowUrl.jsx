@@ -80,6 +80,7 @@ const ShowUrl = (props) => {
             disabled={disabled}
             onClick={copyToClipboard}
             size="small"
+            color="primary"
           >
             <InsertLinkOutlined />
             복사
@@ -88,7 +89,7 @@ const ShowUrl = (props) => {
         <Grid item xs={6} sm={2}>
           <Button
             className={classes.button}
-            color="warning"
+            color="secondary"
             onClick={disabled ? showSrcTimer : undefined}
             size="small"
           >

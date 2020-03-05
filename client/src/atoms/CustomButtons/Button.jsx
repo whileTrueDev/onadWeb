@@ -38,7 +38,7 @@ RegularButton.propTypes = {
 };
 
 RegularButton.defaultProps = {
-  color: 'primary',
+  color: 'default',
   variant: 'contained',
   size: 'large'
 };
