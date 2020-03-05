@@ -246,6 +246,7 @@ router.route('/history')
 
 
 // marketer/sub/profile =>/accountNumber 가져옴.
+// regist =>/accountNum 가져옴.  테스트 필요
 router.route('/account')
     .get(
         responseHelper.middleware.checkSessionExists, // session 확인이 필요한 경우.
@@ -268,6 +269,23 @@ router.route('/account')
                     responseHelper.send({
                         accountNumber, accountHolder
                     }, 'get', res);
+                })
+                .catch((error) => {
+                    responseHelper.promiseError(error, next);
+                })
+        }),
+    )
+    .put(
+        responseHelper.middleware.checkSessionExists, // session 확인이 필요한 경우.
+        responseHelper.middleware.withErrorCatch(async (req, res, next) => {
+            const { marketerId } = responseHelper.getSessionData(req);
+            const [bankName, bankRealName, bankAccount] = responseHelper.getParam(['bankName', 'bankRealName', 'bankAccount'], "PUT", req);
+            const accountNumber = `${bankName}_${bankAccount}`;
+            const enciphedAccountNum = encrypto.encipher(accountNumber);
+            const query = 'UPDATE marketerInfo SET marketerAccountNumber = ?, accountHolder = ? WHERE marketerId = ?';
+            doQuery(query, [enciphedAccountNum, bankRealName, marketerId])
+                .then(() => {
+                    responseHelper.send([true], 'get', res);
                 })
                 .catch((error) => {
                     responseHelper.promiseError(error, next);

@@ -468,6 +468,7 @@ const getCreatorList = () => new Promise((resolve, reject) => {
   doQuery(creatorSelectQuery)
     .then((row) => {
       const creatorList = row.result.map(data => data.creatorId);
+      console.log(creatorList);
       resolve(creatorList);
     })
     .catch(() => {
@@ -492,7 +493,7 @@ const LandingDoQuery = async ({
   const creatorList = await getCreatorList();
 
   // 모든 크리에이터에게 할당하기.
-  if (optionType === 2 && priorityType === 2) {
+  if (optionType === '2' && priorityType === '2') {
     return Promise.all(
       creatorList.map(async targetId => new Promise((resolve, reject) => {
         doQuery(insertQuery, [campaignId, targetId])
@@ -508,7 +509,7 @@ const LandingDoQuery = async ({
   }
 
   // 주어지는 크리에이터 리스트에 대한 랜딩페이지 초기화
-  if (optionType === 2) {
+  if (optionType === '2') {
     return Promise.all(
       priorityList.map(async targetId => new Promise((resolve, reject) => {
         doQuery(insertQuery, [campaignId, targetId])
