@@ -46,6 +46,7 @@ router.route('/')
     }),
   )
   .patch(
+    // 알람 읽음 처리
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
 
       const index: number = responseHelper.getParam('index', 'PATCH', req);

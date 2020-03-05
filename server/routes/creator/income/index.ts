@@ -82,7 +82,7 @@ router.route('/withdrawal')
     responseHelper.middleware.checkSessionExists,
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
       const { creatorId } = responseHelper.getSessionData(req);
-      const withdrawlAmount = responseHelper.getParam('withdrawlAmount', 'POST', req)
+      const withdrawlAmount: number = responseHelper.getParam('withdrawlAmount', 'POST', req)
 
       const creatorWithdrawalQuery = `
       INSERT INTO creatorWithdrawal
@@ -103,7 +103,8 @@ router.route('/withdrawal')
         doQuery(creatorIncomeQuery, [withdrawlAmount, creatorId])
       ])
         .then(() => {
-          responseHelper.send('done', 'POST', res);
+          // post로 하면 왜 InternalServerError 남?
+          responseHelper.send('done', 'get', res);
         })
         .catch((error) => {
           responseHelper.promiseError(error, next)

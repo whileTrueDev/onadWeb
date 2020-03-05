@@ -28,12 +28,12 @@ router.route('/auth')
   .post(
     // 회원가입에 대한 본인인증 이메일 발송
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
-      const marketerMail = responseHelper.getParam('marketerMail', 'POST', req);
+      const [marketerId, marketerMail] = responseHelper.getParam(['marketerId', 'marketerMail'], 'POST', req);
       const mailOptions = {
         from: 'ONAD <support@onad.io>', // 발송 메일 주소 (위에서 작성한 gmail 계정 아이디)
         to: marketerMail, // 수신 메일 주소부분
         subject: `[ONAD] ${req.body.marketerId} 님, 가입을 환영합니다.`, // 제목부분인듯
-        html: makeMarketerRegistTemplate(`${HOST}/mail/auth/${req.body.marketerId}`),
+        html: makeMarketerRegistTemplate(`${HOST}/mail/auth/${marketerId}`),
         attachments: [{
           filename: 'onad_logo_vertical_small.png',
           path: `${process.env.ROOT_PATH}/images/onad_logo_vertical_small.png`,
@@ -60,8 +60,8 @@ router.route('/auth')
   .all(responseHelper.middleware.unusedMethod)
 
 router.route('/auth/:id')
-  .patch(
-    // 회원가입에 대한 본인인증에 대한 marketerEmailAuth값 1로 변경
+  .get(
+    // 회원가입에 대한 본인인증 marketerEmailAuth값 1로 변경
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
       console.log('본인인증에 대한 접근입니다.');
       doQuery(`

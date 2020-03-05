@@ -62,7 +62,8 @@ router.route('/')
 
       doQuery(query, [enciphedAccountNum, bankRealName, creatorId])
         .then(row => {
-          responseHelper.send(row, 'POST', res);
+          // 여기 왜 post 로 보내면 내부 서버 오류뜸?
+          responseHelper.send([true], 'get', res);
         }).catch((error) => {
           responseHelper.promiseError(error, next)
         }
@@ -70,11 +71,11 @@ router.route('/')
     }),
   )
   .patch(
-    // 크리에이터 계약 및 IP 업데이트
+    // 크리에이터 계약 OR IP 업데이트
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
 
       const { creatorId, creatorName } = responseHelper.getSessionData(req);
-      const newIp: string | undefined = responseHelper.getParam('newIp', 'PATCH', req);
+      const newIp: string | undefined = req.body.newIp
 
       if (typeof newIp === 'string') {
         //IP update
@@ -123,7 +124,7 @@ router.route('/')
   .all(responseHelper.middleware.unusedMethod);
 
 router.route('/ad-page')
-  .all(responseHelper.middleware.checkSessionExists)
+  // .all(responseHelper.middleware.checkSessionExists)
   .get(
     // 크리에이터 광고 페이지 정보
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
@@ -154,10 +155,9 @@ router.route('/ad-page')
   .patch(
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
       const { creatorId } = responseHelper.getSessionData(req);
-      const [description, creatorTheme]: [string | undefined, string | undefined] = responseHelper.getParam(['description', 'creatorTheme'], 'PATCH', req);
-      const imageUrl: string | undefined = responseHelper.getParam('imageUrl', 'PATCH', req);
+      const { imageUrl, description, creatorTheme } = req.body
 
-      if (typeof description === 'string' || typeof creatorTheme === 'string') {
+      if (typeof imageUrl !== 'string') {
         // 소개글 관리 변경
         const query = `
           UPDATE creatorLanding
@@ -196,7 +196,7 @@ router.route('/ad-page')
   .all(responseHelper.middleware.unusedMethod);
 
 router.route('/landing-url')
-  // 크리에이터 광고 페이지 정보
+  // 크리에이터 광고 페이지 URL
   .get(
     responseHelper.middleware.checkSessionExists,
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
