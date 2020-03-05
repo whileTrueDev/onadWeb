@@ -18,6 +18,7 @@ import Naver from 'passport-naver';
 
 import Twitch from './TwitchPassport';
 import verification from './verification';
+import { Session } from '../../@types/session';
 
 const Kakao = require('passport-kakao'); // type정의 문제..
 
@@ -33,12 +34,12 @@ const clientSecret = process.env.NODE_ENV === 'production'
   : process.env.DEV_CLIENT_SECRET;
 
 // serializeUser를 정의한다. session에 저장해둘 data를 구현하는 것.
-passport.serializeUser((user, done) => {
+passport.serializeUser<Session, Session>((user, done) => {
   done(null, user);
 });
 
 // 로그인이 되었을 때 매 요청시마다 자동으로 수행되는 session에서 인증된 req.user의 영역으로 저장하기.
-passport.deserializeUser((user, done) => {
+passport.deserializeUser<Session, Session>((user, done) => {
   // db에서 추가로 데이터를 req.user에 저장.
   done(null, user); // 여기의 user가 req.user가 됨
 });

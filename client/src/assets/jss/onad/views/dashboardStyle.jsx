@@ -1,30 +1,8 @@
-import {
-  successColor,
-  whiteColor,
-  grayColor,
-  dangerColor,
-  infoColor,
-  hexToRgb,
-} from '../../onad';
+import { hexToRgb } from '../../onad';
 
-const dashboardStyle = {
-  successText: {
-    color: successColor[0],
-  },
-  dangerText: {
-    color: dangerColor[0],
-    fontWeight: 'bold',
-  },
-  infoText: {
-    color: infoColor[0],
-    fontWeight: 'bold',
-  },
-  upArrowCardCategory: {
-    width: '16px',
-    height: '16px',
-  },
+const dashboardStyle = (theme) => ({
   stats: {
-    color: grayColor[0],
+    color: theme.palette.grey[500],
     display: 'inline-flex',
     fontSize: '14px',
     lineHeight: '22px',
@@ -45,7 +23,7 @@ const dashboardStyle = {
     },
   },
   cardCategory: {
-    color: grayColor[0],
+    color: theme.palette.grey[500],
     textAlign: 'center',
     margin: '0',
     fontSize: '20px',
@@ -54,7 +32,7 @@ const dashboardStyle = {
     marginBottom: '0',
   },
   cardCategoryWhite: {
-    color: `rgba(${hexToRgb(whiteColor)},.62)`,
+    color: `rgba(${hexToRgb(theme.palette.common.white)},.62)`,
     textAlign: 'center',
     margin: '0',
     fontSize: '16px',
@@ -62,7 +40,7 @@ const dashboardStyle = {
     marginBottom: '0',
   },
   cardTitle: {
-    color: grayColor[2],
+    color: theme.palette.grey[500],
     textAlign: 'center',
     marginTop: '0px',
     minHeight: 'auto',
@@ -71,13 +49,13 @@ const dashboardStyle = {
     marginBottom: '3px',
     textDecoration: 'none',
     '& small': {
-      color: grayColor[1],
+      color: theme.palette.grey[500],
       fontWeight: '400',
       lineHeight: '1',
     },
   },
   cardTitleWhite: {
-    color: whiteColor,
+    color: theme.palette.common.white,
     textAlign: 'center',
     marginTop: '0px',
     minHeight: 'auto',
@@ -86,17 +64,11 @@ const dashboardStyle = {
     marginBottom: '3px',
     textDecoration: 'none',
     '& small': {
-      color: grayColor[1],
+      color: theme.palette.grey[500],
       fontWeight: '400',
       lineHeight: '1',
     },
   },
-  spanText: {
-    marginLeft: '8px',
-    color: infoColor[0],
-    fontWeight: 'bold',
-
-  },
-};
+});
 
 export default dashboardStyle;

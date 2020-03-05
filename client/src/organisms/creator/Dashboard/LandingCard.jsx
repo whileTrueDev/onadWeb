@@ -12,7 +12,7 @@ import useFetchData from '../../../utils/lib/hooks/useFetchData';
 import PrettoSlider from '../../../atoms/PrettoSlider';
 import StyledItemText from '../../../atoms/StyledItemText';
 
-const useStyles = makeStyles(({
+const useStyles = makeStyles((theme) => ({
   stats: {
     color: '#999',
     display: 'inline-flex',
@@ -41,7 +41,6 @@ const useStyles = makeStyles(({
   },
   head: {
     fontWeight: '500',
-    color: '#455a64',
   },
   unit: {
     fontWeight: '700',
@@ -111,7 +110,7 @@ const IncomeCard = () => {
                   {`${landingData.payload.visitCount} `}
                 </Typography>
                 <Typography gutterBottom variant="body2" className={classes.unit}>
-                회
+                  회
                 </Typography>
               </div>
             )}
@@ -130,7 +129,7 @@ const IncomeCard = () => {
                   {`${landingData.payload.clickCount} `}
                 </Typography>
                 <Typography gutterBottom variant="body2" className={classes.unit}>
-                회
+                  회
                 </Typography>
               </div>
             )}
@@ -180,7 +179,7 @@ const IncomeCard = () => {
                   {`${landingData.payload.transferCount} `}
                 </Typography>
                 <Typography gutterBottom variant="body2" className={classes.unit}>
-                회
+                  회
                 </Typography>
               </div>
             )}

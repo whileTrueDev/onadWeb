@@ -112,7 +112,7 @@ function CashDialog(props) {
       buttons={(
         <div>
           <Button
-            color="info"
+            color="primary"
             onClick={handleConfirmDialogOpen}
           >
             진행
@@ -262,7 +262,7 @@ function CashDialog(props) {
           title="입력하신대로 캐시 충전 하시겠어요?"
           buttons={(
             <div>
-              <Button onClick={handleSubmitClick} color="info">
+              <Button onClick={handleSubmitClick} color="primary">
                 진행
               </Button>
               <Button onClick={handleOnlyDialogClose}>

@@ -17,7 +17,7 @@ import Tooltip from '../../../atoms/DescPopover';
 import useTooltip from '../../../utils/lib/hooks/useTooltip';
 import useOpenValue from '../../../utils/lib/hooks/useOpenValue';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   flex: {
     display: 'flex',
   },
@@ -25,7 +25,7 @@ const useStyles = makeStyles(() => ({
     flexDirection: 'column',
   },
   site: {
-    color: '#00acc1',
+    color: theme.palette.primary.main,
   }
 }));
 
@@ -68,22 +68,20 @@ export default function LandingPanelBanner(props) {
             </Typography>
             <div>
               { !userData.loading && userData.payload && (
-                <div>
+                <>
                   <StyledInput
                     className={classes.site}
                     style={{ cursor: 'default' }}
                     id="landing_url"
                     value={`https://l.onad.io/${userData.payload.creatorTwitchId}`}
-                    inputprops={{
-                      readOnly: true,
-                    }}
+                    inputprops={{ readOnly: true }}
                     variant="outlined"
                   />
-                  <Button onClick={copyToClipboard} size="sm">
+                  <Button onClick={copyToClipboard} size="small">
                     <InsertLinkOutlined />
                     복사
                   </Button>
-                </div>
+                </>
               )}
             </div>
           </div>
@@ -91,12 +89,12 @@ export default function LandingPanelBanner(props) {
           <div>
             <div className={classes.flex}>
               <Typography variant="h6">
-              기본 이미지
+                기본 이미지
               </Typography>
               <Help
                 fontSize="small"
                 color="disabled"
-                onMouseEnter={evt => handleTooltipOpen(evt, 3)}
+                onMouseEnter={(evt) => handleTooltipOpen(evt, 3)}
                 onMouseLeave={handleTooltipClose}
                 aria-owns={anchorEl ? 'send-desc-popover' : undefined}
                 aria-haspopup="true"

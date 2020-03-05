@@ -72,7 +72,7 @@ const RegistDialog = (props) => {
         <Grid container direction="column" className={classes.contents}>
           <Grid item>
             <CustonButton
-              color="info"
+              color="primary"
               component={Link}
               size="lg"
               to="/regist"

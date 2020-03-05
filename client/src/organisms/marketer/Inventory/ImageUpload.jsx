@@ -68,7 +68,7 @@ const ImageUpload = (props) => {
             </Hidden>
           </Grid>
           <Grid item>
-            <CustomButton component="label" color="info" size="sm" htmlFor="getfile" className={classes.imgInput}>
+            <CustomButton component="label" color="primary" size="sm" htmlFor="getfile" className={classes.imgInput}>
                 파일찾기
               <input type="file" id="getfile" accept="image/*" onChange={readImage} />
             </CustomButton>
@@ -86,7 +86,7 @@ const ImageUpload = (props) => {
         </CustomButton>
         <CustomButton
           variant="contained"
-          color="info"
+          color="primary"
           size="sm"
           onClick={handleNext(1)}
         >
