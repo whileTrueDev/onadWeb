@@ -7,6 +7,7 @@ import makeMarketerRepassword from '../../middlewares/mailTemplate/marketerRepas
 import setTemporaryPassword from '../../middlewares/setTemporyPassword';
 import logger from '../../middlewares/logger';
 import doQuery from '../../model/doQuery';
+import makeInqurie from '../../middlewares/mailTemplate/makeInqurie';
 
 const router = express.Router();
 router.use('/inquiry', inquiryRoute);
@@ -25,6 +26,44 @@ const transporter = nodemailer.createTransport({
     pass: process.env.MAIL_PASSWORD
   }
 });
+
+interface InputForm {
+  name?: string;
+  email?: string;
+  contactNumber?: number;
+  brandName?: string;
+  content?: string;
+}
+
+router.route('/')
+  .post(
+    responseHelper.middleware.withErrorCatch(async (req, res, next) => {
+      const inputForm: InputForm = req.body;
+      // req.body는 x-www-form-urlencoded
+      const mailOptions = {
+        from: `${inputForm.email}`, // 발송 메일 주소
+        to: 'support@onad.io', // 수신 메일 주소부분
+        subject: `${inputForm.name}님의 캠페인 문의 요청입니다.`, // 제목부분
+        html: makeInqurie(inputForm),
+        attachments: [{
+          filename: 'onad_logo_vertical_small.png',
+          path: `${process.env.ROOT_PATH}/images/onad_logo_vertical_small.png`,
+          cid: 'logo'
+        }]
+      };
+
+      transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+          logger.error(`Email 전송오류 : ${error}`);
+          throw new Error(`Error in /mail/inquiry - ${error}`);
+        } else {
+          logger.info(`Email sent: ${info.response}`);
+          res.sendStatus(200);
+        }
+      });
+    })
+  )
+  .all(responseHelper.middleware.unusedMethod);
 
 router.route('/auth')
   .post(
