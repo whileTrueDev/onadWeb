@@ -84,7 +84,7 @@ router.route('/refund')
                         //     JSON.stringify({ refundCash })])
                     ])
                         .then(() => {
-                            responseHelper.send([true], 'get', res);
+                            responseHelper.send([true], 'POST', res);
                         })
                 })
                 .catch((error) => {
@@ -163,7 +163,7 @@ router.route('/charge/card')
                                             vbank_date: `${vbank_date}`,
                                             vbank_name: `${vbank_name}`,
                                             vbank_holder: `${vbank_holder}`,
-                                        }, 'get', res);
+                                        }, 'POST', res);
 
                                         // Promise.all[Notification(
                                         //     {
@@ -227,7 +227,7 @@ router.route('/charge/card')
                                 ])
                                     .then(() => {
                                         // 마케터 캐시 충전 쿼리 완료
-                                        responseHelper.send({ status: 'success', message: '일반 결제 성공' }, 'get', res);
+                                        responseHelper.send({ status: 'success', message: '일반 결제 성공' }, 'POST', res);
                                     })
                                     .catch((error) => {
                                         responseHelper.promiseError(error, next);
@@ -271,7 +271,7 @@ router.route('/charge')
                 //   })])
             ])
                 .then(() => {
-                    responseHelper.send([true], 'get', res);
+                    responseHelper.send([true], 'POST', res);
                 })
                 .catch((error) => {
                     responseHelper.promiseError(error, next);
@@ -294,7 +294,7 @@ router.route('/vbank')
 
             doQuery(vbankCancleQuery, [marketerId, 'vbank'])
                 .then(() => {
-                    responseHelper.send([true], 'get', res);
+                    responseHelper.send([true], 'POST', res);
                 })
                 .catch((error) => {
                     responseHelper.promiseError(error, next);

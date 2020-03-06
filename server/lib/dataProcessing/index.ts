@@ -274,17 +274,7 @@ const getUrlId = (marketerId: string | undefined) => new Promise((resolve, rejec
     });
 });
 
-// 예시함수.
-function someDataProcessingFunction(rawData: QueryResult): QueryResult {
-  const err = false; // 예시를 위해 에러를 무조건 나도록
-  if (err) {
-    throw new Error('여기서 에러가 났어요');
-  }
-  return rawData;
-}
-
 export default {
-  someDataProcessingFunction,
   PriorityDoquery,
   LandingDoQuery,
   getCampaignId,

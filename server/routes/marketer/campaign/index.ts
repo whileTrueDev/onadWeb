@@ -181,7 +181,7 @@ router.route('/')
 
             doQuery(query, params)
                 .then(() => {
-                    responseHelper.send([true], 'DELETE', res);
+                    responseHelper.send([true], 'PATCH', res);
                 })
                 .catch((error) => {
                     responseHelper.promiseError(error, next);

@@ -46,7 +46,6 @@ router.route('/')
         }),
     )
     .post(
-        responseHelper.middleware.checkSessionExists, // session 확인이 필요한 경우.
         responseHelper.middleware.withErrorCatch(async (req, res, next) => {
             const [
                 marketerId, marketerName,
@@ -130,7 +129,7 @@ router.route('/')
             const [updateQuery, params] = getQuery(type);
             doQuery(updateQuery, params)
                 .then(() => {
-                    responseHelper.send([true], 'get', res);
+                    responseHelper.send([true], 'PATCH', res);
                 })
                 .catch((error) => {
                     responseHelper.promiseError(error, next);
@@ -169,7 +168,7 @@ router.route('/')
                             console.log(`${marketerId}님 회원탈퇴`);
                         });
                     }
-                    responseHelper.send([true], 'get', res);
+                    responseHelper.send([true], 'DELETE', res);
                 })
                 .catch((error) => {
                     responseHelper.promiseError(error, next);
@@ -212,7 +211,7 @@ router.route('/platform')
                 doQuery(cashQuery, [marketerId, 0])
             ])
                 .then(() => {
-                    responseHelper.send({ error: false }, 'get', res);
+                    responseHelper.send({ error: false }, 'POST', res);
                 })
                 .catch((error) => {
                     responseHelper.promiseError(error, next);
@@ -285,7 +284,7 @@ router.route('/account')
             const query = 'UPDATE marketerInfo SET marketerAccountNumber = ?, accountHolder = ? WHERE marketerId = ?';
             doQuery(query, [enciphedAccountNum, bankRealName, marketerId])
                 .then(() => {
-                    responseHelper.send([true], 'get', res);
+                    responseHelper.send([true], 'PUT', res);
                 })
                 .catch((error) => {
                     responseHelper.promiseError(error, next);

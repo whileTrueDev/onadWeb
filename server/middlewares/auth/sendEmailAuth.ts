@@ -15,7 +15,7 @@ function sendEmailAuth(
     };
     axios.post(`${HOST}/mail/auth`, user)
         .then((row) => {
-            responseHelper.send(row.data, 'get', res);
+            responseHelper.send(row.data, 'POST', res);
         });
 }
 
