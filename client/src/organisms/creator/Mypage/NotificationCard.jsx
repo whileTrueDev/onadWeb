@@ -1,6 +1,7 @@
 import React from 'react';
 // @material-ui/core components
 import useFetchData from '../../../utils/lib/hooks/useFetchData';
+
 // core components
 import CircularProgress from '../../../atoms/Progress/CircularProgress';
 import Table from '../../../atoms/Table/NotificationTable';
@@ -9,6 +10,7 @@ import StyledItemText from '../../../atoms/StyledItemText';
 
 const NotificationCard = () => {
   const notificationData = useFetchData('/api/dashboard/creator/notification/list');
+
 
   return (
     <CustomCard

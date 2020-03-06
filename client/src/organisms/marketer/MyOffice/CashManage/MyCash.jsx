@@ -27,6 +27,7 @@ function MyCash(props) {
   const refundDialog = useDialog();
   const cashData = useFetchData('/api/dashboard/marketer/cash');
 
+
   const { classes, accountData, userData } = props;
 
   const POPUP_WIDTH = process.env.NODE_ENV === 'production' ? 900 : 700;

@@ -147,7 +147,9 @@ const RegistStepper = withRoot((props) => {
       platformType
     };
     if (platform === undefined) {
-      axios.post(`${HOST}/api/regist/marketer`, user)
+
+      // axios.post(`${HOST}/api/regist/marketer`, user)
+      axios.post('http://localhost:3002/marketer', user)
         .then((res) => {
           const { error } = res.data;
           if (!error) {

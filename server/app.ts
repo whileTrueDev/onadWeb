@@ -16,15 +16,14 @@ import passport from './middlewares/passport';
 // Routers
 import alimtalkRouter from './routes/alimtalk';
 // import apiRouter from './routes/api';
-import creatorRouter from './routes/creator'
-import creatorsRouter from './routes/creators'
+import creatorRouter from './routes/creator';
+import creatorsRouter from './routes/creators';
 import loginRouter from './routes/auth/login';
 import logoutRouter from './routes/auth/logout';
 import marketerRouter from './routes/marketer';
 import chartRouter from './routes/chart';
 import bannersRouter from './routes/banners';
 import mailRouter from './routes/mail';
-import testRouter from './routes/test';
 
 const MySQLStore = require('express-mysql-session')(session);
 
@@ -137,10 +136,10 @@ class OnadWebApi {
     this.app.use('/creator', creatorRouter);
     this.app.use('/marketer', marketerRouter);
     this.app.use('/chart', chartRouter);
+
     this.app.use('/creators', creatorsRouter);
     this.app.use('/banners', bannersRouter);
     this.app.use('/mail', mailRouter);
-    this.app.use('/test', testRouter);
 
     // Error handling
     // catch 404 and forward to error handler

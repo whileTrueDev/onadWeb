@@ -28,6 +28,7 @@ export default function CashUsageList() {
   const detailDialog = useDialog();
   const usageData = useFetchData('/api/dashboard/marketer/cash/usage');
 
+
   return (
     <div className={classes.root}>
       {usageData.loading && (<CircularProgress small />)}

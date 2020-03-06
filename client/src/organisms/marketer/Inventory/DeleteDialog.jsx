@@ -7,6 +7,8 @@ import StyledItemText from '../../../atoms/StyledItemText';
 import Dialog from '../../../atoms/Dialog/Dialog';
 import useFetchData from '../../../utils/lib/hooks/useFetchData';
 import useUpdateData from '../../../utils/lib/hooks/useUpdateData';
+
+
 import history from '../../../history';
 
 const useStyles = makeStyles(theme => ({
@@ -32,9 +34,11 @@ const DeleteDialog = (props) => {
     open, selectedBanner, handleClose
   } = props;
   const deleteRequest = useUpdateData('/api/dashboard/marketer/banner/delete');
+
   const connectedCampaign = useFetchData('/api/dashboard/marketer/banner/connectedcampaign', {
     bannerId: selectedBanner.bannerId
   });
+
   return (
     <Dialog
       open={open}
@@ -60,6 +64,7 @@ const DeleteDialog = (props) => {
             <CustomButton
               color="primary"
               onClick={() => {
+                // deleteRequest.handleDelete({ bannerId: selectedBanner.bannerId });
                 deleteRequest.handleUpdateRequest({ bannerId: selectedBanner.bannerId });
                 setTimeout(() => {
                   handleClose();

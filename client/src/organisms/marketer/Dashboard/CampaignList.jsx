@@ -17,7 +17,9 @@ import CampaignAnalysisDialog from './report/CampaignReportDialog';
 
 import useDialog from '../../../utils/lib/hooks/useDialog';
 import useDeleteData from '../../../utils/lib/hooks/useDeleteData';
+
 import useUpdateData from '../../../utils/lib/hooks/useUpdateData';
+
 
 import history from '../../../history';
 
@@ -73,12 +75,14 @@ export default function CampaignList(props) {
   const snack = useDialog();
 
   const { handleDelete } = useDeleteData('/api/dashboard/marketer/campaign', campaignData.callUrl);
+
   const { handleUpdateRequest } = useUpdateData('/api/dashboard/marketer/campaign/onoff', () => {
     snack.handleOpen();
     campaignData.callUrl();
   });
-  // useUpdateData를 사용할 때, 전달되는 url router의 response data의 형태가 array여야함을 고려한다.
+  
 
+  // useUpdateData를 사용할 때, 전달되는 url router의 response data의 형태가 array여야함을 고려한다.
   const handleUpdateState = ({ onoffState, campaignId }) => (event) => {
     event.preventDefault();
     handleUpdateRequest({ onoffState, campaignId });
