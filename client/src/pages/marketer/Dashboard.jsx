@@ -34,12 +34,13 @@ export default function Dashboard() {
       {(normalData.loading || campaignData.loading
         || onOffData.loading
         || valueChartData.loading
-        || actionLogData.loading || countsData.loading) ? (
+        || actionLogData.loading
+        || countsData.loading) ? (
           <ReportLoading />
         ) : (
           <div>
             {normalData.payload && campaignData.payload
-          && valueChartData.payload && (
+          && valueChartData.payload && countsData.payload && (
           <Grid container spacing={2}>
             <Grid item xs={12} md={6} lg={3}>
               <Grid container spacing={2}>

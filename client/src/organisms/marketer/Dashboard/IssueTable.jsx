@@ -8,7 +8,7 @@ import {
 import Refresh from '@material-ui/icons/Refresh';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 
-const styles = makeStyles(theme => ({
+const styles = makeStyles((theme) => ({
   title: {
     fontSize: '14px',
     fontWeight: 550,

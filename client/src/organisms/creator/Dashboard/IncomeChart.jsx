@@ -20,7 +20,7 @@ function IncomeChart() {
 
   return (
     <Card
-      iconComponent={<StyledItemText primary="광고 수익 확인하기" style={{ color: '#FFF' }} />}
+      iconComponent={<StyledItemText primary="광고 수익 확인하기" color="white" />}
     >
       { valueChartData.loading && (<CircularProgress />)}
       { !valueChartData.loading && valueChartData.error && (

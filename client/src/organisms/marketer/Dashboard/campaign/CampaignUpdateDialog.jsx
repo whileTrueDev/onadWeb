@@ -13,7 +13,7 @@ import Dialog from '../../../../atoms/Dialog/Dialog';
 import Button from '../../../../atoms/CustomButtons/Button';
 import StyledInput from '../../../../atoms/StyledInput';
 import DangerTypography from '../../../../atoms/Typography/Danger';
-import Success from '../../../../atoms/Success';
+import Success from '../../../../atoms/Typography/Success';
 import useDialog from '../../../../utils/lib/hooks/useDialog';
 import useFetchData from '../../../../utils/lib/hooks/useFetchData';
 import useUpdateData from '../../../../utils/lib/hooks/useUpdateData';
@@ -221,7 +221,7 @@ const CampaignUpdateDialog = (props) => {
                 <Grid item container direction="row" justify="flex-end">
                   <Grid item>
                     <Button
-                      color="info"
+                      color="primary"
                       size="sm"
                       onClick={() => {
                         // state체크 및 error 분기화
@@ -354,7 +354,7 @@ const CampaignUpdateDialog = (props) => {
                 <Grid item container direction="row" justify="flex-end">
                   <Grid item>
                     <Button
-                      color="info"
+                      color="primary"
                       size="sm"
                       onClick={() => {
                         if ((!error && state.budget !== '') || state.noBudget) {

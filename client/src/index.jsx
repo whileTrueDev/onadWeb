@@ -40,7 +40,7 @@ const developRouter = (
       <Route exact path="/notice" component={Notice} />
       <Route exact path="/marketer/charge" component={TestChargeDialog} />
       <Route path="/notice/:code" component={Notice} />
-      <ThemeProvider theme={theme}>
+      <ThemeProvider theme={theme.lightTheme}>
         <Route exact path="/dashboard/creator/door" component={CreatorDashboardDoor} />
         <Route path="/dashboard/creator" component={CreatorDashboard} />
         <Route path="/dashboard/marketer" component={MarketerDashboard} />
@@ -66,7 +66,7 @@ const productionRouter = (
       <Route exact path="/marketer/charge" component={TestChargeDialog} />
       <Route exact path="/notice" component={Notice} />
       <Route path="/notice/:code" component={Notice} />
-      <ThemeProvider theme={theme}>
+      <ThemeProvider theme={theme.lightTheme}>
         <Route exact path="/dashboard/creator/door" component={CreatorDashboardDoor} />
         <Route path="/dashboard/creator" component={CreatorDashboard} />
         <Route path="/dashboard/marketer" component={MarketerDashboard} />

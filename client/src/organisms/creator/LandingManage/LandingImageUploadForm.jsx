@@ -9,7 +9,7 @@ import useDialog from '../../../utils/lib/hooks/useDialog';
 import CustomCard from '../../../atoms/CustomCard';
 import StyledItemText from '../../../atoms/StyledItemText';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   imageWrapper: {
     display: 'flex',
     justifyContent: 'center',
@@ -60,11 +60,11 @@ const Buttons = (props) => {
   return (
     <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
       <Button
-        color="info"
+        color="primary"
         disabled={imageUrl === userImage}
         onClick={() => { handleUploadClick(); }}
       >
-            변경 저장하기
+        변경 저장하기
       </Button>
 
       <Button
@@ -72,7 +72,7 @@ const Buttons = (props) => {
         disabled={imageUrl === defaultImage}
         onClick={() => { handleImageChange({ newImageUrl: defaultImage }); }}
       >
-            기본 이미지로
+        기본 이미지로
       </Button>
     </div>
   );
@@ -94,7 +94,7 @@ export default function LandingImageUploadForm(props) {
 
   return (
     <CustomCard
-      iconComponent={<StyledItemText primary="배경이미지 업로드" style={{ color: '#fff' }} />}
+      iconComponent={<StyledItemText primary="배경이미지 업로드" color="white" />}
       buttonComponent={isLgWidth && (
       <Buttons
         imageUrl={imageUrl}
@@ -114,7 +114,7 @@ export default function LandingImageUploadForm(props) {
         />
 
         <div>
-          <Button className={classes.imageButton} component="label" size="lg" color="info">
+          <Button className={classes.imageButton} component="label" size="lg" color="primary">
             <input
               style={{ padding: 0 }}
               type="file"

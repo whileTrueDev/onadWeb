@@ -8,14 +8,14 @@ import Contactless from '@material-ui/icons/Contactless';
 const HOST_URL = `${window.location.protocol}//${window.location.host}/dashboard/creator`;
 
 function LinkText(string, link) {
-  return `<a href="${HOST_URL}/${link}" style="background-color: #FF00FF; color: #eeeeee; padding: 3px">${string}</a>`;
+  return `<a href="${HOST_URL}/${link}" style="background-color: #ffb74d; color: #000; padding: 3px">${string}</a>`;
 }
 
 function styledText(string) {
   return `<span style="background-color: #00B7E2; color:#eeeeee; padding: 3px">${string}</span>`;
 }
 
-const styledBlock = string => `<div style="background-color: #FFECC5; border-radius: 5px; padding: 10px;">${string}</div>`;
+const styledBlock = (string) => `<div style="background-color: #FFECC5; color: rgba(0, 0, 0, 0.87); border-radius: 5px; padding: 10px;">${string}</div>`;
 
 
 const manualSources = {

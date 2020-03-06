@@ -17,50 +17,6 @@
  @import url('https://fonts.googleapis.com/css?family=Nanum+Gothic:400,700,800');
  @import url('https://fonts.googleapis.com/css?family=Sunflower:300&display=swap');
 
-.ct-grid {
-  stroke: rgba(255, 255, 255, 0.2);
-  stroke-width: 1px;
-  stroke-dasharray: 2px;
-}
-
-.ct-series-a .ct-point,
-.ct-series-a .ct-line,
-.ct-series-a .ct-bar,
-.ct-series-a .ct-slice-donut {
-  stroke: rgba(255, 255, 255, 0.8);
-}
-
-.ct-label.ct-horizontal.ct-end {
-  -webkit-box-align: flex-start;
-  -webkit-align-items: flex-start;
-  -ms-flex-align: flex-start;
-  align-items: flex-start;
-  -webkit-box-pack: flex-start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: flex-start;
-  justify-content: flex-start;
-  text-align: left;
-  text-anchor: start;
-}
-
-.ct-label {
-  color: rgba(255, 255, 255, 0.7);
-}
-
-.ct-chart-line .ct-label,
-.ct-chart-bar .ct-label {
-  display: block;
-  display: -webkit-box;
-  display: -moz-box;
-  display: -ms-flexbox;
-  display: -webkit-flex;
-  display: flex;
-}
-
-.ct-label {
-  fill: rgba(0, 0, 0, 0.4);
-  line-height: 1;
-}
 html * {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -120,16 +76,9 @@ h6 {
   text-transform: uppercase;
   font-weight: 500;
 }
-
-body {
-  background-color: #eeeeee;
-  color: #3c4858;
-}
-
 blockquote p {
   font-style: italic;
 }
-
 body,
 h1,
 h2,
@@ -176,74 +125,5 @@ input[type="submit"]::-moz-focus-inner,
 select::-moz-focus-inner,
 input[type="file"] > input[type="button"]::-moz-focus-inner {
   outline: 0 !important;
-}
-
-legend {
-  margin-bottom: 20px;
-  font-size: 21px;
-}
-
-output {
-  padding-top: 8px;
-  font-size: 14px;
-  line-height: 1.42857;
-}
-
-label {
-  font-size: 14px;
-  line-height: 1.42857;
-  color: #aaaaaa;
-  font-weight: 400;
-}
-
-footer {
-  padding: 15px 0;
-}
-
-footer ul {
-  margin-bottom: 0;
-  padding: 0;
-  list-style: none;
-}
-
-footer ul li {
-  display: inline-block;
-}
-
-footer ul li a {
-  color: inherit;
-  padding: 15px;
-  font-weight: 500;
-  font-size: 12px;
-  text-transform: uppercase;
-  border-radius: 3px;
-  text-decoration: none;
-  position: relative;
-  display: block;
-}
-
-footer ul li a:hover {
-  text-decoration: none;
-}
-
-@media (max-width: 991px) {
-  body,
-  html {
-    position: relative;
-    overflow-x: hidden;
-  }
-
-  #bodyClick {
-    height: 100%;
-    width: 100%;
-    position: fixed;
-    opacity: 0;
-    top: 0;
-    left: auto;
-    right: 260px;
-    content: "";
-    z-index: 9999;
-    overflow-x: hidden;
-  }
 }
 

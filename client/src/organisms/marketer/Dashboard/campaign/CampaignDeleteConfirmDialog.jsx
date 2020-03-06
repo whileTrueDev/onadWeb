@@ -15,7 +15,7 @@ export default function CampaignDeleteConfirmDialog(props) {
       buttons={(
         <div>
           <Button
-            color="info"
+            color="primary"
             onClick={() => {
               handleDelete({ campaignId: open });
               handleClose();

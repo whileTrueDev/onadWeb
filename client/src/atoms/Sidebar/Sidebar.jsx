@@ -10,7 +10,7 @@ import {
 } from '@material-ui/core';
 import AdminNavbarLinks from '../Navbars/AdminNavbarLinks';
 // styles
-import sidebarStyle from '../../assets/jss/onad/components/sidebarStyle';
+import sidebarStyle from './Sidebar.style';
 import history from '../../history';
 
 const Sidebar = ({ ...props }) => {
@@ -19,8 +19,7 @@ const Sidebar = ({ ...props }) => {
     return props.location.pathname.indexOf(routeName) > -1;
   }
   const {
-    classes, color, logo, routes,
-    handleDrawerToggle, mobileOpen,
+    classes, logo, routes, handleDrawerToggle, mobileOpen,
   } = props;
 
   function handleLogoClick() {
@@ -32,7 +31,7 @@ const Sidebar = ({ ...props }) => {
       <div>
         {routes.map((prop, key) => {
           const listItemClasses = classNames({
-            [` ${classes[color]}`]: isActiveRoute(prop.layout + prop.path),
+            [` ${classes.activeLink}`]: isActiveRoute(prop.layout + prop.path),
           });
           const whiteFontClasses = classNames({
             [` ${classes.whiteFont}`]: isActiveRoute(prop.layout + prop.path),
@@ -114,9 +113,8 @@ const Sidebar = ({ ...props }) => {
         <Drawer
           variant="permanent"
           open
-          classes={{
-            paper: classNames(classes.desktopPaper),
-          }}
+          classes={{ paper: classes.desktopPaper }}
+          PaperProps={{ elevation: 10 }}
           ModalProps={{
             keepMounted: true, // Better open performance on mobile.
           }}
@@ -143,7 +141,6 @@ const Sidebar = ({ ...props }) => {
 
 Sidebar.propTypes = {
   classes: PropTypes.object.isRequired,
-  color: PropTypes.string,
   logoText: PropTypes.string,
   routes: PropTypes.array.isRequired,
   handleDrawerToggle: PropTypes.func.isRequired,
@@ -152,7 +149,6 @@ Sidebar.propTypes = {
 };
 
 Sidebar.defaultProps = {
-  color: 'info',
   logoText: '',
   mobileOpen: false,
 };

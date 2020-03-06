@@ -11,26 +11,21 @@ import StepLabel from '@material-ui/core/StepLabel';
 import dashboardStyle from '../../../assets/jss/onad/views/dashboardStyle';
 import Card from '../../../atoms/Card/Card';
 import CardHeader from '../../../atoms/Card/CardHeader';
+import CardBody from '../../../atoms/Card/CardBody';
 
 
-const useButtonStyle = makeStyles(theme => ({
-  fixedCard: {
-    position: 'static',
-  },
+const useButtonStyle = makeStyles((theme) => ({
   root: {
-    background: 'white',
+    background: theme.palette.background.paper,
     borderRadius: 3,
     border: 0,
-    color: 'black',
-    // height: 48,
     padding: '0 30px',
-    boxShadow: '0 3px 3px 2px rgba(102, 102, 102, .3)',
+    boxShadow: theme.shadows[3],
     width: '100%',
     height: '100%',
     position: 'relative',
   },
   label: {
-    textTransform: 'capitalize',
     flexDirection: 'column',
   },
 }));
@@ -43,13 +38,13 @@ const Select = (props) => {
   const doneIndex = activeStep - 1;
 
   return (
-    <div className={buttonClasses.fixedCard}>
-      <Card>
-        <CardHeader color="blueGray" stats>
-          <h4 className={classes.cardTitleWhite}>이용 안내</h4>
-          <p className={classes.cardCategoryWhite}>처음이시라면, 순서대로 진행해주세요.</p>
-        </CardHeader>
+    <Card>
+      <CardHeader>
+        <h4 className={classes.cardTitleWhite}>이용 안내</h4>
+        <p className={classes.cardCategoryWhite}>처음이시라면, 순서대로 진행해주세요.</p>
+      </CardHeader>
 
+      <CardBody>
         <Stepper orientation="vertical" activeStep={doneIndex}>
           { sources.map((source, index) => (
             <Step key={shortid.generate()}>
@@ -62,9 +57,7 @@ const Select = (props) => {
                     label: buttonClasses.label, // class name, e.g. `classes-nesting-label-x`
                   }}
                 >
-
                   <source.icon style={{ marginTop: 10 }} />
-
                   <p>{source.label}</p>
                 </Button>
               </StepLabel>
@@ -72,9 +65,9 @@ const Select = (props) => {
           ))}
 
         </Stepper>
+      </CardBody>
 
-      </Card>
-    </div>
+    </Card>
   );
 };
 
