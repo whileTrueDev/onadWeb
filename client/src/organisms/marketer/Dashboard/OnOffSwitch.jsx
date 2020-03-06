@@ -4,6 +4,7 @@ import {
 } from '@material-ui/core';
 import useUpdateData from '../../../utils/lib/hooks/useUpdateData';
 
+
 export default function OnOffSwitch(props) {
   const { onOffData } = props;
   const { handleUpdateRequest } = useUpdateData(

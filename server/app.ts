@@ -20,7 +20,6 @@ import logoutRouter from './routes/auth/logout';
 import creatorRouter from './routes/creator';
 import marketerRouter from './routes/marketer';
 import chartRouter from './routes/chart';
-import creatorsRouter from './routes/creators';
 import bannersRouter from './routes/banners';
 import mailRouter from './routes/mail';
 
@@ -136,7 +135,6 @@ class OnadWebApi {
     this.app.use('/creator', creatorRouter);
     this.app.use('/marketer', marketerRouter);
     this.app.use('/chart', chartRouter);
-    this.app.use('/creators', creatorsRouter);
     this.app.use('/banner', bannersRouter);
     this.app.use('/mail', mailRouter);
 

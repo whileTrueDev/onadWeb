@@ -427,7 +427,6 @@ const dailyLimitCalculate = ({ connection, campaignId }) => {
       .then((result) => {
         const { optionType, dailyLimit } = result[0];
         const today = new Date();
-        if (optionType === 0) {
           doConnectionQuery({ connection, queryState: dayAmountQuery, params: [campaignId, today] })
             .then((row) => {
               const { count } = row[0];
@@ -444,9 +443,6 @@ const dailyLimitCalculate = ({ connection, campaignId }) => {
             .catch((error) => {
               reject(error);
             });
-        } else {
-          resolve();
-        }
       })
       .catch((error) => {
         reject(error);

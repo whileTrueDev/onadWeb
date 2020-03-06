@@ -15,6 +15,7 @@ const initialData = {
 export default function TaxBill() {
   const { payload, loading } = useFetchData('/api/dashboard/marketer/profile/taxbill');
 
+
   return (
     <Card>
       <CardHeader color="blueGray">

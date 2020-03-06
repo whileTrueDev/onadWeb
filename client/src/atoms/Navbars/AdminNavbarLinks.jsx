@@ -19,6 +19,7 @@ import HOST from '../../utils/config';
 import axios from '../../utils/axios';
 import history from '../../history';
 import useFetchData from '../../utils/lib/hooks/useFetchData';
+
 import useUpdateData from '../../utils/lib/hooks/useUpdateData';
 
 const useMenu = () => {
@@ -35,7 +36,9 @@ function HeaderLinks(props) {
   const { noticeReadState } = props;
   const userType = window.location.pathname.split('/')[2];
   const NotificationData = useFetchData(`/api/dashboard/${userType}/notification`);
+
   const updateRequest = useUpdateData('/api/dashboard/noticereadstateupdate');
+
 
   function handleLogoutClick() {
     axios.get(`${HOST}/api/login/logout`).then(() => {

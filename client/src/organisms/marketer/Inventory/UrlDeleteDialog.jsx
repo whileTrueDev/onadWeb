@@ -7,6 +7,8 @@ import StyledItemText from '../../../atoms/StyledItemText';
 import Dialog from '../../../atoms/Dialog/Dialog';
 import useFetchData from '../../../utils/lib/hooks/useFetchData';
 import useDeleteData from '../../../utils/lib/hooks/useDeleteData';
+
+
 import history from '../../../history';
 
 const useStyles = makeStyles(theme => ({
@@ -32,11 +34,13 @@ const DeleteDialog = (props) => {
     open, selectedUrl, handleClose
   } = props;
   const deleteRequest = useDeleteData('/api/dashboard/marketer/inventory/landingurl');
+
   const connectedCampaign = useFetchData(
     '/api/dashboard/marketer/inventory/landingurl/connectedcampaign', {
       linkId: selectedUrl.linkId
     }
   );
+  
 
   return (
     <Dialog

@@ -30,11 +30,13 @@ export default function CampaignReportDialog(props) {
     '/api/dashboard/marketer/report',
     { campaignId: selectedCampaign.campaignId }
   );
+  
 
   const valueChartData = useFetchData(
     '/api/dashboard/marketer/report/totalSpendChart',
     { campaignId: selectedCampaign.campaignId }
   );
+
   const ipToGeoData = useFetchData(
     '/api/dashboard/marketer/geo/campaign',
     { campaignId: selectedCampaign.campaignId }
@@ -49,7 +51,7 @@ export default function CampaignReportDialog(props) {
     '/api/dashboard/marketer/report/clicks',
     { campaignId: selectedCampaign.campaignId }
   );
-
+  
   return (
     <Dialog
       fullScreen

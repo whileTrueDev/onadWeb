@@ -31,7 +31,7 @@ const getParam = (paramField: string | string[],
       case 'put':
       case 'patch':
       case 'delete':
-        if (!(Object.keys(req.body).includes(paramField))) {
+        if (!Object.keys(req.body).includes(paramField)) {
           throw new createError[400](responseMessages.ERROR_400);
         }
         return req.body[paramField];
@@ -53,7 +53,7 @@ const getParam = (paramField: string | string[],
     case 'patch':
     case 'delete':
       return paramField.map((param) => {
-        if (!(Object.keys(req.body).includes(param))) {
+        if (!Object.keys(req.body).includes(param)) {
           throw new createError[400](responseMessages.ERROR_400);
         }
         return req.body[param];
@@ -80,7 +80,12 @@ const getParam = (paramField: string | string[],
  */
 const getSessionData = (req: express.Request): Session => {
   if (req && req.session && req.session.passport && req.session.passport.user) {
-    return req.session.passport.user;
+    const { userType } = req.session.passport.user;
+    if (userType === 'creator') {
+      return { ...req.session.passport.user, creatorId: req.session.passport.user.userid }
+    } else {
+      return { ...req.session.passport.user, marketerId: req.session.passport.user.userid }
+    }
   }
   throw new createError[401](responseMessages.ERROR_401);
 };
