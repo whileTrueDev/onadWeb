@@ -52,7 +52,7 @@ const BannerDescFrom = (props) => {
           </CustomButton>
           <CustomButton
             variant="contained"
-            color="info"
+            color="primary"
             size="sm"
             onClick={handleSubmit}
           >

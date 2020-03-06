@@ -29,9 +29,9 @@ export default function MyOffice() {
 
 
   return (
-    <div>
+    <>
 
-      <Typography variant="h5" style={{ marginTop: 35 }}>내정보관리</Typography>
+      <Typography variant="h5" style={{ marginTop: 35 }} color="textPrimary">내정보관리</Typography>
       {/* 계정 관리 */}
       {userData.loading && (
         <MyOffceLoading />
@@ -58,7 +58,7 @@ export default function MyOffice() {
       </GridContainer>
       )}
 
-      <Typography variant="h5" style={{ marginTop: 35 }}>광고캐시 관리</Typography>
+      <Typography variant="h5" style={{ marginTop: 35 }} color="textPrimary">광고캐시 관리</Typography>
       {/* 광고캐시 충전 및 환불, 관리 */}
       <GridContainer>
         <GridItem xs={12} md={12} lg={8} xl={6}>
@@ -91,6 +91,6 @@ export default function MyOffice() {
       </GridContainer>
       )}
 
-    </div>
+    </>
   );
 }

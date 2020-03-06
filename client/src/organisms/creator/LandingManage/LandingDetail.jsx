@@ -12,7 +12,7 @@ import Tooltip from '../../../atoms/DescPopover';
 import useFetchData from '../../../utils/lib/hooks/useFetchData';
 import useTooltip from '../../../utils/lib/hooks/useTooltip';
 
-const useStyles = makeStyles(({
+const useStyles = makeStyles((theme) => ({
   flex: {
     display: 'flex',
     justifyContent: 'center',
@@ -20,7 +20,6 @@ const useStyles = makeStyles(({
   },
   head: {
     fontWeight: '500',
-    color: '#455a64',
   },
   unit: {
     fontWeight: '700',
@@ -56,7 +55,7 @@ const IncomeCard = () => {
               justifyContent: 'center',
               alignItems: 'center'
             }}
-            onMouseEnter={evt => handleTooltipOpen(evt, 2)}
+            onMouseEnter={(evt) => handleTooltipOpen(evt, 2)}
             onMouseLeave={handleTooltipClose}
             aria-owns={anchorEl ? 'send-desc-popover' : undefined}
             aria-haspopup="true"
@@ -97,7 +96,7 @@ const IncomeCard = () => {
                   {`${landingData.payload.visitCount} `}
                 </Typography>
                 <Typography gutterBottom variant="body2" className={classes.unit}>
-                회
+                  회
                 </Typography>
               </div>
             )}
@@ -117,7 +116,7 @@ const IncomeCard = () => {
                   {`${landingData.payload.clickCount} `}
                 </Typography>
                 <Typography gutterBottom variant="body2" className={classes.unit}>
-                회
+                  회
                 </Typography>
               </div>
             )}
@@ -139,7 +138,7 @@ const IncomeCard = () => {
                   {`${landingData.payload.transferCount} `}
                 </Typography>
                 <Typography gutterBottom variant="body2" className={classes.unit}>
-                회
+                  회
                 </Typography>
               </div>
             )}

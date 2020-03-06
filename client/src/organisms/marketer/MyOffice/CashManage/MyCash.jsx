@@ -50,22 +50,22 @@ function MyCash(props) {
         >
 
           {!userData.loading && !userData.error
-            && <Button color="info" onClick={() => { window.open(`${FRONT_HOST}/marketer/charge`, '_blank', `width=${POPUP_WIDTH}, height=${POPUP_HEIGHT}, left=${POPUP_X}, top=${POPUP_Y}`); }}>캐시충전(전자결제)</Button>
-          }
+            && <Button color="primary" onClick={() => { window.open(`${FRONT_HOST}/marketer/charge`, '_blank', `width=${POPUP_WIDTH}, height=${POPUP_HEIGHT}, left=${POPUP_X}, top=${POPUP_Y}`); }}>캐시충전(전자결제)</Button>}
           {!userData.loading && !userData.error
-            && <Button color="info" onClick={() => { chargeDialog.handleOpen(); }}>캐시충전(무통장)</Button>
-          }
+            && <Button color="primary" onClick={() => { chargeDialog.handleOpen(); }}>캐시충전(무통장)</Button>}
 
           {!accountData.loading && !accountData.error
-              && !accountData.payload.accountNumber ? (
+              && !accountData.payload.accountNumber && (
                 <Tooltip title="환불계좌가 등록되지 않아 진행이 불가합니다.">
-                  <span><Button color="danger" disabled>환불요청</Button></span>
+                  <span><Button color="default" disabled>환불요청</Button></span>
                 </Tooltip>
-            ) : (
-              <Button color="danger" onClick={() => { refundDialog.handleOpen(); }}>
-                  환불요청
+          )}
+          {!accountData.loading && !accountData.error
+              && accountData.payload.accountNumber && (
+              <Button color="default" onClick={() => { refundDialog.handleOpen(); }}>
+                환불요청
               </Button>
-            )}
+          )}
         </div>
       </CardHeader>
 

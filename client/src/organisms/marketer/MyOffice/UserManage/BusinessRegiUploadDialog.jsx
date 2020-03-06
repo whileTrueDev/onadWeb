@@ -53,7 +53,7 @@ export default function BusinessRegiUploadDialog(props) {
       buttons={(
         <div>
           <Button
-            color="info"
+            color="primary"
             onClick={async () => {
               await handleUploadClick();
               await handleClose();
@@ -87,7 +87,7 @@ export default function BusinessRegiUploadDialog(props) {
               {/* </Hidden> */}
             </GridItem>
             <GridItem>
-              <Button component="label" color="info" size="sm" htmlFor="getfile" className={classes.imgInput}>
+              <Button component="label" color="primary" size="sm" htmlFor="getfile" className={classes.imgInput}>
                 파일찾기
                 <input type="file" id="getfile" accept="image/*" onChange={readImage} />
               </Button>

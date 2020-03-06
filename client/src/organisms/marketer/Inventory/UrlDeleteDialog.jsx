@@ -55,7 +55,7 @@ const DeleteDialog = (props) => {
             <Tooltip title={<Typography>URL이 캠페인에 할당되어 있어 삭제가 불가능합니다.</Typography>}>
               <div>
                 <CustomButton
-                  color="info"
+                  color="primary"
                   disabled
                 >
                   확인
@@ -65,7 +65,7 @@ const DeleteDialog = (props) => {
           )}
           {!connectedCampaign.loading && connectedCampaign.payload.length === 0 && (
             <CustomButton
-              color="info"
+              color="primary"
               onClick={() => {
                 deleteRequest.handleDelete({ linkId: selectedUrl.linkId });
                 setTimeout(() => {

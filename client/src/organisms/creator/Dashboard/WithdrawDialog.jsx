@@ -232,7 +232,7 @@ function WithdrawDialog(props) {
                 <Collapse in={true}>
                   <Button
                     variant="contained"
-                    color="info"
+                    color="primary"
                     onClick={handleSubmitClick}
                     className={classes.end}
                   >
@@ -247,7 +247,7 @@ function WithdrawDialog(props) {
                 <Collapse in={stepComplete}>
                   <Button
                     variant="contained"
-                    color="info"
+                    color="primary"
                     onClick={handleNext()}
                     className={classes.end}
                   >

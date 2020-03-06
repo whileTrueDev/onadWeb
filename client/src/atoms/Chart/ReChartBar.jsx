@@ -33,6 +33,7 @@ export default function ReChartBar(props) {
           <XAxis dataKey={xAxisDataKey} />
           <YAxis />
           <Tooltip
+            contentStyle={{ backgroundColor: theme.palette.background.paper }}
             cursor={{ stroke: theme.palette.primary.main, strokeWidth: 1 }}
             labelFormatter={tooltipLabelFormatter}
             formatter={tooltipFormatter}

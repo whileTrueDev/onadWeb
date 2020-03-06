@@ -53,7 +53,7 @@ const IpChanger = (props) => {
       <GridItem xs={12} sm={12} md={7} />
       <GridItem xs={12} sm={12} md={5}>
         <Button
-          color="info"
+          color="primary"
           onClick={IpAdressChanger}
         >
           등록

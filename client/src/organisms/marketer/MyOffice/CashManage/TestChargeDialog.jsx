@@ -315,7 +315,7 @@ function TestChargeDialog() {
                 <Collapse in={stepComplete}>
                   <Button
                     variant="contained"
-                    color="info"
+                    color="primary"
                     onClick={handleSubmitClick}
                     className={classes.end}
                   >
@@ -330,7 +330,7 @@ function TestChargeDialog() {
                 <Collapse in={stepComplete}>
                   <Button
                     variant="contained"
-                    color="info"
+                    color="primary"
                     onClick={handleNext()}
                     className={classes.end}
                   >

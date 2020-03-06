@@ -13,7 +13,7 @@ import Home from '@material-ui/icons/Home';
 import SpeakerNotes from '@material-ui/icons/SpeakerNotes';
 import PowerSettingsNew from '@material-ui/icons/PowerSettingsNew';
 // core components
-import headerLinksStyle from '../../assets/jss/onad/components/headerLinksStyle';
+import headerLinksStyle from './AdminNavbarLinks.style';
 import Notification from './Notification';
 import HOST from '../../utils/config';
 import axios from '../../utils/axios';
@@ -65,7 +65,7 @@ function HeaderLinks(props) {
               : (null)}
             color="secondary"
           >
-            <Notifications fontSize="large" />
+            <Notifications />
           </Badge>
         </IconButton>
       </Tooltip>
@@ -85,7 +85,7 @@ function HeaderLinks(props) {
               : '/dashboard/creator/user'}
             component={Link}
           >
-            <Person fontSize="large" />
+            <Person />
           </IconButton>
         </Tooltip>
       </Hidden>
@@ -104,7 +104,7 @@ function HeaderLinks(props) {
                   variant="dot"
                   color="primary"
                 >
-                  <SpeakerNotes fontSize="large" />
+                  <SpeakerNotes />
                 </Badge>
               </IconButton>
             )
@@ -114,10 +114,9 @@ function HeaderLinks(props) {
                 to="/notice"
                 component={Link}
               >
-                <SpeakerNotes fontSize="large" />
+                <SpeakerNotes />
               </IconButton>
-            )
-          }
+            )}
         </Tooltip>
       </Hidden>
 
@@ -128,7 +127,7 @@ function HeaderLinks(props) {
             to="/"
             component={Link}
           >
-            <Home fontSize="large" />
+            <Home />
           </IconButton>
         </Tooltip>
       </Hidden>
@@ -138,7 +137,7 @@ function HeaderLinks(props) {
           onClick={handleLogoutClick}
           aria-label="logout"
         >
-          <PowerSettingsNew fontSize="large" />
+          <PowerSettingsNew />
         </IconButton>
       </Tooltip>
     </div>

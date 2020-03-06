@@ -22,7 +22,6 @@ import marketerRouter from './routes/marketer';
 import chartRouter from './routes/chart';
 import bannersRouter from './routes/banners';
 import mailRouter from './routes/mail';
-import testRouter from './routes/test';
 
 const MySQLStore = require('express-mysql-session')(session);
 
@@ -75,6 +74,13 @@ class OnadWebApi {
     this.app.set('views', path.join(__dirname, 'views'));
     this.app.set('view engine', 'ejs');
 
+    this.app.use(helmet());
+    this.app.use(express.static(path.join(__dirname, 'public'))); // 정적리소스 처리
+    this.app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
+    this.app.use(bodyParser.json({ limit: '50mb' })); // body parser 설정
+    this.app.use(cookieParser()); // cookie parser 설정
+    this.app.use(morgan(process.env.NODE_ENV === 'development' ? 'dev' : 'common'));
+
     // session 처리
     this.app.use(session({
       secret: '@#@$MYSIGN#@$#$',
@@ -90,17 +96,11 @@ class OnadWebApi {
         // expiration: 86400000 // 세션 만료 시간 86400000 = 24h
       }),
       cookie: {
+        sameSite: 'none',
         secure: process.env.NODE_ENV === 'production', // production환경 ? true : false
         // maxAge: Date.now() + (30 * 86400 * 1000), // 만료 날짜 설정
       }
     }));
-
-    this.app.use(helmet());
-    this.app.use(express.static(path.join(__dirname, 'public'))); // 정적리소스 처리
-    this.app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
-    this.app.use(bodyParser.json({ limit: '50mb' })); // body parser 설정
-    this.app.use(cookieParser()); // cookie parser 설정
-    this.app.use(morgan(process.env.NODE_ENV === 'development' ? 'dev' : 'common'));
 
     // use CORS
     const corsOptions = { origin: FRONT_HOST, credentials: true };
@@ -124,18 +124,19 @@ class OnadWebApi {
     // Router 추가
     // this.app.use('/mailer', mailerRouter);
     this.app.use('/alimtalk', alimtalkRouter);
+
     // *********************************
     // 각 로그인 플랫폼 callbackURL 변경 이후 
     // /auth로 변경
     // *********************************
     this.app.use('/api/login', loginRouter);
+
     this.app.use('/logout', logoutRouter);
     this.app.use('/creator', creatorRouter);
     this.app.use('/marketer', marketerRouter);
     this.app.use('/chart', chartRouter);
     this.app.use('/banner', bannersRouter);
     this.app.use('/mail', mailRouter);
-    this.app.use('/test', testRouter);
 
     // Error handling
     // catch 404 and forward to error handler

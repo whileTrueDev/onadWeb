@@ -52,7 +52,7 @@ const DeleteDialog = (props) => {
             <Tooltip title={<Typography>배너가 캠페인에 할당되어 있어 삭제가 불가능합니다.</Typography>}>
               <div>
                 <CustomButton
-                  color="info"
+                  color="primary"
                   disabled
                 >
                   {'확인'}
@@ -62,7 +62,7 @@ const DeleteDialog = (props) => {
           )}
           {!connectedCampaign.loading && connectedCampaign.payload.length === 0 && (
             <CustomButton
-              color="info"
+              color="primary"
               onClick={() => {
                 // deleteRequest.handleDelete({ bannerId: selectedBanner.bannerId });
                 deleteRequest.handleUpdateRequest({ bannerId: selectedBanner.bannerId });
