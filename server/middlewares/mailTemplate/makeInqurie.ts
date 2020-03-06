@@ -1,7 +1,15 @@
-function makeInqurie(request) {
+function makeInqurie(request: object) {
 
-  const {name, email, contactNumber, brandName, content} = request;
+  interface InputForm {
+    name?: string;
+    email?: string;
+    contactNumber?: number;
+    brandName?: string;
+    content?: string;
+  }
 
+  let inputData: InputForm;
+  inputData = request;
   return (`
   <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><!--[if IE]><html xmlns="http://www.w3.org/1999/xhtml" class="ie"><![endif]--><!--[if !IE]><!--><html style="margin: 0;padding: 0;" xmlns="http://www.w3.org/1999/xhtml"><!--<![endif]--><head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -496,7 +504,7 @@ body{background-color:#fbfbfb}.logo a:hover,.logo a:focus{color:#1e2e3b !importa
         
             <div style="Margin-left: 20px;Margin-right: 20px;Margin-top: 24px;">
       <div style="mso-line-height-rule: exactly;mso-text-raise: 4px;">
-        <h1 style="Margin-top: 0;Margin-bottom: 0;font-style: normal;font-weight: normal;color: #565656;font-size: 22px;line-height: 31px;font-family: arial,sans-serif;text-align: center;"><span class="font-arial">${name}&#45784;&#51032;&#32;&#52896;&#54168;&#51064;&#32;&#47928;&#51032;&#32;&#50836;&#52397;&#51077;&#45768;&#45796;</span></h1><p style="Margin-top: 20px;Margin-bottom: 0;font-family: arial,sans-serif;text-align: center;"><span class="font-arial">&#54856;&#54168;&#51060;&#51648;&#32;&#47700;&#51064;&#51012;&#32;&#53685;&#54644;&#32;&#52896;&#54168;&#51064;&#32;&#47928;&#51032;&#50640;&#32;&#45824;&#54620;&#32;&#45236;&#50857;&#51077;&#45768;&#45796;&#46;</span></p><p style="Margin-top: 20px;Margin-bottom: 0;font-family: arial,sans-serif;text-align: center;"><span class="font-arial">&#54644;&#45817;&#32;&#45236;&#50857;&#51008;&#32;&#45796;&#51020;&#44284;&#32;&#44057;&#49845;&#45768;&#45796;&#46;</span></p><p style="Margin-top: 20px;Margin-bottom: 20px;font-family: arial,sans-serif;text-align: center;"><span class="font-arial">&nbsp;</span></p>
+        <h1 style="Margin-top: 0;Margin-bottom: 0;font-style: normal;font-weight: normal;color: #565656;font-size: 22px;line-height: 31px;font-family: arial,sans-serif;text-align: center;"><span class="font-arial">${inputData.name}&#45784;&#51032;&#32;&#52896;&#54168;&#51064;&#32;&#47928;&#51032;&#32;&#50836;&#52397;&#51077;&#45768;&#45796;</span></h1><p style="Margin-top: 20px;Margin-bottom: 0;font-family: arial,sans-serif;text-align: center;"><span class="font-arial">&#54856;&#54168;&#51060;&#51648;&#32;&#47700;&#51064;&#51012;&#32;&#53685;&#54644;&#32;&#52896;&#54168;&#51064;&#32;&#47928;&#51032;&#50640;&#32;&#45824;&#54620;&#32;&#45236;&#50857;&#51077;&#45768;&#45796;&#46;</span></p><p style="Margin-top: 20px;Margin-bottom: 0;font-family: arial,sans-serif;text-align: center;"><span class="font-arial">&#54644;&#45817;&#32;&#45236;&#50857;&#51008;&#32;&#45796;&#51020;&#44284;&#32;&#44057;&#49845;&#45768;&#45796;&#46;</span></p><p style="Margin-top: 20px;Margin-bottom: 20px;font-family: arial,sans-serif;text-align: center;"><span class="font-arial">&nbsp;</span></p>
       </div>
     </div>
         
@@ -506,7 +514,7 @@ body{background-color:#fbfbfb}.logo a:hover,.logo a:focus{color:#1e2e3b !importa
 
     <div style="Margin-left: 20px;Margin-right: 20px;">
       <div style="mso-line-height-rule: exactly;mso-text-raise: 4px;">
-        <p class="size-20" style="Margin-top: 0;Margin-bottom: 20px;font-family: arial,sans-serif;font-size: 17px;line-height: 26px;text-align: center;" lang="x-size-20"><span class="font-arial"><strong>&#49457;&#54632;&#32;&#58;&#32;</strong>${name}</span></p>
+        <p class="size-20" style="Margin-top: 0;Margin-bottom: 20px;font-family: arial,sans-serif;font-size: 17px;line-height: 26px;text-align: center;" lang="x-size-20"><span class="font-arial"><strong>&#49457;&#54632;&#32;&#58;&#32;</strong>${inputData.name}</span></p>
       </div>
     </div>
         
@@ -516,7 +524,7 @@ body{background-color:#fbfbfb}.logo a:hover,.logo a:focus{color:#1e2e3b !importa
         
             <div style="Margin-left: 20px;Margin-right: 20px;">
       <div style="mso-line-height-rule: exactly;mso-text-raise: 4px;">
-        <p class="size-20" style="Margin-top: 0;Margin-bottom: 20px;font-family: arial,sans-serif;font-size: 17px;line-height: 26px;text-align: center;" lang="x-size-20"><span class="font-arial"><strong>&#51060;&#47700;&#51068;&#32;&#58;&#32;</strong>${email}</span></p>
+        <p class="size-20" style="Margin-top: 0;Margin-bottom: 20px;font-family: arial,sans-serif;font-size: 17px;line-height: 26px;text-align: center;" lang="x-size-20"><span class="font-arial"><strong>&#51060;&#47700;&#51068;&#32;&#58;&#32;</strong>${inputData.email}</span></p>
       </div>
     </div>
         
@@ -526,7 +534,7 @@ body{background-color:#fbfbfb}.logo a:hover,.logo a:focus{color:#1e2e3b !importa
 
     <div style="Margin-left: 20px;Margin-right: 20px;">
     <div style="mso-line-height-rule: exactly;mso-text-raise: 4px;">
-      <p class="size-20" style="Margin-top: 0;Margin-bottom: 20px;font-family: arial,sans-serif;font-size: 17px;line-height: 26px;text-align: center;" lang="x-size-20"><span class="font-arial"><strong>&#50672;&#46973;&#52376;&#32;&#58;&#32;</strong>${contactNumber}</span></p>
+      <p class="size-20" style="Margin-top: 0;Margin-bottom: 20px;font-family: arial,sans-serif;font-size: 17px;line-height: 26px;text-align: center;" lang="x-size-20"><span class="font-arial"><strong>&#50672;&#46973;&#52376;&#32;&#58;&#32;</strong>${inputData.contactNumber}</span></p>
     </div>
   </div>
       
@@ -536,7 +544,7 @@ body{background-color:#fbfbfb}.logo a:hover,.logo a:focus{color:#1e2e3b !importa
 
   <div style="Margin-left: 20px;Margin-right: 20px;">
     <div style="mso-line-height-rule: exactly;mso-text-raise: 4px;">
-      <p class="size-20" style="Margin-top: 0;Margin-bottom: 20px;font-family: arial,sans-serif;font-size: 17px;line-height: 26px;text-align: center;" lang="x-size-20"><span class="font-arial"><strong>&#48652;&#47004;&#46300;&#47749;&#32;&#58;&#32;</strong>${brandName}</span></p>
+      <p class="size-20" style="Margin-top: 0;Margin-bottom: 20px;font-family: arial,sans-serif;font-size: 17px;line-height: 26px;text-align: center;" lang="x-size-20"><span class="font-arial"><strong>&#48652;&#47004;&#46300;&#47749;&#32;&#58;&#32;</strong>${inputData.brandName}</span></p>
     </div>
   </div>
       
@@ -547,7 +555,7 @@ body{background-color:#fbfbfb}.logo a:hover,.logo a:focus{color:#1e2e3b !importa
   <div style="Margin-left: 20px;Margin-right: 20px;">
     <div style="mso-line-height-rule: exactly;mso-text-raise: 4px;">
     <p class="size-20" style="Margin-top: 0;Margin-bottom: 20px;font-family: arial,sans-serif;font-size: 17px;line-height: 26px;text-align: center;" lang="x-size-20"><span class="font-arial"><strong>&#47928;&#51032;&#32;&#49345;&#49464;&#45236;&#50857;</strong></span></p>
-      <p class="size-20" style="Margin-top: 0;Margin-bottom: 20px;font-family: arial,sans-serif;font-size: 17px;line-height: 26px;text-align: center;" lang="x-size-20"><span class="font-arial">${content}</span></p>
+      <p class="size-20" style="Margin-top: 0;Margin-bottom: 20px;font-family: arial,sans-serif;font-size: 17px;line-height: 26px;text-align: center;" lang="x-size-20"><span class="font-arial">${inputData.content}</span></p>
     </div>
   </div>
       
@@ -620,4 +628,4 @@ body{background-color:#fbfbfb}.logo a:hover,.logo a:focus{color:#1e2e3b !importa
 `);
 }
 
-module.exports = makeInqurie;
+export default makeInqurie;

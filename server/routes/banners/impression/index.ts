@@ -10,7 +10,7 @@ router.route('/')
       const dataString = 'DATE_SUB(NOW(), INTERVAL 60 MONTH)';
 
       const query = `
-                    SELECT SUM(cL.cashFromMarketer / (4 * mD.unitPrice))
+                    SELECT SUM(cL.cashFromMarketer / (2 * mD.unitPrice))
                         FROM campaignLog AS cL
                           LEFT JOIN campaign AS cp
                           ON cL.campaignId = cp.campaignId

@@ -34,6 +34,7 @@ router.route('/')
       inputForm = req.body;
       const mailOptions = {
         from: `${inputForm.email}`, // 발송 메일 주소
+        to: 'onad6309@gmail.com', // 수신 메일 주소부분
         subject: `${inputForm.name}님의 캠페인 문의 요청입니다.`, // 제목부분
         html: makeInqurie(inputForm),
         attachments: [{
@@ -46,16 +47,10 @@ router.route('/')
       transporter.sendMail(mailOptions, (error, info) => {
         if (error) {
           logger.error(`Email 전송오류 : ${error}`);
-          console.log(`Email 전송오류 : ${error}`);
-          responseHelper.send({
-            error: error
-          }, 'post', res);
+          throw new Error(`Error in /mail/inquiry - ${error}`)
         } else {
           logger.info(`Email sent: ${info.response}`);
-          responseHelper.send({
-            error: null,
-            result: 200,
-          }, 'post', res);
+          res.send(200);
         }
       });
     })
