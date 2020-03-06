@@ -1,6 +1,6 @@
 import express from 'express';
-import doQuery from '../../../model/doQuery';
-import responseHelper from '../../../middlewares/responseHelper';
+import doQuery from '../../model/doQuery';
+import responseHelper from '../../middlewares/responseHelper';
 
 const router = express.Router();
 
@@ -17,9 +17,9 @@ router.route('/')
           responseHelper.send(row.result, 'get', res);
         })
         .catch((errorData) => {
-          throw new Error(`Error in /creators - ${errorData}`)
+          throw new Error(`Error in /creators - ${errorData}`);
         });
     })
   )
-  .all(responseHelper.middleware.unusedMethod)
+  .all(responseHelper.middleware.unusedMethod);
 export default router;
