@@ -15,9 +15,11 @@ import passport from './middlewares/passport';
 
 // Routers
 import alimtalkRouter from './routes/alimtalk';
+// import apiRouter from './routes/api';
+import creatorRouter from './routes/creator';
+import creatorsRouter from './routes/creators';
 import loginRouter from './routes/auth/login';
 import logoutRouter from './routes/auth/logout';
-import creatorRouter from './routes/creator';
 import marketerRouter from './routes/marketer';
 import chartRouter from './routes/chart';
 import bannersRouter from './routes/banners';
@@ -118,7 +120,6 @@ class OnadWebApi {
     // Swagger UI 추가.
     this.app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
-
     // this.app.use(checkAuthOnReq); // 인증 method를 req에 추가한다.
 
     // Router 추가
@@ -135,7 +136,9 @@ class OnadWebApi {
     this.app.use('/creator', creatorRouter);
     this.app.use('/marketer', marketerRouter);
     this.app.use('/chart', chartRouter);
-    this.app.use('/banner', bannersRouter);
+
+    this.app.use('/creators', creatorsRouter);
+    this.app.use('/banners', bannersRouter);
     this.app.use('/mail', mailRouter);
 
     // Error handling

@@ -1,11 +1,13 @@
 import express from 'express';
 import nodemailer from 'nodemailer';
+import inquiryRoute from './inquiry';
 import responseHelper from '../../middlewares/responseHelper';
 import makeMarketerRegistTemplate from '../../middlewares/mailTemplate/marketerRegist';
-import makeMarketerRepassword from '../../middlewares/mailTemplate/marketerRepassword'
+import makeMarketerRepassword from '../../middlewares/mailTemplate/marketerRepassword';
 import setTemporaryPassword from '../../middlewares/setTemporyPassword';
-import logger from '../../middlewares/logger'
+import logger from '../../middlewares/logger';
 import doQuery from '../../model/doQuery';
+import makeInqurie from '../../middlewares/mailTemplate/makeInqurie';
 
 const router = express.Router();
 
@@ -23,6 +25,44 @@ const transporter = nodemailer.createTransport({
     pass: process.env.MAIL_PASSWORD
   }
 });
+
+interface InputForm {
+  name?: string;
+  email?: string;
+  contactNumber?: number;
+  brandName?: string;
+  content?: string;
+}
+
+router.route('/inquiry')
+  .post(
+    responseHelper.middleware.withErrorCatch(async (req, res, next) => {
+      const inputForm: InputForm = req.body;
+      // req.body는 x-www-form-urlencoded
+      const mailOptions = {
+        from: `${inputForm.email}`, // 발송 메일 주소
+        to: 'support@onad.io', // 수신 메일 주소부분
+        subject: `${inputForm.name}님의 캠페인 문의 요청입니다.`, // 제목부분
+        html: makeInqurie(inputForm),
+        attachments: [{
+          filename: 'onad_logo_vertical_small.png',
+          path: `${process.env.ROOT_PATH}/images/onad_logo_vertical_small.png`,
+          cid: 'logo'
+        }]
+      };
+
+      transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+          logger.error(`Email 전송오류 : ${error}`);
+          throw new Error(`Error in /mail/inquiry - ${error}`);
+        } else {
+          logger.info(`Email sent: ${info.response}`);
+          res.sendStatus(200);
+        }
+      });
+    })
+  )
+  .all(responseHelper.middleware.unusedMethod);
 
 router.route('/auth')
   .post(
@@ -45,7 +85,7 @@ router.route('/auth')
           logger.error(`Email 전송오류 : ${error}`);
           console.log(`Email 전송오류 : ${error}`);
           res.send({
-            error: error
+            error
           });
         } else {
           logger.info(`Email sent: ${info.response}`);
@@ -57,7 +97,7 @@ router.route('/auth')
       });
     }),
   )
-  .all(responseHelper.middleware.unusedMethod)
+  .all(responseHelper.middleware.unusedMethod);
 
 router.route('/auth/:id')
   .get(
@@ -76,7 +116,7 @@ router.route('/auth/:id')
         });
     }),
   )
-  .all(responseHelper.middleware.unusedMethod)
+  .all(responseHelper.middleware.unusedMethod);
 
 router.route('/tmp-auth')
   .post(
@@ -99,7 +139,7 @@ router.route('/tmp-auth')
           logger.error(`Email 전송오류 : ${error}`);
           console.log(`Email 전송오류 : ${error}`);
           res.send({
-            error: error
+            error
           });
         } else {
           logger.info(`Email sent: ${info.response}`);
@@ -111,7 +151,7 @@ router.route('/tmp-auth')
       });
     }),
   )
-  .all(responseHelper.middleware.unusedMethod)
+  .all(responseHelper.middleware.unusedMethod);
 
 router.route('/tmp-password')
   .post(
@@ -144,6 +184,6 @@ router.route('/tmp-password')
         });
     }), setTemporaryPassword
   )
-  .all(responseHelper.middleware.unusedMethod)
+  .all(responseHelper.middleware.unusedMethod);
 
 export default router;
