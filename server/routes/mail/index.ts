@@ -10,7 +10,6 @@ import doQuery from '../../model/doQuery';
 import makeInqurie from '../../middlewares/mailTemplate/makeInqurie';
 
 const router = express.Router();
-router.use('/inquiry', inquiryRoute);
 
 const HOST: any = process.env.NODE_ENV === 'production'
   ? process.env.PRODUCTION_API_HOSTNAME
@@ -35,7 +34,7 @@ interface InputForm {
   content?: string;
 }
 
-router.route('/')
+router.route('/inquiry')
   .post(
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
       const inputForm: InputForm = req.body;
