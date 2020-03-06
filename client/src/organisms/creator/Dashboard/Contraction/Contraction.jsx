@@ -163,7 +163,7 @@ function Contraction(props) {
                     취소
                 </Button>
                 <Button
-                  color="info"
+                  color="primary"
                   onClick={() => { handleContraction(index); handleDialogClose(); }}
                 >
                     동의
@@ -184,7 +184,7 @@ function Contraction(props) {
       <div className={classes.actionsContainer}>
         <Button
           variant="contained"
-          color="info"
+          color="primary"
           // onClick={handleUserContract}
           onClick={handleUserContract}
           disabled={!(contractionList.every(row => row === true))}

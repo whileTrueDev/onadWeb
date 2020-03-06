@@ -30,7 +30,6 @@ const TimeSelectorSet = (props) => {
             name="no-limit"
             checked={!state.time}
             onClick={setNoTime}
-            fontSize="large"
           />
           <StyledSelectText
             onClick={setNoTime}
@@ -45,7 +44,6 @@ const TimeSelectorSet = (props) => {
             name="set-limit"
             checked={state.time}
             onClick={setTime}
-            fontSize="large"
           />
           <StyledSelectText
             primary="송출 시간대 설정"

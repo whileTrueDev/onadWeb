@@ -263,40 +263,50 @@ function AppAppBar(props) {
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
-      <MenuItem>
-        <Button
-          className={classes.rightLink2}
-          component={Link}
-          to={MainUserType === 'marketer' ? ('/introduce/marketer') : ('/introduce/creator')}
-        >
-          <Domain className={classes.buttonIcon} />
-          서비스 소개
-        </Button>
-      </MenuItem>
-
-      <MenuItem>
-        {isLogin ? (
-          <Button
-            className={classNames(classes.rightLink2, classes.coloredLink)}
-            onClick={handleClick}
-          >
+      {noButtons ? (
+        <MenuItem>
+          <Button className={classes.rightLink2} onClick={handleClick}>
             <Dashboard className={classes.buttonIcon} />
             마이페이지
           </Button>
-        )
-          : <LoginPopover type="회원가입" mode="mobile" MainUserType={MainUserType} />}
       </MenuItem>
-
-      <MenuItem>
-        {isLogin ? (
-          <Button className={classes.rightLink2} onClick={logout}>
-            로그아웃
+      ) : (
+        <div>
+        <MenuItem>
+          <Button
+            className={classes.rightLink2}
+            component={Link}
+            to={MainUserType === 'marketer' ? ('/introduce/marketer') : ('/introduce/creator')}
+          >
+            <Domain className={classes.buttonIcon} />
+            서비스 소개
           </Button>
-        ) : (
-          <LoginPopover type="로그인" MainUserType={MainUserType} />
-        )}
-      </MenuItem>
+        </MenuItem>
 
+        <MenuItem>
+          {isLogin ? (
+            <Button
+              className={classNames(classes.rightLink2, classes.coloredLink)}
+              onClick={handleClick}
+            >
+              <Dashboard className={classes.buttonIcon} />
+              마이페이지
+            </Button>
+          )
+            : <LoginPopover type="회원가입" mode="mobile" MainUserType={MainUserType} />}
+        </MenuItem>
+
+        <MenuItem>
+          {isLogin ? (
+            <Button className={classes.rightLink2} onClick={logout}>
+              로그아웃
+            </Button>
+          ) : (
+            <LoginPopover type="로그인" MainUserType={MainUserType} />
+          )}
+        </MenuItem>
+      </div>
+      )}
     </Menu>
   );
 
@@ -306,7 +316,6 @@ function AppAppBar(props) {
         <Toolbar className={classes.toolbar}>
           <div className={classes.left} />
           { noButtons ? (
-            <>
               <a href="/" className={classes.noButtonIcon}>
                 <img
                   src="/pngs/logo/onad_black.png"
@@ -315,9 +324,7 @@ function AppAppBar(props) {
                   style={{ padding: '10px 18px' }}
                 />
               </a>
-            </>
           ) : (
-            <div>
               <a href="/" className={classes.icon}>
                 <img
                   src={!trigger ? ('/pngs/logo/onad_white.png') : ('/pngs/logo/onad_black.png')}
@@ -326,10 +333,7 @@ function AppAppBar(props) {
                   style={{ padding: '10px 18px' }}
                 />
               </a>
-            </div>
           )}
-
-
           {noButtons ? (
             <div className={classes.rightDesktop}>
               <Tooltip title="마이페이지">

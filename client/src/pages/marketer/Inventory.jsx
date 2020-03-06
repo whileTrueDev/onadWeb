@@ -3,6 +3,7 @@ import React from 'react';
 // @material-ui/core
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
+import Paper from '@material-ui/core/Paper';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
@@ -31,7 +32,7 @@ function TabPanel(props) {
 
   return (
     <Typography
-      component="div"
+      component={Paper}
       role="tabpanel"
       hidden={value !== index}
       id={`simple-tabpanel-${index}`}
@@ -50,7 +51,7 @@ function a11yProps(index) {
   };
 }
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
     backgroundColor: theme.palette.background.paper,
@@ -83,13 +84,13 @@ const BannerManage = () => {
             </Tabs>
           </AppBar>
           <TabPanel value={value} index={0}>
-            <CustomButton color="info" size="lg" onClick={() => { uploadDialog.handleOpen(); }}>
+            <CustomButton color="primary" size="lg" onClick={() => { uploadDialog.handleOpen(); }}>
               + 새 배너 등록
             </CustomButton>
             <BannerTable handleDeleteOpen={deleteDialog.handleOpen} />
           </TabPanel>
           <TabPanel value={value} index={1}>
-            <CustomButton color="info" size="lg" onClick={() => { urlUploadDialog.handleOpen(); }}>
+            <CustomButton color="primary" size="lg" onClick={() => { urlUploadDialog.handleOpen(); }}>
               + 새 URL 등록
             </CustomButton>
             <UrlTable handleDeleteOpen={urlDeleteDialog.handleOpen} />

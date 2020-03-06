@@ -15,7 +15,7 @@ export default function BannerTable(props) {
   const columns = [
     {
       title: '배너 이미지',
-      render: rowData => (
+      render: (rowData) => (
         <img
           src={rowData.bannerSrc}
           alt={rowData.bannerId}
@@ -47,10 +47,11 @@ export default function BannerTable(props) {
 
   return (
     <div>
-      {fetchData.loading && (<MaterialTable columns={columns} isLoading />)}
+      {fetchData.loading && (<MaterialTable columns={columns} isLoading style={{ boxShadow: 'none' }} />)}
       {!fetchData.loading && fetchData.error && (<span>Error</span>)}
       {!fetchData.loading && fetchData.payload && (
         <MaterialTable
+          style={{ boxShadow: 'none' }}
           title={null}
           columns={columns}
           data={fetchData.payload}

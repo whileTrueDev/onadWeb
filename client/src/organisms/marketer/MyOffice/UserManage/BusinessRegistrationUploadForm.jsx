@@ -50,7 +50,7 @@ function BusinessRegistrationUploadForm(props) {
         <CardBody>
           <div className={myClasses.buttonWrapper}>
             <Button
-              color="info"
+              color="primary"
               onClick={() => { handleOpen(); }}
             >
               사업자 등록증 변경
@@ -69,7 +69,7 @@ function BusinessRegistrationUploadForm(props) {
           <CardBody>
             <div className={myClasses.buttonWrapper}>
               <Button
-                color="info"
+                color="primary"
                 onClick={handleOpen}
               >
               사업자 등록증 등록

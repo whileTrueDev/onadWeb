@@ -1,7 +1,7 @@
 import express from 'express';
 import createError from 'http-errors';
 import responseMessages from '../../lib/responseMessages';
-import { CreatorSession, MarketerSession } from '../../@types/session';
+import { Session } from '../../@types/session';
 
 /**
  * 제공된 필드명의 파라미터를 반환하는 함수.  
@@ -23,7 +23,7 @@ const getParam = (paramField: string | string[],
   if (typeof paramField === 'string') {
     switch (method.toLowerCase()) {
       case 'get':
-        if (!(req.query[paramField])) {
+        if (!(Object.keys(req.query).includes(paramField))) {
           throw new createError[400](responseMessages.ERROR_400);
         }
         return req.query[paramField];
@@ -31,7 +31,7 @@ const getParam = (paramField: string | string[],
       case 'put':
       case 'patch':
       case 'delete':
-        if (!(req.body[paramField])) {
+        if (!(Object.keys(req.body).includes(paramField))) {
           throw new createError[400](responseMessages.ERROR_400);
         }
         return req.body[paramField];
@@ -43,7 +43,7 @@ const getParam = (paramField: string | string[],
   switch (method.toLowerCase()) {
     case 'get':
       return paramField.map((param) => {
-        if (!(req.query[param])) {
+        if (!(Object.keys(req.query).includes(param))) {
           throw new createError[400](responseMessages.ERROR_400);
         }
         return req.query[param];
@@ -53,7 +53,7 @@ const getParam = (paramField: string | string[],
     case 'patch':
     case 'delete':
       return paramField.map((param) => {
-        if (!(req.body[param])) {
+        if (!(Object.keys(req.body).includes(param))) {
           throw new createError[400](responseMessages.ERROR_400);
         }
         return req.body[param];
@@ -78,7 +78,7 @@ const getParam = (paramField: string | string[],
  * 
  * @author hwasurr
  */
-const getSessionData = (req: express.Request): CreatorSession & MarketerSession => {
+const getSessionData = (req: express.Request): Session => {
   if (req && req.session && req.session.passport && req.session.passport.user) {
     return req.session.passport.user;
   }
@@ -95,7 +95,7 @@ const getSessionData = (req: express.Request): CreatorSession & MarketerSession 
  * @author hwasurr
  */
 const paramValidationCheck = (param: string | number | undefined,
-  field: keyof CreatorSession | keyof MarketerSession,
+  field: keyof Session,
   req: express.Request): true => {
   if (req.session && param === req.session.passport.user[field]) {
     return true;
@@ -116,7 +116,7 @@ const send = (
   res: express.Response
 ): void => {
   const OK = 200;
-  const CREATED = 2001;
+  const CREATED = 201;
   switch (method.toLowerCase()) {
     case 'post':
       res.status(CREATED).json(resultData);

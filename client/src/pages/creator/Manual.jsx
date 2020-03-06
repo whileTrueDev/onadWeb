@@ -5,8 +5,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import ArrowUpward from '@material-ui/icons/ArrowUpward';
 import Grow from '@material-ui/core/Grow';
 import Hidden from '@material-ui/core/Hidden';
+import Fab from '@material-ui/core/Fab';
 // custom container
-import Fab from '../../atoms/Fab/Fab';
 import GridItem from '../../atoms/Grid/GridItem';
 import GridContainer from '../../atoms/Grid/GridContainer';
 
@@ -14,7 +14,7 @@ import ManualSelect from '../../organisms/creator/Manual/Select';
 import ManualDetail from '../../organisms/creator/Manual/ManualDetail';
 import sources from '../../organisms/creator/Manual/sources';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   upwardButton: {
     right: 25,
     bottom: 20,
@@ -73,7 +73,7 @@ const CreatorManual = (props) => {
 
       {/* )} */}
       <Hidden xlUp>
-        <Fab color="info" size="medium" className={classes.upwardButton} onClick={handleUpward}>
+        <Fab color="primary" size="medium" className={classes.upwardButton} onClick={handleUpward}>
           <ArrowUpward />
         </Fab>
       </Hidden>

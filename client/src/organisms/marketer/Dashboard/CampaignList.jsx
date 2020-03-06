@@ -4,13 +4,12 @@ import {
   Grid, Paper, Divider, Button,
   Typography, IconButton,
   ListItem, List, FormControlLabel,
-  Snackbar, Hidden
+  Snackbar, Hidden, Switch
 } from '@material-ui/core';
 import Countup from 'react-countup';
 
 import { Assessment, Delete as DeleteIcon, Build } from '@material-ui/icons';
 import CloseIcon from '@material-ui/icons/Close';
-import IOSSwitch from '../../../atoms/Switch/IOSSwitch';
 
 import CampaignDeleteConfirmDialog from './campaign/CampaignDeleteConfirmDialog';
 import CampaignUpdateDialog from './campaign/CampaignUpdateDialog';
@@ -23,21 +22,21 @@ import useUpdateData from '../../../utils/lib/hooks/useUpdateData';
 import history from '../../../history';
 
 const SLIDE_TIMEOUT = 500;
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   container: {
     padding: 16,
   },
   list: {
     width: '100%',
     '&:hover': {
-      backgroundColor: theme.palette.grey[200]
+      backgroundColor: theme.palette.action.hover
     }
   },
   image: {
     width: 96,
     height: 96,
     marginRight: theme.spacing(3),
-    backgroundColor: theme.palette.grey[100],
+    backgroundColor: theme.palette.grey[300],
     [theme.breakpoints.only('lg')]: {
       width: 72,
       height: 72
@@ -104,17 +103,16 @@ export default function CampaignList(props) {
       <List style={{ maxHeight: 380, overflowY: 'auto' }}>
         {campaignData.payload.map((detail, index) => (
           <div key={detail.campaignId}>
-            <ListItem
-              className={classes.list}
-            >
+            <ListItem className={classes.list}>
               <Grid container direction="row" justify="space-between">
                 <Grid item className={classes.contents}>
                   <Grid container direction="row" className={classes.contents} spacing={3}>
                     <Grid item>
                       <FormControlLabel
                         control={(
-                          <IOSSwitch
+                          <Switch
                             id="onoff-switch"
+                            color="primary"
                             checked={Boolean(detail.onOff)}
                             onChange={handleUpdateState({
                               onoffState: !detail.onOff,
@@ -122,7 +120,7 @@ export default function CampaignList(props) {
                             })}
                           />
                         )}
-                        label={detail.onOff ? (<div style={{ color: '#52d869', fontWeight: 700 }}>활성화</div>) : (<div>비활성화</div>)}
+                        label={detail.onOff ? (<Typography color="primary">활성화</Typography>) : (<Typography>비활성화</Typography>)}
                         labelPlacement="bottom"
                       />
                     </Grid>
@@ -176,8 +174,7 @@ export default function CampaignList(props) {
                             <Typography variant="h4" align="center" style={{ fontWeight: 700 }}>
                               ∞
                             </Typography>
-                          )
-                      }
+                          )}
                       </Grid>
                       <Grid>
                         <Divider orientation="horizontal" />

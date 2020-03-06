@@ -99,7 +99,7 @@ const IpChangerForm = (props) => {
       {state
         ? (
           <Button
-            color="info"
+            color="primary"
             onClick={autoButton}
           >
         현재 PC의 IP 주소
@@ -107,7 +107,7 @@ const IpChangerForm = (props) => {
         )
         : (
           <Button
-            color="info"
+            color="primary"
             onClick={selfButton}
           >
         직접 입력하러 가기
