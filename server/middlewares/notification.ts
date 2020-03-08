@@ -1,10 +1,10 @@
-const doQuery = require('../model/doQuery');
+import doQuery from '../model/doQuery';
 
 interface UserType {
   [type: string]: {
-    selectQuery: string,
-    getTitle(agr: any): string,
-    getMessage(agr: any): string
+    selectQuery: string;
+    getTitle(agr: any): string;
+    getMessage(agr: any): string;
   };
 }
 interface MessageDict {
@@ -72,10 +72,11 @@ const messageDict: MessageDict = {
       LEFT JOIN marketerCharge AS mC
       ON mC.marketerId = ?
       WHERE mC.marketerId = mI.marketerId
-     `
-      ,
+     `,
       getTitle: ({ marketerName }) => `${marketerName}님, 가상계좌 발급이 완료되었습니다.`,
-      getMessage: ({ marketerName, cashAmount, duedate, vbankName, vbankNum }) => `${marketerName}님, ${vbankName} ${vbankNum}으로 ${duedate}까지 ${cashAmount}원을 입금해주세요.
+      getMessage: ({
+        marketerName, cashAmount, duedate, vbankName, vbankNum
+      }) => `${marketerName}님, ${vbankName} ${vbankNum}으로 ${duedate}까지 ${cashAmount}원을 입금해주세요.
       `,
     },
     vbankChargeComplete: {
@@ -112,11 +113,11 @@ const messageDict: MessageDict = {
 };
 
 interface Props {
-  userType: string
-  type: string
-  targetId?: string
-  params?: any
-  vbankDate?: string
+  userType: string;
+  type: string;
+  targetId?: string;
+  params?: any;
+  vbankDate?: string;
 }
 
 // 개인 알림 함수.
@@ -130,9 +131,9 @@ const Notification = async ({
 
   let queryArray;
   if (vbankDate) {
-    queryArray = [vbankDate, targetId]
+    queryArray = [vbankDate, targetId];
   } else {
-    queryArray = [targetId]
+    queryArray = [targetId];
   }
 
   // 일단 해당 target의 기본정보 및 개인알림 등록에 필요한 데이터 수집.

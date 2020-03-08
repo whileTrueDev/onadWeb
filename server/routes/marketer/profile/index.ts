@@ -25,122 +25,122 @@ const router = express.Router();
  *                 $ref: '#/definitions/Todo'
  */
 router.route('/')
-    .get(
-        responseHelper.middleware.checkSessionExists, // session 확인이 필요한 경우.
-        responseHelper.middleware.withErrorCatch(async (req, res, next) => {
-            const { marketerId } = responseHelper.getSessionData(req);
-            const query = `
+  .get(
+    responseHelper.middleware.checkSessionExists, // session 확인이 필요한 경우.
+    responseHelper.middleware.withErrorCatch(async (req, res, next) => {
+      const { marketerId } = responseHelper.getSessionData(req);
+      const query = `
             SELECT 
             marketerId, marketerName, marketerMail, 
             marketerPhoneNum, marketerBusinessRegNum,
             marketerUserType, marketerContraction, platformType
             FROM marketerInfo
             WHERE marketerId = ? `;
-            doQuery(query, [marketerId])
-                .then((row) => {
-                    responseHelper.send(row.result[0], 'get', res);
-                })
-                .catch((error) => {
-                    responseHelper.promiseError(error, next);
-                })
-        }),
-    )
-    .post(
-        responseHelper.middleware.withErrorCatch(async (req, res, next) => {
-            const [
-                marketerId, marketerName,
-                marketerMail, marketerPhoneNum,
-                marketerBusinessRegNum, marketerUserType,
-                marketerRawPasswd
-            ] = responseHelper.getParam([
-                'marketerId', 'marketerName',
-                'marketerMail', 'marketerPhoneNum',
-                'marketerBusinessRegNum', 'marketerUserType',
-                'marketerRawPasswd'
-            ], "POST", req);
-            const [key, salt] = encrypto.make(marketerRawPasswd);
+      doQuery(query, [marketerId])
+        .then((row) => {
+          responseHelper.send(row.result[0], 'get', res);
+        })
+        .catch((error) => {
+          responseHelper.promiseError(error, next);
+        });
+    }),
+  )
+  .post(
+    responseHelper.middleware.withErrorCatch(async (req, res, next) => {
+      const [
+        marketerId, marketerName,
+        marketerMail, marketerPhoneNum,
+        marketerBusinessRegNum, marketerUserType,
+        marketerRawPasswd
+      ] = responseHelper.getParam([
+        'marketerId', 'marketerName',
+        'marketerMail', 'marketerPhoneNum',
+        'marketerBusinessRegNum', 'marketerUserType',
+        'marketerRawPasswd'
+      ], 'POST', req);
+      const [key, salt] = encrypto.make(marketerRawPasswd);
 
-            const infoQuery = `
+      const infoQuery = `
               INSERT INTO marketerInfo 
               (marketerId, marketerPasswd, marketerSalt, marketerName, marketerMail, 
               marketerPhoneNum, marketerBusinessRegNum, marketerUserType) 
               VALUES (?, ?, ?, ?, ?, ?, ?, ?) `;
-            const infoQueryArray = [marketerId, key, salt, marketerName, marketerMail,
-                marketerPhoneNum, marketerBusinessRegNum, marketerUserType];
+      const infoQueryArray = [marketerId, key, salt, marketerName, marketerMail,
+        marketerPhoneNum, marketerBusinessRegNum, marketerUserType];
 
-            const cashQuery = `
+      const cashQuery = `
               INSERT INTO marketerDebit
               (marketerId, cashAmount)
               VALUES (?, ?)`;
 
-            Promise.all([
-                doQuery(infoQuery, infoQueryArray),
-                doQuery(cashQuery, [marketerId, 0]),
-            ])
-                .then(() => {
-                    next();
-                })
-                .catch((error) => {
-                    responseHelper.promiseError(error, next);
-                });
-        }),
-        sendEmailAuth
-    )
-    .patch(
-        responseHelper.middleware.checkSessionExists, // session 확인이 필요한 경우.
-        responseHelper.middleware.withErrorCatch(async (req, res, next) => {
-            const { marketerId } = responseHelper.getSessionData(req);
-            const [type, value] = responseHelper.getParam(['type', 'value'], "PATCH", req);
-            const getQuery = (intype: string): [string, any[]] => {
-                switch (intype) {
-                    case 'password': {
-                        const [key, salt] = encrypto.make(value);
-                        return [`
+      Promise.all([
+        doQuery(infoQuery, infoQueryArray),
+        doQuery(cashQuery, [marketerId, 0]),
+      ])
+        .then(() => {
+          next();
+        })
+        .catch((error) => {
+          responseHelper.promiseError(error, next);
+        });
+    }),
+    sendEmailAuth
+  )
+  .patch(
+    responseHelper.middleware.checkSessionExists, // session 확인이 필요한 경우.
+    responseHelper.middleware.withErrorCatch(async (req, res, next) => {
+      const { marketerId } = responseHelper.getSessionData(req);
+      const [type, value] = responseHelper.getParam(['type', 'value'], 'PATCH', req);
+      const getQuery = (intype: string): [string, any[]] => {
+        switch (intype) {
+          case 'password': {
+            const [key, salt] = encrypto.make(value);
+            return [`
                         UPDATE marketerInfo 
                         SET marketerSalt = ?, marketerPasswd = ?
                         WHERE marketerId = ? 
                         `, [salt, key, marketerId]];
-                    }
-                    case 'name': {
-                        return [`
+          }
+          case 'name': {
+            return [`
                         UPDATE marketerInfo 
                         SET marketerName = ?
                         WHERE marketerId = ? 
                         `, [value, marketerId]];
-                    }
-                    case 'phone': {
-                        return [`
+          }
+          case 'phone': {
+            return [`
                         UPDATE marketerInfo 
                         SET marketerPhoneNum = ?
                         WHERE marketerId = ? 
                         `, [value, marketerId]];
-                    }
-                    case 'mail': {
-                        return [`
+          }
+          case 'mail': {
+            return [`
                         UPDATE marketerInfo 
                         SET marketerMail = ?
                         WHERE marketerId = ? 
                         `, [value, marketerId]];
-                    }
-                    default:
-                        return ['', []];
-                }
-            };
-            const [updateQuery, params] = getQuery(type);
-            doQuery(updateQuery, params)
-                .then(() => {
-                    responseHelper.send([true], 'PATCH', res);
-                })
-                .catch((error) => {
-                    responseHelper.promiseError(error, next);
-                });
+          }
+          default:
+            return ['', []];
+        }
+      };
+      const [updateQuery, params] = getQuery(type);
+      doQuery(updateQuery, params)
+        .then(() => {
+          responseHelper.send([true], 'PATCH', res);
         })
-    )
-    .delete(
-        responseHelper.middleware.checkSessionExists, // session 확인이 필요한 경우.
-        responseHelper.middleware.withErrorCatch(async (req, res, next) => {
-            const { marketerId } = responseHelper.getSessionData(req);
-            const query = ` UPDATE marketerInfo SET
+        .catch((error) => {
+          responseHelper.promiseError(error, next);
+        });
+    })
+  )
+  .delete(
+    responseHelper.middleware.checkSessionExists, // session 확인이 필요한 경우.
+    responseHelper.middleware.withErrorCatch(async (req, res, next) => {
+      const { marketerId } = responseHelper.getSessionData(req);
+      const query = ` UPDATE marketerInfo SET
                                     marketerPasswd = null,
                                     marketerSalt= null,
                                     marketerName= null,
@@ -159,178 +159,178 @@ router.route('/')
                                     signOutState =2,
                                     signOutDate = NOW()
                                     WHERE marketerId = ?`;
-            doQuery(query, [marketerId])
-                .then(() => {
-                    req.logout();
-                    //session이 존재하지 않을 수 있다.
-                    if (req.session) {
-                        req.session.destroy(() => {
-                            console.log(`${marketerId}님 회원탈퇴`);
-                        });
-                    }
-                    responseHelper.send([true], 'DELETE', res);
-                })
-                .catch((error) => {
-                    responseHelper.promiseError(error, next);
-                });
+      doQuery(query, [marketerId])
+        .then(() => {
+          req.logout();
+          // session이 존재하지 않을 수 있다.
+          if (req.session) {
+            req.session.destroy(() => {
+              console.log(`${marketerId}님 회원탈퇴`);
+            });
+          }
+          responseHelper.send([true], 'DELETE', res);
         })
-    )
-    .all(responseHelper.middleware.unusedMethod)
+        .catch((error) => {
+          responseHelper.promiseError(error, next);
+        });
+    })
+  )
+  .all(responseHelper.middleware.unusedMethod);
 
 router.route('/platform')
-    .post(
-        responseHelper.middleware.withErrorCatch(async (req, res, next) => {
-            const [
-                marketerId, marketerName,
-                marketerMail, marketerPhoneNum,
-                marketerBusinessRegNum, marketerUserType,
-                platformType
-            ] = responseHelper.getParam([
-                'marketerId', 'marketerName',
-                'marketerMail', 'marketerPhoneNum',
-                'marketerBusinessRegNum', 'marketerUserType',
-                'platformType'
-            ], "POST", req);
+  .post(
+    responseHelper.middleware.withErrorCatch(async (req, res, next) => {
+      const [
+        marketerId, marketerName,
+        marketerMail, marketerPhoneNum,
+        marketerBusinessRegNum, marketerUserType,
+        platformType
+      ] = responseHelper.getParam([
+        'marketerId', 'marketerName',
+        'marketerMail', 'marketerPhoneNum',
+        'marketerBusinessRegNum', 'marketerUserType',
+        'platformType'
+      ], 'POST', req);
 
-            const infoQuery = `
+      const infoQuery = `
             INSERT INTO marketerInfo 
             (marketerId, marketerName, marketerMail, 
             marketerPhoneNum, marketerBusinessRegNum, marketerUserType, platformType, marketerEmailAuth) 
             VALUES (?, ?, ?, ?, ?, ?, ?, ?) `;
 
-            const infoQueryArray = [marketerId, marketerName, marketerMail,
-                marketerPhoneNum, marketerBusinessRegNum, marketerUserType, platformType, 1];
+      const infoQueryArray = [marketerId, marketerName, marketerMail,
+        marketerPhoneNum, marketerBusinessRegNum, marketerUserType, platformType, 1];
 
-            const cashQuery = `
+      const cashQuery = `
             INSERT INTO marketerDebit
             (marketerId, cashAmount)
             VALUES (?, ?)`;
 
-            Promise.all([
-                doQuery(infoQuery, infoQueryArray),
-                doQuery(cashQuery, [marketerId, 0])
-            ])
-                .then(() => {
-                    responseHelper.send({ error: false }, 'POST', res);
-                })
-                .catch((error) => {
-                    responseHelper.promiseError(error, next);
-                });
+      Promise.all([
+        doQuery(infoQuery, infoQueryArray),
+        doQuery(cashQuery, [marketerId, 0])
+      ])
+        .then(() => {
+          responseHelper.send({ error: false }, 'POST', res);
         })
-    )
-    .all(responseHelper.middleware.unusedMethod)
+        .catch((error) => {
+          responseHelper.promiseError(error, next);
+        });
+    })
+  )
+  .all(responseHelper.middleware.unusedMethod);
 
 router.route('/history')
-    .get(
-        responseHelper.middleware.checkSessionExists, // session 확인이 필요한 경우.
-        responseHelper.middleware.withErrorCatch(async (req, res, next) => {
-            const { marketerId } = responseHelper.getSessionData(req);
-            const query = `
+  .get(
+    responseHelper.middleware.checkSessionExists, // session 확인이 필요한 경우.
+    responseHelper.middleware.withErrorCatch(async (req, res, next) => {
+      const { marketerId } = responseHelper.getSessionData(req);
+      const query = `
             SELECT *
             FROM marketerActionLog
             WHERE marketerId = ?
             ORDER BY date DESC
             LIMIT 100
             `;
-            doQuery(query, [marketerId])
-                .then((row) => {
-                    responseHelper.send(row.result, 'get', res);
-                })
-                .catch((error) => {
-                    responseHelper.promiseError(error, next);
-                })
-        }),
-    )
-    .all(responseHelper.middleware.unusedMethod)
+      doQuery(query, [marketerId])
+        .then((row) => {
+          responseHelper.send(row.result, 'get', res);
+        })
+        .catch((error) => {
+          responseHelper.promiseError(error, next);
+        });
+    }),
+  )
+  .all(responseHelper.middleware.unusedMethod);
 
 
 // marketer/sub/profile =>/accountNumber 가져옴.
 // regist =>/accountNum 가져옴.  테스트 필요
 router.route('/account')
-    .get(
-        responseHelper.middleware.checkSessionExists, // session 확인이 필요한 경우.
-        responseHelper.middleware.withErrorCatch(async (req, res, next) => {
-            const { marketerId } = responseHelper.getSessionData(req);
-            const query = `
+  .get(
+    responseHelper.middleware.checkSessionExists, // session 확인이 필요한 경우.
+    responseHelper.middleware.withErrorCatch(async (req, res, next) => {
+      const { marketerId } = responseHelper.getSessionData(req);
+      const query = `
             SELECT marketerAccountNumber, accountHolder
             FROM marketerInfo
             WHERE marketerId = ?`;
-            doQuery(query, [marketerId])
-                .then((row) => {
-                    const { marketerAccountNumber, accountHolder } = row.result[0];
-                    let accountNumber;
-                    if (marketerAccountNumber) {
-                        accountNumber = encrypto.decipher(marketerAccountNumber);
-                    } else {
-                        accountNumber = '';
-                    }
+      doQuery(query, [marketerId])
+        .then((row) => {
+          const { marketerAccountNumber, accountHolder } = row.result[0];
+          let accountNumber;
+          if (marketerAccountNumber) {
+            accountNumber = encrypto.decipher(marketerAccountNumber);
+          } else {
+            accountNumber = '';
+          }
 
-                    responseHelper.send({
-                        accountNumber, accountHolder
-                    }, 'get', res);
-                })
-                .catch((error) => {
-                    responseHelper.promiseError(error, next);
-                })
-        }),
-    )
-    .put(
-        responseHelper.middleware.checkSessionExists, // session 확인이 필요한 경우.
-        responseHelper.middleware.withErrorCatch(async (req, res, next) => {
-            const { marketerId } = responseHelper.getSessionData(req);
-            const [bankName, bankRealName, bankAccount] = responseHelper.getParam(['bankName', 'bankRealName', 'bankAccount'], "PUT", req);
-            const accountNumber = `${bankName}_${bankAccount}`;
-            const enciphedAccountNum = encrypto.encipher(accountNumber);
-            const query = 'UPDATE marketerInfo SET marketerAccountNumber = ?, accountHolder = ? WHERE marketerId = ?';
-            doQuery(query, [enciphedAccountNum, bankRealName, marketerId])
-                .then(() => {
-                    responseHelper.send([true], 'PUT', res);
-                })
-                .catch((error) => {
-                    responseHelper.promiseError(error, next);
-                })
-        }),
-    )
-    .all(responseHelper.middleware.unusedMethod)
+          responseHelper.send({
+            accountNumber, accountHolder
+          }, 'get', res);
+        })
+        .catch((error) => {
+          responseHelper.promiseError(error, next);
+        });
+    }),
+  )
+  .put(
+    responseHelper.middleware.checkSessionExists, // session 확인이 필요한 경우.
+    responseHelper.middleware.withErrorCatch(async (req, res, next) => {
+      const { marketerId } = responseHelper.getSessionData(req);
+      const [bankName, bankRealName, bankAccount] = responseHelper.getParam(['bankName', 'bankRealName', 'bankAccount'], 'PUT', req);
+      const accountNumber = `${bankName}_${bankAccount}`;
+      const enciphedAccountNum = encrypto.encipher(accountNumber);
+      const query = 'UPDATE marketerInfo SET marketerAccountNumber = ?, accountHolder = ? WHERE marketerId = ?';
+      doQuery(query, [enciphedAccountNum, bankRealName, marketerId])
+        .then(() => {
+          responseHelper.send([true], 'PUT', res);
+        })
+        .catch((error) => {
+          responseHelper.promiseError(error, next);
+        });
+    }),
+  )
+  .all(responseHelper.middleware.unusedMethod);
 
 // marketer/sub/profile => /business, /business/upload 가져옴.
 router.route('/business')
-    .get(
-        responseHelper.middleware.checkSessionExists,
-        responseHelper.middleware.withErrorCatch(async (req, res, next) => {
-            const { marketerId } = responseHelper.getSessionData(req);
-            const query = `
+  .get(
+    responseHelper.middleware.checkSessionExists,
+    responseHelper.middleware.withErrorCatch(async (req, res, next) => {
+      const { marketerId } = responseHelper.getSessionData(req);
+      const query = `
             SELECT marketerBusinessRegNum, marketerBusinessRegSrc
             FROM marketerInfo
             WHERE marketerId = ?`;
-            doQuery(query, [marketerId])
-                .then((row) => {
-                    responseHelper.send(row.result[0], 'get', res);
-                })
-                .catch((error) => {
-                    responseHelper.promiseError(error, next);
-                })
-        }),
-    )
-    .put(
-        responseHelper.middleware.checkSessionExists,
-        responseHelper.middleware.withErrorCatch(async (req, res, next) => {
-            const businessImageSrc = responseHelper.getParam('imageUrl', 'PUT', req);
-            const { marketerId } = responseHelper.getSessionData(req);
-            const query = `
+      doQuery(query, [marketerId])
+        .then((row) => {
+          responseHelper.send(row.result[0], 'get', res);
+        })
+        .catch((error) => {
+          responseHelper.promiseError(error, next);
+        });
+    }),
+  )
+  .put(
+    responseHelper.middleware.checkSessionExists,
+    responseHelper.middleware.withErrorCatch(async (req, res, next) => {
+      const businessImageSrc = responseHelper.getParam('imageUrl', 'PUT', req);
+      const { marketerId } = responseHelper.getSessionData(req);
+      const query = `
             UPDATE marketerInfo
             SET marketerBusinessRegSrc = ?
             WHERE marketerId = ?`;
-            doQuery(query, [businessImageSrc, marketerId])
-                .then(() => {
-                    responseHelper.send([true], 'PUT', res);
-                })
-                .catch((error) => {
-                    responseHelper.promiseError(error, next);
-                })
-        }),
-    )
-    .all(responseHelper.middleware.unusedMethod)
+      doQuery(query, [businessImageSrc, marketerId])
+        .then(() => {
+          responseHelper.send([true], 'PUT', res);
+        })
+        .catch((error) => {
+          responseHelper.promiseError(error, next);
+        });
+    }),
+  )
+  .all(responseHelper.middleware.unusedMethod);
 
 
 interface Taxbill {
@@ -340,46 +340,46 @@ interface Taxbill {
 
 // marketer/sub/profile =>taxbill
 router.route('/tax-bills')
-    .get(
-        responseHelper.middleware.checkSessionExists, // session 확인이 필요한 경우.
-        responseHelper.middleware.withErrorCatch(async (req, res, next) => {
-            const { marketerId } = responseHelper.getSessionData(req);
-            const query = `
+  .get(
+    responseHelper.middleware.checkSessionExists, // session 확인이 필요한 경우.
+    responseHelper.middleware.withErrorCatch(async (req, res, next) => {
+      const { marketerId } = responseHelper.getSessionData(req);
+      const query = `
             SELECT date, cashAmount, state FROM marketerTaxBill
             WHERE marketerId = ?`;
-            doQuery(query, [marketerId])
-                .then((row) => {
-                    const sendArray: any[] = [];
-                    row.result.forEach((obj: Taxbill) => {
-                        const object = obj;
-                        let taxBillState = '';
-                        switch (object.state) {
-                            case 0: taxBillState = '발행대기'; break;
-                            case 1: taxBillState = '발행완료'; break;
-                            case 2: taxBillState = '미발행'; break;
-                            default: throw Error('tax bill state');
-                        }
-                        object.state = taxBillState;
-                        object.cashAmount = object.cashAmount ? object.cashAmount.toString() : '0';
-                        sendArray.push(Object.values(object));
-                    });
-                    responseHelper.send(sendArray, 'get', res);
-                })
-                .catch((error) => {
-                    responseHelper.promiseError(error, next);
-                })
-        }),
-    )
-    .all(responseHelper.middleware.unusedMethod)
+      doQuery(query, [marketerId])
+        .then((row) => {
+          const sendArray: any[] = [];
+          row.result.forEach((obj: Taxbill) => {
+            const object = obj;
+            let taxBillState = '';
+            switch (object.state) {
+              case 0: taxBillState = '발행대기'; break;
+              case 1: taxBillState = '발행완료'; break;
+              case 2: taxBillState = '미발행'; break;
+              default: throw Error('tax bill state');
+            }
+            object.state = taxBillState;
+            object.cashAmount = object.cashAmount ? object.cashAmount.toString() : '0';
+            sendArray.push(Object.values(object));
+          });
+          responseHelper.send(sendArray, 'get', res);
+        })
+        .catch((error) => {
+          responseHelper.promiseError(error, next);
+        });
+    }),
+  )
+  .all(responseHelper.middleware.unusedMethod);
 
 // marketer/sub/notification =>/
 // marketer/sub/notification =>/update/read
 router.route('/notification')
-    .get(
-        responseHelper.middleware.checkSessionExists, // session 확인이 필요한 경우.
-        responseHelper.middleware.withErrorCatch(async (req, res, next) => {
-            const { marketerId } = responseHelper.getSessionData(req);
-            const callQuery = `
+  .get(
+    responseHelper.middleware.checkSessionExists, // session 확인이 필요한 경우.
+    responseHelper.middleware.withErrorCatch(async (req, res, next) => {
+      const { marketerId } = responseHelper.getSessionData(req);
+      const callQuery = `
             SELECT 
             mn.index, title, content,
             date_format(date,'%y년 %m월 %d일') AS dateform,
@@ -388,49 +388,49 @@ router.route('/notification')
             WHERE marketerId = ?
             ORDER BY date DESC, readState ASC`;
 
-            const countQuery = `
+      const countQuery = `
             SELECT count(*) as count
             FROM marketerNotification
             WHERE marketerId = ? AND readState = 0`;
-            const result = { notifications: [{}], unReadCount: 0 };
+      const result = { notifications: [{}], unReadCount: 0 };
 
-            doQuery(callQuery, [marketerId])
-                .then((data) => {
-                    result.notifications = data.result;
-                    doQuery(countQuery, [marketerId])
-                        .then((row) => {
-                            if (row.result) {
-                                const { count } = row.result[0];
-                                result.unReadCount = count;
-                            }
-                            responseHelper.send(result, 'get', res);
-                        });
-                })
-                .catch((error) => {
-                    responseHelper.promiseError(error, next);
-                });
+      doQuery(callQuery, [marketerId])
+        .then((data) => {
+          result.notifications = data.result;
+          doQuery(countQuery, [marketerId])
+            .then((row) => {
+              if (row.result) {
+                const { count } = row.result[0];
+                result.unReadCount = count;
+              }
+              responseHelper.send(result, 'get', res);
+            });
         })
-    )
-    .patch(
-        responseHelper.middleware.checkSessionExists, // session 확인이 필요한 경우.
-        responseHelper.middleware.withErrorCatch(async (req, res, next) => {
-            const { marketerId } = responseHelper.getSessionData(req);
-            const index = responseHelper.getParam("index", "PATCH", req);
-            const query = `
+        .catch((error) => {
+          responseHelper.promiseError(error, next);
+        });
+    })
+  )
+  .patch(
+    responseHelper.middleware.checkSessionExists, // session 확인이 필요한 경우.
+    responseHelper.middleware.withErrorCatch(async (req, res, next) => {
+      const { marketerId } = responseHelper.getSessionData(req);
+      const index = responseHelper.getParam('index', 'PATCH', req);
+      const query = `
                 UPDATE marketerNotification
                 SET readState = 1
                 WHERE marketerNotification.index = ? AND marketerId = ?`;
 
-            doQuery(query, [index, marketerId])
-                .then(() => {
-                    responseHelper.send([true], 'PATCH', res);
-                })
-                .catch((error) => {
-                    responseHelper.promiseError(error, next);
-                })
+      doQuery(query, [index, marketerId])
+        .then(() => {
+          responseHelper.send([true], 'PATCH', res);
         })
-    )
-    .all(responseHelper.middleware.unusedMethod)
+        .catch((error) => {
+          responseHelper.promiseError(error, next);
+        });
+    })
+  )
+  .all(responseHelper.middleware.unusedMethod);
 
 interface Notification {
     title: string;
@@ -441,31 +441,31 @@ interface Notification {
 
 // marketer/sub/notification => /list
 router.route('/notification/list')
-    .get(
-        responseHelper.middleware.checkSessionExists, // session 확인이 필요한 경우.
-        responseHelper.middleware.withErrorCatch(async (req, res, next) => {
-            const { marketerId } = responseHelper.getSessionData(req);
-            const query = `
+  .get(
+    responseHelper.middleware.checkSessionExists, // session 확인이 필요한 경우.
+    responseHelper.middleware.withErrorCatch(async (req, res, next) => {
+      const { marketerId } = responseHelper.getSessionData(req);
+      const query = `
             SELECT title, content, date_format(date,'%y. %m. %d') as date, readState
             FROM marketerNotification AS mn
             WHERE marketerId = ?
             ORDER BY readState`;
 
-            doQuery(query, [marketerId])
-                .then((data) => {
-                    const dataArray = data.result.map((value: Notification) => {
-                        const returnValue: Notification = { ...value };
-                        returnValue.readState = returnValue.readState ? '읽음' : '안읽음';
-                        return Object.values(returnValue)
-                    });
-                    console.log(dataArray);
-                    responseHelper.send(dataArray, 'get', res);
-                })
-                .catch((error) => {
-                    responseHelper.promiseError(error, next);
-                })
-        }),
-    )
-    .all(responseHelper.middleware.unusedMethod)
+      doQuery(query, [marketerId])
+        .then((data) => {
+          const dataArray = data.result.map((value: Notification) => {
+            const returnValue: Notification = { ...value };
+            returnValue.readState = returnValue.readState ? '읽음' : '안읽음';
+            return Object.values(returnValue);
+          });
+          console.log(dataArray);
+          responseHelper.send(dataArray, 'get', res);
+        })
+        .catch((error) => {
+          responseHelper.promiseError(error, next);
+        });
+    }),
+  )
+  .all(responseHelper.middleware.unusedMethod);
 
 export default router;

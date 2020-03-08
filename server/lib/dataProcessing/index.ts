@@ -21,18 +21,16 @@ interface WithrawalList {
 interface Array<A, B> {
   length: number;
   [index: number]: A | B;
-  map(arg: any): any
-};
+  map(arg: any): any;
+}
 
 
 // 출금 내역에 대한 데이터 프로세싱
 function withdrawalList(rawData: QueryResult): object {
-
   const rows: Array<string, number> = rawData.result;
-  const columns: Array<string, number> = Object.keys(rows[0]).map(col =>
-    col.replace('date', '출금날짜')
-      .replace('creatorWithdrawalAmount', '출금금액')
-      .replace('withdrawalState', '신청상태'));
+  const columns: Array<string, number> = Object.keys(rows[0]).map((col) => col.replace('date', '출금날짜')
+    .replace('creatorWithdrawalAmount', '출금금액')
+    .replace('withdrawalState', '신청상태'));
 
   // dataset preprocessing
   const data: Array<string, number> = rows.map(
@@ -74,7 +72,6 @@ const PriorityDoquery = ({
   priorityList,
   optionType
 }: PriorityData) => {
-
   const getSearchQuery = (type: string) => {
     switch (type) {
       case '0': {

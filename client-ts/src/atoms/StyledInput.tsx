@@ -1,12 +1,12 @@
 
 import React from 'react';
 import { Input } from '@material-ui/core';
-import { withStyles } from '@material-ui/core/styles';
+import { withStyles, Theme } from '@material-ui/core/styles';
 
-const StyledInput = withStyles((theme) => ({
+const StyledInput = withStyles((theme: Theme) => ({
   root: {
     fontSize: '16px',
-    fontWeight: '700',
+    fontWeight: 700,
     color: theme.palette.info.main,
     width: '300px',
     [theme.breakpoints.down('sm')]: {

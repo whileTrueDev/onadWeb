@@ -1,6 +1,6 @@
 import crypto from 'crypto';
 
-const makeEncryption = function (passwd: string): string[] {
+const makeEncryption = (passwd: string): string[] => {
   const salt = crypto.randomBytes(64).toString('base64');
   const key = crypto.pbkdf2Sync(passwd, salt, 100202, 64, 'sha512').toString('base64');
   return [key, salt];
@@ -8,7 +8,7 @@ const makeEncryption = function (passwd: string): string[] {
 
 // 입력된 passwd를 salt로 돌려서
 // 생성되는 key와 db의 key값과 비교
-const checkEncryption = function (passwd: string, key: string, salt: string): boolean {
+const checkEncryption = (passwd: string, key: string, salt: string): boolean => {
   const newkey = crypto.pbkdf2Sync(passwd, salt, 100202, 64, 'sha512').toString('base64');
   if (key === newkey) {
     return true;
@@ -39,7 +39,7 @@ const makeDecipherText = (account: string): string => {
 };
 
 
-const makeCipherText = (account: string) => {
+const makeCipherText = (account: string): string => {
   if (account === '') {
     return '';
   }

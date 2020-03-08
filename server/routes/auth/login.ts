@@ -51,7 +51,7 @@ router.get('/kakao/callback', passport.authenticate('kakao'),
       res.redirect(`${HOST}/dashboard/marketer/main`);
     } else {
       console.log('success kakao login - 정보입력');
-      res.redirect(`${HOST}/regist/naver`);
+      res.redirect(`${HOST}/regist/kakao`);
     }
   });
 
@@ -59,7 +59,8 @@ router.get('/kakao/callback', passport.authenticate('kakao'),
 router.get('/twitch', passport.authenticate('twitch'));
 router.get('/twitch/callback', passport.authenticate('twitch'),
   (req, res) => {
-    res.redirect(`${HOST}/`);
+    res.send('success twitch login');
+    // res.redirect(`${HOST}/`);
   });
 
 

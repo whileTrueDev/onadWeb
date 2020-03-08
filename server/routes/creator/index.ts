@@ -29,7 +29,7 @@ router.route('/')
       `;
 
       doQuery(query, [creatorId])
-        .then(row => {
+        .then((row) => {
           const userData = row.result[0];
           const rawAccount: string = row.result[0].creatorAccountNumber || '';
           const deciphedAccountNum: string = encrypto.decipher(rawAccount);
@@ -38,22 +38,20 @@ router.route('/')
           const result = {
             ...userData,
             NowIp
-          }
+          };
           responseHelper.send(result, 'get', res);
         }).catch((error) => {
-          responseHelper.promiseError(error, next)
-        }
-        )
+          responseHelper.promiseError(error, next);
+        });
     }),
   )
   // 크리에이터 정산에 필요한 계좌 등록 / 변경
   .post(
     responseHelper.middleware.checkSessionExists,
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
-
       const { creatorId } = responseHelper.getSessionData(req);
       const [bankName, bankRealName, bankAccount]: string[] = responseHelper.getParam(['bankName', 'bankRealName', 'bankAccount'], 'post', req);
-      const AccountNumber: string = `${bankName}_${bankAccount}`;
+      const AccountNumber = `${bankName}_${bankAccount}`;
       const enciphedAccountNum: string = encrypto.encipher(AccountNumber);
       const query = `
       UPDATE creatorInfo 
@@ -61,34 +59,31 @@ router.route('/')
       `;
 
       doQuery(query, [enciphedAccountNum, bankRealName, creatorId])
-        .then(row => {
+        .then((row) => {
           responseHelper.send([true], 'POST', res);
         }).catch((error) => {
-          responseHelper.promiseError(error, next)
-        }
-        )
+          responseHelper.promiseError(error, next);
+        });
     }),
   )
   .patch(
     // 크리에이터 계약 OR IP 업데이트
     responseHelper.middleware.checkSessionExists,
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
-
       const { creatorId, creatorName } = responseHelper.getSessionData(req);
-      const newIp: string | undefined = req.body.newIp
+      const { newIp } = req.body;
 
       if (typeof newIp === 'string') {
-        //IP update
+        // IP update
         const ipQuery = 'UPDATE creatorInfo SET creatorIp = ? WHERE creatorId = ?';
         doQuery(ipQuery, [newIp, creatorId])
           .then(() => {
             responseHelper.send(`${creatorId}님 IP변경완료`, 'PATCH', res);
           }).catch((error) => {
-            responseHelper.promiseError(error, next)
-          }
-          )
+            responseHelper.promiseError(error, next);
+          });
       } else {
-        //contraction update
+        // contraction update
         const campaignList = JSON.stringify({ campaignList: [] });
 
         const campaignQuery = `
@@ -116,7 +111,7 @@ router.route('/')
             responseHelper.send([true], 'PATCH', res);
           })
           .catch((error) => {
-            responseHelper.promiseError(error, next)
+            responseHelper.promiseError(error, next);
           });
       }
     }),
@@ -138,25 +133,31 @@ router.route('/ad-page')
       WHERE CL.creatorId = ?
       LIMIT 1`;
 
-      doQuery(query, [creatorId])
-        .then(row => {
+      interface CreatorAdPage {
+        creatorTwitchId: string;
+        creatorDesc: string;
+        creatorBackgroundImage: string;
+        creatorTheme: string;
+        visitCount: string; }
+
+      doQuery<CreatorAdPage[]>(query, [creatorId])
+        .then((row) => {
+          console.log(row);
           if (!row.error && row.result) {
             responseHelper.send(row.result[0], 'get', res);
           } else {
-            res.end()
+            res.end();
           }
-
         }).catch((error) => {
-          responseHelper.promiseError(error, next)
-        }
-        )
+          responseHelper.promiseError(error, next);
+        });
     }),
   )
   .patch(
     responseHelper.middleware.checkSessionExists,
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
       const { creatorId } = responseHelper.getSessionData(req);
-      const { imageUrl, description, creatorTheme } = req.body
+      const { imageUrl, description, creatorTheme } = req.body;
 
       if (typeof imageUrl !== 'string') {
         // 소개글 관리 변경
@@ -173,7 +174,7 @@ router.route('/ad-page')
             }
           })
           .catch((err) => {
-            responseHelper.promiseError(err, next)
+            responseHelper.promiseError(err, next);
           });
       } else {
         // 이미지 변경
@@ -189,7 +190,7 @@ router.route('/ad-page')
             }
           })
           .catch((err) => {
-            responseHelper.promiseError(err, next)
+            responseHelper.promiseError(err, next);
           });
       }
     }),
@@ -211,14 +212,13 @@ router.route('/landing-url')
       `;
 
       doQuery(query, [creatorId])
-        .then(row => {
+        .then((row) => {
           const { creatorTwitchId } = row.result[0];
-          const result = `http://l.onad.io/${creatorTwitchId}`
+          const result = `http://l.onad.io/${creatorTwitchId}`;
           responseHelper.send(result, 'get', res);
         }).catch((error) => {
-          responseHelper.promiseError(error, next)
-        }
-        )
+          responseHelper.promiseError(error, next);
+        });
     }),
   )
   .all(responseHelper.middleware.unusedMethod);

@@ -10,7 +10,7 @@ const useStyles = makeStyles({
 });
 
 function GridItem({ children, ...rest }:
-  { children: React.ReactNode; [key: string]: any}): JSX.Element {
+  { children?: React.ReactNode; [key: string]: any}): JSX.Element {
   const classes = useStyles();
   return (
     <Grid item {...rest} className={classes.grid}>

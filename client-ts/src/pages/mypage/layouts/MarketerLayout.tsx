@@ -12,7 +12,7 @@ import history from '../../../history';
 import dashboardStyle from '../../../assets/jss/layouts/dashboardStyle';
 import '../../../assets/onad.css';
 
-const CreatorDashboard = (
+const MarketerDashboard = (
   props: { classes: any; [key: string]: any}
 ): JSX.Element => {
   const { classes, ...rest } = props;
@@ -42,7 +42,7 @@ const CreatorDashboard = (
   return (
     <div className={classes.wrapper}>
       <Sidebar
-        routes={allRoutes.creator}
+        routes={allRoutes.marketer}
         logoText="OnAD"
         logo="/pngs/logo/onad_logo_vertical_white.png"
         mobileOpen={mobileOpen}
@@ -52,13 +52,13 @@ const CreatorDashboard = (
       <div className={classes.mainPanel} ref={mainPanel}>
         <Navbar
           handleDrawerToggle={handleDrawerToggle}
-          routes={allRoutes.creator}
+          routes={allRoutes.marketer}
           {...rest}
         />
         <div className={classes.content}>
           <div className={classes.container}>
             <Switch>
-              {allRoutes.creator.map((prop) => (
+              {allRoutes.marketer.map((prop) => (
                 <Route
                   path={prop.layout + prop.path}
                   component={prop.component
@@ -77,8 +77,8 @@ const CreatorDashboard = (
 };
 
 
-CreatorDashboard.propTypes = {
+MarketerDashboard.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(dashboardStyle)(CreatorDashboard);
+export default withStyles(dashboardStyle)(MarketerDashboard);
