@@ -10,11 +10,7 @@ import history from '../../../history';
 import useLayoutStyles from './Layout.style';
 import '../../../assets/onad.css';
 
-const MarketerDashboard = (
-  props: { [key: string]: any}
-): JSX.Element => {
-  const { ...rest } = props;
-
+const MarketerDashboard = (): JSX.Element => {
   const classes = useLayoutStyles();
 
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -43,17 +39,14 @@ const MarketerDashboard = (
     <div className={classes.wrapper}>
       <Sidebar
         routes={allRoutes.marketer}
-        logoText="OnAD"
         logo="/pngs/logo/onad_logo_vertical_white.png"
         mobileOpen={mobileOpen}
         handleDrawerToggle={handleDrawerToggle}
-        {...rest}
       />
       <div className={classes.mainPanel} ref={mainPanel}>
         <Navbar
           handleDrawerToggle={handleDrawerToggle}
           routes={allRoutes.marketer}
-          {...rest}
         />
         <div className={classes.content}>
           <div className={classes.container}>

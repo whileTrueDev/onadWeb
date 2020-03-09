@@ -1,36 +1,46 @@
 import React from 'react';
 import shortid from 'shortid';
 import classNames from 'classnames';
-import PropTypes from 'prop-types';
 import { NavLink } from 'react-router-dom';
 // @material-ui/core components
-import withStyles from '@material-ui/core/styles/withStyles';
 import {
   Drawer, Hidden, Button, List, ListItemText, Grid,
 } from '@material-ui/core';
 import AdminNavbarLinks from '../Navbars/AdminNavbarLinks';
+import { MypageRoute } from '../../../../pages/mypage/routes';
 // styles
-import sidebarStyle from './Sidebar.style';
+import useSiedebarStyles from './Sidebar.style';
 // utils
 import history from '../../../../history';
 
-const Sidebar = ({ ...props }) => {
-  // verifies if routeName is the one active (in browser input)
-  function isActiveRoute(routeName) {
-    return props.location.pathname.indexOf(routeName) > -1;
-  }
-  const {
-    classes, logo, routes, handleDrawerToggle, mobileOpen,
-  } = props;
+interface SidebarProps {
+  logo: string;
+  routes: MypageRoute[];
+  handleDrawerToggle: () => void;
+  mobileOpen: boolean;
+}
 
-  function handleLogoClick() {
+const Sidebar = ({
+  logo,
+  routes,
+  handleDrawerToggle,
+  mobileOpen
+}: SidebarProps): JSX.Element => {
+  const classes = useSiedebarStyles();
+
+  // verifies if routeName is the one active (in browser input)
+  function isActiveRoute(routeName: string): boolean {
+    return window.location.pathname.indexOf(routeName) > -1;
+  }
+
+  function handleLogoClick(): void {
     history.push(`/dashboard/${window.location.pathname.split('/')[2]}/main`);
   }
 
   const links = (
     <List className={classes.flex}>
       <div>
-        {routes.map((prop, key) => {
+        {routes.map((prop) => {
           const listItemClasses = classNames({
             [` ${classes.activeLink}`]: isActiveRoute(prop.layout + prop.path),
           });
@@ -140,18 +150,4 @@ const Sidebar = ({ ...props }) => {
   );
 };
 
-Sidebar.propTypes = {
-  classes: PropTypes.object.isRequired,
-  logoText: PropTypes.string,
-  routes: PropTypes.array.isRequired,
-  handleDrawerToggle: PropTypes.func.isRequired,
-  mobileOpen: PropTypes.bool,
-  logo: PropTypes.string.isRequired,
-};
-
-Sidebar.defaultProps = {
-  logoText: '',
-  mobileOpen: false,
-};
-
-export default withStyles(sidebarStyle)(Sidebar);
+export default Sidebar;

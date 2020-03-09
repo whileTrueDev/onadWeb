@@ -12,7 +12,6 @@ import theme from './theme';
 import * as serviceWorker from './serviceWorker';
 
 // Pages
-import Test from './pages/Test';
 import Door from './pages/main/Door';
 import CreatorDashboard from './pages/mypage/layouts/CreatorLayout';
 // import MarketerLayout from './pages/mypage/layouts/MarketerLayout';

@@ -1,8 +1,8 @@
-import {
-  drawerWidth,
-} from '../../../../assets/jss/onad';
+import { Theme, makeStyles } from '@material-ui/core/styles';
 
-const sidebarStyle = (theme) => ({
+import { drawerWidth, } from '../../../../assets/jss/onad';
+
+const useSiedebarStyles = makeStyles((theme: Theme) => ({
   flex: {
     justifyContent: 'center',
     alignItems: 'center',
@@ -18,7 +18,7 @@ const sidebarStyle = (theme) => ({
     top: '0',
     bottom: '0',
     left: '0',
-    zIndex: '1',
+    zIndex: 1,
     width: drawerWidth,
     [theme.breakpoints.up('md')]: {
       width: drawerWidth,
@@ -33,7 +33,7 @@ const sidebarStyle = (theme) => ({
       height: '100vh',
       right: '0',
       left: 'auto',
-      zIndex: '1032',
+      zIndex: 10,
       visibility: 'visible',
       overflowY: 'visible',
       borderTop: 'none',
@@ -44,16 +44,15 @@ const sidebarStyle = (theme) => ({
     },
   },
   desktopPaper: {
-    overflow: false,
     border: 'none',
     top: '0',
     bottom: '0',
     left: '0',
-    zIndex: '1',
+    zIndex: 1,
     width: drawerWidth,
   },
   desktopLogo: {
-    zIndex: '4',
+    zIndex: 4,
   },
   mobileHead: {
     display: 'flex',
@@ -63,7 +62,7 @@ const sidebarStyle = (theme) => ({
     marginTop: '15px',
     padding: '0',
     margin: '0',
-    zIndex: '4',
+    zIndex: 4,
     marginBottom: '10px',
     backgroundColor: theme.palette.secondary.main
   },
@@ -72,7 +71,7 @@ const sidebarStyle = (theme) => ({
     marginTop: '15px',
     padding: '0',
     margin: '0',
-    zIndex: '4',
+    zIndex: 4,
     marginBottom: '30px',
     backgroundColor: theme.palette.secondary.main
   },
@@ -88,7 +87,7 @@ const sidebarStyle = (theme) => ({
   },
   background: {
     position: 'absolute',
-    zIndex: '1',
+    zIndex: 1,
     height: '100%',
     width: '100%',
     display: 'block',
@@ -98,7 +97,7 @@ const sidebarStyle = (theme) => ({
     backgroundPosition: 'center center',
     '&:after': {
       position: 'absolute',
-      zIndex: '3',
+      zIndex: 3,
       width: '100%',
       height: '100%',
       content: '""',
@@ -109,7 +108,7 @@ const sidebarStyle = (theme) => ({
   NavBarLinksWrapper: {
     marginLeft: theme.spacing(2),
     marginRight: theme.spacing(2),
-    borderTop: `0.05em solid ${'#fff'}`,
+    borderTop: `0.05em solid ${theme.palette.common.white}`,
     display: 'flex',
     justifyContent: 'flex-end',
   },
@@ -154,7 +153,7 @@ const sidebarStyle = (theme) => ({
     [theme.breakpoints.down('md')]: {
       fontSize: '10px',
     },
-    fontWeight: '700',
+    fontWeight: 700,
   },
   whiteFont: {
     color: theme.palette.common.white,
@@ -164,12 +163,12 @@ const sidebarStyle = (theme) => ({
     height: 'calc(100vh - 75px)',
     overflow: 'auto',
     width: '80px',
-    zIndex: '4',
+    zIndex: 4,
     overflowScrolling: 'touch',
   },
   desktopWrapper: {
-    zIndex: '3',
+    zIndex: 3,
   }
-});
+}));
 
-export default sidebarStyle;
+export default useSiedebarStyles;
