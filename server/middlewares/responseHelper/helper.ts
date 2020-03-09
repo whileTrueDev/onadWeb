@@ -80,12 +80,7 @@ const getParam = (paramField: string | string[],
  */
 const getSessionData = (req: express.Request): Session => {
   if (req && req.session && req.session.passport && req.session.passport.user) {
-    const { userType } = req.session.passport.user;
-    if (userType === 'creator') {
-      return { ...req.session.passport.user, creatorId: req.session.passport.user.userid }
-    } else {
-      return { ...req.session.passport.user, marketerId: req.session.passport.user.userid }
-    }
+    return req.session.passport.user;
   }
   throw new createError[401](responseMessages.ERROR_401);
 };

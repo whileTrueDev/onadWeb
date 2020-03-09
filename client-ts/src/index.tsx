@@ -4,9 +4,9 @@ import dotenv from 'dotenv';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Router, Switch, Route } from 'react-router-dom';
-// import { MuiThemeProvider as ThemeProvider } from '@material-ui/core/styles';
+import { MuiThemeProvider as ThemeProvider } from '@material-ui/core/styles';
 import history from './history';
-// import theme from './theme';
+import theme from './theme';
 
 // PWA
 import * as serviceWorker from './serviceWorker';
@@ -16,6 +16,8 @@ import './assets/onad.css';
 // Pages
 import Test from './pages/Test';
 import Door from './pages/main/Door';
+import CreatorDashboard from './pages/mypage/layouts/CreatorLayout';
+// import MarketerLayout from './pages/mypage/layouts/MarketerLayout';
 
 
 dotenv.config();
@@ -23,7 +25,11 @@ dotenv.config();
 const developmentRouter = (
   <Router history={history}>
     <Switch>
-      <Route exact path="/" component={Test} />
+      <Route exact path="/" component={Door} />
+      <ThemeProvider theme={theme.lightTheme}>
+        <Route path="/mypage/creator" component={CreatorDashboard} />
+        {/* <Route path="/mypage/marketer" component={MarketerDashboard} /> */}
+      </ThemeProvider>
     </Switch>
   </Router>
 );
@@ -32,6 +38,9 @@ const productionRouter = (
   <Router history={history}>
     <Switch>
       <Route exact path="/" component={Door} />
+      <ThemeProvider theme={theme.lightTheme}>
+        <Route path="/mypage/creator" component={CreatorDashboard} />
+      </ThemeProvider>
     </Switch>
   </Router>
 );

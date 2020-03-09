@@ -18,7 +18,7 @@
 // 14	무관
 interface GameDict {
   default: [14];
-  [gameId: number]: number[]
+  [gameId: number]: number[];
 }
 
 const gameDict: GameDict = {
@@ -719,30 +719,30 @@ const gameDict: GameDict = {
   510825: [1],
   313558: [1],
   24623: [1, 4], // MechWarrior Online
-  19976: [1, 3, 12,], // MapleStory
+  19976: [1, 3, 12, ], // MapleStory
   75467: [1, 10, 4], // Euro Truck Simulator 2
   491334: [1, 7, 10], // Kartrider
   115977: [1, 13, 5, 6], // The Witcher 3: Wild Hunt
   499463: [1, 14], // Getting Over It
-  66366: [1, 4,], // War Thunder
+  66366: [1, 4, ], // War Thunder
   503116: [1, 9], // Beat Saber
-  7022: [1,], // The Forest
+  7022: [1, ], // The Forest
   65663: [1, 11, 4], // Company of Heroes 2
-  73586: [1,], // Outlast
+  73586: [1, ], // Outlast
   461389: [1, 6, 8, 12, 11], // Life Is Strange
   370539: [1, 12, 6], // Puyo Puyo Tetris
   20501: [1, 3, 6], // Mabinogi
-  458634: [1,], // Cyphers Online
+  458634: [1, ], // Cyphers Online
   497985: [2, 6, 13], // Lineage M
-  492971: [1,], // Tricky Towers
-  490537: [1,], // Layers of Fear
-  512070: [1,], // Jump King
-  512341: [1,], // Planet Zoo
+  492971: [1, ], // Tricky Towers
+  490537: [1, ], // Layers of Fear
+  512070: [1, ], // Jump King
+  512341: [1, ], // Planet Zoo
   512811: [1, 8], // Otaku's Adventure
   514193: [1, 4, 11], // Ratropolis
-  515314: [1,], // World Flipper
+  515314: [1, ], // World Flipper
   497451: [5, 6, 7, 12], // Pokémon Sword/Shield
-  24193: [1,], // Left 4 Dead 2
+  24193: [1, ], // Left 4 Dead 2
 };
 
 const categories = {

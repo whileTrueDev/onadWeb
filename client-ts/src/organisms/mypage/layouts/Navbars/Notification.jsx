@@ -5,7 +5,7 @@ import {
   Typography, Divider, Badge, Popper
 } from '@material-ui/core';
 import MenuItem from '@material-ui/core/MenuItem';
-import useUpdateData from '../../utils/lib/hooks/useUpdateData';
+import usePostRequest from '../../../../utils/hooks/usePostRequest';
 
 
 const useStyles = makeStyles(() => ({
@@ -38,7 +38,7 @@ function Notification(props) {
   const {
     anchorEl, notificationData
   } = props;
-  const updateRequest = useUpdateData(`/api/dashboard/${userType}/notification/update/read`);
+  const updateRequest = usePostRequest(`/api/dashboard/${userType}/notification/update/read`);
 
   function updateNotifications(notiArray, targetIndex) {
     const arr = notiArray;
@@ -83,7 +83,7 @@ function Notification(props) {
 
         { !notificationData.loading && !notificationData.error && (
         <div>
-          {notificationData.payload.notifications.map(noti => (
+          {notificationData.payload.notifications.map((noti) => (
             <div key={noti.index}>
               <MenuItem onClick={() => {
                 updateRequest.handleUpdateRequest({ index: noti.index });

@@ -3,8 +3,7 @@ DB에 접근하여 context에 저장할 session값을 불러오는 작업을 진
 */
 import doQuery from '../model/doQuery';
 
-const checkEmailAuth = (req: any, res: any) => {
-
+const checkEmailAuth = (req: any, res: any): void => {
   const { message } = req.session.passport.user;
   if (req.session.passport.user.message) {
     res.send([true, message]);

@@ -1,6 +1,5 @@
 import express from 'express';
 import nodemailer from 'nodemailer';
-import inquiryRoute from './inquiry';
 import responseHelper from '../../middlewares/responseHelper';
 import makeMarketerRegistTemplate from '../../middlewares/mailTemplate/marketerRegist';
 import makeMarketerRepassword from '../../middlewares/mailTemplate/marketerRepassword';

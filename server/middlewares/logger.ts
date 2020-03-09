@@ -1,9 +1,11 @@
-const { createLogger, format, transports } = require('winston');
-const winstonDaily = require('winston-daily-rotate-file');
-const moment = require('moment');
+import { createLogger, format, transports } from 'winston';
+
+import WinstonDaily from 'winston-daily-rotate-file';
+import moment from 'moment';
 
 const { combine, timestamp, prettyPrint } = format;
-function timeStampFormat() {
+
+function timeStampFormat(): string {
   return moment().format('YYYY-MM-DD HH:mm:ss.SSS ZZ');
 }
 
@@ -14,29 +16,25 @@ const logger = createLogger({
     prettyPrint()
   ),
   transports: [
-    new winstonDaily({
-      name: 'exception-file',
+    new WinstonDaily({
+      // name: 'exception-file',
       filename: './bin/log/exception_%DATE%.log',
       datePattern: 'YYYY-MM-DD',
-      colorize: false,
-      maxsize: 50000000,
+      // colorize: false,
+      maxSize: 50000000,
       maxFiles: 1000,
       level: 'error',
-      showLevel: true,
       json: false,
-      timestamp: timeStampFormat
     }),
-    new winstonDaily({
-      name: 'info-file',
+    new WinstonDaily({
+      // name: 'info-file',
       filename: './bin/log/info_%DATE%.log',
       datePattern: 'YYYY-MM-DD',
-      colorize: false,
-      maxsize: 50000000,
+      // colorize: false,
+      maxSize: 50000000,
       maxFiles: 1000,
       level: 'info',
-      showLevel: true,
       json: false,
-      timestamp: timeStampFormat
     }),
     // new transports.Console({
     //     name: 'debug-console',
