@@ -1,6 +1,5 @@
 import express from 'express';
 import responseHelper from '../../middlewares/responseHelper';
-import dataProcessing from '../../lib/dataProcessing';
 import doQuery from '../../model/doQuery';
 import encrypto from '../../middlewares/encryption';
 import incomeRouter from './income';

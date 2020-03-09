@@ -1,4 +1,6 @@
-const headerStyle = (theme) => ({
+import { makeStyles, Theme } from '@material-ui/core/styles';
+
+const useNavbarStyles = makeStyles((theme: Theme) => ({
   appBar: {
     backgroundColor: 'transparent',
     boxShadow: 'none',
@@ -7,7 +9,7 @@ const headerStyle = (theme) => ({
     position: 'absolute',
     width: '100%',
     paddingTop: '10px',
-    zIndex: '1029',
+    zIndex: 10,
     color: theme.palette.grey[300],
     border: '0',
     borderRadius: '3px',
@@ -40,6 +42,6 @@ const headerStyle = (theme) => ({
   appResponsive: {
     top: '8px',
   },
-});
+}));
 
-export default headerStyle;
+export default useNavbarStyles;

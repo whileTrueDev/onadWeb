@@ -1,21 +1,21 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import makeStyles from '@material-ui/core/styles/makeStyles';
+import { makeStyles, Theme } from '@material-ui/core/styles';
 import {
   Typography, Divider, Badge, Popper
 } from '@material-ui/core';
 import MenuItem from '@material-ui/core/MenuItem';
-import usePostRequest from '../../../../utils/hooks/usePostRequest';
+import usePatchRequest from '../../../../utils/hooks/usePatchRequest';
+// types
+import { Notification } from './NotificationType';
 
-
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme: Theme) => ({
   contents: {
+    color: theme.palette.text.primary,
     width: 420,
     maxHeight: 540,
-    zIndex: '1300',
-    opacity: 1,
-    backgroundColor: 'white',
-    boxShadow: '1px 1px 1px 1px gray',
+    zIndex: 10,
+    backgroudColor: theme.palette.background.paper,
+    boxShadow: theme.shadows[2],
     overflowX: 'hidden',
     overflowY: 'auto'
   },
@@ -25,31 +25,25 @@ const useStyles = makeStyles(() => ({
   message: {
     marginTop: 4, marginBottom: 4
   },
-  grey: {
-    color: '#90909090'
-  }
 }));
 
 const UNREAD_STATE = 0; // 읽지않음 상태값
 
-function Notification(props) {
+function NotificationPopper({
+  anchorEl,
+  notificationData,
+  successCallback
+}: {
+  anchorEl: HTMLElement;
+  notificationData: Notification[];
+  successCallback: () => void;
+}): JSX.Element {
   const userType = window.location.pathname.split('/')[2];
   const classes = useStyles();
-  const {
-    anchorEl, notificationData
-  } = props;
-  const updateRequest = usePostRequest(`/api/dashboard/${userType}/notification/update/read`);
-
-  function updateNotifications(notiArray, targetIndex) {
-    const arr = notiArray;
-    arr.forEach((noti, idx) => {
-      if (noti.index === targetIndex) {
-        arr[idx] = { ...noti, readState: 1 };
-      }
-    });
-    return arr;
-  }
-
+  const notiReadPatch = usePatchRequest(`/${userType}/notification`, () => {
+    // 클라이언트 알림 읽음 처리
+    successCallback(); // 개인 알림 데이터 리로드
+  });
   return (
     <Popper
       placement="top-end"
@@ -71,7 +65,6 @@ function Notification(props) {
         <div className={classes.title}>
           <Typography variant="h5">알림</Typography>
           <Typography
-            className={classes.grey}
             align="right"
             gutterBottom
             variant="caption"
@@ -81,19 +74,13 @@ function Notification(props) {
         </div>
         <Divider />
 
-        { !notificationData.loading && !notificationData.error && (
+
         <div>
-          {notificationData.payload.notifications.map((noti) => (
+          {notificationData.map((noti) => (
             <div key={noti.index}>
               <MenuItem onClick={() => {
-                updateRequest.handleUpdateRequest({ index: noti.index });
                 if (noti.readState === UNREAD_STATE) {
-                  notificationData.setPayload({
-                    notifications: [
-                      ...updateNotifications(notificationData.payload.notifications, noti.index)
-                    ],
-                    unReadCount: notificationData.payload.unReadCount - 1
-                  });
+                  notiReadPatch.doPatchRequest({ index: noti.index });
                 }
               }}
               >
@@ -120,19 +107,10 @@ function Notification(props) {
             </div>
           ))}
         </div>
-        )}
+
       </div>
     </Popper>
   );
 }
 
-Notification.propTypes = {
-  anchorEl: PropTypes.oneOfType([PropTypes.node, PropTypes.string, PropTypes.object]),
-  notificationData: PropTypes.object.isRequired,
-};
-
-Notification.defaultProps = {
-  anchorEl: '',
-};
-
-export default Notification;
+export default NotificationPopper;

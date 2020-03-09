@@ -1,7 +1,5 @@
 
 import React, { useState, useEffect, useRef } from 'react';
-import PropTypes from 'prop-types';
-import withStyles from '@material-ui/core/styles/withStyles';
 import { Switch, Route } from 'react-router-dom';
 import Navbar from '../../../organisms/mypage/layouts/Navbars/Navbar';
 import Sidebar from '../../../organisms/mypage/layouts/Sidebar/Sidebar';
@@ -9,13 +7,15 @@ import Footer from '../../../organisms/mypage/layouts/Footer/Footer';
 import allRoutes from '../routes';
 import history from '../../../history';
 // css
-import dashboardStyle from '../../../assets/jss/layouts/dashboardStyle';
+import useLayoutStyles from './Layout.style';
 import '../../../assets/onad.css';
 
 const MarketerDashboard = (
-  props: { classes: any; [key: string]: any}
+  props: { [key: string]: any}
 ): JSX.Element => {
-  const { classes, ...rest } = props;
+  const { ...rest } = props;
+
+  const classes = useLayoutStyles();
 
   const [mobileOpen, setMobileOpen] = useState(false);
   const handleDrawerToggle = (): void => {
@@ -61,9 +61,7 @@ const MarketerDashboard = (
               {allRoutes.marketer.map((prop) => (
                 <Route
                   path={prop.layout + prop.path}
-                  component={prop.component
-                    ? (): JSX.Element => <prop.component />
-                    : (): JSX.Element => <div />}
+                  component={prop.component}
                   key={prop.name}
                 />
               ))}
@@ -76,9 +74,4 @@ const MarketerDashboard = (
   );
 };
 
-
-MarketerDashboard.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
-
-export default withStyles(dashboardStyle)(MarketerDashboard);
+export default MarketerDashboard;

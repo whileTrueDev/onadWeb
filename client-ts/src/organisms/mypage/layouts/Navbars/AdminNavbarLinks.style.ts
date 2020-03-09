@@ -1,5 +1,6 @@
+import { makeStyles, Theme } from '@material-ui/core/styles';
 
-const headerLinksStyle = (theme) => ({
+const useHeaderLinksStyles = makeStyles((theme: Theme) => ({
   buttonLink: {
     [theme.breakpoints.down('sm')]: {
       display: 'flex',
@@ -26,12 +27,9 @@ const headerLinksStyle = (theme) => ({
     },
   },
   margin: {
-    zIndex: '4',
+    zIndex: 4,
     margin: '0',
   },
-  icons: {
-    float: 'center',
-  },
-});
+}));
 
-export default headerLinksStyle;
+export default useHeaderLinksStyles;

@@ -1,5 +1,6 @@
 // 라우터 아이콘 @material-ui/icons
 import React from 'react';
+import { SvgIconProps } from '@material-ui/core/SvgIcon';
 import Dashboard from '@material-ui/icons/DashboardOutlined';
 import Person from '@material-ui/icons/PersonOutline';
 import BrandingWatermark from '@material-ui/icons/BrandingWatermarkOutlined';
@@ -23,7 +24,21 @@ import CreatorDashboard from './creator/Dashboard';
 // import MarketerMyOffice from './marketer/MyOffice';
 // import CampaignCreateStepper from './marketer/CampaignCreation';
 
-const dashboardRoutes = {
+export interface MypageRoute {
+  path: string;
+  name: string;
+  icon: (props: SvgIconProps) => JSX.Element;
+  component?: () => JSX.Element;
+  layout: string;
+  noTab?: boolean;
+}
+
+export interface MypageRoutes {
+  creator: MypageRoute[];
+  marketer: MypageRoute[];
+}
+
+const dashboardRoutes: MypageRoutes = {
   creator: [
     {
       path: '/main',

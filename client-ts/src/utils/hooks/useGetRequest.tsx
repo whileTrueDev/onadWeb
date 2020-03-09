@@ -31,8 +31,11 @@ const UNAUTHORIZED = 401;
  *   () => { console.log('success callback done'); handleOpen(); }  
  * );
  */
-export default function useGetRequest<PARAM_TYPE={[key: string]: any}, RES_DATA_TYPE = any>(
-  url: string, params?: PARAM_TYPE
+export default function useGetRequest<
+  PARAM_TYPE={[key: string]: any},
+  RES_DATA_TYPE = any>(
+  url: string,
+  params?: PARAM_TYPE
 ): {
   data: RES_DATA_TYPE | null;
   loading: boolean | null;

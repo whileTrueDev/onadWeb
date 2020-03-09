@@ -1,9 +1,7 @@
-import { Theme } from '@material-ui/core/styles';
-import {
-  drawerWidth,
-} from '../onad';
+import { Theme, makeStyles } from '@material-ui/core/styles';
+import { drawerWidth } from '../../../assets/jss/onad';
 
-const appStyle = (theme: Theme): object => ({
+const useLayoutStyles = makeStyles((theme: Theme) => ({
   wrapper: {
     position: 'relative',
     top: '0',
@@ -20,6 +18,7 @@ const appStyle = (theme: Theme): object => ({
     maxHeight: '100%',
     width: '100%',
     overflowScrolling: 'touch',
+    backgroundColor: theme.palette.background.default,
   },
   content: {
     marginTop: '70px',
@@ -32,6 +31,6 @@ const appStyle = (theme: Theme): object => ({
     marginRight: 'auto',
     marginLeft: 'auto',
   },
-});
+}));
 
-export default appStyle;
+export default useLayoutStyles;

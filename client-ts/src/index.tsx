@@ -10,8 +10,6 @@ import theme from './theme';
 
 // PWA
 import * as serviceWorker from './serviceWorker';
-// 기본 global Css
-import './assets/onad.css';
 
 // Pages
 import Test from './pages/Test';
@@ -25,11 +23,14 @@ dotenv.config();
 const developmentRouter = (
   <Router history={history}>
     <Switch>
-      <Route exact path="/" component={Door} />
-      <ThemeProvider theme={theme.lightTheme}>
-        <Route path="/mypage/creator" component={CreatorDashboard} />
-        {/* <Route path="/mypage/marketer" component={MarketerDashboard} /> */}
-      </ThemeProvider>
+      {/* <> muts be here : All children of a <Switch> should be <Route> or <Redirect> elements. */}
+      <>
+        <Route exact path="/" component={Door} />
+        <ThemeProvider theme={theme.lightTheme}>
+          <Route path="/mypage/creator" component={CreatorDashboard} />
+          {/* <Route path="/mypage/marketer" component={MarketerDashboard} /> */}
+        </ThemeProvider>
+      </>
     </Switch>
   </Router>
 );
@@ -37,10 +38,12 @@ const developmentRouter = (
 const productionRouter = (
   <Router history={history}>
     <Switch>
-      <Route exact path="/" component={Door} />
-      <ThemeProvider theme={theme.lightTheme}>
-        <Route path="/mypage/creator" component={CreatorDashboard} />
-      </ThemeProvider>
+      <>
+        <Route exact path="/" component={Door} />
+        <ThemeProvider theme={theme.lightTheme}>
+          <Route path="/mypage/creator" component={CreatorDashboard} />
+        </ThemeProvider>
+      </>
     </Switch>
   </Router>
 );

@@ -1,7 +1,5 @@
 
 import React, { useState, useEffect, useRef } from 'react';
-import PropTypes from 'prop-types';
-import withStyles from '@material-ui/core/styles/withStyles';
 import { Switch, Route } from 'react-router-dom';
 import Navbar from '../../../organisms/mypage/layouts/Navbars/Navbar';
 import Sidebar from '../../../organisms/mypage/layouts/Sidebar/Sidebar';
@@ -9,13 +7,15 @@ import Footer from '../../../organisms/mypage/layouts/Footer/Footer';
 import allRoutes from '../routes';
 import history from '../../../history';
 // css
-import dashboardStyle from '../../../assets/jss/layouts/dashboardStyle';
+import useLayoutStyles from './Layout.style';
 import '../../../assets/onad.css';
 
 const CreatorDashboard = (
-  props: { classes: any; [key: string]: any}
+  props: { [key: string]: any}
 ): JSX.Element => {
-  const { classes, ...rest } = props;
+  const { ...rest } = props;
+
+  const classes = useLayoutStyles();
 
   const [mobileOpen, setMobileOpen] = useState(false);
   const handleDrawerToggle = (): void => {
@@ -58,13 +58,11 @@ const CreatorDashboard = (
         <div className={classes.content}>
           <div className={classes.container}>
             <Switch>
-              {allRoutes.creator.map((prop) => (
+              {allRoutes.creator.map((route) => (
                 <Route
-                  path={prop.layout + prop.path}
-                  component={prop.component
-                    ? (): JSX.Element => <prop.component />
-                    : (): JSX.Element => <div />}
-                  key={prop.name}
+                  path={route.layout + route.path}
+                  component={route.component}
+                  key={route.name}
                 />
               ))}
             </Switch>
@@ -76,9 +74,4 @@ const CreatorDashboard = (
   );
 };
 
-
-CreatorDashboard.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
-
-export default withStyles(dashboardStyle)(CreatorDashboard);
+export default CreatorDashboard;
