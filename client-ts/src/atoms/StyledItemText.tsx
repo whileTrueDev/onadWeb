@@ -12,7 +12,7 @@ const StyledItemText = withStyles((theme: Theme) => ({
       marginBottom: '8px',
     },
   },
-  primary: ({ fontSize, color }: { fontSize: string; color: string}) => ({
+  primary: ({ fontSize, color }: { fontSize?: string; color?: string}) => ({
     fontSize: fontSize || '16px',
     fontWeight: 700,
     color: color || 'primary'

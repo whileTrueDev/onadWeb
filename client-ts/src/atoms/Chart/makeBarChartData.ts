@@ -1,20 +1,38 @@
-function datefy(dd) {
+function datefy(dd: Date): string {
   const year = dd.getFullYear();
-  const month = `${dd.getMonth() + 1}`.padStart(2, 0);
-  const day = `${dd.getDate()}`.padStart(2, 0);
+  const month = `${dd.getMonth() + 1}`.padStart(2, '0');
+  const day = `${dd.getDate()}`.padStart(2, '0');
   return `${year}-${month}-${day}`;
 }
 
-export default function makeBarChartData(arrayOfExposureData, howMuchDate = 30) {
+interface IncomeChartData {
+  date: string;
+  cash: number;
+  type: 'CPM' | 'CPC';
+}
+
+interface PreprocessedIncomeChartData {
+  date: string;
+  cpm_amount: number;
+  cpc_amount: number;
+}
+
+export default function makeBarChartData(
+  arrayOfExposureData: IncomeChartData[], howMuchDate = 30
+): PreprocessedIncomeChartData[] {
   const KEY_CPM = 'cpm_amount'; const KEY_CPC = 'cpc_amount';
-  const dataSet = [];
-  const previousDates = [];
+  const dataSet = Array<PreprocessedIncomeChartData>();
+  const previousDates = Array<string|Date>();
 
   // 데이터가 있고, 데이터를 담은 배열의 길이가 1개보다 많을 때.
   if (arrayOfExposureData && arrayOfExposureData.length > 0) {
     // 데이터 형 변환
     arrayOfExposureData.map((d) => {
-      const data = {}; // date 검사
+      const data: PreprocessedIncomeChartData = {
+        cpm_amount: 0,
+        cpc_amount: 0,
+        date: ''
+      }; // date 검사
 
       // 이전 날짜와 비교
       if (!(previousDates.includes(d.date))) {
@@ -35,7 +53,7 @@ export default function makeBarChartData(arrayOfExposureData, howMuchDate = 30) 
       } else {
         // 이전 날짜 목록에 포함되어 있는 경우
         // 해당 날짜의 결과데이터 찾기
-        const targetObject = dataSet.filter(d1 => d1.date === d.date)[0];
+        const targetObject = dataSet.filter((d1) => d1.date === d.date)[0];
 
         // 결과 데이터에 CPM, CPC 중 없는 값 추가
         if (d.type === 'CPM') {
@@ -45,14 +63,14 @@ export default function makeBarChartData(arrayOfExposureData, howMuchDate = 30) 
         }
 
         // 결과데이터 배열에서 해당 날짜의 결과데이터의 인덱스 찾기
-        dataSet[dataSet.findIndex(i => i.date === d.date)] = targetObject;
+        dataSet[dataSet.findIndex((i) => i.date === d.date)] = targetObject;
       }
 
       return null;
     });
 
     // 중간중간 비어있는 날짜에 기본 데이터 삽입
-    previousDates.reduce((previousValue, currentValue, currentIndex, array) => {
+    previousDates.reduce((previousValue, currentValue, currentIndex) => {
       const previous = new Date(previousValue);
       const previousPlusOneDay = previous;
       previousPlusOneDay.setDate(previousPlusOneDay.getDate() - 1);
@@ -62,7 +80,7 @@ export default function makeBarChartData(arrayOfExposureData, howMuchDate = 30) 
       if (!DAY_EQUAL) {
         // 같지 않다면,
         const emptyDate = datefy(previous);
-        if (dataSet.findIndex(d2 => d2.date === emptyDate) === -1) {
+        if (dataSet.findIndex((d2) => d2.date === emptyDate) === -1) {
           // dataSet에 해당 날짜의 데이터가 없는 경우
           dataSet.splice(currentIndex, 0, {
             cpc_amount: 0, date: emptyDate, cpm_amount: 0
@@ -83,7 +101,7 @@ export default function makeBarChartData(arrayOfExposureData, howMuchDate = 30) 
     });
 
     if (previousDates.length < howMuchDate) {
-      const sortedDates = previousDates.sort((a, b) => (a - b));
+      const sortedDates = previousDates.sort((a: any, b: any) => (a - b));
       const farthest = sortedDates[previousDates.length - 1];
 
       const farthestDay = new Date(farthest);

@@ -1,60 +1,22 @@
 import React, { useReducer } from 'react';
 import PropTypes from 'prop-types';
 // material ui core
-import { makeStyles } from '@material-ui/core/styles';
 import {
   Grid, Slide, Collapse
 } from '@material-ui/core';
-import axios from '../../../utils/axios';
 // customized component
-import Button from '../../../atoms/CustomButtons/Button';
+import Button from '../../../../atoms/CustomButtons/Button';
 import Dialog from './Withdrawal/Dialog';
-import HOST from '../../../utils/config';
-import history from '../../../history';
 import WithdrawalAgreement from './Withdrawal/WithdrawalAgreement';
 import WithdrawalAmount from './Withdrawal/WithdrawalAmount';
 import WithdrawalConfirm from './Withdrawal/WithdrawalConfirm';
 import WithdrawalComplete from './Withdrawal/WithdrawalComplete';
-import sources from './source/sources';
 
-const useStyles = makeStyles((theme) => ({
-  contentTitle: {
-    fontWeight: 'bold',
-  },
-  selectValue: {
-    color: '#333',
-  },
-  textField: {
-    marginLeft: theme.spacing(1),
-    marginRight: theme.spacing(1),
-    width: 250,
-    fontSize: 16,
-  },
-  paper: {
-    maxWidth: '1200px',
-    width: '1200px',
-    [theme.breakpoints.down('sm')]: {
-      width: '100%'
-    }
-  },
-  button: {
-    marginRight: theme.spacing(1),
-  },
-  end: {
-    color: '#fff',
-    marginRight: theme.spacing(1),
-  },
-  title: {
-    marginTop: 5,
-    paddingBottom: 10,
-    fontWeight: '600',
-  },
-  titleWrap: {
-    background: 'linear-gradient(45deg, #FFAA00 30%, #FF8E53 90%)',
-    color: 'white',
-    textAlign: 'center'
-  }
-}));
+import useWithdrawDialogStyles from './WithdrawDialog.style';
+import sources from './source/sources';
+import axios from '../../../../utils/axios';
+import HOST from '../../../../config';
+import history from '../../../../history';
 
 // key ,value를 이용하여 state의 값에 접근
 const stepReducer = (state, action) => {
@@ -79,27 +41,21 @@ const stepReducer = (state, action) => {
     }
   }
 };
-
-
-function WithdrawDialog(props) {
-  const classes = useStyles();
-  const {
-    open, handleClose, accountNumber, receivable, realName
-  } = props;
-
-  const currentCashNumber = Number(receivable);
+function WithdrawDialog({
+  open, handleClose, accountNumber, receivable, realName
+}) {
+  const classes = useWithdrawDialogStyles();
 
   // 출금 신청 절차에서 사용할 (step) state
   const [stepState, stepDispatch] = useReducer(
     stepReducer,
     {
-      currentCash: currentCashNumber,
+      currentCash: receivable,
       selectValue: '',
       checked: false,
       totalIncome: ''
     }
   );
-
   const { selectValue, checked } = stepState;
 
   function handleSubmitClick(event) {
@@ -197,9 +153,7 @@ function WithdrawDialog(props) {
         );
       case 3:
         return (
-          <WithdrawalComplete
-            state={stepState}
-          />
+          <WithdrawalComplete state={stepState} />
         );
       default:
         return <div />;
@@ -290,12 +244,5 @@ function WithdrawDialog(props) {
     </Dialog>
   );
 }
-
-WithdrawDialog.propTypes = {
-  open: PropTypes.bool.isRequired,
-  handleClose: PropTypes.func.isRequired,
-  accountNumber: PropTypes.string.isRequired,
-  receivable: PropTypes.number.isRequired,
-};
 
 export default WithdrawDialog;

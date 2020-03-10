@@ -5,21 +5,21 @@ import doQuery from '../../../model/doQuery';
 const router = express.Router();
 
 interface CampaignData {
-  creatorId: string,
-  state: number,
-  campaignId: string,
-  date: string,
-  bannerSrc: string,
-  connectedLinkId?: string,
-  marketerName: string,
-  bannerDescription?: string,
-  links?: string,
+  creatorId: string;
+  state: number;
+  campaignId: string;
+  date: string;
+  bannerSrc: string;
+  connectedLinkId?: string;
+  marketerName: string;
+  bannerDescription?: string;
+  links?: string;
 }
 
 interface CreatorCampaignList {
-  campaignList: CampaignData[],
-  banList: string[]
-};
+  campaignList: CampaignData[];
+  banList: string[];
+}
 
 // 캠페인 ID array 를 통해 각 캠페인 ID에 따른 cash를 구하는 함수.
 // banList에 존재할 때 state 또한 변경하는 함수.
@@ -41,7 +41,7 @@ const getCash = async ({ campaignList, banList }: CreatorCampaignList) => {
               newCampaignData.state = 0;
             }
             let cash = 0;
-            row.result.forEach((cashData: { campaignId: string, type: string, cash: number }) => {
+            row.result.forEach((cashData: { campaignId: string; type: string; cash: number }) => {
               newCampaignData[cashData.type] = cashData.cash;
               cash += cashData.cash;
             });
@@ -115,7 +115,7 @@ router.route('/list')
           responseHelper.send(campaignList, 'get', res);
         })
         .catch((error) => {
-          responseHelper.promiseError(error, next)
+          responseHelper.promiseError(error, next);
         });
     }),
   )
@@ -135,13 +135,13 @@ router.route('/overlay')
       `;
 
       doQuery(query, [creatorId])
-        .then(row => {
+        .then((row) => {
           const result = row.result[0];
           result.advertiseUrl = `https://banner.onad.io/banner${result.advertiseUrl}`;
           responseHelper.send(result, 'get', res);
         })
         .catch((error) => {
-          responseHelper.promiseError(error, next)
+          responseHelper.promiseError(error, next);
         });
     }),
   )
@@ -174,13 +174,13 @@ router.route('/active')
       `;
 
       doQuery(query, [creatorId])
-        .then(row => {
-          const { result } = row
+        .then((row) => {
+          const { result } = row;
           result.advertiseUrl = `https://banner.onad.io/banner${result.advertiseUrl}`;
           responseHelper.send(result, 'get', res);
         })
         .catch((error) => {
-          responseHelper.promiseError(error, next)
+          responseHelper.promiseError(error, next);
         });
     }),
   )

@@ -2,25 +2,23 @@ import React from 'react';
 import { Hidden } from '@material-ui/core';
 import GridContainer from '../../../atoms/Grid/GridContainer';
 import GridItem from '../../../atoms/Grid/GridItem';
-// import IncomCard from '../../organisms/creator/Dashboard/IncomeCard';
-// import UrlCard from '../../organisms/creator/Dashboard/UrlCard';
-// import BannerCard from '../../organisms/creator/Dashboard/BannerCard';
-// import LandingCard from '../../organisms/creator/Dashboard/LandingCard';
-// import ContractionCard from '../../organisms/creator/Dashboard/ContractionCard';
-// import IncomeChart from '../../organisms/creator/Dashboard/IncomeChart';
-// import NotificationCard from '../../organisms/creator/Dashboard/NotificationCard';
+import IncomCard from '../../../organisms/mypage/creator/Dashboard/IncomeCard';
+import NotificationCard from '../../../organisms/mypage/creator/Dashboard/NotificationCard';
+import IncomeChart from '../../../organisms/mypage/creator/Dashboard/IncomeChart';
+import BannerCard from '../../../organisms/mypage/creator/Dashboard/BannerCard';
+import LandingCard from '../../../organisms/mypage/creator/Dashboard/LandingCard';
+import ContractionCard from '../../../organisms/mypage/creator/Dashboard/ContractionCard';
+import UrlCard from '../../../organisms/mypage/creator/Dashboard/UrlCard';
 
-const Dashboard = () => (
+const Dashboard = (): JSX.Element => (
   <GridContainer direction="row">
 
     <GridItem sm={12} xl={10}>
-      {/* <ContractionCard /> */}
-      ContractionCard
+      <ContractionCard />
     </GridItem>
     <Hidden smDown>
       <GridItem sm={12} xl={9}>
-        {/* <NotificationCard /> */}
-        NotificationCard
+        <NotificationCard />
       </GridItem>
     </Hidden>
     <Hidden lgDown>
@@ -29,29 +27,24 @@ const Dashboard = () => (
     <GridItem xs={12} xl={3}>
       <GridContainer>
         <GridItem xs={12} md={6} xl={12}>
-          {/* <IncomCard /> */}
-          incomeCard
+          <IncomCard />
         </GridItem>
         <GridItem xs={12} md={6} xl={12}>
-          {/* <LandingCard /> */}
-          LandingCard
+          <LandingCard />
         </GridItem>
       </GridContainer>
     </GridItem>
 
     <GridItem xs={12} xl={6}>
-      {/* <IncomeChart /> */}
-      IncomeChart
+      <IncomeChart />
     </GridItem>
 
     <GridItem xs={12} sm={4}>
-      {/* <BannerCard /> */}
-      BannerCard
+      <BannerCard />
     </GridItem>
 
     <GridItem xs={12} sm={4}>
-      {/* <UrlCard /> */}
-      UrlCard
+      <UrlCard />
     </GridItem>
 
     <GridItem xs={12} sm={1} xl={2} />

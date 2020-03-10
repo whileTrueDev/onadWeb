@@ -27,7 +27,7 @@ const priorityTypes = [
     ),
     completeChildren: ({ selectedNames }) => (
       <div>
-        {selectedNames.map(creator => (
+        {selectedNames.map((creator) => (
           <Chip
             key={creator}
             label={creator}
@@ -59,7 +59,7 @@ const priorityTypes = [
     ),
     completeChildren: ({ checkedPriorities }) => (
       <div>
-        {checkedPriorities.map(game => (
+        {checkedPriorities.map((game) => (
           <Chip
             key={game}
             label={game}
@@ -120,8 +120,8 @@ const PriorityPaper = (props) => {
     >
       {/* 아직 선택되지 않은 경우 */}
       {step === 1 && (
-        <React.Fragment>
-          {priorityTypes.map(type => (
+        <>
+          {priorityTypes.map((type) => (
             <OptionSelectPaper
               key={type.id}
               name={type.id}
@@ -144,14 +144,14 @@ const PriorityPaper = (props) => {
             </OptionSelectPaper>
           ))}
           <ButtonSet handleNext={handleNext} handleBack={handleBack} set={complete} />
-        </React.Fragment>
+        </>
       )}
 
       {/* 선택된 경우 (step3으로 넘어간 경우) */}
       {step > 1 && (
         <div>
-          {priorityTypes.filter(type => state.priorityType === type.id)
-            .map(selectedPriorityType => (
+          {priorityTypes.filter((type) => state.priorityType === type.id)
+            .map((selectedPriorityType) => (
               <OptionSelectPaper
                 key={selectedPriorityType.id}
                 name={selectedPriorityType.id}
@@ -167,8 +167,7 @@ const PriorityPaper = (props) => {
                   </div>
                 )}
               />
-            ))
-          }
+            ))}
         </div>
       )}
     </CampaignCreateStepLayout>

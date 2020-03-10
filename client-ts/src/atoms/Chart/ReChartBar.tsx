@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
   ResponsiveContainer
@@ -7,14 +6,38 @@ import {
 import { useTheme } from '@material-ui/core/styles';
 import makeBarChartData from './makeBarChartData';
 
-export default function ReChartBar(props) {
-  const {
-    data, legend, containerHeight, chartHeight,
-    chartWidth, xAxisDataKey,
-    tooltipFormatter, tooltipLabelFormatter,
-    legendFormatter, dataKey, nopreprocessing
-  } = props;
+interface ReChartBarProps {
+  data: any[];
+  legend?: boolean;
+  containerHeight?: number;
+  chartHeight?: number;
+  chartWidth?: number;
+  xAxisDataKey?: string;
+  tooltipFormatter?: (
+    value: string | number | Array<string | number>, name: string) => React.ReactNode;
+  tooltipLabelFormatter?: (label: string | number) => React.ReactNode;
+  legendFormatter?: (value: string | number | Array<string | number>) => string;
+  nopreprocessing?: boolean;
+  dataKey?: string[] | string;
+}
 
+export default function ReChartBar({
+  data,
+  legend = true,
+  dataKey = ['cpm_amount', 'cpc_amount'],
+  containerHeight = 400,
+  chartHeight = 300,
+  chartWidth = 500,
+  xAxisDataKey = 'date',
+  tooltipLabelFormatter = (label: string|number): string|number => label,
+  tooltipFormatter = (value: string | number | Array<string | number>, name: string): any => {
+    if (name === 'cpm_amount') { return [value, '배너광고']; } return [value, '클릭광고'];
+  },
+  legendFormatter = (value: string | number | Array<string | number>): string => {
+    if (value === 'cpm_amount') { return '배너광고'; } return '클릭광고';
+  },
+  nopreprocessing = false,
+}: ReChartBarProps): JSX.Element {
   const theme = useTheme();
 
   return (
@@ -26,7 +49,7 @@ export default function ReChartBar(props) {
           data={nopreprocessing ? data : makeBarChartData(data)}
           stackOffset="sign"
           margin={{
-            top: 20, right: 30, left: 20, bottom: 5,
+            top: 20, right: 30, left: 20, bottom: 5
           }}
         >
           <CartesianGrid strokeDasharray="3 3" />
@@ -61,36 +84,3 @@ export default function ReChartBar(props) {
     </div>
   );
 }
-
-ReChartBar.propTypes = {
-  data: PropTypes.arrayOf(PropTypes.object).isRequired,
-  legend: PropTypes.bool,
-  containerHeight: PropTypes.number,
-  chartHeight: PropTypes.number,
-  chartWidth: PropTypes.number,
-  xAxisDataKey: PropTypes.string,
-  tooltipFormatter: PropTypes.func,
-  tooltipLabelFormatter: PropTypes.func,
-  legendFormatter: PropTypes.func,
-  nopreprocessing: PropTypes.bool,
-  dataKey: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.string),
-    PropTypes.string])
-};
-
-ReChartBar.defaultProps = {
-  legend: true,
-  dataKey: ['cpm_amount', 'cpc_amount'],
-  containerHeight: 400,
-  chartHeight: 300,
-  chartWidth: 500,
-  xAxisDataKey: 'date',
-  tooltipFormatter(value, name) {
-    if (name === 'cpm_amount') { return [value, '배너광고']; } return [value, '클릭광고'];
-  },
-  tooltipLabelFormatter: null,
-  legendFormatter(value) {
-    if (value === 'cpm_amount') { return '배너광고'; } return '클릭광고';
-  },
-  nopreprocessing: false,
-};

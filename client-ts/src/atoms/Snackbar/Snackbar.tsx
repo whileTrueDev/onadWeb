@@ -22,7 +22,7 @@ function Snackbar({
     <Snack
       open={open}
       onClose={onClose}
-      autoHideDuration={1000}
+      autoHideDuration={3000}
       anchorOrigin={anchorOrigin || { vertical: 'bottom', horizontal: 'right' }}
       {...rest}
     >
