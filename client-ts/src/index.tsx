@@ -14,8 +14,8 @@ import * as serviceWorker from './serviceWorker';
 import './assets/onad.css';
 
 // Pages
-import Test from './pages/Test';
 import Door from './pages/main/Door';
+import Main from './pages/main/Main';
 import CreatorDashboard from './pages/mypage/layouts/CreatorLayout';
 // import MarketerLayout from './pages/mypage/layouts/MarketerLayout';
 
@@ -25,7 +25,11 @@ dotenv.config();
 const developmentRouter = (
   <Router history={history}>
     <Switch>
-      <Route exact path="/" component={Door} />
+      <ThemeProvider theme={theme.MainPageTheme}>
+        <Route exact path="/" component={Door} />
+        <Route exact path="/marketer" component={Main} />
+        <Route exact path="/creator" component={Main} />
+      </ThemeProvider>
       <ThemeProvider theme={theme.lightTheme}>
         <Route path="/mypage/creator" component={CreatorDashboard} />
         {/* <Route path="/mypage/marketer" component={MarketerDashboard} /> */}
@@ -37,7 +41,11 @@ const developmentRouter = (
 const productionRouter = (
   <Router history={history}>
     <Switch>
-      <Route exact path="/" component={Door} />
+      <ThemeProvider theme={theme.MainPageTheme}>
+        <Route exact path="/" component={Door} />
+        <Route exact path="/marketer" component={Main} />
+        <Route exact path="/creator" component={Main} />
+      </ThemeProvider>
       <ThemeProvider theme={theme.lightTheme}>
         <Route path="/mypage/creator" component={CreatorDashboard} />
       </ThemeProvider>

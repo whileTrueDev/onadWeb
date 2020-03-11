@@ -1,5 +1,8 @@
 import { createMuiTheme, responsiveFontSizes } from '@material-ui/core/styles';
-import { cyan, blueGrey } from '@material-ui/core/colors';
+import {
+  blue, yellow, grey,
+  red, cyan, blueGrey
+} from '@material-ui/core/colors';
 import { darken, lighten } from '@material-ui/core/styles/colorManipulator';
 
 const defaultMuiTheme = createMuiTheme();
@@ -53,4 +56,16 @@ const darkTheme = responsiveFontSizes(createMuiTheme({
   }
 }));
 
-export default { lightTheme, darkTheme };
+const MainPageTheme = {
+  white: '#fff',
+  mainblue: blue[600],
+  black: grey[900],
+  mainyellow: yellow[700],
+  red: red[500],
+  cyan: cyan[500],
+  subyellow: yellow[500],
+  Mainfont: 'Noto Sans KR',
+  ...defaultMuiTheme
+};
+
+export default { lightTheme, darkTheme, MainPageTheme };
