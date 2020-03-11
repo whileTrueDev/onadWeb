@@ -15,7 +15,7 @@ const StyledItemText = withStyles((theme: Theme) => ({
   primary: ({ fontSize, color }: { fontSize?: string; color?: string}) => ({
     fontSize: fontSize || '16px',
     fontWeight: 700,
-    color: color || 'primary'
+    color: color || theme.palette.text.primary
   }),
 }))(ListItemText);
 

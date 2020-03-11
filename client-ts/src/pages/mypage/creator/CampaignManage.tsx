@@ -1,8 +1,8 @@
 import React from 'react';
 import { Grid } from '@material-ui/core';
-import BannerTableCard from '../../../organisms/mypage/creator/BannerManage/BannerTableCard';
+import BannerTableCard from '../../../organisms/mypage/creator/CampaignManage/CampaignTableCard';
 
-const BannerManage = (): JSX.Element => (
+const CampaignManage = (): JSX.Element => (
   <Grid container direction="row">
     <Grid item sm={12} md={10}>
       <BannerTableCard />
@@ -10,4 +10,4 @@ const BannerManage = (): JSX.Element => (
   </Grid>
 );
 
-export default BannerManage;
+export default CampaignManage;

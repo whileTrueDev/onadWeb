@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: 420,
     maxHeight: 540,
     zIndex: 10,
-    backgroudColor: theme.palette.background.paper,
+    backgroundColor: theme.palette.background.paper,
     boxShadow: theme.shadows[2],
     overflowX: 'hidden',
     overflowY: 'auto'

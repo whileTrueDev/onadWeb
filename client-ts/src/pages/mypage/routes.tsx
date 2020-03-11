@@ -10,7 +10,7 @@ import Public from '@material-ui/icons/Public';
 // import Public from '@material-ui/icons/Public'; // 지구본 아이콘
 
 // 크리에이터 라우터
-// import CreatorBannerManage from './creator/BannerManage';
+import CreatorCampaignManage from './creator/CampaignManage';
 // import CreatorLandingManage from './creator/LandingManage';
 import CreatorDashboard from './creator/Dashboard';
 // 수정필요함.
@@ -49,9 +49,9 @@ const dashboardRoutes: MypageRoutes = {
     },
     {
       path: '/banner',
-      name: '내 배너',
+      name: '내 배너광고',
       icon: BrandingWatermark,
-      // component: CreatorBannerManage, // 마케터 대시보드 컴포넌트로 수정
+      component: CreatorCampaignManage,
       layout: '/mypage/creator',
     },
     {

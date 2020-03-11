@@ -25,6 +25,45 @@ interface CreatorCampaignList {
 
 interface CampaignPerIncomeData { campaignId: string; type: 'CPM' | 'CPC'; cash: number }
 
+router.route('/')
+  // 배너 밴 기능
+  .delete(
+    responseHelper.middleware.checkSessionExists,
+    responseHelper.middleware.withErrorCatch(async (req, res, next) => {
+      const { creatorId } = responseHelper.getSessionData(req);
+      const campaignId = responseHelper.getParam('campaignId', 'delete', req);
+      const banListSearchQuery = `
+      SELECT banList 
+      FROM creatorCampaign 
+      WHERE creatorId = ?`;
+      interface BanList { banList: string }
+
+      const banListUpdateQuery = `
+      UPDATE creatorCampaign 
+      SET banList = ? 
+      WHERE creatorId = ?`;
+
+      const row = await doQuery<BanList[]>(banListSearchQuery, [creatorId]);
+      if (row.result) {
+        const banList = JSON.parse(row.result[0].banList);
+        const newCampaignList = banList.campaignList.concat(campaignId);
+        banList.campaignList = newCampaignList;
+
+        const banListUpdate = await doQuery(
+          banListUpdateQuery, [JSON.stringify(banList), creatorId]
+        );
+
+        if (banListUpdate.result.affectedRows > 0) {
+          responseHelper.send([true, 'success'], 'delete', res);
+        } else {
+          responseHelper.promiseError(new Error('배너 삭제에 실패했습니다'), next);
+        }
+      }
+      responseHelper.send(true, 'delete', res);
+    })
+  )
+  .all(responseHelper.middleware.unusedMethod);
+
 // 캠페인 ID array 를 통해 각 캠페인 ID에 따른 cash를 구하는 함수.
 // banList에 존재할 때 state 또한 변경하는 함수.
 const getIncomePerCampaign = async ({
@@ -85,22 +124,22 @@ router.route('/list')
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
       const { creatorId } = responseHelper.getSessionData(req);
       const listQuery = `
-      SELECT CT.campaignId, CT.date, BR.bannerSrc, CT.creatorId, campaign.connectedLinkId,
-      campaign.onOff as state, campaign.marketerName, 
-      bannerDescription, IR.links
-      FROM 
-      (
-      SELECT creatorId, campaignId , min(date) as date 
-      FROM campaignTimestamp
-      WHERE creatorId = "129797992"
-      GROUP BY campaignId
+      SELECT
+        CT.campaignId, CT.date, BR.bannerSrc, CT.creatorId, campaign.connectedLinkId,
+        campaign.onOff as state, campaign.marketerName,  bannerDescription, IR.links
+      FROM (
+        SELECT creatorId, campaignId , min(date) as date 
+        FROM campaignTimestamp
+        WHERE creatorId = ?
+        GROUP BY campaignId
       ) AS CT 
       JOIN campaign 
-      ON CT.campaignId = campaign.campaignId
+        ON CT.campaignId = campaign.campaignId
       JOIN bannerRegistered AS BR
-      ON campaign.bannerId = BR.bannerId
+        ON campaign.bannerId = BR.bannerId
       LEFT JOIN linkRegistered AS IR
-      ON connectedLinkId = IR.linkId
+        ON connectedLinkId = IR.linkId
+      ORDER BY date DESC
       `;
       const bannerQuery = `
       SELECT banList 

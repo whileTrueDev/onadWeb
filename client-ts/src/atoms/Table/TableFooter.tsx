@@ -119,9 +119,7 @@ function CustomTableFooter({
           className={classes.tableFooterPagination}
           rowsPerPageOptions={[3, 5, 10, 15]}
           labelRowsPerPage="페이지 당 행:"
-          SelectProps={{
-            native: true,
-          }}
+          SelectProps={{ native: true }}
           count={count}
           rowsPerPage={rowsPerPage}
           page={page}

@@ -61,13 +61,13 @@ const BannerCard = (): JSX.Element => {
           color="primary"
           onClick={(): void => { history.push('/dashboard/creator/banner'); }}
         >
-          배너내역
+          배너광고내역
         </Button>
       )}
     >
       <Grid container direction="column" spacing={2}>
         <Grid item>
-          <StyledItemText primary="현재 송출중인 배너" secondary="배너 관리로 이동하면 상세정보를 확인할 수 있습니다." />
+          <StyledItemText primary="현재 송출중인 배너광고" secondary="내 배너광고로 이동하면 상세정보를 확인할 수 있습니다." />
         </Grid>
         <Grid container direction="row" spacing={1} justify="center">
           {currentBannerGet.loading && (<CircularProgress small />)}

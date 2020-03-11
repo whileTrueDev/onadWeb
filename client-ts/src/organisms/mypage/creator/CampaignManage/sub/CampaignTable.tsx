@@ -4,7 +4,7 @@ import classnames from 'classnames';
 // @material-ui/core components
 import {
   Table, TableHead, TableRow, TableBody, TableCell,
-  Grid, Typography, Divider, Hidden, IconButton
+  Grid, Typography, Divider, Hidden, IconButton, Tooltip
 } from '@material-ui/core';
 // custom table component
 import DateRange from '@material-ui/icons/DateRange';
@@ -37,7 +37,6 @@ export interface CampaignTableData {
 }
 interface CampaignTableProps {
   tableData: CampaignTableData[];
-  tableHeaderColor: 'primary' | 'secondary' | 'error' | 'wanring' | 'success' | 'info';
   pagination: boolean;
   handleDialogOpen: () => void;
   handleCampaignSelect: (campaign: CampaignTableData) => void;
@@ -45,7 +44,6 @@ interface CampaignTableProps {
 
 function CampaignTable({
   tableData,
-  tableHeaderColor = 'info',
   handleDialogOpen,
   handleCampaignSelect,
 }: CampaignTableProps): JSX.Element {
@@ -60,15 +58,17 @@ function CampaignTable({
 
   // page handler
   function handleChangeTablePage(
-    event: React.MouseEvent<HTMLButtonElement>, newPage: number
+    event: React.MouseEvent<HTMLButtonElement> | null, newPage: number
   ): void {
     setPage(newPage);
   }
   // page per row handler
   function handleChangeTableRowsPerPage(
-    event: React.ChangeEventHandler<HTMLTextAreaElement | HTMLInputElement>
+    event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement> | null
   ): void {
-    setRowsPerPage(parseInt(event.target.value, 10));
+    if (event && event.target) {
+      setRowsPerPage(parseInt(event.target.value, 10));
+    }
   }
 
   const handleBan = (campaign: CampaignTableData) => (): void => {
@@ -192,9 +192,11 @@ function CampaignTable({
               && (
               <Hidden mdDown>
                 <TableCell className={classes.tableCell}>
-                  <IconButton aria-label="delete" onClick={handleBan(bannerData)}>
-                    <DeleteIcon />
-                  </IconButton>
+                  <Tooltip title="이 배너 그만 광고하기">
+                    <IconButton aria-label="delete" onClick={handleBan(bannerData)}>
+                      <DeleteIcon />
+                    </IconButton>
+                  </Tooltip>
                 </TableCell>
               </Hidden>
               )}
