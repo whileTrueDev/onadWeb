@@ -1,23 +1,6 @@
+import { Theme, makeStyles } from '@material-ui/core/styles';
 
-const tableStyle = (theme) => ({
-  warningTableHeader: {
-    color: theme.palette.warning.main,
-  },
-  primaryTableHeader: {
-    color: theme.palette.primary.main,
-  },
-  dangerTableHeader: {
-    color: theme.palette.error.main,
-  },
-  successTableHeader: {
-    color: theme.palette.success.main,
-  },
-  infoTableHeader: {
-    color: theme.palette.info.main,
-  },
-  grayTableHeader: {
-    color: theme.palette.grey[300],
-  },
+const useTableStyles = makeStyles((theme: Theme) => ({
   table: {
     marginBottom: '0',
     width: '100%',
@@ -74,8 +57,7 @@ const tableStyle = (theme) => ({
     [theme.breakpoints.down('sm')]: {
       maxHeight: '50px',
     },
-
   },
-});
+}));
 
-export default tableStyle;
+export default useTableStyles;

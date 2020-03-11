@@ -1,17 +1,14 @@
 
 import React from 'react';
-import PropTypes from 'prop-types';
+import { makeStyles } from '@material-ui/core/styles';
 import {
-  makeStyles, withStyles,
-} from '@material-ui/core/styles';
-import {
-  TableRow, TableFooter, TablePagination, IconButton,
+  TableRow, TableFooter, TablePagination, IconButton
 } from '@material-ui/core';
 import {
   LastPage, FirstPage, KeyboardArrowRight, KeyboardArrowLeft,
 } from '@material-ui/icons';
 // jss file import
-import tableStyle from './Table.style';
+import useTableStyles from './Table.style';
 
 // Style for footer
 const useStyles = makeStyles((theme) => ({
@@ -22,26 +19,46 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-// Footer component
-function TablePaginationActions(props) {
+// Action buttons component - 테이블 페이지네이션 버튼들
+interface TablePagenationActionsProps {
+  count: number;
+  page: number;
+  rowsPerPage: number;
+  onChangePage: (e: React.MouseEvent<HTMLButtonElement>, page: number) => void;
+}
+function TablePaginationActions(
+  props: TablePagenationActionsProps
+): JSX.Element {
   const classes = useStyles();
   const {
     count, page, rowsPerPage, onChangePage,
   } = props;
 
-  function handleFirstPageButtonClick(event) {
+  // 처음 페이지로
+  function handleFirstPageButtonClick(
+    event: React.MouseEvent<HTMLButtonElement>
+  ): void {
     onChangePage(event, 0);
   }
 
-  function handleBackButtonClick(event) {
+  // 이전 페이지로
+  function handleBackButtonClick(
+    event: React.MouseEvent<HTMLButtonElement>
+  ): void{
     onChangePage(event, page - 1);
   }
 
-  function handleNextButtonClick(event) {
+  // 다음 페이지로
+  function handleNextButtonClick(
+    event: React.MouseEvent<HTMLButtonElement>
+  ): void{
     onChangePage(event, page + 1);
   }
 
-  function handleLastPageButtonClick(event) {
+  // 마지막 페이지로
+  function handleLastPageButtonClick(
+    event: React.MouseEvent<HTMLButtonElement>
+  ): void{
     onChangePage(event, Math.max(0, Math.ceil(count / rowsPerPage) - 1));
   }
 
@@ -75,27 +92,39 @@ function TablePaginationActions(props) {
   );
 }
 
-// and then We use this.
-function CustomTableFooter(props) {
-  const {
-    classes, count, rowsPerPage, page, handleChangeTablePage, handleChangeTableRowsPerPage,
-  } = props;
+// 테이블 페이지네이션 footer 컴포넌트
+interface CustomTableFooterProps {
+  handleChangeTablePage: (event: React.MouseEvent<HTMLButtonElement> | null, page: number) => void;
+  handleChangeTableRowsPerPage?: React.ChangeEventHandler<HTMLTextAreaElement | HTMLInputElement>;
+  page: number;
+  rowsPerPage: number;
+  count: number;
+}
+
+function CustomTableFooter({
+  count = 0,
+  rowsPerPage = 5,
+  page = 0,
+  handleChangeTablePage,
+  handleChangeTableRowsPerPage,
+}: CustomTableFooterProps): JSX.Element {
+  const classes = useTableStyles();
 
   return (
-    <TableFooter colSpan={6} component="tfoot" className={classes.tableFooter}>
+    <TableFooter component="tfoot" className={classes.tableFooter}>
       <TableRow>
         <TablePagination
         // component="tr"
           style={{ paddingTop: 0, paddingBottom: 0 }}
           className={classes.tableFooterPagination}
           rowsPerPageOptions={[3, 5, 10, 15]}
-          count={count}
-          rowsPerPage={rowsPerPage}
-          page={page}
           labelRowsPerPage="페이지 당 행:"
           SelectProps={{
             native: true,
           }}
+          count={count}
+          rowsPerPage={rowsPerPage}
+          page={page}
           onChangePage={handleChangeTablePage}
           onChangeRowsPerPage={handleChangeTableRowsPerPage}
           ActionsComponent={TablePaginationActions}
@@ -105,30 +134,4 @@ function CustomTableFooter(props) {
   );
 }
 
-CustomTableFooter.propTypes = {
-  classes: PropTypes.object,
-  count: PropTypes.number,
-  rowsPerPage: PropTypes.number,
-  page: PropTypes.number,
-  handleChangeTablePage: PropTypes.func,
-  handleChangeTableRowsPerPage: PropTypes.func,
-};
-
-CustomTableFooter.defaultProps = {
-  count: 0,
-  rowsPerPage: 5,
-  page: 0,
-};
-
-TablePaginationActions.defaultProps = {
-
-};
-
-TablePaginationActions.propTypes = {
-  count: PropTypes.number.isRequired,
-  page: PropTypes.number.isRequired,
-  rowsPerPage: PropTypes.number.isRequired,
-  onChangePage: PropTypes.func.isRequired,
-};
-
-export default withStyles(tableStyle)(CustomTableFooter);
+export default CustomTableFooter;

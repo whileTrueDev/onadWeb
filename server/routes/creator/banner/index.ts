@@ -14,6 +14,8 @@ interface CampaignData {
   marketerName: string;
   bannerDescription?: string;
   links?: string;
+  CPM?: number;
+  CPC?: number;
 }
 
 interface CreatorCampaignList {
@@ -21,9 +23,13 @@ interface CreatorCampaignList {
   banList: string[];
 }
 
+interface CampaignPerIncomeData { campaignId: string; type: 'CPM' | 'CPC'; cash: number }
+
 // 캠페인 ID array 를 통해 각 캠페인 ID에 따른 cash를 구하는 함수.
 // banList에 존재할 때 state 또한 변경하는 함수.
-const getCash = async ({ campaignList, banList }: CreatorCampaignList) => {
+const getIncomePerCampaign = async ({
+  campaignList, banList
+}: CreatorCampaignList): Promise<CampaignData[]> => {
   const cashQuery = `
   SELECT campaignId, type, sum(cashToCreator)  as cash
   FROM campaignLog
@@ -41,7 +47,7 @@ const getCash = async ({ campaignList, banList }: CreatorCampaignList) => {
               newCampaignData.state = 0;
             }
             let cash = 0;
-            row.result.forEach((cashData: { campaignId: string; type: string; cash: number }) => {
+            row.result.forEach((cashData: CampaignPerIncomeData) => {
               newCampaignData[cashData.type] = cashData.cash;
               cash += cashData.cash;
             });
@@ -65,12 +71,9 @@ const getCash = async ({ campaignList, banList }: CreatorCampaignList) => {
           console.log(err);
         });
     })
-  )
-    .catch((errorData) => {
-      console.log(errorData);
-      errorData.point = 'getCash()';
-      errorData.description = 'categoryCampaign에서 각각의 categoryId에 따른 캠페인 가져오기';
-    });
+  ).catch((errorData) => {
+    console.log(errorData);
+  });
 
   return newList;
 };
@@ -89,7 +92,7 @@ router.route('/list')
       (
       SELECT creatorId, campaignId , min(date) as date 
       FROM campaignTimestamp
-      WHERE creatorId = ?
+      WHERE creatorId = "129797992"
       GROUP BY campaignId
       ) AS CT 
       JOIN campaign 
@@ -111,7 +114,7 @@ router.route('/list')
       ])
         .then(async ([row, ban]) => {
           const banList: string[] = JSON.parse(ban.result[0].banList).campaignList;
-          const campaignList = await getCash({ campaignList: row.result, banList });
+          const campaignList = await getIncomePerCampaign({ campaignList: row.result, banList });
           responseHelper.send(campaignList, 'get', res);
         })
         .catch((error) => {
