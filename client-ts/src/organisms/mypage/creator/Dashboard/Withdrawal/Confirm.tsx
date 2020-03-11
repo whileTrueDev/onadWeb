@@ -1,71 +1,24 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import {
-  Grid
-} from '@material-ui/core';
+import { Grid } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
-import sources from '../source/sources';
+import sources from '../source/withdrawalSources';
 import StyledSelectText from '../../../../../atoms/StyledSelectText';
+import { WithdrawalDialogState } from '../WithdrawalDialog.reducer';
+import useWithdrawalConfirmStyles from './Confirm.style';
 
+interface WithdrawalConfirmProps {
+  state: WithdrawalDialogState;
+  accountNumber: string;
+  realName: string;
+}
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    width: '85%',
-    margin: '5px auto'
-  },
-  contentTitle: {
-    fontWeight: 'bold',
-    color: '#999',
-    fontFamily: 'Noto Sans KR'
-  },
-  newContentTitle: {
-    fontWeight: 'bold',
-    color: '#FFAA00',
-    fontFamily: 'Noto Sans KR'
-  },
-  warningTitle: {
-    fontWeight: 'bold',
-    color: 'black',
-    fontFamily: 'Noto Sans KR'
-  },
-  contentDetail: {
-    marginTop: theme.spacing(1),
-  },
-  selectValue: {
-    color: '#333',
-  },
-  textField: {
-    marginLeft: theme.spacing(1),
-    marginRight: theme.spacing(1),
-    width: 250,
-    fontSize: 16,
-  },
-  valueContainer: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  content: {
-    color: 'black',
-    paddingLeft: 5,
-    marginTop: 3,
-    fontSize: 12,
-    fontStyle: 'inherit',
-    fontFamily: 'Noto Sans KR',
-  },
-  warning: {
-    background: 'rgba(0,0,0,0.05)',
-    marginTop: theme.spacing(2),
-    marginBottom: theme.spacing(2),
-  }
-}));
-
-
-const WithdrawalConfirm = (props) => {
-  const { state, accountNumber, realName } = props;
-  const classes = useStyles();
+const WithdrawalConfirm = ({
+  state,
+  accountNumber,
+  realName
+}: WithdrawalConfirmProps): JSX.Element => {
+  const classes = useWithdrawalConfirmStyles();
   const { selectValue, totalIncome } = state;
 
   return (
@@ -108,7 +61,7 @@ const WithdrawalConfirm = (props) => {
             </Grid>
             <Grid item className={classes.contentTitle}>
               <Typography className={classes.contentTitle} variant="h6">
-                {parseInt(selectValue * 0.967)}
+                {parseInt(String(Number(selectValue) * 0.967), 10)}
                 {' '}
                 원
               </Typography>

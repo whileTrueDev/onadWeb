@@ -79,25 +79,25 @@ router.route('/withdrawal')
     responseHelper.middleware.checkSessionExists,
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
       const { creatorId } = responseHelper.getSessionData(req);
-      const withdrawlAmount: number = responseHelper.getParam('withdrawlAmount', 'POST', req);
+      const withdrawalAmount: number = responseHelper.getParam('withdrawalAmount', 'POST', req);
 
       const creatorWithdrawalQuery = `
       INSERT INTO creatorWithdrawal
-      (creatorId, creatorWithdrawalAmount, withdrawalState)
+        (creatorId, creatorWithdrawalAmount, withdrawalState)
       VALUES (?, ?, ?)`;
 
       const creatorIncomeQuery = `
       INSERT INTO creatorIncome 
-      (creatorId, creatorTotalIncome, creatorReceivable)
+        (creatorId, creatorTotalIncome, creatorReceivable)
       SELECT creatorId, creatorTotalIncome, creatorReceivable - ?
-      FROM creatorIncome
-      WHERE creatorId = ?
-      ORDER BY date DESC
-      LIMIT 1`;
+        FROM creatorIncome
+        WHERE creatorId = ?
+        ORDER BY date DESC
+        LIMIT 1`;
 
       Promise.all([
-        doQuery(creatorWithdrawalQuery, [creatorId, withdrawlAmount, 0]),
-        doQuery(creatorIncomeQuery, [withdrawlAmount, creatorId])
+        doQuery(creatorWithdrawalQuery, [creatorId, withdrawalAmount, 0]),
+        doQuery(creatorIncomeQuery, [withdrawalAmount, creatorId])
       ])
         .then(() => {
           responseHelper.send('done', 'POST', res);

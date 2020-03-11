@@ -1,74 +1,57 @@
 import React, { useReducer } from 'react';
-import PropTypes from 'prop-types';
 // material ui core
 import { makeStyles } from '@material-ui/core/styles';
 import {
   Grid, Slide, Collapse, Typography
 } from '@material-ui/core';
-import axios from '../../../utils/axios';
 // customized component
-import Button from '../../../atoms/CustomButtons/Button';
-import Dialog from '../../../atoms/Dialog/Dialog';
-import HOST from '../../../utils/config';
-import history from '../../../history';
-import WithdrawalAgreement from './Withdrawal/WithdrawalAgreement';
-import WithdrawalAmount from './Withdrawal/WithdrawalAmount';
-import WithdrawalConfirm from './Withdrawal/WithdrawalConfirm';
-import WithdrawalComplete from './Withdrawal/WithdrawalComplete';
-import sources from './source/sources';
+import Button from '../../../../atoms/CustomButtons/Button';
+import Dialog from '../../../../atoms/Dialog/Dialog';
+import WithdrawalAgreement from './Withdrawal/Agreement';
+import WithdrawalAmount from './Withdrawal/Amount';
+import WithdrawalConfirm from './Withdrawal/Confirm';
+import WithdrawalComplete from './Withdrawal/Complete';
+// reducer
+import withdrawalDialogReducer, {
+  WithdrawalDialogState
+} from './WithdrawalDialog.reducer';
+// utils
+import usePostRequest from '../../../../utils/hooks/usePostRequest';
+import history from '../../../../history';
+import withdrawalSources from './source/withdrawalSources';
 
-const useStyles = makeStyles((theme) => ({
-  paper: {
-    maxWidth: '1200px',
-    width: '1200px',
-    [theme.breakpoints.down('sm')]: {
-      width: '100%'
-    }
-  },
+const useWithdrawalDialogStyles = makeStyles((theme) => ({
   title: { marginTop: theme.spacing(1) },
 }));
 
-// key ,value를 이용하여 state의 값에 접근
-const stepReducer = (state, action) => {
-  switch (action.key) {
-    case 'currentCash': {
-      return { ...state, currentCash: action.value };
-    }
-    case 'selectValue': {
-      return { ...state, selectValue: action.value };
-    }
-    case 'checked': {
-      return { ...state, checked: action.value };
-    }
-    case 'totalIncome': {
-      return { ...state, totalIncome: action.value };
-    }
-    case 'reset': {
-      return { ...state, selectValue: '0', checked: false };
-    }
-    default: {
-      return state;
-    }
-  }
-};
+interface WithdrawalDialogProps {
+  open: boolean;
+  handleClose: () => void;
+  accountNumber: string;
+  receivable: number;
+  realName: string;
+}
 
-function WithdrawDialog(props) {
-  const classes = useStyles();
-  const {
-    open, handleClose, accountNumber, receivable, realName
-  } = props;
+function WithdrawDialog({
+  open,
+  handleClose,
+  accountNumber,
+  receivable,
+  realName
+}: WithdrawalDialogProps): JSX.Element {
+  const classes = useWithdrawalDialogStyles();
 
   const currentCashNumber = Number(receivable);
 
   // 출금 신청 절차에서 사용할 (step) state
+  const defaultState: WithdrawalDialogState = {
+    currentCash: currentCashNumber,
+    selectValue: '',
+    checked: false,
+    totalIncome: ''
+  };
   const [stepState, stepDispatch] = useReducer(
-    stepReducer,
-    {
-      currentCash: currentCashNumber,
-      selectValue: '',
-      checked: false,
-      totalIncome: ''
-    }
+    withdrawalDialogReducer, defaultState
   );
 
   const { selectValue, checked } = stepState;
@@ -77,19 +60,21 @@ function WithdrawDialog(props) {
   const [paperSwitch, setPaperSwitch] = React.useState(true); // animation을 위한 state
   const [activeStep, setActiveStep] = React.useState(0); // 각 step을 정의하는  state
 
-  const handleNext = (go) => (event) => {
+  const handleNext = (targetStep?: number) => (
+    event: React.MouseEvent<HTMLButtonElement>
+  ): void => {
     event.preventDefault();
     setPaperSwitch(false);
     setStepComplete(false);
 
     if (activeStep === 1) {
-      if (currentCashNumber - selectValue < 0 || selectValue < 30000) {
+      if (currentCashNumber - Number(selectValue) < 0 || Number(selectValue) < 30000) {
         alert('출금 신청 금액은 30000원 미만에서는 불가하며 출금 신청 금액이 보유 수익금보다 클 수 없습니다.');
         history.push('/dashboard/creator/main');
       } else {
         setTimeout(() => {
-          if (go) {
-            setActiveStep(go);
+          if (targetStep) {
+            setActiveStep(targetStep);
           } else {
             setActiveStep((preIndex) => preIndex + 1);
           }
@@ -98,8 +83,8 @@ function WithdrawDialog(props) {
       }
     } else {
       setTimeout(() => {
-        if (go) {
-          setActiveStep(go);
+        if (targetStep) {
+          setActiveStep(targetStep);
         } else {
           setActiveStep((preIndex) => preIndex + 1);
         }
@@ -108,21 +93,19 @@ function WithdrawDialog(props) {
     }
   };
 
-  function handleSubmitClick(event) {
-    event.preventDefault();
+  // 출금 POST 요청객체 생성
+  const withdrawalPost = usePostRequest('/creator/income/withdrawal', () => {
+    // 요청 성공시 Success callback 함수
+    setActiveStep((preIndex) => preIndex + 1);
+  });
 
-    // 해당 금액 만큼 출금 내역에 추가하는 요청
-    axios.post(`${HOST}/api/dashboard/creator/withdrawal`, {
-      withdrawalAmount: selectValue,
-    }).then((res) => {
-      setActiveStep((preIndex) => preIndex + 1);
-    }).catch((err) => {
-      console.log(err);
-      history.push('/dashboard/creator/main');
-    });
+  function handleSubmitClick(event: React.MouseEvent<HTMLButtonElement>): void {
+    event.preventDefault();
+    // 해당 금액 만큼 출금 내역에 추가하는 요청 실시
+    withdrawalPost.doPostRequest({ withdrawalAmount: selectValue });
   }
 
-  const handleBack = (event) => {
+  const handleBack = (event: React.MouseEvent<HTMLButtonElement>): void => {
     event.preventDefault();
     setStepComplete(false);
     setPaperSwitch(false);
@@ -135,29 +118,31 @@ function WithdrawDialog(props) {
     }, 500);
   };
 
-  const DefaultIndex = () => {
+  const DefaultIndex = (): void => {
     handleClose();
     setActiveStep(0);
     stepDispatch({ key: 'reset' });
   };
 
-  const finishIndex = () => {
+  const finishIndex = (): void => {
     handleClose();
-    history.push('/dashboard/creator/main');
+    history.push('/mypage/creator/main');
   };
 
   return (
     <Dialog
       open={open}
       title={(
-        <div className={classes.titleWrap}>
+        <div>
           <>
             OnAD 출금신청 Step
             {' '}
             {activeStep + 1}
             /4
           </>
-          <Typography variant="h6" className={classes.title}>{sources.titleWithdrawal[activeStep]}</Typography>
+          <Typography variant="h6" className={classes.title}>
+            {withdrawalSources.titleWithdrawal[activeStep]}
+          </Typography>
         </div>
       )}
       onClose={activeStep !== 3 ? (DefaultIndex) : (finishIndex)}
@@ -174,7 +159,6 @@ function WithdrawDialog(props) {
                     variant="contained"
                     color="primary"
                     onClick={handleSubmitClick}
-                    className={classes.end}
                   >
                     신청
                   </Button>
@@ -189,7 +173,6 @@ function WithdrawDialog(props) {
                     variant="contained"
                     color="primary"
                     onClick={handleNext()}
-                    className={classes.end}
                   >
                     다음
                   </Button>
@@ -206,7 +189,7 @@ function WithdrawDialog(props) {
             {activeStep !== 3
           && <Grid item><Button onClick={DefaultIndex}>취소</Button></Grid>}
             {activeStep === 3
-          && <Grid item><Button onClick={finishIndex}>완료</Button></Grid>}
+          && <Grid item><Button color="primary" onClick={finishIndex}>완료</Button></Grid>}
           </Grid>
         </div>
       )}
@@ -243,12 +226,5 @@ function WithdrawDialog(props) {
     </Dialog>
   );
 }
-
-WithdrawDialog.propTypes = {
-  open: PropTypes.bool.isRequired,
-  handleClose: PropTypes.func.isRequired,
-  accountNumber: PropTypes.string.isRequired,
-  receivable: PropTypes.number.isRequired,
-};
 
 export default WithdrawDialog;

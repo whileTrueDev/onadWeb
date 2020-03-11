@@ -66,7 +66,7 @@ const DialogActions = withStyles((theme) => ({
 }))(MuiDialogActions);
 
 interface CustomDialogProps {
-  title?: string;
+  title?: React.ReactNode;
   open: boolean;
   children: React.ReactNode;
   buttons?: React.ReactNode;

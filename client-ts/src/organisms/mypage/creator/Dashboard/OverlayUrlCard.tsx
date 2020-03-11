@@ -15,7 +15,7 @@ import useDialog from '../../../../utils/hooks/useDialog';
 
 const useStyles = makeStyles((theme) => ({
   urlSection: { padding: theme.spacing(2) },
-  textField: { width: '100%' },
+  textField: { maxWidth: theme.breakpoints.width('lg') },
   line: { alignItems: 'center' }
 }));
 
@@ -65,47 +65,39 @@ const UrlCard = (): JSX.Element => {
           <StyledItemText primary="배너 오버레이 URL" secondary="광고 송출용 URL을 보여줍니다. 방송 도구에 등록하세요." />
         </Grid>
         <Grid item>
-          { overlayUrlGet.loading && (<CircularProgress />)}
+          { overlayUrlGet.loading && (<CircularProgress small />)}
           { !overlayUrlGet.loading && overlayUrlGet.data && (
-          <div className={classes.urlSection}>
 
-            <Grid container direction="row" spacing={1} className={classes.line}>
-              <Grid item xs={12} sm={8}>
-                <StyledInput
-                  className={classes.textField}
-                  id="overlayUrl"
-                  value={overlayUrlGet.data.creatorContractionAgreement
-                    ? overlayUrlValue
-                    : '계약을 먼저 진행해주세요.'}
-                  readOnly
-                />
-              </Grid>
-              <Grid item xs={6} sm={2}>
-                <Button
-                  disabled={!(overlayUrlGet.data.advertiseUrl === overlayUrlValue)}
-                  onClick={copyToClipboard}
-                  size="small"
-                  color="primary"
-                >
-                  <InsertLinkOutlined />
-                  복사
-                </Button>
-              </Grid>
-              <Grid item xs={6} sm={2}>
-                <Button
-                  color="secondary"
-                  onClick={!(overlayUrlGet.data.advertiseUrl === overlayUrlValue)
-                    ? handleShowOverlayUrl
-                    : undefined}
-                  size="small"
-                >
-                  <RemoveRedEyeOutlined />
-                  주소보기
-                </Button>
-              </Grid>
+            <div className={classes.urlSection}>
+              <StyledInput
+                className={classes.textField}
+                id="overlayUrl"
+                value={overlayUrlGet.data.creatorContractionAgreement
+                  ? overlayUrlValue
+                  : '계약을 먼저 진행해주세요.'}
+                readOnly
+              />
+              <Button
+                color="secondary"
+                onClick={!(overlayUrlGet.data.advertiseUrl === overlayUrlValue)
+                  ? handleShowOverlayUrl
+                  : undefined}
+                size="small"
+              >
+                <RemoveRedEyeOutlined />
+                주소보기
+              </Button>
+              <Button
+                disabled={!(overlayUrlGet.data.advertiseUrl === overlayUrlValue)}
+                onClick={copyToClipboard}
+                size="small"
+                color="primary"
+              >
+                <InsertLinkOutlined />
+                복사
+              </Button>
+            </div>
 
-            </Grid>
-          </div>
           )}
         </Grid>
       </Grid>

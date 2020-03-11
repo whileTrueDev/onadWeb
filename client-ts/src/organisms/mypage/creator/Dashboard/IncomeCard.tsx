@@ -10,7 +10,7 @@ import CustomCard from '../../../../atoms/CustomCard';
 import Button from '../../../../atoms/CustomButtons/Button';
 import CircularProgress from '../../../../atoms/Progress/CircularProgress';
 import useGetRequest from '../../../../utils/hooks/useGetRequest';
-// import WithdrawalDialog from './WithdrawDialog';
+import WithdrawalDialog from './WithdrawalDialog';
 import history from '../../../../history';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -72,7 +72,16 @@ const IncomeCard = (): JSX.Element => {
   return (
     <CustomCard
       iconComponent={<AttachMoney />}
-      buttonComponent={<Button color="primary" onClick={(): void => { handleOpen(); }}>출금신청</Button>}
+      buttonComponent={(!incomeCashGet.loading
+        && incomeCashGet.data
+        && incomeCashGet.data.creatorAccountNumber) && (
+        <Button
+          color="primary"
+          onClick={(): void => { handleOpen(); }}
+        >
+          출금신청
+        </Button>
+      )}
     >
       <Grid container direction="column" spacing={2}>
         <Grid item>
@@ -82,7 +91,7 @@ const IncomeCard = (): JSX.Element => {
           {incomeCashGet.loading && (<CircularProgress small />)}
           {!incomeCashGet.loading && !incomeCashGet.error && incomeCashGet.data && (
           <div className={classes.flex}>
-            <Typography gutterBottom variant="h5" style={{ fontSize: ' 1.7rem' }}>
+            <Typography gutterBottom variant="h5">
               {`${incomeCashGet.data.creatorReceivable} 원`}
             </Typography>
           </div>
@@ -119,18 +128,17 @@ const IncomeCard = (): JSX.Element => {
           </div>
         </Grid>
       </Grid>
-      {/* {!incomeCashGet.loading && !incomeCashGet.error && incomeCashGet.data
+      {!incomeCashGet.loading && !incomeCashGet.error && incomeCashGet.data
       && incomeCashGet.data.creatorContractionAgreement
       && incomeCashGet.data.creatorAccountNumber && (
         <WithdrawalDialog
           open={open}
-          handleOpen={handleOpen}
           handleClose={handleClose}
           realName={incomeCashGet.data.realName}
           accountNumber={incomeCashGet.data.creatorAccountNumber}
           receivable={incomeCashGet.data.creatorReceivable}
         />
-      )} */}
+      )}
     </CustomCard>
   );
 };

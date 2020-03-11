@@ -2,7 +2,7 @@ import React, { useCallback } from 'react';
 import axios from '../axios';
 import host from '../../config';
 
-const DEFAULT_ERROR_MESSAGE = '죄송합니다.. 생성중 오류가 발생했습니다..';
+const DEFAULT_ERROR_MESSAGE = '죄송합니다.. 오류가 발생했습니다..';
 
 /**
  * API서버로 `POST` 요청을 보낼 때 사용하는 react **hook**.

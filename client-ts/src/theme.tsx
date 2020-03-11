@@ -23,6 +23,9 @@ const rawTheme = {
     },
     warning: defaultTheme.palette.secondary,
   },
+  typography: {
+    fontFamily: '"Helvetica", "Sunflower", sans-serif'
+  }
 };
 
 const lightTheme = responsiveFontSizes(createMuiTheme({

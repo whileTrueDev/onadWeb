@@ -56,7 +56,6 @@ const IncomeCard = (): JSX.Element => {
                 value={!adPageGet.loading && !adPageGet.error && adPageGet.data
                   ? adPageGet.data.exp : 0}
               />
-              {adPageGet.loading && '1'}
             </Grid>
           </Grid>
         </Grid>

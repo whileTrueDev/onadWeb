@@ -15,10 +15,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: theme.spacing(4),
     marginBottom: theme.spacing(4),
   },
-  head: {
-    fontWeight: 700,
-    color: theme.palette.info.main,
-  }
+  head: { fontWeight: 700 }
 }));
 
 interface CurrentBannerRes {
@@ -80,7 +77,7 @@ const BannerCard = (): JSX.Element => {
               <Grid
                 item
                 xs={12}
-                sm={6}
+                lg={6}
                 onClick={handlePopoverClick(index)}
                 key={shortid.generate()}
               >
