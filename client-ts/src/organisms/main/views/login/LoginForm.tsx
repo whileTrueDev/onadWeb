@@ -57,24 +57,25 @@ interface Props {
   open: boolean;
   isMarketer: boolean | undefined;
   handleClose: () => void;
-  logout: function;
+  logout(): void;
 }
 // TODO: 비밀번호 암호화하여 전달하기.
 function LoginForm({
   open = false,
   isMarketer = true,
   handleClose = () => { },
-  logout = () => { }
+  logout = void
 }): JSX.Element {
   // prop를 통해 Marketer 인지 Creator인지 확인.
   // 데이터가 변경되는 것일 때 state로 처리를 한다.
-  const [findDialogOpen, setFindDialogOpen] = useState(false);
+  const classes = useStyles();
+  const [findDialogOpen, setFindDialogOpen] = useState<boolean>(false);
   const [dialogType, setDialogType] = useState('ID');
-  const [userid, setUserid] = useState('');
-  const [passwd, setPasswd] = useState('');
+  const [userid, setUserid] = useState<string>('');
+  const [passwd, setPasswd] = useState<string>('');
 
   // 하나의 change로 값을 받을 수 있다.
-  const onChange = (event) => {
+  const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.name === 'userid') {
       setUserid(event.target.value);
     } else {
@@ -82,7 +83,7 @@ function LoginForm({
     }
   };
 
-  const login = (event) => {
+  const login = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event) {
       event.preventDefault();
     }
@@ -130,7 +131,7 @@ function LoginForm({
           <DialogContentText style={{ fontSize: 15, fontFamily: 'Noto Sans kr' }}>
             온애드로 쉽고 빠르게!
           </DialogContentText>
-          <form onChange={onChange}>
+          <form>
             <TextField
               autoFocus
               required
@@ -141,6 +142,7 @@ function LoginForm({
               name="userid"
               InputLabelProps={{ shrink: true }}
               style={{ width: '90%' }}
+              onChange={onChange}
             />
             <TextField
               required
@@ -150,6 +152,7 @@ function LoginForm({
               value={passwd}
               margin="dense"
               name="passwd"
+              onChange={onChange}
               InputLabelProps={{ shrink: true }}
               style={{ width: '90%' }}
               onKeyPress={(e) => {

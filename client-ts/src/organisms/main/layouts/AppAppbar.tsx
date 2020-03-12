@@ -166,6 +166,9 @@ const styles = (theme: Theme) => ({
     }
   }
 });
+interface Props {
+
+}
 
 function AppAppBar(props) {
   const {

@@ -7,7 +7,6 @@ import SupervisedUserCircle from '@material-ui/icons/SupervisedUserCircle';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import LoginForm from './LoginForm';
 import RegistDialog from '../../../Regist/RegistDialog';
-import history from '../../../../history';
 
 const useStyles = makeStyles((theme) => ({
   rightLink: {
@@ -68,7 +67,7 @@ const useStyles = makeStyles((theme) => ({
 
 interface Props {
   type: string;
-  logout: () => {};
+  logout: () => void;
   MainUserType: string;
   trigger: boolean;
   mode: boolean | undefined;
@@ -79,10 +78,10 @@ interface Props {
 // RegistDialog 열기
 function LoginPopover({
   type = '로그인',
-  logout = () => { },
   MainUserType = 'marketer',
   trigger = false,
-  mode = true
+  mode = true,
+  logout = () => { },
 }: Props): JSX.Element {
   const [loginValue, setLoginValue] = React.useState('');
   const [registOpen, setRegistOpen] = React.useState(false);
@@ -203,7 +202,6 @@ function LoginPopover({
             <LoginForm
               open={loginValue === 'creator'}
               isMarketer={false}
-              history={history}
               handleClose={handleDialogClose}
               logout={logout}
             />
