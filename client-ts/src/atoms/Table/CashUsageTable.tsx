@@ -87,7 +87,11 @@ function CustomTable({
                   <Button
                     variant="contained"
                     color="primary"
-                    onClick={(): void => { handleDialogOpen((page * rowsPerPage) + i + 1); }}
+                    onClick={(): void => {
+                      if (handleDialogOpen) {
+                        handleDialogOpen((page * rowsPerPage) + i + 1);
+                      }
+                    }}
                   >
                     상세보기
                   </Button>

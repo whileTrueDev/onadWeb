@@ -9,5 +9,4 @@ const CampaignManage = (): JSX.Element => (
     </Grid>
   </Grid>
 );
-
 export default CampaignManage;

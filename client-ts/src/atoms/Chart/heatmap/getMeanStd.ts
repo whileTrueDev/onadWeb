@@ -3,14 +3,17 @@
  * @param {array} dataArray 평균과 표준편차를 구할 리스트
  * @return { mean: float, stddev: float }
  */
-function getMeanStd(dataArray) {
+function getMeanStd(dataArray: number[]): {
+  mean: number;
+  stddev: number;
+} {
   let allCounts = 0;
   dataArray.map((d) => {
     allCounts += d;
     return null;
   });
 
-  const avgCounts = parseInt(allCounts / dataArray.length, 10);
+  const avgCounts = allCounts / dataArray.length;
 
   let total = 0;
   for (let i = 0; i < dataArray.length; i += 1) {
@@ -26,4 +29,4 @@ function getMeanStd(dataArray) {
   };
 }
 
-module.exports = getMeanStd;
+export default getMeanStd;

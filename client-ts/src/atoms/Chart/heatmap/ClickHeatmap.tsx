@@ -4,9 +4,14 @@ import Heatmap from 'react-calendar-heatmap';
 import getMeanStd from './getMeanStd';
 import './heatmap.css';
 
-export default function ClickHeatmap(props) {
+type ClickData = {count: number; date: string };
+interface ClickHeatmapProps {
+  data: ClickData[];
+}
+export default function ClickHeatmap(props: ClickHeatmapProps): JSX.Element {
   const { data } = props;
-  const getTooltipDataAttrs = (value) => {
+
+  const getTooltipDataAttrs = (value: ClickData): { 'data-tip': string } | null => {
     // Temporary hack around null value.date issue
     if (!value || !value.date) {
       return null;
@@ -17,9 +22,9 @@ export default function ClickHeatmap(props) {
     };
   };
 
-  const { mean, stddev } = getMeanStd(data.map(d => (d.count)));
+  const { mean, stddev } = getMeanStd(data.map((d) => (d.count)));
 
-  function makeDateOptions() {
+  function makeDateOptions(): {startDate: Date; endDate: Date} {
     const today = new Date();
     const today2 = new Date();
 
@@ -43,16 +48,15 @@ export default function ClickHeatmap(props) {
         monthLabels={['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월']}
         values={data}
         tooltipDataAttrs={getTooltipDataAttrs}
-        onClick={(value) => { console.log(value); }}
-        classForValue={(value) => {
+        onClick={(value): void => { console.log(value); }}
+        classForValue={(value): string => {
           if (!value) { return 'color-empty'; }
           if (value.count < mean - (2 * stddev)) { return 'color-github-0'; }
           if (value.count < mean - stddev) { return 'color-github-1'; }
           if (value.count < mean) { return 'color-github-2'; }
           if (value.count < mean + stddev) { return 'color-github-3'; }
           return 'color-github-4';
-        }
-    }
+        }}
       />
       <ReactTooltip type="success" effect="solid" />
     </div>

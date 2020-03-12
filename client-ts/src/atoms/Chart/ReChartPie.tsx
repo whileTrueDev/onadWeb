@@ -1,16 +1,20 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import {
-  PieChart, Pie, Sector, Cell, ResponsiveContainer, Legend,
+  PieChart, Pie, Sector, Cell,
+  ResponsiveContainer, Legend
 } from 'recharts';
 import COLORS from './chartTheme';
 
-const renderActiveShape = (props) => {
+interface RenderActiveShapeProps {
+  unit?: string;
+  underText?: boolean;
+  [key: string]: any;
+}
+const RenderActiveShape = (underText?: boolean, tooltipLabelText?: string) => ({
+  cx, cy, midAngle, innerRadius, outerRadius, startAngle, endAngle,
+  fill, percent, value, name, unit
+}: RenderActiveShapeProps): JSX.Element => {
   const RADIAN = Math.PI / 180;
-  const {
-    cx, cy, midAngle, innerRadius, outerRadius, startAngle, endAngle,
-    fill, percent, value, name, TooltipLabelText, underText
-  } = props;
   const sin = Math.sin(-RADIAN * midAngle);
   const cos = Math.cos(-RADIAN * midAngle);
   const sx = cx + (outerRadius + 10) * cos;
@@ -45,22 +49,53 @@ const renderActiveShape = (props) => {
       />
       <path d={`M${sx},${sy}L${mx},${my}L${ex},${ey}`} stroke={fill} fill="none" />
       <circle cx={ex} cy={ey} r={2} fill={fill} stroke="none" />
-      <text x={ex + (cos >= 0 ? 1 : -1) * 12} y={ey} textAnchor={textAnchor} fill="#333">{`${value} ${TooltipLabelText}`}</text>
-      <text x={ex + (cos >= 0 ? 1 : -1) * 12} y={ey} dy={18} textAnchor={textAnchor} fill="#999">
+      <text
+        x={ex + (cos >= 0 ? 1 : -1) * 12}
+        y={ey}
+        textAnchor={textAnchor}
+        fill={fill}
+      >
+        {`${value} ${tooltipLabelText || ''}`}
+
+      </text>
+      <text
+        x={ex + (cos >= 0 ? 1 : -1) * 12}
+        y={ey}
+        dy={18}
+        textAnchor={textAnchor}
+        fill={fill}
+      >
         {`(${(percent * 100).toFixed(2)}%)`}
       </text>
     </g>
   );
 };
 
-export default function CustomPieChart(props) {
-  const {
-    data, height, dataKey, nameKey,
-    activeIndex, onPieEnter, TooltipLabelText, underText, legend
-  } = props;
+interface CustomPieChartProps<T> {
+  dataKey: string;
+  nameKey: string;
+  data: T[];
+  height: number;
+  legend?: boolean;
+  activeIndex?: number;
+  onPieEnter?: (...args: any[]) => void;
+  tooltipLabelText?: string;
+  underText?: boolean;
+}
 
+export default function CustomPieChart<DataType extends {value: any}>({
+  dataKey,
+  nameKey,
+  legend,
+  onPieEnter,
+  activeIndex,
+  data = [],
+  height = 400,
+  underText = false,
+  tooltipLabelText = '',
+}: CustomPieChartProps<DataType>): JSX.Element {
   const [defaultActiveIndex, setActiveIndex] = React.useState(0);
-  const defaultOnPieEnter = (d, index) => {
+  const defaultOnPieEnter = (e: any, index: number): void => {
     setActiveIndex(index);
   };
 
@@ -71,7 +106,7 @@ export default function CustomPieChart(props) {
           <Pie
             activeIndex={activeIndex || defaultActiveIndex}
             onMouseEnter={onPieEnter || defaultOnPieEnter}
-            activeShape={renderActiveShape}
+            activeShape={RenderActiveShape(underText, tooltipLabelText)}
             data={data}
             cx="50%"
             cy="50%"
@@ -80,15 +115,13 @@ export default function CustomPieChart(props) {
             nameKey={nameKey || 'name'}
             dataKey={dataKey || 'value'}
             animationBegin={0}
-            animationEnd={1000}
+            animationDuration={1000}
           >
-            {data.map(
+            {data.map<JSX.Element>(
               (entry, index) => (
                 <Cell
-                  key={entry}
+                  key={entry.value}
                   fill={COLORS.pie[index % COLORS.pie.length]}
-                  TooltipLabelText={TooltipLabelText || ''}
-                  underText={underText}
                 />
               )
             )}
@@ -101,23 +134,3 @@ export default function CustomPieChart(props) {
     </div>
   );
 }
-
-CustomPieChart.propTypes = {
-  dataKey: PropTypes.string.isRequired,
-  nameKey: PropTypes.string.isRequired,
-  data: PropTypes.arrayOf(PropTypes.object),
-  height: PropTypes.number,
-  activeIndex: PropTypes.oneOfType([PropTypes.number, PropTypes.bool]),
-  onPieEnter: PropTypes.func,
-  TooltipLabelText: PropTypes.string,
-  underText: PropTypes.bool
-};
-
-CustomPieChart.defaultProps = {
-  underText: null,
-  data: '',
-  height: 400,
-  activeIndex: null,
-  TooltipLabelText: '',
-  onPieEnter() {},
-};

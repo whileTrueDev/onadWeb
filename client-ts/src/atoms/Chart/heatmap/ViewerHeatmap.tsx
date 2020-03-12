@@ -1,13 +1,16 @@
 import React from 'react';
-
 import ReactTooltip from 'react-tooltip';
 import Heatmap from 'react-calendar-heatmap';
 import getMeanStd from './getMeanStd';
 
-export default function ViewerHeatmap(props) {
+type ViewerData = { date: string; count: number; viewer: number};
+interface ViewerHeatmapProps {
+  data: ViewerData[];
+}
+export default function ViewerHeatmap(props: ViewerHeatmapProps): JSX.Element {
   const { data } = props;
 
-  const getTooltipDataAttrs = (value) => {
+  const getTooltipDataAttrs = (value: ViewerData): { 'data-tip': string } | null => {
     // Temporary hack around null value.date issue
     if (!value || !value.date) {
       return null;
@@ -18,9 +21,8 @@ export default function ViewerHeatmap(props) {
     };
   };
 
-  const { mean, stddev } = getMeanStd(data.map(d => (d.count)));
+  const { mean, stddev } = getMeanStd(data.map((d) => (d.count)));
 
-  console.log(data.map(d => ({ ...d, value: d.viewer })));
   return (
 
     <div style={{ height: 200, overflowX: 'auto' }}>
@@ -30,10 +32,12 @@ export default function ViewerHeatmap(props) {
         showWeekdayLabels
         startDate={data[0].date}
         endDate={data[data.length - 1].date}
-        weekdayLabels={[...new Set(data.map(d => (d.date)))]}
-        monthLabels={[0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
-          10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]}
-        values={data.map(d => ({ ...d, value: d.viewer }))}
+        weekdayLabels={data.filter(
+          (item, index) => data.indexOf(item) === index
+        ).map((r) => String(r))}
+        monthLabels={['0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+          '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23']}
+        values={data.map((d) => ({ ...d, value: d.viewer }))}
         tooltipDataAttrs={getTooltipDataAttrs}
         onClick={(value) => { console.log(value); }}
         classForValue={(value) => {

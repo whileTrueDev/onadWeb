@@ -3,6 +3,7 @@
  * ***************** 보조 함수 *********************
  * *********************************************** */
 
+type dateDiffFunction = (d1: Date, d2: Date) => number | null;
 /**
   * @description 날짜간의 차이를 반환하는 함수
   * @param {Date} date1 날짜 차이를 구할 기준
@@ -10,13 +11,14 @@
   * @returns {Number} 날짜차이
   * @author hwasurr
   */
-function dateDiff(date1, date2) {
+const dateDiff: dateDiffFunction = (date1, date2) => {
   if (date1 instanceof Date && date2 instanceof Date) {
     return Math.ceil((date1.getTime() - date2.getTime()) / (1000 * 60 * 60 * 24));
   }
   return null;
-}
+};
 
+type monthDiffFunction = (d1: Date, d2: Date) => number;
 /**
   * @description 날짜간의 월의 차이를 반환하는 함수
   * @param {Date} date1 월 차이를 구할 기준
@@ -24,42 +26,50 @@ function dateDiff(date1, date2) {
   * @returns {Number} 월 차이
   * @author hwasurr
   */
-function monthDiff(date1, date2) {
+const monthDiff: monthDiffFunction = (date1, date2) => {
   let strTermCnt = 0;
   // 년도가 같으면 단순히 월을 마이너스 한다.
   // => 20090301-20090201 의 경우(윤달이 있는 경우) 아래 else의 로직으로는 정상적인 1이 리턴되지 않는다.
   if (date2.getFullYear() === date1.getFullYear()) {
     strTermCnt = date1.getMonth() * 1 - date2.getMonth() * 1;
   } else {
-    strTermCnt = Math.round((date2.getTime() - date1.getTime()) / (1000 * 60 * 60 * 24 * 365 / 12));
+    strTermCnt = Math.round(
+      (date2.getTime() - date1.getTime()) / ((1000 * 60 * 60 * 24 * 365) / 12)
+    );
   }
   return strTermCnt;
-}
+};
 
 
+type datefyFunction = (dateObject: Date | string) => string;
 /**
  * @description 날짜를 문자열로 변환하는 함수
  * @param {number} distance
  * @return {String} "%m월 %d일" 에 따르는 날짜 문자열
  * @author hwasurr
  */
-function datefy(dateObject) {
+const datefy: datefyFunction = (dateObject) => {
   if (typeof dateObject === 'string') {
     return dateObject.split(' ')[0];
   }
   return `${dateObject.getMonth() + 1}월 ${dateObject.getDate()}일`;
-}
+};
 
+type defaultDataPacket = {date: string; type: 'CPM'|'CPC'; cash: number}
+type SetUpDataResult = {CPM: number[]; CPC: number[]; setUpLabels: string[]};
 /**
  * @description 데이터를 셋업하는 함수
  * @param {array} dataPacket 로부터 api 서버로부터 넘겨받은 데이터.
  * @param {function} dateDiffFunc 두 날짜간의 사이를 구할 함수 ( dateDiff or monthDiff )
  * @author hwasurr
  */
-function setUpData(dataPacket, dateDiffFunc) {
+function setUpData<T extends defaultDataPacket>(
+  dataPacket: T[], dateDiffFunc: dateDiffFunction | monthDiffFunction
+): SetUpDataResult {
   const DEFAULT_VALUE = 0;
-  const CPM = []; const CPC = [];
-  const setUpLabels = [];
+  const CPM = Array<number>();
+  const CPC = Array<number>();
+  const setUpLabels = Array<string>();
 
   dataPacket.forEach((obj, index) => {
     if (setUpLabels.indexOf(datefy(obj.date)) === -1) { // 처음보는 date
@@ -68,16 +78,18 @@ function setUpData(dataPacket, dateDiffFunc) {
         const currentDate = datefy(obj.date);
         const datediff = dateDiffFunc(new Date(previousDate), new Date(currentDate));
 
-        // 앞의날짜와 지금날짜의 날짜차이가 있다면 ( 빈 데이터가 존재한다면 )
-        if (datediff > 1) {
-          const emptyDate = new Date(previousDate);
-          for (let i = 1; i < datediff; i += 1) {
-            // 빠진 날짜만큼 반복
-            emptyDate.setDate(emptyDate.getDate() - 1);
+        if (datediff) {
+          // 앞의날짜와 지금날짜의 날짜차이가 있다면 ( 빈 데이터가 존재한다면 )
+          if (datediff > 1) {
+            const emptyDate = new Date(previousDate);
+            for (let i = 1; i < datediff; i += 1) {
+              // 빠진 날짜만큼 반복
+              emptyDate.setDate(emptyDate.getDate() - 1);
 
-            setUpLabels.push(emptyDate.toISOString().split('T')[0]);
-            CPM.push(DEFAULT_VALUE);
-            CPC.push(DEFAULT_VALUE);
+              setUpLabels.push(emptyDate.toISOString().split('T')[0]);
+              CPM.push(DEFAULT_VALUE);
+              CPC.push(DEFAULT_VALUE);
+            }
           }
         }
       }
@@ -113,7 +125,11 @@ function setUpData(dataPacket, dateDiffFunc) {
   return { setUpLabels, CPM, CPC };
 }
 
-
+type CreateStackBarDataResult = {
+  CPM: number[];
+  CPC: number[];
+  labels: string[];
+}
 /** ************************************************
  * ***************** 실 사용 함수 *********************
  * *********************************************** */
@@ -124,24 +140,29 @@ function setUpData(dataPacket, dateDiffFunc) {
  * @description StackedBar에 해당하는 데이터를 생성해주는 함수, 데이터가 15일 미만으로 존재할 시, 빈 데이터를 채워준다.
  * @author hwasurr
  */
-function createStackBarDataSet(dataPacket, DATE_RANGE = 15) {
+function createStackBarDataSet(
+  dataPacket: defaultDataPacket[], DATE_RANGE = 15
+): CreateStackBarDataResult {
   const today = new Date();
   if (dataPacket.length > 0) {
     const { setUpLabels, CPM, CPC } = setUpData(dataPacket, dateDiff);
 
 
-    const labels = setUpLabels.map(day => `${day.split('-')[1]}월 ${day.split('-')[2]}일`);
+    const labels = setUpLabels.map((day) => `${day.split('-')[1]}월 ${day.split('-')[2]}일`);
     const firstTime = new Date(dataPacket[0].date.split('T')[0]); // 마지막 날짜
     const lastTime = new Date(dataPacket[dataPacket.length - 1].date.split('T')[0]); // 현재 날짜 수
 
     // 오늘과 today, firstTime 사이의 빈 데이터가 있는경우 채운다.
-    if (dateDiff(today, firstTime) > 0) {
-      // 날짜 차이 만큼 앞에 데이터를 추가한다.
-      for (let i = dateDiff(today, firstTime); i > 1; i -= 1) {
-        firstTime.setDate(firstTime.getDate() + 1);
-        labels.unshift(datefy(firstTime));
-        CPM.unshift(0);
-        CPC.unshift(0);
+    const dDiff = dateDiff(today, firstTime);
+    if (dDiff) {
+      if (dDiff > 0) {
+        // 날짜 차이 만큼 앞에 데이터를 추가한다.
+        for (let i = dDiff; i > 1; i -= 1) {
+          firstTime.setDate(firstTime.getDate() + 1);
+          labels.unshift(datefy(firstTime));
+          CPM.unshift(0);
+          CPC.unshift(0);
+        }
       }
     }
 
@@ -171,14 +192,14 @@ function createStackBarDataSet(dataPacket, DATE_RANGE = 15) {
  * @param { [ {}, {}, ...] }  dataPacket DB로부터 가져온 데이터
  * @author hwasurr
  */
-function createStackBarDataSetPerMonth(dataPacket) {
+function createStackBarDataSetPerMonth(dataPacket: defaultDataPacket[]): CreateStackBarDataResult {
   const MONTH_LENGTH = 12;
   const today = new Date();
   if (dataPacket.length > 0) {
     const { setUpLabels, CPM, CPC } = setUpData(dataPacket, monthDiff);
 
     const labels = setUpLabels.map(
-      day => `${day.split('-')[0]}년 ${day.split('-')[1]}월`
+      (day) => `${day.split('-')[0]}년 ${day.split('-')[1]}월`
     ).reverse();
     const firstTime = new Date(dataPacket[0].date.split('T')[0]); // 처음 날짜
     const lastTime = new Date(dataPacket[dataPacket.length - 1].date.split('T')[0]); // 마지막 날짜
@@ -219,7 +240,7 @@ function createStackBarDataSetPerMonth(dataPacket) {
 }
 
 
-module.exports = {
+export default {
   createStackBarDataSet,
   createStackBarDataSetPerMonth
 };

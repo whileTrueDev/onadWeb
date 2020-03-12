@@ -17,4 +17,19 @@ const chartTheme = {
     '#61a7bc', '#69b7bc', '#91C1C8',
   ],
 };
+
+export const chartTheme2 = {
+  main: [
+    '#9DC8C8', '#58C9B9', '#519D9E', '#D1B6E1', '#dcaf87', '#69a7bc',
+    '#61b7bc', '#9aC1C8', '#9DC8C8', '#58C9B9', '#519D9E', '#D1B6E1',
+    '#dcaf87', '#69a7bc', '#61b7bc', '#9aC1C8', '#9DC8C8', '#58C9B9',
+    '#519D9E', '#D1B6E1', '#dcaf87', '#69a7bc', '#61b7bc', '#9aC1C8',
+    '#58C9B9', '#519D9E', '#D1B6E1', '#dcaf87', '#f3ad3a', '#d3ad3f'],
+  hover: [
+    '#9aC8C8', '#51C9B9', '#598D9E', '#D9c6E1', '#d1af87', '#61a7bc',
+    '#69b7bc', '#91C1C8', '#9aC8C8', '#51C9B9', '#598D9E', '#D9c6E1',
+    '#d1af87', '#61a7bc', '#69b7bc', '#91C1C8', '#9aC8C8', '#51C9B9',
+    '#598D9E', '#D9c6E1', '#d1af87', '#61a7bc', '#69b7bc', '#91C1C8',
+    '#58C9B9', '#519D9E', '#D1B6E1', '#dcaf87', '#f9af4f', '#d9ad6f'],
+};
 export default chartTheme;

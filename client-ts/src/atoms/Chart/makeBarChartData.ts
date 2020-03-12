@@ -5,20 +5,20 @@ function datefy(dd: Date): string {
   return `${year}-${month}-${day}`;
 }
 
-interface IncomeChartData {
+export interface IncomeChartData {
   date: string;
   cash: number;
   type: 'CPM' | 'CPC';
 }
 
-interface PreprocessedIncomeChartData {
+export interface PreprocessedIncomeChartData {
   date: string;
   cpm_amount: number;
   cpc_amount: number;
 }
 
-export default function makeBarChartData(
-  arrayOfExposureData: IncomeChartData[], howMuchDate = 30
+export default function makeBarChartData<T extends IncomeChartData>(
+  arrayOfExposureData: T[], howMuchDate = 30
 ): PreprocessedIncomeChartData[] {
   const KEY_CPM = 'cpm_amount'; const KEY_CPC = 'cpc_amount';
   const dataSet = Array<PreprocessedIncomeChartData>();

@@ -4,10 +4,10 @@ import {
   ResponsiveContainer
 } from 'recharts';
 import { useTheme } from '@material-ui/core/styles';
-import makeBarChartData from './makeBarChartData';
+import makeBarChartData, { IncomeChartData } from './makeBarChartData';
 
-interface ReChartBarProps {
-  data: any[];
+interface ReChartBarProps<T> {
+  data: T[];
   legend?: boolean;
   containerHeight?: number;
   chartHeight?: number;
@@ -21,7 +21,7 @@ interface ReChartBarProps {
   dataKey?: string[] | string;
 }
 
-export default function ReChartBar({
+export default function ReChartBar<DataType extends IncomeChartData>({
   data,
   legend = true,
   dataKey = ['cpm_amount', 'cpc_amount'],
@@ -37,7 +37,7 @@ export default function ReChartBar({
     if (value === 'cpm_amount') { return '배너광고'; } return '클릭광고';
   },
   nopreprocessing = false,
-}: ReChartBarProps): JSX.Element {
+}: ReChartBarProps<DataType>): JSX.Element {
   const theme = useTheme();
 
   return (
@@ -46,7 +46,7 @@ export default function ReChartBar({
         <BarChart
           width={chartWidth}
           height={chartHeight}
-          data={nopreprocessing ? data : makeBarChartData(data)}
+          data={nopreprocessing ? data : makeBarChartData<DataType>(data)}
           stackOffset="sign"
           margin={{
             top: 20, right: 30, left: 20, bottom: 5

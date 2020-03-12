@@ -9,6 +9,14 @@ import history from '../../history';
 const DEFAULT_ERROR_MESSAGE = '죄송합니다.. 데이터 조회중 오류가 발생했습니다..';
 const UNAUTHORIZED = 401;
 
+export interface UseGetRequestObject<T> {
+  data: T | null;
+  loading: boolean | null;
+  error: string;
+  doGetRequest: () => void;
+  setData: React.Dispatch<React.SetStateAction<T | null>>;
+}
+
 type DefaultParamType = {[key: string]: any};
 /**
  * API서버로 `GET` 요청을 보낼 때 사용하는 react **hook**.
@@ -36,13 +44,7 @@ export default function useGetRequest<
   PARAM_TYPE=DefaultParamType, RES_DATA_TYPE = any>(
   url: string,
   params?: PARAM_TYPE
-): {
-  data: RES_DATA_TYPE | null;
-  loading: boolean | null;
-  error: string;
-  doGetRequest: () => void;
-  setData: React.Dispatch<React.SetStateAction<RES_DATA_TYPE | null>>;
-} {
+): UseGetRequestObject<RES_DATA_TYPE> {
   const [param] = useState(params);
   const [data, setData] = useState<RES_DATA_TYPE | null>(null);
   const [loading, setLoading] = useState<boolean | null>(null);
