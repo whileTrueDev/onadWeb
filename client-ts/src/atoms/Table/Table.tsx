@@ -1,33 +1,46 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import shortid from 'shortid';
 // @material-ui/core components
-import withStyles from '@material-ui/core/styles/withStyles';
 import {
   Table, TableHead, TableRow, TableBody, TableCell,
 } from '@material-ui/core';
+import Done from '@material-ui/icons/Done';
 // custom table component
 import CustomTableFooter from './TableFooter';
 
 // core components
-import tableStyle from './Table.style';
+import useTableStyles from './Table.style';
 
-function CustomTable({ ...props }) {
-  const {
-    classes, tableHead, tableData, tableHeaderColor, pagination,
-  } = props;
+interface CustomTableProps {
+  tableHead: string[];
+  tableData: string[][];
+  pagination?: boolean;
+  rowPerPage?: number;
+}
+
+function CustomTable({
+  tableHead,
+  tableData,
+  pagination = false,
+  rowPerPage = 5
+}: CustomTableProps): JSX.Element {
+  const classes = useTableStyles();
 
   const [page, setPage] = React.useState(0); // 테이블 페이지
-  const [rowsPerPage, setRowsPerPage] = React.useState(5); // 테이블 페이지당 행
+  const [rowsPerPage, setRowsPerPage] = React.useState(rowPerPage); // 테이블 페이지당 행
   const emptyRows = rowsPerPage - Math.min(
     rowsPerPage, tableData.length - page * rowsPerPage,
   );
   // page handler
-  function handleChangeTablePage(event, newPage) {
+  function handleChangeTablePage(
+    event: React.MouseEvent<HTMLButtonElement> | null, newPage: number
+  ): void {
     setPage(newPage);
   }
   // page per row handler
-  function handleChangeTableRowsPerPage(event) {
+  function handleChangeTableRowsPerPage(
+    event: React.ChangeEvent< HTMLTextAreaElement | HTMLInputElement>
+  ): void {
     setRowsPerPage(parseInt(event.target.value, 10));
   }
 
@@ -35,7 +48,7 @@ function CustomTable({ ...props }) {
     <div className={classes.tableResponsive}>
       <Table className={classes.table}>
         {tableHead !== undefined ? (
-          <TableHead className={classes[`${tableHeaderColor}TableHeader`]}>
+          <TableHead>
             <TableRow>
               {tableHead.map((value) => (
                 <TableCell
@@ -54,11 +67,23 @@ function CustomTable({ ...props }) {
             {tableData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((prop) => (
               <TableRow hover key={shortid.generate()}>
                 {prop.map((value) => (
-
-                  <TableCell className={classes.tableCell} key={shortid.generate()}>
-                    {value}
-                  </TableCell>
-
+                  value.indexOf('data:image/') === -1 // 없는 경우
+                    ? (
+                      <TableCell className={classes.tableCell} key={shortid.generate()}>
+                        {value === '완료됨'
+                          ? (
+                            <span>
+                              {value}
+                              <Done color="secondary" />
+                            </span>
+                          )
+                          : value}
+                      </TableCell>
+                    ) : (
+                      <TableCell className={classes.imgCell} key={shortid.generate()}>
+                        <img src={value} alt="banner" style={{ width: '100%', height: 'auto' }} />
+                      </TableCell>
+                    )
                 ))}
               </TableRow>
             ))}
@@ -108,29 +133,4 @@ function CustomTable({ ...props }) {
   );
 }
 
-CustomTable.defaultProps = {
-  tableHeaderColor: 'gray',
-  pagination: false,
-};
-
-CustomTable.propTypes = {
-  classes: PropTypes.object.isRequired,
-  tableHeaderColor: PropTypes.oneOf([
-    'warning',
-    'primary',
-    'danger',
-    'success',
-    'info',
-    'rose',
-    'gray',
-    'blueGray',
-  ]),
-  tableHead: PropTypes.arrayOf(PropTypes.string).isRequired,
-  tableData: PropTypes.arrayOf(PropTypes.arrayOf(
-    PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  )).isRequired,
-  pagination: PropTypes.bool,
-};
-
-
-export default withStyles(tableStyle)(CustomTable);
+export default CustomTable;

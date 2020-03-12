@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import MuiMaterialTable, { MaterialTableProps, Column } from 'material-table';
 import ArrowUpward from '@material-ui/icons/ArrowUpwardRounded';
 import Check from '@material-ui/icons/CheckRounded';
@@ -75,8 +74,3 @@ export default function MaterialTable<RowDataType extends object>(
     />
   );
 }
-
-MaterialTable.propTypes = {
-  columns: PropTypes.object.isRequired,
-
-};
