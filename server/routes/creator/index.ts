@@ -178,42 +178,38 @@ router.route('/ad-page')
     responseHelper.middleware.checkSessionExists,
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
       const { creatorId } = responseHelper.getSessionData(req);
-      const { imageUrl, description, creatorTheme } = req.body;
+      const imageUrlKey = 'creatorBackgroundImage';
+      const descriptionKey = 'creatorDesc';
+      const creatorThemeKey = 'creatorTheme';
+      const [creatorBackgroundImage, creatorDesc, creatorTheme] = responseHelper.getOptionalParam(
+        [imageUrlKey, descriptionKey, creatorThemeKey], 'patch', req
+      );
 
-      if (typeof imageUrl !== 'string') {
-        // 소개글 관리 변경
-        const query = `
-          UPDATE creatorLanding
-          SET creatorDesc = ?, creatorTheme = ?
-          WHERE creatorId = ?
-          `;
-        const queryArray = [description, creatorTheme, creatorId];
-        doQuery(query, queryArray)
-          .then((row) => {
-            if (!row.error && row.result) {
-              responseHelper.send([true], 'PATCH', res);
-            }
-          })
-          .catch((err) => {
-            responseHelper.promiseError(err, next);
-          });
-      } else {
-        // 이미지 변경
-        const backgroundImageQuery = `
-          UPDATE creatorLanding
-          SET creatorBackgroundImage = ?
-          WHERE creatorId = ?`;
-        const backgroundImageArray = [imageUrl, creatorId];
-        doQuery(backgroundImageQuery, backgroundImageArray)
-          .then((row) => {
-            if (!row.error) {
-              responseHelper.send([true, '등록되었습니다.'], 'PATCH', res);
-            }
-          })
-          .catch((err) => {
-            responseHelper.promiseError(err, next);
-          });
+      const updateFields: {key: string; value: string}[] = [];
+      if (creatorBackgroundImage) {
+        updateFields.push({ key: imageUrlKey, value: creatorBackgroundImage });
       }
+      if (creatorDesc) { updateFields.push({ key: descriptionKey, value: creatorDesc }); }
+      if (creatorTheme) { updateFields.push({ key: creatorThemeKey, value: creatorTheme }); }
+
+      const updateArray = updateFields.map((field) => field.value).concat(creatorId as string);
+      const updateStrings = updateFields.map((field, index) => {
+        const comma = ',';
+        const r = `${field.key} = ?`;
+        if (updateFields.length - 1 === index) { return r; }
+        return r + comma;
+      }).join('\n ');
+      const updateQuery = `
+      UPDATE creatorLanding SET ${updateStrings} WHERE creatorId = ?
+      `;
+
+      doQuery(updateQuery, updateArray).then((row) => {
+        if (!row.error) {
+          responseHelper.send([true, '변경되었습니다.'], 'PATCH', res);
+        }
+      }).catch((err) => {
+        responseHelper.promiseError(err, next);
+      });
     }),
   )
   .all(responseHelper.middleware.unusedMethod);

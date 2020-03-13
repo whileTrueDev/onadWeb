@@ -1,12 +1,13 @@
 import React from 'react';
-import { Grid } from '@material-ui/core';
+import GridContainer from '../../../atoms/Grid/GridContainer';
+import GridItem from '../../../atoms/Grid/GridItem';
 import BannerTableCard from '../../../organisms/mypage/creator/CampaignManage/CampaignTableCard';
 
 const CampaignManage = (): JSX.Element => (
-  <Grid container direction="row">
-    <Grid item sm={12} md={10}>
+  <GridContainer direction="row">
+    <GridItem sm={12} md={10}>
       <BannerTableCard />
-    </Grid>
-  </Grid>
+    </GridItem>
+  </GridContainer>
 );
 export default CampaignManage;

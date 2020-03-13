@@ -25,10 +25,10 @@ export default function App(): React.ReactElement {
   const patch = useDialog();
   const deletee = useDialog();
 
-  const usePost = usePostRequest<CreatorParam, CreatorPostRes>('/test', () => { post.handleOpen(true); });
-  const useDelete = useDeleteRequest<CreatorParam, CreatorPostRes>('/test', () => { deletee.handleOpen(true); });
-  const usePatch = usePatchRequest<CreatorParam, CreatorPostRes>('/test', () => { patch.handleOpen(true); });
-  const usePut = usePutRequest<CreatorParam, CreatorPostRes>('/test', () => { put.handleOpen(true); });
+  const usePost = usePostRequest<CreatorParam, CreatorPostRes>('/test', () => { post.handleOpen(); });
+  const useDelete = useDeleteRequest<CreatorParam, CreatorPostRes>('/test', () => { deletee.handleOpen(); });
+  const usePatch = usePatchRequest<CreatorParam, CreatorPostRes>('/test', () => { patch.handleOpen(); });
+  const usePut = usePutRequest<CreatorParam, CreatorPostRes>('/test', () => { put.handleOpen(); });
 
   const {
     data, loading, error, doGetRequest

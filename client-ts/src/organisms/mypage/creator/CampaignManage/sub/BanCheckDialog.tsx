@@ -75,7 +75,7 @@ function BanCheckDialog({
             </div>
           </Grid>
           <Grid item className={classes.dialogContent}>
-            <StyledItemText primary="해당 광고의 송출을 중단하시겠어요?" secondary="지금까지의 광고료는 정산되며, 더이상 이 배너가 송출되지 않습니다." />
+            <StyledItemText primary="해당 광고의 송출을 중단하시겠어요?" secondary="지금까지의 광고료는 정산되며, 더 이상 이 배너가 송출되지 않습니다." />
           </Grid>
         </Grid>
       </div>

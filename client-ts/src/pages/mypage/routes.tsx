@@ -11,7 +11,7 @@ import Public from '@material-ui/icons/Public';
 
 // 크리에이터 라우터
 import CreatorCampaignManage from './creator/CampaignManage';
-// import CreatorLandingManage from './creator/LandingManage';
+import CreatorLandingManage from './creator/AdPageManage';
 import CreatorDashboard from './creator/Dashboard';
 // 수정필요함.
 // import CreatorMyPage from './creator/Mypage';
@@ -55,10 +55,10 @@ const dashboardRoutes: MypageRoutes = {
       layout: '/mypage/creator',
     },
     {
-      path: '/landing',
+      path: '/ad-page',
       name: '내 광고페이지',
       icon: Public,
-      // component: CreatorLandingManage,
+      component: CreatorLandingManage,
       layout: '/mypage/creator',
     },
     {

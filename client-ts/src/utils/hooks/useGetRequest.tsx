@@ -70,10 +70,6 @@ export default function useGetRequest<
           setLoading(false); // 로딩 완료
 
           if (err && err.isAxiosError) {
-            if (isAxiosCancel(err)) { // 요청 캔슬된 경우
-              console.error(`request cancelled:${err.message}`);
-            }
-
             if (err && err.response) {
               if (err.response.status === UNAUTHORIZED) { // 세션없는 요청의 경우
                 setError(err.response.data.mesage);
@@ -85,6 +81,8 @@ export default function useGetRequest<
             } else {
               setError(err.message);
             }
+          } else if (isAxiosCancel(err)) {
+            console.info(`reqeust canceling in - ${url}`, err.message);
           } else {
             // axios 에러가 아닌 경우
             console.error('not axios error - ', err);
@@ -98,8 +96,8 @@ export default function useGetRequest<
 
     // cleanup function
     return (): void => {
-      setUnmounted(true);
       source.cancel('Cancelling in cleanup');
+      setUnmounted(true);
     };
   }, [doGetRequest, source]);
 
