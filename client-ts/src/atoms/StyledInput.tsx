@@ -1,13 +1,13 @@
 
 import React from 'react';
-import { Input } from '@material-ui/core';
+import { Input, InputProps } from '@material-ui/core';
 import { withStyles, Theme } from '@material-ui/core/styles';
 
 const StyledInput = withStyles((theme: Theme) => ({
   root: {
     fontSize: '16px',
     fontWeight: 700,
-    color: theme.palette.info.main,
+    color: theme.palette.text.primary,
     width: '300px',
     [theme.breakpoints.down('sm')]: {
       width: '100%',
@@ -16,12 +16,9 @@ const StyledInput = withStyles((theme: Theme) => ({
     },
   },
   underline: {
-    '&:after': {
-      borderBottom: theme.palette.info.main
-    },
-    color: theme.palette.info.main
+    color: theme.palette.text.primary
   },
-}))((props) => (
+}))((props: InputProps) => (
   <Input {...props} />
 ));
 

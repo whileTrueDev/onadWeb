@@ -28,7 +28,7 @@ router.route('/')
       `;
 
       doQuery(query, [creatorId])
-        .then(row => {
+        .then((row) => {
           const result = row.result[0];
           result.date = result.date.toLocaleString();
           let deciphedAccountNum;
@@ -40,9 +40,8 @@ router.route('/')
           result.creatorAccountNumber = deciphedAccountNum;
           responseHelper.send(result, 'get', res);
         }).catch((error) => {
-          responseHelper.promiseError(error, next)
-        }
-        )
+          responseHelper.promiseError(error, next);
+        });
     }),
   )
   .all(responseHelper.middleware.unusedMethod);
@@ -63,8 +62,7 @@ router.route('/withdrawal')
       `;
 
       doQuery(query, [creatorId])
-        .then(row => {
-          console.log(row.result)
+        .then((row) => {
           if (row.result.length > 0) {
             const result = dataProcessing.withdrawalList(row);
             responseHelper.send(result, 'get', res);
@@ -72,9 +70,8 @@ router.route('/withdrawal')
             res.end();
           }
         }).catch((error) => {
-          responseHelper.promiseError(error, next)
-        }
-        )
+          responseHelper.promiseError(error, next);
+        });
     }),
   )
   .post(
@@ -82,34 +79,60 @@ router.route('/withdrawal')
     responseHelper.middleware.checkSessionExists,
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
       const { creatorId } = responseHelper.getSessionData(req);
-      const withdrawlAmount: number = responseHelper.getParam('withdrawlAmount', 'POST', req)
+      const withdrawalAmount: number = responseHelper.getParam('withdrawalAmount', 'POST', req);
 
       const creatorWithdrawalQuery = `
       INSERT INTO creatorWithdrawal
-      (creatorId, creatorWithdrawalAmount, withdrawalState)
+        (creatorId, creatorWithdrawalAmount, withdrawalState)
       VALUES (?, ?, ?)`;
 
       const creatorIncomeQuery = `
       INSERT INTO creatorIncome 
-      (creatorId, creatorTotalIncome, creatorReceivable)
+        (creatorId, creatorTotalIncome, creatorReceivable)
       SELECT creatorId, creatorTotalIncome, creatorReceivable - ?
-      FROM creatorIncome
-      WHERE creatorId = ?
-      ORDER BY date DESC
-      LIMIT 1`;
+        FROM creatorIncome
+        WHERE creatorId = ?
+        ORDER BY date DESC
+        LIMIT 1`;
 
       Promise.all([
-        doQuery(creatorWithdrawalQuery, [creatorId, withdrawlAmount, 0]),
-        doQuery(creatorIncomeQuery, [withdrawlAmount, creatorId])
+        doQuery(creatorWithdrawalQuery, [creatorId, withdrawalAmount, 0]),
+        doQuery(creatorIncomeQuery, [withdrawalAmount, creatorId])
       ])
         .then(() => {
           responseHelper.send('done', 'POST', res);
         })
         .catch((error) => {
-          responseHelper.promiseError(error, next)
+          responseHelper.promiseError(error, next);
         });
     }),
   )
   .all(responseHelper.middleware.unusedMethod);
 
+router.route('/chart')
+  .get(
+    responseHelper.middleware.checkSessionExists,
+    responseHelper.middleware.withErrorCatch(async (req, res, next) => {
+      const { creatorId } = responseHelper.getSessionData(req);
+      const dateRange = responseHelper.getParam('dateRange', 'get', req);
+      const query = `
+      SELECT
+        DATE_FORMAT(cl.date, "%Y-%m-%d") as date,
+        sum(cashToCreator) as cash, type
+      FROM campaignLog AS cl
+      WHERE creatorId = ?
+        AND  cl.date >= DATE_SUB(NOW(), INTERVAL ? DAY)
+      GROUP BY DATE_FORMAT(cl.date, "%Y-%m-%d"), type
+      ORDER BY cl.date DESC
+      `;
+
+      interface IncomeChartResult {
+        date: string;
+        cash: number;
+        type: 'CPM' | 'CPC';
+      }
+      const row = await doQuery<IncomeChartResult[]>(query, [creatorId, dateRange]);
+      responseHelper.send(row.result, 'get', res);
+    })
+  );
 export default router;

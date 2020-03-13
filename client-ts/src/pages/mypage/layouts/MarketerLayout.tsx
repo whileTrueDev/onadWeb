@@ -1,7 +1,5 @@
 
 import React, { useState, useEffect, useRef } from 'react';
-import PropTypes from 'prop-types';
-import withStyles from '@material-ui/core/styles/withStyles';
 import { Switch, Route } from 'react-router-dom';
 import Navbar from '../../../organisms/mypage/layouts/Navbars/Navbar';
 import Sidebar from '../../../organisms/mypage/layouts/Sidebar/Sidebar';
@@ -9,13 +7,11 @@ import Footer from '../../../organisms/mypage/layouts/Footer/Footer';
 import allRoutes from '../routes';
 import history from '../../../history';
 // css
-import dashboardStyle from '../../../assets/jss/layouts/dashboardStyle';
+import useLayoutStyles from './Layout.style';
 import '../../../assets/onad.css';
 
-const MarketerDashboard = (
-  props: { classes: any; [key: string]: any}
-): JSX.Element => {
-  const { classes, ...rest } = props;
+const MarketerDashboard = (): JSX.Element => {
+  const classes = useLayoutStyles();
 
   const [mobileOpen, setMobileOpen] = useState(false);
   const handleDrawerToggle = (): void => {
@@ -43,17 +39,14 @@ const MarketerDashboard = (
     <div className={classes.wrapper}>
       <Sidebar
         routes={allRoutes.marketer}
-        logoText="OnAD"
         logo="/pngs/logo/onad_logo_vertical_white.png"
         mobileOpen={mobileOpen}
         handleDrawerToggle={handleDrawerToggle}
-        {...rest}
       />
       <div className={classes.mainPanel} ref={mainPanel}>
         <Navbar
           handleDrawerToggle={handleDrawerToggle}
           routes={allRoutes.marketer}
-          {...rest}
         />
         <div className={classes.content}>
           <div className={classes.container}>
@@ -61,9 +54,7 @@ const MarketerDashboard = (
               {allRoutes.marketer.map((prop) => (
                 <Route
                   path={prop.layout + prop.path}
-                  component={prop.component
-                    ? (): JSX.Element => <prop.component />
-                    : (): JSX.Element => <div />}
+                  component={prop.component}
                   key={prop.name}
                 />
               ))}
@@ -76,9 +67,4 @@ const MarketerDashboard = (
   );
 };
 
-
-MarketerDashboard.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
-
-export default withStyles(dashboardStyle)(MarketerDashboard);
+export default MarketerDashboard;

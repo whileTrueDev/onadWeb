@@ -5,25 +5,70 @@ import doQuery from '../../../model/doQuery';
 const router = express.Router();
 
 interface CampaignData {
-  creatorId: string,
-  state: number,
-  campaignId: string,
-  date: string,
-  bannerSrc: string,
-  connectedLinkId?: string,
-  marketerName: string,
-  bannerDescription?: string,
-  links?: string,
+  creatorId: string;
+  state: number;
+  campaignId: string;
+  date: string;
+  bannerSrc: string;
+  connectedLinkId?: string;
+  marketerName: string;
+  bannerDescription?: string;
+  links?: string;
+  CPM?: number;
+  CPC?: number;
 }
 
 interface CreatorCampaignList {
-  campaignList: CampaignData[],
-  banList: string[]
-};
+  campaignList: CampaignData[];
+  banList: string[];
+}
+
+interface CampaignPerIncomeData { campaignId: string; type: 'CPM' | 'CPC'; cash: number }
+
+router.route('/')
+  // 배너 밴 기능
+  .delete(
+    responseHelper.middleware.checkSessionExists,
+    responseHelper.middleware.withErrorCatch(async (req, res, next) => {
+      const { creatorId } = responseHelper.getSessionData(req);
+      const campaignId = responseHelper.getParam('campaignId', 'delete', req);
+      const banListSearchQuery = `
+      SELECT banList 
+      FROM creatorCampaign 
+      WHERE creatorId = ?`;
+      interface BanList { banList: string }
+
+      const banListUpdateQuery = `
+      UPDATE creatorCampaign 
+      SET banList = ? 
+      WHERE creatorId = ?`;
+
+      const row = await doQuery<BanList[]>(banListSearchQuery, [creatorId]);
+      if (row.result) {
+        const banList = JSON.parse(row.result[0].banList);
+        const newCampaignList = banList.campaignList.concat(campaignId);
+        banList.campaignList = newCampaignList;
+
+        const banListUpdate = await doQuery(
+          banListUpdateQuery, [JSON.stringify(banList), creatorId]
+        );
+
+        if (banListUpdate.result.affectedRows > 0) {
+          responseHelper.send([true, 'success'], 'delete', res);
+        } else {
+          responseHelper.promiseError(new Error('배너 삭제에 실패했습니다'), next);
+        }
+      }
+      responseHelper.send(true, 'delete', res);
+    })
+  )
+  .all(responseHelper.middleware.unusedMethod);
 
 // 캠페인 ID array 를 통해 각 캠페인 ID에 따른 cash를 구하는 함수.
 // banList에 존재할 때 state 또한 변경하는 함수.
-const getCash = async ({ campaignList, banList }: CreatorCampaignList) => {
+const getIncomePerCampaign = async ({
+  campaignList, banList
+}: CreatorCampaignList): Promise<CampaignData[]> => {
   const cashQuery = `
   SELECT campaignId, type, sum(cashToCreator)  as cash
   FROM campaignLog
@@ -41,7 +86,7 @@ const getCash = async ({ campaignList, banList }: CreatorCampaignList) => {
               newCampaignData.state = 0;
             }
             let cash = 0;
-            row.result.forEach((cashData: { campaignId: string, type: string, cash: number }) => {
+            row.result.forEach((cashData: CampaignPerIncomeData) => {
               newCampaignData[cashData.type] = cashData.cash;
               cash += cashData.cash;
             });
@@ -65,12 +110,9 @@ const getCash = async ({ campaignList, banList }: CreatorCampaignList) => {
           console.log(err);
         });
     })
-  )
-    .catch((errorData) => {
-      console.log(errorData);
-      errorData.point = 'getCash()';
-      errorData.description = 'categoryCampaign에서 각각의 categoryId에 따른 캠페인 가져오기';
-    });
+  ).catch((errorData) => {
+    console.log(errorData);
+  });
 
   return newList;
 };
@@ -82,22 +124,22 @@ router.route('/list')
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
       const { creatorId } = responseHelper.getSessionData(req);
       const listQuery = `
-      SELECT CT.campaignId, CT.date, BR.bannerSrc, CT.creatorId, campaign.connectedLinkId,
-      campaign.onOff as state, campaign.marketerName, 
-      bannerDescription, IR.links
-      FROM 
-      (
-      SELECT creatorId, campaignId , min(date) as date 
-      FROM campaignTimestamp
-      WHERE creatorId = ?
-      GROUP BY campaignId
+      SELECT
+        CT.campaignId, CT.date, BR.bannerSrc, CT.creatorId, campaign.connectedLinkId,
+        campaign.onOff as state, campaign.marketerName,  bannerDescription, IR.links
+      FROM (
+        SELECT creatorId, campaignId , min(date) as date 
+        FROM campaignTimestamp
+        WHERE creatorId = ?
+        GROUP BY campaignId
       ) AS CT 
       JOIN campaign 
-      ON CT.campaignId = campaign.campaignId
+        ON CT.campaignId = campaign.campaignId
       JOIN bannerRegistered AS BR
-      ON campaign.bannerId = BR.bannerId
+        ON campaign.bannerId = BR.bannerId
       LEFT JOIN linkRegistered AS IR
-      ON connectedLinkId = IR.linkId
+        ON connectedLinkId = IR.linkId
+      ORDER BY date DESC
       `;
       const bannerQuery = `
       SELECT banList 
@@ -111,11 +153,11 @@ router.route('/list')
       ])
         .then(async ([row, ban]) => {
           const banList: string[] = JSON.parse(ban.result[0].banList).campaignList;
-          const campaignList = await getCash({ campaignList: row.result, banList });
+          const campaignList = await getIncomePerCampaign({ campaignList: row.result, banList });
           responseHelper.send(campaignList, 'get', res);
         })
         .catch((error) => {
-          responseHelper.promiseError(error, next)
+          responseHelper.promiseError(error, next);
         });
     }),
   )
@@ -135,13 +177,13 @@ router.route('/overlay')
       `;
 
       doQuery(query, [creatorId])
-        .then(row => {
+        .then((row) => {
           const result = row.result[0];
           result.advertiseUrl = `https://banner.onad.io/banner${result.advertiseUrl}`;
           responseHelper.send(result, 'get', res);
         })
         .catch((error) => {
-          responseHelper.promiseError(error, next)
+          responseHelper.promiseError(error, next);
         });
     }),
   )
@@ -174,13 +216,13 @@ router.route('/active')
       `;
 
       doQuery(query, [creatorId])
-        .then(row => {
-          const { result } = row
+        .then((row) => {
+          const { result } = row;
           result.advertiseUrl = `https://banner.onad.io/banner${result.advertiseUrl}`;
           responseHelper.send(result, 'get', res);
         })
         .catch((error) => {
-          responseHelper.promiseError(error, next)
+          responseHelper.promiseError(error, next);
         });
     }),
   )

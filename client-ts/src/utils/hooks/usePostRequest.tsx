@@ -2,8 +2,14 @@ import React, { useCallback } from 'react';
 import axios from '../axios';
 import host from '../../config';
 
-const DEFAULT_ERROR_MESSAGE = '죄송합니다.. 생성중 오류가 발생했습니다..';
-
+const DEFAULT_ERROR_MESSAGE = '죄송합니다.. 오류가 발생했습니다..';
+export interface UsePostRequestObject<T, P> {
+    success: true | null;
+    loading: boolean | null;
+    error: string;
+    doPostRequest: (param: T) => void;
+    data: P | null;
+  }
 /**
  * API서버로 `POST` 요청을 보낼 때 사용하는 react **hook**.
  * ## 타입파라미터 (제네릭)
@@ -30,13 +36,7 @@ const DEFAULT_ERROR_MESSAGE = '죄송합니다.. 생성중 오류가 발생했�
 export default function usePostRequest<PARAM_TYPE = {[key: string]: any}, RES_DATA_TYPE = any>(
   url: string,
   successCallback?: () => void
-): {
-  success: true | null;
-  loading: boolean | null;
-  error: string;
-  data: RES_DATA_TYPE | null;
-  doPostRequest: (param: PARAM_TYPE) => void;
-} {
+): UsePostRequestObject<PARAM_TYPE, RES_DATA_TYPE> {
   const [success, setSuccess] = React.useState<true | null>(null);
   const [data, setData] = React.useState<RES_DATA_TYPE | null>(null);
   const [loading, setLoading] = React.useState<boolean | null>(null);

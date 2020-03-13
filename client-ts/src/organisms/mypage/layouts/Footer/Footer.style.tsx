@@ -3,7 +3,7 @@ import { makeStyles, Theme } from '@material-ui/core/styles';
 const useFooterStyle = makeStyles((theme: Theme) => ({
   block: {
     color: 'inherit',
-    padding: '15px',
+    padding: '10px',
     textTransform: 'uppercase',
     borderRadius: '3px',
     textDecoration: 'none',
@@ -14,10 +14,10 @@ const useFooterStyle = makeStyles((theme: Theme) => ({
   },
   left: {
     float: 'left',
-    display: 'block',
+    display: 'block'
   },
   right: {
-    padding: '15px 0',
+    padding: '10px 0',
     margin: '0',
     fontSize: '14px',
     float: 'right',
@@ -39,7 +39,7 @@ const useFooterStyle = makeStyles((theme: Theme) => ({
     marginTop: '0',
   },
   inlineBlock: {
-    display: 'inlineBlock',
+    display: 'inline-block',
     padding: '0px',
     width: 'auto',
   },
