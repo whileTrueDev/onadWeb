@@ -14,7 +14,7 @@ import CardAvatar from '../../atoms/Card/CardAvatar';
 import CardBody from '../../atoms/Card/CardBody';
 import CircularProgress from '../../atoms/Progress/CircularProgress';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     background: 'url(\'/pngs/main/loading.gif\') no-repeat center center',
     backgroundSize: 'cover',
@@ -162,7 +162,7 @@ export default withRoot((props) => {
                 </h1>
               </Grow>
               <div className={classes.h1sub}>
-                {textSource.heroSector.creatorList.content.split('\n').map(row => (
+                {textSource.heroSector.creatorList.content.split('\n').map((row) => (
                   <p key={row}>{`${row}`}</p>
                 ))}
               </div>
@@ -179,7 +179,7 @@ export default withRoot((props) => {
             </div>
           )}
           {!ContractedCreatorList.loading && !LiveCreatorList.loading && LiveCreatorList.payload
-          && ContractedCreatorList.payload.map(row => (
+          && ContractedCreatorList.payload.map((row) => (
             <Grid item xs={12} sm={5} md={2} className={classes.listWrapper} key={shortid.generate()}>
               <Card profile className={LiveCreatorList.payload.includes(row.creatorTwitchId) ? (classes.live) : (classes.notlive)}>
                 <CardAvatar profile>

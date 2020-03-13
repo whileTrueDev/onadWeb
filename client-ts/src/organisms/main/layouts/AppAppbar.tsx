@@ -1,20 +1,19 @@
 import React, { useState, useCallback } from 'react';
 import classNames from 'classnames';
-import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import { withStyles } from '@material-ui/core/styles';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import {
   Menu, MenuItem, IconButton, Button,
   Tooltip, useScrollTrigger, AppBar, Toolbar
 } from '@material-ui/core';
 import { Domain, Dashboard } from '@material-ui/icons';
-import LoginPopover from '../views/login/LoginPopover';
+import makeStyles from '@material-ui/core/styles/makeStyles';
+import LoginPopover from '../main/views/login/LoginPopover';
 import HOST from '../../../config';
 import axios from '../../../utils/axios';
 import history from '../../../history';
 
-const styles = (theme: Theme) => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: 'rgb( 255, 255, 255, 0)',
     position: 'fixed',
@@ -165,16 +164,21 @@ const styles = (theme: Theme) => ({
       height: 25
     }
   }
-});
+}));
 interface Props {
-
+  isLogin?: boolean;
+  logout?: () => void;
+  noButtons?: boolean;
+  MainUserType?: string;
+  noTrigger?: boolean;
 }
 
-function AppAppBar(props) {
-  const {
-    classes, isLogin, logout, tabValue,
-    handleTabChange, noButtons, MainUserType, noTrigger
-  } = props;
+function AppAppBar({
+  isLogin, logout,
+  noButtons, MainUserType,
+  noTrigger
+}: Props): JSX.Element {
+  const classes = useStyles();
 
   // 스크롤 100위치에 다른 네비게이션 바 css 변경
   let trigger = useScrollTrigger({ threshold: 100, disableHysteresis: true });
@@ -219,10 +223,7 @@ function AppAppBar(props) {
       <LoginPopover
         type="로그인"
         MainUserType={MainUserType}
-        history={history}
         logout={logout}
-        tabValue={tabValue}
-        onChange={handleTabChange}
         trigger={trigger}
       />
     );
@@ -239,15 +240,15 @@ function AppAppBar(props) {
         </Button>
       );
     }
-    return <LoginPopover type="회원가입" history={history} trigger={trigger} MainUserType={MainUserType} />;
+    return <LoginPopover type="회원가입" trigger={trigger} MainUserType={MainUserType} />;
   };
 
   /** 모바일 메뉴 ********************************************* */
-  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
+  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState<null | HTMLElement>(null);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
   // 모바일 메뉴버튼 오픈 state
-  const handleMobileMenuOpen = (event) => {
+  const handleMobileMenuOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
     setMobileMoreAnchorEl(event.currentTarget);
   };
 
@@ -272,7 +273,8 @@ function AppAppBar(props) {
             마이페이지
           </Button>
         </MenuItem>
-      ) : (
+      )
+        : (
           <div>
             <MenuItem>
               <Button
@@ -282,7 +284,7 @@ function AppAppBar(props) {
               >
                 <Domain className={classes.buttonIcon} />
                 서비스 소개
-            </Button>
+              </Button>
             </MenuItem>
 
             <MenuItem>
@@ -293,7 +295,7 @@ function AppAppBar(props) {
                 >
                   <Dashboard className={classes.buttonIcon} />
                   마이페이지
-              </Button>
+                </Button>
               )
                 : <LoginPopover type="회원가입" mode="mobile" MainUserType={MainUserType} />}
             </MenuItem>
@@ -302,8 +304,9 @@ function AppAppBar(props) {
               {isLogin ? (
                 <Button className={classes.rightLink2} onClick={logout}>
                   로그아웃
-              </Button>
-              ) : (
+                </Button>
+              )
+                : (
                   <LoginPopover type="로그인" MainUserType={MainUserType} />
                 )}
             </MenuItem>
@@ -326,7 +329,8 @@ function AppAppBar(props) {
                 style={{ padding: '10px 18px' }}
               />
             </a>
-          ) : (
+          )
+            : (
               <a href="/" className={classes.icon}>
                 <img
                   src={!trigger ? ('/pngs/logo/onad_white.png') : ('/pngs/logo/onad_black.png')}
@@ -344,7 +348,8 @@ function AppAppBar(props) {
                 </IconButton>
               </Tooltip>
             </div>
-          ) : (
+          )
+            : (
               <div className={classes.rightDesktop}>
                 <Button
                   className={!trigger ? (classes.rightLink) : (classes.rightLink2)}
@@ -352,8 +357,8 @@ function AppAppBar(props) {
                   to={MainUserType === 'marketer' ? ('/introduce/marketer') : ('/introduce/creator')}
                 >
                   서비스소개
-              </Button>
-                <RegButton history={history} logout={logout} />
+                </Button>
+                <RegButton logout={logout} />
 
                 {MainUserType === 'marketer' ? (
                   <div>
@@ -363,11 +368,10 @@ function AppAppBar(props) {
                       to="/creatorlist"
                     >
                       크리에이터 리스트
-                  </Button>
+                    </Button>
                   </div>
                 ) : null}
                 <LogButton
-                  history={history}
                   logout={logout}
                 />
               </div>
@@ -385,13 +389,4 @@ function AppAppBar(props) {
   );
 }
 
-AppAppBar.propTypes = {
-  classes: PropTypes.object,
-};
-
-AppAppBar.defaultProps = {
-  classes: {},
-};
-
-
-export default withStyles(styles)(AppAppBar);
+export default AppAppBar;

@@ -16,9 +16,13 @@ import './assets/onad.css';
 // Pages
 import Door from './pages/main/Door';
 import Main from './pages/main/Main';
+import Introduction from './pages/main/Introduction';
+import RegistPage from './pages/main/Regist';
+import Policy from './pages/main/Policy';
+import Notice from './pages/others/Notice';
+import CreatorList from './pages/main/CreatorList';
 import CreatorDashboard from './pages/mypage/layouts/CreatorLayout';
 // import MarketerLayout from './pages/mypage/layouts/MarketerLayout';
-
 
 dotenv.config();
 
@@ -29,6 +33,14 @@ const developmentRouter = (
         <Route exact path="/" component={Door} />
         <Route exact path="/marketer" component={Main} />
         <Route exact path="/creator" component={Main} />
+        <Route exact path="/creatorlist" component={CreatorList} />
+        <Route path="/regist/:platform" component={RegistPage} />
+        <Route exact path="/regist" component={RegistPage} />
+        <Route exact path="/introduce/:userType" component={Introduction} />
+        <Route exact path="/policy" component={Policy} />
+        <Route exact path="/policy/:privacy" component={Policy} />
+        <Route exact path="/notice" component={Notice} />
+        <Route path="/notice/:code" component={Notice} />
       </ThemeProvider>
       <ThemeProvider theme={theme.lightTheme}>
         <Route path="/mypage/creator" component={CreatorDashboard} />
@@ -45,6 +57,14 @@ const productionRouter = (
         <Route exact path="/" component={Door} />
         <Route exact path="/marketer" component={Main} />
         <Route exact path="/creator" component={Main} />
+        <Route exact path="/creatorlist" component={CreatorList} />
+        <Route path="/regist/:platform" component={RegistPage} />
+        <Route exact path="/regist" component={RegistPage} />
+        <Route exact path="/introduce/:userType" component={Introduction} />
+        <Route exact path="/policy" component={Policy} />
+        <Route exact path="/policy/:privacy" component={Policy} />
+        <Route exact path="/notice" component={Notice} />
+        <Route path="/notice/:code" component={Notice} />
       </ThemeProvider>
       <ThemeProvider theme={theme.lightTheme}>
         <Route path="/mypage/creator" component={CreatorDashboard} />

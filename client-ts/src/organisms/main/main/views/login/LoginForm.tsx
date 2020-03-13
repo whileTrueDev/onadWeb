@@ -9,26 +9,25 @@ import {
   DialogTitle,
   Button,
   TextField,
-  withStyles,
   Grid,
   Divider,
   Typography
 } from '@material-ui/core';
-import PropTypes from 'prop-types';
-import axios from '../../../../../utils/axios';
+import makeStyles from '@material-ui/core/styles/makeStyles';
+import axios from '../../../../utils/axios';
 import FindDialog from './FindDialog';
-import HOST from '../../../../../utils/config';
-import history from '../../../../../history';
+import HOST from '../../../../config';
+import history from '../../../../history';
 
 
-const styles = () => ({
+const useStyles = makeStyles(() => ({
   title: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     fontSize: '20px',
     fontFamily: 'Noto Sans KR',
-    fontWeight: '600'
+    fontWeight: 600
   },
   button: {
     fontWeight: 800,
@@ -52,22 +51,31 @@ const styles = () => ({
     maxHeight: '130px',
     margin: '0 auto',
   },
-});
+}));
 
+interface Props {
+  open: boolean;
+  isMarketer: boolean;
+  handleClose: () => void;
+  logout?: () => void;
+}
 // TODO: 비밀번호 암호화하여 전달하기.
-const LoginForm = (props) => {
+function LoginForm({
+  open,
+  isMarketer,
+  handleClose,
+  logout
+}: Props): JSX.Element {
   // prop를 통해 Marketer 인지 Creator인지 확인.
   // 데이터가 변경되는 것일 때 state로 처리를 한다.
-  const {
-    open, isMarketer, classes, handleClose, logout,
-  } = props;
-  const [findDialogOpen, setFindDialogOpen] = useState(false);
-  const [dialogType, setDialogType] = useState('ID');
-  const [userid, setUserid] = useState('');
-  const [passwd, setPasswd] = useState('');
+  const classes = useStyles();
+  const [findDialogOpen, setFindDialogOpen] = useState<boolean>(false);
+  const [dialogType, setDialogType] = useState<string>('ID');
+  const [userid, setUserid] = useState<string | null>(null);
+  const [passwd, setPasswd] = useState<string | null>(null);
 
   // 하나의 change로 값을 받을 수 있다.
-  const onChange = (event) => {
+  const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.name === 'userid') {
       setUserid(event.target.value);
     } else {
@@ -75,7 +83,7 @@ const LoginForm = (props) => {
     }
   };
 
-  const login = (event) => {
+  const login = (event: React.SyntheticEvent) => {
     if (event) {
       event.preventDefault();
     }
@@ -90,7 +98,9 @@ const LoginForm = (props) => {
           alert(res.data[1]);
           if (res.data[1] === '이메일 본인인증을 해야합니다.') {
             handleClose();
-            logout();
+            if (typeof logout !== undefined) {
+              logout();
+            }
           }
         } else {
           const userData = res.data[1];
@@ -121,9 +131,9 @@ const LoginForm = (props) => {
         <DialogTitle className={classes.title}>LOGIN</DialogTitle>
         <DialogContent>
           <DialogContentText style={{ fontSize: 15, fontFamily: 'Noto Sans kr' }}>
-              온애드로 쉽고 빠르게!
+            온애드로 쉽고 빠르게!
           </DialogContentText>
-          <form onChange={onChange}>
+          <form>
             <TextField
               autoFocus
               required
@@ -134,6 +144,7 @@ const LoginForm = (props) => {
               name="userid"
               InputLabelProps={{ shrink: true }}
               style={{ width: '90%' }}
+              onChange={onChange}
             />
             <TextField
               required
@@ -143,11 +154,12 @@ const LoginForm = (props) => {
               value={passwd}
               margin="dense"
               name="passwd"
+              onChange={onChange}
               InputLabelProps={{ shrink: true }}
               style={{ width: '90%' }}
               onKeyPress={(e) => {
                 if (e.key === 'Enter') {
-                  login();
+                  login(e);
                 }
               }}
             />
@@ -158,8 +170,8 @@ const LoginForm = (props) => {
           >
             소셜 계정으로 온애드 서비스 이용
           </Typography>
-          <Divider component="hr" orientation="horizontal" width="60%" />
-          <Grid container direction="row" align="right">
+          <Divider component="hr" orientation="horizontal" />
+          <Grid container direction="row" alignItems="flex-end">
             <Grid item>
               <Button href={`${HOST}/api/login/google`}>
                 <img src="/pngs/logo/google.png" alt="google" className={classes.image} />
@@ -176,25 +188,7 @@ const LoginForm = (props) => {
               </Button>
             </Grid>
           </Grid>
-          {/* <Grid container direction="column" style={{ marginTop: '20px' }}>
-            <Grid item>
-              <Button href={`${HOST}/api/login/google`} className={classes.loginButtion}>
-                <img src="pngs/main/google.png" alt="google" className={classes.image} />
-              </Button>
-            </Grid>
-            <Grid item>
-              <Button href={`${HOST}/api/login/naver`} className={classes.loginButtion}>
-                <img src="pngs/main/naver.png" alt="naver" className={classes.image} />
-              </Button>
-            </Grid>
-            <Grid item>
-              <Button href={`${HOST}/api/login/kakao`} className={classes.loginButtion}>
-                <img src="pngs/main/kakao.png" alt="kakao" className={classes.image} />
-              </Button>
-            </Grid>
-          </Grid> */}
           <Button
-            underline="always"
             style={{ fontSize: 11, marginTop: 10 }}
             onClick={() => {
               setDialogType('ID');
@@ -205,7 +199,6 @@ const LoginForm = (props) => {
           </Button>
           <br />
           <Button
-            underline="always"
             style={{ fontSize: 11, marginTop: 10 }}
             onClick={() => {
               setDialogType('PASSWORD');
@@ -217,7 +210,6 @@ const LoginForm = (props) => {
           <br />
           <Button
             component={Link}
-            underline="always"
             style={{ fontSize: 11, marginTop: 10 }}
             to="/regist"
           >
@@ -226,10 +218,10 @@ const LoginForm = (props) => {
         </DialogContent>
         <DialogActions>
           <Button onClick={login} color="primary">
-              로그인
+            로그인
           </Button>
           <Button onClick={handleClose} color="primary">
-              취소
+            취소
           </Button>
         </DialogActions>
       </Dialog>
@@ -244,7 +236,7 @@ const LoginForm = (props) => {
         <DialogTitle className={classes.title}>LOGIN</DialogTitle>
         <DialogContent>
           <DialogContentText style={{ fontSize: 15, fontFamily: 'Noto Sans kr' }}>
-        당신의 CHANNEL을 선택하세요.
+            당신의 CHANNEL을 선택하세요.
           </DialogContentText>
           <Tooltip title="트위치 계정으로 로그인" placement="right">
             <Button
@@ -271,21 +263,6 @@ const LoginForm = (props) => {
       />
     </div>
   );
-};
+}
 
-LoginForm.defaultProps = {
-  classes: {},
-  isMarketer: true,
-  logout: () => {},
-  handleClose: () => {},
-};
-
-LoginForm.propTypes = {
-  open: PropTypes.bool.isRequired,
-  classes: PropTypes.object,
-  isMarketer: PropTypes.bool,
-  logout: PropTypes.func,
-  handleClose: PropTypes.func,
-};
-
-export default withStyles(styles)(LoginForm);
+export default LoginForm;
