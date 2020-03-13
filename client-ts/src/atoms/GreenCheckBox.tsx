@@ -1,9 +1,11 @@
 import React from 'react';
 import { Checkbox } from '@material-ui/core';
+import { CheckboxProps } from '@material-ui/core/Checkbox'
 import { withStyles, Theme } from '@material-ui/core/styles';
 // icons
 import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@material-ui/icons/CheckBox';
+
 
 const GreenCheckBox = withStyles((theme: Theme) => ({
   root: {
@@ -14,7 +16,7 @@ const GreenCheckBox = withStyles((theme: Theme) => ({
     margin: 0,
   },
   checked: {},
-}))((props) => (
+}))((props: CheckboxProps) => (
   <Checkbox
     color="default"
     size="medium"

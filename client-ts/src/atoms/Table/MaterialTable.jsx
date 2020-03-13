@@ -46,6 +46,7 @@ const localization = {
   }
 };
 
+
 export default function MaterialTable(props) {
   const { columns, cellWidth, ...rest } = props;
 
@@ -70,5 +71,6 @@ export default function MaterialTable(props) {
 
 MaterialTable.propTypes = {
   columns: PropTypes.object.isRequired,
-
+  isLoading: PropTypes.bool.isRequired,
+  style: PropTypes.object
 };

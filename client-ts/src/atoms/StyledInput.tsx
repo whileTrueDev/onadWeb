@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Input } from '@material-ui/core';
+import { Input, InputProps } from '@material-ui/core';
 import { withStyles, Theme } from '@material-ui/core/styles';
 
 const StyledInput = withStyles((theme: Theme) => ({
@@ -21,7 +21,7 @@ const StyledInput = withStyles((theme: Theme) => ({
     },
     color: theme.palette.info.main
   },
-}))((props) => (
+}))((props: InputProps) => (
   <Input {...props} />
 ));
 

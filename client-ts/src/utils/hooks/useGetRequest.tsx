@@ -31,15 +31,18 @@ const UNAUTHORIZED = 401;
  *   () => { console.log('success callback done'); handleOpen(); }  
  * );
  */
-export default function useGetRequest<PARAM_TYPE={[key: string]: any}, RES_DATA_TYPE = any>(
-  url: string, params?: PARAM_TYPE
-): {
-  data: RES_DATA_TYPE | null;
+
+export interface UseGetRequestObject<T> {
+  data: T | null;
   loading: boolean | null;
   error: string;
   doGetRequest: () => void;
-  setData: React.Dispatch<React.SetStateAction<RES_DATA_TYPE | null>>;
-} {
+  setData: React.Dispatch<React.SetStateAction<T | null>>;
+}
+
+export default function useGetRequest<PARAM_TYPE = { [key: string]: any }, RES_DATA_TYPE = any>(
+  url: string, params?: PARAM_TYPE
+): UseGetRequestObject<RES_DATA_TYPE> {
   const [param] = useState(params);
   const [data, setData] = useState<RES_DATA_TYPE | null>(null);
   const [loading, setLoading] = useState<boolean | null>(null);

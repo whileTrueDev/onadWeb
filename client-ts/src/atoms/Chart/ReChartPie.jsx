@@ -110,7 +110,8 @@ CustomPieChart.propTypes = {
   activeIndex: PropTypes.oneOfType([PropTypes.number, PropTypes.bool]),
   onPieEnter: PropTypes.func,
   TooltipLabelText: PropTypes.string,
-  underText: PropTypes.bool
+  underText: PropTypes.bool,
+  legend: PropTypes.bool
 };
 
 CustomPieChart.defaultProps = {
@@ -120,4 +121,5 @@ CustomPieChart.defaultProps = {
   activeIndex: null,
   TooltipLabelText: '',
   onPieEnter() {},
+  legend: false
 };

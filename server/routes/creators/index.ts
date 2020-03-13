@@ -1,9 +1,11 @@
 import express from 'express';
 import doQuery from '../../model/doQuery';
 import responseHelper from '../../middlewares/responseHelper';
+import analysisRouter from './analysis';
 
 const router = express.Router();
 
+router.use('/analysis', analysisRouter);
 router.route('/')
   .get(
     // responseHelper.middleware.checkSessionExists,
