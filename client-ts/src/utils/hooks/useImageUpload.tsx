@@ -1,6 +1,4 @@
 import React from 'react';
-import axios from '../axios';
-import HOST from '../../config';
 
 const MB = 1048576; // 1Mbytes
 const IMAGE_SIZE_LIMIT = 10 * MB;
@@ -17,7 +15,6 @@ export interface UseImageUploadResult {
   handleReset: () => void;
   handleImageChange: ({ newImageName, newImageUrl }: ImageData) => void;
   readImage: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  handleUploadClick: () => void;
 }
 
 /**
@@ -32,8 +29,6 @@ export interface UseImageUploadResult {
  */
 export default function useImageUpload(
   DEFAULT_IMAGE: string,
-  successCallback: () => void,
-  imageUploadUrl?: string,
 ): UseImageUploadResult {
   const [imageUrl, setImageUrl] = React.useState<string| ArrayBuffer |null>(DEFAULT_IMAGE);
   const [imageName, setImageName] = React.useState<string | undefined>('');
@@ -79,26 +74,11 @@ export default function useImageUpload(
     }
   };
 
-  function handleUploadClick(): void {
-    axios.post(`${HOST}${imageUploadUrl}`, { imageUrl })
-      .then((res) => {
-        if (res.data[0]) {
-          successCallback();
-        } else {
-          alert('현재는 등록할 수 없습니다. 잠시 후 다시 시도해주세요.');
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }
-
   return {
     imageUrl,
     imageName,
     handleReset,
     handleImageChange,
     readImage,
-    handleUploadClick
   };
 }

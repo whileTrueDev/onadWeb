@@ -12,10 +12,8 @@ import NightsStay from '@material-ui/icons/NightsStay';
 import StyledItemText from '../../../../atoms/StyledItemText';
 import CustomCard from '../../../../atoms/CustomCard';
 import Button from '../../../../atoms/CustomButtons/Button';
-import Snackbar from '../../../../atoms/Snackbar/Snackbar';
 import Tooltip from '../../../../atoms/DescPopover';
 // hooks
-import useDialog from '../../../../utils/hooks/useDialog';
 import useTooltip from '../../../../utils/hooks/useTooltip';
 // 
 import usePatchRequest from '../../../../utils/hooks/usePatchRequest';
@@ -40,9 +38,10 @@ const useStyles = makeStyles((theme) => ({
 interface AdPageSettingProps {
   userData: AdPageData;
   setUserData: React.Dispatch<React.SetStateAction<AdPageData | null>>;
+  handleSnackOpen: () => void;
 }
 export default function AdPageSetting({
-  userData, setUserData
+  userData, setUserData, handleSnackOpen
 }: AdPageSettingProps): JSX.Element {
   const classes = useStyles();
 
@@ -55,13 +54,10 @@ export default function AdPageSetting({
     tooltipIndex, anchorEl, handleTooltipOpen, handleTooltipClose,
   } = useTooltip();
 
-  const snack = useDialog(); // for success sanckbar
-  const failSnack = useDialog(); // for fail Snack
-
   // for data update
   const AdPagePatch = usePatchRequest<AdPagePatchParamAndRes, AdPagePatchParamAndRes>(
     '/creator/ad-page', () => {
-      snack.handleOpen();
+      handleSnackOpen();
     }
   );
 
@@ -164,22 +160,6 @@ export default function AdPageSetting({
           horizontal: 'left',
         }}
       />
-
-      <Snackbar
-        color="success"
-        open={snack.open}
-        message="정상적으로 변경되었습니다."
-        onClose={snack.handleClose}
-      />
-
-      <Snackbar
-        color="error"
-        open={failSnack.open}
-        message="변경중 오류가 발생했습니다."
-        onClose={failSnack.handleClose}
-      />
-
-
     </CustomCard>
   );
 }

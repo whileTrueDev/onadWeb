@@ -13,9 +13,9 @@ import Public from '@material-ui/icons/Public';
 import CreatorCampaignManage from './creator/CampaignManage';
 import CreatorLandingManage from './creator/AdPageManage';
 import CreatorDashboard from './creator/Dashboard';
+import CreatorManual from './creator/Manual';
 // 수정필요함.
 // import CreatorMyPage from './creator/Mypage';
-// import CreatorManual from './creator/Manual';
 
 // 마케터 라우터
 // import MarketerDashboard from './marketer/Dashboard';
@@ -65,7 +65,7 @@ const dashboardRoutes: MypageRoutes = {
       path: '/manual',
       name: '사용 방법',
       icon: Reorder,
-      // component: CreatorManual,
+      component: CreatorManual,
       layout: '/mypage/creator',
     },
     {

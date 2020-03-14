@@ -1,12 +1,11 @@
 import React from 'react';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import Button from '../../../../atoms/CustomButtons/Button';
-import Snackbar from '../../../../atoms/Snackbar/Snackbar';
 import CustomCard from '../../../../atoms/CustomCard';
 import StyledItemText from '../../../../atoms/StyledItemText';
 // utils
 import useImageUpload, { ImageData, UploadImage } from '../../../../utils/hooks/useImageUpload';
-import useDialog from '../../../../utils/hooks/useDialog';
+import usePatchRequest from '../../../../utils/hooks/usePatchRequest';
 // style and interface
 import useAdPageImageUploadFormStyles from './AdPageImageUploadForm.style';
 import AdPageData from './AdPageData.interfece';
@@ -44,27 +43,22 @@ const Buttons = ({
 
 interface LandingImageUploadFormProps {
   userData: AdPageData;
-  doGetRequest: () => void;
+  handleSnackOpen: () => void;
 }
 export default function LandingImageUploadForm({
-  userData, doGetRequest
+  userData, handleSnackOpen
 }: LandingImageUploadFormProps): JSX.Element {
   const isLgWidth = useMediaQuery('(min-width:1200px)');
   const classes = useAdPageImageUploadFormStyles();
-  const snack = useDialog();
 
-  const userImage = !userData.creatorBackgroundImage
-    ? defaultImage
-    : userData.creatorBackgroundImage;
-
-  // 배경이미지 업로드 API 엔드포인트
-  // usePatchData
 
   // 배경 이미지 업로드를 위한 훅
   const {
-    imageUrl, readImage, handleImageChange, handleUploadClick
-  } = useImageUpload(userImage, () => {
-    snack.handleOpen(); doGetRequest();
+    imageUrl, readImage, handleImageChange
+  } = useImageUpload(userData.creatorBackgroundImage);
+
+  const backgroundPatch = usePatchRequest('/creator/ad-page', () => {
+    handleSnackOpen();
   });
 
   return (
@@ -73,8 +67,12 @@ export default function LandingImageUploadForm({
       buttonComponent={isLgWidth && (
       <Buttons
         imageUrl={imageUrl}
-        userImage={userImage}
-        handleUploadClick={handleUploadClick}
+        userImage={userData.creatorBackgroundImage}
+        handleUploadClick={(): void => {
+          backgroundPatch.doPatchRequest({
+            creatorBackgroundImage: imageUrl
+          });
+        }}
         handleImageChange={handleImageChange}
       />
       )}
@@ -101,18 +99,15 @@ export default function LandingImageUploadForm({
       {!isLgWidth && (
       <Buttons
         imageUrl={imageUrl}
-        userImage={userImage}
-        handleUploadClick={handleUploadClick}
+        userImage={userData.creatorBackgroundImage}
+        handleUploadClick={(): void => {
+          backgroundPatch.doPatchRequest({
+            creatorBackgroundImage: imageUrl
+          });
+        }}
         handleImageChange={handleImageChange}
       />
       )}
-
-      <Snackbar
-        color="success"
-        open={snack.open}
-        message="이미지가 등록되었습니다."
-        onClose={snack.handleClose}
-      />
     </CustomCard>
   );
 }
