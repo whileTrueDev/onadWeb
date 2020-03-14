@@ -5,17 +5,20 @@ import {
 } from '@material-ui/core';
 import Check from '@material-ui/icons/Check';
 import CloseIcon from '@material-ui/icons/Close';
-import { makeStyles } from '@material-ui/core/styles';
-import NumberFormat from 'react-number-format';
+import { makeStyles, Theme } from '@material-ui/core/styles';
+import NumberFormat, { NumberFormatValues } from 'react-number-format';
 import Dialog from '../../../../atoms/Dialog/Dialog';
 import Button from '../../../../atoms/CustomButtons/Button';
 import StyledInput from '../../../../atoms/StyledInput';
 import DangerTypography from '../../../../atoms/Typography/Danger';
 import Success from '../../../../atoms/Typography/Success';
-import useDialog from '../../../../utils/lib/hooks/useDialog';
-import useFetchData from '../../../../utils/lib/hooks/useFetchData';
-import useUpdateData from '../../../../utils/lib/hooks/useUpdateData';
-const useStyles = makeStyles(theme => ({
+import useDialog from '../../../../utils/hooks/useDialog';
+import useGetRequest from '../../../../utils/hooks/useGetRequest';
+import usePatchRequest from '../../../../utils/hooks/usePatchRequest';
+import { campaignInterface } from './interfaces';
+
+
+const useStyles = makeStyles((theme: Theme) => ({
   item: {
     display: 'flex',
     justifyContent: 'center',
@@ -44,7 +47,29 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: '#f9f9f9'
   }
 }));
-const reducer = (state, action) => {
+
+interface propInterface {
+  open: boolean;
+  selectedCampaign: campaignInterface;
+  handleClose: () => void;
+  doGetRequest: () => void;
+}
+
+type Action =
+  { key: 'noBudget' } |
+  { key: 'reset' } |
+  { key: 'campaignName', value: string } |
+  { key: 'budget', value: string }
+
+
+interface stateInterface {
+  noBudget: boolean;
+  budget: string;
+  campaignName: string;
+}
+
+
+const reducer = (state: stateInterface, action: Action): stateInterface => {
   switch (action.key) {
     case 'campaignName':
       return { ...state, campaignName: action.value };
@@ -64,24 +89,31 @@ const reducer = (state, action) => {
     }
   }
 };
-const CampaignUpdateDialog = (props) => {
+
+const CampaignUpdateDialog = (props: propInterface) => {
   const classes = useStyles();
+
   const {
-    open, selectedCampaign, handleClose, callUrl
+    open, selectedCampaign, handleClose, doGetRequest
   } = props;
+
   const snack = useDialog();
-  const [error, setError] = React.useState(false); // budget 작성시 한도 체크용 State
-  const [checkName, setCheckName] = React.useState(false);
-  const [duplicate, setDuplicate] = React.useState(false);
+  const [error, setError] = React.useState<boolean>(false); // budget 작성시 한도 체크용 State
+  const [checkName, setCheckName] = React.useState<boolean>(false);
+  const [duplicate, setDuplicate] = React.useState<boolean>(false);
+
   const [state, dispatch] = React.useReducer(reducer, {
     noBudget: false, budget: '', campaignName: ''
   });
-  const nameData = useFetchData('/api/dashboard/marketer/campaign/names');
-  const updateName = useUpdateData('/api/dashboard/marketer/campaign/changeName', callUrl);
-  const updateBudget = useUpdateData('/api/dashboard/marketer/campaign/changeBudget', callUrl);
-  const checkCampaignName = (value) => {
+
+  const nameData = useGetRequest<string[]>('/marketer/campaign/names');
+  // {'campaignId', 'data', 'type'} 의 데이터를 전달해야 가능하다.
+  const { doPatchRequest } = usePatchRequest('/api/dashboard/marketer/campaign', doGetRequest);
+  // const updateBudget = usePatchRequest('/api/dashboard/marketer/campaign', doGetRequest);
+
+  const checkCampaignName = (value: string): void => {
     if (!nameData.loading && !nameData.error) {
-      if (nameData.payload.includes(value)) {
+      if (nameData.data.includes(value)) {
         setCheckName(false);
         dispatch({ key: 'campaignName', value: '' });
         setDuplicate(true);
@@ -92,7 +124,8 @@ const CampaignUpdateDialog = (props) => {
       }
     }
   };
-  const handleChangeName = (event) => {
+
+  const handleChangeName = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
     if (event.target.value.length === 0) {
       setDuplicate(false);
     }
@@ -103,11 +136,13 @@ const CampaignUpdateDialog = (props) => {
       dispatch({ key: 'campaignName', value: '' });
     }
   };
+
   const handleNoBudgetChange = () => {
     setError(false);
     dispatch({ key: 'noBudget' });
   };
-  const handleChangeBudget = (value) => {
+
+  const handleChangeBudget = (value: NumberFormatValues) => {
     dispatch({ key: 'budget', value: value.value });
     if (Number(value.value) < 5000 && value.value !== '') {
       setError(true);
@@ -115,20 +150,21 @@ const CampaignUpdateDialog = (props) => {
       setError(false);
     }
   };
+
   const handleNameUpdate = () => {
-    const data = { campaignId: selectedCampaign.campaignId, ...state };
-    const { handleUpdateRequest } = updateName;
-    handleUpdateRequest(data);
+    const data = { campaignId: selectedCampaign.campaignId, type: 'name', data: state };
+    doPatchRequest(data);
     dispatch({ key: 'reset' });
     snack.handleOpen();
   };
+
   const handleBudgetUpdate = () => {
-    const data = { campaignId: selectedCampaign.campaignId, ...state };
-    const { handleUpdateRequest } = updateBudget;
-    handleUpdateRequest(data);
+    const data = { campaignId: selectedCampaign.campaignId, type: 'budget', data: state };
+    doPatchRequest(data);
     dispatch({ key: 'reset' });
     snack.handleOpen();
   };
+
   return (
     <Dialog
       open={Boolean(open)}
@@ -184,16 +220,16 @@ const CampaignUpdateDialog = (props) => {
                     </Grid>
                     <Grid item>
                       {(checkName && state.campaignName !== '')
-                      && (
-                      <Success>
-                        <Check />
-                      </Success>
-                      )}
+                        && (
+                          <Success>
+                            <Check />
+                          </Success>
+                        )}
                     </Grid>
                     <Grid item>
                       <DangerTypography>
                         {duplicate
-                        && ('캠페인명이 중복되었습니다.')
+                          && ('캠페인명이 중복되었습니다.')
                         }
                       </DangerTypography>
                     </Grid>
@@ -203,7 +239,7 @@ const CampaignUpdateDialog = (props) => {
                   <Grid item>
                     <Button
                       color="primary"
-                      size="sm"
+                      size="small"
                       onClick={() => {
                         // state체크 및 error 분기화
                         if (checkName && state.campaignName !== '') {
@@ -215,7 +251,7 @@ const CampaignUpdateDialog = (props) => {
                     >
                       변경
                     </Button>
-                    <Button size="sm" onClick={handleClose}>
+                    <Button size="small" onClick={handleClose}>
                       취소
                     </Button>
                   </Grid>
@@ -258,7 +294,7 @@ const CampaignUpdateDialog = (props) => {
                     )
                     : (
                       <Typography variant="h4" align="center" style={{ fontWeight: 700 }}>
-                          ∞
+                        ∞
                       </Typography>
                     )
                   }
@@ -303,10 +339,10 @@ const CampaignUpdateDialog = (props) => {
                                 color="primary"
                                 checked={state.noBudget}
                                 onChange={handleNoBudgetChange}
-                                fontSize="small"
+                                size="small"
                                 style={{ padding: '3px' }}
                               />
-                        )}
+                            )}
                             label="미설정"
                             labelPlacement="start"
                           />
@@ -315,17 +351,17 @@ const CampaignUpdateDialog = (props) => {
                     </Grid>
                     <Grid item>
                       {((!error && state.budget !== '') || state.noBudget)
-                      && (
-                      <Success>
-                        <Check />
-                      </Success>
-                      )}
+                        && (
+                          <Success>
+                            <Check />
+                          </Success>
+                        )}
                     </Grid>
                     <Grid item>
                       <DangerTypography>
                         {error
-                        && ('최소 금액보다 작습니다.')
-                      }
+                          && ('최소 금액보다 작습니다.')
+                        }
                         {' '}
                       </DangerTypography>
                     </Grid>
@@ -335,7 +371,7 @@ const CampaignUpdateDialog = (props) => {
                   <Grid item>
                     <Button
                       color="primary"
-                      size="sm"
+                      size="small"
                       onClick={() => {
                         if ((!error && state.budget !== '') || state.noBudget) {
                           handleBudgetUpdate();
@@ -344,10 +380,10 @@ const CampaignUpdateDialog = (props) => {
                         }
                       }}
                     >
-                          변경
+                      변경
                     </Button>
-                    <Button size="sm" onClick={handleClose}>
-                          취소
+                    <Button size="small" onClick={handleClose}>
+                      취소
                     </Button>
                   </Grid>
                 </Grid>
@@ -373,14 +409,14 @@ const CampaignUpdateDialog = (props) => {
         ContentProps={{
           'aria-describedby': 'message-id',
         }}
-        variant="success"
+        // variant="success"
         message={<Typography id="message-id">성공적으로 반영되었습니다.</Typography>}
         action={[
           <IconButton
             key="close"
             aria-label="close"
             color="inherit"
-            className={classes.close}
+            // className={classes.close}
             onClick={() => {
               snack.handleClose();
               handleClose();
@@ -394,4 +430,10 @@ const CampaignUpdateDialog = (props) => {
   );
 };
 
+// CampaignUpdateDialog.propTypes = {
+//   open: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]).isRequired,
+//   handleClose: PropTypes.func.isRequired,
+//   selectedCampaign: PropTypes.object.isRequired,
+//   callUrl: PropTypes.func.isRequired
+// };
 export default CampaignUpdateDialog;

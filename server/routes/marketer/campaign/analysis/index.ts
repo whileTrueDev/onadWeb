@@ -133,34 +133,50 @@ router.route('/creator-data')
       let queryArray = [];
       if (campaignId) {
         query = `
-                SELECT
-                ci.creatorId, ci.creatorName, ci.creatorTwitchId,
-                ci.creatorLogo, sum(cashFromMarketer) AS total_ad_exposure_amount,
-                cd.viewer, cd.followers, cd.airtime, cd.impression, cd.openHour, cd.content
-                FROM campaignLog as cl
-                JOIN creatorInfo as ci
-                ON cl.creatorId = ci.creatorId
-                LEFT JOIN creatorDetail AS cd
-                ON cl.creatorId = cd.creatorId
-                WHERE campaignId = ?
-                GROUP BY cl.creatorId
-                ORDER BY total_ad_exposure_amount DESC`;
+        SELECT
+        ci.creatorId AS creatorId, 
+        ci.creatorName AS creatorName, 
+        ci.creatorTwitchId AS creatorTwitchId,
+        ci.creatorLogo AS creatorLogo, 
+        sum(cashFromMarketer) AS total_ad_exposure_amount,
+        cd.viewer AS viewer,
+        cd.followers AS followers, 
+        cd.airtime AS airtime, 
+        cd.impression AS impression, 
+        cd.openHour AS openHour, 
+        cd.content AS content
+        FROM campaignLog as cl
+        JOIN creatorInfo as ci
+        ON cl.creatorId = ci.creatorId
+        LEFT JOIN creatorDetail AS cd
+        ON cl.creatorId = cd.creatorId
+        WHERE campaignId = ?
+        GROUP BY cl.creatorId
+        ORDER BY total_ad_exposure_amount DESC`;
 
         queryArray = [campaignId];
       } else {
         query = `
-                SELECT
-                ci.creatorId, ci.creatorName, ci.creatorTwitchId,
-                ci.creatorLogo, sum(cashFromMarketer) AS total_ad_exposure_amount,
-                cd.viewer, cd.followers, cd.airtime, cd.impression, cd.openHour, cd.content
-                FROM campaignLog as cl
-                JOIN creatorInfo as ci
-                ON cl.creatorId = ci.creatorId
-                LEFT JOIN creatorDetail AS cd
-                ON cl.creatorId = cd.creatorId
-                WHERE SUBSTRING_INDEX(campaignId, '_', 1) = ?
-                GROUP BY cl.creatorId
-                ORDER BY total_ad_exposure_amount DESC`;
+        SELECT
+        ci.creatorId AS creatorId, 
+        ci.creatorName AS creatorName, 
+        ci.creatorTwitchId AS creatorTwitchId,
+        ci.creatorLogo AS creatorLogo, 
+        sum(cashFromMarketer) AS total_ad_exposure_amount,
+        cd.viewer AS viewer,
+        cd.followers AS followers, 
+        cd.airtime AS airtime, 
+        cd.impression AS impression, 
+        cd.openHour AS openHour, 
+        cd.content AS content
+        FROM campaignLog as cl
+        JOIN creatorInfo as ci
+        ON cl.creatorId = ci.creatorId
+        LEFT JOIN creatorDetail AS cd
+        ON cl.creatorId = cd.creatorId
+        WHERE SUBSTRING_INDEX(campaignId, '_', 1) = ?
+        GROUP BY cl.creatorId
+        ORDER BY total_ad_exposure_amount DESC`;
 
         queryArray = [marketerId];
       }

@@ -5,9 +5,9 @@ import useMediaQuery from '@material-ui/core/useMediaQuery';
 import {
   Grid, Paper, Collapse, Button
 } from '@material-ui/core';
-import ProrityPaper from '../../../organisms/mypage/marketer/PriorityPaper';
-import OptionPaper from '../../../organisms/mypage/marketer/OptionPaper';
-import CampaignCreateTable from '../../../organisms/mypage/marketer/CampaignCreateTable';
+import ProrityPaper from '../../../organisms/mypage/marketer/campaign-create/PriorityPaper';
+import OptionPaper from '../../../organisms/mypage/marketer/campaign-create/OptionPaper';
+import CampaignCreateTable from '../../../organisms/mypage/marketer/campaign-create/CampaignCreateTable';
 import HOST from '../../../utils/config';
 import axios from '../../../utils/axios';
 import history from '../../../history';
