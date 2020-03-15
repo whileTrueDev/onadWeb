@@ -1,12 +1,8 @@
 import React from 'react';
-import { Typography } from '@material-ui/core';
 // components
 import ReChartBar from '../../../../atoms/Chart/ReChartBar';
 import StyledItemText from '../../../../atoms/StyledItemText';
 import Card from '../../../../atoms/CustomCard';
-import CircularProgress from '../../../../atoms/Progress/CircularProgress';
-// hooks
-import useGetRequest from '../../../../utils/hooks/useGetRequest';
 
 export interface IncomeChartParams {
   dateRange: string;

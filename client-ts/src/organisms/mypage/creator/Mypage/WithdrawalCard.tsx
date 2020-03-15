@@ -1,5 +1,4 @@
 import React from 'react';
-import FormatListNumbered from '@material-ui/icons/FormatListNumbered';
 import MaterialTable from '../../../../atoms/Table/MaterialTable';
 import CustomCard from '../../../../atoms/CustomCard';
 import StyledItemText from '../../../../atoms/StyledItemText';
