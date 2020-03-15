@@ -86,7 +86,7 @@ router.route('/list')
       SELECT title, content, date_format(date,'%y. %m. %d'), readState
       FROM creatorNotification AS cn
       WHERE creatorId = ?
-      ORDER BY readState;
+      ORDER BY readState, DATE DESC
       `;
 
       doQuery(callQuery, [creatorId])

@@ -14,8 +14,7 @@ import CreatorCampaignManage from './creator/CampaignManage';
 import CreatorLandingManage from './creator/AdPageManage';
 import CreatorDashboard from './creator/Dashboard';
 import CreatorManual from './creator/Manual';
-// 수정필요함.
-// import CreatorMyPage from './creator/Mypage';
+import CreatorMyPage from './creator/Mypage';
 
 // 마케터 라우터
 // import MarketerDashboard from './marketer/Dashboard';
@@ -72,7 +71,7 @@ const dashboardRoutes: MypageRoutes = {
       path: '/user',
       name: '내 계정',
       icon: Person,
-      // component: CreatorMyPage,
+      component: CreatorMyPage,
       layout: '/mypage/creator',
     },
   ],

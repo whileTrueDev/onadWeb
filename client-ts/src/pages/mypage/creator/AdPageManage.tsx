@@ -25,7 +25,7 @@ function AdPageManage(): JSX.Element {
       <GridContainer>
         {/* 랜딩페이지 URL 보기 */}
         <GridItem xs={12} lg={6} xl={4}>
-          {landingData.loading && (<Skeleton variant="rect" height={50} />)}
+          {landingData.loading && (<Skeleton variant="text" height={100} />)}
           {!landingData.loading && landingData.data && (
           <AdPageUrl userData={landingData.data} />
           )}
@@ -49,7 +49,7 @@ function AdPageManage(): JSX.Element {
 
             {/* 광고페이지 현황 */}
             <GridItem xs={12}>
-              {landingData.loading && (<Skeleton variant="rect" height={200} />)}
+              {landingData.loading && (<Skeleton variant="text" height={300} />)}
               {!landingData.loading && landingData.data && (
               <AdPageDetail userData={landingData.data} />
               )}
@@ -76,7 +76,7 @@ function AdPageManage(): JSX.Element {
 
             {/* 패널배너 기본이미지 */}
             <GridItem xs={12}>
-              {landingData.loading && (<Skeleton variant="rect" height={200} />)}
+              {landingData.loading && (<Skeleton variant="text" height={450} />)}
               {!landingData.loading && landingData.data && (
               <AdPagePanelBanner userData={landingData.data} />
               )}

@@ -15,19 +15,36 @@ import Snackbar from '../../../../atoms/Snackbar/Snackbar';
 // utils
 import useContractionStyles from './ContractionCard.style';
 import terms from './source/contractTerms';
-import useGetRequest from '../../../../utils/hooks/useGetRequest';
 import useDialog from '../../../../utils/hooks/useDialog';
 import { usePatchRequest } from '../../../../utils/hooks';
 
-const ContractionCard = (): JSX.Element => {
+export interface ContractionDataType {
+  creatorId: string;
+  creatorName: string;
+  creatorIp: string;
+  creatorMail: string;
+  creatorAccountNumber: string;
+  creatorContractionAgreement: number;
+  creatorTwitchId: string;
+  realName: string;
+  creatorLogo: string;
+  NowIp: string;
+}
+
+interface ContractionCardProps {
+  contractionData: ContractionDataType;
+  doContractionDataRequest: () => void;
+}
+const ContractionCard = ({
+  contractionData, doContractionDataRequest
+}: ContractionCardProps): JSX.Element => {
   const classes = useContractionStyles();
   const snack = useDialog(); // 계약완료 스낵바를 위해
   const contractionDialog = useDialog(); // 계약정보 창을 위해
 
-  const contractionGet = useGetRequest('/creator'); // 계약정보 조회
   const contractionPatch = usePatchRequest('/creator', // 계약정보 업데이트
     () => {
-      contractionGet.doGetRequest();
+      doContractionDataRequest();
       // 성공 스낵 오픈
       snack.handleOpen();
     });
@@ -50,9 +67,8 @@ const ContractionCard = (): JSX.Element => {
 
   return (
     <>
-      {!contractionGet.loading
-      && contractionGet.data
-      && contractionGet.data.creatorContractionAgreement === 0 && (
+      {contractionData.creatorContractionAgreement === 0 && (
+
       <CustomCard iconComponent={<StyledItemText primary="서비스 이용 및 출금 계약하기" color="white" />}>
 
         {terms.map((term, index) => (
