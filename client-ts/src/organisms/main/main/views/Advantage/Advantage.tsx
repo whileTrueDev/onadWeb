@@ -2,7 +2,7 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { useScrollTrigger } from '@material-ui/core';
 
-const styles = makeStyles(theme => ({
+const styles = makeStyles((theme) => ({
   root: {
     marginTop: theme.spacing(8),
     marginBottom: theme.spacing(8),
@@ -461,14 +461,25 @@ const styles = makeStyles(theme => ({
   },
 }));
 
-function Advantage(props) {
-  const {
-    source, MainUserType
-  } = props;
+interface Props {
+  MainUserType: string;
+  source: {
+    marketer: {
+      first: string;
+      second: string;
+      third: string;
+    };
+    creator: {
+      first: string;
+      second: string;
+      third: string;
+    };
+  };
+}
+
+function Advantage({ source, MainUserType }: Props): JSX.Element {
   const classes = styles();
-
   const trigger = useScrollTrigger({ threshold: 1300, disableHysteresis: true });
-
   return (
     <div>
       { MainUserType === 'marketer' ? (
@@ -513,7 +524,7 @@ function Advantage(props) {
                 </h1>
               </div>
               <div className={classes.h1sub}>
-                {source.marketer.first.split('\n').map(row => (
+                {source.marketer.first.split('\n').map((row: string) => (
                   <p key={row} className={classes.text}>{`${row}`}</p>
                 ))}
               </div>
@@ -538,7 +549,7 @@ function Advantage(props) {
                 </h1>
               </div>
               <div className={classes.h1sub}>
-                {source.marketer.second.split('\n').map(row => (
+                {source.marketer.second.split('\n').map((row) => (
                   <p key={row} className={classes.text}>{`${row}`}</p>
                 ))}
               </div>
@@ -555,7 +566,7 @@ function Advantage(props) {
                 </h1>
               </div>
               <div className={classes.h1sub}>
-                {source.marketer.third.split('\n').map(row => (
+                {source.marketer.third.split('\n').map((row) => (
                   <p key={row} className={classes.text}>{`${row}`}</p>
                 ))}
               </div>
@@ -607,7 +618,7 @@ function Advantage(props) {
                 </h1>
               </div>
               <div className={classes.h1sub}>
-                {source.creator.first.split('\n').map(row => (
+                {source.creator.first.split('\n').map((row) => (
                   <p key={row} className={classes.text}>{`${row}`}</p>
                 ))}
               </div>
@@ -631,7 +642,7 @@ function Advantage(props) {
                 </h1>
               </div>
               <div className={classes.h1sub}>
-                {source.creator.second.split('\n').map(row => (
+                {source.creator.second.split('\n').map((row) => (
                   <p key={row} className={classes.text}>{`${row}`}</p>
                 ))}
               </div>
@@ -648,7 +659,7 @@ function Advantage(props) {
                 </h1>
               </div>
               <div className={classes.h1sub}>
-                {source.creator.third.split('\n').map(row => (
+                {source.creator.third.split('\n').map((row) => (
                   <p key={row} className={classes.text}>{`${row}`}</p>
                 ))}
               </div>

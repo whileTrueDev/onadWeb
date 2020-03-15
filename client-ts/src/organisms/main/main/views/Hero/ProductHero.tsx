@@ -5,7 +5,7 @@ import Grow from '@material-ui/core/Grow';
 import Button from '../../components/Button';
 import ProductHeroLayout from './ProductHeroLayout';
 
-const styles = makeStyles(theme => ({
+const styles = makeStyles((theme) => ({
   button: {
     alignItems: 'center',
     justifyContent: 'center',
@@ -127,11 +127,19 @@ const styles = makeStyles(theme => ({
   }
 }));
 
-function ProductHero(props) {
-  const {
-    source, MainUserType
-  } = props;
+interface Props {
+  MainUserType: string;
+  source: {
+    text: {
+      title: string;
+      subTitle: string;
+      marketerTail: string;
+      creatorTail: string;
+    };
+  };
+}
 
+function ProductHero({ MainUserType, source }: Props): JSX.Element {
   const classes = styles();
 
   return (
@@ -150,7 +158,7 @@ function ProductHero(props) {
               </h1>
             </Grow>
             <div className={classes.h1sub}>
-              {source.text.marketerTail.split('\n').map(row => (
+              {source.text.marketerTail.split('\n').map((row) => (
                 <p key={row}>{`${row}`}</p>
               ))}
             </div>
@@ -159,13 +167,13 @@ function ProductHero(props) {
               component={Link}
               to="/introduce/marketer"
             >
-            + 자세히보기
+              + 자세히보기
             </Button>
             <Button
               className={classes.buttonRight}
-              onClick={() => { window.open('http://pf.kakao.com/_xoyxmfT/chat'); }}
+              onClick={(): void => { window.open('http://pf.kakao.com/_xoyxmfT/chat'); }}
             >
-            실시간 문의하기
+              실시간 문의하기
             </Button>
           </div>
 
@@ -188,7 +196,7 @@ function ProductHero(props) {
               </h1>
             </Grow>
             <div className={classes.h1sub}>
-              {source.text.creatorTail.split('\n').map(row => (
+              {source.text.creatorTail.split('\n').map((row) => (
                 <p key={row}>{`${row}`}</p>
               ))}
             </div>
@@ -201,7 +209,7 @@ function ProductHero(props) {
             </Button>
             <Button
               className={classes.buttonRight}
-              onClick={() => { window.open('http://pf.kakao.com/_xoyxmfT/chat'); }}
+              onClick={(): void => { window.open('http://pf.kakao.com/_xoyxmfT/chat'); }}
             >
               실시간 문의하기
             </Button>

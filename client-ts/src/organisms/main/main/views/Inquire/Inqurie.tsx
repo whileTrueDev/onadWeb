@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, ChangeEvent } from 'react';
 import PropTypes from 'prop-types';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import {
@@ -9,14 +9,15 @@ import {
   Input,
   Container,
   Grid,
-  CircularProgress
+  CircularProgress,
+  Dialog
 } from '@material-ui/core';
-import HOST from '../../../../../utils/config';
+import HOST from '../../../../../config';
 import axios from '../../../../../utils/axios';
-import useDialog from '../../../../../utils/lib/hooks/useDialog';
-import Dialog from '../../../Introduction/components/Dialog';
+import useDialog from '../../../../../utils/hooks/useDialog';
+// import Dialog from '../../../Introduction/Dialog';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     marginTop: theme.spacing(12),
     marginBottom: theme.spacing(5),
@@ -25,7 +26,7 @@ const useStyles = makeStyles(theme => ({
     fontFamily: 'Noto Sans KR',
     marginTop: '20px',
     marginBottom: '30px',
-    fontWeight: '600',
+    fontWeight: 600,
     wordBreak: 'keep-all',
     [theme.breakpoints.down('sm')]: {
       fontSize: '25px',
@@ -121,18 +122,22 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const Inquire = (props) => {
+interface Props {
+  confirmClose: () => void;
+}
+
+function Inquire({ confirmClose }: Props): JSX.Element {
   const classes = useStyles();
   const [checked, setChecked] = useState(false);
   const confirmDialog = useDialog();
-  const { confirmClose } = props;
+
   const [loading, setLoading] = React.useState(false);
 
-  function handleChange() {
+  function handleChange(): void {
     setChecked(!checked);
   }
 
-  function handleSubmit(e) {
+  function handleSubmit(e: React.FormEvent<HTMLFormElement>): void {
     e.preventDefault();
 
     const formContent = document.forms.inqurireForm;
@@ -305,10 +310,6 @@ const Inquire = (props) => {
       </Dialog>
     </Container>
   );
-};
-
-Inquire.propTypes = {
-  classes: PropTypes.object,
-};
+}
 
 export default Inquire;

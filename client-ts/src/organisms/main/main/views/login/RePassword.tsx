@@ -10,10 +10,10 @@ import {
   withStyles,
 } from '@material-ui/core';
 import axios from '../../../../../utils/axios';
-import HOST from '../../../../../utils/config';
+import HOST from '../../../../../config';
 import history from '../../../../../history';
 
-const style = theme => ({
+const style = (theme) => ({
   contents: {
     display: 'flex',
     flexDirection: 'column',
@@ -106,7 +106,7 @@ const RePasswordDialog = (props) => {
       <form onSubmit={handleSubmit}>
         <DialogContent className={classes.contents}>
           <DialogContentText className={classes.contentText}>
-        변경할 비밀번호를 입력하세요.
+            변경할 비밀번호를 입력하세요.
           </DialogContentText>
           <TextField
             required

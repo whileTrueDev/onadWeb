@@ -1,8 +1,8 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
 
-const styles = theme => ({
+import { makeStyles } from '@material-ui/core/styles';
+
+const useStyles = makeStyles((theme) => ({
   root: {
     background: 'url(\'/pngs/main/creatorDoor.png\') no-repeat center center',
     backgroundSize: 'cover',
@@ -41,12 +41,15 @@ const styles = theme => ({
     flexDirection: 'row',
     justifyContent: 'center',
   },
-});
+}));
 
-function ProductHeroLayout(props) {
-  const {
-    children, classes, MainUserType
-  } = props;
+interface Props {
+  children: React.ReactNode;
+  MainUserType: string;
+}
+
+function ProductHeroLayout({ children, MainUserType }: Props): JSX.Element {
+  const classes = useStyles();
 
   return (
     <section className={MainUserType === 'marketer' ? (classes.root) : (classes.root2)}>
@@ -57,13 +60,4 @@ function ProductHeroLayout(props) {
   );
 }
 
-ProductHeroLayout.propTypes = {
-  children: PropTypes.node,
-  classes: PropTypes.object,
-};
-
-ProductHeroLayout.defaultProps = {
-  classes: {},
-};
-
-export default withStyles(styles)(ProductHeroLayout);
+export default ProductHeroLayout;

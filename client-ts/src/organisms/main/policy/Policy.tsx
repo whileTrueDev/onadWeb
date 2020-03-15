@@ -1,21 +1,20 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
-import TabBar from '../Introduction/components/TabBar';
+import TabBar from '../Introduction/TabBar';
 import PolicyMarketer from './PolicyMarketer';
 import PolicyCreator from './PolicyCreator';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles(() => ({
   root: {
     marginTop: 70,
   },
 }));
 
-const Policy = () => {
+function Policy(): JSX.Element {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
 
-  function handleTabChange(evt, newValue) {
+  function handleTabChange(newValue: number): void {
     setValue(newValue);
   }
 
@@ -31,20 +30,11 @@ const Policy = () => {
         <PolicyMarketer />
       ) : (
         <PolicyCreator />
-      )
-      }
+      )}
 
 
     </div>
   );
-};
-
-Policy.propTypes = {
-  value: PropTypes.number,
-};
-
-Policy.defaultProps = {
-  value: 0,
-};
+}
 
 export default Policy;

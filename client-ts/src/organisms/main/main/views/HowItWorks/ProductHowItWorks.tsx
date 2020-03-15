@@ -9,7 +9,7 @@ import axios from '../../../../../utils/axios';
 import HOST from '../../../../../utils/config';
 import history from '../../../../../history';
 
-const styles = theme => ({
+const styles = (theme) => ({
   root: {
     backgroundColor: 'white',
     marginBottom: theme.spacing(8),
@@ -210,7 +210,7 @@ const ProductHowItWorks = (props) => {
             </Typography>
           </div>
           <div>
-            {source.content.text.split('\n').map(row => (
+            {source.content.text.split('\n').map((row) => (
               <Typography
                 key={shortid.generate()}
                 component="h2"
@@ -238,7 +238,7 @@ const ProductHowItWorks = (props) => {
 
           </div>
           <Typography component="h2" className={classes.bottomSpace}>
-              전화지원 및 플러스친구 답변은 월~금 (10:00~19:00)동안 운영됩니다.
+            전화지원 및 플러스친구 답변은 월~금 (10:00~19:00)동안 운영됩니다.
           </Typography>
         </div>
         <LoginForm

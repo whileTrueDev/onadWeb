@@ -4,7 +4,7 @@ import shortid from 'shortid';
 import terms from './PolicySource';
 
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     marginTop: 70
   },
@@ -20,7 +20,12 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const PolicyPrivacy = () => {
+interface Terms {
+  title: string;
+  text: string;
+}
+
+function PolicyPrivacy(): JSX.Element {
   const classes = useStyles();
 
   return (
@@ -28,11 +33,11 @@ const PolicyPrivacy = () => {
       <h2>개인정보 처리방침</h2>
       <h4>{terms[3]}</h4>
       <div className={classes.content}>
-        {terms[2].map(term => (
+        {terms[2].map((term: Terms) => (
           <div key={shortid.generate()} className={classes.policyWrapper}>
             <h3 key={shortid.generate()}>{term.title}</h3>
             <div key={shortid.generate()} className={classes.text}>
-              {term.text.split('\n').map(sentence => (
+              {term.text.split('\n').map((sentence) => (
                 <p key={shortid.generate()}>{sentence}</p>
               ))}
             </div>
@@ -41,6 +46,6 @@ const PolicyPrivacy = () => {
       </div>
     </div>
   );
-};
+}
 
 export default PolicyPrivacy;
