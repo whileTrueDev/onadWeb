@@ -1,7 +1,7 @@
-require('dotenv').config();
+import TwitchChatCollectorV2 from './model/collector';
+
+
 // const TwitchChatCollector = require('./model/TwitchChatCollector');
-const TwitchChatCollectorV2 = require('./model/collector');
 
 const onad = new TwitchChatCollectorV2();
-
 onad.run();

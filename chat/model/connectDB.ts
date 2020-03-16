@@ -1,11 +1,18 @@
-const doQuery = require('../lib/doQuery'); // For data insert
-const createChatInsertQueryValues = require('../lib/createChatInsertQueryValues'); // For Query
+import doQuery, { OkPacket } from '../lib/doQuery'; // For data insert
+import createChatInsertQueryValues from '../lib/createChatInsertQueryValues'; // For Query
+import { Chat } from './chat.d';
+
+export interface ContractedCreatorsResult {
+  creatorTwitchId: string;
+}
 
 // 계약된 모든 크리에이터 가져오기.
-function getContratedCreators() {
+function getContratedCreators(): Promise<ContractedCreatorsResult[]> {
   const getContractedChannelsQuery = `
-  SELECT creatorTwitchId FROM creatorInfo WHERE creatorContractionAgreement = 1`;
-  return doQuery(getContractedChannelsQuery)
+  SELECT creatorTwitchId
+    FROM creatorInfo
+    WHERE creatorContractionAgreement = 1`;
+  return doQuery<ContractedCreatorsResult[]>(getContractedChannelsQuery)
     .then((row) => {
       if (row.error || !row.result) {
         console.log('[DB적재 에러]');
@@ -19,11 +26,11 @@ function getContratedCreators() {
 }
 
 // 채팅로그 버퍼에 쌓인 모든 채팅로그를 적재.
-function insertChats(chatBuffer) {
+function insertChats(chatBuffer: Chat[]): Promise<OkPacket> {
   const [insertQuery, insertQueryArray] = createChatInsertQueryValues(chatBuffer);
 
   // Reqeust query to DB
-  return doQuery(insertQuery, insertQueryArray)
+  return doQuery<OkPacket>(insertQuery, insertQueryArray)
     .then((row) => {
       if (row.error || !row.result) {
         console.log('[DB적재 에러]');
@@ -38,7 +45,7 @@ function insertChats(chatBuffer) {
     });
 }
 
-module.exports = {
+export default {
   getContratedCreators,
   insertChats
 };
