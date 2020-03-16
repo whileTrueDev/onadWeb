@@ -1,16 +1,15 @@
 import React from 'react';
 import { Grow } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import withRoot from '../../organisms/main/Main/withRoot';
-import useLoginValue from '../../utils/lib/hooks/useLoginValue';
-import AppAppBar from '../../organisms/main/layout/AppAppBar';
+import useLoginValue from '../../utils/hooks/useLoginValue';
+import AppAppBar from '../../organisms/main/layouts/AppAppbar';
 import HowToUseCreator from '../../organisms/main/Introduction/HowToUseCreator';
 import HowToUseMarketer from '../../organisms/main/Introduction/HowToUseMarketer';
 import IntroduceMiddle from '../../organisms/main/Introduction/IntroduceMiddle';
-import ProductHowItWorks from '../../organisms/main/Main/views/HowItWorks/ProductHowItWorks';
+import ProductHowItWorks from '../../organisms/main/main/views/HowItWorks/ProductHowItWorks';
+import sources from '../../organisms/main/main/source/sources';
+import AppFooter from '../../organisms/main/layouts/AppFooter';
 import textSource from '../../organisms/main/Introduction/source/textSource';
-import sources from '../../organisms/main/Main/source/sources';
-import AppFooter from '../../organisms/main/layout/AppFooter';
 import Question from '../../organisms/main/Introduction/Question';
 
 const styles = makeStyles((theme) => ({
@@ -44,13 +43,6 @@ const styles = makeStyles((theme) => ({
     fontSize: '20px',
     fontFamily: 'Noto Sans KR',
     marginRight: 30,
-    [theme.breakpoints.down('md')]: {
-    },
-    [theme.breakpoints.down('sm')]: {
-
-    },
-    [theme.breakpoints.down('xs')]: {
-    },
   },
   h1: {
     marginTop: '10px',
@@ -93,25 +85,10 @@ const styles = makeStyles((theme) => ({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    [theme.breakpoints.down('sm')]: {
-    },
-    [theme.breakpoints.down('xs')]: {
-      // display: 'grid',
-      // gridTemplateColumns: 'repeat(4, 110px)',
-      // gridTemplateRows: 'repeat(2, 250px)'
-    },
   },
   maintopCenterVideo: {
     width: '750px',
     height: '500px',
-    [theme.breakpoints.up('lg')]: {
-    },
-    [theme.breakpoints.down('md')]: {
-    },
-    [theme.breakpoints.down('sm')]: {
-    },
-    [theme.breakpoints.down('xs')]: {
-    },
   },
   buttonLeft: {
     width: '40%',
@@ -127,10 +104,17 @@ const styles = makeStyles((theme) => ({
     fontSize: 20,
   }
 }));
+
+interface Props {
+  match: {
+    params: { userType: string | boolean };
+  };
+}
+
+
 // this is layout compoent
-export default withRoot((props) => {
-  const { history, match } = props;
-  const { isLogin, logout } = useLoginValue(history);
+export default function IntroductionMain({ match }: Props): JSX.Element {
+  const { isLogin, logout } = useLoginValue();
   const classes = styles();
   const { userType } = match.params;
 
@@ -170,7 +154,7 @@ export default withRoot((props) => {
             <HowToUseMarketer source={textSource.marketer.secondSector} />
           </section>
 
-          <IntroduceMiddle source={textSource.topSector} userType />
+          <IntroduceMiddle userType />
 
           <ProductHowItWorks
             source={sources.howitworks}
@@ -178,44 +162,45 @@ export default withRoot((props) => {
           <Question MainUserType="marketer" />
           <AppFooter />
         </div>
-      ) : (
-        <div>
-          <div className={classes.rootWrap}>
-            <div className={classes.containerWrap}>
-              <AppAppBar
-                isLogin={isLogin}
-                logout={logout}
-                MainUserType="creator"
-              />
-              <div className={classes.maintop}>
-                <div className={classes.loginMiddle}>
-                  <Grow in timeout={1500}>
-                    <h1 className={classes.h1}>
-                      {textSource.heroSector.creator.text.title}
-                    </h1>
-                  </Grow>
-                  <div className={classes.h1sub}>
-                    {textSource.heroSector.creator.text.content.split('\n').map((row) => (
-                      <p key={row}>{`${row}`}</p>
-                    ))}
+      )
+        : (
+          <div>
+            <div className={classes.rootWrap}>
+              <div className={classes.containerWrap}>
+                <AppAppBar
+                  isLogin={isLogin}
+                  logout={logout}
+                  MainUserType="creator"
+                />
+                <div className={classes.maintop}>
+                  <div className={classes.loginMiddle}>
+                    <Grow in timeout={1500}>
+                      <h1 className={classes.h1}>
+                        {textSource.heroSector.creator.text.title}
+                      </h1>
+                    </Grow>
+                    <div className={classes.h1sub}>
+                      {textSource.heroSector.creator.text.content.split('\n').map((row) => (
+                        <p key={row}>{`${row}`}</p>
+                      ))}
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
+            <section style={{ background: 'linear-gradient(45deg, #FFAA00 30%, #FF8E53 90%)' }}>
+              <HowToUseCreator source={textSource.creator.secondSector} />
+            </section>
+
+            <IntroduceMiddle userType={false} />
+
+            <ProductHowItWorks
+              source={sources.howitworks}
+            />
+            <Question MainUserType="creator" />
+            <AppFooter />
           </div>
-          <section style={{ background: 'linear-gradient(45deg, #FFAA00 30%, #FF8E53 90%)' }}>
-            <HowToUseCreator source={textSource.creator.secondSector} />
-          </section>
-
-          <IntroduceMiddle source={textSource.topSector} />
-
-          <ProductHowItWorks
-            source={sources.howitworks}
-          />
-          <Question MainUserType="creator" />
-          <AppFooter />
-        </div>
-      )}
+        )}
     </div>
   );
-});
+}

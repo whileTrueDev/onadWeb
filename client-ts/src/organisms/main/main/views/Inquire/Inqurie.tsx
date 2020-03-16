@@ -1,5 +1,4 @@
-import React, { useState, ChangeEvent } from 'react';
-import PropTypes from 'prop-types';
+import React, { useState } from 'react';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import {
   Checkbox,
@@ -10,12 +9,11 @@ import {
   Container,
   Grid,
   CircularProgress,
-  Dialog
 } from '@material-ui/core';
 import HOST from '../../../../../config';
 import axios from '../../../../../utils/axios';
 import useDialog from '../../../../../utils/hooks/useDialog';
-// import Dialog from '../../../Introduction/Dialog';
+import Dialog from '../../../../../atoms/Dialog/Dialog';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -140,25 +138,25 @@ function Inquire({ confirmClose }: Props): JSX.Element {
   function handleSubmit(e: React.FormEvent<HTMLFormElement>): void {
     e.preventDefault();
 
-    const formContent = document.forms.inqurireForm;
+    const formContent = e.currentTarget;
 
     const AnonymousUser = {
-      name: formContent.name.value,
-      email: formContent.email.value,
-      contactNumber: formContent.contactNumber.value,
-      brandName: formContent.brandName.value,
-      content: formContent.content.value,
+      name: formContent.name,
+      email: formContent.email,
+      contactNumber: formContent.contactNumber,
+      brandName: formContent.brandName,
+      content: formContent.content,
     };
     setLoading(true);
     if (checked) {
       axios.post(`${HOST}/mailer/inqurie`, AnonymousUser)
         .then(() => {
           confirmDialog.handleOpen();
-          formContent.name.value = '';
-          formContent.email.value = '';
-          formContent.contactNumber.value = '';
-          formContent.brandName.value = '';
-          formContent.content.value = '';
+          formContent.name = '';
+          formContent.email = '';
+          formContent.contactNumber = '';
+          formContent.brandName = '';
+          formContent.content = '';
           setChecked(false);
           setLoading(false);
         });
@@ -177,7 +175,7 @@ function Inquire({ confirmClose }: Props): JSX.Element {
         광고 관련 문의를 남겨주시면 상담해드립니다
       </Typography>
       <Grid container className={classes.contentWraper} direction="column">
-        <form onSubmit={handleSubmit} className={classes.cardWrapper} name="inqurireForm">
+        <form onSubmit={handleSubmit} className={classes.cardWrapper} id="inquireForm">
           <Grid container className={classes.card} direction="column">
 
             <Grid container direction="row" alignItems="center" className={classes.cardContent}>
@@ -303,7 +301,7 @@ function Inquire({ confirmClose }: Props): JSX.Element {
               확인
             </Button>
           </div>
-          )}
+        )}
       >
         <p style={{ textAlign: 'center', fontSize: '20px', marginTop: 30 }}>문의 요청 완료되었습니다.</p>
         <p style={{ textAlign: 'center', fontSize: '20px' }}>빠른 답변 드리겠습니다.</p>

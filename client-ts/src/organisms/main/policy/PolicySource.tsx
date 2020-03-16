@@ -1,4 +1,4 @@
-const terms = [
+const terms: any = [
   [
     {
       title: '제 1조 목적',

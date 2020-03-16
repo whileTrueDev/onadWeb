@@ -1,23 +1,20 @@
 import React, { useState, useReducer } from 'react';
-import PropTypes from 'prop-types';
 import green from '@material-ui/core/colors/green';
-
 import {
   Paper,
   Typography,
-  withStyles,
   FormControlLabel,
   Checkbox,
   Divider,
   Button,
   Grid,
 } from '@material-ui/core';
-
+import makeStyles from '@material-ui/core/styles/makeStyles';
 import shortid from 'shortid';
 import Dialog from '../../../atoms/Dialog/Dialog';
 import terms from './registConfig';
 
-const styles = theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     ...theme.mixins.gutters(),
     paddingTop: theme.spacing(2),
@@ -74,7 +71,7 @@ const styles = theme => ({
   end: {
     fontSize: '12px'
   }
-});
+}));
 
 const reducer = (state, action) => {
   switch (action.key) {
@@ -91,37 +88,40 @@ const reducer = (state, action) => {
   }
 };
 
-const PaperSheet = (props) => {
-  const {
-    handleBack, handleNext, classes,
-  } = props;
+interface Props {
+  handleBack: () => void;
+  handleNext: () => void;
+}
+
+const PaperSheet = ({ handleBack, handleNext }: Props) => {
+  const classes = useStyles();
   const [state, dispatch] = useReducer(reducer, { checkedA: false, checkedB: false, checkedC: false });
   const [selectTerm, setTerm] = useState({
     text: '',
   });
   const [open, setOpen] = useState(false);
 
-  const handleChange = name => () => {
+  function handleChange(name: string): void {
     dispatch({ key: name });
     setOpen(false);
-  };
+  }
 
-  const handleClose = () => {
+  function handleClose(): void {
     setOpen(false);
-  };
+  }
 
-  const handleOpen = term => () => {
+  function handleOpen(term: any): void {
     setTerm(term);
     setOpen(true);
-  };
+  }
 
-  const finishReg = () => {
+  function finishReg(): void {
     if (state.checkedA && state.checkedB) {
       handleNext();
     } else {
       alert('모든 약관에 동의하지 않으면 회원가입이 완료되지 않습니다.');
     }
-  };
+  }
 
 
   return (
@@ -131,7 +131,7 @@ const PaperSheet = (props) => {
         <Typography variant="h6" component="h6" style={{ textAlign: 'center' }}>
           While:True
         </Typography>
-        {terms.map(term => (
+        {terms.map((term) => (
           <Paper className={classes.container} elevation={1} key={term.state}>
             <Grid container direction="row" justify="space-between" alignItems="center" spacing={1}>
               <Grid item>
@@ -148,7 +148,7 @@ const PaperSheet = (props) => {
                       }}
                       onClick={handleOpen(term)}
                     >
-                        약관보기
+                      약관보기
                     </Button>
                   </Grid>
                   <Grid item>
@@ -165,7 +165,7 @@ const PaperSheet = (props) => {
                             checked: classes.checked,
                           }}
                         />
-                        )}
+                      )}
                       label="동의"
                       style={{ flex: 2, marginRight: 0 }}
                     />
@@ -203,7 +203,7 @@ const PaperSheet = (props) => {
       >
         {/* 계약 내용 */}
         <div className={classes.inDialogContent}>
-          {selectTerm.text.split('\n').map(sentence => (
+          {selectTerm.text.split('\n').map((sentence) => (
             <p key={shortid.generate()} className={classes.names}>{sentence}</p>
           ))}
           <Divider />
@@ -231,10 +231,4 @@ const PaperSheet = (props) => {
   );
 };
 
-PaperSheet.propTypes = {
-  classes: PropTypes.object.isRequired,
-  handleNext: PropTypes.func.isRequired,
-  handleBack: PropTypes.func.isRequired,
-};
-
-export default withStyles(styles)(PaperSheet);
+export default PaperSheet;

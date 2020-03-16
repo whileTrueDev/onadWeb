@@ -4,7 +4,7 @@ import grey from '@material-ui/core/colors/grey';
 import { Button, CircularProgress } from '@material-ui/core';
 import { Link } from 'react-router-dom';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   container: {
     backgroundColor: grey[300],
     width: '100%',
@@ -87,11 +87,11 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const Indicator = () => {
+function Indicator(): JSX.Element {
   const classes = useStyles();
   const [loading, setLoading] = React.useState(false);
 
-  function handleClick() {
+  function handleClick(): void {
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
@@ -110,7 +110,7 @@ const Indicator = () => {
         <Button
           className={classes.button}
           disabled={loading}
-          onClick={() => { handleClick(); }}
+          onClick={(): void => { handleClick(); }}
         >
           <a href="IntroService/ONAD서비스소개서.pdf" download="ONAD서비스소개서" className={classes.down}>소개자료 다운로드</a>
           {loading && (
@@ -119,7 +119,6 @@ const Indicator = () => {
               size={16}
               thickness={5}
               variant="indeterminate"
-              className={classes.buttonProgress}
             />
           )}
         </Button>
@@ -133,6 +132,6 @@ const Indicator = () => {
       </div>
     </div>
   );
-};
+}
 
 export default Indicator;

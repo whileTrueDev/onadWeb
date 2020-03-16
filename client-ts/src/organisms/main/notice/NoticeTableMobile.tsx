@@ -20,8 +20,19 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function NoticeTableMobile(props) {
-  const { data } = props;
+interface Props {
+  data: NoticeData[];
+}
+
+interface NoticeData {
+  code: string;
+  topic: string;
+  title: string;
+  regiDate: string;
+  contents?: string;
+}
+
+export default function NoticeTableMobile({ data }: Props): JSX.Element {
   const classes = useStyles();
 
   return (

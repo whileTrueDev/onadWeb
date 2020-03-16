@@ -7,12 +7,12 @@ import {
   DialogTitle,
   Button,
   TextField,
-  withStyles,
 } from '@material-ui/core';
+import makeStyles from '@material-ui/core/styles/makeStyles';
 import axios from '../../../../../utils/axios';
-import HOST from '../../../../../utils/config';
+import HOST from '../../../../../config';
 
-const style = theme => ({
+const style = makeStyles(() => ({
   contents: {
     display: 'flex',
     flexDirection: 'column',
@@ -21,20 +21,27 @@ const style = theme => ({
   contentText: {
     fontSize: 13,
   },
-});
+}));
 
+interface Props {
+  dialogType: string;
+  findDialogOpen: boolean;
+  handleFindDialogClose: () => void;
+  handleClose: () => void;
+}
 
-const FindDialog = (props) => {
-  const {
-    dialogType, findDialogOpen, handleFindDialogClose, classes, handleClose,
-  } = props;
-
-  const CheckId = (event) => {
+function FindDialog({
+  dialogType,
+  findDialogOpen,
+  handleFindDialogClose,
+  handleClose,
+}: Props): JSX.Element {
+  const CheckId = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const mailInput = document.getElementById('mail');
+    let mailInput = event.currentTarget.marketerMail;
     const user = {
-      marketerName: event.target.marketerName.value,
-      marketerMail: event.target.marketerMail.value,
+      marketerName: event.currentTarget.marketerName,
+      marketerMail: event.currentTarget.marketerMail,
     };
     const emailReg = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*[.]+[a-zA-Z]{2,3}$/i;
     if (emailReg.test(user.marketerMail)) {
@@ -42,7 +49,7 @@ const FindDialog = (props) => {
         .then((res) => {
           if (res.data.error) {
             alert(res.data.message);
-            mailInput.value = '';
+            mailInput = '';
           } else {
             alert(`당신의 ID는 ${res.data.message} 입니다.`);
             handleFindDialogClose();
@@ -59,20 +66,22 @@ const FindDialog = (props) => {
     }
   };
 
-  const CheckPasswd = (event) => {
+  const classes = style();
+
+  const CheckPasswd = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const emailReg = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*[.]+[a-zA-Z]{2,3}$/i;
-    const mailInput = document.getElementById('mail');
+    let mailInput = event.currentTarget.marketerMail;
     const user = {
-      marketerId: event.target.marketerId.value,
-      marketerMail: event.target.marketerMail.value,
+      marketerId: event.currentTarget.marketerId,
+      marketerMail: event.currentTarget.marketerMail,
     };
     if (emailReg.test(user.marketerMail)) {
       axios.post(`${HOST}/api/regist/findPw`, user)
         .then((res) => {
           if (res.data.error) {
             alert(res.data.message);
-            mailInput.value = '';
+            mailInput = '';
             // handleFindDialogClose();
             // handleClose();
           } else {
@@ -99,7 +108,7 @@ const FindDialog = (props) => {
       return (
         <DialogContent className={classes.contents}>
           <DialogContentText className={classes.contentText}>
-          ONAD에 등록시에 입력하였던 ID와 EMAIL을 입력하세요.
+            ONAD에 등록시에 입력하였던 ID와 EMAIL을 입력하세요.
           </DialogContentText>
           <TextField
             required
@@ -143,7 +152,6 @@ const FindDialog = (props) => {
           helperText="EMAIL을 입력하세요."
           margin="dense"
           name="marketerMail"
-          id="mail"
           InputLabelProps={{ shrink: true }}
           style={{ width: '80%' }}
         />
@@ -170,7 +178,7 @@ const FindDialog = (props) => {
       </form>
     </Dialog>
   );
-};
+}
 
 
-export default withStyles(style)(FindDialog);
+export default FindDialog;

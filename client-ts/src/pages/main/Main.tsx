@@ -1,17 +1,17 @@
 import React from 'react';
 // layout 계열 컴포넌트
-import AppAppBar from '../../organisms/main/layouts/AppAppBar';
+import AppAppBar from '../../organisms/main/layouts/AppAppbar';
 import AppFooter from '../../organisms/main/layouts/AppFooter';
 // layout 내부 컨텐츠 계열 컴포넌트
-import ProductHero from '../../organisms/main/Main/views/Hero/ProductHero';
-import ProductHowItWorks from '../../organisms/main/Main/views/HowItWorks/ProductHowItWorks';
-import RePasswordDialog from '../../organisms/main/Main/views/Login/RePassword';
-import sources from '../../organisms/main/Main/source/sources';
-import Inqurie from '../../organisms/main/Main/views/Inquire/Inqurie';
-import Indicator from '../../organisms/main/Main/views/Indicators/Indicator';
-import HowToUse from '../../organisms/main/Main/views/HowToUse/HowToUse';
-import Advantage from '../../organisms/main/Main/views/Advantage/Advantage';
-import IntroService from '../../organisms/main/Main/views/IntroService/IntroService';
+import ProductHero from '../../organisms/main/main/views/Hero/ProductHero';
+import ProductHowItWorks from '../../organisms/main/main/views/HowItWorks/ProductHowItWorks';
+import RePasswordDialog from '../../organisms/main/main/views/login/RePassword';
+import sources from '../../organisms/main/main/source/sources';
+import Inqurie from '../../organisms/main/main/views/Inquire/Inqurie';
+import Indicator from '../../organisms/main/main/views/Indicators/Indicator';
+import HowToUse from '../../organisms/main/main/views/HowToUse/HowToUse';
+import Advantage from '../../organisms/main/main/views/Advantage/Advantage';
+import IntroService from '../../organisms/main/main/views/IntroService/IntroService';
 // utill 계열 컴포넌트
 import useLoginValue from '../../utils/hooks/useLoginValue';
 import history from '../../history';
@@ -44,7 +44,7 @@ export default function Main(): JSX.Element {
           />
           <Advantage source={sources.advantage} MainUserType="marketer" />
           <IntroService />
-          <ProductHowItWorks source={sources.howitworks} MainUserType="marketer" />
+          <ProductHowItWorks source={sources.howitworks} MainUserType="marketer" logout={logout} />
           <Inqurie />
           <AppFooter />
           <RePasswordDialog
@@ -68,7 +68,7 @@ export default function Main(): JSX.Element {
               MainUserType="creator"
             />
             <Advantage source={sources.advantage} MainUserType="creator" />
-            <ProductHowItWorks source={sources.howitworks} MainUserType="creator" />
+            <ProductHowItWorks source={sources.howitworks} MainUserType="creator" logout={logout} />
             <AppFooter />
             <RePasswordDialog
               repasswordOpen={repasswordOpen}

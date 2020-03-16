@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import Tab from '@material-ui/core/Tab';
 import AppBar from '@material-ui/core/AppBar';
 // import { Subscriptions, Person } from '@material-ui/icons';
@@ -14,7 +13,7 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
     marginBottom: theme.spacing(5),
     boxShadow: 'none',
-    zIndex: '3',
+    zIndex: 3,
   },
   tab: {
     height: 50,
@@ -22,8 +21,7 @@ const useStyles = makeStyles((theme) => ({
     color: 'white',
     fontFamily: 'Noto Sans Kr',
     fontSize: 16,
-    fontWeight: '600',
-    // boxShadow: '0 2px 1px gainsboro',
+    fontWeight: 600,
   },
   tab2: {
     height: 50,
@@ -31,8 +29,7 @@ const useStyles = makeStyles((theme) => ({
     color: 'white',
     fontFamily: 'Noto Sans Kr',
     fontSize: 16,
-    fontWeight: '600',
-    // boxShadow: '0 2px 1px gainsboro',
+    fontWeight: 600,
   },
   tab3: {
     height: 50,
@@ -40,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
     color: 'gray',
     fontFamily: 'Noto Sans Kr',
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: 600,
   },
   indicator_marketer: {
     indicator: {
@@ -54,17 +51,19 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-function TabBar(props) {
-  const classes = useStyles();
+interface Props {
+  tabValue: number;
+  handleTabChange: (event: React.ChangeEvent<{}>, newValue: number) => void;
+}
 
-  const { tabValue, handleTabChange } = props;
+function TabBar({ tabValue, handleTabChange }: Props): JSX.Element {
+  const classes = useStyles();
 
   return (
     <AppBar className={classes.tabs} position="static" color="inherit">
       <Tabs
         value={tabValue}
         onChange={handleTabChange}
-        // indicatorColor="primary"
         TabIndicatorProps={
           tabValue
             ? { style: { backgroundColor: '#FFAA00' } }
@@ -84,10 +83,5 @@ function TabBar(props) {
 
   );
 }
-
-TabBar.propTypes = {
-  tabValue: PropTypes.oneOf([0, 1]).isRequired,
-  handleTabChange: PropTypes.func.isRequired,
-};
 
 export default TabBar;

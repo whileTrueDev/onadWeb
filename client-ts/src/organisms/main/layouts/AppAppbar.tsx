@@ -167,7 +167,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 interface Props {
   isLogin?: boolean;
-  logout?: () => void;
+  logout: () => void;
   noButtons?: boolean;
   MainUserType?: string;
   noTrigger?: boolean;
@@ -240,7 +240,7 @@ function AppAppBar({
         </Button>
       );
     }
-    return <LoginPopover type="회원가입" trigger={trigger} MainUserType={MainUserType} />;
+    return <LoginPopover type="회원가입" trigger={trigger} MainUserType={MainUserType} logout={logout} />;
   };
 
   /** 모바일 메뉴 ********************************************* */
@@ -248,14 +248,14 @@ function AppAppBar({
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
   // 모바일 메뉴버튼 오픈 state
-  const handleMobileMenuOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
+  function handleMobileMenuOpen(event: React.MouseEvent<HTMLButtonElement>): void {
     setMobileMoreAnchorEl(event.currentTarget);
-  };
+  }
 
   // 모바일 메뉴버튼 오픈 닫는 핸들링 함수
-  const handleMobileMenuClose = () => {
+  function handleMobileMenuClose(): void {
     setMobileMoreAnchorEl(null);
-  };
+  }
 
   // 모바일 메뉴 컴포넌트
   const renderMobileMenu = (
@@ -297,7 +297,7 @@ function AppAppBar({
                   마이페이지
                 </Button>
               )
-                : <LoginPopover type="회원가입" mode="mobile" MainUserType={MainUserType} />}
+                : <LoginPopover type="회원가입" mode="mobile" MainUserType={MainUserType} logout={logout} />}
             </MenuItem>
 
             <MenuItem>
@@ -307,7 +307,7 @@ function AppAppBar({
                 </Button>
               )
                 : (
-                  <LoginPopover type="로그인" MainUserType={MainUserType} />
+                  <LoginPopover type="로그인" MainUserType={MainUserType} logout={logout} />
                 )}
             </MenuItem>
           </div>
@@ -358,7 +358,7 @@ function AppAppBar({
                 >
                   서비스소개
                 </Button>
-                <RegButton logout={logout} />
+                <RegButton />
 
                 {MainUserType === 'marketer' ? (
                   <div>
@@ -371,9 +371,7 @@ function AppAppBar({
                     </Button>
                   </div>
                 ) : null}
-                <LogButton
-                  logout={logout}
-                />
+                <LogButton />
               </div>
             )}
 

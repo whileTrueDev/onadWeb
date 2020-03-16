@@ -5,7 +5,7 @@ import {
   Grid, Button, Typography
 } from '@material-ui/core';
 import axios from '../../../utils/axios';
-import HOST from '../../../utils/config';
+import HOST from '../../../config';
 import CustomCard from '../../../atoms/CustomCard';
 import StyledItemText from '../../../atoms/StyledItemText';
 
@@ -37,26 +37,26 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'center'
   },
   head: {
-    fontWeight: '500',
+    fontWeight: 500,
     color: theme.palette.info.main,
   },
   unit: {
-    fontWeight: '700',
+    fontWeight: 700,
     marginLeft: '3px'
   },
   level: {
-    fontWeight: '700',
+    fontWeight: 700,
     marginLeft: '1px'
   },
   text1: {
-    fontWeight: '500',
+    fontWeight: 500,
     // color: 'rgba(0, 0, 0, 0.54)',
     fontSize: '14px',
     margin: '16px',
     marginBottom: '3px'
   },
   text2: {
-    fontWeight: '500',
+    fontWeight: 500,
     // color: 'rgba(0, 0, 0, 0.54)',
     fontSize: '14px',
     margin: '16px',
@@ -64,13 +64,22 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
+interface Props {
+  handleBack: () => void;
+  handleNext: () => void;
+  open: boolean;
+  setOpen: (number: number) => void;
+}
+
 // 마케터 유형을 선택하고 난 뒤 rendering되는 컴포넌트.
 // useEffect를 사용하여
-const IndentityVerification = (props) => {
+function IndentityVerification({
+  handleBack,
+  handleNext,
+  open,
+  setOpen
+}: Props): JSX.Element {
   const classes = useStyles();
-  const {
-    handleBack, handleNext, open, setOpen,
-  } = props;
 
   const submitImpUid = useCallback(({ impUid }) => {
     axios.post(`${HOST}/api/regist/certifications`, { imp_uid: impUid })
@@ -95,13 +104,14 @@ const IndentityVerification = (props) => {
 
   useEffect(() => {
     if (open) {
-      const { IMP } = window;
+      const globalParams: any = window;
+      const { IMP } = globalParams;
       IMP.init('imp00026649');
 
       IMP.certification({ // param
         merchant_uid: 'ORD20180131-0000011',
         min_age: '19'
-      }, (rsp) => { // callback
+      }, (rsp: any) => { // callback
         if (rsp.success) {
           submitImpUid({ impUid: rsp.imp_uid });
         } else {
@@ -123,7 +133,7 @@ const IndentityVerification = (props) => {
               primary="미성년자 확인"
               secondary="만 19세 미만인 경우 온애드를 사용할 수 없습니다."
             />
-      )}
+          )}
         >
           <Typography align="right" className={classes.text1}>대한민국 민법상, 만 19세에 달하지 않은자는 회원가입이 불가능 합니다.</Typography>
           <Typography align="right" className={classes.text2}>미성년자가 아닌경우, 다음버튼을 클릭해 본인인증을 진행하세요.</Typography>
@@ -134,14 +144,12 @@ const IndentityVerification = (props) => {
         <div>
           <Button
             onClick={handleBack}
-            className={classes.button}
           >
             뒤로
           </Button>
           <Button
             variant="contained"
             color="primary"
-            className={classes.button}
             onClick={() => { setOpen(1); }}
           >
             다음
@@ -151,6 +159,6 @@ const IndentityVerification = (props) => {
     </Grid>
 
   );
-};
+}
 
 export default IndentityVerification;

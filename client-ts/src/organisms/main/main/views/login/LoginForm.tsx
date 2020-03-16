@@ -14,10 +14,10 @@ import {
   Typography
 } from '@material-ui/core';
 import makeStyles from '@material-ui/core/styles/makeStyles';
-import axios from '../../../../utils/axios';
+import axios from '../../../../../utils/axios';
 import FindDialog from './FindDialog';
-import HOST from '../../../../config';
-import history from '../../../../history';
+import HOST from '../../../../../config';
+import history from '../../../../../history';
 
 
 const useStyles = makeStyles(() => ({
@@ -57,7 +57,7 @@ interface Props {
   open: boolean;
   isMarketer: boolean;
   handleClose: () => void;
-  logout?: () => void;
+  logout: () => void;
 }
 // TODO: 비밀번호 암호화하여 전달하기.
 function LoginForm({
@@ -98,9 +98,6 @@ function LoginForm({
           alert(res.data[1]);
           if (res.data[1] === '이메일 본인인증을 해야합니다.') {
             handleClose();
-            if (typeof logout !== undefined) {
-              logout();
-            }
           }
         } else {
           const userData = res.data[1];

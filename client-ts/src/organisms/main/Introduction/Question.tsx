@@ -242,11 +242,16 @@ const Styles = makeStyles((theme) => ({
   }
 }));
 
+interface QandAData {
+  id: string;
+  text: string;
+  ans?: any | '';
+}
 
-function Question({ MainUserType }: {MainUserType: string}): JSX.Element {
+function Question({ MainUserType }: { MainUserType: string }): JSX.Element {
   const classes = Styles();
 
-  let defaultQuestion;
+  let defaultQuestion: QandAData;
   if (MainUserType === 'marketer') {
     defaultQuestion = {
       id: 'one',
@@ -271,7 +276,7 @@ function Question({ MainUserType }: {MainUserType: string}): JSX.Element {
   const [questionNum, setQuestionNum] = React.useState(defaultQuestion);
 
 
-  function handleClick(row: {id: string; text: string; ans: string}): void {
+  function handleClick(row: QandAData): void {
     if (MainUserType === 'marketer') {
       setQuestionNum({ id: row.id, text: row.text, ans: textSource.answerMarketer[row.id] });
     } else {
@@ -286,7 +291,7 @@ function Question({ MainUserType }: {MainUserType: string}): JSX.Element {
       </h1>
       <div className={classes.QnAWrapper}>
         <div className={classes.question}>
-          {source.map((row) => (
+          {source.map((row: any) => (
             <div
               className={questionNum.id === row.id ? (classes.questionTextClicked) : (classes.questionText)}
               key={shortid.generate()}
@@ -306,7 +311,7 @@ function Question({ MainUserType }: {MainUserType: string}): JSX.Element {
             </div>
           </div>
           <div className={classes.answerBottom}>
-            {questionNum.ans.split('\n').map((row) => (
+            {questionNum.ans.split('\n').map((row: string) => (
               <p key={shortid.generate()} className={classes.answerText}>{`${row}`}</p>
             ))}
           </div>

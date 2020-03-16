@@ -3,7 +3,7 @@ import makeStyles from '@material-ui/core/styles/makeStyles';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
     justifyContent: 'center',
@@ -48,7 +48,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function ShutDownCloseBeta() {
+export default function ShutDownCloseBeta(): JSX.Element {
   const classes = useStyles();
 
   return (
@@ -66,7 +66,7 @@ export default function ShutDownCloseBeta() {
           아래의 링크를 통해
           {' '}
           <strong>설문</strong>
-        을 진행하여 주세요.
+          을 진행하여 주세요.
         </span>
         <span>
           <strong>2차 클로즈베타를 참여할 의사가 있는 분들은</strong>

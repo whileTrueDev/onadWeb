@@ -1,15 +1,14 @@
 import React from 'react';
 import shortid from 'shortid';
-import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import {
-  Grid, Button, Typography, Dialog, Container
+  Grid, Button, Container, Typography
 } from '@material-ui/core';
 // import Typography from '../../Main/components/Typography';
 import useDialog from '../../../utils/hooks/useDialog';
 // import Dialog from './Dialog';
 import Inquire from '../main/views/Inquire/Inqurie';
-
+import Dialog from '../../../atoms/Dialog/Dialog';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -82,17 +81,28 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  semiTitle: {
+    color: 'white',
+    fontFamily: 'Noto Sans kr',
+    fontWeight: 600
   }
 }));
 
-const HowToUsemarketer = (props) => {
+interface Props {
+  source: {
+    firstContent: string;
+    secondContent: string;
+    thirdContent: string;
+    fourthContent: string;
+  };
+}
+
+function HowToUsemarketer({ source }: Props): JSX.Element {
   const classes = useStyles();
   const InquireDialog = useDialog();
   const [imgStep, setImgStep] = React.useState('banner');
   const UseStep = useDialog();
-  const {
-    source
-  } = props;
 
   return (
     <Container className={classes.root} component="section">
@@ -100,7 +110,7 @@ const HowToUsemarketer = (props) => {
         <Grid container className={classes.numbertable}>
           <Grid item xs={12} md={3} className={classes.marketerUse}>
             <div className={classes.useNumber}>1</div>
-            <Typography variant="h5" component="h2" style={{ color: 'white', fontFamily: 'Noto Sans kr', fontWeight: '600' }}>
+            <Typography variant="h5" component="h2" className={classes.semiTitle}>
               배너등록
             </Typography>
             <div className={classes.Content}>
@@ -117,7 +127,7 @@ const HowToUsemarketer = (props) => {
           </Grid>
           <Grid item xs={12} md={3} className={classes.marketerUse}>
             <div className={classes.useNumber}>2</div>
-            <Typography variant="h5" component="h2" style={{ color: 'white', fontFamily: 'Noto Sans kr', fontWeight: '600' }}>
+            <Typography variant="h5" component="h2" className={classes.semiTitle}>
               캠페인생성
             </Typography>
             <div className={classes.Content}>
@@ -131,7 +141,7 @@ const HowToUsemarketer = (props) => {
           </Grid>
           <Grid item xs={12} md={3} className={classes.marketerUse}>
             <div className={classes.useNumber}>3</div>
-            <Typography variant="h5" component="h2" style={{ color: 'white', fontFamily: 'Noto Sans kr', fontWeight: '600' }}>
+            <Typography variant="h5" component="h2" className={classes.semiTitle}>
               광고송출확인
             </Typography>
             <div className={classes.Content}>
@@ -145,7 +155,7 @@ const HowToUsemarketer = (props) => {
           </Grid>
           <Grid item xs={12} md={3} className={classes.marketerUse}>
             <div className={classes.useNumber}>4</div>
-            <Typography variant="h5" component="h2" style={{ color: 'white', fontFamily: 'Noto Sans kr', fontWeight: '600' }}>
+            <Typography variant="h5" component="h2" className={classes.semiTitle}>
               세금계산서 발행
             </Typography>
             <div className={classes.Content}>
@@ -170,7 +180,7 @@ const HowToUsemarketer = (props) => {
               취소
             </Button>
           </div>
-          )}
+        )}
       >
         <Inquire confirmClose={InquireDialog.handleClose} />
       </Dialog>
@@ -184,16 +194,6 @@ const HowToUsemarketer = (props) => {
       </Dialog>
     </Container>
   );
-};
-
-
-HowToUsemarketer.propTypes = {
-  source: PropTypes.object,
-};
-
-HowToUsemarketer.defaultProps = {
-  source: '',
-};
-
+}
 
 export default HowToUsemarketer;

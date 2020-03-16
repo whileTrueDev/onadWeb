@@ -23,11 +23,11 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import Done from '@material-ui/icons/Done';
 import axios from '../../../utils/axios';
 import SuccessTypo from '../../../atoms/Typography/Success';
-import HOST from '../../../utils/config';
+import HOST from '../../../config';
 import StyledInput from '../../../atoms/StyledInput';
 
 // Style Overriding용.
-const styles = theme => ({
+const styles = (theme) => ({
   textField: {
     [theme.breakpoints.down('xs')]: {
       minWidth: '200px',
@@ -121,7 +121,7 @@ const RegistForm = (props) => {
     setCustomDomain(event.target.value);
   };
 
-  const handleChange = name => (event) => {
+  const handleChange = (name) => (event) => {
     dispatch({ type: name, value: event.target.value });
   };
 
@@ -201,7 +201,7 @@ const RegistForm = (props) => {
         ? (
           <Paper className={classes.root} elevation={1}>
             <Typography variant="h6" component="h6" style={{ textAlign: 'center' }}>
-          회원 등록 중입니다. 잠시만 기다려주세요.
+              회원 등록 중입니다. 잠시만 기다려주세요.
             </Typography>
             <div style={{ textAlign: 'center' }}><CircularProgress /></div>
           </Paper>
@@ -223,11 +223,11 @@ const RegistForm = (props) => {
                       <InputAdornment position="end">
                         <Divider className={classes.divider} />
                         <Button onClick={checkDuplicateID}>
-                        조회
+                          조회
                         </Button>
-                        { !state.checkDuplication && <SuccessTypo><Done /></SuccessTypo>}
+                        {!state.checkDuplication && <SuccessTypo><Done /></SuccessTypo>}
                       </InputAdornment>
-                  )}
+                    )}
                   />
                   <FormHelperText>{state.id ? '영문자로 시작하는 4-15자 영문 또는 숫자' : ' '}</FormHelperText>
                 </FormControl>
@@ -273,7 +273,7 @@ const RegistForm = (props) => {
                     label="회사명(브랜드명)"
                     id="name"
                     className={classes.textField}
-                // defaultValue={defaultName}
+                    // defaultValue={defaultName}
                     placeholder="회사명(브랜드명)을 입력하세요"
                     margin="normal"
                     InputLabelProps={{
@@ -316,7 +316,7 @@ const RegistForm = (props) => {
                                 size="small"
                                 color="primary"
                               />
-)}
+                            )}
                             className={classes.switch}
                             label="휴대폰"
                             labelPlacement="bottom"
@@ -352,14 +352,14 @@ const RegistForm = (props) => {
                       <Input
                         // onChange={handleChange('businessRegNum')}
                         name="businessRegNum"
-                        // endAdornment={(
-                        //   <InputAdornment position="end">
-                        //     <Divider className={classes.divider} />
-                        //     <Button onClick={checkBusinessRegNum}>
-                        //       조회
-                        //     </Button>
-                        //   </InputAdornment>
-                        // )}
+                      // endAdornment={(
+                      //   <InputAdornment position="end">
+                      //     <Divider className={classes.divider} />
+                      //     <Button onClick={checkBusinessRegNum}>
+                      //       조회
+                      //     </Button>
+                      //   </InputAdornment>
+                      // )}
                       />
                       <FormHelperText>사업자 번호를 입력후 조회버튼을 누르세요.</FormHelperText>
                     </FormControl>
@@ -399,7 +399,7 @@ const RegistForm = (props) => {
                       }}
                       margin="normal"
                     >
-                      {domains.map(option => (
+                      {domains.map((option) => (
                         <MenuItem key={option.value} value={option.value}>
                           {option.value}
                         </MenuItem>
@@ -430,7 +430,7 @@ const RegistForm = (props) => {
                     onClick={handleBack}
                     className={classes.button}
                   >
-              뒤로
+                    뒤로
                   </Button>
                   <Button
                     variant="contained"
@@ -439,14 +439,13 @@ const RegistForm = (props) => {
                     type="submit"
                     value="submit"
                   >
-              다음
+                    다음
                   </Button>
                 </div>
               </Grid>
             </Grid>
           </form>
-        )
-    }
+        )}
     </div>
   );
 };

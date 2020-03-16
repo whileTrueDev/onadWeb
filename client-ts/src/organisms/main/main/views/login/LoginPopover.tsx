@@ -6,7 +6,7 @@ import LockOpen from '@material-ui/icons/LockOpen';
 import SupervisedUserCircle from '@material-ui/icons/SupervisedUserCircle';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import LoginForm from './LoginForm';
-import RegistDialog from '../../regist/RegistDialog';
+import RegistDialog from '../../../regist/RegistDialog';
 
 const useStyles = makeStyles((theme) => ({
   rightLink: {
@@ -67,7 +67,7 @@ const useStyles = makeStyles((theme) => ({
 
 interface Props {
   type?: string;
-  logout?: () => void;
+  logout: () => void;
   MainUserType?: string;
   trigger?: boolean;
   mode?: string | undefined;

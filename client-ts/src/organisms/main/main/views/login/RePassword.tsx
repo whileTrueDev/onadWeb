@@ -7,13 +7,13 @@ import {
   DialogTitle,
   Button,
   TextField,
-  withStyles,
 } from '@material-ui/core';
+import makeStyles from '@material-ui/core/styles/makeStyles';
 import axios from '../../../../../utils/axios';
 import HOST from '../../../../../config';
 import history from '../../../../../history';
 
-const style = (theme) => ({
+const useStyles = makeStyles(() => ({
   contents: {
     display: 'flex',
     flexDirection: 'column',
@@ -26,7 +26,7 @@ const style = (theme) => ({
   textfield: {
     width: 500,
   },
-});
+}));
 
 const initialValue = {
   value: '',
@@ -34,8 +34,20 @@ const initialValue = {
   repasswd: false,
 };
 
+interface RepasswordState {
+  password: boolean;
+  repasswd: boolean;
+  value: string;
+}
+
+type RepasswordAction = { type: 'password'; value: string }
+  | { type: 'repasswd'; value: string }
+
 // reducer를 사용하여 Error를 handling하자
-const myReducer = (state, action) => {
+const myReducer = (
+  state: RepasswordState,
+  action: RepasswordAction
+) => {
   switch (action.type) {
     case 'password': {
       const regx = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,20}$/;
@@ -56,29 +68,34 @@ const myReducer = (state, action) => {
     }
   }
 };
+interface Props {
+  setRepassword: any;
+  logout: () => void;
+  repasswordOpen: boolean;
+}
 
-const RePasswordDialog = (props) => {
+function RePasswordDialog({ setRepassword, logout, repasswordOpen }: Props): JSX.Element {
   const [state, dispatch] = useReducer(myReducer, initialValue);
+  const classes = useStyles();
 
-  const checkPasswd = (event) => {
+  const checkPasswd = (event: React.ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
     dispatch({ type: 'password', value: event.target.value });
   };
 
-  const checkRePasswd = (event) => {
+  const checkRePasswd = (event: React.ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
     dispatch({ type: 'repasswd', value: event.target.value });
   };
 
-  const handleSubmit = (event) => {
-    const { setRepassword, logout } = props;
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (state.password || state.repasswd) {
       alert('입력이 올바르지 않습니다.');
       return;
     }
     const user = {
-      password: event.target.password.value,
+      password: event.currentTarget.password.value,
     };
 
     axios.post(`${HOST}/api/login/changePw`, user)
@@ -92,9 +109,6 @@ const RePasswordDialog = (props) => {
         console.log(err);
       });
   };
-
-  const { repasswordOpen, classes } = props;
-
 
   return (
     <Dialog
@@ -146,7 +160,7 @@ const RePasswordDialog = (props) => {
       </form>
     </Dialog>
   );
-};
+}
 
 
-export default withStyles(style)(RePasswordDialog);
+export default RePasswordDialog;

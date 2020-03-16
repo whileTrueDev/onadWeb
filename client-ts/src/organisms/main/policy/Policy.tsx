@@ -14,7 +14,7 @@ function Policy(): JSX.Element {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
 
-  function handleTabChange(newValue: number): void {
+  function handleTabChange(event: React.ChangeEvent<{}>, newValue: number): void {
     setValue(newValue);
   }
 
@@ -28,9 +28,10 @@ function Policy(): JSX.Element {
       {value === 0 ? (
         // 마케터
         <PolicyMarketer />
-      ) : (
-        <PolicyCreator />
-      )}
+      )
+        : (
+          <PolicyCreator />
+        )}
 
 
     </div>

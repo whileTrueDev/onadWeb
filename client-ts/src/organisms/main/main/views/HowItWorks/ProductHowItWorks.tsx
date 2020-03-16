@@ -1,15 +1,14 @@
 import React, { useState, useCallback } from 'react';
 import shortid from 'shortid';
-import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import { Button, Hidden } from '@material-ui/core';
-import Typography from '../../components/Typography';
-import LoginForm from '../Login/LoginForm';
+import { Button, Hidden, Typography } from '@material-ui/core';
+// import Typography from '../../components/Typography';
+import makeStyles from '@material-ui/core/styles/makeStyles';
+import LoginForm from '../login/LoginForm';
 import axios from '../../../../../utils/axios';
-import HOST from '../../../../../utils/config';
+import HOST from '../../../../../config';
 import history from '../../../../../history';
 
-const styles = (theme) => ({
+const styles = makeStyles((theme) => ({
   root: {
     backgroundColor: 'white',
     marginBottom: theme.spacing(8),
@@ -148,21 +147,30 @@ const styles = (theme) => ({
       fontSize: 14,
     },
   }
-});
+}));
 
-const ProductHowItWorks = (props) => {
-  const {
-    classes, source, MainUserType
-  } = props;
+interface Props {
+  MainUserType: string;
+  source: {
+    content: {
+      title: string;
+      text: string;
+      loaction: string;
+    };
+  };
+  logout: () => void;
+}
 
-  function useDialog() {
+function ProductHowItWorks({ source, MainUserType, logout }: Props): JSX.Element {
+  const classes = styles();
+  function useDialog(): any {
     const [open, setOpen] = useState(false);
-    const [isMarketer, setIsMarketer] = useState();
-    function handleOpen(buttonType) {
+    const [isMarketer, setIsMarketer] = useState(false);
+    function handleOpen(buttonType: string): void {
       setIsMarketer(buttonType === 'marketer');
       setOpen(true);
     }
-    function handleClose() {
+    function handleClose(): void {
       setOpen(false);
     }
     return {
@@ -224,14 +232,14 @@ const ProductHowItWorks = (props) => {
           <div className={classes.bottomButtom}>
             <Button
               className={classes.button}
-              onClick={MainUserType === 'marketer' ? (() => handleClick('marketer')) : (() => { handleClick('creator'); })}
+              onClick={MainUserType === 'marketer' ? ((): void => handleClick('marketer')) : (() => { handleClick('creator'); })}
             >
               바로 시작하기
             </Button>
 
             <Button
               className={classes.button}
-              onClick={() => { window.open('http://pf.kakao.com/_xoyxmfT/chat'); }}
+              onClick={(): void => { window.open('http://pf.kakao.com/_xoyxmfT/chat'); }}
             >
               플러스친구 문의
             </Button>
@@ -244,21 +252,12 @@ const ProductHowItWorks = (props) => {
         <LoginForm
           open={open}
           isMarketer={isMarketer}
-          history={history}
           handleClose={handleClose}
+          logout={logout}
         />
       </div>
     </section>
   );
-};
+}
 
-
-ProductHowItWorks.propTypes = {
-  classes: PropTypes.object,
-};
-
-ProductHowItWorks.defaultProps = {
-  classes: {},
-};
-
-export default withStyles(styles)(ProductHowItWorks);
+export default ProductHowItWorks;

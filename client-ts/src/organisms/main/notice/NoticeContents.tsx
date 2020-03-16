@@ -1,13 +1,20 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { Paper, Typography, Divider } from '@material-ui/core';
 import Markdown from 'react-markdown/with-html';
 import Button from '../../../atoms/CustomButtons/Button';
 import history from '../../../history';
 
-export default function NoticeContents(props) {
-  const { data } = props;
-
+interface NoticeData {
+  code: string;
+  topic: string;
+  title: string;
+  contents: string;
+  regiDate: string;
+}
+interface Props {
+  data: NoticeData;
+}
+export default function NoticeContents({ data }: Props): JSX.Element {
   return (
     <div>
       <Paper>
@@ -40,7 +47,7 @@ export default function NoticeContents(props) {
 
       </Paper>
 
-      <Button color="white" onClick={() => { history.push('/notice'); }}>
+      <Button onClick={() => { history.push('/notice'); }}>
         <Typography style={{ color: '#333' }}>
           목록
         </Typography>
@@ -48,7 +55,3 @@ export default function NoticeContents(props) {
     </div>
   );
 }
-
-NoticeContents.propTypes = {
-  data: PropTypes.object
-};

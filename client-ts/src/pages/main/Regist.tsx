@@ -1,7 +1,7 @@
 import React from 'react';
 import makeStyles from '@material-ui/core/styles/makeStyles';
-import RegistStepper from '../../organisms/main/Regist/Stepper';
-import AppAppBar from '../../organisms/main/layout/AppAppBar';
+import RegistStepper from '../../organisms/main/regist/Stepper';
+import AppAppBar from '../../organisms/main/layouts/AppAppbar';
 
 const useStyles = makeStyles(() => ({
   root: {

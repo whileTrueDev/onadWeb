@@ -1,4 +1,4 @@
-const textSource = {
+const textSource: any = {
   heroSector: {
     creator: {
       text: {

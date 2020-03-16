@@ -2,9 +2,9 @@ import React from 'react';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import { Grow, Grid } from '@material-ui/core';
 import shortid from 'shortid';
-import AppAppBar from '../../organisms/main/layout/AppAppBar';
-import AppFooter from '../../organisms/main/layout/AppFooter';
-import RePasswordDialog from '../../organisms/main/Main/views/Login/RePassword';
+import AppAppBar from '../../organisms/main/layouts/AppAppbar';
+import AppFooter from '../../organisms/main/layouts/AppFooter';
+import RePasswordDialog from '../../organisms/main/main/views/login/RePassword';
 import useLoginValue from '../../utils/hooks/useLoginValue';
 import useGetRequest from '../../utils/hooks/useGetRequest';
 import textSource from '../../organisms/main/Introduction/source/textSource';
@@ -127,7 +127,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-interface ContractedCreatorListData<T> {
+export interface ContractedCreatorListData<T> {
   creatorTwitchId: T;
   creatorName: T;
   creatorLogo: T;

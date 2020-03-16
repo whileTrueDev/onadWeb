@@ -19,11 +19,11 @@ import {
   Radio
 } from '@material-ui/core';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import useFetchData from '../../../utils/lib/hooks/useFetchData';
+import useGetRequest from '../../../utils/hooks/useGetRequest';
 import StyledInput from '../../../atoms/StyledInput';
 
 // Style Overriding용.
-const styles = theme => ({
+const styles = (theme) => ({
   textField: {
     [theme.breakpoints.down('xs')]: {
       minWidth: '200px',
@@ -109,7 +109,7 @@ const PlatformRegistForm = (props) => {
   const [marketerId, setMarketerId] = useState('');
 
   // user 데이터를 전달 받는 hook 사용하여 기본 값을 가져온다.
-  const profileData = useFetchData('/api/dashboard/marketer/profile/google');
+  const profileData = useGetRequest('/api/dashboard/marketer/profile/google');
 
   useEffect(() => {
     if (!profileData.loading) {
@@ -130,7 +130,7 @@ const PlatformRegistForm = (props) => {
     setNumberType(!numberType);
   };
 
-  const handleChange = name => (event) => {
+  const handleChange = (name) => (event) => {
     dispatch({ type: name, value: event.target.value });
   };
 
@@ -171,7 +171,7 @@ const PlatformRegistForm = (props) => {
         ? (
           <Paper className={classes.root} elevation={1}>
             <Typography variant="h6" component="h6" style={{ textAlign: 'center' }}>
-          회원 등록 중입니다. 잠시만 기다려주세요.
+              회원 등록 중입니다. 잠시만 기다려주세요.
             </Typography>
             <div style={{ textAlign: 'center' }}><CircularProgress /></div>
           </Paper>
@@ -228,7 +228,7 @@ const PlatformRegistForm = (props) => {
                                 size="small"
                                 color="primary"
                               />
-  )}
+                            )}
                             className={classes.switch}
                             label="휴대폰"
                             labelPlacement="bottom"
@@ -245,7 +245,7 @@ const PlatformRegistForm = (props) => {
                                 size="small"
                                 color="primary"
                               />
-  )}
+                            )}
                             className={classes.switch}
                             label="회사"
                             labelPlacement="bottom"
@@ -268,8 +268,7 @@ const PlatformRegistForm = (props) => {
                       <FormHelperText>사업자 번호를 입력하세요.</FormHelperText>
                     </FormControl>
                   )
-                  : <div />
-          }
+                  : <div />}
               </Grid>
               <Grid container direction="row">
                 <Grid item>
@@ -305,7 +304,7 @@ const PlatformRegistForm = (props) => {
                       }}
                       margin="normal"
                     >
-                      {domains.map(option => (
+                      {domains.map((option) => (
                         <MenuItem key={option.value} value={option.value}>
                           {option.value}
                         </MenuItem>
@@ -336,7 +335,7 @@ const PlatformRegistForm = (props) => {
                     onClick={handleBack}
                     className={classes.button}
                   >
-              뒤로
+                    뒤로
                   </Button>
                   <Button
                     variant="contained"
@@ -345,14 +344,13 @@ const PlatformRegistForm = (props) => {
                     type="submit"
                     value="submit"
                   >
-              다음
+                    다음
                   </Button>
                 </div>
               </Grid>
             </Grid>
           </form>
-        )
-    }
+        )}
     </div>
   );
 };

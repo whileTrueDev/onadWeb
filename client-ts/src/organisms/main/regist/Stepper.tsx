@@ -12,12 +12,11 @@ import PlatformRegistForm from './PlatformRegistForm';
 import Usertype from './Usertype';
 import RegistForm from './RegistForm';
 import PaperSheet from './Paper';
-import HOST from '../../../utils/config';
-import withRoot from '../Main/withRoot';
+import HOST from '../../../config';
 import history from '../../../history';
 import IdentityVerification from './IdentityVerification';
 
-const styles = theme => ({
+const useStyles = makeStyles(() => ({
   container: {
     [theme.breakpoints.down('sm')]: {
       width: '90%',
@@ -38,7 +37,7 @@ const styles = theme => ({
   resetContainer: {
     padding: theme.spacing(1) * 3,
   },
-});
+}));
 
 const initialState = {
   passwordValue: '',
@@ -105,8 +104,9 @@ const myReducer = (state, action) => {
   }
 };
 
-const RegistStepper = withRoot((props) => {
-  const { classes, platform } = props;
+function RegistStepper(props): JSX.Element {
+  const classes = useStyles();
+  const { platform } = props;
   const [activeStep, setStep] = useState(0);
   const [userType, setType] = useState(0);
   const [state, dispatch] = useReducer(myReducer, initialState);
@@ -147,7 +147,6 @@ const RegistStepper = withRoot((props) => {
       platformType
     };
     if (platform === undefined) {
-
       // axios.post(`${HOST}/api/regist/marketer`, user)
       axios.post('http://localhost:3002/marketer', user)
         .then((res) => {
@@ -245,20 +244,12 @@ const RegistStepper = withRoot((props) => {
         <Step key="3">
           <StepLabel>개인정보 입력</StepLabel>
           <StepContent>
-            { getRegistComponent()}
+            {getRegistComponent()}
           </StepContent>
         </Step>
       </Stepper>
     </div>
   );
-});
+}
 
-RegistStepper.propTypes = {
-  classes: PropTypes.object,
-};
-
-RegistStepper.defaultProps = {
-  classes: {},
-};
-
-export default withStyles(styles)(RegistStepper);
+export default RegistStepper;
