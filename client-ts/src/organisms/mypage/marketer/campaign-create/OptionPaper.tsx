@@ -6,7 +6,7 @@ import ButtonSet from './sub/ButtonSet';
 import {
   Step1Interface,
   Action
-} from '../../../../pages/mypage/marketer/campaignReducer';
+} from './campaignReducer';
 
 const options = [
   {

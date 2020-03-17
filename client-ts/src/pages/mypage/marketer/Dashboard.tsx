@@ -2,17 +2,17 @@ import React from 'react';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import Grid from '@material-ui/core/Grid';
 import Grow from '@material-ui/core/Grow';
-import CampaignList from '../../organisms/marketer/Dashboard/CampaignList';
-import CanvasForChart from '../../organisms/marketer/Dashboard/CanvasForChart';
-import DescCard from '../../organisms/marketer/Dashboard/DescCard';
-import OnOffSwitch from '../../organisms/marketer/Dashboard/OnOffSwitch';
-import ReportLoading from '../../organisms/marketer/Dashboard/ReportLoading';
-import IssueTable from '../../organisms/marketer/Dashboard/IssueTable';
+import CampaignList from '../../../organisms/mypage/marketer/dashboard/CampaignList';
+import CanvasForChart from '../../../organisms/mypage/marketer/dashboard/CanvasForChart';
+import DescCard from '../../../organisms/mypage/marketer/dashboard/DescCard';
+import OnOffSwitch from '../../../organisms/mypage/marketer/dashboard/OnOffSwitch';
+import ReportLoading from '../../../organisms/mypage/marketer/dashboard/ReportLoading';
+import LogTable from '../../../organisms/mypage/marketer/dashboard/LogTable';
 // hooks
 import useGetRequest from '../../../utils/hooks/useGetRequest';
 import {
   campaignInterface, onOffInterface, adInterface, countInterface,
-  valueChartInterface, boroadCreatorInterface, actionLogInterface
+  valueChartInterface, actionLogInterface
 } from '../../../organisms/mypage/marketer/dashboard/interfaces';
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -25,13 +25,13 @@ const useStyles = makeStyles((theme) => ({
 export default function Dashboard() {
   const classes = useStyles();
 
-  const campaignData = useGetRequest<null, campaignInterface[]>('/marketer/campaign/list');
-  const onOffData = useGetRequest<null, onOffInterface>('/marketer/ad/on-off');
-  const adData = useGetRequest<null, adInterface>('/marketer/ad');
-  const countsData = useGetRequest<null, countInterface>('/marketer/ad/analysis/creator-count');
-  const valueChartData = useGetRequest<null, valueChartInterface[]>('/marketer/ad/analysis/expenditure');
-  const broadCreatorData = useGetRequest<null, boroadCreatorInterface[]>('/marketer/ad/analysis/creator/list');
-  const actionLogData = useGetRequest<null, actionLogInterface[]>('/marketer/history');
+  const campaignData = useGetRequest<null, campaignInterface[] | null>('/marketer/campaign/list');
+  const onOffData = useGetRequest<null, onOffInterface | null>('/marketer/ad/on-off');
+  const adData = useGetRequest<null, adInterface | null>('/marketer/ad');
+  const countsData = useGetRequest<null, countInterface | null>('/marketer/ad/analysis/creator-count');
+  const valueChartData = useGetRequest<null, valueChartInterface[] | null>('/marketer/ad/analysis/expenditure');
+  const broadCreatorData = useGetRequest<null, string[] | null>('/marketer/ad/analysis/creator/list');
+  const actionLogData = useGetRequest<null, actionLogInterface[] | null>('/marketer/history');
 
 
   return (
@@ -107,7 +107,7 @@ export default function Dashboard() {
                     </Grid>
                   </Grid>
                   <Grid item xs={12} md={12} lg={3}>
-                    <IssueTable
+                    <LogTable
                       actionLogData={actionLogData}
                     />
                   </Grid>

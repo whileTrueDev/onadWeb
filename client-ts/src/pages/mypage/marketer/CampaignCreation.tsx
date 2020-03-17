@@ -14,7 +14,7 @@ import history from '../../../history';
 import {
   step1Reducer, step2Reducer, step2SelectReducer, step3Reducer,
   budgetReducer, termReducer, timeReducer, nameReducer
-} from './campaignReducer';
+} from '../../../organisms/mypage/marketer/campaign-create/campaignReducer';
 
 const useStyles = makeStyles((_theme: Theme) => ({
   root: {

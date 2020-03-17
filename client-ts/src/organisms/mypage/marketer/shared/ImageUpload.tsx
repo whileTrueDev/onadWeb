@@ -1,7 +1,7 @@
 import React from 'react';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import { Grid, Hidden, Typography } from '@material-ui/core';
-import CustomButton from '../../../../../atoms/CustomButtons/Button';
+import CustomButton from '../../../../atoms/CustomButtons/Button';
 
 
 const useStyle = makeStyles((theme: Theme) => ({

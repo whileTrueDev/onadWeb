@@ -6,7 +6,7 @@ import {
 } from '@material-ui/core';
 import useGetRequest from '../../../../../utils/hooks/useGetRequest';
 import GameCard from './GameCard';
-import { ArrayAction } from '../../../../../pages/mypage/marketer/campaignReducer';
+import { ArrayAction } from '../campaignReducer';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {

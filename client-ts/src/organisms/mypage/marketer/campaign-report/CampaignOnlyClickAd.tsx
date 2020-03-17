@@ -4,94 +4,56 @@ import {
   Grid, Divider, Typography,
 } from '@material-ui/core';
 import { Assignment } from '@material-ui/icons';
-import { reportInterface, creatorDataInterface, heatmapInterface, geoInterface, campaignInterface } from './interfaces';
-import { UseGetRequestObject } from '../../../../utils/hooks/useGetRequest';
-
 // own components
 import ContentCard from './ContentCard';
-import CampaignCostPie from './CampaignCostPie';
-import CampaignCostBar from './CampaignCostBar';
-import BannerBroadCreators from './BannerBroadCreators';
-import ReportCard from './common/ReportCard';
-import InteractionHeatmap from './onlyClickSub/InteractionHeatmap';
-import InteractionToGeo from './onlyClickSub/InteractionToGeo';
-import CampaignInfo from './common/CampaignInfo';
-import MakePdfButton from './MakePdfButton';
+import ReportCard from './ReportCard';
+import InteractionHeatmap from './HeatmapReport';
+import InteractionToGeo from './GeoReport';
+import CampaignInfo from './CampaignInfo';
+import { reportInterface, heatmapInterface, geoInterface, campaignInterface } from '../dashboard/interfaces';
+import { UseGetRequestObject } from '../../../../utils/hooks/useGetRequest';
 
 const makeContents = (reportData: reportInterface) => ({
   price: [
     {
       title: '광고 총 비용',
-      value: Number(reportData.totalCPM) + Number(reportData.totalCPC) || 0,
-      unit: '원'
-    },
-    {
-      title: '배너광고 총 비용',
-      value: Number(reportData.totalCPM) || 0,
+      value: Number(reportData.totalCPM + reportData.totalCPC),
       unit: '원'
     },
     {
       title: '클릭광고 총 비용',
-      value: Number(reportData.totalCPC) || 0,
+      value: Number(reportData.totalCPC),
       unit: '원'
     }
   ],
   effect: [
     {
-      title: '배너 총 노출 수',
-      value: Number(reportData.totalViewCount) || 0,
+      title: '배너 총 클릭 수',
+      value: Number(reportData.totalClick),
       unit: '회'
     },
     {
-      title: '배너 총 노출 시간',
-      value: Number(reportData.totalTime) || 0,
-      unit: '시간'
-    },
-    {
-      title: '배너 총 클릭 수',
-      value: Number(reportData.totalClick) || 0,
+      title: '홈페이지 이동 수',
+      value: Number(reportData.totalTransfer),
       unit: '회'
     },
   ],
   metrics: [
-    {
-      title: '전환당 비용',
-      value: ((reportData.totalCPM + reportData.totalCPC) / reportData.totalTransfer) || 0,
-      unit: '원',
-      decimalRange: 2
-    },
     {
       title: '전환율',
       value: (reportData.totalTransfer / reportData.totalLandingView) || 0,
       unit: '%',
       decimalRange: 4
     },
-    {
-      title: '상호작용 수',
-      value: (reportData.totalClick + reportData.totalTransfer) || 0,
-      unit: '회'
-    },
+    { title: '상호작용 수', value: (reportData.totalClick + reportData.totalTransfer) || 0, unit: '회' },
     {
       title: '상호 작용 발생율',
       value: ((reportData.totalClick + reportData.totalTransfer)
-        / reportData.totalViewCount) || 0,
+        / reportData.totalCPM) || 0,
       unit: '%',
       decimalRange: 4
     },
-    {
-      title: '배너조회율',
-      value: (reportData.totalClick / reportData.totalViewCount) || 0,
-      unit: '',
-      decimalRange: 4
-    },
-    {
-      title: '배너클릭율',
-      value: (reportData.totalTransfer / reportData.totalViewCount) || 0,
-      unit: '',
-      decimalRange: 4
-    },
-    { title: '지표 준비중', value: '', unit: '' },
-    { title: '지표 준비중.', value: '', unit: '' },
+    { title: '지표준비중', value: '', unit: '' },
   ]
 });
 
@@ -111,34 +73,32 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   contents: {
     padding: '24px 32px'
-  },
+  }
 }));
+
 
 interface propInterface {
   selectedCampaign: campaignInterface;
   reportData: UseGetRequestObject<null | reportInterface>;
   chartData: UseGetRequestObject<any[]>;
-  creatorsData: UseGetRequestObject<null | creatorDataInterface[]>;
   ipToGeoData: UseGetRequestObject<null | geoInterface[]>;
   clickData: UseGetRequestObject<null | heatmapInterface[]>;
 }
 
 
-export default function CampaignBannerClickAd(props: propInterface) {
+export default function CampaignOnlyClickAd(props: propInterface) {
   const classes = useStyles();
   const {
     selectedCampaign, reportData, chartData,
-    creatorsData, ipToGeoData, clickData
+    ipToGeoData, clickData
   } = props;
 
-
   return (
-    <div style={{ backgroundColor: '#fff' }}>
+    <div>
       {!reportData.loading && reportData.data
         && !chartData.loading && chartData.data
-        && !creatorsData.loading && !ipToGeoData.loading
-        && !clickData.loading && (
-          <Grid container id="report-window">
+        && !ipToGeoData.loading && !clickData.loading && (
+          <Grid container>
             {/* 헤드라인 */}
             <Grid item xs={12}>
               <div className={classes.headline}>
@@ -146,10 +106,8 @@ export default function CampaignBannerClickAd(props: propInterface) {
                 {/* 제목 */}
                 <Typography variant="h5" className={classes.title}>
                   {reportData.data.campaignName}
-                  &emsp;광고 효과 분석
+                &emsp;광고 효과 분석
             </Typography>
-
-                <MakePdfButton />
 
               </div>
               <Divider />
@@ -192,7 +150,6 @@ export default function CampaignBannerClickAd(props: propInterface) {
                     </Grid>
 
                     <Grid item xs={12}>
-                      {/* 지표 카드 모음 */}
                       <ReportCard
                         data={makeContents(reportData.data).metrics}
                       />
@@ -202,32 +159,13 @@ export default function CampaignBannerClickAd(props: propInterface) {
                     <Grid item xs={12}>
                       <Grid container spacing={4}>
                         <Grid item xs={12} sm={6}>
-                          <CampaignCostBar
-                            color="primary"
-                            chartData={chartData}
-                          />
-
-                          <CampaignCostPie
-                            color="primary"
-                            reportData={reportData}
-                          />
-                        </Grid>
-
-                        <Grid item xs={12} sm={6}>
-                          <BannerBroadCreators
-                            creatorsData={creatorsData}
-                          />
-
                           <InteractionHeatmap
-                            data-html2canvas-ignore
                             clickData={clickData.data}
                           />
 
                           <InteractionToGeo
-                            data-html2canvas-ignore
                             ipToGeoData={ipToGeoData}
                           />
-
                         </Grid>
                       </Grid>
                     </Grid>

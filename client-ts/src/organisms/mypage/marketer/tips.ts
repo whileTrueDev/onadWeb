@@ -19,3 +19,4 @@ const reportData = useGetRequest<{ campaignId: string }, reportInterface>(
 interface propInterface {
   IconComponent: React.ElementType;
 }
+[]

@@ -9,7 +9,7 @@ import Button from '../../../../../atoms/CustomButtons/Button';
 import { UseGetRequestObject } from '../../../../../utils/hooks/useGetRequest';
 import {
   Action,
-} from '../../../../../pages/mypage/marketer/campaignReducer';
+} from '../campaignReducer';
 
 
 const useStyles = makeStyles((theme: Theme) => ({

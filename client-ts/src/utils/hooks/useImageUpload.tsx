@@ -14,7 +14,7 @@ interface UseImageUploadResult {
   imageName: string;
   handleReset: () => void;
   handleImageChange: ({ newImageName, newImageUrl }: ImageData) => void;
-  readImage: (event: Event) => void;
+  readImage: (event: React.ChangeEvent<HTMLInputElement>) => void;
   handleUploadClick: () => void;
 }
 
@@ -24,7 +24,7 @@ export default function useImageUpload(
   successCallback: () => void,
   reRequest?: () => void
 ): UseImageUploadResult {
-  const [imageUrl, setImageUrl] = React.useState<string| ArrayBuffer |null>(DEFAULT_IMAGE);
+  const [imageUrl, setImageUrl] = React.useState<string | ArrayBuffer | null>(DEFAULT_IMAGE);
   const [imageName, setImageName] = React.useState('');
 
   // image reset
@@ -35,12 +35,12 @@ export default function useImageUpload(
 
   // image change handler
   function handleImageChange({ newImageName, newImageUrl }:
-    {newImageName: string; newImageUrl: string | ArrayBuffer | null}): void {
+    { newImageName: string; newImageUrl: string | ArrayBuffer | null }): void {
     setImageName(newImageName);
     setImageUrl(newImageUrl);
   }
 
-  const readImage = (event: Event): void => {
+  const readImage = (event: React.ChangeEvent<HTMLInputElement>): void => {
     const target = event.target as HTMLInputElement;
     const files = (target.files as FileList);
     if (files.length !== 0) {

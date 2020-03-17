@@ -29,12 +29,6 @@ export interface valueChartInterface {
   type: string;
 }
 
-export interface boroadCreatorInterface {
-  streamerName: string;
-  creatorTwitchId: string;
-  viewer: number;
-}
-
 export interface actionLogInterface {
   id: number;
   marketerId: string;

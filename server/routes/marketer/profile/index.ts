@@ -6,7 +6,6 @@ import sendEmailAuth from '../../../middlewares/auth/sendEmailAuth';
 
 const router = express.Router();
 
-// marketer/actionLog에서 가져옴.
 /**
  * @swagger
  * paths:
@@ -334,8 +333,8 @@ router.route('/business')
 
 
 interface Taxbill {
-    state: string | number;
-    cashAmount: string;
+  state: string | number;
+  cashAmount: string;
 }
 
 // marketer/sub/profile =>taxbill
@@ -433,10 +432,10 @@ router.route('/notification')
   .all(responseHelper.middleware.unusedMethod);
 
 interface Notification {
-    title: string;
-    content: string;
-    data: string;
-    readState: number | string;
+  title: string;
+  content: string;
+  data: string;
+  readState: number | string;
 }
 
 // marketer/sub/notification => /list

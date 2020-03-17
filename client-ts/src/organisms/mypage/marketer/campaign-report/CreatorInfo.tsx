@@ -6,7 +6,7 @@ import Popover from '@material-ui/core/Popover';
 import Button from '@material-ui/core/Button';
 import ContentsPie from '../shared/ContentsPie';
 import TimeChart from '../shared/TimeChart';
-import { creatorDataInterface, creatorDetailInterface } from './interfaces';
+import { creatorDataInterface, creatorDetailInterface } from '../dashboard/interfaces';
 
 const useStyles = makeStyles(() => ({
   container: {
@@ -43,7 +43,7 @@ interface anchorInterface {
 interface propInterface {
   anchorEl: anchorInterface;
   empty: boolean;
-  creatorInfo: creatorDetailInterface;
+  creatorInfo: creatorDetailInterface & creatorDataInterface;
 }
 
 export default function CreatorInfo(props: propInterface) {
@@ -167,10 +167,10 @@ export default function CreatorInfo(props: propInterface) {
               </Grid>
             </Grid>
             <Grid item>
-              <ContentsPie selectedChartData={creatorInfo.contentsGraphData} />
+              <ContentsPie selectedChartData={JSON.parse(creatorInfo.contentsGraphData)} />
             </Grid>
             <Grid>
-              <TimeChart selectedChartData={creatorInfo.timeGraphData} />
+              <TimeChart selectedChartData={JSON.parse(creatorInfo.timeGraphData)} />
             </Grid>
           </Grid>
         )

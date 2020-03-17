@@ -14,11 +14,11 @@ import CampaignBudgetSet from './sub/BudgetSet';
 import CampaignTimeSet from './sub/TermSet';
 // import KeywordInput from './KeywordInput';
 import TimeSelectorSet from './sub/TimeSet';
-import BannerUploadDialog from './sub/BannerUploadDialog';
+import BannerUploadDialog from '../shared/BannerUploadDialog';
 import LandingUrlInventoryDialog from './sub/LandingUrlDialog';
 import useDialog from '../../../../utils/hooks/useDialog';
 import useGetRequest from '../../../../utils/hooks/useGetRequest';
-import CampaignCreateStepLayout from './sub/StepLayout';
+import CampaignCreateStepLayout from './StepLayout';
 import {
   Step3Interface,
   BudgetInterface,
@@ -27,7 +27,7 @@ import {
   TimeInterface,
   TimeAction,
   NameInterface
-} from '../../../../pages/mypage/marketer/campaignReducer';
+} from './campaignReducer';
 
 
 const StyledTableCell = withStyles(theme => ({

@@ -10,7 +10,7 @@ import {
 import {
   TermInterface,
   Action,
-} from '../../../../../pages/mypage/marketer/campaignReducer';
+} from '../campaignReducer';
 
 interface propInterface {
   state: TermInterface;

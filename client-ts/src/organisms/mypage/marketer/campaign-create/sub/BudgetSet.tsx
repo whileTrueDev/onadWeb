@@ -9,7 +9,7 @@ import StyledSelectText from '../../../../../atoms/StyledSelectText';
 import {
   BudgetInterface,
   Action,
-} from '../../../../../pages/mypage/marketer/campaignReducer';
+} from '../campaignReducer';
 
 interface propInterface {
   state: BudgetInterface;

@@ -9,7 +9,7 @@ import DangerTypography from '../../../../../atoms/Typography/Danger';
 import {
   BudgetInterface,
   Action,
-} from '../../../../../pages/mypage/marketer/campaignReducer';
+} from '../campaignReducer';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {

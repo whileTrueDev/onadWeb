@@ -10,7 +10,7 @@ import GreenCheckBox from '../../../../../atoms/GreenCheckBox';
 import ContentsPie from '../../shared/ContentsPie';
 import TimeChart from '../../shared/TimeChart';
 import StyledSelectText from '../../../../../atoms/StyledItemText';
-import { ArrayAction } from '../../../../../pages/mypage/marketer/campaignReducer';
+import { ArrayAction } from '../campaignReducer';
 import { rowDataInterface } from '../interfaces';
 const BANNER_MAX_WIDTH = 48;
 const BANNER_MAX_HEIGHT = 48;

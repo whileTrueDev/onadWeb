@@ -11,7 +11,7 @@ import {
   Step2Interface,
   ArrayAction,
   Action
-} from '../../../../pages/mypage/marketer/campaignReducer';
+} from './campaignReducer';
 
 // 추후에 인터페이스 통합
 interface propsInterface {

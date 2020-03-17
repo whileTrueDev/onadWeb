@@ -4,7 +4,7 @@ import { makeStyles, Theme, withStyles } from '@material-ui/core/styles';
 import {
   Grid, FormControl, InputLabel, Input, FormHelperText, CircularProgress
 } from '@material-ui/core';
-import CustomButton from '../../../../../atoms/CustomButtons/Button';
+import CustomButton from '../../../../atoms/CustomButtons/Button';
 
 const useStyle = makeStyles((theme: Theme) => ({
   imgPreview: {

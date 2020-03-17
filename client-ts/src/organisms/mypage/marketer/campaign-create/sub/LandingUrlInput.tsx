@@ -10,7 +10,7 @@ import Button from '../../../../../atoms/CustomButtons/Button';
 import {
   Step3Interface,
   Action
-} from '../../../../../pages/mypage/marketer/campaignReducer';
+} from '../campaignReducer';
 
 const useStyle = makeStyles((theme: Theme) => ({
   input: {

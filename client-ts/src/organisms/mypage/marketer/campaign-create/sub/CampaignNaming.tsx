@@ -13,7 +13,7 @@ import StyledInput from '../../../../../atoms/StyledInput';
 import {
   Action,
   NameInterface
-} from '../../../../../pages/mypage/marketer/campaignReducer';
+} from '../campaignReducer';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {

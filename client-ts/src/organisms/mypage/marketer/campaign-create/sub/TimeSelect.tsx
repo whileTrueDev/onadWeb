@@ -10,7 +10,7 @@ import {
 import {
   TimeInterface,
   TimeAction,
-} from '../../../../../pages/mypage/marketer/campaignReducer';
+} from '../campaignReducer';
 
 interface propInterface {
   state: TimeInterface;

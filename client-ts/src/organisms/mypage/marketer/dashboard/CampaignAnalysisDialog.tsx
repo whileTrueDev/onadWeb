@@ -3,10 +3,10 @@ import { Grid, Slide } from '@material-ui/core';
 import { campaignInterface } from './interfaces';
 
 import Dialog from '../../../../atoms/Dialog/Dialog';
-import ReportLoading from './ReportLoading';
-import CampaignBannerClickAd from './CampaignBannerClickAd';
-import CampaignOnlyClickAd from './sub/CampaignOnlyClickAd';
-import CampaignOnlyBannerAd from './sub/CampaignOnlyBannerAd';
+import ReportLoading from '../campaign-report/ReportLoading';
+import CampaignBannerClickAd from '../campaign-report/CampaignBannerClickAd';
+import CampaignOnlyClickAd from '../campaign-report/CampaignOnlyClickAd';
+import CampaignOnlyBannerAd from '../campaign-report/CampaignOnlyBannerAd';
 // hooks
 import useGetRequest from '../../../../utils/hooks/useGetRequest';
 import { reportInterface, creatorDataInterface, heatmapInterface, geoInterface } from './interfaces';
@@ -34,7 +34,7 @@ export default function CampaignReportDialog(props: propInterface) {
     SLIDE_TIMEOUT, selectedCampaign, open, handleClose
   } = props;
 
-  const reportData = useGetRequest<{ campaignId: string }, reportInterface>(
+  const reportData = useGetRequest<{ campaignId: string }, reportInterface | null>(
     '/marketer/campaign/analysis',
     { campaignId: selectedCampaign.campaignId }
   );
@@ -45,17 +45,17 @@ export default function CampaignReportDialog(props: propInterface) {
   );
 
   //라우터 추가가 필요하다.
-  const ipToGeoData = useGetRequest<{ campaignId: string }, geoInterface[]>(
+  const ipToGeoData = useGetRequest<{ campaignId: string }, geoInterface[] | null>(
     '/marketer/geo/campaign',
     { campaignId: selectedCampaign.campaignId }
   );
 
-  const creatorsData = useGetRequest<{ campaignId: string }, creatorDataInterface[]>(
+  const creatorsData = useGetRequest<{ campaignId: string }, creatorDataInterface[] | null>(
     '/marketer/campaign/analysis/creator-data',
     { campaignId: selectedCampaign.campaignId }
   );
 
-  const clickData = useGetRequest<{ campaignId: string }, heatmapInterface[]>(
+  const clickData = useGetRequest<{ campaignId: string }, heatmapInterface[] | null>(
     '/marketer/campaign/analysis/heatmap',
     { campaignId: selectedCampaign.campaignId }
   );

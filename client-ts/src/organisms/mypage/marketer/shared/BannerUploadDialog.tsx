@@ -5,13 +5,13 @@ import {
 } from '@material-ui/core';
 import classnames from 'classnames';
 import Check from '@material-ui/icons/Check';
-import Dialog from '../../../../../atoms/Dialog/Dialog';
+import Dialog from '../../../../atoms/Dialog/Dialog';
 import BannerDescForm from './BannerDescForm';
 import './upload.css';
 import ImageUpload from './ImageUpload';
-import HOST from '../../../../../utils/config';
-import axios from '../../../../../utils/axios';
-import history from '../../../../../history';
+import HOST from '../../../../utils/config';
+import axios from '../../../../utils/axios';
+import history from '../../../../history';
 
 const DEFAULT_IMAGE_PATH = '/pngs/dashboard/banner_upload_manual.png';
 
@@ -94,8 +94,8 @@ const myReducer = (state: ImageInterface, action: ImageAction): ImageInterface =
 interface propInterface {
   open: boolean;
   onClose: () => void;
-  isCampaignPage: boolean;
-  recallRequest: () => void;
+  isCampaignPage?: boolean;
+  recallRequest?: () => void;
 }
 
 const UploadDialog = (props: propInterface) => {
@@ -133,7 +133,11 @@ const UploadDialog = (props: propInterface) => {
           alert(res.data[1]);
           if (!isCampaignPage) {
             history.push(window.location.pathname);
-          } else { recallRequest(); }
+          } else {
+            if (recallRequest) {
+              recallRequest();
+            }
+          }
         } else {
           alert('현재는 등록할 수 없습니다. 잠시 후 다시 시도해주세요.');
         }

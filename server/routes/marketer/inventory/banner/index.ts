@@ -138,7 +138,7 @@ router.route('/campaigns')
         responseHelper.middleware.withErrorCatch(async (req, res, next) => {
             const bannerId = responseHelper.getParam("bannerId", "GET", req);
             const query = `
-            SELECT *
+            SELECT campaignId
             FROM campaign
             WHERE bannerId = ? AND deletedState = 0`;
             doQuery(query, [bannerId])

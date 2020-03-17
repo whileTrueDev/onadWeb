@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 import StyledItemText from '../../../../../atoms/StyledItemText';
 import CreatorTable from './CreatorTable';
 import useGetRequest from '../../../../../utils/hooks/useGetRequest';
-import { ArrayAction } from '../../../../../pages/mypage/marketer/campaignReducer';
+import { ArrayAction } from '../campaignReducer';
 
 interface propInterface {
   setStepComplete: React.Dispatch<React.SetStateAction<boolean>>;
