@@ -15,10 +15,6 @@
     "@material-ui/icons": "^4.9.1",
     "@material-ui/lab": "^4.0.0-alpha.44",
     "axios": "^0.19.2",
-<<<<<<< HEAD
-    "babel-eslint": "^10.1.0",
-=======
->>>>>>> dev
     "chart.js": "^2.9.3",
     "chartjs-plugin-colorschemes": "^0.4.0",
     "classnames": "^2.2.6",
