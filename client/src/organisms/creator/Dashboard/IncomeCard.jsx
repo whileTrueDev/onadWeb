@@ -46,11 +46,6 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const WithdrawalButton = (props) => {
-  const { handleOpen } = props;
-  return (<Button color="primary" onClick={() => { handleOpen(); }}>출금신청</Button>);
-};
-
 const IncomeCard = () => {
   const classes = useStyles();
   const cashData = useFetchData('/api/dashboard/creator/income');
@@ -71,7 +66,15 @@ const IncomeCard = () => {
   return (
     <CustomCard
       iconComponent={<AttachMoney />}
-      buttonComponent={<WithdrawalButton handleOpen={handleOpen} />}
+      buttonComponent={(!cashData.loading && cashData.payload
+        && cashData.payload.creatorAccountNumber) && (
+        <Button
+          color="primary"
+          onClick={() => { handleOpen(); }}
+        >
+          출금신청
+        </Button>
+      )}
     >
       <Grid container direction="column" spacing={2}>
         <Grid item>
@@ -118,7 +121,8 @@ const IncomeCard = () => {
         </Grid>
       </Grid>
       {!cashData.loading && !cashData.error
-      && cashData.payload.creatorContractionAgreement && cashData.payload.creatorAccountNumber && (
+      && cashData.payload.creatorContractionAgreement
+      && cashData.payload.creatorAccountNumber && (
         <WithdrawalDialog
           open={open}
           handleOpen={handleOpen}

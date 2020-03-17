@@ -15,7 +15,10 @@
     "@material-ui/icons": "^4.9.1",
     "@material-ui/lab": "^4.0.0-alpha.44",
     "axios": "^0.19.2",
+<<<<<<< HEAD
     "babel-eslint": "^10.1.0",
+=======
+>>>>>>> dev
     "chart.js": "^2.9.3",
     "chartjs-plugin-colorschemes": "^0.4.0",
     "classnames": "^2.2.6",
@@ -49,6 +52,7 @@
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
     "@types/axios": "^0.14.0",
+    "@types/chart.js": "^2.9.15",
     "@types/classnames": "^2.2.9",
     "@types/dotenv": "^8.2.0",
     "@types/googlemaps": "^3.39.3",

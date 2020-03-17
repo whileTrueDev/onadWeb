@@ -10,11 +10,8 @@ import theme from './theme';
 
 // PWA
 import * as serviceWorker from './serviceWorker';
-// 기본 global Css
-import './assets/onad.css';
 
 // Pages
-import Test from './pages/Test';
 import Door from './pages/main/Door';
 // import CreatorDashboard from './pages/mypage/layouts/CreatorLayout';
 import MarketerDashboard from './pages/mypage/layouts/MarketerLayout';
@@ -37,12 +34,12 @@ const developmentRouter = (
 const productionRouter = (
   <Router history={history}>
     <Switch>
-      <Route exact path="/" component={Door} />
-      <ThemeProvider theme={theme.lightTheme}>
-        <Route path="/mypage/marketer" component={MarketerDashboard} />
-
-        {/* <Route path="/mypage/creator" component={CreatorDashboard} /> */}
-      </ThemeProvider>
+      <>
+        <Route exact path="/" component={Door} />
+        <ThemeProvider theme={theme.lightTheme}>
+          <Route path="/mypage/creator" component={CreatorDashboard} />
+        </ThemeProvider>
+      </>
     </Switch>
   </Router>
 );

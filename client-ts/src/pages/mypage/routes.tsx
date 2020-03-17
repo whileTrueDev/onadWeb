@@ -1,5 +1,6 @@
 // 라우터 아이콘 @material-ui/icons
 import React from 'react';
+import { SvgIconProps } from '@material-ui/core/SvgIcon';
 import Dashboard from '@material-ui/icons/DashboardOutlined';
 import Person from '@material-ui/icons/PersonOutline';
 import BrandingWatermark from '@material-ui/icons/BrandingWatermarkOutlined';
@@ -9,7 +10,7 @@ import Public from '@material-ui/icons/Public';
 // import Public from '@material-ui/icons/Public'; // 지구본 아이콘
 
 // 크리에이터 라우터
-// import CreatorBannerManage from './creator/BannerManage';
+import CreatorCampaignManage from './creator/CampaignManage';
 // import CreatorLandingManage from './creator/LandingManage';
 import CreatorDashboard from './creator/Dashboard';
 // 수정필요함.
@@ -23,7 +24,21 @@ import MarketerInventory from './marketer/Inventory';
 import MarketerMyOffice from './marketer/MyOffice';
 import CampaignCreateStepper from './marketer/CampaignCreation';
 
-const dashboardRoutes = {
+export interface MypageRoute {
+  path: string;
+  name: string;
+  icon: (props: SvgIconProps) => JSX.Element;
+  component?: () => JSX.Element;
+  layout: string;
+  noTab?: boolean;
+}
+
+export interface MypageRoutes {
+  creator: MypageRoute[];
+  marketer: MypageRoute[];
+}
+
+const dashboardRoutes: MypageRoutes = {
   creator: [
     {
       path: '/main',
@@ -34,9 +49,9 @@ const dashboardRoutes = {
     },
     {
       path: '/banner',
-      name: '내 배너',
+      name: '내 배너광고',
       icon: BrandingWatermark,
-      // component: CreatorBannerManage, // 마케터 대시보드 컴포넌트로 수정
+      component: CreatorCampaignManage,
       layout: '/mypage/creator',
     },
     {

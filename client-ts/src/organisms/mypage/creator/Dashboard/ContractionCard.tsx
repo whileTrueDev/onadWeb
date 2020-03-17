@@ -1,0 +1,169 @@
+import React, { useState } from 'react';
+import shortid from 'shortid';
+import {
+  Paper, Typography, Divider, Grid
+} from '@material-ui/core';
+import { Done, Clear } from '@material-ui/icons';
+// components
+import Dialog from '../../../../atoms/Dialog/Dialog';
+import SuccessTypo from '../../../../atoms/Typography/Success';
+import DangerTypo from '../../../../atoms/Typography/Danger';
+import Button from '../../../../atoms/CustomButtons/Button';
+import CustomCard from '../../../../atoms/CustomCard';
+import StyledItemText from '../../../../atoms/StyledItemText';
+import Snackbar from '../../../../atoms/Snackbar/Snackbar';
+// utils
+import useContractionStyles from './ContractionCard.style';
+import terms from './source/contractTerms';
+import useGetRequest from '../../../../utils/hooks/useGetRequest';
+import useDialog from '../../../../utils/hooks/useDialog';
+import { usePatchRequest } from '../../../../utils/hooks';
+
+const ContractionCard = (): JSX.Element => {
+  const classes = useContractionStyles();
+  const snack = useDialog(); // 계약완료 스낵바를 위해
+  const contractionDialog = useDialog(); // 계약정보 창을 위해
+
+  const contractionGet = useGetRequest('/creator'); // 계약정보 조회
+  const contractionPatch = usePatchRequest('/creator', // 계약정보 업데이트
+    () => {
+      contractionGet.doGetRequest();
+      // 성공 스낵 오픈
+      snack.handleOpen();
+    });
+
+  // 모든 계약의 동의 상태값 배열
+  const [contractionList, setContractionList] = useState([false, false]);
+  // 현재 클릭한 계약 동의 내용 상태값
+  const [activeContractionIndex, setActiveContractionIndex] = useState<number>(0);
+  // 개별 계약 동의 클릭 핸들 함수
+  function handleContractionAgree(targetIndex: number): void {
+    // 해당 인덱스의 값만 true 로 변환
+    const newData = [...contractionList];
+    newData.forEach((data, index) => {
+      if (index === targetIndex) {
+        newData[index] = true;
+      }
+    });
+    setContractionList(newData);
+  }
+
+  return (
+    <>
+      {!contractionGet.loading
+      && contractionGet.data
+      && contractionGet.data.creatorContractionAgreement === 0 && (
+      <CustomCard iconComponent={<StyledItemText primary="서비스 이용 및 출금 계약하기" color="white" />}>
+
+        {terms.map((term, index) => (
+          <Paper key={term.state} className={classes.container} elevation={1}>
+            <Grid container direction="row" justify="space-between" alignItems="center" spacing={1}>
+              <Grid item>
+                <Typography className={classes.termTitle}>
+                  {term.title}
+                </Typography>
+              </Grid>
+              <Grid item>
+                <Grid container direction="row" alignItems="center">
+                  <Grid item>
+                    <Button
+                      onClick={(): void => {
+                        contractionDialog.handleOpen();
+                        setActiveContractionIndex(index);
+                      }}
+                    >
+                      약관보기
+                    </Button>
+                  </Grid>
+                  <Grid>
+                    <Divider className={classes.divider} />
+                  </Grid>
+                  <Grid item>
+                    { contractionList[index]
+                      ? (
+                        <SuccessTypo>
+                          <Done />
+                        </SuccessTypo>
+                      )
+                      : (
+                        <DangerTypo>
+                          <Clear />
+                        </DangerTypo>
+                      )}
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Paper>
+        ))}
+
+        { /* 약관 보기 Dialog */ }
+        <Dialog
+          open={contractionDialog.open}
+          onClose={contractionDialog.handleClose}
+          title={terms[activeContractionIndex].title}
+          maxWidth="md"
+        >
+          {/* 계약 내용 */}
+          <div className={classes.inDialogContent}>
+            {terms[activeContractionIndex].text.split('\n').map((sentence) => (
+              <p key={shortid.generate()}>{sentence}</p>
+            ))}
+            <Divider />
+            <Grid container direction="row" alignContent="center" justify="center">
+              <Grid item>
+                <Typography variant="body2">
+                  위의 내용을 올바르게 이해하셨습니까? 아래 버튼을 클릭하여 약관에 동의해주세요.
+                </Typography>
+              </Grid>
+            </Grid>
+            <Grid container direction="row" alignContent="center" justify="center">
+              <Grid item>
+                <Button onClick={contractionDialog.handleClose}>
+                  취소
+                </Button>
+                <Button
+                  color="primary"
+                  onClick={(): void => {
+                    handleContractionAgree(activeContractionIndex);
+                    contractionDialog.handleClose();
+                  }}
+                >
+                  동의
+                </Button>
+              </Grid>
+            </Grid>
+          </div>
+        </Dialog>
+
+        {/* 계약 완료 버튼 */}
+        <div className={classes.actionsContainer}>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={(): void => {
+              if (contractionList.every((row) => row === true)) {
+                // 크리에이터 계약정보 patch 요청
+                contractionPatch.doPatchRequest({ type: 'contraction' });
+              }
+            }}
+            disabled={!(contractionList.every((row) => row === true))
+              || Boolean(contractionPatch.loading)}
+          >
+            확인
+          </Button>
+        </div>
+      </CustomCard>
+      )}
+
+      <Snackbar
+        color="success"
+        message="성공적으로 계약이 완료되었습니다."
+        open={snack.open}
+        onClose={snack.handleClose}
+      />
+    </>
+  );
+};
+
+export default ContractionCard;

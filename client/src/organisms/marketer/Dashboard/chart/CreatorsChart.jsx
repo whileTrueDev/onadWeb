@@ -10,7 +10,7 @@ import ReChartPie from '../../../../atoms/Chart/ReChartPie';
 // usehook
 import useFetchData from '../../../../utils/lib/hooks/useFetchData';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   chip: {
     margin: theme.spacing(0.5)
   },
@@ -47,7 +47,7 @@ export default function CustomPieChart(props) {
       {(creatorsData.loading) && (
         <Grid item xs={12} className={classes.loading}>
           <Typography className={classes.statement}>
-          송출 크리에이터 데이터를 로드하고 있습니다.
+            송출 크리에이터 데이터를 로드하고 있습니다.
           </Typography>
           <Typography className={classes.sub} color="textSecondary">
             접속환경에 따라 수 분이 걸릴 수 있습니다.
@@ -69,10 +69,10 @@ export default function CustomPieChart(props) {
         <div>
           <Grid container direction="column" justify="center" alignItems="center">
             <Typography style={{ zIndex: 1 }}>
-            아직 광고를 송출한 크리에이터가 없어요.
+              아직 광고를 송출한 크리에이터가 없어요.
             </Typography>
             <Typography style={{ zIndex: 1 }}>
-            배너와 캠페인을 등록해 광고를 집행해보세요.
+              배너와 캠페인을 등록해 광고를 집행해보세요.
             </Typography>
           </Grid>
         </div>
