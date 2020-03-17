@@ -54,7 +54,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-function TabBar(props) {
+function TabBar(props): JSX.Element {
   const classes = useStyles();
 
   const { tabValue, handleTabChange } = props;

@@ -67,7 +67,7 @@ const useStyles = makeStyles((theme) => ({
 interface Props {
   handleBack: () => void;
   handleNext: () => void;
-  open: boolean;
+  open: number;
   setOpen: (number: number) => void;
 }
 

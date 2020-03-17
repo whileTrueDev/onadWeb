@@ -1,13 +1,11 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import makeStyles from '@material-ui/core/styles/makeStyles';
 import {
-  withStyles,
   ButtonBase,
   Typography,
-
 } from '@material-ui/core';
 
-const styles = theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
     flexWrap: 'wrap',
@@ -78,7 +76,7 @@ const styles = theme => ({
     left: 'calc(50% - 9px)',
     transition: theme.transitions.create('opacity'),
   },
-});
+}));
 
 const images = [
   {
@@ -93,22 +91,28 @@ const images = [
   },
 ];
 
-const Usertype = (props) => {
-  // props 는 전달하지 않아도 가능한가?
-  const { classes } = props;
+interface Props {
+  typeChange: (type: number) => void;
+  handleNext: () => void;
+}
 
-  const typeChange = (title) => {
+function Usertype({ typeChange, handleNext }: Props): JSX.Element {
+  // props 는 전달하지 않아도 가능한가?
+
+  const classes = useStyles();
+
+  function changeType(title: string): void {
     if (title === '일반인') {
-      props.typeChange(0);
+      typeChange(0);
     } else {
-      props.typeChange(1);
+      typeChange(1);
     }
-    props.handleNext();
-  };
+    handleNext();
+  }
 
   return (
     <div className={classes.root}>
-      {images.map(image => (
+      {images.map((image) => (
         <ButtonBase
           focusRipple
           key={image.title}
@@ -117,7 +121,7 @@ const Usertype = (props) => {
           style={{
             width: image.width,
           }}
-          onClick={e => typeChange(image.title, e)}
+          onClick={() => changeType(image.title)}
         >
           <span
             className={classes.imageSrc}
@@ -141,16 +145,6 @@ const Usertype = (props) => {
       ))}
     </div>
   );
-};
+}
 
-Usertype.propTypes = {
-  classes: PropTypes.object.isRequired,
-  typeChange: PropTypes.func.isRequired,
-  handleNext: PropTypes.func,
-};
-
-Usertype.defaultProps = {
-  handleNext: Function,
-};
-
-export default withStyles(styles)(Usertype);
+export default Usertype;

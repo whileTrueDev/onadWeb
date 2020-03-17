@@ -1,12 +1,11 @@
 import React, { useState, useEffect, useReducer } from 'react';
-import PropTypes from 'prop-types';
 import {
-  withStyles,
   Stepper,
   Step,
   StepLabel,
   StepContent,
 } from '@material-ui/core';
+import makeStyles from '@material-ui/core/styles/makeStyles';
 import axios from '../../../utils/axios';
 import PlatformRegistForm from './PlatformRegistForm';
 import Usertype from './Usertype';
@@ -16,7 +15,7 @@ import HOST from '../../../config';
 import history from '../../../history';
 import IdentityVerification from './IdentityVerification';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   container: {
     [theme.breakpoints.down('sm')]: {
       width: '90%',
@@ -50,8 +49,32 @@ const initialState = {
   domain: '',
 };
 
+export interface StepState {
+  passwordValue: string | number;
+  id: boolean;
+  password: boolean;
+  repasswd: boolean;
+  checkDuplication: boolean;
+  email: string;
+  phoneNum: string | number;
+  domain: string;
+}
+
+export type StepAction = {type: 'id'; value: string}
+| {type: 'password'; value: string}
+| {type: 'repasswd'; value: string}
+| {type: 'email'; value: string}
+| {type: 'phoneNum'; value: string | number}
+| {type: 'domain'; value: string}
+| {type: 'checkDuplication'; value: boolean}
+| {type: 'reset'}
+
+
 // reducer를 사용하여 Error를 handling하자
-const myReducer = (state, action) => {
+const myReducer = (
+  state: StepState,
+  action: StepAction
+) => {
   switch (action.type) {
     case 'id': {
       const idReg = /^[A-za-z]+[a-z0-9]{4,15}$/g;
@@ -104,9 +127,9 @@ const myReducer = (state, action) => {
   }
 };
 
-function RegistStepper(props): JSX.Element {
+
+function RegistStepper({ platform }: {platform: string}): JSX.Element {
   const classes = useStyles();
-  const { platform } = props;
   const [activeStep, setStep] = useState(0);
   const [userType, setType] = useState(0);
   const [state, dispatch] = useReducer(myReducer, initialState);
@@ -119,28 +142,25 @@ function RegistStepper(props): JSX.Element {
     }
   }, [platform]);
 
-  const handleNext = () => {
+  function handleNext(): void{
     setStep(activeStep + 1);
-    // if (activeStep === 0) {
-    //   setOpen(1);
-    // }
-  };
+  }
 
-  const handleBack = () => {
+  function handleBack(): void {
     dispatch({ type: 'reset' });
     setStep(activeStep - 1);
-  };
+  }
 
-  const handleReset = () => {
+  function handleReset(): void {
     dispatch({ type: 'reset' });
     setStep(0);
-  };
+  }
 
-  const typeChange = (type) => {
+  function typeChange(type: number): void{
     setType(type);
-  };
+  }
 
-  const handleUserSubmit = (user) => {
+  function handleUserSubmit(user: StepState): void {
     const platformType = platformList.indexOf(platform);
     const returnUser = {
       ...user,
@@ -186,9 +206,9 @@ function RegistStepper(props): JSX.Element {
           history.push('/');
         });
     }
-  };
+  }
 
-  const getRegistComponent = () => {
+  function getRegistComponent(): JSX.Element {
     if (platform === undefined) {
       return (
         <RegistForm
@@ -213,7 +233,7 @@ function RegistStepper(props): JSX.Element {
         setLoading={setLoading}
       />
     );
-  };
+  }
 
   return (
 
@@ -229,7 +249,12 @@ function RegistStepper(props): JSX.Element {
         <Step key="1">
           <StepLabel>미성년자 확인</StepLabel>
           <StepContent>
-            <IdentityVerification handleNext={handleNext} handleBack={handleBack} open={open} setOpen={setOpen} />
+            <IdentityVerification
+              handleNext={handleNext}
+              handleBack={handleBack}
+              open={open}
+              setOpen={setOpen}
+            />
           </StepContent>
         </Step>
         <Step key="2">

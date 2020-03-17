@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
 import NumberFormat from 'react-number-format';
-
 import {
   FormControl,
   InputLabel,
@@ -9,7 +7,6 @@ import {
   FormHelperText,
   InputAdornment,
   Button,
-  withStyles,
   MenuItem,
   TextField,
   Grid,
@@ -19,11 +16,14 @@ import {
   Radio
 } from '@material-ui/core';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import { makeStyles } from '@material-ui/core/styles';
 import useGetRequest from '../../../utils/hooks/useGetRequest';
 import StyledInput from '../../../atoms/StyledInput';
+import { StepState, StepAction } from './Stepper';
+
 
 // Style Overriding용.
-const styles = (theme) => ({
+const useStyles = makeStyles((theme) => ({
   textField: {
     [theme.breakpoints.down('xs')]: {
       minWidth: '200px',
@@ -71,7 +71,7 @@ const styles = (theme) => ({
     marginTop: theme.spacing(3),
     padding: 0,
   }
-});
+}));
 
 // domain select용.
 const domains = [
@@ -98,53 +98,73 @@ const domains = [
   - 2. domain
   - 3. passwordValue
 */
+interface Props {
+  userType: number;
+  handleBack: () => void;
+  handleUserSubmit: (user: any) => void;
+  state: StepState;
+  dispatch: (state: StepAction) => void;
+  loading: number;
+  setLoading: (number: number) => void;
+}
 
-const PlatformRegistForm = (props) => {
-  const {
-    classes, userType, handleBack, handleUserSubmit, state, dispatch, loading, setLoading
-  } = props;
+interface ProfileData {
+  marketerPlatformData: string;
+  marketerMail: string;
+}
 
+function PlatformRegistForm({
+  userType,
+  handleBack,
+  handleUserSubmit,
+  state,
+  dispatch,
+  loading,
+  setLoading
+}: Props): JSX.Element {
+  const classes = useStyles();
   const [numberType, setNumberType] = useState(true);
   const [marketerCustomDomain, setCustomDomain] = useState('');
   const [marketerId, setMarketerId] = useState('');
 
   // user 데이터를 전달 받는 hook 사용하여 기본 값을 가져온다.
-  const profileData = useGetRequest('/api/dashboard/marketer/profile/google');
+  const profileData = useGetRequest<null, ProfileData >('?????');
 
   useEffect(() => {
     if (!profileData.loading) {
-      const { marketerPlatformData, marketerMail } = profileData.payload;
+      const { marketerPlatformData, marketerMail } = profileData.data;
 
       dispatch({ type: 'domain', value: marketerMail.split('@')[1] });
       dispatch({ type: 'email', value: marketerMail.split('@')[0] });
       setMarketerId(marketerPlatformData);
       dispatch({ type: 'checkDuplication', value: false });
     }
-  }, [dispatch, profileData.loading, profileData.payload]);
+  }, [dispatch, profileData.loading, profileData.data]);
 
-  const handleCustom = (event) => {
+  function handleCustom(event: React.ChangeEvent<HTMLInputElement>): void {
     setCustomDomain(event.target.value);
-  };
+  }
 
-  const handleTypeToogle = () => {
+  function handleTypeToogle(): void {
     setNumberType(!numberType);
-  };
+  }
 
-  const handleChange = (name) => (event) => {
+  const handleChange = (name: any) => (event: React.ChangeEvent<HTMLInputElement>) => {
     dispatch({ type: name, value: event.target.value });
   };
 
-  const handleChangePhone = (value) => {
+  function handleChangePhone(value: any): void {
     dispatch({ type: 'phoneNum', value: value.formattedValue });
-  };
+  }
 
-  const handleSubmit = (event) => {
+  function handleSubmit(event: React.FormEvent<HTMLFormElement>): void {
     event.preventDefault();
 
     const { email } = state;
     // 모든 state가 false가 되어야한다.
-    const marketerName = document.getElementById('name').value;
-    const marketerBusinessRegNum = (document.getElementById('marketerBusinessRegNum') ? document.getElementById('marketerBusinessRegNum').value : '');
+    // const marketerName = document.getElementById('name').value;
+    const marketerName = event.currentTarget.name;
+    const marketerBusinessRegNum = (document.getElementById('marketerBusinessRegNum') ? event.currentTarget.marketerBusinessRegNum : '');
     const marketerPhoneNum = state.phoneNum;
     const marketerDomain = state.domain === '직접입력' ? marketerCustomDomain : state.domain;
     const marketerUserType = userType;
@@ -158,7 +178,7 @@ const PlatformRegistForm = (props) => {
     };
     setLoading(1);
     handleUserSubmit(user);
-  };
+  }
 
   // const checkBusinessRegNum = () => {
   //   alert('준비 중입니다. 회원가입을 진행해 주세요.');
@@ -169,7 +189,7 @@ const PlatformRegistForm = (props) => {
     <div>
       {loading
         ? (
-          <Paper className={classes.root} elevation={1}>
+          <Paper elevation={1}>
             <Typography variant="h6" component="h6" style={{ textAlign: 'center' }}>
               회원 등록 중입니다. 잠시만 기다려주세요.
             </Typography>
@@ -195,7 +215,7 @@ const PlatformRegistForm = (props) => {
                   />
                 </Grid>
                 <Grid item>
-                  <Grid container diretion="row">
+                  <Grid container direction="row">
                     <Grid item>
                       <FormControl
                         className={classes.phoneField}
@@ -353,10 +373,7 @@ const PlatformRegistForm = (props) => {
         )}
     </div>
   );
-};
+}
 
-PlatformRegistForm.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
 
-export default withStyles(styles)(PlatformRegistForm);
+export default PlatformRegistForm;

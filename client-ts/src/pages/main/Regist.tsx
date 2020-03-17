@@ -2,6 +2,7 @@ import React from 'react';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import RegistStepper from '../../organisms/main/regist/Stepper';
 import AppAppBar from '../../organisms/main/layouts/AppAppbar';
+import useLoginValue from '../../utils/hooks/useLoginValue';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -11,16 +12,20 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const Regist = (props) => {
+interface Props {
+  match: {params: {platform: string}};
+}
+
+function Regist({ match }: Props): JSX.Element {
   const classes = useStyles();
-  const { match } = props;
+  const { logout } = useLoginValue();
   return (
     <div className={classes.root}>
-      <AppAppBar MainUserType="marketer" noTrigger />
+      <AppAppBar MainUserType="marketer" logout={logout} noTrigger />
       <RegistStepper platform={match.params.platform} />
     </div>
   );
-};
+}
 
 
 export default Regist;

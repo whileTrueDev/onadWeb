@@ -70,10 +70,31 @@ const useStyles = makeStyles((theme) => ({
   },
   end: {
     fontSize: '12px'
+  },
+  buttonStyle: {
+    flex: 1,
+    backgroundColor: '#d6d6d6',
+    height: '70%',
+    fontSize: 13,
   }
 }));
 
-const reducer = (state, action) => {
+interface CheckState<T> {
+  checkedA: T;
+  checkedB: T;
+  checkedC: T;
+  [checkType: string]: T;
+}
+
+type CheckAction = {key: 'checkedA'; value: boolean}
+| {key: 'checkedB'; value: boolean}
+| {key: 'checkedC'; value: boolean}
+| {key: 'reset'}
+
+const reducer = (
+  state: CheckState<boolean>,
+  action: CheckAction
+) => {
   switch (action.key) {
     case 'checkedA':
       return { ...state, checkedA: !state.checkedA };
@@ -93,15 +114,20 @@ interface Props {
   handleNext: () => void;
 }
 
-const PaperSheet = ({ handleBack, handleNext }: Props) => {
+function PaperSheet({ handleBack, handleNext }: Props): JSX.Element {
   const classes = useStyles();
-  const [state, dispatch] = useReducer(reducer, { checkedA: false, checkedB: false, checkedC: false });
+  const [state, dispatch] = useReducer(
+    reducer, { checkedA: false, checkedB: false, checkedC: false }
+  );
+
   const [selectTerm, setTerm] = useState({
     text: '',
+    title: '',
+    state: ''
   });
   const [open, setOpen] = useState(false);
 
-  function handleChange(name: string): void {
+  function handleChange(name: any): void {
     dispatch({ key: name });
     setOpen(false);
   }
@@ -131,7 +157,7 @@ const PaperSheet = ({ handleBack, handleNext }: Props) => {
         <Typography variant="h6" component="h6" style={{ textAlign: 'center' }}>
           While:True
         </Typography>
-        {terms.map((term) => (
+        {terms.map((term: {title: string; state: string; text: string}) => (
           <Paper className={classes.container} elevation={1} key={term.state}>
             <Grid container direction="row" justify="space-between" alignItems="center" spacing={1}>
               <Grid item>
@@ -143,10 +169,8 @@ const PaperSheet = ({ handleBack, handleNext }: Props) => {
                 <Grid container direction="row" alignItems="center">
                   <Grid item>
                     <Button
-                      style={{
-                        flex: 1, backgroundColor: '#d6d6d6', height: '70%', fontSize: 13,
-                      }}
-                      onClick={handleOpen(term)}
+                      className={classes.buttonStyle}
+                      onClick={() => handleOpen(term)}
                     >
                       약관보기
                     </Button>
@@ -218,7 +242,7 @@ const PaperSheet = ({ handleBack, handleNext }: Props) => {
                 variant="contained"
                 color="primary"
                 size="small"
-                onClick={handleChange(selectTerm.state)}
+                onClick={() => handleChange(selectTerm.state)}
                 className={classes.end}
               >
                 {state[selectTerm.state] ? '취소' : '동의'}
@@ -229,6 +253,6 @@ const PaperSheet = ({ handleBack, handleNext }: Props) => {
       </Dialog>
     </div>
   );
-};
+}
 
 export default PaperSheet;
