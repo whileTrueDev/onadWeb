@@ -8,7 +8,7 @@ const sql = require('./public/models/select');
 const pool = require('./public/models/connect');
 const requestImg = require('./public/requestImg.js');
 // port 설정 및 hostname 설정
-const PORT = 3003;
+const PORT = 3002;
 process.env.NODE_ENV = (process.env.NODE_ENV && (process.env.NODE_ENV).trim().toLowerCase() === 'production') ? 'production' : 'development';
 let SOCKET_HOST = process.env.DEV_SOCKET_HOSTNAME;
 if (process.env.NODE_ENV === 'production') {

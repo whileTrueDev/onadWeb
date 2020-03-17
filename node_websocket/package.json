@@ -3,6 +3,7 @@
     "version": "1.0.0",
     "description": "웹소켓을 통한 배너 실시간 전송",
     "dependencies": {
+        "@types/socket.io": "^2.1.4",
         "create-react-app": "^3.0.0",
         "dotenv": "^8.2.0",
         "ejs": "^2.6.1",
