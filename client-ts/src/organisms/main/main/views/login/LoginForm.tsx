@@ -57,7 +57,7 @@ interface Props {
   open: boolean;
   isMarketer: boolean;
   handleClose: () => void;
-  logout: () => void;
+  logout?: () => void;
 }
 // TODO: 비밀번호 암호화하여 전달하기.
 function LoginForm({

@@ -174,10 +174,22 @@ function CreatorList(): JSX.Element {
               <h1 className={classes.loadingTitle}>크리에이터의 방송을 확인해보세요</h1>
             </div>
           )}
-          {!ContractedCreatorList.loading && !LiveCreatorList.loading && LiveCreatorList.data && ContractedCreatorList.data
+          {!ContractedCreatorList.loading && !LiveCreatorList.loading
+            && LiveCreatorList.data && ContractedCreatorList.data
             && ContractedCreatorList.data.map((row) => (
-              <Grid item xs={12} sm={5} md={2} className={classes.listWrapper} key={shortid.generate()}>
-                <Card profile className={LiveCreatorList.data!.includes(row.creatorTwitchId) ? (classes.live) : (classes.notlive)}>
+              <Grid
+                item
+                xs={12}
+                sm={5}
+                md={2}
+                className={classes.listWrapper}
+                key={shortid.generate()}
+              >
+                <Card
+                  profile
+                  className={LiveCreatorList.data!.includes(row.creatorTwitchId)
+                    ? (classes.live) : (classes.notlive)}
+                >
                   <CardAvatar profile>
                     <a href={`https://www.twitch.tv/${row.creatorTwitchId}`}>
                       <img src={row.creatorLogo} alt="creatorLogo" />

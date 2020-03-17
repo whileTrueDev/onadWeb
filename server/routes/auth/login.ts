@@ -4,6 +4,7 @@ import passport from 'passport';
 // import checkEmailAuth from '../../middlewares/checkEmailAuth';
 import responseHelper from '../../middlewares/responseHelper';
 import doQuery from '../../model/doQuery';
+import checkEmailAuth from '../../middlewares/checkEmailAuth';
 
 const HOST = process.env.NODE_ENV === 'production'
   ? process.env.PRODUCTION_REACT_HOSTNAME
@@ -11,7 +12,7 @@ const HOST = process.env.NODE_ENV === 'production'
 const router = express.Router();
 
 // local 로그인
-router.get('/', passport.authenticate('local')); // checkEmailAuth 추가
+router.post('/', passport.authenticate('local'), checkEmailAuth); // checkEmailAuth 추가
 
 // marketer - google 로그인
 router.get('/google', passport.authenticate('google', { scope: ['email', 'profile'] }));

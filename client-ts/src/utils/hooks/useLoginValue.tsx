@@ -25,7 +25,7 @@ const useLoginValue = (): {
     // ****************************************
     // ONAD API v2에서 POST요청으로 바꾸어야 한다.
     // ****************************************
-    axios.get(`${HOST}/api/login/logout`)
+    axios.get(`${HOST}/logout`)
       .then(() => {
         history.push('/');
       })
@@ -35,7 +35,7 @@ const useLoginValue = (): {
   };
 
   React.useLayoutEffect(() => {
-    axios.get<LoginCheckResponse>(`${HOST}/api/login/check`)
+    axios.get<LoginCheckResponse>(`${HOST}/api/login`)
       .then((res) => {
         if (!res.data.error) {
           if (res.data.state) {
