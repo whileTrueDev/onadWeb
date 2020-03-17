@@ -158,7 +158,7 @@ function CreatorList(): JSX.Element {
                 </h1>
               </Grow>
               <div className={classes.h1sub}>
-                {textSource.heroSector.creatorList.content.split('\n').map((row) => (
+                {textSource.heroSector.creatorList.content.split('\n').map((row: string) => (
                   <p key={row}>{`${row}`}</p>
                 ))}
               </div>
@@ -174,17 +174,17 @@ function CreatorList(): JSX.Element {
               <h1 className={classes.loadingTitle}>크리에이터의 방송을 확인해보세요</h1>
             </div>
           )}
-          {!ContractedCreatorList.loading && !LiveCreatorList.loading && LiveCreatorList.data
+          {!ContractedCreatorList.loading && !LiveCreatorList.loading && LiveCreatorList.data && ContractedCreatorList.data
             && ContractedCreatorList.data.map((row) => (
               <Grid item xs={12} sm={5} md={2} className={classes.listWrapper} key={shortid.generate()}>
-                <Card profile className={LiveCreatorList.data.includes(row.creatorTwitchId) ? (classes.live) : (classes.notlive)}>
+                <Card profile className={LiveCreatorList.data!.includes(row.creatorTwitchId) ? (classes.live) : (classes.notlive)}>
                   <CardAvatar profile>
                     <a href={`https://www.twitch.tv/${row.creatorTwitchId}`}>
                       <img src={row.creatorLogo} alt="creatorLogo" />
                     </a>
                   </CardAvatar>
                   <CardBody profile>
-                    {LiveCreatorList.data.includes(row.creatorTwitchId) && (
+                    {LiveCreatorList.data!.includes(row.creatorTwitchId) && (
                       <h4 className={classes.liveTitle}>LIVE</h4>
                     )}
                     <h4 className={classes.cardTitle}>

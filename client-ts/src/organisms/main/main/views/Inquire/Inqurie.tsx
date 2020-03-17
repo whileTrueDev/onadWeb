@@ -121,7 +121,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 interface Props {
-  confirmClose: () => void;
+  confirmClose?: () => void;
 }
 
 function Inquire({ confirmClose }: Props): JSX.Element {

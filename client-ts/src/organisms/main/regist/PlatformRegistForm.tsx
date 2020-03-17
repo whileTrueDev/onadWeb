@@ -19,7 +19,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import { makeStyles } from '@material-ui/core/styles';
 import useGetRequest from '../../../utils/hooks/useGetRequest';
 import StyledInput from '../../../atoms/StyledInput';
-import { StepState, StepAction } from './Stepper';
+import { StepAction, StepState } from './Stepper.reducer';
 
 
 // Style Overriding용.
@@ -98,7 +98,7 @@ const domains = [
   - 2. domain
   - 3. passwordValue
 */
-interface Props {
+export interface Props {
   userType: number;
   handleBack: () => void;
   handleUserSubmit: (user: any) => void;
@@ -128,10 +128,10 @@ function PlatformRegistForm({
   const [marketerId, setMarketerId] = useState('');
 
   // user 데이터를 전달 받는 hook 사용하여 기본 값을 가져온다.
-  const profileData = useGetRequest<null, ProfileData >('?????');
+  const profileData = useGetRequest<null, ProfileData>('?????');
 
   useEffect(() => {
-    if (!profileData.loading) {
+    if (!profileData.loading && profileData.data) {
       const { marketerPlatformData, marketerMail } = profileData.data;
 
       dispatch({ type: 'domain', value: marketerMail.split('@')[1] });

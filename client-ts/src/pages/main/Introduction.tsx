@@ -142,7 +142,7 @@ export default function IntroductionMain({ match }: Props): JSX.Element {
                     </h1>
                   </Grow>
                   <div className={classes.h1sub}>
-                    {textSource.heroSector.marketer.text.content.split('\n').map((row) => (
+                    {textSource.heroSector.marketer.text.content.split('\n').map((row: string) => (
                       <p key={row}>{`${row}`}</p>
                     ))}
                   </div>
@@ -158,6 +158,8 @@ export default function IntroductionMain({ match }: Props): JSX.Element {
 
           <ProductHowItWorks
             source={sources.howitworks}
+            MainUserType="marketer"
+            logout={logout}
           />
           <Question MainUserType="marketer" />
           <AppFooter />
@@ -180,7 +182,7 @@ export default function IntroductionMain({ match }: Props): JSX.Element {
                       </h1>
                     </Grow>
                     <div className={classes.h1sub}>
-                      {textSource.heroSector.creator.text.content.split('\n').map((row) => (
+                      {textSource.heroSector.creator.text.content.split('\n').map((row: string) => (
                         <p key={row}>{`${row}`}</p>
                       ))}
                     </div>
@@ -196,6 +198,8 @@ export default function IntroductionMain({ match }: Props): JSX.Element {
 
             <ProductHowItWorks
               source={sources.howitworks}
+              MainUserType="creator"
+              logout={logout}
             />
             <Question MainUserType="creator" />
             <AppFooter />

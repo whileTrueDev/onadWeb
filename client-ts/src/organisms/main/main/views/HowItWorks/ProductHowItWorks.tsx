@@ -155,7 +155,7 @@ interface Props {
     content: {
       title: string;
       text: string;
-      loaction: string;
+      location: string;
     };
   };
   logout: () => void;

@@ -49,13 +49,14 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
+interface Props {
+  open: boolean;
+  handleClose: () => void;
+}
 // TODO: 비밀번호 암호화하여 전달하기.
-const RegistDialog = (props) => {
+const RegistDialog = ({ open, handleClose }: Props) => {
   // prop를 통해 Marketer 인지 Creator인지 확인.
   // 데이터가 변경되는 것일 때 state로 처리를 한다.
-  const {
-    open, handleClose,
-  } = props;
   const classes = useStyles();
   // 하나의 change로 값을 받을 수 있다.
 
@@ -72,9 +73,8 @@ const RegistDialog = (props) => {
           <Grid item>
             <CustomButton
               color="primary"
-              component={Link}
+              component={<Link to="/regist" />}
               size="large"
-              to="/regist"
             >
               온애드 가입하기
             </CustomButton>

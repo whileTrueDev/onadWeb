@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import NumberFormat from 'react-number-format';
-import PropTypes from 'prop-types';
 import {
   FormControl,
   InputLabel,
@@ -9,7 +8,6 @@ import {
   InputAdornment,
   Button,
   Divider,
-  withStyles,
   MenuItem,
   TextField,
   Grid,
@@ -18,16 +16,17 @@ import {
   Radio,
   FormControlLabel
 } from '@material-ui/core';
-
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Done from '@material-ui/icons/Done';
+import makeStyles from '@material-ui/core/styles/makeStyles';
 import axios from '../../../utils/axios';
 import SuccessTypo from '../../../atoms/Typography/Success';
 import HOST from '../../../config';
 import StyledInput from '../../../atoms/StyledInput';
+import { Props } from './PlatformRegistForm';
 
 // Style Overriding용.
-const styles = (theme) => ({
+const useStyles = makeStyles((theme) => ({
   textField: {
     [theme.breakpoints.down('xs')]: {
       minWidth: '200px',
@@ -76,7 +75,7 @@ const styles = (theme) => ({
     marginTop: theme.spacing(3),
     padding: 0,
   }
-});
+}));
 
 // domain select용.
 const domains = [
@@ -104,12 +103,16 @@ const domains = [
   - 3. passwordValue
 */
 
-const RegistForm = (props) => {
-  const {
-    classes, userType, handleBack, handleUserSubmit,
-    state, dispatch, loading, setLoading
-  } = props;
-
+function RegistForm({
+  userType,
+  handleBack,
+  handleUserSubmit,
+  state,
+  dispatch,
+  loading,
+  setLoading,
+}: Props): JSX.Element {
+  const classes = useStyles();
   const [marketerCustomDomain, setCustomDomain] = useState('');
   const [numberType, setNumberType] = useState(true);
 
@@ -117,20 +120,20 @@ const RegistForm = (props) => {
     setNumberType(!numberType);
   };
   // handle을 전달.
-  const handleCustom = (event) => {
+  function handleCustom(event: React.ChangeEvent<HTMLInputElement>): void {
     setCustomDomain(event.target.value);
-  };
+  }
 
-  const handleChange = (name) => (event) => {
+  const handleChange = (name: any) => (event: React.ChangeEvent<HTMLInputElement>) => {
     dispatch({ type: name, value: event.target.value });
   };
 
-  const handleChangePhone = (value) => {
+  function handleChangePhone(value: any): void {
     dispatch({ type: 'phoneNum', value: value.formattedValue });
     // setFomattedPhone(value.formattedValue);
-  };
+  }
 
-  const handleSubmit = (event) => {
+  function handleSubmit(event: React.FormEvent<HTMLFormElement>): void {
     event.preventDefault();
 
     if (state.checkDuplication) {
@@ -141,7 +144,8 @@ const RegistForm = (props) => {
       id, password, repasswd, checkDuplication,
     } = state;
 
-    const marketerMailId = document.getElementById('email').value;
+    // const marketerMailId = document.getElementById('email').value;
+    const marketerMailId = event.currentTarget.email;
 
     if (marketerMailId === '') {
       alert('입력이 올바르지 않습니다.');
@@ -149,9 +153,9 @@ const RegistForm = (props) => {
     }
     // 모든 state가 false가 되어야한다.
     if (!(id || password || repasswd || checkDuplication)) {
-      const marketerId = document.getElementById('id').value;
-      const marketerName = document.getElementById('name').value;
-      const marketerBusinessRegNum = (document.getElementById('marketerBusinessRegNum') ? document.getElementById('marketerBusinessRegNum').value : '');
+      const marketerId = event.currentTarget.id;
+      const marketerName = event.currentTarget.name;
+      const marketerBusinessRegNum = (document.getElementById('marketerBusinessRegNum') ? event.currentTarget.marketerBusinessRegNum : '');
       const marketerPhoneNum = state.phoneNum;
       const marketerRawPasswd = state.passwordValue;
       const marketerDomain = state.domain === '직접입력' ? marketerCustomDomain : state.domain;
@@ -170,14 +174,14 @@ const RegistForm = (props) => {
     } else {
       alert('입력이 올바르지 않습니다.');
     }
-  };
+  }
 
   // const checkBusinessRegNum = () => {
   //   alert('준비 중입니다. 회원가입을 진행해 주세요.');
   // };
 
-  const checkDuplicateID = () => {
-    const id = document.getElementById('id').value;
+  function checkDuplicateID(): void {
+    const id = document.getElementById('id')!.nodeValue;
     if (state.id || id === '') {
       alert('ID을 올바르게 입력해주세요.');
     } else {
@@ -193,13 +197,13 @@ const RegistForm = (props) => {
           }
         });
     }
-  };
+  }
 
   return (
     <div>
       {loading
         ? (
-          <Paper className={classes.root} elevation={1}>
+          <Paper elevation={1}>
             <Typography variant="h6" component="h6" style={{ textAlign: 'center' }}>
               회원 등록 중입니다. 잠시만 기다려주세요.
             </Typography>
@@ -222,7 +226,7 @@ const RegistForm = (props) => {
                     endAdornment={(
                       <InputAdornment position="end">
                         <Divider className={classes.divider} />
-                        <Button onClick={checkDuplicateID}>
+                        <Button onClick={() => checkDuplicateID()}>
                           조회
                         </Button>
                         {!state.checkDuplication && <SuccessTypo><Done /></SuccessTypo>}
@@ -283,7 +287,7 @@ const RegistForm = (props) => {
                   />
                 </Grid>
                 <Grid item>
-                  <Grid container diretion="row">
+                  <Grid container direction="row">
                     <Grid item>
                       <FormControl
                         className={classes.phoneField}
@@ -448,10 +452,6 @@ const RegistForm = (props) => {
         )}
     </div>
   );
-};
+}
 
-RegistForm.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
-
-export default withStyles(styles)(RegistForm);
+export default RegistForm;
