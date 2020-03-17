@@ -3,6 +3,15 @@ import axios from '../axios';
 import host from '../../config';
 
 const DEFAULT_ERROR_MESSAGE = '죄송합니다.. 오류입니다..';
+
+export interface UseDeleteRequestObject<T, P> {
+  success: true | null;
+  loading: boolean | null;
+  error: string;
+  doDeleteRequest: (param: T) => void;
+  data: P | null;
+}
+
 /**
  * API서버로 `DELETE` 요청을 보낼 때 사용하는 react **hook**.
  * ## 타입파라미터 (제네릭)
@@ -29,13 +38,7 @@ const DEFAULT_ERROR_MESSAGE = '죄송합니다.. 오류입니다..';
 export default function useDeleteRequest<PARAM_TYPE = {[key: string]: any}, RES_DATA_TYPE = any>(
   url: string,
   successCallback?: () => void
-): {
-  success: true | null;
-  loading: boolean | null;
-  error: string;
-  data: RES_DATA_TYPE | null;
-  doDeleteRequest: (param: PARAM_TYPE) => void;
-} {
+): UseDeleteRequestObject<PARAM_TYPE, RES_DATA_TYPE> {
   const [success, setSuccess] = React.useState<true | null>(null);
   const [data, setData] = React.useState<RES_DATA_TYPE | null>(null);
   const [loading, setLoading] = React.useState<boolean | null>(null);

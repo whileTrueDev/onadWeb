@@ -59,8 +59,7 @@ router.get('/kakao/callback', passport.authenticate('kakao'),
 router.get('/twitch', passport.authenticate('twitch'));
 router.get('/twitch/callback', passport.authenticate('twitch'),
   (req, res) => {
-    res.send('success twitch login');
-    // res.redirect(`${HOST}/`);
+    res.redirect(`${HOST}/mypage/creator/main`);
   });
 
 
@@ -72,9 +71,9 @@ router.route('/check')
 
       if (session.userType === 'marketer') {
         const checkQuery = `
-      SELECT temporaryLogin
-      FROM marketerInfo
-      WHERE marketerId = ?`;
+        SELECT temporaryLogin
+        FROM marketerInfo
+        WHERE marketerId = ?`;
 
         const row = await doQuery(checkQuery, [session.marketerId]);
         if (row.result) {

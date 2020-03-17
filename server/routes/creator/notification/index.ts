@@ -29,7 +29,7 @@ router.route('/')
       const result = { notifications: [{}], unReadCount: 0 };
 
       doQuery(callQuery, [creatorId])
-        .then(data => {
+        .then((data) => {
           result.notifications = data.result;
           doQuery(countQuery, [creatorId])
             .then((row) => {
@@ -40,18 +40,17 @@ router.route('/')
               responseHelper.send(result, 'get', res);
             });
         }).catch((error) => {
-          responseHelper.promiseError(error, next)
-        }
-        )
+          responseHelper.promiseError(error, next);
+        });
     }),
   )
   .patch(
     // 알람 읽음 처리
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
-
       const index: number = responseHelper.getParam('index', 'PATCH', req);
 
-      const callQuery = `UPDATE creatorNotification AS cn 
+      const callQuery = `
+      UPDATE creatorNotification AS cn 
       SET readState = 1
       WHERE cn.index = ?`;
 
@@ -60,7 +59,7 @@ router.route('/')
           responseHelper.send([true], 'PATCH', res);
         })
         .catch((err) => {
-          responseHelper.promiseError(err, next)
+          responseHelper.promiseError(err, next);
         });
     }),
   )
@@ -70,8 +69,8 @@ interface NotificationData {
   title: string;
   content: string;
   date: string;
-  [readState: number]: number
-};
+  [readState: number]: number;
+}
 
 type EachNotification<A, B> = [A, A, A, B];
 
@@ -91,7 +90,7 @@ router.route('/list')
       `;
 
       doQuery(callQuery, [creatorId])
-        .then(data => {
+        .then((data) => {
           dataArray = data.result.map((value: NotificationData) => Object.values(value));
           tmpDataArray = dataArray;
           tmpDataArray.map((value: EachNotification<string, number>, index: number) => {
@@ -106,9 +105,8 @@ router.route('/list')
           });
           responseHelper.send(dataArray, 'get', res);
         }).catch((error) => {
-          responseHelper.promiseError(error, next)
-        }
-        )
+          responseHelper.promiseError(error, next);
+        });
     }),
   )
   .all(responseHelper.middleware.unusedMethod);

@@ -12,10 +12,14 @@ const StyledItemText = withStyles((theme: Theme) => ({
       marginBottom: '8px',
     },
   },
+<<<<<<< HEAD
   primary: ({ fontSize, color }: { fontSize?: string; color?: string }) => ({
+=======
+  primary: ({ fontSize, color }: { fontSize?: string; color?: string}) => ({
+>>>>>>> c13cb7d411cc9a8f7c77f16183e14731c26a8f09
     fontSize: fontSize || '16px',
     fontWeight: 700,
-    color: color || 'primary'
+    color: color || theme.palette.text.primary
   }),
 }))(ListItemText);
 
