@@ -5,8 +5,8 @@ import Grow from '@material-ui/core/Grow';// custom container
 import GridItem from '../../../atoms/Grid/GridItem';
 import GridContainer from '../../../atoms/Grid/GridContainer';
 
-import ManualSelect from '../../../organisms/mypage/creator/Manual/Select';
-import ManualDetail from '../../../organisms/mypage/creator/Manual/ManualDetail';
+import ManualSelect from '../../../organisms/mypage/shared/ManualSelector';
+import CreatorManualDetail from '../../../organisms/mypage/creator/Manual/CreatorManualDetail';
 import sources from '../../../organisms/mypage/creator/Manual/sources';
 
 function CreatorManual(): JSX.Element {
@@ -31,12 +31,12 @@ function CreatorManual(): JSX.Element {
       <Grow in={Boolean(manual)}>
         <GridItem xs={12} sm={12} md={6} lg={8} xl={6}>
           {((): React.ReactNode | null => {
-            if (manual === 1) return (<ManualDetail source={sources.contract} />);
-            if (manual === 2) return (<ManualDetail source={sources.programSetting} />);
-            if (manual === 3) return (<ManualDetail source={sources.income} />);
-            if (manual === 4) return (<ManualDetail source={sources.landing} />);
-            if (manual === 5) return (<ManualDetail source={sources.bannerlist} />);
-            if (manual === 6) return (<ManualDetail source={sources.withdrawal} />);
+            if (manual === 1) return (<CreatorManualDetail source={sources.contract} />);
+            if (manual === 2) return (<CreatorManualDetail source={sources.programSetting} />);
+            if (manual === 3) return (<CreatorManualDetail source={sources.income} />);
+            if (manual === 4) return (<CreatorManualDetail source={sources.landing} />);
+            if (manual === 5) return (<CreatorManualDetail source={sources.bannerlist} />);
+            if (manual === 6) return (<CreatorManualDetail source={sources.withdrawal} />);
             return null;
           })()}
         </GridItem>

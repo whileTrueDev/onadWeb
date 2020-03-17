@@ -3,7 +3,7 @@ import makeStyles from '@material-ui/core/styles/makeStyles';
 import {
   ButtonBase, Typography, Avatar
 } from '@material-ui/core';
-import { ManualContentSources } from './sources';
+import { ManualContentSources } from '../../shared/ManualTypes';
 
 const useStyles = makeStyles((theme) => ({
   root: {

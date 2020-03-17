@@ -1,6 +1,5 @@
 import React from 'react';
 // core ../../../atoms
-import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import Grow from '@material-ui/core/Grow';
@@ -11,15 +10,14 @@ import CardHeader from '../../../../atoms/Card/CardHeader';
 import CardBody from '../../../../atoms/Card/CardBody';
 import CardFooter from '../../../../atoms/Card/CardFooter';
 // material-ui
-import dashboardStyle from '../../../../assets/jss/views/dashboardStyle';
-import ManualDetailDetail from './ManualDetailDetail';
+import ManualContent from '../../shared/ManualContent';
 import ProgramSelector from './ProgramSelector';
-import { ManualContentSources, Source } from './sources';
+import { ManualContentSources, Source } from '../../shared/ManualTypes';
 
-interface ManualDetailProps {
+interface ManualProgramSelectorProps {
   source: ManualContentSources;
 }
-function ManualDetail({ source }: ManualDetailProps): JSX.Element {
+function ManualProgramSelector({ source }: ManualProgramSelectorProps): JSX.Element {
   const [type, setType] = React.useState<string | null>(null);
   function handleTypeChange(programType: 'XSplit Broadcaster' | 'OBS Studio'): void {
     setType(programType);
@@ -45,7 +43,7 @@ function ManualDetail({ source }: ManualDetailProps): JSX.Element {
                 <Grow in={type === 'XSplit Broadcaster'} timeout={{ enter: 500 }}>
                   <div>
                     <Divider />
-                    <ManualDetailDetail source={source.xsplit as Source[]} />
+                    <ManualContent source={source.xsplit as Source[]} />
                   </div>
                 </Grow>
                 )}
@@ -53,13 +51,13 @@ function ManualDetail({ source }: ManualDetailProps): JSX.Element {
                 <Grow in={type === 'OBS Studio'} timeout={{ enter: 500 }}>
                   <div>
                     <Divider />
-                    <ManualDetailDetail source={source.obs as Source[]} />
+                    <ManualContent source={source.obs as Source[]} />
                   </div>
                 </Grow>
                 )}
               </div>
             )
-              : <ManualDetailDetail source={source.source as Source[]} />}
+              : <ManualContent source={source.source as Source[]} />}
           </div>
         </CardBody>
 
@@ -75,4 +73,4 @@ function ManualDetail({ source }: ManualDetailProps): JSX.Element {
   );
 }
 
-export default withStyles(dashboardStyle)(ManualDetail);
+export default ManualProgramSelector;

@@ -8,9 +8,10 @@ import StepLabel from '@material-ui/core/StepLabel';
 import StepContent from '@material-ui/core/StepContent';
 import { makeStyles } from '@material-ui/core/styles';
 import ButtonBase from '@material-ui/core/ButtonBase';
-import ImageDialog from './ImageDialog';
-import { Source } from './sources';
-import useDialog from '../../../../utils/hooks/useDialog';
+
+import ImageDialog from './ManualImageDialog';
+import { Source } from './ManualTypes';
+import useDialog from '../../../utils/hooks/useDialog';
 
 const useStyles = makeStyles((theme) => ({
   root: { marginTop: theme.spacing(3) },
@@ -41,10 +42,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-interface ManualDetailDetailProps {
+interface ManualContentProps {
   source: Source[];
 }
-const ManualDetailDetail = ({ source }: ManualDetailDetailProps): JSX.Element => {
+const ManualContent = ({ source }: ManualContentProps): JSX.Element => {
   const dialog = useDialog();
   const [imageSrc, setImageSrc] = React.useState<string>('');
 
@@ -101,4 +102,4 @@ const ManualDetailDetail = ({ source }: ManualDetailDetailProps): JSX.Element =>
   );
 };
 
-export default ManualDetailDetail;
+export default ManualContent;

@@ -8,11 +8,10 @@ import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
 import Typography from '@material-ui/core/Typography';
 // material-ui icons
-import Card from '../../../../atoms/Card/Card';
-import CardHeader from '../../../../atoms/Card/CardHeader';
-import CardBody from '../../../../atoms/Card/CardBody';
-import { ManualSelects } from './sources';
-
+import Card from '../../../atoms/Card/Card';
+import CardHeader from '../../../atoms/Card/CardHeader';
+import CardBody from '../../../atoms/Card/CardBody';
+import { ManualSelect } from './ManualTypes';
 
 const useButtonStyle = makeStyles((theme) => ({
   root: {
@@ -30,16 +29,16 @@ const useButtonStyle = makeStyles((theme) => ({
   },
 }));
 
-interface ManualSelectProps {
+interface ManualSelectorProps {
   handleButton: (num: number) => void;
   activeStep: number | null;
-  sources: ManualSelects[];
+  sources: ManualSelect[];
 }
-const Select = ({
+const ManualSelector = ({
   handleButton,
   activeStep,
   sources,
-}: ManualSelectProps): JSX.Element => {
+}: ManualSelectorProps): JSX.Element => {
   const buttonClasses = useButtonStyle();
 
   return (
@@ -76,4 +75,4 @@ const Select = ({
   );
 };
 
-export default Select;
+export default ManualSelector;

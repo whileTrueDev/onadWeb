@@ -4,8 +4,7 @@ import AttachMoney from '@material-ui/icons/AttachMoney';
 import InsertChart from '@material-ui/icons/InsertChart';
 import Public from '@material-ui/icons/Public';
 import Contactless from '@material-ui/icons/Contactless';
-import { SvgIconProps } from '@material-ui/core';
-
+import { ManualSources } from '../../shared/ManualTypes';
 import theme from '../../../../theme';
 
 const HOST_URL = `${window.location.protocol}//${window.location.host}/dashboard/creator`;
@@ -19,31 +18,6 @@ function styledText(string: string): string {
 }
 
 const styledBlock = (string: string): string => `<div style="background-color: #FFECC5; color: ${theme.lightTheme.palette.text.primary}; border-radius: 5px; padding: 10px;">${string}</div>`;
-
-export interface ManualSelects {
-  icon: (props: SvgIconProps) => JSX.Element;
-  label: string;
-}
-export interface Source {
-  image: string | null; description: string;
-}
-export interface ManualContentSources {
-  subType: boolean;
-  card: { title: string; subtitle: string };
-  selectorImages?: {url: string; title: string}[];
-  source?: Source[];
-  xsplit?: Source[];
-  obs?: Source[];
-}
-export interface ManualSources {
-  selectComponent: ManualSelects[];
-  contract: ManualContentSources;
-  programSetting: ManualContentSources;
-  income: ManualContentSources;
-  landing: ManualContentSources;
-  bannerlist: ManualContentSources;
-  withdrawal: ManualContentSources;
-}
 
 const manualSources: ManualSources = {
   selectComponent: [

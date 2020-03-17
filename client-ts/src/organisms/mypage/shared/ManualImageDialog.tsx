@@ -1,18 +1,18 @@
 import React from 'react';
-import Dialog from '../../../../atoms/Dialog/Dialog';
+import Dialog from '../../../atoms/Dialog/Dialog';
 
-interface ImageDialogProps {
+interface ManualImageDialogProps {
   open: boolean;
   title?: string;
   imageSrc: string;
   handleDialogClose: () => void;
 }
-export default function ImageDialog({
+export default function ManualImageDialog({
   open,
   imageSrc,
   handleDialogClose,
   title = '',
-}: ImageDialogProps): JSX.Element {
+}: ManualImageDialogProps): JSX.Element {
   return (
     <Dialog
       title={title}
