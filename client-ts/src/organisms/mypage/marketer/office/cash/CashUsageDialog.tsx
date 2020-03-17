@@ -1,9 +1,9 @@
 import React from 'react';
 import { Typography } from '@material-ui/core';
 import makeStyles from '@material-ui/core/styles/makeStyles';
-import Dialog from '../../../../atoms/Dialog/Dialog';
-import useGetRequest from '../../../../utils/hooks/useGetRequest';
-import Table from '../../../../atoms/Table/CashUsageTable';
+import Dialog from '../../../../../atoms/Dialog/Dialog';
+import useGetRequest from '../../../../../utils/hooks/useGetRequest';
+import Table from '../../../../../atoms/Table/CashUsageTable';
 
 const initialData = {
   data: [['-', '-', '-']]

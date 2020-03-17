@@ -5,9 +5,9 @@ import {
 } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
-import sources from './sources'
-import StyledSelectText from '../../../../atoms/StyledSelectText';
-import { stateInterface } from './interface';
+import sources from '../sources'
+import StyledSelectText from '../../../../../atoms/StyledSelectText';
+import { stateInterface } from '../interface';
 
 
 

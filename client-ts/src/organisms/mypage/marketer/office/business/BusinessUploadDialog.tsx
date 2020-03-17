@@ -1,10 +1,10 @@
 import React from 'react';
 import makeStyles from '@material-ui/core/styles/makeStyles';
-import Button from '../../../../atoms/CustomButtons/Button';
-import Dialog from '../../../../atoms/Dialog/Dialog';
-import GridContainer from '../../../../atoms/Grid/GridContainer';
-import GridItem from '../../../../atoms/Grid/GridItem';
-import useImageUpload from '../../../../utils/hooks/useImageUpload';
+import Button from '../../../../../atoms/CustomButtons/Button';
+import Dialog from '../../../../../atoms/Dialog/Dialog';
+import GridContainer from '../../../../../atoms/Grid/GridContainer';
+import GridItem from '../../../../../atoms/Grid/GridItem';
+import useImageUpload from '../../../../../utils/hooks/useImageUpload';
 
 
 const useStyles = makeStyles(theme => ({

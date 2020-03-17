@@ -5,17 +5,17 @@ import withStyles from '@material-ui/core/styles/withStyles';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import Typography from '@material-ui/core/Typography';
 // own components
-import Card from '../../../../atoms/Card/Card';
-import CardHeader from '../../../../atoms/Card/CardHeader';
-import CardBody from '../../../../atoms/Card/CardBody';
-import Button from '../../../../atoms/CustomButtons/Button';
-import DashboardStyle from '../../../../assets/jss/views/dashboardStyle';
+import Card from '../../../../../atoms/Card/Card';
+import CardHeader from '../../../../../atoms/Card/CardHeader';
+import CardBody from '../../../../../atoms/Card/CardBody';
+import Button from '../../../../../atoms/CustomButtons/Button';
+import DashboardStyle from '../../../../../assets/jss/views/dashboardStyle';
 import BusinessRegiUploadDialog from './BusinessUploadDialog';
-import Snackbar from '../../../../atoms/Snackbar/Snackbar';
+import Snackbar from '../../../../../atoms/Snackbar/Snackbar';
 // hooks
-import useDialog from '../../../../utils/hooks/useDialog';
-import { UseGetRequestObject } from '../../../../utils/hooks/useGetRequest';
-import { businessInterface } from './interface';
+import useDialog from '../../../../../utils/hooks/useDialog';
+import { UseGetRequestObject } from '../../../../../utils/hooks/useGetRequest';
+import { businessInterface } from '../interface';
 
 const useStyles = makeStyles(() => ({
   buttonWrapper: {

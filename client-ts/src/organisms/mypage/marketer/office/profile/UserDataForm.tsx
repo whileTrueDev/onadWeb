@@ -3,18 +3,18 @@ import PropTypes from 'prop-types';
 // @material-ui/core
 import { withStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import { TextField } from '@material-ui/core';
-import GridContainer from '../../../../atoms/Grid/GridContainer';
-import GridItem from '../../../../atoms/Grid/GridItem';
-import Card from '../../../../atoms/Card/Card';
-import CardHeader from '../../../../atoms/Card/CardHeader';
-import CardBody from '../../../../atoms/Card/CardBody';
-import CardFooter from '../../../../atoms/Card/CardFooter';
-import Button from '../../../../atoms/CustomButtons/Button';
-import dashboardStyle from '../../../../assets/jss/views/dashboardStyle';
+import GridContainer from '../../../../../atoms/Grid/GridContainer';
+import GridItem from '../../../../../atoms/Grid/GridItem';
+import Card from '../../../../../atoms/Card/Card';
+import CardHeader from '../../../../../atoms/Card/CardHeader';
+import CardBody from '../../../../../atoms/Card/CardBody';
+import CardFooter from '../../../../../atoms/Card/CardFooter';
+import Button from '../../../../../atoms/CustomButtons/Button';
+import dashboardStyle from '../../../../../assets/jss/views/dashboardStyle';
 import UserDataUpdateDialog from './UserDataUpdateDialog';
 
-import { userInterface } from './interface';
-import useDialog from '../../../../utils/hooks/useDialog';
+import { userInterface } from '../interface';
+import useDialog from '../../../../../utils/hooks/useDialog';
 
 
 // const useStyles = makeStyles(() => ({

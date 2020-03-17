@@ -10,12 +10,12 @@ import Radio from '@material-ui/core/Radio';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import TextField from '@material-ui/core/TextField';
 import DialogContent from '@material-ui/core/DialogContent';
-import axios from '../../../../utils/axios';
+import axios from '../../../../../utils/axios';
 // customized component
-import Button from '../../../../atoms/CustomButtons/Button';
-import Dialog from '../../../../atoms/Dialog/Dialog';
-import HOST from '../../../../utils/config';
-import history from '../../../../history';
+import Button from '../../../../../atoms/CustomButtons/Button';
+import Dialog from '../../../../../atoms/Dialog/Dialog';
+import HOST from '../../../../../utils/config';
+import history from '../../../../../history';
 
 const useStyles = makeStyles((theme: Theme) => ({
   contentTitle: {

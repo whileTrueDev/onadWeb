@@ -6,12 +6,12 @@ import {
 import CloseIcon from '@material-ui/icons/Close';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import NumberFormat from 'react-number-format';
-import Dialog from '../../../../atoms/Dialog/Dialog';
-import Button from '../../../../atoms/CustomButtons/Button';
-import StyledInput from '../../../../atoms/StyledInput';
-import useDialog from '../../../../utils/hooks/useDialog';
-import usePatchRequest from '../../../../utils/hooks/usePatchRequest';
-import { userInterface } from './interface';
+import Dialog from '../../../../../atoms/Dialog/Dialog';
+import Button from '../../../../../atoms/CustomButtons/Button';
+import StyledInput from '../../../../../atoms/StyledInput';
+import useDialog from '../../../../../utils/hooks/useDialog';
+import usePatchRequest from '../../../../../utils/hooks/usePatchRequest';
+import { userInterface } from '../interface';
 
 
 const useStyles = makeStyles((theme: Theme) => ({

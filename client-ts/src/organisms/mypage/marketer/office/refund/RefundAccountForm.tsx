@@ -5,17 +5,17 @@ import withStyles from '@material-ui/core/styles/withStyles';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import Typography from '@material-ui/core/Typography';
 // own components
-import Card from '../../../../atoms/Card/Card';
-import CardHeader from '../../../../atoms/Card/CardHeader';
-import CardBody from '../../../../atoms/Card/CardBody';
-import Button from '../../../../atoms/CustomButtons/Button';
-import DashboardStyle from '../../../../assets/jss/views/dashboardStyle';
-import AccountRegistDialog from './AccountRegistDialog';
-import { accountInterface } from './interface';
-import { UseGetRequestObject } from '../../../../utils/hooks/useGetRequest';
+import Card from '../../../../../atoms/Card/Card';
+import CardHeader from '../../../../../atoms/Card/CardHeader';
+import CardBody from '../../../../../atoms/Card/CardBody';
+import Button from '../../../../../atoms/CustomButtons/Button';
+import DashboardStyle from '../../../../../assets/jss/views/dashboardStyle';
+import AccountRegistDialog from '../AccountRegistDialog';
+import { accountInterface } from '../interface';
+import { UseGetRequestObject } from '../../../../../utils/hooks/useGetRequest';
 
 // hooks
-import useDialog from '../../../../utils/hooks/useDialog';
+import useDialog from '../../../../../utils/hooks/useDialog';
 
 const useStyles = makeStyles(() => ({
   buttonWrapper: {

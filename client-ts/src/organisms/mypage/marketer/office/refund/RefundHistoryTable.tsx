@@ -2,13 +2,13 @@ import React from 'react';
 // core
 import withStyles from '@material-ui/core/styles/withStyles';
 // own components
-import Card from '../../../../atoms/Card/Card';
-import CardHeader from '../../../../atoms/Card/CardHeader';
-import CardBody from '../../../../atoms/Card/CardBody';
-import Table from '../../../../atoms/Table/Table';
-import DashboardStyle from '../../../../assets/jss/views/dashboardStyle';
+import Card from '../../../../../atoms/Card/Card';
+import CardHeader from '../../../../../atoms/Card/CardHeader';
+import CardBody from '../../../../../atoms/Card/CardBody';
+import Table from '../../../../../atoms/Table/Table';
+import DashboardStyle from '../../../../../assets/jss/views/dashboardStyle';
 // hooks
-import useGetRequest from '../../../../utils/hooks/useGetRequest';
+import useGetRequest from '../../../../../utils/hooks/useGetRequest';
 
 const initialData = {
   columns: ['날짜', '환불금액', '진행상황'],

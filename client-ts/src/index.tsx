@@ -16,8 +16,8 @@ import './assets/onad.css';
 // Pages
 import Test from './pages/Test';
 import Door from './pages/main/Door';
-import CreatorDashboard from './pages/mypage/layouts/CreatorLayout';
-// import MarketerLayout from './pages/mypage/layouts/MarketerLayout';
+// import CreatorDashboard from './pages/mypage/layouts/CreatorLayout';
+import MarketerDashboard from './pages/mypage/layouts/MarketerLayout';
 
 
 dotenv.config();
@@ -27,8 +27,8 @@ const developmentRouter = (
     <Switch>
       <Route exact path="/" component={Door} />
       <ThemeProvider theme={theme.lightTheme}>
-        <Route path="/mypage/creator" component={CreatorDashboard} />
-        {/* <Route path="/mypage/marketer" component={MarketerDashboard} /> */}
+        {/* <Route path="/mypage/creator" component={CreatorDashboard} /> */}
+        <Route path="/mypage/marketer" component={MarketerDashboard} />
       </ThemeProvider>
     </Switch>
   </Router>
@@ -39,7 +39,9 @@ const productionRouter = (
     <Switch>
       <Route exact path="/" component={Door} />
       <ThemeProvider theme={theme.lightTheme}>
-        <Route path="/mypage/creator" component={CreatorDashboard} />
+        <Route path="/mypage/marketer" component={MarketerDashboard} />
+
+        {/* <Route path="/mypage/creator" component={CreatorDashboard} /> */}
       </ThemeProvider>
     </Switch>
   </Router>

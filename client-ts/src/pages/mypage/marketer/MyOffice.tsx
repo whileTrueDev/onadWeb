@@ -3,13 +3,13 @@ import Typography from '@material-ui/core/Typography';
 import GridContainer from '../../../atoms/Grid/GridContainer';
 import GridItem from '../../../atoms/Grid/GridItem';
 
-import UserDataForm from '../../../organisms/mypage/marketer/office/UserDataForm';
-import RefundAccountForm from '../../../organisms/mypage/marketer/office/RefundAccountForm';
-import MyCash from '../../../organisms/mypage/marketer/office/MyCash';
-import CashHistoryTable from '../../../organisms/mypage/marketer/office/CashHistoryTable';
-import RefundHistoryTable from '../../../organisms/mypage/marketer/office/RefundHistoryTable';
-import BusinessRegistration from '../../../organisms/mypage/marketer/office/BusinessUploadForm';
-import SignOut from '../../../organisms/mypage/marketer/office/SignOut';
+import UserDataForm from '../../../organisms/mypage/marketer/office/profile/UserDataForm';
+import RefundAccountForm from '../../../organisms/mypage/marketer/office/refund/RefundAccountForm';
+import MyCash from '../../../organisms/mypage/marketer/office/cash/MyCash';
+import CashHistoryTable from '../../../organisms/mypage/marketer/office/cash/CashHistoryTable';
+import RefundHistoryTable from '../../../organisms/mypage/marketer/office/refund/RefundHistoryTable';
+import BusinessRegistration from '../../../organisms/mypage/marketer/office/business/BusinessUploadForm';
+import SignOut from '../../../organisms/mypage/marketer/office/profile/SignOut';
 import MyOffceLoading from '../../../organisms/mypage/marketer/office/MyOfficeLoading';
 import TaxBill from '../../../organisms/mypage/marketer/office/TaxBill';
 

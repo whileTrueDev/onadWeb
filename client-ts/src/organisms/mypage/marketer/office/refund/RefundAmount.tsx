@@ -10,8 +10,8 @@ import RadioGroup from '@material-ui/core/RadioGroup';
 import Radio from '@material-ui/core/Radio';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import TextField from '@material-ui/core/TextField';
-import sources from './sources';
-import { stateInterface, Action } from './interface';
+import sources from '../sources';
+import { stateInterface, Action } from '../interface';
 
 
 const useStyles = makeStyles(theme => ({

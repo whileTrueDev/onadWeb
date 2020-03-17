@@ -5,7 +5,7 @@ import {
 } from '@material-ui/core';
 import { Star } from '@material-ui/icons';
 import Dialog from '../../../../../atoms/Dialog/Dialog';
-import './upload.css';
+import '../../shared/upload.css';
 import MaterialTable from '../../../../../atoms/Table/MaterialTable';
 import GreenCheckbox from '../../../../../atoms/GreenCheckBox';
 import { UseGetRequestObject } from '../../../../../utils/hooks/useGetRequest';

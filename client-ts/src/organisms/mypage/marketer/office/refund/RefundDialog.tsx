@@ -4,18 +4,18 @@ import { makeStyles, Theme } from '@material-ui/core/styles';
 import {
   Grid, Slide, Collapse
 } from '@material-ui/core';
-import axios from '../../../../utils/axios';
+import axios from '../../../../../utils/axios';
 // customized component
-import Dialog from './Dialog';
-import Button from '../../../../atoms/CustomButtons/Button';
-import HOST from '../../../../utils/config';
-import history from '../../../../history';
+import Dialog from '../../shared/Dialog';
+import Button from '../../../../../atoms/CustomButtons/Button';
+import HOST from '../../../../../utils/config';
+import history from '../../../../../history';
 import RefundAgreement from './RefundAgreement';
 import RefundConfirm from './RefundConfirm';
 import RefundAmount from './RefundAmount';
 import RefundComplete from './RefundComplete';
-import sources from './sources';
-import { stateInterface, Action, stepReducer } from './interface';
+import sources from '../sources';
+import { stateInterface, Action, stepReducer } from '../interface';
 
 const useStyles = makeStyles((theme: Theme) => ({
   contentTitle: {

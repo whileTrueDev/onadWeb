@@ -11,9 +11,9 @@ import {
   Grid,
 } from '@material-ui/core';
 import shortid from 'shortid';
-import sources from './sources';
-import Dialog from '../../../../atoms/Dialog/Dialog';
-import { Action } from './interface';
+import sources from '../sources';
+import Dialog from '../../../../../atoms/Dialog/Dialog';
+import { Action } from '../interface';
 
 
 const useStyles = makeStyles((theme: Theme) => ({

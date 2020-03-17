@@ -5,7 +5,7 @@ import {
 } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
-import { stateInterface } from './interface';
+import { stateInterface } from '../interface';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {

@@ -3,15 +3,15 @@ import PropTypes from 'prop-types';
 // core
 import withStyles from '@material-ui/core/styles/withStyles';
 // own components
-import Card from '../../../../atoms/Card/Card';
-import CardHeader from '../../../../atoms/Card/CardHeader';
-import CardBody from '../../../../atoms/Card/CardBody';
-import Table from '../../../../atoms/Table/Table';
-import DashboardStyle from '../../../../assets/jss/views/dashboardStyle';
+import Card from '../../../../../atoms/Card/Card';
+import CardHeader from '../../../../../atoms/Card/CardHeader';
+import CardBody from '../../../../../atoms/Card/CardBody';
+import Table from '../../../../../atoms/Table/Table';
+import DashboardStyle from '../../../../../assets/jss/views/dashboardStyle';
 // hooks
-import useGetRequest from '../../../../utils/hooks/useGetRequest';
-import axios from '../../../../utils/axios';
-import HOST from '../../../../utils/config';
+import useGetRequest from '../../../../../utils/hooks/useGetRequest';
+import axios from '../../../../../utils/axios';
+import HOST from '../../../../../utils/config';
 
 const initialData = {
   columns: ['날짜', '충전금액', '결제수단', '진행상황'],

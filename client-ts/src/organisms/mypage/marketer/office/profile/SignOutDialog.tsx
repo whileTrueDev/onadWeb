@@ -3,7 +3,7 @@ import { makeStyles, Theme } from '@material-ui/core/styles';
 import Dialog from '@material-ui/core/Dialog';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
-import Button from '../../../../atoms/CustomButtons/Button';
+import Button from '../../../../../atoms/CustomButtons/Button';
 
 const useStyles = makeStyles((theme: Theme) => ({
   container: {

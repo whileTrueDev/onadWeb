@@ -7,23 +7,23 @@ import DateRange from '@material-ui/icons/DateRange';
 import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
 // own components
-import CircularProgress from '../../../../atoms/Progress/CircularProgress';
-import ExpansionPanel from '../../../../atoms/ExpansionPanel/ExpansionPanel';
-import Button from '../../../../atoms/CustomButtons/Button';
-import Card from '../../../../atoms/Card/Card';
-import CardHeader from '../../../../atoms/Card/CardHeader';
-import CardBody from '../../../../atoms/Card/CardBody';
-import CardIcon from '../../../../atoms/Card/CardIcon';
-import DashboardStyle from '../../../../assets/jss/views/dashboardStyle';
+import CircularProgress from '../../../../../atoms/Progress/CircularProgress';
+import ExpansionPanel from '../../../../../atoms/ExpansionPanel/ExpansionPanel';
+import Button from '../../../../../atoms/CustomButtons/Button';
+import Card from '../../../../../atoms/Card/Card';
+import CardHeader from '../../../../../atoms/Card/CardHeader';
+import CardBody from '../../../../../atoms/Card/CardBody';
+import CardIcon from '../../../../../atoms/Card/CardIcon';
+import DashboardStyle from '../../../../../assets/jss/views/dashboardStyle';
 
 import CashChargeDialog from './CashChargeDialog';
-import RefundDialog from './RefundDialog';
+import RefundDialog from '../refund/RefundDialog';
 import CashUsageList from './CashUsageList';
 
-import { cashInterface, userInterface, accountInterface } from './interface';
+import { cashInterface, userInterface, accountInterface } from '../interface';
 // hooks
-import useGetRequest, { UseGetRequestObject } from '../../../../utils/hooks/useGetRequest';
-import useDialog from '../../../../utils/hooks/useDialog';
+import useGetRequest, { UseGetRequestObject } from '../../../../../utils/hooks/useGetRequest';
+import useDialog from '../../../../../utils/hooks/useDialog';
 
 interface propInterface {
   classes: any;
