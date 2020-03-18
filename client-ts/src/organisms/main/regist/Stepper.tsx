@@ -79,7 +79,7 @@ function RegistStepper({ platform }: { platform: string }): JSX.Element {
     };
     if (platform === undefined) {
       // axios.post(`${HOST}/api/regist/marketer`, user)
-      axios.post('http://localhost:3002/marketer', user)
+      axios.post(`${HOST}/marketer`, user)
         .then((res) => {
           const { error } = res.data;
           if (!error) {
@@ -98,7 +98,7 @@ function RegistStepper({ platform }: { platform: string }): JSX.Element {
           history.push('/');
         });
     } else {
-      axios.post(`${HOST}/api/regist/marketer/platform`, returnUser)
+      axios.post(`${HOST}/marketer/platform`, returnUser)
         .then((res) => {
           const { error } = res.data;
           if (!error) {

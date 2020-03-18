@@ -98,7 +98,7 @@ function RePasswordDialog({ setRepassword, logout, repasswordOpen }: Props): JSX
       password: event.currentTarget.password.value,
     };
 
-    axios.post(`${HOST}/api/login/changePw`, user)
+    axios.post(`${HOST}/login/changePw`, user)
       .then((res) => {
         alert('비밀번호 변경이 완료되었습니다. 다시 로그인 해주세요');
         setRepassword(false);

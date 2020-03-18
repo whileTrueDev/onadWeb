@@ -7,16 +7,22 @@ export const initialState = {
   email: '',
   phoneNum: '',
   domain: '',
+  name: '',
+  marketerBusinessRegNum: '',
+  idValue: '',
 };
 export interface StepState {
   passwordValue: string | number;
-  id: boolean;
+  id: string | boolean;
+  idValue: string;
   password: boolean;
   repasswd: boolean;
   checkDuplication: boolean;
   email: string;
   phoneNum: string | number;
   domain: string;
+  name: string;
+  marketerBusinessRegNum: string | number;
 }
 
 export type StepAction = { type: 'id'; value: string }
@@ -26,6 +32,8 @@ export type StepAction = { type: 'id'; value: string }
   | { type: 'phoneNum'; value: string | number }
   | { type: 'domain'; value: string }
   | { type: 'checkDuplication'; value: boolean }
+  | { type: 'name'; value: string }
+  | { type: 'marketerBusinessRegNum'; value: string | number }
   | { type: 'reset' }
 
 
@@ -38,9 +46,13 @@ export function myReducer(
     case 'id': {
       const idReg = /^[A-za-z]+[a-z0-9]{4,15}$/g;
       if (idReg.test(action.value)) {
-        return { ...state, id: false, checkDuplication: true };
+        return {
+          ...state, id: false, checkDuplication: true, idValue: action.value
+        };
       }
-      return { ...state, id: true, checkDuplication: true };
+      return {
+        ...state, id: true, checkDuplication: true, idValue: action.value
+      };
     }
     // (?=.*[0-9])
     case 'password': {
@@ -73,6 +85,12 @@ export function myReducer(
     // case 'businessRegNum': {
     //   return { ...state, businessRegNum: action.value };
     // }
+    case 'marketerBusinessRegNum': {
+      return { ...state, marketerBusinessRegNum: action.value };
+    }
+    case 'name': {
+      return { ...state, name: action.value };
+    }
     case 'checkDuplication': {
       return { ...state, checkDuplication: action.value };
     }

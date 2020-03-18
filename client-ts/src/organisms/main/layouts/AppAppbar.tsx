@@ -190,7 +190,7 @@ function AppAppBar({
 
   // 대시보드로 이동 버튼 클릭
   const handleClick = useCallback((buttonType) => {
-    axios.get(`${HOST}/api/dashboard/checkUserType`)
+    axios.get(`${HOST}/login/check`)
       .then((res) => {
         const { userType } = res.data;
         if (userType === undefined) {

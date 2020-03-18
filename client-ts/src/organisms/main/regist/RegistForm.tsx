@@ -145,7 +145,7 @@ function RegistForm({
     } = state;
 
     // const marketerMailId = document.getElementById('email').value;
-    const marketerMailId = event.currentTarget.email;
+    const marketerMailId = state.email;
 
     if (marketerMailId === '') {
       alert('입력이 올바르지 않습니다.');
@@ -153,9 +153,11 @@ function RegistForm({
     }
     // 모든 state가 false가 되어야한다.
     if (!(id || password || repasswd || checkDuplication)) {
-      const marketerId = event.currentTarget.id;
-      const marketerName = event.currentTarget.name;
-      const marketerBusinessRegNum = (document.getElementById('marketerBusinessRegNum') ? event.currentTarget.marketerBusinessRegNum : '');
+      // const marketerId = document.getElementById('id')!.value;
+      const marketerId = state.idValue;
+      const marketerName = state.name;
+      // const marketerName = document.getElementById('name')!.value;
+      const marketerBusinessRegNum = (document.getElementById('marketerBusinessRegNum') ? state.marketerBusinessRegNum : '');
       const marketerPhoneNum = state.phoneNum;
       const marketerRawPasswd = state.passwordValue;
       const marketerDomain = state.domain === '직접입력' ? marketerCustomDomain : state.domain;
@@ -180,14 +182,14 @@ function RegistForm({
   //   alert('준비 중입니다. 회원가입을 진행해 주세요.');
   // };
 
+
   function checkDuplicateID(): void {
-    const id = document.getElementById('id')!.nodeValue;
-    if (state.id || id === '') {
+    // const id = document.getElementById('id')!.value;
+    const { idValue } = state;
+    if (state.id || idValue === '') {
       alert('ID을 올바르게 입력해주세요.');
     } else {
-      axios.post(`${HOST}/api/regist/checkId`, {
-        id,
-      })
+      axios.post(`${HOST}/marketer/checkId`, { idValue })
         .then((res) => {
           if (res.data) {
             alert('ID가 중복되었습니다. 다시 입력해 주세요.');
@@ -215,7 +217,7 @@ function RegistForm({
             <Grid container direction="column" spacing={1}>
               <Grid item xs={12}>
                 <FormControl
-                  error={state.id}
+                  error={Boolean(state.id)}
                 >
                   <InputLabel shrink>ID</InputLabel>
                   <Input
@@ -276,6 +278,7 @@ function RegistForm({
                     required
                     label="회사명(브랜드명)"
                     id="name"
+                    onChange={handleChange('name')}
                     className={classes.textField}
                     // defaultValue={defaultName}
                     placeholder="회사명(브랜드명)을 입력하세요"
@@ -356,14 +359,6 @@ function RegistForm({
                       <Input
                         // onChange={handleChange('businessRegNum')}
                         name="businessRegNum"
-                      // endAdornment={(
-                      //   <InputAdornment position="end">
-                      //     <Divider className={classes.divider} />
-                      //     <Button onClick={checkBusinessRegNum}>
-                      //       조회
-                      //     </Button>
-                      //   </InputAdornment>
-                      // )}
                       />
                       <FormHelperText>사업자 번호를 입력후 조회버튼을 누르세요.</FormHelperText>
                     </FormControl>

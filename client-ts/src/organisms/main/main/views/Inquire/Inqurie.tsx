@@ -14,6 +14,7 @@ import HOST from '../../../../../config';
 import axios from '../../../../../utils/axios';
 import useDialog from '../../../../../utils/hooks/useDialog';
 import Dialog from '../../../../../atoms/Dialog/Dialog';
+import { initialState } from '../../../regist/Stepper.reducer';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -124,39 +125,46 @@ interface Props {
   confirmClose?: () => void;
 }
 
+const initialContent = {
+  name: '',
+  email: '',
+  contactNumber: '',
+  brandName: '',
+  content: ''
+};
+
+const InquiryResult: any = {};
+
 function Inquire({ confirmClose }: Props): JSX.Element {
   const classes = useStyles();
   const [checked, setChecked] = useState(false);
   const confirmDialog = useDialog();
-
+  const [inquiryContent, setInquiryContent] = useState(initialContent);
   const [loading, setLoading] = React.useState(false);
+
 
   function handleChange(): void {
     setChecked(!checked);
   }
 
+  function onChange(e: React.ChangeEvent<HTMLInputElement>): void {
+    const { name, value } = e.currentTarget;
+    InquiryResult[name] = value;
+    setInquiryContent(InquiryResult);
+  }
+
   function handleSubmit(e: React.FormEvent<HTMLFormElement>): void {
     e.preventDefault();
 
-    const formContent = e.currentTarget;
+    const AnonymousUser = inquiryContent;
 
-    const AnonymousUser = {
-      name: formContent.name,
-      email: formContent.email,
-      contactNumber: formContent.contactNumber,
-      brandName: formContent.brandName,
-      content: formContent.content,
-    };
+    console.log(AnonymousUser);
     setLoading(true);
     if (checked) {
-      axios.post(`${HOST}/mailer/inqurie`, AnonymousUser)
+      axios.post(`${HOST}/mail/inquiry`, AnonymousUser)
         .then(() => {
           confirmDialog.handleOpen();
-          formContent.name = '';
-          formContent.email = '';
-          formContent.contactNumber = '';
-          formContent.brandName = '';
-          formContent.content = '';
+          setInquiryContent(initialContent);
           setChecked(false);
           setLoading(false);
         });
@@ -187,6 +195,7 @@ function Inquire({ confirmClose }: Props): JSX.Element {
                   className={classes.datailContent}
                   classes={{ focused: classes.inputStyle }}
                   disableUnderline
+                  onChange={onChange}
                   required
                   name="name"
                 />
@@ -199,6 +208,7 @@ function Inquire({ confirmClose }: Props): JSX.Element {
                   className={classes.datailContent}
                   classes={{ focused: classes.inputStyle }}
                   disableUnderline
+                  onChange={onChange}
                   required
                   name="email"
                 />
@@ -213,6 +223,7 @@ function Inquire({ confirmClose }: Props): JSX.Element {
                 <Input
                   className={classes.datailContent}
                   classes={{ focused: classes.inputStyle }}
+                  onChange={onChange}
                   disableUnderline
                   required
                   name="contactNumber"
@@ -225,6 +236,7 @@ function Inquire({ confirmClose }: Props): JSX.Element {
                 <Input
                   className={classes.datailContent}
                   classes={{ focused: classes.inputStyle }}
+                  onChange={onChange}
                   disableUnderline
                   name="brandName"
                 />
@@ -240,6 +252,7 @@ function Inquire({ confirmClose }: Props): JSX.Element {
                   classes={{ focused: classes.inputStyle }}
                   className={classes.datailContent}
                   disableUnderline
+                  onChange={onChange}
                   multiline
                   required
                   rows={5}

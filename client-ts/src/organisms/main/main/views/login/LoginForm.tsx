@@ -87,7 +87,7 @@ function LoginForm({
     if (event) {
       event.preventDefault();
     }
-    axios.post(`${HOST}/api/login`,
+    axios.post(`${HOST}/login`,
       {
         userid,
         passwd,
@@ -95,6 +95,7 @@ function LoginForm({
       .then((res) => {
         if (res.data[0]) {
           setPasswd('');
+          console.log(res.data);
           alert(res.data[1]);
           if (res.data[1] === '이메일 본인인증을 해야합니다.') {
             handleClose();
@@ -170,17 +171,17 @@ function LoginForm({
           <Divider component="hr" orientation="horizontal" />
           <Grid container direction="row" alignItems="flex-end">
             <Grid item>
-              <Button href={`${HOST}/api/login/google`}>
+              <Button href={`${HOST}/login/google`}>
                 <img src="/pngs/logo/google.png" alt="google" className={classes.image} />
               </Button>
             </Grid>
             <Grid item>
-              <Button href={`${HOST}/api/login/naver`}>
+              <Button href={`${HOST}/login/naver`}>
                 <img src="/pngs/logo/naver2.png" alt="naver" className={classes.image} />
               </Button>
             </Grid>
             <Grid item>
-              <Button href={`${HOST}/api/login/kakao`}>
+              <Button href={`${HOST}/login/kakao`}>
                 <img src="/pngs/logo/kakao.png" alt="kakao" className={classes.image} />
               </Button>
             </Grid>
@@ -237,7 +238,7 @@ function LoginForm({
           </DialogContentText>
           <Tooltip title="트위치 계정으로 로그인" placement="right">
             <Button
-              href={`${HOST}/api/login/twitch`}
+              href={`${HOST}/login/twitch`}
               style={{
                 backgroundImage: 'url("/pngs/logo/twitch.png")',
               }}

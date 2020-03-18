@@ -26,11 +26,11 @@ const transporter = nodemailer.createTransport({
 });
 
 interface InputForm {
-  name?: string;
-  email?: string;
-  contactNumber?: number;
+  name: string;
+  email: string;
+  contactNumber: number;
   brandName?: string;
-  content?: string;
+  content: string;
 }
 
 router.route('/inquiry')

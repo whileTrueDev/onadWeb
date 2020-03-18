@@ -114,8 +114,8 @@ interface BannerClickData {
 function Indicator(): JSX.Element {
   const classes = useStyles();
   const updateTime = new Date().toLocaleDateString();
-  const BannerView = useGetRequest<null, BannerViewData>('/banners/impression');
-  const BannerClick = useGetRequest<null, BannerClickData>('/banners/click');
+  const BannerView = useGetRequest<null, BannerViewData[]>('/banners/impression');
+  const BannerClick = useGetRequest<null, BannerClickData[]>('/banners/click');
   const ContractedCreator = useGetRequest<null, ContractedCreatorListData<string>[]>('/creators');
 
   return (
@@ -132,7 +132,7 @@ function Indicator(): JSX.Element {
               && (
                 <h3 className={classes.itemTitle}>
                   &#43;&nbsp;
-                  <Countup duration={2} end={BannerView.data.bannerView} separator="," />
+                  <Countup duration={2} end={BannerView.data[0].bannerView} separator="," />
                   <span className={classes.itemSub}>&nbsp;회</span>
                 </h3>
               )}
@@ -152,7 +152,7 @@ function Indicator(): JSX.Element {
             {!BannerClick.loading && BannerClick.data && (
               <h3 className={classes.itemTitle}>
                 &#43;&nbsp;
-                <Countup duration={2} end={BannerClick.data.bannerClick} separator="," />
+                <Countup duration={2} end={BannerClick.data[0].bannerClick} separator="," />
                 <span className={classes.itemSub}>&nbsp;회</span>
               </h3>
             )}

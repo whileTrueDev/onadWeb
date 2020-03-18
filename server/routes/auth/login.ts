@@ -73,20 +73,22 @@ router.route('/check')
 
       if (session.userType === 'marketer') {
         const checkQuery = `
-      SELECT temporaryLogin
-      FROM marketerInfo
-      WHERE marketerId = ?`;
+        SELECT temporaryLogin
+        FROM marketerInfo
+        WHERE marketerId = ?`;
 
-        const row = await doQuery(checkQuery, [session.marketerId]);
-        if (row.result) {
-          const { temporaryLogin } = row.result[0];
-          if (temporaryLogin === 1) {
-            responseHelper.send({ error: false, state: 1 }, 'get', res);
-          } else {
-            responseHelper.send({ error: false, state: 0, userType: 'marketer' }, 'get', res);
-          }
-        }
-        throw new Error('MarketerId 가 marketerInfo에 없습니다.');
+        doQuery(checkQuery, [session.marketerId])
+          .then((row) => {
+            const { temporaryLogin } = row.result[0];
+            if (temporaryLogin === 1) {
+              responseHelper.send({ error: false, state: 1 }, 'get', res);
+            } else {
+              responseHelper.send({ error: false, state: 0, userType: 'marketer' }, 'get', res);
+            }
+          })
+          .catch(() => {
+            throw new Error('MarketerId 가 marketerInfo에 없습니다.');
+          });
       } else if (session.userType === 'creator') {
         responseHelper.send({ error: false, state: 0, userType: 'creator' }, 'get', res);
       } else {

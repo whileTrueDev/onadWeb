@@ -35,7 +35,7 @@ const useLoginValue = (): {
   };
 
   React.useLayoutEffect(() => {
-    axios.get<LoginCheckResponse>(`${HOST}/api/login`)
+    axios.get<LoginCheckResponse>(`${HOST}/login/check`)
       .then((res) => {
         if (!res.data.error) {
           if (res.data.state) {

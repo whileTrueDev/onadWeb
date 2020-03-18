@@ -73,8 +73,9 @@ const RegistDialog = ({ open, handleClose }: Props) => {
           <Grid item>
             <CustomButton
               color="primary"
-              component={<Link to="/regist" />}
+              link={Link}
               size="large"
+              to="/regist"
             >
               온애드 가입하기
             </CustomButton>
@@ -91,17 +92,17 @@ const RegistDialog = ({ open, handleClose }: Props) => {
           <Grid item className={classes.buttons}>
             <Grid container direction="row">
               <Grid item>
-                <Button href={`${HOST}/api/login/google`}>
+                <Button href={`${HOST}/login/google`}>
                   <img src="/pngs/logo/google.png" alt="google" className={classes.image} />
                 </Button>
               </Grid>
               <Grid item>
-                <Button href={`${HOST}/api/login/naver`}>
+                <Button href={`${HOST}/login/naver`}>
                   <img src="/pngs/logo/naver2.png" alt="naver" className={classes.image} />
                 </Button>
               </Grid>
               <Grid item>
-                <Button href={`${HOST}/api/login/kakao`}>
+                <Button href={`${HOST}/login/kakao`}>
                   <img src="/pngs/logo/kakao.png" alt="kakao" className={classes.image} />
                 </Button>
               </Grid>
