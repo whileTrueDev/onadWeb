@@ -63,7 +63,7 @@ export default function UrlUploadDialog(props: propInterface) {
   }, any[]>(
     '/marketer/landing-url',
     // success callback function
-    () => { handleClose(); history.push('/dashboard/marketer/inventory'); }
+    () => { handleClose(); history.push('/mypage/marketer/inventory'); }
   );
 
 

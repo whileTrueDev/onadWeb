@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 // core
 import withStyles from '@material-ui/core/styles/withStyles';
 import makeStyles from '@material-ui/core/styles/makeStyles';
@@ -11,7 +10,6 @@ import CardBody from '../../../../../atoms/Card/CardBody';
 import Button from '../../../../../atoms/CustomButtons/Button';
 import DashboardStyle from '../../../../../assets/jss/views/dashboardStyle';
 import BusinessRegiUploadDialog from './BusinessUploadDialog';
-import Snackbar from '../../../../../atoms/Snackbar/Snackbar';
 // hooks
 import useDialog from '../../../../../utils/hooks/useDialog';
 import { UseGetRequestObject } from '../../../../../utils/hooks/useGetRequest';

@@ -18,8 +18,8 @@ import CreatorDashboard from './creator/Dashboard';
 // import CreatorManual from './creator/Manual';
 
 // 마케터 라우터
-import MarketerDashboard from './marketer/Dashboard';
 import MarketerInventory from './marketer/Inventory';
+import MarketerDashboard from './marketer/Dashboard';
 // import MarketerManual from './marketer/Manual';
 import MarketerMyOffice from './marketer/MyOffice';
 import CampaignCreateStepper from './marketer/CampaignCreation';

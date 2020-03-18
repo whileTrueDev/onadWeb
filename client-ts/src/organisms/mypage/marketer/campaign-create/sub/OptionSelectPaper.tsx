@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 interface propsInterface {
   primaryText: string;
   secondaryText: string;
-  handleSelect?: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  handleSelect?: () => void;
   checked: boolean;
   disabled?: boolean;
   children?: JSX.Element;
@@ -54,7 +54,7 @@ export default function OptionSelectPaper(props: propsInterface) {
       {/* 해당 버튼클릭을 사용하기 위해서는 buttonref를 사용해야한다. */}
       <ButtonBase
         className={classes.choiceWrapper}
-        // onClick={handleSelect}
+        onClick={handleSelect}
         disabled={disabled}
       >
         <Paper

@@ -1,7 +1,6 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 // @material-ui/core
-import { withStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core/styles';
 import { TextField } from '@material-ui/core';
 import GridContainer from '../../../../../atoms/Grid/GridContainer';
 import GridItem from '../../../../../atoms/Grid/GridItem';
@@ -18,19 +17,19 @@ import useDialog from '../../../../../utils/hooks/useDialog';
 
 
 // const useStyles = makeStyles(() => ({
-//   width: '100%',
+//  { width: '100%',
 //   marginTop: '15px',
-//   borderColor: '#00acc1'
-//   '& .MuiFormLabel-root ': {
-//     color: '#00acc1',
-//   },
-//   '& .MuiInputBase-input:before': {
-//     color: '#00acc1',
-//   },
-//   '& .MuiInput-underline:after': {
-//     borderBottomColor: '#00acc1',
-//   },
-// }))
+//   borderColor: '#00acc1',}
+//   // '& .MuiFormLabel-root ': {
+//   //   color: '#00acc1',
+//   // },
+//   // '& .MuiInputBase-input:before': {
+//   //   color: '#00acc1',
+//   // },
+//   // '& .MuiInput-underline:after': {
+//   //   borderBottomColor: '#00acc1',
+//   // },
+// }));
 
 interface propInterface {
   userData: userInterface;

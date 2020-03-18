@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
 // core
 import withStyles from '@material-ui/core/styles/withStyles';
 // own components
@@ -27,7 +26,7 @@ function CashHistory(props: { classes: any }) {
   const { data, loading } = useGetRequest<null, { data: string[][] }>('/marketer/cash/history/charge');
 
   useEffect(() => {
-    axios.post<boolean[]>(`${HOST}/api/dashboard/marketer/cash/vbank`)
+    axios.post<boolean[]>(`${HOST}/marketer/cash/vbank`)
       .then((row) => {
         setVbankload(row.data[0]);
       });
@@ -42,7 +41,7 @@ function CashHistory(props: { classes: any }) {
       </CardHeader>
       <CardBody>
         <Table
-          tableHeaderColor="info"
+          // tableHeaderColor="info"
           tableHead={initialData.columns}
           tableData={(loading || (data === null)) ? initialData.data : data.data}
           pagination

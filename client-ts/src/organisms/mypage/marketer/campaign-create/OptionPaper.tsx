@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import OptionSelectPaper from './sub/OptionSelectPaper';
 import CampaignCreateStepLayout from './StepLayout';
 import ButtonSet from './sub/ButtonSet';
@@ -49,7 +48,7 @@ const OptionPaper = (props: propsInterface) => {
   } = props;
 
   // option을 선택하였을 때 event listener
-  const handleChange = (id: string) => (event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleChange = (id: string) => () => {
     dispatch({ key: id, value: '' });
   };
 
@@ -82,7 +81,7 @@ const OptionPaper = (props: propsInterface) => {
             .filter(opt => state.option === opt.id)
             .map(selectedOption => (
               <OptionSelectPaper
-                key={selectedOption.id}
+                key={`${selectedOption.id}`}
                 primaryText={selectedOption.primaryText}
                 secondaryText={selectedOption.secondaryText}
                 checked
@@ -111,12 +110,4 @@ const OptionPaper = (props: propsInterface) => {
  *
  * @author 박찬우
  */
-OptionPaper.propTypes = {
-  state: PropTypes.object.isRequired,
-  dispatch: PropTypes.func.isRequired,
-  handleBack: PropTypes.func.isRequired,
-  handleNext: PropTypes.func.isRequired,
-  step: PropTypes.number.isRequired
-};
-
 export default OptionPaper;

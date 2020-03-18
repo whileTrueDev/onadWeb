@@ -1,11 +1,10 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import Skeleton from '@material-ui/lab/Skeleton';
 import ReChartPie from '../../../../atoms/Chart/ReChartPie';
 
 interface propInterface {
   selectedChartData: {
-    data: { gameName: string, percent: number }[];
+    data: Readonly<{ gameName: string, percent: number }>[];
   }
 }
 
@@ -26,7 +25,7 @@ export default function ContentsPie(props: propInterface) {
         <Skeleton height={400} />
       )}
       {selectedChartData && (
-        <ReChartPie
+        <ReChartPie< { gameName: string, percent: number }>
           activeIndex={activeIndex}
           onPieEnter={onPieEnter}
           data={selectedChartData.data}

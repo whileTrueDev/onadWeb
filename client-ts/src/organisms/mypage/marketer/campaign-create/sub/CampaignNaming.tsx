@@ -2,7 +2,6 @@ import React from 'react';
 import {
   Grid
 } from '@material-ui/core';
-import PropTypes from 'prop-types';
 import Check from '@material-ui/icons/Check';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import useGetRequest from '../../../../../utils/hooks/useGetRequest';
@@ -137,10 +136,5 @@ const CampaignNaming = (props: propInterface) => {
 * @param {*} nameState ? campaignName에 대한 error와 data를 저장하는 object
   * @author 박찬우
   */
-CampaignNaming.propTypes = {
-  nameDispatch: PropTypes.func.isRequired,
-  nameState: PropTypes.object.isRequired,
-};
-
 
 export default CampaignNaming;

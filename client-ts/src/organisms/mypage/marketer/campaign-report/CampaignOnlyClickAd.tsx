@@ -8,7 +8,7 @@ import { Assignment } from '@material-ui/icons';
 import ContentCard from './ContentCard';
 import ReportCard from './ReportCard';
 import InteractionHeatmap from './HeatmapReport';
-import InteractionToGeo from './GeoReport';
+// import InteractionToGeo from './GeoReport';
 import CampaignInfo from './CampaignInfo';
 import { reportInterface, heatmapInterface, geoInterface, campaignInterface } from '../dashboard/interfaces';
 import { UseGetRequestObject } from '../../../../utils/hooks/useGetRequest';
@@ -162,10 +162,10 @@ export default function CampaignOnlyClickAd(props: propInterface) {
                           <InteractionHeatmap
                             clickData={clickData.data}
                           />
-
+                          {/* 
                           <InteractionToGeo
                             ipToGeoData={ipToGeoData}
-                          />
+                          /> */}
                         </Grid>
                       </Grid>
                     </Grid>

@@ -30,7 +30,7 @@ function RefundHistory(props: { classes: any }) {
       </CardHeader>
       <CardBody>
         <Table
-          tableHeaderColor="danger"
+          // tableHeaderColor="danger"
           tableHead={initialData.columns}
           tableData={(loading || (data === null)) ? initialData.data : data.data}
           pagination

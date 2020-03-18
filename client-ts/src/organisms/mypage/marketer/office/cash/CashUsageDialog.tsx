@@ -20,7 +20,7 @@ interface propInterface {
 }
 
 interface usageInterface {
-  data: (string | number)[][];
+  data: (string)[][];
   metaData: { type: string, cash: string }[];
 }
 
@@ -64,7 +64,7 @@ export default function CashUsageDialog(props: propInterface) {
         )}
         {!usagePerMonthData.loading && usagePerMonthData.data && (
           <Table
-            tableHeaderColor="info"
+            // tableHeaderColor="info"
             tableHead={['집행 날짜', '집행 금액', '광고 타입']}
             tableData={usagePerMonthData.loading
               ? initialData.data

@@ -131,7 +131,7 @@ router.route('/creator-data')
       const campaignId = responseHelper.getParam('campaignId', 'GET', req);
       let query = '';
       let queryArray = [];
-      if (campaignId) {
+      if (campaignId !== '') {
         query = `
         SELECT
         ci.creatorId AS creatorId, 

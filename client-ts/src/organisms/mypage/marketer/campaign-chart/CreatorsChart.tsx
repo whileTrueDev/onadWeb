@@ -40,7 +40,7 @@ interface propInterface {
 export default function CustomPieChart(props: propInterface) {
   const classes = useStyles();
   const { broadCreatorData } = props;
-  const creatorsData = useGetRequest<null, creatorDataInterface[] | null>('/marketer/campaign/analysis/creator-data');
+  const creatorsData = useGetRequest<{ campaignId: string }, creatorDataInterface[] | null>('/marketer/campaign/analysis/creator-data', { campaignId: '' });
 
   const [activeIndex, setActiveIndex] = React.useState<number>(0);
 
@@ -86,7 +86,7 @@ export default function CustomPieChart(props: propInterface) {
       )}
 
       <Grid item xs={12} lg={6}>
-
+        {/* 
         {!creatorsData.loading && broadCreatorData.data && creatorsData.data && creatorsData.data.length > 0 && (
           <ReChartPie
             activeIndex={activeIndex}
@@ -97,7 +97,7 @@ export default function CustomPieChart(props: propInterface) {
             dataKey="total_ad_exposure_amount"
             TooltipLabelText="노출"
           />
-        )}
+        )} */}
       </Grid>
 
       <Grid item xs={12} lg={6} style={{ overflow: 'hidden' }}>

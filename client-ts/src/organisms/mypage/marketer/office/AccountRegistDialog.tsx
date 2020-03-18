@@ -1,4 +1,4 @@
-import React, { useState, useReducer } from 'react';
+import React, { useState } from 'react';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import {
   DialogActions, DialogContent,
@@ -51,67 +51,33 @@ const banks = [
   { bankName: '부산', }, { bankName: 'SC제일', },
 ];
 
-interface stateInterface {
-  bankName: string;
-  idNumber: string;
-  bankAccount: string;
-  bankRealName: string;
-}
-
-interface Action {
-  key: string;
-  value: string;
-}
-
-
-// key ,value를 이용하여 state의 값에 접근
-const formReducer = (state: stateInterface, action: Action): stateInterface => {
-  switch (action.key) {
-    case 'bankName': {
-      return { ...state, bankName: action.value };
-    }
-    case 'idNumber': {
-      return { ...state, idNumber: action.value };
-    }
-    case 'bankAccount': {
-      return { ...state, bankAccount: action.value };
-    }
-    case 'bankRealName': {
-      return { ...state, bankRealName: action.value };
-    }
-    default: {
-      return state;
-    }
-  }
-};
-
 const AccountDialog = (props: { open: boolean, handleDialogClose: () => void }) => {
   const { open, handleDialogClose } = props;
   const classes = useStyles();
 
-  const [state, dispatch] = useReducer(formReducer, {
-    bankName: '',
-    idNumber: '',
-    bankAccount: '',
-    bankRealName: ''
-  });
+  const [bank, setBank] = useState<string>('농협');
 
-  const handleChange = (key: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value;
-    dispatch({ key, value })
-  }
+  const handleChangeBank = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newbank = event.target.value;
+    setBank(newbank);
+  };
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     console.log('제출');
 
+    const bankRealName = (document.getElementById('accountHolder') as HTMLInputElement).value;
+    const idNumber = (document.getElementById('idNumber') as HTMLInputElement).value;
+    const bankAccount = (document.getElementById('bankAccount') as HTMLInputElement).value;
+
     /** *******************
      * 계좌 조회 api 요청필요
      ******************* */
-    axios.post(`${HOST}/api/regist/accountNum`, state)
+    axios.put(`${HOST}/marketer/account`, { bankName: bank, bankRealName, idNumber, bankAccount })
       .then(() => {
         alert('계좌번호 저장에 성공하였습니다.');
-        history.push('/dashboard/marketer/myoffice');
+        handleDialogClose();
+        history.push('/mypage/marketer/myoffice');
       })
       .catch((err) => {
         console.log(err);
@@ -131,8 +97,8 @@ const AccountDialog = (props: { open: boolean, handleDialogClose: () => void }) 
         label="BANK"
         name="bank"
         className={classes.textField}
-        value={state.bankName}
-        onChange={handleChange('bankName')}
+        value={bank}
+        onChange={handleChangeBank}
         helperText="은행을 선택하세요."
         InputLabelProps={{
           shrink: true,
@@ -151,9 +117,7 @@ const AccountDialog = (props: { open: boolean, handleDialogClose: () => void }) 
         label="예금주"
         margin="dense"
         className={classes.textField}
-        name="accountHolder"
-        value={state.bankRealName}
-        onChange={handleChange('bankRealName')}
+        id="accountHolder"
         InputLabelProps={{
           shrink: true,
         }}
@@ -163,13 +127,10 @@ const AccountDialog = (props: { open: boolean, handleDialogClose: () => void }) 
       <TextField
         required
         label="주민번호 앞자리"
-        name="idNumber"
         id="idNumber"
         className={classes.textField}
         helperText="주민등록번호 앞 6자리를 입력해주세요."
         margin="normal"
-        value={state.idNumber}
-        onChange={handleChange('idNumber')}
         InputLabelProps={{
           shrink: true,
         }}
@@ -185,9 +146,7 @@ const AccountDialog = (props: { open: boolean, handleDialogClose: () => void }) 
         <InputLabel shrink>계좌번호</InputLabel>
         <Input
           required
-          name="bankAccount"
-          value={state.bankAccount}
-          onChange={handleChange('bankAccount')}
+          id="bankAccount"
           inputProps={{
             required: '{true}'
           }}

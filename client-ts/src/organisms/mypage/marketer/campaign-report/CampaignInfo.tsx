@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   typo: { fontWeight: 700, textAlign: 'right' },
   divider: { marginBottom: 10 },
   container: { maxWidth: 320, maxHeight: 160, marginBottom: 48 },
-  divier5: { marginBottom: 5 },
+  divierHalf: { marginBottom: 5 },
   img: {
     width: 320,
     height: 160,
@@ -85,7 +85,7 @@ export default function CampaignInfo(props: propInterface) {
       <Grid item xs={12}>
         <div className={classes.container}>
           <Typography variant="h6">배너 이미지</Typography>
-          <Divider className={classes.divider5} />
+          <Divider className={classes.divierHalf} />
           <img
             className={classes.img}
             src={selectedCampaign.bannerSrc}

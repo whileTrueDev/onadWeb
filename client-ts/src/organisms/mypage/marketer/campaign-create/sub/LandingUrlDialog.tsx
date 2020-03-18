@@ -41,7 +41,7 @@ interface bannerDataInterface {
 interface propInterface {
   open: boolean
   onClose: () => void;
-  landingUrlData: UseGetRequestObject<bannerDataInterface[] | string>
+  landingUrlData: UseGetRequestObject<bannerDataInterface[]>
   dispatch: React.Dispatch<Action>;
 }
 
@@ -246,13 +246,13 @@ const LandingUrlInventoryDialog = (props: propInterface) => {
     >
       <div>
         {!landingUrlData.loading && landingUrlData.error && (<span>Error</span>)}
-        {landingUrlData.loading && !landingUrlData.loading && landingUrlData.data && (
+        {!landingUrlData.loading && landingUrlData.data && (
           <MaterialTable
             style={{ boxShadow: 'none' }}
             title=''
             columns={columns}
-            data={landingUrlData.data === 'nourldata' ? [] : landingUrlData.data}
-            isLoading={landingUrlData.loading}
+            data={landingUrlData.data}
+            // isLoading={landingUrlData.loading && landingUrlData.loading}
             options={{
               actionsColumnIndex: -1,
               search: false

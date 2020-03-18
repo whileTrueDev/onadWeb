@@ -74,7 +74,7 @@ const RenderActiveShape = (underText?: boolean, tooltipLabelText?: string) => ({
 interface CustomPieChartProps<T> {
   dataKey: string;
   nameKey: string;
-  data: T[];
+  data: Readonly<T>[];
   height: number;
   legend?: boolean;
   activeIndex?: number;
@@ -82,8 +82,8 @@ interface CustomPieChartProps<T> {
   tooltipLabelText?: string;
   underText?: boolean;
 }
-
-export default function CustomPieChart<DataType extends { value: any }>({
+//  extends { value: any }
+export default function CustomPieChart<DataType>({
   dataKey,
   nameKey,
   legend,
@@ -120,7 +120,7 @@ export default function CustomPieChart<DataType extends { value: any }>({
             {data.map<JSX.Element>(
               (entry, index) => (
                 <Cell
-                  key={entry.value}
+                  key={`cell_${index}`}
                   fill={COLORS.pie[index % COLORS.pie.length]}
                 />
               )

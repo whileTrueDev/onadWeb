@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import MobileStepper from '@material-ui/core/MobileStepper';
 import ButtonBase from '@material-ui/core/Paper';
@@ -210,15 +209,5 @@ const BannerCarousel = (props) => {
  *
  * @author 박찬우
  */
-BannerCarousel.propTypes = {
-  steps: PropTypes.array,
-  handleBannerId: PropTypes.func.isRequired,
-  registStep: PropTypes.number.isRequired
-};
-
-// steps는 bannerId, bannerSrc 라는 col이 존재해야한다.
-BannerCarousel.defaultProps = {
-  steps: tutorialSteps,
-};
 
 export default BannerCarousel;

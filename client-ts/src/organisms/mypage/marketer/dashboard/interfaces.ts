@@ -26,7 +26,7 @@ export interface countInterface {
 export interface valueChartInterface {
   date: string;
   cash: number;
-  type: string;
+  type: 'CPM' | 'CPC';
 }
 
 export interface actionLogInterface {

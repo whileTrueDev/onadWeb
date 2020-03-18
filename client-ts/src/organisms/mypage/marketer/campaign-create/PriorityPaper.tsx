@@ -152,7 +152,7 @@ const PriorityPaper = (props: propsInterface): JSX.Element => {
               primaryText={type.primaryText}
               secondaryText={type.secondaryText}
               disabled={type.disabled}
-              handleSelect={(event: React.MouseEvent<HTMLButtonElement>) => {
+              handleSelect={() => {
                 handleChange(type.id);
                 if (type.customHandleSelect) {
                   type.customHandleSelect(state, setStepComplete);

@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 // core
 import withStyles from '@material-ui/core/styles/withStyles';
 import makeStyles from '@material-ui/core/styles/makeStyles';

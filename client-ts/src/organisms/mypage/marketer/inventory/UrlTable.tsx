@@ -138,7 +138,7 @@ export default function UrlTable(props: propInterface) {
 
   return (
     <div>
-      {fetchData.loading && (<MaterialTable columns={columns} isLoading style={{ boxShadow: 'none' }} />)}
+      {fetchData.loading && (<MaterialTable columns={columns} data={[]} isLoading style={{ boxShadow: 'none' }} />)}
       {!fetchData.loading && fetchData.error && (<span>Error</span>)}
       {!fetchData.loading && fetchData.data && (
         <MaterialTable
@@ -150,8 +150,12 @@ export default function UrlTable(props: propInterface) {
             {
               icon: () => (<Delete />),
               tooltip: '링크 삭제',
-              onClick: (event: React.MouseEvent<HTMLButtonElement>, rowData: urlDataInterface) => {
-                setUrl(rowData);
+              onClick: (event: React.MouseEvent<HTMLButtonElement>, rowData: urlDataInterface | urlDataInterface[]) => {
+                if (Array.isArray(rowData)) {
+                  setUrl(rowData[0]);
+                } else {
+                  setUrl(rowData);
+                }
                 handleDeleteOpen();
               }
             }

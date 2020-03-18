@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { Typography, Tooltip } from '@material-ui/core';
 import Delete from '@material-ui/icons/Delete';
 import MaterialTable from '../../../../atoms/Table/MaterialTable';
@@ -53,7 +52,7 @@ export default function BannerTable(props: propInterface) {
 
   return (
     <div>
-      {fetchData.loading && (<MaterialTable columns={columns} isLoading style={{ boxShadow: 'none' }} />)}
+      {fetchData.loading && (<MaterialTable columns={columns} data={[]} isLoading style={{ boxShadow: 'none' }} />)}
       {!fetchData.loading && fetchData.error && (<span>Error</span>)}
       {!fetchData.loading && fetchData.data && (
         <MaterialTable
@@ -65,8 +64,12 @@ export default function BannerTable(props: propInterface) {
             {
               icon: () => (<Delete />),
               tooltip: '배너삭제',
-              onClick: (event: React.MouseEvent<HTMLButtonElement>, rowData: bannerDataInterface) => {
-                setBanner(rowData);
+              onClick: (event: React.MouseEvent<HTMLButtonElement>, data: bannerDataInterface | bannerDataInterface[]) => {
+                if (Array.isArray(data)) {
+                  setBanner(data[0]);
+                } else {
+                  setBanner(data);
+                }
                 handleDeleteOpen();
               }
             }
@@ -90,6 +93,3 @@ export default function BannerTable(props: propInterface) {
   );
 }
 
-BannerTable.propTypes = {
-  handleDeleteOpen: PropTypes.func.isRequired
-};

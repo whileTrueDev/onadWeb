@@ -108,7 +108,7 @@ const CampaignUpdateDialog = (props: propInterface) => {
 
   const nameData = useGetRequest<string[]>('/marketer/campaign/names');
   // {'campaignId', 'data', 'type'} 의 데이터를 전달해야 가능하다.
-  const { doPatchRequest } = usePatchRequest('/api/dashboard/marketer/campaign', doGetRequest);
+  const { doPatchRequest } = usePatchRequest('/marketer/campaign', doGetRequest);
   // const updateBudget = usePatchRequest('/api/dashboard/marketer/campaign', doGetRequest);
 
   const checkCampaignName = (value: string): void => {

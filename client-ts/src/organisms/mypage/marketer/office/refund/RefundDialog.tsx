@@ -15,7 +15,7 @@ import RefundConfirm from './RefundConfirm';
 import RefundAmount from './RefundAmount';
 import RefundComplete from './RefundComplete';
 import sources from '../sources';
-import { stateInterface, Action, stepReducer } from '../interface';
+import { stepReducer } from '../interface';
 
 const useStyles = makeStyles((theme: Theme) => ({
   contentTitle: {

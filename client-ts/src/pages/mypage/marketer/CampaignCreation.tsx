@@ -159,7 +159,7 @@ const CampaignCreation = (): JSX.Element => {
       ...step3State,
     };
     if (checkEmpty(validateObject)) {
-      axios.post(`${HOST}/api/dashboard/marketer/campaign/push`, validateObject)
+      axios.post(`${HOST}/marketer/campaign`, validateObject)
         .then((res) => {
           if (res.data[0]) {
             alert(res.data[1]);

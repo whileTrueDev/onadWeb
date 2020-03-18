@@ -38,6 +38,10 @@ const useStyles = makeStyles((theme) => ({
   unit: {
     fontWeight: 700,
     marginLeft: '2px'
+  },
+  table: {
+    boxShadow: 'none',
+    overflow: 'hidden'
   }
 }));
 
@@ -53,7 +57,7 @@ export default function CreatorTable(props: propInterface) {
   const {
     checkedCreators, checkedCreatorsDispatch, creatorNamesDispatch
   } = props;
-  const fetchData = useGetRequest('/creators/detail');
+  const fetchData = useGetRequest('/creators/analysis/detail');
   const getChecked = (creatorId: string) => checkedCreators.includes(creatorId);
 
   const handleChecked = (rowData: rowDataInterface) => () => {
@@ -90,7 +94,7 @@ export default function CreatorTable(props: propInterface) {
     {
       title: '',
       field: 'creatorName',
-      render: (rowData: rowDataInterface) => (
+      render: (rowData: rowDataInterface): JSX.Element => (
         <Grid container direction="row" onClick={handleChecked(rowData)} style={{ cursor: 'pointer' }}>
           <Grid item>
             <Avatar variant="rounded" className={classes.image}>
@@ -110,62 +114,62 @@ export default function CreatorTable(props: propInterface) {
     {
       title: '팔로워',
       field: 'followers',
-      render: (rowData: rowDataInterface) => (
+      render: (rowData: rowDataInterface): JSX.Element => (
         makeValueComponent({ value: rowData.followers, unit: '명' })
       )
     },
     {
       title: '평균 시청자수',
       field: 'viewer',
-      render: (rowData: rowDataInterface) => (
+      render: (rowData: rowDataInterface): JSX.Element => (
         makeValueComponent({ value: rowData.viewer, unit: '명' })
       )
     },
     {
       title: '평균 방송시간',
       field: 'airtime',
-      render: (rowData: rowDataInterface) => (
+      render: (rowData: rowDataInterface): JSX.Element => (
         makeValueComponent({ value: rowData.airtime, unit: '분' })
       )
     },
     {
       title: '평균 노출량',
       field: 'impression',
-      render: (rowData: rowDataInterface) => (
+      render: (rowData: rowDataInterface): JSX.Element => (
         makeValueComponent({ value: rowData.impression, unit: '명' })
       )
     },
     {
       title: '평균 노출비용',
       field: 'cost',
-      render: (rowData: rowDataInterface) => (
+      render: (rowData: rowDataInterface): JSX.Element => (
         makeValueComponent({ value: rowData.cost, unit: '원' })
       )
     },
     {
       title: '배너 클릭률',
       field: 'ctr',
-      render: (rowData: rowDataInterface) => (
+      render: (rowData: rowDataInterface): JSX.Element => (
         makeValueComponent({ value: rowData.ctr, unit: '%' })
       )
     },
     {
       title: '주 컨텐츠',
       field: 'content',
-      render: (rowData: rowDataInterface) => (
+      render: (rowData: rowDataInterface): JSX.Element => (
         makeChartComponent({ value: rowData.content })
       )
     },
     {
       title: '주 방송시간대',
       field: 'openHour',
-      render: (rowData: rowDataInterface) => (
+      render: (rowData: rowDataInterface): JSX.Element => (
         makeChartComponent({ value: rowData.openHour })
       )
     },
     {
       title: '',
-      render: (rowData: rowDataInterface) => (
+      render: (rowData: rowDataInterface): JSX.Element => (
         <GreenCheckBox
           checked={getChecked(rowData.creatorId)}
           style={{ fontSize: '20px', padding: 0 }}
@@ -178,11 +182,12 @@ export default function CreatorTable(props: propInterface) {
 
   return (
     <div>
-      {fetchData.loading && (<MaterialTable columns={columns} isLoading />)}
+      {fetchData.loading && (<MaterialTable columns={columns} data={[]} isLoading />)}
       {!fetchData.loading && fetchData.error && (<span>Error</span>)}
       {!fetchData.loading && fetchData.data && (
         <MaterialTable
           style={{ boxShadow: 'none', overflow: 'hidden' }}
+          // className={classes.table}
           title=""
           columns={columns}
           cellWidth={80}

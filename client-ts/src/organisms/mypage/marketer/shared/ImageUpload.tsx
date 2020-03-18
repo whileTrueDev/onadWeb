@@ -54,6 +54,7 @@ const ImageUpload = (props: propInterface) => {
   } = props;
 
   const classes = useStyle();
+
   const readImage = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length !== 0) {
       const fileRegx = /^image\/[a-z]*$/;
@@ -92,11 +93,13 @@ const ImageUpload = (props: propInterface) => {
             </Hidden>
           </Grid>
           <Grid item>
-            {/* htmlFor="getfile"  */}
-            <CustomButton color="primary" size="small" className={classes.imgInput}>
+            {/* for="getfile" */}
+            {/* <CustomButton color="primary" size="small" className={classes.imgInput}>
               파일찾기
               <input type="file" id="getfile" accept="image/*" onChange={readImage} />
-            </CustomButton>
+            </CustomButton> */}
+            <input type="file" id="getfile" accept="image/*" onChange={readImage} />
+            {/* <button type="button" onClick={readImage} /> */}
           </Grid>
         </Grid>
       </div>

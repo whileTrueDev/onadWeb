@@ -25,9 +25,9 @@ export default function TaxBill() {
       </CardHeader>
       <CardBody>
         <Table
-          tableHeaderColor="danger"
+          // tableHeaderColor="danger"
           tableHead={initialData.columns}
-          tableData={loading && data ? initialData.data : data}
+          tableData={loading || data === null ? initialData.data : data}
           pagination
         />
       </CardBody>

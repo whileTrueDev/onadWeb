@@ -38,7 +38,7 @@ export default function CashUsageList() {
       {usageData.loading && (<CircularProgress small />)}
       {!usageData.loading && !usageData.error && usageData.data && (
         <Table
-          tableHeaderColor="info"
+          // tableHeaderColor="info"
           tableHead={initialData.columns}
           tableData={usageData.data.data}
           handleDialogOpen={detailDialog.handleOpen}

@@ -263,9 +263,11 @@ router.route('/account')
           } else {
             accountNumber = '';
           }
+          console.log(accountNumber)
+          console.log(accountHolder)
 
           responseHelper.send({
-            accountNumber, accountHolder
+            marketerAccountNumber: accountNumber, accountHolder
           }, 'get', res);
         })
         .catch((error) => {

@@ -109,10 +109,12 @@ const GameSelect = (props: propInterface) => {
                   defaultValue=""
                   native
                   input={<Input id="grouped-native-select" />}
-                  onChange={(event: React.ChangeEvent<HTMLSelectElement>) => {
-                    if (!checkedGames.includes(event.target.value)) {
-                      if (event.target.value) {
-                        checkedGamesDispatch({ type: 'push', value: event.target.value });
+                  onChange={(event: React.ChangeEvent<{ name?: string | undefined; value: unknown; }>) => {
+                    if (typeof event.target.value === 'string') {
+                      if (!checkedGames.includes(event.target.value)) {
+                        if (event.target.value) {
+                          checkedGamesDispatch({ type: 'push', value: event.target.value });
+                        }
                       }
                     }
                   }}

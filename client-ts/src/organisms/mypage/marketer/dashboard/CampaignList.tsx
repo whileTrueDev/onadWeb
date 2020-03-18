@@ -16,8 +16,10 @@ import CampaignAnalysisDialog from './CampaignAnalysisDialog';
 import { campaignInterface } from './interfaces';
 import { UseGetRequestObject } from '../../../../utils/hooks/useGetRequest';
 import useDialog from '../../../../utils/hooks/useDialog';
-import usePatchRequest from '../../../../utils/hooks/usePatchRequest';
 import history from '../../../../history';
+import axios from '../../../../utils/axios';
+import HOST from '../../../../utils/config';
+
 
 const SLIDE_TIMEOUT = 500;
 const useStyles = makeStyles((theme: Theme) => ({
@@ -71,16 +73,20 @@ export default function CampaignList(props: { campaignData: UseGetRequestObject<
   const campaignReportDialog = useDialog();
   const snack = useDialog();
 
-  const { doPatchRequest } = usePatchRequest('/marketer/campaign/on-off', () => {
-    snack.handleOpen();
-    campaignData.doGetRequest();
-  });
-
-
   // useUpdateData를 사용할 때, 전달되는 url router의 response data의 형태가 array여야함을 고려한다.
   const handleUpdateState = ({ onoffState, campaignId }: { onoffState: boolean; campaignId: string }) => (event: React.ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
-    doPatchRequest({ onoffState, campaignId });
+
+    axios.patch(`${HOST}/marketer/campaign/on-off`, { onoffState, campaignId })
+      .then((res) => {
+        if (res.data[0]) {
+          snack.handleOpen();
+          campaignData.doGetRequest();
+        } else {
+          alert(res.data[1])
+        }
+      })
+    // doPatchRequest({ onoffState, campaignId });
   };
 
   return (
@@ -92,7 +98,7 @@ export default function CampaignList(props: { campaignData: UseGetRequestObject<
         <Button
           variant="contained"
           color="primary"
-          onClick={() => { history.push('/dashboard/marketer/campaigncreate'); }}
+          onClick={() => { history.push('/mypage/marketer/campaigncreate'); }}
         >
           캠페인 등록하기
         </Button>

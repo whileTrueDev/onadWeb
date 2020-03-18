@@ -37,7 +37,7 @@ const productionRouter = (
       <>
         <Route exact path="/" component={Door} />
         <ThemeProvider theme={theme.lightTheme}>
-          <Route path="/mypage/creator" component={CreatorDashboard} />
+          <Route path="/mypage/marketer" component={MarketerDashboard} />
         </ThemeProvider>
       </>
     </Switch>

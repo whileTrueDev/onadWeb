@@ -1,7 +1,7 @@
 import React from 'react';
 // for Link tag component
 // @material-ui/core
-import { withStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import { makeStyles, Theme } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Paper from '@material-ui/core/Paper';
 import Tabs from '@material-ui/core/Tabs';
@@ -21,7 +21,7 @@ import UrlUploadDialog from '../../../organisms/mypage/marketer/inventory/UrlUpl
 import UrlDeleteDialog from '../../../organisms/mypage/marketer/inventory/UrlDeleteDialog';
 
 // core ../../atoms
-import dashboardStyle from '../../../assets/jss/views/dashboardStyle';
+// import dashboardStyle from '../../../assets/jss/views/dashboardStyle';
 import useDialog from '../../../utils/hooks/useDialog';
 import { bannerDataInterface, urlDataInterface } from '../../../organisms/mypage/marketer/inventory/interface';
 
@@ -59,7 +59,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const BannerManage = () => {
+const Inventory = (): JSX.Element => {
   // banner
   const deleteDialog = useDialog();
   const uploadDialog = useDialog();
@@ -133,4 +133,6 @@ const BannerManage = () => {
   );
 };
 
-export default withStyles(dashboardStyle)(BannerManage);
+
+// export default withStyles(dashboardStyle)(Inventory);
+export default Inventory;

@@ -3,7 +3,6 @@ import { makeStyles, Theme } from '@material-ui/core/styles';
 import {
   Grid, Paper, CircularProgress
 } from '@material-ui/core';
-import PropTypes from 'prop-types';
 import StyledItemText from '../../../../../atoms/StyledItemText';
 import CreatorTable from './CreatorTable';
 import useGetRequest from '../../../../../utils/hooks/useGetRequest';
@@ -119,13 +118,6 @@ const CreatorSelect = (props: propInterface) => {
 
  * @author 박찬우
  */
-CreatorSelect.propTypes = {
-  setStepComplete: PropTypes.func.isRequired,
-  checkedCreators: PropTypes.array.isRequired,
-  checkedCreatorsDispatch: PropTypes.func.isRequired,
-  priorityType: PropTypes.string,
-  setSelectedNames: PropTypes.func.isRequired
-};
 
 
 export default CreatorSelect;

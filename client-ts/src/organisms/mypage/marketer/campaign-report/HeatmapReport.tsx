@@ -13,9 +13,13 @@ export default function HeatmapReport(props: propInterface) {
   return (
     <div {...rest}>
       <CardTemplate title="날짜별 상호작용" IconComponent={Flag} color="secondary">
-        <ClickHeatmap
-          data={clickData}
-        />
+        {clickData &&
+          (
+            <ClickHeatmap
+              data={clickData}
+            />
+          )
+        }
       </CardTemplate>
     </div>
   );
