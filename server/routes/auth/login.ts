@@ -67,30 +67,32 @@ router.get('/twitch/callback', passport.authenticate('twitch'),
 
 router.route('/check')
   .get(
-    responseHelper.middleware.checkSessionExists,
+    // responseHelper.middleware.checkSessionExists,
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
-      const session = responseHelper.getSessionData(req);
+      if (responseHelper.getSessionData(req)) {
+        const session = responseHelper.getSessionData(req);
 
-      if (session.userType === 'marketer') {
-        const checkQuery = `
+        if (session.userType === 'marketer') {
+          const checkQuery = `
         SELECT temporaryLogin
         FROM marketerInfo
         WHERE marketerId = ?`;
 
-        doQuery(checkQuery, [session.marketerId])
-          .then((row) => {
-            const { temporaryLogin } = row.result[0];
-            if (temporaryLogin === 1) {
-              responseHelper.send({ error: false, state: 1 }, 'get', res);
-            } else {
-              responseHelper.send({ error: false, state: 0, userType: 'marketer' }, 'get', res);
-            }
-          })
-          .catch(() => {
-            throw new Error('MarketerId 가 marketerInfo에 없습니다.');
-          });
-      } else if (session.userType === 'creator') {
-        responseHelper.send({ error: false, state: 0, userType: 'creator' }, 'get', res);
+          doQuery(checkQuery, [session.marketerId])
+            .then((row) => {
+              const { temporaryLogin } = row.result[0];
+              if (temporaryLogin === 1) {
+                responseHelper.send({ error: false, state: 1 }, 'get', res);
+              } else {
+                responseHelper.send({ error: false, state: 0, userType: 'marketer' }, 'get', res);
+              }
+            })
+            .catch(() => {
+              throw new Error('MarketerId 가 marketerInfo에 없습니다.');
+            });
+        } else if (session.userType === 'creator') {
+          responseHelper.send({ error: false, state: 0, userType: 'creator' }, 'get', res);
+        }
       } else {
         throw new Error('userType is not in creator | marketer');
       }
