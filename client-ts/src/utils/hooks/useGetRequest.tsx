@@ -43,7 +43,7 @@ type DefaultParamType = {[key: string]: any};
 export default function useGetRequest<
   PARAM_TYPE=DefaultParamType, RES_DATA_TYPE = any>(
   url: string,
-  params?: PARAM_TYPE
+  params?: PARAM_TYPE,
 ): UseGetRequestObject<RES_DATA_TYPE> {
   const [param] = useState(params);
   const [data, setData] = useState<RES_DATA_TYPE | null>(null);
@@ -52,6 +52,7 @@ export default function useGetRequest<
 
   const [unmounted, setUnmounted] = useState(false);
   const [source] = useState(cancelToken.source());
+
 
   const doGetRequest = useCallback(() => {
     setLoading(true);
@@ -89,7 +90,7 @@ export default function useGetRequest<
           }
         }
       });
-  }, [source.token, unmounted, param, url]);
+  }, [url, param, source.token, unmounted]);
 
   useEffect(() => {
     doGetRequest();
