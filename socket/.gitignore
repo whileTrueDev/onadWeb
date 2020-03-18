@@ -20,8 +20,4 @@ calculationLog/*
 /banners/*
 /local/*
 
-*/dist
-./dist/*
-!/dist/views
-dist/*
-dist/
+/dist/*
