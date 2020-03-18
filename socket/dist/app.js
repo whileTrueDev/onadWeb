@@ -37,7 +37,6 @@ app.get('/banner/:id', (req, res, next) => {
     res.render('client.ejs');
 });
 io.on('connection', (socket) => {
-    console.log('SOCKET ON');
     const rule = new node_schedule_1.default.RecurrenceRule();
     rule.hour = new node_schedule_1.default.Range(0, 23);
     rule.minute = [0, 10, 20, 30, 40, 50];
@@ -49,6 +48,7 @@ io.on('connection', (socket) => {
         const CLIENT_URL = msg[0];
         const HISTORY = msg[1];
         if (process.env.NODE_ENV === 'development') {
+            console.log('SOCKET ON');
             socket.emit('host pass', SOCKET_HOST);
             callImg_1.default(socket, [CLIENT_URL, '']);
         }

@@ -46,7 +46,6 @@ app.get('/banner/:id', (req, res, next) => { // /banner/:id로 라우팅
 });
 
 io.on('connection', (socket: any) => {
-  console.log('SOCKET ON');
   const rule = new nodeSchedule.RecurrenceRule(); // 스케쥴러 객체 생성
   rule.hour = new nodeSchedule.Range(0, 23); // cronTask 시간지정
   rule.minute = [0, 10, 20, 30, 40, 50]; // cronTask 실행되는 분(minute)
@@ -60,6 +59,7 @@ io.on('connection', (socket: any) => {
     const CLIENT_URL = msg[0];
     const HISTORY = msg[1];
     if (process.env.NODE_ENV === 'development') {
+      console.log('SOCKET ON');
       socket.emit('host pass', SOCKET_HOST);
       callImg(socket, [CLIENT_URL, '']);
     } else if (HISTORY !== 1) {
