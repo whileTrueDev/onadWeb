@@ -21,3 +21,4 @@ calculationLog/*
 /local/*
 
 /dist/*
+!/dist/views
