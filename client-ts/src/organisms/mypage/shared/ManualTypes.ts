@@ -8,7 +8,7 @@ export interface Source {
   image: string | null; description: string;
 }
 export interface ManualContentSources {
-  subType: boolean;
+  subType?: boolean;
   card: { title: string; subtitle: string };
   selectorImages?: {url: string; title: string}[];
   source?: Source[];

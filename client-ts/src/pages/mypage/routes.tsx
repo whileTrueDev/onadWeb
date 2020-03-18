@@ -19,7 +19,7 @@ import CreatorMyPage from './creator/Mypage';
 // 마케터 라우터
 // import MarketerDashboard from './marketer/Dashboard';
 // import MarketerInventory from './marketer/Inventory';
-// import MarketerManual from './marketer/Manual';
+import MarketerManual from './marketer/Manual';
 // import MarketerMyOffice from './marketer/MyOffice';
 // import CampaignCreateStepper from './marketer/CampaignCreation';
 
@@ -95,7 +95,7 @@ const dashboardRoutes: MypageRoutes = {
       path: '/manual',
       name: '사용 방법',
       icon: Reorder,
-      // component: MarketerManual, // 마케터 대시보드 컴포넌트로 수정
+      component: MarketerManual, // 마케터 대시보드 컴포넌트로 수정
       layout: '/mypage/marketer',
     },
     {

@@ -10,7 +10,6 @@ router.route('/:campaignId')
     console.log(campaignId);
 
     /**
-    id: 고유번호
     clickedTime: 클릭 시간
     conversionTime: 전환 시간
     action: 클릭/전환 상태
@@ -28,16 +27,16 @@ router.route('/:campaignId')
     payout: 금액
     */
 
-    const query = `
-    
-    `;
+    // const query = `
 
-    const row = await doQuery(query, [campaignId]);
+    // `;
+
+    // const row = await doQuery(query, [campaignId]);
 
 
     const result = {
       message: 'success',
-      href: 'https://twitch.tv'
+      href: 'http://youtube.com'
     };
     responseHelper.send(result, 'get', res);
   }))

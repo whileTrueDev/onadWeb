@@ -10,6 +10,8 @@ interface AdChatRes {
 export default function AdChat(
   { match }: RouteComponentProps<{campaignId: string}>
 ): JSX.Element {
+  console.log(navigator.userAgent); // 유저에이전트
+  console.log(document.referrer); // 리퍼러
   const AdChatGet = useGetRequest<undefined, AdChatRes>(`/tracking/adchat/${match.params.campaignId}`);
 
   React.useEffect(() => {
