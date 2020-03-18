@@ -10,6 +10,7 @@ const socket_io_1 = __importDefault(require("socket.io"));
 dotenv_1.default.config();
 const doQuery_1 = __importDefault(require("./models/doQuery"));
 const callImg_1 = __importDefault(require("./public/callImg"));
+const node_schedule_1 = __importDefault(require("node-schedule"));
 const app = express_1.default();
 const httpServer = http_1.default.createServer(app);
 const io = socket_io_1.default(httpServer);
@@ -37,18 +38,23 @@ app.get('/banner/:id', (req, res, next) => {
 });
 io.on('connection', (socket) => {
     console.log('SOCKET ON');
+    const rule = new node_schedule_1.default.RecurrenceRule();
+    rule.hour = new node_schedule_1.default.Range(0, 23);
+    rule.second = [0, 10, 20, 30, 40, 50];
+    node_schedule_1.default.scheduleJob(rule, () => {
+        socket.emit('re-render at client', {});
+    });
     socket.on('new client', (msg) => {
         const CLIENT_URL = msg[0];
         const HISTORY = msg[1];
         if (process.env.NODE_ENV === 'development') {
             socket.join('banner room');
             socket.emit('host pass', SOCKET_HOST);
-            console.log(CLIENT_URL);
             callImg_1.default(socket, [CLIENT_URL, '']);
         }
         else if (HISTORY !== 1) {
-            const destination = `${SOCKET_HOST}/browserWarn`;
-            socket.emit('browser warning', destination);
+            const DESTINATION_URL = `${SOCKET_HOST}/browserWarn`;
+            socket.emit('browser warning', DESTINATION_URL);
         }
         else {
             socket.join('banner room');
@@ -60,14 +66,23 @@ io.on('connection', (socket) => {
         const campaignId = msg[0][0];
         const creatorId = msg[0][1];
         const program = msg[1];
+        console.log([campaignId, creatorId, program]);
         const writeQuery = 'INSERT INTO campaignTimestamp (campaignId, creatorId, program) VALUES (?, ?, ?);';
         doQuery_1.default(writeQuery, [campaignId, creatorId, program]);
     });
     socket.on('re-render', (msg) => {
         callImg_1.default(socket, msg);
     });
-    socket.on('hiddenTest', (msg) => { console.log(msg); });
-    socket.on('showTest', (msg) => { console.log(msg); });
+    socket.on('pageOn', (CLIENT_URL) => {
+        callImg_1.default(socket, [CLIENT_URL, '']);
+    });
+    socket.on('pageActive handler', (msg) => {
+        const bannerName = msg[0];
+        const state = msg[1];
+        const program = msg[2];
+        const activeQuery = 'INSERT INTO bannerVisible (advertiseUrl, visibleState, program) VALUES (?, ?, ?);';
+        doQuery_1.default(activeQuery, [bannerName, state, program]);
+    });
 });
 httpServer.listen(PORT, () => {
     console.log(`node_websocket server on ${process.env.NODE_ENV} mode`);

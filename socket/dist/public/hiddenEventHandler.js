@@ -1,24 +1,17 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-function hiddenEventHandler(socket) {
-    const visibilityChange = 'visibilityChange';
-    const hidden = 'hidden';
-    function handleVisibilityChange() {
-        if (document[hidden]) {
-            console.log('hidden');
-            socket.emit('hiddenTest', 'hidden');
+function hiddenEventHandler(socket, THIS_URL, programType) {
+    const cutUrl = `/${THIS_URL.split('/')[4]}`;
+    document.addEventListener("visibilitychange", function () {
+        if (document.visibilityState === 'hidden') {
+            socket.emit('pageActive handler', [cutUrl, 0, programType]);
+            $('#imgMessage').empty();
         }
         else {
-            console.log('show');
-            socket.emit('showTest', 'show');
+            socket.emit('pageActive handler', [cutUrl, 1, programType]);
+            socket.emit('pageOn', THIS_URL);
         }
-    }
-    if (typeof document.addEventListener === 'undefined' || typeof document.hidden === 'undefined') {
-        alert('지원하지 않는 브라우저입니다. 크롬에서 시도해주세요.');
-    }
-    else {
-        document.addEventListener(visibilityChange, handleVisibilityChange, false);
-    }
+    });
 }
 exports.hiddenEventHandler = hiddenEventHandler;
 //# sourceMappingURL=hiddenEventHandler.js.map

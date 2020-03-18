@@ -6,14 +6,22 @@ const socket: any = io();
 const programType: string = identifier();
 const history: number = window.history.length;
 const THIS_URL: string = window.location.href;
-const bannerName: string | undefined = $('#banner-area').attr('name')
-
-hiddenEventHandler(socket);
+let bannerName: string | undefined = $('#banner-area').attr('name');
+hiddenEventHandler(socket, THIS_URL, programType);
+let socketHost: string = '';
 
 socket.emit('new client', [THIS_URL, history]);
 
-socket.on('browser warning', (destination: string) => {
-  window.location.href = destination;
+socket.on('host pass', (SOCKET_HOST: string) => {
+  socketHost = SOCKET_HOST;
+});
+
+socket.on('browser warning', (DESTINATION_URL: string) => {
+  window.location.href = DESTINATION_URL;
+});
+
+socket.on('url warning', () => {
+  window.location.href = `${socketHost}/wrongurl`;
 });
 
 socket.on('img receive', (msg: string[]) => {
@@ -27,6 +35,7 @@ socket.on('img receive', (msg: string[]) => {
 });
 
 socket.on('response banner data to server', () => {
+  bannerName = $('#banner-area').attr('name');
   if (bannerName) {
     const cutBannerName = bannerName.split(',');
     socket.emit('write to db', [cutBannerName, programType]);
@@ -34,6 +43,7 @@ socket.on('response banner data to server', () => {
 });
 
 socket.on('re-render at client', () => {
+  bannerName = $('#banner-area').attr('name');
   socket.emit('re-render', [THIS_URL, bannerName]);
 });
 

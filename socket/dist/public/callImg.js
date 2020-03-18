@@ -258,8 +258,12 @@ function callImg(socket, msg) {
             return new Promise((resolve, reject) => {
                 doQuery_1.default(initQuery, [cutUrl])
                     .then((row) => {
-                    console.log(row.result[0].creatorId);
-                    resolve(row.result[0].creatorId);
+                    if (row.result[0]) {
+                        resolve(row.result[0].creatorId);
+                    }
+                    else {
+                        socket.emit('url warning', []);
+                    }
                 })
                     .catch((errorData) => {
                     errorData.point = 'getUrl()';
@@ -273,19 +277,16 @@ function callImg(socket, msg) {
         return __awaiter(this, void 0, void 0, function* () {
             const myCreatorId = yield getUrl();
             if (myCreatorId) {
-                console.log(myCreatorId);
                 myGameId = yield getGameId(myCreatorId);
                 const bannerInfo = yield getBanner([myCreatorId, myGameId]);
                 if (bannerInfo) {
                     const doInsert = yield insertLandingPage(bannerInfo[1], bannerInfo[2]);
                     socket.emit('img receive', [bannerInfo[0], [bannerInfo[1], bannerInfo[2]]]);
+                    socket.emit('next-campaigns-twitch-chatbot', { campaignId: myCampaignId, creatorId: myCreatorId, twitchCreatorId: '' });
                 }
                 else {
                     console.log(`${myCreatorId} : 같은 캠페인 송출 중이어서 재호출 안합니다. at ${getTime}`);
                 }
-            }
-            else {
-                socket.emit('url warning', []);
             }
         });
     }

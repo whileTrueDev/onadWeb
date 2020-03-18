@@ -10,7 +10,7 @@ import doQuery from './models/doQuery'
 import callImg from './public/callImg';
 
 
-// import nodeschedule from 'node-schedule';
+import nodeSchedule from 'node-schedule';
 
 const app = express();
 const httpServer = http.createServer(app);
@@ -47,6 +47,15 @@ app.get('/banner/:id', (req, res, next) => { // /banner/:id로 라우팅
 
 io.on('connection', (socket: any) => {
   console.log('SOCKET ON');
+  const rule = new nodeSchedule.RecurrenceRule(); // 스케쥴러 객체 생성
+  rule.hour = new nodeSchedule.Range(0, 23); // cronTask 시간지정
+  // rule.minute = [0, 10, 20, 30, 40, 50]; // cronTask 실행되는 분(minute)
+  rule.second = [0, 10, 20, 30, 40, 50]
+  //cronTask
+  nodeSchedule.scheduleJob(rule, () => { // 스케쥴러를 통해 10분마다 db에 배너정보 전송
+    // socket.emit('response banner data to server', {}); // client로 emit
+    socket.emit('re-render at client', {});
+  });
 
   socket.on('new client', (msg: [string, number]) => {
     const CLIENT_URL = msg[0];
@@ -54,11 +63,10 @@ io.on('connection', (socket: any) => {
     if (process.env.NODE_ENV === 'development') {
       socket.join('banner room');
       socket.emit('host pass', SOCKET_HOST);
-      console.log(CLIENT_URL);
       callImg(socket, [CLIENT_URL, '']);
     } else if (HISTORY !== 1) {
-      const destination = `${SOCKET_HOST}/browserWarn`;
-      socket.emit('browser warning', destination);
+      const DESTINATION_URL = `${SOCKET_HOST}/browserWarn`;
+      socket.emit('browser warning', DESTINATION_URL);
     } else {
       socket.join('banner room');
       socket.emit('host pass', SOCKET_HOST);
@@ -70,6 +78,7 @@ io.on('connection', (socket: any) => {
     const campaignId = msg[0][0];
     const creatorId = msg[0][1];
     const program = msg[1];
+    console.log([campaignId, creatorId, program])
     const writeQuery = 'INSERT INTO campaignTimestamp (campaignId, creatorId, program) VALUES (?, ?, ?);';
     doQuery(writeQuery, [campaignId, creatorId, program])
   });
@@ -78,8 +87,19 @@ io.on('connection', (socket: any) => {
     callImg(socket, msg);
   });
 
-  socket.on('hiddenTest', (msg: string) => { console.log(msg); });
-  socket.on('showTest', (msg: string) => { console.log(msg); });
+  socket.on('pageOn', (CLIENT_URL: string) => {
+    callImg(socket, [CLIENT_URL, '']);
+  });
+
+  socket.on('pageActive handler', (msg: [string, number, string]) => {
+    // 배너창을 띄웠을 때는 state = 1
+    // 배너창 숨겼을 때는 state = 0
+    const bannerName = msg[0];
+    const state = msg[1];
+    const program = msg[2];
+    const activeQuery = 'INSERT INTO bannerVisible (advertiseUrl, visibleState, program) VALUES (?, ?, ?);';
+    doQuery(activeQuery, [bannerName, state, program])
+  });
 
 });
 

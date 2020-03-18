@@ -7,11 +7,18 @@ const socket = io();
 const programType = programIdentifier_1.identifier();
 const history = window.history.length;
 const THIS_URL = window.location.href;
-const bannerName = $('#banner-area').attr('name');
-hiddenEventHandler_1.hiddenEventHandler(socket);
+let bannerName = $('#banner-area').attr('name');
+hiddenEventHandler_1.hiddenEventHandler(socket, THIS_URL, programType);
+let socketHost = '';
 socket.emit('new client', [THIS_URL, history]);
-socket.on('browser warning', (destination) => {
-    window.location.href = destination;
+socket.on('host pass', (SOCKET_HOST) => {
+    socketHost = SOCKET_HOST;
+});
+socket.on('browser warning', (DESTINATION_URL) => {
+    window.location.href = DESTINATION_URL;
+});
+socket.on('url warning', () => {
+    window.location.href = `${socketHost}/wrongurl`;
 });
 socket.on('img receive', (msg) => {
     if ($('#imgMessage').find('#banner-area').length === 1) {
@@ -24,12 +31,14 @@ socket.on('img receive', (msg) => {
     }
 });
 socket.on('response banner data to server', () => {
+    bannerName = $('#banner-area').attr('name');
     if (bannerName) {
         const cutBannerName = bannerName.split(',');
         socket.emit('write to db', [cutBannerName, programType]);
     }
 });
 socket.on('re-render at client', () => {
+    bannerName = $('#banner-area').attr('name');
     socket.emit('re-render', [THIS_URL, bannerName]);
 });
 socket.on('img clear', () => {
@@ -39,25 +48,18 @@ socket.on('img clear', () => {
 },{"./hiddenEventHandler":2,"./programIdentifier":3}],2:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-function hiddenEventHandler(socket) {
-    const visibilityChange = 'visibilityChange';
-    const hidden = 'hidden';
-    function handleVisibilityChange() {
-        if (document[hidden]) {
-            console.log('hidden');
-            socket.emit('hiddenTest', 'hidden');
+function hiddenEventHandler(socket, THIS_URL, programType) {
+    const cutUrl = `/${THIS_URL.split('/')[4]}`;
+    document.addEventListener("visibilitychange", function () {
+        if (document.visibilityState === 'hidden') {
+            socket.emit('pageActive handler', [cutUrl, 0, programType]);
+            $('#imgMessage').empty();
         }
         else {
-            console.log('show');
-            socket.emit('showTest', 'show');
+            socket.emit('pageActive handler', [cutUrl, 1, programType]);
+            socket.emit('pageOn', THIS_URL);
         }
-    }
-    if (typeof document.addEventListener === 'undefined' || typeof document.hidden === 'undefined') {
-        alert('지원하지 않는 브라우저입니다. 크롬에서 시도해주세요.');
-    }
-    else {
-        document.addEventListener(visibilityChange, handleVisibilityChange, false);
-    }
+    });
 }
 exports.hiddenEventHandler = hiddenEventHandler;
 
@@ -82,4 +84,4 @@ function identifier() {
 }
 exports.identifier = identifier;
 
-},{}]},{},[1]);
+},{}]},{},[2,1,3]);

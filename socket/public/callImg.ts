@@ -1,7 +1,7 @@
 import { gameDict } from '../models/gameCategory';
 import doQuery from '../models/doQuery';
 
-function callImg(socket: any, msg: string[]) {
+function callImg(socket: any, msg: string[]): void {
   const fullUrl: string = msg[0];
   const cutUrl = `/${fullUrl.split('/')[4]}`;
   const prevBannerName: string = msg[1];
@@ -49,23 +49,23 @@ function callImg(socket: any, msg: string[]) {
     AND NOT campaign.optionType = 2
     AND campaign.limitState = 0
     `;
-    interface timeData {
+    interface TimeData {
       startDate: Date;
       finDate: Date;
       campaignId: string;
       selectedTime: Date;
     }
-    interface returnDate {
+    interface ReturnDate {
       [key: string]: Date;
     }
     return new Promise((resolve, reject) => {
       doQuery(campaignListQuery)
         .then((row) => {
-          const filteredDate: returnDate = {};
+          const filteredDate: ReturnDate = {};
           const campaignIdList: string[] = [];
           const nowDate = new Date();
           row.result.map(
-            (data: timeData) => {
+            (data: TimeData) => {
               if (data.startDate && data.startDate < nowDate && (data.finDate > nowDate || !data.finDate)) {
                 filteredDate[data.campaignId] = data.selectedTime;
               }
@@ -278,8 +278,11 @@ function callImg(socket: any, msg: string[]) {
     return new Promise((resolve, reject) => {
       doQuery(initQuery, [cutUrl])
         .then((row) => {
-          console.log(row.result[0].creatorId);
-          resolve(row.result[0].creatorId);
+          if (row.result[0]) {
+            resolve(row.result[0].creatorId);
+          } else {
+            socket.emit('url warning', []);
+          }
         })
         .catch((errorData) => {
           errorData.point = 'getUrl()';
@@ -292,18 +295,17 @@ function callImg(socket: any, msg: string[]) {
   async function init() {
     const myCreatorId = await getUrl();
     if (myCreatorId) {
-      console.log(myCreatorId);
       myGameId = await getGameId(myCreatorId);
       const bannerInfo: [string, string, number] | undefined = await getBanner([myCreatorId, myGameId]);
       if (bannerInfo) {
         const doInsert = await insertLandingPage(bannerInfo[1], bannerInfo[2]);
+        // [bannerSrc, myCampaignId, creatorId]
         socket.emit('img receive', [bannerInfo[0], [bannerInfo[1], bannerInfo[2]]]);
-        // socket.emit('next-campaigns-twitch-chatbot', {})
+        // to chatbot
+        socket.emit('next-campaigns-twitch-chatbot', { campaignId: myCampaignId, creatorId: myCreatorId, twitchCreatorId: '' })
       } else {
         console.log(`${myCreatorId} : 같은 캠페인 송출 중이어서 재호출 안합니다. at ${getTime}`);
       }
-    } else {
-      socket.emit('url warning', []);
     }
   }
   // 실행
