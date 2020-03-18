@@ -13,9 +13,9 @@ function callImg(socket: any, msg: string[]): void {
   const campaignObject: CampaignIdOptionType = {};
 
   let myCampaignId: string;
-  let myGameId: number;
+  let myGameId: string;
   // creatorId를 전달받아 creatorCampaign과 onff List를 도출.
-  const getCreatorCampaignList = (creatorId: number): Promise<string[]> => {
+  const getCreatorCampaignList = (creatorId: string): Promise<string[]> => {
     console.log(`${creatorId}에게 계약된 creatorCampaign의 campaignList를 가져옵니다.`);
 
     const campaignListQuery = `
@@ -92,7 +92,7 @@ function callImg(socket: any, msg: string[]): void {
     });
   };
   // 하나의 categoryId 에 해당하는 캠페인 리스트를 반환하는 Promise
-  const getCategoryCampaignList = (categoryId: number): Promise<{}> => {
+  const getCategoryCampaignList = (categoryId: number): Promise<string[]> => {
     const campaignListQuery = `
     SELECT campaignList 
     FROM categoryCampaign
@@ -113,7 +113,7 @@ function callImg(socket: any, msg: string[]): void {
     });
   };
 
-  const getGameId = async (creatorId: number): Promise<number> => {
+  const getGameId = async (creatorId: string): Promise<string> => {
     console.log(`크리에이터 ${creatorId}의 gameid를 받아옵니다`);
     const getGameIdQuery = `SELECT gameId 
                             FROM twitchStreamDetail AS tsd 
@@ -137,7 +137,7 @@ function callImg(socket: any, msg: string[]): void {
     });
   };
 
-  const insertTwitchGameUnchecked = (gameId: number, creatorId: number) => {
+  const insertTwitchGameUnchecked = (gameId: string, creatorId: string) => {
     const insertTwitchGameUncheckedQuery = 'INSERT IGNORE INTO twitchGame_unchecked(gameId, creatorId) values(?,?)';
     return new Promise((resolve, reject) => {
       doQuery(insertTwitchGameUncheckedQuery, [gameId, creatorId])
@@ -154,7 +154,7 @@ function callImg(socket: any, msg: string[]): void {
   };
 
   // 하나의 gameId에 해당하는 모든 캠페인 리스트를 반환하는 Promise
-  const getGameCampaignList = async (gameId: number, creatorId: number): Promise<string[]> => {
+  const getGameCampaignList = async (gameId: string, creatorId: string): Promise<string[]> => {
     console.log('게임의 카테고리에 계약되어있는 캠페인 List를 가져옵니다.');
     const categoryList: number[] = gameDict[gameId] ? gameDict[gameId].concat(gameDict.default) : gameDict.default;
     let returnList: string[] = [];
@@ -177,7 +177,7 @@ function callImg(socket: any, msg: string[]): void {
     return Array.from(new Set(returnList));
   };
 
-  const getBanList = (creatorId: number): Promise<string[]> => {
+  const getBanList = (creatorId: string): Promise<string[]> => {
     const selectQuery = `
     SELECT banList 
     FROM creatorCampaign
@@ -224,7 +224,7 @@ function callImg(socket: any, msg: string[]): void {
     return Math.floor(Math.random() * (max - 0)) + 0; // 최댓값은 제외, 최솟값은 포함
   };
 
-  const insertLandingPage = (campaignId: string, creatorId: number) => {
+  const insertLandingPage = (campaignId: string, creatorId: string): Promise<boolean> | boolean => {
     // campaignId를 가져와서 optionType 0,1check후 삽입.
     const optionType = campaignObject[campaignId];
     if (optionType === 0) {
@@ -233,8 +233,8 @@ function callImg(socket: any, msg: string[]): void {
     const insertLandingQuery = 'INSERT IGNORE INTO landingClick(campaignId, creatorId) values(?,?);';
     return new Promise((resolve, reject) => {
       doQuery(insertLandingQuery, [campaignId, creatorId])
-        .then((row) => {
-          resolve(row.result);
+        .then(() => {
+          resolve(true);
         })
         .catch((errorData) => {
           errorData.point = 'insertLandingPage()';
@@ -244,7 +244,7 @@ function callImg(socket: any, msg: string[]): void {
     });
   };
 
-  async function getBanner([creatorId, gameId]: number[]): Promise<[string, string, number] | undefined> {
+  async function getBanner([creatorId, gameId]: string[]): Promise<[string, string, string] | undefined> {
     console.log(`-----------------------Id : ${creatorId} / ${getTime}---------------------------`);
     const [creatorCampaignList, onCampaignList, banList] = await Promise.all(
       [
@@ -273,11 +273,11 @@ function callImg(socket: any, msg: string[]): void {
       return;
     }
     const bannerSrc = await getBannerSrc(myCampaignId);
-    const returnArray: [string, string, number] = [bannerSrc, myCampaignId, creatorId];
+    const returnArray: [string, string, string] = [bannerSrc, myCampaignId, creatorId];
     return returnArray;
   }
   interface CreatorIds {
-    creatorId: number;
+    creatorId: string;
     creatorTwitchId: string
   }
   async function getCreatorIds(): Promise<CreatorIds> {
@@ -303,7 +303,7 @@ function callImg(socket: any, msg: string[]): void {
     const CREATOR_IDS = await getCreatorIds();
     if (CREATOR_IDS.creatorId) {
       myGameId = await getGameId(CREATOR_IDS.creatorId);
-      const bannerInfo: [string, string, number] | undefined = await getBanner([CREATOR_IDS.creatorId, myGameId]);
+      const bannerInfo: [string, string, string] | undefined = await getBanner([CREATOR_IDS.creatorId, myGameId]);
       if (bannerInfo) {
         const doInsert = await insertLandingPage(bannerInfo[1], bannerInfo[2]);
         // [bannerSrc, myCampaignId, creatorId]
