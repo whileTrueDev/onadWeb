@@ -22,6 +22,6 @@ calculationLog/*
 
 */dist
 ./dist/*
+!/dist/views
 dist/*
 dist/
-!/dist/views
