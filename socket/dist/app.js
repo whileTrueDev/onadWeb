@@ -40,15 +40,15 @@ io.on('connection', (socket) => {
     console.log('SOCKET ON');
     const rule = new node_schedule_1.default.RecurrenceRule();
     rule.hour = new node_schedule_1.default.Range(0, 23);
-    rule.second = [0, 10, 20, 30, 40, 50];
+    rule.minute = [0, 10, 20, 30, 40, 50];
     node_schedule_1.default.scheduleJob(rule, () => {
+        socket.emit('response banner data to server', {});
         socket.emit('re-render at client', {});
     });
     socket.on('new client', (msg) => {
         const CLIENT_URL = msg[0];
         const HISTORY = msg[1];
         if (process.env.NODE_ENV === 'development') {
-            socket.join('banner room');
             socket.emit('host pass', SOCKET_HOST);
             callImg_1.default(socket, [CLIENT_URL, '']);
         }
@@ -57,7 +57,6 @@ io.on('connection', (socket) => {
             socket.emit('browser warning', DESTINATION_URL);
         }
         else {
-            socket.join('banner room');
             socket.emit('host pass', SOCKET_HOST);
             callImg_1.default(socket, [CLIENT_URL, '']);
         }
@@ -77,11 +76,11 @@ io.on('connection', (socket) => {
         callImg_1.default(socket, [CLIENT_URL, '']);
     });
     socket.on('pageActive handler', (msg) => {
-        const bannerName = msg[0];
+        const clientUrl = msg[0];
         const state = msg[1];
         const program = msg[2];
         const activeQuery = 'INSERT INTO bannerVisible (advertiseUrl, visibleState, program) VALUES (?, ?, ?);';
-        doQuery_1.default(activeQuery, [bannerName, state, program]);
+        doQuery_1.default(activeQuery, [clientUrl, state, program]);
     });
 });
 httpServer.listen(PORT, () => {

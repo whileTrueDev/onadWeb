@@ -65,6 +65,7 @@ function callImg(socket, msg) {
                 row.result.map((data) => {
                     if (data.startDate && data.startDate < nowDate && (data.finDate > nowDate || !data.finDate)) {
                         filteredDate[data.campaignId] = data.selectedTime;
+                        campaignObject[data.campaignId] = data.optionType;
                     }
                 });
                 Object.values(filteredDate).map((value, index) => {
@@ -233,8 +234,8 @@ function callImg(socket, msg) {
             const onCreatorcampaignList = creatorCampaignList.filter((campaignId) => onCampaignList.includes(campaignId));
             const onCategorycampaignList = categoryCampaignList.filter((campaignId) => onCampaignList.includes(campaignId));
             const campaignList = Array.from(new Set(onCreatorcampaignList.concat(onCategorycampaignList)));
-            const cutCampaignList = campaignList.filter((campaignId) => !banList.includes(campaignId));
-            const returnCampaignId = cutCampaignList[getRandomInt(cutCampaignList.length)];
+            const extractBanCampaignList = campaignList.filter((campaignId) => !banList.includes(campaignId));
+            const returnCampaignId = extractBanCampaignList[getRandomInt(extractBanCampaignList.length)];
             myCampaignId = returnCampaignId;
             if (myCampaignId) {
                 console.log(`${creatorId} : 광고될 캠페인은 ${myCampaignId} 입니다. at : ${getTime}`);
@@ -252,14 +253,14 @@ function callImg(socket, msg) {
             return returnArray;
         });
     }
-    function getUrl() {
+    function getCreatorIds() {
         return __awaiter(this, void 0, void 0, function* () {
-            const initQuery = 'SELECT creatorId FROM creatorInfo WHERE advertiseUrl = ?';
+            const initQuery = 'SELECT creatorId, creatorTwitchId FROM creatorInfo WHERE advertiseUrl = ?';
             return new Promise((resolve, reject) => {
                 doQuery_1.default(initQuery, [cutUrl])
                     .then((row) => {
                     if (row.result[0]) {
-                        resolve(row.result[0].creatorId);
+                        resolve(row.result[0]);
                     }
                     else {
                         socket.emit('url warning', []);
@@ -275,17 +276,17 @@ function callImg(socket, msg) {
     }
     function init() {
         return __awaiter(this, void 0, void 0, function* () {
-            const myCreatorId = yield getUrl();
-            if (myCreatorId) {
-                myGameId = yield getGameId(myCreatorId);
-                const bannerInfo = yield getBanner([myCreatorId, myGameId]);
+            const CREATOR_IDS = yield getCreatorIds();
+            if (CREATOR_IDS.creatorId) {
+                myGameId = yield getGameId(CREATOR_IDS.creatorId);
+                const bannerInfo = yield getBanner([CREATOR_IDS.creatorId, myGameId]);
                 if (bannerInfo) {
                     const doInsert = yield insertLandingPage(bannerInfo[1], bannerInfo[2]);
                     socket.emit('img receive', [bannerInfo[0], [bannerInfo[1], bannerInfo[2]]]);
-                    socket.emit('next-campaigns-twitch-chatbot', { campaignId: myCampaignId, creatorId: myCreatorId, twitchCreatorId: '' });
+                    socket.emit('next-campaigns-twitch-chatbot', { campaignId: myCampaignId, creatorId: CREATOR_IDS.creatorId, twitchCreatorId: CREATOR_IDS.creatorTwitchId });
                 }
                 else {
-                    console.log(`${myCreatorId} : 같은 캠페인 송출 중이어서 재호출 안합니다. at ${getTime}`);
+                    console.log(`${CREATOR_IDS.creatorId} : 같은 캠페인 송출 중이어서 재호출 안합니다. at ${getTime}`);
                 }
             }
         });

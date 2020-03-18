@@ -6,9 +6,12 @@ function callImg(socket: any, msg: string[]): void {
   const cutUrl = `/${fullUrl.split('/')[4]}`;
   const prevBannerName: string = msg[1];
   const getTime: string = new Date().toLocaleString();
-  const campaignObject: any = {};
 
-  // let myCreatorId: number;
+  interface CampaignIdOptionType {
+    [_: string]: number
+  }
+  const campaignObject: CampaignIdOptionType = {};
+
   let myCampaignId: string;
   let myGameId: number;
   // creatorId를 전달받아 creatorCampaign과 onff List를 도출.
@@ -54,6 +57,7 @@ function callImg(socket: any, msg: string[]): void {
       finDate: Date;
       campaignId: string;
       selectedTime: Date;
+      optionType: number;
     }
     interface ReturnDate {
       [key: string]: Date;
@@ -68,6 +72,7 @@ function callImg(socket: any, msg: string[]): void {
             (data: TimeData) => {
               if (data.startDate && data.startDate < nowDate && (data.finDate > nowDate || !data.finDate)) {
                 filteredDate[data.campaignId] = data.selectedTime;
+                campaignObject[data.campaignId] = data.optionType;
               }
             }
           );
@@ -160,7 +165,6 @@ function callImg(socket: any, msg: string[]): void {
       await Promise.all(
         categoryList.map((categoryId) => getCategoryCampaignList(categoryId)
           .then((campaignList: any) => {
-            // returnList = returnList.concat(JSON.stringify(campaignList));
             returnList = returnList.concat(campaignList);
           }))
       )
@@ -253,8 +257,8 @@ function callImg(socket: any, msg: string[]): void {
     const onCreatorcampaignList = creatorCampaignList.filter((campaignId) => onCampaignList.includes(campaignId));
     const onCategorycampaignList = categoryCampaignList.filter((campaignId) => onCampaignList.includes(campaignId));
     const campaignList = Array.from(new Set(onCreatorcampaignList.concat(onCategorycampaignList)));
-    const cutCampaignList = campaignList.filter((campaignId) => !banList.includes(campaignId)); // 마지막에 banList를 통해 거르기.
-    const returnCampaignId = cutCampaignList[getRandomInt(cutCampaignList.length)];
+    const extractBanCampaignList = campaignList.filter((campaignId) => !banList.includes(campaignId)); // 마지막에 banList를 통해 거르기.
+    const returnCampaignId = extractBanCampaignList[getRandomInt(extractBanCampaignList.length)];
     myCampaignId = returnCampaignId;
 
     if (myCampaignId) {
@@ -272,14 +276,17 @@ function callImg(socket: any, msg: string[]): void {
     const returnArray: [string, string, number] = [bannerSrc, myCampaignId, creatorId];
     return returnArray;
   }
-
-  async function getUrl(): Promise<number> {
-    const initQuery = 'SELECT creatorId FROM creatorInfo WHERE advertiseUrl = ?';
+  interface CreatorIds {
+    creatorId: number;
+    creatorTwitchId: string
+  }
+  async function getCreatorIds(): Promise<CreatorIds> {
+    const initQuery = 'SELECT creatorId, creatorTwitchId FROM creatorInfo WHERE advertiseUrl = ?';
     return new Promise((resolve, reject) => {
       doQuery(initQuery, [cutUrl])
         .then((row) => {
           if (row.result[0]) {
-            resolve(row.result[0].creatorId);
+            resolve(row.result[0]);
           } else {
             socket.emit('url warning', []);
           }
@@ -293,18 +300,18 @@ function callImg(socket: any, msg: string[]): void {
   }
 
   async function init() {
-    const myCreatorId = await getUrl();
-    if (myCreatorId) {
-      myGameId = await getGameId(myCreatorId);
-      const bannerInfo: [string, string, number] | undefined = await getBanner([myCreatorId, myGameId]);
+    const CREATOR_IDS = await getCreatorIds();
+    if (CREATOR_IDS.creatorId) {
+      myGameId = await getGameId(CREATOR_IDS.creatorId);
+      const bannerInfo: [string, string, number] | undefined = await getBanner([CREATOR_IDS.creatorId, myGameId]);
       if (bannerInfo) {
         const doInsert = await insertLandingPage(bannerInfo[1], bannerInfo[2]);
         // [bannerSrc, myCampaignId, creatorId]
         socket.emit('img receive', [bannerInfo[0], [bannerInfo[1], bannerInfo[2]]]);
         // to chatbot
-        socket.emit('next-campaigns-twitch-chatbot', { campaignId: myCampaignId, creatorId: myCreatorId, twitchCreatorId: '' })
+        socket.emit('next-campaigns-twitch-chatbot', { campaignId: myCampaignId, creatorId: CREATOR_IDS.creatorId, twitchCreatorId: CREATOR_IDS.creatorTwitchId })
       } else {
-        console.log(`${myCreatorId} : 같은 캠페인 송출 중이어서 재호출 안합니다. at ${getTime}`);
+        console.log(`${CREATOR_IDS.creatorId} : 같은 캠페인 송출 중이어서 재호출 안합니다. at ${getTime}`);
       }
     }
   }
