@@ -3,7 +3,6 @@ import {
 } from 'react';
 import axios, { cancelToken, isCancel as isAxiosCancel } from '../axios';
 import host from '../../config';
-import querify from '../querify';
 import history from '../../history';
 
 const DEFAULT_ERROR_MESSAGE = '죄송합니다.. 데이터 조회중 오류가 발생했습니다..';
@@ -56,7 +55,8 @@ export default function useGetRequest<
 
   const doGetRequest = useCallback(() => {
     setLoading(true);
-    axios.get<RES_DATA_TYPE>(`${host}${url}${querify(param)}`, {
+    axios.get<RES_DATA_TYPE>(`${host}${url}`, {
+      params: { ...param },
       cancelToken: source.token,
       withCredentials: true
     })

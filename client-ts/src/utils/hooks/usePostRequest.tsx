@@ -46,15 +46,11 @@ export default function usePostRequest<PARAM_TYPE = {[key: string]: any}, RES_DA
     setLoading(true); // 로딩 시작
     axios.post<RES_DATA_TYPE>(`${host}${url}`,
       { ...param })
-      .then((res) => {
+      .then((res) => { // 200 번대 상태코드
         setLoading(false); // 로딩 완료
-
-        const { status } = res;
         setData(res.data);
-        if (Math.floor(status / 100) === 2) {
-          setSuccess(true);
-          if (successCallback) { successCallback(); }
-        }
+        setSuccess(true);
+        if (successCallback) { successCallback(); }
       })
       .catch((err) => {
         setLoading(false); // 로딩 완료
