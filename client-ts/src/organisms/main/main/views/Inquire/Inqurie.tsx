@@ -158,7 +158,6 @@ function Inquire({ confirmClose }: Props): JSX.Element {
 
     const AnonymousUser = inquiryContent;
 
-    console.log(AnonymousUser);
     setLoading(true);
     if (checked) {
       axios.post(`${HOST}/mail/inquiry`, AnonymousUser)

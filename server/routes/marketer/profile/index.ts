@@ -4,6 +4,7 @@ import responseHelper from '../../../middlewares/responseHelper';
 import doQuery from '../../../model/doQuery';
 import encrypto from '../../../middlewares/encryption';
 import sendEmailAuth from '../../../middlewares/auth/sendEmailAuth';
+import setTemporaryPassword from '../../../middlewares/auth/setTemporyPassword';
 
 const router = express.Router();
 
@@ -98,7 +99,7 @@ router.route('/')
             const [key, salt] = encrypto.make(value);
             return [`
                         UPDATE marketerInfo 
-                        SET marketerSalt = ?, marketerPasswd = ?
+                        SET marketerSalt = ?, marketerPasswd = ?, temporaryLogin = 0
                         WHERE marketerId = ? 
                         `, [salt, key, marketerId]];
           }
@@ -536,6 +537,50 @@ router.route('/checkId')
           responseHelper.send(false, 'post', res);
         });
     })
+  )
+  .all(responseHelper.middleware.unusedMethod);
+
+router.route('/social')
+  // 세션 데이터 전송
+  .get(
+    responseHelper.middleware.checkSessionExists,
+    responseHelper.middleware.withErrorCatch(async (req, res, next) => {
+      const { marketerPlatformData, marketerMail } = responseHelper.getSessionData(req);
+      responseHelper.send({ marketerPlatformData, marketerMail }, 'get', res);
+    })
+  )
+  .all(responseHelper.middleware.unusedMethod);
+
+router.route('/tmp-password')
+  .patch(
+    // 아이디, 이메일로 체크 후 비밀번호 변경
+    responseHelper.middleware.withErrorCatch(async (req, res, next) => {
+      const json = {
+        error: true,
+        message: ''
+      };
+      const [marketerId, marketerMail] = responseHelper.getParam(['marketerId', 'marketerMail'], 'patch', req);
+
+      doQuery('SELECT marketerMail, marketerId FROM marketerInfo WHERE marketerId = ? ', [marketerId])
+        .then((data) => {
+          const { result } = data;
+          if (result[0]) {
+            if (result[0].marketerMail === marketerMail && result[0].marketerId === marketerId) {
+              next();
+            } else {
+              json.message = 'EMAIL이 일치하지 않습니다.';
+              responseHelper.send(JSON.stringify(json), 'patch', res);
+            }
+          } else {
+            json.message = '해당 ID의 회원이 존재하지 않습니다.';
+            responseHelper.send(JSON.stringify(json), 'patch', res);
+          }
+        })
+        .catch(() => {
+          json.message = 'DB 관련 오류입니다. 잠시 후 다시 시도해주세요..';
+          responseHelper.send(JSON.stringify(json), 'patch', res);
+        });
+    }), setTemporaryPassword
   )
   .all(responseHelper.middleware.unusedMethod);
 

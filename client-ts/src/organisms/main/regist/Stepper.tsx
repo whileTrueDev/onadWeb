@@ -14,7 +14,7 @@ import PaperSheet from './Paper';
 import HOST from '../../../config';
 import history from '../../../history';
 import IdentityVerification from './IdentityVerification';
-import { myReducer, initialState, StepState } from './Stepper.reducer';
+import { myReducer, initialState } from './Stepper.reducer';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -71,14 +71,13 @@ function RegistStepper({ platform }: { platform: string }): JSX.Element {
     setType(type);
   }
 
-  function handleUserSubmit(user: StepState): void {
+  function handleUserSubmit(user: any): void {
     const platformType = platformList.indexOf(platform);
     const returnUser = {
       ...user,
       platformType
     };
     if (platform === undefined) {
-      // axios.post(`${HOST}/api/regist/marketer`, user)
       axios.post(`${HOST}/marketer`, user)
         .then((res) => {
           const { error } = res.data;

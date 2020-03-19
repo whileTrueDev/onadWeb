@@ -74,9 +74,9 @@ router.route('/check')
 
         if (session.userType === 'marketer') {
           const checkQuery = `
-        SELECT temporaryLogin
-        FROM marketerInfo
-        WHERE marketerId = ?`;
+          SELECT temporaryLogin
+          FROM marketerInfo
+          WHERE marketerId = ?`;
 
           doQuery(checkQuery, [session.marketerId])
             .then((row) => {

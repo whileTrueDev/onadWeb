@@ -30,69 +30,81 @@ interface Props {
   handleClose: () => void;
 }
 
+const initialState = {
+  marketerName: '',
+  marketerMail: '',
+  marketerId: ''
+};
+
+const FindResult: any = initialState;
+
+type InputType = React.ChangeEvent<HTMLInputElement>
+type FormType = React.FormEvent<HTMLFormElement>
+
+
 function FindDialog({
   dialogType,
   findDialogOpen,
   handleFindDialogClose,
   handleClose,
 }: Props): JSX.Element {
-  const CheckId = (event: React.FormEvent<HTMLFormElement>) => {
+  const classes = style();
+  const [findContent, setFindContent] = React.useState(initialState);
+
+  function onChange(e: InputType): void {
+    const { name, value } = e.currentTarget;
+    FindResult[name] = value;
+    setFindContent(FindResult);
+  }
+  const CheckId = (event: FormType) => {
     event.preventDefault();
-    let mailInput = event.currentTarget.marketerMail;
-    const user = {
-      marketerName: event.currentTarget.marketerName,
-      marketerMail: event.currentTarget.marketerMail,
-    };
     const emailReg = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*[.]+[a-zA-Z]{2,3}$/i;
-    if (emailReg.test(user.marketerMail)) {
-      axios.post(`${HOST}/api/regist/findId`, user)
+    if (emailReg.test(findContent.marketerMail)) {
+      axios.get(`${HOST}/marketer/id`, { params: findContent })
         .then((res) => {
+          const ans = JSON.parse(res.data);
           if (res.data.error) {
-            alert(res.data.message);
-            mailInput = '';
+            alert(ans.message);
+            setFindContent(initialState);
           } else {
-            alert(`당신의 ID는 ${res.data.message} 입니다.`);
+            alert(`당신의 ID는 ${ans.message} 입니다.`);
             handleFindDialogClose();
+            setFindContent(initialState);
           }
         })
         .catch((err) => {
           console.log(err);
           handleFindDialogClose();
+          setFindContent(initialState);
         });
     } else {
       // 이메일 형식 오류
       alert('이메일 형식이 올바르지 않습니다.');
-      mailInput.value = '';
+      setFindContent(initialState);
     }
   };
 
-  const classes = style();
-
-  const CheckPasswd = (event: React.FormEvent<HTMLFormElement>) => {
+  const CheckPasswd = (event: FormType) => {
     event.preventDefault();
     const emailReg = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*[.]+[a-zA-Z]{2,3}$/i;
-    let mailInput = event.currentTarget.marketerMail;
-    const user = {
-      marketerId: event.currentTarget.marketerId,
-      marketerMail: event.currentTarget.marketerMail,
-    };
-    if (emailReg.test(user.marketerMail)) {
-      axios.post(`${HOST}/api/regist/findPw`, user)
+    if (emailReg.test(findContent.marketerMail)) {
+      axios.patch(`${HOST}/marketer/tmp-password`, findContent)
         .then((res) => {
-          if (res.data.error) {
-            alert(res.data.message);
-            mailInput = '';
-            // handleFindDialogClose();
-            // handleClose();
+          const ans = JSON.parse(res.data);
+          if (ans.error) {
+            alert(ans.message);
+            setFindContent(initialState);
           } else {
             alert('가입시 등록한 이메일로 임시비밀번호가 발송되었습니다.');
             handleFindDialogClose();
             handleClose();
+            setFindContent(initialState);
           }
         });
     } else {
       // 이메일 형식 오류
       alert('이메일 형식이 올바르지 않습니다.');
+      setFindContent(initialState);
     }
   };
 
@@ -115,6 +127,7 @@ function FindDialog({
             label="ID"
             helperText="ID을 입력하세요."
             margin="dense"
+            onChange={onChange}
             name="marketerId"
             InputLabelProps={{ shrink: true }}
             style={{ width: '80%' }}
@@ -124,6 +137,7 @@ function FindDialog({
             label="EMAIL"
             helperText="EMAIL을 입력하세요."
             margin="dense"
+            onChange={onChange}
             name="marketerMail"
             id="mail"
             InputLabelProps={{ shrink: true }}
@@ -142,6 +156,7 @@ function FindDialog({
           label="NAME"
           helperText="이름을 입력하세요."
           margin="dense"
+          onChange={onChange}
           name="marketerName"
           InputLabelProps={{ shrink: true }}
           style={{ width: '80%' }}
@@ -151,6 +166,7 @@ function FindDialog({
           label="EMAIL"
           helperText="EMAIL을 입력하세요."
           margin="dense"
+          onChange={onChange}
           name="marketerMail"
           InputLabelProps={{ shrink: true }}
           style={{ width: '80%' }}

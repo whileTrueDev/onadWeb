@@ -1,15 +1,14 @@
 import { Request, Response } from 'express';
 import axios from 'axios';
-import encrypto from './encryption';
-import doQuery from '../model/doQuery';
+import encrypto from '../encryption';
+import doQuery from '../../model/doQuery';
+import responseHelper from '../responseHelper';
 
 const HOST = process.env.NODE_ENV === 'production'
   ? process.env.PRODUCTION_API_HOSTNAME
   : process.env.DEV_API_HOSTNAME;
 
-const setTemporaryPassword = (
-  req: Request, res: Response
-): void => {
+function setTemporaryPassword(req: Request, res: Response): void {
   // 임시비밀번호 생성.
   let password = '';
 
@@ -33,16 +32,17 @@ const setTemporaryPassword = (
         password,
         baseUrl: req.baseUrl
       };
+      console.log(req.body);
       axios.post(`${HOST}/mail/tmp-auth`, user)
         .then((response) => {
           // 메일 전송 오류 및 성공.
-          res.send(response.data);
+          responseHelper.send(response.data, 'POST', res);
         });
     })
     .catch((data) => {
       // 쿼리문이나 커넥션에 대한 에러
       res.send(data);
     });
-};
+}
 
 export default setTemporaryPassword;

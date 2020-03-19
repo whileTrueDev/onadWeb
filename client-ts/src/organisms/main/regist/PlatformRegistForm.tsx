@@ -128,8 +128,7 @@ function PlatformRegistForm({
   const [marketerId, setMarketerId] = useState('');
 
   // user 데이터를 전달 받는 hook 사용하여 기본 값을 가져온다.
-  const profileData = useGetRequest<null, ProfileData>('?????');
-
+  const profileData = useGetRequest<null, ProfileData>('/marketer/social');
   useEffect(() => {
     if (!profileData.loading && profileData.data) {
       const { marketerPlatformData, marketerMail } = profileData.data;
@@ -163,8 +162,8 @@ function PlatformRegistForm({
     const { email } = state;
     // 모든 state가 false가 되어야한다.
     // const marketerName = document.getElementById('name').value;
-    const marketerName = event.currentTarget.name;
-    const marketerBusinessRegNum = (document.getElementById('marketerBusinessRegNum') ? event.currentTarget.marketerBusinessRegNum : '');
+    const marketerName = state.name;
+    const marketerBusinessRegNum = (document.getElementById('marketerBusinessRegNum') ? state.marketerBusinessRegNum : '');
     const marketerPhoneNum = state.phoneNum;
     const marketerDomain = state.domain === '직접입력' ? marketerCustomDomain : state.domain;
     const marketerUserType = userType;
@@ -205,6 +204,7 @@ function PlatformRegistForm({
                     required
                     label="회사명(브랜드명)"
                     id="name"
+                    onChange={handleChange('name')}
                     className={classes.textField}
                     placeholder="회사명(브랜드명)을 입력하세요"
                     margin="normal"
@@ -282,7 +282,7 @@ function PlatformRegistForm({
                     <FormControl style={{ marginTop: '8px', marginBottom: '16px' }}>
                       <InputLabel shrink>사업자등록번호</InputLabel>
                       <Input
-                        // onChange={handleChange('businessRegNum')}
+                        onChange={handleChange('marketerBusinessRegNum')}
                         name="businessRegNum"
                       />
                       <FormHelperText>사업자 번호를 입력하세요.</FormHelperText>

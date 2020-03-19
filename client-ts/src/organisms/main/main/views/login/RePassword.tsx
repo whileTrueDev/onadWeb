@@ -68,6 +68,9 @@ const myReducer = (
     }
   }
 };
+
+type InputType = React.ChangeEvent<HTMLInputElement>
+type FormType = React.FormEvent<HTMLFormElement>
 interface Props {
   setRepassword: any;
   logout: () => void;
@@ -78,28 +81,29 @@ function RePasswordDialog({ setRepassword, logout, repasswordOpen }: Props): JSX
   const [state, dispatch] = useReducer(myReducer, initialValue);
   const classes = useStyles();
 
-  const checkPasswd = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const checkPasswd = (event: InputType) => {
     event.preventDefault();
     dispatch({ type: 'password', value: event.target.value });
   };
 
-  const checkRePasswd = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const checkRePasswd = (event: InputType) => {
     event.preventDefault();
     dispatch({ type: 'repasswd', value: event.target.value });
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (event: FormType) => {
     event.preventDefault();
     if (state.password || state.repasswd) {
       alert('입력이 올바르지 않습니다.');
       return;
     }
     const user = {
-      password: event.currentTarget.password.value,
+      type: 'password',
+      value: state.value
     };
 
-    axios.post(`${HOST}/login/changePw`, user)
-      .then((res) => {
+    axios.patch(`${HOST}/marketer`, user)
+      .then(() => {
         alert('비밀번호 변경이 완료되었습니다. 다시 로그인 해주세요');
         setRepassword(false);
         logout();
@@ -155,7 +159,6 @@ function RePasswordDialog({ setRepassword, logout, repasswordOpen }: Props): JSX
         </DialogContent>
         <DialogActions>
           <Button type="submit" value="Submit" color="primary">확인</Button>
-          <Button color="primary">취소</Button>
         </DialogActions>
       </form>
     </Dialog>

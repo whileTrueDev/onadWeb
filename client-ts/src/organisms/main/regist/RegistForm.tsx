@@ -357,7 +357,7 @@ function RegistForm({
                     <FormControl style={{ marginTop: '8px', marginBottom: '16px' }}>
                       <InputLabel shrink>사업자등록번호</InputLabel>
                       <Input
-                        // onChange={handleChange('businessRegNum')}
+                        onChange={handleChange('marketerBusinessRegNum')}
                         name="businessRegNum"
                       />
                       <FormHelperText>사업자 번호를 입력후 조회버튼을 누르세요.</FormHelperText>
