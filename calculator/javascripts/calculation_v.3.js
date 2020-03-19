@@ -3,7 +3,10 @@ const Notification = require('./notification');
 const pool = require('../model/connectionPool');
 const sendAlimtalk = require('./alimtalk');
 
+// 시청자수 1회당 가격
 const PPP = 2;
+
+// 마케터 대비 크리에이터가 받는 돈의 비율 => 노출량 10회에 마케터는 PPP X 10 / 크리에이터는 PPP X 10 X FEERATE
 const FEERATE = 0.5;
 
 const doConnectionQuery = ({ connection, queryState, params }) => new Promise((resolve, reject) => {
@@ -138,7 +141,7 @@ const getprice = ({
       }
       if (result.length !== 0) {
         const { unitPrice } = result[0];
-        resolve(Math.round(Number(PPP * unitPrice)));
+        resolve(Number(unitPrice));
       } else {
         resolve(0);
       }
@@ -164,13 +167,20 @@ const getStreamList = ({
     if (viewer === 0) {
       return {};
     }
-    const price = await getprice({
+    
+    // 마케터의 unitprice를 가져온다.
+    const unitPrice = await getprice({
       connection, campaignId
     });
-    // 가격 가져오기.
+  
     streamData.viewer = viewer || 0;
-    streamData.cashFromMarketer = viewer * price;
-    streamData.cashToCreator = Math.round(Number(Number(viewer) * Number(price) * FEERATE));
+
+    //마케터에게서 징수하는 금액은 PPP(노출 1회당 가격) X viewer(10분동안의 노출량) X unitPrice(마케터 고유의 가격)
+    streamData.cashFromMarketer = Math.round(Number(viewer) * Number(unitPrice) * PPP);
+    
+    //크리에이터에게 전달되는 금액은 PPP(노출 1회당 가격) X viewer(10분동안의 노출량) X unitPrice(마케터 고유의 가격) X FEERATE(세율)
+    streamData.cashToCreator = Math.round( Math.round(Number(viewer) * Number(unitPrice) * PPP) * FEERATE);
+
     return streamData;
   })
 );
@@ -427,7 +437,6 @@ const dailyLimitCalculate = ({ connection, campaignId }) => {
       .then((result) => {
         const { optionType, dailyLimit } = result[0];
         const today = new Date();
-        if (optionType === 0) {
           doConnectionQuery({ connection, queryState: dayAmountQuery, params: [campaignId, today] })
             .then((row) => {
               const { count } = row[0];
@@ -444,9 +453,6 @@ const dailyLimitCalculate = ({ connection, campaignId }) => {
             .catch((error) => {
               reject(error);
             });
-        } else {
-          resolve();
-        }
       })
       .catch((error) => {
         reject(error);
