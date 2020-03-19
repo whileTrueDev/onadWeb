@@ -1,8 +1,8 @@
 import React from 'react';
-import shortid from 'shortid';
-import {
-  Grid, Typography, Button
-} from '@material-ui/core';
+// import shortid from 'shortid';
+// import {
+//   Grid, Typography, Button
+// } from '@material-ui/core';
 // import Skeleton from '@material-ui/lab/Skeleton';
 // import BubbleChart from '@material-ui/icons/BubbleChart';
 // import { compose, withProps, withHandlers } from 'recompose';
@@ -11,7 +11,7 @@ import {
 // } from 'react-google-maps';
 // import MarkerClusterer, { MarkerClustererProps } from 'react-google-maps/lib/components/addons/MarkerClusterer';
 // import CardTemplate from './CardTemplate';
-import MaterialTable from '../../../../atoms/Table/MaterialTable';
+// import MaterialTable from '../../../../atoms/Table/MaterialTable';
 import { geoInterface } from '../dashboard/interfaces';
 import { UseGetRequestObject } from '../../../../utils/hooks/useGetRequest';
 
@@ -29,14 +29,14 @@ import { UseGetRequestObject } from '../../../../utils/hooks/useGetRequest';
 //     mapElement: <div style={{ height: '100%' }} />,
 //   }),
 //   withHandlers({
-//     onMarkerClustererClick: () => (markerClusterer: MarkerClustererProps) => {
+//     onMarkerClustererClick: () => (markerClusterer: any) => {
 //       // 마커 클릭 이벤트 걸기
-//       // const clickedMarkers = markerClusterer.getMarkers();
+//       const clickedMarkers = markerClusterer.getMarkers();
 //     },
 //   }),
 //   withScriptjs,
 //   withGoogleMap
-// )((props: MarkerClustererProps) => (
+// )((props: any) => (
 //   <GoogleMap
 //     defaultZoom={6}
 //     defaultCenter={{ lat: 36.2, lng: 127.959043 }}

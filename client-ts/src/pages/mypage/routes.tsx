@@ -89,7 +89,7 @@ const dashboardRoutes: MypageRoutes = {
       path: '/inventory',
       name: '내 배너',
       icon: BrandingWatermark,
-      component: MarketerInventory, // 마케터 대시보드 컴포넌트로 수정
+      component: () => <MarketerInventory />, // 마케터 대시보드 컴포넌트로 수정
       layout: '/mypage/marketer',
     },
     {

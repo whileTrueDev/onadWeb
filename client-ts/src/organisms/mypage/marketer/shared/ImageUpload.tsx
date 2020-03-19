@@ -1,6 +1,6 @@
 import React from 'react';
 import { makeStyles, Theme } from '@material-ui/core/styles';
-import { Grid, Hidden, Typography } from '@material-ui/core';
+import { Grid, Hidden, Typography, Button } from '@material-ui/core';
 import CustomButton from '../../../../atoms/CustomButtons/Button';
 
 
@@ -9,8 +9,8 @@ const useStyle = makeStyles((theme: Theme) => ({
     [theme.breakpoints.down('xs')]: {
       margin: '2px',
     },
-    margin: 0,
-    textAlign: 'center',
+    marginTop: '4px',
+    fontSize: '15px',
   },
   imgPreview: {
     width: '100%',
@@ -25,7 +25,12 @@ const useStyle = makeStyles((theme: Theme) => ({
   },
   buttonSet: {
     maginTop: '16px'
-  }
+  },
+  container: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 }));
 
 interface ImageInterface {
@@ -87,19 +92,20 @@ const ImageUpload = (props: propInterface) => {
       />
       <div className="filebox">
         <Grid container direction="row" justify="flex-end">
-          <Grid item>
+          <Grid item className={classes.container}>
             <Hidden smDown>
               <input className="upload-name" value={state.imageName} disabled />
             </Hidden>
           </Grid>
-          <Grid item>
-            {/* for="getfile" */}
-            {/* <CustomButton color="primary" size="small" className={classes.imgInput}>
-              파일찾기
-              <input type="file" id="getfile" accept="image/*" onChange={readImage} />
-            </CustomButton> */}
+          <Grid item className={classes.container}>
+            <Button component="span" color="primary">
+              <label htmlFor='getfile' >
+                <Typography className={classes.imgInput}>
+                  파일찾기
+                </Typography>
+              </label>
+            </Button>
             <input type="file" id="getfile" accept="image/*" onChange={readImage} />
-            {/* <button type="button" onClick={readImage} /> */}
           </Grid>
         </Grid>
       </div>

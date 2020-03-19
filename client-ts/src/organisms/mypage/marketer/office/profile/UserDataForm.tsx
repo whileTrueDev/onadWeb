@@ -7,7 +7,6 @@ import GridItem from '../../../../../atoms/Grid/GridItem';
 import Card from '../../../../../atoms/Card/Card';
 import CardHeader from '../../../../../atoms/Card/CardHeader';
 import CardBody from '../../../../../atoms/Card/CardBody';
-import CardFooter from '../../../../../atoms/Card/CardFooter';
 import Button from '../../../../../atoms/CustomButtons/Button';
 import dashboardStyle from '../../../../../assets/jss/views/dashboardStyle';
 import UserDataUpdateDialog from './UserDataUpdateDialog';
@@ -115,17 +114,16 @@ const UserDataForm = (props: propInterface) => {
             />
           </GridItem>
         </GridContainer>
-      </CardBody>
-      <CardFooter>
         <Button
           onClick={() => {
             userDataUpdateDialog.handleOpen();
           }}
+          size="medium"
           color="primary"
         >
           정보변경
         </Button>
-      </CardFooter>
+      </CardBody>
       <UserDataUpdateDialog
         open={userDataUpdateDialog.open}
         userData={userData}

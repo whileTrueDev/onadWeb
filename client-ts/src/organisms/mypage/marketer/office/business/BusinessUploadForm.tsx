@@ -77,6 +77,7 @@ function BusinessUploadForm(props: propInterface) {
               <Button
                 color="primary"
                 onClick={() => { handleOpen(); }}
+                size="medium"
               >
                 사업자 등록증 등록
               </Button>

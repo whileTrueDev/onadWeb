@@ -15,7 +15,7 @@ import * as serviceWorker from './serviceWorker';
 import Door from './pages/main/Door';
 // import CreatorDashboard from './pages/mypage/layouts/CreatorLayout';
 import MarketerDashboard from './pages/mypage/layouts/MarketerLayout';
-
+import ChargeDialog from './organisms/mypage/marketer/office/charge/ChargeDialog'
 
 dotenv.config();
 
@@ -26,6 +26,7 @@ const developmentRouter = (
       <ThemeProvider theme={theme.lightTheme}>
         {/* <Route path="/mypage/creator" component={CreatorDashboard} /> */}
         <Route path="/mypage/marketer" component={MarketerDashboard} />
+        <Route exact path="/marketer/charge" component={ChargeDialog} />
       </ThemeProvider>
     </Switch>
   </Router>
@@ -38,6 +39,7 @@ const productionRouter = (
         <Route exact path="/" component={Door} />
         <ThemeProvider theme={theme.lightTheme}>
           <Route path="/mypage/marketer" component={MarketerDashboard} />
+          <Route exact path="/marketer/charge" component={ChargeDialog} />
         </ThemeProvider>
       </>
     </Switch>

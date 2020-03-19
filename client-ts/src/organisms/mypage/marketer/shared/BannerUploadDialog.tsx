@@ -1,4 +1,4 @@
-import React, { useReducer, useState } from 'react';
+import React, { useReducer, useState, useEffect } from 'react';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import {
   Stepper, Step, StepLabel, StepContent,
@@ -12,6 +12,8 @@ import ImageUpload from './ImageUpload';
 import HOST from '../../../../utils/config';
 import axios from '../../../../utils/axios';
 import history from '../../../../history';
+import usePostRequest from '../../../../utils/hooks/usePostRequest';
+
 
 const DEFAULT_IMAGE_PATH = '/pngs/dashboard/banner_upload_manual.png';
 
@@ -105,12 +107,13 @@ const UploadDialog = (props: propInterface) => {
   const classes = useStyle();
   const [state, dispatch] = useReducer(myReducer, { imageName: '', imageUrl: DEFAULT_IMAGE_PATH });
   const [activeStep, setStep] = useState(0);
-
+  const { data, loading, error, doPostRequest } = usePostRequest<{ bannerSrc: string, bannerDescription: string }, boolean[]>('/marketer/banner')
   const handleClose = () => {
     dispatch({ type: 'reset' });
     setStep(0);
     onClose();
   };
+
 
   const handleNext = (number: number) => (): void => {
     if (state.imageUrl !== DEFAULT_IMAGE_PATH) {
@@ -122,10 +125,16 @@ const UploadDialog = (props: propInterface) => {
 
   // url을 제출.
   const handleSubmit = () => {
-    const bannerDescription = (document.getElementById('banner') as HTMLInputElement).value || null;
-    // text format을 사용하기 위해 state로 사용한다.
-
-    axios.post(`${HOST}/api/dashboard/marketer/banner/push`, {
+    const bannerDescription = (document.getElementById('banner') as HTMLInputElement).value || '';
+    // if (state.imageUrl) {
+    //   doPostRequest({
+    //     bannerSrc: state.imageUrl, bannerDescription,
+    //   });
+    //   if (recallRequest) {
+    //     recallRequest();
+    //   }
+    // }
+    axios.post(`${HOST}/marketer/banner`, {
       bannerSrc: state.imageUrl, bannerDescription,
     })
       .then((res) => {
@@ -143,7 +152,10 @@ const UploadDialog = (props: propInterface) => {
         }
         handleClose();
       });
-  };
+
+  }
+  // text format을 사용하기 위해 state로 사용한다.
+
 
 
   return (
@@ -176,7 +188,9 @@ const UploadDialog = (props: propInterface) => {
             <BannerDescForm
               handleNext={handleNext}
               state={state}
-              handleSubmit={handleSubmit}
+              handleSubmit={() => {
+                handleSubmit();
+              }}
             />
           </StepContent>
         </Step>

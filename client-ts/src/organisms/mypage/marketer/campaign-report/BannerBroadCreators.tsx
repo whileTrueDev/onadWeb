@@ -5,7 +5,7 @@ import {
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import CardTemplate from './CardTemplate';
 import CreatorInfo from './CreatorInfo';
-import axios from '../../../../utils/axios';
+import axios, { cancelToken } from '../../../../utils/axios';
 import HOST from '../../../../utils/config';
 import { creatorDataInterface } from '../dashboard/interfaces';
 import { UseGetRequestObject } from '../../../../utils/hooks/useGetRequest'
@@ -33,12 +33,18 @@ export default function BannerBroadCreators(props: propInterface) {
     if (creatorsData.data) {
       const { creatorId } = creatorsData.data[index];
       // 수정필요.
-      axios.get(`${HOST}/creators/report/detail`, { params: { creatorId } })
+      axios.get(`${HOST}/creators/analysis/detail-data`, {
+        params: { creatorId },
+        cancelToken: cancelToken.source().token,
+        withCredentials: true
+
+      })
         .then((res) => {
           const rawDetailData = res.data;
           if (!creatorsData.data) {
             return;
           }
+          console.log(rawDetailData);
           if (Object.entries(rawDetailData).length === 0 && rawDetailData.constructor === Object) {
             setDetail({
               loading: false,
@@ -85,7 +91,7 @@ export default function BannerBroadCreators(props: propInterface) {
                 </Grid>
               ))}
 
-              {!detailData.loading && (
+              {!detailData.loading && !detailData.empty && (
                 <CreatorInfo
                   creatorInfo={detailData.payload}
                   anchorEl={anchorEl}

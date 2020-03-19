@@ -58,9 +58,9 @@ function MyCash(props: propInterface) {
         >
 
           {!userData.loading && !userData.error
-            && <Button color="primary" onClick={() => { window.open(`${FRONT_HOST}/marketer/charge`, '_blank', `width=${POPUP_WIDTH}, height=${POPUP_HEIGHT}, left=${POPUP_X}, top=${POPUP_Y}`); }}>캐시충전(전자결제)</Button>}
+            && <Button size="medium" color="primary" onClick={() => { window.open(`${FRONT_HOST}/marketer/charge`, '_blank', `width=${POPUP_WIDTH}, height=${POPUP_HEIGHT}, left=${POPUP_X}, top=${POPUP_Y}`); }}>캐시충전(전자결제)</Button>}
           {!userData.loading && !userData.error
-            && <Button color="primary" onClick={() => { chargeDialog.handleOpen(); }}>캐시충전(무통장)</Button>}
+            && <Button size="medium" color="primary" onClick={() => { chargeDialog.handleOpen(); }}>캐시충전(무통장)</Button>}
 
           {!accountData.loading && !accountData.error && accountData.data
             && !accountData.data.marketerAccountNumber && (
@@ -70,7 +70,7 @@ function MyCash(props: propInterface) {
             )}
           {!accountData.loading && !accountData.error && accountData.data
             && accountData.data.marketerAccountNumber && (
-              <Button color="default" onClick={() => { refundDialog.handleOpen(); }}>
+              <Button size="medium" color="default" onClick={() => { refundDialog.handleOpen(); }}>
                 환불요청
               </Button>
             )}

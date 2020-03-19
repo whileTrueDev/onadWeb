@@ -22,7 +22,7 @@ export default function makeBarChartData<T extends IncomeChartData>(
 ): PreprocessedIncomeChartData[] {
   const KEY_CPM = 'cpm_amount'; const KEY_CPC = 'cpc_amount';
   const dataSet = Array<PreprocessedIncomeChartData>();
-  const previousDates = Array<string|Date>();
+  const previousDates = Array<string | Date>();
 
   // 데이터가 있고, 데이터를 담은 배열의 길이가 1개보다 많을 때.
   if (arrayOfExposureData && arrayOfExposureData.length > 0) {

@@ -52,6 +52,7 @@ function RefundAccountForm(props: propInterface) {
             <Button
               color="primary"
               onClick={() => { handleOpen() }}
+              size="medium"
             >
               환불계좌 변경
             </Button>
@@ -73,6 +74,8 @@ function RefundAccountForm(props: propInterface) {
               <Button
                 color="primary"
                 onClick={() => { handleOpen() }}
+                size="medium"
+
               >
                 환불계좌 등록
             </Button>

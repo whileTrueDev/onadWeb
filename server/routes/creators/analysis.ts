@@ -114,4 +114,37 @@ router.route('/games')
   )
   .all(responseHelper.middleware.unusedMethod);
 
+
+// marketer/sub/report =>/detail
+router.route('/detail-data')
+  .get(
+    responseHelper.middleware.withErrorCatch(async (req, res, next) => {
+      const creatorId = responseHelper.getParam('creatorId', 'GET', req);
+      const query = `
+      SELECT *
+      FROM creatorDetail
+      WHERE creatorId = ? `;
+      doQuery(query, [creatorId])
+        .then((row) => {
+          let detailData = {};
+          // string to JSON data
+          if (row.result.length > 0) {
+            const { timeGraphData, contentsGraphData } = row.result[0];
+
+            detailData = {
+              ...row.result[0],
+              // timeGraphData: JSON.parse(timeGraphData),
+              // contentsGraphData: JSON.parse(contentsGraphData),
+            };
+          }
+          responseHelper.send(detailData, 'get', res);
+        })
+        .catch((error) => {
+          responseHelper.promiseError(error, next);
+        });
+    }),
+  )
+  .all(responseHelper.middleware.unusedMethod);
+
 export default router;
+

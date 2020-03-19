@@ -86,7 +86,7 @@ export default function CustomPieChart(props: propInterface) {
       )}
 
       <Grid item xs={12} lg={6}>
-        {/* 
+
         {!creatorsData.loading && broadCreatorData.data && creatorsData.data && creatorsData.data.length > 0 && (
           <ReChartPie
             activeIndex={activeIndex}
@@ -95,9 +95,9 @@ export default function CustomPieChart(props: propInterface) {
             height={400}
             nameKey="creatorName"
             dataKey="total_ad_exposure_amount"
-            TooltipLabelText="노출"
+            tooltipLabelText="노출"
           />
-        )} */}
+        )}
       </Grid>
 
       <Grid item xs={12} lg={6} style={{ overflow: 'hidden' }}>
