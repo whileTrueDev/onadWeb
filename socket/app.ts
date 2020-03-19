@@ -75,7 +75,6 @@ io.on('connection', (socket: any) => {
     const campaignId = msg[0][0];
     const creatorId = msg[0][1];
     const program = msg[1];
-    console.log([campaignId, creatorId, program])
     const writeQuery = 'INSERT INTO campaignTimestamp (campaignId, creatorId, program) VALUES (?, ?, ?);';
     doQuery(writeQuery, [campaignId, creatorId, program])
   });
