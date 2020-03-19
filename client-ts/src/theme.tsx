@@ -58,14 +58,14 @@ const darkTheme = responsiveFontSizes(createMuiTheme({
 
 const MainPageTheme = {
   white: '#fff',
-  mainblue: blue[600],
+  mainBlue: blue[600],
   black: grey[900],
-  mainyellow: yellow[700],
+  mainYellow: yellow[700],
   red: red[500],
   cyan: cyan[500],
-  subyellow: yellow[500],
+  subYellow: yellow[500],
   Mainfont: 'Noto Sans KR',
-  ...defaultMuiTheme
+  ...rawTheme
 };
 
 export default { lightTheme, darkTheme, MainPageTheme };

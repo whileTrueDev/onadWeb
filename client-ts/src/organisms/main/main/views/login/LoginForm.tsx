@@ -71,8 +71,8 @@ function LoginForm({
   const classes = useStyles();
   const [findDialogOpen, setFindDialogOpen] = useState<boolean>(false);
   const [dialogType, setDialogType] = useState<string>('ID');
-  const [userid, setUserid] = useState<string | null>(null);
-  const [passwd, setPasswd] = useState<string | null>(null);
+  const [userid, setUserid] = useState<string>('');
+  const [passwd, setPasswd] = useState<string>('');
 
   // 하나의 change로 값을 받을 수 있다.
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {

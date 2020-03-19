@@ -8,6 +8,7 @@ import RePasswordDialog from '../../organisms/main/main/views/login/RePassword';
 import useLoginValue from '../../utils/hooks/useLoginValue';
 import Policy from '../../organisms/main/policy/Policy';
 import PolicyPrivacy from '../../organisms/main/policy/PolicyPrivacy';
+import withRoot from './withRoot';
 
 
 const useStyles = makeStyles(() => ({
@@ -28,10 +29,10 @@ const useStyles = makeStyles(() => ({
 }));
 
 interface Props {
-    match: { params: {privacy: string} };
+  match: { params: { privacy: string } };
 }
 
-export default function PolicyMain({ match }: Props): JSX.Element {
+export default withRoot(({ match }: Props) => {
   const {
     repasswordOpen, logout, setRepassword
   } = useLoginValue();
@@ -85,4 +86,4 @@ export default function PolicyMain({ match }: Props): JSX.Element {
       />
     </div>
   );
-}
+});

@@ -14,7 +14,6 @@ import HOST from '../../../../../config';
 import axios from '../../../../../utils/axios';
 import useDialog from '../../../../../utils/hooks/useDialog';
 import Dialog from '../../../../../atoms/Dialog/Dialog';
-import { initialState } from '../../../regist/Stepper.reducer';
 
 const useStyles = makeStyles((theme) => ({
   root: {

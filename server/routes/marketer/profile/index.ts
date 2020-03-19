@@ -584,4 +584,38 @@ router.route('/tmp-password')
   )
   .all(responseHelper.middleware.unusedMethod);
 
+router.route('/id')
+  .get(
+    responseHelper.middleware.withErrorCatch(async (req, res, next) => {
+      let json = {
+        error: true,
+        message: ''
+      };
+      const [marketerName, marketerMail] = responseHelper.getParam(['marketerName', 'marketerMail'], 'get', req);
+
+      doQuery('SELECT marketerId, marketerName FROM marketerInfo WHERE marketerMail = ? ', [marketerMail])
+        .then((data) => {
+          const { result } = data;
+          if (result[0]) {
+            if (result[0].marketerName === marketerName) {
+              json = {
+                error: false,
+                message: result[0].marketerId
+              };
+            } else {
+              json.message = 'NAME이 일치하지 않습니다.';
+            }
+          } else {
+            json.message = '입력하신 EMAIL의 회원이 존재하지 않습니다.';
+          }
+          responseHelper.send(JSON.stringify(json), 'get', res);
+        })
+        .catch(() => {
+          json.message = 'DB 관련 오류입니다. 잠시 후 다시 시도해주세요..';
+          responseHelper.send(JSON.stringify(json), 'get', res);
+        });
+    })
+  )
+  .all(responseHelper.middleware.unusedMethod);
+
 export default router;

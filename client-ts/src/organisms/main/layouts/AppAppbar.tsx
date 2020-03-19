@@ -18,14 +18,14 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: 'rgb( 255, 255, 255, 0)',
     position: 'fixed',
     width: '100%',
-    height: 70,
+    height: 64,
     zIndex: 100,
   },
   root2: {
     backgroundColor: 'white',
     position: 'fixed',
     width: '100%',
-    height: 70,
+    height: 64,
     zIndex: 100,
     boxShadow: '0 1px 10px gainsboro'
   },

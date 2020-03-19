@@ -67,9 +67,8 @@ router.get('/twitch/callback', passport.authenticate('twitch'),
 
 router.route('/check')
   .get(
-    // responseHelper.middleware.checkSessionExists,
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
-      if (responseHelper.getSessionData(req)) {
+      if (req.session!.passport) {
         const session = responseHelper.getSessionData(req);
 
         if (session.userType === 'marketer') {
@@ -93,9 +92,11 @@ router.route('/check')
         } else if (session.userType === 'creator') {
           responseHelper.send({ error: false, state: 0, userType: 'creator' }, 'get', res);
         }
-      } else {
-        throw new Error('userType is not in creator | marketer');
       }
+      // 원래는 에러 핸들링이 필요하나 로그가 너무 찍혀서 주석처리
+      //   else {
+      //   throw new Error('userType is not in creator | marketer');
+      // }
     })
   )
   .all(responseHelper.middleware.unusedMethod);

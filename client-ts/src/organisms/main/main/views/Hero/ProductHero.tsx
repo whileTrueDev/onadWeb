@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Link } from 'react-router-dom';
 import Grow from '@material-ui/core/Grow';
 // import Button from '../../components/Button';
-import { Button } from '@material-ui/core';
+import Button from '@material-ui/core/Button';
 import ProductHeroLayout from './ProductHeroLayout';
 
 const styles = makeStyles((theme) => ({
@@ -91,11 +91,18 @@ const styles = makeStyles((theme) => ({
     },
   },
   buttonLeft: {
+    color: theme.palette.common.white,
     width: '40%',
     backgroundColor: '#3154EB',
     borderRadius: '5px',
-    fontSize: 16,
+    fontSize: theme.typography.pxToRem(14),
     marginRight: 20,
+    fontWeight: theme.typography.fontWeightMedium,
+    boxShadow: 'none',
+    padding: theme.spacing(2, 2),
+    '&:active, &:focus': {
+      boxShadow: 'none',
+    },
     [theme.breakpoints.down('md')]: {
       fontSize: 13,
     },
@@ -109,10 +116,17 @@ const styles = makeStyles((theme) => ({
     },
   },
   buttonRight: {
+    color: theme.palette.common.white,
     width: '40%',
     borderRadius: '5px',
     border: '1px solid #3154EB',
-    fontSize: 16,
+    fontSize: theme.typography.pxToRem(14),
+    fontWeight: theme.typography.fontWeightMedium,
+    padding: theme.spacing(2, 2),
+    boxShadow: 'none',
+    '&:active, &:focus': {
+      boxShadow: 'none',
+    },
     [theme.breakpoints.down('md')]: {
       fontSize: 13,
       padding: '10px 10px'
@@ -125,7 +139,7 @@ const styles = makeStyles((theme) => ({
       fontSize: 11,
       padding: '8px 8px'
     },
-  }
+  },
 }));
 
 interface Props {
@@ -183,7 +197,8 @@ function ProductHero({ MainUserType, source }: Props): JSX.Element {
             <track />
           </video>
         </div>
-      ) : (
+      )
+        : (
           <div className={classes.maintop}>
             <div className={classes.loginButtonLeft}>
               <Grow in timeout={1500}>
@@ -207,13 +222,13 @@ function ProductHero({ MainUserType, source }: Props): JSX.Element {
                 to="/introduce/creator"
               >
                 + 자세히보기
-            </Button>
+              </Button>
               <Button
                 className={classes.buttonRight}
                 onClick={(): void => { window.open('http://pf.kakao.com/_xoyxmfT/chat'); }}
               >
                 실시간 문의하기
-            </Button>
+              </Button>
             </div>
 
             <video className={classes.maintopCenterVideo} autoPlay loop>

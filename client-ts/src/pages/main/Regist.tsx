@@ -3,6 +3,7 @@ import makeStyles from '@material-ui/core/styles/makeStyles';
 import RegistStepper from '../../organisms/main/regist/Stepper';
 import AppAppBar from '../../organisms/main/layouts/AppAppbar';
 import useLoginValue from '../../utils/hooks/useLoginValue';
+import withRoot from './withRoot';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -13,10 +14,10 @@ const useStyles = makeStyles(() => ({
 }));
 
 interface Props {
-  match: {params: {platform: string}};
+  match: { params: { platform: string } };
 }
 
-function Regist({ match }: Props): JSX.Element {
+export default withRoot(({ match }: Props) => {
   const classes = useStyles();
   const { logout } = useLoginValue();
   return (
@@ -25,7 +26,4 @@ function Regist({ match }: Props): JSX.Element {
       <RegistStepper platform={match.params.platform} />
     </div>
   );
-}
-
-
-export default Regist;
+});

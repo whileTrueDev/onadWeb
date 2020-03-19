@@ -1,5 +1,6 @@
 import React from 'react';
 // layout 계열 컴포넌트
+import CssBaseline from '@material-ui/core/CssBaseline';
 import AppAppBar from '../../organisms/main/layouts/AppAppbar';
 import AppFooter from '../../organisms/main/layouts/AppFooter';
 // layout 내부 컨텐츠 계열 컴포넌트
@@ -15,8 +16,9 @@ import IntroService from '../../organisms/main/main/views/IntroService/IntroServ
 // utill 계열 컴포넌트
 import useLoginValue from '../../utils/hooks/useLoginValue';
 import history from '../../history';
+import withRoot from './withRoot';
 
-export default function Main(): JSX.Element {
+export default withRoot(() => {
   const {
     isLogin, repasswordOpen, logout, setRepassword
   } = useLoginValue();
@@ -29,6 +31,7 @@ export default function Main(): JSX.Element {
 
   return (
     <div>
+      {/* <CssBaseline /> */}
       {MainUserType === '/marketer' ? (
         <div>
           <AppAppBar isLogin={isLogin} logout={logout} MainUserType="marketer" />
@@ -79,4 +82,4 @@ export default function Main(): JSX.Element {
         )}
     </div>
   );
-}
+});

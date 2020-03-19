@@ -111,12 +111,17 @@ const styles = makeStyles((theme) => ({
     },
   },
   buttonRight: {
+    fontSize: theme.typography.pxToRem(14),
+    fontWeight: theme.typography.fontWeightMedium,
+    padding: theme.spacing(2, 2),
+    boxShadow: 'none',
+    '&:active, &:focus': {
+      boxShadow: 'none',
+    },
     width: '210px',
     color: '#3154EB',
     borderRadius: '5px',
     border: '1px solid #3154EB',
-    fontSize: 18,
-    padding: 10,
     [theme.breakpoints.down('md')]: {
       width: '210px',
       fontSize: 18,

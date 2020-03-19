@@ -11,6 +11,7 @@ import sources from '../../organisms/main/main/source/sources';
 import AppFooter from '../../organisms/main/layouts/AppFooter';
 import textSource from '../../organisms/main/Introduction/source/textSource';
 import Question from '../../organisms/main/Introduction/Question';
+import withRoot from './withRoot';
 
 const styles = makeStyles((theme) => ({
   rootWrap: {
@@ -105,7 +106,7 @@ const styles = makeStyles((theme) => ({
   }
 }));
 
-interface Props {
+export interface Props {
   match: {
     params: { userType: string | boolean };
   };
@@ -113,7 +114,7 @@ interface Props {
 
 
 // this is layout compoent
-export default function IntroductionMain({ match }: Props): JSX.Element {
+export default withRoot(({ match }: Props) => {
   const { isLogin, logout } = useLoginValue();
   const classes = styles();
   const { userType } = match.params;
@@ -207,4 +208,4 @@ export default function IntroductionMain({ match }: Props): JSX.Element {
         )}
     </div>
   );
-}
+});

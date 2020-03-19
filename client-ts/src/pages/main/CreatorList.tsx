@@ -12,6 +12,7 @@ import Card from '../../atoms/Card/Card';
 import CardAvatar from '../../atoms/Card/CardAvatar';
 import CardBody from '../../atoms/Card/CardBody';
 import CircularProgress from '../../atoms/Progress/CircularProgress';
+import withRoot from './withRoot';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -133,7 +134,7 @@ export interface ContractedCreatorListData<T> {
   creatorLogo: T;
 }
 
-function CreatorList(): JSX.Element {
+export default withRoot(() => {
   const {
     isLogin, repasswordOpen, logout, setRepassword
   } = useLoginValue();
@@ -216,6 +217,4 @@ function CreatorList(): JSX.Element {
       />
     </div>
   );
-}
-
-export default CreatorList;
+});
