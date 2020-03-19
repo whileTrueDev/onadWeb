@@ -1,7 +1,6 @@
 import React from 'react';
 // core
-import withStyles from '@material-ui/core/styles/withStyles';
-import makeStyles from '@material-ui/core/styles/makeStyles';
+import { makeStyles, withStyles, Theme } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 // own components
 import Card from '../../../../../atoms/Card/Card';
@@ -15,7 +14,7 @@ import useDialog from '../../../../../utils/hooks/useDialog';
 import { UseGetRequestObject } from '../../../../../utils/hooks/useGetRequest';
 import { businessInterface } from '../interface';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme: Theme) => ({
   buttonWrapper: {
     display: 'flex',
     flexDirection: 'row-reverse',
@@ -26,6 +25,9 @@ const useStyles = makeStyles(() => ({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  success: {
+    color: theme.palette.primary.main
   }
 }));
 
@@ -86,7 +88,7 @@ function BusinessUploadForm(props: propInterface) {
               <Typography gutterBottom variant="body1">아직 등록된 사업자 등록증이 없습니다.</Typography>
             </div>
             <div className={myClasses.textBox} style={{ marginBottom: 10 }}>
-              <Typography gutterBottom variant="body1" style={{ color: '#00acc1' }}>등록</Typography>
+              <Typography gutterBottom variant="body1" className={classes.success}>등록</Typography>
               <Typography gutterBottom variant="body1">
                 버튼을 눌러 사업자 등록증을 업로드해주세요.
               </Typography>

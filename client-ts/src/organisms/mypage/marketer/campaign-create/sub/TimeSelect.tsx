@@ -1,7 +1,7 @@
 import 'date-fns';
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, Theme } from '@material-ui/core/styles';
 import DateFnsUtils from '@date-io/date-fns';
 import {
   MuiPickersUtilsProvider,
@@ -17,7 +17,7 @@ interface propInterface {
   dispatch: React.Dispatch<TimeAction>;
 }
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme: Theme) => ({
   table: {
     width: '100%',
     borderCollapse: 'collapse',
@@ -42,12 +42,12 @@ const useStyles = makeStyles({
     borderColor: '#444444',
     borderStyle: 'solid',
     padding: 'auto',
-    backgroundColor: '#00acc1',
+    backgroundColor: theme.palette.primary.main,
     width: '45px',
     height: '3px'
   },
   font: { opacity: '0' }
-});
+}));
 
 const TimeSelector = (props: propInterface) => {
   const classes = useStyles();

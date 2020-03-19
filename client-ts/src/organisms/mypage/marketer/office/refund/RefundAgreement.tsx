@@ -43,9 +43,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   checked: {},
   checkboxRoot: {
-    color: green[600],
+    color: theme.palette.success.light,
     '&$checked': {
-      color: green[500],
+      color: theme.palette.success.light
     },
   },
   divider: {

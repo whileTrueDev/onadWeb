@@ -25,7 +25,7 @@ const useStyle = makeStyles((theme: Theme) => ({
   label: {
     fontSize: '20px',
     fontWeight: 700,
-    color: '#00acc1',
+    color: theme.palette.primary.main,
     marginBottom: '7px',
   },
   buttonProgress: {
@@ -41,21 +41,21 @@ const useStyle = makeStyles((theme: Theme) => ({
   }
 }));
 
-const CssFormControl = withStyles({
+const CssFormControl = withStyles((theme: Theme) => ({
   root: {
     '& label.Mui-focused': {
-      color: '#00acc1',
+      color: theme.palette.primary.main,
     },
     '& .MuiInput-underline:after': {
-      borderBottomColor: '#00acc1',
+      borderBottomColor: theme.palette.primary.main,
     },
     '& .MuiOutlinedInput-root': {
       '&:hover fieldset': {
-        borderColor: '#00acc1',
+        borderColor: theme.palette.primary.main,
       },
     },
   },
-})(FormControl);
+}))(FormControl);
 
 
 interface ImageInterface {
