@@ -9,7 +9,7 @@ import Tabs from '@material-ui/core/Tabs';
 const ORANGE_BACKGROUND = 'linear-gradient(45deg, #FFAA00 30%, #FF8E53 90%)';
 const EMERALD_BACKGROUND = 'linear-gradient(45deg, #00DBE0 30%, #21CBF3 90%)';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   tabs: {
     flexGrow: 1,
     marginBottom: theme.spacing(5),
@@ -54,7 +54,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-function TabBar(props) {
+function TabBar(props): JSX.Element {
   const classes = useStyles();
 
   const { tabValue, handleTabChange } = props;

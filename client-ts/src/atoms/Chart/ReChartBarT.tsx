@@ -4,8 +4,6 @@ import {
   ResponsiveContainer
 } from 'recharts';
 import { useTheme } from '@material-ui/core/styles';
-import makeBarChartData from './makeBarChartData';
-
 
 interface ReChartBarProps<T> {
   data: Readonly<T>[];
@@ -33,9 +31,9 @@ export default function ReChartBar<DataType>({
   xAxisDataKey,
   yAxisDataKey,
   tooltipLabelFormatter = (label: string | number): string | number => label,
-  tooltipFormatter = (value: string | number | Array<string | number>, name: string) => {
-    return [value, name]
-  },
+  tooltipFormatter = (
+    value: string | number | Array<string | number>, name: string
+  ) => [value, name],
   // legendFormatter = (value: string | number | Array<string | number>): string => {
   //   if (value === 'cpm_amount') { return '배너광고'; } return '클릭광고';
   // },
@@ -70,13 +68,14 @@ export default function ReChartBar<DataType>({
             // formatter={legendFormatter}
             />
           )}
-          {dataKey &&
+          {dataKey
+            && (
             <Bar
               dataKey={dataKey}
               stackId="a"
               fill={theme.palette.primary.light}
             />
-          }
+            )}
         </BarChart>
       </ResponsiveContainer>
     </div>

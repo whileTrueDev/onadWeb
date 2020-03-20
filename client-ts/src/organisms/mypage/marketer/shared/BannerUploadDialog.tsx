@@ -1,4 +1,4 @@
-import React, { useReducer, useState, useEffect } from 'react';
+import React, { useReducer, useState } from 'react';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import {
   Stepper, Step, StepLabel, StepContent,
@@ -12,8 +12,6 @@ import ImageUpload from './ImageUpload';
 import HOST from '../../../../utils/config';
 import axios from '../../../../utils/axios';
 import history from '../../../../history';
-import usePostRequest from '../../../../utils/hooks/usePostRequest';
-
 
 const DEFAULT_IMAGE_PATH = '/pngs/dashboard/banner_upload_manual.png';
 
@@ -81,11 +79,12 @@ const myReducer = (state: ImageInterface, action: ImageAction): ImageInterface =
     case 'set': {
       if (action.imageUrl && typeof action.imageUrl !== 'string') {
         // ArrayBuffer to String에 대한 test가 필요하다. => 안되면 any를 하자.
-        const strUrl = String.fromCharCode.apply(null, Array.from(new Uint16Array(action.imageUrl)));
+        const strUrl = String.fromCharCode.apply(
+          null, Array.from(new Uint16Array(action.imageUrl))
+        );
         return { imageName: action.imageName, imageUrl: strUrl };
-      } else {
-        return { imageName: action.imageName, imageUrl: action.imageUrl };
       }
+      return { imageName: action.imageName, imageUrl: action.imageUrl };
     }
     default: {
       return state;
@@ -107,7 +106,6 @@ const UploadDialog = (props: propInterface) => {
   const classes = useStyle();
   const [state, dispatch] = useReducer(myReducer, { imageName: '', imageUrl: DEFAULT_IMAGE_PATH });
   const [activeStep, setStep] = useState(0);
-  const { data, loading, error, doPostRequest } = usePostRequest<{ bannerSrc: string, bannerDescription: string }, boolean[]>('/marketer/banner')
   const handleClose = () => {
     dispatch({ type: 'reset' });
     setStep(0);
@@ -123,9 +121,16 @@ const UploadDialog = (props: propInterface) => {
     }
   };
 
+  // // usePostRequest 수정 이후 적용
+  // const {
+  //   data, loading, error, doPostRequest
+  // } = usePostRequest<{ bannerSrc: string; bannerDescription: string }, boolean[]>(
+  //   '/marketer/banner');
+
   // url을 제출.
   const handleSubmit = () => {
     const bannerDescription = (document.getElementById('banner') as HTMLInputElement).value || '';
+    // // usePostRequest 수정 이후 적용
     // if (state.imageUrl) {
     //   doPostRequest({
     //     bannerSrc: state.imageUrl, bannerDescription,
@@ -142,20 +147,16 @@ const UploadDialog = (props: propInterface) => {
           alert(res.data[1]);
           if (!isCampaignPage) {
             history.push(window.location.pathname);
-          } else {
-            if (recallRequest) {
-              recallRequest();
-            }
+          } else if (recallRequest) {
+            recallRequest();
           }
         } else {
           alert('현재는 등록할 수 없습니다. 잠시 후 다시 시도해주세요.');
         }
         handleClose();
       });
-
-  }
+  };
   // text format을 사용하기 위해 state로 사용한다.
-
 
 
   return (

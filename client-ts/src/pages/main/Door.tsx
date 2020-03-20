@@ -1,5 +1,5 @@
 import React from 'react';
-import useStyles from './Door.style';
+import useStyles from './style/Door.style';
 
 
 export default function Door(): JSX.Element {

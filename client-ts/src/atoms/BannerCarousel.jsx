@@ -9,44 +9,6 @@ import SwipeableViews from 'react-swipeable-views';
 import Check from '@material-ui/icons/Check';
 import Success from './Typography/Success';
 
-/** ***********
- * 만든 사람이 Ts로 정리바람.. 
- * checkImage 타입을 number를썼다가 객체를썼다가 왔다리갔다리 뭐가 맞는지 알아서 체크해서 고쳐주세요
- * activeStep 현재 스텝
- * step ??
- * registStep
- * steps 배너들..
- * 이름 다 헷갈리니 알아서 변경 바랍니다.
- *********** */
-
-const tutorialSteps = [
-  {
-    bannerId: 'San Francisco – Oakland Bay Bridge, United States',
-    bannerSrc:
-      'https://images.unsplash.com/photo-1537944434965-cf4679d1a598?auto=format&fit=crop&w=400&h=250&q=60',
-  },
-  {
-    bannerId: 'Bird',
-    bannerSrc:
-      'https://images.unsplash.com/photo-1538032746644-0212e812a9e7?auto=format&fit=crop&w=400&h=250&q=60',
-  },
-  {
-    bannerId: 'Bali, Indonesia',
-    bannerSrc:
-      'https://images.unsplash.com/photo-1537996194471-e657df975ab4?auto=format&fit=crop&w=400&h=250&q=80',
-  },
-  {
-    bannerId: 'NeONBRAND Digital Marketing, Las Vegas, United States',
-    bannerSrc:
-      'https://images.unsplash.com/photo-1518732714860-b62714ce0c59?auto=format&fit=crop&w=400&h=250&q=60',
-  },
-  {
-    bannerId: 'Goč, Serbia',
-    bannerSrc:
-      'https://images.unsplash.com/photo-1512341689857-198e7e2f3ca8?auto=format&fit=crop&w=400&h=250&q=60',
-  },
-];
-
 const useStyles = makeStyles((theme) => ({
   root: {
     width: '600px',
