@@ -1,4 +1,4 @@
-export interface bannerDataInterface {
+export interface BannerDataInterface {
   bannerSrc: string;
   confirmState: number;
   bannerId: string;
@@ -8,7 +8,7 @@ export interface bannerDataInterface {
   regiDate: string;
 }
 
-export interface urlDataInterface {
+export interface UrlDataInterface {
   linkId: string;
   marketerId: string;
   confirmState: number;
@@ -18,8 +18,8 @@ export interface urlDataInterface {
       primary: boolean;
       linkName: string;
       linkTo: string;
-    }[]
-  }
+    }[];
+  };
   regiDate: string;
   updateDate: Date;
 }

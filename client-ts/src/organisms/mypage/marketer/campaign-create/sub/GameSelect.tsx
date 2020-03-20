@@ -26,14 +26,14 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 
-interface propInterface {
+interface GameSelectProps {
   setStepComplete: React.Dispatch<React.SetStateAction<boolean>>;
   checkedGames: string[];
   checkedGamesDispatch: React.Dispatch<ArrayAction>;
   priorityType: string | undefined;
 }
 
-interface gameDataInterface {
+interface GameDataInterface {
   count: number;
   content: string;
   gameId: string;
@@ -42,7 +42,7 @@ interface gameDataInterface {
   boxArt: string;
 }
 
-const GameSelect = (props: propInterface) => {
+const GameSelect = (props: GameSelectProps): JSX.Element => {
   const {
     setStepComplete, checkedGames, checkedGamesDispatch, priorityType
   } = props;
@@ -62,7 +62,7 @@ const GameSelect = (props: propInterface) => {
     }
   }, [checkedGames.length, priorityType, setStepComplete]);
 
-  function handleGameClick(game: gameDataInterface) {
+  function handleGameClick(game: GameDataInterface): void {
     if (checkedGames.includes(game.gameName)) {
       checkedGamesDispatch({ type: 'delete', value: game.gameName });
     } else {
@@ -86,14 +86,14 @@ const GameSelect = (props: propInterface) => {
         {!gamesData.loading && gamesData.data && (
 
           <Grid container spacing={2} style={{ flexWrap: 'wrap' }}>
-            {gamesData.data.slice(0, 12).map((game: gameDataInterface) => (
+            {gamesData.data.slice(0, 12).map((game: GameDataInterface) => (
               <Grid key={game.gameId} item xs={4} md={3} xl={2}>
                 <GameCard
                   gameName={game.gameName}
                   gameNameKr={game.gameNameKr}
                   count={game.count}
                   boxArt={game.boxArt}
-                  handleClick={() => { handleGameClick(game); }}
+                  handleClick={(): void => { handleGameClick(game); }}
                   backgroundColor={checkedGames.includes(game.gameName)
                     ? theme.palette.primary.light : 'inherit'}
                   color={checkedGames.includes(game.gameName)
@@ -109,7 +109,9 @@ const GameSelect = (props: propInterface) => {
                   defaultValue=""
                   native
                   input={<Input id="grouped-native-select" />}
-                  onChange={(event: React.ChangeEvent<{ name?: string | undefined; value: unknown; }>) => {
+                  onChange={(
+                    event: React.ChangeEvent<{ name?: string | undefined; value: unknown }>
+                  ): void => {
                     if (typeof event.target.value === 'string') {
                       if (!checkedGames.includes(event.target.value)) {
                         if (event.target.value) {
@@ -119,9 +121,11 @@ const GameSelect = (props: propInterface) => {
                     }
                   }}
                 >
-                  {gamesData.data.slice(12, gamesData.data.length).map((game: gameDataInterface) => (
-                    <option key={game.gameId} value={game.gameName}>{game.gameNameKr}</option>
-                  ))}
+                  {gamesData.data.slice(12, gamesData.data.length).map(
+                    (game: GameDataInterface) => (
+                      <option key={game.gameId} value={game.gameName}>{game.gameNameKr}</option>
+                    )
+                  )}
                 </Select>
               </FormControl>
             </Grid>
@@ -132,7 +136,7 @@ const GameSelect = (props: propInterface) => {
           <Grid item xs={12}>
             <Typography variant="h6">선택된 게임</Typography>
             <div style={{ padding: 16 }}>
-              {checkedGames.map(game => (
+              {checkedGames.map((game) => (
                 <Chip
                   key={`selected_${game}`}
                   label={game}

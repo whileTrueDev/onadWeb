@@ -12,7 +12,7 @@ import BusinessRegiUploadDialog from './BusinessUploadDialog';
 // hooks
 import useDialog from '../../../../../utils/hooks/useDialog';
 import { UseGetRequestObject } from '../../../../../utils/hooks/useGetRequest';
-import { businessInterface } from '../interface';
+import { BusinessInterface } from '../interface';
 
 const useStyles = makeStyles((theme: Theme) => ({
   buttonWrapper: {
@@ -31,12 +31,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-interface propInterface {
+interface BusinessUploadFormProps {
   classes: any;
-  businessRegistrationData: UseGetRequestObject<businessInterface | null>;
+  businessRegistrationData: UseGetRequestObject<BusinessInterface | null>;
 }
 
-function BusinessUploadForm(props: propInterface) {
+function BusinessUploadForm(props: BusinessUploadFormProps): JSX.Element {
   const myClasses = useStyles();
   const { classes, businessRegistrationData } = props;
   const { open, handleOpen, handleClose } = useDialog();
@@ -59,7 +59,7 @@ function BusinessUploadForm(props: propInterface) {
             <div className={myClasses.buttonWrapper}>
               <Button
                 color="primary"
-                onClick={() => { handleOpen(); }}
+                onClick={(): void => { handleOpen(); }}
               >
                 사업자 등록증 변경
               </Button>
@@ -78,7 +78,7 @@ function BusinessUploadForm(props: propInterface) {
             <div className={myClasses.buttonWrapper}>
               <Button
                 color="primary"
-                onClick={() => { handleOpen(); }}
+                onClick={(): void => { handleOpen(); }}
                 size="medium"
               >
                 사업자 등록증 등록

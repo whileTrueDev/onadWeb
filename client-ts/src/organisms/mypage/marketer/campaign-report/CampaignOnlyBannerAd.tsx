@@ -11,12 +11,11 @@ import CampaignCostBar from './CampaignCostBar';
 import BannerBroadCreators from './BannerBroadCreators';
 import CampaignInfo from './CampaignInfo';
 import MakePdfButton from './MakePdfButton';
-import { reportInterface, creatorDataInterface, campaignInterface } from '../dashboard/interfaces';
+import { ReportInterface, CreatorDataInterface, CampaignInterface } from '../dashboard/interfaces';
 import { UseGetRequestObject } from '../../../../utils/hooks/useGetRequest';
 
 
-
-const makeContents = (reportData: reportInterface) => ({
+const makeContents = (reportData: ReportInterface) => ({
   price: [
     {
       title: '광고 총 비용',
@@ -79,33 +78,26 @@ const makeContents = (reportData: reportInterface) => ({
   ]
 });
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   headline: {
     display: 'flex',
     padding: '24px 32px 0px 32px',
     justifyContent: 'space-between',
     alignItems: 'cetner'
   },
-  title: {
-    fontWeight: 500
-  },
-  formControl: {
-    margin: theme.spacing(1),
-    minWidth: 120,
-  },
-  contents: {
-    padding: '24px 32px'
-  }
+  title: { fontWeight: 500 },
+  formControl: { margin: theme.spacing(1), minWidth: 120, },
+  contents: { padding: '24px 32px' }
 }));
 
-interface propInterface {
-  selectedCampaign: campaignInterface;
-  reportData: UseGetRequestObject<null | reportInterface>;
+interface CampaignOnlyBannerAdProps {
+  selectedCampaign: CampaignInterface;
+  reportData: UseGetRequestObject<null | ReportInterface>;
   chartData: UseGetRequestObject<any[]>;
-  creatorsData: UseGetRequestObject<null | creatorDataInterface[]>;
+  creatorsData: UseGetRequestObject<null | CreatorDataInterface[]>;
 }
 
-export default function CampaignOnlyBannerAd(props: propInterface) {
+export default function CampaignOnlyBannerAd(props: CampaignOnlyBannerAdProps): JSX.Element {
   const classes = useStyles();
   const {
     selectedCampaign, reportData, chartData,
@@ -125,8 +117,8 @@ export default function CampaignOnlyBannerAd(props: propInterface) {
                 {/* 제목 */}
                 <Typography variant="h5" className={classes.title}>
                   {reportData.data.campaignName}
-                &emsp;광고 효과 분석
-            </Typography>
+                  &emsp;광고 효과 분석
+                </Typography>
 
                 <MakePdfButton />
               </div>
@@ -195,7 +187,7 @@ export default function CampaignOnlyBannerAd(props: propInterface) {
             </Grid>
 
           </Grid>
-        )}
+      )}
     </div>
   );
 }

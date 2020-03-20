@@ -16,13 +16,13 @@ const useStyle = makeStyles((theme: Theme) => ({
   input: {
     fontSize: '14px',
     fontWeight: 700,
-    color: '#3c4858',
+    color: theme.palette.text.primary,
     margin: '4px'
   },
   inputName: {
     fontSize: '14px',
     fontWeight: 700,
-    color: '#3c4858',
+    color: theme.palette.text.primary,
   },
   label: {
     fontSize: '20px',
@@ -32,64 +32,68 @@ const useStyle = makeStyles((theme: Theme) => ({
   },
 }));
 
-interface propInterface {
+interface LandingUrlInputProps {
   handleDialogOpen: () => void;
   dispatch: React.Dispatch<Action>;
-  state: Step3Interface
+  state: Step3Interface;
 }
 
-const LandingUrlInput = (props: propInterface) => {
+const LandingUrlInput = (props: LandingUrlInputProps): JSX.Element => {
   const {
     handleDialogOpen, dispatch, state
   } = props;
   const classes = useStyle();
   const [subOpen, setSubOpen] = React.useState(false);
 
-  const handleSubOpen = () => {
+  const handleSubOpen = (): void => {
     setSubOpen(!subOpen);
   };
 
-  const handleUrlName = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleUrlName = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ): boolean => {
     switch (event.target.id) {
       case 'main-url-name':
-        {
-          dispatch({ key: 'mainLandingUrlName', value: event.target.value.replace(/ /gi, '') });
-          return false;
-        }
+      {
+        dispatch({ key: 'mainLandingUrlName', value: event.target.value.replace(/ /gi, '') });
+        return false;
+      }
       case 'sub-url1-name':
-        {
-          dispatch({ key: 'sub1LandingUrlName', value: event.target.value.replace(/ /gi, '') });
-          return false;
-        }
+      {
+        dispatch({ key: 'sub1LandingUrlName', value: event.target.value.replace(/ /gi, '') });
+        return false;
+      }
       case 'sub-url2-name':
-        {
-          dispatch({ key: 'sub2LandingUrlName', value: event.target.value.replace(/ /gi, '') });
-          return false;
-        }
+      {
+        dispatch({ key: 'sub2LandingUrlName', value: event.target.value.replace(/ /gi, '') });
+        return false;
+      }
       default:
-        { return false; }
+      { return false; }
     }
   };
 
-  const handleUrlChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleUrlChange = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ): boolean => {
     switch (event.target.id) {
       case 'main-url':
-        {
-          dispatch({ key: 'mainLandingUrl', value: event.target.value.replace(/ /gi, '') });
-          return false;
-        }
+      {
+        dispatch({ key: 'mainLandingUrl', value: event.target.value.replace(/ /gi, '') });
+        return false;
+      }
       case 'sub-url1':
-        {
-          dispatch({ key: 'sub1LandingUrl', value: event.target.value.replace(/ /gi, '') });
-          return false;
-        }
+      {
+        dispatch({ key: 'sub1LandingUrl', value: event.target.value.replace(/ /gi, '') });
+        return false;
+      }
       case 'sub-url2':
-        {
-          dispatch({ key: 'sub2LandingUrl', value: event.target.value.replace(/ /gi, '') });
-          return false;
-        }
+      {
+        dispatch({ key: 'sub2LandingUrl', value: event.target.value.replace(/ /gi, '') });
+        return false;
+      }
       default:
-        { return false; }
+      { return false; }
     }
   };
 

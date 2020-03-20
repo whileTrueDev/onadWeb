@@ -32,14 +32,14 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-interface propInterface {
+interface CardTemplateProps {
   title: string;
   color: string;
   IconComponent: React.ElementType;
   children: any;
 }
 
-export default function CardTemplate(props: propInterface) {
+export default function CardTemplate(props: CardTemplateProps): JSX.Element {
   const classes = useStyles();
   const {
     title, color, IconComponent, children

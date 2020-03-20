@@ -32,7 +32,7 @@ const useStyles = makeStyles((_theme: Theme) => ({
     marginRight: _theme.spacing(1),
   },
   end: {
-    color: '#fff',
+    color: _theme.palette.text.primary,
     marginRight: _theme.spacing(1),
   }
 }));
@@ -54,7 +54,8 @@ const CampaignCreation = (): JSX.Element => {
 
   // 3 번째 캠페인 기본정보에서 사용할 State
   const [budgetState, budgetDispatch] = useReducer(budgetReducer, { budget: false, value: 0 });
-  const [termState, termDispatch] = useReducer(termReducer, { term: false, startDate: new Date(), finDate: null });
+  const [termState, termDispatch] = useReducer(termReducer,
+    { term: false, startDate: new Date(), finDate: null });
   const [nameState, nameDispatch] = useReducer(nameReducer, { error: true, name: '' });
 
   const [timeState, timeDispatch] = useReducer(timeReducer, { time: false, timeList: [] });
@@ -69,7 +70,7 @@ const CampaignCreation = (): JSX.Element => {
   });
 
 
-  const step3Reset = () => {
+  const step3Reset = (): void => {
     checkedPrioritiesDispatch({ type: 'reset' });
     budgetDispatch({ key: 'noBudget', value: '' });
     termDispatch({ key: 'reset', value: '' });
@@ -77,7 +78,7 @@ const CampaignCreation = (): JSX.Element => {
     step3Dispatch({ key: 'reset', value: '' });
   };
 
-  const checkEmpty = (input: any) => {
+  const checkEmpty = (input: any): boolean => {
     if (input.campaignName === null) {
       alert('캠페인 명이 올바르게 입력되지 않았습니다.');
       return false;
@@ -106,15 +107,14 @@ const CampaignCreation = (): JSX.Element => {
     return true;
   };
 
-  const getIndexArray = (arr: boolean[] | undefined) => {
+  const getIndexArray = (arr: boolean[] | undefined): number[] => {
     if (arr) {
       return arr.reduce((acc: number[], ele: boolean, index: number) => {
         if (ele) { acc.push(index); }
         return acc;
-      }, [])
-    } else {
-      return []
+      }, []);
     }
+    return [];
   };
 
   const handleCallbackSubmit = (event: MouseEvent<HTMLButtonElement>): void => {
@@ -124,7 +124,7 @@ const CampaignCreation = (): JSX.Element => {
     const { budget, value } = budgetState;
     const { term, startDate, finDate } = termState;
 
-    function typeToNum(type: string) {
+    function typeToNum(type: string): string {
       const NUM = type.replace(/[^0-9]/g, '');
       return NUM;
     }
@@ -149,7 +149,8 @@ const CampaignCreation = (): JSX.Element => {
       optionType,
       priorityType,
       priorityList,
-      selectedTime: time ? getIndexArray(timeList) : [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23],
+      selectedTime: time ? getIndexArray(timeList) : [
+        0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23],
       dailyLimit: budget ? value : -1,
       startDate,
       finDate,
@@ -195,7 +196,7 @@ const CampaignCreation = (): JSX.Element => {
   return (
     <Grid container direction="row" spacing={2} wrap="wrap">
       {isDesktop ? (
-        <React.Fragment>
+        <>
           <Grid item xs={12} lg={12} xl={12}>
             <Paper>
               <Grid container direction="column" className={classes.root}>
@@ -243,12 +244,12 @@ const CampaignCreation = (): JSX.Element => {
                             className={classes.end}
                           >
                             완료
-                        </Button>
+                          </Button>
                         </Grid>
                         <Grid item>
                           <Button onClick={handleBack} className={classes.button}>
                             뒤로
-                        </Button>
+                          </Button>
                         </Grid>
                       </Grid>
                     </Grid>
@@ -257,28 +258,28 @@ const CampaignCreation = (): JSX.Element => {
               </Grid>
             </Paper>
           </Grid>
-        </React.Fragment>
+        </>
       ) : (
-          <div style={{
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            alignItems: 'center',
-            height: '80vh',
-            width: '100%'
-          }}
+        <div style={{
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '80vh',
+          width: '100%'
+        }}
+        >
+          <h4>캠페인 생성은 데스크탑에서 진행해주세요.</h4>
+          <Button
+            variant="contained"
+            color="primary"
+            component={Link}
+            to="/dashboard/marketer/main"
           >
-            <h4>캠페인 생성은 데스크탑에서 진행해주세요.</h4>
-            <Button
-              variant="contained"
-              color="primary"
-              component={Link}
-              to="/dashboard/marketer/main"
-            >
-              대시보드로 이동
-        </Button>
-          </div>
-        )}
+            대시보드로 이동
+          </Button>
+        </div>
+      )}
     </Grid>
   );
 };

@@ -2,12 +2,12 @@ import React from 'react';
 import Skeleton from '@material-ui/lab/Skeleton';
 import ReChartBarT from '../../../../atoms/Chart/ReChartBarT';
 
-interface propInterface {
+interface TimeChartProps {
   selectedChartData: {
-    data: Readonly<{ sumtime: string, hours: number }>[];
-  }
+    data: Readonly<{ sumtime: string; hours: number }>[];
+  };
 }
-export default function TimeChart(props: propInterface) {
+export default function TimeChart(props: TimeChartProps): JSX.Element {
   const { selectedChartData } = props;
 
   return (
@@ -16,7 +16,7 @@ export default function TimeChart(props: propInterface) {
         <Skeleton height={400} />
       )}
       {selectedChartData && (
-        <ReChartBarT<{ sumtime: string, hours: number }>
+        <ReChartBarT<{ sumtime: string; hours: number }>
           containerHeight={400} // 차트를 둘러싼 컴포넌트의 높이
           chartWidth={400} // 차트 넓이
           chartHeight={350} // 차트 높이
@@ -25,8 +25,8 @@ export default function TimeChart(props: propInterface) {
           dataKey="sumtime" // 막대로 보여질 데이터의 키값
           xAxisDataKey="hours" // x축 키값
           yAxisDataKey="sumtime" // y축 키값
-          tooltipFormatter={value => [value, '비율']} // 툴팁 포맷
-          tooltipLabelFormatter={value => [value, ' 시']} // 툴팁 라벨 포맷
+          tooltipFormatter={(value) => [value, '비율']} // 툴팁 포맷
+          tooltipLabelFormatter={(value) => [value, ' 시']} // 툴팁 라벨 포맷
           legend={false}
         />
       )}

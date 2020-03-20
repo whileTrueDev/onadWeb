@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export default function MakePdfButton() {
+export default function MakePdfButton(): JSX.Element {
   const classes = useStyles();
   const [inProgress, setInProgress] = React.useState<boolean>(false);
 
@@ -35,7 +35,7 @@ export default function MakePdfButton() {
             variant="contained"
             color="primary"
             disabled={inProgress}
-            onClick={() => {
+            onClick={(): void => {
               setInProgress(true);
               jsPdfGenerate(setInProgress);
             }}

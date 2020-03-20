@@ -1,20 +1,20 @@
 import React from 'react';
-import { makeStyles, Theme } from '@material-ui/core/styles';
+import { makeStyles, useTheme, Theme } from '@material-ui/core/styles';
 import {
   Grid
 } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
-import { stateInterface } from '../interface';
+import { StateInterface } from '../interface';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    width: `85%`,
-    margin: `5px auto`
+    width: '85%',
+    margin: '5px auto'
   },
   newContentTitle: {
     fontWeight: 'bold',
-    color: '#00DBDF',
+    color: theme.palette.primary.main,
     fontFamily: 'Noto Sans KR'
   },
   content: {
@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: '6.5rem',
     height: '6.5rem',
     marginTop: theme.spacing(1),
-    fill: '#00DBE0',
+    fill: theme.palette.primary.light,
     // marginBottom: theme.spacing(2),
   },
   complete: {
@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0,0,0,0.05)',
+    backgroundColor: theme.palette.action.disabledBackground,
     paddingBottom: theme.spacing(2),
   },
   circle: {
@@ -45,8 +45,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: '12rem',
     marginTop: theme.spacing(4),
     marginBottom: theme.spacing(1),
-    borderRadius: `50%`,
-    backgroundColor: '#fff',
+    borderRadius: '50%',
+    backgroundColor: theme.palette.common.white,
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'center',
@@ -58,10 +58,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-const RefundComplete = (props: { state: stateInterface }) => {
+const RefundComplete = (props: { state: StateInterface }): JSX.Element => {
   const { state } = props;
   const classes = useStyles();
-  const { totalDebit } = state
+  const theme = useTheme();
+  const { totalDebit } = state;
 
   return (
     <div>
@@ -75,7 +76,9 @@ const RefundComplete = (props: { state: stateInterface }) => {
             </Grid>
             <Grid item className={classes.newContentTitle}>
               <Typography className={classes.newContentTitle} variant="h6">
-                {totalDebit} 원
+                {totalDebit}
+                {' '}
+                원
               </Typography>
             </Grid>
           </Grid>
@@ -86,7 +89,8 @@ const RefundComplete = (props: { state: stateInterface }) => {
             <Grid item className={classes.circle}>
               <svg viewBox="0 0 104 88" className={classes.svg}>
                 <path d="M44,85c-2.6,0-5.2-1-7.1-2.9l-32-32C1,46.2,1,39.8,4.9,35.9s10.2-3.9,14.1,0l23.8,23.8L84,5
-                c3.3-4.4,9.6-5.3,14-2c4.4,3.3,5.3,9.6,2,14L52,81c-1.7,2.3-4.4,3.8-7.3,4C44.5,85,44.2,85,44,85z"></path>
+                c3.3-4.4,9.6-5.3,14-2c4.4,3.3,5.3,9.6,2,14L52,81c-1.7,2.3-4.4,3.8-7.3,4C44.5,85,44.2,85,44,85z"
+                />
               </svg>
             </Grid>
             <Grid item>
@@ -96,7 +100,10 @@ const RefundComplete = (props: { state: stateInterface }) => {
             </Grid>
             <Grid item>
               <Typography variant="subtitle1" className={classes.typo}>
-                환불에 대한 문의 사항은 <span style={{ color: '#00DBDF' }}>OnAD 고객센터</span>에 연락주세요
+                환불에 대한 문의 사항은
+                {' '}
+                <span style={{ color: theme.palette.primary.main }}>OnAD 고객센터</span>
+                에 연락주세요
               </Typography>
             </Grid>
           </Grid>
@@ -104,7 +111,6 @@ const RefundComplete = (props: { state: stateInterface }) => {
       </Grid>
     </div>
   );
-
 };
 
-export default RefundComplete
+export default RefundComplete;

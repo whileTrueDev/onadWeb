@@ -9,9 +9,9 @@ import ReChartPie from '../../../../atoms/Chart/ReChartPie';
 
 // usehook
 import useGetRequest, { UseGetRequestObject } from '../../../../utils/hooks/useGetRequest';
-import { creatorDataInterface } from '../dashboard/interfaces';
+import { CreatorDataInterface } from '../dashboard/interfaces';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   chip: {
     margin: theme.spacing(0.5)
   },
@@ -33,18 +33,18 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-interface propInterface {
+interface CustomPieChartProps {
   broadCreatorData: UseGetRequestObject<string[] | null>;
 }
 
-export default function CustomPieChart(props: propInterface) {
+export default function CustomPieChart(props: CustomPieChartProps): JSX.Element {
   const classes = useStyles();
   const { broadCreatorData } = props;
-  const creatorsData = useGetRequest<{ campaignId: string }, creatorDataInterface[] | null>('/marketer/campaign/analysis/creator-data', { campaignId: '' });
+  const creatorsData = useGetRequest<{ campaignId: string }, CreatorDataInterface[] | null>('/marketer/campaign/analysis/creator-data', { campaignId: '' });
 
   const [activeIndex, setActiveIndex] = React.useState<number>(0);
 
-  const onPieEnter = (d: creatorDataInterface, index: number) => {
+  const onPieEnter = (d: CreatorDataInterface, index: number): void => {
     setActiveIndex(index);
   };
 
@@ -61,7 +61,10 @@ export default function CustomPieChart(props: propInterface) {
           <div style={{ textAlign: 'center' }}><CircularProgress /></div>
         </Grid>
       )}
-      {!creatorsData.loading && creatorsData.data && broadCreatorData.data && broadCreatorData.data.length === 0 && creatorsData.data.length === 0 && (
+      {!creatorsData.loading
+      && creatorsData.data
+      && broadCreatorData.data
+      && broadCreatorData.data.length === 0 && creatorsData.data.length === 0 && (
         <Grid
           item
           xs={12}
@@ -76,10 +79,10 @@ export default function CustomPieChart(props: propInterface) {
             <Grid container direction="column" justify="center" alignItems="center">
               <Typography style={{ zIndex: 1 }}>
                 아직 광고를 송출한 크리에이터가 없어요.
-            </Typography>
+              </Typography>
               <Typography style={{ zIndex: 1 }}>
                 배너와 캠페인을 등록해 광고를 집행해보세요.
-            </Typography>
+              </Typography>
             </Grid>
           </div>
         </Grid>
@@ -87,7 +90,10 @@ export default function CustomPieChart(props: propInterface) {
 
       <Grid item xs={12} lg={6}>
 
-        {!creatorsData.loading && broadCreatorData.data && creatorsData.data && creatorsData.data.length > 0 && (
+        {!creatorsData.loading
+        && broadCreatorData.data
+        && creatorsData.data
+        && creatorsData.data.length > 0 && (
           <ReChartPie
             activeIndex={activeIndex}
             onPieEnter={onPieEnter}
@@ -110,9 +116,9 @@ export default function CustomPieChart(props: propInterface) {
               <Grid item xs={12}>
                 <Typography variant="caption">
                   * 붉은 점 표시는 현재 배너 송출중 상태를 나타냅니다 (오차가 있을수 있습니다.)
-              </Typography>
+                </Typography>
               </Grid>
-              {creatorsData.data.slice(0, 30).map((d: creatorDataInterface, index: number) => (
+              {creatorsData.data.slice(0, 30).map((d: CreatorDataInterface, index: number) => (
                 <Chip
                   key={d.creatorName}
                   variant="outlined"
@@ -124,8 +130,8 @@ export default function CustomPieChart(props: propInterface) {
                           <Typography variant="body2">{`${index + 1}. ${d.creatorName}`}</Typography>
                         </Badge>
                       ) : (
-                          <Typography variant="body2">{`${index + 1}. ${d.creatorName}`}</Typography>
-                        )}
+                        <Typography variant="body2">{`${index + 1}. ${d.creatorName}`}</Typography>
+                      )}
                     </div>
                   )}
                   avatar={(
@@ -133,14 +139,14 @@ export default function CustomPieChart(props: propInterface) {
                       src={d.creatorLogo}
                     />
                   )}
-                  onMouseEnter={() => {
+                  onMouseEnter={(): void => {
                     setActiveIndex(index);
                   }}
-                  onClick={() => { window.open(`https://twitch.tv/${d.creatorTwitchId}`); }}
+                  onClick={(): void => { window.open(`https://twitch.tv/${d.creatorTwitchId}`); }}
                 />
               ))}
             </Grid>
-          )}
+        )}
       </Grid>
     </Grid>
   );

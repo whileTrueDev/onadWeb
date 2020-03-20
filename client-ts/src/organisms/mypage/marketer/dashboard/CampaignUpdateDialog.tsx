@@ -15,7 +15,7 @@ import Success from '../../../../atoms/Typography/Success';
 import useDialog from '../../../../utils/hooks/useDialog';
 import useGetRequest from '../../../../utils/hooks/useGetRequest';
 import usePatchRequest from '../../../../utils/hooks/usePatchRequest';
-import { campaignInterface } from './interfaces';
+import { CampaignInterface } from './interfaces';
 
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -36,40 +36,29 @@ const useStyles = makeStyles((theme: Theme) => ({
       margin: 0,
     },
   },
-  campaign: {
-    fontSize: '16px',
-    fontWeight: 700,
-    color: '#3c4858'
-  },
+  campaign: { fontSize: '16px', fontWeight: 700, color: theme.palette.text.primary },
   contents: {
     marginTop: theme.spacing(2),
     padding: theme.spacing(3),
-    backgroundColor: '#f9f9f9'
+    backgroundColor: theme.palette.background.paper
   }
 }));
-
-interface propInterface {
-  open: boolean;
-  selectedCampaign: campaignInterface;
-  handleClose: () => void;
-  doGetRequest: () => void;
-}
 
 type Action =
   { key: 'noBudget' } |
   { key: 'reset' } |
-  { key: 'campaignName', value: string } |
-  { key: 'budget', value: string }
+  { key: 'campaignName'; value: string } |
+  { key: 'budget'; value: string }
 
 
-interface stateInterface {
+interface StateInterface {
   noBudget: boolean;
   budget: string;
   campaignName: string;
 }
 
 
-const reducer = (state: stateInterface, action: Action): stateInterface => {
+const reducer = (state: StateInterface, action: Action): StateInterface => {
   switch (action.key) {
     case 'campaignName':
       return { ...state, campaignName: action.value };
@@ -90,7 +79,13 @@ const reducer = (state: stateInterface, action: Action): stateInterface => {
   }
 };
 
-const CampaignUpdateDialog = (props: propInterface) => {
+interface CampaignUpdateDialogProps {
+  open: boolean;
+  selectedCampaign: CampaignInterface;
+  handleClose: () => void;
+  doGetRequest: () => void;
+}
+const CampaignUpdateDialog = (props: CampaignUpdateDialogProps): JSX.Element => {
   const classes = useStyles();
 
   const {
@@ -125,7 +120,9 @@ const CampaignUpdateDialog = (props: propInterface) => {
     }
   };
 
-  const handleChangeName = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+  const handleChangeName = (
+    event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
+  ): void => {
     if (event.target.value.length === 0) {
       setDuplicate(false);
     }
@@ -137,12 +134,12 @@ const CampaignUpdateDialog = (props: propInterface) => {
     }
   };
 
-  const handleNoBudgetChange = () => {
+  const handleNoBudgetChange = (): void => {
     setError(false);
     dispatch({ key: 'noBudget' });
   };
 
-  const handleChangeBudget = (value: NumberFormatValues) => {
+  const handleChangeBudget = (value: NumberFormatValues): void => {
     dispatch({ key: 'budget', value: value.value });
     if (Number(value.value) < 5000 && value.value !== '') {
       setError(true);
@@ -151,14 +148,14 @@ const CampaignUpdateDialog = (props: propInterface) => {
     }
   };
 
-  const handleNameUpdate = () => {
+  const handleNameUpdate = (): void => {
     const data = { campaignId: selectedCampaign.campaignId, type: 'name', data: state };
     doPatchRequest(data);
     dispatch({ key: 'reset' });
     snack.handleOpen();
   };
 
-  const handleBudgetUpdate = () => {
+  const handleBudgetUpdate = (): void => {
     const data = { campaignId: selectedCampaign.campaignId, type: 'budget', data: state };
     doPatchRequest(data);
     dispatch({ key: 'reset' });
@@ -229,8 +226,7 @@ const CampaignUpdateDialog = (props: propInterface) => {
                     <Grid item>
                       <DangerTypography>
                         {duplicate
-                          && ('캠페인명이 중복되었습니다.')
-                        }
+                          && ('캠페인명이 중복되었습니다.')}
                       </DangerTypography>
                     </Grid>
                   </Grid>
@@ -240,7 +236,7 @@ const CampaignUpdateDialog = (props: propInterface) => {
                     <Button
                       color="primary"
                       size="small"
-                      onClick={() => {
+                      onClick={(): void => {
                         // state체크 및 error 분기화
                         if (checkName && state.campaignName !== '') {
                           handleNameUpdate();
@@ -296,8 +292,7 @@ const CampaignUpdateDialog = (props: propInterface) => {
                       <Typography variant="h4" align="center" style={{ fontWeight: 700 }}>
                         ∞
                       </Typography>
-                    )
-                  }
+                    )}
                 </Grid>
               </Grid>
             </Grid>
@@ -360,8 +355,7 @@ const CampaignUpdateDialog = (props: propInterface) => {
                     <Grid item>
                       <DangerTypography>
                         {error
-                          && ('최소 금액보다 작습니다.')
-                        }
+                          && ('최소 금액보다 작습니다.')}
                         {' '}
                       </DangerTypography>
                     </Grid>
@@ -372,7 +366,7 @@ const CampaignUpdateDialog = (props: propInterface) => {
                     <Button
                       color="primary"
                       size="small"
-                      onClick={() => {
+                      onClick={(): void => {
                         if ((!error && state.budget !== '') || state.noBudget) {
                           handleBudgetUpdate();
                         } else {
@@ -402,7 +396,7 @@ const CampaignUpdateDialog = (props: propInterface) => {
         }}
         open={snack.open}
         autoHideDuration={400}
-        onClose={() => {
+        onClose={(): void => {
           snack.handleClose();
           handleClose();
         }}
@@ -417,7 +411,7 @@ const CampaignUpdateDialog = (props: propInterface) => {
             aria-label="close"
             color="inherit"
             // className={classes.close}
-            onClick={() => {
+            onClick={(): void => {
               snack.handleClose();
               handleClose();
             }}

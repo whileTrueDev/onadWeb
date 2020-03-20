@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   input: {
     fontSize: '14px',
     fontWeight: 700,
-    color: '#3c4858',
+    color: theme.palette.text.primary,
     margin: '4px'
   },
   label: {
@@ -32,12 +32,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-interface propInterface {
+interface UrlUploadDialogProps {
   open: boolean;
   handleClose: () => void;
 }
 
-export default function UrlUploadDialog(props: propInterface) {
+export default function UrlUploadDialog(props: UrlUploadDialogProps): JSX.Element {
   const classes = useStyles();
   const { open, handleClose } = props;
 
@@ -59,7 +59,7 @@ export default function UrlUploadDialog(props: propInterface) {
       primary: boolean;
       linkName: string;
       linkTo: string;
-    }[]
+    }[];
   }, any[]>(
     '/marketer/landing-url',
     // success callback function
@@ -67,7 +67,7 @@ export default function UrlUploadDialog(props: propInterface) {
   );
 
 
-  function handleSubmit() {
+  function handleSubmit(): void {
     const linkResult = [];
     linkResult.push({ primary: true, linkName: mainUrlName.value, linkTo: mainUrl.value });
     if (!subUrlCheck.toggle) {
@@ -139,7 +139,7 @@ export default function UrlUploadDialog(props: propInterface) {
               <Checkbox
                 color="primary"
                 checked={subOpen.toggle}
-                onChange={() => {
+                onChange={(): void => {
                   subOpen.handleToggle(); // sub url1 칸 열기
                   subUrlCheck.handleToggle(); // sub url1 disabled 풀기
                 }}

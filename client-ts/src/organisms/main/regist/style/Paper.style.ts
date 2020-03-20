@@ -1,5 +1,4 @@
 import makeStyles from '@material-ui/core/styles/makeStyles';
-import green from '@material-ui/core/colors/green';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -9,23 +8,18 @@ const useStyles = makeStyles((theme) => ({
   },
   checked: {},
   checkboxRoot: {
-    color: green[600],
+    color: theme.palette.success.main,
     '&$checked': {
-      color: green[500],
+      color: theme.palette.success.light,
     },
   },
-  divider: {
-    width: 2,
-    height: 28,
-    margin: 10,
-  },
+  divider: { width: 2, height: 28, margin: 10, },
   container: {
     ...theme.mixins.gutters(),
     paddingTop: theme.spacing(1),
     paddingBottom: theme.spacing(1),
     marginTop: theme.spacing(2),
     display: 'flex',
-    backgroundColor: '#f2f2f2',
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',

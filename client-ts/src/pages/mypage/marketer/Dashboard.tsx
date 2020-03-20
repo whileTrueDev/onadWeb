@@ -11,9 +11,10 @@ import LogTable from '../../../organisms/mypage/marketer/dashboard/LogTable';
 // hooks
 import useGetRequest from '../../../utils/hooks/useGetRequest';
 import {
-  campaignInterface, onOffInterface, adInterface, countInterface,
-  valueChartInterface, actionLogInterface
+  CampaignInterface, OnOffInterface, AdInterface, CountInterface,
+  ValueChartInterface, ActionLogInterface
 } from '../../../organisms/mypage/marketer/dashboard/interfaces';
+
 const useStyles = makeStyles((theme) => ({
   root: {
     [theme.breakpoints.up('xl')]: {
@@ -25,13 +26,13 @@ const useStyles = makeStyles((theme) => ({
 export default function Dashboard() {
   const classes = useStyles();
 
-  const campaignData = useGetRequest<null, campaignInterface[] | null>('/marketer/campaign/list');
-  const onOffData = useGetRequest<null, onOffInterface | null>('/marketer/ad/on-off');
-  const adData = useGetRequest<null, adInterface | null>('/marketer/ad');
-  const countsData = useGetRequest<null, countInterface | null>('/marketer/ad/analysis/creator-count');
-  const valueChartData = useGetRequest<null, valueChartInterface[] | null>('/marketer/ad/analysis/expenditure');
+  const campaignData = useGetRequest<null, CampaignInterface[] | null>('/marketer/campaign/list');
+  const onOffData = useGetRequest<null, OnOffInterface | null>('/marketer/ad/on-off');
+  const adData = useGetRequest<null, AdInterface | null>('/marketer/ad');
+  const countsData = useGetRequest<null, CountInterface | null>('/marketer/ad/analysis/creator-count');
+  const valueChartData = useGetRequest<null, ValueChartInterface[] | null>('/marketer/ad/analysis/expenditure');
   const broadCreatorData = useGetRequest<null, string[] | null>('/marketer/ad/analysis/creator/list');
-  const actionLogData = useGetRequest<null, actionLogInterface[] | null>('/marketer/history');
+  const actionLogData = useGetRequest<null, ActionLogInterface[] | null>('/marketer/history');
 
 
   return (
@@ -112,7 +113,7 @@ export default function Dashboard() {
                     />
                   </Grid>
                 </Grid>
-              )}
+            )}
           </div>
         )}
     </div>

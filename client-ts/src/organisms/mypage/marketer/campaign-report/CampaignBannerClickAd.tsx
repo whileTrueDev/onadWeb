@@ -1,10 +1,12 @@
 import React from 'react';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import {
-  Grid, Divider, Typography,
+  Paper, Grid, Divider, Typography,
 } from '@material-ui/core';
 import { Assignment } from '@material-ui/icons';
-import { reportInterface, creatorDataInterface, heatmapInterface, geoInterface, campaignInterface } from '../dashboard/interfaces';
+import {
+  ReportInterface, CreatorDataInterface, HeatmapInterface, GeoInterface, CampaignInterface
+} from '../dashboard/interfaces';
 import { UseGetRequestObject } from '../../../../utils/hooks/useGetRequest';
 
 // own components
@@ -18,7 +20,7 @@ import InteractionHeatmap from './HeatmapReport';
 import CampaignInfo from './CampaignInfo';
 import MakePdfButton from './MakePdfButton';
 
-const makeContents = (reportData: reportInterface) => ({
+const makeContents = (reportData: ReportInterface) => ({
   price: [
     {
       title: '광고 총 비용',
@@ -114,17 +116,19 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-interface propInterface {
-  selectedCampaign: campaignInterface;
-  reportData: UseGetRequestObject<null | reportInterface>;
+interface CampaignBannerClickAdProps {
+  selectedCampaign: CampaignInterface;
+  reportData: UseGetRequestObject<null | ReportInterface>;
   chartData: UseGetRequestObject<any[]>;
-  creatorsData: UseGetRequestObject<null | creatorDataInterface[]>;
-  ipToGeoData: UseGetRequestObject<null | geoInterface[]>;
-  clickData: UseGetRequestObject<null | heatmapInterface[]>;
+  creatorsData: UseGetRequestObject<null | CreatorDataInterface[]>;
+  ipToGeoData: UseGetRequestObject<null | GeoInterface[]>;
+  clickData: UseGetRequestObject<null | HeatmapInterface[]>;
 }
 
 
-export default function CampaignBannerClickAd(props: propInterface) {
+export default function CampaignBannerClickAd(
+  props: CampaignBannerClickAdProps
+): JSX.Element {
   const classes = useStyles();
   const {
     selectedCampaign, reportData, chartData,
@@ -133,7 +137,7 @@ export default function CampaignBannerClickAd(props: propInterface) {
 
 
   return (
-    <div style={{ backgroundColor: '#fff' }}>
+    <Paper>
       {!reportData.loading && reportData.data
         && !chartData.loading && chartData.data
         && !creatorsData.loading && !ipToGeoData.loading
@@ -147,7 +151,7 @@ export default function CampaignBannerClickAd(props: propInterface) {
                 <Typography variant="h5" className={classes.title}>
                   {reportData.data.campaignName}
                   &emsp;광고 효과 분석
-            </Typography>
+                </Typography>
 
                 <MakePdfButton />
 
@@ -237,7 +241,7 @@ export default function CampaignBannerClickAd(props: propInterface) {
             </Grid>
 
           </Grid>
-        )}
-    </div>
+      )}
+    </Paper>
   );
 }

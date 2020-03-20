@@ -12,7 +12,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-interface gameDataInterface {
+interface GameCardProps {
   count: number;
   gameName: string;
   gameNameKr: string;
@@ -23,7 +23,7 @@ interface gameDataInterface {
 }
 
 
-export default function GameCard(props: gameDataInterface) {
+export default function GameCard(props: GameCardProps): JSX.Element {
   const {
     boxArt, gameName, gameNameKr, count, handleClick, backgroundColor, color
   } = props;

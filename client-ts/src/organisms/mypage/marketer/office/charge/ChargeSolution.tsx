@@ -15,8 +15,8 @@ import { ChargeAction, ChargeInterface } from '../interface';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    width: `85%`,
-    margin: `5px auto`
+    width: '85%',
+    margin: '5px auto'
   },
   contentTitle: {
     fontWeight: 'bold',
@@ -26,9 +26,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   contentDetail: {
     marginTop: theme.spacing(1),
   },
-  selectValue: {
-    color: '#333',
-  },
+
   textField: {
     marginLeft: theme.spacing(1),
     marginRight: theme.spacing(1),
@@ -43,7 +41,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   newContentTitle: {
     fontWeight: 'bold',
-    color: '#00DBDF',
+    color: theme.palette.primary.main,
     fontFamily: 'Noto Sans KR'
   },
   content: {
@@ -55,26 +53,26 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontFamily: 'Noto Sans KR',
   },
   warning: {
-    background: 'rgba(0,0,0,0.05)',
+    background: theme.palette.action.disabledBackground,
     marginTop: theme.spacing(2),
   }
 }));
 
-interface propInterface {
+interface TestChargeSolutionProps {
   state: ChargeInterface;
   dispatch: React.Dispatch<ChargeAction>;
   setStepComplete: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const TestChargeSolution = (props: propInterface) => {
+const TestChargeSolution = (props: TestChargeSolutionProps): JSX.Element => {
   const { setStepComplete, state, dispatch } = props;
   const classes = useStyles();
-  const { totalDebit, selectValue, chargeType } = state
+  const { totalDebit, selectValue, chargeType } = state;
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch({ key: 'chargeType', value: event.target.value })
-    setStepComplete(true)
-  }
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
+    dispatch({ key: 'chargeType', value: event.target.value });
+    setStepComplete(true);
+  };
 
   return (
     <div>
@@ -86,7 +84,9 @@ const TestChargeSolution = (props: propInterface) => {
             </Grid>
             <Grid item className={classes.contentTitle}>
               <Typography className={classes.contentTitle} variant="h6">
-                {Math.round(parseInt(selectValue) * 1.1)} 원
+                {Math.round(parseInt(selectValue, 10) * 1.1)}
+                {' '}
+                원
               </Typography>
             </Grid>
           </Grid>
@@ -100,7 +100,14 @@ const TestChargeSolution = (props: propInterface) => {
             </Grid>
             <Grid item className={classes.contentTitle}>
               <Typography className={classes.newContentTitle} variant="h6">
-                &#43;{selectValue} &rarr; {totalDebit} 원
+                &#43;
+                {selectValue}
+                {' '}
+                &rarr;
+                {' '}
+                {totalDebit}
+                {' '}
+                원
               </Typography>
             </Grid>
           </Grid>
@@ -113,7 +120,7 @@ const TestChargeSolution = (props: propInterface) => {
                 결제방법 선택
               </Typography>
             </Grid>
-            <Grid container spacing={4} direction="row" justify='space-around'>
+            <Grid container spacing={4} direction="row" justify="space-around">
               <Grid item>
                 <RadioGroup
                   name="howmuch"
@@ -125,7 +132,7 @@ const TestChargeSolution = (props: propInterface) => {
                     value="card"
                     control={<Radio color="primary" />}
                     label={(
-                      <Typography variant="subtitle1" className={classes.selectValue}>
+                      <Typography variant="subtitle1">
                         신용카드
                       </Typography>
                     )}
@@ -134,7 +141,7 @@ const TestChargeSolution = (props: propInterface) => {
                     value="trans"
                     control={<Radio color="primary" />}
                     label={(
-                      <Typography variant="subtitle1" className={classes.selectValue}>
+                      <Typography variant="subtitle1">
                         계좌이체
                       </Typography>
                     )}
@@ -143,7 +150,7 @@ const TestChargeSolution = (props: propInterface) => {
                     value="vbank"
                     control={<Radio color="primary" />}
                     label={(
-                      <Typography variant="subtitle1" className={classes.selectValue}>
+                      <Typography variant="subtitle1">
                         가상계좌
                       </Typography>
                     )}
@@ -160,15 +167,14 @@ const TestChargeSolution = (props: propInterface) => {
         <Grid item className={classes.warning}>
           <Grid container>
             <Grid item className={classes.content}>
-              자동 충전 금액에는 부가세가 적용되며 '계좌이체'의 경우 1인 1계좌 하루 최대 50만원까지 결제 가능합니다.
+              자동 충전 금액에는 부가세가 적용되며 &apos;계좌이체&apos;의 경우 1인 1계좌 하루 최대 50만원까지 결제 가능합니다.
               또한, 신용카드 결제시 및 프로모션 이벤트 금액에 대한 세금계산서 발급은 불가합니다.
-              </Grid>
+            </Grid>
           </Grid>
         </Grid>
       </Grid>
     </div>
   );
-
 };
 
-export default TestChargeSolution
+export default TestChargeSolution;

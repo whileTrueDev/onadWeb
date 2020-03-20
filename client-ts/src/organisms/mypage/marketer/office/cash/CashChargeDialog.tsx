@@ -1,5 +1,4 @@
 import React from 'react';
-import classnames from 'classnames';
 // material ui core
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
@@ -18,70 +17,67 @@ import HOST from '../../../../../utils/config';
 import history from '../../../../../history';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  contentTitle: {
-    fontWeight: 'bold',
-  },
-  contentDetail: {
-    marginTop: theme.spacing(1),
-  },
-  selectValue: {
-    color: '#333',
-  },
+  contentTitle: { fontWeight: 'bold', },
+  contentDetail: { marginTop: theme.spacing(1), },
   textField: {
     marginLeft: theme.spacing(1),
     marginRight: theme.spacing(1),
     width: 250,
     fontSize: 16,
   },
-  account: {
-    marginBottom: 5,
-    fontWeight: 700,
-    color: 'red'
-  },
-  typo: {
-    fontWeight: 600,
-    color: 'red',
-  }
+  account: { marginBottom: 5, fontWeight: 700, color: 'red' },
+  typo: { fontWeight: 600, color: 'red' }
 }));
 
-function useConfirmDialog(handleClose: () => void): any {
+function useConfirmDialog(handleClose: () => void): {
+  confirmDialogOpen: boolean;
+  handleConfirmDialogClose: () => void;
+  handleOnlyDialogClose: () => void;
+  handleConfirmDialogOpen: () => void;
+} {
   const [confirmDialogOpen, setConfirmDialogOpen] = React.useState<boolean>(false);
 
-  function handleConfirmDialogClose() {
+  function handleConfirmDialogClose(): void {
     setConfirmDialogOpen(false);
     handleClose(); // 모달창까지 닫기
   }
 
-  function handleOnlyDialogClose() {
+  function handleOnlyDialogClose(): void {
     setConfirmDialogOpen(false);
   }
 
-  function handleConfirmDialogOpen() {
+  function handleConfirmDialogOpen(): void {
     setConfirmDialogOpen(true);
   }
 
   return {
-    confirmDialogOpen, handleConfirmDialogClose, handleOnlyDialogClose, handleConfirmDialogOpen,
+    confirmDialogOpen,
+    handleConfirmDialogClose,
+    handleOnlyDialogClose,
+    handleConfirmDialogOpen,
   };
 }
 
-function useValue(defaultValue: number | string) {
+function useValue(defaultValue: number | string): {
+  selectValue: string | number;
+  handleChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+} {
   const [selectValue, setValue] = React.useState<number | string>(defaultValue);
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
     setValue(event.target.value);
   };
 
   return { selectValue, handleChange };
 }
 
-interface propInterface {
+interface CashDialogProps {
   open: boolean;
   handleClose: () => void;
   currentCash: string;
 }
 
-function CashDialog(props: propInterface) {
+function CashDialog(props: CashDialogProps): JSX.Element {
   const classes = useStyles();
   const {
     open, handleClose, currentCash,
@@ -99,7 +95,7 @@ function CashDialog(props: propInterface) {
   } = useConfirmDialog(handleClose);
 
 
-  function handleSubmitClick() {
+  function handleSubmitClick(): void {
     // 해당 금액 만큼 광고 캐시에 추가하는 요청
     axios.post<boolean[]>(`${HOST}/api/dashboard/marketer/cash/charge`, {
       chargeCash: selectValue,
@@ -169,7 +165,7 @@ function CashDialog(props: propInterface) {
                 value="신용카드"
                 control={<Radio color="primary" />}
                 label={(
-                  <Typography variant="subtitle1" className={classes.selectValue}>
+                  <Typography variant="subtitle1" >
                     신용카드
                   </Typography>
                 )}
@@ -178,7 +174,7 @@ function CashDialog(props: propInterface) {
                 value="계좌이체"
                 control={<Radio color="primary" />}
                 label={(
-                  <Typography variant="subtitle1" className={classes.selectValue}>
+                  <Typography variant="subtitle1" >
                     계좌이체
                   </Typography>
                 )}
@@ -187,13 +183,13 @@ function CashDialog(props: propInterface) {
                 value="무통장입금"
                 control={<Radio color="primary" />}
                 label={(
-                  <Typography variant="subtitle1" className={classes.selectValue}>
+                  <Typography variant="subtitle1">
                     무통장입금
                   </Typography>
                 )}
               />
             </RadioGroup>
-            <Typography variant="subtitle1" className={classnames([classes.account, classes.selectValue])}>
+            <Typography variant="subtitle1" className={classes.account}>
               부산은행 : 101 - 2064 - 1964 - 03 (와일트루강동기)
             </Typography>
 
@@ -215,7 +211,7 @@ function CashDialog(props: propInterface) {
                 value="50000"
                 control={<Radio color="primary" />}
                 label={(
-                  <Typography variant="subtitle1" className={classes.selectValue}>
+                  <Typography variant="subtitle1">
                     50,000 원
                   </Typography>
                 )}
@@ -224,7 +220,7 @@ function CashDialog(props: propInterface) {
                 value="100000"
                 control={<Radio color="primary" />}
                 label={(
-                  <Typography variant="subtitle1" className={classes.selectValue}>
+                  <Typography variant="subtitle1">
                     100,000 원
                   </Typography>
                 )}
@@ -233,7 +229,7 @@ function CashDialog(props: propInterface) {
                 value="300000"
                 control={<Radio color="primary" />}
                 label={(
-                  <Typography variant="subtitle1" className={classes.selectValue}>
+                  <Typography variant="subtitle1">
                     300,000 원
                   </Typography>
                 )}
@@ -242,7 +238,7 @@ function CashDialog(props: propInterface) {
                 value="500000"
                 control={<Radio color="primary" />}
                 label={(
-                  <Typography variant="subtitle1" className={classes.selectValue}>
+                  <Typography variant="subtitle1">
                     500,000 원
                   </Typography>
                 )}
@@ -253,7 +249,7 @@ function CashDialog(props: propInterface) {
                 <TextField
                   id="selectValue"
                   label={(
-                    <Typography variant="subtitle1" className={classes.selectValue}>
+                    <Typography variant="subtitle1">
                       충전할 금액을 입력하세요
                     </Typography>
                   )}
@@ -287,17 +283,18 @@ function CashDialog(props: propInterface) {
           )}
         >
           <DialogContent>
-            <Typography variant="h6" >
+            <Typography variant="h6">
               {/* marked="center" */}
               {`광고캐시 충전 신청액 : ${selectValue}`}
             </Typography>
-            <Typography variant="h6" >
+            <Typography variant="h6">
               {/* marked="center" */}
               {`충전 이후 보유 광고캐시 : ${totalDebit}`}
             </Typography>
             <Divider />
             <Typography variant="h6" style={{ marginTop: 10 }} className={classes.typo}>
-              {`무통장 입금액 : ${(typeof selectValue === "string") ? parseInt(selectValue) * 1.1 : selectValue * 1.1}`}원(부가세포함)을
+              {`무통장 입금액 : ${(typeof selectValue === 'string') ? parseInt(selectValue, 10) * 1.1 : selectValue * 1.1}`}
+              원(부가세포함)을
             </Typography>
             <Typography variant="h6" className={classes.typo}>
               부산은행 : 101 - 2064 - 1964 - 03 (와일트루강동기)

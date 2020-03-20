@@ -20,7 +20,7 @@ const useStyle = makeStyles((theme: Theme) => ({
   input: {
     fontSize: '14px',
     fontWeight: 700,
-    color: '#3c4858',
+    color: theme.palette.text.primary,
   },
   label: {
     fontSize: '20px',
@@ -63,13 +63,13 @@ interface ImageInterface {
   imageUrl?: string;
 }
 
-interface propInterface {
+interface BannerDescFromProps {
   handleNext: (number: number) => (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
   handleSubmit: () => void;
-  state: ImageInterface
+  state: ImageInterface;
 }
 
-const BannerDescFrom = (props: propInterface) => {
+const BannerDescFrom = (props: BannerDescFromProps): JSX.Element => {
   const {
     handleNext, state, handleSubmit,
   } = props;
@@ -77,7 +77,9 @@ const BannerDescFrom = (props: propInterface) => {
   const [inProgress, setInProgress] = React.useState(false);
   const classes = useStyle();
 
-  const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+  const handleChange = (
+    event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
+  ): void => {
     setValue(event.target.value);
   };
 
@@ -122,7 +124,7 @@ const BannerDescFrom = (props: propInterface) => {
             variant="contained"
             color="primary"
             size="small"
-            onClick={() => {
+            onClick={(): void => {
               setInProgress(true);
               handleSubmit();
             }}

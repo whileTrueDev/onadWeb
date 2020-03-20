@@ -5,25 +5,23 @@ import {
 } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
-import sources from '../sources'
+import sources from '../sources';
 import StyledSelectText from '../../../../../atoms/StyledSelectText';
-import { stateInterface } from '../interface';
-
-
+import { StateInterface } from '../interface';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    width: `85%`,
-    margin: `5px auto`
+    width: '85%',
+    margin: '5px auto'
   },
   contentTitle: {
     fontWeight: 'bold',
-    color: '#999',
+    color: theme.palette.text.primary,
     fontFamily: 'Noto Sans KR'
   },
   newContentTitle: {
     fontWeight: 'bold',
-    color: '#00DBDF',
+    color: theme.palette.primary.main,
     fontFamily: 'Noto Sans KR'
   },
   warningTitle: {
@@ -31,12 +29,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: 'black',
     fontFamily: 'Noto Sans KR'
   },
-  contentDetail: {
-    marginTop: theme.spacing(1),
-  },
-  selectValue: {
-    color: '#333',
-  },
+  contentDetail: { marginTop: theme.spacing(1) },
   textField: {
     marginLeft: theme.spacing(1),
     marginRight: theme.spacing(1),
@@ -58,24 +51,24 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontFamily: 'Noto Sans KR',
   },
   warning: {
-    background: 'rgba(0,0,0,0.05)',
+    background: theme.palette.action.disabledBackground,
     marginTop: theme.spacing(2),
     marginBottom: theme.spacing(2),
   }
 }));
 
 
-interface propInterface {
-  state: stateInterface
+interface RefundConfirmProps {
+  state: StateInterface;
   accountNumber: string;
   accountHolder: string;
 }
 
 
-const RefundConfirm = (props: propInterface) => {
+const RefundConfirm = (props: RefundConfirmProps): JSX.Element => {
   const { state, accountNumber, accountHolder } = props;
   const classes = useStyles();
-  const { selectValue, totalDebit } = state
+  const { selectValue, totalDebit } = state;
 
   return (
     <div>
@@ -117,7 +110,11 @@ const RefundConfirm = (props: propInterface) => {
             </Grid>
             <Grid item className={classes.contentTitle}>
               <Typography className={classes.contentTitle} variant="h6">
-                {parseInt(selectValue) < 10000 ? parseInt(selectValue) - 1000 : parseInt(selectValue) * 0.9} 원
+                {parseInt(selectValue, 10) < 10000
+                  ? parseInt(selectValue, 10) - 1000
+                  : parseInt(selectValue, 10) * 0.9}
+                {' '}
+                원
               </Typography>
             </Grid>
           </Grid>
@@ -132,7 +129,14 @@ const RefundConfirm = (props: propInterface) => {
             </Grid>
             <Grid item className={classes.contentTitle}>
               <Typography className={classes.newContentTitle} variant="h6">
-                &#45;{selectValue} &rarr; {totalDebit} 원
+                &#45;
+                {selectValue}
+                {' '}
+                &rarr;
+                {' '}
+                {totalDebit}
+                {' '}
+                원
               </Typography>
             </Grid>
           </Grid>
@@ -144,7 +148,7 @@ const RefundConfirm = (props: propInterface) => {
             <Grid item>
               <Typography className={classes.warningTitle} variant="h6">
                 환불 요청 안내사항
-                </Typography>
+              </Typography>
             </Grid>
             <Grid item className={classes.content}>
               {sources.contentRefund.confirmWarning}
@@ -154,7 +158,6 @@ const RefundConfirm = (props: propInterface) => {
       </Grid>
     </div>
   );
-
 };
 
-export default RefundConfirm
+export default RefundConfirm;

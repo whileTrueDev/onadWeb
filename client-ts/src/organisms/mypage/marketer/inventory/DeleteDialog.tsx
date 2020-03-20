@@ -6,10 +6,9 @@ import StyledItemText from '../../../../atoms/StyledItemText';
 import Dialog from '../../../../atoms/Dialog/Dialog';
 import useGetRequest from '../../../../utils/hooks/useGetRequest';
 import useDeleteRequest from '../../../../utils/hooks/useDeleteRequest';
-import { bannerDataInterface } from '../../../../organisms/mypage/marketer/inventory/interface';
-
-
+import { BannerDataInterface } from './interface';
 import history from '../../../../history';
+
 const useStyles = makeStyles((theme: Theme) => ({
   img: {
     maxHeight: '200px',
@@ -26,14 +25,14 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-interface propInterface {
+interface DeleteDialogProps {
   open: boolean;
-  selectedBanner: bannerDataInterface;
+  selectedBanner: BannerDataInterface;
   handleClose: () => void;
 }
 
 
-const DeleteDialog = (props: propInterface) => {
+const DeleteDialog = (props: DeleteDialogProps): JSX.Element => {
   const classes = useStyles();
   const {
     open, selectedBanner, handleClose
@@ -54,22 +53,26 @@ const DeleteDialog = (props: propInterface) => {
       maxWidth="sm"
       buttons={(
         <div style={{ display: 'flex' }}>
-          {!connectedCampaign.loading && connectedCampaign.data && connectedCampaign.data.length > 0 && (
+          {!connectedCampaign.loading
+          && connectedCampaign.data
+          && connectedCampaign.data.length > 0 && (
             <Tooltip title={<Typography>배너가 캠페인에 할당되어 있어 삭제가 불가능합니다.</Typography>}>
               <div>
                 <CustomButton
                   color="primary"
                   disabled
                 >
-                  {'확인'}
+                  확인
                 </CustomButton>
               </div>
             </Tooltip>
           )}
-          {!connectedCampaign.loading && connectedCampaign.data && connectedCampaign.data.length === 0 && (
+          {!connectedCampaign.loading
+          && connectedCampaign.data
+          && connectedCampaign.data.length === 0 && (
             <CustomButton
               color="primary"
-              onClick={() => {
+              onClick={(): void => {
                 doDeleteRequest({ bannerId: selectedBanner.bannerId });
                 setTimeout(() => {
                   handleClose();
@@ -77,7 +80,7 @@ const DeleteDialog = (props: propInterface) => {
                 }, 1000);
               }}
             >
-              {'확인'}
+              확인
             </CustomButton>
           )}
           <CustomButton onClick={handleClose}>취소</CustomButton>

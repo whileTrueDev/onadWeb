@@ -1,9 +1,9 @@
-export interface businessInterface {
+export interface BusinessInterface {
   marketerBusinessRegNum: string;
   marketerBusinessRegSrc: string;
 }
 
-export interface userInterface {
+export interface UserInterface {
   marketerId: string;
   marketerName: string;
   marketerMail: string;
@@ -11,20 +11,20 @@ export interface userInterface {
   marketerBusinessRegNum: string;
   marketerUserType: number;
   marketerContraction: number;
-  platformType: number
+  platformType: number;
 }
 
-export interface accountInterface {
+export interface AccountInterface {
   marketerAccountNumber: string;
   accountHolder: string;
 }
 
-export interface cashInterface {
+export interface CashInterface {
   cashAmount: string;
   date: string;
 }
 
-export interface stateInterface {
+export interface StateInterface {
   currentCash: number;
   selectValue: string;
   checked: boolean;
@@ -51,7 +51,7 @@ export type Action = {
 
 
 // key ,value를 이용하여 state의 값에 접근
-export const stepReducer = (state: stateInterface, action: Action): stateInterface => {
+export const stepReducer = (state: StateInterface, action: Action): StateInterface => {
   switch (action.key) {
     case 'currentCash': {
       return { ...state, currentCash: action.value };
@@ -83,19 +83,19 @@ export interface ChargeInterface {
 
 export type ChargeAction =
   {
-    key: 'currentCash', value: string;
+    key: 'currentCash'; value: string;
   } |
   {
-    key: 'selectValue', value: string;
+    key: 'selectValue'; value: string;
   } |
   {
-    key: 'totalDebit', value: string;
+    key: 'totalDebit'; value: string;
   } |
   {
-    key: 'chargeType', value: string;
+    key: 'chargeType'; value: string;
   } |
   {
-    key: 'reset'
+    key: 'reset';
   }
 
 // key ,value를 이용하여 state의 값에 접근
@@ -123,7 +123,7 @@ export const chargeReducer = (state: ChargeInterface, action: ChargeAction) => {
 };
 
 
-export interface vbankInterface {
+export interface VbankInterface {
   vbankNum: string;
   vbankHolder: string;
   vbankName: string;
