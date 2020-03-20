@@ -38,7 +38,7 @@ const MarketerDashboard = (): JSX.Element => {
   return (
     <div className={classes.wrapper}>
       <Sidebar
-        routes={allRoutes.marketer}
+        routes={allRoutes.marketer.filter((r) => !r.noTab)}
         logo="/pngs/logo/onad_logo_vertical_white.png"
         mobileOpen={mobileOpen}
         handleDrawerToggle={handleDrawerToggle}

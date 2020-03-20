@@ -12,6 +12,7 @@ interface CardHeaderProps {
   plain?: boolean;
   stats?: boolean;
   icon?: boolean;
+  color?: string;
 }
 
 function CardHeader({

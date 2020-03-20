@@ -33,7 +33,6 @@ router.route('/list')
     .get(
         responseHelper.middleware.checkSessionExists, // session 확인이 필요한 경우.
         responseHelper.middleware.withErrorCatch(async (req, res, next) => {
-            console.log('list입니다.')
             const { marketerId } = responseHelper.getSessionData(req);
             const query = `
             SELECT bannerSrc, confirmState, bannerId, 
@@ -139,7 +138,7 @@ router.route('/campaigns')
         responseHelper.middleware.withErrorCatch(async (req, res, next) => {
             const bannerId = responseHelper.getParam("bannerId", "GET", req);
             const query = `
-            SELECT *
+            SELECT campaignId
             FROM campaign
             WHERE bannerId = ? AND deletedState = 0`;
             doQuery(query, [bannerId])

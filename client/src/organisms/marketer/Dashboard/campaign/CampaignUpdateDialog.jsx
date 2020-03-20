@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
 import {
   Grid, Checkbox, FormControlLabel, Divider, Snackbar, IconButton
@@ -394,10 +393,5 @@ const CampaignUpdateDialog = (props) => {
     </Dialog>
   );
 };
-CampaignUpdateDialog.propTypes = {
-  open: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]).isRequired,
-  handleClose: PropTypes.func.isRequired,
-  selectedCampaign: PropTypes.object.isRequired,
-  callUrl: PropTypes.func.isRequired
-};
+
 export default CampaignUpdateDialog;

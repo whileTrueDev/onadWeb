@@ -6,6 +6,7 @@ import {
 import { useTheme } from '@material-ui/core/styles';
 import makeBarChartData, { IncomeChartData } from './makeBarChartData';
 
+
 interface ReChartBarProps<T> {
   data: T[];
   legend?: boolean;
@@ -29,7 +30,7 @@ export default function ReChartBar<DataType extends IncomeChartData>({
   chartHeight = 300,
   chartWidth = 500,
   xAxisDataKey = 'date',
-  tooltipLabelFormatter = (label: string|number): string|number => label,
+  tooltipLabelFormatter = (label: string | number): string | number => label,
   tooltipFormatter = (value: string | number | Array<string | number>, name: string): any => {
     if (name === 'cpm_amount') { return [value, '배너광고']; } return [value, '클릭광고'];
   },

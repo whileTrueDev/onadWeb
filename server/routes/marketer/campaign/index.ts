@@ -8,14 +8,14 @@ const router = express.Router();
 router.use('/analysis', analysisRouter);
 
 interface CampaignData {
-    campaignId: string;
-    campaignName: string;
-    optionType: number;
-    priorityType: number | string;
-    regiDate: string;
-    onOff: number;
-    bannerSrc: string;
-    dailyLimit: number;
+  campaignId: string;
+  campaignName: string;
+  optionType: number;
+  priorityType: number | string;
+  regiDate: string;
+  onOff: number;
+  bannerSrc: string;
+  dailyLimit: number;
 }
 
 // 모든 캠페인에 대한 목록을 의미한다.
@@ -35,7 +35,7 @@ router.route('/list')
 
       const query = `
             SELECT
-            campaignId, campaignName, optionType, priorityType, campaign.regiDate, onOff, bannerSrc, dailyLimit
+            campaignId, campaignName, optionType, priorityType, campaign.regiDate as regiDate, onOff, bannerSrc, dailyLimit
             FROM campaign
             JOIN bannerRegistered AS br
             ON br.bannerId = campaign.bannerId
@@ -124,7 +124,7 @@ router.route('/on-off')
         .then((row) => {
           const { campaignName, bannerConfirm, linkConfirm } = row.result[0];
           if ((bannerConfirm === 1 && linkConfirm === 1)
-          || (bannerConfirm === 1 && linkConfirm === null)) {
+            || (bannerConfirm === 1 && linkConfirm === null)) {
             doQuery(query, [onoffState, campaignId])
               .then(() => {
                 // const MARKETER_ACTION_LOG_TYPE = 6;
@@ -201,9 +201,9 @@ router.route('/')
         startDate, finDate, keyword, bannerId,
         mainLandingUrl, sub1LandingUrl, sub2LandingUrl,
         mainLandingUrlName, sub1LandingUrlName, sub2LandingUrlName] = responseHelper.getParam(['campaignName', 'optionType', 'priorityType',
-        'priorityList', 'selectedTime', 'dailyLimit', 'startDate', 'finDate',
-        'keyword', 'bannerId', 'mainLandingUrl', 'sub1LandingUrl', 'sub2LandingUrl',
-        'mainLandingUrlName', 'sub1LandingUrlName', 'sub2LandingUrlName'], 'POST', req);
+          'priorityList', 'selectedTime', 'dailyLimit', 'startDate', 'finDate',
+          'keyword', 'bannerId', 'mainLandingUrl', 'sub1LandingUrl', 'sub2LandingUrl',
+          'mainLandingUrlName', 'sub1LandingUrlName', 'sub2LandingUrlName'], 'POST', req);
 
       const searchQuery = `
             SELECT campaignId
@@ -236,26 +236,26 @@ router.route('/')
             const landingUrlJsonData = JSON.stringify(
               {
                 links:
-                                    [{
-                                      linkName: mainLandingUrlName,
-                                      linkTo: mainLandingUrl,
-                                      primary: true,
-                                    },
-                                    (sub1LandingUrl
-                                      ? {
-                                        linkName: sub1LandingUrlName,
-                                        linkTo: sub1LandingUrl,
-                                        primary: false,
-                                      } : null
-                                    ),
-                                    (sub2LandingUrl
-                                      ? {
-                                        linkName: sub2LandingUrlName,
-                                        linkTo: sub2LandingUrl,
-                                        primary: false,
-                                      } : null
-                                    ),
-                                    ].filter(Boolean)
+                  [{
+                    linkName: mainLandingUrlName,
+                    linkTo: mainLandingUrl,
+                    primary: true,
+                  },
+                  (sub1LandingUrl
+                    ? {
+                      linkName: sub1LandingUrlName,
+                      linkTo: sub1LandingUrl,
+                      primary: false,
+                    } : null
+                  ),
+                  (sub2LandingUrl
+                    ? {
+                      linkName: sub2LandingUrlName,
+                      linkTo: sub2LandingUrl,
+                      primary: false,
+                    } : null
+                  ),
+                  ].filter(Boolean)
               }
             );
             const keywordsJsonData = JSON.stringify(

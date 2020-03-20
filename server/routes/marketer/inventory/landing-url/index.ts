@@ -22,12 +22,12 @@ router.route('/list')
         responseHelper.middleware.withErrorCatch(async (req, res, next) => {
             const { marketerId } = responseHelper.getSessionData(req);
             const query = `
-        SELECT
-        linkId, marketerId, confirmState, denialReason,
-        links, DATE_FORMAT(regiDate, "%Y년 %m월 %d일") as regiDate, updateDate
-        FROM linkRegistered
-        WHERE marketerId = ?
-        `;
+            SELECT
+            linkId, marketerId, confirmState, denialReason,
+            links, DATE_FORMAT(regiDate, "%Y년 %m월 %d일") as regiDate, updateDate
+            FROM linkRegistered
+            WHERE marketerId = ?
+            `;
             doQuery(query, [marketerId])
                 .then((row) => {
                     const result = row.result.map(

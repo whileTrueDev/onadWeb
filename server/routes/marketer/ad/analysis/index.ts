@@ -64,4 +64,36 @@ router.route('/creator-count')
   )
   .all(responseHelper.middleware.unusedMethod);
 
+// 마케터의 캠페인을 송출하는 크리에이터 중에서 현재 방송중임을 보여주기 위해서
+// marketer/marketer =>/broadcast/creator
+// test 완료
+router.route('/creator/list')
+  .get(
+    responseHelper.middleware.checkSessionExists, // session 확인이 필요한 경우.
+    responseHelper.middleware.withErrorCatch(async (req, res, next) => {
+      const { marketerId } = responseHelper.getSessionData(req);
+      const tenMinuteAgoTime = new Date();
+      tenMinuteAgoTime.setMinutes(tenMinuteAgoTime.getMinutes() - 10);
+      const query = `
+          SELECT streamerName, creatorTwitchId, viewer FROM twitchStreamDetail
+              JOIN creatorInfo
+              ON creatorInfo.creatorName = twitchStreamDetail.streamerName
+              JOIN campaignTimestamp
+              ON campaignTimestamp.creatorId = creatorInfo.creatorId
+              WHERE TIME > ? 
+              AND creatorInfo.creatorContractionAgreement = 1
+              AND campaignTimestamp.date > ?
+              AND substring_index(campaignTimestamp.campaignId, "_", 1) = ?`;
+      doQuery(query, [tenMinuteAgoTime, tenMinuteAgoTime, marketerId])
+        .then((row) => {
+          const result = row.result.map((d: any) => d.streamerName);
+          responseHelper.send(result, 'get', res);
+        })
+        .catch((error) => {
+          responseHelper.promiseError(error, next);
+        });
+    }),
+  )
+  .all(responseHelper.middleware.unusedMethod);
+
 export default router;

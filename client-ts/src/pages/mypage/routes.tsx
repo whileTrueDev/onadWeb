@@ -17,11 +17,12 @@ import CreatorManual from './creator/Manual';
 import CreatorMyPage from './creator/Mypage';
 
 // 마케터 라우터
-// import MarketerDashboard from './marketer/Dashboard';
-// import MarketerInventory from './marketer/Inventory';
+
+import MarketerInventory from './marketer/Inventory';
+import MarketerDashboard from './marketer/Dashboard';
+import MarketerMyOffice from './marketer/MyOffice';
+import CampaignCreateStepper from './marketer/CampaignCreation';
 import MarketerManual from './marketer/Manual';
-// import MarketerMyOffice from './marketer/MyOffice';
-// import CampaignCreateStepper from './marketer/CampaignCreation';
 
 export interface MypageRoute {
   path: string;
@@ -80,15 +81,15 @@ const dashboardRoutes: MypageRoutes = {
       path: '/main',
       name: '대시보드',
       icon: Dashboard,
-      component: () => <div />,
-      // component: MarketerDashboard, // 마케터 대시보드 컴포넌트로 수정
+      // component: () => <div />,
+      component: MarketerDashboard, // 마케터 대시보드 컴포넌트로 수정
       layout: '/mypage/marketer',
     },
     {
       path: '/inventory',
       name: '내 배너',
       icon: BrandingWatermark,
-      // component: MarketerInventory, // 마케터 대시보드 컴포넌트로 수정
+      component: () => <MarketerInventory />, // 마케터 대시보드 컴포넌트로 수정
       layout: '/mypage/marketer',
     },
     {
@@ -102,14 +103,14 @@ const dashboardRoutes: MypageRoutes = {
       path: '/myoffice',
       name: '내 오피스',
       icon: Work,
-      // component: MarketerMyOffice,
+      component: MarketerMyOffice,
       layout: '/mypage/marketer'
     },
     {
       path: '/campaigncreate',
       name: '캠페인생성',
       icon: Work,
-      // component: CampaignCreateStepper,
+      component: CampaignCreateStepper,
       layout: '/mypage/marketer',
       noTab: true
     },

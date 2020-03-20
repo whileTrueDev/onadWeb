@@ -13,11 +13,12 @@ import * as serviceWorker from './serviceWorker';
 
 // Pages
 import Door from './pages/main/Door';
+
+import MarketerDashboard from './pages/mypage/layouts/MarketerLayout';
+import ChargeDialog from './organisms/mypage/marketer/office/charge/ChargeDialog'
 import CreatorDashboard from './pages/mypage/layouts/CreatorLayout';
-// import MarketerLayout from './pages/mypage/layouts/MarketerLayout';
 import AdChatTracker from './pages/others/AdChatTracker';
 import Adchattest from './pages/others/Adchattest';
-
 
 dotenv.config();
 
@@ -31,7 +32,8 @@ const developmentRouter = (
         <Route exact path="/" component={Door} />
         <ThemeProvider theme={theme.lightTheme}>
           <Route path="/mypage/creator" component={CreatorDashboard} />
-          {/* <Route path="/mypage/marketer" component={MarketerDashboard} /> */}
+          <Route path="/mypage/marketer" component={MarketerDashboard} />
+          <Route exact path="/marketer/charge" component={ChargeDialog} />
         </ThemeProvider>
       </>
     </Switch>
@@ -44,7 +46,8 @@ const productionRouter = (
       <>
         <Route exact path="/" component={Door} />
         <ThemeProvider theme={theme.lightTheme}>
-          <Route path="/mypage/creator" component={CreatorDashboard} />
+          <Route path="/mypage/marketer" component={MarketerDashboard} />
+          <Route exact path="/marketer/charge" component={ChargeDialog} />
         </ThemeProvider>
       </>
     </Switch>

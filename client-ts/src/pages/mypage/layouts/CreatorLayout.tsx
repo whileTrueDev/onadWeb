@@ -38,7 +38,7 @@ const CreatorDashboard = (): JSX.Element => {
   return (
     <div className={classes.wrapper}>
       <Sidebar
-        routes={allRoutes.creator}
+        routes={allRoutes.creator.filter((r) => !r.noTab)}
         logo="/pngs/logo/onad_logo_vertical_white.png"
         mobileOpen={mobileOpen}
         handleDrawerToggle={handleDrawerToggle}

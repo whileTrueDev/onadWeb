@@ -49,6 +49,7 @@ const localization = {
 
 interface CustomMaterialTableProps<T extends object> extends MaterialTableProps<T> {
   cellWidth?: number;
+  style?: React.CSSProperties;
 }
 
 export default function MaterialTable<RowDataType extends object>(
