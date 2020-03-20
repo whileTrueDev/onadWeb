@@ -1,17 +1,9 @@
 import React from 'react';
-import makeStyles from '@material-ui/core/styles/makeStyles';
+import useStyles from './style/Regist.style';
 import RegistStepper from '../../organisms/main/regist/Stepper';
 import AppAppBar from '../../organisms/main/layouts/AppAppbar';
 import useLoginValue from '../../utils/hooks/useLoginValue';
 import withRoot from './withRoot';
-
-const useStyles = makeStyles(() => ({
-  root: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-  },
-}));
 
 interface Props {
   match: { params: { platform: string } };

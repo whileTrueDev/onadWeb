@@ -1,14 +1,8 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
 import TabBar from '../Introduction/TabBar';
 import PolicyMarketer from './PolicyMarketer';
 import PolicyCreator from './PolicyCreator';
-
-const useStyles = makeStyles(() => ({
-  root: {
-    marginTop: 70,
-  },
-}));
+import useStyles from './style/Policy.style';
 
 function Policy(): JSX.Element {
   const classes = useStyles();

@@ -5,7 +5,7 @@ import {
   StepLabel,
   StepContent,
 } from '@material-ui/core';
-import makeStyles from '@material-ui/core/styles/makeStyles';
+import useStyles from './style/Stepper.style';
 import axios from '../../../utils/axios';
 import PlatformRegistForm from './PlatformRegistForm';
 import Usertype from './Usertype';
@@ -16,28 +16,6 @@ import history from '../../../history';
 import IdentityVerification from './IdentityVerification';
 import { myReducer, initialState } from './Stepper.reducer';
 
-const useStyles = makeStyles((theme) => ({
-  container: {
-    [theme.breakpoints.down('sm')]: {
-      width: '90%',
-    },
-    [theme.breakpoints.up('md')]: {
-      width: '75%',
-    },
-    marginTop: theme.spacing(10),
-    marginBottom: theme.spacing(5),
-  },
-  button: {
-    marginTop: theme.spacing(1),
-    marginRight: theme.spacing(1),
-  },
-  actionsContainer: {
-    marginBottom: theme.spacing(2),
-  },
-  resetContainer: {
-    padding: theme.spacing(1) * 3,
-  },
-}));
 
 function RegistStepper({ platform }: { platform: string }): JSX.Element {
   const classes = useStyles();

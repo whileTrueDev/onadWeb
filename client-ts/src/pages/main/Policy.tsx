@@ -1,32 +1,14 @@
 import React from 'react';
-import makeStyles from '@material-ui/core/styles/makeStyles';
 import { Grid } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import { Link } from 'react-router-dom';
+import useStyles from './style/Policy.style';
 import AppFooter from '../../organisms/main/layouts/AppFooter';
-import RePasswordDialog from '../../organisms/main/main/views/login/RePassword';
+import RePasswordDialog from '../../organisms/main/main/login/RePassword';
 import useLoginValue from '../../utils/hooks/useLoginValue';
 import Policy from '../../organisms/main/policy/Policy';
 import PolicyPrivacy from '../../organisms/main/policy/PolicyPrivacy';
 import withRoot from './withRoot';
-
-
-const useStyles = makeStyles(() => ({
-  root: {
-    paddingTop: 70
-  },
-  contentBox: {
-    width: '80%',
-    margin: '0px auto',
-    wordBreak: 'keep-all'
-  },
-  policyTitle: {
-    paddingTop: '10px',
-  },
-  button: {
-    marginRight: 40,
-  },
-}));
 
 interface Props {
   match: { params: { privacy: string } };

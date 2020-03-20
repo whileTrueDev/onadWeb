@@ -1,23 +1,7 @@
 import React from 'react';
-import makeStyles from '@material-ui/core/styles/makeStyles';
 import shortid from 'shortid';
-import terms from './PolicySource';
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    marginTop: 70
-  },
-  content: {
-    marginTop: 20,
-    fontFamily: 'Noto Sans KR',
-  },
-  text: {
-    marginTop: 30,
-  },
-  policyWrapper: {
-    marginTop: theme.spacing(8)
-  }
-}));
+import useStyles from './style/PolicyMarketer.style';
+import terms from './source/PolicySource';
 
 interface Terms {
   title: string;
