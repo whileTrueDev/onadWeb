@@ -5,9 +5,9 @@ import Dialog from '../../../../../atoms/Dialog/Dialog';
 import GridContainer from '../../../../../atoms/Grid/GridContainer';
 import GridItem from '../../../../../atoms/Grid/GridItem';
 import useImageUpload from '../../../../../utils/hooks/useImageUpload';
+import usePutRequest from '../../../../../utils/hooks/usePutRequest';
 
-
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   imgInput: {
     [theme.breakpoints.down('xs')]: {
       margin: '2px',
@@ -36,7 +36,7 @@ interface propInterface {
   handleSnackOpen: () => void;
 }
 
-export default function BusinessRegiUploadDialog(props: propInterface) {
+export default function BusinessRegiUploadDialog(props: propInterface): JSX.Element {
   const {
     open, handleClose, businessRegiImage, request, handleSnackOpen
   } = props;
@@ -45,11 +45,13 @@ export default function BusinessRegiUploadDialog(props: propInterface) {
   const defaultImage = businessRegiImage || '/pngs/logo/onad_logo_vertical_small.png';
 
   const {
-    imageUrl, imageName, handleReset, readImage, handleUploadClick
-  } = useImageUpload(defaultImage,
-    '/api/dashboard/marketer/profile/business/upload',
-    handleSnackOpen);
+    imageUrl, imageName, handleReset, readImage
+  } = useImageUpload(defaultImage);
 
+  const imageUpload = usePutRequest('/marketer/business', () => {
+    handleSnackOpen();
+    request();
+  });
 
   return (
     <Dialog
@@ -63,9 +65,8 @@ export default function BusinessRegiUploadDialog(props: propInterface) {
           <Button
             color="primary"
             onClick={async () => {
-              await handleUploadClick();
+              await imageUpload.doPutRequest({ imageUrl });
               await handleClose();
-              request();
             }}
             disabled={!imageName}
           >
@@ -91,7 +92,7 @@ export default function BusinessRegiUploadDialog(props: propInterface) {
           <GridContainer justify="flex-end">
             <GridItem>
               {/* <Hidden smDown> */}
-              <input className="upload-name" value={imageName} disabled />
+              <input className="upload-name" value={imageName || ''} disabled />
               {/* </Hidden> */}
             </GridItem>
             <GridItem>

@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 interface propInterface {
   classes: any;
-  businessRegistrationData: UseGetRequestObject<businessInterface | null>
+  businessRegistrationData: UseGetRequestObject<businessInterface | null>;
 }
 
 function BusinessUploadForm(props: propInterface) {
@@ -62,7 +62,7 @@ function BusinessUploadForm(props: propInterface) {
                 onClick={() => { handleOpen(); }}
               >
                 사업자 등록증 변경
-            </Button>
+              </Button>
             </div>
             <div className={myClasses.textBox} style={{ marginTop: 5 }}>
               <Typography gutterBottom variant="body1">등록된 사업자 등록번호</Typography>
