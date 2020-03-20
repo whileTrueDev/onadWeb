@@ -4,24 +4,17 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 
 const useStyles = makeStyles(() => ({
-  wrapper: {
-    alignItems: 'start'
-  },
-  labelIcon: {
-    display: 'flex'
-  },
-  tab: {
-    minWidth: 0,
-    fontSize: 17
-  }
+  wrapper: { alignItems: 'start' },
+  labelIcon: { display: 'flex' },
+  tab: { minWidth: 0, fontSize: 17 }
 }));
 
-interface propInterface {
+interface ReportTabsProps {
   value: number;
-  handleChange: (event: React.ChangeEvent<{}>, value: number) => void
+  handleChange: (event: React.ChangeEvent<{}>, value: number) => void;
 }
 
-export default function ReportTabs(props: propInterface) {
+export default function ReportTabs(props: ReportTabsProps): JSX.Element {
   const classes = useStyles();
   const { value, handleChange } = props;
 

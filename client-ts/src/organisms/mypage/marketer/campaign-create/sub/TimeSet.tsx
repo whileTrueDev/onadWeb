@@ -11,22 +11,22 @@ import {
   TimeAction,
 } from '../campaignReducer';
 
-interface propInterface {
+interface TimeSelectorSetProps {
   state: TimeInterface;
   dispatch: React.Dispatch<TimeAction>;
 }
 
-const TimeSelectorSet = (props: propInterface) => {
+const TimeSelectorSet = (props: TimeSelectorSetProps): JSX.Element => {
   const {
     state,
     dispatch
   } = props;
 
-  const setTime = () => {
+  const setTime = (): void => {
     dispatch({ key: 'time', value: [] });
   };
 
-  const setNoTime = () => {
+  const setNoTime = (): void => {
     dispatch({ key: 'noTime', value: [] });
   };
 

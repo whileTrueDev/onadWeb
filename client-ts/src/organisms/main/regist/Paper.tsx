@@ -29,7 +29,7 @@ type CheckAction = { key: 'checkedA'; value: boolean }
 const reducer = (
   state: CheckState<boolean>,
   action: CheckAction
-) => {
+): CheckState<boolean> => {
   switch (action.key) {
     case 'checkedA':
       return { ...state, checkedA: !state.checkedA };
@@ -105,7 +105,7 @@ function PaperSheet({ handleBack, handleNext }: Props): JSX.Element {
                   <Grid item>
                     <Button
                       className={classes.buttonStyle}
-                      onClick={() => handleOpen(term)}
+                      onClick={(): void => handleOpen(term)}
                     >
                       약관보기
                     </Button>
@@ -117,7 +117,7 @@ function PaperSheet({ handleBack, handleNext }: Props): JSX.Element {
                     <FormControlLabel
                       control={(
                         <Checkbox
-                          onChange={() => { alert('약관보기를 통해 약관을 모두 읽어야 동의가 가능합니다.'); }}
+                          onChange={(): void => { alert('약관보기를 통해 약관을 모두 읽어야 동의가 가능합니다.'); }}
                           checked={state[term.state]}
                           classes={{
                             root: classes.checkboxRoot,
@@ -177,7 +177,7 @@ function PaperSheet({ handleBack, handleNext }: Props): JSX.Element {
                 variant="contained"
                 color="primary"
                 size="small"
-                onClick={() => handleChange(selectTerm.state)}
+                onClick={(): void => handleChange(selectTerm.state)}
                 className={classes.end}
               >
                 {state[selectTerm.state] ? '취소' : '동의'}

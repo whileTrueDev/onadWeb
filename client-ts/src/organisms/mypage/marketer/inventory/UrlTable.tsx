@@ -1,17 +1,15 @@
 import React from 'react';
-import { makeStyles, Theme } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import {
   Typography, Tooltip, Divider
 } from '@material-ui/core';
 import { Delete, Star } from '@material-ui/icons';
 import MaterialTable from '../../../../atoms/Table/MaterialTable';
 import useGetRequest from '../../../../utils/hooks/useGetRequest';
-import { urlDataInterface } from './interface';
+import { UrlDataInterface } from './interface';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  title: {
-    fontWeight: 'bold'
-  },
+const useStyles = makeStyles(() => ({
+  title: { fontWeight: 'bold' },
   url: {
     overflow: 'hidden',
     textOverflow: 'ellipsis',
@@ -19,22 +17,22 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-interface propInterface {
+interface UrlTableProps {
   handleDeleteOpen: () => void;
-  setUrl: React.Dispatch<React.SetStateAction<urlDataInterface | null>>;
+  setUrl: React.Dispatch<React.SetStateAction<UrlDataInterface | null>>;
 }
 
-export default function UrlTable(props: propInterface) {
+export default function UrlTable(props: UrlTableProps): JSX.Element {
   const { handleDeleteOpen, setUrl } = props;
   const classes = useStyles();
-  const fetchData = useGetRequest<null, urlDataInterface[] | null>('/marketer/landing-url/list');
+  const fetchData = useGetRequest<null, UrlDataInterface[] | null>('/marketer/landing-url/list');
 
   const titleArray = ['MAIN', 'SUB1', 'SUB2'];
   const columns = [
     {
       title: '심의 결과',
       field: 'confirmState',
-      render: (rowData: urlDataInterface) => {
+      render: (rowData: UrlDataInterface): React.ReactNode => {
         switch (rowData.confirmState) {
           case 0: return '승인대기⏰';
           case 1: return '승인됨👌';
@@ -51,7 +49,7 @@ export default function UrlTable(props: propInterface) {
     },
     {
       title: '링크 이름',
-      render: (rowData: urlDataInterface) => (
+      render: (rowData: UrlDataInterface): JSX.Element | null => (
         <div>
           {rowData.links.links.map((link, index) => {
             if (link) {
@@ -68,16 +66,16 @@ export default function UrlTable(props: propInterface) {
                       <Divider />
                     </div>
                   ) : (
-                      <div>
-                        <p className={classes.title}>
-                          SUB
+                    <div>
+                      <p className={classes.title}>
+                        SUB
                       </p>
-                        <span>
-                          {link.linkName}
-                        </span>
-                        <Divider />
-                      </div>
-                    )}
+                      <span>
+                        {link.linkName}
+                      </span>
+                      <Divider />
+                    </div>
+                  )}
                 </div>
               );
             }
@@ -88,9 +86,9 @@ export default function UrlTable(props: propInterface) {
     },
     {
       title: '링크 주소',
-      render: (rowData: urlDataInterface) => (
+      render: (rowData: UrlDataInterface): JSX.Element => (
         <div>
-          {rowData.links.links.map((link, index) => {
+          {rowData.links.links.map((link, index): JSX.Element | null => {
             if (link) {
               return (
                 <div key={titleArray[index] + link.linkTo} className={classes.url}>
@@ -109,15 +107,15 @@ export default function UrlTable(props: propInterface) {
                       </p>
                     </div>
                   ) : (
-                      <div>
-                        <p className={classes.title}>
-                          SUB
+                    <div>
+                      <p className={classes.title}>
+                        SUB
                       </p>
-                      </div>
-                    )}
+                    </div>
+                  )}
                   <a
                     href={link.linkTo}
-                    onClick={(e) => {
+                    onClick={(e): void => {
                       e.preventDefault();
                       window.open(link.linkTo);
                     }}
@@ -133,7 +131,7 @@ export default function UrlTable(props: propInterface) {
         </div>
       ),
     },
-    { title: '링크 등록 일자', render: (rowData: urlDataInterface) => (<span>{rowData.regiDate}</span>) },
+    { title: '링크 등록 일자', render: (rowData: UrlDataInterface): React.ReactNode => (<span>{rowData.regiDate}</span>) },
   ];
 
   return (
@@ -143,14 +141,15 @@ export default function UrlTable(props: propInterface) {
       {!fetchData.loading && fetchData.data && (
         <MaterialTable
           style={{ boxShadow: 'none' }}
-          title=''
+          title=""
           columns={columns}
           data={fetchData.data ? fetchData.data : []}
           actions={[
             {
-              icon: () => (<Delete />),
+              icon: (): JSX.Element => (<Delete />),
               tooltip: '링크 삭제',
-              onClick: (event: React.MouseEvent<HTMLButtonElement>, rowData: urlDataInterface | urlDataInterface[]) => {
+              onClick: (event: React.MouseEvent<HTMLButtonElement>,
+                rowData: UrlDataInterface | UrlDataInterface[]): void => {
                 if (Array.isArray(rowData)) {
                   setUrl(rowData[0]);
                 } else {

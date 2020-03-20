@@ -19,7 +19,7 @@ const initialData = {
   ],
 };
 
-function CashHistory(props: { classes: any }) {
+function CashHistory(props: { classes: any }): JSX.Element {
   const { classes } = props;
   const [vbankload, setVbankload] = useState<boolean>(false);
 

@@ -19,21 +19,21 @@ import CashChargeDialog from './CashChargeDialog';
 import RefundDialog from '../refund/RefundDialog';
 import CashUsageList from './CashUsageList';
 
-import { cashInterface, userInterface, accountInterface } from '../interface';
+import { CashInterface, UserInterface, AccountInterface } from '../interface';
 // hooks
 import useGetRequest, { UseGetRequestObject } from '../../../../../utils/hooks/useGetRequest';
 import useDialog from '../../../../../utils/hooks/useDialog';
 
-interface propInterface {
+interface MyCashProps {
   classes: any;
-  accountData: UseGetRequestObject<accountInterface | null>
-  userData: UseGetRequestObject<userInterface | null>
+  accountData: UseGetRequestObject<AccountInterface | null>;
+  userData: UseGetRequestObject<UserInterface | null>;
 }
 
-function MyCash(props: propInterface) {
+function MyCash(props: MyCashProps): JSX.Element {
   const chargeDialog = useDialog();
   const refundDialog = useDialog();
-  const cashData = useGetRequest<null, cashInterface | null>('/marketer/cash');
+  const cashData = useGetRequest<null, CashInterface | null>('/marketer/cash');
 
 
   const { classes, accountData, userData } = props;
@@ -58,22 +58,40 @@ function MyCash(props: propInterface) {
         >
 
           {!userData.loading && !userData.error
-            && <Button size="medium" color="primary" onClick={() => { window.open(`${FRONT_HOST}/marketer/charge`, '_blank', `width=${POPUP_WIDTH}, height=${POPUP_HEIGHT}, left=${POPUP_X}, top=${POPUP_Y}`); }}>캐시충전(전자결제)</Button>}
+            && (
+            <Button
+              size="medium"
+              color="primary"
+              onClick={(): void => {
+                window.open(`${FRONT_HOST}/marketer/charge`, '_blank', `width=${POPUP_WIDTH}, height=${POPUP_HEIGHT}, left=${POPUP_X}, top=${POPUP_Y}`);
+              }}
+            >
+              캐시충전(전자결제)
+            </Button>
+            )}
           {!userData.loading && !userData.error
-            && <Button size="medium" color="primary" onClick={() => { chargeDialog.handleOpen(); }}>캐시충전(무통장)</Button>}
+            && (
+            <Button
+              size="medium"
+              color="primary"
+              onClick={(): void => { chargeDialog.handleOpen(); }}
+            >
+              캐시충전(무통장)
+            </Button>
+            )}
 
           {!accountData.loading && !accountData.error && accountData.data
             && !accountData.data.marketerAccountNumber && (
               <Tooltip title="환불계좌가 등록되지 않아 진행이 불가합니다.">
                 <span><Button color="default" disabled>환불요청</Button></span>
               </Tooltip>
-            )}
+          )}
           {!accountData.loading && !accountData.error && accountData.data
             && accountData.data.marketerAccountNumber && (
-              <Button size="medium" color="default" onClick={() => { refundDialog.handleOpen(); }}>
+              <Button size="medium" color="default" onClick={(): void => { refundDialog.handleOpen(); }}>
                 환불요청
               </Button>
-            )}
+          )}
         </div>
       </CardHeader>
 
@@ -131,7 +149,7 @@ function MyCash(props: propInterface) {
             accountHolder={accountData.data.accountHolder}
             currentCash={cashData.data.cashAmount}
           />
-        )}
+      )}
 
     </Card>
   );

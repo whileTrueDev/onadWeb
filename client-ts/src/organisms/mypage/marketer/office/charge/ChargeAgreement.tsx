@@ -1,14 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { makeStyles, Theme } from '@material-ui/core/styles';
-import { green } from '@material-ui/core/colors';
 import {
-  Paper,
-  Typography,
-  FormControlLabel,
-  Checkbox,
-  Divider,
-  Button,
-  Grid,
+  Paper, Typography, FormControlLabel,
+  Checkbox, Divider, Button, Grid,
 } from '@material-ui/core';
 import shortid from 'shortid';
 import sources from '../sources';
@@ -21,8 +15,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingBottom: theme.spacing(2),
   },
   warning: {
-    backgroundColor: 'rgba(0,0,0,0.05)',
-    borderLeft: '0.25rem solid #d0021b',
+    backgroundColor: theme.palette.action.disabledBackground,
+    borderLeft: `0.25rem solid ${theme.palette.error.main}`,
     wordBreak: 'keep-all'
   },
   title: {
@@ -41,16 +35,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   checked: {},
   checkboxRoot: {
-    color: green[600],
+    color: theme.palette.success.main,
     '&$checked': {
-      color: green[500],
+      color: theme.palette.success.light,
     },
   },
-  divider: {
-    width: 2,
-    height: 28,
-    margin: 10,
-  },
+  divider: { width: 2, height: 28, margin: 10 },
   container: {
     ...theme.mixins.gutters(),
     width: '78%',
@@ -58,7 +48,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingBottom: theme.spacing(1),
     margin: '0 auto',
     display: 'flex',
-    backgroundColor: '#f2f2f2',
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -91,13 +80,15 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 }));
 
-interface termInterface {
+interface TermInterface {
   title: string;
   state: string;
   text: string;
 }
 
-const TestChargeAgreement = (props: { setStepComplete: React.Dispatch<React.SetStateAction<boolean>> }) => {
+const TestChargeAgreement = (
+  props: { setStepComplete: React.Dispatch<React.SetStateAction<boolean>> }
+): JSX.Element => {
   const classes = useStyles();
   const terms = sources.agreement;
   const {
@@ -109,14 +100,14 @@ const TestChargeAgreement = (props: { setStepComplete: React.Dispatch<React.SetS
   const [checkedD, setD] = useState<boolean>(false);
 
 
-  const [selectTerm, setTerm] = useState<termInterface>({
+  const [selectTerm, setTerm] = useState<TermInterface>({
     title: '',
     state: '',
     text: ''
   });
   const [open, setOpen] = useState<boolean>(false);
 
-  const handleChange = (name: string) => () => {
+  const handleChange = (name: string) => (): void => {
     if (name === 'checkedA') {
       setA(!checkedA);
       if (!checkedA === true) {
@@ -163,11 +154,11 @@ const TestChargeAgreement = (props: { setStepComplete: React.Dispatch<React.SetS
     }
   };
 
-  const handleClose = () => {
+  const handleClose = (): void => {
     setOpen(false);
   };
 
-  const handleOpen = (term: termInterface) => () => {
+  const handleOpen = (term: TermInterface) => (): void => {
     setTerm(term);
     setOpen(true);
   };
@@ -181,7 +172,7 @@ const TestChargeAgreement = (props: { setStepComplete: React.Dispatch<React.SetS
   //   }
   // }
 
-  const checked = (term: termInterface) => {
+  const checked = (term: TermInterface): boolean => {
     if (term.state === 'checkedB') {
       return checkedB;
     } if (term.state === 'checkedC') {
@@ -204,7 +195,7 @@ const TestChargeAgreement = (props: { setStepComplete: React.Dispatch<React.SetS
         <p className={classes.content}>{sources.content.warning}</p>
       </blockquote>
       <div>
-        {terms.map((term: termInterface) => (
+        {terms.map((term: TermInterface) => (
           <Paper className={classes.container} elevation={1} key={term.state}>
             <Grid container direction="row" justify="space-between" alignItems="center" spacing={1}>
               <Grid item>
@@ -217,9 +208,7 @@ const TestChargeAgreement = (props: { setStepComplete: React.Dispatch<React.SetS
                   <Grid item>
                     {term.state === 'checkedA' ? (null) : (
                       <Button
-                        style={{
-                          flex: 1, backgroundColor: '#d6d6d6', height: '70%', fontSize: 13,
-                        }}
+                        style={{ flex: 1, height: '70%', fontSize: 13 }}
                         onClick={handleOpen(term)}
                       >
                         전문보기
@@ -266,7 +255,7 @@ const TestChargeAgreement = (props: { setStepComplete: React.Dispatch<React.SetS
         >
           {/* 계약 내용 */}
           <div className={classes.inDialogContent}>
-            {selectTerm.text.split('\n').map(sentence => (
+            {selectTerm.text.split('\n').map((sentence) => (
               <p key={shortid.generate()} className={classes.names}>{sentence}</p>
             ))}
           </div>

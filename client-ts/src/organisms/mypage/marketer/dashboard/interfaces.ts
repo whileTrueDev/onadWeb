@@ -1,4 +1,4 @@
-export interface campaignInterface {
+export interface CampaignInterface {
   campaignId: string;
   campaignName: string;
   optionType: number;
@@ -10,34 +10,34 @@ export interface campaignInterface {
   dailysum: number;
 }
 
-export interface onOffInterface {
+export interface OnOffInterface {
   onOffState: boolean;
 }
 
-export interface adInterface {
+export interface AdInterface {
   cashAmount: number;
   spendAll: number;
 }
 
-export interface countInterface {
+export interface CountInterface {
   counts: number;
 }
 
-export interface valueChartInterface {
+export interface ValueChartInterface {
   date: string;
   cash: number;
   type: 'CPM' | 'CPC';
 }
 
-export interface actionLogInterface {
+export interface ActionLogInterface {
   id: number;
   marketerId: string;
   type: number;
   detail: string;
-  date: Date
+  date: Date;
 }
 
-export interface reportInterface {
+export interface ReportInterface {
   campaignName: string;
   totalCPM: number;
   totalViewCount: number;
@@ -48,7 +48,7 @@ export interface reportInterface {
   totalLandingView: number;
 }
 
-export interface creatorDataInterface {
+export interface CreatorDataInterface {
   creatorId: string;
   creatorName: string;
   creatorTwitchId: string;
@@ -62,12 +62,12 @@ export interface creatorDataInterface {
   content: number;
 }
 
-export interface heatmapInterface {
+export interface HeatmapInterface {
   date: string;
   count: number;
 }
 
-export interface geoInterface {
+export interface GeoInterface {
   id: number;
   type: number;
   ipAddress: string;
@@ -76,7 +76,7 @@ export interface geoInterface {
   date: Date;
 }
 
-export interface creatorDetailInterface {
+export interface CreatorDetailInterface {
   creatorId: string;
   followers: number;
   viewer: number;
@@ -95,4 +95,3 @@ export interface creatorDetailInterface {
   creatorLogo: string;
   creatorName: string;
 }
-

@@ -1,13 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import {
-  Paper,
-  Typography,
-  FormControlLabel,
-  Checkbox,
-  Divider,
-  Button,
-  Grid,
+  Paper, Typography, FormControlLabel,
+  Checkbox, Divider, Button, Grid,
 } from '@material-ui/core';
 import shortid from 'shortid';
 import sources from '../sources';
@@ -22,8 +17,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingBottom: theme.spacing(2),
   },
   warning: {
-    backgroundColor: 'rgba(0,0,0,0.05)',
-    borderLeft: '0.25rem solid #d0021b',
+    backgroundColor: theme.palette.action.disabledBackground,
+    borderLeft: `0.25rem solid ${theme.palette.error.main}`,
     wordBreak: 'keep-all'
   },
   title: {
@@ -92,13 +87,13 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 }));
 
-interface propInterface {
+interface RefundAgreementProps {
   setStepComplete: React.Dispatch<React.SetStateAction<boolean>>;
   checked: boolean;
   dispatch: React.Dispatch<Action>;
 }
 
-const RefundAgreement = (props: propInterface) => {
+const RefundAgreement = (props: RefundAgreementProps): JSX.Element => {
   const classes = useStyles();
   const terms = sources.contentRefund;
   const { setStepComplete, checked, dispatch } = props;
@@ -108,14 +103,14 @@ const RefundAgreement = (props: propInterface) => {
   }, [setStepComplete]);
 
   const [open, setOpen] = useState(false);
-  const handleClose = () => {
+  const handleClose = (): void => {
     setOpen(false);
   };
-  const handleOpen = () => {
+  const handleOpen = (): void => {
     setOpen(true);
   };
 
-  const handleChange = () => {
+  const handleChange = (): void => {
     dispatch({ key: 'checked', value: !checked });
     if (!checked) {
       setStepComplete(true);

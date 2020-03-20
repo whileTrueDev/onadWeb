@@ -4,18 +4,18 @@ import Typography from '@material-ui/core/Typography';
 import axios from '../../../../../utils/axios';
 import SignOutDialog from './SignOutDialog';
 import HOST from '../../../../../utils/config';
-import { userInterface } from '../interface';
+import { UserInterface } from '../interface';
 
-const SignOut = (props: { userData: userInterface }) => {
+const SignOut = (props: { userData: UserInterface }): JSX.Element => {
   const { userData } = props;
   const [open, openState] = useState(false);
   const [marketerId, setMarketerId] = useState<string>('');
 
-  function handleOpen() {
+  function handleOpen(): void {
     openState(!open);
   }
 
-  function doSignOut() {
+  function doSignOut(): void {
     axios.delete<null, boolean[]>(`${HOST}/marketer`)
       .then(() => {
         alert('탈퇴가 완료되었습니다.');
@@ -29,14 +29,13 @@ const SignOut = (props: { userData: userInterface }) => {
 
   return (
 
-    <div style={{ display: 'flex' }}>
-      <Typography variant="body2" style={{ margin: '5px', border: '5px' }}>
+    <div style={{ display: 'flex', margin: '5px', border: '5px' }}>
+      <Typography variant="body2" color="textPrimary">
         더 이상 온애드를 사용하시지 않나요?
       </Typography>
       <Typography
-        style={{
-          margin: '5px', border: '5px', cursor: 'pointer', textDecoration: 'underline'
-        }}
+        color="textPrimary"
+        style={{ cursor: 'pointer', textDecoration: 'underline' }}
         variant="button"
         onClick={handleOpen}
       >

@@ -3,15 +3,15 @@ import { Pie } from 'react-chartjs-2';
 import useTheme from '@material-ui/core/styles/useTheme';
 import DonutSmall from '@material-ui/icons/DonutSmall';
 import CardTemplate from './CardTemplate';
-import { reportInterface } from '../dashboard/interfaces';
-import { UseGetRequestObject } from '../../../../utils/hooks/useGetRequest'
+import { ReportInterface } from '../dashboard/interfaces';
+import { UseGetRequestObject } from '../../../../utils/hooks/useGetRequest';
 
-interface propInterface {
+interface CampaignCostPieProps {
   color: string;
-  reportData: UseGetRequestObject<null | reportInterface>;
+  reportData: UseGetRequestObject<null | ReportInterface>;
 }
 
-export default function CampaignCostPie(props: propInterface) {
+export default function CampaignCostPie(props: CampaignCostPieProps): JSX.Element {
   const theme = useTheme();
   const { color, reportData, ...rest } = props;
 

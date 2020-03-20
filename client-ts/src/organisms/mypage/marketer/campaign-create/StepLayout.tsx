@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Grid, Divider } from '@material-ui/core';
 import StyledItemText from '../../../../atoms/StyledItemText';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     width: '100%',
     marginTop: '0px',
@@ -25,13 +25,15 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-interface propInterface {
+interface CampaignCreateStepLayoutProps {
   primaryText: string;
   secondaryText: string;
   children?: React.ReactNode;
 }
 
-export default function CampaignCreateStepLayout(props: propInterface) {
+export default function CampaignCreateStepLayout(
+  props: CampaignCreateStepLayoutProps
+): JSX.Element {
   const classes = useStyles();
   const { children, primaryText, secondaryText } = props;
   return (

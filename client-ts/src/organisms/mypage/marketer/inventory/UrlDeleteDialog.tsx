@@ -7,7 +7,7 @@ import Dialog from '../../../../atoms/Dialog/Dialog';
 import useGetRequest from '../../../../utils/hooks/useGetRequest';
 import useDeleteRequest from '../../../../utils/hooks/useDeleteRequest';
 import history from '../../../../history';
-import { urlDataInterface } from './interface';
+import { UrlDataInterface } from './interface';
 
 const useStyles = makeStyles((theme: Theme) => ({
   img: {
@@ -25,13 +25,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-interface propInterface {
+interface UrlDeleteDialogProps {
   open: boolean;
-  selectedUrl: urlDataInterface;
+  selectedUrl: UrlDataInterface;
   handleClose: () => void;
 }
 
-const UrlDeleteDialog = (props: propInterface) => {
+const UrlDeleteDialog = (props: UrlDeleteDialogProps): JSX.Element => {
   const classes = useStyles();
   const {
     open, selectedUrl, handleClose
@@ -52,7 +52,9 @@ const UrlDeleteDialog = (props: propInterface) => {
       maxWidth="sm"
       buttons={(
         <div style={{ display: 'flex' }}>
-          {!connectedCampaign.loading && connectedCampaign.data && connectedCampaign.data.length > 0 && (
+          {!connectedCampaign.loading
+          && connectedCampaign.data
+          && connectedCampaign.data.length > 0 && (
             <Tooltip title={<Typography>URL이 캠페인에 할당되어 있어 삭제가 불가능합니다.</Typography>}>
               <div>
                 <CustomButton
@@ -64,10 +66,12 @@ const UrlDeleteDialog = (props: propInterface) => {
               </div>
             </Tooltip>
           )}
-          {(!connectedCampaign.loading && connectedCampaign.data && connectedCampaign.data.length === 0) && (
+          {(!connectedCampaign.loading
+          && connectedCampaign.data
+          && connectedCampaign.data.length === 0) && (
             <CustomButton
               color="primary"
-              onClick={() => {
+              onClick={(): void => {
                 doDeleteRequest({ linkId: selectedUrl.linkId });
                 setTimeout(() => {
                   handleClose();
@@ -83,13 +87,15 @@ const UrlDeleteDialog = (props: propInterface) => {
       )}
     >
       <Grid container direction="column" spacing={2}>
-        {selectedUrl.links.links.map(url => (
-          <Grid item className={classes.center}>
+        {selectedUrl.links.links.map((url, index) => (
+          <Grid key={url.linkName} item className={classes.center}>
             <Typography
               style={{
-                color: 'red', cursor: 'pointer', textDecoration: 'underline'
+                color: 'red',
+                cursor: 'pointer',
+                textDecoration: index === (selectedUrl.links.links.length - 1) ? 'none' : 'underline'
               }}
-              onClick={(e) => {
+              onClick={(e): void => {
                 e.preventDefault();
                 window.open(url.linkTo);
               }}

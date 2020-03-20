@@ -1,7 +1,7 @@
 import React from 'react';
+import { useTheme } from '@material-ui/core/styles';
 import Tab from '@material-ui/core/Tab';
 import AppBar from '@material-ui/core/AppBar';
-// import { Subscriptions, Person } from '@material-ui/icons';
 import Tabs from '@material-ui/core/Tabs';
 import useStyles from './style/TabBar.style';
 
@@ -12,6 +12,7 @@ interface Props {
 
 function TabBar({ tabValue, handleTabChange }: Props): JSX.Element {
   const classes = useStyles();
+  const theme = useTheme();
 
   return (
     <AppBar className={classes.tabs} position="static" color="inherit">
@@ -20,8 +21,8 @@ function TabBar({ tabValue, handleTabChange }: Props): JSX.Element {
         onChange={handleTabChange}
         TabIndicatorProps={
           tabValue
-            ? { style: { backgroundColor: '#FFAA00' } }
-            : { style: { backgroundColor: '#00DBE0' } }
+            ? { style: { backgroundColor: theme.palette.secondary.main } }
+            : { style: { backgroundColor: theme.palette.primary.main } }
         }
       >
         <Tab

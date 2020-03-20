@@ -7,31 +7,28 @@ import {
   KeyboardDatePicker,
 } from '@material-ui/pickers';
 
-import {
-  TermInterface,
-  Action,
-} from '../campaignReducer';
+import { TermInterface, Action, } from '../campaignReducer';
 
-interface propInterface {
+interface MaterialUIPickersProps {
   state: TermInterface;
   dispatch: React.Dispatch<Action>;
 }
 
 
-function MaterialUIPickers(props: propInterface) {
+function MaterialUIPickers(props: MaterialUIPickersProps): JSX.Element {
   // The first commit of Material-UI
   const { state, dispatch } = props;
   const [finOpen, setFinOpen] = React.useState(true);
 
-  const handleOpenDateChange = (date: any) => {
+  const handleOpenDateChange = (date: any): void => {
     dispatch({ key: 'startDate', value: date });
   };
 
-  const handleFinDateChange = (date: any) => {
+  const handleFinDateChange = (date: any): void => {
     dispatch({ key: 'finDate', value: date });
   };
 
-  const handleEndChange = () => {
+  const handleEndChange = (): void => {
     setFinOpen(!finOpen);
     dispatch({ key: 'finDate', value: '' });
   };

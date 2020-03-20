@@ -3,18 +3,22 @@ import Typography from '@material-ui/core/Typography';
 import Dialog from '../../../../atoms/Dialog/Dialog';
 import Button from '../../../../atoms/CustomButtons/Button';
 import useDeleteRequest from '../../../../utils/hooks/useDeleteRequest';
-import { campaignInterface } from './interfaces';
+import { CampaignInterface } from './interfaces';
 
 
-interface propInterface {
+interface CampaignDeleteConfirmDialogProps {
   open: boolean;
-  selectedCampaign: campaignInterface;
+  selectedCampaign: CampaignInterface;
   handleClose: () => void;
   doGetRequest: () => void;
 }
 
-export default function CampaignDeleteConfirmDialog(props: propInterface) {
-  const { open, handleClose, doGetRequest, selectedCampaign } = props;
+export default function CampaignDeleteConfirmDialog(
+  props: CampaignDeleteConfirmDialogProps
+): JSX.Element {
+  const {
+    open, handleClose, doGetRequest, selectedCampaign
+  } = props;
   const { doDeleteRequest } = useDeleteRequest('/marketer/campaign', doGetRequest);
 
 
@@ -28,7 +32,7 @@ export default function CampaignDeleteConfirmDialog(props: propInterface) {
         <div>
           <Button
             color="primary"
-            onClick={() => {
+            onClick={(): void => {
               doDeleteRequest({ campaignId: selectedCampaign.campaignId });
               handleClose();
             }}

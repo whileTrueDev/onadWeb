@@ -50,7 +50,6 @@ const developmentRouter = (
           <Route path="/mypage/creator" component={CreatorDashboard} />
           <Route path="/mypage/marketer" component={MarketerDashboard} />
           <Route exact path="/marketer/charge" component={ChargeDialog} />
-          <Route path="/mypage/creator" component={CreatorDashboard} />
         </ThemeProvider>
       </>
     </Switch>
@@ -78,7 +77,6 @@ const productionRouter = (
           <Route path="/mypage/creator" component={CreatorDashboard} />
           <Route path="/mypage/marketer" component={MarketerDashboard} />
           <Route exact path="/marketer/charge" component={ChargeDialog} />
-          <Route path="/mypage/creator" component={CreatorDashboard} />
         </ThemeProvider>
       </>
     </Switch>

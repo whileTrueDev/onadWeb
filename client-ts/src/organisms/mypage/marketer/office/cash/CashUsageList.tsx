@@ -18,19 +18,15 @@ const initialData = {
 };
 
 const useStyles = makeStyles(() => ({
-  root: {
-    width: '100%'
-  },
+  root: { width: '100%' },
 }));
 
-interface usageInterface {
-  data: string[][];
-}
+interface UsageInterface { data: string[][] }
 
-export default function CashUsageList() {
+export default function CashUsageList(): JSX.Element {
   const classes = useStyles();
   const detailDialog = useDialog();
-  const usageData = useGetRequest<null, usageInterface | null>('/marketer/cash/history/usage');
+  const usageData = useGetRequest<null, UsageInterface | null>('/marketer/cash/history/usage');
 
 
   return (

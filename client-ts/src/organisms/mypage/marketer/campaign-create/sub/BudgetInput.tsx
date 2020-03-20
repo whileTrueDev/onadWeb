@@ -1,14 +1,11 @@
 import React from 'react';
-import {
-  Grid
-} from '@material-ui/core';
+import { Grid } from '@material-ui/core';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import NumberFormat, { NumberFormatValues } from 'react-number-format';
 import StyledInput from '../../../../../atoms/StyledInput';
 import DangerTypography from '../../../../../atoms/Typography/Danger';
 import {
-  BudgetInterface,
-  Action,
+  BudgetInterface, Action,
 } from '../campaignReducer';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -37,14 +34,6 @@ const useStyles = makeStyles((theme: Theme) => ({
       padding: theme.spacing(1),
     },
   },
-  ready: {
-    padding: theme.spacing(3),
-    [theme.breakpoints.down('sm')]: {
-      padding: theme.spacing(1),
-    },
-    color: 'rgba(0, 0, 0, 0.26)',
-    backgroundColor: 'rgba(0, 0, 0, 0.15)',
-  },
   icon: {
     display: 'flex',
     justifyContent: 'center',
@@ -64,13 +53,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-interface propInterface {
+interface BudgetInputProps {
   state: BudgetInterface;
   dispatch: React.Dispatch<Action>;
 }
 
 
-const BudgetInput = (props: propInterface) => {
+const BudgetInput = (props: BudgetInputProps): JSX.Element => {
   const classes = useStyles();
   const {
     state, dispatch
@@ -80,7 +69,7 @@ const BudgetInput = (props: propInterface) => {
 
   // budget을 입력하였을 때 event listener
   // any를 쓴 이유 - 
-  const onChange = (value: NumberFormatValues) => {
+  const onChange = (value: NumberFormatValues): void => {
     dispatch({ key: 'budget', value: value.value });
     if (Number(value.value) < 5000 && value.value !== '') {
       setBudgetError(true);

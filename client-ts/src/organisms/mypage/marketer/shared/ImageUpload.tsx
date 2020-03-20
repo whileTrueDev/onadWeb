@@ -48,21 +48,21 @@ interface ImageAction {
 }
 
 
-interface propInterface {
+interface ImageUploadProps {
   handleClose: () => void;
   handleNext: (number: number) => () => void;
   state: ImageInterface;
   dispatch: React.Dispatch<ImageAction>;
 }
 
-const ImageUpload = (props: propInterface): JSX.Element => {
+const ImageUpload = (props: ImageUploadProps): JSX.Element => {
   const {
     handleClose, handleNext, state, dispatch,
   } = props;
 
   const classes = useStyle();
 
-  const readImage = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const readImage = (event: React.ChangeEvent<HTMLInputElement>): void => {
     if (event.target.files && event.target.files.length !== 0) {
       const fileRegx = /^image\/[a-z]*$/;
       const myImage = event.target.files[0];
@@ -89,7 +89,7 @@ const ImageUpload = (props: propInterface): JSX.Element => {
         id="preview"
         src={state.imageUrl}
         className={classes.imgPreview}
-        onError={() => { dispatch({ type: 'reset' }); }}
+        onError={(): void => { dispatch({ type: 'reset' }); }}
         alt="이미지가 보일 영역"
       />
       <div className="filebox">

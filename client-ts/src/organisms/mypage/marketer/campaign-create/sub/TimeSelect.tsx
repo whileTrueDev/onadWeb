@@ -1,5 +1,6 @@
 import 'date-fns';
 import React from 'react';
+import classnames from 'classnames';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import DateFnsUtils from '@date-io/date-fns';
@@ -12,7 +13,7 @@ import {
   TimeAction,
 } from '../campaignReducer';
 
-interface propInterface {
+interface TimeSelectorProps {
   state: TimeInterface;
   dispatch: React.Dispatch<TimeAction>;
 }
@@ -30,31 +31,27 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   td: {
     border: '1px',
-    borderColor: '#444444',
+    borderColor: theme.palette.common.black,
     borderStyle: 'solid',
     padding: 'auto',
     width: '45px',
     textAlign: 'center',
-    height: '3px'
+    height: '3px',
+    backgroundColor: theme.palette.action.disabled,
   },
   tdCheck: {
-    border: '1px',
-    borderColor: '#444444',
-    borderStyle: 'solid',
-    padding: 'auto',
     backgroundColor: theme.palette.primary.main,
-    width: '45px',
-    height: '3px'
   },
   font: { opacity: '0' }
 }));
 
-const TimeSelector = (props: propInterface) => {
+const TimeSelector = (props: TimeSelectorProps): JSX.Element => {
   const classes = useStyles();
   const {
     state, dispatch
   } = props;
-  const times = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23];
+  const times = [
+    0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23];
 
   const onUpdate = (index: number) => () => {
     const newcheckState = state.timeList.map((item, j) => ((j === index) ? !item : item));
@@ -67,14 +64,17 @@ const TimeSelector = (props: propInterface) => {
         <table className={classes.table}>
           <thead>
             <tr>
-              {times.map(index => (<td className={classes.thead} key={index}>{`${index}시`}</td>))}
+              {times.map((index) => (<td className={classes.thead} key={index}>{`${index}시`}</td>))}
             </tr>
           </thead>
           <tbody>
             <tr className={classes.td}>
               {times.map((index: number) => (
                 <td
-                  className={state.timeList[index] ? classes.tdCheck : classes.td}
+                  className={classnames({
+                    [classes.td]: true,
+                    [classes.tdCheck]: state.timeList[index]
+                  })}
                   key={index}
                   onClick={onUpdate(index)}
                   role="gridcell"

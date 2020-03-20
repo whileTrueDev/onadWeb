@@ -4,7 +4,7 @@ import Grid from '@material-ui/core/Grid';
 import Hidden from '@material-ui/core/Hidden';
 import Divider from '@material-ui/core/Divider';
 
-export default function ReportLoading() {
+export default function ReportLoading(): JSX.Element {
   return (
     <div data-html2canvas-ignore>
       <div style={{ padding: 24 }}>

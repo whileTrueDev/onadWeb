@@ -9,18 +9,18 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginRight: theme.spacing(1),
   },
   end: {
-    color: '#fff',
+    color: theme.palette.common.white,
     marginRight: theme.spacing(1),
   }
 }));
 
-interface propInterface {
+interface ButtonSetProps {
   handleBack: (event: React.MouseEvent<HTMLButtonElement>) => void;
   handleNext: (event: React.MouseEvent<HTMLButtonElement>) => void;
   set: boolean;
 }
 
-const ButtonSet = (props: propInterface) => {
+const ButtonSet = (props: ButtonSetProps): JSX.Element => {
   const {
     handleNext, handleBack, set
   } = props;

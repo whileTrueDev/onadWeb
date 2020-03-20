@@ -7,27 +7,32 @@ import CardTemplate from './CardTemplate';
 import CreatorInfo from './CreatorInfo';
 import axios, { cancelToken } from '../../../../utils/axios';
 import HOST from '../../../../utils/config';
-import { creatorDataInterface } from '../dashboard/interfaces';
-import { UseGetRequestObject } from '../../../../utils/hooks/useGetRequest'
+import { CreatorDataInterface } from '../dashboard/interfaces';
+import { UseGetRequestObject } from '../../../../utils/hooks/useGetRequest';
 import useAnchorEl from '../../../../utils/hooks/useAnchorEl';
 
 
-interface propInterface {
-  creatorsData: UseGetRequestObject<null | creatorDataInterface[]>
+interface BannerBroadCreatorsProps {
+  creatorsData: UseGetRequestObject<null | CreatorDataInterface[]>;
 }
 
-export default function BannerBroadCreators(props: propInterface) {
+export default function BannerBroadCreators(
+  props: BannerBroadCreatorsProps
+): JSX.Element {
   const { creatorsData, ...rest } = props;
 
   const anchorEl = useAnchorEl();
 
-  const [detailData, setDetail] = React.useState<{ loading: boolean, empty: boolean, payload: any }>({
-    loading: true,
-    empty: false,
-    payload: {}
-  });
+  const [detailData, setDetail] = React.useState<{
+    loading: boolean; empty: boolean; payload: any; }>({
+      loading: true,
+      empty: false,
+      payload: {}
+    });
 
-  const handleClick = (event: React.MouseEvent<HTMLElement, MouseEvent>, index: number) => {
+  const handleClick = (
+    event: React.MouseEvent<HTMLElement, MouseEvent>, index: number
+  ): void => {
     anchorEl.handleAnchorOpen(event);
     // creatorsData의 특정 데이터를 로드할 수 있다.
     if (creatorsData.data) {
@@ -72,35 +77,40 @@ export default function BannerBroadCreators(props: propInterface) {
       {creatorsData.data && creatorsData.data.length === 0 ? (
         null
       ) : (
-          <CardTemplate title="배너 송출 크리에이터" color="secondary" IconComponent={AccountCircle}>
-            <Grid container style={{ height: 380, overflow: 'auto' }} id="broad-creators">
-              <Grid item container direction="column">
-                <Typography variant="caption">* 송출량 순 상위 50명까지의 크리에이터 목록입니다.</Typography>
-                <Typography variant="caption">* 크리에이터 클릭 시, 상세정보를 볼 수 있습니다.</Typography>
-              </Grid>
-              {creatorsData.data && creatorsData.data.slice(0, 50).map((creator: creatorDataInterface, index: number) => (
+        <CardTemplate title="배너 송출 크리에이터" color="secondary" IconComponent={AccountCircle}>
+          <Grid container style={{ height: 380, overflow: 'auto' }} id="broad-creators">
+            <Grid item container direction="column">
+              <Typography variant="caption">* 송출량 순 상위 50명까지의 크리에이터 목록입니다.</Typography>
+              <Typography variant="caption">* 크리에이터 클릭 시, 상세정보를 볼 수 있습니다.</Typography>
+            </Grid>
+            {creatorsData.data
+            && creatorsData.data.slice(0, 50).map(
+              (creator: CreatorDataInterface, index: number) => (
                 <Grid key={creator.creatorName} item xs={6} md={4} lg={3} style={{ padding: 8 }}>
                   <Avatar
                     src={creator.creatorLogo}
                     style={{
                       cursor: 'pointer',
                     }}
-                    onClick={(event: React.MouseEvent<HTMLElement, MouseEvent>) => { handleClick(event, index); }}
+                    onClick={(event: React.MouseEvent<HTMLElement, MouseEvent>): void => {
+                      handleClick(event, index);
+                    }}
                   />
                   <Typography variant="body1">{`${index + 1}. ${creator.creatorName}`}</Typography>
                 </Grid>
-              ))}
+              )
+            )}
 
-              {!detailData.loading && !detailData.empty && (
-                <CreatorInfo
-                  creatorInfo={detailData.payload}
-                  anchorEl={anchorEl}
-                  empty={detailData.empty}
-                />
-              )}
-            </Grid>
-          </CardTemplate>
-        )}
+            {!detailData.loading && !detailData.empty && (
+            <CreatorInfo
+              creatorInfo={detailData.payload}
+              anchorEl={anchorEl}
+              empty={detailData.empty}
+            />
+            )}
+          </Grid>
+        </CardTemplate>
+      )}
     </div>
   );
 }

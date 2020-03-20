@@ -2,20 +2,20 @@ import React from 'react';
 import Skeleton from '@material-ui/lab/Skeleton';
 import ReChartPie from '../../../../atoms/Chart/ReChartPie';
 
-interface propInterface {
+interface ContentsPieProps {
   selectedChartData: {
-    data: Readonly<{ gameName: string, percent: number }>[];
-  }
+    data: Readonly<{ gameName: string; percent: number }>[];
+  };
 }
 
-export default function ContentsPie(props: propInterface) {
+export default function ContentsPie(props: ContentsPieProps): JSX.Element {
   const {
     selectedChartData
   } = props;
   // 마우스오버 핸들러
   const [activeIndex, setActiveIndex] = React.useState(0);
 
-  const onPieEnter = (d: any, index: number) => {
+  const onPieEnter = (d: any, index: number): void => {
     setActiveIndex(index);
   };
 
@@ -25,7 +25,7 @@ export default function ContentsPie(props: propInterface) {
         <Skeleton height={400} />
       )}
       {selectedChartData && (
-        <ReChartPie< { gameName: string, percent: number }>
+        <ReChartPie< { gameName: string; percent: number }>
           activeIndex={activeIndex}
           onPieEnter={onPieEnter}
           data={selectedChartData.data}

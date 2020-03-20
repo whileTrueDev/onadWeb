@@ -13,7 +13,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import CampaignDeleteConfirmDialog from './CampaignDeleteConfirmDialog';
 import CampaignUpdateDialog from './CampaignUpdateDialog';
 import CampaignAnalysisDialog from './CampaignAnalysisDialog';
-import { campaignInterface } from './interfaces';
+import { CampaignInterface } from './interfaces';
 import { UseGetRequestObject } from '../../../../utils/hooks/useGetRequest';
 import useDialog from '../../../../utils/hooks/useDialog';
 import history from '../../../../history';
@@ -23,23 +23,11 @@ import HOST from '../../../../utils/config';
 
 const SLIDE_TIMEOUT = 500;
 const useStyles = makeStyles((theme: Theme) => ({
-  container: {
-    padding: 16,
-  },
+  container: { padding: theme.spacing(2) },
   list: {
     width: '100%',
     '&:hover': {
       backgroundColor: theme.palette.action.hover
-    }
-  },
-  image: {
-    width: 96,
-    height: 96,
-    marginRight: theme.spacing(3),
-    backgroundColor: theme.palette.grey[300],
-    [theme.breakpoints.only('lg')]: {
-      width: 72,
-      height: 72
     }
   },
   img: {
@@ -58,12 +46,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-
-export default function CampaignList(props: { campaignData: UseGetRequestObject<null | campaignInterface[]> }) {
+export default function CampaignList(
+  props: { campaignData: UseGetRequestObject<null | CampaignInterface[]> }
+): JSX.Element {
   const classes = useStyles();
   const { campaignData } = props;
 
-  const [selectedCampaign, setSelectedCampaign] = React.useState<campaignInterface | null>(null);
+  const [selectedCampaign, setSelectedCampaign] = React.useState<CampaignInterface | null>(null);
   const optionTypeList = ['배너 광고', '배너 + 클릭 광고', '클릭 광고'];
   const priorityTypeList = ['크리에이터 우선', '카테고리 우선', '노출 우선'];
 
@@ -74,7 +63,9 @@ export default function CampaignList(props: { campaignData: UseGetRequestObject<
   const snack = useDialog();
 
   // useUpdateData를 사용할 때, 전달되는 url router의 response data의 형태가 array여야함을 고려한다.
-  const handleUpdateState = ({ onoffState, campaignId }: { onoffState: boolean; campaignId: string }) => (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleUpdateState = (
+    { onoffState, campaignId }: { onoffState: boolean; campaignId: string }
+  ) => (event: React.ChangeEvent<HTMLInputElement>): void => {
     event.preventDefault();
 
     axios.patch(`${HOST}/marketer/campaign/on-off`, { onoffState, campaignId })
@@ -83,9 +74,9 @@ export default function CampaignList(props: { campaignData: UseGetRequestObject<
           snack.handleOpen();
           campaignData.doGetRequest();
         } else {
-          alert(res.data[1])
+          alert(res.data[1]);
         }
-      })
+      });
     // doPatchRequest({ onoffState, campaignId });
   };
 
@@ -98,7 +89,7 @@ export default function CampaignList(props: { campaignData: UseGetRequestObject<
         <Button
           variant="contained"
           color="primary"
-          onClick={() => { history.push('/mypage/marketer/campaigncreate'); }}
+          onClick={(): void => { history.push('/mypage/marketer/campaigncreate'); }}
         >
           캠페인 등록하기
         </Button>
@@ -106,7 +97,7 @@ export default function CampaignList(props: { campaignData: UseGetRequestObject<
 
       <Divider />
       <List style={{ maxHeight: 380, overflowY: 'auto' }}>
-        {campaignData.data && campaignData.data.map((detail: campaignInterface, index) => (
+        {campaignData.data && campaignData.data.map((detail: CampaignInterface, index) => (
           <div key={detail.campaignId}>
             <ListItem className={classes.list}>
               <Grid container direction="row" justify="space-between">
@@ -195,7 +186,7 @@ export default function CampaignList(props: { campaignData: UseGetRequestObject<
                     <List>
                       <ListItem
                         button
-                        onClick={() => {
+                        onClick={(): void => {
                           setSelectedCampaign(detail);
                           campaignReportDialog.handleOpen();
                         }}
@@ -205,7 +196,7 @@ export default function CampaignList(props: { campaignData: UseGetRequestObject<
                       </ListItem>
                       <ListItem
                         button
-                        onClick={() => {
+                        onClick={(): void => {
                           setSelectedCampaign(detail);
                           campaignUpdateDialog.handleOpen();
                         }}
@@ -215,7 +206,7 @@ export default function CampaignList(props: { campaignData: UseGetRequestObject<
                       </ListItem>
                       <ListItem
                         button
-                        onClick={() => {
+                        onClick={(): void => {
                           setSelectedCampaign(detail);
                           campaignDeleteDialog.handleOpen();
                         }}
@@ -230,7 +221,8 @@ export default function CampaignList(props: { campaignData: UseGetRequestObject<
               </Grid>
 
             </ListItem>
-            {(campaignData.data && !(campaignData.data.length - 1 === index)) && (<Divider light />)}
+            {(campaignData.data
+              && !(campaignData.data.length - 1 === index)) && (<Divider light />)}
           </div>
         ))}
       </List>
@@ -248,7 +240,7 @@ export default function CampaignList(props: { campaignData: UseGetRequestObject<
         }}
         open={snack.open}
         autoHideDuration={400}
-        onClose={() => {
+        onClose={(): void => {
           snack.handleClose();
         }}
         ContentProps={{
@@ -274,7 +266,7 @@ export default function CampaignList(props: { campaignData: UseGetRequestObject<
           SLIDE_TIMEOUT={SLIDE_TIMEOUT} // 슬라이드 트랜지션 타임아웃
           open={campaignReportDialog.open}
           selectedCampaign={selectedCampaign}
-          handleClose={() => {
+          handleClose={(): void => {
             campaignReportDialog.handleClose();
             setTimeout(() => {
               setSelectedCampaign(null);
@@ -290,7 +282,7 @@ export default function CampaignList(props: { campaignData: UseGetRequestObject<
           open={campaignUpdateDialog.open}
           selectedCampaign={selectedCampaign}
           doGetRequest={campaignData.doGetRequest}
-          handleClose={() => {
+          handleClose={(): void => {
             setSelectedCampaign(null);
             campaignUpdateDialog.handleClose();
           }}
@@ -303,7 +295,7 @@ export default function CampaignList(props: { campaignData: UseGetRequestObject<
           open={campaignDeleteDialog.open}
           selectedCampaign={selectedCampaign}
           doGetRequest={campaignData.doGetRequest}
-          handleClose={() => {
+          handleClose={(): void => {
             setSelectedCampaign(null);
             campaignDeleteDialog.handleClose();
           }}

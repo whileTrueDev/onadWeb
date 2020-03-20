@@ -11,21 +11,21 @@ import {
   Action,
 } from '../campaignReducer';
 
-interface propInterface {
+interface CampaignBudgetSetProps {
   state: BudgetInterface;
   dispatch: React.Dispatch<Action>;
 }
 
-const CampaignBudgetSet = (props: propInterface) => {
+const CampaignBudgetSet = (props: CampaignBudgetSetProps): JSX.Element => {
   const {
     state, dispatch,
   } = props;
 
-  const setBudget = () => {
+  const setBudget = (): void => {
     dispatch({ key: 'budget', value: '' });
   };
 
-  const setNoBudget = () => {
+  const setNoBudget = (): void => {
     dispatch({ key: 'noBudget', value: '' });
   };
 

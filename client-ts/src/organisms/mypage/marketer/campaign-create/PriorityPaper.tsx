@@ -14,9 +14,9 @@ import {
 } from './campaignReducer';
 
 // 추후에 인터페이스 통합
-interface propsInterface {
+interface PriorityPaperProps {
   state: Step2Interface;
-  dispatch: React.Dispatch<Action>;  // 우선형 타입 선택
+  dispatch: React.Dispatch<Action>; // 우선형 타입 선택
   checkedPriorities: string[];
   checkedPrioritiesDispatch: React.Dispatch<ArrayAction>; // 선택된 크리에이터
   handleBack: (event: React.MouseEvent<HTMLButtonElement>) => void;
@@ -39,7 +39,13 @@ const priorityTypes: PriorityInterface[] = [
     id: 'type0',
     primaryText: '특정 크리에이터에게만 광고 송출',
     secondaryText: '특정 크리에이터에게만 광고를 송출할 수 있어요',
-    defaultChildren: (state: Step2Interface, setStepComplete: React.Dispatch<React.SetStateAction<boolean>>, checkedPriorities: string[], checkedPrioritiesDispatch: React.Dispatch<ArrayAction>, setSelectedNames: React.Dispatch<React.SetStateAction<string[]>>) => (
+    defaultChildren: (
+      state: Step2Interface,
+      setStepComplete: React.Dispatch<React.SetStateAction<boolean>>,
+      checkedPriorities: string[],
+      checkedPrioritiesDispatch: React.Dispatch<ArrayAction>,
+      setSelectedNames: React.Dispatch<React.SetStateAction<string[]>>
+    ): JSX.Element => (
       <Collapse in={state.priorityType === 'type0'}>
         <CreatorSelect
           setStepComplete={setStepComplete}
@@ -72,7 +78,12 @@ const priorityTypes: PriorityInterface[] = [
     id: 'type1',
     primaryText: '특정 게임에만 광고 송출',
     secondaryText: '특정 게임에만 광고를 송출할 수 있어요.',
-    defaultChildren: (state: Step2Interface, setStepComplete: React.Dispatch<React.SetStateAction<boolean>>, checkedPriorities: string[], checkedPrioritiesDispatch: React.Dispatch<ArrayAction>) => (
+    defaultChildren: (
+      state: Step2Interface,
+      setStepComplete: React.Dispatch<React.SetStateAction<boolean>>,
+      checkedPriorities: string[],
+      checkedPrioritiesDispatch: React.Dispatch<ArrayAction>
+    ): JSX.Element => (
       <Collapse in={state.priorityType === 'type1'}>
         <GameSelect
           setStepComplete={setStepComplete}
@@ -101,13 +112,15 @@ const priorityTypes: PriorityInterface[] = [
     secondaryText: ` 최대한 많은 시청자들에게 브랜드를 인지시키고 싶은 광고주님께 추천드립니다. 
     `,
     defaultChildren: null,
-    customHandleSelect: (state: Step2Interface, setStepComplete: React.Dispatch<boolean>) => {
+    customHandleSelect: (
+      state: Step2Interface, setStepComplete: React.Dispatch<boolean>
+    ): void => {
       setStepComplete(state.priorityType !== 'type2');
     }
   }
 ];
 
-const PriorityPaper = (props: propsInterface): JSX.Element => {
+const PriorityPaper = (props: PriorityPaperProps): JSX.Element => {
   const {
     state, dispatch, // 우선형 타입 선택
     checkedPriorities, checkedPrioritiesDispatch, // 선택된 크리에이터
@@ -126,7 +139,7 @@ const PriorityPaper = (props: propsInterface): JSX.Element => {
   const [selectedNames, setSelectedNames] = React.useState([]);
 
   // TShandleChange
-  const handleChange = (id: string) => {
+  const handleChange = (id: string): void => {
     // 이미 체크되어있는 경우
     if (state.priorityType === id) {
       setStepComplete(false);
@@ -145,14 +158,14 @@ const PriorityPaper = (props: propsInterface): JSX.Element => {
     >
       {/* 아직 선택되지 않은 경우 */}
       {step === 1 && (
-        <React.Fragment>
+        <>
           {priorityTypes.map((type: PriorityInterface) => (
             <OptionSelectPaper
               key={type.id}
               primaryText={type.primaryText}
               secondaryText={type.secondaryText}
               disabled={type.disabled}
-              handleSelect={() => {
+              handleSelect={(): void => {
                 handleChange(type.id);
                 if (type.customHandleSelect) {
                   type.customHandleSelect(state, setStepComplete);
@@ -168,7 +181,7 @@ const PriorityPaper = (props: propsInterface): JSX.Element => {
             </OptionSelectPaper>
           ))}
           <ButtonSet handleNext={handleNext} handleBack={handleBack} set={complete} />
-        </React.Fragment>
+        </>
       )}
 
       {/* 선택된 경우 (step3으로 넘어간 경우) */}
@@ -185,13 +198,16 @@ const PriorityPaper = (props: propsInterface): JSX.Element => {
                 innerPaperChildren={(
                   <div>
                     {selectedPriorityType.completeChildren
-                      ? selectedPriorityType.completeChildren({ checkedPriorities, checkedPrioritiesDispatch, selectedNames })
+                      ? selectedPriorityType.completeChildren({
+                        checkedPriorities,
+                        checkedPrioritiesDispatch,
+                        selectedNames
+                      })
                       : null}
                   </div>
                 )}
               />
-            ))
-          }
+            ))}
         </div>
       )}
     </CampaignCreateStepLayout>

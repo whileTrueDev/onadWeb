@@ -23,10 +23,10 @@ import UrlDeleteDialog from '../../../organisms/mypage/marketer/inventory/UrlDel
 // core ../../atoms
 import dashboardStyle from '../../../assets/jss/views/dashboardStyle';
 import useDialog from '../../../utils/hooks/useDialog';
-import { bannerDataInterface, urlDataInterface } from '../../../organisms/mypage/marketer/inventory/interface';
+import { BannerDataInterface, UrlDataInterface } from '../../../organisms/mypage/marketer/inventory/interface';
 
 
-function TabPanel(props: any) {
+function TabPanel(props: any): JSX.Element {
   const {
     children, value, index, ...other
   } = props;
@@ -45,7 +45,7 @@ function TabPanel(props: any) {
   );
 }
 
-function a11yProps(index: number) {
+function a11yProps(index: number): {id: string; 'aria-controls': string} {
   return {
     id: `simple-tab-${index}`,
     'aria-controls': `simple-tabpanel-${index}`,
@@ -69,11 +69,11 @@ const Inventory = (): JSX.Element => {
 
   const classes = useStyles();
   const [value, setValue] = React.useState<number>(0);
-  const [selectedBanner, setBanner] = React.useState<bannerDataInterface | null>(null);
-  const [selectedUrl, setUrl] = React.useState<urlDataInterface | null>(null);
+  const [selectedBanner, setBanner] = React.useState<BannerDataInterface | null>(null);
+  const [selectedUrl, setUrl] = React.useState<UrlDataInterface | null>(null);
 
 
-  const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
+  const handleChange = (event: React.ChangeEvent<{}>, newValue: number): void => {
     setValue(newValue);
   };
 
@@ -88,13 +88,13 @@ const Inventory = (): JSX.Element => {
             </Tabs>
           </AppBar>
           <TabPanel value={value} index={0}>
-            <CustomButton color="primary" size="large" onClick={() => { uploadDialog.handleOpen(); }}>
+            <CustomButton color="primary" size="large" onClick={(): void => { uploadDialog.handleOpen(); }}>
               + 새 배너 등록
             </CustomButton>
             <BannerTable handleDeleteOpen={deleteDialog.handleOpen} setBanner={setBanner} />
           </TabPanel>
           <TabPanel value={value} index={1}>
-            <CustomButton color="primary" size="large" onClick={() => { urlUploadDialog.handleOpen(); }}>
+            <CustomButton color="primary" size="large" onClick={(): void => { urlUploadDialog.handleOpen(); }}>
               + 새 URL 등록
             </CustomButton>
             <UrlTable handleDeleteOpen={urlDeleteDialog.handleOpen} setUrl={setUrl} />

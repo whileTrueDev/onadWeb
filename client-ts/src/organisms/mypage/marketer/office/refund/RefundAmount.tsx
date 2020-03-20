@@ -11,22 +11,22 @@ import Radio from '@material-ui/core/Radio';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import TextField from '@material-ui/core/TextField';
 import sources from '../sources';
-import { stateInterface, Action } from '../interface';
+import { StateInterface, Action } from '../interface';
 
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     width: '85%',
     margin: '5px auto'
   },
   contentTitle: {
     fontWeight: 'bold',
-    color: '#999',
+    color: theme.palette.text.primary,
     fontFamily: 'Noto Sans KR'
   },
   newContentTitle: {
     fontWeight: 'bold',
-    color: '#00DBDF',
+    color: theme.palette.primary.main,
     fontFamily: 'Noto Sans KR'
   },
   warningTitle: {
@@ -34,12 +34,7 @@ const useStyles = makeStyles(theme => ({
     color: 'black',
     fontFamily: 'Noto Sans KR'
   },
-  contentDetail: {
-    marginTop: theme.spacing(1),
-  },
-  selectValue: {
-    color: '#333',
-  },
+  contentDetail: { marginTop: theme.spacing(1) },
   textField: {
     marginLeft: theme.spacing(1),
     marginRight: theme.spacing(1),
@@ -61,15 +56,15 @@ const useStyles = makeStyles(theme => ({
     fontFamily: 'Noto Sans KR',
   },
   warning: {
-    background: 'rgba(0,0,0,0.05)',
+    background: theme.palette.action.disabledBackground,
     marginTop: theme.spacing(2),
     marginBottom: theme.spacing(2),
   }
 }));
 
-interface propInterface {
+interface RefundAmountProps {
   setStepComplete: React.Dispatch<React.SetStateAction<boolean>>;
-  state: stateInterface;
+  state: StateInterface;
   dispatch: React.Dispatch<Action>;
   stepComplete: boolean;
   accountNumber: string;
@@ -77,14 +72,14 @@ interface propInterface {
 }
 
 
-const RefundAmount = (props: propInterface) => {
+const RefundAmount = (props: RefundAmountProps): JSX.Element => {
   const {
     setStepComplete, state, dispatch, stepComplete, accountNumber, accountHolder
   } = props;
   const classes = useStyles();
   const { currentCash, selectValue, totalDebit } = state;
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
     dispatch({ key: 'selectValue', value: event.target.value });
     setStepComplete(true);
     dispatch({ key: 'totalDebit', value: Number(currentCash) - Number(event.target.value) });
@@ -143,7 +138,7 @@ const RefundAmount = (props: propInterface) => {
               <Grid item>
                 <Typography className={classes.newContentTitle} variant="h6">
                   환불 후 잔액
-              </Typography>
+                </Typography>
               </Grid>
               <Grid item className={classes.contentTitle}>
                 <Typography className={classes.newContentTitle} variant="h6">
@@ -174,7 +169,7 @@ const RefundAmount = (props: propInterface) => {
                     control={<Radio color="primary" />}
                     label={(
                       currentCash >= 10000 ? (
-                        <Typography variant="subtitle1" className={classes.selectValue}>
+                        <Typography variant="subtitle1">
                           10,000 원
                         </Typography>
                       )
@@ -190,7 +185,7 @@ const RefundAmount = (props: propInterface) => {
                     control={<Radio color="primary" />}
                     label={(
                       currentCash >= 30000 ? (
-                        <Typography variant="subtitle1" className={classes.selectValue}>
+                        <Typography variant="subtitle1">
                           30,000 원
                         </Typography>
                       )
@@ -206,7 +201,7 @@ const RefundAmount = (props: propInterface) => {
                     control={<Radio color="primary" />}
                     label={(
                       currentCash >= 50000 ? (
-                        <Typography variant="subtitle1" className={classes.selectValue}>
+                        <Typography variant="subtitle1">
                           50,000 원
                         </Typography>
                       )
@@ -222,7 +217,7 @@ const RefundAmount = (props: propInterface) => {
                     control={<Radio color="primary" />}
                     label={(
                       currentCash >= 100000 ? (
-                        <Typography variant="subtitle1" className={classes.selectValue}>
+                        <Typography variant="subtitle1">
                           100,000 원
                         </Typography>
                       )
@@ -241,7 +236,7 @@ const RefundAmount = (props: propInterface) => {
                     <TextField
                       id="selectValue"
                       label={(
-                        <Typography variant="subtitle1" className={classes.selectValue}>
+                        <Typography variant="subtitle1">
                           환불 요청할 금액을 입력하세요
                         </Typography>
                       )}
@@ -251,8 +246,10 @@ const RefundAmount = (props: propInterface) => {
                       onChange={handleChange}
                       margin="normal"
                       variant="outlined"
-                      error={!((currentCash >= parseInt(selectValue))) || !(parseInt(selectValue) > 1000)}
-                      helperText={((currentCash >= parseInt(selectValue)) && (parseInt(selectValue) > 1000)) ? null : '올바른 입력 부탁드립니다'}
+                      error={!((currentCash >= parseInt(selectValue, 10)))
+                        || !(parseInt(selectValue, 10) > 1000)}
+                      helperText={((currentCash >= parseInt(selectValue, 10))
+                        && (parseInt(selectValue, 10) > 1000)) ? null : '올바른 입력 부탁드립니다'}
                     />
                   </Tooltip>
                 </div>

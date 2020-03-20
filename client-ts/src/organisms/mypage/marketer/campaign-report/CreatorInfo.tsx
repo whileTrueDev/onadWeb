@@ -6,7 +6,7 @@ import Popover from '@material-ui/core/Popover';
 import Button from '@material-ui/core/Button';
 import ContentsPie from '../shared/ContentsPie';
 import TimeChart from '../shared/TimeChart';
-import { creatorDataInterface, creatorDetailInterface } from '../dashboard/interfaces';
+import { CreatorDataInterface, CreatorDetailInterface } from '../dashboard/interfaces';
 
 const useStyles = makeStyles(() => ({
   container: {
@@ -33,27 +33,29 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-interface anchorInterface {
+interface AnchorInterface {
   open: boolean;
   anchorEl: HTMLElement | null;
   handleAnchorOpen: (event: React.MouseEvent<HTMLElement>) => void;
   handleAnchorClose: () => void;
 }
 
-interface propInterface {
-  anchorEl: anchorInterface;
+interface CreatorInfoProps {
+  anchorEl: AnchorInterface;
   empty: boolean;
-  creatorInfo: creatorDetailInterface & creatorDataInterface;
+  creatorInfo: CreatorDetailInterface & CreatorDataInterface;
 }
 
-export default function CreatorInfo(props: propInterface) {
+export default function CreatorInfo(props: CreatorInfoProps): JSX.Element {
   const classes = useStyles();
   const {
     anchorEl, creatorInfo, empty
   } = props;
 
 
-  const makeValueComponent = ({ value, unit }: { value: string | number, unit: string }) => (
+  const makeValueComponent = ({
+    value, unit
+  }: { value: string | number; unit: string }): React.ReactNode => (
     <div className={classes.flex}>
       <Typography gutterBottom variant="h6">
         {value}
@@ -63,7 +65,7 @@ export default function CreatorInfo(props: propInterface) {
   );
 
 
-  const makeNameComponent = ({ value }: { value: string }) => (
+  const makeNameComponent = ({ value }: { value: string }): React.ReactNode => (
     <div className={classes.flex}>
       <Typography gutterBottom variant="body1" style={{ fontWeight: 700 }}>
         {value}
@@ -103,7 +105,7 @@ export default function CreatorInfo(props: propInterface) {
           <Button
             variant="contained"
             color="primary"
-            onClick={() => {
+            onClick={(): void => {
               window.open(`https://twitch.tv/${creatorInfo.creatorTwitchId}`);
               anchorEl.handleAnchorClose();
             }}
@@ -179,8 +181,7 @@ export default function CreatorInfo(props: propInterface) {
               <Typography variant="body1">해당 크리에이터는 </Typography>
               <Typography variant="body1">아직 분석할 데이터가 부족합니다.</Typography>
             </div>
-          )
-        }
+          )}
       </div>
     </Popover>
   );

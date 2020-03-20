@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-//데이터를 받는형태
+// 데이터를 받는형태
 // [
 //   {
 //     title: '전환당 비용',
@@ -41,14 +41,14 @@ const useStyles = makeStyles((theme: Theme) => ({
 //   },
 //   { title: '지표 준비중.', value: '', unit: '' },
 // ]
-interface dataInterface {
+interface DataInterface {
   title: string;
   value: number | string;
   unit: string;
   decimalRange?: number;
 }
 
-const ReportCard = (props: { data: dataInterface[] }) => {
+const ReportCard = (props: { data: DataInterface[] }): JSX.Element => {
   const { data, ...rest } = props;
 
   const classes = useStyles();
@@ -73,12 +73,12 @@ const ReportCard = (props: { data: dataInterface[] }) => {
                   {content.value === '-' ? (
                     <span>{content.value}</span>
                   ) : (
-                      <CountUp
-                        duration={1}
-                        end={Number(content.value)}
-                        decimals={content.decimalRange}
-                      />
-                    )}
+                    <CountUp
+                      duration={1}
+                      end={Number(content.value)}
+                      decimals={content.decimalRange}
+                    />
+                  )}
                 </Typography>
 
                 <Typography gutterBottom variant="body2">

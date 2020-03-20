@@ -26,9 +26,9 @@ const options = [
 ];
 
 // 추후에 인터페이스 통합
-interface propsInterface {
+interface OptionPaperProps {
   state: Step1Interface;
-  dispatch: React.Dispatch<Action>;  // 우선형 타입 선택
+  dispatch: React.Dispatch<Action>; // 우선형 타입 선택
   handleBack: (event: React.MouseEvent<HTMLButtonElement>) => void;
   handleNext: (event: React.MouseEvent<HTMLButtonElement>) => void;
   step: number;
@@ -42,13 +42,13 @@ interface OptionInterface {
 }
 
 
-const OptionPaper = (props: propsInterface) => {
+const OptionPaper = (props: OptionPaperProps): JSX.Element => {
   const {
     state, dispatch, step, handleNext, handleBack // for '다음' 버튼 관리
   } = props;
 
   // option을 선택하였을 때 event listener
-  const handleChange = (id: string) => () => {
+  const handleChange = (id: string) => (): void => {
     dispatch({ key: id, value: '' });
   };
 
@@ -78,8 +78,8 @@ const OptionPaper = (props: propsInterface) => {
       {step > 0 && (
         <div>
           {options
-            .filter(opt => state.option === opt.id)
-            .map(selectedOption => (
+            .filter((opt) => state.option === opt.id)
+            .map((selectedOption) => (
               <OptionSelectPaper
                 key={`${selectedOption.id}`}
                 primaryText={selectedOption.primaryText}

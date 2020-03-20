@@ -28,25 +28,25 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-interface bannerDataInterface {
+interface BannerDataInterface {
   linkId: string;
   marketerId: string;
   confirmState: number;
   denialReason: string;
-  links: { links: { linkName: string, linkTo: string, primary: boolean }[] };
+  links: { links: { linkName: string; linkTo: string; primary: boolean }[] };
   regiDate: Date;
   updateDate: Date;
 }
 
-interface propInterface {
-  open: boolean
+interface LandingUrlInventoryDialogProps {
+  open: boolean;
   onClose: () => void;
-  landingUrlData: UseGetRequestObject<bannerDataInterface[]>
+  landingUrlData: UseGetRequestObject<BannerDataInterface[]>;
   dispatch: React.Dispatch<Action>;
 }
 
 
-const LandingUrlInventoryDialog = (props: propInterface) => {
+const LandingUrlInventoryDialog = (props: LandingUrlInventoryDialogProps): JSX.Element => {
   const {
     open, onClose, landingUrlData, dispatch
   } = props;
@@ -62,7 +62,9 @@ const LandingUrlInventoryDialog = (props: propInterface) => {
 
   const titleArray = ['MAIN', 'SUB1', 'SUB2'];
 
-  const handleCheck = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>, rowData: any) => {
+  const handleCheck = (
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>, rowData: any
+  ): void => {
     //  MouseEvent, ButtonElement일 경우, target을 찾는 방법.
     const { id } = event.target as HTMLButtonElement;
     setindexId(id);
@@ -82,7 +84,7 @@ const LandingUrlInventoryDialog = (props: propInterface) => {
     }
   };
 
-  const handleClose = (click?: string) => {
+  const handleClose = (click?: string): void => {
     if (click === 'click') {
       dispatch({ key: 'mainLandingUrl', value: tmpMainUrl });
       if (tmpSub1Url) { dispatch({ key: 'sub1LandingUrl', value: tmpSub1Url }); }
@@ -105,7 +107,7 @@ const LandingUrlInventoryDialog = (props: propInterface) => {
     {
       title: '심의 결과',
       field: 'confirmState',
-      render: (rowData: bannerDataInterface) => {
+      render: (rowData: BannerDataInterface): React.ReactNode => {
         switch (rowData.confirmState) {
           case 0: return '승인대기⏰';
           case 1: return '승인됨👌';
@@ -122,7 +124,7 @@ const LandingUrlInventoryDialog = (props: propInterface) => {
     },
     {
       title: '링크 이름',
-      render: (rowData: bannerDataInterface) => (
+      render: (rowData: BannerDataInterface): React.ReactNode => (
         <div>
           {rowData.links.links.map((link, index) => {
             if (link) {
@@ -139,16 +141,16 @@ const LandingUrlInventoryDialog = (props: propInterface) => {
                       <Divider />
                     </div>
                   ) : (
-                      <div>
-                        <p className={classes.title}>
-                          SUB
+                    <div>
+                      <p className={classes.title}>
+                        SUB
                       </p>
-                        <span>
-                          {link.linkName}
-                        </span>
-                        <Divider />
-                      </div>
-                    )}
+                      <span>
+                        {link.linkName}
+                      </span>
+                      <Divider />
+                    </div>
+                  )}
                 </div>
               );
             }
@@ -159,7 +161,7 @@ const LandingUrlInventoryDialog = (props: propInterface) => {
     },
     {
       title: '링크 주소',
-      render: (rowData: bannerDataInterface) => (
+      render: (rowData: BannerDataInterface): React.ReactNode => (
         <div>
           {rowData.links.links.map((link, index) => {
             if (link) {
@@ -180,15 +182,15 @@ const LandingUrlInventoryDialog = (props: propInterface) => {
                       </p>
                     </div>
                   ) : (
-                      <div>
-                        <p className={classes.title}>
-                          SUB
+                    <div>
+                      <p className={classes.title}>
+                        SUB
                       </p>
-                      </div>
-                    )}
+                    </div>
+                  )}
                   <a
                     href={link.linkTo}
-                    onClick={(e) => {
+                    onClick={(e): void => {
                       e.preventDefault();
                       window.open(link.linkTo);
                     }}
@@ -204,15 +206,15 @@ const LandingUrlInventoryDialog = (props: propInterface) => {
         </div>
       ),
     },
-    { title: '링크 등록 일자', render: (rowData: bannerDataInterface) => (<span>{rowData.regiDate}</span>) },
+    { title: '링크 등록 일자', render: (rowData: BannerDataInterface): React.ReactNode => (<span>{rowData.regiDate}</span>) },
     {
       title: '선택',
-      render: (rowData: bannerDataInterface) => (
+      render: (rowData: BannerDataInterface): React.ReactNode => (
         <div>
           <GreenCheckbox
             id={rowData.linkId}
             checked={indexId === rowData.linkId}
-            onClick={(event) => { handleCheck(event, rowData.links); }}
+            onClick={(event): void => { handleCheck(event, rowData.links); }}
           />
         </div>
       ),
@@ -230,14 +232,14 @@ const LandingUrlInventoryDialog = (props: propInterface) => {
         <div style={{ margin: '5px' }}>
           <Button
             variant="contained"
-            onClick={() => { handleClose() }}
+            onClick={(): void => { handleClose(); }}
           >
             닫기
           </Button>
           <Button
             variant="contained"
             color="primary"
-            onClick={() => { handleClose('click'); }}
+            onClick={(): void => { handleClose('click'); }}
           >
             확인
           </Button>
@@ -249,7 +251,7 @@ const LandingUrlInventoryDialog = (props: propInterface) => {
         {!landingUrlData.loading && landingUrlData.data && (
           <MaterialTable
             style={{ boxShadow: 'none' }}
-            title=''
+            title=""
             columns={columns}
             data={landingUrlData.data}
             // isLoading={landingUrlData.loading && landingUrlData.loading}

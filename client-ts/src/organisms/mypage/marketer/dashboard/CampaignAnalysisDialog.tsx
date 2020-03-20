@@ -1,6 +1,9 @@
 import React from 'react';
 import { Grid, Slide } from '@material-ui/core';
-import { campaignInterface } from './interfaces';
+import {
+  CampaignInterface, ReportInterface,
+  CreatorDataInterface, HeatmapInterface, GeoInterface
+} from './interfaces';
 
 import Dialog from '../../../../atoms/Dialog/Dialog';
 import ReportLoading from '../campaign-report/ReportLoading';
@@ -9,7 +12,8 @@ import CampaignOnlyClickAd from '../campaign-report/CampaignOnlyClickAd';
 import CampaignOnlyBannerAd from '../campaign-report/CampaignOnlyBannerAd';
 // hooks
 import useGetRequest from '../../../../utils/hooks/useGetRequest';
-import { reportInterface, creatorDataInterface, heatmapInterface, geoInterface } from './interfaces';
+
+
 const ONLY_BANNER_STATE = 0;
 const BANNER_WITH_CLICK_STATE = 1;
 const ONLY_CLICK_STATE = 2;
@@ -22,19 +26,19 @@ const Transition = React.forwardRef((props, ref) => (
   />
 ));
 
-interface propInterface {
+interface CampaignReportDialogProps {
   open: boolean;
-  selectedCampaign: campaignInterface;
+  selectedCampaign: CampaignInterface;
   handleClose: () => void;
   SLIDE_TIMEOUT: number;
 }
 
-export default function CampaignReportDialog(props: propInterface) {
+export default function CampaignReportDialog(props: CampaignReportDialogProps): JSX.Element {
   const {
     SLIDE_TIMEOUT, selectedCampaign, open, handleClose
   } = props;
 
-  const reportData = useGetRequest<{ campaignId: string }, reportInterface | null>(
+  const reportData = useGetRequest<{ campaignId: string }, ReportInterface | null>(
     '/marketer/campaign/analysis',
     { campaignId: selectedCampaign.campaignId }
   );
@@ -44,18 +48,18 @@ export default function CampaignReportDialog(props: propInterface) {
     { campaignId: selectedCampaign.campaignId }
   );
 
-  //라우터 추가가 필요하다.
-  const ipToGeoData = useGetRequest<{ campaignId: string }, geoInterface[] | null>(
+  // 라우터 추가가 필요하다.
+  const ipToGeoData = useGetRequest<{ campaignId: string }, GeoInterface[] | null>(
     '/marketer/geo/campaign',
     { campaignId: selectedCampaign.campaignId }
   );
 
-  const creatorsData = useGetRequest<{ campaignId: string }, creatorDataInterface[] | null>(
+  const creatorsData = useGetRequest<{ campaignId: string }, CreatorDataInterface[] | null>(
     '/marketer/campaign/analysis/creator-data',
     { campaignId: selectedCampaign.campaignId }
   );
 
-  const clickData = useGetRequest<{ campaignId: string }, heatmapInterface[] | null>(
+  const clickData = useGetRequest<{ campaignId: string }, HeatmapInterface[] | null>(
     '/marketer/campaign/analysis/heatmap',
     { campaignId: selectedCampaign.campaignId }
   );

@@ -23,10 +23,7 @@ const useStyle = makeStyles((theme: Theme) => ({
 }));
 
 const useQontoStepIconStyles = makeStyles((theme: Theme) => ({
-  root: {
-    color: '#eaeaf0',
-    display: 'flex',
-  },
+  root: { color: theme.palette.background.paper, display: 'flex', },
   active: {
     color: theme.palette.primary.main,
   },
@@ -47,7 +44,7 @@ const useQontoStepIconStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-function QontoStepIcon(props: any) {
+function QontoStepIcon(props: any): JSX.Element {
   const classes = useQontoStepIconStyles();
   const { active, completed } = props;
 
@@ -92,21 +89,21 @@ const myReducer = (state: ImageInterface, action: ImageAction): ImageInterface =
   }
 };
 
-interface propInterface {
+interface UploadDialogProps {
   open: boolean;
   onClose: () => void;
   isCampaignPage?: boolean;
   recallRequest?: () => void;
 }
 
-const UploadDialog = (props: propInterface) => {
+const UploadDialog = (props: UploadDialogProps): JSX.Element => {
   const {
     open, onClose, isCampaignPage, recallRequest
   } = props;
   const classes = useStyle();
   const [state, dispatch] = useReducer(myReducer, { imageName: '', imageUrl: DEFAULT_IMAGE_PATH });
   const [activeStep, setStep] = useState(0);
-  const handleClose = () => {
+  const handleClose = (): void => {
     dispatch({ type: 'reset' });
     setStep(0);
     onClose();
@@ -128,7 +125,7 @@ const UploadDialog = (props: propInterface) => {
   //   '/marketer/banner');
 
   // url을 제출.
-  const handleSubmit = () => {
+  const handleSubmit = (): void => {
     const bannerDescription = (document.getElementById('banner') as HTMLInputElement).value || '';
     // // usePostRequest 수정 이후 적용
     // if (state.imageUrl) {
@@ -189,7 +186,7 @@ const UploadDialog = (props: propInterface) => {
             <BannerDescForm
               handleNext={handleNext}
               state={state}
-              handleSubmit={() => {
+              handleSubmit={(): void => {
                 handleSubmit();
               }}
             />

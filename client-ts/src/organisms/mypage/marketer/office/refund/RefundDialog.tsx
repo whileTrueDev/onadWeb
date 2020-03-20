@@ -6,7 +6,7 @@ import {
 } from '@material-ui/core';
 import axios from '../../../../../utils/axios';
 // customized component
-import Dialog from '../../shared/Dialog';
+import Dialog from '../../../../../atoms/Dialog/Dialog';
 import Button from '../../../../../atoms/CustomButtons/Button';
 import HOST from '../../../../../utils/config';
 import history from '../../../../../history';
@@ -21,9 +21,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   contentTitle: {
     fontWeight: 'bold',
   },
-  selectValue: {
-    color: '#333',
-  },
   textField: {
     marginLeft: theme.spacing(1),
     marginRight: theme.spacing(1),
@@ -37,28 +34,20 @@ const useStyles = makeStyles((theme: Theme) => ({
       width: '100%'
     }
   },
-  button: {
-    marginRight: theme.spacing(1),
-  },
-  end: {
-    color: '#fff',
-    marginRight: theme.spacing(1),
-  },
+  button: { marginRight: theme.spacing(1) },
   title: {
     marginTop: 5,
     paddingBottom: 10,
     fontWeight: 600,
   },
   titleWrap: {
-    background: 'linear-gradient(45deg, #00DBE0 30%, #21CBF3 90%)',
+    background: `linear-gradient(45deg, ${theme.palette.primary.light} 30%, ${theme.palette.primary.dark} 90%)`,
     color: 'white',
     textAlign: 'center'
   }
 }));
 
-
-
-interface propInterface {
+interface RefundDialogProps {
   open: boolean;
   handleClose: () => void;
   currentCash: string;
@@ -66,7 +55,7 @@ interface propInterface {
   accountHolder: string;
 }
 
-function RefundDialog(props: propInterface) {
+function RefundDialog(props: RefundDialogProps): JSX.Element {
   const classes = useStyles();
   const [stepComplete, setStepComplete] = React.useState(false); // 현재 step에서 다음 step으로 넘어가기위한 state
   const [paperSwitch, setPaperSwitch] = React.useState(true); // animation을 위한 state
@@ -91,27 +80,29 @@ function RefundDialog(props: propInterface) {
 
   const { selectValue, checked } = stepState;
 
-  function handleSubmitClick(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+  function handleSubmitClick(event: React.MouseEvent<HTMLButtonElement, MouseEvent>): void {
     event.preventDefault();
 
     // 해당 금액 만큼 환불 내역에 추가하는 요청
     axios.post(`${HOST}/api/dashboard/marketer/cash/refund`, {
       withdrawCash: selectValue,
     }).then(() => {
-      setIndex(preIndex => preIndex + 1);
+      setIndex((preIndex) => preIndex + 1);
     }).catch((err) => {
       console.log(err);
       history.push('/dashboard/marketer/myoffice');
     });
   }
 
-  const handleNext = (go: number | null) => (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  const handleNext = (go: number | null) => (
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ): void => {
     event.preventDefault();
     setPaperSwitch(false);
     setStepComplete(false);
 
     if (index === 1) {
-      if (currentCashNumber - parseInt(selectValue) < 0 || parseInt(selectValue) <= 1000) {
+      if (currentCashNumber - parseInt(selectValue, 10) < 0 || parseInt(selectValue, 10) <= 1000) {
         alert('환불 신청 금액은 1000원 이하에서는 불가하며 환불 신청 금액이 보유 캐시보다 클 수 없습니다.');
         history.push('/dashboard/marketer/myoffice');
       } else {
@@ -119,7 +110,7 @@ function RefundDialog(props: propInterface) {
           if (go) {
             setIndex(go);
           } else {
-            setIndex(preIndex => preIndex + 1);
+            setIndex((preIndex) => preIndex + 1);
           }
           setPaperSwitch(true);
         }, 500);
@@ -129,14 +120,14 @@ function RefundDialog(props: propInterface) {
         if (go) {
           setIndex(go);
         } else {
-          setIndex(preIndex => preIndex + 1);
+          setIndex((preIndex) => preIndex + 1);
         }
         setPaperSwitch(true);
       }, 500);
     }
   };
 
-  const handleBack = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  const handleBack = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>): void => {
     event.preventDefault();
     setStepComplete(false);
     setPaperSwitch(false);
@@ -144,12 +135,12 @@ function RefundDialog(props: propInterface) {
       stepDispatch({ key: 'reset' });
     }
     setTimeout(() => {
-      setIndex(preIndex => preIndex - 1);
+      setIndex((preIndex) => preIndex - 1);
       setPaperSwitch(true);
     }, 500);
   };
 
-  const setSteps = (_index: number) => {
+  const setSteps = (_index: number): React.ReactNode => {
     switch (_index) {
       case 0:
         return (
@@ -189,13 +180,13 @@ function RefundDialog(props: propInterface) {
     }
   };
 
-  const DefaultIndex = () => {
+  const DefaultIndex = (): void => {
     handleClose();
     setIndex(0);
     stepDispatch({ key: 'reset' });
   };
 
-  const finishIndex = () => {
+  const finishIndex = (): void => {
     handleClose();
     history.push('/dashboard/marketer/myoffice');
   };
@@ -217,10 +208,9 @@ function RefundDialog(props: propInterface) {
                       variant="contained"
                       color="primary"
                       onClick={handleSubmitClick}
-                      className={classes.end}
                     >
                       신청
-                  </Button>
+                    </Button>
                   </Collapse>
                 </Grid>
               )}
@@ -232,10 +222,9 @@ function RefundDialog(props: propInterface) {
                       variant="contained"
                       color="primary"
                       onClick={handleNext(null)}
-                      className={classes.end}
                     >
                       다음
-                  </Button>
+                    </Button>
                   </Collapse>
                 </Grid>
               )}
@@ -247,11 +236,9 @@ function RefundDialog(props: propInterface) {
               </Grid>
             ) : null}
             {index !== 3
-              && <Grid item><Button onClick={DefaultIndex}>취소</Button></Grid>
-            }
+              && <Grid item><Button onClick={DefaultIndex}>취소</Button></Grid>}
             {index === 3
-              && <Grid item><Button onClick={finishIndex}>완료</Button></Grid>
-            }
+              && <Grid item><Button onClick={finishIndex}>완료</Button></Grid>}
           </Grid>
         </div>
       )}
@@ -262,7 +249,7 @@ function RefundDialog(props: propInterface) {
             OnAD 환불요청 Step
             {' '}
             {index + 1}
-/4
+            /4
           </div>
           <h4 className={classes.title}>{sources.titleRefund[index]}</h4>
         </div>

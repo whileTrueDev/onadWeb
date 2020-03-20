@@ -9,7 +9,7 @@ import CardBody from '../../../../../atoms/Card/CardBody';
 import Button from '../../../../../atoms/CustomButtons/Button';
 import DashboardStyle from '../../../../../assets/jss/views/dashboardStyle';
 import AccountRegistDialog from '../AccountRegistDialog';
-import { accountInterface } from '../interface';
+import { AccountInterface } from '../interface';
 import { UseGetRequestObject } from '../../../../../utils/hooks/useGetRequest';
 
 // hooks
@@ -27,17 +27,15 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
     marginBottom: 10
   },
-  success: {
-    color: theme.palette.primary.main
-  }
+  success: { color: theme.palette.primary.main }
 }));
 
-interface propInterface {
+interface RefundAccountFormProps {
   classes: any;
-  accountData: UseGetRequestObject<accountInterface | null>
+  accountData: UseGetRequestObject<AccountInterface | null>;
 }
 
-function RefundAccountForm(props: propInterface) {
+function RefundAccountForm(props: RefundAccountFormProps): JSX.Element {
   const myClasses = useStyles();
   const { classes, accountData } = props;
   const { open, handleOpen, handleClose } = useDialog();
@@ -53,7 +51,7 @@ function RefundAccountForm(props: propInterface) {
           <div className={myClasses.buttonWrapper}>
             <Button
               color="primary"
-              onClick={() => { handleOpen() }}
+              onClick={(): void => { handleOpen(); }}
               size="medium"
             >
               환불계좌 변경
@@ -61,40 +59,43 @@ function RefundAccountForm(props: propInterface) {
           </div>
           <div className={myClasses.textBox}>
             <Typography gutterBottom variant="body1">
-              계좌번호 : {accountData.data.marketerAccountNumber}
+              계좌번호 :
+              {' '}
+              {accountData.data.marketerAccountNumber}
             </Typography>
           </div>
           <div className={myClasses.textBox}>
             <Typography gutterBottom variant="body1">
-              예금주 : {accountData.data.accountHolder}
+              예금주 :
+              {' '}
+              {accountData.data.accountHolder}
             </Typography>
           </div>
         </CardBody>
       ) : (
-          <CardBody>
-            <div className={myClasses.buttonWrapper}>
-              <Button
-                color="primary"
-                onClick={() => { handleOpen() }}
-                size="medium"
-
-              >
-                환불계좌 등록
+        <CardBody>
+          <div className={myClasses.buttonWrapper}>
+            <Button
+              color="primary"
+              onClick={(): void => { handleOpen(); }}
+              size="medium"
+            >
+              환불계좌 등록
             </Button>
-            </div>
-            <div className={myClasses.textBox}>
-              <Typography gutterBottom variant="body1">아직 등록된 환불계좌가 없습니다.</Typography>
-            </div>
-            <div className={myClasses.textBox}>
-              <Typography gutterBottom variant="body1" className={classes.success}>등록</Typography>
-              <Typography gutterBottom variant="body1">
-                버튼을 눌러 환불계좌를 등록해주세요.
+          </div>
+          <div className={myClasses.textBox}>
+            <Typography gutterBottom variant="body1">아직 등록된 환불계좌가 없습니다.</Typography>
+          </div>
+          <div className={myClasses.textBox}>
+            <Typography gutterBottom variant="body1" className={classes.success}>등록</Typography>
+            <Typography gutterBottom variant="body1">
+              버튼을 눌러 환불계좌를 등록해주세요.
             </Typography>
-            </div>
+          </div>
 
 
-          </CardBody>
-        )}
+        </CardBody>
+      )}
 
       <AccountRegistDialog open={open} handleDialogClose={handleClose} />
 

@@ -3,24 +3,24 @@ import { Typography, Tooltip } from '@material-ui/core';
 import Delete from '@material-ui/icons/Delete';
 import MaterialTable from '../../../../atoms/Table/MaterialTable';
 import useGetRequest from '../../../../utils/hooks/useGetRequest';
-import { bannerDataInterface } from './interface';
+import { BannerDataInterface } from './interface';
 
 const BANNER_MAX_WIDTH = 320;
 const BANNER_MAX_HEIGHT = 200;
 
-interface propInterface {
+interface BannerTableProps {
   handleDeleteOpen: (v?: boolean | undefined) => void;
-  setBanner: React.Dispatch<React.SetStateAction<bannerDataInterface | null>>;
+  setBanner: React.Dispatch<React.SetStateAction<BannerDataInterface | null>>;
 }
 
-export default function BannerTable(props: propInterface) {
+export default function BannerTable(props: BannerTableProps): JSX.Element {
   const { handleDeleteOpen, setBanner } = props;
-  const fetchData = useGetRequest<null, bannerDataInterface[] | null>('/marketer/banner/list');
+  const fetchData = useGetRequest<null, BannerDataInterface[] | null>('/marketer/banner/list');
 
   const columns = [
     {
       title: '배너 이미지',
-      render: (rowData: bannerDataInterface) => (
+      render: (rowData: BannerDataInterface): JSX.Element => (
         <img
           src={rowData.bannerSrc}
           alt={rowData.bannerId}
@@ -31,7 +31,7 @@ export default function BannerTable(props: propInterface) {
     {
       title: '심의 결과',
       field: 'confirmState',
-      render: (rowData: bannerDataInterface) => {
+      render: (rowData: BannerDataInterface): React.ReactNode => {
         switch (rowData.confirmState) {
           case 0: return '승인대기⏰';
           case 1: return '승인됨👌';
@@ -57,14 +57,15 @@ export default function BannerTable(props: propInterface) {
       {!fetchData.loading && fetchData.data && (
         <MaterialTable
           style={{ boxShadow: 'none' }}
-          title=''
+          title=""
           columns={columns}
           data={fetchData.data}
           actions={[
             {
-              icon: () => (<Delete />),
+              icon: (): JSX.Element => (<Delete />),
               tooltip: '배너삭제',
-              onClick: (event: React.MouseEvent<HTMLButtonElement>, data: bannerDataInterface | bannerDataInterface[]) => {
+              onClick: (event: React.MouseEvent<HTMLButtonElement>,
+                data: BannerDataInterface | BannerDataInterface[]): void => {
                 if (Array.isArray(data)) {
                   setBanner(data[0]);
                 } else {
@@ -92,4 +93,3 @@ export default function BannerTable(props: propInterface) {
     </div>
   );
 }
-

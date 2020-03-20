@@ -12,23 +12,23 @@ import {
   Action,
 } from '../campaignReducer';
 
-interface propInterface {
+interface CampaignTermSetProps {
   state: TermInterface;
   dispatch: React.Dispatch<Action>;
 }
 
-const CampaignTermSet = (props: propInterface) => {
+const CampaignTermSet = (props: CampaignTermSetProps): JSX.Element => {
   const {
     state,
     dispatch
   } = props;
 
 
-  const setTerm = () => {
+  const setTerm = (): void => {
     dispatch({ key: 'term', value: '' });
   };
 
-  const setNoTerm = () => {
+  const setNoTerm = (): void => {
     dispatch({ key: 'noTerm', value: '' });
   };
 

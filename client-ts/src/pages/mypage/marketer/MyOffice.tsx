@@ -13,16 +13,15 @@ import SignOut from '../../../organisms/mypage/marketer/office/profile/SignOut';
 import MyOffceLoading from '../../../organisms/mypage/marketer/office/MyOfficeLoading';
 import TaxBill from '../../../organisms/mypage/marketer/office/TaxBill';
 
-import { businessInterface, userInterface, accountInterface } from '../../../organisms/mypage/marketer/office/interface';
+import { BusinessInterface, UserInterface, AccountInterface } from '../../../organisms/mypage/marketer/office/interface';
 import useGetRequest from '../../../utils/hooks/useGetRequest';
 
 
 export default function MyOffice() {
-
   // 계좌 정보
-  const accountData = useGetRequest<null, accountInterface | null>('/marketer/account');
-  const userData = useGetRequest<null, userInterface | null>('/marketer');
-  const businessRegistrationData = useGetRequest<null, businessInterface | null>('/marketer/business');
+  const accountData = useGetRequest<null, AccountInterface | null>('/marketer/account');
+  const userData = useGetRequest<null, UserInterface | null>('/marketer');
+  const businessRegistrationData = useGetRequest<null, BusinessInterface | null>('/marketer/business');
 
 
   return (
@@ -72,7 +71,7 @@ export default function MyOffice() {
         </GridItem>
       </GridContainer>
 
-      <Typography variant="h5" style={{ marginTop: 35 }}>세금계산서 관리</Typography>
+      <Typography variant="h5" style={{ marginTop: 35 }} color="textPrimary">세금계산서 관리</Typography>
       <GridContainer>
         <GridItem xs={12} md={12} lg={8} xl={6}>
           <TaxBill />

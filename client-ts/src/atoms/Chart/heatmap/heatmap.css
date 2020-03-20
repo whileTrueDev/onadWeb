@@ -28,7 +28,7 @@
    */
   
   .react-calendar-heatmap .color-empty {
-    fill: #eeeeee;
+    fill: rgba(0, 0, 0, 0.12);
   }
   
   .react-calendar-heatmap .color-filled {
@@ -40,7 +40,7 @@
    */
   
   .react-calendar-heatmap .color-github-0 {
-    fill: #eeeeee;
+    fill:rgba(0, 0, 0, 0.12);
   }
   .react-calendar-heatmap .color-github-1 {
     fill: #d6e685;

@@ -12,7 +12,7 @@ const initialData = {
   data: [['-', '-', '-']]
 };
 
-export default function TaxBill() {
+export default function TaxBill(): JSX.Element {
   const { data, loading } = useGetRequest<null, string[][]>('/marketer/tax-bills');
 
 

@@ -1,7 +1,5 @@
 import React from 'react';
-import {
-  Grid
-} from '@material-ui/core';
+import { Grid } from '@material-ui/core';
 import Check from '@material-ui/icons/Check';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import useGetRequest from '../../../../../utils/hooks/useGetRequest';
@@ -9,10 +7,7 @@ import StyledItemText from '../../../../../atoms/StyledItemText';
 import Success from '../../../../../atoms/Typography/Success';
 import DangerTypography from '../../../../../atoms/Typography/Danger';
 import StyledInput from '../../../../../atoms/StyledInput';
-import {
-  Action,
-  NameInterface
-} from '../campaignReducer';
+import { Action, NameInterface } from '../campaignReducer';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -50,19 +45,19 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-interface propInterface {
+interface CampaignNamingProps {
   nameState: NameInterface;
   nameDispatch: React.Dispatch<Action>;
 }
 
-const CampaignNaming = (props: propInterface) => {
+const CampaignNaming = (props: CampaignNamingProps): JSX.Element => {
   const {
     nameState, nameDispatch
   } = props;
   const classes = useStyles();
   const nameData = useGetRequest('/marketer/campaign/names');
 
-  const checkCampaignName = (value: string) => {
+  const checkCampaignName = (value: string): void => {
     if (!nameData.loading && !nameData.error) {
       if (nameData.data.includes(value)) {
         nameDispatch({ key: 'duplicate', value: '' });
@@ -73,7 +68,7 @@ const CampaignNaming = (props: propInterface) => {
   };
 
   // document element 값 접근시 필요.
-  const getName = () => {
+  const getName = (): string => {
     const nameTag = (document.getElementsByName('name')[0] as HTMLInputElement);
     if (nameTag) {
       if (nameTag.value.length < 2) {

@@ -40,7 +40,7 @@ function HeaderLinks(): JSX.Element {
 
   // 로그아웃
   function handleLogoutClick(): void {
-    axios.get(`${HOST}/api/login/logout`).then(() => { history.push('/'); });
+    axios.get(`${HOST}/logout`).then(() => { history.push('/'); });
   }
 
   return (

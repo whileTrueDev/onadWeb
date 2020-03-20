@@ -15,7 +15,7 @@ const initialData = {
   data: [['-', '-', '-']],
 };
 
-function RefundHistory(props: { classes: any }) {
+function RefundHistory(props: { classes: any }): JSX.Element {
   const { classes } = props;
 
   const { data, loading } = useGetRequest<null, { data: string[][] }>('/marketer/cash/history/refund');

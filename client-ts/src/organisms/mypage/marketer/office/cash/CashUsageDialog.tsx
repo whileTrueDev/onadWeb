@@ -13,24 +13,26 @@ const useStyles = makeStyles(() => ({
   flex: { display: 'flex', alignItems: 'center' }
 }));
 
-interface propInterface {
+interface CashUsageDialogProps {
   open: boolean;
   handleClose: () => void;
   data: string[];
 }
 
-interface usageInterface {
+interface UsageInterface {
   data: (string)[][];
-  metaData: { type: string, cash: string }[];
+  metaData: { type: string; cash: string }[];
 }
 
-export default function CashUsageDialog(props: propInterface) {
+export default function CashUsageDialog(props: CashUsageDialogProps): JSX.Element {
   const classes = useStyles();
   const { open, handleClose, data } = props;
 
-  const usagePerMonthData = useGetRequest<{ month: string }, usageInterface>('/marketer/cash/history/usage/month', {
-    month: data[0] // data[0] = "00년 00월"
-  });
+  const usagePerMonthData = useGetRequest<{ month: string }, UsageInterface>(
+    '/marketer/cash/history/usage/month', {
+      month: data[0] // data[0] = "00년 00월"
+    }
+  );
 
   return (
     <Dialog
@@ -51,8 +53,8 @@ export default function CashUsageDialog(props: propInterface) {
 
         {!usagePerMonthData.loading && usagePerMonthData.data && (
           <div className={classes.flex}>
-            {usagePerMonthData.data.metaData.map((meta, index: number) => (
-              <div key={`month_data_${index}`} className={classes.flex}>
+            {usagePerMonthData.data.metaData.map((meta) => (
+              <div key={`month_data_${meta.type}${meta.cash}`} className={classes.flex}>
                 <Typography variant="body1" gutterBottom>
                   &emsp;
                   {`${meta.type}: `}

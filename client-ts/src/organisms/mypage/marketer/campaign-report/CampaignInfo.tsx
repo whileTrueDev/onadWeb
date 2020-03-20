@@ -1,7 +1,7 @@
 import React from 'react';
 import { Typography, Grid, Divider } from '@material-ui/core';
-import { campaignInterface } from '../dashboard/interfaces';
-import { makeStyles, Theme } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
+import { CampaignInterface } from '../dashboard/interfaces';
 
 /**
  * 우선 순위 타입넘버에 해당하는 문자열 반환
@@ -10,7 +10,7 @@ import { makeStyles, Theme } from '@material-ui/core/styles';
  */
 
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles(() => ({
   typo: { fontWeight: 700, textAlign: 'right' },
   divider: { marginBottom: 10 },
   container: { maxWidth: 320, maxHeight: 160, marginBottom: 48 },
@@ -57,7 +57,7 @@ function getPriorityType(type: number): string {
   return result;
 }
 
-function makeContent(selectedCampaign: campaignInterface): { topic: string, value: string }[] {
+function makeContent(selectedCampaign: CampaignInterface): { topic: string; value: string }[] {
   return [
     { topic: '캠페인 명', value: selectedCampaign.campaignName },
     { topic: '캠페인 상태', value: selectedCampaign.onOff ? '운용중' : '중지' },
@@ -71,11 +71,11 @@ function makeContent(selectedCampaign: campaignInterface): { topic: string, valu
   ];
 }
 
-interface propInterface {
-  selectedCampaign: campaignInterface;
+interface CampaignInfoProps {
+  selectedCampaign: CampaignInterface;
 }
 
-export default function CampaignInfo(props: propInterface) {
+export default function CampaignInfo(props: CampaignInfoProps): JSX.Element {
   const { selectedCampaign } = props;
   const classes = useStyles();
   const data = makeContent(selectedCampaign);
@@ -93,7 +93,7 @@ export default function CampaignInfo(props: propInterface) {
           />
         </div>
       </Grid>
-      {data.map(d => (
+      {data.map((d) => (
         <Grid item xs={6} sm={3} key={d.topic}>
           <Typography variant="h6">{d.topic}</Typography>
           {d.value && <Divider className={classes.divider} />}

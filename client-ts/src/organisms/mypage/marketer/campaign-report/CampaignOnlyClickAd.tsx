@@ -10,10 +10,12 @@ import ReportCard from './ReportCard';
 import InteractionHeatmap from './HeatmapReport';
 // import InteractionToGeo from './GeoReport';
 import CampaignInfo from './CampaignInfo';
-import { reportInterface, heatmapInterface, geoInterface, campaignInterface } from '../dashboard/interfaces';
+import {
+  ReportInterface, HeatmapInterface, GeoInterface, CampaignInterface
+} from '../dashboard/interfaces';
 import { UseGetRequestObject } from '../../../../utils/hooks/useGetRequest';
 
-const makeContents = (reportData: reportInterface) => ({
+const makeContents = (reportData: ReportInterface) => ({
   price: [
     {
       title: '광고 총 비용',
@@ -64,29 +66,22 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'space-between',
     alignItems: 'cetner'
   },
-  title: {
-    fontWeight: 500
-  },
-  formControl: {
-    margin: theme.spacing(1),
-    minWidth: 120,
-  },
-  contents: {
-    padding: '24px 32px'
-  }
+  title: { fontWeight: 500 },
+  formControl: { margin: theme.spacing(1), minWidth: 120, },
+  contents: { padding: '24px 32px' }
 }));
 
 
-interface propInterface {
-  selectedCampaign: campaignInterface;
-  reportData: UseGetRequestObject<null | reportInterface>;
+interface CampaignOnlyClickAdProps {
+  selectedCampaign: CampaignInterface;
+  reportData: UseGetRequestObject<null | ReportInterface>;
   chartData: UseGetRequestObject<any[]>;
-  ipToGeoData: UseGetRequestObject<null | geoInterface[]>;
-  clickData: UseGetRequestObject<null | heatmapInterface[]>;
+  ipToGeoData: UseGetRequestObject<null | GeoInterface[]>;
+  clickData: UseGetRequestObject<null | HeatmapInterface[]>;
 }
 
 
-export default function CampaignOnlyClickAd(props: propInterface) {
+export default function CampaignOnlyClickAd(props: CampaignOnlyClickAdProps): JSX.Element {
   const classes = useStyles();
   const {
     selectedCampaign, reportData, chartData,
@@ -106,8 +101,8 @@ export default function CampaignOnlyClickAd(props: propInterface) {
                 {/* 제목 */}
                 <Typography variant="h5" className={classes.title}>
                   {reportData.data.campaignName}
-                &emsp;광고 효과 분석
-            </Typography>
+                  &emsp;광고 효과 분석
+                </Typography>
 
               </div>
               <Divider />
@@ -175,7 +170,7 @@ export default function CampaignOnlyClickAd(props: propInterface) {
             </Grid>
 
           </Grid>
-        )}
+      )}
     </div>
   );
 }
