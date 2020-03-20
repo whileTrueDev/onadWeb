@@ -21,17 +21,13 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Dashboard() {
   const classes = useStyles();
+  
   const campaignData = useFetchData('/api/dashboard/marketer/campaign/new');
-
   const onOffData = useFetchData('/api/dashboard/marketer/onoff');
-
   const normalData = useFetchData('/api/dashboard/marketer/normal');
-
   const countsData = useFetchData('/api/dashboard/marketer/report/counts');
   const valueChartData = useFetchData('/api/dashboard/marketer/campaign/chart');
-
   const broadCreatorData = useFetchData('/api/dashboard/marketer/broadcast/creator');
-
   const actionLogData = useFetchData('/api/dashboard/marketer/actionlog');
 
 

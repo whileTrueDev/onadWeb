@@ -60,8 +60,7 @@ router.get('/kakao/callback', passport.authenticate('kakao'),
 router.get('/twitch', passport.authenticate('twitch'));
 router.get('/twitch/callback', passport.authenticate('twitch'),
   (req, res) => {
-    res.send('success twitch login');
-    // res.redirect(`${HOST}/`);
+    res.redirect(`${HOST}/mypage/creator/main`);
   });
 
 

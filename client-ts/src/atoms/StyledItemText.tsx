@@ -12,16 +12,11 @@ const StyledItemText = withStyles((theme: Theme) => ({
       marginBottom: '8px',
     },
   },
-  primary: {
-    fontSize: '16px',
+  primary: ({ fontSize, color }: { fontSize?: string; color?: string }) => ({
+    fontSize: fontSize || '16px',
     fontWeight: 700,
-    color: 'primary'
-  },
-  secondary: {
-    fontSize: '13px',
-    fontWeight: 600,
-    color: 'secondary'
-  },
+    color: color || theme.palette.text.primary
+  }),
 }))(ListItemText);
 
 

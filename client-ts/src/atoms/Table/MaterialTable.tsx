@@ -47,17 +47,15 @@ const localization = {
   }
 };
 
-interface CustomMaterialTable<T extends object> extends MaterialTableProps<T> {
+interface CustomMaterialTableProps<T extends object> extends MaterialTableProps<T> {
   cellWidth?: number;
-  title?: string;
+  style?: React.CSSProperties;
 }
 
 export default function MaterialTable<RowDataType extends object>(
-  props: CustomMaterialTable<RowDataType>
+  props: CustomMaterialTableProps<RowDataType>
 ): JSX.Element {
-  const {
-    columns, cellWidth, title, ...rest
-  } = props;
+  const { columns, cellWidth, ...rest } = props;
 
   function styleColumn(_columns: Column<RowDataType>[], minWidth = 100): Column<RowDataType>[] {
     _columns.map((col) => {
@@ -70,7 +68,6 @@ export default function MaterialTable<RowDataType extends object>(
 
   return (
     <MuiMaterialTable
-      title={title}
       icons={tableIcons}
       localization={localization}
       columns={styleColumn(columns, cellWidth)}

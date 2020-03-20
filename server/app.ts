@@ -24,7 +24,8 @@ import marketerRouter from './routes/marketer';
 import chartRouter from './routes/chart';
 import bannersRouter from './routes/banners';
 import mailRouter from './routes/mail';
-import noticeRouter from './routes/notification';
+import noticeRouter from './routes/notice';
+import trackingRouter from './routes/tracking';
 
 const MySQLStore = require('express-mysql-session')(session);
 
@@ -142,6 +143,7 @@ class OnadWebApi {
     this.app.use('/banners', bannersRouter);
     this.app.use('/mail', mailRouter);
     this.app.use('/notice', noticeRouter);
+    this.app.use('/tracking', trackingRouter);
 
     // Error handling
     // catch 404 and forward to error handler

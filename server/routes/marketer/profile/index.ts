@@ -8,7 +8,6 @@ import setTemporaryPassword from '../../../middlewares/auth/setTemporyPassword';
 
 const router = express.Router();
 
-// marketer/actionLog에서 가져옴.
 /**
  * @swagger
  * paths:
@@ -266,9 +265,11 @@ router.route('/account')
           } else {
             accountNumber = '';
           }
+          console.log(accountNumber)
+          console.log(accountHolder)
 
           responseHelper.send({
-            accountNumber, accountHolder
+            marketerAccountNumber: accountNumber, accountHolder
           }, 'get', res);
         })
         .catch((error) => {
