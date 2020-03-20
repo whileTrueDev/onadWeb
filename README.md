@@ -104,10 +104,24 @@ WhileTrue 개발자 [강동기](https://github.com/GoMotiv), [강화수](https:/
         }
     },
     "rules": {
+        "lines-between-class-members": 0,
         "react/display-name": 0,
         "react/jsx-props-no-spreading": "warn",
-        "react/jsx-filename-extension": [1, { "extensions": [".tsx", ".jsx"] }] ,
-        "no-trailing-spaces": ["error", {"ignoreComments": true}],
+        "react/jsx-filename-extension": [
+            1,
+            {
+                "extensions": [
+                    ".tsx",
+                    ".jsx"
+                ]
+            }
+        ],
+        "no-trailing-spaces": [
+            "error",
+            {
+                "ignoreComments": true
+            }
+        ],
         "class-methods-use-this": [
             "error",
             {

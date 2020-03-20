@@ -1,32 +1,38 @@
 import React from 'react';
-import axios from '../axios';
-import HOST from '../../config';
 
-const IMAGE_SIZE_LIMIT = 100000 * 10;
+const MB = 1048576; // 1Mbytes
+const IMAGE_SIZE_LIMIT = 10 * MB;
 
-interface ImageData {
-  newImageName: string;
-  newImageUrl: string | ArrayBuffer | null;
+export type UploadImage = string | ArrayBuffer | null;
+export interface ImageData {
+  newImageName?: string;
+  newImageUrl: UploadImage;
 }
 
-interface UseImageUploadResult {
-  imageUrl: string | ArrayBuffer | null;
-  imageName: string;
+export interface UseImageUploadResult {
+  imageUrl: UploadImage;
+  imageName: string | null | undefined;
   handleReset: () => void;
   handleImageChange: ({ newImageName, newImageUrl }: ImageData) => void;
   readImage: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  handleUploadClick: () => void;
 }
 
+/**
+ * 이미지 업로드를 위한 훅.  
+ * 10MB이하의 '이미지'파일 데이터만 (image URI scheme) 업로드 가능하다.
+ * @param DEFAULT_IMAGE 기본이미지파일
+ * @param imageUploadUrl 이미지를 업로드할 API 서버 엔드포인트
+ * @param successCallback 이미지 업로드 성공시 콜백함수
+ * @returns
+ * iamgeUrl, imageName, handleReset, handleImageChange, readImage, handleUploadClick
+ * @reference data_uri_scheme : https://en.wikipedia.org/wiki/Data_URI_scheme
+ */
 export default function useImageUpload(
   DEFAULT_IMAGE: string,
-  imageUploadUrl: string,
-  successCallback: () => void,
-  reRequest?: () => void
 ): UseImageUploadResult {
-  const [imageUrl, setImageUrl] = React.useState<string | ArrayBuffer | null>(DEFAULT_IMAGE);
-  const [imageName, setImageName] = React.useState('');
-
+  const [imageUrl, setImageUrl] = React.useState<string| ArrayBuffer |null>(DEFAULT_IMAGE);
+  const [imageName, setImageName] = React.useState<string | undefined>('');
+      
   // image reset
   function handleReset(): void {
     setImageName('');
@@ -34,8 +40,7 @@ export default function useImageUpload(
   }
 
   // image change handler
-  function handleImageChange({ newImageName, newImageUrl }:
-    { newImageName: string; newImageUrl: string | ArrayBuffer | null }): void {
+  function handleImageChange({ newImageName, newImageUrl }: ImageData): void {
     setImageName(newImageName);
     setImageUrl(newImageUrl);
   }
@@ -69,29 +74,11 @@ export default function useImageUpload(
     }
   };
 
-  function handleUploadClick(): void {
-    axios.post(`${HOST}${imageUploadUrl}`, { imageUrl })
-      .then((res) => {
-        if (res.data[0]) {
-          successCallback();
-          if (reRequest) {
-            reRequest();
-          }
-        } else {
-          alert('현재는 등록할 수 없습니다. 잠시 후 다시 시도해주세요.');
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }
-
   return {
     imageUrl,
     imageName,
     handleReset,
     handleImageChange,
     readImage,
-    handleUploadClick
   };
 }

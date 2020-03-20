@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import classnames from 'classnames';
 import { Theme, makeStyles } from '@material-ui/core/styles';
 import {
   Grid, Typography, Divider
@@ -8,33 +7,10 @@ import AttachMoney from '@material-ui/icons/AttachMoney';
 import DateRange from '@material-ui/icons/DateRange';
 import CustomCard from '../../../../atoms/CustomCard';
 import Button from '../../../../atoms/CustomButtons/Button';
-import CircularProgress from '../../../../atoms/Progress/CircularProgress';
-import useGetRequest from '../../../../utils/hooks/useGetRequest';
 import WithdrawalDialog from './WithdrawalDialog';
 import history from '../../../../history';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  stats: {
-    color: theme.palette.text.hint,
-    display: 'inline-flex',
-    fontSize: '14px',
-    lineHeight: '22px',
-    '& svg': {
-      top: '4px',
-      width: '16px',
-      height: '16px',
-      position: 'relative',
-      marginRight: '3px',
-      marginLeft: '3px',
-    },
-    '& .fab,& .fas,& .far,& .fal,& .material-icons': {
-      top: '4px',
-      fontSize: '16px',
-      position: 'relative',
-      marginRight: '3px',
-      marginLeft: '3px',
-    },
-  },
   flex: {
     display: 'flex',
     justifyContent: 'center',
@@ -45,7 +21,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-interface IncomeCashRes {
+export interface IncomeCashRes {
   creatorTotalIncome: number;
   creatorReceivable: number;
   creatorAccountNumber: string;
@@ -54,14 +30,16 @@ interface IncomeCashRes {
   realName: string;
 }
 
-const IncomeCard = (): JSX.Element => {
+interface IncomeCardProps {
+  incomeData: IncomeCashRes;
+}
+const IncomeCard = ({ incomeData }: IncomeCardProps): JSX.Element => {
   const classes = useStyles();
-  const incomeCashGet = useGetRequest<null, IncomeCashRes>('/creator/income');
 
   // 출금 신청 다이얼로그
   const [open, setOpen] = useState(false);
   const handleOpen = (): void => {
-    if (incomeCashGet.data && !incomeCashGet.data.creatorAccountNumber) {
+    if (incomeData && !incomeData.creatorAccountNumber) {
       alert('등록된 계좌가 존재하지 않으므로 내 계정으로 이동합니다.');
       history.push('/mypage/creator/user');
     }
@@ -72,9 +50,7 @@ const IncomeCard = (): JSX.Element => {
   return (
     <CustomCard
       iconComponent={<AttachMoney />}
-      buttonComponent={(!incomeCashGet.loading
-        && incomeCashGet.data
-        && incomeCashGet.data.creatorAccountNumber) && (
+      buttonComponent={(incomeData.creatorAccountNumber) && (
         <Button
           color="primary"
           onClick={(): void => { handleOpen(); }}
@@ -88,14 +64,11 @@ const IncomeCard = (): JSX.Element => {
           <div className={classes.flex}>
             <Typography gutterBottom variant="body1" className={classes.head}>출금가능한 수익금</Typography>
           </div>
-          {incomeCashGet.loading && (<CircularProgress small />)}
-          {!incomeCashGet.loading && !incomeCashGet.error && incomeCashGet.data && (
           <div className={classes.flex}>
             <Typography gutterBottom variant="h5">
-              {`${incomeCashGet.data.creatorReceivable} 원`}
+              {`${incomeData.creatorReceivable} 원`}
             </Typography>
           </div>
-          )}
         </Grid>
         <Grid item>
           <Divider variant="middle" component="hr" />
@@ -104,39 +77,31 @@ const IncomeCard = (): JSX.Element => {
           <div className={classes.flex}>
             <Typography gutterBottom variant="body1" className={classes.head}>총 수익금</Typography>
           </div>
-          {incomeCashGet.loading && (<CircularProgress small />)}
-          {!incomeCashGet.loading && !incomeCashGet.error && incomeCashGet.data && (
           <div className={classes.flex}>
             <Typography gutterBottom variant="h5">
-              {`${incomeCashGet.data.creatorTotalIncome} 원`}
+              {`${incomeData.creatorTotalIncome} 원`}
             </Typography>
           </div>
-          )}
         </Grid>
         <Grid item>
-          <div
-            className={classnames(classes.stats, classes.flex)}
-          >
-            {!incomeCashGet.loading && !incomeCashGet.error
-              && incomeCashGet.data && incomeCashGet.data.date
-              && (
-              <div>
+          <div className={classes.flex}>
+            {incomeData.date && (
+              <Typography variant="caption" color="textSecondary">
                 <DateRange />
-                <span>{`업데이트 : ${incomeCashGet.data.date}`}</span>
-              </div>
-              )}
+                {`업데이트 : ${incomeData.date}`}
+              </Typography>
+            )}
           </div>
         </Grid>
       </Grid>
-      {!incomeCashGet.loading && !incomeCashGet.error && incomeCashGet.data
-      && incomeCashGet.data.creatorContractionAgreement
-      && incomeCashGet.data.creatorAccountNumber && (
+      {incomeData && incomeData.creatorContractionAgreement
+      && incomeData.creatorAccountNumber && (
         <WithdrawalDialog
           open={open}
           handleClose={handleClose}
-          realName={incomeCashGet.data.realName}
-          accountNumber={incomeCashGet.data.creatorAccountNumber}
-          receivable={incomeCashGet.data.creatorReceivable}
+          realName={incomeData.realName}
+          accountNumber={incomeData.creatorAccountNumber}
+          receivable={incomeData.creatorReceivable}
         />
       )}
     </CustomCard>

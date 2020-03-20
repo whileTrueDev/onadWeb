@@ -1,7 +1,7 @@
 import React from 'react';
 // @material-ui/core components
 import makeStyles from '@material-ui/core/styles/makeStyles';
-import Grid from '@material-ui/core/Grid';
+import Grid, { GridProps } from '@material-ui/core/Grid';
 
 const useStyles = makeStyles({
   grid: {
@@ -10,8 +10,7 @@ const useStyles = makeStyles({
   },
 });
 
-function GridContainer({ children, ...rest }:
-  { children: React.ReactNode; [rest: string]: any}): JSX.Element {
+function GridContainer({ children, ...rest }: GridProps): JSX.Element {
   const classes = useStyles();
   return (
     <Grid container {...rest} className={classes.grid}>

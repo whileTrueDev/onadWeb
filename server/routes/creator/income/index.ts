@@ -55,7 +55,7 @@ router.route('/withdrawal')
 
       const query = `
       SELECT
-      date, creatorWithdrawalAmount, withdrawalState
+      DATE_FORMAT(DATE, "%Y년 %m월 %d일") as date, creatorWithdrawalAmount, withdrawalState
       FROM creatorWithdrawal
       WHERE creatorId= ?
       ORDER BY date DESC
@@ -64,8 +64,7 @@ router.route('/withdrawal')
       doQuery(query, [creatorId])
         .then((row) => {
           if (row.result.length > 0) {
-            const result = dataProcessing.withdrawalList(row);
-            responseHelper.send(result, 'get', res);
+            responseHelper.send(row.result, 'get', res);
           } else {
             res.end();
           }
