@@ -1,6 +1,8 @@
 import React from 'react';
 import { makeStyles, Theme } from '@material-ui/core/styles';
-import { Grid, Hidden, Typography, Button } from '@material-ui/core';
+import {
+  Grid, Hidden, Typography, Button
+} from '@material-ui/core';
 import CustomButton from '../../../../atoms/CustomButtons/Button';
 
 
@@ -49,11 +51,11 @@ interface ImageAction {
 interface propInterface {
   handleClose: () => void;
   handleNext: (number: number) => () => void;
-  state: ImageInterface
-  dispatch: React.Dispatch<ImageAction>
+  state: ImageInterface;
+  dispatch: React.Dispatch<ImageAction>;
 }
 
-const ImageUpload = (props: propInterface) => {
+const ImageUpload = (props: propInterface): JSX.Element => {
   const {
     handleClose, handleNext, state, dispatch,
   } = props;
@@ -99,7 +101,7 @@ const ImageUpload = (props: propInterface) => {
           </Grid>
           <Grid item className={classes.container}>
             <Button component="span" color="primary">
-              <label htmlFor='getfile' >
+              <label htmlFor="getfile">
                 <Typography className={classes.imgInput}>
                   파일찾기
                 </Typography>

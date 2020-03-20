@@ -15,7 +15,7 @@ import * as serviceWorker from './serviceWorker';
 import Door from './pages/main/Door';
 
 import MarketerDashboard from './pages/mypage/layouts/MarketerLayout';
-import ChargeDialog from './organisms/mypage/marketer/office/charge/ChargeDialog'
+import ChargeDialog from './organisms/mypage/marketer/office/charge/ChargeDialog';
 import CreatorDashboard from './pages/mypage/layouts/CreatorLayout';
 import AdChatTracker from './pages/others/AdChatTracker';
 import Adchattest from './pages/others/Adchattest';
