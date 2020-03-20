@@ -4,6 +4,7 @@ import passport from 'passport';
 // import checkEmailAuth from '../../middlewares/checkEmailAuth';
 import responseHelper from '../../middlewares/responseHelper';
 import doQuery from '../../model/doQuery';
+import checkEmailAuth from '../../middlewares/checkEmailAuth';
 
 const HOST = process.env.NODE_ENV === 'production'
   ? process.env.PRODUCTION_REACT_HOSTNAME
@@ -11,7 +12,7 @@ const HOST = process.env.NODE_ENV === 'production'
 const router = express.Router();
 
 // local 로그인
-router.get('/', passport.authenticate('local')); // checkEmailAuth 추가
+router.post('/', passport.authenticate('local'), checkEmailAuth); // checkEmailAuth 추가
 
 // marketer - google 로그인
 router.get('/google', passport.authenticate('google', { scope: ['email', 'profile'] }));
@@ -65,31 +66,36 @@ router.get('/twitch/callback', passport.authenticate('twitch'),
 
 router.route('/check')
   .get(
-    responseHelper.middleware.checkSessionExists,
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
-      const session = responseHelper.getSessionData(req);
+      if (req.session!.passport) {
+        const session = responseHelper.getSessionData(req);
 
-      if (session.userType === 'marketer') {
-        const checkQuery = `
-        SELECT temporaryLogin
-        FROM marketerInfo
-        WHERE marketerId = ?`;
+        if (session.userType === 'marketer') {
+          const checkQuery = `
+          SELECT temporaryLogin
+          FROM marketerInfo
+          WHERE marketerId = ?`;
 
-        const row = await doQuery(checkQuery, [session.marketerId]);
-        if (row.result) {
-          const { temporaryLogin } = row.result[0];
-          if (temporaryLogin === 1) {
-            responseHelper.send({ error: false, state: 1 }, 'get', res);
-          } else {
-            responseHelper.send({ error: false, state: 0, userType: 'marketer' }, 'get', res);
-          }
+          doQuery(checkQuery, [session.marketerId])
+            .then((row) => {
+              const { temporaryLogin } = row.result[0];
+              if (temporaryLogin === 1) {
+                responseHelper.send({ error: false, state: 1 }, 'get', res);
+              } else {
+                responseHelper.send({ error: false, state: 0, userType: 'marketer' }, 'get', res);
+              }
+            })
+            .catch(() => {
+              throw new Error('MarketerId 가 marketerInfo에 없습니다.');
+            });
+        } else if (session.userType === 'creator') {
+          responseHelper.send({ error: false, state: 0, userType: 'creator' }, 'get', res);
         }
-        throw new Error('MarketerId 가 marketerInfo에 없습니다.');
-      } else if (session.userType === 'creator') {
-        responseHelper.send({ error: false, state: 0, userType: 'creator' }, 'get', res);
-      } else {
-        throw new Error('userType is not in creator | marketer');
       }
+      // 원래는 에러 핸들링이 필요하나 로그가 너무 찍혀서 주석처리
+      //   else {
+      //   throw new Error('userType is not in creator | marketer');
+      // }
     })
   )
   .all(responseHelper.middleware.unusedMethod);

@@ -1,5 +1,5 @@
 import express from 'express';
-import doQuery from '../../../model/doQuery'
+import doQuery from '../../../model/doQuery';
 import responseHelper from '../../../middlewares/responseHelper';
 
 const router = express.Router();
@@ -10,7 +10,7 @@ router.route('/')
       const dataString = 'DATE_SUB(NOW(), INTERVAL 60 MONTH)';
 
       const query = `
-                    SELECT SUM(cL.cashFromMarketer / (2 * mD.unitPrice))
+                    SELECT SUM(cL.cashFromMarketer / (2 * mD.unitPrice)) as bannerView
                         FROM campaignLog AS cL
                           LEFT JOIN campaign AS cp
                           ON cL.campaignId = cp.campaignId
@@ -25,10 +25,10 @@ router.route('/')
           }
         })
         .catch((errorData) => {
-          throw new Error(`Error in /banners/impression - ${errorData}`)
+          throw new Error(`Error in /banners/impression - ${errorData}`);
         });
     })
   )
-  .all(responseHelper.middleware.unusedMethod)
+  .all(responseHelper.middleware.unusedMethod);
 
-export default router
+export default router;

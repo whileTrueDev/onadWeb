@@ -132,7 +132,7 @@ class OnadWebApi {
     // 각 로그인 플랫폼 callbackURL 변경 이후 
     // /auth로 변경
     // *********************************
-    this.app.use('/api/login', loginRouter);
+    this.app.use('/login', loginRouter);
 
     this.app.use('/logout', logoutRouter);
     this.app.use('/creator', creatorRouter);

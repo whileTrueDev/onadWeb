@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { makeStyles, Theme } from '@material-ui/core/styles';
-import { green } from '@material-ui/core/colors';
 import {
   Paper,
   Typography,
@@ -108,27 +107,23 @@ const RefundAgreement = (props: propInterface) => {
     setStepComplete(false);
   }, [setStepComplete]);
 
+  const [open, setOpen] = useState(false);
   const handleClose = () => {
     setOpen(false);
   };
-
   const handleOpen = () => {
     setOpen(true);
   };
 
   const handleChange = () => {
-
-
     dispatch({ key: 'checked', value: !checked });
     if (!checked) {
       setStepComplete(true);
     } else {
       setStepComplete(false);
     }
+  };
 
-  }
-
-  const [open, setOpen] = useState(false);
 
   return (
     <div>
@@ -205,7 +200,7 @@ const RefundAgreement = (props: propInterface) => {
       </div>
     </div>
 
-  )
-}
+  );
+};
 
 export default RefundAgreement;

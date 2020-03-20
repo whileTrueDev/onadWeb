@@ -13,9 +13,14 @@ import * as serviceWorker from './serviceWorker';
 
 // Pages
 import Door from './pages/main/Door';
-
+import Main from './pages/main/Main';
+import Introduction from './pages/main/Introduction';
+import RegistPage from './pages/main/Regist';
+import Policy from './pages/main/Policy';
+import Notice from './pages/others/Notice';
+import CreatorList from './pages/main/CreatorList';
 import MarketerDashboard from './pages/mypage/layouts/MarketerLayout';
-import ChargeDialog from './organisms/mypage/marketer/office/charge/ChargeDialog'
+import ChargeDialog from './organisms/mypage/marketer/office/charge/ChargeDialog';
 import CreatorDashboard from './pages/mypage/layouts/CreatorLayout';
 import AdChatTracker from './pages/others/AdChatTracker';
 import Adchattest from './pages/others/Adchattest';
@@ -27,6 +32,17 @@ const developmentRouter = (
     <Switch>
       {/* <> muts be here : All children of a <Switch> should be <Route> or <Redirect> elements. */}
       <>
+        <Route exact path="/" component={Door} />
+        <Route exact path="/marketer" component={Main} />
+        <Route exact path="/creator" component={Main} />
+        <Route exact path="/creatorlist" component={CreatorList} />
+        <Route path="/regist/:platform" component={RegistPage} />
+        <Route exact path="/regist" component={RegistPage} />
+        <Route exact path="/introduce/:userType" component={Introduction} />
+        <Route exact path="/policy" component={Policy} />
+        <Route exact path="/policy/:privacy" component={Policy} />
+        <Route exact path="/notice" component={Notice} />
+        <Route path="/notice/:code" component={Notice} />
         <Route exact path="/adchat/" component={Adchattest} />
         <Route exact path="/adchat/:campaignId" component={AdChatTracker} />
         <Route exact path="/" component={Door} />
@@ -34,6 +50,7 @@ const developmentRouter = (
           <Route path="/mypage/creator" component={CreatorDashboard} />
           <Route path="/mypage/marketer" component={MarketerDashboard} />
           <Route exact path="/marketer/charge" component={ChargeDialog} />
+          <Route path="/mypage/creator" component={CreatorDashboard} />
         </ThemeProvider>
       </>
     </Switch>
@@ -45,9 +62,23 @@ const productionRouter = (
     <Switch>
       <>
         <Route exact path="/" component={Door} />
+        <Route exact path="/marketer" component={Main} />
+        <Route exact path="/creator" component={Main} />
+        <Route exact path="/creatorlist" component={CreatorList} />
+        <Route path="/regist/:platform" component={RegistPage} />
+        <Route exact path="/regist" component={RegistPage} />
+        <Route exact path="/introduce/:userType" component={Introduction} />
+        <Route exact path="/policy" component={Policy} />
+        <Route exact path="/policy/:privacy" component={Policy} />
+        <Route exact path="/notice" component={Notice} />
+        <Route path="/notice/:code" component={Notice} />
+        <Route exact path="/adchat/:campaignId" component={AdChatTracker} />
+        <Route exact path="/" component={Door} />
         <ThemeProvider theme={theme.lightTheme}>
+          <Route path="/mypage/creator" component={CreatorDashboard} />
           <Route path="/mypage/marketer" component={MarketerDashboard} />
           <Route exact path="/marketer/charge" component={ChargeDialog} />
+          <Route path="/mypage/creator" component={CreatorDashboard} />
         </ThemeProvider>
       </>
     </Switch>

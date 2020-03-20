@@ -8,7 +8,7 @@ const checkEmailAuth = (req: any, res: any): void => {
   if (req.session.passport.user.message) {
     res.send([true, message]);
   } else {
-    const marketerId = req.session.passport.user.userid;
+    const { marketerId } = req.session.passport.user;
     const checkQuery = `
     SELECT marketerEmailAuth, temporaryLogin
     FROM marketerInfo

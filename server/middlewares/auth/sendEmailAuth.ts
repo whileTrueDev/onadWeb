@@ -1,6 +1,6 @@
 import express from 'express';
 import axios from 'axios';
-import responseHelper from '../../middlewares/responseHelper';
+import responseHelper from '../responseHelper';
 
 const HOST = process.env.NODE_ENV === 'production'
     ? process.env.PRODUCTION_API_HOSTNAME
@@ -20,4 +20,3 @@ function sendEmailAuth(
 }
 
 export default sendEmailAuth;
-
