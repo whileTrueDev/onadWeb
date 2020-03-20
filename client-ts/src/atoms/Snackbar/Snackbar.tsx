@@ -23,7 +23,7 @@ function Snackbar({
       open={open}
       onClose={onClose}
       autoHideDuration={3000}
-      anchorOrigin={anchorOrigin || { vertical: 'bottom', horizontal: 'right' }}
+      anchorOrigin={anchorOrigin || { vertical: 'bottom', horizontal: 'center' }}
       {...rest}
     >
       <Alert

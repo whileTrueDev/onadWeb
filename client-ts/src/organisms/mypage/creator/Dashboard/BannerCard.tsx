@@ -5,8 +5,6 @@ import { makeStyles, Theme } from '@material-ui/core/styles';
 import BrandingWatermark from '@material-ui/icons/BrandingWatermark';
 import Button from '../../../../atoms/CustomButtons/Button';
 import CustomCard from '../../../../atoms/CustomCard';
-import useGetRequest from '../../../../utils/hooks/useGetRequest';
-import CircularProgress from '../../../../atoms/Progress/CircularProgress';
 import StyledItemText from '../../../../atoms/StyledItemText';
 import history from '../../../../history';
 
@@ -18,13 +16,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   head: { fontWeight: 700 }
 }));
 
-interface CurrentBannerRes {
+export interface CurrentBannerRes {
   marketerName: string; bannerSrc: string; bannerDescription: string;
 }
 
-const BannerCard = (): JSX.Element => {
+interface BannerCardProps {currentBannerData: CurrentBannerRes[]}
+function BannerCard({ currentBannerData }: BannerCardProps): JSX.Element {
   const classes = useStyles();
-  const currentBannerGet = useGetRequest<null, CurrentBannerRes[]>('/creator/banner/active');
   const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
   const [descIndex, setDescIndex] = React.useState(0); // popover의 내용 Index
 
@@ -70,31 +68,26 @@ const BannerCard = (): JSX.Element => {
           <StyledItemText primary="현재 송출중인 배너광고" secondary="내 배너광고로 이동하면 상세정보를 확인할 수 있습니다." />
         </Grid>
         <Grid container direction="row" spacing={1} justify="center">
-          {currentBannerGet.loading && (<CircularProgress small />)}
-          {!currentBannerGet.loading && !currentBannerGet.error
-          && currentBannerGet.data && (
-            currentBannerGet.data.map((bannerData, index) => (
-              <Grid
-                item
-                xs={12}
-                lg={6}
-                onClick={handlePopoverClick(index)}
-                key={shortid.generate()}
-              >
-                <img
-                  src={bannerData.bannerSrc}
-                  onMouseEnter={handlePopoverOpen(index)}
-                  onMouseLeave={handlePopoverClose}
-                  alt="bannerArea"
-                  width="100%"
-                  height="100%"
-                  style={{ maxHeight: '160px', maxWidth: '320px' }}
-                />
-              </Grid>
-            ))
-          )}
-          {!currentBannerGet.loading && currentBannerGet.data
-          && currentBannerGet.data.length <= 0 && (
+          {currentBannerData.map((bannerData, index) => (
+            <Grid
+              item
+              xs={12}
+              lg={6}
+              onClick={handlePopoverClick(index)}
+              key={shortid.generate()}
+            >
+              <img
+                src={bannerData.bannerSrc}
+                onMouseEnter={handlePopoverOpen(index)}
+                onMouseLeave={handlePopoverClose}
+                alt="bannerArea"
+                width="100%"
+                height="100%"
+                style={{ maxHeight: '160px', maxWidth: '320px' }}
+              />
+            </Grid>
+          ))}
+          {currentBannerData.length <= 0 && (
           <div className={classes.area}>
             <Typography variant="h6" className={classes.head}>
               <span role="img" aria-label="caution">🚫</span>
@@ -108,6 +101,6 @@ const BannerCard = (): JSX.Element => {
       </Grid>
     </CustomCard>
   );
-};
+}
 
 export default BannerCard;

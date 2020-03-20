@@ -11,16 +11,15 @@ import Public from '@material-ui/icons/Public';
 
 // 크리에이터 라우터
 import CreatorCampaignManage from './creator/CampaignManage';
-// import CreatorLandingManage from './creator/LandingManage';
+import CreatorLandingManage from './creator/AdPageManage';
 import CreatorDashboard from './creator/Dashboard';
-// 수정필요함.
-// import CreatorMyPage from './creator/Mypage';
-// import CreatorManual from './creator/Manual';
+import CreatorManual from './creator/Manual';
+import CreatorMyPage from './creator/Mypage';
 
 // 마케터 라우터
 // import MarketerDashboard from './marketer/Dashboard';
 // import MarketerInventory from './marketer/Inventory';
-// import MarketerManual from './marketer/Manual';
+import MarketerManual from './marketer/Manual';
 // import MarketerMyOffice from './marketer/MyOffice';
 // import CampaignCreateStepper from './marketer/CampaignCreation';
 
@@ -55,24 +54,24 @@ const dashboardRoutes: MypageRoutes = {
       layout: '/mypage/creator',
     },
     {
-      path: '/landing',
+      path: '/ad-page',
       name: '내 광고페이지',
       icon: Public,
-      // component: CreatorLandingManage,
+      component: CreatorLandingManage,
       layout: '/mypage/creator',
     },
     {
       path: '/manual',
       name: '사용 방법',
       icon: Reorder,
-      // component: CreatorManual,
+      component: CreatorManual,
       layout: '/mypage/creator',
     },
     {
       path: '/user',
       name: '내 계정',
       icon: Person,
-      // component: CreatorMyPage,
+      component: CreatorMyPage,
       layout: '/mypage/creator',
     },
   ],
@@ -96,7 +95,7 @@ const dashboardRoutes: MypageRoutes = {
       path: '/manual',
       name: '사용 방법',
       icon: Reorder,
-      // component: MarketerManual, // 마케터 대시보드 컴포넌트로 수정
+      component: MarketerManual, // 마케터 대시보드 컴포넌트로 수정
       layout: '/mypage/marketer',
     },
     {

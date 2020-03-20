@@ -137,6 +137,7 @@ const getSessionData = (req: express.Request): Session => {
 /**
  * 세션 데이터와 파라미터 데이터를 체크하여  
  * 타인의 정보를 요청한 경우 403에러(Forbidden)를 발생시킨다,
+ * 지금은 결국에 true와 true를 비교하는 형국, DB연동하여 유효성 체크하도록 변경예정. 2020 03 17
  * @param param 유효성 체크할 파라미터 데이터
  * @param field 유효성 체크할 파라미터의 필드명 (세션의 key값)
  * @param req `express.Request`

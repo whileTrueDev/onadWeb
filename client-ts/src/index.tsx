@@ -15,6 +15,8 @@ import * as serviceWorker from './serviceWorker';
 import Door from './pages/main/Door';
 import CreatorDashboard from './pages/mypage/layouts/CreatorLayout';
 // import MarketerLayout from './pages/mypage/layouts/MarketerLayout';
+import AdChatTracker from './pages/others/AdChatTracker';
+import Adchattest from './pages/others/Adchattest';
 
 
 dotenv.config();
@@ -24,6 +26,8 @@ const developmentRouter = (
     <Switch>
       {/* <> muts be here : All children of a <Switch> should be <Route> or <Redirect> elements. */}
       <>
+        <Route exact path="/adchat/" component={Adchattest} />
+        <Route exact path="/adchat/:campaignId" component={AdChatTracker} />
         <Route exact path="/" component={Door} />
         <ThemeProvider theme={theme.lightTheme}>
           <Route path="/mypage/creator" component={CreatorDashboard} />

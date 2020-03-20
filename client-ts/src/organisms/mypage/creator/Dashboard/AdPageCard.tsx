@@ -5,16 +5,14 @@ import {
 import { BarChart } from '@material-ui/icons';
 // components
 import CustomCard from '../../../../atoms/CustomCard';
-import CircularProgress from '../../../../atoms/Progress/CircularProgress';
 import PrettoSlider from '../../../../atoms/PrettoSlider';
 import StyledItemText from '../../../../atoms/StyledItemText';
 // style
-import useLandingCardStyles from './LandingCard.style';
+import useLandingCardStyles from './AdPageCard.style';
 // utils
-import useGetRequest from '../../../../utils/hooks/useGetRequest';
 import numFormatter from '../../../../utils/numFormatter';
 
-interface AdPageRes {
+export interface AdPageRes {
   exp: number;
   level: number;
   visitCount: number;
@@ -23,9 +21,13 @@ interface AdPageRes {
   date: string;
 }
 
-const IncomeCard = (): JSX.Element => {
+interface AdPageCardProps {
+  adPageData: AdPageRes;
+}
+const AdPageCard = ({
+  adPageData
+}: AdPageCardProps): JSX.Element => {
   const classes = useLandingCardStyles();
-  const adPageGet = useGetRequest<null, AdPageRes>('/creator/ad-page');
 
   return (
     <CustomCard
@@ -41,20 +43,17 @@ const IncomeCard = (): JSX.Element => {
         <Grid item style={{ paddingTop: 32 }}>
           <Grid container direction="row" alignItems="center" justify="center">
             <Grid item xs={12}>
-              {!adPageGet.loading && !adPageGet.error && adPageGet.data && (
               <Typography variant="body2" align="center" className={classes.level}>
                 LV.
                 {' '}
-                {adPageGet.data.level}
+                {adPageData.level}
               </Typography>
-              )}
               <PrettoSlider
                 style={{ cursor: 'default' }}
                 max={500}
                 valueLabelDisplay="on"
                 aria-label="pretto slider"
-                value={!adPageGet.loading && !adPageGet.error && adPageGet.data
-                  ? adPageGet.data.exp : 0}
+                value={adPageData.exp}
               />
             </Grid>
           </Grid>
@@ -65,17 +64,14 @@ const IncomeCard = (): JSX.Element => {
             <div className={classes.flex}>
               <Typography gutterBottom variant="body1" className={classes.head}>총 방문수</Typography>
             </div>
-            {adPageGet.loading && (<CircularProgress small />)}
-            {!adPageGet.loading && !adPageGet.error && adPageGet.data && (
-              <div className={classes.flex}>
-                <Typography gutterBottom variant="h5">
-                  {`${numFormatter(adPageGet.data.visitCount)} `}
-                </Typography>
-                <Typography gutterBottom variant="body2" className={classes.unit}>
-                  회
-                </Typography>
-              </div>
-            )}
+            <div className={classes.flex}>
+              <Typography gutterBottom variant="h5">
+                {`${numFormatter(adPageData.visitCount)} `}
+              </Typography>
+              <Typography gutterBottom variant="body2" className={classes.unit}>
+                회
+              </Typography>
+            </div>
           </Grid>
           <Grid item>
             <Divider component="hr" orientation="vertical" />
@@ -84,17 +80,14 @@ const IncomeCard = (): JSX.Element => {
             <div className={classes.flex}>
               <Typography gutterBottom variant="body1" className={classes.head}>총 배너 클릭수</Typography>
             </div>
-            {adPageGet.loading && (<CircularProgress small />)}
-            {!adPageGet.loading && !adPageGet.error && adPageGet.data && (
-              <div className={classes.flex}>
-                <Typography gutterBottom variant="h5">
-                  {`${numFormatter(adPageGet.data.clickCount)} `}
-                </Typography>
-                <Typography gutterBottom variant="body2" className={classes.unit}>
-                  회
-                </Typography>
-              </div>
-            )}
+            <div className={classes.flex}>
+              <Typography gutterBottom variant="h5">
+                {`${numFormatter(adPageData.clickCount)} `}
+              </Typography>
+              <Typography gutterBottom variant="body2" className={classes.unit}>
+                회
+              </Typography>
+            </div>
           </Grid>
           <Grid item>
             <Divider component="hr" orientation="vertical" />
@@ -105,17 +98,14 @@ const IncomeCard = (): JSX.Element => {
                 <Typography gutterBottom variant="body1" className={classes.head}>총 구매 이동수</Typography>
               </Grid>
             </Grid>
-            {adPageGet.loading && (<CircularProgress small />)}
-            {!adPageGet.loading && !adPageGet.error && adPageGet.data && (
-              <div className={classes.flex}>
-                <Typography gutterBottom variant="h5">
-                  {`${numFormatter(adPageGet.data.transferCount)} `}
-                </Typography>
-                <Typography gutterBottom variant="body2" className={classes.unit}>
-                  회
-                </Typography>
-              </div>
-            )}
+            <div className={classes.flex}>
+              <Typography gutterBottom variant="h5">
+                {`${numFormatter(adPageData.transferCount)} `}
+              </Typography>
+              <Typography gutterBottom variant="body2" className={classes.unit}>
+                회
+              </Typography>
+            </div>
           </Grid>
         </Grid>
       </Grid>
@@ -123,4 +113,4 @@ const IncomeCard = (): JSX.Element => {
   );
 };
 
-export default IncomeCard;
+export default AdPageCard;
