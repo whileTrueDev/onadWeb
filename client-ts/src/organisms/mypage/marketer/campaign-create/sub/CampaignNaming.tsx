@@ -67,12 +67,12 @@ const CampaignNaming = (props: propInterface) => {
       if (nameData.data.includes(value)) {
         nameDispatch({ key: 'duplicate', value: '' });
       } else {
-        nameDispatch({ key: 'set', value: '' });
+        nameDispatch({ key: 'set', value });
       }
     }
   };
 
-  //document element 값 접근시 필요.
+  // document element 값 접근시 필요.
   const getName = () => {
     const nameTag = (document.getElementsByName('name')[0] as HTMLInputElement);
     if (nameTag) {

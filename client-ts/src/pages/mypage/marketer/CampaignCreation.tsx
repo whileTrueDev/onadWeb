@@ -78,7 +78,7 @@ const CampaignCreation = (): JSX.Element => {
   };
 
   const checkEmpty = (input: any) => {
-    if (input.campaignName === null) {
+    if (input.campaignName === '') {
       alert('캠페인 명이 올바르게 입력되지 않았습니다.');
       return false;
     }
@@ -111,10 +111,9 @@ const CampaignCreation = (): JSX.Element => {
       return arr.reduce((acc: number[], ele: boolean, index: number) => {
         if (ele) { acc.push(index); }
         return acc;
-      }, [])
-    } else {
-      return []
+      }, []);
     }
+    return [];
   };
 
   const handleCallbackSubmit = (event: MouseEvent<HTMLButtonElement>): void => {
@@ -158,12 +157,13 @@ const CampaignCreation = (): JSX.Element => {
       keyword: ['', '', ''], // keyword추가후 수정
       ...step3State,
     };
+
     if (checkEmpty(validateObject)) {
       axios.post(`${HOST}/marketer/campaign`, validateObject)
         .then((res) => {
           if (res.data[0]) {
             alert(res.data[1]);
-            history.push('/dashboard/marketer/main');
+            history.push('/mypage/marketer/main');
           } else {
             alert(res.data[1]);
           }
@@ -180,7 +180,7 @@ const CampaignCreation = (): JSX.Element => {
   const handleBack = (event: MouseEvent<HTMLButtonElement>): void => {
     event.preventDefault();
     if (step === 0) {
-      history.push('/dashboard/marketer/main');
+      history.push('/mypage/marketer/main');
       return;
     }
     step2Dispatch({ key: 'reset', value: '' });
@@ -195,7 +195,7 @@ const CampaignCreation = (): JSX.Element => {
   return (
     <Grid container direction="row" spacing={2} wrap="wrap">
       {isDesktop ? (
-        <React.Fragment>
+        <>
           <Grid item xs={12} lg={12} xl={12}>
             <Paper>
               <Grid container direction="column" className={classes.root}>
@@ -243,12 +243,12 @@ const CampaignCreation = (): JSX.Element => {
                             className={classes.end}
                           >
                             완료
-                        </Button>
+                          </Button>
                         </Grid>
                         <Grid item>
                           <Button onClick={handleBack} className={classes.button}>
                             뒤로
-                        </Button>
+                          </Button>
                         </Grid>
                       </Grid>
                     </Grid>
@@ -257,7 +257,7 @@ const CampaignCreation = (): JSX.Element => {
               </Grid>
             </Paper>
           </Grid>
-        </React.Fragment>
+        </>
       ) : (
           <div style={{
             display: 'flex',
@@ -276,7 +276,7 @@ const CampaignCreation = (): JSX.Element => {
               to="/dashboard/marketer/main"
             >
               대시보드로 이동
-        </Button>
+          </Button>
           </div>
         )}
     </Grid>
