@@ -5,10 +5,6 @@ import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import useStyles from './style/TabBar.style';
 
-const ORANGE_BACKGROUND = 'linear-gradient(45deg, #FFAA00 30%, #FF8E53 90%)';
-const EMERALD_BACKGROUND = 'linear-gradient(45deg, #00DBE0 30%, #21CBF3 90%)';
-
-
 interface Props {
   tabValue: number;
   handleTabChange: (event: React.ChangeEvent<{}>, newValue: number) => void;

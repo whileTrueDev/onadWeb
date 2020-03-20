@@ -1,5 +1,8 @@
 import { makeStyles } from '@material-ui/core/styles';
 
+const ORANGE_BACKGROUND = 'linear-gradient(45deg, #FFAA00 30%, #FF8E53 90%)';
+const EMERALD_BACKGROUND = 'linear-gradient(45deg, #00DBE0 30%, #21CBF3 90%)';
+
 const useStyles = makeStyles((theme) => ({
   tabs: {
     flexGrow: 1,

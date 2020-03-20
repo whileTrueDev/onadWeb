@@ -54,9 +54,9 @@ function ProductHowItWorks({ source, MainUserType, logout }: Props): JSX.Element
             alert('로그인 이후 이용하세요');
           }
         } else if (userType === 'marketer') {
-          history.push('/dashboard/marketer/main');
+          history.push('/mypage/marketer/main');
         } else if (userType === 'creator') {
-          history.push('/dashboard/creator/main');
+          history.push('/mypage/creator/main');
         }
       }).catch((err) => {
         console.log(err);

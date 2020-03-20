@@ -1,5 +1,4 @@
 import React from 'react';
-import grey from '@material-ui/core/colors/grey';
 import { Button, CircularProgress } from '@material-ui/core';
 import { Link } from 'react-router-dom';
 import useStyles from '../style/IntroService.style';

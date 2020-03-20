@@ -21,7 +21,7 @@ router.get('/google/callback', passport.authenticate('google'),
     const session = responseHelper.getSessionData(req);
     if (session.registered) {
       console.log('success google login');
-      res.redirect(`${HOST}/dashboard/marketer/main`);
+      res.redirect(`${HOST}/mypage/marketer/main`);
     } else {
       console.log('success google login - 정보입력');
       res.redirect(`${HOST}/regist/google`);
@@ -35,7 +35,7 @@ router.get('/naver/callback', passport.authenticate('naver'),
     const session = responseHelper.getSessionData(req);
     if (session.registered) {
       console.log('success naver login');
-      res.redirect(`${HOST}/dashboard/marketer/main`);
+      res.redirect(`${HOST}/mypage/marketer/main`);
     } else {
       console.log('success naver login - 정보입력');
       res.redirect(`${HOST}/regist/naver`);
@@ -49,7 +49,7 @@ router.get('/kakao/callback', passport.authenticate('kakao'),
     const session = responseHelper.getSessionData(req);
     if (session.registered) {
       console.log('success kakao login');
-      res.redirect(`${HOST}/dashboard/marketer/main`);
+      res.redirect(`${HOST}/mypage/marketer/main`);
     } else {
       console.log('success kakao login - 정보입력');
       res.redirect(`${HOST}/regist/kakao`);

@@ -74,7 +74,7 @@ function LoginForm({
           } else {
             // dispatch({ type: 'session', data: userData });
             handleClose();
-            history.push('/dashboard/marketer/main');
+            history.push('/mypage/marketer/main');
           }
         }
       })
