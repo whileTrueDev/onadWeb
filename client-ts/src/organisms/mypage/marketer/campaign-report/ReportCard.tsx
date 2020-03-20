@@ -6,9 +6,7 @@ import Card from '../../../../atoms/Card/Card';
 import CardBody from '../../../../atoms/Card/CardBody';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  container: {
-    padding: '28px 0px',
-  },
+  container: { padding: '28px 0px' },
   card: {
     margin: 0,
     padding: 0,
@@ -26,9 +24,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       fontSize: 16
     }
   },
-  value: {
-    color: theme.palette.primary.light, fontWeight: 700
-  }
+  value: { color: theme.palette.primary.light, fontWeight: 700 }
 }));
 
 // 데이터를 받는형태
@@ -42,10 +38,8 @@ const useStyles = makeStyles((theme: Theme) => ({
 //   { title: '지표 준비중.', value: '', unit: '' },
 // ]
 interface DataInterface {
-  title: string;
-  value: number | string;
-  unit: string;
-  decimalRange?: number;
+  title: string; value: number | string;
+  unit: string; decimalRange?: number;
 }
 
 const ReportCard = (props: { data: DataInterface[] }): JSX.Element => {

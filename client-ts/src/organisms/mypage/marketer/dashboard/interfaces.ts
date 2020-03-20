@@ -67,14 +67,16 @@ export interface HeatmapInterface {
   count: number;
 }
 
-export interface GeoInterface {
-  id: number;
-  type: number;
-  ipAddress: string;
-  campaignId: string;
-  creatorId: string;
-  date: Date;
-}
+
+export type GeoInterface = {
+  latitude: number;
+  longitude: number;
+  range: number[];
+  country: string;
+  region: string;
+  city: string;
+  ll: number[];
+} | null;
 
 export interface CreatorDetailInterface {
   creatorId: string;
