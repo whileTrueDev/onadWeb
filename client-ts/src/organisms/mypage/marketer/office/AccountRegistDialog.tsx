@@ -51,18 +51,23 @@ const banks = [
   { bankName: '부산', }, { bankName: 'SC제일', },
 ];
 
-const AccountDialog = (props: { open: boolean, handleDialogClose: () => void }) => {
+const AccountDialog = (
+  props: {
+    open: boolean;
+    handleDialogClose: () => void;
+  }
+): JSX.Element => {
   const { open, handleDialogClose } = props;
   const classes = useStyles();
 
   const [bank, setBank] = useState<string>('농협');
 
-  const handleChangeBank = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChangeBank = (event: React.ChangeEvent<HTMLInputElement>): void => {
     const newbank = event.target.value;
     setBank(newbank);
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
     console.log('제출');
 
@@ -73,7 +78,9 @@ const AccountDialog = (props: { open: boolean, handleDialogClose: () => void }) 
     /** *******************
      * 계좌 조회 api 요청필요
      ******************* */
-    axios.put(`${HOST}/marketer/account`, { bankName: bank, bankRealName, idNumber, bankAccount })
+    axios.put(`${HOST}/marketer/account`, {
+      bankName: bank, bankRealName, idNumber, bankAccount
+    })
       .then(() => {
         alert('계좌번호 저장에 성공하였습니다.');
         handleDialogClose();
@@ -86,7 +93,7 @@ const AccountDialog = (props: { open: boolean, handleDialogClose: () => void }) 
   };
 
 
-  const Content = () => (
+  const Content = (): JSX.Element => (
     <DialogContent className={classes.contents}>
       <DialogContentText className={classes.contentText}>
         환불 받을 계좌정보를 입력해주세요.

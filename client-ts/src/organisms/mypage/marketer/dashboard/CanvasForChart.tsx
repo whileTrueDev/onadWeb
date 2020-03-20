@@ -4,20 +4,20 @@ import { Paper, Divider } from '@material-ui/core';
 import ChartTabs from '../campaign-chart/ChartTabs';
 import CreatorsChart from '../campaign-chart/CreatorsChart';
 import ReChartBar from '../../../../atoms/Chart/ReChartBar';
-import { valueChartInterface } from '../dashboard/interfaces';
+import { ValueChartInterface } from './interfaces';
 import { UseGetRequestObject } from '../../../../utils/hooks/useGetRequest';
 
-interface propInterface {
-  valueChartData: UseGetRequestObject<valueChartInterface[] | null>;
+interface CanvasForChartProps {
+  valueChartData: UseGetRequestObject<ValueChartInterface[] | null>;
   broadCreatorData: UseGetRequestObject<null | string[]>;
 }
 
-export default function CanvasForChart(props: propInterface) {
+export default function CanvasForChart(props: CanvasForChartProps): JSX.Element {
   const { valueChartData, broadCreatorData } = props;
 
   const [tabValue, setTabValue] = React.useState<number>(0);
 
-  function handleTabChange(event: React.ChangeEvent<{}>, newValue: number) {
+  function handleTabChange(event: React.ChangeEvent<{}>, newValue: number): void {
     setTabValue(newValue);
   }
 
@@ -34,8 +34,8 @@ export default function CanvasForChart(props: propInterface) {
           {tabValue === 0 && valueChartData.data && (
             <ReChartBar data={valueChartData.data} />
           )}
-          {tabValue === 1 &&
-            ((!broadCreatorData.loading) && broadCreatorData.data
+          {tabValue === 1
+            && ((!broadCreatorData.loading) && broadCreatorData.data
               && (
                 <CreatorsChart broadCreatorData={broadCreatorData} />
               )

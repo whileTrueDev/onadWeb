@@ -4,12 +4,12 @@ import CardTemplate from './CardTemplate';
 import ReportStackedBar from '../../../../atoms/Chart/ReportStackedBar';
 import { UseGetRequestObject } from '../../../../utils/hooks/useGetRequest';
 
-interface propInterface {
+interface CampaignCostBarProps {
   color: string;
-  chartData: UseGetRequestObject<any[]>
+  chartData: UseGetRequestObject<any[]>;
 }
 
-export default function CampaignCostBar(props: propInterface) {
+export default function CampaignCostBar(props: CampaignCostBarProps): JSX.Element {
   const { color, chartData, ...rest } = props;
 
   return (

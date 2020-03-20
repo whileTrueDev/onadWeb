@@ -6,18 +6,18 @@ import {
 
 import usePostRequest from '../../../../utils/hooks/usePostRequest';
 import { UseGetRequestObject } from '../../../../utils/hooks/useGetRequest';
-import { onOffInterface } from '../dashboard/interfaces';
+import { OnOffInterface } from './interfaces';
 
 const useStyles = makeStyles(() => ({
   paper: { maxheight: 100 },
   div: { display: 'flex', justifyContent: 'space-between', padding: 16 }
 }));
 
-interface propInterface {
-  onOffData: UseGetRequestObject<onOffInterface | null>
+interface OnOffSwitchProps {
+  onOffData: UseGetRequestObject<OnOffInterface | null>;
 }
 
-export default function OnOffSwitch(props: propInterface) {
+export default function OnOffSwitch(props: OnOffSwitchProps): JSX.Element {
   const { onOffData } = props;
   const classes = useStyles();
   const { doPostRequest } = usePostRequest(
@@ -32,22 +32,21 @@ export default function OnOffSwitch(props: propInterface) {
         </Typography>
         {!onOffData.loading && onOffData.data && (
           <FormControlLabel
-            label=''
+            label=""
             control={(
               <Switch
                 color="secondary"
                 checked={onOffData.data.onOffState}
-                onChange={() => {
+                onChange={(): void => {
                   doPostRequest({
                     onOffState: onOffData.data ? !onOffData.data.onOffState : false
                   });
-                }
-                }
+                }}
               />
             )}
           />
         )}
       </div>
-    </Paper >
+    </Paper>
   );
 }

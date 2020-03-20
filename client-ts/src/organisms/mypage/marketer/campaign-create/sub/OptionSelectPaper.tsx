@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-interface propsInterface {
+interface OptionSelectPaperProps {
   primaryText: string;
   secondaryText: string;
   handleSelect?: () => void;
@@ -31,7 +31,7 @@ interface propsInterface {
 }
 
 
-export default function OptionSelectPaper(props: propsInterface) {
+export default function OptionSelectPaper(props: OptionSelectPaperProps): JSX.Element {
   const {
     checked, handleSelect, primaryText,
     secondaryText, disabled, children,
@@ -40,7 +40,7 @@ export default function OptionSelectPaper(props: propsInterface) {
   const classes = useStyles();
   const theme = useTheme();
 
-  function getBackgroudColor() {
+  function getBackgroudColor(): string {
     if (checked) {
       return theme.palette.primary.light;
     } if (!checked && disabled) {

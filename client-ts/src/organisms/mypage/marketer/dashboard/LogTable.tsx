@@ -7,7 +7,7 @@ import {
 } from '@material-ui/core';
 import Refresh from '@material-ui/icons/Refresh';
 import { makeStyles, Theme } from '@material-ui/core/styles';
-import { actionLogInterface } from './interfaces';
+import { ActionLogInterface } from './interfaces';
 import { UseGetRequestObject } from '../../../../utils/hooks/useGetRequest';
 
 const styles = makeStyles((theme: Theme) => ({
@@ -111,7 +111,9 @@ function makeContents(typeNumber: number, detail: string) {
 }
 
 
-export default function issueTable(props: { actionLogData: UseGetRequestObject<actionLogInterface[] | null> }) {
+export default function issueTable(
+  props: { actionLogData: UseGetRequestObject<ActionLogInterface[] | null> }
+): JSX.Element {
   const { actionLogData } = props;
   const classes = styles();
 
@@ -153,20 +155,21 @@ export default function issueTable(props: { actionLogData: UseGetRequestObject<a
                       secondary={new Date(r.date).toLocaleString()}
                     />
                   </ListItem>
-                  {actionLogData.data && index !== actionLogData.data.length - 1 && (<Divider light />)}
+                  {actionLogData.data
+                  && index !== actionLogData.data.length - 1 && (<Divider light />)}
                 </div>
               ))}
           </List>
         ) : (
-            // 데이터 없는 경우
-            <div
-              style={{
-                display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%'
-              }}
-            >
-              <Typography variant="body1">아직 활동내역이 없습니다.</Typography>
-            </div>
-          )}
+        // 데이터 없는 경우
+          <div
+            style={{
+              display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%'
+            }}
+          >
+            <Typography variant="body1">아직 활동내역이 없습니다.</Typography>
+          </div>
+        )}
       </Grid>
 
       {/* 데이터 없는 경우 */}

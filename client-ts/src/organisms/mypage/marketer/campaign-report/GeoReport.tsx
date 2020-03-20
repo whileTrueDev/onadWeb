@@ -9,10 +9,12 @@ import React from 'react';
 // import {
 //   withScriptjs, withGoogleMap, GoogleMap, Marker,
 // } from 'react-google-maps';
-// import MarkerClusterer, { MarkerClustererProps } from 'react-google-maps/lib/components/addons/MarkerClusterer';
+// import MarkerClusterer, {
+//   MarkerClustererProps
+// } from 'react-google-maps/lib/components/addons/MarkerClusterer';
 // import CardTemplate from './CardTemplate';
 // import MaterialTable from '../../../../atoms/Table/MaterialTable';
-import { geoInterface } from '../dashboard/interfaces';
+import { GeoInterface } from '../dashboard/interfaces';
 import { UseGetRequestObject } from '../../../../utils/hooks/useGetRequest';
 
 
@@ -59,13 +61,13 @@ import { UseGetRequestObject } from '../../../../utils/hooks/useGetRequest';
 
 
 interface propInterface {
-  ipToGeoData: UseGetRequestObject<geoInterface[] | null>
+  ipToGeoData: UseGetRequestObject<GeoInterface[] | null>;
   // data:
 
 }
 
 // // Ip To Geo Map component
-// function IpToGeo(props: { data: UseGetRequestObject<geoInterface[] | null> }) {
+// function IpToGeo(props: { data: UseGetRequestObject<GeoInterface[] | null> }) {
 //   const { data } = props;
 //   const [mapOpen, setMapOpen] = React.useState<boolean>(false);
 
@@ -101,7 +103,7 @@ interface propInterface {
 // }
 
 // // Ip To Get Table settgins
-// function groupByCity(payload: geoInterface[] | null) {
+// function groupByCity(payload: GeoInterface[] | null) {
 //   const newData = [];
 //   const cities = [];
 //   if (payload !== null) {
@@ -132,7 +134,7 @@ interface propInterface {
 // }
 
 // // Ip To Geo Table
-// function IpToGeoTable(props: { data: UseGetRequestObject<geoInterface[] | null> }) {
+// function IpToGeoTable(props: { data: UseGetRequestObject<GeoInterface[] | null> }) {
 //   const { data, ...rest } = props;
 
 //   return (

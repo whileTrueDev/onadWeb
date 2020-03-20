@@ -30,7 +30,7 @@ const useWithdrawalCompleteStyles = makeStyles((theme: Theme) => ({
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0,0,0,0.05)',
+    backgroundColor: theme.palette.action.disabledBackground,
     paddingBottom: theme.spacing(2),
   },
   circle: {

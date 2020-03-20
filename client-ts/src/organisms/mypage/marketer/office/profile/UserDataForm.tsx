@@ -11,32 +11,16 @@ import Button from '../../../../../atoms/CustomButtons/Button';
 import dashboardStyle from '../../../../../assets/jss/views/dashboardStyle';
 import UserDataUpdateDialog from './UserDataUpdateDialog';
 
-import { userInterface } from '../interface';
+import { UserInterface } from '../interface';
 import useDialog from '../../../../../utils/hooks/useDialog';
 
-
-// const useStyles = makeStyles(() => ({
-//  { width: '100%',
-//   marginTop: '15px',
-//   borderColor: '#00acc1',}
-//   // '& .MuiFormLabel-root ': {
-//   //   color: '#00acc1',
-//   // },
-//   // '& .MuiInputBase-input:before': {
-//   //   color: '#00acc1',
-//   // },
-//   // '& .MuiInput-underline:after': {
-//   //   borderBottomColor: '#00acc1',
-//   // },
-// }));
-
-interface propInterface {
-  userData: userInterface;
+interface UserDataFormProps {
+  userData: UserInterface;
   doGetRequest: () => void;
   classes: any;
 }
 
-const UserDataForm = (props: propInterface) => {
+const UserDataForm = (props: UserDataFormProps): JSX.Element => {
   const { classes, userData, doGetRequest } = props;
   // const classes = useStyles();
   const userDataUpdateDialog = useDialog();
@@ -115,7 +99,7 @@ const UserDataForm = (props: propInterface) => {
           </GridItem>
         </GridContainer>
         <Button
-          onClick={() => {
+          onClick={(): void => {
             userDataUpdateDialog.handleOpen();
           }}
           size="medium"
@@ -128,7 +112,7 @@ const UserDataForm = (props: propInterface) => {
         open={userDataUpdateDialog.open}
         userData={userData}
         doGetRequest={doGetRequest}
-        handleClose={() => {
+        handleClose={(): void => {
           userDataUpdateDialog.handleClose();
         }}
       />

@@ -6,19 +6,15 @@ import {
 } from '@material-ui/core';
 
 const useStyles = makeStyles(() => ({
-  container: {
-    padding: 16
-  },
-  innercantainer: {
-    padding: 24
-  }
+  container: { padding: 16 },
+  innercantainer: { padding: 24 }
 }));
 
-interface propInterface {
-  data: { title: string, value: number, unit: string }
+interface DescCardProps {
+  data: { title: string; value: number; unit: string };
 }
 
-export default function DescCard(props: propInterface) {
+export default function DescCard(props: DescCardProps): JSX.Element {
   const classes = useStyles();
   const { data, ...rest } = props;
   return (

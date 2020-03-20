@@ -11,7 +11,7 @@ import Button from '../../../../../atoms/CustomButtons/Button';
 import StyledInput from '../../../../../atoms/StyledInput';
 import useDialog from '../../../../../utils/hooks/useDialog';
 import usePatchRequest from '../../../../../utils/hooks/usePatchRequest';
-import { userInterface } from '../interface';
+import { UserInterface } from '../interface';
 
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -48,7 +48,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   campaign: {
     fontSize: '16px',
     fontWeight: 700,
-    color: '#3c4858'
+    color: theme.palette.text.primary
   },
   contents: {
     marginTop: theme.spacing(2),
@@ -78,7 +78,7 @@ const domains = [
 ];
 
 
-interface stateInterface {
+interface StateInterface {
   passwordValue: string;
   password: boolean;
   repasswd: boolean;
@@ -93,7 +93,7 @@ interface Action {
   value: string;
 }
 
-const reducer = (state: stateInterface, action: Action) => {
+const reducer = (state: StateInterface, action: Action): StateInterface => {
   switch (action.type) {
     case 'name': {
       return { ...state, name: action.value };
@@ -132,14 +132,14 @@ const reducer = (state: stateInterface, action: Action) => {
 };
 
 
-interface propInterface {
+interface UserDataUpdateDialogProps {
   open: boolean;
   handleClose: () => void;
-  userData: userInterface;
+  userData: UserInterface;
   doGetRequest: () => void;
 }
 
-const CampaignUpdateDialog = (props: propInterface) => {
+const UserDataUpdateDialog = (props: UserDataUpdateDialogProps): JSX.Element => {
   const classes = useStyles();
   const {
     open, handleClose, userData, doGetRequest
@@ -149,23 +149,27 @@ const CampaignUpdateDialog = (props: propInterface) => {
   const [formattedPhone, setFomattedPhone] = React.useState<string>('');
   const [inputPhoneNum, setPhoneNum] = React.useState<string>('');
   const [state, dispatch] = React.useReducer(reducer, initialState);
-  const { doPatchRequest } = usePatchRequest<{ type: string, value: string | number }, any[]>('/marketer', doGetRequest);
+  const { doPatchRequest } = usePatchRequest<{ type: string; value: string | number }, any[]>('/marketer', doGetRequest);
 
 
-  const handleChange = (name: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (name: string) => (
+    event: React.ChangeEvent<HTMLInputElement>
+  ): void => {
     dispatch({ type: name, value: event.target.value });
   };
 
-  const handleCustom = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleCustom = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ): void => {
     setCustomDomain(event.target.value);
   };
 
-  const handlePhoneNum = (value: { value: string; formattedValue: string; }) => {
+  const handlePhoneNum = (value: { value: string; formattedValue: string }): void => {
     setPhoneNum(value.value);
     setFomattedPhone(value.formattedValue);
   };
 
-  const handleSubmit = (type: string) => {
+  const handleSubmit = (type: string): void => {
     const getValue = (intype: string): string => {
       switch (intype) {
         case 'password':
@@ -202,7 +206,7 @@ const CampaignUpdateDialog = (props: propInterface) => {
                   <Grid item className={classes.item}>
                     <Typography gutterBottom variant="body1" style={{ fontWeight: 700 }}>
                       비밀번호 변경
-                </Typography>
+                    </Typography>
                   </Grid>
                   <Grid item>
                     <Hidden smDown>
@@ -265,7 +269,7 @@ const CampaignUpdateDialog = (props: propInterface) => {
                       <Button
                         color="primary"
                         size="small"
-                        onClick={() => {
+                        onClick={(): void => {
                           // state체크 및 error 분기화
                           if (!(state.password || state.repasswd) && state.passwordValue !== '') {
                             handleSubmit('password');
@@ -275,10 +279,10 @@ const CampaignUpdateDialog = (props: propInterface) => {
                         }}
                       >
                         변경
-                  </Button>
+                      </Button>
                       <Button size="small" onClick={handleClose}>
                         취소
-                  </Button>
+                      </Button>
                     </Grid>
                   </Grid>
                 </Grid>
@@ -340,7 +344,7 @@ const CampaignUpdateDialog = (props: propInterface) => {
                     <Button
                       color="primary"
                       size="small"
-                      onClick={() => {
+                      onClick={(): void => {
                         // state체크 및 error 분기화
                         if (state.name !== '' && state.name !== null) {
                           handleSubmit('name');
@@ -371,7 +375,7 @@ const CampaignUpdateDialog = (props: propInterface) => {
                 <Grid item className={classes.item}>
                   <Typography gutterBottom variant="body1" style={{ fontWeight: 700 }}>
                     이메일 변경
-              </Typography>
+                  </Typography>
                 </Grid>
                 <Grid item>
                   <Divider orientation="vertical" variant="fullWidth" />
@@ -382,7 +386,7 @@ const CampaignUpdateDialog = (props: propInterface) => {
                   <Grid item className={classes.item}>
                     <Typography gutterBottom variant="body1" style={{ fontWeight: 700 }}>
                       현재 이메일
-                </Typography>
+                    </Typography>
                   </Grid>
                   <Grid item>
                     <Divider orientation="horizontal" variant="middle" />
@@ -399,7 +403,7 @@ const CampaignUpdateDialog = (props: propInterface) => {
                   <Grid item className={classes.item}>
                     <Typography gutterBottom variant="body1" style={{ fontWeight: 700 }}>
                       변경할 이메일
-                </Typography>
+                    </Typography>
                   </Grid>
                   <Grid item>
                     <Divider orientation="horizontal" variant="middle" />
@@ -438,7 +442,7 @@ const CampaignUpdateDialog = (props: propInterface) => {
                             }}
                             margin="normal"
                           >
-                            {domains.map(option => (
+                            {domains.map((option) => (
                               <MenuItem key={option.value} value={option.value}>
                                 {option.value}
                               </MenuItem>
@@ -469,7 +473,7 @@ const CampaignUpdateDialog = (props: propInterface) => {
                       <Button
                         color="primary"
                         size="small"
-                        onClick={() => {
+                        onClick={(): void => {
                           // state체크 및 error 분기화
                           if (state.email !== '' && state.domain !== '') {
                             handleSubmit('mail');
@@ -479,10 +483,10 @@ const CampaignUpdateDialog = (props: propInterface) => {
                         }}
                       >
                         변경
-                  </Button>
+                      </Button>
                       <Button size="small" onClick={handleClose}>
                         취소
-                  </Button>
+                      </Button>
                     </Grid>
                   </Grid>
                 </Grid>
@@ -553,7 +557,7 @@ const CampaignUpdateDialog = (props: propInterface) => {
                     <Button
                       color="primary"
                       size="small"
-                      onClick={() => {
+                      onClick={(): void => {
                         // state체크 및 error 분기화
                         if (inputPhoneNum !== '' && inputPhoneNum !== null) {
                           handleSubmit('phone');
@@ -584,7 +588,7 @@ const CampaignUpdateDialog = (props: propInterface) => {
         }}
         open={snack.open}
         autoHideDuration={500}
-        onClose={() => {
+        onClose={(): void => {
           snack.handleClose();
           handleClose();
           // history.push('/dashboard/marketer/myoffice');
@@ -599,7 +603,7 @@ const CampaignUpdateDialog = (props: propInterface) => {
             key="close"
             aria-label="close"
             color="inherit"
-            onClick={() => {
+            onClick={(): void => {
               snack.handleClose();
               handleClose();
             }}
@@ -612,4 +616,4 @@ const CampaignUpdateDialog = (props: propInterface) => {
   );
 };
 
-export default CampaignUpdateDialog;
+export default UserDataUpdateDialog;

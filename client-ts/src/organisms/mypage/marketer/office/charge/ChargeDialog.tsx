@@ -12,11 +12,11 @@ import TestChargeAmount from './ChargeAmount';
 import TestChargeComplete from './ChargeComplete';
 import TestChargeSolution from './ChargeSolution';
 import useGetRequest from '../../../../../utils/hooks/useGetRequest';
-import { chargeReducer, vbankInterface } from '../interface';
+import { chargeReducer, VbankInterface } from '../interface';
 import sources from '../sources';
 
 declare global {
-  interface Window { IMP: any; }
+  interface Window { IMP: any }
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -29,9 +29,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   contentDetail: {
     marginTop: theme.spacing(1),
   },
-  selectValue: {
-    color: '#333',
-  },
+
   textField: {
     marginLeft: theme.spacing(1),
     marginRight: theme.spacing(1),
@@ -71,7 +69,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 
-interface marketerInfoInterface {
+interface MarketerInfoInterface {
   marketerId: string;
   marketerName: string;
   marketerMail: string;
@@ -82,14 +80,13 @@ interface marketerInfoInterface {
   platformType: number;
 }
 
-
-function TestChargeDialog() {
-  const marketerProfileData = useGetRequest<null, marketerInfoInterface>('/marketer');
+function TestChargeDialog(): JSX.Element {
+  const marketerProfileData = useGetRequest<null, MarketerInfoInterface>('/marketer');
   // const cashData = useGetRequest<null, string | null>('/marketer/cash');
 
 
   const classes = useStyles();
-  const [vbankInfo, setVbankInfo] = useState<vbankInterface>(
+  const [vbankInfo, setVbankInfo] = useState<VbankInterface>(
     {
       vbankNum: '',
       vbankHolder: '',
@@ -140,7 +137,9 @@ function TestChargeDialog() {
 
 
   // 전자 결제시스템
-  function handleSubmitClick(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+  function handleSubmitClick(
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ): void {
     event.preventDefault();
 
     if (marketerProfileData.data == null) {
@@ -186,7 +185,7 @@ function TestChargeDialog() {
       pay_method: chargeType, // 가상계좌 or 신용카드 or 계좌이체
       merchant_uid: marketerProfileData.data.marketerId + currentDateFormat,
       name: 'ONAD캐시',
-      amount: parseInt(selectValue) * 1.1,
+      amount: parseInt(selectValue, 10) * 1.1,
       buyer_email: marketerProfileData.data.marketerMail,
       buyer_name: buyerName,
       buyer_tel: marketerProfileData.data.marketerPhoneNum,
@@ -213,7 +212,7 @@ function TestChargeDialog() {
                 vbanDate: `${rsp.vbank_date}`,
                 vbankAmount: `${rsp.paid_amount}`,
               });
-              setIndex(preIndex => preIndex + 1);
+              setIndex((preIndex) => preIndex + 1);
               break;
 
             // 계좌이체 및 신용카드 결제 완료시 로직
@@ -243,13 +242,15 @@ function TestChargeDialog() {
   }
 
 
-  const handleNext = (go: number | null) => (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  const handleNext = (go: number | null) => (
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ): void => {
     event.preventDefault();
     setPaperSwitch(false);
     setStepComplete(false);
 
     if (index === 1) {
-      if (parseInt(selectValue) < 10000) {
+      if (parseInt(selectValue, 10) < 10000) {
         alert('충전 최소 금액은 10000원 입니다');
         window.close();
       } else {
@@ -259,7 +260,6 @@ function TestChargeDialog() {
           } else {
             // setIndex(preIndex => preIndex + 1);
             setIndex(index + 1);
-
           }
           setPaperSwitch(true);
         }, 500);
@@ -277,7 +277,7 @@ function TestChargeDialog() {
     }
   };
 
-  const handleBack = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  const handleBack = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>): void => {
     event.preventDefault();
     setStepComplete(false);
     setPaperSwitch(false);
@@ -330,20 +330,20 @@ function TestChargeDialog() {
   };
 
   // 취소 버튼 누를 시
-  const DefaultIndex = () => {
+  const DefaultIndex = (): void => {
     setIndex(0);
     stepDispatch({ key: 'reset' });
     window.close();
   };
 
   // 완료 버튼 누를 시
-  const finishIndex = () => {
+  const finishIndex = (): void => {
     window.opener.location.reload();
     window.close();
   };
 
   // 하단 step 조절 버튼
-  const BottomButton = () => (
+  const BottomButton = (): JSX.Element => (
     <div className={classes.buttonContainer}>
       <Grid container direction="row" justify="flex-end">
         {index === 2
@@ -357,7 +357,7 @@ function TestChargeDialog() {
                   className={classes.end}
                 >
                   결제
-                  </Button>
+                </Button>
               </Collapse>
             </Grid>
           )}
@@ -372,7 +372,7 @@ function TestChargeDialog() {
                   className={classes.end}
                 >
                   다음
-                  </Button>
+                </Button>
               </Collapse>
             </Grid>
           )}
@@ -384,11 +384,9 @@ function TestChargeDialog() {
           </Grid>
         ) : null}
         {index !== 3
-          && <Grid item><Button onClick={DefaultIndex}>취소</Button></Grid>
-        }
+          && <Grid item><Button onClick={DefaultIndex}>취소</Button></Grid>}
         {index === 3
-          && <Grid item><Button onClick={finishIndex}>완료</Button></Grid>
-        }
+          && <Grid item><Button onClick={finishIndex}>완료</Button></Grid>}
       </Grid>
     </div>
   );
@@ -401,7 +399,7 @@ function TestChargeDialog() {
           OnAD 캐시 충전하기 Step
           {' '}
           {index + 1}
-/4
+          /4
         </div>
         <h4 className={classes.title}>{sources.title[index]}</h4>
       </div>

@@ -7,9 +7,7 @@ import StyledItemText from '../../../../../atoms/StyledItemText';
 import BannerCarousel from '../../../../../atoms/BannerCarousel';
 import Button from '../../../../../atoms/CustomButtons/Button';
 import { UseGetRequestObject } from '../../../../../utils/hooks/useGetRequest';
-import {
-  Action,
-} from '../campaignReducer';
+import { Action } from '../campaignReducer';
 
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -48,20 +46,20 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-interface propInterface {
+interface CampaignBannerRegProps {
   dispatch: React.Dispatch<Action>;
   handleDialogOpen: () => void;
-  bannerData: UseGetRequestObject<{ bannerId: string, bannerSrc: string }[]>;
+  bannerData: UseGetRequestObject<{ bannerId: string; bannerSrc: string }[]>;
   step: number;
 }
 
-const CampaignBannerReg = (props: propInterface) => {
+const CampaignBannerReg = (props: CampaignBannerRegProps): JSX.Element => {
   const {
     dispatch, handleDialogOpen, bannerData, step
   } = props;
   const classes = useStyles();
 
-  const handleBannerId = (bannerId: string) => {
+  const handleBannerId = (bannerId: string): void => {
     dispatch({ key: 'bannerId', value: bannerId });
   };
 
@@ -79,14 +77,18 @@ const CampaignBannerReg = (props: propInterface) => {
             </div>
           )}
           {!bannerData.loading && bannerData.data && bannerData.data.length > 0 ? (
-            <BannerCarousel steps={bannerData.data} handleBannerId={handleBannerId} registStep={step} />
+            <BannerCarousel
+              steps={bannerData.data}
+              handleBannerId={handleBannerId}
+              registStep={step}
+            />
           ) : (null)}
         </Grid>
       </Grid>
       <StyledItemText>새로운 배너를 등록하고 싶으신가요?</StyledItemText>
 
       <Button
-        onClick={() => { handleDialogOpen(); }}
+        onClick={(): void => { handleDialogOpen(); }}
       >
         + 배너 등록하기
       </Button>

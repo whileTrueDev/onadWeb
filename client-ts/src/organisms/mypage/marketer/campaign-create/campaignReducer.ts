@@ -1,5 +1,5 @@
 // key ,value를 이용하여 state의 값에 접근
-export type Action = { key: string, value: string }
+export type Action = { key: string; value: string }
 
 export interface ArrayAction {
   type: string;
@@ -87,12 +87,12 @@ const step2SelectReducer = (state: any[], action: ArrayAction): string[] => {
     case 'push':
       if (action.value instanceof Array) {
         // 기존 state와 중복되지 않은 value만 선택
-        const values = action.value.filter(v => !state.includes(v));
+        const values = action.value.filter((v) => !state.includes(v));
         return [...state, ...values];
       }
       return [...state, action.value];
     case 'delete':
-      return state.filter(item => item !== action.value);
+      return state.filter((item) => item !== action.value);
     case 'reset':
       return [];
     default:
@@ -183,7 +183,8 @@ const termReducer = (state: TermInterface, action: Action): TermInterface => {
 
 const timeReducer = (state: TimeInterface, action: TimeAction): TimeInterface => {
   // [...Array(24).keys()]가 불가하다.
-  const timeReset: number[] = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23];
+  const timeReset: number[] = [
+    0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23];
   switch (action.key) {
     case 'noTime':
       return { time: false, timeList: [] };

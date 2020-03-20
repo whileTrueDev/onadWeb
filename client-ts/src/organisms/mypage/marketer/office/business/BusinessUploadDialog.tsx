@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-interface propInterface {
+interface BusinessRegiUploadDialogProps {
   open: boolean;
   handleClose: () => void;
   businessRegiImage: string;
@@ -36,7 +36,9 @@ interface propInterface {
   handleSnackOpen: () => void;
 }
 
-export default function BusinessRegiUploadDialog(props: propInterface): JSX.Element {
+export default function BusinessRegiUploadDialog(
+  props: BusinessRegiUploadDialogProps
+): JSX.Element {
   const {
     open, handleClose, businessRegiImage, request, handleSnackOpen
   } = props;
@@ -64,7 +66,7 @@ export default function BusinessRegiUploadDialog(props: propInterface): JSX.Elem
         <div>
           <Button
             color="primary"
-            onClick={async () => {
+            onClick={async (): Promise<void> => {
               await imageUpload.doPutRequest({ imageUrl });
               await handleClose();
             }}
@@ -72,7 +74,7 @@ export default function BusinessRegiUploadDialog(props: propInterface): JSX.Elem
           >
             진행
           </Button>
-          <Button onClick={() => { handleClose(); handleReset(); }}>
+          <Button onClick={(): void => { handleClose(); handleReset(); }}>
             취소
           </Button>
         </div>

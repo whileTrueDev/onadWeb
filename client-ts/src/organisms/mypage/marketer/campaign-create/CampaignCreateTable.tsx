@@ -30,7 +30,7 @@ import {
 } from './campaignReducer';
 
 
-const StyledTableCell = withStyles(theme => ({
+const StyledTableCell = withStyles((theme) => ({
   head: {
     backgroundColor: theme.palette.common.black,
     color: theme.palette.common.white,
@@ -40,7 +40,7 @@ const StyledTableCell = withStyles(theme => ({
   },
 }))(TableCell);
 
-const StyledTableRow = withStyles(theme => ({
+const StyledTableRow = withStyles((theme) => ({
   root: {
     '&:nth-of-type(odd)': {
       backgroundColor: theme.palette.background.default,
@@ -54,7 +54,7 @@ const useStyles = makeStyles({
   },
 });
 
-interface propInterface {
+interface CampaignCreateTableProps {
   optionType: string;
   state: Step3Interface;
   dispatch: React.Dispatch<Action>;
@@ -69,7 +69,7 @@ interface propInterface {
   step: number;
 }
 
-const CampaignCreateTable = (props: propInterface) => {
+const CampaignCreateTable = (props: CampaignCreateTableProps): JSX.Element => {
   const classes = useStyles();
   const {
     state, dispatch, budgetState, budgetDispatch, termState, termDispatch, timeState, timeDispatch,
@@ -88,27 +88,27 @@ const CampaignCreateTable = (props: propInterface) => {
     title: string;
     component: JSX.Element;
   }[] | any[] = [
-      {
-        title: '캠페인 이름 입력',
-        component: (
-          <CampaignNaming
-            nameState={nameState}
-            nameDispatch={nameDispatch}
-          />
-        )
-      },
-      {
-        title: '배너 선택',
-        component: (
-          <CampaignBannerReg
-            bannerData={bannerData}
-            dispatch={dispatch}
-            handleDialogOpen={uploadDialog.handleOpen}
-            step={step}
-          />
-        )
-      }, // check 완료
-      (optionType !== 'option0')
+    {
+      title: '캠페인 이름 입력',
+      component: (
+        <CampaignNaming
+          nameState={nameState}
+          nameDispatch={nameDispatch}
+        />
+      )
+    },
+    {
+      title: '배너 선택',
+      component: (
+        <CampaignBannerReg
+          bannerData={bannerData}
+          dispatch={dispatch}
+          handleDialogOpen={uploadDialog.handleOpen}
+          step={step}
+        />
+      )
+    }, // check 완료
+    (optionType !== 'option0')
       && {
         title: '랜딩페이지 URL',
         component: (
@@ -120,43 +120,43 @@ const CampaignCreateTable = (props: propInterface) => {
         )
       }, // react-hooks-form 사용.
 
-      // {
-      //   title: '키워드 입력',
-      //   component: (
-      //     <KeywordInput
-      //       dispatch={dispatch}
-      //       state={state}
-      //     />
-      //   )
-      // },
-      {
-        title: '예산설정',
-        component: (
-          <CampaignBudgetSet
-            state={budgetState}
-            dispatch={budgetDispatch}
-          />
-        )
-      },
-      {
-        title: '기간 설정',
-        component: (
-          <CampaignTimeSet
-            dispatch={termDispatch}
-            state={termState}
-          />
-        )
-      },
-      {
-        title: '시간대 설정',
-        component: (
-          <TimeSelectorSet
-            state={timeState}
-            dispatch={timeDispatch}
-          />
-        )
-      },
-    ];
+    // {
+    //   title: '키워드 입력',
+    //   component: (
+    //     <KeywordInput
+    //       dispatch={dispatch}
+    //       state={state}
+    //     />
+    //   )
+    // },
+    {
+      title: '예산설정',
+      component: (
+        <CampaignBudgetSet
+          state={budgetState}
+          dispatch={budgetDispatch}
+        />
+      )
+    },
+    {
+      title: '기간 설정',
+      component: (
+        <CampaignTimeSet
+          dispatch={termDispatch}
+          state={termState}
+        />
+      )
+    },
+    {
+      title: '시간대 설정',
+      component: (
+        <TimeSelectorSet
+          state={timeState}
+          dispatch={timeDispatch}
+        />
+      )
+    },
+  ];
 
 
   return (
@@ -171,15 +171,15 @@ const CampaignCreateTable = (props: propInterface) => {
               title: string;
               component: JSX.Element;
             }) => (
-                <StyledTableRow key={_step.title}>
-                  <StyledTableCell>
-                    {_step.title}
-                  </StyledTableCell>
-                  <StyledTableCell>
-                    {_step.component}
-                  </StyledTableCell>
-                </StyledTableRow>
-              ))}
+              <StyledTableRow key={_step.title}>
+                <StyledTableCell>
+                  {_step.title}
+                </StyledTableCell>
+                <StyledTableCell>
+                  {_step.component}
+                </StyledTableCell>
+              </StyledTableRow>
+            ))}
           </TableBody>
         </Table>
       </TableContainer>

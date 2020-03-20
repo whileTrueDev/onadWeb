@@ -8,14 +8,6 @@ import CreatorTable from './CreatorTable';
 import useGetRequest from '../../../../../utils/hooks/useGetRequest';
 import { ArrayAction } from '../campaignReducer';
 
-interface propInterface {
-  setStepComplete: React.Dispatch<React.SetStateAction<boolean>>;
-  checkedCreators: string[];
-  checkedCreatorsDispatch: React.Dispatch<ArrayAction>;
-  priorityType: string | undefined;
-  setSelectedNames: React.Dispatch<React.SetStateAction<string[]>>;
-}
-
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     width: '100%',
@@ -35,7 +27,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 // array State를 사용하는 Reducer
-const reducer = (state: string[], action: { type: string, value: string }) => {
+const reducer = (state: string[], action: { type: string; value: string }): string[] => {
   switch (action.type) {
     case 'push':
       return [...state, action.value];
@@ -48,7 +40,14 @@ const reducer = (state: string[], action: { type: string, value: string }) => {
   }
 };
 
-const CreatorSelect = (props: propInterface) => {
+interface CreatorSelectProps {
+  setStepComplete: React.Dispatch<React.SetStateAction<boolean>>;
+  checkedCreators: string[];
+  checkedCreatorsDispatch: React.Dispatch<ArrayAction>;
+  priorityType: string | undefined;
+  setSelectedNames: React.Dispatch<React.SetStateAction<string[]>>;
+}
+const CreatorSelect = (props: CreatorSelectProps): JSX.Element => {
   const {
     setStepComplete, checkedCreators, checkedCreatorsDispatch, priorityType, setSelectedNames
   } = props;
@@ -93,7 +92,9 @@ const CreatorSelect = (props: propInterface) => {
             )}
             {!creatorsData.loading && creatorsData.data && (
               <CreatorTable
-                // creatorList={creatorsData.data.map((creator: { creatorId: string, creatorName: string, creatorLogo: string }) => creator.creatorId)}
+                // creatorList={creatorsData.data.map((
+                //   creator: { creatorId: string; creatorName: string; creatorLogo: string }
+                // ) => creator.creatorId)}
                 checkedCreators={checkedCreators}
                 checkedCreatorsDispatch={checkedCreatorsDispatch}
                 creatorNamesDispatch={creatorNamesDispatch}

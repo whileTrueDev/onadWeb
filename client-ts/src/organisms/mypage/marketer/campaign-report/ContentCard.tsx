@@ -31,14 +31,14 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-interface propInterface {
+interface ContentCardProps {
   title: string;
-  contents: { title: string, value: number, unit: string, decimalRange?: number }[];
+  contents: { title: string; value: number; unit: string; decimalRange?: number }[];
   color: string;
   IconComponent: React.ElementType;
 }
 
-export default function ContentCard(props: propInterface) {
+export default function ContentCard(props: ContentCardProps): JSX.Element {
   const classes = useStyles();
   const {
     title, contents, color, IconComponent
