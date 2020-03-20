@@ -1,12 +1,9 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState } from 'react';
 import shortid from 'shortid';
 import { Button, Hidden, Typography } from '@material-ui/core';
 // import Typography from '../../components/Typography';
 import styles from '../style/ProductHowItWorks.style';
 import LoginForm from '../login/LoginForm';
-import axios from '../../../../utils/axios';
-import HOST from '../../../../config';
-import history from '../../../../history';
 
 
 interface Props {
@@ -42,27 +39,6 @@ function ProductHowItWorks({ source, MainUserType, logout }: Props): JSX.Element
     open, isMarketer, handleOpen, handleClose
   } = useDialog();
 
-  const handleClick = useCallback((buttonType) => {
-    axios.get(`${HOST}/api/dashboard/checkUserType`)
-      .then((res) => {
-        const { userType } = res.data;
-        if (userType === undefined) {
-          if (buttonType) {
-            handleOpen(buttonType);
-          } else {
-            // 로그인 이후 이용하세요
-            alert('로그인 이후 이용하세요');
-          }
-        } else if (userType === 'marketer') {
-          history.push('/mypage/marketer/main');
-        } else if (userType === 'creator') {
-          history.push('/mypage/creator/main');
-        }
-      }).catch((err) => {
-        console.log(err);
-      });
-  }, [handleOpen]);
-
   return (
     <section className={classes.root}>
       <div className={classes.wrapper}>
@@ -92,7 +68,7 @@ function ProductHowItWorks({ source, MainUserType, logout }: Props): JSX.Element
           <div className={classes.bottomButtom}>
             <Button
               className={classes.button}
-              onClick={MainUserType === 'marketer' ? ((): void => handleClick('marketer')) : (() => { handleClick('creator'); })}
+              onClick={MainUserType === 'marketer' ? ((): void => handleOpen('marketer')) : (() => { handleOpen('creator'); })}
             >
               바로 시작하기
             </Button>
