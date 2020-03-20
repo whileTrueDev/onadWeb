@@ -8,7 +8,7 @@ import withStyles from '@material-ui/core/styles/withStyles';
 // @material-ui/icons
 import Paper from '@material-ui/core/Paper';
 // core components
-import cardStyle from '../../assets/jss/onad/components/cardStyle';
+import cardStyle from './Card.Style';
 
 function Card({ ...props }) {
   const {

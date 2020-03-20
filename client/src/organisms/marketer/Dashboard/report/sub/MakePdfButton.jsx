@@ -5,7 +5,7 @@ import {
 } from '@material-ui/core';
 import jsPdfGenerate from '../../../../../utils/lib/PdfGenerator';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   buttonProgress: {
     color: theme.palette.primary.main,
     position: 'absolute',
@@ -24,10 +24,9 @@ export default function MakePdfButton() {
     <div data-html2canvas-ignore="true">
 
       <Tooltip
-
         title={(
           <Typography variant="body2">
-          1440 x 800 해상도 이상에서 올바르게 작동합니다.
+            1440 x 800 해상도 이상에서 올바르게 작동합니다.
           </Typography>
       )}
       >
@@ -41,7 +40,7 @@ export default function MakePdfButton() {
               jsPdfGenerate(setInProgress);
             }}
           >
-          PDF로 다운로드
+            PDF로 다운로드
             {inProgress && (
             <CircularProgress
               disableShrink

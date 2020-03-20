@@ -12,10 +12,10 @@ import DateRange from '@material-ui/icons/DateRange';
 import DeleteIcon from '@material-ui/icons/Delete';
 import CustomTableFooter from '../../../../atoms/Table/TableFooter';
 // core components
-import tableStyle from '../../../../assets/jss/onad/components/tableStyle';
+import tableStyle from '../../../../atoms/Table/Table.style';
 import StyledItemText from '../../../../atoms/StyledItemText';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   stats: {
     color: '#999',
     display: 'inline-flex',
@@ -43,7 +43,6 @@ const useStyles = makeStyles(theme => ({
   },
   head: {
     fontWeight: '500',
-    color: '#455a64',
     [theme.breakpoints.down('sm')]: {
       fontSize: '0.80rem'
     }
@@ -96,7 +95,7 @@ function BannerTable({ ...props }) {
     setRowsPerPage(parseInt(event.target.value, 10));
   }
 
-  const handleBan = campaign => () => {
+  const handleBan = (campaign) => () => {
     setCampaign(campaign);
     setOpen(true);
   };
@@ -108,7 +107,7 @@ function BannerTable({ ...props }) {
         <TableHead className={classes[`${tableHeaderColor}TableHeader`]}>
           <TableRow>
             <Hidden mdDown>
-              {tableHead.map(value => (
+              {tableHead.map((value) => (
                 <TableCell
                   className={`${classes.tableCell} ${classes.tableHeadCell}`}
                   key={shortid.generate()}
@@ -120,7 +119,9 @@ function BannerTable({ ...props }) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {tableData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(bannerData => (
+          {tableData.slice(
+            page * rowsPerPage, page * rowsPerPage + rowsPerPage
+          ).map((bannerData) => (
             <TableRow hover key={shortid.generate()}>
               <Hidden mdDown>
                 <TableCell className={classes.tableCell}>
@@ -134,7 +135,7 @@ function BannerTable({ ...props }) {
                         <Typography gutterBottom variant="body2" className={innerClasses.head}>
                           {bannerData.date}
                           {' '}
-                        ~
+                          ~
                         </Typography>
                       </div>
                     </Grid>
@@ -158,7 +159,7 @@ function BannerTable({ ...props }) {
                     {`${bannerData.cash} `}
                   </Typography>
                   <Typography gutterBottom variant="body2" className={innerClasses.unit}>
-                      원
+                    원
                   </Typography>
                 </div>
                 <Hidden mdDown>
@@ -172,7 +173,7 @@ function BannerTable({ ...props }) {
                           {`${bannerData.CPM} `}
                         </Typography>
                         <Typography gutterBottom variant="body2" className={innerClasses.unit}>
-                        원
+                          원
                         </Typography>
                       </div>
                     </Grid>
@@ -190,7 +191,7 @@ function BannerTable({ ...props }) {
                           {`${bannerData.CPC} `}
                         </Typography>
                         <Typography gutterBottom variant="body2" className={innerClasses.unit}>
-                        원
+                          원
                         </Typography>
                       </div>
                     </Grid>
@@ -202,7 +203,7 @@ function BannerTable({ ...props }) {
                   <Grid container direction="column" spacing={1}>
                     <Grid item className={innerClasses.textCell}>
                       <StyledItemText primary="배너 소개" fontSize="15px" />
-                      {bannerData.bannerDescription.split('\n').map(row => (
+                      {bannerData.bannerDescription.split('\n').map((row) => (
                         <Typography variant="body2" key={shortid.generate()}>
                           {row}
                         </Typography>
@@ -220,8 +221,7 @@ function BannerTable({ ...props }) {
                   </IconButton>
                 </TableCell>
               </Hidden>
-              )
-              }
+              )}
             </TableRow>
           ))}
           {emptyRows > 0 && (

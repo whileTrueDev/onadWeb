@@ -13,12 +13,13 @@ import Home from '@material-ui/icons/Home';
 import SpeakerNotes from '@material-ui/icons/SpeakerNotes';
 import PowerSettingsNew from '@material-ui/icons/PowerSettingsNew';
 // core components
-import headerLinksStyle from '../../assets/jss/onad/components/headerLinksStyle';
+import headerLinksStyle from './AdminNavbarLinks.style';
 import Notification from './Notification';
 import HOST from '../../utils/config';
 import axios from '../../utils/axios';
 import history from '../../history';
 import useFetchData from '../../utils/lib/hooks/useFetchData';
+
 import useUpdateData from '../../utils/lib/hooks/useUpdateData';
 
 const useMenu = () => {
@@ -35,7 +36,9 @@ function HeaderLinks(props) {
   const { noticeReadState } = props;
   const userType = window.location.pathname.split('/')[2];
   const NotificationData = useFetchData(`/api/dashboard/${userType}/notification`);
+
   const updateRequest = useUpdateData('/api/dashboard/noticereadstateupdate');
+
 
   function handleLogoutClick() {
     axios.get(`${HOST}/api/login/logout`).then(() => {
@@ -62,7 +65,7 @@ function HeaderLinks(props) {
               : (null)}
             color="secondary"
           >
-            <Notifications fontSize="large" />
+            <Notifications />
           </Badge>
         </IconButton>
       </Tooltip>
@@ -82,7 +85,7 @@ function HeaderLinks(props) {
               : '/dashboard/creator/user'}
             component={Link}
           >
-            <Person fontSize="large" />
+            <Person />
           </IconButton>
         </Tooltip>
       </Hidden>
@@ -101,7 +104,7 @@ function HeaderLinks(props) {
                   variant="dot"
                   color="primary"
                 >
-                  <SpeakerNotes fontSize="large" />
+                  <SpeakerNotes />
                 </Badge>
               </IconButton>
             )
@@ -111,10 +114,9 @@ function HeaderLinks(props) {
                 to="/notice"
                 component={Link}
               >
-                <SpeakerNotes fontSize="large" />
+                <SpeakerNotes />
               </IconButton>
-            )
-          }
+            )}
         </Tooltip>
       </Hidden>
 
@@ -125,7 +127,7 @@ function HeaderLinks(props) {
             to="/"
             component={Link}
           >
-            <Home fontSize="large" />
+            <Home />
           </IconButton>
         </Tooltip>
       </Hidden>
@@ -135,7 +137,7 @@ function HeaderLinks(props) {
           onClick={handleLogoutClick}
           aria-label="logout"
         >
-          <PowerSettingsNew fontSize="large" />
+          <PowerSettingsNew />
         </IconButton>
       </Tooltip>
     </div>

@@ -8,7 +8,7 @@ import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import SwipeableViews from 'react-swipeable-views';
 import Check from '@material-ui/icons/Check';
-import Success from './Success';
+import Success from './Typography/Success';
 
 
 const tutorialSteps = [
@@ -39,7 +39,7 @@ const tutorialSteps = [
   },
 ];
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     width: '600px',
     [theme.breakpoints.down('sm')]: {
@@ -116,12 +116,12 @@ const BannerCarousel = (props) => {
 
   function handleNext() {
     setCheckImage({});
-    setActiveStep(prevActiveStep => prevActiveStep + 1);
+    setActiveStep((prevActiveStep) => prevActiveStep + 1);
   }
 
   function handleBack() {
     setCheckImage(0);
-    setActiveStep(prevActiveStep => prevActiveStep - 1);
+    setActiveStep((prevActiveStep) => prevActiveStep - 1);
   }
 
   function handleStepChange(step) {
@@ -129,7 +129,7 @@ const BannerCarousel = (props) => {
   }
 
   // check가 안될
-  const handleActiveStep = step => () => {
+  const handleActiveStep = (step) => () => {
     // check가 되어있었던 상태였다면.
     if (checkImage.check) {
       setCheckImage({ step: -1, check: 0 });
@@ -148,7 +148,7 @@ const BannerCarousel = (props) => {
         onChangeIndex={handleStepChange}
         enableMouseEvents
       >
-        {steps.map(step => (
+        {steps.map((step) => (
           <ButtonBase
             key={step.bannerId}
             className={classes.image}

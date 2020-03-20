@@ -42,7 +42,7 @@ function RefundAccountForm(props) {
         <CardBody>
           <div className={myClasses.buttonWrapper}>
             <Button
-              color="info"
+              color="primary"
               onClick={handleOpen}
             >
             환불계좌 변경
@@ -63,7 +63,7 @@ function RefundAccountForm(props) {
         <CardBody>
           <div className={myClasses.buttonWrapper}>
             <Button
-              color="info"
+              color="primary"
               onClick={handleOpen}
             >
             환불계좌 등록

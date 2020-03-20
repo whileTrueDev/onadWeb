@@ -7,6 +7,8 @@ import StyledItemText from '../../../atoms/StyledItemText';
 import Dialog from '../../../atoms/Dialog/Dialog';
 import useFetchData from '../../../utils/lib/hooks/useFetchData';
 import useDeleteData from '../../../utils/lib/hooks/useDeleteData';
+
+
 import history from '../../../history';
 
 const useStyles = makeStyles(theme => ({
@@ -32,11 +34,13 @@ const DeleteDialog = (props) => {
     open, selectedUrl, handleClose
   } = props;
   const deleteRequest = useDeleteData('/api/dashboard/marketer/inventory/landingurl');
+
   const connectedCampaign = useFetchData(
     '/api/dashboard/marketer/inventory/landingurl/connectedcampaign', {
       linkId: selectedUrl.linkId
     }
   );
+  
 
   return (
     <Dialog
@@ -51,7 +55,7 @@ const DeleteDialog = (props) => {
             <Tooltip title={<Typography>URL이 캠페인에 할당되어 있어 삭제가 불가능합니다.</Typography>}>
               <div>
                 <CustomButton
-                  color="info"
+                  color="primary"
                   disabled
                 >
                   확인
@@ -61,7 +65,7 @@ const DeleteDialog = (props) => {
           )}
           {!connectedCampaign.loading && connectedCampaign.payload.length === 0 && (
             <CustomButton
-              color="info"
+              color="primary"
               onClick={() => {
                 deleteRequest.handleDelete({ linkId: selectedUrl.linkId });
                 setTimeout(() => {

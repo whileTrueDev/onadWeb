@@ -7,6 +7,7 @@ import GridContainer from '../../../../atoms/Grid/GridContainer';
 import GridItem from '../../../../atoms/Grid/GridItem';
 import useImageUpload from '../../../../utils/lib/hooks/useImageUpload';
 
+
 const useStyles = makeStyles(theme => ({
   imgInput: {
     [theme.breakpoints.down('xs')]: {
@@ -52,7 +53,7 @@ export default function BusinessRegiUploadDialog(props) {
       buttons={(
         <div>
           <Button
-            color="info"
+            color="primary"
             onClick={async () => {
               await handleUploadClick();
               await handleClose();
@@ -86,7 +87,7 @@ export default function BusinessRegiUploadDialog(props) {
               {/* </Hidden> */}
             </GridItem>
             <GridItem>
-              <Button component="label" color="info" size="sm" htmlFor="getfile" className={classes.imgInput}>
+              <Button component="label" color="primary" size="sm" htmlFor="getfile" className={classes.imgInput}>
                 파일찾기
                 <input type="file" id="getfile" accept="image/*" onChange={readImage} />
               </Button>

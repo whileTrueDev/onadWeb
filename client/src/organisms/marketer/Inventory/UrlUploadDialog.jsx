@@ -77,7 +77,7 @@ export default function UrlUploadDialog(props) {
               .test(mainUrl.value))}
           >
             <Button
-              color="info"
+              color="primary"
               disabled={// from https://regexr.com/3um70
                 !(/^(https?|chrome):\/\/[^\s$.?#].[^\s]*$/
                   .test(mainUrl.value))

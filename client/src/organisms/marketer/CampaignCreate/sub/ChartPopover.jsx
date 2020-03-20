@@ -8,9 +8,9 @@ import StyledSelectText from '../../../../atoms/StyledItemText';
 import ContentsPie from './ContentsPie';
 import TimeChart from './TimeChart';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   label: {
-    color: '#455a64',
+    color: theme.palette.info.main,
     fontWeight: '700',
     [theme.breakpoints.down('sm')]: {
       fontSize: '14px',
@@ -20,7 +20,7 @@ const useStyles = makeStyles(theme => ({
   popover: {
     pointerEvents: 'none',
   },
-  choice: props => ({
+  choice: (props) => ({
     // padding: theme.spacing(3),
     padding: props.padding === 0 ? 0 : theme.spacing(3),
     paddingBottom: theme.spacing(3),

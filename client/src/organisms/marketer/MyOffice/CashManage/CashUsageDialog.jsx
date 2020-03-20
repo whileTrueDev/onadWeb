@@ -17,6 +17,7 @@ const useStyles = makeStyles(() => ({
 export default function CashUsageDialog(props) {
   const classes = useStyles();
   const { open, handleClose, data } = props;
+
   const usagePerMonthData = useFetchData('/api/dashboard/marketer/cash/usage/month', {
     month: data[0] // data[0] = "00년 00월"
   });

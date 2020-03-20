@@ -86,6 +86,7 @@ function Notification(props) {
           {notificationData.payload.notifications.map(noti => (
             <div key={noti.index}>
               <MenuItem onClick={() => {
+
                 updateRequest.handleUpdateRequest({ index: noti.index });
                 if (noti.readState === UNREAD_STATE) {
                   notificationData.setPayload({

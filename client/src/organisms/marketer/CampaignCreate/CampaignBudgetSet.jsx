@@ -29,7 +29,6 @@ const CampaignBudgetSet = (props) => {
             name="no-limit"
             checked={!state.budget}
             onClick={setNoBudget}
-            fontSize="large"
             // disabled
           />
           <StyledSelectText onClick={setNoBudget} style={{ cursor: 'pointer' }} primary="일예산제한 없이 계속 집행" />
@@ -41,7 +40,6 @@ const CampaignBudgetSet = (props) => {
             name="set-limit"
             checked={state.budget}
             onClick={setBudget}
-            fontSize="large"
           />
           <StyledSelectText
             onClick={setBudget}

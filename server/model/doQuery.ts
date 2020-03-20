@@ -1,8 +1,18 @@
 import createError from 'http-errors';
 import { MysqlError, PoolConnection } from 'mysql';
-import { QueryResult } from '../@types/db';
 import pool from './connectinoPool'; // DB 커넥션 가져오기.
 // const logger = require('../middlewares/logger');
+
+interface OkPacket {
+  fieldCount: number;
+  affectedRows: number;
+  insertId: number;
+  serverStatus: number;
+  warningCount: number;
+  message: string;
+  protocol41: boolean;
+  changedRows: number;
+}
 
 /**
  * @description
@@ -18,29 +28,30 @@ import pool from './connectinoPool'; // DB 커넥션 가져오기.
  * @param {array} queryArray ? 에 해당하는 변수들을 요소로 가지는 array
  * @author 박찬우
  */
-const doQuery = (
+function doQuery<QueryResult = any>(
   query: string,
-  queryArray: any[]
-): Promise<QueryResult> => new Promise((resolve, reject) => {
-  pool.getConnection((err: MysqlError, conn: PoolConnection) => {
-    // 커넥션 시 에러발생
-    if (err) {
-      console.log('conn in err - getConnection 함수', conn);
-      console.log(`DB연결 오류 ${err.message}`);
-      // logger.error(`DB연결 관련 오류${err}`);
-      reject(new createError[500](err.message));
-    } else {
-      conn.query(query, queryArray, (error, result) => {
-        if (error) {
-          conn.release();
-          reject(new createError[500](error.sqlMessage));
-        } else {
-          conn.release();
-          resolve({ result });
-        }
-      });
-    }
+  queryArray?: any[]
+): Promise<{result: QueryResult; error: any}> {
+  return new Promise((resolve, reject) => {
+    pool.getConnection((err: MysqlError, conn: PoolConnection) => {
+      // 커넥션 시 에러발생
+      if (err) {
+        console.log('conn in err - getConnection 함수', conn);
+        console.log(`DB연결 오류 ${err.message}`);
+        // logger.error(`DB연결 관련 오류${err}`);
+        reject(new createError[500](err.message));
+      } else {
+        conn.query(query, queryArray, (error, result: QueryResult) => {
+          if (error) {
+            conn.release();
+            reject(new createError[500](error.sqlMessage));
+          } else {
+            conn.release();
+            resolve({ error, result });
+          }
+        });
+      }
+    });
   });
-});
-
+}
 export default doQuery;
