@@ -276,16 +276,16 @@ module.exports = function (sql, socket, msg) {
         await insertLandingPage(bannerInfo[1], bannerInfo[2]);
         socket.emit('img receive', [bannerInfo[0], [bannerInfo[1], bannerInfo[2]]]);
         // to chatbot
-        if (myAdChatAgreement === 1) {
-          console.log('next-campaigns-twitch-chatbot Emitting!! - ', myCreatorTwitchId);
-          socket.broadcast.emit('next-campaigns-twitch-chatbot', { campaignId: myCampaignId, creatorId: myCreatorId, creatorTwitchId: myCreatorTwitchId });
-        }
+        // if (myAdChatAgreement === 1) {
+        console.log('next-campaigns-twitch-chatbot Emitting!! - ', myCreatorTwitchId);
+        socket.broadcast.emit('next-campaigns-twitch-chatbot', { campaignId: myCampaignId, creatorId: myCreatorId, creatorTwitchId: myCreatorTwitchId });
+        // }
       } else {
         // to chatbot
-        if (myAdChatAgreement === 1) {
-          console.log('next-campaigns-twitch-chatbot Emitting!! - ', myCreatorTwitchId);
-          socket.broadcast.emit('next-campaigns-twitch-chatbot', { campaignId: myCampaignId, creatorId: myCreatorId, creatorTwitchId: myCreatorTwitchId });
-        }
+        // if (myAdChatAgreement === 1) {
+        console.log('next-campaigns-twitch-chatbot Emitting!! - ', myCreatorTwitchId);
+        socket.broadcast.emit('next-campaigns-twitch-chatbot', { campaignId: myCampaignId, creatorId: myCreatorId, creatorTwitchId: myCreatorTwitchId });
+        // }
         console.log(`${myCreatorId} : 같은 캠페인 송출 중이어서 재호출 안합니다. at ${getTime}`);
       }
     } else {
