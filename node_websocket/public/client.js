@@ -9,7 +9,7 @@ $(() => {
   let socketHost;
   let hidden;
   let visibilityChange;
-  
+
   if (navi.indexOf('xsplit') !== -1) {
     program = 'xsplit';
   } else if (navi.indexOf('twitch') !== -1) {
@@ -29,11 +29,11 @@ $(() => {
 
   function handleVisibilityChange() {
     if (document[hidden]) {
-      console.log(hidden)
+      console.log(hidden);
       socket.emit('pageActive handler', [cutUrl, 0, program]);
       $('#imgMessage').empty();
     } else {
-      console.log(hidden)
+      console.log(hidden);
       socket.emit('pageActive handler', [cutUrl, 1, program]);
       socket.emit('pageActive', _url);
     }
