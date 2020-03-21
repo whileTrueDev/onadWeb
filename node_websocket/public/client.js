@@ -9,7 +9,7 @@ $(() => {
   let socketHost;
   let hidden;
   let visibilityChange;
-
+  
   if (navi.indexOf('xsplit') !== -1) {
     program = 'xsplit';
   } else if (navi.indexOf('twitch') !== -1) {
@@ -29,9 +29,11 @@ $(() => {
 
   function handleVisibilityChange() {
     if (document[hidden]) {
+      console.log(hidden)
       socket.emit('pageActive handler', [cutUrl, 0, program]);
       $('#imgMessage').empty();
     } else {
+      console.log(hidden)
       socket.emit('pageActive handler', [cutUrl, 1, program]);
       socket.emit('pageActive', _url);
     }
@@ -74,7 +76,7 @@ $(() => {
   });
 
   socket.on('response banner data to server', () => {
-    if ($('#showBanner').attr('name')) {
+    if ($('#showBanner').attr('name') && document.visibilityState === 'visible') {
       const cutBannerName = $('#showBanner').attr('name').split(',');
       socket.emit('write to db', [cutBannerName, program]);
     }
@@ -82,7 +84,9 @@ $(() => {
 
   socket.on('re-render at client', () => {
     const bannerName = $('#showBanner').attr('name');
-    socket.emit('re-render', [_url, bannerName]);
+    if (bannerName && document.visibilityState === 'visible') {
+      socket.emit('re-render', [_url, bannerName]);
+    }
   });
 
   socket.on('img clear', () => {
