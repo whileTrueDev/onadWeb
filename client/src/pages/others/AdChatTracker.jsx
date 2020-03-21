@@ -6,6 +6,7 @@ import HOST from '../../utils/config';
 
 export default function AdChat({ match }) {
   const [error, setError] = useState(null);
+  console.log('adchat referrer: ', document.referrer);
   React.useEffect(() => {
     const params = {
       campaignId: match.params.campaignId,
