@@ -11,6 +11,8 @@ const passport = require('./passportStrategy');
 // Router 정의
 const mailerRouter = require('./routes/mailer');
 const apiRouter = require('./routes/api');
+const trackingRouter = require('./routes/tracking');
+
 // marketer Tax Bill scheduler
 const taxBillScheduler = require('./middlewares/scheduler/taxBillScheduler');
 
@@ -72,6 +74,7 @@ app.get('/', (req, res, next) => {
 
 app.use('/mailer', mailerRouter);
 app.use('/api', apiRouter);
+app.use('/tracking', trackingRouter);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
