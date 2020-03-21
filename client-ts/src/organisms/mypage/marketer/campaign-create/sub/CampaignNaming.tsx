@@ -62,7 +62,7 @@ const CampaignNaming = (props: CampaignNamingProps): JSX.Element => {
       if (nameData.data.includes(value)) {
         nameDispatch({ key: 'duplicate', value: '' });
       } else {
-        nameDispatch({ key: 'set', value: '' });
+        nameDispatch({ key: 'set', value });
       }
     }
   };

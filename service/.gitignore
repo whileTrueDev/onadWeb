@@ -19,3 +19,5 @@ calculationLog/*
 
 /banners/*
 /local/*
+
+.env

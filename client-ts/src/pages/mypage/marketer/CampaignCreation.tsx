@@ -79,7 +79,7 @@ const CampaignCreation = (): JSX.Element => {
   };
 
   const checkEmpty = (input: any): boolean => {
-    if (input.campaignName === null) {
+    if (input.campaignName === '') {
       alert('캠페인 명이 올바르게 입력되지 않았습니다.');
       return false;
     }
@@ -159,12 +159,13 @@ const CampaignCreation = (): JSX.Element => {
       keyword: ['', '', ''], // keyword추가후 수정
       ...step3State,
     };
+
     if (checkEmpty(validateObject)) {
       axios.post(`${HOST}/marketer/campaign`, validateObject)
         .then((res) => {
           if (res.data[0]) {
             alert(res.data[1]);
-            history.push('/dashboard/marketer/main');
+            history.push('/mypage/marketer/main');
           } else {
             alert(res.data[1]);
           }
@@ -181,7 +182,7 @@ const CampaignCreation = (): JSX.Element => {
   const handleBack = (event: MouseEvent<HTMLButtonElement>): void => {
     event.preventDefault();
     if (step === 0) {
-      history.push('/dashboard/marketer/main');
+      history.push('/mypage/marketer/main');
       return;
     }
     step2Dispatch({ key: 'reset', value: '' });
@@ -260,26 +261,26 @@ const CampaignCreation = (): JSX.Element => {
           </Grid>
         </>
       ) : (
-        <div style={{
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          alignItems: 'center',
-          height: '80vh',
-          width: '100%'
-        }}
-        >
-          <h4>캠페인 생성은 데스크탑에서 진행해주세요.</h4>
-          <Button
-            variant="contained"
-            color="primary"
-            component={Link}
-            to="/dashboard/marketer/main"
+          <div style={{
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+            height: '80vh',
+            width: '100%'
+          }}
           >
-            대시보드로 이동
+            <h4>캠페인 생성은 데스크탑에서 진행해주세요.</h4>
+            <Button
+              variant="contained"
+              color="primary"
+              component={Link}
+              to="/mypage/marketer/main"
+            >
+              대시보드로 이동
           </Button>
-        </div>
-      )}
+          </div>
+        )}
     </Grid>
   );
 };
