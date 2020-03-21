@@ -60,9 +60,9 @@ export default function AdChat(
           <Typography variant="h5"> 이동중입니다... </Typography>
         </>
       )}
-      {!error && (
+      {error && (
         <>
-          <Typography variant="h5"> 죄송합니다. 지금은 접근할 수 없습니다 다시 시도해 주십시오. </Typography>
+          <Typography variant="h5"> 죄송합니다. 지금은 접근할 수 없습니다 잠시 후 다시 시도해 주십시오. </Typography>
           <Button
             onClick={(): void => { window.history.back(); }}
           >

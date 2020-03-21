@@ -40,7 +40,7 @@ router.route('/campaign')
       const campaignId = responseHelper.getParam('campaignId', 'GET', req);
       const query = `
       SELECT
-        id, type, ipAddres, campaignId, creatorId, date
+        id, type, ipAddress, campaignId, creatorId, date
       FROM landingClickIp
       WHERE campaignId = ?`;
       doQuery(query, [campaignId])

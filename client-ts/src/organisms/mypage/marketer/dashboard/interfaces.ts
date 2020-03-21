@@ -76,7 +76,7 @@ export type GeoInterface = {
   region: string;
   city: string;
   ll: number[];
-} | null;
+};
 
 export interface CreatorDetailInterface {
   creatorId: string;

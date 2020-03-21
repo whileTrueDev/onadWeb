@@ -16,7 +16,7 @@ import CampaignCostBar from './CampaignCostBar';
 import BannerBroadCreators from './BannerBroadCreators';
 import ReportCard from './ReportCard';
 import InteractionHeatmap from './HeatmapReport';
-// import InteractionToGeo from './GeoReport';
+import InteractionToGeo from './GeoReport';
 import CampaignInfo from './CampaignInfo';
 import MakePdfButton from './MakePdfButton';
 
@@ -226,11 +226,11 @@ export default function CampaignBannerClickAd(
                             data-html2canvas-ignore
                             clickData={clickData.data}
                           />
-                          {/* 
+
                           <InteractionToGeo
                             data-html2canvas-ignore
                             ipToGeoData={ipToGeoData}
-                          /> */}
+                          />
 
                         </Grid>
                       </Grid>

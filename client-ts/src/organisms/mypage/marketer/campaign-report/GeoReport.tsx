@@ -9,67 +9,67 @@ import { compose, withProps, withHandlers } from 'recompose';
 import {
   withScriptjs, withGoogleMap, GoogleMap, Marker
 } from 'react-google-maps';
-import MarkerClusterer, {
-  MarkerClustererProps
-} from 'react-google-maps/lib/components/addons/MarkerClusterer';
+import MarkerClusterer from 'react-google-maps/lib/components/addons/MarkerClusterer';
+import dotenv from 'dotenv';
 import CardTemplate from './CardTemplate';
 import MaterialTable from '../../../../atoms/Table/MaterialTable';
 import { GeoInterface } from '../dashboard/interfaces';
 import { UseGetRequestObject } from '../../../../utils/hooks/useGetRequest';
 
-
+dotenv.config();
+interface MapWithMarkerClustererProps {
+  onMarkerClustererClick: () => (markerClusterer: any) => void;
+  markers: GeoInterface[];
+}
+interface MapWithMarkerClustererOutProps {
+  markers: GeoInterface[];
+}
 // Ip To Geo Map settings
-const MapWithAMarkerClusterer = compose(
-  withProps({
-    googleMapURL: [
-      'https://maps.googleapis.com/maps/api/js',
-      `?key=${process.env.REACT_APP_GOOGLE_MAP_API_KEY}`,
-      '&v=3',
-    ].join(''),
-    loadingElement: <div style={{ height: '100%' }} />,
-    containerElement: <div style={{ height: '400px' }} />,
-    mapElement: <div style={{ height: '100%' }} />,
-  }),
-  withHandlers({
-    onMarkerClustererClick: () => (markerClusterer: any) => {
+const MapWithAMarkerClusterer = compose<
+  MapWithMarkerClustererProps, MapWithMarkerClustererOutProps>(
+    withProps({
+      googleMapURL: [
+        'https://maps.googleapis.com/maps/api/js',
+        `?key=${process.env.REACT_APP_GOOGLE_MAP_API_KEY}`,
+        '&v=3',
+      ].join(''),
+      loadingElement: <div style={{ height: '100%' }} />,
+      containerElement: <div style={{ height: '400px' }} />,
+      mapElement: <div style={{ height: '100%' }} />,
+    }),
+    withHandlers({
+      onMarkerClustererClick: () => (markerClusterer: any) => {
       // 마커 클릭 이벤트 걸기
-      const clickedMarkers = markerClusterer.getMarkers();
-    },
-  }),
-  withScriptjs,
-  withGoogleMap
-)((props: any) => (
-  <GoogleMap
-    defaultZoom={6}
-    defaultCenter={{ lat: 36.2, lng: 127.959043 }}
-  >
-    <MarkerClusterer
-      onClick={props.onMarkerClustererClick}
-      averageCenter
-      enableRetinaIcons
-      gridSize={60}
+        const clickedMarkers = markerClusterer.getMarkers();
+        console.log(clickedMarkers);
+      },
+    }),
+    withScriptjs,
+    withGoogleMap
+  )((props: MapWithMarkerClustererProps) => (
+    <GoogleMap
+      defaultZoom={6}
+      defaultCenter={{ lat: 36.2, lng: 127.959043 }}
     >
-      {props.markers.map((marker: any) => (
-        <Marker
-          key={shortid.generate()}
-          position={{ lat: marker.latitude, lng: marker.longitude }}
-        />
-      ))}
-    </MarkerClusterer>
-  </GoogleMap>
-));
+      <MarkerClusterer
+        onClick={props.onMarkerClustererClick}
+        averageCenter
+        enableRetinaIcons
+        gridSize={60}
+      >
+        {props.markers.map((marker: GeoInterface) => (
+          <Marker
+            key={shortid.generate()}
+            position={{ lat: marker.latitude, lng: marker.longitude }}
+          />
+        ))}
+      </MarkerClusterer>
+    </GoogleMap>
+  ));
 
-
+type IpToGeoData = UseGetRequestObject<GeoInterface[] | null>;
 interface IpToGeoProps {
-  ipToGeoData: UseGetRequestObject<{
-    latitude: number;
-    longitude: number;
-    range: number[];
-    country: string;
-    region: string;
-    city: string;
-    ll: number[];
-} | null>;
+  ipToGeoData: IpToGeoData;
 }
 
 // Ip To Geo Map component
@@ -108,19 +108,20 @@ function IpToGeo(props: IpToGeoProps): JSX.Element {
   );
 }
 
+interface GeoTableData {
+  click: number;
+  city: string;
+}
 // Ip To Get Table settgins
-function groupByCity(payload: GeoInterface[] | null) {
-  const newData = [];
-  const cities = [];
+function groupByCity(payload: GeoInterface[] | null): Array<GeoTableData> {
+  const newData: Array<GeoTableData> = [];
+  const cities: Array<string> = [];
   if (payload !== null) {
     payload.map((click) => {
       if (click.city) {
         if (!cities.includes(click.city)) {
           cities.push(click.city);
-          newData.push({
-            city: click.city,
-            click: 1
-          });
+          newData.push({ city: click.city, click: 1 });
         } else {
           newData.map((d, idx) => {
             if (d.city === click.city) {
@@ -140,12 +141,15 @@ function groupByCity(payload: GeoInterface[] | null) {
 }
 
 // Ip To Geo Table
-function IpToGeoTable(props: { data: UseGetRequestObject<GeoInterface[] | null> }): JSX.Element {
-  const { data, ...rest } = props;
+interface IpToGeoTableProps {
+  ipToGeoData: IpToGeoData;
+}
+function IpToGeoTable(props: IpToGeoTableProps): JSX.Element {
+  const { ipToGeoData } = props;
 
   return (
-    <div style={{ height: '410px' }} {...rest}>
-      {!data.loading && data.data && (
+    <div style={{ height: '410px' }}>
+      {!ipToGeoData.loading && ipToGeoData.data && (
         <MaterialTable
           style={{ boxShadow: 'none' }}
           columns={[
@@ -154,7 +158,7 @@ function IpToGeoTable(props: { data: UseGetRequestObject<GeoInterface[] | null> 
               title: '클릭',
               field: 'click',
               defaultSort: 'desc',
-              render: (rowData) => {
+              render: (rowData): React.ReactNode => {
                 if (rowData.city) {
                   return (<Typography>{rowData.click}</Typography>);
                 }
@@ -162,7 +166,7 @@ function IpToGeoTable(props: { data: UseGetRequestObject<GeoInterface[] | null> 
               }
             },
           ]}
-          data={groupByCity(data.data)}
+          data={groupByCity(ipToGeoData.data)}
           options={{
             toolbar: false,
             pageSize: 5,
@@ -180,18 +184,18 @@ function IpToGeoTable(props: { data: UseGetRequestObject<GeoInterface[] | null> 
 }
 
 
-export default function InteractionToGeo(props: IpToGeoProps) {
+export default function InteractionToGeo(props: IpToGeoProps): JSX.Element {
   const { ipToGeoData, ...rest } = props;
   return (
     <div {...rest}>
       <CardTemplate title="지역별 상호작용" color="secondary" IconComponent={BubbleChart}>
         <Grid container spacing={1}>
           <Grid item xs={12}>
-            <IpToGeo data={ipToGeoData} />
+            <IpToGeo ipToGeoData={ipToGeoData} />
           </Grid>
 
           <Grid item xs={12}>
-            <IpToGeoTable data={ipToGeoData} />
+            <IpToGeoTable ipToGeoData={ipToGeoData} />
           </Grid>
         </Grid>
       </CardTemplate>
