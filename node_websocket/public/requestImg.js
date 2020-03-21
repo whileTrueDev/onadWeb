@@ -277,6 +277,7 @@ module.exports = function (sql, socket, msg) {
         socket.emit('img receive', [bannerInfo[0], [bannerInfo[1], bannerInfo[2]]]);
         // to chatbot
         // if (myAdChatAgreement === 1) {
+        console.log(myCreatorTwitchId, myAdChatAgreement);
         console.log('next-campaigns-twitch-chatbot Emitting!! - ', myCreatorTwitchId);
         socket.broadcast.emit('next-campaigns-twitch-chatbot', { campaignId: myCampaignId, creatorId: myCreatorId, creatorTwitchId: myCreatorTwitchId });
         // }
