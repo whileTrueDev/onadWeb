@@ -275,7 +275,7 @@ const CampaignCreation = (): JSX.Element => {
               variant="contained"
               color="primary"
               component={Link}
-              to="/dashboard/marketer/main"
+              to="/mypage/marketer/main"
             >
               대시보드로 이동
           </Button>
