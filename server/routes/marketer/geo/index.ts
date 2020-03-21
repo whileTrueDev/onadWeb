@@ -38,16 +38,18 @@ router.route('/campaign')
     responseHelper.middleware.checkSessionExists, // session 확인이 필요한 경우.
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
       const campaignId = responseHelper.getParam('campaignId', 'GET', req);
-      const query = `SELECT *
-            FROM landingClickIp
-            WHERE campaignId = ?`;
+      const query = `
+      SELECT
+        id, type, ipAddress, campaignId, creatorId, date
+      FROM landingClickIp
+      WHERE campaignId = ?`;
       doQuery(query, [campaignId])
         .then((row) => {
           const result: any[] = [];
           row.result.map((click: any) => {
             if (click.ipAddress) {
-              // const geo = ipToGeoData(click.ipAddress);
-              // if (geo) { result.push(geo); }
+              const geo = ipToGeoData(click.ipAddress);
+              if (geo) { result.push(geo); }
             }
             return click;
           });

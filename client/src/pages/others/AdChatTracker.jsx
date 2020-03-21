@@ -1,39 +1,26 @@
 import React, { useState } from 'react';
-import { RouteComponentProps } from 'react-router-dom';
 import { Typography, CircularProgress } from '@material-ui/core';
 import Button from '../../atoms/CustomButtons/Button';
 import axios from '../../utils/axios';
-import HOST from '../../config';
+import HOST from '../../utils/config';
 
-interface AdChatParams {
-  campaignId: string;
-  creatorTwitchId: string;
-  referrer: string;
-  userAgent: string;
-}
-interface AdChatRes {
-  message: string;
-  href: string;
-}
-type AdChatProps = RouteComponentProps<{campaignId: string; creatorTwitchId: string}>
-export default function AdChat(
-  { match }: AdChatProps
-): JSX.Element {
-  const [error, setError] = useState<string | null>(null);
+export default function AdChat({ match }) {
+  const [error, setError] = useState(null);
   React.useEffect(() => {
-    const params: AdChatParams = {
+    const params = {
       campaignId: match.params.campaignId,
       creatorTwitchId: match.params.creatorTwitchId,
       userAgent: navigator.userAgent,
-      referrer: document.referrer
+      referrer: document.referrer,
     };
     const twitchRegex = RegExp('twitch.tv');
     if (document.referrer.search(twitchRegex) < 0) {
-      setError('invalid referrer');
-      axios.post<AdChatRes>(`${HOST}/tracking/adchat`, params)
+      setError(true);
+    } else { // 트위치로부터 온 것으로 확인되었을 때
+      axios.post(`${HOST}/tracking/adchat`, params)
         .then((row) => {
-          if (row.data
-          && (row.data.message === 'success' || row.data.message === 'already inserted')) {
+          if (row.data && (
+            row.data.message === 'success' || row.data.message === 'already inserted')) {
             document.location.href = row.data.href;
           }
         })
@@ -73,7 +60,7 @@ export default function AdChat(
           <Typography variant="h5"> 죄송합니다. 지금은 접근할 수 없습니다.</Typography>
           <Typography variant="h5"> 잠시 후 다시 시도해 주십시오. </Typography>
           <Button
-            onClick={(): void => { window.history.back(); }}
+            onClick={() => { window.history.back(); }}
           >
             돌아가기
           </Button>
