@@ -49,55 +49,51 @@ router.route('/')
       RIGHT JOIN creatorInfo ON creatorTwitchId = ?
     WHERE campaignId = ?`;
 
-    // twitch 정규 표현식
-    const twitchRegex = RegExp('twitch.tv');
-    if (referrer.search(twitchRegex) > 0) { // 트위치로부터 온 것인지 확인
-      // Get creatorId
-      const selectedRows = await doQuery(
-        selectQuery, [creatorTwitchId, campaignId]
-      ); // 캠페인아이디가 올바른 것인지 확인 + 데이터 가져오기
-      if (selectedRows.result.length > 0) {
-        // 올바른 데이터인 경우.
+    // Get creatorId
+    const selectedRows = await doQuery(
+      selectQuery, [creatorTwitchId, campaignId]
+    ); // 캠페인아이디가 올바른 것인지 확인 + 데이터 가져오기
+    if (selectedRows.result.length > 0) {
+      // 올바른 데이터인 경우.
 
-        // 링크URL
-        const { links } = JSON.parse(selectedRows.result[0].links);
-        // 적재를 위한 데이터
-        const { campaignName, linkId, creatorId } = selectedRows.result[0];
-        // CPC
-        // 테스트기간동안 0!!
-        const payout = 0; // calculator > landingCalculator_v1 > GAUGE
-        const whereToGo = links.find((link) => link.primary).linkTo;
+      // 링크URL
+      const { links } = JSON.parse(selectedRows.result[0].links);
+      // 적재를 위한 데이터
+      const { campaignName, linkId, creatorId } = selectedRows.result[0];
+      // CPC
+      // 테스트기간동안 0!!
+      const payout = 0; // calculator > landingCalculator_v1 > GAUGE
+      const whereToGo = links.find((link) => link.primary).linkTo;
 
-        // 중복 클릭 체크
-        const alreadyInsertedCheckQuery = `
+      // 중복 클릭 체크
+      const alreadyInsertedCheckQuery = `
         SELECT id FROM tracking
           WHERE creatorId = ?
           AND campaignId = ? AND linkId = ? AND ip = ?
           AND clickedTime > DATE_SUB(now(), INTERVAL 7 DAY)`;
-        const alreadyInsertedCheckArray = [creatorId, campaignId, linkId, nowIp];
-        const alreadyInserted = await doQuery(alreadyInsertedCheckQuery, alreadyInsertedCheckArray);
-        let message = '';
-        if (alreadyInserted.result.length === 0) { // 중복클릭이 아닌 경우
-          message = 'success';
-          const insertQuery = `
+      const alreadyInsertedCheckArray = [creatorId, campaignId, linkId, nowIp];
+      const alreadyInserted = await doQuery(alreadyInsertedCheckQuery, alreadyInsertedCheckArray);
+      let message = '';
+      if (alreadyInserted.result.length === 0) { // 중복클릭이 아닌 경우
+        message = 'success';
+        const insertQuery = `
           INSERT INTO tracking (
               action, conversionTime, linkId, campaignId, campaignName, marketerId,
               creatorId, creatorTwitchId, ip, device, os, os_version,
               browser, browser_version, browser_engine, browser_engine_version, payout
             ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )`;
-          const queryArray = [
-            'CPC', null, linkId, campaignId, campaignName, campaignId.split('_')[0],
-            creatorId, creatorTwitchId, nowIp, device, OS.name, OS.version,
-            browser.name, browser.version, browserEngine.name, browserEngine.version,
-            payout
-          ];
-          await doQuery(insertQuery, queryArray);
-        }
-        message = 'already inserted';
-        const result = { message, href: whereToGo };
-        res.status(201).send(result);
-      } else { next(createError('Invalid Semantic Parameter')); }
-    } else { next(createError('Invalid referrer')); }
+        const queryArray = [
+          'CPC', null, linkId, campaignId, campaignName, campaignId.split('_')[0],
+          creatorId, creatorTwitchId, nowIp, device, OS.name, OS.version,
+          browser.name, browser.version, browserEngine.name, browserEngine.version,
+          payout
+        ];
+        await doQuery(insertQuery, queryArray);
+      }
+      message = 'already inserted';
+      const result = { message, href: whereToGo };
+      res.status(201).send(result);
+    } else { next(createError('Invalid Semantic Parameter')); }
   });
 
 module.exports = router;
