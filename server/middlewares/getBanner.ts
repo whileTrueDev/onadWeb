@@ -113,7 +113,7 @@ const getRandomInt = (length: number) => {
   return Math.floor(Math.random() * (max - 0)) + 0; // 최댓값은 제외, 최솟값은 포함
 };
 
-async function getBanner({ creatorId, gameId }: { creatorId: string, gameId: number }) {
+async function getBanner({ creatorId, gameId }: { creatorId: string; gameId: number }) {
   const [creatorCampaignList, onCampaignList]: [any, any] = await Promise.all(
     [
       getCreatorCampaignList(creatorId),
@@ -122,9 +122,15 @@ async function getBanner({ creatorId, gameId }: { creatorId: string, gameId: num
   );
   const categoryCampaignList = await getGameCampaignList(gameId);
 
-  const onCreatorcampaignList = creatorCampaignList.filter((campaignId: string) => onCampaignList.includes(campaignId));
-  const onCategorycampaignList = categoryCampaignList.filter(campaignId => onCampaignList.includes(campaignId));
-  const campaignList: string[] = Array.from(new Set(onCreatorcampaignList.concat(onCategorycampaignList)));
+  const onCreatorcampaignList = creatorCampaignList.filter(
+    (campaignId: string) => onCampaignList.includes(campaignId)
+  );
+  const onCategorycampaignList = categoryCampaignList.filter(
+    (campaignId) => onCampaignList.includes(campaignId)
+  );
+  const campaignList: string[] = Array.from(new Set(
+    onCreatorcampaignList.concat(onCategorycampaignList)
+  ));
 
   const campaignId = campaignList[getRandomInt(campaignList.length)];
   console.log(`이번에 광고될 캠페인은 ${campaignId} 입니다.`);

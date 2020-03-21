@@ -1,10 +1,8 @@
 import express from 'express';
 import nodemailer from 'nodemailer';
-import inquiryRoute from './inquiry';
 import responseHelper from '../../middlewares/responseHelper';
 import makeMarketerRegistTemplate from '../../middlewares/mailTemplate/marketerRegist';
 import makeMarketerRepassword from '../../middlewares/mailTemplate/marketerRepassword';
-import setTemporaryPassword from '../../middlewares/setTemporyPassword';
 import logger from '../../middlewares/logger';
 import doQuery from '../../model/doQuery';
 import makeInqurie from '../../middlewares/mailTemplate/makeInqurie';
@@ -27,11 +25,11 @@ const transporter = nodemailer.createTransport({
 });
 
 interface InputForm {
-  name?: string;
-  email?: string;
-  contactNumber?: number;
+  name: string;
+  email: string;
+  contactNumber: number;
   brandName?: string;
-  content?: string;
+  content: string;
 }
 
 router.route('/inquiry')
@@ -143,46 +141,12 @@ router.route('/tmp-auth')
           });
         } else {
           logger.info(`Email sent: ${info.response}`);
-          res.send({
-            error: null,
-            result: info.response,
-          });
+          responseHelper.send(JSON.stringify({
+            error: false,
+          }), 'post', res);
         }
       });
     }),
-  )
-  .all(responseHelper.middleware.unusedMethod);
-
-router.route('/tmp-password')
-  .post(
-    // 임시 비밀번호 생성
-    responseHelper.middleware.withErrorCatch(async (req, res, next) => {
-      const json = {
-        error: true,
-        message: ''
-      };
-      const [marketerId, marketerMail] = responseHelper.getParam(['marketerId', 'marketerMail'], 'POST', req);
-
-      doQuery('SELECT marketerMail FROM marketerInfo WHERE marketerId = ? ', [marketerId])
-        .then((data) => {
-          const { result } = data;
-          if (result[0]) {
-            if (result[0].marketerMail === marketerMail) {
-              next();
-            } else {
-              json.message = 'ID와 EMAIL이 일치하지 않습니다.';
-              responseHelper.send(JSON.stringify(json), 'POST', res);
-            }
-          } else {
-            json.message = '해당 ID의 회원이 존재하지 않습니다.';
-            responseHelper.send(JSON.stringify(json), 'POST', res);
-          }
-        })
-        .catch(() => {
-          json.message = 'DB 관련 오류입니다. 잠시 후 다시 시도해주세요..';
-          responseHelper.send(JSON.stringify(json), 'POST', res);
-        });
-    }), setTemporaryPassword
   )
   .all(responseHelper.middleware.unusedMethod);
 

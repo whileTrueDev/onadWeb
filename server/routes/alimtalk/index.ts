@@ -106,7 +106,7 @@ router.get('/marketer/cash/burn', (req, res) => {
 
   function createSendingData({ marketerName, phonenum }:
     {marketerName: string; phonenum: string}): NaverCloudSendingData {
-    const TEMPLATE_CONTENT = `안녕하세요! ${marketerName} 님\nOnAD 광고캐시가 거의 다 소진되었음을 알려드립니다. \n자세한 정보는 온애드에서 확인하세요.`;
+    const TEMPLATE_CONTENT = `안녕하세요! ${marketerName} 님\nOnAD 광고캐시가 대부분 소진되었음을 알려드립니다. \n자세한 정보는 온애드에서 확인하세요.`;
     const sendingData = {
       templateCode: TEMPLATE_CODE,
       plusFriendId: PLUS_FRIEND_ID,

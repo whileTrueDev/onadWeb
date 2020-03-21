@@ -1,6 +1,16 @@
-const geoip = require('geoip-lite');
+import geoip from 'geoip-lite';
 
-function ipToGeoData(ip: string) {
+export type ipToGeoData = {
+  latitude: number;
+  longitude: number;
+  range: number[];
+  country: string;
+  region: string;
+  city: string;
+  ll: number[];
+} | null
+
+function ipToGeoData(ip: string): ipToGeoData {
   const result = geoip.lookup(ip);
   if (result) {
     const [latitude, longitude] = result.ll;
@@ -10,4 +20,4 @@ function ipToGeoData(ip: string) {
   return null;
 }
 
-module.exports = ipToGeoData;
+export default ipToGeoData;

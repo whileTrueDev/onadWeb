@@ -24,6 +24,8 @@ import marketerRouter from './routes/marketer';
 import chartRouter from './routes/chart';
 import bannersRouter from './routes/banners';
 import mailRouter from './routes/mail';
+import noticeRouter from './routes/notice';
+import trackingRouter from './routes/tracking';
 
 const MySQLStore = require('express-mysql-session')(session);
 
@@ -130,7 +132,7 @@ class OnadWebApi {
     // 각 로그인 플랫폼 callbackURL 변경 이후 
     // /auth로 변경
     // *********************************
-    this.app.use('/api/login', loginRouter);
+    this.app.use('/login', loginRouter);
 
     this.app.use('/logout', logoutRouter);
     this.app.use('/creator', creatorRouter);
@@ -140,6 +142,8 @@ class OnadWebApi {
     this.app.use('/creators', creatorsRouter);
     this.app.use('/banners', bannersRouter);
     this.app.use('/mail', mailRouter);
+    this.app.use('/notice', noticeRouter);
+    this.app.use('/tracking', trackingRouter);
 
     // Error handling
     // catch 404 and forward to error handler

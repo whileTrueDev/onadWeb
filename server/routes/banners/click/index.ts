@@ -1,5 +1,5 @@
 import express from 'express';
-import doQuery from '../../../model/doQuery'
+import doQuery from '../../../model/doQuery';
 import responseHelper from '../../../middlewares/responseHelper';
 
 const router = express.Router();
@@ -10,7 +10,7 @@ router.route('/')
       const dataString = 'DATE_SUB(NOW(), INTERVAL 60 MONTH)';
 
       const query = `
-                      SELECT SUM(clickCount)
+                      SELECT SUM(clickCount) as bannerClick
                         FROM landingClick as lc
                         WHERE lc.regidate > ${dataString}
                     `;
@@ -21,10 +21,10 @@ router.route('/')
           }
         })
         .catch((errorData) => {
-          throw new Error(`Error in /banners/click - ${errorData}`)
+          throw new Error(`Error in /banners/click - ${errorData}`);
         });
     })
   )
-  .all(responseHelper.middleware.unusedMethod)
+  .all(responseHelper.middleware.unusedMethod);
 
 export default router;

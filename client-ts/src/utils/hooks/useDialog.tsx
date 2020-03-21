@@ -10,13 +10,13 @@ import React from 'react';
  */
 export default function useDialog(): {
   open: boolean;
-  handleOpen: (v?: boolean) => void;
+  handleOpen: () => void;
   handleClose: () => void;
   } {
   const [open, setOpen] = React.useState<boolean>(false);
 
-  function handleOpen(v = true): void {
-    setOpen(v);
+  function handleOpen(): void {
+    setOpen(true);
   }
   function handleClose(): void {
     setOpen(false);

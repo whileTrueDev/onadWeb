@@ -14,16 +14,17 @@ const url = process.env.SLACK_ALARM_URL as string;
  * - onad_socket
  * - onad_calculator
  */
-function push(text: string, task: string, type = 'onad_web_api') {
+function push(text: string, task: string, type = 'onad_web_api'): void {
   const sendingText = `[${type}]\n[${`${task} - ` || ''}${new Date().toLocaleString()}]\n${text}`;
-  Axios.post(url,
-    JSON.stringify({
-      text: sendingText
-    }), { withCredentials: true })
+  Axios
+    .post(url,
+      JSON.stringify({
+        text: sendingText
+      }), { withCredentials: true })
     .catch((err: any) => {
       const { status, statusText } = err.response;
       console.log(status, statusText, 'ERR in Slack alarm to onad_alarm, check slack webhook');
     });
 }
 
-export default push
+export default push;
