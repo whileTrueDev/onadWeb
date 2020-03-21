@@ -268,21 +268,21 @@ module.exports = function (sql, socket, msg) {
       console.log(err);
     } else if (data[0]) {
       myCreatorId = data[0].creatorId;
-      myCreatorTwitchId = data[0].creatorTwitchId;
-      myAdChatAgreement = data[0].adChatAgreement;
+      const myCreatorTwitchId = data[0].creatorTwitchId;
+      const myAdChatAgreement = data[0].adChatAgreement;
       myGameId = await getGameId(myCreatorId);
       const bannerInfo = await getBanner([myCreatorId, myGameId]);
       if (bannerInfo) {
         const doInsert = await insertLandingPage(bannerInfo[1], bannerInfo[2]);
         socket.emit('img receive', [bannerInfo[0], [bannerInfo[1], bannerInfo[2]]]);
         // to chatbot
-        if (myAdChatAgreement === 1){
-          socket.emit('next-campaigns-twitch-chatbot', { campaignId: myCampaignId, creatorId: myCreatorId, creatorTwitchId: myCreatorTwitchId })
+        if (myAdChatAgreement === 1) {
+          socket.broadcast.emit('next-campaigns-twitch-chatbot', { campaignId: myCampaignId, creatorId: myCreatorId, creatorTwitchId: myCreatorTwitchId });
         }
       } else {
         // to chatbot
-        if (myAdChatAgreement === 1){
-          socket.emit('next-campaigns-twitch-chatbot', { campaignId: myCampaignId, creatorId: myCreatorId, creatorTwitchId: myCreatorTwitchId })
+        if (myAdChatAgreement === 1) {
+          socket.broadcast.emit('next-campaigns-twitch-chatbot', { campaignId: myCampaignId, creatorId: myCreatorId, creatorTwitchId: myCreatorTwitchId });
         }
         console.log(`${myCreatorId} : 같은 캠페인 송출 중이어서 재호출 안합니다. at ${getTime}`);
       }
