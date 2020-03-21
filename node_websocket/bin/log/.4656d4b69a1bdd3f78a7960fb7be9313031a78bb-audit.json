@@ -14,6 +14,26 @@
             "date": 1580695854915,
             "name": "bin\\log\\exception_2020-02-03.log",
             "hash": "a7f47938dadb875bee864c2ccaa01042"
+        },
+        {
+            "date": 1583718333967,
+            "name": "bin\\log\\exception_2020-03-09.log",
+            "hash": "f4cf72b9d4152bce35295e2529abcebf"
+        },
+        {
+            "date": 1583815946502,
+            "name": "bin\\log\\exception_2020-03-10.log",
+            "hash": "9ad349442b822216732cca8c928ec1fa"
+        },
+        {
+            "date": 1584337750329,
+            "name": "bin\\log\\exception_2020-03-16.log",
+            "hash": "460d56bccb7987f0cb010aa31eca2b1b"
+        },
+        {
+            "date": 1584436556352,
+            "name": "bin\\log\\exception_2020-03-17.log",
+            "hash": "eca5e8171d8242484dbd4c9db7d5ff62"
         }
     ]
 }

@@ -72,3 +72,4 @@ node_websocket/views/test.ejs
 node_websocket/public/requestImgSync.js
 node_websocket/requestImgSync.js
 node_websocket/views/browsercheck.ejs
+et --hard commit_id

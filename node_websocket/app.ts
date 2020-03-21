@@ -8,7 +8,7 @@ const sql = require('./public/models/select');
 const pool = require('./public/models/connect');
 const requestImg = require('./public/requestImg.js');
 // port 설정 및 hostname 설정
-const PORT = 3003;
+const PORT = 3002;
 process.env.NODE_ENV = (process.env.NODE_ENV && (process.env.NODE_ENV).trim().toLowerCase() === 'production') ? 'production' : 'development';
 let SOCKET_HOST = process.env.DEV_SOCKET_HOSTNAME;
 if (process.env.NODE_ENV === 'production') {
@@ -66,9 +66,9 @@ app.get('/test', (req, res, next) => { // /banner/:id로 라우팅
     const rule = new schedule.RecurrenceRule(); // 스케쥴러 객체 생성
     rule.hour = new schedule.Range(0, 23); // cronTask 시간지정
     rule.minute = [0, 10, 20, 30, 40, 50]; // cronTask 실행되는 분(minute)
-
+    // console.log(roomInfo);
     const cronTask = schedule.scheduleJob(rule, () => { // 스케쥴러를 통해 1분마다 db에 배너정보 전송
-      socket.emit('response banner data to server', {}); // client로 emit
+      // socket.emit('response banner data to server', {}); // client로 emit
       socket.emit('re-render at client', {});
     });
 
@@ -76,20 +76,29 @@ app.get('/test', (req, res, next) => { // /banner/:id로 라우팅
       const _url = msg[0];
       const history = msg[1];
       const urlArray = Object.values(socketsInfo);
+      // console.log(`- 새 접속 ip : ${ip}`);
+      // console.log(`- 클라이언트 소켓 아이디 : ${clientId}`);
       if (process.env.NODE_ENV === 'development') {
         socket.join('banner room');
         socket.emit('host pass', SOCKET_HOST);
+        // console.log('banner socketinfo : ', socketsInfo);
         socketsInfo[Object.keys(roomInfo).pop()] = _url; // roomInfo에서 소켓아이디 불러와서 socketsInfo 객체에 {'id' : url} 형태로 저장
         requestImg(sql, socket, [_url, false]);
       } else if (history !== 1) {
         const destination = `${SOCKET_HOST}/browserWarn`;
         socket.emit('browser warning', destination);
+      } else if (urlArray.includes(_url)) {
+        console.log(`${_url} 중복접속`);
+        const destination = `${SOCKET_HOST}/duplicate`;
+        socket.emit('duplicate warn', destination);
       } else {
         socket.join('banner room');
         socket.emit('host pass', SOCKET_HOST);
+        // console.log('banner socketinfo : ', socketsInfo);
         socketsInfo[Object.keys(roomInfo).pop()] = _url; // roomInfo에서 소켓아이디 불러와서 socketsInfo 객체에 {'id' : url} 형태로 저장
         requestImg(sql, socket, [_url, false]);
       }
+      // console.log(socketsInfo); // 접속중인 url 저장된 부분
     });
 
     socket.on('new marquee', () => {
@@ -99,6 +108,7 @@ app.get('/test', (req, res, next) => { // /banner/:id로 라우팅
 
     socket.on('disconnect', () => { // 접속종료시
       delete socketsInfo[clientId]; // socketsInfo에서 접속종료한 clientID 삭제
+      console.log(`- ip : ${ip} :  접속종료`);
       clientId = undefined;
       clearInterval(socket.interval);
     });
