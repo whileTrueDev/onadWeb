@@ -58,7 +58,6 @@ app.get('/test', (req, res, next) => { // /banner/:id로 라우팅
 (function () {
   const socketsInfo = {}; // 클라이언트로 보낼 socketinfo 객체
   io.on('connection', (socket) => {
-    console.log('socket client on'); // 연결이 되면 로그 발생
     let clientId = socket.id; // socketID 획득
     const req = socket.request; // req
     const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress; // 클라이언트 ip주소 얻는 부분
@@ -71,6 +70,8 @@ app.get('/test', (req, res, next) => { // /banner/:id로 라우팅
       socket.emit('response banner data to server', {}); // client로 emit
       socket.emit('re-render at client', {});
     });
+
+    console.log('socket client on - ', clientId, ip); // 연결이 되면 로그 발생
 
     socket.on('new client', (msg) => { // 새로운 클라이언트 접속 시 발생
       const _url = msg[0];
