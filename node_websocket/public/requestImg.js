@@ -240,17 +240,11 @@ module.exports = function (sql, socket, msg) {
         getBanList(creatorId)
       ]
     );
-    console.log([creatorCampaignList, onCampaignList, banList]);
     const categoryCampaignList = await getGameCampaignList(gameId, creatorId);
-    console.log(categoryCampaignList)
     const onCreatorcampaignList = creatorCampaignList.filter((campaignId) => onCampaignList.includes(campaignId));
-    console.log(onCreatorcampaignList)
     const onCategorycampaignList = categoryCampaignList.filter((campaignId) => onCampaignList.includes(campaignId));
-    console.log('이게빔', onCategorycampaignList)
     const campaignList = Array.from(new Set(onCreatorcampaignList.concat(onCategorycampaignList)));
-    console.log(campaignList)
     const cutCampaignList = campaignList.filter((campaignId) => !banList.includes(campaignId)); // 마지막에 banList를 통해 거르기.
-    console.log(cutCampaignList)
     const returnCampaignId = cutCampaignList[getRandomInt(cutCampaignList.length)];
     myCampaignId = returnCampaignId;
     if (myCampaignId) {
@@ -268,19 +262,23 @@ module.exports = function (sql, socket, msg) {
     return [bannerSrc, myCampaignId, creatorId];
   }
 
-  const getQuery = sql(`SELECT creatorId FROM creatorInfo WHERE advertiseUrl = "${cutUrl}"`);
+  const getQuery = sql(`SELECT creatorId, creatorTwitchId FROM creatorInfo WHERE advertiseUrl = "${cutUrl}"`);
   getQuery.select(async (err, data) => {
     if (err) {
       console.log(err);
     } else if (data[0]) {
-      console.log(data);
       myCreatorId = data[0].creatorId;
+      myCreatorTwitchId = data[0].creatorTwitchId
       myGameId = await getGameId(myCreatorId);
       const bannerInfo = await getBanner([myCreatorId, myGameId]);
       if (bannerInfo) {
         const doInsert = await insertLandingPage(bannerInfo[1], bannerInfo[2]);
         socket.emit('img receive', [bannerInfo[0], [bannerInfo[1], bannerInfo[2]]]);
+        // to chatbot
+        socket.emit('next-campaigns-twitch-chatbot', { campaignId: myCampaignId, creatorId: myCreatorId, creatorTwitchId: myCreatorTwitchId })
       } else {
+        // to chatbot
+        socket.emit('next-campaigns-twitch-chatbot', { campaignId: myCampaignId, creatorId: myCreatorId, creatorTwitchId: myCreatorTwitchId })
         console.log(`${myCreatorId} : 같은 캠페인 송출 중이어서 재호출 안합니다. at ${getTime}`);
       }
     } else {
