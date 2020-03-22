@@ -3,8 +3,6 @@
 .vs/
 .vs
 
-.eslintrc
-
 yarn.lock
 package-lock.json
 
@@ -21,7 +19,6 @@ docker-compose.debug.*
 node_modules/*
 node_modules/
 yarn.lock
-.eslintrc
 
 log/*
 /log/*
@@ -42,8 +39,6 @@ calculationLog/*
 node_modules/*
 /.pnp
 .pnp.js
-
-.eslintrc
 
 yarn.lock
 # testing
