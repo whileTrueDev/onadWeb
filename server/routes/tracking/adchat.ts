@@ -32,36 +32,40 @@ router.route('/')
     interface Link { primary?: boolean; linkName: string; linkTo: string }
 
     const nowIp: string | string[] | undefined = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-    const [creatorTwitchId, campaignId, referrer, userAgent]: string[] = responseHelper.getParam(
-      ['creatorTwitchId', 'campaignId', 'referrer', 'userAgent'], 'post', req
-    );
-    console.log('referrer: ', referrer);
+    // 봇, 아이피 차단
+    const banIpArray = ['66.249.64.79'];
+    if (typeof nowIp === 'string' && banIpArray.includes(nowIp)) {
+      console.log(`[${new Date().toLocaleString()}] AdChat - banned IP - ${nowIp}`);
+      responseHelper.promiseError(Error('Invalid Ip'), next);
+    } else {
+      // Get data
+      const [creatorTwitchId, campaignId, referrer, userAgent]: string[] = responseHelper.getParam(
+        ['creatorTwitchId', 'campaignId', 'referrer', 'userAgent'], 'post', req
+      );
+      console.log('referrer: ', referrer);
 
-    // User agent parsing
-    const UA = new uaparser.UAParser(userAgent);
-    const uaDevice = UA.getDevice();
-    const OS = UA.getOS();
-    const browser = UA.getBrowser();
-    const browserEngine = UA.getEngine();
-    const device = `${uaDevice.vendor},${uaDevice.model},${uaDevice.type}`; // null 처리 필요
+      // User agent parsing
+      const UA = new uaparser.UAParser(userAgent);
+      const uaDevice = UA.getDevice();
+      const OS = UA.getOS();
+      const browser = UA.getBrowser();
+      const browserEngine = UA.getEngine();
+      const device = `${uaDevice.vendor},${uaDevice.model},${uaDevice.type}`; // null 처리 필요
 
-    // 클릭로그 적재에 필요한 데이터 가져오기
-    const selectQuery = `
+      // 클릭로그 적재에 필요한 데이터 가져오기
+      const selectQuery = `
     SELECT campaignName, linkId, links, creatorId
       FROM campaign
       JOIN linkRegistered ON linkId = connectedLinkId
       RIGHT JOIN creatorInfo ON creatorTwitchId = ?
     WHERE campaignId = ?`;
 
-    // twitch 정규 표현식
-    const twitchRegex = RegExp('twitch.tv');
-    if (referrer.search(twitchRegex) > 0) { // 트위치로부터 온 것인지 확인
       // Get creatorId
       const selectedRows = await doQuery<SelectedRows[]>(
         selectQuery, [creatorTwitchId, campaignId]
       ); // 캠페인아이디가 올바른 것인지 확인 + 데이터 가져오기
       if (selectedRows.result.length > 0) {
-        // 올바른 데이터인 경우.
+      // 올바른 데이터인 경우.
 
         // 링크URL
         const { links }: {links: Link[]} = JSON.parse(selectedRows.result[0].links);
@@ -103,8 +107,11 @@ router.route('/')
         message = 'already inserted';
         const result = { message, href: whereToGo };
         responseHelper.send(result, 'post', res);
-      } else { responseHelper.promiseError(Error('Invalid Semantic Parameter'), next); }
-    } else { responseHelper.promiseError(Error('Invalid referrer'), next); }
+      } else {
+        console.log(`[${new Date().toLocaleString()}] invalid creatorTwitchId/campaignId - ${creatorTwitchId}, ${campaignId}`);
+        responseHelper.promiseError(Error('Invalid Semantic Parameter'), next);
+      }
+    }
   }))
   .all(responseHelper.middleware.unusedMethod);
 
