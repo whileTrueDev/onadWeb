@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Typography, CircularProgress } from '@material-ui/core';
-import Button from '../../atoms/CustomButtons/Button';
 import axios from '../../utils/axios';
 import HOST from '../../utils/config';
 
@@ -13,6 +12,7 @@ export default function AdChat({ match }) {
       userAgent: navigator.userAgent,
       referrer: document.referrer,
     };
+    console.log(params);
     axios.post(`${HOST}/tracking/adchat`, params)
       .then((row) => {
         if (row.data && (
@@ -54,11 +54,6 @@ export default function AdChat({ match }) {
         <div style={{ padding: 12, textAlign: 'center' }}>
           <Typography variant="h5"> 죄송합니다. 지금은 접근할 수 없습니다.</Typography>
           <Typography variant="h5"> 잠시 후 다시 시도해 주십시오. </Typography>
-          <Button
-            onClick={() => { window.close(); }}
-          >
-            창 닫기
-          </Button>
         </div>
       )}
     </div>
