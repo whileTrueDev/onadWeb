@@ -6,7 +6,6 @@ import StyledItemText from '../../../../atoms/StyledItemText';
 import Dialog from '../../../../atoms/Dialog/Dialog';
 import useGetRequest from '../../../../utils/hooks/useGetRequest';
 import useDeleteRequest from '../../../../utils/hooks/useDeleteRequest';
-import history from '../../../../history';
 import { UrlDataInterface } from './interface';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -29,12 +28,14 @@ interface UrlDeleteDialogProps {
   open: boolean;
   selectedUrl: UrlDataInterface;
   handleClose: () => void;
+  recallRequest: () => void;
+
 }
 
 const UrlDeleteDialog = (props: UrlDeleteDialogProps): JSX.Element => {
   const classes = useStyles();
   const {
-    open, selectedUrl, handleClose
+    open, selectedUrl, handleClose, recallRequest
   } = props;
 
   const { doDeleteRequest } = useDeleteRequest<{ linkId: string }, any[]>('/marketer/landing-url');
@@ -53,35 +54,37 @@ const UrlDeleteDialog = (props: UrlDeleteDialogProps): JSX.Element => {
       buttons={(
         <div style={{ display: 'flex' }}>
           {!connectedCampaign.loading
-          && connectedCampaign.data
-          && connectedCampaign.data.length > 0 && (
-            <Tooltip title={<Typography>URL이 캠페인에 할당되어 있어 삭제가 불가능합니다.</Typography>}>
-              <div>
-                <CustomButton
-                  color="primary"
-                  disabled
-                >
-                  확인
-                </CustomButton>
-              </div>
-            </Tooltip>
-          )}
+            && connectedCampaign.data
+            && connectedCampaign.data.length > 0 && (
+              <Tooltip title={<Typography>URL이 캠페인에 할당되어 있어 삭제가 불가능합니다.</Typography>}>
+                <div>
+                  <CustomButton
+                    color="primary"
+                    disabled
+                  >
+                    확인
+                  </CustomButton>
+                </div>
+              </Tooltip>
+            )}
           {(!connectedCampaign.loading
-          && connectedCampaign.data
-          && connectedCampaign.data.length === 0) && (
-            <CustomButton
-              color="primary"
-              onClick={(): void => {
-                doDeleteRequest({ linkId: selectedUrl.linkId });
-                setTimeout(() => {
-                  handleClose();
-                  history.push(window.location.pathname);
-                }, 1000);
-              }}
-            >
-              확인
-            </CustomButton>
-          )}
+            && connectedCampaign.data
+            && connectedCampaign.data.length === 0) && (
+              <CustomButton
+                color="primary"
+                onClick={(): void => {
+                  doDeleteRequest({ linkId: selectedUrl.linkId });
+                  setTimeout(() => {
+                    handleClose();
+                    if (recallRequest) {
+                      recallRequest();
+                    }
+                  }, 1000);
+                }}
+              >
+                확인
+              </CustomButton>
+            )}
           <CustomButton onClick={handleClose}>취소</CustomButton>
         </div>
       )}

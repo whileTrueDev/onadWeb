@@ -218,7 +218,7 @@ const UserDataUpdateDialog = (props: UserDataUpdateDialogProps): JSX.Element => 
                   </Grid>
                 </Grid>
                 <Grid item xs={12} sm={10}>
-                  <Grid container direction="row" justify="space-evenly" xs={12}>
+                  <Grid container direction="row" justify="space-evenly">
                     <Grid item xs={5} className={classes.item}>
                       <Grid item className={classes.text}>
                         <TextField

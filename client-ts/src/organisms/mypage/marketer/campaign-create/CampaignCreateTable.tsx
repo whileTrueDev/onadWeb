@@ -77,7 +77,6 @@ const CampaignCreateTable = (props: CampaignCreateTableProps): JSX.Element => {
     nameState, nameDispatch
   } = props;
 
-  const IS_CAMPAIGN_CREATE_PAGE = true; // 캠페인생성 페이지 구분을 위한 변수
   const landingUrlData = useGetRequest('/marketer/landing-url/list');
   const bannerData = useGetRequest('/marketer/banner/list/active');
 
@@ -88,27 +87,27 @@ const CampaignCreateTable = (props: CampaignCreateTableProps): JSX.Element => {
     title: string;
     component: JSX.Element;
   }[] | any[] = [
-    {
-      title: '캠페인 이름 입력',
-      component: (
-        <CampaignNaming
-          nameState={nameState}
-          nameDispatch={nameDispatch}
-        />
-      )
-    },
-    {
-      title: '배너 선택',
-      component: (
-        <CampaignBannerReg
-          bannerData={bannerData}
-          dispatch={dispatch}
-          handleDialogOpen={uploadDialog.handleOpen}
-          step={step}
-        />
-      )
-    }, // check 완료
-    (optionType !== 'option0')
+      {
+        title: '캠페인 이름 입력',
+        component: (
+          <CampaignNaming
+            nameState={nameState}
+            nameDispatch={nameDispatch}
+          />
+        )
+      },
+      {
+        title: '배너 선택',
+        component: (
+          <CampaignBannerReg
+            bannerData={bannerData}
+            dispatch={dispatch}
+            handleDialogOpen={uploadDialog.handleOpen}
+            step={step}
+          />
+        )
+      }, // check 완료
+      (optionType !== 'option0')
       && {
         title: '랜딩페이지 URL',
         component: (
@@ -120,43 +119,43 @@ const CampaignCreateTable = (props: CampaignCreateTableProps): JSX.Element => {
         )
       }, // react-hooks-form 사용.
 
-    // {
-    //   title: '키워드 입력',
-    //   component: (
-    //     <KeywordInput
-    //       dispatch={dispatch}
-    //       state={state}
-    //     />
-    //   )
-    // },
-    {
-      title: '예산설정',
-      component: (
-        <CampaignBudgetSet
-          state={budgetState}
-          dispatch={budgetDispatch}
-        />
-      )
-    },
-    {
-      title: '기간 설정',
-      component: (
-        <CampaignTimeSet
-          dispatch={termDispatch}
-          state={termState}
-        />
-      )
-    },
-    {
-      title: '시간대 설정',
-      component: (
-        <TimeSelectorSet
-          state={timeState}
-          dispatch={timeDispatch}
-        />
-      )
-    },
-  ];
+      // {
+      //   title: '키워드 입력',
+      //   component: (
+      //     <KeywordInput
+      //       dispatch={dispatch}
+      //       state={state}
+      //     />
+      //   )
+      // },
+      {
+        title: '예산설정',
+        component: (
+          <CampaignBudgetSet
+            state={budgetState}
+            dispatch={budgetDispatch}
+          />
+        )
+      },
+      {
+        title: '기간 설정',
+        component: (
+          <CampaignTimeSet
+            dispatch={termDispatch}
+            state={termState}
+          />
+        )
+      },
+      {
+        title: '시간대 설정',
+        component: (
+          <TimeSelectorSet
+            state={timeState}
+            dispatch={timeDispatch}
+          />
+        )
+      },
+    ];
 
 
   return (
@@ -171,15 +170,15 @@ const CampaignCreateTable = (props: CampaignCreateTableProps): JSX.Element => {
               title: string;
               component: JSX.Element;
             }) => (
-              <StyledTableRow key={_step.title}>
-                <StyledTableCell>
-                  {_step.title}
-                </StyledTableCell>
-                <StyledTableCell>
-                  {_step.component}
-                </StyledTableCell>
-              </StyledTableRow>
-            ))}
+                <StyledTableRow key={_step.title}>
+                  <StyledTableCell>
+                    {_step.title}
+                  </StyledTableCell>
+                  <StyledTableCell>
+                    {_step.component}
+                  </StyledTableCell>
+                </StyledTableRow>
+              ))}
           </TableBody>
         </Table>
       </TableContainer>
@@ -187,7 +186,7 @@ const CampaignCreateTable = (props: CampaignCreateTableProps): JSX.Element => {
       <BannerUploadDialog
         open={uploadDialog.open}
         onClose={uploadDialog.handleClose}
-        isCampaignPage={IS_CAMPAIGN_CREATE_PAGE}
+        // isCampaignPage={IS_CAMPAIGN_CREATE_PAGE}
         recallRequest={bannerData.doGetRequest} // 배너 데이터 재요청
       />
 

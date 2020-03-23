@@ -23,6 +23,7 @@ import UrlDeleteDialog from '../../../organisms/mypage/marketer/inventory/UrlDel
 // core ../../atoms
 import dashboardStyle from '../../../assets/jss/views/dashboardStyle';
 import useDialog from '../../../utils/hooks/useDialog';
+import useGetRequest from '../../../utils/hooks/useGetRequest';
 import { BannerDataInterface, UrlDataInterface } from '../../../organisms/mypage/marketer/inventory/interface';
 
 
@@ -45,7 +46,7 @@ function TabPanel(props: any): JSX.Element {
   );
 }
 
-function a11yProps(index: number): {id: string; 'aria-controls': string} {
+function a11yProps(index: number): { id: string; 'aria-controls': string } {
   return {
     id: `simple-tab-${index}`,
     'aria-controls': `simple-tabpanel-${index}`,
@@ -60,6 +61,9 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 const Inventory = (): JSX.Element => {
+  const bannerData = useGetRequest<null, BannerDataInterface[] | null>('/marketer/banner/list');
+  const urlData = useGetRequest<null, UrlDataInterface[] | null>('/marketer/landing-url/list');
+
   // banner
   const deleteDialog = useDialog();
   const uploadDialog = useDialog();
@@ -91,13 +95,13 @@ const Inventory = (): JSX.Element => {
             <CustomButton color="primary" size="large" onClick={(): void => { uploadDialog.handleOpen(); }}>
               + 새 배너 등록
             </CustomButton>
-            <BannerTable handleDeleteOpen={deleteDialog.handleOpen} setBanner={setBanner} />
+            <BannerTable handleDeleteOpen={deleteDialog.handleOpen} setBanner={setBanner} fetchData={bannerData} />
           </TabPanel>
           <TabPanel value={value} index={1}>
             <CustomButton color="primary" size="large" onClick={(): void => { urlUploadDialog.handleOpen(); }}>
               + 새 URL 등록
             </CustomButton>
-            <UrlTable handleDeleteOpen={urlDeleteDialog.handleOpen} setUrl={setUrl} />
+            <UrlTable handleDeleteOpen={urlDeleteDialog.handleOpen} setUrl={setUrl} fetchData={urlData} />
           </TabPanel>
         </div>
       </GridItem>
@@ -106,12 +110,15 @@ const Inventory = (): JSX.Element => {
       <UploadDialog
         open={uploadDialog.open}
         onClose={uploadDialog.handleClose}
+        recallRequest={bannerData.doGetRequest}
       />
       {deleteDialog.open && selectedBanner && (
         <DeleteDialog
           open={deleteDialog.open}
           selectedBanner={selectedBanner}
           handleClose={deleteDialog.handleClose}
+          recallRequest={bannerData.doGetRequest}
+
         />
       )}
 
@@ -119,12 +126,15 @@ const Inventory = (): JSX.Element => {
       <UrlUploadDialog
         open={urlUploadDialog.open}
         handleClose={urlUploadDialog.handleClose}
+        recallRequest={urlData.doGetRequest}
       />
       {urlDeleteDialog.open && selectedUrl && (
         <UrlDeleteDialog
           open={urlDeleteDialog.open}
           selectedUrl={selectedUrl}
           handleClose={urlDeleteDialog.handleClose}
+          recallRequest={urlData.doGetRequest}
+
         />
       )}
 

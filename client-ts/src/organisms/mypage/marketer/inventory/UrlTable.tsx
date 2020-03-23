@@ -5,7 +5,7 @@ import {
 } from '@material-ui/core';
 import { Delete, Star } from '@material-ui/icons';
 import MaterialTable from '../../../../atoms/Table/MaterialTable';
-import useGetRequest from '../../../../utils/hooks/useGetRequest';
+import { UseGetRequestObject } from '../../../../utils/hooks/useGetRequest';
 import { UrlDataInterface } from './interface';
 
 const useStyles = makeStyles(() => ({
@@ -20,12 +20,12 @@ const useStyles = makeStyles(() => ({
 interface UrlTableProps {
   handleDeleteOpen: () => void;
   setUrl: React.Dispatch<React.SetStateAction<UrlDataInterface | null>>;
+  fetchData: UseGetRequestObject<UrlDataInterface[] | null>;
 }
 
 export default function UrlTable(props: UrlTableProps): JSX.Element {
-  const { handleDeleteOpen, setUrl } = props;
+  const { handleDeleteOpen, setUrl, fetchData } = props;
   const classes = useStyles();
-  const fetchData = useGetRequest<null, UrlDataInterface[] | null>('/marketer/landing-url/list');
 
   const titleArray = ['MAIN', 'SUB1', 'SUB2'];
   const columns = [
@@ -66,16 +66,16 @@ export default function UrlTable(props: UrlTableProps): JSX.Element {
                       <Divider />
                     </div>
                   ) : (
-                    <div>
-                      <p className={classes.title}>
-                        SUB
+                      <div>
+                        <p className={classes.title}>
+                          SUB
                       </p>
-                      <span>
-                        {link.linkName}
-                      </span>
-                      <Divider />
-                    </div>
-                  )}
+                        <span>
+                          {link.linkName}
+                        </span>
+                        <Divider />
+                      </div>
+                    )}
                 </div>
               );
             }
@@ -107,12 +107,12 @@ export default function UrlTable(props: UrlTableProps): JSX.Element {
                       </p>
                     </div>
                   ) : (
-                    <div>
-                      <p className={classes.title}>
-                        SUB
+                      <div>
+                        <p className={classes.title}>
+                          SUB
                       </p>
-                    </div>
-                  )}
+                      </div>
+                    )}
                   <a
                     href={link.linkTo}
                     onClick={(e): void => {

@@ -261,26 +261,26 @@ const CampaignCreation = (): JSX.Element => {
           </Grid>
         </>
       ) : (
-          <div style={{
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            alignItems: 'center',
-            height: '80vh',
-            width: '100%'
-          }}
+        <div style={{
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '80vh',
+          width: '100%'
+        }}
+        >
+          <h4>캠페인 생성은 데스크탑에서 진행해주세요.</h4>
+          <Button
+            variant="contained"
+            color="primary"
+            component={Link}
+            to="/mypage/marketer/main"
           >
-            <h4>캠페인 생성은 데스크탑에서 진행해주세요.</h4>
-            <Button
-              variant="contained"
-              color="primary"
-              component={Link}
-              to="/mypage/marketer/main"
-            >
-              대시보드로 이동
+            대시보드로 이동
           </Button>
-          </div>
-        )}
+        </div>
+      )}
     </Grid>
   );
 };

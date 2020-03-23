@@ -265,8 +265,6 @@ router.route('/account')
           } else {
             accountNumber = '';
           }
-          console.log(accountNumber)
-          console.log(accountHolder)
 
           responseHelper.send({
             marketerAccountNumber: accountNumber, accountHolder

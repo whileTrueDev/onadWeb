@@ -9,7 +9,6 @@ import Button from '../../../../atoms/CustomButtons/Button';
 import useToggle from '../../../../utils/hooks/useToggle';
 import useEventTargetValue from '../../../../utils/hooks/useEventTargetValue';
 import usePostRequest from '../../../../utils/hooks/usePostRequest';
-import history from '../../../../history';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -35,11 +34,13 @@ const useStyles = makeStyles((theme: Theme) => ({
 interface UrlUploadDialogProps {
   open: boolean;
   handleClose: () => void;
+  recallRequest?: () => void;
+
 }
 
 export default function UrlUploadDialog(props: UrlUploadDialogProps): JSX.Element {
   const classes = useStyles();
-  const { open, handleClose } = props;
+  const { open, handleClose, recallRequest } = props;
 
   const subOpen = useToggle(); // Toggle for sub-urls
   const mainUrl = useEventTargetValue('https://'); // Main url
@@ -63,7 +64,12 @@ export default function UrlUploadDialog(props: UrlUploadDialogProps): JSX.Elemen
   }, any[]>(
     '/marketer/landing-url',
     // success callback function
-    () => { handleClose(); history.push('/mypage/marketer/inventory'); }
+    () => {
+      handleClose();
+      if (recallRequest) {
+        recallRequest();
+      }
+    }
   );
 
 

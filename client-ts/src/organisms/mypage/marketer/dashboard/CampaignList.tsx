@@ -4,7 +4,7 @@ import {
   Grid, Paper, Divider, Button,
   Typography, IconButton,
   ListItem, List, FormControlLabel,
-  Snackbar, Hidden, Switch
+  Snackbar, Hidden, Switch, CircularProgress
 } from '@material-ui/core';
 import Countup from 'react-countup';
 import { Assessment, Delete as DeleteIcon, Build } from '@material-ui/icons';
@@ -43,7 +43,18 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center'
-  }
+  },
+  loading: {
+    paddingTop: theme.spacing(3),
+    paddingBottom: theme.spacing(3)
+  },
+  statement: {
+    fontSize: 15,
+    fontWeight: 700,
+    textAlign: 'center',
+    marginBottom: theme.spacing(2)
+  },
+
 }));
 
 export default function CampaignList(
@@ -96,142 +107,153 @@ export default function CampaignList(
       </div>
 
       <Divider />
-      <List style={{ maxHeight: 380, overflowY: 'auto' }}>
-        {campaignData.data && campaignData.data.map((detail: CampaignInterface, index) => (
-          <div key={detail.campaignId}>
-            <ListItem className={classes.list}>
-              <Grid container direction="row" justify="space-between">
-                <Grid item className={classes.contents}>
-                  <Grid container direction="row" className={classes.contents} spacing={3}>
-                    <Grid item>
-                      <FormControlLabel
-                        control={(
-                          <Switch
-                            id="onoff-switch"
-                            color="primary"
-                            checked={Boolean(detail.onOff)}
-                            onChange={handleUpdateState({
-                              onoffState: !detail.onOff,
-                              campaignId: detail.campaignId
-                            })}
-                          />
-                        )}
-                        label={detail.onOff ? (<Typography color="primary">활성화</Typography>) : (<Typography>비활성화</Typography>)}
-                        labelPlacement="bottom"
-                      />
-                    </Grid>
-                    <Grid item>
-                      <img className={classes.img} alt="campaign-logo" src={detail.bannerSrc} />
-                    </Grid>
-                    <Hidden xsDown>
+      {!campaignData.loading && campaignData.data && (
+        <List style={{ maxHeight: 380, overflowY: 'auto' }}>
+          {campaignData.data.map((detail: CampaignInterface, index) => (
+            <div key={detail.campaignId}>
+              <ListItem className={classes.list}>
+                <Grid container direction="row" justify="space-between">
+                  <Grid item className={classes.contents}>
+                    <Grid container direction="row" className={classes.contents} spacing={3}>
                       <Grid item>
-                        <Grid container direction="column" spacing={2}>
+                        <FormControlLabel
+                          control={(
+                            <Switch
+                              id="onoff-switch"
+                              color="primary"
+                              checked={Boolean(detail.onOff)}
+                              onChange={handleUpdateState({
+                                onoffState: !detail.onOff,
+                                campaignId: detail.campaignId
+                              })}
+                            />
+                          )}
+                          label={detail.onOff ? (<Typography color="primary">활성화</Typography>) : (<Typography>비활성화</Typography>)}
+                          labelPlacement="bottom"
+                        />
+                      </Grid>
+                      <Grid item>
+                        <img className={classes.img} alt="campaign-logo" src={detail.bannerSrc} />
+                      </Grid>
+                      <Hidden xsDown>
+                        <Grid item>
+                          <Grid container direction="column" spacing={2}>
+                            <Typography gutterBottom variant="body2">
+                              {detail.campaignName}
+                            </Typography>
+                            <Typography variant="caption" gutterBottom>
+                              {optionTypeList[detail.optionType]}
+                            </Typography>
+                            <Typography variant="caption" gutterBottom>
+                              {priorityTypeList[detail.priorityType]}
+                            </Typography>
+                            <Typography variant="caption" color="textSecondary">
+                              {new Date(detail.regiDate).toLocaleDateString()}
+                            </Typography>
+                          </Grid>
+                        </Grid>
+                      </Hidden>
+                    </Grid>
+                  </Grid>
+                  <Hidden xsDown>
+                    <Grid item style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <Grid container direction="column">
+                        <Grid item>
                           <Typography gutterBottom variant="body2">
-                            {detail.campaignName}
+                            오늘 집행된 예산
                           </Typography>
-                          <Typography variant="caption" gutterBottom>
-                            {optionTypeList[detail.optionType]}
+                        </Grid>
+                        <Grid>
+                          <Divider orientation="horizontal" />
+                        </Grid>
+                        <Grid item>
+                          <Typography variant="h5" color="secondary" align="center">
+                            <Countup duration={2} end={detail.dailysum ? detail.dailysum : 0} separator="," />
                           </Typography>
-                          <Typography variant="caption" gutterBottom>
-                            {priorityTypeList[detail.priorityType]}
-                          </Typography>
-                          <Typography variant="caption" color="textSecondary">
-                            {new Date(detail.regiDate).toLocaleDateString()}
+                        </Grid>
+                        <Grid item>
+                          {(detail.dailyLimit !== -1)
+                            ? (
+                              <Typography variant="body1" align="center" style={{ fontWeight: 700 }}>
+                                {new Intl.NumberFormat().format(detail.dailyLimit)}
+                              </Typography>
+                            )
+                            : (
+                              <Typography variant="h4" align="center" style={{ fontWeight: 700 }}>
+                                ∞
+                              </Typography>
+                            )}
+                        </Grid>
+                        <Grid>
+                          <Divider orientation="horizontal" />
+                        </Grid>
+                        <Grid item>
+                          <Typography gutterBottom variant="body2" align="center">
+                            일일 예산
                           </Typography>
                         </Grid>
                       </Grid>
-                    </Hidden>
-                  </Grid>
-                </Grid>
-                <Hidden xsDown>
-                  <Grid item style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <Grid container direction="column">
-                      <Grid item>
-                        <Typography gutterBottom variant="body2">
-                          오늘 집행된 예산
-                        </Typography>
-                      </Grid>
-                      <Grid>
-                        <Divider orientation="horizontal" />
-                      </Grid>
-                      <Grid item>
-                        <Typography variant="h5" color="secondary" align="center">
-                          <Countup duration={2} end={detail.dailysum ? detail.dailysum : 0} separator="," />
-                        </Typography>
-                      </Grid>
-                      <Grid item>
-                        {(detail.dailyLimit !== -1)
-                          ? (
-                            <Typography variant="body1" align="center" style={{ fontWeight: 700 }}>
-                              {new Intl.NumberFormat().format(detail.dailyLimit)}
-                            </Typography>
-                          )
-                          : (
-                            <Typography variant="h4" align="center" style={{ fontWeight: 700 }}>
-                              ∞
-                            </Typography>
-                          )}
-                      </Grid>
-                      <Grid>
-                        <Divider orientation="horizontal" />
-                      </Grid>
-                      <Grid item>
-                        <Typography gutterBottom variant="body2" align="center">
-                          일일 예산
-                        </Typography>
-                      </Grid>
                     </Grid>
-                  </Grid>
-                  <Grid item>
-                    <List>
-                      <ListItem
-                        button
-                        onClick={(): void => {
-                          setSelectedCampaign(detail);
-                          campaignReportDialog.handleOpen();
-                        }}
-                      >
-                        <Assessment />
-                        <Typography>분석</Typography>
-                      </ListItem>
-                      <ListItem
-                        button
-                        onClick={(): void => {
-                          setSelectedCampaign(detail);
-                          campaignUpdateDialog.handleOpen();
-                        }}
-                      >
-                        <Build color="action" />
-                        <Typography>수정</Typography>
-                      </ListItem>
-                      <ListItem
-                        button
-                        onClick={(): void => {
-                          setSelectedCampaign(detail);
-                          campaignDeleteDialog.handleOpen();
-                        }}
-                      >
-                        <DeleteIcon color="error" />
-                        <Typography color="error">삭제</Typography>
-                      </ListItem>
-                    </List>
-                  </Grid>
-                </Hidden>
+                    <Grid item>
+                      <List>
+                        <ListItem
+                          button
+                          onClick={(): void => {
+                            setSelectedCampaign(detail);
+                            campaignReportDialog.handleOpen();
+                          }}
+                        >
+                          <Assessment />
+                          <Typography>분석</Typography>
+                        </ListItem>
+                        <ListItem
+                          button
+                          onClick={(): void => {
+                            setSelectedCampaign(detail);
+                            campaignUpdateDialog.handleOpen();
+                          }}
+                        >
+                          <Build color="action" />
+                          <Typography>수정</Typography>
+                        </ListItem>
+                        <ListItem
+                          button
+                          onClick={(): void => {
+                            setSelectedCampaign(detail);
+                            campaignDeleteDialog.handleOpen();
+                          }}
+                        >
+                          <DeleteIcon color="error" />
+                          <Typography color="error">삭제</Typography>
+                        </ListItem>
+                      </List>
+                    </Grid>
+                  </Hidden>
 
-              </Grid>
+                </Grid>
 
-            </ListItem>
-            {(campaignData.data
-              && !(campaignData.data.length - 1 === index)) && (<Divider light />)}
-          </div>
-        ))}
-      </List>
-      {!campaignData.loading && campaignData.data && campaignData.data.length === 0 && (
+              </ListItem>
+              {(campaignData.data
+                && !(campaignData.data.length - 1 === index)) && (<Divider light />)}
+            </div>
+          ))}
+        </List>
+      )}
+      {(!campaignData.loading && campaignData.data && campaignData.data.length === 0) && (
         <Grid container justify="center" alignItems="center" direction="column" style={{ marginTop: 40 }}>
           <Typography variant="body1">생성된 캠페인이 없습니다.</Typography>
           <Typography variant="body1">새로운 캠페인을 생성해 광고를 진행하세요.</Typography>
         </Grid>
       )}
+      {(campaignData.loading) && (
+        <Grid item xs={12} className={classes.loading}>
+          <Typography className={classes.statement}>
+            캠페인 리스트 데이터를 로드하고 있습니다.
+          </Typography>
+          <div style={{ textAlign: 'center' }}><CircularProgress /></div>
+        </Grid>
+      )}
+
 
       <Snackbar
         anchorOrigin={{

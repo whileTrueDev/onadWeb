@@ -2,7 +2,7 @@ import React from 'react';
 import { Typography, Tooltip } from '@material-ui/core';
 import Delete from '@material-ui/icons/Delete';
 import MaterialTable from '../../../../atoms/Table/MaterialTable';
-import useGetRequest from '../../../../utils/hooks/useGetRequest';
+import { UseGetRequestObject } from '../../../../utils/hooks/useGetRequest';
 import { BannerDataInterface } from './interface';
 
 const BANNER_MAX_WIDTH = 320;
@@ -11,11 +11,11 @@ const BANNER_MAX_HEIGHT = 200;
 interface BannerTableProps {
   handleDeleteOpen: (v?: boolean | undefined) => void;
   setBanner: React.Dispatch<React.SetStateAction<BannerDataInterface | null>>;
+  fetchData: UseGetRequestObject<BannerDataInterface[] | null>;
 }
 
 export default function BannerTable(props: BannerTableProps): JSX.Element {
-  const { handleDeleteOpen, setBanner } = props;
-  const fetchData = useGetRequest<null, BannerDataInterface[] | null>('/marketer/banner/list');
+  const { handleDeleteOpen, setBanner, fetchData } = props;
 
   const columns = [
     {

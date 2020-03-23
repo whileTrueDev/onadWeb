@@ -7,7 +7,6 @@ import Dialog from '../../../../atoms/Dialog/Dialog';
 import useGetRequest from '../../../../utils/hooks/useGetRequest';
 import useDeleteRequest from '../../../../utils/hooks/useDeleteRequest';
 import { BannerDataInterface } from './interface';
-import history from '../../../../history';
 
 const useStyles = makeStyles((theme: Theme) => ({
   img: {
@@ -29,13 +28,14 @@ interface DeleteDialogProps {
   open: boolean;
   selectedBanner: BannerDataInterface;
   handleClose: () => void;
+  recallRequest: () => void;
 }
 
 
 const DeleteDialog = (props: DeleteDialogProps): JSX.Element => {
   const classes = useStyles();
   const {
-    open, selectedBanner, handleClose
+    open, selectedBanner, handleClose, recallRequest
   } = props;
 
   const { doDeleteRequest } = useDeleteRequest<{ bannerId: string }, any[]>('/marketer/banner');
@@ -54,35 +54,35 @@ const DeleteDialog = (props: DeleteDialogProps): JSX.Element => {
       buttons={(
         <div style={{ display: 'flex' }}>
           {!connectedCampaign.loading
-          && connectedCampaign.data
-          && connectedCampaign.data.length > 0 && (
-            <Tooltip title={<Typography>배너가 캠페인에 할당되어 있어 삭제가 불가능합니다.</Typography>}>
-              <div>
-                <CustomButton
-                  color="primary"
-                  disabled
-                >
-                  확인
-                </CustomButton>
-              </div>
-            </Tooltip>
-          )}
+            && connectedCampaign.data
+            && connectedCampaign.data.length > 0 && (
+              <Tooltip title={<Typography>배너가 캠페인에 할당되어 있어 삭제가 불가능합니다.</Typography>}>
+                <div>
+                  <CustomButton
+                    color="primary"
+                    disabled
+                  >
+                    확인
+                  </CustomButton>
+                </div>
+              </Tooltip>
+            )}
           {!connectedCampaign.loading
-          && connectedCampaign.data
-          && connectedCampaign.data.length === 0 && (
-            <CustomButton
-              color="primary"
-              onClick={(): void => {
-                doDeleteRequest({ bannerId: selectedBanner.bannerId });
-                setTimeout(() => {
-                  handleClose();
-                  history.push(window.location.pathname);
-                }, 1000);
-              }}
-            >
-              확인
-            </CustomButton>
-          )}
+            && connectedCampaign.data
+            && connectedCampaign.data.length === 0 && (
+              <CustomButton
+                color="primary"
+                onClick={(): void => {
+                  doDeleteRequest({ bannerId: selectedBanner.bannerId });
+                  setTimeout(() => {
+                    handleClose();
+                    recallRequest();
+                  }, 500);
+                }}
+              >
+                확인
+              </CustomButton>
+            )}
           <CustomButton onClick={handleClose}>취소</CustomButton>
         </div>
       )}

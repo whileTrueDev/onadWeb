@@ -37,7 +37,17 @@ const styles = makeStyles((theme: Theme) => ({
     [theme.breakpoints.down('xs')]: {
       fontSize: '9px',
     },
-  }
+  },
+  loading: {
+    paddingTop: theme.spacing(3),
+    paddingBottom: theme.spacing(3)
+  },
+  statement: {
+    fontSize: 15,
+    fontWeight: 700,
+    textAlign: 'center',
+    marginBottom: theme.spacing(2)
+  },
 }));
 
 
@@ -142,8 +152,15 @@ export default function issueTable(
 
       <Grid container style={{ height: '350px', overflow: 'auto' }}>
         {/* 데이터 있는 경우 */}
-        {actionLogData.loading && (<CircularProgress />)}
-        {actionLogData.data && actionLogData.data.length > 0 ? (
+        {actionLogData.loading && (
+          <Grid item xs={12} className={classes.loading}>
+            <Typography className={classes.statement}>
+              활동내역 데이터를 로드하고 있습니다.
+            </Typography>
+            <div style={{ textAlign: 'center' }}><CircularProgress /></div>
+          </Grid>
+        )}
+        {!actionLogData.loading && actionLogData.data && actionLogData.data.length > 0 && (
           <List component="nav" style={{ width: '100%' }} aria-label="issue-table">
             {actionLogData.data
               .sort((a, b) => (a.date > b.date ? -1 : a.date < b.date ? 1 : 0))
@@ -156,12 +173,13 @@ export default function issueTable(
                     />
                   </ListItem>
                   {actionLogData.data
-                  && index !== actionLogData.data.length - 1 && (<Divider light />)}
+                    && index !== actionLogData.data.length - 1 && (<Divider light />)}
                 </div>
               ))}
           </List>
-        ) : (
-        // 데이터 없는 경우
+        )}
+        {!actionLogData.loading && actionLogData.data && actionLogData.data.length === 0 && (
+          // 데이터 없는 경우
           <div
             style={{
               display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%'
@@ -171,9 +189,6 @@ export default function issueTable(
           </div>
         )}
       </Grid>
-
-      {/* 데이터 없는 경우 */}
-
     </Paper>
   );
 }

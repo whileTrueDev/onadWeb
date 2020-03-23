@@ -11,7 +11,6 @@ import './upload.css';
 import ImageUpload from './ImageUpload';
 import HOST from '../../../../utils/config';
 import axios from '../../../../utils/axios';
-import history from '../../../../history';
 
 const DEFAULT_IMAGE_PATH = '/pngs/dashboard/banner_upload_manual.png';
 
@@ -92,13 +91,12 @@ const myReducer = (state: ImageInterface, action: ImageAction): ImageInterface =
 interface UploadDialogProps {
   open: boolean;
   onClose: () => void;
-  isCampaignPage?: boolean;
   recallRequest?: () => void;
 }
 
 const UploadDialog = (props: UploadDialogProps): JSX.Element => {
   const {
-    open, onClose, isCampaignPage, recallRequest
+    open, onClose, recallRequest
   } = props;
   const classes = useStyle();
   const [state, dispatch] = useReducer(myReducer, { imageName: '', imageUrl: DEFAULT_IMAGE_PATH });
@@ -142,9 +140,7 @@ const UploadDialog = (props: UploadDialogProps): JSX.Element => {
       .then((res) => {
         if (res.data[0]) {
           alert(res.data[1]);
-          if (!isCampaignPage) {
-            history.push(window.location.pathname);
-          } else if (recallRequest) {
+          if (recallRequest) {
             recallRequest();
           }
         } else {
