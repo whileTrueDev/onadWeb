@@ -6,7 +6,7 @@
     "start:mac": "PORT=3001 react-scripts start",
     "start": "set PORT=3001 && react-scripts start",
     "build": "NODE_ENV=production GENERATE_SOURCEMAP=false react-scripts build",
-    "test": "react-scripts test",
+    "test": "react-scripts test --coverage --detectOpenHandles --forceExit --passWithNoTests",
     "eject": "react-scripts eject"
   },
   "dependencies": {

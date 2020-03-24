@@ -3,9 +3,6 @@
 .vs/
 .vs
 
-.eslintrc
-
-yarn.lock
 package-lock.json
 
 node_modules/
@@ -20,8 +17,6 @@ docker-compose.debug.*
 ./node_modules/*
 node_modules/*
 node_modules/
-yarn.lock
-.eslintrc
 
 log/*
 /log/*
@@ -43,14 +38,13 @@ node_modules/*
 /.pnp
 .pnp.js
 
-.eslintrc
-
-yarn.lock
 # testing
 /coverage
+coverage
 
 # production
 /build
+/dist
 
 # misc
 .DS_Store
@@ -64,7 +58,6 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-.github
 node_websocket/bin/log/.4656d4b69a1bdd3f78a7960fb7be9313031a78bb-audit.json
 node_websocket/bin/log/.095c09e3523e69374ed428d1a39c4cde0127627b-audit.json
 node_websocket/bin/log/.4656d4b69a1bdd3f78a7960fb7be9313031a78bb-audit.json

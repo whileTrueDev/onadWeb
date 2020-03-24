@@ -3,7 +3,7 @@ env:
   - NODE_ENV=production
 
 node_js:
-  - "10.15.3"
+  - "12.16.1"
 
 branches:
   only:
@@ -19,10 +19,6 @@ services:
 
 script:
   - cd client && yarn install --prod && CI="false" yarn build && cd -
-  - cd service && yarn && cd -
-  # - cd server && yarn && yarn build && cd -
-  - cd node_websocket && yarn && cd -
-  - cd calculator && yarn && cd -
 
 cache:
   yarn: true
@@ -42,7 +38,6 @@ after_success:
   - docker push $DOCKER_USERNAME/onad_web_api
   - docker push $DOCKER_USERNAME/onad_socket
   - docker push $DOCKER_USERNAME/onad_calculator
-
 
 # slack notification for one channel
 notifications:

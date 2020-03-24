@@ -1,4 +1,4 @@
-FROM node:10.15.3-alpine
+FROM node:12.16.1-alpine
 ENV NODE_ENV production
 RUN mkdir -p /home/api_server
 WORKDIR /home/api_server

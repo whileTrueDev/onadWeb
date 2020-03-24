@@ -12,7 +12,7 @@
     "build": "webpack --config webpack.config.js",
     "start:production": "NODE_ENV=production node ./dist/bundle.js",
     "start:production:window": "set NODE_ENV=production && node ./dist/bundle.js",
-    "test": "jest --config jest.config.json --coverage"
+    "test": "jest --coverage --detectOpenHandles --forceExit --passWithNoTests"
   },
   "devDependencies": {
     "@types/body-parser": "^1.19.0",
@@ -40,6 +40,7 @@
     "@types/swagger-jsdoc": "^3.0.2",
     "@types/swagger-ui-express": "^4.1.1",
     "@types/ua-parser-js": "^0.7.33",
+    "file-loader": "^6.0.0",
     "jest": "^25.1.0",
     "nodemon": "^2.0.2",
     "rimraf": "^3.0.2",
