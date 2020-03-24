@@ -40,7 +40,7 @@ module.exports = function (sql, socket, msg) {
   const getOnCampaignList = () => {
     console.log('현재 ON되어있는 campaign List를 조회한다.');
     const campaignListQuery = `
-    SELECT campaignId, optionType, startDate, finDate, selectedTime
+    SELECT campaignId, campaignName, optionType, startDate, finDate, selectedTime
     FROM campaign
     LEFT JOIN marketerInfo
     ON campaign.marketerId = marketerInfo.marketerId
@@ -60,7 +60,7 @@ module.exports = function (sql, socket, msg) {
             (data) => {
               if (data.startDate && data.startDate < nowDate && (data.findate > nowDate || !data.finDate)) {
                 filteredDate[data.campaignId] = data.selectedTime;
-                campaignObject[data.campaignId] = data.optionType;
+                campaignObject[data.campaignId] = [data.optionType, data.campaignName];
               }
             }
           );
@@ -253,11 +253,11 @@ module.exports = function (sql, socket, msg) {
     } else {
       socket.emit('img clear', []);
       console.log(`${creatorId} : 켜져있는 광고가 없습니다. at : ${getTime}`);
-      return false;
+      return [false, false, false];
     }
 
     if (prevBannerName && myCampaignId === prevBannerName.split(',')[0]) {
-      return false;
+      return [false, myCampaignId, creatorId];
     }
     const bannerSrc = await getBannerSrc(myCampaignId);
     return [bannerSrc, myCampaignId, creatorId];
@@ -272,20 +272,28 @@ module.exports = function (sql, socket, msg) {
       const myCreatorTwitchId = data[0].creatorTwitchId;
       const myAdChatAgreement = data[0].adChatAgreement;
       myGameId = await getGameId(myCreatorId);
+
       const bannerInfo = await getBanner([myCreatorId, myGameId]);
-      if (bannerInfo) {
+      const checkOptionType = campaignObject[bannerInfo[1]] ? campaignObject[bannerInfo[1]][0] : false;
+      const myCampaignName = campaignObject[bannerInfo[1]] ? campaignObject[bannerInfo[1]][1] : false;
+
+      if (bannerInfo[0]) {
         await insertLandingPage(bannerInfo[1], bannerInfo[2]);
         socket.emit('img receive', [bannerInfo[0], [bannerInfo[1], bannerInfo[2]]]);
         // to chatbot
-        if (myAdChatAgreement === 1 && campaignObject[bannerInfo[1]] === 1) {
+        if (myAdChatAgreement === 1 && checkOptionType) {
           console.log(myCreatorId, ' next-campaigns-twitch-chatbot Emitting!! - ', myCreatorTwitchId);
-          socket.broadcast.emit('next-campaigns-twitch-chatbot', { campaignId: myCampaignId, creatorId: myCreatorId, creatorTwitchId: myCreatorTwitchId });
+          socket.broadcast.emit('next-campaigns-twitch-chatbot', {
+            campaignId: myCampaignId, creatorId: myCreatorId, creatorTwitchId: myCreatorTwitchId, campaignName: myCampaignName
+          });
         }
       } else {
         // to chatbot
-        if (myAdChatAgreement === 1 && campaignObject[bannerInfo[1]] === 1) {
+        if (myAdChatAgreement === 1 && checkOptionType) {
           console.log(myCreatorId, ' next-campaigns-twitch-chatbot Emitting!! - ', myCreatorTwitchId);
-          socket.broadcast.emit('next-campaigns-twitch-chatbot', { campaignId: myCampaignId, creatorId: myCreatorId, creatorTwitchId: myCreatorTwitchId });
+          socket.broadcast.emit('next-campaigns-twitch-chatbot', {
+            campaignId: myCampaignId, creatorId: myCreatorId, creatorTwitchId: myCreatorTwitchId, campaignName: myCampaignName
+          });
         }
         console.log(`${myCreatorId} : 같은 캠페인 송출 중이어서 재호출 안합니다. at ${getTime}`);
       }
