@@ -47,6 +47,7 @@ jobs:
         uses: elgohr/Publish-Docker-Github-Action@2.13
         with:
           name: hwasurr/onad_web
+          workdir: client-ts
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
           dockerfile: client-ts/Dockerfile
@@ -56,6 +57,7 @@ jobs:
         uses: elgohr/Publish-Docker-Github-Action@2.13
         with:
           name: hwasurr/onad_web_api
+          workdir: server
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
           dockerfile: server/Dockerfile
