@@ -35,7 +35,7 @@ jobs:
       - name: <client-ts> eslint
         uses: stefanoeb/eslint-action@1.0.2
         with:
-          files: ./client-ts/src/
+          files: client-ts/src/
 
       - name: <client-ts> test/build-test/
         run: |
@@ -48,7 +48,7 @@ jobs:
       - name: <server> eslint
         uses: stefanoeb/eslint-action@1.0.2
         with:
-          files: ./server/
+          files: server/
 
       - name: <server> test/build-test/
         run: |
