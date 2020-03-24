@@ -53,7 +53,6 @@ router.get('/onoff', (req, res) => {
     });
 });
 
-// 캠페인 On & Off 기능
 // 잔액이 0원일 때는 불가능 하도록 정의.
 router.post('/onoff', (req, res) => {
   const contractionState = req.body.onOffState === false ? 0 : 1;
@@ -101,7 +100,8 @@ router.post('/onoff', (req, res) => {
     });
 });
 
-// doQuery 수정
+// doQuery 수정 
+//안씀
 router.get('/creatorlist', (req, res) => {
   const listQuery = `
   SELECT ts.streamerName, avg(viewer) as avgViewer
@@ -126,6 +126,7 @@ router.get('/creatorlist', (req, res) => {
 });
 
 // bannerMatched의 특정 배너와 계약된 크리에이터 조회
+// 안씀
 router.get('/contraction/creatorList', (req, res) => {
   const { bannerId } = req.query;
 

@@ -11,7 +11,7 @@ import MaterialTable from '../../../atoms/Table/MaterialTable';
 
 import GreenCheckbox from '../../../atoms/GreenCheckBox';
 
-const dialogStyle = theme => ({
+const dialogStyle = (theme) => ({
   formRoot: {
     margin: theme.spacing(2),
     padding: theme.spacing(1),
@@ -19,7 +19,7 @@ const dialogStyle = theme => ({
 });
 
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   title: {
     fontWeight: 'bold'
   },
@@ -105,7 +105,7 @@ const LandingUrlInventoryDialog = (props) => {
     },
     {
       title: '링크 이름',
-      render: rowData => (
+      render: (rowData) => (
         <div>
           {rowData.links.links.map((link, index) => {
             if (link) {
@@ -142,7 +142,7 @@ const LandingUrlInventoryDialog = (props) => {
     },
     {
       title: '링크 주소',
-      render: rowData => (
+      render: (rowData) => (
         <div>
           {rowData.links.links.map((link, index) => {
             if (link) {
@@ -187,13 +187,12 @@ const LandingUrlInventoryDialog = (props) => {
         </div>
       ),
     },
-    { title: '링크 등록 일자', render: rowData => (<span>{rowData.regiDate}</span>) },
+    { title: '링크 등록 일자', render: (rowData) => (<span>{rowData.regiDate}</span>) },
     {
       title: '선택',
-      render: rowData => (
+      render: (rowData) => (
         <div>
           <GreenCheckbox
-            fontSize="large"
             id={rowData.linkId}
             checked={indexId === rowData.linkId}
             onClick={(event) => { handleCheck(event, rowData.links); }}
@@ -216,14 +215,14 @@ const LandingUrlInventoryDialog = (props) => {
             variant="contained"
             onClick={handleClose}
           >
-              닫기
+            닫기
           </Button>
           <Button
             variant="contained"
             color="primary"
             onClick={() => { handleClose('click'); }}
           >
-              확인
+            확인
           </Button>
         </div>
 )}

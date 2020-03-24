@@ -18,7 +18,7 @@ import CardFooter from '../../../atoms/Card/CardFooter';
 import ImageDialog from './ImageDialog';
 import dashboardStyle from '../../../assets/jss/onad/views/dashboardStyle';
 
-const stepperStyles = makeStyles(theme => ({
+const stepperStyles = makeStyles((theme) => ({
   image: {
     position: 'relative',
     height: 330,
@@ -74,7 +74,7 @@ const ManualDetail = (props) => {
   return (
     <GridContainer>
       <Card>
-        <CardHeader color="blueGray" stats>
+        <CardHeader color="blueGray">
           <h4 className={classes.cardTitleWhite}>
             {source.card.title}
           </h4>
@@ -84,7 +84,7 @@ const ManualDetail = (props) => {
         </CardHeader>
         <CardBody>
           <Stepper orientation="vertical">
-            {source.source.map(value => (
+            {source.source.map((value) => (
               <Step active key={shortid.generate()}>
                 <StepLabel>
                   <Markdown
@@ -117,11 +117,9 @@ const ManualDetail = (props) => {
         </CardBody>
 
         <CardFooter stats>
-          <Typography variant="body2">
-            {''}
-          </Typography>
+          <div />
           <Typography variant="subtitle2" style={{ textTransform: 'none' }}>
-          이해가 잘 안되시거나, 문의사항이 있으시면 고객센터로 문의해주세요. E-mail : support@onad.io
+            이해가 잘 안되시거나, 문의사항이 있으시면 고객센터로 문의해주세요. E-mail : support@onad.io
           </Typography>
         </CardFooter>
 

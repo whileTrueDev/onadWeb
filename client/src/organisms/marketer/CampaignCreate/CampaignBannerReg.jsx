@@ -8,7 +8,7 @@ import StyledItemText from '../../../atoms/StyledItemText';
 import BannerCarousel from '../../../atoms/BannerCarousel';
 import Button from '../../../atoms/CustomButtons/Button';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     width: '100%',
     marginTop: '0px',
@@ -35,7 +35,7 @@ const useStyles = makeStyles(theme => ({
     },
   },
   label: {
-    color: '#455a64',
+    color: theme.palette.info.main,
     fontWeight: '700',
     [theme.breakpoints.down('sm')]: {
       fontSize: '14px',
@@ -78,7 +78,7 @@ const CampaignBannerReg = (props) => {
       <Button
         onClick={() => { handleDialogOpen(); }}
       >
-          + 배너 등록하기
+        + 배너 등록하기
       </Button>
     </Grid>
   );

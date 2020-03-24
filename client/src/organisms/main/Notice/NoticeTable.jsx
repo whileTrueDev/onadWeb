@@ -15,12 +15,12 @@ export default function NoticeTable(props) {
     <MaterialTable
       title="공지 사항"
       columns={[
-        { title: '글번호', field: 'code', render: rowData => (<Typography>{rowData.code}</Typography>) },
-        { title: '구분', field: 'topic', render: rowData => (<Typography>{rowData.topic}</Typography>) },
+        { title: '글번호', field: 'code', render: (rowData) => (<Typography>{rowData.code}</Typography>) },
+        { title: '구분', field: 'topic', render: (rowData) => (<Typography>{rowData.topic}</Typography>) },
         {
           title: '글제목',
           field: 'title',
-          render: rowData => (
+          render: (rowData) => (
             <Typography className="title">
               {rowData.title}
               { dateDiff(new Date(), new Date(rowData.regiDate)) < 8 && (
@@ -32,7 +32,7 @@ export default function NoticeTable(props) {
         {
           title: '작성일',
           field: 'regiDate',
-          render: rowData => (
+          render: (rowData) => (
             <Typography>{new Date(rowData.regiDate).toLocaleString()}</Typography>
           )
         },

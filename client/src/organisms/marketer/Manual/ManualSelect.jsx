@@ -12,23 +12,21 @@ import CardHeader from '../../../atoms/Card/CardHeader';
 // style and images
 import dashboardStyle from '../../../assets/jss/onad/views/dashboardStyle';
 
-const useButtonStyle = makeStyles(theme => ({
+const useButtonStyle = makeStyles((theme) => ({
   fixedCard: {
     position: 'static',
   },
   root: {
-    background: 'white',
+    background: theme.palette.background.paper,
     borderRadius: 3,
     border: 0,
-    color: 'black',
     padding: '0 30px',
-    boxShadow: '0 3px 3px 2px rgba(102, 102, 102, .3)',
+    boxShadow: theme.shadows[3],
     width: '100%',
     height: '100%',
     position: 'relative',
   },
   label: {
-    textTransform: 'capitalize',
     flexDirection: 'column',
   },
 }));
@@ -43,9 +41,9 @@ const Select = (props) => {
   return (
     <div className={buttonClasses.fixedCard}>
       <Card>
-        <CardHeader color="blueGray" stats>
+        <CardHeader color="blueGray">
           <h4 className={classes.cardTitleWhite}>
-          이용 안내
+            이용 안내
           </h4>
           <p className={classes.cardCategoryWhite}>처음이시라면, 순서대로 진행해주세요.</p>
         </CardHeader>
@@ -54,7 +52,6 @@ const Select = (props) => {
           {sources.map((source, index) => (
             <Step key={shortid.generate()}>
               <StepLabel>
-
                 <Button
                   size="large"
                   variant="outlined"

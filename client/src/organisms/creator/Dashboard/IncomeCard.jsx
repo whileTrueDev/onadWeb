@@ -14,7 +14,7 @@ import WithdrawalDialog from './WithdrawDialog';
 import history from '../../../history';
 
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   stats: {
     color: '#999',
     display: 'inline-flex',
@@ -43,14 +43,8 @@ const useStyles = makeStyles(() => ({
   },
   head: {
     fontWeight: '500',
-    color: '#455a64',
   }
 }));
-
-const WithdrawalButton = (props) => {
-  const { handleOpen } = props;
-  return (<Button color="info" onClick={() => { handleOpen(); }}>출금신청</Button>);
-};
 
 const IncomeCard = () => {
   const classes = useStyles();
@@ -72,7 +66,15 @@ const IncomeCard = () => {
   return (
     <CustomCard
       iconComponent={<AttachMoney />}
-      buttonComponent={<WithdrawalButton handleOpen={handleOpen} />}
+      buttonComponent={(!cashData.loading && cashData.payload
+        && cashData.payload.creatorAccountNumber) && (
+        <Button
+          color="primary"
+          onClick={() => { handleOpen(); }}
+        >
+          출금신청
+        </Button>
+      )}
     >
       <Grid container direction="column" spacing={2}>
         <Grid item>
@@ -119,7 +121,8 @@ const IncomeCard = () => {
         </Grid>
       </Grid>
       {!cashData.loading && !cashData.error
-      && cashData.payload.creatorContractionAgreement && cashData.payload.creatorAccountNumber && (
+      && cashData.payload.creatorContractionAgreement
+      && cashData.payload.creatorAccountNumber && (
         <WithdrawalDialog
           open={open}
           handleOpen={handleOpen}

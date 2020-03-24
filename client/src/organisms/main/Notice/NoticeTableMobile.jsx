@@ -10,7 +10,7 @@ import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { Typography } from '@material-ui/core';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     width: '100%',
     padding: 0,
@@ -31,8 +31,8 @@ export default function NoticeTableMobile(props) {
       </div>
 
       <List component="nav" className={classes.root} aria-label="contacts">
-        {data.map(row => (
-          <div>
+        {data.map((row) => (
+          <div key={row.title}>
             <ExpansionPanel>
               <ExpansionPanelSummary
                 expandIcon={<ExpandMoreIcon />}
@@ -41,7 +41,10 @@ export default function NoticeTableMobile(props) {
               >
                 <div style={{ display: 'flex', flexDirection: 'column' }}>
                   <ListItemText secondary={row.topic} />
-                  <ListItemText primary={row.title} secondary={row.regiDate} />
+                  <ListItemText
+                    primary={row.title}
+                    secondary={new Date(row.regiDate).toLocaleString()}
+                  />
                 </div>
               </ExpansionPanelSummary>
               <ExpansionPanelDetails>

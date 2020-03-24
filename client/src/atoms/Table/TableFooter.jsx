@@ -11,10 +11,10 @@ import {
   LastPage, FirstPage, KeyboardArrowRight, KeyboardArrowLeft,
 } from '@material-ui/icons';
 // jss file import
-import tableStyle from '../../assets/jss/onad/components/tableStyle';
+import tableStyle from './Table.style';
 
 // Style for footer
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     flexShrink: 0,
     color: theme.palette.text.secondary,

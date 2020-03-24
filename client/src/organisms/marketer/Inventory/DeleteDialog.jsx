@@ -7,6 +7,8 @@ import StyledItemText from '../../../atoms/StyledItemText';
 import Dialog from '../../../atoms/Dialog/Dialog';
 import useFetchData from '../../../utils/lib/hooks/useFetchData';
 import useUpdateData from '../../../utils/lib/hooks/useUpdateData';
+
+
 import history from '../../../history';
 
 const useStyles = makeStyles(theme => ({
@@ -32,9 +34,11 @@ const DeleteDialog = (props) => {
     open, selectedBanner, handleClose
   } = props;
   const deleteRequest = useUpdateData('/api/dashboard/marketer/banner/delete');
+
   const connectedCampaign = useFetchData('/api/dashboard/marketer/banner/connectedcampaign', {
     bannerId: selectedBanner.bannerId
   });
+
   return (
     <Dialog
       open={open}
@@ -48,7 +52,7 @@ const DeleteDialog = (props) => {
             <Tooltip title={<Typography>배너가 캠페인에 할당되어 있어 삭제가 불가능합니다.</Typography>}>
               <div>
                 <CustomButton
-                  color="info"
+                  color="primary"
                   disabled
                 >
                   {'확인'}
@@ -58,8 +62,9 @@ const DeleteDialog = (props) => {
           )}
           {!connectedCampaign.loading && connectedCampaign.payload.length === 0 && (
             <CustomButton
-              color="info"
+              color="primary"
               onClick={() => {
+                // deleteRequest.handleDelete({ bannerId: selectedBanner.bannerId });
                 deleteRequest.handleUpdateRequest({ bannerId: selectedBanner.bannerId });
                 setTimeout(() => {
                   handleClose();

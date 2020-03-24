@@ -4,8 +4,6 @@ import Card from '../../../../atoms/Card/Card';
 import CardHeader from '../../../../atoms/Card/CardHeader';
 import CardBody from '../../../../atoms/Card/CardBody';
 import Table from '../../../../atoms/Table/Table';
-// own component
-// import NoTaxBillTolltip from '../../../../atoms/Tooltip/NoTaxBillTooltip';
 // hooks
 import useFetchData from '../../../../utils/lib/hooks/useFetchData';
 
@@ -16,6 +14,7 @@ const initialData = {
 
 export default function TaxBill() {
   const { payload, loading } = useFetchData('/api/dashboard/marketer/profile/taxbill');
+
 
   return (
     <Card>

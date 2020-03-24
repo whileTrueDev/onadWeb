@@ -55,7 +55,10 @@ const CampaignCreateTable = (props) => {
 
   const IS_CAMPAIGN_CREATE_PAGE = true; // 캠페인생성 페이지 구분을 위한 변수
   const landingUrlData = useFetchData('/api/dashboard/marketer/inventory/landingurl/all');
+
+
   const bannerData = useFetchData('/api/dashboard/marketer/banner/registered');
+
 
   const uploadDialog = useDialog();
   const landingUrlInventoryDialog = useDialog();

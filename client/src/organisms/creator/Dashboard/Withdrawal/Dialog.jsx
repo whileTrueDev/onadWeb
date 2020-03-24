@@ -12,18 +12,18 @@ import Typography from '@material-ui/core/Typography';
 import CloseIcon from '@material-ui/icons/Close';
 import Grid from '@material-ui/core/Grid';
 
-const styles = theme => ({
+const styles = (theme) => ({
   root: {
     margin: 0,
     padding: theme.spacing(2),
-    backgroundColor: '#455a64',
+    backgroundColor: theme.palette.info.main,
     color: '#FFF',
   },
   closeButton: {
     position: 'absolute',
     right: theme.spacing(1),
     top: theme.spacing(1),
-    color: theme.palette.grey[100],
+    color: theme.palette.grey[300],
   },
   title: {
     [theme.breakpoints.down('xs')]: {
@@ -33,7 +33,7 @@ const styles = theme => ({
       fontSize: '1.25rem',
     },
   },
-  
+
 });
 
 const DialogTitle = withStyles(styles)((props) => {
@@ -58,13 +58,13 @@ const DialogTitle = withStyles(styles)((props) => {
   );
 });
 
-const DialogContent = withStyles(theme => ({
+const DialogContent = withStyles((theme) => ({
   root: {
     padding: theme.spacing(2),
   },
 }))(MuiDialogContent);
 
-const DialogActions = withStyles(theme => ({
+const DialogActions = withStyles((theme) => ({
   root: {
     margin: 0,
     padding: theme.spacing(1),
@@ -87,7 +87,7 @@ function CustomDialog(props) {
           {title}
         </DialogTitle>
       ) : null }
-      <DialogContent style={{padding: `0 0`}}>
+      <DialogContent style={{ padding: '0 0' }}>
         {children}
       </DialogContent>
       { buttons

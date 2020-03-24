@@ -1,7 +1,7 @@
 import express from 'express';
 import createError from 'http-errors';
 import responseMessages from '../../lib/responseMessages';
-import { CreatorSession, MarketerSession } from '../../@types/session';
+import { Session } from '../../@types/session';
 
 /**
  * 제공된 필드명의 파라미터를 반환하는 함수.  
@@ -23,7 +23,7 @@ const getParam = (paramField: string | string[],
   if (typeof paramField === 'string') {
     switch (method.toLowerCase()) {
       case 'get':
-        if (!(req.query[paramField])) {
+        if (!(Object.keys(req.query).includes(paramField))) {
           throw new createError[400](responseMessages.ERROR_400);
         }
         return req.query[paramField];
@@ -31,7 +31,7 @@ const getParam = (paramField: string | string[],
       case 'put':
       case 'patch':
       case 'delete':
-        if (!(req.body[paramField])) {
+        if (!Object.keys(req.body).includes(paramField)) {
           throw new createError[400](responseMessages.ERROR_400);
         }
         return req.body[paramField];
@@ -43,7 +43,7 @@ const getParam = (paramField: string | string[],
   switch (method.toLowerCase()) {
     case 'get':
       return paramField.map((param) => {
-        if (!(req.query[param])) {
+        if (!(Object.keys(req.query).includes(param))) {
           throw new createError[400](responseMessages.ERROR_400);
         }
         return req.query[param];
@@ -53,13 +53,62 @@ const getParam = (paramField: string | string[],
     case 'patch':
     case 'delete':
       return paramField.map((param) => {
-        if (!(req.body[param])) {
+        if (!Object.keys(req.body).includes(param)) {
           throw new createError[400](responseMessages.ERROR_400);
         }
         return req.body[param];
       });
     default:
       throw new Error('getParam에 올바른 Method 명을 입력하지 않았습니다.');
+  }
+};
+
+/**
+ * 제공된 필드명의 파라미터를 반환하는 함수.  
+ * 필드명의 파라미터가 요청객체에 없는 경우 undefined를 반환한다.  
+ * Required가 아닌 파라미터를 요청으로부터 가져올 때 사용한다.  
+ * 대개 optional 파라미터는 PATCH 요청에서 쓰일 것이므로 patch 가 아닌경우는 사용을 자제.  
+ * @param paramField 필드명 또는 필드명을 요소로 하는 배열
+ * @param method 현재 HTTP 메소드  get | post | put | patch | delete
+ * @param req `express.Request`
+ * @example
+ * 
+ * const creatorContractionAgreement = getOptionalParam(
+ *   'creatorContractionAgreement', 'patch', req
+ * );
+ * const [marketerId, marketerName] = getOptionalParam(
+ *   ['marketerId', 'marketerName'], 'get', req
+ * );
+ * @author hwasurr
+ */
+const getOptionalParam = (paramField: string | string[],
+  method: 'get' | 'post' | 'put' | 'patch' | 'delete' | 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE',
+  req: express.Request): any | any[] => {
+  // 파라미터 field가 하나의 문자열인 경우
+  if (typeof paramField === 'string') {
+    switch (method.toLowerCase()) {
+      case 'get':
+        return req.query[paramField];
+      case 'post':
+      case 'put':
+      case 'patch':
+      case 'delete':
+        return req.body[paramField];
+      default:
+        throw new Error('getOptionalParam에 올바른 Method 명을 입력하지 않았습니다.');
+    }
+  }
+  // 파라미터 field가 배열인 경우
+  switch (method.toLowerCase()) {
+    case 'get':
+      return paramField.map((param) => req.query[param]);
+    case 'post':
+    case 'put':
+    case 'patch':
+    case 'delete':
+      return paramField.map((param) => req.body[param]);
+    default:
+      throw new Error('getOptionalParam에 올바른 Method 명을 입력하지 않았습니다.');
   }
 };
 
@@ -78,7 +127,7 @@ const getParam = (paramField: string | string[],
  * 
  * @author hwasurr
  */
-const getSessionData = (req: express.Request): CreatorSession & MarketerSession => {
+const getSessionData = (req: express.Request): Session => {
   if (req && req.session && req.session.passport && req.session.passport.user) {
     return req.session.passport.user;
   }
@@ -88,6 +137,7 @@ const getSessionData = (req: express.Request): CreatorSession & MarketerSession 
 /**
  * 세션 데이터와 파라미터 데이터를 체크하여  
  * 타인의 정보를 요청한 경우 403에러(Forbidden)를 발생시킨다,
+ * 지금은 결국에 true와 true를 비교하는 형국, DB연동하여 유효성 체크하도록 변경예정. 2020 03 17
  * @param param 유효성 체크할 파라미터 데이터
  * @param field 유효성 체크할 파라미터의 필드명 (세션의 key값)
  * @param req `express.Request`
@@ -95,7 +145,7 @@ const getSessionData = (req: express.Request): CreatorSession & MarketerSession 
  * @author hwasurr
  */
 const paramValidationCheck = (param: string | number | undefined,
-  field: keyof CreatorSession | keyof MarketerSession,
+  field: keyof Session,
   req: express.Request): true => {
   if (req.session && param === req.session.passport.user[field]) {
     return true;
@@ -116,7 +166,7 @@ const send = (
   res: express.Response
 ): void => {
   const OK = 200;
-  const CREATED = 2001;
+  const CREATED = 201;
   switch (method.toLowerCase()) {
     case 'post':
       res.status(CREATED).json(resultData);
@@ -148,5 +198,10 @@ const promiseError = (
 
 
 export default {
-  getParam, getSessionData, paramValidationCheck, send, promiseError
+  getParam,
+  getOptionalParam,
+  getSessionData,
+  paramValidationCheck,
+  send,
+  promiseError
 };

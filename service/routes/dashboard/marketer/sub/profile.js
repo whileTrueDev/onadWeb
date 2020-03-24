@@ -196,27 +196,31 @@ router.get('/taxbill', (req, res) => {
 
   const queryArray = [marketerId];
 
-  doQuery(query, queryArray).then((row) => {
-    const sendArray = [];
-    if (!row.error && row.result) {
-      row.result.forEach((obj) => {
-        const object = obj;
+  doQuery(query, queryArray)
+    .then((row) => {
+      const sendArray = [];
+      if (!row.error && row.result) {
+        row.result.forEach((obj) => {
+          const object = obj;
 
-        let taxBillState = '';
-        switch (object.state) {
-          case 0: taxBillState = '발행대기'; break;
-          case 1: taxBillState = '발행완료'; break;
-          case 2: taxBillState = '미발행'; break;
-          default: throw Error('tax bill state');
-        }
+          let taxBillState = '';
+          switch (object.state) {
+            case 0: taxBillState = '발행대기'; break;
+            case 1: taxBillState = '발행완료'; break;
+            case 2: taxBillState = '미발행'; break;
+            default: throw Error('tax bill state');
+          }
 
-        object.state = taxBillState;
-        object.cashAmount = object.cashAmount.toString();
-        sendArray.push(Object.values(object));
-      });
-      res.send(sendArray);
-    }
-  });
+          object.state = taxBillState;
+          object.cashAmount = object.cashAmount ? object.cashAmount.toString() : '0';
+          sendArray.push(Object.values(object));
+        });
+        res.send(sendArray);
+      }
+    })
+    .catch((err) => {
+      console.log('/profile/taxbill ', err);
+    });
 });
 
 router.get('/google', (req, res) => {

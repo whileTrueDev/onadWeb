@@ -13,7 +13,7 @@ import Button from '../../../../atoms/CustomButtons/Button';
 import HOST from '../../../../utils/config';
 import history from '../../../../history';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   contents: {
     display: 'flex',
     flexDirection: 'column',
@@ -98,7 +98,7 @@ const AccountDialog = (props) => {
   const Content = () => (
     <DialogContent className={classes.contents}>
       <DialogContentText className={classes.contentText}>
-          환불 받을 계좌정보를 입력해주세요.
+        환불 받을 계좌정보를 입력해주세요.
       </DialogContentText>
       <TextField
         required
@@ -170,7 +170,7 @@ const AccountDialog = (props) => {
           }}
         />
         <FormHelperText>
-          {'(-)을 제외한 계좌번호를 입력하세요'}
+          (-)을 제외한 계좌번호를 입력하세요
         </FormHelperText>
       </FormControl>
     </DialogContent>
@@ -189,10 +189,10 @@ const AccountDialog = (props) => {
         <Content />
 
         <DialogActions>
-          <Button type="submit" value="Submit" color="info">
+          <Button type="submit" value="Submit" color="primary">
             확인
           </Button>
-          <Button onClick={handleDialogClose}>
+          <Button color="default" onClick={handleDialogClose}>
             취소
           </Button>
         </DialogActions>

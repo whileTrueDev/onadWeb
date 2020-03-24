@@ -7,6 +7,7 @@ import helper from './helper';
 
 export default {
   getParam: helper.getParam,
+  getOptionalParam: helper.getOptionalParam,
   getSessionData: helper.getSessionData,
   paramValidationCheck: helper.paramValidationCheck,
   send: helper.send,

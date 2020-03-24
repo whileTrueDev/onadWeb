@@ -50,7 +50,7 @@ function BusinessRegistrationUploadForm(props) {
         <CardBody>
           <div className={myClasses.buttonWrapper}>
             <Button
-              color="info"
+              color="primary"
               onClick={() => { handleOpen(); }}
             >
               사업자 등록증 변경
@@ -69,7 +69,7 @@ function BusinessRegistrationUploadForm(props) {
           <CardBody>
             <div className={myClasses.buttonWrapper}>
               <Button
-                color="info"
+                color="primary"
                 onClick={handleOpen}
               >
               사업자 등록증 등록
@@ -97,7 +97,7 @@ function BusinessRegistrationUploadForm(props) {
         />
       )}
 
-      <Snackbar
+      {/* <Snackbar
         place="tc"
         color="success"
         message="사업자 등록증이 등록되었습니다."
@@ -105,7 +105,7 @@ function BusinessRegistrationUploadForm(props) {
         onClose={snack.handleClose}
         closeNotification={() => { snack.handleClose(); }}
         close
-      />
+      /> */}
 
     </Card>
   );

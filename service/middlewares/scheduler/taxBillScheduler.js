@@ -49,12 +49,12 @@ function getInsertData() {
           const marketerInfo = rowList[0].result; // marketerInfo
           const marketerCharge = rowList[1].result; // marketerCharge
 
-          const marketerIds = marketerInfo.map(marketer => marketer.marketerId);
+          const marketerIds = marketerInfo.map((marketer) => marketer.marketerId);
 
           marketerIds.forEach((id, index) => {
             // date에 전월 할당
-              marketerInfo[index].date = previousMonth;
-              marketerCharge.forEach((m) => {
+            marketerInfo[index].date = previousMonth;
+            marketerCharge.forEach((m) => {
               // 캐시내역 없는 경우 기본값 0 추가
               if (!marketerInfo[index].cashAmount) {
                 marketerInfo[index].cashAmount = 0;
@@ -99,28 +99,27 @@ const scheduler = schedule.scheduleJob(
   'Marketer taxbill scheduler', '1 10 1 * *', () => {
     // 전전월의 발행대기 => 미발행으로 변경 작업.
     updateFail()
-    .then(() => {
-      slack.push('마케터 세금계산서 미발행처리 완료.', '마케터 세금계산서');
+      .then(() => {
+        slack.push('마케터 세금계산서 미발행처리 완료.', '마케터 세금계산서');
 
-      // 삽입할 데이터 가져오기
-      getInsertData().then((data) => {
+        // 삽입할 데이터 가져오기
+        getInsertData().then((data) => {
         // 삽입 쿼리 생성
-        const q = makeInsertQuery(data);
+          const q = makeInsertQuery(data);
 
-        // 이전 월, '발행 대기', 삽입 작업.
-        doQuery(q.queryString, q.queryArray).then(() => {
-          slack.push('마케터 세금계산서 데이터 Insert 완료.', '마케터 세금계산서');
-        }).catch((err) => {
-          console.log(err);
-          slack.push('마케터 세금계산서 데이터 Insert 중 오류발생함.', '마케터 세금계산서');
+          // 이전 월, '발행 대기', 삽입 작업.
+          doQuery(q.queryString, q.queryArray).then(() => {
+            slack.push('마케터 세금계산서 데이터 Insert 완료.', '마케터 세금계산서');
+          }).catch((err) => {
+            console.log(err);
+            slack.push('마케터 세금계산서 데이터 Insert 중 오류발생함.', '마케터 세금계산서');
+          });
         });
+      })
+      .catch((err) => {
+        console.log(err);
+        slack.push('마케터 세금계산서 미발행처리 중 오류발생함.', '마케터 세금계산서');
       });
-    })
-    .catch((err) => {
-      console.log(err);
-      slack.push('마케터 세금계산서 미발행처리 중 오류발생함.', '마케터 세금계산서');
-    });
-
   }
 );
 module.exports = scheduler;

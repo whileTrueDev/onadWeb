@@ -17,6 +17,7 @@ import Notice from './pages/others/Notice';
 import Policy from './pages/main/Policy';
 import CreatorList from './pages/main/CreatorList';
 import TestChargeDialog from './organisms/marketer/MyOffice/CashManage/TestChargeDialog';
+import AdChatTracker from './pages/others/AdChatTracker';
 // import ShutDownCloseBeta from './pages/others/ShutDownCloseBeta';
 // import KakaoPay from './pages/Common/KakaoPay';
 import * as serviceWorker from './utils/serviceWorker';
@@ -40,7 +41,8 @@ const developRouter = (
       <Route exact path="/notice" component={Notice} />
       <Route exact path="/marketer/charge" component={TestChargeDialog} />
       <Route path="/notice/:code" component={Notice} />
-      <ThemeProvider theme={theme}>
+      <Route exact path="/adchat/:campaignId/:creatorTwitchId" component={AdChatTracker} />
+      <ThemeProvider theme={theme.lightTheme}>
         <Route exact path="/dashboard/creator/door" component={CreatorDashboardDoor} />
         <Route path="/dashboard/creator" component={CreatorDashboard} />
         <Route path="/dashboard/marketer" component={MarketerDashboard} />
@@ -66,7 +68,8 @@ const productionRouter = (
       <Route exact path="/marketer/charge" component={TestChargeDialog} />
       <Route exact path="/notice" component={Notice} />
       <Route path="/notice/:code" component={Notice} />
-      <ThemeProvider theme={theme}>
+      <Route exact path="/adchat/:campaignId/:creatorTwitchId" component={AdChatTracker} />
+      <ThemeProvider theme={theme.lightTheme}>
         <Route exact path="/dashboard/creator/door" component={CreatorDashboardDoor} />
         <Route path="/dashboard/creator" component={CreatorDashboard} />
         <Route path="/dashboard/marketer" component={MarketerDashboard} />

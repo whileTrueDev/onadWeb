@@ -3,23 +3,22 @@ import { Checkbox } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@material-ui/icons/CheckBox';
-import { green } from '@material-ui/core/colors';
 
-const GreenCheckBox = withStyles(() => ({
+const GreenCheckBox = withStyles((theme) => ({
   root: {
-    color: green[400],
+    color: theme.palette.success.light,
     '&$checked': {
-      color: green[600],
+      color: theme.palette.success.main,
     },
     margin: 0,
   },
   checked: {},
-}))(props => (
+}))(({ ...props }) => (
   <Checkbox
     color="default"
-    fontSize="large"
-    icon={<CheckBoxOutlineBlankIcon fontSize={props.fontSize} />}
-    checkedIcon={<CheckBoxIcon fontSize={props.fontSize} />}
+    size="medium"
+    icon={<CheckBoxOutlineBlankIcon />}
+    checkedIcon={<CheckBoxIcon />}
     {...props}
   />
 ));

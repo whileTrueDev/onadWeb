@@ -79,19 +79,22 @@ const ShowUrl = (props) => {
             className={classes.button}
             disabled={disabled}
             onClick={copyToClipboard}
+            size="small"
+            color="primary"
           >
             <InsertLinkOutlined />
-                복사
+            복사
           </Button>
         </Grid>
         <Grid item xs={6} sm={2}>
           <Button
             className={classes.button}
-            color="warning"
+            color="secondary"
             onClick={disabled ? showSrcTimer : undefined}
+            size="small"
           >
             <RemoveRedEyeOutlined />
-                  주소보기
+            주소보기
           </Button>
         </Grid>
 
