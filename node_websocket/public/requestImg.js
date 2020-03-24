@@ -60,6 +60,7 @@ module.exports = function (sql, socket, msg) {
             (data) => {
               if (data.startDate && data.startDate < nowDate && (data.findate > nowDate || !data.finDate)) {
                 filteredDate[data.campaignId] = data.selectedTime;
+                campaignObject[data.campaignId] = data.optionType;
               }
             }
           );
@@ -276,13 +277,13 @@ module.exports = function (sql, socket, msg) {
         await insertLandingPage(bannerInfo[1], bannerInfo[2]);
         socket.emit('img receive', [bannerInfo[0], [bannerInfo[1], bannerInfo[2]]]);
         // to chatbot
-        if (myAdChatAgreement === 1) {
+        if (myAdChatAgreement === 1 && campaignObject[bannerInfo[1]] === 1) {
           console.log(myCreatorId, ' next-campaigns-twitch-chatbot Emitting!! - ', myCreatorTwitchId);
           socket.broadcast.emit('next-campaigns-twitch-chatbot', { campaignId: myCampaignId, creatorId: myCreatorId, creatorTwitchId: myCreatorTwitchId });
         }
       } else {
         // to chatbot
-        if (myAdChatAgreement === 1) {
+        if (myAdChatAgreement === 1 && campaignObject[bannerInfo[1]] === 1) {
           console.log(myCreatorId, ' next-campaigns-twitch-chatbot Emitting!! - ', myCreatorTwitchId);
           socket.broadcast.emit('next-campaigns-twitch-chatbot', { campaignId: myCampaignId, creatorId: myCreatorId, creatorTwitchId: myCreatorTwitchId });
         }
