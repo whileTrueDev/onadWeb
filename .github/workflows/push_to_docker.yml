@@ -50,7 +50,6 @@ jobs:
           workdir: client-ts
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-          dockerfile: client-ts/Dockerfile
           tags: "latest,1.${{ github.run_number }}"
 
       - name: <server> Dockerize and Push to docker hub
@@ -60,7 +59,6 @@ jobs:
           workdir: server
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-          dockerfile: server/Dockerfile
           tags: "latest,1.${{ github.run_number }}"
 
       - name: notify to slack
