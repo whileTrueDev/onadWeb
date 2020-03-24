@@ -214,10 +214,6 @@ module.exports = function (sql, socket, msg) {
 
   const insertLandingPage = (campaignId, creatorId) => {
     // campaignId를 가져와서 optionType 0,1check후 삽입.
-    const optionType = campaignObject[campaignId];
-    if (optionType === 0) {
-      return false;
-    }
     const insertLandingQuery = 'INSERT IGNORE INTO landingClick(campaignId, creatorId) values(?,?);';
     return new Promise((resolve, reject) => {
       doQuery(insertLandingQuery, [campaignId, creatorId])
@@ -278,8 +274,9 @@ module.exports = function (sql, socket, msg) {
       const myCampaignName = campaignObject[bannerInfo[1]] ? campaignObject[bannerInfo[1]][1] : false;
 
       if (bannerInfo[0]) {
-        await insertLandingPage(bannerInfo[1], bannerInfo[2]);
-        socket.emit('img receive', [bannerInfo[0], [bannerInfo[1], bannerInfo[2]]]);
+        if (checkOptionType) {
+          await insertLandingPage(bannerInfo[1], bannerInfo[2]);
+        }
         // to chatbot
         if (myAdChatAgreement === 1 && checkOptionType) {
           console.log(myCreatorId, ' next-campaigns-twitch-chatbot Emitting!! - ', myCreatorTwitchId);
@@ -287,6 +284,7 @@ module.exports = function (sql, socket, msg) {
             campaignId: myCampaignId, creatorId: myCreatorId, creatorTwitchId: myCreatorTwitchId, campaignName: myCampaignName
           });
         }
+        socket.emit('img receive', [bannerInfo[0], [bannerInfo[1], bannerInfo[2]]]);
       } else {
         // to chatbot
         if (myAdChatAgreement === 1 && checkOptionType) {
