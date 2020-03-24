@@ -7,6 +7,7 @@ const useStyles = makeStyles((theme) => ({
     minWidth: 360,
     minHeight: '70vh',
     backgroundColor: theme.palette.background.paper,
+    fontFamily: 'Noto Sans KR',
   },
 }));
 

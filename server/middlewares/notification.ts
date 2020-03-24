@@ -113,17 +113,14 @@ const messageDict: MessageDict = {
 };
 
 interface Props {
-  userType: string;
-  type: string;
-  targetId?: string;
-  params?: any;
+  userType: string; type: string;
+  targetId?: string; params?: any;
   vbankDate?: string;
 }
-
 // 개인 알림 함수.
 const Notification = async ({
   userType, type, targetId, params, vbankDate
-}: Props) => {
+}: Props): Promise<{result: any; error: any}> => {
   // 날짜 수집.
   const dateCode = new Date().toLocaleString();
 

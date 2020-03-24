@@ -102,7 +102,7 @@ const useSiedebarStyles = makeStyles((theme: Theme) => ({
       height: '100%',
       content: '""',
       display: 'block',
-      background: '#fff',
+      background: theme.palette.background.default,
     },
   },
   NavBarLinksWrapper: {

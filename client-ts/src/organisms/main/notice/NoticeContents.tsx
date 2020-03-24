@@ -17,7 +17,7 @@ interface Props {
 export default function NoticeContents({ data }: Props): JSX.Element {
   return (
     <div>
-      <Paper>
+      <Paper style={{ fontFamily: 'Roboto', }}>
         <div style={{ padding: 28 }}>
           <Typography variant="h4">
             {data.title}
