@@ -84,7 +84,7 @@ $(() => {
 
   socket.on('re-render at client', () => {
     const bannerName = $('#showBanner').attr('name');
-    if (bannerName && document.visibilityState === 'visible') {
+    if (document.visibilityState === 'visible') {
       socket.emit('re-render', [_url, bannerName]);
     }
   });
