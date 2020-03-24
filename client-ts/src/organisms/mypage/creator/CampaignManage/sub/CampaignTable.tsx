@@ -97,7 +97,7 @@ function CampaignTable({
         <TableBody>
           {tableData.slice(
             page * rowsPerPage, page * rowsPerPage + rowsPerPage
-          ).map((bannerData) => (
+          ).sort((a, b) => b.date.localeCompare(a.date)).map((bannerData) => (
             <TableRow hover key={shortid.generate()}>
               <Hidden mdDown>
                 <TableCell className={classes.tableCell}>

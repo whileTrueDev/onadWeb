@@ -125,7 +125,7 @@ router.route('/charge/card')
       const paymentData = getPaymentData.data.response; // 조회한 결제 정보를 들고 있는 변수
       const { amount, status } = paymentData; // 실제로 사용자가 전송한 금액과 그 상태
 
-      if ((chargeCash * 1.1) === parseInt(amount)) {
+      if ((chargeCash * 1.1) === parseInt(amount, 10)) {
         switch (status) {
           case 'ready':
             // 가상계좌 발급 시 로직
