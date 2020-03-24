@@ -44,7 +44,7 @@ router.route('/inquiry')
         html: makeInqurie(inputForm),
         attachments: [{
           filename: 'onad_logo_vertical_small.png',
-          path: `${process.env.ROOT_PATH}/images/onad_logo_vertical_small.png`,
+          path: `${process.env.ROOT_PATH}/public/onad_logo_vertical_small.png`,
           cid: 'logo'
         }]
       };
@@ -74,7 +74,7 @@ router.route('/auth')
         html: makeMarketerRegistTemplate(`${HOST}/mail/auth/${marketerId}`),
         attachments: [{
           filename: 'onad_logo_vertical_small.png',
-          path: `${process.env.ROOT_PATH}/images/onad_logo_vertical_small.png`,
+          path: `${process.env.ROOT_PATH}/public/onad_logo_vertical_small.png`,
           cid: 'logo'
         }]
       };
@@ -128,7 +128,7 @@ router.route('/tmp-auth')
         html: makeMarketerRepassword(marketerId, password),
         attachments: [{
           filename: 'onad_logo_vertical_small.png',
-          path: `${process.env.ROOT_PATH}/images/onad_logo_vertical_small.png`,
+          path: `${process.env.ROOT_PATH}/public/onad_logo_vertical_small.png`,
           cid: 'logo'
         }]
       };

@@ -7,8 +7,19 @@ module.exports = {
     rules: [
       {
         test: /\.ts?$/,
-        use: 'ts-loader',
-        exclude: /node_modules/
+        loader: 'ts-loader',
+        options: {
+          configFile: 'tsconfig.webpack.json'
+        },
+        exclude: [
+          /node_modules/
+        ],
+      },
+      {
+        test: /.(png|jpg|ico|ttf|svg)(\?[a-z0-9=.]+)?$/,
+        use: [
+          { loader: 'file-loader', }
+        ]
       }
     ]
   },
@@ -20,7 +31,8 @@ module.exports = {
   },
   output: {
     filename: 'bundle.js',
-    path: path.resolve(__dirname, 'dist')
+    path: path.resolve(__dirname, 'dist'),
+    publicPath: path.resolve(__dirname, 'public')
   },
   externals: [nodeExternals()],
   optimization: {

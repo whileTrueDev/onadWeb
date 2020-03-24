@@ -1,0 +1,59 @@
+name: PR Checks
+
+on:
+  pull_request:
+    branches: [master]
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        node-version: [10.x, 12.x]
+
+    runs-on: ubuntu-latest
+
+    # This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
+    # For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v2
+
+      - name: Cache yarn dependencies
+        uses: actions/cache@v1
+        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: <client-ts> eslint
+        uses: stefanoeb/eslint-action@1.0.2
+        with:
+          files: ./client-ts/src/
+
+      - name: <client-ts> test/build-test/
+        run: |
+          cd client-ts
+          yarn
+          yarn test --watchAll=false
+          yarn build
+          cd -
+
+      - name: <server> eslint
+        uses: stefanoeb/eslint-action@1.0.2
+        with:
+          files: ./server/
+
+      - name: <server> test/build-test/
+        run: |
+          cd server
+          yarn
+          yarn test --watchAll=false
+          yarn build
+          cd -

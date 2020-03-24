@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { Typography, CircularProgress } from '@material-ui/core';
-import Button from '../../atoms/CustomButtons/Button';
 import axios from '../../utils/axios';
 import HOST from '../../config';
 
