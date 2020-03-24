@@ -37,11 +37,11 @@ jobs:
           cd client-ts
           yarn install
           yarn build
-          cd -
+          cd ..
           cd server
           yarn install
           yarn build
-          cd -
+          cd ..
 
       - name: <client-ts> Dockerize and Push to docker hub
         uses: elgohr/Publish-Docker-Github-Action@2.13
