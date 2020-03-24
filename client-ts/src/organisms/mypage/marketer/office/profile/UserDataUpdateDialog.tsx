@@ -591,7 +591,6 @@ const UserDataUpdateDialog = (props: UserDataUpdateDialogProps): JSX.Element => 
         onClose={(): void => {
           snack.handleClose();
           handleClose();
-          // history.push('/dashboard/marketer/myoffice');
         }}
         ContentProps={{
           'aria-describedby': 'message-id',

@@ -57,7 +57,7 @@ function BannerCard({ currentBannerData }: BannerCardProps): JSX.Element {
       buttonComponent={(
         <Button
           color="primary"
-          onClick={(): void => { history.push('/dashboard/creator/banner'); }}
+          onClick={(): void => { history.push('/mypage/creator/banner'); }}
         >
           배너광고내역
         </Button>

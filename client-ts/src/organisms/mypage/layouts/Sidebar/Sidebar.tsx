@@ -34,7 +34,7 @@ const Sidebar = ({
   }
 
   function handleLogoClick(): void {
-    history.push(`/dashboard/${window.location.pathname.split('/')[2]}/main`);
+    history.push(`/mypage/${window.location.pathname.split('/')[2]}/main`);
   }
 
   const links = (

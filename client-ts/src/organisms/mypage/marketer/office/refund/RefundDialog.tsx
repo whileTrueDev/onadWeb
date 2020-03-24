@@ -84,13 +84,13 @@ function RefundDialog(props: RefundDialogProps): JSX.Element {
     event.preventDefault();
 
     // 해당 금액 만큼 환불 내역에 추가하는 요청
-    axios.post(`${HOST}/api/dashboard/marketer/cash/refund`, {
+    axios.post(`${HOST}/marketer/cash/refund`, {
       withdrawCash: selectValue,
     }).then(() => {
       setIndex((preIndex) => preIndex + 1);
     }).catch((err) => {
       console.log(err);
-      history.push('/dashboard/marketer/myoffice');
+      history.push('/mypage/marketer/myoffice');
     });
   }
 
@@ -104,7 +104,7 @@ function RefundDialog(props: RefundDialogProps): JSX.Element {
     if (index === 1) {
       if (currentCashNumber - parseInt(selectValue, 10) < 0 || parseInt(selectValue, 10) <= 1000) {
         alert('환불 신청 금액은 1000원 이하에서는 불가하며 환불 신청 금액이 보유 캐시보다 클 수 없습니다.');
-        history.push('/dashboard/marketer/myoffice');
+        history.push('/mypage/marketer/myoffice');
       } else {
         setTimeout(() => {
           if (go) {

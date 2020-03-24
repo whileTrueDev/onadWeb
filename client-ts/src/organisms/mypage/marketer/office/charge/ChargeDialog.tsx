@@ -195,7 +195,7 @@ function TestChargeDialog(): JSX.Element {
     // 결제 완료 시 호출될 콜백함수
     const payCallback = (rsp: any) => {
       if (rsp.success) { // 결제 성공 시: 결제 승인 또는 가상계좌 발급에 성공한 경우
-        axios.post(`${HOST}/api/dashboard/marketer/cash/testcharge`, {
+        axios.post(`${HOST}/marketer/cash/testcharge`, {
           chargeCash: selectValue,
           chargeType,
           imp_uid: rsp.imp_uid,

@@ -70,7 +70,7 @@ function WithdrawDialog({
     if (activeStep === 1) {
       if (currentCashNumber - Number(selectValue) < 0 || Number(selectValue) < 30000) {
         alert('출금 신청 금액은 30000원 미만에서는 불가하며 출금 신청 금액이 보유 수익금보다 클 수 없습니다.');
-        history.push('/dashboard/creator/main');
+        history.push('/mypage/creator/main');
       } else {
         setTimeout(() => {
           if (targetStep) {

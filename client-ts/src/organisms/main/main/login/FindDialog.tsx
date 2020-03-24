@@ -53,7 +53,7 @@ function FindDialog({
       axios.get(`${HOST}/marketer/id`, { params: findContent })
         .then((res) => {
           const ans = JSON.parse(res.data);
-          if (res.data.error) {
+          if (ans.error) {
             alert(ans.message);
             setFindContent(initialState);
           } else {

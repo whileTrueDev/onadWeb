@@ -97,13 +97,13 @@ function CashDialog(props: CashDialogProps): JSX.Element {
 
   function handleSubmitClick(): void {
     // 해당 금액 만큼 광고 캐시에 추가하는 요청
-    axios.post<boolean[]>(`${HOST}/api/dashboard/marketer/cash/charge`, {
+    axios.post<boolean[]>(`${HOST}/marketer/cash/charge`, {
       chargeCash: selectValue,
       chargeType: chargeType.selectValue,
     }).then((res) => {
       if (!res.data[0]) {
         handleConfirmDialogClose();
-        history.push('/dashboard/marketer/myoffice');
+        history.push('/mypage/marketer/myoffice');
       } else {
         console.log('cash - charge - error!');
       }
@@ -111,7 +111,6 @@ function CashDialog(props: CashDialogProps): JSX.Element {
       console.log(err);
     });
   }
-
 
   return (
     <Dialog

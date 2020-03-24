@@ -56,7 +56,7 @@ const manualSources = {
     source: [
       {
         image: '/pngs/dashboard/manual/new_marketer/marketer-banner-02.png',
-        description: `${textStyling.LinkText('<내 배너>', 'inventory')} 탭에서 ${textStyling.styledText('+ 새 배너 등록')} 버튼을 클릭하여,  
+        description: `${textStyling.LinkText('<내 배너>', 'inventory', 'marketer')} 탭에서 ${textStyling.styledText('+ 새 배너 등록')} 버튼을 클릭하여,  
         규정에 맞는 배너를 업로드합니다.  
         등록된 배너는 검수과정을 거쳐 승인/거절 됩니다. (최대 3일 이내)`,
       },
@@ -70,7 +70,7 @@ const manualSources = {
         image: null,
         description: `배너의 송출은 캠페인을 생성한 이후에 가능합니다.  
         승인된 배너의 경우 캠페인 생성시에 활용 가능합니다.  
-        캠페인 생성은 ${textStyling.LinkText('<대시보드>', 'main')}에서 진행할 수 있습니다.`,
+        캠페인 생성은 ${textStyling.LinkText('<대시보드>', 'main', 'marketer')}에서 진행할 수 있습니다.`,
       },
     ],
   },
@@ -82,7 +82,7 @@ const manualSources = {
     source: [
       {
         image: '/pngs/dashboard/manual/new_marketer/marketer-campaign-01.png',
-        description: `${textStyling.LinkText('<대시보드>', 'main')}에서 ${textStyling.styledText('캠페인 등록하기')} 버튼을 눌러주세요.`,
+        description: `${textStyling.LinkText('<대시보드>', 'main', 'marketer')}에서 ${textStyling.styledText('캠페인 등록하기')} 버튼을 눌러주세요.`,
       },
       {
         image: '/pngs/dashboard/manual/new_marketer/marketer-campaign-02.png',
@@ -107,12 +107,12 @@ const manualSources = {
       },
       {
         image: '/pngs/dashboard/manual/new_marketer/marketer-campaign-06.png',
-        description: `${textStyling.LinkText('<대시보드>', 'main')} 좌측 상단의 ${textStyling.styledText('ON/OFF')} 버튼을 통해 광고주님의 광고상태를 ${textStyling.styledText('ON/OFF')}하여 등록된 모든 캠페인 송출을 제어할 수 있습니다.`,
+        description: `${textStyling.LinkText('<대시보드>', 'main', 'marketer')} 좌측 상단의 ${textStyling.styledText('ON/OFF')} 버튼을 통해 광고주님의 광고상태를 ${textStyling.styledText('ON/OFF')}하여 등록된 모든 캠페인 송출을 제어할 수 있습니다.`,
       },
       {
         image: null,
         description: `배너와 URL링크의 심의가 통과되고, ${textStyling.styledText('광고 캐시')}가 충분하며, 광고주의 광고 상태 ${textStyling.styledText('ON')}인 모든 광고는 송출할 준비가 되어서  
-        내부 광고 송출 알고리즘에 따라 자동적으로 송출됩니다.${textStyling.styledBlock(`${textStyling.LinkText('> 광고 캐시 충전하러 가기', 'myoffice')}`)}`,
+        내부 광고 송출 알고리즘에 따라 자동적으로 송출됩니다.${textStyling.styledBlock(`${textStyling.LinkText('> 광고 캐시 충전하러 가기', 'myoffice', 'marketer')}`)}`,
       },
     ],
   },
@@ -124,12 +124,12 @@ const manualSources = {
     source: [
       {
         image: '/pngs/dashboard/manual/new_marketer/marketer-costChart-01.png',
-        description: `광고 비용에 대한 차트는 ${textStyling.LinkText('<대시보드>', 'main')}에서 확인할 수 있습니다.  
-        또한 광고주님의 광고를 송출한 크리에이터를 ${textStyling.LinkText('<대시보드>', 'main')}의 ${textStyling.styledText('송출크리에이터')}에서 확인할 수 있습니다.`,
+        description: `광고 비용에 대한 차트는 ${textStyling.LinkText('<대시보드>', 'main', 'marketer')}에서 확인할 수 있습니다.  
+        또한 광고주님의 광고를 송출한 크리에이터를 ${textStyling.LinkText('<대시보드>', 'main', 'marketer')}의 ${textStyling.styledText('송출크리에이터')}에서 확인할 수 있습니다.`,
       },
       {
         image: '/pngs/dashboard/manual/new_marketer/marketer-costChart-02.png',
-        description: `광고효과보고서에 대한 차트는 ${textStyling.LinkText('<대시보드>', 'main')}의 ${textStyling.styledText('캠페인목록')}의 ${textStyling.styledText('분석')}을 클릭하면 ${textStyling.styledText('캠페인 효과 분석')} 탭으로 이동하실 수 있습니다.`,
+        description: `광고효과보고서에 대한 차트는 ${textStyling.LinkText('<대시보드>', 'main', 'marketer')}의 ${textStyling.styledText('캠페인목록')}의 ${textStyling.styledText('분석')}을 클릭하면 ${textStyling.styledText('캠페인 효과 분석')} 탭으로 이동하실 수 있습니다.`,
       },
       {
         image: '/pngs/dashboard/manual/new_marketer/marketer-costChart-03.png',
@@ -145,12 +145,12 @@ const manualSources = {
     source: [
       {
         image: null,
-        description: `${textStyling.LinkText('<내 오피스>', 'myoffice')}에서 캐시를 충전하거나, 환불할 수 있습니다.  
+        description: `${textStyling.LinkText('<내 오피스>', 'myoffice', 'marketer')}에서 캐시를 충전하거나, 환불할 수 있습니다.  
         환불의 경우, 환불계좌 등록 이후 진행 가능합니다.`
       },
       {
         image: null,
-        description: `${textStyling.LinkText('<내 오피스>', 'myoffice')}에서 상세 캐시 소진 내역을 확인할 수 있습니다.  
+        description: `${textStyling.LinkText('<내 오피스>', 'myoffice', 'marketer')}에서 상세 캐시 소진 내역을 확인할 수 있습니다.  
         상세 보기 클릭 시, 해당 월의 세부 캐시 소진 내역을 확인할 수 있습니다.`
       }
     ]
@@ -171,11 +171,11 @@ const manualSources = {
       },
       {
         image: '/pngs/dashboard/manual/new_marketer/marketer-taxbill-01.png',
-        description: `사업자 등록증 업로드는 ${textStyling.LinkText('<내 오피스>', 'myoffice')}에서 ${textStyling.styledText('사업자등록증 등록')}을 클릭하여 진행할 수 있습니다.${textStyling.styledBlock('사업자 등록증이 업로드된 계정만 세금계산서가 발행됨을 유의하시기 바랍니다.')}`
+        description: `사업자 등록증 업로드는 ${textStyling.LinkText('<내 오피스>', 'myoffice', 'marketer')}에서 ${textStyling.styledText('사업자등록증 등록')}을 클릭하여 진행할 수 있습니다.${textStyling.styledBlock('사업자 등록증이 업로드된 계정만 세금계산서가 발행됨을 유의하시기 바랍니다.')}`
       },
       {
         image: '/pngs/dashboard/manual/new_marketer/marketer-taxbill-02.png',
-        description: `${textStyling.LinkText('<내 오피스>', 'myoffice')}에서 ${textStyling.styledText('세금계산서 관리')}에서 세금계산서 발행 내역을 확인할 수 있습니다.  
+        description: `${textStyling.LinkText('<내 오피스>', 'myoffice', 'marketer')}에서 ${textStyling.styledText('세금계산서 관리')}에서 세금계산서 발행 내역을 확인할 수 있습니다.  
         이상 있거나, 지난달의 세금계산서(수정 발행 포함)에 대한 수요가 있는 경우,  
         support@onad.io로 메일을 보내주시기 바랍니다.  
         수정 발행, 지난달의 세금계간서 발행 마감 주기  
