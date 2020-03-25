@@ -48,7 +48,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginRight: theme.spacing(1),
   },
   end: {
-    color: '#fff',
+    color: theme.palette.common.white,
     marginRight: theme.spacing(1),
   },
   title: {
@@ -57,7 +57,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontWeight: 600,
   },
   titleWrap: {
-    background: 'linear-gradient(45deg, #00DBE0 30%, #21CBF3 90%)',
+    background: `linear-gradient(45deg, ${theme.palette.primary.light} 30%, ${theme.palette.primary.dark} 90%)`,
     color: 'white',
     textAlign: 'center'
   },
@@ -345,7 +345,7 @@ function TestChargeDialog(): JSX.Element {
   // 하단 step 조절 버튼
   const BottomButton = (): JSX.Element => (
     <div className={classes.buttonContainer}>
-      <Grid container direction="row" justify="flex-end">
+      <Grid container direction="row" justify="flex-end" alignItems="center">
         {index === 2
           && (
             <Grid item>

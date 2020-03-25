@@ -1,8 +1,10 @@
+/* eslint-disable @typescript-eslint/camelcase */
 import express from 'express';
 import axios from 'axios';
 import responseHelper from '../../../middlewares/responseHelper';
 import doQuery from '../../../model/doQuery';
 import historyRouter from './history';
+import notification from '../../../middlewares/notification';
 
 const router = express.Router();
 
@@ -302,6 +304,5 @@ router.route('/vbank')
     }),
   )
   .all(responseHelper.middleware.unusedMethod);
-
 
 export default router;

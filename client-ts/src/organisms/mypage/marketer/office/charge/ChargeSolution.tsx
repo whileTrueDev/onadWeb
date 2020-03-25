@@ -9,7 +9,6 @@ import Divider from '@material-ui/core/Divider';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import Radio from '@material-ui/core/Radio';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import StyledSelectText from '../../../../../atoms/StyledSelectText';
 import { ChargeAction, ChargeInterface } from '../interface';
 
 
@@ -20,7 +19,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   contentTitle: {
     fontWeight: 'bold',
-    color: '#999',
     fontFamily: 'Noto Sans KR'
   },
   contentDetail: {
@@ -80,7 +78,12 @@ const TestChargeSolution = (props: TestChargeSolutionProps): JSX.Element => {
         <Grid item>
           <Grid container direction="row" justify="space-between">
             <Grid item>
-              <StyledSelectText primary="자동 충전금액" secondary="부가세 포함" className={classes.contentTitle} />
+              <Typography className={classes.contentTitle} variant="h6">
+                자동 충전금액
+              </Typography>
+              <Typography variant="caption" style={{ fontFamily: 'Noto Sans KR' }}>
+                부가세 포함
+              </Typography>
             </Grid>
             <Grid item className={classes.contentTitle}>
               <Typography className={classes.contentTitle} variant="h6">

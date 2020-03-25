@@ -2,11 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import {
   Paper, Typography, FormControlLabel,
-  Checkbox, Divider, Button, Grid,
+  Checkbox, Divider, Grid,
 } from '@material-ui/core';
 import shortid from 'shortid';
 import sources from '../sources';
 import Dialog from '../../../../../atoms/Dialog/Dialog';
+import Button from '../../../../../atoms/CustomButtons/Button';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {

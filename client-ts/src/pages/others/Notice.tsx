@@ -53,20 +53,19 @@ export default function PublicNotification({ match, logout }: Props): JSX.Elemen
           <div className={classes.contentBox}>
             <GridContainer>
               <GridItem xs={12}>
-                {noticeData.loading && (<CircularProgress small />)}
-                {!noticeData.loading && noticeData.data && (
-                  <div>
-                    {!code ? (
-                      <NoticeTable data={noticeData.data} />
-                    )
-                      : (
-                        <NoticeContents
-                          data={noticeData.data
-                            .filter((obj) => String(obj.code) === code)[0]}
-                        />
+                <div>
+                  {!code ? (
+                    <NoticeTable loading={noticeData.loading} data={noticeData.data || []} />
+                  ) : (
+                    <>
+                      {!noticeData.loading && noticeData.data && (
+                      <NoticeContents
+                        data={noticeData.data.filter((obj) => String(obj.code) === code)[0]}
+                      />
                       )}
-                  </div>
-                )}
+                    </>
+                  )}
+                </div>
               </GridItem>
             </GridContainer>
           </div>

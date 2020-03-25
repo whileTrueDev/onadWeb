@@ -2,11 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import {
   Paper, Typography, FormControlLabel,
-  Checkbox, Divider, Button, Grid,
+  Checkbox, Divider, Grid,
 } from '@material-ui/core';
 import shortid from 'shortid';
 import sources from '../sources';
 import Dialog from '../../../../../atoms/Dialog/Dialog';
+import Button from '../../../../../atoms/CustomButtons/Button';
 import { Action } from '../interface';
 
 
@@ -54,7 +55,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingBottom: theme.spacing(1),
     margin: '0 auto',
     display: 'flex',
-    backgroundColor: '#f2f2f2',
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -139,7 +139,7 @@ const RefundAgreement = (props: RefundAgreementProps): JSX.Element => {
                 <Grid item>
                   <Button
                     style={{
-                      flex: 1, backgroundColor: '#d6d6d6', height: '70%', fontSize: 13,
+                      flex: 1, height: '70%', fontSize: 13,
                     }}
                     onClick={handleOpen}
                   >

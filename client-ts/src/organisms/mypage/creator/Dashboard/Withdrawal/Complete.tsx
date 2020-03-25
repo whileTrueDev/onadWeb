@@ -1,9 +1,6 @@
 import React from 'react';
-import {
-  Grid
-} from '@material-ui/core';
-import Typography from '@material-ui/core/Typography';
-import Divider from '@material-ui/core/Divider';
+import { useTheme } from '@material-ui/core/styles';
+import { Grid, Typography, Divider } from '@material-ui/core';
 import useWithdrawalCompleteStyles from './Complete.style';
 import { WithdrawalDialogState } from '../WithdrawalDialog.reducer';
 
@@ -14,6 +11,7 @@ interface WithdrawalCompleteProps {
 
 const WithdrawalComplete = ({ state }: WithdrawalCompleteProps) => {
   const classes = useWithdrawalCompleteStyles();
+  const theme = useTheme();
   const { totalIncome } = state;
 
   return (
@@ -54,7 +52,7 @@ const WithdrawalComplete = ({ state }: WithdrawalCompleteProps) => {
               <Typography variant="subtitle1" style={{ fontWeight: 'bold', fontFamily: 'Noto Sans KR' }}>
                 출금에 대한 문의 사항은
                 {' '}
-                <span style={{ color: '#FFAA00' }}>OnAD 고객센터</span>
+                <span style={{ color: theme.palette.secondary.main }}>OnAD 고객센터</span>
                 에 연락주세요
               </Typography>
             </Grid>

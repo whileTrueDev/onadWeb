@@ -8,7 +8,7 @@ const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
     justifyContent: 'center',
-    backgroundColor: '#fff',
+    backgroundColor: theme.palette.background.default,
     height: '102vh'
   },
   container: {
@@ -24,14 +24,11 @@ const useStyles = makeStyles((theme) => ({
     marginRight: theme.spacing(5),
   },
   linkButton: {
-    color: '#fff',
+    color: theme.palette.common.white,
     maxWidth: '250px',
     height: '80px',
     textTransform: 'none',
-    backgroundColor: '#00b1dc',
-    '&:hover': {
-      backgroundColor: '#00a1dc',
-    },
+    backgroundColor: theme.palette.primary.main,
   },
 }));
 
@@ -49,7 +46,16 @@ export default function NotFound(): JSX.Element {
         <span>오류 및 변경, 삭제로 인해 요청하신 페이지를 찾을 수 없습니다.</span>
         <span>문의가 필요하시다면, support@onad.io 로 메일을 보내주세요! 빠른 시일내에 답변드릴게요.</span>
         <br />
-        <Button className={classes.linkButton} size="large" to="/" component={Link}>OnAD 메인으로 이동</Button>
+        <Button
+          className={classes.linkButton}
+          variant="contained"
+          size="large"
+          to="/"
+          component={Link}
+        >
+          OnAD 메인으로 이동
+
+        </Button>
       </Grid>
     </Grid>
   );

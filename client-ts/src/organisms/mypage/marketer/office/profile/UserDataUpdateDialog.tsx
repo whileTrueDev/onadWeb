@@ -53,7 +53,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   contents: {
     marginTop: theme.spacing(2),
     padding: theme.spacing(3),
-    backgroundColor: '#f9f9f9'
+    backgroundColor: theme.palette.action.hover
   }
 }));
 
