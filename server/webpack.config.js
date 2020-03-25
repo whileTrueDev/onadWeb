@@ -16,10 +16,13 @@ module.exports = {
         ],
       },
       {
-        test: /.(png|jpg|ico|ttf|svg)(\?[a-z0-9=.]+)?$/,
-        use: [
-          { loader: 'file-loader', }
-        ]
+        test: /\.(png|jpg|gif|svg)$/,
+        use: {
+          loader: 'file-loader',
+          options: {
+            name: 'public/[name].[hash].[ext]',
+          }
+        },
       }
     ]
   },
@@ -32,7 +35,6 @@ module.exports = {
   output: {
     filename: 'bundle.js',
     path: path.resolve(__dirname, 'dist'),
-    publicPath: path.resolve(__dirname, 'public')
   },
   externals: [nodeExternals()],
   optimization: {

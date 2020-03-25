@@ -7,6 +7,8 @@ import logger from '../../middlewares/logger';
 import doQuery from '../../model/doQuery';
 import makeInqurie from '../../middlewares/mailTemplate/makeInqurie';
 
+// const logo = require('../../public/onad_logo_vertical_small.png');
+
 const router = express.Router();
 
 const HOST: any = process.env.NODE_ENV === 'production'
@@ -44,7 +46,7 @@ router.route('/inquiry')
         html: makeInqurie(inputForm),
         attachments: [{
           filename: 'onad_logo_vertical_small.png',
-          path: `${process.env.ROOT_PATH}public/onad_logo_vertical_small.png`,
+          path: `${process.env.ROOT_PATH}/public/onad_logo_vertical_small.png`,
           cid: 'logo'
         }]
       };
@@ -74,7 +76,7 @@ router.route('/auth')
         html: makeMarketerRegistTemplate(`${HOST}/mail/auth/${marketerId}`),
         attachments: [{
           filename: 'onad_logo_vertical_small.png',
-          path: `${process.env.ROOT_PATH}public/onad_logo_vertical_small.png`,
+          path: `${process.env.ROOT_PATH}/public/onad_logo_vertical_small.png`,
           cid: 'logo'
         }]
       };
@@ -128,7 +130,7 @@ router.route('/tmp-auth')
         html: makeMarketerRepassword(marketerId, password),
         attachments: [{
           filename: 'onad_logo_vertical_small.png',
-          path: `${process.env.ROOT_PATH}public/onad_logo_vertical_small.png`,
+          path: `${process.env.ROOT_PATH}/public/onad_logo_vertical_small.png`,
           cid: 'logo'
         }]
       };
@@ -136,9 +138,7 @@ router.route('/tmp-auth')
         if (error) {
           logger.error(`Email 전송오류 : ${error}`);
           console.log(`Email 전송오류 : ${error}`);
-          res.send({
-            error
-          });
+          res.send({ error });
         } else {
           logger.info(`Email sent: ${info.response}`);
           responseHelper.send(JSON.stringify({

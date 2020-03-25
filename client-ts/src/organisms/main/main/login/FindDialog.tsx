@@ -80,6 +80,7 @@ function FindDialog({
     if (emailReg.test(findContent.marketerMail)) {
       axios.patch(`${HOST}/marketer/tmp-password`, findContent)
         .then((res) => {
+          console.log(res.data);
           const ans = JSON.parse(res.data);
           if (ans.error) {
             alert(ans.message);
