@@ -45,7 +45,6 @@ const developmentRouter = (
         <Route path="/notice/:code" component={Notice} />
         <Route exact path="/adchat/" component={Adchattest} />
         <Route exact path="/adchat/:campaignId/:creatorTwitchId" component={AdChatTracker} />
-        <Route exact path="/" component={Door} />
         <ThemeProvider theme={theme.lightTheme}>
           <Route path="/mypage/creator" component={CreatorDashboard} />
           <Route path="/mypage/marketer" component={MarketerDashboard} />
@@ -72,7 +71,6 @@ const productionRouter = (
         <Route exact path="/notice" component={Notice} />
         <Route path="/notice/:code" component={Notice} />
         <Route exact path="/adchat/:campaignId/:creatorTwitchId" component={AdChatTracker} />
-        <Route exact path="/" component={Door} />
         <ThemeProvider theme={theme.lightTheme}>
           <Route path="/mypage/creator" component={CreatorDashboard} />
           <Route path="/mypage/marketer" component={MarketerDashboard} />
