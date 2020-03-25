@@ -26,6 +26,7 @@ import bannersRouter from './routes/banners';
 import mailRouter from './routes/mail';
 import noticeRouter from './routes/notice';
 import trackingRouter from './routes/tracking';
+import taxBillScheduler from './middlewares/scheduler/taxBillScheduler';
 
 const MySQLStore = require('express-mysql-session')(session);
 
@@ -101,7 +102,7 @@ class OnadWebApi {
       }),
       cookie: {
         sameSite: 'none',
-        secure: process.env.NODE_ENV === 'production', // production환경 ? true : false
+        secure: false, // production환경 ? true : false
         // maxAge: Date.now() + (30 * 86400 * 1000), // 만료 날짜 설정
       }
     }));
@@ -190,8 +191,8 @@ class OnadWebApi {
   }
 }
 
-// console.log('ENVIRONMENT: ', process.env.NODE_ENV);
-// console.log(`SCHEDULER: [${taxBillScheduler.name}] - ON `);
+console.log('ENVIRONMENT: ', process.env.NODE_ENV);
+console.log(`SCHEDULER: [${taxBillScheduler.name}] - ON `);
 
 // 선언만 하고 start는 bin에서 시작
 module.exports = OnadWebApi;

@@ -1,7 +1,8 @@
 import doQuery from '../../model/doQuery';
-const schedule = require('node-schedule');
 import makeInsertQuery from './util/makeInsertQuery';
 import slack from '../slack/message';
+
+const schedule = require('node-schedule');
 
 const WAIT_STATE = 0; // '발행대기' 상태값
 const FAIL_STATE = 2; // '미발행' 상태값
@@ -54,7 +55,7 @@ function getInsertData() {
           marketerIds.forEach((id: string, index: number) => {
             // date에 전월 할당
             marketerInfo[index].date = previousMonth;
-            marketerCharge.forEach((m: { marketerId: string, cashAmount: number, date: string }) => {
+            marketerCharge.forEach((m: { marketerId: string; cashAmount: number; date: string }) => {
               // 캐시내역 없는 경우 기본값 0 추가
               if (!marketerInfo[index].cashAmount) {
                 marketerInfo[index].cashAmount = 0;
@@ -120,7 +121,6 @@ const scheduler = schedule.scheduleJob(
         console.log(err);
         slack('마케터 세금계산서 미발행처리 중 오류발생함.', '마케터 세금계산서');
       });
-
   }
 );
 
