@@ -10,10 +10,6 @@ branches:
     - master
 sudo: required
 
-before_install:
-  - npm install -g yarn # yarn을 글로벌로 설치
-  # 테스트
-
 services:
   - docker
 
