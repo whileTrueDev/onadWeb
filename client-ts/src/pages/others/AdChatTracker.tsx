@@ -26,7 +26,6 @@ export default function AdChat(
       userAgent: navigator.userAgent,
       referrer: document.referrer
     };
-    console.log(params);
     axios.post<AdChatRes>(`${HOST}/tracking/adchat`, params)
       .then((row) => {
         if (row.data
