@@ -9,7 +9,7 @@ import makeInqurie from '../../middlewares/mailTemplate/makeInqurie';
 
 const router = express.Router();
 
-const HOST: any = process.env.NODE_ENV === 'production'
+const HOST = process.env.NODE_ENV === 'production'
   ? process.env.PRODUCTION_API_HOSTNAME
   : process.env.DEV_API_HOSTNAME;
 
@@ -42,11 +42,11 @@ router.route('/inquiry')
         to: 'support@onad.io', // 수신 메일 주소부분
         subject: `${inputForm.name}님의 캠페인 문의 요청입니다.`, // 제목부분
         html: makeInqurie(inputForm),
-        attachments: [{
-          filename: 'onad_logo_vertical_small.png',
-          path: `${process.env.ROOT_PATH}public/onad_logo_vertical_small.png`,
-          cid: 'logo'
-        }]
+        // attachments: [{
+        //   filename: 'onad_logo_vertical_small.png',
+        //   path: `${process.env.ROOT_PATH}/public/onad_logo_vertical_small.png`,
+        //   cid: 'logo'
+        // }]
       };
 
       transporter.sendMail(mailOptions, (error, info) => {
@@ -72,11 +72,11 @@ router.route('/auth')
         to: marketerMail, // 수신 메일 주소부분
         subject: `[ONAD] ${req.body.marketerId} 님, 가입을 환영합니다.`, // 제목부분인듯
         html: makeMarketerRegistTemplate(`${HOST}/mail/auth/${marketerId}`),
-        attachments: [{
-          filename: 'onad_logo_vertical_small.png',
-          path: `${process.env.ROOT_PATH}public/onad_logo_vertical_small.png`,
-          cid: 'logo'
-        }]
+        // attachments: [{
+        //   filename: 'onad_logo_vertical_small.png',
+        //   path: `${process.env.ROOT_PATH}/public/onad_logo_vertical_small.png`,
+        //   cid: 'logo'
+        // }]
       };
       transporter.sendMail(mailOptions, (error, info) => {
         if (error) {
@@ -107,10 +107,10 @@ router.route('/auth/:id')
       SET marketerEmailAuth = 1
       WHERE marketerId = ?`, [req.params.id])
         .then(() => {
-          res.redirect(HOST);
+          res.redirect(HOST as string);
         })
         .catch(() => {
-          res.redirect(HOST);
+          res.redirect(HOST as string);
         });
     }),
   )
@@ -126,19 +126,17 @@ router.route('/tmp-auth')
         to: marketerMail, // 수신 메일 주소부분
         subject: `[ONAD] ${marketerId} 님, 임시 비밀번호가 발급 되었습니다.`, // 제목부분인듯
         html: makeMarketerRepassword(marketerId, password),
-        attachments: [{
-          filename: 'onad_logo_vertical_small.png',
-          path: `${process.env.ROOT_PATH}public/onad_logo_vertical_small.png`,
-          cid: 'logo'
-        }]
+        // attachments: [{
+        //   filename: 'onad_logo_vertical_small.png',
+        //   path: `${process.env.ROOT_PATH}/public/onad_logo_vertical_small.png`,
+        //   cid: 'logo'
+        // }]
       };
       transporter.sendMail(mailOptions, (error, info) => {
         if (error) {
           logger.error(`Email 전송오류 : ${error}`);
           console.log(`Email 전송오류 : ${error}`);
-          res.send({
-            error
-          });
+          res.send({ error });
         } else {
           logger.info(`Email sent: ${info.response}`);
           responseHelper.send(JSON.stringify({
