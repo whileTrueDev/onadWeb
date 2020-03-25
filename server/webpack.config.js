@@ -20,7 +20,7 @@ module.exports = {
         use: {
           loader: 'file-loader',
           options: {
-            name: 'public/[name].[hash].[ext]',
+            name: 'public/[name].[ext]',
           }
         },
       }
