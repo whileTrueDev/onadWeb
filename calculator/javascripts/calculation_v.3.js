@@ -28,7 +28,9 @@ const getcreatorList = ({ date }) => {
   ON A.streamId = B.streamId `;
 
   const bannerListQuery = `
-  SELECT CT.creatorId, campaignId
+  SELECT RT.creatorId, RT.campaignId
+  FROM
+  (SELECT CT.creatorId, campaignId
   FROM 
   (
   SELECT creatorId, campaignId
@@ -38,7 +40,12 @@ const getcreatorList = ({ date }) => {
   LEFT JOIN
   creatorInfo
   ON CT.creatorId = creatorInfo.creatorId
-  WHERE creatorInfo.arrested = 0`;
+  WHERE creatorInfo.arrested = 0
+  ) AS RT
+  LEFT JOIN
+  campaign
+  ON RT.campaignId = campaign.campaignId
+  WHERE NOT campaign.limitState = 1`;
 
   return new Promise((resolve, reject) => {
     pool.getConnection((err, connection) => {
@@ -52,7 +59,7 @@ const getcreatorList = ({ date }) => {
         ])
           .then(([bannerListData, streamerListData]) => {
             // 실제 현재 방송 중인 크리에이터이다.
-            const streamers = streamerListData.map(streamerData => streamerData.streamerId);
+            const streamers = streamerListData.map((streamerData) => streamerData.streamerId);
             const uniqueStreamers = Array.from(new Set(streamers));
             // streamers의 중복을 제거하기 위해서 Array.from(new Set([1,2,4,6]))을 사용한다.
             const creators = bannerListData.reduce((result, bannerData) => {
@@ -167,19 +174,19 @@ const getStreamList = ({
     if (viewer === 0) {
       return {};
     }
-    
+
     // 마케터의 unitprice를 가져온다.
     const unitPrice = await getprice({
       connection, campaignId
     });
-  
+
     streamData.viewer = viewer || 0;
 
-    //마케터에게서 징수하는 금액은 PPP(노출 1회당 가격) X viewer(10분동안의 노출량) X unitPrice(마케터 고유의 가격)
+    // 마케터에게서 징수하는 금액은 PPP(노출 1회당 가격) X viewer(10분동안의 노출량) X unitPrice(마케터 고유의 가격)
     streamData.cashFromMarketer = Math.round(Number(viewer) * Number(unitPrice) * PPP);
-    
-    //크리에이터에게 전달되는 금액은 PPP(노출 1회당 가격) X viewer(10분동안의 노출량) X unitPrice(마케터 고유의 가격) X FEERATE(세율)
-    streamData.cashToCreator = Math.round( Math.round(Number(viewer) * Number(unitPrice) * PPP) * FEERATE);
+
+    // 크리에이터에게 전달되는 금액은 PPP(노출 1회당 가격) X viewer(10분동안의 노출량) X unitPrice(마케터 고유의 가격) X FEERATE(세율)
+    streamData.cashToCreator = Math.round(Math.round(Number(viewer) * Number(unitPrice) * PPP) * FEERATE);
 
     return streamData;
   })
@@ -399,7 +406,7 @@ const zeroCalculateConnectionWarp = ({ marketerList }) => new Promise((resolve, 
       reject(err);
     } else {
       Promise.all(
-        marketerList.map(marketerId => marketerZeroCalculate({ connection, marketerId }))
+        marketerList.map((marketerId) => marketerZeroCalculate({ connection, marketerId }))
       )
         .then(() => {
           console.log(`프로그램을 종료합니다. 종료 시각 : ${new Date().toLocaleString()}`);
@@ -437,22 +444,22 @@ const dailyLimitCalculate = ({ connection, campaignId }) => {
       .then((result) => {
         const { optionType, dailyLimit } = result[0];
         const today = new Date();
-          doConnectionQuery({ connection, queryState: dayAmountQuery, params: [campaignId, today] })
-            .then((row) => {
-              const { count } = row[0];
-              if (count === null || dailyLimit <= 1) {
-                resolve();
-                return;
-              }
-              if (count + 2000 > dailyLimit) {
-                // 한도를 초과하였으므로 캠페인을 종료시킵니다.
-                doTransacQuery({ connection, queryState: offQuery, params: [campaignId] });
-              }
+        doConnectionQuery({ connection, queryState: dayAmountQuery, params: [campaignId, today] })
+          .then((row) => {
+            const { count } = row[0];
+            if (count === null || dailyLimit <= 1) {
               resolve();
-            })
-            .catch((error) => {
-              reject(error);
-            });
+              return;
+            }
+            if (count + 2000 > dailyLimit) {
+              // 한도를 초과하였으므로 캠페인을 종료시킵니다.
+              doTransacQuery({ connection, queryState: offQuery, params: [campaignId] });
+            }
+            resolve();
+          })
+          .catch((error) => {
+            reject(error);
+          });
       })
       .catch((error) => {
         reject(error);
@@ -466,7 +473,7 @@ const dailyLimitCalculateConnectionWarp = ({ campaignList }) => new Promise((res
       reject(err);
     } else {
       Promise.all(
-        campaignList.map(campaignId => dailyLimitCalculate({ connection, campaignId }))
+        campaignList.map((campaignId) => dailyLimitCalculate({ connection, campaignId }))
       )
         .then(() => {
           connection.release();
