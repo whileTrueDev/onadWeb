@@ -83,7 +83,7 @@ class OnadWebApi {
     this.app.use(express.static(path.join(__dirname, 'public'))); // 정적리소스 처리
     this.app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
     this.app.use(bodyParser.json({ limit: '50mb' })); // body parser 설정
-    this.app.use(cookieParser()); // cookie parser 설정
+    this.app.use(cookieParser('@#@$MYSIGN#@$#$')); // cookie parser 설정
     this.app.use(morgan(process.env.NODE_ENV === 'development' ? 'dev' : 'common'));
 
     // session 처리
@@ -101,7 +101,7 @@ class OnadWebApi {
         // expiration: 86400000 // 세션 만료 시간 86400000 = 24h
       }),
       cookie: {
-        sameSite: 'none',
+        // sameSite: 'none',
         secure: false, // production환경 ? true : false
         // maxAge: Date.now() + (30 * 86400 * 1000), // 만료 날짜 설정
       }
