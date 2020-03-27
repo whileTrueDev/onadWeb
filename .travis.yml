@@ -10,18 +10,35 @@ branches:
     - master
 sudo: required
 
+before_install:
+  - npm install -g yarn # yarn을 글로벌로 설치
+  # 테스트
+
 services:
   - docker
+
+script:
+  - cd client && yarn install --prod && CI="false" yarn build && cd -
+  - cd service && yarn && cd -
+
+cache:
+  yarn: true
 
 after_success:
   - echo "Deploy to docker hub"
   - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
   - docker build -t $DOCKER_USERNAME/onad_socket ./node_websocket
   - docker build -t $DOCKER_USERNAME/onad_calculator ./calculator
+  - docker build -t $DOCKER_USERNAME/onad_web ./client
+  - docker build -t $DOCKER_USERNAME/onad_web_api ./service
   - docker tag $DOCKER_USERNAME/onad_socket $DOCKER_USERNAME/onad_socket:0.$TRAVIS_JOB_NUMBER
   - docker tag $DOCKER_USERNAME/onad_calculator $DOCKER_USERNAME/onad_calculator:0.$TRAVIS_JOB_NUMBER
+  - docker tag $DOCKER_USERNAME/oand_web $DOCKER_USERNAME/onad_web:0.$TRAVIS_JOB_NUMBER
+  - docker tag $DOCKER_USERNAME/onad_web_api $DOCKER_USERNAME/onad_web_api:0.$TRAVIS_JOB_NUMBER
   - docker push $DOCKER_USERNAME/onad_socket
   - docker push $DOCKER_USERNAME/onad_calculator
+  - docker push $DOCKER_USERNAME/onad_web
+  - docker push $DOCKER_USERNAME/onad_web_api
 
 # slack notification for one channel
 notifications:
