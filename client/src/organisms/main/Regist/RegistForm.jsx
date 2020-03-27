@@ -361,7 +361,7 @@ const RegistForm = (props) => {
                         //   </InputAdornment>
                         // )}
                       />
-                      <FormHelperText>사업자 번호를 입력후 조회버튼을 누르세요.</FormHelperText>
+                      {/* <FormHelperText>사업자 번호를 입력후 조회버튼을 누르세요.</FormHelperText> */}
                     </FormControl>
                   )
                   : <div />}
