@@ -61,6 +61,24 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
           tags: "latest,1.${{ github.run_number }}"
 
+      - name: <calculator> Dockerize and Push to docker hub
+        uses: elgohr/Publish-Dokcer-Github-Action@2.13
+        with:
+          name: hwasurr/onad_calculator
+          workdir: calculator
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+          tags: "latest,1.${{ github.run_number }}"
+
+      - name: <ad broad socket server> Dockerize and Push to docker hub
+        uses: elgohr/Publish-Dokcer-Github-Action@2.13
+        with:
+          name: hwasurr/onad_socket
+          workdir: node_websocket
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+          tags: "latest,1.${{ github.run_number }}"
+
       - name: notify to slack
         uses: 8398a7/action-slack@v2.7.0
         with:
