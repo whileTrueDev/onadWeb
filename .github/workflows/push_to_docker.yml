@@ -33,6 +33,10 @@ jobs:
           node-version: ${{ matrix.node-version }}
 
       - name: Build with webpack (with Dependencies Installing)
+        env:
+          REACT_APP_PRODUCTION_API_HOSTNAME: ${{ secrets.REACT_APP_PRODUCTION_API_HOSTNAME }}
+          REACT_APP_PRODUCTION_REACT_HOSTNAME: ${{ secrets.REACT_APP_PRODUCTION_REACT_HOSTNAME }}
+          REACT_APP_GOOGLE_MAP_API_KEY: ${{ secrets.REACT_APP_GOOGLE_MAP_API_KEY }}
         run: |
           cd client-ts
           yarn install
