@@ -18,11 +18,6 @@ const options = [
     primaryText: '배너 광고',
     secondaryText: '상품, 브랜드 홍보만 하고싶어요.',
   },
-  {
-    id: 'option2',
-    primaryText: '클릭 광고',
-    secondaryText: '구매 전환을 하고 싶어요.',
-  },
 ];
 
 // 추후에 인터페이스 통합

@@ -49,10 +49,24 @@
         }
     },
     "rules": {
+        "arrow-parens": "error",
         "react/display-name": 0,
         "react/jsx-props-no-spreading": "warn",
-        "react/jsx-filename-extension": [1, { "extensions": [".tsx", ".jsx"] }] ,
-        "no-trailing-spaces": ["error", {"ignoreComments": true}],
+        "react/jsx-filename-extension": [
+            1,
+            {
+                "extensions": [
+                    ".tsx",
+                    ".jsx"
+                ]
+            }
+        ],
+        "no-trailing-spaces": [
+            "error",
+            {
+                "ignoreComments": true
+            }
+        ],
         "class-methods-use-this": [
             "error",
             {
@@ -109,5 +123,8 @@
         "jest": true,
         "es6": true
     },
-    "ignorePatterns": ["node_modules/", "dist/"]
+    "ignorePatterns": [
+        "node_modules/",
+        "dist/"
+    ]
 }

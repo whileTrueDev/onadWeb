@@ -101,7 +101,7 @@ function CashDialog(props: CashDialogProps): JSX.Element {
       chargeCash: selectValue,
       chargeType: chargeType.selectValue,
     }).then((res) => {
-      if (!res.data[0]) {
+      if (res.data[0]) {
         handleConfirmDialogClose();
         history.push('/mypage/marketer/myoffice');
       } else {

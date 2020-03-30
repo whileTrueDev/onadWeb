@@ -8,14 +8,14 @@ import MenuItem from '@material-ui/core/MenuItem';
 import useUpdateData from '../../utils/lib/hooks/useUpdateData';
 
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   contents: {
+    color: theme.palette.text.primary,
     width: 420,
     maxHeight: 540,
-    zIndex: '1300',
-    opacity: 1,
-    backgroundColor: 'white',
-    boxShadow: '1px 1px 1px 1px gray',
+    zIndex: 10,
+    backgroundColor: theme.palette.background.paper,
+    boxShadow: theme.shadows[2],
     overflowX: 'hidden',
     overflowY: 'auto'
   },
@@ -25,9 +25,6 @@ const useStyles = makeStyles(() => ({
   message: {
     marginTop: 4, marginBottom: 4
   },
-  grey: {
-    color: '#90909090'
-  }
 }));
 
 const UNREAD_STATE = 0; // 읽지않음 상태값
@@ -71,7 +68,6 @@ function Notification(props) {
         <div className={classes.title}>
           <Typography variant="h5">알림</Typography>
           <Typography
-            className={classes.grey}
             align="right"
             gutterBottom
             variant="caption"
@@ -83,10 +79,9 @@ function Notification(props) {
 
         { !notificationData.loading && !notificationData.error && (
         <div>
-          {notificationData.payload.notifications.map(noti => (
+          {notificationData.payload.notifications.map((noti) => (
             <div key={noti.index}>
               <MenuItem onClick={() => {
-
                 updateRequest.handleUpdateRequest({ index: noti.index });
                 if (noti.readState === UNREAD_STATE) {
                   notificationData.setPayload({

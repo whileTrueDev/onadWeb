@@ -4,7 +4,7 @@ import axios from 'axios';
 import responseHelper from '../../../middlewares/responseHelper';
 import doQuery from '../../../model/doQuery';
 import historyRouter from './history';
-import notification from '../../../middlewares/notification';
+import Notification from '../../../middlewares/notification';
 
 const router = express.Router();
 
@@ -102,7 +102,8 @@ router.route('/charge/card')
     responseHelper.middleware.checkSessionExists, // session 확인이 필요한 경우.
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
       const { marketerId } = responseHelper.getSessionData(req);
-      const [chargeCashString, chargeType, imp_uid, merchant_uid] = responseHelper.getParam(['chargeCash', 'chargeType', ' imp_uid', 'merchant_uid'], 'POST', req);
+      const [chargeCashString, chargeType, imp_uid, merchant_uid] = responseHelper.getParam(['chargeCash', 'chargeType', 'imp_uid', 'merchant_uid'], 'POST', req);
+
       const chargeCash = Number(chargeCashString);
 
       // 결제시스템의 액세스 토큰(access token) 발급 받기 => 결제 위변조를 대조 용도도 포함
@@ -158,6 +159,20 @@ router.route('/charge/card')
               .then(() => {
                 doQuery(vbankCashChargeInsertQuery, vbankCashChargeArray)
                   .then(() => {
+                    Notification(
+                      {
+                        userType: 'marketer',
+                        type: 'vbankChargeReady',
+                        targetId: marketerId,
+                        params: {
+                          cashAmount: amount,
+                          vbankName: vbank_name,
+                          vbankNum: vbank_num,
+                        },
+                        vbankDate: vbank_date
+                      }
+                    );
+
                     // 마케터 캐시 충전 쿼리 완료
                     responseHelper.send({
                       status: 'vbankIssued',
@@ -166,20 +181,6 @@ router.route('/charge/card')
                       vbank_name: `${vbank_name}`,
                       vbank_holder: `${vbank_holder}`,
                     }, 'POST', res);
-
-                    // Promise.all[Notification(
-                    //     {
-                    //         userType: 'marketer',
-                    //         type: 'vbankChargeReady',
-                    //         targetId: marketerId,
-                    //         params: {
-                    //             cashAmount: amount,
-                    //             vbankName: vbank_name,
-                    //             vbankNum: vbank_num,
-                    //         },
-                    //         vbankDate: vbank_date
-                    //     }
-                    // )];
                   })
                   .catch((error) => {
                     responseHelper.promiseError(error, next);
@@ -194,28 +195,28 @@ router.route('/charge/card')
             // 계좌이체 및 신용카드 결제 로직
             // 현재 마케터 보유 캐시량 조회
             const currentDebitQuery = `
-                        SELECT cashAmount as cashAmount
-                        FROM marketerDebit
-                        WHERE marketerId = ?
-                        ORDER BY date DESC
-                        LIMIT 1
-                        `;
+            SELECT cashAmount as cashAmount
+            FROM marketerDebit
+            WHERE marketerId = ?
+            ORDER BY date DESC
+            LIMIT 1
+            `;
 
             // 신용카드 및 계좌이체로 row 한줄 생성
             const cashChargeInsertQuery = `
-                        INSERT INTO marketerCharge
-                        (marketerId, cash, type, merchant_uid, imp_uid, temporaryState)
-                        VALUES (?, ?, ?, ?, ?, 1)
-                        `;
+            INSERT INTO marketerCharge
+            (marketerId, cash, type, merchant_uid, imp_uid, temporaryState)
+            VALUES (?, ?, ?, ?, ?, 1)
+            `;
 
             // 신용카드 및 계좌이체로 row 한줄 생성
             const cashChargeArray = [marketerId, chargeCash, chargeType, merchant_uid, imp_uid];
 
             // 충전시 기존의 캐시량 + 캐시충전량으로 바로 update
             const debitUpdateQuery = `
-                        UPDATE marketerDebit
-                        SET cashAmount = ? 
-                        WHERE marketerId = ?`;
+            UPDATE marketerDebit
+            SET cashAmount = ? 
+            WHERE marketerId = ?`;
 
             doQuery(currentDebitQuery, [marketerId])
               .then((row) => {
