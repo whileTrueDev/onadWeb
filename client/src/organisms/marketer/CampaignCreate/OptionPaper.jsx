@@ -16,11 +16,6 @@ const options = [
     primaryText: '배너 광고',
     secondaryText: '상품, 브랜드 홍보만 하고싶어요.',
   },
-  {
-    id: 'option2',
-    primaryText: '클릭 광고',
-    secondaryText: '구매 전환을 하고 싶어요.',
-  },
 ];
 
 const OptionPaper = (props) => {
@@ -42,7 +37,7 @@ const OptionPaper = (props) => {
       {/* optionType 선택 이전 */}
       {step === 0 && (
         <div>
-          {options.map(opt => (
+          {options.map((opt) => (
             <OptionSelectPaper
               key={opt.id}
               name={opt.id}
@@ -60,8 +55,8 @@ const OptionPaper = (props) => {
       {step > 0 && (
         <div>
           {options
-            .filter(opt => state.option === opt.id)
-            .map(selectedOption => (
+            .filter((opt) => state.option === opt.id)
+            .map((selectedOption) => (
               <OptionSelectPaper
                 key={selectedOption.id}
                 name={selectedOption.id}
