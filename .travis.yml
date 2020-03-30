@@ -33,7 +33,7 @@ after_success:
   - docker build -t $DOCKER_USERNAME/onad_web_api ./service
   - docker tag $DOCKER_USERNAME/onad_socket $DOCKER_USERNAME/onad_socket:0.$TRAVIS_JOB_NUMBER
   - docker tag $DOCKER_USERNAME/onad_calculator $DOCKER_USERNAME/onad_calculator:0.$TRAVIS_JOB_NUMBER
-  - docker tag $DOCKER_USERNAME/oand_web $DOCKER_USERNAME/onad_web:0.$TRAVIS_JOB_NUMBER
+  - docker tag $DOCKER_USERNAME/onad_web $DOCKER_USERNAME/onad_web:0.$TRAVIS_JOB_NUMBER
   - docker tag $DOCKER_USERNAME/onad_web_api $DOCKER_USERNAME/onad_web_api:0.$TRAVIS_JOB_NUMBER
   - docker push $DOCKER_USERNAME/onad_socket
   - docker push $DOCKER_USERNAME/onad_calculator
