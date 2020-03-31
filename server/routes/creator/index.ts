@@ -1,5 +1,6 @@
 import express from 'express';
 import createHttpError from 'http-errors';
+import AWS from 'aws-sdk';
 import responseHelper from '../../middlewares/responseHelper';
 import doQuery from '../../model/doQuery';
 import encrypto from '../../middlewares/encryption';

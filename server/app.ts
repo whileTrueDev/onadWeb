@@ -27,6 +27,7 @@ import mailRouter from './routes/mail';
 import noticeRouter from './routes/notice';
 import trackingRouter from './routes/tracking';
 import taxBillScheduler from './middlewares/scheduler/taxBillScheduler';
+import S3 from './lib/AWS/S3';
 
 const MySQLStore = require('express-mysql-session')(session);
 
@@ -191,6 +192,8 @@ class OnadWebApi {
   }
 }
 
+// S3.getImages();
+// S3.uploadImage();
 console.log('ENVIRONMENT: ', process.env.NODE_ENV);
 console.log(`SCHEDULER: [${taxBillScheduler.name}] - ON `);
 
