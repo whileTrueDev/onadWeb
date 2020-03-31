@@ -2,6 +2,7 @@ import express from 'express';
 import responseHelper from '../../../middlewares/responseHelper';
 import doQuery from '../../../model/doQuery';
 import analysisRouter from './analysis';
+import marketerActionLogging from '../../../middlewares/marketerActionLog';
 
 const router = express.Router();
 
@@ -88,10 +89,10 @@ router.route('/on-off')
             Promise.all([
               doQuery(infoQuery, [contractionState, marketerId]),
               // 마케터 활동내역 테이블 적재
-              // marketerActionLogging([marketerId, MARKETER_ACTION_LOG_TYPE,
-              //     JSON.stringify({
-              //     onoffState: contractionState // on: 1, off : 0
-              //     })])
+              marketerActionLogging([marketerId, MARKETER_ACTION_LOG_TYPE,
+                JSON.stringify({
+                  onoffState: contractionState // on: 1, off : 0
+                })])
             ])
               .then(() => {
                 responseHelper.send([true], 'POST', res);

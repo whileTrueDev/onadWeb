@@ -3,6 +3,7 @@ import responseHelper from '../../../middlewares/responseHelper';
 import doQuery from '../../../model/doQuery';
 import dataProcessing from '../../../lib/dataProcessing';
 import analysisRouter from './analysis';
+import marketerActionLogging from '../../../middlewares/marketerActionLog';
 
 const router = express.Router();
 router.use('/analysis', analysisRouter);
@@ -127,9 +128,9 @@ router.route('/on-off')
             || (bannerConfirm === 1 && linkConfirm === null)) {
             doQuery(query, [onoffState, campaignId])
               .then(() => {
-                // const MARKETER_ACTION_LOG_TYPE = 6;
-                // marketerActionLogging([campaignId.split('_')[0], MARKETER_ACTION_LOG_TYPE,
-                // JSON.stringify({ campaignName, onoffState })]);
+                const MARKETER_ACTION_LOG_TYPE = 6;
+                marketerActionLogging([campaignId.split('_')[0], MARKETER_ACTION_LOG_TYPE,
+                  JSON.stringify({ campaignName, onoffState })]);
                 responseHelper.send([true], 'PATCH', res);
               })
               .catch((error) => {
@@ -200,10 +201,11 @@ router.route('/')
       const [campaignName, optionType, priorityType, priorityList, selectedTime, dailyLimit,
         startDate, finDate, keyword, bannerId,
         mainLandingUrl, sub1LandingUrl, sub2LandingUrl,
-        mainLandingUrlName, sub1LandingUrlName, sub2LandingUrlName] = responseHelper.getParam(['campaignName', 'optionType', 'priorityType',
-          'priorityList', 'selectedTime', 'dailyLimit', 'startDate', 'finDate',
-          'keyword', 'bannerId', 'mainLandingUrl', 'sub1LandingUrl', 'sub2LandingUrl',
-          'mainLandingUrlName', 'sub1LandingUrlName', 'sub2LandingUrlName'], 'POST', req);
+        mainLandingUrlName, sub1LandingUrlName, sub2LandingUrlName] = responseHelper.getParam([
+        'campaignName', 'optionType', 'priorityType',
+        'priorityList', 'selectedTime', 'dailyLimit', 'startDate', 'finDate',
+        'keyword', 'bannerId', 'mainLandingUrl', 'sub1LandingUrl', 'sub2LandingUrl',
+        'mainLandingUrlName', 'sub1LandingUrlName', 'sub2LandingUrlName'], 'POST', req);
 
       const searchQuery = `
             SELECT campaignId
@@ -218,7 +220,7 @@ router.route('/')
             bannerId, connectedLinkId, dailyLimit, priorityType, 
             optionType, onOff, targetList, marketerName, 
             keyword, startDate, finDate, selectedTime) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, 0, ?, ?, ?, ?, ?, ?)`;
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, 1, ?, ?, ?, ?, ?, ?)`;
 
       const saveToLinkRegistered = `
             INSERT INTO linkRegistered
@@ -279,9 +281,9 @@ router.route('/')
                 campaignId, optionType, priorityType, priorityList
               }),
               // 마케터 활동내역 테이블 적재.
-              // marketerActionLogging([
-              //     marketerId, MARKETER_ACTION_LOG_TYPE, JSON.stringify({ campaignName })
-              // ]),
+              marketerActionLogging([
+                marketerId, MARKETER_ACTION_LOG_TYPE, JSON.stringify({ campaignName })
+              ]),
             ])
               .then(() => {
                 responseHelper.send([true, '캠페인이 생성되었습니다.'], 'POST', res);
@@ -301,7 +303,7 @@ router.route('/')
   .delete(
     responseHelper.middleware.checkSessionExists,
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
-      // const { marketerId } = responseHelper.getSessionData(req);
+      const { marketerId } = responseHelper.getSessionData(req);
       const campaignId = responseHelper.getParam('campaignId', 'DELETE', req);
       const query = `
             UPDATE campaign
@@ -314,13 +316,13 @@ router.route('/')
       doQuery(query, [campaignId])
         .then(() => {
           doQuery(selectQuery, [campaignId])
-            .then(() => {
+            .then((row) => {
               responseHelper.send([true], 'DELETE', res);
-              // const { campaignName } = row1.result[0];
+              const { campaignName } = row.result[0];
               // marketer action log 테이블 적재
-              // const MARKETER_ACTION_LOG_TYPE = 12; // <캠페인 삭제> 상태값
-              // marketerActionLogging([marketerId,
-              // MARKETER_ACTION_LOG_TYPE, JSON.stringify({ campaignName })]);
+              const MARKETER_ACTION_LOG_TYPE = 12; // <캠페인 삭제> 상태값
+              marketerActionLogging([marketerId,
+                MARKETER_ACTION_LOG_TYPE, JSON.stringify({ campaignName })]);
             })
             .catch((error) => {
               responseHelper.promiseError(error, next);
