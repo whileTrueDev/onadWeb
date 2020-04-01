@@ -192,8 +192,6 @@ class OnadWebApi {
   }
 }
 
-// S3.getImages();
-// S3.uploadImage();
 console.log('ENVIRONMENT: ', process.env.NODE_ENV);
 console.log(`SCHEDULER: [${taxBillScheduler.name}] - ON `);
 

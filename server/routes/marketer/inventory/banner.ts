@@ -2,6 +2,7 @@ import express from 'express';
 import responseHelper from '../../../middlewares/responseHelper';
 import doQuery from '../../../model/doQuery';
 import marketerActionLogging from '../../../middlewares/marketerActionLog';
+import S3 from '../../../lib/AWS/S3';
 
 const router = express.Router();
 
@@ -91,6 +92,8 @@ router.route('/')
           } else {
             bannerId = `${marketerId}_01`;
           }
+          // S3에 저장
+          // S3.uploadImage(`banner/${marketerId}/${bannerId}`, bannerSrc);
           doQuery(saveQuery,
             [bannerId, marketerId, bannerSrc,
               bannerDescription])

@@ -322,6 +322,8 @@ router.route('/business')
             UPDATE marketerInfo
             SET marketerBusinessRegSrc = ?
             WHERE marketerId = ?`;
+      // S3에 저장
+      // S3.uploadImage(`business-regi/${marketerId}`, businessImageSrc);
       doQuery(query, [businessImageSrc, marketerId])
         .then(() => {
           responseHelper.send([true], 'PUT', res);

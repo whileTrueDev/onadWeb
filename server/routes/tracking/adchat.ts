@@ -33,7 +33,9 @@ router.route('/')
 
     const nowIp: string | string[] | undefined = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
     // 봇, 아이피 차단
-    const banIpArray = ['66.249.64.79'];
+    const banIpArray = [
+      '66.249.64.79', '66.249.89.143', '66.249.64.90', '66.249.64.81', '66.249.64.87', '66.249.64.75'
+    ];
     if (typeof nowIp === 'string' && banIpArray.includes(nowIp)) {
       console.log(`[${new Date().toLocaleString()}] AdChat - banned IP - ${nowIp}`);
       responseHelper.promiseError(Error('Invalid Ip'), next);
