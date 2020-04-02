@@ -1,13 +1,13 @@
 import React from 'react';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import {
-  Paper, Typography, FormControlLabel, Switch,
+  Typography, FormControlLabel, Switch,
   Divider,
 } from '@material-ui/core';
+import Card from '../../../../atoms/Card/Card';
 import useToggle from '../../../../utils/hooks/useToggle';
 
 const useStyles = makeStyles((theme) => ({
-  paper: { maxheight: 100 },
   head: { display: 'flex', justifyContent: 'space-between', padding: theme.spacing(2) },
   body: { padding: theme.spacing(2) },
   emphasizedText: {
@@ -18,12 +18,11 @@ const useStyles = makeStyles((theme) => ({
 export default function AdChatOnOffCard(): JSX.Element {
   const toggle = useToggle();
   const classes = useStyles();
-  const theme = useTheme();
   return (
-    <Paper className={classes.paper}>
+    <Card>
       <div className={classes.head}>
         <Typography variant="h6">
-          채팅광고 On/Off
+          채팅 광고 On/Off
         </Typography>
         <FormControlLabel
           label=""
@@ -61,6 +60,6 @@ export default function AdChatOnOffCard(): JSX.Element {
           &quot;를 입력해 매니저로 임명해주세요!
         </Typography>
       </div>
-    </Paper>
+    </Card>
   );
 }
