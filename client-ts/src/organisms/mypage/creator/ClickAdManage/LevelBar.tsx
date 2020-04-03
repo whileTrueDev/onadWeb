@@ -12,10 +12,20 @@ export default function LevelBar({
 }: LevelBarProps): JSX.Element {
   return (
     <div style={{
-      display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      width: '100%'
     }}
     >
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginBottom: 16
+      }}
+      >
         <Typography variant="body2">
           {'Lv. '}
         </Typography>
@@ -24,7 +34,7 @@ export default function LevelBar({
         </Typography>
       </div>
       <LinearProgress
-        style={{ width: 180 }}
+        style={{ width: '90%', maxWidth: 300 }}
         value={exp} // 경험치 100 분위수
         variant="determinate"
       />

@@ -1,10 +1,8 @@
 import React from 'react';
 import classnames from 'classnames';
 import makeStyles from '@material-ui/core/styles/makeStyles';
-import { Typography, Divider } from '@material-ui/core';
-import InsertLinkOutlined from '@material-ui/icons/InsertLinkOutlined';
+import { Typography, Divider, Tooltip } from '@material-ui/core';
 import Card from '../../../../atoms/Card/Card';
-import Button from '../../../../atoms/CustomButtons/Button';
 import StyledInput from '../../../../atoms/StyledInput';
 import Snackbar from '../../../../atoms/Snackbar/Snackbar';
 import copyToClipboard from '../../../../utils/copyToClipboard';
@@ -32,7 +30,11 @@ const useStyles = makeStyles((theme) => ({
   image: { width: '100%', maxWidth: 320, },
 }));
 
-export default function AdPanelCard(): JSX.Element {
+interface AdPanelCardProps {
+  creatorUrl: string;
+}
+export default function AdPanelCard(props: AdPanelCardProps): JSX.Element {
+  const { creatorUrl } = props;
   const classes = useStyles();
   const snack = useDialog(); // 복사 성공 snackbar state
 
@@ -49,12 +51,13 @@ export default function AdPanelCard(): JSX.Element {
         <Divider />
 
         <div className={classes.body}>
-          <img
-            src="/pngs/dashboard/clickad_panel_example.png"
-            alt="panel_example"
-            style={{ maxWidth: '100%', height: 350 }}
-          />
-          <div style={{ textAlign: 'center' }} />
+          <div style={{ textAlign: 'center' }}>
+            <img
+              src="/pngs/dashboard/clickad_panel_example.png"
+              alt="panel_example"
+              style={{ maxWidth: '100%', height: 350 }}
+            />
+          </div>
           <Typography variant="body2">
             패널광고는 자신의 채널 하단의 패널에 삽입할 수 있는 배너 광고입니다.
           </Typography>
@@ -76,26 +79,21 @@ export default function AdPanelCard(): JSX.Element {
             <Typography variant="h6">
               광고페이지 링크
             </Typography>
-            <div>
-              <StyledInput
-                className={classes.site}
-                style={{ cursor: 'default' }}
-                id="ad-page-url"
-                value="https://l.onad.io/크리에이터아이디"
-                inputProps={{ readOnly: true }}
-              />
-              <Button
-                onClick={(e): void => {
-                  copyToClipboard(e, 'ad-page-url', () => {
-                    snack.handleOpen();
-                  });
-                }}
-                size="small"
-              >
-                <InsertLinkOutlined />
-                복사
-              </Button>
-            </div>
+            <Tooltip title="클릭시 클립보드에 복사됩니다.">
+              <div>
+                <StyledInput
+                  className={classes.site}
+                  id="ad-page-url"
+                  value={creatorUrl}
+                  inputProps={{ readOnly: true, style: { cursor: 'pointer' } }}
+                  onClick={(e): void => {
+                    copyToClipboard(e, 'ad-page-url', () => {
+                      snack.handleOpen();
+                    });
+                  }}
+                />
+              </div>
+            </Tooltip>
           </div>
 
           <div className={classes.flex}>
@@ -109,11 +107,13 @@ export default function AdPanelCard(): JSX.Element {
           </div>
 
           <div className={classnames(classes.flex, classes.images)}>
-            <div>
-              <a href="/pngs/landing/onad_panel_banner_default.png" download="onad_panel_banner_default">
-                <img src="/pngs/landing/onad_panel_banner_default.png" alt="패널기본배너1" className={classes.image} />
-              </a>
-            </div>
+            <Tooltip title="클릭시 다운로드 됩니다.">
+              <div>
+                <a href="/pngs/landing/onad_panel_banner_default.png" download="onad_panel_banner_default">
+                  <img src="/pngs/landing/onad_panel_banner_default.png" alt="패널기본배너1" className={classes.image} />
+                </a>
+              </div>
+            </Tooltip>
           </div>
         </div>
       </Card>

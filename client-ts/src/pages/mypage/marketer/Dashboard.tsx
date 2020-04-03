@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export default function Dashboard() {
+export default function Dashboard(): JSX.Element {
   const classes = useStyles();
 
   const campaignData = useGetRequest<null, CampaignInterface[] | null>('/marketer/campaign/list');

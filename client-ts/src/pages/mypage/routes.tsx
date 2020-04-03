@@ -63,13 +63,6 @@ const dashboardRoutes: MypageRoutes = {
       layout: '/mypage/creator',
     },
     {
-      path: '/ad-page',
-      name: '내 광고페이지(삭제예정)',
-      icon: Public,
-      component: CreatorLandingManage,
-      layout: '/mypage/creator',
-    },
-    {
       path: '/manual',
       name: '사용 방법',
       icon: Reorder,
