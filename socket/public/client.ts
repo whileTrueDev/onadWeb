@@ -8,8 +8,7 @@ const history: number = window.history.length;
 const THIS_URL: string = window.location.href;
 let bannerName: string | undefined = $('#banner-area').attr('name');
 hiddenEventHandler(socket, THIS_URL, programType);
-let socketHost: string = '';
-console.log(document.visibilityState)
+let socketHost = '';
 socket.emit('new client', [THIS_URL, history]);
 
 socket.on('host pass', (SOCKET_HOST: string) => {
@@ -34,18 +33,10 @@ socket.on('img receive', (msg: string[]) => {
   }
 });
 
-socket.on('response banner data to server', () => {
-  bannerName = $('#banner-area').attr('name');
-  if (bannerName && document.visibilityState === 'visible') {
-    const cutBannerName = bannerName.split(',');
-    socket.emit('write to db', [cutBannerName, programType]);
-  }
-});
-
 socket.on('re-render at client', () => {
   bannerName = $('#banner-area').attr('name');
   if (bannerName && document.visibilityState === 'visible') {
-    socket.emit('re-render', [THIS_URL, bannerName]);
+    socket.emit('re-render', [THIS_URL, bannerName, programType]);
   }
 });
 

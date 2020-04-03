@@ -1,6 +1,6 @@
-function hiddenEventHandler(socket: any, THIS_URL: string, programType: string) {
+function hiddenEventHandler(socket: any, THIS_URL: string, programType: string): void {
   const cutUrl = `/${THIS_URL.split('/')[4]}`;
-  document.addEventListener("visibilitychange", function () {
+  document.addEventListener('visibilitychange', () => {
     if (document.visibilityState === 'hidden') {
       // 숨김
       socket.emit('pageActive handler', [cutUrl, 0, programType]);
@@ -12,4 +12,4 @@ function hiddenEventHandler(socket: any, THIS_URL: string, programType: string) 
   });
 }
 
-export { hiddenEventHandler }
+export { };
