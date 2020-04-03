@@ -7,7 +7,6 @@ function callImg(socket: any, msg: string[]): void {
   const prevBannerName: string = msg[1];
   const programType: string = msg[2];
   const getTime: string = new Date().toLocaleString();
-
   interface CampaignIdOptionType {
     [_: string]: [number, string];
   }

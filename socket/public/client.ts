@@ -1,6 +1,6 @@
 
-import { identifier } from './programIdentifier';
-import { hiddenEventHandler } from './hiddenEventHandler';
+import identifier from './programIdentifier';
+import hiddenEventHandler from './hiddenEventHandler';
 
 const socket: any = io();
 const programType: string = identifier();

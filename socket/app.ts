@@ -75,8 +75,10 @@ io.on('connection', (socket: any) => {
     callImg(socket, msg);
   });
 
-  socket.on('pageOn', (CLIENT_URL: string) => {
-    callImg(socket, [CLIENT_URL, '']);
+  socket.on('pageOn', (msg: [string, string]) => {
+    const CLIENT_URL = msg[0];
+    const programType = msg[1];
+    callImg(socket, [CLIENT_URL, '', programType]);
   });
 
   socket.on('pageActive handler', (msg: [string, number, string]) => {
