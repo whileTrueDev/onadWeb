@@ -16,9 +16,7 @@ router.route('/')
       WHERE creatorId = ?
       GROUP BY channel`;
       const queryArray = [creatorId];
-      interface ClicksResult {
-        channel: string; count: number;
-      }
+      interface ClicksResult { channel: string; count: number }
       const row = await doQuery<ClicksResult[]>(query, queryArray);
 
       if (row.result) {

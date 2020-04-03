@@ -28,16 +28,14 @@ import {
   TimeAction,
   NameInterface
 } from './campaignReducer';
-
+import StyledItemText from '../../../../atoms/StyledItemText';
 
 const StyledTableCell = withStyles((theme) => ({
   head: {
     backgroundColor: theme.palette.common.black,
     color: theme.palette.common.white,
   },
-  body: {
-    fontSize: 14,
-  },
+  body: { fontSize: 14, },
 }))(TableCell);
 
 const StyledTableRow = withStyles((theme) => ({
@@ -85,31 +83,35 @@ const CampaignCreateTable = (props: CampaignCreateTableProps): JSX.Element => {
 
   const inputsteps: {
     title: string;
+    subtitle: string;
     component: JSX.Element;
   }[] | any[] = [
-      {
-        title: '캠페인 이름 입력',
-        component: (
-          <CampaignNaming
-            nameState={nameState}
-            nameDispatch={nameDispatch}
-          />
-        )
-      },
-      {
-        title: '배너 선택',
-        component: (
-          <CampaignBannerReg
-            bannerData={bannerData}
-            dispatch={dispatch}
-            handleDialogOpen={uploadDialog.handleOpen}
-            step={step}
-          />
-        )
-      }, // check 완료
-      (optionType !== 'option0')
+    {
+      title: '캠페인 이름 입력',
+      subtitle: '캠페인을 식별하는 상황과 광고채팅의 접두어로 사용됩니다.',
+      component: (
+        <CampaignNaming
+          nameState={nameState}
+          nameDispatch={nameDispatch}
+        />
+      )
+    },
+    {
+      title: '배너 선택',
+      subtitle: '캠페인을 식별하는 상황과 광고채팅의 접두어로 사용됩니다.',
+      component: (
+        <CampaignBannerReg
+          bannerData={bannerData}
+          dispatch={dispatch}
+          handleDialogOpen={uploadDialog.handleOpen}
+          step={step}
+        />
+      )
+    }, // check 완료
+    (optionType !== 'option0')
       && {
         title: '랜딩페이지 URL',
+        subtitle: '캠페인을 식별하는 상황과 광고채팅의 접두어로 사용됩니다.',
         component: (
           <LandingUrlInput
             dispatch={dispatch}
@@ -118,44 +120,37 @@ const CampaignCreateTable = (props: CampaignCreateTableProps): JSX.Element => {
           />
         )
       }, // react-hooks-form 사용.
-
-      // {
-      //   title: '키워드 입력',
-      //   component: (
-      //     <KeywordInput
-      //       dispatch={dispatch}
-      //       state={state}
-      //     />
-      //   )
-      // },
-      {
-        title: '예산설정',
-        component: (
-          <CampaignBudgetSet
-            state={budgetState}
-            dispatch={budgetDispatch}
-          />
-        )
-      },
-      {
-        title: '기간 설정',
-        component: (
-          <CampaignTimeSet
-            dispatch={termDispatch}
-            state={termState}
-          />
-        )
-      },
-      {
-        title: '시간대 설정',
-        component: (
-          <TimeSelectorSet
-            state={timeState}
-            dispatch={timeDispatch}
-          />
-        )
-      },
-    ];
+    {
+      title: '예산설정',
+      subtitle: '캠페인을 식별하는 상황과 광고채팅의 접두어로 사용됩니다.',
+      component: (
+        <CampaignBudgetSet
+          state={budgetState}
+          dispatch={budgetDispatch}
+        />
+      )
+    },
+    {
+      title: '기간 설정',
+      subtitle: '캠페인을 식별하는 상황과 광고채팅의 접두어로 사용됩니다.',
+      component: (
+        <CampaignTimeSet
+          dispatch={termDispatch}
+          state={termState}
+        />
+      )
+    },
+    {
+      title: '시간대 설정',
+      subtitle: '캠페인을 식별하는 상황과 광고채팅의 접두어로 사용됩니다.',
+      component: (
+        <TimeSelectorSet
+          state={timeState}
+          dispatch={timeDispatch}
+        />
+      )
+    },
+  ];
 
 
   return (
@@ -167,18 +162,17 @@ const CampaignCreateTable = (props: CampaignCreateTableProps): JSX.Element => {
         <Table className={classes.table} aria-label="customized table">
           <TableBody>
             {inputsteps.map((_step: {
-              title: string;
-              component: JSX.Element;
+              title: string; subtitle: string; component: JSX.Element;
             }) => (
-                <StyledTableRow key={_step.title}>
-                  <StyledTableCell>
-                    {_step.title}
-                  </StyledTableCell>
-                  <StyledTableCell>
-                    {_step.component}
-                  </StyledTableCell>
-                </StyledTableRow>
-              ))}
+              <StyledTableRow key={_step.title}>
+                <StyledTableCell>
+                  <StyledItemText primary={_step.title} secondary={_step.subtitle} />
+                </StyledTableCell>
+                <StyledTableCell>
+                  {_step.component}
+                </StyledTableCell>
+              </StyledTableRow>
+            ))}
           </TableBody>
         </Table>
       </TableContainer>
