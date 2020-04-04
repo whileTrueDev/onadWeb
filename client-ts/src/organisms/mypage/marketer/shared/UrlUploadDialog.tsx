@@ -91,7 +91,7 @@ export default function UrlUploadDialog(props: UrlUploadDialogProps): JSX.Elemen
       open={open}
       maxWidth="sm"
       fullWidth
-      title="URL 등록"
+      title="랜딩페이지 URL 등록"
       buttons={(
         <div style={{ display: 'flex' }}>
           <Collapse
@@ -137,7 +137,7 @@ export default function UrlUploadDialog(props: UrlUploadDialogProps): JSX.Elemen
             />
           </Grid>
         </Grid>
-        <FormHelperText>랜딩페이지를 통해 접속할 웹페이지를 작성해주세요</FormHelperText>
+        <FormHelperText>시청자가 광고채팅 또는 패널 클릭시 접속될 웹페이지를 작성해주세요</FormHelperText>
 
         <Grid item>
           <FormControlLabel
@@ -156,6 +156,7 @@ export default function UrlUploadDialog(props: UrlUploadDialogProps): JSX.Elemen
             label="SUB URL 설정"
             labelPlacement="end"
           />
+          <FormHelperText>SUB URL은 향후 CPA 상품 개발 시 사용될 예정입니다.</FormHelperText>
         </Grid>
 
         <Collapse in={subOpen.toggle}>
@@ -199,7 +200,7 @@ export default function UrlUploadDialog(props: UrlUploadDialogProps): JSX.Elemen
               />
             </Grid>
 
-            <Grid container direction="row">
+            {/* <Grid container direction="row">
               <Grid item>
                 <InputLabel shrink htmlFor="company">Sub2 URL 이름</InputLabel>
                 <Input
@@ -235,7 +236,7 @@ export default function UrlUploadDialog(props: UrlUploadDialogProps): JSX.Elemen
                 label="미설정"
                 labelPlacement="start"
               />
-            </Grid>
+            </Grid> */}
           </Grid>
         </Collapse>
       </Grid>

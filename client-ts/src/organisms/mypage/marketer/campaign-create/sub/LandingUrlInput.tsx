@@ -1,16 +1,17 @@
 import React from 'react';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import {
-  Grid, InputLabel, Input, FormHelperText,
-  FormControlLabel, Checkbox, Collapse
+  Grid, List, ListItem, ListItemText,
+  ListItemSecondaryAction, Typography
 } from '@material-ui/core';
 
+import GreenCheckbox from '../../../../../atoms/GreenCheckBox';
 import StyledItemText from '../../../../../atoms/StyledItemText';
 import Button from '../../../../../atoms/CustomButtons/Button';
-import {
-  Step3Interface,
-  Action
-} from '../campaignReducer';
+import { Step3Interface, Action } from '../campaignReducer';
+import { LandingUrlData } from '../interfaces';
+
+import { UseGetRequestObject } from '../../../../../utils/hooks/useGetRequest';
 
 const useStyle = makeStyles((theme: Theme) => ({
   input: {
@@ -30,24 +31,32 @@ const useStyle = makeStyles((theme: Theme) => ({
     color: theme.palette.primary.light,
     margin: '3px',
   },
+  landinglist: {
+    width: '100%',
+    maxWidth: 480,
+    backgroundColor: theme.palette.background.paper,
+    maxHeight: 300,
+    overflow: 'auto',
+  },
 }));
 
 interface LandingUrlInputProps {
   handleDialogOpen: () => void;
   dispatch: React.Dispatch<Action>;
   state: Step3Interface;
+  landingUrlData: UseGetRequestObject<LandingUrlData[]>;
 }
 
 const LandingUrlInput = (props: LandingUrlInputProps): JSX.Element => {
   const {
-    handleDialogOpen, dispatch, state
+    handleDialogOpen, dispatch, state, landingUrlData
   } = props;
   const classes = useStyle();
-  const [subOpen, setSubOpen] = React.useState(false);
-
-  const handleSubOpen = (): void => {
-    setSubOpen(!subOpen);
+  const [checked, setChecked] = React.useState(0);
+  const handleToggle = (value: number) => (): void => {
+    setChecked(value);
   };
+
 
   const handleUrlName = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -100,135 +109,53 @@ const LandingUrlInput = (props: LandingUrlInputProps): JSX.Element => {
 
   return (
     <Grid container direction="column" spacing={3} style={{ marginBottom: 20 }}>
-      <InputLabel shrink htmlFor="company" className={classes.label}>MAIN URL</InputLabel>
-      <Grid container direction="row">
-        <Grid item>
-          <InputLabel shrink htmlFor="company">URL 이름</InputLabel>
-          <Input
-            required
-            id="main-url-name"
-            value={state.mainLandingUrlName}
-            className={classes.input}
-            onChange={handleUrlName}
-          />
-        </Grid>
-        <Grid item>
-          <InputLabel shrink htmlFor="company">URL 주소*</InputLabel>
-          <Input
-            required
-            value={state.mainLandingUrl}
-            type="url"
-            id="main-url"
-            className={classes.input}
-            onChange={handleUrlChange}
-          />
-        </Grid>
-      </Grid>
-      <FormHelperText>랜딩페이지를 통해 시청자들에게 보여질 이름과 접속할 웹페이지를 작성해주세요</FormHelperText>
-
       <Grid item>
-        <FormControlLabel
-          control={(
-            <Checkbox
-              color="primary"
-              checked={subOpen}
-              onChange={handleSubOpen}
-              size="small"
-              style={{ padding: '3px' }}
-            />
-          )}
-          label="SUB URL 설정"
-          labelPlacement="end"
+        <StyledItemText
+          primary="랜딩페이지 URL 선택하기"
+          secondary="선택된 URL링크는 패널, 채팅광고를 클릭시 이동될 링크입니다."
+          className={classes.label}
         />
       </Grid>
-
-      <Collapse in={subOpen}>
-        <Grid item>
-          <InputLabel shrink htmlFor="company" className={classes.label}>SUB URL</InputLabel>
-          <Grid container direction="row">
-            <Grid item>
-              <InputLabel shrink htmlFor="company">Sub1 URL 이름</InputLabel>
-              <Input
-                required
-                id="sub-url1-name"
-                value={state.sub1LandingUrlName}
-                className={classes.input}
-                onChange={handleUrlName}
-              // disabled={sub1CloseState}
+      <Grid item>
+        {!landingUrlData.loading && landingUrlData.data && (
+        <List className={classes.landinglist}>
+          {landingUrlData.data.filter(
+            (l) => l.confirmState === 1
+          ).sort((a, b) => b.regiDate.localeCompare(a.regiDate)).map((ll, index) => (
+            <ListItem
+              key={ll.linkId}
+              button
+              selected={checked === index}
+              onClick={handleToggle(index)}
+            >
+              <ListItemText
+                primary={(
+                  <>
+                    <Typography variant="body1">{ll.links.links.find((link) => link.primary)?.linkTo}</Typography>
+                    <Typography variant="body2">{ll.links.links.filter((link) => !link.primary)?.map((lll) => lll.linkTo)}</Typography>
+                  </>
+                )}
+                secondary={`등록일: ${ll.regiDate}`}
               />
-            </Grid>
-            <Grid item>
-              <InputLabel shrink htmlFor="company">Sub1 URL 주소</InputLabel>
-              <Input
-                type="url"
-                id="sub-url1"
-                value={state.sub1LandingUrl}
-                className={classes.input}
-                onChange={handleUrlChange}
-              // disabled={sub1CloseState}
-              />
-            </Grid>
-            {/* <FormControlLabel
-              control={(
-                <Checkbox
-                  color="primary"
-                  id="sub-url1-checkbox"
-                  checked={sub1CloseState}
-                  onChange={handleCloseState}
-                  fontSize="small"
-                  style={{ padding: '3px' }}
+              <ListItemSecondaryAction>
+                <GreenCheckbox
+                  edge="end"
+                  onChange={handleToggle(index)}
+                  checked={index === checked}
+                  inputProps={{ 'aria-labelledby': ll.linkId }}
                 />
-              )}
-              label="미설정"
-              labelPlacement="start"
-            /> */}
-          </Grid>
-
-          <Grid container direction="row">
-            <Grid item>
-              <InputLabel shrink htmlFor="company">Sub2 URL 이름</InputLabel>
-              <Input
-                required
-                id="sub-url2-name"
-                value={state.sub2LandingUrlName}
-                className={classes.input}
-                onChange={handleUrlName}
-              // disabled={sub2CloseState}
-              />
-            </Grid>
-            <Grid item>
-              <InputLabel shrink htmlFor="company">Sub2 URL 주소</InputLabel>
-              <Input
-                type="url"
-                id="sub-url2"
-                value={state.sub2LandingUrl}
-                className={classes.input}
-                onChange={handleUrlChange}
-              // disabled={sub2CloseState}
-              />
-            </Grid>
-            {/* <FormControlLabel
-              control={(
-                <Checkbox
-                  color="primary"
-                  id="sub-url2-checkbox"
-                  checked={sub2CloseState}
-                  onChange={handleCloseState}
-                  fontSize="small"
-                  style={{ padding: '3px' }}
-                />
-                  )}
-              label="미설정"
-              labelPlacement="start"
-            /> */}
-          </Grid>
-        </Grid>
-      </Collapse>
+              </ListItemSecondaryAction>
+            </ListItem>
+          ))}
+        </List>
+        )}
+      </Grid>
 
       <Grid item>
-        <StyledItemText>등록된 URL을 보고싶으신가요?</StyledItemText>
-        <Button onClick={handleDialogOpen}>
-          나의 인벤토리
+        <StyledItemText>새로운 URL을 등록하고 싶으신가요?</StyledItemText>
+        {/* url 등록 다이얼로그로 변경 */}
+        <Button onClick={handleDialogOpen} color="primary">
+          + URL 등록하기
         </Button>
       </Grid>
     </Grid>

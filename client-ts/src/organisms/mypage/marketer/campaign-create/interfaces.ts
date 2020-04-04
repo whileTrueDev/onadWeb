@@ -17,3 +17,13 @@ export interface RowDataInterface {
   creatorLogo: string;
   creatorName: string;
 }
+
+export interface LandingUrlData {
+  linkId: string;
+  marketerId: string;
+  confirmState: number;
+  denialReason: string;
+  links: { links: { linkName: string; linkTo: string; primary: boolean }[] };
+  regiDate: string;
+  updateDate: string;
+}

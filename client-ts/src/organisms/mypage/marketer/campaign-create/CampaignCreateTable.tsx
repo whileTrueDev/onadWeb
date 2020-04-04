@@ -15,7 +15,7 @@ import CampaignTimeSet from './sub/TermSet';
 // import KeywordInput from './KeywordInput';
 import TimeSelectorSet from './sub/TimeSet';
 import BannerUploadDialog from '../shared/BannerUploadDialog';
-import LandingUrlInventoryDialog from './sub/LandingUrlDialog';
+import UrlUploadDialog from '../shared/UrlUploadDialog';
 import useDialog from '../../../../utils/hooks/useDialog';
 import useGetRequest from '../../../../utils/hooks/useGetRequest';
 import CampaignCreateStepLayout from './StepLayout';
@@ -79,7 +79,7 @@ const CampaignCreateTable = (props: CampaignCreateTableProps): JSX.Element => {
   const bannerData = useGetRequest('/marketer/banner/list/active');
 
   const uploadDialog = useDialog();
-  const landingUrlInventoryDialog = useDialog();
+  const landingUrlUploadDialog = useDialog();
 
   const inputsteps: {
     title: string;
@@ -88,7 +88,6 @@ const CampaignCreateTable = (props: CampaignCreateTableProps): JSX.Element => {
   }[] | any[] = [
     {
       title: '캠페인 이름 입력',
-      subtitle: '캠페인을 식별하는 상황과 광고채팅의 접두어로 사용됩니다.',
       component: (
         <CampaignNaming
           nameState={nameState}
@@ -98,7 +97,6 @@ const CampaignCreateTable = (props: CampaignCreateTableProps): JSX.Element => {
     },
     {
       title: '배너 선택',
-      subtitle: '캠페인을 식별하는 상황과 광고채팅의 접두어로 사용됩니다.',
       component: (
         <CampaignBannerReg
           bannerData={bannerData}
@@ -111,18 +109,17 @@ const CampaignCreateTable = (props: CampaignCreateTableProps): JSX.Element => {
     (optionType !== 'option0')
       && {
         title: '랜딩페이지 URL',
-        subtitle: '캠페인을 식별하는 상황과 광고채팅의 접두어로 사용됩니다.',
         component: (
           <LandingUrlInput
             dispatch={dispatch}
             state={state}
-            handleDialogOpen={landingUrlInventoryDialog.handleOpen}
+            handleDialogOpen={landingUrlUploadDialog.handleOpen}
+            landingUrlData={landingUrlData}
           />
         )
       }, // react-hooks-form 사용.
     {
-      title: '예산설정',
-      subtitle: '캠페인을 식별하는 상황과 광고채팅의 접두어로 사용됩니다.',
+      title: '예산 설정',
       component: (
         <CampaignBudgetSet
           state={budgetState}
@@ -132,7 +129,6 @@ const CampaignCreateTable = (props: CampaignCreateTableProps): JSX.Element => {
     },
     {
       title: '기간 설정',
-      subtitle: '캠페인을 식별하는 상황과 광고채팅의 접두어로 사용됩니다.',
       component: (
         <CampaignTimeSet
           dispatch={termDispatch}
@@ -142,7 +138,6 @@ const CampaignCreateTable = (props: CampaignCreateTableProps): JSX.Element => {
     },
     {
       title: '시간대 설정',
-      subtitle: '캠페인을 식별하는 상황과 광고채팅의 접두어로 사용됩니다.',
       component: (
         <TimeSelectorSet
           state={timeState}
@@ -166,7 +161,7 @@ const CampaignCreateTable = (props: CampaignCreateTableProps): JSX.Element => {
             }) => (
               <StyledTableRow key={_step.title}>
                 <StyledTableCell>
-                  <StyledItemText primary={_step.title} secondary={_step.subtitle} />
+                  <StyledItemText primary={_step.title} />
                 </StyledTableCell>
                 <StyledTableCell>
                   {_step.component}
@@ -185,11 +180,10 @@ const CampaignCreateTable = (props: CampaignCreateTableProps): JSX.Element => {
       />
 
       {/* 랜딩페이지URL 생성 다이얼로그 */}
-      <LandingUrlInventoryDialog
-        open={landingUrlInventoryDialog.open}
-        onClose={landingUrlInventoryDialog.handleClose}
-        landingUrlData={landingUrlData}
-        dispatch={dispatch}
+      <UrlUploadDialog
+        open={landingUrlUploadDialog.open}
+        handleClose={landingUrlUploadDialog.handleClose}
+        recallRequest={landingUrlData.doGetRequest}
       />
     </CampaignCreateStepLayout>
   );
