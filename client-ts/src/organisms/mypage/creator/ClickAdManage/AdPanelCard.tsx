@@ -59,7 +59,7 @@ export default function AdPanelCard(props: AdPanelCardProps): JSX.Element {
             />
           </div>
           <Typography variant="body2">
-            패널광고는 자신의 채널 하단의 패널에 삽입할 수 있는 배너 광고입니다.
+            패널광고는 자신의 채널 하단의 패널에 삽입할 수 있는 배너 광고입니다.
           </Typography>
           <Typography variant="body2">
             클릭시 현재 방송화면에 송출되고 있는 광고의 링크로 바로 이동하게 됩니다.
@@ -77,7 +77,7 @@ export default function AdPanelCard(props: AdPanelCardProps): JSX.Element {
         <div className={classes.body}>
           <div style={{ marginBottom: 30 }}>
             <Typography variant="h6">
-              광고페이지 링크
+              패널 링크
             </Typography>
             <Tooltip title="클릭시 클립보드에 복사됩니다.">
               <div>
