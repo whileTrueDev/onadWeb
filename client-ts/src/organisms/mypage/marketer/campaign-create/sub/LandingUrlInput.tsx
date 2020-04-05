@@ -1,8 +1,8 @@
 import React from 'react';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import {
-  Grid, List, ListItem, ListItemText,
-  ListItemSecondaryAction, Typography
+  Grid, List, ListItem, ListItemText, ListItemIcon,
+  ListItemSecondaryAction, Typography, Tooltip
 } from '@material-ui/core';
 
 import GreenCheckbox from '../../../../../atoms/GreenCheckBox';
@@ -52,60 +52,6 @@ const LandingUrlInput = (props: LandingUrlInputProps): JSX.Element => {
     handleDialogOpen, dispatch, state, landingUrlData
   } = props;
   const classes = useStyle();
-  const [checked, setChecked] = React.useState(0);
-  const handleToggle = (value: number) => (): void => {
-    setChecked(value);
-  };
-
-
-  const handleUrlName = (
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ): boolean => {
-    switch (event.target.id) {
-      case 'main-url-name':
-      {
-        dispatch({ key: 'mainLandingUrlName', value: event.target.value.replace(/ /gi, '') });
-        return false;
-      }
-      case 'sub-url1-name':
-      {
-        dispatch({ key: 'sub1LandingUrlName', value: event.target.value.replace(/ /gi, '') });
-        return false;
-      }
-      case 'sub-url2-name':
-      {
-        dispatch({ key: 'sub2LandingUrlName', value: event.target.value.replace(/ /gi, '') });
-        return false;
-      }
-      default:
-      { return false; }
-    }
-  };
-
-  const handleUrlChange = (
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ): boolean => {
-    switch (event.target.id) {
-      case 'main-url':
-      {
-        dispatch({ key: 'mainLandingUrl', value: event.target.value.replace(/ /gi, '') });
-        return false;
-      }
-      case 'sub-url1':
-      {
-        dispatch({ key: 'sub1LandingUrl', value: event.target.value.replace(/ /gi, '') });
-        return false;
-      }
-      case 'sub-url2':
-      {
-        dispatch({ key: 'sub2LandingUrl', value: event.target.value.replace(/ /gi, '') });
-        return false;
-      }
-      default:
-      { return false; }
-    }
-  };
-
 
   return (
     <Grid container direction="column" spacing={3} style={{ marginBottom: 20 }}>
@@ -120,14 +66,30 @@ const LandingUrlInput = (props: LandingUrlInputProps): JSX.Element => {
         {!landingUrlData.loading && landingUrlData.data && (
         <List className={classes.landinglist}>
           {landingUrlData.data.filter(
-            (l) => l.confirmState === 1
-          ).sort((a, b) => b.regiDate.localeCompare(a.regiDate)).map((ll, index) => (
+            (l) => l.confirmState !== 2 // 2는 거절된 url을 나타낸다.
+          ).sort((a, b) => b.regiDate.localeCompare(a.regiDate)).map((ll) => (
             <ListItem
               key={ll.linkId}
               button
-              selected={checked === index}
-              onClick={handleToggle(index)}
+              selected={ll.linkId === state.connectedLinkId}
+              onClick={(): void => {
+                dispatch({ key: 'landingUrl', value: ll.linkId });
+              }}
             >
+              {ll.confirmState === 0 && (
+                <Tooltip title="승인 대기중인 URL">
+                  <ListItemIcon>
+                    <span style={{ fontSize: 24 }} role="img" aria-label="url-waiting-for-confirm">⏰</span>
+                  </ListItemIcon>
+                </Tooltip>
+              )}
+              {ll.confirmState === 1 && (
+                <Tooltip title="승인된 URL">
+                  <ListItemIcon>
+                    <span style={{ fontSize: 24 }} role="img" aria-label="url-confirmed">👌</span>
+                  </ListItemIcon>
+                </Tooltip>
+              )}
               <ListItemText
                 primary={(
                   <>
@@ -140,8 +102,10 @@ const LandingUrlInput = (props: LandingUrlInputProps): JSX.Element => {
               <ListItemSecondaryAction>
                 <GreenCheckbox
                   edge="end"
-                  onChange={handleToggle(index)}
-                  checked={index === checked}
+                  checked={ll.linkId === state.connectedLinkId}
+                  onChange={(): void => {
+                    dispatch({ key: 'landingUrl', value: ll.linkId });
+                  }}
                   inputProps={{ 'aria-labelledby': ll.linkId }}
                 />
               </ListItemSecondaryAction>

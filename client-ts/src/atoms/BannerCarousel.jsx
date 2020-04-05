@@ -26,9 +26,6 @@ const useStyles = makeStyles((theme) => ({
       '& $imageBackdrop': {
         opacity: 0.35,
       },
-      '& $imageMarked': {
-        opacity: 0,
-      },
       '& $imageTitle': {
         opacity: 1.0,
       },

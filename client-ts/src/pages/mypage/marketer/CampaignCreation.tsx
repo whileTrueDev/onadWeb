@@ -60,13 +60,7 @@ const CampaignCreation = (): JSX.Element => {
 
   const [timeState, timeDispatch] = useReducer(timeReducer, { time: false, timeList: [] });
   const [step3State, step3Dispatch] = useReducer(step3Reducer, {
-    bannerId: '',
-    mainLandingUrlName: '',
-    sub1LandingUrlName: '',
-    sub2LandingUrlName: '',
-    mainLandingUrl: '',
-    sub1LandingUrl: '',
-    sub2LandingUrl: '',
+    bannerId: '', connectedLinkId: '',
   });
 
 
@@ -87,8 +81,8 @@ const CampaignCreation = (): JSX.Element => {
       alert('배너가 선택되지 않았습니다.');
       return false;
     }
-    if (input.optionType !== '0' && (input.mainLandingUrl.replace(/ /gi, '').length === 0)) {
-      alert('랜딩페이지 URL이 입력되지 않았습니다.');
+    if (input.optionType !== '0' && !input.connectedLinkId) {
+      alert('랜딩페이지 URL이 선택되지 않았습니다.');
       return false;
     }
     if (input.budget && (input.dailyLimit === null || input.dailyLimit < 5000)) {
@@ -241,6 +235,7 @@ const CampaignCreation = (): JSX.Element => {
                           <Button
                             variant="contained"
                             color="primary"
+                            style={{ color: 'white' }}
                             onClick={handleCallbackSubmit}
                             className={classes.end}
                           >

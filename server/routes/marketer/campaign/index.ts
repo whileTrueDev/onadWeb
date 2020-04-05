@@ -199,13 +199,10 @@ router.route('/')
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
       const { marketerId, marketerName } = responseHelper.getSessionData(req);
       const [campaignName, optionType, priorityType, priorityList, selectedTime, dailyLimit,
-        startDate, finDate, keyword, bannerId,
-        mainLandingUrl, sub1LandingUrl, sub2LandingUrl,
-        mainLandingUrlName, sub1LandingUrlName, sub2LandingUrlName] = responseHelper.getParam([
+        startDate, finDate, keyword, bannerId, connectedLinkId] = responseHelper.getParam([
         'campaignName', 'optionType', 'priorityType',
         'priorityList', 'selectedTime', 'dailyLimit', 'startDate', 'finDate',
-        'keyword', 'bannerId', 'mainLandingUrl', 'sub1LandingUrl', 'sub2LandingUrl',
-        'mainLandingUrlName', 'sub1LandingUrlName', 'sub2LandingUrlName'], 'POST', req);
+        'keyword', 'bannerId', 'connectedLinkId'], 'POST', req);
 
       const searchQuery = `
             SELECT campaignId
@@ -220,84 +217,45 @@ router.route('/')
             bannerId, connectedLinkId, dailyLimit, priorityType, 
             optionType, onOff, targetList, marketerName, 
             keyword, startDate, finDate, selectedTime) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, 1, ?, ?, ?, ?, ?, ?)`;
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, 0, ?, ?, ?, ?, ?, ?)`;
 
-      const saveToLinkRegistered = `
-            INSERT INTO linkRegistered
-            (linkId, marketerId, confirmState, links)
-            VALUES (?, ?, ?, ?)
-            `;
+      doQuery(searchQuery, [marketerId])
+        .then((row) => {
+          const campaignId = dataProcessing.getCampaignId(row.result[0], marketerId);
+          const targetJsonData = JSON.stringify({ targetList: priorityList });
+          const timeJsonData = JSON.stringify({ time: selectedTime });
+          const keywordsJsonData = JSON.stringify(
+            { keywords: keyword }
+          );
 
-      dataProcessing.getUrlId(marketerId).then((urlId) => {
-        doQuery(searchQuery, [marketerId])
-          .then((row) => {
-            const linkId = optionType !== '0' ? `link_${urlId}` : null;
-            const campaignId = dataProcessing.getCampaignId(row.result[0], marketerId);
-            const targetJsonData = JSON.stringify({ targetList: priorityList });
-            const timeJsonData = JSON.stringify({ time: selectedTime });
-            const landingUrlJsonData = JSON.stringify(
-              {
-                links:
-                  [{
-                    linkName: mainLandingUrlName,
-                    linkTo: mainLandingUrl,
-                    primary: true,
-                  },
-                  (sub1LandingUrl
-                    ? {
-                      linkName: sub1LandingUrlName,
-                      linkTo: sub1LandingUrl,
-                      primary: false,
-                    } : null
-                  ),
-                  (sub2LandingUrl
-                    ? {
-                      linkName: sub2LandingUrlName,
-                      linkTo: sub2LandingUrl,
-                      primary: false,
-                    } : null
-                  ),
-                  ].filter(Boolean)
-              }
-            );
-            const keywordsJsonData = JSON.stringify(
-              { keywords: keyword }
-            );
-
-            // 마케터 활동내역 로깅 테이블에서, 캠페인 생성의 상태값
-            const MARKETER_ACTION_LOG_TYPE = 5;
-            Promise.all([
-              doQuery(saveQuery,
-                [campaignId, campaignName, marketerId, bannerId, linkId, dailyLimit,
-                  priorityType, optionType, targetJsonData, marketerName, keywordsJsonData,
-                  startDate, finDate, timeJsonData]),
-              (optionType !== '0'
-                ? doQuery(saveToLinkRegistered,
-                  [linkId, marketerId, 0, landingUrlJsonData]) : null),
-              dataProcessing.PriorityDoquery({
-                campaignId, priorityType, priorityList, optionType
-              }),
-              dataProcessing.LandingDoQuery({
-                campaignId, optionType, priorityType, priorityList
-              }),
-              // 마케터 활동내역 테이블 적재.
-              marketerActionLogging([
-                marketerId, MARKETER_ACTION_LOG_TYPE, JSON.stringify({ campaignName })
-              ]),
-            ])
-              .then(() => {
-                responseHelper.send([true, '캠페인이 생성되었습니다.'], 'POST', res);
-              })
-              .catch((error) => {
-                responseHelper.promiseError(error, next);
-              });
-          })
-          .catch((error) => {
-            responseHelper.promiseError(error, next);
-          });
-      }).catch((error) => {
-        responseHelper.promiseError(error, next);
-      });
+          // 마케터 활동내역 로깅 테이블에서, 캠페인 생성의 상태값
+          const MARKETER_ACTION_LOG_TYPE = 5;
+          Promise.all([
+            doQuery(saveQuery,
+              [campaignId, campaignName, marketerId, bannerId, connectedLinkId, dailyLimit,
+                priorityType, optionType, targetJsonData, marketerName, keywordsJsonData,
+                startDate, finDate, timeJsonData]),
+            dataProcessing.PriorityDoquery({
+              campaignId, priorityType, priorityList, optionType
+            }),
+            dataProcessing.LandingDoQuery({
+              campaignId, optionType, priorityType, priorityList
+            }),
+            // 마케터 활동내역 테이블 적재.
+            marketerActionLogging([
+              marketerId, MARKETER_ACTION_LOG_TYPE, JSON.stringify({ campaignName })
+            ]),
+          ])
+            .then(() => {
+              responseHelper.send([true, '캠페인이 생성되었습니다.'], 'POST', res);
+            })
+            .catch((error) => {
+              responseHelper.promiseError(error, next);
+            });
+        })
+        .catch((error) => {
+          responseHelper.promiseError(error, next);
+        });
     }),
   )
   .delete(

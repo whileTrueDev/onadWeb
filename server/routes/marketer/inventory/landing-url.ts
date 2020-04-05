@@ -27,6 +27,7 @@ router.route('/list')
             links, DATE_FORMAT(regiDate, "%Y년 %m월 %d일") as regiDate, updateDate
             FROM linkRegistered
             WHERE marketerId = ?
+            ORDER BY regiDate DESC
             `;
       doQuery(query, [marketerId])
         .then((row) => {
