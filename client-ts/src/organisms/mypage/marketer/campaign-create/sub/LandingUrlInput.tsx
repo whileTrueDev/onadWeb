@@ -93,8 +93,16 @@ const LandingUrlInput = (props: LandingUrlInputProps): JSX.Element => {
               <ListItemText
                 primary={(
                   <>
-                    <Typography variant="body1">{ll.links.links.find((link) => link.primary)?.linkTo}</Typography>
-                    <Typography variant="body2">{ll.links.links.filter((link) => !link.primary)?.map((lll) => lll.linkTo)}</Typography>
+                    <Typography variant="body1">
+                      {ll.links.links.find((link) => link.primary)?.linkName}
+                      {' '}
+                      {ll.links.links.find((link) => link.primary)?.linkTo}
+                    </Typography>
+                    <Typography variant="body2">
+                      {ll.links.links.filter((link) => !link.primary)?.map((lll) => lll.linkName)}
+                      {' '}
+                      {ll.links.links.filter((link) => !link.primary)?.map((lll) => lll.linkTo)}
+                    </Typography>
                   </>
                 )}
                 secondary={`등록일: ${ll.regiDate}`}

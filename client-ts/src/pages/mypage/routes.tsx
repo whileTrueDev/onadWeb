@@ -6,7 +6,8 @@ import Person from '@material-ui/icons/PersonOutline';
 import BrandingWatermark from '@material-ui/icons/BrandingWatermarkOutlined';
 import Reorder from '@material-ui/icons/Reorder';
 import Work from '@material-ui/icons/Work';
-import Mouse from '@material-ui/icons/Mouse'; // 지구본 아이콘
+import Mouse from '@material-ui/icons/Mouse'; // 마우스 아이콘
+import Public from '@material-ui/icons/Public'; // 지구본 아이콘
 
 // 크리에이터 라우터
 import CreatorCampaignManage from './creator/CampaignManage';
@@ -14,6 +15,7 @@ import CreatorDashboard from './creator/Dashboard';
 import CreatorManual from './creator/Manual';
 import CreatorMyPage from './creator/Mypage';
 import CreatorAdDashboard from './creator/ClickAdManage';
+import AdPageManage from './creator/AdPageManage';
 
 // 마케터 라우터
 
@@ -51,6 +53,13 @@ const dashboardRoutes: MypageRoutes = {
       name: '내 배너광고',
       icon: BrandingWatermark,
       component: CreatorCampaignManage,
+      layout: '/mypage/creator',
+    },
+    {
+      path: '/ad-page',
+      name: '내 광고페이지 (삭제 예정)',
+      icon: Public,
+      component: AdPageManage,
       layout: '/mypage/creator',
     },
     {

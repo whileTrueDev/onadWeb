@@ -93,7 +93,7 @@ const CampaignNaming = (props: CampaignNamingProps): JSX.Element => {
         <Grid item>
           <StyledItemText
             primary="캠페인 이름 입력하기"
-            secondary="채팅광고로 시청자에게 보여지며, 캠페인 식별자로 사용됩니다."
+            secondary="캠페인 식별자로 사용됩니다."
             className={classes.label}
           />
         </Grid>

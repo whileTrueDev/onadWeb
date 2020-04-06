@@ -77,7 +77,7 @@ export default function AdChatOnOffCard({
             <img src="/pngs/dashboard/onaddy_example.png" alt="onaddy_example" style={{ maxWidth: '100%' }} />
           </div>
           <Typography variant="body2">
-            온애드의 광고채팅봇 onadyy는 주기적으로 광고에 대한 설명과 광고 링크를 채팅으로 홍보합니다.
+            온애드의 광고채팅봇 onadyy는 주기적으로 광고에 대한 설명과 광고 링크를 채팅으로 자동홍보합니다.
             시청자가 onadyy가 홍보한 링크를 클릭하면, 클릭에 대한 수익이 크리에이터에게 발생합니다.
           </Typography>
           <br />
@@ -86,7 +86,7 @@ export default function AdChatOnOffCard({
             {' '}
             <span className={classes.emphasizedText}>스위치를 On</span>
             {' '}
-            시켜주세요.
+            시켜주세요. 스위치를 켜기만 하면 자동으로 광고가 송출됩니다.
           </Typography>
           <Typography variant="body2">
             또한, onadyy가 광고채팅을 원활히 진행할 수 있게 채팅창에서 &quot;

@@ -43,7 +43,7 @@ export default function AdPanelCard(props: AdPanelCardProps): JSX.Element {
       <Card>
         <div className={classes.head}>
           <Typography variant="h6">
-            패널 광고 설정
+            패널 광고 설정 (추후 추가 예정)
             {' '}
           </Typography>
         </div>
@@ -67,8 +67,21 @@ export default function AdPanelCard(props: AdPanelCardProps): JSX.Element {
           <Typography variant="body2">
             시청자가 해당 광고 패널을 클릭하면 클릭당 광고 수익금을 창출할 수 있습니다.
           </Typography>
+          <br />
+          <Typography variant="body2">
+            전달 사항
+          </Typography>
           <Typography variant="caption">
-            (기존의 광고페이지는 더이상 사용되지 않습니다.)
+            1. 4월 20일 전후로, 패널광고를 사용할 수 있습니다.
+            <br />
+          </Typography>
+          <Typography variant="caption">
+            2. 4월 20일 이후, 기존의 광고페이지는 더이상 사용되지 않습니다.
+            <br />
+          </Typography>
+          <Typography variant="caption">
+            3. 기존에 자신의 트위치채널 패널에 광고페이지 링크를 올려두었다면, 굳이 변경할 필요 없습니다. 링크는 기존의 크리에이터별 광고페이지와 동일합니다.
+            <br />
           </Typography>
         </div>
 
