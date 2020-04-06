@@ -7,7 +7,6 @@ import BrandingWatermark from '@material-ui/icons/BrandingWatermarkOutlined';
 import Reorder from '@material-ui/icons/Reorder';
 import Work from '@material-ui/icons/Work';
 import Public from '@material-ui/icons/Public';
-// import Public from '@material-ui/icons/Public'; // 지구본 아이콘
 
 // 크리에이터 라우터
 import CreatorCampaignManage from './creator/CampaignManage';

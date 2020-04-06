@@ -5,7 +5,7 @@ import GridItem from '../../../atoms/Grid/GridItem';
 import Snackbar from '../../../atoms/Snackbar/Snackbar';
 import WithdrawalCard from '../../../organisms/mypage/creator/Mypage/WithdrawalCard';
 import ProfileCard from '../../../organisms/mypage/creator/Mypage/ProfileCard';
-import AccountCard from '../../../organisms/mypage/creator/Mypage/AccountCard';
+import SettlementCard from '../../../organisms/mypage/creator/Mypage/SettlementCard';
 
 import useGetRequest from '../../../utils/hooks/useGetRequest';
 import useDialog from '../../../utils/hooks/useDialog';
@@ -24,22 +24,27 @@ const Mypage = (): JSX.Element => {
           <GridItem xs={12}>
             {(profileData.loading || withdrawalData.loading) && (<Skeleton height={400} variant="rect" />)}
             {!(profileData.loading || withdrawalData.loading) && profileData.data && (
-            <ProfileCard profileData={profileData.data} />
-            )}
-          </GridItem>
-          <GridItem xs={12}>
-            {(profileData.loading || withdrawalData.loading) && (<Skeleton height={400} variant="rect" />)}
-            {!(profileData.loading || withdrawalData.loading) && (
-            <WithdrawalCard withdrawalData={withdrawalData.data ? withdrawalData.data : []} />
+              <ProfileCard profileData={profileData.data} />
             )}
           </GridItem>
         </GridContainer>
       </GridItem>
 
       <GridItem xs={12} md={6} xl={4}>
+        <GridContainer>
+          <GridItem xs={12}>
+            {(profileData.loading || withdrawalData.loading) && (<Skeleton height={400} variant="rect" />)}
+            {!(profileData.loading || withdrawalData.loading) && (
+              <WithdrawalCard withdrawalData={withdrawalData.data ? withdrawalData.data : []} />
+            )}
+          </GridItem>
+        </GridContainer>
+      </GridItem>
+
+      <GridItem xs={12} md={10} xl={9}>
         {(profileData.loading || withdrawalData.loading) && (<Skeleton height={400} variant="rect" />)}
         {!(profileData.loading || withdrawalData.loading) && profileData.data && (
-          <AccountCard
+          <SettlementCard
             profileData={profileData.data}
             doProfileDataRequest={profileData.doGetRequest}
             handleSnackOpen={snack.handleOpen}
