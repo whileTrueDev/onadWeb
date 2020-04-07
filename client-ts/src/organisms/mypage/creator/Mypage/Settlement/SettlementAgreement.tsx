@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Grid, FormControlLabel, Checkbox } from '@material-ui/core';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import shortid from 'shortid';
@@ -23,23 +23,35 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-function SettlementAgreement(): JSX.Element {
-  const classes = useStyles();
-  const [checkA, setCheckA] = useState<boolean>(false);
-  const [checkB, setCheckB] = useState<boolean>(false);
-  const [checkC, setCheckC] = useState<boolean>(false);
+interface SettlementAgreementProps {
+  setAllCheck: React.Dispatch<React.SetStateAction<{
+    checkA: boolean;
+    checkB: boolean;
+    checkC: boolean;
+  }>>;
+  allCheck: {
+    checkA: boolean;
+    checkB: boolean;
+    checkC: boolean;
+  };
+}
 
-  function checkBoxHandleChange(name: string): void {
+function SettlementAgreement({ setAllCheck, allCheck }: SettlementAgreementProps): JSX.Element {
+  const classes = useStyles();
+  const { checkA, checkB, checkC } = allCheck;
+  const handleChange = (name: string) => (): void => {
     switch (name) {
       case 'checkA':
-        return setCheckA(!checkA);
+        setAllCheck({ ...allCheck, checkA: !checkA });
+        break;
       case 'checkB':
-        return setCheckB(!checkB);
+        setAllCheck({ ...allCheck, checkB: !checkB });
+        break;
       default:
-        return setCheckC(!checkC);
+        setAllCheck({ ...allCheck, checkC: !checkC });
+        break;
     }
-  }
-
+  };
   return (
     <>
       <Grid item className={classes.textField}>
@@ -52,7 +64,8 @@ function SettlementAgreement(): JSX.Element {
         <FormControlLabel
           control={(
             <Checkbox
-              onChange={(): void => { checkBoxHandleChange('checkA'); }}
+              required
+              onChange={handleChange('checkA')}
               checked={checkA}
               value={checkA}
               classes={{
@@ -75,9 +88,10 @@ function SettlementAgreement(): JSX.Element {
         <FormControlLabel
           control={(
             <Checkbox
-              onChange={(): void => { checkBoxHandleChange('checkB'); }}
-              checked={checkA}
-              value={checkA}
+              required
+              onChange={handleChange('checkB')}
+              checked={checkB}
+              value={checkB}
               classes={{
                 root: classes.checkboxRoot,
                 checked: classes.checked,
@@ -98,9 +112,10 @@ function SettlementAgreement(): JSX.Element {
         <FormControlLabel
           control={(
             <Checkbox
-              onChange={(): void => { checkBoxHandleChange('checkC'); }}
-              checked={checkA}
-              value={checkA}
+              required
+              onChange={handleChange('checkC')}
+              checked={checkC}
+              value={checkC}
               classes={{
                 root: classes.checkboxRoot,
                 checked: classes.checked,

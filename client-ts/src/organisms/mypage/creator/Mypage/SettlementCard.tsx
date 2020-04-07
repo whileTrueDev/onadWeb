@@ -6,7 +6,6 @@ import Button from '../../../../atoms/CustomButtons/Button';
 import SettlementForm from './Settlement/SettlementForm';
 import CustomCard from '../../../../atoms/CustomCard';
 import StyledItemText from '../../../../atoms/StyledItemText';
-import SettlementAgreement from './Settlement/SettlementAgreement';
 import { ProfileDataType } from './ProfileData.type';
 
 const useStyles = makeStyles((theme) => ({
@@ -101,14 +100,6 @@ const SettlementCard = ({
                 doProfileDataRequest={doProfileDataRequest}
                 handleSnackOpen={handleSnackOpen}
               />
-            </Grid>
-            <Grid item sm={12} md={9}>
-              <div className={classes.titleWrap}>
-                <StyledItemText primary="서비스 이용 및 정산등록 동의" fontSize="18px" color="#00acc1" />
-              </div>
-            </Grid>
-            <Grid item sm={12} md={9}>
-              <SettlementAgreement />
             </Grid>
           </Grid>
         </>

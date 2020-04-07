@@ -12,6 +12,7 @@ import usePostRequest from '../../../../../utils/hooks/usePostRequest';
 import StyledItemText from '../../../../../atoms/StyledItemText';
 import useImageUpload, { ImageData, UploadImage } from '../../../../../utils/hooks/useImageUpload';
 import useDialog from '../../../../../utils/hooks/useDialog';
+import SettlementAgreement from './SettlementAgreement';
 
 const useStyles = makeStyles((theme: Theme) => ({
   textField: {
@@ -40,6 +41,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   contentImage: {
     width: '50%'
+  },
+  titleWraper: {
+    textAlign: 'center',
+    height: 30,
+    border: 'solid 1px #00acc1',
+    margin: '30px 0',
+    borderRadius: 5
   }
 }));
 interface SettlementFormProps {
@@ -101,6 +109,12 @@ function SettlementForm({
   //   imageUrl, readImage, handleImageChange
   // } = useImageUpload();
 
+  // 이용약관 올체크
+  const [allCheck, setAllCheck] = useState({
+    checkA: false,
+    checkB: false,
+    checkC: false
+  });
 
   // 출금 계좌 등록을 위한 요청 객체 생성
   const AccountPost = usePostRequest('/creator/account', () => {
@@ -249,6 +263,10 @@ function SettlementForm({
           />
           <Button>통장사본업로드안내</Button>
         </Grid>
+        <div className={classes.titleWraper}>
+          <StyledItemText primary="서비스 이용 및 정산등록 동의" fontSize="18px" color="#00acc1" />
+        </div>
+        <SettlementAgreement setAllCheck={setAllCheck} allCheck={allCheck} />
         <Grid item>
           <div style={{ textAlign: 'center' }}>
             <Button
