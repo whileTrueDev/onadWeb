@@ -335,7 +335,7 @@ const MarketerConnectionWarp = ({ marketerDic }) => new Promise((resolve, reject
 
 async function calculation() {
   console.log('-----------------------------------------------------------');
-  console.log(`계산을 실시합니다. 시작 시각 : ${new Date().toLocaleString()}`);
+  console.log(`tracking server 계산을 실시합니다. 시작 시각 : ${new Date().toLocaleString()}`);
   const date = new Date();
   date.setMinutes(date.getMinutes() - 10);
   // 모든 list가 dic형태로 return 된다.
@@ -352,7 +352,7 @@ async function calculation() {
     MarketerConnectionWarp({ marketerDic })
   ])
     .then(() => {
-      console.log(`계산을 종료합니다. 시작 시각 : ${new Date().toLocaleString()}`);
+      console.log(`tracking server 계산을 종료합니다. 시작 시각 : ${new Date().toLocaleString()}`);
       console.log('-----------------------------------------------------------');
     });
 }
