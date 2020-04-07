@@ -9,15 +9,16 @@ import {
 import Countup from 'react-countup';
 import { Assessment, Delete as DeleteIcon, Build } from '@material-ui/icons';
 import CloseIcon from '@material-ui/icons/Close';
-
 import CampaignDeleteConfirmDialog from './CampaignDeleteConfirmDialog';
 import CampaignUpdateDialog from './CampaignUpdateDialog';
 import CampaignAnalysisDialog from './CampaignAnalysisDialog';
+import VideoBanner from '../../../../atoms/Banner/VideoBanner';
 import { CampaignInterface } from './interfaces';
 import { UseGetRequestObject } from '../../../../utils/hooks/useGetRequest';
 import useDialog from '../../../../utils/hooks/useDialog';
 import history from '../../../../history';
 import axios from '../../../../utils/axios';
+import isVideo from '../../../../utils/isVideo';
 import HOST from '../../../../utils/config';
 
 
@@ -40,13 +41,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     maxWidth: '100%',
   },
   contents: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center'
+    display: 'flex', alignItems: 'center', justifyContent: 'center'
   },
   loading: {
-    paddingTop: theme.spacing(3),
-    paddingBottom: theme.spacing(3)
+    paddingTop: theme.spacing(3), paddingBottom: theme.spacing(3)
   },
   statement: {
     fontSize: 15,
@@ -133,7 +131,11 @@ export default function CampaignList(
                         />
                       </Grid>
                       <Grid item>
-                        <img className={classes.img} alt="campaign-logo" src={detail.bannerSrc} />
+                        { isVideo(detail.bannerSrc) ? (
+                          <VideoBanner className={classes.img} src={detail.bannerSrc} />
+                        ) : (
+                          <img className={classes.img} alt="campaign-logo" src={detail.bannerSrc} />
+                        )}
                       </Grid>
                       <Hidden xsDown>
                         <Grid item>

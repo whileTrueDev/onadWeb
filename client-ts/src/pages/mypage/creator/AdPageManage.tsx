@@ -1,6 +1,9 @@
 import React from 'react';
 // core ../../../atoms
 import Skeleton from '@material-ui/lab/Skeleton';
+import Alert from '@material-ui/lab/Alert';
+import SpeakerNotes from '@material-ui/icons/SpeakerNotes';
+import { Typography } from '@material-ui/core';
 import GridContainer from '../../../atoms/Grid/GridContainer';
 import GridItem from '../../../atoms/Grid/GridItem';
 
@@ -22,6 +25,20 @@ function AdPageManage(): JSX.Element {
 
   return (
     <>
+      <GridContainer>
+        <GridItem xs={12} lg={6}>
+          <Alert severity="warning" style={{ alignItems: 'center' }}>
+            <Typography>
+              크리에이터별 광고페이지 기능이 4월 20일에 종료됩니다.
+            </Typography>
+            <Typography>
+              자세한 사항은 우측 상단 공지사항
+              <SpeakerNotes />
+              을 통해 확인해 주세요.
+            </Typography>
+          </Alert>
+        </GridItem>
+      </GridContainer>
       <GridContainer>
         {/* 랜딩페이지 URL 보기 */}
         <GridItem xs={12} lg={6} xl={4}>

@@ -8,6 +8,8 @@ import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import SwipeableViews from 'react-swipeable-views';
 import Check from '@material-ui/icons/Check';
 import Success from './Typography/Success';
+import isVideo from '../utils/isVideo';
+import VideoBanner from './Banner/VideoBanner';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -122,7 +124,11 @@ const BannerCarousel = (props) => {
             focusvisibleclassname={classes.focusVisible}
             onClick={handleActiveStep(step)}
           >
-            <img className={classes.imageSrc} src={step.bannerSrc} alt={step.bannerId} />
+            { isVideo(step.bannerSrc) ? (
+              <VideoBanner className={classes.imageSrc} src={step.bannerSrc} />
+            ) : (
+              <img className={classes.imageSrc} src={step.bannerSrc} alt={step.bannerId} />
+            )}
             <span
               className={classes.imageBackdrop}
               style={checkImage.check ? { opacity: 0.5 } : {}}

@@ -10,7 +10,7 @@ import usePatchRequest from '../../../../utils/hooks/usePatchRequest';
 import useAdPageImageUploadFormStyles from './AdPageImageUploadForm.style';
 import AdPageData from './AdPageData.interfece';
 
-const defaultImage = 'https://onad-static-files.s3.ap-northeast-2.amazonaws.com/adpage-background/background-whale.jpg';
+const defaultImage = '/pngs/landing/background-whale.jpg';
 
 // 배경이미지 업로드, 기본이미지로 돌아가기 button
 interface ImageUploadButtonsProps {
