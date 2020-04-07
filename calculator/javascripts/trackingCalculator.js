@@ -14,37 +14,16 @@ campaignLog에 넣되, action을 CPA로 정의하여 계산을 실시한다.
 
 확장성을 고려하여 action의 종류를 고려한다.
 */
-// require('dotenv').config();
 
 const schedule = require('node-schedule');
 const doQuery = require('../model/calculatorQuery');
 const pool = require('../model/connectionPool');
 
 const FEERATE = 0.6;
-const CPC_COST = 100;
 
 // 각 action에 따른 cash
-const getCreatorCash = ({ count, action }) => {
-  switch (action) {
-    case 'CPC':
-      return Math.round(count * CPC_COST * FEERATE);
-    // case "?":
-    //   return Math.round(count * COST_action_2 * FEERATE);
-    default:
-      return 0;
-  }
-};
-
-const getMarketerCash = ({ count, action }) => {
-  switch (action) {
-    case 'CPC':
-      return Math.round(count * CPC_COST);
-    // case 2:
-    //   return Math.round(count * COST_action_2);
-    default:
-      return 0;
-  }
-};
+const getCreatorCash = ({ payouts }) => Math.round(payouts * FEERATE);
+const getMarketerCash = ({ payouts }) => Math.round(payouts);
 
 
 const doTransacQuery = ({ connection, queryState, params }) => new Promise((resolve, reject) => {
@@ -78,13 +57,13 @@ const doTransacQuery = ({ connection, queryState, params }) => new Promise((reso
   });
 });
 
-// 크리에이터
+
 const getCreatorList = (date) => {
   const creatorListQuery = `
-  SELECT creatorId,  count(action) as count, action
+  SELECT creatorId, sum(payout) as payouts
   FROM tracking 
   WHERE clickedTime > ? AND NOT os IS NULL
-  GROUP BY creatorId, action
+  GROUP BY creatorId
   `;
 
   return new Promise((resolve, reject) => {
@@ -92,8 +71,8 @@ const getCreatorList = (date) => {
       .then((inrow) => {
         const creatorNames = [];
         const creators = {};
-        inrow.result.forEach(({ creatorId, count, action }) => {
-          const cash = getCreatorCash({ count, action });
+        inrow.result.forEach(({ creatorId, payouts }) => {
+          const cash = getCreatorCash({ payouts });
           if (creatorNames.includes(creatorId)) {
             // creatorId가 존재할경우,
             creators[creatorId].cash += cash;
@@ -115,10 +94,10 @@ const getCreatorList = (date) => {
 
 const getCampaignList = (date) => {
   const campaignListQuery = `
-  SELECT campaignId, creatorId, count(action) as count, action
+  SELECT campaignId, creatorId, sum(payout) as payouts
   FROM tracking 
   WHERE clickedTime > ? AND NOT os IS NULL
-  GROUP BY campaignId, creatorId, action
+  GROUP BY campaignId, creatorId
   `;
 
   return new Promise((resolve, reject) => {
@@ -127,11 +106,11 @@ const getCampaignList = (date) => {
         const logNames = [];
         const logs = {};
         inrow.result.forEach(({
-          campaignId, creatorId, count, action
+          campaignId, creatorId, payouts
         }) => {
-          const cashToCreator = getCreatorCash({ count, action });
-          const cashFromMarketer = getMarketerCash({ count, action });
-          const logId = `${campaignId}/${creatorId}/${action}`;
+          const cashToCreator = getCreatorCash({ payouts });
+          const cashFromMarketer = getMarketerCash({ payouts });
+          const logId = `${campaignId}/${creatorId}`;
           if (logNames.includes(logId)) {
             // creatorId가 존재할경우,
             logs[logId].cashToCreator += cashToCreator;
@@ -140,7 +119,6 @@ const getCampaignList = (date) => {
             logs[logId] = {
               cashToCreator,
               cashFromMarketer,
-              action
             };
             logNames.push(logId);
           }
@@ -157,10 +135,10 @@ const getCampaignList = (date) => {
 
 const getMarketerList = (date) => {
   const marketerListQuery = `
-  SELECT count(action) as count, marketerId, action
+  SELECT marketerId, sum(payout) as payouts
   FROM tracking
   WHERE clickedTime > ? AND NOT os IS NULL
-  GROUP BY marketerId, action
+  GROUP BY marketerId
   `;
 
   return new Promise((resolve, reject) => {
@@ -168,8 +146,8 @@ const getMarketerList = (date) => {
       .then((inrow) => {
         const marketerNames = [];
         const marketers = {};
-        inrow.result.forEach(({ marketerId, count, action }) => {
-          const cash = getMarketerCash({ count, action });
+        inrow.result.forEach(({ marketerId, payouts }) => {
+          const cash = getMarketerCash({ payouts });
           if (cash === 0) {
             return;
           }
@@ -258,7 +236,9 @@ const doTransacMarketerQuery = ({
     } else {
       const { cashAmount } = result[0];
       // write를 진행하기 위해서 transaction을 생성한다.
-      if (cash >= cashAmount) {
+      if (cash === 0) {
+        resolve();
+      } else if (cash >= cashAmount) {
         console.log(`잔액이 부족하므로 ${cash}만큼 받지 못했습니다.`);
         resolve();
       } else {
@@ -312,8 +292,8 @@ const CampaignConnectionWarp = ({ campaignDic }) => new Promise((resolve, reject
       Promise.all(
         Object.keys(campaignDic).map((logId) => {
           const [campaignId, creatorId] = logId.split('/');
-          const { cashFromMarketer, cashToCreator, action } = campaignDic[logId];
-          return doTransacQuery({ connection, queryState: campaignLogQuery, params: [campaignId, creatorId, action, cashFromMarketer, cashToCreator] });
+          const { cashFromMarketer, cashToCreator } = campaignDic[logId];
+          return doTransacQuery({ connection, queryState: campaignLogQuery, params: [campaignId, creatorId, 'CPC', cashFromMarketer, cashToCreator] });
         })
       )
         .then(() => {
@@ -359,6 +339,7 @@ async function calculation() {
   const date = new Date();
   date.setMinutes(date.getMinutes() - 10);
   // 모든 list가 dic형태로 return 된다.
+
   const [creatorDic, marketerDic, campaignDic] = await Promise.all([
     getCreatorList(date),
     getMarketerList(date),
