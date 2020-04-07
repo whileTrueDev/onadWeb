@@ -36,10 +36,10 @@ function AdPageManage(): JSX.Element {
               4월 21일 이후 &quot;광고페이지&quot;기능은 중단됩니다.
             </Typography>
             <Typography>
-              참여형 광고페이지 에서는 사전예약, 회원가입 등 액션이 발생하면 수익금을 얻는 형태의 광고를 진행할 수 있습니다.
+              &quot;참여형 광고페이지&quot; 에서는 사전예약, 회원가입 등 액션이 발생하면 수익금을 얻는 형태의 광고를 진행할 수 있습니다.
             </Typography>
             <Typography variant="caption">
-              - 크리에이터 여러분은 참여형 광고 페이지의 링크를 새롭게 발급받게 됩니다. 패널에 새로 게시하여 광고 유입을 유도할 수 있습니다.
+              - 크리에이터 여러분은 &quot;참여형 광고 페이지&quot;의 링크를 새롭게 발급받게 됩니다. 패널에 새로 게시하여 광고 유입을 유도할 수 있습니다.
             </Typography>
             <Typography variant="caption">
               - &quot;광고페이지&quot;는 4월 21일 기능이 중단됩니다. &quot;참여형 광고페이지&quot;는 5월 중 서비스를 진행할 예정입니다.
