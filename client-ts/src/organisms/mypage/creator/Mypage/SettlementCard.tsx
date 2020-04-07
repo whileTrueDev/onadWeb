@@ -6,6 +6,7 @@ import Button from '../../../../atoms/CustomButtons/Button';
 import SettlementForm from './Settlement/SettlementForm';
 import CustomCard from '../../../../atoms/CustomCard';
 import StyledItemText from '../../../../atoms/StyledItemText';
+import SettlementAgreement from './Settlement/SettlementAgreement';
 import { ProfileDataType } from './ProfileData.type';
 
 const useStyles = makeStyles((theme) => ({
@@ -19,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
   titleWrap: {
     textAlign: 'center',
     height: 30,
-    border: 'solid 1px #00acc1', 
+    border: 'solid 1px #00acc1',
     margin: '10px 0',
     borderRadius: 5
   }
@@ -38,13 +39,13 @@ const SettlementCard = ({
   const classes = useStyles();
   const settlementState = '미등록';
   // 0일 경우 개인(대한민국국민), 1일경우 개인사업자
-  const [CreatorType, setCreatorType] = React.useState(0)
+  const [CreatorType, setCreatorType] = React.useState(0);
 
   function handleClick(type: string): void {
     if (type === 'normal') {
-      setCreatorType(0) 
+      setCreatorType(0);
     } else {
-      setCreatorType(1)
+      setCreatorType(1);
     }
   }
 
@@ -53,7 +54,6 @@ const SettlementCard = ({
       iconComponent={<StyledItemText primary="정산 관리" color="white" />}
       secondComponent={<StyledItemText primary={`${settlementState}`} color="#00acc1" />}
     >
-      
       {profileData.creatorAccountNumber && (
         <>
           <Grid container direction="row" justify="center" alignItems="center" spacing={2}>
@@ -64,10 +64,10 @@ const SettlementCard = ({
             </Grid>
             <Grid item sm={12} md={9}>
               <div>
-                <StyledItemText primary="해당하는 유형을 선택해주세요." fontSize="18px" color="#00acc1"/>
+                <StyledItemText primary="해당하는 유형을 선택해주세요." fontSize="18px" color="#00acc1" />
               </div>
-              <Button className={classes.typeButton} color={CreatorType === 0 ? "primary" : undefined} onClick={() => {handleClick('normal')}}>개인(대한민국 국민)</Button>
-              <Button className={classes.typeButton} color={CreatorType === 1 ? "primary" : undefined} onClick={() => {handleClick('bussiness')}}>개인사업자</Button>
+              <Button className={classes.typeButton} color={CreatorType === 0 ? 'primary' : undefined} onClick={() => { handleClick('normal'); }}>개인(대한민국 국민)</Button>
+              <Button className={classes.typeButton} color={CreatorType === 1 ? 'primary' : undefined} onClick={() => { handleClick('bussiness'); }}>개인사업자</Button>
             </Grid>
             {/* <Grid item sm={12} md={9}>
               <TextField
@@ -101,6 +101,14 @@ const SettlementCard = ({
                 doProfileDataRequest={doProfileDataRequest}
                 handleSnackOpen={handleSnackOpen}
               />
+            </Grid>
+            <Grid item sm={12} md={9}>
+              <div className={classes.titleWrap}>
+                <StyledItemText primary="서비스 이용 및 정산등록 동의" fontSize="18px" color="#00acc1" />
+              </div>
+            </Grid>
+            <Grid item sm={12} md={9}>
+              <SettlementAgreement />
             </Grid>
           </Grid>
         </>
