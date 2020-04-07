@@ -220,6 +220,38 @@ function callImg(socket: any, msg: string[]): void {
     });
   };
 
+  interface LinkJson {
+    linkName: string;
+    linkTo: string;
+    primary: boolean;
+  }
+
+  const getLinkName = (campaignId: string): Promise<string> => {
+    const selectQuery = `
+                          SELECT links 
+                          FROM linkRegistered 
+                          WHERE linkId = (SELECT connectedLinkId FROM campaign WHERE campaignId = ?) 
+                        `;
+    return new Promise((resolve, reject) => {
+      doQuery(selectQuery, [campaignId])
+        .then((row) => {
+          let linkName;
+          const links = JSON.parse(row.result[0].links);
+          links.links.map((data: LinkJson) => {
+            if (data.primary === true) {
+              linkName = data.linkName;
+            }
+          });
+          resolve(linkName);
+        })
+        .catch((errorData) => {
+          errorData.point = 'getLinkName()';
+          errorData.description = '하나의 campaignId를 통해 linkName 가져오는 과정';
+          reject(errorData);
+        });
+    });
+  };
+
   const getRandomInt = (length: number): number => {
     const max = Math.floor(length);
     return Math.floor(Math.random() * (max - 0)) + 0; // 최댓값은 제외, 최솟값은 포함
@@ -241,7 +273,7 @@ function callImg(socket: any, msg: string[]): void {
     });
   };
 
-  async function getBanner([creatorId, gameId]: string[]): Promise<[string | boolean, string | boolean]> {
+  async function getBanner([creatorId, gameId]: string[]): Promise<[string | boolean, string | boolean, string | boolean]> {
     console.log(`-----------------------Id : ${creatorId} / ${getTime}---------------------------`);
     const [creatorCampaignList, onCampaignList, banList] = await Promise.all(
       [
@@ -256,21 +288,24 @@ function callImg(socket: any, msg: string[]): void {
     const campaignList = Array.from(new Set(onCreatorcampaignList.concat(onCategorycampaignList)));
     const extractBanCampaignList = campaignList.filter((campaignId) => !banList.includes(campaignId)); // 마지막에 banList를 통해 거르기.
     const returnCampaignId = extractBanCampaignList[getRandomInt(extractBanCampaignList.length)];
+    let linkToChatBot;
     myCampaignId = returnCampaignId;
 
     if (myCampaignId) {
       console.log(`${creatorId} : 광고될 캠페인은 ${myCampaignId} 입니다. at : ${getTime}`);
+      linkToChatBot = await getLinkName(myCampaignId);
+      console.log(linkToChatBot);
     } else {
       socket.emit('img clear', []);
       console.log(`${creatorId} : 켜져있는 광고가 없습니다. at : ${getTime}`);
-      return [false, false];
+      return [false, false, false];
     }
 
     if (prevBannerName && myCampaignId === prevBannerName.split(',')[0]) {
-      return [false, myCampaignId];
+      return [false, myCampaignId, linkToChatBot];
     }
     const bannerSrc = await getBannerSrc(myCampaignId);
-    return [bannerSrc, myCampaignId];
+    return [bannerSrc, myCampaignId, linkToChatBot];
   }
   interface CreatorIds {
     creatorId: string;
@@ -309,28 +344,23 @@ function callImg(socket: any, msg: string[]): void {
       const myAdChatAgreement = CREATOR_DATA.adChatAgreement;
       const bannerInfo = await getBanner([CREATOR_DATA.creatorId, myGameId]);
       const checkOptionType = typeof bannerInfo[1] === 'string' ? campaignObject[bannerInfo[1]][0] : null;
-      const myCampaignName = typeof bannerInfo[1] === 'string' ? campaignObject[bannerInfo[1]][1] : null;
+      const campaignName = typeof bannerInfo[1] === 'string' ? campaignObject[bannerInfo[1]][1] : null;
+      const linkName = typeof bannerInfo[1] === 'string' ? bannerInfo[2] : null;
 
       if (myAdChatAgreement === 1 && checkOptionType) { // 채봇 동의 및 옵션타입 cpm+cpc인 경우에 챗봇으로 데이터 전송
         console.log(CREATOR_DATA.creatorId, 'next-campaigns-twitch-chatbot Emitting!! - ', myCreatorTwitchId);
         socket.broadcast.emit('next-campaigns-twitch-chatbot', {
-          campaignId: myCampaignId, creatorId: CREATOR_DATA.creatorId, creatorTwitchId: myCreatorTwitchId, campaignName: myCampaignName
+          campaignId: myCampaignId, creatorId: CREATOR_DATA.creatorId, creatorTwitchId: myCreatorTwitchId, campaignName, linkName
         });
       }
 
       if (typeof bannerInfo[0] === 'string' && typeof bannerInfo[1] === 'string') {
         await insertLandingPage(bannerInfo[1], CREATOR_DATA.creatorId);
         writeToDb(myCampaignId, CREATOR_DATA.creatorId, programType);
-        // [bannerSrc, myCampaignId, creatorId]
+        // [bannerSrc, myCampaignId]
         socket.emit('img receive', [bannerInfo[0], [bannerInfo[1], CREATOR_DATA.creatorId]]);
         // to chatbot
       } else {
-        if (myAdChatAgreement === 1 && checkOptionType) {
-          console.log(CREATOR_DATA.creatorId, 'next-campaigns-twitch-chatbot Emitting!! - ', myCreatorTwitchId);
-          socket.broadcast.emit('next-campaigns-twitch-chatbot', {
-            campaignId: myCampaignId, creatorId: CREATOR_DATA.creatorId, creatorTwitchId: myCreatorTwitchId, campaignName: myCampaignName
-          });
-        }
         writeToDb(myCampaignId, CREATOR_DATA.creatorId, programType);
         console.log(`${CREATOR_DATA.creatorId} : 같은 캠페인 송출 중이어서 재호출 안합니다. at ${getTime}`);
       }
