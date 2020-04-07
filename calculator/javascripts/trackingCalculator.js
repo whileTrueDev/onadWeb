@@ -5,7 +5,7 @@
 구현 내용:
 
 CPC 계산프로그램과 동일하게 checkTime을 탐지하여 10분마다 계산을 실시한다.
-campaignLog에 넣되, action을 CPA로 정의하여 계산을 실시한다.
+campaignLog action을 CPC로 정의하여 Insert 한다.
 
 * CPC만 하는 캠페인이 존재하지 않으므로 CPM을 계산하는 타이밍에 잔액이 존재하는지 안하는지 체크하도록 둔다.
 - campaign계산: 사용된 돈과 크리에이터에게 줄 돈을 계산하여 campaignLog를 찍는다.
