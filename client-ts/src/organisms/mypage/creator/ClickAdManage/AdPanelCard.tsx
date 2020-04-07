@@ -1,7 +1,8 @@
 import React from 'react';
 import classnames from 'classnames';
-import makeStyles from '@material-ui/core/styles/makeStyles';
+import { makeStyles } from '@material-ui/core/styles';
 import { Typography, Divider, Tooltip } from '@material-ui/core';
+import Alert from '@material-ui/lab/Alert';
 import Card from '../../../../atoms/Card/Card';
 import StyledInput from '../../../../atoms/StyledInput';
 import Snackbar from '../../../../atoms/Snackbar/Snackbar';
@@ -62,27 +63,31 @@ export default function AdPanelCard(props: AdPanelCardProps): JSX.Element {
             패널광고는 자신의 채널 하단의 패널에 삽입할 수 있는 배너 광고입니다.
           </Typography>
           <Typography variant="body2">
-            클릭시 현재 방송화면에 송출되고 있는 광고의 링크로 바로 이동하게 됩니다.
+            시청자가 클릭시 현재 방송화면에 송출되고 있는 광고의 페이지로 바로 이동하게 됩니다.
           </Typography>
           <Typography variant="body2">
-            시청자가 해당 광고 패널을 클릭하면 클릭당 광고 수익금을 창출할 수 있습니다.
+            시청자의 이동 수에 따라 광고 수익이 창출됩니다.
           </Typography>
           <br />
-          <Typography variant="body2">
-            전달 사항
-          </Typography>
-          <Typography variant="caption">
-            1. 4월 20일 전후로, 패널광고를 사용할 수 있습니다.
-            <br />
-          </Typography>
-          <Typography variant="caption">
-            2. 4월 20일 이후, 기존의 광고페이지는 더이상 사용되지 않습니다.
-            <br />
-          </Typography>
-          <Typography variant="caption">
-            3. 기존에 자신의 트위치채널 패널에 광고페이지 링크를 올려두었다면, 굳이 변경할 필요 없습니다. 링크는 기존의 크리에이터별 광고페이지와 동일합니다.
-            <br />
-          </Typography>
+          <Alert>
+            <Typography variant="body2">
+              전달 사항
+            </Typography>
+            <Typography variant="caption">
+              1. 4월 21일 전후로, 패널광고를 사용할 수 있습니다.
+              <br />
+            </Typography>
+            <Typography variant="caption">
+              2. 기존에 자신의 트위치채널 패널에 &quot;광고페이지&quot; 설정을 하셨다면, 굳이 변경할 필요 없습니다.
+              기존의 크리에이터별 광고페이지 링크가 4월 21일 이후로, 패널광고의 링크로 사용됩니다.
+              <br />
+            </Typography>
+            <Typography variant="caption">
+              3. 기존의 &quot;광고페이지&quot;는 5월 중, &quot;참여형 광고페이지(CPA)&quot;로 변경되어 운영될 예정입니다.
+              참여형광고페이지에 대한 새로운 링크를 발급받고, 새로운 패널을 추가하여 참여형 광고를 유치하여 또 다른 광고수익을 창출할 수 있습니다.
+              <br />
+            </Typography>
+          </Alert>
         </div>
 
         <Divider />

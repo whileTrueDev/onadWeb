@@ -29,12 +29,33 @@ function AdPageManage(): JSX.Element {
         <GridItem xs={12} lg={6}>
           <Alert severity="warning" style={{ alignItems: 'center' }}>
             <Typography>
-              크리에이터별 광고페이지 기능이 4월 20일에 종료됩니다.
+              소수의 크리에이터를 대상으로 진행한 참여형캠페인(CPA) 테스트 결과, 광고언급과 참여유도가 시청자참여에 영향이 있음을 확인하였습니다.
             </Typography>
             <Typography>
-              자세한 사항은 우측 상단 공지사항
+              따라서, 현 &quot;광고페이지&quot;는 &quot;참여형 광고페이지&quot;로 변경되며,
+              4월 21일 이후 &quot;광고페이지&quot;기능은 중단됩니다.
+            </Typography>
+            <Typography>
+              참여형 광고페이지 에서는 사전예약, 회원가입 등 액션이 발생하면 수익금을 얻는 형태의 광고를 진행할 수 있습니다.
+            </Typography>
+            <Typography variant="caption">
+              - 크리에이터 여러분은 참여형 광고 페이지의 링크를 새롭게 발급받게 됩니다. 패널에 새로 게시하여 광고 유입을 유도할 수 있습니다.
+            </Typography>
+            <Typography variant="caption">
+              - &quot;광고페이지&quot;는 4월 21일 기능이 중단됩니다. &quot;참여형 광고페이지&quot;는 5월 중 서비스를 진행할 예정입니다.
+            </Typography>
+            <Typography variant="caption">
+              - 기존의 &quot;광고페이지&quot;로 이동되던 링크[https://l.onad.io/creator-name] 는 &quot;패널광고&quot; 링크로 사용됩니다.
+            </Typography>
+            <Typography variant="caption">
+              - &quot;패널광고&quot;에 대한 내용은 내 클릭광고 탭에서 확인하세요!
+            </Typography>
+            <Typography>
+              더욱 자세한 사항은 우측 상단
+              {' '}
               <SpeakerNotes />
-              을 통해 확인해 주세요.
+              {' '}
+              공지사항을 통해 확인하세요.
             </Typography>
           </Alert>
         </GridItem>

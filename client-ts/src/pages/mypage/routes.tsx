@@ -57,7 +57,7 @@ const dashboardRoutes: MypageRoutes = {
     },
     {
       path: '/ad-page',
-      name: '내 광고페이지 (삭제 예정)',
+      name: '내 광고페이지 (변경 예정)',
       icon: Public,
       component: AdPageManage,
       layout: '/mypage/creator',
