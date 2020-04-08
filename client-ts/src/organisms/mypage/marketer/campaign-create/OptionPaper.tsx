@@ -63,6 +63,7 @@ const OptionPaper = (props: OptionPaperProps): JSX.Element => {
               secondaryText={opt.secondaryText}
               handleSelect={handleChange(opt.id)}
               checked={state.option === opt.id}
+              disabled={opt.id === 'option0'}
             />
           ))}
           <ButtonSet handleNext={handleNext} handleBack={handleBack} set={Boolean(1)} />

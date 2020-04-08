@@ -14,7 +14,7 @@ const pool = require('../model/connectionPool');
 
 // COST 세분화를 하자.
 // const COST_TYPE_0 = 0;
-const COST_TYPE_1 = 5; // 랜딩페이지의 점수에 비례하여 creator에게 보상을 준다.
+// const COST_TYPE_1 = 5; // 랜딩페이지의 점수에 비례하여 creator에게 보상을 준다.
 const COST_TYPE_2 = 100;
 
 const GAUGE = 500;
@@ -23,10 +23,9 @@ const FEERATE = 0.6;
 // 각 type에 따른 수 만큼, type이 0일 때는 의미가 없으므로
 const getCreatorCash = ({ count, type }) => {
   switch (type) {
-    case 1:
-      return Math.round(count * COST_TYPE_1 * FEERATE);
     case 2:
       return Math.round(count * COST_TYPE_2 * FEERATE);
+    case 1:
     default:
       return 0;
   }
@@ -47,10 +46,9 @@ const getCreatorExp = ({ count, type }) => {
 
 const getMarketerCash = ({ count, type }) => {
   switch (type) {
-    case 1:
-      return Math.round(count * COST_TYPE_1);
     case 2:
       return Math.round(count * COST_TYPE_2);
+    case 1:
     default:
       return 0;
   }

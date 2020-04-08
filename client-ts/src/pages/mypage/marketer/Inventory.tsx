@@ -17,7 +17,7 @@ import BannerTable from '../../../organisms/mypage/marketer/inventory/BannerTabl
 import UploadDialog from '../../../organisms/mypage/marketer/shared/BannerUploadDialog';
 import DeleteDialog from '../../../organisms/mypage/marketer/inventory/DeleteDialog';
 import UrlTable from '../../../organisms/mypage/marketer/inventory/UrlTable';
-import UrlUploadDialog from '../../../organisms/mypage/marketer/inventory/UrlUploadDialog';
+import UrlUploadDialog from '../../../organisms/mypage/marketer/shared/UrlUploadDialog';
 import UrlDeleteDialog from '../../../organisms/mypage/marketer/inventory/UrlDeleteDialog';
 
 // core ../../atoms

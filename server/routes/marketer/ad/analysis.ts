@@ -1,6 +1,6 @@
 import express from 'express';
-import responseHelper from '../../../../middlewares/responseHelper';
-import doQuery from '../../../../model/doQuery';
+import responseHelper from '../../../middlewares/responseHelper';
+import doQuery from '../../../model/doQuery';
 
 
 const router = express.Router();

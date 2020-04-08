@@ -4,6 +4,8 @@ import Delete from '@material-ui/icons/Delete';
 import MaterialTable from '../../../../atoms/Table/MaterialTable';
 import { UseGetRequestObject } from '../../../../utils/hooks/useGetRequest';
 import { BannerDataInterface } from './interface';
+import VideoBanner from '../../../../atoms/Banner/VideoBanner';
+import isVideo from '../../../../utils/isVideo';
 
 const BANNER_MAX_WIDTH = 320;
 const BANNER_MAX_HEIGHT = 200;
@@ -21,11 +23,20 @@ export default function BannerTable(props: BannerTableProps): JSX.Element {
     {
       title: '배너 이미지',
       render: (rowData: BannerDataInterface): JSX.Element => (
-        <img
-          src={rowData.bannerSrc}
-          alt={rowData.bannerId}
-          style={{ maxHeight: BANNER_MAX_HEIGHT, maxWidth: BANNER_MAX_WIDTH }}
-        />
+        <>
+          { isVideo(rowData.bannerSrc) ? (
+            <VideoBanner
+              src={rowData.bannerSrc}
+              style={{ maxHeight: BANNER_MAX_HEIGHT, maxWidth: BANNER_MAX_WIDTH }}
+            />
+          ) : (
+            <img
+              src={rowData.bannerSrc}
+              alt={rowData.bannerId}
+              style={{ maxHeight: BANNER_MAX_HEIGHT, maxWidth: BANNER_MAX_WIDTH }}
+            />
+          )}
+        </>
       )
     },
     {

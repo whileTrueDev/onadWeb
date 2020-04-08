@@ -91,7 +91,11 @@ const CampaignNaming = (props: CampaignNamingProps): JSX.Element => {
     <Grid item>
       <Grid container direction="column" className={classes.item} spacing={1}>
         <Grid item>
-          <StyledItemText primary="캠페인 이름 입력하기" secondary="해당 광고 캠페인의 이름을 입력하세요." className={classes.label} />
+          <StyledItemText
+            primary="캠페인 이름 입력하기"
+            secondary="캠페인 식별자로 사용됩니다."
+            className={classes.label}
+          />
         </Grid>
         <Grid item>
           <Grid container direction="row">
