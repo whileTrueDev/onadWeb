@@ -84,7 +84,7 @@ export default function AdPanelCard(props: AdPanelCardProps): JSX.Element {
             </Typography>
             <Typography variant="caption">
               3. 기존의 &quot;광고페이지&quot;는 5월 중, &quot;참여형 광고페이지(CPA)&quot;로 변경되어 운영될 예정입니다.
-              참여형광고페이지에 대한 새로운 링크를 발급받고, 새로운 패널을 추가하여 참여형 광고를 유치하여 또 다른 광고수익을 창출할 수 있습니다.
+              참여형광고페이지에 대한 새로운 링크를 발급받고, 새로운 패널을 추가하여 참여형 광고를 통해 또 다른 광고수익을 창출할 수 있습니다.
               <br />
             </Typography>
           </Alert>
