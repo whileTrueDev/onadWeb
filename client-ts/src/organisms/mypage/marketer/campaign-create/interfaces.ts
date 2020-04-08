@@ -1,4 +1,4 @@
-export interface RowDataInterface {
+export interface CreatorDetailDataInterface {
   creatorId: string;
   followers: number;
   viewer: number;
