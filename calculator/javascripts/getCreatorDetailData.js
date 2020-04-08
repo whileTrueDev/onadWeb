@@ -1,5 +1,8 @@
 // 크리에이터 상세정보 변수 정의 및 변수별 함수 정의
-require('dotenv').config();
+const schedule = require('node-schedule');
+const axios = require('axios');
+const doQuery = require('../model/doQuery');
+const pool = require('../model/connectionPool');
 
 process.env.ROOT_PATH = __dirname;
 process.env.NODE_ENV = (process.env.NODE_ENV
@@ -10,9 +13,8 @@ if (process.env.NODE_ENV === 'production') {
   FRONT_HOST = process.env.PRODUCTION_REACT_HOSTNAME;
 }
 
-const axios = require('axios');
-const doQuery = require('./model/doQuery');
-const pool = require('./model/connectionPool');
+// 이번년도 
+const yearStart = '2020-01-01 00:00:00';
 
 const doConnectionQuery = ({ connection, queryState, params }) => new Promise((resolve, reject) => {
   connection.query(queryState, params, (err, result) => {
@@ -56,9 +58,11 @@ const doTransacQuery = ({ connection, queryState, params }) => new Promise((reso
   });
 });
 
+const forEachPromise = (items, fn) => items.reduce((promise, item) => promise.then(() => fn(item)), Promise.resolve());
+
 const getMedian = ({ streamData }) => {
   streamData.sort((a, b) => a.airtime - b.airtime);
-  const average = data => data.reduce((sum, value) => sum + value) / data.length;
+  const average = (data) => data.reduce((sum, value) => sum + value) / data.length;
   const len = streamData.length;
   let median = 0;
   if (len % 2 === 0) {
@@ -117,12 +121,14 @@ const getViewerAirtime = ({
   connection, creatorId
 }) => {
   const selectQuery = `
-  SELECT B.streamId, AVG(viewer) AS viewer, COUNT(*) AS airtime, MAX(viewer) AS peakview
-  FROM twitchStreamDetail AS A
-  LEFT JOIN twitchStream AS B 
+  SELECT  B.streamId, AVG(viewer) AS viewer, COUNT(*) AS airtime, MAX(viewer) AS peakview
+  FROM
+  (SELECT streamId
+  FROM twitchStream 
+  WHERE streamerId = ? AND startedAt > ${yearStart}) AS B
+  LEFT JOIN twitchStreamDetail AS A
   ON A.streamId = B.streamId
-  WHERE B.streamerId = ?
-  GROUP BY B.streamId
+  GROUP BY streamId
   `;
 
   // 2. stream별 이상치제거를 수행하는 함수.
@@ -144,7 +150,7 @@ const getViewerAirtime = ({
     const viewerList = [];
     const airtimeList = [];
     const peakList = [];
-    const average = data => data.reduce((sum, value) => sum + value) / data.length;
+    const average = (data) => data.reduce((sum, value) => sum + value) / data.length;
     // const stddev = values => Math.sqrt(average(values.map(value => (value - average(values)) ** 2)));
     cutStreamData.forEach(({ viewer, airtime, peakview }) => {
       peakList.push(peakview);
@@ -173,9 +179,8 @@ const getViewerAirtime = ({
         }
       })
       .catch((err) => {
-        console.log(err);
-        console.log('viewer를 가져오는 과정');
-        reject(err);
+        console.log(`${creatorId}의 시청자수, 방송시간을 구하는 과정`);
+        resolve({});
       });
   });
 };
@@ -239,12 +244,13 @@ const getContentsPercent = ({
           const content = contentsGraphData[0].gameName;
           resolve({ content, contentsGraphData });
         } else {
-          reject();
+          console.log(`${creatorId}의 방송시간대를 구하는 과정`);
+          resolve({ content: '', contentsGraphData: {} });
         }
       })
       .catch((err) => {
-        console.log('viewer를 가져오는 과정');
-        reject(err);
+        console.log(`${creatorId}의 방송시간대를 구하는 과정`);
+        resolve({ content: '', contentsGraphData: {} });
       });
   });
 };
@@ -296,7 +302,7 @@ const getOpenHourPercent = ({ connection, creatorId }) => {
     let outData = [];
 
     if (timeData.length !== 24) {
-      outData = [...Array(24).keys()].map(i => ({
+      outData = [...Array(24).keys()].map((i) => ({
         hours: i,
         sumtime: 0
       }));
@@ -345,12 +351,13 @@ const getOpenHourPercent = ({ connection, creatorId }) => {
           const timeGraphData = normalization({ timeData: row });
           resolve({ openHour, timeGraphData });
         } else {
-          reject();
+          console.log(`${creatorId}의 방송시간대를 구하는 과정`);
+          resolve({ openHour: '', timeGraphData: {} });
         }
       })
       .catch((err) => {
-        console.log('viewer를 가져오는 과정');
-        reject(err);
+        console.log(`${creatorId}의 방송시간대를 구하는 과정`);
+        resolve({ openHour: '', timeGraphData: {} });
       });
   });
 };
@@ -373,18 +380,134 @@ const getClickPercent = ({ connection, creatorId }) => {
           const clickCount = row[0].counts;
           resolve({ clickCount });
         } else {
-          reject();
+          console.log(`${creatorId}의 클릭률을 구하는 과정`);
+          resolve({ clickCount: 0 });
         }
       })
       .catch((err) => {
-        console.log('일간 평균 click을 가져오는 과정');
-        reject(err);
+        console.log(`${creatorId}의 클릭률을 구하는 과정`);
+        resolve({ clickCount: 0 });
       });
   });
 };
 
+
+const getRegDate = ({ connection, creatorId }) => new Promise((resolve, reject) => {
+  const selectQuery = `
+  select date
+  from creatorInfo
+  where creatorId = ?
+  `;
+  doConnectionQuery({ connection, queryState: selectQuery, params: [creatorId] })
+    .then((row) => {
+      const { date } = row[0];
+      resolve(date);
+    })
+    .catch((err) => {
+      console.log(`${creatorId}의 가입날짜를 구하는 과정`);
+      console.log(err);
+      resolve([]);
+    });
+});
+// 2. API로 수집된 실제 방송 시간
+const getAirtime = ({ connection, creatorId, date }) => new Promise((resolve, reject) => {
+  const selectQuery = `
+  SELECT  COUNT(*) AS airtime
+  FROM twitchStreamDetail AS A
+  LEFT JOIN twitchStream AS B 
+  ON A.streamId = B.streamId
+  WHERE B.streamerId = ?
+  AND time > ${yearStart}
+  `;
+
+  doConnectionQuery({ connection, queryState: selectQuery, params: [creatorId, date] })
+    .then((row) => {
+      const { airtime } = row[0];
+      resolve(airtime);
+    })
+    .catch((err) => {
+      console.log(`${creatorId}의 실제 방송 시간을 구하는 과정`);
+      console.log(err);
+      resolve(0);
+    });
+});
+// 3. timestamp에 찍힌 실제 배너 게시 시간.
+const getImpressiontime = ({ connection, creatorId }) => new Promise((resolve, reject) => {
+  const selectQuery = `
+  SELECT  COUNT(*) AS impressiontime
+  FROM campaignTimestamp
+  WHERE creatorId = ?
+  AND date > ${yearStart}
+  `;
+
+  doConnectionQuery({ connection, queryState: selectQuery, params: [creatorId] })
+    .then((row) => {
+      const { impressiontime } = row[0];
+      resolve(impressiontime);
+    })
+    .catch((err) => {
+      console.log(`${creatorId}의 노출시간을 구하는 과정`);
+      console.log(err);
+      resolve(0);
+    });
+});
+
+const getTimeData = ({ connection, creatorId }) => new Promise((resolve, reject) => {
+  getRegDate({ connection, creatorId })
+    .then((date) => {
+      Promise.all([
+        getAirtime({ connection, creatorId, date }),
+        getImpressiontime({ connection, creatorId })
+      ])
+        .then(([airtime, impressiontime]) => {
+          let RIP = 0;
+          if (impressiontime !== 0) {
+            RIP = Number((airtime / impressiontime).toFixed(2));
+            if (RIP >= 1) {
+              RIP = 1;
+            }
+          } else {
+            RIP = 0;
+          }
+          resolve(RIP);
+        })
+        .catch((error) => {
+          console.log('streamDetail에서 데이터를 가져오는 과정');
+          console.log(error);
+          resolve(0);
+        });
+    })
+    .catch((error) => {
+      console.log('streamDetail에서 데이터를 가져오는 과정');
+      console.log(error);
+      resolve(0);
+    });
+});
+
+const getCheckDetail = ({ connection, creatorId }) => new Promise((resolve, reject) => {
+  const selectQuery = `
+  select *
+  from creatorDetail
+  where creatorId = ?
+  `;
+
+  doConnectionQuery({ connection, queryState: selectQuery, params: [creatorId] })
+    .then((row) => {
+      if (row.length > 0) {
+        resolve(true);
+      } else {
+        resolve(false);
+      }
+    })
+    .catch(() => {
+      resolve(true);
+    });
+});
+
+
+// creatorId를 조회하여 값이 존재하지 않을 경우 INSERT
+// 존재할 경우 UPDATE
 const getCreatorDetail = ({ connection, creatorId }) => new Promise((resolve, reject) => {
-  console.log(`${creatorId} 의 분석을 시작합니다.`);
   getViewerAirtime({ connection, creatorId })
     .then((viewData) => {
       if (Object.entries(viewData).length === 0 && viewData.constructor === Object) {
@@ -395,12 +518,12 @@ const getCreatorDetail = ({ connection, creatorId }) => new Promise((resolve, re
         airtime, viewer, impression, peakview
       } = viewData;
       Promise.all([
-        // UpdateFollower(creatorId),
         getClickPercent({ connection, creatorId }),
         getOpenHourPercent({ connection, creatorId }),
-        getContentsPercent({ connection, creatorId })
+        getContentsPercent({ connection, creatorId }),
+        getTimeData({ connection, creatorId }),
       ])
-        .then(([{ clickCount }, { openHour, timeGraphData }, { content, contentsGraphData }]) => {
+        .then(([{ clickCount }, { openHour, timeGraphData }, { content, contentsGraphData }, rip]) => {
           if (impression === 0) {
             return [];
           }
@@ -410,7 +533,6 @@ const getCreatorDetail = ({ connection, creatorId }) => new Promise((resolve, re
           const timeJsonData = JSON.stringify({ data: timeGraphData });
           const contentsJsonData = JSON.stringify({ data: contentsGraphData });
           return [
-            creatorId,
             followers,
             ctr,
             airtime,
@@ -421,42 +543,60 @@ const getCreatorDetail = ({ connection, creatorId }) => new Promise((resolve, re
             openHour,
             timeJsonData,
             contentsJsonData,
-            peakview
+            peakview,
+            rip,
+            creatorId
           ];
         })
         .then((params) => {
           if (params.length === 0) {
+            resolve();
             return;
           }
-          const queryState = `
-          INSERT INTO creatorDetail
-          (creatorId, followers, ctr, airtime, viewer, impression, cost, content, openHour, timeGraphData, contentsGraphData, peakview)
-          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-          `;
-          doTransacQuery({ connection, queryState, params })
-            .then(() => {
-              console.log(`${creatorId} 의 분석을 종료합니다.`);
-              resolve();
-            })
-            .catch((error) => {
-              console.log(`${creatorId}의 데이터를 저장하는 과정`);
-              reject(error);
+          getCheckDetail({ connection, creatorId })
+            .then((check) => {
+              const insertQuery = `
+              INSERT INTO creatorDetail
+              (followers, ctr, airtime, viewer, impression, cost, content, openHour, timeGraphData, contentsGraphData, peakview, rip, creatorId)
+              VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+              `;
+              const updateQuery = `
+              UPDATE creatorDetail
+              SET 
+              followers = ?, 
+              ctr = ?, 
+              airtime = ?, 
+              viewer = ?, 
+              impression = ?,
+              cost = ?,
+              content = ?, 
+              openHour = ?,
+              timeGraphData = ?,
+              contentsGraphData = ?, 
+              peakview = ?, 
+              rip = ?
+              WHERE creatorId = ?
+              `;
+              const queryState = check ? updateQuery : insertQuery;
+              doTransacQuery({ connection, queryState, params })
+                .then(() => {
+                  resolve();
+                })
+                .catch((error) => {
+                  console.log(`${creatorId}의 데이터를 저장하는 과정`);
+                  console.log(error);
+                  resolve();
+                });
             });
-        })
-        .catch((error) => {
-          console.log(`${creatorId}의 데이터를 수집하는 과정`);
-          reject(error);
         });
     })
     .catch((error) => {
       console.log(error);
+      resolve();
     });
 });
 
-
-// 계산할 대상을 가져온다.
-// 계산할 대상은 2주전까지 가입했던 크리에이터들.
-const getCreatorList = ({ connection }) => new Promise((resolve, reject) => {
+const getDoQueryCreatorList = () => new Promise((resolve, reject) => {
   const date = new Date();
   date.setDate(date.getDate() - 14);
   const selectQuery = `
@@ -465,31 +605,9 @@ const getCreatorList = ({ connection }) => new Promise((resolve, reject) => {
   where date < ?
   and creatorContractionAgreement = 1
   `;
-  doConnectionQuery({ connection, queryState: selectQuery, params: [date] })
-    .then((row) => {
-      const creatorList = row.map(element => element.creatorId);
-      resolve(creatorList);
-    })
-    .catch((err) => {
-      console.log('creator list를 가져오는 과정');
-      console.log(err);
-      resolve([]);
-    });
-});
-
-
-const getDoQueryCreatorList = () => new Promise((resolve, reject) => {
-  const date = new Date();
-  date.setDate(date.getDate() - 7);
-  const selectQuery = `
-  select creatorId
-  from creatorInfo
-  where date < ?
-  and creatorContractionAgreement = 1
-  `;
   doQuery(selectQuery, [date])
     .then((row) => {
-      const creatorList = row.result.map(element => element.creatorId);
+      const creatorList = row.result.map((element) => element.creatorId);
       resolve(creatorList);
     })
     .catch((err) => {
@@ -498,7 +616,6 @@ const getDoQueryCreatorList = () => new Promise((resolve, reject) => {
       resolve([]);
     });
 });
-
 
 const preprocessingHeatmapData = (row) => {
   // 사전에 날짜별로 시간별로 정렬된 상태이므로
@@ -520,7 +637,7 @@ const preprocessingHeatmapData = (row) => {
   uniqueDateList.forEach((date) => {
     [...Array(24).keys()].forEach((i) => {
       // date와 time이 일치하는 값을 가져온다.
-      const matchIndex = row.findIndex(x => x.date === date && x.time === i);
+      const matchIndex = row.findIndex((x) => x.date === date && x.time === i);
       let data = {
         date,
         time: i,
@@ -569,7 +686,6 @@ const getHeatmapData = ({ connection, creatorId }) => new Promise((resolve, reje
       `;
       doTransacQuery({ connection, queryState, params: [jsonHeatmapData, creatorId] })
         .then(() => {
-          console.log(`${creatorId}의 데이터를 저장하였습니다.`);
           resolve();
         })
         .catch((error) => {
@@ -583,33 +699,54 @@ const getHeatmapData = ({ connection, creatorId }) => new Promise((resolve, reje
     });
 });
 
-const getDetailList = ({ connection }) => new Promise((resolve, reject) => {
-  const selectQuery = `
-  select creatorId
-  from creatorDetail
-  `;
-  doConnectionQuery({ connection, queryState: selectQuery })
-    .then((row) => {
-      const creatorList = row.map(element => element.creatorId);
-      resolve(creatorList);
-    })
-    .catch((err) => {
-      console.log('creator list를 가져오는 과정');
+
+const dividedGetDetail = (targetList) => new Promise((resolve, reject) => {
+  pool.getConnection((err, connection) => {
+    if (err) {
       console.log(err);
-      resolve([]);
-    });
+      reject(err);
+    } else {
+      // 100개씩 잘라서 수행 시작.
+      Promise.all(
+        targetList.map((creatorId) => getCreatorDetail({ connection, creatorId }))
+      ).then(() => {
+        connection.release();
+        setTimeout(() => {
+          resolve();
+        }, 10000);
+      });
+    }
+  });
 });
+
+
+const dividedCalculation = async () => {
+  const creatorList = await getDoQueryCreatorList();
+  const turns = Math.ceil(creatorList.length / 30);
+  const targetList = [];
+  for (let i = 0; i < turns;) {
+    const targets = creatorList.splice(0, 30);
+    targetList.push(targets);
+    i += 1;
+  }
+
+  return new Promise((resolve, reject) => {
+    forEachPromise(targetList, dividedGetDetail)
+      .then(() => {
+        resolve();
+      });
+  });
+};
 
 
 const getDetaildoQueryList = () => new Promise((resolve, reject) => {
   const selectQuery = `
   select creatorId
   from creatorDetail
-  where followers = 0
   `;
   doQuery(selectQuery, [])
     .then((row) => {
-      const creatorList = row.result.map(element => element.creatorId);
+      const creatorList = row.result.map((element) => element.creatorId);
       resolve(creatorList);
     })
     .catch((err) => {
@@ -618,155 +755,6 @@ const getDetaildoQueryList = () => new Promise((resolve, reject) => {
       resolve([]);
     });
 });
-
-
-const updateTimeGraphData = ({ connection, creatorId }) => new Promise((resolve, reject) => {
-  getOpenHourPercent({ connection, creatorId })
-    .then((row) => {
-      const { timeGraphData } = row;
-      const timeJsonData = JSON.stringify({ data: timeGraphData });
-      const queryState = `
-          UPDATE creatorDetail 
-          SET timeGraphData = ?
-          WHERE creatorId = ? 
-          `;
-      doTransacQuery({ connection, queryState, params: [timeJsonData, creatorId] })
-        .then(() => {
-          console.log(`${creatorId}의 데이터를 저장하였습니다.`);
-          resolve();
-        })
-        .catch((error) => {
-          console.log(`${creatorId}의 데이터를 저장하는 과정`);
-          reject(error);
-        });
-    });
-});
-
-// 1.가입을 진행한 날짜
-const getRegDate = ({ connection, creatorId }) => new Promise((resolve, reject) => {
-  const selectQuery = `
-  select date
-  from creatorInfo
-  where creatorId = ?
-  `;
-  doConnectionQuery({ connection, queryState: selectQuery, params: [creatorId] })
-    .then((row) => {
-      const { date } = row[0];
-      resolve(date);
-    })
-    .catch((err) => {
-      console.log('getRegDate');
-      console.log(err);
-      resolve([]);
-    });
-});
-// 2. API로 수집된 실제 방송 시간
-const getAirtime = ({ connection, creatorId, date }) => new Promise((resolve, reject) => {
-  const selectQuery = `
-  SELECT  COUNT(*) AS airtime
-  FROM twitchStreamDetail AS A
-  LEFT JOIN twitchStream AS B 
-  ON A.streamId = B.streamId
-  WHERE B.streamerId = ?
-  AND time > ?
-  
-  `;
-  doConnectionQuery({ connection, queryState: selectQuery, params: [creatorId, date] })
-    .then((row) => {
-      const { airtime } = row[0];
-      resolve(airtime);
-    })
-    .catch((err) => {
-      console.log('getRegDate');
-      console.log(err);
-      resolve([]);
-    });
-});
-// 3. timestamp에 찍힌 실제 배너 게시 시간.
-const getImpressiontime = ({ connection, creatorId }) => new Promise((resolve, reject) => {
-  const selectQuery = `
-  SELECT  COUNT(*) AS impressiontime
-  FROM campaignTimestamp
-  WHERE creatorId = ?
-  
-  `;
-  doConnectionQuery({ connection, queryState: selectQuery, params: [creatorId] })
-    .then((row) => {
-      const { impressiontime } = row[0];
-      resolve(impressiontime);
-    })
-    .catch((err) => {
-      console.log('getRegDate');
-      console.log(err);
-      resolve([]);
-    });
-});
-
-const getTimeData = ({ connection, creatorId }) => new Promise((resolve, reject) => {
-  getRegDate({ connection, creatorId })
-    .then((date) => {
-      Promise.all([
-        getAirtime({ connection, creatorId, date }),
-        getImpressiontime({ connection, creatorId })
-      ])
-        .then(([airtime, impressiontime]) => {
-          // 실제 배너 송출 비율 RIP
-          let RIP = 0;
-          if (impressiontime !== 0) {
-            RIP = Number((airtime / impressiontime).toFixed(2));
-            if (RIP >= 1) {
-              RIP = 1;
-            }
-          } else {
-            RIP = 0;
-          }
-          return (RIP);
-        })
-        .then((RIP) => {
-          const queryState = `
-      UPDATE creatorDetail 
-      SET rip = ?
-      WHERE creatorId = ? 
-      `;
-          doTransacQuery({ connection, queryState, params: [RIP, creatorId] })
-            .then(() => {
-              console.log(`${creatorId}의 데이터를 저장하였습니다.`);
-              resolve();
-            })
-            .catch((error) => {
-              console.log(`${creatorId}의 데이터를 저장하는 과정`);
-              reject(error);
-            });
-        });
-    });
-});
-
-async function calculation() {
-  pool.getConnection(async (err, connection) => {
-    if (err) {
-      console.log(err);
-    } else {
-      const creatorList = await getCreatorList({ connection });
-
-      // 100개씩 잘라서 수행 시작.
-      const targetList = creatorList;
-      Promise.all(
-        targetList.map(creatorId => getCreatorDetail({ connection, creatorId }))
-      )
-        .then(() => {
-          connection.release();
-          console.log('분석이 완료 되었습니다.');
-        })
-        .catch((errorData) => {
-          connection.release();
-          console.log('-----------------------------------------------------------');
-          console.log(errorData);
-          console.log('--------위의 사유로 인하여 에러가 발생하였습니다.-------------');
-        });
-      connection.release();
-    }
-  });
-}
 
 // 0. 구독자 수를 갱신하는 함수.
 // creatorId에 대해 API요청으로 data를 가져온다.
@@ -791,32 +779,26 @@ const UpdateFollower = ({ creatorId, connection }) => new Promise((resolve, reje
       `;
       doTransacQuery({ connection, queryState, params: [followers, creatorId] })
         .then(() => {
-          console.log(`${creatorId}의 데이터를 저장하였습니다.`);
           resolve();
         })
         .catch((error) => {
           console.log(`${creatorId}의 데이터를 저장하는 과정`);
           resolve();
-
-          // reject(error);
         });
     })
     .catch((error) => {
       console.log('twitch API를 통한 구독자수 요청 실패');
       resolve();
-
-      // reject(error);
     });
 });
 
-
-const dividedGetFollower = targetList => new Promise((resolve, reject) => {
+const dividedGetFollower = (targetList) => new Promise((resolve, reject) => {
   pool.getConnection(async (err, connection) => {
     if (err) {
       console.log(err);
     } else {
       Promise.all(
-        targetList.map(creatorId => UpdateFollower({ creatorId, connection }))
+        targetList.map((creatorId) => UpdateFollower({ creatorId, connection }))
       ).then(() => {
         connection.release();
         setTimeout(() => {
@@ -828,71 +810,34 @@ const dividedGetFollower = targetList => new Promise((resolve, reject) => {
 });
 
 
-const dividedGetDetail = targetList => new Promise((resolve, reject) => {
-  pool.getConnection((err, connection) => {
-    if (err) {
-      console.log(err);
-      reject(err);
-    } else {
-      // 100개씩 잘라서 수행 시작.
-      Promise.all(
-        targetList.map(creatorId => getCreatorDetail({ connection, creatorId }))
-      ).then(() => {
-        connection.release();
-        setTimeout(() => {
-          resolve();
-        }, 60000);
+const dividedUpdate = async () => {
+  const creatorList = await getDetaildoQueryList();
+  const turns = Math.ceil(creatorList.length / 30);
+  const targetList = [];
+  for (let i = 0; i < turns;) {
+    const targets = creatorList.splice(0, 30);
+    targetList.push(targets);
+    i += 1;
+  }
+
+  return new Promise((resolve, reject) => {
+    forEachPromise(targetList, dividedGetFollower)
+      .then(() => {
         resolve();
       });
-    }
   });
+};
+
+async function main() {
+  await dividedCalculation();
+  await dividedUpdate();
+  console.log('creator detail data update complete!');
+}
+
+
+const scheduler = schedule.scheduleJob('3 * * *', () => {
+  console.log('creator detail data update start');
+  main();
 });
 
-const forEachPromise = (items, fn) => items.reduce((promise, item) => promise.then(() => fn(item)), Promise.resolve());
-
-async function dividedCalculation() {
-  const creatorList = await getDoQueryCreatorList();
-  // const creatorList = await getDetaildoQueryList();
-  console.log(creatorList.length);
-  // const turns = Math.ceil(creatorList.length / 30);
-  // const targetList = [];
-  // for (let i = 0; i < turns;) {
-  //   const targets = creatorList.splice(0, 10);
-  //   targetList.push(targets);
-  //   i += 1;
-  // }
-
-  // forEachPromise(targetList, dividedGetDetail).then(() => {
-  //   console.log('done');
-  // });
-
-  // forEachPromise(targetList, dividedGetFollower).then(() => {
-  //   console.log('done');
-  // });
-}
-
-
-async function detailcalculation() {
-  pool.getConnection(async (err, connection) => {
-    if (err) {
-      console.log(err);
-    } else {
-      const creatorList = await getDetailList({ connection });
-      Promise.all(
-        creatorList.map(creatorId => getTimeData({ connection, creatorId }))
-      )
-        .then(() => {
-          connection.release();
-          console.log('분석이 완료 되었습니다.');
-        })
-        .catch((errorData) => {
-          connection.release();
-          console.log('-----------------------------------------------------------');
-          console.log(errorData);
-          console.log('--------위의 사유로 인하여 에러가 발생하였습니다.-------------');
-        });
-    }
-  });
-}
-
-dividedCalculation();
+module.exports = scheduler;
