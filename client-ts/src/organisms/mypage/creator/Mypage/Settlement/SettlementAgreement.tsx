@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Grid, FormControlLabel, Checkbox } from '@material-ui/core';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import shortid from 'shortid';
@@ -23,21 +23,14 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-interface SettlementAgreementProps {
-  setAllCheck: React.Dispatch<React.SetStateAction<{
-    checkA: boolean;
-    checkB: boolean;
-    checkC: boolean;
-  }>>;
-  allCheck: {
-    checkA: boolean;
-    checkB: boolean;
-    checkC: boolean;
-  };
-}
 
-function SettlementAgreement({ setAllCheck, allCheck }: SettlementAgreementProps): JSX.Element {
+function SettlementAgreement(): JSX.Element {
   const classes = useStyles();
+  const [allCheck, setAllCheck] = useState({
+    checkA: false,
+    checkB: false,
+    checkC: false
+  });
   const { checkA, checkB, checkC } = allCheck;
   const handleChange = (name: string) => (): void => {
     switch (name) {

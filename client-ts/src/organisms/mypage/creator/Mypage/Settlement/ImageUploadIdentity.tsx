@@ -46,6 +46,7 @@ function ImageUploadIdentity(): JSX.Element {
         </Grid>
         <Grid item>
           위에 해당하는 신분증이더라도 이름 및 주민등록번호 13자리를 확인할 수 있어야 하며, 해당 정보가 기재되어 있지 않거나 모자이크 처리 된 경우 신분증으로 인정되지 않습니다.
+          <p style={{ color: 'red' }}>이미지 크기는 10MB이하로 올려주시기 바랍니다.</p>
         </Grid>
       </Grid>
     </div>

@@ -40,8 +40,8 @@ const IncomeCard = ({ incomeData }: IncomeCardProps): JSX.Element => {
   // 출금 신청 다이얼로그
   const [open, setOpen] = useState(false);
   const handleOpen = (): void => {
-    if (incomeData && !incomeData.creatorAccountNumber) {
-      alert('등록된 계좌가 존재하지 않으므로 내 계정으로 이동합니다.');
+    if (incomeData && !(incomeData.settlementState === 2)) {
+      alert('정산등록 신청이 승인되지 않았습니다.');
       history.push('/mypage/creator/user');
     }
     setOpen(true);
@@ -104,7 +104,7 @@ const IncomeCard = ({ incomeData }: IncomeCardProps): JSX.Element => {
             accountNumber={incomeData.creatorAccountNumber}
             receivable={incomeData.creatorReceivable}
           />
-        )}
+      )}
     </CustomCard>
   );
 };

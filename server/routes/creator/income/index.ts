@@ -15,7 +15,8 @@ router.route('/')
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
       const { creatorId } = responseHelper.getSessionData(req);
       const query = `
-      SELECT 
+      SELECT
+      ci.settlementState,
       creatorTotalIncome as creatorTotalIncome,
       creatorReceivable as creatorReceivable,
       creatorAccountNumber, creatorIncome.date, creatorContractionAgreement, realName

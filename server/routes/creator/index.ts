@@ -30,7 +30,11 @@ router.route('/')
           const userData = row.result[0];
           const rawAccount: string = row.result[0].creatorAccountNumber || '';
           const deciphedAccountNum: string = encrypto.decipher(rawAccount);
+          const deciphedIdentificationNum: string = encrypto.decipher(userData.identificationNumber);
+          const deciphedphoneNum: string = encrypto.decipher(userData.phoneNumber);
           userData.creatorLogo = creatorLogo;
+          userData.identificationNumber = deciphedIdentificationNum;
+          userData.phoneNumber = deciphedphoneNum;
           userData.creatorAccountNumber = deciphedAccountNum;
           const result = { ...userData, NowIp };
           responseHelper.send(result, 'get', res);
@@ -99,9 +103,9 @@ router.route('/settlement')
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
       const { creatorId } = responseHelper.getSessionData(req);
       const [bankName, bankRealName, bankAccount, CreatorName, CreatorType,
-        CreatorIdentity, CreatorPhone, CreatorIDImg, CreatorAccountImg]: string[] = responseHelper.getParam([
+        CreatorIdentity, CreatorPhone, CreatorIDImg, CreatorAccountImg, CreatorBussinessImg]: string[] = responseHelper.getParam([
           'bankName', 'bankRealName', 'bankAccount', 'CreatorName', 'CreatorType',
-          'CreatorIdentity', 'CreatorPhone', 'CreatorIDImg', 'CreatorAccountImg'], 'patch', req);
+          'CreatorIdentity', 'CreatorPhone', 'CreatorIDImg', 'CreatorAccountImg', 'CreatorBussinessImg'], 'patch', req);
 
       const AccountNumber = `${bankName}_${bankAccount}`;
       const enciphedAccountNum: string = encrypto.encipher(AccountNumber);
@@ -116,7 +120,7 @@ router.route('/settlement')
       `;
 
       doQuery(settlementQuery, [CreatorName, 1, enciphedIdentityNum, enciphedPhoneNum, CreatorType,
-        CreatorIDImg, CreatorAccountImg, '임시', enciphedAccountNum, bankRealName, creatorId])
+        CreatorIDImg, CreatorAccountImg, CreatorBussinessImg, enciphedAccountNum, bankRealName, creatorId])
         .then((row) => {
           if (row.result && row.result.affectedRows > 0) {
             responseHelper.send([true], 'patch', res);
