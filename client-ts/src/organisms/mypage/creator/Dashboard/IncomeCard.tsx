@@ -28,6 +28,7 @@ export interface IncomeCashRes {
   date: string;
   creatorContractionAgreement: number;
   realName: string;
+  settlementState: number;
 }
 
 interface IncomeCardProps {
@@ -95,15 +96,15 @@ const IncomeCard = ({ incomeData }: IncomeCardProps): JSX.Element => {
         </Grid>
       </Grid>
       {incomeData && incomeData.creatorContractionAgreement
-      && incomeData.creatorAccountNumber && (
-        <WithdrawalDialog
-          open={open}
-          handleClose={handleClose}
-          realName={incomeData.realName}
-          accountNumber={incomeData.creatorAccountNumber}
-          receivable={incomeData.creatorReceivable}
-        />
-      )}
+        && incomeData.creatorAccountNumber && (
+          <WithdrawalDialog
+            open={open}
+            handleClose={handleClose}
+            realName={incomeData.realName}
+            accountNumber={incomeData.creatorAccountNumber}
+            receivable={incomeData.creatorReceivable}
+          />
+        )}
     </CustomCard>
   );
 };

@@ -97,8 +97,8 @@ const SettlementCard = ({
             </Grid>
             <Grid item sm={12} md={9}>
               <SettlementForm
-                doProfileDataRequest={doProfileDataRequest}
                 handleSnackOpen={handleSnackOpen}
+                CreatorType={CreatorType}
               />
             </Grid>
           </Grid>

@@ -30,7 +30,7 @@ export interface UseImageUploadResult {
 export default function useImageUpload(
   DEFAULT_IMAGE: string,
 ): UseImageUploadResult {
-  const [imageUrl, setImageUrl] = React.useState<string| ArrayBuffer |null>(DEFAULT_IMAGE);
+  const [imageUrl, setImageUrl] = React.useState<string | ArrayBuffer | null>(DEFAULT_IMAGE);
   const [imageName, setImageName] = React.useState<string | undefined>('');
 
   // image reset

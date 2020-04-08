@@ -1,18 +1,21 @@
 // AccountNumber를 입력하는 Form component 작성
-import React, { useState, useReducer } from 'react';
+import React, {
+  useState, useReducer
+} from 'react';
 import {
-  TextField, MenuItem, Grid, Input, Dialog
+  TextField, MenuItem, Grid, Dialog
 } from '@material-ui/core';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import NumberFormat, { NumberFormatValues } from 'react-number-format';
 import Button from '../../../../../atoms/CustomButtons/Button';
 import banks from './banks';
 import settlementFormReducer from './Settlement.reducer';
-import usePostRequest from '../../../../../utils/hooks/usePostRequest';
+import usePatchRequest from '../../../../../utils/hooks/usePatchRequest';
 import StyledItemText from '../../../../../atoms/StyledItemText';
-import useImageUpload, { ImageData, UploadImage } from '../../../../../utils/hooks/useImageUpload';
 import useDialog from '../../../../../utils/hooks/useDialog';
 import SettlementAgreement from './SettlementAgreement';
+import ImageUploadIdentity from './ImageUploadIdentity';
+import ImageUploadAccount from './ImageUploadAccount';
 
 const useStyles = makeStyles((theme: Theme) => ({
   textField: {
@@ -51,15 +54,20 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 interface SettlementFormProps {
-  doProfileDataRequest: () => void;
   handleSnackOpen: () => void;
+  CreatorType: number;
 }
+interface ImageData {
+  newImageUrl: string | ArrayBuffer | null;
+  index: number;
+}
+
 function SettlementForm({
-  doProfileDataRequest, handleSnackOpen
+  handleSnackOpen, CreatorType
 }: SettlementFormProps): JSX.Element {
   const classes = useStyles();
-  const ImageUploadIdentity = useDialog();
-  const ImageUploadAccount = useDialog();
+  const ImageUploadID = useDialog();
+  const ImageUploadAC = useDialog();
   // 은행
   const [bankState, dispatch] = useReducer(settlementFormReducer, { name: '농협', code: '011' });
   const handleChangeBank = (event: React.ChangeEvent<HTMLInputElement>): void => {
@@ -104,10 +112,63 @@ function SettlementForm({
     setCreatorPhone(values.value);
   };
 
-  // 통장사본 및 신분증 사본 업로드 훅
-  // const {
-  //   imageUrl, readImage, handleImageChange
-  // } = useImageUpload();
+  const MB = 1048576; // 1Mbytes
+  const IMAGE_SIZE_LIMIT = 10 * MB;
+
+  // 신분증 이미지
+  const [creatorIDImg, setCreatorIDImg] = React.useState<string | ArrayBuffer | null>('');
+
+  // 통장사본 이미지
+  const [creatorBussinessImg, setCreatorBussinessImg] = React.useState<string | ArrayBuffer | null>('');
+
+  // image reset
+  function handleReset(index: number): void {
+    switch (index) {
+      case 1:
+        return setCreatorIDImg('');
+      default:
+        return setCreatorBussinessImg('');
+    }
+  }
+
+  // image change handler
+  function handleImageChange({ newImageUrl, index }: ImageData): void {
+    switch (index) {
+      case 1:
+        return setCreatorIDImg(newImageUrl);
+      default:
+        return setCreatorBussinessImg(newImageUrl);
+    }
+  }
+
+  const readImage = (event: React.ChangeEvent<HTMLInputElement>, index: number): void => {
+    const target = event.target as HTMLInputElement;
+    const files = (target.files as FileList);
+    if (files.length !== 0) {
+      const fileRegx = /^image\/[a-z]*$/;
+      const myImage = files[0];
+
+      // image 확장자 검사
+      if (fileRegx.test(myImage.type)) {
+        // 이미지 사이즈 검사
+        if (myImage.size < IMAGE_SIZE_LIMIT) {
+          // 사이즈 제한보다 작은 경우
+          const reader = new FileReader();
+          reader.readAsDataURL(myImage);
+          reader.onload = (): void => {
+            handleImageChange({ newImageUrl: reader.result, index });
+          };
+        } else {
+          // 사이즈 제한보다 큰 경우
+          alert('10MB 이하의 이미지를 업로드해주세요.');
+        }
+      } else {
+        alert('파일의 형식이 올바르지 않습니다.');
+      }
+    } else {
+      handleReset(index);
+    }
+  };
 
   // 이용약관 올체크
   const [allCheck, setAllCheck] = useState({
@@ -116,22 +177,27 @@ function SettlementForm({
     checkC: false
   });
 
-  // 출금 계좌 등록을 위한 요청 객체 생성
-  const AccountPost = usePostRequest('/creator/account', () => {
-    doProfileDataRequest();
+  // 정산시스템 등록을 위한 요청 객체 생성 ===> 정산시스템 patch로
+  const settlementPatch = usePatchRequest('/creator/settlement', () => {
     handleSnackOpen();
   });
 
   const handleSubmit = (event: React.MouseEvent<HTMLFormElement>): void => {
     event.preventDefault();
-    const userAccount = {
+    const creatorData = {
       bankName: bankState.name,
       bankRealName: realName,
       bankAccount: accountNum,
+      CreatorName: creatorName,
+      CreatorIdentity: creatorIdentity,
+      CreatorPhone: creatorPhone,
+      CreatorIDImg: creatorIDImg,
+      CreatorAccountImg: creatorBussinessImg,
+      CreatorType
     };
 
     // usePostRequest
-    AccountPost.doPostRequest({ ...userAccount });
+    settlementPatch.doPatchRequest({ ...creatorData });
   };
 
   return (
@@ -241,27 +307,27 @@ function SettlementForm({
         </div>
         <Grid item className={classes.contentImageWrap}>
           <StyledItemText primary="신분증 업로드" fontSize="15px" className={classes.contentTitle} />
-          <Input
+          <input
             required
-            disableUnderline
+            accept="image/*"
             color="primary"
-            // onChange={(e): void => { readImage(); }}
+            onChange={(e): void => { readImage(e, 1); }}
             type="file"
             className={classes.contentImage}
           />
-          <Button>신분증업로드안내</Button>
+          <Button onClick={ImageUploadID.handleOpen}>신분증업로드안내</Button>
         </Grid>
         <Grid item className={classes.contentImageWrap}>
           <StyledItemText primary="통장사본" fontSize="15px" className={classes.contentTitle} />
-          <Input
-            disableUnderline
+          <input
             required
+            accept="image/*"
             color="primary"
-            // onChange={(e): void => { readImage(); }}
+            onChange={(e): void => { readImage(e, 2); }}
             type="file"
             className={classes.contentImage}
           />
-          <Button>통장사본업로드안내</Button>
+          <Button onClick={ImageUploadAC.handleOpen}>통장사본업로드안내</Button>
         </Grid>
         <div className={classes.titleWraper}>
           <StyledItemText primary="서비스 이용 및 정산등록 동의" fontSize="18px" color="#00acc1" />
@@ -285,17 +351,21 @@ function SettlementForm({
         </Grid>
       </form>
       <Dialog
-        open={Boolean(ImageUploadIdentity.open)}
-        onClose={ImageUploadIdentity.handleClose}
+        open={Boolean(ImageUploadID.open)}
+        onClose={ImageUploadID.handleClose}
         fullWidth
         maxWidth="md"
-      />
+      >
+        <ImageUploadIdentity />
+      </Dialog>
       <Dialog
-        open={Boolean(ImageUploadAccount.open)}
-        onClose={ImageUploadAccount.handleClose}
+        open={Boolean(ImageUploadAC.open)}
+        onClose={ImageUploadAC.handleClose}
         fullWidth
         maxWidth="md"
-      />
+      >
+        <ImageUploadAccount />
+      </Dialog>
     </>
   );
 }

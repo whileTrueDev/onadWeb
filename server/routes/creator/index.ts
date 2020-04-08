@@ -22,8 +22,7 @@ router.route('/')
       const NowIp: any = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
 
       const query = `
-      SELECT creatorId, creatorName, creatorIp, creatorMail,
-      creatorAccountNumber, creatorContractionAgreement, creatorTwitchId, realName
+      SELECT *
       FROM creatorInfo
       WHERE creatorId = ?`;
       doQuery(query, [creatorId])
@@ -94,25 +93,35 @@ router.route('/')
   .all(responseHelper.middleware.unusedMethod);
 
 
-router.route('/account')
-  .post( // 크리에이터 정산에 필요한 계좌 등록 / 변경
+router.route('/settlement')
+  .patch( // 크리에이터 정산에 필요한 계좌 등록 / 변경
     responseHelper.middleware.checkSessionExists,
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
       const { creatorId } = responseHelper.getSessionData(req);
-      const [bankName, bankRealName, bankAccount]: string[] = responseHelper.getParam(['bankName', 'bankRealName', 'bankAccount'], 'post', req);
+      const [bankName, bankRealName, bankAccount, CreatorName, CreatorType,
+        CreatorIdentity, CreatorPhone, CreatorIDImg, CreatorAccountImg]: string[] = responseHelper.getParam([
+          'bankName', 'bankRealName', 'bankAccount', 'CreatorName', 'CreatorType',
+          'CreatorIdentity', 'CreatorPhone', 'CreatorIDImg', 'CreatorAccountImg'], 'patch', req);
+
       const AccountNumber = `${bankName}_${bankAccount}`;
       const enciphedAccountNum: string = encrypto.encipher(AccountNumber);
-      const accountNumberQuery = `
-      UPDATE creatorInfo 
-      SET creatorAccountNumber = ?, realName = ?  WHERE creatorId = ?
+      const enciphedPhoneNum: string = encrypto.encipher(CreatorPhone);
+      const enciphedIdentityNum: string = encrypto.encipher(CreatorIdentity);
+
+      const settlementQuery = `
+      UPDATE creatorInfo
+      SET name = ?, settlementState = ?, identificationNumber = ?, phoneNumber = ?, creatorType = ?,
+      identificationImg = ?, AccountImg = ?, BussinessRegiImg = ?, creatorAccountNumber = ?, realName = ?
+      WHERE creatorId = ?
       `;
 
-      doQuery(accountNumberQuery, [enciphedAccountNum, bankRealName, creatorId])
+      doQuery(settlementQuery, [CreatorName, 1, enciphedIdentityNum, enciphedPhoneNum, CreatorType,
+        CreatorIDImg, CreatorAccountImg, '임시', enciphedAccountNum, bankRealName, creatorId])
         .then((row) => {
           if (row.result && row.result.affectedRows > 0) {
-            responseHelper.send([true], 'POST', res);
+            responseHelper.send([true], 'patch', res);
           } else {
-            responseHelper.promiseError(Error('계좌번호 등록 실패'), next);
+            responseHelper.promiseError(Error('정산 등록 신청 실패'), next);
           }
         }).catch((error) => {
           responseHelper.promiseError(error, next);
@@ -184,7 +193,7 @@ router.route('/ad-page')
         [imageUrlKey, descriptionKey, creatorThemeKey], 'patch', req
       );
 
-      const updateFields: {key: string; value: string}[] = [];
+      const updateFields: { key: string; value: string }[] = [];
       if (creatorBackgroundImage) {
         updateFields.push({ key: imageUrlKey, value: creatorBackgroundImage });
       }
