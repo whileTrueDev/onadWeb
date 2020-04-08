@@ -1,7 +1,11 @@
+/* eslint-disable import/first */
+import dotenv from 'dotenv';
+
+dotenv.config();
 import createError from 'http-errors';
 import { MysqlError, PoolConnection } from 'mysql';
 import { QueryResult } from '../@types/db';
-import pool from './connectinoPool'; // DB 커넥션 가져오기.
+import pool from './connectionPool'; // DB 커넥션 가져오기.
 // const logger = require('../middlewares/logger');
 
 /**
