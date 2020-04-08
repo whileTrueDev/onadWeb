@@ -5,6 +5,13 @@
   "main": "dist/app.js",
   "author": "leejineun",
   "license": "MIT",
+  "scripts": {
+    "prebuild": "rimraf ./dist",
+    "build": "tsc",
+    "postbuild": "browserify ./dist/public/client.js ./dist/public/hiddenEventHandler.js ./dist/public/programIdentifier.js -o ./dist/public/bundle.js && cp -r ./views ./dist/views",
+    "start:debug": "tsc -w",
+    "start:production": "node ./dist/app.js"
+  },
   "dependencies": {
     "@types/http-errors": "^1.6.3",
     "@types/jquery": "^3.3.33",
@@ -19,5 +26,9 @@
     "socketio": "^1.0.0",
     "winston": "^3.2.1",
     "winston-daily-rotate-file": "^4.4.2"
+  },
+  "devDependencies": {
+    "browserify": "^16.5.1",
+    "rimraf": "^3.0.2"
   }
 }
