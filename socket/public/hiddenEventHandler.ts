@@ -1,4 +1,4 @@
-export = function hiddenEventHandler(socket: any, THIS_URL: string, programType: string): void {
+function hiddenEventHandler(socket: any, THIS_URL: string, programType: string): void {
   const cutUrl = `/${THIS_URL.split('/')[4]}`;
   document.addEventListener('visibilitychange', () => {
     if (document.visibilityState === 'hidden') {
@@ -11,3 +11,5 @@ export = function hiddenEventHandler(socket: any, THIS_URL: string, programType:
     }
   });
 }
+
+export default hiddenEventHandler;

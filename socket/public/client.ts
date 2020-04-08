@@ -30,7 +30,7 @@ socket.on('url warning', () => {
 });
 
 socket.on('img receive', (msg: string[]) => {
-  if ($('#imgMessage').find('#banner-area').length === 1 && isVideo(msg[0])) { // mp4일 때
+  if ($('#imgMessage').find('#banner-area').length === 1 && isVideo(msg[0])) { // 기존 배너 있고 mp4일 때
     $('#banner-area').fadeOut(1000, () => {
       $('#imgMessage').empty().append(`
       <video id="banner-area" name="${msg[1]}" autoPlay loop muted width="100%" height="100%">
@@ -38,20 +38,18 @@ socket.on('img receive', (msg: string[]) => {
       </video>
       `);
     }).fadeIn(1000);
-  } else if ($('#imgMessage').find('#banner-area').length === 1 && isVideo(msg[0]) === false) { // 이미지일 때
+  } else if ($('#imgMessage').find('#banner-area').length === 1 && isVideo(msg[0]) === false) { // 기존 배너 있고 이미지일 때
     $('#banner-area').fadeOut(1000, () => {
       $('#imgMessage').empty().append(`<img src="${msg[0]}" id="banner-area" name="${msg[1]}" width="100%" height="100%">`);
     }).fadeIn(1000);
-  } else if (isVideo(msg[0])) { // mp4일 때
+  } else if (isVideo(msg[0])) { // 기존 배너없고 mp4일 때
     $('#imgMessage').empty().append(`
         <video id="banner-area" name="${msg[1]}" autoPlay loop muted width="100%" height="100%">
           <source type="video/mp4" src=${msg[0]} />
         </video>
         `);
-  } else { // 이미지일 때
-    $('#banner-area').fadeOut(1000, () => {
-      $('#imgMessage').empty().append(`<img src="${msg[0]}" id="banner-area" name="${msg[1]}" width="100%" height="100%">`);
-    }).fadeIn(1000);
+  } else { // 기존배너 없고 이미지일 때
+    $('#imgMessage').empty().append(`<img src="${msg[0]}" id="banner-area" name="${msg[1]}" width="100%" height="100%">`);
   }
 });
 

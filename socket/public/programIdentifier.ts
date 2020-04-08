@@ -1,4 +1,4 @@
-export = function identifier(): string {
+function identifier(): string {
   const navi = navigator.userAgent.toLowerCase();
   let program;
 
@@ -12,3 +12,5 @@ export = function identifier(): string {
   program = 'obs';
   return program;
 }
+
+export default identifier;
