@@ -236,7 +236,7 @@ router.route('/landing-url')
       doQuery(query, [creatorId])
         .then((row) => {
           const { creatorTwitchId } = row.result[0];
-          const result = `http://l.onad.io/${creatorTwitchId}`;
+          const result = `https://l.onad.io/${creatorTwitchId}`;
           responseHelper.send({ url: result }, 'get', res);
         }).catch((error) => {
           responseHelper.promiseError(error, next);
