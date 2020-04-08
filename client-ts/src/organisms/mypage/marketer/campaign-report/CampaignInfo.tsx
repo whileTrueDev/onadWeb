@@ -2,6 +2,8 @@ import React from 'react';
 import { Typography, Grid, Divider } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { CampaignInterface } from '../dashboard/interfaces';
+import VideoBanner from '../../../../atoms/Banner/VideoBanner';
+import isVideo from '../../../../utils/isVideo';
 
 /**
  * 우선 순위 타입넘버에 해당하는 문자열 반환
@@ -86,11 +88,16 @@ export default function CampaignInfo(props: CampaignInfoProps): JSX.Element {
         <div className={classes.container}>
           <Typography variant="h6">배너 이미지</Typography>
           <Divider className={classes.divierHalf} />
-          <img
-            className={classes.img}
-            src={selectedCampaign.bannerSrc}
-            alt={selectedCampaign.campaignName}
-          />
+
+          { isVideo(selectedCampaign.bannerSrc) ? (
+            <VideoBanner className={classes.img} src={selectedCampaign.bannerSrc} />
+          ) : (
+            <img
+              className={classes.img}
+              src={selectedCampaign.bannerSrc}
+              alt={selectedCampaign.campaignName}
+            />
+          )}
         </div>
       </Grid>
       {data.map((d) => (

@@ -123,7 +123,13 @@ const GameSelect = (props: GameSelectProps): JSX.Element => {
                 >
                   {gamesData.data.slice(12, gamesData.data.length).map(
                     (game: GameDataInterface) => (
-                      <option key={game.gameId} value={game.gameName}>{game.gameNameKr}</option>
+                      <option
+                        key={game.gameId}
+                        value={game.gameName}
+                      >
+                        {game.gameNameKr || game.gameName}
+
+                      </option>
                     )
                   )}
                 </Select>

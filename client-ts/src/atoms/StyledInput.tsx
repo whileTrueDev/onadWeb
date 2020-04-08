@@ -9,7 +9,7 @@ const StyledInput = withStyles((theme: Theme) => ({
     fontWeight: 700,
     color: theme.palette.text.primary,
     width: '300px',
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('xs')]: {
       width: '100%',
       fontSize: '12px',
       margin: 0,

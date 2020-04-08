@@ -1,7 +1,7 @@
 import React from 'react';
 
 export default function copyToClipboard(
-  e: React.MouseEvent<HTMLButtonElement>,
+  e: React.MouseEvent<HTMLButtonElement> | React.MouseEvent<HTMLDivElement>,
   elementId: string,
   callback: () => void
 ): void {
