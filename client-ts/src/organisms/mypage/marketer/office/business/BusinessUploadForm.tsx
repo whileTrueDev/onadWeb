@@ -19,7 +19,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     flexDirection: 'row-reverse',
     alignItems: 'center',
-
   },
   textBox: {
     display: 'flex',
@@ -46,9 +45,9 @@ function BusinessUploadForm(props: BusinessUploadFormProps): JSX.Element {
     <Card>
       <CardHeader color="blueGray">
         <div className={myClasses.textBox}>
-          <h4 className={classes.cardTitleWhite}>
+          <Typography variant="h6">
             사업자 등록증 업로드
-          </h4>
+          </Typography>
         </div>
 
       </CardHeader>
@@ -65,12 +64,7 @@ function BusinessUploadForm(props: BusinessUploadFormProps): JSX.Element {
               </Button>
             </div>
             <div className={myClasses.textBox} style={{ marginTop: 5 }}>
-              <Typography gutterBottom variant="body1">등록된 사업자 등록번호</Typography>
-            </div>
-            <div className={myClasses.textBox} style={{ marginBottom: 10 }}>
-              <Typography gutterBottom variant="body1">
-                {businessRegistrationData.data.marketerBusinessRegNum}
-              </Typography>
+              <Typography gutterBottom variant="body1">사업자 등록증이 업로드 되어 있습니다.</Typography>
             </div>
           </CardBody>
         ) : (

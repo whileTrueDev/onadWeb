@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from 'react';
-// core
-import withStyles from '@material-ui/core/styles/withStyles';
+import Typography from '@material-ui/core/Typography';
 // own components
 import Card from '../../../../../atoms/Card/Card';
 import CardHeader from '../../../../../atoms/Card/CardHeader';
 import CardBody from '../../../../../atoms/Card/CardBody';
 import Table from '../../../../../atoms/Table/Table';
-import DashboardStyle from '../../../../../assets/jss/views/dashboardStyle';
 // hooks
 import useGetRequest from '../../../../../utils/hooks/useGetRequest';
 import axios from '../../../../../utils/axios';
@@ -19,8 +17,7 @@ const initialData = {
   ],
 };
 
-function CashHistory(props: { classes: any }): JSX.Element {
-  const { classes } = props;
+function CashHistory(): JSX.Element {
   const [vbankload, setVbankload] = useState<boolean>(false);
 
   const { data, loading } = useGetRequest<null, { data: string[][] }>('/marketer/cash/history/charge');
@@ -35,10 +32,11 @@ function CashHistory(props: { classes: any }): JSX.Element {
   return (
     <Card>
       <CardHeader color="blueGray">
-        <h4 className={classes.cardTitleWhite}>
+        <Typography variant="h6" style={{ textAlign: 'center', }}>
           충전 내역
-        </h4>
+        </Typography>
       </CardHeader>
+
       <CardBody>
         <Table
           // tableHeaderColor="info"
@@ -52,4 +50,4 @@ function CashHistory(props: { classes: any }): JSX.Element {
     </Card>
   );
 }
-export default withStyles(DashboardStyle)(CashHistory);
+export default CashHistory;

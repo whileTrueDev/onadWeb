@@ -5,11 +5,10 @@ import {
   Divider,
 } from '@material-ui/core';
 import Card from '../../../../atoms/Card/Card';
-import Snackbar from '../../../../atoms/Snackbar/Snackbar';
-import useToggle from '../../../../utils/hooks/useToggle';
-import useDialog from '../../../../utils/hooks/useDialog';
 import usePatchRequest from '../../../../utils/hooks/usePatchRequest';
+import { UseGetRequestObject } from '../../../../utils/hooks/useGetRequest';
 
+interface AdChatRes { adChatAgreement: 1 | 0 }
 const useStyles = makeStyles((theme) => ({
   head: { display: 'flex', justifyContent: 'space-between', padding: theme.spacing(2) },
   body: { padding: theme.spacing(2) },
@@ -19,33 +18,30 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 interface AdChatOnOffCardProps {
-  adChatOnOff: 1|0;
+  adChatData: UseGetRequestObject<AdChatRes>;
   doGetReqeustOnOff: () => void;
+  successSnackOpen: () => void;
+  failSnackOpen: () => void;
 }
 export default function AdChatOnOffCard({
-  adChatOnOff, doGetReqeustOnOff
+  adChatData, doGetReqeustOnOff, successSnackOpen, failSnackOpen
 }: AdChatOnOffCardProps): JSX.Element {
   const classes = useStyles();
 
   // OnOff toggle
-  const onoff = useToggle(adChatOnOff === 1);
   const onOffUpdate = usePatchRequest('/creator/adchat/agreement', () => {
     doGetReqeustOnOff();
   });
   const handleSwitch = (): void => {
-    onOffUpdate.doPatchRequest({ targetOnOffState: !onoff.toggle });
+    onOffUpdate.doPatchRequest({ targetOnOffState: !(adChatData.data?.adChatAgreement) });
   };
-
-  // For Onoff success snackbar
-  const snack = useDialog();
-  const failSnack = useDialog();
 
   // For OnOff update error
   React.useEffect(() => {
     if (onOffUpdate.error) {
-      failSnack.handleOpen();
+      failSnackOpen();
     }
-  }, [failSnack, onOffUpdate.error]);
+  }, [failSnackOpen, onOffUpdate.error]);
 
   return (
     <>
@@ -59,11 +55,10 @@ export default function AdChatOnOffCard({
             control={(
               <Switch
                 color="secondary"
-                checked={onoff.toggle}
+                checked={Boolean(adChatData.data?.adChatAgreement)}
                 onChange={(): void => {
-                  onoff.handleToggle();
                   handleSwitch();
-                  snack.handleOpen();
+                  successSnackOpen();
                 }}
               />
             )}
@@ -95,21 +90,6 @@ export default function AdChatOnOffCard({
           </Typography>
         </div>
       </Card>
-
-      <Snackbar
-        color="success"
-        open={snack.open}
-        message="정상적으로 변경되었습니다."
-        onClose={snack.handleClose}
-      />
-
-      <Snackbar
-        color="error"
-        open={failSnack.open}
-        message="변경중 오류가 발생했습니다."
-        onClose={failSnack.handleClose}
-      />
-
     </>
   );
 }
