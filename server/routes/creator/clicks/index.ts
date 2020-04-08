@@ -19,12 +19,15 @@ router.route('/')
       interface ClicksResult { channel: string; count: number }
       const row = await doQuery<ClicksResult[]>(query, queryArray);
 
-      if (row.result) {
+      if (row.result.length > 0) {
         interface ClicksResData { [key: string]: number }
         const result: ClicksResData = {};
         row.result.forEach((r) => {
-          result[r.channel] = Number(r.count);
+          result[r.channel] = r.count ? Number(r.count) : 0;
         });
+        responseHelper.send(result, 'get', res);
+      } else {
+        const result = { adchat: 0, adpanel: 0 };
         responseHelper.send(result, 'get', res);
       }
     })
