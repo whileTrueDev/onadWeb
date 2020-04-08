@@ -33,7 +33,7 @@ const useStyle = makeStyles((theme: Theme) => ({
   },
   landinglist: {
     width: '100%',
-    maxWidth: 480,
+    maxWidth: 600,
     backgroundColor: theme.palette.background.paper,
     maxHeight: 300,
     overflow: 'auto',
