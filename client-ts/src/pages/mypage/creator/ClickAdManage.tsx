@@ -50,13 +50,21 @@ export default function AdDashboard(): JSX.Element {
 
               <GridItem xs={12} md={6} lg={3} xl={6}>
                 {!clicksGet.loading && clicksGet.data && (
-                <AdDescriptionCard title="총 클릭 수" value={clicksGet.data.adchat + clicksGet.data.adpanel} unit="회" />
+                <AdDescriptionCard
+                  title="총 클릭 수"
+                  value={clicksGet.data.adchat + clicksGet.data.adpanel}
+                  unit="회"
+                />
                 )}
               </GridItem>
 
               <GridItem xs={12} md={6} lg={3} xl={6}>
                 {!clicksGet.loading && clicksGet.data && (
-                <AdDescriptionCard title="채팅 광고 클릭 수" value={clicksGet.data.adchat} unit="회" />
+                <AdDescriptionCard
+                  title="채팅 광고 클릭 수"
+                  value={clicksGet.data.adchat}
+                  unit="회"
+                />
                 )}
               </GridItem>
 
