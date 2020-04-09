@@ -38,8 +38,8 @@ const Mypage = (): JSX.Element => {
         </GridContainer>
       </GridItem>
 
-      <GridItem xs={12} md={10} xl={9}>
-        {(profileData.loading || withdrawalData.loading) && (<Skeleton height={400} variant="rect" />)}
+      <GridItem xs={12} xl={8}>
+        {(profileData.loading || withdrawalData.loading) && (<Skeleton height={400} variant="text" />)}
         {!(profileData.loading || withdrawalData.loading) && profileData.data && (
           <SettlementCard
             profileData={profileData.data}

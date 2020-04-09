@@ -2,18 +2,13 @@ import React from 'react';
 import { Grid } from '@material-ui/core';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import Button from '../../../../../atoms/CustomButtons/Button';
-import history from '../../../../../history';
-
 
 const useStyles = makeStyles(() => ({
   title: {
-    fontSize: 20,
-    fontWeight: 700,
-    margin: '20px 0'
+    fontSize: 20, fontWeight: 700, margin: '20px 0'
   },
   wraper: {
-    width: '80%',
-    margin: 'auto'
+    width: '80%', margin: 'auto'
   },
 }));
 
