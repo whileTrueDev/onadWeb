@@ -349,7 +349,8 @@ router.route('/tax-bills')
       const { marketerId } = responseHelper.getSessionData(req);
       const query = `
             SELECT date, cashAmount, state FROM marketerTaxBill
-            WHERE marketerId = ?`;
+            WHERE marketerId = ?
+            ORDER BY date DESC`;
       doQuery(query, [marketerId])
         .then((row) => {
           const sendArray: any[] = [];

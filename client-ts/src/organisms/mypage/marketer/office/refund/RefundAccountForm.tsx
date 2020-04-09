@@ -42,9 +42,9 @@ function RefundAccountForm(props: RefundAccountFormProps): JSX.Element {
   return (
     <Card>
       <CardHeader color="blueGray">
-        <h4 className={classes.cardTitleWhite}>
+        <Typography variant="h6">
           환불 계좌 정보
-        </h4>
+        </Typography>
       </CardHeader>
       {!accountData.loading && accountData.data && accountData.data.marketerAccountNumber ? (
         <CardBody>
@@ -52,7 +52,6 @@ function RefundAccountForm(props: RefundAccountFormProps): JSX.Element {
             <Button
               color="primary"
               onClick={(): void => { handleOpen(); }}
-              size="medium"
             >
               환불계좌 변경
             </Button>

@@ -2,12 +2,14 @@ import React from 'react';
 import Skeleton from '@material-ui/lab/Skeleton';
 import GridContainer from '../../../atoms/Grid/GridContainer';
 import GridItem from '../../../atoms/Grid/GridItem';
+import Snackbar from '../../../atoms/Snackbar/Snackbar';
 import AdChatOnOffCard from '../../../organisms/mypage/creator/ClickAdManage/AdChatOnOffCard';
 import AdPanelCard from '../../../organisms/mypage/creator/ClickAdManage/AdPanelCard';
 import AdDescriptionCard from '../../../organisms/mypage/creator/ClickAdManage/AdDescriptionCard';
 import LevelBar from '../../../organisms/mypage/creator/ClickAdManage/LevelBar';
 // hooks
 import useGetRequest from '../../../utils/hooks/useGetRequest';
+import useDialog from '../../../utils/hooks/useDialog';
 
 interface LanidngUrlRes { url: string }
 interface AdChatRes { adChatAgreement: 1 | 0 }
@@ -24,11 +26,15 @@ export default function AdDashboard(): JSX.Element {
   // Creator Level data
   const levelGet = useGetRequest<null, LevelRes>('/creator/level');
 
+  // For Onoff success snackbar
+  const snack = useDialog();
+  const failSnack = useDialog();
+
   return (
     <>
 
       <GridContainer>
-        {!(levelGet.loading || clicksGet.loading || landingUrlGet.loading || adchatGet.loading) ? (
+        {!(levelGet.loading || clicksGet.loading || landingUrlGet.loading) ? (
           <GridItem xs={12} xl={6}>
             <GridContainer>
               {/* 광고페이지 현황 */}
@@ -44,13 +50,25 @@ export default function AdDashboard(): JSX.Element {
 
               <GridItem xs={12} md={6} lg={3} xl={6}>
                 {!clicksGet.loading && clicksGet.data && (
-                <AdDescriptionCard title="총 클릭 수" value={clicksGet.data.adchat + clicksGet.data.adpanel} unit="회" />
+                <AdDescriptionCard
+                  title="총 클릭 수"
+                  value={(clicksGet.data.adchat
+                    ? clicksGet.data.adchat
+                    : 0) + (
+                    clicksGet.data.adpanel
+                      ? clicksGet.data.adpanel : 0)}
+                  unit="회"
+                />
                 )}
               </GridItem>
 
               <GridItem xs={12} md={6} lg={3} xl={6}>
                 {!clicksGet.loading && clicksGet.data && (
-                <AdDescriptionCard title="채팅 광고 클릭 수" value={clicksGet.data.adchat} unit="회" />
+                <AdDescriptionCard
+                  title="채팅 광고 클릭 수"
+                  value={clicksGet.data.adchat ? clicksGet.data.adchat : 0}
+                  unit="회"
+                />
                 )}
               </GridItem>
 
@@ -70,12 +88,12 @@ export default function AdDashboard(): JSX.Element {
               </GridItem>
 
               <GridItem xs={12} md={6} lg={6}>
-                {!adchatGet.loading && adchatGet.data && (
                 <AdChatOnOffCard
-                  adChatOnOff={adchatGet.data?.adChatAgreement}
+                  adChatData={adchatGet}
                   doGetReqeustOnOff={adchatGet.doGetRequest}
+                  successSnackOpen={snack.handleOpen}
+                  failSnackOpen={failSnack.handleOpen}
                 />
-                )}
               </GridItem>
             </GridContainer>
 
@@ -109,6 +127,21 @@ export default function AdDashboard(): JSX.Element {
 
 
       </GridContainer>
+
+      <Snackbar
+        color="success"
+        open={snack.open}
+        message="정상적으로 변경되었습니다."
+        onClose={snack.handleClose}
+      />
+
+      <Snackbar
+        color="error"
+        open={failSnack.open}
+        message="변경중 오류가 발생했습니다."
+        onClose={failSnack.handleClose}
+      />
+
     </>
   );
 }
