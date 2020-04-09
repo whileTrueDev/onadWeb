@@ -30,7 +30,7 @@ const MapWithAMarkerClusterer = compose<
     withProps({
       googleMapURL: [
         'https://maps.googleapis.com/maps/api/js',
-        `?key=${process.env.REACT_APP_GOOGLE_MAP_API_KEY}`,
+        '?key=AIzaSyDz4pPjHLj9DPta-h4OkfZjeZlW_Q5sav0',
         '&v=3',
       ].join(''),
       loadingElement: <div style={{ height: '100%' }} />,

@@ -1,12 +1,11 @@
 import React from 'react';
 // core
-import withStyles from '@material-ui/core/styles/withStyles';
+import Typography from '@material-ui/core/Typography';
 // own components
 import Card from '../../../../../atoms/Card/Card';
 import CardHeader from '../../../../../atoms/Card/CardHeader';
 import CardBody from '../../../../../atoms/Card/CardBody';
 import Table from '../../../../../atoms/Table/Table';
-import DashboardStyle from '../../../../../assets/jss/views/dashboardStyle';
 // hooks
 import useGetRequest from '../../../../../utils/hooks/useGetRequest';
 
@@ -15,18 +14,16 @@ const initialData = {
   data: [['-', '-', '-']],
 };
 
-function RefundHistory(props: { classes: any }): JSX.Element {
-  const { classes } = props;
-
+function RefundHistory(): JSX.Element {
   const { data, loading } = useGetRequest<null, { data: string[][] }>('/marketer/cash/history/refund');
   // 충전 및 환불 페이지네이션
 
   return (
     <Card>
       <CardHeader color="blueGray">
-        <h4 className={classes.cardTitleWhite}>
+        <Typography variant="h6">
           환불 처리 내역
-        </h4>
+        </Typography>
       </CardHeader>
       <CardBody>
         <Table
@@ -40,4 +37,4 @@ function RefundHistory(props: { classes: any }): JSX.Element {
   );
 }
 
-export default withStyles(DashboardStyle)(RefundHistory);
+export default RefundHistory;

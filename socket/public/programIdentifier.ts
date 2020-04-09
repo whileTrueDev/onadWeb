@@ -1,16 +1,16 @@
-function identifier(): any {
+function identifier(): string {
   const navi = navigator.userAgent.toLowerCase();
   let program;
 
   if (navi.indexOf('xsplit') !== -1) {
     program = 'xsplit';
     return program;
-  } else if (navi.indexOf('twitch') !== -1) {
+  } if (navi.indexOf('twitch') !== -1) {
     program = 'twitch-studio';
     return program;
-  } else {
-    program = 'obs';
-    return program;
   }
+  program = 'obs';
+  return program;
 }
-export { identifier };
+
+export default identifier;

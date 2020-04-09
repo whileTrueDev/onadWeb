@@ -15,7 +15,7 @@ import CampaignTimeSet from './sub/TermSet';
 // import KeywordInput from './KeywordInput';
 import TimeSelectorSet from './sub/TimeSet';
 import BannerUploadDialog from '../shared/BannerUploadDialog';
-import LandingUrlInventoryDialog from './sub/LandingUrlDialog';
+import UrlUploadDialog from '../shared/UrlUploadDialog';
 import useDialog from '../../../../utils/hooks/useDialog';
 import useGetRequest from '../../../../utils/hooks/useGetRequest';
 import CampaignCreateStepLayout from './StepLayout';
@@ -28,16 +28,14 @@ import {
   TimeAction,
   NameInterface
 } from './campaignReducer';
-
+import StyledItemText from '../../../../atoms/StyledItemText';
 
 const StyledTableCell = withStyles((theme) => ({
   head: {
     backgroundColor: theme.palette.common.black,
     color: theme.palette.common.white,
   },
-  body: {
-    fontSize: 14,
-  },
+  body: { fontSize: 14, },
 }))(TableCell);
 
 const StyledTableRow = withStyles((theme) => ({
@@ -81,81 +79,73 @@ const CampaignCreateTable = (props: CampaignCreateTableProps): JSX.Element => {
   const bannerData = useGetRequest('/marketer/banner/list/active');
 
   const uploadDialog = useDialog();
-  const landingUrlInventoryDialog = useDialog();
+  const landingUrlUploadDialog = useDialog();
 
   const inputsteps: {
     title: string;
+    subtitle: string;
     component: JSX.Element;
   }[] | any[] = [
-      {
-        title: '캠페인 이름 입력',
-        component: (
-          <CampaignNaming
-            nameState={nameState}
-            nameDispatch={nameDispatch}
-          />
-        )
-      },
-      {
-        title: '배너 선택',
-        component: (
-          <CampaignBannerReg
-            bannerData={bannerData}
-            dispatch={dispatch}
-            handleDialogOpen={uploadDialog.handleOpen}
-            step={step}
-          />
-        )
-      }, // check 완료
-      (optionType !== 'option0')
+    {
+      title: '캠페인 이름 입력',
+      component: (
+        <CampaignNaming
+          nameState={nameState}
+          nameDispatch={nameDispatch}
+        />
+      )
+    },
+    {
+      title: '배너 선택',
+      component: (
+        <CampaignBannerReg
+          bannerData={bannerData}
+          dispatch={dispatch}
+          handleDialogOpen={uploadDialog.handleOpen}
+          step={step}
+        />
+      )
+    }, // check 완료
+    (optionType !== 'option0')
       && {
         title: '랜딩페이지 URL',
         component: (
           <LandingUrlInput
             dispatch={dispatch}
             state={state}
-            handleDialogOpen={landingUrlInventoryDialog.handleOpen}
+            handleDialogOpen={landingUrlUploadDialog.handleOpen}
+            landingUrlData={landingUrlData}
           />
         )
       }, // react-hooks-form 사용.
-
-      // {
-      //   title: '키워드 입력',
-      //   component: (
-      //     <KeywordInput
-      //       dispatch={dispatch}
-      //       state={state}
-      //     />
-      //   )
-      // },
-      {
-        title: '예산설정',
-        component: (
-          <CampaignBudgetSet
-            state={budgetState}
-            dispatch={budgetDispatch}
-          />
-        )
-      },
-      {
-        title: '기간 설정',
-        component: (
-          <CampaignTimeSet
-            dispatch={termDispatch}
-            state={termState}
-          />
-        )
-      },
-      {
-        title: '시간대 설정',
-        component: (
-          <TimeSelectorSet
-            state={timeState}
-            dispatch={timeDispatch}
-          />
-        )
-      },
-    ];
+    {
+      title: '예산 설정',
+      component: (
+        <CampaignBudgetSet
+          state={budgetState}
+          dispatch={budgetDispatch}
+        />
+      )
+    },
+    {
+      title: '기간 설정',
+      component: (
+        <CampaignTimeSet
+          dispatch={termDispatch}
+          state={termState}
+        />
+      )
+    },
+    {
+      title: '시간대 설정',
+      component: (
+        <TimeSelectorSet
+          state={timeState}
+          dispatch={timeDispatch}
+        />
+      )
+    },
+  ];
 
 
   return (
@@ -167,18 +157,17 @@ const CampaignCreateTable = (props: CampaignCreateTableProps): JSX.Element => {
         <Table className={classes.table} aria-label="customized table">
           <TableBody>
             {inputsteps.map((_step: {
-              title: string;
-              component: JSX.Element;
+              title: string; subtitle: string; component: JSX.Element;
             }) => (
-                <StyledTableRow key={_step.title}>
-                  <StyledTableCell>
-                    {_step.title}
-                  </StyledTableCell>
-                  <StyledTableCell>
-                    {_step.component}
-                  </StyledTableCell>
-                </StyledTableRow>
-              ))}
+              <StyledTableRow key={_step.title}>
+                <StyledTableCell>
+                  <StyledItemText primary={_step.title} />
+                </StyledTableCell>
+                <StyledTableCell>
+                  {_step.component}
+                </StyledTableCell>
+              </StyledTableRow>
+            ))}
           </TableBody>
         </Table>
       </TableContainer>
@@ -191,11 +180,10 @@ const CampaignCreateTable = (props: CampaignCreateTableProps): JSX.Element => {
       />
 
       {/* 랜딩페이지URL 생성 다이얼로그 */}
-      <LandingUrlInventoryDialog
-        open={landingUrlInventoryDialog.open}
-        onClose={landingUrlInventoryDialog.handleClose}
-        landingUrlData={landingUrlData}
-        dispatch={dispatch}
+      <UrlUploadDialog
+        open={landingUrlUploadDialog.open}
+        handleClose={landingUrlUploadDialog.handleClose}
+        recallRequest={landingUrlData.doGetRequest}
       />
     </CampaignCreateStepLayout>
   );

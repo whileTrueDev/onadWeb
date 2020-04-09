@@ -6,6 +6,8 @@ import BrandingWatermark from '@material-ui/icons/BrandingWatermark';
 import Button from '../../../../atoms/CustomButtons/Button';
 import CustomCard from '../../../../atoms/CustomCard';
 import StyledItemText from '../../../../atoms/StyledItemText';
+import VideoBanner from '../../../../atoms/Banner/VideoBanner';
+import isVideo from '../../../../utils/isVideo';
 import history from '../../../../history';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -76,15 +78,27 @@ function BannerCard({ currentBannerData }: BannerCardProps): JSX.Element {
               onClick={handlePopoverClick(index)}
               key={shortid.generate()}
             >
-              <img
-                src={bannerData.bannerSrc}
-                onMouseEnter={handlePopoverOpen(index)}
-                onMouseLeave={handlePopoverClose}
-                alt="bannerArea"
-                width="100%"
-                height="100%"
-                style={{ maxHeight: '160px', maxWidth: '320px' }}
-              />
+              { isVideo(bannerData.bannerSrc) ? (
+                <VideoBanner
+                  src={bannerData.bannerSrc}
+                  onMouseEnter={handlePopoverOpen(index)}
+                  onMouseLeave={handlePopoverClose}
+                  alt="bannerArea"
+                  width="100%"
+                  height="100%"
+                  style={{ maxHeight: '160px', maxWidth: '320px' }}
+                />
+              ) : (
+                <img
+                  src={bannerData.bannerSrc}
+                  onMouseEnter={handlePopoverOpen(index)}
+                  onMouseLeave={handlePopoverClose}
+                  alt="bannerArea"
+                  width="100%"
+                  height="100%"
+                  style={{ maxHeight: '160px', maxWidth: '320px' }}
+                />
+              )}
             </Grid>
           ))}
           {currentBannerData.length <= 0 && (

@@ -1,7 +1,7 @@
 import React from 'react';
 
 const MB = 1048576; // 1Mbytes
-const IMAGE_SIZE_LIMIT = 10 * MB;
+const IMAGE_SIZE_LIMIT = 5 * MB;
 
 export type UploadImage = string | ArrayBuffer | null;
 export interface ImageData {

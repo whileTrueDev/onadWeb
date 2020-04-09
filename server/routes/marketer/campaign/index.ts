@@ -3,6 +3,7 @@ import responseHelper from '../../../middlewares/responseHelper';
 import doQuery from '../../../model/doQuery';
 import dataProcessing from '../../../lib/dataProcessing';
 import analysisRouter from './analysis';
+import marketerActionLogging from '../../../middlewares/marketerActionLog';
 
 const router = express.Router();
 router.use('/analysis', analysisRouter);
@@ -127,9 +128,9 @@ router.route('/on-off')
             || (bannerConfirm === 1 && linkConfirm === null)) {
             doQuery(query, [onoffState, campaignId])
               .then(() => {
-                // const MARKETER_ACTION_LOG_TYPE = 6;
-                // marketerActionLogging([campaignId.split('_')[0], MARKETER_ACTION_LOG_TYPE,
-                // JSON.stringify({ campaignName, onoffState })]);
+                const MARKETER_ACTION_LOG_TYPE = 6;
+                marketerActionLogging([campaignId.split('_')[0], MARKETER_ACTION_LOG_TYPE,
+                  JSON.stringify({ campaignName, onoffState })]);
                 responseHelper.send([true], 'PATCH', res);
               })
               .catch((error) => {
@@ -198,12 +199,10 @@ router.route('/')
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
       const { marketerId, marketerName } = responseHelper.getSessionData(req);
       const [campaignName, optionType, priorityType, priorityList, selectedTime, dailyLimit,
-        startDate, finDate, keyword, bannerId,
-        mainLandingUrl, sub1LandingUrl, sub2LandingUrl,
-        mainLandingUrlName, sub1LandingUrlName, sub2LandingUrlName] = responseHelper.getParam(['campaignName', 'optionType', 'priorityType',
-          'priorityList', 'selectedTime', 'dailyLimit', 'startDate', 'finDate',
-          'keyword', 'bannerId', 'mainLandingUrl', 'sub1LandingUrl', 'sub2LandingUrl',
-          'mainLandingUrlName', 'sub1LandingUrlName', 'sub2LandingUrlName'], 'POST', req);
+        startDate, finDate, keyword, bannerId, connectedLinkId] = responseHelper.getParam([
+        'campaignName', 'optionType', 'priorityType',
+        'priorityList', 'selectedTime', 'dailyLimit', 'startDate', 'finDate',
+        'keyword', 'bannerId', 'connectedLinkId'], 'POST', req);
 
       const searchQuery = `
             SELECT campaignId
@@ -220,88 +219,49 @@ router.route('/')
             keyword, startDate, finDate, selectedTime) 
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, 0, ?, ?, ?, ?, ?, ?)`;
 
-      const saveToLinkRegistered = `
-            INSERT INTO linkRegistered
-            (linkId, marketerId, confirmState, links)
-            VALUES (?, ?, ?, ?)
-            `;
+      doQuery(searchQuery, [marketerId])
+        .then((row) => {
+          const campaignId = dataProcessing.getCampaignId(row.result[0], marketerId);
+          const targetJsonData = JSON.stringify({ targetList: priorityList });
+          const timeJsonData = JSON.stringify({ time: selectedTime });
+          const keywordsJsonData = JSON.stringify(
+            { keywords: keyword }
+          );
 
-      dataProcessing.getUrlId(marketerId).then((urlId) => {
-        doQuery(searchQuery, [marketerId])
-          .then((row) => {
-            const linkId = optionType !== '0' ? `link_${urlId}` : null;
-            const campaignId = dataProcessing.getCampaignId(row.result[0], marketerId);
-            const targetJsonData = JSON.stringify({ targetList: priorityList });
-            const timeJsonData = JSON.stringify({ time: selectedTime });
-            const landingUrlJsonData = JSON.stringify(
-              {
-                links:
-                  [{
-                    linkName: mainLandingUrlName,
-                    linkTo: mainLandingUrl,
-                    primary: true,
-                  },
-                  (sub1LandingUrl
-                    ? {
-                      linkName: sub1LandingUrlName,
-                      linkTo: sub1LandingUrl,
-                      primary: false,
-                    } : null
-                  ),
-                  (sub2LandingUrl
-                    ? {
-                      linkName: sub2LandingUrlName,
-                      linkTo: sub2LandingUrl,
-                      primary: false,
-                    } : null
-                  ),
-                  ].filter(Boolean)
-              }
-            );
-            const keywordsJsonData = JSON.stringify(
-              { keywords: keyword }
-            );
-
-            // 마케터 활동내역 로깅 테이블에서, 캠페인 생성의 상태값
-            const MARKETER_ACTION_LOG_TYPE = 5;
-            Promise.all([
-              doQuery(saveQuery,
-                [campaignId, campaignName, marketerId, bannerId, linkId, dailyLimit,
-                  priorityType, optionType, targetJsonData, marketerName, keywordsJsonData,
-                  startDate, finDate, timeJsonData]),
-              (optionType !== '0'
-                ? doQuery(saveToLinkRegistered,
-                  [linkId, marketerId, 0, landingUrlJsonData]) : null),
-              dataProcessing.PriorityDoquery({
-                campaignId, priorityType, priorityList, optionType
-              }),
-              dataProcessing.LandingDoQuery({
-                campaignId, optionType, priorityType, priorityList
-              }),
-              // 마케터 활동내역 테이블 적재.
-              // marketerActionLogging([
-              //     marketerId, MARKETER_ACTION_LOG_TYPE, JSON.stringify({ campaignName })
-              // ]),
-            ])
-              .then(() => {
-                responseHelper.send([true, '캠페인이 생성되었습니다.'], 'POST', res);
-              })
-              .catch((error) => {
-                responseHelper.promiseError(error, next);
-              });
-          })
-          .catch((error) => {
-            responseHelper.promiseError(error, next);
-          });
-      }).catch((error) => {
-        responseHelper.promiseError(error, next);
-      });
+          // 마케터 활동내역 로깅 테이블에서, 캠페인 생성의 상태값
+          const MARKETER_ACTION_LOG_TYPE = 5;
+          Promise.all([
+            doQuery(saveQuery,
+              [campaignId, campaignName, marketerId, bannerId, connectedLinkId, dailyLimit,
+                priorityType, optionType, targetJsonData, marketerName, keywordsJsonData,
+                startDate, finDate, timeJsonData]),
+            dataProcessing.PriorityDoquery({
+              campaignId, priorityType, priorityList, optionType
+            }),
+            dataProcessing.LandingDoQuery({
+              campaignId, optionType, priorityType, priorityList
+            }),
+            // 마케터 활동내역 테이블 적재.
+            marketerActionLogging([
+              marketerId, MARKETER_ACTION_LOG_TYPE, JSON.stringify({ campaignName })
+            ]),
+          ])
+            .then(() => {
+              responseHelper.send([true, '캠페인이 생성되었습니다.'], 'POST', res);
+            })
+            .catch((error) => {
+              responseHelper.promiseError(error, next);
+            });
+        })
+        .catch((error) => {
+          responseHelper.promiseError(error, next);
+        });
     }),
   )
   .delete(
     responseHelper.middleware.checkSessionExists,
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
-      // const { marketerId } = responseHelper.getSessionData(req);
+      const { marketerId } = responseHelper.getSessionData(req);
       const campaignId = responseHelper.getParam('campaignId', 'DELETE', req);
       const query = `
             UPDATE campaign
@@ -314,13 +274,13 @@ router.route('/')
       doQuery(query, [campaignId])
         .then(() => {
           doQuery(selectQuery, [campaignId])
-            .then(() => {
+            .then((row) => {
               responseHelper.send([true], 'DELETE', res);
-              // const { campaignName } = row1.result[0];
+              const { campaignName } = row.result[0];
               // marketer action log 테이블 적재
-              // const MARKETER_ACTION_LOG_TYPE = 12; // <캠페인 삭제> 상태값
-              // marketerActionLogging([marketerId,
-              // MARKETER_ACTION_LOG_TYPE, JSON.stringify({ campaignName })]);
+              const MARKETER_ACTION_LOG_TYPE = 12; // <캠페인 삭제> 상태값
+              marketerActionLogging([marketerId,
+                MARKETER_ACTION_LOG_TYPE, JSON.stringify({ campaignName })]);
             })
             .catch((error) => {
               responseHelper.promiseError(error, next);

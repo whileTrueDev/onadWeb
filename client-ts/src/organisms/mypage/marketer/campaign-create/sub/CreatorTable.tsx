@@ -11,7 +11,7 @@ import ContentsPie from '../../shared/ContentsPie';
 import TimeChart from '../../shared/TimeChart';
 import StyledSelectText from '../../../../../atoms/StyledItemText';
 import { ArrayAction } from '../campaignReducer';
-import { RowDataInterface } from '../interfaces';
+import { CreatorDetailDataInterface } from '../interfaces';
 
 const BANNER_MAX_WIDTH = 48;
 const BANNER_MAX_HEIGHT = 48;
@@ -51,18 +51,16 @@ interface CreatorTableProps {
   checkedCreatorsDispatch: React.Dispatch<ArrayAction>;
   creatorNamesDispatch: React.Dispatch<{ type: string; value: string }>;
 }
-
-
 export default function CreatorTable(props: CreatorTableProps): JSX.Element {
   const classes = useStyles();
   const theme = useTheme();
   const {
     checkedCreators, checkedCreatorsDispatch, creatorNamesDispatch
   } = props;
-  const fetchData = useGetRequest('/creators/analysis/detail');
+  const fetchData = useGetRequest<null, CreatorDetailDataInterface[]>('/creators/analysis/detail');
   const getChecked = (creatorId: string): boolean => checkedCreators.includes(creatorId);
 
-  const handleChecked = (rowData: RowDataInterface) => (): void => {
+  const handleChecked = (rowData: CreatorDetailDataInterface) => (): void => {
     const { creatorId, creatorName } = rowData;
     if (getChecked(creatorId)) {
       // 체크 된 걸 다시 체크할 때
@@ -98,7 +96,7 @@ export default function CreatorTable(props: CreatorTableProps): JSX.Element {
     {
       title: '',
       field: 'creatorName',
-      render: (rowData: RowDataInterface): JSX.Element => (
+      render: (rowData: CreatorDetailDataInterface): JSX.Element => (
         <Grid container direction="row" onClick={handleChecked(rowData)} style={{ cursor: 'pointer' }}>
           <Grid item>
             <Avatar variant="rounded" className={classes.image}>
@@ -118,62 +116,62 @@ export default function CreatorTable(props: CreatorTableProps): JSX.Element {
     {
       title: '팔로워',
       field: 'followers',
-      render: (rowData: RowDataInterface): JSX.Element => (
+      render: (rowData: CreatorDetailDataInterface): JSX.Element => (
         makeValueComponent({ value: rowData.followers, unit: '명' })
       )
     },
     {
       title: '평균 시청자수',
       field: 'viewer',
-      render: (rowData: RowDataInterface): JSX.Element => (
+      render: (rowData: CreatorDetailDataInterface): JSX.Element => (
         makeValueComponent({ value: rowData.viewer, unit: '명' })
       )
     },
     {
       title: '평균 방송시간',
       field: 'airtime',
-      render: (rowData: RowDataInterface): JSX.Element => (
+      render: (rowData: CreatorDetailDataInterface): JSX.Element => (
         makeValueComponent({ value: rowData.airtime, unit: '분' })
       )
     },
     {
       title: '평균 노출량',
       field: 'impression',
-      render: (rowData: RowDataInterface): JSX.Element => (
+      render: (rowData: CreatorDetailDataInterface): JSX.Element => (
         makeValueComponent({ value: rowData.impression, unit: '명' })
       )
     },
     {
       title: '평균 노출비용',
       field: 'cost',
-      render: (rowData: RowDataInterface): JSX.Element => (
+      render: (rowData: CreatorDetailDataInterface): JSX.Element => (
         makeValueComponent({ value: rowData.cost, unit: '원' })
       )
     },
     {
       title: '배너 클릭률',
       field: 'ctr',
-      render: (rowData: RowDataInterface): JSX.Element => (
+      render: (rowData: CreatorDetailDataInterface): JSX.Element => (
         makeValueComponent({ value: rowData.ctr, unit: '%' })
       )
     },
     {
       title: '주 컨텐츠',
       field: 'content',
-      render: (rowData: RowDataInterface): JSX.Element => (
+      render: (rowData: CreatorDetailDataInterface): JSX.Element => (
         makeChartComponent({ value: rowData.content })
       )
     },
     {
       title: '주 방송시간대',
       field: 'openHour',
-      render: (rowData: RowDataInterface): JSX.Element => (
+      render: (rowData: CreatorDetailDataInterface): JSX.Element => (
         makeChartComponent({ value: rowData.openHour })
       )
     },
     {
       title: '',
-      render: (rowData: RowDataInterface): JSX.Element => (
+      render: (rowData: CreatorDetailDataInterface): JSX.Element => (
         <GreenCheckBox
           checked={getChecked(rowData.creatorId)}
           style={{ fontSize: '20px', padding: 0 }}
@@ -195,7 +193,7 @@ export default function CreatorTable(props: CreatorTableProps): JSX.Element {
           title=""
           columns={columns}
           cellWidth={80}
-          data={fetchData.data}
+          data={fetchData.data.filter((creator) => !(creator.creatorId === '472147060'))} // 지나가언젠가 제거
           detailPanel={[
             {
               icon: (): JSX.Element => (
@@ -204,7 +202,7 @@ export default function CreatorTable(props: CreatorTableProps): JSX.Element {
                 />
               ),
               tooltip: '그래프보기',
-              render: (rowData: RowDataInterface): JSX.Element => (
+              render: (rowData: CreatorDetailDataInterface): JSX.Element => (
                 <Grid container direction="row" justify="center" style={{ marginTop: 10 }}>
                   <Grid item xs={5}>
                     <Grid container direction="column" spacing={1}>
@@ -236,7 +234,7 @@ export default function CreatorTable(props: CreatorTableProps): JSX.Element {
             actionsColumnIndex: -1,
             pageSize: 10,
             detailPanelColumnAlignment: 'right',
-            rowStyle: (rowData: RowDataInterface): React.CSSProperties => ({
+            rowStyle: (rowData: CreatorDetailDataInterface): React.CSSProperties => ({
               backgroundColor: getChecked(rowData.creatorId)
                 ? theme.palette.action.selected : theme.palette.background.paper
             })

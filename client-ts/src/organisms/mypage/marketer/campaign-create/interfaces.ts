@@ -1,4 +1,4 @@
-export interface RowDataInterface {
+export interface CreatorDetailDataInterface {
   creatorId: string;
   followers: number;
   viewer: number;
@@ -16,4 +16,14 @@ export interface RowDataInterface {
   viewerHeatmatData: string | null;
   creatorLogo: string;
   creatorName: string;
+}
+
+export interface LandingUrlData {
+  linkId: string;
+  marketerId: string;
+  confirmState: number;
+  denialReason: string;
+  links: { links: { linkName: string; linkTo: string; primary: boolean }[] };
+  regiDate: string;
+  updateDate: string;
 }
