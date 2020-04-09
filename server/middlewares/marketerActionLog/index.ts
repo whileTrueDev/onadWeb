@@ -1,6 +1,6 @@
 import doQuery from '../../model/doQuery';
 
-module.exports = function marketerActionLogging(queryArray: any[]) {
+export default function marketerActionLogging(queryArray: any[]) {
   const actionLogQuery = `
   INSERT INTO marketerActionLog
   (marketerId, type, detail)
@@ -10,4 +10,4 @@ module.exports = function marketerActionLogging(queryArray: any[]) {
     throw Error('queryArray must be Array');
   }
   return doQuery(actionLogQuery, queryArray);
-};
+}

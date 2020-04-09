@@ -132,7 +132,7 @@ router.route('/list')
         FROM campaignTimestamp
         WHERE creatorId = ?
         GROUP BY campaignId
-      ) AS CT 
+      ) AS CT
       JOIN campaign 
         ON CT.campaignId = campaign.campaignId
       JOIN bannerRegistered AS BR

@@ -6,11 +6,13 @@ import encrypto from '../../middlewares/encryption';
 import incomeRouter from './income';
 import bannerRouter from './banner';
 import notificationRouter from './notification';
+import clicksRouter from './clicks';
 
 const router = express.Router();
 router.use('/income', incomeRouter);
 router.use('/banner', bannerRouter);
 router.use('/notification', notificationRouter);
+router.use('/clicks', clicksRouter);
 
 
 router.route('/')
@@ -133,6 +135,10 @@ router.route('/settlement')
     })
   );
 
+/**
+ * Deprecated
+ * # 2020. 04. 03 - 광고페이지 삭제
+ */
 router.route('/ad-page')
   .get(
     // 크리에이터 광고 페이지 정보
@@ -243,8 +249,8 @@ router.route('/landing-url')
       doQuery(query, [creatorId])
         .then((row) => {
           const { creatorTwitchId } = row.result[0];
-          const result = `http://l.onad.io/${creatorTwitchId}`;
-          responseHelper.send(result, 'get', res);
+          const result = `https://l.onad.io/${creatorTwitchId}`;
+          responseHelper.send({ url: result }, 'get', res);
         }).catch((error) => {
           responseHelper.promiseError(error, next);
         });
@@ -252,4 +258,51 @@ router.route('/landing-url')
   )
   .all(responseHelper.middleware.unusedMethod);
 
+router.route('/adchat/agreement')
+  .get(
+    responseHelper.middleware.checkSessionExists,
+    responseHelper.middleware.withErrorCatch(async (req, res, next) => {
+      const { creatorId } = responseHelper.getSessionData(req);
+      const query = 'SELECT adChatAgreement FROM creatorInfo WHERE creatorId = ?';
+      const queryArray = [creatorId];
+
+      const row = await doQuery(query, queryArray);
+      if (row.result.length > 0) {
+        responseHelper.send(row.result[0], 'get', res);
+      }
+    }),
+  )
+  .patch(
+    responseHelper.middleware.checkSessionExists,
+    responseHelper.middleware.withErrorCatch(async (req, res, next) => {
+      const { creatorId } = responseHelper.getSessionData(req);
+      const targetOnOffState = responseHelper.getParam('targetOnOffState', 'patch', req);
+      const query = 'UPDATE creatorInfo SET adChatAgreement = ? WHERE creatorId = ?';
+      const queryArray = [targetOnOffState, creatorId];
+      const row = await doQuery(query, queryArray);
+      responseHelper.send(row.result, 'patch', res);
+    })
+  )
+  .all(responseHelper.middleware.unusedMethod);
+
+router.route('/level')
+  .get(
+    responseHelper.middleware.checkSessionExists,
+    responseHelper.middleware.withErrorCatch(async (req, res, next) => {
+      const { creatorId } = responseHelper.getSessionData(req);
+
+      const query = `
+      SELECT
+        creatorId, level, exp
+      FROM creatorRoyaltyLevel
+      WHERE creatorId = ?`;
+      interface CreatorAdPageResult {
+        creatorId: string; exp: number; level: number;
+      }
+      const row = await doQuery(query, [creatorId]);
+      if (row.result) {
+        responseHelper.send(row.result[0], 'get', res);
+      }
+    })
+  );
 export default router;

@@ -56,7 +56,7 @@ export default function NoticeTable({ data, loading }: Props): JSX.Element {
           )
         },
         {
-          width: '120px',
+          width: '180px',
           title: '작성일',
           field: 'regiDate',
           render: (rowData): JSX.Element => (

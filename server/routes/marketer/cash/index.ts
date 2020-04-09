@@ -5,6 +5,7 @@ import responseHelper from '../../../middlewares/responseHelper';
 import doQuery from '../../../model/doQuery';
 import historyRouter from './history';
 import Notification from '../../../middlewares/notification';
+import marketerActionLogging from '../../../middlewares/marketerActionLog';
 
 const router = express.Router();
 
@@ -73,7 +74,7 @@ router.route('/refund')
             (marketerId, cash, marketerRefund.check)
             VALUES (?, ?, ?)`;
       const refundHistoryInsertArray = [marketerId, Number(withFeeRefundCash), 0];
-      // const MARKETER_ACTION_LOG_TYPE = 9;
+      const MARKETER_ACTION_LOG_TYPE = 9;
       doQuery(currentDebitQuery, [marketerId])
         .then((row) => {
           const currentCashAmount = Number(row.result[0].cashAmount);
@@ -81,9 +82,9 @@ router.route('/refund')
             doQuery(refundHistoryInsertQuery, refundHistoryInsertArray),
             doQuery(debitUpdateQuery, [currentCashAmount - refundCash, marketerId]),
             // 마케터 활동내역 로깅 테이블 :환불 신청 적재
-            //   marketerActionLogging([marketerId,
-            //     MARKETER_ACTION_LOG_TYPE,
-            //     JSON.stringify({ refundCash })])
+            marketerActionLogging([marketerId,
+              MARKETER_ACTION_LOG_TYPE,
+              JSON.stringify({ refundCash })])
           ])
             .then(() => {
               responseHelper.send([true], 'POST', res);
@@ -153,7 +154,8 @@ router.route('/charge/card')
                         VALUES (?, ?, ?, ?, ?, 0, ?, (SELECT FROM_UNIXTIME(${vbank_date}, "%Y-%m-%d %h:%i:%s")), ? )
                         `;
             // 충전 금액 row 한 줄 추가
-            const vbankCashChargeArray = [marketerId, chargeCash, chargeType, merchant_uid, imp_uid, vbank_num, vbank_name];
+            const vbankCashChargeArray = [marketerId, chargeCash, chargeType,
+              merchant_uid, imp_uid, vbank_num, vbank_name];
 
             doQuery(vbankCurrentDebitQuery, [marketerId])
               .then(() => {

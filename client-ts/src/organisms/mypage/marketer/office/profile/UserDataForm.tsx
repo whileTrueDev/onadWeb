@@ -1,7 +1,7 @@
 import React from 'react';
 // @material-ui/core
 import { withStyles } from '@material-ui/core/styles';
-import { TextField } from '@material-ui/core';
+import { TextField, Typography } from '@material-ui/core';
 import GridContainer from '../../../../../atoms/Grid/GridContainer';
 import GridItem from '../../../../../atoms/Grid/GridItem';
 import Card from '../../../../../atoms/Card/Card';
@@ -28,12 +28,12 @@ const UserDataForm = (props: UserDataFormProps): JSX.Element => {
   return (
     <Card>
       <CardHeader color="blueGray">
-        <h4 className={classes.cardTitleWhite}>
+        <Typography variant="h6">
           {userData.marketerName}
           {' '}
           님의 정보
-        </h4>
-        <p className={classes.cardCategoryWhite}>정보를 변경하시려면 정보변경을 클릭하세요.</p>
+        </Typography>
+        <Typography variant="caption">정보를 변경하시려면 정보변경을 클릭하세요.</Typography>
       </CardHeader>
       <CardBody>
         <GridContainer>

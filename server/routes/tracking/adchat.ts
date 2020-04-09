@@ -8,7 +8,7 @@ const router = express.Router();
 /**
 clickedTime: 클릭 시간
 conversionTime: 전환 시간
-action: 클릭/전환 상태
+costType: 비용 타입
 linkId: 링크의 아이디
 campaignId: 해당 캠페인 아이디
 campaignName: 해당 캠페인 아이디
@@ -33,7 +33,9 @@ router.route('/')
 
     const nowIp: string | string[] | undefined = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
     // 봇, 아이피 차단
-    const banIpArray = ['66.249.64.79'];
+    const banIpArray = [
+      '66.249.64.79', '66.249.89.143', '66.249.64.90', '66.249.64.81', '66.249.64.87', '66.249.64.75'
+    ];
     if (typeof nowIp === 'string' && banIpArray.includes(nowIp)) {
       console.log(`[${new Date().toLocaleString()}] AdChat - banned IP - ${nowIp}`);
       responseHelper.promiseError(Error('Invalid Ip'), next);
@@ -97,15 +99,15 @@ router.route('/')
             message = 'success';
             const insertQuery = `
             INSERT INTO tracking (
-                action, conversionTime, linkId, campaignId, campaignName, marketerId,
+                costType, conversionTime, linkId, campaignId, campaignName, marketerId,
                 creatorId, creatorTwitchId, ip, device, os, os_version,
-                browser, browser_version, browser_engine, browser_engine_version, payout
-              ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )`;
+                browser, browser_version, browser_engine, browser_engine_version, payout, channel
+              ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )`;
             const queryArray = [
               'CPC', null, linkId, campaignId, campaignName, campaignId.split('_')[0],
               creatorId, creatorTwitchId, nowIp, device, OS.name, OS.version,
               browser.name, browser.version, browserEngine.name, browserEngine.version,
-              payout
+              payout, 'adchat'
             ];
             await doQuery(insertQuery, queryArray);
           }

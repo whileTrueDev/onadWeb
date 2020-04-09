@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  Grid, Divider, CircularProgress
+  Grid, CircularProgress
 } from '@material-ui/core';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import StyledItemText from '../../../../../atoms/StyledItemText';
@@ -67,8 +67,11 @@ const CampaignBannerReg = (props: CampaignBannerRegProps): JSX.Element => {
     <Grid item>
       <Grid container direction="column" className={classes.item} spacing={1}>
         <Grid item>
-          <StyledItemText primary="배너 선택하기" secondary="해당 광고 캠페인에 사용할 배너를 선택해주세요." className={classes.label} />
-          <Divider component="hr" style={{ marginBottom: '10px', width: '300px' }} />
+          <StyledItemText
+            primary="배너 선택하기"
+            secondary="선택된 배너는 크리에이터의 방송화면에 송출됩니다."
+            className={classes.label}
+          />
         </Grid>
         <Grid item>
           {bannerData.loading && (
@@ -89,6 +92,7 @@ const CampaignBannerReg = (props: CampaignBannerRegProps): JSX.Element => {
 
       <Button
         onClick={(): void => { handleDialogOpen(); }}
+        color="primary"
       >
         + 배너 등록하기
       </Button>
