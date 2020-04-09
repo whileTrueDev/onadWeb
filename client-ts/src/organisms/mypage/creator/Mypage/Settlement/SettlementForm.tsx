@@ -139,7 +139,7 @@ function SettlementForm({
   };
 
   const MB = 1048576; // 1Mbytes
-  const IMAGE_SIZE_LIMIT = 10 * MB;
+  const IMAGE_SIZE_LIMIT = 5 * MB;
 
   // 신분증 이미지
   const [creatorIDImg, setCreatorIDImg] = React.useState<string | ArrayBuffer | null>('');
