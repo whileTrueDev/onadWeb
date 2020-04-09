@@ -291,7 +291,7 @@ function callImg(socket: any, msg: string[]): void {
     let linkToChatBot;
     myCampaignId = returnCampaignId;
 
-    if (myCampaignId) {
+    if (myCampaignId && campaignObject[myCampaignId][0] === 1) {
       console.log(`${creatorId} : 광고될 캠페인은 ${myCampaignId} 입니다. at : ${getTime}`);
       linkToChatBot = await getLinkName(myCampaignId);
       console.log(linkToChatBot);
