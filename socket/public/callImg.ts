@@ -347,7 +347,7 @@ function callImg(socket: any, msg: string[]): void {
       const campaignName = typeof bannerInfo[1] === 'string' ? campaignObject[bannerInfo[1]][1] : null;
       const linkName = typeof bannerInfo[1] === 'string' ? bannerInfo[2] : null;
 
-      if (myAdChatAgreement === 1 && checkOptionType) { // 채봇 동의 및 옵션타입 cpm+cpc인 경우에 챗봇으로 데이터 전송
+      if (myAdChatAgreement === 1 && checkOptionType === 1) { // 채봇 동의 및 옵션타입 cpm+cpc인 경우에 챗봇으로 데이터 전송
         console.log(CREATOR_DATA.creatorId, 'next-campaigns-twitch-chatbot Emitting!! - ', myCreatorTwitchId);
         socket.broadcast.emit('next-campaigns-twitch-chatbot', {
           campaignId: myCampaignId, creatorId: CREATOR_DATA.creatorId, creatorTwitchId: myCreatorTwitchId, campaignName, linkName
