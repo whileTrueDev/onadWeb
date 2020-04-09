@@ -52,7 +52,11 @@ export default function AdDashboard(): JSX.Element {
                 {!clicksGet.loading && clicksGet.data && (
                 <AdDescriptionCard
                   title="총 클릭 수"
-                  value={clicksGet.data.adchat + clicksGet.data.adpanel}
+                  value={(clicksGet.data.adchat
+                    ? clicksGet.data.adchat
+                    : 0) + (
+                    clicksGet.data.adpanel
+                      ? clicksGet.data.adpanel : 0)}
                   unit="회"
                 />
                 )}
@@ -62,7 +66,7 @@ export default function AdDashboard(): JSX.Element {
                 {!clicksGet.loading && clicksGet.data && (
                 <AdDescriptionCard
                   title="채팅 광고 클릭 수"
-                  value={clicksGet.data.adchat}
+                  value={clicksGet.data.adchat ? clicksGet.data.adchat : 0}
                   unit="회"
                 />
                 )}
