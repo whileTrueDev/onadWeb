@@ -74,17 +74,18 @@ export default function AdPanelCard(props: AdPanelCardProps): JSX.Element {
               전달 사항
             </Typography>
             <Typography variant="caption">
-              1. 4월 21일 전후로, 패널광고를 사용할 수 있습니다.
+              1. 4월 21일 이후 패널 광고를 사용할 수 있습니다.
               <br />
             </Typography>
             <Typography variant="caption">
-              2. 기존에 자신의 트위치채널 패널에 &quot;광고페이지&quot; 설정을 하셨다면, 굳이 변경할 필요 없습니다.
-              기존의 크리에이터별 광고페이지 링크가 4월 21일 이후로, 패널광고의 링크로 사용됩니다.
+              2. 기존 트위치 채널 패널에 &quot;광고페이지&quot;를 설정을 하셨다면 링크 주소를 바꿀 필요 없이 자동으로 변경 사항이 적용됩니다.
+              즉, 기존 크리에이터 광고페이지 주소는 4월 21일 이후 패널 광고의 주소로 사용됩니다.
               <br />
             </Typography>
             <Typography variant="caption">
-              3. 기존의 &quot;광고페이지&quot;는 5월 중, &quot;참여형 광고페이지(CPA)&quot;로 변경되어 운영될 예정입니다.
-              참여형광고페이지에 대한 새로운 링크를 발급받고, 새로운 패널을 추가하여 참여형 광고를 통해 또 다른 광고수익을 창출할 수 있습니다.
+              3. 기존의 &quot;광고페이지&quot;는 &quot;참여형 광고페이지(CPA)&quot;로 변경되어 운영될 예정입니다.
+              5월 중으로 &quot;참여형 광고페이지&quot;라는 이름으로 새로운 주소를 발급해드릴 예정이며
+              해당 주소로 패널을 추가 설정하면 추가적인 광고 수익을 창출할 수 있습니다.
               <br />
             </Typography>
           </Alert>
