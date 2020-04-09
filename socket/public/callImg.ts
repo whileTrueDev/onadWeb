@@ -361,7 +361,9 @@ function callImg(socket: any, msg: string[]): void {
         socket.emit('img receive', [bannerInfo[0], [bannerInfo[1], CREATOR_DATA.creatorId]]);
         // to chatbot
       } else {
-        writeToDb(myCampaignId, CREATOR_DATA.creatorId, programType);
+        if (myCampaignId) {
+          writeToDb(myCampaignId, CREATOR_DATA.creatorId, programType);
+        }
         console.log(`${CREATOR_DATA.creatorId} : 같은 캠페인 송출 중이어서 재호출 안합니다. at ${getTime}`);
       }
     }
