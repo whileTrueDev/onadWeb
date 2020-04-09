@@ -9,4 +9,12 @@ export interface ProfileDataType {
   realName: string;
   creatorLogo: string;
   NowIp: string;
+  settlementState: number;
+  identificationNumber: string;
+  name: string;
+  phoneNumber: string;
+  creatorType: number;
+  identificationImg: string;
+  AccountImg: string;
+  BussinessRegiImg: string;
 }
