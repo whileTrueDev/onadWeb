@@ -1,4 +1,6 @@
 // 크리에이터 상세정보 변수 정의 및 변수별 함수 정의
+// require('dotenv').config(); // 환경변수를 위해. dev환경: .env 파일 / production환경: docker run의 --env-file인자로 넘김.
+
 const schedule = require('node-schedule');
 const axios = require('axios');
 const doQuery = require('../model/doQuery');
@@ -125,7 +127,7 @@ const getViewerAirtime = ({
   FROM
   (SELECT streamId
   FROM twitchStream 
-  WHERE streamerId = ? AND startedAt > ${yearStart}) AS B
+  WHERE streamerId = ? AND startedAt > '${yearStart}') AS B
   LEFT JOIN twitchStreamDetail AS A
   ON A.streamId = B.streamId
   GROUP BY streamId
@@ -417,7 +419,7 @@ const getAirtime = ({ connection, creatorId, date }) => new Promise((resolve, re
   LEFT JOIN twitchStream AS B 
   ON A.streamId = B.streamId
   WHERE B.streamerId = ?
-  AND time > ${yearStart}
+  AND time > '${yearStart}'
   `;
 
   doConnectionQuery({ connection, queryState: selectQuery, params: [creatorId, date] })
@@ -437,7 +439,7 @@ const getImpressiontime = ({ connection, creatorId }) => new Promise((resolve, r
   SELECT  COUNT(*) AS impressiontime
   FROM campaignTimestamp
   WHERE creatorId = ?
-  AND date > ${yearStart}
+  AND date > '${yearStart}'
   `;
 
   doConnectionQuery({ connection, queryState: selectQuery, params: [creatorId] })
@@ -563,7 +565,6 @@ const getCreatorDetail = ({ connection, creatorId }) => new Promise((resolve, re
               const updateQuery = `
               UPDATE creatorDetail
               SET 
-              followers = ?, 
               ctr = ?, 
               airtime = ?, 
               viewer = ?, 
@@ -578,7 +579,9 @@ const getCreatorDetail = ({ connection, creatorId }) => new Promise((resolve, re
               WHERE creatorId = ?
               `;
               const queryState = check ? updateQuery : insertQuery;
-              doTransacQuery({ connection, queryState, params })
+              const newParams = check ? params.slice(1) : params;
+
+              doTransacQuery({ connection, queryState, params: newParams })
                 .then(() => {
                   resolve();
                 })
@@ -756,11 +759,27 @@ const getDetaildoQueryList = () => new Promise((resolve, reject) => {
     });
 });
 
-// 0. 구독자 수를 갱신하는 함수.
-// creatorId에 대해 API요청으로 data를 가져온다.
+
+const getfollowerZerodoQueryList = () => new Promise((resolve, reject) => {
+  const selectQuery = `
+  select creatorId
+  from creatorDetail
+  where followers = 0
+  `;
+  doQuery(selectQuery, [])
+    .then((row) => {
+      const creatorList = row.result.map((element) => element.creatorId);
+      resolve(creatorList);
+    })
+    .catch((err) => {
+      console.log('creator list를 가져오는 과정');
+      console.log(err);
+      resolve([]);
+    });
+});
+
 const UpdateFollower = ({ creatorId, connection }) => new Promise((resolve, reject) => {
   const clientID = process.env.PRODUCTION_CLIENT_ID;
-  // connection을 받아서 update query를 수행하는 함수 정의
   const config = {
     headers: {
       'Client-ID': clientID
@@ -811,6 +830,7 @@ const dividedGetFollower = (targetList) => new Promise((resolve, reject) => {
 
 
 const dividedUpdate = async () => {
+  console.log('follower update start.');
   const creatorList = await getDetaildoQueryList();
   const turns = Math.ceil(creatorList.length / 30);
   const targetList = [];
@@ -828,9 +848,31 @@ const dividedUpdate = async () => {
   });
 };
 
+
+const dividedZeroUpdate = async () => {
+  console.log('follower zero update start.');
+  const creatorList = await getfollowerZerodoQueryList();
+  const turns = Math.ceil(creatorList.length / 30);
+  const targetList = [];
+  for (let i = 0; i < turns;) {
+    const targets = creatorList.splice(0, 30);
+    targetList.push(targets);
+    i += 1;
+  }
+
+  return new Promise((resolve, reject) => {
+    forEachPromise(targetList, dividedGetFollower)
+      .then(() => {
+        resolve();
+      });
+  });
+};
+
+
 async function main() {
   await dividedCalculation();
   await dividedUpdate();
+  await dividedZeroUpdate();
   console.log('creator detail data update complete!');
 }
 
@@ -840,4 +882,5 @@ const scheduler = schedule.scheduleJob('3 * * *', () => {
   main();
 });
 
+// main();
 module.exports = scheduler;
