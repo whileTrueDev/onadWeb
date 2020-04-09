@@ -4,6 +4,8 @@ import {
   Grid, Hidden, Typography, Button
 } from '@material-ui/core';
 import CustomButton from '../../../../atoms/CustomButtons/Button';
+import VideoBanner from '../../../../atoms/Banner/VideoBanner';
+import isVideo from '../../../../utils/isVideo';
 
 
 const useStyle = makeStyles((theme: Theme) => ({
@@ -64,13 +66,13 @@ const ImageUpload = (props: ImageUploadProps): JSX.Element => {
 
   const readImage = (event: React.ChangeEvent<HTMLInputElement>): void => {
     if (event.target.files && event.target.files.length !== 0) {
-      const fileRegx = /^image\/[a-z]*$/;
+      const fileRegx = /(.mp4)|(^image\/[a-z]*)$/;
       const myImage = event.target.files[0];
       // 최대 size를 지정하자.
       if (fileRegx.test(myImage.type)) {
         const reader = new FileReader();
         reader.readAsDataURL(myImage);
-        reader.onload = () => {
+        reader.onload = (): void => {
           if (reader.result !== null) {
             dispatch({ type: 'set', imageName: myImage.name, imageUrl: reader.result });
           }
@@ -85,13 +87,21 @@ const ImageUpload = (props: ImageUploadProps): JSX.Element => {
 
   return (
     <div>
-      <img
-        id="preview"
-        src={state.imageUrl}
-        className={classes.imgPreview}
-        onError={(): void => { dispatch({ type: 'reset' }); }}
-        alt="이미지가 보일 영역"
-      />
+      { state.imageUrl && isVideo(state.imageUrl) ? (
+        <VideoBanner
+          className={classes.imgPreview}
+          src={state.imageUrl}
+          onError={(): void => { dispatch({ type: 'reset' }); }}
+        />
+      ) : (
+        <img
+          id="preview"
+          src={state.imageUrl}
+          className={classes.imgPreview}
+          onError={(): void => { dispatch({ type: 'reset' }); }}
+          alt="배너이미지"
+        />
+      )}
       <div className="filebox">
         <Grid container direction="row" justify="flex-end">
           <Grid item className={classes.container}>
@@ -107,7 +117,7 @@ const ImageUpload = (props: ImageUploadProps): JSX.Element => {
                 </Typography>
               </label>
             </Button>
-            <input type="file" id="getfile" accept="image/*" onChange={readImage} />
+            <input type="file" id="getfile" accept=".mp4,image/*" onChange={readImage} />
           </Grid>
         </Grid>
       </div>

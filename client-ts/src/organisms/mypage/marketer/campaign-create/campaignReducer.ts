@@ -16,12 +16,7 @@ export interface Step2Interface {
 
 export interface Step3Interface {
   bannerId: string;
-  mainLandingUrlName: string;
-  sub1LandingUrlName: string;
-  sub2LandingUrlName: string;
-  mainLandingUrl: string;
-  sub1LandingUrl: string;
-  sub2LandingUrl: string;
+  connectedLinkId: string;
 }
 
 export interface NameInterface {
@@ -104,28 +99,10 @@ const step3Reducer = (state: Step3Interface, action: Action): Step3Interface => 
   switch (action.key) {
     case 'bannerId':
       return { ...state, bannerId: action.value };
-    case 'mainLandingUrlName':
-      return { ...state, mainLandingUrlName: action.value };
-    case 'sub1LandingUrlName':
-      return { ...state, sub1LandingUrlName: action.value };
-    case 'sub2LandingUrlName':
-      return { ...state, sub2LandingUrlName: action.value };
-    case 'mainLandingUrl':
-      return { ...state, mainLandingUrl: action.value };
-    case 'sub1LandingUrl':
-      return { ...state, sub1LandingUrl: action.value };
-    case 'sub2LandingUrl':
-      return { ...state, sub2LandingUrl: action.value };
+    case 'landingUrl':
+      return { ...state, connectedLinkId: action.value };
     case 'reset': {
-      return {
-        bannerId: '',
-        mainLandingUrl: '',
-        sub1LandingUrl: '',
-        sub2LandingUrl: '',
-        mainLandingUrlName: '',
-        sub1LandingUrlName: '',
-        sub2LandingUrlName: '',
-      };
+      return { bannerId: '', connectedLinkId: '' };
     }
     // case 'keyword0':
     //   return { ...state, keyword0: action.value };

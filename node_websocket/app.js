@@ -51,10 +51,6 @@ app.get('/check', (req, res, next) => { // /banner/:id로 라우팅
   res.render('browsercheck.ejs');
 });
 
-app.get('/test', (req, res, next) => { // /banner/:id로 라우팅
-  res.render('test.ejs');
-});
-
 (function () {
   const socketsInfo = {}; // 클라이언트로 보낼 socketinfo 객체
   io.on('connection', (socket) => {

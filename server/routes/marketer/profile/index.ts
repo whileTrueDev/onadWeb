@@ -322,6 +322,8 @@ router.route('/business')
             UPDATE marketerInfo
             SET marketerBusinessRegSrc = ?
             WHERE marketerId = ?`;
+      // S3에 저장
+      // S3.uploadImage(`business-regi/${marketerId}`, businessImageSrc);
       doQuery(query, [businessImageSrc, marketerId])
         .then(() => {
           responseHelper.send([true], 'PUT', res);
@@ -347,7 +349,8 @@ router.route('/tax-bills')
       const { marketerId } = responseHelper.getSessionData(req);
       const query = `
             SELECT date, cashAmount, state FROM marketerTaxBill
-            WHERE marketerId = ?`;
+            WHERE marketerId = ?
+            ORDER BY date DESC`;
       doQuery(query, [marketerId])
         .then((row) => {
           const sendArray: any[] = [];
