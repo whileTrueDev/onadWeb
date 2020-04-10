@@ -1,5 +1,5 @@
 require('dotenv').config(); // 환경변수를 위해. dev환경: .env 파일 / production환경: docker run의 --env-file인자로 넘김.
-const pool = require('./model/connectionPool');
+const pool = require('../model/connectionPool');
 // 시청자수 1회당 가격
 
 const START_TIME = '2020-03-17 12:25:00';
