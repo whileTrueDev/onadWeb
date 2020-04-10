@@ -16,7 +16,7 @@ function callImg(socket: any, msg: string[]): void {
   let myGameId: string;
   // creatorId를 전달받아 creatorCampaign과 onff List를 도출.
   const getCreatorCampaignList = (creatorId: string): Promise<string[]> => {
-    console.log(`${creatorId}에게 계약된 creatorCampaign의 campaignList를 가져옵니다.`);
+    console.log(`${creatorId}의 특정 크리에이터 송출 광고 조회`);
 
     const campaignListQuery = `
     SELECT campaignList 
@@ -275,6 +275,7 @@ function callImg(socket: any, msg: string[]): void {
 
   async function getBanner([creatorId, gameId]: string[]): Promise<[string | boolean, string | boolean, string | boolean]> {
     console.log(`-----------------------Id : ${creatorId} / ${getTime}---------------------------`);
+    let linkToChatBot;
     const [creatorCampaignList, onCampaignList, banList] = await Promise.all(
       [
         getCreatorCampaignList(creatorId),
@@ -284,17 +285,26 @@ function callImg(socket: any, msg: string[]): void {
     );
     const categoryCampaignList = await getGameCampaignList(gameId, creatorId);
     const onCreatorcampaignList = creatorCampaignList.filter((campaignId) => onCampaignList.includes(campaignId));
-    const onCategorycampaignList = categoryCampaignList.filter((campaignId) => onCampaignList.includes(campaignId));
-    const campaignList = Array.from(new Set(onCreatorcampaignList.concat(onCategorycampaignList)));
-    const extractBanCampaignList = campaignList.filter((campaignId) => !banList.includes(campaignId)); // 마지막에 banList를 통해 거르기.
-    const returnCampaignId = extractBanCampaignList[getRandomInt(extractBanCampaignList.length)];
-    let linkToChatBot;
-    myCampaignId = returnCampaignId;
+    if (onCreatorcampaignList.length !== 0) {
+      console.log(onCreatorcampaignList);
+      const extractBanCampaignList = onCreatorcampaignList.filter((campaignId) => !banList.includes(campaignId)); // 마지막에 banList를 통해 거르기.
+      if (extractBanCampaignList) {
+        const returnCampaignId = extractBanCampaignList[getRandomInt(extractBanCampaignList.length)];
+        console.log(returnCampaignId);
+        myCampaignId = returnCampaignId;
+      }
+    } else {
+      console.log(`${creatorId} 크리에이터에게만 송출될 광고 없음. 카테고리 선택형 및 노출우선형 광고 검색`);
+      const onCategorycampaignList = categoryCampaignList.filter((campaignId) => onCampaignList.includes(campaignId));
+      // const campaignList = Array.from(new Set(onCreatorcampaignList.concat(onCategorycampaignList)));
+      const extractBanCampaignList = onCategorycampaignList.filter((campaignId) => !banList.includes(campaignId)); // 마지막에 banList를 통해 거르기.
+      const returnCampaignId = extractBanCampaignList[getRandomInt(extractBanCampaignList.length)];
+      myCampaignId = returnCampaignId;
+    }
 
     if (myCampaignId && campaignObject[myCampaignId][0] === 1) {
       console.log(`${creatorId} : 광고될 캠페인은 ${myCampaignId} 입니다. at : ${getTime}`);
       linkToChatBot = await getLinkName(myCampaignId);
-      console.log(linkToChatBot);
     } else {
       socket.emit('img clear', []);
       console.log(`${creatorId} : 켜져있는 광고가 없습니다. at : ${getTime}`);

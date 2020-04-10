@@ -25,7 +25,7 @@ const checkSessionExists: RequestHandler = (req, res, next) => {
    * Session Check
    ****************** */
   if ((req && req.session && req.session.passport && req.session.passport.user)
-  || (req && req.user)) {
+    || (req && req.user)) {
     next();
   } else {
     next(new createError[401](responseMessages.ERROR_401));
@@ -72,8 +72,8 @@ const withErrorCatch = (
 ): RequestHandler => (
   req, res, next
 ): void => {
-  fn(req, res, next).catch(next);
-};
+    fn(req, res, next).catch(next);
+  };
 
 /**
  * 라우터의 사용하지 않는 메소드 핸들러의 경우 해당 함수를 미들웨어로 두어
