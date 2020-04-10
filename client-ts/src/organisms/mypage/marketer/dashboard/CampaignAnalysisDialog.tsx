@@ -15,7 +15,7 @@ import useGetRequest from '../../../../utils/hooks/useGetRequest';
 
 
 const ONLY_BANNER_STATE = 0;
-const BANNER_WITH_CLICK_STATE = 1;
+const BANNER_WITH_CLICK_STATE = 1; // "생방송 배너 광고" 
 const ONLY_CLICK_STATE = 2;
 
 const Transition = React.forwardRef((props, ref) => (
@@ -48,7 +48,6 @@ export default function CampaignReportDialog(props: CampaignReportDialogProps): 
     { campaignId: selectedCampaign.campaignId }
   );
 
-  // 라우터 추가가 필요하다.
   const ipToGeoData = useGetRequest<{ campaignId: string }, GeoInterface[] | null>(
     '/marketer/geo/campaign',
     { campaignId: selectedCampaign.campaignId }

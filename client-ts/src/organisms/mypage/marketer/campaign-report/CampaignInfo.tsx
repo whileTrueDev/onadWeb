@@ -32,7 +32,7 @@ function getOptionType(type: number): string {
     result = '배너광고';
   }
   if (type === 1) {
-    result = '배너광고 + 클릭광고';
+    result = '생방송 배너 광고';
   }
   if (type === 2) {
     result = '클릭광고';

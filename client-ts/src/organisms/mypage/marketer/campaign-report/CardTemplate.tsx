@@ -7,7 +7,7 @@ import Card from '../../../../atoms/Card/Card';
 const useStyles = makeStyles((theme: Theme) => ({
   container: {
     backgroundColor: theme.palette.background.paper,
-    padding: '14px 20px'
+    padding: '14px 20px',
   },
   flex: {
     display: 'flex', alignItems: 'center'

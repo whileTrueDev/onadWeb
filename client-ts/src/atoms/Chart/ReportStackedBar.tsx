@@ -68,7 +68,9 @@ export default function ReportStackedBar<DataType extends DefaultDataType>({
   return (
     <Bar
       data={preprocessedDataSet}
-      options={{ tooltips: { mode: 'index', intersect: false }, responsive: false, aspectRatio: 2 }}
+      options={{
+        tooltips: { mode: 'index', intersect: false }, responsive: false, aspectRatio: 2, maintainAspectRatio: false
+      }}
       height={height}
       {...rest}
     />

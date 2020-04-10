@@ -27,19 +27,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   value: { color: theme.palette.primary.light, fontWeight: 700 }
 }));
 
-// 데이터를 받는형태
-// [
-//   {
-//     title: '전환당 비용',
-//     value: ((reportData.totalCPM + reportData.totalCPC) / reportData.totalTransfer) || 0,
-//     unit: '원',
-//     decimalRange: 2
-//   },
-//   { title: '지표 준비중.', value: '', unit: '' },
-// ]
 interface DataInterface {
   title: string; value: number | string;
-  unit: string; decimalRange?: number;
+  unit: string; decimalRange?: number; percent?: number | string;
 }
 
 const ReportCard = (props: { data: DataInterface[] }): JSX.Element => {
@@ -50,7 +40,7 @@ const ReportCard = (props: { data: DataInterface[] }): JSX.Element => {
   return (
     <Grid container spacing={3} className={classes.container} {...rest}>
       {data.map((content) => (
-        <Grid key={content.title} item xs={12} sm={6} lg={3}>
+        <Grid key={content.title} item xs={12} md={4}>
           <Card className={classes.card}>
             <CardBody>
               <div className={classes.titleSection}>
@@ -61,7 +51,7 @@ const ReportCard = (props: { data: DataInterface[] }): JSX.Element => {
 
               </div>
 
-              <div style={{ display: 'flex' }}>
+              <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
 
                 <Typography gutterBottom variant="h5" className={classes.value}>
                   {content.value === '-' ? (
@@ -74,6 +64,12 @@ const ReportCard = (props: { data: DataInterface[] }): JSX.Element => {
                     />
                   )}
                 </Typography>
+
+                {content.percent && (
+                  <Typography gutterBottom variant="body1">
+                    {`(${content.percent}%)`}
+                  </Typography>
+                )}
 
                 <Typography gutterBottom variant="body2">
                   {content.unit}

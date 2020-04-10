@@ -18,7 +18,7 @@ export default function ClickHeatmap(props: ClickHeatmapProps): JSX.Element {
     }
     // Configuration for react-tooltip
     return {
-      'data-tip': `${value.date}, ${value.count} 개의 상호작용 발생`,
+      'data-tip': `${value.date}, ${value.count} 클릭`,
     };
   };
 
@@ -28,7 +28,7 @@ export default function ClickHeatmap(props: ClickHeatmapProps): JSX.Element {
     const today = new Date();
     const today2 = new Date();
 
-    today.setDate(today.getDate() - 180);
+    today.setDate(today.getDate() - 250);
     today2.setDate(today2.getDate() + 50);
     const startDate = today;
     const endDate = today2;
@@ -37,7 +37,7 @@ export default function ClickHeatmap(props: ClickHeatmapProps): JSX.Element {
 
 
   return (
-    <div style={{ height: 200, overflowX: 'auto' }}>
+    <div style={{ height: 280, overflow: 'auto' }}>
 
       <Heatmap
         showMonthLabels

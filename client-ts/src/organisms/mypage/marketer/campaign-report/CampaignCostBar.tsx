@@ -7,6 +7,7 @@ import { UseGetRequestObject } from '../../../../utils/hooks/useGetRequest';
 interface CampaignCostBarProps {
   color: string;
   chartData: UseGetRequestObject<any[]>;
+  [key: string]: any;
 }
 
 export default function CampaignCostBar(props: CampaignCostBarProps): JSX.Element {
@@ -15,12 +16,14 @@ export default function CampaignCostBar(props: CampaignCostBarProps): JSX.Elemen
   return (
     <div {...rest}>
       <CardTemplate title="광고 비용 그래프" color={color} IconComponent={Assignment}>
-        {!chartData.loading && chartData.data && (
+        <div style={{ justifyContent: 'center', display: 'flex' }}>
+          {!chartData.loading && chartData.data && (
           <ReportStackedBar
-            height={200}
+            height={250}
             dataSet={chartData.data[0]}
           />
-        )}
+          )}
+        </div>
       </CardTemplate>
     </div>
   );

@@ -86,7 +86,7 @@ export default function BannerBroadCreators(
             {creatorsData.data
             && creatorsData.data.slice(0, 50).map(
               (creator: CreatorDataInterface, index: number) => (
-                <Grid key={creator.creatorName} item xs={6} md={4} lg={3} style={{ padding: 8 }}>
+                <Grid key={creator.creatorName} item xs={4} md={3} lg={2} style={{ padding: 8 }}>
                   <Avatar
                     src={creator.creatorLogo}
                     style={{

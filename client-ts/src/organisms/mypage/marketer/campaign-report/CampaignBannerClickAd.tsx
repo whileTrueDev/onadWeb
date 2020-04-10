@@ -18,27 +18,26 @@ import ReportCard from './ReportCard';
 import InteractionHeatmap from './HeatmapReport';
 import InteractionToGeo from './GeoReport';
 import CampaignInfo from './CampaignInfo';
-import MakePdfButton from './MakePdfButton';
 
 const makeContents = (reportData: ReportInterface) => ({
-  price: [
+  price: [ // 광고 비용
     {
       title: '광고 총 비용',
       value: Number(reportData.totalCPM) + Number(reportData.totalCPC) || 0,
       unit: '원'
     },
     {
-      title: '배너광고 총 비용',
+      title: 'CPM 총 비용',
       value: Number(reportData.totalCPM) || 0,
       unit: '원'
     },
     {
-      title: '클릭광고 총 비용',
+      title: 'CPC 총 비용',
       value: Number(reportData.totalCPC) || 0,
       unit: '원'
     }
   ],
-  effect: [
+  effect: [ // 광고 효과
     {
       title: '배너 총 노출 수',
       value: Number(reportData.totalViewCount) || 0,
@@ -55,45 +54,27 @@ const makeContents = (reportData: ReportInterface) => ({
       unit: '회'
     },
   ],
-  metrics: [
+  metrics: [ // 보조 지표
     {
-      title: '전환당 비용',
-      value: ((reportData.totalCPM + reportData.totalCPC) / reportData.totalTransfer) || 0,
-      unit: '원',
-      decimalRange: 2
+      title: '랜딩페이지 이동 수 📋',
+      value: 100,
+      unit: '회',
+      decimalRange: 0
     },
     {
-      title: '전환율',
-      value: (reportData.totalTransfer / reportData.totalLandingView) || 0,
-      unit: '%',
-      decimalRange: 4
+      title: '채팅봇 유입 수 🤖',
+      value: 100,
+      unit: '회',
+      decimalRange: 0,
+      percent: 80,
     },
     {
-      title: '상호작용 수',
-      value: (reportData.totalClick + reportData.totalTransfer) || 0,
-      unit: '회'
+      title: '패널 유입 수 📺',
+      value: 100,
+      unit: '회',
+      decimalRange: 0,
+      percent: 20,
     },
-    {
-      title: '상호 작용 발생율',
-      value: ((reportData.totalClick + reportData.totalTransfer)
-        / reportData.totalViewCount) || 0,
-      unit: '%',
-      decimalRange: 4
-    },
-    {
-      title: '배너조회율',
-      value: (reportData.totalClick / reportData.totalViewCount) || 0,
-      unit: '',
-      decimalRange: 4
-    },
-    {
-      title: '배너클릭율',
-      value: (reportData.totalTransfer / reportData.totalViewCount) || 0,
-      unit: '',
-      decimalRange: 4
-    },
-    { title: '지표 준비중', value: '', unit: '' },
-    { title: '지표 준비중.', value: '', unit: '' },
   ]
 });
 
@@ -153,7 +134,7 @@ export default function CampaignBannerClickAd(
                   &emsp;광고 효과 분석
                 </Typography>
 
-                <MakePdfButton />
+                {/* <MakePdfButton /> */}
 
               </div>
               <Divider />
@@ -163,7 +144,7 @@ export default function CampaignBannerClickAd(
             <Grid item xs={12}>
               {!reportData.loading && reportData.data && (
                 <div className={classes.contents}>
-                  <Grid container>
+                  <Grid container spacing={4}>
 
                     {/* 캠페인 정보 */}
                     <Grid item xs={12}>
@@ -203,38 +184,41 @@ export default function CampaignBannerClickAd(
                     </Grid>
 
                     {/* 캠페인 지표 차트 */}
-                    <Grid item xs={12}>
-                      <Grid container spacing={4}>
-                        <Grid item xs={12} sm={6}>
-                          <CampaignCostBar
-                            color="primary"
-                            chartData={chartData}
-                          />
 
-                          <CampaignCostPie
-                            color="primary"
-                            reportData={reportData}
-                          />
-                        </Grid>
-
-                        <Grid item xs={12} sm={6}>
-                          <BannerBroadCreators
-                            creatorsData={creatorsData}
-                          />
-
-                          <InteractionHeatmap
-                            data-html2canvas-ignore
-                            clickData={clickData.data}
-                          />
-
-                          <InteractionToGeo
-                            data-html2canvas-ignore
-                            ipToGeoData={ipToGeoData}
-                          />
-
-                        </Grid>
-                      </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <CampaignCostBar
+                        color="primary"
+                        chartData={chartData}
+                      />
                     </Grid>
+
+                    <Grid item xs={12} sm={6}>
+                      <CampaignCostPie
+                        color="primary"
+                        reportData={reportData}
+                      />
+                    </Grid>
+
+                    <Grid item xs={12}>
+                      <BannerBroadCreators
+                        creatorsData={creatorsData}
+                      />
+                    </Grid>
+
+                    <Grid item xs={12}>
+                      <InteractionHeatmap
+                        data-html2canvas-ignore
+                        clickData={clickData.data}
+                      />
+                    </Grid>
+
+                    <Grid item xs={12}>
+                      <InteractionToGeo
+                        data-html2canvas-ignore
+                        ipToGeoData={ipToGeoData}
+                      />
+                    </Grid>
+
                   </Grid>
                 </div>
               )}

@@ -75,7 +75,9 @@ export default function Dashboard(): JSX.Element {
                       <Grow in timeout={{ enter: 1100 }}>
                         <DescCard data={{
                           title: '운용중 캠페인',
-                          value: (!campaignData.loading && campaignData.data) ? campaignData.data.filter((c) => c.onOff === 1).length : 0,
+                          value: (!campaignData.loading && campaignData.data)
+                            ? campaignData.data.filter((c) => c.onOff === 1).length
+                            : 0,
                           unit: '캠페인'
                         }}
                         />
