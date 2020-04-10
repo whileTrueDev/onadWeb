@@ -110,10 +110,10 @@ function makeContents(typeNumber: number, detail: string) {
       content = `${details.campaignName} 캠페인 삭제`;
       return content;
     case 13:
-      content = `${details.linkTo} URL 심사 거절됨`;
+      content = `${details.linkId} URL 심사 거절됨`;
       return content;
     case 14:
-      content = `${details.linkTo} URL 심사 승인됨`;
+      content = `${details.linkId} URL 심사 승인됨`;
       return content;
     default:
       throw Error('typeNumber must be need');
