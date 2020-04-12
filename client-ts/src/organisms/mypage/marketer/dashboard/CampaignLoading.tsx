@@ -2,7 +2,7 @@ import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import Skeleton from '@material-ui/lab/Skeleton';
 
-export default function ReportLoading(): JSX.Element {
+export default function CampaignLoading(): JSX.Element {
   return (
     <div>
       <Grid container spacing={2}>

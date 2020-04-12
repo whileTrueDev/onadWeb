@@ -1,8 +1,8 @@
 import React from 'react';
 import Assignment from '@material-ui/icons/Assignment';
 import CardTemplate from './CardTemplate';
-import ReportStackedBar from '../../../../atoms/Chart/ReportStackedBar';
-import { UseGetRequestObject } from '../../../../utils/hooks/useGetRequest';
+import ReportStackedBar from '../../../../../atoms/Chart/ReportStackedBar';
+import { UseGetRequestObject } from '../../../../../utils/hooks/useGetRequest';
 
 interface CampaignCostBarProps {
   color: string;

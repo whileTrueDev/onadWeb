@@ -1,45 +1,35 @@
 import React from 'react';
 import { Grid, Slide } from '@material-ui/core';
 import {
-  CampaignInterface, ReportInterface,
+  CampaignInterface, ReportInterfaceV2,
   CreatorDataInterface, HeatmapInterface, GeoInterface
 } from './interfaces';
-
 import Dialog from '../../../../atoms/Dialog/Dialog';
 import ReportLoading from '../campaign-report/ReportLoading';
-import CampaignBannerClickAd from '../campaign-report/CampaignBannerClickAd';
-import CampaignOnlyClickAd from '../campaign-report/CampaignOnlyClickAd';
-import CampaignOnlyBannerAd from '../campaign-report/CampaignOnlyBannerAd';
+import LiveBannerAd from '../campaign-report/LiveBannerAd';
 // hooks
 import useGetRequest from '../../../../utils/hooks/useGetRequest';
 
-const ONLY_BANNER_STATE = 0;
 const BANNER_WITH_CLICK_STATE = 1; // "생방송 배너 광고" 
-const ONLY_CLICK_STATE = 2;
-
+// Dialog Transition 컴포넌트
 const Transition = React.forwardRef((props, ref) => (
   <Slide direction="up" ref={ref} {...props} />
 ));
 
-interface CampaignReportDialogProps {
-  open: boolean;
-  selectedCampaign: CampaignInterface;
-  handleClose: () => void;
-  SLIDE_TIMEOUT: number;
+interface CampaignAnalysisDialogV2Props {
+  open: boolean; selectedCampaign: CampaignInterface;
+  handleClose: () => void; SLIDE_TIMEOUT: number;
 }
-
-export default function CampaignReportDialog(props: CampaignReportDialogProps): JSX.Element {
-  const {
-    SLIDE_TIMEOUT, selectedCampaign, open, handleClose
-  } = props;
-
+export default function CampaignAnalysisDialogV2({
+  SLIDE_TIMEOUT, selectedCampaign, open, handleClose
+}: CampaignAnalysisDialogV2Props): JSX.Element {
   const ipToGeoData = useGetRequest<{ campaignId: string }, GeoInterface[] | null>(
-    '/marketer/geo/v1/campaign/',
+    '/marketer/geo/campaign',
     { campaignId: selectedCampaign.campaignId }
   );
 
-  const reportData = useGetRequest<{ campaignId: string }, ReportInterface | null>(
-    '/marketer/campaign/analysis/v1',
+  const reportData = useGetRequest<{ campaignId: string }, ReportInterfaceV2 | null>(
+    '/marketer/campaign/analysis',
     { campaignId: selectedCampaign.campaignId }
   );
 
@@ -54,10 +44,11 @@ export default function CampaignReportDialog(props: CampaignReportDialogProps): 
   );
 
   const clickData = useGetRequest<{ campaignId: string }, HeatmapInterface[] | null>(
-    '/marketer/campaign/analysis/v1/heatmap',
+    '/marketer/campaign/analysis/heatmap',
     { campaignId: selectedCampaign.campaignId }
   );
 
+  console.log(ipToGeoData);
 
   return (
     <Dialog
@@ -81,31 +72,9 @@ export default function CampaignReportDialog(props: CampaignReportDialogProps): 
 
           {/* 로딩 이후 화면 */}
 
-          {/* Only CPC (클릭 광고인 경우) */}
-          {selectedCampaign.optionType === ONLY_CLICK_STATE && (
-            <CampaignOnlyClickAd
-              selectedCampaign={selectedCampaign}
-              reportData={reportData}
-              chartData={chartData}
-              ipToGeoData={ipToGeoData}
-              clickData={clickData}
-            />
-          )}
-
-
-          {/* Only CPM (배너 광고인 경우) */}
-          {selectedCampaign.optionType === ONLY_BANNER_STATE && (
-            <CampaignOnlyBannerAd
-              selectedCampaign={selectedCampaign}
-              reportData={reportData}
-              chartData={chartData}
-              creatorsData={creatorsData}
-            />
-          )}
-
           {/* CPM + CPC (배너 광고 + 클릭 광고인 경우) */}
           {selectedCampaign.optionType === BANNER_WITH_CLICK_STATE && (
-            <CampaignBannerClickAd
+            <LiveBannerAd
               selectedCampaign={selectedCampaign}
               reportData={reportData}
               chartData={chartData}
@@ -114,7 +83,6 @@ export default function CampaignReportDialog(props: CampaignReportDialogProps): 
               clickData={clickData}
             />
           )}
-
         </Grid>
         <Grid item xl={3} />
       </Grid>

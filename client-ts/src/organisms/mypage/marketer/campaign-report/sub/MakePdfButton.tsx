@@ -3,7 +3,7 @@ import { makeStyles, Theme } from '@material-ui/core/styles';
 import {
   Typography, Button, CircularProgress, Tooltip,
 } from '@material-ui/core';
-import jsPdfGenerate from '../../../../utils/PdfGenerator';
+import jsPdfGenerate from '../../../../../utils/PdfGenerator';
 
 const useStyles = makeStyles((theme: Theme) => ({
   buttonProgress: {

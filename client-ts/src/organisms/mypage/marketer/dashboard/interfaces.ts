@@ -3,7 +3,7 @@ export interface CampaignInterface {
   campaignName: string;
   optionType: number;
   priorityType: number;
-  regiDate: Date;
+  regiDate: string;
   onOff: number;
   bannerSrc: string;
   dailyLimit: number;
@@ -46,6 +46,11 @@ export interface ReportInterface {
   totalClick: number;
   totalTransfer: number;
   totalLandingView: number;
+}
+
+export interface ReportInterfaceV2 {
+  campaignName: string; totalCPM: number; totalViewCount: number; totalTime: number;
+  totalCPC: number; adchatClick: number; adpanelClick: number;
 }
 
 export interface CreatorDataInterface {

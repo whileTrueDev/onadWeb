@@ -2,11 +2,13 @@ import express from 'express';
 import responseHelper from '../../../middlewares/responseHelper';
 import doQuery from '../../../model/doQuery';
 import dataProcessing from '../../../lib/dataProcessing';
-import analysisRouter from './analysis';
+import analysisRouter from './analysis_v1';
+import analysisV2Router from './analysis_v2';
 import marketerActionLogging from '../../../middlewares/marketerActionLog';
 
 const router = express.Router();
-router.use('/analysis', analysisRouter);
+router.use('/analysis/v1', analysisRouter);
+router.use(['/analysis', '/analysis/v2'], analysisV2Router);
 
 interface CampaignData {
   campaignId: string;

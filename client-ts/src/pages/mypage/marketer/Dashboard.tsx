@@ -6,7 +6,7 @@ import CampaignList from '../../../organisms/mypage/marketer/dashboard/CampaignL
 import CanvasForChart from '../../../organisms/mypage/marketer/dashboard/CanvasForChart';
 import DescCard from '../../../organisms/mypage/marketer/dashboard/DescCard';
 import OnOffSwitch from '../../../organisms/mypage/marketer/dashboard/OnOffSwitch';
-import ReportLoading from '../../../organisms/mypage/marketer/dashboard/ReportLoading';
+import CampaignLoading from '../../../organisms/mypage/marketer/dashboard/CampaignLoading';
 import LogTable from '../../../organisms/mypage/marketer/dashboard/LogTable';
 // hooks
 import useGetRequest from '../../../utils/hooks/useGetRequest';
@@ -41,7 +41,7 @@ export default function Dashboard(): JSX.Element {
         || countsData.loading
         || valueChartData.loading
         || countsData.loading) ? (
-          <ReportLoading />
+          <CampaignLoading />
         ) : (
           <div>
             {adData.data && valueChartData.data && countsData.data && (

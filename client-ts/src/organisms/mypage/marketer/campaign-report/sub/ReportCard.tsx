@@ -2,8 +2,8 @@ import React from 'react';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import CountUp from 'react-countup';
 import { Grid, Typography } from '@material-ui/core';
-import Card from '../../../../atoms/Card/Card';
-import CardBody from '../../../../atoms/Card/CardBody';
+import Card from '../../../../../atoms/Card/Card';
+import CardBody from '../../../../../atoms/Card/CardBody';
 
 const useStyles = makeStyles((theme: Theme) => ({
   container: { padding: '28px 0px' },
@@ -17,12 +17,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     [theme.breakpoints.up('md')]: {
       marginBottom: 65
     },
-  },
-  title: {
-    fontWeight: 700,
-    [theme.breakpoints.only('md')]: {
-      fontSize: 16
-    }
   },
   value: { color: theme.palette.primary.light, fontWeight: 700 }
 }));
@@ -45,9 +39,7 @@ const ReportCard = (props: { data: DataInterface[] }): JSX.Element => {
             <CardBody>
               <div className={classes.titleSection}>
 
-                <Typography variant="body1" className={classes.title}>
-                  {content.title}
-                </Typography>
+                <Typography variant="h5">{content.title}</Typography>
 
               </div>
 
@@ -66,7 +58,7 @@ const ReportCard = (props: { data: DataInterface[] }): JSX.Element => {
                 </Typography>
 
                 {content.percent && (
-                  <Typography gutterBottom variant="body1">
+                  <Typography gutterBottom variant="body2">
                     {`(${content.percent}%)`}
                   </Typography>
                 )}

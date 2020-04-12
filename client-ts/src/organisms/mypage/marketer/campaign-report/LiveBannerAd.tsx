@@ -5,13 +5,13 @@ import {
 } from '@material-ui/core';
 import { Assignment } from '@material-ui/icons';
 import {
-  ReportInterface, CreatorDataInterface, HeatmapInterface, GeoInterface, CampaignInterface
+  ReportInterfaceV2, CreatorDataInterface, HeatmapInterface, GeoInterface, CampaignInterface
 } from '../dashboard/interfaces';
 import { UseGetRequestObject } from '../../../../utils/hooks/useGetRequest';
 
 // own components
 import ContentCard from './sub/ContentCard';
-import CampaignCostPie from './sub/CampaignCostPie';
+import CampaignCostPie from './sub/CampaignCostPieV2';
 import CampaignCostBar from './sub/CampaignCostBar';
 import BannerBroadCreators from './sub/BannerBroadCreators';
 import ReportCard from './sub/ReportCard';
@@ -19,25 +19,25 @@ import InteractionHeatmap from './sub/HeatmapReport';
 import InteractionToGeo from './sub/GeoReport';
 import CampaignInfo from './sub/CampaignInfo';
 
-const makeContents = (reportData: ReportInterface) => ({
-  price: [
+const makeContents = (reportData: ReportInterfaceV2) => ({
+  price: [ // 광고 비용
     {
       title: '광고 총 비용',
       value: Number(reportData.totalCPM) + Number(reportData.totalCPC) || 0,
       unit: '원'
     },
     {
-      title: '배너광고 총 비용',
+      title: 'CPM 총 비용',
       value: Number(reportData.totalCPM) || 0,
       unit: '원'
     },
     {
-      title: '클릭광고 총 비용',
+      title: 'CPC 총 비용',
       value: Number(reportData.totalCPC) || 0,
       unit: '원'
     }
   ],
-  effect: [
+  effect: [ // 광고 효과
     {
       title: '배너 총 노출 수',
       value: Number(reportData.totalViewCount) || 0,
@@ -50,46 +50,32 @@ const makeContents = (reportData: ReportInterface) => ({
     },
     {
       title: '배너 총 클릭 수',
-      value: Number(reportData.totalClick) || 0,
+      value: Number(reportData.adchatClick) + Number(reportData.adpanelClick) || 0,
       unit: '회'
     },
   ],
-  metrics: [
+  metrics: [ // 보조 지표
     {
-      title: '전환당 비용',
-      value: ((reportData.totalCPM + reportData.totalCPC) / reportData.totalTransfer) || 0,
-      unit: '원',
-      decimalRange: 2
+      title: '랜딩페이지 이동 수 📋',
+      value: Number(reportData.adchatClick) + Number(reportData.adpanelClick) || 0,
+      unit: '회',
+      decimalRange: 0
     },
     {
-      title: '전환율',
-      value: (reportData.totalTransfer / reportData.totalLandingView) || 0,
-      unit: '%',
-      decimalRange: 4
+      title: '채팅봇 유입 수 🤖',
+      value: Number(reportData.adchatClick) || 0,
+      unit: '회',
+      decimalRange: 0,
+      percent: (Number(reportData.adchatClick) / (
+        Number(reportData.adchatClick) + Number(reportData.adpanelClick))) * 100 || '0',
     },
     {
-      title: '상호작용 수',
-      value: (reportData.totalClick + reportData.totalTransfer) || 0,
-      unit: '회'
-    },
-    {
-      title: '상호 작용 발생율',
-      value: ((reportData.totalClick + reportData.totalTransfer)
-        / reportData.totalViewCount) || 0,
-      unit: '%',
-      decimalRange: 4
-    },
-    {
-      title: '배너조회율',
-      value: (reportData.totalClick / reportData.totalViewCount) || 0,
-      unit: '',
-      decimalRange: 4
-    },
-    {
-      title: '배너클릭율',
-      value: (reportData.totalTransfer / reportData.totalViewCount) || 0,
-      unit: '',
-      decimalRange: 4
+      title: '패널 유입 수 📺',
+      value: Number(reportData.adpanelClick) || 0,
+      unit: '회',
+      decimalRange: 0,
+      percent: (Number(reportData.adpanelClick) / (
+        Number(reportData.adchatClick) + Number(reportData.adpanelClick))) * 100 || '0',
     },
   ]
 });
@@ -101,27 +87,19 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'space-between',
     alignItems: 'cetner'
   },
-  title: {
-    fontWeight: 500
-  },
-  formControl: {
-    margin: theme.spacing(1),
-    minWidth: 120,
-  },
-  contents: {
-    padding: '24px 32px'
-  },
+  title: { fontWeight: 500 },
+  formControl: { margin: theme.spacing(1), minWidth: 120, },
+  contents: { padding: '24px 32px' },
 }));
 
 interface CampaignBannerClickAdProps {
   selectedCampaign: CampaignInterface;
-  reportData: UseGetRequestObject<null | ReportInterface>;
+  reportData: UseGetRequestObject<null | ReportInterfaceV2>;
   chartData: UseGetRequestObject<any[]>;
   creatorsData: UseGetRequestObject<null | CreatorDataInterface[]>;
   ipToGeoData: UseGetRequestObject<null | GeoInterface[]>;
   clickData: UseGetRequestObject<null | HeatmapInterface[]>;
 }
-
 
 export default function CampaignBannerClickAd(
   props: CampaignBannerClickAdProps

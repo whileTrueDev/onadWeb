@@ -3,8 +3,8 @@ import { Pie } from 'react-chartjs-2';
 import useTheme from '@material-ui/core/styles/useTheme';
 import DonutSmall from '@material-ui/icons/DonutSmall';
 import CardTemplate from './CardTemplate';
-import { ReportInterface } from '../dashboard/interfaces';
-import { UseGetRequestObject } from '../../../../utils/hooks/useGetRequest';
+import { ReportInterface } from '../../dashboard/interfaces';
+import { UseGetRequestObject } from '../../../../../utils/hooks/useGetRequest';
 
 interface CampaignCostPieProps {
   color: string;

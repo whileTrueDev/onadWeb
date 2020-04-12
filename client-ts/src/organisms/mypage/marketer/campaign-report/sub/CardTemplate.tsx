@@ -2,7 +2,7 @@ import React from 'react';
 import classnames from 'classnames';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import { Typography, Divider } from '@material-ui/core';
-import Card from '../../../../atoms/Card/Card';
+import Card from '../../../../../atoms/Card/Card';
 
 const useStyles = makeStyles((theme: Theme) => ({
   container: {

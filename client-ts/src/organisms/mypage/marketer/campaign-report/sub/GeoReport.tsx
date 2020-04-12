@@ -12,9 +12,9 @@ import {
 import MarkerClusterer from 'react-google-maps/lib/components/addons/MarkerClusterer';
 import dotenv from 'dotenv';
 import CardTemplate from './CardTemplate';
-import MaterialTable from '../../../../atoms/Table/MaterialTable';
-import { GeoInterface } from '../dashboard/interfaces';
-import { UseGetRequestObject } from '../../../../utils/hooks/useGetRequest';
+import MaterialTable from '../../../../../atoms/Table/MaterialTable';
+import { GeoInterface } from '../../dashboard/interfaces';
+import { UseGetRequestObject } from '../../../../../utils/hooks/useGetRequest';
 
 dotenv.config();
 interface MapWithMarkerClustererProps {
