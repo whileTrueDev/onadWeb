@@ -71,7 +71,7 @@ export default function ContentCard(props: ContentCardProps): JSX.Element {
             </div>
           </div>
           {!(index === contents.length - 1) && (
-            <Divider />
+          <Divider />
           )}
         </div>
       ))}

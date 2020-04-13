@@ -48,8 +48,6 @@ export default function CampaignAnalysisDialogV2({
     { campaignId: selectedCampaign.campaignId }
   );
 
-  console.log(ipToGeoData);
-
   return (
     <Dialog
       fullScreen

@@ -49,7 +49,7 @@ export interface ReportInterface {
 }
 
 export interface ReportInterfaceV2 {
-  campaignName: string; totalCPM: number; totalViewCount: number; totalTime: number;
+  campaignName: string; totalCPM: number; totalViewCount: number;
   totalCPC: number; adchatClick: number; adpanelClick: number;
 }
 

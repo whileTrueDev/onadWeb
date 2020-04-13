@@ -2,6 +2,7 @@ import React from 'react';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import {
   Paper, Grid, Divider, Typography,
+  Tabs, Tab
 } from '@material-ui/core';
 import { Assignment } from '@material-ui/icons';
 import {
@@ -10,75 +11,14 @@ import {
 import { UseGetRequestObject } from '../../../../utils/hooks/useGetRequest';
 
 // own components
-import ContentCard from './sub/ContentCard';
 import CampaignCostPie from './sub/CampaignCostPieV2';
 import CampaignCostBar from './sub/CampaignCostBar';
 import BannerBroadCreators from './sub/BannerBroadCreators';
-import ReportCard from './sub/ReportCard';
 import InteractionHeatmap from './sub/HeatmapReport';
 import InteractionToGeo from './sub/GeoReport';
 import CampaignInfo from './sub/CampaignInfo';
-
-const makeContents = (reportData: ReportInterfaceV2) => ({
-  price: [ // 광고 비용
-    {
-      title: '광고 총 비용',
-      value: Number(reportData.totalCPM) + Number(reportData.totalCPC) || 0,
-      unit: '원'
-    },
-    {
-      title: 'CPM 총 비용',
-      value: Number(reportData.totalCPM) || 0,
-      unit: '원'
-    },
-    {
-      title: 'CPC 총 비용',
-      value: Number(reportData.totalCPC) || 0,
-      unit: '원'
-    }
-  ],
-  effect: [ // 광고 효과
-    {
-      title: '배너 총 노출 수',
-      value: Number(reportData.totalViewCount) || 0,
-      unit: '회'
-    },
-    {
-      title: '배너 총 노출 시간',
-      value: Number(reportData.totalTime) || 0,
-      unit: '시간'
-    },
-    {
-      title: '배너 총 클릭 수',
-      value: Number(reportData.adchatClick) + Number(reportData.adpanelClick) || 0,
-      unit: '회'
-    },
-  ],
-  metrics: [ // 보조 지표
-    {
-      title: '랜딩페이지 이동 수 📋',
-      value: Number(reportData.adchatClick) + Number(reportData.adpanelClick) || 0,
-      unit: '회',
-      decimalRange: 0
-    },
-    {
-      title: '채팅봇 유입 수 🤖',
-      value: Number(reportData.adchatClick) || 0,
-      unit: '회',
-      decimalRange: 0,
-      percent: (Number(reportData.adchatClick) / (
-        Number(reportData.adchatClick) + Number(reportData.adpanelClick))) * 100 || '0',
-    },
-    {
-      title: '패널 유입 수 📺',
-      value: Number(reportData.adpanelClick) || 0,
-      unit: '회',
-      decimalRange: 0,
-      percent: (Number(reportData.adpanelClick) / (
-        Number(reportData.adchatClick) + Number(reportData.adpanelClick))) * 100 || '0',
-    },
-  ]
-});
+import CardTemplate from './sub/CardTemplate';
+import MetricsExpression from './sub/MetricsExpression';
 
 const useStyles = makeStyles((theme: Theme) => ({
   headline: {
@@ -110,6 +50,10 @@ export default function CampaignBannerClickAd(
     creatorsData, ipToGeoData, clickData
   } = props;
 
+  const [tabIndex, setTabIndex] = React.useState(0);
+  function handleTabChange(e: React.ChangeEvent<{}>, index: number): void {
+    setTabIndex(index);
+  }
 
   return (
     <Paper>
@@ -150,35 +94,65 @@ export default function CampaignBannerClickAd(
 
                       {/* 개요 */}
                       <Grid container spacing={4}>
-                        <Grid item xs={12} sm={6}>
-                          <ContentCard
+                        <Grid item xs={12}>
+                          <CardTemplate
                             title="광고 비용"
                             color="primary"
-                            contents={makeContents(reportData.data).price}
                             IconComponent={Assignment}
-                          />
+                          >
+                            <MetricsExpression
+                              color="primary"
+                              left={{ value: Number(reportData.data.totalCPM) || 0, desc: 'CPM' }}
+                              right={{ value: Number(reportData.data.totalCPC) || 0, desc: 'CPC' }}
+                              result={{ value: Number(reportData.data.totalCPC) + Number(reportData.data.totalCPM), desc: '총 광고 비용' }}
+                            />
+                          </CardTemplate>
                         </Grid>
-
-                        <Grid item xs={12} sm={6}>
-                          <ContentCard
+                        <Grid item xs={12}>
+                          <CardTemplate
                             title="광고 효과"
                             color="secondary"
-                            contents={makeContents(reportData.data).effect}
                             IconComponent={Assignment}
-                          />
+                            tabs={(
+                              <Tabs
+                                value={tabIndex}
+                                onChange={handleTabChange}
+                                indicatorColor="primary"
+                                textColor="primary"
+                                aria-label="scrollable auto tabs example"
+                              >
+                                <Tab label="랜딩페이지 이동" />
+                                <Tab label="배너 총 노출 " />
+                              </Tabs>
+                            )}
+                          >
+                            {tabIndex === 0 && (
+                            <MetricsExpression
+                              color="secondary"
+                              left={{ value: Number(reportData.data.adpanelClick), desc: '패널 유입🖥' }}
+                              right={{ value: Number(reportData.data.adchatClick) || 0, desc: '채팅봇 유입🤖' }}
+                              result={{
+                                value: (Number(reportData.data.adchatClick)
+                                + Number(reportData.data.adpanelClick)) || 0,
+                                desc: '랜딩페이지 이동 수🏃'
+                              }}
+                            />
+                            )}
+                            {tabIndex === 1 && (
+                            <MetricsExpression
+                              color="secondary"
+                              result={{
+                                value: (Number(reportData.data.totalViewCount)) || 0,
+                                desc: '배너 총 노출 수'
+                              }}
+                            />
+                            )}
+                          </CardTemplate>
                         </Grid>
                       </Grid>
                     </Grid>
 
-                    <Grid item xs={12}>
-                      {/* 지표 카드 모음 */}
-                      <ReportCard
-                        data={makeContents(reportData.data).metrics}
-                      />
-                    </Grid>
-
                     {/* 캠페인 지표 차트 */}
-
                     <Grid item xs={12} sm={6}>
                       <CampaignCostBar
                         color="primary"

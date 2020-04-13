@@ -9,47 +9,38 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: theme.palette.background.paper,
     padding: '14px 20px',
   },
-  flex: {
-    display: 'flex', alignItems: 'center'
-  },
+  flex: { display: 'flex', alignItems: 'center', },
   flexCenter: {
     display: 'flex', justifyContent: 'center', alignItems: 'center'
   },
   contents: {
     padding: '16px 28px', display: 'flex', justifyContent: 'space-between'
   },
-  icon: {
-    marginRight: '5px'
-  },
-  value: {
-    fontWeight: 700
-  },
-  primaryColor: {
-    color: theme.palette.primary.main
-  },
-  secondaryColor: {
-    color: theme.palette.secondary.main
-  }
+  icon: { marginRight: '5px' },
+  value: { fontWeight: 700 },
+  primaryColor: { color: theme.palette.primary.main },
+  secondaryColor: { color: theme.palette.secondary.main }
 }));
 
 interface CardTemplateProps {
   title: string;
   color: string;
   IconComponent: React.ElementType;
-  children: any;
+  tabs?: React.ReactNode;
+  children: React.ReactNode;
 }
 
 export default function CardTemplate(props: CardTemplateProps): JSX.Element {
   const classes = useStyles();
   const {
-    title, color, IconComponent, children
+    title, color, IconComponent, tabs, children
   } = props;
   const colorClass = color === 'secondary' ? classes.secondaryColor : classes.primaryColor;
 
   return (
     <Card>
-      <div className={classes.container}>
-        <div className={classes.flex}>
+      <div className={classes.flex}>
+        <div className={classnames(classes.flex, classes.container)}>
           <IconComponent
             fontSize="large"
             className={classnames([classes.icon, colorClass])}
@@ -60,8 +51,11 @@ export default function CardTemplate(props: CardTemplateProps): JSX.Element {
         </div>
       </div>
       <Divider />
-      <div className={classes.container}>
-        {children}
+      <div>
+        {tabs}
+        <div className={classes.container}>
+          {children}
+        </div>
       </div>
     </Card>
   );

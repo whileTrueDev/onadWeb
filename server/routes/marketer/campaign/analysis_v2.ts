@@ -26,10 +26,6 @@ router.route('/')
           FROM campaignLog as cl
           WHERE campaignId= ? AND type="CPM") AS totalViewCount,
         
-        (SELECT count(*) / 6
-          FROM campaignLog
-          WHERE campaignId = ?) AS totalTime,
-        
         (SELECT SUM(cashFromMarketer)
           FROM campaignLog
           WHERE campaignId= ? AND type="CPC") AS totalCPC,
