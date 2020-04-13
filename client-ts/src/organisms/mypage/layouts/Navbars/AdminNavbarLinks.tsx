@@ -45,17 +45,21 @@ function HeaderLinks(): JSX.Element {
     axios.get(`${HOST}/logout`).then(() => { history.push('/'); });
   }
 
+  // ------ For 읽지않은 알림 존재 시 알림 컴포넌트 열어두기 ------
+  const [isAlreadyRendered, setIsAlreadyRendered] = React.useState(false);
   const notificationRef = useRef<HTMLButtonElement | null>(null);
-  // useEffect(() => {
-  //   function handleUnreadNotificationOpen() {
-  //     if (!notificationGet.loading
-  //       && notificationGet.data
-  //       && (notificationGet.data.notifications.filter((noti) => noti.readState === 0).length)) {
-  //       handleAnchorOpenWithRef(notificationRef);
-  //     }
-  //   }
-  //   handleUnreadNotificationOpen();
-  // }, [handleAnchorOpenWithRef, notificationGet.data, notificationGet.loading]);
+  useEffect(() => {
+    function handleUnreadNotificationOpen(): void {
+      if (!notificationGet.loading && notificationGet.data
+        && (notificationGet.data.notifications.filter((noti) => noti.readState === 0).length)
+        && !isAlreadyRendered) {
+        setIsAlreadyRendered(true);
+        handleAnchorOpenWithRef(notificationRef);
+      }
+    }
+    handleUnreadNotificationOpen();
+  }, [handleAnchorOpenWithRef, isAlreadyRendered, notificationGet.data, notificationGet.loading]);
+  // ------ For 읽지않은 알림 존재 시 알림 컴포넌트 열어두기 ------
 
   return (
     <div>

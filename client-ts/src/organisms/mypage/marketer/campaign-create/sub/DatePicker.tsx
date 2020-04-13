@@ -1,5 +1,6 @@
 import 'date-fns';
-import React from 'react';
+import koLocale from 'date-fns/locale/ko';
+import React, { useState } from 'react';
 import { Grid, FormControlLabel, Checkbox } from '@material-ui/core';
 import DateFnsUtils from '@date-io/date-fns';
 import {
@@ -18,8 +19,8 @@ interface MaterialUIPickersProps {
 function MaterialUIPickers(props: MaterialUIPickersProps): JSX.Element {
   // The first commit of Material-UI
   const { state, dispatch } = props;
-  const [finOpen, setFinOpen] = React.useState(true);
 
+  const [today] = useState(new Date());
   const handleOpenDateChange = (date: any): void => {
     dispatch({ key: 'startDate', value: date });
   };
@@ -28,13 +29,14 @@ function MaterialUIPickers(props: MaterialUIPickersProps): JSX.Element {
     dispatch({ key: 'finDate', value: date });
   };
 
+  const [finOpen, setFinOpen] = React.useState(true);
   const handleEndChange = (): void => {
     setFinOpen(!finOpen);
     dispatch({ key: 'finDate', value: '' });
   };
 
   return (
-    <MuiPickersUtilsProvider utils={DateFnsUtils}>
+    <MuiPickersUtilsProvider utils={DateFnsUtils} locale={koLocale}>
       <Grid container>
         <KeyboardDatePicker
           autoOk
@@ -42,9 +44,10 @@ function MaterialUIPickers(props: MaterialUIPickersProps): JSX.Element {
           variant="inline"
           format="yyyy/MM/dd"
           margin="normal"
+          invalidDateMessage="날짜 형식이 올바르지 않습니다."
           id="start-date-picker"
           label="시작일"
-          minDate={state.startDate}
+          minDate={today}
           value={state.startDate}
           onChange={handleOpenDateChange}
           KeyboardButtonProps={{
@@ -58,6 +61,7 @@ function MaterialUIPickers(props: MaterialUIPickersProps): JSX.Element {
           variant="inline"
           format="yyyy/MM/dd"
           margin="normal"
+          invalidDateMessage="날짜 형식이 올바르지 않습니다."
           id="end-date-picker"
           label="종료일"
           minDate={state.startDate}

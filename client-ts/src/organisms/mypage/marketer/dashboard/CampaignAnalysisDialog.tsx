@@ -49,7 +49,7 @@ export default function CampaignReportDialog(props: CampaignReportDialogProps): 
   );
 
   const creatorsData = useGetRequest<{ campaignId: string }, CreatorDataInterface[] | null>(
-    '/marketer/campaign/analysis/v1/creator-data',
+    '/marketer/campaign/analysis/creator-data',
     { campaignId: selectedCampaign.campaignId }
   );
 

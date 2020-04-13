@@ -42,6 +42,7 @@ const TimeSelectorSet = (props: TimeSelectorSetProps): JSX.Element => {
           />
           <StyledSelectText
             onClick={setNoTime}
+            style={{ cursor: 'pointer' }}
             primary="시간대 설정 없이 계속 집행"
           />
         </Grid>
