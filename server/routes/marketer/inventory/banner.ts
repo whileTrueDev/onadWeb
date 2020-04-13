@@ -2,7 +2,8 @@ import express from 'express';
 import responseHelper from '../../../middlewares/responseHelper';
 import doQuery from '../../../model/doQuery';
 import marketerActionLogging from '../../../middlewares/marketerActionLog';
-import S3 from '../../../lib/AWS/S3';
+import slack from '../../../lib/slack/messageWithJson';
+// import S3 from '../../../lib/AWS/S3';
 
 const router = express.Router();
 
@@ -103,6 +104,15 @@ router.route('/')
               marketerActionLogging([
                 marketerId, MARKETER_ACTION_LOG_TYPE, JSON.stringify({ bannerId })
               ]);
+              slack({
+                summary: '배너 등록 알림',
+                text: '관리자 페이지에서 방금 등록된 배너를 확인하고, 심사하세요.',
+                fields: [
+                  { title: '마케터 아이디', value: marketerId!, short: true },
+                  { title: '배너 아이디', value: bannerId!, short: true },
+                  { title: '배너 설명', value: bannerDescription!, short: true },
+                ]
+              });
             })
             .catch((error) => {
               responseHelper.promiseError(error, next);

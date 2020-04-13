@@ -124,7 +124,7 @@ router.route('/account')
 
 /**
  * Deprecated
- * # 2020. 04. 03 - 광고페이지 삭제
+ * # 2020. 04. 21 - 광고페이지 삭제
  */
 router.route('/ad-page')
   .get(
