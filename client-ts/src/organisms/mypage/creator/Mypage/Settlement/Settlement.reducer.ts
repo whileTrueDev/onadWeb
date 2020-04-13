@@ -4,9 +4,9 @@ export interface AccountNumberFormState {
   name: string;
   code: string;
 }
-export type AccountNumberFormAction = {type: 'set'; name: string }
+export type AccountNumberFormAction = { type: 'set'; name: string }
 
-const AccountNumberFormReducer = (
+const SettlementFormReducer = (
   state: AccountNumberFormState, action: AccountNumberFormAction
 ): AccountNumberFormState => {
   const bank = banks.find((_bank) => _bank.bankName === action.name);
@@ -24,4 +24,4 @@ const AccountNumberFormReducer = (
   }
 };
 
-export default AccountNumberFormReducer;
+export default SettlementFormReducer;
