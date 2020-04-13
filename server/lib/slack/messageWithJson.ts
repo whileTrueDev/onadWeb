@@ -23,7 +23,7 @@ export default function messageWithJson({
         attachments: [
           {
             fallback: summary,
-            name: summary,
+            pretext: summary,
             color: '#3AA3E3',
             title: linkTitle,
             title_link: linkUrl,
