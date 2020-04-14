@@ -133,7 +133,7 @@ const manualSources = {
       },
       {
         image: '/pngs/dashboard/manual/new_marketer/marketer-costChart-03.png',
-        description: '캠페인 상태 및 광고비용 그래프, 광고비용 비율, 배너 송출 크리에이터, 지역별, 날짜별 상호작용을 한눈에 확인하실 수 있습니다.'
+        description: '캠페인 상태 및 광고비용 그래프, 광고비용 비율, 배너 송출 크리에이터, 지역별, 날짜별 유입 수를 한눈에 확인하실 수 있습니다.'
       },
     ],
   },

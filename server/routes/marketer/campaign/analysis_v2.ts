@@ -21,10 +21,9 @@ router.route('/')
           FROM campaignLog as cl
           WHERE campaignId= ? AND type="CPM") AS totalCPM,
         
-        (SELECT SUM(cashFromMarketer)
-            / (SELECT unitPrice FROM marketerDebit WHERE marketerId = ?)
+        (SELECT SUM(viewer)
           FROM campaignLog as cl
-          WHERE campaignId= ? AND type="CPM") AS totalViewCount,
+          WHERE campaignId= ? AND type="CPM" AND viewer IS NOT NULL) AS totalViewCount,
         
         (SELECT SUM(cashFromMarketer)
           FROM campaignLog

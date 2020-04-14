@@ -16,8 +16,8 @@ export default function messageWithJson({
   text, fields,
   footer = 'OnAD Slack Bot',
   footerIcon = 'https://platform.slack-edge.com/img/default_application_icon.png'
-}: SlackMessageData): void {
-  Axios
+}: SlackMessageData): Promise<number|string> {
+  return Axios
     .post(url,
       JSON.stringify({
         attachments: [
@@ -34,8 +34,10 @@ export default function messageWithJson({
           }
         ]
       }), { withCredentials: true })
+    .then((res) => res.status)
     .catch((err: any) => {
       const { status, statusText } = err.response;
       console.log(status, statusText, 'ERR in Slack alarm to onad_alarm, check slack webhook');
+      return 'slack messaging fail';
     });
 }
