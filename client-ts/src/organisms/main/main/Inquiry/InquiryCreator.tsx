@@ -64,10 +64,10 @@ function InquiryCreator({ confirmClose }: Props): JSX.Element {
   return (
     <Container className={classes.root}>
       <Typography variant="h3" align="center" component="h2" className={classes.title}>
-        광고 문의하기
+        온애드에 문의하기
       </Typography>
       <Typography variant="h5" align="center" component="h2" className={classes.subTitle}>
-        광고 관련 문의를 남겨주시면 상담해드립니다
+        어떠한 문의든 괜찮습니다.
       </Typography>
       <Grid container className={classes.contentWraper} direction="column">
         <form onSubmit={handleSubmit} className={classes.cardWrapper} id="inquireForm">
