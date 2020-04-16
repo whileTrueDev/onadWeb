@@ -26,7 +26,6 @@ import {
   TimeAction,
   NameInterface
 } from './campaignReducer';
-import StyledItemText from '../../../../atoms/StyledItemText';
 
 const StyledTableCell = withStyles((theme) => ({
   head: {

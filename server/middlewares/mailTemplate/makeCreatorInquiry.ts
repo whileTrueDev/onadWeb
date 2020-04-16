@@ -1,12 +1,7 @@
 interface InputForm {
-  name?: string;
-  email?: string;
-  contactNumber?: number;
-  brandName?: string;
-  brandPage?: string;
-  content?: string;
+  name?: string; email?: string; platform?: string; content?: string;
 }
-function makeInqurie(request: InputForm): string {
+function makeCreatorInquiry(request: InputForm): string {
   const inputData = request;
   return (`
   <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><!--[if IE]><html xmlns="http://www.w3.org/1999/xhtml" class="ie"><![endif]--><!--[if !IE]><!--><html style="margin: 0;padding: 0;" xmlns="http://www.w3.org/1999/xhtml"><!--<![endif]--><head>
@@ -502,7 +497,7 @@ body{background-color:#fbfbfb}.logo a:hover,.logo a:focus{color:#1e2e3b !importa
         
             <div style="Margin-left: 20px;Margin-right: 20px;Margin-top: 24px;">
       <div style="mso-line-height-rule: exactly;mso-text-raise: 4px;">
-        <h1 style="Margin-top: 0;Margin-bottom: 0;font-style: normal;font-weight: normal;color: #565656;font-size: 22px;line-height: 31px;font-family: arial,sans-serif;text-align: center;"><span class="font-arial">${inputData.name}&#45784;&#51032;&#32;&#52896;&#54168;&#51064;&#32;&#47928;&#51032;&#32;&#50836;&#52397;&#51077;&#45768;&#45796;</span></h1><p style="Margin-top: 20px;Margin-bottom: 0;font-family: arial,sans-serif;text-align: center;"><span class="font-arial">&#54856;&#54168;&#51060;&#51648;&#32;&#47700;&#51064;&#51012;&#32;&#53685;&#54644;&#32;&#52896;&#54168;&#51064;&#32;&#47928;&#51032;&#50640;&#32;&#45824;&#54620;&#32;&#45236;&#50857;&#51077;&#45768;&#45796;&#46;</span></p><p style="Margin-top: 20px;Margin-bottom: 0;font-family: arial,sans-serif;text-align: center;"><span class="font-arial">&#54644;&#45817;&#32;&#45236;&#50857;&#51008;&#32;&#45796;&#51020;&#44284;&#32;&#44057;&#49845;&#45768;&#45796;&#46;</span></p><p style="Margin-top: 20px;Margin-bottom: 20px;font-family: arial,sans-serif;text-align: center;"><span class="font-arial">&nbsp;</span></p>
+        <h1 style="Margin-top: 0;Margin-bottom: 0;font-style: normal;font-weight: normal;color: #565656;font-size: 22px;line-height: 31px;font-family: arial,sans-serif;text-align: center;"><span class="font-arial">크리에이터 ${inputData.name}님의 광고 문의 입니다.</span></h1><p style="Margin-top: 20px;Margin-bottom: 0;font-family: arial,sans-serif;text-align: center;"><span class="font-arial">&#54644;&#45817;&#32;&#45236;&#50857;&#51008;&#32;&#45796;&#51020;&#44284;&#32;&#44057;&#49845;&#45768;&#45796;&#46;</span></p><p style="Margin-top: 20px;Margin-bottom: 20px;font-family: arial,sans-serif;text-align: center;"><span class="font-arial">&nbsp;</span></p>
       </div>
     </div>
         
@@ -522,7 +517,7 @@ body{background-color:#fbfbfb}.logo a:hover,.logo a:focus{color:#1e2e3b !importa
         
             <div style="Margin-left: 20px;Margin-right: 20px;">
       <div style="mso-line-height-rule: exactly;mso-text-raise: 4px;">
-        <p class="size-20" style="Margin-top: 0;Margin-bottom: 20px;font-family: arial,sans-serif;font-size: 17px;line-height: 26px;text-align: center;" lang="x-size-20"><span class="font-arial"><strong>&#51060;&#47700;&#51068;&#32;&#58;&#32;</strong>${inputData.email}</span></p>
+        <p class="size-20" style="Margin-top: 0;Margin-bottom: 20px;font-family: arial,sans-serif;font-size: 17px;line-height: 26px;text-align: center;" lang="x-size-20"><span class="font-arial"><strong>mail :</strong>${inputData.email}</span></p>
       </div>
     </div>
         
@@ -532,47 +527,21 @@ body{background-color:#fbfbfb}.logo a:hover,.logo a:focus{color:#1e2e3b !importa
 
     <div style="Margin-left: 20px;Margin-right: 20px;">
     <div style="mso-line-height-rule: exactly;mso-text-raise: 4px;">
-      <p class="size-20" style="Margin-top: 0;Margin-bottom: 20px;font-family: arial,sans-serif;font-size: 17px;line-height: 26px;text-align: center;" lang="x-size-20"><span class="font-arial"><strong>&#50672;&#46973;&#52376;&#32;&#58;&#32;</strong>${inputData.contactNumber}</span></p>
+      <p class="size-20" style="Margin-top: 0;Margin-bottom: 20px;font-family: arial,sans-serif;font-size: 17px;line-height: 26px;text-align: center;" lang="x-size-20"><span class="font-arial"><strong>platform: </strong>${inputData.platform}</span></p>
     </div>
-  </div>
-      
-          <div style="Margin-left: 20px;Margin-right: 20px;">
-    <div class="divider" style="display: block;font-size: 2px;line-height: 2px;Margin-left: auto;Margin-right: auto;width: 40px;background-color: #c8c8c8;Margin-bottom: 20px;">&nbsp;</div>
   </div>
 
-  <div style="Margin-left: 20px;Margin-right: 20px;">
-    <div style="mso-line-height-rule: exactly;mso-text-raise: 4px;">
-      <p class="size-20" style="Margin-top: 0;Margin-bottom: 20px;font-family: arial,sans-serif;font-size: 17px;line-height: 26px;text-align: center;" lang="x-size-20"><span class="font-arial"><strong>&#48652;&#47004;&#46300;&#47749;&#32;&#58;&#32;</strong>${inputData.brandName}</span></p>
-    </div>
-  </div>
-      
-          <div style="Margin-left: 20px;Margin-right: 20px;">
+    <div style="Margin-left: 20px;Margin-right: 20px;">
     <div class="divider" style="display: block;font-size: 2px;line-height: 2px;Margin-left: auto;Margin-right: auto;width: 40px;background-color: #c8c8c8;Margin-bottom: 20px;">&nbsp;</div>
   </div>
 
   <div style="Margin-left: 20px;Margin-right: 20px;">
   <div style="mso-line-height-rule: exactly;mso-text-raise: 4px;">
-    <p class="size-20" style="Margin-top: 0;Margin-bottom: 20px;font-family: arial,sans-serif;font-size: 17px;line-height: 26px;text-align: center;" lang="x-size-20"><span class="font-arial"><strong>Homepage</strong>${inputData.brandPage}</span></p>
+  <p class="size-20" style="Margin-top: 0;Margin-bottom: 20px;font-family: arial,sans-serif;font-size: 17px;line-height: 26px;text-align: center;" lang="x-size-20"><span class="font-arial"><strong>&#47928;&#51032;&#32;&#49345;&#49464;&#45236;&#50857;</strong></span></p>
+    <p class="size-20" style="Margin-top: 0;Margin-bottom: 20px;font-family: arial,sans-serif;font-size: 17px;line-height: 26px;text-align: center;" lang="x-size-20"><span class="font-arial">${inputData.content}</span></p>
   </div>
 </div>
     
-        <div style="Margin-left: 20px;Margin-right: 20px;">
-  <div class="divider" style="display: block;font-size: 2px;line-height: 2px;Margin-left: auto;Margin-right: auto;width: 40px;background-color: #c8c8c8;Margin-bottom: 20px;">&nbsp;</div>
-</div>
-
-
-  <div style="Margin-left: 20px;Margin-right: 20px;">
-    <div style="mso-line-height-rule: exactly;mso-text-raise: 4px;">
-    <p class="size-20" style="Margin-top: 0;Margin-bottom: 20px;font-family: arial,sans-serif;font-size: 17px;line-height: 26px;text-align: center;" lang="x-size-20"><span class="font-arial"><strong>&#47928;&#51032;&#32;&#49345;&#49464;&#45236;&#50857;</strong></span></p>
-      <p class="size-20" style="Margin-top: 0;Margin-bottom: 20px;font-family: arial,sans-serif;font-size: 17px;line-height: 26px;text-align: center;" lang="x-size-20"><span class="font-arial">${inputData.content}</span></p>
-    </div>
-  </div>
-      
-          <div style="Margin-left: 20px;Margin-right: 20px;">
-    <div class="divider" style="display: block;font-size: 2px;line-height: 2px;Margin-left: auto;Margin-right: auto;width: 40px;background-color: #c8c8c8;Margin-bottom: 20px;">&nbsp;</div>
-  </div>
-
-
             <div style="Margin-left: 20px;Margin-right: 20px;Margin-bottom: 24px;">
       <div style="mso-line-height-rule: exactly;mso-text-raise: 4px;">
         <p style="Margin-top: 0;Margin-bottom: 0;font-family: arial,sans-serif;text-align: center;"><span class="font-arial">&nbsp;</span></p><p style="Margin-top: 20px;Margin-bottom: 0;font-family: arial,sans-serif;text-align: center;"><span class="font-arial">&#50948;&#50640;&#32;&#47749;&#49884;&#46108;&#32;&#47700;&#51068;&#47196;&#32;&#47928;&#51032;&#32;&#45236;&#50857;&#50640;&#32;&#45824;&#54620;&#32;&#45813;&#51109;&#32;&#49569;&#48512;&#32;&#48148;&#46989;&#45768;&#45796;&#46;</span></p>
@@ -637,4 +606,4 @@ body{background-color:#fbfbfb}.logo a:hover,.logo a:focus{color:#1e2e3b !importa
 `);
 }
 
-export default makeInqurie;
+export default makeCreatorInquiry;

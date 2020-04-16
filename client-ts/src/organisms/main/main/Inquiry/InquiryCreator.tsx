@@ -1,13 +1,7 @@
 import React, { useState } from 'react';
 import {
-  Checkbox,
-  FormControlLabel,
-  Button,
-  Typography,
-  Input,
-  Container,
-  Grid,
-  CircularProgress,
+  Checkbox, FormControlLabel, Button,
+  Typography, Input, Container, Grid, CircularProgress,
 } from '@material-ui/core';
 import useStyles from '../style/Inqurie.style';
 import HOST from '../../../../config';
@@ -21,16 +15,15 @@ interface Props {
 }
 
 const initialContent = {
-  name: '',
+  name: '', // 채널 명 or 활동 명
   email: '',
-  contactNumber: '',
-  brandName: '',
+  platform: '', // 송출 플랫폼
   content: ''
 };
 
 const InquiryResult: any = {};
 
-function Inquire({ confirmClose }: Props): JSX.Element {
+function InquiryCreator({ confirmClose }: Props): JSX.Element {
   const classes = useStyles();
   const [checked, setChecked] = useState(false);
   const confirmDialog = useDialog();
@@ -55,7 +48,7 @@ function Inquire({ confirmClose }: Props): JSX.Element {
 
     setLoading(true);
     if (checked) {
-      axios.post(`${HOST}/mail/inquiry`, AnonymousUser)
+      axios.post(`${HOST}/mail/inquiry/creator`, AnonymousUser)
         .then(() => {
           confirmDialog.handleOpen();
           setInquiryContent(initialContent);
@@ -83,7 +76,7 @@ function Inquire({ confirmClose }: Props): JSX.Element {
             <Grid container direction="row" alignItems="center" className={classes.cardContent}>
               <Grid item xs={6} sm={6} className={classes.detailWrap}>
                 <Typography className={classes.detailTitle}>
-                  * 성명
+                  * 채널 명 또는 활동 명
                 </Typography>
                 <Input
                   className={classes.datailContent}
@@ -96,7 +89,7 @@ function Inquire({ confirmClose }: Props): JSX.Element {
               </Grid>
               <Grid item xs={6} sm={6} className={classes.detailWrap}>
                 <Typography className={classes.detailTitle}>
-                  * 이메일
+                  * 활동 플랫폼 (유튜브/트위치/아프리카tv 등)
                 </Typography>
                 <Input
                   className={classes.datailContent}
@@ -104,7 +97,7 @@ function Inquire({ confirmClose }: Props): JSX.Element {
                   disableUnderline
                   onChange={onChange}
                   required
-                  name="email"
+                  name="platform"
                 />
               </Grid>
             </Grid>
@@ -112,7 +105,7 @@ function Inquire({ confirmClose }: Props): JSX.Element {
             <Grid container direction="row" alignItems="center" className={classes.cardContent}>
               <Grid item xs={6} sm={6} className={classes.detailWrap}>
                 <Typography className={classes.detailTitle}>
-                  * 연락처
+                  * 이메일
                 </Typography>
                 <Input
                   className={classes.datailContent}
@@ -120,19 +113,7 @@ function Inquire({ confirmClose }: Props): JSX.Element {
                   onChange={onChange}
                   disableUnderline
                   required
-                  name="contactNumber"
-                />
-              </Grid>
-              <Grid item xs={6} sm={6} className={classes.detailWrap}>
-                <Typography className={classes.detailTitle}>
-                  브랜드명
-                </Typography>
-                <Input
-                  className={classes.datailContent}
-                  classes={{ focused: classes.inputStyle }}
-                  onChange={onChange}
-                  disableUnderline
-                  name="brandName"
+                  name="email"
                 />
               </Grid>
             </Grid>
@@ -140,7 +121,7 @@ function Inquire({ confirmClose }: Props): JSX.Element {
             <Grid container className={classes.cardContent}>
               <Grid item xs={12} sm={12} className={classes.detailWrap}>
                 <Typography className={classes.detailTitle}>
-                  * 상세내용 (배너제작에 관한 내용도 질문바랍니다)
+                  * 상세내용 (어떤 질문이든 가능합니다.)
                 </Typography>
                 <Input
                   classes={{ focused: classes.inputStyle }}
@@ -200,7 +181,7 @@ function Inquire({ confirmClose }: Props): JSX.Element {
         maxWidth="xs"
         buttons={(
           <div>
-            <Button onClick={() => {
+            <Button onClick={(): void => {
               confirmDialog.handleClose();
               if (confirmClose) { confirmClose(); }
             }}
@@ -217,4 +198,4 @@ function Inquire({ confirmClose }: Props): JSX.Element {
   );
 }
 
-export default Inquire;
+export default InquiryCreator;
