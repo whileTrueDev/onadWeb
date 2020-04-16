@@ -1,7 +1,6 @@
 // 데이터 가공 함수가 위치할 것임.
 // 데이터 가공함수에서의 오류는 모두 throw new Error('에러메시지') 로 처리함.
 // 요청자에게는 500 에러 가 전송될 것임. (에러메시지는 develop 환경에서만 볼 수 있음.)
-import { QueryResult } from '../../@types/db';
 import doQuery from '../../model/doQuery';
 
 interface PriorityData {

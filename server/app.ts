@@ -27,7 +27,8 @@ import mailRouter from './routes/mail';
 import noticeRouter from './routes/notice';
 import trackingRouter from './routes/tracking';
 import taxBillScheduler from './middlewares/scheduler/taxBillScheduler';
-import S3 from './lib/AWS/S3';
+// import S3 from './lib/AWS/S3';
+import Controller from './controller';
 
 const MySQLStore = require('express-mysql-session')(session);
 
@@ -76,10 +77,16 @@ class OnadWebApi {
 
   constructor() {
     this.app = express();
+    // this.connectDataBase();
 
-    this.app.set('views', path.join(__dirname, 'views'));
-    this.app.set('view engine', 'ejs');
+    // initialize settings
+    this.initializeAppSettings();
 
+    // Initialize Controllers (Routers)
+    this.initializeRouters();
+  }
+
+  private initializeAppSettings(): void {
     this.app.use(helmet());
     this.app.use(express.static(path.join(__dirname, 'public'))); // 정적리소스 처리
     this.app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
@@ -115,7 +122,9 @@ class OnadWebApi {
     // passport 초기화를 통해 'local' 전략이 수립된다.
     this.app.use(passport.initialize());
     this.app.use(passport.session());
+  }
 
+  private initializeRouters(): void {
     // For aws ELB health check
     this.app.get('/', (req, res, next) => {
       res.sendStatus(200);
@@ -163,15 +172,15 @@ class OnadWebApi {
       err: Err, req: express.Request, res: express.Response, next: express.NextFunction
     ) => {
       /** **********************
-       * Production Environment
-       * 에러메세지에서 Error Stack 정보를 출력하는 것은 대단히 위험한 일이다.
-       * 내부적인 코드 구조와 프레임웍 구조를 외부에 노출함으로써, 해커들에게, 해킹을 할 수 있는 정보를 제공하기 때문이다.
-       * 일반적인 서비스 구조에서는 아래와 같은 에러 스택정보를 API 에러 메세지에 포함 시키지 않는 것이 바람직 하다.
-       * 그렇지만, 내부 개발중이거나 디버깅 시에는 매우 유용한데, API 서비스를 개발시,
-       * 서버의 모드를 production과 dev 모드로 분리해서, 옵션에 따라 dev 모드등으로 기동시,
-       * REST API의 에러 응답 메세지에 에러 스택 정보를 포함해서 리턴하도록 하면, 디버깅에 매우 유용하게 사용할 수 있다.
-       * from https://bcho.tistory.com/914
-       ********************** */
+   * Production Environment
+   * 에러메세지에서 Error Stack 정보를 출력하는 것은 대단히 위험한 일이다.
+   * 내부적인 코드 구조와 프레임웍 구조를 외부에 노출함으로써, 해커들에게, 해킹을 할 수 있는 정보를 제공하기 때문이다.
+   * 일반적인 서비스 구조에서는 아래와 같은 에러 스택정보를 API 에러 메세지에 포함 시키지 않는 것이 바람직 하다.
+   * 그렇지만, 내부 개발중이거나 디버깅 시에는 매우 유용한데, API 서비스를 개발시,
+   * 서버의 모드를 production과 dev 모드로 분리해서, 옵션에 따라 dev 모드등으로 기동시,
+   * REST API의 에러 응답 메세지에 에러 스택 정보를 포함해서 리턴하도록 하면, 디버깅에 매우 유용하게 사용할 수 있다.
+   * from https://bcho.tistory.com/914
+   ********************** */
 
       // set locals, only providing error in development
       const serverErrorMessage = 'Internal Server Error';
@@ -188,6 +197,12 @@ class OnadWebApi {
           message: err.message || serverErrorMessage
         });
       }
+    });
+  }
+
+  private initializeControllers(controllers: Controller[]): void {
+    controllers.forEach((controller) => {
+      this.app.use('/', controller.router);
     });
   }
 }
