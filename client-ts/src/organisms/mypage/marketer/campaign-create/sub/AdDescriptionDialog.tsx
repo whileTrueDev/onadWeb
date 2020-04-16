@@ -1,9 +1,14 @@
 import React from 'react';
+import classnames from 'classnames';
 import Dialog from '@material-ui/core/Dialog';
 import { makeStyles } from '@material-ui/core/styles';
-import { Typography } from '@material-ui/core';
+import { Typography, IconButton } from '@material-ui/core';
+import { Close } from '@material-ui/icons';
+import AdDescriptionSelect from './AdDescriptionSelect';
+import { OptionInterface, AdMaterial } from '../interfaces';
 
 const useStyles = makeStyles((theme) => ({
+  select: { marginTop: 32, marginBottom: 32 },
   itmeTitle: {
     display: 'flex',
     alignItems: 'center',
@@ -13,15 +18,28 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.success.main,
     padding: 32,
     color: theme.palette.getContrastText(theme.palette.success.dark)
-  }
+  },
+  imageSection: { padding: 16, textAlign: 'center' },
+  section: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'column',
+    padding: 32,
+  },
+  last: { marginBottom: 32 }
 }));
 
 interface AdDescriptionDialogProps {
   open: boolean; onClose: () => void;
-
+  selectedOption: OptionInterface;
+  selectedMaterial: AdMaterial;
+  handleSelectedMaterial: (material: AdMaterial) => void;
 }
 export default function AdDescriptionDialog(props: AdDescriptionDialogProps): JSX.Element {
-  const { open, onClose } = props;
+  const {
+    open, onClose, selectedOption, selectedMaterial, handleSelectedMaterial
+  } = props;
   const classes = useStyles();
 
   return (
@@ -31,48 +49,52 @@ export default function AdDescriptionDialog(props: AdDescriptionDialogProps): JS
       fullWidth
       maxWidth="md"
     >
-      {/* 광고 상품 이름 및 광고 구성 선택  */}
+      <div style={{ position: 'relative', top: 0, right: 0 }}>
+        <IconButton onClick={onClose}><Close /></IconButton>
+      </div>
 
-      <div style={{
-        padding: 32,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        flexDirection: 'column',
-      }}
-      >
-        제목 + 보고싶은 광고 구성 선택
-        <div style={{ display: 'flex', justifyContent: 'space-evenly', width: '100%' }}>
-          <div>1 뭐시기</div>
-          <div>2 뭐시기</div>
-          <div>3 뭐시기</div>
-        </div>
+      {/* 광고 상품 이름 및 광고 구성 선택  */}
+      <div className={classes.select}>
+        <AdDescriptionSelect
+          selectedMaterialName={selectedMaterial.name}
+          primary={selectedOption.primaryText}
+          opt={selectedOption}
+          handleMaterialClick={(material: AdMaterial): void => {
+            handleSelectedMaterial(material);
+          }}
+        />
       </div>
 
 
       {/* 선택된 구성 타이틀 */}
       <div className={classes.itmeTitle}>
-        <Typography variant="h6" style={{ padding: 16, fontWeight: 700, }}>배너광고</Typography>
-        <Typography variant="body2">배너광고 설명배너광고 설명배너광고 설명배너광고 설명배너광고 설명</Typography>
+        <Typography variant="h5" align="center" style={{ padding: 16, fontWeight: 700, }}>{selectedMaterial.name}</Typography>
+        {selectedMaterial.desc.split('\n').map((desc) => (
+          <Typography key={desc} variant="body2" align="center">{desc}</Typography>
+        ))}
       </div>
 
       {/* 이미지 및 설명 */}
-      <div style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        flexDirection: 'column',
-        padding: 32
-      }}
-      >
-        <div style={{ padding: 16, textAlign: 'center' }}>
-          <Typography variant="h6">모바일 화면</Typography>
-          <img height={500} src="/pngs/dashboard/ad_desc/모바일배너.png" alt="logo" />
-        </div>
-        <div style={{ padding: 16, textAlign: 'center' }}>
-          <Typography variant="h6">피시 화면</Typography>
-          <img height={500} src="/pngs/dashboard/ad_desc/피시배너.png" alt="logo" />
-        </div>
+      <div className={classes.section}>
+        {selectedMaterial.images.map((image) => (
+          <div key={image.desc} className={classes.imageSection}>
+            {image.desc.split('\n').map((d) => (
+              <Typography key={d} variant="h6">{d}</Typography>
+            ))}
+            <img height={500} src={image.src} alt="logo" />
+          </div>
+        ))}
+      </div>
+
+      <div className={classnames(classes.section, classes.last)}>
+        <Typography variant="h6" style={{ textTransform: 'none' }}>
+          과금유형:
+          {' '}
+          {selectedMaterial.billingType}
+        </Typography>
+        {selectedMaterial.lastDesc.split('\n').map((ldesc) => (
+          <Typography key={ldesc} variant="body1">{ldesc}</Typography>
+        ))}
       </div>
     </Dialog>
   );

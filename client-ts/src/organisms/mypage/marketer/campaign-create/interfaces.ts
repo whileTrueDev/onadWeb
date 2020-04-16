@@ -27,3 +27,13 @@ export interface LandingUrlData {
   regiDate: string;
   updateDate: string;
 }
+
+export interface AdMaterial {
+   name: string; desc: string;
+   images: {src: string; desc: string}[]; lastDesc: string ;
+   billingType: string;
+}
+export interface OptionInterface {
+  id: string; primaryText: string; secondaryText: string;
+  materials?: AdMaterial[];
+}

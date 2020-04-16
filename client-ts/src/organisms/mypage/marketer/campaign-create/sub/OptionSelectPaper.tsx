@@ -27,9 +27,8 @@ interface OptionSelectPaperProps {
   checked: boolean;
   disabled?: boolean;
   children?: JSX.Element;
-  innerPaperChildren?: JSX.Element;
+  innerPaperChildren?: React.ReactNode;
 }
-
 
 export default function OptionSelectPaper(props: OptionSelectPaperProps): JSX.Element {
   const {

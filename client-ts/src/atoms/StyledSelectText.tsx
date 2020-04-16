@@ -7,6 +7,7 @@ interface StyledSelectTextProps extends ListItemTextProps {
 const StyledSelectText = withStyles((theme: Theme) => ({
   primary: ({ fontSize, color }: {fontSize?: number|string; color?: string}) => ({
     fontSize: fontSize || '18px',
+    lineHeight: 2.0,
     fontWeight: 700,
     [theme.breakpoints.down('sm')]: {
       fontSize: '16px',
