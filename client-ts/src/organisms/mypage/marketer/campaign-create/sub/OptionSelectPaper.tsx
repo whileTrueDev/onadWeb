@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTheme, makeStyles, Theme } from '@material-ui/core/styles';
-import { Paper, ButtonBase } from '@material-ui/core';
+import { Typography, Paper, ButtonBase } from '@material-ui/core';
 import StyledSelectText from '../../../../../atoms/StyledSelectText';
 import GreenCheckbox from '../../../../../atoms/GreenCheckBox';
 
@@ -69,11 +69,15 @@ export default function OptionSelectPaper(props: OptionSelectPaperProps): JSX.El
               checked={checked}
               onChange={handleSelect}
             />
-            <StyledSelectText
+            <Typography variant="h5" style={{ fontWeight: 700, paddingBottom: 16 }}>{primaryText}</Typography>
+            {secondaryText.split('\n').map((t) => (
+              <Typography key={t} variant="body1">{t}</Typography>
+            ))}
+            {/* <StyledSelectText
               primary={primaryText}
               secondary={secondaryText}
               color={checked ? theme.palette.common.white : 'inherit'}
-            />
+            /> */}
             {innerPaperChildren || null}
           </div>
         </Paper>

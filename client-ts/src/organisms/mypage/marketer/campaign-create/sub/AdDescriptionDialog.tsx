@@ -19,6 +19,8 @@ const useStyles = makeStyles((theme) => ({
     padding: 32,
     color: theme.palette.getContrastText(theme.palette.success.dark)
   },
+  itemName: { padding: 16, fontWeight: 700, },
+  close: { position: 'relative', top: 0, right: 0 },
   imageSection: { padding: 16, textAlign: 'center' },
   section: {
     display: 'flex',
@@ -49,7 +51,7 @@ export default function AdDescriptionDialog(props: AdDescriptionDialogProps): JS
       fullWidth
       maxWidth="md"
     >
-      <div style={{ position: 'relative', top: 0, right: 0 }}>
+      <div className={classes.close}>
         <IconButton onClick={onClose}><Close /></IconButton>
       </div>
 
@@ -68,7 +70,9 @@ export default function AdDescriptionDialog(props: AdDescriptionDialogProps): JS
 
       {/* 선택된 구성 타이틀 */}
       <div className={classes.itmeTitle}>
-        <Typography variant="h5" align="center" style={{ padding: 16, fontWeight: 700, }}>{selectedMaterial.name}</Typography>
+        <Typography variant="h5" align="center" className={classes.itemName}>
+          {selectedMaterial.name}
+        </Typography>
         {selectedMaterial.desc.split('\n').map((desc) => (
           <Typography key={desc} variant="body2" align="center">{desc}</Typography>
         ))}
