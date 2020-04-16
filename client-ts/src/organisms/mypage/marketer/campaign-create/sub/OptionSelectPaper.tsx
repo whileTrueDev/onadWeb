@@ -65,7 +65,7 @@ export default function OptionSelectPaper(props: OptionSelectPaperProps): JSX.El
           }}
           elevation={checked ? 1 : 4}
         >
-          <div style={{ alignItems: 'center', flexDirection: 'column' }}>
+          <div style={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
             <GreenCheckbox
               checked={checked}
               onChange={handleSelect}
