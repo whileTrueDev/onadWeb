@@ -19,7 +19,7 @@ const schedule = require('node-schedule');
 const doQuery = require('../model/calculatorQuery');
 const pool = require('../model/connectionPool');
 
-const FEERATE = 0.6;
+const FEERATE = 0.3;
 
 // 각 action에 따른 cash
 const getCreatorCash = ({ payouts }) => Math.round(payouts * FEERATE);

@@ -5,7 +5,7 @@ const app = express();
 
 console.log('계산프로그램을 IMPORT 합니다.');
 require('./javascripts/calculation_v.3');
-require('./javascripts/landingCalculator_v.1');
+// require('./javascripts/landingCalculator_v.1');
 require('./javascripts/updatelimit');
 require('./javascripts/trackingCalculator');
 
