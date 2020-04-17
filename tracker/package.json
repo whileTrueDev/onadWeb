@@ -6,7 +6,6 @@
   "author": "M'baku",
   "license": "MIT",
   "dependencies": {
-    "@types/dotenv": "^8.2.0",
     "@types/express": "^4.17.6",
     "@types/express-session": "^1.17.0",
     "@types/http-errors": "^1.6.3",

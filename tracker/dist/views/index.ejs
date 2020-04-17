@@ -2,12 +2,29 @@
 
 <head>
   <title>
-    dkdkdk
+    redirect
   </title>
+  <script src='http://code.jquery.com/jquery-latest.js'></script>
 </head>
 
 <body>
-  body
+  <script>
+    const {
+      userAgent
+    } = navigator;
+    $.ajax({
+      url: window.location.href,
+      dataType: 'json',
+      type: 'GET',
+      data: {
+        userAgent,
+      },
+      success: function () {
+        return;
+      }
+    });
+  </script>
+  <p>Redirecting...</p>
 </body>
 
 </html>
