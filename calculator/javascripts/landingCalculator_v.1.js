@@ -18,7 +18,7 @@ const pool = require('../model/connectionPool');
 const COST_TYPE_2 = 100;
 
 const GAUGE = 500;
-const FEERATE = 0.6;
+const FEERATE = 0.3;
 
 // 각 type에 따른 수 만큼, type이 0일 때는 의미가 없으므로
 const getCreatorCash = ({ count, type }) => {

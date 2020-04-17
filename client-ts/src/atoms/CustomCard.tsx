@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme) => ({
     },
     marginBotton: '20px',
     marginTop: '20px'
-  }
+  },
 }));
 
 /**
@@ -25,11 +25,12 @@ const useStyles = makeStyles((theme) => ({
  */
 interface CustomCardProps {
   iconComponent: React.ReactNode;
+  secondComponent?: React.ReactNode;
   buttonComponent?: React.ReactNode;
   children: React.ReactNode;
 }
 export default function CustomCard({
-  iconComponent, buttonComponent, children
+  iconComponent, secondComponent, buttonComponent, children
 }: CustomCardProps): JSX.Element {
   const classes = useStyles();
   return (
@@ -38,7 +39,12 @@ export default function CustomCard({
         <CardIcon color="blueGray">
           {iconComponent}
         </CardIcon>
-        { buttonComponent && (buttonComponent)}
+        {secondComponent && (
+          <CardIcon>
+            {secondComponent}
+          </CardIcon>
+        )}
+        {buttonComponent && (buttonComponent)}
       </CardHeader>
       <CardBody>
         {children}

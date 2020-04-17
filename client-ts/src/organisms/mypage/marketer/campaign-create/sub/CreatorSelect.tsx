@@ -67,7 +67,7 @@ const CreatorSelect = (props: CreatorSelectProps): JSX.Element => {
     if (priorityType !== 'type0') {
       return;
     }
-    if (checkedCreators.length >= 3) {
+    if (checkedCreators.length >= 1) {
       setStepComplete(true);
       setSelectedNames(creatorNames);
     } else {

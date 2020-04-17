@@ -62,11 +62,11 @@ const GameSelect = (props: GameSelectProps): JSX.Element => {
     }
   }, [checkedGames.length, priorityType, setStepComplete]);
 
-  function handleGameClick(game: GameDataInterface): void {
-    if (checkedGames.includes(game.gameName)) {
-      checkedGamesDispatch({ type: 'delete', value: game.gameName });
+  function handleGameClick(game: string): void {
+    if (checkedGames.includes(game)) {
+      checkedGamesDispatch({ type: 'delete', value: game });
     } else {
-      checkedGamesDispatch({ type: 'push', value: game.gameName });
+      checkedGamesDispatch({ type: 'push', value: game });
     }
   }
 
@@ -93,7 +93,7 @@ const GameSelect = (props: GameSelectProps): JSX.Element => {
                   gameNameKr={game.gameNameKr}
                   count={game.count}
                   boxArt={game.boxArt}
-                  handleClick={(): void => { handleGameClick(game); }}
+                  handleClick={(): void => { handleGameClick(game.gameName); }}
                   backgroundColor={checkedGames.includes(game.gameName)
                     ? theme.palette.primary.light : 'inherit'}
                   color={checkedGames.includes(game.gameName)
@@ -117,6 +117,8 @@ const GameSelect = (props: GameSelectProps): JSX.Element => {
                         if (event.target.value) {
                           checkedGamesDispatch({ type: 'push', value: event.target.value });
                         }
+                      } else if (event.target.value) {
+                        checkedGamesDispatch({ type: 'delete', value: event.target.value });
                       }
                     }
                   }}
@@ -148,6 +150,7 @@ const GameSelect = (props: GameSelectProps): JSX.Element => {
                   label={game}
                   color="primary"
                   variant="outlined"
+                  onDelete={(): void => { handleGameClick(game); }}
                   style={{ margin: 4 }}
                 />
               ))}
