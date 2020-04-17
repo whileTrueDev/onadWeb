@@ -74,7 +74,7 @@ export default function AdDescriptionDialog(props: AdDescriptionDialogProps): JS
           {selectedMaterial.name}
         </Typography>
         {selectedMaterial.desc.split('\n').map((desc) => (
-          <Typography key={desc} variant="body2" align="center">{desc}</Typography>
+          <Typography key={desc} variant="body1" align="center">{desc}</Typography>
         ))}
       </div>
 

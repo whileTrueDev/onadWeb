@@ -18,8 +18,9 @@ const options: OptionInterface[] = [
       },
       {
         name: '클릭 배너',
-        desc: '방송화면 아래에 비치되어 클릭 시, 랜딩페이지로 이동할 수 있는 배너입니다.',
+        desc: '방송화면 아래, 방송인의 프로필에 비치되어 클릭 시, 랜딩페이지로 이동할 수 있는 배너입니다.',
         images: [
+          { desc: '모바일 화면 | 방송인 프로필에 위치하며 클릭 시 랜딩페이지로 이동합니다.', src: '/pngs/dashboard/ad_desc/모바일하단배너.png' },
           { desc: 'PC 화면 | 영상 하단에 위치하며 클릭 시 랜딩페이지로 이동합니다.', src: '/pngs/dashboard/ad_desc/피시하단배너.png' },
         ],
         billingType: 'eCPC',

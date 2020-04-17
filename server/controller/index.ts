@@ -13,12 +13,14 @@ export interface RequestPromiseHandler {
 }
 
 export default class Controller {
+  path = '';
+
   router = express.Router();
 
   // *********************************
   // ********** Middlewares **********
   // *********************************
-  protected checkSessionExists: RequestHandler = (req, res, next) => {
+  private checkSessionExists: RequestHandler = (req, res, next) => {
     /** ******************
      * Session Check
      ****************** */
@@ -30,7 +32,7 @@ export default class Controller {
     }
   };
 
-  protected checkAuth: RequestHandler = (req, res, next) => {
+  private checkAuth: RequestHandler = (req, res, next) => {
     /** ******************
      * Authorization tasks ( API_KEY check )
      ****************** */
@@ -42,15 +44,22 @@ export default class Controller {
     }
   };
 
-  protected withErrorCatch = (fn: RequestPromiseHandler): RequestHandler => (
+  private withErrorCatch = (fn: RequestPromiseHandler): RequestHandler => (
     req, res, next
   ): void => {
     fn(req, res, next).catch(next);
   };
 
-  protected unusedMethod: RequestHandler = (req, res, next) => {
+  private unusedMethod: RequestHandler = (req, res, next) => {
     next(new createError[405](responseMessages.ERROR_405));
   };
+
+  protected middlewares = {
+    checkSessionExists: this.checkSessionExists,
+    checkAuth: this.checkAuth,
+    withErrorCatch: this.withErrorCatch,
+    unusedMethod: this.unusedMethod
+  }
 
   // *********************************
   // ************ Helprs *************
