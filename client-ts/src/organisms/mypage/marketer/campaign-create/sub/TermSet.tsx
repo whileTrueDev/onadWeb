@@ -44,6 +44,7 @@ const CampaignTermSet = (props: CampaignTermSetProps): JSX.Element => {
           />
           <StyledSelectText
             onClick={setNoTerm}
+            style={{ cursor: 'pointer' }}
             primary="승인일부터 종료일 없이 계속 집행"
           />
         </Grid>
@@ -64,10 +65,7 @@ const CampaignTermSet = (props: CampaignTermSetProps): JSX.Element => {
       </Grid>
       {state.term && (
         <Grid item>
-          <DatePicker
-            state={state}
-            dispatch={dispatch}
-          />
+          <DatePicker state={state} dispatch={dispatch} />
         </Grid>
       )}
     </Grid>

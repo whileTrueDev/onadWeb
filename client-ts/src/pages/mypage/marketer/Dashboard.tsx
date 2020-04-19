@@ -7,7 +7,7 @@ import CampaignList from '../../../organisms/mypage/marketer/dashboard/CampaignL
 import CanvasForChart from '../../../organisms/mypage/marketer/dashboard/CanvasForChart';
 import DescCard from '../../../organisms/mypage/marketer/dashboard/DescCard';
 import OnOffSwitch from '../../../organisms/mypage/marketer/dashboard/OnOffSwitch';
-import ReportLoading from '../../../organisms/mypage/marketer/dashboard/ReportLoading';
+import CampaignLoading from '../../../organisms/mypage/marketer/dashboard/CampaignLoading';
 import LogTable from '../../../organisms/mypage/marketer/dashboard/LogTable';
 import CashPopper from '../../../organisms/mypage/marketer/dashboard/CashPopper';
 
@@ -57,7 +57,7 @@ export default function Dashboard(): JSX.Element {
         || countsData.loading
         || valueChartData.loading
         || countsData.loading) ? (
-          <ReportLoading />
+          <CampaignLoading />
         ) : (
           <div>
             {adData.data && valueChartData.data && countsData.data && (
@@ -107,7 +107,9 @@ export default function Dashboard(): JSX.Element {
                       <Grow in timeout={{ enter: 1100 }}>
                         <DescCard data={{
                           title: '운용중 캠페인',
-                          value: (!campaignData.loading && campaignData.data) ? campaignData.data.filter((c) => c.onOff === 1).length : 0,
+                          value: (!campaignData.loading && campaignData.data)
+                            ? campaignData.data.filter((c) => c.onOff === 1).length
+                            : 0,
                           unit: '캠페인'
                         }}
                         />

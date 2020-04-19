@@ -4,9 +4,9 @@ import makeStyles from '@material-ui/core/styles/makeStyles';
 import Typography from '@material-ui/core/Typography';
 import Popover from '@material-ui/core/Popover';
 import Button from '@material-ui/core/Button';
-import ContentsPie from '../shared/ContentsPie';
-import TimeChart from '../shared/TimeChart';
-import { CreatorDataInterface, CreatorDetailInterface } from '../dashboard/interfaces';
+import ContentsPie from '../../shared/ContentsPie';
+import TimeChart from '../../shared/TimeChart';
+import { CreatorDataInterface, CreatorDetailInterface } from '../../dashboard/interfaces';
 
 const useStyles = makeStyles(() => ({
   container: {
@@ -16,13 +16,10 @@ const useStyles = makeStyles(() => ({
     display: 'flex', justifyContent: 'space-between', padding: 4
   },
   flex: {
-    justifyContent: 'center',
-    display: 'flex',
-    alignItems: 'center'
+    justifyContent: 'center', display: 'flex', alignItems: 'center'
   },
   unit: {
-    fontWeight: 700,
-    marginLeft: '3px'
+    fontWeight: 700, marginLeft: '3px'
   },
   nodetails: {
     height: '150px',
@@ -48,9 +45,7 @@ interface CreatorInfoProps {
 
 export default function CreatorInfo(props: CreatorInfoProps): JSX.Element {
   const classes = useStyles();
-  const {
-    anchorEl, creatorInfo, empty
-  } = props;
+  const { anchorEl, creatorInfo, empty } = props;
 
 
   const makeValueComponent = ({

@@ -5,11 +5,11 @@ import {
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import CardTemplate from './CardTemplate';
 import CreatorInfo from './CreatorInfo';
-import axios, { cancelToken } from '../../../../utils/axios';
-import HOST from '../../../../utils/config';
-import { CreatorDataInterface } from '../dashboard/interfaces';
-import { UseGetRequestObject } from '../../../../utils/hooks/useGetRequest';
-import useAnchorEl from '../../../../utils/hooks/useAnchorEl';
+import axios, { cancelToken } from '../../../../../utils/axios';
+import HOST from '../../../../../utils/config';
+import { CreatorDataInterface } from '../../dashboard/interfaces';
+import { UseGetRequestObject } from '../../../../../utils/hooks/useGetRequest';
+import useAnchorEl from '../../../../../utils/hooks/useAnchorEl';
 
 
 interface BannerBroadCreatorsProps {
@@ -86,7 +86,7 @@ export default function BannerBroadCreators(
             {creatorsData.data
             && creatorsData.data.slice(0, 50).map(
               (creator: CreatorDataInterface, index: number) => (
-                <Grid key={creator.creatorName} item xs={6} md={4} lg={3} style={{ padding: 8 }}>
+                <Grid key={creator.creatorName} item xs={4} md={3} lg={2} style={{ padding: 8 }}>
                   <Avatar
                     src={creator.creatorLogo}
                     style={{

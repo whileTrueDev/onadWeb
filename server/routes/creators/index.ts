@@ -55,7 +55,8 @@ router.route('/live')
 
       doQuery(query, [date, date])
         .then((row) => {
-          const resultList = row.result.map((creator: { creatorTwitchId: string }) => creator.creatorTwitchId);
+          const resultList = row.result.map((creator: {
+            creatorTwitchId: string; }) => creator.creatorTwitchId);
           responseHelper.send(resultList, 'get', res);
         })
         .catch((errorData) => {

@@ -10,15 +10,14 @@ import {
 import { UseGetRequestObject } from '../../../../utils/hooks/useGetRequest';
 
 // own components
-import ContentCard from './ContentCard';
-import CampaignCostPie from './CampaignCostPie';
-import CampaignCostBar from './CampaignCostBar';
-import BannerBroadCreators from './BannerBroadCreators';
-import ReportCard from './ReportCard';
-import InteractionHeatmap from './HeatmapReport';
-import InteractionToGeo from './GeoReport';
-import CampaignInfo from './CampaignInfo';
-import MakePdfButton from './MakePdfButton';
+import ContentCard from './sub/ContentCard';
+import CampaignCostPie from './sub/CampaignCostPie';
+import CampaignCostBar from './sub/CampaignCostBar';
+import BannerBroadCreators from './sub/BannerBroadCreators';
+import ReportCard from './sub/ReportCard';
+import InteractionHeatmap from './sub/HeatmapReport';
+import InteractionToGeo from './sub/GeoReport';
+import CampaignInfo from './sub/CampaignInfo';
 
 const makeContents = (reportData: ReportInterface) => ({
   price: [
@@ -92,8 +91,6 @@ const makeContents = (reportData: ReportInterface) => ({
       unit: '',
       decimalRange: 4
     },
-    { title: '지표 준비중', value: '', unit: '' },
-    { title: '지표 준비중.', value: '', unit: '' },
   ]
 });
 
@@ -153,7 +150,7 @@ export default function CampaignBannerClickAd(
                   &emsp;광고 효과 분석
                 </Typography>
 
-                <MakePdfButton />
+                {/* <MakePdfButton /> */}
 
               </div>
               <Divider />
@@ -163,7 +160,7 @@ export default function CampaignBannerClickAd(
             <Grid item xs={12}>
               {!reportData.loading && reportData.data && (
                 <div className={classes.contents}>
-                  <Grid container>
+                  <Grid container spacing={4}>
 
                     {/* 캠페인 정보 */}
                     <Grid item xs={12}>
@@ -203,38 +200,41 @@ export default function CampaignBannerClickAd(
                     </Grid>
 
                     {/* 캠페인 지표 차트 */}
-                    <Grid item xs={12}>
-                      <Grid container spacing={4}>
-                        <Grid item xs={12} sm={6}>
-                          <CampaignCostBar
-                            color="primary"
-                            chartData={chartData}
-                          />
 
-                          <CampaignCostPie
-                            color="primary"
-                            reportData={reportData}
-                          />
-                        </Grid>
-
-                        <Grid item xs={12} sm={6}>
-                          <BannerBroadCreators
-                            creatorsData={creatorsData}
-                          />
-
-                          <InteractionHeatmap
-                            data-html2canvas-ignore
-                            clickData={clickData.data}
-                          />
-
-                          <InteractionToGeo
-                            data-html2canvas-ignore
-                            ipToGeoData={ipToGeoData}
-                          />
-
-                        </Grid>
-                      </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <CampaignCostBar
+                        color="primary"
+                        chartData={chartData}
+                      />
                     </Grid>
+
+                    <Grid item xs={12} sm={6}>
+                      <CampaignCostPie
+                        color="primary"
+                        reportData={reportData}
+                      />
+                    </Grid>
+
+                    <Grid item xs={12}>
+                      <BannerBroadCreators
+                        creatorsData={creatorsData}
+                      />
+                    </Grid>
+
+                    <Grid item xs={12}>
+                      <InteractionHeatmap
+                        data-html2canvas-ignore
+                        clickData={clickData.data}
+                      />
+                    </Grid>
+
+                    <Grid item xs={12}>
+                      <InteractionToGeo
+                        data-html2canvas-ignore
+                        ipToGeoData={ipToGeoData}
+                      />
+                    </Grid>
+
                   </Grid>
                 </div>
               )}

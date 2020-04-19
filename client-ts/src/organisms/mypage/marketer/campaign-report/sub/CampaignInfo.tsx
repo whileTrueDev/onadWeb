@@ -1,9 +1,9 @@
 import React from 'react';
 import { Typography, Grid, Divider } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import { CampaignInterface } from '../dashboard/interfaces';
-import VideoBanner from '../../../../atoms/Banner/VideoBanner';
-import isVideo from '../../../../utils/isVideo';
+import { CampaignInterface } from '../../dashboard/interfaces';
+import VideoBanner from '../../../../../atoms/Banner/VideoBanner';
+import isVideo from '../../../../../utils/isVideo';
 
 /**
  * 우선 순위 타입넘버에 해당하는 문자열 반환
@@ -13,7 +13,7 @@ import isVideo from '../../../../utils/isVideo';
 
 
 const useStyles = makeStyles(() => ({
-  typo: { fontWeight: 700, textAlign: 'right' },
+  typo: { fontWeight: 600, textAlign: 'right' },
   divider: { marginBottom: 10 },
   container: { maxWidth: 320, maxHeight: 160, marginBottom: 48 },
   divierHalf: { marginBottom: 5 },
@@ -32,7 +32,7 @@ function getOptionType(type: number): string {
     result = '배너광고';
   }
   if (type === 1) {
-    result = '배너광고 + 클릭광고';
+    result = '생방송 배너 광고';
   }
   if (type === 2) {
     result = '클릭광고';
@@ -86,7 +86,7 @@ export default function CampaignInfo(props: CampaignInfoProps): JSX.Element {
     <Grid container spacing={4}>
       <Grid item xs={12}>
         <div className={classes.container}>
-          <Typography variant="h6">배너 이미지</Typography>
+          <Typography variant="h5">배너 이미지</Typography>
           <Divider className={classes.divierHalf} />
 
           { isVideo(selectedCampaign.bannerSrc) ? (
@@ -102,9 +102,9 @@ export default function CampaignInfo(props: CampaignInfoProps): JSX.Element {
       </Grid>
       {data.map((d) => (
         <Grid item xs={6} sm={3} key={d.topic}>
-          <Typography variant="h6">{d.topic}</Typography>
+          <Typography variant="h5">{d.topic}</Typography>
           {d.value && <Divider className={classes.divider} />}
-          <Typography variant="body1" className={classes.typo}>
+          <Typography variant="h6" className={classes.typo}>
             {d.value}
           </Typography>
         </Grid>

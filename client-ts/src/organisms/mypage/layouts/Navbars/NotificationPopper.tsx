@@ -1,7 +1,7 @@
 import React from 'react';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import {
-  Typography, Divider, Badge, Popper
+  Typography, Divider, Badge, Popper, List, ListSubheader
 } from '@material-ui/core';
 import MenuItem from '@material-ui/core/MenuItem';
 import usePatchRequest from '../../../../utils/hooks/usePatchRequest';
@@ -20,7 +20,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     overflowY: 'auto'
   },
   title: {
-    padding: 8, display: 'flex', justifyContent: 'space-between'
+    padding: '8px 0px',
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    borderBottom: `1px solid ${theme.palette.divider}`
   },
   message: {
     marginTop: 4, marginBottom: 4
@@ -51,34 +55,28 @@ function NotificationPopper({
       open={Boolean(anchorEl)}
       disablePortal
       modifiers={{
-        flip: {
-          enabled: true,
-        },
-        preventOverflow: {
-          enabled: false,
-          boundariesElement: 'scrollParent',
-        }
+        flip: { enabled: true, },
+        preventOverflow: { enabled: false, boundariesElement: 'scrollParent', }
       }}
     >
       {/* 공지 메뉴 컴포넌트 */}
-      <div className={classes.contents}>
-        <div className={classes.title}>
-          <Typography variant="h5">알림</Typography>
-          <Typography
-            align="right"
-            gutterBottom
-            variant="caption"
-          >
-            클릭시 읽음처리됩니다.
-          </Typography>
-        </div>
-        <Divider />
-
-
+      <List
+        className={classes.contents}
+        subheader={(
+          <ListSubheader>
+            <div className={classes.title}>
+              <Typography variant="h5">알림</Typography>
+              <Typography align="right" gutterBottom variant="caption">
+                클릭시 읽음처리됩니다.
+              </Typography>
+            </div>
+          </ListSubheader>
+        )}
+      >
         <div>
           {notificationData.map((noti) => (
             <div key={noti.index}>
-              <MenuItem onClick={() => {
+              <MenuItem onClick={(): void => {
                 if (noti.readState === UNREAD_STATE) {
                   notiReadPatch.doPatchRequest({ index: noti.index });
                 }
@@ -108,7 +106,7 @@ function NotificationPopper({
           ))}
         </div>
 
-      </div>
+      </List>
     </Popper>
   );
 }

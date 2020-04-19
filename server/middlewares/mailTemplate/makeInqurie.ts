@@ -3,6 +3,7 @@ interface InputForm {
   email?: string;
   contactNumber?: number;
   brandName?: string;
+  brandPage?: string;
   content?: string;
 }
 function makeInqurie(request: InputForm): string {
@@ -548,6 +549,17 @@ body{background-color:#fbfbfb}.logo a:hover,.logo a:focus{color:#1e2e3b !importa
           <div style="Margin-left: 20px;Margin-right: 20px;">
     <div class="divider" style="display: block;font-size: 2px;line-height: 2px;Margin-left: auto;Margin-right: auto;width: 40px;background-color: #c8c8c8;Margin-bottom: 20px;">&nbsp;</div>
   </div>
+
+  <div style="Margin-left: 20px;Margin-right: 20px;">
+  <div style="mso-line-height-rule: exactly;mso-text-raise: 4px;">
+    <p class="size-20" style="Margin-top: 0;Margin-bottom: 20px;font-family: arial,sans-serif;font-size: 17px;line-height: 26px;text-align: center;" lang="x-size-20"><span class="font-arial"><strong>Homepage</strong>${inputData.brandPage}</span></p>
+  </div>
+</div>
+    
+        <div style="Margin-left: 20px;Margin-right: 20px;">
+  <div class="divider" style="display: block;font-size: 2px;line-height: 2px;Margin-left: auto;Margin-right: auto;width: 40px;background-color: #c8c8c8;Margin-bottom: 20px;">&nbsp;</div>
+</div>
+
 
   <div style="Margin-left: 20px;Margin-right: 20px;">
     <div style="mso-line-height-rule: exactly;mso-text-raise: 4px;">

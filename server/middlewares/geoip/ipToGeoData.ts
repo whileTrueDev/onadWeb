@@ -10,7 +10,7 @@ export type ipToGeoData = {
   ll: number[];
 } | null
 
-function ipToGeoData(ip: string): ipToGeoData {
+function ipToGeo(ip: string): ipToGeoData {
   const result = geoip.lookup(ip);
   if (result) {
     const [latitude, longitude] = result.ll;
@@ -20,4 +20,4 @@ function ipToGeoData(ip: string): ipToGeoData {
   return null;
 }
 
-export default ipToGeoData;
+export default ipToGeo;

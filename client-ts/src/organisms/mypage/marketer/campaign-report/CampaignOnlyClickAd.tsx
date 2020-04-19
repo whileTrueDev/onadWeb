@@ -5,11 +5,11 @@ import {
 } from '@material-ui/core';
 import { Assignment } from '@material-ui/icons';
 // own components
-import ContentCard from './ContentCard';
-import ReportCard from './ReportCard';
-import InteractionHeatmap from './HeatmapReport';
-import InteractionToGeo from './GeoReport';
-import CampaignInfo from './CampaignInfo';
+import ContentCard from './sub/ContentCard';
+import ReportCard from './sub/ReportCard';
+import InteractionHeatmap from './sub/HeatmapReport';
+import InteractionToGeo from './sub/GeoReport';
+import CampaignInfo from './sub/CampaignInfo';
 import {
   ReportInterface, HeatmapInterface, GeoInterface, CampaignInterface
 } from '../dashboard/interfaces';

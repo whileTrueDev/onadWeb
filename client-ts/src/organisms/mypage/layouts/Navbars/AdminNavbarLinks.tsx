@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 // @material-ui/core components
 import Tooltip from '@material-ui/core/Tooltip';
@@ -28,7 +28,9 @@ function HeaderLinks(): JSX.Element {
 
   // 개인 알림
   const notificationGet = useGetRequest<NoticeDataParam, NoticeDataRes>(`/${userType}/notification`);
-  const { anchorEl, handleAnchorOpen, handleAnchorClose } = useAnchorEl();
+  const {
+    anchorEl, handleAnchorOpen, handleAnchorOpenWithRef, handleAnchorClose
+  } = useAnchorEl();
 
   // 공지사항
   const noticeReadFlagGet = useGetRequest<{userType: string}, {noticeReadState: number}>(
@@ -43,12 +45,29 @@ function HeaderLinks(): JSX.Element {
     axios.get(`${HOST}/logout`).then(() => { history.push('/'); });
   }
 
+  // ------ For 읽지않은 알림 존재 시 알림 컴포넌트 열어두기 ------
+  const [isAlreadyRendered, setIsAlreadyRendered] = React.useState(false);
+  const notificationRef = useRef<HTMLButtonElement | null>(null);
+  useEffect(() => {
+    function handleUnreadNotificationOpen(): void {
+      if (!notificationGet.loading && notificationGet.data
+        && (notificationGet.data.notifications.filter((noti) => noti.readState === 0).length)
+        && !isAlreadyRendered) {
+        setIsAlreadyRendered(true);
+        handleAnchorOpenWithRef(notificationRef);
+      }
+    }
+    handleUnreadNotificationOpen();
+  }, [handleAnchorOpenWithRef, isAlreadyRendered, notificationGet.data, notificationGet.loading]);
+  // ------ For 읽지않은 알림 존재 시 알림 컴포넌트 열어두기 ------
+
   return (
     <div>
       {/* notification */}
       <Tooltip title="알림">
         <IconButton
           aria-label="notifications"
+          ref={notificationRef}
           onClick={(e): void => {
             if (anchorEl) { handleAnchorClose(); } else { handleAnchorOpen(e); }
           }}

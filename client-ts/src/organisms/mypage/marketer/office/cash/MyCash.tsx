@@ -83,7 +83,7 @@ function MyCash(props: MyCashProps): JSX.Element {
           {!accountData.loading && !accountData.error && accountData.data
             && !accountData.data.marketerAccountNumber && (
               <Tooltip title="환불계좌가 등록되지 않아 진행이 불가합니다.">
-                <span><Button color="default" disabled>환불요청</Button></span>
+                <span><Button size="medium" color="default" disabled>환불요청</Button></span>
               </Tooltip>
           )}
           {!accountData.loading && !accountData.error && accountData.data

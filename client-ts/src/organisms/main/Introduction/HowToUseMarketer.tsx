@@ -7,7 +7,7 @@ import useStyles from './style/HowToUseMarketer.style';
 // import Typography from '../../Main/components/Typography';
 import useDialog from '../../../utils/hooks/useDialog';
 // import Dialog from './Dialog';
-import Inquire from '../main/Inquire/Inqurie';
+import Inquire from '../main/Inquiry/Inquiry';
 import Dialog from '../../../atoms/Dialog/Dialog';
 
 

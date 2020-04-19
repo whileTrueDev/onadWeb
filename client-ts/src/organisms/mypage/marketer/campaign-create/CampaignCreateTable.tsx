@@ -1,12 +1,10 @@
 import React from 'react';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
+import {
+  Typography, Table, TableBody, TableCell,
+  TableContainer, TableRow, Paper
+} from '@material-ui/core';
 import CampaignNaming from './sub/CampaignNaming';
 import CampaignBannerReg from './sub/BannerReg';
 import LandingUrlInput from './sub/LandingUrlInput';
@@ -28,7 +26,6 @@ import {
   TimeAction,
   NameInterface
 } from './campaignReducer';
-import StyledItemText from '../../../../atoms/StyledItemText';
 
 const StyledTableCell = withStyles((theme) => ({
   head: {
@@ -161,7 +158,8 @@ const CampaignCreateTable = (props: CampaignCreateTableProps): JSX.Element => {
             }) => (
               <StyledTableRow key={_step.title}>
                 <StyledTableCell>
-                  <StyledItemText primary={_step.title} />
+                  <Typography variant="h6" style={{ fontWeight: 700 }}>{_step.title}</Typography>
+                  {/* <StyledItemText primary={_step.title} /> */}
                 </StyledTableCell>
                 <StyledTableCell>
                   {_step.component}

@@ -7,7 +7,8 @@ import ProductHero from '../../organisms/main/main/Hero/ProductHero';
 import ProductHowItWorks from '../../organisms/main/main/HowItWorks/ProductHowItWorks';
 import RePasswordDialog from '../../organisms/main/main/login/RePassword';
 import sources from '../../organisms/main/main/source/sources';
-import Inqurie from '../../organisms/main/main/Inquire/Inqurie';
+import Inqurie from '../../organisms/main/main/Inquiry/Inquiry';
+import InquiryCreator from '../../organisms/main/main/Inquiry/InquiryCreator';
 import Indicator from '../../organisms/main/main/Indicators/Indicator';
 import HowToUse from '../../organisms/main/main/HowToUse/HowToUse';
 import Advantage from '../../organisms/main/main/Advantage/Advantage';
@@ -71,6 +72,7 @@ export default withRoot(() => {
             />
             <Advantage source={sources.advantage} MainUserType="creator" />
             <ProductHowItWorks source={sources.howitworks} MainUserType="creator" logout={logout} />
+            <InquiryCreator />
             <AppFooter />
             <RePasswordDialog
               repasswordOpen={repasswordOpen}

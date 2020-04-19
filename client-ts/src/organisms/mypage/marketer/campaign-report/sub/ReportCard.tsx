@@ -2,8 +2,8 @@ import React from 'react';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import CountUp from 'react-countup';
 import { Grid, Typography } from '@material-ui/core';
-import Card from '../../../../atoms/Card/Card';
-import CardBody from '../../../../atoms/Card/CardBody';
+import Card from '../../../../../atoms/Card/Card';
+import CardBody from '../../../../../atoms/Card/CardBody';
 
 const useStyles = makeStyles((theme: Theme) => ({
   container: { padding: '28px 0px' },
@@ -18,28 +18,12 @@ const useStyles = makeStyles((theme: Theme) => ({
       marginBottom: 65
     },
   },
-  title: {
-    fontWeight: 700,
-    [theme.breakpoints.only('md')]: {
-      fontSize: 16
-    }
-  },
   value: { color: theme.palette.primary.light, fontWeight: 700 }
 }));
 
-// 데이터를 받는형태
-// [
-//   {
-//     title: '전환당 비용',
-//     value: ((reportData.totalCPM + reportData.totalCPC) / reportData.totalTransfer) || 0,
-//     unit: '원',
-//     decimalRange: 2
-//   },
-//   { title: '지표 준비중.', value: '', unit: '' },
-// ]
 interface DataInterface {
   title: string; value: number | string;
-  unit: string; decimalRange?: number;
+  unit: string; decimalRange?: number; percent?: number | string;
 }
 
 const ReportCard = (props: { data: DataInterface[] }): JSX.Element => {
@@ -50,18 +34,16 @@ const ReportCard = (props: { data: DataInterface[] }): JSX.Element => {
   return (
     <Grid container spacing={3} className={classes.container} {...rest}>
       {data.map((content) => (
-        <Grid key={content.title} item xs={12} sm={6} lg={3}>
+        <Grid key={content.title} item xs={12} md={4}>
           <Card className={classes.card}>
             <CardBody>
               <div className={classes.titleSection}>
 
-                <Typography variant="body1" className={classes.title}>
-                  {content.title}
-                </Typography>
+                <Typography variant="h5">{content.title}</Typography>
 
               </div>
 
-              <div style={{ display: 'flex' }}>
+              <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
 
                 <Typography gutterBottom variant="h5" className={classes.value}>
                   {content.value === '-' ? (
@@ -74,6 +56,12 @@ const ReportCard = (props: { data: DataInterface[] }): JSX.Element => {
                     />
                   )}
                 </Typography>
+
+                {content.percent && (
+                  <Typography gutterBottom variant="body2">
+                    {`(${content.percent}%)`}
+                  </Typography>
+                )}
 
                 <Typography gutterBottom variant="body2">
                   {content.unit}

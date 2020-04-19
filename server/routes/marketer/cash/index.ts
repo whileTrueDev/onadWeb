@@ -5,6 +5,7 @@ import responseHelper from '../../../middlewares/responseHelper';
 import doQuery from '../../../model/doQuery';
 import historyRouter from './history';
 import Notification from '../../../middlewares/notification';
+import slack from '../../../lib/slack/messageWithJson';
 import marketerActionLogging from '../../../middlewares/marketerActionLog';
 
 const router = express.Router();
@@ -88,6 +89,14 @@ router.route('/refund')
           ])
             .then(() => {
               responseHelper.send([true], 'POST', res);
+              slack({
+                summary: '마케터 환불 요청 알림',
+                text: '마케터가 환불을 요청했습니다. 확인해주세요.',
+                fields: [
+                  { title: '마케터 아이디', value: marketerId!, short: true },
+                  { title: '환불 요청 금액', value: refundCash!, short: true },
+                ]
+              });
             });
         })
         .catch((error) => {
@@ -183,6 +192,19 @@ router.route('/charge/card')
                       vbank_name: `${vbank_name}`,
                       vbank_holder: `${vbank_holder}`,
                     }, 'POST', res);
+
+                    // 슬랙 알림
+                    slack({
+                      summary: '마케터 캐시 충전(가상계좌발급) 알림',
+                      text: '마케터가 캐시를 충전했습니다. 확인해주세요.',
+                      fields: [
+                        { title: '마케터 아이디', value: marketerId!, short: true },
+                        { title: '캐시 충전 금액', value: amount!, short: true },
+                        { title: '가상 계좌 이름', value: vbank_name!, short: true },
+                        { title: '가상 계좌 번호', value: vbank_num!, short: true },
+                        { title: 'vbankDate', value: vbank_date!, short: true },
+                      ]
+                    });
                   })
                   .catch((error) => {
                     responseHelper.promiseError(error, next);
@@ -233,6 +255,15 @@ router.route('/charge/card')
                   .then(() => {
                     // 마케터 캐시 충전 쿼리 완료
                     responseHelper.send({ status: 'success', message: '일반 결제 성공' }, 'POST', res);
+                    // 슬랙 알림
+                    slack({
+                      summary: '마케터 캐시 충전(카드or계좌이체) 알림',
+                      text: '마케터가 캐시를 충전했습니다. 확인해주세요.',
+                      fields: [
+                        { title: '마케터 아이디', value: marketerId!, short: true },
+                        { title: '캐시 충전 금액', value: amount!.toString(), short: true },
+                      ]
+                    });
                   })
                   .catch((error) => {
                     responseHelper.promiseError(error, next);
@@ -277,6 +308,15 @@ router.route('/charge')
       ])
         .then(() => {
           responseHelper.send([true], 'POST', res);
+          // 슬랙 알림
+          slack({
+            summary: '마케터 캐시 충전(카드or계좌이체) 알림',
+            text: '마케터가 캐시를 충전했습니다. 확인해주세요.',
+            fields: [
+              { title: '마케터 아이디', value: marketerId!, short: true },
+              { title: '캐시 충전 금액', value: chargeCashString!.toString(), short: true },
+            ]
+          });
         })
         .catch((error) => {
           responseHelper.promiseError(error, next);

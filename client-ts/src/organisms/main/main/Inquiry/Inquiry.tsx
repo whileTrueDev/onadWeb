@@ -1,13 +1,7 @@
 import React, { useState } from 'react';
 import {
-  Checkbox,
-  FormControlLabel,
-  Button,
-  Typography,
-  Input,
-  Container,
-  Grid,
-  CircularProgress,
+  Checkbox, FormControlLabel, Button,
+  Typography, Input, Container, Grid, CircularProgress,
 } from '@material-ui/core';
 import useStyles from '../style/Inqurie.style';
 import HOST from '../../../../config';
@@ -25,6 +19,7 @@ const initialContent = {
   email: '',
   contactNumber: '',
   brandName: '',
+  brandPage: '',
   content: ''
 };
 
@@ -61,6 +56,7 @@ function Inquire({ confirmClose }: Props): JSX.Element {
           setInquiryContent(initialContent);
           setChecked(false);
           setLoading(false);
+          setInquiryContent(initialContent);
         });
     } else {
       setLoading(false);
@@ -138,6 +134,21 @@ function Inquire({ confirmClose }: Props): JSX.Element {
             </Grid>
 
             <Grid container className={classes.cardContent}>
+              <Grid item xs={6} sm={6} className={classes.detailWrap}>
+                <Typography className={classes.detailTitle}>
+                  홈페이지 주소
+                </Typography>
+                <Input
+                  className={classes.datailContent}
+                  classes={{ focused: classes.inputStyle }}
+                  onChange={onChange}
+                  disableUnderline
+                  name="brandPage"
+                />
+              </Grid>
+            </Grid>
+
+            <Grid container className={classes.cardContent}>
               <Grid item xs={12} sm={12} className={classes.detailWrap}>
                 <Typography className={classes.detailTitle}>
                   * 상세내용 (배너제작에 관한 내용도 질문바랍니다)
@@ -200,7 +211,7 @@ function Inquire({ confirmClose }: Props): JSX.Element {
         maxWidth="xs"
         buttons={(
           <div>
-            <Button onClick={() => {
+            <Button onClick={(): void => {
               confirmDialog.handleClose();
               if (confirmClose) { confirmClose(); }
             }}
