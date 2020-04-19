@@ -73,9 +73,9 @@ export default function AdDashboard(): JSX.Element {
               </GridItem>
 
               <GridItem xs={12} md={6} lg={3} xl={6}>
-                {/* {!clicksGet.loading && clicksGet.data && (
+                {!clicksGet.loading && clicksGet.data && (
                 <AdDescriptionCard title="패널 광고 클릭 수" value={clicksGet.data.adpanel} unit="회" />
-                )} */}
+                )}
               </GridItem>
 
             </GridContainer>
