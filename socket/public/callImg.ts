@@ -270,11 +270,9 @@ function callImg(socket: any, msg: string[]): void {
     const categoryCampaignList = await getGameCampaignList(gameId, creatorId);
     const onCreatorcampaignList = creatorCampaignList.filter((campaignId) => onCampaignList.includes(campaignId));
     if (onCreatorcampaignList.length !== 0) {
-      console.log(onCreatorcampaignList);
       const extractBanCampaignList = onCreatorcampaignList.filter((campaignId) => !banList.includes(campaignId)); // 마지막에 banList를 통해 거르기.
       if (extractBanCampaignList) {
         const returnCampaignId = extractBanCampaignList[getRandomInt(extractBanCampaignList.length)];
-        console.log(returnCampaignId);
         myCampaignId = returnCampaignId;
       }
     } else {
