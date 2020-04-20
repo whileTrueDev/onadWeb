@@ -257,22 +257,6 @@ function callImg(socket: any, msg: string[]): void {
     return Math.floor(Math.random() * (max - 0)) + 0; // 최댓값은 제외, 최솟값은 포함
   };
 
-  const insertLandingPage = (campaignId: string, creatorId: string): Promise<boolean> | boolean => {
-    // campaignId를 가져와서 optionType 0,1check후 삽입.   
-    const insertLandingQuery = 'INSERT IGNORE INTO landingClick(campaignId, creatorId) values(?,?);';
-    return new Promise((resolve, reject) => {
-      doQuery(insertLandingQuery, [campaignId, creatorId])
-        .then(() => {
-          resolve(true);
-        })
-        .catch((errorData) => {
-          errorData.point = 'insertLandingPage()';
-          errorData.description = 'landingClick에 새로운 랜딩페이지 입력 과정';
-          reject(errorData);
-        });
-    });
-  };
-
   async function getBanner([creatorId, gameId]: string[]): Promise<[string | boolean, string | boolean, string | boolean]> {
     console.log(`-----------------------Id : ${creatorId} / ${getTime}---------------------------`);
     let linkToChatBot;
@@ -365,7 +349,6 @@ function callImg(socket: any, msg: string[]): void {
       }
 
       if (typeof bannerInfo[0] === 'string' && typeof bannerInfo[1] === 'string') {
-        await insertLandingPage(bannerInfo[1], CREATOR_DATA.creatorId);
         writeToDb(myCampaignId, CREATOR_DATA.creatorId, programType);
         // [bannerSrc, myCampaignId]
         socket.emit('img receive', [bannerInfo[0], [bannerInfo[1], CREATOR_DATA.creatorId]]);
