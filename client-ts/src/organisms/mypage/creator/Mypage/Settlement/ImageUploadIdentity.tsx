@@ -3,7 +3,7 @@ import { Grid } from '@material-ui/core';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   sampleImg: {
     width: 400,
     height: 250
@@ -43,6 +43,7 @@ function ImageUploadIdentity(): JSX.Element {
           <p>- 운전면허증</p>
           <p>- 여권(대한민국발행)</p>
           <p>- 주민등록증발급신청확인서 (유효기간 이내의 사진 및 주요 정보에 테이핑 처리 된 것에 한함)</p>
+          <p>- 청소년증, 청소년증 발급 확인서(청소년증 발급 신청서는 불가)</p>
         </Grid>
         <Grid item>
           위에 해당하는 신분증이더라도 이름 및 주민등록번호 13자리를 확인할 수 있어야 하며, 해당 정보가 기재되어 있지 않거나 모자이크 처리 된 경우 신분증으로 인정되지 않습니다.
