@@ -49,6 +49,7 @@ jobs:
           cd socket
           yarn install
           yarn build
+          cd ..
           cd tracker
           yarn install
           yarn build
