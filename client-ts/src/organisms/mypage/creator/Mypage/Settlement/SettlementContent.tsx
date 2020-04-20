@@ -4,12 +4,13 @@ import {
   TextField, Grid, Dialog
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import NumberFormat from 'react-number-format';
+import shortid from 'shortid';
 import Button from '../../../../../atoms/CustomButtons/Button';
 import StyledItemText from '../../../../../atoms/StyledItemText';
 import { ProfileDataType } from '../ProfileData.type';
 import useDialog from '../../../../../utils/hooks/useDialog';
 import SettlementForm from './SettlementForm';
+import AgreementSource from '../source/source';
 
 const useStyles = makeStyles(() => ({
   textField: {
@@ -48,10 +49,18 @@ const useStyles = makeStyles(() => ({
     overflowY: 'auto',
     border: 'solid 1px #00acc1'
   },
+  textFieldContent: {
+    width: '100%',
+    margin: '20px 0',
+    height: 150,
+    overflowX: 'hidden',
+    overflowY: 'auto',
+    border: 'solid 1px #00acc1'
+  },
 }));
 
 interface SettlementContentProps {
-    profileData: ProfileDataType;
+  profileData: ProfileDataType;
 }
 
 function SettlementContent({
@@ -69,27 +78,36 @@ function SettlementContent({
 
   return (
     <>
+      <div>
+        <StyledItemText className={classes.titleWrap} primary="정산 수수료 및 절차, 종합소득세 신고 안내 📋" fontSize="18px" color="#00acc1" />
+      </div>
+      <Grid item className={classes.textFieldContent}>
+        {AgreementSource.taxGuidance.split('\n').map((sentence: string) => (
+          <p key={shortid.generate()}>{sentence}</p>
+        ))}
+      </Grid>
       {(creatorType === 1)
-            && (
-            <div>
-              <Grid item className={classes.AgreementField}>
-                <p>
-                  개인사업자 계약 진행시 세무대리인 혹은 본인이 직접 홈택스를 통해 모든 세무 신고를 진행하여야하며 신고 누락, 금액 오기재 등으로
-                  피해가 발생하여도 온애드는 일절 책임이 없음을 알립니다.
-                </p>
-              </Grid>
-            </div>
-            )}
+        && (
+          <div>
+            <Grid item className={classes.AgreementField}>
+              <p>
+                개인사업자 계약 진행시 세무대리인 혹은 본인이 직접 홈택스를 통해 모든 세무 신고를 진행하여야하며 신고 누락, 금액 오기재 등으로
+                피해가 발생하여도 온애드는 일절 책임이 없음을 알립니다.
+              </p>
+            </Grid>
+          </div>
+        )}
       <div>
         <StyledItemText className={classes.titleWrap} primary="계약자 정보 📋" fontSize="18px" color="#00acc1" />
       </div>
       <Grid item className={classes.content}>
         <StyledItemText primary="과세 유형" fontSize="15px" className={classes.contentTitle} />
-        { creatorType === 0 ? (
+        {creatorType === 0 ? (
           <StyledItemText primary="개인(사업소득)" fontSize="15px" className={classes.textField} />
-        ) : (
-          <StyledItemText primary="개인사업자" fontSize="15px" className={classes.textField} />
-        )}
+        )
+          : (
+            <StyledItemText primary="개인사업자" fontSize="15px" className={classes.textField} />
+          )}
       </Grid>
       <Grid item className={classes.content}>
         <StyledItemText primary="성명" fontSize="15px" className={classes.contentTitle} />
@@ -103,24 +121,18 @@ function SettlementContent({
       </Grid>
       <Grid item className={classes.content}>
         <StyledItemText primary="주민등록번호" fontSize="15px" className={classes.contentTitle} />
-        <NumberFormat
-          value={identificationNumber}
+        <TextField
+          value={`${identificationNumber.slice(0, 6)} - ⚫⚫⚫⚫⚫⚫⚫`}
           InputProps={{ readOnly: true }}
-          format="###### - #######"
-          mask="_"
-          customInput={TextField}
           className={classes.textField}
           margin="dense"
         />
       </Grid>
       <Grid item className={classes.content}>
         <StyledItemText primary="휴대전화번호" fontSize="15px" className={classes.contentTitle} />
-        <NumberFormat
-          value={phoneNumber}
+        <TextField
+          value={`${phoneNumber.slice(0, 3)} - ⚫⚫⚫⚫ - ${phoneNumber.slice(7, 11)}`}
           InputProps={{ readOnly: true }}
-          allowEmptyFormatting
-          format="( ### ) - #### - ####"
-          customInput={TextField}
           className={classes.textField}
           margin="dense"
         />
@@ -158,13 +170,13 @@ function SettlementContent({
         <StyledItemText primary="통장사본" fontSize="15px" className={classes.contentTitle} />
         <Button onClick={ImageUploadAC.handleOpen}>통장사본확인</Button>
       </Grid>
-      { (creatorType === 1)
-            && (
-            <Grid item className={classes.contentImageWrap}>
-              <StyledItemText primary="사업자등록증" fontSize="15px" className={classes.contentTitle} />
-              <Button onClick={BussinessUpload.handleOpen}>사업자등록증확인</Button>
-            </Grid>
-            )}
+      {(creatorType === 1)
+        && (
+          <Grid item className={classes.contentImageWrap}>
+            <StyledItemText primary="사업자등록증" fontSize="15px" className={classes.contentTitle} />
+            <Button onClick={BussinessUpload.handleOpen}>사업자등록증확인</Button>
+          </Grid>
+        )}
       <Grid item>
         <div style={{ textAlign: 'center' }}>
           <Button
