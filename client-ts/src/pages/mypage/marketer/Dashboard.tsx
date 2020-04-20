@@ -2,14 +2,22 @@ import React from 'react';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import Grid from '@material-ui/core/Grid';
 import Grow from '@material-ui/core/Grow';
+import Button from '@material-ui/core/Button';
 import CampaignList from '../../../organisms/mypage/marketer/dashboard/CampaignList';
 import CanvasForChart from '../../../organisms/mypage/marketer/dashboard/CanvasForChart';
 import DescCard from '../../../organisms/mypage/marketer/dashboard/DescCard';
 import OnOffSwitch from '../../../organisms/mypage/marketer/dashboard/OnOffSwitch';
-import ReportLoading from '../../../organisms/mypage/marketer/dashboard/ReportLoading';
+import CampaignLoading from '../../../organisms/mypage/marketer/dashboard/CampaignLoading';
 import LogTable from '../../../organisms/mypage/marketer/dashboard/LogTable';
+import CashPopper from '../../../organisms/mypage/marketer/dashboard/CashPopper';
+
 // hooks
 import useGetRequest from '../../../utils/hooks/useGetRequest';
+import useAnchorEl from '../../../utils/hooks/useAnchorEl';
+import useDialog from '../../../utils/hooks/useDialog';
+
+import CashChargeDialog from '../../../organisms/mypage/marketer/office/cash/CashChargeDialog';
+
 import {
   CampaignInterface, OnOffInterface, AdInterface, CountInterface,
   ValueChartInterface, ActionLogInterface
@@ -20,12 +28,20 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.up('xl')]: {
       margin: '0px 160px'
     }
+  },
+  buttons: {
+    paddingTop: theme.spacing(2),
+    paddingBottom: theme.spacing(2),
+    paddingLeft: theme.spacing(3),
+    paddingRight: theme.spacing(3)
   }
 }));
 
 export default function Dashboard(): JSX.Element {
   const classes = useStyles();
+  const chargeDialog = useDialog();
 
+  const { anchorEl, handleAnchorOpen, handleAnchorClose } = useAnchorEl();
   const campaignData = useGetRequest<null, CampaignInterface[] | null>('/marketer/campaign/list');
   const onOffData = useGetRequest<null, OnOffInterface | null>('/marketer/ad/on-off');
   const adData = useGetRequest<null, AdInterface | null>('/marketer/ad');
@@ -41,7 +57,7 @@ export default function Dashboard(): JSX.Element {
         || countsData.loading
         || valueChartData.loading
         || countsData.loading) ? (
-          <ReportLoading />
+          <CampaignLoading />
         ) : (
           <div>
             {adData.data && valueChartData.data && countsData.data && (
@@ -57,9 +73,25 @@ export default function Dashboard(): JSX.Element {
                   <Grid container spacing={2}>
                     <Grid item xs={12} sm={6} lg={3}>
                       <Grow in timeout={{ enter: 300 }}>
-                        <DescCard data={{
-                          title: '광고 캐시 잔액', value: adData.data.cashAmount, unit: '원'
-                        }}
+                        <DescCard
+                          data={{
+                            title: '광고 캐시 잔액', value: adData.data.cashAmount, unit: '원'
+                          }}
+                          button={(
+                            <Button
+                              variant="contained"
+                              color="primary"
+                              onClick={(event): void => {
+                                if (anchorEl) {
+                                  handleAnchorClose();
+                                } else {
+                                  handleAnchorOpen(event);
+                                }
+                              }}
+                            >
+                              광고캐시 충전
+                            </Button>
+                          )}
                         />
                       </Grow>
                     </Grid>
@@ -75,7 +107,9 @@ export default function Dashboard(): JSX.Element {
                       <Grow in timeout={{ enter: 1100 }}>
                         <DescCard data={{
                           title: '운용중 캠페인',
-                          value: (!campaignData.loading && campaignData.data) ? campaignData.data.filter((c) => c.onOff === 1).length : 0,
+                          value: (!campaignData.loading && campaignData.data)
+                            ? campaignData.data.filter((c) => c.onOff === 1).length
+                            : 0,
                           unit: '캠페인'
                         }}
                         />
@@ -109,8 +143,15 @@ export default function Dashboard(): JSX.Element {
                     actionLogData={actionLogData}
                   />
                 </Grid>
+                <CashPopper anchorEl={anchorEl} handleAnchorClose={handleAnchorClose} handleOpen={chargeDialog.handleOpen} />
+                <CashChargeDialog
+                  open={chargeDialog.open}
+                  handleClose={chargeDialog.handleClose}
+                  currentCash={adData.data.cashAmount.toString()}
+                />
               </Grid>
             )}
+
           </div>
         )}
     </div>

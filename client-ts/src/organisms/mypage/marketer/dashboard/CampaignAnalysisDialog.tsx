@@ -13,17 +13,12 @@ import CampaignOnlyBannerAd from '../campaign-report/CampaignOnlyBannerAd';
 // hooks
 import useGetRequest from '../../../../utils/hooks/useGetRequest';
 
-
 const ONLY_BANNER_STATE = 0;
-const BANNER_WITH_CLICK_STATE = 1;
+const BANNER_WITH_CLICK_STATE = 1; // "생방송 배너 광고" 
 const ONLY_CLICK_STATE = 2;
 
 const Transition = React.forwardRef((props, ref) => (
-  <Slide
-    direction="up"
-    ref={ref}
-    {...props}
-  />
+  <Slide direction="up" ref={ref} {...props} />
 ));
 
 interface CampaignReportDialogProps {
@@ -38,19 +33,18 @@ export default function CampaignReportDialog(props: CampaignReportDialogProps): 
     SLIDE_TIMEOUT, selectedCampaign, open, handleClose
   } = props;
 
+  const ipToGeoData = useGetRequest<{ campaignId: string }, GeoInterface[] | null>(
+    '/marketer/geo/v1/campaign/',
+    { campaignId: selectedCampaign.campaignId }
+  );
+
   const reportData = useGetRequest<{ campaignId: string }, ReportInterface | null>(
-    '/marketer/campaign/analysis',
+    '/marketer/campaign/analysis/v1',
     { campaignId: selectedCampaign.campaignId }
   );
 
   const chartData = useGetRequest<{ campaignId: string }, any[]>(
-    '/marketer/campaign/analysis/expenditure',
-    { campaignId: selectedCampaign.campaignId }
-  );
-
-  // 라우터 추가가 필요하다.
-  const ipToGeoData = useGetRequest<{ campaignId: string }, GeoInterface[] | null>(
-    '/marketer/geo/campaign',
+    '/marketer/campaign/analysis/v1/expenditure',
     { campaignId: selectedCampaign.campaignId }
   );
 
@@ -60,9 +54,10 @@ export default function CampaignReportDialog(props: CampaignReportDialogProps): 
   );
 
   const clickData = useGetRequest<{ campaignId: string }, HeatmapInterface[] | null>(
-    '/marketer/campaign/analysis/heatmap',
+    '/marketer/campaign/analysis/v1/heatmap',
     { campaignId: selectedCampaign.campaignId }
   );
+
 
   return (
     <Dialog

@@ -7,6 +7,7 @@ import incomeRouter from './income';
 import bannerRouter from './banner';
 import notificationRouter from './notification';
 import clicksRouter from './clicks';
+import slack from '../../lib/slack/messageWithJson';
 
 const router = express.Router();
 router.use('/income', incomeRouter);
@@ -126,6 +127,15 @@ router.route('/settlement')
         .then((row) => {
           if (row.result && row.result.affectedRows > 0) {
             responseHelper.send([true], 'patch', res);
+            // 정산 등록 슬랙 알림
+            slack({
+              summary: '크리에이터 정산 등록 알림',
+              text: '크리에이터가 정산을 등록했습니다. 확인해주세요.',
+              fields: [
+                { title: '크리에이터 아이디', value: creatorId!, short: true },
+                { title: '은행', value: bankName!, short: true },
+              ]
+            });
           } else {
             responseHelper.promiseError(Error('정산 등록 신청 실패'), next);
           }
@@ -137,7 +147,7 @@ router.route('/settlement')
 
 /**
  * Deprecated
- * # 2020. 04. 03 - 광고페이지 삭제
+ * # 2020. 04. 21 - 광고페이지 삭제
  */
 router.route('/ad-page')
   .get(

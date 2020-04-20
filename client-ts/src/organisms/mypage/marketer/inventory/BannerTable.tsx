@@ -88,7 +88,8 @@ export default function BannerTable(props: BannerTableProps): JSX.Element {
           ]}
           options={{
             actionsColumnIndex: -1,
-            search: false
+            search: false,
+            headerStyle: { zIndex: 0 }
           }}
           localization={{
             body: {

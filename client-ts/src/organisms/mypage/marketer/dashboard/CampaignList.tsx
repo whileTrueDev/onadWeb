@@ -12,6 +12,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import CampaignDeleteConfirmDialog from './CampaignDeleteConfirmDialog';
 import CampaignUpdateDialog from './CampaignUpdateDialog';
 import CampaignAnalysisDialog from './CampaignAnalysisDialog';
+import CampaignAnalysisDialogV2 from './CampaignAnalysisDialogV2';
 import VideoBanner from '../../../../atoms/Banner/VideoBanner';
 import { CampaignInterface } from './interfaces';
 import { UseGetRequestObject } from '../../../../utils/hooks/useGetRequest';
@@ -23,6 +24,7 @@ import HOST from '../../../../utils/config';
 
 
 const SLIDE_TIMEOUT = 500;
+const V2_TIME = '2020-04-21';
 const useStyles = makeStyles((theme: Theme) => ({
   container: { padding: theme.spacing(2) },
   list: {
@@ -62,7 +64,7 @@ export default function CampaignList(
   const { campaignData } = props;
 
   const [selectedCampaign, setSelectedCampaign] = React.useState<CampaignInterface | null>(null);
-  const optionTypeList = ['배너 광고', '배너 + 클릭 광고', '클릭 광고'];
+  const optionTypeList = ['(구)배너 광고', '생방송 배너 광고', '(구)클릭 광고'];
   const priorityTypeList = ['크리에이터 우선', '카테고리 우선', '노출 우선'];
 
   // To open campaign control dialog
@@ -284,9 +286,28 @@ export default function CampaignList(
         ]}
       />
 
-      {/* 캠페인 분석 다이얼로그 (full screen) */}
-      {selectedCampaign && (
+      {/* 4월 21일 이전 (광고페이지 있는 경우의) 캠페인 분석 다이얼로그 (full screen) */}
+      {selectedCampaign && (selectedCampaign.regiDate < V2_TIME) && (
         <CampaignAnalysisDialog
+          SLIDE_TIMEOUT={SLIDE_TIMEOUT} // 슬라이드 트랜지션 타임아웃
+          open={campaignReportDialog.open}
+          selectedCampaign={selectedCampaign}
+          handleClose={(): void => {
+            campaignReportDialog.handleClose();
+            setTimeout(() => {
+              setSelectedCampaign(null);
+              // 트랜지션 만큼 뒤에 실행. (먼저 실행하면 트랜지션 발동 안됨)
+            }, SLIDE_TIMEOUT);
+          }}
+        />
+      )}
+
+
+      {/* 4월 21일 이후 캠페인 분석 다이얼로그 (full screen) */}
+      {selectedCampaign
+      && (selectedCampaign.regiDate >= V2_TIME)
+      && selectedCampaign.optionType === 1 && ( // "생방송 배너 광고" 캠페인
+        <CampaignAnalysisDialogV2
           SLIDE_TIMEOUT={SLIDE_TIMEOUT} // 슬라이드 트랜지션 타임아웃
           open={campaignReportDialog.open}
           selectedCampaign={selectedCampaign}

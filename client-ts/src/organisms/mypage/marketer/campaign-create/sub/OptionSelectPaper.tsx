@@ -1,7 +1,6 @@
 import React from 'react';
 import { useTheme, makeStyles, Theme } from '@material-ui/core/styles';
-import { Paper, ButtonBase } from '@material-ui/core';
-import StyledSelectText from '../../../../../atoms/StyledSelectText';
+import { Typography, Paper, ButtonBase } from '@material-ui/core';
 import GreenCheckbox from '../../../../../atoms/GreenCheckBox';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -27,9 +26,8 @@ interface OptionSelectPaperProps {
   checked: boolean;
   disabled?: boolean;
   children?: JSX.Element;
-  innerPaperChildren?: JSX.Element;
+  innerPaperChildren?: React.ReactNode;
 }
-
 
 export default function OptionSelectPaper(props: OptionSelectPaperProps): JSX.Element {
   const {
@@ -65,16 +63,20 @@ export default function OptionSelectPaper(props: OptionSelectPaperProps): JSX.El
           }}
           elevation={checked ? 1 : 4}
         >
-          <div style={{ alignItems: 'center', flexDirection: 'column' }}>
+          <div style={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
             <GreenCheckbox
               checked={checked}
               onChange={handleSelect}
             />
-            <StyledSelectText
+            <Typography variant="h5" style={{ fontWeight: 700, paddingBottom: 16 }}>{primaryText}</Typography>
+            {secondaryText.split('\n').map((t) => (
+              <Typography key={t} variant="body1">{t}</Typography>
+            ))}
+            {/* <StyledSelectText
               primary={primaryText}
               secondary={secondaryText}
               color={checked ? theme.palette.common.white : 'inherit'}
-            />
+            /> */}
             {innerPaperChildren || null}
           </div>
         </Paper>

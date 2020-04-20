@@ -1,24 +1,25 @@
 import React from 'react';
+import { makeStyles } from '@material-ui/core/styles';
+import { Collapse, Typography } from '@material-ui/core';
 import OptionSelectPaper from './sub/OptionSelectPaper';
 import CampaignCreateStepLayout from './StepLayout';
 import ButtonSet from './sub/ButtonSet';
-import {
-  Step1Interface,
-  Action
-} from './campaignReducer';
+import AdDescriptionSelect from './sub/AdDescriptionSelect';
+import AdDescriptionDialog from './sub/AdDescriptionDialog';
+import { Step1Interface, Action } from './campaignReducer';
+import { OptionInterface, AdMaterial } from './interfaces';
+import options from './options';
+import useDialog from '../../../../utils/hooks/useDialog';
 
-const options = [
-  {
-    id: 'option1',
-    primaryText: '배너 광고 + 클릭 광고',
-    secondaryText: '상품, 브랜드 홍보 뿐 아니라 구매 전환까지 하고 싶어요.',
-  },
-  {
-    id: 'option0',
-    primaryText: '배너 광고',
-    secondaryText: '상품, 브랜드 홍보만 하고싶어요.',
-  },
-];
+const useStyles = makeStyles((theme) => ({
+  expansionPanel: {
+    padding: theme.spacing(4),
+    borderColor: theme.palette.primary.light,
+    borderWidth: 1,
+    borderStyle: 'solid',
+    borderRadius: '0px 0px 15px 15px',
+  }
+}));
 
 // 추후에 인터페이스 통합
 interface OptionPaperProps {
@@ -28,24 +29,24 @@ interface OptionPaperProps {
   handleNext: (event: React.MouseEvent<HTMLButtonElement>) => void;
   step: number;
 }
-
-
-interface OptionInterface {
-  id: string;
-  primaryText: string;
-  secondaryText: string;
-}
-
-
 const OptionPaper = (props: OptionPaperProps): JSX.Element => {
+  const classes = useStyles();
   const {
-    state, dispatch, step, handleNext, handleBack // for '다음' 버튼 관리
+    state, dispatch, step, handleNext, handleBack, // for '다음' 버튼 관리
   } = props;
 
   // option을 선택하였을 때 event listener
   const handleChange = (id: string) => (): void => {
     dispatch({ key: id, value: '' });
   };
+
+  // 광고 유형 선택 - 광고 구성 설명 다이얼로그
+  const adDescriptionDialog = useDialog();
+  const [selectedIndex, setSelectedIndex] = React.useState(0);
+  const [selectedMaterial, setSelectedMaterial] = React.useState<AdMaterial>();
+  function handleSelectedMaterial(material: AdMaterial): void {
+    setSelectedMaterial(material);
+  }
 
   return (
     <CampaignCreateStepLayout
@@ -56,15 +57,37 @@ const OptionPaper = (props: OptionPaperProps): JSX.Element => {
       {/* optionType 선택 이전 */}
       {step === 0 && (
         <div>
-          {options.map((opt: OptionInterface) => (
+          {options.map((opt: OptionInterface, index) => (
             <OptionSelectPaper
               key={opt.id}
               primaryText={opt.primaryText}
               secondaryText={opt.secondaryText}
               handleSelect={handleChange(opt.id)}
+              innerPaperChildren={opt.id !== 'option1' ? (null) : (
+                <div>
+                  <img height={50} alt="a" src="/pngs/logo/twitch.png" style={{ filter: 'grayscale(0%)', padding: 8 }} />
+                  <Typography variant="body2">(유튜브, 아프리카TV 향후 지원 예정)</Typography>
+                </div>
+              )}
               checked={state.option === opt.id}
-              disabled={opt.id === 'option0'}
-            />
+              disabled={opt.id !== 'option1'}
+            >
+              {opt.materials && (
+              <Collapse in={state.option === opt.id}>
+                <div className={classes.expansionPanel}>
+                  <AdDescriptionSelect
+                    primary={opt.primaryText}
+                    opt={opt}
+                    handleMaterialClick={(material: AdMaterial): void => {
+                      setSelectedIndex(index);
+                      setSelectedMaterial(material);
+                      adDescriptionDialog.handleOpen();
+                    }}
+                  />
+                </div>
+              </Collapse>
+              )}
+            </OptionSelectPaper>
           ))}
           <ButtonSet handleNext={handleNext} handleBack={handleBack} set={Boolean(1)} />
         </div>
@@ -86,6 +109,17 @@ const OptionPaper = (props: OptionPaperProps): JSX.Element => {
             ))}
         </div>
       )}
+
+      {adDescriptionDialog.open && options[selectedIndex].materials && selectedMaterial && (
+      <AdDescriptionDialog
+        open={adDescriptionDialog.open}
+        onClose={adDescriptionDialog.handleClose}
+        selectedOption={options[selectedIndex]}
+        selectedMaterial={selectedMaterial}
+        handleSelectedMaterial={handleSelectedMaterial}
+      />
+      )}
+
     </CampaignCreateStepLayout>
   );
 };

@@ -1,5 +1,6 @@
 import express from 'express';
 import responseHelper from '../../../middlewares/responseHelper';
+import slack from '../../../lib/slack/messageWithJson';
 import doQuery from '../../../model/doQuery';
 
 const router = express.Router();
@@ -71,7 +72,7 @@ router.route('/')
       doQuery(searchQuery, [marketerId])
         .then((row) => {
           // 이전에 배너를 게시한 적이 있다는 의미.
-          let linkId;
+          let linkId: string;
           if (row.result.length > 0) {
             const lastlinkId = row.result[0].linkId;
             const count = parseInt(lastlinkId.split('_')[2], 10) + 1;
@@ -88,6 +89,15 @@ router.route('/')
             [linkId, marketerId, DEFAULT_CONFIRM_STATE, JSON.stringify({ links })])
             .then(() => {
               responseHelper.send([true], 'POST', res);
+              slack({
+                summary: '랜딩 URL 등록 알림',
+                text: '관리자 페이지에서 방금 등록된 랜딩 Url을 확인하고, 심사하세요.',
+                fields: [
+                  { title: '마케터 아이디', value: marketerId!, short: true },
+                  { title: '링크 아이디', value: linkId!, short: true },
+                  { title: '링크 개수', value: links.length, short: true },
+                ]
+              });
             })
             .catch((error) => {
               responseHelper.promiseError(error, next);

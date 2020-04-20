@@ -6,6 +6,7 @@ import makeMarketerRepassword from '../../middlewares/mailTemplate/marketerRepas
 import logger from '../../middlewares/logger';
 import doQuery from '../../model/doQuery';
 import makeInqurie from '../../middlewares/mailTemplate/makeInqurie';
+import makeCreatorInquiry from '../../middlewares/mailTemplate/makeCreatorInquiry';
 
 const router = express.Router();
 
@@ -53,6 +54,36 @@ router.route('/inquiry')
         if (error) {
           logger.error(`Email 전송오류 : ${error}`);
           throw new Error(`Error in /mail/inquiry - ${error}`);
+        } else {
+          logger.info(`Email sent: ${info.response}`);
+          res.sendStatus(200);
+        }
+      });
+    })
+  )
+  .all(responseHelper.middleware.unusedMethod);
+
+router.route('/inquiry/creator')
+  .post(
+    responseHelper.middleware.withErrorCatch(async (req, res) => {
+      const inputForm: InputForm = req.body;
+      // req.body는 x-www-form-urlencoded
+      const mailOptions = {
+        from: `${inputForm.email}`, // 발송 메일 주소
+        to: 'support@onad.io', // 수신 메일 주소부분
+        subject: `${inputForm.name}님의 크리에이터 문의 입니다.`, // 제목부분
+        html: makeCreatorInquiry(inputForm),
+        // attachments: [{
+        //   filename: 'onad_logo_vertical_small.png',
+        //   path: `${process.env.ROOT_PATH}/public/onad_logo_vertical_small.png`,
+        //   cid: 'logo'
+        // }]
+      };
+
+      transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+          logger.error(`Email 전송오류 : ${error}`);
+          throw new Error(`Error in /mail/inquiry/creator - ${error}`);
         } else {
           logger.info(`Email sent: ${info.response}`);
           res.sendStatus(200);

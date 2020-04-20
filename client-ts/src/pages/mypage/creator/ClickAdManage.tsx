@@ -42,7 +42,7 @@ export default function AdDashboard(): JSX.Element {
               <GridItem xs={12} md={6} lg={3} xl={6}>
                 {!levelGet.loading && levelGet.data && (
                 <AdDescriptionCard title="내 광고 레벨">
-                  <LevelBar level={levelGet.data.level} exp={levelGet.data.exp / 5} />
+                  <LevelBar level={levelGet.data.level} exp={levelGet.data.exp} />
                 </AdDescriptionCard>
                 )}
               </GridItem>
@@ -73,9 +73,13 @@ export default function AdDashboard(): JSX.Element {
               </GridItem>
 
               <GridItem xs={12} md={6} lg={3} xl={6}>
-                {/* {!clicksGet.loading && clicksGet.data && (
-                <AdDescriptionCard title="패널 광고 클릭 수" value={clicksGet.data.adpanel} unit="회" />
-                )} */}
+                {!clicksGet.loading && clicksGet.data && (
+                <AdDescriptionCard
+                  title="패널 광고 클릭 수"
+                  value={clicksGet.data.adpanel ? clicksGet.data.adpanel : 0}
+                  unit="회"
+                />
+                )}
               </GridItem>
 
             </GridContainer>

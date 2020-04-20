@@ -5,12 +5,12 @@ import {
 } from '@material-ui/core';
 import { Assignment } from '@material-ui/icons';
 // own components
-import ContentCard from './ContentCard';
-import CampaignCostPie from './CampaignCostPie';
-import CampaignCostBar from './CampaignCostBar';
-import BannerBroadCreators from './BannerBroadCreators';
-import CampaignInfo from './CampaignInfo';
-import MakePdfButton from './MakePdfButton';
+import ContentCard from './sub/ContentCard';
+import CampaignCostPie from './sub/CampaignCostPie';
+import CampaignCostBar from './sub/CampaignCostBar';
+import BannerBroadCreators from './sub/BannerBroadCreators';
+import CampaignInfo from './sub/CampaignInfo';
+import MakePdfButton from './sub/MakePdfButton';
 import { ReportInterface, CreatorDataInterface, CampaignInterface } from '../dashboard/interfaces';
 import { UseGetRequestObject } from '../../../../utils/hooks/useGetRequest';
 

@@ -1,6 +1,6 @@
 import doQuery from '../../model/doQuery';
 import makeInsertQuery from './util/makeInsertQuery';
-import slack from '../slack/message';
+import slack from '../../lib/slack/message';
 
 const schedule = require('node-schedule');
 

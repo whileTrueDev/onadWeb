@@ -1,6 +1,6 @@
 import React from 'react';
 import Typography from '@material-ui/core/Typography';
-import LinearProgress from '@material-ui/core/LinearProgress';
+import PrettoSlider from '../../../../atoms/PrettoSlider';
 
 interface LevelBarProps {
   level: number;
@@ -33,10 +33,12 @@ export default function LevelBar({
           {level}
         </Typography>
       </div>
-      <LinearProgress
-        style={{ width: '90%', maxWidth: 300 }}
-        value={exp} // 경험치 100 분위수
-        variant="determinate"
+      <PrettoSlider
+        style={{ cursor: 'default', width: '90%' }}
+        max={500}
+        valueLabelDisplay="on"
+        aria-label="pretto slider creator-ad-level"
+        value={exp}
       />
     </div>
   );

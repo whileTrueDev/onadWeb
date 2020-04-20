@@ -7,10 +7,7 @@ import makeSignature from './makeSignature';
 // import slack from '../../middlewares/slack/message';
 
 interface NaverCloudButton {
-  type: string;
-  name: string;
-  linkMobile: string;
-  linkPc: string;
+  type: string; name: string; linkMobile: string; linkPc: string;
 }
 
 interface NaverCloudMessage {
@@ -21,10 +18,7 @@ interface NaverCloudMessage {
 }
 
 interface NaverCloudMessageResponse {
-  messageId: string;
-  countryCode: string;
-  to: string;
-  content: string;
+  messageId: string; countryCode: string; to: string; content: string;
   requestStatusCode: string;
   requestStatusName: string;
   requestStatusDesc: string;
@@ -50,31 +44,6 @@ const router = express.Router();
 
 /**
  * @name 마케터캐시소진알림톡전송
- * @swagger
- * /alimtalk/marketer/cash/burn:
- *   post:
- *     tags: [alimtalk]
- *     summary: 마케터 캐시소진 알림톡 전송
- *     description: param으로 받는 마케터 아이디에 따라 해당 마케터에게 알림톡을 전송하는 요청
- *     produces:
- *       - application/json
- *     parameters:
- *       - name: marketerId
- *         description: 알림톡을 전송할 마케터 고유 ID
- *         required: true
- *         in: body
- *         type: string
- *     responses:
- *       200:
- *         description: OK
- *       201:
- *         description: Created
- *       400:
- *         $ref: '#/responses/400'
- *       401:
- *         $ref: '#/responses/401'
- *       404:
- *         $ref: '#/responses/404'
  * */
 router.get('/marketer/cash/burn', (req, res) => {
   // Get marketerId
@@ -196,147 +165,5 @@ router.get('/marketer/cash/burn', (req, res) => {
     }
   });
 });
-
-/**
- * @name 캠페인정의
- * @swagger
- * definitions:
- *   campaign:
- *     type: "object"
- *     properties:
- *       campaignId:
- *         type: string
- *         description: 캠페인의 고유 아이디
- *       campaignName:
- *         type: string
- *         description: 캠페인 명
- *       marketerId:
- *         type: string
- *         description: 캠페인 소유 마케터 아이디
- *       marketerName:
- *         type: string
- *         description: 캠페인 소유 마케터 이름
- *       bannerId:
- *         type: string
- *         description: 캠페인에 할당된 배너 아이디
- *       connectedLinkId:
- *         type: string
- *         description: 캠페인에 할당된 랜딩url 아이디
- *       dailyLimit:
- *         type: integer
- *         description: 캠페인 일일 비용 예산
- *       limitState:
- *         type: integer
- *         description: 일일 비용 예산을 넘었는지 안넘었는지 상태값
- *         enum:
- *           - 넘음
- *           - 안 넘음
- *         default: 안넘음
- *       priorityType:
- *         type: integer
- *         description: 우선순위 타입
- *         enum:
- *           - 크리에이터 선택형
- *           - 게임 선택형
- *           - 노출 우선형
- *       optionType:
- *         type: string
- *         description: 캠페인광고 유형
- *         enum:
- *           - CPM
- *           - CPMCPC
- *           - CPC
- *       onOff:
- *         type: integer
- *         description: 캠페인 활성화/비활성화 상태값
- *         enum:
- *           - on
- *           - off
- *       deletedState:
- *         type: integer
- *         description: 캠페인 삭제 상태값
- *         enum:
- *           - 미삭제
- *           - 삭제
- *       regiDate:
- *         type: string
- *         description: 캠페인 생성 날짜
- *         format: date-time
- *       updateDate:
- *         type: string
- *         description: 캠페인이 업데이트된 가장 최신의 날짜
- *         format: date-time
- *       stopDate:
- *         type: string
- *         description: 광고가 정지된 시점 (광고비가 모두 소진되어 광고가 끝나는 시점을 기록 )
- *         format: date-time
- *       targetList:
- *         type: string
- *         description: 캠페인에 대한 카테고리ID / 크리에이터ID 모음
- *       keyword:
- *         type: jsonstring
- *         description: 해당캠페인에 대한 키워드들 모음 json형태 문자열
- *       startDate:
- *         type: string
- *         description: 광고주가 설정한 캠페인 시작일
- *         format: date-time
- *       finDate:
- *         type: string
- *         description: 광고주가 설정한 캠페인 종료일
- *         format: date-time
- *       selectedTime:
- *         type: string
- *         description: 광고주가 설정한 캠페인 송출 시간대 ( | 로 구분)
- */
-
-/**
- * @name 응답코드정의
- * @swagger
- * responses:
- *   400:
- *     description: Bad Requests
- *     schema:
- *       $ref: '#/definitions/Error'
- *   401:
- *     description: Unauthorized
- *     schema:
- *       $ref: '#/definitions/Error'
- *   403:
- *     description: Forbidden
- *     schema:
- *       $ref: '#/definitions/Error'
- *   404:
- *     description: Not Found
- *     schema:
- *       $ref: '#/definitions/Error'
- *   405:
- *     description: Method Not Allowed
- *     schema:
- *       $ref: '#/definitions/Error'
- *   429:
- *     description: Too Many Requests
- *     schema:
- *       $ref: '#/definitions/Error'
- *   5XX:
- *     description: Internal Server Error
- *     schema:
- *       $ref: '#/definitions/Error'
- */
-
-/**
- * @name 응답객체정의
- * @swagger
- * definitions:
- *   Error:
- *     type: object
- *     properties:
- *       code:
- *         type: string
- *       message:
- *         type: string
- *     required:
- *       - code
- *       - message
- */
 
 export default router;

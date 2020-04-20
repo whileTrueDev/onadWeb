@@ -309,13 +309,13 @@ const marketerCalculate = ({ connection, campaignId, price }) => {
 };
 
 const campaignCalculate = ({
-  connection, creatorId, campaignId, cashFromMarketer, cashToCreator
+  connection, creatorId, campaignId, cashFromMarketer, cashToCreator, viewer
 }) => {
   const queryState = `
     INSERT INTO campaignLog
-    (campaignId, creatorId, type, cashFromMarketer, cashToCreator) 
-    VALUES (?, ?, ?, ?, ?)`;
-  return doTransacQuery({ connection, queryState, params: [campaignId, creatorId, 'CPM', cashFromMarketer, cashToCreator] });
+    (campaignId, creatorId, type, cashFromMarketer, cashToCreator, viewer) 
+    VALUES (?, ?, ?, ?, ?, ?)`;
+  return doTransacQuery({ connection, queryState, params: [campaignId, creatorId, 'CPM', cashFromMarketer, cashToCreator, viewer] });
 };
 
 const marketerZeroCalculate = ({ connection, marketerId }) => {
@@ -489,7 +489,7 @@ const dailyLimitCalculateConnectionWarp = ({ campaignList }) => new Promise((res
 
 
 const calculateConnectionWrap = ({
-  creatorId, campaignId, cashFromMarketer, cashToCreator
+  creatorId, campaignId, cashFromMarketer, cashToCreator, viewer
 }) => new Promise((resolve, reject) => {
   pool.getConnection((err, connection) => {
     if (err) {
@@ -501,7 +501,7 @@ const calculateConnectionWrap = ({
       }),
       marketerCalculate({ connection, campaignId, price: cashFromMarketer }),
       campaignCalculate({
-        connection, creatorId, campaignId, cashFromMarketer, cashToCreator
+        connection, creatorId, campaignId, cashFromMarketer, cashToCreator, viewer
       })
     ])
       .then(() => {
@@ -549,14 +549,15 @@ async function calculation() {
     console.log(`계산 항목이 존재하지 않으므로 계산 종료합니다. 종료 시각 : ${new Date().toLocaleString()}`);
     return;
   }
+
   console.log(`계산을 실시합니다. 시작 시각 : ${new Date().toLocaleString()}`);
   const marketerList = [];
   const campaignList = [];
   Promise.all(
     calculateList.map(({
-      creatorId, campaignId, cashFromMarketer, cashToCreator
+      creatorId, campaignId, cashFromMarketer, cashToCreator, viewer
     }) => calculateConnectionWrap({
-      creatorId, campaignId, cashFromMarketer, cashToCreator
+      creatorId, campaignId, cashFromMarketer, cashToCreator, viewer
     }).then(() => {
       const marketerId = campaignId.split('_')[0];
       if (!marketerList.includes(marketerId)) {

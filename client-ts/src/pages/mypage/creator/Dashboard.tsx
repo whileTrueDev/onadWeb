@@ -8,7 +8,7 @@ import Snackbar from '../../../atoms/Snackbar/Snackbar';
 import ContractionCard, { ContractionDataType } from '../../../organisms/mypage/creator/Dashboard/ContractionCard';
 import NotificationCard from '../../../organisms/mypage/creator/Dashboard/NotificationCard';
 import IncomeCard, { IncomeCashRes } from '../../../organisms/mypage/creator/Dashboard/IncomeCard';
-import AdPageCard, { AdPageRes } from '../../../organisms/mypage/creator/Dashboard/AdPageCard';
+import AdPageCard, { ClicksRes, LevelRes } from '../../../organisms/mypage/creator/Dashboard/AdPageCard';
 import IncomeChart, { IncomeChartData, IncomeChartParams } from '../../../organisms/mypage/creator/Dashboard/IncomeChart';
 import BannerCard, { CurrentBannerRes } from '../../../organisms/mypage/creator/Dashboard/BannerCard';
 import UrlCard, { OverlayUrlRes } from '../../../organisms/mypage/creator/Dashboard/OverlayUrlCard';
@@ -23,7 +23,9 @@ const Dashboard = (): JSX.Element => {
   // 수익금 정보 조회
   const incomeCashGet = useGetRequest<null, IncomeCashRes>('/creator/income');
   // 광고페이지 정보 조회
-  const adPageGet = useGetRequest<null, AdPageRes>('/creator/ad-page');
+  const clicksGet = useGetRequest<null, ClicksRes>('/creator/clicks');
+  // 크리에이터 광고 레벨 정보 조회
+  const levelGet = useGetRequest<null, LevelRes>('/creator/level');
   // 수익금 차트 정보 조회
   const incomeChartGet = useGetRequest<IncomeChartParams, IncomeChartData[]>(
     '/creator/income/chart', { dateRange: '30' }
@@ -37,7 +39,7 @@ const Dashboard = (): JSX.Element => {
   return (
     <>
       {(contractionGet.loading || incomeCashGet.loading
-        || adPageGet.loading || incomeChartGet.loading
+        || clicksGet.loading || levelGet.loading || incomeChartGet.loading
         || currentBannerGet.loading || overlayUrlGet.loading) ? (
           <DashboardLoading />
         ) : (
@@ -75,8 +77,8 @@ const Dashboard = (): JSX.Element => {
 
                 {/* 광고페이지 카드 */}
                 <GridItem xs={12} md={6} xl={12}>
-                  {!adPageGet.loading && adPageGet.data && (
-                  <AdPageCard adPageData={adPageGet.data} />
+                  {!levelGet.loading && levelGet.data && !clicksGet.loading && clicksGet.data && (
+                  <AdPageCard levelData={levelGet.data} clicksData={clicksGet.data} />
                   )}
                 </GridItem>
               </GridContainer>
