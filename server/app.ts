@@ -5,17 +5,12 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import createError from 'http-errors';
-import swaggerJsDoc from 'swagger-jsdoc';
-import swaggerUi from 'swagger-ui-express';
 import session from 'express-session';
 import morgan from 'morgan';
-
 // import checkAuthOnReq from './middlewares/auth/checkAuthOnReq';
 import passport from './middlewares/passport';
-
 // Routers
 import alimtalkRouter from './routes/alimtalk';
-// import apiRouter from './routes/api';
 import creatorRouter from './routes/creator';
 import creatorsRouter from './routes/creators';
 import loginRouter from './routes/auth/login';
@@ -26,6 +21,7 @@ import bannersRouter from './routes/banners';
 import mailRouter from './routes/mail';
 import noticeRouter from './routes/notice';
 import trackingRouter from './routes/tracking';
+// Middleware or custom modules
 import taxBillScheduler from './middlewares/scheduler/taxBillScheduler';
 // import S3 from './lib/AWS/S3';
 import Controller from './controller';
@@ -41,37 +37,11 @@ let FRONT_HOST = process.env.DEV_REACT_HOSTNAME;
 if (process.env.NODE_ENV === 'production') {
   FRONT_HOST = process.env.PRODUCTION_REACT_HOSTNAME;
 }
-
-// swagger 옵션
-const swaggerOptions = {
-  swaggerDefinition: {
-    info: {
-      version: '1.0.0',
-      title: 'OnAD web API',
-      description: 'An API server for OnAD platform in nodeJS using typescript',
-      license: {
-        name: 'MIT',
-        url: 'https://opensource.org/licenses/MIT'
-      },
-      contact: {
-        name: 'whileTrue',
-      },
-      servers: ['localhost:3000'],
-    },
-  },
-  // ['.routes/*.ts']
-  apis: ['routes/**/*.ts', 'routes/**/*.js']
-};
-
-// swagger를 주석으로 작성할 수 있도록.
-const swaggerDocs = swaggerJsDoc(swaggerOptions);
-
 interface Err {
   status?: number;
   stack?: string;
   message?: string;
 }
-
 class OnadWebApi {
   public app: express.Express;
 
@@ -130,13 +100,9 @@ class OnadWebApi {
       res.sendStatus(200);
     });
 
-    // Swagger UI 추가.
-    this.app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
-
     // this.app.use(checkAuthOnReq); // 인증 method를 req에 추가한다.
 
     // Router 추가
-    // this.app.use('/mailer', mailerRouter);
     this.app.use('/alimtalk', alimtalkRouter);
 
     // *********************************

@@ -105,7 +105,7 @@ const CampaignCreateTable = (props: CampaignCreateTableProps): JSX.Element => {
     }, // check 완료
     (optionType !== 'option0')
       && {
-        title: '랜딩페이지 URL',
+        title: '랜딩페이지 URL 선택',
         component: (
           <LandingUrlInput
             dispatch={dispatch}
