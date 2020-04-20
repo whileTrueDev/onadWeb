@@ -12,20 +12,12 @@ import useLandingCardStyles from './AdPageCard.style';
 // utils
 import numFormatter from '../../../../utils/numFormatter';
 
-export interface AdPageRes {
-  exp: number;
-  level: number;
-  visitCount: number;
-  clickCount: number;
-  transferCount: number;
-  date: string;
-}
+export interface ClicksRes { adpanel: number; adchat: number }
+export interface LevelRes { creatorId: string; level: number; exp: number }
 
-interface AdPageCardProps {
-  adPageData: AdPageRes;
-}
+interface AdPageCardProps { clicksData: ClicksRes; levelData: LevelRes }
 const AdPageCard = ({
-  adPageData
+  clicksData, levelData
 }: AdPageCardProps): JSX.Element => {
   const classes = useLandingCardStyles();
 
@@ -33,10 +25,7 @@ const AdPageCard = ({
     <CustomCard
       iconComponent={<BarChart />}
       buttonComponent={(
-        <StyledItemText
-          primary="광고페이지 현황"
-          secondary="다음 보상까지 남은 경험치입니다."
-        />
+        <StyledItemText primary="클릭광고 현황" secondary="자세한 사항은 내 클릭광고 탭에서 확인하세요." />
       )}
     >
       <Grid container direction="column" spacing={2}>
@@ -46,14 +35,14 @@ const AdPageCard = ({
               <Typography variant="body2" align="center" className={classes.level}>
                 LV.
                 {' '}
-                {adPageData.level}
+                {levelData.level}
               </Typography>
               <PrettoSlider
                 style={{ cursor: 'default' }}
                 max={500}
                 valueLabelDisplay="on"
-                aria-label="pretto slider"
-                value={adPageData.exp}
+                aria-label="pretto slider creator-ad-level"
+                value={levelData.exp}
               />
             </Grid>
           </Grid>
@@ -62,11 +51,14 @@ const AdPageCard = ({
         <Grid container direction="row" justify="space-evenly">
           <Grid item>
             <div className={classes.flex}>
-              <Typography gutterBottom variant="body1" className={classes.head}>총 방문수</Typography>
+              <Typography gutterBottom variant="body1" className={classes.head}>총 클릭 수</Typography>
             </div>
             <div className={classes.flex}>
               <Typography gutterBottom variant="h5">
-                {`${numFormatter(adPageData.visitCount)} `}
+                {`${numFormatter(
+                  ((clicksData.adchat ? clicksData.adchat : 0)
+                    + (clicksData.adpanel ? clicksData.adpanel : 0))
+                )} `}
               </Typography>
               <Typography gutterBottom variant="body2" className={classes.unit}>
                 회
@@ -78,11 +70,11 @@ const AdPageCard = ({
           </Grid>
           <Grid item>
             <div className={classes.flex}>
-              <Typography gutterBottom variant="body1" className={classes.head}>총 배너 클릭수</Typography>
+              <Typography gutterBottom variant="body1" className={classes.head}>채팅광고 클릭</Typography>
             </div>
             <div className={classes.flex}>
               <Typography gutterBottom variant="h5">
-                {`${numFormatter(adPageData.clickCount)} `}
+                {`${numFormatter(clicksData.adchat)} `}
               </Typography>
               <Typography gutterBottom variant="body2" className={classes.unit}>
                 회
@@ -95,12 +87,12 @@ const AdPageCard = ({
           <Grid item>
             <Grid container className={classes.flex}>
               <Grid item>
-                <Typography gutterBottom variant="body1" className={classes.head}>총 구매 이동수</Typography>
+                <Typography gutterBottom variant="body1" className={classes.head}>패널광고 클릭</Typography>
               </Grid>
             </Grid>
             <div className={classes.flex}>
               <Typography gutterBottom variant="h5">
-                {`${numFormatter(adPageData.transferCount)} `}
+                {`${numFormatter(clicksData.adpanel ? clicksData.adpanel : 0)} `}
               </Typography>
               <Typography gutterBottom variant="body2" className={classes.unit}>
                 회
