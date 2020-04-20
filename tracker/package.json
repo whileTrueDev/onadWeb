@@ -8,7 +8,7 @@
   "scripts": {
     "prebuild": "rimraf ./dist",
     "build": "tsc",
-    "postbuild": "cp -r ./views ./dist/views",
+    "postbuild": "cp -r ./views ./dist/views && cp ./robots.txt ./dist/robots.txt && cp -r ./public ./dist",
     "start:debug": "nodemon --watch *.ts --exec ts-node app.ts",
     "start:production": "cross-env NODE_ENV=production CPC_PAYOUT=100 node ./dist/app.js"
   },
