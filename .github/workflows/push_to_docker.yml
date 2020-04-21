@@ -41,10 +41,10 @@ jobs:
           cd tracker
           yarn install
           yarn build
+          cd ..
           cd client-ts
           yarn install
           yarn build
-        # cd ..
         # cd server
         # yarn install
         # yarn build
