@@ -44,7 +44,6 @@ jobs:
           cd client-ts
           yarn install
           yarn build
-
         # cd ..
         # cd server
         # yarn install
