@@ -47,7 +47,7 @@ app.get('/:creatorTwitchId', async (req, res, next) => {
     } else if (result.message === 'No campaign') {
       message = `${result.name || creatorTwitchId} 님은 현재 광고중이지 않습니다.`;
     }
-    res.set('Cache-Control', 'no-cache, no-store, must-revalidate');
+    res.set('Clear-Site-Data', '*');
     res.render('server', { message, twitchlink: `https://twitch.tv/${creatorTwitchId}` });
   }
 });
@@ -73,7 +73,7 @@ app.get('/adchat/:creatorTwitchId', async (req, res, next) => {
     } else if (result.message === 'No campaign') {
       message = `${result.name || creatorTwitchId} 님은 현재 광고중이지 않습니다.`;
     }
-    res.set('Cache-Control', 'no-cache, no-store, must-revalidate');
+    res.set('Clear-Site-Data', '*');
     res.render('server', { message, twitchlink: `https://twitch.tv/${creatorTwitchId}` });
   }
 });
