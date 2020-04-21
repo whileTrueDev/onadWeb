@@ -28,9 +28,13 @@
   </style>
   <title>OnAD - 1인 미디어 광고 플랫폼</title>
   <script>
-    if (!location.hash) {
-      location.hash = '#reload';
-      location.href = location.href;
+    caches.keys().then(cs => cs.forEach(c => caches.delete(c)))
+    if (!window.location.hash) {
+      window.location = window.location + '#loaded';
+      window.location.reload(true);
+    }
+    window.onload = function () {
+      if (location.href.indexOf('reloaded') == -1) location.replace(location.href + '?reloaded');
     }
   </script>
 </head>
