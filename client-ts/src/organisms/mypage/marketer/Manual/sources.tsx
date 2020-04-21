@@ -91,7 +91,7 @@ const manualSources = {
       },
       {
         image: '/pngs/dashboard/manual/new_marketer/marketer-campaign-03.png',
-        description: `원하는 송출 방식을 선택하고 ${textStyling.styledText('다음')}을 눌러주세요. ${textStyling.styledBlock(`- 생방송 LIVE - 배너 광고 캠페인 : 원하는 크리에이터에게만 송출을 원하는 경우<br>
+        description: `원하는 송출 방식을 선택하고 ${textStyling.styledText('다음')}을 눌러주세요. ${textStyling.styledBlock(`- 특정 크리에이터에게만 광고 송출 : 원하는 크리에이터에게만 송출을 원하는 경우<br>
         - 특정 게임에만 광고 송출 : 특정 게임 시청자들을 타겟팅 하는 경우<br>
         - 업로드형 광고 캠페인(유투브) : 많은 시청자들에게 노출되는 것을 우선하는 경우(노출 수 가장 높음)`)}`
       },
@@ -101,8 +101,7 @@ const manualSources = {
       },
       {
         image: '/pngs/dashboard/manual/new_marketer/marketer-campaign-05.png',
-        description: `  
-        클릭 시 이동하는 광고주님의 랜딩페이지 URL을 설정할 수 있습니다. ${textStyling.styledBlock(`URL 이름은 광고주님께서 URL의 식별 편리를 위한 이름입니다.</br>
+        description: `클릭 시 이동하는 광고주님의 랜딩페이지 URL을 설정할 수 있습니다. ${textStyling.styledBlock(`URL 이름은 광고주님께서 URL의 식별 편리를 위한 이름입니다.</br>
         EX) URL 이름 : 네이버, URL주소 : www.naver.com`)}`,
       },
       {
