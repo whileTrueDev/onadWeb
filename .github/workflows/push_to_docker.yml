@@ -38,57 +38,57 @@ jobs:
           REACT_APP_PRODUCTION_REACT_HOSTNAME: ${{ secrets.REACT_APP_PRODUCTION_REACT_HOSTNAME }}
           REACT_APP_GOOGLE_MAP_API_KEY: ${{ secrets.REACT_APP_GOOGLE_MAP_API_KEY }}
         run: |
-          cd client-ts
-          yarn install
-          yarn build
-          cd ..
-          cd server
-          yarn install
-          yarn build
-          cd ..
-          cd socket
-          yarn install
-          yarn build
-          cd ..
           cd tracker
           yarn install
           yarn build
 
-      - name: <client-ts> Dockerize and Push to docker hub
-        uses: elgohr/Publish-Docker-Github-Action@2.14
-        with:
-          name: hwasurr/onad_web
-          workdir: client-ts
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-          tags: "latest,1.${{ github.run_number }}"
+        # cd client-ts
+        # yarn install
+        # yarn build
+        # cd ..
+        # cd server
+        # yarn install
+        # yarn build
+        # cd ..
+        # cd socket
+        # yarn install
+        # yarn build
+        # cd ..
+      # - name: <client-ts> Dockerize and Push to docker hub
+      #   uses: elgohr/Publish-Docker-Github-Action@2.14
+      #   with:
+      #     name: hwasurr/onad_web
+      #     workdir: client-ts
+      #     username: ${{ secrets.DOCKER_USERNAME }}
+      #     password: ${{ secrets.DOCKER_PASSWORD }}
+      #     tags: "latest,1.${{ github.run_number }}"
 
-      - name: <server> Dockerize and Push to docker hub
-        uses: elgohr/Publish-Docker-Github-Action@2.14
-        with:
-          name: hwasurr/onad_web_api
-          workdir: server
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-          tags: "latest,1.${{ github.run_number }}"
+      # - name: <server> Dockerize and Push to docker hub
+      #   uses: elgohr/Publish-Docker-Github-Action@2.14
+      #   with:
+      #     name: hwasurr/onad_web_api
+      #     workdir: server
+      #     username: ${{ secrets.DOCKER_USERNAME }}
+      #     password: ${{ secrets.DOCKER_PASSWORD }}
+      #     tags: "latest,1.${{ github.run_number }}"
 
-      - name: <calculator> Dockerize and Push to docker hub
-        uses: elgohr/Publish-Docker-Github-Action@2.14
-        with:
-          name: hwasurr/onad_calculator
-          workdir: calculator
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-          tags: "latest,1.${{ github.run_number }}"
+      # - name: <calculator> Dockerize and Push to docker hub
+      #   uses: elgohr/Publish-Docker-Github-Action@2.14
+      #   with:
+      #     name: hwasurr/onad_calculator
+      #     workdir: calculator
+      #     username: ${{ secrets.DOCKER_USERNAME }}
+      #     password: ${{ secrets.DOCKER_PASSWORD }}
+      #     tags: "latest,1.${{ github.run_number }}"
 
-      - name: <Ad broad socket server> Dockerize and Push to docker hub
-        uses: elgohr/Publish-Docker-Github-Action@2.14
-        with:
-          name: hwasurr/onad_socket
-          workdir: socket
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-          tags: "latest,1.${{ github.run_number }}"
+      # - name: <Ad broad socket server> Dockerize and Push to docker hub
+      #   uses: elgohr/Publish-Docker-Github-Action@2.14
+      #   with:
+      #     name: hwasurr/onad_socket
+      #     workdir: socket
+      #     username: ${{ secrets.DOCKER_USERNAME }}
+      #     password: ${{ secrets.DOCKER_PASSWORD }}
+      #     tags: "latest,1.${{ github.run_number }}"
 
       - name: <Onad Tracker> Dockerize and Push to docker hub
         uses: elgohr/Publish-Docker-Github-Action@2.14
