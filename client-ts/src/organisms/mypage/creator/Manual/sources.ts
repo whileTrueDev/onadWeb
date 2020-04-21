@@ -23,7 +23,7 @@ const manualSources: ManualSources = {
     },
     {
       icon: Public,
-      label: '광고페이지 설정',
+      label: '내 클릭광고 설정',
     },
     {
       icon: Contactless,
@@ -187,9 +187,10 @@ const manualSources: ManualSources = {
       },
       {
         image: '/pngs/dashboard/manual/new_creator/creator-income-02.png',
-        description: `송출된 광고는 크리에이터님의 ${textStyling.LinkText('<내 광고페이지>', 'landing')}에도 게시됩니다.  
-        게시된 광고페이지의 상호작용(광고 조회, 상품 및 브랜드 페이지 이동 등)에 따라 수익은 추가적으로 발생합니다.  
-        또한, 광고페이지 상호작용에 따라 크리에이터님의 광고 레벨도 상승합니다.  
+        description: `송출되는 광고는 크리에이터님의 방송 채널 패널과 연동됩니다.   
+        패널 클릭시 광고주/마케터 님이 연동한 URL 페이지로 이동합니다. 패널 및 채팅광고에 대한 시청자의 클릭(상호작용)에 대해 수익은 추가적으로 발생합니다.   
+        또한, 시청자의 광고에 대한 클릭에 따라 크리에이터님의 광고 레벨도 상승합니다.   
+        ${textStyling.LinkText('<내 클릭광고>', 'ad-dashboard')}에서 확인하세요!
         광고 단가 책정, 이벤트 및 광고 선정 우선순위에 가산점으로 작용할 수 있습니다.`
       },
     ],
@@ -197,13 +198,13 @@ const manualSources: ManualSources = {
   landing: {
     subType: false,
     card: {
-      title: '내 광고페이지를 관리하기',
-      subtitle: '광고 페이지를 관리하고, 패널에 배너를 업로드하고, 현황을 확인하세요'
+      title: '내 클릭광고 관리하기',
+      subtitle: '패널광고와 채팅광고를 관리하고, 현황을 확인하세요'
     },
     source: [
       {
         image: null,
-        description: `자신의 방송 채널에 광고페이지 바로가기 배너를 게시해 더욱 많은 광고 수익을 얻어보세요.  
+        description: `자신의 방송 채널에 패널을 게시하고 채팅 광고를 통해 더욱 많은 광고 수익을 얻어보세요.  
         시청자들의 상호작용에 의해 추가적 광고 수익이 발생할 수 있습니다.  
         `
       },
@@ -215,19 +216,20 @@ const manualSources: ManualSources = {
       {
         image: '/pngs/dashboard/manual/new_creator/creator-landing-02.png',
         description: `자신만의 광고페이지 이동 배너를 업로드하거나,  
-        ${textStyling.LinkText('<내 광고페이지>', 'landing')}에서 기본이미지를 다운로드 받아 업로드하세요.  
-        이미지 링크에는 자신의 광고페이지 주소를 입력하세요.
+        ${textStyling.LinkText('<내 클릭광고>', 'ad-dashboard')}에서 기본이미지를 다운로드 받아 업로드하세요.  
+        이미지 링크에는 자신의 ${textStyling.styledText('패널링크')} 주소를 입력하세요.
         `
       },
       {
         image: null,
-        description: `${textStyling.LinkText('<내 광고페이지>', 'landing')}에서 광고페이지의 소개글과  
-        라이트 / 다크모드, 배경이미지 등을설정하세요. 커스텀 기능은 점차적으로 업데이트 됩니다.  
+        description: `채팅 광고를 하고 싶다면 채팅광고 ON/OFF를 설정해주세요.   
+        온애드의 광고채팅봇 ${textStyling.styledText('onadyy')}는 주기적으로 현재 송출중인 배너광고에 대한 설명과 광고 링크를 채팅으로 자동홍보해줘요.   
+        시청자가 ${textStyling.styledText('onadyy')}가 홍보한 링크를 클릭하면, 클릭에 대한 추가적인 광고 수익이 발생한답니다.
         `
       },
       {
         image: '/pngs/dashboard/manual/new_creator/creator-landing-03.png',
-        description: `${textStyling.LinkText('<대시보드>', 'landing')} 또는 ${textStyling.LinkText('<내 광고페이지>', 'landing')}에서 현황을 확인할 수 있습니다.  
+        description: `${textStyling.LinkText('<대시보드>', 'landing')} 또는 ${textStyling.LinkText('<내 클릭광고>', 'ad-dashboard')}에서 현황을 확인할 수 있습니다.  
         `
       },
     ]
@@ -249,7 +251,8 @@ const manualSources: ManualSources = {
     source: [
       {
         image: '/pngs/dashboard/manual/new_creator/creator-withdrawal-01.png',
-        description: `${textStyling.LinkText('<내 계정>', 'user')}으로 이동하여 출금계좌를 등록하세요.
+        description: `${textStyling.LinkText('<내 계정>', 'user')}으로 이동하여 정산 등록 신청서를 제출하세요.   
+        정산 등록이 ${textStyling.styledText('승인완료')} 되어야만 출금 신청이 가능합니다.
         `,
       },
       {
