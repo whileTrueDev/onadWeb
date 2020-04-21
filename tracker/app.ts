@@ -41,7 +41,7 @@ app.get('/:creatorTwitchId', async (req, res, next) => {
       || result.message === 'invalid link') {
       message = '죄송합니다. 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.';
     } else if (result.message === 'No campaign') {
-      message = `${result.name || creatorTwitchId} 님은 현재 방송중이지 않습니다.`;
+      message = `${result.name || creatorTwitchId} 님은 현재 광고중이지 않습니다.`;
     }
     res.render('index', { message, twitchlink: `https://twitch.tv/${creatorTwitchId}` });
   }
@@ -66,7 +66,7 @@ app.get('/adchat/:creatorTwitchId', async (req, res, next) => {
       || result.message === 'invalid link') {
       message = '죄송합니다. 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.';
     } else if (result.message === 'No campaign') {
-      message = `${result.name || creatorTwitchId} 님은 현재 방송중이지 않습니다.`;
+      message = `${result.name || creatorTwitchId} 님은 현재 광고중이지 않습니다.`;
     }
     res.render('index', { message, twitchlink: `https://twitch.tv/${creatorTwitchId}` });
   }
