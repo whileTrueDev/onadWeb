@@ -16,9 +16,13 @@ const httpServer = http.createServer(app);
 const PORT = 3030;
 process.env.NODE_ENV = (process.env.NODE_ENV && (process.env.NODE_ENV).trim().toLowerCase() === 'production') ? 'production' : 'development';
 
-app.use(express.static(path.join(__dirname, 'public'))); // 정적리소스 처리
 app.set('views', `${__dirname}/views`); // view engine
 app.set('view engine', 'ejs');
+// ***********************
+// cache 무시
+app.use(express.static(path.join(__dirname, 'public'), { etag: false })); // 정적리소스 처리
+app.set('etag', false);
+// ***********************
 app.use(morgan(process.env.NODE_ENV === 'development' ? 'dev' : 'common'));
 app.engine('html', require('ejs').renderFile);
 
@@ -43,7 +47,7 @@ app.get('/:creatorTwitchId', async (req, res, next) => {
     } else if (result.message === 'No campaign') {
       message = `${result.name || creatorTwitchId} 님은 현재 광고중이지 않습니다.`;
     }
-    res.render('index', { message, twitchlink: `https://twitch.tv/${creatorTwitchId}` });
+    res.render('index', { message, twitchlink: creatorTwitchId ? `https://twitch.tv/${creatorTwitchId}` : '' });
   }
 });
 
@@ -68,7 +72,7 @@ app.get('/adchat/:creatorTwitchId', async (req, res, next) => {
     } else if (result.message === 'No campaign') {
       message = `${result.name || creatorTwitchId} 님은 현재 광고중이지 않습니다.`;
     }
-    res.render('index', { message, twitchlink: `https://twitch.tv/${creatorTwitchId}` });
+    res.render('index', { message, twitchlink: creatorTwitchId ? `https://twitch.tv/${creatorTwitchId}` : '' });
   }
 });
 
