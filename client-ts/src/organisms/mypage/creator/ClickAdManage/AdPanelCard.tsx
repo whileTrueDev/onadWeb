@@ -128,8 +128,8 @@ export default function AdPanelCard(props: AdPanelCardProps): JSX.Element {
           <div className={classnames(classes.flex, classes.images)}>
             <Tooltip title="클릭시 다운로드 됩니다.">
               <div>
-                <a href="/pngs/landing/onad_panel_banner_default.png" download="onad_panel_banner_default">
-                  <img src="/pngs/landing/onad_panel_banner_default.png" alt="패널기본배너1" className={classes.image} />
+                <a href="/pngs/landing/온애드패널바로가기.png" download="onad_panel_banner_default">
+                  <img src="/pngs/landing/온애드패널바로가기.png" alt="패널기본배너1" className={classes.image} />
                 </a>
               </div>
             </Tooltip>
