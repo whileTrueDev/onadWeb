@@ -4,6 +4,8 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 import express from 'express';
+import helmet from 'helmet';
+import nocache from 'nocache';
 import http from 'http';
 import path from 'path';
 import morgan from 'morgan';
@@ -18,10 +20,13 @@ process.env.NODE_ENV = (process.env.NODE_ENV && (process.env.NODE_ENV).trim().to
 
 app.set('views', `${__dirname}/views`); // view engine
 app.set('view engine', 'ejs');
+
+app.use(helmet());
 // ***********************
 // cache 무시
 app.use(express.static(path.join(__dirname, 'public'), { etag: false })); // 정적리소스 처리
 app.set('etag', false);
+app.use(nocache());
 // ***********************
 app.use(morgan(process.env.NODE_ENV === 'development' ? 'dev' : 'common'));
 app.engine('html', require('ejs').renderFile);
@@ -48,6 +53,7 @@ app.get('/:creatorTwitchId', async (req, res, next) => {
       message = `${result.name || creatorTwitchId} 님은 현재 광고중이지 않습니다.`;
     }
     res.set('Cache-Control', 'no-cache, no-store, must-revalidate');
+    res.set('Clear-Site-Data', '*');
     res.render('server', { message, twitchlink: `https://twitch.tv/${creatorTwitchId}` });
   }
 });
@@ -74,6 +80,7 @@ app.get('/adchat/:creatorTwitchId', async (req, res, next) => {
       message = `${result.name || creatorTwitchId} 님은 현재 광고중이지 않습니다.`;
     }
     res.set('Cache-Control', 'no-cache, no-store, must-revalidate');
+    res.set('Clear-Site-Data', '*');
     res.render('server', { message, twitchlink: `https://twitch.tv/${creatorTwitchId}` });
   }
 });
