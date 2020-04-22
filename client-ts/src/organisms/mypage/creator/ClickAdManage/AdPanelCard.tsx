@@ -44,7 +44,7 @@ export default function AdPanelCard(props: AdPanelCardProps): JSX.Element {
       <Card>
         <div className={classes.head}>
           <Typography variant="h6">
-            패널 광고 설정 (추후 추가 예정)
+            패널 광고 설정
             {' '}
           </Typography>
         </div>
@@ -69,23 +69,22 @@ export default function AdPanelCard(props: AdPanelCardProps): JSX.Element {
             시청자의 이동 수에 따라 광고 수익이 창출됩니다.
           </Typography>
           <br />
-          <Alert>
+          <Alert severity="warning">
             <Typography variant="body2">
               전달 사항
             </Typography>
             <Typography variant="caption">
-              1. 4월 21일 이후 패널 광고를 사용할 수 있습니다.
+              기존 패널 링크
+              <span style={{ fontWeight: 'bold', fontSize: '13px' }}>(https://l.onad.io/~)</span>
+              는
+              <span style={{ fontWeight: 'bold' }}>{` ${'2020년 5월 6일'}`}</span>
+              이후로 광고주 페이지로 연결되지 않으니,
               <br />
             </Typography>
             <Typography variant="caption">
-              2. 기존 트위치 채널 패널에 &quot;광고페이지&quot;를 설정을 하셨다면 링크 주소를 바꿀 필요 없이 자동으로 변경 사항이 적용됩니다.
-              즉, 기존 크리에이터 광고페이지 주소는 4월 21일 이후 패널 광고의 주소로 사용됩니다.
-              <br />
-            </Typography>
-            <Typography variant="caption">
-              3. 기존의 &quot;광고페이지&quot;는 &quot;참여형 광고페이지(CPA)&quot;로 변경되어 운영될 예정입니다.
-              5월 중으로 &quot;참여형 광고페이지&quot;라는 이름으로 새로운 주소를 발급해드릴 예정이며
-              해당 주소로 패널을 추가 설정하면 추가적인 광고 수익을 창출할 수 있습니다.
+              해당 기간안에 광고 패널 주소를
+              <span style={{ fontWeight: 'bold', fontSize: '13px' }}>(https://t.onad.io/~)</span>
+              와 같이 꼭 변경해주시길 바랍니다.
               <br />
             </Typography>
           </Alert>
@@ -128,8 +127,8 @@ export default function AdPanelCard(props: AdPanelCardProps): JSX.Element {
           <div className={classnames(classes.flex, classes.images)}>
             <Tooltip title="클릭시 다운로드 됩니다.">
               <div>
-                <a href="/pngs/landing/onad_panel_banner_default.png" download="onad_panel_banner_default">
-                  <img src="/pngs/landing/onad_panel_banner_default.png" alt="패널기본배너1" className={classes.image} />
+                <a href="/pngs/landing/온애드패널바로가기.png" download="onad_panel_banner_default">
+                  <img src="/pngs/landing/온애드패널바로가기.png" alt="패널기본배너1" className={classes.image} />
                 </a>
               </div>
             </Tooltip>

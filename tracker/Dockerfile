@@ -6,5 +6,5 @@ COPY ./dist /home/tracker/dist
 COPY ./yarn.lock /home/tracker/yarn.lock
 COPY ./package.json /home/tracker/package.json
 RUN yarn install --prod
-EXPOSE 3000
+EXPOSE 3030
 CMD NODE_ENV=production yarn start:production
