@@ -26,8 +26,7 @@ export default function CampaignCostPie(props: CampaignCostPieProps): JSX.Elemen
             data={{
               labels: ['CPM', 'CPC'],
               datasets: [{
-                data: [reportData.data.totalCPM,
-                  reportData.data.adchatClick + reportData.data.adpanelClick],
+                data: [reportData.data.totalCPM, reportData.data.totalCPC],
                 backgroundColor: [theme.palette.primary.light, theme.palette.secondary.light]
               }]
             }}

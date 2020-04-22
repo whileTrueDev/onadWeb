@@ -10,7 +10,7 @@ const manualSources = {
   selectComponent: [
     {
       icon: CloudUpload,
-      label: '등록 가능 배너',
+      label: '온애드 광고 아이템',
     },
     {
       icon: BrandingWatermark,
@@ -41,10 +41,11 @@ const manualSources = {
     source: [
       {
         image: '/pngs/dashboard/manual/new_marketer/marketer-banner-01.png',
-        description: `제공 되는 배너 인벤토리는 2종류로  
-        ${textStyling.styledText('1의 배너')}는 방송 영상 내에 송출되는 배너입니다. (클릭 불가능)  
-        ${textStyling.styledText('2의 배너')}는 크리에이터 영상 하단의 패널입니다. 해당 패널을 클릭시 현재 송출중인 배너광고와 
-        연동된 URL로 이동합니다.(클릭 가능)`,
+        description: `광고와 관련된 아이템은 세가지 종류로, 다음과 같습니다.  
+        번호 ${textStyling.styledTextSecondary('1')}의 ${textStyling.styledText('방송 화면 송출 배너')}는 방송 화면 내에 송출되는 배너입니다. (클릭 불가, 광고주의 배너 이미지)  
+        번호 ${textStyling.styledTextSecondary('2')}의 ${textStyling.styledText('패널 배너')}는 클릭시 현재 방송 화면에 송출중인 배너광고와 연동된 URL로 이동합니다.(클릭 가능, 방송인이 설정한 이미지)  
+        번호 ${textStyling.styledTextSecondary('3')}의 ${textStyling.styledText('채팅창 광고 글귀')}는 방송 채팅창에 주기적으로 송출되는 광고관련 글귀입니다.(광고주의 글귀)  
+        `,
       },
     ],
   },
