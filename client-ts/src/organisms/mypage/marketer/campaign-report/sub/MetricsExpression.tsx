@@ -41,7 +41,11 @@ export default function MetricsExpression(props: MetricsExpressionProps): JSX.El
             <Typography variant="h5" className={classes.value}>
               <CountUp duration={1} end={left.value} />
             </Typography>
-            <Typography variant="body1">{`${((left.value / (right.value + left.value)) * 100).toFixed(1)}%`}</Typography>
+            { right.value && left.value && (
+              <Typography variant="body1">
+                {`${((left.value / (right.value + left.value)) * 100).toFixed(1)}%`}
+              </Typography>
+            )}
           </div>
           <Typography variant="h4">+</Typography>
           <div className={classes.valueWrapper}>
@@ -49,7 +53,11 @@ export default function MetricsExpression(props: MetricsExpressionProps): JSX.El
             <Typography variant="h5" className={classes.value}>
               <CountUp duration={1} end={right.value} />
             </Typography>
-            <Typography variant="body1">{`${((right.value / (left.value + right.value)) * 100).toFixed(1)}%`}</Typography>
+            { right.value && left.value && (
+              <Typography variant="body1">
+                {`${((right.value / (left.value + right.value)) * 100).toFixed(1)}%`}
+              </Typography>
+            )}
           </div>
           <Typography variant="h4">=</Typography>
         </>
