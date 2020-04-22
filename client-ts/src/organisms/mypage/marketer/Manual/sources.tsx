@@ -36,29 +36,29 @@ const manualSources = {
   bannerRegist: {
     card: {
       title: '등록 가능 배너',
-      subtitle: '크리에이터의 방송 및 광고페이지에 송출할 수 있는 배너를 소개합니다',
+      subtitle: '크리에이터의 방송 및 패널에 송출할 수 있는 배너를 소개합니다',
     },
     source: [
       {
         image: '/pngs/dashboard/manual/new_marketer/marketer-banner-01.png',
         description: `제공 되는 배너 인벤토리는 2종류로  
         ${textStyling.styledText('1의 배너')}는 방송 영상 내에 송출되는 배너입니다. (클릭 불가능)  
-        ${textStyling.styledText('2의 배너')}는 크리에이터 영상 하단에 위치한 링크를 들어가면 있는  
-        채널 게시판에 등록되는 배너입니다. (클릭 가능)`,
+        ${textStyling.styledText('2의 배너')}는 크리에이터 영상 하단의 패널입니다. 해당 패널을 클릭시 현재 송출중인 배너광고와 
+        연동된 URL로 이동합니다.(클릭 가능)`,
       },
     ],
   },
   bannerUpload: {
     card: {
       title: '배너 업로드',
-      subtitle: '크리에이터의 방송 및 광고페이지에 송출하고자 하는 광고를 등록하고 관리할 수 있습니다.',
+      subtitle: '크리에이터의 방송 및 패널에 송출하고자 하는 광고를 등록하고 관리할 수 있습니다.',
     },
     source: [
       {
         image: '/pngs/dashboard/manual/new_marketer/marketer-banner-02.png',
         description: `${textStyling.LinkText('<내 배너>', 'inventory', 'marketer')} 탭에서 ${textStyling.styledText('+ 새 배너 등록')} 버튼을 클릭하여,  
         규정에 맞는 배너를 업로드합니다.  
-        등록된 배너는 검수과정을 거쳐 승인/거절 됩니다. (최대 3일 이내)`,
+        등록된 배너는 검수과정을 거쳐 승인/거절 됩니다. (최대 1일 이내)`,
       },
       {
         image: null,
@@ -93,16 +93,15 @@ const manualSources = {
         image: '/pngs/dashboard/manual/new_marketer/marketer-campaign-03.png',
         description: `원하는 송출 방식을 선택하고 ${textStyling.styledText('다음')}을 눌러주세요. ${textStyling.styledBlock(`- 특정 크리에이터에게만 광고 송출 : 원하는 크리에이터에게만 송출을 원하는 경우<br>
         - 특정 게임에만 광고 송출 : 특정 게임 시청자들을 타겟팅 하는 경우<br>
-        - 노출 우선 : 많은 시청자들에게 노출되는 것을 우선하는 경우(노출 수 가장 높음)`)}`
+        - 업로드형 광고 캠페인(유투브) : 많은 시청자들에게 노출되는 것을 우선하는 경우(노출 수 가장 높음)`)}`
       },
       {
         image: '/pngs/dashboard/manual/new_marketer/marketer-campaign-04.png',
-        description: `${textStyling.styledText('배너')}를 클릭하여 선택하고 이후 나오는 캠페인 생성 절차를 천천히 따라가 주세요. ${textStyling.styledBlock('캠페인 이름을 세글자 이상 적어주세요.')}`,
+        description: `${textStyling.styledText('배너')}를 클릭하여 선택하고 이후 나오는 캠페인 생성 절차를 천천히 따라가 주세요. ${textStyling.styledBlock('캠페인 이름을 두글자 이상 적어주세요.')}`,
       },
       {
         image: '/pngs/dashboard/manual/new_marketer/marketer-campaign-05.png',
-        description: `${textStyling.styledText('클릭광고')} 또는 ${textStyling.styledText('배너광고 + 클릭광고')}를 선택하시면  
-        클릭 시 이동하는 랜딩페이지 URL을 설정할 수 있습니다. ${textStyling.styledBlock(`URL 이름은 광고주님께서 URL의 식별 편리를 위한 이름입니다.</br>
+        description: `클릭 시 이동하는 광고주님의 랜딩페이지 URL을 설정할 수 있습니다. ${textStyling.styledBlock(`URL 이름은 광고주님께서 URL의 식별 편리를 위한 이름입니다.</br>
         EX) URL 이름 : 네이버, URL주소 : www.naver.com`)}`,
       },
       {
@@ -133,7 +132,7 @@ const manualSources = {
       },
       {
         image: '/pngs/dashboard/manual/new_marketer/marketer-costChart-03.png',
-        description: '캠페인 상태 및 광고비용 그래프, 광고비용 비율, 배너 송출 크리에이터, 지역별, 날짜별 유입 수를 한눈에 확인하실 수 있습니다.'
+        description: '캠페인 상태 및 광고비용 그래프, 광고비용 비율, 배너 송출 크리에이터, 날짜별, 지역별 유입 수를 한눈에 확인하실 수 있습니다.'
       },
     ],
   },
