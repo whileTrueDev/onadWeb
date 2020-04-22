@@ -30,11 +30,11 @@ router.route('/')
         
         (SELECT COUNT(*)
           FROM tracking
-          WHERE campaignId = ? AND channel = 'adchat') AS adchatClick,
+          WHERE campaignId = ? AND channel = 'adchat' AND os IS NOT NULL) AS adchatClick,
         
         (SELECT COUNT(*)
           FROM tracking 
-          WHERE campaignId = ? AND channel = "adpanel") AS adpanelClick`;
+          WHERE campaignId = ? AND channel = "adpanel"  AND os IS NOT NULL) AS adpanelClick`;
 
       doQuery(query, [
         campaignId, campaignId, campaignId,
