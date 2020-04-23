@@ -11,6 +11,7 @@ import path from 'path';
 import morgan from 'morgan';
 import tracking from './lib/tracking';
 import parseUserAgent from './lib/parseUserAgent';
+import googleAnalytics from './lib/GoogleAnalytics';
 
 const app = express();
 const httpServer = http.createServer(app);
@@ -20,6 +21,9 @@ process.env.NODE_ENV = (process.env.NODE_ENV && (process.env.NODE_ENV).trim().to
 
 app.set('views', `${__dirname}/views`); // view engine
 app.set('view engine', 'ejs');
+
+// GoogleAnalytics
+app.use(googleAnalytics);
 
 app.use(helmet());
 // ***********************
@@ -31,6 +35,10 @@ app.use(nocache());
 app.use(morgan(process.env.NODE_ENV === 'development' ? 'dev' : 'common'));
 app.engine('html', require('ejs').renderFile);
 
+// For AWS Health Checks
+app.get('/', (req, res, next) => {
+  res.sendStatus(200);
+});
 app.get('/:creatorTwitchId', async (req, res, next) => {
   const costType = 'adpanel';
   // Get semantic parameters

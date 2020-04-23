@@ -95,13 +95,21 @@ const Inventory = (): JSX.Element => {
             <CustomButton color="primary" size="large" onClick={(): void => { uploadDialog.handleOpen(); }}>
               + 새 배너 등록
             </CustomButton>
-            <BannerTable handleDeleteOpen={deleteDialog.handleOpen} setBanner={setBanner} fetchData={bannerData} />
+            <BannerTable
+              handleDeleteOpen={deleteDialog.handleOpen}
+              setBanner={setBanner}
+              fetchData={bannerData}
+            />
           </TabPanel>
           <TabPanel value={value} index={1}>
             <CustomButton color="primary" size="large" onClick={(): void => { urlUploadDialog.handleOpen(); }}>
               + 새 URL 등록
             </CustomButton>
-            <UrlTable handleDeleteOpen={urlDeleteDialog.handleOpen} setUrl={setUrl} fetchData={urlData} />
+            <UrlTable
+              handleDeleteOpen={urlDeleteDialog.handleOpen}
+              setUrl={setUrl}
+              fetchData={urlData}
+            />
           </TabPanel>
         </div>
       </GridItem>
