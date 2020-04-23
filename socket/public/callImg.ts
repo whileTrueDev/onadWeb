@@ -16,7 +16,7 @@ function callImg(socket: any, msg: string[]): void {
   let myGameId: string;
   // creatorId를 전달받아 creatorCampaign과 onff List를 도출.
   const getCreatorCampaignList = (creatorId: string): Promise<string[]> => {
-    console.log(`${creatorId}의 특정 크리에이터 송출 광고 조회`);
+    console.log(`${creatorId} / 특정 크리에이터 송출 광고 조회 / ${getTime}`);
 
     const campaignListQuery = `
     SELECT campaignList 
@@ -41,7 +41,6 @@ function callImg(socket: any, msg: string[]): void {
   };
 
   const getOnCampaignList = (): Promise<string[]> => {
-    console.log('현재 ON되어있는 campaign List를 조회한다.');
     const campaignListQuery = `
     SELECT campaignId, campaignName, optionType, startDate, finDate, selectedTime
     FROM campaign
@@ -115,7 +114,7 @@ function callImg(socket: any, msg: string[]): void {
   };
 
   const getGameId = async (creatorId: string): Promise<string> => {
-    console.log(`크리에이터 ${creatorId}의 gameid를 받아옵니다`);
+    console.log(`${creatorId} / get gameid /${getTime}`);
     const getGameIdQuery = `SELECT gameId 
                             FROM twitchStreamDetail AS tsd 
                             WHERE streamId = (SELECT streamId FROM twitchStream WHERE streamerId = ? ORDER BY startedAt DESC LIMIT 1)
@@ -156,7 +155,6 @@ function callImg(socket: any, msg: string[]): void {
 
   // 하나의 gameId에 해당하는 모든 캠페인 리스트를 반환하는 Promise
   const getGameCampaignList = async (gameId: string, creatorId: string): Promise<string[]> => {
-    console.log('게임의 카테고리에 계약되어있는 캠페인 List를 가져옵니다.');
     const categoryList: number[] = gameDict[gameId] ? gameDict[gameId].concat(gameDict.default) : gameDict.default;
     let returnList: string[] = [];
     if (categoryList) {
@@ -170,7 +168,6 @@ function callImg(socket: any, msg: string[]): void {
           }))
       )
         .catch((errorData) => {
-          console.log(errorData);
           errorData.point = 'getGameCampaignList()';
           errorData.description = 'categoryCampaign에서 각각의 categoryId에 따른 캠페인 가져오기';
         });
@@ -278,18 +275,17 @@ function callImg(socket: any, msg: string[]): void {
     } else {
       console.log(`${creatorId} 크리에이터에게만 송출될 광고 없음. 카테고리 선택형 및 노출우선형 광고 검색`);
       const onCategorycampaignList = categoryCampaignList.filter((campaignId) => onCampaignList.includes(campaignId));
-      // const campaignList = Array.from(new Set(onCreatorcampaignList.concat(onCategorycampaignList)));
       const extractBanCampaignList = onCategorycampaignList.filter((campaignId) => !banList.includes(campaignId)); // 마지막에 banList를 통해 거르기.
       const returnCampaignId = extractBanCampaignList[getRandomInt(extractBanCampaignList.length)];
       myCampaignId = returnCampaignId;
     }
 
     if (myCampaignId && campaignObject[myCampaignId][0] === 1) {
-      console.log(`${creatorId} : 광고될 캠페인은 ${myCampaignId} 입니다. at : ${getTime}`);
+      console.log(`${creatorId} / 광고될 캠페인은 ${myCampaignId} / ${getTime}`);
       linkToChatBot = await getLinkName(myCampaignId);
     } else {
       socket.emit('img clear', []);
-      console.log(`${creatorId} : 켜져있는 광고가 없습니다. at : ${getTime}`);
+      console.log(`${creatorId} / 켜져있는 광고 없음 / ${getTime}`);
       return [false, false, false];
     }
 
@@ -340,7 +336,7 @@ function callImg(socket: any, msg: string[]): void {
       const linkName = typeof bannerInfo[1] === 'string' ? bannerInfo[2] : null;
 
       if (myAdChatAgreement === 1 && checkOptionType === 1) { // 채봇 동의 및 옵션타입 cpm+cpc인 경우에 챗봇으로 데이터 전송
-        console.log(CREATOR_DATA.creatorId, 'next-campaigns-twitch-chatbot Emitting!! - ', myCreatorTwitchId);
+        console.log(`${CREATOR_DATA.creatorId} / next-campaigns-twitch-chatbot Emitting ${myCreatorTwitchId} / ${getTime}`);
         socket.broadcast.emit('next-campaigns-twitch-chatbot', {
           campaignId: myCampaignId, creatorId: CREATOR_DATA.creatorId, creatorTwitchId: myCreatorTwitchId, campaignName, linkName
         });
@@ -355,7 +351,7 @@ function callImg(socket: any, msg: string[]): void {
         if (myCampaignId) {
           writeToDb(myCampaignId, CREATOR_DATA.creatorId, programType);
         }
-        console.log(`${CREATOR_DATA.creatorId} : 같은 캠페인 송출 중이어서 재호출 안합니다. at ${getTime}`);
+        console.log(`${CREATOR_DATA.creatorId} / 같은 캠페인 송출 중이어서 재호출 안함 / ${getTime}`);
       }
     }
   }
