@@ -17,7 +17,7 @@ import { BusinessInterface, UserInterface, AccountInterface } from '../../../org
 import useGetRequest from '../../../utils/hooks/useGetRequest';
 
 
-export default function MyOffice() {
+export default function MyOffice(): JSX.Element {
   // 계좌 정보
   const accountData = useGetRequest<null, AccountInterface | null>('/marketer/account');
   const userData = useGetRequest<null, UserInterface | null>('/marketer');
