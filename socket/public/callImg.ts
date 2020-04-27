@@ -114,7 +114,7 @@ function callImg(socket: any, msg: string[]): void {
   };
 
   const getGameId = async (creatorId: string): Promise<string> => {
-    console.log(`${creatorId} / get gameid /${getTime}`);
+    console.log(`${creatorId} / get gameid / ${getTime}`);
     const getGameIdQuery = `SELECT gameId 
                             FROM twitchStreamDetail AS tsd 
                             WHERE streamId = (SELECT streamId FROM twitchStream WHERE streamerId = ? ORDER BY startedAt DESC LIMIT 1)
@@ -273,7 +273,7 @@ function callImg(socket: any, msg: string[]): void {
         myCampaignId = returnCampaignId;
       }
     } else {
-      console.log(`${creatorId} 크리에이터에게만 송출될 광고 없음. 카테고리 선택형 및 노출우선형 광고 검색`);
+      console.log(`${creatorId} 크리에이터에게만 송출될 광고 없음. 카테고리 선택형 및 노출우선형 광고 검색 / ${getTime}`);
       const onCategorycampaignList = categoryCampaignList.filter((campaignId) => onCampaignList.includes(campaignId));
       const extractBanCampaignList = onCategorycampaignList.filter((campaignId) => !banList.includes(campaignId)); // 마지막에 banList를 통해 거르기.
       const returnCampaignId = extractBanCampaignList[getRandomInt(extractBanCampaignList.length)];

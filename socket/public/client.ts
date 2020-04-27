@@ -15,7 +15,7 @@ function isVideo(src: string): boolean {
 
 hiddenEventHandler(socket, THIS_URL, programType);
 let socketHost = '';
-socket.emit('new client', [THIS_URL, history]);
+socket.emit('new client', [THIS_URL, history, programType]);
 
 socket.on('host pass', (SOCKET_HOST: string) => {
   socketHost = SOCKET_HOST;

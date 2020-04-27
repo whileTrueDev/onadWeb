@@ -49,25 +49,27 @@ io.on('connection', (socket: any) => {
   const rule = new nodeSchedule.RecurrenceRule(); // 스케쥴러 객체 생성
   rule.hour = new nodeSchedule.Range(0, 23); // cronTask 시간지정
   rule.minute = [0, 10, 20, 30, 40, 50]; // cronTask 실행되는 분(minute)
+  // rule.second = [0, 10, 20, 30, 40, 50]; // test second
   // cronTask
   nodeSchedule.scheduleJob(rule, () => { // 스케쥴러를 통해 10분마다 db에 배너정보 전송
     // socket.emit('response banner data to server', {}); // client로 emit
     socket.emit('re-render at client', {});
   });
 
-  socket.on('new client', (msg: [string, number]) => {
+  socket.on('new client', (msg: [string, number, string]) => {
     const CLIENT_URL = msg[0];
     const HISTORY = msg[1];
+    const programType = msg[2];
     if (process.env.NODE_ENV === 'development') {
       console.log('SOCKET ON');
       socket.emit('host pass', SOCKET_HOST);
-      callImg(socket, [CLIENT_URL, '', 'REFRESH']);
+      callImg(socket, [CLIENT_URL, '', programType]);
     } else if (HISTORY !== 1) {
       const DESTINATION_URL = `${SOCKET_HOST}/browserWarn`;
       socket.emit('browser warning', DESTINATION_URL);
     } else {
       socket.emit('host pass', SOCKET_HOST);
-      callImg(socket, [CLIENT_URL, '', 'REFRESH']);
+      callImg(socket, [CLIENT_URL, '', programType]);
     }
   });
 
