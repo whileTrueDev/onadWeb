@@ -55,8 +55,12 @@ socket.on('img receive', (msg: string[]) => {
 
 socket.on('re-render at client', () => {
   bannerName = $('#banner-area').attr('name');
-  if (bannerName && document.visibilityState === 'visible') {
-    socket.emit('re-render', [THIS_URL, bannerName, programType]);
+  if (document.visibilityState === 'visible') {
+    if (bannerName) {
+      socket.emit('re-render', [THIS_URL, bannerName, programType]);
+    } else {
+      socket.emit('re-render', [THIS_URL, '', programType]);
+    }
   }
 });
 
