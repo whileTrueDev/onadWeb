@@ -52,7 +52,6 @@ io.on('connection', (socket: any) => {
   // rule.second = [0, 10, 20, 30, 40, 50]; // test second
   // cronTask
   nodeSchedule.scheduleJob(rule, () => { // 스케쥴러를 통해 10분마다 db에 배너정보 전송
-    // socket.emit('response banner data to server', {}); // client로 emit
     socket.emit('re-render at client', {});
   });
 
