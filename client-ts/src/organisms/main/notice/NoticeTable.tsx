@@ -7,7 +7,7 @@ import history from '../../../history';
 // For column width - type error from Materiap-table
 declare module 'material-table' {
   export interface Column<RowData extends object> {
-      width?: string;
+    width?: string;
   }
 }
 function dateDiff(date1: Date, date2: Date): number {
@@ -50,7 +50,7 @@ export default function NoticeTable({ data, loading }: Props): JSX.Element {
             <Typography className="title">
               {rowData.title}
               {dateDiff(new Date(), new Date(rowData.regiDate)) < 8 && (
-              <FiberNew style={{ color: '#ff9800' }} />
+                <FiberNew style={{ color: '#ff9800' }} />
               )}
             </Typography>
           )
@@ -72,11 +72,13 @@ export default function NoticeTable({ data, loading }: Props): JSX.Element {
         // add: false,
         pageSize: 15,
         pageSizeOptions: [5, 10, 15],
-        rowStyle: {
-          height: 65
-        },
-        headerStyle: { backgroundColor: '#f5f5f5', color: '#555555' },
-        searchFieldAlignment: 'right'
+        rowStyle: (rowData: NoticeData): React.CSSProperties => (
+          rowData.topic === '필독'
+            ? { height: 65, backgroundColor: '#F5A9A9', color: '#000' }
+            : { height: 65, backgroundColor: '#f5f5f5', color: '#555555' }
+        ),
+        searchFieldAlignment: 'right',
+        // headerStyle: { backgroundColor: '#f5f5f5', color: '#555555' }
       }}
     />
   );

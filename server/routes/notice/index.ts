@@ -19,15 +19,17 @@ router.route('/')
 
       interface NoticeResult {
         code: string | number;
-        topic: string;
+        topic: string | number;
         title: string;
         contents: string;
         regiDate: string | Date;
       }
 
-      const rows = await doQuery<NoticeResult>(query);
-
-      responseHelper.send(rows.result, 'get', res);
+      const rows = await doQuery<NoticeResult[]>(query);
+      const MustRows = rows.result.filter((x: NoticeResult) => x.topic === '필독');
+      const NotMustRows = rows.result.filter((x: NoticeResult) => x.topic !== '필독');
+      const result = MustRows.concat(NotMustRows);
+      responseHelper.send(result, 'get', res);
     })
   )
   .all(responseHelper.middleware.unusedMethod);
