@@ -9,7 +9,6 @@ router.route('/')
   .get(
     responseHelper.middleware.checkSessionExists, // session 확인이 필요한 경우.
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
-      const { marketerId } = responseHelper.getSessionData(req);
       const campaignId = responseHelper.getParam('campaignId', 'GET', req);
       const query = `
       SELECT 
@@ -31,14 +30,14 @@ router.route('/')
         
         (SELECT COUNT(*)
           FROM tracking
-          WHERE campaignId = ? AND channel = 'adchat') AS adchatClick,
+          WHERE campaignId = ? AND channel = 'adchat' AND os IS NOT NULL) AS adchatClick,
         
         (SELECT COUNT(*)
           FROM tracking 
-          WHERE campaignId = ? AND channel = "adpanel") AS adpanelClick`;
+          WHERE campaignId = ? AND channel = "adpanel"  AND os IS NOT NULL) AS adpanelClick`;
 
       doQuery(query, [
-        campaignId, campaignId, marketerId, campaignId,
+        campaignId, campaignId, campaignId,
         campaignId, campaignId, campaignId, campaignId
       ])
         .then((row) => {

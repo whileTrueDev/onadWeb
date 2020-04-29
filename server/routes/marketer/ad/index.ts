@@ -88,13 +88,13 @@ router.route('/on-off')
             const MARKETER_ACTION_LOG_TYPE = 7;
             Promise.all([
               doQuery(infoQuery, [contractionState, marketerId]),
-              // 마케터 활동내역 테이블 적재
-              marketerActionLogging([marketerId, MARKETER_ACTION_LOG_TYPE,
-                JSON.stringify({
-                  onoffState: contractionState // on: 1, off : 0
-                })])
             ])
               .then(() => {
+                // 마케터 활동내역 테이블 적재
+                marketerActionLogging([marketerId, MARKETER_ACTION_LOG_TYPE,
+                  JSON.stringify({
+                    onoffState: contractionState // on: 1, off : 0
+                  })]);
                 responseHelper.send([true], 'POST', res);
               })
               .catch((error) => {

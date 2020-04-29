@@ -104,7 +104,7 @@ export default function CampaignBannerClickAd(
                               color="primary"
                               left={{ value: Number(reportData.data.totalCPM) || 0, desc: 'CPM' }}
                               right={{ value: Number(reportData.data.totalCPC) || 0, desc: 'CPC' }}
-                              result={{ value: Number(reportData.data.totalCPC) + Number(reportData.data.totalCPM), desc: '총 광고 비용' }}
+                              result={{ value: (Number(reportData.data.totalCPC) + Number(reportData.data.totalCPM)) || 0, desc: '총 광고 비용' }}
                             />
                           </CardTemplate>
                         </Grid>

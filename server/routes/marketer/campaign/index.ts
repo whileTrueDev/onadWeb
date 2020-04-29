@@ -244,13 +244,13 @@ router.route('/')
             dataProcessing.LandingDoQuery({
               campaignId, optionType, priorityType, priorityList
             }),
-            // 마케터 활동내역 테이블 적재.
-            marketerActionLogging([
-              marketerId, MARKETER_ACTION_LOG_TYPE, JSON.stringify({ campaignName })
-            ]),
           ])
             .then(() => {
               responseHelper.send([true, '캠페인이 생성되었습니다.'], 'POST', res);
+              // 마케터 활동내역 테이블 적재.
+              marketerActionLogging([
+                marketerId, MARKETER_ACTION_LOG_TYPE, JSON.stringify({ campaignName })
+              ]);
               slack({
                 summary: '캠페인 등록 알림',
                 text: '관리자 페이지에서 방금 등록된 캠페인을 확인하세요.',

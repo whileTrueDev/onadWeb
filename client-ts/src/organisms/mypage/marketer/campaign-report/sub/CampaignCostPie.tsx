@@ -16,6 +16,7 @@ export default function CampaignCostPie(props: CampaignCostPieProps): JSX.Elemen
   const theme = useTheme();
   const { color, reportData, ...rest } = props;
 
+
   return (
     <div {...rest}>
       <CardTemplate title="광고 비용 비율" color={color} IconComponent={DonutSmall}>
@@ -30,7 +31,7 @@ export default function CampaignCostPie(props: CampaignCostPieProps): JSX.Elemen
                 backgroundColor: [theme.palette.primary.light, theme.palette.secondary.light]
               }]
             }}
-            options={{ maintainAspectRatio: false }}
+            options={{ maintainAspectRatio: false, }}
           />
           )}
         </div>

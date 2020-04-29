@@ -143,7 +143,11 @@ export default function Dashboard(): JSX.Element {
                     actionLogData={actionLogData}
                   />
                 </Grid>
-                <CashPopper anchorEl={anchorEl} handleAnchorClose={handleAnchorClose} handleOpen={chargeDialog.handleOpen} />
+                <CashPopper
+                  anchorEl={anchorEl}
+                  handleAnchorClose={handleAnchorClose}
+                  handleOpen={chargeDialog.handleOpen}
+                />
                 <CashChargeDialog
                   open={chargeDialog.open}
                   handleClose={chargeDialog.handleClose}

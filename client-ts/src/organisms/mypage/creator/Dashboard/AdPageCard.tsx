@@ -74,7 +74,7 @@ const AdPageCard = ({
             </div>
             <div className={classes.flex}>
               <Typography gutterBottom variant="h5">
-                {`${numFormatter(clicksData.adchat)} `}
+                {`${numFormatter(clicksData.adchat ? clicksData.adchat : 0)} `}
               </Typography>
               <Typography gutterBottom variant="body2" className={classes.unit}>
                 회

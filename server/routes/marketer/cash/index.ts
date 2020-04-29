@@ -82,13 +82,13 @@ router.route('/refund')
           Promise.all([
             doQuery(refundHistoryInsertQuery, refundHistoryInsertArray),
             doQuery(debitUpdateQuery, [currentCashAmount - refundCash, marketerId]),
-            // 마케터 활동내역 로깅 테이블 :환불 신청 적재
-            marketerActionLogging([marketerId,
-              MARKETER_ACTION_LOG_TYPE,
-              JSON.stringify({ refundCash })])
           ])
             .then(() => {
               responseHelper.send([true], 'POST', res);
+              // 마케터 활동내역 로깅 테이블 :환불 신청 적재
+              marketerActionLogging([marketerId,
+                MARKETER_ACTION_LOG_TYPE,
+                JSON.stringify({ refundCash })]);
               slack({
                 summary: '마케터 환불 요청 알림',
                 text: '마케터가 환불을 요청했습니다. 확인해주세요.',
