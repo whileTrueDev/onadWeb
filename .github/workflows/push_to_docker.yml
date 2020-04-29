@@ -49,10 +49,10 @@ jobs:
           cd server
           yarn install
           yarn build
-        # cd ..
-        # cd socket
-        # yarn install
-        # yarn build
+          cd ..
+          cd socket
+          yarn install
+          yarn build
         # cd ..
       - name: <client-ts> Dockerize and Push to docker hub
         uses: elgohr/Publish-Docker-Github-Action@2.14
@@ -81,14 +81,14 @@ jobs:
       #     password: ${{ secrets.DOCKER_PASSWORD }}
       #     tags: "latest,1.${{ github.run_number }}"
 
-      # - name: <Ad broad socket server> Dockerize and Push to docker hub
-      #   uses: elgohr/Publish-Docker-Github-Action@2.14
-      #   with:
-      #     name: hwasurr/onad_socket
-      #     workdir: socket
-      #     username: ${{ secrets.DOCKER_USERNAME }}
-      #     password: ${{ secrets.DOCKER_PASSWORD }}
-      #     tags: "latest,1.${{ github.run_number }}"
+      - name: <Ad broad socket server> Dockerize and Push to docker hub
+        uses: elgohr/Publish-Docker-Github-Action@2.14
+        with:
+          name: hwasurr/onad_socket
+          workdir: socket
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+          tags: "latest,1.${{ github.run_number }}"
 
       - name: <Onad Tracker> Dockerize and Push to docker hub
         uses: elgohr/Publish-Docker-Github-Action@2.14
