@@ -40,7 +40,9 @@
     <% if (message === '광고주 페이지로 이동중입니다...') { %>
     <div class="loader"></div>
     <% } else { %>
-    <img src=https://onad-static-files.s3.ap-northeast-2.amazonaws.com/onad_logo_blue.jpg height=160px></img>
+    <a href="https://onad.io">
+      <img src=https://onad-static-files.s3.ap-northeast-2.amazonaws.com/onad_logo_blue.jpg height=160px></img>
+    </a>
     <% } %>
     <h3 style="font-weight: 600;"><%= message %></h3>
     <a href="<%= twitchlink %>"><%= twitchlink %></a>
