@@ -86,7 +86,25 @@ class OnadWebApi {
     }));
 
     // use CORS
-    const corsOptions = { origin: FRONT_HOST, credentials: true };
+    // define white-list
+    const whiteList = [
+      'https://onad.io', 'https://test.onad.io',
+      FRONT_HOST!, 'http://localhost:3001'
+    ];
+    const corsOptions = {
+      origin(
+        requestOrigin: string | undefined,
+        callback: (err: Error | null, allow?: boolean) => void
+      ): void {
+        if (requestOrigin && whiteList.indexOf(requestOrigin) !== -1) {
+          callback(null, true);
+        } else {
+          // origin is not defined
+          callback(new Error('Not allowed by CORS'));
+        }
+      },
+      credentials: true
+    };
     this.app.use(cors(corsOptions));
 
     // passport 초기화를 통해 'local' 전략이 수립된다.
