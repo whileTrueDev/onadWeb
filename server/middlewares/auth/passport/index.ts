@@ -18,7 +18,7 @@ import Naver from 'passport-naver';
 
 import Twitch from './TwitchPassport';
 import verification from './verification';
-import { Session } from '../../@types/session';
+import { Session } from '../../../@types/session';
 
 const Kakao = require('passport-kakao'); // type정의 문제..
 

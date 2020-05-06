@@ -8,7 +8,7 @@ import createError from 'http-errors';
 import session from 'express-session';
 import morgan from 'morgan';
 // import checkAuthOnReq from './middlewares/auth/checkAuthOnReq';
-import passport from './middlewares/passport';
+import passport from './middlewares/auth/passport';
 // Routers
 import alimtalkRouter from './routes/alimtalk';
 import creatorRouter from './routes/creator';
@@ -89,20 +89,10 @@ class OnadWebApi {
     // define white-list
     const whiteList = [
       'https://onad.io', 'https://test.onad.io',
-      FRONT_HOST!, 'http://localhost:3001'
+      FRONT_HOST!, 'http://localhost:3001',
     ];
     const corsOptions = {
-      origin(
-        requestOrigin: string | undefined,
-        callback: (err: Error | null, allow?: boolean) => void
-      ): void {
-        if (requestOrigin && whiteList.indexOf(requestOrigin) !== -1) {
-          callback(null, true);
-        } else {
-          // origin is not defined
-          callback(new Error('Not allowed by CORS'));
-        }
-      },
+      origin: whiteList,
       credentials: true
     };
     this.app.use(cors(corsOptions));
