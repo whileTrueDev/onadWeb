@@ -92,18 +92,6 @@ class OnadWebApi {
       FRONT_HOST!, 'http://localhost:3001',
     ];
     const corsOptions = {
-      // origin(
-      //   requestOrigin: string | undefined,
-      //   callback: (err: Error | null, allow?: boolean) => void
-      // ): void {
-      //   console.log(requestOrigin);
-      //   if (requestOrigin && whiteList.indexOf(requestOrigin) !== -1) {
-      //     callback(null, true);
-      //   } else {
-      //     // origin is not defined
-      //     callback(new Error(`${requestOrigin} is not allowed by CORS`));
-      //   }
-      // },
       origin: whiteList,
       credentials: true
     };
