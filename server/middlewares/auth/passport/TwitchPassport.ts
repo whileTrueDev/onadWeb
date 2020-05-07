@@ -1,4 +1,9 @@
 import OAuth2Strategy from 'passport-oauth2';
+import request from 'request';
+
+const clientID = process.env.NODE_ENV === 'production'
+  ? process.env.PRODUCTION_CLIENT_ID
+  : process.env.DEV_CLIENT_ID;
 
 class Strategy extends OAuth2Strategy {
   constructor(
@@ -26,26 +31,23 @@ class Strategy extends OAuth2Strategy {
    * @api protected
    */
   userProfile(accessToken: string, done: (err?: Error | null, profile?: any) => void): void {
-    this._oauth2.get(
-      'https://api.twitch.tv/helix/users',
-      accessToken,
-      (err, body, res): void => {
-        if (err) {
-          return done(new OAuth2Strategy.InternalOAuthError('failed to fetch user profile', err));
-        }
-
-        try {
-          if (typeof body === 'string') {
-            done(null, {
-              ...JSON.parse(body).data[0],
-              provider: 'twitch'
-            });
-          }
-        } catch (e) {
-          done(e);
-        }
+    const options = {
+      url: 'https://api.twitch.tv/helix/users',
+      method: 'GET',
+      headers: {
+        'Client-ID': clientID,
+        Accept: 'application/vnd.twitchtv.v5+json',
+        Authorization: `Bearer ${accessToken}`
       }
-    );
+    };
+
+    request(options, (error, response, body) => {
+      if (response && response.statusCode === 200) {
+        done(null, JSON.parse(body).data[0]);
+      } else {
+        done(JSON.parse(body));
+      }
+    });
   }
 
   authorizationParams(options: any): any {
