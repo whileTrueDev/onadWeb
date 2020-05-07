@@ -45,7 +45,8 @@ const getcreatorList = ({ date }) => {
   LEFT JOIN
   campaign
   ON RT.campaignId = campaign.campaignId
-  WHERE NOT campaign.limitState = 1`;
+  WHERE NOT campaign.limitState = 1
+  GROUP BY creatorId`;
 
   return new Promise((resolve, reject) => {
     pool.getConnection((err, connection) => {
@@ -61,7 +62,6 @@ const getcreatorList = ({ date }) => {
             // 실제 현재 방송 중인 크리에이터이다.
             const streamers = streamerListData.map((streamerData) => streamerData.streamerId);
             const uniqueStreamers = Array.from(new Set(streamers));
-            // streamers의 중복을 제거하기 위해서 Array.from(new Set([1,2,4,6]))을 사용한다.
             const creators = bannerListData.reduce((result, bannerData) => {
               if (uniqueStreamers.includes(bannerData.creatorId)) {
                 result.push(bannerData);
