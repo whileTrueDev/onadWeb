@@ -8,7 +8,7 @@ import createError from 'http-errors';
 import session from 'express-session';
 import morgan from 'morgan';
 // import checkAuthOnReq from './middlewares/auth/checkAuthOnReq';
-import passport from './middlewares/passport';
+import passport from './middlewares/auth/passport';
 // Routers
 import alimtalkRouter from './routes/alimtalk';
 import creatorRouter from './routes/creator';
@@ -86,7 +86,15 @@ class OnadWebApi {
     }));
 
     // use CORS
-    const corsOptions = { origin: FRONT_HOST, credentials: true };
+    // define white-list
+    const whiteList = [
+      'https://onad.io', 'https://test.onad.io',
+      FRONT_HOST!, 'http://localhost:3001',
+    ];
+    const corsOptions = {
+      origin: whiteList,
+      credentials: true
+    };
     this.app.use(cors(corsOptions));
 
     // passport 초기화를 통해 'local' 전략이 수립된다.

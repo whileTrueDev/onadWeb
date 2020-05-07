@@ -91,6 +91,8 @@ router.route('/check')
         } else if (session.userType === 'creator') {
           responseHelper.send({ error: false, state: 0, userType: 'creator' }, 'get', res);
         }
+      } else {
+        responseHelper.send({ error: true }, 'get', res);
       }
       // 원래는 에러 핸들링이 필요하나 로그가 너무 찍혀서 주석처리
       //   else {

@@ -5,11 +5,11 @@ import Google from 'passport-google-oauth20';
 import Naver from 'passport-naver';
 import Kakao from 'passport-kakao';
 // DB 커넥션 쿼리 함수
-import doQuery from '../../model/doQuery';
+import doQuery from '../../../model/doQuery';
 // 암호화 체크 객체 생성
-import encrpyto from '../encryption';
+import encrpyto from '../../encryption';
 // type
-import { Session } from '../../@types/session';
+import { Session } from '../../../@types/session';
 
 /**
  * @name 배너URL생성함수
