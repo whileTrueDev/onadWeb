@@ -32,27 +32,27 @@ const developmentRouter = (
   <Router history={history}>
     <Switch>
       {/* <> muts be here : All children of a <Switch> should be <Route> or <Redirect> elements. */}
+      <Route exact path="/" component={Door} />
+      <Route exact path="/marketer" component={Main} />
+      <Route exact path="/creator" component={Main} />
+      <Route exact path="/creatorlist" component={CreatorList} />
+      <Route path="/regist/:platform" component={RegistPage} />
+      <Route exact path="/regist" component={RegistPage} />
+      <Route exact path="/introduce/:userType" component={Introduction} />
+      <Route exact path="/policy" component={Policy} />
+      <Route exact path="/policy/:privacy" component={Policy} />
+      <Route exact path="/notice" component={Notice} />
+      <Route path="/notice/:code" component={Notice} />
+      <Route exact path="/adchat/" component={Adchattest} />
+      <Route exact path="/adchat/:campaignId/:creatorTwitchId" component={AdChatTracker} />
       <>
-        <Route exact path="/" component={Door} />
-        <Route exact path="/marketer" component={Main} />
-        <Route exact path="/creator" component={Main} />
-        <Route exact path="/creatorlist" component={CreatorList} />
-        <Route path="/regist/:platform" component={RegistPage} />
-        <Route exact path="/regist" component={RegistPage} />
-        <Route exact path="/introduce/:userType" component={Introduction} />
-        <Route exact path="/policy" component={Policy} />
-        <Route exact path="/policy/:privacy" component={Policy} />
-        <Route exact path="/notice" component={Notice} />
-        <Route path="/notice/:code" component={Notice} />
-        <Route exact path="/adchat/" component={Adchattest} />
-        <Route exact path="/adchat/:campaignId/:creatorTwitchId" component={AdChatTracker} />
         <ThemeProvider theme={theme.lightTheme}>
           <Route path="/mypage/creator" component={CreatorDashboard} />
           <Route path="/mypage/marketer" component={MarketerDashboard} />
           <Route exact path="/marketer/charge" component={ChargeDialog} />
         </ThemeProvider>
-        <Route component={NotFound} />
       </>
+      <Route component={NotFound} />
     </Switch>
   </Router>
 );
