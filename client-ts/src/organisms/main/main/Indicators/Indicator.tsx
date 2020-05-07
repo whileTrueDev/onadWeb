@@ -16,11 +16,15 @@ interface BannerClickData {
   bannerClick: number;
 }
 
+interface NowBroadcastData {
+  nowBroadcast: number;
+}
+
 function Indicator(): JSX.Element {
   const classes = useStyles();
   const updateTime = new Date().toLocaleDateString();
   const BannerView = useGetRequest<null, BannerViewData[]>('/banners/impression');
-  const BannerClick = useGetRequest<null, BannerClickData[]>('/banners/click');
+  const NowBroadcast = useGetRequest<null, NowBroadcastData[]>('/creators/broadcast');
   const ContractedCreator = useGetRequest<null, ContractedCreatorListData<string>[]>('/creators');
 
   return (
@@ -31,36 +35,60 @@ function Indicator(): JSX.Element {
       <div className={classes.wrapper}>
         <Grid container className={classes.innerWrapper}>
           <Grid item className={classes.item}>
-            <h4 className={classes.itemTitle}>배너 노출</h4>
-            {!BannerView.loading && !BannerClick.loading && !ContractedCreator.loading
-              && BannerView.data && BannerClick.data && ContractedCreator.data
-              && (
-                <h3 className={classes.itemTitle}>
-                  &#43;&nbsp;
-                  <Countup duration={2} end={BannerView.data[0].bannerView} separator="," />
-                  <span className={classes.itemSub}>&nbsp;회</span>
-                </h3>
-              )}
+            <h4 className={classes.itemTitle}>총 노출량</h4>
+            <h3 className={classes.itemTitle}>
+              {!BannerView.loading && !NowBroadcast.loading && !ContractedCreator.loading
+                && BannerView.data && NowBroadcast.data && ContractedCreator.data
+                && (
+                  <>
+                    &#43;&nbsp;
+                    <Countup duration={2} end={BannerView.data[0].bannerView} separator="," />
+                    <span className={classes.itemSub}>&nbsp;회</span>
+                  </>
+                )}
+            </h3>
           </Grid>
           <Grid item className={classes.item}>
             <h4 className={classes.itemTitle}>계약 크리에이터</h4>
-            {!ContractedCreator.loading && ContractedCreator.data && (
-              <h3 className={classes.itemTitle}>
-                &#43;&nbsp;
-                <Countup duration={2} end={ContractedCreator.data.length} separator="," />
-                <span className={classes.itemSub}>&nbsp;명</span>
-              </h3>
-            )}
+            <h3 className={classes.itemTitle}>
+              {!BannerView.loading && !NowBroadcast.loading && !ContractedCreator.loading
+                && BannerView.data && NowBroadcast.data && ContractedCreator.data
+                && (
+                  <>
+                    &#43;&nbsp;
+                    <Countup duration={2} end={ContractedCreator.data.length} separator="," />
+                    <span className={classes.itemSub}>&nbsp;명</span>
+                  </>
+                )}
+            </h3>
           </Grid>
           <Grid item className={classes.item}>
-            <h4 className={classes.itemTitle}>배너 클릭</h4>
-            {!BannerClick.loading && BannerClick.data && (
-              <h3 className={classes.itemTitle}>
-                &#43;&nbsp;
-                <Countup duration={2} end={BannerClick.data[0].bannerClick} separator="," />
-                <span className={classes.itemSub}>&nbsp;회</span>
-              </h3>
-            )}
+            <h4 className={classes.itemTitle}>현재 방송 크리에이터</h4>
+            <h3 className={classes.itemTitle}>
+              {!BannerView.loading && !NowBroadcast.loading && !ContractedCreator.loading
+                && BannerView.data && NowBroadcast.data && ContractedCreator.data
+                && (
+                  <>
+                    &#43;&nbsp;
+                    <Countup duration={2} end={NowBroadcast.data[0].nowBroadcast} separator="," />
+                    <span className={classes.itemSub}>&nbsp;명</span>
+                  </>
+                )}
+            </h3>
+          </Grid>
+          <Grid item className={classes.item}>
+            <h4 className={classes.itemTitle}>총 팔로우</h4>
+            <h3 className={classes.itemTitle}>
+              {!BannerView.loading && !NowBroadcast.loading && !ContractedCreator.loading
+                && BannerView.data && NowBroadcast.data && ContractedCreator.data
+                && (
+                  <>
+                    &#43;&nbsp;
+                    <Countup duration={2} end={NowBroadcast.data[0].nowBroadcast} separator="," />
+                    <span className={classes.itemSub}>&nbsp;명</span>
+                  </>
+                )}
+            </h3>
           </Grid>
         </Grid>
         <h4 className={classes.date}>

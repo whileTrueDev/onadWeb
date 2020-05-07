@@ -56,7 +56,8 @@ router.route('/live')
       doQuery(query, [date, date])
         .then((row) => {
           const resultList = row.result.map((creator: {
-            creatorTwitchId: string; }) => creator.creatorTwitchId);
+            creatorTwitchId: string;
+          }) => creator.creatorTwitchId);
           responseHelper.send(resultList, 'get', res);
         })
         .catch((errorData) => {
@@ -65,4 +66,35 @@ router.route('/live')
     })
   )
   .all(responseHelper.middleware.unusedMethod);
+
+router.route('/broadcast')
+  .get(
+    // 계약중이면서~ 방송중인 크리에이터 리스트
+    responseHelper.middleware.withErrorCatch(async (req, res, next) => {
+      const date = new Date();
+      date.setMinutes(date.getMinutes() - 10);
+
+      const query = `SELECT COUNT(creatorId) AS nowBroadcast
+      FROM creatorInfo as CI
+      RIGHT JOIN
+      (SELECT streamerName, viewer
+      FROM twitchStreamDetail
+      WHERE time > ?
+      GROUP BY streamerName) as A
+      ON CI.creatorName = A.streamerName
+      WHERE creatorContractionAgreement = 1`;
+
+      doQuery(query, [date, date])
+        .then((row) => {
+          const { result } = row;
+          console.log(result);
+          responseHelper.send(result, 'get', res);
+        })
+        .catch((errorData) => {
+          throw new Error(`Error in /creators/live - ${errorData}`);
+        });
+    })
+  )
+  .all(responseHelper.middleware.unusedMethod);
+
 export default router;
