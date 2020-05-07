@@ -24,6 +24,7 @@ import ChargeDialog from './organisms/mypage/marketer/office/charge/ChargeDialog
 import CreatorDashboard from './pages/mypage/layouts/CreatorLayout';
 import AdChatTracker from './pages/others/AdChatTracker';
 import Adchattest from './pages/others/Adchattest';
+import NotFound from './pages/others/NotFound';
 
 dotenv.config();
 
@@ -50,6 +51,7 @@ const developmentRouter = (
           <Route path="/mypage/marketer" component={MarketerDashboard} />
           <Route exact path="/marketer/charge" component={ChargeDialog} />
         </ThemeProvider>
+        <Route component={NotFound} />
       </>
     </Switch>
   </Router>
@@ -76,6 +78,7 @@ const productionRouter = (
           <Route path="/mypage/marketer" component={MarketerDashboard} />
           <Route exact path="/marketer/charge" component={ChargeDialog} />
         </ThemeProvider>
+        <Route component={NotFound} />
       </>
     </Switch>
   </Router>
