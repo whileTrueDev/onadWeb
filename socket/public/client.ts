@@ -6,7 +6,7 @@ const socket: any = io();
 const programType: string = identifier();
 const history: number = window.history.length;
 const THIS_URL: string = window.location.href;
-let bannerName: string | undefined = $('#banner-area').attr('name');
+let bannerName: string | undefined = $('.banner-area').attr('name');
 
 function isVideo(src: string): boolean {
   const videoRegex = /video\/mp4/;
@@ -30,32 +30,33 @@ socket.on('url warning', () => {
 });
 
 socket.on('img receive', (msg: string[]) => {
-  if ($('#imgMessage').find('#banner-area').length === 1 && isVideo(msg[0])) { // 기존 배너 있고 mp4일 때
-    $('#banner-area').fadeOut(1000, () => {
-      $('#imgMessage').empty().append(`
-      <video id="banner-area" name="${msg[1]}" autoPlay loop muted width="100%" height="100%">
+  if ($('.img-area').find('.banner-area').length === 1 && isVideo(msg[0])) { // 기존 배너 있고 mp4일 때
+    $('.banner-area').fadeOut(1000, () => {
+      $('.img-area').empty().append(`
+      <video class="banner-area" name="${msg[1]}" autoPlay loop muted width="100%" height="100%">
         <source src={${msg[0]}} type="video/mp4" />
       </video>
       `);
     }).fadeIn(1000);
-  } else if ($('#imgMessage').find('#banner-area').length === 1 && isVideo(msg[0]) === false) { // 기존 배너 있고 이미지일 때
-    $('#banner-area').fadeOut(1000, () => {
-      $('#imgMessage').empty().append(`<img src="${msg[0]}" id="banner-area" name="${msg[1]}" width="100%" height="100%">`);
+  } else if ($('.img-area').find('.banner-area').length === 1 && isVideo(msg[0]) === false) { // 기존 배너 있고 이미지일 때
+    $('.banner-area').fadeOut(1000, () => {
+      $('.img-area').empty().append(`<img src="${msg[0]}" class="banner-area" name="${msg[1]}" width="100%" height="100%">`);
     }).fadeIn(1000);
   } else if (isVideo(msg[0])) { // 기존 배너없고 mp4일 때
-    $('#imgMessage').empty().append(`
-        <video id="banner-area" name="${msg[1]}" autoPlay loop muted width="100%" height="100%">
+    $('.img-area').empty().append(`
+        <video class="banner-area" name="${msg[1]}" autoPlay loop muted width="100%" height="100%">
           <source type="video/mp4" src=${msg[0]} />
         </video>
         `);
   } else { // 기존배너 없고 이미지일 때
-    $('#imgMessage').empty().append(`<img src="${msg[0]}" id="banner-area" name="${msg[1]}" width="100%" height="100%">`);
+    $('.img-area').empty().append(`<img src="${msg[0]}" class="banner-area" name="${msg[1]}" width="100%" height="100%">`);
   }
 });
 
 socket.on('re-render at client', () => {
-  bannerName = $('#banner-area').attr('name');
-  if (document.visibilityState === 'visible') {
+  bannerName = $('.banner-area').attr('name');
+  const hiddenState: boolean = $('div').hasClass('hidden');
+  if (document.visibilityState === 'visible' && !hiddenState) {
     if (bannerName) {
       socket.emit('re-render', [THIS_URL, bannerName, programType]);
     } else {
@@ -65,7 +66,7 @@ socket.on('re-render at client', () => {
 });
 
 socket.on('img clear', () => {
-  $('#imgMessage').empty();
+  $('.img-area').empty();
 });
 
 export { };
