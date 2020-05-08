@@ -17,13 +17,25 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   wrapper: {
-    width: '70%',
+    width: '1100px',
     border: '2px solid white',
     padding: '0px 60px',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
+    [theme.breakpoints.down('md')]: {
+      padding: '8px 30px',
+      width: '825px',
+    },
+    [theme.breakpoints.down('sm')]: {
+      padding: '7px 20px',
+      width: '450px',
+    },
+    [theme.breakpoints.down('xs')]: {
+      padding: '6px 15px',
+      width: '70%',
+    },
   },
   item: {
     padding: '10px 40px',
@@ -82,15 +94,15 @@ const useStyles = makeStyles((theme) => ({
   itemTitle: {
     fontWeight: 600,
     fontFamily: 'Noto Sans KR',
-    fontSize: 30,
+    fontSize: 25,
     [theme.breakpoints.down('md')]: {
       fontSize: 20
     },
     [theme.breakpoints.down('sm')]: {
-      fontSize: 20
+      fontSize: 19
     },
     [theme.breakpoints.down('xs')]: {
-      fontSize: 20,
+      fontSize: 17,
       wordBreak: 'keep-all'
     },
   }

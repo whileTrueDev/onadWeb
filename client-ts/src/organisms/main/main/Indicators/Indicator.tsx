@@ -20,12 +20,17 @@ interface NowBroadcastData {
   nowBroadcast: number;
 }
 
+interface TotalFollowersData {
+  totalFollowers: number;
+}
+
 function Indicator(): JSX.Element {
   const classes = useStyles();
   const updateTime = new Date().toLocaleDateString();
   const BannerView = useGetRequest<null, BannerViewData[]>('/banners/impression');
   const NowBroadcast = useGetRequest<null, NowBroadcastData[]>('/creators/broadcast');
   const ContractedCreator = useGetRequest<null, ContractedCreatorListData<string>[]>('/creators');
+  const TotoalFollowers = useGetRequest<null, TotalFollowersData[]>('/creators/detail');
 
   return (
     <div className={classes.container}>
@@ -37,8 +42,8 @@ function Indicator(): JSX.Element {
           <Grid item className={classes.item}>
             <h4 className={classes.itemTitle}>총 노출량</h4>
             <h3 className={classes.itemTitle}>
-              {!BannerView.loading && !NowBroadcast.loading && !ContractedCreator.loading
-                && BannerView.data && NowBroadcast.data && ContractedCreator.data
+              {!BannerView.loading && !NowBroadcast.loading && !ContractedCreator.loading && !TotoalFollowers.loading
+                && BannerView.data && NowBroadcast.data && ContractedCreator.data && TotoalFollowers.data
                 && (
                   <>
                     &#43;&nbsp;
@@ -51,8 +56,8 @@ function Indicator(): JSX.Element {
           <Grid item className={classes.item}>
             <h4 className={classes.itemTitle}>계약 크리에이터</h4>
             <h3 className={classes.itemTitle}>
-              {!BannerView.loading && !NowBroadcast.loading && !ContractedCreator.loading
-                && BannerView.data && NowBroadcast.data && ContractedCreator.data
+              {!BannerView.loading && !NowBroadcast.loading && !ContractedCreator.loading && !TotoalFollowers.loading
+                && BannerView.data && NowBroadcast.data && ContractedCreator.data && TotoalFollowers.data
                 && (
                   <>
                     &#43;&nbsp;
@@ -63,24 +68,24 @@ function Indicator(): JSX.Element {
             </h3>
           </Grid>
           <Grid item className={classes.item}>
-            <h4 className={classes.itemTitle}>현재 방송 크리에이터</h4>
+            <h4 className={classes.itemTitle}>총 팔로우</h4>
             <h3 className={classes.itemTitle}>
-              {!BannerView.loading && !NowBroadcast.loading && !ContractedCreator.loading
-                && BannerView.data && NowBroadcast.data && ContractedCreator.data
+              {!BannerView.loading && !NowBroadcast.loading && !ContractedCreator.loading && !TotoalFollowers.loading
+                && BannerView.data && NowBroadcast.data && ContractedCreator.data && TotoalFollowers.data
                 && (
                   <>
                     &#43;&nbsp;
-                    <Countup duration={2} end={NowBroadcast.data[0].nowBroadcast} separator="," />
+                    <Countup duration={2} end={TotoalFollowers.data[0].totalFollowers} separator="," />
                     <span className={classes.itemSub}>&nbsp;명</span>
                   </>
                 )}
             </h3>
           </Grid>
           <Grid item className={classes.item}>
-            <h4 className={classes.itemTitle}>총 팔로우</h4>
+            <h4 className={classes.itemTitle}>현재 생방송 중</h4>
             <h3 className={classes.itemTitle}>
-              {!BannerView.loading && !NowBroadcast.loading && !ContractedCreator.loading
-                && BannerView.data && NowBroadcast.data && ContractedCreator.data
+              {!BannerView.loading && !NowBroadcast.loading && !ContractedCreator.loading && !TotoalFollowers.loading
+                && BannerView.data && NowBroadcast.data && ContractedCreator.data && TotoalFollowers.data
                 && (
                   <>
                     &#43;&nbsp;

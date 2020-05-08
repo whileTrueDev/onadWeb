@@ -75,10 +75,10 @@ export default function NoticeTable({ data, loading }: Props): JSX.Element {
         rowStyle: (rowData: NoticeData): React.CSSProperties => (
           rowData.topic === '필독'
             ? { height: 65, backgroundColor: '#F5A9A9', color: '#000' }
-            : { height: 65, backgroundColor: '#f5f5f5', color: '#555555' }
+            : { height: 65, backgroundColor: '#fff', color: '#000' }
         ),
         searchFieldAlignment: 'right',
-        // headerStyle: { backgroundColor: '#f5f5f5', color: '#555555' }
+        headerStyle: { backgroundColor: '#f5f5f5', color: '#555555' }
       }}
     />
   );

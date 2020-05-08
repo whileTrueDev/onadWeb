@@ -87,7 +87,25 @@ router.route('/broadcast')
       doQuery(query, [date, date])
         .then((row) => {
           const { result } = row;
-          console.log(result);
+          responseHelper.send(result, 'get', res);
+        })
+        .catch((errorData) => {
+          throw new Error(`Error in /creators/live - ${errorData}`);
+        });
+    })
+  )
+  .all(responseHelper.middleware.unusedMethod);
+
+router.route('/detail')
+  .get(
+    // 계약중이면서~ 방송중인 크리에이터 리스트
+    responseHelper.middleware.withErrorCatch(async (req, res, next) => {
+      const query = `SELECT SUM(followers) AS totalFollowers
+      FROM creatorDetail`;
+
+      doQuery(query)
+        .then((row) => {
+          const { result } = row;
           responseHelper.send(result, 'get', res);
         })
         .catch((errorData) => {
