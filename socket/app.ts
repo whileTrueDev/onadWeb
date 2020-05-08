@@ -46,8 +46,10 @@ app.get('/banner/:id', (req, res, next) => { // /banner/:id로 라우팅
 });
 
 io.on('connection', (socket: any) => {
-  const socketInfo = socket.client;
-  console.log(socketInfo);
+  const socketInfo = {};
+  const roomInfo: {} = socket.adapter.rooms; // 현재 웹소켓에 접속중이 room들과 그 접속자들의 정보 얻음
+  const urlArray = Object.values(socketInfo);
+  console.log(roomInfo);
   const rule = new nodeSchedule.RecurrenceRule(); // 스케쥴러 객체 생성
   rule.hour = new nodeSchedule.Range(0, 23); // cronTask 시간지정
   rule.minute = [0, 10, 20, 30, 40, 50]; // cronTask 실행되는 분(minute)
@@ -61,9 +63,13 @@ io.on('connection', (socket: any) => {
     const CLIENT_URL = msg[0];
     const HISTORY = msg[1];
     const programType = msg[2];
+    // const tmp: string = Object.keys(roomInfo).pop();
+    // socketInfo[tmp] = CLIENT_URL; // roomInfo에서 소켓아이디 불러와서 socketsInfo 객체에 {'id' : url} 형태로 저장
+    // console.log(urlArray);
+
     if (process.env.NODE_ENV === 'development') {
       console.log('SOCKET ON');
-      socket.emit('host pass', SOCKET_HOST);
+      socket.emit('ho st pass', SOCKET_HOST);
       callImg(socket, [CLIENT_URL, '', programType]);
     } else if (HISTORY !== 1) {
       const DESTINATION_URL = `${SOCKET_HOST}/browserWarn`;
