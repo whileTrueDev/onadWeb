@@ -45,6 +45,21 @@ const getcreatorList = ({ date }) => {
   WHERE NOT campaign.limitState = 1
   GROUP BY creatorId`;
 
+  // 제약조건 추가. 계산하는 시간 내 OFF 버튼 존재시 그냥 해당 시점 밴
+  const offListQuery = `
+  select creatorId
+  from (
+  select advertiseUrl
+  from bannerVisible
+  where date > ?
+  and type = 0
+  and visibleState = 0
+  ) as URL
+  left join creatorInfo
+  on URL.advertiseUrl = creatorInfo.advertiseUrl
+  group by creatorId
+  `;
+
   return new Promise((resolve, reject) => {
     pool.getConnection((err, connection) => {
       if (err) {
@@ -54,13 +69,16 @@ const getcreatorList = ({ date }) => {
         Promise.all([
           doConnectionQuery({ connection, queryState: bannerListQuery, params: [date] }),
           doConnectionQuery({ connection, queryState: streamerListQuery, params: [date] }),
+          doConnectionQuery({ connection, queryState: offListQuery, params: [date] }),
         ])
-          .then(([bannerListData, streamerListData]) => {
+          .then(([bannerListData, streamerListData, offListData]) => {
             // 실제 현재 방송 중인 크리에이터이다.
+            const offList = offListData.map((offData) => offData.creatorId);
             const streamers = streamerListData.map((streamerData) => streamerData.streamerId);
             const uniqueStreamers = Array.from(new Set(streamers));
             const creators = bannerListData.reduce((result, bannerData) => {
-              if (uniqueStreamers.includes(bannerData.creatorId)) {
+              // offList에 존재하지 않을 경우에만 계산항목으로 들어가도록 추가.
+              if (uniqueStreamers.includes(bannerData.creatorId) && !offList.includes(bannerData.creatorId)) {
                 result.push(bannerData);
               }
               return result;

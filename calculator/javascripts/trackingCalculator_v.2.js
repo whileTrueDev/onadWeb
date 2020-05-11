@@ -1,27 +1,29 @@
 /*
-수정 : 2020-04-02
-작성자 : 박찬우 (궁금한 것은 문의 하세요.)
+수정 : 2020-05-11
 
-구현 내용:
+- 어뷰징 방지를 위한 계산 매커니즘 변경
+- adpanel, adchat 채널에 의한 creator 정산 금액 수정
 
-CPC 계산프로그램과 동일하게 checkTime을 탐지하여 10분마다 계산을 실시한다.
-campaignLog action을 CPC로 정의하여 Insert 한다.
-
-* CPC만 하는 캠페인이 존재하지 않으므로 CPM을 계산하는 타이밍에 잔액이 존재하는지 안하는지 체크하도록 둔다.
-- campaign계산: 사용된 돈과 크리에이터에게 줄 돈을 계산하여 campaignLog를 찍는다.
-- marketer계산: marketerDebit에서 사용된 돈을 제한다.
-- creator계산: creatorIncome에 찍는다.
-
-확장성을 고려하여 action의 종류를 고려한다.
 */
+// require('dotenv').config(); // 환경변수를 위해. dev환경: .env 파일 / production환경: docker run의 --env-file인자로 넘김.
 
 const doQuery = require('../model/calculatorQuery');
 const pool = require('../model/connectionPool');
 
-const FEERATE = 0.3;
-
+const CHAT_FEERATE = 0.3;
+const PANEL_FEERATE = 0.5;
 // 각 action에 따른 cash
-const getCreatorCash = ({ payouts }) => Math.round(payouts * FEERATE);
+const getCreatorCash = ({ payouts, channel }) => {
+  switch (channel) {
+    case 'adchat':
+      return Math.round(payouts * CHAT_FEERATE);
+    case 'adpanel':
+      return Math.round(payouts * PANEL_FEERATE);
+    default:
+      return Math.round(payouts * CHAT_FEERATE);
+  }
+};
+
 const getMarketerCash = ({ payouts }) => Math.round(payouts);
 
 
@@ -59,30 +61,62 @@ const doTransacQuery = ({ connection, queryState, params }) => new Promise((reso
 // 해당 시점에서의 크리에이터별로
 const getCreatorList = (date) => {
   const creatorListQuery = `
-  SELECT creatorId, sum(payout) as payouts
+  SELECT trackingData.*, creatorDetail.peakview
+  FROM
+  (
+  SELECT creatorId, channel, sum(payout) as payouts, count(*) as counts
   FROM tracking 
   WHERE clickedTime > ? AND NOT os IS NULL
-  GROUP BY creatorId
+  GROUP BY creatorId, channel
+  ) AS trackingData
+  LEFT JOIN
+  creatorDetail
+  ON trackingData.creatorId = creatorDetail.creatorId
   `;
 
   return new Promise((resolve, reject) => {
     doQuery(creatorListQuery, [date])
       .then((inrow) => {
-        const creatorNames = [];
+        let creatorNames = [];
+        const banList = []; // 계산에서 제외할 creatorList
+        const countsList = {};
         const creators = {};
-        inrow.result.forEach(({ creatorId, payouts }) => {
-          const cash = getCreatorCash({ payouts });
+
+        // 일단 creeator별로 counts를 합산하여 ban dictionary를 만든다.
+        inrow.result.forEach(({ creatorId, counts }) => {
           if (creatorNames.includes(creatorId)) {
             // creatorId가 존재할경우,
-            creators[creatorId].cash += cash;
+            countsList[creatorId].counts += counts;
           } else {
-            creators[creatorId] = {
-              cash,
+            countsList[creatorId] = {
+              counts,
             };
             creatorNames.push(creatorId);
           }
         });
-        resolve(creators);
+
+        creatorNames = [];
+
+        inrow.result.forEach(({
+          creatorId, payouts, channel, peakview
+        }) => {
+          if (peakview !== null && countsList[creatorId] > peakview) {
+            banList.push(creatorId);
+          } else {
+            const cash = getCreatorCash({ payouts, channel });
+            if (creatorNames.includes(creatorId)) {
+              // creatorId가 존재할경우,
+              creators[creatorId].cash += cash;
+            } else {
+              creators[creatorId] = {
+                cash,
+              };
+              creatorNames.push(creatorId);
+            }
+          }
+        });
+
+        resolve({ creatorDic: creators, banList });
       })
       .catch((errorData) => {
         console.log(errorData);
@@ -92,12 +126,12 @@ const getCreatorList = (date) => {
 };
 
 
-const getCampaignList = (date) => {
+const getCampaignList = ({ date, banList }) => {
   const campaignListQuery = `
-  SELECT campaignId, creatorId, sum(payout) as payouts
+  SELECT campaignId, creatorId, channel, sum(payout) as payouts
   FROM tracking 
   WHERE clickedTime > ? AND NOT os IS NULL
-  GROUP BY campaignId, creatorId
+  GROUP BY campaignId, creatorId, channel
   `;
 
   return new Promise((resolve, reject) => {
@@ -106,21 +140,23 @@ const getCampaignList = (date) => {
         const logNames = [];
         const logs = {};
         inrow.result.forEach(({
-          campaignId, creatorId, payouts
+          campaignId, creatorId, payouts, channel
         }) => {
-          const cashToCreator = getCreatorCash({ payouts });
-          const cashFromMarketer = getMarketerCash({ payouts });
-          const logId = `${campaignId}/${creatorId}`;
-          if (logNames.includes(logId)) {
+          if (!banList.includes(creatorId)) {
+            const cashToCreator = getCreatorCash({ payouts, channel });
+            const cashFromMarketer = getMarketerCash({ payouts });
+            const logId = `${campaignId}/${creatorId}`;
+            if (logNames.includes(logId)) {
             // creatorId가 존재할경우,
-            logs[logId].cashToCreator += cashToCreator;
-            logs[logId].cashFromMarketer += cashFromMarketer;
-          } else {
-            logs[logId] = {
-              cashToCreator,
-              cashFromMarketer,
-            };
-            logNames.push(logId);
+              logs[logId].cashToCreator += cashToCreator;
+              logs[logId].cashFromMarketer += cashFromMarketer;
+            } else {
+              logs[logId] = {
+                cashToCreator,
+                cashFromMarketer,
+              };
+              logNames.push(logId);
+            }
           }
         });
         resolve(logs);
@@ -133,12 +169,12 @@ const getCampaignList = (date) => {
 };
 
 
-const getMarketerList = (date) => {
+const getMarketerList = ({ date, banList }) => {
   const marketerListQuery = `
-  SELECT marketerId, sum(payout) as payouts
+  SELECT marketerId, creatorId, sum(payout) as payouts
   FROM tracking
   WHERE clickedTime > ? AND NOT os IS NULL
-  GROUP BY marketerId
+  GROUP BY marketerId, creatorId
   `;
 
   return new Promise((resolve, reject) => {
@@ -146,16 +182,18 @@ const getMarketerList = (date) => {
       .then((inrow) => {
         const marketerNames = [];
         const marketers = {};
-        inrow.result.forEach(({ marketerId, payouts }) => {
-          const cash = getMarketerCash({ payouts });
-          if (cash === 0) {
-            return;
-          }
-          if (marketerNames.includes(marketerId)) {
-            marketers[marketerId] += cash;
-          } else {
-            marketers[marketerId] = cash;
-            marketerNames.push(marketerId);
+        inrow.result.forEach(({ marketerId, payouts, creatorId }) => {
+          if (!banList.includes(creatorId)) {
+            const cash = getMarketerCash({ payouts });
+            if (cash === 0) {
+              return;
+            }
+            if (marketerNames.includes(marketerId)) {
+              marketers[marketerId] += cash;
+            } else {
+              marketers[marketerId] = cash;
+              marketerNames.push(marketerId);
+            }
           }
         });
         resolve(marketers);
@@ -338,10 +376,10 @@ async function calculation() {
   date.setMinutes(date.getMinutes() - 10);
   // 모든 list가 dic형태로 return 된다.
 
-  const [creatorDic, marketerDic, campaignDic] = await Promise.all([
-    getCreatorList(date),
-    getMarketerList(date),
-    getCampaignList(date)
+  const { creatorDic, banList } = await getCreatorList(date);
+  const [marketerDic, campaignDic] = await Promise.all([
+    getMarketerList({ date, banList }),
+    getCampaignList({ date, banList })
   ]);
 
   Promise.all([
@@ -354,4 +392,5 @@ async function calculation() {
     });
 }
 
-module.exports = calculation;
+// module.exports = calculation;
+calculation();
