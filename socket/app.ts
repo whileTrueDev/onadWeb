@@ -30,7 +30,7 @@ app.set('view engine', 'ejs');
 app.engine('html', require('ejs').renderFile);
 
 app.get('/', (req: express.Request, res: express.Response) => {
-  res.send(200);
+  res.sendStatus(200);
 });
 
 app.get('/wrongurl', (req, res) => {
@@ -41,65 +41,90 @@ app.get('/browserwarn', (req, res) => {
   res.render('browserWarn.ejs');
 });
 
+app.get('/duplicate', (req, res) => {
+  res.render('duplicate.ejs');
+});
+
 app.get('/banner/:id', (req, res, next) => { // /banner/:id로 라우팅
   res.render('client.ejs');
 });
+interface SocketInfo {
+  [key: string]: string;
+}
+(
+  function () {
+    const socketInfo: SocketInfo = {};
+    io.on('connection', (socket: any) => {
+      const roomInfo: {} = socket.adapter.rooms; // 현재 웹소켓에 접속중이 room들과 그 접속자들의 정보 얻음
+      let SOCKET_ID: string = socket.id;
+      const urlArray: Array<string> = Object.values(socketInfo);
+      const rule = new nodeSchedule.RecurrenceRule(); // 스케쥴러 객체 생성
+      rule.hour = new nodeSchedule.Range(0, 23); // cronTask 시간지정
+      rule.minute = [0, 10, 20, 30, 40, 50]; // cronTask 실행되는 분(minute)
+      // rule.second = [0, 10, 20, 30, 40, 50]; // test second
+      // cronTask
+      nodeSchedule.scheduleJob(rule, () => { // 스케쥴러를 통해 10분마다 db에 배너정보 전송
+        socket.emit('re-render at client', {});
+      });
 
-io.on('connection', (socket: any) => {
-  const socketInfo = {};
-  const roomInfo: {} = socket.adapter.rooms; // 현재 웹소켓에 접속중이 room들과 그 접속자들의 정보 얻음
-  const urlArray = Object.values(socketInfo);
-  console.log(roomInfo);
-  const rule = new nodeSchedule.RecurrenceRule(); // 스케쥴러 객체 생성
-  rule.hour = new nodeSchedule.Range(0, 23); // cronTask 시간지정
-  rule.minute = [0, 10, 20, 30, 40, 50]; // cronTask 실행되는 분(minute)
-  // rule.second = [0, 10, 20, 30, 40, 50]; // test second
-  // cronTask
-  nodeSchedule.scheduleJob(rule, () => { // 스케쥴러를 통해 10분마다 db에 배너정보 전송
-    socket.emit('re-render at client', {});
-  });
+      socket.on('new client', (msg: [string, number, string]) => {
+        const CLIENT_URL = msg[0];
+        const HISTORY = msg[1];
+        const programType = msg[2];
 
-  socket.on('new client', (msg: [string, number, string]) => {
-    const CLIENT_URL = msg[0];
-    const HISTORY = msg[1];
-    const programType = msg[2];
-    // const tmp: string = Object.keys(roomInfo).pop();
-    // socketInfo[tmp] = CLIENT_URL; // roomInfo에서 소켓아이디 불러와서 socketsInfo 객체에 {'id' : url} 형태로 저장
-    // console.log(urlArray);
+        if (process.env.NODE_ENV === 'development') {
+          console.log('SOCKET ON');
+          socket.emit('host pass', SOCKET_HOST);
+          callImg(socket, [CLIENT_URL, '', programType]);
+        } else if (HISTORY !== 1) {
+          const DESTINATION_URL = `${SOCKET_HOST}/browserWarn`;
+          socket.emit('browser warning', DESTINATION_URL);
+        }
 
-    if (process.env.NODE_ENV === 'development') {
-      console.log('SOCKET ON');
-      socket.emit('ho st pass', SOCKET_HOST);
-      callImg(socket, [CLIENT_URL, '', programType]);
-    } else if (HISTORY !== 1) {
-      const DESTINATION_URL = `${SOCKET_HOST}/browserWarn`;
-      socket.emit('browser warning', DESTINATION_URL);
-    } else {
-      socket.emit('host pass', SOCKET_HOST);
-      callImg(socket, [CLIENT_URL, '', programType]);
-    }
-  });
+        if (urlArray.includes(CLIENT_URL)) {
+          const DESTINATION_URL = `${SOCKET_HOST}/duplicate`;
+          socket.emit('duplicate', DESTINATION_URL);
+        } else {
+          socketInfo[SOCKET_ID] = CLIENT_URL;
+          socket.emit('host pass', SOCKET_HOST);
+          callImg(socket, [CLIENT_URL, '', programType]);
+        }
+      });
 
-  socket.on('re-render', (msg: [string, string, string]) => {
-    callImg(socket, msg);
-  });
+      socket.on('disconnect', () => { // 접속종료시
+        delete socketInfo[SOCKET_ID]; // socketsInfo에서 접속종료한 clientID 삭제
+        SOCKET_ID = '';
+      });
 
-  socket.on('pageOn', (msg: [string, string]) => {
-    const CLIENT_URL = msg[0];
-    const programType = msg[1];
-    callImg(socket, [CLIENT_URL, '', programType]);
-  });
+      socket.on('re-render', (msg: [string, string, string]) => {
+        callImg(socket, msg);
+      });
 
-  socket.on('pageActive handler', (msg: [string, number, string]) => {
-    // 배너창을 띄웠을 때는 state = 1
-    // 배너창 숨겼을 때는 state = 0
-    const clientUrl = msg[0];
-    const state = msg[1];
-    const program = msg[2];
-    const activeQuery = 'INSERT INTO bannerVisible (advertiseUrl, visibleState, program) VALUES (?, ?, ?);';
-    doQuery(activeQuery, [clientUrl, state, program]);
-  });
-});
+      socket.on('pageOn', (msg: [string, string]) => {
+        const CLIENT_URL = msg[0];
+        const programType = msg[1];
+        callImg(socket, [CLIENT_URL, '', programType]);
+      });
+
+      socket.on('pageActive handler', (msg: [string, boolean, string]) => {
+        // 배너창을 띄웠을 때는 state = 1
+        // 배너창 숨겼을 때는 state = 0
+        const clientUrl = msg[0];
+        const state = msg[1] === true ? 1 : 0;
+        const program = msg[2];
+        const activeQuery = 'INSERT INTO bannerVisible (advertiseUrl, visibleState, program, type) VALUES (?, ?, ?, 0);';
+        doQuery(activeQuery, [clientUrl, state, program]);
+      });
+
+      socket.on('banner click', (msg: [string, boolean, string]) => {
+        const clientUrl = msg[0];
+        const state = msg[1] === true ? 1 : 0;
+        const program = msg[2];
+        const hiddenQuery = 'INSERT INTO bannerVisible (advertiseUrl, visibleState, program, type) VALUES (?, ?, ?, 1);';
+        doQuery(hiddenQuery, [clientUrl, state, program]);
+      });
+    });
+  }());
 
 httpServer.listen(PORT, () => {
   console.log(`node_websocket server on ${process.env.NODE_ENV} mode`);

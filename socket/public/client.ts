@@ -1,6 +1,6 @@
-
 import identifier from './programIdentifier';
 import hiddenEventHandler from './hiddenEventHandler';
+import imageClicker from './imageClicker';
 
 const socket: any = io();
 const programType: string = identifier();
@@ -13,7 +13,9 @@ function isVideo(src: string): boolean {
   return videoRegex.test(src);
 }
 
-hiddenEventHandler(socket, THIS_URL, programType);
+hiddenEventHandler(socket, THIS_URL, history, programType);
+imageClicker(socket, THIS_URL, programType);
+
 let socketHost = '';
 socket.emit('new client', [THIS_URL, history, programType]);
 
@@ -27,6 +29,10 @@ socket.on('browser warning', (DESTINATION_URL: string) => {
 
 socket.on('url warning', () => {
   window.location.href = `${socketHost}/wrongurl`;
+});
+
+socket.on('duplicate', (DESTINATION_URL: string) => {
+  window.location.href = DESTINATION_URL;
 });
 
 socket.on('img receive', (msg: string[]) => {
