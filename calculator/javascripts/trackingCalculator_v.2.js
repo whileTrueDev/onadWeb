@@ -392,5 +392,5 @@ async function calculation() {
     });
 }
 
-// module.exports = calculation;
-calculation();
+module.exports = calculation;
+// calculation();
