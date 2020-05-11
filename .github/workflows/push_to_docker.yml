@@ -72,14 +72,14 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
           tags: "latest,1.${{ github.run_number }}"
 
-      # - name: <calculator> Dockerize and Push to docker hub
-      #   uses: elgohr/Publish-Docker-Github-Action@2.14
-      #   with:
-      #     name: hwasurr/onad_calculator
-      #     workdir: calculator
-      #     username: ${{ secrets.DOCKER_USERNAME }}
-      #     password: ${{ secrets.DOCKER_PASSWORD }}
-      #     tags: "latest,1.${{ github.run_number }}"
+      - name: <calculator> Dockerize and Push to docker hub
+        uses: elgohr/Publish-Docker-Github-Action@2.14
+        with:
+          name: hwasurr/onad_calculator
+          workdir: calculator
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+          tags: "latest,1.${{ github.run_number }}"
 
       - name: <Ad broad socket server> Dockerize and Push to docker hub
         uses: elgohr/Publish-Docker-Github-Action@2.14

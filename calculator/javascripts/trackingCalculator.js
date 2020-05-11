@@ -15,7 +15,6 @@ campaignLog action을 CPC로 정의하여 Insert 한다.
 확장성을 고려하여 action의 종류를 고려한다.
 */
 
-const schedule = require('node-schedule');
 const doQuery = require('../model/calculatorQuery');
 const pool = require('../model/connectionPool');
 
@@ -334,8 +333,6 @@ const MarketerConnectionWarp = ({ marketerDic }) => new Promise((resolve, reject
 
 
 async function calculation() {
-  console.log('-----------------------------------------------------------');
-  console.log(`tracking server 계산을 실시합니다. 시작 시각 : ${new Date().toLocaleString()}`);
   const date = new Date();
   date.setMinutes(date.getMinutes() - 10);
   // 모든 list가 dic형태로 return 된다.
@@ -352,13 +349,8 @@ async function calculation() {
     MarketerConnectionWarp({ marketerDic })
   ])
     .then(() => {
-      console.log(`tracking server 계산을 종료합니다. 시작 시각 : ${new Date().toLocaleString()}`);
-      console.log('-----------------------------------------------------------');
+      console.log("tracking calculator success");
     });
 }
 
-const scheduler = schedule.scheduleJob('0,10,20,30,40,50 * * * *', () => {
-  calculation();
-});
-
-module.exports = scheduler;
+module.exports = calculation;
