@@ -42,7 +42,7 @@ const getcreatorList = ({ date }) => {
   select advertiseUrl
   from bannerVisible
   where date > ?
-  and type = 0
+  and type = 1
   and visibleState = 0
   ) as URL
   left join creatorInfo
