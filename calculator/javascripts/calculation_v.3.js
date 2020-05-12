@@ -1,20 +1,10 @@
 const Notification = require('./notification');
 const pool = require('../model/connectionPool');
 const sendAlimtalk = require('./alimtalk');
-
+const { doConnectionQuery, doTransacQuery } = require('../model/doQuery');
 // 시청자수 1회당 가격
 const PPP = 2;
 const FEERATE = 0.5;
-
-const doConnectionQuery = ({ connection, queryState, params }) => new Promise((resolve, reject) => {
-  connection.query(queryState, params, (err, result) => {
-    if (err) {
-      reject(err);
-    } else {
-      resolve(result);
-    }
-  });
-});
 
 // 현재시간은 5분, crawler가 활동하는 시기는 0분 타이밍이므로 10분을 깎아서
 const getcreatorList = ({ date }) => {
@@ -230,38 +220,6 @@ const connectionWarp = ({ func, params }) => new Promise((resolve, reject) => {
   });
 });
 
-// 커넥션을 전달 받아 쿼리문을 수행한다. 트랜잭션을 사용하기 때문에
-const doTransacQuery = ({ connection, queryState, params }) => new Promise((resolve, reject) => {
-  connection.beginTransaction((err) => {
-    if (err) {
-      console.log('doTransacQuery err');
-      console.log(err);
-      reject(err);
-    }
-    connection.query(queryState, params, (err1, result) => {
-      if (err1) {
-        console.log('doTransacQuery err1');
-        console.log(err1);
-        connection.rollback(() => {
-          reject(err1);
-        });
-      } else {
-        connection.commit((err2) => {
-          if (err2) {
-            console.log('doTransacQuery err2');
-            console.log(err2);
-            connection.rollback(() => {
-              reject(err2);
-            });
-          } else {
-            resolve();
-          }
-        });
-      }
-    });
-  });
-});
-
 const creatorCalculate = ({ connection, price, creatorId }) => {
   const searchQuery = `
   SELECT creatorId, creatorTotalIncome, creatorReceivable 
@@ -422,7 +380,6 @@ const zeroCalculateConnectionWarp = ({ marketerList }) => new Promise((resolve, 
         marketerList.map((marketerId) => marketerZeroCalculate({ connection, marketerId }))
       )
         .then(() => {
-          console.log(`프로그램을 종료합니다. 종료 시각 : ${new Date().toLocaleString()}`);
           connection.release();
           resolve();
         })
@@ -531,6 +488,24 @@ const calculateConnectionWrap = ({
   });
 });
 
+// next calculation
+const nextCalculate = ({ marketerList, campaignList }) => new Promise((resolve, reject) => {
+  setTimeout(() => {
+    Promise.all([
+      zeroCalculateConnectionWarp({ marketerList }),
+      dailyLimitCalculateConnectionWarp({ campaignList }),
+    ])
+      .then(() => {
+        resolve();
+      })
+      .catch((error) => {
+        console.log(error);
+        reject();
+      });
+  }, 30000);
+});
+
+
 // 계산프로그램시 필요한 함수
 async function getList(date) {
   // 계산할 대상을 탐색하는 함수.
@@ -548,43 +523,49 @@ async function getList(date) {
   return returnList;
 }
 
-async function calculation() {
+const calculationPromise = async () => {
   const date = new Date();
   date.setMinutes(date.getMinutes() - 10);
   const calculateList = await getList(date);
 
-  if (calculateList.length === 0) {
-    console.log(`계산 항목이 존재하지 않으므로 계산 종료합니다. 종료 시각 : ${new Date().toLocaleString()}`);
-    return;
-  }
+  return new Promise((resolve, reject) => {
+    if (calculateList.length === 0) {
+      console.log(`계산 항목이 존재하지 않으므로 계산 종료합니다. 종료 시각 : ${new Date().toLocaleString()}`);
+      resolve();
+    } else {
+      console.log(`CPM 계산을 실시합니다. 시작 시각 : ${new Date().toLocaleString()}`);
+      const marketerList = [];
+      const campaignList = [];
+      Promise.all(
+        calculateList.map(({
+          creatorId, campaignId, cashFromMarketer, cashToCreator, viewer
+        }) => calculateConnectionWrap({
+          creatorId, campaignId, cashFromMarketer, cashToCreator, viewer
+        }).then(() => {
+          const marketerId = campaignId.split('_')[0];
+          if (!marketerList.includes(marketerId)) {
+            marketerList.push(marketerId);
+          }
+          if (!campaignList.includes(campaignId)) {
+            campaignList.push(campaignId);
+          }
+        }))
+      )
+        .then(
+          nextCalculate({ marketerList, campaignList })
+            .then(() => {
+              console.log(`CPM 계산을 종료합니다. 종료 시각 : ${new Date().toLocaleString()}`);
+              resolve();
+            })
+        )
+        .catch((errorData) => {
+          console.log('-----------------------------------------------------------');
+          console.log(errorData);
+          console.log('--------위의 사유로 인하여 에러가 발생하였습니다.-------------');
+          resolve();
+        });
+    }
+  });
+};
 
-  console.log(`계산을 실시합니다. 시작 시각 : ${new Date().toLocaleString()}`);
-  const marketerList = [];
-  const campaignList = [];
-  Promise.all(
-    calculateList.map(({
-      creatorId, campaignId, cashFromMarketer, cashToCreator, viewer
-    }) => calculateConnectionWrap({
-      creatorId, campaignId, cashFromMarketer, cashToCreator, viewer
-    }).then(() => {
-      const marketerId = campaignId.split('_')[0];
-      if (!marketerList.includes(marketerId)) {
-        marketerList.push(marketerId);
-      }
-      if (!campaignList.includes(campaignId)) {
-        campaignList.push(campaignId);
-      }
-    }))
-  )
-    .then(() => {
-      setTimeout(() => zeroCalculateConnectionWarp({ marketerList }), 30000);
-      setTimeout(() => dailyLimitCalculateConnectionWarp({ campaignList }), 30000);
-    })
-    .catch((errorData) => {
-      console.log('-----------------------------------------------------------');
-      console.log(errorData);
-      console.log('--------위의 사유로 인하여 에러가 발생하였습니다.-------------');
-    });
-}
-
-module.exports = calculation;
+module.exports = calculationPromise;

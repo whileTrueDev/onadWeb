@@ -8,10 +8,13 @@
 // require('dotenv').config(); // 환경변수를 위해. dev환경: .env 파일 / production환경: docker run의 --env-file인자로 넘김.
 
 const doQuery = require('../model/calculatorQuery');
+const { doTransacQuery } = require('../model/doQuery');
+
 const pool = require('../model/connectionPool');
 
 const CHAT_FEERATE = 0.3;
 const PANEL_FEERATE = 0.5;
+
 // 각 action에 따른 cash
 const getCreatorCash = ({ payouts, channel }) => {
   switch (channel) {
@@ -24,39 +27,8 @@ const getCreatorCash = ({ payouts, channel }) => {
   }
 };
 
+// 0으로 고쳐둠.
 const getMarketerCash = ({ payouts }) => Math.round(payouts);
-
-
-const doTransacQuery = ({ connection, queryState, params }) => new Promise((resolve, reject) => {
-  connection.beginTransaction((err) => {
-    if (err) {
-      console.log('doTransacQuery err');
-      console.log(err);
-      reject(err);
-    }
-    connection.query(queryState, params, (err1, result) => {
-      if (err1) {
-        console.log('doTransacQuery err1');
-        console.log(err1);
-        connection.rollback(() => {
-          reject(err1);
-        });
-      } else {
-        connection.commit((err2) => {
-          if (err2) {
-            console.log('doTransacQuery err2');
-            console.log(err2);
-            connection.rollback(() => {
-              reject(err2);
-            });
-          } else {
-            resolve();
-          }
-        });
-      }
-    });
-  });
-});
 
 // 해당 시점에서의 크리에이터별로
 const getCreatorList = (date) => {
@@ -370,11 +342,11 @@ const MarketerConnectionWarp = ({ marketerDic }) => new Promise((resolve, reject
   });
 });
 
-
-async function calculation() {
+const calculationPromise = async () => {
   const date = new Date();
   date.setMinutes(date.getMinutes() - 10);
   // 모든 list가 dic형태로 return 된다.
+  console.log(`CPC 계산을 실시합니다. 시작 시각 : ${new Date().toLocaleString()}`);
 
   const { creatorDic, banList } = await getCreatorList(date);
   const [marketerDic, campaignDic] = await Promise.all([
@@ -382,15 +354,23 @@ async function calculation() {
     getCampaignList({ date, banList })
   ]);
 
-  Promise.all([
-    CampaignConnectionWarp({ campaignDic }),
-    CreatorConnectionWarp({ creatorDic }),
-    MarketerConnectionWarp({ marketerDic })
-  ])
-    .then(() => {
-      console.log('tracking calculator success');
-    });
-}
+  return new Promise((resolve, reject) => {
+    Promise.all([
+      CampaignConnectionWarp({ campaignDic }),
+      CreatorConnectionWarp({ creatorDic }),
+      MarketerConnectionWarp({ marketerDic })
+    ])
+      .then(() => {
+        console.log(`CPC 계산을 종료합니다. 종료 시각 : ${new Date().toLocaleString()}`);
+        resolve();
+      })
+      .catch((error) => {
+        console.log('-----------------------------------------------------------');
+        console.log(error);
+        console.log('--------위의 사유로 인하여 에러가 발생하였습니다.-------------');
+        resolve();
+      });
+  });
+};
 
-module.exports = calculation;
-// calculation();
+module.exports = calculationPromise;
