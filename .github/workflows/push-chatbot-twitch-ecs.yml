@@ -1,8 +1,8 @@
 on:
   push:
     branches: [master]
-    # paths:
-    #   - "chatbot-twitch/**"
+    paths:
+      - "chatbot-twitch/**"
 
 name: Deploy to Amazon ECS - "chatbot-twitch"
 

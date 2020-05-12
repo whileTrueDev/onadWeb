@@ -43,7 +43,7 @@ jobs:
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
           task-definition: tracker/task-definition.json
-          container-name: onad_tracker
+          container-name: onad-tracker
           image: ${{ secrets.DOCKER_USERNAME }}/onad_tracker:${{ github.sha }}
 
       - name: Deploy Amazon ECS task definition

@@ -43,7 +43,7 @@ jobs:
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
           task-definition: socket/task-definition.json
-          container-name: onad_socket
+          container-name: onad-banner-broad
           image: ${{ secrets.DOCKER_USERNAME }}/onad_socket:${{ github.sha }}
 
       - name: Deploy Amazon ECS task definition
