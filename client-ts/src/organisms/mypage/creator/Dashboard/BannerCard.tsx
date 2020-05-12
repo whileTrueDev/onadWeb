@@ -22,7 +22,7 @@ export interface CurrentBannerRes {
   marketerName: string; bannerSrc: string; bannerDescription: string;
 }
 
-interface BannerCardProps {currentBannerData: CurrentBannerRes[]}
+interface BannerCardProps { currentBannerData: CurrentBannerRes[] }
 function BannerCard({ currentBannerData }: BannerCardProps): JSX.Element {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
@@ -78,7 +78,7 @@ function BannerCard({ currentBannerData }: BannerCardProps): JSX.Element {
               onClick={handlePopoverClick(index)}
               key={shortid.generate()}
             >
-              { isVideo(bannerData.bannerSrc) ? (
+              {isVideo(bannerData.bannerSrc) ? (
                 <VideoBanner
                   src={bannerData.bannerSrc}
                   onMouseEnter={handlePopoverOpen(index)}
@@ -89,26 +89,26 @@ function BannerCard({ currentBannerData }: BannerCardProps): JSX.Element {
                   style={{ maxHeight: '160px', maxWidth: '320px' }}
                 />
               ) : (
-                <img
-                  src={bannerData.bannerSrc}
-                  onMouseEnter={handlePopoverOpen(index)}
-                  onMouseLeave={handlePopoverClose}
-                  alt="bannerArea"
-                  width="100%"
-                  height="100%"
-                  style={{ maxHeight: '160px', maxWidth: '320px' }}
-                />
-              )}
+                  <img
+                    src={bannerData.bannerSrc}
+                    onMouseEnter={handlePopoverOpen(index)}
+                    onMouseLeave={handlePopoverClose}
+                    alt="bannerArea"
+                    width="100%"
+                    height="100%"
+                    style={{ maxHeight: '160px', maxWidth: '320px' }}
+                  />
+                )}
             </Grid>
           ))}
           {currentBannerData.length <= 0 && (
-          <div className={classes.area}>
-            <Typography variant="h6" className={classes.head}>
-              <span role="img" aria-label="caution">🚫</span>
-              {' '}
-              현재 송출 중인 배너가 없습니다.
-            </Typography>
-          </div>
+            <div className={classes.area}>
+              <Typography variant="h6" className={classes.head}>
+                <span role="img" aria-label="caution">🚫</span>
+                {' '}
+                매칭된 광고가 없습니다.
+              </Typography>
+            </div>
           )}
         </Grid>
         <Grid item />

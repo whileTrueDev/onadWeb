@@ -81,9 +81,9 @@ const CampaignNaming = (props: CampaignNamingProps): JSX.Element => {
   };
 
   const handleChangeName = (): void => {
-    const inputName = getName();
+    const inputName: string = getName();
     if (inputName.length >= 2) {
-      checkCampaignName(inputName);
+      nameDispatch({ key: 'set', value: inputName });
     }
   };
 
