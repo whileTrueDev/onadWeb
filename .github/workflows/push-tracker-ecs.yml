@@ -1,8 +1,8 @@
 on:
   push:
     branches: [master]
-    paths:
-      - "tracker/**"
+    # paths:
+    #   - "tracker/**"
 
 name: Deploy to Amazon ECS - "tracker"
 
