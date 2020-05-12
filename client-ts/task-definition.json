@@ -1,0 +1,145 @@
+{
+    "ipcMode": null,
+    "executionRoleArn": "arn:aws:iam::803609402610:role/ecsTaskExecutionRole",
+    "containerDefinitions": [
+        {
+            "dnsSearchDomains": null,
+            "logConfiguration": {
+                "logDriver": "awslogs",
+                "secretOptions": null,
+                "options": {
+                    "awslogs-group": "/ecs/onad-web",
+                    "awslogs-region": "ap-northeast-2",
+                    "awslogs-stream-prefix": "ecs"
+                }
+            },
+            "entryPoint": null,
+            "portMappings": [
+                {
+                    "hostPort": 3001,
+                    "protocol": "tcp",
+                    "containerPort": 3001
+                }
+            ],
+            "command": null,
+            "linuxParameters": null,
+            "cpu": 0,
+            "environment": [
+                {
+                    "name": "PUBLIC_URL",
+                    "value": "https://onad.io"
+                }
+            ],
+            "resourceRequirements": null,
+            "ulimits": null,
+            "dnsServers": null,
+            "mountPoints": [],
+            "workingDirectory": null,
+            "secrets": [
+                {
+                    "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/PRODUCTION_REACT_HOSTNAME",
+                    "name": "REACT_APP_PRODUCTION_REACT_HOSTNAME"
+                },
+                {
+                    "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/DEV_REACT_HOSTNAME",
+                    "name": "REACT_APP_DEV_REACT_HOSTNAME"
+                },
+                {
+                    "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/PRODUCTION_API_HOSTNAME",
+                    "name": "REACT_APP_PRODUCTION_API_HOSTNAME"
+                },
+                {
+                    "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/DEV_API_HOSTNAME",
+                    "name": "REACT_APP_DEV_API_HOSTNAME"
+                }
+            ],
+            "dockerSecurityOptions": null,
+            "memory": null,
+            "memoryReservation": 800,
+            "volumesFrom": [],
+            "stopTimeout": null,
+            "image": "hwasurr/onad_web",
+            "startTimeout": null,
+            "firelensConfiguration": null,
+            "dependsOn": null,
+            "disableNetworking": null,
+            "interactive": null,
+            "healthCheck": null,
+            "essential": true,
+            "links": null,
+            "hostname": null,
+            "extraHosts": null,
+            "pseudoTerminal": null,
+            "user": null,
+            "readonlyRootFilesystem": null,
+            "dockerLabels": null,
+            "systemControls": null,
+            "privileged": null,
+            "name": "onad-web"
+        }
+    ],
+    "placementConstraints": [],
+    "memory": "1024",
+    "taskRoleArn": null,
+    "compatibilities": [
+        "EC2",
+        "FARGATE"
+    ],
+    "taskDefinitionArn": "arn:aws:ecs:ap-northeast-2:803609402610:task-definition/onad-web:3",
+    "family": "onad-web",
+    "requiresAttributes": [
+        {
+            "targetId": null,
+            "targetType": null,
+            "value": null,
+            "name": "com.amazonaws.ecs.capability.logging-driver.awslogs"
+        },
+        {
+            "targetId": null,
+            "targetType": null,
+            "value": null,
+            "name": "ecs.capability.execution-role-awslogs"
+        },
+        {
+            "targetId": null,
+            "targetType": null,
+            "value": null,
+            "name": "com.amazonaws.ecs.capability.docker-remote-api.1.19"
+        },
+        {
+            "targetId": null,
+            "targetType": null,
+            "value": null,
+            "name": "com.amazonaws.ecs.capability.docker-remote-api.1.21"
+        },
+        {
+            "targetId": null,
+            "targetType": null,
+            "value": null,
+            "name": "ecs.capability.secrets.ssm.environment-variables"
+        },
+        {
+            "targetId": null,
+            "targetType": null,
+            "value": null,
+            "name": "com.amazonaws.ecs.capability.docker-remote-api.1.18"
+        },
+        {
+            "targetId": null,
+            "targetType": null,
+            "value": null,
+            "name": "ecs.capability.task-eni"
+        }
+    ],
+    "pidMode": null,
+    "requiresCompatibilities": [
+        "FARGATE"
+    ],
+    "networkMode": "awsvpc",
+    "cpu": "512",
+    "revision": 3,
+    "status": "ACTIVE",
+    "inferenceAccelerators": null,
+    "proxyConfiguration": null,
+    "volumes": []
+}
