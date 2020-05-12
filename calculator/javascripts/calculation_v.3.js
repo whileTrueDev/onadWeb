@@ -1,12 +1,9 @@
-const schedule = require('node-schedule');
 const Notification = require('./notification');
 const pool = require('../model/connectionPool');
 const sendAlimtalk = require('./alimtalk');
 
 // 시청자수 1회당 가격
 const PPP = 2;
-
-// 마케터 대비 크리에이터가 받는 돈의 비율 => 노출량 10회에 마케터는 PPP X 10 / 크리에이터는 PPP X 10 X FEERATE
 const FEERATE = 0.5;
 
 const doConnectionQuery = ({ connection, queryState, params }) => new Promise((resolve, reject) => {
@@ -45,7 +42,8 @@ const getcreatorList = ({ date }) => {
   LEFT JOIN
   campaign
   ON RT.campaignId = campaign.campaignId
-  WHERE NOT campaign.limitState = 1`;
+  WHERE NOT campaign.limitState = 1
+  GROUP BY creatorId`;
 
   return new Promise((resolve, reject) => {
     pool.getConnection((err, connection) => {
@@ -61,7 +59,6 @@ const getcreatorList = ({ date }) => {
             // 실제 현재 방송 중인 크리에이터이다.
             const streamers = streamerListData.map((streamerData) => streamerData.streamerId);
             const uniqueStreamers = Array.from(new Set(streamers));
-            // streamers의 중복을 제거하기 위해서 Array.from(new Set([1,2,4,6]))을 사용한다.
             const creators = bannerListData.reduce((result, bannerData) => {
               if (uniqueStreamers.includes(bannerData.creatorId)) {
                 result.push(bannerData);
@@ -379,7 +376,6 @@ const marketerZeroCalculate = ({ connection, marketerId }) => {
               reject(errorData);
             });
         } else if (debit <= 10000 && warning === 0) {
-          console.log(`${marketerId}의 잔액이 존재합니다.`);
           Promise.all([
             doTransacQuery({ connection, queryState: setWarningQuery, params: [marketerId] }),
             Notification({
@@ -392,7 +388,6 @@ const marketerZeroCalculate = ({ connection, marketerId }) => {
             resolve();
           });
         } else {
-          console.log(`${marketerId}의 잔액이 존재합니다.`);
           resolve();
         }
       }
@@ -520,8 +515,6 @@ const calculateConnectionWrap = ({
 
 // 계산프로그램시 필요한 함수
 async function getList(date) {
-  console.log(`크리에이터 인원을 계산합니다. 시작 시각 : ${new Date().toLocaleString()}`);
-
   // 계산할 대상을 탐색하는 함수.
   const creatorList = await getcreatorList({ date });
 
@@ -534,8 +527,6 @@ async function getList(date) {
     }
     return result;
   }, []);
-  console.log('해당시점에 배너 게시 중인 인원: ', returnList.length);
-  console.log(`크리에이터 인원 계산을 종료합니다. 시작 시각 : ${new Date().toLocaleString()}`);
   return returnList;
 }
 
@@ -545,7 +536,6 @@ async function calculation() {
   const calculateList = await getList(date);
 
   if (calculateList.length === 0) {
-    console.log('---------------------------------------------------');
     console.log(`계산 항목이 존재하지 않으므로 계산 종료합니다. 종료 시각 : ${new Date().toLocaleString()}`);
     return;
   }
@@ -579,8 +569,4 @@ async function calculation() {
     });
 }
 
-const scheduler = schedule.scheduleJob('5,15,25,35,45,55 * * * *', () => {
-  calculation();
-});
-
-module.exports = scheduler;
+module.exports = calculation;

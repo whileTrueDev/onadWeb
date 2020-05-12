@@ -17,6 +17,11 @@ yarn.lock
 # production
 /build
 
+
+# dependencies
+/ex_javascripts
+ex_javascripts/*
+
 # misc
 .DS_Store
 .env.local

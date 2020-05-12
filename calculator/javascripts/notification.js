@@ -1,5 +1,4 @@
 const doQuery = require('../model/doQuery');
-// const logger = require('./calculatorLogger');
 
 // userType : 마케터인가 크리에이터인가
 // type : 현재 어떠한 상황의 메세지인가 => 해당 값을 통해 messeage dictionary에서 꺼내 사용한다.

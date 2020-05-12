@@ -15,7 +15,7 @@ function isVideo(src: string): boolean {
 
 hiddenEventHandler(socket, THIS_URL, programType);
 let socketHost = '';
-socket.emit('new client', [THIS_URL, history]);
+socket.emit('new client', [THIS_URL, history, programType]);
 
 socket.on('host pass', (SOCKET_HOST: string) => {
   socketHost = SOCKET_HOST;
@@ -55,8 +55,12 @@ socket.on('img receive', (msg: string[]) => {
 
 socket.on('re-render at client', () => {
   bannerName = $('#banner-area').attr('name');
-  if (bannerName && document.visibilityState === 'visible') {
-    socket.emit('re-render', [THIS_URL, bannerName, programType]);
+  if (document.visibilityState === 'visible') {
+    if (bannerName) {
+      socket.emit('re-render', [THIS_URL, bannerName, programType]);
+    } else {
+      socket.emit('re-render', [THIS_URL, '', programType]);
+    }
   }
 });
 
