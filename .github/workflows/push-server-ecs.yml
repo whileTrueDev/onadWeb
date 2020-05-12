@@ -32,7 +32,7 @@ jobs:
       - name: Build, tag, and push image to Docker Hub
         uses: elgohr/Publish-Docker-Github-Action@2.14
         with:
-          workdir: /server
+          workdir: server
           name: ${{ secrets.DOCKER_USERNAME }}/onad_web_api
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
