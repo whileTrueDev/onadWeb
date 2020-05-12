@@ -1,8 +1,8 @@
 on:
   push:
     branches: [master]
-    # paths:
-    #   - "socket/**"
+    paths:
+      - "socket/**"
 
 name: Deploy to Amazon ECS - "socket"
 

@@ -1,10 +1,10 @@
 on:
   push:
     branches: [master]
-    paths:
-      - "tracker/**"
+    # paths:
+    #   - "client-ts/**"
 
-name: Deploy to Amazon ECS - "tracker"
+name: Deploy to Amazon ECS - "client-ts"
 
 jobs:
   deploy:
@@ -24,7 +24,7 @@ jobs:
 
       - name: TS Build
         run: |
-          cd tracker
+          cd client-ts
           yarn
           yarn build
           cd -
@@ -32,8 +32,8 @@ jobs:
       - name: Build, tag, and push image to Docker Hub
         uses: elgohr/Publish-Docker-Github-Action@2.14
         with:
-          workdir: tracker
-          name: ${{ secrets.DOCKER_USERNAME }}/onad_tracker
+          workdir: client-ts
+          name: ${{ secrets.DOCKER_USERNAME }}/onad_web
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
           tags: ${{ github.sha }}
@@ -42,14 +42,14 @@ jobs:
         id: task-def
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
-          task-definition: tracker/task-definition.json
-          container-name: onad-tracker
-          image: ${{ secrets.DOCKER_USERNAME }}/onad_tracker:${{ github.sha }}
+          task-definition: client-ts/task-definition.json
+          container-name: onad-web
+          image: ${{ secrets.DOCKER_USERNAME }}/onad_web:${{ github.sha }}
 
       - name: Deploy Amazon ECS task definition
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
           task-definition: ${{ steps.task-def.outputs.task-definition }}
-          service: ${{ secrets.ECS_SERVICE_NAME_TRACKER }}
+          service: ${{ secrets.ECS_SERVICE_NAME_REACT_SERVER }}
           cluster: ${{ secrets.ECS_CLUSTER_NAME }}
           wait-for-service-stability: true
