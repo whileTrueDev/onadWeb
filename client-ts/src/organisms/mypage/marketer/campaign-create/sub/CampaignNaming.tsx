@@ -84,7 +84,6 @@ const CampaignNaming = (props: CampaignNamingProps): JSX.Element => {
     const inputName: string = getName();
     if (inputName.length >= 2) {
       nameDispatch({ key: 'set', value: inputName });
-      // checkCampaignName(inputName); 
     }
   };
 
