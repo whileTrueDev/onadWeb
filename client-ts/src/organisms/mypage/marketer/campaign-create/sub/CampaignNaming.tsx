@@ -2,7 +2,6 @@ import React from 'react';
 import { Grid } from '@material-ui/core';
 import Check from '@material-ui/icons/Check';
 import { makeStyles, Theme } from '@material-ui/core/styles';
-import useGetRequest from '../../../../../utils/hooks/useGetRequest';
 import StyledItemText from '../../../../../atoms/StyledItemText';
 import Success from '../../../../../atoms/Typography/Success';
 import DangerTypography from '../../../../../atoms/Typography/Danger';
@@ -55,17 +54,6 @@ const CampaignNaming = (props: CampaignNamingProps): JSX.Element => {
     nameState, nameDispatch
   } = props;
   const classes = useStyles();
-  const nameData = useGetRequest('/marketer/campaign/names');
-
-  const checkCampaignName = (value: string): void => {
-    if (!nameData.loading && !nameData.error) {
-      if (nameData.data.includes(value)) {
-        nameDispatch({ key: 'duplicate', value: '' });
-      } else {
-        nameDispatch({ key: 'set', value });
-      }
-    }
-  };
 
   // document element 값 접근시 필요.
   const getName = (): string => {

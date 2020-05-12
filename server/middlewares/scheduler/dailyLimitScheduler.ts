@@ -10,7 +10,7 @@ function calculation() {
   doQuery(updateQuery, []);
 }
 
-const scheduler = schedule.scheduleJob('0 * * *', () => {
+const scheduler = schedule.scheduleJob('Marketer CampaignLimitState update scheduler', '0 * * *', () => {
   calculation();
 });
 
