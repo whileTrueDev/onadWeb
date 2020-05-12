@@ -9,6 +9,14 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.background.paper,
     fontFamily: 'Noto Sans KR',
   },
+  MustTopic: {
+    backgroundColor: '#F5A9A9',
+    color: '#000'
+  },
+  JustTopic: {
+    backgroundColor: '#fff',
+    color: '#000'
+  }
 }));
 
 export default useStyles;

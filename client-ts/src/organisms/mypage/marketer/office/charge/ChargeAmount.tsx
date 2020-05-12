@@ -80,7 +80,7 @@ const TestChargeAmount = (props: TestChargeAmountProps): JSX.Element => {
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
     dispatch({ key: 'selectValue', value: event.target.value });
-    dispatch({ key: 'totalDebit', value: (Number(currentCash.replace(',', '')) + Number(event.target.value)).toString() });
+    dispatch({ key: 'totalDebit', value: (Number(currentCash.replace(/,/gi, '')) + Number(event.target.value)).toString() });
     setStepComplete(true);
   };
 

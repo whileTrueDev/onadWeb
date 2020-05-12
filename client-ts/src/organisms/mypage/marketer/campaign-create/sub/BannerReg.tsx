@@ -8,6 +8,9 @@ import BannerCarousel from '../../../../../atoms/BannerCarousel';
 import Button from '../../../../../atoms/CustomButtons/Button';
 import { UseGetRequestObject } from '../../../../../utils/hooks/useGetRequest';
 import { Action } from '../campaignReducer';
+import useDialog from '../../../../../utils/hooks/useDialog';
+import Inquire from '../../../../main/main/Inquiry/Inquiry';
+import Dialog from '../../../../../atoms/Dialog/Dialog';
 
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -58,7 +61,7 @@ const CampaignBannerReg = (props: CampaignBannerRegProps): JSX.Element => {
     dispatch, handleDialogOpen, bannerData, step
   } = props;
   const classes = useStyles();
-
+  const InquireDialog = useDialog();
   const handleBannerId = (bannerId: string): void => {
     dispatch({ key: 'bannerId', value: bannerId });
   };
@@ -96,6 +99,27 @@ const CampaignBannerReg = (props: CampaignBannerRegProps): JSX.Element => {
       >
         + 배너 등록하기
       </Button>
+      <Button
+        onClick={(): void => { InquireDialog.handleOpen(); }}
+        color="primary"
+      >
+        배너가 없으신가요?
+      </Button>
+      <Dialog
+        open={Boolean(InquireDialog.open)}
+        onClose={InquireDialog.handleClose}
+        fullWidth
+        maxWidth="md"
+        buttons={(
+          <div>
+            <Button onClick={InquireDialog.handleClose}>
+              취소
+            </Button>
+          </div>
+        )}
+      >
+        <Inquire confirmClose={InquireDialog.handleClose} />
+      </Dialog>
     </Grid>
   );
 };

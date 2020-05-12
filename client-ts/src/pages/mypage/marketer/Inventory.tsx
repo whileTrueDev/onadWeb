@@ -8,6 +8,7 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
+import Button from '@material-ui/core/Button';
 
 import GridContainer from '../../../atoms/Grid/GridContainer';
 import GridItem from '../../../atoms/Grid/GridItem';
@@ -25,7 +26,8 @@ import dashboardStyle from '../../../assets/jss/views/dashboardStyle';
 import useDialog from '../../../utils/hooks/useDialog';
 import useGetRequest from '../../../utils/hooks/useGetRequest';
 import { BannerDataInterface, UrlDataInterface } from '../../../organisms/mypage/marketer/inventory/interface';
-
+import Dialog from '../../../atoms/Dialog/Dialog';
+import Inquire from '../../../organisms/main/main/Inquiry/Inquiry';
 
 function TabPanel(props: any): JSX.Element {
   const {
@@ -63,7 +65,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 const Inventory = (): JSX.Element => {
   const bannerData = useGetRequest<null, BannerDataInterface[] | null>('/marketer/banner/list');
   const urlData = useGetRequest<null, UrlDataInterface[] | null>('/marketer/landing-url/list');
-
+  const InquireDialog = useDialog();
   // banner
   const deleteDialog = useDialog();
   const uploadDialog = useDialog();
@@ -94,6 +96,9 @@ const Inventory = (): JSX.Element => {
           <TabPanel value={value} index={0}>
             <CustomButton color="primary" size="large" onClick={(): void => { uploadDialog.handleOpen(); }}>
               + 새 배너 등록
+            </CustomButton>
+            <CustomButton color="primary" size="large" onClick={(): void => { InquireDialog.handleOpen(); }}>
+              배너가 없으신가요?
             </CustomButton>
             <BannerTable
               handleDeleteOpen={deleteDialog.handleOpen}
@@ -145,6 +150,21 @@ const Inventory = (): JSX.Element => {
 
         />
       )}
+      <Dialog
+        open={Boolean(InquireDialog.open)}
+        onClose={InquireDialog.handleClose}
+        fullWidth
+        maxWidth="md"
+        buttons={(
+          <div>
+            <Button onClick={InquireDialog.handleClose}>
+              취소
+            </Button>
+          </div>
+        )}
+      >
+        <Inquire confirmClose={InquireDialog.handleClose} />
+      </Dialog>
 
     </GridContainer>
 
