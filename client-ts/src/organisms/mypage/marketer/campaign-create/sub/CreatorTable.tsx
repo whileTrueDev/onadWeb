@@ -43,7 +43,12 @@ const useStyles = makeStyles((theme) => ({
   table: {
     boxShadow: 'none',
     overflow: 'hidden'
-  }
+  },
+  left: {
+    display: 'flex',
+    justifyContent: 'left',
+    alignItems: 'left'
+  },
 }));
 
 interface CreatorTableProps {
@@ -76,17 +81,41 @@ export default function CreatorTable(props: CreatorTableProps): JSX.Element {
   const makeValueComponent = ({
     value, unit
   }: { value: string | number; unit: string }): JSX.Element => (
-    <div className={classes.flex}>
-      <Typography gutterBottom variant="h6">
-        {value}
-      </Typography>
-      <Typography variant="body2" gutterBottom className={classes.unit}>{unit}</Typography>
-    </div>
-  );
+      <div>
+        <Grid container direction="row" className={classes.left}>
+          <Grid item>
+            <Typography gutterBottom variant="h6">
+              {value}
+            </Typography>
+          </Grid>
+          <Grid item className={classes.flex}>
+            <Typography variant="body2" gutterBottom className={classes.unit}>{unit}</Typography>
+          </Grid>
+        </Grid>
+      </div>
+    );
+
+
+  const makeCenterComponent = ({
+    value, unit
+  }: { value: string | number; unit: string }): JSX.Element => (
+      <div>
+        <Grid container direction="row" className={classes.flex}>
+          <Grid item>
+            <Typography gutterBottom variant="h6">
+              {value}
+            </Typography>
+          </Grid>
+          <Grid item className={classes.flex}>
+            <Typography variant="body2" gutterBottom className={classes.unit}>{unit}</Typography>
+          </Grid>
+        </Grid>
+      </div>
+    );
 
   const makeChartComponent = ({ value }: { value: string }): JSX.Element => (
-    <div className={classes.flex}>
-      <Typography gutterBottom variant="body1" style={{ fontWeight: 500 }}>
+    <div className={classes.left}>
+      <Typography gutterBottom style={{ fontWeight: 500 }}>
         {value}
       </Typography>
     </div>
@@ -114,45 +143,45 @@ export default function CreatorTable(props: CreatorTableProps): JSX.Element {
       )
     },
     {
-      title: '팔로워',
+      title: '팔로워 수',
       field: 'followers',
       render: (rowData: CreatorDetailDataInterface): JSX.Element => (
         makeValueComponent({ value: rowData.followers, unit: '명' })
       )
     },
     {
-      title: '평균 시청자수',
+      title: '평균 시청자 수',
       field: 'viewer',
       render: (rowData: CreatorDetailDataInterface): JSX.Element => (
         makeValueComponent({ value: rowData.viewer, unit: '명' })
       )
     },
     {
-      title: '평균 방송시간',
+      title: '평균 방송 시간',
       field: 'airtime',
       render: (rowData: CreatorDetailDataInterface): JSX.Element => (
-        makeValueComponent({ value: rowData.airtime, unit: '분' })
+        makeValueComponent({ value: rowData.airtime, unit: '시간' })
       )
     },
     {
-      title: '평균 노출량',
+      title: '방송당 평균 노출량',
       field: 'impression',
       render: (rowData: CreatorDetailDataInterface): JSX.Element => (
-        makeValueComponent({ value: rowData.impression, unit: '명' })
+        makeCenterComponent({ value: rowData.impression, unit: '회' })
       )
     },
     {
-      title: '평균 노출비용',
+      title: '시간당 예상 노출 비용',
       field: 'cost',
       render: (rowData: CreatorDetailDataInterface): JSX.Element => (
-        makeValueComponent({ value: rowData.cost, unit: '원' })
+        makeCenterComponent({ value: rowData.cost, unit: '원' })
       )
     },
     {
-      title: '배너 클릭률',
+      title: '일간 평균 클릭 수',
       field: 'ctr',
       render: (rowData: CreatorDetailDataInterface): JSX.Element => (
-        makeValueComponent({ value: rowData.ctr, unit: '%' })
+        makeCenterComponent({ value: Math.round(rowData.ctr), unit: '회' })
       )
     },
     {
@@ -192,7 +221,7 @@ export default function CreatorTable(props: CreatorTableProps): JSX.Element {
           // className={classes.table}
           title=""
           columns={columns}
-          cellWidth={80}
+          cellWidth={90}
           data={fetchData.data.filter((creator) => !(creator.creatorId === '472147060'))} // 지나가언젠가 제거
           detailPanel={[
             {

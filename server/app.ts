@@ -23,6 +23,8 @@ import noticeRouter from './routes/notice';
 import trackingRouter from './routes/tracking';
 // Middleware or custom modules
 import taxBillScheduler from './middlewares/scheduler/taxBillScheduler';
+import dailyLimitScheduler from './middlewares/scheduler/dailyLimitScheduler';
+
 // import S3 from './lib/AWS/S3';
 import Controller from './controller';
 
@@ -183,6 +185,8 @@ class OnadWebApi {
 
 console.log('ENVIRONMENT: ', process.env.NODE_ENV);
 console.log(`SCHEDULER: [${taxBillScheduler.name}] - ON `);
+console.log(`SCHEDULER: [${dailyLimitScheduler.name}] - ON `);
+
 
 // 선언만 하고 start는 bin에서 시작
 module.exports = OnadWebApi;
