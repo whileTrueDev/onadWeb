@@ -1,5 +1,10 @@
 FROM node:12.16.1-alpine
 ENV NODE_ENV production
+
+# timezone 설정
+ENV TZ=Asia/Seoul
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
 RUN mkdir -p /home/tracker
 WORKDIR /home/tracker
 COPY ./dist /home/tracker/dist
