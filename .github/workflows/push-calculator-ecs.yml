@@ -1,8 +1,8 @@
 on:
   push:
     branches: [master]
-    paths:
-      - "calculator/**"
+    # paths:
+    #   - "calculator/**"
 
 name: Deploy to Amazon ECS - "calculator"
 
