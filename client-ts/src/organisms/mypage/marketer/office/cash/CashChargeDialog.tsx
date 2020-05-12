@@ -85,7 +85,7 @@ function CashDialog(props: CashDialogProps): JSX.Element {
   // select value
   const { selectValue, handleChange } = useValue('10000');
   const chargeType = useValue('무통장입금');
-  const currentCashNumber = currentCash.replace(',', '');
+  const currentCashNumber = currentCash.replace(/,/gi, '');
   const totalDebit = Number(currentCashNumber) + Number(selectValue);
 
   // 출금신청 스낵바
