@@ -479,11 +479,8 @@ const calculateConnectionWrap = ({
         resolve();
       })
       .catch((errorData) => {
-        console.log('-----------------------------------------------------------');
-        console.log(errorData);
-        console.log('--------위의 사유로 인하여 에러가 발생하였습니다.-------------');
         connection.release();
-        reject();
+        reject(errorData);
       });
   });
 });
@@ -499,8 +496,7 @@ const nextCalculate = ({ marketerList, campaignList }) => new Promise((resolve, 
         resolve();
       })
       .catch((error) => {
-        console.log(error);
-        reject();
+        reject(error);
       });
   }, 30000);
 });
@@ -557,11 +553,19 @@ const calculationPromise = async () => {
               console.log(`CPM 계산을 종료합니다. 종료 시각 : ${new Date().toLocaleString()}`);
               resolve();
             })
+            .catch((errorData) => {
+              console.log('-----------------------------------------------------------');
+              console.log(errorData.sqlMessage);
+              console.log('--------위의 사유로 인하여 에러가 발생하였습니다.-------------');
+              console.log(`CPM 계산을 종료합니다. 종료 시각 : ${new Date().toLocaleString()}`);
+              resolve();
+            }) // 에러 핸들링 여부 확인
         )
         .catch((errorData) => {
           console.log('-----------------------------------------------------------');
-          console.log(errorData);
+          console.log(errorData.sqlMessage);
           console.log('--------위의 사유로 인하여 에러가 발생하였습니다.-------------');
+          console.log(`CPM 계산을 종료합니다. 종료 시각 : ${new Date().toLocaleString()}`);
           resolve();
         });
     }
