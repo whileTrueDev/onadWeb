@@ -45,4 +45,50 @@ const doQuery = (query, queryArray = []) => new Promise((resolve, reject) => {
   });
 });
 
-module.exports = doQuery;
+const doTransacQuery = ({ connection, queryState, params }) => new Promise((resolve, reject) => {
+  connection.beginTransaction((err) => {
+    if (err) {
+      console.log('doTransacQuery err');
+      console.log(err);
+      reject(err);
+    }
+    connection.query(queryState, params, (err1, result) => {
+      if (err1) {
+        console.log('doTransacQuery err1');
+        console.log(err1);
+        connection.rollback(() => {
+          reject(err1);
+        });
+      } else {
+        connection.commit((err2) => {
+          if (err2) {
+            console.log('doTransacQuery err2');
+            console.log(err2);
+            connection.rollback(() => {
+              reject(err2);
+            });
+          } else {
+            resolve();
+          }
+        });
+      }
+    });
+  });
+});
+
+const doConnectionQuery = ({ connection, queryState, params }) => new Promise((resolve, reject) => {
+  connection.query(queryState, params, (err, result) => {
+    if (err) {
+      reject(err);
+    } else {
+      resolve(result);
+    }
+  });
+});
+
+
+module.exports = {
+  doQuery,
+  doTransacQuery,
+  doConnectionQuery
+};

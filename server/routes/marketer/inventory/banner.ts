@@ -19,6 +19,7 @@ router.route('/list/active')
         WHERE marketerId = ? AND (confirmState = 0 OR confirmState = 1)
         ORDER BY regiDate DESC 
         `;
+
       doQuery(query, [marketerId])
         .then((row) => {
           responseHelper.send(row.result, 'get', res);
