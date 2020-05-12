@@ -1,4 +1,4 @@
-function hiddenEventHandler(socket: any, THIS_URL: string, history: number, programType: string): void {
+function hiddenEventHandler(socket: any, THIS_URL: string, programType: string): void {
   const cutUrl = `/${THIS_URL.split('/')[4]}`;
   document.addEventListener('visibilitychange', () => {
     if (document.visibilityState === 'hidden') {
@@ -6,10 +6,12 @@ function hiddenEventHandler(socket: any, THIS_URL: string, history: number, prog
       socket.emit('pageActive handler', [cutUrl, false, programType]);
       socket.close();
       $('#imgMessage').empty();
-    } else {
+    } else if (document.visibilityState === 'visible') {
       socket.open();
-      socket.emit('pageActive handler', [cutUrl, true, programType]);
-      socket.emit('pageOn', [THIS_URL, programType]);
+      setTimeout(() => {
+        socket.emit('pageActive handler', [cutUrl, true, programType]);
+        socket.emit('pageOn', [THIS_URL, programType]);
+      }, 1000);
     }
   });
 }

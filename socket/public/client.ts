@@ -13,7 +13,7 @@ function isVideo(src: string): boolean {
   return videoRegex.test(src);
 }
 
-hiddenEventHandler(socket, THIS_URL, history, programType);
+hiddenEventHandler(socket, THIS_URL, programType);
 imageClicker(socket, THIS_URL, programType);
 
 let socketHost = '';

@@ -71,12 +71,12 @@ interface SocketInfo {
         const CLIENT_URL = msg[0];
         const HISTORY = msg[1];
         const programType = msg[2];
-
+        console.log('new client');
         if (process.env.NODE_ENV === 'development') {
           console.log('SOCKET ON');
           socket.emit('host pass', SOCKET_HOST);
           callImg(socket, [CLIENT_URL, '', programType]);
-        } else if (HISTORY !== 1) {
+        } else if (programType !== 'twitch-studio' && HISTORY !== 1) {
           const DESTINATION_URL = `${SOCKET_HOST}/browserWarn`;
           socket.emit('browser warning', DESTINATION_URL);
         }
