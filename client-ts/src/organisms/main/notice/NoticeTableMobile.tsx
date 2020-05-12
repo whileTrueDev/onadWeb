@@ -40,8 +40,11 @@ export default function NoticeTableMobile({ data }: Props): JSX.Element {
                 expandIcon={<ExpandMoreIcon />}
                 aria-controls="panel1a-content"
                 id="panel1a-header"
+                className={row.topic === '필독' ? (classes.MustTopic) : (classes.JustTopic)}
               >
-                <div style={{ display: 'flex', flexDirection: 'column', fontFamily: 'Noto Sans KR' }}>
+                <div
+                  style={{ display: 'flex', flexDirection: 'column', fontFamily: 'Noto Sans KR' }}
+                >
                   <ListItemText secondary={row.topic} />
                   <ListItemText
                     primary={row.title}
