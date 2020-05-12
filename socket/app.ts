@@ -71,7 +71,6 @@ interface SocketInfo {
         const CLIENT_URL = msg[0];
         const HISTORY = msg[1];
         const programType = msg[2];
-        console.log('new client');
         if (process.env.NODE_ENV === 'development') {
           console.log('SOCKET ON');
           socket.emit('host pass', SOCKET_HOST);
