@@ -23,20 +23,15 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   loginButtonRight2: {
+    marginTop: 20,
+    marginBottom: 40,
     width: '100%',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
-    [theme.breakpoints.down('sm')]: {
-      display: 'none'
-    },
-    [theme.breakpoints.down('xs')]: {
-      display: 'none'
-    },
   },
   exBanner: {
-    boxShadow: '0px 0px 10px 0px rgba(0,0,0,0.75)',
     width: '900px',
     height: '700px',
     [theme.breakpoints.down('lg')]: {
@@ -55,18 +50,21 @@ const useStyles = makeStyles((theme) => ({
       width: '300px',
       height: '240px',
     },
-
   },
   exBanner2: {
-    width: '1200px',
-    height: 250,
-    [theme.breakpoints.down('md')]: {
+    width: '1000px',
+    height: '800px',
+    [theme.breakpoints.down('lg')]: {
       width: '900px',
-      height: '190px',
+      height: '700px',
+    },
+    [theme.breakpoints.down('md')]: {
+      width: '700px',
+      height: '550px',
     },
     [theme.breakpoints.down('sm')]: {
-      width: '550px',
-      height: '110px',
+      width: '500px',
+      height: '400px',
     },
     [theme.breakpoints.down('xs')]: {
       width: '300px',
@@ -126,7 +124,7 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: 15,
     fontSize: 30,
     fontFamily: 'Noto Sans KR',
-    fontWeight: 550,
+    fontWeight: 600,
     [theme.breakpoints.down('md')]: {
       fontSize: 25
     },
@@ -207,7 +205,7 @@ const useStyles = makeStyles((theme) => ({
     textAlign: 'left'
   },
   costCard2: {
-    width: '40%',
+    width: '50%',
     display: 'flex',
     flexDirection: 'column',
     padding: 30,
@@ -220,28 +218,6 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.down('xs')]: {
       width: '85%',
     },
-  },
-  textWrapper: {
-    width: 1200,
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    [theme.breakpoints.down('md')]: {
-      width: '900px',
-    },
-    [theme.breakpoints.down('sm')]: {
-      width: '550px',
-    },
-    [theme.breakpoints.down('xs')]: {
-      width: '300px',
-    },
-  },
-  text: {
-    margin: 5,
-    fontFamily: 'Noto Sans KR',
-    fontSize: 15,
-    fontWeight: 550,
-    textAlign: 'center',
   },
 }));
 

@@ -96,8 +96,8 @@ const styles = makeStyles((theme) => ({
       height: '380px',
     },
     [theme.breakpoints.down('sm')]: {
-      width: '380px',
-      height: '280px',
+      width: '300px',
+      height: '240px',
     },
     [theme.breakpoints.down('xs')]: {
       width: '300px',
@@ -112,20 +112,20 @@ const styles = makeStyles((theme) => ({
     '&:active, &:focus': {
       boxShadow: 'none',
     },
-    width: '210px',
+    width: '240px',
     color: '#3154EB',
     borderRadius: '5px',
     border: '1px solid #3154EB',
     [theme.breakpoints.down('md')]: {
-      width: '210px',
+      width: '230px',
       fontSize: 18,
     },
     [theme.breakpoints.down('sm')]: {
-      width: '170px',
+      width: '190px',
       fontSize: 13,
     },
     [theme.breakpoints.down('xs')]: {
-      width: '170px',
+      width: '190px',
       fontSize: 13,
     },
   },
@@ -148,16 +148,16 @@ const styles = makeStyles((theme) => ({
     width: 400,
     height: 120,
     [theme.breakpoints.down('md')]: {
-      width: '300px',
-      height: '100px',
+      width: '350px',
+      height: '105px',
     },
     [theme.breakpoints.down('sm')]: {
-      width: '250px',
-      height: '85px',
+      width: '225px',
+      height: '75px',
     },
     [theme.breakpoints.down('xs')]: {
       width: '250px',
-      height: '85px',
+      height: '75px',
     },
   },
   slide: {
@@ -175,7 +175,7 @@ const styles = makeStyles((theme) => ({
     [theme.breakpoints.down('sm')]: {
       width: '380px',
       height: '280px',
-      marginRight: 40,
+      marginRight: 0,
     },
     [theme.breakpoints.down('xs')]: {
       width: '300px',

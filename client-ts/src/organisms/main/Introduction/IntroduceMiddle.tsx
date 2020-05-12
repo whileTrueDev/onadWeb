@@ -45,11 +45,14 @@ export default function IntroduceTop({ userType }: { userType: string | boolean 
               <h1 className={classes.h1}>
                 광고페이지(CPC)
               </h1>
-              <p className={classes.subAdtitle2}>랜딩 페이지(예: 회사 홈페이지, 쇼핑몰)로의 유입을 원하는 광고주를 위한 형태</p>
+              <p className={classes.subAdtitle2}>
+                랜딩 페이지(예: 회사 홈페이지, 쇼핑몰)로의 유입을 원하는 광고주를 위한 형태
+              </p>
               <div className={classes.costCardWrapper}>
                 <div className={classes.costCard2}>
-                  <h3 className={classes.costCardTitle}>광고형식</h3>
-                  <p className={classes.costCardCon}>개인방송 플랫폼 하단 링크를 동해 광고페이지로 이동</p>
+                  <h3 className={classes.costCardTitle}>광고형식 1. 패널</h3>
+                  <p className={classes.costCardCon}>크리에이터님이 개인방송 플랫폼(채널)에 패널 등록 후</p>
+                  <p className={classes.costCardCon}>패널 클릭시 지금 송출되는 광고 랜딩페이지로 이동합니다.</p>
                 </div>
                 <div className={classes.costCard2}>
                   <h3 className={classes.costCardTitle}>
@@ -58,27 +61,31 @@ export default function IntroduceTop({ userType }: { userType: string | boolean 
                   <p className={classes.costCardCon}>100 CPC (클릭당 비용 = 100원/1회 클릭)</p>
                 </div>
               </div>
-            </div>
-            <div className={classes.loginButtonRight2}>
-              <Grow in={trigger2} timeout={1000}>
-                <img src="/pngs/introduction/exCPC.png" alt="exCPC" className={classes.exBanner2} />
-              </Grow>
-              <Grow in={trigger2} timeout={1200}>
-                <div className={classes.textWrapper}>
-                  <div>
-                    <p className={classes.text}>1. 크리에이터가 개인방송 플랫폼(채널)에</p>
-                    <p className={classes.text}>개인 랜딩페이지링크 업로드</p>
-                  </div>
-                  <div>
-                    <p className={classes.text}>2. 실시간 방송 광고 배너를 본 시청자가</p>
-                    <p className={classes.text}>링크를 클릭해 개인 랜딩페이지로 이동</p>
-                  </div>
-                  <div>
-                    <p className={classes.text}>3. 관심있는 광고 배너를 클릭 후</p>
-                    <p className={classes.text}>랜딩페이지로 이동(CPC발생)</p>
-                  </div>
+              <div className={classes.loginButtonRight2}>
+                <Grow in={trigger2} timeout={1000}>
+                  <img src="/pngs/introduction/exCPC.png" alt="exCPC" className={classes.exBanner2} />
+                </Grow>
+              </div>
+
+
+              <div className={classes.costCardWrapper}>
+                <div className={classes.costCard2}>
+                  <h3 className={classes.costCardTitle}>광고형식 2. 채팅봇</h3>
+                  <p className={classes.costCardCon}>크리에이터님이 개인방송 플랫폼(채널)에 채팅봇 등록 후</p>
+                  <p className={classes.costCardCon}>채팅봇 클릭시 지금 송출되는 광고 랜딩페이지로 이동합니다.</p>
                 </div>
-              </Grow>
+                <div className={classes.costCard2}>
+                  <h3 className={classes.costCardTitle}>
+                    과금기준
+                  </h3>
+                  <p className={classes.costCardCon}>100 CPC (클릭당 비용 = 100원/1회 클릭)</p>
+                </div>
+              </div>
+              <div className={classes.loginButtonRight2}>
+                <Grow in={trigger2} timeout={1400}>
+                  <img src="/pngs/introduction/exChatbot.png" alt="exCPC" className={classes.exBanner2} />
+                </Grow>
+              </div>
             </div>
           </div>
         </div>
@@ -122,7 +129,7 @@ export default function IntroduceTop({ userType }: { userType: string | boolean 
               <div className={classes.costContent2}>
                 <p className={classes.subAdtitle}>배너광고에서 클릭까지</p>
                 <h1 className={classes.h1}>
-                  나만의 광고페이지
+                  지금 송출되는 광고 클릭해봐요
                 </h1>
                 <p className={classes.subAdtitle2}>
                   시청자의 참여와 관심이 추가 수익으로!
@@ -130,8 +137,9 @@ export default function IntroduceTop({ userType }: { userType: string | boolean 
                 </p>
                 <div className={classes.costCardWrapper}>
                   <div className={classes.costCard2}>
-                    <h3 className={classes.costCardTitle}>광고형식</h3>
-                    <p className={classes.costCardCon}>개인방송 플랫폼 하단 링크를 동해 광고페이지로 이동</p>
+                    <h3 className={classes.costCardTitle}>광고형식 1. 패널</h3>
+                    <p className={classes.costCardCon}>크리에이터님이 개인방송 플랫폼(채널)에 패널 등록 후</p>
+                    <p className={classes.costCardCon}>패널 클릭시 지금 송출되는 광고 랜딩페이지로 이동합니다.</p>
                   </div>
                   <div className={classes.costCard2}>
                     <h3 className={classes.costCardTitle}>
@@ -141,27 +149,32 @@ export default function IntroduceTop({ userType }: { userType: string | boolean 
                     <p className={classes.costCardCon}>배너광고와 별도로 적립돼요!</p>
                   </div>
                 </div>
-              </div>
-              <div className={classes.loginButtonRight2}>
-                <Grow in={trigger2} timeout={1000}>
-                  <img src="/pngs/introduction/exCPC.png" alt="exCPC" className={classes.exBanner2} />
-                </Grow>
-                <Grow in={trigger2} timeout={1200}>
-                  <div className={classes.textWrapper}>
-                    <div>
-                      <p className={classes.text}>1. 크리에이터가 개인방송 플랫폼(채널)에</p>
-                      <p className={classes.text}>개인 랜딩페이지링크 업로드</p>
-                    </div>
-                    <div>
-                      <p className={classes.text}>2. 실시간 방송 광고 배너를 본 시청자가</p>
-                      <p className={classes.text}>링크를 클릭해 개인 랜딩페이지로 이동</p>
-                    </div>
-                    <div>
-                      <p className={classes.text}>3. 관심있는 광고 배너를 클릭 후</p>
-                      <p className={classes.text}>랜딩페이지로 이동(CPC발생)</p>
-                    </div>
+                <div className={classes.loginButtonRight2}>
+                  <Grow in={trigger2} timeout={1000}>
+                    <img src="/pngs/introduction/exCPC.png" alt="exCPC" className={classes.exBanner2} />
+                  </Grow>
+                </div>
+
+
+                <div className={classes.costCardWrapper}>
+                  <div className={classes.costCard2}>
+                    <h3 className={classes.costCardTitle}>광고형식 2. 채팅봇</h3>
+                    <p className={classes.costCardCon}>크리에이터님이 개인방송 플랫폼(채널)에 채팅봇 등록 후</p>
+                    <p className={classes.costCardCon}>채팅봇 클릭시 지금 송출되는 광고 랜딩페이지로 이동합니다.</p>
                   </div>
-                </Grow>
+                  <div className={classes.costCard2}>
+                    <h3 className={classes.costCardTitle}>
+                      수익금
+                    </h3>
+                    <p className={classes.costCardCon}>시청자의 참여도(클릭, 다운로드, 구매 등)에 따라 수익이 쌓입니다</p>
+                    <p className={classes.costCardCon}>패널의 클릭과 합산되어 적립돼요!</p>
+                  </div>
+                </div>
+                <div className={classes.loginButtonRight2}>
+                  <Grow in={trigger2} timeout={1400}>
+                    <img src="/pngs/introduction/exChatbot.png" alt="exCPC" className={classes.exBanner2} />
+                  </Grow>
+                </div>
               </div>
             </div>
           </div>
