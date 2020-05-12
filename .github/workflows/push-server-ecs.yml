@@ -1,0 +1,54 @@
+on:
+  push:
+    branches: [master]
+    paths:
+      - "server/**"
+
+name: Deploy to Amazon ECS - "server"
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-northeast-2
+
+      - name: TS Build
+        run: |
+          cd server
+          yarn
+          yarn build
+          cd -
+
+      - name: Build, tag, and push image to Docker Hub
+        uses: elgohr/Publish-Docker-Github-Action@2.14
+        with:
+          name: ${{ secrets.DOCKER_USERNAME }}/onad_web_api
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+          tags: ${{ github.sha }}
+
+      - name: Fill in the new image ID in the Amazon ECS task definition
+        id: task-def
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: server/task-definition.json
+          container-name: onad_web_api
+          image: ${{ secrets.DOCKER_USERNAME }}/onad_web_api:${{ github.sha }}
+
+      - name: Deploy Amazon ECS task definition
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        with:
+          task-definition: ${{ steps.task-def.outputs.task-definition }}
+          service: ${{ secrets.ECS_SERVICE_NAME_API_SERVER }}
+          cluster: ${{ secrets.ECS_CLUSTER_NAME }}
+          wait-for-service-stability: true

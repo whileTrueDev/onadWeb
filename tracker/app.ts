@@ -77,7 +77,7 @@ app.get('/adchat/:creatorTwitchId', async (req, res, next) => {
 
   const result = await tracking(nowIp, userAgent, creatorTwitchId, costType);
   if (result.href) {
-    res.redirect(301, result.href);
+    res.redirect(302, result.href);
   } else {
     let message = '광고주 페이지로 이동중입니다...';
     if (result.message === 'Invalid ip'
