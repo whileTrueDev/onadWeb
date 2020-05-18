@@ -56,7 +56,7 @@ const doTransacQuery = ({ connection, queryState, params }) => new Promise((reso
   });
 });
 
-
+// 해당 시점에서의 크리에이터별로
 const getCreatorList = (date) => {
   const creatorListQuery = `
   SELECT creatorId, sum(payout) as payouts
@@ -90,6 +90,7 @@ const getCreatorList = (date) => {
       });
   });
 };
+
 
 const getCampaignList = (date) => {
   const campaignListQuery = `
@@ -349,7 +350,7 @@ async function calculation() {
     MarketerConnectionWarp({ marketerDic })
   ])
     .then(() => {
-      console.log("tracking calculator success");
+      console.log('tracking calculator success');
     });
 }
 

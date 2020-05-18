@@ -65,7 +65,7 @@ function RefundDialog(props: RefundDialogProps): JSX.Element {
     open, handleClose, currentCash, accountNumber, accountHolder
   } = props;
 
-  const currentCashNumber = Number(currentCash.replace(',', ''));
+  const currentCashNumber = Number(currentCash.replace(/,/gi, ''));
 
   // 환불 요청 절차에서 사용할(step2) State.
   const [stepState, stepDispatch] = useReducer(
