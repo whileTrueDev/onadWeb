@@ -7,7 +7,6 @@ export interface Session {
   creatorLogo?: string;
   creatorIp?: string | string[];
   marketerId?: string;
-  marketerUserType?: string;
   marketerMail?: string;
   marketerAccountNumber?: string;
   marketerBusinessRegNum?: string;

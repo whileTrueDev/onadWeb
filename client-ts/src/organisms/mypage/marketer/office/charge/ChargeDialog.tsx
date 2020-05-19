@@ -75,7 +75,6 @@ interface MarketerInfoInterface {
   marketerMail: string;
   marketerPhoneNum: string;
   marketerBusinessRegNum: string;
-  marketerUserType: number;
   marketerContraction: number;
   platformType: number;
 }

@@ -149,7 +149,6 @@ router.route('/')
                                     marketerPhoneNum= null,
                                     marketerBusinessRegNum= null,
                                     marketerBusinessRegSrc= null,
-                                    marketerUserType= null,
                                     marketerContraction= null,
                                     marketerAlarmAgreement= null,
                                     marketerEmailAuth= null,

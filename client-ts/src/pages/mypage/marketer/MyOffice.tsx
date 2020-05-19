@@ -27,7 +27,7 @@ export default function MyOffice(): JSX.Element {
   return (
     <>
 
-      <Typography variant="h5" style={{ marginTop: 35 }} color="textPrimary">내정보관리</Typography>
+      <Typography variant="h5" style={{ marginTop: 35 }} color="textPrimary">내 정보 관리</Typography>
       {/* 계정 관리 */}
       {userData.loading && (
         <MyOffceLoading />

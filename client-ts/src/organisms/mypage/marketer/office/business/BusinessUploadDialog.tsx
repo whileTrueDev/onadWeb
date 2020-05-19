@@ -48,7 +48,7 @@ export default function BusinessRegiUploadDialog(
   } = props;
   const classes = useStyles();
 
-  const defaultImage = businessRegiImage || '/pngs/logo/onad_logo_vertical_small.png';
+  const defaultImage = '/pngs/logo/onad_logo_vertical_small.png';
 
   const {
     imageUrl, imageName, handleReset, readImage
@@ -91,7 +91,7 @@ export default function BusinessRegiUploadDialog(
           src={(typeof imageUrl === 'string' && imageUrl.indexOf('pdf') === -1) ? imageUrl : defaultImage}
           className={classes.imgPreview}
           onError={handleReset}
-          alt="business -registration-preview"
+          alt="business-registration-preview"
         />
 
         <div className="filebox">

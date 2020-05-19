@@ -24,7 +24,7 @@ router.route('/list')
       const { marketerId } = responseHelper.getSessionData(req);
       const query = `
             SELECT
-            linkId, marketerId, confirmState, denialReason,
+            linkId, marketerId, confirmState, denialReason, linkDescription,
             links, DATE_FORMAT(regiDate, "%Y년 %m월 %d일") as regiDate, updateDate
             FROM linkRegistered
             WHERE marketerId = ?

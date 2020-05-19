@@ -115,14 +115,12 @@ function PlatformRegistForm({
     const marketerBusinessRegNum = (document.getElementById('marketerBusinessRegNum') ? state.marketerBusinessRegNum : '');
     const marketerPhoneNum = state.phoneNum;
     const marketerDomain = state.domain === '직접입력' ? marketerCustomDomain : state.domain;
-    const marketerUserType = userType;
     const user = {
       marketerId,
       marketerName,
       marketerMail: `${email}@${marketerDomain}`,
       marketerPhoneNum,
       marketerBusinessRegNum,
-      marketerUserType
     };
     setLoading(1);
     handleUserSubmit(user);

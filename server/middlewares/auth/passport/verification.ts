@@ -34,7 +34,6 @@ const makeUrl = (): string => {
  * 1. session에 저장할 값 (변경되지 않는 영속적인 값)
  *   - useType
  *   - marketerId
- *   - marketerUserType
  * 2. context에 저장할 값 (User의 기본적인 정보.)
  *   - marketerId : userid,
  *   - userType: 'marketer',
@@ -42,7 +41,6 @@ const makeUrl = (): string => {
  *   - marketerEmail
  *   - marketerContraction
  *   - marketerPhoneNum
- *   - marketerUserType
  *   - marketerAccountNumber
  * 3. 구동방식
  *   - 추후에 비밀번호 및 ID에 대한 오류 수정.

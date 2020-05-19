@@ -83,20 +83,6 @@ const UserDataForm = (props: UserDataFormProps): JSX.Element => {
             />
           </GridItem>
           <GridItem xs={12} sm={12} md={5} />
-          <GridItem xs={12} sm={12} md={3}>
-            <TextField
-              label="TYPE"
-              value={!userData.marketerUserType ? '일반인' : '사업자'}
-              className={classes.textField}
-              margin="normal"
-              InputProps={{
-                readOnly: true,
-              }}
-              InputLabelProps={{
-                shrink: true,
-              }}
-            />
-          </GridItem>
         </GridContainer>
         <Button
           onClick={(): void => {

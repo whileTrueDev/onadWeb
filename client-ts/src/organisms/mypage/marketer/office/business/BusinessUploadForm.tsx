@@ -1,6 +1,7 @@
 import React from 'react';
 // core
 import { makeStyles, withStyles, Theme } from '@material-ui/core/styles';
+import Dialog from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
 // own components
 import Card from '../../../../../atoms/Card/Card';
@@ -9,6 +10,8 @@ import CardBody from '../../../../../atoms/Card/CardBody';
 import Button from '../../../../../atoms/CustomButtons/Button';
 import DashboardStyle from '../../../../../assets/jss/views/dashboardStyle';
 import BusinessRegiUploadDialog from './BusinessUploadDialog';
+import BusinessViewDialog from './BusinessViewDialog';
+
 // hooks
 import useDialog from '../../../../../utils/hooks/useDialog';
 import { UseGetRequestObject } from '../../../../../utils/hooks/useGetRequest';
@@ -38,7 +41,8 @@ interface BusinessUploadFormProps {
 function BusinessUploadForm(props: BusinessUploadFormProps): JSX.Element {
   const myClasses = useStyles();
   const { classes, businessRegistrationData } = props;
-  const { open, handleOpen, handleClose } = useDialog();
+  const showDialog = useDialog();
+  const registerDialog = useDialog();
   const snack = useDialog();
 
   return (
@@ -55,12 +59,19 @@ function BusinessUploadForm(props: BusinessUploadFormProps): JSX.Element {
       {!businessRegistrationData.loading
         && businessRegistrationData.data && businessRegistrationData.data.marketerBusinessRegSrc ? (
           <CardBody>
+
             <div className={myClasses.buttonWrapper}>
               <Button
                 color="primary"
-                onClick={(): void => { handleOpen(); }}
+                onClick={(): void => { registerDialog.handleOpen(); }}
               >
                 사업자 등록증 변경
+              </Button>
+              <Button
+                color="secondary"
+                onClick={(): void => { showDialog.handleOpen(); }}
+              >
+                사업자 등록증 보기
               </Button>
             </div>
             <div className={myClasses.textBox} style={{ marginTop: 5 }}>
@@ -72,7 +83,7 @@ function BusinessUploadForm(props: BusinessUploadFormProps): JSX.Element {
             <div className={myClasses.buttonWrapper}>
               <Button
                 color="primary"
-                onClick={(): void => { handleOpen(); }}
+                onClick={(): void => { registerDialog.handleOpen(); }}
                 size="medium"
               >
                 사업자 등록증 등록
@@ -92,24 +103,22 @@ function BusinessUploadForm(props: BusinessUploadFormProps): JSX.Element {
 
       {!businessRegistrationData.loading && businessRegistrationData.data && (
         <BusinessRegiUploadDialog
-          open={open}
-          handleClose={handleClose}
+          open={registerDialog.open}
+          handleClose={registerDialog.handleClose}
           businessRegiImage={businessRegistrationData.data.marketerBusinessRegSrc}
           request={businessRegistrationData.doGetRequest}
           handleSnackOpen={snack.handleOpen}
         />
       )}
-
-      {/* <Snackbar
-        place="tc"
-        color="success"
-        message="사업자 등록증이 등록되었습니다."
-        open={snack.open}
-        onClose={snack.handleClose}
-        closeNotification={() => { snack.handleClose(); }}
-        close
-      /> */}
-
+      {!businessRegistrationData.loading && businessRegistrationData.data && (
+        <BusinessViewDialog
+          open={showDialog.open}
+          handleClose={showDialog.handleClose}
+          businessRegiImage={businessRegistrationData.data.marketerBusinessRegSrc}
+          request={businessRegistrationData.doGetRequest}
+          handleSnackOpen={snack.handleOpen}
+        />
+      )}
     </Card>
   );
 }
