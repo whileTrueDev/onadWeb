@@ -13,6 +13,7 @@ import Indicator from '../../organisms/main/main/Indicators/Indicator';
 import HowToUse from '../../organisms/main/main/HowToUse/HowToUse';
 import Advantage from '../../organisms/main/main/Advantage/Advantage';
 import IntroService from '../../organisms/main/main/IntroService/IntroService';
+import Reference from '../../organisms/main/main/Reference/Reference';
 // utill 계열 컴포넌트
 import useLoginValue from '../../utils/hooks/useLoginValue';
 import history from '../../history';
@@ -48,6 +49,7 @@ export default withRoot(() => {
           <Advantage source={sources.advantage} MainUserType="marketer" />
           <IntroService />
           <ProductHowItWorks source={sources.howitworks} MainUserType="marketer" logout={logout} />
+          <Reference />
           <Inqurie />
           <AppFooter />
           <RePasswordDialog
@@ -72,6 +74,7 @@ export default withRoot(() => {
             />
             <Advantage source={sources.advantage} MainUserType="creator" />
             <ProductHowItWorks source={sources.howitworks} MainUserType="creator" logout={logout} />
+            <Reference />
             <InquiryCreator />
             <AppFooter />
             <RePasswordDialog
