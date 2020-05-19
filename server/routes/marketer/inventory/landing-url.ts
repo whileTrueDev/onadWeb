@@ -6,13 +6,13 @@ import doQuery from '../../../model/doQuery';
 const router = express.Router();
 
 interface UrlData {
-    linkId: string;
-    marketerId: string;
-    denialReason: string;
-    links: string;
-    regiDate: string;
-    updateDate: string;
-    confirmState: number;
+  linkId: string;
+  marketerId: string;
+  denialReason: string;
+  links: string;
+  regiDate: string;
+  updateDate: string;
+  confirmState: number;
 }
 
 //  marketer/sub/inventory =>/landingurl/all
@@ -53,6 +53,7 @@ router.route('/')
     responseHelper.middleware.checkSessionExists,
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
       const links = responseHelper.getParam('links', 'POST', req);
+      const linkDesc = responseHelper.getParam('linkDescription', 'POST', req);
       const { marketerId } = responseHelper.getSessionData(req);
       const DEFAULT_CONFIRM_STATE = 0;
 
@@ -65,8 +66,8 @@ router.route('/')
 
       const saveQuery = `
             INSERT INTO linkRegistered
-            (linkId, marketerId, confirmState, links)
-            VALUES (?, ?, ?, ?)
+            (linkId, marketerId, linkDescription, confirmState, links)
+            VALUES (?, ?, ?, ?, ?)
             `;
 
       doQuery(searchQuery, [marketerId])
@@ -86,7 +87,7 @@ router.route('/')
           }
 
           doQuery(saveQuery,
-            [linkId, marketerId, DEFAULT_CONFIRM_STATE, JSON.stringify({ links })])
+            [linkId, marketerId, linkDesc, DEFAULT_CONFIRM_STATE, JSON.stringify({ links }),])
             .then(() => {
               responseHelper.send([true], 'POST', res);
               slack({
@@ -96,6 +97,7 @@ router.route('/')
                   { title: '마케터 아이디', value: marketerId!, short: true },
                   { title: '링크 아이디', value: linkId!, short: true },
                   { title: '링크 개수', value: links.length, short: true },
+                  { title: '링크 설명', value: linkDesc, short: true },
                 ]
               });
             })

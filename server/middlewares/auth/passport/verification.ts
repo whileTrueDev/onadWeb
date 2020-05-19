@@ -55,7 +55,7 @@ const marketerLocal = (
       SELECT
         marketerPasswd, marketerSalt,
         marketerId, marketerName, marketerMail, marketerPhoneNum, marketerBusinessRegNum,
-        marketerUserType, marketerAccountNumber, marketerEmailAuth
+        marketerAccountNumber, marketerEmailAuth
       FROM marketerInfo
       WHERE marketerId = ? `;
 
@@ -67,7 +67,6 @@ const marketerLocal = (
           const user: Session = {
             marketerId: userid,
             userType: 'marketer',
-            marketerUserType: marketerData.marketerUserType,
             marketerMail: marketerData.marketerMail,
             marketerAccountNumber: marketerData.marketerAccountNumber,
             marketerBusinessRegNum: marketerData.marketerBusinessRegNum,
@@ -164,7 +163,7 @@ const creatorTwitch = (
             SET  creatorName = ?, creatorMail = ?, creatorTwitchId = ?, creatorLogo = ?
             WHERE creatorId = ?
             `;
-            // 랜딩페이지 명 변경
+          // 랜딩페이지 명 변경
           const landingUpdateQuery = `
           UPDATE creatorLanding
           SET creatorTwitchId = ?
@@ -255,8 +254,8 @@ const creatorTwitch = (
 
       Promise.all([
         doQuery(infoQuery, [user.creatorId, user.creatorDisplayName,
-          user.creatorMail, creatorIp, `/${creatorBannerUrl}`,
-          user.creatorName, user.creatorLogo]),
+        user.creatorMail, creatorIp, `/${creatorBannerUrl}`,
+        user.creatorName, user.creatorLogo]),
         doQuery(royaltyQuery, [user.creatorId]),
         doQuery(incomeQuery, [user.creatorId, 0, 0]),
         doQuery(priceQuery, [user.creatorId, 1, 0, 2]),
@@ -288,7 +287,7 @@ const marketerGoogle = (
   const checkQuery = `
   SELECT
     marketerId, marketerName, marketerMail, marketerPhoneNum, marketerBusinessRegNum,
-    marketerUserType, marketerAccountNumber
+    marketerAccountNumber
   FROM marketerInfo
   WHERE marketerId = ?
   AND platformType = 1`;
@@ -296,12 +295,11 @@ const marketerGoogle = (
   doQuery(checkQuery, [sub])
     .then((row) => {
       if (row.result[0]) {
-      // ID가 존재할 경우.
+        // ID가 존재할 경우.
         const marketerData = row.result[0];
         const user: Session = {
           marketerId: marketerData.marketerId,
           userType: 'marketer',
-          marketerUserType: marketerData.marketerUserType,
           marketerMail: marketerData.marketerMail,
           marketerAccountNumber: marketerData.marketerAccountNumber,
           marketerBusinessRegNum: marketerData.marketerBusinessRegNum,
@@ -341,7 +339,7 @@ const marketerNaver: Naver.VerifyFunction = (accessToken, refreshToken, profile,
   const checkQuery = `
   SELECT
     marketerId, marketerName, marketerMail, marketerPhoneNum, marketerBusinessRegNum,
-    marketerUserType, marketerAccountNumber
+    marketerAccountNumber
   FROM marketerInfo
   WHERE marketerId = ?
   AND platformType = 2 `;
@@ -349,12 +347,11 @@ const marketerNaver: Naver.VerifyFunction = (accessToken, refreshToken, profile,
   doQuery(checkQuery, [id])
     .then((row) => {
       if (row.result[0]) {
-      // ID가 존재할 경우.
+        // ID가 존재할 경우.
         const marketerData = row.result[0];
         const user: Session = {
           marketerId: marketerData.marketerId,
           userType: 'marketer',
-          marketerUserType: marketerData.marketerUserType,
           marketerMail: marketerData.marketerMail,
           marketerAccountNumber: marketerData.marketerAccountNumber,
           marketerBusinessRegNum: marketerData.marketerBusinessRegNum,
@@ -388,7 +385,7 @@ const marketerKakao: Kakao.VerifyFunction = (accessToken, refreshToken, profile,
 
   const checkQuery = `
   SELECT marketerId, marketerName, marketerMail, marketerPhoneNum, marketerBusinessRegNum,
-  marketerUserType, marketerAccountNumber
+  marketerAccountNumber
   FROM marketerInfo
   WHERE marketerId = ?
   AND platformType = 3 `;
@@ -400,7 +397,6 @@ const marketerKakao: Kakao.VerifyFunction = (accessToken, refreshToken, profile,
         const user: Session = {
           marketerId: marketerData.marketerId,
           userType: 'marketer',
-          marketerUserType: marketerData.marketerUserType,
           marketerMail: marketerData.marketerMail,
           marketerAccountNumber: marketerData.marketerAccountNumber,
           marketerBusinessRegNum: marketerData.marketerBusinessRegNum,

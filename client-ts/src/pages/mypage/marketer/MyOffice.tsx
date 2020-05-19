@@ -40,11 +40,11 @@ export default function MyOffice(): JSX.Element {
 
           <GridItem xs={12} lg={6} xl={3}>
             <GridContainer>
-              {userData.data.marketerUserType ? (
-                <GridItem xs={12}>
-                  <BusinessRegistration businessRegistrationData={businessRegistrationData} />
-                </GridItem>
-              ) : (null)}
+
+              <GridItem xs={12}>
+                <BusinessRegistration businessRegistrationData={businessRegistrationData} />
+              </GridItem>
+
               <GridItem xs={12}>
                 <RefundAccountForm accountData={accountData} />
               </GridItem>

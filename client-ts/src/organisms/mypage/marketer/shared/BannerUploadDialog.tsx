@@ -6,7 +6,7 @@ import {
 import classnames from 'classnames';
 import Check from '@material-ui/icons/Check';
 import Dialog from '../../../../atoms/Dialog/Dialog';
-import BannerDescForm from './BannerDescForm';
+// import BannerDescForm from './BannerDescForm';
 import './upload.css';
 import ImageUpload from './ImageUpload';
 import HOST from '../../../../utils/config';
@@ -124,7 +124,7 @@ const UploadDialog = (props: UploadDialogProps): JSX.Element => {
 
   // url을 제출.
   const handleSubmit = (): void => {
-    const bannerDescription = (document.getElementById('banner') as HTMLInputElement).value || '';
+    // const bannerDescription = (document.getElementById('banner') as HTMLInputElement).value || '';
     // // usePostRequest 수정 이후 적용
     // if (state.imageUrl) {
     //   doPostRequest({
@@ -135,7 +135,7 @@ const UploadDialog = (props: UploadDialogProps): JSX.Element => {
     //   }
     // }
     axios.post(`${HOST}/marketer/banner`, {
-      bannerSrc: state.imageUrl, bannerDescription,
+      bannerSrc: state.imageUrl
     })
       .then((res) => {
         if (res.data[0]) {
@@ -168,23 +168,9 @@ const UploadDialog = (props: UploadDialogProps): JSX.Element => {
           <StepContent>
             <ImageUpload
               handleClose={handleClose}
-              handleNext={handleNext}
+              handleSubmit={handleSubmit}
               state={state}
               dispatch={dispatch}
-            />
-          </StepContent>
-        </Step>
-        <Step key="1">
-          <StepLabel StepIconComponent={QontoStepIcon}>
-            홍보문구 입력
-          </StepLabel>
-          <StepContent className={classes.formRoot}>
-            <BannerDescForm
-              handleNext={handleNext}
-              state={state}
-              handleSubmit={(): void => {
-                handleSubmit();
-              }}
             />
           </StepContent>
         </Step>

@@ -37,6 +37,7 @@ export default function useImageUpload(
   function handleReset(): void {
     setImageName('');
     setImageUrl(DEFAULT_IMAGE);
+    console.log('reset');
   }
 
   // image change handler
@@ -51,16 +52,22 @@ export default function useImageUpload(
     if (files.length !== 0) {
       const fileRegx = /^image\/[a-z]*$/;
       const myImage = files[0];
-
+      console.log(myImage.type === 'application/pdf');
       // image 확장자 검사
-      if (fileRegx.test(myImage.type)) {
+      if (fileRegx.test(myImage.type) || myImage.type === 'application/pdf') {
         // 이미지 사이즈 검사
         if (myImage.size < IMAGE_SIZE_LIMIT) {
           // 사이즈 제한보다 작은 경우
           const reader = new FileReader();
           reader.readAsDataURL(myImage);
           reader.onload = (): void => {
+            // if (fileRegx.test(myImage.type)) {
             handleImageChange({ newImageName: myImage.name, newImageUrl: reader.result });
+            // } 
+            // else {
+            //   handleImageChange({ newImageName: myImage.name, newImageUrl: '' });
+            // }
+            console.log(reader.result);
           };
         } else {
           // 사이즈 제한보다 큰 경우

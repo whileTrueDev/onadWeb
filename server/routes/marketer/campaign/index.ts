@@ -18,7 +18,10 @@ interface CampaignData {
   priorityType: number | string;
   regiDate: string;
   onOff: number;
+  confirmState: number;
   bannerSrc: string;
+  links: string;
+  linkConfirmState: number;
   dailyLimit: number;
 }
 
@@ -38,14 +41,18 @@ router.route('/list')
       date.setMilliseconds(0);
 
       const query = `
-            SELECT
-            campaignId, campaignName, optionType, priorityType, campaign.regiDate as regiDate, onOff, bannerSrc, dailyLimit
-            FROM campaign
-            JOIN bannerRegistered AS br
-            ON br.bannerId = campaign.bannerId
-            WHERE campaign.marketerId = ?
-            AND deletedState = 0
-            ORDER BY br.regiDate DESC
+              SELECT
+              campaignId, campaignName, optionType, priorityType, 
+              campaign.regiDate as regiDate, onOff, br.confirmState, 
+              bannerSrc, lr.links as links, lr.confirmState as linkConfirmState, dailyLimit
+              FROM campaign
+              JOIN bannerRegistered AS br
+              ON br.bannerId = campaign.bannerId
+              JOIN linkRegistered AS lr
+              ON lr.linkId = connectedLinkId
+              WHERE campaign.marketerId = ?
+              AND deletedState = 0
+              ORDER BY br.regiDate DESC
             `;
 
       const sumQuery = `
@@ -62,7 +69,8 @@ router.route('/list')
                 [campaignData.campaignId, date])
                 .then((inrow) => {
                   const { dailysum } = inrow.result[0];
-                  return { ...campaignData, dailysum };
+                  const linkData = JSON.parse(campaignData.links);
+                  return { ...campaignData, linkData, dailysum };
                 }))
             ).then((campaignList) => {
               responseHelper.send(campaignList, 'get', res);
@@ -133,7 +141,7 @@ router.route('/on-off')
               .then(() => {
                 const MARKETER_ACTION_LOG_TYPE = 6;
                 marketerActionLogging([campaignId.split('_')[0], MARKETER_ACTION_LOG_TYPE,
-                  JSON.stringify({ campaignName, onoffState })]);
+                JSON.stringify({ campaignName, onoffState })]);
                 responseHelper.send([true], 'PATCH', res);
               })
               .catch((error) => {
@@ -203,9 +211,9 @@ router.route('/')
       const { marketerId, marketerName } = responseHelper.getSessionData(req);
       const [campaignName, optionType, priorityType, priorityList, selectedTime, dailyLimit,
         startDate, finDate, keyword, bannerId, connectedLinkId] = responseHelper.getParam([
-        'campaignName', 'optionType', 'priorityType',
-        'priorityList', 'selectedTime', 'dailyLimit', 'startDate', 'finDate',
-        'keyword', 'bannerId', 'connectedLinkId'], 'POST', req);
+          'campaignName', 'optionType', 'priorityType',
+          'priorityList', 'selectedTime', 'dailyLimit', 'startDate', 'finDate',
+          'keyword', 'bannerId', 'connectedLinkId'], 'POST', req);
 
       const searchQuery = `
             SELECT campaignId

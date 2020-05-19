@@ -40,8 +40,7 @@ router.route('/list')
       const { marketerId } = responseHelper.getSessionData(req);
       const query = `
             SELECT bannerSrc, confirmState, bannerId, 
-            bannerDenialReason, bannerDescription, 
-            DATE_FORMAT(date, "%Y년% %m월 %d일") as date,
+            bannerDenialReason, DATE_FORMAT(date, "%Y년% %m월 %d일") as date,
             DATE_FORMAT(regiDate, "%Y년% %m월 %d일") as regiDate
             FROM bannerRegistered
             WHERE marketerId = ?
@@ -65,7 +64,7 @@ router.route('/')
   .post(
     responseHelper.middleware.checkSessionExists,
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
-      const [bannerSrc, bannerDescription] = responseHelper.getParam(['bannerSrc', 'bannerDescription'], 'PUT', req);
+      const [bannerSrc] = responseHelper.getParam(['bannerSrc'], 'PUT', req);
       const { marketerId } = responseHelper.getSessionData(req);
       const searchQuery = `
             SELECT bannerId 
@@ -76,8 +75,8 @@ router.route('/')
 
       const saveQuery = `
             INSERT INTO bannerRegistered 
-            (bannerId, marketerId, bannerSrc, bannerDescription, confirmState) 
-            VALUES (?, ?, ?, ?, 0)`;
+            (bannerId, marketerId, bannerSrc, confirmState) 
+            VALUES (?, ?, ?, 0)`;
 
       doQuery(searchQuery, [marketerId])
         .then((row) => {
@@ -97,8 +96,7 @@ router.route('/')
           // S3에 저장
           // S3.uploadImage(`banner/${marketerId}/${bannerId}`, bannerSrc);
           doQuery(saveQuery,
-            [bannerId, marketerId, bannerSrc,
-              bannerDescription])
+            [bannerId, marketerId, bannerSrc])
             .then(() => {
               responseHelper.send([true, '배너 등록이 완료되었습니다.'], 'POST', res);
               const MARKETER_ACTION_LOG_TYPE = 2; // <배너 등록> 의 상태값 : 2
@@ -111,7 +109,6 @@ router.route('/')
                 fields: [
                   { title: '마케터 아이디', value: marketerId!, short: true },
                   { title: '배너 아이디', value: bannerId!, short: true },
-                  { title: '배너 설명', value: bannerDescription!, short: true },
                 ]
               });
             })

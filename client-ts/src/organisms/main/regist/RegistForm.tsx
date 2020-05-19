@@ -111,7 +111,6 @@ function RegistForm({
       const marketerPhoneNum = state.phoneNum;
       const marketerRawPasswd = state.passwordValue;
       const marketerDomain = state.domain === '직접입력' ? marketerCustomDomain : state.domain;
-      const marketerUserType = userType;
       const user = {
         marketerId,
         marketerRawPasswd,
@@ -119,7 +118,6 @@ function RegistForm({
         marketerMail: `${marketerMailId}@${marketerDomain}`,
         marketerPhoneNum,
         marketerBusinessRegNum,
-        marketerUserType,
       };
       setLoading(1);
       handleUserSubmit(user);
@@ -142,7 +140,7 @@ function RegistForm({
       axios.post(`${HOST}/marketer/checkId`, { idValue })
         .then((res) => {
           if (res.data) {
-            alert('ID가 중복되었습니다. 다시 입력해 주세요.');
+            alert('ID가 중복되었습니다. 다른 ID를 사용해주세요.');
             dispatch({ type: 'checkDuplication', value: true });
           } else {
             dispatch({ type: 'checkDuplication', value: false });
@@ -302,18 +300,23 @@ function RegistForm({
                 </Grid>
               </Grid>
               <Grid item>
-                {userType
-                  ? (
-                    <FormControl style={{ marginTop: '8px', marginBottom: '16px' }}>
-                      <InputLabel shrink>사업자등록번호</InputLabel>
-                      <Input
-                        onChange={handleChange('marketerBusinessRegNum')}
-                        name="businessRegNum"
-                      />
-                      <FormHelperText>사업자 번호를 입력후 조회버튼을 누르세요.</FormHelperText>
-                    </FormControl>
-                  )
-                  : <div />}
+
+                <FormControl style={{ marginTop: '8px', marginBottom: '16px' }}>
+                  {/* <InputLabel shrink>사업자등록번호</InputLabel> */}
+                  <TextField
+                    required
+                    label="사업자 등록번호"
+                    onChange={handleChange('marketerBusinessRegNum')}
+                    name="businessRegNum"
+                    className={classes.textField}
+                    placeholder="사업자 등록번호를 입력하세요"
+                    margin="normal"
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                  />
+                </FormControl>
+
               </Grid>
               <Grid container direction="row">
                 <Grid item>

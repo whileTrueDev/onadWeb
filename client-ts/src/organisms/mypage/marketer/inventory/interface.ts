@@ -3,7 +3,7 @@ export interface BannerDataInterface {
   confirmState: number;
   bannerId: string;
   bannerDenialReason: string;
-  bannerDescription: string;
+  // bannerDescription: string;
   date: string;
   regiDate: string;
 }
@@ -20,6 +20,7 @@ export interface UrlDataInterface {
       linkTo: string;
     }[];
   };
+  linkDescription: string;
   regiDate: string;
   updateDate: Date;
 }

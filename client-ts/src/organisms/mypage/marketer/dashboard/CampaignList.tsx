@@ -6,6 +6,8 @@ import {
   ListItem, List, FormControlLabel,
   Snackbar, Hidden, Switch, CircularProgress
 } from '@material-ui/core';
+import Check from '@material-ui/icons/Check';
+
 import Countup from 'react-countup';
 import { Assessment, Delete as DeleteIcon, Build } from '@material-ui/icons';
 import CloseIcon from '@material-ui/icons/Close';
@@ -54,7 +56,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     textAlign: 'center',
     marginBottom: theme.spacing(2)
   },
-
+  url: {
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    width: '240px'
+  }
 }));
 
 export default function CampaignList(
@@ -90,6 +96,29 @@ export default function CampaignList(
       });
     // doPatchRequest({ onoffState, campaignId });
   };
+
+  const confirmCases = (state: number) => {
+    switch (state) {
+      case 0: return (
+        <Typography gutterBottom variant="body2" color="secondary" align="center">
+          승인 대기
+          <span role="img" area-label="clock-mark">⏰</span>
+        </Typography>
+      );
+      case 1: return (
+        <Typography gutterBottom variant="body2" color="primary" align="center">
+          승인 완료
+          <span role="img" area-label="ok-mark">👌</span>
+        </Typography>
+      );
+
+      case 2: return (
+        <Typography style={{ color: 'red' }} gutterBottom variant="body2" align="center">승인 거절</Typography>
+      );
+      default: throw new Error('you need confirmState for table');
+    }
+  };
+
 
   return (
     <Paper style={{ minHeight: 220 }}>
@@ -133,11 +162,11 @@ export default function CampaignList(
                         />
                       </Grid>
                       <Grid item>
-                        { isVideo(detail.bannerSrc) ? (
+                        {isVideo(detail.bannerSrc) ? (
                           <VideoBanner className={classes.img} src={detail.bannerSrc} />
                         ) : (
-                          <img className={classes.img} alt="campaign-logo" src={detail.bannerSrc} />
-                        )}
+                            <img className={classes.img} alt="campaign-logo" src={detail.bannerSrc} />
+                          )}
                       </Grid>
                       <Hidden xsDown>
                         <Grid item>
@@ -159,6 +188,47 @@ export default function CampaignList(
                       </Hidden>
                     </Grid>
                   </Grid>
+                  <Hidden xsDown>
+                    <Grid item>
+                      <Grid container direction="column" spacing={2}>
+                        {detail.linkData.links.map((link, index): JSX.Element | null => (
+                          <Grid item key={link.linkName}>
+                            <Typography variant="body1" color="primary" align="center">
+                              링크 이름
+                            </Typography>
+                            <Divider orientation="horizontal" />
+                            <Typography gutterBottom variant="body2" align="center">
+                              {link.linkName}
+                            </Typography>
+                            <Typography variant="body1" color="primary" align="center">
+                              URL 주소
+                            </Typography>
+                            <Divider orientation="horizontal" />
+                            <Typography className={classes.url} gutterBottom variant="body2" align="center">
+                              {link.linkTo}
+                            </Typography>
+                            <Divider orientation="horizontal" />
+                            {/* {
+                              detail.linkConfirmState ? (
+                                <Typography gutterBottom variant="body2" color="primary" align="center">
+                                  승인 완료
+                                  <span role="img" area-label="ok-mark">👌</span>
+                                </Typography>
+                              )
+                                : (
+                                  <Typography gutterBottom variant="body2" color="secondary" align="center">
+                                    승인대기
+                                    <span role="img" area-label="clock-mark">⏰</span>
+                                  </Typography>
+                                )
+                            } */}
+                            {confirmCases(detail.linkConfirmState)}
+                          </Grid>
+                        ))}
+                        {/* {detail.linkConfirmState} */}
+                      </Grid>
+                    </Grid>
+                  </Hidden>
                   <Hidden xsDown>
                     <Grid item style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                       <Grid container direction="column">
@@ -243,20 +313,24 @@ export default function CampaignList(
           ))}
         </List>
       )}
-      {(!campaignData.loading && campaignData.data && campaignData.data.length === 0) && (
-        <Grid container justify="center" alignItems="center" direction="column" style={{ marginTop: 40 }}>
-          <Typography variant="body1">생성된 캠페인이 없습니다.</Typography>
-          <Typography variant="body1">새로운 캠페인을 생성해 광고를 진행하세요.</Typography>
-        </Grid>
-      )}
-      {(campaignData.loading) && (
-        <Grid item xs={12} className={classes.loading}>
-          <Typography className={classes.statement}>
-            캠페인 리스트 데이터를 로드하고 있습니다.
-          </Typography>
-          <div style={{ textAlign: 'center' }}><CircularProgress /></div>
-        </Grid>
-      )}
+      {
+        (!campaignData.loading && campaignData.data && campaignData.data.length === 0) && (
+          <Grid container justify="center" alignItems="center" direction="column" style={{ marginTop: 40 }}>
+            <Typography variant="body1">생성된 캠페인이 없습니다.</Typography>
+            <Typography variant="body1">새로운 캠페인을 생성해 광고를 진행하세요.</Typography>
+          </Grid>
+        )
+      }
+      {
+        (campaignData.loading) && (
+          <Grid item xs={12} className={classes.loading}>
+            <Typography className={classes.statement}>
+              캠페인 리스트 데이터를 로드하고 있습니다.
+            </Typography>
+            <div style={{ textAlign: 'center' }}><CircularProgress /></div>
+          </Grid>
+        )
+      }
 
 
       <Snackbar
@@ -287,65 +361,73 @@ export default function CampaignList(
       />
 
       {/* 4월 21일 이전 (광고페이지 있는 경우의) 캠페인 분석 다이얼로그 (full screen) */}
-      {selectedCampaign && (selectedCampaign.regiDate < V2_TIME) && (
-        <CampaignAnalysisDialog
-          SLIDE_TIMEOUT={SLIDE_TIMEOUT} // 슬라이드 트랜지션 타임아웃
-          open={campaignReportDialog.open}
-          selectedCampaign={selectedCampaign}
-          handleClose={(): void => {
-            campaignReportDialog.handleClose();
-            setTimeout(() => {
-              setSelectedCampaign(null);
-              // 트랜지션 만큼 뒤에 실행. (먼저 실행하면 트랜지션 발동 안됨)
-            }, SLIDE_TIMEOUT);
-          }}
-        />
-      )}
+      {
+        selectedCampaign && (selectedCampaign.regiDate < V2_TIME) && (
+          <CampaignAnalysisDialog
+            SLIDE_TIMEOUT={SLIDE_TIMEOUT} // 슬라이드 트랜지션 타임아웃
+            open={campaignReportDialog.open}
+            selectedCampaign={selectedCampaign}
+            handleClose={(): void => {
+              campaignReportDialog.handleClose();
+              setTimeout(() => {
+                setSelectedCampaign(null);
+                // 트랜지션 만큼 뒤에 실행. (먼저 실행하면 트랜지션 발동 안됨)
+              }, SLIDE_TIMEOUT);
+            }}
+          />
+        )
+      }
 
 
       {/* 4월 21일 이후 캠페인 분석 다이얼로그 (full screen) */}
-      {selectedCampaign
-      && (selectedCampaign.regiDate >= V2_TIME)
-      && selectedCampaign.optionType === 1 && ( // "생방송 배너 광고" 캠페인
-        <CampaignAnalysisDialogV2
-          SLIDE_TIMEOUT={SLIDE_TIMEOUT} // 슬라이드 트랜지션 타임아웃
-          open={campaignReportDialog.open}
-          selectedCampaign={selectedCampaign}
-          handleClose={(): void => {
-            campaignReportDialog.handleClose();
-            setTimeout(() => {
-              setSelectedCampaign(null);
-              // 트랜지션 만큼 뒤에 실행. (먼저 실행하면 트랜지션 발동 안됨)
-            }, SLIDE_TIMEOUT);
-          }}
-        />
-      )}
+      {
+        selectedCampaign
+        && (selectedCampaign.regiDate >= V2_TIME)
+        && selectedCampaign.optionType === 1 && ( // "생방송 배너 광고" 캠페인
+          <CampaignAnalysisDialogV2
+            SLIDE_TIMEOUT={SLIDE_TIMEOUT} // 슬라이드 트랜지션 타임아웃
+            open={campaignReportDialog.open}
+            selectedCampaign={selectedCampaign}
+            handleClose={(): void => {
+              campaignReportDialog.handleClose();
+              setTimeout(() => {
+                setSelectedCampaign(null);
+                // 트랜지션 만큼 뒤에 실행. (먼저 실행하면 트랜지션 발동 안됨)
+              }, SLIDE_TIMEOUT);
+            }}
+          />
+        )
+      }
 
       {/* 캠페인 업데이트 다이얼로그 */}
-      {selectedCampaign && (
-        <CampaignUpdateDialog
-          open={campaignUpdateDialog.open}
-          selectedCampaign={selectedCampaign}
-          doGetRequest={campaignData.doGetRequest}
-          handleClose={(): void => {
-            setSelectedCampaign(null);
-            campaignUpdateDialog.handleClose();
-          }}
-        />
-      )}
+      {
+        selectedCampaign && (
+          <CampaignUpdateDialog
+            open={campaignUpdateDialog.open}
+            selectedCampaign={selectedCampaign}
+            doGetRequest={campaignData.doGetRequest}
+            handleClose={(): void => {
+              setSelectedCampaign(null);
+              campaignUpdateDialog.handleClose();
+            }}
+          />
+        )
+      }
 
       {/* 캠페인 삭제 클릭시 다이얼로그 */}
-      {selectedCampaign && (
-        <CampaignDeleteConfirmDialog
-          open={campaignDeleteDialog.open}
-          selectedCampaign={selectedCampaign}
-          doGetRequest={campaignData.doGetRequest}
-          handleClose={(): void => {
-            setSelectedCampaign(null);
-            campaignDeleteDialog.handleClose();
-          }}
-        />
-      )}
+      {
+        selectedCampaign && (
+          <CampaignDeleteConfirmDialog
+            open={campaignDeleteDialog.open}
+            selectedCampaign={selectedCampaign}
+            doGetRequest={campaignData.doGetRequest}
+            handleClose={(): void => {
+              setSelectedCampaign(null);
+              campaignDeleteDialog.handleClose();
+            }}
+          />
+        )
+      }
     </Paper>
   );
 }

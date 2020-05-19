@@ -88,10 +88,10 @@ export default function BusinessRegiUploadDialog(
 
         <img
           id="preview"
-          src={(typeof imageUrl === 'string') ? imageUrl : undefined}
+          src={(typeof imageUrl === 'string' && imageUrl.indexOf('pdf') === -1) ? imageUrl : defaultImage}
           className={classes.imgPreview}
           onError={handleReset}
-          alt="business-registration-preview"
+          alt="business -registration-preview"
         />
 
         <div className="filebox">
@@ -109,7 +109,7 @@ export default function BusinessRegiUploadDialog(
                   </Typography>
                 </label>
               </UploadButton>
-              <input type="file" id="getfile" accept="image/*" onChange={readImage} />
+              <input type="file" id="getfile" accept="image/*, application/pdf" onChange={readImage} />
             </Grid>
           </Grid>
         </div>

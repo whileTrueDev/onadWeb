@@ -8,7 +8,7 @@ import {
 import useStyles from './style/Stepper.style';
 import axios from '../../../utils/axios';
 import PlatformRegistForm from './PlatformRegistForm';
-import Usertype from './Usertype';
+// import Usertype from './Usertype';
 import RegistForm from './RegistForm';
 import PaperSheet from './Paper';
 import HOST from '../../../config';
@@ -45,10 +45,6 @@ function RegistStepper({ platform }: { platform: string }): JSX.Element {
     setStep(0);
   }
 
-  function typeChange(type: number): void {
-    setType(type);
-  }
-
   function handleUserSubmit(user: any): void {
     const platformType = platformList.indexOf(platform);
     const returnUser = {
@@ -60,17 +56,17 @@ function RegistStepper({ platform }: { platform: string }): JSX.Element {
         .then((res) => {
           const { error } = res.data;
           if (!error) {
-            alert('등록한 이메일로 인증메일을 발송하였습니다. 이메일을 확인하세요!');
+            alert('등록한 이메일로 인증메일을 발송 하였습니다. 이메일을 확인하세요!');
             setLoading(0);
             history.push('/');
           } else {
-            alert('등록중 오류가 났습니다. 잠시 후 다시 시도해주세요.');
+            alert('등록중 오류가 발생 하였습니다. 잠시 후 다시 시도해주세요.');
             setLoading(0);
             history.push('/');
           }
         })
         .catch(() => {
-          alert('등록중 오류가 났습니다. 잠시 후 다시 시도해주세요.');
+          alert('등록중 오류가 발생 하였습니다. 잠시 후 다시 시도해주세요.');
           setLoading(0);
           history.push('/');
         });
@@ -83,13 +79,13 @@ function RegistStepper({ platform }: { platform: string }): JSX.Element {
             setLoading(0);
             history.push('/');
           } else {
-            alert('등록중 오류가 났습니다. 잠시 후 다시 시도해주세요.');
+            alert('등록중 오류가 발생 하였습니다. 잠시 후 다시 시도해주세요.');
             setLoading(0);
             history.push('/');
           }
         })
         .catch(() => {
-          alert('등록중 오류가 났습니다. 잠시 후 다시 시도해주세요.');
+          alert('등록중 오류가 발생 하였습니다. 잠시 후 다시 시도해주세요.');
           setLoading(0);
           history.push('/');
         });
@@ -129,12 +125,6 @@ function RegistStepper({ platform }: { platform: string }): JSX.Element {
 
       <Stepper activeStep={activeStep} orientation="vertical">
         <Step key="0">
-          <StepLabel>마케터 유형 선택</StepLabel>
-          <StepContent>
-            <Usertype typeChange={typeChange} handleNext={handleNext} />
-          </StepContent>
-        </Step>
-        <Step key="1">
           <StepLabel>미성년자 확인</StepLabel>
           <StepContent>
             <IdentityVerification
@@ -145,7 +135,7 @@ function RegistStepper({ platform }: { platform: string }): JSX.Element {
             />
           </StepContent>
         </Step>
-        <Step key="2">
+        <Step key="1">
           <StepLabel>정보 동의 및 계약</StepLabel>
           <StepContent>
             <PaperSheet
@@ -154,7 +144,7 @@ function RegistStepper({ platform }: { platform: string }): JSX.Element {
             />
           </StepContent>
         </Step>
-        <Step key="3">
+        <Step key="2">
           <StepLabel>개인정보 입력</StepLabel>
           <StepContent>
             {getRegistComponent()}
