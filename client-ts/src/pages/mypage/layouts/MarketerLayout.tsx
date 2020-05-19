@@ -6,13 +6,17 @@ import Sidebar from '../../../organisms/mypage/layouts/Sidebar/Sidebar';
 import Footer from '../../../organisms/mypage/layouts/Footer/Footer';
 import allRoutes from '../routes';
 import history from '../../../history';
+import useLoginValue from '../../../utils/hooks/useLoginValue';
 // css
 import useLayoutStyles from './Layout.style';
 import '../../../assets/onad.css';
 
 const MarketerDashboard = (): JSX.Element => {
   const classes = useLayoutStyles();
-
+  const { userType } = useLoginValue();
+  if (userType === 'creator') {
+    history.push('/');
+  }
   const [mobileOpen, setMobileOpen] = useState(false);
   const handleDrawerToggle = (): void => {
     setMobileOpen(!mobileOpen);
@@ -21,11 +25,13 @@ const MarketerDashboard = (): JSX.Element => {
   // main ref
   const mainPanel = useRef<HTMLDivElement>(null);
 
+
   useEffect(() => {
     document.title = '온애드 | 대시보드';
     if (mainPanel && mainPanel.current) {
       mainPanel.current.scrollTop = 0;
     }
+
     return (): void => {
       if (history.location.pathname === window.location.pathname) {
         if (mobileOpen) {

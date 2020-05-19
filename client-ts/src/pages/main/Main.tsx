@@ -21,7 +21,7 @@ import withRoot from './withRoot';
 
 export default withRoot(() => {
   const {
-    isLogin, repasswordOpen, logout, setRepassword
+    isLogin, repasswordOpen, logout, setRepassword,
   } = useLoginValue();
 
   React.useEffect(() => {
