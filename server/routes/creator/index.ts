@@ -1,5 +1,6 @@
 import express from 'express';
 import createHttpError from 'http-errors';
+import axios from 'axios';
 import responseHelper from '../../middlewares/responseHelper';
 import doQuery from '../../model/doQuery';
 import encrypto from '../../middlewares/encryption';
@@ -314,5 +315,53 @@ router.route('/level')
         responseHelper.send(row.result[0], 'get', res);
       }
     })
+  );
+
+router.route('/follower')
+  .get(
+    responseHelper.middleware.checkSessionExists,
+    responseHelper.middleware.withErrorCatch(async (req, res, next) => {
+      const { creatorId } = responseHelper.getSessionData(req);
+      const getAccessToken = (): Promise<string> => new Promise((resolve, reject) => {
+        const clientID = process.env.PRODUCTION_CLIENT_ID;
+        const clientSecret = process.env.PRODUCTION_CLIENT_SECRET;
+
+        const authorizationUrl = ` https://id.twitch.tv/oauth2/token?client_id=${clientID}&client_secret=${clientSecret}&grant_type=client_credentials&scope=user:read:email`;
+        axios.post(authorizationUrl)
+          .then((response) => {
+            const accesstoken = response.data.access_token || '';
+            resolve(accesstoken);
+          })
+          .catch((error) => {
+            console.log('twitch API를 통한 token 가져오기 실패');
+            resolve('');
+          });
+      });
+
+      const UpdateFollower = (accessToken: string): Promise<void> => new Promise((resolve, reject) => {
+        const clientID = process.env.PRODUCTION_CLIENT_ID;
+
+        const config = {
+          headers: {
+            'Client-ID': `${clientID}`,
+            Authorization: `Bearer ${accessToken}`
+          }
+        };
+        const url = `https://api.twitch.tv/helix/users/follows?to_id=${creatorId}`;
+        axios.get(url, config)
+          .then((response) => {
+            const followers = response.data.total;
+            responseHelper.send(followers, 'get', res);
+          })
+          .catch((error) => {
+            console.log('twitch API를 통한 구독자수 요청 실패');
+            resolve();
+          });
+      });
+      getAccessToken().then(async (result) => {
+        UpdateFollower(result);
+      });
+    })
+
   );
 export default router;

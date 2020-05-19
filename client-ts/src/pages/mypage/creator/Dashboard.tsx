@@ -35,7 +35,6 @@ const Dashboard = (): JSX.Element => {
   // 배너 송출 URL 정보 조회
   const overlayUrlGet = useGetRequest<null, OverlayUrlRes>('/creator/banner/overlay');
   const snack = useDialog(); // 오버레이 url 복사 성공 알림 스낵바를 위한 객체
-
   return (
     <>
       {(contractionGet.loading || incomeCashGet.loading
@@ -46,11 +45,11 @@ const Dashboard = (): JSX.Element => {
           <GridContainer direction="row">
             {/* 크리에이터 계약 */}
             <GridItem sm={12} xl={10}>
-              {!contractionGet.loading && contractionGet.data && (
-              <ContractionCard
-                contractionData={contractionGet.data}
-                doContractionDataRequest={contractionGet.doGetRequest}
-              />
+              {!contractionGet.loading && contractionGet.data && !contractionGet.data.creatorContractionAgreement && (
+                <ContractionCard
+                  contractionData={contractionGet.data}
+                  doContractionDataRequest={contractionGet.doGetRequest}
+                />
               )}
             </GridItem>
 
@@ -71,14 +70,14 @@ const Dashboard = (): JSX.Element => {
                 {/* 수익금 카드 */}
                 <GridItem xs={12} md={6} xl={12}>
                   {!incomeCashGet.loading && incomeCashGet.data && (
-                  <IncomeCard incomeData={incomeCashGet.data} />
+                    <IncomeCard incomeData={incomeCashGet.data} />
                   )}
                 </GridItem>
 
                 {/* 광고페이지 카드 */}
                 <GridItem xs={12} md={6} xl={12}>
                   {!levelGet.loading && levelGet.data && !clicksGet.loading && clicksGet.data && (
-                  <AdPageCard levelData={levelGet.data} clicksData={clicksGet.data} />
+                    <AdPageCard levelData={levelGet.data} clicksData={clicksGet.data} />
                   )}
                 </GridItem>
               </GridContainer>
@@ -87,21 +86,21 @@ const Dashboard = (): JSX.Element => {
             {/* 수익금 차트 */}
             <GridItem xs={12} xl={6}>
               {!incomeChartGet.loading && (
-              <IncomeChart incomeChartData={incomeChartGet.data ? incomeChartGet.data : []} />
+                <IncomeChart incomeChartData={incomeChartGet.data ? incomeChartGet.data : []} />
               )}
             </GridItem>
 
             {/* 현재 송출중 배너 카드 */}
             <GridItem xs={12} sm={6} lg={4}>
               {!incomeChartGet.loading && (
-              <BannerCard currentBannerData={currentBannerGet.data ? currentBannerGet.data : []} />
+                <BannerCard currentBannerData={currentBannerGet.data ? currentBannerGet.data : []} />
               )}
             </GridItem>
 
             {/* 배너 광고 송출 URL */}
             <GridItem xs={12} sm={6} lg={4}>
               {!overlayUrlGet.loading && overlayUrlGet.data && (
-              <UrlCard overlayUrlData={overlayUrlGet.data} handleSnackOpen={snack.handleOpen} />
+                <UrlCard overlayUrlData={overlayUrlGet.data} handleSnackOpen={snack.handleOpen} />
               )}
             </GridItem>
 
