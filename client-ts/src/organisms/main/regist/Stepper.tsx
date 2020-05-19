@@ -8,7 +8,6 @@ import {
 import useStyles from './style/Stepper.style';
 import axios from '../../../utils/axios';
 import PlatformRegistForm from './PlatformRegistForm';
-// import Usertype from './Usertype';
 import RegistForm from './RegistForm';
 import PaperSheet from './Paper';
 import HOST from '../../../config';
@@ -20,7 +19,6 @@ import { myReducer, initialState } from './Stepper.reducer';
 function RegistStepper({ platform }: { platform: string }): JSX.Element {
   const classes = useStyles();
   const [activeStep, setStep] = useState(0);
-  const [userType, setType] = useState(0);
   const [state, dispatch] = useReducer(myReducer, initialState);
   const [loading, setLoading] = useState(0);
   const [open, setOpen] = useState(0);
@@ -96,7 +94,6 @@ function RegistStepper({ platform }: { platform: string }): JSX.Element {
     if (platform === undefined) {
       return (
         <RegistForm
-          userType={userType}
           handleUserSubmit={handleUserSubmit}
           handleBack={handleBack}
           state={state}
@@ -108,7 +105,6 @@ function RegistStepper({ platform }: { platform: string }): JSX.Element {
     }
     return (
       <PlatformRegistForm
-        userType={userType}
         handleUserSubmit={handleUserSubmit}
         handleBack={handleBack}
         state={state}

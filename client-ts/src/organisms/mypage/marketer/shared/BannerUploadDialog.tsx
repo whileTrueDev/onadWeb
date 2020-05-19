@@ -14,13 +14,6 @@ import axios from '../../../../utils/axios';
 
 const DEFAULT_IMAGE_PATH = '/pngs/dashboard/banner_upload_manual.png';
 
-const useStyle = makeStyles((theme: Theme) => ({
-  formRoot: {
-    margin: theme.spacing(2),
-    padding: theme.spacing(1),
-  },
-}));
-
 const useQontoStepIconStyles = makeStyles((theme: Theme) => ({
   root: { color: theme.palette.background.paper, display: 'flex', },
   active: {
@@ -98,22 +91,12 @@ const UploadDialog = (props: UploadDialogProps): JSX.Element => {
   const {
     open, onClose, recallRequest
   } = props;
-  const classes = useStyle();
   const [state, dispatch] = useReducer(myReducer, { imageName: '', imageUrl: DEFAULT_IMAGE_PATH });
   const [activeStep, setStep] = useState(0);
   const handleClose = (): void => {
     dispatch({ type: 'reset' });
     setStep(0);
     onClose();
-  };
-
-
-  const handleNext = (number: number) => (): void => {
-    if (state.imageUrl !== DEFAULT_IMAGE_PATH) {
-      setStep(number);
-    } else {
-      alert('파일을 선택하지 않았습니다.');
-    }
   };
 
   // // usePostRequest 수정 이후 적용

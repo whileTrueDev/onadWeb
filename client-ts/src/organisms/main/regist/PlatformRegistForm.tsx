@@ -48,7 +48,6 @@ const domains = [
   - 3. passwordValue
 */
 export interface Props {
-  userType: number;
   handleBack: () => void;
   handleUserSubmit: (user: any) => void;
   state: StepState;
@@ -63,7 +62,6 @@ interface ProfileData {
 }
 
 function PlatformRegistForm({
-  userType,
   handleBack,
   handleUserSubmit,
   state,
@@ -224,18 +222,14 @@ function PlatformRegistForm({
                 </Grid>
               </Grid>
               <Grid item>
-                {userType
-                  ? (
-                    <FormControl style={{ marginTop: '8px', marginBottom: '16px' }}>
-                      <InputLabel shrink>사업자등록번호</InputLabel>
-                      <Input
-                        onChange={handleChange('marketerBusinessRegNum')}
-                        name="businessRegNum"
-                      />
-                      <FormHelperText>사업자 번호를 입력하세요.</FormHelperText>
-                    </FormControl>
-                  )
-                  : <div />}
+                <FormControl style={{ marginTop: '8px', marginBottom: '16px' }}>
+                  <InputLabel shrink>사업자등록번호</InputLabel>
+                  <Input
+                    onChange={handleChange('marketerBusinessRegNum')}
+                    name="businessRegNum"
+                  />
+                  <FormHelperText>사업자 번호를 입력하세요.</FormHelperText>
+                </FormControl>
               </Grid>
               <Grid container direction="row">
                 <Grid item>

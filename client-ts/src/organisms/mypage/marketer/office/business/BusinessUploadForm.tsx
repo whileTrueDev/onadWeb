@@ -1,7 +1,6 @@
 import React from 'react';
 // core
 import { makeStyles, withStyles, Theme } from '@material-ui/core/styles';
-import Dialog from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
 // own components
 import Card from '../../../../../atoms/Card/Card';

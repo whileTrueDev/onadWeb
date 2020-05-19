@@ -6,7 +6,6 @@ import {
   ListItem, List, FormControlLabel,
   Snackbar, Hidden, Switch, CircularProgress
 } from '@material-ui/core';
-import Check from '@material-ui/icons/Check';
 
 import Countup from 'react-countup';
 import { Assessment, Delete as DeleteIcon, Build } from '@material-ui/icons';
@@ -191,7 +190,7 @@ export default function CampaignList(
                   <Hidden xsDown>
                     <Grid item>
                       <Grid container direction="column" spacing={2}>
-                        {detail.linkData.links.map((link, index): JSX.Element | null => (
+                        {detail.linkData.links.map((link): JSX.Element | null => (
                           <Grid item key={link.linkName}>
                             <Typography variant="body1" color="primary" align="center">
                               링크 이름
@@ -208,24 +207,9 @@ export default function CampaignList(
                               {link.linkTo}
                             </Typography>
                             <Divider orientation="horizontal" />
-                            {/* {
-                              detail.linkConfirmState ? (
-                                <Typography gutterBottom variant="body2" color="primary" align="center">
-                                  승인 완료
-                                  <span role="img" area-label="ok-mark">👌</span>
-                                </Typography>
-                              )
-                                : (
-                                  <Typography gutterBottom variant="body2" color="secondary" align="center">
-                                    승인대기
-                                    <span role="img" area-label="clock-mark">⏰</span>
-                                  </Typography>
-                                )
-                            } */}
                             {confirmCases(detail.linkConfirmState)}
                           </Grid>
                         ))}
-                        {/* {detail.linkConfirmState} */}
                       </Grid>
                     </Grid>
                   </Hidden>

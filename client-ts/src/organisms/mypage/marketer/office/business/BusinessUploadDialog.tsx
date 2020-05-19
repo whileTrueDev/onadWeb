@@ -76,7 +76,7 @@ export default function BusinessRegiUploadDialog(
             }}
             disabled={!imageName}
           >
-            진행
+            등록
           </Button>
           <Button onClick={(): void => { handleClose(); handleReset(); }}>
             취소

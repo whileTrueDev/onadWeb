@@ -54,7 +54,6 @@ const domains = [
 */
 
 function RegistForm({
-  userType,
   handleBack,
   handleUserSubmit,
   state,
