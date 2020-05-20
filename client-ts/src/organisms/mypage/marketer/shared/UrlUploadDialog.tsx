@@ -153,10 +153,6 @@ export default function UrlUploadDialog(props: UrlUploadDialogProps): JSX.Elemen
   };
   const handleReset = (): void => {
     setStep(0);
-    // subOpen.handleToggle();
-    // mainUrl.value = '';
-    // mainUrlName.value = '';
-    // subUrl.value = '';
     handleClose();
   };
   return (
