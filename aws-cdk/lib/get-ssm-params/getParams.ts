@@ -64,32 +64,29 @@ export default function getSSMParams(scope: cdk.Construct) {
       parameterName: '/DB_CHARSET',
     }
   );
-  const GOOGLE_CLIENT_ID = ssm.StringParameter.fromStringParameterAttributes(
+  const GOOGLE_CLIENT_ID = ssm.StringParameter.fromSecureStringParameterAttributes(
     scope, 'GOOGLE_CLIENT_ID', {
-      parameterName: '/GOOGLE_CLIENT_ID',
+      parameterName: '/GOOGLE_CLIENT_ID', version: 1
     }
   );
-  const GOOGLE_CLIENT_SECRET = ssm.StringParameter.fromStringParameterAttributes(
+  const GOOGLE_CLIENT_SECRET = ssm.StringParameter.fromSecureStringParameterAttributes(
     scope, 'GOOGLE_CLIENT_SECRET', {
-      parameterName: '/GOOGLE_CLIENT_SECRET',
+      parameterName: '/GOOGLE_CLIENT_SECRET', version: 1
     }
   );
   const IMP_KEY = ssm.StringParameter.fromSecureStringParameterAttributes(
     scope, 'IMP_KEY', {
-      parameterName: '/IMP_KEY',
-      version: 1
+      parameterName: '/IMP_KEY', version: 1
     }
   );
   const IMP_SECRET = ssm.StringParameter.fromSecureStringParameterAttributes(
     scope, 'IMP_SECRET', {
-      parameterName: '/IMP_SECRET',
-      version: 1
+      parameterName: '/IMP_SECRET', version: 1
     }
   );
   const KAKAO_CLIENT_ID = ssm.StringParameter.fromSecureStringParameterAttributes(
     scope, 'KAKAO_CLIENT_ID', {
-      parameterName: '/KAKAO_CLIENT_ID',
-      version: 1
+      parameterName: '/KAKAO_CLIENT_ID', version: 1
     }
   );
   const MAIL_ID = ssm.StringParameter.fromStringParameterAttributes(

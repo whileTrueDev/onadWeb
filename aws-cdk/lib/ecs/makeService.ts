@@ -1,6 +1,5 @@
 import * as cdk from '@aws-cdk/core';
 import * as ecs from '@aws-cdk/aws-ecs';
-import { Cluster } from '@aws-cdk/aws-ecs';
 
 export default function makeService(
   scope: cdk.Construct,

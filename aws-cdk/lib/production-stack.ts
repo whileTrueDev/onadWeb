@@ -13,16 +13,20 @@ import getParams from './get-ssm-params/getParams';
 import makeTaskDefinition from './ecs/makeTaskDefinition';
 import makeService from './ecs/makeService';
 
+const DOMAIN = 'hwasurr.io';
+
 export default class OnADProductionAwsStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
     // *********************************************
     // Define VPC
+
     const productionVpc = new ec2.Vpc(this, 'OnAdProductionVpc');
 
     // *********************************************
     // Make Security groups
+
     // empty security group
     const emptySecGrp = new ec2.SecurityGroup(this, 'emptySecurityGroup', {
       vpc: productionVpc,
@@ -60,6 +64,7 @@ export default class OnADProductionAwsStack extends cdk.Stack {
 
     // *********************************************
     // Create IAM Role for Fargate task, CloudWatch
+
     const onadTaskRole = new iam.Role(this, 'ecsTaskExecutionRole', {
       assumedBy: new iam.ServicePrincipal('ecs-tasks.amazonaws.com')
     });
@@ -77,14 +82,17 @@ export default class OnADProductionAwsStack extends cdk.Stack {
 
     // *********************************************
     // Define ECS Cluster
+
     const productionCluster = new ecs.Cluster(this, 'OnADCluster', { vpc: productionVpc });
 
     // *********************************************
     // Get params from SSM Parameter Store
+
     const ssmParameters = getParams(this);
 
     // *********************************************
     // Create Task Definitions, CloudWatch LogGroups
+
     // React - Task definition
     const onadClientRepo = 'hwasurr/onad_web';
     const onadClientPort = 3001;
@@ -231,31 +239,49 @@ export default class OnADProductionAwsStack extends cdk.Stack {
     // Create ECS Service
 
     // onadWeb
-    const onadWebService = makeService(this, onadClientName, productionCluster, onadWeb.taskDefinition, {
-      assignPublicIp: true, desiredCount: 1, securityGroup: onadWebSecGrp,
+    const onadWebService = new ecs.FargateService(this, `${onadClientName}Service`, {
+      cluster: productionCluster,
+      taskDefinition: onadWeb.taskDefinition,
+      assignPublicIp: true,
+      desiredCount: 1,
+      securityGroup: onadWebSecGrp,
     });
-
     // onadWebApi
-    const onadWebApiService = makeService(this, onadApiName, productionCluster, onadApi.taskDefinition, {
-      assignPublicIp: true, desiredCount: 1, securityGroup: onadWebApiSecGrp
+    const onadWebApiService = new ecs.FargateService(this, `${onadApiName}Service`, {
+      cluster: productionCluster,
+      taskDefinition: onadApi.taskDefinition,
+      assignPublicIp: true,
+      desiredCount: 1,
+      securityGroup: onadWebApiSecGrp,
     });
-
     // banner broad
-    const onadBannerBroadService = makeService(
-      this, onadBannerBroadName, productionCluster, onadBannerBroad.taskDefinition, {
-        assignPublicIp: true, desiredCount: 1, securityGroup: bannerBroadSecGrp
+    const onadBannerBroadService = new ecs.FargateService(
+      this, `${onadBannerBroadName}Service`, {
+        cluster: productionCluster,
+        taskDefinition: onadBannerBroad.taskDefinition,
+        assignPublicIp: true,
+        desiredCount: 1,
+        securityGroup: bannerBroadSecGrp,
       }
     );
-
     // tracker
-    const onadTrackerService = makeService(this, onadTrackerName, productionCluster, onadTracker.taskDefinition, {
-      assignPublicIp: true, desiredCount: 1, securityGroup: trackerSecGrp
-    });
-
+    const onadTrackerService = new ecs.FargateService(
+      this, `${onadTrackerName}Service`, {
+        cluster: productionCluster,
+        taskDefinition: onadTracker.taskDefinition,
+        assignPublicIp: true,
+        desiredCount: 1,
+        securityGroup: trackerSecGrp,
+      }
+    );
     // chatbot
-    const onadTwitchChatbotService = makeService(
-      this, onadTwitchChatbotName, productionCluster, onadTwitchChatbot.taskDefinition, {
-        assignPublicIp: true, desiredCount: 1, securityGroup: emptySecGrp
+    const onadTwitchChatbotService = new ecs.FargateService(
+      this, `${onadTwitchChatbotName}Service`, {
+        cluster: productionCluster,
+        taskDefinition: onadTwitchChatbot.taskDefinition,
+        assignPublicIp: true,
+        desiredCount: 1,
+        securityGroup: emptySecGrp,
       }
     );
 
@@ -293,66 +319,118 @@ export default class OnADProductionAwsStack extends cdk.Stack {
     }));
 
     // *********************************************
+    // Route53 ALB, subdomain 등록
+
+    // Add Hosted zone
+    const onadHostzone = route53.HostedZone.fromHostedZoneAttributes(
+      this, `find${DOMAIN}Zone`, {
+        zoneName: DOMAIN,
+        hostedZoneId: process.env.AWS_HOSTEDZONE_ID!,
+      }
+    );
+
+    // *********************************************
+    // Get DNS validated Certificates
+
+    const sslcert = new acm.Certificate(this, 'DnsCertificate', {
+      domainName: `${DOMAIN}`,
+      subjectAlternativeNames: [`*.${DOMAIN}`],
+    });
+
+    // *********************************************
     // Create ALB (Application Loadbalencer)
+
     const onadLoadBalancer = new elbv2.ApplicationLoadBalancer(this, 'OnADLB', {
       vpc: productionVpc, internetFacing: true
     });
     // Add Http listener
-    const onadHttpListener = onadLoadBalancer.addListener('OnADHttpListener', { port: 80 });
-    onadHttpListener.addRedirectResponse('redirect80To443', {
+    const onadListenerDefaultGroup = new elbv2.ApplicationTargetGroup(this, 'httpsDefaultTargetGroup', {
+      vpc: productionVpc,
+      protocol: elbv2.ApplicationProtocol.HTTP,
+      port: onadClientPort,
+      targets: [onadWebService],
+      targetGroupName: `${onadClientName}Target`,
+    });
+    const onadHttpListener = onadLoadBalancer.addListener('OnADHttpListener', {
+      port: 80,
+      defaultTargetGroups: [onadListenerDefaultGroup]
+    });
+    onadHttpListener.addRedirectResponse('80to443RedirectTarget', {
       priority: 1,
-      hostHeader: '*',
+      pathPattern: '/*',
       statusCode: 'HTTP_301',
       port: '443',
-      protocol: 'HTTPS'
+      protocol: elbv2.Protocol.HTTPS
     });
+    onadHttpListener.connections.allowDefaultPortFromAnyIpv4('http ALB open to world');
 
     // Add https listener
     const onadHttpsListener = onadLoadBalancer.addListener('OnADHttpsListener', {
       port: 443,
-      certificates: [new acm.Certificate(this, 'onad.io-Certificate', {
-        domainName: 'onad.io'
-      })] // The CloudFormation deployment will wait until this verification process has been completed
+      // The CloudFormation deployment will wait until this verification process has been completed
+      certificates: [sslcert],
+      sslPolicy: elbv2.SslPolicy.RECOMMENDED,
+      defaultTargetGroups: [onadListenerDefaultGroup]
     });
-    const onadWebHostHeader = 'onad.io';
-    onadHttpsListener.addTargets('onadWebTargetGroup', {
+    const onadWebHostHeader = `test.${DOMAIN}`;
+    onadHttpsListener.addTargetGroups('onadWebTargetGroups', {
+      priority: 1,
+      targetGroups: [onadListenerDefaultGroup],
       hostHeader: onadWebHostHeader,
-      targets: [onadWebService],
-      healthCheck: { path: '/' },
     });
-    const onadWebApiHostHeader = 'api.onad.io';
+    const onadWebApiHostHeader = `test-api.${DOMAIN}`;
     onadHttpsListener.addTargets('onadWebApiGroup', {
+      targetGroupName: `${onadApiName}Target`,
+      priority: 2,
+      port: onadApiPort,
+      protocol: elbv2.ApplicationProtocol.HTTP,
       hostHeader: onadWebApiHostHeader,
       targets: [onadWebApiService],
-      healthCheck: { path: '/' },
+
     });
-    const onadBannerBroadHostHeader = 'banner.onad.io';
+    const onadBannerBroadHostHeader = `test-banner.${DOMAIN}`;
     onadHttpsListener.addTargets('onadBannerBroadGroup', {
+      targetGroupName: `${onadBannerBroadName}Target`,
+      priority: 3,
+      port: onadBannerBroadPort,
+      protocol: elbv2.ApplicationProtocol.HTTP,
       hostHeader: onadBannerBroadHostHeader,
       targets: [onadBannerBroadService],
-      healthCheck: { path: '/' },
+
     });
-    const onadTrackerHostHeader = 't.onad.io';
+    const onadTrackerHostHeader = `test-t.${DOMAIN}`;
     onadHttpsListener.addTargets('onadTrackerGroup', {
+      targetGroupName: `${onadTrackerName}Target`,
+      priority: 4,
+      port: onadTrackerPort,
+      protocol: elbv2.ApplicationProtocol.HTTP,
       hostHeader: onadTrackerHostHeader,
       targets: [onadTrackerService],
-      healthCheck: { path: '/' },
+
     });
+    onadHttpsListener.connections.allowDefaultPortFromAnyIpv4('https ALB open to world');
 
     // *********************************************
     // Route53 ALB, subdomain 등록
-    const onadHostzone = new route53.PublicHostedZone(this, 'onadHostedZone', {
-      zoneName: 'onad.io'
-    });
-    // Add Loadbalancer ARecord
+
+    // Add Loadbalancer ARecord to onadHostZone
     const onadLoadbalancerRecord = new route53.ARecord(this, 'LoadbalancerARecord', {
       zone: onadHostzone,
-      recordName: 'onad.io.',
+      recordName: `${DOMAIN}.`,
       target: route53.RecordTarget.fromAlias(
         new alias.LoadBalancerTarget(onadLoadBalancer)
       )
     });
 
-    // route 53 에 ACM certificate record 등록. 알아보고 다른 스택으로 작성해야 한다면 그렇게.
+    const subdomains = [
+      'test', 'test-t', 'test-api', 'test-banner'
+    ];
+    subdomains.map((subdomain) => new route53.ARecord(this, `subdomain/${subdomain}`, {
+      zone: onadHostzone,
+      recordName: `${subdomain}.${DOMAIN}`,
+      target: route53.RecordTarget.fromAlias(
+        new alias.LoadBalancerTarget(onadLoadBalancer)
+      )
+    }));
   }
 }
