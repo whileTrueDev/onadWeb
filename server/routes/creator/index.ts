@@ -326,13 +326,19 @@ router.route('/follower')
         const clientID = process.env.PRODUCTION_CLIENT_ID;
         const clientSecret = process.env.PRODUCTION_CLIENT_SECRET;
 
-        const authorizationUrl = ` https://id.twitch.tv/oauth2/token?client_id=${clientID}&client_secret=${clientSecret}&grant_type=client_credentials&scope=user:read:email`;
-        axios.post(authorizationUrl)
+        const authorizationUrl = 'https://id.twitch.tv/oauth2/token';
+
+        axios.post(authorizationUrl, null, {
+          params: {
+            client_id: clientID, client_secret: clientSecret, grant_type: 'client_credentials', scope: 'user:read:email'
+          }
+        })
           .then((response) => {
             const accesstoken = response.data.access_token || '';
             resolve(accesstoken);
           })
           .catch((error) => {
+            console.log(error);
             console.log('twitch API를 통한 token 가져오기 실패');
             resolve('');
           });
