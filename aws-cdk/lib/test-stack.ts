@@ -148,7 +148,7 @@ export default class OnADTestAwsStack extends cdk.Stack {
     const onadBannerBroadPort = 3002;
     const onadBannerBroadName = 'TEST-onad-banner-broad';
     const onadBannerBroad = makeTaskDefinition(this, onadBannerBroadName, onadBannerBroadRepo, onadTaskRole, {
-      SOCKET_HOSTNAME: ecs.Secret.fromSsmParameter(ssmParameters.PRODUCTION_SOCKET_HOSTNAME),
+      SOCKET_HOSTNAME: ecs.Secret.fromSsmParameter(ssmParameters.TEST_SOCKET_HOSTNAME),
       DB_HOST: ecs.Secret.fromSsmParameter(ssmParameters.DB_HOST),
       DB_USER: ecs.Secret.fromSsmParameter(ssmParameters.DB_USER),
       DB_PASSWORD: ecs.Secret.fromSsmParameter(ssmParameters.DB_PASSWORD),
