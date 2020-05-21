@@ -4,6 +4,7 @@
   "containerDefinitions": [
     {
       "dnsSearchDomains": null,
+      "environmentFiles": null,
       "logConfiguration": {
         "logDriver": "awslogs",
         "secretOptions": null,
@@ -61,7 +62,7 @@
       "memoryReservation": 500,
       "volumesFrom": [],
       "stopTimeout": null,
-      "image": "hwasurr/onad_tracker",
+      "image": "hwasurr/onad_tracker:d12f8213c1ba98d19d02e60ad16cd0223e15d25c",
       "startTimeout": null,
       "firelensConfiguration": null,
       "dependsOn": null,
@@ -88,7 +89,7 @@
     "EC2",
     "FARGATE"
   ],
-  "taskDefinitionArn": "arn:aws:ecs:ap-northeast-2:803609402610:task-definition/onad-tracker:1",
+  "taskDefinitionArn": "arn:aws:ecs:ap-northeast-2:803609402610:task-definition/TEST-onad-tracker:6",
   "family": "TEST-onad-tracker",
   "requiresAttributes": [
     {
@@ -140,7 +141,7 @@
   ],
   "networkMode": "awsvpc",
   "cpu": "256",
-  "revision": 1,
+  "revision": 6,
   "status": "ACTIVE",
   "inferenceAccelerators": null,
   "proxyConfiguration": null,
