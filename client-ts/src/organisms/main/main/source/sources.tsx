@@ -32,6 +32,72 @@ const sources = {
       location: 'mainpageLogin'
     },
   },
+  Reference: [
+    {
+      BannerUrl: './pngs/Reference/banner/bless.gif',
+      imageUrl: './pngs/Reference/company/bless.png'
+    },
+    {
+      BannerUrl: './pngs/Reference/banner/bluestacks.gif',
+      imageUrl: './pngs/Reference/company/bluestacks.png'
+    },
+    {
+      BannerUrl: './pngs/Reference/banner/bufftoon.gif',
+      imageUrl: './pngs/Reference/company/bufftoon.png'
+    },
+    {
+      BannerUrl: './pngs/Reference/banner/CGV.gif',
+      imageUrl: './pngs/Reference/company/CGV.png'
+    },
+    {
+      BannerUrl: './pngs/Reference/banner/counterside.gif',
+      imageUrl: './pngs/Reference/company/counterside.png'
+    },
+    {
+      BannerUrl: './pngs/Reference/banner/eduwill.gif',
+      imageUrl: './pngs/Reference/company/eduwill.png'
+    },
+    {
+      BannerUrl: './pngs/Reference/banner/fifamobile.gif',
+      imageUrl: './pngs/Reference/company/fifamobile.png'
+    },
+    {
+      BannerUrl: './pngs/Reference/banner/Finnq.gif',
+      imageUrl: './pngs/Reference/company/Finnq.png'
+    },
+    {
+      BannerUrl: './pngs/Reference/banner/gstar.gif',
+      imageUrl: './pngs/Reference/company/gstar.png'
+    },
+    {
+      BannerUrl: './pngs/Reference/banner/gubgoo.gif',
+      imageUrl: './pngs/Reference/company/gubgoo.png'
+    },
+    {
+      BannerUrl: './pngs/Reference/banner/junran.gif',
+      imageUrl: './pngs/Reference/company/junran.png'
+    },
+    {
+      BannerUrl: './pngs/Reference/banner/lastkingdom.png',
+      imageUrl: './pngs/Reference/company/lastkingdom.png'
+    },
+    {
+      BannerUrl: './pngs/Reference/banner/LGU+.png',
+      imageUrl: './pngs/Reference/company/LGU+.png'
+    },
+    {
+      BannerUrl: './pngs/Reference/banner/stillalive.gif',
+      imageUrl: './pngs/Reference/company/stillalive.png'
+    },
+    {
+      BannerUrl: './pngs/Reference/banner/v4.gif',
+      imageUrl: './pngs/Reference/company/v4.png'
+    },
+    {
+      BannerUrl: './pngs/Reference/banner/yungjoo.gif',
+      imageUrl: './pngs/Reference/company/yungjoo.png'
+    },
+  ]
 };
 
 export default sources;
