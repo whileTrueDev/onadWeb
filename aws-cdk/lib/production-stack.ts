@@ -11,7 +11,6 @@ import * as acm from '@aws-cdk/aws-certificatemanager';
 
 import getParams from './get-ssm-params/getParams';
 import makeTaskDefinition from './ecs/makeTaskDefinition';
-import makeService from './ecs/makeService';
 
 const DOMAIN = 'hwasurr.io';
 
@@ -322,12 +321,12 @@ export default class OnADProductionAwsStack extends cdk.Stack {
     // Route53 ALB, subdomain 등록
 
     // Add Hosted zone
-    const onadHostzone = route53.HostedZone.fromHostedZoneAttributes(
-      this, `find${DOMAIN}Zone`, {
-        zoneName: DOMAIN,
-        hostedZoneId: process.env.AWS_HOSTEDZONE_ID!,
-      }
-    );
+    // const onadHostzone = route53.HostedZone.fromHostedZoneAttributes(
+    //   this, `find${DOMAIN}Zone`, {
+    //     zoneName: DOMAIN,
+    //     hostedZoneId: process.env.AWS_HOSTEDZONE_ID!,
+    //   }
+    // );
 
     // *********************************************
     // Get DNS validated Certificates
@@ -414,23 +413,23 @@ export default class OnADProductionAwsStack extends cdk.Stack {
     // Route53 ALB, subdomain 등록
 
     // Add Loadbalancer ARecord to onadHostZone
-    const onadLoadbalancerRecord = new route53.ARecord(this, 'LoadbalancerARecord', {
-      zone: onadHostzone,
-      recordName: `${DOMAIN}.`,
-      target: route53.RecordTarget.fromAlias(
-        new alias.LoadBalancerTarget(onadLoadBalancer)
-      )
-    });
+    // const onadLoadbalancerRecord = new route53.ARecord(this, 'LoadbalancerARecord', {
+    //   zone: onadHostzone,
+    //   recordName: `${DOMAIN}.`,
+    //   target: route53.RecordTarget.fromAlias(
+    //     new alias.LoadBalancerTarget(onadLoadBalancer)
+    //   )
+    // });
 
-    const subdomains = [
-      'test', 'test-t', 'test-api', 'test-banner'
-    ];
-    subdomains.map((subdomain) => new route53.ARecord(this, `subdomain/${subdomain}`, {
-      zone: onadHostzone,
-      recordName: `${subdomain}.${DOMAIN}`,
-      target: route53.RecordTarget.fromAlias(
-        new alias.LoadBalancerTarget(onadLoadBalancer)
-      )
-    }));
+    // const subdomains = [
+    //   'test', 'test-t', 'test-api', 'test-banner'
+    // ];
+    // subdomains.map((subdomain) => new route53.ARecord(this, `subdomain/${subdomain}`, {
+    //   zone: onadHostzone,
+    //   recordName: `${subdomain}.${DOMAIN}`,
+    //   target: route53.RecordTarget.fromAlias(
+    //     new alias.LoadBalancerTarget(onadLoadBalancer)
+    //   )
+    // }));
   }
 }
