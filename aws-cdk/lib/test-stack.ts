@@ -82,7 +82,8 @@ export default class OnADProductionAwsStack extends cdk.Stack {
     // *********************************************
     // Define ECS Cluster
 
-    const productionCluster = new ecs.Cluster(this, 'OnADCluster', { vpc: productionVpc });
+    const productionCluster = new ecs.Cluster(this, 'OnADCluster',
+      { vpc: productionVpc, clusterName: 'OnAD-Test' });
 
     // *********************************************
     // Get params from SSM Parameter Store
