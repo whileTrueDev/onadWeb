@@ -1,254 +1,254 @@
 {
-    "ipcMode": null,
-    "executionRoleArn": "arn:aws:iam::803609402610:role/ecsTaskExecutionRole",
-    "containerDefinitions": [
-      {
-        "dnsSearchDomains": null,
-        "logConfiguration": {
-          "logDriver": "awslogs",
-          "secretOptions": null,
-          "options": {
-            "awslogs-group": "/ecs/onad-web-api",
-            "awslogs-region": "ap-northeast-2",
-            "awslogs-stream-prefix": "ecs"
-          }
+  "ipcMode": null,
+  "executionRoleArn": "arn:aws:iam::803609402610:role/ecsTaskExecutionRole",
+  "containerDefinitions": [
+    {
+      "dnsSearchDomains": null,
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "secretOptions": null,
+        "options": {
+          "awslogs-group": "/ecs/onad-web-api",
+          "awslogs-region": "ap-northeast-2",
+          "awslogs-stream-prefix": "ecs"
+        }
+      },
+      "entryPoint": null,
+      "portMappings": [
+        {
+          "hostPort": 3000,
+          "protocol": "tcp",
+          "containerPort": 3000
+        }
+      ],
+      "command": null,
+      "linuxParameters": null,
+      "cpu": 0,
+      "environment": [],
+      "resourceRequirements": null,
+      "ulimits": null,
+      "dnsServers": null,
+      "mountPoints": [],
+      "workingDirectory": null,
+      "secrets": [
+        {
+          "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/DB_CHARSET",
+          "name": "DB_CHARSET"
         },
-        "entryPoint": null,
-        "portMappings": [
-          {
-            "hostPort": 3000,
-            "protocol": "tcp",
-            "containerPort": 3000
-          }
-        ],
-        "command": null,
-        "linuxParameters": null,
-        "cpu": 0,
-        "environment": [],
-        "resourceRequirements": null,
-        "ulimits": null,
-        "dnsServers": null,
-        "mountPoints": [],
-        "workingDirectory": null,
-        "secrets": [
-          {
-            "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/DB_CHARSET",
-            "name": "DB_CHARSET"
-          },
-          {
-            "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/DB_HOST",
-            "name": "DB_HOST"
-          },
-          {
-            "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/DB_PASSWORD",
-            "name": "DB_PASSWORD"
-          },
-          {
-            "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/DB_PORT",
-            "name": "DB_PORT"
-          },
-          {
-            "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/DB_USER",
-            "name": "DB_USER"
-          },
-          {
-            "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/DB_DATABASE",
-            "name": "DB_DATABASE"
-          },
-          {
-            "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/PRODUCTION_CLIENT_ID",
-            "name": "PRODUCTION_CLIENT_ID"
-          },
-          {
-            "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/PRODUCTION_CLIENT_SECRET",
-            "name": "PRODUCTION_CLIENT_SECRET"
-          },
-          {
-            "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/SESSION_STORE_DB_HOST",
-            "name": "SESSION_STORE_DB_HOST"
-          },
-          {
-            "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/SESSION_STORE_DB_USER",
-            "name": "SESSION_STORE_DB_USER"
-          },
-          {
-            "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/SESSION_STORE_DB_PASSWORD",
-            "name": "SESSION_STORE_DB_PASSWORD"
-          },
-          {
-            "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/SESSION_STORE_DB_DATABASE",
-            "name": "SESSION_STORE_DB_DATABASE"
-          },
-          {
-            "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/SESSION_STORE_DB_PORT",
-            "name": "SESSION_STORE_DB_PORT"
-          },
-          {
-            "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/SLACK_ALARM_URL",
-            "name": "SLACK_ALARM_URL"
-          },
-          {
-            "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/NAVER_CLOUD_ACCESS_KEY",
-            "name": "NAVER_CLOUD_ACCESS_KEY"
-          },
-          {
-            "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/NAVER_CLOUD_SECRET_KEY",
-            "name": "NAVER_CLOUD_SECRET_KEY"
-          },
-          {
-            "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/NAVER_CLOUD_BIZMESSAGE_SERVICE_ID",
-            "name": "NAVER_CLOUD_BIZMESSAGE_SERVICE_ID"
-          },
-          {
-            "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/GOOGLE_CLIENT_ID",
-            "name": "GOOGLE_CLIENT_ID"
-          },
-          {
-            "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/GOOGLE_CLIENT_SECRET",
-            "name": "GOOGLE_CLIENT_SECRET"
-          },
-          {
-            "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/NAVER_CLIENT_ID",
-            "name": "NAVER_CLIENT_ID"
-          },
-          {
-            "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/NAVER_CLIENT_SECRET",
-            "name": "NAVER_CLIENT_SECRET"
-          },
-          {
-            "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/KAKAO_CLIENT_ID",
-            "name": "KAKAO_CLIENT_ID"
-          },
-          {
-            "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/CIPHER_KEY",
-            "name": "CIPHER_KEY"
-          },
-          {
-            "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/CIPHER_IV",
-            "name": "CIPHER_IV"
-          },
-          {
-            "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/REACT_APP_GOOGLE_MAP_API_KEY",
-            "name": "REACT_APP_GOOGLE_MAP_API_KEY"
-          },
-          {
-            "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/IMP_KEY",
-            "name": "IMP_KEY"
-          },
-          {
-            "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/IMP_SECRET",
-            "name": "IMP_SECRET"
-          },
-          {
-            "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/MAIL_ID",
-            "name": "MAIL_ID"
-          },
-          {
-            "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/MAIL_PASSWORD",
-            "name": "MAIL_PASSWORD"
-          },
-          {
-            "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/S3_ACCESS_KEY_ID",
-            "name": "AWS_S3_ACCESS_KEY_ID"
-          },
-          {
-            "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/S3_ACCESS_KEY_SECRET",
-            "name": "AWS_S3_ACCESS_KEY_SECRET"
-          }
-        ],
-        "dockerSecurityOptions": null,
-        "memory": null,
-        "memoryReservation": 500,
-        "volumesFrom": [],
-        "stopTimeout": null,
-        "image": "hwasurr/onad_web_api",
-        "startTimeout": null,
-        "firelensConfiguration": null,
-        "dependsOn": null,
-        "disableNetworking": null,
-        "interactive": null,
-        "healthCheck": null,
-        "essential": true,
-        "links": null,
-        "hostname": null,
-        "extraHosts": null,
-        "pseudoTerminal": null,
-        "user": null,
-        "readonlyRootFilesystem": null,
-        "dockerLabels": null,
-        "systemControls": null,
-        "privileged": null,
-        "name": "onad-web-api"
-      }
-    ],
-    "placementConstraints": [],
-    "memory": "512",
-    "taskRoleArn": "arn:aws:iam::803609402610:role/ecsTaskExecutionRole",
-    "compatibilities": [
-      "EC2",
-      "FARGATE"
-    ],
-    "taskDefinitionArn": "arn:aws:ecs:ap-northeast-2:803609402610:task-definition/onad-web-api:7",
-    "family": "onad-web-api",
-    "requiresAttributes": [
-      {
-        "targetId": null,
-        "targetType": null,
-        "value": null,
-        "name": "com.amazonaws.ecs.capability.logging-driver.awslogs"
-      },
-      {
-        "targetId": null,
-        "targetType": null,
-        "value": null,
-        "name": "ecs.capability.execution-role-awslogs"
-      },
-      {
-        "targetId": null,
-        "targetType": null,
-        "value": null,
-        "name": "com.amazonaws.ecs.capability.docker-remote-api.1.19"
-      },
-      {
-        "targetId": null,
-        "targetType": null,
-        "value": null,
-        "name": "com.amazonaws.ecs.capability.docker-remote-api.1.21"
-      },
-      {
-        "targetId": null,
-        "targetType": null,
-        "value": null,
-        "name": "com.amazonaws.ecs.capability.task-iam-role"
-      },
-      {
-        "targetId": null,
-        "targetType": null,
-        "value": null,
-        "name": "ecs.capability.secrets.ssm.environment-variables"
-      },
-      {
-        "targetId": null,
-        "targetType": null,
-        "value": null,
-        "name": "com.amazonaws.ecs.capability.docker-remote-api.1.18"
-      },
-      {
-        "targetId": null,
-        "targetType": null,
-        "value": null,
-        "name": "ecs.capability.task-eni"
-      }
-    ],
-    "pidMode": null,
-    "requiresCompatibilities": [
-      "FARGATE"
-    ],
-    "networkMode": "awsvpc",
-    "cpu": "256",
-    "revision": 7,
-    "status": "ACTIVE",
-    "inferenceAccelerators": null,
-    "proxyConfiguration": null,
-    "volumes": []
-  }
+        {
+          "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/DB_HOST",
+          "name": "DB_HOST"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/DB_PASSWORD",
+          "name": "DB_PASSWORD"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/DB_PORT",
+          "name": "DB_PORT"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/DB_USER",
+          "name": "DB_USER"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/DB_DATABASE",
+          "name": "DB_DATABASE"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/PRODUCTION_CLIENT_ID",
+          "name": "PRODUCTION_CLIENT_ID"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/PRODUCTION_CLIENT_SECRET",
+          "name": "PRODUCTION_CLIENT_SECRET"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/SESSION_STORE_DB_HOST",
+          "name": "SESSION_STORE_DB_HOST"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/SESSION_STORE_DB_USER",
+          "name": "SESSION_STORE_DB_USER"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/SESSION_STORE_DB_PASSWORD",
+          "name": "SESSION_STORE_DB_PASSWORD"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/SESSION_STORE_DB_DATABASE",
+          "name": "SESSION_STORE_DB_DATABASE"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/SESSION_STORE_DB_PORT",
+          "name": "SESSION_STORE_DB_PORT"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/SLACK_ALARM_URL",
+          "name": "SLACK_ALARM_URL"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/NAVER_CLOUD_ACCESS_KEY",
+          "name": "NAVER_CLOUD_ACCESS_KEY"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/NAVER_CLOUD_SECRET_KEY",
+          "name": "NAVER_CLOUD_SECRET_KEY"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/NAVER_CLOUD_BIZMESSAGE_SERVICE_ID",
+          "name": "NAVER_CLOUD_BIZMESSAGE_SERVICE_ID"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/GOOGLE_CLIENT_ID",
+          "name": "GOOGLE_CLIENT_ID"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/GOOGLE_CLIENT_SECRET",
+          "name": "GOOGLE_CLIENT_SECRET"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/NAVER_CLIENT_ID",
+          "name": "NAVER_CLIENT_ID"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/NAVER_CLIENT_SECRET",
+          "name": "NAVER_CLIENT_SECRET"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/KAKAO_CLIENT_ID",
+          "name": "KAKAO_CLIENT_ID"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/CIPHER_KEY",
+          "name": "CIPHER_KEY"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/CIPHER_IV",
+          "name": "CIPHER_IV"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/REACT_APP_GOOGLE_MAP_API_KEY",
+          "name": "REACT_APP_GOOGLE_MAP_API_KEY"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/IMP_KEY",
+          "name": "IMP_KEY"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/IMP_SECRET",
+          "name": "IMP_SECRET"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/MAIL_ID",
+          "name": "MAIL_ID"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/MAIL_PASSWORD",
+          "name": "MAIL_PASSWORD"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/S3_ACCESS_KEY_ID",
+          "name": "AWS_S3_ACCESS_KEY_ID"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/S3_ACCESS_KEY_SECRET",
+          "name": "AWS_S3_ACCESS_KEY_SECRET"
+        }
+      ],
+      "dockerSecurityOptions": null,
+      "memory": null,
+      "memoryReservation": 500,
+      "volumesFrom": [],
+      "stopTimeout": null,
+      "image": "hwasurr/onad_web_api",
+      "startTimeout": null,
+      "firelensConfiguration": null,
+      "dependsOn": null,
+      "disableNetworking": null,
+      "interactive": null,
+      "healthCheck": null,
+      "essential": true,
+      "links": null,
+      "hostname": null,
+      "extraHosts": null,
+      "pseudoTerminal": null,
+      "user": null,
+      "readonlyRootFilesystem": null,
+      "dockerLabels": null,
+      "systemControls": null,
+      "privileged": null,
+      "name": "onad-web-api"
+    }
+  ],
+  "placementConstraints": [],
+  "memory": "1024",
+  "taskRoleArn": "arn:aws:iam::803609402610:role/ecsTaskExecutionRole",
+  "compatibilities": [
+    "EC2",
+    "FARGATE"
+  ],
+  "taskDefinitionArn": "arn:aws:ecs:ap-northeast-2:803609402610:task-definition/onad-web-api:7",
+  "family": "onad-web-api",
+  "requiresAttributes": [
+    {
+      "targetId": null,
+      "targetType": null,
+      "value": null,
+      "name": "com.amazonaws.ecs.capability.logging-driver.awslogs"
+    },
+    {
+      "targetId": null,
+      "targetType": null,
+      "value": null,
+      "name": "ecs.capability.execution-role-awslogs"
+    },
+    {
+      "targetId": null,
+      "targetType": null,
+      "value": null,
+      "name": "com.amazonaws.ecs.capability.docker-remote-api.1.19"
+    },
+    {
+      "targetId": null,
+      "targetType": null,
+      "value": null,
+      "name": "com.amazonaws.ecs.capability.docker-remote-api.1.21"
+    },
+    {
+      "targetId": null,
+      "targetType": null,
+      "value": null,
+      "name": "com.amazonaws.ecs.capability.task-iam-role"
+    },
+    {
+      "targetId": null,
+      "targetType": null,
+      "value": null,
+      "name": "ecs.capability.secrets.ssm.environment-variables"
+    },
+    {
+      "targetId": null,
+      "targetType": null,
+      "value": null,
+      "name": "com.amazonaws.ecs.capability.docker-remote-api.1.18"
+    },
+    {
+      "targetId": null,
+      "targetType": null,
+      "value": null,
+      "name": "ecs.capability.task-eni"
+    }
+  ],
+  "pidMode": null,
+  "requiresCompatibilities": [
+    "FARGATE"
+  ],
+  "networkMode": "awsvpc",
+  "cpu": "512",
+  "revision": 7,
+  "status": "ACTIVE",
+  "inferenceAccelerators": null,
+  "proxyConfiguration": null,
+  "volumes": []
+}

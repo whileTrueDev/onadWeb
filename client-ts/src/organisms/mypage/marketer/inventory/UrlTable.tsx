@@ -131,6 +131,14 @@ export default function UrlTable(props: UrlTableProps): JSX.Element {
         </div>
       ),
     },
+    {
+      title: '홍보 문구',
+      render: (rowData: UrlDataInterface): JSX.Element | null => (
+        <div>
+          {rowData.linkDescription}
+        </div>
+      )
+    },
     { title: '링크 등록 일자', render: (rowData: UrlDataInterface): React.ReactNode => (<span>{rowData.regiDate}</span>) },
   ];
 

@@ -12,7 +12,7 @@ interface CampaignData {
   bannerSrc: string;
   connectedLinkId?: string;
   marketerName: string;
-  bannerDescription?: string;
+  // bannerDescription?: string;
   links?: string;
   CPM?: number;
   CPC?: number;
@@ -126,7 +126,7 @@ router.route('/list')
       const listQuery = `
       SELECT
         CT.campaignId, CT.date, BR.bannerSrc, CT.creatorId, campaign.connectedLinkId,
-        campaign.onOff as state, campaign.marketerName,  bannerDescription, IR.links
+        campaign.onOff as state, campaign.marketerName, IR.links
       FROM (
         SELECT creatorId, campaignId , min(date) as date 
         FROM campaignTimestamp

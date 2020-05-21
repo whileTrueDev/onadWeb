@@ -6,20 +6,13 @@ import {
 import classnames from 'classnames';
 import Check from '@material-ui/icons/Check';
 import Dialog from '../../../../atoms/Dialog/Dialog';
-import BannerDescForm from './BannerDescForm';
+// import BannerDescForm from './BannerDescForm';
 import './upload.css';
 import ImageUpload from './ImageUpload';
 import HOST from '../../../../utils/config';
 import axios from '../../../../utils/axios';
 
 const DEFAULT_IMAGE_PATH = '/pngs/dashboard/banner_upload_manual.png';
-
-const useStyle = makeStyles((theme: Theme) => ({
-  formRoot: {
-    margin: theme.spacing(2),
-    padding: theme.spacing(1),
-  },
-}));
 
 const useQontoStepIconStyles = makeStyles((theme: Theme) => ({
   root: { color: theme.palette.background.paper, display: 'flex', },
@@ -98,22 +91,12 @@ const UploadDialog = (props: UploadDialogProps): JSX.Element => {
   const {
     open, onClose, recallRequest
   } = props;
-  const classes = useStyle();
   const [state, dispatch] = useReducer(myReducer, { imageName: '', imageUrl: DEFAULT_IMAGE_PATH });
   const [activeStep, setStep] = useState(0);
   const handleClose = (): void => {
     dispatch({ type: 'reset' });
     setStep(0);
     onClose();
-  };
-
-
-  const handleNext = (number: number) => (): void => {
-    if (state.imageUrl !== DEFAULT_IMAGE_PATH) {
-      setStep(number);
-    } else {
-      alert('파일을 선택하지 않았습니다.');
-    }
   };
 
   // // usePostRequest 수정 이후 적용
@@ -124,7 +107,7 @@ const UploadDialog = (props: UploadDialogProps): JSX.Element => {
 
   // url을 제출.
   const handleSubmit = (): void => {
-    const bannerDescription = (document.getElementById('banner') as HTMLInputElement).value || '';
+    // const bannerDescription = (document.getElementById('banner') as HTMLInputElement).value || '';
     // // usePostRequest 수정 이후 적용
     // if (state.imageUrl) {
     //   doPostRequest({
@@ -135,7 +118,7 @@ const UploadDialog = (props: UploadDialogProps): JSX.Element => {
     //   }
     // }
     axios.post(`${HOST}/marketer/banner`, {
-      bannerSrc: state.imageUrl, bannerDescription,
+      bannerSrc: state.imageUrl
     })
       .then((res) => {
         if (res.data[0]) {
@@ -168,23 +151,9 @@ const UploadDialog = (props: UploadDialogProps): JSX.Element => {
           <StepContent>
             <ImageUpload
               handleClose={handleClose}
-              handleNext={handleNext}
+              handleSubmit={handleSubmit}
               state={state}
               dispatch={dispatch}
-            />
-          </StepContent>
-        </Step>
-        <Step key="1">
-          <StepLabel StepIconComponent={QontoStepIcon}>
-            홍보문구 입력
-          </StepLabel>
-          <StepContent className={classes.formRoot}>
-            <BannerDescForm
-              handleNext={handleNext}
-              state={state}
-              handleSubmit={(): void => {
-                handleSubmit();
-              }}
             />
           </StepContent>
         </Step>

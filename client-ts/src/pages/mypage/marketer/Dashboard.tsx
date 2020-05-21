@@ -3,6 +3,7 @@ import makeStyles from '@material-ui/core/styles/makeStyles';
 import Grid from '@material-ui/core/Grid';
 import Grow from '@material-ui/core/Grow';
 import Button from '@material-ui/core/Button';
+import Hidden from '@material-ui/core/Hidden';
 import CampaignList from '../../../organisms/mypage/marketer/dashboard/CampaignList';
 import CanvasForChart from '../../../organisms/mypage/marketer/dashboard/CanvasForChart';
 import DescCard from '../../../organisms/mypage/marketer/dashboard/DescCard';
@@ -125,24 +126,27 @@ export default function Dashboard(): JSX.Element {
                     </Grid>
                   </Grid>
                 </Grid>
-                <Grid item xs={12} md={12} lg={9}>
+                <Grid item xs={12} md={12} lg={12}>
                   <Grid container spacing={2}>
-                    <Grid item xs={12}>
+                    <Grid item xs={12} md={12}>
                       <CampaignList campaignData={campaignData} />
                     </Grid>
-                    <Grid item xs={12}>
-                      <CanvasForChart
-                        valueChartData={valueChartData}
-                        broadCreatorData={broadCreatorData}
-                      />
-                    </Grid>
+                    <Hidden mdDown>
+                      <Grid item xs={9} md={3} lg={9}>
+                        <CanvasForChart
+                          valueChartData={valueChartData}
+                          broadCreatorData={broadCreatorData}
+                        />
+                      </Grid>
+                      <Grid item xs={3} md={3} lg={3}>
+                        <LogTable
+                          actionLogData={actionLogData}
+                        />
+                      </Grid>
+                    </Hidden>
                   </Grid>
                 </Grid>
-                <Grid item xs={12} md={12} lg={3}>
-                  <LogTable
-                    actionLogData={actionLogData}
-                  />
-                </Grid>
+
                 <CashPopper
                   anchorEl={anchorEl}
                   handleAnchorClose={handleAnchorClose}

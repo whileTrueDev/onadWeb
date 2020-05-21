@@ -76,7 +76,6 @@ const BudgetInput = (props: BudgetInputProps): JSX.Element => {
     } else {
       // setExcpectedDay(parseInt(Number(value.value) / Number(total / 30), 10));
       // setExcpectedViews(parseInt(Number(value.value) / 2, 10));
-      console.log('else', budgetError);
       setBudgetError(false);
     }
   };

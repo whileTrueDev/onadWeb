@@ -52,14 +52,14 @@ interface ImageAction {
 
 interface ImageUploadProps {
   handleClose: () => void;
-  handleNext: (number: number) => () => void;
+  handleSubmit: () => void;
   state: ImageInterface;
   dispatch: React.Dispatch<ImageAction>;
 }
 
 const ImageUpload = (props: ImageUploadProps): JSX.Element => {
   const {
-    handleClose, handleNext, state, dispatch,
+    handleClose, handleSubmit, state, dispatch,
   } = props;
 
   const classes = useStyle();
@@ -87,21 +87,21 @@ const ImageUpload = (props: ImageUploadProps): JSX.Element => {
 
   return (
     <div>
-      { state.imageUrl && isVideo(state.imageUrl) ? (
+      {state.imageUrl && isVideo(state.imageUrl) ? (
         <VideoBanner
           className={classes.imgPreview}
           src={state.imageUrl}
           onError={(): void => { dispatch({ type: 'reset' }); }}
         />
       ) : (
-        <img
-          id="preview"
-          src={state.imageUrl}
-          className={classes.imgPreview}
-          onError={(): void => { dispatch({ type: 'reset' }); }}
-          alt="배너이미지"
-        />
-      )}
+          <img
+            id="preview"
+            src={state.imageUrl}
+            className={classes.imgPreview}
+            onError={(): void => { dispatch({ type: 'reset' }); }}
+            alt="배너이미지"
+          />
+        )}
       <div className="filebox">
         <Grid container direction="row" justify="flex-end">
           <Grid item className={classes.container}>
@@ -134,9 +134,9 @@ const ImageUpload = (props: ImageUploadProps): JSX.Element => {
           variant="contained"
           color="primary"
           size="small"
-          onClick={handleNext(1)}
+          onClick={handleSubmit}
         >
-          다음
+          등록
         </CustomButton>
       </div>
 

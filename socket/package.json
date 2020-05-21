@@ -8,7 +8,7 @@
   "scripts": {
     "prebuild": "rimraf ./dist",
     "build": "tsc",
-    "postbuild": "browserify ./dist/public/client.js ./dist/public/hiddenEventHandler.js ./dist/public/programIdentifier.js -o ./dist/public/bundle.js && cp -r ./views ./dist/views",
+    "postbuild": "browserify ./dist/public/client.js ./dist/public/hiddenEventHandler.js ./dist/public/programIdentifier.js ./dist/public/imageClicker.js -o ./dist/public/bundle.js && cp -r ./views ./dist/views",
     "start:debug": "tsc -w",
     "start:production": "node ./dist/app.js"
   },
