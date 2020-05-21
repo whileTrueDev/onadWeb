@@ -3,16 +3,16 @@ import * as elbv2 from '@aws-cdk/aws-elasticloadbalancingv2';
 import * as ec2 from '@aws-cdk/aws-ec2';
 import * as ecs from '@aws-cdk/aws-ecs';
 import * as iam from '@aws-cdk/aws-iam';
-import * as route53 from '@aws-cdk/aws-route53';
-import * as alias from '@aws-cdk/aws-route53-targets';
-import * as events from '@aws-cdk/aws-events';
-import * as targets from '@aws-cdk/aws-events-targets';
+// import * as route53 from '@aws-cdk/aws-route53';
+// import * as alias from '@aws-cdk/aws-route53-targets';
+// import * as events from '@aws-cdk/aws-events';
+// import * as targets from '@aws-cdk/aws-events-targets';
 import * as acm from '@aws-cdk/aws-certificatemanager';
 
 import getParams from './get-ssm-params/getParams';
 import makeTaskDefinition from './ecs/makeTaskDefinition';
 
-const DOMAIN = 'hwasurr.io';
+const DOMAIN = 'onad.io';
 
 export default class OnADProductionAwsStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
@@ -21,7 +21,7 @@ export default class OnADProductionAwsStack extends cdk.Stack {
     // *********************************************
     // Define VPC
 
-    const productionVpc = new ec2.Vpc(this, 'OnAdProductionVpc');
+    const productionVpc = new ec2.Vpc(this, 'OnAdTestVpc');
 
     // *********************************************
     // Make Security groups
@@ -35,28 +35,28 @@ export default class OnADProductionAwsStack extends cdk.Stack {
     // React
     const onadWebSecGrp = new ec2.SecurityGroup(this, 'reactSecurityGroup', {
       vpc: productionVpc,
-      securityGroupName: 'OnADReactSecurityGroup',
+      securityGroupName: 'OnADReact-test-SecurityGroup',
       allowAllOutbound: true
     });
     onadWebSecGrp.connections.allowFromAnyIpv4(ec2.Port.tcp(3001));
     // API
     const onadWebApiSecGrp = new ec2.SecurityGroup(this, 'APISecurityGroup', {
       vpc: productionVpc,
-      securityGroupName: 'OnADAPISecurityGroup',
+      securityGroupName: 'OnADAPI-test-SecurityGroup',
       allowAllOutbound: true
     });
     onadWebApiSecGrp.connections.allowFromAnyIpv4(ec2.Port.tcp(3000));
     // Ad Broad
     const bannerBroadSecGrp = new ec2.SecurityGroup(this, 'bannerBroadSecurityGroup', {
       vpc: productionVpc,
-      securityGroupName: 'OnADAdBaordSecurityGroup',
+      securityGroupName: 'OnADAdBaord-test-SecurityGroup',
       allowAllOutbound: true
     });
     bannerBroadSecGrp.connections.allowFromAnyIpv4(ec2.Port.tcp(3002));
     // Trakcer
     const trackerSecGrp = new ec2.SecurityGroup(this, 'trackerSecurityGroup', {
       vpc: productionVpc,
-      securityGroupName: 'OnADAdTrackerSecurityGroup',
+      securityGroupName: 'OnADAdTracker-test-SecurityGroup',
       allowAllOutbound: true
     });
     trackerSecGrp.connections.allowFromAnyIpv4(ec2.Port.tcp(3030));
@@ -107,8 +107,8 @@ export default class OnADProductionAwsStack extends cdk.Stack {
     const onadApiPort = 3000;
     const onadApiName = 'OnADApi';
     const onadApi = makeTaskDefinition(this, onadApiName, onadApiRepo, onadTaskRole, {
-      REACT_HOSTNAME: ecs.Secret.fromSsmParameter(ssmParameters.PRODUCTION_REACT_HOSTNAME),
-      API_HOSTNAME: ecs.Secret.fromSsmParameter(ssmParameters.PRODUCTION_API_HOSTNAME),
+      REACT_HOSTNAME: ecs.Secret.fromSsmParameter(ssmParameters.TEST_REACT_HOSTNAME),
+      API_HOSTNAME: ecs.Secret.fromSsmParameter(ssmParameters.TEST_API_HOSTNAME),
       DB_CHARSET: ecs.Secret.fromSsmParameter(ssmParameters.DB_CHARSET),
       DB_HOST: ecs.Secret.fromSsmParameter(ssmParameters.DB_HOST),
       DB_PASSWORD: ecs.Secret.fromSsmParameter(ssmParameters.DB_PASSWORD),
@@ -157,19 +157,6 @@ export default class OnADProductionAwsStack extends cdk.Stack {
     },
     onadBannerBroadPort);
 
-    // calculator - Task definition
-    const onadCalculatorRepo = 'hwasurr/onad_calculator';
-    const onadCalculatorName = 'OnADCalculator';
-    const onadCalculator = makeTaskDefinition(this, onadCalculatorName, onadCalculatorRepo, onadTaskRole, {
-      API_HOSTNAME: ecs.Secret.fromSsmParameter(ssmParameters.PRODUCTION_API_HOSTNAME),
-      DB_HOST: ecs.Secret.fromSsmParameter(ssmParameters.DB_HOST),
-      DB_USER: ecs.Secret.fromSsmParameter(ssmParameters.DB_USER),
-      DB_PASSWORD: ecs.Secret.fromSsmParameter(ssmParameters.DB_PASSWORD),
-      DB_DATABASE: ecs.Secret.fromSsmParameter(ssmParameters.DB_DATABASE),
-      DB_CHARSET: ecs.Secret.fromSsmParameter(ssmParameters.DB_CHARSET),
-      DB_PORT: ecs.Secret.fromSsmParameter(ssmParameters.DB_PORT),
-    });
-
     // tracker - Task Definition
     const onadTrackerRepo = 'hwasurr/onad_tracker';
     const onadTrackerPort = 3030;
@@ -183,54 +170,11 @@ export default class OnADProductionAwsStack extends cdk.Stack {
       DB_PORT: ecs.Secret.fromSsmParameter(ssmParameters.DB_PORT),
     }, onadTrackerPort);
 
-    // twitch chatbot - Task Definition
-    const onadTwitchChatbotRepo = 'hwasurr/onad_twitch_bot';
-    const onadTwitchChatbotName = 'OnADChatbotTwitch';
-    const onadTwitchChatbot = makeTaskDefinition(this, onadTwitchChatbotName, onadTwitchChatbotRepo, onadTaskRole, {
-      DB_HOST: ecs.Secret.fromSsmParameter(ssmParameters.DB_HOST),
-      DB_USER: ecs.Secret.fromSsmParameter(ssmParameters.DB_USER),
-      DB_PASSWORD: ecs.Secret.fromSsmParameter(ssmParameters.DB_PASSWORD),
-      DB_DATABASE: ecs.Secret.fromSsmParameter(ssmParameters.DB_DATABASE),
-      DB_CHARSET: ecs.Secret.fromSsmParameter(ssmParameters.DB_CHARSET),
-      DB_PORT: ecs.Secret.fromSsmParameter(ssmParameters.DB_PORT),
-      TWITCH_BOT_OAUTH_TOKEN: ecs.Secret.fromSsmParameter(ssmParameters.TWITCH_BOT_OAUTH_TOKEN)
-    });
-
-    // creatorDetail analysis - Task Definition
-    const onadCreatorDetailRepo = 'dn0208/creatordetail';
-    const onadCreatorDetailName = 'OnADCreatorDetail';
-    const onadCreatorDetail = makeTaskDefinition(this, onadCreatorDetailName, onadCreatorDetailRepo, onadTaskRole, {
-      DB_HOST: ecs.Secret.fromSsmParameter(ssmParameters.DB_HOST),
-      DB_USER: ecs.Secret.fromSsmParameter(ssmParameters.DB_USER),
-      DB_PASSWORD: ecs.Secret.fromSsmParameter(ssmParameters.DB_PASSWORD),
-      DB_DATABASE: ecs.Secret.fromSsmParameter(ssmParameters.DB_DATABASE),
-      DB_CHARSET: ecs.Secret.fromSsmParameter(ssmParameters.DB_CHARSET),
-      DB_PORT: ecs.Secret.fromSsmParameter(ssmParameters.DB_PORT),
-      PRODUCTION_CLIENT_ID: ecs.Secret.fromSsmParameter(ssmParameters.TWITCH_CLIENT_ID),
-      PRODUCTION_CLIENT_SECRET: ecs.Secret.fromSsmParameter(ssmParameters.TWITCH_CLIENT_SECRET),
-    });
-
-    // Twitch API Crawler - Task Definition
-    const onadTwitchCrawlRepo = 'hwasurr/twitch-crawl';
-    const onadTwitchCrawlName = 'OnADtwitchCrawl';
-    const onadTwitchCrawl = makeTaskDefinition(this, onadTwitchCrawlName, onadTwitchCrawlRepo, onadTaskRole, {
-      DB_HOST: ecs.Secret.fromSsmParameter(ssmParameters.DB_HOST),
-      DB_USER: ecs.Secret.fromSsmParameter(ssmParameters.DB_USER),
-      DB_PASSWORD: ecs.Secret.fromSsmParameter(ssmParameters.DB_PASSWORD),
-      DB_DATABASE: ecs.Secret.fromSsmParameter(ssmParameters.DB_DATABASE),
-      DB_CHARSET: ecs.Secret.fromSsmParameter(ssmParameters.DB_CHARSET),
-      DB_PORT: ecs.Secret.fromSsmParameter(ssmParameters.DB_PORT),
-      CRAWL_TWITCH_API_CLIENT_SECRET: ecs.Secret.fromSsmParameter(ssmParameters.CRAWL_TWITCH_API_CLIENT_SECRET),
-      CRAWL_TWITCH_API_KEY: ecs.Secret.fromSsmParameter(ssmParameters.CRAWL_TWITCH_API_KEY),
-      CRAWL_YOUTUBE_API_KEY: ecs.Secret.fromSsmParameter(ssmParameters.CRAWL_YOUTUBE_API_KEY),
-    });
-
-
     // *********************************************
     // Create ECS Service
 
     // onadWeb
-    const onadWebService = new ecs.FargateService(this, `${onadClientName}Service`, {
+    const onadWebService = new ecs.FargateService(this, `${onadClientName}-test-Service`, {
       cluster: productionCluster,
       taskDefinition: onadWeb.taskDefinition,
       assignPublicIp: true,
@@ -238,7 +182,7 @@ export default class OnADProductionAwsStack extends cdk.Stack {
       securityGroup: onadWebSecGrp,
     });
     // onadWebApi
-    const onadWebApiService = new ecs.FargateService(this, `${onadApiName}Service`, {
+    const onadWebApiService = new ecs.FargateService(this, `${onadApiName}-test-Service`, {
       cluster: productionCluster,
       taskDefinition: onadApi.taskDefinition,
       assignPublicIp: true,
@@ -247,7 +191,7 @@ export default class OnADProductionAwsStack extends cdk.Stack {
     });
     // banner broad
     const onadBannerBroadService = new ecs.FargateService(
-      this, `${onadBannerBroadName}Service`, {
+      this, `${onadBannerBroadName}-test-Service`, {
         cluster: productionCluster,
         taskDefinition: onadBannerBroad.taskDefinition,
         assignPublicIp: true,
@@ -257,7 +201,7 @@ export default class OnADProductionAwsStack extends cdk.Stack {
     );
     // tracker
     const onadTrackerService = new ecs.FargateService(
-      this, `${onadTrackerName}Service`, {
+      this, `${onadTrackerName}-test-Service`, {
         cluster: productionCluster,
         taskDefinition: onadTracker.taskDefinition,
         assignPublicIp: true,
@@ -265,49 +209,6 @@ export default class OnADProductionAwsStack extends cdk.Stack {
         securityGroup: trackerSecGrp,
       }
     );
-    // chatbot
-    const onadTwitchChatbotService = new ecs.FargateService(
-      this, `${onadTwitchChatbotName}Service`, {
-        cluster: productionCluster,
-        taskDefinition: onadTwitchChatbot.taskDefinition,
-        assignPublicIp: true,
-        desiredCount: 1,
-        securityGroup: emptySecGrp,
-      }
-    );
-
-    // *********************************************
-    // Create Scheduled Job
-
-    // calculator
-    const onadCalculatorRule = new events.Rule(this, `${onadCalculatorName}Rule`, {
-      schedule: events.Schedule.expression('cron(5,15,25,35,45,55 * * * ? *)')
-    });
-    onadCalculatorRule.addTarget(new targets.EcsTask({
-      cluster: productionCluster,
-      taskDefinition: onadCalculator.taskDefinition,
-      taskCount: 1,
-    }));
-
-    // creatordetail
-    const onadCreatorDetailRule = new events.Rule(this, `${onadCreatorDetailName}Rule`, {
-      schedule: events.Schedule.expression('cron(0 3 * * ? *)')
-    });
-    onadCreatorDetailRule.addTarget(new targets.EcsTask({
-      cluster: productionCluster,
-      taskDefinition: onadCreatorDetail.taskDefinition,
-      taskCount: 1,
-    }));
-
-    // Twitch Crawl
-    const onadTwitchCrawlRule = new events.Rule(this, `${onadTwitchCrawlName}Rule`, {
-      schedule: events.Schedule.expression('cron(3,6,9,13,16,19,23,26,29,33,36,39,43,46,49,53,56,59 * * * ? *)')
-    });
-    onadTwitchCrawlRule.addTarget(new targets.EcsTask({
-      cluster: productionCluster,
-      taskDefinition: onadTwitchCrawl.taskDefinition,
-      taskCount: 1,
-    }));
 
     // *********************************************
     // Route53 ALB, subdomain 등록
@@ -332,7 +233,7 @@ export default class OnADProductionAwsStack extends cdk.Stack {
     // Create ALB (Application Loadbalencer)
 
     const onadLoadBalancer = new elbv2.ApplicationLoadBalancer(this, 'OnADLB', {
-      vpc: productionVpc, internetFacing: true
+      vpc: productionVpc, internetFacing: true, loadBalancerName: `${DOMAIN}-test-LB`
     });
     // Add Http listener
     const onadListenerDefaultGroup = new elbv2.ApplicationTargetGroup(this, 'httpsDefaultTargetGroup', {
@@ -340,7 +241,7 @@ export default class OnADProductionAwsStack extends cdk.Stack {
       protocol: elbv2.ApplicationProtocol.HTTP,
       port: onadClientPort,
       targets: [onadWebService],
-      targetGroupName: `${onadClientName}Target`,
+      targetGroupName: `${onadClientName}-test-Target`,
     });
     const onadHttpListener = onadLoadBalancer.addListener('OnADHttpListener', {
       port: 80,
@@ -363,15 +264,15 @@ export default class OnADProductionAwsStack extends cdk.Stack {
       sslPolicy: elbv2.SslPolicy.RECOMMENDED,
       defaultTargetGroups: [onadListenerDefaultGroup]
     });
-    const onadWebHostHeader = `${DOMAIN}`;
+    const onadWebHostHeader = `test.${DOMAIN}`;
     onadHttpsListener.addTargetGroups('onadWebTargetGroups', {
       priority: 1,
       targetGroups: [onadListenerDefaultGroup],
       hostHeader: onadWebHostHeader,
     });
-    const onadWebApiHostHeader = `api.${DOMAIN}`;
+    const onadWebApiHostHeader = `test-api.${DOMAIN}`;
     onadHttpsListener.addTargets('onadWebApiGroup', {
-      targetGroupName: `${onadApiName}Target`,
+      targetGroupName: `${onadApiName}-test-Target`,
       priority: 2,
       port: onadApiPort,
       protocol: elbv2.ApplicationProtocol.HTTP,
@@ -379,9 +280,9 @@ export default class OnADProductionAwsStack extends cdk.Stack {
       targets: [onadWebApiService],
 
     });
-    const onadBannerBroadHostHeader = `banner.${DOMAIN}`;
+    const onadBannerBroadHostHeader = `test-banner.${DOMAIN}`;
     onadHttpsListener.addTargets('onadBannerBroadGroup', {
-      targetGroupName: `${onadBannerBroadName}Target`,
+      targetGroupName: `${onadBannerBroadName}-test-Target`,
       priority: 3,
       port: onadBannerBroadPort,
       protocol: elbv2.ApplicationProtocol.HTTP,
@@ -389,9 +290,9 @@ export default class OnADProductionAwsStack extends cdk.Stack {
       targets: [onadBannerBroadService],
 
     });
-    const onadTrackerHostHeader = `t.${DOMAIN}`;
+    const onadTrackerHostHeader = `test-t.${DOMAIN}`;
     onadHttpsListener.addTargets('onadTrackerGroup', {
-      targetGroupName: `${onadTrackerName}Target`,
+      targetGroupName: `${onadTrackerName}-test-Target`,
       priority: 4,
       port: onadTrackerPort,
       protocol: elbv2.ApplicationProtocol.HTTP,
