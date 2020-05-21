@@ -8,7 +8,7 @@ import Table from '../../../../../atoms/Table/Table';
 // hooks
 import useGetRequest from '../../../../../utils/hooks/useGetRequest';
 import axios from '../../../../../utils/axios';
-import HOST from '../../../../../utils/config';
+import HOST from '../../../../../config';
 
 const initialData = {
   columns: ['날짜', '충전금액', '결제수단', '진행상황'],

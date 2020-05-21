@@ -8,7 +8,7 @@ import {
 import ProrityPaper from '../../../organisms/mypage/marketer/campaign-create/PriorityPaper';
 import OptionPaper from '../../../organisms/mypage/marketer/campaign-create/OptionPaper';
 import CampaignCreateTable from '../../../organisms/mypage/marketer/campaign-create/CampaignCreateTable';
-import HOST from '../../../utils/config';
+import HOST from '../../../config';
 import axios from '../../../utils/axios';
 import history from '../../../history';
 import {

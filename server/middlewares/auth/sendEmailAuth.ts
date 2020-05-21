@@ -2,9 +2,7 @@ import express from 'express';
 import axios from 'axios';
 import responseHelper from '../responseHelper';
 
-const HOST = process.env.NODE_ENV === 'production'
-  ? process.env.PRODUCTION_API_HOSTNAME
-  : process.env.DEV_API_HOSTNAME;
+const HOST = process.env.API_HOSTNAME;
 
 function sendEmailAuth(
   req: express.Request, res: express.Response

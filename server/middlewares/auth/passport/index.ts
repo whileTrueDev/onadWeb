@@ -23,15 +23,9 @@ import { Session } from '../../../@types/session';
 const Kakao = require('passport-kakao'); // type정의 문제..
 
 // 개발 환경에 따른 분기처리
-const HOST = process.env.NODE_ENV === 'production'
-  ? process.env.PRODUCTION_API_HOSTNAME
-  : process.env.DEV_API_HOSTNAME;
-const clientID = process.env.NODE_ENV === 'production'
-  ? process.env.PRODUCTION_CLIENT_ID
-  : process.env.DEV_CLIENT_ID;
-const clientSecret = process.env.NODE_ENV === 'production'
-  ? process.env.PRODUCTION_CLIENT_SECRET
-  : process.env.DEV_CLIENT_SECRET;
+const HOST = process.env.API_HOSTNAME;
+const clientID = process.env.TWITCH_CLIENT_ID;
+const clientSecret = process.env.TWITCH_CLIENT_SECRET;
 
 // serializeUser를 정의한다. session에 저장해둘 data를 구현하는 것.
 passport.serializeUser<Session, Session>((user, done) => {

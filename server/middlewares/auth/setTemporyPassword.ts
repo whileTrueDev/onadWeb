@@ -4,9 +4,7 @@ import encrypto from '../encryption';
 import doQuery from '../../model/doQuery';
 import responseHelper from '../responseHelper';
 
-const HOST = process.env.NODE_ENV === 'production'
-  ? process.env.PRODUCTION_API_HOSTNAME
-  : process.env.DEV_API_HOSTNAME;
+const HOST = process.env.API_HOSTNAME;
 
 function setTemporaryPassword(req: Request, res: Response): void {
   // 임시비밀번호 생성.
