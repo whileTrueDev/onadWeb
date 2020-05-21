@@ -24,8 +24,6 @@ const Kakao = require('passport-kakao'); // type정의 문제..
 
 // 개발 환경에 따른 분기처리
 const HOST = process.env.API_HOSTNAME;
-const clientID = process.env.TWITCH_CLIENT_ID;
-const clientSecret = process.env.TWITCH_CLIENT_SECRET;
 
 // serializeUser를 정의한다. session에 저장해둘 data를 구현하는 것.
 passport.serializeUser<Session, Session>((user, done) => {
@@ -50,8 +48,8 @@ passport.use(new Local.Strategy(
 // 크리에이터 - twitch로 로그인
 passport.use(new Twitch.Strategy(
   {
-    clientID: clientID || '',
-    clientSecret: clientSecret || '',
+    clientID: process.env.TWITCH_CLIENT_ID!,
+    clientSecret: process.env.TWITCH_CLIENT_SECRET!,
     callbackURL: `${HOST}/login/twitch/callback`,
     scope: 'user:read:email', // user:read:email
     authorizationURL: 'https://id.twitch.tv/oauth2/authorize',
@@ -63,13 +61,13 @@ passport.use(new Twitch.Strategy(
 ));
 
 passport.use(new Google.Strategy({
-  clientID: process.env.GOOGLE_CLIENT_ID || '',
-  clientSecret: process.env.GOOGLE_CLIENT_SECRET || '',
+  clientID: process.env.GOOGLE_CLIENT_ID!,
+  clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
   callbackURL: `${HOST}/login/google/callback`,
 }, verification.marketerGoogle));
 
 passport.use(new Kakao.Strategy({
-  clientID: process.env.KAKAO_CLIENT_ID || '',
+  clientID: process.env.KAKAO_CLIENT_ID!,
   // clientSecret을 사용하지 않는다면 넘기지 말거나 빈 스트링을 넘길 것
   // from https://github.com/rotoshine/passport-kakao#readme
   clientSecret: '',
@@ -77,8 +75,8 @@ passport.use(new Kakao.Strategy({
 }, verification.marketerKakao));
 
 passport.use(new Naver.Strategy({
-  clientID: process.env.NAVER_CLIENT_ID || '',
-  clientSecret: process.env.NAVER_CLIENT_SECRET || '',
+  clientID: process.env.NAVER_CLIENT_ID!,
+  clientSecret: process.env.NAVER_CLIENT_SECRET!,
   callbackURL: `${HOST}/login/naver/callback`
 }, verification.marketerNaver));
 

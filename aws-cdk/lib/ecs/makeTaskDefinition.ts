@@ -30,7 +30,7 @@ export default function makeTaskDefinition(
     logGroup: LogGroup, streamPrefix: 'ecs'
   });
   const container = taskDefinition.addContainer(
-    `${name}Container`, {
+    `${name}`, {
       image: ecs.ContainerImage.fromRegistry(imageRepo),
       secrets,
       logging: LogDriver,
