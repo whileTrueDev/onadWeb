@@ -101,13 +101,13 @@ export default function CampaignList(
       case 0: return (
         <Typography gutterBottom variant="body2" color="secondary" align="center">
           승인 대기
-          <span role="img" area-label="clock-mark">⏰</span>
+          <span role="img" aria-label="clock-mark">⏰</span>
         </Typography>
       );
       case 1: return (
         <Typography gutterBottom variant="body2" color="primary" align="center">
           승인 완료
-          <span role="img" area-label="ok-mark">👌</span>
+          <span role="img" aria-label="ok-mark">👌</span>
         </Typography>
       );
 
@@ -166,8 +166,8 @@ export default function CampaignList(
                         {isVideo(detail.bannerSrc) ? (
                           <VideoBanner className={classes.img} src={detail.bannerSrc} />
                         ) : (
-                            <img className={classes.img} alt="campaign-logo" src={detail.bannerSrc} />
-                          )}
+                          <img className={classes.img} alt="campaign-logo" src={detail.bannerSrc} />
+                        )}
                       </Grid>
                       <Hidden xsDown>
                         <Grid item>
