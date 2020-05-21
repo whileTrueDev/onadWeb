@@ -218,25 +218,25 @@ export default class OnADTestAwsStack extends cdk.Stack {
       protocol: elbv2.ApplicationProtocol.HTTP,
       port: onadClientPort,
       targets: [onadWebService],
-      targetGroupName: `${onadClientName}-test-Target`,
+      targetGroupName: `${onadClientName}-Target`,
     });
     const onadWebApiGroup = new elbv2.ApplicationTargetGroup(this, 'onadLBWebApiTargetGroup', {
       vpc: myVpc,
-      targetGroupName: `${onadApiName}-test-Target`,
+      targetGroupName: `${onadApiName}-Target`,
       port: onadApiPort,
       protocol: elbv2.ApplicationProtocol.HTTP,
       targets: [onadWebApiService],
     });
     const onadBannerBroadGroup = new elbv2.ApplicationTargetGroup(this, 'onadLBBannerBroadTargetGroup', {
       vpc: myVpc,
-      targetGroupName: `${onadBannerBroadName}-test-Target`,
+      targetGroupName: `${onadBannerBroadName}-Target`,
       port: onadBannerBroadPort,
       protocol: elbv2.ApplicationProtocol.HTTP,
       targets: [onadBannerBroadService],
     });
     const onadTrackerGroup = new elbv2.ApplicationTargetGroup(this, 'onadLBTrackerTargetGroup', {
       vpc: myVpc,
-      targetGroupName: `${onadTrackerName}-test-Target`,
+      targetGroupName: `${onadTrackerName}-Target`,
       port: onadTrackerPort,
       protocol: elbv2.ApplicationProtocol.HTTP,
       targets: [onadTrackerService],
