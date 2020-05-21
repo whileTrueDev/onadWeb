@@ -94,14 +94,14 @@ const ImageUpload = (props: ImageUploadProps): JSX.Element => {
           onError={(): void => { dispatch({ type: 'reset' }); }}
         />
       ) : (
-          <img
-            id="preview"
-            src={state.imageUrl}
-            className={classes.imgPreview}
-            onError={(): void => { dispatch({ type: 'reset' }); }}
-            alt="배너이미지"
-          />
-        )}
+        <img
+          id="preview"
+          src={state.imageUrl}
+          className={classes.imgPreview}
+          onError={(): void => { dispatch({ type: 'reset' }); }}
+          alt="배너이미지"
+        />
+      )}
       <div className="filebox">
         <Grid container direction="row" justify="flex-end">
           <Grid item className={classes.container}>

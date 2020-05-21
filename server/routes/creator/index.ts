@@ -323,8 +323,8 @@ router.route('/follower')
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
       const { creatorId } = responseHelper.getSessionData(req);
       const getAccessToken = (): Promise<string> => new Promise((resolve, reject) => {
-        const clientID = process.env.PRODUCTION_CLIENT_ID;
-        const clientSecret = process.env.PRODUCTION_CLIENT_SECRET;
+        const clientID = process.env.TWITCH_CLIENT_ID;
+        const clientSecret = process.env.TWITCH_CLIENT_SECRET;
 
         const authorizationUrl = 'https://id.twitch.tv/oauth2/token';
 
@@ -345,7 +345,7 @@ router.route('/follower')
       });
 
       const UpdateFollower = (accessToken: string): Promise<void> => new Promise((resolve, reject) => {
-        const clientID = process.env.PRODUCTION_CLIENT_ID;
+        const clientID = process.env.TWITCH_CLIENT_ID;
 
         const config = {
           headers: {
