@@ -224,88 +224,88 @@ export default class OnADProductionAwsStack extends cdk.Stack {
     // *********************************************
     // Get DNS validated Certificates
 
-    const sslcert = new acm.Certificate(this, 'DnsCertificate', {
-      domainName: `${DOMAIN}`,
-      subjectAlternativeNames: [`*.${DOMAIN}`],
-    });
+    // const sslcert = new acm.Certificate(this, 'DnsCertificate', {
+    //   domainName: `${DOMAIN}`,
+    //   subjectAlternativeNames: [`*.${DOMAIN}`],
+    // });
 
-    // *********************************************
-    // Create ALB (Application Loadbalencer)
+    // // *********************************************
+    // // Create ALB (Application Loadbalencer)
 
-    const onadLoadBalancer = new elbv2.ApplicationLoadBalancer(this, 'OnADLB', {
-      vpc: productionVpc, internetFacing: true, loadBalancerName: `${DOMAIN}-test-LB`
-    });
-    // Add Http listener
-    const onadListenerDefaultGroup = new elbv2.ApplicationTargetGroup(this, 'httpsDefaultTargetGroup', {
-      vpc: productionVpc,
-      protocol: elbv2.ApplicationProtocol.HTTP,
-      port: onadClientPort,
-      targets: [onadWebService],
-      targetGroupName: `${onadClientName}-test-Target`,
-    });
-    const onadHttpListener = onadLoadBalancer.addListener('OnADHttpListener', {
-      port: 80,
-      defaultTargetGroups: [onadListenerDefaultGroup]
-    });
-    onadHttpListener.addRedirectResponse('80to443RedirectTarget', {
-      priority: 1,
-      pathPattern: '/*',
-      statusCode: 'HTTP_301',
-      port: '443',
-      protocol: elbv2.Protocol.HTTPS
-    });
-    onadHttpListener.connections.allowDefaultPortFromAnyIpv4('http ALB open to world');
+    // const onadLoadBalancer = new elbv2.ApplicationLoadBalancer(this, 'OnADLB', {
+    //   vpc: productionVpc, internetFacing: true, loadBalancerName: `${DOMAIN}-test-LB`
+    // });
+    // // Add Http listener
+    // const onadListenerDefaultGroup = new elbv2.ApplicationTargetGroup(this, 'httpsDefaultTargetGroup', {
+    //   vpc: productionVpc,
+    //   protocol: elbv2.ApplicationProtocol.HTTP,
+    //   port: onadClientPort,
+    //   targets: [onadWebService],
+    //   targetGroupName: `${onadClientName}-test-Target`,
+    // });
+    // const onadHttpListener = onadLoadBalancer.addListener('OnADHttpListener', {
+    //   port: 80,
+    //   defaultTargetGroups: [onadListenerDefaultGroup]
+    // });
+    // onadHttpListener.addRedirectResponse('80to443RedirectTarget', {
+    //   priority: 1,
+    //   pathPattern: '/*',
+    //   statusCode: 'HTTP_301',
+    //   port: '443',
+    //   protocol: elbv2.Protocol.HTTPS
+    // });
+    // onadHttpListener.connections.allowDefaultPortFromAnyIpv4('http ALB open to world');
 
-    // Add https listener
-    const onadHttpsListener = onadLoadBalancer.addListener('OnADHttpsListener', {
-      port: 443,
-      // The CloudFormation deployment will wait until this verification process has been completed
-      certificates: [sslcert],
-      sslPolicy: elbv2.SslPolicy.RECOMMENDED,
-      defaultTargetGroups: [onadListenerDefaultGroup]
-    });
-    const onadWebHostHeader = `test.${DOMAIN}`;
-    onadHttpsListener.addTargetGroups('onadWebTargetGroups', {
-      priority: 1,
-      targetGroups: [onadListenerDefaultGroup],
-      hostHeader: onadWebHostHeader,
-    });
-    const onadWebApiHostHeader = `test-api.${DOMAIN}`;
-    onadHttpsListener.addTargets('onadWebApiGroup', {
-      targetGroupName: `${onadApiName}-test-Target`,
-      priority: 2,
-      port: onadApiPort,
-      protocol: elbv2.ApplicationProtocol.HTTP,
-      hostHeader: onadWebApiHostHeader,
-      targets: [onadWebApiService],
+    // // Add https listener
+    // const onadHttpsListener = onadLoadBalancer.addListener('OnADHttpsListener', {
+    //   port: 443,
+    //   // The CloudFormation deployment will wait until this verification process has been completed
+    //   certificates: [sslcert],
+    //   sslPolicy: elbv2.SslPolicy.RECOMMENDED,
+    //   defaultTargetGroups: [onadListenerDefaultGroup]
+    // });
+    // const onadWebHostHeader = `test.${DOMAIN}`;
+    // onadHttpsListener.addTargetGroups('onadWebTargetGroups', {
+    //   priority: 1,
+    //   targetGroups: [onadListenerDefaultGroup],
+    //   hostHeader: onadWebHostHeader,
+    // });
+    // const onadWebApiHostHeader = `test-api.${DOMAIN}`;
+    // onadHttpsListener.addTargets('onadWebApiGroup', {
+    //   targetGroupName: `${onadApiName}-test-Target`,
+    //   priority: 2,
+    //   port: onadApiPort,
+    //   protocol: elbv2.ApplicationProtocol.HTTP,
+    //   hostHeader: onadWebApiHostHeader,
+    //   targets: [onadWebApiService],
 
-    });
-    const onadBannerBroadHostHeader = `test-banner.${DOMAIN}`;
-    onadHttpsListener.addTargets('onadBannerBroadGroup', {
-      targetGroupName: `${onadBannerBroadName}-test-Target`,
-      priority: 3,
-      port: onadBannerBroadPort,
-      protocol: elbv2.ApplicationProtocol.HTTP,
-      hostHeader: onadBannerBroadHostHeader,
-      targets: [onadBannerBroadService],
+    // });
+    // const onadBannerBroadHostHeader = `test-banner.${DOMAIN}`;
+    // onadHttpsListener.addTargets('onadBannerBroadGroup', {
+    //   targetGroupName: `${onadBannerBroadName}-test-Target`,
+    //   priority: 3,
+    //   port: onadBannerBroadPort,
+    //   protocol: elbv2.ApplicationProtocol.HTTP,
+    //   hostHeader: onadBannerBroadHostHeader,
+    //   targets: [onadBannerBroadService],
 
-    });
-    const onadTrackerHostHeader = `test-t.${DOMAIN}`;
-    onadHttpsListener.addTargets('onadTrackerGroup', {
-      targetGroupName: `${onadTrackerName}-test-Target`,
-      priority: 4,
-      port: onadTrackerPort,
-      protocol: elbv2.ApplicationProtocol.HTTP,
-      hostHeader: onadTrackerHostHeader,
-      targets: [onadTrackerService],
+    // });
+    // const onadTrackerHostHeader = `test-t.${DOMAIN}`;
+    // onadHttpsListener.addTargets('onadTrackerGroup', {
+    //   targetGroupName: `${onadTrackerName}-test-Target`,
+    //   priority: 4,
+    //   port: onadTrackerPort,
+    //   protocol: elbv2.ApplicationProtocol.HTTP,
+    //   hostHeader: onadTrackerHostHeader,
+    //   targets: [onadTrackerService],
 
-    });
-    onadHttpsListener.connections.allowDefaultPortFromAnyIpv4('https ALB open to world');
+    // });
+    // onadHttpsListener.connections.allowDefaultPortFromAnyIpv4('https ALB open to world');
 
-    // *********************************************
-    // Route53 ALB, subdomain 등록
+    // // *********************************************
+    // // Route53 ALB, subdomain 등록
 
-    // Add Loadbalancer ARecord to onadHostZone
+    // // Add Loadbalancer ARecord to onadHostZone
     // const onadLoadbalancerRecord = new route53.ARecord(this, 'LoadbalancerARecord', {
     //   zone: onadHostzone,
     //   recordName: `${DOMAIN}.`,
