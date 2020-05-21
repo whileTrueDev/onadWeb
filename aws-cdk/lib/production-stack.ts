@@ -96,7 +96,7 @@ export default class OnADProductionAwsStack extends cdk.Stack {
     // React - Task definition
     const onadClientRepo = 'hwasurr/onad_web';
     const onadClientPort = 3001;
-    const onadClientName = 'OnADWeb';
+    const onadClientName = 'onad-web';
     const onadWeb = makeTaskDefinition(this, onadClientName, onadClientRepo, onadTaskRole, {
       REACT_APP_REACT_HOSTNAME: ecs.Secret.fromSsmParameter(ssmParameters.PRODUCTION_REACT_HOSTNAME),
       REACT_APP_API_HOSTNAME: ecs.Secret.fromSsmParameter(ssmParameters.PRODUCTION_API_HOSTNAME),
@@ -106,7 +106,7 @@ export default class OnADProductionAwsStack extends cdk.Stack {
     // API - Task definition
     const onadApiRepo = 'hwasurr/onad_web_api';
     const onadApiPort = 3000;
-    const onadApiName = 'OnADApi';
+    const onadApiName = 'onad-web-api';
     const onadApi = makeTaskDefinition(this, onadApiName, onadApiRepo, onadTaskRole, {
       REACT_HOSTNAME: ecs.Secret.fromSsmParameter(ssmParameters.PRODUCTION_REACT_HOSTNAME),
       API_HOSTNAME: ecs.Secret.fromSsmParameter(ssmParameters.PRODUCTION_API_HOSTNAME),
@@ -146,7 +146,7 @@ export default class OnADProductionAwsStack extends cdk.Stack {
     // Banner broad - Task definition
     const onadBannerBroadRepo = 'hwasurr/onad_socket';
     const onadBannerBroadPort = 3002;
-    const onadBannerBroadName = 'OnADBannerBroad';
+    const onadBannerBroadName = 'onad-banner-broad';
     const onadBannerBroad = makeTaskDefinition(this, onadBannerBroadName, onadBannerBroadRepo, onadTaskRole, {
       SOCKET_HOSTNAME: ecs.Secret.fromSsmParameter(ssmParameters.PRODUCTION_SOCKET_HOSTNAME),
       DB_HOST: ecs.Secret.fromSsmParameter(ssmParameters.DB_HOST),
@@ -160,7 +160,7 @@ export default class OnADProductionAwsStack extends cdk.Stack {
 
     // calculator - Task definition
     const onadCalculatorRepo = 'hwasurr/onad_calculator';
-    const onadCalculatorName = 'OnADCalculator';
+    const onadCalculatorName = 'onad-calculator';
     const onadCalculator = makeTaskDefinition(this, onadCalculatorName, onadCalculatorRepo, onadTaskRole, {
       API_HOSTNAME: ecs.Secret.fromSsmParameter(ssmParameters.PRODUCTION_API_HOSTNAME),
       DB_HOST: ecs.Secret.fromSsmParameter(ssmParameters.DB_HOST),
@@ -174,7 +174,7 @@ export default class OnADProductionAwsStack extends cdk.Stack {
     // tracker - Task Definition
     const onadTrackerRepo = 'hwasurr/onad_tracker';
     const onadTrackerPort = 3030;
-    const onadTrackerName = 'OnADTracker';
+    const onadTrackerName = 'onad-tracker';
     const onadTracker = makeTaskDefinition(this, onadTrackerName, onadTrackerRepo, onadTaskRole, {
       DB_HOST: ecs.Secret.fromSsmParameter(ssmParameters.DB_HOST),
       DB_USER: ecs.Secret.fromSsmParameter(ssmParameters.DB_USER),
@@ -186,7 +186,7 @@ export default class OnADProductionAwsStack extends cdk.Stack {
 
     // twitch chatbot - Task Definition
     const onadTwitchChatbotRepo = 'hwasurr/onad_twitch_bot';
-    const onadTwitchChatbotName = 'OnADChatbotTwitch';
+    const onadTwitchChatbotName = 'onad-chatbot-twitch';
     const onadTwitchChatbot = makeTaskDefinition(this, onadTwitchChatbotName, onadTwitchChatbotRepo, onadTaskRole, {
       DB_HOST: ecs.Secret.fromSsmParameter(ssmParameters.DB_HOST),
       DB_USER: ecs.Secret.fromSsmParameter(ssmParameters.DB_USER),
@@ -199,7 +199,7 @@ export default class OnADProductionAwsStack extends cdk.Stack {
 
     // creatorDetail analysis - Task Definition
     const onadCreatorDetailRepo = 'dn0208/creatordetail';
-    const onadCreatorDetailName = 'OnADCreatorDetail';
+    const onadCreatorDetailName = 'onad-creatordetail';
     const onadCreatorDetail = makeTaskDefinition(this, onadCreatorDetailName, onadCreatorDetailRepo, onadTaskRole, {
       DB_HOST: ecs.Secret.fromSsmParameter(ssmParameters.DB_HOST),
       DB_USER: ecs.Secret.fromSsmParameter(ssmParameters.DB_USER),
@@ -213,7 +213,7 @@ export default class OnADProductionAwsStack extends cdk.Stack {
 
     // Twitch API Crawler - Task Definition
     const onadTwitchCrawlRepo = 'hwasurr/twitch-crawl';
-    const onadTwitchCrawlName = 'OnADtwitchCrawl';
+    const onadTwitchCrawlName = 'onad-twitch-crawl';
     const onadTwitchCrawl = makeTaskDefinition(this, onadTwitchCrawlName, onadTwitchCrawlRepo, onadTaskRole, {
       DB_HOST: ecs.Secret.fromSsmParameter(ssmParameters.DB_HOST),
       DB_USER: ecs.Secret.fromSsmParameter(ssmParameters.DB_USER),

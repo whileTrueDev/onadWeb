@@ -50,18 +50,6 @@
           "name": "DB_USER"
         },
         {
-          "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/DEV_SOCKET_HOSTNAME",
-          "name": "DEV_ONAD_SOCKET_HOST"
-        },
-        {
-          "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/PRODUCTION_SOCKET_HOSTNAME",
-          "name": "PRODUCTION_SOCKET_HOSTNAME"
-        },
-        {
-          "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/SLACK_ALARM_URL",
-          "name": "SLACK_ALARM_URL"
-        },
-        {
           "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/TWITCH_BOT_OAUTH_TOKEN",
           "name": "TWITCH_BOT_OAUTH_TOKEN"
         }

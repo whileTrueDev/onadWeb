@@ -8,7 +8,7 @@
         "logDriver": "awslogs",
         "secretOptions": null,
         "options": {
-          "awslogs-group": "/ecs/onad-banner-broad",
+          "awslogs-group": "/ecs/TEST-onad-banner-broad",
           "awslogs-region": "ap-northeast-2",
           "awslogs-stream-prefix": "ecs"
         }
@@ -32,7 +32,7 @@
       "workingDirectory": null,
       "secrets": [
         {
-          "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/SOCKET_HOSTNAME",
+          "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/TEST/SOCKET_HOSTNAME",
           "name": "SOCKET_HOSTNAME"
         },
         {
@@ -82,7 +82,7 @@
       "dockerLabels": null,
       "systemControls": null,
       "privileged": null,
-      "name": "onad-banner-broad"
+      "name": "TEST-onad-banner-broad"
     }
   ],
   "placementConstraints": [],
@@ -93,7 +93,7 @@
     "FARGATE"
   ],
   "taskDefinitionArn": "arn:aws:ecs:ap-northeast-2:803609402610:task-definition/onad-banner-broad:1",
-  "family": "onad-banner-broad",
+  "family": "TEST-onad-banner-broad",
   "requiresAttributes": [
     {
       "targetId": null,

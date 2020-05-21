@@ -96,7 +96,7 @@ export default class OnADProductionAwsStack extends cdk.Stack {
     // React - Task definition
     const onadClientRepo = 'hwasurr/onad_web';
     const onadClientPort = 3001;
-    const onadClientName = 'OnADWeb';
+    const onadClientName = 'TEST-onad-web';
     const onadWeb = makeTaskDefinition(this, onadClientName, onadClientRepo, onadTaskRole, {
       REACT_APP_REACT_HOSTNAME: ecs.Secret.fromSsmParameter(ssmParameters.PRODUCTION_REACT_HOSTNAME),
       REACT_APP_API_HOSTNAME: ecs.Secret.fromSsmParameter(ssmParameters.PRODUCTION_API_HOSTNAME),
@@ -106,7 +106,7 @@ export default class OnADProductionAwsStack extends cdk.Stack {
     // API - Task definition
     const onadApiRepo = 'hwasurr/onad_web_api';
     const onadApiPort = 3000;
-    const onadApiName = 'OnADApi';
+    const onadApiName = 'TEST-onad-web-api';
     const onadApi = makeTaskDefinition(this, onadApiName, onadApiRepo, onadTaskRole, {
       REACT_HOSTNAME: ecs.Secret.fromSsmParameter(ssmParameters.TEST_REACT_HOSTNAME),
       API_HOSTNAME: ecs.Secret.fromSsmParameter(ssmParameters.TEST_API_HOSTNAME),
@@ -146,7 +146,7 @@ export default class OnADProductionAwsStack extends cdk.Stack {
     // Banner broad - Task definition
     const onadBannerBroadRepo = 'hwasurr/onad_socket';
     const onadBannerBroadPort = 3002;
-    const onadBannerBroadName = 'OnADBannerBroad';
+    const onadBannerBroadName = 'TEST-onad-banner-broad';
     const onadBannerBroad = makeTaskDefinition(this, onadBannerBroadName, onadBannerBroadRepo, onadTaskRole, {
       SOCKET_HOSTNAME: ecs.Secret.fromSsmParameter(ssmParameters.PRODUCTION_SOCKET_HOSTNAME),
       DB_HOST: ecs.Secret.fromSsmParameter(ssmParameters.DB_HOST),
@@ -161,7 +161,7 @@ export default class OnADProductionAwsStack extends cdk.Stack {
     // tracker - Task Definition
     const onadTrackerRepo = 'hwasurr/onad_tracker';
     const onadTrackerPort = 3030;
-    const onadTrackerName = 'OnADTracker';
+    const onadTrackerName = 'TEST-onad-tracker';
     const onadTracker = makeTaskDefinition(this, onadTrackerName, onadTrackerRepo, onadTaskRole, {
       DB_HOST: ecs.Secret.fromSsmParameter(ssmParameters.DB_HOST),
       DB_USER: ecs.Secret.fromSsmParameter(ssmParameters.DB_USER),
@@ -175,7 +175,7 @@ export default class OnADProductionAwsStack extends cdk.Stack {
     // Create ECS Service
 
     // onadWeb
-    const onadWebService = new ecs.FargateService(this, `${onadClientName}-test-Service`, {
+    const onadWebService = new ecs.FargateService(this, `${onadClientName}-Service`, {
       cluster: productionCluster,
       taskDefinition: onadWeb.taskDefinition,
       assignPublicIp: true,
@@ -183,7 +183,7 @@ export default class OnADProductionAwsStack extends cdk.Stack {
       securityGroup: onadWebSecGrp,
     });
     // onadWebApi
-    const onadWebApiService = new ecs.FargateService(this, `${onadApiName}-test-Service`, {
+    const onadWebApiService = new ecs.FargateService(this, `${onadApiName}-Service`, {
       cluster: productionCluster,
       taskDefinition: onadApi.taskDefinition,
       assignPublicIp: true,
@@ -192,7 +192,7 @@ export default class OnADProductionAwsStack extends cdk.Stack {
     });
     // banner broad
     const onadBannerBroadService = new ecs.FargateService(
-      this, `${onadBannerBroadName}-test-Service`, {
+      this, `${onadBannerBroadName}-Service`, {
         cluster: productionCluster,
         taskDefinition: onadBannerBroad.taskDefinition,
         assignPublicIp: true,
@@ -202,7 +202,7 @@ export default class OnADProductionAwsStack extends cdk.Stack {
     );
     // tracker
     const onadTrackerService = new ecs.FargateService(
-      this, `${onadTrackerName}-test-Service`, {
+      this, `${onadTrackerName}-Service`, {
         cluster: productionCluster,
         taskDefinition: onadTracker.taskDefinition,
         assignPublicIp: true,

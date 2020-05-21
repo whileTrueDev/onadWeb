@@ -46,16 +46,12 @@
           "name": "DB_PORT"
         },
         {
-          "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/PRODUCTION_REACT_HOSTNAME",
-          "name": "PRODUCTION_REACT_HOSTNAME"
+          "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/DB_CHARSET",
+          "name": "DB_CHARSET"
         },
         {
-          "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/PRODUCTION_CLIENT_ID",
-          "name": "PRODUCTION_CLIENT_ID"
-        },
-        {
-          "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/DEV_REACT_HOSTNAME",
-          "name": "DEV_REACT_HOSTNAME"
+          "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/API_HOSTNAME",
+          "name": "API_HOSTNAME"
         }
       ],
       "dockerSecurityOptions": null,

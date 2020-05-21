@@ -19,10 +19,12 @@ export default function makeTaskDefinition(
   const taskDefinition = new ecs.FargateTaskDefinition(
     scope,
     `${name}TaskDef`,
-    { memoryLimitMiB: 512, cpu: 256, taskRole }
+    {
+      memoryLimitMiB: 512, cpu: 256, taskRole, family: `${name}`
+    }
   );
   const LogGroup = new logs.LogGroup(scope, `${name}LogGroup`, {
-    logGroupName: `ecs/${name}LogGroup`, removalPolicy: cdk.RemovalPolicy.DESTROY
+    logGroupName: `ecs/${name}`, removalPolicy: cdk.RemovalPolicy.DESTROY
   });
   const LogDriver = new ecs.AwsLogDriver({
     logGroup: LogGroup, streamPrefix: 'ecs'
@@ -31,7 +33,7 @@ export default function makeTaskDefinition(
     `${name}Container`, {
       image: ecs.ContainerImage.fromRegistry(imageRepo),
       secrets,
-      logging: LogDriver
+      logging: LogDriver,
     }
   );
   if (containerPort) {

@@ -8,7 +8,7 @@
         "logDriver": "awslogs",
         "secretOptions": null,
         "options": {
-          "awslogs-group": "/ecs/onad-web-api",
+          "awslogs-group": "/ecs/TEST-onad-web-api",
           "awslogs-region": "ap-northeast-2",
           "awslogs-stream-prefix": "ecs"
         }
@@ -32,11 +32,11 @@
       "workingDirectory": null,
       "secrets": [
         {
-          "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/REACT_HOSTNAME",
+          "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/TEST/REACT_HOSTNAME",
           "name": "REACT_HOSTNAME"
         },
         {
-          "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/API_HOSTNAME",
+          "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/TEST/API_HOSTNAME",
           "name": "API_HOSTNAME"
         },
         {
@@ -182,7 +182,7 @@
       "dockerLabels": null,
       "systemControls": null,
       "privileged": null,
-      "name": "onad-web-api"
+      "name": "TEST-onad-web-api"
     }
   ],
   "placementConstraints": [],
@@ -193,7 +193,7 @@
     "FARGATE"
   ],
   "taskDefinitionArn": "arn:aws:ecs:ap-northeast-2:803609402610:task-definition/onad-web-api:7",
-  "family": "onad-web-api",
+  "family": "TEST-onad-web-api",
   "requiresAttributes": [
     {
       "targetId": null,

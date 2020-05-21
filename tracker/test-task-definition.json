@@ -8,7 +8,7 @@
         "logDriver": "awslogs",
         "secretOptions": null,
         "options": {
-          "awslogs-group": "/ecs/onad-banner-broad",
+          "awslogs-group": "/ecs/TEST-onad-tracker",
           "awslogs-region": "ap-northeast-2",
           "awslogs-stream-prefix": "ecs"
         }
@@ -16,9 +16,9 @@
       "entryPoint": null,
       "portMappings": [
         {
-          "hostPort": 3002,
+          "hostPort": 3030,
           "protocol": "tcp",
-          "containerPort": 3002
+          "containerPort": 3030
         }
       ],
       "command": null,
@@ -32,32 +32,28 @@
       "workingDirectory": null,
       "secrets": [
         {
-          "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/SOCKET_HOSTNAME",
-          "name": "SOCKET_HOSTNAME"
-        },
-        {
-          "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/DB_HOST",
-          "name": "DB_HOST"
-        },
-        {
-          "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/DB_USER",
-          "name": "DB_USER"
-        },
-        {
-          "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/DB_PASSWORD",
-          "name": "DB_PASSWORD"
+          "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/DB_CHARSET",
+          "name": "DB_CHARSET"
         },
         {
           "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/DB_DATABASE",
           "name": "DB_DATABASE"
         },
         {
-          "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/DB_CHARSET",
-          "name": "DB_CHARSET"
+          "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/DB_HOST",
+          "name": "DB_HOST"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/DB_PASSWORD",
+          "name": "DB_PASSWORD"
         },
         {
           "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/DB_PORT",
           "name": "DB_PORT"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/DB_USER",
+          "name": "DB_USER"
         }
       ],
       "dockerSecurityOptions": null,
@@ -65,7 +61,7 @@
       "memoryReservation": 500,
       "volumesFrom": [],
       "stopTimeout": null,
-      "image": "hwasurr/onad_socket",
+      "image": "hwasurr/onad_tracker",
       "startTimeout": null,
       "firelensConfiguration": null,
       "dependsOn": null,
@@ -82,18 +78,18 @@
       "dockerLabels": null,
       "systemControls": null,
       "privileged": null,
-      "name": "onad-banner-broad"
+      "name": "TEST-onad-tracker"
     }
   ],
   "placementConstraints": [],
-  "memory": "1024",
+  "memory": "512",
   "taskRoleArn": null,
   "compatibilities": [
     "EC2",
     "FARGATE"
   ],
-  "taskDefinitionArn": "arn:aws:ecs:ap-northeast-2:803609402610:task-definition/onad-banner-broad:1",
-  "family": "onad-banner-broad",
+  "taskDefinitionArn": "arn:aws:ecs:ap-northeast-2:803609402610:task-definition/onad-tracker:1",
+  "family": "TEST-onad-tracker",
   "requiresAttributes": [
     {
       "targetId": null,
@@ -143,7 +139,7 @@
     "FARGATE"
   ],
   "networkMode": "awsvpc",
-  "cpu": "512",
+  "cpu": "256",
   "revision": 1,
   "status": "ACTIVE",
   "inferenceAccelerators": null,
