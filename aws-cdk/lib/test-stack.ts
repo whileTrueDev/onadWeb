@@ -177,6 +177,7 @@ export default class OnADTestAwsStack extends cdk.Stack {
     // onadWeb
     const onadWebService = new ecs.FargateService(this, `${onadClientName}-Service`, {
       cluster: myCluster,
+      serviceName: `${onadClientName}-Service`,
       taskDefinition: onadWeb.taskDefinition,
       assignPublicIp: true,
       desiredCount: 1,
@@ -185,6 +186,7 @@ export default class OnADTestAwsStack extends cdk.Stack {
     // onadWebApi
     const onadWebApiService = new ecs.FargateService(this, `${onadApiName}-Service`, {
       cluster: myCluster,
+      serviceName: `${onadApiName}-Service`,
       taskDefinition: onadApi.taskDefinition,
       assignPublicIp: true,
       desiredCount: 1,
@@ -194,6 +196,7 @@ export default class OnADTestAwsStack extends cdk.Stack {
     const onadBannerBroadService = new ecs.FargateService(
       this, `${onadBannerBroadName}-Service`, {
         cluster: myCluster,
+        serviceName: `${onadBannerBroadName}-Service`,
         taskDefinition: onadBannerBroad.taskDefinition,
         assignPublicIp: true,
         desiredCount: 1,
@@ -204,6 +207,7 @@ export default class OnADTestAwsStack extends cdk.Stack {
     const onadTrackerService = new ecs.FargateService(
       this, `${onadTrackerName}-Service`, {
         cluster: myCluster,
+        serviceName: `${onadTrackerName}-Service`,
         taskDefinition: onadTracker.taskDefinition,
         assignPublicIp: true,
         desiredCount: 1,
