@@ -24,17 +24,17 @@ export default function getSSMParams(scope: cdk.Construct) {
 
   // Test Environment
   const TEST_REACT_HOSTNAME = ssm.StringParameter.fromStringParameterAttributes(
-    scope, 'PRODUCTION_REACT_HOSTNAME', {
+    scope, 'TEST_REACT_HOSTNAME', {
       parameterName: '/TEST/REACT_HOSTNAME'
     }
   );
   const TEST_API_HOSTNAME = ssm.StringParameter.fromStringParameterAttributes(
-    scope, 'PRODUCTION_API_HOSTNAME', {
+    scope, 'TEST_API_HOSTNAME', {
       parameterName: '/TEST/API_HOSTNAME'
     }
   );
   const TEST_SOCKET_HOSTNAME = ssm.StringParameter.fromStringParameterAttributes(
-    scope, 'PRODUCTION_SOCKET_HOSTNAME', {
+    scope, 'TEST_SOCKET_HOSTNAME', {
       parameterName: '/TEST/SOCKET_HOSTNAME'
     }
   );

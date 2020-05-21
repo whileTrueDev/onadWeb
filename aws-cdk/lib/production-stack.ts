@@ -311,6 +311,40 @@ export default class OnADProductionAwsStack extends cdk.Stack {
     }));
 
     // *********************************************
+    // Create Target groups
+
+    const onadWebGroup = new elbv2.ApplicationTargetGroup(this, 'httpsDefaultTargetGroup', {
+      vpc: productionVpc,
+      protocol: elbv2.ApplicationProtocol.HTTP,
+      port: onadClientPort,
+      targets: [onadWebService],
+      targetGroupName: `${onadClientName}Target`,
+    });
+
+    const onadWebApiGroup = new elbv2.ApplicationTargetGroup(this, 'onadLBWebApiTargetGroup', {
+      vpc: productionVpc,
+      targetGroupName: `${onadApiName}Target`,
+      port: onadApiPort,
+      protocol: elbv2.ApplicationProtocol.HTTP,
+      targets: [onadWebApiService],
+
+    });
+    const onadBannerBroadGroup = new elbv2.ApplicationTargetGroup(this, 'onadLBBannerBroadTargetGroup', {
+      vpc: productionVpc,
+      targetGroupName: `${onadBannerBroadName}Target`,
+      port: onadBannerBroadPort,
+      protocol: elbv2.ApplicationProtocol.HTTP,
+      targets: [onadBannerBroadService],
+    });
+    const onadTrackerGroup = new elbv2.ApplicationTargetGroup(this, 'onadLBTrackerTargetGroup', {
+      vpc: productionVpc,
+      targetGroupName: `${onadTrackerName}Target`,
+      port: onadTrackerPort,
+      protocol: elbv2.ApplicationProtocol.HTTP,
+      targets: [onadTrackerService],
+    });
+
+    // *********************************************
     // Route53 ALB, subdomain 등록
 
     // Add Hosted zone
@@ -321,31 +355,26 @@ export default class OnADProductionAwsStack extends cdk.Stack {
     //   }
     // );
 
-    // *********************************************
-    // Get DNS validated Certificates
+    // // *********************************************
+    // // Get DNS validated Certificates
 
     // const sslcert = new acm.Certificate(this, 'DnsCertificate', {
     //   domainName: `${DOMAIN}`,
     //   subjectAlternativeNames: [`*.${DOMAIN}`],
     // });
 
-    // *********************************************
-    // Create ALB (Application Loadbalencer)
+    // // *********************************************
+    // // Create ALB (Application Loadbalencer)
 
     // const onadLoadBalancer = new elbv2.ApplicationLoadBalancer(this, 'OnADLB', {
     //   vpc: productionVpc, internetFacing: true
     // });
-    // // Add Http listener
-    // const onadListenerDefaultGroup = new elbv2.ApplicationTargetGroup(this, 'httpsDefaultTargetGroup', {
-    //   vpc: productionVpc,
-    //   protocol: elbv2.ApplicationProtocol.HTTP,
-    //   port: onadClientPort,
-    //   targets: [onadWebService],
-    //   targetGroupName: `${onadClientName}Target`,
-    // });
+
+
+    // // *********************************************
+    // // Add Http listener to ALB
     // const onadHttpListener = onadLoadBalancer.addListener('OnADHttpListener', {
-    //   port: 80,
-    //   defaultTargetGroups: [onadListenerDefaultGroup]
+    //   port: 80, defaultTargetGroups: [onadWebGroup]
     // });
     // onadHttpListener.addRedirectResponse('80to443RedirectTarget', {
     //   priority: 1,
@@ -356,54 +385,43 @@ export default class OnADProductionAwsStack extends cdk.Stack {
     // });
     // onadHttpListener.connections.allowDefaultPortFromAnyIpv4('http ALB open to world');
 
-    // // Add https listener
+    // // *********************************************
+    // // Add https listener to ALB
     // const onadHttpsListener = onadLoadBalancer.addListener('OnADHttpsListener', {
     //   port: 443,
     //   // The CloudFormation deployment will wait until this verification process has been completed
     //   certificates: [sslcert],
     //   sslPolicy: elbv2.SslPolicy.RECOMMENDED,
-    //   defaultTargetGroups: [onadListenerDefaultGroup]
+    //   defaultTargetGroups: [onadWebGroup]
     // });
     // const onadWebHostHeader = `${DOMAIN}`;
     // onadHttpsListener.addTargetGroups('onadWebTargetGroups', {
     //   priority: 1,
-    //   targetGroups: [onadListenerDefaultGroup],
+    //   targetGroups: [onadWebGroup],
     //   hostHeader: onadWebHostHeader,
     // });
     // const onadWebApiHostHeader = `api.${DOMAIN}`;
-    // onadHttpsListener.addTargets('onadWebApiGroup', {
-    //   targetGroupName: `${onadApiName}Target`,
+    // onadHttpsListener.addTargetGroups('onadWebApiGroup', {
     //   priority: 2,
-    //   port: onadApiPort,
-    //   protocol: elbv2.ApplicationProtocol.HTTP,
     //   hostHeader: onadWebApiHostHeader,
-    //   targets: [onadWebApiService],
-
+    //   targetGroups: [onadWebApiGroup],
     // });
     // const onadBannerBroadHostHeader = `banner.${DOMAIN}`;
-    // onadHttpsListener.addTargets('onadBannerBroadGroup', {
-    //   targetGroupName: `${onadBannerBroadName}Target`,
+    // onadHttpsListener.addTargetGroups('onadBannerBroadGroup', {
     //   priority: 3,
-    //   port: onadBannerBroadPort,
-    //   protocol: elbv2.ApplicationProtocol.HTTP,
     //   hostHeader: onadBannerBroadHostHeader,
-    //   targets: [onadBannerBroadService],
-
+    //   targetGroups: [onadBannerBroadGroup],
     // });
     // const onadTrackerHostHeader = `t.${DOMAIN}`;
-    // onadHttpsListener.addTargets('onadTrackerGroup', {
-    //   targetGroupName: `${onadTrackerName}Target`,
+    // onadHttpsListener.addTargetGroups('onadTrackerGroup', {
     //   priority: 4,
-    //   port: onadTrackerPort,
-    //   protocol: elbv2.ApplicationProtocol.HTTP,
     //   hostHeader: onadTrackerHostHeader,
-    //   targets: [onadTrackerService],
-
+    //   targetGroups: [onadTrackerGroup],
     // });
     // onadHttpsListener.connections.allowDefaultPortFromAnyIpv4('https ALB open to world');
 
-    // *********************************************
-    // Route53 ALB, subdomain 등록
+    // // *********************************************
+    // // Route53 ALB, subdomain 등록
 
     // Add Loadbalancer ARecord to onadHostZone
     // const onadLoadbalancerRecord = new route53.ARecord(this, 'LoadbalancerARecord', {

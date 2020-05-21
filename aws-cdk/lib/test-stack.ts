@@ -9,53 +9,53 @@ import * as iam from '@aws-cdk/aws-iam';
 // import * as targets from '@aws-cdk/aws-events-targets';
 import * as acm from '@aws-cdk/aws-certificatemanager';
 
-import getParams from './get-ssm-params/getParams';
 import makeTaskDefinition from './ecs/makeTaskDefinition';
+import getParams from './get-ssm-params/getParams';
 
 const DOMAIN = 'onad.io';
 
-export default class OnADProductionAwsStack extends cdk.Stack {
+export default class OnADTestAwsStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
     // *********************************************
     // Define VPC
 
-    const productionVpc = new ec2.Vpc(this, 'OnAdTestVpc');
+    const myVpc = new ec2.Vpc(this, 'OnAdTestVpc');
 
     // *********************************************
     // Make Security groups
 
     // empty security group
     const emptySecGrp = new ec2.SecurityGroup(this, 'emptySecurityGroup', {
-      vpc: productionVpc,
+      vpc: myVpc,
       securityGroupName: 'OnADEmptySecurityGroup',
       allowAllOutbound: true,
     });
     // React
     const onadWebSecGrp = new ec2.SecurityGroup(this, 'reactSecurityGroup', {
-      vpc: productionVpc,
+      vpc: myVpc,
       securityGroupName: 'OnADReact-test-SecurityGroup',
       allowAllOutbound: true
     });
     onadWebSecGrp.connections.allowFromAnyIpv4(ec2.Port.tcp(3001));
     // API
     const onadWebApiSecGrp = new ec2.SecurityGroup(this, 'APISecurityGroup', {
-      vpc: productionVpc,
+      vpc: myVpc,
       securityGroupName: 'OnADAPI-test-SecurityGroup',
       allowAllOutbound: true
     });
     onadWebApiSecGrp.connections.allowFromAnyIpv4(ec2.Port.tcp(3000));
     // Ad Broad
     const bannerBroadSecGrp = new ec2.SecurityGroup(this, 'bannerBroadSecurityGroup', {
-      vpc: productionVpc,
+      vpc: myVpc,
       securityGroupName: 'OnADAdBaord-test-SecurityGroup',
       allowAllOutbound: true
     });
     bannerBroadSecGrp.connections.allowFromAnyIpv4(ec2.Port.tcp(3002));
     // Trakcer
     const trackerSecGrp = new ec2.SecurityGroup(this, 'trackerSecurityGroup', {
-      vpc: productionVpc,
+      vpc: myVpc,
       securityGroupName: 'OnADAdTracker-test-SecurityGroup',
       allowAllOutbound: true
     });
@@ -83,7 +83,7 @@ export default class OnADProductionAwsStack extends cdk.Stack {
     // Define ECS Cluster
 
     const productionCluster = new ecs.Cluster(this, 'OnADCluster',
-      { vpc: productionVpc, clusterName: 'OnAD-Test' });
+      { vpc: myVpc, clusterName: 'OnAD-Test' });
 
     // *********************************************
     // Get params from SSM Parameter Store
@@ -212,6 +212,37 @@ export default class OnADProductionAwsStack extends cdk.Stack {
     );
 
     // *********************************************
+    // Create Target groups
+    const onadWebGroup = new elbv2.ApplicationTargetGroup(this, 'onadLBonadWebTargetGroup', {
+      vpc: myVpc,
+      protocol: elbv2.ApplicationProtocol.HTTP,
+      port: onadClientPort,
+      targets: [onadWebService],
+      targetGroupName: `${onadClientName}-test-Target`,
+    });
+    const onadWebApiGroup = new elbv2.ApplicationTargetGroup(this, 'onadLBWebApiTargetGroup', {
+      vpc: myVpc,
+      targetGroupName: `${onadApiName}-test-Target`,
+      port: onadApiPort,
+      protocol: elbv2.ApplicationProtocol.HTTP,
+      targets: [onadWebApiService],
+    });
+    const onadBannerBroadGroup = new elbv2.ApplicationTargetGroup(this, 'onadLBBannerBroadTargetGroup', {
+      vpc: myVpc,
+      targetGroupName: `${onadBannerBroadName}-test-Target`,
+      port: onadBannerBroadPort,
+      protocol: elbv2.ApplicationProtocol.HTTP,
+      targets: [onadBannerBroadService],
+    });
+    const onadTrackerGroup = new elbv2.ApplicationTargetGroup(this, 'onadLBTrackerTargetGroup', {
+      vpc: myVpc,
+      targetGroupName: `${onadTrackerName}-test-Target`,
+      port: onadTrackerPort,
+      protocol: elbv2.ApplicationProtocol.HTTP,
+      targets: [onadTrackerService],
+    });
+
+    // *********************************************
     // Route53 ALB, subdomain 등록
 
     // Add Hosted zone
@@ -230,23 +261,18 @@ export default class OnADProductionAwsStack extends cdk.Stack {
     //   subjectAlternativeNames: [`*.${DOMAIN}`],
     // });
 
-    // // *********************************************
-    // // Create ALB (Application Loadbalencer)
+    // *********************************************
+    // Create ALB (Application Loadbalencer)
 
     // const onadLoadBalancer = new elbv2.ApplicationLoadBalancer(this, 'OnADLB', {
-    //   vpc: productionVpc, internetFacing: true, loadBalancerName: `${DOMAIN}-test-LB`
+    //   vpc: myVpc, internetFacing: true, loadBalancerName: `${DOMAIN}-test-LB`
     // });
-    // // Add Http listener
-    // const onadListenerDefaultGroup = new elbv2.ApplicationTargetGroup(this, 'httpsDefaultTargetGroup', {
-    //   vpc: productionVpc,
-    //   protocol: elbv2.ApplicationProtocol.HTTP,
-    //   port: onadClientPort,
-    //   targets: [onadWebService],
-    //   targetGroupName: `${onadClientName}-test-Target`,
-    // });
+
+    // // *********************************************
+    // // Add Http listener to ALB
     // const onadHttpListener = onadLoadBalancer.addListener('OnADHttpListener', {
     //   port: 80,
-    //   defaultTargetGroups: [onadListenerDefaultGroup]
+    //   defaultTargetGroups: [onadWebGroup]
     // });
     // onadHttpListener.addRedirectResponse('80to443RedirectTarget', {
     //   priority: 1,
@@ -257,48 +283,42 @@ export default class OnADProductionAwsStack extends cdk.Stack {
     // });
     // onadHttpListener.connections.allowDefaultPortFromAnyIpv4('http ALB open to world');
 
-    // // Add https listener
+    // // *********************************************
+    // // Add https listener to ALB
     // const onadHttpsListener = onadLoadBalancer.addListener('OnADHttpsListener', {
     //   port: 443,
     //   // The CloudFormation deployment will wait until this verification process has been completed
     //   certificates: [sslcert],
     //   sslPolicy: elbv2.SslPolicy.RECOMMENDED,
-    //   defaultTargetGroups: [onadListenerDefaultGroup]
+    //   defaultTargetGroups: [onadWebGroup]
     // });
+
     // const onadWebHostHeader = `test.${DOMAIN}`;
     // onadHttpsListener.addTargetGroups('onadWebTargetGroups', {
     //   priority: 1,
-    //   targetGroups: [onadListenerDefaultGroup],
+    //   targetGroups: [onadWebGroup],
     //   hostHeader: onadWebHostHeader,
     // });
+
     // const onadWebApiHostHeader = `test-api.${DOMAIN}`;
-    // onadHttpsListener.addTargets('onadWebApiGroup', {
-    //   targetGroupName: `${onadApiName}-test-Target`,
+    // onadHttpsListener.addTargetGroups('onadWebApiGroup', {
     //   priority: 2,
-    //   port: onadApiPort,
-    //   protocol: elbv2.ApplicationProtocol.HTTP,
     //   hostHeader: onadWebApiHostHeader,
-    //   targets: [onadWebApiService],
-
+    //   targetGroups: [onadWebApiGroup]
     // });
+
     // const onadBannerBroadHostHeader = `test-banner.${DOMAIN}`;
-    // onadHttpsListener.addTargets('onadBannerBroadGroup', {
-    //   targetGroupName: `${onadBannerBroadName}-test-Target`,
+    // onadHttpsListener.addTargetGroups('onadBannerBroadGroup', {
     //   priority: 3,
-    //   port: onadBannerBroadPort,
-    //   protocol: elbv2.ApplicationProtocol.HTTP,
     //   hostHeader: onadBannerBroadHostHeader,
-    //   targets: [onadBannerBroadService],
-
+    //   targetGroupss: [onadBannerBroadGroup],
     // });
+
     // const onadTrackerHostHeader = `test-t.${DOMAIN}`;
-    // onadHttpsListener.addTargets('onadTrackerGroup', {
-    //   targetGroupName: `${onadTrackerName}-test-Target`,
+    // onadHttpsListener.addTargetGroups('onadTrackerGroup', {
     //   priority: 4,
-    //   port: onadTrackerPort,
-    //   protocol: elbv2.ApplicationProtocol.HTTP,
     //   hostHeader: onadTrackerHostHeader,
-    //   targets: [onadTrackerService],
+    //   targetGroupss: [onadTrackerGroup],
 
     // });
     // onadHttpsListener.connections.allowDefaultPortFromAnyIpv4('https ALB open to world');
