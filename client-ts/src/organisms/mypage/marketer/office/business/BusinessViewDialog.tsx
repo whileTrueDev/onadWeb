@@ -41,8 +41,15 @@ interface BusinessRegiUploadDialogProps {
 const BusinessViewDialog = (props: BusinessRegiUploadDialogProps): JSX.Element => {
   const { open, handleClose, businessRegiImage } = props;
   const classes = useStyles();
-  const defaultImage = '/pngs/logo/onad_logo_vertical_small.png';
-
+  let defaultImage = '/pngs/logo/onad_logo_vertical_small.png';
+  let isPdf = false;
+  if (typeof businessRegiImage === 'string') {
+    if (businessRegiImage.indexOf('pdf') === -1) {
+      defaultImage = businessRegiImage;
+    } else {
+      isPdf = true;
+    }
+  }
   return (
     <Dialog
       open={open}
@@ -54,10 +61,10 @@ const BusinessViewDialog = (props: BusinessRegiUploadDialogProps): JSX.Element =
         <img
           className={classes.imgPreview}
           id="preview"
-          src={(typeof businessRegiImage === 'string' && businessRegiImage.indexOf('pdf') === -1) ? businessRegiImage : defaultImage}
+          src={defaultImage}
           alt="business-registration-preview"
         />
-        {businessRegiImage.indexOf('pdf') !== -1 && (
+        {isPdf && (
           <span>
             PDF파일은 미리보기를 지원하지 않습니다.
           </span>
