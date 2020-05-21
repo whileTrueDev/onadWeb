@@ -21,7 +21,7 @@ import useDialog from '../../../../utils/hooks/useDialog';
 import history from '../../../../history';
 import axios from '../../../../utils/axios';
 import isVideo from '../../../../utils/isVideo';
-import HOST from '../../../../utils/config';
+import HOST from '../../../../config';
 
 
 const SLIDE_TIMEOUT = 500;
@@ -156,7 +156,9 @@ export default function CampaignList(
                               })}
                             />
                           )}
-                          label={detail.onOff ? (<Typography color="primary">활성화</Typography>) : (<Typography>비활성화</Typography>)}
+                          label={detail.onOff
+                            ? (<Typography color="primary">활성화</Typography>)
+                            : (<Typography>비활성화</Typography>)}
                           labelPlacement="bottom"
                         />
                       </Grid>

@@ -8,7 +8,7 @@ import axios from '../../../../../utils/axios';
 // customized component
 import Dialog from '../../../../../atoms/Dialog/Dialog';
 import Button from '../../../../../atoms/CustomButtons/Button';
-import HOST from '../../../../../utils/config';
+import HOST from '../../../../../config';
 import history from '../../../../../history';
 import RefundAgreement from './RefundAgreement';
 import RefundConfirm from './RefundConfirm';

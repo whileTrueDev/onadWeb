@@ -49,6 +49,10 @@
         }
     },
     "rules": {
+        "max-len": [
+            2,
+            120
+        ],
         "arrow-parens": "error",
         "react/display-name": 0,
         "react/jsx-props-no-spreading": "warn",

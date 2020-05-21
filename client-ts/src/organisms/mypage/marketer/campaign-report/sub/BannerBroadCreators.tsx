@@ -6,7 +6,7 @@ import AccountCircle from '@material-ui/icons/AccountCircle';
 import CardTemplate from './CardTemplate';
 import CreatorInfo from './CreatorInfo';
 import axios, { cancelToken } from '../../../../../utils/axios';
-import HOST from '../../../../../utils/config';
+import HOST from '../../../../../config';
 import { CreatorDataInterface } from '../../dashboard/interfaces';
 import { UseGetRequestObject } from '../../../../../utils/hooks/useGetRequest';
 import useAnchorEl from '../../../../../utils/hooks/useAnchorEl';

@@ -6,7 +6,7 @@ import {
 import axios from '../../../../../utils/axios';
 // customized component
 import Button from '../../../../../atoms/CustomButtons/Button';
-import HOST from '../../../../../utils/config';
+import HOST from '../../../../../config';
 import TestChargeAgreement from './ChargeAgreement';
 import TestChargeAmount from './ChargeAmount';
 import TestChargeComplete from './ChargeComplete';

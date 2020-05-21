@@ -18,10 +18,7 @@ const io = socketio(httpServer);
 
 const PORT = 3002;
 process.env.NODE_ENV = (process.env.NODE_ENV && (process.env.NODE_ENV).trim().toLowerCase() === 'production') ? 'production' : 'development';
-let SOCKET_HOST = process.env.DEV_SOCKET_HOSTNAME;
-if (process.env.NODE_ENV === 'production') {
-  SOCKET_HOST = process.env.PRODUCTION_SOCKET_HOSTNAME;
-}
+const SOCKET_HOST = process.env.SOCKET_HOSTNAME;
 
 app.use('/public', express.static(`${__dirname}/public`)); // 디렉토리 정적으로 고정하는 부분
 // view engine

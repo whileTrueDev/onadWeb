@@ -3,7 +3,7 @@ import Typography from '@material-ui/core/Typography';
 
 import axios from '../../../../../utils/axios';
 import SignOutDialog from './SignOutDialog';
-import HOST from '../../../../../utils/config';
+import HOST from '../../../../../config';
 import { UserInterface } from '../interface';
 
 const SignOut = (props: { userData: UserInterface }): JSX.Element => {

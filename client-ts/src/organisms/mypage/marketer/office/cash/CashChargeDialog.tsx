@@ -13,7 +13,7 @@ import axios from '../../../../../utils/axios';
 // customized component
 import Button from '../../../../../atoms/CustomButtons/Button';
 import Dialog from '../../../../../atoms/Dialog/Dialog';
-import HOST from '../../../../../utils/config';
+import HOST from '../../../../../config';
 import history from '../../../../../history';
 
 const useStyles = makeStyles((theme: Theme) => ({

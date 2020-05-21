@@ -10,9 +10,7 @@ import makeCreatorInquiry from '../../middlewares/mailTemplate/makeCreatorInquir
 
 const router = express.Router();
 
-const HOST = process.env.NODE_ENV === 'production'
-  ? process.env.PRODUCTION_API_HOSTNAME
-  : process.env.DEV_API_HOSTNAME;
+const HOST = process.env.API_HOSTNAME;
 
 const transporter = nodemailer.createTransport({
   service: 'gmail',

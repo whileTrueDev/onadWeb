@@ -9,7 +9,7 @@ import Dialog from '../../../../atoms/Dialog/Dialog';
 // import BannerDescForm from './BannerDescForm';
 import './upload.css';
 import ImageUpload from './ImageUpload';
-import HOST from '../../../../utils/config';
+import HOST from '../../../../config';
 import axios from '../../../../utils/axios';
 
 const DEFAULT_IMAGE_PATH = '/pngs/dashboard/banner_upload_manual.png';

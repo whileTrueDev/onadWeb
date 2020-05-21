@@ -6,7 +6,7 @@ import {
 // import usePostRequest from '../../../../utils/hooks/usePostRequest';
 import { UseGetRequestObject } from '../../../../utils/hooks/useGetRequest';
 import { OnOffInterface } from './interfaces';
-import HOST from '../../../../utils/config';
+import HOST from '../../../../config';
 import axios from '../../../../utils/axios';
 
 const useStyles = makeStyles(() => ({
