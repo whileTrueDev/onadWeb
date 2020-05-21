@@ -11,6 +11,8 @@ log/*
 /bin/log/*.json
 /log
 
+/lib/youtube/*
+
 calculationLog/*
 */calculationLog
 /middlewares/bin/calculationLog
