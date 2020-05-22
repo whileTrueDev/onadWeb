@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import shortid from 'shortid';
 import {
-  Paper, Typography, Divider, Grid
+  Paper, Typography, Divider, Grid, Collapse
 } from '@material-ui/core';
 import { Done, Clear } from '@material-ui/icons';
 // components
@@ -70,7 +70,7 @@ const ContractionCard = ({
 
   return (
     <>
-      {contractionData.creatorContractionAgreement === 0 && !getFollower.loading && getFollower.data >= 300 ? (
+      {contractionData.creatorContractionAgreement === 0 && !getFollower.loading && (
 
         <CustomCard iconComponent={<StyledItemText primary="서비스  이용 및 출금 계약하기" color="white" />}>
 
@@ -90,6 +90,7 @@ const ContractionCard = ({
                           contractionDialog.handleOpen();
                           setActiveContractionIndex(index);
                         }}
+                        disabled={getFollower.data < 300}
                       >
                         약관보기
                       </Button>
@@ -115,7 +116,21 @@ const ContractionCard = ({
               </Grid>
             </Paper>
           ))}
-
+          <Collapse in={getFollower.data < 300}>
+            <Grid container style={{ marginTop: '16px' }} direction="row" justify="space-between" alignItems="center" spacing={2}>
+              <Grid item>
+                <Typography style={{ fontWeight: 'bold' }} variant="body1" color="secondary">
+                  ※ 팔로워 수가 300명 이상이 되면 계약할 수 있습니다.
+                </Typography>
+                <Typography style={{ fontWeight: 'bold' }} variant="body2">
+                  - 현재 팔로워는
+                  {' '}
+                  {getFollower.data}
+                  명입니다.
+                </Typography>
+              </Grid>
+            </Grid>
+          </Collapse>
           { /* 약관 보기 Dialog */}
           <Dialog
             open={contractionDialog.open}
@@ -173,20 +188,7 @@ const ContractionCard = ({
             </Button>
           </div>
         </CustomCard>
-      )
-        : (
-          <CustomCard iconComponent={<StyledItemText primary="서비스  이용 및 출금 계약하기" color="white" />}>
-            <Paper>
-              <Grid container direction="row" justify="space-between" alignItems="center" spacing={1}>
-                <Grid item>
-                  <Typography style={{ fontWeight: 'bold' }} variant="h5" color="secondary">
-                    팔로워 수가 300명 이상이 되면 계약할 수 있습니다.
-                  </Typography>
-                </Grid>
-              </Grid>
-            </Paper>
-          </CustomCard>
-        )}
+      )}
 
       <Snackbar
         color="success"
