@@ -163,7 +163,7 @@
       ],
       "dockerSecurityOptions": null,
       "memory": null,
-      "memoryReservation": 500,
+      "memoryReservation": 800,
       "volumesFrom": [],
       "stopTimeout": null,
       "image": "hwasurr/onad_web_api:d12f8213c1ba98d19d02e60ad16cd0223e15d25c",
@@ -187,7 +187,7 @@
     }
   ],
   "placementConstraints": [],
-  "memory": "512",
+  "memory": "1024",
   "taskRoleArn": "arn:aws:iam::803609402610:role/ecsTaskExecutionRole",
   "compatibilities": [
     "EC2",
