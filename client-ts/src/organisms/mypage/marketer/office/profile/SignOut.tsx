@@ -3,7 +3,7 @@ import Typography from '@material-ui/core/Typography';
 
 import axios from '../../../../../utils/axios';
 import SignOutDialog from './SignOutDialog';
-import HOST from '../../../../../config';
+import HOST, { REACT_HOST } from '../../../../../config';
 import { UserInterface } from '../interface';
 
 const SignOut = (props: { userData: UserInterface }): JSX.Element => {
@@ -19,7 +19,7 @@ const SignOut = (props: { userData: UserInterface }): JSX.Element => {
     axios.delete<null, boolean[]>(`${HOST}/marketer`)
       .then(() => {
         alert('탈퇴가 완료되었습니다.');
-        window.location.href = 'https://onad.io';
+        window.location.href = REACT_HOST!;
       }).catch(() => { alert('오류가 발생했습니다. 잠시 후 다시 시도해주세요.'); });
   }
 

@@ -28,7 +28,11 @@ jobs:
           yarn
           yarn build
           cd -
-
+        env:
+          REACT_APP_REACT_HOSTNAME: ${{ secrets.REACT_APP_TEST_REACT_HOSTNAME }}
+          REACT_APP_API_HOSTNAME: ${{ secrets.REACT_APP_TEST_API_HOSTNAME }}
+          REACT_APP_GOOGLE_MAP_API_KEY: ${{ secrets.REACT_APP_GOOGLE_MAP_API_KEY }}
+          
       - name: Build, tag, and push image to Docker Hub
         uses: elgohr/Publish-Docker-Github-Action@2.14
         with:
