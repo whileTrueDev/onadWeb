@@ -8,7 +8,7 @@ function callImg(socket: any, msg: string[]): void {
   const programType: string = msg[2];
   const getTime: string = new Date().toLocaleString();
   interface CampaignIdOptionType {
-    [_: string]: [number, string];
+    [_: string]: [number, string, string];
   }
   const campaignObject: CampaignIdOptionType = {};
 
@@ -42,7 +42,7 @@ function callImg(socket: any, msg: string[]): void {
 
   const getOnCampaignList = (): Promise<string[]> => {
     const campaignListQuery = `
-    SELECT campaignId, campaignName, optionType, startDate, finDate, selectedTime
+    SELECT campaignId, campaignName, optionType, startDate, finDate, selectedTime, campaignDescription
     FROM campaign
     LEFT JOIN marketerInfo
     ON campaign.marketerId = marketerInfo.marketerId
@@ -58,6 +58,7 @@ function callImg(socket: any, msg: string[]): void {
       campaignName: string;
       selectedTime: Date;
       optionType: number;
+      campaignDescription: string;
     }
     interface ReturnDate {
       [key: string]: Date;
@@ -72,7 +73,7 @@ function callImg(socket: any, msg: string[]): void {
             (data: TimeData) => {
               if (data.startDate && data.startDate < nowDate && (data.finDate > nowDate || !data.finDate)) {
                 filteredDate[data.campaignId] = data.selectedTime;
-                campaignObject[data.campaignId] = [data.optionType, data.campaignName];
+                campaignObject[data.campaignId] = [data.optionType, data.campaignName, data.campaignDescription];
               }
             }
           );
@@ -334,11 +335,13 @@ function callImg(socket: any, msg: string[]): void {
       const checkOptionType = typeof bannerInfo[1] === 'string' ? campaignObject[bannerInfo[1]][0] : null;
       const campaignName = typeof bannerInfo[1] === 'string' ? campaignObject[bannerInfo[1]][1] : null;
       const linkName = typeof bannerInfo[1] === 'string' ? bannerInfo[2] : null;
+      const campaignDescription = typeof bannerInfo[1] === 'string' ? campaignObject[bannerInfo[1]][2] : null;
+      const descriptionToChat: string | boolean | null = campaignDescription || linkName;
 
       if (myAdChatAgreement === 1 && checkOptionType === 1) { // 채봇 동의 및 옵션타입 cpm+cpc인 경우에 챗봇으로 데이터 전송
         console.log(`${CREATOR_DATA.creatorId} / next-campaigns-twitch-chatbot Emitting ${myCreatorTwitchId} / ${getTime}`);
         socket.broadcast.emit('next-campaigns-twitch-chatbot', {
-          campaignId: myCampaignId, creatorId: CREATOR_DATA.creatorId, creatorTwitchId: myCreatorTwitchId, campaignName, linkName
+          campaignId: myCampaignId, creatorId: CREATOR_DATA.creatorId, creatorTwitchId: myCreatorTwitchId, campaignName, descriptionToChat
         });
       }
 
