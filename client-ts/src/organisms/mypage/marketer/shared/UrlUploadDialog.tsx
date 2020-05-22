@@ -1,10 +1,7 @@
 import React, { useState } from 'react';
-import { makeStyles, Theme, withStyles } from '@material-ui/core/styles';
+import { makeStyles, Theme } from '@material-ui/core/styles';
 import {
-  Grid, InputLabel, Input, FormHelperText,
-  Collapse,
-  Stepper, Step, StepLabel, StepContent,
-  FormControl
+  Collapse, Stepper, Step, StepLabel, StepContent,
 } from '@material-ui/core';
 import Check from '@material-ui/icons/Check';
 import classnames from 'classnames';
@@ -15,46 +12,6 @@ import useToggle from '../../../../utils/hooks/useToggle';
 import useEventTargetValue from '../../../../utils/hooks/useEventTargetValue';
 import usePostRequest from '../../../../utils/hooks/usePostRequest';
 import UrlUploadStep from './UrlUploadStep';
-
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    padding: theme.spacing(2),
-  },
-  input: {
-    fontSize: '14px',
-    fontWeight: 700,
-    color: theme.palette.text.primary,
-    margin: '4px'
-  },
-  label: {
-    fontSize: '20px',
-    fontWeight: 700,
-    color: theme.palette.primary.main,
-    marginBottom: '7px',
-  },
-  checkbox: {
-
-  },
-  buttonSet: {
-    maginTop: '16px'
-  },
-}));
-
-const CssFormControl = withStyles((theme: Theme) => ({
-  root: {
-    '& label.Mui-focused': {
-      color: theme.palette.primary.main,
-    },
-    '& .MuiInput-underline:after': {
-      borderBottomColor: theme.palette.primary.main,
-    },
-    '& .MuiOutlinedInput-root': {
-      '&:hover fieldset': {
-        borderColor: theme.palette.primary.main,
-      },
-    },
-  },
-}))(FormControl);
 
 const useQontoStepIconStyles = makeStyles((theme: Theme) => ({
   root: { color: theme.palette.background.paper, display: 'flex', },
@@ -98,7 +55,6 @@ function QontoStepIcon(props: any): JSX.Element {
 }
 
 export default function UrlUploadDialog(props: UrlUploadDialogProps): JSX.Element {
-  const classes = useStyles();
   const { open, handleClose, recallRequest } = props;
   const [activeStep, setStep] = useState(0);
 
@@ -114,14 +70,12 @@ export default function UrlUploadDialog(props: UrlUploadDialogProps): JSX.Elemen
   const sub2UrlName = useEventTargetValue(); // Sub url2 name
   const sub2UrlCheck = useToggle(true); // Sub url2 설정/미설정
 
-  const linkDesc = useEventTargetValue();
   const { doPostRequest } = usePostRequest<{
     links: {
       primary: boolean;
       linkName: string;
       linkTo: string;
     }[];
-    linkDescription: string;
   }, any[]>(
     '/marketer/landing-url',
     // success callback function
@@ -145,7 +99,7 @@ export default function UrlUploadDialog(props: UrlUploadDialogProps): JSX.Elemen
       linkResult.push({ primary: false, linkName: sub2UrlName.value, linkTo: sub2Url.value });
     }
 
-    doPostRequest({ links: linkResult, linkDescription: linkDesc.value });
+    doPostRequest({ links: linkResult });
   }
 
   const handleNext = (number: number) => (): void => {
@@ -153,6 +107,13 @@ export default function UrlUploadDialog(props: UrlUploadDialogProps): JSX.Elemen
   };
   const handleReset = (): void => {
     setStep(0);
+    // Reset values
+    mainUrl.handleReset();
+    mainUrlName.handleReset();
+    subUrl.handleReset();
+    subUrlName.handleReset();
+    sub2Url.handleReset();
+    sub2UrlName.handleReset();
     handleClose();
   };
   return (
@@ -181,7 +142,7 @@ export default function UrlUploadDialog(props: UrlUploadDialogProps): JSX.Elemen
                 다음
               </Button>
             </Collapse>
-            <Button onClick={handleClose}>취소</Button>
+            <Button onClick={handleReset}>취소</Button>
           </div>
         )
           : (
@@ -213,34 +174,6 @@ export default function UrlUploadDialog(props: UrlUploadDialogProps): JSX.Elemen
               handleClose={handleReset}
               handleNext={handleNext}
             />
-          </StepContent>
-        </Step>
-        <Step key="1">
-          <StepLabel StepIconComponent={QontoStepIcon}>
-            홍보문구 입력
-          </StepLabel>
-          <StepContent>
-            <Grid item>
-              <CssFormControl
-                required
-                fullWidth
-              >
-                <InputLabel shrink htmlFor="company" className={classes.label}>홍보문구 입력</InputLabel>
-                <Input
-                  required
-                  id="banner"
-                  multiline
-                  className={classes.input}
-                  value={linkDesc.value}
-                  onChange={linkDesc.handleChange}
-                />
-                <FormHelperText>
-                  {' '}
-                  {'챗봇 사용 시 보일 홍보문구를 입력해주세요. < 이벤트 / 할인정보 등>'}
-                  {' '}
-                </FormHelperText>
-              </CssFormControl>
-            </Grid>
           </StepContent>
         </Step>
       </Stepper>

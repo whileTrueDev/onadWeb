@@ -40,9 +40,11 @@ const UrlDeleteDialog = (props: UrlDeleteDialogProps): JSX.Element => {
 
   const { doDeleteRequest } = useDeleteRequest<{ linkId: string }, any[]>('/marketer/landing-url');
 
-  const connectedCampaign = useGetRequest<{ linkId: string }, { campaignId: string }[]>('/marketer/landing-url/campaigns', {
-    linkId: selectedUrl.linkId
-  });
+  const connectedCampaign = useGetRequest<{ linkId: string }, { campaignId: string }[]>(
+    '/marketer/landing-url/campaigns', {
+      linkId: selectedUrl.linkId
+    }
+  );
 
   return (
     <Dialog
@@ -66,7 +68,7 @@ const UrlDeleteDialog = (props: UrlDeleteDialogProps): JSX.Element => {
                   </CustomButton>
                 </div>
               </Tooltip>
-            )}
+          )}
           {(!connectedCampaign.loading
             && connectedCampaign.data
             && connectedCampaign.data.length === 0) && (
@@ -84,7 +86,7 @@ const UrlDeleteDialog = (props: UrlDeleteDialogProps): JSX.Element => {
               >
                 확인
               </CustomButton>
-            )}
+          )}
           <CustomButton onClick={handleClose}>취소</CustomButton>
         </div>
       )}

@@ -44,7 +44,8 @@ router.route('/list')
               SELECT
               campaignId, campaignName, optionType, priorityType, 
               campaign.regiDate as regiDate, onOff, br.confirmState, 
-              bannerSrc, lr.links as links, lr.confirmState as linkConfirmState, dailyLimit
+              bannerSrc, lr.links as links, lr.confirmState as linkConfirmState, dailyLimit,
+              campaignDescription
               FROM campaign
               JOIN bannerRegistered AS br
               ON br.bannerId = campaign.bannerId
@@ -141,7 +142,7 @@ router.route('/on-off')
               .then(() => {
                 const MARKETER_ACTION_LOG_TYPE = 6;
                 marketerActionLogging([campaignId.split('_')[0], MARKETER_ACTION_LOG_TYPE,
-                JSON.stringify({ campaignName, onoffState })]);
+                  JSON.stringify({ campaignName, onoffState })]);
                 responseHelper.send([true], 'PATCH', res);
               })
               .catch((error) => {
@@ -210,10 +211,10 @@ router.route('/')
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
       const { marketerId, marketerName } = responseHelper.getSessionData(req);
       const [campaignName, optionType, priorityType, priorityList, selectedTime, dailyLimit,
-        startDate, finDate, keyword, bannerId, connectedLinkId] = responseHelper.getParam([
-          'campaignName', 'optionType', 'priorityType',
-          'priorityList', 'selectedTime', 'dailyLimit', 'startDate', 'finDate',
-          'keyword', 'bannerId', 'connectedLinkId'], 'POST', req);
+        startDate, finDate, keyword, bannerId, connectedLinkId, campaignDescription] = responseHelper.getParam([
+        'campaignName', 'optionType', 'priorityType',
+        'priorityList', 'selectedTime', 'dailyLimit', 'startDate', 'finDate',
+        'keyword', 'bannerId', 'connectedLinkId', 'campaignDescription'], 'POST', req);
 
       const searchQuery = `
             SELECT campaignId
@@ -227,8 +228,8 @@ router.route('/')
             (campaignId, campaignName, marketerId, 
             bannerId, connectedLinkId, dailyLimit, priorityType, 
             optionType, onOff, targetList, marketerName, 
-            keyword, startDate, finDate, selectedTime) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, 0, ?, ?, ?, ?, ?, ?)`;
+            keyword, startDate, finDate, selectedTime, campaignDescription) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, 0, ?, ?, ?, ?, ?, ?, ?)`;
 
       doQuery(searchQuery, [marketerId])
         .then((row) => {
@@ -245,7 +246,7 @@ router.route('/')
             doQuery(saveQuery,
               [campaignId, campaignName, marketerId, bannerId, connectedLinkId, dailyLimit,
                 priorityType, optionType, targetJsonData, marketerName, keywordsJsonData,
-                startDate, finDate, timeJsonData]),
+                startDate, finDate, timeJsonData, campaignDescription]),
             dataProcessing.PriorityDoquery({
               campaignId, priorityType, priorityList, optionType
             }),

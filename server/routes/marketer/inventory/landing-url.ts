@@ -24,7 +24,7 @@ router.route('/list')
       const { marketerId } = responseHelper.getSessionData(req);
       const query = `
             SELECT
-            linkId, marketerId, confirmState, denialReason, linkDescription,
+            linkId, marketerId, confirmState, denialReason,
             links, DATE_FORMAT(regiDate, "%Y년 %m월 %d일") as regiDate, updateDate
             FROM linkRegistered
             WHERE marketerId = ?
@@ -53,7 +53,6 @@ router.route('/')
     responseHelper.middleware.checkSessionExists,
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
       const links = responseHelper.getParam('links', 'POST', req);
-      const linkDesc = responseHelper.getParam('linkDescription', 'POST', req);
       const { marketerId } = responseHelper.getSessionData(req);
       const DEFAULT_CONFIRM_STATE = 0;
 
@@ -66,7 +65,7 @@ router.route('/')
 
       const saveQuery = `
             INSERT INTO linkRegistered
-            (linkId, marketerId, linkDescription, confirmState, links)
+            (linkId, marketerId, confirmState, links)
             VALUES (?, ?, ?, ?, ?)
             `;
 
@@ -87,7 +86,7 @@ router.route('/')
           }
 
           doQuery(saveQuery,
-            [linkId, marketerId, linkDesc, DEFAULT_CONFIRM_STATE, JSON.stringify({ links }),])
+            [linkId, marketerId, DEFAULT_CONFIRM_STATE, JSON.stringify({ links })])
             .then(() => {
               responseHelper.send([true], 'POST', res);
               slack({
@@ -97,7 +96,6 @@ router.route('/')
                   { title: '마케터 아이디', value: marketerId!, short: true },
                   { title: '링크 아이디', value: linkId!, short: true },
                   { title: '링크 개수', value: links.length, short: true },
-                  { title: '링크 설명', value: linkDesc, short: true },
                 ]
               });
             })

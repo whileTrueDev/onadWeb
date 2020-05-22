@@ -66,16 +66,16 @@ export default function UrlTable(props: UrlTableProps): JSX.Element {
                       <Divider />
                     </div>
                   ) : (
-                      <div>
-                        <p className={classes.title}>
-                          SUB
+                    <div>
+                      <p className={classes.title}>
+                        SUB
                       </p>
-                        <span>
-                          {link.linkName}
-                        </span>
-                        <Divider />
-                      </div>
-                    )}
+                      <span>
+                        {link.linkName}
+                      </span>
+                      <Divider />
+                    </div>
+                  )}
                 </div>
               );
             }
@@ -107,12 +107,12 @@ export default function UrlTable(props: UrlTableProps): JSX.Element {
                       </p>
                     </div>
                   ) : (
-                      <div>
-                        <p className={classes.title}>
-                          SUB
+                    <div>
+                      <p className={classes.title}>
+                        SUB
                       </p>
-                      </div>
-                    )}
+                    </div>
+                  )}
                   <a
                     href={link.linkTo}
                     onClick={(e): void => {
@@ -130,14 +130,6 @@ export default function UrlTable(props: UrlTableProps): JSX.Element {
           })}
         </div>
       ),
-    },
-    {
-      title: '홍보 문구',
-      render: (rowData: UrlDataInterface): JSX.Element | null => (
-        <div>
-          {rowData.linkDescription}
-        </div>
-      )
     },
     { title: '링크 등록 일자', render: (rowData: UrlDataInterface): React.ReactNode => (<span>{rowData.regiDate}</span>) },
   ];

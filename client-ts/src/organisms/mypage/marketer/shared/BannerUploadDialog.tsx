@@ -1,11 +1,12 @@
 import React, { useReducer, useState } from 'react';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import {
-  Stepper, Step, StepLabel, StepContent,
+  Stepper, Step, StepLabel, StepContent, Collapse
 } from '@material-ui/core';
 import classnames from 'classnames';
 import Check from '@material-ui/icons/Check';
 import Dialog from '../../../../atoms/Dialog/Dialog';
+import Button from '../../../../atoms/CustomButtons/Button';
 // import BannerDescForm from './BannerDescForm';
 import './upload.css';
 import ImageUpload from './ImageUpload';
@@ -142,6 +143,19 @@ const UploadDialog = (props: UploadDialogProps): JSX.Element => {
       maxWidth="sm"
       fullWidth
       title="배너 등록"
+      buttons={(
+        <div style={{ display: 'flex' }}>
+          <Collapse in={Boolean(state.imageUrl && (state.imageUrl !== DEFAULT_IMAGE_PATH))}>
+            <Button
+              color="primary"
+              onClick={handleSubmit}
+            >
+              등록
+            </Button>
+          </Collapse>
+          <Button onClick={handleClose}>취소</Button>
+        </div>
+          )}
     >
       <Stepper activeStep={activeStep} orientation="vertical" style={{ padding: 0 }}>
         <Step key="0">
@@ -150,8 +164,6 @@ const UploadDialog = (props: UploadDialogProps): JSX.Element => {
           </StepLabel>
           <StepContent>
             <ImageUpload
-              handleClose={handleClose}
-              handleSubmit={handleSubmit}
               state={state}
               dispatch={dispatch}
             />

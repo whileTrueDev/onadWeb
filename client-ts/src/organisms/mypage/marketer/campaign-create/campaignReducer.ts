@@ -25,6 +25,10 @@ export interface NameInterface {
   msg?: string;
 }
 
+export interface DescriptionInterface {
+  error: boolean; description?: string;
+}
+
 export interface BudgetInterface {
   budget: boolean;
   value?: number | string;
@@ -119,10 +123,21 @@ const nameReducer = (state: NameInterface, action: Action): NameInterface => {
   switch (action.key) {
     case 'set':
       return { error: false, name: action.value };
-    case 'duplicate':
+    case 'duplicate': // deprecated 200520 sprint 7.2
       return { error: true, msg: '캠페인 이름이 중복되었습니다.' };
     case 'min':
       return { error: true, msg: '2자 이상 입력하세요.' };
+    default:
+      return state;
+  }
+};
+
+const descriptionReducer = (state: DescriptionInterface, action: Action): DescriptionInterface => {
+  switch (action.key) {
+    case 'set':
+      return { error: false, description: action.value };
+    case 'limitExceeded':
+      return { error: true };
     default:
       return state;
   }
@@ -183,5 +198,6 @@ export {
   termReducer,
   timeReducer,
   nameReducer,
-  budgetReducer
+  descriptionReducer,
+  budgetReducer,
 };

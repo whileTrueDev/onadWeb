@@ -19,7 +19,6 @@ export interface UrlDataInterface {
       linkTo: string;
     }[];
   };
-  linkDescription: string;
   regiDate: string;
   updateDate: Date;
 }

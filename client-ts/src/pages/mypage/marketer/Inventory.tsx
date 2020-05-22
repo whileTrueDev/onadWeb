@@ -97,7 +97,11 @@ const Inventory = (): JSX.Element => {
             <CustomButton color="primary" size="large" onClick={(): void => { uploadDialog.handleOpen(); }}>
               + 새 배너 등록
             </CustomButton>
-            <CustomButton color="primary" size="large" onClick={(): void => { InquireDialog.handleOpen(); }}>
+            <CustomButton
+              color="default"
+              size="large"
+              onClick={(): void => { InquireDialog.handleOpen(); }}
+            >
               배너가 없으신가요?
             </CustomButton>
             <BannerTable

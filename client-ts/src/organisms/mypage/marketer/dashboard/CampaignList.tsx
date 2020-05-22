@@ -181,6 +181,14 @@ export default function CampaignList(
                             <Typography variant="caption" gutterBottom>
                               {priorityTypeList[detail.priorityType]}
                             </Typography>
+                            {detail.campaignDescription && (
+                            <Typography variant="caption" gutterBottom>
+                              {detail.campaignDescription.slice(0, 20)}
+                              {detail.campaignDescription.length > 20 && (
+                                <span>...</span>
+                              )}
+                            </Typography>
+                            )}
                             <Typography variant="caption" color="textSecondary">
                               {new Date(detail.regiDate).toLocaleDateString()}
                             </Typography>
@@ -194,13 +202,17 @@ export default function CampaignList(
                       <Grid container direction="column" spacing={2}>
                         {detail.linkData.links.map((link): JSX.Element | null => (
                           <Grid item key={link.linkName}>
-                            <Typography variant="body1" color="primary" align="center">
-                              링크 이름
-                            </Typography>
-                            <Divider orientation="horizontal" />
-                            <Typography gutterBottom variant="body2" align="center">
-                              {link.linkName}
-                            </Typography>
+                            {link.linkName && (
+                              <>
+                                <Typography variant="body1" color="primary" align="center">
+                                  링크 이름
+                                </Typography>
+                                <Divider orientation="horizontal" />
+                                <Typography gutterBottom variant="body2" align="center">
+                                  {link.linkName}
+                                </Typography>
+                              </>
+                            )}
                             <Typography variant="body1" color="primary" align="center">
                               URL 주소
                             </Typography>

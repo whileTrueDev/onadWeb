@@ -3,7 +3,6 @@ import { makeStyles, Theme } from '@material-ui/core/styles';
 import {
   Grid, Hidden, Typography, Button
 } from '@material-ui/core';
-import CustomButton from '../../../../atoms/CustomButtons/Button';
 import VideoBanner from '../../../../atoms/Banner/VideoBanner';
 import isVideo from '../../../../utils/isVideo';
 
@@ -51,15 +50,13 @@ interface ImageAction {
 
 
 interface ImageUploadProps {
-  handleClose: () => void;
-  handleSubmit: () => void;
   state: ImageInterface;
   dispatch: React.Dispatch<ImageAction>;
 }
 
 const ImageUpload = (props: ImageUploadProps): JSX.Element => {
   const {
-    handleClose, handleSubmit, state, dispatch,
+    state, dispatch,
   } = props;
 
   const classes = useStyle();
@@ -122,23 +119,6 @@ const ImageUpload = (props: ImageUploadProps): JSX.Element => {
         </Grid>
       </div>
       <Typography variant="h6">* 배너이미지는 배경이 존재해야 합니다.</Typography>
-
-      <div className={classes.buttonSet}>
-        <CustomButton
-          size="small"
-          onClick={handleClose}
-        >
-          취소
-        </CustomButton>
-        <CustomButton
-          variant="contained"
-          color="primary"
-          size="small"
-          onClick={handleSubmit}
-        >
-          등록
-        </CustomButton>
-      </div>
 
     </div>
 

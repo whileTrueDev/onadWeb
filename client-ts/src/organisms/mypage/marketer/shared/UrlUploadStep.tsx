@@ -60,8 +60,8 @@ const UrlUploadStep = (props: any): JSX.Element => {
           />
         </Grid>
       </Grid>
-      <FormHelperText>* 시청자가 광고채팅 또는 패널 클릭시 접속될 웹페이지를 작성해주세요</FormHelperText>
-      <FormHelperText>* URL 이름은 광고채팅의 접두어로 사용되어, 시청자에게 직접적으로 보여집니다.</FormHelperText>
+      <FormHelperText>* 시청자가 채팅광고 또는 패널 클릭시 접속될 웹페이지를 작성해주세요</FormHelperText>
+      <FormHelperText>* URL 이름은 URL 구분을 위해 사용됩니다.</FormHelperText>
 
       <Grid item>
         <FormControlLabel

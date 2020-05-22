@@ -17,6 +17,7 @@ export interface CampaignInterface {
   linkConfirmState: number;
   dailyLimit: number;
   dailysum: number;
+  campaignDescription: string;
 }
 
 export interface OnOffInterface {

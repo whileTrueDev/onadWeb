@@ -13,7 +13,8 @@ import axios from '../../../utils/axios';
 import history from '../../../history';
 import {
   step1Reducer, step2Reducer, step2SelectReducer, step3Reducer,
-  budgetReducer, termReducer, timeReducer, nameReducer
+  budgetReducer, termReducer, timeReducer, nameReducer,
+  descriptionReducer
 } from '../../../organisms/mypage/marketer/campaign-create/campaignReducer';
 
 const useStyles = makeStyles((_theme: Theme) => ({
@@ -57,7 +58,7 @@ const CampaignCreation = (): JSX.Element => {
   const [termState, termDispatch] = useReducer(termReducer,
     { term: false, startDate: new Date(), finDate: null });
   const [nameState, nameDispatch] = useReducer(nameReducer, { error: true, name: '' });
-
+  const [descriptionState, descriptionDispatch] = useReducer(descriptionReducer, { error: false, description: '' });
   const [timeState, timeDispatch] = useReducer(timeReducer, { time: false, timeList: [] });
   const [step3State, step3Dispatch] = useReducer(step3Reducer, {
     bannerId: '', connectedLinkId: '',
@@ -75,6 +76,10 @@ const CampaignCreation = (): JSX.Element => {
   const checkEmpty = (input: any): boolean => {
     if (input.campaignName === '') {
       alert('캠페인 명이 올바르게 입력되지 않았습니다.');
+      return false;
+    }
+    if (input.campaignDescription === '') {
+      alert('캠페인 홍보 문구가 올바르게 입력되지 않았습니다.');
       return false;
     }
     if (input.bannerId.length === 0) {
@@ -140,6 +145,7 @@ const CampaignCreation = (): JSX.Element => {
 
     const validateObject = {
       campaignName: error ? null : name,
+      campaignDescription: descriptionState.error ? null : descriptionState.description,
       optionType,
       priorityType,
       priorityList,
@@ -227,6 +233,8 @@ const CampaignCreation = (): JSX.Element => {
                       timeDispatch={timeDispatch}
                       nameState={nameState}
                       nameDispatch={nameDispatch}
+                      descriptionState={descriptionState}
+                      descriptionDispatch={descriptionDispatch}
                       step={step}
                     />
                     <Grid item>
