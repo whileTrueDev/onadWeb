@@ -141,7 +141,7 @@ export default class OnADTestAwsStack extends cdk.Stack {
       AWS_S3_ACCESS_KEY_ID: ecs.Secret.fromSsmParameter(ssmParameters.S3_ACCESS_KEY_ID),
       AWS_S3_ACCESS_KEY_SECRET: ecs.Secret.fromSsmParameter(ssmParameters.S3_ACCESS_KEY_SECRET)
     },
-    onadApiPort);
+    onadApiPort, 1024);
 
     // Banner broad - Task definition
     const onadBannerBroadRepo = 'hwasurr/onad_socket';

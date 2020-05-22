@@ -12,6 +12,8 @@ export default function makeTaskDefinition(
     [key: string]: ecs.Secret;
   },
   containerPort?: number,
+  memory = 512,
+  cpu = 256,
 ): {
   taskDefinition: ecs.FargateTaskDefinition;
   container: ecs.ContainerDefinition;
@@ -20,7 +22,7 @@ export default function makeTaskDefinition(
     scope,
     `${name}TaskDef`,
     {
-      memoryLimitMiB: 512, cpu: 256, taskRole, family: `${name}`
+      memoryLimitMiB: memory, cpu, taskRole, family: `${name}`
     }
   );
   const LogGroup = new logs.LogGroup(scope, `${name}LogGroup`, {
