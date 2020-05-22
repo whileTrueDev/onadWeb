@@ -11,7 +11,6 @@ import DateRange from '@material-ui/icons/DateRange';
 import DeleteIcon from '@material-ui/icons/Delete';
 import CustomTableFooter from '../../../../../atoms/Table/TableFooter';
 // core components
-import StyledItemText from '../../../../../atoms/StyledItemText';
 import useTableStyles from '../../../../../atoms/Table/Table.style';
 import useCampaignTableStyles from './CampaignTable.style';
 import isVideo from '../../../../../utils/isVideo';
@@ -24,18 +23,9 @@ interface Link {
 }
 
 export interface CampaignTableData {
-  campaignId: string;
-  date: string;
-  bannerSrc: string;
-  creatorId: string;
-  connectedLinkId: string;
-  state: number;
-  marketerName: string;
-  bannerDescription: string;
-  links: Link;
-  cash: number;
-  CPC: number;
-  CPM: number;
+  campaignId: string; date: string; bannerSrc: string; creatorId: string;
+  connectedLinkId: string; state: number; marketerName: string;
+  links: Link; cash: number; CPC: number; CPM: number;
 }
 interface CampaignTableProps {
   tableData: CampaignTableData[];
@@ -78,7 +68,7 @@ function CampaignTable({
     handleDialogOpen();
   };
 
-  const tableHead = ['광고주 / 시작일', '배너이미지', '수익', '배너 설명', ''];
+  const tableHead = ['광고주 / 시작일', '배너이미지', '수익'];
   return (
     <div className={classes.tableResponsive}>
       <Table className={classes.table}>
@@ -105,7 +95,13 @@ function CampaignTable({
                 <TableCell className={classes.tableCell}>
                   <Grid container direction="column" justify="center">
                     <Grid item className={innerClasses.flex}>
-                      <Typography gutterBottom variant="h6" style={{ fontWeight: 700 }}>{bannerData.marketerName}</Typography>
+                      <Typography
+                        gutterBottom
+                        variant="h6"
+                        style={{ fontWeight: 700 }}
+                      >
+                        {bannerData.marketerName}
+                      </Typography>
                     </Grid>
                     <Grid item>
                       <div className={classnames(innerClasses.stats, innerClasses.flex)}>
@@ -126,9 +122,9 @@ function CampaignTable({
               <TableCell className={classes.imgCell}>
                 <div className={innerClasses.flex}>
                   { isVideo(bannerData.bannerSrc) ? (
-                    <VideoBanner src={bannerData.bannerSrc} style={{ maxHeight: '200px', width: '100%' }} />
+                    <VideoBanner src={bannerData.bannerSrc} style={{ maxHeight: '200px', width: '300' }} />
                   ) : (
-                    <img src={bannerData.bannerSrc} alt="banner" style={{ maxHeight: '200px', width: '100%' }} />
+                    <img src={bannerData.bannerSrc} alt="banner" style={{ maxHeight: '200px', width: '300' }} />
                   )}
                 </div>
               </TableCell>
@@ -180,20 +176,6 @@ function CampaignTable({
                   </Grid>
                 </Hidden>
               </TableCell>
-              <Hidden mdDown>
-                <TableCell className={classes.tableCell}>
-                  <Grid container direction="column" spacing={1}>
-                    <Grid item className={innerClasses.textCell}>
-                      <StyledItemText primary="배너 소개" fontSize="15px" />
-                      {bannerData.bannerDescription.split('\n').map((row) => (
-                        <Typography variant="body2" key={shortid.generate()}>
-                          {row}
-                        </Typography>
-                      ))}
-                    </Grid>
-                  </Grid>
-                </TableCell>
-              </Hidden>
               {bannerData.state === 1
               && (
               <Hidden mdDown>

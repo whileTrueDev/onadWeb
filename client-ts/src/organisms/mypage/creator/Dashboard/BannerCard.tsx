@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 export interface CurrentBannerRes {
-  marketerName: string; bannerSrc: string; bannerDescription: string;
+  marketerName: string; bannerSrc: string;
 }
 
 interface BannerCardProps { currentBannerData: CurrentBannerRes[] }
@@ -89,16 +89,16 @@ function BannerCard({ currentBannerData }: BannerCardProps): JSX.Element {
                   style={{ maxHeight: '160px', maxWidth: '320px' }}
                 />
               ) : (
-                  <img
-                    src={bannerData.bannerSrc}
-                    onMouseEnter={handlePopoverOpen(index)}
-                    onMouseLeave={handlePopoverClose}
-                    alt="bannerArea"
-                    width="100%"
-                    height="100%"
-                    style={{ maxHeight: '160px', maxWidth: '320px' }}
-                  />
-                )}
+                <img
+                  src={bannerData.bannerSrc}
+                  onMouseEnter={handlePopoverOpen(index)}
+                  onMouseLeave={handlePopoverClose}
+                  alt="bannerArea"
+                  width="100%"
+                  height="100%"
+                  style={{ maxHeight: '160px', maxWidth: '320px' }}
+                />
+              )}
             </Grid>
           ))}
           {currentBannerData.length <= 0 && (
