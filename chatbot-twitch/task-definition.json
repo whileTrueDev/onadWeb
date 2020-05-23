@@ -50,6 +50,10 @@
           "name": "DB_USER"
         },
         {
+          "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/SOCKET_HOSTNAME",
+          "name": "SOCKET_HOSTNAME"
+        },
+        {
           "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/TWITCH_BOT_OAUTH_TOKEN",
           "name": "TWITCH_BOT_OAUTH_TOKEN"
         }
