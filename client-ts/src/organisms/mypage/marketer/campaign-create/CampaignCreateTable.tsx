@@ -6,6 +6,7 @@ import {
   TableContainer, TableRow, Paper
 } from '@material-ui/core';
 import CampaignNaming from './sub/CampaignNaming';
+import CampaignDescriptionInput from './sub/CampaignDescriptionInput';
 import CampaignBannerReg from './sub/BannerReg';
 import LandingUrlInput from './sub/LandingUrlInput';
 import CampaignBudgetSet from './sub/BudgetSet';
@@ -24,7 +25,8 @@ import {
   TermInterface,
   TimeInterface,
   TimeAction,
-  NameInterface
+  NameInterface,
+  DescriptionInterface
 } from './campaignReducer';
 
 const StyledTableCell = withStyles((theme) => ({
@@ -61,6 +63,8 @@ interface CampaignCreateTableProps {
   timeDispatch: React.Dispatch<TimeAction>;
   nameState: NameInterface;
   nameDispatch: React.Dispatch<Action>;
+  descriptionState: DescriptionInterface;
+  descriptionDispatch: React.Dispatch<Action>;
   step: number;
 }
 
@@ -68,8 +72,7 @@ const CampaignCreateTable = (props: CampaignCreateTableProps): JSX.Element => {
   const classes = useStyles();
   const {
     state, dispatch, budgetState, budgetDispatch, termState, termDispatch, timeState, timeDispatch,
-    optionType, step,
-    nameState, nameDispatch
+    optionType, step, nameState, nameDispatch, descriptionState, descriptionDispatch
   } = props;
 
   const landingUrlData = useGetRequest('/marketer/landing-url/list');
@@ -115,6 +118,15 @@ const CampaignCreateTable = (props: CampaignCreateTableProps): JSX.Element => {
           />
         )
       }, // react-hooks-form 사용.
+    {
+      title: '홍보 문구 입력',
+      component: (
+        <CampaignDescriptionInput
+          descriptionState={descriptionState}
+          descriptionDispatch={descriptionDispatch}
+        />
+      )
+    },
     {
       title: '예산 설정',
       component: (

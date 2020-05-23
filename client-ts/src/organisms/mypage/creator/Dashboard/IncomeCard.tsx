@@ -95,7 +95,7 @@ const IncomeCard = ({ incomeData }: IncomeCardProps): JSX.Element => {
           </div>
         </Grid>
       </Grid>
-      {incomeData && incomeData.creatorContractionAgreement
+      {incomeData && Boolean(incomeData.creatorContractionAgreement)
         && incomeData.creatorAccountNumber && (
           <WithdrawalDialog
             open={open}
@@ -104,7 +104,7 @@ const IncomeCard = ({ incomeData }: IncomeCardProps): JSX.Element => {
             accountNumber={incomeData.creatorAccountNumber}
             receivable={incomeData.creatorReceivable}
           />
-      )}
+        )}
     </CustomCard>
   );
 };

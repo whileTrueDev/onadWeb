@@ -3,6 +3,7 @@
 > REST = Representational State Transfer
 > API  = Application Programming Interface
 
+
 ## API?
 
 소프트웨어의 **기능들을 활용할 수 있도록 만드는 제어장치**.
@@ -95,13 +96,13 @@ ex. 캠페인을 생성(create), 캠페인 목록을 조회(read), 캠페인을 
 
 #### 올바른 HTTP Method
 
-| METHOD | 역할     |
-| ------ | ------ |
-| GET    | 데이터 조회 |
-| POST   | 데이터 생성 |
+| METHOD | 역할                     |
+| ------ | ---------------------- |
+| GET    | 데이터 조회                 |
+| POST   | 데이터 생성                 |
 | PUT    | 데이터 수정(데이터 전체를 갈아 끼우기) |
-| PATCH  | 데이터 수정(데이터의 부분만 변경) |
-| DELETE | 자원 삭제  |
+| PATCH  | 데이터 수정(데이터의 부분만 변경)    |
+| DELETE | 자원 삭제                  |
 
 해당 규칙을 지키지 않은 API = REST API가 아닌, just HTTP API
 

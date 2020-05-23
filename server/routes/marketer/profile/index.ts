@@ -34,7 +34,7 @@ router.route('/')
             SELECT 
             marketerId, marketerName, marketerMail, 
             marketerPhoneNum, marketerBusinessRegNum,
-            marketerUserType, marketerContraction, platformType
+            marketerContraction, platformType
             FROM marketerInfo
             WHERE marketerId = ? `;
       doQuery(query, [marketerId])
@@ -51,12 +51,12 @@ router.route('/')
       const [
         marketerId, marketerName,
         marketerMail, marketerPhoneNum,
-        marketerBusinessRegNum, marketerUserType,
+        marketerBusinessRegNum,
         marketerRawPasswd
       ] = responseHelper.getParam([
         'marketerId', 'marketerName',
         'marketerMail', 'marketerPhoneNum',
-        'marketerBusinessRegNum', 'marketerUserType',
+        'marketerBusinessRegNum',
         'marketerRawPasswd'
       ], 'POST', req);
       const [key, salt] = encrypto.make(marketerRawPasswd);
@@ -64,10 +64,10 @@ router.route('/')
       const infoQuery = `
               INSERT INTO marketerInfo 
               (marketerId, marketerPasswd, marketerSalt, marketerName, marketerMail, 
-              marketerPhoneNum, marketerBusinessRegNum, marketerUserType) 
-              VALUES (?, ?, ?, ?, ?, ?, ?, ?) `;
+              marketerPhoneNum, marketerBusinessRegNum) 
+              VALUES (?, ?, ?, ?, ?, ?, ?)`;
       const infoQueryArray = [marketerId, key, salt, marketerName, marketerMail,
-        marketerPhoneNum, marketerBusinessRegNum, marketerUserType];
+        marketerPhoneNum, marketerBusinessRegNum];
 
       const cashQuery = `
               INSERT INTO marketerDebit
@@ -149,7 +149,6 @@ router.route('/')
                                     marketerPhoneNum= null,
                                     marketerBusinessRegNum= null,
                                     marketerBusinessRegSrc= null,
-                                    marketerUserType= null,
                                     marketerContraction= null,
                                     marketerAlarmAgreement= null,
                                     marketerEmailAuth= null,
@@ -184,23 +183,23 @@ router.route('/platform')
       const [
         marketerId, marketerName,
         marketerMail, marketerPhoneNum,
-        marketerBusinessRegNum, marketerUserType,
+        marketerBusinessRegNum,
         platformType
       ] = responseHelper.getParam([
         'marketerId', 'marketerName',
         'marketerMail', 'marketerPhoneNum',
-        'marketerBusinessRegNum', 'marketerUserType',
+        'marketerBusinessRegNum',
         'platformType'
       ], 'POST', req);
 
       const infoQuery = `
             INSERT INTO marketerInfo 
             (marketerId, marketerName, marketerMail, 
-            marketerPhoneNum, marketerBusinessRegNum, marketerUserType, platformType, marketerEmailAuth) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?) `;
+            marketerPhoneNum, marketerBusinessRegNum, platformType, marketerEmailAuth) 
+            VALUES (?, ?, ?, ?, ?, ?, ?) `;
 
       const infoQueryArray = [marketerId, marketerName, marketerMail,
-        marketerPhoneNum, marketerBusinessRegNum, marketerUserType, platformType, 1];
+        marketerPhoneNum, marketerBusinessRegNum, platformType, 1];
 
       const cashQuery = `
             INSERT INTO marketerDebit

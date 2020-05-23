@@ -5,9 +5,19 @@ export interface CampaignInterface {
   priorityType: number;
   regiDate: string;
   onOff: number;
+  confirmState: number;
   bannerSrc: string;
+  linkData: {
+    links: {
+      primary: boolean;
+      linkName: string;
+      linkTo: string;
+    }[];
+  };
+  linkConfirmState: number;
   dailyLimit: number;
   dailysum: number;
+  campaignDescription: string;
 }
 
 export interface OnOffInterface {

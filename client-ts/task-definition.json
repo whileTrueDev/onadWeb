@@ -24,12 +24,7 @@
             "command": null,
             "linuxParameters": null,
             "cpu": 0,
-            "environment": [
-                {
-                    "name": "PUBLIC_URL",
-                    "value": "https://onad.io"
-                }
-            ],
+            "environment": [],
             "resourceRequirements": null,
             "ulimits": null,
             "dnsServers": null,
@@ -37,20 +32,20 @@
             "workingDirectory": null,
             "secrets": [
                 {
-                    "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/PRODUCTION_REACT_HOSTNAME",
-                    "name": "REACT_APP_PRODUCTION_REACT_HOSTNAME"
+                    "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/REACT_HOSTNAME",
+                    "name": "PUBLIC_URL"
                 },
                 {
-                    "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/DEV_REACT_HOSTNAME",
-                    "name": "REACT_APP_DEV_REACT_HOSTNAME"
+                    "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/REACT_HOSTNAME",
+                    "name": "REACT_APP_REACT_HOSTNAME"
                 },
                 {
-                    "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/PRODUCTION_API_HOSTNAME",
-                    "name": "REACT_APP_PRODUCTION_API_HOSTNAME"
+                    "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/API_HOSTNAME",
+                    "name": "REACT_APP_API_HOSTNAME"
                 },
                 {
-                    "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/DEV_API_HOSTNAME",
-                    "name": "REACT_APP_DEV_API_HOSTNAME"
+                    "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/GOOGLE_MAP_API_KEY",
+                    "name": "REACT_APP_GOOGLE_MAP_API_KEY"
                 }
             ],
             "dockerSecurityOptions": null,

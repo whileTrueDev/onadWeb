@@ -48,7 +48,6 @@ const domains = [
   - 3. passwordValue
 */
 export interface Props {
-  userType: number;
   handleBack: () => void;
   handleUserSubmit: (user: any) => void;
   state: StepState;
@@ -63,7 +62,6 @@ interface ProfileData {
 }
 
 function PlatformRegistForm({
-  userType,
   handleBack,
   handleUserSubmit,
   state,
@@ -115,14 +113,12 @@ function PlatformRegistForm({
     const marketerBusinessRegNum = (document.getElementById('marketerBusinessRegNum') ? state.marketerBusinessRegNum : '');
     const marketerPhoneNum = state.phoneNum;
     const marketerDomain = state.domain === '직접입력' ? marketerCustomDomain : state.domain;
-    const marketerUserType = userType;
     const user = {
       marketerId,
       marketerName,
       marketerMail: `${email}@${marketerDomain}`,
       marketerPhoneNum,
       marketerBusinessRegNum,
-      marketerUserType
     };
     setLoading(1);
     handleUserSubmit(user);
@@ -226,18 +222,14 @@ function PlatformRegistForm({
                 </Grid>
               </Grid>
               <Grid item>
-                {userType
-                  ? (
-                    <FormControl style={{ marginTop: '8px', marginBottom: '16px' }}>
-                      <InputLabel shrink>사업자등록번호</InputLabel>
-                      <Input
-                        onChange={handleChange('marketerBusinessRegNum')}
-                        name="businessRegNum"
-                      />
-                      <FormHelperText>사업자 번호를 입력하세요.</FormHelperText>
-                    </FormControl>
-                  )
-                  : <div />}
+                <FormControl style={{ marginTop: '8px', marginBottom: '16px' }}>
+                  <InputLabel shrink>사업자등록번호</InputLabel>
+                  <Input
+                    onChange={handleChange('marketerBusinessRegNum')}
+                    name="businessRegNum"
+                  />
+                  <FormHelperText>사업자 번호를 입력하세요.</FormHelperText>
+                </FormControl>
               </Grid>
               <Grid container direction="row">
                 <Grid item>

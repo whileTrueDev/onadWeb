@@ -32,6 +32,14 @@
       "workingDirectory": null,
       "secrets": [
         {
+          "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/REACT_HOSTNAME",
+          "name": "REACT_HOSTNAME"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/API_HOSTNAME",
+          "name": "API_HOSTNAME"
+        },
+        {
           "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/DB_CHARSET",
           "name": "DB_CHARSET"
         },
@@ -56,12 +64,12 @@
           "name": "DB_DATABASE"
         },
         {
-          "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/PRODUCTION_CLIENT_ID",
-          "name": "PRODUCTION_CLIENT_ID"
+          "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/TWITCH_CLIENT_ID",
+          "name": "TWITCH_CLIENT_ID"
         },
         {
-          "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/PRODUCTION_CLIENT_SECRET",
-          "name": "PRODUCTION_CLIENT_SECRET"
+          "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/TWITCH_CLIENT_SECRET",
+          "name": "TWITCH_CLIENT_SECRET"
         },
         {
           "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/SESSION_STORE_DB_HOST",
@@ -126,10 +134,6 @@
         {
           "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/CIPHER_IV",
           "name": "CIPHER_IV"
-        },
-        {
-          "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/REACT_APP_GOOGLE_MAP_API_KEY",
-          "name": "REACT_APP_GOOGLE_MAP_API_KEY"
         },
         {
           "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/IMP_KEY",

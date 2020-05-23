@@ -48,7 +48,7 @@ export default function BusinessRegiUploadDialog(
   } = props;
   const classes = useStyles();
 
-  const defaultImage = businessRegiImage || '/pngs/logo/onad_logo_vertical_small.png';
+  const defaultImage = '/pngs/logo/onad_logo_vertical_small.png';
 
   const {
     imageUrl, imageName, handleReset, readImage
@@ -76,7 +76,7 @@ export default function BusinessRegiUploadDialog(
             }}
             disabled={!imageName}
           >
-            진행
+            등록
           </Button>
           <Button onClick={(): void => { handleClose(); handleReset(); }}>
             취소
@@ -88,7 +88,7 @@ export default function BusinessRegiUploadDialog(
 
         <img
           id="preview"
-          src={(typeof imageUrl === 'string') ? imageUrl : undefined}
+          src={(typeof imageUrl === 'string' && imageUrl.indexOf('pdf') === -1) ? imageUrl : defaultImage}
           className={classes.imgPreview}
           onError={handleReset}
           alt="business-registration-preview"
@@ -109,7 +109,7 @@ export default function BusinessRegiUploadDialog(
                   </Typography>
                 </label>
               </UploadButton>
-              <input type="file" id="getfile" accept="image/*" onChange={readImage} />
+              <input type="file" id="getfile" accept="image/*, application/pdf" onChange={readImage} />
             </Grid>
           </Grid>
         </div>

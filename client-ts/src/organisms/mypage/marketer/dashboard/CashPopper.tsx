@@ -9,6 +9,7 @@ import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import CreditCard from '@material-ui/icons/CreditCard';
 import Input from '@material-ui/icons/Input';
+import { REACT_HOST } from '../../../../config';
 
 const useStyles = makeStyles((theme) => ({
   buttons: {
@@ -35,8 +36,6 @@ export default function CashPopper(props: CashPopperProps): JSX.Element {
   const POPUP_HEIGHT = process.env.NODE_ENV === 'production' ? 800 : 700;
   const POPUP_X = process.env.NODE_ENV === 'production' ? (window.screen.width / 2) - 450 : (window.screen.width / 2) - 350;
   const POPUP_Y = process.env.NODE_ENV === 'production' ? (window.screen.height / 2) - 400 : (window.screen.height / 2) - 350;
-  // front HOST
-  const FRONT_HOST = process.env.NODE_ENV === 'production' ? 'https://onad.io' : 'http://localhost:3001';
 
   function handleListKeyDown(event: React.KeyboardEvent<HTMLUListElement>) {
     if (event.key === 'Tab') {
@@ -73,7 +72,8 @@ export default function CashPopper(props: CashPopperProps): JSX.Element {
               <MenuList autoFocusItem={Boolean(anchorEl)} id="menu-list-grow" onKeyDown={handleListKeyDown}>
                 <MenuItem
                   onClick={(): void => {
-                    window.open(`${FRONT_HOST}/marketer/charge`, '_blank', `width=${POPUP_WIDTH}, height=${POPUP_HEIGHT}, left=${POPUP_X}, top=${POPUP_Y}`);
+                    window.open(`${REACT_HOST}/marketer/charge`,
+                      '_blank', `width=${POPUP_WIDTH}, height=${POPUP_HEIGHT}, left=${POPUP_X}, top=${POPUP_Y}`);
                     handleAnchorClose();
                   }}
                   className={classes.buttons}

@@ -65,7 +65,12 @@ const OptionPaper = (props: OptionPaperProps): JSX.Element => {
               handleSelect={handleChange(opt.id)}
               innerPaperChildren={opt.id !== 'option1' ? (null) : (
                 <div>
-                  <img height={50} alt="a" src="/pngs/logo/twitch.png" style={{ filter: 'grayscale(0%)', padding: 8 }} />
+                  <img
+                    height={50}
+                    alt="a"
+                    src="/pngs/logo/twitch.png"
+                    style={{ filter: 'grayscale(0%)', padding: 8 }}
+                  />
                   <Typography variant="body2">(유튜브, 아프리카TV 향후 지원 예정)</Typography>
                 </div>
               )}

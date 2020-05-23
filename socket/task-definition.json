@@ -32,12 +32,8 @@
       "workingDirectory": null,
       "secrets": [
         {
-          "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/PRODUCTION_SOCKET_HOSTNAME",
-          "name": "PRODUCTION_SOCKET_HOSTNAME"
-        },
-        {
-          "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/DEV_SOCKET_HOSTNAME",
-          "name": "DEV_SOCKET_HOSTNAME"
+          "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/SOCKET_HOSTNAME",
+          "name": "SOCKET_HOSTNAME"
         },
         {
           "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/DB_HOST",

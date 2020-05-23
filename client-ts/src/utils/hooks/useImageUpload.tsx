@@ -51,9 +51,8 @@ export default function useImageUpload(
     if (files.length !== 0) {
       const fileRegx = /^image\/[a-z]*$/;
       const myImage = files[0];
-
       // image 확장자 검사
-      if (fileRegx.test(myImage.type)) {
+      if (fileRegx.test(myImage.type) || myImage.type === 'application/pdf') {
         // 이미지 사이즈 검사
         if (myImage.size < IMAGE_SIZE_LIMIT) {
           // 사이즈 제한보다 작은 경우

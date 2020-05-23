@@ -6,9 +6,7 @@ import responseHelper from '../../middlewares/responseHelper';
 import doQuery from '../../model/doQuery';
 import checkEmailAuth from '../../middlewares/checkEmailAuth';
 
-const HOST = process.env.NODE_ENV === 'production'
-  ? process.env.PRODUCTION_REACT_HOSTNAME
-  : process.env.DEV_REACT_HOSTNAME;
+const HOST = process.env.REACT_HOSTNAME;
 const router = express.Router();
 
 // local 로그인

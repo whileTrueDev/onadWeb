@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import shortid from 'shortid';
 import {
-  Paper, Typography, Divider, Grid
+  Paper, Typography, Divider, Grid, Collapse
 } from '@material-ui/core';
 import { Done, Clear } from '@material-ui/icons';
 // components
@@ -17,6 +17,7 @@ import useContractionStyles from './ContractionCard.style';
 import terms from './source/contractTerms';
 import useDialog from '../../../../utils/hooks/useDialog';
 import { usePatchRequest } from '../../../../utils/hooks';
+import useGetRequest from '../../../../utils/hooks/useGetRequest';
 
 export interface ContractionDataType {
   creatorId: string;
@@ -35,13 +36,15 @@ interface ContractionCardProps {
   contractionData: ContractionDataType;
   doContractionDataRequest: () => void;
 }
+
 const ContractionCard = ({
   contractionData, doContractionDataRequest
 }: ContractionCardProps): JSX.Element => {
   const classes = useContractionStyles();
   const snack = useDialog(); // 계약완료 스낵바를 위해
   const contractionDialog = useDialog(); // 계약정보 창을 위해
-
+  // 팔로워 수 정보조회
+  const getFollower = useGetRequest<number>('/creator/follower');
   const contractionPatch = usePatchRequest('/creator', // 계약정보 업데이트
     () => {
       doContractionDataRequest();
@@ -67,109 +70,124 @@ const ContractionCard = ({
 
   return (
     <>
-      {contractionData.creatorContractionAgreement === 0 && (
+      {contractionData.creatorContractionAgreement === 0 && !getFollower.loading && (
 
-      <CustomCard iconComponent={<StyledItemText primary="서비스 이용 및 출금 계약하기" color="white" />}>
+        <CustomCard iconComponent={<StyledItemText primary="서비스  이용 및 출금 계약하기" color="white" />}>
 
-        {terms.map((term, index) => (
-          <Paper key={term.state} className={classes.container} elevation={1}>
-            <Grid container direction="row" justify="space-between" alignItems="center" spacing={1}>
-              <Grid item>
-                <Typography className={classes.termTitle}>
-                  {term.title}
-                </Typography>
-              </Grid>
-              <Grid item>
-                <Grid container direction="row" alignItems="center">
-                  <Grid item>
-                    <Button
-                      onClick={(): void => {
-                        contractionDialog.handleOpen();
-                        setActiveContractionIndex(index);
-                      }}
-                    >
-                      약관보기
-                    </Button>
-                  </Grid>
-                  <Grid>
-                    <Divider className={classes.divider} />
-                  </Grid>
-                  <Grid item>
-                    { contractionList[index]
-                      ? (
-                        <SuccessTypo>
-                          <Done />
-                        </SuccessTypo>
-                      )
-                      : (
-                        <DangerTypo>
-                          <Clear />
-                        </DangerTypo>
-                      )}
+          {terms.map((term, index) => (
+            <Paper key={term.state} className={classes.container} elevation={1}>
+              <Grid container direction="row" justify="space-between" alignItems="center" spacing={1}>
+                <Grid item>
+                  <Typography className={classes.termTitle}>
+                    {term.title}
+                  </Typography>
+                </Grid>
+                <Grid item>
+                  <Grid container direction="row" alignItems="center">
+                    <Grid item>
+                      <Button
+                        onClick={(): void => {
+                          contractionDialog.handleOpen();
+                          setActiveContractionIndex(index);
+                        }}
+                        disabled={getFollower.data < 300}
+                      >
+                        약관보기
+                      </Button>
+                    </Grid>
+                    <Grid>
+                      <Divider className={classes.divider} />
+                    </Grid>
+                    <Grid item>
+                      {contractionList[index]
+                        ? (
+                          <SuccessTypo>
+                            <Done />
+                          </SuccessTypo>
+                        )
+                        : (
+                          <DangerTypo>
+                            <Clear />
+                          </DangerTypo>
+                        )}
+                    </Grid>
                   </Grid>
                 </Grid>
               </Grid>
-            </Grid>
-          </Paper>
-        ))}
-
-        { /* 약관 보기 Dialog */ }
-        <Dialog
-          open={contractionDialog.open}
-          onClose={contractionDialog.handleClose}
-          title={terms[activeContractionIndex].title}
-          maxWidth="md"
-        >
-          {/* 계약 내용 */}
-          <div className={classes.inDialogContent}>
-            {terms[activeContractionIndex].text.split('\n').map((sentence) => (
-              <p key={shortid.generate()}>{sentence}</p>
-            ))}
-            <Divider />
-            <Grid container direction="row" alignContent="center" justify="center">
+            </Paper>
+          ))}
+          <Collapse in={getFollower.data < 300}>
+            <Grid container style={{ marginTop: '16px' }} direction="row" justify="space-between" alignItems="center" spacing={2}>
               <Grid item>
-                <Typography variant="body2">
-                  위의 내용을 올바르게 이해하셨습니까? 아래 버튼을 클릭하여 약관에 동의해주세요.
+                <Typography style={{ fontWeight: 'bold' }} variant="body1" color="secondary">
+                  ※ 팔로워 수가 300명 이상이 되면 계약할 수 있습니다.
+                </Typography>
+                <Typography style={{ fontWeight: 'bold' }} variant="body2">
+                  - 현재 팔로워는
+                  {' '}
+                  {getFollower.data}
+                  명입니다.
                 </Typography>
               </Grid>
             </Grid>
-            <Grid container direction="row" alignContent="center" justify="center">
-              <Grid item>
-                <Button onClick={contractionDialog.handleClose}>
-                  취소
-                </Button>
-                <Button
-                  color="primary"
-                  onClick={(): void => {
-                    handleContractionAgree(activeContractionIndex);
-                    contractionDialog.handleClose();
-                  }}
-                >
-                  동의
-                </Button>
-              </Grid>
-            </Grid>
-          </div>
-        </Dialog>
-
-        {/* 계약 완료 버튼 */}
-        <div className={classes.actionsContainer}>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={(): void => {
-              if (contractionList.every((row) => row === true)) {
-                // 크리에이터 계약정보 patch 요청
-                contractionPatch.doPatchRequest({ type: 'contraction' });
-              }
-            }}
-            disabled={!(contractionList.every((row) => row === true))
-              || Boolean(contractionPatch.loading)}
+          </Collapse>
+          { /* 약관 보기 Dialog */}
+          <Dialog
+            open={contractionDialog.open}
+            onClose={contractionDialog.handleClose}
+            title={terms[activeContractionIndex].title}
+            maxWidth="md"
           >
-            확인
-          </Button>
-        </div>
-      </CustomCard>
+            {/* 계약 내용 */}
+            <div className={classes.inDialogContent}>
+              {terms[activeContractionIndex].text.split('\n').map((sentence) => (
+                <p key={shortid.generate()}>{sentence}</p>
+              ))}
+              <Divider />
+              <Grid container direction="row" alignContent="center" justify="center">
+                <Grid item>
+                  <Typography variant="body2">
+                    위의 내용을 올바르게 이해하셨습니까? 아래 버튼을 클릭하여 약관에 동의해주세요.
+                  </Typography>
+                </Grid>
+              </Grid>
+              <Grid container direction="row" alignContent="center" justify="center">
+                <Grid item>
+                  <Button onClick={contractionDialog.handleClose}>
+                    취소
+                  </Button>
+                  <Button
+                    color="primary"
+                    onClick={(): void => {
+                      handleContractionAgree(activeContractionIndex);
+                      contractionDialog.handleClose();
+                    }}
+                  >
+                    동의
+                  </Button>
+                </Grid>
+              </Grid>
+            </div>
+          </Dialog>
+
+          {/* 계약 완료 버튼 */}
+          <div className={classes.actionsContainer}>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={(): void => {
+                if (contractionList.every((row) => row === true)) {
+                  // 크리에이터 계약정보 patch 요청
+                  contractionPatch.doPatchRequest({ type: 'contraction' });
+                }
+              }}
+              disabled={!(contractionList.every((row) => row === true))
+                || Boolean(contractionPatch.loading)}
+            >
+              확인
+            </Button>
+          </div>
+        </CustomCard>
       )}
 
       <Snackbar

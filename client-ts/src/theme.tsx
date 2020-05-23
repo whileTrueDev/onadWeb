@@ -27,7 +27,7 @@ const rawTheme = {
     warning: defaultTheme.palette.secondary,
   },
   typography: {
-    fontFamily: '"Helvetica", "Sunflower", sans-serif'
+    fontFamily: '"NotoSansKR-Regular", "Sunflower", sans-serif'
   }
 };
 

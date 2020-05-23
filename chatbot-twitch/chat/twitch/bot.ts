@@ -131,8 +131,8 @@ class Bot {
   // 광고 메시지 송출 핸들러 생성 함수 ( 광고채팅 - 시작 함수 )
   runAdChat(): void {
     interface NextCampaignData {
-      creatorId: string; creatorTwitchId: string;
-      campaignId: string; campaignName: string; linkName: string;
+      creatorId?: string; creatorTwitchId?: string;
+      campaignId?: string; campaignName?: string; descriptionToChat?: string;
     }
     console.log('Ad Chat handler ON!');
     this.onadSocketClient.on('next-campaigns-twitch-chatbot', (data: NextCampaignData) => {
@@ -142,8 +142,8 @@ class Bot {
         // AD 챗 동의한 크리에이터 인 경우.
         if (data.creatorTwitchId) { // 데이터가 올바르게 온 경우.
           const adString = `https://t.onad.io/adchat/${data.creatorTwitchId}`;
-          if (data.linkName) {
-            this.sayAdMessage(data.creatorTwitchId, adString, data.linkName);
+          if (data.descriptionToChat) {
+            this.sayAdMessage(data.creatorTwitchId, adString, data.descriptionToChat);
           } else {
             this.sayAdMessage(data.creatorTwitchId, adString);
           }

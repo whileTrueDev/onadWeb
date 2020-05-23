@@ -18,7 +18,10 @@ interface CampaignData {
   priorityType: number | string;
   regiDate: string;
   onOff: number;
+  confirmState: number;
   bannerSrc: string;
+  links: string;
+  linkConfirmState: number;
   dailyLimit: number;
 }
 
@@ -38,14 +41,19 @@ router.route('/list')
       date.setMilliseconds(0);
 
       const query = `
-            SELECT
-            campaignId, campaignName, optionType, priorityType, campaign.regiDate as regiDate, onOff, bannerSrc, dailyLimit
-            FROM campaign
-            JOIN bannerRegistered AS br
-            ON br.bannerId = campaign.bannerId
-            WHERE campaign.marketerId = ?
-            AND deletedState = 0
-            ORDER BY br.regiDate DESC
+              SELECT
+              campaignId, campaignName, optionType, priorityType, 
+              campaign.regiDate as regiDate, onOff, br.confirmState, 
+              bannerSrc, lr.links as links, lr.confirmState as linkConfirmState, dailyLimit,
+              campaignDescription
+              FROM campaign
+              JOIN bannerRegistered AS br
+              ON br.bannerId = campaign.bannerId
+              JOIN linkRegistered AS lr
+              ON lr.linkId = connectedLinkId
+              WHERE campaign.marketerId = ?
+              AND deletedState = 0
+              ORDER BY br.regiDate DESC
             `;
 
       const sumQuery = `
@@ -62,7 +70,8 @@ router.route('/list')
                 [campaignData.campaignId, date])
                 .then((inrow) => {
                   const { dailysum } = inrow.result[0];
-                  return { ...campaignData, dailysum };
+                  const linkData = JSON.parse(campaignData.links);
+                  return { ...campaignData, linkData, dailysum };
                 }))
             ).then((campaignList) => {
               responseHelper.send(campaignList, 'get', res);
@@ -202,10 +211,10 @@ router.route('/')
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
       const { marketerId, marketerName } = responseHelper.getSessionData(req);
       const [campaignName, optionType, priorityType, priorityList, selectedTime, dailyLimit,
-        startDate, finDate, keyword, bannerId, connectedLinkId] = responseHelper.getParam([
+        startDate, finDate, keyword, bannerId, connectedLinkId, campaignDescription] = responseHelper.getParam([
         'campaignName', 'optionType', 'priorityType',
         'priorityList', 'selectedTime', 'dailyLimit', 'startDate', 'finDate',
-        'keyword', 'bannerId', 'connectedLinkId'], 'POST', req);
+        'keyword', 'bannerId', 'connectedLinkId', 'campaignDescription'], 'POST', req);
 
       const searchQuery = `
             SELECT campaignId
@@ -219,8 +228,8 @@ router.route('/')
             (campaignId, campaignName, marketerId, 
             bannerId, connectedLinkId, dailyLimit, priorityType, 
             optionType, onOff, targetList, marketerName, 
-            keyword, startDate, finDate, selectedTime) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, 0, ?, ?, ?, ?, ?, ?)`;
+            keyword, startDate, finDate, selectedTime, campaignDescription) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, 0, ?, ?, ?, ?, ?, ?, ?)`;
 
       doQuery(searchQuery, [marketerId])
         .then((row) => {
@@ -237,7 +246,7 @@ router.route('/')
             doQuery(saveQuery,
               [campaignId, campaignName, marketerId, bannerId, connectedLinkId, dailyLimit,
                 priorityType, optionType, targetJsonData, marketerName, keywordsJsonData,
-                startDate, finDate, timeJsonData]),
+                startDate, finDate, timeJsonData, campaignDescription]),
             dataProcessing.PriorityDoquery({
               campaignId, priorityType, priorityList, optionType
             }),

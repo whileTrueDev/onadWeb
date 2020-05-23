@@ -66,16 +66,16 @@ export default function UrlTable(props: UrlTableProps): JSX.Element {
                       <Divider />
                     </div>
                   ) : (
-                      <div>
-                        <p className={classes.title}>
-                          SUB
+                    <div>
+                      <p className={classes.title}>
+                        SUB
                       </p>
-                        <span>
-                          {link.linkName}
-                        </span>
-                        <Divider />
-                      </div>
-                    )}
+                      <span>
+                        {link.linkName}
+                      </span>
+                      <Divider />
+                    </div>
+                  )}
                 </div>
               );
             }
@@ -107,12 +107,12 @@ export default function UrlTable(props: UrlTableProps): JSX.Element {
                       </p>
                     </div>
                   ) : (
-                      <div>
-                        <p className={classes.title}>
-                          SUB
+                    <div>
+                      <p className={classes.title}>
+                        SUB
                       </p>
-                      </div>
-                    )}
+                    </div>
+                  )}
                   <a
                     href={link.linkTo}
                     onClick={(e): void => {

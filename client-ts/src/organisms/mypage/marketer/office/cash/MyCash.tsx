@@ -23,6 +23,7 @@ import { CashInterface, UserInterface, AccountInterface } from '../interface';
 // hooks
 import useGetRequest, { UseGetRequestObject } from '../../../../../utils/hooks/useGetRequest';
 import useDialog from '../../../../../utils/hooks/useDialog';
+import { REACT_HOST } from '../../../../../config';
 
 interface MyCashProps {
   classes: any;
@@ -40,10 +41,11 @@ function MyCash(props: MyCashProps): JSX.Element {
 
   const POPUP_WIDTH = process.env.NODE_ENV === 'production' ? 900 : 700;
   const POPUP_HEIGHT = process.env.NODE_ENV === 'production' ? 800 : 700;
-  const POPUP_X = process.env.NODE_ENV === 'production' ? (window.screen.width / 2) - 450 : (window.screen.width / 2) - 350;
-  const POPUP_Y = process.env.NODE_ENV === 'production' ? (window.screen.height / 2) - 400 : (window.screen.height / 2) - 350;
+  const POPUP_X = process.env.NODE_ENV === 'production'
+    ? (window.screen.width / 2) - 450 : (window.screen.width / 2) - 350;
+  const POPUP_Y = process.env.NODE_ENV === 'production'
+    ? (window.screen.height / 2) - 400 : (window.screen.height / 2) - 350;
   // front HOST
-  const FRONT_HOST = process.env.NODE_ENV === 'production' ? 'https://onad.io' : 'http://localhost:3001';
 
   return (
     <Card>
@@ -63,7 +65,8 @@ function MyCash(props: MyCashProps): JSX.Element {
               size="medium"
               color="primary"
               onClick={(): void => {
-                window.open(`${FRONT_HOST}/marketer/charge`, '_blank', `width=${POPUP_WIDTH}, height=${POPUP_HEIGHT}, left=${POPUP_X}, top=${POPUP_Y}`);
+                window.open(`${REACT_HOST}/marketer/charge`,
+                  '_blank', `width=${POPUP_WIDTH}, height=${POPUP_HEIGHT}, left=${POPUP_X}, top=${POPUP_Y}`);
               }}
             >
               캐시충전(전자결제)

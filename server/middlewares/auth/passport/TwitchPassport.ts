@@ -1,9 +1,7 @@
 import OAuth2Strategy from 'passport-oauth2';
 import request from 'request';
 
-const clientID = process.env.NODE_ENV === 'production'
-  ? process.env.PRODUCTION_CLIENT_ID
-  : process.env.DEV_CLIENT_ID;
+const clientID = process.env.TWITCH_CLIENT_ID;
 
 class Strategy extends OAuth2Strategy {
   constructor(

@@ -6,13 +6,13 @@ import doQuery from '../../../model/doQuery';
 const router = express.Router();
 
 interface UrlData {
-    linkId: string;
-    marketerId: string;
-    denialReason: string;
-    links: string;
-    regiDate: string;
-    updateDate: string;
-    confirmState: number;
+  linkId: string;
+  marketerId: string;
+  denialReason: string;
+  links: string;
+  regiDate: string;
+  updateDate: string;
+  confirmState: number;
 }
 
 //  marketer/sub/inventory =>/landingurl/all
@@ -66,7 +66,7 @@ router.route('/')
       const saveQuery = `
             INSERT INTO linkRegistered
             (linkId, marketerId, confirmState, links)
-            VALUES (?, ?, ?, ?)
+            VALUES (?, ?, ?, ?, ?)
             `;
 
       doQuery(searchQuery, [marketerId])
