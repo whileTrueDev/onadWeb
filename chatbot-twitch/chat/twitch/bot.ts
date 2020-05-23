@@ -10,7 +10,7 @@ require('dotenv').config();
 // configure constants
 const ADCHAT_AGREE_STATE = 1;
 const BOT_NAME = 'onadyy';
-const { PRODUCTION_SOCKET_HOSTNAME } = process.env;
+const { SOCKET_HOSTNAME } = process.env;
 const BOT_OAUTH_TOKEN = process.env.TWITCH_BOT_OAUTH_TOKEN; // onadyy
 const JOIN_TIMEOUT = 8000;
 
@@ -111,8 +111,8 @@ class Bot {
 
     // onad 배너 송출 socket server 연결
     try {
-      this.onadSocketClient = io(PRODUCTION_SOCKET_HOSTNAME as string);
-      console.log('onad banner broad socket connected - ', PRODUCTION_SOCKET_HOSTNAME);
+      this.onadSocketClient = io(SOCKET_HOSTNAME as string);
+      console.log('onad banner broad socket connected - ', SOCKET_HOSTNAME);
     } catch {
       throw Error('ONAD_SOCKET_HOST needed');
     }
@@ -121,7 +121,7 @@ class Bot {
   // 광고 메시지 송출 함수
   private sayAdMessage(channel: string, adString: string,
     messagePrefix = '지금 나오고 있는 광고가 궁금하다면?\n'): void {
-    const adMessage = `${`${messagePrefix}\n${adString}`}`;
+    const adMessage = `${messagePrefix}\n${adString}`;
     if (this.chatBotClient) {
       this.chatBotClient.say(channel, adMessage)
         .catch((err) => console.log(`sayAdMessage error - ${err}`));
