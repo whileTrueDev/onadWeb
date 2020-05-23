@@ -183,8 +183,8 @@ export default function CampaignList(
                             </Typography>
                             {detail.campaignDescription && (
                             <Typography variant="caption" gutterBottom>
-                              {detail.campaignDescription.slice(0, 20)}
-                              {detail.campaignDescription.length > 20 && (
+                              {detail.campaignDescription.slice(0, 10)}
+                              {detail.campaignDescription.length > 10 && (
                                 <span>...</span>
                               )}
                             </Typography>
