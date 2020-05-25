@@ -39,6 +39,13 @@ app.engine('html', require('ejs').renderFile);
 app.get('/', (req, res, next) => {
   res.sendStatus(200);
 });
+
+app.get('/adpick', (req, res, next) => {
+  const getData = req.query;
+  console.log(getData);
+  res.json(getData);
+});
+
 app.get('/:creatorTwitchId', async (req, res, next) => {
   const costType = 'adpanel';
   // Get semantic parameters
