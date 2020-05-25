@@ -21,6 +21,8 @@ import bannersRouter from './routes/banners';
 import mailRouter from './routes/mail';
 import noticeRouter from './routes/notice';
 import trackingRouter from './routes/tracking';
+import adpageRouter from './routes/adpage';
+
 // Middleware or custom modules
 import taxBillScheduler from './middlewares/scheduler/taxBillScheduler';
 import dailyLimitScheduler from './middlewares/scheduler/dailyLimitScheduler';
@@ -88,7 +90,7 @@ class OnadWebApi {
     // define white-list
     const whiteList = [
       'https://onad.io', 'https://test.onad.io',
-      FRONT_HOST!, 'http://localhost:3001',
+      FRONT_HOST!, 'http://localhost:3001', 'http://localhost:3011'
     ];
     const corsOptions = {
       origin: whiteList,
@@ -128,7 +130,7 @@ class OnadWebApi {
     this.app.use('/mail', mailRouter);
     this.app.use('/notice', noticeRouter);
     this.app.use('/tracking', trackingRouter);
-
+    this.app.use('/adpage', adpageRouter);
     // Error handling
     // catch 404 and forward to error handler
     this.app.use((req, res, next) => {
