@@ -7,10 +7,10 @@ ENV TZ=Asia/Seoul
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 RUN mkdir -p /home/adpick
-WORKDIR /home/tracker
-COPY ./dist /home/tracker/dist
-COPY ./yarn.lock /home/tracker/yarn.lock
-COPY ./package.json /home/tracker/package.json
+WORKDIR /home/adpick
+COPY ./dist /home/adpick/dist
+COPY ./yarn.lock /home/adpick/yarn.lock
+COPY ./package.json /home/adpick/package.json
 
 RUN yarn install --prod
 CMD NODE_ENV=production yarn start:production

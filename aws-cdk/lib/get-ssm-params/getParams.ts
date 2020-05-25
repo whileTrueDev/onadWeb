@@ -251,6 +251,14 @@ export default function getSSMParams(scope: cdk.Construct) {
     }
   );
 
+  // *******************************************************
+  // Adpick affid
+  const ADPICK_AFF_ID = ssm.StringParameter.fromSecureStringParameterAttributes(
+    scope, 'ADPICK_AFF_ID', {
+      parameterName: '/ADPICK_AFF_ID', version: 1
+    }
+  );
+
   return {
     TEST_REACT_HOSTNAME,
     TEST_API_HOSTNAME,
@@ -293,5 +301,6 @@ export default function getSSMParams(scope: cdk.Construct) {
     CRAWL_YOUTUBE_API_KEY,
     TWITCH_BOT_OAUTH_TOKEN,
     SLACK_ALARM_URL,
+    ADPICK_AFF_ID
   };
 }

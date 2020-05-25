@@ -226,6 +226,19 @@ export default class OnADProductionAwsStack extends cdk.Stack {
       CRAWL_YOUTUBE_API_KEY: ecs.Secret.fromSsmParameter(ssmParameters.CRAWL_YOUTUBE_API_KEY),
     });
 
+    // Adpick Crawler
+    const onadAdpickCrawlRepo = 'hwasurr/onad-adpick-crawl';
+    const onadAdpickCrawlName = 'onad-adpick-crawl';
+    const onadAdpickCrawl = makeTaskDefinition(this, onadAdpickCrawlName, onadAdpickCrawlRepo, onadTaskRole, {
+      DB_HOST: ecs.Secret.fromSsmParameter(ssmParameters.DB_HOST),
+      DB_USER: ecs.Secret.fromSsmParameter(ssmParameters.DB_USER),
+      DB_PASSWORD: ecs.Secret.fromSsmParameter(ssmParameters.DB_PASSWORD),
+      DB_DATABASE: ecs.Secret.fromSsmParameter(ssmParameters.DB_DATABASE),
+      DB_CHARSET: ecs.Secret.fromSsmParameter(ssmParameters.DB_CHARSET),
+      DB_PORT: ecs.Secret.fromSsmParameter(ssmParameters.DB_PORT),
+      ADPICK_AFF_ID: ecs.Secret.fromSsmParameter(ssmParameters.ADPICK_AFF_ID),
+    });
+
 
     // *********************************************
     // Create ECS Service
@@ -307,6 +320,16 @@ export default class OnADProductionAwsStack extends cdk.Stack {
     onadTwitchCrawlRule.addTarget(new targets.EcsTask({
       cluster: productionCluster,
       taskDefinition: onadTwitchCrawl.taskDefinition,
+      taskCount: 1,
+    }));
+
+    // Twitch Crawl
+    const onadAdpickCrawlRule = new events.Rule(this, `${onadAdpickCrawlName}Rule`, {
+      schedule: events.Schedule.expression('cron(*/10 * * * ? *)')
+    });
+    onadAdpickCrawlRule.addTarget(new targets.EcsTask({
+      cluster: productionCluster,
+      taskDefinition: onadAdpickCrawl.taskDefinition,
       taskCount: 1,
     }));
 
