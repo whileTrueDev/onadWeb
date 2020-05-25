@@ -1,0 +1,25 @@
+{
+  "name": "onad-adpick",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "start": "ts-node ./src/main.ts",
+    "start:debug": "tsc -w",
+    "start:production": "node ./dist/main.js",
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@types/dotenv": "^8.2.0",
+    "axios": "^0.19.2",
+    "dotenv": "^8.2.0",
+    "mysql": "^2.18.1",
+    "ts-node": "^8.10.0",
+    "typeorm": "^0.2.24",
+    "typescript": "^3.8.3"
+  },
+  "devDependencies": {
+    "@types/axios": "^0.14.0",
+    "@types/node": "^13.13.4"
+  }
+}
