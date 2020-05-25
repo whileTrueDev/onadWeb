@@ -14,7 +14,9 @@ const config: ConnectionOptions = {
   synchronize: true,
   logging: true,
   entities: [
-    'src/entity/*.ts', 'modules/**/entity/*.ts', 'src/entity/*.js', 'modules/**/entity/*.js'
+    'src/entity/*.ts', 'modules/**/entity/*.ts',
+    'src/entity/*.js', 'modules/**/entity/*.js',
+    'entity/*.js',
   ],
 };
 
