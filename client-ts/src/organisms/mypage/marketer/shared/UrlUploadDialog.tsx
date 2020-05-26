@@ -56,7 +56,7 @@ function QontoStepIcon(props: any): JSX.Element {
 
 export default function UrlUploadDialog(props: UrlUploadDialogProps): JSX.Element {
   const { open, handleClose, recallRequest } = props;
-  const [activeStep, setStep] = useState(0);
+  const [activeStep] = useState(0);
 
   const subOpen = useToggle(); // Toggle for sub-urls
   const mainUrl = useEventTargetValue('https://'); // Main url
@@ -101,12 +101,7 @@ export default function UrlUploadDialog(props: UrlUploadDialogProps): JSX.Elemen
 
     doPostRequest({ links: linkResult });
   }
-
-  const handleNext = (number: number) => (): void => {
-    setStep(number);
-  };
-  const handleReset = (): void => {
-    setStep(0);
+  const handleDialogClose = (): void => {
     // Reset values
     mainUrl.handleReset();
     mainUrlName.handleReset();
@@ -116,47 +111,32 @@ export default function UrlUploadDialog(props: UrlUploadDialogProps): JSX.Elemen
     sub2UrlName.handleReset();
     handleClose();
   };
+
+  function isLengthValid(): boolean {
+    return !(mainUrlName.value.length > 20 || subUrlName.value.length > 20 || sub2UrlName.value.length > 20);
+  }
   return (
     <Dialog
-      onClose={handleReset}
+      onClose={handleDialogClose}
       open={open}
       maxWidth="sm"
       fullWidth
       title="랜딩페이지 URL 등록"
-      buttons={
-        activeStep === 0 ? (
-          <div style={{ display: 'flex' }}>
-
-            <Collapse
-              in={(/^(https?|chrome):\/\/[^\s$.?#].[^\s]*$/
-                .test(mainUrl.value))}
-            >
-              <Button
-                color="primary"
-                disabled={// from https://regexr.com/3um70
+      buttons={(
+        <div style={{ display: 'flex' }}>
+          <Button
+            color="primary"
+            disabled={// from https://regexr.com/3um70
                   !(/^(https?|chrome):\/\/[^\s$.?#].[^\s]*$/
-                    .test(mainUrl.value))
+                    .test(mainUrl.value)) || !isLengthValid()
                 }
-                onClick={handleNext(1)}
-              >
-                다음
-              </Button>
-            </Collapse>
-            <Button onClick={handleReset}>취소</Button>
-          </div>
-        )
-          : (
-            <div style={{ display: 'flex' }}>
-              <Button
-                color="primary"
-                onClick={handleSubmit}
-              >
-                등록
-              </Button>
-              <Button onClick={handleReset}>취소</Button>
-            </div>
-          )
-      }
+            onClick={handleSubmit}
+          >
+            등록
+          </Button>
+          <Button onClick={handleDialogClose}>취소</Button>
+        </div>
+        )}
     >
       <Stepper activeStep={activeStep} orientation="vertical" style={{ padding: 0 }}>
         <Step key="0">
@@ -171,8 +151,6 @@ export default function UrlUploadDialog(props: UrlUploadDialogProps): JSX.Elemen
               subUrl={subUrl}
               subUrlName={subUrlName}
               subUrlCheck={subUrlCheck}
-              handleClose={handleReset}
-              handleNext={handleNext}
             />
           </StepContent>
         </Step>
