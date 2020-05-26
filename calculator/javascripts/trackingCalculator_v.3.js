@@ -17,7 +17,6 @@ const PANEL_FEERATE = 0.5;
 const PAGE_FEERATE = 0.4;
 
 
-
 // 각 action에 따른 cash
 const getCreatorCash = ({ payouts, channel }) => {
   switch (channel) {
@@ -51,9 +50,8 @@ const getCreatorList = (date) => {
   creatorDetail
   ON trackingData.creatorId = creatorDetail.creatorId
   `;
-
   return new Promise((resolve, reject) => {
-    doQuery(creatorListQuery, [date])
+    doQuery(creatorListQuery, [date, date])
       .then((inrow) => {
         let creatorNames = [];
         const banList = []; // 계산에서 제외할 creatorList
@@ -104,21 +102,22 @@ const getCreatorList = (date) => {
 };
 
 
+// 캠페인 아이디에 따라서 costType이 다를 수 있으나 현재는 CPC + CPA 상품이 존재하지 않기 때문에 가능하다.
 const getCampaignList = ({ date, banList }) => {
   const campaignListQuery = `
-  SELECT campaignId, creatorId, channel, sum(payout) as payouts
+  SELECT campaignId, creatorId, channel, sum(payout) as payouts, costType
   FROM tracking 
-  WHERE clickedTime > ? AND NOT os IS NULL
+  WHERE (clickedTime > ? AND costType = 'CPC' AND NOT os IS NULL)
+  OR (conversionTime > ? AND costType = 'CPA' AND NOT os IS NULL)
   GROUP BY campaignId, creatorId, channel
   `;
-
   return new Promise((resolve, reject) => {
-    doQuery(campaignListQuery, [date])
+    doQuery(campaignListQuery, [date, date])
       .then((inrow) => {
         const logNames = [];
         const logs = {};
         inrow.result.forEach(({
-          campaignId, creatorId, payouts, channel
+          campaignId, creatorId, payouts, channel, costType
         }) => {
           if (!banList.includes(creatorId)) {
             const cashToCreator = getCreatorCash({ payouts, channel });
@@ -132,6 +131,7 @@ const getCampaignList = ({ date, banList }) => {
               logs[logId] = {
                 cashToCreator,
                 cashFromMarketer,
+                costType
               };
               logNames.push(logId);
             }
@@ -151,7 +151,7 @@ const getMarketerList = ({ date, banList }) => {
   const marketerListQuery = `
   SELECT marketerId, creatorId, sum(payout) as payouts
   FROM tracking
-  WHERE clickedTime > ? AND NOT os IS NULL
+  WHERE clickedTime > ? AND costType = 'CPC' AND NOT os IS NULL
   GROUP BY marketerId, creatorId
   `;
 
@@ -308,8 +308,8 @@ const CampaignConnectionWarp = ({ campaignDic }) => new Promise((resolve, reject
       Promise.all(
         Object.keys(campaignDic).map((logId) => {
           const [campaignId, creatorId] = logId.split('/');
-          const { cashFromMarketer, cashToCreator } = campaignDic[logId];
-          return doTransacQuery({ connection, queryState: campaignLogQuery, params: [campaignId, creatorId, 'CPC', cashFromMarketer, cashToCreator] });
+          const { cashFromMarketer, cashToCreator, costType } = campaignDic[logId];
+          return doTransacQuery({ connection, queryState: campaignLogQuery, params: [campaignId, creatorId, costType, cashFromMarketer, cashToCreator] });
         })
       )
         .then(() => {
@@ -378,5 +378,6 @@ const calculationPromise = async () => {
       });
   });
 };
+
 
 module.exports = calculationPromise;
