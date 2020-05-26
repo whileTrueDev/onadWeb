@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { Connection } from 'typeorm';
 import { AdPickData } from './AdPickTypes';
-import AdPickCampaign from '../../entity/AdPick';
+import AdPickCampaign from '../../entity/AdPick.entity';
 
 type AdPickDataList = Array<AdPickData>;
 export default class AdPick {
