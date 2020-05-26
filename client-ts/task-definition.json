@@ -74,7 +74,7 @@
         }
     ],
     "placementConstraints": [],
-    "memory": "1024",
+    "memory": "512",
     "taskRoleArn": null,
     "family": "onad-web",
     "pidMode": null,
@@ -82,7 +82,7 @@
         "FARGATE"
     ],
     "networkMode": "awsvpc",
-    "cpu": "512",
+    "cpu": "256",
     "inferenceAccelerators": null,
     "proxyConfiguration": null,
     "volumes": []
