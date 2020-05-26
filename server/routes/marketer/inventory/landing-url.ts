@@ -66,7 +66,7 @@ router.route('/')
       const saveQuery = `
             INSERT INTO linkRegistered
             (linkId, marketerId, confirmState, links)
-            VALUES (?, ?, ?, ?, ?)
+            VALUES (?, ?, ?, ?)
             `;
 
       doQuery(searchQuery, [marketerId])

@@ -22,9 +22,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: theme.palette.primary.main,
     marginBottom: '7px',
   },
-  checkbox: {
-
-  },
   buttonSet: {
     maginTop: '16px'
   },
@@ -42,21 +39,21 @@ const UrlUploadStep = (props: any): JSX.Element => {
         <Grid item>
           <InputLabel shrink htmlFor="company">URL 이름</InputLabel>
           <Input
-            required
             id="main-url-name"
             className={classes.input}
             value={mainUrlName.value}
             onChange={mainUrlName.handleChange}
+            error={mainUrlName.value.length > 20}
           />
         </Grid>
         <Grid item>
           <InputLabel shrink htmlFor="company">URL 주소*</InputLabel>
           <Input
-            required
             id="main-url"
             className={classes.input}
             value={mainUrl.value}
             onChange={mainUrl.handleChange}
+            error={!(/^(https?|chrome):\/\/[^\s$.?#].[^\s]*$/.test(mainUrl.value))}
           />
         </Grid>
       </Grid>
@@ -75,7 +72,6 @@ const UrlUploadStep = (props: any): JSX.Element => {
                 subUrlCheck.handleToggle(); // sub url1 disabled 풀기
               }}
               size="small"
-              className={classes.checkbox}
             />
           )}
           label="SUB URL 설정"
@@ -91,12 +87,12 @@ const UrlUploadStep = (props: any): JSX.Element => {
             <Grid item>
               <InputLabel shrink htmlFor="company">Sub1 URL 이름</InputLabel>
               <Input
-                required
                 id="sub-url1-name"
                 className={classes.input}
                 value={subUrlName.value}
                 onChange={subUrlName.handleChange}
                 disabled={subUrlCheck.toggle}
+                error={subUrlName.value.length > 20}
               />
             </Grid>
             <Grid item>
@@ -107,6 +103,7 @@ const UrlUploadStep = (props: any): JSX.Element => {
                 value={subUrl.value}
                 onChange={subUrl.handleChange}
                 disabled={subUrlCheck.toggle}
+                error={!(/^(https?|chrome):\/\/[^\s$.?#].[^\s]*$/.test(subUrl.value))}
               />
             </Grid>
           </Grid>
