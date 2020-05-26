@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import {
-  Collapse, Stepper, Step, StepLabel, StepContent,
+  Stepper, Step, StepLabel, StepContent,
 } from '@material-ui/core';
 import Check from '@material-ui/icons/Check';
 import classnames from 'classnames';
