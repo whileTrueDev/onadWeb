@@ -20,8 +20,14 @@ function CardIcon({
     [classes.cardIcon]: true,
     [className || '']: className !== undefined,
   });
+
+  const cardIconClasses2 = classNames({
+    [classes.cardIcon2]: true,
+    [className || '']: className !== undefined,
+  });
+
   return (
-    <div className={cardIconClasses} {...rest}>
+    <div className={className === 'yellowBack' ? (cardIconClasses2) : (cardIconClasses)} {...rest}>
       {children}
     </div>
   );
