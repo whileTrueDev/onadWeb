@@ -12,6 +12,7 @@ router.route('/adpick/campaigns')
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
       // const { creatorId } = responseHelper.getSessionData(req);
 
+      // 크리에이터: 수익금의 40%를 가져가므로.
       const query = `
       SELECT
         id, apOffer, apType, apCategory,
@@ -19,7 +20,7 @@ router.route('/adpick/campaigns')
         apHeadline, apVideo, apDailyCap,
         apRemain, apAppPromoText, apKPI,
         apPartner, apImages, apTrackingLink,
-        apHook, apEvent, format(apPayout,1) as apPayout,
+        apHook, apEvent, FORMAT(apPayout * (4/10), 0) AS apPayout,
         apIOSPayout, createdAt, updatedAt
       FROM adPickCampaign
       WHERE createdAt > DATE_SUB(NOW(), INTERVAL 10 minute)
