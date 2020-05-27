@@ -43,8 +43,8 @@ export default class AdPickCampaign extends BaseEntity {
   @Column()
   apRemain!: number; // 오늘 남은 수
 
-  @Column()
-  apOS!: 'Android' | 'iOS' | 'Both'; // 캠페인 OS (Both : Android, iOS 모두 가능)
+  @Column({ nullable: true })
+  apOS?: 'Android' | 'iOS' | 'Both'; // 캠페인 OS (Both : Android, iOS 모두 가능)
 
   // 홍보문구
   @Column({ nullable: true })
