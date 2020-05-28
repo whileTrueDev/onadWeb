@@ -2,21 +2,29 @@ import React from 'react';
 import useGetRequest from '../../../utils/hooks/useGetRequest';
 
 import CPACampaigns from '../../../organisms/mypage/creator/CPAManage/CPACampaigns';
+import CPAIncomeTable from '../../../organisms/mypage/creator/CPAManage/CPAIncomeTable';
 // types
-import { AdPickData } from '../../../organisms/mypage/creator/CPAManage/AdpickTypes';
+import { CampaignResult, AdPickIncome } from '../../../organisms/mypage/creator/CPAManage/AdpickTypes';
 
 export default function CPAManage(): JSX.Element {
-  const getAdpickCampaigns = useGetRequest<null, AdPickData[]>('/creator/cpa/adpick/campaigns');
-
+  const getAdpickCampaigns = useGetRequest<null, CampaignResult[]>('/creator/cpa/adpick/campaigns');
+  const getCampaignIncomes = useGetRequest<null, AdPickIncome[]>('/creator/cpa/adpick/incomes');
   return (
-    <div>
-      CPAManage
+    <div style={{ margin: '0px auto', maxWidth: 1430 }}>
+      {!getCampaignIncomes.loading
+      && getCampaignIncomes.data
+      && getCampaignIncomes.data.length > 0
+      && (
+        <CPAIncomeTable campaignIncomes={getCampaignIncomes.data} />
+      )}
 
-      <div style={{ margin: '0px auto', maxWidth: 1430 }}>
-        {!getAdpickCampaigns.loading && getAdpickCampaigns.data && (
-        <CPACampaigns campaigns={getAdpickCampaigns.data} />
-        )}
-      </div>
+      {!getAdpickCampaigns.loading && getAdpickCampaigns.data
+      && (
+        <CPACampaigns
+          campaigns={getAdpickCampaigns.data}
+          getCampaign={getAdpickCampaigns.doGetRequest}
+        />
+      )}
     </div>
   );
 }
