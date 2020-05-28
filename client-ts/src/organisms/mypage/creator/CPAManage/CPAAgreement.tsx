@@ -9,9 +9,12 @@ import Filter3Icon from '@material-ui/icons/Filter3';
 import CustomCard from '../../../../atoms/CustomCard';
 import StyledItemText from '../../../../atoms/StyledItemText';
 import Button from '../../../../atoms/CustomButtons/Button';
+import AgreementContentDialog from './sub/AgreementContentDialog';
+import DetailCampaignDialog from './sub/DetailCampaignDialog';
 // hook
 import useDialog from '../../../../utils/hooks/useDialog';
 import useGetRequest from '../../../../utils/hooks/useGetRequest';
+import usePatchRequest from '../../../../utils/hooks/usePatchRequest';
 import { ContractionDataType } from '../Dashboard/ContractionCard';
 // source
 import textsource from './source/AgreementText';
@@ -24,11 +27,16 @@ const CPAAgreement = (): JSX.Element => {
   const DetailCampaign = useDialog();
   const classes = useStyle();
   const [check, setCheck] = React.useState(false);
+  const CAPAgreementPatch = usePatchRequest('/creator',
+    () => {
+      // 동의하기 누를시에 다시 리렌더링 되도록 로직 추가
+      contractionGet.doGetRequest();
+    });
 
   function handleChange(): void {
     setCheck(!check);
     // 서버쪽 creatorInfo 업데이트하기
-    // 동의하기 누를시에 다시 리렌더링 되도록 로직 추가
+    CAPAgreementPatch.doPatchRequest({ type: 'CPAAgreement' });
   }
 
   return (
@@ -108,6 +116,9 @@ const CPAAgreement = (): JSX.Element => {
                   <Typography variant="body1" align="center" gutterBottom className={classes.stepWrapRed}>
                     참여형 광고로 인한 실적(수익금, 운영수, 상세내역) 반영에는 1~2일이 소요됩니다
                   </Typography>
+                  <Typography variant="body1" align="center" gutterBottom className={classes.stepWrapRed}>
+                    모든 참여형 광고 캠페인은 광고주의 진행/중단 요청에 따라 임의로 종료될 수 있습니다
+                  </Typography>
                 </Grid>
               </Grid>
             </CustomCard>
@@ -115,6 +126,8 @@ const CPAAgreement = (): JSX.Element => {
       )}
 
       {/* 다이얼로그 두개(유의사항 및 상세보기 내용) 생성 */}
+      <AgreementContentDialog changeHandle={AgreementContent} source={textsource} />
+      <DetailCampaignDialog changeHandle={DetailCampaign} />
     </>
   );
 };

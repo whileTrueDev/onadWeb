@@ -2,7 +2,8 @@ import { makeStyles } from '@material-ui/core/styles';
 
 const useStyle = makeStyles(() => ({
   text: {
-    fontFamily: 'Noto Sans KR'
+    fontFamily: 'Noto Sans KR',
+    fontSize: 15
   },
   step: {
     display: 'flex',
@@ -20,7 +21,7 @@ const useStyle = makeStyles(() => ({
     alignItems: 'center',
   },
   stepWrapRed: {
-    color: 'red'
+    color: '#00acc1'
   },
   stepWrap2: {
     marginBottom: 20
