@@ -9,7 +9,8 @@
         "sourceMap": true, /* Generates corresponding '.map' file. */
         "outDir": "./dist", /* Redirect output structure to the directory. */
         "removeComments": true, /* Do not emit comments to output. */
-        "isolatedModules": true, /* Transpile each file as a separate module (similar to 'ts.transpileModule'). */
+        // "isolatedModules": true, /* Transpile each file as a separate module (similar to 'ts.transpileModule'). */
+        "isolatedModules": false, /* Transpile each file as a separate module (similar to 'ts.transpileModule'). */
         "strict": true, /* Enable all strict type-checking options. */
         "moduleResolution": "node", /* Specify module resolution strategy: 'node' (Node.js) or 'classic' (TypeScript pre-1.6). */
         "typeRoots": [
