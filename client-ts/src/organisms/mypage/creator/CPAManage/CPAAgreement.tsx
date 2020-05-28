@@ -23,6 +23,7 @@ import useStyle from './CPAAgreement.style';
 
 const CPAAgreement = (): JSX.Element => {
   const contractionGet = useGetRequest<null, ContractionDataType>('/creator');
+  const CPAmainData = useGetRequest<null>('/creator/cpa/adpick/mainIndicator');
   const AgreementContent = useDialog();
   const DetailCampaign = useDialog();
   const classes = useStyle();
@@ -88,40 +89,62 @@ const CPAAgreement = (): JSX.Element => {
           </CustomCard>
         )
           : (
-            <CustomCard iconComponent={<StyledItemText primary="나의 참여형 광고" color="white" />} backgroundColor>
-              <Grid container direction="row" className={classes.stepExplain} justify="center">
-                <Grid item xs={12} md={4} sm={4} className={classes.box}>
-                  <Typography variant="body1" align="center" className={classes.stepWrap2}>
-                    참여형 광고 수익금 : ____ 원
-                  </Typography>
-                  <Typography variant="body1" align="center">
-                    참여형 광고 운영수 : ____ 건
-                  </Typography>
+            !CPAmainData.loading && CPAmainData.data && (
+              <CustomCard iconComponent={<StyledItemText primary="나의 참여형 광고" color="white" />} backgroundColor>
+                <Grid container direction="row" className={classes.stepExplain} justify="center">
+                  <Grid item xs={12} md={4} sm={4} className={classes.box}>
+                    <Typography variant="h6" align="center" className={classes.stepWrap2}>
+                      참여형 광고 수익금 :
+                      {' '}
+                      {CPAmainData.data.totalCPAIncome}
+                      {' '}
+                      원
+                    </Typography>
+                    <Typography variant="h6" align="center">
+                      참여형 광고 운영수 :
+                      {' '}
+                      {CPAmainData.data.totalCPACount}
+                      {' '}
+                      건
+                    </Typography>
+                  </Grid>
+                  <Grid item className={classes.box} xs={12} md={8} sm={8}>
+                    <div className={classes.buttonWrap}>
+                      <Button
+                        color="primary"
+                        onClick={AgreementContent.handleOpen}
+                      >
+                        유의사항 확인
+                      </Button>
+                      <Button
+                        color="primary"
+                        onClick={DetailCampaign.handleOpen}
+                      >
+                        상세내역 확인
+                      </Button>
+                      <Button
+                        color="secondary"
+                        onClick={() => {
+                          const newTap = window.open(`cpa.onad.io/${CPAmainData.data.creatorId}`, '_blank');
+                          if (newTap) {
+                            newTap.focus();
+                          }
+                        }}
+                        style={{ color: 'white' }}
+                      >
+                        내 광고페이지
+                      </Button>
+                    </div>
+                    <Typography variant="body1" align="center" gutterBottom className={classes.stepWrapRed}>
+                      참여형 광고로 인한 실적(수익금, 운영수, 상세내역) 반영에는 1~2일이 소요됩니다
+                    </Typography>
+                    <Typography variant="body1" align="center" gutterBottom className={classes.stepWrapRed}>
+                      모든 참여형 광고 캠페인은 광고주의 진행/중단 요청에 따라 임의로 종료될 수 있습니다
+                    </Typography>
+                  </Grid>
                 </Grid>
-                <Grid item className={classes.box} xs={12} md={8} sm={8}>
-                  <div className={classes.buttonWrap}>
-                    <Button
-                      color="primary"
-                      onClick={AgreementContent.handleOpen}
-                    >
-                      유의사항 확인
-                    </Button>
-                    <Button
-                      color="primary"
-                      onClick={DetailCampaign.handleOpen}
-                    >
-                      상세내역 확인
-                    </Button>
-                  </div>
-                  <Typography variant="body1" align="center" gutterBottom className={classes.stepWrapRed}>
-                    참여형 광고로 인한 실적(수익금, 운영수, 상세내역) 반영에는 1~2일이 소요됩니다
-                  </Typography>
-                  <Typography variant="body1" align="center" gutterBottom className={classes.stepWrapRed}>
-                    모든 참여형 광고 캠페인은 광고주의 진행/중단 요청에 따라 임의로 종료될 수 있습니다
-                  </Typography>
-                </Grid>
-              </Grid>
-            </CustomCard>
+              </CustomCard>
+            )
           )
       )}
 

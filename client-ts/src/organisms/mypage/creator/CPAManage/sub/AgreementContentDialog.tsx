@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button } from '@material-ui/core';
+import { Button, Typography } from '@material-ui/core';
 import Dialog from '../../../../../atoms/Dialog/Dialog';
 
 interface AgreementContentDialogProps {
@@ -13,6 +13,13 @@ function AgreementContentDialog({
   return (
     <Dialog
       open={Boolean(changeHandle.open)}
+      title={(
+        <div>
+          <Typography variant="h6">
+            유의사항
+          </Typography>
+        </div>
+      )}
       onClose={changeHandle.handleClose}
       fullWidth
       maxWidth="md"
