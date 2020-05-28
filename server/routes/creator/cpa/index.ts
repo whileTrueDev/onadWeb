@@ -43,7 +43,7 @@ router.route('/adpick/indicatorDetail')
       const query = `
       SELECT
         adPickCampaign.apAppTitle as title,
-        adPickCampaign.apImages as image,
+        adPickCampaign.apImages as apImages,
         SUM(cashToCreator) as campaignIncome,
         DATE_FORMAT(MIN(DATE), "%Y년 %m월 %d일") AS startDate,
         DATE_FORMAT(MAX(DATE), "%Y년 %m월 %d일")  AS endDate
@@ -62,7 +62,7 @@ router.route('/adpick/indicatorDetail')
 
       const row = await doQuery<CPADetail[]>(query, [130096343]);
       if (!row.error) {
-        const { result } = row;
+        const result = row.result.map((v) => ({ ...v, apImages: JSON.parse(v.apImages as string) }));
         responseHelper.send(result, 'get', res);
       }
     })

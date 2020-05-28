@@ -36,7 +36,7 @@ export interface CPAmainData {
 
 export interface CPADetail {
   title?: string;
-  image?: { // 사이즈별 홍보이미지
+  apImages?: { // 사이즈별 홍보이미지
     icon?: string; icon57?: string; icon114?: string; icon256?: string;
     banner640x100?: string; banner640x960?: string;
     banner960x640?: string; banner640x640?: string;

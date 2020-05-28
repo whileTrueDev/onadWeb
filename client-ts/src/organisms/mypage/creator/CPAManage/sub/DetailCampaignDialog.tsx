@@ -9,20 +9,27 @@ interface DetailCampaignDialogProps {
   changeHandle: { open: boolean; handleOpen: () => void; handleClose: () => void };
 }
 
+interface CPADetail {
+  title?: string;
+  apImages?: { // 사이즈별 홍보이미지
+    icon?: string; icon57?: string; icon114?: string; icon256?: string;
+    banner640x100?: string; banner640x960?: string;
+    banner960x640?: string; banner640x640?: string;
+    banner1024x500?: string;
+  };
+  campaignIncome: number;
+  startDate: string;
+  endDate: string;
+}
+
 function DetailCampaignDialog({
   changeHandle
 }: DetailCampaignDialogProps): JSX.Element {
-  const mainIndicatorDetail = useGetRequest<null>('/creator/cpa/adpick/indicatorDetail');
+  const mainIndicatorDetail = useGetRequest<null, CPADetail[]>('/creator/cpa/adpick/indicatorDetail');
   return (
     <Dialog
       open={Boolean(changeHandle.open)}
-      title={(
-        <div>
-          <Typography variant="h6">
-            상세내역 확인
-          </Typography>
-        </div>
-      )}
+      title="상세내역 확인"
       onClose={changeHandle.handleClose}
       fullWidth
       maxWidth="md"
@@ -43,24 +50,20 @@ function DetailCampaignDialog({
           columns={[
             {
               title: '캠페인',
-              render: (rowData): JSX.Element => (
-                <p>{rowData.title}</p>
+              render: (rowData): string | undefined => (
+                rowData.title
               ),
             },
             {
               title: '진행 기간',
-              render: (rowData): JSX.Element => (
-                <p>
-                  {rowData.startDate}
-                  ~
-                  {rowData.endDate}
-                </p>
+              render: (rowData): string | undefined => (
+                `${rowData.startDate} ~ ${rowData.endDate}`
               ),
             },
             {
               title: '수익금',
-              render: (rowData) => (
-                <p>{rowData.campaignIncome}</p>
+              render: (rowData): number => (
+                rowData.campaignIncome
               ),
             },
           ]}
