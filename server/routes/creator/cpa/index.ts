@@ -30,7 +30,8 @@ router.route('/adpick/incomes')
           ORDER BY A.id LIMIT 1
         )
       WHERE type = "CPA" AND creatorId = ?
-      GROUP BY campaignId`;
+      GROUP BY campaignId
+      ORDER BY campaignLog.date DESC`;
       const queryArray = [creatorId];
 
       interface AdPickIncomeResult {

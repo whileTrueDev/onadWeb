@@ -1,8 +1,5 @@
 import React from 'react';
-import {
-  Typography
-} from '@material-ui/core';
-
+import { makeStyles } from '@material-ui/core/styles';
 // atoms
 import GridContainer from '../../../../atoms/Grid/GridContainer';
 import GridItem from '../../../../atoms/Grid/GridItem';
@@ -12,7 +9,16 @@ import MaterialTable from '../../../../atoms/Table/MaterialTable';
 import {
   AdPickIncome, AdpickCampaignTypeEnum
 } from './AdpickTypes';
-// hooks
+
+
+const useStyles = makeStyles((theme) => ({
+  flex: {
+    display: 'flex', alignItems: 'center'
+  },
+  appLogo: {
+    width: 50, height: 50, borderRadius: 10, marginRight: theme.spacing(1)
+  }
+}));
 
 interface CPAIncomeTableProps {
   campaignIncomes: AdPickIncome[];
@@ -20,6 +26,8 @@ interface CPAIncomeTableProps {
 export default function CPAIncomeTable({
   campaignIncomes
 }: CPAIncomeTableProps): JSX.Element {
+  const classes = useStyles();
+
   return (
     <GridContainer>
       <GridItem xs>
@@ -28,48 +36,30 @@ export default function CPAIncomeTable({
           data={campaignIncomes}
           columns={[
             {
-              width: '40%',
-              title: '캠페인',
+              width: '100px',
               render: (rowData): JSX.Element => (
-                <div style={{ display: 'flex', alignItems: 'center' }}>
+                <div className={classes.flex}>
                   <img
+                    className={classes.appLogo}
                     src={rowData.apImages?.icon}
                     alt=""
-                    height="50"
-                    width="50"
-                    style={{ borderRadius: 10, marginRight: 8 }}
                   />
-                  <Typography>
-                    {rowData.apAppTitle}
-                  </Typography>
                 </div>
               )
             },
+            { title: '캠페인', field: 'apAppTitle' },
             {
-              // width: '120px',
               title: '유형',
-              render: (rowData): JSX.Element => (
-                <Typography>
-                  {(AdpickCampaignTypeEnum.INSTALL === rowData.apType) && '설치형'}
-                  {(AdpickCampaignTypeEnum.EVENT === rowData.apType) && '이벤트형'}
-                  {AdpickCampaignTypeEnum.RESERVATION === rowData.apType && '사전예약'}
-                  {AdpickCampaignTypeEnum.SIGNUP === rowData.apType && '회원가입'}
-                </Typography>
-              )
+              field: 'apType',
+              lookup: {
+                [AdpickCampaignTypeEnum.INSTALL]: '설치형',
+                [AdpickCampaignTypeEnum.EVENT]: '이벤트형',
+                [AdpickCampaignTypeEnum.RESERVATION]: '사전예약',
+                [AdpickCampaignTypeEnum.SIGNUP]: '회원가입',
+              }
             },
-            {
-              title: '전환',
-              field: 'conversionCount'
-            },
-            {
-              width: '20%',
-              title: '수익',
-              render: (rowData): JSX.Element => (
-                <Typography>
-                  {rowData.campaignIncome}
-                </Typography>
-              )
-            },
+            { title: '전환', type: 'numeric', field: 'conversionCount' },
+            { title: '수익', type: 'numeric', field: 'campaignIncome' },
           ]}
           options={{
             search: false, pageSize: 5, pageSizeOptions: [5, 10, 15],
