@@ -90,6 +90,7 @@ class OnadWebApi {
     const whiteList = [
       'https://onad.io', 'https://test.onad.io',
       FRONT_HOST!, 'http://localhost:3001',
+      ADPAGE_HOST!, 'http://localhost:3011'
     ];
     const corsOptions = {
       origin: whiteList,

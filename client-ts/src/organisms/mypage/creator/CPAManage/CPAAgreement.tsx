@@ -17,7 +17,6 @@ import useGetRequest from '../../../../utils/hooks/useGetRequest';
 import usePatchRequest from '../../../../utils/hooks/usePatchRequest';
 import { ContractionDataType } from '../Dashboard/ContractionCard';
 import MainIndicatorLoading from './sub/MainIndicator.loading';
-import { ADPAGE_HOST } from '../../../../config';
 // source
 import textsource from './source/AgreementText';
 import useStyle from './CPAAgreement.style';
@@ -80,7 +79,7 @@ const CPAAgreement = (): JSX.Element => {
                 <Button
                   color="secondary"
                   onClick={(): void => {
-                    const newTap = window.open(`${ADPAGE_HOST}/${CPAmainData.data.creatorId}`, '_blank');
+                    const newTap = window.open(`http://localhost:3011/${CPAmainData.data.creatorId}`, '_blank');
                     if (newTap) {
                       newTap.focus();
                     }
