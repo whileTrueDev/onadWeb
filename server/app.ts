@@ -38,6 +38,8 @@ process.env.NODE_ENV = (process.env.NODE_ENV
   && (process.env.NODE_ENV).trim().toLowerCase() === 'production')
   ? 'production' : 'development';
 const FRONT_HOST = process.env.REACT_HOSTNAME;
+const ADPAGE_HOST = process.env.ADPAGE_HOSTNAME;
+
 interface Err {
   status?: number;
   stack?: string;
@@ -90,7 +92,8 @@ class OnadWebApi {
     // define white-list
     const whiteList = [
       'https://onad.io', 'https://test.onad.io',
-      FRONT_HOST!, 'http://localhost:3001', 'http://localhost:3011'
+      FRONT_HOST!, 'http://localhost:3001',
+      ADPAGE_HOST!, 'http://localhost:3011'
     ];
     const corsOptions = {
       origin: whiteList,
