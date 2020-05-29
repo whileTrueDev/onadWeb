@@ -1,5 +1,6 @@
 import React from 'react';
 import { Button, Typography } from '@material-ui/core';
+import shortid from 'shortid';
 import Dialog from '../../../../../atoms/Dialog/Dialog';
 
 interface AgreementContentDialogProps {
@@ -34,7 +35,9 @@ function AgreementContentDialog({
         </div>
       )}
     >
-      {source.agreementText}
+      {source.agreementText.split('\n').map((sentence) => (
+        <p key={shortid.generate()}>{sentence}</p>
+      ))}
     </Dialog>
   );
 }

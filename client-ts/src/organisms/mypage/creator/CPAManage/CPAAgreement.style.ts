@@ -1,6 +1,6 @@
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, Theme } from '@material-ui/core/styles';
 
-const useStyle = makeStyles(() => ({
+const useStyle = makeStyles((theme: Theme) => ({
   text: {
     fontFamily: 'Noto Sans KR',
     fontSize: 15
@@ -19,6 +19,7 @@ const useStyle = makeStyles(() => ({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center'
   },
   stepWrapRed: {
     color: '#00acc1'
@@ -27,7 +28,7 @@ const useStyle = makeStyles(() => ({
     marginBottom: 20
   },
   stepIMG: {
-    width: 200,
+    width: 150,
     height: 150,
     margin: 'auto'
   },
@@ -42,6 +43,13 @@ const useStyle = makeStyles(() => ({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-around',
+  },
+  agreementWrap: {
+    width: '100%',
+    height: 200,
+    overflow: 'auto',
+    border: `1px solid ${theme.palette.primary.dark}`,
+    borderRadius: 3
   }
 }));
 

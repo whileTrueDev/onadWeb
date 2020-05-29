@@ -6,6 +6,7 @@ import {
 import Filter1Icon from '@material-ui/icons/Filter1';
 import Filter2Icon from '@material-ui/icons/Filter2';
 import Filter3Icon from '@material-ui/icons/Filter3';
+import shortid from 'shortid';
 import CustomCard from '../../../../atoms/CustomCard';
 import StyledItemText from '../../../../atoms/StyledItemText';
 import Button from '../../../../atoms/CustomButtons/Button';
@@ -17,6 +18,7 @@ import useGetRequest from '../../../../utils/hooks/useGetRequest';
 import usePatchRequest from '../../../../utils/hooks/usePatchRequest';
 import { ContractionDataType } from '../Dashboard/ContractionCard';
 import MainIndicatorLoading from './sub/MainIndicator.loading';
+import { ADPAGE_HOST } from '../../../../config';
 // source
 import textsource from './source/AgreementText';
 import useStyle from './CPAAgreement.style';
@@ -79,7 +81,7 @@ const CPAAgreement = (): JSX.Element => {
                 <Button
                   color="secondary"
                   onClick={(): void => {
-                    const newTap = window.open(`http://localhost:3011/${CPAmainData.data.creatorId}`, '_blank');
+                    const newTap = window.open(`${ADPAGE_HOST}/${CPAmainData.data.creatorId}`, '_blank');
                     if (newTap) {
                       newTap.focus();
                     }
@@ -115,21 +117,21 @@ const CPAAgreement = (): JSX.Element => {
               <Filter1Icon color="primary" fontSize="small" className={classes.stepTitle} />
               약관 동의
             </Typography>
-            <img src="/pngs/main/main_client.png" alt="step1" className={classes.stepIMG} />
+            <img src="/pngs/cpa/agreement.png" alt="step1" className={classes.stepIMG} />
           </Grid>
           <Grid item className={classes.step} xs={12} md={4} sm={4}>
             <Typography variant="body1" align="center" gutterBottom className={classes.stepWrap}>
               <Filter2Icon color="primary" fontSize="small" className={classes.stepTitle} />
               캠페인 설정
             </Typography>
-            <img src="/pngs/main/main_client.png" alt="step2" className={classes.stepIMG} />
+            <img src="/pngs/cpa/campaign.png" alt="step2" className={classes.stepIMG} />
           </Grid>
           <Grid item className={classes.step} xs={12} md={4} sm={4}>
             <Typography variant="body1" align="center" gutterBottom className={classes.stepWrap}>
               <Filter3Icon color="primary" fontSize="small" className={classes.stepTitle} />
               내역 확인
             </Typography>
-            <img src="/pngs/main/main_client.png" alt="step3" className={classes.stepIMG} />
+            <img src="/pngs/cpa/detailcampaign.png" alt="step3" className={classes.stepIMG} />
           </Grid>
         </Grid>
       </CustomCard>
@@ -139,13 +141,17 @@ const CPAAgreement = (): JSX.Element => {
           <CustomCard iconComponent={<StyledItemText primary="유의사항" color="white" />} backgroundColor>
             <Grid container direction="row" className={classes.stepExplain} justify="center">
               <Grid item className={classes.text} xs={12} md={8} sm={8}>
-                {textsource.agreementText}
+                <div className={classes.agreementWrap}>
+                  {textsource.agreementText.split('\n').map((sentence) => (
+                    <p key={shortid.generate()}>{sentence}</p>
+                  ))}
+                </div>
               </Grid>
               <Grid item className={classes.box} xs={12} md={4} sm={4}>
                 <FormControlLabel
                   control={<Checkbox checked={check} onChange={handleChange} color="primary" />}
-                  label="동의"
-                  labelPlacement="start"
+                  label="참여형 광고의 유의사항을 확인하였습니다"
+                  labelPlacement="end"
                 />
               </Grid>
             </Grid>
