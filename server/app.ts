@@ -36,6 +36,7 @@ process.env.NODE_ENV = (process.env.NODE_ENV
   && (process.env.NODE_ENV).trim().toLowerCase() === 'production')
   ? 'production' : 'development';
 const FRONT_HOST = process.env.REACT_HOSTNAME;
+const ADPAGE_HOST = process.env.ADPAGE_HOSTNAME;
 interface Err {
   status?: number;
   stack?: string;

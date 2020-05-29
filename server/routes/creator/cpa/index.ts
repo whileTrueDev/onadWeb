@@ -60,7 +60,7 @@ router.route('/adpick/indicatorDetail')
       GROUP BY campaignId
       `;
 
-      const row = await doQuery<CPADetail[]>(query, [130096343]);
+      const row = await doQuery<CPADetail[]>(query, [creatorId]);
       if (!row.error) {
         const result = row.result.map((v) => ({ ...v, apImages: JSON.parse(v.apImages as string) }));
         responseHelper.send(result, 'get', res);
