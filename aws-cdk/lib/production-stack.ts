@@ -110,6 +110,7 @@ export default class OnADProductionAwsStack extends cdk.Stack {
     const onadApi = makeTaskDefinition(this, onadApiName, onadApiRepo, onadTaskRole, {
       REACT_HOSTNAME: ecs.Secret.fromSsmParameter(ssmParameters.PRODUCTION_REACT_HOSTNAME),
       API_HOSTNAME: ecs.Secret.fromSsmParameter(ssmParameters.PRODUCTION_API_HOSTNAME),
+      ADPAGE_HOSTNAME: ecs.Secret.fromSsmParameter(ssmParameters.PRODUCTION_ADPAGE_HOSTNAME),
       DB_CHARSET: ecs.Secret.fromSsmParameter(ssmParameters.DB_CHARSET),
       DB_HOST: ecs.Secret.fromSsmParameter(ssmParameters.DB_HOST),
       DB_PASSWORD: ecs.Secret.fromSsmParameter(ssmParameters.DB_PASSWORD),

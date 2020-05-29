@@ -41,6 +41,10 @@
           "name": "API_HOSTNAME"
         },
         {
+          "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/ADPAGE_HOSTNAME",
+          "name": "ADPAGE_HOSTNAME"
+        },
+        {
           "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/DB_CHARSET",
           "name": "DB_CHARSET"
         },

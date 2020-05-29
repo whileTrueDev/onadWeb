@@ -21,6 +21,11 @@ export default function getSSMParams(scope: cdk.Construct) {
       parameterName: '/SOCKET_HOSTNAME'
     }
   );
+  const PRODUCTION_ADPAGE_HOSTNAME = ssm.StringParameter.fromStringParameterAttributes(
+    scope, 'PRODUCTION_ADPAGE_HOSTNAME', {
+      parameterName: '/ADPAGE_HOSTNAME'
+    }
+  );
 
   // Test Environment
   const TEST_REACT_HOSTNAME = ssm.StringParameter.fromStringParameterAttributes(
@@ -36,6 +41,11 @@ export default function getSSMParams(scope: cdk.Construct) {
   const TEST_SOCKET_HOSTNAME = ssm.StringParameter.fromStringParameterAttributes(
     scope, 'TEST_SOCKET_HOSTNAME', {
       parameterName: '/TEST/SOCKET_HOSTNAME'
+    }
+  );
+  const TEST_ADPAGE_HOSTNAME = ssm.StringParameter.fromStringParameterAttributes(
+    scope, 'TEST_ADPAGE_HOSTNAME', {
+      parameterName: '/TEST/ADPAGE_HOSTNAME'
     }
   );
 
@@ -263,9 +273,11 @@ export default function getSSMParams(scope: cdk.Construct) {
     TEST_REACT_HOSTNAME,
     TEST_API_HOSTNAME,
     TEST_SOCKET_HOSTNAME,
+    PRODUCTION_ADPAGE_HOSTNAME,
     PRODUCTION_REACT_HOSTNAME,
     PRODUCTION_API_HOSTNAME,
     PRODUCTION_SOCKET_HOSTNAME,
+    TEST_ADPAGE_HOSTNAME,
     DB_HOST,
     DB_PASSWORD,
     DB_PORT,
