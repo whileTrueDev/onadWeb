@@ -1,6 +1,7 @@
 import express from 'express';
 import responseHelper from '../../middlewares/responseHelper';
 import doQuery from '../../model/doQuery';
+import { AdPickData } from './CpaTypes';
 
 const router = express.Router();
 
@@ -73,21 +74,28 @@ router.route('/user')
   )
   .all(responseHelper.middleware.unusedMethod);
 
-
 router.route('/clicks')
   .get(
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
       const name = responseHelper.getParam('name', 'get', req);
       const query = `
-      SELECT
-      count(*) as bannerCount,
-      sum(clickCount) as totalClickCount
-      FROM adpageClick as lc
-      JOIN creatorLanding as cl
-      ON cl.creatorId = lc.creatorId
+      SELECT tc.*
+      FROM
+      ( 
+      SELECT count(*) as totalClickCount, creatorId
+      from tracking
+      WHERE costType = 'CPA' 
+      AND channel = 'adpage'
+      group by creatorId
+      ) as tc
+      JOIN
+      (
+      SELECT creatorId
+      FROM creatorInfo
       WHERE creatorTwitchId = ?
-      LIMIT 1
-        `;
+      ) AS ci
+      on tc.creatorId = ci.creatorId
+      `;
       const queryArray = [name];
       let lastResult;
       doQuery(query, queryArray)
@@ -124,79 +132,51 @@ router.route('/clicks')
   .all(responseHelper.middleware.unusedMethod);
 
 
-router.route('/banner')
+router.route('/campaigns')
   .get(
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
-      const NOT_DELETED_CAMPAIGN_STATE = 0;
-      const ON_STATE = 1;
       const name = responseHelper.getParam('name', 'get', req);
+      const nameQuery =
+        `
+      SELECT creatorId 
+      FROM creatorInfo
+      WHERE creatorTwitchId = ?
+      `
+      // 크리에이터: 수익금의 40%를 가져가므로.
       const query = `
-      SELECT
-      bannerSrc, clickCount, mi.marketerName, campaign.campaignId, lc.creatorId,
-      bannerDescription, companyDescription, links,
-      DATE_FORMAT(lc.regiDate, "%Y년 %m월 %d일") as regiDate
-      
-      FROM adpageClick as lc
-
-      JOIN marketerInfo as mi
-        ON SUBSTRING_INDEX(lc.campaignId, "_", 1) = mi.marketerId
-        
-      JOIN creatorLanding as cl
-        ON lc.creatorId = cl.creatorId
-        
-      JOIN campaign
-        ON lc.campaignId = campaign.campaignId
-        
-      JOIN bannerRegistered as br
-        ON campaign.bannerId = br.bannerId
-        
-      JOIN linkRegistered as  lr
-        ON lr.linkId = campaign.connectedLinkId
-        
-      WHERE creatorTwitchId = ? AND campaign.deletedState = 0
-        AND campaign.limitState != 1
-        AND campaign.onOff = 1 AND mi.marketerContraction = 1
-        AND campaign.optionType != 0
-      ORDER BY regiDate DESC`;
-      const queryArray = [name, NOT_DELETED_CAMPAIGN_STATE, ON_STATE, ON_STATE];
-
-      let lastResult;
-
-
-      doQuery(query, queryArray)
-        .then((row) => {
-          const { error, result } = row;
-          if (!error) {
-            // 쿼리 과정에서 오류가 아닌 경우
-            if (result.length > 0) {
-              // 쿼리 결과가 있는 경우
-              lastResult = {
-                error: null,
-                result: row.result.map((r: any) => ({
-                  ...r,
-                  links: JSON.parse(r.links)
-                }))
-              };
-              responseHelper.send(lastResult, 'get', res);
-
-            } else {
-              // 쿼리 결과가 없는 경우
-              lastResult = { error: true, result: null, };
-              responseHelper.send(lastResult, 'get', res);
-
-            }
-          } else {
-            // 쿼리 과정에서 오류인 경우
-            lastResult = { error: true, result: error, };
-            responseHelper.send(lastResult, 'get', res);
-
-          }
-        }).catch((reason) => {
-          // db 쿼리 수행 과정의 오류인 경우
-          console.log(`ERROR - [${new Date().toLocaleString()}] - /banner\n`, reason);
-          lastResult = { error: true, reason };
-          responseHelper.send(lastResult, 'get', res);
-        });
+      SELECT adlist.*,  mylist.campaignId, mylist.creatorId
+      FROM 
+      (
+      SELECT *, SUBSTR(campaignId, 8) as adId 
+      FROM adpageClick
+      WHERE creatorId = ?
+      AND state = 1
+      ) AS mylist
+      JOIN 
+      (
+      SELECT 
+      id, apOffer, apType, apCategory,
+      apPackage, apItemid, apAppTitle,
+      apHeadline, apVideo, apDailyCap,
+      apRemain, apAppPromoText, apKPI,
+      apPartner, apImages, apTrackingLink,
+      apHook, apEvent, FORMAT(apPayout * (4/10), 0) AS apPayout,
+      apIOSPayout, createdAt, updatedAt
+      FROM adPickCampaign
+      WHERE createdAt > DATE_SUB(NOW(), INTERVAL 10 minute)
+      AND apRemain > 5
+      ) AS adlist
+      on mylist.adId = adlist.apOffer
+      `;
+      const id = await doQuery(nameQuery, [name]);
+      const { creatorId } = id.result[0];
+      const row = await doQuery<AdPickData[]>(query, [creatorId]);
+      if (!row.error) {
+        const result = row.result.map((r) => ({ ...r, apImages: JSON.parse(r.apImages as string) }));
+        responseHelper.send({ error: null, result }, 'get', res);
+      } else {
+        responseHelper.send({ error: true, result: null }, 'get', res);
+      }
     })
   )
   .all(responseHelper.middleware.unusedMethod);
@@ -298,7 +278,7 @@ router.route('/banner/click')
       `;
       const ipInsertArray = [campaignId, creatorId, userIp, TRANSFER_TYPE_NUM];
 
-      // <이동>클릭 수 증가쿼리
+      // <이동>클릭 수 증가쿼리 전환에 대한 추적을 어떻게 발생 
       const clickUpdateQuery = `
       UPDATE adpageClick
       SET clickCount = clickCount + ?
