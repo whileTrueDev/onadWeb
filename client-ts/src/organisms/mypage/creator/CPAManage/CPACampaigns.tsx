@@ -89,7 +89,8 @@ export default function CPACampaigns({
   return (
     <GridContainer>
       {campaigns
-        .filter((cam) => !(cam.apType === AdpickCampaignTypeEnum.INSTALL))
+        .filter((cam) => !(cam.apType === AdpickCampaignTypeEnum.INSTALL)) // 설치형 제외
+        .filter((cam) => !(cam.apOffer === '4ed8e')) // 애드픽 회원가입 제외
         .map((item, idx) => (
           <GridItem key={item.apOffer} xs={12} md={4} lg={3} xl={3}>
             <Card>

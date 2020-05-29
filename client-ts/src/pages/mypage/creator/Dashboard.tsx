@@ -9,7 +9,9 @@ import ContractionCard, { ContractionDataType } from '../../../organisms/mypage/
 import NotificationCard from '../../../organisms/mypage/creator/Dashboard/NotificationCard';
 import IncomeCard, { IncomeCashRes } from '../../../organisms/mypage/creator/Dashboard/IncomeCard';
 import AdPageCard, { ClicksRes, LevelRes } from '../../../organisms/mypage/creator/Dashboard/AdPageCard';
-import IncomeChart, { IncomeChartData, IncomeChartParams } from '../../../organisms/mypage/creator/Dashboard/IncomeChart';
+import IncomeChart, {
+  IncomeChartData, IncomeChartParams
+} from '../../../organisms/mypage/creator/Dashboard/IncomeChart';
 import BannerCard, { CurrentBannerRes } from '../../../organisms/mypage/creator/Dashboard/BannerCard';
 import UrlCard, { OverlayUrlRes } from '../../../organisms/mypage/creator/Dashboard/OverlayUrlCard';
 import DashboardLoading from './Dashboard.loading';
