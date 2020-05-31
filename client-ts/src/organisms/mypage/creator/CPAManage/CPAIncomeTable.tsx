@@ -1,33 +1,26 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
 // atoms
+import { Typography } from '@material-ui/core';
 import GridContainer from '../../../../atoms/Grid/GridContainer';
 import GridItem from '../../../../atoms/Grid/GridItem';
 import MaterialTable from '../../../../atoms/Table/MaterialTable';
-
+import CPACampaignIcon from './sub/CPACampaignIcon';
 // types
 import {
-  AdPickIncome, AdpickCampaignTypeEnum
+  CampaignResult,
+  AdPickIncome,
+  AdpickCampaignTypeEnum,
+  AdpickCampaignStateEnum
 } from './AdpickTypes';
 
-
-const useStyles = makeStyles((theme) => ({
-  flex: {
-    display: 'flex', alignItems: 'center'
-  },
-  appLogo: {
-    width: 50, height: 50, borderRadius: 10, marginRight: theme.spacing(1)
-  }
-}));
-
 interface CPAIncomeTableProps {
+  campaigns: CampaignResult[];
   campaignIncomes: AdPickIncome[];
 }
 export default function CPAIncomeTable({
+  campaigns,
   campaignIncomes
 }: CPAIncomeTableProps): JSX.Element {
-  const classes = useStyles();
-
   return (
     <GridContainer>
       <GridItem xs>
@@ -38,16 +31,27 @@ export default function CPAIncomeTable({
             {
               width: '100px',
               render: (rowData): JSX.Element => (
-                <div className={classes.flex}>
-                  <img
-                    className={classes.appLogo}
-                    src={rowData.apImages?.icon}
-                    alt=""
-                  />
-                </div>
+                <CPACampaignIcon src={rowData.apImages?.icon} size="small" />
               )
             },
             { title: '캠페인', field: 'apAppTitle' },
+            {
+              title: '상태',
+              field: 'campaignState',
+              render: (rowData): JSX.Element => (
+                <>
+                  {!(campaigns.findIndex((cam) => rowData.apOffer === cam.apOffer) > -1) && (
+                    <Typography>중지(종료)</Typography>
+                  )}
+                  {rowData.campaignState === AdpickCampaignStateEnum.ACTIVE && (
+                    <Typography>등록됨</Typography>
+                  )}
+                  {rowData.campaignState === AdpickCampaignStateEnum.INACTIVE && (
+                    <Typography>제외됨</Typography>
+                  )}
+                </>
+              ),
+            },
             {
               title: '유형',
               field: 'apType',

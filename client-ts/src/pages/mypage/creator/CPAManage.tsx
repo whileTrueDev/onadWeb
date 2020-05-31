@@ -34,12 +34,14 @@ export default function CPAManage(): JSX.Element {
   return (
     <div style={{ margin: '0px auto', maxWidth: 1430 }}>
       {/* CPA 수익내역 테이블 */}
-      {getCampaignIncomes.loading && (<Skeleton height={400} variant="text" />)}
-      {!getCampaignIncomes.loading
+      {(getAdpickCampaigns.loading || getCampaignIncomes.loading) && (<Skeleton height={400} variant="text" />)}
+      {!getAdpickCampaigns.loading
+      && getAdpickCampaigns.data
+      && !getCampaignIncomes.loading
       && getCampaignIncomes.data
       && getCampaignIncomes.data.length > 0
       && (
-        <CPAIncomeTable campaignIncomes={getCampaignIncomes.data} />
+        <CPAIncomeTable campaigns={getAdpickCampaigns.data} campaignIncomes={getCampaignIncomes.data} />
       )}
 
       {/* 현재 가능한 CPA 캠페인 목록 */}

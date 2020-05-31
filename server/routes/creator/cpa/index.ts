@@ -34,15 +34,27 @@ router.route('/adpick/incomes')
       ORDER BY campaignLog.date DESC`;
       const queryArray = [creatorId];
 
+      // 크리에이터 cpa 페이지 상태
+      const stateQuery = `
+      SELECT campaignId, state
+      FROM adpageClick
+      WHERE creatorId = ?`;
+
       interface AdPickIncomeResult {
         apOffer: string; apType: string; apAppTitle: string; apImages: string;
         campaignId: string; campaignIncome: number; conversionCount: number;
       }
 
       const row = await doQuery<AdPickIncomeResult[]>(query, queryArray);
-      if (!row.error) {
+      const stateRow = await doQuery<AdPickState[]>(stateQuery, [creatorId]);
+      if (!row.error && !stateRow.error) {
         responseHelper.send(
-          row.result.map((c) => ({ ...c, apImages: JSON.parse(c.apImages) })),
+          row.result.map((c) => ({
+            ...c,
+            apImages: JSON.parse(c.apImages),
+            campaignState: stateRow.result
+              .find((x) => x.campaignId.replace(CAMPAIGNID_PREFIX, '') === c.apOffer)?.state,
+          })),
           'get',
           res
         );
@@ -66,7 +78,7 @@ router.route('/adpick/campaigns')
         apRemain, apAppPromoText, apKPI,
         apPartner, apImages, apTrackingLink,
         apHook, apEvent, FORMAT(apPayout * (4/10), 0) AS apPayout,
-        apIOSPayout, createdAt, updatedAt
+        apOS, apIOSPayout, createdAt, updatedAt
       FROM adPickCampaign
       WHERE createdAt > DATE_SUB(NOW(), INTERVAL 10 minute)
       `;

@@ -6,6 +6,7 @@ export interface AdPickIncome {
   apOffer: string; apType: string; apAppTitle: string;
   apImages?: AdPickImages;
   campaignId: string; campaignIncome: number; conversionCount: number;
+  campaignState?: number;
 }
 
 // adpick 응답 데이터 설명

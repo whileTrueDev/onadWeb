@@ -86,6 +86,14 @@ export default function CPACampaigns({
     }
   }
 
+  function renderOS(ostype?: string): string {
+    switch (ostype) {
+      case 'Android': return 'Android';
+      case 'IOS': return 'IOS';
+      default: return 'OS 상관없음';
+    }
+  }
+
   return (
     <GridContainer>
       {campaigns
@@ -117,6 +125,11 @@ export default function CPACampaigns({
                 {/* 캠페인 타입 */}
                 <Typography variant="body2">
                   {renderType(item.apType)}
+                </Typography>
+
+                {/* 캠페인 타입 */}
+                <Typography variant="body2">
+                  {renderOS(item.apOS)}
                 </Typography>
 
                 {/* DailyCap 과 남은 수 */}
