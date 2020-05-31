@@ -3,7 +3,7 @@ import classnames from 'classnames';
 import shortid from 'shortid';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import {
-  Typography, Divider, Collapse
+  Typography, Divider, Collapse, ButtonGroup
 } from '@material-ui/core';
 import TransparentButton from '@material-ui/core/Button';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDownOutlined';
@@ -35,6 +35,7 @@ const useStyles = makeStyles((theme) => ({
     textOverflow: 'ellipsis',
     maxWidth: '100%',
   },
+  topmargin2: { marginTop: theme.spacing(2) },
   left2: { paddingLeft: theme.spacing(2) },
   topbottom1: { margin: '8px 0px', },
   flex: { display: 'flex', alignItems: 'center' },
@@ -55,6 +56,14 @@ interface CPACampaignsProps {
   onStartClick: (item: CampaignResult) => () => void;
   onStopClick: (item: CampaignResult) => () => void;
 }
+
+// Lookup arrays
+const apTypeLookup = [
+  { name: AdpickCampaignTypeEnum.INSTALL, lookup: '앱설치' },
+  { name: AdpickCampaignTypeEnum.SIGNUP, lookup: '회원가입' },
+  { name: AdpickCampaignTypeEnum.EVENT, lookup: '이벤트' },
+  { name: AdpickCampaignTypeEnum.RESERVATION, lookup: '사전예약' }
+];
 export default function CPACampaigns({
   campaigns, onStartClick, onStopClick
 }: CPACampaignsProps): JSX.Element {
@@ -71,34 +80,56 @@ export default function CPACampaigns({
     }
   }
 
+  // 필터링 배열 state
+  const [filterArray, setFilterArray] = useState<string[]>(apTypeLookup.map((x) => x.name));
+  function handleFilterArray(item: string): void {
+    if (filterArray?.includes(item)) {
+      // 이미 목록에 있으면 제거
+      setFilterArray(filterArray?.filter((x) => x !== item));
+    } else {
+      // 목록에 없는 경우 목록에 추가
+      setFilterArray(filterArray?.concat(item));
+    }
+  }
 
   // ***********************************************
   // util 함수
 
-  // Rendering Campaign types
-  function renderType(typeNum: string): string {
-    switch (typeNum) {
-      case AdpickCampaignTypeEnum.INSTALL: return '앱설치';
-      case AdpickCampaignTypeEnum.SIGNUP: return '회원가입';
-      case AdpickCampaignTypeEnum.EVENT: return '이벤트';
-      case AdpickCampaignTypeEnum.RESERVATION: return '사전예약';
-      default: return typeNum;
-    }
-  }
-
   function renderOS(ostype?: string): string {
+    const apOSLookup = ['Android', 'IOS', 'OS 상관없음'];
     switch (ostype) {
-      case 'Android': return 'Android';
-      case 'IOS': return 'IOS';
-      default: return 'OS 상관없음';
+      case 'Android': return apOSLookup[0];
+      case 'IOS': return apOSLookup[1];
+      default: return apOSLookup[2];
     }
   }
 
   return (
     <GridContainer>
+      <GridItem xs={12} className={classes.topmargin2}>
+        <Typography variant="h6">참여형 광고 목록</Typography>
+        <ButtonGroup
+          className={classes.topmargin2}
+          color="primary"
+          aria-label="aptype button group"
+        >
+          {apTypeLookup.map((type) => (
+            <Button
+              key={type.name}
+              variant={filterArray.includes(type.name) ? 'contained' : 'outlined'}
+              onClick={(): void => {
+                handleFilterArray(type.name);
+              }}
+            >
+              {type.lookup}
+            </Button>
+          ))}
+        </ButtonGroup>
+      </GridItem>
       {campaigns
         // .filter((cam) => !(cam.apType === AdpickCampaignTypeEnum.INSTALL)) // 설치형 제외
         .filter((cam) => !(cam.apOffer === '4ed8e')) // 애드픽 회원가입 제외
+        .filter((cam) => filterArray.includes(cam.apType)) // 캠페인 타입 필터링
         .map((item, idx) => (
           <GridItem key={item.apOffer} xs={12} md={4} lg={3} xl={3}>
             <Card>
@@ -124,7 +155,7 @@ export default function CPACampaigns({
 
                 {/* 캠페인 타입 */}
                 <Typography variant="body2">
-                  {renderType(item.apType)}
+                  {apTypeLookup.find((x) => x.name === item.apType)?.lookup}
                 </Typography>
 
                 {/* 캠페인 타입 */}
