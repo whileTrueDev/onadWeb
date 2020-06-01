@@ -17,7 +17,7 @@ const DialogTitle = withStyles((theme: Theme) => ({
   root: {
     margin: 0,
     padding: theme.spacing(2),
-    backgroundColor: theme.palette.primary.dark,
+    backgroundColor: theme.palette.primary.main,
     color: theme.palette.common.white,
   },
   closeButton: {
@@ -50,7 +50,7 @@ const DialogTitle = withStyles((theme: Theme) => ({
         </Grid>
       </Grid>
     </MuiDialogTitle>
-  ));
+));
 
 const DialogContent = withStyles((theme) => ({
   root: {
