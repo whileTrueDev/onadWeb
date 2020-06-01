@@ -23,10 +23,7 @@ router.route('/adpick/mainIndicator')
           (SELECT COUNT(campaignId)
             FROM adpageClick
             WHERE creatorId = ? AND SUBSTRING_INDEX(adpageClick.campaignId, "_", 1)='adpick'
-          ) AS totalCPACount,
-          (SELECT creatorTwitchId 
-            FROM creatorInfo
-            WHERE creatorId = ?) AS creatorTwitchId
+          ) AS totalCPACount
       `;
 
       const row = await doQuery<CPAmainData[]>(query, [creatorId, creatorId, creatorId]);
