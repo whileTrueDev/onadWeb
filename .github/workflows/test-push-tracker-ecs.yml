@@ -8,7 +8,7 @@ name: <test> Deploy to Amazon ECS - "tracker"
 
 jobs:
   deploy:
-    name: Deploy
+    name: Test Deploy
     runs-on: ubuntu-latest
 
     steps:
