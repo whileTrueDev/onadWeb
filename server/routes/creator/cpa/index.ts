@@ -15,6 +15,7 @@ router.route('/adpick/mainIndicator')
 
       const query = `
         SELECT
+          (SELECT creatorTwitchId FROM creatorInfo WHERE creatorId = ?) AS creatorTwitchId,
           (SELECT IFNULL(SUM(cashToCreator), 0)
             FROM campaignLog
             WHERE type="CPA" AND creatorId = ?
@@ -25,7 +26,7 @@ router.route('/adpick/mainIndicator')
           ) AS totalCPACount
       `;
 
-      const row = await doQuery<CPAmainData[]>(query, [creatorId, creatorId]);
+      const row = await doQuery<CPAmainData[]>(query, [creatorId, creatorId, creatorId]);
       if (!row.error) {
         const result = row.result[0];
         const newResult = { ...result, creatorId };

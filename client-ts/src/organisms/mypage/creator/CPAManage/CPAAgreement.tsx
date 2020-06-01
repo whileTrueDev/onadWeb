@@ -81,7 +81,7 @@ const CPAAgreement = (): JSX.Element => {
                 <Button
                   color="secondary"
                   onClick={(): void => {
-                    const newTap = window.open(`${ADPAGE_HOST}/${CPAmainData.data.creatorId}`, '_blank');
+                    const newTap = window.open(`${ADPAGE_HOST}/${CPAmainData.data.creatorTwitchId}`, '_blank');
                     if (newTap) {
                       newTap.focus();
                     }
