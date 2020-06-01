@@ -25,17 +25,32 @@ interface ReChartBarProps<T> {
 export default function ReChartBar<DataType extends IncomeChartData>({
   data,
   legend = true,
-  dataKey = ['cpm_amount', 'cpc_amount'],
+  dataKey = ['cpm_amount', 'cpc_amount', 'cpa_amount'],
   containerHeight = 400,
   chartHeight = 300,
   chartWidth = 500,
   xAxisDataKey = 'date',
   tooltipLabelFormatter = (label: string | number): string | number => label,
   tooltipFormatter = (value: string | number | Array<string | number>, name: string): any => {
-    if (name === 'cpm_amount') { return [value, '배너광고']; } return [value, '클릭광고'];
+    if (name === 'cpm_amount') {
+      return [value, '배너광고'];
+    }
+    if (name === 'cpc_amount') {
+      return [value, '클릭광고'];
+    }
+    if (name === 'cpa_amount') {
+      return [value, '참여형광고'];
+    }
   },
-  legendFormatter = (value: string | number | Array<string | number>): string => {
-    if (value === 'cpm_amount') { return '배너광고'; } return '클릭광고';
+  legendFormatter = (value: string | number | Array<string | number>): any => {
+    if (value === 'cpm_amount') {
+      return '배너광고';
+    } if (value === 'cpc_amount') {
+      return '클릭광고';
+    }
+    if (value === 'cpa_amount') {
+      return '참여형광고';
+    }
   },
   nopreprocessing = false,
 }: ReChartBarProps<DataType>): JSX.Element {
@@ -74,11 +89,18 @@ export default function ReChartBar<DataType extends IncomeChartData>({
             stackId="a"
             fill={theme.palette.primary.light}
           />
-          {dataKey instanceof Array ? (
+          {dataKey instanceof Array && dataKey.length >= 2 ? (
             <Bar
               dataKey={dataKey[1]}
               stackId="a"
               fill={theme.palette.secondary.light}
+            />
+          ) : (null)}
+          {dataKey instanceof Array && dataKey.length >= 3 ? (
+            <Bar
+              dataKey={dataKey[2]}
+              stackId="a"
+              fill={theme.palette.success.light}
             />
           ) : (null)}
         </BarChart>

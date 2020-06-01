@@ -24,8 +24,15 @@ const useLayoutStyles = makeStyles((theme: Theme) => ({
     marginTop: '70px',
     padding: '15px 15px',
     minHeight: 'calc(100vh - 123px)',
+    [theme.breakpoints.down('xs')]: {
+      padding: 0
+    }
   },
   container: {
+    [theme.breakpoints.down('xs')]: {
+      paddingLeft: 15,
+      paddingRight: 15
+    },
     paddingRight: '15px',
     paddingLeft: '15px',
     marginRight: 'auto',

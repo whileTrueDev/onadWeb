@@ -11,7 +11,7 @@ export interface AdPickData {
   apVideo: string;
   apDailyCap: string; // 데일리 캡 (0 : 제한없음)
   apRemain: number; // 오늘 남은 수
-  apOS: 'Android' | 'iOS' | 'Both'; // 캠페인 OS (Both : Android, iOS 모두 가능)
+  apOS?: 'Android' | 'iOS' | 'Both'; // 캠페인 OS (Both : Android, iOS 모두 가능)
   // 홍보문구
   apAppPromoText?: string;
   apKPI?: string; // 미정산 조건

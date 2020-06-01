@@ -31,11 +31,10 @@ export default function AdDashboard(): JSX.Element {
   const failSnack = useDialog();
 
   return (
-    <>
-
+    <div style={{ margin: '0px auto', maxWidth: 1430 }}>
       <GridContainer>
         {!(levelGet.loading || clicksGet.loading || landingUrlGet.loading) ? (
-          <GridItem xs={12} xl={6}>
+          <GridItem xs={12}>
             <GridContainer>
               {/* 광고페이지 현황 */}
 
@@ -103,7 +102,7 @@ export default function AdDashboard(): JSX.Element {
 
           </GridItem>
         ) : (
-          <GridItem xs={12} xl={6}>
+          <GridItem xs={12}>
             <GridContainer>
               <GridItem xs={12} md={6} lg={3} xl={6}>
                 <Skeleton variant="text" height={250} />
@@ -146,6 +145,6 @@ export default function AdDashboard(): JSX.Element {
         onClose={failSnack.handleClose}
       />
 
-    </>
+    </div>
   );
 }

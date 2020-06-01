@@ -1,5 +1,9 @@
 // adpick 응답 데이터 설명
-export interface AdPickData {
+export interface CampaignResult extends AdPickCampaign {
+  state?: number; payout?: number;
+}
+
+export interface AdPickCampaign {
   apOffer: string; // 캠페인 코드
   apType: string; // 캠페인 종류 (1 : 앱설치형, 3 : 가입형, 4 : 이벤트형, 16 : 사전예약)
   apCategory: string; // 캠페인 카테고리 (1 : 게임, 2 : 쇼핑, 3 : 교육, 4 : 생활, 5 : 웹툰)
@@ -29,6 +33,11 @@ export interface AdPickData {
   apIOSPayout?: number | string;// iOS 캠페인의 payout (both, ios 캠페인의 경우에만)
 }
 
+
+export interface AdPickState { campaignId: string; state: number }
+
+
+export interface AdPickIncome { campaignId: string; payout: number }
 export interface CPAmainData {
   totalCPAIncome: number;
   totalCPACount: number;

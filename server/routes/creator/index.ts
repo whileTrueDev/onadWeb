@@ -4,12 +4,13 @@ import axios from 'axios';
 import responseHelper from '../../middlewares/responseHelper';
 import doQuery from '../../model/doQuery';
 import encrypto from '../../middlewares/encryption';
+import slack from '../../lib/slack/messageWithJson';
+// routers
 import incomeRouter from './income';
 import bannerRouter from './banner';
 import notificationRouter from './notification';
 import clicksRouter from './clicks';
 import cpaRouter from './cpa';
-import slack from '../../lib/slack/messageWithJson';
 
 const router = express.Router();
 router.use('/income', incomeRouter);
