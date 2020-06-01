@@ -149,7 +149,9 @@ export default function CPACampaigns({
                 <CPACampaignIcon src={item.apImages?.icon} />
 
                 {/* 캠페인 이름 */}
-                <Typography className={classnames(classes.title, classes.hardbold, classes.longline)}>
+                <Typography
+                  className={classnames(classes.title, classes.hardbold, classes.longline)}
+                >
                   {item.apAppTitle}
                 </Typography>
 

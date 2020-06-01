@@ -30,8 +30,8 @@ const useLayoutStyles = makeStyles((theme: Theme) => ({
   },
   container: {
     [theme.breakpoints.down('xs')]: {
-      paddingLeft: 10,
-      paddingRight: 10
+      paddingLeft: 15,
+      paddingRight: 15
     },
     paddingRight: '15px',
     paddingLeft: '15px',

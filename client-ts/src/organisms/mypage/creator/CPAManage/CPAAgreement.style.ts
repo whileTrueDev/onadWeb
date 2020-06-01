@@ -19,10 +19,11 @@ const useStyle = makeStyles((theme: Theme) => ({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    fontWeight: 800,
   },
   stepWrapRed: {
-    color: '#00acc1'
+    color: theme.palette.primary.main
   },
   stepWrap2: {
     marginBottom: 20
@@ -43,6 +44,9 @@ const useStyle = makeStyles((theme: Theme) => ({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-around',
+    [theme.breakpoints.down('xs')]: {
+      width: '100%'
+    }
   },
   agreementWrap: {
     width: '100%',

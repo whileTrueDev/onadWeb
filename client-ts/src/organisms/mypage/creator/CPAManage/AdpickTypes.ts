@@ -6,7 +6,7 @@ export interface AdPickIncome {
   apOffer: string; apType: string; apAppTitle: string;
   apImages?: AdPickImages;
   campaignId: string; campaignIncome: number; conversionCount: number;
-  campaignState?: number;
+  campaignState?: number; startDate: string; endDate: string;
 }
 
 // adpick 응답 데이터 설명
@@ -41,6 +41,12 @@ interface AdPickImages {
   banner640x100?: string; banner640x960?: string;
   banner960x640?: string; banner640x640?: string;
   banner1024x500?: string;
+}
+
+export interface AdPickMetrics {
+    creatorTwitchId: string;
+    totalCPAIncome: number;
+    totalCPACount: number;
 }
 export enum AdpickCampaignStateEnum {
   ACTIVE = 1, INACTIVE = 2
