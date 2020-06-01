@@ -21,7 +21,7 @@ import bannersRouter from './routes/banners';
 import mailRouter from './routes/mail';
 import noticeRouter from './routes/notice';
 import trackingRouter from './routes/tracking';
-
+import adpageRouter from './routes/adpage';
 // Middleware or custom modules
 import taxBillScheduler from './middlewares/scheduler/taxBillScheduler';
 import dailyLimitScheduler from './middlewares/scheduler/dailyLimitScheduler';
@@ -37,6 +37,8 @@ process.env.NODE_ENV = (process.env.NODE_ENV
   && (process.env.NODE_ENV).trim().toLowerCase() === 'production')
   ? 'production' : 'development';
 const FRONT_HOST = process.env.REACT_HOSTNAME;
+const ADPAGE_HOST = process.env.ADPAGE_HOSTNAME;
+
 interface Err {
   status?: number;
   stack?: string;
@@ -88,8 +90,9 @@ class OnadWebApi {
     // use CORS
     // define white-list
     const whiteList = [
-      'https://onad.io', 'https://test.onad.io',
+      'https://onad.io', 'https://test.onad.io', 'https://test-cpa.onad.io',
       FRONT_HOST!, 'http://localhost:3001',
+      ADPAGE_HOST!, 'http://localhost:3011'
     ];
     const corsOptions = {
       origin: whiteList,
@@ -129,7 +132,7 @@ class OnadWebApi {
     this.app.use('/mail', mailRouter);
     this.app.use('/notice', noticeRouter);
     this.app.use('/tracking', trackingRouter);
-
+    this.app.use('/adpage', adpageRouter);
     // Error handling
     // catch 404 and forward to error handler
     this.app.use((req, res, next) => {
