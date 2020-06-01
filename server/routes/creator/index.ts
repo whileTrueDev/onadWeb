@@ -8,6 +8,7 @@ import incomeRouter from './income';
 import bannerRouter from './banner';
 import notificationRouter from './notification';
 import clicksRouter from './clicks';
+import cpaRouter from './cpa';
 import slack from '../../lib/slack/messageWithJson';
 
 const router = express.Router();
@@ -15,6 +16,7 @@ router.use('/income', incomeRouter);
 router.use('/banner', bannerRouter);
 router.use('/notification', notificationRouter);
 router.use('/clicks', clicksRouter);
+router.use('/cpa', cpaRouter);
 
 
 router.route('/')
@@ -48,7 +50,7 @@ router.route('/')
     }),
   )
   .patch(
-    // 크리에이터 계약 OR IP 업데이트
+    // 크리에이터 계약 OR IP 업데이트 OR CPA 계약 동의
     responseHelper.middleware.checkSessionExists,
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
       const { creatorId, creatorName } = responseHelper.getSessionData(req);
@@ -87,6 +89,19 @@ router.route('/')
           doQuery(campaignQuery, [creatorId, campaignList, campaignList]),
           doQuery(landingQuery, [creatorId, creatorName])
         ])
+          .then(() => {
+            responseHelper.send([true], 'PATCH', res);
+          })
+          .catch((error) => {
+            responseHelper.promiseError(error, next);
+          });
+      } else if (type === 'CPAAgreement') {
+        const CPAAgreementUpdateQuery = `
+          UPDATE creatorInfo
+          SET CPAAgreement = ?
+          WHERE creatorInfo.creatorId = ?`;
+
+        doQuery(CPAAgreementUpdateQuery, [1, creatorId])
           .then(() => {
             responseHelper.send([true], 'PATCH', res);
           })

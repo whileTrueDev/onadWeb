@@ -8,6 +8,13 @@ const useCardIconStyle = makeStyles((theme: Theme) => ({
     marginRight: '15px',
     float: 'left',
   },
+  cardIcon2: {
+    backgroundColor: '#ffb74d',
+    padding: '15px',
+    marginTop: '-20px',
+    marginRight: '15px',
+    float: 'left',
+  },
 }));
 
 export default useCardIconStyle;

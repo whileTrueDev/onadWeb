@@ -8,19 +8,13 @@
                 "logDriver": "awslogs",
                 "secretOptions": null,
                 "options": {
-                    "awslogs-group": "/ecs/onad-web",
+                    "awslogs-group": "/ecs/onad-adpick-crawl",
                     "awslogs-region": "ap-northeast-2",
                     "awslogs-stream-prefix": "ecs"
                 }
             },
             "entryPoint": null,
-            "portMappings": [
-                {
-                    "hostPort": 3001,
-                    "protocol": "tcp",
-                    "containerPort": 3001
-                }
-            ],
+            "portMappings": [],
             "command": null,
             "linuxParameters": null,
             "cpu": 0,
@@ -32,28 +26,40 @@
             "workingDirectory": null,
             "secrets": [
                 {
-                    "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/REACT_HOSTNAME",
-                    "name": "PUBLIC_URL"
+                    "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/DB_CHARSET",
+                    "name": "DB_CHARSET"
                 },
                 {
-                    "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/REACT_HOSTNAME",
-                    "name": "REACT_APP_REACT_HOSTNAME"
+                    "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/DB_DATABASE",
+                    "name": "DB_DATABASE"
                 },
                 {
-                    "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/API_HOSTNAME",
-                    "name": "REACT_APP_API_HOSTNAME"
+                    "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/DB_HOST",
+                    "name": "DB_HOST"
                 },
                 {
-                    "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/GOOGLE_MAP_API_KEY",
-                    "name": "REACT_APP_GOOGLE_MAP_API_KEY"
+                    "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/DB_PASSWORD",
+                    "name": "DB_PASSWORD"
+                },
+                {
+                    "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/DB_PORT",
+                    "name": "DB_PORT"
+                },
+                {
+                    "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/DB_USER",
+                    "name": "DB_USER"
+                },
+                {
+                    "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/ADPICK_AFF_ID",
+                    "name": "ADPICK_AFF_ID"
                 }
             ],
             "dockerSecurityOptions": null,
             "memory": null,
-            "memoryReservation": 800,
+            "memoryReservation": 500,
             "volumesFrom": [],
             "stopTimeout": null,
-            "image": "hwasurr/onad_web",
+            "image": "hwasurr/onad-adpick-crawl",
             "startTimeout": null,
             "firelensConfiguration": null,
             "dependsOn": null,
@@ -70,13 +76,13 @@
             "dockerLabels": null,
             "systemControls": null,
             "privileged": null,
-            "name": "onad-web"
+            "name": "onad-adpick-crawl"
         }
     ],
     "placementConstraints": [],
     "memory": "512",
     "taskRoleArn": null,
-    "family": "onad-web",
+    "family": "onad-adpick-crawl",
     "pidMode": null,
     "requiresCompatibilities": [
         "FARGATE"
