@@ -216,7 +216,7 @@ const LandingMain = (props) => {
         });
     }
     // eslint-disable-next-line
-  }, []);
+  }, [clickData]);
 
   return (
     <Grid
@@ -253,7 +253,7 @@ const LandingMain = (props) => {
         {!campaignData.loading && campaignData.data && (
           <LandingImages campaignData = {campaignData}  isDesktopWidth={isDesktopWidth} name={match.params.name} />
         )}
-        {!campaignData.loading && campaignData.data  && campaignData.data.length == 0 && (<LandingNoAd />)}
+        {!campaignData.loading && campaignData.data  && campaignData.data.length === 0 && (<LandingNoAd />)}
       </Grid>
     </Grid>
   );

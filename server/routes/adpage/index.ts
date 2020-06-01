@@ -79,16 +79,16 @@ router.route('/clicks')
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
       const name = responseHelper.getParam('name', 'get', req);
       const query = `
-      SELECT tc.*
+      SELECT IFNULL(tc.tcc,0) as totalClickCount , ci.creatorId
       FROM
       ( 
-      SELECT count(*) as totalClickCount, creatorId
+      SELECT count(*) as tcc, creatorId
       from tracking
       WHERE costType = 'CPA' 
       AND channel = 'adpage'
       group by creatorId
       ) as tc
-      JOIN
+      RIGHT JOIN
       (
       SELECT creatorId
       FROM creatorInfo
