@@ -38,3 +38,20 @@ export interface AdPickState { campaignId: string; state: number }
 
 
 export interface AdPickIncome { campaignId: string; payout: number }
+export interface CPAmainData {
+  totalCPAIncome: number;
+  totalCPACount: number;
+}
+
+export interface CPADetail {
+  title?: string;
+  apImages?: { // 사이즈별 홍보이미지
+    icon?: string; icon57?: string; icon114?: string; icon256?: string;
+    banner640x100?: string; banner640x960?: string;
+    banner960x640?: string; banner640x640?: string;
+    banner1024x500?: string;
+  };
+  campaignIncome: number;
+  startDate: string;
+  endDate: string;
+}

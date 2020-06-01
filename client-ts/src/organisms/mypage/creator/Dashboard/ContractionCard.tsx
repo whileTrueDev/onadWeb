@@ -30,6 +30,7 @@ export interface ContractionDataType {
   realName: string;
   creatorLogo: string;
   NowIp: string;
+  CPAAgreement: number;
 }
 
 interface ContractionCardProps {

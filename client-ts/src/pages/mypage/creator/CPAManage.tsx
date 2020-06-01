@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { Skeleton } from '@material-ui/lab';
+import GridContainer from '../../../atoms/Grid/GridContainer';
+import GridItem from '../../../atoms/Grid/GridItem';
 import useGetRequest from '../../../utils/hooks/useGetRequest';
 import useDialog from '../../../utils/hooks/useDialog';
 
@@ -7,6 +9,7 @@ import CPACampaigns from '../../../organisms/mypage/creator/CPAManage/CPACampaig
 import CPAIncomeTable from '../../../organisms/mypage/creator/CPAManage/CPAIncomeTable';
 import CPAConfirmDialog from '../../../organisms/mypage/creator/CPAManage/CPAConfirmDialog';
 import CPACampaignsLoading from '../../../organisms/mypage/creator/CPAManage/CPACampaignsLoading';
+import CPAAgreement from '../../../organisms/mypage/creator/CPAManage/CPAAgreement';
 // types
 import { CampaignResult, AdPickIncome } from '../../../organisms/mypage/creator/CPAManage/AdpickTypes';
 
@@ -33,6 +36,12 @@ export default function CPAManage(): JSX.Element {
 
   return (
     <div style={{ margin: '0px auto', maxWidth: 1430 }}>
+      <GridContainer>
+        <GridItem sm={12} md={10}>
+          <CPAAgreement />
+        </GridItem>
+      </GridContainer>
+
       {/* CPA 수익내역 테이블 */}
       {(getAdpickCampaigns.loading || getCampaignIncomes.loading) && (<Skeleton height={400} variant="text" />)}
       {!getAdpickCampaigns.loading
@@ -78,7 +87,6 @@ export default function CPAManage(): JSX.Element {
           selectedCampaign={selectedCampaign}
         />
       )}
-
     </div>
   );
 }
