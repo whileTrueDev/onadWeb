@@ -36,7 +36,7 @@ function AgreementContentDialog({
       )}
     >
       {source.agreementText.split('\n').map((sentence) => (
-        <p key={shortid.generate()}>{sentence}</p>
+        <p style={{ fontWeight: 500 }} key={shortid.generate()}>{sentence}</p>
       ))}
     </Dialog>
   );
