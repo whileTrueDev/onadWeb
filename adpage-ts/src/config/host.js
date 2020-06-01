@@ -1,3 +1,3 @@
-const apiHOST = process.env.NODE_ENV === 'production' ? 'https://api.onad.io' : 'http://localhost:3000';
+const apiHOST = process.env.REACT_APP_API_HOSTNAME!;
 
 export default apiHOST;
