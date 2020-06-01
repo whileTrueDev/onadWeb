@@ -17,7 +17,7 @@ const DialogTitle = withStyles((theme: Theme) => ({
   root: {
     margin: 0,
     padding: theme.spacing(2),
-    backgroundColor: theme.palette.info.main,
+    backgroundColor: theme.palette.primary.main,
     color: theme.palette.common.white,
   },
   closeButton: {
@@ -35,7 +35,7 @@ const DialogTitle = withStyles((theme: Theme) => ({
     },
   },
 }))(({ children, classes, onClose }:
-  { children: React.ReactNode; classes: any; onClose: () => void}) => (
+  { children: React.ReactNode; classes: any; onClose: () => void }) => (
     <MuiDialogTitle disableTypography className={classes.root}>
       <Grid container direction="row" justify="space-between" alignItems="center" spacing={1}>
         <Grid item>
@@ -83,15 +83,15 @@ function CustomDialog({
       open={open}
       {...rest}
     >
-      { title ? (
+      {title ? (
         <DialogTitle onClose={onClose}>
           {title}
         </DialogTitle>
-      ) : null }
+      ) : null}
       <DialogContent dividers>
         {children}
       </DialogContent>
-      { buttons
+      {buttons
         ? (
           <DialogActions>
             {buttons}

@@ -49,11 +49,7 @@
         }
     },
     "rules": {
-        "max-len": [
-            2,
-            120
-        ],
-        "arrow-parens": "error",
+        "lines-between-class-members": 0,
         "react/display-name": 0,
         "react/jsx-props-no-spreading": "warn",
         "react/jsx-filename-extension": [
@@ -72,7 +68,7 @@
             }
         ],
         "class-methods-use-this": [
-            "warn",
+            "error",
             {
                 "exceptMethods": [
                     "authorizationParams"
@@ -126,9 +122,5 @@
         "browser": true,
         "jest": true,
         "es6": true
-    },
-    "ignorePatterns": [
-        "node_modules/",
-        "dist/"
-    ]
+    }
 }

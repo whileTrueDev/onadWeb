@@ -7,13 +7,15 @@ import BrandingWatermark from '@material-ui/icons/BrandingWatermarkOutlined';
 import Reorder from '@material-ui/icons/Reorder';
 import Work from '@material-ui/icons/Work';
 import Mouse from '@material-ui/icons/Mouse'; // 마우스 아이콘
+import HowToRegIcon from '@material-ui/icons/HowToReg';
 
 // 크리에이터 라우터
 import CreatorCampaignManage from './creator/CampaignManage';
 import CreatorDashboard from './creator/Dashboard';
 import CreatorManual from './creator/Manual';
 import CreatorMyPage from './creator/Mypage';
-import CreatorAdDashboard from './creator/ClickAdManage';
+import CreatorClickAdManage from './creator/ClickAdManage';
+import CreatorCPAManage from './creator/CPAManage';
 
 // 마케터 라우터
 
@@ -57,7 +59,14 @@ const dashboardRoutes: MypageRoutes = {
       path: '/ad-dashboard',
       name: '내 클릭광고',
       icon: Mouse,
-      component: CreatorAdDashboard,
+      component: CreatorClickAdManage,
+      layout: '/mypage/creator',
+    },
+    {
+      path: '/cpa-dashboard',
+      name: '참여형 광고',
+      icon: HowToRegIcon,
+      component: CreatorCPAManage,
       layout: '/mypage/creator',
     },
     {

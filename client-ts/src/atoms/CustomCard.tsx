@@ -28,15 +28,16 @@ interface CustomCardProps {
   secondComponent?: React.ReactNode;
   buttonComponent?: React.ReactNode;
   children: React.ReactNode;
+  backgroundColor?: boolean;
 }
 export default function CustomCard({
-  iconComponent, secondComponent, buttonComponent, children
+  iconComponent, secondComponent, buttonComponent, children, backgroundColor
 }: CustomCardProps): JSX.Element {
   const classes = useStyles();
   return (
     <Card className={classes.root}>
       <CardHeader stats icon>
-        <CardIcon color="blueGray">
+        <CardIcon color="blueGray" className={backgroundColor ? ('yellowBack') : (null)}>
           {iconComponent}
         </CardIcon>
         {secondComponent && (
