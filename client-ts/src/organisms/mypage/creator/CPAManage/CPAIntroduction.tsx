@@ -45,7 +45,7 @@ export default function CPAIntroduction(): JSX.Element {
             className={classes.stepWrap}
           >
             <Filter2Icon color="primary" fontSize="small" className={classes.stepTitle} />
-            광고페이지에 등록
+            광고페이지에 광고 등록
           </Typography>
           <img src="/pngs/cpa/detailcampaign.png" alt="step3" className={classes.stepIMG} />
         </Grid>
