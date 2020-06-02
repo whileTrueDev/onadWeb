@@ -10,8 +10,9 @@ import CPAConfirmDialog from '../../../organisms/mypage/creator/CPAManage/CPACon
 import CPACampaignsLoading from '../../../organisms/mypage/creator/CPAManage/CPACampaigns.loading';
 import CPAAgreement from '../../../organisms/mypage/creator/CPAManage/CPAAgreement';
 import CPAIndicator from '../../../organisms/mypage/creator/CPAManage/CPAIndicator';
-import AgreementContentDialog from '../../../organisms/mypage/creator/CPAManage/sub/AgreementContentDialog';
+import AgreementContentDialog from '../../../organisms/mypage/creator/CPAManage/AgreementContentDialog';
 import MainIndicatorLoading from '../../../organisms/mypage/creator/CPAManage/sub/MainIndicator.loading';
+import HowToCPADialog from '../../../organisms/mypage/creator/CPAManage/HowToCPADialog';
 // source
 import textsource from '../../../organisms/mypage/creator/CPAManage/source/AgreementText';
 // types
@@ -48,6 +49,9 @@ export default function CPAManage(): JSX.Element {
   // 상세 수익정보 dialog
   const incomeTableDialog = useDialog();
 
+  // 광고 시작 방법 dialog
+  const howToCPADialog = useDialog();
+
 
   return (
     <div style={{ margin: '0px auto', maxWidth: 1430 }}>
@@ -80,6 +84,7 @@ export default function CPAManage(): JSX.Element {
                       CPAmainData={CPAmainData.data}
                       handleIncomeTableDialogOpen={incomeTableDialog.handleOpen}
                       handleAgreementDialogOpen={agreementDialog.handleOpen}
+                      handleHowToCPADialogOpen={howToCPADialog.handleOpen}
                       callback={contractionGet.doGetRequest}
                     />
                   </GridItem>
@@ -141,6 +146,15 @@ export default function CPAManage(): JSX.Element {
                       campaignIncomes={getCampaignIncomes.data}
                     />
                   )}
+
+                {/* CPA광고 시작 방법 다이얼로그 */}
+                {!CPAmainData.loading && CPAmainData.data && (
+                <HowToCPADialog
+                  open={howToCPADialog.open}
+                  handleClose={howToCPADialog.handleClose}
+                  CPAmainData={CPAmainData.data}
+                />
+                )}
 
               </>
             )}
