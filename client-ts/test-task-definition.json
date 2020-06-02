@@ -58,7 +58,7 @@
             "memoryReservation": 500,
             "volumesFrom": [],
             "stopTimeout": null,
-            "image": "hwasurr/onad_web:d12f8213c1ba98d19d02e60ad16cd0223e15d25c",
+            "image": "hwasurr/onad_web",
             "startTimeout": null,
             "firelensConfiguration": null,
             "dependsOn": null,

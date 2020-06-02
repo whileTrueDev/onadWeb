@@ -106,7 +106,6 @@ export default function CPAManage(): JSX.Element {
                   onClose={startDialog.handleClose}
                   callback={(): void => {
                     getAdpickCampaigns.doGetRequest();
-                    CPAmainData.doGetRequest();
                     startDialog.handleClose();
                   }}
                   selectedCampaign={selectedCampaign}
@@ -122,7 +121,6 @@ export default function CPAManage(): JSX.Element {
                   onClose={stopDialog.handleClose}
                   callback={(): void => {
                     getAdpickCampaigns.doGetRequest();
-                    CPAmainData.doGetRequest();
                     stopDialog.handleClose();
                   }}
                   selectedCampaign={selectedCampaign}

@@ -107,6 +107,7 @@ export default class OnADTestAwsStack extends cdk.Stack {
     const onadWeb = makeTaskDefinition(this, onadClientName, onadClientRepo, onadTaskRole, {
       REACT_APP_REACT_HOSTNAME: ecs.Secret.fromSsmParameter(ssmParameters.TEST_REACT_HOSTNAME),
       REACT_APP_API_HOSTNAME: ecs.Secret.fromSsmParameter(ssmParameters.TEST_API_HOSTNAME),
+      REACT_APP_ADPAGE_HOSTNAME: ecs.Secret.fromSsmParameter(ssmParameters.TEST_ADPAGE_HOSTNAME),
       REACT_APP_GOOGLE_MAP_API_KEY: ecs.Secret.fromSsmParameter(ssmParameters.GOOGLE_MAP_API_KEY),
     }, onadClientPort);
 
