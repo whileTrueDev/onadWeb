@@ -216,7 +216,7 @@ const LandingMain = (props) => {
         });
     }
     // eslint-disable-next-line
-  }, [clickData]);
+  }, []);
 
   return (
     <Grid
