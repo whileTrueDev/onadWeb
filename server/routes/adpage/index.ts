@@ -83,10 +83,9 @@ router.route('/clicks')
       FROM
       ( 
       SELECT count(*) as tcc, creatorId
-      from tracking
-      WHERE costType = 'CPA' 
-      AND channel = 'adpage'
-      group by creatorId
+      from campaignLog
+      WHERE type = 'CPA' 
+      group by creatorId 
       ) as tc
       RIGHT JOIN
       (
