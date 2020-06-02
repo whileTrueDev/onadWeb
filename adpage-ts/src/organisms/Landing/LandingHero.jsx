@@ -149,7 +149,7 @@ export default function LandingHero(props) {
             <Grid item xs={9}>
               <Typography variant="h4" gutterBottom className={classes.title}>{`${user}`}</Typography>
             </Grid>
-
+{/* 
             {!levelData.loading && !levelData.errorState && levelData.data && (
             <Grid item xs={3}>
               <LevelBar
@@ -157,7 +157,7 @@ export default function LandingHero(props) {
                 exp={Math.ceil(levelData.data.exp / 5)}
               />
             </Grid>
-            )}
+            )} */}
           </Grid>
         )}
         <Grid container justify="flex-start" spacing={isDesktopWidth ? 2 : 1}>
@@ -191,7 +191,7 @@ export default function LandingHero(props) {
       </Grid>
 
       {/* loyalty level visualization */}
-      {isDesktopWidth && !levelData.loading && !levelData.errorState && levelData.data ? (
+      {/* {isDesktopWidth && !levelData.loading && !levelData.errorState && levelData.data ? (
         <Grid item sm={1} xs={3}>
           <Tooltip textArray={[`${user}님의 광고 레벨입니다.`, '광고페이지에서의 상호작용에 따라', ' 레벨이 변화합니다.']}>
             <div>
@@ -204,7 +204,7 @@ export default function LandingHero(props) {
         </Grid>
       ) : (
         null
-      )}
+      )} */}
 
     </Grid>
   );

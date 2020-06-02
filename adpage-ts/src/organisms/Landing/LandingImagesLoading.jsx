@@ -14,6 +14,7 @@ const useStyles = makeStyles(theme => ({
     [theme.breakpoints.down('sm')]: {
       marginTop: theme.spacing(2),
     },
+    borderColor: `rgba(0, 0, 0, 0.12)`
   },
   imageSection: {
     marginTop: theme.spacing(5)
