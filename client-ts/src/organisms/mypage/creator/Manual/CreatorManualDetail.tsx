@@ -39,20 +39,20 @@ function ManualProgramSelector({ source }: ManualProgramSelectorProps): JSX.Elem
               <div>
                 <ProgramSelector source={source} handleTypeChange={handleTypeChange} />
                 {type !== null && type === 'XSplit Broadcaster' && (
-                <Grow in={type === 'XSplit Broadcaster'} timeout={{ enter: 500 }}>
-                  <div>
-                    <Divider />
-                    <ManualContent source={source.xsplit as Source[]} />
-                  </div>
-                </Grow>
+                  <Grow in={type === 'XSplit Broadcaster'} timeout={{ enter: 500 }}>
+                    <div>
+                      <Divider />
+                      <ManualContent source={source.xsplit as Source[]} />
+                    </div>
+                  </Grow>
                 )}
                 {type !== null && type === 'OBS Studio' && (
-                <Grow in={type === 'OBS Studio'} timeout={{ enter: 500 }}>
-                  <div>
-                    <Divider />
-                    <ManualContent source={source.obs as Source[]} />
-                  </div>
-                </Grow>
+                  <Grow in={type === 'OBS Studio'} timeout={{ enter: 500 }}>
+                    <div>
+                      <Divider />
+                      <ManualContent source={source.obs as Source[]} />
+                    </div>
+                  </Grow>
                 )}
               </div>
             )

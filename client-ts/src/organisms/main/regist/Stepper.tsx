@@ -54,7 +54,7 @@ function RegistStepper({ platform }: { platform: string }): JSX.Element {
         .then((res) => {
           const { error } = res.data;
           if (!error) {
-            alert('등록한 이메일로 인증메일을 발송 하였습니다. 이메일을 확인하세요!');
+            alert('회원가입이 완료되었습니다. 다시 로그인 해주세요.');
             setLoading(0);
             history.push('/');
           } else {

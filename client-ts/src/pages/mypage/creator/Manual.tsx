@@ -35,8 +35,9 @@ function CreatorManual(): JSX.Element {
             if (manual === 2) return (<CreatorManualDetail source={sources.programSetting} />);
             if (manual === 3) return (<CreatorManualDetail source={sources.income} />);
             if (manual === 4) return (<CreatorManualDetail source={sources.landing} />);
-            if (manual === 5) return (<CreatorManualDetail source={sources.bannerlist} />);
-            if (manual === 6) return (<CreatorManualDetail source={sources.withdrawal} />);
+            if (manual === 5) return (<CreatorManualDetail source={sources.adpage} />);
+            if (manual === 6) return (<CreatorManualDetail source={sources.bannerlist} />);
+            if (manual === 7) return (<CreatorManualDetail source={sources.withdrawal} />);
             return null;
           })()}
         </GridItem>
