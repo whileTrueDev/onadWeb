@@ -79,13 +79,17 @@ router.route('/')
         doQuery(cashQuery, [marketerId, 0]),
       ])
         .then(() => {
-          next();
+          responseHelper.send({
+            error: null,
+            result: `Email skip!`
+          }, 'POST', res);
+          // next();
         })
         .catch((error) => {
           responseHelper.promiseError(error, next);
         });
     }),
-    sendEmailAuth
+    // sendEmailAuth
   )
   .patch(
     responseHelper.middleware.checkSessionExists, // session 확인이 필요한 경우.
