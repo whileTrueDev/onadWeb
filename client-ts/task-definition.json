@@ -44,7 +44,7 @@
                     "name": "REACT_APP_API_HOSTNAME"
                 },
                 {
-                    "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/REACT_APP_ADPAGE_HOSTNAME",
+                    "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/ADPAGE_HOSTNAME",
                     "name": "REACT_APP_ADPAGE_HOSTNAME"
                 },
                 {
