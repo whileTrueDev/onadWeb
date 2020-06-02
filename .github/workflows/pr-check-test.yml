@@ -13,6 +13,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v1
 
+      - name: Set up python3
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.x
+
       - name: CDK Diff
         uses: scottbrenner/aws-cdk-action@master
         with:
