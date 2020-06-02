@@ -47,7 +47,7 @@ jobs:
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
           task-definition: adpage-ts/test-task-definition.json
-          container-name: TEST-onad-web
+          container-name: TEST-onad-adpage
           image: ${{ secrets.DOCKER_USERNAME }}/onad-adpage:${{ github.sha }}
 
       - name: Deploy Amazon ECS task definition
