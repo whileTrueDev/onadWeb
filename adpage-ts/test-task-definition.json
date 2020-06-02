@@ -8,7 +8,7 @@
                 "logDriver": "awslogs",
                 "secretOptions": null,
                 "options": {
-                    "awslogs-group": "/ecs/TEST-onad-adpage",
+                    "awslogs-group": "ecs/TEST-onad-adpage",
                     "awslogs-region": "ap-northeast-2",
                     "awslogs-stream-prefix": "ecs"
                 }
@@ -42,10 +42,6 @@
                 {
                     "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/API_HOSTNAME",
                     "name": "REACT_APP_API_HOSTNAME"
-                },
-                {
-                    "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/GOOGLE_MAP_API_KEY",
-                    "name": "REACT_APP_GOOGLE_MAP_API_KEY"
                 }
             ],
             "dockerSecurityOptions": null,

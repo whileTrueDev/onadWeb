@@ -36,7 +36,7 @@ jobs:
           name: ${{ secrets.DOCKER_USERNAME }}/onad_socket
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-          tags: ${{ github.sha }}
+          tags: "${{ github.sha }},latest"
 
       - name: Fill in the new image ID in the Amazon ECS task definition
         id: task-def

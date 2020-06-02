@@ -60,6 +60,13 @@ export default class OnADTestAwsStack extends cdk.Stack {
       allowAllOutbound: true
     });
     trackerSecGrp.connections.allowFromAnyIpv4(ec2.Port.tcp(3030));
+    // Adpage
+    const adpageSecGrp = new ec2.SecurityGroup(this, 'adPageSecurityGroup', {
+      vpc: myVpc,
+      securityGroupName: 'OnADAdAdpage-test-SecurityGroup',
+      allowAllOutbound: true
+    });
+    adpageSecGrp.connections.allowFromAnyIpv4(ec2.Port.tcp(3011));
 
     // *********************************************
     // Create IAM Role for Fargate task, CloudWatch
@@ -121,13 +128,19 @@ export default class OnADTestAwsStack extends cdk.Stack {
       TWITCH_CLIENT_SECRET: ecs.Secret.fromSsmParameter(ssmParameters.TWITCH_CLIENT_SECRET),
       SESSION_STORE_DB_HOST: ecs.Secret.fromSsmParameter(ssmParameters.SESSION_STORE_DB_HOST),
       SESSION_STORE_DB_USER: ecs.Secret.fromSsmParameter(ssmParameters.SESSION_STORE_DB_USER),
-      SESSION_STORE_DB_PASSWORD: ecs.Secret.fromSsmParameter(ssmParameters.SESSION_STORE_DB_PASSWORD),
-      SESSION_STORE_DB_DATABASE: ecs.Secret.fromSsmParameter(ssmParameters.SESSION_STORE_DB_DATABASE),
+      SESSION_STORE_DB_PASSWORD: ecs.Secret.fromSsmParameter(
+        ssmParameters.SESSION_STORE_DB_PASSWORD
+      ),
+      SESSION_STORE_DB_DATABASE: ecs.Secret.fromSsmParameter(
+        ssmParameters.SESSION_STORE_DB_DATABASE
+      ),
       SESSION_STORE_DB_PORT: ecs.Secret.fromSsmParameter(ssmParameters.SESSION_STORE_DB_PORT),
       SLACK_ALARM_URL: ecs.Secret.fromSsmParameter(ssmParameters.SLACK_ALARM_URL),
       NAVER_CLOUD_ACCESS_KEY: ecs.Secret.fromSsmParameter(ssmParameters.NAVER_CLOUD_ACCESS_KEY),
       NAVER_CLOUD_SECRET_KEY: ecs.Secret.fromSsmParameter(ssmParameters.NAVER_CLOUD_SECRET_KEY),
-      NAVER_CLOUD_BIZMESSAGE_SERVICE_ID: ecs.Secret.fromSsmParameter(ssmParameters.NAVER_CLOUD_BIZMESSAGE_SERVICE_ID),
+      NAVER_CLOUD_BIZMESSAGE_SERVICE_ID: ecs.Secret.fromSsmParameter(
+        ssmParameters.NAVER_CLOUD_BIZMESSAGE_SERVICE_ID
+      ),
       GOOGLE_CLIENT_ID: ecs.Secret.fromSsmParameter(ssmParameters.GOOGLE_CLIENT_ID),
       GOOGLE_CLIENT_SECRET: ecs.Secret.fromSsmParameter(ssmParameters.GOOGLE_CLIENT_SECRET),
       NAVER_CLIENT_ID: ecs.Secret.fromSsmParameter(ssmParameters.NAVER_CLIENT_ID),
@@ -148,16 +161,17 @@ export default class OnADTestAwsStack extends cdk.Stack {
     const onadBannerBroadRepo = 'hwasurr/onad_socket';
     const onadBannerBroadPort = 3002;
     const onadBannerBroadName = 'TEST-onad-banner-broad';
-    const onadBannerBroad = makeTaskDefinition(this, onadBannerBroadName, onadBannerBroadRepo, onadTaskRole, {
-      SOCKET_HOSTNAME: ecs.Secret.fromSsmParameter(ssmParameters.TEST_SOCKET_HOSTNAME),
-      DB_HOST: ecs.Secret.fromSsmParameter(ssmParameters.DB_HOST),
-      DB_USER: ecs.Secret.fromSsmParameter(ssmParameters.DB_USER),
-      DB_PASSWORD: ecs.Secret.fromSsmParameter(ssmParameters.DB_PASSWORD),
-      DB_DATABASE: ecs.Secret.fromSsmParameter(ssmParameters.DB_DATABASE),
-      DB_CHARSET: ecs.Secret.fromSsmParameter(ssmParameters.DB_CHARSET),
-      DB_PORT: ecs.Secret.fromSsmParameter(ssmParameters.DB_PORT),
-    },
-    onadBannerBroadPort);
+    const onadBannerBroad = makeTaskDefinition(this,
+      onadBannerBroadName, onadBannerBroadRepo, onadTaskRole, {
+        SOCKET_HOSTNAME: ecs.Secret.fromSsmParameter(ssmParameters.TEST_SOCKET_HOSTNAME),
+        DB_HOST: ecs.Secret.fromSsmParameter(ssmParameters.DB_HOST),
+        DB_USER: ecs.Secret.fromSsmParameter(ssmParameters.DB_USER),
+        DB_PASSWORD: ecs.Secret.fromSsmParameter(ssmParameters.DB_PASSWORD),
+        DB_DATABASE: ecs.Secret.fromSsmParameter(ssmParameters.DB_DATABASE),
+        DB_CHARSET: ecs.Secret.fromSsmParameter(ssmParameters.DB_CHARSET),
+        DB_PORT: ecs.Secret.fromSsmParameter(ssmParameters.DB_PORT),
+      },
+      onadBannerBroadPort);
 
     // tracker - Task Definition
     const onadTrackerRepo = 'hwasurr/onad_tracker';
@@ -171,6 +185,15 @@ export default class OnADTestAwsStack extends cdk.Stack {
       DB_CHARSET: ecs.Secret.fromSsmParameter(ssmParameters.DB_CHARSET),
       DB_PORT: ecs.Secret.fromSsmParameter(ssmParameters.DB_PORT),
     }, onadTrackerPort);
+
+    // Adpage - Task Definition
+    const onadAdpageRepo = 'hwasurr/onad-adpage';
+    const onadAdpagePort = 3011;
+    const onadAdpageName = 'TEST-onad-adpage';
+    const onadAdpage = makeTaskDefinition(this, onadAdpageName, onadAdpageRepo, onadTaskRole, {
+      REACT_APP_API_HOSTNAME: ecs.Secret.fromSsmParameter(ssmParameters.TEST_API_HOSTNAME),
+      PUBLIC_URL: ecs.Secret.fromSsmParameter(ssmParameters.TEST_ADPAGE_HOSTNAME),
+    }, onadAdpagePort);
 
     // *********************************************
     // Create ECS Service
@@ -215,6 +238,17 @@ export default class OnADTestAwsStack extends cdk.Stack {
         securityGroup: trackerSecGrp,
       }
     );
+    // AD page
+    const onadAdpageService = new ecs.FargateService(
+      this, `${onadAdpageName}-Service`, {
+        cluster: myCluster,
+        serviceName: `${onadAdpageName}-Service`,
+        taskDefinition: onadAdpage.taskDefinition,
+        assignPublicIp: true,
+        desiredCount: 1,
+        securityGroup: adpageSecGrp,
+      }
+    );
 
     // *********************************************
     // Create Target groups
@@ -245,6 +279,13 @@ export default class OnADTestAwsStack extends cdk.Stack {
       port: onadTrackerPort,
       protocol: elbv2.ApplicationProtocol.HTTP,
       targets: [onadTrackerService],
+    });
+    const onadAdpageGroup = new elbv2.ApplicationTargetGroup(this, 'onadLBAdpageTargetGroup', {
+      vpc: myVpc,
+      targetGroupName: `${onadAdpageName}-Target`,
+      port: onadAdpagePort,
+      protocol: elbv2.ApplicationProtocol.HTTP,
+      targets: [onadAdpageService],
     });
 
     // *********************************************
@@ -325,6 +366,13 @@ export default class OnADTestAwsStack extends cdk.Stack {
       hostHeader: onadTrackerHostHeader,
       targetGroups: [onadTrackerGroup],
 
+    });
+
+    const onadAdpageHostHeader = `test-cpa.${DOMAIN}`;
+    onadHttpsListener.addTargetGroups('onadAdpageGroup', {
+      priority: 5,
+      hostHeader: onadAdpageHostHeader,
+      targetGroups: [onadAdpageGroup],
     });
     onadHttpsListener.connections.allowDefaultPortFromAnyIpv4('https ALB open to world');
 
