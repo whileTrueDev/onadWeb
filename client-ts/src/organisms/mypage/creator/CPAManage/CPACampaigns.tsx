@@ -70,7 +70,7 @@ export default function CPACampaigns({
   // classes
   const classes = useStyles();
 
-  // 상세보기 open state
+  // 광고설명 open state
   const [openIndex, setOpenIdx] = useState<number| null>(null);
   function handleOpen(num: number): void {
     if (num === openIndex) {
@@ -183,21 +183,25 @@ export default function CPACampaigns({
                 </Typography>
               </div>
 
-              {/* 상세보기 버튼 */}
+              {/* 광고설명 버튼 */}
               <div className={classnames(classes.flex, classes.left2)}>
-                <TransparentButton
-                  size="small"
-                  onClick={(): void => { handleOpen(idx); }}
-                >
-                  {openIndex === idx ? (<ArrowDropDownIcon />) : (<ArrowRightIcon />)}
-                  <Typography variant="caption">
-                    상세보기
-                    {!(item.apHeadline || item.apKPI || item.apAppPromoText) && ' 없음'}
-                  </Typography>
-                </TransparentButton>
+                {(item.apHeadline || item.apKPI || item.apAppPromoText) ? (
+                  <TransparentButton
+                    style={{ height: 32 }}
+                    size="small"
+                    onClick={(): void => { handleOpen(idx); }}
+                  >
+                    {openIndex === idx ? (<ArrowDropDownIcon />) : (<ArrowRightIcon />)}
+                    <Typography variant="caption">
+                      광고 설명
+                    </Typography>
+                  </TransparentButton>
+                ) : (
+                  <div style={{ height: 32 }} />
+                )}
               </div>
 
-              {/* 상세보기 패널 */}
+              {/* 광고설명 패널 */}
               {(item.apHeadline || item.apKPI || item.apAppPromoText) && (
               <Collapse in={openIndex === idx}>
                 <div className={classes.left2}>
