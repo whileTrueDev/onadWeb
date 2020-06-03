@@ -1,5 +1,5 @@
 import React from 'react';
-import { useTheme, makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import {
   Typography, Stepper, Step, StepLabel
 } from '@material-ui/core';
@@ -35,16 +35,15 @@ export default function CPAIncomeTable({
   handleClose,
   CPAmainData
 }: CPAIncomeTableProps): JSX.Element {
-  const theme = useTheme();
   const classes = useStyles();
   const getAdpageLink = (): string => `${ADPAGE_HOST}/${CPAmainData.creatorTwitchId}`;
 
   // Stepper
   const [activeStep, setActiveStep] = React.useState(0);
   const steps = [
-    { icon: Filter1Icon, title: '트위치 패널에 배너 등록하기' },
-    { icon: Filter2Icon, title: '광고페이지에 참여형 광고 등록하기' },
-    { icon: Filter3Icon, title: '시청자 참여시 수익 발생' },
+    { icon: Filter1Icon, shortTitle: '패널 등록', title: '트위치 패널에 배너 등록하기' },
+    { icon: Filter2Icon, shortTitle: '광고 등록', title: '광고페이지에 참여형 광고 등록하기' },
+    { icon: Filter3Icon, shortTitle: '수익 발생', title: '시청자 참여시 수익 발생' },
   ];
   function handleJumpTo(idx: number): void {
     setActiveStep(idx);
@@ -70,7 +69,7 @@ export default function CPAIncomeTable({
     switch (step) {
       case 0: return (
         <GridItem container direction="column" alignItems="center" className={classes.container}>
-          <img src="/pngs/cpa/참여형패널설정.png" alt="" style={{ maxWidth: 700 }} />
+          <img src="/pngs/cpa/참여형패널설정.png" alt="" style={{ maxWidth: '100%' }} />
 
           <br />
           <Typography variant="body2">* 기존 클릭광고용 패널과는 별도이며, 추가적인 등록이 필요합니다.</Typography>
@@ -88,19 +87,19 @@ export default function CPAIncomeTable({
           <Typography variant="body2">이미지 클릭시 다운로드됩니다.</Typography>
           <br />
           <a download="온애드참여형광고배너1.png" href="/pngs/cpa/온애드참여형광고배너1.png">
-            <img src="/pngs/cpa/온애드참여형광고배너1.png" alt="" />
+            <img src="/pngs/cpa/온애드참여형광고배너1.png" alt="" width="100%" />
           </a>
           <a download="온애드참여형광고배너2.png" href="/pngs/cpa/온애드참여형광고배너2.png">
-            <img src="/pngs/cpa/온애드참여형광고배너2.png" alt="" />
+            <img src="/pngs/cpa/온애드참여형광고배너2.png" alt="" width="100%" />
           </a>
           <a download="온애드참여형광고배너3.png" href="/pngs/cpa/온애드참여형광고배너3.png">
-            <img src="/pngs/cpa/온애드참여형광고배너3.png" alt="" />
+            <img src="/pngs/cpa/온애드참여형광고배너3.png" alt="" width="100%" />
           </a>
         </GridItem>
       );
       case 1: return (
         <GridItem container direction="column" alignItems="center" className={classes.container}>
-          <img src="/pngs/dashboard/manual/new_creator/creator-adpage-05.png" alt="" style={{ maxWidth: 500 }} />
+          <img src="/pngs/dashboard/manual/new_creator/creator-adpage-05.png" alt="" style={{ maxWidth: '100%' }} />
 
           <br />
           <Typography variant="body2">* 자신의 광고페이지에 업로드할 광고를 선택하여 등록합니다.</Typography>
@@ -162,7 +161,7 @@ export default function CPAIncomeTable({
                   )}
                 >
                   <Typography style={{ fontWeight: 800 }}>
-                    {step.title}
+                    {step.shortTitle}
                   </Typography>
                 </StepLabel>
               </Step>
