@@ -50,7 +50,7 @@ const useStyles = makeStyles(theme => ({
 
 }));
 
-export default function CPACampaigns({ campaigns, isDesktopWidth, name }) {
+export default function CPACampaigns({ campaigns, isDesktopWidth, isAndroid }) {
   const theme = useTheme();
   const classes = useStyles();
   // 상세보기 open state
@@ -62,6 +62,7 @@ export default function CPACampaigns({ campaigns, isDesktopWidth, name }) {
       setOpenIdx(num);
     }
   }
+
 
   // Rendering Campaign types
   function renderType(typeNum) {
@@ -137,7 +138,10 @@ export default function CPACampaigns({ campaigns, isDesktopWidth, name }) {
                   color="primary"
                   onClick={() => {
                     // 우리 클릭 트래킹 추가.
-                    //  안드로이드 일때,
+                    //  안드로이드 && (앱설치 + 회원가입)일때, 
+                    if(isAndroid && (item.apType === '1'  || item.apType === '3')){
+                      alert('안드로이드는 PC 또는 모바일 웹 브라우저에서 참여가 가능합니다.');
+                    }
                     axios.post(`${apiHOST}/adpage/banner/click`, { campaignId: item.campaignId, creatorId: item.creatorId });
                     window.location.href = item.apTrackingLink;
                   }}

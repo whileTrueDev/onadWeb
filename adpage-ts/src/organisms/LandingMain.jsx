@@ -251,7 +251,7 @@ const LandingMain = (props) => {
      
         {campaignData.loading && (<LandingImagesLoading isDesktopWidth={isDesktopWidth} />)}
         {!campaignData.loading && campaignData.data && (
-          <LandingImages campaignData = {campaignData}  isDesktopWidth={isDesktopWidth} name={match.params.name} />
+          <LandingImages campaignData = {campaignData} isAndroid={Number(getScreen() === '1' && getOsIndex() ==='3')} isDesktopWidth={isDesktopWidth} name={match.params.name} />
         )}
         {!campaignData.loading && campaignData.data  && campaignData.data.length === 0 && (<LandingNoAd />)}
       </Grid>
