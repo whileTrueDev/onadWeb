@@ -3,9 +3,7 @@ from os.path import join, dirname
 import os
 from dotenv import load_dotenv
 import sys
-from . import csv_loader
 
-path_dir = './new_csv'
 dotenv_path = join(dirname(__file__), '.env')
 load_dotenv(verbose=True)
 
