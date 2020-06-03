@@ -63,6 +63,15 @@ export default function CPACampaigns({ campaigns, isDesktopWidth, isAndroid }) {
     }
   }
 
+  function renderOS(appOS){
+    switch (appOS) {
+      case "Both": return 'Android/iOS';
+      case "Android": return 'Android 전용';
+      case "iOS": return 'iOS 전용';
+      default: return null;
+    }
+  }
+
 
   // Rendering Campaign types
   function renderType(typeNum) {
@@ -76,7 +85,7 @@ export default function CPACampaigns({ campaigns, isDesktopWidth, isAndroid }) {
   }
   
   return (
-    <GridContainer justify={isDesktopWidth ? "flex-start" : "center"} >
+    <GridContainer style={{width: '100%'}} justify={isDesktopWidth ? "flex-start" : "center"} >
       {campaigns
         // .filter((cam) => !(cam.apType === AdpickCampaignTypeEnum.INSTALL))
         .map((item, idx) => (
@@ -104,6 +113,23 @@ export default function CPACampaigns({ campaigns, isDesktopWidth, isAndroid }) {
                 >
                   {item.apAppTitle}
                 </Typography>
+                
+                {item.apOS ?
+                <Typography style={{
+                  fontWeight: 500,
+                  display: 'block',
+                  overflow: 'hidden',
+                  whiteSpace: 'nowrap',
+                  textOverflow: 'ellipsis',
+                  maxWidth: '100%',
+                  lineHeight: 1.5
+                }}
+                >
+                  {renderOS(item.apOS)}
+                </Typography>
+                :
+                 <div style={{ height: 32 }} />
+              }
                 {/* 캠페인 타입 */}
               </div>
 
