@@ -154,7 +154,7 @@ router.route('/campaigns')
       JOIN 
       (
       SELECT 
-      id, apOffer, apType, apCategory,
+      id, apOS, apOffer, apType, apCategory,
       apPackage, apItemid, apAppTitle,
       apHeadline, apVideo, apDailyCap,
       apRemain, apAppPromoText, apKPI,
