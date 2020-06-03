@@ -67,9 +67,9 @@ def adpick_crawler():
         'ui-depth3')[0].find_elements_by_tag_name("li")[2].click()  # navbar-전환 클릭
     print('navbar-transfer')
     driver.find_elements_by_class_name(
-        'om-select-custom-select')[0].find_elements_by_tag_name('option')[0].click()  # 오늘 날짜 선택
+        'om-select-custom-select')[0].find_elements_by_tag_name('option')[1].click()  # 어제 날짜 선택
 
-    print('select today')
+    print('select yesterday')
 
     req = driver.page_source
     soup = BeautifulSoup(req, 'html.parser')
