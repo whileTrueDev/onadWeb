@@ -68,12 +68,15 @@ def adpick_crawler():
     print('navbar-transfer')
     driver.find_elements_by_class_name(
         'om-select-custom-select')[0].find_elements_by_tag_name('option')[1].click()  # 어제 날짜 선택
+    driver.implicitly_wait(1)
 
     print('select yesterday')
 
     req = driver.page_source
+    driver.implicitly_wait(1)
+
     soup = BeautifulSoup(req, 'html.parser')
-    driver.implicitly_wait(2)
+    driver.implicitly_wait(1)
     tr_list = soup.find('tbody').find_all()
 
     # tr들 리스트에서 td들 뽑음
