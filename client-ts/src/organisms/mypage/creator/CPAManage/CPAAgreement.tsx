@@ -38,23 +38,23 @@ const CPAAgreement = ({
         {CAPAgreementPatch.loading ? (
           <CircularProgress />
         ) : (
-            <>
-              <Grid item className={classes.text} xs={12} md={8} sm={8}>
-                <div className={classes.agreementWrap}>
-                  {textsource.agreementText.split('\n').map((sentence) => (
-                    <p key={shortid.generate()}>{sentence}</p>
-                  ))}
-                </div>
-              </Grid>
-              <Grid item className={classes.box} xs={12} md={4} sm={4}>
-                <FormControlLabel
-                  control={<Checkbox checked={check} onChange={handleChange} color="primary" />}
-                  label="참여형 광고의 유의사항을 확인하였습니다"
-                  labelPlacement="end"
-                />
-              </Grid>
-            </>
-          )}
+          <>
+            <Grid item className={classes.text} xs={12} md={8} sm={8}>
+              <div className={classes.agreementWrap}>
+                {textsource.agreementText.split('\n').map((sentence) => (
+                  <p key={shortid.generate()}>{sentence}</p>
+                ))}
+              </div>
+            </Grid>
+            <Grid item className={classes.box} xs={12} md={4} sm={4}>
+              <FormControlLabel
+                control={<Checkbox checked={check} onChange={handleChange} color="primary" />}
+                label="참여형 광고의 유의사항을 확인하였습니다"
+                labelPlacement="end"
+              />
+            </Grid>
+          </>
+        )}
       </Grid>
     </CustomCard>
 
