@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import shortId from 'shortid';
 // material-ui
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import Grid from '@material-ui/core/Grid';
@@ -13,8 +12,6 @@ import ButtonBase from '@material-ui/core/ButtonBase';
 import axios from 'axios';
 import setNumberFormat from '../../utils/lib/setNumberFormat';
 // own component
-import LevelBar from '../../atoms/LevelBar/LevelBar';
-import Tooltip from '../../atoms/Tooltip/Tooltip';
 import Dynamic from './Dynamic';
 import apiHOST from '../../config/host';
 
@@ -91,7 +88,7 @@ const useStyles = makeStyles(theme => ({
 
 export default function LandingHero(props) {
   const {
-    user, userLogo, userDesc, levelData,
+    user, userLogo,
     isDesktopWidth, bannerCount, totalClickCount, mezzoData, name
   } = props;
   const classes = useStyles();
@@ -149,15 +146,6 @@ export default function LandingHero(props) {
             <Grid item xs={9}>
               <Typography variant="h4" gutterBottom className={classes.title}>{`${user}`}</Typography>
             </Grid>
-{/* 
-            {!levelData.loading && !levelData.errorState && levelData.data && (
-            <Grid item xs={3}>
-              <LevelBar
-                level={levelData.data.level}
-                exp={Math.ceil(levelData.data.exp / 5)}
-              />
-            </Grid>
-            )} */}
           </Grid>
         )}
         <Grid container justify="flex-start" spacing={isDesktopWidth ? 2 : 1}>
@@ -185,9 +173,11 @@ export default function LandingHero(props) {
         </Grid>
 
         <br />
-        {userDesc && userDesc.split('\n').map(row => (
-          <Typography variant="body1" key={shortId.generate()}>{row}</Typography>
-        ))}
+        <Typography variant="h6">광고에 참여해서 크리에이터를 응원해주세요!</Typography> 
+        <Typography variant="h6">{user}님에게 광고 수익이 돌아갑니다.<span role="img" aria-label="money">💸💸</span></Typography> 
+        <Typography variant="body2">*참여 반영에는 시간이 소요될 수 있습니다. </Typography>
+        
+
       </Grid>
 
       {/* loyalty level visualization */}

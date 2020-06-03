@@ -73,10 +73,11 @@ export default function CPACampaigns({ campaigns, isDesktopWidth, name }) {
       default: return typeNum;
     }
   }
+  
   return (
     <GridContainer justify={isDesktopWidth ? "flex-start" : "center"} >
       {campaigns
-        .filter((cam) => !(cam.apType === AdpickCampaignTypeEnum.INSTALL))
+        // .filter((cam) => !(cam.apType === AdpickCampaignTypeEnum.INSTALL))
         .map((item, idx) => (
           <GridItem key={item.apOffer} xs={10} md={4} lg={3} xl={3}>
             <Card className= {classes.card}>
@@ -136,6 +137,7 @@ export default function CPACampaigns({ campaigns, isDesktopWidth, name }) {
                   color="primary"
                   onClick={() => {
                     // 우리 클릭 트래킹 추가.
+                    //  안드로이드 일때,
                     axios.post(`${apiHOST}/adpage/banner/click`, { campaignId: item.campaignId, creatorId: item.creatorId });
                     window.location.href = item.apTrackingLink;
                   }}
