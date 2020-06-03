@@ -35,7 +35,18 @@ export default function CPAIntroduction(): JSX.Element {
             <Filter1Icon color="primary" fontSize="small" className={classes.stepTitle} />
             트위치 패널 설정
           </Typography>
-          <img src="/pngs/cpa/campaign.png" alt="step2" className={classes.stepIMG} />
+          <img src="/pngs/cpa/pannel.png" alt="step2" className={classes.stepIMG} />
+          {textsource.step.first.split('\n').map((text) => (
+            <Typography
+              key={text}
+              variant="body1"
+              align="center"
+              gutterBottom
+              className={classes.stepDetailWrap}
+            >
+              {text}
+            </Typography>
+          ))}
         </Grid>
         <Grid item className={classes.step} xs={12} md={4} sm={4}>
           <Typography
@@ -47,7 +58,18 @@ export default function CPAIntroduction(): JSX.Element {
             <Filter2Icon color="primary" fontSize="small" className={classes.stepTitle} />
             광고페이지에 광고 등록
           </Typography>
-          <img src="/pngs/cpa/detailcampaign.png" alt="step3" className={classes.stepIMG} />
+          <img src="/pngs/cpa/adpage.png" alt="step3" className={classes.stepIMG} />
+          {textsource.step.second.split('\n').map((text) => (
+            <Typography
+              key={text}
+              variant="body1"
+              align="center"
+              gutterBottom
+              className={classes.stepDetailWrap}
+            >
+              {text}
+            </Typography>
+          ))}
         </Grid>
         <Grid item className={classes.step} xs={12} md={4} sm={4}>
           <Typography
@@ -59,7 +81,18 @@ export default function CPAIntroduction(): JSX.Element {
             <Filter3Icon color="primary" fontSize="small" className={classes.stepTitle} />
             수익 발생
           </Typography>
-          <img src="/pngs/cpa/agreement.png" alt="step1" className={classes.stepIMG} />
+          <img src="/pngs/cpa/income.png" alt="step1" className={classes.stepIMG} />
+          {textsource.step.third.split('\n').map((text) => (
+            <Typography
+              key={text}
+              variant="body1"
+              align="center"
+              gutterBottom
+              className={classes.stepDetailWrap}
+            >
+              {text}
+            </Typography>
+          ))}
         </Grid>
       </Grid>
     </CustomCard>

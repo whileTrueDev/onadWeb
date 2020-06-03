@@ -124,7 +124,7 @@ const Sidebar = ({
         <Drawer
           variant="permanent"
           open
-          classes={{ paper: classes.desktopPaper }}
+          classes={{ paper: classNames(classes.desktopPaper) }}
           PaperProps={{ elevation: 10 }}
           ModalProps={{
             keepMounted: true, // Better open performance on mobile.
