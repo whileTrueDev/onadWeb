@@ -93,7 +93,7 @@ export default function CPAIndicator({
             </Button>
           </div>
           <Typography variant="body1" align="center" gutterBottom className={classes.stepWrapRed}>
-            * 참여형 광고로 인한 실적(수익금, 운영수, 상세내역) 반영에는 1~2일이 소요됩니다
+            * 참여형 광고로 인한 실적(수익금, 수익발생 광고수, 수익내역) 반영에는 최대 1~2일이 소요됩니다
           </Typography>
           <Typography variant="body1" align="center" gutterBottom className={classes.stepWrapRed}>
             * 모든 참여형 광고 캠페인은 광고주의 진행/중단 요청에 따라 임의로 종료될 수 있습니다

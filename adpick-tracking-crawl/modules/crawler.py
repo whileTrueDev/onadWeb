@@ -5,6 +5,14 @@ import csv
 import datetime
 from bs4 import BeautifulSoup
 import sys
+
+import os
+from dotenv import load_dotenv
+
+load_dotenv(verbose=True)
+ADPICK_MEM_ID = os.environ.get('ADPICK_MEM_ID')
+ADPICK_MEM_PWD = os.environ.get('ADPICK_MEM_PWD')
+
 now = datetime.datetime.now().strftime('%Y-%m-%d')
 
 print('%s crawling 시작' % now)
@@ -46,8 +54,8 @@ def adpick_crawler():
 
     print('adpick enter succeed')
 
-    driver.find_element_by_id('memid').send_keys('oxquiz@onad.io')  # id 입력
-    driver.find_element_by_id('mempwd').send_keys('rkdghktn12!@')  # pwd 입력
+    driver.find_element_by_id('memid').send_keys(ADPICK_MEM_ID)  # id 입력
+    driver.find_element_by_id('mempwd').send_keys(ADPICK_MEM_PWD)  # pwd 입력
 
     print('typing id, pw succeed')
 
