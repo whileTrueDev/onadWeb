@@ -1,20 +1,24 @@
 from modules import crawler
 from modules import db_insert
-from os.path import join, dirname
+from os.path import join, dirname, abspath
 import os
 from dotenv import load_dotenv
 import pandas as pd
 import time
-dotenv_path = join(dirname(__file__), '.env')
+
+ROOT_PATH = dirname(abspath(__file__))
+UNIX_CHROME_DRIVER_PATH = join(ROOT_PATH, 'chromedriver')
+dotenv_path = join(ROOT_PATH, '.env')
 load_dotenv(verbose=True)
 
 col_list = ['costType', 'marketerId', 'creatorId', 'os_version', 'browser',
             'device', 'browser_version', 'browser_engine', 'browser_engine_version', 'channel']
 while True:
     try:
-        referrer_list = crawler.adpick_crawler()  # 엑셀 다운로드 및 referrer 리스트 얻음
+        referrer_list = crawler.adpick_crawler(
+            UNIX_CHROME_DRIVER_PATH)  # 엑셀 다운로드 및 referrer 리스트 얻음
         time.sleep(3)
-        path_dir = './xlsx'
+        path_dir = join(ROOT_PATH, 'xlsx')
         file_list = os.listdir(path_dir)
 
         data_xls = pd.read_excel(
@@ -61,7 +65,7 @@ while True:
         print('crawling error retry')
         time.sleep(5)
         continue
-    else:
+    except Exception as e:
         print('other error')
         print(e)
         break
