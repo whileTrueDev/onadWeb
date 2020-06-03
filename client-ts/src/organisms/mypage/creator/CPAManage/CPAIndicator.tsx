@@ -19,11 +19,13 @@ interface CPAIndicatorProps {
   callback: () => void;
   handleIncomeTableDialogOpen: () => void;
   handleAgreementDialogOpen: () => void;
+  handleHowToCPADialogOpen: () => void;
 }
 export default function CPAIndicator({
   CPAmainData,
   handleIncomeTableDialogOpen,
-  handleAgreementDialogOpen
+  handleAgreementDialogOpen,
+  handleHowToCPADialogOpen
 }: CPAIndicatorProps): JSX.Element {
   const classes = useStyle();
   const theme = useTheme();
@@ -71,10 +73,11 @@ export default function CPAIndicator({
         <Grid item className={classes.box} xs={12} md={8} sm={8}>
           <div className={classes.buttonWrap}>
             <Button
-              color="primary"
-              onClick={handleAgreementDialogOpen}
+              color="secondary"
+              onClick={handleHowToCPADialogOpen}
+              style={{ color: 'white' }}
             >
-              유의사항 확인
+              광고 시작하기
             </Button>
             <Button
               color="primary"
@@ -83,11 +86,10 @@ export default function CPAIndicator({
               수익내역 확인
             </Button>
             <Button
-              color="secondary"
-              onClick={handleAdpageOpen}
-              style={{ color: 'white' }}
+              color="primary"
+              onClick={handleAgreementDialogOpen}
             >
-              내 광고페이지
+              유의사항 확인
             </Button>
           </div>
           <Typography variant="body1" align="center" gutterBottom className={classes.stepWrapRed}>

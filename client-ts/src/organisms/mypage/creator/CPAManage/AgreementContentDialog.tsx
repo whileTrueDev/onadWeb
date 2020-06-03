@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button, Typography } from '@material-ui/core';
 import shortid from 'shortid';
-import Dialog from '../../../../../atoms/Dialog/Dialog';
+import Dialog from '../../../../atoms/Dialog/Dialog';
 
 interface AgreementContentDialogProps {
   changeHandle: { open: boolean; handleOpen: () => void; handleClose: () => void };
