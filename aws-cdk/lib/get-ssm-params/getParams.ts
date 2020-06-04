@@ -269,6 +269,16 @@ export default function getSSMParams(scope: cdk.Construct) {
     }
   );
 
+  const ADPICK_MEM_ID = ssm.StringParameter.fromStringParameterAttributes(
+    scope, 'ADPICK_MEM_ID', { parameterName: '/ADPICK_MEM_ID' }
+  );
+
+  const ADPICK_MEM_PWD = ssm.StringParameter.fromSecureStringParameterAttributes(
+    scope, 'ADPICK_MEM_PWD', {
+      parameterName: '/ADPICK_MEM_PWD', version: 1
+    }
+  );
+
   return {
     TEST_REACT_HOSTNAME,
     TEST_API_HOSTNAME,
@@ -313,6 +323,8 @@ export default function getSSMParams(scope: cdk.Construct) {
     CRAWL_YOUTUBE_API_KEY,
     TWITCH_BOT_OAUTH_TOKEN,
     SLACK_ALARM_URL,
-    ADPICK_AFF_ID
+    ADPICK_AFF_ID,
+    ADPICK_MEM_ID,
+    ADPICK_MEM_PWD
   };
 }
