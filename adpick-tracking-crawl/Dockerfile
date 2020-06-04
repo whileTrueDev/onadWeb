@@ -25,4 +25,5 @@ RUN chmod +x chromedriver
 
 RUN pip install --no-cache-dir -r requirements.txt
 
+
 CMD [ "python", "run.py" ]
