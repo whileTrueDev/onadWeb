@@ -44,6 +44,10 @@
                     "name": "REACT_APP_API_HOSTNAME"
                 },
                 {
+                    "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/ADPAGE_HOSTNAME",
+                    "name": "REACT_APP_ADPAGE_HOSTNAME"
+                },
+                {
                     "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/GOOGLE_MAP_API_KEY",
                     "name": "REACT_APP_GOOGLE_MAP_API_KEY"
                 }
@@ -74,7 +78,7 @@
         }
     ],
     "placementConstraints": [],
-    "memory": "1024",
+    "memory": "512",
     "taskRoleArn": null,
     "family": "onad-web",
     "pidMode": null,
@@ -82,7 +86,7 @@
         "FARGATE"
     ],
     "networkMode": "awsvpc",
-    "cpu": "512",
+    "cpu": "256",
     "inferenceAccelerators": null,
     "proxyConfiguration": null,
     "volumes": []

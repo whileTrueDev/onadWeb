@@ -61,6 +61,14 @@ export default class OnADProductionAwsStack extends cdk.Stack {
     });
     trackerSecGrp.connections.allowFromAnyIpv4(ec2.Port.tcp(3030));
 
+    // Adpage
+    const adpageSecGrp = new ec2.SecurityGroup(this, 'adPageSecurityGroup', {
+      vpc: productionVpc,
+      securityGroupName: 'OnADAdAdpageSecurityGroup',
+      allowAllOutbound: true
+    });
+    adpageSecGrp.connections.allowFromAnyIpv4(ec2.Port.tcp(3011));
+
     // *********************************************
     // Create IAM Role for Fargate task, CloudWatch
 
@@ -110,6 +118,7 @@ export default class OnADProductionAwsStack extends cdk.Stack {
     const onadApi = makeTaskDefinition(this, onadApiName, onadApiRepo, onadTaskRole, {
       REACT_HOSTNAME: ecs.Secret.fromSsmParameter(ssmParameters.PRODUCTION_REACT_HOSTNAME),
       API_HOSTNAME: ecs.Secret.fromSsmParameter(ssmParameters.PRODUCTION_API_HOSTNAME),
+      ADPAGE_HOSTNAME: ecs.Secret.fromSsmParameter(ssmParameters.PRODUCTION_ADPAGE_HOSTNAME),
       DB_CHARSET: ecs.Secret.fromSsmParameter(ssmParameters.DB_CHARSET),
       DB_HOST: ecs.Secret.fromSsmParameter(ssmParameters.DB_HOST),
       DB_PASSWORD: ecs.Secret.fromSsmParameter(ssmParameters.DB_PASSWORD),
@@ -226,6 +235,44 @@ export default class OnADProductionAwsStack extends cdk.Stack {
       CRAWL_YOUTUBE_API_KEY: ecs.Secret.fromSsmParameter(ssmParameters.CRAWL_YOUTUBE_API_KEY),
     });
 
+    // Adpick Crawler
+    const onadAdpickCrawlRepo = 'hwasurr/onad-adpick-crawl';
+    const onadAdpickCrawlName = 'onad-adpick-crawl';
+    const onadAdpickCrawl = makeTaskDefinition(this, onadAdpickCrawlName, onadAdpickCrawlRepo, onadTaskRole, {
+      DB_HOST: ecs.Secret.fromSsmParameter(ssmParameters.DB_HOST),
+      DB_USER: ecs.Secret.fromSsmParameter(ssmParameters.DB_USER),
+      DB_PASSWORD: ecs.Secret.fromSsmParameter(ssmParameters.DB_PASSWORD),
+      DB_DATABASE: ecs.Secret.fromSsmParameter(ssmParameters.DB_DATABASE),
+      DB_CHARSET: ecs.Secret.fromSsmParameter(ssmParameters.DB_CHARSET),
+      DB_PORT: ecs.Secret.fromSsmParameter(ssmParameters.DB_PORT),
+      ADPICK_AFF_ID: ecs.Secret.fromSsmParameter(ssmParameters.ADPICK_AFF_ID),
+    });
+
+    // Adpage - Task Definition
+    const onadAdpageRepo = 'hwasurr/onad-adpage';
+    const onadAdpagePort = 3011;
+    const onadAdpageName = 'onad-adpage';
+    const onadAdpage = makeTaskDefinition(this, onadAdpageName, onadAdpageRepo, onadTaskRole, {
+      REACT_APP_API_HOSTNAME: ecs.Secret.fromSsmParameter(ssmParameters.TEST_API_HOSTNAME),
+      PUBLIC_URL: ecs.Secret.fromSsmParameter(ssmParameters.TEST_ADPAGE_HOSTNAME),
+    }, onadAdpagePort);
+
+    // Adpick Tracking Crawler Task Definition
+    const onadAdpickTrackingCrawlRepo = 'hwasurr/onad-adpick-tracking-crawl';
+    const onadAdpickTrackingCrawlName = 'onad-adpick-tracking-crawl';
+    const onadAdpickTrackingCrawl = makeTaskDefinition(this,
+      onadAdpickTrackingCrawlName, onadAdpickTrackingCrawlRepo, onadTaskRole, {
+        DB_HOST: ecs.Secret.fromSsmParameter(ssmParameters.DB_HOST),
+        DB_USER: ecs.Secret.fromSsmParameter(ssmParameters.DB_USER),
+        DB_PASSWORD: ecs.Secret.fromSsmParameter(ssmParameters.DB_PASSWORD),
+        DB_DATABASE: ecs.Secret.fromSsmParameter(ssmParameters.DB_DATABASE),
+        DB_CHARSET: ecs.Secret.fromSsmParameter(ssmParameters.DB_CHARSET),
+        DB_PORT: ecs.Secret.fromSsmParameter(ssmParameters.DB_PORT),
+        ADPICK_AFF_ID: ecs.Secret.fromSsmParameter(ssmParameters.ADPICK_AFF_ID),
+        ADPICK_MEM_ID: ecs.Secret.fromSsmParameter(ssmParameters.ADPICK_MEM_ID),
+        ADPICK_MEM_PWD: ecs.Secret.fromSsmParameter(ssmParameters.ADPICK_MEM_PWD),
+      });
+
 
     // *********************************************
     // Create ECS Service
@@ -233,6 +280,7 @@ export default class OnADProductionAwsStack extends cdk.Stack {
     // onadWeb
     const onadWebService = new ecs.FargateService(this, `${onadClientName}Service`, {
       cluster: productionCluster,
+      serviceName: `${onadClientName}-Service`,
       taskDefinition: onadWeb.taskDefinition,
       assignPublicIp: true,
       desiredCount: 1,
@@ -241,6 +289,7 @@ export default class OnADProductionAwsStack extends cdk.Stack {
     // onadWebApi
     const onadWebApiService = new ecs.FargateService(this, `${onadApiName}Service`, {
       cluster: productionCluster,
+      serviceName: `${onadApiName}-Service`,
       taskDefinition: onadApi.taskDefinition,
       assignPublicIp: true,
       desiredCount: 1,
@@ -250,6 +299,7 @@ export default class OnADProductionAwsStack extends cdk.Stack {
     const onadBannerBroadService = new ecs.FargateService(
       this, `${onadBannerBroadName}Service`, {
         cluster: productionCluster,
+        serviceName: `${onadBannerBroadName}-Service`,
         taskDefinition: onadBannerBroad.taskDefinition,
         assignPublicIp: true,
         desiredCount: 1,
@@ -260,6 +310,7 @@ export default class OnADProductionAwsStack extends cdk.Stack {
     const onadTrackerService = new ecs.FargateService(
       this, `${onadTrackerName}Service`, {
         cluster: productionCluster,
+        serviceName: `${onadTrackerName}-Service`,
         taskDefinition: onadTracker.taskDefinition,
         assignPublicIp: true,
         desiredCount: 1,
@@ -270,12 +321,26 @@ export default class OnADProductionAwsStack extends cdk.Stack {
     const onadTwitchChatbotService = new ecs.FargateService(
       this, `${onadTwitchChatbotName}Service`, {
         cluster: productionCluster,
+        serviceName: `${onadTwitchChatbotName}-Service`,
         taskDefinition: onadTwitchChatbot.taskDefinition,
         assignPublicIp: true,
         desiredCount: 1,
         securityGroup: emptySecGrp,
       }
     );
+
+    // AD page
+    const onadAdpageService = new ecs.FargateService(
+      this, `${onadAdpageName}Service`, {
+        cluster: productionCluster,
+        serviceName: `${onadAdpageName}-Service`,
+        taskDefinition: onadAdpage.taskDefinition,
+        assignPublicIp: true,
+        desiredCount: 1,
+        securityGroup: adpageSecGrp,
+      }
+    );
+
 
     // *********************************************
     // Create Scheduled Job
@@ -307,6 +372,26 @@ export default class OnADProductionAwsStack extends cdk.Stack {
     onadTwitchCrawlRule.addTarget(new targets.EcsTask({
       cluster: productionCluster,
       taskDefinition: onadTwitchCrawl.taskDefinition,
+      taskCount: 1,
+    }));
+
+    // Adpick campaign data Crawl
+    const onadAdpickCrawlRule = new events.Rule(this, `${onadAdpickCrawlName}Rule`, {
+      schedule: events.Schedule.expression('cron(*/10 * * * ? *)')
+    });
+    onadAdpickCrawlRule.addTarget(new targets.EcsTask({
+      cluster: productionCluster,
+      taskDefinition: onadAdpickCrawl.taskDefinition,
+      taskCount: 1,
+    }));
+
+    // Adpick conversion data Crawl
+    const onadAdpickTrackingCrawlRule = new events.Rule(this, `${onadAdpickTrackingCrawlName}Rule`, {
+      schedule: events.Schedule.expression('cron(*/10 * * * ? *)')
+    });
+    onadAdpickTrackingCrawlRule.addTarget(new targets.EcsTask({
+      cluster: productionCluster,
+      taskDefinition: onadAdpickTrackingCrawl.taskDefinition,
       taskCount: 1,
     }));
 
@@ -343,6 +428,15 @@ export default class OnADProductionAwsStack extends cdk.Stack {
       protocol: elbv2.ApplicationProtocol.HTTP,
       targets: [onadTrackerService],
     });
+
+    const onadAdpageGroup = new elbv2.ApplicationTargetGroup(this, 'onadLBAdpageTargetGroup', {
+      vpc: productionVpc,
+      targetGroupName: `${onadAdpageName}Target`,
+      port: onadAdpagePort,
+      protocol: elbv2.ApplicationProtocol.HTTP,
+      targets: [onadAdpageService],
+    });
+
 
     // *********************************************
     // Route53 ALB, subdomain 등록

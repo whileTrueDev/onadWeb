@@ -8,7 +8,7 @@ name: <test> Deploy to Amazon ECS - "client-ts"
 
 jobs:
   deploy:
-    name: Deploy
+    name: Test Deploy
     runs-on: ubuntu-latest
 
     steps:
@@ -31,8 +31,9 @@ jobs:
         env:
           REACT_APP_REACT_HOSTNAME: ${{ secrets.REACT_APP_TEST_REACT_HOSTNAME }}
           REACT_APP_API_HOSTNAME: ${{ secrets.REACT_APP_TEST_API_HOSTNAME }}
+          REACT_APP_ADPAGE_HOSTNAME: ${{ secrets.REACT_APP_TEST_ADPAGE_HOSTNAME }}
           REACT_APP_GOOGLE_MAP_API_KEY: ${{ secrets.REACT_APP_GOOGLE_MAP_API_KEY }}
-          
+
       - name: Build, tag, and push image to Docker Hub
         uses: elgohr/Publish-Docker-Github-Action@2.14
         with:
@@ -40,7 +41,7 @@ jobs:
           name: ${{ secrets.DOCKER_USERNAME }}/onad_web
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-          tags: ${{ github.sha }}
+          tags: "${{ github.sha }},latest"
 
       - name: Fill in the new image ID in the Amazon ECS task definition
         id: task-def

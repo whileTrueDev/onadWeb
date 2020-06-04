@@ -32,7 +32,7 @@ export default function CanvasForChart(props: CanvasForChartProps): JSX.Element 
 
         <div style={{ padding: 16 }}>
           {tabValue === 0 && valueChartData.data && (
-            <ReChartBar data={valueChartData.data} />
+            <ReChartBar data={valueChartData.data} dataKey={['cpm_amount', 'cpc_amount']} />
           )}
           {tabValue === 1
             && ((!broadCreatorData.loading) && broadCreatorData.data

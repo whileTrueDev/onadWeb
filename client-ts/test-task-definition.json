@@ -45,6 +45,10 @@
                     "name": "REACT_APP_API_HOSTNAME"
                 },
                 {
+                    "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/TEST/ADPAGE_HOSTNAME",
+                    "name": "REACT_APP_ADPAGE_HOSTNAME"
+                },
+                {
                     "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/GOOGLE_MAP_API_KEY",
                     "name": "REACT_APP_GOOGLE_MAP_API_KEY"
                 }
@@ -54,7 +58,7 @@
             "memoryReservation": 500,
             "volumesFrom": [],
             "stopTimeout": null,
-            "image": "hwasurr/onad_web:d12f8213c1ba98d19d02e60ad16cd0223e15d25c",
+            "image": "hwasurr/onad_web",
             "startTimeout": null,
             "firelensConfiguration": null,
             "dependsOn": null,
