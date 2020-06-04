@@ -262,7 +262,7 @@ const manualSources: ManualSources = {
         description: `광고 페이지에 게시할 캠페인을 선택하셨다면 ${textStyling.styledText('캠페인 홍보 유의사항 및  미정산 조건 확인')}을 체크하고 등록 버튼을 누르시면 내 광고페이지에서 광고가 시작됩니다! `
       },
       {
-        image: '/pngs/dashboard/manual/new_creator/creator-adpage-06.png',
+        image: '/pngs/dashboard/manual/new_creator/creator-adpage-07.png',
         description: `광고 페이지에 등록된 캠페인을 종료하고 싶다면 ${textStyling.styledText('제외하기')} 버튼을 누르시면 됩니다. 내 광고페이지에서 광고가 더 이상 보이지 않게 됩니다. `
       },
     ]

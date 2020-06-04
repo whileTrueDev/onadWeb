@@ -8,7 +8,6 @@ const router = express.Router();
 // --------------------interface 정의--------------------------
 
 
-
 // --------------------interface 정의 end--------------------------
 
 
@@ -106,25 +105,21 @@ router.route('/clicks')
               // 쿼리 결과가 있는 경우
               lastResult = { error: null, result: row.result[0] };
               responseHelper.send(lastResult, 'get', res);
-
             } else {
               // 쿼리 결과가 없는 경우
               lastResult = { error: true, result: null, };
               responseHelper.send(lastResult, 'get', res);
-
             }
           } else {
             // 쿼리 과정에서 오류인 경우
             lastResult = { error: true, result: error, };
             responseHelper.send(lastResult, 'get', res);
-
           }
         }).catch((reason) => {
           // db 쿼리 수행 과정의 오류인 경우
           console.log(`ERROR - [${new Date().toLocaleString()}] - /clicks\n`, reason);
           lastResult = { error: true, reason };
           responseHelper.send(lastResult, 'get', res);
-
         });
     })
   )
@@ -135,12 +130,11 @@ router.route('/campaigns')
   .get(
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
       const name = responseHelper.getParam('name', 'get', req);
-      const nameQuery =
-        `
+      const nameQuery = `
       SELECT creatorId 
       FROM creatorInfo
       WHERE creatorTwitchId = ?
-      `
+      `;
       // 크리에이터: 수익금의 40%를 가져가므로.
       const query = `
       SELECT adlist.*,  mylist.campaignId, mylist.creatorId
@@ -182,7 +176,6 @@ router.route('/campaigns')
   .all(responseHelper.middleware.unusedMethod);
 
 
-
 router.route('/visit')
   .post(
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
@@ -205,7 +198,7 @@ router.route('/visit')
         WHERE creatorId = (SELECT creatorId FROM creatorInfo WHERE creatorTwitchId = ?)`;
       const visitUpdateArray = [1, name];
 
-      let lastResult = {
+      const lastResult = {
         error: null,
         result: { ipCheck: {}, ipInsert: {}, visitUpdate: {} }
       };
@@ -216,7 +209,7 @@ router.route('/visit')
             const { error, result } = ipInsertRow;
             if (!error) { // 쿼리 과정에서 오류가 아닌 경우
               if (result) { // 쿼리 결과가 존재하는 경우
-                lastResult.result.ipCheck = { error: null, result: result };
+                lastResult.result.ipCheck = { error: null, result };
               } else { // 쿼리 결과가 없는 경우
                 lastResult.result.ipCheck = { error: true, result: null };
               }
@@ -232,7 +225,7 @@ router.route('/visit')
             const { error, result } = clickUpdateRow;
             if (!error) { // 쿼리 과정에서 오류가 아닌 경우
               if (result) { // 쿼리 결과가 있는 경우
-                lastResult.result.visitUpdate = { error: null, result: result };
+                lastResult.result.visitUpdate = { error: null, result };
               } else { // 쿼리 결과가 없는 경우
                 lastResult.result.visitUpdate = { error: true, result: null };
               }
@@ -285,7 +278,7 @@ router.route('/banner/click')
       WHERE campaignId = ? AND creatorId = ?`;
       const clickUpdateArray = [1, campaignId, creatorId];
 
-      let lastResult = {
+      const lastResult = {
         error: null,
         result: {
           ipCheck: {},
@@ -307,7 +300,7 @@ router.route('/banner/click')
                     const { error, result } = ipInsertRow;
                     if (!error) { // 쿼리 과정에서 오류가 아닌 경우
                       if (result) { // 쿼리 결과가 존재하는 경우
-                        lastResult.result.ipCheck = { error: null, result: result };
+                        lastResult.result.ipCheck = { error: null, result };
                       } else { // 쿼리 결과가 없는 경우
                         lastResult.result.ipCheck = { error: true, result: null };
                       }
@@ -323,7 +316,7 @@ router.route('/banner/click')
                     const { error, result } = clickUpdateRow;
                     if (!error) { // 쿼리 과정에서 오류가 아닌 경우
                       if (result) { // 쿼리 결과가 있는 경우
-                        lastResult.result.clickUpdate = { error: null, result: result };
+                        lastResult.result.clickUpdate = { error: null, result };
                       } else { // 쿼리 결과가 없는 경우
                         lastResult.result.clickUpdate = { error: true, result: null };
                       }
@@ -378,7 +371,7 @@ router.route('/manplus/impression')
         .then((row) => {
           if (row.result.length > 0) {
             responseHelper.send(true, 'post', res);
-            return
+            return;
           }
           doQuery(ipInsertQuery, ipInsertArray)
             .then(() => {
@@ -386,12 +379,12 @@ router.route('/manplus/impression')
             })
             .catch(() => {
               responseHelper.send(true, 'post', res);
-            })
+            });
         })
         .catch((error) => {
           console.log(error);
           responseHelper.send(true, 'post', res);
-        })
+        });
     })
   )
   .all(responseHelper.middleware.unusedMethod);
@@ -430,7 +423,7 @@ router.route('/manplus/click')
         .then((row) => {
           if (row.result.length > 0) {
             responseHelper.send(true, 'post', res);
-            return
+            return;
           }
           doQuery(ipInsertQuery, ipInsertArray)
             .then(() => {
@@ -438,13 +431,12 @@ router.route('/manplus/click')
             })
             .catch(() => {
               responseHelper.send(true, 'post', res);
-            })
+            });
         })
         .catch((error) => {
           console.log(error);
           responseHelper.send(true, 'post', res);
-
-        })
+        });
     })
   )
   .all(responseHelper.middleware.unusedMethod);

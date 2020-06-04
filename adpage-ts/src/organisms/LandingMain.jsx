@@ -75,11 +75,11 @@ const LandingMain = (props) => {
   };
   const getOsIndex = () => (osName === 'iOS' ? '2' : '3');
 
-  const clickData = useFetchData('/adpage/clicks', { name: match.params.name });
-  const campaignData = useFetchData('/adpage/campaigns' , {name: match.params.name });
+  const clickData = useFetchData('/cpapage/clicks', { name: match.params.name });
+  const campaignData = useFetchData('/cpapage/campaigns' , {name: match.params.name });
 
   // 방문처리.
-  usePostData('/adpage/visit', { name: match.params.name });
+  usePostData('/cpapage/visit', { name: match.params.name });
 
   const params = {
     e_version: '2',
@@ -140,7 +140,7 @@ const LandingMain = (props) => {
                         click_tracking_api, html, isSSP: false
                       }
                     });
-                    axios.post(`${apiHOST}/adpage/manplus/impression`, { name: match.params.name });
+                    axios.post(`${apiHOST}/cpapage/manplus/impression`, { name: match.params.name });
                   } else {
                     setState({ load: false, err: true, data: {} });
                   }
@@ -158,7 +158,7 @@ const LandingMain = (props) => {
                         html: adm, click_tracking_api: ssp_click, isSSP: true
                       }
                     });
-                    axios.post(`${apiHOST}/adpage/manplus/impression`, { name: match.params.name });
+                    axios.post(`${apiHOST}/cpapage/manplus/impression`, { name: match.params.name });
                     // 노출 API가 null일경우 회피하기위한 에러핸들링
                     if (ssp_imp !== null || ssp_imp !== undefined || ssp_imp !== '' || ssp_imp !== 'null') {
                       if (ssp_imp.length !== 0) {
@@ -198,7 +198,7 @@ const LandingMain = (props) => {
                 click_tracking_api, html, isSSP: false
               }
             });
-            axios.post(`${apiHOST}/adpage/manplus/impression`, { name: match.params.name });
+            axios.post(`${apiHOST}/cpapage/manplus/impression`, { name: match.params.name });
           } else {
             console.log('AD API CALL');
             const {
@@ -211,7 +211,7 @@ const LandingMain = (props) => {
                 click_tracking_api, html, isSSP: false
               }
             });
-            axios.post(`${apiHOST}/adpage/manplus/impression`, { name: match.params.name });
+            axios.post(`${apiHOST}/cpapage/manplus/impression`, { name: match.params.name });
           }
         });
     }
