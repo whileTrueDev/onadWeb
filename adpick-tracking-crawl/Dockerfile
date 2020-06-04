@@ -21,7 +21,7 @@ WORKDIR /adpick_crawler
 ADD . /adpick_crawler
 
 # Change chromedriver's mod
-RUN sudo chmod +x chromedriver
+RUN chmod +x chromedriver
 
 RUN pip install --no-cache-dir -r requirements.txt
 

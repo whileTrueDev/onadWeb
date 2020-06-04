@@ -73,8 +73,8 @@ export default withRoot(() => {
               MainUserType="creator"
             />
             <Advantage source={sources.advantage} MainUserType="creator" />
-            <ProductHowItWorks source={sources.howitworks} MainUserType="creator" logout={logout} />
             <Reference />
+            <ProductHowItWorks source={sources.howitworks} MainUserType="creator" logout={logout} />
             <InquiryCreator />
             <AppFooter />
             <RePasswordDialog
