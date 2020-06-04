@@ -54,7 +54,7 @@
             ],
             "dockerSecurityOptions": null,
             "memory": null,
-            "memoryReservation": 800,
+            "memoryReservation": 500,
             "volumesFrom": [],
             "stopTimeout": null,
             "image": "hwasurr/onad_web",
