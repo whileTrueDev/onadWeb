@@ -97,7 +97,7 @@ def get_number_of_row():
     select_query = """
                     SELECT COUNT(*)
                     FROM tracking
-                    WHERE DATE_FORMAT(conversionTime, "%Y-%m-%d") = CURDATE();
+                    WHERE DATE_FORMAT(conversionTime, "%Y-%m-%d") = CURDATE()
                         AND channel = "adpage"
                         AND marketerId = "adpick"
                 """
