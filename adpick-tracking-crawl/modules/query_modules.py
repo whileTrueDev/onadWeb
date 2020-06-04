@@ -27,7 +27,7 @@ connection = pymysql.connect(
 def do_insert(data):
     cursor = connection.cursor(pymysql.cursors.DictCursor)
     insert_query = """
-                    INSERT INTO tracking_test (
+                    INSERT INTO tracking (
                     costType, clickedTime, conversionTime, linkId, campaignId, campaignName, marketerId,
                     creatorId, creatorTwitchId, ip, device, os, os_version,
                     browser, browser_version, browser_engine, browser_engine_version, payout, channel
@@ -42,7 +42,7 @@ def get_creatorTwitchId():
     print('get_creatorTwitchId')
     select_query = """
                     SELECT creatorTwitchId 
-                    FROM tracking_test 
+                    FROM tracking 
                     WHERE DATE_FORMAT(clickedTime, "%Y-%m-%d") = CURDATE();"""
     cursor = connection.cursor(pymysql.cursors.DictCursor)
     cursor.execute(select_query)
@@ -82,7 +82,7 @@ def update_creatorId(creator_id_data):
     cursor = connection.cursor(pymysql.cursors.DictCursor)
     for id in creator_id_data:
         update_query = """
-                    UPDATE tracking_test 
+                    UPDATE tracking 
                     SET creatorId = {creatorId}
                     WHERE creatorTwitchId = "{creatorTwitchId}"
                     AND DATE_FORMAT(clickedTime, "%Y-%m-%d") = CURDATE();
@@ -95,7 +95,11 @@ def update_creatorId(creator_id_data):
 def get_number_of_row():
     print('오늘 등록된 row 가져오기')
     select_query = """
-                    SELECT COUNT(*) FROM tracking_test WHERE DATE_FORMAT(conversionTime, "%Y-%m-%d") = CURDATE();
+                    SELECT COUNT(*)
+                    FROM tracking
+                    WHERE DATE_FORMAT(conversionTime, "%Y-%m-%d") = CURDATE();
+                        AND channel = "adpage"
+                        AND marketerId = "adpick"
                 """
     cursor = connection.cursor(pymysql.cursors.DictCursor)
     cursor.execute(select_query)
