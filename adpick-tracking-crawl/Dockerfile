@@ -19,6 +19,10 @@ RUN rm -rf /etc/apt/sources.list.d/google.list
 RUN mkdir -p /adpick_crawler
 WORKDIR /adpick_crawler
 ADD . /adpick_crawler
+
+# Change chromedriver's mod
+RUN sudo chmod +x chromedriver
+
 RUN pip install --no-cache-dir -r requirements.txt
 
 CMD [ "python", "run.py" ]

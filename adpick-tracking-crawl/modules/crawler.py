@@ -17,7 +17,7 @@ now = datetime.datetime.now().strftime('%Y-%m-%d')
 
 print('%s crawling 시작' % now)
 # Add following 2 line before start the Chrome
-if(sys.platform == 'win32'):
+if(sys.platform == 'win32' or sys.platform == 'darwin'):
     options = webdriver.ChromeOptions()
     options.add_argument('headless')
     options.add_argument('disable-gpu')
