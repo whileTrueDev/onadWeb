@@ -76,6 +76,10 @@ def adpick_crawler(number_of_row, UNIX_CHROME_DRIVER_PATH):
     driver.implicitly_wait(2)
     print('navbar-transfer')
     driver.find_elements_by_class_name(
+        'om-checkbox-custom-checkbox-label')[4].click()  # 버전 체크박스 클릭
+    driver.implicitly_wait(2)
+    print('version checkbox 클릭')
+    driver.find_elements_by_class_name(
         'om-select-custom-select')[0].find_elements_by_tag_name('option')[0].click()  # 오늘 날짜 선택
     driver.implicitly_wait(2)
     print('select today')

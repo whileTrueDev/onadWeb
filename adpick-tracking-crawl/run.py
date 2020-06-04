@@ -1,10 +1,11 @@
 from modules import crawler
-from modules import db_insert
+from modules import query_modules
 from os.path import join, dirname, abspath
 import os
 from dotenv import load_dotenv
 import pandas as pd
 import time
+import datetime
 
 ROOT_PATH = dirname(abspath(__file__))
 UNIX_CHROME_DRIVER_PATH = join(ROOT_PATH, 'chromedriver')
@@ -12,7 +13,7 @@ dotenv_path = join(ROOT_PATH, '.env')
 
 load_dotenv(verbose=True)
 
-col_list = ['costType', 'marketerId', 'creatorId', 'os_version', 'browser',
+col_list = ['costType', 'marketerId', 'creatorId', 'browser',
             'device', 'browser_version', 'browser_engine', 'browser_engine_version', 'channel']
 while True:
     try:
@@ -37,9 +38,10 @@ while True:
         data_xls['creatorTwitchId'] = referrer_list
         data_xls.drop(['날짜', '시간대', 'Referer', '상태'], axis=1, inplace=True)
         data_xls[col_list] = pd.DataFrame(
-            [['CPA', 'adpick', '', '', '', '', '', '', '', 'adpage']], index=data_xls.index)
+            [['CPA', 'adpick', '', '', '', '', '', '', 'adpage']], index=data_xls.index)
         data_xls.rename(columns={'링크코드': 'linkId', 'Offer': 'campaignId', '시간': 'conversionTime',
-                                 '수익': 'payout', '캠페인': 'campaignName', 'Device': 'os'}, inplace=True)
+                                 '수익': 'payout', '캠페인': 'campaignName', 'Device': 'os',
+                                 'Version': 'os_version'}, inplace=True)
         data_xls['clickedTime'] = data_xls['conversionTime']
         reorder_cols = [
             'costType',
