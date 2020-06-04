@@ -50,7 +50,7 @@ const useStyles = makeStyles(theme => ({
 
 }));
 
-export default function CPACampaigns({ campaigns, isDesktopWidth, isAndroid }) {
+export default function CPACampaigns({ campaigns, isDesktopWidth, isMobile, os }) {
   const theme = useTheme();
   const classes = useStyles();
   // 상세보기 open state
@@ -165,7 +165,11 @@ export default function CPACampaigns({ campaigns, isDesktopWidth, isAndroid }) {
                   onClick={() => {
                     // 우리 클릭 트래킹 추가.
                     //  안드로이드 && (앱설치 + 회원가입)일때, 
-                    if(isAndroid && (item.apType === '1'  || item.apType === '3')){
+                    if(isMobile && !(item.apOS === null || item.apOS === "Both") && os !== item.apOS ){
+                      alert("접속하신 기기에서는 사용할 수 없는 앱입니다.");
+                      return;
+                    }
+                    if(isMobile && os === "Android" && (item.apType === '1'  || item.apType === '3')){
                       alert('안드로이드는 PC 또는 모바일 웹 브라우저에서 참여가 가능합니다.');
                     }
                     axios.post(`${apiHOST}/adpage/banner/click`, { campaignId: item.campaignId, creatorId: item.creatorId });
