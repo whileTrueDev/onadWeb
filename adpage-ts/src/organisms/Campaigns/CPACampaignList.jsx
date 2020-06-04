@@ -172,7 +172,7 @@ export default function CPACampaigns({ campaigns, isDesktopWidth, isMobile, os }
                     if(isMobile && os === "Android" && (item.apType === '1'  || item.apType === '3')){
                       alert('안드로이드는 PC 또는 모바일 웹 브라우저에서 참여가 가능합니다.');
                     }
-                    axios.post(`${apiHOST}/adpage/banner/click`, { campaignId: item.campaignId, creatorId: item.creatorId });
+                    axios.post(`${apiHOST}/cpapage/banner/click`, { campaignId: item.campaignId, creatorId: item.creatorId });
                     window.location.href = item.apTrackingLink;
                   }}
                   style={{

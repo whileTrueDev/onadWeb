@@ -58,7 +58,7 @@ export default function CPAIntroduction(): JSX.Element {
             <Filter2Icon color="primary" fontSize="small" className={classes.stepTitle} />
             광고페이지에 광고 등록
           </Typography>
-          <img src="/pngs/cpa/adpage.png" alt="step3" className={classes.stepIMG} />
+          <img src="/pngs/cpa/cpapage.png" alt="step3" className={classes.stepIMG} />
           {textsource.step.second.split('\n').map((text) => (
             <Typography
               key={text}

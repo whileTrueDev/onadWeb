@@ -20,7 +20,7 @@ import useSearch from '../../utils/lib/hook/useSearch';
 export default function Landing(props) {
   const { match } = props;
   const isDesktopWidth = useMediaQuery('(min-width:600px)');
-  const userData = useFetchData('/adpage/user', { name: match.params.name });
+  const userData = useFetchData('/cpapage/user', { name: match.params.name });
   const { searchText, handleSearchChange } = useSearch();
 
   const [isDarkTheme, setDarkTheme] = React.useState('light');
