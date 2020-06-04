@@ -1,10 +1,12 @@
 from modules import crawler
-from modules import db_insert
+from modules import query_modules
 from os.path import join, dirname
 import os
 from dotenv import load_dotenv
 import pandas as pd
 import time
+import datetime
+
 dotenv_path = join(dirname(__file__), '.env')
 load_dotenv(verbose=True)
 
@@ -12,8 +14,19 @@ col_list = ['costType', 'marketerId', 'creatorId', 'os_version', 'browser',
             'device', 'browser_version', 'browser_engine', 'browser_engine_version', 'channel']
 while True:
     try:
-        referrer_list = crawler.adpick_crawler()  # 엑셀 다운로드 및 referrer 리스트 얻음
-        time.sleep(3)
+        now = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
+        print('%s crawling 시작' % now)
+
+        number_of_row = query_modules.get_number_of_row()
+        crawling_result = crawler.adpick_crawler(
+            number_of_row)  # 엑셀 다운로드 및 referrer 리스트 얻음
+        referrer_list = crawling_result['referrer_list']
+        stop = crawling_result['stop']
+        difference = crawling_result['difference']
+        time.sleep(2)
+        if(stop):
+            raise NotImplementedError
         path_dir = './xlsx'
         file_list = os.listdir(path_dir)
 
@@ -25,8 +38,10 @@ while True:
             [['CPA', 'adpick', '', '', '', '', '', '', '', 'adpage']], index=data_xls.index)
         data_xls.rename(columns={'링크코드': 'linkId', 'Offer': 'campaignId', '시간': 'conversionTime',
                                  '수익': 'payout', '캠페인': 'campaignName', 'Device': 'os'}, inplace=True)
+        data_xls['clickedTime'] = data_xls['conversionTime']
         reorder_cols = [
             'costType',
+            'clickedTime',
             'conversionTime',
             'linkId',
             'campaignId',
@@ -45,23 +60,30 @@ while True:
             'payout',
             'channel'
         ]
-        data_xls = data_xls[reorder_cols]
-        products_list = data_xls.values.tolist()
-        db_insert.do_insert(products_list)
+        data_xls = data_xls[reorder_cols]  # column 순서 변경
+        products_list = data_xls[:difference].values.tolist()
+        query_modules.do_insert(products_list)
         print('크롤링 / DB 입력완료')
-        creator_twitch_id = db_insert.get_creatorTwitchId()
-        creator_id_data = db_insert.get_creatorId(creator_twitch_id)
-        db_insert.update_creatorId(creator_id_data)
-        print('작업완료')
+        creator_twitch_id = query_modules.get_creatorTwitchId()
+        creator_id_data = query_modules.get_creatorId(creator_twitch_id)
+        query_modules.update_creatorId(creator_id_data)
+        print('creatorId 입력완료')
+        print('--전체 작업 완료--')
         break
-    except ValueError:
+    except ValueError as e:
         print('발생 CPA 없음')
+        print(e)
         break
-    except AttributeError:
+    except NotImplementedError as e:
+        print('새로 발생한 cpa 없음 / db insert 없이 종료')
+        print(e)
+        break
+    except AttributeError as e:
         print('crawling error retry')
-        time.sleep(5)
+        print(e)
+        time.sleep(3)
         continue
-    else:
+    except Exception as e:
         print('other error')
         print(e)
         break

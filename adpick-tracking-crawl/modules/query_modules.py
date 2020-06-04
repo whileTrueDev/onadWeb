@@ -28,10 +28,10 @@ def do_insert(data):
     cursor = connection.cursor(pymysql.cursors.DictCursor)
     insert_query = """
                     INSERT INTO tracking_test (
-                    costType, conversionTime, linkId, campaignId, campaignName, marketerId,
+                    costType, clickedTime, conversionTime, linkId, campaignId, campaignName, marketerId,
                     creatorId, creatorTwitchId, ip, device, os, os_version,
                     browser, browser_version, browser_engine, browser_engine_version, payout, channel
-                  ) VALUES ( %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s );"""
+                  ) VALUES ( %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s );"""
 
     cursor.executemany(insert_query, data)
     connection.commit()
@@ -47,10 +47,10 @@ def get_creatorTwitchId():
     cursor = connection.cursor(pymysql.cursors.DictCursor)
     cursor.execute(select_query)
     connection.commit()
-    cursor.close()
     result = [item['creatorTwitchId']
               for item in cursor.fetchall() if item['creatorTwitchId'] != '-']
     organized_result = list(dict.fromkeys(result))
+    cursor.close()
     return organized_result
     # returns list of twitchId no duplicates
 
@@ -68,7 +68,6 @@ def get_creatorId(creator_twitch_id):
         cursor.execute(select_query, id)
         connection.commit()
         result = cursor.fetchall()
-        print(result)
         try:
             result[0]['creatorTwitchId'] = id
             return_data.append(result[0])
@@ -91,3 +90,18 @@ def update_creatorId(creator_id_data):
         cursor.execute(update_query)
         connection.commit()
     cursor.close()
+
+
+def get_number_of_row():
+    print('오늘 등록된 row 가져오기')
+    select_query = """
+                    SELECT COUNT(*) FROM tracking_test WHERE DATE_FORMAT(conversionTime, "%Y-%m-%d") = CURDATE();
+                """
+    cursor = connection.cursor(pymysql.cursors.DictCursor)
+    cursor.execute(select_query)
+    result = [item['COUNT(*)']
+              for item in cursor.fetchall()]
+    connection.commit()
+    cursor.close()
+    print('오늘 등록된 row : {value}'.format(value=result[0]))
+    return result[0]
