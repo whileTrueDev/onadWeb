@@ -2,20 +2,19 @@ from selenium import webdriver
 import requests
 from pyvirtualdisplay import Display
 import csv
-import datetime
 from bs4 import BeautifulSoup
 import sys
-
-import os
 from dotenv import load_dotenv
+from os.path import join, dirname
+import os
+import time
 
+dotenv_path = join(dirname(__file__), '.env')
 load_dotenv(verbose=True)
-ADPICK_MEM_ID = os.environ.get('ADPICK_MEM_ID')
-ADPICK_MEM_PWD = os.environ.get('ADPICK_MEM_PWD')
 
-now = datetime.datetime.now().strftime('%Y-%m-%d')
+ADPICK_USER_ID = os.environ.get("ADPICK_MEM_ID")
+ADPICK_PASSWORD = os.environ.get("ADPICK_MEM_PWD")
 
-print('%s crawling 시작' % now)
 # Add following 2 line before start the Chrome
 if(sys.platform == 'win32' or sys.platform == 'darwin'):
     options = webdriver.ChromeOptions()
@@ -37,9 +36,10 @@ else:
     options.add_experimental_option('prefs', prefs)
 
 
-def adpick_crawler(UNIX_CHROME_DRIVER_PATH):
+def adpick_crawler(number_of_row, UNIX_CHROME_DRIVER_PATH):
     csv_list = []
     cell_list = []
+    stop = False
     if (sys.platform == 'win32'):
         driver = webdriver.Chrome(
             r'C:\Users\kevin\Desktop\adpick_crawler\winwebdriver\chromedriver.exe', options=options)
@@ -53,9 +53,9 @@ def adpick_crawler(UNIX_CHROME_DRIVER_PATH):
 
     print('adpick enter succeed')
 
-    driver.find_element_by_id('memid').send_keys(ADPICK_MEM_ID)  # id 입력
-    driver.find_element_by_id('mempwd').send_keys(ADPICK_MEM_PWD)  # pwd 입력
-
+    driver.find_element_by_id('memid').send_keys(ADPICK_USER_ID)  # id 입력
+    driver.find_element_by_id('mempwd').send_keys(
+        ADPICK_PASSWORD)  # pwd 입력
     print('typing id, pw succeed')
 
     driver.find_element_by_class_name('btnLogin').click()  # 로그인 버튼 클릭
@@ -70,20 +70,25 @@ def adpick_crawler(UNIX_CHROME_DRIVER_PATH):
 
     campaign_side_bar_ul_li[0].click()  # 리포트 - 캠페인 클릭
     print('report-campaign click')
+    driver.implicitly_wait(2)
     driver.find_elements_by_class_name(
         'ui-depth3')[0].find_elements_by_tag_name("li")[2].click()  # navbar-전환 클릭
+    driver.implicitly_wait(2)
     print('navbar-transfer')
     driver.find_elements_by_class_name(
-        'om-select-custom-select')[0].find_elements_by_tag_name('option')[1].click()  # 어제 날짜 선택
-    driver.implicitly_wait(1)
-
-    print('select yesterday')
+        'om-checkbox-custom-checkbox-label')[4].click()  # 버전 체크박스 클릭
+    driver.implicitly_wait(2)
+    print('version checkbox 클릭')
+    driver.find_elements_by_class_name(
+        'om-select-custom-select')[0].find_elements_by_tag_name('option')[0].click()  # 오늘 날짜 선택
+    driver.implicitly_wait(2)
+    print('select today')
 
     req = driver.page_source
-    driver.implicitly_wait(1)
+    driver.implicitly_wait(2)
 
     soup = BeautifulSoup(req, 'html.parser')
-    driver.implicitly_wait(1)
+    driver.implicitly_wait(2)
     tr_list = soup.find('tbody').find_all()
 
     # tr들 리스트에서 td들 뽑음
@@ -93,6 +98,7 @@ def adpick_crawler(UNIX_CHROME_DRIVER_PATH):
             td_list = cell.findChildren()
             if(i == 3):
                 cell_list.append(td_list[0])
+    cell_length = len(cell_list)
     print('get tr list succeed')
 
     # referrer cell 값만 저장
@@ -103,10 +109,18 @@ def adpick_crawler(UNIX_CHROME_DRIVER_PATH):
             csv_list.append(val.text)
 
     print('get referrer cell list succeed')
+    difference = cell_length - number_of_row
+    if(difference == 0):
+        print('새로 발생한 cpa 없음 / 크롤링 종료')
+        stop = True
+    else:
+        print('새로 발생한 cpa 존재 / 엑셀 다운로드')
+        driver.find_elements_by_class_name('btn_myprofile')[
+            0].click()  # 엑셀 다운로드 클릭
+        driver.implicitly_wait(1)
+        print('download xlsx succeed')
+    return_dict = {'referrer_list': csv_list,
+                   'stop': stop, 'difference': difference}
+    driver.close()
 
-    driver.find_elements_by_class_name('btn_myprofile')[
-        0].click()  # 엑셀 다운로드 클릭
-    driver.implicitly_wait(1)
-
-    print('download xlsx succeed')
-    return csv_list
+    return return_dict
