@@ -1,9 +1,8 @@
 import makeStyles from '@material-ui/core/styles/makeStyles';
-import grey from '@material-ui/core/colors/grey';
 
 const useStyles = makeStyles((theme) => ({
   container: {
-    backgroundColor: grey[100],
+    backgroundColor: 'white',
     width: '100%',
     height: '400px',
     color: 'black',

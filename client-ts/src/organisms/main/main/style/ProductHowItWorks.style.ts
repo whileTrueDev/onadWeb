@@ -1,8 +1,9 @@
 import makeStyles from '@material-ui/core/styles/makeStyles';
+import grey from '@material-ui/core/colors/grey';
 
 const styles = makeStyles((theme) => ({
   root: {
-    backgroundColor: 'white',
+    backgroundColor: grey[100],
     marginBottom: theme.spacing(8),
     padding: '80px 0px',
     [theme.breakpoints.down('sm')]: {
