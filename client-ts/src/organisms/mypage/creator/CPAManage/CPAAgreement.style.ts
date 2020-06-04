@@ -59,7 +59,12 @@ const useStyle = makeStyles((theme: Theme) => ({
     height: 200,
     overflow: 'auto',
     border: `1px solid ${theme.palette.primary.dark}`,
-    borderRadius: 3
+    borderRadius: 3,
+  },
+  endButton: {
+    padding: '10px 0px',
+    display: 'flex',
+    justifyContent: 'center'
   }
 }));
 
