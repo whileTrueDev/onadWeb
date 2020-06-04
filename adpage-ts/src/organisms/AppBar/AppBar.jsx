@@ -81,7 +81,7 @@ export default function PrimarySearchAppBar(props) {
                   ? '/images/logo/onad_logo_vertical_white.png'
                   : '/images/logo/onad_logo_vertical.png'}
                 alt=""
-                height="50"
+                height="30"
               />
             </a>
           </Typography>

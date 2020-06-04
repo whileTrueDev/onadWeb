@@ -1,13 +1,15 @@
 from modules import crawler
-from modules import query_modules
-from os.path import join, dirname
+from modules import db_insert
+from os.path import join, dirname, abspath
 import os
 from dotenv import load_dotenv
 import pandas as pd
 import time
-import datetime
 
-dotenv_path = join(dirname(__file__), '.env')
+ROOT_PATH = dirname(abspath(__file__))
+UNIX_CHROME_DRIVER_PATH = join(ROOT_PATH, 'chromedriver')
+dotenv_path = join(ROOT_PATH, '.env')
+
 load_dotenv(verbose=True)
 
 col_list = ['costType', 'marketerId', 'creatorId', 'os_version', 'browser',
@@ -20,18 +22,18 @@ while True:
 
         number_of_row = query_modules.get_number_of_row()
         crawling_result = crawler.adpick_crawler(
-            number_of_row)  # 엑셀 다운로드 및 referrer 리스트 얻음
+            number_of_row, UNIX_CHROME_DRIVER_PATH)  # 엑셀 다운로드 및 referrer 리스트 얻음
         referrer_list = crawling_result['referrer_list']
         stop = crawling_result['stop']
         difference = crawling_result['difference']
         time.sleep(2)
         if(stop):
             raise NotImplementedError
-        path_dir = './xlsx'
+        path_dir = join(ROOT_PATH, 'xlsx')
         file_list = os.listdir(path_dir)
 
         data_xls = pd.read_excel(
-            './xlsx/{dir}'.format(dir=file_list[0]), 'Worksheet', index_col=None)
+            join(path_dir, '{dir}'.format(dir=file_list[0])), 'Worksheet', index_col=None)
         data_xls['creatorTwitchId'] = referrer_list
         data_xls.drop(['날짜', '시간대', 'Referer', '상태'], axis=1, inplace=True)
         data_xls[col_list] = pd.DataFrame(

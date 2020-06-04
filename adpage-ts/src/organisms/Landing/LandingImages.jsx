@@ -96,7 +96,7 @@ const useTabValue = () => {
 };
 
 export default function LandingImages(props) {
-  const { campaignData, isDesktopWidth, name } = props;
+  const { campaignData, isDesktopWidth, name,  isMobile, os } = props;
   const classes = useStyles();
   const { value, handleTabChange } = useTabValue();
   return (
@@ -118,7 +118,7 @@ export default function LandingImages(props) {
       
 
       {/* Image section */}
-      <CPACampaigns campaigns={campaignData.data} isDesktopWidth={isDesktopWidth} name={name}/>
+      <CPACampaigns campaigns={campaignData.data} isDesktopWidth={isDesktopWidth} name={name} isMobile={isMobile} os={os}/>
     </Grid>
   );
 }

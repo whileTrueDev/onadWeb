@@ -246,7 +246,7 @@ const manualSources: ManualSources = {
       {
         image: '/pngs/dashboard/manual/new_creator/creator-adpage-02.png',
         description: `${textStyling.LinkText('<내 참여형광고>', 'cpa-dashboard')}에서 지금까지의 참여형 광고 수익금과 진행한 광고 수를 확인할 수 있습니다. 
-        각 버튼을 통해 참여형 광고의 유의사항, 참여형 광고 내역, 내 광고페이지를 확인할 수 있습니다.`
+        ${textStyling.styledText('광고시작하기')} 버튼을 클릭해 지금 바로 광고를 시작해보세요!`
       },
       {
         image: '/pngs/dashboard/manual/new_creator/creator-adpage-03.png',

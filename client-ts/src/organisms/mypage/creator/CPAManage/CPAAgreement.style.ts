@@ -22,6 +22,12 @@ const useStyle = makeStyles((theme: Theme) => ({
     justifyContent: 'center',
     fontWeight: 800,
   },
+  stepDetailWrap: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   stepWrapRed: {
     color: theme.palette.primary.main
   },

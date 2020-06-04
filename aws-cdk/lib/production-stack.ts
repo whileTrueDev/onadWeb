@@ -257,6 +257,22 @@ export default class OnADProductionAwsStack extends cdk.Stack {
       PUBLIC_URL: ecs.Secret.fromSsmParameter(ssmParameters.TEST_ADPAGE_HOSTNAME),
     }, onadAdpagePort);
 
+    // Adpick Tracking Crawler Task Definition
+    const onadAdpickTrackingCrawlRepo = 'hwasurr/onad-adpick-tracking-crawl';
+    const onadAdpickTrackingCrawlName = 'onad-adpick-tracking-crawl';
+    const onadAdpickTrackingCrawl = makeTaskDefinition(this,
+      onadAdpickTrackingCrawlName, onadAdpickTrackingCrawlRepo, onadTaskRole, {
+        DB_HOST: ecs.Secret.fromSsmParameter(ssmParameters.DB_HOST),
+        DB_USER: ecs.Secret.fromSsmParameter(ssmParameters.DB_USER),
+        DB_PASSWORD: ecs.Secret.fromSsmParameter(ssmParameters.DB_PASSWORD),
+        DB_DATABASE: ecs.Secret.fromSsmParameter(ssmParameters.DB_DATABASE),
+        DB_CHARSET: ecs.Secret.fromSsmParameter(ssmParameters.DB_CHARSET),
+        DB_PORT: ecs.Secret.fromSsmParameter(ssmParameters.DB_PORT),
+        ADPICK_AFF_ID: ecs.Secret.fromSsmParameter(ssmParameters.ADPICK_AFF_ID),
+        ADPICK_MEM_ID: ecs.Secret.fromSsmParameter(ssmParameters.ADPICK_MEM_ID),
+        ADPICK_MEM_PWD: ecs.Secret.fromSsmParameter(ssmParameters.ADPICK_MEM_PWD),
+      });
+
 
     // *********************************************
     // Create ECS Service
@@ -359,13 +375,23 @@ export default class OnADProductionAwsStack extends cdk.Stack {
       taskCount: 1,
     }));
 
-    // Twitch Crawl
+    // Adpick campaign data Crawl
     const onadAdpickCrawlRule = new events.Rule(this, `${onadAdpickCrawlName}Rule`, {
       schedule: events.Schedule.expression('cron(*/10 * * * ? *)')
     });
     onadAdpickCrawlRule.addTarget(new targets.EcsTask({
       cluster: productionCluster,
       taskDefinition: onadAdpickCrawl.taskDefinition,
+      taskCount: 1,
+    }));
+
+    // Adpick conversion data Crawl
+    const onadAdpickTrackingCrawlRule = new events.Rule(this, `${onadAdpickTrackingCrawlName}Rule`, {
+      schedule: events.Schedule.expression('cron(*/10 * * * ? *)')
+    });
+    onadAdpickTrackingCrawlRule.addTarget(new targets.EcsTask({
+      cluster: productionCluster,
+      taskDefinition: onadAdpickTrackingCrawl.taskDefinition,
       taskCount: 1,
     }));
 

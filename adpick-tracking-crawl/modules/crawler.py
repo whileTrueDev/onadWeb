@@ -16,7 +16,7 @@ ADPICK_USER_ID = os.environ.get("ADPICK_MEM_ID")
 ADPICK_PASSWORD = os.environ.get("ADPICK_MEM_PWD")
 
 # Add following 2 line before start the Chrome
-if(sys.platform == 'win32'):
+if(sys.platform == 'win32' or sys.platform == 'darwin'):
     options = webdriver.ChromeOptions()
     options.add_argument('headless')
     options.add_argument('disable-gpu')
@@ -36,7 +36,7 @@ else:
     options.add_experimental_option('prefs', prefs)
 
 
-def adpick_crawler(number_of_row):
+def adpick_crawler(number_of_row, UNIX_CHROME_DRIVER_PATH):
     csv_list = []
     cell_list = []
     stop = False
@@ -45,8 +45,7 @@ def adpick_crawler(number_of_row):
             r'C:\Users\kevin\Desktop\adpick_crawler\winwebdriver\chromedriver.exe', options=options)
         driver.implicitly_wait(2)
     else:
-        driver = webdriver.Chrome(
-            './webdriver/chromedriver', options=options)
+        driver = webdriver.Chrome(UNIX_CHROME_DRIVER_PATH, options=options)
 
     driver.get(
         'https://www.adpick.co.kr/?ac=login&nurl=https%3A%2F%2Fwww.adpick.co.kr%2F%3Fac%3Ddashboard')
@@ -57,7 +56,6 @@ def adpick_crawler(number_of_row):
     driver.find_element_by_id('memid').send_keys(ADPICK_USER_ID)  # id 입력
     driver.find_element_by_id('mempwd').send_keys(
         ADPICK_PASSWORD)  # pwd 입력
-
     print('typing id, pw succeed')
 
     driver.find_element_by_class_name('btnLogin').click()  # 로그인 버튼 클릭

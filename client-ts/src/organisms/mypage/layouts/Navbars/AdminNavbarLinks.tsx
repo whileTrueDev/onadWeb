@@ -64,32 +64,36 @@ function HeaderLinks(): JSX.Element {
   return (
     <div>
       {/* notification */}
-      <Tooltip title="알림">
-        <IconButton
-          aria-label="notifications"
-          ref={notificationRef}
-          onClick={(e): void => {
-            if (anchorEl) { handleAnchorClose(); } else { handleAnchorOpen(e); }
-          }}
-        >
-          <Badge
-            badgeContent={!notificationGet.loading && notificationGet.data
-              ? (notificationGet.data.notifications.filter((noti) => noti.readState === 0).length)
-              : (null)}
-            color="secondary"
+      <Hidden smDown>
+        <Tooltip title="알림">
+          <IconButton
+            aria-label="notifications"
+            ref={notificationRef}
+            onClick={(e): void => {
+              if (anchorEl) { handleAnchorClose(); } else { handleAnchorOpen(e); }
+            }}
           >
-            <Notifications />
-          </Badge>
-        </IconButton>
-      </Tooltip>
+            <Badge
+              badgeContent={!notificationGet.loading && notificationGet.data
+                ? (notificationGet.data.notifications.filter((noti) => noti.readState === 0).length)
+                : (null)}
+              color="secondary"
+            >
+              <Notifications />
+            </Badge>
+          </IconButton>
+        </Tooltip>
+      </Hidden>
 
-      {anchorEl && !notificationGet.loading && notificationGet.data && (
-      <NotificationPopper
-        anchorEl={anchorEl}
-        notificationData={notificationGet.data.notifications}
-        successCallback={notificationGet.doGetRequest}
-      />
-      )}
+      <Hidden smDown>
+        {anchorEl && !notificationGet.loading && notificationGet.data && (
+        <NotificationPopper
+          anchorEl={anchorEl}
+          notificationData={notificationGet.data.notifications}
+          successCallback={notificationGet.doGetRequest}
+        />
+        )}
+      </Hidden>
 
       <Hidden smDown>
         <Tooltip title="계정관리로 이동">

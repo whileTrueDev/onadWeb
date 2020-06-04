@@ -19,11 +19,13 @@ interface CPAIndicatorProps {
   callback: () => void;
   handleIncomeTableDialogOpen: () => void;
   handleAgreementDialogOpen: () => void;
+  handleHowToCPADialogOpen: () => void;
 }
 export default function CPAIndicator({
   CPAmainData,
   handleIncomeTableDialogOpen,
-  handleAgreementDialogOpen
+  handleAgreementDialogOpen,
+  handleHowToCPADialogOpen
 }: CPAIndicatorProps): JSX.Element {
   const classes = useStyle();
   const theme = useTheme();
@@ -71,10 +73,11 @@ export default function CPAIndicator({
         <Grid item className={classes.box} xs={12} md={8} sm={8}>
           <div className={classes.buttonWrap}>
             <Button
-              color="primary"
-              onClick={handleAgreementDialogOpen}
+              color="secondary"
+              onClick={handleHowToCPADialogOpen}
+              style={{ color: 'white' }}
             >
-              유의사항 확인
+              광고 시작하기
             </Button>
             <Button
               color="primary"
@@ -83,15 +86,14 @@ export default function CPAIndicator({
               수익내역 확인
             </Button>
             <Button
-              color="secondary"
-              onClick={handleAdpageOpen}
-              style={{ color: 'white' }}
+              color="primary"
+              onClick={handleAgreementDialogOpen}
             >
-              내 광고페이지
+              유의사항 확인
             </Button>
           </div>
           <Typography variant="body1" align="center" gutterBottom className={classes.stepWrapRed}>
-            * 참여형 광고로 인한 실적(수익금, 운영수, 상세내역) 반영에는 1~2일이 소요됩니다
+            * 참여형 광고로 인한 실적(수익금, 수익발생 광고수, 수익내역) 반영에는 최대 1~2일이 소요됩니다
           </Typography>
           <Typography variant="body1" align="center" gutterBottom className={classes.stepWrapRed}>
             * 모든 참여형 광고 캠페인은 광고주의 진행/중단 요청에 따라 임의로 종료될 수 있습니다

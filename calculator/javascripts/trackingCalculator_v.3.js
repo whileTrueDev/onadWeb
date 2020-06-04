@@ -76,7 +76,7 @@ const getCreatorList = (date) => {
         inrow.result.forEach(({
           creatorId, payouts, channel, peakview
         }) => {
-          if (peakview !== null && countsList[creatorId] > peakview) {
+          if ((peakview !== null && countsList[creatorId] > peakview) || creatorId == null ) {
             banList.push(creatorId);
           } else {
             const cash = getCreatorCash({ payouts, channel });

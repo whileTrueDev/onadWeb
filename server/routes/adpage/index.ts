@@ -154,7 +154,7 @@ router.route('/campaigns')
       JOIN 
       (
       SELECT 
-      id, apOffer, apType, apCategory,
+      id, apOS, apOffer, apType, apCategory,
       apPackage, apItemid, apAppTitle,
       apHeadline, apVideo, apDailyCap,
       apRemain, apAppPromoText, apKPI,
@@ -166,6 +166,7 @@ router.route('/campaigns')
       AND apRemain > 5
       ) AS adlist
       on mylist.adId = adlist.apOffer
+      order by apType
       `;
       const id = await doQuery(nameQuery, [name]);
       const { creatorId } = id.result[0];

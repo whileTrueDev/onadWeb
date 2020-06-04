@@ -50,7 +50,7 @@ const useStyles = makeStyles(theme => ({
 
 }));
 
-export default function CPACampaigns({ campaigns, isDesktopWidth, name }) {
+export default function CPACampaigns({ campaigns, isDesktopWidth, isMobile, os }) {
   const theme = useTheme();
   const classes = useStyles();
   // 상세보기 open state
@@ -63,6 +63,16 @@ export default function CPACampaigns({ campaigns, isDesktopWidth, name }) {
     }
   }
 
+  function renderOS(appOS){
+    switch (appOS) {
+      case "Both": return 'Android/iOS';
+      case "Android": return 'Android 전용';
+      case "iOS": return 'iOS 전용';
+      default: return null;
+    }
+  }
+
+
   // Rendering Campaign types
   function renderType(typeNum) {
     switch (typeNum) {
@@ -73,10 +83,11 @@ export default function CPACampaigns({ campaigns, isDesktopWidth, name }) {
       default: return typeNum;
     }
   }
+  
   return (
-    <GridContainer justify={isDesktopWidth ? "flex-start" : "center"} >
+    <GridContainer style={{width: '100%'}} justify={isDesktopWidth ? "flex-start" : "center"} >
       {campaigns
-        .filter((cam) => !(cam.apType === AdpickCampaignTypeEnum.INSTALL))
+        // .filter((cam) => !(cam.apType === AdpickCampaignTypeEnum.INSTALL))
         .map((item, idx) => (
           <GridItem key={item.apOffer} xs={10} md={4} lg={3} xl={3}>
             <Card className= {classes.card}>
@@ -102,6 +113,23 @@ export default function CPACampaigns({ campaigns, isDesktopWidth, name }) {
                 >
                   {item.apAppTitle}
                 </Typography>
+                
+                {item.apOS ?
+                <Typography style={{
+                  fontWeight: 500,
+                  display: 'block',
+                  overflow: 'hidden',
+                  whiteSpace: 'nowrap',
+                  textOverflow: 'ellipsis',
+                  maxWidth: '100%',
+                  lineHeight: 1.5
+                }}
+                >
+                  {renderOS(item.apOS)}
+                </Typography>
+                :
+                 <div style={{ height: 32 }} />
+              }
                 {/* 캠페인 타입 */}
               </div>
 
@@ -136,6 +164,14 @@ export default function CPACampaigns({ campaigns, isDesktopWidth, name }) {
                   color="primary"
                   onClick={() => {
                     // 우리 클릭 트래킹 추가.
+                    //  안드로이드 && (앱설치 + 회원가입)일때, 
+                    if(isMobile && !(item.apOS === null || item.apOS === "Both") && os !== item.apOS ){
+                      alert("접속하신 기기에서는 사용할 수 없는 앱입니다.");
+                      return;
+                    }
+                    if(isMobile && os === "Android" && (item.apType === '1'  || item.apType === '3')){
+                      alert('안드로이드는 PC 또는 모바일 웹 브라우저에서 참여가 가능합니다.');
+                    }
                     axios.post(`${apiHOST}/adpage/banner/click`, { campaignId: item.campaignId, creatorId: item.creatorId });
                     window.location.href = item.apTrackingLink;
                   }}
