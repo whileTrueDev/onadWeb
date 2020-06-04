@@ -17,7 +17,7 @@ now = datetime.datetime.now().strftime('%Y-%m-%d')
 
 print('%s crawling 시작' % now)
 # Add following 2 line before start the Chrome
-if(sys.platform == 'win32'):
+if(sys.platform == 'win32' or sys.platform == 'darwin'):
     options = webdriver.ChromeOptions()
     options.add_argument('headless')
     options.add_argument('disable-gpu')
@@ -37,7 +37,7 @@ else:
     options.add_experimental_option('prefs', prefs)
 
 
-def adpick_crawler():
+def adpick_crawler(UNIX_CHROME_DRIVER_PATH):
     csv_list = []
     cell_list = []
     if (sys.platform == 'win32'):
@@ -45,8 +45,7 @@ def adpick_crawler():
             r'C:\Users\kevin\Desktop\adpick_crawler\winwebdriver\chromedriver.exe', options=options)
         driver.implicitly_wait(2)
     else:
-        driver = webdriver.Chrome(
-            './webdriver/chromedriver', options=options)
+        driver = webdriver.Chrome(UNIX_CHROME_DRIVER_PATH, options=options)
 
     driver.get(
         'https://www.adpick.co.kr/?ac=login&nurl=https%3A%2F%2Fwww.adpick.co.kr%2F%3Fac%3Ddashboard')
