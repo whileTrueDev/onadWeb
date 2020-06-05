@@ -120,7 +120,7 @@ const getCampaignList = ({ date, banList }) => {
           campaignId, creatorId, payouts, channel, costType
         }) => {
           if (!banList.includes(creatorId)) {
-            const cashToCreator = getCreatorCash({ payouts, channel });
+            const cashToCreator = (creatorId == null) ? 0 : getCreatorCash({ payouts, channel });
             const cashFromMarketer = getMarketerCash({ payouts });
             const logId = `${campaignId}/${creatorId}`;
             if (logNames.includes(logId)) {
