@@ -11,7 +11,8 @@ ROOT_PATH = dirname(abspath(__file__))
 UNIX_CHROME_DRIVER_PATH = join(ROOT_PATH, 'chromedriver')
 dotenv_path = join(ROOT_PATH, '.env')
 
-load_dotenv(verbose=True)
+if (os.environ.get('PYTHON_ENV') != 'production'):
+    load_dotenv(verbose=True)
 
 col_list = ['costType', 'marketerId', 'creatorId', 'browser',
             'device', 'browser_version', 'browser_engine', 'browser_engine_version', 'channel']

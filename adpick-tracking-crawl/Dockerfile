@@ -1,5 +1,9 @@
 FROM python:3.8.2
 
+# environment 설정
+ENV PYTHON_ENV=production
+
+# 한국어 설정
 ENV LC_ALL=C.UTF-8
 
 # timezone 설정
