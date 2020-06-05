@@ -43,7 +43,7 @@ const getCreatorList = (date) => {
   SELECT creatorId, channel, sum(payout) as payouts, count(*) as counts
   FROM tracking 
   WHERE (clickedTime > ? AND costType = 'CPC' AND NOT os IS NULL)
-  OR (conversionTime > ? AND costType = 'CPA' AND NOT os IS NULL)
+  OR (createdAt > ? AND costType = 'CPA' AND NOT os IS NULL)
   GROUP BY creatorId, channel
   ) AS trackingData
   LEFT JOIN
@@ -108,7 +108,7 @@ const getCampaignList = ({ date, banList }) => {
   SELECT campaignId, creatorId, channel, sum(payout) as payouts, costType
   FROM tracking 
   WHERE (clickedTime > ? AND costType = 'CPC' AND NOT os IS NULL)
-  OR (conversionTime > ? AND costType = 'CPA' AND NOT os IS NULL)
+  OR (createdAt > ? AND costType = 'CPA' AND NOT os IS NULL)
   GROUP BY campaignId, creatorId, channel
   `;
   return new Promise((resolve, reject) => {

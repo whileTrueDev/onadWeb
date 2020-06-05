@@ -5,7 +5,8 @@ from dotenv import load_dotenv
 import sys
 
 dotenv_path = join(dirname(__file__), '.env')
-load_dotenv(verbose=True)
+if (os.environ.get('PYTHON_ENV') != 'production'):
+    load_dotenv(verbose=True)
 
 USER_ID = os.environ.get("DB_USER")
 PASSWORD = os.environ.get("DB_PASSWORD")
