@@ -10,7 +10,8 @@ import os
 import time
 
 dotenv_path = join(dirname(__file__), '.env')
-load_dotenv(verbose=True)
+if (os.environ.get('PYTHON_ENV') != 'production'):
+    load_dotenv(verbose=True)
 
 ADPICK_USER_ID = os.environ.get("ADPICK_MEM_ID")
 ADPICK_PASSWORD = os.environ.get("ADPICK_MEM_PWD")
