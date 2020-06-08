@@ -24,6 +24,7 @@ while True:
         number_of_row = query_modules.get_number_of_row()
         crawling_result = crawler.adpick_crawler(
             number_of_row, UNIX_CHROME_DRIVER_PATH)  # 엑셀 다운로드 및 referrer 리스트 얻음
+
         referrer_list = crawling_result['referrer_list']
         stop = crawling_result['stop']
         difference = crawling_result['difference']
@@ -32,9 +33,10 @@ while True:
             raise NotImplementedError
         path_dir = join(ROOT_PATH, 'xlsx')
         file_list = os.listdir(path_dir)
+        latest_file = sorted(file_list)[-1]
 
         data_xls = pd.read_excel(
-            join(path_dir, '{dir}'.format(dir=file_list[0])), 'Worksheet', index_col=None)
+            join(path_dir, '{dir}'.format(dir=latest_file)), 'Worksheet', index_col=None)
         data_xls['creatorTwitchId'] = referrer_list
         data_xls.drop(['날짜', '시간대', 'Referer', '상태'], axis=1, inplace=True)
         data_xls[col_list] = pd.DataFrame(
@@ -74,10 +76,6 @@ while True:
         print('creatorId 입력완료')
         print('--전체 작업 완료--')
         break
-    except ValueError as e:
-        print('발생 CPA 없음')
-        print(e)
-        break
     except NotImplementedError as e:
         print('새로 발생한 cpa 없음 / db insert 없이 종료')
         print(e)
@@ -87,7 +85,3 @@ while True:
         print(e)
         time.sleep(3)
         continue
-    except Exception as e:
-        print('other error')
-        print(e)
-        break
