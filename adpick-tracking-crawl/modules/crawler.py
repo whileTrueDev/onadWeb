@@ -21,8 +21,8 @@ ADPICK_PASSWORD = os.environ.get("ADPICK_MEM_PWD")
 # Add following 2 line before start the Chrome
 if(sys.platform == 'win32' or sys.platform == 'darwin'):
     options = webdriver.ChromeOptions()
-    # options.add_argument('headless')
-    # options.add_argument('disable-gpu')
+    options.add_argument('headless')
+    options.add_argument('disable-gpu')
     prefs = {
         "download.default_directory": r"C:\Users\kevin\Desktop\adpick_crawler\xlsx\\"}
     options.add_experimental_option("prefs", prefs)
