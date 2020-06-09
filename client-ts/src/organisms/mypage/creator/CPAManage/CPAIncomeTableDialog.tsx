@@ -54,14 +54,17 @@ export default function CPAIncomeTable({
                 field: 'campaignState',
                 render: (rowData): JSX.Element => (
                   <>
-                    {!(campaigns.findIndex((cam) => rowData.apOffer === cam.apOffer) > -1) && (
-                    <Typography variant="body2">중지(종료)</Typography>
-                    )}
-                    {rowData.campaignState === AdpickCampaignStateEnum.ACTIVE && (
-                    <Typography variant="body2">등록됨</Typography>
-                    )}
-                    {rowData.campaignState === AdpickCampaignStateEnum.INACTIVE && (
-                    <Typography variant="body2">제외됨</Typography>
+                    {!(campaigns.findIndex((cam) => rowData.apOffer === cam.apOffer) > -1) ? (
+                      <Typography variant="body2">중지(종료)</Typography>
+                    ) : (
+                      <>
+                        {rowData.campaignState === AdpickCampaignStateEnum.ACTIVE && (
+                        <Typography variant="body2">등록됨</Typography>
+                        )}
+                        {rowData.campaignState === AdpickCampaignStateEnum.INACTIVE && (
+                        <Typography variant="body2">제외됨</Typography>
+                        )}
+                      </>
                     )}
                   </>
                 ),
