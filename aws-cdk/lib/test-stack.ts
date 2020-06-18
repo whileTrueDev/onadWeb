@@ -46,6 +46,7 @@ export default class OnADTestAwsStack extends cdk.Stack {
       allowAllOutbound: true
     });
     onadWebApiSecGrp.connections.allowFromAnyIpv4(ec2.Port.tcp(3000));
+    onadWebApiSecGrp.connections.allowFromAnyIpv4(ec2.Port.tcp(587));
     // Ad Broad
     const bannerBroadSecGrp = new ec2.SecurityGroup(this, 'bannerBroadSecurityGroup', {
       vpc: myVpc,
@@ -113,7 +114,8 @@ export default class OnADTestAwsStack extends cdk.Stack {
 
     // API - Task definition
     const onadApiRepo = 'hwasurr/onad_web_api';
-    const onadApiPort = 3000;
+    const onadApiTargetPort = 3000;
+    const onadApiPort = [3000, 587];
     const onadApiName = 'TEST-onad-web-api';
     const onadApi = makeTaskDefinition(this, onadApiName, onadApiRepo, onadTaskRole, {
       REACT_HOSTNAME: ecs.Secret.fromSsmParameter(ssmParameters.TEST_REACT_HOSTNAME),
@@ -263,7 +265,7 @@ export default class OnADTestAwsStack extends cdk.Stack {
     const onadWebApiGroup = new elbv2.ApplicationTargetGroup(this, 'onadLBWebApiTargetGroup', {
       vpc: myVpc,
       targetGroupName: `${onadApiName}-Target`,
-      port: onadApiPort,
+      port: onadApiTargetPort,
       protocol: elbv2.ApplicationProtocol.HTTP,
       targets: [onadWebApiService],
     });

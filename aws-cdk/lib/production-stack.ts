@@ -46,6 +46,7 @@ export default class OnADProductionAwsStack extends cdk.Stack {
       allowAllOutbound: true
     });
     onadWebApiSecGrp.connections.allowFromAnyIpv4(ec2.Port.tcp(3000));
+    onadWebApiSecGrp.connections.allowFromAnyIpv4(ec2.Port.tcp(587));
     // Ad Broad
     const bannerBroadSecGrp = new ec2.SecurityGroup(this, 'bannerBroadSecurityGroup', {
       vpc: productionVpc,
@@ -113,7 +114,7 @@ export default class OnADProductionAwsStack extends cdk.Stack {
 
     // API - Task definition
     const onadApiRepo = 'hwasurr/onad_web_api';
-    const onadApiPort = 3000;
+    const onadApiPort = [3000, 587];
     const onadApiName = 'onad-web-api';
     const onadApi = makeTaskDefinition(this, onadApiName, onadApiRepo, onadTaskRole, {
       REACT_HOSTNAME: ecs.Secret.fromSsmParameter(ssmParameters.PRODUCTION_REACT_HOSTNAME),

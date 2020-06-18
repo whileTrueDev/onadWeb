@@ -50,7 +50,7 @@ export default withRoot(() => {
           <Reference />
           <IntroService />
           <ProductHowItWorks source={sources.howitworks} MainUserType="marketer" logout={logout} />
-          <Inqurie />
+          {/* <Inqurie /> */}
           <AppFooter />
           <RePasswordDialog
             repasswordOpen={repasswordOpen}
@@ -75,7 +75,7 @@ export default withRoot(() => {
             <Advantage source={sources.advantage} MainUserType="creator" />
             <Reference />
             <ProductHowItWorks source={sources.howitworks} MainUserType="creator" logout={logout} />
-            <InquiryCreator />
+            {/* <InquiryCreator /> */}
             <AppFooter />
             <RePasswordDialog
               repasswordOpen={repasswordOpen}
