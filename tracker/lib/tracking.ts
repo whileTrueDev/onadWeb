@@ -91,6 +91,16 @@ export default async function tracking(
       await doQuery(insertQuery, queryArray);
       message = 'Successfully Inserted';
       trackingLogging(channelType, creatorTwitchId, message);
+
+      // creatorRoyaltyLevel -> exp up
+      const levelQuery = `
+      UPDATE creatorRoyaltyLevel
+        SET exp = exp + 1
+        WHERE creatorId = ?`;
+      const levelQueryArray = [creatorId];
+      await doQuery(levelQuery, levelQueryArray);
+      trackingLogging(channelType, creatorTwitchId, 'Successfully Royalty level Updated');
+
       return { message, name: creatorName, href: whereToGo };
     }
     message = 'already inserted';
