@@ -1,0 +1,21 @@
+{
+  "name": "sleep-account",
+  "version": "1.0.0",
+  "description": "check sleep accounts and send mails.",
+  "main": "app.js",
+  "author": "M'baku",
+  "license": "MIT",
+  "dependencies": {
+    "@types/dotenv": "^8.2.0",
+    "@types/http-errors": "^1.6.3",
+    "@types/mysql": "^2.15.13",
+    "@types/nodemailer": "^6.4.0",
+    "@types/winston": "^2.4.4",
+    "dotenv": "^8.2.0",
+    "http-errors": "^1.7.3",
+    "mysql": "^2.18.1",
+    "nodemailer": "^6.4.8",
+    "winston": "^3.2.1",
+    "winston-daily-rotate-file": "^4.5.0"
+  }
+}
