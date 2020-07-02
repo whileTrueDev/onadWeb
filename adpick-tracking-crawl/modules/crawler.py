@@ -10,7 +10,9 @@ import sys
 from dotenv import load_dotenv
 from os.path import join, dirname
 import os
-import time
+import datetime
+
+time = datetime.datetime.now().hour
 
 dotenv_path = join(dirname(__file__), '.env')
 if (os.environ.get('PYTHON_ENV') != 'production'):
@@ -67,14 +69,19 @@ def adpick_crawler(number_of_row, UNIX_CHROME_DRIVER_PATH):
 
         print('login succeed')
 
-        campaign_side_bar = driver.find_element_by_class_name('m3')  # 사이드바 찾기
-        campaign_side_bar_ul = campaign_side_bar.find_elements_by_tag_name(
-            "ul")  # 사이드바 - ul 찾기
-        campaign_side_bar_ul_li = campaign_side_bar_ul[0].find_elements_by_tag_name(
-            "li")  # 사이드바 - ul - li 찾기
+        # campaign_side_bar = driver.find_element_by_class_name(
+        #     'gnb-tab-wrap')  # 사이드바 찾기
+        # campaign_side_bar_ul = campaign_side_bar.find_elements_by_tag_name(
+        #     "ul")  # 사이드바 - ul 찾기
+        # campaign_side_bar_ul_li = campaign_side_bar_ul[0].find_elements_by_tag_name("li")[
+        #     7]  # 사이드바 - ul - li 찾기
 
-        campaign_side_bar_ul_li[0].click()  # 리포트 - 캠페인 클릭
-        print('report-campaign click')
+        # campaign_side_bar_ul_li.click()  # 리포트 - 캠페인 클릭
+        # print('report-campaign click')
+
+        # 리포트 페이지 - 전환으로 이동
+        driver.get('https://www.adpick.co.kr/?ac=report&tac=details')
+
         driver.implicitly_wait(2)
         driver.find_elements_by_class_name(
             'ui-depth3')[0].find_elements_by_tag_name("li")[2].click()  # navbar-전환 클릭
@@ -84,10 +91,18 @@ def adpick_crawler(number_of_row, UNIX_CHROME_DRIVER_PATH):
             'om-checkbox-custom-checkbox-label')[4].click()  # 버전 체크박스 클릭
         driver.implicitly_wait(2)
         print('version checkbox 클릭')
-        driver.find_elements_by_class_name(
-            'om-select-custom-select')[0].find_elements_by_tag_name('option')[0].click()  # 오늘 날짜 선택
-        driver.implicitly_wait(2)
-        print('select today')
+
+        if time == 0:  # 자정일 경우는 어제 데이터를 검색
+            driver.find_elements_by_class_name(
+                'om-select-custom-select')[1].find_elements_by_tag_name('option')[0].click()  # 오늘 날짜 선택
+            driver.implicitly_wait(2)
+            print('select yesterday')
+
+        else:
+            driver.find_elements_by_class_name(
+                'om-select-custom-select')[0].find_elements_by_tag_name('option')[0].click()  # 오늘 날짜 선택
+            driver.implicitly_wait(2)
+            print('select today')
 
         referrer_list = []
 
