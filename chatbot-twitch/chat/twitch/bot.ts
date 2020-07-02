@@ -124,7 +124,7 @@ class Bot {
     const adMessage = `${messagePrefix}\n${adString}`;
     if (this.chatBotClient) {
       this.chatBotClient.say(channel, adMessage)
-        .catch((err) => console.log(`sayAdMessage error - ${err}`));
+        .catch((err) => console.log(`[${new Date().toLocaleString()}] ${channel}, sayAdMessage error - ${err}`));
     }
   }
 
@@ -147,7 +147,11 @@ class Bot {
           } else {
             this.sayAdMessage(data.creatorTwitchId, adString);
           }
-          console.log(`[${new Date().toLocaleString()}] adchat to - ${data.creatorTwitchId}`);
+          if (data.campaignName) {
+            console.log(`[${new Date().toLocaleString()}] adchat to - ${data.creatorTwitchId}, ${data.campaignName}: ${data.descriptionToChat?.slice(10)}`);
+          } else {
+            console.log(`[${new Date().toLocaleString()}] adchat to - ${data.creatorTwitchId}, with default Message`);
+          }
         }
       }
     });

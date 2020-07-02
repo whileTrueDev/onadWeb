@@ -13,6 +13,13 @@ import makeTaskDefinition from './ecs/makeTaskDefinition';
 import getParams from './get-ssm-params/getParams';
 
 const DOMAIN = 'onad.io';
+const GMAIL_PORT = 587;
+const API_PORT = 3000;
+const REACT_PORT = 3001;
+const BANNER_BROAD_PORT = 3002;
+const TRACKER_PORT = 3030;
+const ADPAGE_PORT = 3011;
+
 
 export default class OnADTestAwsStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
@@ -38,36 +45,36 @@ export default class OnADTestAwsStack extends cdk.Stack {
       securityGroupName: 'OnADReact-test-SecurityGroup',
       allowAllOutbound: true
     });
-    onadWebSecGrp.connections.allowFromAnyIpv4(ec2.Port.tcp(3001));
+    onadWebSecGrp.connections.allowFromAnyIpv4(ec2.Port.tcp(REACT_PORT));
     // API
     const onadWebApiSecGrp = new ec2.SecurityGroup(this, 'APISecurityGroup', {
       vpc: myVpc,
       securityGroupName: 'OnADAPI-test-SecurityGroup',
       allowAllOutbound: true
     });
-    onadWebApiSecGrp.connections.allowFromAnyIpv4(ec2.Port.tcp(3000));
-    onadWebApiSecGrp.connections.allowFromAnyIpv4(ec2.Port.tcp(587));
+    onadWebApiSecGrp.connections.allowFromAnyIpv4(ec2.Port.tcp(API_PORT));
+    onadWebApiSecGrp.connections.allowFromAnyIpv4(ec2.Port.tcp(GMAIL_PORT));
     // Ad Broad
     const bannerBroadSecGrp = new ec2.SecurityGroup(this, 'bannerBroadSecurityGroup', {
       vpc: myVpc,
       securityGroupName: 'OnADAdBaord-test-SecurityGroup',
       allowAllOutbound: true
     });
-    bannerBroadSecGrp.connections.allowFromAnyIpv4(ec2.Port.tcp(3002));
+    bannerBroadSecGrp.connections.allowFromAnyIpv4(ec2.Port.tcp(BANNER_BROAD_PORT));
     // Trakcer
     const trackerSecGrp = new ec2.SecurityGroup(this, 'trackerSecurityGroup', {
       vpc: myVpc,
       securityGroupName: 'OnADAdTracker-test-SecurityGroup',
       allowAllOutbound: true
     });
-    trackerSecGrp.connections.allowFromAnyIpv4(ec2.Port.tcp(3030));
+    trackerSecGrp.connections.allowFromAnyIpv4(ec2.Port.tcp(TRACKER_PORT));
     // Adpage
     const adpageSecGrp = new ec2.SecurityGroup(this, 'adPageSecurityGroup', {
       vpc: myVpc,
       securityGroupName: 'OnADAdAdpage-test-SecurityGroup',
       allowAllOutbound: true
     });
-    adpageSecGrp.connections.allowFromAnyIpv4(ec2.Port.tcp(3011));
+    adpageSecGrp.connections.allowFromAnyIpv4(ec2.Port.tcp(ADPAGE_PORT));
 
     // *********************************************
     // Create IAM Role for Fargate task, CloudWatch
@@ -103,7 +110,7 @@ export default class OnADTestAwsStack extends cdk.Stack {
 
     // React - Task definition
     const onadClientRepo = 'hwasurr/onad_web';
-    const onadClientPort = 3001;
+    const onadClientPort = REACT_PORT;
     const onadClientName = 'TEST-onad-web';
     const onadWeb = makeTaskDefinition(this, onadClientName, onadClientRepo, onadTaskRole, {
       REACT_APP_REACT_HOSTNAME: ecs.Secret.fromSsmParameter(ssmParameters.TEST_REACT_HOSTNAME),
@@ -114,8 +121,8 @@ export default class OnADTestAwsStack extends cdk.Stack {
 
     // API - Task definition
     const onadApiRepo = 'hwasurr/onad_web_api';
-    const onadApiTargetPort = 3000;
-    const onadApiPort = [3000, 587];
+    const onadApiTargetPort = API_PORT;
+    const onadApiPort = [API_PORT, GMAIL_PORT];
     const onadApiName = 'TEST-onad-web-api';
     const onadApi = makeTaskDefinition(this, onadApiName, onadApiRepo, onadTaskRole, {
       REACT_HOSTNAME: ecs.Secret.fromSsmParameter(ssmParameters.TEST_REACT_HOSTNAME),
@@ -162,7 +169,7 @@ export default class OnADTestAwsStack extends cdk.Stack {
 
     // Banner broad - Task definition
     const onadBannerBroadRepo = 'hwasurr/onad_socket';
-    const onadBannerBroadPort = 3002;
+    const onadBannerBroadPort = BANNER_BROAD_PORT;
     const onadBannerBroadName = 'TEST-onad-banner-broad';
     const onadBannerBroad = makeTaskDefinition(this,
       onadBannerBroadName, onadBannerBroadRepo, onadTaskRole, {
@@ -178,7 +185,7 @@ export default class OnADTestAwsStack extends cdk.Stack {
 
     // tracker - Task Definition
     const onadTrackerRepo = 'hwasurr/onad_tracker';
-    const onadTrackerPort = 3030;
+    const onadTrackerPort = TRACKER_PORT;
     const onadTrackerName = 'TEST-onad-tracker';
     const onadTracker = makeTaskDefinition(this, onadTrackerName, onadTrackerRepo, onadTaskRole, {
       DB_HOST: ecs.Secret.fromSsmParameter(ssmParameters.DB_HOST),
@@ -191,7 +198,7 @@ export default class OnADTestAwsStack extends cdk.Stack {
 
     // Adpage - Task Definition
     const onadAdpageRepo = 'hwasurr/onad-adpage';
-    const onadAdpagePort = 3011;
+    const onadAdpagePort = ADPAGE_PORT;
     const onadAdpageName = 'TEST-onad-adpage';
     const onadAdpage = makeTaskDefinition(this, onadAdpageName, onadAdpageRepo, onadTaskRole, {
       REACT_APP_API_HOSTNAME: ecs.Secret.fromSsmParameter(ssmParameters.TEST_API_HOSTNAME),
