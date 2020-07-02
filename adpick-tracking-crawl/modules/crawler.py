@@ -83,10 +83,10 @@ def adpick_crawler(number_of_row, UNIX_CHROME_DRIVER_PATH):
         driver.get('https://www.adpick.co.kr/?ac=report&tac=details')
 
         driver.implicitly_wait(2)
-        driver.find_elements_by_class_name(
-            'ui-depth3')[0].find_elements_by_tag_name("li")[2].click()  # navbar-전환 클릭
-        driver.implicitly_wait(2)
-        print('navbar-transfer')
+        # driver.find_elements_by_class_name(
+        #     'ui-depth3')[0].find_elements_by_tag_name("li")[2].click()  # navbar-전환 클릭
+        # driver.implicitly_wait(2)
+        # print('navbar-transfer')
         driver.find_elements_by_class_name(
             'om-checkbox-custom-checkbox-label')[4].click()  # 버전 체크박스 클릭
         driver.implicitly_wait(2)
