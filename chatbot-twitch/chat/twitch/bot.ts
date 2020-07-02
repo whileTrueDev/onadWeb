@@ -148,7 +148,7 @@ class Bot {
             this.sayAdMessage(data.creatorTwitchId, adString);
           }
           if (data.campaignName) {
-            console.log(`[${new Date().toLocaleString()}] adchat to - ${data.creatorTwitchId}, ${data.campaignName}: ${data.descriptionToChat?.slice(10)}`);
+            console.log(`[${new Date().toLocaleString()}] adchat to - ${data.creatorTwitchId}, ${data.campaignName}: ${data.descriptionToChat?.slice(10)}...`);
           } else {
             console.log(`[${new Date().toLocaleString()}] adchat to - ${data.creatorTwitchId}, with default Message`);
           }
