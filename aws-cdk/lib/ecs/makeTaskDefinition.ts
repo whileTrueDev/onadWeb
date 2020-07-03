@@ -11,7 +11,7 @@ export default function makeTaskDefinition(
   secrets: {
     [key: string]: ecs.Secret;
   },
-  containerPort?: number,
+  containerPort?: number | number[],
   memory = 512,
   cpu = 256,
 ): {
@@ -39,7 +39,13 @@ export default function makeTaskDefinition(
     }
   );
   if (containerPort) {
-    container.addPortMappings({ containerPort });
+    if (containerPort instanceof Array) {
+      containerPort.forEach((port) => {
+        container.addPortMappings({ containerPort: port });
+      });
+    } else {
+      container.addPortMappings({ containerPort });
+    }
   }
 
   return {
