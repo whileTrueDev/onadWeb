@@ -4,6 +4,10 @@ interface Bank {
 }
 const banks: Bank[] = [
   {
+    bankName: '우체국',
+    bankCode: '071',
+  },
+  {
     bankName: '국민',
     bankCode: '004',
   },
