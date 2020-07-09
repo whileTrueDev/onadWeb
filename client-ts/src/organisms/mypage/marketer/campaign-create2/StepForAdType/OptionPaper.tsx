@@ -1,15 +1,15 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Collapse, Typography } from '@material-ui/core';
-import OptionSelectPaper from './sub/OptionSelectPaper';
-import CampaignCreateStepLayout from './StepLayout';
-import ButtonSet from './sub/ButtonSet';
-import AdDescriptionSelect from './sub/AdDescriptionSelect';
-import AdDescriptionDialog from './sub/AdDescriptionDialog';
-import { Step1Interface, Action } from './campaignReducer';
-import { OptionInterface, AdMaterial } from './interfaces';
-import options from './source/options';
-import useDialog from '../../../../utils/hooks/useDialog';
+import CampaignCreateStepLayout from '../shared/StepLayout';
+import OptionSelectPaper from '../shared/SelectPaper';
+import AdDescriptionSelect from './AdDescriptionSelect';
+import AdDescriptionDialog from './AdDescriptionDialog';
+import options from '../source/options';
+import { Step1Interface, Action as CampaignAction } from '../campaignReducer';
+import { OptionInterface, AdMaterial } from '../interfaces';
+
+import useDialog from '../../../../../utils/hooks/useDialog';
 
 const useStyles = makeStyles((theme) => ({
   expansionPanel: {
@@ -24,15 +24,25 @@ const useStyles = makeStyles((theme) => ({
 // 추후에 인터페이스 통합
 interface OptionPaperProps {
   state: Step1Interface;
-  dispatch: React.Dispatch<Action>; // 우선형 타입 선택
-  handleBack: (event: React.MouseEvent<HTMLButtonElement>) => void;
-  handleNext: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  dispatch: React.Dispatch<CampaignAction>; // 우선형 타입 선택
   step: number;
 }
+/**
+ * @description
+  해당 캠페인의 송출옵션을 선택한다.
+  0: CPM
+  1: CPM + CPC
+  2: CPC
+ * @param {*} state 송출옵션을 저장하는 object
+ * @param {*} dispatch 송출옵션을 변경하는 func
+ * @param {*} step 현재의 회원가입 진행상태, 다음 step으로 진행될 때, 선택된 옵션에 대한 렌더링을 위함.
+ *
+ * @author 박찬우
+ */
 const OptionPaper = (props: OptionPaperProps): JSX.Element => {
   const classes = useStyles();
   const {
-    state, dispatch, step, handleNext, handleBack, // for '다음' 버튼 관리
+    state, dispatch, step, // for '다음' 버튼 관리
   } = props;
 
   // option을 선택하였을 때 event listener
@@ -60,6 +70,8 @@ const OptionPaper = (props: OptionPaperProps): JSX.Element => {
           {options.map((opt: OptionInterface, index) => (
             <OptionSelectPaper
               key={opt.id}
+              checked={state.option === opt.id}
+              disabled={opt.id !== 'option1'}
               primaryText={opt.primaryText}
               secondaryText={opt.secondaryText}
               handleSelect={handleChange(opt.id)}
@@ -74,8 +86,6 @@ const OptionPaper = (props: OptionPaperProps): JSX.Element => {
                   <Typography variant="body2">(유튜브, 아프리카TV 향후 지원 예정)</Typography>
                 </div>
               )}
-              checked={state.option === opt.id}
-              disabled={opt.id !== 'option1'}
             >
               {opt.materials && (
               <Collapse in={state.option === opt.id}>
@@ -94,7 +104,6 @@ const OptionPaper = (props: OptionPaperProps): JSX.Element => {
               )}
             </OptionSelectPaper>
           ))}
-          <ButtonSet handleNext={handleNext} handleBack={handleBack} collapseOpen={Boolean(1)} />
         </div>
       )}
 
@@ -129,20 +138,4 @@ const OptionPaper = (props: OptionPaperProps): JSX.Element => {
   );
 };
 
-
-/**
- * @description
-  해당 캠페인의 송출옵션을 선택한다.
-  0: CPM
-  1: CPM + CPC
-  2: CPC
-
- * @param {*} state ? 송출옵션을 저장하는 object
- * @param {*} dispatch ? 송출옵션을 변경하는 func
- * @param {*} handleBack ? 뒤로 버튼에 연결
- * @param {*} handleNext ? 다음 버튼에 연결
- * @param {*} step ? 현재의 회원가입 진행상태, 다음 step으로 진행될 때, 선택된 옵션에 대한 렌더링을 위함.
- *
- * @author 박찬우
- */
 export default OptionPaper;

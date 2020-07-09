@@ -180,7 +180,7 @@ const PriorityPaper = (props: PriorityPaperProps): JSX.Element => {
               ) : null}
             </OptionSelectPaper>
           ))}
-          <ButtonSet handleNext={handleNext} handleBack={handleBack} set={complete} />
+          <ButtonSet handleNext={handleNext} handleBack={handleBack} collapseOpen={complete} />
         </>
       )}
 

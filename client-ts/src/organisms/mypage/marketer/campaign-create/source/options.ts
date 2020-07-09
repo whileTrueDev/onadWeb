@@ -1,4 +1,4 @@
-import { OptionInterface } from './interfaces';
+import { OptionInterface } from '../interfaces';
 
 const options: OptionInterface[] = [
   {

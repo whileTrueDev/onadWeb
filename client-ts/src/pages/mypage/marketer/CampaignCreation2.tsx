@@ -1,21 +1,27 @@
 import React, { useReducer, MouseEvent } from 'react';
 import { Link } from 'react-router-dom';
 import { makeStyles, Theme } from '@material-ui/core/styles';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
 import {
-  Grid, Paper, Collapse, Button
+  Grid, Paper, Collapse, Button, useMediaQuery
 } from '@material-ui/core';
-import ProrityPaper from '../../../organisms/mypage/marketer/campaign-create/PriorityPaper';
-import OptionPaper from '../../../organisms/mypage/marketer/campaign-create/OptionPaper';
-import CampaignCreateTable from '../../../organisms/mypage/marketer/campaign-create/CampaignCreateTable';
-import HOST from '../../../config';
-import axios from '../../../utils/axios';
-import history from '../../../history';
+// atoms
+import GridItem from '../../../atoms/Grid/GridItem';
+import GridContainer from '../../../atoms/Grid/GridContainer';
+// organisms
+import ProrityPaper from '../../../organisms/mypage/marketer/campaign-create2/StepForPriorityType/PriorityPaper';
+import OptionPaper from '../../../organisms/mypage/marketer/campaign-create2/StepForAdType/OptionPaper';
+import CampaignFormPaper from '../../../organisms/mypage/marketer/campaign-create2/StepForInformation/CampaignFormPaper';
 import {
   step1Reducer, step2Reducer, step2SelectReducer, step3Reducer,
   budgetReducer, termReducer, timeReducer, nameReducer,
   descriptionReducer
 } from '../../../organisms/mypage/marketer/campaign-create/campaignReducer';
+import ButtonSet from '../../../organisms/mypage/marketer/campaign-create2/shared/ButtonSet';
+// others
+import HOST from '../../../config';
+import axios from '../../../utils/axios';
+import history from '../../../history';
+
 
 const useStyles = makeStyles((_theme: Theme) => ({
   root: {
@@ -29,13 +35,11 @@ const useStyles = makeStyles((_theme: Theme) => ({
       padding: _theme.spacing(1),
     },
   },
-  button: {
-    marginRight: _theme.spacing(1),
-  },
   end: {
     color: _theme.palette.text.primary,
     marginRight: _theme.spacing(1),
-  }
+  },
+  button: { marginRight: _theme.spacing(1) },
 }));
 
 
@@ -45,6 +49,9 @@ const CampaignCreation = (): JSX.Element => {
   // 진행 단계에 대한 스테이트 값.
   const [step, setStep] = React.useState(0);
 
+  // 캠페인 생성은 Desktop only 이므로, Desktop 인지 불린값.
+  const isDesktop = useMediaQuery((theme: any) => theme.breakpoints.up('md'));
+
   // 광고 송출형 유형선택시 사용하는 Reducer 기본값은 첫번째 옵션(CPM + CPC)
   const [step1State, step1Dispatch] = useReducer(step1Reducer, { option: 'option1' });
 
@@ -52,7 +59,7 @@ const CampaignCreation = (): JSX.Element => {
   const [step2State, step2Dispatch] = useReducer(step2Reducer, {});
 
   // 2 번째 prioritystep에서 사용할 State.
-  const [checkedPriorities, checkedPrioritiesDispatch] = useReducer(step2SelectReducer, []);
+  const [checkedPriorityType, checkedPriorityTypeDispatch] = useReducer(step2SelectReducer, []);
 
   // 3 번째 캠페인 기본정보에서 사용할 State
   const [budgetState, budgetDispatch] = useReducer(budgetReducer, { budget: false, value: 0 });
@@ -67,7 +74,7 @@ const CampaignCreation = (): JSX.Element => {
 
 
   const step3Reset = (): void => {
-    checkedPrioritiesDispatch({ type: 'reset' });
+    checkedPriorityTypeDispatch({ type: 'reset' });
     budgetDispatch({ key: 'noBudget', value: '' });
     termDispatch({ key: 'reset', value: '' });
     timeDispatch({ key: 'noTime', value: [] });
@@ -137,7 +144,7 @@ const CampaignCreation = (): JSX.Element => {
       switch (type) {
         case 'type0':
         case 'type1':
-          return checkedPriorities; // 선택된 게임
+          return checkedPriorityType; // 선택된 게임
         case 'type2':
         default:
           return ['무관']; // 카테고리 무관인 카테고리 ID
@@ -193,98 +200,63 @@ const CampaignCreation = (): JSX.Element => {
     setStep(step - 1);
   };
 
-  const isDesktop = useMediaQuery((theme: any) => theme.breakpoints.up('md'));
-
   return (
     <Grid container direction="row" spacing={2} wrap="wrap">
-      {isDesktop ? (
-        <>
-          <Grid item xs={12} lg={12} xl={12}>
-            <Paper>
-              <Grid container direction="column" className={classes.root}>
-                <Grid item xs={12}>
-                  <OptionPaper
-                    state={step1State}
-                    dispatch={step1Dispatch}
-                    step={step}
-                    handleNext={handleNext}
+      <Grid item xs={12}>
+        <Paper>
+          <Grid container direction="column" className={classes.root}>
+            <Grid item xs={12}>
+
+              {/* 광고 유형 선택 단계 */}
+              <Collapse in={step >= 0}>
+                <OptionPaper step={step} state={step1State} dispatch={step1Dispatch} />
+              </Collapse>
+
+              {/* 광고 유형 선택 단계 */}
+              <Collapse in={step >= 1}>
+                <ProrityPaper
+                  step={step}
+                  state={step2State}
+                  dispatch={step2Dispatch}
+                  checkedPriorityType={checkedPriorityType}
+                  checkedPriorityTypeDispatch={checkedPriorityTypeDispatch}
+                />
+              </Collapse>
+
+              {/* 캠페인 정보 입력 단계 */}
+              <Collapse in={step === 2} timeout={{ enter: 800 }}>
+                <CampaignFormPaper
+                  dispatch={step3Dispatch}
+                  state={step3State}
+                  budgetState={budgetState}
+                  optionType={step1State.option}
+                  budgetDispatch={budgetDispatch}
+                  termState={termState}
+                  termDispatch={termDispatch}
+                  timeState={timeState}
+                  timeDispatch={timeDispatch}
+                  nameState={nameState}
+                  nameDispatch={nameDispatch}
+                  descriptionState={descriptionState}
+                  descriptionDispatch={descriptionDispatch}
+                  step={step}
+                />
+              </Collapse>
+
+              {/* 뒤로, 다음(완료) 버튼셋 */}
+              <GridItem>
+                <GridContainer direction="row-reverse" item>
+                  <ButtonSet
+                    handleNext={step === 2 ? handleCallbackSubmit : handleNext}
                     handleBack={handleBack}
+                    collapseOpen={Boolean(1)}
                   />
-                  <Collapse in={step >= 1}>
-                    <ProrityPaper
-                      state={step2State}
-                      dispatch={step2Dispatch}
-                      step={step}
-                      handleNext={handleNext}
-                      handleBack={handleBack}
-                      checkedPriorities={checkedPriorities}
-                      checkedPrioritiesDispatch={checkedPrioritiesDispatch}
-                    />
-                  </Collapse>
-                  <Collapse in={step === 2} timeout={{ enter: 800 }}>
-                    <CampaignCreateTable
-                      dispatch={step3Dispatch}
-                      state={step3State}
-                      budgetState={budgetState}
-                      optionType={step1State.option}
-                      budgetDispatch={budgetDispatch}
-                      termState={termState}
-                      termDispatch={termDispatch}
-                      timeState={timeState}
-                      timeDispatch={timeDispatch}
-                      nameState={nameState}
-                      nameDispatch={nameDispatch}
-                      descriptionState={descriptionState}
-                      descriptionDispatch={descriptionDispatch}
-                      step={step}
-                    />
-                    <Grid item>
-                      <Grid container direction="row-reverse">
-                        <Grid item>
-                          <Button
-                            variant="contained"
-                            color="primary"
-                            style={{ color: 'white' }}
-                            onClick={handleCallbackSubmit}
-                            className={classes.end}
-                          >
-                            완료
-                          </Button>
-                        </Grid>
-                        <Grid item>
-                          <Button onClick={handleBack} className={classes.button}>
-                            뒤로
-                          </Button>
-                        </Grid>
-                      </Grid>
-                    </Grid>
-                  </Collapse>
-                </Grid>
-              </Grid>
-            </Paper>
+                </GridContainer>
+              </GridItem>
+            </Grid>
           </Grid>
-        </>
-      ) : (
-        <div style={{
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          alignItems: 'center',
-          height: '80vh',
-          width: '100%'
-        }}
-        >
-          <h4>캠페인 생성은 데스크탑에서 진행해주세요.</h4>
-          <Button
-            variant="contained"
-            color="primary"
-            component={Link}
-            to="/mypage/marketer/main"
-          >
-            대시보드로 이동
-          </Button>
-        </div>
-      )}
+        </Paper>
+      </Grid>
     </Grid>
   );
 };

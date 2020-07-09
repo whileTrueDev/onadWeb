@@ -1,8 +1,6 @@
 import React from 'react';
 import { makeStyles, Theme } from '@material-ui/core/styles';
-import {
-  Grid, Button, Collapse,
-} from '@material-ui/core';
+import { Grid, Button, Collapse } from '@material-ui/core';
 
 const useStyles = makeStyles((theme: Theme) => ({
   button: {

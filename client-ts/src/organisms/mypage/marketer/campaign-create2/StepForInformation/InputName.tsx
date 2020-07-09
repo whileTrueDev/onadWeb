@@ -44,12 +44,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-interface CampaignNamingProps {
+interface InputNameProps {
   nameState: NameInterface;
   nameDispatch: React.Dispatch<Action>;
 }
 
-const CampaignNaming = (props: CampaignNamingProps): JSX.Element => {
+const InputName = (props: InputNameProps): JSX.Element => {
   const {
     nameState, nameDispatch
   } = props;
@@ -124,4 +124,4 @@ const CampaignNaming = (props: CampaignNamingProps): JSX.Element => {
   * @author 박찬우
   */
 
-export default CampaignNaming;
+export default InputName;

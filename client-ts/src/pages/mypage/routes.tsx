@@ -22,7 +22,7 @@ import CreatorCPAManage from './creator/CPAManage';
 import MarketerInventory from './marketer/Inventory';
 import MarketerDashboard from './marketer/Dashboard';
 import MarketerMyOffice from './marketer/MyOffice';
-import CampaignCreateStepper from './marketer/CampaignCreation';
+import CampaignCreateStepper from './marketer/CampaignCreation2';
 import MarketerManual from './marketer/Manual';
 
 export interface MypageRoute {

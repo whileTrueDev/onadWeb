@@ -1,12 +1,10 @@
 import React from 'react';
 import { Grid } from '@material-ui/core';
-import Check from '@material-ui/icons/Check';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import StyledItemText from '../../../../../atoms/StyledItemText';
-import Success from '../../../../../atoms/Typography/Success';
 import DangerTypography from '../../../../../atoms/Typography/Danger';
 import StyledInput from '../../../../../atoms/StyledInput';
-import { Action, NameInterface } from '../campaignReducer';
+import { Action, DescriptionInterface } from '../campaignReducer';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -27,7 +25,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   input: {
-    width: '300px',
+    width: '400px',
     [theme.breakpoints.down('sm')]: {
       width: '100%',
       fontSize: '12px',
@@ -44,34 +42,36 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-interface CampaignNamingProps {
-  nameState: NameInterface;
-  nameDispatch: React.Dispatch<Action>;
+interface InputDescriptionProps {
+  descriptionState: DescriptionInterface;
+  descriptionDispatch: React.Dispatch<Action>;
 }
 
-const CampaignNaming = (props: CampaignNamingProps): JSX.Element => {
+// 홍보 문구 글자 수 제한
+const DESCRIPTION_LENGHT_LIMIT = 50;
+
+const InputDescription = (props: InputDescriptionProps): JSX.Element => {
   const {
-    nameState, nameDispatch
+    descriptionState, descriptionDispatch
   } = props;
   const classes = useStyles();
 
   // document element 값 접근시 필요.
-  const getName = (): string => {
-    const nameTag = (document.getElementsByName('name')[0] as HTMLInputElement);
-    if (nameTag) {
-      if (nameTag.value.length < 2) {
-        nameDispatch({ key: 'min', value: '' });
+  const getDescription = (): string => {
+    const descriptionTag = (document.getElementsByName('description')[0] as HTMLInputElement);
+    if (descriptionTag) {
+      if (descriptionTag.value.length > DESCRIPTION_LENGHT_LIMIT) {
+        descriptionDispatch({ key: 'limitExceeded', value: '' });
       }
-      return nameTag.value;
+      return descriptionTag.value;
     }
-    nameDispatch({ key: 'min', value: '' });
     return '';
   };
 
   const handleChangeName = (): void => {
-    const inputName: string = getName();
-    if (inputName.length >= 2) {
-      nameDispatch({ key: 'set', value: inputName });
+    const inputDescription: string = getDescription();
+    if (inputDescription.length < DESCRIPTION_LENGHT_LIMIT) {
+      descriptionDispatch({ key: 'set', value: inputDescription });
     }
   };
 
@@ -80,8 +80,8 @@ const CampaignNaming = (props: CampaignNamingProps): JSX.Element => {
       <Grid container direction="column" className={classes.item} spacing={1}>
         <Grid item>
           <StyledItemText
-            primary="캠페인 이름 입력하기"
-            secondary="캠페인 구분을 위해 사용됩니다."
+            primary="홍보 문구 입력하기"
+            secondary="광고 홍보 문구를 입력해 주세요. 채팅광고의 문구로 사용되어, 시청자에게 직접 노출됩니다. (최대 50자)"
             className={classes.label}
           />
         </Grid>
@@ -90,38 +90,23 @@ const CampaignNaming = (props: CampaignNamingProps): JSX.Element => {
             <Grid item>
               <StyledInput
                 autoFocus
-                name="name"
+                error={descriptionState.error}
+                name="description"
                 className={classes.input}
-                // onChange={handleChangeName}
+                onChange={handleChangeName}
               />
-            </Grid>
-            <Grid item>
-              {(!nameState.error && getName() !== '')
-                && (
-                  <Success>
-                    <Check />
-                  </Success>
-                )}
+              {descriptionState.error && (
+                <DangerTypography>
+                  {DESCRIPTION_LENGHT_LIMIT}
+                  자 이내로 입력하세요.
+                </DangerTypography>
+              )}
             </Grid>
           </Grid>
-        </Grid>
-        <Grid item>
-          <DangerTypography>
-            {nameState.error && nameState.msg}
-          </DangerTypography>
         </Grid>
       </Grid>
     </Grid>
   );
 };
 
-/**
- * @description
- 해당 캠페인의 이름을 설정하는 컴포넌트
- 
-* @param {*} nameDispatch ? campaignName에 대한 error와 data를 설정하는 func
-* @param {*} nameState ? campaignName에 대한 error와 data를 저장하는 object
-  * @author 박찬우
-  */
-
-export default CampaignNaming;
+export default InputDescription;
