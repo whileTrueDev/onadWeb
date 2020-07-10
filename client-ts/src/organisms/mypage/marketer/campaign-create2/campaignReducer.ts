@@ -17,6 +17,22 @@ export interface Step2Interface {
 export interface Step3Interface {
   bannerId: string;
   connectedLinkId: string;
+  campaignName: string;
+  campaignDescription: string;
+
+  useBudgetSetting: boolean;
+  campaignBudget: number | string;
+
+  useTermSetting: boolean;
+  campaignTerm: {
+    startData: Date | string | null;
+    finData: string | null;
+  };
+
+  useTimeSetting: boolean;
+  campaignTime: {
+    timeList: boolean[];
+  };
 }
 
 export interface NameInterface {
@@ -41,13 +57,11 @@ export interface TermInterface {
 }
 
 export interface TimeAction {
-  key: string;
-  value: boolean[];
+  key: string; value: boolean[];
 }
 
 export interface TimeInterface {
-  time: boolean;
-  timeList: boolean[];
+  time: boolean; timeList: boolean[];
 }
 
 const step1Reducer = (state: Step1Interface, action: Action): Step1Interface => {
@@ -80,7 +94,7 @@ const step2Reducer = (state: Step2Interface, action: Action): Step2Interface => 
   }
 };
 
-// array State를 사용하는 Reducer
+// array State를 사용하는 Reducer (특정 크리에이터 / 게임 선택)
 const step2SelectReducer = (state: any[], action: ArrayAction): string[] => {
   switch (action.type) {
     case 'push':
@@ -106,14 +120,8 @@ const step3Reducer = (state: Step3Interface, action: Action): Step3Interface => 
     case 'landingUrl':
       return { ...state, connectedLinkId: action.value };
     case 'reset': {
-      return { bannerId: '', connectedLinkId: '' };
+      return { ...state, bannerId: '', connectedLinkId: '' };
     }
-    // case 'keyword0':
-    //   return { ...state, keyword0: action.value };
-    // case 'keyword1':
-    //   return { ...state, keyword1: action.value };
-    // case 'keyword2':
-    //   return { ...state, keyword2: action.value };
     default:
       return state;
   }

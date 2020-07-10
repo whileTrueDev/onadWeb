@@ -30,6 +30,7 @@ import {
   NameInterface,
   DescriptionInterface
 } from '../campaignReducer';
+import { StepForInformationAction, StepForInformationInterface } from '../reducers/stepForInformation';
 
 const StyledTableCell = withStyles((theme) => ({
   head: {
@@ -52,35 +53,15 @@ const useStyles = makeStyles({
 });
 
 interface CampaignFormPaperProps {
-  optionType: string;
-  state: Step3Interface;
-  dispatch: React.Dispatch<Action>;
-  budgetState: BudgetInterface;
-  budgetDispatch: React.Dispatch<Action>;
-  termState: TermInterface;
-  termDispatch: React.Dispatch<Action>;
-  timeState: TimeInterface;
-  timeDispatch: React.Dispatch<TimeAction>;
-  nameState: NameInterface;
-  nameDispatch: React.Dispatch<Action>;
-  descriptionState: DescriptionInterface;
-  descriptionDispatch: React.Dispatch<Action>;
   step: number;
+  optionType: string;
+  state: StepForInformationInterface;
+  dispatch: React.Dispatch<StepForInformationAction>;
 }
 
 function CampaignFormPaper({
   state,
   dispatch,
-  budgetState,
-  budgetDispatch,
-  termState,
-  termDispatch,
-  timeState,
-  timeDispatch,
-  nameState,
-  nameDispatch,
-  descriptionState,
-  descriptionDispatch,
   optionType,
   step,
 }: CampaignFormPaperProps): JSX.Element {
@@ -100,70 +81,70 @@ function CampaignFormPaper({
       title: '캠페인 이름 입력',
       component: (
         <InputName
-          nameState={nameState}
-          nameDispatch={nameDispatch}
+          nameState={state}
+          nameDispatch={dispatch}
         />
       )
     },
-    {
-      title: '배너 선택',
-      component: (
-        <SelectBanner
-          bannerData={bannerData}
-          dispatch={dispatch}
-          handleDialogOpen={bannerUploadDialog.handleOpen}
-          step={step}
-        />
-      )
-    }, // check 완료
-    (optionType !== 'option0')
-      && {
-        title: '랜딩페이지 URL 선택',
-        component: (
-          <SelectLandingUrl
-            dispatch={dispatch}
-            state={state}
-            handleDialogOpen={landingUrlUploadDialog.handleOpen}
-            landingUrlData={landingUrlData}
-          />
-        )
-      }, // react-hooks-form 사용.
-    {
-      title: '홍보 문구 입력',
-      component: (
-        <InputDescription
-          descriptionState={descriptionState}
-          descriptionDispatch={descriptionDispatch}
-        />
-      )
-    },
-    {
-      title: '예산 설정',
-      component: (
-        <SelectBudget
-          state={budgetState}
-          dispatch={budgetDispatch}
-        />
-      )
-    },
-    {
-      title: '기간 설정',
-      component: (
-        <SelectDateTerm
-          dispatch={termDispatch}
-          state={termState}
-        />
-      )
-    },
-    {
-      title: '시간대 설정',
-      component: (
-        <SelectTime
-          state={timeState}
-          dispatch={timeDispatch}
-        />
-      )
-    },
+    // {
+    //   title: '배너 선택',
+    //   component: (
+    //     <SelectBanner
+    //       bannerData={bannerData}
+    //       dispatch={dispatch}
+    //       handleDialogOpen={bannerUploadDialog.handleOpen}
+    //       step={step}
+    //     />
+    //   )
+    // }, // check 완료
+    // (optionType !== 'option0')
+    //   && {
+    //     title: '랜딩페이지 URL 선택',
+    //     component: (
+    //       <SelectLandingUrl
+    //         dispatch={dispatch}
+    //         state={state}
+    //         handleDialogOpen={landingUrlUploadDialog.handleOpen}
+    //         landingUrlData={landingUrlData}
+    //       />
+    //     )
+    //   }, // react-hooks-form 사용.
+    // {
+    //   title: '홍보 문구 입력',
+    //   component: (
+    //     <InputDescription
+    //       descriptionState={descriptionState}
+    //       descriptionDispatch={descriptionDispatch}
+    //     />
+    //   )
+    // },
+    // {
+    //   title: '예산 설정',
+    //   component: (
+    //     <SelectBudget
+    //       state={budgetState}
+    //       dispatch={budgetDispatch}
+    //     />
+    //   )
+    // },
+    // {
+    //   title: '기간 설정',
+    //   component: (
+    //     <SelectDateTerm
+    //       dispatch={termDispatch}
+    //       state={termState}
+    //     />
+    //   )
+    // },
+    // {
+    //   title: '시간대 설정',
+    //   component: (
+    //     <SelectTime
+    //       state={timeState}
+    //       dispatch={timeDispatch}
+    //     />
+    //   )
+    // },
   ];
 
 
