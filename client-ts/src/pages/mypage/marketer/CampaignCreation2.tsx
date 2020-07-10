@@ -88,58 +88,74 @@ const CampaignCreation = (): JSX.Element => {
   };
 
   // 3 번째 캠페인정보 입력 핸들러
+  const nameInputRef = React.useRef<HTMLInputElement>();
+  const descriptionInputRef = React.useRef<HTMLInputElement>();
+  const budgetInputRef = React.useRef<HTMLInputElement>();
   const handleCallbackSubmit = (event: MouseEvent<HTMLButtonElement>): void => {
     event.preventDefault();
-    console.log('submit requested');
-    console.log(step3State.campaignName);
+    if (nameInputRef && nameInputRef.current) {
+      console.log(nameInputRef.current.value);
+    }
+  };
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
+    e.preventDefault();
+    if (nameInputRef && nameInputRef.current) {
+      console.log(nameInputRef.current.value);
+    }
   };
 
   return (
     <Grid container direction="row" spacing={2} wrap="wrap">
       <Grid item xs={12}>
         <Paper>
-          <Grid container direction="column" className={classes.root}>
-            <Grid item xs={12}>
+          <form onSubmit={handleSubmit}>
+            <Grid container direction="column" className={classes.root}>
+              <Grid item xs={12}>
 
-              {/* 광고 유형 선택 단계 */}
-              <Collapse in={step >= 0}>
-                <OptionPaper step={step} state={step1State} dispatch={step1Dispatch} />
-              </Collapse>
+                {/* 광고 유형 선택 단계 */}
+                <Collapse in={step >= 0}>
+                  <OptionPaper step={step} state={step1State} dispatch={step1Dispatch} />
+                </Collapse>
 
-              {/* 광고 유형 선택 단계 */}
-              <Collapse in={step >= 1}>
-                <ProrityPaper
-                  step={step}
-                  state={step2State}
-                  dispatch={step2Dispatch}
-                  checkedPriorityType={checkedPriorityType}
-                  checkedPriorityTypeDispatch={checkedPriorityTypeDispatch}
-                />
-              </Collapse>
-
-              {/* 캠페인 정보 입력 단계 */}
-              <Collapse in={step === 2} timeout={{ enter: 800 }}>
-                <CampaignFormPaper
-                  state={step3State}
-                  dispatch={step3Dispatch}
-                  optionType={step1State.option}
-                  step={step}
-                />
-              </Collapse>
-
-              {/* 뒤로, 다음(완료) 버튼셋 */}
-              <GridItem>
-                <GridContainer direction="row-reverse" item>
-                  <ButtonSet
-                    nextButtonName={step === 2 ? '완료' : undefined}
-                    handleNext={step === 2 ? handleCallbackSubmit : handleNext}
-                    handleBack={handleBack}
-                    collapseOpen={Boolean(1)}
+                {/* 광고 유형 선택 단계 */}
+                <Collapse in={step >= 1}>
+                  <ProrityPaper
+                    step={step}
+                    state={step2State}
+                    dispatch={step2Dispatch}
+                    checkedPriorityType={checkedPriorityType}
+                    checkedPriorityTypeDispatch={checkedPriorityTypeDispatch}
                   />
-                </GridContainer>
-              </GridItem>
+                </Collapse>
+
+                {/* 캠페인 정보 입력 단계 */}
+                <Collapse in={step === 2} timeout={{ enter: 800 }}>
+                  <CampaignFormPaper
+                    nameInputRef={nameInputRef}
+                    descriptionInputRef={descriptionInputRef}
+                    budgetInputRef={budgetInputRef}
+                    state={step3State}
+                    dispatch={step3Dispatch}
+                    optionType={step1State.option}
+                    step={step}
+                  />
+                </Collapse>
+
+                {/* 뒤로, 다음(완료) 버튼셋 */}
+                <GridItem>
+                  <GridContainer direction="row-reverse" item>
+                    <ButtonSet
+                      nextButtonName={step === 2 ? '완료' : undefined}
+                      handleNext={step === 2 ? handleCallbackSubmit : handleNext}
+                      handleBack={handleBack}
+                      collapseOpen={Boolean(1)}
+                    />
+                    <input type="submit" value="캠페인 생성" />
+                  </GridContainer>
+                </GridItem>
+              </Grid>
             </Grid>
-          </Grid>
+          </form>
         </Paper>
       </Grid>
     </Grid>

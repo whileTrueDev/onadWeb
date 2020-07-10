@@ -19,19 +19,13 @@ interface SelectDateTermProps {
 
 const SelectDateTerm = (props: SelectDateTermProps): JSX.Element => {
   const {
-    state,
-    dispatch
+    state, dispatch
   } = props;
 
-
-  const setTerm = (): void => {
-    dispatch({ key: 'term', value: '' });
-  };
-
-  const setNoTerm = (): void => {
-    dispatch({ key: 'noTerm', value: '' });
-  };
-
+  const [toggle, setToggle] = React.useState(false);
+  function handleToggle(): void {
+    setToggle(!toggle);
+  }
 
   return (
     <Grid container direction="column">
@@ -39,11 +33,11 @@ const SelectDateTerm = (props: SelectDateTermProps): JSX.Element => {
         <Grid container direction="row">
           <GreenCheckbox
             name="no-limit"
-            checked={!state.term}
-            onClick={setNoTerm}
+            checked={toggle}
+            onClick={handleToggle}
           />
           <StyledSelectText
-            onClick={setNoTerm}
+            onClick={handleToggle}
             style={{ cursor: 'pointer' }}
             primary="승인일부터 종료일 없이 계속 집행"
           />
@@ -54,11 +48,11 @@ const SelectDateTerm = (props: SelectDateTermProps): JSX.Element => {
           <GreenCheckbox
             name="set-limit"
             checked={state.term}
-            onClick={setTerm}
+            onClick={handleToggle}
           />
           <StyledSelectText
             primary="시작일 또는 종료일 설정"
-            onClick={setTerm}
+            onClick={handleToggle}
             style={{ cursor: 'pointer' }}
           />
         </Grid>

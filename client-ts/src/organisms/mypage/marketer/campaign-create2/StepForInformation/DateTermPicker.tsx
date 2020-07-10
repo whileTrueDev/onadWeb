@@ -19,6 +19,7 @@ interface DateTermPickerProps {
 function DateTermPicker(props: DateTermPickerProps): JSX.Element {
   // The first commit of Material-UI
   const { state, dispatch } = props;
+  const ref = useRef();
 
   const [today] = useState(new Date());
   const handleOpenDateChange = (date: any): void => {
@@ -58,8 +59,8 @@ function DateTermPicker(props: DateTermPickerProps): JSX.Element {
           autoOk
           disablePast
           disabled={finOpen}
-          variant="inline"
           format="yyyy/MM/dd"
+          variant="inline"
           margin="normal"
           invalidDateMessage="날짜 형식이 올바르지 않습니다."
           id="end-date-picker"

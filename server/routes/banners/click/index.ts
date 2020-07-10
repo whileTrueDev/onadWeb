@@ -10,11 +10,11 @@ router.route('/')
       const dataString = 'DATE_SUB(NOW(), INTERVAL 60 MONTH)';
 
       const query = `
-                      SELECT SUM(clickCount) as bannerClick
-                        FROM landingClick as lc
-                        WHERE lc.regidate > ${dataString}
-                    `;
-      doQuery(query)
+          SELECT SUM(clickCount) as bannerClick
+            FROM landingClick as lc
+            WHERE lc.regidate > ?
+        `;
+      doQuery(query, [dataString])
         .then((row) => {
           if (!row.error && row.result) {
             responseHelper.send(row.result, 'get', res);

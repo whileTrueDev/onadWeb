@@ -53,6 +53,9 @@ const useStyles = makeStyles({
 });
 
 interface CampaignFormPaperProps {
+  nameInputRef: React.MutableRefObject<HTMLInputElement | undefined>;
+  descriptionInputRef: React.MutableRefObject<HTMLInputElement | undefined>;
+  budgetInputRef: React.MutableRefObject<HTMLInputElement | undefined>;
   step: number;
   optionType: string;
   state: StepForInformationInterface;
@@ -60,6 +63,9 @@ interface CampaignFormPaperProps {
 }
 
 function CampaignFormPaper({
+  nameInputRef,
+  descriptionInputRef,
+  budgetInputRef,
   state,
   dispatch,
   optionType,
@@ -79,12 +85,7 @@ function CampaignFormPaper({
   } | false> = [
     {
       title: '캠페인 이름 입력',
-      component: (
-        <InputName
-          nameState={state}
-          nameDispatch={dispatch}
-        />
-      )
+      component: <InputName nameInputRef={nameInputRef} />
     },
     // {
     //   title: '배너 선택',
@@ -109,33 +110,18 @@ function CampaignFormPaper({
     //       />
     //     )
     //   }, // react-hooks-form 사용.
-    // {
-    //   title: '홍보 문구 입력',
-    //   component: (
-    //     <InputDescription
-    //       descriptionState={descriptionState}
-    //       descriptionDispatch={descriptionDispatch}
-    //     />
-    //   )
-    // },
-    // {
-    //   title: '예산 설정',
-    //   component: (
-    //     <SelectBudget
-    //       state={budgetState}
-    //       dispatch={budgetDispatch}
-    //     />
-    //   )
-    // },
-    // {
-    //   title: '기간 설정',
-    //   component: (
-    //     <SelectDateTerm
-    //       dispatch={termDispatch}
-    //       state={termState}
-    //     />
-    //   )
-    // },
+    {
+      title: '홍보 문구 입력',
+      component: <InputDescription descriptionInputRef={descriptionInputRef} />
+    },
+    {
+      title: '예산 설정',
+      component: <SelectBudget budgetInputRef={budgetInputRef} />
+    },
+    {
+      title: '기간 설정',
+      component: <SelectDateTerm dispatch={termDispatch} state={termState} />
+    },
     // {
     //   title: '시간대 설정',
     //   component: (

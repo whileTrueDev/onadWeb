@@ -1,71 +1,81 @@
 import React from 'react';
-import {
-  Grid,
-} from '@material-ui/core';
-import BudgetInput from './InputBudget';
+import { makeStyles, Theme } from '@material-ui/core/styles';
+import { Grid } from '@material-ui/core';
+import StyledInput from '../../../../../atoms/StyledInput';
 import GreenCheckbox from '../../../../../atoms/GreenCheckBox';
 import StyledSelectText from '../../../../../atoms/StyledSelectText';
 
-import {
-  BudgetInterface,
-  Action,
-} from '../campaignReducer';
+const useStyles = makeStyles((theme: Theme) => ({
+  input: {
+    width: '300px',
+    [theme.breakpoints.down('sm')]: {
+      width: '100%', fontSize: '12px', margin: 0,
+    },
+  },
+}));
 
 interface SelectBudgetProps {
-  state: BudgetInterface;
-  dispatch: React.Dispatch<Action>;
+  budgetInputRef: React.MutableRefObject<HTMLInputElement | undefined>;
 }
 
 const SelectBudget = (props: SelectBudgetProps): JSX.Element => {
-  const {
-    state, dispatch,
-  } = props;
+  const classes = useStyles();
+  const { budgetInputRef } = props;
 
-  const setBudget = (): void => {
-    dispatch({ key: 'budget', value: '' });
-  };
-
-  const setNoBudget = (): void => {
-    dispatch({ key: 'noBudget', value: '' });
-  };
-
+  const [toggle, setToggle] = React.useState(false);
+  function handleToggle(): void {
+    setToggle(!toggle);
+  }
 
   return (
     <Grid container direction="column">
-      <Grid item>
-        <Grid container direction="row">
-          <GreenCheckbox
-            name="no-limit"
-            checked={!state.budget}
-            onClick={setNoBudget}
-          // disabled
+      <Grid container item direction="row">
+        <GreenCheckbox
+          name="no-limit"
+          checked={!toggle}
+          onClick={handleToggle}
+        // disabled
+        />
+        <StyledSelectText
+          onClick={handleToggle}
+          style={{ cursor: 'pointer' }}
+          primary="일예산제한 없이 계속 집행"
+        />
+      </Grid>
+      <Grid container item direction="row">
+        <GreenCheckbox
+          name="set-limit"
+          checked={toggle}
+          onClick={handleToggle}
+        />
+        <StyledSelectText
+          onClick={handleToggle}
+          style={{ cursor: 'pointer' }}
+          primary="일예산 설정"
+          secondary="최소금액(5000원 이상)"
+        />
+      </Grid>
+      {toggle && (
+      <Grid container item>
+        <Grid item>
+          <StyledInput
+            autoFocus
+            name="campaign-create-budget"
+            className={classes.input}
+            type="number"
+            inputRef={budgetInputRef}
+            inputProps={{
+              autoComplete: false,
+              min: 5000,
+              required: true
+            }}
           />
-          <StyledSelectText onClick={setNoBudget} style={{ cursor: 'pointer' }} primary="일예산제한 없이 계속 집행" />
+        </Grid>
+        <Grid item>
+          원
         </Grid>
       </Grid>
-      <Grid item>
-        <Grid container direction="row">
-          <GreenCheckbox
-            name="set-limit"
-            checked={state.budget}
-            onClick={setBudget}
-          />
-          <StyledSelectText
-            onClick={setBudget}
-            style={{ cursor: 'pointer' }}
-            primary="일예산 설정"
-            secondary="최소금액(5000원 이상)"
-          />
-        </Grid>
-        {state.budget && (
-          <Grid item>
-            <BudgetInput
-              state={state}
-              dispatch={dispatch}
-            />
-          </Grid>
-        )}
-      </Grid>
+      )}
     </Grid>
   );
 };
