@@ -8,32 +8,35 @@ import {
   KeyboardDatePicker,
 } from '@material-ui/pickers';
 
-import { TermInterface, Action, } from '../campaignReducer';
+import {
+  StepForInformationAction,
+  StepForInformationInterface
+} from '../reducers/campaignCreate.reducer';
 
 interface DateTermPickerProps {
-  state: TermInterface;
-  dispatch: React.Dispatch<Action>;
+  state: StepForInformationInterface;
+  dispatch: React.Dispatch<StepForInformationAction>;
 }
-
 
 function DateTermPicker(props: DateTermPickerProps): JSX.Element {
   // The first commit of Material-UI
   const { state, dispatch } = props;
-  const ref = useRef();
 
   const [today] = useState(new Date());
   const handleOpenDateChange = (date: any): void => {
-    dispatch({ key: 'startDate', value: date });
+    dispatch({ value: date, type: 'SET_TERM_START_DATE' });
   };
 
   const handleFinDateChange = (date: any): void => {
-    dispatch({ key: 'finDate', value: date });
+    dispatch({ value: date, type: 'SET_TERM_FIN_DATE' });
   };
 
-  const [finOpen, setFinOpen] = React.useState(true);
-  const handleEndChange = (): void => {
-    setFinOpen(!finOpen);
-    dispatch({ key: 'finDate', value: '' });
+  const [finDateToggle, setFinDatetoggle] = React.useState(true);
+  const handleEndToggle = (): void => {
+    if (finDateToggle === true) {
+      dispatch({ type: 'RESET_TERM_FIN_DATE', value: '' });
+    }
+    setFinDatetoggle(!finDateToggle);
   };
 
   return (
@@ -49,7 +52,7 @@ function DateTermPicker(props: DateTermPickerProps): JSX.Element {
           id="start-date-picker"
           label="시작일"
           minDate={today}
-          value={state.startDate}
+          value={state.campaignTerm.startDate}
           onChange={handleOpenDateChange}
           KeyboardButtonProps={{
             'aria-label': 'change date',
@@ -58,15 +61,15 @@ function DateTermPicker(props: DateTermPickerProps): JSX.Element {
         <KeyboardDatePicker
           autoOk
           disablePast
-          disabled={finOpen}
+          disabled={finDateToggle}
           format="yyyy/MM/dd"
           variant="inline"
           margin="normal"
           invalidDateMessage="날짜 형식이 올바르지 않습니다."
           id="end-date-picker"
           label="종료일"
-          minDate={state.startDate}
-          value={state.finDate}
+          minDate={state.campaignTerm.startDate}
+          value={state.campaignTerm.finDate}
           onChange={handleFinDateChange}
           KeyboardButtonProps={{
             'aria-label': 'change date',
@@ -76,8 +79,8 @@ function DateTermPicker(props: DateTermPickerProps): JSX.Element {
           control={(
             <Checkbox
               color="primary"
-              checked={finOpen}
-              onChange={handleEndChange}
+              checked={finDateToggle}
+              onChange={handleEndToggle}
               size="small"
               style={{ padding: '3px' }}
             />

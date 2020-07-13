@@ -1,15 +1,16 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Collapse, Typography } from '@material-ui/core';
-import CampaignCreateStepLayout from '../shared/StepLayout';
-import OptionSelectPaper from '../shared/SelectPaper';
-import AdDescriptionSelect from './AdDescriptionSelect';
-import AdDescriptionDialog from './AdDescriptionDialog';
-import options from '../source/options';
-import { Step1Interface, Action as CampaignAction } from '../campaignReducer';
-import { OptionInterface, AdMaterial } from '../interfaces';
+import CampaignCreateStepLayout from './shared/StepLayout';
+import OptionSelectPaper from './shared/SelectPaper';
+import ButtonSet from './shared/ButtonSet';
+import AdDescriptionSelect from './StepForAdType/AdDescriptionSelect';
+import AdDescriptionDialog from './StepForAdType/AdDescriptionDialog';
+import options from './StepForAdType/optionSources';
+import { OptionInterface, AdMaterial } from './interfaces';
+import { StepForInformationInterface, StepForInformationAction } from './reducers/campaignCreate.reducer';
 
-import useDialog from '../../../../../utils/hooks/useDialog';
+import useDialog from '../../../../utils/hooks/useDialog';
 
 const useStyles = makeStyles((theme) => ({
   expansionPanel: {
@@ -23,9 +24,11 @@ const useStyles = makeStyles((theme) => ({
 
 // 추후에 인터페이스 통합
 interface OptionPaperProps {
-  state: Step1Interface;
-  dispatch: React.Dispatch<CampaignAction>; // 우선형 타입 선택
+  state: StepForInformationInterface;
+  dispatch: React.Dispatch<StepForInformationAction>; // 우선형 타입 선택
   step: number;
+  handleNext: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  handleBack: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }
 /**
  * @description
@@ -43,11 +46,12 @@ const OptionPaper = (props: OptionPaperProps): JSX.Element => {
   const classes = useStyles();
   const {
     state, dispatch, step, // for '다음' 버튼 관리
+    handleNext, handleBack
   } = props;
 
   // option을 선택하였을 때 event listener
   const handleChange = (id: string) => (): void => {
-    dispatch({ key: id, value: '' });
+    dispatch({ type: 'SET_OPTION', value: id });
   };
 
   // 광고 유형 선택 - 광고 구성 설명 다이얼로그
@@ -70,7 +74,7 @@ const OptionPaper = (props: OptionPaperProps): JSX.Element => {
           {options.map((opt: OptionInterface, index) => (
             <OptionSelectPaper
               key={opt.id}
-              checked={state.option === opt.id}
+              checked={state.selectedOption === opt.id}
               disabled={opt.id !== 'option1'}
               primaryText={opt.primaryText}
               secondaryText={opt.secondaryText}
@@ -88,7 +92,7 @@ const OptionPaper = (props: OptionPaperProps): JSX.Element => {
               )}
             >
               {opt.materials && (
-              <Collapse in={state.option === opt.id}>
+              <Collapse in={state.selectedOption === opt.id}>
                 <div className={classes.expansionPanel}>
                   <AdDescriptionSelect
                     primary={opt.primaryText}
@@ -104,6 +108,12 @@ const OptionPaper = (props: OptionPaperProps): JSX.Element => {
               )}
             </OptionSelectPaper>
           ))}
+          <ButtonSet
+            type="button"
+            handleNext={handleNext}
+            handleBack={handleBack}
+            nextButtonOpen
+          />
         </div>
       )}
 
@@ -111,7 +121,7 @@ const OptionPaper = (props: OptionPaperProps): JSX.Element => {
       {step > 0 && (
         <div>
           {options
-            .filter((opt) => state.option === opt.id)
+            .filter((opt) => state.selectedOption === opt.id)
             .map((selectedOption) => (
               <OptionSelectPaper
                 key={`${selectedOption.id}`}

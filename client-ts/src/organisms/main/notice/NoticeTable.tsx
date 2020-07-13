@@ -5,11 +5,7 @@ import MaterialTable from '../../../atoms/Table/MaterialTable';
 import history from '../../../history';
 
 // For column width - type error from Materiap-table
-declare module 'material-table' {
-  export interface Column<RowData extends object> {
-    width?: string;
-  }
-}
+
 function dateDiff(date1: Date, date2: Date): number {
   return Math.ceil((date1.getTime() - date2.getTime()) / (1000 * 60 * 60 * 24));
 }

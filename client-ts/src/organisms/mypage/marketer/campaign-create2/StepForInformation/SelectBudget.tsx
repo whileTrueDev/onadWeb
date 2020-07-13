@@ -23,22 +23,25 @@ const SelectBudget = (props: SelectBudgetProps): JSX.Element => {
   const { budgetInputRef } = props;
 
   const [toggle, setToggle] = React.useState(false);
-  function handleToggle(): void {
-    setToggle(!toggle);
+  function handleUse(): void {
+    setToggle(true);
+  }
+  function handleNotUse(): void {
+    setToggle(false);
   }
 
   return (
     <Grid container direction="column">
-      <Grid container item direction="row">
+      <Grid container item direction="row" style={{ maxWidth: 400 }}>
         <GreenCheckbox
           name="no-limit"
           checked={!toggle}
-          onClick={handleToggle}
+          onClick={handleNotUse}
         // disabled
         />
         <StyledSelectText
-          onClick={handleToggle}
-          style={{ cursor: 'pointer' }}
+          onClick={handleNotUse}
+          style={{ cursor: 'pointer', maxWidth: 300 }}
           primary="일예산제한 없이 계속 집행"
         />
       </Grid>
@@ -46,31 +49,29 @@ const SelectBudget = (props: SelectBudgetProps): JSX.Element => {
         <GreenCheckbox
           name="set-limit"
           checked={toggle}
-          onClick={handleToggle}
+          onClick={handleUse}
         />
         <StyledSelectText
-          onClick={handleToggle}
-          style={{ cursor: 'pointer' }}
+          onClick={handleUse}
+          style={{ cursor: 'pointer', maxWidth: 300 }}
           primary="일예산 설정"
           secondary="최소금액(5000원 이상)"
         />
       </Grid>
       {toggle && (
       <Grid container item>
-        <Grid item>
-          <StyledInput
-            autoFocus
-            name="campaign-create-budget"
-            className={classes.input}
-            type="number"
-            inputRef={budgetInputRef}
-            inputProps={{
-              autoComplete: false,
-              min: 5000,
-              required: true
-            }}
-          />
-        </Grid>
+        <StyledInput
+          autoFocus
+          name="campaign-create-budget"
+          className={classes.input}
+          type="number"
+          inputRef={budgetInputRef}
+          inputProps={{
+            autoComplete: false,
+            min: 5000,
+            required: true
+          }}
+        />
         <Grid item>
           원
         </Grid>

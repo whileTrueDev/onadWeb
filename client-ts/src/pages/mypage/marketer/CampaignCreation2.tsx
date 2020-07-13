@@ -1,24 +1,18 @@
 import React, { useReducer, MouseEvent } from 'react';
-import { Link } from 'react-router-dom';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import {
-  Grid, Paper, Collapse, Button, useMediaQuery
+  Grid, Paper, Collapse, useMediaQuery
 } from '@material-ui/core';
 // atoms
 import GridItem from '../../../atoms/Grid/GridItem';
 import GridContainer from '../../../atoms/Grid/GridContainer';
 // organisms
-import ProrityPaper from '../../../organisms/mypage/marketer/campaign-create2/StepForPriorityType/PriorityPaper';
-import OptionPaper from '../../../organisms/mypage/marketer/campaign-create2/StepForAdType/OptionPaper';
-import CampaignFormPaper from '../../../organisms/mypage/marketer/campaign-create2/StepForInformation/CampaignFormPaper';
-import {
-  step1Reducer, step2Reducer, step2SelectReducer, step3Reducer,
-  budgetReducer, termReducer, timeReducer, nameReducer,
-  descriptionReducer
-} from '../../../organisms/mypage/marketer/campaign-create/campaignReducer';
+import ProrityPaper from '../../../organisms/mypage/marketer/campaign-create2/PriorityPaper';
+import OptionPaper from '../../../organisms/mypage/marketer/campaign-create2/OptionPaper';
+import CampaignFormPaper from '../../../organisms/mypage/marketer/campaign-create2/CampaignFormPaper';
 import {
   stepForInformationReducer, defaultState as step3DefaultState
-} from '../../../organisms/mypage/marketer/campaign-create2/reducers/stepForInformation';
+} from '../../../organisms/mypage/marketer/campaign-create2/reducers/campaignCreate.reducer';
 import ButtonSet from '../../../organisms/mypage/marketer/campaign-create2/shared/ButtonSet';
 // others
 import HOST from '../../../config';
@@ -52,20 +46,10 @@ const CampaignCreation = (): JSX.Element => {
   // 진행 단계에 대한 스테이트 값.
   const [step, setStep] = React.useState(0);
 
-  // 캠페인 생성은 Desktop only 이므로, Desktop 인지 불린값.
-  const isDesktop = useMediaQuery((theme: any) => theme.breakpoints.up('md'));
-
-  // 광고 송출형 유형선택시 사용하는 Reducer 기본값은 첫번째 옵션(CPM + CPC)
-  const [step1State, step1Dispatch] = useReducer(step1Reducer, { option: 'option1' });
-
-  // 광고 선택형 유형선택시 사용하는 Reducer 기본값은 3번째 옵션인 무관
-  const [step2State, step2Dispatch] = useReducer(step2Reducer, {});
-
-  // 2 번째 prioritystep에서 사용할 State.
-  const [checkedPriorityType, checkedPriorityTypeDispatch] = useReducer(step2SelectReducer, []);
-
-  // Step 3 Reducer
-  const [step3State, step3Dispatch] = useReducer(stepForInformationReducer, step3DefaultState);
+  // 전체적 state 리듀서
+  const [campaignCreateState, campaignCreateDispatch] = useReducer(
+    stepForInformationReducer, step3DefaultState
+  );
 
   // '뒤로' 버튼 핸들러
   const handleBack = (event: MouseEvent<HTMLButtonElement>): void => {
@@ -74,10 +58,7 @@ const CampaignCreation = (): JSX.Element => {
       history.push('/mypage/marketer/main');
       return;
     }
-    step2Dispatch({ key: 'reset', value: '' });
-    if (step === 2) {
-      // step3Reset();
-    }
+    campaignCreateDispatch({ type: 'ALL_RESET', value: '' });
     setStep(step - 1);
   };
 
@@ -87,20 +68,38 @@ const CampaignCreation = (): JSX.Element => {
     setStep(step + 1);
   };
 
+  // 캠페인 생성은 Desktop only 이므로, Desktop 인지 불린값.
+  const isDesktop = useMediaQuery((theme: any) => theme.breakpoints.up('md'));
+
   // 3 번째 캠페인정보 입력 핸들러
   const nameInputRef = React.useRef<HTMLInputElement>();
   const descriptionInputRef = React.useRef<HTMLInputElement>();
   const budgetInputRef = React.useRef<HTMLInputElement>();
-  const handleCallbackSubmit = (event: MouseEvent<HTMLButtonElement>): void => {
-    event.preventDefault();
-    if (nameInputRef && nameInputRef.current) {
-      console.log(nameInputRef.current.value);
-    }
-  };
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
+    console.log('Submit Clicked!');
     if (nameInputRef && nameInputRef.current) {
-      console.log(nameInputRef.current.value);
+      console.log('nameInputRef: ', nameInputRef.current.value);
+    }
+    if (descriptionInputRef && descriptionInputRef.current) {
+      console.log('descriptionInput: ', descriptionInputRef.current.value);
+    }
+    if (budgetInputRef && budgetInputRef.current) {
+      console.log('budgetInputRef: ', budgetInputRef.current.value);
+    }
+    console.log(campaignCreateState);
+    if (!campaignCreateState.selectedBannerId) {
+      alert('캠페인의 배너가 선택되지 않았습니다. 송출할 배너를 선택해 주세요.');
+      return;
+    }
+    if (!campaignCreateState.selectedLandingUrl) {
+      alert('캠페인의 랜딩 페이지 URL이 선택되지 않았습니다.');
+      return;
+    }
+    if (campaignCreateState.campaignTerm.finDate && (
+      campaignCreateState.campaignTerm.finDate < campaignCreateState.campaignTerm.startDate)
+    ) {
+      alert('시작일은 종료일보다 빠를 수 없습니다.');
     }
   };
 
@@ -114,45 +113,38 @@ const CampaignCreation = (): JSX.Element => {
 
                 {/* 광고 유형 선택 단계 */}
                 <Collapse in={step >= 0}>
-                  <OptionPaper step={step} state={step1State} dispatch={step1Dispatch} />
+                  <OptionPaper
+                    step={step}
+                    state={campaignCreateState}
+                    dispatch={campaignCreateDispatch}
+                    handleBack={handleBack}
+                    handleNext={handleNext}
+                  />
                 </Collapse>
 
                 {/* 광고 유형 선택 단계 */}
                 <Collapse in={step >= 1}>
                   <ProrityPaper
                     step={step}
-                    state={step2State}
-                    dispatch={step2Dispatch}
-                    checkedPriorityType={checkedPriorityType}
-                    checkedPriorityTypeDispatch={checkedPriorityTypeDispatch}
+                    state={campaignCreateState}
+                    dispatch={campaignCreateDispatch}
+                    handleBack={handleBack}
+                    handleNext={handleNext}
                   />
                 </Collapse>
 
                 {/* 캠페인 정보 입력 단계 */}
                 <Collapse in={step === 2} timeout={{ enter: 800 }}>
                   <CampaignFormPaper
+                    step={step}
+                    optionType={campaignCreateState.selectedOption}
                     nameInputRef={nameInputRef}
                     descriptionInputRef={descriptionInputRef}
                     budgetInputRef={budgetInputRef}
-                    state={step3State}
-                    dispatch={step3Dispatch}
-                    optionType={step1State.option}
-                    step={step}
+                    state={campaignCreateState}
+                    dispatch={campaignCreateDispatch}
                   />
                 </Collapse>
-
-                {/* 뒤로, 다음(완료) 버튼셋 */}
-                <GridItem>
-                  <GridContainer direction="row-reverse" item>
-                    <ButtonSet
-                      nextButtonName={step === 2 ? '완료' : undefined}
-                      handleNext={step === 2 ? handleCallbackSubmit : handleNext}
-                      handleBack={handleBack}
-                      collapseOpen={Boolean(1)}
-                    />
-                    <input type="submit" value="캠페인 생성" />
-                  </GridContainer>
-                </GridItem>
               </Grid>
             </Grid>
           </form>

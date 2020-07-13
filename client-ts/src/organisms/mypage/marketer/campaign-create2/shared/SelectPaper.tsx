@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-interface OptionSelectPaperProps {
+interface SelectPaperProps {
   primaryText: string;
   secondaryText: string;
   handleSelect?: () => void;
@@ -29,7 +29,7 @@ interface OptionSelectPaperProps {
   innerPaperChildren?: React.ReactNode;
 }
 
-export default function OptionSelectPaper(props: OptionSelectPaperProps): JSX.Element {
+export default function SelectPaper(props: SelectPaperProps): JSX.Element {
   const {
     checked,
     handleSelect,
@@ -53,7 +53,6 @@ export default function OptionSelectPaper(props: OptionSelectPaperProps): JSX.El
 
   return (
     <div className={classes.root}>
-      {/* 해당 버튼클릭을 사용하기 위해서는 buttonref를 사용해야한다. */}
       <ButtonBase
         className={classes.choiceWrapper}
         onClick={handleSelect}

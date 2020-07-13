@@ -5,32 +5,21 @@ import {
   Typography, Table, TableBody, TableCell,
   TableContainer, TableRow, Paper
 } from '@material-ui/core';
-import InputName from './InputName';
-import SelectBanner from './SelectBanner';
-import SelectLandingUrl from './SelectLandingUrl';
-import InputDescription from './InputDescription';
-import SelectBudget from './SelectBudget';
-import SelectDateTerm from './SelectDateTerm';
-import SelectTime from './SelectTime';
+import InputName from './StepForInformation/InputName';
+import SelectBanner from './StepForInformation/SelectBanner';
+import SelectLandingUrl from './StepForInformation/SelectLandingUrl';
+import InputDescription from './StepForInformation/InputDescription';
+import SelectBudget from './StepForInformation/SelectBudget';
+import SelectDateTerm from './StepForInformation/SelectDateTerm';
+import SelectTime from './StepForInformation/SelectTime';
 
-import BannerUploadDialog from '../../shared/BannerUploadDialog';
-import UrlUploadDialog from '../../shared/UrlUploadDialog';
-import CampaignCreateStepLayout from '../shared/StepLayout';
+import BannerUploadDialog from '../shared/BannerUploadDialog';
+import UrlUploadDialog from '../shared/UrlUploadDialog';
+import CampaignCreateStepLayout from './shared/StepLayout';
 
-import useDialog from '../../../../../utils/hooks/useDialog';
-import useGetRequest from '../../../../../utils/hooks/useGetRequest';
-
-import {
-  Step3Interface,
-  BudgetInterface,
-  Action,
-  TermInterface,
-  TimeInterface,
-  TimeAction,
-  NameInterface,
-  DescriptionInterface
-} from '../campaignReducer';
-import { StepForInformationAction, StepForInformationInterface } from '../reducers/stepForInformation';
+import useDialog from '../../../../utils/hooks/useDialog';
+import useGetRequest from '../../../../utils/hooks/useGetRequest';
+import { StepForInformationAction, StepForInformationInterface } from './reducers/campaignCreate.reducer';
 
 const StyledTableCell = withStyles((theme) => ({
   head: {
@@ -79,37 +68,34 @@ function CampaignFormPaper({
   const bannerUploadDialog = useDialog();
   const landingUrlUploadDialog = useDialog();
 
-  const inputsteps: Array<{
-    title: string;
-    component: JSX.Element;
-  } | false> = [
+  const inputsteps: Array<{ title: string; component: JSX.Element } | false> = [
     {
       title: '캠페인 이름 입력',
       component: <InputName nameInputRef={nameInputRef} />
     },
-    // {
-    //   title: '배너 선택',
-    //   component: (
-    //     <SelectBanner
-    //       bannerData={bannerData}
-    //       dispatch={dispatch}
-    //       handleDialogOpen={bannerUploadDialog.handleOpen}
-    //       step={step}
-    //     />
-    //   )
-    // }, // check 완료
-    // (optionType !== 'option0')
-    //   && {
-    //     title: '랜딩페이지 URL 선택',
-    //     component: (
-    //       <SelectLandingUrl
-    //         dispatch={dispatch}
-    //         state={state}
-    //         handleDialogOpen={landingUrlUploadDialog.handleOpen}
-    //         landingUrlData={landingUrlData}
-    //       />
-    //     )
-    //   }, // react-hooks-form 사용.
+    {
+      title: '배너 선택',
+      component: (
+        <SelectBanner
+          bannerData={bannerData}
+          dispatch={dispatch}
+          handleDialogOpen={bannerUploadDialog.handleOpen}
+          step={step}
+        />
+      )
+    },
+    (optionType !== 'option0')
+      && {
+        title: '랜딩페이지 URL 선택',
+        component: (
+          <SelectLandingUrl
+            state={state}
+            dispatch={dispatch}
+            handleDialogOpen={landingUrlUploadDialog.handleOpen}
+            landingUrlData={landingUrlData}
+          />
+        )
+      },
     {
       title: '홍보 문구 입력',
       component: <InputDescription descriptionInputRef={descriptionInputRef} />
@@ -120,19 +106,13 @@ function CampaignFormPaper({
     },
     {
       title: '기간 설정',
-      component: <SelectDateTerm dispatch={termDispatch} state={termState} />
+      component: <SelectDateTerm state={state} dispatch={dispatch} />
     },
-    // {
-    //   title: '시간대 설정',
-    //   component: (
-    //     <SelectTime
-    //       state={timeState}
-    //       dispatch={timeDispatch}
-    //     />
-    //   )
-    // },
+    {
+      title: '시간대 설정',
+      component: <SelectTime state={state} dispatch={dispatch} />
+    },
   ];
-
 
   return (
     <CampaignCreateStepLayout
@@ -140,7 +120,7 @@ function CampaignFormPaper({
       secondaryText="캠페인의 세부 정보를 입력해주세요."
     >
       <TableContainer component={Paper}>
-        <Table className={classes.table} aria-label="customized table">
+        <Table className={classes.table} aria-label="campaign-create-form-table">
           <TableBody>
             {inputsteps.map((_step: false | { title: string; component: JSX.Element }) => (
               <>

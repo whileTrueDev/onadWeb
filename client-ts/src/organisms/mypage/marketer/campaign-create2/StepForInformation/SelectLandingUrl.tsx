@@ -1,5 +1,4 @@
 import React from 'react';
-import { makeStyles, Theme } from '@material-ui/core/styles';
 import {
   Grid, List, ListItem, ListItemText, ListItemIcon,
   ListItemSecondaryAction, Typography, Tooltip
@@ -8,50 +7,35 @@ import {
 import GreenCheckbox from '../../../../../atoms/GreenCheckBox';
 import StyledItemText from '../../../../../atoms/StyledItemText';
 import Button from '../../../../../atoms/CustomButtons/Button';
-import { Step3Interface, Action } from '../campaignReducer';
-import { LandingUrlData } from '../interfaces';
-
 import { UseGetRequestObject } from '../../../../../utils/hooks/useGetRequest';
-
-const useStyle = makeStyles((theme: Theme) => ({
-  input: {
-    fontSize: '14px',
-    fontWeight: 700,
-    color: theme.palette.text.primary,
-    margin: '4px'
-  },
-  inputName: {
-    fontSize: '14px',
-    fontWeight: 700,
-    color: theme.palette.text.primary,
-  },
-  label: {
-    fontSize: '20px',
-    fontWeight: 700,
-    color: theme.palette.primary.light,
-    margin: '3px',
-  },
-  landinglist: {
-    width: '100%',
-    maxWidth: 600,
-    backgroundColor: theme.palette.background.paper,
-    maxHeight: 300,
-    overflow: 'auto',
-  },
-}));
+import {
+  StepForInformationInterface, StepForInformationAction,
+} from '../reducers/campaignCreate.reducer';
+import { LandingUrlData } from '../interfaces';
+import useStyles from './SelectLandingUrl.style';
 
 interface SelectLandingUrlProps {
   handleDialogOpen: () => void;
-  dispatch: React.Dispatch<Action>;
-  state: Step3Interface;
+  state: StepForInformationInterface;
+  dispatch: React.Dispatch<StepForInformationAction>;
   landingUrlData: UseGetRequestObject<LandingUrlData[]>;
 }
+/**
+ * @description
+ 해당 캠페인의 landingUrl을 변경하기 위한 컴포넌트
 
-const SelectLandingUrl = (props: SelectLandingUrlProps): JSX.Element => {
+ * @param {*} state ? landingUrl을 저장하기 위한 object
+ * @param {*} dispatch ? landingUrl을 변경하는 func
+ * @param {*} handleDialogOpen ? landingUrl을 기존에 저장되어있는 URL을 선택하기 위한 state
+ * @param {*} classes ? style
+
+ * @author 박찬우
+ */
+function SelectLandingUrl(props: SelectLandingUrlProps): JSX.Element {
   const {
     handleDialogOpen, dispatch, state, landingUrlData
   } = props;
-  const classes = useStyle();
+  const classes = useStyles();
 
   return (
     <Grid container direction="column" spacing={3} style={{ marginBottom: 20 }}>
@@ -65,60 +49,61 @@ const SelectLandingUrl = (props: SelectLandingUrlProps): JSX.Element => {
       <Grid item>
         {!landingUrlData.loading && landingUrlData.data && (
         <List className={classes.landinglist}>
-          {landingUrlData.data.filter(
-            (l) => l.confirmState !== 2 // 2는 거절된 url을 나타낸다.
-          ).sort((a, b) => b.regiDate.localeCompare(a.regiDate)).map((ll) => (
-            <ListItem
-              key={ll.linkId}
-              button
-              selected={ll.linkId === state.connectedLinkId}
-              onClick={(): void => {
-                dispatch({ key: 'landingUrl', value: ll.linkId });
-              }}
-            >
-              {ll.confirmState === 0 && (
+          {landingUrlData.data
+            .filter((l) => l.confirmState !== 2) // 2는 거절된 url을 나타낸다.
+            .sort((a, b) => b.regiDate.localeCompare(a.regiDate))
+            .map((ll) => (
+              <ListItem
+                key={ll.linkId}
+                button
+                selected={ll.linkId === state.selectedLandingUrl}
+                onClick={(): void => {
+                  dispatch({ type: 'SET_LANDING_URL', value: ll.linkId });
+                }}
+              >
+                {ll.confirmState === 0 && (
                 <Tooltip title="승인 대기중인 URL">
                   <ListItemIcon>
                     <span style={{ fontSize: 24 }} role="img" aria-label="url-waiting-for-confirm">⏰</span>
                   </ListItemIcon>
                 </Tooltip>
-              )}
-              {ll.confirmState === 1 && (
+                )}
+                {ll.confirmState === 1 && (
                 <Tooltip title="승인된 URL">
                   <ListItemIcon>
                     <span style={{ fontSize: 24 }} role="img" aria-label="url-confirmed">👌</span>
                   </ListItemIcon>
                 </Tooltip>
-              )}
-              <ListItemText
-                primary={(
-                  <>
-                    <Typography variant="body1">
-                      {ll.links.links.find((link) => link.primary)?.linkName}
-                      {' '}
-                      {ll.links.links.find((link) => link.primary)?.linkTo}
-                    </Typography>
-                    <Typography variant="body2">
-                      {ll.links.links.filter((link) => !link.primary)?.map((lll) => lll.linkName)}
-                      {' '}
-                      {ll.links.links.filter((link) => !link.primary)?.map((lll) => lll.linkTo)}
-                    </Typography>
-                  </>
                 )}
-                secondary={`등록일: ${ll.regiDate}`}
-              />
-              <ListItemSecondaryAction>
-                <GreenCheckbox
-                  edge="end"
-                  checked={ll.linkId === state.connectedLinkId}
-                  onChange={(): void => {
-                    dispatch({ key: 'landingUrl', value: ll.linkId });
-                  }}
-                  inputProps={{ 'aria-labelledby': ll.linkId }}
+                <ListItemText
+                  primary={(
+                    <>
+                      <Typography variant="body1">
+                        {ll.links.links.find((link) => link.primary)?.linkName}
+                        {' '}
+                        {ll.links.links.find((link) => link.primary)?.linkTo}
+                      </Typography>
+                      <Typography variant="body2">
+                        {ll.links.links.filter((link) => !link.primary)?.map((lll) => lll.linkName)}
+                        {' '}
+                        {ll.links.links.filter((link) => !link.primary)?.map((lll) => lll.linkTo)}
+                      </Typography>
+                    </>
+                )}
+                  secondary={`등록일: ${ll.regiDate}`}
                 />
-              </ListItemSecondaryAction>
-            </ListItem>
-          ))}
+                <ListItemSecondaryAction>
+                  <GreenCheckbox
+                    edge="end"
+                    checked={ll.linkId === state.selectedLandingUrl}
+                    onChange={(): void => {
+                      dispatch({ type: 'SET_LANDING_URL', value: ll.linkId });
+                    }}
+                    inputProps={{ 'aria-labelledby': ll.linkId }}
+                  />
+                </ListItemSecondaryAction>
+              </ListItem>
+            ))}
         </List>
         )}
       </Grid>
@@ -132,19 +117,6 @@ const SelectLandingUrl = (props: SelectLandingUrlProps): JSX.Element => {
       </Grid>
     </Grid>
   );
-};
-
-/**
- * @description
- 해당 캠페인의 landingUrl을 변경하기 위한 컴포넌트
-
- * @param {*} state ? landingUrl을 저장하기 위한 object
- * @param {*} dispatch ? landingUrl을 변경하는 func
- * @param {*} handleDialogOpen ? landingUrl을 기존에 저장되어있는 URL을 선택하기 위한 state
- * @param {*} classes ? style
-
- * @author 박찬우
- */
-
+}
 
 export default SelectLandingUrl;

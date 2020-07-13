@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { makeStyles, useTheme, Theme } from '@material-ui/core/styles';
 import {
   Grid, CircularProgress, Typography, Divider,
   FormControl, InputLabel, Select, Input, Chip
 } from '@material-ui/core';
 import GameCard from './GameSelectCard';
-import { ArrayAction } from '../campaignReducer';
+import { StepForInformationInterface, StepForInformationAction } from '../reducers/campaignCreate.reducer';
 
 import useGetRequest from '../../../../../utils/hooks/useGetRequest';
 
@@ -22,13 +22,6 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 }));
 
-
-interface GameSelectProps {
-  checkedGames: string[];
-  checkedGamesDispatch: React.Dispatch<ArrayAction>;
-  priorityType: string | undefined;
-}
-
 interface GameDataInterface {
   count: number;
   content: string;
@@ -37,23 +30,44 @@ interface GameDataInterface {
   gameNameKr: string;
   boxArt: string;
 }
+interface GameSelectProps {
+  state: StepForInformationInterface;
+  dispatch: React.Dispatch<StepForInformationAction>;
+  handleComplete: () => void;
+  handleIncomplete: () => void;
+}
 
 const GameSelect = (props: GameSelectProps): JSX.Element => {
   const {
-    checkedGames, checkedGamesDispatch
+    state, dispatch, handleComplete, handleIncomplete
   } = props;
   const classes = useStyles();
   const theme = useTheme();
 
+  // **********************************************************
+  // 게임데이터 로딩 및 클릭 핸들러
   const gamesData = useGetRequest('/creators/analysis/games');
-
   function handleGameClick(game: string): void {
-    if (checkedGames.includes(game)) {
-      checkedGamesDispatch({ type: 'delete', value: game });
+    if (state.selectedGames.includes(game)) {
+      dispatch({ type: 'DELETE_SELECTED_GAMES', value: game });
     } else {
-      checkedGamesDispatch({ type: 'push', value: game });
+      dispatch({ type: 'SET_SELECTED_GAMES', value: game });
     }
   }
+
+  // **********************************************************
+  // "다음" 버튼 핸들러
+  useEffect(() => {
+    if (state.selectedPriorityType !== 'type1') {
+      return;
+    }
+    if (state.selectedGames.length >= 1) {
+      handleComplete();
+    } else {
+      handleIncomplete();
+    }
+  }, [handleComplete, handleIncomplete, state.selectedGames.length, state.selectedPriorityType]);
+
 
   return (
     <Grid container direction="column" spacing={2} className={classes.root}>
@@ -79,9 +93,9 @@ const GameSelect = (props: GameSelectProps): JSX.Element => {
                   count={game.count}
                   boxArt={game.boxArt}
                   handleClick={(): void => { handleGameClick(game.gameName); }}
-                  backgroundColor={checkedGames.includes(game.gameName)
+                  backgroundColor={state.selectedGames.includes(game.gameName)
                     ? theme.palette.primary.light : 'inherit'}
-                  color={checkedGames.includes(game.gameName)
+                  color={state.selectedGames.includes(game.gameName)
                     ? theme.palette.common.white : 'inherit'}
                 />
               </Grid>
@@ -98,12 +112,12 @@ const GameSelect = (props: GameSelectProps): JSX.Element => {
                     event: React.ChangeEvent<{ name?: string | undefined; value: unknown }>
                   ): void => {
                     if (typeof event.target.value === 'string') {
-                      if (!checkedGames.includes(event.target.value)) {
+                      if (!state.selectedGames.includes(event.target.value)) {
                         if (event.target.value) {
-                          checkedGamesDispatch({ type: 'push', value: event.target.value });
+                          dispatch({ type: 'SET_SELECTED_GAMES', value: event.target.value });
                         }
                       } else if (event.target.value) {
-                        checkedGamesDispatch({ type: 'delete', value: event.target.value });
+                        dispatch({ type: 'DELETE_SELECTED_GAMES', value: event.target.value });
                       }
                     }
                   }}
@@ -125,11 +139,11 @@ const GameSelect = (props: GameSelectProps): JSX.Element => {
           </Grid>
         )}
 
-        {checkedGames.length > 0 && (
+        {state.selectedGames.length > 0 && (
           <Grid item xs={12}>
             <Typography variant="h6">선택된 게임</Typography>
             <div style={{ padding: 16 }}>
-              {checkedGames.map((game) => (
+              {state.selectedGames.map((game) => (
                 <Chip
                   key={`selected_${game}`}
                   label={game}

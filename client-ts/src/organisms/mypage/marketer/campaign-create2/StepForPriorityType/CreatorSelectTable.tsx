@@ -10,8 +10,8 @@ import GreenCheckBox from '../../../../../atoms/GreenCheckBox';
 import ContentsPie from '../../shared/ContentsPie';
 import TimeChart from '../../shared/TimeChart';
 import StyledSelectText from '../../../../../atoms/StyledItemText';
-import { ArrayAction } from '../campaignReducer';
 import { CreatorDetailDataInterface } from '../interfaces';
+import { StepForInformationAction } from '../reducers/campaignCreate.reducer';
 
 const BANNER_MAX_WIDTH = 48;
 const BANNER_MAX_HEIGHT = 48;
@@ -53,27 +53,32 @@ const useStyles = makeStyles((theme) => ({
 
 interface CreatorTableProps {
   checkedCreators: string[];
-  checkedCreatorsDispatch: React.Dispatch<ArrayAction>;
+  dispatch: React.Dispatch<StepForInformationAction>;
   creatorNamesDispatch: React.Dispatch<{ type: string; value: string }>;
 }
 export default function CreatorTable(props: CreatorTableProps): JSX.Element {
   const classes = useStyles();
   const theme = useTheme();
-  const {
-    checkedCreators, checkedCreatorsDispatch, creatorNamesDispatch
-  } = props;
-  const fetchData = useGetRequest<null, CreatorDetailDataInterface[]>('/creators/analysis/detail');
-  const getChecked = (creatorId: string): boolean => checkedCreators.includes(creatorId);
+  const { checkedCreators, dispatch, creatorNamesDispatch } = props;
 
+  // **********************************************************
+  // 데이터 요청
+  const fetchData = useGetRequest<null, CreatorDetailDataInterface[]>('/creators/analysis/detail');
+
+  // **********************************************************
+  // 크리에이터 선택 관련
+  const getChecked = (creatorId: string): boolean => checkedCreators.includes(creatorId);
   const handleChecked = (rowData: CreatorDetailDataInterface) => (): void => {
     const { creatorId, creatorName } = rowData;
     if (getChecked(creatorId)) {
       // 체크 된 걸 다시 체크할 때
-      checkedCreatorsDispatch({ type: 'delete', value: creatorId });
+      dispatch({ type: 'DELETE_SELECTED_CREATORS', value: creatorId });
+      dispatch({ type: 'DELETE_SELECTED_CREATOR_NAMES', value: creatorName });
       creatorNamesDispatch({ type: 'delete', value: creatorName });
     } else {
       // 체크 됐을 때
-      checkedCreatorsDispatch({ type: 'push', value: creatorId });
+      dispatch({ type: 'SET_SELECTED_CREATORS', value: creatorId });
+      dispatch({ type: 'SET_SELECTED_CREATOR_NAMES', value: creatorName });
       creatorNamesDispatch({ type: 'push', value: creatorName });
     }
   };
@@ -126,7 +131,7 @@ export default function CreatorTable(props: CreatorTableProps): JSX.Element {
       title: '',
       field: 'creatorName',
       render: (rowData: CreatorDetailDataInterface): JSX.Element => (
-        <Grid container direction="row" onClick={handleChecked(rowData)} style={{ cursor: 'pointer' }}>
+        <Grid container direction="row" style={{ cursor: 'pointer' }}>
           <Grid item>
             <Avatar variant="rounded" className={classes.image}>
               <img
@@ -222,13 +227,12 @@ export default function CreatorTable(props: CreatorTableProps): JSX.Element {
           title=""
           columns={columns}
           cellWidth={90}
+          // onRowClick={(evt, rowData: any) => { console.log(rowData); handleChecked(rowData); }}
           data={fetchData.data.filter((creator) => !(creator.creatorId === '472147060'))} // 지나가언젠가 제거
           detailPanel={[
             {
               icon: (): JSX.Element => (
-                <Poll
-                  color="disabled"
-                />
+                <Poll color="disabled" />
               ),
               tooltip: '그래프보기',
               render: (rowData: CreatorDetailDataInterface): JSX.Element => (

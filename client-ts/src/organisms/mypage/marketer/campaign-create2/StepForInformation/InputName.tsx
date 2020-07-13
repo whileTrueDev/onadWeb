@@ -26,7 +26,7 @@ const InputName = (props: InputNameProps): JSX.Element => {
         <Grid item>
           <StyledItemText
             primary="캠페인 이름 입력하기"
-            secondary="캠페인 구분을 위해 사용됩니다."
+            secondary="캠페인 구분을 위해 사용됩니다.(최소 2자)"
             className={classes.label}
           />
         </Grid>

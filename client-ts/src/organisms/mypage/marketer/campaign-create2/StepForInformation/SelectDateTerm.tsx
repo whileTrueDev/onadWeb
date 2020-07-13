@@ -8,13 +8,13 @@ import StyledSelectText from '../../../../../atoms/StyledSelectText';
 import DatePicker from './DateTermPicker';
 
 import {
-  TermInterface,
-  Action,
-} from '../campaignReducer';
+  StepForInformationAction,
+  StepForInformationInterface
+} from '../reducers/campaignCreate.reducer';
 
 interface SelectDateTermProps {
-  state: TermInterface;
-  dispatch: React.Dispatch<Action>;
+  state: StepForInformationInterface;
+  dispatch: React.Dispatch<StepForInformationAction>;
 }
 
 const SelectDateTerm = (props: SelectDateTermProps): JSX.Element => {
@@ -23,42 +23,41 @@ const SelectDateTerm = (props: SelectDateTermProps): JSX.Element => {
   } = props;
 
   const [toggle, setToggle] = React.useState(false);
-  function handleToggle(): void {
-    setToggle(!toggle);
+  function handleUse(): void {
+    setToggle(true);
+  }
+  function handleNotUse(): void {
+    setToggle(false);
   }
 
   return (
     <Grid container direction="column">
-      <Grid item>
-        <Grid container direction="row">
-          <GreenCheckbox
-            name="no-limit"
-            checked={toggle}
-            onClick={handleToggle}
-          />
-          <StyledSelectText
-            onClick={handleToggle}
-            style={{ cursor: 'pointer' }}
-            primary="승인일부터 종료일 없이 계속 집행"
-          />
-        </Grid>
+      <Grid container item direction="row">
+        <GreenCheckbox
+          name="no-limit"
+          checked={!toggle}
+          onClick={handleNotUse}
+        />
+        <StyledSelectText
+          onClick={handleNotUse}
+          style={{ cursor: 'pointer' }}
+          primary="승인일부터 종료일 없이 계속 집행"
+        />
       </Grid>
-      <Grid item>
-        <Grid container direction="row">
-          <GreenCheckbox
-            name="set-limit"
-            checked={state.term}
-            onClick={handleToggle}
-          />
-          <StyledSelectText
-            primary="시작일 또는 종료일 설정"
-            onClick={handleToggle}
-            style={{ cursor: 'pointer' }}
-          />
-        </Grid>
+      <Grid item container direction="row">
+        <GreenCheckbox
+          name="set-limit"
+          checked={toggle}
+          onClick={handleUse}
+        />
+        <StyledSelectText
+          primary="시작일 또는 종료일 설정"
+          onClick={handleUse}
+          style={{ cursor: 'pointer' }}
+        />
       </Grid>
-      {state.term && (
-        <Grid item>
+      {toggle && (
+        <Grid item container>
           <DatePicker state={state} dispatch={dispatch} />
         </Grid>
       )}

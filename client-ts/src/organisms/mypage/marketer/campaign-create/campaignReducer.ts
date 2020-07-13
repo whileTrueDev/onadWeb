@@ -108,12 +108,6 @@ const step3Reducer = (state: Step3Interface, action: Action): Step3Interface => 
     case 'reset': {
       return { bannerId: '', connectedLinkId: '' };
     }
-    // case 'keyword0':
-    //   return { ...state, keyword0: action.value };
-    // case 'keyword1':
-    //   return { ...state, keyword1: action.value };
-    // case 'keyword2':
-    //   return { ...state, keyword2: action.value };
     default:
       return state;
   }

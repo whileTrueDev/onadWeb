@@ -2,58 +2,24 @@ import React from 'react';
 import {
   Grid, CircularProgress
 } from '@material-ui/core';
-import { makeStyles, Theme } from '@material-ui/core/styles';
 import StyledItemText from '../../../../../atoms/StyledItemText';
 import BannerCarousel from '../../../../../atoms/BannerCarousel';
 import Button from '../../../../../atoms/CustomButtons/Button';
 import { UseGetRequestObject } from '../../../../../utils/hooks/useGetRequest';
-import { Action } from '../campaignReducer';
 import useDialog from '../../../../../utils/hooks/useDialog';
 import Inquire from '../../../../main/main/Inquiry/Inquiry';
 import Dialog from '../../../../../atoms/Dialog/Dialog';
+import useStyles from './SelectBanner.style';
+import {
+  StepForInformationAction,
+} from '../reducers/campaignCreate.reducer';
 
-
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    width: '100%',
-    marginTop: '0px',
-    alignItem: 'center',
-    [theme.breakpoints.down('sm')]: {
-      margin: 0,
-    },
-  },
-  item: {
-    marginBottom: '30px',
-    [theme.breakpoints.down('sm')]: {
-      width: '100%',
-      margin: 0,
-      marginBottom: '30px',
-      padding: 0,
-    },
-  },
-  input: {
-    width: '300px',
-    [theme.breakpoints.down('sm')]: {
-      width: '100%',
-      fontSize: '12px',
-      margin: 0,
-    },
-  },
-  label: {
-    color: theme.palette.info.main,
-    fontWeight: 700,
-    [theme.breakpoints.down('sm')]: {
-      fontSize: '14px',
-      marginBottom: '8px',
-    },
-  },
-}));
 
 interface SelectBannerProps {
-  dispatch: React.Dispatch<Action>;
+  step: number;
+  dispatch: React.Dispatch<StepForInformationAction>;
   handleDialogOpen: () => void;
   bannerData: UseGetRequestObject<{ bannerId: string; bannerSrc: string }[]>;
-  step: number;
 }
 
 const SelectBanner = (props: SelectBannerProps): JSX.Element => {
@@ -63,7 +29,7 @@ const SelectBanner = (props: SelectBannerProps): JSX.Element => {
   const classes = useStyles();
   const InquireDialog = useDialog();
   const handleBannerId = (bannerId: string): void => {
-    dispatch({ key: 'bannerId', value: bannerId });
+    dispatch({ type: 'SET_BANNER', value: bannerId });
   };
 
   return (

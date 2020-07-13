@@ -49,8 +49,19 @@ const GameSelect = (props: GameSelectProps): JSX.Element => {
   const classes = useStyles();
   const theme = useTheme();
 
+  // **********************************************************
+  // 게임데이터 로딩 및 클릭 핸들러
   const gamesData = useGetRequest('/creators/analysis/games');
+  function handleGameClick(game: string): void {
+    if (checkedGames.includes(game)) {
+      checkedGamesDispatch({ type: 'delete', value: game });
+    } else {
+      checkedGamesDispatch({ type: 'push', value: game });
+    }
+  }
 
+  // **********************************************************
+  // "다음" 버튼 핸들러
   useEffect(() => {
     if (priorityType !== 'type1') {
       return;
@@ -61,14 +72,6 @@ const GameSelect = (props: GameSelectProps): JSX.Element => {
       setStepComplete(false);
     }
   }, [checkedGames.length, priorityType, setStepComplete]);
-
-  function handleGameClick(game: string): void {
-    if (checkedGames.includes(game)) {
-      checkedGamesDispatch({ type: 'delete', value: game });
-    } else {
-      checkedGamesDispatch({ type: 'push', value: game });
-    }
-  }
 
   return (
     <Grid container direction="column" spacing={2} className={classes.root}>

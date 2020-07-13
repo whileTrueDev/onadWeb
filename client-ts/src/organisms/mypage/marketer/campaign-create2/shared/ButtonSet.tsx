@@ -13,29 +13,32 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface ButtonSetProps {
+  type?: 'button' | 'submit';
   nextButtonName?: string;
   backButtonName?: string;
   handleBack: (event: React.MouseEvent<HTMLButtonElement>) => void;
-  handleNext: (event: React.MouseEvent<HTMLButtonElement>) => void;
-  collapseOpen: boolean;
+  handleNext?: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  nextButtonOpen: boolean;
 }
 
 export default function ButtonSet({
+  type = 'button',
   nextButtonName = '다음',
   backButtonName = '뒤로',
   handleNext,
   handleBack,
-  collapseOpen
+  nextButtonOpen
 }: ButtonSetProps): JSX.Element {
   const classes = useStyles();
 
   return (
     <Grid container direction="row-reverse">
       <Grid item>
-        <Collapse in={collapseOpen}>
+        <Collapse in={nextButtonOpen}>
           <Button
             variant="contained"
             color="primary"
+            type={type}
             onClick={handleNext}
             className={classes.end}
           >

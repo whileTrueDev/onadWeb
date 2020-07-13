@@ -2,34 +2,31 @@ import React from 'react';
 import {
   Grid
 } from '@material-ui/core';
-import TimeSelector from './SelectTimeDetail';
+import SelectTimeDetail from './SelectTimeDetail';
 import GreenCheckbox from '../../../../../atoms/GreenCheckBox';
 import StyledSelectText from '../../../../../atoms/StyledSelectText';
 
 import {
-  TimeInterface,
-  TimeAction,
-} from '../campaignReducer';
+  StepForInformationAction,
+  StepForInformationInterface
+} from '../reducers/campaignCreate.reducer';
 
 interface SelectTimeProps {
-  state: TimeInterface;
-  dispatch: React.Dispatch<TimeAction>;
+  state: StepForInformationInterface;
+  dispatch: React.Dispatch<StepForInformationAction>;
 }
 
 const SelectTime = (props: SelectTimeProps): JSX.Element => {
-  const {
-    state,
-    dispatch
-  } = props;
+  const { state, dispatch } = props;
 
-  const setTime = (): void => {
-    dispatch({ key: 'time', value: [] });
-  };
-
-  const setNoTime = (): void => {
-    dispatch({ key: 'noTime', value: [] });
-  };
-
+  const [toggle, setToggle] = React.useState(false);
+  function handleUse(): void {
+    setToggle(true);
+  }
+  function handleNotUse(): void {
+    setToggle(false);
+    dispatch({ type: 'RESET_TIME', value: '' });
+  }
 
   return (
     <Grid container direction="column">
@@ -37,12 +34,12 @@ const SelectTime = (props: SelectTimeProps): JSX.Element => {
         <Grid container direction="row">
           <GreenCheckbox
             name="no-limit"
-            checked={!state.time}
-            onClick={setNoTime}
+            checked={!toggle}
+            onClick={handleNotUse}
           />
           <StyledSelectText
-            onClick={setNoTime}
-            style={{ cursor: 'pointer' }}
+            onClick={handleNotUse}
+            style={{ cursor: 'pointer', maxWidth: 300 }}
             primary="시간대 설정 없이 계속 집행"
           />
         </Grid>
@@ -52,21 +49,16 @@ const SelectTime = (props: SelectTimeProps): JSX.Element => {
         <Grid container direction="row">
           <GreenCheckbox
             name="set-limit"
-            checked={state.time}
-            onClick={setTime}
+            checked={toggle}
+            onClick={handleUse}
           />
           <StyledSelectText
             primary="송출 시간대 설정"
-            onClick={setTime}
-            style={{ cursor: 'pointer' }}
+            onClick={handleUse}
+            style={{ cursor: 'pointer', maxWidth: 300 }}
           />
         </Grid>
-        {state.time ? (
-          <TimeSelector
-            state={state}
-            dispatch={dispatch}
-          />
-        ) : null}
+        {toggle ? (<SelectTimeDetail state={state} dispatch={dispatch} />) : null}
       </Grid>
     </Grid>
   );
