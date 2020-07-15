@@ -3,24 +3,22 @@ import {
   Grid
 } from '@material-ui/core';
 
-import GreenCheckbox from '../../../../../atoms/GreenCheckBox';
+import GreenCheckbox from '../../../../../atoms/Checkbox/GreenCheckBox';
 import StyledSelectText from '../../../../../atoms/StyledSelectText';
 import DatePicker from './DateTermPicker';
 
 import {
-  StepForInformationAction,
-  StepForInformationInterface
+  CampaignCreateAction,
+  CampaignCreateInterface
 } from '../reducers/campaignCreate.reducer';
 
 interface SelectDateTermProps {
-  state: StepForInformationInterface;
-  dispatch: React.Dispatch<StepForInformationAction>;
+  state: CampaignCreateInterface;
+  dispatch: React.Dispatch<CampaignCreateAction>;
 }
 
 const SelectDateTerm = (props: SelectDateTermProps): JSX.Element => {
-  const {
-    state, dispatch
-  } = props;
+  const { state, dispatch } = props;
 
   const [toggle, setToggle] = React.useState(false);
   function handleUse(): void {
@@ -28,6 +26,7 @@ const SelectDateTerm = (props: SelectDateTermProps): JSX.Element => {
   }
   function handleNotUse(): void {
     setToggle(false);
+    dispatch({ type: 'RESET_TERM_FIN_DATE', value: '' });
   }
 
   return (

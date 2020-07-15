@@ -6,7 +6,7 @@ import {
 import Poll from '@material-ui/icons/Poll';
 import MaterialTable from '../../../../../atoms/Table/MaterialTable';
 import useGetRequest from '../../../../../utils/hooks/useGetRequest';
-import GreenCheckBox from '../../../../../atoms/GreenCheckBox';
+import GreenCheckBox from '../../../../../atoms/Checkbox/GreenCheckBox';
 import ContentsPie from '../../shared/ContentsPie';
 import TimeChart from '../../shared/TimeChart';
 import StyledSelectText from '../../../../../atoms/StyledItemText';
@@ -81,37 +81,37 @@ export default function CreatorTable(props: CreatorTableProps): JSX.Element {
   const makeValueComponent = ({
     value, unit
   }: { value: string | number; unit: string }): JSX.Element => (
-      <div>
-        <Grid container direction="row" className={classes.left}>
-          <Grid item>
-            <Typography gutterBottom variant="h6">
-              {value}
-            </Typography>
-          </Grid>
-          <Grid item className={classes.flex}>
-            <Typography variant="body2" gutterBottom className={classes.unit}>{unit}</Typography>
-          </Grid>
+    <div>
+      <Grid container direction="row" className={classes.left}>
+        <Grid item>
+          <Typography gutterBottom variant="h6">
+            {value}
+          </Typography>
         </Grid>
-      </div>
-    );
+        <Grid item className={classes.flex}>
+          <Typography variant="body2" gutterBottom className={classes.unit}>{unit}</Typography>
+        </Grid>
+      </Grid>
+    </div>
+  );
 
 
   const makeCenterComponent = ({
     value, unit
   }: { value: string | number; unit: string }): JSX.Element => (
-      <div>
-        <Grid container direction="row" className={classes.flex}>
-          <Grid item>
-            <Typography gutterBottom variant="h6">
-              {value}
-            </Typography>
-          </Grid>
-          <Grid item className={classes.flex}>
-            <Typography variant="body2" gutterBottom className={classes.unit}>{unit}</Typography>
-          </Grid>
+    <div>
+      <Grid container direction="row" className={classes.flex}>
+        <Grid item>
+          <Typography gutterBottom variant="h6">
+            {value}
+          </Typography>
         </Grid>
-      </div>
-    );
+        <Grid item className={classes.flex}>
+          <Typography variant="body2" gutterBottom className={classes.unit}>{unit}</Typography>
+        </Grid>
+      </Grid>
+    </div>
+  );
 
   const makeChartComponent = ({ value }: { value: string }): JSX.Element => (
     <div className={classes.left}>

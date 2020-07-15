@@ -22,7 +22,7 @@ import CreatorCPAManage from './creator/CPAManage';
 import MarketerInventory from './marketer/Inventory';
 import MarketerDashboard from './marketer/Dashboard';
 import MarketerMyOffice from './marketer/MyOffice';
-import CampaignCreateStepper from './marketer/CampaignCreation2';
+import MarketerCreateCampaign from './marketer/CampaignCreate';
 import MarketerManual from './marketer/Manual';
 
 export interface MypageRoute {
@@ -118,7 +118,7 @@ const dashboardRoutes: MypageRoutes = {
       path: '/campaigncreate',
       name: '캠페인생성',
       icon: Work,
-      component: CampaignCreateStepper,
+      component: MarketerCreateCampaign,
       layout: '/mypage/marketer',
       noTab: true
     },

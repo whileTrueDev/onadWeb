@@ -11,13 +11,13 @@ import Inquire from '../../../../main/main/Inquiry/Inquiry';
 import Dialog from '../../../../../atoms/Dialog/Dialog';
 import useStyles from './SelectBanner.style';
 import {
-  StepForInformationAction,
+  CampaignCreateAction,
 } from '../reducers/campaignCreate.reducer';
 
 
 interface SelectBannerProps {
   step: number;
-  dispatch: React.Dispatch<StepForInformationAction>;
+  dispatch: React.Dispatch<CampaignCreateAction>;
   handleDialogOpen: () => void;
   bannerData: UseGetRequestObject<{ bannerId: string; bannerSrc: string }[]>;
 }
@@ -28,7 +28,7 @@ const SelectBanner = (props: SelectBannerProps): JSX.Element => {
   } = props;
   const classes = useStyles();
   const InquireDialog = useDialog();
-  const handleBannerId = (bannerId: string): void => {
+  const handleBannerSelect = (bannerId: string): void => {
     dispatch({ type: 'SET_BANNER', value: bannerId });
   };
 
@@ -51,7 +51,7 @@ const SelectBanner = (props: SelectBannerProps): JSX.Element => {
           {!bannerData.loading && bannerData.data && bannerData.data.length > 0 ? (
             <BannerCarousel
               steps={bannerData.data}
-              handleBannerId={handleBannerId}
+              handleBannerId={handleBannerSelect}
               registStep={step}
             />
           ) : (null)}

@@ -4,11 +4,11 @@ import { Collapse, Typography } from '@material-ui/core';
 import CampaignCreateStepLayout from './shared/StepLayout';
 import OptionSelectPaper from './shared/SelectPaper';
 import ButtonSet from './shared/ButtonSet';
-import AdDescriptionSelect from './StepForAdType/AdDescriptionSelect';
-import AdDescriptionDialog from './StepForAdType/AdDescriptionDialog';
-import options from './StepForAdType/optionSources';
+import AdDescriptionSelect from './AdOptionComponents/AdDescriptionSelect';
+import AdDescriptionDialog from './AdOptionComponents/AdDescriptionDialog';
+import options from './AdOptionComponents/optionSources';
 import { OptionInterface, AdMaterial } from './interfaces';
-import { StepForInformationInterface, StepForInformationAction } from './reducers/campaignCreate.reducer';
+import { CampaignCreateInterface, CampaignCreateAction } from './reducers/campaignCreate.reducer';
 
 import useDialog from '../../../../utils/hooks/useDialog';
 
@@ -24,8 +24,8 @@ const useStyles = makeStyles((theme) => ({
 
 // 추후에 인터페이스 통합
 interface OptionPaperProps {
-  state: StepForInformationInterface;
-  dispatch: React.Dispatch<StepForInformationAction>; // 우선형 타입 선택
+  state: CampaignCreateInterface;
+  dispatch: React.Dispatch<CampaignCreateAction>; // 우선형 타입 선택
   step: number;
   handleNext: (event: React.MouseEvent<HTMLButtonElement>) => void;
   handleBack: (event: React.MouseEvent<HTMLButtonElement>) => void;

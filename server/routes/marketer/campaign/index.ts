@@ -211,10 +211,16 @@ router.route('/')
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
       const { marketerId, marketerName } = responseHelper.getSessionData(req);
       const [campaignName, optionType, priorityType, priorityList, selectedTime, dailyLimit,
-        startDate, finDate, keyword, bannerId, connectedLinkId, campaignDescription] = responseHelper.getParam([
+        startDate, finDate, keyword, bannerId, connectedLinkId, campaignDescription
+      ] = responseHelper.getOptionalParam([
         'campaignName', 'optionType', 'priorityType',
         'priorityList', 'selectedTime', 'dailyLimit', 'startDate', 'finDate',
         'keyword', 'bannerId', 'connectedLinkId', 'campaignDescription'], 'POST', req);
+
+      console.log('campaignId', campaignName, marketerId,
+        bannerId, connectedLinkId, dailyLimit, priorityType,
+        optionType, 0, priorityList, marketerName,
+        keyword, startDate, finDate, selectedTime, campaignDescription);
 
       const searchQuery = `
             SELECT campaignId
@@ -225,7 +231,7 @@ router.route('/')
 
       const saveQuery = `
             INSERT INTO campaign 
-            (campaignId, campaignName, marketerId, 
+            (campaignId, campaignName, marketerId,
             bannerId, connectedLinkId, dailyLimit, priorityType, 
             optionType, onOff, targetList, marketerName, 
             keyword, startDate, finDate, selectedTime, campaignDescription) 
@@ -236,9 +242,7 @@ router.route('/')
           const campaignId = dataProcessing.getCampaignId(row.result[0], marketerId);
           const targetJsonData = JSON.stringify({ targetList: priorityList });
           const timeJsonData = JSON.stringify({ time: selectedTime });
-          const keywordsJsonData = JSON.stringify(
-            { keywords: keyword }
-          );
+          const keywordsJsonData = JSON.stringify({ keywords: keyword });
 
           // 마케터 활동내역 로깅 테이블에서, 캠페인 생성의 상태값
           const MARKETER_ACTION_LOG_TYPE = 5;

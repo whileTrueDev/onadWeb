@@ -3,17 +3,17 @@ import {
   Grid
 } from '@material-ui/core';
 import SelectTimeDetail from './SelectTimeDetail';
-import GreenCheckbox from '../../../../../atoms/GreenCheckBox';
+import GreenCheckbox from '../../../../../atoms/Checkbox/GreenCheckBox';
 import StyledSelectText from '../../../../../atoms/StyledSelectText';
 
 import {
-  StepForInformationAction,
-  StepForInformationInterface
+  CampaignCreateAction,
+  CampaignCreateInterface
 } from '../reducers/campaignCreate.reducer';
 
 interface SelectTimeProps {
-  state: StepForInformationInterface;
-  dispatch: React.Dispatch<StepForInformationAction>;
+  state: CampaignCreateInterface;
+  dispatch: React.Dispatch<CampaignCreateAction>;
 }
 
 const SelectTime = (props: SelectTimeProps): JSX.Element => {

@@ -1,7 +1,7 @@
 import React from 'react';
 import { useTheme, makeStyles, Theme } from '@material-ui/core/styles';
 import { Typography, Paper, ButtonBase } from '@material-ui/core';
-import GreenCheckbox from '../../../../../atoms/GreenCheckBox';
+import GreenCheckbox from '../../../../../atoms/Checkbox/GreenCheckBox';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {

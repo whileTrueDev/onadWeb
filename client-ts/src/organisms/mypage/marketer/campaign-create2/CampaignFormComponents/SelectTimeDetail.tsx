@@ -3,14 +3,14 @@ import classnames from 'classnames';
 import Grid from '@material-ui/core/Grid';
 
 import {
-  StepForInformationAction,
-  StepForInformationInterface
+  CampaignCreateAction,
+  CampaignCreateInterface
 } from '../reducers/campaignCreate.reducer';
 import SelectTimeDetailUseStyles from './SelectTimeDetail.style';
 
 interface SelectTimeDetailProps {
-  state: StepForInformationInterface;
-  dispatch: React.Dispatch<StepForInformationAction>;
+  state: CampaignCreateInterface;
+  dispatch: React.Dispatch<CampaignCreateAction>;
 }
 
 const SelectTimeDetail = (props: SelectTimeDetailProps): JSX.Element => {

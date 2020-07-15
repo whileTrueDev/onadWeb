@@ -9,13 +9,13 @@ import {
 } from '@material-ui/pickers';
 
 import {
-  StepForInformationAction,
-  StepForInformationInterface
+  CampaignCreateAction,
+  CampaignCreateInterface
 } from '../reducers/campaignCreate.reducer';
 
 interface DateTermPickerProps {
-  state: StepForInformationInterface;
-  dispatch: React.Dispatch<StepForInformationAction>;
+  state: CampaignCreateInterface;
+  dispatch: React.Dispatch<CampaignCreateAction>;
 }
 
 function DateTermPicker(props: DateTermPickerProps): JSX.Element {
@@ -23,7 +23,7 @@ function DateTermPicker(props: DateTermPickerProps): JSX.Element {
   const { state, dispatch } = props;
 
   const [today] = useState(new Date());
-  const handleOpenDateChange = (date: any): void => {
+  const handleStartDateChange = (date: any): void => {
     dispatch({ value: date, type: 'SET_TERM_START_DATE' });
   };
 
@@ -53,7 +53,7 @@ function DateTermPicker(props: DateTermPickerProps): JSX.Element {
           label="시작일"
           minDate={today}
           value={state.campaignTerm.startDate}
-          onChange={handleOpenDateChange}
+          onChange={handleStartDateChange}
           KeyboardButtonProps={{
             'aria-label': 'change date',
           }}
@@ -68,7 +68,7 @@ function DateTermPicker(props: DateTermPickerProps): JSX.Element {
           invalidDateMessage="날짜 형식이 올바르지 않습니다."
           id="end-date-picker"
           label="종료일"
-          minDate={state.campaignTerm.startDate}
+          minDate={finDateToggle ? undefined : state.campaignTerm.startDate}
           value={state.campaignTerm.finDate}
           onChange={handleFinDateChange}
           KeyboardButtonProps={{

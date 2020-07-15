@@ -5,7 +5,7 @@ import {
   FormControl, InputLabel, Select, Input, Chip
 } from '@material-ui/core';
 import GameCard from './GameSelectCard';
-import { StepForInformationInterface, StepForInformationAction } from '../reducers/campaignCreate.reducer';
+import { CampaignCreateInterface, CampaignCreateAction } from '../reducers/campaignCreate.reducer';
 
 import useGetRequest from '../../../../../utils/hooks/useGetRequest';
 
@@ -31,8 +31,8 @@ interface GameDataInterface {
   boxArt: string;
 }
 interface GameSelectProps {
-  state: StepForInformationInterface;
-  dispatch: React.Dispatch<StepForInformationAction>;
+  state: CampaignCreateInterface;
+  dispatch: React.Dispatch<CampaignCreateAction>;
   handleComplete: () => void;
   handleIncomplete: () => void;
 }

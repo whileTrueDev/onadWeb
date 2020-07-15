@@ -3,7 +3,7 @@ import {
   Grid,
 } from '@material-ui/core';
 import BudgetInput from './BudgetInput';
-import GreenCheckbox from '../../../../../atoms/GreenCheckBox';
+import GreenCheckbox from '../../../../../atoms/Checkbox/GreenCheckBox';
 import StyledSelectText from '../../../../../atoms/StyledSelectText';
 
 import {

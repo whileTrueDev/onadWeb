@@ -5,21 +5,22 @@ import {
   Typography, Table, TableBody, TableCell,
   TableContainer, TableRow, Paper
 } from '@material-ui/core';
-import InputName from './StepForInformation/InputName';
-import SelectBanner from './StepForInformation/SelectBanner';
-import SelectLandingUrl from './StepForInformation/SelectLandingUrl';
-import InputDescription from './StepForInformation/InputDescription';
-import SelectBudget from './StepForInformation/SelectBudget';
-import SelectDateTerm from './StepForInformation/SelectDateTerm';
-import SelectTime from './StepForInformation/SelectTime';
+import InputName from './CampaignFormComponents/InputName';
+import SelectBanner from './CampaignFormComponents/SelectBanner';
+import SelectLandingUrl from './CampaignFormComponents/SelectLandingUrl';
+import InputDescription from './CampaignFormComponents/InputDescription';
+import SelectBudget from './CampaignFormComponents/SelectBudget';
+import SelectDateTerm from './CampaignFormComponents/SelectDateTerm';
+import SelectTime from './CampaignFormComponents/SelectTime';
 
 import BannerUploadDialog from '../shared/BannerUploadDialog';
 import UrlUploadDialog from '../shared/UrlUploadDialog';
 import CampaignCreateStepLayout from './shared/StepLayout';
+import ButtonSet from './shared/ButtonSet';
 
 import useDialog from '../../../../utils/hooks/useDialog';
 import useGetRequest from '../../../../utils/hooks/useGetRequest';
-import { StepForInformationAction, StepForInformationInterface } from './reducers/campaignCreate.reducer';
+import { CampaignCreateAction, CampaignCreateInterface } from './reducers/campaignCreate.reducer';
 
 const StyledTableCell = withStyles((theme) => ({
   head: {
@@ -37,9 +38,10 @@ const StyledTableRow = withStyles((theme) => ({
   },
 }))(TableRow);
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
+  tableContainer: { marginBottom: theme.spacing(2) },
   table: { minWidth: 700 },
-});
+}));
 
 interface CampaignFormPaperProps {
   nameInputRef: React.MutableRefObject<HTMLInputElement | undefined>;
@@ -47,8 +49,9 @@ interface CampaignFormPaperProps {
   budgetInputRef: React.MutableRefObject<HTMLInputElement | undefined>;
   step: number;
   optionType: string;
-  state: StepForInformationInterface;
-  dispatch: React.Dispatch<StepForInformationAction>;
+  state: CampaignCreateInterface;
+  dispatch: React.Dispatch<CampaignCreateAction>;
+  handleBack: (e: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
 function CampaignFormPaper({
@@ -59,6 +62,7 @@ function CampaignFormPaper({
   dispatch,
   optionType,
   step,
+  handleBack,
 }: CampaignFormPaperProps): JSX.Element {
   const classes = useStyles();
 
@@ -119,13 +123,13 @@ function CampaignFormPaper({
       primaryText="셋째,&nbsp;&nbsp; 캠페인 정보 입력"
       secondaryText="캠페인의 세부 정보를 입력해주세요."
     >
-      <TableContainer component={Paper}>
+      <TableContainer component={Paper} className={classes.tableContainer}>
         <Table className={classes.table} aria-label="campaign-create-form-table">
           <TableBody>
             {inputsteps.map((_step: false | { title: string; component: JSX.Element }) => (
-              <>
+              <React.Fragment key={_step ? _step.title : 'campaign-create-no-landing-url'}>
                 {_step ? (
-                  <StyledTableRow key={_step.title}>
+                  <StyledTableRow>
                     <StyledTableCell>
                       <Typography variant="h6" style={{ fontWeight: 700 }}>{_step.title}</Typography>
                     </StyledTableCell>
@@ -134,11 +138,17 @@ function CampaignFormPaper({
                     </StyledTableCell>
                   </StyledTableRow>
                 ) : null}
-              </>
+              </React.Fragment>
             ))}
           </TableBody>
         </Table>
       </TableContainer>
+
+      <ButtonSet
+        type="submit"
+        handleBack={handleBack}
+        nextButtonOpen
+      />
 
       {/* 배너 생성 다이얼로그 */}
       <BannerUploadDialog

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useReducer } from 'react';
+import React, { useState, useEffect } from 'react';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import {
   Grid, Paper, CircularProgress
@@ -6,7 +6,7 @@ import {
 import StyledItemText from '../../../../../atoms/StyledItemText';
 import CreatorTable from './CreatorSelectTable';
 import useGetRequest from '../../../../../utils/hooks/useGetRequest';
-import { StepForInformationInterface, StepForInformationAction } from '../reducers/campaignCreate.reducer';
+import { CampaignCreateInterface, CampaignCreateAction } from '../reducers/campaignCreate.reducer';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -26,23 +26,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-// 선태된 creator 이름 리듀서
-const reducer = (state: string[], action: { type: string; value: string }): string[] => {
-  switch (action.type) {
-    case 'push':
-      return [...state, action.value];
-    case 'delete':
-      return state.filter((item: string) => item !== action.value);
-    case 'reset':
-      return [];
-    default:
-      return state;
-  }
-};
 
 interface CreatorSelectProps {
-  state: StepForInformationInterface;
-  dispatch: React.Dispatch<StepForInformationAction>;
+  state: CampaignCreateInterface;
+  dispatch: React.Dispatch<CampaignCreateAction>;
   handleComplete: () => void;
   handleIncomplete: () => void;
   priorityType?: string;
@@ -73,15 +60,19 @@ const CreatorSelect = (props: CreatorSelectProps): JSX.Element => {
   // **********************************************************
   // 선택된 크리에이터 이름 핸들러
   const [creatorsText, setText] = useState('');
-  const [creatorNames, creatorNamesDispatch] = useReducer(reducer, []);
   useEffect(() => {
-    const texts = creatorNames.reduce((text, creatorName) => {
+    const texts = state.selectedCreatorNames.reduce((text, creatorName) => {
       const newText = text.concat(creatorName).concat(', ');
       return newText;
     }, '현재까지 선택된 크리에이터 :  ');
 
     setText(texts);
-  }, [creatorNames]);
+  }, [state.selectedCreatorNames]);
+
+  // **********************************************************
+  // For test.
+  const ref = React.useRef(null);
+
 
   return (
     <Grid container direction="column" spacing={2} className={classes.root}>
@@ -100,11 +91,23 @@ const CreatorSelect = (props: CreatorSelectProps): JSX.Element => {
             )}
             {!creatorsData.loading && creatorsData.data && (
               <CreatorTable
+                tableRef={ref}
                 checkedCreators={state.selectedCreators}
                 dispatch={dispatch}
-                creatorNamesDispatch={creatorNamesDispatch}
               />
             )}
+            <button
+              type="button"
+              onClick={(e) => {
+                e.preventDefault();
+                if (ref && ref.current) {
+                  console.log(ref.current);
+                }
+              }}
+            >
+              tableRef확인
+
+            </button>
           </Grid>
         </Grid>
       </Grid>

@@ -1,5 +1,5 @@
 // key ,value를 이용하여 state의 값에 접근
-export type StepForInformationAction = {
+export type CampaignCreateAction = {
   type:
     | 'SET_OPTION'
     | 'SET_PRIORITY_TYPE'
@@ -23,7 +23,7 @@ export type StepForInformationAction = {
   value: string;
 }
 
-export interface StepForInformationInterface {
+export interface CampaignCreateInterface {
   selectedOption: string;
   selectedPriorityType: string;
   selectedCreators: string[];
@@ -33,12 +33,12 @@ export interface StepForInformationInterface {
   selectedLandingUrl: string;
   campaignTerm: {
     startDate: Date | string;
-    finDate: string | null;
+    finDate?: string;
   };
   campaignTime: string[];
 }
 
-export const defaultState: StepForInformationInterface = {
+export const defaultState: CampaignCreateInterface = {
   selectedOption: 'option1',
   selectedPriorityType: '',
   selectedCreators: [],
@@ -49,13 +49,13 @@ export const defaultState: StepForInformationInterface = {
   campaignTime: [],
   campaignTerm: {
     startDate: new Date(),
-    finDate: null,
+    finDate: undefined,
   },
 };
-const stepForInformationReducer = (
-  state: StepForInformationInterface,
-  action: StepForInformationAction
-): StepForInformationInterface => {
+export const CampaignCreateReducer = (
+  state: CampaignCreateInterface,
+  action: CampaignCreateAction
+): CampaignCreateInterface => {
   const { type, value } = action;
   switch (type) {
     case 'SET_OPTION':
@@ -74,7 +74,7 @@ const stepForInformationReducer = (
     case 'SET_TERM_FIN_DATE':
       return { ...state, campaignTerm: { ...state.campaignTerm, finDate: value } };
     case 'RESET_TERM_FIN_DATE':
-      return { ...state, campaignTerm: { ...state.campaignTerm, finDate: null } };
+      return { ...state, campaignTerm: { ...state.campaignTerm, finDate: undefined } };
     // 광고 타겟 시간 선택 관련
     case 'SET_TIME':
       if (state.campaignTime.includes(value)) {
@@ -100,7 +100,7 @@ const stepForInformationReducer = (
         selectedCreatorNames: state.selectedCreatorNames.filter((item: string) => item !== value)
       };
     case 'RESET_SELECTED_CREATORS':
-      return { ...state, selectedCreators: [] };
+      return { ...state, selectedCreators: [], selectedCreatorNames: [] };
     // 광고 송출 게임 선택 관련
     case 'SET_SELECTED_GAMES':
       return { ...state, selectedGames: [...state.selectedGames, action.value] };
@@ -118,5 +118,3 @@ const stepForInformationReducer = (
       throw new Error(`action.type is not defined or there is no handler for ${type}`);
   }
 };
-
-export { stepForInformationReducer };

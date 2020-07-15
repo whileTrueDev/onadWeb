@@ -7,7 +7,7 @@ import {
 } from '@material-ui/core';
 // custom table component
 import Help from '@material-ui/icons/Help';
-import GreenCheckbox from '../GreenCheckBox';
+import GreenCheckbox from '../Checkbox/GreenCheckBox';
 import TableFooter from './TableFooter';
 // core components
 import useTableStyles from './Table.style';

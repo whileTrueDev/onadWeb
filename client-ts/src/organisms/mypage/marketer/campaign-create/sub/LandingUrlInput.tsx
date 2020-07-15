@@ -5,7 +5,7 @@ import {
   ListItemSecondaryAction, Typography, Tooltip
 } from '@material-ui/core';
 
-import GreenCheckbox from '../../../../../atoms/GreenCheckBox';
+import GreenCheckbox from '../../../../../atoms/Checkbox/GreenCheckBox';
 import StyledItemText from '../../../../../atoms/StyledItemText';
 import Button from '../../../../../atoms/CustomButtons/Button';
 import { Step3Interface, Action } from '../campaignReducer';

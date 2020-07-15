@@ -3,11 +3,11 @@ import { Collapse, Chip } from '@material-ui/core';
 import SelectPaper from './shared/SelectPaper';
 import CampaignCreateStepLayout from './shared/StepLayout';
 import ButtonSet from './shared/ButtonSet';
-import CreatorSelect from './StepForPriorityType/CreatorSelect';
-import GameSelect from './StepForPriorityType/GameSelect';
+import CreatorSelect from './AdPriorityComponents/CreatorSelect';
+import GameSelect from './AdPriorityComponents/GameSelect';
 import {
-  StepForInformationInterface,
-  StepForInformationAction
+  CampaignCreateInterface,
+  CampaignCreateAction
 } from './reducers/campaignCreate.reducer';
 
 
@@ -27,8 +27,8 @@ const priorityTypes: PriorityInterface[] = [
     primaryText: '특정 크리에이터에게만 광고 송출',
     secondaryText: '특정 크리에이터에게만 광고를 송출할 수 있어요',
     defaultChildren: (
-      state: StepForInformationInterface,
-      dispatch: React.Dispatch<StepForInformationAction>,
+      state: CampaignCreateInterface,
+      dispatch: React.Dispatch<CampaignCreateAction>,
       handleComplete: () => void,
       handleIncomplete: () => void,
       // setSelectedNames: React.Dispatch<React.SetStateAction<string[]>>
@@ -61,8 +61,8 @@ const priorityTypes: PriorityInterface[] = [
     primaryText: '특정 게임에만 광고 송출',
     secondaryText: '특정 게임에만 광고를 송출할 수 있어요.',
     defaultChildren: (
-      state: StepForInformationInterface,
-      dispatch: React.Dispatch<StepForInformationAction>,
+      state: CampaignCreateInterface,
+      dispatch: React.Dispatch<CampaignCreateAction>,
       handleComplete: () => void,
       handleIncomplete: () => void,
     ): JSX.Element => (
@@ -96,8 +96,8 @@ const priorityTypes: PriorityInterface[] = [
 ];
 
 interface PriorityPaperProps {
-  state: StepForInformationInterface;
-  dispatch: React.Dispatch<StepForInformationAction>; // 우선형 타입 선택
+  state: CampaignCreateInterface;
+  dispatch: React.Dispatch<CampaignCreateAction>; // 우선형 타입 선택
   step: number;
   handleNext: (e: React.MouseEvent<HTMLButtonElement>) => void;
   handleBack: (e: React.MouseEvent<HTMLButtonElement>) => void;
@@ -129,6 +129,8 @@ function PriorityPaper({
     } else {
       // 새로 체크하는 경우
       dispatch({ type: 'SET_PRIORITY_TYPE', value: id });
+      dispatch({ type: 'RESET_SELECTED_CREATORS', value: '' });
+      dispatch({ type: 'RESET_SELECTED_GAMES', value: '' });
     }
   };
 

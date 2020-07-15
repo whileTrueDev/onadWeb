@@ -2,7 +2,7 @@ import React from 'react';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import { Grid } from '@material-ui/core';
 import StyledInput from '../../../../../atoms/StyledInput';
-import GreenCheckbox from '../../../../../atoms/GreenCheckBox';
+import GreenCheckbox from '../../../../../atoms/Checkbox/GreenCheckBox';
 import StyledSelectText from '../../../../../atoms/StyledSelectText';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -67,7 +67,6 @@ const SelectBudget = (props: SelectBudgetProps): JSX.Element => {
           type="number"
           inputRef={budgetInputRef}
           inputProps={{
-            autoComplete: false,
             min: 5000,
             required: true
           }}
