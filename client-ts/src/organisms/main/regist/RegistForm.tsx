@@ -305,6 +305,7 @@ function RegistForm({
                   <TextField
                     required
                     label="사업자 등록번호"
+                    helperText="사업자등록증이 없다면 현금 영수증 발행할 전화번호를 입력"
                     onChange={handleChange('marketerBusinessRegNum')}
                     name="businessRegNum"
                     className={classes.textField}

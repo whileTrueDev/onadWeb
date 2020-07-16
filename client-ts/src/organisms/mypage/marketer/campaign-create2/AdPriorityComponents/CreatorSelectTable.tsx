@@ -94,7 +94,6 @@ export default function CreatorTable(props: CreatorTableProps): JSX.Element {
         <GreenCheckBox
           checked={getChecked(rowData.creatorId)}
           style={{ fontSize: '20px', padding: 0 }}
-          onClick={() => { handleCreatorSelect(rowData); }}
           name={rowData.creatorId}
         />
       ),
@@ -103,7 +102,7 @@ export default function CreatorTable(props: CreatorTableProps): JSX.Element {
       title: '',
       field: 'creatorName',
       render: (rowData: CreatorDetailDataInterface): JSX.Element => (
-        <Grid container direction="row" style={{ cursor: 'pointer' }} onClick={() => { handleCreatorSelect(rowData); }}>
+        <Grid container direction="row" style={{ cursor: 'pointer' }}>
           <Grid item>
             <Avatar variant="rounded" className={classes.image}>
               <img
@@ -186,7 +185,7 @@ export default function CreatorTable(props: CreatorTableProps): JSX.Element {
         <MaterialTable
           tableRef={tableRef}
           style={{ boxShadow: 'none', overflow: 'hidden' }}
-          onSelectionChange={(wholeData, rowData): void => {
+          onRowClick={(e, rowData): void => {
             handleCreatorSelect(rowData);
           }}
           title=""
