@@ -81,7 +81,7 @@ router.route('/')
         .then(() => {
           responseHelper.send({
             error: null,
-            result: `Email skip!`
+            result: 'Email skip!'
           }, 'POST', res);
           // next();
         })
@@ -319,7 +319,7 @@ router.route('/business')
   .put(
     responseHelper.middleware.checkSessionExists,
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
-      const businessImageSrc = responseHelper.getParam('imageUrl', 'PUT', req);
+      const taxBillData = responseHelper.getParam('taxBillData', 'PUT', req);
       const { marketerId } = responseHelper.getSessionData(req);
       const query = `
             UPDATE marketerInfo
@@ -327,7 +327,7 @@ router.route('/business')
             WHERE marketerId = ?`;
       // S3에 저장
       // S3.uploadImage(`business-regi/${marketerId}`, businessImageSrc);
-      doQuery(query, [businessImageSrc, marketerId])
+      doQuery(query, [taxBillData, marketerId])
         .then(() => {
           responseHelper.send([true], 'PUT', res);
         })

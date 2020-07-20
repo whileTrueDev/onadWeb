@@ -71,7 +71,7 @@ export default function BusinessRegiUploadDialog(
           <Button
             color="primary"
             onClick={async (): Promise<void> => {
-              await imageUpload.doPutRequest({ imageUrl });
+              await imageUpload.doPutRequest({ taxBillData: imageUrl });
               await handleClose();
             }}
             disabled={!imageName}
