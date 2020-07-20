@@ -13,7 +13,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface ButtonSetProps {
-  type?: 'button' | 'submit';
+  type?: 'button' | 'reset' | 'submit';
   nextButtonName?: string;
   backButtonName?: string;
   handleBack: (event: React.MouseEvent<HTMLButtonElement>) => void;

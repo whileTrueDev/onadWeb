@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid } from '@material-ui/core';
+import { Grid, Typography } from '@material-ui/core';
 import StyledItemText from '../../../../../atoms/StyledItemText';
 import StyledInput from '../../../../../atoms/StyledInput';
 import useStyles from './InputDescription.style';
@@ -18,7 +18,12 @@ const InputDescription = (props: InputDescriptionProps): JSX.Element => {
         <Grid item>
           <StyledItemText
             primary="홍보 문구 입력하기"
-            secondary="광고 홍보 문구를 입력해 주세요. 채팅광고의 문구로 사용되어, 시청자에게 직접 노출됩니다. (최대 50자)"
+            secondary={(
+              <Typography variant="body2">
+                광고 홍보 문구를 입력해 주세요. 채팅광고의 문구로 사용되어, 시청자에게 직접 노출됩니다.
+                <Typography color="error" variant="caption">(최대 50자)</Typography>
+              </Typography>
+            )}
             className={classes.label}
           />
         </Grid>

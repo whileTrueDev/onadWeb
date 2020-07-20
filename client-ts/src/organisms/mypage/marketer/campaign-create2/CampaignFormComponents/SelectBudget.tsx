@@ -1,6 +1,6 @@
 import React from 'react';
 import { makeStyles, Theme } from '@material-ui/core/styles';
-import { Grid } from '@material-ui/core';
+import { Grid, Typography } from '@material-ui/core';
 import StyledInput from '../../../../../atoms/StyledInput';
 import GreenCheckbox from '../../../../../atoms/Checkbox/GreenCheckBox';
 import StyledSelectText from '../../../../../atoms/StyledSelectText';
@@ -55,7 +55,12 @@ const SelectBudget = (props: SelectBudgetProps): JSX.Element => {
           onClick={handleUse}
           style={{ cursor: 'pointer', maxWidth: 300 }}
           primary="일예산 설정"
-          secondary="최소금액(5000원 이상)"
+          secondary={toggle && (
+            <Typography variant="body2">
+              최소금액
+              <Typography color="error" variant="caption">(5000원 이상)</Typography>
+            </Typography>
+          )}
         />
       </Grid>
       {toggle && (

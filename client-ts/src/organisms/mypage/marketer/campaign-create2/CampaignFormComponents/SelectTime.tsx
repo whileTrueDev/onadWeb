@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  Grid
+  Grid, Typography
 } from '@material-ui/core';
 import SelectTimeDetail from './SelectTimeDetail';
 import GreenCheckbox from '../../../../../atoms/Checkbox/GreenCheckBox';
@@ -40,7 +40,7 @@ const SelectTime = (props: SelectTimeProps): JSX.Element => {
           <StyledSelectText
             onClick={handleNotUse}
             style={{ cursor: 'pointer', maxWidth: 300 }}
-            primary="시간대 설정 없이 계속 집행"
+            primary="시간 설정 없이 계속 집행"
           />
         </Grid>
       </Grid>
@@ -53,7 +53,13 @@ const SelectTime = (props: SelectTimeProps): JSX.Element => {
             onClick={handleUse}
           />
           <StyledSelectText
-            primary="송출 시간대 설정"
+            primary="송출 시간 설정"
+            secondary={toggle && (
+              <Typography variant="body2">
+                선택한 시간대에 광고가 송출됩니다.
+                <Typography color="error" variant="caption">(중복 선택 가능)</Typography>
+              </Typography>
+            )}
             onClick={handleUse}
             style={{ cursor: 'pointer', maxWidth: 300 }}
           />

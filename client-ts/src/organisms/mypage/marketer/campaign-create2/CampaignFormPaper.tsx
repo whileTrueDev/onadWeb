@@ -40,7 +40,7 @@ const StyledTableRow = withStyles((theme) => ({
 
 const useStyles = makeStyles((theme) => ({
   tableContainer: { marginBottom: theme.spacing(2) },
-  table: { minWidth: 700 },
+  table: { },
 }));
 
 interface CampaignFormPaperProps {
@@ -78,7 +78,7 @@ function CampaignFormPaper({
       component: <InputName nameInputRef={nameInputRef} />
     },
     {
-      title: '배너 선택',
+      title: '송출 배너 선택',
       component: (
         <SelectBanner
           bannerData={bannerData}
@@ -105,15 +105,15 @@ function CampaignFormPaper({
       component: <InputDescription descriptionInputRef={descriptionInputRef} />
     },
     {
-      title: '예산 설정',
+      title: '일예산 설정',
       component: <SelectBudget budgetInputRef={budgetInputRef} />
     },
     {
-      title: '기간 설정',
+      title: '송출 기간 설정',
       component: <SelectDateTerm state={state} dispatch={dispatch} />
     },
     {
-      title: '시간대 설정',
+      title: '송출 시간 설정',
       component: <SelectTime state={state} dispatch={dispatch} />
     },
   ];
@@ -130,7 +130,7 @@ function CampaignFormPaper({
               <React.Fragment key={_step ? _step.title : 'campaign-create-no-landing-url'}>
                 {_step ? (
                   <StyledTableRow>
-                    <StyledTableCell>
+                    <StyledTableCell width={400}>
                       <Typography variant="h6" style={{ fontWeight: 700 }}>{_step.title}</Typography>
                     </StyledTableCell>
                     <StyledTableCell>
