@@ -14,7 +14,7 @@ const pool = require('../model/connectionPool');
 
 const CHAT_FEERATE = 0.3;
 const PANEL_FEERATE = 0.5;
-const PAGE_FEERATE = 0.4;
+const PAGE_FEERATE = 0.8;
 
 
 // 각 action에 따른 cash
