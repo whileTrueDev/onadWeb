@@ -23,7 +23,6 @@ export default function MyOffice(): JSX.Element {
   const userData = useGetRequest<null, UserInterface | null>('/marketer');
   const businessRegistrationData = useGetRequest<null, BusinessInterface | null>('/marketer/business');
 
-
   return (
     <>
 

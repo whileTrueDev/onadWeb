@@ -81,7 +81,7 @@ router.route('/')
         .then(() => {
           responseHelper.send({
             error: null,
-            result: `Email skip!`
+            result: 'Email skip!'
           }, 'POST', res);
           // next();
         })
@@ -319,7 +319,7 @@ router.route('/business')
   .put(
     responseHelper.middleware.checkSessionExists,
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
-      const businessImageSrc = responseHelper.getParam('imageUrl', 'PUT', req);
+      const businessImageSrc = responseHelper.getParam('value', 'PUT', req);
       const { marketerId } = responseHelper.getSessionData(req);
       const query = `
             UPDATE marketerInfo
