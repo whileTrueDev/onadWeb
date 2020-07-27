@@ -14,7 +14,8 @@ const pool = require('../model/connectionPool');
 
 const CHAT_FEERATE = 0.3;
 const PANEL_FEERATE = 0.5;
-const PAGE_FEERATE = 0.4;
+const PAGE_FEERATE = 0.8;
+// 2020 07 27 0.3 => 0.8로 변경 * 크리에이터 이탈률 증가에 대한 대처방안
 
 
 // 각 action에 따른 cash
