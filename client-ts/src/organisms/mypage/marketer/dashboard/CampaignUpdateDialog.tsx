@@ -63,7 +63,11 @@ const reducer = (state: StateInterface, action: Action): StateInterface => {
     case 'campaignName':
       return { ...state, campaignName: action.value };
     case 'noBudget': {
-      return { ...state, noBudget: !state.noBudget };
+      return {
+        ...state,
+        noBudget: !state.noBudget,
+        budget: (!state.noBudget) === true ? '' : state.budget
+      };
     }
     case 'budget': {
       return { ...state, budget: action.value };
@@ -79,6 +83,9 @@ const reducer = (state: StateInterface, action: Action): StateInterface => {
   }
 };
 
+const MIN_BUDGET_ERR_MSG = '최소 금액(5000원) 보다 작습니다.';
+const BUDGET_WARNING_MSG = `* 금일 집행한 금액이 이미 변경할 일일 예산을 초과했습니다.
+* 변경시 금일 광고 진행이 중단되며 일일 예산은 내일부터 적용됩니다.`;
 interface CampaignUpdateDialogProps {
   open: boolean;
   selectedCampaign: CampaignInterface;
@@ -93,7 +100,7 @@ const CampaignUpdateDialog = (props: CampaignUpdateDialogProps): JSX.Element => 
   } = props;
 
   const snack = useDialog();
-  const [error, setError] = React.useState<boolean>(false); // budget 작성시 한도 체크용 State
+  const [error, setError] = React.useState<string | false>(false); // budget 작성시 한도 체크용 State
   const [checkName, setCheckName] = React.useState<boolean>(false);
   const [duplicate, setDuplicate] = React.useState<boolean>(false);
 
@@ -142,7 +149,12 @@ const CampaignUpdateDialog = (props: CampaignUpdateDialogProps): JSX.Element => 
   const handleChangeBudget = (value: NumberFormatValues): void => {
     dispatch({ key: 'budget', value: value.value });
     if (Number(value.value) < 5000 && value.value !== '') {
-      setError(true);
+      setError(MIN_BUDGET_ERR_MSG);
+    } else if (
+      value.value !== '' && (Number(value.value) < Number(selectedCampaign.dailysum))
+    ) {
+      // 변경할 예산보다 현재 집행된 금액이 큰 경우
+      setError(BUDGET_WARNING_MSG);
     } else {
       setError(false);
     }
@@ -345,7 +357,7 @@ const CampaignUpdateDialog = (props: CampaignUpdateDialogProps): JSX.Element => 
                       </Grid>
                     </Grid>
                     <Grid item>
-                      {((!error && state.budget !== '') || state.noBudget)
+                      {(!error && state.budget !== '')
                         && (
                           <Success>
                             <Check />
@@ -353,11 +365,7 @@ const CampaignUpdateDialog = (props: CampaignUpdateDialogProps): JSX.Element => 
                         )}
                     </Grid>
                     <Grid item>
-                      <DangerTypography>
-                        {error
-                          && ('최소 금액보다 작습니다.')}
-                        {' '}
-                      </DangerTypography>
+                      {error && error.split('\n').map((e) => <DangerTypography key={e}>{e}</DangerTypography>)}
                     </Grid>
                   </Grid>
                 </Grid>
@@ -367,7 +375,7 @@ const CampaignUpdateDialog = (props: CampaignUpdateDialogProps): JSX.Element => 
                       color="primary"
                       size="small"
                       onClick={(): void => {
-                        if ((!error && state.budget !== '') || state.noBudget) {
+                        if (((error === false || error === BUDGET_WARNING_MSG) && state.budget !== '') || state.noBudget) {
                           handleBudgetUpdate();
                         } else {
                           alert('입력이 올바르지 않습니다.');
