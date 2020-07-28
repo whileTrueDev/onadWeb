@@ -50,6 +50,8 @@ function BusinessUploadForm(props: BusinessUploadFormProps): JSX.Element {
 
   // businessRegistrationData.marketerBusinessRegSrc 로 이미지 인지, 전화번호 인지 판단
   // businessRegistrationData.data.marketerBusinessRegSrc.substring(0, 9) == 'data:image'
+  // 피드백 사항 --> subString 과 일치 여부를 비교하는 방법은 여러 이미지 타입 파일에 대해 버그유발 가능
+  // 전화번호는 최대 15 자리 이므로 , 길이로 판단하는 것이 옳다
 
   const [step, setStep] = React.useState({
     currStep: 0,
@@ -70,7 +72,7 @@ function BusinessUploadForm(props: BusinessUploadFormProps): JSX.Element {
         && businessRegistrationData.data && businessRegistrationData.data.marketerBusinessRegSrc ? (
 
           <CardBody>
-            {businessRegistrationData.data.marketerBusinessRegSrc.substring(0, 10) === 'data:image' ? (
+            {businessRegistrationData.data.marketerBusinessRegSrc.length > 15 ? (
               <span>
                 <div className={myClasses.buttonWrapper}>
                   <Button

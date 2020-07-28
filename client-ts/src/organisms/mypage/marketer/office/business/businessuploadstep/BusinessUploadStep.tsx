@@ -16,6 +16,7 @@ const useStyles = makeStyles((theme) => ({
     },
     marginTop: '4px',
     fontSize: '15px',
+    verticalAlign: 'middle'
   },
   imgPreview: {
     width: '100%',
@@ -62,25 +63,25 @@ interface BusinessRegiUploadDialogProps {
     handleSnackOpen?: () => void;
 }
 
-export default function Step2(props: StepperInterface&BusinessRegiUploadDialogProps): JSX.Element {
+function BusinessUploadStep(props: StepperInterface&BusinessRegiUploadDialogProps): JSX.Element {
   const {
     handleChangeStep, isBusiness
   } = props;
   const classes = useStyles();
   const defaultImage = '/pngs/logo/onad_logo_vertical_small.png';
   const defaultNumber = '';
-
   const {
     imageUrl, imageName, handleReset, readImage
   } = useImageUpload(defaultImage);
   const eventValue = useEventTargetValue(defaultNumber);
-
   const imageUpload = usePutRequest('/marketer/business', () => {
     handleChangeStep(2);
   });
   const numberUpload = usePutRequest('/marketer/business', () => {
     handleChangeStep(2);
   });
+
+  // const handlePhoneNumberCheck = () => { eventValue.value.length === 13; };
 
   return (
     <div>
@@ -104,7 +105,7 @@ export default function Step2(props: StepperInterface&BusinessRegiUploadDialogPr
                   handleReset();
                 }}
               >
-                취소
+                초기화
               </Button>
               <Button
                 color="primary"
@@ -144,7 +145,6 @@ export default function Step2(props: StepperInterface&BusinessRegiUploadDialogPr
             <span className={classes.container}>
               <TextField
                 label="현금 영수증 번호 입력"
-                type="tel"
                 placeholder="(000) - 0000 - 0000"
                 value={eventValue.value}
                 InputProps={{
@@ -152,6 +152,8 @@ export default function Step2(props: StepperInterface&BusinessRegiUploadDialogPr
                     input: classes.resize,
                   },
                 }}
+                error={eventValue.value.length !== 13}
+                helperText={eventValue.value.length !== 13 ? '휴대전화번호를 입력해 주세요' : ''}
                 onChange={eventValue.handleChange}
               />
             </span>
@@ -163,7 +165,7 @@ export default function Step2(props: StepperInterface&BusinessRegiUploadDialogPr
                   eventValue.handleReset();
                 }}
               >
-                취소
+                초기화
               </Button>
               <Button
                 className={classes.button}
@@ -171,7 +173,7 @@ export default function Step2(props: StepperInterface&BusinessRegiUploadDialogPr
                 onClick={async (): Promise<void> => {
                   await numberUpload.doPutRequest({ value: eventValue.value });
                 }}
-                disabled={!eventValue.value}
+                disabled={!eventValue.value || eventValue.value.length !== 13}
               >
                 등록
               </Button>
@@ -181,3 +183,5 @@ export default function Step2(props: StepperInterface&BusinessRegiUploadDialogPr
     </div>
   );
 }
+
+export default BusinessUploadStep;

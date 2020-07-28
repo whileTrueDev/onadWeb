@@ -12,9 +12,9 @@ import Typography from '@material-ui/core/Typography';
   step 2 : 선택된 유형에 대해 업로드 수행
   step 3 : 업로드 완료 , 선택한 유형에 따라 세금 계산서 발행/현금 영수증 발행 안내
 */
-import Step1 from './Step1';
-import Step2 from './Step2';
-import Step3 from './Step3';
+import BusinessSelectStep from './BusinessSelectStep';
+import BusinessUploadStep from './BusinessUploadStep';
+import BusinessCompleteStep from './BusinessCompleteStep';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -73,10 +73,10 @@ export default function BuisnessUploadStepManager(
   function getStepContent(stepIndex: number): JSX.Element {
     switch (stepIndex) {
       case 0:
-        return <Step1 handleChangeStep={handleChangeStep} handleIsBusiness={handleIsBusiness} />;
+        return <BusinessSelectStep handleChangeStep={handleChangeStep} handleIsBusiness={handleIsBusiness} />;
       case 1:
         return (
-          <Step2
+          <BusinessUploadStep
             handleClose={handleClose}
             handleChangeStep={handleChangeStep}
             isBusiness={isBusiness}
@@ -86,7 +86,7 @@ export default function BuisnessUploadStepManager(
         );
       case 2:
         return (
-          <Step3
+          <BusinessCompleteStep
             handleChangeStep={handleChangeStep}
             isBusiness={isBusiness}
           />

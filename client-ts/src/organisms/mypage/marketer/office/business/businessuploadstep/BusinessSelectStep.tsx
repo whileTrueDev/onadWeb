@@ -33,7 +33,7 @@ interface StepperInterface{
   handleIsBusiness: (stepIndex: boolean) => void;
 }
 
-export default function Step1(props: StepperInterface): JSX.Element {
+export default function BusinessSelectStep(props: StepperInterface): JSX.Element {
   const classes = useStyles();
   const { handleChangeStep, handleIsBusiness } = props;
 
@@ -45,7 +45,9 @@ export default function Step1(props: StepperInterface): JSX.Element {
           handleIsBusiness(true);
         }}
       >
-            사업자 등록증 업로드
+            세금계산서 발행
+        <br />
+            (사업자 등록증 업로드)
       </Button>
       <Button
         onClick={(): void => {
@@ -53,7 +55,9 @@ export default function Step1(props: StepperInterface): JSX.Element {
           handleIsBusiness(false);
         }}
       >
-            현금 영수증 업로드
+             현금영수증 발행
+        <br />
+            (휴대전화 번호 업로드)
       </Button>
     </div>
   );
