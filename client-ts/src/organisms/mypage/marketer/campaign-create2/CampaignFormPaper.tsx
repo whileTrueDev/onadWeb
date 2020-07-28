@@ -130,7 +130,7 @@ function CampaignFormPaper({
               <React.Fragment key={_step ? _step.title : 'campaign-create-no-landing-url'}>
                 {_step ? (
                   <StyledTableRow>
-                    <StyledTableCell width={400}>
+                    <StyledTableCell style={{ width: 300 }}>
                       <Typography variant="h6" style={{ fontWeight: 700 }}>{_step.title}</Typography>
                     </StyledTableCell>
                     <StyledTableCell>

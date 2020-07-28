@@ -14,6 +14,12 @@ import {
   AdpickCampaignStateEnum
 } from './AdpickTypes';
 
+// For column width - type error from Materiap-table
+declare module 'material-table' {
+  export interface Column<RowData extends object> {
+    width?: string;
+  }
+}
 interface CPAIncomeTableProps {
   open: boolean; handleClose: () => void;
   campaigns: CampaignResult[];
