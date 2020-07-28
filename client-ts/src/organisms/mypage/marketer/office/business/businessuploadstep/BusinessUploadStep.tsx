@@ -80,14 +80,12 @@ function BusinessUploadStep(props: StepperInterface&BusinessRegiUploadDialogProp
   const numberUpload = usePutRequest('/marketer/business', () => {
     handleChangeStep(2);
   });
-
-  // const handlePhoneNumberCheck = () => { eventValue.value.length === 13; };
+  const phoneRex = /^\d{3}-\d{3,4}-\d{4}$/;
 
   return (
     <div>
       {isBusiness
         ? (
-
           <div>
             <span className={classes.container}>
               <img
@@ -152,9 +150,9 @@ function BusinessUploadStep(props: StepperInterface&BusinessRegiUploadDialogProp
                     input: classes.resize,
                   },
                 }}
-                error={eventValue.value.length !== 13}
-                helperText={eventValue.value.length !== 13 ? '휴대전화번호를 입력해 주세요' : ''}
-                onChange={eventValue.handleChange}
+                error={!phoneRex.test(eventValue.value)}
+                helperText={!phoneRex.test(eventValue.value) ? '휴대전화번호를 입력해 주세요' : ''}
+                onChange={eventValue.handleChangePhoneNumber}
               />
             </span>
 
@@ -173,7 +171,7 @@ function BusinessUploadStep(props: StepperInterface&BusinessRegiUploadDialogProp
                 onClick={async (): Promise<void> => {
                   await numberUpload.doPutRequest({ value: eventValue.value });
                 }}
-                disabled={!eventValue.value || eventValue.value.length !== 13}
+                disabled={!eventValue.value || !phoneRex.test(eventValue.value)}
               >
                 등록
               </Button>

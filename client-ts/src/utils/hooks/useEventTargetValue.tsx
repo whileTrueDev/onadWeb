@@ -5,16 +5,13 @@ export default function useEventTargetValue(defaultValue = ''): {
   handleChange(e: React.ChangeEvent<HTMLInputElement>): void;
   handleReset(): void;
   setValue: (value: React.SetStateAction<string>) => void;
-  inputPhoneNumber(phoneNumber: string): string | undefined;
+  handleChangePhoneNumber?(e: React.ChangeEvent<HTMLInputElement>): void;
 } {
   const [value, setValue] = React.useState(defaultValue);
 
-
-  function inputPhoneNumber(phoneNumber: string) {
+  function inputPhoneNumber(phoneNumber: string): string {
     const number = phoneNumber.replace(/[^0-9]/g, '');
     let phone = '';
-
-
     if (number.length < 4) {
       return number;
     } if (number.length < 7) {
@@ -39,7 +36,11 @@ export default function useEventTargetValue(defaultValue = ''): {
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>): void {
     e.preventDefault();
-    // setValue(e.target.value);
+    setValue(e.target.value);
+  }
+
+  function handleChangePhoneNumber(e: React.ChangeEvent<HTMLInputElement>): void {
+    e.preventDefault();
     setValue(inputPhoneNumber(e.target.value));
   }
 
@@ -47,8 +48,7 @@ export default function useEventTargetValue(defaultValue = ''): {
     setValue(defaultValue);
   }
 
-
   return {
-    value, handleChange, handleReset, setValue, inputPhoneNumber
+    value, handleChange, handleReset, setValue, handleChangePhoneNumber
   };
 }

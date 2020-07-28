@@ -5,12 +5,10 @@ import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
-
-// step views
 /*
-  step 1 : 유형 선택, 사업자 등록증 업로드 or 현금 영수증 업로드
-  step 2 : 선택된 유형에 대해 업로드 수행
-  step 3 : 업로드 완료 , 선택한 유형에 따라 세금 계산서 발행/현금 영수증 발행 안내
+  BusinessSelectStep 1 : 유형 선택, 사업자 등록증 업로드 or 현금 영수증 업로드
+  BusinessUploadStep 2 : 선택된 유형에 대해 업로드 수행
+  BusinessCompleteStep 3 : 업로드 완료 , 선택한 유형에 따라 세금 계산서 발행/현금 영수증 발행 안내
 */
 import BusinessSelectStep from './BusinessSelectStep';
 import BusinessUploadStep from './BusinessUploadStep';
@@ -95,7 +93,6 @@ export default function BuisnessUploadStepManager(
         return <Typography variant="body1">진행에 문제가 발생했습니다. 창을 닫고 다시 처음부터 실행해 주세요</Typography>;
     }
   }
-
   return (
     <div className={classes.root}>
       <Stepper activeStep={activeStep} alternativeLabel>
@@ -114,7 +111,6 @@ export default function BuisnessUploadStepManager(
         ) : (
           <div>
             <Typography component="span" className={classes.instructions}>{getStepContent(activeStep)}</Typography>
-
             <Button
               disabled={activeStep === 0}
               onClick={handleBack}
@@ -133,8 +129,7 @@ export default function BuisnessUploadStepManager(
               >
                 완료
               </Button>
-            )
-              : (<span />)}
+            ) : (<span />)}
           </div>
         )}
       </span>

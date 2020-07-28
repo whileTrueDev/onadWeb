@@ -47,12 +47,8 @@ function BusinessUploadForm(props: BusinessUploadFormProps): JSX.Element {
   const showDialog = useDialog();
   const snack = useDialog();
   const stepDialog = useDialog();
-
-  // businessRegistrationData.marketerBusinessRegSrc 로 이미지 인지, 전화번호 인지 판단
-  // businessRegistrationData.data.marketerBusinessRegSrc.substring(0, 9) == 'data:image'
-  // 피드백 사항 --> subString 과 일치 여부를 비교하는 방법은 여러 이미지 타입 파일에 대해 버그유발 가능
-  // 전화번호는 최대 15 자리 이므로 , 길이로 판단하는 것이 옳다
-
+  const imageRex = /data:image\/([a-zA-Z]*);base64,([^\\"]*)/;
+  const phoneRex = /^\d{3}-\d{3,4}-\d{4}$/;
   const [step, setStep] = React.useState({
     currStep: 0,
     isBusiness: false
@@ -72,7 +68,7 @@ function BusinessUploadForm(props: BusinessUploadFormProps): JSX.Element {
         && businessRegistrationData.data && businessRegistrationData.data.marketerBusinessRegSrc ? (
 
           <CardBody>
-            {businessRegistrationData.data.marketerBusinessRegSrc.length > 15 ? (
+            {imageRex.test(businessRegistrationData.data.marketerBusinessRegSrc) ? (
               <span>
                 <div className={myClasses.buttonWrapper}>
                   <Button
@@ -100,6 +96,22 @@ function BusinessUploadForm(props: BusinessUploadFormProps): JSX.Element {
               </span>
             ) : (
               <span>
+                {phoneRex.test(businessRegistrationData.data.marketerBusinessRegSrc) ? (
+                  <span>
+                    <Typography variant="h5" align="center">
+                      {businessRegistrationData.data.marketerBusinessRegSrc}
+                    </Typography>
+                    <div className={myClasses.textBox} style={{ marginTop: 5 }}>
+                      <Typography gutterBottom variant="body1">현금 영수증이 업로드 되어 있습니다.</Typography>
+                    </div>
+                  </span>
+                ) : (
+                  <Typography variant="body1" align="center">
+                    전화 번호 형식이 올바르지 않습니다.
+                    <br />
+                    변경하기를 눌러 다시 등록해주세요
+                  </Typography>
+                )}
                 <div className={myClasses.buttonWrapper}>
                   <Button
                     size="small"
@@ -114,13 +126,6 @@ function BusinessUploadForm(props: BusinessUploadFormProps): JSX.Element {
                   >
                 현금 영수증 변경
                   </Button>
-                </div>
-                <Typography variant="h6" align="center">
-                  {businessRegistrationData.data.marketerBusinessRegSrc}
-                </Typography>
-
-                <div className={myClasses.textBox} style={{ marginTop: 5 }}>
-                  <Typography gutterBottom variant="body1">현금 영수증이 업로드 되어 있습니다.</Typography>
                 </div>
               </span>
             )}
