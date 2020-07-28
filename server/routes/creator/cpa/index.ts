@@ -82,7 +82,7 @@ router.route('/adpick/campaigns')
         apHeadline, apVideo, apDailyCap,
         apRemain, apAppPromoText, apKPI,
         apPartner, apImages, apTrackingLink,
-        apHook, apEvent, FORMAT(apPayout * (4/10), 0) AS apPayout,
+        apHook, apEvent, FORMAT(apPayout * (8/10), 0) AS apPayout,
         apOS, apIOSPayout, createdAt, updatedAt
       FROM adPickCampaign
       WHERE createdAt > DATE_SUB(NOW(), INTERVAL 10 minute)
