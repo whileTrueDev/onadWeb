@@ -13,7 +13,6 @@ import Typography from '@material-ui/core/Typography';
 import BusinessSelectStep from './BusinessSelectStep';
 import BusinessUploadStep from './BusinessUploadStep';
 import BusinessCompleteStep from './BusinessCompleteStep';
-import history from '../../../../../../history';
 
 const useStyles = makeStyles((theme) => ({
   root: {
