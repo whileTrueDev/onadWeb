@@ -22,9 +22,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   buttonWrapper: {
     display: 'flex',
     flexDirection: 'row-reverse',
-    alignItems: 'center',
-    fontSize: '12',
-    justifyContent: 'center'
+    justifyContent: 'space-between'
   },
   textBox: {
     display: 'flex',
@@ -69,7 +67,7 @@ function BusinessUploadForm(props: BusinessUploadFormProps): JSX.Element {
 
           <CardBody>
             {imageRex.test(businessRegistrationData.data.marketerBusinessRegSrc) ? (
-              <span>
+              <>
                 <div className={myClasses.buttonWrapper}>
                   <Button
                     color="primary"
@@ -81,40 +79,23 @@ function BusinessUploadForm(props: BusinessUploadFormProps): JSX.Element {
                       stepDialog.handleOpen();
                     }}
                   >
-                  사업자 등록증 변경
+                    사업자 등록증 변경
                   </Button>
                   <Button
                     color="secondary"
                     onClick={(): void => { showDialog.handleOpen(); }}
                   >
-                  사업자 등록증 보기
+                    사업자 등록증 보기
                   </Button>
                 </div>
                 <div className={myClasses.textBox} style={{ marginTop: 5 }}>
                   <Typography gutterBottom variant="body1">사업자 등록증이 업로드 되어 있습니다.</Typography>
                 </div>
-              </span>
+              </>
             ) : (
-              <span>
-                {phoneRex.test(businessRegistrationData.data.marketerBusinessRegSrc) ? (
-                  <span>
-                    <Typography variant="h5" align="center">
-                      {businessRegistrationData.data.marketerBusinessRegSrc}
-                    </Typography>
-                    <div className={myClasses.textBox} style={{ marginTop: 5 }}>
-                      <Typography gutterBottom variant="body1">현금 영수증이 업로드 되어 있습니다.</Typography>
-                    </div>
-                  </span>
-                ) : (
-                  <Typography variant="body1" align="center">
-                    전화 번호 형식이 올바르지 않습니다.
-                    <br />
-                    변경하기를 눌러 다시 등록해주세요
-                  </Typography>
-                )}
+              <>
                 <div className={myClasses.buttonWrapper}>
                   <Button
-                    size="small"
                     color="primary"
                     onClick={(): void => {
                       setStep({
@@ -124,10 +105,28 @@ function BusinessUploadForm(props: BusinessUploadFormProps): JSX.Element {
                       stepDialog.handleOpen();
                     }}
                   >
-                현금 영수증 변경
+                    현금 영수증 변경
                   </Button>
                 </div>
-              </span>
+                {phoneRex.test(businessRegistrationData.data.marketerBusinessRegSrc) ? (
+                  <span>
+                    <Typography gutterBottom align="center">
+                      전화번호 :
+                      {' '}
+                      {businessRegistrationData.data.marketerBusinessRegSrc}
+                    </Typography>
+                    <div className={myClasses.textBox} style={{ marginTop: 5 }}>
+                      <Typography gutterBottom>현금 영수증이 업로드 되어 있습니다.</Typography>
+                    </div>
+                  </span>
+                ) : (
+                  <Typography variant="body1" align="center">
+                    전화 번호 형식이 올바르지 않습니다.
+                    <br />
+                    변경하기를 눌러 다시 등록해주세요
+                  </Typography>
+                )}
+              </>
             )}
 
           </CardBody>

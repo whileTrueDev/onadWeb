@@ -13,6 +13,7 @@ import Typography from '@material-ui/core/Typography';
 import BusinessSelectStep from './BusinessSelectStep';
 import BusinessUploadStep from './BusinessUploadStep';
 import BusinessCompleteStep from './BusinessCompleteStep';
+import history from '../../../../../../history';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -71,7 +72,12 @@ export default function BuisnessUploadStepManager(
   function getStepContent(stepIndex: number): JSX.Element {
     switch (stepIndex) {
       case 0:
-        return <BusinessSelectStep handleChangeStep={handleChangeStep} handleIsBusiness={handleIsBusiness} />;
+        return (
+          <BusinessSelectStep
+            handleChangeStep={handleChangeStep}
+            handleIsBusiness={handleIsBusiness}
+          />
+        );
       case 1:
         return (
           <BusinessUploadStep
@@ -116,7 +122,7 @@ export default function BuisnessUploadStepManager(
               onClick={handleBack}
               className={classes.backButton}
             >
-                이전으로
+              이전으로
             </Button>
             {activeStep === 2 ? (
               <Button
@@ -124,7 +130,7 @@ export default function BuisnessUploadStepManager(
                 color="primary"
                 onClick={(): void => {
                   handleClose();
-                  window.location.reload();
+                  request();
                 }}
               >
                 완료
