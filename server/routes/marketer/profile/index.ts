@@ -3,7 +3,6 @@ import axios from 'axios';
 import responseHelper from '../../../middlewares/responseHelper';
 import doQuery from '../../../model/doQuery';
 import encrypto from '../../../middlewares/encryption';
-import sendEmailAuth from '../../../middlewares/auth/sendEmailAuth';
 import setTemporaryPassword from '../../../middlewares/auth/setTemporyPassword';
 
 const router = express.Router();
@@ -319,7 +318,7 @@ router.route('/business')
   .put(
     responseHelper.middleware.checkSessionExists,
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
-      const taxBillData = responseHelper.getParam('taxBillData', 'PUT', req);
+      const taxBillData = responseHelper.getParam('value', 'PUT', req);
       const { marketerId } = responseHelper.getSessionData(req);
       const query = `
             UPDATE marketerInfo

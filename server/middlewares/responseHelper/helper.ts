@@ -67,7 +67,7 @@ const getParam = (paramField: string | string[],
  * 제공된 필드명의 파라미터를 반환하는 함수.  
  * 필드명의 파라미터가 요청객체에 없는 경우 undefined를 반환한다.  
  * Required가 아닌 파라미터를 요청으로부터 가져올 때 사용한다.  
- * 대개 optional 파라미터는 PATCH 요청에서 쓰일 것이므로 patch 가 아닌경우는 사용을 자제.  
+ * 대개 optional 파라미터는 PATCH 요청에서 쓰일 것이므로 pat  ch 가 아닌경우는 사용을 자제.  
  * @param paramField 필드명 또는 필드명을 요소로 하는 배열
  * @param method 현재 HTTP 메소드  get | post | put | patch | delete
  * @param req `express.Request`
