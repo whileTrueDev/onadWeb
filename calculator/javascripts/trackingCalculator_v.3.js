@@ -14,7 +14,8 @@ const pool = require('../model/connectionPool');
 
 const CHAT_FEERATE = 0.3;
 const PANEL_FEERATE = 0.5;
-const PAGE_FEERATE = 0.4;
+const PAGE_FEERATE = 0.8;
+// 2020 07 27 0.3 => 0.8로 변경 * 크리에이터 이탈률 증가에 대한 대처방안
 
 
 // 각 action에 따른 cash
@@ -43,7 +44,7 @@ const getCreatorList = (date) => {
   SELECT creatorId, channel, sum(payout) as payouts, count(*) as counts
   FROM tracking 
   WHERE (clickedTime > ? AND costType = 'CPC' AND NOT os IS NULL)
-  OR (conversionTime > ? AND costType = 'CPA' AND NOT os IS NULL)
+  OR (createdAt > ? AND costType = 'CPA' AND NOT os IS NULL)
   GROUP BY creatorId, channel
   ) AS trackingData
   LEFT JOIN
@@ -108,7 +109,7 @@ const getCampaignList = ({ date, banList }) => {
   SELECT campaignId, creatorId, channel, sum(payout) as payouts, costType
   FROM tracking 
   WHERE (clickedTime > ? AND costType = 'CPC' AND NOT os IS NULL)
-  OR (conversionTime > ? AND costType = 'CPA' AND NOT os IS NULL)
+  OR (createdAt > ? AND costType = 'CPA' AND NOT os IS NULL)
   GROUP BY campaignId, creatorId, channel
   `;
   return new Promise((resolve, reject) => {
@@ -120,7 +121,7 @@ const getCampaignList = ({ date, banList }) => {
           campaignId, creatorId, payouts, channel, costType
         }) => {
           if (!banList.includes(creatorId)) {
-            const cashToCreator = getCreatorCash({ payouts, channel });
+            const cashToCreator = (creatorId == null) ? 0 : getCreatorCash({ payouts, channel });
             const cashFromMarketer = getMarketerCash({ payouts });
             const logId = `${campaignId}/${creatorId}`;
             if (logNames.includes(logId)) {

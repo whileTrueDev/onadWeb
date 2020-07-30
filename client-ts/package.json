@@ -26,7 +26,7 @@
     "html2canvas": "^1.0.0-rc.5",
     "jquery": "^3.4.1",
     "jspdf": "^1.5.3",
-    "material-table": "^1.65.0",
+    "material-table": "1.57.2",
     "react": "^16.12.0",
     "react-bootstrap": "^1.0.0-beta.16",
     "react-calendar-heatmap": "^1.8.1",
@@ -41,10 +41,10 @@
     "react-swipeable-views": "^0.13.9",
     "react-swipeable-views-utils": "^0.13.9",
     "react-tooltip": "^4.0.3",
-    "recharts": "^2.0.0-beta.1",
+    "recharts": "1.8.5",
     "recompose": "^0.30.0",
     "shortid": "^2.2.15",
-    "typescript": "~3.7.2"
+    "typescript": "3.9.7"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^4.2.4",

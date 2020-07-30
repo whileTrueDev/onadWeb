@@ -69,11 +69,6 @@ const CreatorSelect = (props: CreatorSelectProps): JSX.Element => {
     setText(texts);
   }, [state.selectedCreatorNames]);
 
-  // **********************************************************
-  // For test.
-  const ref = React.useRef(null);
-
-
   return (
     <Grid container direction="column" spacing={2} className={classes.root}>
       <Grid item>
@@ -91,23 +86,10 @@ const CreatorSelect = (props: CreatorSelectProps): JSX.Element => {
             )}
             {!creatorsData.loading && creatorsData.data && (
               <CreatorTable
-                tableRef={ref}
                 checkedCreators={state.selectedCreators}
                 dispatch={dispatch}
               />
             )}
-            <button
-              type="button"
-              onClick={(e) => {
-                e.preventDefault();
-                if (ref && ref.current) {
-                  console.log(ref.current);
-                }
-              }}
-            >
-              tableRef확인
-
-            </button>
           </Grid>
         </Grid>
       </Grid>

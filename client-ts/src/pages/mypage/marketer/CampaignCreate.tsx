@@ -138,7 +138,9 @@ const CampaignCreate = (): JSX.Element => {
       campaignCreateDTO.priorityList = ['무관'];
     }
     if (campaignCreateState.campaignTime.length > 0) {
-      campaignCreateDTO.selectedTime = campaignCreateState.campaignTime;
+      campaignCreateDTO.selectedTime = campaignCreateState.campaignTime
+        .map((x) => Number(x))
+        .sort();
     } else {
       campaignCreateDTO.selectedTime = [
         0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,

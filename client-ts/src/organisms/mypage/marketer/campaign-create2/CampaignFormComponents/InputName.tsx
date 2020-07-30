@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid } from '@material-ui/core';
+import { Grid, Typography } from '@material-ui/core';
 import StyledItemText from '../../../../../atoms/StyledItemText';
 import StyledInput from '../../../../../atoms/StyledInput';
 import useInputNameStyles from './InputName.style';
@@ -26,7 +26,12 @@ const InputName = (props: InputNameProps): JSX.Element => {
         <Grid item>
           <StyledItemText
             primary="캠페인 이름 입력하기"
-            secondary="캠페인 구분을 위해 사용됩니다.(최소 2자)"
+            secondary={(
+              <Typography variant="body2">
+                캠페인 구분을 위해 사용됩니다.
+                <Typography color="error" variant="caption">(최소 2자)</Typography>
+              </Typography>
+            )}
             className={classes.label}
           />
         </Grid>

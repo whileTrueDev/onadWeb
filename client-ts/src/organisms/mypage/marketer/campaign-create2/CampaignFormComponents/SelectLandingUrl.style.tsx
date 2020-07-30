@@ -15,7 +15,6 @@ export default makeStyles((theme: Theme) => ({
   label: {
     fontSize: '20px',
     fontWeight: 700,
-    color: theme.palette.primary.light,
     margin: '3px',
   },
   landinglist: {

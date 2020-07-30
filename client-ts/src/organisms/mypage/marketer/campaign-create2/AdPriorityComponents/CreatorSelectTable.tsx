@@ -21,14 +21,13 @@ const BANNER_MAX_HEIGHT = 48;
 interface CreatorTableProps {
   checkedCreators: string[];
   dispatch: React.Dispatch<CampaignCreateAction>;
-  tableRef: any;
 }
 
 export default function CreatorTable(props: CreatorTableProps): JSX.Element {
   const classes = useStyles();
   const theme = useTheme();
 
-  const { checkedCreators, dispatch, tableRef } = props;
+  const { checkedCreators, dispatch } = props;
 
   // **********************************************************
   // 데이터 요청
@@ -183,7 +182,6 @@ export default function CreatorTable(props: CreatorTableProps): JSX.Element {
       {!fetchData.loading && fetchData.error && (<span>Error</span>)}
       {!fetchData.loading && fetchData.data && (
         <MaterialTable
-          tableRef={tableRef}
           style={{ boxShadow: 'none', overflow: 'hidden' }}
           onRowClick={(e, rowData): void => {
             handleCreatorSelect(rowData);
@@ -201,9 +199,7 @@ export default function CreatorTable(props: CreatorTableProps): JSX.Element {
                   <Grid item xs={5}>
                     <Grid container direction="column" spacing={1}>
                       <Grid item>
-                        <StyledSelectText
-                          primary="컨텐츠 분포도"
-                        />
+                        <StyledSelectText primary="컨텐츠 분포도" />
                       </Grid>
                       <Grid item lg={12}>
                         <ContentsPie selectedChartData={JSON.parse(rowData.contentsGraphData)} />

@@ -416,6 +416,7 @@ const dailyLimitCalculate = ({ connection, campaignId }) => {
         const today = new Date();
         doConnectionQuery({ connection, queryState: dayAmountQuery, params: [campaignId, today] })
           .then((row) => {
+            // count = 현재 이 마케터가 쓴 캐시 총합
             const { count } = row[0];
             if (count === null || dailyLimit <= 1) {
               resolve();

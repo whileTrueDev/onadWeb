@@ -42,7 +42,11 @@ function SelectLandingUrl(props: SelectLandingUrlProps): JSX.Element {
       <Grid item>
         <StyledItemText
           primary="랜딩페이지 URL 선택하기"
-          secondary="선택된 URL링크는 패널, 채팅광고를 클릭시 이동될 링크입니다."
+          secondary={(
+            <Typography variant="body2">
+              선택된 URL링크는 패널, 채팅광고를 클릭시 이동될 링크입니다.
+            </Typography>
+          )}
           className={classes.label}
         />
       </Grid>

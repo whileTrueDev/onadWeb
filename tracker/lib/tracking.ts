@@ -16,7 +16,7 @@ export default async function tracking(
   userAgent: UserAgent,
   creatorTwitchId: string,
   channelType: 'adpanel' | 'adchat'
-): Promise<{message: TrackingMessage; href?: string; name?: string }> {
+): Promise<{ message: TrackingMessage; href?: string; name?: string }> {
   // 봇, 아이피 차단
   const banIpArray = ['66.249.64.79'];
   let message: TrackingMessage;
@@ -32,12 +32,16 @@ export default async function tracking(
   const getInformationQuery = `
     SELECT
       campaign.campaignId, campaign.campaignName, creatorInfo.creatorId, campaign.marketerId,
-      campaignTimestamp.date, connectedLinkId, links, creatorName FROM campaignTimestamp
+      campaignTimestamp.date, connectedLinkId, links, creatorName
+    FROM campaignTimestamp
       JOIN creatorInfo ON creatorTwitchId = ?
       JOIN campaign ON campaign.campaignId = campaignTimestamp.campaignId
       JOIN linkRegistered ON linkRegistered.linkId = connectedLinkId
+      JOIN twitchStreamDetail ON creatorInfo.creatorName = twitchStreamDetail.streamerName
     WHERE campaignTimestamp.creatorId = creatorInfo.creatorId
-      AND campaignTimestamp.date > date_sub(NOW(), INTERVAL 10 MINUTE)`;
+      AND campaignTimestamp.date > date_sub(NOW(), INTERVAL 10 MINUTE)
+      AND twitchStreamDetail.time > date_sub(NOW(), INTERVAL 10 MINUTE)
+    ORDER BY campaignTimestamp.date desc LIMIT 1`;
   const { result, error } = await doQuery<NowBroadData[]>(getInformationQuery, [creatorTwitchId]);
   // DB ERROR
   if (error) {

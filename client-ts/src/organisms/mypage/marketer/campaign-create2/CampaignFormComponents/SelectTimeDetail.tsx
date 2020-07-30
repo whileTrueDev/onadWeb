@@ -25,11 +25,21 @@ const SelectTimeDetail = (props: SelectTimeDetailProps): JSX.Element => {
   };
 
   return (
-    <Grid container justify="space-around">
+    <Grid container item direction="column">
+      {/* 송출 / 송출 안함에 대한 범례 */}
+      <Grid item className={classes.legend}>
+        <div className={classnames([classes.legendItem, classes.legendItemOn])} />
+        <span>송출</span>
+        <div className={classnames([classes.legendItem, classes.legendItemOff])} />
+        <span>송출안함</span>
+      </Grid>
+
+      {/* 송출 시간 선택 */}
       <table className={classes.table}>
         <thead>
           <tr>
-            {times.map((index) => (<td className={classes.thead} key={index}>{`${index}시`}</td>))}
+            {times.map((index) => (
+              <td className={classes.thead} key={index}>{`${index}시`}</td>))}
           </tr>
         </thead>
         <tbody>
