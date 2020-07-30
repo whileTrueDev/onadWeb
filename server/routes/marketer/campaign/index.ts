@@ -163,47 +163,66 @@ router.route('/on-off')
   )
   .all(responseHelper.middleware.unusedMethod);
 
-// 캠페인 생성 및 삭제에 대한 라우트
-// (POST) marketer/sub/campaign =>/push 
-// (PATCH) marketer/sub/campaign =>/changeName marketer/sub/campaign =>/changeBudget
-// (DELETE)  marketer/sub/campaign => /
-// 테스트 완료
-router.route('/')
-  .patch(
-    responseHelper.middleware.checkSessionExists,
-    // const data = { campaignId: selectedCampaign.campaignId,
-    // data: {...state}, type: 'name' }; req의 형태
-    responseHelper.middleware.withErrorCatch(async (req, res, next) => {
-      const [campaignId, value, type] = responseHelper.getParam(['campaignId', 'data', 'type'], 'PATCH', req);
-      let query = '';
-      let params: any[] = [];
-      switch (type) {
-        case 'name':
-          query = `
-                    UPDATE campaign 
-                    SET campaignName = ? 
-                    WHERE campaignId = ? `;
-          params = [value.campaignName, campaignId];
-          break;
-        case 'budget':
-          query = ` 
-                    UPDATE campaign 
-                    SET dailyLimit = ? 
-                    WHERE campaignId = ? `;
-          const updateBudget = value.noBudget ? -1 : value.budget;
-          params = [updateBudget, campaignId];
-          break;
-        default:
-          throw Error('invalid param');
-      }
 
-      doQuery(query, params)
-        .then(() => {
-          responseHelper.send([true], 'PATCH', res);
-        })
-        .catch((error) => {
-          responseHelper.promiseError(error, next);
-        });
+router.route('/')
+  .patch( // 캠페인 정보 변경
+    responseHelper.middleware.checkSessionExists,
+    responseHelper.middleware.withErrorCatch(async (req, res, next) => {
+      const [campaignId, data, type] = responseHelper.getParam(['campaignId', 'data', 'type'], 'PATCH', req);
+
+      // ************************************************************************
+      // 캠페인 이름 변경
+      if (type === 'name') {
+        const query = 'UPDATE campaign SET campaignName = ? WHERE campaignId = ?';
+        const params = [data.campaignName, campaignId];
+        await doQuery(query, params);
+        responseHelper.send([true], 'PATCH', res);
+      }
+      // ************************************************************************
+      // 캠페인 일일 예산 변경
+      if (type === 'budget') {
+        // 현재 총 사용량
+        const getCampaignImformationQuery = `
+        SELECT sum(cashFromMarketer) AS count, limitState
+          FROM campaignLog
+          JOIN campaign ON campaign.campaignId = campaignLog.campaignId
+          WHERE campaignLog.campaignId = ?
+            AND DATE(campaignLog.date) = DATE(?)
+        `;
+        const getCampaignImformationArray = [campaignId, new Date()];
+
+        const dayAmount = await doQuery(
+          getCampaignImformationQuery, getCampaignImformationArray
+        );
+
+        if (dayAmount.result) {
+          const { count, limitState } = dayAmount.result[0];
+
+          const query = 'UPDATE campaign SET dailyLimit = ?, limitState = ? WHERE campaignId = ?';
+          let queryArray = [];
+          if (count >= data.budget) {
+            if (limitState === 1) {
+              // 현재까지 사용한 광고 금액이 바꿀 예산보다 큰 경우
+              // ex) 기존 설정 값 (30,000) → 변경 값 (50,000)이고, 현재 30,000을 사용
+              // 예산 변경 적용, limitState를 1 -> 0으로 변경
+              queryArray = [data.budget, 0, campaignId];
+            }
+
+            // 현재까지 사용한 광고 금액이 바꿀 예산보다 큰 경우
+            // ex) 기존 설정 값 (30,000) → 변경 값 (20,000)이고, 현재 20,001원을 사용
+            queryArray = [data.budget, 1, campaignId];
+          } else {
+            // 현재 사용한 금액이 바꿀 예산보다 작은 경우
+            // ex) 기존 설정 값 (30,000) → 변경 값 (20,000)이고, 현재 10,000원을 사용
+            // ex) 기존 설정 값 (30,000) → 변경 값 (50,000)이고, 현재 20,000원을 사용
+            queryArray = [data.budget, 0, campaignId];
+          }
+          const row = await doQuery(query, queryArray);
+          if (row.result) {
+            responseHelper.send([true], 'patch', res);
+          }
+        }
+      }
     }),
   )
   .post(
@@ -211,10 +230,16 @@ router.route('/')
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
       const { marketerId, marketerName } = responseHelper.getSessionData(req);
       const [campaignName, optionType, priorityType, priorityList, selectedTime, dailyLimit,
-        startDate, finDate, keyword, bannerId, connectedLinkId, campaignDescription] = responseHelper.getParam([
+        startDate, finDate, keyword, bannerId, connectedLinkId, campaignDescription
+      ] = responseHelper.getOptionalParam([
         'campaignName', 'optionType', 'priorityType',
         'priorityList', 'selectedTime', 'dailyLimit', 'startDate', 'finDate',
         'keyword', 'bannerId', 'connectedLinkId', 'campaignDescription'], 'POST', req);
+
+      console.log('campaignId', campaignName, marketerId,
+        bannerId, connectedLinkId, dailyLimit, priorityType,
+        optionType, 0, priorityList, marketerName,
+        keyword, startDate, finDate, selectedTime, campaignDescription);
 
       const searchQuery = `
             SELECT campaignId
@@ -225,7 +250,7 @@ router.route('/')
 
       const saveQuery = `
             INSERT INTO campaign 
-            (campaignId, campaignName, marketerId, 
+            (campaignId, campaignName, marketerId,
             bannerId, connectedLinkId, dailyLimit, priorityType, 
             optionType, onOff, targetList, marketerName, 
             keyword, startDate, finDate, selectedTime, campaignDescription) 
@@ -236,9 +261,7 @@ router.route('/')
           const campaignId = dataProcessing.getCampaignId(row.result[0], marketerId);
           const targetJsonData = JSON.stringify({ targetList: priorityList });
           const timeJsonData = JSON.stringify({ time: selectedTime });
-          const keywordsJsonData = JSON.stringify(
-            { keywords: keyword }
-          );
+          const keywordsJsonData = JSON.stringify({ keywords: keyword });
 
           // 마케터 활동내역 로깅 테이블에서, 캠페인 생성의 상태값
           const MARKETER_ACTION_LOG_TYPE = 5;

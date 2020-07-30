@@ -19,6 +19,7 @@ import marketerRouter from './routes/marketer';
 import chartRouter from './routes/chart';
 import bannersRouter from './routes/banners';
 import mailRouter from './routes/mail';
+import inquiryRouter from './routes/inquiry';
 import noticeRouter from './routes/notice';
 import trackingRouter from './routes/tracking';
 import cpapageRouter from './routes/cpapage';
@@ -115,6 +116,7 @@ class OnadWebApi {
 
     // Router 추가
     this.app.use('/alimtalk', alimtalkRouter);
+    this.app.use('/inquiry', inquiryRouter);
 
     // *********************************
     // 각 로그인 플랫폼 callbackURL 변경 이후 

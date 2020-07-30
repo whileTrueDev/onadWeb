@@ -1,4 +1,5 @@
 import React from 'react';
+import { TransitionProps } from '@material-ui/core/transitions';
 import { Grid, Slide } from '@material-ui/core';
 import {
   CampaignInterface, ReportInterface,
@@ -17,9 +18,10 @@ const ONLY_BANNER_STATE = 0;
 const BANNER_WITH_CLICK_STATE = 1; // "생방송 배너 광고" 
 const ONLY_CLICK_STATE = 2;
 
-const Transition = React.forwardRef((props, ref) => (
-  <Slide direction="up" ref={ref} {...props} />
-));
+const Transition = React.forwardRef((
+  props: TransitionProps & { children?: React.ReactElement<any, any> },
+  ref: React.Ref<unknown>,
+) => <Slide direction="up" ref={ref} {...props} />);
 
 interface CampaignReportDialogProps {
   open: boolean;
