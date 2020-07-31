@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import {
   Checkbox, FormControlLabel, Button,
   Typography, Input, Container, Grid, CircularProgress,
@@ -19,48 +19,64 @@ const initialContent = {
   email: '',
   contactNumber: '',
   brandName: '',
-  brandPage: '',
-  content: ''
+  homepage: '',
+  inquiryContents: '',
+  privacyAgreement: false
 };
 
 const InquiryResult: any = {};
 
 function Inquire({ confirmClose }: Props): JSX.Element {
   const classes = useStyles();
-  const [checked, setChecked] = useState(false);
   const confirmDialog = useDialog();
-  const [inquiryContent, setInquiryContent] = useState(initialContent);
-  const [loading, setLoading] = React.useState(false);
 
-
+  // ****************************************************************
+  // 개인정보 제공 동의 체크를 위한 상태
+  const [checked, setChecked] = useState(false);
   function handleChange(): void {
     setChecked(!checked);
   }
 
+  // ****************************************************************
+  // 문의 정보 상태
+  const [inquiryContent, setInquiryContent] = useState(initialContent);
   function onChange(e: React.ChangeEvent<HTMLInputElement>): void {
     const { name, value } = e.currentTarget;
     InquiryResult[name] = value;
     setInquiryContent(InquiryResult);
   }
 
+  // ****************************************************************
+  // 문의 form ref
+  const formRef = useRef<HTMLFormElement | null>(null);
+  // 문의 요청 중 로딩에 대한 상태
+  const [loading, setLoading] = React.useState(false);
+
   function handleSubmit(e: React.FormEvent<HTMLFormElement>): void {
     e.preventDefault();
-
     const AnonymousUser = inquiryContent;
-
     setLoading(true);
-    if (checked) {
-      axios.post(`${HOST}/mail/inquiry`, AnonymousUser)
+
+    if (!checked) {
+      setLoading(false);
+      alert('개인정보수집 및 이용안내에 동의해주세요');
+    } else {
+      AnonymousUser.privacyAgreement = true;
+      axios.post(`${HOST}/inquiry`, AnonymousUser)
         .then(() => {
           confirmDialog.handleOpen();
           setInquiryContent(initialContent);
           setChecked(false);
           setLoading(false);
-          setInquiryContent(initialContent);
+          // Reset all of the input values in this form
+          if (formRef && formRef.current) {
+            formRef.current.reset();
+          }
+        })
+        .catch(() => {
+          setLoading(false);
+          alert('불편을 드려 대단히 죄송합니다.\n문의 요청중 오류가 발생했습니다.\nsupport@onad.io 메일로 보내주시면 감사하겠습니다.');
         });
-    } else {
-      setLoading(false);
-      alert('개인정보수집 및 이용안내에 동의해주세요');
     }
   }
 
@@ -73,17 +89,19 @@ function Inquire({ confirmClose }: Props): JSX.Element {
         광고 관련 문의를 남겨주시면 상담해드립니다
       </Typography>
       <Grid container className={classes.contentWraper} direction="column">
-        <form onSubmit={handleSubmit} className={classes.cardWrapper} id="inquireForm">
+        <form onSubmit={handleSubmit} className={classes.cardWrapper} ref={formRef}>
           <Grid container className={classes.card} direction="column">
 
             <Grid container direction="row" alignItems="center" className={classes.cardContent}>
               <Grid item xs={6} sm={6} className={classes.detailWrap}>
                 <Typography className={classes.detailTitle}>
-                  * 성명
+                  성명
+                  <Typography variant="caption" color="error">(필수)</Typography>
                 </Typography>
                 <Input
                   className={classes.datailContent}
                   classes={{ focused: classes.inputStyle }}
+                  autoComplete="off"
                   disableUnderline
                   onChange={onChange}
                   required
@@ -92,11 +110,15 @@ function Inquire({ confirmClose }: Props): JSX.Element {
               </Grid>
               <Grid item xs={6} sm={6} className={classes.detailWrap}>
                 <Typography className={classes.detailTitle}>
-                  * 이메일
+                  이메일
+                  <Typography variant="caption" color="error">(필수)</Typography>
                 </Typography>
                 <Input
                   className={classes.datailContent}
                   classes={{ focused: classes.inputStyle }}
+                  type="email"
+                  placeholder="email@email.com"
+                  autoComplete="off"
                   disableUnderline
                   onChange={onChange}
                   required
@@ -108,11 +130,15 @@ function Inquire({ confirmClose }: Props): JSX.Element {
             <Grid container direction="row" alignItems="center" className={classes.cardContent}>
               <Grid item xs={6} sm={6} className={classes.detailWrap}>
                 <Typography className={classes.detailTitle}>
-                  * 연락처
+                  연락처
+                  <Typography variant="caption" color="error">(필수)</Typography>
                 </Typography>
                 <Input
                   className={classes.datailContent}
                   classes={{ focused: classes.inputStyle }}
+                  type="tel"
+                  placeholder="000-0000-0000"
+                  autoComplete="off"
                   onChange={onChange}
                   disableUnderline
                   required
@@ -142,8 +168,11 @@ function Inquire({ confirmClose }: Props): JSX.Element {
                   className={classes.datailContent}
                   classes={{ focused: classes.inputStyle }}
                   onChange={onChange}
+                  autoComplete="off"
+                  placeholder="http://homepage.com"
                   disableUnderline
-                  name="brandPage"
+                  type="url"
+                  name="homepage"
                 />
               </Grid>
             </Grid>
@@ -151,7 +180,8 @@ function Inquire({ confirmClose }: Props): JSX.Element {
             <Grid container className={classes.cardContent}>
               <Grid item xs={12} sm={12} className={classes.detailWrap}>
                 <Typography className={classes.detailTitle}>
-                  * 상세내용 (배너제작에 관한 내용도 질문바랍니다)
+                  문의 상세내용
+                  <Typography variant="caption" color="error">(필수)</Typography>
                 </Typography>
                 <Input
                   classes={{ focused: classes.inputStyle }}
@@ -159,9 +189,10 @@ function Inquire({ confirmClose }: Props): JSX.Element {
                   disableUnderline
                   onChange={onChange}
                   multiline
+                  placeholder="광고 관련, 배너제작 등 어떠한 내용도 괜찮습니다."
                   required
                   rows={5}
-                  name="content"
+                  name="inquiryContents"
                 />
               </Grid>
             </Grid>
@@ -204,6 +235,7 @@ function Inquire({ confirmClose }: Props): JSX.Element {
           </Grid>
         </form>
       </Grid>
+
       <Dialog
         open={Boolean(confirmDialog.open)}
         onClose={confirmDialog.handleClose}

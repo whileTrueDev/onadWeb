@@ -88,7 +88,6 @@ const UserDataForm = (props: UserDataFormProps): JSX.Element => {
           onClick={(): void => {
             userDataUpdateDialog.handleOpen();
           }}
-          size="medium"
           color="primary"
         >
           정보변경

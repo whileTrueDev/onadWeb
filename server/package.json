@@ -7,7 +7,7 @@
     "start": "set PORT=3000 && ts-node ./bin/www.ts",
     "start:mac": "PORT=3000 ts-node ./bin/www.ts",
     "start:debug": "set PORT=3000 && nodemon --watch *.ts --exec ts-node ./bin/www.ts",
-    "start:debug:mac": "PORT=3000 && nodemon --watch ./ --exec ts-node ./bin/www.ts",
+    "start:debug:mac": "PORT=3000 && nodemon --watch ./ --exec ts-node ./bin/www.ts --inspect=9229",
     "prebuild": "rimraf dist",
     "build": "webpack --config webpack.config.js",
     "postbuild": "cp -r ./public ./dist/public",

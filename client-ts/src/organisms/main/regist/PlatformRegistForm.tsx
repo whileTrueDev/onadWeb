@@ -3,7 +3,6 @@ import NumberFormat from 'react-number-format';
 import {
   FormControl,
   InputLabel,
-  Input,
   FormHelperText,
   InputAdornment,
   Button,
@@ -110,7 +109,6 @@ function PlatformRegistForm({
     // 모든 state가 false가 되어야한다.
     // const marketerName = document.getElementById('name').value;
     const marketerName = state.name;
-    const marketerBusinessRegNum = (document.getElementById('marketerBusinessRegNum') ? state.marketerBusinessRegNum : '');
     const marketerPhoneNum = state.phoneNum;
     const marketerDomain = state.domain === '직접입력' ? marketerCustomDomain : state.domain;
     const user = {
@@ -118,7 +116,6 @@ function PlatformRegistForm({
       marketerName,
       marketerMail: `${email}@${marketerDomain}`,
       marketerPhoneNum,
-      marketerBusinessRegNum,
     };
     setLoading(1);
     handleUserSubmit(user);
@@ -220,16 +217,6 @@ function PlatformRegistForm({
                     </Grid>
                   </Grid>
                 </Grid>
-              </Grid>
-              <Grid item>
-                <FormControl style={{ marginTop: '8px', marginBottom: '16px' }}>
-                  <InputLabel shrink>사업자등록번호</InputLabel>
-                  <Input
-                    onChange={handleChange('marketerBusinessRegNum')}
-                    name="businessRegNum"
-                  />
-                  <FormHelperText>사업자 번호를 입력하세요.</FormHelperText>
-                </FormControl>
               </Grid>
               <Grid container direction="row">
                 <Grid item>

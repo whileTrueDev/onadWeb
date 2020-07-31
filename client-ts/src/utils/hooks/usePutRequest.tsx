@@ -45,6 +45,7 @@ export default function usePutRequest<PARAM_TYPE = {[key: string]: any}, RES_DAT
 
   const doPutRequest = useCallback((param: PARAM_TYPE): void => {
     setLoading(true); // 로딩 시작
+    console.log('params', param);
     axios.put<RES_DATA_TYPE>(`${host}${url}`,
       { ...param })
       .then((res) => {

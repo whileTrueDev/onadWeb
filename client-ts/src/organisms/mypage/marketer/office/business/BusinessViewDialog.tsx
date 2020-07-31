@@ -1,6 +1,5 @@
 import React from 'react';
 import makeStyles from '@material-ui/core/styles/makeStyles';
-
 import Dialog from '../../../../../atoms/Dialog/Dialog';
 
 const useStyles = makeStyles((theme) => ({
@@ -29,17 +28,19 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-
 interface BusinessRegiUploadDialogProps {
   open: boolean;
   handleClose: () => void;
   businessRegiImage: string;
   request: () => void;
   handleSnackOpen: () => void;
+  step: {currStep: number; isBusiness: boolean};
 }
 
 const BusinessViewDialog = (props: BusinessRegiUploadDialogProps): JSX.Element => {
-  const { open, handleClose, businessRegiImage } = props;
+  const {
+    open, handleClose, businessRegiImage
+  } = props;
   const classes = useStyles();
   let defaultImage = '/pngs/logo/onad_logo_vertical_small.png';
   let isPdf = false;
@@ -56,6 +57,7 @@ const BusinessViewDialog = (props: BusinessRegiUploadDialogProps): JSX.Element =
       onClose={handleClose}
       maxWidth="sm"
       fullWidth
+      title="사업자 등록증"
     >
       <div>
         <img

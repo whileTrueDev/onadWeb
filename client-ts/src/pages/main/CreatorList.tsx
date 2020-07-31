@@ -80,7 +80,11 @@ export default withRoot(() => {
                 >
                   <CardAvatar profile>
                     <a href={`https://www.twitch.tv/${row.creatorTwitchId}`}>
-                      <img src={row.creatorLogo} alt="creatorLogo" />
+                      <img
+                        src={row.creatorLogo}
+                        alt="creatorLogo"
+                        onError={(e) => { e.currentTarget.src = '/pngs/logo/onad_logo_vertical_small.png'; }}
+                      />
                     </a>
                   </CardAvatar>
                   <CardBody profile>

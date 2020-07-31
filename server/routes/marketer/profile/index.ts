@@ -3,7 +3,6 @@ import axios from 'axios';
 import responseHelper from '../../../middlewares/responseHelper';
 import doQuery from '../../../model/doQuery';
 import encrypto from '../../../middlewares/encryption';
-import sendEmailAuth from '../../../middlewares/auth/sendEmailAuth';
 import setTemporaryPassword from '../../../middlewares/auth/setTemporyPassword';
 
 const router = express.Router();
@@ -50,13 +49,10 @@ router.route('/')
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
       const [
         marketerId, marketerName,
-        marketerMail, marketerPhoneNum,
-        marketerBusinessRegNum,
-        marketerRawPasswd
+        marketerMail, marketerPhoneNum, marketerRawPasswd
       ] = responseHelper.getParam([
         'marketerId', 'marketerName',
         'marketerMail', 'marketerPhoneNum',
-        'marketerBusinessRegNum',
         'marketerRawPasswd'
       ], 'POST', req);
       const [key, salt] = encrypto.make(marketerRawPasswd);
@@ -64,10 +60,10 @@ router.route('/')
       const infoQuery = `
               INSERT INTO marketerInfo 
               (marketerId, marketerPasswd, marketerSalt, marketerName, marketerMail, 
-              marketerPhoneNum, marketerBusinessRegNum) 
-              VALUES (?, ?, ?, ?, ?, ?, ?)`;
+              marketerPhoneNum) 
+              VALUES (?, ?, ?, ?, ?, ?)`;
       const infoQueryArray = [marketerId, key, salt, marketerName, marketerMail,
-        marketerPhoneNum, marketerBusinessRegNum];
+        marketerPhoneNum];
 
       const cashQuery = `
               INSERT INTO marketerDebit
@@ -81,7 +77,7 @@ router.route('/')
         .then(() => {
           responseHelper.send({
             error: null,
-            result: `Email skip!`
+            result: 'Email skip!'
           }, 'POST', res);
           // next();
         })
@@ -187,23 +183,21 @@ router.route('/platform')
       const [
         marketerId, marketerName,
         marketerMail, marketerPhoneNum,
-        marketerBusinessRegNum,
         platformType
       ] = responseHelper.getParam([
         'marketerId', 'marketerName',
         'marketerMail', 'marketerPhoneNum',
-        'marketerBusinessRegNum',
         'platformType'
       ], 'POST', req);
 
       const infoQuery = `
             INSERT INTO marketerInfo 
             (marketerId, marketerName, marketerMail, 
-            marketerPhoneNum, marketerBusinessRegNum, platformType, marketerEmailAuth) 
-            VALUES (?, ?, ?, ?, ?, ?, ?) `;
+            marketerPhoneNum, platformType, marketerEmailAuth) 
+            VALUES (?, ?, ?, ?, ?, ?) `;
 
       const infoQueryArray = [marketerId, marketerName, marketerMail,
-        marketerPhoneNum, marketerBusinessRegNum, platformType, 1];
+        marketerPhoneNum, platformType, 1];
 
       const cashQuery = `
             INSERT INTO marketerDebit
@@ -319,7 +313,7 @@ router.route('/business')
   .put(
     responseHelper.middleware.checkSessionExists,
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
-      const businessImageSrc = responseHelper.getParam('imageUrl', 'PUT', req);
+      const taxBillData = responseHelper.getParam('value', 'PUT', req);
       const { marketerId } = responseHelper.getSessionData(req);
       const query = `
             UPDATE marketerInfo
@@ -327,7 +321,7 @@ router.route('/business')
             WHERE marketerId = ?`;
       // S3에 저장
       // S3.uploadImage(`business-regi/${marketerId}`, businessImageSrc);
-      doQuery(query, [businessImageSrc, marketerId])
+      doQuery(query, [taxBillData, marketerId])
         .then(() => {
           responseHelper.send([true], 'PUT', res);
         })
