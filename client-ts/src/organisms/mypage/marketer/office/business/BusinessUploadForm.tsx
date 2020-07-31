@@ -46,6 +46,7 @@ function BusinessUploadForm(props: BusinessUploadFormProps): JSX.Element {
   const snack = useDialog();
   const stepDialog = useDialog();
   const imageRex = /data:image\/([a-zA-Z]*);base64,([^\\"]*)/;
+  const pdfRex = /data:application\/pdf;base64,([^\\"]*)/;
   const phoneRex = /^\d{3}-\d{3,4}-\d{4}$/;
   const [step, setStep] = React.useState({
     currStep: 0,
@@ -66,14 +67,15 @@ function BusinessUploadForm(props: BusinessUploadFormProps): JSX.Element {
         && businessRegistrationData.data && businessRegistrationData.data.marketerBusinessRegSrc ? (
 
           <CardBody>
-            {imageRex.test(businessRegistrationData.data.marketerBusinessRegSrc) ? (
+            {imageRex.test(businessRegistrationData.data.marketerBusinessRegSrc) ||
+             pdfRex.test(businessRegistrationData.data.marketerBusinessRegSrc)? (
               <>
                 <div className={myClasses.buttonWrapper}>
                   <Button
                     color="primary"
                     onClick={(): void => {
                       setStep({
-                        currStep: 1,
+                        currStep: 0,
                         isBusiness: true
                       });
                       stepDialog.handleOpen();
@@ -99,7 +101,7 @@ function BusinessUploadForm(props: BusinessUploadFormProps): JSX.Element {
                     color="primary"
                     onClick={(): void => {
                       setStep({
-                        currStep: 1,
+                        currStep: 0,
                         isBusiness: false
                       });
                       stepDialog.handleOpen();

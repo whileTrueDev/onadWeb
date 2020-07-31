@@ -7,7 +7,7 @@ import history from '../../../history';
 // For column width - type error from Materiap-table
 declare module 'material-table' {
   export interface Column<RowData extends object> {
-    width?: string;
+    width?: string; 
   }
 }
 function dateDiff(date1: Date, date2: Date): number {
