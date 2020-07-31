@@ -81,7 +81,7 @@ function BusinessUploadStep(props: StepperInterface&BusinessRegiUploadDialogProp
     handleChangeStep(2);
   });
   const phoneRex = /^\d{3}-\d{3,4}-\d{4}$/;
-
+  
   return (
     <div>
       {isBusiness
