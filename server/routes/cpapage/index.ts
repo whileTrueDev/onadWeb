@@ -135,7 +135,7 @@ router.route('/campaigns')
       FROM creatorInfo
       WHERE creatorTwitchId = ?
       `;
-      // 크리에이터: 수익금의 40%를 가져가므로.
+      // 크리에이터: 수익금의 40%를 가져가므로. -> 수익금의 80% (200728, hwasurr)
       const query = `
       SELECT adlist.*,  mylist.campaignId, mylist.creatorId
       FROM 
@@ -153,7 +153,7 @@ router.route('/campaigns')
       apHeadline, apVideo, apDailyCap,
       apRemain, apAppPromoText, apKPI,
       apPartner, apImages, apTrackingLink,
-      apHook, apEvent, FORMAT(apPayout * (4/10), 0) AS apPayout,
+      apHook, apEvent, FORMAT(apPayout * (8/10), 0) AS apPayout,
       apIOSPayout, createdAt, updatedAt
       FROM adPickCampaign
       WHERE createdAt > DATE_SUB(NOW(), INTERVAL 10 minute)
@@ -166,7 +166,9 @@ router.route('/campaigns')
       const { creatorId } = id.result[0];
       const row = await doQuery<AdPickData[]>(query, [creatorId]);
       if (!row.error) {
-        const result = row.result.map((r) => ({ ...r, apImages: JSON.parse(r.apImages as string) }));
+        const result = row.result.map((r) => ({
+          ...r, apImages: JSON.parse(r.apImages as string)
+        }));
         responseHelper.send({ error: null, result }, 'get', res);
       } else {
         responseHelper.send({ error: true, result: null }, 'get', res);
