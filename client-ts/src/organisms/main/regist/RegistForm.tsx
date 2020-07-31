@@ -106,7 +106,6 @@ function RegistForm({
       const marketerId = state.idValue;
       const marketerName = state.name;
       // const marketerName = document.getElementById('name')!.value;
-      const marketerBusinessRegNum = (document.getElementById('marketerBusinessRegNum') ? state.marketerBusinessRegNum : '');
       const marketerPhoneNum = state.phoneNum;
       const marketerRawPasswd = state.passwordValue;
       const marketerDomain = state.domain === '직접입력' ? marketerCustomDomain : state.domain;
@@ -116,7 +115,6 @@ function RegistForm({
         marketerName,
         marketerMail: `${marketerMailId}@${marketerDomain}`,
         marketerPhoneNum,
-        marketerBusinessRegNum,
       };
       setLoading(1);
       handleUserSubmit(user);
@@ -298,26 +296,7 @@ function RegistForm({
                   </Grid>
                 </Grid>
               </Grid>
-              <Grid item>
 
-                <FormControl style={{ marginTop: '8px', marginBottom: '16px' }}>
-                  {/* <InputLabel shrink>사업자등록번호</InputLabel> */}
-                  <TextField
-                    required
-                    label="사업자 등록번호"
-                    helperText="사업자등록증이 없다면 현금 영수증 발행할 전화번호를 입력"
-                    onChange={handleChange('marketerBusinessRegNum')}
-                    name="businessRegNum"
-                    className={classes.textField}
-                    placeholder="사업자 등록번호를 입력하세요"
-                    margin="normal"
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                  />
-                </FormControl>
-
-              </Grid>
               <Grid container direction="row">
                 <Grid item>
                   <TextField
