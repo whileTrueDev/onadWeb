@@ -49,13 +49,10 @@ router.route('/')
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
       const [
         marketerId, marketerName,
-        marketerMail, marketerPhoneNum,
-        marketerBusinessRegNum,
-        marketerRawPasswd
+        marketerMail, marketerPhoneNum, marketerRawPasswd
       ] = responseHelper.getParam([
         'marketerId', 'marketerName',
         'marketerMail', 'marketerPhoneNum',
-        'marketerBusinessRegNum',
         'marketerRawPasswd'
       ], 'POST', req);
       const [key, salt] = encrypto.make(marketerRawPasswd);
@@ -63,10 +60,10 @@ router.route('/')
       const infoQuery = `
               INSERT INTO marketerInfo 
               (marketerId, marketerPasswd, marketerSalt, marketerName, marketerMail, 
-              marketerPhoneNum, marketerBusinessRegNum) 
-              VALUES (?, ?, ?, ?, ?, ?, ?)`;
+              marketerPhoneNum) 
+              VALUES (?, ?, ?, ?, ?, ?)`;
       const infoQueryArray = [marketerId, key, salt, marketerName, marketerMail,
-        marketerPhoneNum, marketerBusinessRegNum];
+        marketerPhoneNum];
 
       const cashQuery = `
               INSERT INTO marketerDebit
@@ -186,23 +183,21 @@ router.route('/platform')
       const [
         marketerId, marketerName,
         marketerMail, marketerPhoneNum,
-        marketerBusinessRegNum,
         platformType
       ] = responseHelper.getParam([
         'marketerId', 'marketerName',
         'marketerMail', 'marketerPhoneNum',
-        'marketerBusinessRegNum',
         'platformType'
       ], 'POST', req);
 
       const infoQuery = `
             INSERT INTO marketerInfo 
             (marketerId, marketerName, marketerMail, 
-            marketerPhoneNum, marketerBusinessRegNum, platformType, marketerEmailAuth) 
-            VALUES (?, ?, ?, ?, ?, ?, ?) `;
+            marketerPhoneNum, platformType, marketerEmailAuth) 
+            VALUES (?, ?, ?, ?, ?, ?) `;
 
       const infoQueryArray = [marketerId, marketerName, marketerMail,
-        marketerPhoneNum, marketerBusinessRegNum, platformType, 1];
+        marketerPhoneNum, platformType, 1];
 
       const cashQuery = `
             INSERT INTO marketerDebit

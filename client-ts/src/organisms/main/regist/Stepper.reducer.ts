@@ -8,7 +8,6 @@ export const initialState = {
   phoneNum: '',
   domain: '',
   name: '',
-  marketerBusinessRegNum: '',
   idValue: '',
 };
 export interface StepState {
@@ -22,7 +21,6 @@ export interface StepState {
   phoneNum: string | number;
   domain: string;
   name: string;
-  marketerBusinessRegNum: string | number;
 }
 
 export type StepAction = { type: 'id'; value: string }
@@ -33,7 +31,6 @@ export type StepAction = { type: 'id'; value: string }
   | { type: 'domain'; value: string }
   | { type: 'checkDuplication'; value: boolean }
   | { type: 'name'; value: string }
-  | { type: 'marketerBusinessRegNum'; value: string | number }
   | { type: 'reset' }
 
 
@@ -85,9 +82,6 @@ export function myReducer(
     // case 'businessRegNum': {
     //   return { ...state, businessRegNum: action.value };
     // }
-    case 'marketerBusinessRegNum': {
-      return { ...state, marketerBusinessRegNum: action.value };
-    }
     case 'name': {
       return { ...state, name: action.value };
     }
