@@ -57,7 +57,12 @@ function ProductHero({ MainUserType, source }: Props): JSX.Element {
             </Button>
           </div>
 
-          <video className={classes.maintopCenterVideo} autoPlay loop>
+          <video
+            className={classes.maintopCenterVideo}
+            autoPlay
+            loop
+            muted
+          >
             <source src="/video/main/mainMarketer.mp4" type="video/mp4" />
             <track />
           </video>
@@ -96,7 +101,7 @@ function ProductHero({ MainUserType, source }: Props): JSX.Element {
               </Button>
             </div>
 
-            <video className={classes.maintopCenterVideo} autoPlay loop>
+            <video className={classes.maintopCenterVideo} autoPlay loop muted>
               <source src="/video/main/mainMarketer.mp4" type="video/mp4" />
               <track />
             </video>

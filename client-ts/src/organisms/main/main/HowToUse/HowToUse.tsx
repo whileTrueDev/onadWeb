@@ -35,7 +35,7 @@ function HowToUse({ source, slideTime, MainUserType }: Props): JSX.Element {
               : { timeout: slideTime })}
           >
             <Grid item className={classes.slide}>
-              <video className={classes.mainMiddleLeftVideo} autoPlay loop>
+              <video className={classes.mainMiddleLeftVideo} autoPlay loop muted>
                 <source src="/video/main/howtouseMarketer.mp4" type="video/mp4" />
                 <track />
               </video>
@@ -80,7 +80,7 @@ function HowToUse({ source, slideTime, MainUserType }: Props): JSX.Element {
                 : { timeout: slideTime })}
             >
               <Grid item className={classes.slide}>
-                <video className={classes.mainMiddleLeftVideo} autoPlay loop>
+                <video className={classes.mainMiddleLeftVideo} autoPlay loop muted>
                   <source src="/video/main/howtouseCreator.mp4" type="video/mp4" />
                   <track />
                 </video>

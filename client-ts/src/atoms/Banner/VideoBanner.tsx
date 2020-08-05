@@ -12,7 +12,7 @@ export default function VideoBanner({
   ...rest
 }: VideoProps): JSX.Element {
   return (
-    <video {...rest} autoPlay loop onError={onError}>
+    <video {...rest} autoPlay loop muted onError={onError}>
       <source src={src} type="video/mp4" />
       <track srcLang="ko" kind="captions" />
     </video>
