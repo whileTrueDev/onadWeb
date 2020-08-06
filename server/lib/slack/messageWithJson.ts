@@ -12,7 +12,7 @@ const url = process.env.SLACK_ALARM_URL as string;
 export default function messageWithJson({
   summary,
   linkTitle = '관리자 페이지 바로가기',
-  linkUrl = 'http://localhost:3051',
+  linkUrl = 'https://admin.onad.io',
   text, fields,
   footer = 'OnAD Slack Bot',
   footerIcon = 'https://platform.slack-edge.com/img/default_application_icon.png'
