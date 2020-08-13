@@ -9,6 +9,7 @@ import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 import GridContainer from '../../../atoms/Grid/GridContainer';
 import GridItem from '../../../atoms/Grid/GridItem';
@@ -60,6 +61,17 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexGrow: 1,
     backgroundColor: theme.palette.background.paper,
   },
+  guideButton:{
+    border: '1px solid red',
+    padding: '5px 10px',
+    marginLeft: 10
+  },
+  guideLink:{
+    color: 'red',
+    fontFamily: 'Noto Sans kr',
+    fontSize: 16
+  },
+
 }));
 
 const Inventory = (): JSX.Element => {
@@ -78,6 +90,14 @@ const Inventory = (): JSX.Element => {
   const [selectedBanner, setBanner] = React.useState<BannerDataInterface | null>(null);
   const [selectedUrl, setUrl] = React.useState<UrlDataInterface | null>(null);
 
+  const [loading, setLoading] = React.useState(false);
+
+  function handleClick(): void {
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+    }, 1000);
+  }
 
   const handleChange = (event: React.ChangeEvent<{}>, newValue: number): void => {
     setValue(newValue);
@@ -104,6 +124,21 @@ const Inventory = (): JSX.Element => {
             >
               배너가 없으신가요?
             </CustomButton>
+            <Button
+              className={classes.guideButton}
+              disabled={loading}
+              onClick={(): void => { handleClick(); }}
+            >
+              <a href="/IntroService/온애드배너제작가이드.pdf" download="온애드배너제작가이드" className={classes.guideLink}>배너제작 가이드</a>
+              {loading && (
+                <CircularProgress
+                  disableShrink
+                  size={16}
+                  thickness={5}
+                  variant="indeterminate"
+                />
+              )}
+            </Button>
             <BannerTable
               handleDeleteOpen={deleteDialog.handleOpen}
               setBanner={setBanner}
