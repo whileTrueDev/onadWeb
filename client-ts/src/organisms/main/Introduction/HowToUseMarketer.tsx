@@ -26,14 +26,6 @@ function HowToUsemarketer({ source }: Props): JSX.Element {
   const InquireDialog = useDialog();
   const [imgStep, setImgStep] = React.useState('banner');
   const UseStep = useDialog();
-  // const [loading, setLoading] = React.useState(false);
-
-  // function handleClick(): void {
-  //   setLoading(true);
-  //   setTimeout(() => {
-  //     setLoading(false);
-  //   }, 1000);
-  // }
 
   return (
     <Container className={classes.root} component="section">

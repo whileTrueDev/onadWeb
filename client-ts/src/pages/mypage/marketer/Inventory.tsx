@@ -9,7 +9,6 @@ import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
-import CircularProgress from '@material-ui/core/CircularProgress';
 
 import GridContainer from '../../../atoms/Grid/GridContainer';
 import GridItem from '../../../atoms/Grid/GridItem';
@@ -88,15 +87,6 @@ const Inventory = (): JSX.Element => {
   const [value, setValue] = React.useState<number>(0);
   const [selectedBanner, setBanner] = React.useState<BannerDataInterface | null>(null);
   const [selectedUrl, setUrl] = React.useState<UrlDataInterface | null>(null);
-
-  const [loading, setLoading] = React.useState(false);
-
-  function handleClick(): void {
-    setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-    }, 1000);
-  }
 
   const handleChange = (event: React.ChangeEvent<{}>, newValue: number): void => {
     setValue(newValue);

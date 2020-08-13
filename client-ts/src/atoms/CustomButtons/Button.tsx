@@ -10,13 +10,14 @@ import {
 interface CustomProps extends ButtonProps {
   to?: string;
   link?: any;
-  load? : boolean
+  load?: boolean
 }
 
 function RegularButton({
   color = 'default',
   size = 'large',
   variant = 'contained',
+  onClick,
   load,
   link,
   children,
@@ -41,7 +42,12 @@ function RegularButton({
       className={classes.button}
       component={link}
       disabled={ load && isloading }
-      onClick={ load && ((): void => {handleClick();}) }
+      onClick={(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        if (onClick) onClick(e)
+        if (load) {
+          handleClick();
+        }
+      }}
       to={to}
       {...rest}
     >
