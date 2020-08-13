@@ -69,12 +69,12 @@ const useStyles = makeStyles((theme) => ({
     border: '1px solid red',
     padding: '5px 10px',
     marginTop: 20,
-    marginLeft: 10
+    marginLeft: 10,
   },
   guideLink:{
     color: 'red',
     fontFamily: 'Noto Sans kr',
-    fontSize: 16
+    fontSize: 16,
   },
   contentImg: {
     width: '100%',

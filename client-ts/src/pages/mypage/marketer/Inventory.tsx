@@ -62,12 +62,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: theme.palette.background.paper,
   },
   guideButton:{
-    border: '1px solid red',
     padding: '5px 10px',
     marginLeft: 10
   },
   guideLink:{
-    color: 'red',
+    color: 'white',
     fontFamily: 'Noto Sans kr',
     fontSize: 16
   },
@@ -124,21 +123,14 @@ const Inventory = (): JSX.Element => {
             >
               배너가 없으신가요?
             </CustomButton>
-            <Button
+            <CustomButton
+              color="primary"
+              size="large"
               className={classes.guideButton}
-              disabled={loading}
-              onClick={(): void => { handleClick(); }}
+              load={true}
             >
               <a href="/IntroService/온애드배너제작가이드.pdf" download="온애드배너제작가이드" className={classes.guideLink}>배너제작 가이드</a>
-              {loading && (
-                <CircularProgress
-                  disableShrink
-                  size={16}
-                  thickness={5}
-                  variant="indeterminate"
-                />
-              )}
-            </Button>
+            </CustomButton>
             <BannerTable
               handleDeleteOpen={deleteDialog.handleOpen}
               setBanner={setBanner}

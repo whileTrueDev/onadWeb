@@ -1,7 +1,7 @@
 import React from 'react';
 import shortid from 'shortid';
 import {
-  Grid, Button, Container, Typography, CircularProgress
+  Grid, Button, Container, Typography
 } from '@material-ui/core';
 import useStyles from './style/HowToUseMarketer.style';
 // import Typography from '../../Main/components/Typography';
@@ -9,6 +9,7 @@ import useDialog from '../../../utils/hooks/useDialog';
 // import Dialog from './Dialog';
 import Inquire from '../main/Inquiry/Inquiry';
 import Dialog from '../../../atoms/Dialog/Dialog';
+import CustomButtons from '../../../atoms/CustomButtons/Button'
 
 
 interface Props {
@@ -25,14 +26,14 @@ function HowToUsemarketer({ source }: Props): JSX.Element {
   const InquireDialog = useDialog();
   const [imgStep, setImgStep] = React.useState('banner');
   const UseStep = useDialog();
-  const [loading, setLoading] = React.useState(false);
+  // const [loading, setLoading] = React.useState(false);
 
-  function handleClick(): void {
-    setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-    }, 1000);
-  }
+  // function handleClick(): void {
+  //   setLoading(true);
+  //   setTimeout(() => {
+  //     setLoading(false);
+  //   }, 1000);
+  // }
 
   return (
     <Container className={classes.root} component="section">
@@ -51,21 +52,12 @@ function HowToUsemarketer({ source }: Props): JSX.Element {
             <Button className={classes.sampleLink} onClick={() => { setImgStep('banner'); UseStep.handleOpen(); }}>
               &gt;&nbsp;샘플보기
             </Button>
-            <Button
+            <CustomButtons
               className={classes.guideButton}
-              disabled={loading}
-              onClick={(): void => { handleClick(); }}
+              load={true}
             >
               <a href="/IntroService/온애드배너제작가이드.pdf" download="온애드배너제작가이드" className={classes.guideLink}>배너가이드</a>
-              {loading && (
-                <CircularProgress
-                  disableShrink
-                  size={16}
-                  thickness={5}
-                  variant="indeterminate"
-                />
-              )}
-            </Button>
+            </CustomButtons>
             <Button className={classes.inquireLink} onClick={() => { InquireDialog.handleOpen(); }}>
               배너가 아직 없으시다면 클릭!
             </Button>
@@ -101,7 +93,7 @@ function HowToUsemarketer({ source }: Props): JSX.Element {
           <Grid item xs={12} md={3} className={classes.marketerUse}>
             <div className={classes.useNumber}>4</div>
             <Typography variant="h5" component="h2" className={classes.semiTitle}>
-              세금계산서 발행
+              세금계산서/현금영수증
             </Typography>
             <div className={classes.Content}>
               {source.fourthContent.split('\n').map((row) => (

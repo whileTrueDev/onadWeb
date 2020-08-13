@@ -3,22 +3,35 @@ import React from 'react';
 import Button, { ButtonProps } from '@material-ui/core/Button';
 // Styles
 import useButtonStyles from './Button.style';
+import {
+  CircularProgress
+} from '@material-ui/core';
 
 interface CustomProps extends ButtonProps {
   to?: string;
   link?: any;
+  load? : boolean
 }
 
 function RegularButton({
   color = 'default',
   size = 'large',
   variant = 'contained',
+  load,
   link,
   children,
   to,
   ...rest
 }: CustomProps): JSX.Element {
   const classes = useButtonStyles();
+  const [isloading, setIsLoading] = React.useState(false);
+
+  function handleClick(): void {
+    setIsLoading(true);
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 1000);
+  }
 
   return (
     <Button
@@ -27,10 +40,20 @@ function RegularButton({
       color={color}
       className={classes.button}
       component={link}
+      disabled={ load && isloading }
+      onClick={ load && ((): void => {handleClick();}) }
       to={to}
       {...rest}
     >
       {children}
+      {isloading && (
+        <CircularProgress
+          disableShrink
+          size={16}
+          thickness={5}
+          variant="indeterminate"
+        />
+      )}
     </Button>
   );
 }

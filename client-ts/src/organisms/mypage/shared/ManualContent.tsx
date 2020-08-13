@@ -6,7 +6,7 @@ import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
 import StepContent from '@material-ui/core/StepContent';
-import {Button, CircularProgress } from '@material-ui/core';
+import CustomButton from '../../../atoms/CustomButtons/Button'
 import { makeStyles } from '@material-ui/core/styles';
 import ButtonBase from '@material-ui/core/ButtonBase';
 
@@ -42,12 +42,11 @@ const useStyles = makeStyles((theme) => ({
     backgroundRepeat: 'no-repeat',
   },
     guideButton:{
-      border: '1px solid red',
       padding: '5px 10px',
       marginLeft: 10
     },
     guideLink:{
-      color: 'red',
+      color: 'white',
       fontFamily: 'Noto Sans kr',
       fontSize: 16
     },
@@ -63,16 +62,6 @@ const ManualContent = ({ source }: ManualContentProps): JSX.Element => {
   function handleImageChange(src: string): void {
     setImageSrc(src);
   }
-
-  const [loading, setLoading] = React.useState(false);
-
-  function handleClick(): void {
-    setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-    }, 1000);
-  }
-
   const classes = useStyles();
 
   return (
@@ -86,21 +75,14 @@ const ManualContent = ({ source }: ManualContentProps): JSX.Element => {
               renderers={{ code: ({ value1 }): JSX.Element => <Markdown source={value1} /> }}
             />
             {value && value.customButton && (
-              <Button
+              <CustomButton
+                color="primary"
+                size="large"
                 className={classes.guideButton}
-                disabled={loading}
-                onClick={(): void => { handleClick(); }}
+                load={true}
               >
                 <a href="/IntroService/온애드배너제작가이드.pdf" download="온애드배너제작가이드" className={classes.guideLink}>배너제작 가이드 확인하기</a>
-                {loading && (
-                  <CircularProgress
-                    disableShrink
-                    size={16}
-                    thickness={5}
-                    variant="indeterminate"
-                  />
-                )}
-              </Button>
+              </CustomButton>
             )}
           </StepLabel>
           <StepContent>
