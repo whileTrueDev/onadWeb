@@ -6,6 +6,7 @@ import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
 import StepContent from '@material-ui/core/StepContent';
+import CustomButton from '../../../atoms/CustomButtons/Button'
 import { makeStyles } from '@material-ui/core/styles';
 import ButtonBase from '@material-ui/core/ButtonBase';
 
@@ -40,6 +41,15 @@ const useStyles = makeStyles((theme) => ({
     backgroundPosition: 'center',
     backgroundRepeat: 'no-repeat',
   },
+    guideButton:{
+      padding: '5px 10px',
+      marginLeft: 10
+    },
+    guideLink:{
+      color: 'white',
+      fontFamily: 'Noto Sans kr',
+      fontSize: 16
+    },
 }));
 
 interface ManualContentProps {
@@ -52,7 +62,6 @@ const ManualContent = ({ source }: ManualContentProps): JSX.Element => {
   function handleImageChange(src: string): void {
     setImageSrc(src);
   }
-
   const classes = useStyles();
 
   return (
@@ -65,6 +74,16 @@ const ManualContent = ({ source }: ManualContentProps): JSX.Element => {
               escapeHtml={false}
               renderers={{ code: ({ value1 }): JSX.Element => <Markdown source={value1} /> }}
             />
+            {value && value.customButton && (
+              <CustomButton
+                color="primary"
+                size="large"
+                className={classes.guideButton}
+                load={true}
+              >
+                <a href="/IntroService/온애드배너제작가이드.pdf" download="온애드배너제작가이드" className={classes.guideLink}>배너제작 가이드 확인하기</a>
+              </CustomButton>
+            )}
           </StepLabel>
           <StepContent>
             {value && value.image && (

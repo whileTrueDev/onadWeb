@@ -60,6 +60,16 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexGrow: 1,
     backgroundColor: theme.palette.background.paper,
   },
+  guideButton:{
+    padding: '5px 10px',
+    marginLeft: 10
+  },
+  guideLink:{
+    color: 'white',
+    fontFamily: 'Noto Sans kr',
+    fontSize: 16
+  },
+
 }));
 
 const Inventory = (): JSX.Element => {
@@ -77,7 +87,6 @@ const Inventory = (): JSX.Element => {
   const [value, setValue] = React.useState<number>(0);
   const [selectedBanner, setBanner] = React.useState<BannerDataInterface | null>(null);
   const [selectedUrl, setUrl] = React.useState<UrlDataInterface | null>(null);
-
 
   const handleChange = (event: React.ChangeEvent<{}>, newValue: number): void => {
     setValue(newValue);
@@ -103,6 +112,14 @@ const Inventory = (): JSX.Element => {
               onClick={(): void => { InquireDialog.handleOpen(); }}
             >
               배너가 없으신가요?
+            </CustomButton>
+            <CustomButton
+              color="primary"
+              size="large"
+              className={classes.guideButton}
+              load={true}
+            >
+              <a href="/IntroService/온애드배너제작가이드.pdf" download="온애드배너제작가이드" className={classes.guideLink}>배너제작 가이드</a>
             </CustomButton>
             <BannerTable
               handleDeleteOpen={deleteDialog.handleOpen}
