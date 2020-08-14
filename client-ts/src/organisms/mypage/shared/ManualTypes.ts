@@ -5,7 +5,7 @@ export interface ManualSelect {
   label: string;
 }
 export interface Source {
-  image: string | null; description: string;
+  image: string | null; description: string; customButton?: boolean
 }
 
 export interface ManualContentSources {
