@@ -13,6 +13,65 @@
     .img-area {
       width: 100%;
       height: 100%;
+      position: relative
+    }
+
+    body {
+      margin: 20px;
+    }
+
+    .marquee {
+      overflow: hidden;
+      margin-bottom: 10px;
+      position: absolute;
+      display: block;
+      font-size: 40vh;
+      width: 100%;
+      height: 80%;
+      background: rbga(0, 0, 0, 5);
+      top: 20%;
+      bottom: 20%;
+      background-color: rgba(0, 0, 0, .5);
+    }
+
+    .marquee p {
+      color: white;
+      text-shadow: -3px 0 #000000, 0 3px #000000, 3px 0 #000000, 0 -3px #000000;
+      margin: 0;
+      padding-left: 100%;
+      display: inline-block;
+      white-space: nowrap;
+      -webkit-animation-name: marquee;
+      -webkit-animation-timing-function: linear;
+      -webkit-animation-duration: 10s;
+      -webkit-animation-iteration-count: 1;
+      -moz-animation-name: marquee;
+      -moz-animation-timing-function: linear;
+      -moz-animation-duration: 10s;
+      -moz-animation-iteration-count: 1;
+      -ms-animation-name: marquee;
+      -ms-animation-timing-function: linear;
+      -ms-animation-duration: 10s;
+      -ms-animation-iteration-count: 1;
+      -o-animation-name: marquee;
+      -o-animation-timing-function: linear;
+      -o-animation-duration: 10s;
+      -o-animation-iteration-count: 1;
+      animation-name: marquee;
+      animation-timing-function: linear;
+      animation-duration: 10s;
+      animation-iteration-count: 1;
+    }
+
+    @-webkit-keyframes marquee {
+      from {
+        -webkit-transform: translate(0%);
+      }
+
+      99%,
+      to {
+        -webkit-transform: translate(-100%);
+      }
     }
   </style>
   <script src="/socket.io/socket.io.js"></script>
@@ -20,9 +79,12 @@
   <script>
     const exports = {};
   </script>
+
   <script src='/public/bundle.js'></script>
   <div class="img-area" id="imgMessage"></div>
-  <div id="qrcode"></div>
+  <div class="marquee">
+    <p>해당 배너는 금전적 지원을 받은 광고입니다.</p>
+  </div>
 </body>
 
 </html>

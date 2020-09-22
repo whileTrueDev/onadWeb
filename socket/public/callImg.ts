@@ -40,6 +40,7 @@ function callImg(socket: any, msg: string[]): void {
     });
   };
 
+  // 켜져있는 광고
   const getOnCampaignList = (): Promise<string[]> => {
     const campaignListQuery = `
     SELECT campaignId, campaignName, optionType, startDate, finDate, selectedTime, campaignDescription
