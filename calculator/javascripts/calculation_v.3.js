@@ -4,7 +4,11 @@ const sendAlimtalk = require('./alimtalk');
 const { doConnectionQuery, doTransacQuery } = require('../model/doQuery');
 // 시청자수 1회당 가격
 const PPP = 2;
-const FEERATE = 0.5;
+// const FEERATE = 0.5;
+
+// 추석 이벤트 가격 수정
+const FEERATE = 1;
+
 
 // 현재시간은 5분, crawler가 활동하는 시기는 0분 타이밍이므로 10분을 깎아서
 const getcreatorList = ({ date }) => {
