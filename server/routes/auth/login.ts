@@ -2,6 +2,7 @@
 import express from 'express';
 import passport from 'passport';
 // import checkEmailAuth from '../../middlewares/checkEmailAuth';
+import Axios from 'axios';
 import responseHelper from '../../middlewares/responseHelper';
 import doQuery from '../../model/doQuery';
 import checkEmailAuth from '../../middlewares/checkEmailAuth';
@@ -57,6 +58,31 @@ router.get('/kakao/callback', passport.authenticate('kakao'),
 // creator - twitch 로그인
 router.get('/twitch', passport.authenticate('twitch'));
 router.get('/twitch/callback', passport.authenticate('twitch'),
+  (req, res) => {
+    res.redirect(`${HOST}/mypage/creator/main`);
+  });
+
+// creator - afreeca 로그인
+router.get('/afreeca', (req, res) => {
+  Axios.get('https://openapi.afreecatv.com/auth/code',
+    {
+      params: { client_id: process.env.AFREECA_KEY },
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        Accept: '*/*',
+      }
+    })
+    .then((apiRes) => {
+      console.log(apiRes.data);
+      res.send(apiRes.data);
+    })
+    .catch((err) => {
+      console.log(err.response.data);
+      res.sendStatus(err.response.status);
+    });
+});
+router.get('/afreeca/callback',
+  passport.authenticate('afreeca'),
   (req, res) => {
     res.redirect(`${HOST}/mypage/creator/main`);
   });

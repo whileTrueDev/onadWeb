@@ -202,15 +202,29 @@ function LoginForm({
           <DialogContentText style={{ fontSize: 15, fontFamily: 'Noto Sans kr' }}>
             당신의 CHANNEL을 선택하세요.
           </DialogContentText>
-          <Tooltip title="트위치 계정으로 로그인" placement="right">
-            <Button
-              href={`${HOST}/login/twitch`}
-              style={{
-                backgroundImage: 'url("/pngs/logo/twitch.png")',
-              }}
-              className={classes.imageSrc}
-            />
-          </Tooltip>
+          <div style={{ display: 'flex' }}>
+            <Tooltip title="트위치 계정으로 로그인" placement="right">
+              <Button
+                href={`${HOST}/login/twitch`}
+                style={{
+                  backgroundImage: 'url("/pngs/logo/twitch.png")',
+                }}
+                className={classes.imageSrc}
+              />
+            </Tooltip>
+            <Tooltip title="아프리카tv 계정으로 로그인" placement="right">
+              <Button
+                href={`${HOST}/login/afreeca`}
+                style={{
+                  backgroundImage: 'url("/pngs/logo/afreecatv.png")',
+                  backgroundSize: 'contain',
+                  backgroundPosition: 'center',
+                  backgroundRepeat: 'no-repeat',
+                }}
+                className={classes.imageSrc}
+              />
+            </Tooltip>
+          </div>
         </DialogContent>
       </Dialog>
     )
