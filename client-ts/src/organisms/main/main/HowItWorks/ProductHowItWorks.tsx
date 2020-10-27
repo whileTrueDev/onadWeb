@@ -3,7 +3,8 @@ import shortid from 'shortid';
 import { Button, Hidden, Typography } from '@material-ui/core';
 // import Typography from '../../components/Typography';
 import styles from '../style/ProductHowItWorks.style';
-import LoginForm from '../login/LoginForm';
+import MarketerLoginForm from '../login/MarketerLoginForm';
+import CreatorLoginForm from '../login/CreatorLoginForm';
 
 
 interface Props {
@@ -85,12 +86,15 @@ function ProductHowItWorks({ source, MainUserType, logout }: Props): JSX.Element
             전화지원 및 플러스친구 답변은 월~금 (10:00~19:00)동안 운영됩니다.
           </Typography>
         </div>
-        <LoginForm
-          open={open}
-          isMarketer={isMarketer}
-          handleClose={handleClose}
-          logout={logout}
-        />
+        {isMarketer ? (
+          <MarketerLoginForm
+            open={open}
+            handleClose={handleClose}
+            logout={logout}
+          />
+        ) : (
+          <CreatorLoginForm open={open} handleClose={handleClose} />
+        )}
       </div>
     </section>
   );

@@ -5,7 +5,8 @@ import {
 import LockOpen from '@material-ui/icons/LockOpen';
 import SupervisedUserCircle from '@material-ui/icons/SupervisedUserCircle';
 import useStyles from '../style/LoginPopover.style';
-import LoginForm from './LoginForm';
+import MarketerLoginForm from './MarketerLoginForm';
+import CreatorLoginForm from './CreatorLoginForm';
 import RegistDialog from '../../regist/RegistDialog';
 
 
@@ -68,17 +69,14 @@ function LoginPopover({
               온애드 시작하기
             </Button>
 
-            <LoginForm
+            <MarketerLoginForm
               open={loginValue === 'marketer'}
-              isMarketer
               handleClose={handleDialogClose}
               logout={logout}
             />
-            <LoginForm
+            <CreatorLoginForm
               open={loginValue === 'creator'}
-              isMarketer={false}
               handleClose={handleDialogClose}
-              logout={logout}
             />
           </>
         )
@@ -143,11 +141,9 @@ function LoginPopover({
                     )}
                 </div>
               )}
-            <LoginForm
+            <CreatorLoginForm
               open={loginValue === 'creator'}
-              isMarketer={false}
               handleClose={handleDialogClose}
-              logout={logout}
             />
             <RegistDialog
               open={registOpen}
