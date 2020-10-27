@@ -15,6 +15,15 @@ const useStyles = makeStyles((theme: OnadTheme) => ({
     padding: `${theme.spacing(6)}px ${theme.spacing(4)}px`,
   },
   dialogTitle: { fontWeight: 700 },
+  buttonLoading: {
+    backgroundColor: theme.palette.action.disabledBackground,
+    position: 'absolute',
+    width: '100%',
+    height: '100%',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
   socialLoginButton: {
     borderRadius: '0px',
     width: '100%',
@@ -41,7 +50,8 @@ const useStyles = makeStyles((theme: OnadTheme) => ({
     height: 35,
     position: 'absolute',
     left: theme.spacing(2),
-  }
+  },
+
 }));
 
 export default useStyles;
