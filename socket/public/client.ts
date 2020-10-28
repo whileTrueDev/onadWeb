@@ -2,7 +2,7 @@ import identifier from './programIdentifier';
 import hiddenEventHandler from './hiddenEventHandler';
 import imageClicker from './imageClicker';
 
-const socket: any = io();
+const socket: any = io({transports: ['websocket']});
 const programType: string = identifier();
 const history: number = window.history.length;
 const THIS_URL: string = window.location.href;
