@@ -68,25 +68,47 @@ router.get('/afreeca', (req, res) => {
     {
       params: { client_id: process.env.AFREECA_KEY },
       headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
+        'Content-Type': 'application/json',
         Accept: '*/*',
       }
     })
     .then((apiRes) => {
-      console.log(apiRes.data);
-      res.send(apiRes.data);
+      res.redirect(apiRes.request.res.responseUrl);
     })
     .catch((err) => {
       console.log(err.response.data);
       res.sendStatus(err.response.status);
     });
 });
-router.get('/afreeca/callback',
-  passport.authenticate('afreeca'),
-  (req, res) => {
-    res.redirect(`${HOST}/mypage/creator/main`);
-  });
 
+// 
+router.get('/afreeca/callback', (req, res) => {
+  const afreecaCode = req.query.code;
+  Axios.post('https://openapi.afreecatv.com/auth/token',
+    {
+      grant_type: 'authorization_code',
+      client_id: process.env.AFREECA_KEY,
+      client_secret: process.env.AFREECA_SECRET_KEY,
+      code: afreecaCode,
+    },
+    {
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: '*/*',
+      }
+    })
+    .then((tokenRes) => {
+      console.log(tokenRes.data);
+      res.redirect(`${HOST}/creator`);
+    })
+    .catch((err) => {
+      if (err.response) {
+        console.log(err.response.data);
+      } else {
+        console.log(err);
+      }
+    });
+});
 
 router.route('/check')
   .get(

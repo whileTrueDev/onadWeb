@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme: OnadTheme) => ({
     width: '100%',
     height: 60,
     margin: `${theme.spacing(1)}px 0px`,
-    boxShadow: 'none'
+    boxShadow: theme.shadows[0]
   },
   twitch: {
     color: theme.palette.getContrastText(theme.palette.platform.twitch),
