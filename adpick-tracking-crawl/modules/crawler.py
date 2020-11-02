@@ -69,11 +69,6 @@ def adpick_crawler(number_of_row, UNIX_CHROME_DRIVER_PATH):
 
         print('login succeed')
 
-        # 리포트 페이지 - 전환으로 이동
-        driver.get('https://www.adpick.co.kr/?ac=report&tac=details')
-
-        driver.implicitly_wait(2)
-
         if time == 0:  # 자정일 경우는 어제 데이터를 검색
             # version checkbox True / yesterday data
             driver.get(
