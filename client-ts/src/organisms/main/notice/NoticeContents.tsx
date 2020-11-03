@@ -1,8 +1,14 @@
 import React from 'react';
-import { Paper, Typography, Divider } from '@material-ui/core';
+import {
+  Paper, Typography, Divider, makeStyles
+} from '@material-ui/core';
 import Markdown from 'react-markdown/with-html';
 import Button from '../../../atoms/CustomButtons/Button';
 import history from '../../../history';
+
+const useStyles = makeStyles((theme) => ({
+  markdown: { fontSize: theme.typography.body1.fontSize, fontWeight: 400 }
+}));
 
 interface NoticeData {
   code: string;
@@ -15,6 +21,7 @@ interface Props {
   data: NoticeData;
 }
 export default function NoticeContents({ data }: Props): JSX.Element {
+  const classes = useStyles();
   return (
     <div>
       <Paper style={{ fontFamily: 'Roboto', }}>
@@ -39,6 +46,7 @@ export default function NoticeContents({ data }: Props): JSX.Element {
 
         <div style={{ padding: 28 }}>
           <Markdown
+            className={classes.markdown}
             source={data.contents}
             escapeHtml={false}
             renderers={{ code: ({ value }) => <Markdown source={value} /> }}

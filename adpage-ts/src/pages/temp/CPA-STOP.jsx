@@ -24,7 +24,7 @@ export default function CpaStop() {
       <Typography variant="body1">
         자세한 사항은
         {' '}
-        <a style={{ textDecoration: 'underline' }} href="https://naver.com">공지사항</a>
+        <a style={{ textDecoration: 'underline' }} href="https://onad.io/notice/35">공지사항</a>
         을 확인해주시기 바랍니다.
       </Typography>
 
