@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function CpaStop() {
   const classes = useStyles();
-  const [bibbles, setBibbles] = useState([
+  const [bibbles, ] = useState([
     { name: '0', dragged: false },
     { name: '1', dragged: false },
     { name: '2', dragged: false },
@@ -41,11 +41,11 @@ export default function CpaStop() {
       <div style={{ padding: 40 }}>
         {bibbles.map((bibble) => (
           <img
+            alt=""
             key={bibble.name}
             src="https://static-cdn.jtvnw.net/emoticons/v2/86/default/light/3.0"
             width={50}
             height={50}
-            onDragStart={() => { handleDragged(bibble.name) }}
             className={classnames({
               [classes.bibble]: true,
               [classes.binggleLeft]: Boolean(Math.round(Math.random())),
