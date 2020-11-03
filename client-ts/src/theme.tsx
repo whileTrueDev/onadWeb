@@ -1,9 +1,23 @@
-import { createMuiTheme, responsiveFontSizes } from '@material-ui/core/styles';
+import { createMuiTheme, responsiveFontSizes, Theme } from '@material-ui/core/styles';
 import {
   blue, yellow, grey,
   red, cyan, blueGrey
 } from '@material-ui/core/colors';
 import { darken, lighten } from '@material-ui/core/styles/colorManipulator';
+import { Palette } from '@material-ui/core/styles/createPalette';
+
+export interface OnadPalette extends Palette {
+  platform: {
+    afreeca: string;
+    twitch: string;
+    youtube: string;
+  };
+}
+
+export interface OnadTheme extends Theme {
+  handleThemeChange?: () => void;
+  palette: OnadPalette;
+}
 
 const defaultTheme = createMuiTheme();
 
@@ -31,14 +45,14 @@ const rawTheme = {
   }
 };
 
-const lightTheme = responsiveFontSizes(createMuiTheme({
+const lightThemeSource = responsiveFontSizes(createMuiTheme({
   ...rawTheme,
   palette: {
     type: 'light',
     ...rawTheme.palette
   }
 }));
-const darkTheme = responsiveFontSizes(createMuiTheme({
+const darkThemeSource = responsiveFontSizes(createMuiTheme({
   ...rawTheme,
   palette: {
     type: 'dark',
@@ -46,6 +60,28 @@ const darkTheme = responsiveFontSizes(createMuiTheme({
   }
 }));
 
+const lightTheme: OnadTheme = {
+  ...lightThemeSource,
+  palette: {
+    ...lightThemeSource.palette,
+    platform: {
+      afreeca: '#2e6afd',
+      twitch: '#9147ff',
+      youtube: '#CC0000',
+    }
+  }
+};
+const darkTheme: OnadTheme = {
+  ...darkThemeSource,
+  palette: {
+    ...darkThemeSource.palette,
+    platform: {
+      afreeca: '#2e6afd',
+      twitch: '#9147ff',
+      youtube: '#CC0000',
+    }
+  }
+};
 const MainPageTheme = {
   white: '#fff',
   mainBlue: blue[600],

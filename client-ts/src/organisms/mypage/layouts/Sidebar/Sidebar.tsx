@@ -4,7 +4,7 @@ import classNames from 'classnames';
 import { NavLink } from 'react-router-dom';
 // @material-ui/core components
 import {
-  Drawer, Hidden, Button, List, ListItemText, Grid,
+  Drawer, Hidden, Button, List, ListItemText, Grid, Typography,
 } from '@material-ui/core';
 import AdminNavbarLinks from '../Navbars/AdminNavbarLinks';
 import { MypageRoute } from '../../../../pages/mypage/routes';
@@ -50,11 +50,37 @@ const Sidebar = ({
           return (
             <NavLink
               to={prop.layout + prop.path}
-              // className={classes.item}
               activeClassName="active"
               key={shortid.generate()}
             >
-              <Button className={classNames(classes.itemLink, listItemClasses)}>
+              <Button
+                className={classNames(classes.itemLink, listItemClasses)}
+                /**
+                 * 참여형 광고 긴급점검 표시를 위한 처리
+                 * @since 2020. 11. 03
+                 * @by dan, martini
+                 */
+                style={prop.name === '참여형 광고' ? { backgroundColor: '#ddd' } : {}}
+              >
+                {/**
+                 * 참여형 광고 긴급점검 표시를 위한 처리
+                 * @since 2020. 11. 03
+                 * @by dan, martini
+                 */}
+                {prop.name === '참여형 광고' && (
+                <div style={{
+                  width: '100%',
+                  backgroundColor: 'red',
+                  position: 'absolute',
+                  bottom: 0,
+                  right: 0,
+                }}
+                >
+                  <Typography variant="body2" style={{ color: 'white' }}>
+                    점검중
+                  </Typography>
+                </div>
+                )}
                 <Grid container direction="column">
                   <Grid item className={classes.center}>
                     <prop.icon

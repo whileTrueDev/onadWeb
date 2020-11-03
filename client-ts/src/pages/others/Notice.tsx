@@ -14,12 +14,9 @@ import useGetRequest from '../../utils/hooks/useGetRequest';
 
 
 const useStyles = makeStyles(() => ({
-  root: {
-    paddingTop: 70
-  },
   contentBox: {
     width: 980,
-    margin: '150px auto',
+    margin: '120px auto',
     minHeight: 924,
   }
 }));
@@ -47,41 +44,38 @@ export default function PublicNotification({ match, logout }: Props): JSX.Elemen
     <div>
       <AppAppBar logout={logout} noButtons />
 
-      <div className={classes.root}>
-
-        {isDesktopWidth ? (
-          <div className={classes.contentBox}>
-            <GridContainer>
-              <GridItem xs={12}>
-                <div>
-                  {!code ? (
-                    <NoticeTable loading={noticeData.loading} data={noticeData.data || []} />
-                  ) : (
-                    <>
-                      {!noticeData.loading && noticeData.data && (
+      {isDesktopWidth ? (
+        <div className={classes.contentBox}>
+          <GridContainer>
+            <GridItem xs={12}>
+              <div>
+                {!code ? (
+                  <NoticeTable loading={noticeData.loading} data={noticeData.data || []} />
+                ) : (
+                  <>
+                    {!noticeData.loading && noticeData.data && (
                       <NoticeContents
                         data={noticeData.data.filter((obj) => String(obj.code) === code)[0]}
                       />
-                      )}
-                    </>
-                  )}
-                </div>
-              </GridItem>
-            </GridContainer>
-          </div>
-        )
-          : (
-            <div>
-              {noticeData.loading && (<CircularProgress small />)}
-              {!noticeData.loading && noticeData.data && (
-                <NoticeTableMobile data={noticeData.data} />
-              )}
-            </div>
-          )}
-
-        <div>
-          <AppFooter />
+                    )}
+                  </>
+                )}
+              </div>
+            </GridItem>
+          </GridContainer>
         </div>
+      )
+        : (
+          <div>
+            {noticeData.loading && (<CircularProgress small />)}
+            {!noticeData.loading && noticeData.data && (
+            <NoticeTableMobile data={noticeData.data} />
+            )}
+          </div>
+        )}
+
+      <div>
+        <AppFooter />
       </div>
     </div>
   );

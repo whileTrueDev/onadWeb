@@ -2,6 +2,7 @@
 import express from 'express';
 import passport from 'passport';
 // import checkEmailAuth from '../../middlewares/checkEmailAuth';
+import Axios from 'axios';
 import responseHelper from '../../middlewares/responseHelper';
 import doQuery from '../../model/doQuery';
 import checkEmailAuth from '../../middlewares/checkEmailAuth';
@@ -61,6 +62,53 @@ router.get('/twitch/callback', passport.authenticate('twitch'),
     res.redirect(`${HOST}/mypage/creator/main`);
   });
 
+// creator - afreeca 로그인
+router.get('/afreeca', (req, res) => {
+  Axios.get('https://openapi.afreecatv.com/auth/code',
+    {
+      params: { client_id: process.env.AFREECA_KEY },
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: '*/*',
+      }
+    })
+    .then((apiRes) => {
+      res.redirect(apiRes.request.res.responseUrl);
+    })
+    .catch((err) => {
+      console.log(err.response.data);
+      res.sendStatus(err.response.status);
+    });
+});
+
+// 
+router.get('/afreeca/callback', (req, res) => {
+  const afreecaCode = req.query.code;
+  Axios.post('https://openapi.afreecatv.com/auth/token',
+    {
+      grant_type: 'authorization_code',
+      client_id: process.env.AFREECA_KEY,
+      client_secret: process.env.AFREECA_SECRET_KEY,
+      code: afreecaCode,
+    },
+    {
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: '*/*',
+      }
+    })
+    .then((tokenRes) => {
+      console.log(tokenRes.data);
+      res.redirect(`${HOST}/creator`);
+    })
+    .catch((err) => {
+      if (err.response) {
+        console.log(err.response.data);
+      } else {
+        console.log(err);
+      }
+    });
+});
 
 router.route('/check')
   .get(

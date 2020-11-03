@@ -15,7 +15,7 @@ import CreatorDashboard from './creator/Dashboard';
 import CreatorManual from './creator/Manual';
 import CreatorMyPage from './creator/Mypage';
 import CreatorClickAdManage from './creator/ClickAdManage';
-import CreatorCPAManage from './creator/CPAManage';
+// import CreatorCPAManage from './creator/CPAManage';
 
 // 마케터 라우터
 
@@ -24,6 +24,7 @@ import MarketerDashboard from './marketer/Dashboard';
 import MarketerMyOffice from './marketer/MyOffice';
 import MarketerCreateCampaign from './marketer/CampaignCreate';
 import MarketerManual from './marketer/Manual';
+import CpaStop from './temp/CPA-STOP';
 
 export interface MypageRoute {
   path: string;
@@ -65,8 +66,14 @@ const dashboardRoutes: MypageRoutes = {
     {
       path: '/cpa-dashboard',
       name: '참여형 광고',
+      /**
+       * CPA referer 안오는 문제로 점검
+       * @since 2020. 11. 03
+       * @by dan, martini
+       */
       icon: HowToRegIcon,
-      component: CreatorCPAManage,
+      // component: CreatorCPAManage,
+      component: CpaStop,
       layout: '/mypage/creator',
     },
     {
@@ -89,7 +96,6 @@ const dashboardRoutes: MypageRoutes = {
       path: '/main',
       name: '대시보드',
       icon: Dashboard,
-      // component: () => <div />,
       component: MarketerDashboard, // 마케터 대시보드 컴포넌트로 수정
       layout: '/mypage/marketer',
     },

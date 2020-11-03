@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Typography } from '@material-ui/core';
 import GridContainer from '../../../atoms/Grid/GridContainer';
 import GridItem from '../../../atoms/Grid/GridItem';
 import useGetRequest from '../../../utils/hooks/useGetRequest';
@@ -55,6 +56,7 @@ export default function CPAManage(): JSX.Element {
 
   return (
     <div style={{ margin: '0px auto', maxWidth: 1430 }}>
+
       {/* 설명 */}
       <GridContainer>
         <GridItem xs={12}>

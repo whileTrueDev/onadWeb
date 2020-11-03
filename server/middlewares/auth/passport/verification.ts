@@ -252,8 +252,8 @@ const creatorTwitch = (
 
       Promise.all([
         doQuery(infoQuery, [user.creatorId, user.creatorDisplayName,
-        user.creatorMail, creatorIp, `/${creatorBannerUrl}`,
-        user.creatorName, user.creatorLogo]),
+          user.creatorMail, creatorIp, `/${creatorBannerUrl}`,
+          user.creatorName, user.creatorLogo]),
         doQuery(royaltyQuery, [user.creatorId]),
         doQuery(incomeQuery, [user.creatorId, 0, 0]),
         doQuery(priceQuery, [user.creatorId, 1, 0, 2]),
@@ -425,10 +425,24 @@ const marketerKakao: Kakao.VerifyFunction = (accessToken, refreshToken, profile,
     .catch((errorData) => done(errorData));
 };
 
+const creatorAfreeca = (
+  req: express.Request, accessToken: string,
+  refreshToken: string, profile: any,
+  done: OAuth2Strategy.VerifyCallback
+): void => {
+  // profile은 현재 afreeca API를 통해 받을 수 없음
+
+  // refresh token 적재
+
+
+};
+
+
 export default {
   marketerLocal,
   creatorTwitch,
   marketerGoogle,
   marketerNaver,
-  marketerKakao
+  marketerKakao,
+  creatorAfreeca,
 };
