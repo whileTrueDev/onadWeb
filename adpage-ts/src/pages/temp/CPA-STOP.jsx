@@ -1,20 +1,56 @@
-import React from 'react';
+import React, { useState } from 'react';
+import classnames from 'classnames';
 import Typography from '@material-ui/core/Typography';
+import { makeStyles } from '@material-ui/styles';
+
+const useStyles = makeStyles((theme) => ({
+  bibble: {
+    transition: 'transform .1s linear',
+  },
+  binggleLeft: {
+    '&:hover': {
+      transform: `rotate(45deg)` 
+    }},
+  binggleRight: {
+    '&:hover': {
+    transform: `rotate(-45deg)` 
+  }},
+  dragged: {
+    width: 300
+  }
+}))
 
 export default function CpaStop() {
+  const classes = useStyles();
+  const [bibbles, setBibbles] = useState([
+    { name: '0', dragged: false },
+    { name: '1', dragged: false },
+    { name: '2', dragged: false },
+    { name: '3', dragged: false },
+    { name: '4', dragged: false },
+    { name: '5', dragged: false },
+    { name: '6', dragged: false },
+    { name: '7', dragged: false },
+  ]);
+
   return (
     <div style={{
       display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', width: '100%', height: '100vh'
     }}
     >
       <div style={{ padding: 40 }}>
-        {[0, 0, 0, 0, 0, 0, 0, 0].map((ele) => (
+        {bibbles.map((bibble) => (
           <img
-            key={ele}
+            key={bibble.name}
             src="https://static-cdn.jtvnw.net/emoticons/v2/86/default/light/3.0"
-            alt=""
             width={50}
             height={50}
+            onDragStart={() => { handleDragged(bibble.name) }}
+            className={classnames({
+              [classes.bibble]: true,
+              [classes.binggleLeft]: Boolean(Math.round(Math.random())),
+              [classes.binggleRight]: Boolean(Math.round(Math.random())),
+            })}
           />
         ))}
       </div>
