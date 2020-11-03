@@ -2,7 +2,7 @@ import identifier from './programIdentifier';
 import hiddenEventHandler from './hiddenEventHandler';
 import imageClicker from './imageClicker';
 
-const socket: any = io();
+const socket: any = io({transports: ['websocket']});
 const programType: string = identifier();
 const history: number = window.history.length;
 const THIS_URL: string = window.location.href;
@@ -40,7 +40,7 @@ socket.on('img receive', (msg: string[]) => {
     $('.banner-area').fadeOut(1000, () => {
       $('.img-area').empty().append(`
       <video class="banner-area" name="${msg[1]}" autoPlay loop muted width="100%" height="100%">
-        <source src={${msg[0]}} type="video/mp4" />
+        <source src=${msg[0]} type="video/mp4" />
       </video>
       `);
       setTimeout(() => {
@@ -50,7 +50,7 @@ socket.on('img receive', (msg: string[]) => {
   } else if ($('.img-area').find('.banner-area').length === 1 && isVideo(msg[0]) === false) { // 기존 배너 있고 이미지일 때
     $('.banner-area').fadeOut(1000, () => {
       $('.img-area').empty().append(`
-      <img src="${msg[0]}" class="banner-area" name="${msg[1]}" width="100%" height="100%">
+      <img src=${msg[0]} class="banner-area" name="${msg[1]}" width="100%" height="100%">
       `);
       setTimeout(() => {
         $('.marquee').fadeOut(1000);
@@ -66,7 +66,7 @@ socket.on('img receive', (msg: string[]) => {
       $('.marquee').fadeOut(1000);
     }, 9000);
   } else { // 기존배너 없고 이미지일 때
-    $('.img-area').empty().append(`<img src="${msg[0]}" class="banner-area" name="${msg[1]}" width="100%" height="100%">`);
+    $('.img-area').empty().append(`<img src=${msg[0]} class="banner-area" name="${msg[1]}" width="100%" height="100%">`);
     setTimeout(() => {
       $('.marquee').fadeOut(1000);
     }, 9000);
