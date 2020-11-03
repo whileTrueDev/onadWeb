@@ -72,7 +72,13 @@ export default function CreatorLoginForm({
           ))}
 
           <LoginButton loginLink={`${HOST}/login/twitch`} logo="/pngs/logo/twitch/TwitchGlitchWhite.png" text="트위치 아이디로 로그인" platform="twitch" />
-          <LoginButton loginLink={`${HOST}/login/afreeca`} logo="/pngs/logo/afreeca/onlyFace.png" text="아프리카TV 아이디로 로그인" platform="afreeca" />
+          {/* 아프리카 TV로 로그인 버튼 - 기능 구현 완료 후 주석 제거 필요 @hwasurr */}
+          {/* <LoginButton
+            loginLink={`${HOST}/login/afreeca`}
+            logo="/pngs/logo/afreeca/onlyFace.png"
+            text="아프리카TV 아이디로 로그인"
+            platform="afreeca"
+          /> */}
         </DialogContent>
         {loading && (
           <div className={classes.buttonLoading}><CircularProgress /></div>
