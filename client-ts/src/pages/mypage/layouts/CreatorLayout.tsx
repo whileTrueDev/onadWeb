@@ -2,7 +2,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Switch, Route } from 'react-router-dom';
 import Navbar from '../../../organisms/mypage/layouts/Navbars/Navbar';
-import Sidebar from '../../../organisms/mypage/layouts/Sidebar/Sidebar';
 import Footer from '../../../organisms/mypage/layouts/Footer/Footer';
 import allRoutes from '../routes';
 import history from '../../../history';
@@ -10,6 +9,7 @@ import useLoginValue from '../../../utils/hooks/useLoginValue';
 // css
 import useLayoutStyles from './Layout.style';
 import '../../../assets/onad.css';
+import ResponsiveDrawer from '../../../organisms/mypage/layouts/Sidebar/ResponsiveDrawer';
 
 const CreatorDashboard = (): JSX.Element => {
   const classes = useLayoutStyles();
@@ -43,9 +43,8 @@ const CreatorDashboard = (): JSX.Element => {
 
   return (
     <div className={classes.wrapper}>
-      <Sidebar
+      <ResponsiveDrawer
         routes={allRoutes.creator.filter((r) => !r.noTab)}
-        logo="/pngs/logo/onad_logo_vertical_white.png"
         mobileOpen={mobileOpen}
         handleDrawerToggle={handleDrawerToggle}
       />

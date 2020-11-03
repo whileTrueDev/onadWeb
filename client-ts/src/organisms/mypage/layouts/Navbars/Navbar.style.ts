@@ -41,6 +41,9 @@ const useNavbarStyles = makeStyles((theme: Theme) => ({
   appResponsive: {
     top: '8px',
   },
+  menuButton: {
+    marginRight: theme.spacing(2),
+  },
 }));
 
 export default useNavbarStyles;

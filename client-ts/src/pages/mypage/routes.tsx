@@ -33,6 +33,7 @@ export interface MypageRoute {
   component?: () => JSX.Element;
   layout: string;
   noTab?: boolean;
+  needNextDivider?: boolean;
 }
 
 export interface MypageRoutes {
@@ -75,6 +76,7 @@ const dashboardRoutes: MypageRoutes = {
       // component: CreatorCPAManage,
       component: CpaStop,
       layout: '/mypage/creator',
+      needNextDivider: true,
     },
     {
       path: '/manual',
