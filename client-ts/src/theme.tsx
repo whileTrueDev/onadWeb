@@ -1,4 +1,4 @@
-import { createMuiTheme, responsiveFontSizes, Theme } from '@material-ui/core/styles';
+import { createMuiTheme, Theme } from '@material-ui/core/styles';
 import {
   blue, yellow, grey,
   red, cyan, blueGrey
@@ -13,14 +13,12 @@ export interface OnadPalette extends Palette {
     youtube: string;
   };
 }
-
 export interface OnadTheme extends Theme {
-  handleThemeChange?: () => void;
+  handleThemeChange: () => void;
   palette: OnadPalette;
 }
 
 const defaultTheme = createMuiTheme();
-
 const rawTheme = {
   palette: {
     primary: {
@@ -45,43 +43,13 @@ const rawTheme = {
   }
 };
 
-const lightThemeSource = responsiveFontSizes(createMuiTheme({
-  ...rawTheme,
-  palette: {
-    type: 'light',
-    ...rawTheme.palette
-  }
-}));
-const darkThemeSource = responsiveFontSizes(createMuiTheme({
-  ...rawTheme,
-  palette: {
-    type: 'dark',
-    ...rawTheme.palette
-  }
-}));
+const platformOverrides = {
+  afreeca: '#2e6afd',
+  twitch: '#9147ff',
+  youtube: '#CC0000',
+};
 
-const lightTheme: OnadTheme = {
-  ...lightThemeSource,
-  palette: {
-    ...lightThemeSource.palette,
-    platform: {
-      afreeca: '#2e6afd',
-      twitch: '#9147ff',
-      youtube: '#CC0000',
-    }
-  }
-};
-const darkTheme: OnadTheme = {
-  ...darkThemeSource,
-  palette: {
-    ...darkThemeSource.palette,
-    platform: {
-      afreeca: '#2e6afd',
-      twitch: '#9147ff',
-      youtube: '#CC0000',
-    }
-  }
-};
+
 const MainPageTheme = {
   white: '#fff',
   mainBlue: blue[600],
@@ -94,4 +62,4 @@ const MainPageTheme = {
   ...rawTheme
 };
 
-export default { lightTheme, darkTheme, MainPageTheme };
+export default { rawTheme, MainPageTheme, platformOverrides };

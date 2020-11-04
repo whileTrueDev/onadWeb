@@ -10,7 +10,7 @@ const useNavbarStyles = makeStyles((theme: Theme) => ({
     width: '100%',
     paddingTop: '10px',
     zIndex: 10,
-    color: theme.palette.grey[300],
+    color: theme.palette.text.primary,
     border: '0',
     borderRadius: '3px',
     padding: '10px 0',
@@ -19,8 +19,8 @@ const useNavbarStyles = makeStyles((theme: Theme) => ({
     display: 'block',
   },
   container: {
-    paddingRight: '15px',
-    paddingLeft: '15px',
+    paddingRight: theme.spacing(2),
+    paddingLeft: theme.spacing(2),
     marginRight: 'auto',
     marginLeft: 'auto',
     minHeight: '50px',
@@ -37,9 +37,6 @@ const useNavbarStyles = makeStyles((theme: Theme) => ({
     '&:hover,&:focus': {
       background: 'transparent',
     },
-  },
-  appResponsive: {
-    top: '8px',
   },
   menuButton: {
     marginRight: theme.spacing(2),

@@ -27,7 +27,7 @@ const CreatorDashboard = (): JSX.Element => {
   const mainPanel = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    document.title = '온애드 | 대시보드';
+    document.title = '온애드 | 마이페이지';
     if (mainPanel && mainPanel.current) {
       mainPanel.current.scrollTop = 0;
     }

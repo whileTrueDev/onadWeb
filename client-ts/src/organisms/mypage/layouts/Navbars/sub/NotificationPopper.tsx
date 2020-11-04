@@ -1,30 +1,29 @@
 import React from 'react';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import {
-  Typography, Divider, Badge, Popper, List, ListSubheader
+  Typography, Divider, Badge, Popover, List, ListItem,
 } from '@material-ui/core';
 import MenuItem from '@material-ui/core/MenuItem';
-import usePatchRequest from '../../../../utils/hooks/usePatchRequest';
+import usePatchRequest from '../../../../../utils/hooks/usePatchRequest';
 // types
-import { Notification } from './NotificationType';
+import { Notification } from '../NotificationType';
 
 const useStyles = makeStyles((theme: Theme) => ({
   contents: {
     color: theme.palette.text.primary,
-    width: 420,
-    maxHeight: 540,
-    zIndex: 10,
+    minWidth: 320,
+    maxWidth: 400,
+    minHeight: 400,
     backgroundColor: theme.palette.background.paper,
     boxShadow: theme.shadows[2],
     overflowX: 'hidden',
     overflowY: 'auto'
   },
   title: {
-    padding: '8px 0px',
+    padding: theme.spacing(1),
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    borderBottom: `1px solid ${theme.palette.divider}`
   },
   message: {
     marginTop: 4, marginBottom: 4
@@ -33,14 +32,16 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const UNREAD_STATE = 0; // 읽지않음 상태값
 
-function NotificationPopper({
+export default function NotificationPopover({
   anchorEl,
   notificationData,
-  successCallback
+  successCallback,
+  handleAnchorClose
 }: {
   anchorEl: HTMLElement;
   notificationData: Notification[];
   successCallback: () => void;
+  handleAnchorClose: () => void;
 }): JSX.Element {
   const userType = window.location.pathname.split('/')[2];
   const classes = useStyles();
@@ -49,30 +50,28 @@ function NotificationPopper({
     successCallback(); // 개인 알림 데이터 리로드
   });
   return (
-    <Popper
-      placement="top-end"
-      anchorEl={anchorEl}
+    <Popover
       open={Boolean(anchorEl)}
-      disablePortal
-      modifiers={{
-        flip: { enabled: true, },
-        preventOverflow: { enabled: false, boundariesElement: 'scrollParent', }
+      anchorEl={anchorEl}
+      onClose={handleAnchorClose}
+      anchorOrigin={{
+        vertical: 'bottom',
+        horizontal: 'right',
       }}
+      transformOrigin={{
+        vertical: 'top',
+        horizontal: 'right',
+      }}
+      disableScrollLock
+      style={{ maxHeight: 600 }}
     >
       {/* 공지 메뉴 컴포넌트 */}
-      <List
-        className={classes.contents}
-        subheader={(
-          <ListSubheader>
-            <div className={classes.title}>
-              <Typography variant="h5">알림</Typography>
-              <Typography align="right" gutterBottom variant="caption">
-                클릭시 읽음처리됩니다.
-              </Typography>
-            </div>
-          </ListSubheader>
-        )}
-      >
+      <List className={classes.contents}>
+        <ListItem style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <Typography variant="h6">알림</Typography>
+          <Typography variant="caption" align="right">클릭시 읽음처리됩니다.</Typography>
+        </ListItem>
+        <Divider />
         <div>
           {notificationData.map((noti) => (
             <div key={noti.index}>
@@ -107,8 +106,6 @@ function NotificationPopper({
         </div>
 
       </List>
-    </Popper>
+    </Popover>
   );
 }
-
-export default NotificationPopper;

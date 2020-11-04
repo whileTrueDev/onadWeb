@@ -37,7 +37,6 @@ function Navbar(props: NavbarProps): JSX.Element {
     <AppBar className={classes.appBar}>
       <Toolbar className={classes.container}>
         <div className={classes.flex}>
-
           <Hidden mdUp>
             <IconButton
               aria-label="open drawer"
@@ -55,7 +54,6 @@ function Navbar(props: NavbarProps): JSX.Element {
           ) : (null)}
 
         </div>
-
         <AdminNavbarLinks />
       </Toolbar>
     </AppBar>

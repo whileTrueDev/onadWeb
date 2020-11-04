@@ -6,9 +6,8 @@ import useNotificationCardStyles from './NotificationCard.style';
 const ContractionCard = (): JSX.Element => {
   const classes = useNotificationCardStyles();
   return (
-
-    <Alert severity="error">
-      <Grid container direction="row" spacing={1}>
+    <Alert severity="error" variant="outlined">
+      <Grid container direction="row">
         <Grid item container direction="row" className={classes.text}>
           <Grid item>
             <Typography className={classes.body}>
