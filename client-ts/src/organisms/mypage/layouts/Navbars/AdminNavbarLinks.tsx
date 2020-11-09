@@ -6,7 +6,7 @@ import IconButton from '@material-ui/core/IconButton';
 // @material-ui/icons
 import Notifications from '@material-ui/icons/Notifications';
 // core components
-import { Avatar } from '@material-ui/core';
+import { Avatar, makeStyles } from '@material-ui/core';
 import NotificationPopper from './sub/NotificationPopper';
 // utils
 import axios from '../../../../utils/axios';
@@ -19,7 +19,12 @@ import useAnchorEl from '../../../../utils/hooks/useAnchorEl';
 import { NoticeDataParam, NoticeDataRes } from './NotificationType';
 import UserPopover from './sub/UserPopover';
 
+const useStyles = makeStyles((theme) => ({
+  avatar: { width: theme.spacing(4), height: theme.spacing(4) }
+}));
+
 function HeaderLinks(): JSX.Element {
+  const classes = useStyles();
   const userType = window.location.pathname.split('/')[2];
 
   // 개인 알림
@@ -88,7 +93,7 @@ function HeaderLinks(): JSX.Element {
       </Tooltip>
 
       <IconButton size="small" onClick={userLogoAnchor.handleAnchorOpen}>
-        <Avatar />
+        <Avatar className={classes.avatar} />
       </IconButton>
 
 
