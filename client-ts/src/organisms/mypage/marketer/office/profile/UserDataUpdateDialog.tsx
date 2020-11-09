@@ -177,6 +177,9 @@ const UserDataUpdateDialog = (props: UserDataUpdateDialogProps): JSX.Element => 
         case 'phone':
           return formattedPhone;
         case 'mail':
+          if(marketerCustomDomain !== ''){
+            return `${state.email}@${marketerCustomDomain}`;
+          }
           return `${state.email}@${state.domain}`;
         case 'name':
           return state.name;
@@ -184,8 +187,11 @@ const UserDataUpdateDialog = (props: UserDataUpdateDialogProps): JSX.Element => 
           return '';
       }
     };
+
     const value = getValue(type);
     doPatchRequest({ type, value });
+
+    setCustomDomain('');
     snack.handleOpen();
   };
 
