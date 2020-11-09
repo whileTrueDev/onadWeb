@@ -3,15 +3,8 @@ import { Theme, makeStyles } from '@material-ui/core/styles';
 
 const useNotificationCardStyles = makeStyles((theme: Theme) => ({
   root: {
-    width: '100%',
-    heigth: '100%',
-    [theme.breakpoints.down('sm')]: {
-      width: '100%',
-    },
-    margin: 0,
-    marginBottom: '10px',
-    fontSize: '1.6rem',
-    fontWeight: 700
+    marginBottom: theme.spacing(2),
+    maxWidth: 800
   },
   body: {
     marginRight: '4px',

@@ -1,6 +1,6 @@
 // 환경변수를 위해. dev환경: .env 파일 / production환경: docker run의 --env-file인자로 넘김.
+import 'moment/locale/ko';
 import dotenv from 'dotenv';
-
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Router, Switch, Route } from 'react-router-dom';
@@ -25,7 +25,6 @@ import NotFound from './pages/others/NotFound';
 import useOnadThemeType from './utils/hooks/useOnadThemeType';
 
 dotenv.config();
-
 const OnadIndex = (): JSX.Element => {
   // *******************************************
   // Theme Configurations
