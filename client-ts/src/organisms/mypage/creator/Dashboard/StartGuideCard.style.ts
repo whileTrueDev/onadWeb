@@ -21,18 +21,7 @@ const useContractionStyles = makeStyles((theme: Theme) => ({
     backgroundColor: theme.palette.background.paper,
     fontSize: 13,
   },
-  inDialogContent: {
-    padding: theme.spacing(1),
-    outline: 'none',
-    [theme.breakpoints.down('xs')]: {
-      fontWeight: 500,
-      fontSize: '10px',
-    },
-  },
-  actionsContainer: {
-    marginTop: theme.spacing(1),
-    float: 'right',
-  },
+  actionsContainer: { textAlign: 'right', },
   termTitle: {
     [theme.breakpoints.down('xs')]: {
       fontSize: '12px',

@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { Typography } from '@material-ui/core';
 import GridContainer from '../../../atoms/Grid/GridContainer';
 import GridItem from '../../../atoms/Grid/GridItem';
 import useGetRequest from '../../../utils/hooks/useGetRequest';
@@ -18,10 +17,21 @@ import HowToCPADialog from '../../../organisms/mypage/creator/CPAManage/HowToCPA
 import textsource from '../../../organisms/mypage/creator/CPAManage/source/AgreementText';
 // types
 import { CampaignResult, AdPickIncome, AdPickMetrics } from '../../../organisms/mypage/creator/CPAManage/AdpickTypes';
-import { ContractionDataType } from '../../../organisms/mypage/creator/Dashboard/ContractionCard';
 import CPAIntroduction from '../../../organisms/mypage/creator/CPAManage/CPAIntroduction';
 
-
+export interface ContractionDataType {
+  creatorId: string;
+  creatorName: string;
+  creatorIp: string;
+  creatorMail: string;
+  creatorAccountNumber: string;
+  creatorContractionAgreement: number;
+  creatorTwitchId: string;
+  realName: string;
+  creatorLogo: string;
+  NowIp: string;
+  CPAAgreement: number;
+}
 export default function CPAManage(): JSX.Element {
   const contractionGet = useGetRequest<null, ContractionDataType>('/creator');
   const CPAmainData = useGetRequest<null, AdPickMetrics>('/creator/cpa/adpick/mainIndicator');

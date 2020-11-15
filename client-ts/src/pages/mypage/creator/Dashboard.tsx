@@ -1,11 +1,11 @@
 import React from 'react';
 // atoms
-import { Hidden, Button, } from '@material-ui/core';
+import { Hidden, } from '@material-ui/core';
 import GridContainer from '../../../atoms/Grid/GridContainer';
 import GridItem from '../../../atoms/Grid/GridItem';
 import Snackbar from '../../../atoms/Snackbar/Snackbar';
 // organisms
-import ContractionCard, { ContractionDataType } from '../../../organisms/mypage/creator/Dashboard/ContractionCard';
+import StartGuideCard from '../../../organisms/mypage/creator/Dashboard/StartGuideCard';
 import NotificationCard from '../../../organisms/mypage/creator/Dashboard/NotificationCard';
 import IncomeCard, { IncomeCashRes } from '../../../organisms/mypage/creator/Dashboard/IncomeCard';
 import WithdrawalDialog from '../../../organisms/mypage/creator/Dashboard/WithdrawalDialog';
@@ -16,9 +16,13 @@ import IncomeChart, {
 import BannerCard, { CurrentBannerRes } from '../../../organisms/mypage/creator/Dashboard/BannerCard';
 import UrlCard, { OverlayUrlRes } from '../../../organisms/mypage/creator/Dashboard/OverlayUrlCard';
 import DashboardLoading from './Dashboard.loading';
+import NoticeCard, { NoticeData } from '../../../organisms/mypage/creator/Dashboard/NoticeCard';
 // hooks
 import useGetRequest from '../../../utils/hooks/useGetRequest';
 import useDialog from '../../../utils/hooks/useDialog';
+import CustomerServiceCard from '../../../organisms/mypage/creator/Dashboard/CustomerServiceCard';
+import EventInfoCard from '../../../organisms/mypage/creator/Dashboard/EventInfoCard';
+import { ContractionDataType } from './CPAManage';
 
 const Dashboard = (): JSX.Element => {
   // 계약 정보 조회
@@ -37,6 +41,8 @@ const Dashboard = (): JSX.Element => {
   const currentBannerGet = useGetRequest<null, CurrentBannerRes[]>('/creator/banner/active');
   // 배너 송출 URL 정보 조회
   const overlayUrlGet = useGetRequest<null, OverlayUrlRes>('/creator/banner/overlay');
+  // 공지사항 정보 조회
+  const noticeGet = useGetRequest<null, NoticeData[]>('/notice');
   // 오버레이 url 복사 성공 알림 스낵바를 위한 객체
   const snack = useDialog();
 
@@ -54,24 +60,16 @@ const Dashboard = (): JSX.Element => {
   // *************************** 작업중 빼둔것.
   return (
     <>
-      {(contractionGet.loading || incomeCashGet.loading
+      <div style={{ margin: '0 auto', maxWidth: 1430 }}>
+        {(contractionGet.loading || incomeCashGet.loading
         || clicksGet.loading || levelGet.loading || incomeChartGet.loading
         || currentBannerGet.loading || overlayUrlGet.loading) ? (
           <DashboardLoading />
-        ) : (
-          <GridContainer direction="row">
+          ) : (
+            <GridContainer direction="row">
 
-            {(incomeCashGet.data && incomeCashGet.data.creatorAccountNumber) && (
-            <Button
-              color="primary"
-              onClick={(): void => { handleOpen(); }}
-            >
-              출금신청
-            </Button>
-            )}
-
-            {/* 출금신청 다이얼로그 */}
-            {incomeCashGet.data && Boolean(incomeCashGet.data.creatorContractionAgreement)
+              {/* 출금신청 다이얼로그 */}
+              {incomeCashGet.data && Boolean(incomeCashGet.data.creatorContractionAgreement)
             && incomeCashGet.data.creatorAccountNumber && (
               <WithdrawalDialog
                 open={open}
@@ -80,67 +78,89 @@ const Dashboard = (): JSX.Element => {
                 accountNumber={incomeCashGet.data.creatorAccountNumber}
                 receivable={incomeCashGet.data.creatorReceivable}
               />
-            )}
-            {/* 크리에이터 계약 */}
-            <GridItem sm={12} xl={10}>
+              )}
+
+              {/* 배너 권장 크기 및 무효화 공지 */}
               {!contractionGet.loading && contractionGet.data
-              && !contractionGet.data.creatorContractionAgreement && (
-                <ContractionCard
-                  contractionData={contractionGet.data}
+                && Boolean(contractionGet.data.creatorContractionAgreement)
+                && (
+                  <Hidden smDown>
+                    <GridItem xs={12}>
+                      <NotificationCard />
+                    </GridItem>
+                  </Hidden>
+                )}
+
+              {/* 온애드 시작 가이드 */}
+              <GridItem xs={12} lg={6}>
+                <StartGuideCard
                   doContractionDataRequest={contractionGet.doGetRequest}
                 />
-              )}
-            </GridItem>
+              </GridItem>
 
-            {/* 배너 권장 크기 및 무효화 공지 */}
-            <Hidden smDown>
-              <NotificationCard />
-            </Hidden>
+              {/* 배너 광고 송출 URL */}
+              <GridItem xs={12} lg={6}>
+                {!overlayUrlGet.loading && overlayUrlGet.data && (
+                <UrlCard
+                  overlayUrlData={overlayUrlGet.data}
+                  handleSnackOpen={snack.handleOpen}
+                />
+                )}
+              </GridItem>
 
-            <GridItem xs={12} lg={6}>
-              <GridContainer>
-                {/* 수익금 카드 */}
-                <GridItem xs={12}>
-                  {!incomeCashGet.loading && incomeCashGet.data && (
-                    <IncomeCard incomeData={incomeCashGet.data} />
-                  )}
-                </GridItem>
+              {/* 유저 정보 및 수익금 카드 */}
+              <GridItem xs={12} lg={6}>
+                {!incomeCashGet.loading && incomeCashGet.data && (
+                <IncomeCard
+                  incomeData={incomeCashGet.data}
+                  handleWithdrawalDialogOpen={handleOpen}
+                />
+                )}
+              </GridItem>
 
-                {/* 광고페이지 카드 */}
-                <GridItem xs={12}>
-                  {!levelGet.loading && levelGet.data && !clicksGet.loading && clicksGet.data && (
-                    <AdPageCard levelData={levelGet.data} clicksData={clicksGet.data} />
-                  )}
-                </GridItem>
-              </GridContainer>
-            </GridItem>
-
-            {/* 수익금 차트 */}
-            <GridItem xs={12} xl={6}>
-              {!incomeChartGet.loading && (
+              {/* 수익금 차트 카드 */}
+              <GridItem xs={12} lg={6}>
+                {!incomeChartGet.loading && (
                 <IncomeChart incomeChartData={incomeChartGet.data ? incomeChartGet.data : []} />
-              )}
-            </GridItem>
+                )}
+              </GridItem>
 
-            {/* 현재 송출중 배너 카드 */}
-            <GridItem xs={12} sm={6} lg={4}>
-              {!incomeChartGet.loading && (
+              {/* 현재 송출중 배너 카드 */}
+              <GridItem xs={12} sm={6}>
+                {!incomeChartGet.loading && (
                 <BannerCard
                   currentBannerData={currentBannerGet.data ? currentBannerGet.data : []}
                 />
-              )}
-            </GridItem>
+                )}
+              </GridItem>
 
-            {/* 배너 광고 송출 URL */}
-            <GridItem xs={12} sm={6} lg={4}>
-              {!overlayUrlGet.loading && overlayUrlGet.data && (
-                <UrlCard overlayUrlData={overlayUrlGet.data} handleSnackOpen={snack.handleOpen} />
-              )}
-            </GridItem>
+              {/* 광고페이지 카드 */}
+              <GridItem xs={12} sm={6}>
+                {!levelGet.loading && levelGet.data && !clicksGet.loading && clicksGet.data && (
+                <AdPageCard levelData={levelGet.data} clicksData={clicksGet.data} />
+                )}
+              </GridItem>
 
-            <GridItem xs={12} sm={1} xl={2} />
-          </GridContainer>
-        )}
+              {/* 공지사항 카드 */}
+              <GridItem xs={12} sm={6}>
+                {!noticeGet.loading && noticeGet.data && (
+                  <NoticeCard noticeData={noticeGet.data} />
+                )}
+              </GridItem>
+
+              {/* 고객센터 카드 */}
+              <GridItem xs={12} sm={3}>
+                <CustomerServiceCard />
+              </GridItem>
+
+              {/* 이벤트 알림 카드 */}
+              <GridItem xs={12} sm={3}>
+                <EventInfoCard />
+              </GridItem>
+
+            </GridContainer>
+          )}
+      </div>
 
       <Snackbar
         color="success"

@@ -1,6 +1,6 @@
 import React from 'react';
 import Typography from '@material-ui/core/Typography';
-import PrettoSlider from '../../../../atoms/PrettoSlider';
+import PrettoSlider from '../../../../atoms/AdLevelSlider';
 
 interface LevelBarProps {
   level: number;

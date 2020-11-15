@@ -19,7 +19,6 @@ const useFooterStyle = makeStyles((theme: Theme) => ({
   right: {
     padding: '10px 0',
     margin: '0',
-    fontSize: '14px',
     float: 'right',
   },
   footer: {

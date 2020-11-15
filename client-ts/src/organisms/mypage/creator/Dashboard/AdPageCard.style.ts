@@ -34,10 +34,6 @@ const useLandingCardStyles = makeStyles((theme: Theme) => ({
     fontWeight: 700,
     marginLeft: '3px'
   },
-  level: {
-    fontWeight: 700,
-    marginLeft: '1px'
-  }
 }));
 
 export default useLandingCardStyles;

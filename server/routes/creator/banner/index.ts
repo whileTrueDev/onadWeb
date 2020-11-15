@@ -196,7 +196,7 @@ router.route('/active')
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
       const { creatorId } = responseHelper.getSessionData(req);
       const query = `
-          SELECT cp.bannerId, bannerSrc
+          SELECT cp.bannerId, bannerSrc, cp.campaignName, cp.campaignDescription
           FROM campaignTimestamp AS ct 
           JOIN campaign AS cp 
           ON ct.campaignId = cp.campaignId 

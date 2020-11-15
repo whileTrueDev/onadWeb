@@ -27,7 +27,7 @@ function Footer(): JSX.Element {
           </List>
         </div>
         <div className={classes.right}>
-          <Typography color="textPrimary">
+          <Typography variant="body2">
             &copy;
             {`${new Date().getFullYear()} while True Corp. All rights Reserved`}
           </Typography>

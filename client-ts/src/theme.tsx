@@ -24,7 +24,7 @@ const rawTheme = {
     primary: {
       light: lighten(cyan[400], 0.07),
       main: cyan[600],
-      dark: darken(cyan[700], 0.07),
+      dark: darken(cyan[600], 0.07),
       // contrastText: will be calculated to contrast with palette.primary.main
       contrastText: defaultTheme.palette.getContrastText(cyan[700]),
     },

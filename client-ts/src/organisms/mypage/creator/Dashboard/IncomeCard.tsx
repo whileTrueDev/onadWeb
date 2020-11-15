@@ -1,15 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
+import classnames from 'classnames';
 import moment from 'moment';
 import { makeStyles } from '@material-ui/core/styles';
 import {
-  Grid, Typography, Divider, Paper, Avatar, Chip
+  Typography, Divider, Paper, Avatar, Chip
 } from '@material-ui/core';
-import AttachMoney from '@material-ui/icons/AttachMoney';
-import DateRange from '@material-ui/icons/DateRange';
-import CustomCard from '../../../../atoms/CustomCard';
 import Button from '../../../../atoms/CustomButtons/Button';
-import WithdrawalDialog from './WithdrawalDialog';
-import history from '../../../../history';
 import { useGetRequest } from '../../../../utils/hooks';
 
 const useStyles = makeStyles((theme) => ({
@@ -19,6 +15,8 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'center'
   },
   container: {
+    minHeight: 400,
+    marginTop: theme.spacing(1),
     padding: theme.spacing(4),
     [theme.breakpoints.down('xs')]: {
       padding: theme.spacing(1)
@@ -32,11 +30,14 @@ const useStyles = makeStyles((theme) => ({
       width: 40, height: 40
     }
   },
-  successChip: {
+  chip: {
     marginRight: theme.spacing(1) / 2,
-    backgroundColor: theme.palette.success.main,
     color: theme.palette.common.white
   },
+  success: { backgroundColor: theme.palette.success.main, },
+  error: { backgroundColor: theme.palette.error.main },
+  black: { backgroundColor: theme.palette.common.black },
+  info: { backgroundColor: theme.palette.info.main }
 }));
 
 export interface IncomeCashRes {
@@ -50,8 +51,11 @@ export interface IncomeCashRes {
 }
 interface IncomeCardProps {
   incomeData: IncomeCashRes;
+  handleWithdrawalDialogOpen: () => void;
 }
-const IncomeCard = ({ incomeData }: IncomeCardProps): JSX.Element => {
+const IncomeCard = ({
+  incomeData, handleWithdrawalDialogOpen
+}: IncomeCardProps): JSX.Element => {
   const classes = useStyles();
 
   const profileData = useGetRequest('/creator');
@@ -73,7 +77,6 @@ const IncomeCard = ({ incomeData }: IncomeCardProps): JSX.Element => {
     }
     return result;
   }
-  console.log(profileData);
   return (
     <Paper className={classes.container}>
 
@@ -89,6 +92,8 @@ const IncomeCard = ({ incomeData }: IncomeCardProps): JSX.Element => {
             <Typography variant="h5" style={{ fontWeight: 'bold' }}>
               {profileData.data ? profileData.data.creatorName : ''}
               &nbsp;
+              <Typography component="span" variant="body2">아프리카,</Typography>
+              <Typography component="span" variant="body2">트위치</Typography>
             </Typography>
             <Typography variant="caption">
               {profileData.data ? profileData.data.creatorMail : ''}
@@ -99,12 +104,19 @@ const IncomeCard = ({ incomeData }: IncomeCardProps): JSX.Element => {
             style={{ marginRight: 4 }}
             size="small"
             color="primary"
-            label={profileData.data && profileData.data.creatorContractionAgreement === 1 ? '계약완료' : '미계약'}
+            label={profileData.data && profileData.data.creatorContractionAgreement === 1
+              ? '이용약관 동의완료'
+              : '이용약관 미동의'}
           />
           <Chip
-            className={classes.successChip}
+            className={classnames(classes.chip, classes.success)}
             size="small"
             label={profileData.data && getSettlementString(profileData.data.settlementState)}
+          />
+          <Chip
+            className={classnames(classes.chip, classes.info)}
+            size="small"
+            label="배너 오버레이 설정완료"
           />
         </div>
       </div>
@@ -123,8 +135,37 @@ const IncomeCard = ({ incomeData }: IncomeCardProps): JSX.Element => {
           {`${incomeData.creatorReceivable.toLocaleString()} 원`}
         </Typography>
         <Typography color="textSecondary" variant="caption">{`최근 수익 반영: ${moment(incomeData.date).fromNow()}`}</Typography>
+
+        {(incomeData && incomeData.creatorAccountNumber) && (
+        <div style={{ textAlign: 'right' }}>
+          <Button
+            color="primary"
+            size="small"
+            onClick={(): void => { handleWithdrawalDialogOpen(); }}
+          >
+            출금신청
+          </Button>
+        </div>
+        )}
       </div>
 
+      <Divider />
+
+      <div style={{ margin: 8, marginTop: 16, overflowY: 'auto' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', padding: '4px 0px' }}>
+          <Typography>123,456원 출금 신청 완료, 정산 대기중...</Typography>
+          <Chip size="small" className={classnames(classes.chip, classes.success)} style={{ marginLeft: 8 }} label="00월 정산 예정" />
+        </div>
+        <div style={{ display: 'flex', justifyContent: 'space-between', padding: '4px 0px' }}>
+          <Typography>123,456원 출금 신청 진행중...</Typography>
+          <Chip size="small" className={classnames(classes.chip, classes.success)} style={{ marginLeft: 8 }} label="00월 정산 예정" />
+        </div>
+        <div style={{ textAlign: 'right' }}>
+          <Typography variant="caption" color="textSecondary">
+            자세히 보기
+          </Typography>
+        </div>
+      </div>
     </Paper>
   );
 };
