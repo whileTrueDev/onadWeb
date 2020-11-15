@@ -13,6 +13,7 @@ import ContractionSection from './guides/ContractionSection';
 import SetOverlaySection from './guides/SetOverlaySection';
 import SetSettlementSection from './guides/SetSettlementSection';
 import GuideIntroduction from './guides/GuideIntroduction';
+import SetClickAdSection from './guides/SetClickAdSection';
 
 interface ContractionCardProps {
   doContractionDataRequest: () => void;
@@ -66,6 +67,7 @@ const ContractionCard = ({
       />,
     },
     { label: '배너광고 준비하기', component: <SetOverlaySection />, },
+    { label: '클릭광고 준비하기', component: <SetClickAdSection />, },
     { label: '출금 정산 등록하기', component: <SetSettlementSection />, },
   ];
 
