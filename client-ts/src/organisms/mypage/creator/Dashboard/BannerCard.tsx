@@ -7,6 +7,7 @@ import Button from '../../../../atoms/CustomButtons/Button';
 import CustomCard from '../../../../atoms/CustomCard';
 import StyledItemText from '../../../../atoms/StyledItemText';
 import VideoBanner from '../../../../atoms/Banner/VideoBanner';
+import RemotePageOpenButton from '../RemotePage/sub/RemotePageOpenButton';
 import isVideo from '../../../../utils/isVideo';
 import history from '../../../../history';
 
@@ -57,12 +58,15 @@ function BannerCard({ currentBannerData }: BannerCardProps): JSX.Element {
     <CustomCard
       iconComponent={<BrandingWatermark />}
       buttonComponent={(
-        <Button
-          color="primary"
-          onClick={(): void => { history.push('/mypage/creator/banner'); }}
-        >
-          배너광고내역
-        </Button>
+        <>
+          <RemotePageOpenButton />
+          <Button
+            color="primary"
+            onClick={(): void => { history.push('/mypage/creator/banner'); }}
+          >
+            배너광고내역
+          </Button>
+        </>
       )}
     >
       <Grid container direction="column" spacing={2}>

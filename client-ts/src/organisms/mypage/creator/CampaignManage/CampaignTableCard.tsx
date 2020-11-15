@@ -4,6 +4,7 @@ import CustomCard from '../../../../atoms/CustomCard';
 import StyledItemText from '../../../../atoms/StyledItemText';
 import CampaignTable, { CampaignTableData } from './sub/CampaignTable';
 import BanCheckDialog from './sub/BanCheckDialog';
+import RemotePageOpenButton from '../RemotePage/sub/RemotePageOpenButton';
 // hook
 import useDialog from '../../../../utils/hooks/useDialog';
 
@@ -26,6 +27,7 @@ const CampaignTableCard = ({
 
   return (
     <CustomCard iconComponent={<StyledItemText primary="내 배너광고 목록" color="white" />}>
+      <RemotePageOpenButton />
       <div>
         <CampaignTable
           tableData={campaignTableData}
