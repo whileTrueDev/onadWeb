@@ -115,18 +115,25 @@ const UserInfoCard = ({
             size="small"
             color="primary"
             label={profileData.data && profileData.data.creatorContractionAgreement === 1
-              ? '이용약관 동의완료'
-              : '이용약관 미동의'}
+              ? '이용 동의완료'
+              : '이용 미동의'}
           />
           <Chip
             className={classnames(classes.chip, classes.success)}
             size="small"
             label={profileData.data && getSettlementString(profileData.data.settlementState)}
           />
+          {/* 한번이라도 배너 송출 로그가 찍혀있는 경우 설정 완료로 처리 */}
           <Chip
             className={classnames(classes.chip, classes.info)}
             size="small"
             label="배너 오버레이 설정완료"
+          />
+          {/* 한번이라도 클릭 로그가 찍혀 있는 경우 설정 완료로 처리 */}
+          <Chip
+            className={classnames(classes.chip, classes.black)}
+            size="small"
+            label="클릭광고 설정완료"
           />
         </div>
       </div>

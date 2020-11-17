@@ -11,6 +11,7 @@ import {
 } from '@material-ui/core/styles';
 import { Button, Typography, useTheme } from '@material-ui/core';
 import { Link } from 'react-router-dom';
+import shortid from 'shortid';
 import { drawerWidth } from '../../../../assets/jss/onad';
 import history from '../../../../history';
 import { MypageRoute } from '../../../../pages/mypage/routes';
@@ -93,13 +94,12 @@ export default function ResponsiveDrawer(props: ResponsiveDrawerProps): JSX.Elem
       <Divider />
       <List>
         {routes.map((route) => (
-          <>
+          <div key={route.layout + route.name}>
             <ListItem
               className={classNames({
                 [classes.activeLink]: isActiveRoute(route.layout + route.path),
               })}
               button
-              key={route.layout + route.name}
               to={route.layout + route.path}
               component={Link}
             /**
@@ -143,7 +143,7 @@ export default function ResponsiveDrawer(props: ResponsiveDrawerProps): JSX.Elem
               <ListItemText primary={route.name} />
             </ListItem>
             {route.needNextDivider && (<Divider style={{ margin: '8px 0px' }} />)}
-          </>
+          </div>
         ))}
       </List>
     </div>

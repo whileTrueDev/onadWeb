@@ -94,10 +94,12 @@ const Dashboard = (): JSX.Element => {
 
               {/* 온애드 시작 가이드 */}
               <GridItem xs={12} lg={6}>
-                {!overlayUrlGet.loading && overlayUrlGet.data && (
+                {!overlayUrlGet.loading && overlayUrlGet.data
+                && !contractionGet.loading && contractionGet.data && (
                 <StartGuideCard
                   doContractionDataRequest={contractionGet.doGetRequest}
                   overlayUrlData={overlayUrlGet.data}
+                  contractionData={contractionGet.data}
                   handleSnackOpen={snack.handleOpen}
                 />
                 )}

@@ -14,6 +14,7 @@ import SetSettlementSection from './guides/SetSettlementSection';
 import GuideIntroduction from './guides/GuideIntroduction';
 import SetClickAdSection from './guides/SetClickAdSection';
 import { OverlayUrlRes } from './OverlayUrlCard';
+import { ContractionDataType } from '../../../../pages/mypage/creator/CPAManage';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -31,11 +32,13 @@ const useStyles = makeStyles((theme) => ({
 
 interface ContractionCardProps {
   doContractionDataRequest: () => void;
+  contractionData: ContractionDataType;
   overlayUrlData: OverlayUrlRes;
   handleSnackOpen: () => void;
 }
 const ContractionCard = ({
   doContractionDataRequest,
+  contractionData,
   overlayUrlData,
   handleSnackOpen,
 }: ContractionCardProps): JSX.Element => {
@@ -71,6 +74,7 @@ const ContractionCard = ({
     {
       label: '온애드 이용약관 동의하기',
       component: <ContractionSection
+        contractionData={contractionData}
         doContractionDataRequest={doContractionDataRequest}
         handleSuccess={(): void => { snack.handleOpen(); }}
       />,

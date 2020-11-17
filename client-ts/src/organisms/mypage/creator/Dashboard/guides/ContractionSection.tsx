@@ -4,13 +4,16 @@ import {
   makeStyles,
   Paper, Typography,
 } from '@material-ui/core';
-import { Done, Clear } from '@material-ui/icons';
+import {
+  Done, Clear, CheckCircleOutline
+} from '@material-ui/icons';
 import Button from '../../../../../atoms/CustomButtons/Button';
 import terms from '../source/contractTerms';
 import SuccessTypo from '../../../../../atoms/Typography/Success';
 import DangerTypo from '../../../../../atoms/Typography/Danger';
 import { useDialog, useGetRequest, usePatchRequest } from '../../../../../utils/hooks';
 import ContractionTextDialog from './sub/ContractionTextDialog';
+import { ContractionDataType } from '../../../../../pages/mypage/creator/CPAManage';
 
 const useStyles = makeStyles((theme) => ({
   container: { textAlign: 'center' },
@@ -24,14 +27,17 @@ const useStyles = makeStyles((theme) => ({
     margin: `${theme.spacing(2)}px 0px`
   },
   termButton: { display: 'flex', alignItems: 'center' },
-  textRightSpace: { marginRight: theme.spacing(1) }
+  textRightSpace: { marginRight: theme.spacing(1) },
+  section: { margin: `${theme.spacing(2)}px 0px` },
 }));
 export interface ContractionSectionProps {
   doContractionDataRequest: () => void;
+  contractionData: ContractionDataType;
   handleSuccess: () => void;
 }
 export default function ContractionSection({
   doContractionDataRequest,
+  contractionData,
   handleSuccess,
 }: ContractionSectionProps): JSX.Element {
   const classes = useStyles();
@@ -66,6 +72,7 @@ export default function ContractionSection({
     });
     setContractionList(newData);
   }
+
   return (
     <div>
       {/* 약관 동의 설명 */}
@@ -88,57 +95,67 @@ export default function ContractionSection({
         </Typography>
       </div>
 
-      {terms.map((term, index) => (
-        <Paper
-          key={term.state}
-          elevation={1}
-          className={classes.termItem}
-        >
-          <Typography>
-            {term.title}
-          </Typography>
-          <div className={classes.termButton}>
-            <Button
-              size="small"
-              onClick={(): void => {
-                contractionTextDialog.handleOpen();
-                setActiveContractionIndex(index);
-              }}
+      {contractionData.creatorContractionAgreement === 1 ? (
+        <div className={classnames(classes.container, classes.section)}>
+          <CheckCircleOutline style={{ fontSize: 48 * 2 }} color="primary" />
+          <Typography className={classes.bold}>이용 동의가 완료된 상태입니다!</Typography>
+        </div>
+      ) : (
+        <>
+          {terms.map((term, index) => (
+            <Paper
+              key={term.state}
+              elevation={1}
+              className={classes.termItem}
             >
-              약관보기
-            </Button>
-            {contractionList[index]
-              ? (<SuccessTypo><Done /></SuccessTypo>)
-              : (<DangerTypo><Clear /></DangerTypo>)}
-          </div>
-        </Paper>
-      ))}
+              <Typography>
+                {term.title}
+              </Typography>
+              <div className={classes.termButton}>
+                <Button
+                  size="small"
+                  onClick={(): void => {
+                    contractionTextDialog.handleOpen();
+                    setActiveContractionIndex(index);
+                  }}
+                >
+                  약관보기
+                </Button>
+                {contractionList[index]
+                  ? (<SuccessTypo><Done /></SuccessTypo>)
+                  : (<DangerTypo><Clear /></DangerTypo>)}
+              </div>
+            </Paper>
+          ))}
 
-      <div className={classes.container}>
-        {!getFollower.loading && getFollower.data < 300 && (
-        <Typography variant="body2" color="error" className={classes.textRightSpace}>
-          {`죄송합니다. 팔로워/애청자 수가 부족합니다 (${getFollower.data}명)`}
-        </Typography>
-        )}
-        <Button
-          color="primary"
-          onClick={(): void => {
-            if (contractionList.every((row) => row === true)) {
-              // 크리에이터 계약정보 patch 요청
-              contractionPatch.doPatchRequest({ type: 'contraction' });
-            }
-          }}
-          disabled={!(contractionList.every((row) => row === true))
+          <div className={classes.container}>
+            {!getFollower.loading && getFollower.data < 300 && (
+            <Typography variant="body2" color="error" className={classes.textRightSpace}>
+              {`죄송합니다. 팔로워/애청자 수가 부족합니다 (${getFollower.data}명)`}
+            </Typography>
+            )}
+            <Button
+              color="primary"
+              onClick={(): void => {
+                if (contractionList.every((row) => row === true)) {
+                  // 크리에이터 계약정보 patch 요청
+                  contractionPatch.doPatchRequest({ type: 'contraction' });
+                }
+              }}
+              disabled={!(contractionList.every((row) => row === true))
                 || Boolean(contractionPatch.loading)
                 || getFollower.data < 300}
-        >
-          이용동의완료
-        </Button>
+            >
+              이용동의완료
+            </Button>
 
-        <Typography>완료하셨다면 [다음] 버튼을 눌러, 배너 오버레이를 설정해보세요!</Typography>
-      </div>
+            <Typography>완료하셨다면 [다음] 버튼을 눌러, 배너 오버레이를 설정해보세요!</Typography>
+          </div>
+        </>
+      )}
 
       {/* 계약 내용 보기 다이얼로그 */}
+      {!contractionData.creatorContractionAgreement && (
       <ContractionTextDialog
         open={contractionTextDialog.open}
         onClose={contractionTextDialog.handleClose}
@@ -146,6 +163,7 @@ export default function ContractionSection({
         activeTermIndex={activeContractionIndex}
         title={terms[activeContractionIndex].title}
       />
+      )}
 
     </div>
   );
