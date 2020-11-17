@@ -5,16 +5,18 @@ import { makeStyles, Paper, Typography } from '@material-ui/core';
 import history from '../../../../history';
 
 const useStyles = makeStyles((theme) => ({
-  ellipsis: {
-    whiteSpace: 'nowrap',
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
+  container: {
+    padding: theme.spacing(4), marginTop: theme.spacing(1), height: 250, overflowY: 'auto'
   },
+  bold: { fontWeight: 'bold' },
+  section: { marginTop: theme.spacing(2) },
+  noticeItem: { margin: `${theme.spacing(1)}px 0px`, display: 'flex', justifyContent: 'space-between' },
+  noticeDate: { marginLeft: theme.spacing(1), minWidth: 60, cursor: 'default' },
+  ellipsis: { whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', },
+  right: { textAlign: 'right' },
   link: {
     cursor: 'pointer',
-    '&:hover': {
-      textDecoration: 'underline',
-    }
+    '&:hover': { textDecoration: 'underline', }
   }
 }));
 
@@ -33,20 +35,17 @@ export default function NoticeCard({
 }: NoticeCardProps): JSX.Element {
   const classes = useStyles();
   return (
-    <Paper style={{
-      padding: 32, marginTop: 8, height: 250, overflowY: 'auto'
-    }}
-    >
-      <Typography style={{ fontWeight: 'bold' }}>
+    <Paper className={classes.container}>
+      <Typography className={classes.bold}>
         최근 공지사항
       </Typography>
 
-      <div style={{ marginTop: 16 }}>
+      <div className={classes.section}>
         {noticeData
           .sort((x, y) => new Date(y.regiDate).getTime() - new Date(x.regiDate).getTime())
           .slice(0, 5)
           .map((noti) => (
-            <div key={noti.code} style={{ margin: '8px 0px', display: 'flex', justifyContent: 'space-between' }}>
+            <div key={noti.code} className={classes.noticeItem}>
               <Typography
                 onClick={(): void => {
                   history.push(`/notice/${noti.code}`);
@@ -55,18 +54,23 @@ export default function NoticeCard({
               >
                 {noti.title}
               </Typography>
-              <Typography variant="caption" color="textSecondary" align="right" style={{ marginLeft: 8, minWidth: 60, cursor: 'default' }}>
+              <Typography
+                variant="caption"
+                color="textSecondary"
+                align="right"
+                className={classes.noticeDate}
+              >
                 {moment(noti.regiDate).fromNow()}
               </Typography>
             </div>
           ))}
       </div>
 
-      <div style={{ textAlign: 'right' }}>
+      <div className={classes.right}>
         <Typography
+          className={classes.link}
           variant="caption"
           color="textSecondary"
-          className={classes.link}
           onClick={(): void => {
             history.push('/notice');
           }}

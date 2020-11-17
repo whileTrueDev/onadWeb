@@ -1,27 +1,45 @@
 import React from 'react';
 import {
-  Paper, Typography, Stepper, Step, StepLabel
+  Paper, Typography, Stepper, Step, StepLabel, makeStyles
 } from '@material-ui/core';
 // components
 import Dialog from '../../../../atoms/Dialog/Dialog';
 import Button from '../../../../atoms/CustomButtons/Button';
 import Snackbar from '../../../../atoms/Snackbar/Snackbar';
 // utils
-import useContractionStyles from './StartGuideCard.style';
 import useDialog from '../../../../utils/hooks/useDialog';
 import ContractionSection from './guides/ContractionSection';
 import SetOverlaySection from './guides/SetOverlaySection';
 import SetSettlementSection from './guides/SetSettlementSection';
 import GuideIntroduction from './guides/GuideIntroduction';
 import SetClickAdSection from './guides/SetClickAdSection';
+import { OverlayUrlRes } from './OverlayUrlCard';
+
+const useStyles = makeStyles((theme) => ({
+  container: {
+    padding: theme.spacing(2),
+    marginTop: theme.spacing(1),
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between'
+  },
+  bold: { fontWeight: 'bold' },
+  red: { color: theme.palette.error.main },
+  contents: { padding: theme.spacing(2) },
+  actionsContainer: { textAlign: 'right', },
+}));
 
 interface ContractionCardProps {
   doContractionDataRequest: () => void;
+  overlayUrlData: OverlayUrlRes;
+  handleSnackOpen: () => void;
 }
 const ContractionCard = ({
-  doContractionDataRequest
+  doContractionDataRequest,
+  overlayUrlData,
+  handleSnackOpen,
 }: ContractionCardProps): JSX.Element => {
-  const classes = useContractionStyles();
+  const classes = useStyles();
 
   const guideDialog = useDialog(); // 가이드 진행을 위해
   const snack = useDialog(); // 계약완료 스낵바를 위해
@@ -37,15 +55,6 @@ const ContractionCard = ({
   };
   // ********************************
   // 가이드 Stepper
-  const [stepSuccess, setStepSuccess] = React.useState([false, false, false]);
-  const handleSuccess = (step: number): void => {
-    const temp = stepSuccess;
-    temp[step] = true;
-    setStepSuccess(temp);
-  };
-  const handleSuccessReset = (): void => {
-    setStepSuccess([false, false, false]);
-  };
   const [activeStep, setActiveStep] = React.useState(0);
   const handleNext = (): void => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -63,11 +72,22 @@ const ContractionCard = ({
       label: '온애드 이용약관 동의하기',
       component: <ContractionSection
         doContractionDataRequest={doContractionDataRequest}
-        handleSuccess={(): void => { snack.handleOpen(); handleSuccess(0); }}
+        handleSuccess={(): void => { snack.handleOpen(); }}
       />,
     },
-    { label: '배너광고 준비하기', component: <SetOverlaySection />, },
-    { label: '클릭광고 준비하기', component: <SetClickAdSection />, },
+    {
+      label: '배너광고 준비하기',
+      component: <SetOverlaySection
+        overlayUrlData={overlayUrlData}
+        handleSnackOpen={handleSnackOpen}
+      />,
+    },
+    {
+      label: '클릭광고 준비하기',
+      component: <SetClickAdSection
+        handleSnackOpen={handleSnackOpen}
+      />,
+    },
     { label: '출금 정산 등록하기', component: <SetSettlementSection />, },
   ];
 
@@ -77,12 +97,9 @@ const ContractionCard = ({
 
   return (
     <>
-      <Paper style={{
-        padding: 16, marginTop: 8, display: 'flex', alignItems: 'center', justifyContent: 'space-between'
-      }}
-      >
-        <Typography style={{ fontWeight: 'bold' }}>
-          <span style={{ color: 'red' }}>[필수]</span>
+      <Paper className={classes.container}>
+        <Typography className={classes.bold}>
+          <span className={classes.red}>[필수]</span>
           &nbsp;
           온애드 시작 가이드
         </Typography>
@@ -110,7 +127,7 @@ const ContractionCard = ({
               ))}
             </Stepper>
             {/* 단계별 컴포넌트 */}
-            <div style={{ padding: 16 }}>
+            <div className={classes.contents}>
               {getStepComponent(activeStep)}
             </div>
           </>
@@ -124,7 +141,6 @@ const ContractionCard = ({
               if (activeStep === 0) {
                 guideDialog.handleClose();
                 handleIntroReset();
-                handleSuccessReset();
                 handleStepReset();
               } else handleBack();
             }}
@@ -138,7 +154,9 @@ const ContractionCard = ({
               if (introduction) handleIntroSkip();
               else if (activeStep === steps.length - 1) {
                 guideDialog.handleClose(); handleStepReset();
-              } else handleNext();
+              } else {
+                handleNext();
+              }
             }}
           >
             다음

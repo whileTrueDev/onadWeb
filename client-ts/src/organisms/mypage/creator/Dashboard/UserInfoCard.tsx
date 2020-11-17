@@ -9,11 +9,7 @@ import Button from '../../../../atoms/CustomButtons/Button';
 import { useGetRequest } from '../../../../utils/hooks';
 
 const useStyles = makeStyles((theme) => ({
-  flex: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
+  flex: { display: 'flex', justifyContent: 'center', alignItems: 'center' },
   container: {
     minHeight: 400,
     marginTop: theme.spacing(1),
@@ -30,6 +26,7 @@ const useStyles = makeStyles((theme) => ({
       width: 40, height: 40
     }
   },
+  bold: { fontWeight: 'bold' },
   chip: {
     marginRight: theme.spacing(1) / 2,
     color: theme.palette.common.white
@@ -37,7 +34,20 @@ const useStyles = makeStyles((theme) => ({
   success: { backgroundColor: theme.palette.success.main, },
   error: { backgroundColor: theme.palette.error.main },
   black: { backgroundColor: theme.palette.common.black },
-  info: { backgroundColor: theme.palette.info.main }
+  info: { backgroundColor: theme.palette.info.main },
+  infoSection: { display: 'flex', alignItems: 'center' },
+  section: { textAlign: 'right', margin: theme.spacing(1) },
+  withdrawalSection: { margin: theme.spacing(1), marginTop: theme.spacing(2), overflowY: 'auto' },
+  withdrawalItem: { display: 'flex', justifyContent: 'space-between', padding: '4px 0px' },
+  withdrawalChip: { marginLeft: theme.spacing(1) },
+  right: { textAlign: 'right' },
+  ellipsis: {
+    whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
+  },
+  moreButton: {
+    cursor: 'pointer',
+    '&:hover': { textDecoration: 'underline', }
+  },
 }));
 
 export interface IncomeCashRes {
@@ -49,13 +59,13 @@ export interface IncomeCashRes {
   realName: string;
   settlementState: number;
 }
-interface IncomeCardProps {
+interface UserInfoCardProps {
   incomeData: IncomeCashRes;
   handleWithdrawalDialogOpen: () => void;
 }
-const IncomeCard = ({
+const UserInfoCard = ({
   incomeData, handleWithdrawalDialogOpen
-}: IncomeCardProps): JSX.Element => {
+}: UserInfoCardProps): JSX.Element => {
   const classes = useStyles();
 
   const profileData = useGetRequest('/creator');
@@ -81,15 +91,15 @@ const IncomeCard = ({
     <Paper className={classes.container}>
 
       {/* 유저 정보 섹션 */}
-      <div style={{ display: 'flex', alignItems: 'center' }}>
+      <div className={classes.infoSection}>
         <Avatar
           variant="circle"
           className={classes.avatar}
           src={profileData.data ? profileData.data.creatorLogo : ''}
         />
         <div>
-          <div style={{ display: 'block', }}>
-            <Typography variant="h5" style={{ fontWeight: 'bold' }}>
+          <div>
+            <Typography variant="h5" className={classes.bold}>
               {profileData.data ? profileData.data.creatorName : ''}
               &nbsp;
               <Typography component="span" variant="body2">아프리카,</Typography>
@@ -101,7 +111,7 @@ const IncomeCard = ({
           </div>
           {/* 상태 칩 섹션 */}
           <Chip
-            style={{ marginRight: 4 }}
+            className={classes.chip}
             size="small"
             color="primary"
             label={profileData.data && profileData.data.creatorContractionAgreement === 1
@@ -122,12 +132,9 @@ const IncomeCard = ({
       </div>
 
       {/* 수익금 섹션 */}
-      <div style={{
-        textAlign: 'right', margin: 8
-      }}
-      >
+      <div className={classes.section}>
         <Typography gutterBottom variant="body1">출금가능한 수익금</Typography>
-        <Typography gutterBottom variant="h4" style={{ fontWeight: 'bold', }}>
+        <Typography gutterBottom variant="h4" className={classes.bold}>
           <Typography component="span" variant="body2" color="textSecondary">
             {`누적 수익 ${incomeData.creatorTotalIncome.toLocaleString()}원`}
           </Typography>
@@ -137,7 +144,7 @@ const IncomeCard = ({
         <Typography color="textSecondary" variant="caption">{`최근 수익 반영: ${moment(incomeData.date).fromNow()}`}</Typography>
 
         {(incomeData && incomeData.creatorAccountNumber) && (
-        <div style={{ textAlign: 'right' }}>
+        <div className={classes.right}>
           <Button
             color="primary"
             size="small"
@@ -151,17 +158,25 @@ const IncomeCard = ({
 
       <Divider />
 
-      <div style={{ margin: 8, marginTop: 16, overflowY: 'auto' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', padding: '4px 0px' }}>
-          <Typography>123,456원 출금 신청 완료, 정산 대기중...</Typography>
-          <Chip size="small" className={classnames(classes.chip, classes.success)} style={{ marginLeft: 8 }} label="00월 정산 예정" />
+      <div className={classes.withdrawalSection}>
+        <div className={classes.withdrawalItem}>
+          <Typography className={classes.ellipsis}>123,456원 출금 신청 완료, 정산 대기중...</Typography>
+          <Chip
+            size="small"
+            className={classnames(classes.chip, classes.success, classes.withdrawalChip)}
+            label="00월 정산 예정"
+          />
         </div>
-        <div style={{ display: 'flex', justifyContent: 'space-between', padding: '4px 0px' }}>
-          <Typography>123,456원 출금 신청 진행중...</Typography>
-          <Chip size="small" className={classnames(classes.chip, classes.success)} style={{ marginLeft: 8 }} label="00월 정산 예정" />
+        <div className={classes.withdrawalItem}>
+          <Typography className={classes.ellipsis}>123,456원 출금 신청 진행중...</Typography>
+          <Chip
+            size="small"
+            className={classnames(classes.chip, classes.success, classes.withdrawalChip)}
+            label="00월 정산 예정"
+          />
         </div>
-        <div style={{ textAlign: 'right' }}>
-          <Typography variant="caption" color="textSecondary">
+        <div className={classes.right}>
+          <Typography variant="caption" color="textSecondary" className={classes.moreButton}>
             자세히 보기
           </Typography>
         </div>
@@ -170,4 +185,4 @@ const IncomeCard = ({
   );
 };
 
-export default IncomeCard;
+export default UserInfoCard;

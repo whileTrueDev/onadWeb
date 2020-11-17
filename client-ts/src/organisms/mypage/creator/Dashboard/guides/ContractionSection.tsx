@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
+import classnames from 'classnames';
 import {
+  makeStyles,
   Paper, Typography,
 } from '@material-ui/core';
 import { Done, Clear } from '@material-ui/icons';
@@ -10,6 +12,20 @@ import DangerTypo from '../../../../../atoms/Typography/Danger';
 import { useDialog, useGetRequest, usePatchRequest } from '../../../../../utils/hooks';
 import ContractionTextDialog from './sub/ContractionTextDialog';
 
+const useStyles = makeStyles((theme) => ({
+  container: { textAlign: 'center' },
+  bold: { fontWeight: 'bold' },
+  red: { color: theme.palette.error.main },
+  termItem: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: theme.spacing(2),
+    margin: `${theme.spacing(2)}px 0px`
+  },
+  termButton: { display: 'flex', alignItems: 'center' },
+  textRightSpace: { marginRight: theme.spacing(1) }
+}));
 export interface ContractionSectionProps {
   doContractionDataRequest: () => void;
   handleSuccess: () => void;
@@ -18,6 +34,8 @@ export default function ContractionSection({
   doContractionDataRequest,
   handleSuccess,
 }: ContractionSectionProps): JSX.Element {
+  const classes = useStyles();
+  // ****************************************
   // 팔로워 수 정보조회
   const getFollower = useGetRequest<number>('/creator/follower');
   // 계약 정보 업데이트 요청
@@ -28,7 +46,8 @@ export default function ContractionSection({
       handleSuccess();
     });
 
-
+  // ****************************************
+  // 계약 정보 창
   const contractionTextDialog = useDialog(); // 계약정보 창을 위해
   // 현재 클릭한 계약 동의 내용 상태값
   const [activeContractionIndex, setActiveContractionIndex] = useState<number>(0);
@@ -50,20 +69,20 @@ export default function ContractionSection({
   return (
     <div>
       {/* 약관 동의 설명 */}
-      <div style={{ textAlign: 'center' }}>
+      <div className={classes.container}>
         <Typography>온애드 서비스를 정상적으로 이용하기 위해서는 이용 동의가 필요합니다.</Typography>
         <Typography>아래의 약관들에 대해서 동의한 이후, [이용동의완료] 버튼을 클릭해 완료해주세요.</Typography>
         <Typography variant="body2" color="textSecondary">약관보기를 클릭한 이후 하단에서 약관을 동의할 수 있습니다.</Typography>
         <br />
         <Typography>온애드에서는 시청자와 크리에이터를 구분하기 위한 최소한의 제한사항으로</Typography>
         <Typography>
-          최소 팔로워수가
+          최소 팔로워/애청자수가
           {' '}
-          <span style={{ color: 'red', fontWeight: 'bold' }}>300</span>
+          <span className={classnames(classes.red, classes.bold)}>300</span>
           {' '}
           명 이상인 크리에이터만 사용 가능합니다. (현재
           {' '}
-          <span style={{ color: 'red', fontWeight: 'bold' }}>{getFollower.data}</span>
+          <span className={classnames(classes.red, classes.bold)}>{getFollower.data}</span>
           {' '}
           명)
         </Typography>
@@ -73,14 +92,12 @@ export default function ContractionSection({
         <Paper
           key={term.state}
           elevation={1}
-          style={{
-            display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: 16, margin: '16px 0px'
-          }}
+          className={classes.termItem}
         >
           <Typography>
             {term.title}
           </Typography>
-          <div style={{ display: 'flex', alignItems: 'center' }}>
+          <div className={classes.termButton}>
             <Button
               size="small"
               onClick={(): void => {
@@ -97,14 +114,13 @@ export default function ContractionSection({
         </Paper>
       ))}
 
-      <div style={{ textAlign: 'right' }}>
+      <div className={classes.container}>
         {!getFollower.loading && getFollower.data < 300 && (
-        <Typography variant="caption" color="error" style={{ marginRight: 8 }}>
-          {`죄송합니다. 팔로워 수가 부족합니다 (${getFollower.data}명)`}
+        <Typography variant="body2" color="error" className={classes.textRightSpace}>
+          {`죄송합니다. 팔로워/애청자 수가 부족합니다 (${getFollower.data}명)`}
         </Typography>
         )}
         <Button
-          size="small"
           color="primary"
           onClick={(): void => {
             if (contractionList.every((row) => row === true)) {
@@ -118,6 +134,8 @@ export default function ContractionSection({
         >
           이용동의완료
         </Button>
+
+        <Typography>완료하셨다면 [다음] 버튼을 눌러, 배너 오버레이를 설정해보세요!</Typography>
       </div>
 
       {/* 계약 내용 보기 다이얼로그 */}

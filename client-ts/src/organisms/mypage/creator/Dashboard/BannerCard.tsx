@@ -2,13 +2,24 @@ import React from 'react';
 import { Paper, Typography } from '@material-ui/core';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import history from '../../../../history';
+import isVideo from '../../../../utils/isVideo';
+import VideoBanner from '../../../../atoms/Banner/VideoBanner';
 
 const useStyles = makeStyles((theme: Theme) => ({
+  container: {
+    padding: theme.spacing(4), marginTop: theme.spacing(1), height: 280, overflowY: 'auto'
+  },
+  bold: { fontWeight: 'bold' },
+  section: { marginTop: theme.spacing(2) },
+  bannerContainer: { display: 'flex', marginBottom: theme.spacing(2), alignItems: 'center' },
+  bannerItem: { maxHeight: '160px', maxWidth: '320px', marginRight: theme.spacing(2) },
   area: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    minHeight: 150
+    display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 150
+  },
+  right: { textAlign: 'right' },
+  moreButton: {
+    cursor: 'pointer',
+    '&:hover': { textDecoration: 'underline', }
   },
   head: { fontWeight: 700 }
 }));
@@ -24,13 +35,10 @@ function BannerCard({ currentBannerData }: BannerCardProps): JSX.Element {
   const classes = useStyles();
 
   return (
-    <Paper style={{
-      padding: 32, marginTop: 8, height: 280, overflowY: 'auto'
-    }}
-    >
+    <Paper className={classes.container}>
       {/* 제목 */}
       <div>
-        <Typography style={{ fontWeight: 'bold' }}>
+        <Typography className={classes.bold}>
           현재 송출중인 배너광고
         </Typography>
         <Typography variant="caption">
@@ -38,7 +46,7 @@ function BannerCard({ currentBannerData }: BannerCardProps): JSX.Element {
         </Typography>
       </div>
 
-      <div style={{ marginTop: 16 }}>
+      <div className={classes.section}>
         {currentBannerData.length >= 0 && (
         <div className={classes.area}>
           <Typography variant="body1" className={classes.head}>
@@ -46,10 +54,10 @@ function BannerCard({ currentBannerData }: BannerCardProps): JSX.Element {
           </Typography>
         </div>
         )}
-        {/* {currentBannerData.map((bannerData) => (
+        {currentBannerData.map((bannerData) => (
           <div
             key={bannerData.campaignDescription}
-            style={{ display: 'flex', marginBottom: 16, alignItems: 'center' }}
+            className={classes.bannerContainer}
           >
             {isVideo(bannerData.bannerSrc) ? (
               <VideoBanner
@@ -58,14 +66,14 @@ function BannerCard({ currentBannerData }: BannerCardProps): JSX.Element {
                 alt="bannerArea"
                 width="100%"
                 height="100%"
-                style={{ maxHeight: '160px', maxWidth: '320px', marginRight: 16 }}
+                className={classes.bannerItem}
               />
             ) : (
               <img
                 src={bannerData.bannerSrc}
                 draggable={false}
                 alt="bannerArea"
-                style={{ maxHeight: '160px', maxWidth: '320px', marginRight: 16 }}
+                className={classes.bannerItem}
               />
             )}
             <div>
@@ -77,11 +85,12 @@ function BannerCard({ currentBannerData }: BannerCardProps): JSX.Element {
               </Typography>
             </div>
           </div>
-        ))} */}
+        ))}
       </div>
 
-      <div style={{ textAlign: 'right', margin: '16px 8px 8px', overflowY: 'auto' }}>
+      <div className={classes.right}>
         <Typography
+          className={classes.moreButton}
           variant="caption"
           color="textSecondary"
           onClick={(): void => { history.push('/mypage/creator/banner'); }}

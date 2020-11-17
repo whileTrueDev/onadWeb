@@ -8,8 +8,16 @@ import { InsertLinkOutlined } from '@material-ui/icons';
 import Button from '../../../../atoms/CustomButtons/Button';
 
 const useStyles = makeStyles((theme) => ({
+  container: {
+    padding: theme.spacing(2),
+    marginTop: theme.spacing(1),
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between'
+  },
+  title: { marginRight: theme.spacing(1), fontWeight: 'bold' },
   textField: { maxWidth: 300, marginRight: theme.spacing(2) },
-  line: { alignItems: 'center' }
+  line: { alignItems: 'center' },
 }));
 
 export interface OverlayUrlRes {
@@ -20,10 +28,12 @@ export interface OverlayUrlRes {
 interface UrlCardProps {
   overlayUrlData: OverlayUrlRes;
   handleSnackOpen: () => void;
+  helperText?: string;
 }
 function UrlCard({
   overlayUrlData,
-  handleSnackOpen
+  handleSnackOpen,
+  helperText = '[이용 동의 필요] 시작가이드를 활용해주세요.'
 }: UrlCardProps): JSX.Element {
   const classes = useStyles();
 
@@ -47,17 +57,14 @@ function UrlCard({
   };
 
   return (
-    <Paper style={{
-      padding: 16, marginTop: 8, display: 'flex', alignItems: 'center', justifyContent: 'space-between'
-    }}
-    >
-      <Typography style={{ marginRight: 8, fontWeight: 'bold' }}>배너 오버레이 URL</Typography>
+    <Paper className={classes.container}>
+      <Typography className={classes.title}>배너 오버레이 URL</Typography>
       <Input
         className={classes.textField}
         id="overlayUrl"
         value={overlayUrlData.creatorContractionAgreement
           ? overlayUrlValue
-          : '[이용 동의 필요] 시작가이드를 활용해주세요.'}
+          : helperText}
         readOnly
         fullWidth
         disabled={!overlayUrlValue}

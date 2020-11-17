@@ -6,22 +6,22 @@ import GridItem from '../../../atoms/Grid/GridItem';
 import Snackbar from '../../../atoms/Snackbar/Snackbar';
 // organisms
 import StartGuideCard from '../../../organisms/mypage/creator/Dashboard/StartGuideCard';
-import NotificationCard from '../../../organisms/mypage/creator/Dashboard/NotificationCard';
-import IncomeCard, { IncomeCashRes } from '../../../organisms/mypage/creator/Dashboard/IncomeCard';
+import AlertCard from '../../../organisms/mypage/creator/Dashboard/AlertCard';
+import UserInfoCard, { IncomeCashRes } from '../../../organisms/mypage/creator/Dashboard/UserInfoCard';
 import WithdrawalDialog from '../../../organisms/mypage/creator/Dashboard/WithdrawalDialog';
-import AdPageCard, { ClicksRes, LevelRes } from '../../../organisms/mypage/creator/Dashboard/AdPageCard';
+import ClickAdCard, { ClicksRes, LevelRes } from '../../../organisms/mypage/creator/Dashboard/ClickAdCard';
 import IncomeChart, {
   IncomeChartData, IncomeChartParams
 } from '../../../organisms/mypage/creator/Dashboard/IncomeChart';
 import BannerCard, { CurrentBannerRes } from '../../../organisms/mypage/creator/Dashboard/BannerCard';
-import UrlCard, { OverlayUrlRes } from '../../../organisms/mypage/creator/Dashboard/OverlayUrlCard';
+import OverlayUrlCard, { OverlayUrlRes } from '../../../organisms/mypage/creator/Dashboard/OverlayUrlCard';
 import DashboardLoading from './Dashboard.loading';
 import NoticeCard, { NoticeData } from '../../../organisms/mypage/creator/Dashboard/NoticeCard';
+import CustomerServiceCard from '../../../organisms/mypage/creator/Dashboard/CustomerServiceCard';
+import EventInfoCard from '../../../organisms/mypage/creator/Dashboard/EventInfoCard';
 // hooks
 import useGetRequest from '../../../utils/hooks/useGetRequest';
 import useDialog from '../../../utils/hooks/useDialog';
-import CustomerServiceCard from '../../../organisms/mypage/creator/Dashboard/CustomerServiceCard';
-import EventInfoCard from '../../../organisms/mypage/creator/Dashboard/EventInfoCard';
 import { ContractionDataType } from './CPAManage';
 
 const Dashboard = (): JSX.Element => {
@@ -85,23 +85,28 @@ const Dashboard = (): JSX.Element => {
                 && Boolean(contractionGet.data.creatorContractionAgreement)
                 && (
                   <Hidden smDown>
-                    <GridItem xs={12}>
-                      <NotificationCard />
+                    <GridItem xs={12} md={12} lg={6}>
+                      <AlertCard />
                     </GridItem>
+                    <GridItem lg={6} />
                   </Hidden>
                 )}
 
               {/* 온애드 시작 가이드 */}
               <GridItem xs={12} lg={6}>
+                {!overlayUrlGet.loading && overlayUrlGet.data && (
                 <StartGuideCard
                   doContractionDataRequest={contractionGet.doGetRequest}
+                  overlayUrlData={overlayUrlGet.data}
+                  handleSnackOpen={snack.handleOpen}
                 />
+                )}
               </GridItem>
 
               {/* 배너 광고 송출 URL */}
               <GridItem xs={12} lg={6}>
                 {!overlayUrlGet.loading && overlayUrlGet.data && (
-                <UrlCard
+                <OverlayUrlCard
                   overlayUrlData={overlayUrlGet.data}
                   handleSnackOpen={snack.handleOpen}
                 />
@@ -111,7 +116,7 @@ const Dashboard = (): JSX.Element => {
               {/* 유저 정보 및 수익금 카드 */}
               <GridItem xs={12} lg={6}>
                 {!incomeCashGet.loading && incomeCashGet.data && (
-                <IncomeCard
+                <UserInfoCard
                   incomeData={incomeCashGet.data}
                   handleWithdrawalDialogOpen={handleOpen}
                 />
@@ -134,10 +139,10 @@ const Dashboard = (): JSX.Element => {
                 )}
               </GridItem>
 
-              {/* 광고페이지 카드 */}
+              {/* 클릭광고 카드 */}
               <GridItem xs={12} sm={6}>
                 {!levelGet.loading && levelGet.data && !clicksGet.loading && clicksGet.data && (
-                <AdPageCard levelData={levelGet.data} clicksData={clicksGet.data} />
+                <ClickAdCard levelData={levelGet.data} clicksData={clicksGet.data} />
                 )}
               </GridItem>
 
