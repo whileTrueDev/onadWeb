@@ -31,7 +31,6 @@ const RemotePageBannerTable = (props: any) => {
   //   handleDialogOpen: () => void;
   //   handleCampaignSelect: (campaign: BannerStatus) => void;
   // }
-  console.log(remoteCampaignTableGet);
   return (
     <Table>
       <TableBody>

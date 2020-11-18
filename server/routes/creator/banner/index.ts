@@ -164,11 +164,15 @@ router.route('/list')
   .all(responseHelper.middleware.unusedMethod);
 
 async function getRemotePageBanner(campaignList: any, pausedList: any) {
-  const originCampaignList = campaignList;
-  if (originCampaignList.includes(pausedList)) {
-    originCampaignList.state = 0;
-  }
-  return originCampaignList;
+  // const originCampaignList = campaignList;
+  await Promise.all(
+    campaignList.map((campaignData: any) => {
+      if (pausedList.includes(campaignData.campaignId)) {
+        campaignData.state = 0;
+      }
+    })
+  );
+  return campaignList;
 }
 router.route('/remote-page')
 // 크리에이터 배너 목록 정보
@@ -178,7 +182,7 @@ router.route('/remote-page')
       const { creatorId } = responseHelper.getSessionData(req);
       const listQuery = `
     SELECT
-      campaign.campaignId, campaign.marketerName, CT.date, BR.bannerSrc, campaign.onOff as state
+      campaign.campaignId, campaign.marketerName, BR.bannerSrc, CT.date, campaign.onOff as state
     FROM (
       SELECT creatorId, campaignId , min(date) as date 
       FROM campaignTimestamp
@@ -217,25 +221,35 @@ router.route('/remote-page')
   .patch(
     // 토글 버튼 변화에 따른 pausedList 업데이트
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
+      const { creatorId } = responseHelper.getSessionData(req);
       const onOffDetail: any = responseHelper.getParam(['campaignId', 'state'], 'PATCH', req);
       const campaignId = onOffDetail[0];
       const state = onOffDetail[1];
-      console.log(onOffDetail);
-      // if(state === 0){
+      const getPausedListQuery = 'SELECT pausedList FROM creatorCampaign WHERE creatorId = ?';
+      const banListUpdateQuery = `
+      UPDATE creatorCampaign 
+      SET pausedList = ? 
+      WHERE creatorId = ?`;
 
-      // }
-      // const callQuery = `
-      // UPDATE creatorNotification AS cn 
-      // SET readState = 1
-      // WHERE cn.index = ?`;
+      const row = await doQuery(getPausedListQuery, [creatorId]);
 
-      // doQuery(callQuery, [index])
-      //   .then(() => {
-      //     responseHelper.send([true], 'PATCH', res);
-      //   })
-      //   .catch((err) => {
-      //     responseHelper.promiseError(err, next);
-      //   });
+      if (row.result) {
+        const pausedList = JSON.parse(row.result[0].pausedList);
+        if (state === 1) {
+          const newCampaignList = pausedList.campaignList.concat(campaignId);
+          pausedList.campaignList = newCampaignList;
+        } else {
+          pausedList.campaignList.splice(pausedList.campaignList.indexOf(campaignId), 1);
+        }
+        const pausedListUpdate = await doQuery(
+          banListUpdateQuery, [JSON.stringify(pausedList), creatorId]
+        );
+        if (pausedListUpdate.result.affectedRows > 0) {
+          responseHelper.send([true, 'success'], 'patch', res);
+        } else {
+          responseHelper.promiseError(new Error('배너 상태 변경에 실패했습니다'), next);
+        }
+      }
     }),
   )
   .all(responseHelper.middleware.unusedMethod);
