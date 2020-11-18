@@ -1,13 +1,15 @@
 import React from 'react';
+import Skeleton from '@material-ui/lab/Skeleton';
+import GridContainer from '../../../atoms/Grid/GridContainer';
 
-const RemotePage = (): JSX.Element => {
-  const tmp = 1;
+import RemotePageBannerTable, { BannerStatus } from '../../../organisms/mypage/creator/RemotePage/RemotePageBannerTable';
+import useGetRequest from '../../../utils/hooks/useGetRequest';
+// import  from '../../../organisms/mypage/creator/RemotePage/RemotePageBannerTable';
 
-  return (
-    <p>
-      리모트페이지
-    </p>
-  );
-};
+const RemotePage = (): JSX.Element => (
+  <GridContainer direction="row">
+    <RemotePageBannerTable />
+  </GridContainer>
+);
 
 export default RemotePage;

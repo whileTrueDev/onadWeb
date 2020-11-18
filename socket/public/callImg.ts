@@ -177,9 +177,9 @@ function callImg(socket: any, msg: string[]): void {
     return Array.from(new Set(returnList));
   };
 
-  const getBanList = (creatorId: string): Promise<string[]> => {
+  const getBanList = (creatorId: string): Promise<any> => {
     const selectQuery = `
-    SELECT banList 
+    SELECT banList, pausedList
     FROM creatorCampaign
     WHERE creatorId = ?
     `;
@@ -188,7 +188,8 @@ function callImg(socket: any, msg: string[]): void {
       doQuery(selectQuery, [creatorId])
         .then((row) => {
           const banList = JSON.parse(row.result[0].banList).campaignList;
-          resolve(banList);
+          const pausedList = JSON.parse(row.result[0].pausedList).campaignList;
+          resolve({ banList, pausedList });
         })
         .catch((errorData) => {
           errorData.point = 'getBanList()';
@@ -259,7 +260,7 @@ function callImg(socket: any, msg: string[]): void {
   async function getBanner([creatorId, gameId]: string[]): Promise<[string | boolean, string | boolean, string | boolean]> {
     console.log(`-----------------------Id : ${creatorId} / ${getTime}---------------------------`);
     let linkToChatBot;
-    const [creatorCampaignList, onCampaignList, banList] = await Promise.all(
+    const [creatorCampaignList, onCampaignList, checkList] = await Promise.all(
       [
         getCreatorCampaignList(creatorId),
         getOnCampaignList(),
@@ -269,7 +270,8 @@ function callImg(socket: any, msg: string[]): void {
     const categoryCampaignList = await getGameCampaignList(gameId, creatorId);
     const onCreatorcampaignList = creatorCampaignList.filter((campaignId) => onCampaignList.includes(campaignId));
     if (onCreatorcampaignList.length !== 0) {
-      const extractBanCampaignList = onCreatorcampaignList.filter((campaignId) => !banList.includes(campaignId)); // 마지막에 banList를 통해 거르기.
+      const extractPausedCampaignList = onCreatorcampaignList.filter((campaignId) => !checkList.pausedList.includes(campaignId)); // 일시정지 배너 거르기.
+      const extractBanCampaignList = extractPausedCampaignList.filter((campaignId) => !checkList.banList.includes(campaignId)); // 마지막에 banList를 통해 거르기.
       if (extractBanCampaignList) {
         const returnCampaignId = extractBanCampaignList[getRandomInt(extractBanCampaignList.length)];
         myCampaignId = returnCampaignId;
@@ -277,7 +279,8 @@ function callImg(socket: any, msg: string[]): void {
     } else {
       console.log(`${creatorId} 크리에이터에게만 송출될 광고 없음. 카테고리 선택형 및 노출우선형 광고 검색 / ${getTime}`);
       const onCategorycampaignList = categoryCampaignList.filter((campaignId) => onCampaignList.includes(campaignId));
-      const extractBanCampaignList = onCategorycampaignList.filter((campaignId) => !banList.includes(campaignId)); // 마지막에 banList를 통해 거르기.
+      const extractPausedCampaignList = onCategorycampaignList.filter((campaignId) => !checkList.pausedList.includes(campaignId)); // 일시정지 배너 거르기.
+      const extractBanCampaignList = extractPausedCampaignList.filter((campaignId) => !checkList.banList.includes(campaignId)); // 마지막에 banList를 통해 거르기.
       const returnCampaignId = extractBanCampaignList[getRandomInt(extractBanCampaignList.length)];
       myCampaignId = returnCampaignId;
     }

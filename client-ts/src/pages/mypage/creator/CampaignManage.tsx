@@ -33,7 +33,7 @@ const CampaignManage = (): JSX.Element => {
 
       <Snackbar
         open={banSuccessSnack.open}
-        message="배너광고 거절이 성공하였습니다."
+        message="배너광고 거절을 완료하였습니다."
         color="success"
         onClose={banSuccessSnack.handleClose}
       />

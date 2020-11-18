@@ -76,8 +76,8 @@ router.route('/')
         const campaignList = JSON.stringify({ campaignList: [] });
         const campaignQuery = `
           INSERT INTO creatorCampaign
-          (creatorId, campaignList, banList)
-          VALUES (?, ?, ?)
+          (creatorId, campaignList, banList, pausedList)
+          VALUES (?, ?, ?, ?)
         `;
         // 계약시 생성되는 creatorLanding 기본값
         const landingQuery = `
@@ -87,7 +87,7 @@ router.route('/')
 
         Promise.all([
           doQuery(contractionUpdateQuery, [1, creatorId]),
-          doQuery(campaignQuery, [creatorId, campaignList, campaignList]),
+          doQuery(campaignQuery, [creatorId, campaignList, campaignList, campaignList]),
           doQuery(landingQuery, [creatorId, creatorName])
         ])
           .then(() => {

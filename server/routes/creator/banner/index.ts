@@ -163,6 +163,82 @@ router.route('/list')
   )
   .all(responseHelper.middleware.unusedMethod);
 
+async function getRemotePageBanner(campaignList: any, pausedList: any) {
+  const originCampaignList = campaignList;
+  if (originCampaignList.includes(pausedList)) {
+    originCampaignList.state = 0;
+  }
+  return originCampaignList;
+}
+router.route('/remote-page')
+// 크리에이터 배너 목록 정보
+  .get(
+    responseHelper.middleware.checkSessionExists,
+    responseHelper.middleware.withErrorCatch(async (req, res, next) => {
+      const { creatorId } = responseHelper.getSessionData(req);
+      const listQuery = `
+    SELECT
+      campaign.campaignId, campaign.marketerName, CT.date, BR.bannerSrc, campaign.onOff as state
+    FROM (
+      SELECT creatorId, campaignId , min(date) as date 
+      FROM campaignTimestamp
+      WHERE creatorId = ?
+      GROUP BY campaignId
+    ) AS CT
+    JOIN campaign 
+      ON CT.campaignId = campaign.campaignId
+    JOIN bannerRegistered AS BR
+      ON campaign.bannerId = BR.bannerId
+    LEFT JOIN linkRegistered AS IR
+      ON connectedLinkId = IR.linkId
+    WHERE campaign.onOff = 1
+    ORDER BY date DESC
+    `;
+      const getPausedQuery = `
+    SELECT pausedList 
+    FROM creatorCampaign
+    WHERE creatorId = ?
+    `;
+
+      Promise.all([
+        doQuery(listQuery, [creatorId]),
+        doQuery(getPausedQuery, [creatorId])
+      ])
+        .then(async ([row, paused]) => {
+          const pausedList: string[] = JSON.parse(paused.result[0].pausedList).campaignList;
+          const campaignList = await getRemotePageBanner(row.result, pausedList);
+          responseHelper.send(campaignList, 'get', res);
+        })
+        .catch((error) => {
+          responseHelper.promiseError(error, next);
+        });
+    }),
+  )
+  .patch(
+    // 토글 버튼 변화에 따른 pausedList 업데이트
+    responseHelper.middleware.withErrorCatch(async (req, res, next) => {
+      const onOffDetail: any = responseHelper.getParam(['campaignId', 'state'], 'PATCH', req);
+      const campaignId = onOffDetail[0];
+      const state = onOffDetail[1];
+      console.log(onOffDetail);
+      // if(state === 0){
+
+      // }
+      // const callQuery = `
+      // UPDATE creatorNotification AS cn 
+      // SET readState = 1
+      // WHERE cn.index = ?`;
+
+      // doQuery(callQuery, [index])
+      //   .then(() => {
+      //     responseHelper.send([true], 'PATCH', res);
+      //   })
+      //   .catch((err) => {
+      //     responseHelper.promiseError(err, next);
+      //   });
+    }),
+  )
+  .all(responseHelper.middleware.unusedMethod);
 
 router.route('/overlay')
   // 크리에이터 배너 오버레이 주소 조회
