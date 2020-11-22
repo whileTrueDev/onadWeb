@@ -3,10 +3,13 @@ import classnames from 'classnames';
 import moment from 'moment';
 import { makeStyles } from '@material-ui/core/styles';
 import {
-  Typography, Divider, Paper, Avatar, Chip
+  Typography, Divider, Paper, Avatar, Chip, Grow
 } from '@material-ui/core';
+import shortid from 'shortid';
 import Button from '../../../../atoms/CustomButtons/Button';
 import { useGetRequest } from '../../../../utils/hooks';
+import history from '../../../../history';
+import { ContractionDataType } from '../../../../pages/mypage/creator/CPAManage';
 
 const useStyles = makeStyles((theme) => ({
   flex: { display: 'flex', justifyContent: 'center', alignItems: 'center' },
@@ -29,12 +32,13 @@ const useStyles = makeStyles((theme) => ({
   bold: { fontWeight: 'bold' },
   chip: {
     marginRight: theme.spacing(1) / 2,
-    color: theme.palette.common.white
+    color: theme.palette.common.white,
   },
   success: { backgroundColor: theme.palette.success.main, },
   error: { backgroundColor: theme.palette.error.main },
   black: { backgroundColor: theme.palette.common.black },
   info: { backgroundColor: theme.palette.info.main },
+  secondary: { backgroundColor: theme.palette.secondary.main },
   infoSection: { display: 'flex', alignItems: 'center' },
   section: { textAlign: 'right', margin: theme.spacing(1) },
   withdrawalSection: { margin: theme.spacing(1), marginTop: theme.spacing(2), overflowY: 'auto' },
@@ -49,7 +53,11 @@ const useStyles = makeStyles((theme) => ({
     '&:hover': { textDecoration: 'underline', }
   },
 }));
-
+export interface WithdrawalRes {
+  date: string;
+  creatorWithdrawalAmount: number;
+  withdrawalState: number;
+}
 export interface IncomeCashRes {
   creatorTotalIncome: number;
   creatorReceivable: number;
@@ -60,15 +68,21 @@ export interface IncomeCashRes {
   settlementState: number;
 }
 interface UserInfoCardProps {
+  userProfileData: ContractionDataType;
   incomeData: IncomeCashRes;
+  withdrawalData: WithdrawalRes[];
   handleWithdrawalDialogOpen: () => void;
 }
 const UserInfoCard = ({
-  incomeData, handleWithdrawalDialogOpen
+  userProfileData, incomeData, withdrawalData, handleWithdrawalDialogOpen
 }: UserInfoCardProps): JSX.Element => {
   const classes = useStyles();
 
-  const profileData = useGetRequest('/creator');
+  // 배너 광고 첫 수익 여부 정보
+  const bannerAdStartData = useGetRequest('/creator/banner/start-check');
+  // 클릭 광고 첫 수익 여부 정보
+  const clickAdStartData = useGetRequest('/creator/clicks/start-check');
+
   function getSettlementString(settlementState: number): string {
     let result;
     switch (settlementState) {
@@ -87,6 +101,7 @@ const UserInfoCard = ({
     }
     return result;
   }
+
   return (
     <Paper className={classes.container}>
 
@@ -95,46 +110,59 @@ const UserInfoCard = ({
         <Avatar
           variant="circle"
           className={classes.avatar}
-          src={profileData.data ? profileData.data.creatorLogo : ''}
+          src={userProfileData.creatorLogo}
         />
         <div>
           <div>
             <Typography variant="h5" className={classes.bold}>
-              {profileData.data ? profileData.data.creatorName : ''}
+              {userProfileData.creatorName}
               &nbsp;
               <Typography component="span" variant="body2">아프리카,</Typography>
               <Typography component="span" variant="body2">트위치</Typography>
             </Typography>
             <Typography variant="caption">
-              {profileData.data ? profileData.data.creatorMail : ''}
+              {userProfileData.creatorMail}
             </Typography>
           </div>
           {/* 상태 칩 섹션 */}
-          <Chip
-            className={classes.chip}
-            size="small"
-            color="primary"
-            label={profileData.data && profileData.data.creatorContractionAgreement === 1
-              ? '이용 동의완료'
-              : '이용 미동의'}
-          />
-          <Chip
-            className={classnames(classes.chip, classes.success)}
-            size="small"
-            label={profileData.data && getSettlementString(profileData.data.settlementState)}
-          />
+          <Grow in>
+            <Chip
+              className={classes.chip}
+              size="small"
+              color="primary"
+              label={userProfileData.creatorContractionAgreement === 1
+                ? '이용 동의완료'
+                : '이용 미동의'}
+            />
+          </Grow>
+          <Grow in>
+            <Chip
+              className={classnames(classes.chip, classes.success)}
+              size="small"
+              label={getSettlementString(userProfileData.settlementState)}
+            />
+          </Grow>
           {/* 한번이라도 배너 송출 로그가 찍혀있는 경우 설정 완료로 처리 */}
-          <Chip
-            className={classnames(classes.chip, classes.info)}
-            size="small"
-            label="배너 오버레이 설정완료"
-          />
-          {/* 한번이라도 클릭 로그가 찍혀 있는 경우 설정 완료로 처리 */}
-          <Chip
-            className={classnames(classes.chip, classes.black)}
-            size="small"
-            label="클릭광고 설정완료"
-          />
+          {!bannerAdStartData.loading && bannerAdStartData.data && (
+            <Grow in>
+              <Chip
+                className={classnames(classes.chip)}
+                size="small"
+                color="secondary"
+                label="배너광고 첫수익달성"
+              />
+            </Grow>
+          )}
+          {/* 클릭 로그가 찍혀 있는 경우  처리 */}
+          {!clickAdStartData.loading && clickAdStartData.data && (
+            <Grow in>
+              <Chip
+                className={classnames(classes.chip, classes.info)}
+                size="small"
+                label="클릭광고 첫수익달성"
+              />
+            </Grow>
+          )}
         </div>
       </div>
 
@@ -166,27 +194,45 @@ const UserInfoCard = ({
       <Divider />
 
       <div className={classes.withdrawalSection}>
-        <div className={classes.withdrawalItem}>
-          <Typography className={classes.ellipsis}>123,456원 출금 신청 완료, 정산 대기중...</Typography>
-          <Chip
-            size="small"
-            className={classnames(classes.chip, classes.success, classes.withdrawalChip)}
-            label="00월 정산 예정"
-          />
+        {withdrawalData.length === 0 && (
+        <div className={classes.flex} style={{ marginTop: 32 }}>
+          <Typography variant="body2" className={classes.ellipsis}>아직 출금 신청 내역이 없어요..</Typography>
         </div>
-        <div className={classes.withdrawalItem}>
-          <Typography className={classes.ellipsis}>123,456원 출금 신청 진행중...</Typography>
-          <Chip
-            size="small"
-            className={classnames(classes.chip, classes.success, classes.withdrawalChip)}
-            label="00월 정산 예정"
-          />
-        </div>
+        )}
+        {withdrawalData && withdrawalData.slice(0, 2).map((withdrawalRequest) => (
+          <div className={classes.withdrawalItem} key={shortid.generate()}>
+            <Typography className={classes.ellipsis}>
+              {`${withdrawalRequest.creatorWithdrawalAmount.toLocaleString()}원 출금신청 `}
+              <Typography component="span" variant="caption" color="textSecondary">
+                {moment(withdrawalRequest.date).format('YYYY년 MM월 DD일')}
+              </Typography>
+            </Typography>
+            <Chip
+              size="small"
+              className={classnames({
+                [classes.chip]: true,
+                [classes.success]: withdrawalRequest.withdrawalState === 1,
+                [classes.info]: withdrawalRequest.withdrawalState === 0,
+                [classes.withdrawalChip]: true,
+              })}
+              label={withdrawalRequest.withdrawalState === 1 ? '정산 완료' : '정산 예정'}
+            />
+          </div>
+        ))}
+        {!(withdrawalData.length === 0) && (
         <div className={classes.right}>
-          <Typography variant="caption" color="textSecondary" className={classes.moreButton}>
+          <Typography
+            variant="caption"
+            color="textSecondary"
+            className={classes.moreButton}
+            onClick={(): void => {
+              history.push('/mypage/creator/user');
+            }}
+          >
             자세히 보기
           </Typography>
         </div>
+        )}
       </div>
     </Paper>
   );

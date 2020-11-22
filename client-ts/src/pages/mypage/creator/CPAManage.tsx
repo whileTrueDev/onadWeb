@@ -31,6 +31,7 @@ export interface ContractionDataType {
   creatorLogo: string;
   NowIp: string;
   CPAAgreement: number;
+  settlementState: number;
 }
 export default function CPAManage(): JSX.Element {
   const contractionGet = useGetRequest<null, ContractionDataType>('/creator');

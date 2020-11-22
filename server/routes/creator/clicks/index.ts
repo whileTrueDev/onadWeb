@@ -34,4 +34,21 @@ router.route('/')
   )
   .all(responseHelper.middleware.unusedMethod);
 
+/**
+ * 클릭 광고로 첫 수익 달성 여부를 반환하는 라우터.
+ */
+router.route('/start-check').get(
+  responseHelper.middleware.checkSessionExists,
+  responseHelper.middleware.withErrorCatch((async (req, res, next) => {
+    const { creatorId } = responseHelper.getSessionData(req);
+    const query = `
+    SELECT * FROM campaignLog WHERE creatorId = ? AND type = "CPC" ORDER BY date DESC LIMIT 1`;
+    doQuery(query, [creatorId])
+      .then((row) => {
+        responseHelper.send(row.result, 'get', res);
+      })
+      .catch((error) => { responseHelper.promiseError(error, next); });
+  }))
+);
+
 export default router;

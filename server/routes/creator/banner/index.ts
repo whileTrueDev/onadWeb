@@ -117,6 +117,23 @@ const getIncomePerCampaign = async ({
   return newList;
 };
 
+/**
+ * 배너 광고로 첫 수익 달성 여부를 반환하는 라우터.
+ */
+router.route('/start-check').get(
+  responseHelper.middleware.checkSessionExists,
+  responseHelper.middleware.withErrorCatch((async (req, res, next) => {
+    const { creatorId } = responseHelper.getSessionData(req);
+    const query = `
+    SELECT * FROM campaignLog WHERE creatorId = ? AND TYPE = "CPM" ORDER BY date DESC LIMIT 1`;
+    doQuery(query, [creatorId])
+      .then((row) => {
+        responseHelper.send(row.result, 'get', res);
+      })
+      .catch((error) => { responseHelper.promiseError(error, next); });
+  }))
+);
+
 router.route('/list')
   // 크리에이터 배너 목록 정보
   .get(

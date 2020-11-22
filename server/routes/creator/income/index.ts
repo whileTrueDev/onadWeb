@@ -56,7 +56,7 @@ router.route('/withdrawal')
 
       const query = `
       SELECT
-      DATE_FORMAT(DATE, "%Y년 %m월 %d일") as date, creatorWithdrawalAmount, withdrawalState
+        date, creatorWithdrawalAmount, withdrawalState
       FROM creatorWithdrawal
       WHERE creatorId= ?
       ORDER BY date DESC

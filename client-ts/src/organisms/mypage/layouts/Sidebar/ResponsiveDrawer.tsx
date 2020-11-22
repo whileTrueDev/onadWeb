@@ -11,7 +11,6 @@ import {
 } from '@material-ui/core/styles';
 import { Button, Typography, useTheme } from '@material-ui/core';
 import { Link } from 'react-router-dom';
-import shortid from 'shortid';
 import { drawerWidth } from '../../../../assets/jss/onad';
 import history from '../../../../history';
 import { MypageRoute } from '../../../../pages/mypage/routes';

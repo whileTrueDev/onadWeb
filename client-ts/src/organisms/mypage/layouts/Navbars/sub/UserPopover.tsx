@@ -16,16 +16,16 @@ import useTheme from '@material-ui/core/styles/useTheme';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import { UseGetRequestObject } from '../../../../../utils/hooks/useGetRequest';
 import { OnadTheme } from '../../../../../theme';
+import { ContractionDataType } from '../../../../../pages/mypage/creator/CPAManage';
 
 const useStyles = makeStyles((theme) => ({
-  container: {
-    width: 280,
-  },
+  container: { width: 280, },
   icon: { marginRight: theme.spacing(2) }
 }));
 
 export interface UserPopoverProps {
   open: boolean;
+  userData: ContractionDataType;
   anchorEl?: HTMLElement | null;
   handleAnchorClose: () => void;
   handleLogoutClick: () => void;
@@ -35,6 +35,7 @@ export interface UserPopoverProps {
 export default function UserPopover(props: UserPopoverProps): JSX.Element {
   const {
     open,
+    userData,
     anchorEl,
     handleAnchorClose,
     handleLogoutClick,
@@ -64,8 +65,11 @@ export default function UserPopover(props: UserPopoverProps): JSX.Element {
         {/* 유저 정보 */}
         <List>
           <ListItem style={{ display: 'flex', alignItems: 'center' }}>
-            <Avatar className={classes.icon} />
-            <ListItemText primary="유저 이름" secondary="유저 이메일@email.com" />
+            <Avatar className={classes.icon} src={userData.creatorLogo} />
+            <ListItemText
+              primary={userData.creatorName}
+              secondary={userData.creatorMail}
+            />
           </ListItem>
         </List>
         <Divider />

@@ -15,7 +15,7 @@ import IncomeChart, {
 } from '../../../organisms/mypage/creator/Dashboard/IncomeChart';
 import BannerCard, { CurrentBannerRes } from '../../../organisms/mypage/creator/Dashboard/BannerCard';
 import OverlayUrlCard, { OverlayUrlRes } from '../../../organisms/mypage/creator/Dashboard/OverlayUrlCard';
-import DashboardLoading from './Dashboard.loading';
+import MypageLoading from './Mypage.loading';
 import NoticeCard, { NoticeData } from '../../../organisms/mypage/creator/Dashboard/NoticeCard';
 import CustomerServiceCard from '../../../organisms/mypage/creator/Dashboard/CustomerServiceCard';
 import EventInfoCard from '../../../organisms/mypage/creator/Dashboard/EventInfoCard';
@@ -26,7 +26,7 @@ import { ContractionDataType } from './CPAManage';
 
 const Dashboard = (): JSX.Element => {
   // 계약 정보 조회
-  const contractionGet = useGetRequest<null, ContractionDataType>('/creator');
+  const profileGet = useGetRequest<null, ContractionDataType>('/creator');
   // 수익금 정보 조회
   const incomeCashGet = useGetRequest<null, IncomeCashRes>('/creator/income');
   // 광고페이지 정보 조회
@@ -43,6 +43,9 @@ const Dashboard = (): JSX.Element => {
   const overlayUrlGet = useGetRequest<null, OverlayUrlRes>('/creator/banner/overlay');
   // 공지사항 정보 조회
   const noticeGet = useGetRequest<null, NoticeData[]>('/notice');
+  // 출금 내역 정보
+  const withdrawalData = useGetRequest('/creator/income/withdrawal');
+
   // 오버레이 url 복사 성공 알림 스낵바를 위한 객체
   const snack = useDialog();
 
@@ -58,13 +61,14 @@ const Dashboard = (): JSX.Element => {
   };
   const handleClose = (): void => { setOpen(false); };
   // *************************** 작업중 빼둔것.
+
   return (
     <>
       <div style={{ margin: '0 auto', maxWidth: 1430 }}>
-        {(contractionGet.loading || incomeCashGet.loading
+        {(profileGet.loading || incomeCashGet.loading
         || clicksGet.loading || levelGet.loading || incomeChartGet.loading
         || currentBannerGet.loading || overlayUrlGet.loading) ? (
-          <DashboardLoading />
+          <MypageLoading />
           ) : (
             <GridContainer direction="row">
 
@@ -81,8 +85,8 @@ const Dashboard = (): JSX.Element => {
               )}
 
               {/* 배너 권장 크기 및 무효화 공지 */}
-              {!contractionGet.loading && contractionGet.data
-                && Boolean(contractionGet.data.creatorContractionAgreement)
+              {!profileGet.loading && profileGet.data
+                && Boolean(profileGet.data.creatorContractionAgreement)
                 && (
                   <Hidden smDown>
                     <GridItem xs={12} md={12} lg={6}>
@@ -95,11 +99,11 @@ const Dashboard = (): JSX.Element => {
               {/* 온애드 시작 가이드 */}
               <GridItem xs={12} lg={6}>
                 {!overlayUrlGet.loading && overlayUrlGet.data
-                && !contractionGet.loading && contractionGet.data && (
+                && !profileGet.loading && profileGet.data && (
                 <StartGuideCard
-                  doContractionDataRequest={contractionGet.doGetRequest}
+                  doContractionDataRequest={profileGet.doGetRequest}
                   overlayUrlData={overlayUrlGet.data}
-                  contractionData={contractionGet.data}
+                  contractionData={profileGet.data}
                   handleSnackOpen={snack.handleOpen}
                 />
                 )}
@@ -117,8 +121,12 @@ const Dashboard = (): JSX.Element => {
 
               {/* 유저 정보 및 수익금 카드 */}
               <GridItem xs={12} lg={6}>
-                {!incomeCashGet.loading && incomeCashGet.data && (
+                {!incomeCashGet.loading && incomeCashGet.data
+                && !profileGet.loading && profileGet.data
+                && !withdrawalData.loading && (
                 <UserInfoCard
+                  userProfileData={profileGet.data}
+                  withdrawalData={withdrawalData.data}
                   incomeData={incomeCashGet.data}
                   handleWithdrawalDialogOpen={handleOpen}
                 />
@@ -156,12 +164,12 @@ const Dashboard = (): JSX.Element => {
               </GridItem>
 
               {/* 고객센터 카드 */}
-              <GridItem xs={12} sm={3}>
+              <GridItem xs={12} sm={6} lg={3}>
                 <CustomerServiceCard />
               </GridItem>
 
               {/* 이벤트 알림 카드 */}
-              <GridItem xs={12} sm={3}>
+              <GridItem xs={12} sm={6} lg={3}>
                 <EventInfoCard />
               </GridItem>
 

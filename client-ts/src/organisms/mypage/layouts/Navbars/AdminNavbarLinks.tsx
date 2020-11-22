@@ -18,6 +18,7 @@ import useAnchorEl from '../../../../utils/hooks/useAnchorEl';
 // types
 import { NoticeDataParam, NoticeDataRes } from './NotificationType';
 import UserPopover from './sub/UserPopover';
+import { ContractionDataType } from '../../../../pages/mypage/creator/CPAManage';
 
 const useStyles = makeStyles((theme) => ({
   avatar: { width: theme.spacing(4), height: theme.spacing(4) }
@@ -67,6 +68,8 @@ function HeaderLinks(): JSX.Element {
   const userLogoAnchor = useAnchorEl();
   // anchorEl, handleAnchorOpen, handleAnchorOpenWithRef, handleAnchorClose
 
+  // 유저 정보 조회
+  const userProfileGet = useGetRequest<null, ContractionDataType>('/creator');
 
   return (
     <div>
@@ -93,7 +96,7 @@ function HeaderLinks(): JSX.Element {
       </Tooltip>
 
       <IconButton size="small" onClick={userLogoAnchor.handleAnchorOpen}>
-        <Avatar className={classes.avatar} />
+        <Avatar className={classes.avatar} src={userProfileGet.data ? userProfileGet.data.creatorLogo : ''} />
       </IconButton>
 
 
@@ -108,8 +111,10 @@ function HeaderLinks(): JSX.Element {
       )}
 
       {/* 유저 설정 리스트 */}
+      {!userProfileGet.loading && userProfileGet.data && (
       <UserPopover
         open={userLogoAnchor.open}
+        userData={userProfileGet.data}
         anchorEl={userLogoAnchor.anchorEl}
         handleAnchorClose={userLogoAnchor.handleAnchorClose}
         handleLogoutClick={handleLogoutClick}
@@ -118,6 +123,7 @@ function HeaderLinks(): JSX.Element {
           noticeReadFlagPatch.doPatchRequest({ userType });
         }}
       />
+      )}
     </div>
   );
 }
