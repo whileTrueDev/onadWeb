@@ -32,6 +32,7 @@ const useStyles = makeStyles((theme) => ({
   bold: { fontWeight: 'bold' },
   chip: {
     marginRight: theme.spacing(1) / 2,
+    marginTop: theme.spacing(1) / 2,
     color: theme.palette.common.white,
   },
   success: { backgroundColor: theme.palette.success.main, },

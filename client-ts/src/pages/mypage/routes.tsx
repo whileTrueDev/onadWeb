@@ -10,7 +10,7 @@ import Mouse from '@material-ui/icons/Mouse'; // 마우스 아이콘
 import HowToRegIcon from '@material-ui/icons/HowToReg';
 
 // 크리에이터 라우터
-import CreatorCampaignManage from './creator/CampaignManage';
+import CreatorMyBanner from './creator/MyBanner';
 import CreatorDashboard from './creator/Dashboard';
 import CreatorManual from './creator/Manual';
 import CreatorMyPage from './creator/Mypage';
@@ -54,7 +54,7 @@ const dashboardRoutes: MypageRoutes = {
       path: '/banner',
       name: '내 배너광고',
       icon: BrandingWatermark,
-      component: CreatorCampaignManage,
+      component: CreatorMyBanner,
       layout: '/mypage/creator',
     },
     {

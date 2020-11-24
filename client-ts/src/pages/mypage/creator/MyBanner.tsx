@@ -10,7 +10,7 @@ import { CampaignTableData } from '../../../organisms/mypage/creator/CampaignMan
 import useDialog from '../../../utils/hooks/useDialog';
 import useGetRequest from '../../../utils/hooks/useGetRequest';
 
-const CampaignManage = (): JSX.Element => {
+const MyBanner = (): JSX.Element => {
   // 캠페인목록을 조회하기 위한 객체
   const campaignTableGet = useGetRequest<null, CampaignTableData[]>('/creator/banner/list');
   // 배너광고 그만하기 성공시 스낵바
@@ -40,4 +40,4 @@ const CampaignManage = (): JSX.Element => {
     </>
   );
 };
-export default CampaignManage;
+export default MyBanner;

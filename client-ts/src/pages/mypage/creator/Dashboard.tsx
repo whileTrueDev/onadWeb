@@ -89,10 +89,9 @@ const Dashboard = (): JSX.Element => {
                 && Boolean(profileGet.data.creatorContractionAgreement)
                 && (
                   <Hidden smDown>
-                    <GridItem xs={12} md={12} lg={6}>
+                    <GridItem xs={12}>
                       <AlertCard />
                     </GridItem>
-                    <GridItem lg={6} />
                   </Hidden>
                 )}
 
