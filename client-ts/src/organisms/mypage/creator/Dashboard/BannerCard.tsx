@@ -47,7 +47,7 @@ function BannerCard({ currentBannerData }: BannerCardProps): JSX.Element {
       </div>
 
       <div className={classes.section}>
-        {currentBannerData.length >= 0 && (
+        {currentBannerData.length <= 0 && (
         <div className={classes.area}>
           <Typography variant="body1" className={classes.head}>
             매칭된 광고가 없습니다.
@@ -93,7 +93,7 @@ function BannerCard({ currentBannerData }: BannerCardProps): JSX.Element {
           className={classes.moreButton}
           variant="caption"
           color="textSecondary"
-          onClick={(): void => { history.push('/mypage/creator/banner'); }}
+          onClick={(): void => { history.push('/mypage/creator/ad'); }}
         >
           자세히 보기
         </Typography>

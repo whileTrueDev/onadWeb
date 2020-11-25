@@ -64,6 +64,24 @@ router.route('/')
   )
   .all(responseHelper.middleware.unusedMethod);
 
+/**
+ * 배너 광고로 첫 수익 달성 여부를 반환하는 라우터.
+ */
+router.route('/start-check').get(
+  responseHelper.middleware.checkSessionExists,
+  responseHelper.middleware.withErrorCatch((async (req, res, next) => {
+    const { creatorId } = responseHelper.getSessionData(req);
+    const query = `
+    SELECT * FROM campaignLog WHERE creatorId = ? AND TYPE = "CPM" ORDER BY date DESC LIMIT 1`;
+    doQuery(query, [creatorId])
+      .then((row) => {
+        responseHelper.send(row.result, 'get', res);
+      })
+      .catch((error) => { responseHelper.promiseError(error, next); });
+  }))
+);
+
+
 // 캠페인 ID array 를 통해 각 캠페인 ID에 따른 cash를 구하는 함수.
 // banList에 존재할 때 state 또한 변경하는 함수.
 const getIncomePerCampaign = async ({
@@ -117,46 +135,36 @@ const getIncomePerCampaign = async ({
   return newList;
 };
 
-/**
- * 배너 광고로 첫 수익 달성 여부를 반환하는 라우터.
- */
-router.route('/start-check').get(
-  responseHelper.middleware.checkSessionExists,
-  responseHelper.middleware.withErrorCatch((async (req, res, next) => {
-    const { creatorId } = responseHelper.getSessionData(req);
-    const query = `
-    SELECT * FROM campaignLog WHERE creatorId = ? AND TYPE = "CPM" ORDER BY date DESC LIMIT 1`;
-    doQuery(query, [creatorId])
-      .then((row) => {
-        responseHelper.send(row.result, 'get', res);
-      })
-      .catch((error) => { responseHelper.promiseError(error, next); });
-  }))
-);
-
 router.route('/list')
   // 크리에이터 배너 목록 정보
   .get(
     responseHelper.middleware.checkSessionExists,
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
       const { creatorId } = responseHelper.getSessionData(req);
+      const [page, offset] = responseHelper.getOptionalParam(['page', 'offset'], 'get', req);
+      const startNum = Number(page) * Number(offset);
+
       const listQuery = `
       SELECT
-        CT.campaignId, CT.date, BR.bannerSrc, CT.creatorId, campaign.connectedLinkId,
-        campaign.onOff as state, campaign.marketerName, IR.links
+      CT.campaignId, CT.date, CT.creatorId,
+      BR.bannerSrc,
+      campaign.connectedLinkId, campaign.onOff as state, campaign.marketerName,
+      campaign.campaignDescription, campaign.priorityType, campaign.optionType, campaign.targetList,
+      IR.links
       FROM (
-        SELECT creatorId, campaignId , min(date) as date 
-        FROM campaignTimestamp
-        WHERE creatorId = ?
-        GROUP BY campaignId
+      SELECT creatorId, campaignId , min(date) as date
+      FROM campaignTimestamp
+      WHERE creatorId = ?
+      GROUP BY campaignId
       ) AS CT
-      JOIN campaign 
-        ON CT.campaignId = campaign.campaignId
+      JOIN campaign
+      ON CT.campaignId = campaign.campaignId
       JOIN bannerRegistered AS BR
-        ON campaign.bannerId = BR.bannerId
+      ON campaign.bannerId = BR.bannerId
       LEFT JOIN linkRegistered AS IR
-        ON connectedLinkId = IR.linkId
-      ORDER BY date DESC
+      ON connectedLinkId = IR.linkId
+         ORDER BY DATE DESC
+         LIMIT ?, ?   
       `;
       const bannerQuery = `
       SELECT banList 
@@ -165,7 +173,7 @@ router.route('/list')
       `;
 
       Promise.all([
-        doQuery(listQuery, [creatorId]),
+        doQuery(listQuery, [creatorId, Number(startNum), Number(offset)]),
         doQuery(bannerQuery, [creatorId])
       ])
         .then(async ([row, ban]) => {

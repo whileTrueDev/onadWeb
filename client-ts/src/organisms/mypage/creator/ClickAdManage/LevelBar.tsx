@@ -36,7 +36,6 @@ export default function LevelBar({
       <PrettoSlider
         style={{ cursor: 'default', width: '90%' }}
         max={500}
-        valueLabelDisplay="on"
         aria-label="pretto slider creator-ad-level"
         value={exp}
       />
