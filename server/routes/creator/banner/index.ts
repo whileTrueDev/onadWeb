@@ -221,15 +221,17 @@ router.route('/active')
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
       const { creatorId } = responseHelper.getSessionData(req);
       const query = `
-          SELECT cp.bannerId, bannerSrc, cp.campaignName, cp.campaignDescription
-          FROM campaignTimestamp AS ct 
-          JOIN campaign AS cp 
-          ON ct.campaignId = cp.campaignId 
-          JOIN bannerRegistered AS br 
-          ON cp.bannerId = br.bannerId
-          WHERE creatorId = ? 
-          AND ct.DATE > DATE_ADD(NOW(), INTERVAL - 10 MINUTE) 
-          ORDER BY ct.DATE DESC LIMIT 1
+      SELECT cp.bannerId, bannerSrc, cp.campaignName, cp.campaignDescription, lr.links, cp.regiDate
+      FROM campaignTimestamp AS ct 
+      JOIN campaign AS cp 
+      ON ct.campaignId = cp.campaignId 
+      JOIN bannerRegistered AS br 
+      ON cp.bannerId = br.bannerId
+      JOIN linkRegistered AS lr
+      ON cp.connectedLinkId = lr.linkId
+      WHERE creatorId = "130096343"
+      AND ct.DATE > DATE_ADD(NOW(), INTERVAL - 10 MINUTE) 
+      ORDER BY ct.DATE DESC LIMIT 1
         `;
 
       doQuery(query, [creatorId])

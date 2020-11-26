@@ -41,7 +41,7 @@ const ClickAdCard = ({
           클릭광고 현황
         </Typography>
         <Typography variant="caption">
-          내 클릭광고 탭에서 자세히 확인할 수 있습니다.
+          내 광고관리 탭에서 자세히 확인할 수 있습니다.
         </Typography>
       </div>
 
@@ -94,7 +94,7 @@ const ClickAdCard = ({
           className={classes.moreButton}
           variant="caption"
           color="textSecondary"
-          onClick={(): void => { history.push('/mypage/creator/ad-dashboard'); }}
+          onClick={(): void => { history.push('/mypage/creator/ad'); }}
         >
           자세히 보기
         </Typography>

@@ -1,9 +1,8 @@
-import moment from 'moment';
 import { Paper, Typography } from '@material-ui/core';
 import React from 'react';
 import { Cell, Pie, PieChart } from 'recharts';
 
-export default function AnotherCard2(): JSX.Element {
+export default function AdIncomeCard(): JSX.Element {
   const COLORS = ['#0088FE', '#00C49F', '#FFBB28'];
 
   const data01 = [
@@ -14,7 +13,7 @@ export default function AnotherCard2(): JSX.Element {
   const RADIAN = Math.PI / 180;
   const renderCustomizedLabel = ({
     cx, cy, midAngle, innerRadius, outerRadius, percent, index,
-  }: any) => {
+  }: any): JSX.Element => {
     const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
     const x = cx + radius * Math.cos(-midAngle * RADIAN);
     const y = cy + radius * Math.sin(-midAngle * RADIAN);
@@ -30,9 +29,17 @@ export default function AnotherCard2(): JSX.Element {
       height: 200, padding: 32, marginBottom: 16,
     }}
     >
-      <div style={{ display: 'flex', }}>
+      <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
         <div>
-          <Typography style={{ fontWeight: 'bold' }}>광고 수익 정보</Typography>
+          <Typography>배너광고수익</Typography>
+          <Typography variant="h4" style={{ fontWeight: 'bold' }}>2000만원</Typography>
+          <Typography>클릭광고수익</Typography>
+          <Typography variant="h4" style={{ fontWeight: 'bold' }}>1500만원</Typography>
+          <Typography>채팅광고수익</Typography>
+          <Typography variant="h4" style={{ fontWeight: 'bold' }}>1800만원</Typography>
+        </div>
+        <div>
+          <Typography style={{ fontWeight: 'bold' }}>광고 수익 비율</Typography>
           <PieChart width={180} height={180}>
             <Pie
               data={data01}
@@ -49,18 +56,9 @@ export default function AnotherCard2(): JSX.Element {
           </PieChart>
         </div>
 
-        <div style={{ marginLeft: 16 }}>
-          <Typography style={{ fontWeight: 'bold', marginBottom: 16 }}>최근 광고 클릭</Typography>
-
-          <Typography variant="body2">동안미비누 - asdfasdf - from http://localhost:3301/asdfasdf/asdfasdf</Typography>
-          <Typography variant="body2">{`인제떡방 ${moment(new Date()).format('YYYY년 MM월 DD일 HH시 mm분')}`}</Typography>
-          <Typography variant="body2">동안미비누 - asdfasdf - from http://localhost:3301/asdfasdf/asdfasdf</Typography>
-          <Typography variant="body2">동안미비누 - asdfasdf - from http://localhost:3301/asdfasdf/asdfasdf</Typography>
-          <Typography variant="body2">모지랑이</Typography>
-          <Typography variant="body2">모지랑이</Typography>
-          <Typography variant="body2">{`인제떡방 ${moment(new Date()).format('YYYY년 MM월 DD일 HH시 mm분')}`}</Typography>
-        </div>
       </div>
+
+
     </Paper>
   );
 }

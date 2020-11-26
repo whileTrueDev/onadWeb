@@ -1,33 +1,145 @@
+import classnames from 'classnames';
 import {
-  FormControlLabel, Paper, Switch, Typography
+  FormControlLabel, Hidden, makeStyles, Paper, Popover, Switch, Typography
 } from '@material-ui/core';
 import HelpIcon from '@material-ui/icons/Help';
 import React from 'react';
+import { useAnchorEl, usePatchRequest } from '../../../../utils/hooks';
+import { UseGetRequestObject } from '../../../../utils/hooks/useGetRequest';
 
-export default function ChatAdInfo(): JSX.Element {
+const useStyles = makeStyles((theme) => ({
+  bold: { fontWeight: theme.typography.fontWeightBold },
+  highlight: { color: theme.palette.primary.main },
+  container: {
+    height: 200,
+    padding: theme.spacing(4),
+    marginBottom: theme.spacing(2),
+    [theme.breakpoints.down('md')]: {
+      height: 125,
+    }
+  },
+  onoffButton: { marginTop: theme.spacing(4), textAlign: 'center' },
+  popover: { maxWidth: 450 },
+  popoverContents: { padding: theme.spacing(4), },
+  alignCenter: { textAlign: 'center' },
+}));
+
+export interface AdChatRes { adChatAgreement: 1 | 0 }
+export interface ChatAdInfoProps {
+  adChatData: UseGetRequestObject<AdChatRes>;
+  doGetReqeustOnOff: () => void;
+  successSnackOpen: () => void;
+  failSnackOpen: () => void;
+}
+export default function ChatAdInfo({
+  adChatData,
+  doGetReqeustOnOff,
+  successSnackOpen,
+  failSnackOpen,
+}: ChatAdInfoProps): JSX.Element {
+  const classes = useStyles();
+  const descAnchor = useAnchorEl();
+
+  // OnOff toggle
+  const onOffUpdate = usePatchRequest('/creator/adchat/agreement', () => {
+    doGetReqeustOnOff();
+  });
+  const handleSwitch = (): void => {
+    onOffUpdate.doPatchRequest({ targetOnOffState: !(adChatData.data?.adChatAgreement) });
+  };
+
+  // For OnOff update error
+  React.useEffect(() => {
+    if (onOffUpdate.error) {
+      failSnackOpen();
+    }
+  }, [failSnackOpen, onOffUpdate.error]);
+
   return (
-    <Paper style={{
-      height: 200, padding: 32, marginBottom: 16,
-    }}
-    >
-      <Typography style={{ fontWeight: 'bold' }}>
-        내 채팅 광고 상태
-        <HelpIcon fontSize="small" />
-      </Typography>
+    <Paper className={classes.container}>
+      <div style={{ height: '100%' }}>
+        <Typography className={classes.bold}>
+          내 채팅 광고 상태
+          <Hidden smDown>
+            <Typography
+              aria-owns={descAnchor.open ? 'mouse-over-popover' : undefined}
+              component="span"
+              aria-haspopup="true"
+              style={{ cursor: 'pointer' }}
+              onClick={descAnchor.handleAnchorOpen}
+            >
+              <HelpIcon fontSize="small" />
+            </Typography>
+          </Hidden>
+        </Typography>
 
-      <div style={{
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-        height: '100%'
-      }}
-      >
-        <FormControlLabel
-          label="Off/On"
-          control={(<Switch color="secondary" />)}
-        />
+        <Typography variant="caption" color="textSecondary">
+          현재 트위치만 가능합니다.
+        </Typography>
+
+        <div className={classes.onoffButton}>
+          <FormControlLabel
+            label="끄기/켜기"
+            control={(
+              <Switch
+                color="primary"
+                checked={Boolean(adChatData.data?.adChatAgreement)}
+                onChange={(): void => {
+                  handleSwitch();
+                  successSnackOpen();
+                }}
+              />
+          )}
+          />
+        </div>
       </div>
+
+      {descAnchor.open && (
+        <Popover
+          disableScrollLock
+          className={classes.popover}
+          id="mouse-over-popove"
+          open={descAnchor.open}
+          anchorEl={descAnchor.anchorEl}
+          anchorOrigin={{
+            vertical: 'bottom', horizontal: 'center',
+          }}
+          transformOrigin={{
+            vertical: 'top', horizontal: 'center',
+          }}
+          onClose={descAnchor.handleAnchorClose}
+          disableRestoreFocus
+        >
+          <div className={classnames(classes.popoverContents, classes.alignCenter)}>
+            <div className={classes.alignCenter}>
+              <img src="/pngs/dashboard/onaddy_example.png" alt="onaddy_example" width="320px" />
+            </div>
+            <Typography variant="body2">
+              온애드의 광고채팅봇 onadyy는 주기적으로 광고에 대한 설명과 광고 링크를 채팅으로 자동홍보합니다.
+              시청자가 onadyy가 홍보한 링크를 클릭하면, 클릭에 대한 수익이 크리에이터에게 발생합니다.
+            </Typography>
+            <br />
+            <Typography variant="body2">
+              onadyy가 채널 채팅창에서 홍보하는 것을 허용하려면
+              {' '}
+              <span className={classnames(classes.highlight, classes.bold)}>스위치를 On</span>
+              {' '}
+              시켜주세요. 스위치를 켜기만 하면 자동으로 광고가 송출됩니다.
+            </Typography>
+            <Typography variant="body2">
+              또한, onadyy가 광고채팅을 원활히 진행할 수 있게 채팅창에서 &quot;
+              <span className={classnames(classes.highlight, classes.bold)}>/mod onaddy</span>
+              &quot;를 입력해 매니저로 임명해주세요!
+            </Typography>
+
+            <br />
+            <Typography variant="body2">
+              아프리카TV의 경우 사용할 수 없습니다.
+            </Typography>
+          </div>
+
+        </Popover>
+      )}
     </Paper>
   );
 }

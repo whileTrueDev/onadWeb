@@ -42,16 +42,19 @@ function BannerCard({ currentBannerData }: BannerCardProps): JSX.Element {
           현재 송출중인 배너광고
         </Typography>
         <Typography variant="caption">
-          내 배너광고 탭에서 자세히 확인할 수 있습니다.
+          내 광고관리 탭에서 자세히 확인할 수 있습니다.
         </Typography>
       </div>
 
       <div className={classes.section}>
         {currentBannerData.length <= 0 && (
         <div className={classes.area}>
-          <Typography variant="body1" className={classes.head}>
-            매칭된 광고가 없습니다.
-          </Typography>
+          <div style={{ textAlign: 'center' }}>
+            <Typography variant="body1" className={classes.head}>
+              매칭된 광고가 없습니다.
+            </Typography>
+            <Typography variant="body2" color="textSecondary">정확하게 표시되지 않을 수 있습니다.</Typography>
+          </div>
         </div>
         )}
         {currentBannerData.map((bannerData) => (

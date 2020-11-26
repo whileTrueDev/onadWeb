@@ -9,7 +9,7 @@ import Work from '@material-ui/icons/Work';
 import HowToRegIcon from '@material-ui/icons/HowToReg';
 
 // 크리에이터 라우터
-import CreatorMyAd from './creator/MyBanner';
+import CreatorMyAds from './creator/MyAds';
 import CreatorDashboard from './creator/Dashboard';
 import CreatorManual from './creator/Manual';
 import CreatorMyPage from './creator/Mypage';
@@ -52,7 +52,7 @@ const dashboardRoutes: MypageRoutes = {
       path: '/ad',
       name: '내 광고 관리',
       icon: BrandingWatermark,
-      component: CreatorMyAd,
+      component: CreatorMyAds,
       layout: '/mypage/creator',
     },
     {
