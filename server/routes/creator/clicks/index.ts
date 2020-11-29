@@ -4,6 +4,10 @@ import doQuery from '../../../model/doQuery';
 
 const router = express.Router();
 
+export interface Link {
+  primary: boolean; linkName: string; linkTo: string;
+}
+
 router.route('/')
   .get(
     responseHelper.middleware.checkSessionExists,
@@ -34,6 +38,39 @@ router.route('/')
   )
   .all(responseHelper.middleware.unusedMethod);
 
+
+router.route('/current')
+  .get(responseHelper.middleware.checkSessionExists,
+    responseHelper.middleware.withErrorCatch(async (req, res, next) => {
+      const { creatorId } = responseHelper.getSessionData(req);
+      const [offset, page] = responseHelper.getParam(['offset', 'page'], 'get', req);
+      const query = `
+      SELECT tracking.id, clickedTime, costType, tracking.linkId, campaignName, links, creatorId, payout, channel
+        FROM tracking
+        JOIN linkRegistered AS lr
+        ON lr.linkId = tracking.linkId
+        WHERE creatorId = ?
+        ORDER BY clickedTime DESC
+        LIMIT ?, ?
+      `;
+      const queryArray = [creatorId, Number(page), Number(offset)];
+
+      interface CurrentClickQueryRes {
+        id: string; clickedTime: string; costType: string; linkId: string;
+        campaignName: string; links: string; creatorId: string;
+        payout: number; channel: string;
+      }
+
+      const { result } = await doQuery<CurrentClickQueryRes[]>(query, queryArray);
+      const response = result.map((click) => {
+        const links: { links: Link[] } = JSON.parse(click.links);
+        return {
+          ...click, links
+        };
+      });
+
+      responseHelper.send(response, 'get', res);
+    }));
 /**
  * 클릭 광고로 첫 수익 달성 여부를 반환하는 라우터.
  */

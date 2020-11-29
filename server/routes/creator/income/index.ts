@@ -47,6 +47,25 @@ router.route('/')
   )
   .all(responseHelper.middleware.unusedMethod);
 
+router.route('/ratio').get(
+  responseHelper.middleware.checkSessionExists,
+  responseHelper.middleware.withErrorCatch(async (req, res, next) => {
+    const { creatorId } = responseHelper.getSessionData(req);
+    const query = `
+    SELECT
+      creatorId, type, SUM(cashToCreator) as cashAmount
+      FROM campaignLog
+      WHERE creatorId= ?
+      GROUP BY type`;
+      // 248937084
+    interface RatioQueryResult {
+      creatorId: string; type: 'CPM' | 'CPC' | 'CPA'; cashAmount: number;
+    }
+    const { result } = await doQuery<RatioQueryResult>(query, [creatorId]);
+    responseHelper.send(result, 'get', res);
+  })
+);
+
 router.route('/withdrawal')
   // 크리에이터 출금 내역 리스트
   .get(

@@ -1,5 +1,5 @@
 import {
-  CircularProgress, makeStyles, Paper, Typography
+  CircularProgress, Grid, makeStyles, Paper, Typography
 } from '@material-ui/core';
 import React from 'react';
 import VideoBanner from '../../../../atoms/Banner/VideoBanner';
@@ -9,14 +9,20 @@ import { Link } from './BannerCard';
 
 const useStyles = makeStyles((theme) => ({
   container: {
-    padding: theme.spacing(4), marginTop: theme.spacing(1), height: 280, overflowY: 'auto'
+    height: 200,
+    padding: theme.spacing(4),
+    marginBottom: theme.spacing(2),
+    [theme.breakpoints.down('xs')]: { minHeight: 260, }
+  },
+  loading: {
+    display: 'flex', justifyContent: 'center', height: 200, alignItems: 'center'
   },
   bold: { fontWeight: 'bold' },
   section: { marginTop: theme.spacing(2) },
-  bannerContainer: { display: 'flex', marginBottom: theme.spacing(2), alignItems: 'center' },
-  bannerItem: { maxHeight: '160px', maxWidth: '320px', marginRight: theme.spacing(2) },
+  bannerContainer: { display: 'flex', },
+  bannerImgWrapper: { maxHeight: '160px', maxWidth: '320px', },
   area: {
-    display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 150
+    display: 'flex', alignItems: 'center', justifyContent: 'center', height: 200
   },
   head: { fontWeight: 700 },
 }));
@@ -39,10 +45,7 @@ export default function NowBroadCard({
   const classes = useStyles();
 
   return (
-    <Paper style={{
-      height: 200, padding: 32, marginBottom: 16,
-    }}
-    >
+    <Paper className={classes.container}>
       {/* 제목 */}
       <div>
         <Typography className={classes.bold}>
@@ -52,7 +55,7 @@ export default function NowBroadCard({
 
       <div className={classes.section}>
         {currentBannerGet.loading && (
-        <div style={{ textAlign: 'center' }}>
+        <div className={classes.loading}>
           <CircularProgress />
         </div>
         )}
@@ -71,28 +74,32 @@ export default function NowBroadCard({
         && currentBannerGet.data
           .slice(0, 1)
           .map((bannerData) => (
-            <div
+            <Grid
+              container
+              spacing={2}
               key={bannerData.campaignDescription}
               className={classes.bannerContainer}
             >
-              {isVideo(bannerData.bannerSrc) ? (
-                <VideoBanner
-                  src={bannerData.bannerSrc}
-                  draggable={false}
-                  alt="bannerArea"
-                  width="100%"
-                  height="100%"
-                  className={classes.bannerItem}
-                />
-              ) : (
-                <img
-                  src={bannerData.bannerSrc}
-                  draggable={false}
-                  alt="bannerArea"
-                  className={classes.bannerItem}
-                />
-              )}
-              <div>
+              <Grid item xs={12} sm={6} className={classes.bannerImgWrapper}>
+                {isVideo(bannerData.bannerSrc) ? (
+                  <VideoBanner
+                    src={bannerData.bannerSrc}
+                    draggable={false}
+                    alt="bannerArea"
+                    width="100%"
+                    height="100%"
+                  />
+                ) : (
+                  <img
+                    src={bannerData.bannerSrc}
+                    draggable={false}
+                    alt="bannerArea"
+                    width="100%"
+                    height="100%"
+                  />
+                )}
+              </Grid>
+              <Grid item xs={12} sm={6}>
                 <Typography
                   variant="body1"
                   style={{ fontWeight: 'bold', cursor: 'pointer', textDecoration: 'underline' }}
@@ -109,11 +116,13 @@ export default function NowBroadCard({
                     : bannerData.campaignName}
                 </Typography>
                 <Typography variant="body2">
-                  {bannerData.campaignDescription}
+                  {bannerData.campaignDescription.length > 50
+                    ? `${bannerData.campaignDescription.substr(0, 50)}...`
+                    : bannerData.campaignDescription}
                 </Typography>
                 <Typography variant="body2" />
-              </div>
-            </div>
+              </Grid>
+            </Grid>
           ))}
       </div>
     </Paper>

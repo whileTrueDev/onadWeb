@@ -1,5 +1,5 @@
 import React from 'react';
-import { Paper, Typography } from '@material-ui/core';
+import { Grid, Paper, Typography } from '@material-ui/core';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import history from '../../../../history';
 import isVideo from '../../../../utils/isVideo';
@@ -11,8 +11,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   bold: { fontWeight: 'bold' },
   section: { marginTop: theme.spacing(2) },
-  bannerContainer: { display: 'flex', marginBottom: theme.spacing(2), alignItems: 'center' },
-  bannerItem: { maxHeight: '160px', maxWidth: '320px', marginRight: theme.spacing(2) },
+  bannerContainer: { display: 'flex', alignItems: 'center' },
+  bannerItem: { maxHeight: '160px', maxWidth: '320px', },
   area: {
     display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 150
   },
@@ -58,36 +58,40 @@ function BannerCard({ currentBannerData }: BannerCardProps): JSX.Element {
         </div>
         )}
         {currentBannerData.map((bannerData) => (
-          <div
+          <Grid
+            container
+            spacing={2}
             key={bannerData.campaignDescription}
             className={classes.bannerContainer}
           >
-            {isVideo(bannerData.bannerSrc) ? (
-              <VideoBanner
-                src={bannerData.bannerSrc}
-                draggable={false}
-                alt="bannerArea"
-                width="100%"
-                height="100%"
-                className={classes.bannerItem}
-              />
-            ) : (
-              <img
-                src={bannerData.bannerSrc}
-                draggable={false}
-                alt="bannerArea"
-                className={classes.bannerItem}
-              />
-            )}
-            <div>
+            <Grid item xs={12} md={6} className={classes.bannerItem}>
+              {isVideo(bannerData.bannerSrc) ? (
+                <VideoBanner
+                  src={bannerData.bannerSrc}
+                  draggable={false}
+                  alt="bannerArea"
+                  width="100%"
+                  height="100%"
+                />
+              ) : (
+                <img
+                  src={bannerData.bannerSrc}
+                  draggable={false}
+                  alt="bannerArea"
+                  width="100%"
+                  height="100%"
+                />
+              )}
+            </Grid>
+            <Grid item xs={12} lg={6}>
               <Typography variant="body1" gutterBottom>
                 {bannerData.campaignName}
               </Typography>
               <Typography variant="body2">
                 {bannerData.campaignDescription}
               </Typography>
-            </div>
-          </div>
+            </Grid>
+          </Grid>
         ))}
       </div>
 

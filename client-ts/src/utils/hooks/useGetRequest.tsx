@@ -11,7 +11,7 @@ export interface UseGetRequestObject<T> {
   data: T | null;
   loading: boolean | null;
   error: string;
-  doGetRequest: () => void;
+  doGetRequest: (newParam?: any) => void;
   setData: React.Dispatch<React.SetStateAction<T | null>>;
 }
 
@@ -52,10 +52,10 @@ export default function useGetRequest<
   const [source] = useState(cancelToken.source());
 
 
-  const doGetRequest = useCallback(() => {
+  const doGetRequest = useCallback((newParam?: PARAM_TYPE) => {
     setLoading(true);
     axios.get<RES_DATA_TYPE>(`${host}${url}`, {
-      params: { ...param },
+      params: newParam ? { ...newParam } : { ...param },
       cancelToken: source.token,
       withCredentials: true
     })

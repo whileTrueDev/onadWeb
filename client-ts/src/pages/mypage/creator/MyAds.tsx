@@ -36,7 +36,7 @@ const MyBanner = (): JSX.Element => {
   // Adchat agreement
   const adchatGet = useGetRequest<null, AdChatRes>('/creator/adchat/agreement');
   // Creator click data
-  const clicksGet = useGetRequest<null, ClicksRes>('/creator/clicks');
+  const clicksSummaryGet = useGetRequest<null, ClicksRes>('/creator/clicks');
   // Creator Level data
   const levelGet = useGetRequest<null, LevelRes>('/creator/level');
   // 현재 송출중 배너 정보 조회
@@ -74,7 +74,7 @@ const MyBanner = (): JSX.Element => {
         </GridItem>
         <GridItem xs={12} lg={6}>
           <AdClickCard
-            clicksData={clicksGet}
+            clicksSummaryData={clicksSummaryGet}
             levelData={levelGet}
           />
         </GridItem>
