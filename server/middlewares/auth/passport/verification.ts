@@ -28,6 +28,17 @@ const makeUrl = (): string => {
 };
 
 /**
+ * @name 리모컨 URL 생성함수 
+ */
+const makeRemoteControllerUrl = (creatorId: string): string | undefined => {
+  if (creatorId.length !== 0) {
+    const remoteControllerUrl = btoa(creatorId);
+    return remoteControllerUrl;
+  }
+  return undefined;
+};
+
+/**
  * @author 박찬우
  * @date 2019-07-13
  * @description
@@ -225,12 +236,13 @@ const creatorTwitch = (
       const campaignList = JSON.stringify({ campaignList: [] });
 
       const creatorBannerUrl = makeUrl();
+      const creatorRemoteControllerUrl = makeRemoteControllerUrl(user?.creatorId ? user.creatorId : '');
       user.creatorIp = creatorIp;
 
       const infoQuery = `
                 INSERT INTO creatorInfo
-                (creatorId, creatorName, creatorMail, creatorIp, advertiseUrl, creatorTwitchId, creatorLogo)
-                VALUES (?, ?, ?, ?, ?, ?, ?)`;
+                (creatorId, creatorName, creatorMail, creatorIp, advertiseUrl, creatorTwitchId, creatorLogo, remoteControllerUrl)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
 
       const incomeQuery = `
                 INSERT INTO creatorIncome 
@@ -253,7 +265,8 @@ const creatorTwitch = (
       Promise.all([
         doQuery(infoQuery, [user.creatorId, user.creatorDisplayName,
           user.creatorMail, creatorIp, `/${creatorBannerUrl}`,
-          user.creatorName, user.creatorLogo]),
+          user.creatorName, user.creatorLogo, `/${creatorRemoteControllerUrl}`
+        ]),
         doQuery(royaltyQuery, [user.creatorId]),
         doQuery(incomeQuery, [user.creatorId, 0, 0]),
         doQuery(priceQuery, [user.creatorId, 1, 0, 2]),

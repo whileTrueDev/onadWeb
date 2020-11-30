@@ -1,4 +1,6 @@
+import { AnyAaaaRecord } from 'dns';
 import express from 'express';
+import { ConsoleTransportOptions } from 'winston/lib/winston/transports';
 import responseHelper from '../../../middlewares/responseHelper';
 import doQuery from '../../../model/doQuery';
 
@@ -174,15 +176,39 @@ async function getRemotePageBanner(campaignList: any, pausedList: any) {
   );
   return campaignList;
 }
+
+router.route('/remote-page-url')
+  .get(responseHelper.middleware.checkSessionExists,
+    responseHelper.middleware.withErrorCatch(async (req, res, next) => {
+      const { creatorId } = responseHelper.getSessionData(req);
+      const searchQuery = `
+                          SELECT remoteControllerUrl
+                          FROM creatorInfo
+                          WHERE creatorId = ?
+                          `;
+      doQuery(searchQuery, [creatorId])
+        .then((row) => {
+          responseHelper.send(row.result[0].remoteControllerUrl, 'get', res);
+        })
+        .catch((errorData) => {
+          throw new Error(`Error in /creators - ${errorData}`);
+        });
+    }))
+  .all(responseHelper.middleware.unusedMethod);
 router.route('/remote-page')
 // 크리에이터 배너 목록 정보
   .get(
-    responseHelper.middleware.checkSessionExists,
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
-      const { creatorId } = responseHelper.getSessionData(req);
+      const urlInfo = responseHelper.getParam('remoteControllerUrl', 'get', req);
+      const getCreatorIdQuery = `
+                                SELECT creatorId 
+                                FROM creatorInfo 
+                                WHERE remoteControllerUrl = ?
+                                `;
       const listQuery = `
     SELECT
-      campaign.campaignId, campaign.marketerName, BR.bannerSrc, CT.date, campaign.onOff as state
+      campaign.campaignId, campaign.marketerName, priorityType, BR.bannerSrc, targetList, CT.date, campaign.onOff as state,
+      campaign.campaignDescription
     FROM (
       SELECT creatorId, campaignId , min(date) as date 
       FROM campaignTimestamp
@@ -203,20 +229,24 @@ router.route('/remote-page')
     FROM creatorCampaign
     WHERE creatorId = ?
     `;
-
+      const creatorId = await doQuery(getCreatorIdQuery, [urlInfo]);
       Promise.all([
-        doQuery(listQuery, [creatorId]),
-        doQuery(getPausedQuery, [creatorId])
+        doQuery(listQuery, [creatorId.result[0].creatorId]),
+        doQuery(getPausedQuery, [creatorId.result[0].creatorId])
       ])
         .then(async ([row, paused]) => {
           const pausedList: string[] = JSON.parse(paused.result[0].pausedList).campaignList;
           const campaignList = await getRemotePageBanner(row.result, pausedList);
+          campaignList.map((value: any) => {
+            value.targetList = JSON.parse(value.targetList).targetList;
+          });
           responseHelper.send(campaignList, 'get', res);
         })
         .catch((error) => {
           responseHelper.promiseError(error, next);
         });
-    }),
+    })
+
   )
   .patch(
     // 토글 버튼 변화에 따른 pausedList 업데이트
@@ -251,6 +281,36 @@ router.route('/remote-page')
         }
       }
     }),
+  )
+  .all(responseHelper.middleware.unusedMethod);
+
+router.route('/remote-page-creator-name')
+  .get(
+    responseHelper.middleware.checkSessionExists,
+    responseHelper.middleware.withErrorCatch(async (req, res, next) => {
+      // const { creatorId } = responseHelper.getSessionData(req);
+      const urlInfo = responseHelper.getParam('remoteControllerUrl', 'get', req);
+
+      const getCreatorIdQuery = `
+                                SELECT creatorId 
+                                FROM creatorInfo 
+                                WHERE remoteControllerUrl = ?
+                                `;
+      const creatorId = await doQuery(getCreatorIdQuery, [urlInfo]);
+
+      const searchQuery = `
+                            SELECT creatorName
+                            FROM creatorInfo
+                            WHERE creatorId = ?
+                            `;
+      doQuery(searchQuery, [creatorId])
+        .then((row) => {
+          responseHelper.send(row.result[0], 'get', res);
+        })
+        .catch((errorData) => {
+          throw new Error(`Error in /creators - ${errorData}`);
+        });
+    })
   )
   .all(responseHelper.middleware.unusedMethod);
 

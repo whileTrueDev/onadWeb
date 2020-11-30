@@ -11,14 +11,16 @@ import isVideo from '../../../../utils/isVideo';
 import VideoBanner from '../../../../atoms/Banner/VideoBanner';
 
 export interface BannerStatus {
-  loading: boolean; campaignId: string; marketerName: string; date: string; bannerSrc: string; state: number;
+  loading: boolean; campaignId: string;
+  marketerName: string; priorityType: number;
+  targetList: any; date: string; bannerSrc: string;
+  state: number; campaignDescription: string;
 }
 
 const RemotePageBannerTable = (props: any) => {
-  // const { remoteCampaignTableGet } = props;
-  const remoteCampaignTableGet = useGetRequest<null, BannerStatus[]>('/creator/banner/remote-page');
+  const { creatorName, tableData, remoteCampaignOnOff } = props;
   const onOffUpdate = usePatchRequest('/creator/banner/remote-page', () => {
-    remoteCampaignTableGet.doGetRequest();
+    remoteCampaignOnOff();
   });
   const handleSwitch = (campaignId: string, state: number): void => {
     onOffUpdate.doPatchRequest({ campaignId, state });
@@ -31,16 +33,55 @@ const RemotePageBannerTable = (props: any) => {
   //   handleDialogOpen: () => void;
   //   handleCampaignSelect: (campaign: BannerStatus) => void;
   // }
+  const categorySwitch = (category: number, targetList: any, creatorName: string) => {
+    switch (category) {
+      case 0: return (
+        <TableCell>
+          <Typography variant="body2">
+            <span style={{ fontWeight: 'bold' }}>
+              {creatorName}
+            </span>
+            님과 매칭된 광고입니다.
+          </Typography>
+        </TableCell>
+      );
+      case 1: return (
+        <TableCell>
+          <Typography variant="body2">
+            <span style={{ fontWeight: 'bold' }}>
+              {targetList.join(', ')}
+            </span>
+            와 매칭 되는 광고입니다.
+          </Typography>
+        </TableCell>
+      );
+      case 2: return (
+        <TableCell>
+          <Typography variant="body2">
+            자동으로 매칭되는 광고입니다.
+          </Typography>
+        </TableCell>
+      );
+      default: return (
+        <TableCell>
+          <Typography variant="body2">
+            자동으로 매칭되는 광고입니다.
+          </Typography>
+        </TableCell>
+      );
+    }
+  };
   return (
     <Table>
       <TableBody>
-        {remoteCampaignTableGet.loading && (<Skeleton height={400} variant="rect" animation="wave" />)}
-        {!remoteCampaignTableGet.loading && remoteCampaignTableGet.data?.map((value: any) => (
+        {tableData.data?.map((value: any) => (
           <TableRow key={value.index}>
+
             <TableCell style={{
               flexDirection: 'column',
-              textAlign: 'center'
-              // justifyItems: 'center'
+              textAlign: 'center',
+              width: '170px',
+              padding: '5px'
             }}
             >
               <Typography variant="body1">
@@ -50,7 +91,7 @@ const RemotePageBannerTable = (props: any) => {
                 label=""
                 control={(
                   <Switch
-                    checked={value.state}
+                    checked={Boolean(value.state)}
                     color="secondary"
                     onChange={(): void => {
                       handleSwitch(value.campaignId, value.state);
@@ -60,9 +101,10 @@ const RemotePageBannerTable = (props: any) => {
             )}
               />
               <Typography variant="body1">
-                {value.date}
+                {value.date.split('T')[0]}
               </Typography>
             </TableCell>
+            {categorySwitch(value.priorityType, value.targetList, creatorName)}
             <TableCell>
               <div>
                 { isVideo(value.bannerSrc) ? (
@@ -73,7 +115,7 @@ const RemotePageBannerTable = (props: any) => {
               </div>
             </TableCell>
             <TableCell>
-              배너설명
+              {value.campaignDescription}
             </TableCell>
           </TableRow>
         ))}
