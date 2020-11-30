@@ -192,7 +192,7 @@ const getStreamList = ({
     streamData.viewer = viewer || 0;
 
     // ********************************************************************************************
-    // 2020-11-29 특정 마케터 금액 높이기. + 아래 마케터 캐시 코드에서 weight 곱 추가
+    // 2020-11-29 특정 마케터 금액 높이기. + 아래 마케터 캐시 코드에서 weight 곱 추가 + 30 재수정
     const marketerId = campaignId.split('_')[0];
     const vips = ['richmarket', 'mojirange', 'herbsoap', 'injecake', 'seoulcake'];
     const weight = vips.includes(marketerId) ? 10: 1;
