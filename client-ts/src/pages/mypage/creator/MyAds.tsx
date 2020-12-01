@@ -1,14 +1,12 @@
 import React from 'react';
-import Skeleton from '@material-ui/lab/Skeleton';
 // components
-import { Button, Typography } from '@material-ui/core';
 import GridContainer from '../../../atoms/Grid/GridContainer';
 import GridItem from '../../../atoms/Grid/GridItem';
 import Snackbar from '../../../atoms/Snackbar/Snackbar';
 // hooks
 import useGetRequest from '../../../utils/hooks/useGetRequest';
 import useDialog from '../../../utils/hooks/useDialog';
-import BannerCard, { CampaignData } from '../../../organisms/mypage/creator/CampaignManage/BannerCard';
+import BannerCard from '../../../organisms/mypage/creator/CampaignManage/BannerCard';
 import NowBroadCard, { CurrentBannerRes } from '../../../organisms/mypage/creator/CampaignManage/NowBroadCard';
 import ChatAdInfo from '../../../organisms/mypage/creator/CampaignManage/ChatAdInfo';
 import ClickAdInfo from '../../../organisms/mypage/creator/CampaignManage/ClickAdInfo';
@@ -22,12 +20,6 @@ interface ClicksRes { adpanel: number; adchat: number }
 interface LevelRes { creatorId: string; level: number; exp: number }
 
 const MyBanner = (): JSX.Element => {
-  // 캠페인목록을 조회하기 위한 객체
-  const campaignTableGet = useGetRequest<{offset: number; page: number}, CampaignData[]>(
-    '/creator/banner/list', {
-      offset: 3, page: 0,
-    }
-  );
   // 배너광고 그만하기 성공시 스낵바
   const banSuccessSnack = useDialog();
 
@@ -81,15 +73,8 @@ const MyBanner = (): JSX.Element => {
 
 
         {/* 진행한 캠페인 정보 */}
-        {campaignTableGet.loading && (<Skeleton height={400} variant="rect" animation="wave" />)}
         <GridItem xs={12}>
-          <Typography style={{ fontWeight: 'bold' }}>내가 진행한 광고 목록</Typography>
-          {!campaignTableGet.loading && campaignTableGet.data && (
-          <BannerCard campaignData={campaignTableGet.data} />
-          )}
-          <div style={{ textAlign: 'center', margin: 16 }}>
-            <Button variant="contained" color="primary" size="large">더보기</Button>
-          </div>
+          <BannerCard />
         </GridItem>
       </GridContainer>
 

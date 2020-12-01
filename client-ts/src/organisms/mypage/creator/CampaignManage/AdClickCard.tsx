@@ -2,12 +2,14 @@ import moment from 'moment';
 import classnames from 'classnames';
 import {
   Button,
+  Chip,
   CircularProgress,
   Divider,
-  Grid, Hidden, makeStyles, Paper, Typography
+  Grid, Hidden, makeStyles, Paper, Popover, Typography
 } from '@material-ui/core';
 import React, { useState } from 'react';
 import useGetRequest, { UseGetRequestObject } from '../../../../utils/hooks/useGetRequest';
+import { useAnchorEl } from '../../../../utils/hooks';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -36,6 +38,7 @@ export interface CurrentClickRes {
   id: string; clickedTime: string; costType: string; linkId: string;
   campaignName: string;
   creatorId: string; payout: number; channel: string;
+  os: string; browser: string;
   links: {
     links: Array<{ primary: boolean; linkTo: string; linkName: string }>;
   };
@@ -70,6 +73,14 @@ export default function AdClickCard({
     if (type === 'adpage') return '참여형';
     return '';
   };
+
+  // 선택된 광고클릭 객체
+  const [selectedClick, setSelectedClick] = useState<CurrentClickRes>();
+  function handleSelectedClick(item: CurrentClickRes): void {
+    setSelectedClick(item);
+  }
+  // 설명 팝오버
+  const descAnchor = useAnchorEl();
 
   return (
     <Paper className={classes.container}>
@@ -142,6 +153,10 @@ export default function AdClickCard({
               <Typography
                 className={classnames(classes.buttonText, classes.line)}
                 variant="body2"
+                onClick={(e) => {
+                  handleSelectedClick(click);
+                  descAnchor.handleAnchorOpen(e);
+                }}
               >
                 {`${click.links.links.find((link) => link.primary)?.linkName}`}
 
@@ -185,6 +200,50 @@ export default function AdClickCard({
           )}
         </Grid>
       </Grid>
+
+      {selectedClick && descAnchor.open && (
+      <Popover
+        disableScrollLock
+        id="mouse-over-popover"
+        open={descAnchor.open}
+        anchorEl={descAnchor.anchorEl}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'center',
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'center',
+        }}
+        onClose={descAnchor.handleAnchorClose}
+        disableRestoreFocus
+      >
+        <div style={{ padding: 8, maxWidth: 300, }}>
+          <Chip size="small" label={renderClickChannel(selectedClick.channel)} />
+          <div style={{ padding: 4 }}>
+            <Typography variant="body2">
+              {`${selectedClick.links.links.find((link) => link.primary)?.linkName}`}
+            </Typography>
+            {selectedClick.payout > 0 && (
+            <Typography variant="body2">{`수익금: ${selectedClick.payout} 원`}</Typography>
+            )}
+            <Typography variant="caption" color="textSecondary">
+              {`${selectedClick.os}, ${selectedClick.browser}`}
+            </Typography>
+          </div>
+          <Button
+            variant="contained"
+            color="primary"
+            size="small"
+            onClick={() => {
+              window.open(`${selectedClick.links.links.find((link) => link.primary)?.linkTo}`);
+            }}
+          >
+            링크바로가기
+          </Button>
+        </div>
+      </Popover>
+      )}
     </Paper>
   );
 }

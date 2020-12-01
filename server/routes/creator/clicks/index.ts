@@ -45,7 +45,7 @@ router.route('/current')
       const { creatorId } = responseHelper.getSessionData(req);
       const [offset, page] = responseHelper.getParam(['offset', 'page'], 'get', req);
       const query = `
-      SELECT tracking.id, clickedTime, costType, tracking.linkId, campaignName, links, creatorId, payout, channel
+      SELECT tracking.id, clickedTime, costType, tracking.linkId, campaignName, links, creatorId, payout, channel, os, browser
         FROM tracking
         JOIN linkRegistered AS lr
         ON lr.linkId = tracking.linkId

@@ -1,11 +1,12 @@
 import {
-  CircularProgress, Divider, Grid, Hidden, makeStyles, Paper, Typography, useTheme
+  CircularProgress, Divider, Grid, Hidden, makeStyles, Paper, Popover, Typography, useTheme
 } from '@material-ui/core';
+import { Help } from '@material-ui/icons';
 import React from 'react';
 import {
   Cell, Legend, Pie, PieChart, Tooltip
 } from 'recharts';
-import { useGetRequest } from '../../../../utils/hooks';
+import { useAnchorEl, useGetRequest } from '../../../../utils/hooks';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -36,6 +37,8 @@ export default function AdIncomeCard(): JSX.Element {
   const theme = useTheme();
   const classes = useStyles();
 
+  // *********************************************
+  // chart settings
   const COLORS = [
     theme.palette.primary.light,
     theme.palette.secondary.light,
@@ -57,6 +60,7 @@ export default function AdIncomeCard(): JSX.Element {
     );
   };
 
+  // 차트 범례 표시 컴포넌트
   const renderLegend = (props: any) => {
     const { payload } = props;
     return (
@@ -73,12 +77,16 @@ export default function AdIncomeCard(): JSX.Element {
     );
   };
 
+  // 수익 type 렌더링 함수
   const renderType = (type: 'CPM' | 'CPC' | 'CPA'): string => {
     if (type === 'CPM') return '배너광고';
     if (type === 'CPC') return '클릭/채팅광고';
     if (type === 'CPA') return '참여형광고';
     return '';
   };
+
+  // 참여형 광고 설명 팝오버
+  const descAnchor = useAnchorEl();
 
   return (
     <Paper className={classes.container}>
@@ -110,7 +118,23 @@ export default function AdIncomeCard(): JSX.Element {
               <Typography style={{ fontWeight: 'bold', marginBottom: 16 }}>광고 수익 정보</Typography>
               {incomeRatioGet.data.sort((a, b) => b.type.localeCompare(a.type)).map((d) => (
                 <div key={d.type + d.cashAmount} className={classes.fields}>
-                  <Typography>{renderType(d.type)}</Typography>
+                  <Typography>
+                    {renderType(d.type)}
+
+                    {/* CPA의 경우 설명 (?) 아이콘 생성 */}
+                    {d.type === 'CPA' && (
+                    <Typography
+                      aria-owns={descAnchor.open ? 'mouse-over-popover' : undefined}
+                      component="span"
+                      aria-haspopup="true"
+                      style={{ cursor: 'pointer' }}
+                      onClick={descAnchor.handleAnchorOpen}
+                    >
+                      <Help fontSize="small" />
+                    </Typography>
+                    )}
+
+                  </Typography>
                   <Typography variant="h6" style={{ fontWeight: 'bold' }}>
                     {`${d.cashAmount.toLocaleString()} 원`}
                   </Typography>
@@ -146,6 +170,32 @@ export default function AdIncomeCard(): JSX.Element {
         )}
       </Grid>
 
+      <Popover
+        disableScrollLock
+        id="mouse-over-popover"
+        open={descAnchor.open}
+        anchorEl={descAnchor.anchorEl}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'center',
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'center',
+        }}
+        onClose={descAnchor.handleAnchorClose}
+        disableRestoreFocus
+      >
+        <div style={{ padding: 32, maxWidth: 300, textAlign: 'center' }}>
+          <Typography variant="body2">
+            참여형 광고는 시청자의 참여(제품설치/구매 등)가 수익으로 이어지는 광고상품입니다.
+          </Typography>
+          <Typography variant="caption">
+            2020년 11월 3일 이후 해당 상품 서비스 종료되었습니다.
+          </Typography>
+
+        </div>
+      </Popover>
 
     </Paper>
   );
