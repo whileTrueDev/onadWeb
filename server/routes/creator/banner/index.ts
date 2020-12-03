@@ -1,6 +1,4 @@
-import { AnyAaaaRecord } from 'dns';
 import express from 'express';
-import { ConsoleTransportOptions } from 'winston/lib/winston/transports';
 import responseHelper from '../../../middlewares/responseHelper';
 import doQuery from '../../../model/doQuery';
 
@@ -201,44 +199,51 @@ router.route('/remote-page')
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
       const urlInfo = responseHelper.getParam('remoteControllerUrl', 'get', req);
       const getCreatorIdQuery = `
-                                SELECT creatorId 
-                                FROM creatorInfo 
-                                WHERE remoteControllerUrl = ?
+                                  SELECT creatorId 
+                                  FROM creatorInfo 
+                                  WHERE remoteControllerUrl = ?
                                 `;
       const listQuery = `
-    SELECT
-      campaign.campaignId, campaign.marketerName, priorityType, BR.bannerSrc, targetList, CT.date, campaign.onOff as state,
-      campaign.campaignDescription
-    FROM (
-      SELECT creatorId, campaignId , min(date) as date 
-      FROM campaignTimestamp
-      WHERE creatorId = ?
-      GROUP BY campaignId
-    ) AS CT
-    JOIN campaign 
-      ON CT.campaignId = campaign.campaignId
-    JOIN bannerRegistered AS BR
-      ON campaign.bannerId = BR.bannerId
-    LEFT JOIN linkRegistered AS IR
-      ON connectedLinkId = IR.linkId
-    WHERE campaign.onOff = 1
-    ORDER BY date DESC
-    `;
+                          SELECT
+                            campaign.campaignId, campaign.marketerName, priorityType, BR.bannerSrc, targetList, CT.date, campaign.onOff as state,
+                            campaign.campaignDescription
+                          FROM (
+                            SELECT creatorId, campaignId , min(date) as date 
+                            FROM campaignTimestamp
+                            WHERE creatorId = ?
+                            GROUP BY campaignId
+                          ) AS CT
+                          JOIN campaign 
+                            ON CT.campaignId = campaign.campaignId
+                          JOIN bannerRegistered AS BR
+                            ON campaign.bannerId = BR.bannerId
+                          LEFT JOIN linkRegistered AS IR
+                            ON connectedLinkId = IR.linkId
+                          WHERE campaign.onOff = 1
+                          ORDER BY date DESC
+                          `;
       const getPausedQuery = `
-    SELECT pausedList 
-    FROM creatorCampaign
-    WHERE creatorId = ?
-    `;
+                              SELECT pausedList 
+                              FROM creatorCampaign
+                              WHERE creatorId = ?
+                              `;
+      const searchQuery = `
+                            SELECT creatorName
+                            FROM creatorInfo
+                            WHERE creatorId = ?
+                            `;
       const creatorId = await doQuery(getCreatorIdQuery, [urlInfo]);
       Promise.all([
+        doQuery(searchQuery, [creatorId.result[0].creatorId]),
         doQuery(listQuery, [creatorId.result[0].creatorId]),
         doQuery(getPausedQuery, [creatorId.result[0].creatorId])
       ])
-        .then(async ([row, paused]) => {
+        .then(async ([creatorName, row, paused]) => {
           const pausedList: string[] = JSON.parse(paused.result[0].pausedList).campaignList;
           const campaignList = await getRemotePageBanner(row.result, pausedList);
-          campaignList.map((value: any) => {
+          campaignList.map((value: any): void => {
             value.targetList = JSON.parse(value.targetList).targetList;
+            value.creatorName = creatorName.result[0].creatorName;
           });
           responseHelper.send(campaignList, 'get', res);
         })
@@ -251,16 +256,28 @@ router.route('/remote-page')
   .patch(
     // 토글 버튼 변화에 따른 pausedList 업데이트
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
-      const { creatorId } = responseHelper.getSessionData(req);
-      const onOffDetail: any = responseHelper.getParam(['campaignId', 'state'], 'PATCH', req);
+      // const { creatorId } = responseHelper.getSessionData(req);
+      const onOffDetail: (string|number)[] = responseHelper.getParam(['campaignId', 'state', 'url'], 'PATCH', req);
       const campaignId = onOffDetail[0];
       const state = onOffDetail[1];
-      const getPausedListQuery = 'SELECT pausedList FROM creatorCampaign WHERE creatorId = ?';
-      const banListUpdateQuery = `
-      UPDATE creatorCampaign 
-      SET pausedList = ? 
-      WHERE creatorId = ?`;
+      const pageUrl = onOffDetail[2];
+      const getCreatorIdQuery = `
+                                  SELECT creatorId
+                                  FROM creatorInfo
+                                  WHERE remoteControllerUrl = ?
+                                  `;
 
+      const getPausedListQuery = `
+                                  SELECT pausedList 
+                                  FROM creatorCampaign 
+                                  WHERE creatorId = ?`;
+      const banListUpdateQuery = `
+                                  UPDATE creatorCampaign 
+                                  SET pausedList = ? 
+                                  WHERE creatorId = ?
+                                  `;
+      const creatorId = await doQuery(getCreatorIdQuery, [pageUrl])
+        .then((value) => value.result[0].creatorId);
       const row = await doQuery(getPausedListQuery, [creatorId]);
 
       if (row.result) {
@@ -284,35 +301,36 @@ router.route('/remote-page')
   )
   .all(responseHelper.middleware.unusedMethod);
 
-router.route('/remote-page-creator-name')
-  .get(
-    responseHelper.middleware.checkSessionExists,
-    responseHelper.middleware.withErrorCatch(async (req, res, next) => {
-      // const { creatorId } = responseHelper.getSessionData(req);
-      const urlInfo = responseHelper.getParam('remoteControllerUrl', 'get', req);
+// router.route('/remote-page-creator-name')
+//   .get(
+//     // responseHelper.middleware.checkSessionExists,
+//     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
+//       // const { creatorId } = responseHelper.getSessionData(req);
+//       const urlInfo = responseHelper.getParam('remoteControllerUrl', 'get', req);
 
-      const getCreatorIdQuery = `
-                                SELECT creatorId 
-                                FROM creatorInfo 
-                                WHERE remoteControllerUrl = ?
-                                `;
-      const creatorId = await doQuery(getCreatorIdQuery, [urlInfo]);
+//       const getCreatorIdQuery = `
+//                                 SELECT creatorId 
+//                                 FROM creatorInfo 
+//                                 WHERE remoteControllerUrl = ?
+//                                 `;
+//       const creatorId = await doQuery(getCreatorIdQuery, [urlInfo]);
 
-      const searchQuery = `
-                            SELECT creatorName
-                            FROM creatorInfo
-                            WHERE creatorId = ?
-                            `;
-      doQuery(searchQuery, [creatorId])
-        .then((row) => {
-          responseHelper.send(row.result[0], 'get', res);
-        })
-        .catch((errorData) => {
-          throw new Error(`Error in /creators - ${errorData}`);
-        });
-    })
-  )
-  .all(responseHelper.middleware.unusedMethod);
+//       const searchQuery = `
+//                             SELECT creatorName
+//                             FROM creatorInfo
+//                             WHERE creatorId = ?
+//                             `;
+//       doQuery(searchQuery, [creatorId])
+//         .then((row) => {
+//           console.log(row.result[0]);
+//           responseHelper.send(row.result[0], 'get', res);
+//         })
+//         .catch((errorData) => {
+//           throw new Error(`Error in /creators - ${errorData}`);
+//         });
+//     })
+//   )
+//   .all(responseHelper.middleware.unusedMethod);
 
 router.route('/overlay')
   // 크리에이터 배너 오버레이 주소 조회

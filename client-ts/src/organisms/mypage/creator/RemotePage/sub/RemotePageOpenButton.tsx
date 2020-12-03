@@ -7,7 +7,6 @@ const RemotePageOpenButton = (): JSX.Element => {
   const POPUP_WIDTH = process.env.NODE_ENV === 'production' ? 900 : 900;
   const POPUP_HEIGHT = process.env.NODE_ENV === 'production' ? 800 : 700;
   const remoteControllerUrl = useGetRequest<null, string>('/creator/banner/remote-page-url');
-  // const getCreatorName = useGetRequest<null, string>('/creator/banner/remote-page-url');
 
   // 개인 리모트 페이지 hash 값 필요
   // remote/{여기 들어가기}

@@ -1,31 +1,32 @@
 import React from 'react';
+import shortid from 'shortid';
+
 import {
   Table, TableHead, TableRow, TableBody, TableCell, Switch,
-  Grid, Typography, Divider, Hidden, IconButton, Tooltip, FormControlLabel
+  Typography, FormControlLabel
 } from '@material-ui/core';
-import Skeleton from '@material-ui/lab/Skeleton';
-import classnames from 'classnames';
-import useGetRequest from '../../../../utils/hooks/useGetRequest';
-import usePatchRequest from '../../../../utils/hooks/usePatchRequest';
 import isVideo from '../../../../utils/isVideo';
 import VideoBanner from '../../../../atoms/Banner/VideoBanner';
 
 export interface BannerStatus {
   loading: boolean; campaignId: string;
   marketerName: string; priorityType: number;
-  targetList: any; date: string; bannerSrc: string;
+  targetList: string[]; date: string; bannerSrc: string;
   state: number; campaignDescription: string;
+  creatorName: string;
 }
 
-const RemotePageBannerTable = (props: any) => {
-  const { creatorName, tableData, remoteCampaignOnOff } = props;
-  const onOffUpdate = usePatchRequest('/creator/banner/remote-page', () => {
-    remoteCampaignOnOff();
-  });
-  const handleSwitch = (campaignId: string, state: number): void => {
-    onOffUpdate.doPatchRequest({ campaignId, state });
-    console.log('epdlxj', campaignId, state);
+const RemotePageBannerTable = (props: any): JSX.Element => {
+  const { tableData, onOffUpdate, pageUrl } = props;
+
+  const handleSwitch = (campaignId: string, state: number, url: string): void => {
+    onOffUpdate.doPatchRequest({ campaignId, state, url });
   };
+  const page = 1; // 테이블 페이지
+  const rowsPerPage = 8; // 테이블 페이지당 행
+  const emptyRows = rowsPerPage - Math.min(
+    rowsPerPage, tableData.data.length - page * rowsPerPage,
+  );
 
   // interface CampaignTableProps {
   //   tableData: BannerStatus[];
@@ -33,7 +34,7 @@ const RemotePageBannerTable = (props: any) => {
   //   handleDialogOpen: () => void;
   //   handleCampaignSelect: (campaign: BannerStatus) => void;
   // }
-  const categorySwitch = (category: number, targetList: any, creatorName: string) => {
+  const categorySwitch = (category: number, targetList: string[], creatorName: string): JSX.Element => {
     switch (category) {
       case 0: return (
         <TableCell>
@@ -73,14 +74,52 @@ const RemotePageBannerTable = (props: any) => {
   };
   return (
     <Table>
+      <TableHead>
+        <TableRow>
+          <TableCell style={{
+            flexDirection: 'column',
+            textAlign: 'center',
+            width: '170px',
+            padding: '5px'
+          }}
+          >
+            시작일 / 광고주
+          </TableCell>
+          <TableCell style={{
+            flexDirection: 'column',
+            textAlign: 'center',
+            width: '170px',
+            padding: '5px'
+          }}
+          >
+            카테고리
+          </TableCell>
+          <TableCell style={{
+            flexDirection: 'column',
+            textAlign: 'center',
+            width: '170px',
+            padding: '5px'
+          }}
+          >
+            배너 이미지
+          </TableCell>
+          <TableCell style={{
+            flexDirection: 'column',
+            textAlign: 'center',
+            width: '170px',
+            padding: '5px'
+          }}
+          >
+            배너 설명
+          </TableCell>
+        </TableRow>
+      </TableHead>
       <TableBody>
         {tableData.data?.map((value: any) => (
           <TableRow key={value.index}>
-
             <TableCell style={{
               flexDirection: 'column',
               textAlign: 'center',
-              width: '170px',
               padding: '5px'
             }}
             >
@@ -93,9 +132,10 @@ const RemotePageBannerTable = (props: any) => {
                   <Switch
                     checked={Boolean(value.state)}
                     color="secondary"
-                    onChange={(): void => {
-                      handleSwitch(value.campaignId, value.state);
-                    }}
+                    // onChange={(): void => {
+                    //   handleSwitch(value.campaignId, value.state);
+                    // }}
+                    onChange={(): void => { handleSwitch(value.campaignId, value.state, pageUrl); }}
                   />
 
             )}
@@ -104,7 +144,7 @@ const RemotePageBannerTable = (props: any) => {
                 {value.date.split('T')[0]}
               </Typography>
             </TableCell>
-            {categorySwitch(value.priorityType, value.targetList, creatorName)}
+            {categorySwitch(value.priorityType, value.targetList, value.creatorName)}
             <TableCell>
               <div>
                 { isVideo(value.bannerSrc) ? (
@@ -119,6 +159,12 @@ const RemotePageBannerTable = (props: any) => {
             </TableCell>
           </TableRow>
         ))}
+        {console.log(emptyRows)}
+        {emptyRows > 0 && (
+        <TableRow style={{ height: 48 * emptyRows }} key={shortid.generate()}>
+          <TableCell colSpan={4} />
+        </TableRow>
+        )}
       </TableBody>
     </Table>
   );
