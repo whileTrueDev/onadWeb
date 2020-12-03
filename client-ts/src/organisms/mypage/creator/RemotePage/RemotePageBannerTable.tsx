@@ -1,5 +1,6 @@
 import React from 'react';
 import shortid from 'shortid';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 import {
   Table, TableHead, TableRow, TableBody, TableCell, Switch,
@@ -139,6 +140,7 @@ const RemotePageBannerTable = (props: RemotePageBannerTable): JSX.Element => {
           </TableRow>
         </TableHead>
         <TableBody>
+
           {remoteCampaignTableGet?.data?.map((value: BannerStatus) => (
             <TableRow key={value.index}>
               <TableCell style={{
@@ -190,6 +192,14 @@ const RemotePageBannerTable = (props: RemotePageBannerTable): JSX.Element => {
           </TableRow>
           )}
         </TableBody>
+        {remoteCampaignTableGet.loading && (
+        <TableCell
+          align="center"
+          colSpan={4}
+        >
+          <CircularProgress />
+        </TableCell>
+        )}
       </Table>
 
       <Snackbar
