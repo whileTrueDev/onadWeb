@@ -10,6 +10,7 @@ import VideoBanner from '../../../../atoms/Banner/VideoBanner';
 import Snackbar from '../../../../atoms/Snackbar/Snackbar';
 import useDialog from '../../../../utils/hooks/useDialog';
 import usePatchRequest from '../../../../utils/hooks/usePatchRequest';
+import useGetRequest from '../../../../utils/hooks/useGetRequest';
 
 export interface BannerStatus {
   loading: boolean; campaignId: string; index: number;
@@ -19,36 +20,36 @@ export interface BannerStatus {
   creatorName: string;
 }
 
-interface PatchParams {
-  campaignId: string;
-  state: number;
-  url: string;
-}
 interface RemotePageBannerTable {
-  tableData: BannerStatus[];
-  doGetRequestOnOff: () => void;
   pageUrl: string;
+}
+
+interface Params {
+  remoteControllerUrl: string;
 }
 const RemotePageBannerTable = (props: RemotePageBannerTable): JSX.Element => {
   const {
-    tableData, doGetRequestOnOff, pageUrl
+    pageUrl
   } = props;
 
   const snack = useDialog();
   const failSnack = useDialog();
+  const remoteCampaignTableGet = useGetRequest<Params, BannerStatus[]>('/creator/banner/remote-page', { remoteControllerUrl: pageUrl });
 
   const onOffUpdate = usePatchRequest('/creator/banner/remote-page', () => {
-    doGetRequestOnOff();
+    remoteCampaignTableGet.doGetRequest();
   });
 
   const handleSwitch = (campaignId: string, state: number, url: string): void => {
     onOffUpdate.doPatchRequest({ campaignId, state, url });
   };
+
   const page = 1; // 테이블 페이지
   const rowsPerPage = 8; // 테이블 페이지당 행
-  const emptyRows = rowsPerPage - Math.min(
-    rowsPerPage, tableData.length - page * rowsPerPage,
-  );
+
+  const emptyRows = !remoteCampaignTableGet.loading && remoteCampaignTableGet.data && (rowsPerPage - Math.min(
+    rowsPerPage, remoteCampaignTableGet.data.length - page * rowsPerPage,
+  ));
 
   React.useEffect(() => {
     if (onOffUpdate.error) {
@@ -138,7 +139,7 @@ const RemotePageBannerTable = (props: RemotePageBannerTable): JSX.Element => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {tableData?.map((value: BannerStatus) => (
+          {remoteCampaignTableGet?.data?.map((value: BannerStatus) => (
             <TableRow key={value.index}>
               <TableCell style={{
                 flexDirection: 'column',
@@ -159,6 +160,7 @@ const RemotePageBannerTable = (props: RemotePageBannerTable): JSX.Element => {
                         handleSwitch(value.campaignId, value.state, pageUrl);
                         snack.handleOpen();
                       }}
+                      disabled={Boolean(remoteCampaignTableGet.loading)}
                     />
 
             )}
@@ -182,13 +184,14 @@ const RemotePageBannerTable = (props: RemotePageBannerTable): JSX.Element => {
               </TableCell>
             </TableRow>
           ))}
-          {emptyRows > 0 && (
+          {emptyRows && emptyRows > 0 && (
           <TableRow style={{ height: 48 * emptyRows }} key={shortid.generate()}>
             <TableCell colSpan={4} />
           </TableRow>
           )}
         </TableBody>
       </Table>
+
       <Snackbar
         color="success"
         open={snack.open}
