@@ -164,7 +164,6 @@ router.route('/list')
   .all(responseHelper.middleware.unusedMethod);
 
 async function getRemotePageBanner(campaignList: any, pausedList: any) {
-  // const originCampaignList = campaignList;
   await Promise.all(
     campaignList.map((campaignData: any) => {
       if (pausedList.includes(campaignData.campaignId)) {
@@ -300,37 +299,6 @@ router.route('/remote-page')
     }),
   )
   .all(responseHelper.middleware.unusedMethod);
-
-// router.route('/remote-page-creator-name')
-//   .get(
-//     // responseHelper.middleware.checkSessionExists,
-//     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
-//       // const { creatorId } = responseHelper.getSessionData(req);
-//       const urlInfo = responseHelper.getParam('remoteControllerUrl', 'get', req);
-
-//       const getCreatorIdQuery = `
-//                                 SELECT creatorId 
-//                                 FROM creatorInfo 
-//                                 WHERE remoteControllerUrl = ?
-//                                 `;
-//       const creatorId = await doQuery(getCreatorIdQuery, [urlInfo]);
-
-//       const searchQuery = `
-//                             SELECT creatorName
-//                             FROM creatorInfo
-//                             WHERE creatorId = ?
-//                             `;
-//       doQuery(searchQuery, [creatorId])
-//         .then((row) => {
-//           console.log(row.result[0]);
-//           responseHelper.send(row.result[0], 'get', res);
-//         })
-//         .catch((errorData) => {
-//           throw new Error(`Error in /creators - ${errorData}`);
-//         });
-//     })
-//   )
-//   .all(responseHelper.middleware.unusedMethod);
 
 router.route('/overlay')
   // 크리에이터 배너 오버레이 주소 조회
