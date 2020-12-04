@@ -5,7 +5,7 @@ import React from 'react';
 import VideoBanner from '../../../../atoms/Banner/VideoBanner';
 import { UseGetRequestObject } from '../../../../utils/hooks/useGetRequest';
 import isVideo from '../../../../utils/isVideo';
-import { Link } from './BannerCard';
+import { Link } from './BannerList';
 
 const useStyles = makeStyles((theme) => ({
   container: {

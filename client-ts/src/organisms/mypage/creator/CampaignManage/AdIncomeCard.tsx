@@ -26,7 +26,15 @@ const useStyles = makeStyles((theme) => ({
   loading: {
     display: 'flex', justifyContent: 'center', height: 200, alignItems: 'center'
   },
-  fields: { textAlign: 'center' }
+  fields: { textAlign: 'center' },
+  emptySection: {
+    display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 150
+  },
+  bold: { fontWeight: 'bold', },
+  emptySectionContents: { textAlign: 'center' },
+  title: { fontWeight: 'bold', marginBottom: theme.spacing(2) },
+  chartSection: { display: 'flex', justifyContent: 'center' },
+  tooltip: { padding: theme.spacing(4), maxWidth: 300, textAlign: 'center' },
 }));
 
 export interface IncomeRatio {
@@ -100,14 +108,9 @@ export default function AdIncomeCard(): JSX.Element {
 
         {/* 수익데이터가없는 경우 */}
         {!incomeRatioGet.loading && incomeRatioGet.data && incomeRatioGet.data.length === 0 && (
-          <Grid
-            item
-            style={{
-              display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 150
-            }}
-          >
-            <div style={{ textAlign: 'center' }}>
-              <Typography variant="body1" style={{ fontWeight: 'bold', }}>표시할 수익 데이터가 아직 없습니다.</Typography>
+          <Grid item className={classes.emptySection}>
+            <div className={classes.emptySectionContents}>
+              <Typography variant="body1" className={classes.bold}>표시할 수익 데이터가 아직 없습니다.</Typography>
             </div>
           </Grid>
         )}
@@ -115,7 +118,7 @@ export default function AdIncomeCard(): JSX.Element {
         {!incomeRatioGet.loading && incomeRatioGet.data && incomeRatioGet.data.length > 0 && (
           <>
             <Grid item xs={12} sm={6}>
-              <Typography style={{ fontWeight: 'bold', marginBottom: 16 }}>광고 수익 정보</Typography>
+              <Typography className={classes.title}>광고 수익 정보</Typography>
               {incomeRatioGet.data.sort((a, b) => b.type.localeCompare(a.type)).map((d) => (
                 <div key={d.type + d.cashAmount} className={classes.fields}>
                   <Typography>
@@ -135,7 +138,7 @@ export default function AdIncomeCard(): JSX.Element {
                     )}
 
                   </Typography>
-                  <Typography variant="h6" style={{ fontWeight: 'bold' }}>
+                  <Typography variant="h6" className={classes.bold}>
                     {`${d.cashAmount.toLocaleString()} 원`}
                   </Typography>
                 </div>
@@ -144,8 +147,8 @@ export default function AdIncomeCard(): JSX.Element {
             <Grid item xs={12} sm={6}>
               {/* 모바일화면 DIvider */}
               <Hidden smUp><Divider className={classes.divider} /></Hidden>
-              <Typography style={{ fontWeight: 'bold' }}>광고 수익 비율</Typography>
-              <div style={{ display: 'flex', justifyContent: 'center' }}>
+              <Typography className={classes.bold}>광고 수익 비율</Typography>
+              <div className={classes.chartSection}>
                 <PieChart width={270} height={200}>
                   <Pie
                     data={incomeRatioGet.data.map((d) => ({
@@ -186,7 +189,7 @@ export default function AdIncomeCard(): JSX.Element {
         onClose={descAnchor.handleAnchorClose}
         disableRestoreFocus
       >
-        <div style={{ padding: 32, maxWidth: 300, textAlign: 'center' }}>
+        <div className={classes.tooltip}>
           <Typography variant="body2">
             참여형 광고는 시청자의 참여(제품설치/구매 등)가 수익으로 이어지는 광고상품입니다.
           </Typography>
