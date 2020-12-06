@@ -6,6 +6,7 @@ import {
 } from '@material-ui/core';
 import React, { useCallback, useEffect, useState } from 'react';
 import VideoBanner from '../../../../atoms/Banner/VideoBanner';
+import Snackbar from '../../../../atoms/Snackbar/Snackbar';
 import HOST from '../../../../config';
 import axiosInstance from '../../../../utils/axios';
 import isVideo from '../../../../utils/isVideo';
@@ -38,7 +39,11 @@ export default function BannerCard(): JSX.Element {
     if (option === 2) str = '클릭광고';
     return str;
   }
-
+  // 에러 스낵바
+  const [errorSnack, setErrorSnack] = useState(false);
+  function handleErrorSnackOpen(): void {
+    setErrorSnack(false);
+  }
   // 캠페인목록 크기
   const OFFSET = 4;
   // 로딩
@@ -61,13 +66,14 @@ export default function BannerCard(): JSX.Element {
       })
       .catch(() => {
         setLoading(false);
-        // snackbar
+        setErrorSnack(true);
       });
   }, [page]);
 
   useEffect(() => {
     request();
   }, [request]);
+
 
   return (
     <Grid container spacing={1} style={{ marginBottom: 32 }}>
@@ -101,10 +107,6 @@ export default function BannerCard(): JSX.Element {
               </div>
 
               <div style={{ marginLeft: 8 }}>
-                {/* <Typography>{`campaignId: ${campaign.campaignId}`}</Typography> */}
-                {/* <Typography>{`bannerSrc: ${campaign.bannerSrc}`}</Typography> */}
-                {/* <Typography>{`creatorId: ${campaign.creatorId}`}</Typography> */}
-                {/* <Typography>{`connectedLinkId: ${campaign.connectedLinkId}`}</Typography> */}
                 <div>
                   {campaign.links && JSON.parse(campaign.links).links.map((link: Link) => (
                     <>
@@ -113,7 +115,7 @@ export default function BannerCard(): JSX.Element {
                         component="span"
                         key={link.linkName}
                         style={{ textDecoration: 'underline', cursor: 'pointer' }}
-                        onClick={() => window.open(link.linkTo)}
+                        onClick={(): void => { window.open(link.linkTo); }}
                       >
                         {' '}
                         {link.linkName}
@@ -171,6 +173,13 @@ export default function BannerCard(): JSX.Element {
         </div>
       </Grid>
       )}
+
+      <Snackbar
+        open={errorSnack}
+        message="진행 광고 목록을 불러오는 도중 오류가 발생했습니다."
+        color="error"
+        onClose={handleErrorSnackOpen}
+      />
     </Grid>
   );
 }
