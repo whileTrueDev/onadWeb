@@ -49,10 +49,7 @@ function LoginForm({
       event.preventDefault();
     }
     axios.post(`${HOST}/login`,
-      {
-        userid,
-        passwd,
-      })
+      { userid, passwd, type: 'marketer' })
       .then((res) => {
         if (res.data[0]) {
           setPasswd('');
@@ -89,7 +86,7 @@ function LoginForm({
     >
       <DialogContent>
         <DialogContentText style={{ fontSize: 15, fontFamily: 'Noto Sans kr' }}>
-            온애드로 쉽고 빠르게!
+          온애드로 쉽고 빠르게!
         </DialogContentText>
         <form>
           <TextField
@@ -126,7 +123,7 @@ function LoginForm({
           fontSize: 15, fontFamily: 'Noto Sans kr', marginTop: '20px', color: 'rgba(0, 0, 0, 0.54)', marginBottom: '3px'
         }}
         >
-            소셜 계정으로 온애드 서비스 이용
+          소셜 계정으로 온애드 서비스 이용
         </Typography>
         <Divider component="hr" orientation="horizontal" />
         <Grid container direction="row" alignItems="flex-end">
@@ -153,7 +150,7 @@ function LoginForm({
             setFindDialogOpen(true);
           }}
         >
-            아이디가 기억나지 않으신가요?
+          아이디가 기억나지 않으신가요?
         </Button>
         <br />
         <Button
@@ -163,7 +160,7 @@ function LoginForm({
             setFindDialogOpen(true);
           }}
         >
-            비밀번호가 기억나지 않으신가요?
+          비밀번호가 기억나지 않으신가요?
         </Button>
         <br />
         <Button
@@ -171,15 +168,15 @@ function LoginForm({
           style={{ fontSize: 11, marginTop: 10 }}
           to="/regist"
         >
-            계정이 없으신가요? 회원가입하기
+          계정이 없으신가요? 회원가입하기
         </Button>
       </DialogContent>
       <DialogActions>
         <Button onClick={login} color="primary">
-            로그인
+          로그인
         </Button>
         <Button onClick={handleClose} color="primary">
-            취소
+          취소
         </Button>
       </DialogActions>
     </Dialog>

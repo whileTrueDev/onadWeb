@@ -19,6 +19,21 @@ router.use('/notification', notificationRouter);
 router.use('/clicks', clicksRouter);
 router.use('/cpa', cpaRouter);
 
+// 통합 회원가입 - 아이디 중복 체크
+router.route('/check-id')
+  .get(
+    responseHelper.middleware.withErrorCatch(async (req, res, next) => {
+      const userid = responseHelper.getParam('userid', 'get', req);
+      const duplicateCheckQuery = 'SELECT creatorId, loginId FROM creatorInfo_v2 WHERE loginId = ?';
+      const queryArray = [userid];
+      const { result } = await doQuery(duplicateCheckQuery, queryArray);
+      if (result.length > 0) { // 중복아이디가 있는 경우
+        responseHelper.send('duplicate', 'get', res);
+      } else { // 중복 아이디가 없는 경우
+        responseHelper.send('allow', 'get', res);
+      }
+    })
+  );
 
 router.route('/')
   // 크리에이터 유저정보(계좌암호화 해제하여 전송) 조회
@@ -49,6 +64,42 @@ router.route('/')
           responseHelper.promiseError(error, next);
         });
     }),
+  )
+  .post(
+    // 크리에이터 회원 가입
+    responseHelper.middleware.withErrorCatch(async (req, res, next) => {
+      const creatorIp = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+      const [userid, passwd] = responseHelper.getParam(['userid', 'passwd'], 'POST', req);
+      const [encryptedPassword, salt] = encrypto.make(passwd);
+      // 고유 아이디
+      const creatorId = `V2_${userid}_${new Date().getTime()}`;
+      const createCreatorQuery = `
+      INSERT INTO creatorInfo_v2 
+        (creatorId, loginId, password, passwordSalt, creatorIp) 
+        VALUES (?, ?, ?, ?, ?)`;
+      const queryArray = [creatorId, userid, encryptedPassword, salt, creatorIp];
+      const row = await doQuery(createCreatorQuery, queryArray);
+      if (row.result) {
+        responseHelper.send(userid, 'post', res);
+      } else next();
+      // 20201206 -> 기본 테이블 행 추가 필요
+      // const incomeQuery = `
+      //           INSERT INTO creatorIncome 
+      //           (creatorId, creatorTotalIncome, creatorReceivable) 
+      //           VALUES (?, ?, ?)`;
+
+      // const priceQuery = `
+      //           INSERT INTO creatorPrice
+      //           (creatorId, grade, viewerAverageCount, unitPrice)
+      //           VALUES (?, ?, ?, ?)
+      //           `;
+
+      // const royaltyQuery = `
+      //           INSERT INTO creatorRoyaltyLevel
+      //           (creatorId, level, exp, visitCount)
+      //           VALUES (?, 1, 0, 0)
+      //           `;
+    })
   )
   .patch(
     // 크리에이터 계약 OR IP 업데이트 OR CPA 계약 동의
@@ -115,7 +166,6 @@ router.route('/')
     }),
   )
   .all(responseHelper.middleware.unusedMethod);
-
 
 router.route('/settlement')
   .patch( // 크리에이터 정산에 필요한 계좌 등록 / 변경
@@ -386,4 +436,5 @@ router.route('/follower')
     })
 
   );
+
 export default router;

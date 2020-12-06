@@ -14,6 +14,7 @@ router.route('/')
     responseHelper.middleware.checkSessionExists,
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
       const { creatorId } = responseHelper.getSessionData(req);
+      console.log('income/ creatorId: ', creatorId);
       const query = `
       SELECT
       ci.settlementState,

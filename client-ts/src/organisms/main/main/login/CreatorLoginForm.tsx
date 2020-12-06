@@ -4,7 +4,9 @@ import {
   Dialog, DialogContent, DialogContentText, Button, Typography, CircularProgress
 } from '@material-ui/core';
 import useStyles from '../style/LoginForm.style';
+import axios from '../../../../utils/axios';
 import HOST from '../../../../config';
+import history from '../../../../history';
 
 interface CreatorLoginFormProps {
   open: boolean;
@@ -58,11 +60,20 @@ export default function CreatorLoginForm({
       >
         <DialogContent className={classes.dialog}>
           <DialogContentText variant="h4" color="textPrimary" className={classes.dialogTitle}>
-              로그인
+            로그인
           </DialogContentText>
           <DialogContentText variant="body1" color="textPrimary">
             별도 회원가입 없이 소셜 로그인으로 온애드를 이용하세요.
           </DialogContentText>
+
+          {/* new 로그인 */}
+          <Button onClick={() => {
+            axios.post(`${HOST}/login`, { type: 'creator', userid: 'testtest', passwd: 'rkdghktn12!@' })
+              .then((res) => history.push('/mypage/creator/main'));
+          }}
+          >
+            new로그인버튼(아이디/비번)
+          </Button>
 
           {/* error helper text */}
           {helperText && helperText.split('\n').map((t) => (

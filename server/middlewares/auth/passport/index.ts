@@ -38,11 +38,8 @@ passport.deserializeUser<Session, Session>((user, done) => {
 
 // 마케터 - Onad로 로그인
 passport.use(new Local.Strategy(
-  {
-    usernameField: 'userid',
-    passwordField: 'passwd',
-    passReqToCallback: false,
-  }, verification.marketerLocal
+  { usernameField: 'userid', passwordField: 'passwd', passReqToCallback: true, },
+  verification.local
 ));
 
 // 크리에이터 - twitch로 로그인

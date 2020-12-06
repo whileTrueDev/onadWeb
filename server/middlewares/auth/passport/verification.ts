@@ -45,11 +45,44 @@ const makeUrl = (): string => {
  * 3. 구동방식
  *   - 추후에 비밀번호 및 ID에 대한 오류 수정.
  */
-const marketerLocal = (
+const local = (
+  req: express.Request,
   userid: string, passwd: string,
   done: (error: any, user?: any, options?: any) => void
 ): void => {
-  const checkQuery = `
+  const { type } = req.body;
+  switch (type) {
+    case 'creator': {
+      console.log('creator new 통합 Login request');
+      const query = `
+      SELECT creatorId, loginId, password, passwordSalt, creatorName, creatorMail, advertiseUrl, creatorContractionAgreement,
+      creatorTwitchId, creatorLogo, arrested, noticeReadState, adChatAgreement, settlementState
+      FROM creatorInfo_v2 WHERE loginId = ?`;
+      const queryArray = [userid];
+      doQuery(query, queryArray)
+        .then((row) => {
+          if (row.result.length > 0) {
+            const creator = row.result[0];
+            if (encrpyto.check(passwd, creator.password, creator.passwordSalt)) {
+              const user: Session = {
+                userType: 'creator',
+                creatorId: creator.creatorId,
+                creatorIp: creator.creatorIp,
+              };
+              return done(null, user);
+            }
+            console.log(`${creator.loginId} 비밀번호가 일치하지 않습니다.`);
+            return done(null, { message: '비밀번호가 일치하지 않습니다.' });
+          }
+          console.log('회원이 아닙니다.');
+          return done('회원이 아닙니다.');
+        })
+        .catch((err) => done(err));
+      break;
+    }
+    case 'marketer':
+    default: {
+      const checkQuery = `
       SELECT
         marketerPasswd, marketerSalt,
         marketerId, marketerName, marketerMail, marketerPhoneNum, marketerBusinessRegNum,
@@ -57,36 +90,38 @@ const marketerLocal = (
       FROM marketerInfo
       WHERE marketerId = ? `;
 
-  doQuery(checkQuery, [userid])
-    .then((row) => {
-      if (row.result[0]) {
-        const marketerData = row.result[0];
-        if (encrpyto.check(passwd, marketerData.marketerPasswd, marketerData.marketerSalt)) {
-          const user: Session = {
-            marketerId: userid,
-            userType: 'marketer',
-            marketerMail: marketerData.marketerMail,
-            marketerAccountNumber: marketerData.marketerAccountNumber,
-            marketerBusinessRegNum: marketerData.marketerBusinessRegNum,
-            marketerName: marketerData.marketerName,
-            marketerPhoneNum: marketerData.marketerPhoneNum,
-          };
-          const stampQuery = `
+      doQuery(checkQuery, [userid])
+        .then((row) => {
+          if (row.result[0]) {
+            const marketerData = row.result[0];
+            if (encrpyto.check(passwd, marketerData.marketerPasswd, marketerData.marketerSalt)) {
+              const user: Session = {
+                marketerId: userid,
+                userType: 'marketer',
+                marketerMail: marketerData.marketerMail,
+                marketerAccountNumber: marketerData.marketerAccountNumber,
+                marketerBusinessRegNum: marketerData.marketerBusinessRegNum,
+                marketerName: marketerData.marketerName,
+                marketerPhoneNum: marketerData.marketerPhoneNum,
+              };
+              const stampQuery = `
             INSERT INTO loginStamp(userId, userIp, userType) Values(?,?,?)`;
-          doQuery(stampQuery, [user.marketerId, '', '1']);
-          console.log(`${marketerData.marketerName} 로그인 하였습니다.`);
+              doQuery(stampQuery, [user.marketerId, '', '1']);
+              console.log(`${marketerData.marketerName} 로그인 하였습니다.`);
 
-          return done(null, user);
-        }
+              return done(null, user);
+            }
 
-        console.log(`${marketerData.marketerName} 비밀번호가 일치하지 않습니다.`);
-        return done(null, { message: '비밀번호가 일치하지 않습니다.' });
-      }
+            console.log(`${marketerData.marketerName} 비밀번호가 일치하지 않습니다.`);
+            return done(null, { message: '비밀번호가 일치하지 않습니다.' });
+          }
 
-      console.log('회원이 아닙니다.');
-      return done('회원이 아닙니다.');
-    })
-    .catch((errorData) => done(errorData));
+          console.log('회원이 아닙니다.');
+          return done('회원이 아닙니다.');
+        })
+        .catch((errorData) => done(errorData));
+    }
+  }
 };
 
 /**
@@ -439,7 +474,7 @@ const creatorAfreeca = (
 
 
 export default {
-  marketerLocal,
+  local,
   creatorTwitch,
   marketerGoogle,
   marketerNaver,

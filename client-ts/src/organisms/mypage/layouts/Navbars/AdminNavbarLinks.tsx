@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 // @material-ui/core components
 import Tooltip from '@material-ui/core/Tooltip';
 import Badge from '@material-ui/core/Badge';
@@ -19,6 +19,7 @@ import useAnchorEl from '../../../../utils/hooks/useAnchorEl';
 import { NoticeDataParam, NoticeDataRes } from './NotificationType';
 import UserPopover from './sub/UserPopover';
 import { ContractionDataType } from '../../../../pages/mypage/creator/CPAManage';
+import MarketerPopover, { MarketerInfoRes } from './sub/MarketerPopover';
 
 const useStyles = makeStyles((theme) => ({
   avatar: { width: theme.spacing(4), height: theme.spacing(4) }
@@ -70,7 +71,9 @@ function HeaderLinks(): JSX.Element {
 
   // 유저 정보 조회
   const userProfileGet = useGetRequest<null, ContractionDataType>('/creator');
+  const marketerProfileGet = useGetRequest<null, MarketerInfoRes>('/marketer');
 
+  const [type] = useState(window.document.location.pathname.includes('/creator/') ? 'creator' : 'marketer');
   return (
     <div>
 
@@ -96,7 +99,14 @@ function HeaderLinks(): JSX.Element {
       </Tooltip>
 
       <IconButton size="small" onClick={userLogoAnchor.handleAnchorOpen}>
+        {type === 'creator' && (
         <Avatar className={classes.avatar} src={userProfileGet.data ? userProfileGet.data.creatorLogo : ''} />
+        )}
+        {type === 'marketer' && (
+        <Avatar className={classes.avatar}>
+          {marketerProfileGet.data ? marketerProfileGet.data.marketerName.slice(0, 1) : ''}
+        </Avatar>
+        )}
       </IconButton>
 
 
@@ -111,10 +121,25 @@ function HeaderLinks(): JSX.Element {
       )}
 
       {/* 유저 설정 리스트 */}
-      {!userProfileGet.loading && userProfileGet.data && (
+      {type === 'creator' && !userProfileGet.loading && userProfileGet.data && (
       <UserPopover
         open={userLogoAnchor.open}
         userData={userProfileGet.data}
+        anchorEl={userLogoAnchor.anchorEl}
+        handleAnchorClose={userLogoAnchor.handleAnchorClose}
+        handleLogoutClick={handleLogoutClick}
+        noticeReadFlagGet={noticeReadFlagGet}
+        doNoticePatchRequest={() => {
+          noticeReadFlagPatch.doPatchRequest({ userType });
+        }}
+      />
+      )}
+
+      {/* 유저 설정 리스트 */}
+      {type === 'marketer' && !marketerProfileGet.loading && marketerProfileGet.data && (
+      <MarketerPopover
+        open={userLogoAnchor.open}
+        userData={marketerProfileGet.data}
         anchorEl={userLogoAnchor.anchorEl}
         handleAnchorClose={userLogoAnchor.handleAnchorClose}
         handleLogoutClick={handleLogoutClick}

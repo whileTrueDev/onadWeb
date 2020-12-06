@@ -23,6 +23,7 @@ import inquiryRouter from './routes/inquiry';
 import noticeRouter from './routes/notice';
 import trackingRouter from './routes/tracking';
 import cpapageRouter from './routes/cpapage';
+import certificationRouter from './routes/cert/certification';
 // Middleware or custom modules
 import taxBillScheduler from './middlewares/scheduler/taxBillScheduler';
 import dailyLimitScheduler from './middlewares/scheduler/dailyLimitScheduler';
@@ -135,6 +136,7 @@ class OnadWebApi {
     this.app.use('/notice', noticeRouter);
     this.app.use('/tracking', trackingRouter);
     this.app.use('/cpapage', cpapageRouter);
+    this.app.use('/certification', certificationRouter);
     // Error handling
     // catch 404 and forward to error handler
     this.app.use((req, res, next) => {
