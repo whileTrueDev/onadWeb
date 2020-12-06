@@ -2,7 +2,7 @@ import {
   Button,
   Chip,
   CircularProgress,
-  Grid, Paper, Typography,
+  Grid, makeStyles, Paper, Typography,
 } from '@material-ui/core';
 import React, { useCallback, useEffect, useState } from 'react';
 import VideoBanner from '../../../../atoms/Banner/VideoBanner';
@@ -10,6 +10,20 @@ import Snackbar from '../../../../atoms/Snackbar/Snackbar';
 import HOST from '../../../../config';
 import axiosInstance from '../../../../utils/axios';
 import isVideo from '../../../../utils/isVideo';
+
+const useStyles = makeStyles((theme) => ({
+  bold: { fontWeight: 'bold' },
+  container: { marginBottom: theme.spacing(4) },
+  paper: { padding: theme.spacing(2), height: 350, overflowY: 'auto' },
+  img: { maxHeight: 160, maxWidth: 320, },
+  bannerContents: { marginLeft: theme.spacing(1) },
+  linkTitle: { textDecoration: 'underline', cursor: 'pointer' },
+  desc: { marginTop: theme.spacing(1) },
+  loading: {
+    display: 'flex', justifyContent: 'center', height: 200, alignItems: 'center'
+  },
+  moreButton: { textAlign: 'center' },
+}));
 
 export interface Link {primary: boolean; linkTo: string; linkName: string}
 export interface CampaignData {
@@ -29,7 +43,8 @@ export interface CampaignData {
   optionType: number;
   priorityType: number;
 }
-export default function BannerCard(): JSX.Element {
+export default function BannerList(): JSX.Element {
+  const classes = useStyles();
   // 광고 타입 렌더링 함수
   function renderOptionType(option: number): string {
     // {/* optionType : 캠페인의 광고타입 ( 0: CPM, 1: CPM + CPC, 2: CPC ) */}
@@ -76,17 +91,17 @@ export default function BannerCard(): JSX.Element {
 
 
   return (
-    <Grid container spacing={1} style={{ marginBottom: 32 }}>
+    <Grid container spacing={1} className={classes.container}>
 
       <Grid item xs={12}>
-        <Typography style={{ fontWeight: 'bold' }}>내가 진행한 광고 목록</Typography>
+        <Typography className={classes.bold}>내가 진행한 광고 목록</Typography>
       </Grid>
       {/* 목록 */}
       {data.map((campaign) => (
         <Grid item xs={12} sm={6} lg={3} key={campaign.campaignId}>
-          <Paper style={{ padding: 32, height: 350, overflowY: 'auto' }}>
+          <Paper className={classes.paper}>
             <div>
-              <div style={{ maxHeight: 160, maxWidth: 320, }}>
+              <div className={classes.img}>
                 {isVideo(campaign.bannerSrc) ? (
                   <VideoBanner
                     src={campaign.bannerSrc}
@@ -106,7 +121,7 @@ export default function BannerCard(): JSX.Element {
                 )}
               </div>
 
-              <div style={{ marginLeft: 8 }}>
+              <div className={classes.bannerContents}>
                 <div>
                   {campaign.links && JSON.parse(campaign.links).links.map((link: Link) => (
                     <>
@@ -114,8 +129,8 @@ export default function BannerCard(): JSX.Element {
                       <Typography
                         component="span"
                         key={link.linkName}
-                        style={{ textDecoration: 'underline', cursor: 'pointer' }}
-                        onClick={(): void => { window.open(link.linkTo); }}
+                        className={classes.linkTitle}
+                        onClick={() => window.open(link.linkTo)}
                       >
                         {' '}
                         {link.linkName}
@@ -133,10 +148,9 @@ export default function BannerCard(): JSX.Element {
                 <Typography variant="caption" color="textSecondary">{`광고 첫 게시 ${campaign.date}`}</Typography>
                 <Typography variant="body2">{`배너광고 ${campaign.CPM.toLocaleString()}원 • 클릭광고 ${campaign.CPC.toLocaleString()}원`}</Typography>
                 <Typography variant="body2">{`${renderOptionType(campaign.optionType)}`}</Typography>
-                <div style={{ marginTop: 8 }}>
+                <div className={classes.desc}>
                   <Typography variant="body2">{campaign.campaignDescription}</Typography>
                 </div>
-                {/* priorityType : 배너 광고 우선순위 타입 ( 0: 크리에이터 우선형, 1: 카테고리 우선형 2: 노출 우선형) */}
               </div>
             </div>
           </Paper>
@@ -145,13 +159,7 @@ export default function BannerCard(): JSX.Element {
 
       {/* 로딩 */}
       {loading && (
-      <Grid
-        item
-        xs={12}
-        style={{
-          display: 'flex', justifyContent: 'center', height: 200, alignItems: 'center'
-        }}
-      >
+      <Grid item xs={12} className={classes.loading}>
         <CircularProgress />
       </Grid>
       )}
@@ -159,7 +167,7 @@ export default function BannerCard(): JSX.Element {
       {/* 더보기 버튼 */}
       {data.length % OFFSET === 0 && (
       <Grid item xs={12}>
-        <div style={{ textAlign: 'center' }}>
+        <div className={classes.moreButton}>
           <Button
             variant="contained"
             color="primary"

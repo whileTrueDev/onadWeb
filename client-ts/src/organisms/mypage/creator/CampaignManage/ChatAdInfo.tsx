@@ -89,7 +89,7 @@ export default function ChatAdInfo({
                   successSnackOpen();
                 }}
               />
-          )}
+            )}
           />
         </div>
       </div>

@@ -6,7 +6,7 @@ import Snackbar from '../../../atoms/Snackbar/Snackbar';
 // hooks
 import useGetRequest from '../../../utils/hooks/useGetRequest';
 import useDialog from '../../../utils/hooks/useDialog';
-import BannerCard from '../../../organisms/mypage/creator/CampaignManage/BannerCard';
+import BannerList from '../../../organisms/mypage/creator/CampaignManage/BannerList';
 import NowBroadCard, { CurrentBannerRes } from '../../../organisms/mypage/creator/CampaignManage/NowBroadCard';
 import ChatAdInfo from '../../../organisms/mypage/creator/CampaignManage/ChatAdInfo';
 import ClickAdInfo from '../../../organisms/mypage/creator/CampaignManage/ClickAdInfo';
@@ -74,7 +74,7 @@ const MyBanner = (): JSX.Element => {
 
         {/* 진행한 캠페인 정보 */}
         <GridItem xs={12}>
-          <BannerCard />
+          <BannerList />
         </GridItem>
       </GridContainer>
 
