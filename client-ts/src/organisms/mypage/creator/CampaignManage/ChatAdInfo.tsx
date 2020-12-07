@@ -6,6 +6,7 @@ import HelpIcon from '@material-ui/icons/Help';
 import React from 'react';
 import { useAnchorEl, usePatchRequest } from '../../../../utils/hooks';
 import { UseGetRequestObject } from '../../../../utils/hooks/useGetRequest';
+import { ContractionDataType } from '../../../../pages/mypage/creator/CPAManage';
 
 const useStyles = makeStyles((theme) => ({
   bold: { fontWeight: theme.typography.fontWeightBold },
@@ -26,12 +27,14 @@ const useStyles = makeStyles((theme) => ({
 
 export interface AdChatRes { adChatAgreement: 1 | 0 }
 export interface ChatAdInfoProps {
+  contracitonAgreementData: UseGetRequestObject<ContractionDataType>;
   adChatData: UseGetRequestObject<AdChatRes>;
   doGetReqeustOnOff: () => void;
   successSnackOpen: () => void;
   failSnackOpen: () => void;
 }
 export default function ChatAdInfo({
+  contracitonAgreementData,
   adChatData,
   doGetReqeustOnOff,
   successSnackOpen,
@@ -45,15 +48,10 @@ export default function ChatAdInfo({
     doGetReqeustOnOff();
   });
   const handleSwitch = (): void => {
-    onOffUpdate.doPatchRequest({ targetOnOffState: !(adChatData.data?.adChatAgreement) });
+    onOffUpdate.doPatchRequest({ targetOnOffState: !(adChatData.data?.adChatAgreement) })
+      .then(() => successSnackOpen())
+      .catch(() => failSnackOpen());
   };
-
-  // For OnOff update error
-  React.useEffect(() => {
-    if (onOffUpdate.error) {
-      failSnackOpen();
-    }
-  }, [failSnackOpen, onOffUpdate.error]);
 
   return (
     <Paper className={classes.container}>
@@ -77,21 +75,26 @@ export default function ChatAdInfo({
           현재 트위치만 가능합니다.
         </Typography>
 
-        <div className={classes.onoffButton}>
-          <FormControlLabel
-            label="끄기/켜기"
-            control={(
-              <Switch
-                color="primary"
-                checked={Boolean(adChatData.data?.adChatAgreement)}
-                onChange={(): void => {
-                  handleSwitch();
-                  successSnackOpen();
-                }}
-              />
+        {!contracitonAgreementData.loading && contracitonAgreementData.data && (
+          <div className={classes.onoffButton}>
+            <FormControlLabel
+              label="끄기/켜기"
+              disabled={!contracitonAgreementData.data.creatorContractionAgreement}
+              control={(
+                <Switch
+                  color="primary"
+                  checked={Boolean(adChatData.data?.adChatAgreement)}
+                  onChange={(): void => {
+                    handleSwitch();
+                  }}
+                />
             )}
-          />
-        </div>
+            />
+            {!contracitonAgreementData.data.creatorContractionAgreement && (
+            <Typography variant="body2" color="textSecondary">이용동의가 필요합니다.</Typography>
+            )}
+          </div>
+        )}
       </div>
 
       {descAnchor.open && (

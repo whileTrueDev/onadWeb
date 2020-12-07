@@ -75,7 +75,11 @@ router.route('/start-check').get(
     SELECT * FROM campaignLog WHERE creatorId = ? AND TYPE = "CPM" ORDER BY date DESC LIMIT 1`;
     doQuery(query, [creatorId])
       .then((row) => {
-        responseHelper.send(row.result, 'get', res);
+        if (row.result.length > 0) {
+          responseHelper.send(row.result, 'get', res);
+        } else {
+          responseHelper.send(null, 'get', res);
+        }
       })
       .catch((error) => { responseHelper.promiseError(error, next); });
   }))
@@ -197,7 +201,7 @@ router.route('/overlay')
       const { creatorId } = responseHelper.getSessionData(req);
       const query = `
       SELECT advertiseUrl, creatorContractionAgreement
-      FROM creatorInfo
+      FROM creatorInfo_v2
       WHERE creatorId = ?
       `;
 

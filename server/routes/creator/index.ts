@@ -45,7 +45,7 @@ router.route('/')
 
       const query = `
       SELECT *
-      FROM creatorInfo
+      FROM creatorInfo_v2
       WHERE creatorId = ?`;
       doQuery(query, [creatorId])
         .then((row) => {
@@ -82,23 +82,29 @@ router.route('/')
       if (row.result) {
         responseHelper.send(userid, 'post', res);
       } else next();
-      // 20201206 -> 기본 테이블 행 추가 필요
-      // const incomeQuery = `
-      //           INSERT INTO creatorIncome 
-      //           (creatorId, creatorTotalIncome, creatorReceivable) 
-      //           VALUES (?, ?, ?)`;
 
-      // const priceQuery = `
-      //           INSERT INTO creatorPrice
-      //           (creatorId, grade, viewerAverageCount, unitPrice)
-      //           VALUES (?, ?, ?, ?)
-      //           `;
+      // 각 테이블 기본 행 추가 (수익금, 수익률, 레벨)
+      const incomeQuery = `
+        INSERT INTO creatorIncome 
+        (creatorId, creatorTotalIncome, creatorReceivable) 
+        VALUES (?, 0, 0)`;
 
-      // const royaltyQuery = `
-      //           INSERT INTO creatorRoyaltyLevel
-      //           (creatorId, level, exp, visitCount)
-      //           VALUES (?, 1, 0, 0)
-      //           `;
+      const priceQuery = `
+        INSERT INTO creatorPrice
+        (creatorId, grade, viewerAverageCount, unitPrice)
+        VALUES (?, ?, ?, ?)`;
+
+      const royaltyQuery = `
+        INSERT INTO creatorRoyaltyLevel
+        (creatorId, level, exp, visitCount)
+        VALUES (?, 1, 0, 0)`;
+
+      Promise.all([
+        doQuery(incomeQuery, [creatorId]),
+        doQuery(priceQuery, [creatorId, 1, 0, 2]),
+        doQuery(royaltyQuery, [creatorId])
+      ]).then(() => responseHelper.send(userid, 'post', res))
+        .catch(() => next());
     })
   )
   .patch(
@@ -118,6 +124,9 @@ router.route('/')
             responseHelper.promiseError(error, next);
           });
       } else if (type === 'contraction') {
+        // ***************************************************************************
+        // 201207 - advertiseURL 생성 기능 여기서 추가필요. ( 회원가입시 -> 이용계약시 수정 )
+
         // 크리에이터 계약
         const contractionUpdateQuery = `
           UPDATE creatorInfo
@@ -319,7 +328,7 @@ router.route('/landing-url')
       const query = `
       SELECT 
       creatorTwitchId 
-      FROM creatorInfo
+      FROM creatorInfo_v2
       WHERE creatorId = ?
       `;
 
@@ -340,7 +349,7 @@ router.route('/adchat/agreement')
     responseHelper.middleware.checkSessionExists,
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
       const { creatorId } = responseHelper.getSessionData(req);
-      const query = 'SELECT adChatAgreement FROM creatorInfo WHERE creatorId = ?';
+      const query = 'SELECT adChatAgreement FROM creatorInfo_v2 WHERE creatorId = ?';
       const queryArray = [creatorId];
 
       const row = await doQuery(query, queryArray);
@@ -357,7 +366,11 @@ router.route('/adchat/agreement')
       const query = 'UPDATE creatorInfo SET adChatAgreement = ? WHERE creatorId = ?';
       const queryArray = [targetOnOffState, creatorId];
       const row = await doQuery(query, queryArray);
-      responseHelper.send(row.result, 'patch', res);
+      if (row.result.affectedRows > 0) {
+        responseHelper.send(row.result.affectedRows, 'patch', res);
+      } else {
+        responseHelper.promiseError(new Error(`failed - creatorId ${creatorId} is not exists`), next);
+      }
     })
   )
   .all(responseHelper.middleware.unusedMethod);

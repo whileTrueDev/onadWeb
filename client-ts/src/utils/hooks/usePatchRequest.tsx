@@ -7,7 +7,7 @@ export interface UsePatchRequestObject<T, P> {
   success: true | null;
   loading?: boolean;
   error: string;
-  doPatchRequest: (param: T) => void;
+  doPatchRequest: (param: T) => Promise<P>;
   data: P | null;
 }
 /**
@@ -42,10 +42,9 @@ export default function usePatchRequest<PARAM_TYPE = {[key: string]: any}, RES_D
   const [loading, setLoading] = React.useState<boolean | undefined>(undefined);
   const [error, setError] = React.useState('');
 
-  const doPatchRequest = useCallback((param: PARAM_TYPE): void => {
+  const doPatchRequest = useCallback(async (param: PARAM_TYPE): Promise<RES_DATA_TYPE> => {
     setLoading(true); // 로딩 시작
-    axios.patch<RES_DATA_TYPE>(`${host}${url}`,
-      { ...param })
+    return axios.patch<RES_DATA_TYPE>(`${host}${url}`, { ...param })
       .then((res) => {
         setLoading(false); // 로딩 완료
 
@@ -54,7 +53,9 @@ export default function usePatchRequest<PARAM_TYPE = {[key: string]: any}, RES_D
         if (Math.floor(status / 100) === 2) {
           setSuccess(true);
           if (successCallback) { successCallback(); }
+          return res.data;
         }
+        return res.data;
       })
       .catch((err) => {
         setLoading(false); // 로딩 완료
@@ -73,6 +74,7 @@ export default function usePatchRequest<PARAM_TYPE = {[key: string]: any}, RES_D
           console.log('오류를 발생시킨 요청을 설정하는 중에 문제가 발생했습니다');
           setError(DEFAULT_ERROR_MESSAGE);
         }
+        throw err;
       });
   }, [successCallback, url]);
 

@@ -11,7 +11,7 @@ export interface UseGetRequestObject<T> {
   data: T | null;
   loading: boolean | null;
   error: string;
-  doGetRequest: (newParam?: any) => void;
+  doGetRequest: (newParam?: any) => Promise<T>;
   setData: React.Dispatch<React.SetStateAction<T | null>>;
 }
 
@@ -52,9 +52,9 @@ export default function useGetRequest<
   const [source] = useState(cancelToken.source());
 
 
-  const doGetRequest = useCallback((newParam?: PARAM_TYPE) => {
+  const doGetRequest = useCallback(async (newParam?: PARAM_TYPE): Promise<RES_DATA_TYPE> => {
     setLoading(true);
-    axios.get<RES_DATA_TYPE>(`${host}${url}`, {
+    return axios.get<RES_DATA_TYPE>(`${host}${url}`, {
       params: newParam ? { ...newParam } : { ...param },
       cancelToken: source.token,
       withCredentials: true
@@ -64,6 +64,7 @@ export default function useGetRequest<
           setLoading(false); // 로딩 완료
           setData(res.data); // 데이터 설정
         }
+        return res.data;
       })
       .catch((err) => { // 상태코드 300~
         if (!unmounted) { // 컴포넌트가 unmount 되지 않은 경우
@@ -88,6 +89,7 @@ export default function useGetRequest<
             console.error('not axios error - ', err);
           }
         }
+        throw err;
       });
   }, [url, param, source.token, unmounted]);
 

@@ -12,6 +12,7 @@ import ChatAdInfo from '../../../organisms/mypage/creator/CampaignManage/ChatAdI
 import ClickAdInfo from '../../../organisms/mypage/creator/CampaignManage/ClickAdInfo';
 import AdIncomeCard from '../../../organisms/mypage/creator/CampaignManage/AdIncomeCard';
 import AdClickCard from '../../../organisms/mypage/creator/CampaignManage/AdClickCard';
+import { ContractionDataType } from './CPAManage';
 
 
 interface LanidngUrlRes { url: string }
@@ -33,6 +34,8 @@ const MyBanner = (): JSX.Element => {
   const levelGet = useGetRequest<null, LevelRes>('/creator/level');
   // 현재 송출중 배너 정보 조회
   const currentBannerGet = useGetRequest<null, CurrentBannerRes[]>('/creator/banner/active');
+  // 계약 정보 조회
+  const profileGet = useGetRequest<null, ContractionDataType>('/creator');
 
   // For Onoff success snackbar
   const snack = useDialog();
@@ -49,11 +52,20 @@ const MyBanner = (): JSX.Element => {
 
         {/* 클릭광고 정보 */}
         <GridItem xs={12} sm={6} lg={3}>
-          <ClickAdInfo creatorUrl={landingUrlGet.data ? landingUrlGet.data.url : ''} />
+          <ClickAdInfo
+            creatorUrl={
+            (!profileGet.loading && profileGet.data
+              && profileGet.data.creatorContractionAgreement && landingUrlGet.data)
+              ? landingUrlGet.data.url
+              : ''
+            }
+          />
         </GridItem>
+
         {/* 채팅광고 정보 */}
         <GridItem xs={12} sm={6} lg={3}>
           <ChatAdInfo
+            contracitonAgreementData={profileGet}
             adChatData={adchatGet}
             doGetReqeustOnOff={adchatGet.doGetRequest}
             successSnackOpen={snack.handleOpen}
@@ -74,7 +86,9 @@ const MyBanner = (): JSX.Element => {
 
         {/* 진행한 캠페인 정보 */}
         <GridItem xs={12}>
+          {profileGet.loading && profileGet.data && profileGet.data.creatorContractionAgreement && (
           <BannerList />
+          )}
         </GridItem>
       </GridContainer>
 

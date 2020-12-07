@@ -68,7 +68,7 @@ export default function CreatorLoginForm({
 
           {/* new 로그인 */}
           <Button onClick={() => {
-            axios.post(`${HOST}/login`, { type: 'creator', userid: 'testtest', passwd: 'rkdghktn12!@' })
+            axios.post(`${HOST}/login`, { type: 'creator', userid: 'hwasurr', passwd: 'rkdghktn12!@' })
               .then((res) => history.push('/mypage/creator/main'));
           }}
           >

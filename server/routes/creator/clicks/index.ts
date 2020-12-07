@@ -82,7 +82,11 @@ router.route('/start-check').get(
     SELECT * FROM campaignLog WHERE creatorId = ? AND type = "CPC" ORDER BY date DESC LIMIT 1`;
     doQuery(query, [creatorId])
       .then((row) => {
-        responseHelper.send(row.result, 'get', res);
+        if (row.result.length > 0) {
+          responseHelper.send(row.result, 'get', res);
+        } else {
+          responseHelper.send(null, 'get', res);
+        }
       })
       .catch((error) => { responseHelper.promiseError(error, next); });
   }))

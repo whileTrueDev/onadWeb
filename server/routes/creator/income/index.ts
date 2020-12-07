@@ -1,6 +1,5 @@
 import express from 'express';
 import responseHelper from '../../../middlewares/responseHelper';
-import dataProcessing from '../../../lib/dataProcessing';
 import doQuery from '../../../model/doQuery';
 import encrypto from '../../../middlewares/encryption';
 
@@ -21,7 +20,7 @@ router.route('/')
       creatorTotalIncome as creatorTotalIncome,
       creatorReceivable as creatorReceivable,
       creatorAccountNumber, creatorIncome.date, creatorContractionAgreement, realName
-      FROM creatorInfo as ci
+      FROM creatorInfo_v2 as ci
       JOIN creatorIncome 
       ON ci.creatorId = creatorIncome.creatorId
       WHERE ci.creatorId= ? 

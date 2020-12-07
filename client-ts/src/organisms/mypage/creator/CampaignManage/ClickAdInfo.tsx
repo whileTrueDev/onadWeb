@@ -61,9 +61,13 @@ export default function ClickAdInfo({
           className={classes.overlayUrl}
           fullWidth
           id="ad-page-url"
-          value={creatorUrl}
-          disabled
-          inputProps={{ readOnly: true, className: classes.overlayUrlInput }}
+          value={creatorUrl || '이용동의가 필요합니다.'}
+          disabled={!creatorUrl}
+          inputProps={{
+            readOnly: true,
+            className: creatorUrl
+              ? classes.overlayUrlInput : undefined
+          }}
         />
       </div>
       {descAnchor.open && (

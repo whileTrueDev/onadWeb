@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
-  Paper, Typography, Stepper, Step, StepLabel, makeStyles
+  Paper, Typography, Stepper, Step, StepLabel, makeStyles,
 } from '@material-ui/core';
 // components
 import Dialog from '../../../../atoms/Dialog/Dialog';
@@ -15,6 +15,7 @@ import GuideIntroduction from './guides/GuideIntroduction';
 import SetClickAdSection from './guides/SetClickAdSection';
 import { OverlayUrlRes } from './OverlayUrlCard';
 import { ContractionDataType } from '../../../../pages/mypage/creator/CPAManage';
+import StyledTooltip from '../../../../atoms/Tooltip/StyledTooltip';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -99,6 +100,14 @@ const ContractionCard = ({
     return steps[step].component;
   }
 
+  // 첫 사용자 도움 popper 
+  const tooltip = useDialog();
+  useEffect(() => {
+    if (!contractionData.creatorContractionAgreement) {
+      tooltip.handleOpen();
+    }
+  }, [tooltip, contractionData]);
+
   return (
     <>
       <Paper className={classes.container}>
@@ -107,10 +116,26 @@ const ContractionCard = ({
           &nbsp;
           온애드 시작 가이드
         </Typography>
+
         {/* 계약 완료 버튼 */}
-        <Button size="small" color="primary" onClick={guideDialog.handleOpen}>
-          시작하기
-        </Button>
+        <StyledTooltip
+          title={<Typography variant="body2">시작가이드와 함께 시작해보세요</Typography>}
+          placement="bottom-start"
+          open={!guideDialog.open && tooltip.open}
+          arrow
+          interactive
+        >
+          <div>
+            <Button
+              size="small"
+              color="primary"
+              onClick={guideDialog.handleOpen}
+            >
+              시작하기
+            </Button>
+          </div>
+        </StyledTooltip>
+
       </Paper>
 
       <Dialog
