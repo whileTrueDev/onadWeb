@@ -52,7 +52,9 @@ router.route('/')
           const userData = row.result[0];
           const rawAccount: string = row.result[0].creatorAccountNumber || '';
           const deciphedAccountNum: string = encrypto.decipher(rawAccount);
-          const deciphedIdentificationNum: string = encrypto.decipher(userData.identificationNumber);
+          const deciphedIdentificationNum: string = encrypto.decipher(
+            userData.identificationNumber
+          );
           const deciphedphoneNum: string = encrypto.decipher(userData.phoneNumber);
           userData.creatorLogo = creatorLogo;
           userData.identificationNumber = deciphedIdentificationNum;

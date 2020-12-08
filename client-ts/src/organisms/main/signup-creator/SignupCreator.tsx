@@ -1,33 +1,22 @@
 import {
   Button,
   Divider,
-  Grid, IconButton, InputAdornment, makeStyles, Paper,
+  Grid, IconButton, InputAdornment, Paper,
   TextField, Typography
 } from '@material-ui/core';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import { Lock, Visibility, VisibilityOff } from '@material-ui/icons';
 import React, { useState } from 'react';
-import { useLoginValue } from '../../../utils/hooks';
-import AppAppBar from '../layouts/AppAppbar';
 import axiosInstance from '../../../utils/axios';
 import HOST from '../../../config';
 import IndentityVerificationDialog from './IdentityVerification';
 import history from '../../../history';
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-  },
-}));
+
 export interface CreatorSignupInfo {
   userid: string; passwd: string; repasswd: string; pwdVisibility: boolean;
 }
 export default function SignupCreator(): JSX.Element {
-  const classes = useStyles();
-  const { logout } = useLoginValue();
-
   // 회원가입 정보
   const [signupInfo, setSignupInfo] = useState<CreatorSignupInfo>({
     userid: '', passwd: '', repasswd: '', pwdVisibility: false,
@@ -164,164 +153,152 @@ export default function SignupCreator(): JSX.Element {
   const [rePwIconColor, setRePwIconColor] = useState<'primary' | 'disabled'>('disabled');
 
   return (
-    <div className={classes.root}>
-      <AppAppBar MainUserType="creator" logout={logout} noTrigger />
-      <div style={{ paddingTop: 90 }} />
+    <Grid container alignItems="center" direction="column">
+      <Grid item xs={12} md={6} style={{ maxWidth: 500 }}>
+        <Paper style={{ padding: 24, textAlign: 'center' }}>
+          <Typography variant="h4" style={{ fontWeight: 'bold' }}>회원가입</Typography>
 
-      <Grid container alignItems="center" direction="column">
-        <Grid item xs={12} md={6}>
-          <Paper style={{ padding: 24, textAlign: 'center' }}>
-            <Typography variant="h4" style={{ fontWeight: 'bold' }}>회원가입</Typography>
+          {window.location.pathname === '/creator/signup/complete' && (
+          <div>
+            <Typography>회원가입이 완료되었습니다.</Typography>
+            <Typography>회원가입 완료 페이지를 여기에.</Typography>
+          </div>
+          )}
 
-            {window.location.pathname === '/creator/signup/complete' && (
-              <div>
-                <Typography>회원가입이 완료되었습니다.</Typography>
-                <Typography>회원가입 완료 페이지를 여기에.</Typography>
-              </div>
-            )}
+          {/* 회원정보 받기 */}
+          {!(window.location.pathname === '/creator/signup/complete') && activeStep === 0 && (
+          <form
+            onSubmit={handleSubmit}
+            style={{ marginTop: 16, marginBottom: 16, minWidth: 270 }}
+          >
+            {/* 아이디 */}
+            <TextField
+              style={{ marginBottom: 16 }}
+              fullWidth
+              variant="outlined"
+              disabled={duplicateCheckLoading}
+              placeholder="아이디"
+              onChange={handleChange('userid')}
+              value={signupInfo.userid}
+              error={useridError}
+              helperText={useridHelperText}
+              onFocus={(): void => setUseridIconColor('primary')}
+              onBlur={(): void => setUseridIconColor('disabled')}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <AccountCircleIcon color={useridIconColor} />
+                  </InputAdornment>
+                )
+              }}
+            />
+            {/* 비밀번호 */}
+            <TextField
+              style={{ marginBottom: 16 }}
+              fullWidth
+              variant="outlined"
+              placeholder="비밀번호"
+              disabled={duplicateCheckLoading}
+              type={signupInfo.pwdVisibility ? 'text' : 'password'}
+              error={pwdError}
+              helperText="특수문자를 포함한 8-20자 영문 또는 숫자"
+              value={signupInfo.passwd}
+              onChange={handleChange('passwd')}
+              onFocus={(): void => setPwIconColor('primary')}
+              onBlur={(): void => setPwIconColor('disabled')}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Lock color={pwIconColor} />
+                  </InputAdornment>
+                ),
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={handleClickShowPassword}
+                      onMouseDown={handleMouseDownPassword}
+                    >
+                      {signupInfo.pwdVisibility ? <Visibility /> : <VisibilityOff />}
+                    </IconButton>
+                  </InputAdornment>
+                )
+              }}
+            />
+            {/* 비밀번호 확인 */}
+            <TextField
+              style={{ marginBottom: 16 }}
+              fullWidth
+              variant="outlined"
+              placeholder="비밀번호확인"
+              disabled={duplicateCheckLoading}
+              type={signupInfo.pwdVisibility ? 'text' : 'password'}
+              error={repwdError}
+              helperText={repwdError ? '비밀번호와 동일하지 않습니다.' : ''}
+              value={signupInfo.repasswd}
+              onChange={handleChange('repasswd')}
+              onFocus={(): void => setRePwIconColor('primary')}
+              onBlur={(): void => setRePwIconColor('disabled')}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Lock color={rePwIconColor} />
+                  </InputAdornment>
+                ),
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={handleClickShowPassword}
+                      onMouseDown={handleMouseDownPassword}
+                    >
+                      {signupInfo.pwdVisibility ? <Visibility /> : <VisibilityOff />}
+                    </IconButton>
+                  </InputAdornment>
+                )
+              }}
+            />
 
-            {/* 회원정보 받기 */}
-            {!(window.location.pathname === '/creator/signup/complete') && activeStep === 0 && (
-              <form
-                onSubmit={handleSubmit}
-                style={{ marginTop: 16, marginBottom: 16, minWidth: 270 }}
-              >
-                {/* 아이디 */}
-                <TextField
-                  style={{ marginBottom: 16 }}
-                  fullWidth
-                  variant="outlined"
-                  disabled={duplicateCheckLoading}
-                  placeholder="아이디"
-                  onChange={handleChange('userid')}
-                  value={signupInfo.userid}
-                  error={useridError}
-                  helperText={useridHelperText}
-                  onFocus={(): void => setUseridIconColor('primary')}
-                  onBlur={(): void => setUseridIconColor('disabled')}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <AccountCircleIcon color={useridIconColor} />
-                      </InputAdornment>
-                    )
-                  }}
-                />
-                {/* 비밀번호 */}
-                <TextField
-                  style={{ marginBottom: 16 }}
-                  fullWidth
-                  variant="outlined"
-                  placeholder="비밀번호"
-                  disabled={duplicateCheckLoading}
-                  type={signupInfo.pwdVisibility ? 'text' : 'password'}
-                  error={pwdError}
-                  helperText="특수문자를 포함한 8-20자 영문 또는 숫자"
-                  value={signupInfo.passwd}
-                  onChange={handleChange('passwd')}
-                  onFocus={(): void => setPwIconColor('primary')}
-                  onBlur={(): void => setPwIconColor('disabled')}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <Lock color={pwIconColor} />
-                      </InputAdornment>
-                    ),
-                    endAdornment: (
-                      <InputAdornment position="end">
-                        <IconButton
-                          aria-label="toggle password visibility"
-                          onClick={handleClickShowPassword}
-                          onMouseDown={handleMouseDownPassword}
-                        >
-                          {signupInfo.pwdVisibility ? <Visibility /> : <VisibilityOff />}
-                        </IconButton>
-                      </InputAdornment>
-                    )
-                  }}
-                />
-                {/* 비밀번호 확인 */}
-                <TextField
-                  style={{ marginBottom: 16 }}
-                  fullWidth
-                  variant="outlined"
-                  placeholder="비밀번호확인"
-                  disabled={duplicateCheckLoading}
-                  type={signupInfo.pwdVisibility ? 'text' : 'password'}
-                  error={repwdError}
-                  helperText={repwdError ? '비밀번호와 동일하지 않습니다.' : ''}
-                  value={signupInfo.repasswd}
-                  onChange={handleChange('repasswd')}
-                  onFocus={(): void => setRePwIconColor('primary')}
-                  onBlur={(): void => setRePwIconColor('disabled')}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <Lock color={rePwIconColor} />
-                      </InputAdornment>
-                    ),
-                    endAdornment: (
-                      <InputAdornment position="end">
-                        <IconButton
-                          aria-label="toggle password visibility"
-                          onClick={handleClickShowPassword}
-                          onMouseDown={handleMouseDownPassword}
-                        >
-                          {signupInfo.pwdVisibility ? <Visibility /> : <VisibilityOff />}
-                        </IconButton>
-                      </InputAdornment>
-                    )
-                  }}
-                />
+            <Button
+              type="submit"
+              color="primary"
+              size="large"
+              variant="contained"
+              style={{ width: '100%' }}
+              disabled={!signupInfo.userid || !signupInfo.passwd || !signupInfo.repasswd}
+            >
+              가입하기
+            </Button>
 
-                <Button
-                  type="submit"
-                  color="primary"
-                  size="large"
-                  variant="contained"
-                  style={{ width: '100%' }}
-                  disabled={!signupInfo.userid || !signupInfo.passwd || !signupInfo.repasswd}
-                >
-                  가입하기
-                </Button>
+            <Button onClick={handleSignup}>
+              가입테스트
+            </Button>
+          </form>
+          )}
 
-                <Button onClick={handleSignup}>
-                  가입테스트
-                </Button>
-              </form>
-            )}
-
-            {/* 본인인증 진행 */}
-            {!(window.location.pathname === '/creator/signup/complete') && activeStep === 1 && (
+          {/* 본인인증 진행 */}
+          {!(window.location.pathname === '/creator/signup/complete') && activeStep === 1 && (
             <IndentityVerificationDialog
               onSuccess={handleSignup}
               onBackClick={handleBack}
             />
-            )}
+          )}
 
-            {!(window.location.pathname === '/creator/signup/complete') && (
-              <>
-                <Divider />
-                <div style={{ margin: 16 }}>
-                  <Typography>
-                    이미 온애드 계정이 있나요?&nbsp;
-                    <span style={{ color: 'red', textDecoration: 'underline', cursor: 'pointer' }}>
-                      로그인
-                    </span>
-                  </Typography>
-                  <Typography>
-                    트위치 계정 로그인 방식으로 온애드를 사용했었나요?&nbsp;
-                    <span style={{ color: 'red', textDecoration: 'underline', cursor: 'pointer' }}>
-                      기존계정연동
-                    </span>
-                  </Typography>
-                </div>
-              </>
-            )}
-          </Paper>
-        </Grid>
+          {!(window.location.pathname === '/creator/signup/complete') && (
+            <>
+              <Divider />
+              <div style={{ margin: 16 }}>
+                <Typography variant="body2">
+                  트위치 계정 로그인 방식으로 온애드를 사용했었나요?&nbsp;
+                  <span style={{ color: 'red', textDecoration: 'underline', cursor: 'pointer' }}>
+                    기존계정로그인
+                  </span>
+                </Typography>
+              </div>
+            </>
+          )}
+        </Paper>
       </Grid>
-
-    </div>
+    </Grid>
   );
 }

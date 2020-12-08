@@ -233,10 +233,10 @@ router.route('/active')
       ON cp.bannerId = br.bannerId
       JOIN linkRegistered AS lr
       ON cp.connectedLinkId = lr.linkId
-      WHERE creatorId = "130096343"
+      WHERE creatorId = ?
       AND ct.DATE > DATE_ADD(NOW(), INTERVAL - 10 MINUTE) 
       ORDER BY ct.DATE DESC LIMIT 1
-        `;
+      `;
 
       doQuery(query, [creatorId])
         .then((row) => {

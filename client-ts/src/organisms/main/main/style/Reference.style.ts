@@ -1,17 +1,16 @@
+import { grey } from '@material-ui/core/colors';
 import makeStyles from '@material-ui/core/styles/makeStyles';
-import grey from '@material-ui/core/colors/grey';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   container: {
     backgroundColor: grey[100],
-    width: '100%',
     height: 'auto',
     color: 'black',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    padding: '3% 10% 3% 10%'
+    padding: theme.spacing(4),
   },
   image: {
     width: 200,

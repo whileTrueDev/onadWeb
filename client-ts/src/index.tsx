@@ -23,7 +23,7 @@ import ChargeDialog from './organisms/mypage/marketer/office/charge/ChargeDialog
 import CreatorDashboard from './pages/mypage/layouts/CreatorLayout';
 import NotFound from './pages/others/NotFound';
 import useOnadThemeType from './utils/hooks/useOnadThemeType';
-import SignupCreator from './organisms/main/signup-creator/SignupCreator';
+import RegistCreator from './pages/main/RegistCreator';
 
 dotenv.config();
 const OnadIndex = (): JSX.Element => {
@@ -50,8 +50,8 @@ const OnadIndex = (): JSX.Element => {
             <Route exact path="/" component={Door} />
             <Route exact path="/marketer" component={Main} />
             <Route exact path="/creator" component={Main} />
-            <Route exact path="/creator/signup" component={SignupCreator} />
-            <Route exact path="/creator/signup/complete" component={SignupCreator} />
+            <Route exact path="/creator/signup" component={RegistCreator} />
+            <Route exact path="/creator/signup/complete" component={RegistCreator} />
             <Route exact path="/creatorlist" component={CreatorList} />
             <Route path="/regist/:platform" component={RegistPage} />
             <Route exact path="/regist" component={RegistPage} />

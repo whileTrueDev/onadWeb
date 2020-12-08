@@ -74,8 +74,8 @@ const local = (
             console.log(`${creator.loginId} 비밀번호가 일치하지 않습니다.`);
             return done(null, { message: '비밀번호가 일치하지 않습니다.' });
           }
-          console.log('회원이 아닙니다.');
-          return done('회원이 아닙니다.');
+          console.log(`${userid} 회원이 아닙니다.`);
+          return done(new Error('아이디를 확인해주세요. 등록된 아이디가 아닙니다.'));
         })
         .catch((err) => done(err));
       break;
