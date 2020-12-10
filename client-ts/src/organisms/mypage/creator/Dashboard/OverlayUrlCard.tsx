@@ -38,7 +38,7 @@ function UrlCard({
   const classes = useStyles();
 
   // 오버레이 주소 10초간만 보여주기 위한 기본값
-  const DEFAULT_OVERLAY_URL = '';
+  const DEFAULT_OVERLAY_URL = '[주소 복사] 버튼을 눌러주세요.';
   const [overlayUrlValue, setOverlayUrlValue] = useState<string>(DEFAULT_OVERLAY_URL);
 
   // 10초간 overlayUrl을 보여주는 함수
@@ -63,8 +63,7 @@ function UrlCard({
         className={classes.textField}
         id="overlayUrl"
         value={overlayUrlData.creatorContractionAgreement
-          ? overlayUrlValue
-          : helperText}
+          ? overlayUrlValue : helperText}
         readOnly
         fullWidth
         disabled={!overlayUrlValue}

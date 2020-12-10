@@ -90,6 +90,7 @@ const ContractionCard = ({
     {
       label: '클릭광고 준비하기',
       component: <SetClickAdSection
+        contractionData={contractionData}
         handleSnackOpen={handleSnackOpen}
       />,
     },

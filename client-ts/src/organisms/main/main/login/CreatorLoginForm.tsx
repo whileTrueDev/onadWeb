@@ -22,30 +22,6 @@ export default function CreatorLoginForm({
   const classes = useStyles();
 
   const [loading, setLoading] = useState(false);
-  const [helperText, setHelperText] = useState<string>();
-
-  // 각 플랫폼 로그인 버튼 - loading 을 가진다.
-  const LoginButton = ({
-    loginLink, logo, text, platform
-  }: { loginLink: string; logo: string; text: string; platform: 'twitch' | 'afreeca'}): JSX.Element => (
-    <Button
-      onClick={(e): void => {
-        e.preventDefault();
-        setLoading(true);
-        setTimeout(() => { // 15초 간의 timeout을 두고, 로딩 컴포넌트를 없앤다
-          setLoading(false);
-          setHelperText('로그인에 일시적인 문제가 발생했습니다.\n잠시후 다시 시도해주세요.');
-        }, 1000 * 15); // 15초
-        window.location.href = loginLink;
-      }}
-      variant="contained"
-      className={classnames(classes.socialLoginButton, classes[platform])}
-      disabled={loading || Boolean(helperText)}
-    >
-      <img src={logo} alt="" className={classes.socialLogo} />
-      <Typography variant="body1">{text}</Typography>
-    </Button>
-  );
 
   const userid = useEventTargetValue();
   const passwd = useEventTargetValue();
@@ -58,7 +34,7 @@ export default function CreatorLoginForm({
         passwd.handleReset();
         setTimeout(() => { // 15초 간의 timeout을 두고, 로딩 컴포넌트를 없앤다
           setLoading(false);
-          setHelperText('로그인에 일시적인 문제가 발생했습니다.\n잠시후 다시 시도해주세요.');
+          setError('로그인에 일시적인 문제가 발생했습니다.\n잠시후 다시 시도해주세요.');
         }, 1000 * 10); // 15초
 
         if (res.data[0]) {
@@ -133,12 +109,6 @@ export default function CreatorLoginForm({
             로그인
           </Button>
 
-          {/* <LoginButton
-            loginLink={`${HOST}/login/twitch`}
-            logo="/pngs/logo/twitch/TwitchGlitchWhite.png"
-            text="트위치 아이디로 로그인"
-            platform="twitch"
-          /> */}
           <Divider style={{ marginTop: 16, marginBottom: 16 }} />
 
           <div style={{ margin: 16 }}>
@@ -148,7 +118,7 @@ export default function CreatorLoginForm({
                 가입하기
               </span>
             </Typography>
-            <Typography variant="body2">
+            <Typography variant="body2" onClick={() => history.push('/creator/signup/pre-user')}>
               트위치 계정 로그인 방식으로 온애드를 사용했었나요?&nbsp;
               <span style={{ color: 'red', textDecoration: 'underline', cursor: 'pointer' }}>
                 기존계정로그인

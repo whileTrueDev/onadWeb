@@ -76,12 +76,12 @@ router.route('/creator/list')
       tenMinuteAgoTime.setMinutes(tenMinuteAgoTime.getMinutes() - 10);
       const query = `
           SELECT streamerName, creatorTwitchId, viewer FROM twitchStreamDetail
-              JOIN creatorInfo
-              ON creatorInfo.creatorName = twitchStreamDetail.streamerName
+              JOIN creatorInfo_v2
+              ON creatorInfo_v2.creatorName = twitchStreamDetail.streamerName
               JOIN campaignTimestamp
-              ON campaignTimestamp.creatorId = creatorInfo.creatorId
+              ON campaignTimestamp.creatorId = creatorInfo_v2.creatorId
               WHERE TIME > ? 
-              AND creatorInfo.creatorContractionAgreement = 1
+              AND creatorInfo_v2.creatorContractionAgreement = 1
               AND campaignTimestamp.date > ?
               AND substring_index(campaignTimestamp.campaignId, "_", 1) = ?`;
       doQuery(query, [tenMinuteAgoTime, tenMinuteAgoTime, marketerId])

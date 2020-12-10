@@ -42,8 +42,6 @@ export default function ContractionSection({
 }: ContractionSectionProps): JSX.Element {
   const classes = useStyles();
   // ****************************************
-  // 팔로워 수 정보조회
-  const getFollower = useGetRequest<number>('/creator/follower');
   // 계약 정보 업데이트 요청
   const contractionPatch = usePatchRequest('/creator', // 계약정보 업데이트
     () => {
@@ -80,19 +78,6 @@ export default function ContractionSection({
         <Typography>온애드 서비스를 정상적으로 이용하기 위해서는 이용 동의가 필요합니다.</Typography>
         <Typography>아래의 약관들에 대해서 동의한 이후, [이용동의완료] 버튼을 클릭해 완료해주세요.</Typography>
         <Typography variant="body2" color="textSecondary">약관보기를 클릭한 이후 하단에서 약관을 동의할 수 있습니다.</Typography>
-        <br />
-        <Typography>온애드에서는 시청자와 크리에이터를 구분하기 위한 최소한의 제한사항으로</Typography>
-        <Typography>
-          최소 팔로워/애청자수가
-          {' '}
-          <span className={classnames(classes.red, classes.bold)}>300</span>
-          {' '}
-          명 이상인 크리에이터만 사용 가능합니다. (현재
-          {' '}
-          <span className={classnames(classes.red, classes.bold)}>{getFollower.data}</span>
-          {' '}
-          명)
-        </Typography>
       </div>
 
       {contractionData.creatorContractionAgreement === 1 ? (
@@ -129,11 +114,6 @@ export default function ContractionSection({
           ))}
 
           <div className={classes.container}>
-            {!getFollower.loading && getFollower.data < 300 && (
-            <Typography variant="body2" color="error" className={classes.textRightSpace}>
-              {`죄송합니다. 팔로워/애청자 수가 부족합니다 (${getFollower.data}명)`}
-            </Typography>
-            )}
             <Button
               color="primary"
               onClick={(): void => {
@@ -143,8 +123,7 @@ export default function ContractionSection({
                 }
               }}
               disabled={!(contractionList.every((row) => row === true))
-                || Boolean(contractionPatch.loading)
-                || getFollower.data < 300}
+                || Boolean(contractionPatch.loading)}
             >
               이용동의완료
             </Button>

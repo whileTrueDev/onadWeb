@@ -116,13 +116,13 @@ const UserInfoCard = ({
         <div>
           <div>
             <Typography variant="h5" className={classes.bold}>
-              {userProfileData.creatorName}
+              {userProfileData.loginId}
               &nbsp;
               <Typography component="span" variant="body2">아프리카,</Typography>
               <Typography component="span" variant="body2">트위치</Typography>
             </Typography>
             <Typography variant="caption">
-              {userProfileData.creatorMail}
+              {userProfileData.creatorName}
             </Typography>
           </div>
           {/* 상태 칩 섹션 */}

@@ -103,7 +103,7 @@ router.route('/creator-data')
         cd.openHour AS openHour, 
         cd.content AS content
         FROM campaignLog as cl
-        JOIN creatorInfo as ci
+        JOIN creatorInfo_v2 as ci
         ON cl.creatorId = ci.creatorId
         LEFT JOIN creatorDetail AS cd
         ON cl.creatorId = cd.creatorId
@@ -127,7 +127,7 @@ router.route('/creator-data')
         cd.openHour AS openHour, 
         cd.content AS content
         FROM campaignLog as cl
-        JOIN creatorInfo as ci
+        JOIN creatorInfo_v2 as ci
         ON cl.creatorId = ci.creatorId
         LEFT JOIN creatorDetail AS cd
         ON cl.creatorId = cd.creatorId

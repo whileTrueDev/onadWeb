@@ -7,12 +7,14 @@ import { InsertLinkOutlined } from '@material-ui/icons';
 import Button from '../../../../../atoms/CustomButtons/Button';
 import copyToClipboard from '../../../../../utils/copyToClipboard';
 import { useGetRequest } from '../../../../../utils/hooks';
+import { ContractionDataType } from '../../../../../pages/mypage/creator/CPAManage';
 
 export interface SetClickAdSectionnProps {
+  contractionData: ContractionDataType;
   handleSnackOpen: () => void;
 }
 export default function SetClickAdSection({
-  handleSnackOpen,
+  handleSnackOpen, contractionData
 }: SetClickAdSectionnProps): JSX.Element {
   // Landing url
   const landingUrlGet = useGetRequest('/creator/landing-url');
@@ -42,7 +44,9 @@ export default function SetClickAdSection({
             <Input
               style={{ maxWidth: 300, marginRight: 16 }}
               id="ad-page-url"
-              value={landingUrlGet.data.url}
+              value={contractionData.creatorContractionAgreement === 1
+                ? landingUrlGet.data.url : '[온애드 이용 동의] 가 필요합니다.'}
+              disabled={!contractionData.creatorContractionAgreement}
               readOnly
               fullWidth
             />

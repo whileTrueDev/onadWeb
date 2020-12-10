@@ -11,6 +11,7 @@ import bannerRouter from './banner';
 import notificationRouter from './notification';
 import clicksRouter from './clicks';
 import cpaRouter from './cpa';
+import makeAdvertiseUrl from '../../lib/makeAdvertiseUrl';
 
 const router = express.Router();
 router.use('/income', incomeRouter);
@@ -118,7 +119,7 @@ router.route('/')
 
       if (typeof newIp === 'string') {
         // IP update
-        const ipQuery = 'UPDATE creatorInfo SET creatorIp = ? WHERE creatorId = ?';
+        const ipQuery = 'UPDATE creatorInfo_v2 SET creatorIp = ? WHERE creatorId = ?';
         doQuery(ipQuery, [newIp, creatorId])
           .then(() => {
             responseHelper.send(`${creatorId}님 IP변경완료`, 'PATCH', res);
@@ -130,10 +131,11 @@ router.route('/')
         // 201207 - advertiseURL 생성 기능 여기서 추가필요. ( 회원가입시 -> 이용계약시 수정 )
 
         // 크리에이터 계약
+        const creatorBannerUrl = makeAdvertiseUrl();
         const contractionUpdateQuery = `
-          UPDATE creatorInfo
-          SET creatorContractionAgreement = ?
-          WHERE creatorInfo.creatorId = ?`;
+          UPDATE creatorInfo_v2
+          SET creatorContractionAgreement = ?, advertiseUrl = ?
+          WHERE creatorInfo_v2.creatorId = ?`;
         // 계약시 생성되는 creatorCampaign 기본값
         const campaignList = JSON.stringify({ campaignList: [] });
         const campaignQuery = `
@@ -146,9 +148,8 @@ router.route('/')
           INSERT INTO creatorLanding
           (creatorId, creatorTwitchId)
           VALUES (?, ?)`;
-
         Promise.all([
-          doQuery(contractionUpdateQuery, [1, creatorId]),
+          doQuery(contractionUpdateQuery, [1, creatorBannerUrl, creatorId]),
           doQuery(campaignQuery, [creatorId, campaignList, campaignList]),
           doQuery(landingQuery, [creatorId, creatorName])
         ])
@@ -160,9 +161,9 @@ router.route('/')
           });
       } else if (type === 'CPAAgreement') {
         const CPAAgreementUpdateQuery = `
-          UPDATE creatorInfo
+          UPDATE creatorInfo_v2
           SET CPAAgreement = ?
-          WHERE creatorInfo.creatorId = ?`;
+          WHERE creatorInfo_v2.creatorId = ?`;
 
         doQuery(CPAAgreementUpdateQuery, [1, creatorId])
           .then(() => {
@@ -194,7 +195,7 @@ router.route('/settlement')
       const enciphedIdentityNum: string = encrypto.encipher(CreatorIdentity);
 
       const settlementQuery = `
-      UPDATE creatorInfo
+      UPDATE creatorInfo_v2
       SET name = ?, settlementState = ?, identificationNumber = ?, phoneNumber = ?, creatorType = ?,
       identificationImg = ?, AccountImg = ?, BussinessRegiImg = ?, creatorAccountNumber = ?, realName = ?
       WHERE creatorId = ?
@@ -365,7 +366,7 @@ router.route('/adchat/agreement')
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
       const { creatorId } = responseHelper.getSessionData(req);
       const targetOnOffState = responseHelper.getParam('targetOnOffState', 'patch', req);
-      const query = 'UPDATE creatorInfo SET adChatAgreement = ? WHERE creatorId = ?';
+      const query = 'UPDATE creatorInfo_v2 SET adChatAgreement = ? WHERE creatorId = ?';
       const queryArray = [targetOnOffState, creatorId];
       const row = await doQuery(query, queryArray);
       if (row.result.affectedRows > 0) {

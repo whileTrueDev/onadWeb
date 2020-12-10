@@ -148,7 +148,7 @@ const PriorityDoquery = ({
 const getCreatorList = () => new Promise<string[]>((resolve, reject) => {
   const creatorSelectQuery = `
     SELECT creatorId
-    FROM creatorInfo
+    FROM creatorInfo_v2
     WHERE creatorContractionAgreement = 1
     `;
   doQuery(creatorSelectQuery, [])

@@ -22,6 +22,7 @@ import CPAIntroduction from '../../../organisms/mypage/creator/CPAManage/CPAIntr
 export interface ContractionDataType {
   creatorId: string;
   creatorName: string;
+  loginId: string;
   creatorIp: string;
   creatorMail: string;
   creatorAccountNumber: string;

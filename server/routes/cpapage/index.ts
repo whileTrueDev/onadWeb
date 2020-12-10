@@ -46,7 +46,7 @@ router.route('/user')
       (
       select 
       creatorName, creatorLogo, creatorTwitchId, creatorId
-      from creatorInfo 
+      from creatorInfo_v2
       WHERE creatorTwitchId = ? 
       ) as ci
       join 
@@ -89,7 +89,7 @@ router.route('/clicks')
       RIGHT JOIN
       (
       SELECT creatorId
-      FROM creatorInfo
+      FROM creatorInfo_v2
       WHERE creatorTwitchId = ?
       ) AS ci
       on tc.creatorId = ci.creatorId
@@ -132,7 +132,7 @@ router.route('/campaigns')
       const name = responseHelper.getParam('name', 'get', req);
       const nameQuery = `
       SELECT creatorId 
-      FROM creatorInfo
+      FROM creatorInfo_v2
       WHERE creatorTwitchId = ?
       `;
       // 크리에이터: 수익금의 40%를 가져가므로. -> 수익금의 80% (200728, hwasurr)
@@ -189,7 +189,7 @@ router.route('/visit')
       const ipInsertQuery = `
         INSERT INTO adpageClickIp  (creatorId, ipAddress, type)
         VALUES (
-        (SELECT creatorId FROM creatorInfo WHERE creatorTwitchId = ?), ?, ?)
+        (SELECT creatorId FROM creatorInfo_v2 WHERE creatorTwitchId = ?), ?, ?)
         `;
       const ipInsertArray = [name, userIp, VISIT_TYPE_NUM];
 
@@ -197,7 +197,7 @@ router.route('/visit')
       const visitUpdateQuery = `
         UPDATE creatorRoyaltyLevel
         SET visitCount = visitCount + ?
-        WHERE creatorId = (SELECT creatorId FROM creatorInfo WHERE creatorTwitchId = ?)`;
+        WHERE creatorId = (SELECT creatorId FROM creatorInfo_v2 WHERE creatorTwitchId = ?)`;
       const visitUpdateArray = [1, name];
 
       const lastResult = {
@@ -365,7 +365,7 @@ router.route('/manplus/impression')
       const ipInsertQuery = `
       INSERT INTO manpointClick  (creatorId, ipAddress, type)
       VALUES (
-      (SELECT creatorId FROM creatorInfo WHERE creatorTwitchId = ?), ?, ?)
+      (SELECT creatorId FROM creatorInfo_v2 WHERE creatorTwitchId = ?), ?, ?)
       `;
 
       const ipInsertArray = [name, userIp, MANPOINT_IMPRESSION_NUM];
@@ -417,7 +417,7 @@ router.route('/manplus/click')
       const ipInsertQuery = `
       INSERT INTO manpointClick  (creatorId, ipAddress, type)
       VALUES (
-      (SELECT creatorId FROM creatorInfo WHERE creatorTwitchId = ?), ?, ?)
+      (SELECT creatorId FROM creatorInfo_v2 WHERE creatorTwitchId = ?), ?, ?)
       `;
       const ipInsertArray = [name, userIp, MANPOINT_CLICK_NUM];
 

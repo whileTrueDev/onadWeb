@@ -10,22 +10,7 @@ import doQuery from '../../../model/doQuery';
 import encrpyto from '../../encryption';
 // type
 import { Session } from '../../../@types/session';
-
-/**
- * @name 배너URL생성함수
- */
-const makeUrl = (): string => {
-  let password = '';
-  for (let i = 0; i < 8; i += 1) {
-    const lowerStr = String.fromCharCode(Math.floor(Math.random() * 26 + 97));
-    if (i % 2 === 0) {
-      password += String(Math.floor(Math.random() * 10));
-    } else {
-      password += lowerStr;
-    }
-  }
-  return password;
-};
+import makeAdvertiseUrl from '../../../lib/makeAdvertiseUrl';
 
 /**
  * @author 박찬우
@@ -259,7 +244,7 @@ const creatorTwitch = (
       const creatorIp = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
       const campaignList = JSON.stringify({ campaignList: [] });
 
-      const creatorBannerUrl = makeUrl();
+      const creatorBannerUrl = makeAdvertiseUrl();
       user.creatorIp = creatorIp;
 
       const infoQuery = `
@@ -287,7 +272,7 @@ const creatorTwitch = (
 
       Promise.all([
         doQuery(infoQuery, [user.creatorId, user.creatorDisplayName,
-          user.creatorMail, creatorIp, `/${creatorBannerUrl}`,
+          user.creatorMail, creatorIp, creatorBannerUrl,
           user.creatorName, user.creatorLogo]),
         doQuery(royaltyQuery, [user.creatorId]),
         doQuery(incomeQuery, [user.creatorId, 0, 0]),

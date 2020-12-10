@@ -52,6 +52,7 @@ const OnadIndex = (): JSX.Element => {
             <Route exact path="/creator" component={Main} />
             <Route exact path="/creator/signup" component={RegistCreator} />
             <Route exact path="/creator/signup/complete" component={RegistCreator} />
+            <Route exact path="/creator/signup/pre-user" component={RegistCreator} />
             <Route exact path="/creatorlist" component={CreatorList} />
             <Route path="/regist/:platform" component={RegistPage} />
             <Route exact path="/regist" component={RegistPage} />

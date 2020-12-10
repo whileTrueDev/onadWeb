@@ -8,6 +8,11 @@
     src: url(./fonts/NotoSansKR-Regular.otf) format('truetype');
 }
 
+@font-face {
+    font-family: 'AppleSDGothicNeo';
+    src: url(./fonts/AppleSDGothicNeoM.ttf) format('truetype');
+}
+
 html * {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -18,7 +23,7 @@ body {
     /* background-color: #fff; */
     margin: 0;
     font-family: Helvetica, 'Sunflower', sans-serif;
-    font-weight: 300;
+    font-weight: 400;
     line-height: 1.5em;
 }
 

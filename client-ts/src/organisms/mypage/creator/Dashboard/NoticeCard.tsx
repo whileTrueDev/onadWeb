@@ -3,6 +3,7 @@ import classnames from 'classnames';
 import React from 'react';
 import { makeStyles, Paper, Typography } from '@material-ui/core';
 import history from '../../../../history';
+import { usePatchRequest } from '../../../../utils/hooks';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -34,6 +35,8 @@ export default function NoticeCard({
   noticeData,
 }: NoticeCardProps): JSX.Element {
   const classes = useStyles();
+  const noticeReadFlagPatch = usePatchRequest('/notice/read-flag');
+
   return (
     <Paper className={classes.container}>
       <Typography className={classes.bold}>
@@ -48,6 +51,7 @@ export default function NoticeCard({
             <div key={noti.code} className={classes.noticeItem}>
               <Typography
                 onClick={(): void => {
+                  noticeReadFlagPatch.doPatchRequest();
                   history.push(`/notice/${noti.code}`);
                 }}
                 className={classnames(classes.link, classes.ellipsis)}

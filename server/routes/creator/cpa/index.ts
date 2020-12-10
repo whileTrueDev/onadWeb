@@ -168,7 +168,7 @@ router.route('/adpick/mainIndicator')
 
       const query = `
         SELECT
-          (SELECT creatorTwitchId FROM creatorInfo WHERE creatorId = ?) AS creatorTwitchId,
+          (SELECT creatorTwitchId FROM creatorInfo_v2 WHERE creatorId = ?) AS creatorTwitchId,
           (SELECT IFNULL(SUM(cashToCreator), 0)
             FROM campaignLog
             WHERE type="CPA" AND creatorId = ?

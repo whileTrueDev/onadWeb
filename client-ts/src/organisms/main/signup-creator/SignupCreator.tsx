@@ -288,7 +288,7 @@ export default function SignupCreator(): JSX.Element {
             <>
               <Divider />
               <div style={{ margin: 16 }}>
-                <Typography variant="body2">
+                <Typography variant="body2" onClick={() => history.push('/creator/signup/pre-user')}>
                   트위치 계정 로그인 방식으로 온애드를 사용했었나요?&nbsp;
                   <span style={{ color: 'red', textDecoration: 'underline', cursor: 'pointer' }}>
                     기존계정로그인

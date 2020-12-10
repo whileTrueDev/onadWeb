@@ -66,10 +66,7 @@ export default function UserPopover(props: UserPopoverProps): JSX.Element {
         <List>
           <ListItem style={{ display: 'flex', alignItems: 'center' }}>
             <Avatar className={classes.icon} src={userData.creatorLogo} />
-            <ListItemText
-              primary={userData.creatorName}
-              secondary={userData.creatorMail}
-            />
+            <ListItemText primary={userData.loginId} secondary={userData.creatorMail} />
           </ListItem>
         </List>
         <Divider />

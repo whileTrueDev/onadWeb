@@ -13,7 +13,7 @@ router.route('/detail')
       left join 
       (
       select creatorId, creatorLogo, creatorName
-      from creatorInfo
+      from creatorInfo_v2
       )as B
       on creatorDetail.creatorId = B.creatorId
       WHERE rip > 0.5
@@ -32,18 +32,18 @@ router.route('/detail')
 router.route('/contents')
   .get(
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
-      const creatorId = responseHelper.getParam('creatorId', "GET", req);
+      const creatorId = responseHelper.getParam('creatorId', 'GET', req);
       const query = `
       SELECT
         creatorName, creatorTwitchId, creatorLogo, contentsGraphData
       FROM creatorDetail AS cc
-      JOIN creatorInfo AS ci
+      JOIN creatorInfo_v2 AS ci
       ON ci.creatorId = cc.creatorId
       WHERE cc.creatorId = ?`;
       doQuery(query, [creatorId])
         .then((row) => {
           if (row.result.length > 0) {
-            const result = row.result.map((r: { creatorName: string, creatorTwitchId: string, creatorLogo: string, contentsGraphData: string }) => ({
+            const result = row.result.map((r: { creatorName: string; creatorTwitchId: string; creatorLogo: string; contentsGraphData: string }) => ({
               ...r,
               contentsGraphData: JSON.parse(r.contentsGraphData)
             }));
@@ -63,17 +63,17 @@ router.route('/contents')
 router.route('/hours')
   .get(
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
-      const creatorId = responseHelper.getParam('creatorId', "GET", req);
+      const creatorId = responseHelper.getParam('creatorId', 'GET', req);
       const query = `
       SELECT creatorName, timeGraphData
       FROM creatorDetail AS cc
-      JOIN creatorInfo AS ci
+      JOIN creatorInfo_v2 AS ci
       ON ci.creatorId = cc.creatorId
       WHERE cc.creatorId = ?`;
       doQuery(query, [creatorId])
         .then((row) => {
           if (row.result.length > 0) {
-            const result = row.result.map((r: { creatorName: string, timeGraphData: string }) => ({
+            const result = row.result.map((r: { creatorName: string; timeGraphData: string }) => ({
               ...r,
               timeGraphData: JSON.parse(r.timeGraphData)
             }));
@@ -88,7 +88,6 @@ router.route('/hours')
     }),
   )
   .all(responseHelper.middleware.unusedMethod);
-
 
 
 router.route('/games')
@@ -147,4 +146,3 @@ router.route('/detail-data')
   .all(responseHelper.middleware.unusedMethod);
 
 export default router;
-

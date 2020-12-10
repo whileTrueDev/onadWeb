@@ -99,14 +99,35 @@ function HeaderLinks(): JSX.Element {
       </Tooltip>
 
       <IconButton size="small" onClick={userLogoAnchor.handleAnchorOpen}>
-        {type === 'creator' && (
-        <Avatar className={classes.avatar} src={userProfileGet.data ? userProfileGet.data.creatorLogo : ''} />
-        )}
-        {type === 'marketer' && (
-        <Avatar className={classes.avatar}>
-          {marketerProfileGet.data ? marketerProfileGet.data.marketerName.slice(0, 1) : ''}
-        </Avatar>
-        )}
+        {/* 읽지않은 공지사항이 있는 경우 뱃지 표시 */}
+        {!noticeReadFlagGet.loading && noticeReadFlagGet.data
+          && noticeReadFlagGet.data.noticeReadState === 0 ? (
+            <Badge variant="dot" color="primary">
+              <div>
+                {type === 'creator' && (
+                <Avatar className={classes.avatar} src={userProfileGet.data ? userProfileGet.data.creatorLogo : ''} />
+                )}
+                {type === 'marketer' && (
+                <Avatar className={classes.avatar}>
+                  {marketerProfileGet.data ? marketerProfileGet.data.marketerName.slice(0, 1) : ''}
+                </Avatar>
+                )}
+              </div>
+            </Badge>
+          ) : (
+            <div>
+              {/* 읽지않은 공지사항이 없는 경우 */}
+              {type === 'creator' && (
+              <Avatar className={classes.avatar} src={userProfileGet.data ? userProfileGet.data.creatorLogo : ''} />
+              )}
+              {type === 'marketer' && (
+              <Avatar className={classes.avatar}>
+                {marketerProfileGet.data ? marketerProfileGet.data.marketerName.slice(0, 1) : ''}
+              </Avatar>
+              )}
+            </div>
+          )}
+
       </IconButton>
 
 
