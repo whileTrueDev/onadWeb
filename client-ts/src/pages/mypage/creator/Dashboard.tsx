@@ -1,6 +1,8 @@
 import React from 'react';
 // atoms
-import { Hidden, } from '@material-ui/core';
+import {
+  Hidden, useTheme,
+} from '@material-ui/core';
 import GridContainer from '../../../atoms/Grid/GridContainer';
 import GridItem from '../../../atoms/Grid/GridItem';
 import Snackbar from '../../../atoms/Snackbar/Snackbar';
@@ -23,6 +25,7 @@ import EventInfoCard from '../../../organisms/mypage/creator/Dashboard/EventInfo
 import useGetRequest from '../../../utils/hooks/useGetRequest';
 import useDialog from '../../../utils/hooks/useDialog';
 import { ContractionDataType } from './CPAManage';
+import PlatformLinkDialog from '../../../organisms/mypage/shared/PlatformLinkDialog';
 
 const Dashboard = (): JSX.Element => {
   // 계약 정보 조회
@@ -45,6 +48,9 @@ const Dashboard = (): JSX.Element => {
   const noticeGet = useGetRequest<null, NoticeData[]>('/notice');
   // 출금 내역 정보
   const withdrawalData = useGetRequest('/creator/income/withdrawal');
+
+  // 채널 연동 유도 다이얼로그
+  const platformLinkDialog = useDialog();
 
   // 오버레이 url 복사 성공 알림 스낵바를 위한 객체
   const snack = useDialog();
@@ -175,6 +181,12 @@ const Dashboard = (): JSX.Element => {
             </GridContainer>
           )}
       </div>
+
+      <PlatformLinkDialog
+        open={platformLinkDialog.open}
+        handleOpen={platformLinkDialog.handleOpen}
+        onClose={platformLinkDialog.handleClose}
+      />
 
       <Snackbar
         color="success"

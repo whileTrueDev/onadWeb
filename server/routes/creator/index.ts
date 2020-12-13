@@ -179,6 +179,50 @@ router.route('/')
   )
   .all(responseHelper.middleware.unusedMethod);
 
+// 기존 트위치 로그인 -> 새로운 로그인 방식으로 변환하는 작업
+// @2020 12 13 hwasurr
+router.route('/pre-user')
+  .post(responseHelper.middleware.withErrorCatch(async (req, res, next) => {
+    const [creatorId, userid, passwd, accessToken] = responseHelper.getParam([
+      'creatorId', 'userid', 'passwd', 'accessToken'
+    ], 'POST', req);
+
+    // 백에서는 받은 액세스토큰으로 twitch users 요청을 진행,
+    axios.get('https://api.twitch.tv/helix/users', {
+      params: { id: creatorId },
+      headers: {
+        'Client-Id': process.env.TWITCH_CLIENT_ID,
+        Authorization: `Bearer ${accessToken}`
+      }
+    })
+      .then((userInfoRes) => {
+        if (userInfoRes.data.data.length > 0) {
+        // 올바른 정보가 오면 아디/비번을 설정
+          const [encrypted, salt] = encrypto.make(passwd);
+          const query = `
+          UPDATE creatorInfo_v2
+          SET loginId = ?, password = ?, passwordSalt = ?, creatorTwitchOriginalId = ?
+          WHERE creatorId = ?`;
+          const queryArray = [userid, encrypted, salt, creatorId, creatorId];
+          doQuery(query, queryArray)
+            .then((row) => {
+              responseHelper.send(row.result.affectedRows, 'POST', res);
+            })
+            .catch((err) => {
+              console.error('Query Error occurred in - /pre-user');
+              throw err;
+            });
+        }
+      })
+      // 액세스토큰이 없거나, 올바르지 못한 액세스토큰인 경우, 에러처리.
+      .catch((err) => {
+        if (err.response.status === 401) {
+          throw new createHttpError[401](err.response.data);
+        }
+        throw err;
+      });
+  }));
+
 router.route('/settlement')
   .patch( // 크리에이터 정산에 필요한 계좌 등록 / 변경
     responseHelper.middleware.checkSessionExists,

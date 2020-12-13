@@ -17,18 +17,13 @@ export default function RegistCreator(): JSX.Element {
   const classes = useStyles();
   const { logout } = useLoginValue();
 
-  const location = useLocation();
   return (
     <div className={classes.root}>
       <AppAppBar MainUserType="creator" logout={logout} noTrigger />
 
       <div style={{ paddingTop: 90 }} />
 
-      {location.pathname === '/creator/signup/pre-user' ? (
-        <SignupPreCreator />
-      ) : (
-        <SignupCreator />
-      )}
+      <SignupCreator />
     </div>
   );
 }

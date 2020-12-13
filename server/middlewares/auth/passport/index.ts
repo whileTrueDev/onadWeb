@@ -44,6 +44,23 @@ passport.use(new Local.Strategy(
 
 // 크리에이터 - twitch로 로그인
 passport.use(new Twitch.Strategy(
+  'twitch-pre-creator',
+  {
+    clientID: process.env.TWITCH_CLIENT_ID!,
+    clientSecret: process.env.TWITCH_CLIENT_SECRET!,
+    callbackURL: `${HOST}/login/twitch/callback`,
+    scope: 'user:read:email', // user:read:email
+    authorizationURL: 'https://id.twitch.tv/oauth2/authorize',
+    tokenURL: 'https://id.twitch.tv/oauth2/token',
+    passReqToCallback: true,
+  },
+  // login성공시 수행되는 함수.
+  verification.creatorTwitchPreCreator
+));
+
+// 크리에이터 - twitch로 로그인
+passport.use(new Twitch.Strategy(
+  'twitch',
   {
     clientID: process.env.TWITCH_CLIENT_ID!,
     clientSecret: process.env.TWITCH_CLIENT_SECRET!,

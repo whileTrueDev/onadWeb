@@ -151,6 +151,13 @@ const creatorTwitch = (
   refreshToken: string, profile: any,
   done: OAuth2Strategy.VerifyCallback
 ): void => {
+  const selectQuery = `
+    SELECT
+      creatorIp, creatorId, creatorName,
+      creatorMail, creatorTwitchId, creatorLogo
+    FROM creatorInfo
+    WHERE creatorId = ?`;
+
   const user: Session = {
     creatorId: profile.id,
     creatorDisplayName: profile.display_name,
@@ -159,12 +166,7 @@ const creatorTwitch = (
     creatorLogo: profile.profile_image_url,
     userType: 'creator'
   };
-  const selectQuery = `
-    SELECT
-      creatorIp, creatorId, creatorName,
-      creatorMail, creatorTwitchId, creatorLogo
-    FROM creatorInfo
-    WHERE creatorId = ?`;
+
   doQuery(selectQuery, [user.creatorId])
     .then((row): void => {
       const creatorData = row.result[0];
@@ -457,10 +459,33 @@ const creatorAfreeca = (
 
 };
 
+// 기존 로그인 방식의 크리에이터의 새로운 회원가입을 위한 verification함수
+const creatorTwitchPreCreator = (
+  req: express.Request, accessToken: string,
+  refreshToken: string, profile: any,
+  done: OAuth2Strategy.VerifyCallback
+): void => {
+  // 이전에 트위치 로그인을 사용해 사용했던 크리에이터를 찾는다. V
+  // 프론트로 보낸다. ( 크리에이터 아이디/이름과 엑세스 토큰을 ) V
 
+  const searchQuery = `
+  SELECT creatorId, creatorName FROM creatorInfo_v2 WHERE creatorId = ? LIMIT 1`;
+  const searchArray = [profile.id];
+  doQuery(searchQuery, searchArray).then((row) => {
+    if (row.result.length > 0) {
+      done(null, {
+        accessToken,
+        creatorId: row.result[0].creatorId,
+        creatorName: row.result[0].creatorName,
+      });
+    } else done(Error('기존 회원이 아닙니다.'));
+  })
+    .catch((err) => done(Error(`Internal Server Error\n${err}`)));
+};
 export default {
   local,
   creatorTwitch,
+  creatorTwitchPreCreator,
   marketerGoogle,
   marketerNaver,
   marketerKakao,

@@ -72,7 +72,11 @@ export default function SignupPreCreator(): JSX.Element {
           <Typography variant="h4" style={{ fontWeight: 'bold' }}>기존계정 연동</Typography>
 
           <Typography>
-            온애드는 로그인 방식이 변경되었습니다.
+            온애드의 로그인 방식이 변경되었습니다.
+          </Typography>
+
+          <Typography>
+            기존 계정 로그인시 사용할 ID/PW를 입력해주세요.
           </Typography>
 
           <div style={{ minWidth: 280, minHeight: 200 }}>
@@ -82,20 +86,18 @@ export default function SignupPreCreator(): JSX.Element {
               text="트위치 아이디로 로그인"
               platform="twitch"
             />
+
             <Typography>
-              1. 트위치로 로그인
+              1. 새로운 로그인 방식인 아이디/비번 입력 받고 (본인 인증 진행 X)
             </Typography>
             <Typography>
-              2. 로그인된 트위치 유저의 기존 온애드 ID를 찾아 기억해둔다
+              2. 기존에 사용하던 트위치 계정으로 로그인
             </Typography>
             <Typography>
-              3. 새로운 로그인 방식인 아이디/비번 입력 받고 (본인 인증 진행 X)
+              3. 해당 유저의 loginId, passwd, passwdSalt를 채워넣는다
             </Typography>
             <Typography>
-              4. 해당 유저의 loginId, passwd, passwdSalt를 채워넣는다
-            </Typography>
-            <Typography>
-              5. creatorId는 건들지 않았으므로 그대로 사용 가능.
+              4. creatorId는 건들지 않았으므로 그대로 사용 가능.
             </Typography>
           </div>
         </Paper>

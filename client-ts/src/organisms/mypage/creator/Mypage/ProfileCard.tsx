@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import { Grid, TextField, Avatar } from '@material-ui/core';
+import {
+  Grid, TextField, Avatar, Typography, Paper, Divider
+} from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
 import Card from '../../../../atoms/Card/Card';
@@ -55,65 +57,52 @@ function ProfileCard({ profileData }: ProfileCardProps): JSX.Element {
   };
 
   return (
-    <Card profile>
-      <CardAvatar profile>
-        <a href="#hi" onClick={(e): void => e.preventDefault()}>
-          <img src={profileData.creatorLogo} alt="..." />
-        </a>
-      </CardAvatar>
-      <CardBody profile>
-        <StyledItemText
-          primary={`${profileData.creatorName} 님의 정보`}
-          fontSize="18px"
-          style={{ margin: '16px 0' }}
-        />
-        <Grid container direction="row" spacing={2} justify="center">
-          <Grid item xs={12} sm={9} md={9}>
+    <>
+      <Paper style={{ padding: 32 }}>
+        <Grid container>
+          <Typography style={{ fontWeight: 'bold' }}>플랫폼 연동</Typography>
+          <Grid item xs={12} style={{ display: 'flex', alignItems: 'center' }}>
+            <img alt="" height={35} src="/pngs/logo/twitch/TwitchGlitchPurple.png" />
+            <Button variant="contained" size="small">연동하기</Button>
+          </Grid>
+          <Grid item xs={12} style={{ display: 'flex', alignItems: 'center' }}>
+            <img alt="" height={35} src="/pngs/logo/afreeca/onlyFace.png" />
+            <Button variant="contained" size="small">연동하기</Button>
+          </Grid>
+
+          <Typography style={{ fontWeight: 'bold' }}>내 정보 관리</Typography>
+          <Grid item xs={12} style={{ display: 'flex', alignItems: 'center' }}>
+            <Typography style={{ marginRight: 16, minWidth: 75 }}>프로필사진</Typography>
+            <Avatar src={profileData.creatorLogo} style={{ width: 45, height: 45 }} />
+          </Grid>
+          <Grid item xs={12} style={{ display: 'flex', alignItems: 'center' }}>
+            <Typography style={{ marginRight: 16, minWidth: 75 }}>아이디</Typography>
+            <TextField />
+          </Grid>
+          <Grid item xs={12} style={{ display: 'flex', alignItems: 'center' }}>
+            <Typography style={{ marginRight: 16, minWidth: 75 }}>비밀번호</Typography>
+            <TextField />
+          </Grid>
+          <Grid item xs={12} style={{ display: 'flex', alignItems: 'center' }}>
+            <Typography style={{ marginRight: 16, minWidth: 75 }}>계약상태</Typography>
             <TextField
-              label="EMAIL"
-              value={profileData.creatorMail || ''}
-              className={classes.textField}
+              value={profileData.creatorContractionAgreement === 1 ? '계약완료' : '미계약'}
               margin="normal"
               InputProps={{ readOnly: true }}
             />
-          </Grid>
-          <Grid item xs={12} sm={9} md={9}>
-            <Grid container direction="row" spacing={1} justify="flex-start">
-              <Grid item xs={5} sm={9}>
-                <TextField
-                  label="계약상태"
-                  value={profileData.creatorContractionAgreement === 1 ? '계약완료' : '미계약'}
-                  className={classes.textField}
-                  margin="normal"
-                  InputProps={{
-                    readOnly: true,
-                  }}
-                />
-              </Grid>
-              <Grid item xs={3} sm={3}>
-                <Button
-                  size="medium"
-                  style={{ marginTop: 20, float: 'left' }}
-                  onClick={handleContractionOpen}
-                >
-                  계약서 보기
-                </Button>
-              </Grid>
-            </Grid>
-          </Grid>
-          <Grid item sm={12} md={9}>
-            <Button color="primary" onClick={handleProfileChange}>
-
-              정보 변경하러 가기
-              <Avatar src="/pngs/logo/twitch.png" />
-
+            <Button
+              size="small"
+              style={{ marginTop: 20, float: 'left' }}
+              onClick={handleContractionOpen}
+            >
+              계약서 보기
             </Button>
           </Grid>
         </Grid>
-      </CardBody>
+      </Paper>
 
       <Contract open={ContractionOpen} handleClose={handleContractionClose} />
-    </Card>
+    </>
   );
 }
 

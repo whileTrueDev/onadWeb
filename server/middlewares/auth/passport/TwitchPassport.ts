@@ -1,3 +1,4 @@
+/* eslint-disable class-methods-use-this */
 import OAuth2Strategy from 'passport-oauth2';
 import request from 'request';
 
@@ -5,12 +6,13 @@ const clientID = process.env.TWITCH_CLIENT_ID;
 
 class Strategy extends OAuth2Strategy {
   constructor(
+    name: string,
     options: OAuth2Strategy.StrategyOptionsWithRequest,
     verify: OAuth2Strategy.VerifyFunctionWithRequest
   ) {
     super(options, verify);
 
-    this.name = 'twitch';
+    this.name = name;
 
     this._oauth2.setAuthMethod('Bearer');
     this._oauth2.useAuthorizationHeaderforGET(true);

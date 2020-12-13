@@ -15,38 +15,33 @@ const Mypage = (): JSX.Element => {
   const withdrawalData = useGetRequest('/creator/income/withdrawal');
 
   return (
-    <GridContainer direction="row">
-      <GridItem xs={12} md={6} xl={4}>
-        <GridContainer>
-          <GridItem xs={12}>
-            {(profileData.loading || withdrawalData.loading) && (<Skeleton height={400} variant="rect" />)}
-            {!(profileData.loading || withdrawalData.loading) && profileData.data && (
-              <ProfileCard profileData={profileData.data} />
-            )}
-          </GridItem>
-        </GridContainer>
-      </GridItem>
+    <div style={{ margin: '0 auto', maxWidth: 1024 }}>
 
-      <GridItem xs={12} md={6} xl={4}>
-        <GridContainer>
-          <GridItem xs={12}>
-            {(profileData.loading || withdrawalData.loading) && (<Skeleton height={400} variant="rect" />)}
-            {!(profileData.loading || withdrawalData.loading) && (
-              <WithdrawalCard withdrawalData={withdrawalData.data ? withdrawalData.data : []} />
-            )}
-          </GridItem>
-        </GridContainer>
-      </GridItem>
+      <GridContainer direction="row">
+        <GridItem xs={12}>
+          {(profileData.loading || withdrawalData.loading) && (<Skeleton height={400} variant="rect" />)}
+          {!(profileData.loading || withdrawalData.loading) && profileData.data && (
+          <ProfileCard profileData={profileData.data} />
+          )}
+        </GridItem>
 
-      <GridItem xs={12} xl={8}>
-        {(profileData.loading || withdrawalData.loading) && (<Skeleton height={400} variant="text" />)}
-        {!(profileData.loading || withdrawalData.loading) && profileData.data && (
+        <GridItem xs={12}>
+          {(profileData.loading || withdrawalData.loading) && (<Skeleton height={400} variant="rect" />)}
+          {!(profileData.loading || withdrawalData.loading) && (
+          <WithdrawalCard withdrawalData={withdrawalData.data ? withdrawalData.data : []} />
+          )}
+        </GridItem>
+
+        <GridItem xs={12}>
+          {(profileData.loading || withdrawalData.loading) && (<Skeleton height={400} variant="text" />)}
+          {!(profileData.loading || withdrawalData.loading) && profileData.data && (
           <SettlementCard
             profileData={profileData.data}
           />
-        )}
-      </GridItem>
-    </GridContainer>
+          )}
+        </GridItem>
+      </GridContainer>
+    </div>
   );
 };
 

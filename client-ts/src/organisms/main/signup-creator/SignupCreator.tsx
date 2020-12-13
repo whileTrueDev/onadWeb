@@ -1,22 +1,63 @@
+import classnames from 'classnames';
 import {
   Button,
+  darken,
   Divider,
-  Grid, IconButton, InputAdornment, Paper,
+  Grid, IconButton, InputAdornment, makeStyles, Paper,
   TextField, Typography
 } from '@material-ui/core';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
-import { Lock, Visibility, VisibilityOff } from '@material-ui/icons';
+import {
+  Check, Lock, Visibility, VisibilityOff
+} from '@material-ui/icons';
 import React, { useState } from 'react';
+import { useLocation } from 'react-router-dom';
+import { Alert } from '@material-ui/lab';
 import axiosInstance from '../../../utils/axios';
 import HOST from '../../../config';
 import IndentityVerificationDialog from './IdentityVerification';
 import history from '../../../history';
+import { OnadTheme } from '../../../theme';
+import Snackbar from '../../../atoms/Snackbar/Snackbar';
+import { useDialog } from '../../../utils/hooks';
 
+const useStyles = makeStyles((theme: OnadTheme) => ({
+  socialLoginButton: {
+    borderRadius: '0px',
+    width: '100%',
+    height: 60,
+    margin: `${theme.spacing(1)}px 0px`,
+    boxShadow: theme.shadows[0]
+  },
+  twitch: {
+    color: theme.palette.getContrastText(theme.palette.platform.twitch),
+    backgroundColor: theme.palette.platform.twitch,
+    '&:hover': {
+      backgroundColor: darken(theme.palette.platform.twitch, 0.07),
+    }
+  },
+  success: {
+    cursor: 'default',
+    backgroundColor: theme.palette.success.main,
+    '&:hover': {
+      backgroundColor: theme.palette.success.main,
+      boxShadow: theme.shadows[0]
+    }
+  },
+  socialLogo: {
+    width: 35,
+    height: 35,
+    position: 'absolute',
+    left: theme.spacing(2),
+  }
+}));
 
 export interface CreatorSignupInfo {
   userid: string; passwd: string; repasswd: string; pwdVisibility: boolean;
 }
 export default function SignupCreator(): JSX.Element {
+  const classes = useStyles();
+  const location = useLocation();
   // 회원가입 정보
   const [signupInfo, setSignupInfo] = useState<CreatorSignupInfo>({
     userid: '', passwd: '', repasswd: '', pwdVisibility: false,
@@ -29,14 +70,38 @@ export default function SignupCreator(): JSX.Element {
   const [pwdError, setPwdError] = useState<boolean>(false);
   const [repwdError, setRePwdError] = useState<boolean>(false);
 
+  // input icon 색상
+  const [useridIconColor, setUseridIconColor] = useState<'primary' | 'disabled'>('disabled');
+  const [pwIconColor, setPwIconColor] = useState<'primary' | 'disabled'>('disabled');
+  const [rePwIconColor, setRePwIconColor] = useState<'primary' | 'disabled'>('disabled');
+
   // 단계 정보
   const [activeStep, setStep] = useState(0);
-  function handleNext(): void {
+  function handleNext(target?: number): void {
+    if (target) { setStep(target); }
     setStep(activeStep + 1);
   }
 
   function handleBack(): void {
     setStep(activeStep - 1);
+  }
+
+  // 스낵바
+  const failSnack = useDialog();
+  const [snackErrMsg, setSnackErrMsg] = useState<string>();
+
+  // Parse search parpameter
+  function parseParams(params: string) {
+    const result: {
+          accessToken?: string; creatorId?: string; creatorName?: string;
+        } = {};
+    params.substr(1).split('&').map((splited) => {
+      const [key, value] = splited.split('=');
+      return Object.assign(result, {
+        [key]: decodeURI(value),
+      });
+    });
+    return result;
   }
 
   // 본인인증 완료 이후 -> 회원가입 요청
@@ -48,6 +113,23 @@ export default function SignupCreator(): JSX.Element {
         alert(`${res.data}완료`); history.push('/creator/signup/complete');
       })
       .catch();
+  }
+
+  /**
+   * 기존 유저 새로운 로그인 방식으로 회원가입 및 기존 onad 계정과 연동 핸들러
+   * */
+  function handleSignupPreCreator(): void {
+    axiosInstance.post(`${HOST}/creator/pre-user`, {
+      userid: signupInfo.userid,
+      passwd: signupInfo.passwd,
+      creatorId: parseParams(location.search).creatorId,
+      accessToken: parseParams(location.search).accessToken
+    }).then(() => {
+      history.push('/creator/signup/complete');
+    }).catch(() => {
+      setSnackErrMsg('회원가입 과정에서 오류가 발생했습니다. 잠시후 다시 시도해주세요.');
+      failSnack.handleOpen();
+    });
   }
 
   // 회원가입 정보 변경 핸들러
@@ -132,6 +214,11 @@ export default function SignupCreator(): JSX.Element {
     return true;
   }
 
+  // 기존 계정 로그인 성공 여부
+  const isLogedIn = !!(location.search && parseParams(location.search).accessToken
+        && parseParams(location.search).creatorId
+        && parseParams(location.search).creatorName);
+
   // form 작성 오류 검사 -> 통과시 본인인증 다이얼로그 오픈
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>): Promise<void> {
     e.preventDefault();
@@ -140,17 +227,137 @@ export default function SignupCreator(): JSX.Element {
       const allow = await duplicateCheck();
       if (allow) {
         if (passwdErrorCheck()) {
-          // 회원가입 요청
-          handleNext();
+          if (location.pathname === '/creator/signup/pre-user') {
+            // 기존 회원 트위치로 로그인
+            handleSignupPreCreator();
+          } else {
+            // 회원가입 요청
+            handleNext();
+          }
         }
       }
     }
   }
 
-  // input icon 색상
-  const [useridIconColor, setUseridIconColor] = useState<'primary' | 'disabled'>('disabled');
-  const [pwIconColor, setPwIconColor] = useState<'primary' | 'disabled'>('disabled');
-  const [rePwIconColor, setRePwIconColor] = useState<'primary' | 'disabled'>('disabled');
+  // 회원가입 입력 폼
+  const signupForm = (
+    <form
+      onSubmit={handleSubmit}
+      style={{ marginTop: 16, marginBottom: 16, minWidth: 270 }}
+    >
+      {/* 아이디 */}
+      <TextField
+        style={{ marginBottom: 16 }}
+        fullWidth
+        variant="outlined"
+        disabled={duplicateCheckLoading}
+        placeholder="아이디"
+        onChange={handleChange('userid')}
+        value={signupInfo.userid}
+        error={useridError}
+        helperText={useridHelperText}
+        onFocus={(): void => setUseridIconColor('primary')}
+        onBlur={(): void => setUseridIconColor('disabled')}
+        InputProps={{
+          startAdornment: (
+            <InputAdornment position="start">
+              <AccountCircleIcon color={useridIconColor} />
+            </InputAdornment>
+          )
+        }}
+      />
+      {/* 비밀번호 */}
+      <TextField
+        style={{ marginBottom: 16 }}
+        fullWidth
+        variant="outlined"
+        placeholder="비밀번호"
+        disabled={duplicateCheckLoading}
+        type={signupInfo.pwdVisibility ? 'text' : 'password'}
+        error={pwdError}
+        helperText="특수문자를 포함한 8-20자 영문 또는 숫자"
+        value={signupInfo.passwd}
+        onChange={handleChange('passwd')}
+        onFocus={(): void => setPwIconColor('primary')}
+        onBlur={(): void => setPwIconColor('disabled')}
+        InputProps={{
+          startAdornment: (
+            <InputAdornment position="start">
+              <Lock color={pwIconColor} />
+            </InputAdornment>
+          ),
+          endAdornment: (
+            <InputAdornment position="end">
+              <IconButton
+                aria-label="toggle password visibility"
+                onClick={handleClickShowPassword}
+                onMouseDown={handleMouseDownPassword}
+              >
+                {signupInfo.pwdVisibility ? <Visibility /> : <VisibilityOff />}
+              </IconButton>
+            </InputAdornment>
+          )
+        }}
+      />
+      {/* 비밀번호 확인 */}
+      <TextField
+        style={{ marginBottom: 16 }}
+        fullWidth
+        variant="outlined"
+        placeholder="비밀번호확인"
+        disabled={duplicateCheckLoading}
+        type={signupInfo.pwdVisibility ? 'text' : 'password'}
+        error={repwdError}
+        helperText={repwdError ? '비밀번호와 동일하지 않습니다.' : ''}
+        value={signupInfo.repasswd}
+        onChange={handleChange('repasswd')}
+        onFocus={(): void => setRePwIconColor('primary')}
+        onBlur={(): void => setRePwIconColor('disabled')}
+        InputProps={{
+          startAdornment: (
+            <InputAdornment position="start">
+              <Lock color={rePwIconColor} />
+            </InputAdornment>
+          ),
+          endAdornment: (
+            <InputAdornment position="end">
+              <IconButton
+                aria-label="toggle password visibility"
+                onClick={handleClickShowPassword}
+                onMouseDown={handleMouseDownPassword}
+              >
+                {signupInfo.pwdVisibility ? <Visibility /> : <VisibilityOff />}
+              </IconButton>
+            </InputAdornment>
+          )
+        }}
+      />
+
+      {location.pathname === '/creator/signup/pre-user' ? (
+        <Button
+          type="submit"
+          color="primary"
+          size="large"
+          variant="contained"
+          style={{ width: '100%' }}
+          disabled={!signupInfo.userid || !signupInfo.passwd || !signupInfo.repasswd || !isLogedIn}
+        >
+          연결진행
+        </Button>
+      ) : (
+        <Button
+          type="submit"
+          color="primary"
+          size="large"
+          variant="contained"
+          style={{ width: '100%' }}
+          disabled={!signupInfo.userid || !signupInfo.passwd || !signupInfo.repasswd}
+        >
+          가입하기
+        </Button>
+      )}
+    </form>
+  );
 
   return (
     <Grid container alignItems="center" direction="column">
@@ -158,133 +365,79 @@ export default function SignupCreator(): JSX.Element {
         <Paper style={{ padding: 24, textAlign: 'center' }}>
           <Typography variant="h4" style={{ fontWeight: 'bold' }}>회원가입</Typography>
 
-          {window.location.pathname === '/creator/signup/complete' && (
+          {/* 회원가입 완료 페이지 */}
+          {location.pathname === '/creator/signup/complete' && (
           <div>
             <Typography>회원가입이 완료되었습니다.</Typography>
             <Typography>회원가입 완료 페이지를 여기에.</Typography>
           </div>
           )}
 
+          {/* 기존 유저 회원 가입 안내 */}
+          {location.pathname === '/creator/signup/pre-user' && (
+            <>
+              <Alert severity="info" style={{ textAlign: 'left', marginTop: 16, paddingTop: 16 }}>
+                <Typography>
+                  기존 &quot;트위치로 로그인&quot;기능으로 온애드를 이용한 유저는 다음 방법으로 로그인할 수 있습니다.
+                </Typography>
+
+                <div style={{ marginTop: 8 }}>
+                  <Typography variant="body2">
+                    1. &quot;기존 트위치 로그인&quot; 버튼을 통해 사용하던 트위치 계정으로 로그인해주세요.
+                  </Typography>
+                  <Typography variant="body2">
+                    2. 로그인 시 사용할 ID/PW를 입력해주세요.
+                  </Typography>
+                  <Typography variant="body2">
+                    3. 이후 로그인부터는 입력한 ID/PW로 로그인할 수 있습니다.
+                  </Typography>
+
+                </div>
+              </Alert>
+
+              <Button
+                onClick={(e): void => {
+                  e.preventDefault();
+                  if (!isLogedIn) window.location.href = `${HOST}/login/twitch/pre-creator`;
+                }}
+                className={classnames(classes.socialLoginButton, classes.twitch, {
+                  [classes.success]: !!isLogedIn
+                })}
+                variant="contained"
+              >
+                {isLogedIn ? (
+                  <>
+                    <Check />
+                    <Typography variant="body1">
+                      {`${parseParams(location.search).creatorName} 기존계정인증 완료`}
+                    </Typography>
+                  </>
+                ) : (
+                  <>
+                    <img src="/pngs/logo/twitch/TwitchGlitchWhite.png" alt="" className={classes.socialLogo} />
+                    <Typography variant="body1">기존 트위치 로그인</Typography>
+                  </>
+                )}
+              </Button>
+            </>
+          )}
+
+
           {/* 회원정보 받기 */}
-          {!(window.location.pathname === '/creator/signup/complete') && activeStep === 0 && (
-          <form
-            onSubmit={handleSubmit}
-            style={{ marginTop: 16, marginBottom: 16, minWidth: 270 }}
-          >
-            {/* 아이디 */}
-            <TextField
-              style={{ marginBottom: 16 }}
-              fullWidth
-              variant="outlined"
-              disabled={duplicateCheckLoading}
-              placeholder="아이디"
-              onChange={handleChange('userid')}
-              value={signupInfo.userid}
-              error={useridError}
-              helperText={useridHelperText}
-              onFocus={(): void => setUseridIconColor('primary')}
-              onBlur={(): void => setUseridIconColor('disabled')}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <AccountCircleIcon color={useridIconColor} />
-                  </InputAdornment>
-                )
-              }}
-            />
-            {/* 비밀번호 */}
-            <TextField
-              style={{ marginBottom: 16 }}
-              fullWidth
-              variant="outlined"
-              placeholder="비밀번호"
-              disabled={duplicateCheckLoading}
-              type={signupInfo.pwdVisibility ? 'text' : 'password'}
-              error={pwdError}
-              helperText="특수문자를 포함한 8-20자 영문 또는 숫자"
-              value={signupInfo.passwd}
-              onChange={handleChange('passwd')}
-              onFocus={(): void => setPwIconColor('primary')}
-              onBlur={(): void => setPwIconColor('disabled')}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <Lock color={pwIconColor} />
-                  </InputAdornment>
-                ),
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton
-                      aria-label="toggle password visibility"
-                      onClick={handleClickShowPassword}
-                      onMouseDown={handleMouseDownPassword}
-                    >
-                      {signupInfo.pwdVisibility ? <Visibility /> : <VisibilityOff />}
-                    </IconButton>
-                  </InputAdornment>
-                )
-              }}
-            />
-            {/* 비밀번호 확인 */}
-            <TextField
-              style={{ marginBottom: 16 }}
-              fullWidth
-              variant="outlined"
-              placeholder="비밀번호확인"
-              disabled={duplicateCheckLoading}
-              type={signupInfo.pwdVisibility ? 'text' : 'password'}
-              error={repwdError}
-              helperText={repwdError ? '비밀번호와 동일하지 않습니다.' : ''}
-              value={signupInfo.repasswd}
-              onChange={handleChange('repasswd')}
-              onFocus={(): void => setRePwIconColor('primary')}
-              onBlur={(): void => setRePwIconColor('disabled')}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <Lock color={rePwIconColor} />
-                  </InputAdornment>
-                ),
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton
-                      aria-label="toggle password visibility"
-                      onClick={handleClickShowPassword}
-                      onMouseDown={handleMouseDownPassword}
-                    >
-                      {signupInfo.pwdVisibility ? <Visibility /> : <VisibilityOff />}
-                    </IconButton>
-                  </InputAdornment>
-                )
-              }}
-            />
-
-            <Button
-              type="submit"
-              color="primary"
-              size="large"
-              variant="contained"
-              style={{ width: '100%' }}
-              disabled={!signupInfo.userid || !signupInfo.passwd || !signupInfo.repasswd}
-            >
-              가입하기
-            </Button>
-
-            <Button onClick={handleSignup}>
-              가입테스트
-            </Button>
-          </form>
+          {!(location.pathname === '/creator/signup/complete') && activeStep === 0 && (
+            <div>{signupForm}</div>
           )}
 
           {/* 본인인증 진행 */}
-          {!(window.location.pathname === '/creator/signup/complete') && activeStep === 1 && (
+          {!(location.pathname === '/creator/signup/pre-user')
+          && !(location.pathname === '/creator/signup/complete') && activeStep === 1 && (
             <IndentityVerificationDialog
               onSuccess={handleSignup}
               onBackClick={handleBack}
             />
           )}
 
-          {!(window.location.pathname === '/creator/signup/complete') && (
+          {location.pathname === '/creator/signup' && (
             <>
               <Divider />
               <div style={{ margin: 16 }}>
@@ -299,6 +452,8 @@ export default function SignupCreator(): JSX.Element {
           )}
         </Paper>
       </Grid>
+
+      <Snackbar color="error" message={snackErrMsg} onClose={failSnack.handleClose} />
     </Grid>
   );
 }
