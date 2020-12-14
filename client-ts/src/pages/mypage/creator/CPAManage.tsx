@@ -28,6 +28,8 @@ export interface ContractionDataType {
   creatorAccountNumber: string;
   creatorContractionAgreement: number;
   creatorTwitchId: string;
+  creatorTwitchOriginalId: string;
+  afreecaId: string;
   realName: string;
   creatorLogo: string;
   NowIp: string;

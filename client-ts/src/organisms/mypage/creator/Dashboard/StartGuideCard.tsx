@@ -16,6 +16,7 @@ import SetClickAdSection from './guides/SetClickAdSection';
 import { OverlayUrlRes } from './OverlayUrlCard';
 import { ContractionDataType } from '../../../../pages/mypage/creator/CPAManage';
 import StyledTooltip from '../../../../atoms/Tooltip/StyledTooltip';
+import history from '../../../../history';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -146,52 +147,69 @@ const ContractionCard = ({
         maxWidth="md"
         fullWidth
       >
-        {introduction ? (<GuideIntroduction />) : (
-          <>
-            {/* 가이드 Stepper */}
-            <Stepper activeStep={activeStep} alternativeLabel>
-              {steps.map((step) => (
-                <Step key={step.label}>
-                  <StepLabel color="textPrimary">{step.label}</StepLabel>
-                </Step>
-              ))}
-            </Stepper>
-            {/* 단계별 컴포넌트 */}
-            <div className={classes.contents}>
-              {getStepComponent(activeStep)}
-            </div>
-          </>
-        )}
+        {/* 연동된 플랫폼이 하나도 없는 경우 */}
+        {!contractionData.creatorTwitchOriginalId && !contractionData.afreecaId ? (
+          <div style={{ textAlign: 'center', padding: 32 }}>
+            <Typography>죄송합니다. </Typography>
+            <Typography>아직 연동된 방송 플랫폼이 없어 온애드를 시작할 수 없습니다.</Typography>
+            <Button
+              color="primary"
+              onClick={() => history.push('/mypage/creator/user')}
+            >
+              플랫폼 연동하러가기
 
-        {/* Stepper 버튼 섹션 */}
-        <div className={classes.actionsContainer}>
-          <Button
-            size="small"
-            onClick={(): void => {
-              if (activeStep === 0) {
-                guideDialog.handleClose();
-                handleIntroReset();
-                handleStepReset();
-              } else handleBack();
-            }}
-          >
-            이전
-          </Button>
-          <Button
-            size="small"
-            color="primary"
-            onClick={(): void => {
-              if (introduction) handleIntroSkip();
-              else if (activeStep === steps.length - 1) {
-                guideDialog.handleClose(); handleStepReset();
-              } else {
-                handleNext();
-              }
-            }}
-          >
-            다음
-          </Button>
-        </div>
+            </Button>
+          </div>
+        ) : (
+          <div>
+            {introduction ? (<GuideIntroduction />) : (
+              <>
+                {/* 가이드 Stepper */}
+                <Stepper activeStep={activeStep} alternativeLabel>
+                  {steps.map((step) => (
+                    <Step key={step.label}>
+                      <StepLabel color="textPrimary">{step.label}</StepLabel>
+                    </Step>
+                  ))}
+                </Stepper>
+                {/* 단계별 컴포넌트 */}
+                <div className={classes.contents}>
+                  {getStepComponent(activeStep)}
+                </div>
+              </>
+            )}
+
+            {/* Stepper 버튼 섹션 */}
+            <div className={classes.actionsContainer}>
+              <Button
+                size="small"
+                onClick={(): void => {
+                  if (activeStep === 0) {
+                    guideDialog.handleClose();
+                    handleIntroReset();
+                    handleStepReset();
+                  } else handleBack();
+                }}
+              >
+                이전
+              </Button>
+              <Button
+                size="small"
+                color="primary"
+                onClick={(): void => {
+                  if (introduction) handleIntroSkip();
+                  else if (activeStep === steps.length - 1) {
+                    guideDialog.handleClose(); handleStepReset();
+                  } else {
+                    handleNext();
+                  }
+                }}
+              >
+                다음
+              </Button>
+            </div>
+          </div>
+        )}
       </Dialog>
 
       <Snackbar

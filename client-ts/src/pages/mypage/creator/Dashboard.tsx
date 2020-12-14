@@ -182,11 +182,15 @@ const Dashboard = (): JSX.Element => {
           )}
       </div>
 
+      {!profileGet.loading && profileGet.data
+      && (!profileGet.data.creatorTwitchOriginalId && !profileGet.data.afreecaId)
+      && (
       <PlatformLinkDialog
         open={platformLinkDialog.open}
         handleOpen={platformLinkDialog.handleOpen}
         onClose={platformLinkDialog.handleClose}
       />
+      )}
 
       <Snackbar
         color="success"
