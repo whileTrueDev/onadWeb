@@ -14,6 +14,7 @@ import alimtalkRouter from './routes/alimtalk';
 import creatorRouter from './routes/creator';
 import creatorsRouter from './routes/creators';
 import loginRouter from './routes/auth/login';
+import linkRouter from './routes/auth/link';
 import logoutRouter from './routes/auth/logout';
 import marketerRouter from './routes/marketer';
 import chartRouter from './routes/chart';
@@ -124,6 +125,7 @@ class OnadWebApi {
     // /auth로 변경
     // *********************************
     this.app.use('/login', loginRouter);
+    this.app.use('/link', linkRouter);
 
     this.app.use('/logout', logoutRouter);
     this.app.use('/creator', creatorRouter);

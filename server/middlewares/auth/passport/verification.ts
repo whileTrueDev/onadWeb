@@ -482,9 +482,44 @@ const creatorTwitchPreCreator = (
   })
     .catch((err) => done(Error(`Internal Server Error\n${err}`)));
 };
+
+/**
+ * Twitch 연동 패스포트 verification 미들웨어 - 트위치 로그인이 아닌 "연동" 미들웨어.
+ * @param req 요청객체
+ * @param accessToken twitch 액세스토큰
+ * @param refreshToken twitch 리프레시 토큰
+ * @param profile twitch 로그인 user 정보
+ * @param done 세션 체크 완료 콜백함수
+ */
+const creatorTwitchLink = (
+  req: express.Request, accessToken: string,
+  refreshToken: string, profile: any,
+  done: OAuth2Strategy.VerifyCallback
+): void => {
+  const creatorId = profile.id;
+  const creatorName = profile.display_name;
+  const creatorTwitchId = profile.login;
+  const creatorMail = profile.email;
+  const creatorLogo = profile.profile_image_url;
+
+  const linkQuery = `
+  UPDATE creatorInfo_v2
+  SET (creatorTwitchOriginalId, creatorName, creatorTwitchId, creatorMail, creatorLogo)
+  VALUES (?,?,?,?,?)`;
+  const queryArray = [creatorId, creatorName, creatorTwitchId, creatorMail, creatorLogo];
+
+  doQuery(linkQuery, queryArray)
+    .then((row) => {
+      console.log(row);
+      done(null);
+    })
+    .catch((err) => done(err));
+};
+
 export default {
   local,
   creatorTwitch,
+  creatorTwitchLink,
   creatorTwitchPreCreator,
   marketerGoogle,
   marketerNaver,

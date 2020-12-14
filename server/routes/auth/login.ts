@@ -57,7 +57,7 @@ router.get('/kakao/callback', passport.authenticate('kakao'),
 
 // creator - twitch -> 새로운 로그인 방식 처리
 router.get('/twitch/pre-creator', passport.authenticate('twitch-pre-creator'));
-router.get('/twitch/callback', passport.authenticate('twitch-pre-creator'),
+router.get('/twitch/pre-creator/callback', passport.authenticate('twitch-pre-creator'),
   (req, res) => {
     const { creatorId, creatorName, accessToken } = req.user as any;
     res.redirect([
@@ -68,13 +68,6 @@ router.get('/twitch/callback', passport.authenticate('twitch-pre-creator'),
     ].join(''));
   });
 
-// creator - twitch 로그인
-router.get('/twitch', passport.authenticate('twitch'));
-// router.get('/twitch/callback', passport.authenticate('twitch'),
-//   (req, res) => {
-//     console.log(req.user);
-//     res.redirect(`${HOST}/mypage/creator/main`);
-//   });
 
 // creator - afreeca 로그인
 router.get('/afreeca', (req, res) => {

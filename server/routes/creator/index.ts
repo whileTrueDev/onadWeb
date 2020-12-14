@@ -497,4 +497,46 @@ router.route('/follower')
 
   );
 
+// 2020.12.14 hwasurr - 새로운 로그인 방식에 따른 password 변경 라우터 생성
+router.route('/password')
+  .patch( // 비밀번호 변경
+    responseHelper.middleware.checkSessionExists,
+    responseHelper.middleware.withErrorCatch(async (req, res, next) => {
+      const sess = responseHelper.getSessionData(req);
+      const newPassword = responseHelper.getParam('password', 'PATCH', req);
+
+      const [encrypted, salt] = encrypto.make(newPassword);
+      const query = 'UPDATE creatorInfo_v2 SET password = ?, passwordSalt = ? WHERE creatorId = ?';
+      const queryArray = [encrypted, salt, sess.creatorId];
+
+      doQuery(query, queryArray)
+        .then((row) => {
+          responseHelper.send(row.result.changedRows, 'PATCH', res);
+        })
+        .catch((err) => responseHelper.promiseError(err, next));
+    })
+  )
+  .post( // 비밀번호 확인
+    responseHelper.middleware.checkSessionExists,
+    responseHelper.middleware.withErrorCatch(async (req, res, next) => {
+      const sess = responseHelper.getSessionData(req);
+      const password = responseHelper.getParam('password', 'post', req);
+
+      const findQuery = `
+      SELECT password, passwordSalt FROM creatorInfo_v2 WHERE creatorId = ?`;
+      const queryArray = [sess.creatorId];
+
+      doQuery(findQuery, queryArray)
+        .then((row) => {
+          const user = row.result[0];
+          if (encrypto.check(password, user.password, user.passwordSalt)) {
+            responseHelper.send(true, 'get', res);
+          } else {
+            responseHelper.send(false, 'get', res);
+          }
+        })
+        .catch((err) => responseHelper.promiseError(err, next));
+    })
+  );
+
 export default router;

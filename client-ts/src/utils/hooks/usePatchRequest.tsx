@@ -1,4 +1,5 @@
 import React, { useCallback } from 'react';
+import { AxiosResponse } from 'axios';
 import axios from '../axios';
 import host from '../../config';
 
@@ -7,7 +8,7 @@ export interface UsePatchRequestObject<T, P> {
   success: true | null;
   loading?: boolean;
   error: string;
-  doPatchRequest: (param?: T) => Promise<P>;
+  doPatchRequest: (param?: T) => Promise<AxiosResponse<P>>;
   data: P | null;
 }
 /**
@@ -42,7 +43,8 @@ export default function usePatchRequest<PARAM_TYPE = {[key: string]: any}, RES_D
   const [loading, setLoading] = React.useState<boolean | undefined>(undefined);
   const [error, setError] = React.useState('');
 
-  const doPatchRequest = useCallback(async (param?: PARAM_TYPE): Promise<RES_DATA_TYPE> => {
+  const doPatchRequest = useCallback(async (
+    param?: PARAM_TYPE): Promise<AxiosResponse<RES_DATA_TYPE>> => {
     setLoading(true); // 로딩 시작
     return axios.patch<RES_DATA_TYPE>(`${host}${url}`, { ...param })
       .then((res) => {
@@ -53,9 +55,9 @@ export default function usePatchRequest<PARAM_TYPE = {[key: string]: any}, RES_D
         if (Math.floor(status / 100) === 2) {
           setSuccess(true);
           if (successCallback) { successCallback(); }
-          return res.data;
+          return res;
         }
-        return res.data;
+        return res;
       })
       .catch((err) => {
         setLoading(false); // 로딩 완료

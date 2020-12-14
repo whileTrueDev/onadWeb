@@ -1,4 +1,5 @@
 import React, { useCallback } from 'react';
+import { AxiosResponse } from 'axios';
 import axios from '../axios';
 import host from '../../config';
 
@@ -8,7 +9,7 @@ export interface UseDeleteRequestObject<T, P> {
   success: true | null;
   loading: boolean | null;
   error: string;
-  doDeleteRequest: (param?: T) => Promise<P>;
+  doDeleteRequest: (param?: T) => Promise<AxiosResponse<P>>;
   data: P | null;
 }
 
@@ -44,7 +45,8 @@ export default function useDeleteRequest<PARAM_TYPE = {[key: string]: any}, RES_
   const [loading, setLoading] = React.useState<boolean | null>(null);
   const [error, setError] = React.useState('');
 
-  const doDeleteRequest = useCallback(async (param?: PARAM_TYPE): Promise<RES_DATA_TYPE> => {
+  const doDeleteRequest = useCallback(async (
+    param?: PARAM_TYPE): Promise<AxiosResponse<RES_DATA_TYPE>> => {
     setLoading(true); // 로딩 시작
     return axios.delete<RES_DATA_TYPE>(`${host}${url}`,
       { data: { ...param } })
@@ -57,7 +59,7 @@ export default function useDeleteRequest<PARAM_TYPE = {[key: string]: any}, RES_
           setSuccess(true);
           if (successCallback) { successCallback(); }
         }
-        return res.data;
+        return res;
       })
       .catch((err) => {
         setLoading(false); // 로딩 완료

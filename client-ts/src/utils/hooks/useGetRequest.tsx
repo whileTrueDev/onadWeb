@@ -1,6 +1,7 @@
 import {
   useState, useEffect, useCallback
 } from 'react';
+import { AxiosResponse } from 'axios';
 import axios, { cancelToken, isCancel as isAxiosCancel } from '../axios';
 import host from '../../config';
 import history from '../../history';
@@ -11,7 +12,7 @@ export interface UseGetRequestObject<T> {
   data: T | null;
   loading: boolean | null;
   error: string;
-  doGetRequest: (newParam?: any) => Promise<T>;
+  doGetRequest: (newParam?: any) => Promise<AxiosResponse<T>>;
   setData: React.Dispatch<React.SetStateAction<T | null>>;
 }
 
@@ -52,7 +53,8 @@ export default function useGetRequest<
   const [source] = useState(cancelToken.source());
 
 
-  const doGetRequest = useCallback(async (newParam?: PARAM_TYPE): Promise<RES_DATA_TYPE> => {
+  const doGetRequest = useCallback(async (
+    newParam?: PARAM_TYPE): Promise<AxiosResponse<RES_DATA_TYPE>> => {
     setLoading(true);
     return axios.get<RES_DATA_TYPE>(`${host}${url}`, {
       params: newParam ? { ...newParam } : { ...param },
@@ -64,7 +66,7 @@ export default function useGetRequest<
           setLoading(false); // 로딩 완료
           setData(res.data); // 데이터 설정
         }
-        return res.data;
+        return res;
       })
       .catch((err) => { // 상태코드 300~
         if (!unmounted) { // 컴포넌트가 unmount 되지 않은 경우

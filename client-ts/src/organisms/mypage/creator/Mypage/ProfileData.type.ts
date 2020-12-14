@@ -1,4 +1,5 @@
 export interface ProfileDataType {
+  loginId: string;
   creatorId: string;
   creatorName: string;
   creatorIp: string;
