@@ -5,6 +5,7 @@ import Google from 'passport-google-oauth20';
 import Naver from 'passport-naver';
 import Kakao from 'passport-kakao';
 // DB 커넥션 쿼리 함수
+import createHttpError from 'http-errors';
 import doQuery from '../../../model/doQuery';
 // 암호화 체크 객체 생성
 import encrpyto from '../../encryption';
@@ -491,29 +492,70 @@ const creatorTwitchPreCreator = (
  * @param profile twitch 로그인 user 정보
  * @param done 세션 체크 완료 콜백함수
  */
-const creatorTwitchLink = (
+const creatorTwitchLink = async (
   req: express.Request, accessToken: string,
   refreshToken: string, profile: any,
   done: OAuth2Strategy.VerifyCallback
-): void => {
-  const creatorId = profile.id;
+): Promise<void> => {
+  const { creatorId } = req.user as Session;
+  const creatorTwitchOriginalId = profile.id;
   const creatorName = profile.display_name;
   const creatorTwitchId = profile.login;
   const creatorMail = profile.email;
   const creatorLogo = profile.profile_image_url;
 
-  const linkQuery = `
-  UPDATE creatorInfo_v2
-  SET (creatorTwitchOriginalId, creatorName, creatorTwitchId, creatorMail, creatorLogo)
-  VALUES (?,?,?,?,?)`;
-  const queryArray = [creatorId, creatorName, creatorTwitchId, creatorMail, creatorLogo];
+  // ***************************************************
+  // 이전 온애드 계정 사용으로, creatorId 가 twitchId인 경우 (본인일 수 있음)
+  const preCreatorQuery = 'SELECT creatorId, creatorName FROM creatorInfo_v2 WHERE creatorId = ?';
+  const preCreatorRow = await doQuery(preCreatorQuery, [creatorTwitchOriginalId]);
+  if (preCreatorRow.result.length > 0) {
+    const alreadyLinked = preCreatorRow.result[0];
+    if (alreadyLinked.creatorId === creatorTwitchOriginalId) {
+      done(Error('error=precreator'));
+    }
+  } else {
+    // ***************************************************
+    // 연결된 다른 유저가 있는지 조회
+    const searchQuery = `SELECT creatorId, creatorName, loginId
+    FROM creatorInfo_v2 WHERE creatorTwitchOriginalId = ?`;
+    const { result } = await doQuery(searchQuery, [creatorTwitchOriginalId]);
+    // 이미 해당 아이디에 연결된 유저가 있는 경우
+    if (result.length > 0) {
+      const alreadyLinked = result[0];
+      // loginId가 있는 새로운 로그인 방식으로 가입한 다른 유저의 경우
+      const user = `${alreadyLinked.loginId.slice(0, alreadyLinked.loginId.length - 2)}**`;
+      done(Error(`error=alreadyLinked&user=${user}`));
+    } else {
+      // 정상 연결 작업
+      const linkQuery = `
+      UPDATE creatorInfo_v2
+      SET
+      creatorTwitchOriginalId = ?, creatorName = ?,
+      creatorTwitchId = ?, creatorMail = ?, creatorLogo = ?,
+      creatorTwitchRefreshToken = ?
+      WHERE creatorId = ?`;
+      const queryArray = [
+        creatorTwitchOriginalId, creatorName, creatorTwitchId, creatorMail, creatorLogo,
+        refreshToken, creatorId
+      ];
 
-  doQuery(linkQuery, queryArray)
-    .then((row) => {
-      console.log(row);
-      done(null);
-    })
-    .catch((err) => done(err));
+      doQuery(linkQuery, queryArray)
+        .then((row) => {
+          if (row.result) {
+            done(null, {
+              creatorId,
+              creatorTwitchOriginalId,
+              creatorName,
+              creatorMail,
+              creatorLogo,
+            });
+          } else {
+            done(Error('DB Update Error'));
+          }
+        })
+        .catch((err) => done(err));
+    }
+  }
 };
 
 export default {

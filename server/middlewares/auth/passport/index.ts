@@ -53,6 +53,7 @@ passport.use(new Twitch.Strategy(
     authorizationURL: 'https://id.twitch.tv/oauth2/authorize',
     tokenURL: 'https://id.twitch.tv/oauth2/token',
     passReqToCallback: true,
+    forceVerify: true,
   },
   // login성공시 수행되는 함수.
   verification.creatorTwitchPreCreator
@@ -69,6 +70,7 @@ passport.use(new Twitch.Strategy(
     authorizationURL: 'https://id.twitch.tv/oauth2/authorize',
     tokenURL: 'https://id.twitch.tv/oauth2/token',
     passReqToCallback: true,
+    forceVerify: true,
   },
   // login성공시 수행되는 함수.
   verification.creatorTwitchLink

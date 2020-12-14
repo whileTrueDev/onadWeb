@@ -4,10 +4,13 @@ import request from 'request';
 
 const clientID = process.env.TWITCH_CLIENT_ID;
 
+export interface TwitchStrategyOptions extends OAuth2Strategy.StrategyOptionsWithRequest{
+  forceVerify?: boolean;
+}
 class Strategy extends OAuth2Strategy {
   constructor(
     name: string,
-    options: OAuth2Strategy.StrategyOptionsWithRequest,
+    options: TwitchStrategyOptions,
     verify: OAuth2Strategy.VerifyFunctionWithRequest
   ) {
     super(options, verify);
