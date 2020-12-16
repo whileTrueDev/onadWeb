@@ -118,11 +118,15 @@ const UserInfoCard = ({
             <Typography variant="h5" className={classes.bold}>
               {userProfileData.loginId}
               &nbsp;
-              <Typography component="span" variant="body2">아프리카,</Typography>
-              <Typography component="span" variant="body2">트위치</Typography>
+              {userProfileData.afreecaId && (
+              <img alt="" height={25} src="/pngs/logo/afreeca/onlyFace.png" style={{ marginRight: 8 }} />
+              )}
+              {userProfileData.creatorTwitchOriginalId && (
+              <img alt="" height={25} src="/pngs/logo/twitch/TwitchGlitchPurple.png" style={{ marginRight: 8 }} />
+              )}
             </Typography>
-            <Typography variant="caption">
-              {userProfileData.creatorName}
+            <Typography variant="body2">
+              {`${userProfileData.creatorName} ${userProfileData.creatorMail}`}
             </Typography>
           </div>
           {/* 상태 칩 섹션 */}

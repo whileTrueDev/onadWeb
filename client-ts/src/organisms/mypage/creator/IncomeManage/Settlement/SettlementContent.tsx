@@ -7,7 +7,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import shortid from 'shortid';
 import Button from '../../../../../atoms/CustomButtons/Button';
 import StyledItemText from '../../../../../atoms/StyledItemText';
-import { ProfileDataType } from '../ProfileData.type';
+import { ProfileDataType } from '../../Mypage/ProfileData.type';
 import useDialog from '../../../../../utils/hooks/useDialog';
 import SettlementForm from './SettlementForm';
 import AgreementSource from '../source/source';

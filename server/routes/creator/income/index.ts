@@ -77,7 +77,7 @@ router.route('/withdrawal')
       SELECT
         date, creatorWithdrawalAmount, withdrawalState
       FROM creatorWithdrawal
-      WHERE creatorId= ?
+      WHERE creatorId = ?
       ORDER BY date DESC
       `;
 

@@ -41,7 +41,7 @@ router.route('/')
   .get(
     responseHelper.middleware.checkSessionExists,
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
-      const { creatorId, creatorLogo } = responseHelper.getSessionData(req);
+      const { creatorId } = responseHelper.getSessionData(req);
       const NowIp: any = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
 
       const query = `
@@ -57,7 +57,6 @@ router.route('/')
             userData.identificationNumber
           );
           const deciphedphoneNum: string = encrypto.decipher(userData.phoneNumber);
-          userData.creatorLogo = creatorLogo;
           userData.identificationNumber = deciphedIdentificationNum;
           userData.phoneNumber = deciphedphoneNum;
           userData.creatorAccountNumber = deciphedAccountNum;

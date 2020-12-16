@@ -7,7 +7,7 @@ import BrandingWatermark from '@material-ui/icons/BrandingWatermarkOutlined';
 import Reorder from '@material-ui/icons/Reorder';
 import Work from '@material-ui/icons/Work';
 import HowToRegIcon from '@material-ui/icons/HowToReg';
-
+import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
 // 크리에이터 라우터
 import CreatorMyAds from './creator/MyAds';
 import CreatorDashboard from './creator/Dashboard';
@@ -23,6 +23,7 @@ import MarketerMyOffice from './marketer/MyOffice';
 import MarketerCreateCampaign from './marketer/CampaignCreate';
 import MarketerManual from './marketer/Manual';
 import CpaStop from './temp/CPA-STOP';
+import CreatorIncomeManage from './creator/IncomeManage';
 
 export interface MypageRoute {
   path: string;
@@ -70,17 +71,25 @@ const dashboardRoutes: MypageRoutes = {
       needNextDivider: true,
     },
     {
-      path: '/manual',
-      name: '사용 방법',
-      icon: Reorder,
-      component: CreatorManual,
+      path: '/income',
+      name: '내 수익 관리',
+      icon: AttachMoneyIcon,
+      component: CreatorIncomeManage,
       layout: '/mypage/creator',
     },
     {
       path: '/user',
-      name: '내 계정',
+      name: '내 계정 관리',
       icon: Person,
       component: CreatorMyPage,
+      layout: '/mypage/creator',
+    },
+
+    {
+      path: '/manual',
+      name: '사용 방법',
+      icon: Reorder,
+      component: CreatorManual,
       layout: '/mypage/creator',
     },
   ],

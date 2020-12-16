@@ -1,8 +1,7 @@
 import React from 'react';
 import moment from 'moment';
+import { Paper, Typography } from '@material-ui/core';
 import MaterialTable from '../../../../atoms/Table/MaterialTable';
-import CustomCard from '../../../../atoms/CustomCard';
-import StyledItemText from '../../../../atoms/StyledItemText';
 import { WithdrawalDataType } from './WithdrawalData.type';
 
 interface WithdrawalCardProps {
@@ -12,7 +11,8 @@ function Mypage({
   withdrawalData
 }: WithdrawalCardProps): JSX.Element {
   return (
-    <CustomCard iconComponent={(<StyledItemText primary="출금 신청 내역" color="white" />)}>
+    <Paper style={{ padding: 32, height: 400 }}>
+      <Typography style={{ fontWeight: 'bold' }}>출금 신청 내역</Typography>
       <MaterialTable<WithdrawalDataType>
         columns={[
           { title: '출금신청날짜', field: 'date', render: (rowData) => moment(rowData.date).format('YYYY년 MM월 DD일') },
@@ -29,7 +29,7 @@ function Mypage({
           toolbar: false
         }}
       />
-    </CustomCard>
+    </Paper>
   );
 }
 

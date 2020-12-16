@@ -41,6 +41,7 @@ export interface IncomeRatio {
   creatorId: string; type: 'CPM' | 'CPC' | 'CPA'; cashAmount: number;
 }
 export default function AdIncomeCard(): JSX.Element {
+  // 출금 비율 정보 조회
   const incomeRatioGet = useGetRequest<null, IncomeRatio[]>('/creator/income/ratio');
   const theme = useTheme();
   const classes = useStyles();

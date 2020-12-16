@@ -10,7 +10,7 @@ import BannerList from '../../../organisms/mypage/creator/CampaignManage/BannerL
 import NowBroadCard, { CurrentBannerRes } from '../../../organisms/mypage/creator/CampaignManage/NowBroadCard';
 import ChatAdInfo from '../../../organisms/mypage/creator/CampaignManage/ChatAdInfo';
 import ClickAdInfo from '../../../organisms/mypage/creator/CampaignManage/ClickAdInfo';
-import AdIncomeCard from '../../../organisms/mypage/creator/CampaignManage/AdIncomeCard';
+import AdIncomeCard from '../../../organisms/mypage/creator/shared/AdIncomeCard';
 import AdClickCard from '../../../organisms/mypage/creator/CampaignManage/AdClickCard';
 import { ContractionDataType } from './CPAManage';
 

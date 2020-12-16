@@ -7,7 +7,7 @@ import SettlementForm from './Settlement/SettlementForm';
 import SettlementContent from './Settlement/SettlementContent';
 import CustomCard from '../../../../atoms/CustomCard';
 import StyledItemText from '../../../../atoms/StyledItemText';
-import { ProfileDataType } from './ProfileData.type';
+import { ProfileDataType } from '../Mypage/ProfileData.type';
 
 const useStyles = makeStyles((theme) => ({
   textField: {

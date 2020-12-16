@@ -2,10 +2,8 @@ import React from 'react';
 import Skeleton from '@material-ui/lab/Skeleton';
 import GridContainer from '../../../atoms/Grid/GridContainer';
 import GridItem from '../../../atoms/Grid/GridItem';
-import WithdrawalCard from '../../../organisms/mypage/creator/Mypage/WithdrawalCard';
 import ProfileCard from '../../../organisms/mypage/creator/Mypage/ProfileCard';
-import SettlementCard from '../../../organisms/mypage/creator/Mypage/SettlementCard';
-
+import PlatformLinkCard from '../../../organisms/mypage/creator/Mypage/PlatformLinkCard';
 import useGetRequest from '../../../utils/hooks/useGetRequest';
 
 const Mypage = (): JSX.Element => {
@@ -21,23 +19,13 @@ const Mypage = (): JSX.Element => {
         <GridItem xs={12}>
           {(profileData.loading || withdrawalData.loading) && (<Skeleton height={400} variant="rect" />)}
           {!(profileData.loading || withdrawalData.loading) && profileData.data && (
-          <ProfileCard profileData={profileData.data} />
+          <PlatformLinkCard profileData={profileData.data} />
           )}
         </GridItem>
-
         <GridItem xs={12}>
           {(profileData.loading || withdrawalData.loading) && (<Skeleton height={400} variant="rect" />)}
-          {!(profileData.loading || withdrawalData.loading) && (
-          <WithdrawalCard withdrawalData={withdrawalData.data ? withdrawalData.data : []} />
-          )}
-        </GridItem>
-
-        <GridItem xs={12}>
-          {(profileData.loading || withdrawalData.loading) && (<Skeleton height={400} variant="text" />)}
           {!(profileData.loading || withdrawalData.loading) && profileData.data && (
-          <SettlementCard
-            profileData={profileData.data}
-          />
+          <ProfileCard profileData={profileData.data} />
           )}
         </GridItem>
       </GridContainer>

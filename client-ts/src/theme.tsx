@@ -38,8 +38,14 @@ const rawTheme = {
     warning: defaultTheme.palette.secondary,
   },
   typography: {
-    fontFamily: '"Roboto", "AppleSDGothicNeo", "NotoSansKR-Regular", sans-serif'
-  }
+    fontFamily: '"AppleSDGothicNeo", "Roboto", "NotoSansKR-Regular", sans-serif',
+    htmlFontSize: 16,
+    fontSize: 14,
+    fontWeightLight: 300,
+    fontWeightRegular: 400,
+    fontWeightMedium: 500,
+    fontWeightBold: 700,
+  },
 };
 
 const platformOverrides = {
