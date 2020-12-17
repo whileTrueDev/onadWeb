@@ -1,7 +1,9 @@
 import React from 'react';
 // @material-ui/core components
 import makeStyles from '@material-ui/core/styles/makeStyles';
-import { Grid } from '@material-ui/core';
+import {
+  Chip, Grid, Paper, Typography
+} from '@material-ui/core';
 import Button from '../../../../atoms/CustomButtons/Button';
 import SettlementForm from './Settlement/SettlementForm';
 import SettlementContent from './Settlement/SettlementContent';
@@ -76,31 +78,36 @@ const SettlementCard = ({
   }
 
   return (
-    <CustomCard
-      iconComponent={<StyledItemText primary="정산 관리" color="white" />}
-      secondComponent={<StyledItemText primary={`${settlementState}`} color="#00acc1" />}
-    >
+    <Paper style={{ padding: 32, marginTop: 8 }}>
+      <Typography style={{ fontWeight: 'bold' }} component="div">
+        정산 등록 관리
+        <Chip
+          style={{ marginLeft: 8 }}
+          label={settlementState}
+          color={profileData.settlementState === 2 ? 'primary' : 'default'}
+        />
+      </Typography>
       {(profileData.settlementState === 0 || profileData.settlementState === 3) && (
         <>
           <Grid container direction="row" justify="center" alignItems="center" spacing={2}>
-            <Grid item sm={12} md={9}>
+            <Grid item sm={12}>
               <div className={classes.titleWrap}>
                 <StyledItemText primary="정산관리 설정" fontSize="18px" color="#00acc1" />
               </div>
             </Grid>
-            <Grid item sm={12} md={9}>
+            <Grid item sm={12}>
               <div>
                 <StyledItemText primary="해당하는 유형을 선택해주세요." fontSize="18px" color="#00acc1" />
               </div>
               <Button className={classes.typeButton} color={CreatorType === 0 ? 'primary' : undefined} onClick={(): void => { handleClick('normal'); }}>개인(대한민국 국민)</Button>
               <Button className={classes.typeButton} color={CreatorType === 1 ? 'primary' : undefined} onClick={(): void => { handleClick('bussiness'); }}>개인사업자</Button>
             </Grid>
-            <Grid item sm={12} md={9}>
+            <Grid item sm={12}>
               <div className={classes.titleWrap}>
                 <StyledItemText primary="정산등록 신청서" fontSize="18px" color="#00acc1" />
               </div>
             </Grid>
-            <Grid item sm={12} md={9}>
+            <Grid item sm={12}>
               <SettlementForm
                 CreatorType={CreatorType}
               />
@@ -111,7 +118,7 @@ const SettlementCard = ({
       {(profileData.settlementState === 1) && (
         <>
           <Grid container direction="row" justify="center" alignItems="center" spacing={2}>
-            <Grid item sm={12} md={9}>
+            <Grid item sm={12}>
               <div className={classes.titleWrap}>
                 <StyledItemText primary="정산등록 신청 승인대기 중입니다." fontSize="18px" color="#00acc1" />
               </div>
@@ -122,7 +129,7 @@ const SettlementCard = ({
       {(profileData.settlementState === 2) && (
         <>
           <Grid container direction="row" justify="center" alignItems="center" spacing={2}>
-            <Grid item sm={12} md={9}>
+            <Grid item sm={12}>
               <SettlementContent
                 profileData={profileData}
               />
@@ -130,7 +137,7 @@ const SettlementCard = ({
           </Grid>
         </>
       )}
-    </CustomCard>
+    </Paper>
   );
 };
 

@@ -41,6 +41,7 @@ const MyBanner = (): JSX.Element => {
   const snack = useDialog();
   const failSnack = useDialog();
 
+  console.log(profileGet.data);
   return (
     <div style={{ margin: '0 auto', maxWidth: 1430 }}>
       <GridContainer>
@@ -86,7 +87,8 @@ const MyBanner = (): JSX.Element => {
 
         {/* 진행한 캠페인 정보 */}
         <GridItem xs={12}>
-          {profileGet.loading && profileGet.data && profileGet.data.creatorContractionAgreement && (
+          {!profileGet.loading && profileGet.data
+          && profileGet.data.creatorContractionAgreement === 1 && (
           <BannerList />
           )}
         </GridItem>
