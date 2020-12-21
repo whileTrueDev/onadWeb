@@ -1,10 +1,9 @@
 import React from 'react';
 import shortid from 'shortid';
 import CircularProgress from '@material-ui/core/CircularProgress';
-
 import {
   Table, TableHead, TableRow, TableBody, TableCell, Switch,
-  Typography, FormControlLabel
+  Typography, FormControlLabel, Chip
 } from '@material-ui/core';
 import isVideo from '../../../../utils/isVideo';
 import VideoBanner from '../../../../atoms/Banner/VideoBanner';
@@ -62,6 +61,11 @@ const RemotePageBannerTable = (props: RemotePageBannerTable): JSX.Element => {
     switch (category) {
       case 0: return (
         <TableCell>
+          <Chip
+            size="small"
+            label="크리에이터 우선형"
+            style={{ marginBottom: '5px' }}
+          />
           <Typography variant="body2">
             <span style={{ fontWeight: 'bold' }}>
               {creatorName}
@@ -72,6 +76,12 @@ const RemotePageBannerTable = (props: RemotePageBannerTable): JSX.Element => {
       );
       case 1: return (
         <TableCell>
+          <Chip
+            color="primary"
+            size="small"
+            label="카테고리 우선형"
+            style={{ marginBottom: '5px' }}
+          />
           <Typography variant="body2">
             <span style={{ fontWeight: 'bold' }}>
               {targetList.join(', ')}

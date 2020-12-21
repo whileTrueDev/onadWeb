@@ -163,7 +163,7 @@ router.route('/list')
   )
   .all(responseHelper.middleware.unusedMethod);
 
-async function getRemotePageBanner(campaignList: any, pausedList: any) {
+async function getRemotePageBanner(campaignList: any, pausedList: string[]) {
   await Promise.all(
     campaignList.map((campaignData: any) => {
       if (pausedList.includes(campaignData.campaignId)) {
@@ -255,7 +255,6 @@ router.route('/remote-page')
   .patch(
     // 토글 버튼 변화에 따른 pausedList 업데이트
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
-      // const { creatorId } = responseHelper.getSessionData(req);
       const onOffDetail: (string|number)[] = responseHelper.getParam(['campaignId', 'state', 'url'], 'PATCH', req);
       const campaignId = onOffDetail[0];
       const state = onOffDetail[1];
