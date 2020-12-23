@@ -1,12 +1,10 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core';
-import { useLocation } from 'react-router-dom';
 import AppAppBar from '../../organisms/main/layouts/AppAppbar';
 import { useLoginValue } from '../../utils/hooks';
 import SignupCreator from '../../organisms/main/signup-creator/SignupCreator';
-import SignupPreCreator from '../../organisms/main/signup-creator/SignupPreCreator';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   root: {
     display: 'flex',
     flexDirection: 'column',

@@ -1,5 +1,4 @@
 import React from 'react';
-import Skeleton from '@material-ui/lab/Skeleton';
 
 import GridContainer from '../../../atoms/Grid/GridContainer';
 import GridItem from '../../../atoms/Grid/GridItem';
@@ -12,6 +11,7 @@ import { useAnchorEl } from '../../../utils/hooks';
 import SettlementDescPopover from '../../../organisms/mypage/creator/IncomeManage/SettlementDescPopover';
 import SummaryCard from '../../../organisms/mypage/creator/IncomeManage/SummaryCard';
 import { ProfileDataType } from '../../../organisms/mypage/creator/Mypage/ProfileData.type';
+import CenterLoading from '../../../atoms/Loading/CenterLoading';
 
 
 export default function IncomeManage(): JSX.Element {
@@ -47,7 +47,7 @@ export default function IncomeManage(): JSX.Element {
 
         {/* 출금 신청 내역 */}
         <GridItem xs={12} lg={6}>
-          {(profileData.loading || withdrawalData.loading) && (<Skeleton height={400} variant="rect" />)}
+          {(profileData.loading || withdrawalData.loading) && (<CenterLoading />)}
           {!(profileData.loading || withdrawalData.loading) && (
           <WithdrawalCard withdrawalData={withdrawalData.data ? withdrawalData.data : []} />
           )}
@@ -55,7 +55,7 @@ export default function IncomeManage(): JSX.Element {
 
         {/* 정산 등록 */}
         <GridItem xs={12} lg={6}>
-          {(profileData.loading || withdrawalData.loading) && (<Skeleton height={400} variant="text" />)}
+          {(profileData.loading || withdrawalData.loading) && (<CenterLoading />)}
           {!(profileData.loading || withdrawalData.loading) && profileData.data && (
           <SettlementCard profileData={profileData.data} />
           )}

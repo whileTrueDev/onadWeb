@@ -7,7 +7,6 @@ import {
 import Button from '../../../../atoms/CustomButtons/Button';
 import SettlementForm from './Settlement/SettlementForm';
 import SettlementContent from './Settlement/SettlementContent';
-import CustomCard from '../../../../atoms/CustomCard';
 import StyledItemText from '../../../../atoms/StyledItemText';
 import { ProfileDataType } from '../Mypage/ProfileData.type';
 

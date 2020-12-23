@@ -63,3 +63,7 @@ et --hard commit_id
 # tmp 
 sleepAccount/
 ./sleepAccount
+
+# python
+__pycache__
+__pypackages__/

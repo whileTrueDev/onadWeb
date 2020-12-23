@@ -11,7 +11,7 @@ import Button from '../../../../../atoms/CustomButtons/Button';
 import terms from '../source/contractTerms';
 import SuccessTypo from '../../../../../atoms/Typography/Success';
 import DangerTypo from '../../../../../atoms/Typography/Danger';
-import { useDialog, useGetRequest, usePatchRequest } from '../../../../../utils/hooks';
+import { useDialog, usePatchRequest } from '../../../../../utils/hooks';
 import ContractionTextDialog from './sub/ContractionTextDialog';
 import { ContractionDataType } from '../../../../../pages/mypage/creator/CPAManage';
 

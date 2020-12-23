@@ -1,10 +1,10 @@
 import React from 'react';
-import Skeleton from '@material-ui/lab/Skeleton';
 import GridContainer from '../../../atoms/Grid/GridContainer';
 import GridItem from '../../../atoms/Grid/GridItem';
 import ProfileCard from '../../../organisms/mypage/creator/Mypage/ProfileCard';
 import PlatformLinkCard from '../../../organisms/mypage/creator/Mypage/PlatformLinkCard';
 import useGetRequest from '../../../utils/hooks/useGetRequest';
+import CenterLoading from '../../../atoms/Loading/CenterLoading';
 
 const Mypage = (): JSX.Element => {
   // 프로필 유저 데이터
@@ -17,13 +17,13 @@ const Mypage = (): JSX.Element => {
 
       <GridContainer direction="row">
         <GridItem xs={12}>
-          {(profileData.loading || withdrawalData.loading) && (<Skeleton height={400} variant="rect" />)}
+          {(profileData.loading || withdrawalData.loading) && (<CenterLoading />)}
           {!(profileData.loading || withdrawalData.loading) && profileData.data && (
           <PlatformLinkCard profileData={profileData.data} />
           )}
         </GridItem>
         <GridItem xs={12}>
-          {(profileData.loading || withdrawalData.loading) && (<Skeleton height={400} variant="rect" />)}
+          {(profileData.loading || withdrawalData.loading) && (<CenterLoading />)}
           {!(profileData.loading || withdrawalData.loading) && profileData.data && (
           <ProfileCard profileData={profileData.data} />
           )}

@@ -1,8 +1,6 @@
 import React from 'react';
 // atoms
-import {
-  Hidden, useTheme,
-} from '@material-ui/core';
+import { Hidden } from '@material-ui/core';
 import GridContainer from '../../../atoms/Grid/GridContainer';
 import GridItem from '../../../atoms/Grid/GridItem';
 import Snackbar from '../../../atoms/Snackbar/Snackbar';

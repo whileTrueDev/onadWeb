@@ -448,18 +448,6 @@ const marketerKakao: Kakao.VerifyFunction = (accessToken, refreshToken, profile,
     .catch((errorData) => done(errorData));
 };
 
-const creatorAfreeca = (
-  req: express.Request, accessToken: string,
-  refreshToken: string, profile: any,
-  done: OAuth2Strategy.VerifyCallback
-): void => {
-  // profile은 현재 afreeca API를 통해 받을 수 없음
-
-  // refresh token 적재
-
-
-};
-
 // 기존 로그인 방식의 크리에이터의 새로운 회원가입을 위한 verification함수
 const creatorTwitchPreCreator = (
   req: express.Request, accessToken: string,
@@ -566,5 +554,4 @@ export default {
   marketerGoogle,
   marketerNaver,
   marketerKakao,
-  creatorAfreeca,
 };
