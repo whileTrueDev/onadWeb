@@ -5,8 +5,7 @@ from sqlalchemy.sql.sqltypes import TIMESTAMP
 
 Base = declarative_base()
 
-
-class AfreecaLinkCertification:
+class AfreecaLinkCertification(Base):
     """
     id: 고유값
     creatorId: 온애드 크리에이터 고유 ID

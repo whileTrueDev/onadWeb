@@ -86,6 +86,11 @@ class AfreecaNoteCrawler:
             self.driver.get(note.get('note_url'))
             time.sleep(2)
 
+    def __check_code(self):
+        # DB의 인증코드 리스트
+        cert_list = self.db_controller.select_link_cert()
+        pass
+
     def start(self):
         # 아프리카 로그인 창으로 이동
         self.__go_login_page()
@@ -97,8 +102,6 @@ class AfreecaNoteCrawler:
 
         # 아프리카 쪽지 목록
         notes = self.__do_note_fetch()
-
-        print(notes)
 
         # 개별 쪽지 읾음 처리
         self.__do_note_read(notes)
