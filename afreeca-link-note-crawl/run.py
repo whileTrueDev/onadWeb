@@ -23,14 +23,10 @@ def get_driver_path():
 def run():
     # *****************************************************
     # logger 설정
-
-    logging.basicConfig(
-        fotmat="[%(asctime)s] %(filename)s|%(funcName)s:%(levelname)s - %(message)s")
+    FORMAT="[%(asctime)s]:%(levelname)s: %(filename)s | %(funcName)s - %(message)s"
+    logging.basicConfig(format=FORMAT)
     logger = logging.getLogger(__name__)
     logger.setLevel(logging.DEBUG)
-    console = logging.StreamHandler()
-    console.setLevel(logging.DEBUG)
-    logger.addHandler(console)
 
     # *****************************************************
     # environment variables 설정

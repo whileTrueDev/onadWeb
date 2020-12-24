@@ -29,6 +29,7 @@ class AfreecaNoteCrawler:
         # Driver 옵션 설정
         self.driver_options = webdriver.ChromeOptions()
         # self.driver_options.add_argument('headless')
+        self.driver_options.add_experimental_option("excludeSwitches", ["enable-logging"])
         self.driver_options.add_argument('disable-gpu')
         self.driver_options.add_argument('--no-sandbox')
         self.driver_options.add_argument('--mute-audio')
@@ -42,31 +43,54 @@ class AfreecaNoteCrawler:
         self.password = config.AFREECA_LOGIN_PASSWORD
         self.logger.info('크롬드라이버 생성 완료')
 
+    def __get_link_cert_list(self):
+        # DB의 인증코드 리스트 가져오기. afreecaLinkCertification 객체가 온다.
+        self.logger.info('연동 인증코드 가져오기 시작')
+        cert_list = self.db_controller.select_link_cert()
+        self.logger.info('연동 인증코드 가져오기 완료')
+
+        if (len(cert_list) > 0):
+            self.cert_list = cert_list
+            return cert_list
+        else:
+            self.logger.info('새로운 연동 인증 요청 없음')
+            self.cert_list = []
+            return []
+
     def __go_login_page(self):
+        self.logger.info('로그인 창으로 이동 시작')
         self.driver.get(self.afreeca_login_url)
         time.sleep(1)
+        self.logger.info('로그인 창으로 이동 완료')
 
     def __do_login(self):
+        self.logger.info('로그인 작업 시작')
         # 아이디
         uid = self.driver.find_element_by_id('uid')
         uid.clear()
         uid.send_keys(self.login_id)
+        self.logger.info('아이디 입력 완료')
 
         # 비밀번호
         password = self.driver.find_element_by_id('password')
         password.clear()
         password.send_keys(self.password)
+        self.logger.info('비밀번호 입력 완료')
 
         # 로그인
         password.send_keys(Keys.RETURN)
+        self.logger.info('로그인 작업 완료')
 
         time.sleep(5)
 
     def __go_note_page(self):
+        self.logger.info('쪽지 페이지 이동 시작')
         self.driver.get(self.afreeca_link_note_url)
         time.sleep(1)
+        self.logger.info('쪽지 페이지 이동 완료')
 
     def __do_note_fetch(self):
+        self.logger.info('쪽지 데이터 수집 시작')
         result = []
         # 읽지 않은 쪽지 목록을 가져온다.
         unread_notes = self.driver.find_elements_by_class_name('read')
@@ -96,18 +120,27 @@ class AfreecaNoteCrawler:
             })
 
         time.sleep(1)
+        self.logger.info('쪽지 데이터 수집 완료')
+
+        if len(unread_notes) == 0:
+            self.logger.info('새로운 쪽지 없음')
+
         return result
 
     def __do_note_read(self, notes):
+        self.logger.info('쪽지 데이터 읽음 처리 시작')
         for note in notes:
             self.driver.get(note.get('note_url'))
+            self.logger.info('쪽지 데이터 읽음 처리 완료')
             time.sleep(2)
 
     def __call_bjapi_station(self, afreecaId):
+        self.logger.info('bjapi 요청 시작')
         res = requests.get(
             self.bjapi_url + '/' + afreecaId + '/station', headers=self.bjapi_header)
 
         if res.status_code == 200:
+            self.logger.info('bjapi 요청 응답 받음')
             afreeca_data = res.json()
             logo = "https:" + afreeca_data['profile_image']
             nickname = afreeca_data['station']['user_nick']
@@ -117,17 +150,16 @@ class AfreecaNoteCrawler:
             raise Exception('bjapi 요청에 실패하였습니다.')
 
     def __check_code(self, notes):
-        # DB의 인증코드 리스트 # afreecaLinkCertification 객체가 온다.
-        cert_list = self.db_controller.select_link_cert()
-
-        # 인증완료 인증 row 목록
-        verified_note_list = []
-        verified_cert_list = []
-        for item in cert_list:
+        self.logger.info('인증코드 체크 시작')
+        verified_note_list = [] # 인증완료된 쪽지 목록
+        verified_cert_list = [] # 인증완료된 인증요청 row 목록
+            
+        for item in self.cert_list:
             for note in notes:
                 if item.afreecaId == note['afreecaId'] and item.tempCode in note['note_contents']:
                     # 온애드에서 연동 신청한 afreecaId와 동일한 Id를 가지며 내용에 인증코드가 있는 경우
                     # 인증 성공 상태로 변경
+                    self.logger.info(item.afreecaId + ' 연동 쪽지 체크 완료')
                     item.certState = self.CERT_STATE_VERIFIED
 
                     # 인증된 DB 연동 인증 정보
@@ -138,6 +170,7 @@ class AfreecaNoteCrawler:
         if len(verified_cert_list) > 0:
             for verified_cert in verified_cert_list:
 
+                self.logger.info(verified_cert.afreecaId + ' 연동 DB작업 시작')
                 # 인증된 유저 정보의 afreecaId 연동 작업
                 verified_user = self.db_controller.get_user(
                     verified_cert.creatorId)
@@ -151,31 +184,43 @@ class AfreecaNoteCrawler:
                 verified_user.afreecaName = afreeca_info['nickname']
                 verified_user.afreecaLogo = afreeca_info['logo']
 
+            self.logger.info('연동 DB작업 완료')
             # 인증 상태 변경 / 유저 아프리카 Id 변경 DB에 적용
             self.db_controller.commit()
 
         return verified_note_list
 
+    def __close(self):
+        self.logger.info('selenium driver 종료 시작')
+        self.driver.quit()
+        self.logger.info('selenium driver 종료 완료')
+
     def start(self):
-        # 로거 설정
-        self.__set_logger()
+        # 연동 신청 목록 가져오기
+        cert_list = self.__get_link_cert_list()
 
-        # 아프리카 로그인 창으로 이동
-        self.__go_login_page()
+        if (len(cert_list) > 0):
+            # 아프리카 로그인 창으로 이동
+            self.__go_login_page()
 
-        # 아프리카 로그인 작업
-        self.__do_login()
+            # 아프리카 로그인 작업
+            self.__do_login()
 
-        # 아프리카 쪽지 창으로 접속
-        self.__go_note_page()
+            # 아프리카 쪽지 창으로 접속
+            self.__go_note_page()
 
-        # 아프리카 쪽지 목록 데이터 가져오기
-        notes = self.__do_note_fetch()
+            # 아프리카 쪽지 목록 데이터 가져오기
+            notes = self.__do_note_fetch()
 
-        # 아프리카 연동인증 요청과 쪽지창을 비교
-        verified_notes = self.__check_code(notes)
+            if (len(notes) > 0):
+                # 아프리카 연동인증 요청과 쪽지창을 비교
+                verified_notes = self.__check_code(notes)
 
-        # 개별 쪽지 읾음 처리
-        self.__do_note_read(verified_notes)
+                # 개별 쪽지 읾음 처리
+                if (len(verified_notes) > 0):
+                    self.__do_note_read(verified_notes)
 
-        time.sleep(1)
+                time.sleep(1)
+        
+        # 크롤러 종료
+        self.__close()
