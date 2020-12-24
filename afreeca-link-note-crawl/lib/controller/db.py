@@ -1,18 +1,23 @@
+from db.member import AfreecaLinkCertification
+from db.member import CreatorInfo
+
+
 class DBController:
     def __init__(self, data_access_object):
         self.dao = data_access_object
 
-    def __do_query(self, query, query_dict={}):
+    def commit(self):
+        self.dao.commit()
+
+    def get_user(self, creatorId):
+        return self.dao.query(CreatorInfo).filter_by(creatorId=creatorId).first()
+
+    def get_users(self):
+        return self.dao.query(CreatorInfo).filter_by(afreecaId=None).all()
+
+    def select_link_cert(self, certState=0):
         '''
-        db query => fetchAll 함수  
-        :query: {string} 디비 쿼리, 동적인 데이터는 :data이름 으로 넣는다.  
-        :query_dict: {dict} 디비 쿼리 딕셔너리 동적인 데이터를 넣는 경우 키:값으로 매핑하는 딕셔너리
+        afreeca link certification 테이블 조회함수.
+        @param certState 인증상태 정보. 기본값:0, 0=인증진행중,1=인증완료,2=인증실패
         '''
-        rows = self.dao.execute(query, query_dict).fetchall()
-        return rows
-
-
-    def select_link_cert(self):
-        from db.member import AfreecaLinkCertification
-
-        return self.dao.query(AfreecaLinkCertification).filter_by(certState = 0).all()
+        return self.dao.query(AfreecaLinkCertification).filter_by(certState=certState).all()

@@ -1,6 +1,7 @@
 from os.path import abspath, join, dirname
 import sys
 import os
+import logging
 from lib.afreeca import afreeca_crawler
 from lib.controller.db import DBController
 from db.dbmanager import DBManager
@@ -20,6 +21,17 @@ def get_driver_path():
 
 
 def run():
+    # *****************************************************
+    # logger 설정
+
+    logging.basicConfig(
+        fotmat="[%(asctime)s] %(filename)s|%(funcName)s:%(levelname)s - %(message)s")
+    logger = logging.getLogger(__name__)
+    logger.setLevel(logging.DEBUG)
+    console = logging.StreamHandler()
+    console.setLevel(logging.DEBUG)
+    logger.addHandler(console)
+
     # *****************************************************
     # environment variables 설정
     config = ConfigLoader()
@@ -42,7 +54,8 @@ def run():
     # *****************************************************
     # 크롤러 인스턴스 생성
     DRIVER_PATH = get_driver_path()
-    af = afreeca_crawler.AfreecaNoteCrawler(DRIVER_PATH, db_controller, config)
+    af = afreeca_crawler.AfreecaNoteCrawler(
+        DRIVER_PATH, db_controller, config, logger)
 
     # 크롤러 시작
     af.start()

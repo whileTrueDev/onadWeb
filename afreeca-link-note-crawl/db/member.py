@@ -1,9 +1,10 @@
-from sqlalchemy import Column, String, Integer
+from sqlalchemy import Column, String, Integer, SmallInteger
 from sqlalchemy.sql.expression import func
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.sql.sqltypes import TIMESTAMP
 
 Base = declarative_base()
+
 
 class AfreecaLinkCertification(Base):
     """
@@ -18,6 +19,16 @@ class AfreecaLinkCertification(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     creatorId = Column(String(50), unique=False)
     tempCode = Column(String(50), unique=True)
-    certState = Column(String(50))
+    certState = Column(SmallInteger)
     afreecaId = Column(String(50))
     createdAt = Column(TIMESTAMP, default=func.now())
+
+
+class CreatorInfo(Base):
+    __tablename__ = 'creatorInfo_v2'
+
+    creatorId = Column(String(50), primary_key=True)
+    afreecaId = Column(String(50))
+    afreecaName = Column(String(50))
+    afreecaLogo = Column(String(200))
+    afreecaRefreshToken = Column(String(50))
