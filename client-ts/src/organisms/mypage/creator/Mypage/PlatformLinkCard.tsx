@@ -1,9 +1,10 @@
 import React from 'react';
 import {
-  Grid, Typography, Paper, darken
+  Grid, Typography, Paper, darken,
 } from '@material-ui/core';
+import MuiButton from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
-import { Check, } from '@material-ui/icons';
+import { Check, Refresh, } from '@material-ui/icons';
 import { Alert } from '@material-ui/lab';
 import { useLocation } from 'react-router-dom';
 import Button from '../../../../atoms/CustomButtons/Button';
@@ -12,6 +13,10 @@ import { ProfileDataType } from './ProfileData.type';
 import HOST from '../../../../config';
 import { OnadTheme } from '../../../../theme';
 import history from '../../../../history';
+import { useDialog, useGetRequest } from '../../../../utils/hooks';
+import AfreecaLinkDialog from './LinkDialog/AfreecaLinkDialog';
+import axiosInstance from '../../../../utils/axios';
+import CustomDialog from '../../../../atoms/Dialog/Dialog';
 
 const useStyles = makeStyles((theme: OnadTheme) => ({
   success: { color: theme.palette.success.main },
@@ -29,8 +34,12 @@ const useStyles = makeStyles((theme: OnadTheme) => ({
 
 interface PlatformLinkCardProps {
   profileData: ProfileDataType;
+  profileRefetch: () => void;
 }
-export default function PlatformLinkCard({ profileData }: PlatformLinkCardProps): JSX.Element {
+export default function PlatformLinkCard({
+  profileData,
+  profileRefetch,
+}: PlatformLinkCardProps): JSX.Element {
   const classes = useStyles();
 
   // **************************************************
@@ -46,6 +55,27 @@ export default function PlatformLinkCard({ profileData }: PlatformLinkCardProps)
     }
     return result;
   }
+
+  const afreecaLinkData = useGetRequest('/link/afreeca');
+
+  // 아프리카 연동 다이얼로그
+  const afreecaLinkDialog = useDialog();
+
+  // 아프리카 연동 취소 확인 다이얼로그
+  const afreecaCancelConfirmDialog = useDialog();
+  // 아프리카 연동 요청 취소 핸들러
+  function handleCancel(): void {
+    axiosInstance.delete(`${HOST}/link/afreeca`, {
+      data: { afreecaId: 'orangene11' }
+    })
+      .then((res) => {
+        if (res.data) {
+          afreecaCancelConfirmDialog.handleClose();
+          profileRefetch();
+        }
+      });
+  }
+
   return (
     <Paper style={{ padding: 32 }}>
       <Grid container style={{ paddingBottom: 16 }} alignItems="center" spacing={1}>
@@ -121,21 +151,77 @@ export default function PlatformLinkCard({ profileData }: PlatformLinkCardProps)
         <Grid item xs={12} style={{ display: 'flex', alignItems: 'center' }}>
           <img alt="" height={35} src="/pngs/logo/afreeca/onlyFace.png" style={{ marginRight: 16 }} />
           {!profileData.afreecaId ? (
-            <Button
-              variant="contained"
-              size="small"
-              className={classes.afreeca}
-            >
-              아프리카TV 연동하기
-            </Button>
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+              <Button
+                variant="contained"
+                size="small"
+                className={classes.afreeca}
+                onClick={afreecaLinkDialog.handleOpen}
+              >
+                아프리카TV 연동하기
+              </Button>
+              {!afreecaLinkData.loading && afreecaLinkData.data
+              && (
+                <>
+                  <Typography style={{ marginLeft: 8 }}>
+                    {`${afreecaLinkData.data.afreecaId} 연동 진행중`}
+                  </Typography>
+                  <MuiButton
+                    color="primary"
+                    size="small"
+                    onClick={(): void => { profileRefetch(); afreecaLinkData.doGetRequest(); }}
+                  >
+                    새로고침
+                    <Refresh fontSize="small" />
+                  </MuiButton>
+                  <MuiButton
+                    color="default"
+                    size="small"
+                    onClick={afreecaCancelConfirmDialog.handleOpen}
+                  >
+                    취소하기
+                  </MuiButton>
+                </>
+              )}
+            </div>
           ) : (
-            <Button variant="contained" size="small" disableElevation style={{ cursor: 'default' }}>
-              아프리카TV 연동완료
-              <Check className={classes.success} />
-            </Button>
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+              <Button variant="contained" size="small" disableElevation style={{ cursor: 'default' }}>
+                아프리카TV 연동완료
+                <Check className={classes.success} />
+              </Button>
+              <Typography style={{ marginLeft: 8 }}>
+                {`${profileData.afreecaName}, ${profileData.afreecaId}`}
+              </Typography>
+            </div>
           )}
         </Grid>
       </Grid>
+
+      {/* 아프리카 연동 다이얼로그 */}
+      <AfreecaLinkDialog
+        afreecaLinkData={afreecaLinkData.data}
+        afreecaLinkDataRefetch={afreecaLinkData.doGetRequest}
+        open={afreecaLinkDialog.open}
+        onClose={afreecaLinkDialog.handleClose}
+      />
+
+      {/* 아프리카 연동 취소 확인 다이얼로그 */}
+      <CustomDialog
+        open={afreecaCancelConfirmDialog.open}
+        onClose={afreecaCancelConfirmDialog.handleClose}
+        title="아프리카TV 연동 취소 확인"
+        maxWidth="xs"
+        fullWidth
+        buttons={(
+          <div>
+            <Button size="small" onClick={handleCancel} variant="contained" color="primary">확인</Button>
+            <Button size="small" onClick={afreecaCancelConfirmDialog.handleClose}>취소</Button>
+          </div>
+        )}
+      >
+        <Typography>정말로 취소하시겠습니까?</Typography>
+      </CustomDialog>
     </Paper>
   );
 }

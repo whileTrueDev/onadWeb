@@ -4,7 +4,9 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.keys import Keys
 import time
+from datetime import datetime
 import requests
+import moment
 import logging
 
 
@@ -13,7 +15,7 @@ class AfreecaNoteCrawler:
     CERT_STATE_VERIFIED = 1
     CERT_STATE_DENIED = 2
     afreeca_login_url = 'https://login.afreecatv.com/afreeca/login.php'
-    afreeca_link_note_url = 'http://note.afreecatv.com/app/index.php?page=recv_list&nPageNo=0&nListPerPage=50&nNoteCategory=0'
+    afreeca_link_note_url = 'http://note.afreecatv.com/app/index.php?page=recv_list&nPageNo=0&nListPerPage=50&nNoteCategory=3'
     bjapi_url = 'https://bjapi.afreecatv.com/api'
     bjapi_header = {"User-Agent": "Mozilla/5.0"}
 
@@ -130,9 +132,24 @@ class AfreecaNoteCrawler:
     def __do_note_read(self, notes):
         self.logger.info('쪽지 데이터 읽음 처리 시작')
         for note in notes:
-            self.driver.get(note.get('note_url'))
-            self.logger.info('쪽지 데이터 읽음 처리 완료')
+            self.driver.get(note['note_url'])
+            self.logger.info(note['username'] + ' 쪽지 데이터 읽음 처리 완료')
             time.sleep(2)
+
+    def __do_failed_note_read(self, notes):
+        self.logger.info('1시간 이상 지난 인증 실패한 쪽지 읽음 처리 시작')
+        ONE_HOUR = 3600
+        
+        for note in notes:
+            note_created_at = moment.date(note['created_at'], "YY-MM-DD [HH:mm]")
+            time_delta = moment.now() - note_created_at
+            # 1시간 이상 지난 쪽지인 경우
+            if time_delta.total_seconds() > ONE_HOUR:
+                self.driver.get(note['note_url'])
+                self.logger.info(note['username'] + ' 쪽지 데이터 읽음 처리 완료')
+                time.sleep(2)
+
+        self.logger.info('1시간 이상 지난 인증 실패한 쪽지 읽음 처리 완료')
 
     def __call_bjapi_station(self, afreecaId):
         self.logger.info('bjapi 요청 시작')
@@ -196,31 +213,35 @@ class AfreecaNoteCrawler:
         self.logger.info('selenium driver 종료 완료')
 
     def start(self):
-        # 연동 신청 목록 가져오기
-        cert_list = self.__get_link_cert_list()
+        try:
+            # 연동 신청 목록 가져오기
+            cert_list = self.__get_link_cert_list()
 
-        if (len(cert_list) > 0):
-            # 아프리카 로그인 창으로 이동
-            self.__go_login_page()
+            if (len(cert_list) > 0):
+                # 아프리카 로그인 창으로 이동
+                self.__go_login_page()
 
-            # 아프리카 로그인 작업
-            self.__do_login()
+                # 아프리카 로그인 작업
+                self.__do_login()
 
-            # 아프리카 쪽지 창으로 접속
-            self.__go_note_page()
+                # 아프리카 쪽지 창으로 접속
+                self.__go_note_page()
 
-            # 아프리카 쪽지 목록 데이터 가져오기
-            notes = self.__do_note_fetch()
+                # 아프리카 쪽지 목록 데이터 가져오기
+                notes = self.__do_note_fetch()
 
-            if (len(notes) > 0):
-                # 아프리카 연동인증 요청과 쪽지창을 비교
-                verified_notes = self.__check_code(notes)
+                if (len(notes) > 0):
+                    # 아프리카 연동인증 요청과 쪽지창을 비교
+                    verified_notes = self.__check_code(notes)
 
-                # 개별 쪽지 읾음 처리
-                if (len(verified_notes) > 0):
-                    self.__do_note_read(verified_notes)
+                    # 개별 쪽지 읾음 처리
+                    if (len(verified_notes) > 0):
+                        self.__do_note_read(verified_notes)
 
-                time.sleep(1)
-        
-        # 크롤러 종료
-        self.__close()
+                    # 연동 진행 되지 않았고 1시간 이상 지난 쪽지 읽음 처리
+                    self.__do_failed_note_read(notes)
+
+                    time.sleep(1)
+        finally:
+            # 크롤러 종료
+            self.__close()

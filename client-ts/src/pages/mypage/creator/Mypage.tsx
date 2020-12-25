@@ -19,11 +19,13 @@ const Mypage = (): JSX.Element => {
         <GridItem xs={12}>
           {(profileData.loading || withdrawalData.loading) && (<CenterLoading />)}
           {!(profileData.loading || withdrawalData.loading) && profileData.data && (
-          <PlatformLinkCard profileData={profileData.data} />
+          <PlatformLinkCard
+            profileData={profileData.data}
+            profileRefetch={profileData.doGetRequest}
+          />
           )}
         </GridItem>
         <GridItem xs={12}>
-          {(profileData.loading || withdrawalData.loading) && (<CenterLoading />)}
           {!(profileData.loading || withdrawalData.loading) && profileData.data && (
           <ProfileCard profileData={profileData.data} />
           )}

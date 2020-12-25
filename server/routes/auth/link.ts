@@ -1,7 +1,10 @@
 
 import Axios from 'axios';
 import express from 'express';
+import shortid from 'shortid';
 import passport from 'passport';
+import responseHelper from '../../middlewares/responseHelper';
+import doQuery from '../../model/doQuery';
 
 const HOST = process.env.REACT_HOSTNAME;
 const router = express.Router();
@@ -24,10 +27,101 @@ router.route('/twitch/callback')
     } else res.redirect(`${HOST}/mypage/creator/user?error=error&platform=twitch`);
   },);
 
-// http://note.afreecatv.com/app/index.php?page=recv_list&nPageNo=1&nListPerPage=50&nNoteCategory=3
+// 아프리카 쪽지 인증 기록 조회
+router.get('/afreeca',
+  responseHelper.middleware.checkSessionExists,
+  responseHelper.middleware.withErrorCatch(async (req, res, next) => {
+    const { creatorId } = responseHelper.getSessionData(req);
+    const query = `SELECT * FROM afreecaLinkCertification
+    WHERE creatorId = ? AND certState = 0`;
+    const { result } = await doQuery(query, [creatorId]);
+    if (result.length > 0) {
+      responseHelper.send(result[0], 'get', res);
+    }
+  }));
+// 아프리카 쪽지 인증을 이용한 채널 연동
+router.post('/afreeca',
+  responseHelper.middleware.checkSessionExists,
+  responseHelper.middleware.withErrorCatch(async (req, res, next) => {
+    const { creatorId } = responseHelper.getSessionData(req);
+    const afreecaId = responseHelper.getParam('afreecaId', 'POST', req);
 
-// creator - afreeca 로그인
-router.get('/afreeca', (req, res) => {
+    // 요청받은 afreecaId가 이미 다른 onad유저에게 연동되어 있는 지 체크
+    const checkQuery = `SELECT creatorId, loginId FROM creatorInfo_v2
+    WHERE afreecaId = ?`;
+    const checkQueryArray = [afreecaId];
+    const alreadyLinked = await doQuery(checkQuery, checkQueryArray);
+
+    // 이미 다른 유저에게 연동되어 있는 경우
+    if (alreadyLinked.result.length > 0) {
+      const alreadyLinkedUser = alreadyLinked.result[0];
+      responseHelper.send({
+        status: 'already-linked',
+        user: { creatorId: alreadyLinkedUser.creatorId, loginId: alreadyLinkedUser.loginId }
+      }, 'post', res);
+      return;
+    }
+
+    // 동일한 온애드 유저로부터의 동일한 afreecaId로의 인증번호 발급이 이미 있는 경우
+    const check2Query = `SELECT
+    creatorId, afreecaId, tempCode, createdAt, certState
+    FROM afreecaLinkCertification
+    WHERE certState = 0 AND creatorId = ? AND afreecaId = ? LIMIT 1`;
+    const check2QueryArray = [creatorId, afreecaId];
+    const duplicateRequestCheck = await doQuery(check2Query, check2QueryArray);
+    if (duplicateRequestCheck.result.length > 0) {
+      responseHelper.send({
+        status: 'duplicate-request',
+        cert: duplicateRequestCheck.result[0]
+      }, 'post', res);
+      return;
+    }
+
+    // 위 두 경우가 아닌 경우
+    // 인증번호 발급
+    const certCode = `${new Date().getTime()}${shortid.generate()}`;
+
+    // afreecaLinkCertification 테이블에 row 생성
+    const query = `
+    INSERT INTO afreecaLinkCertification
+      (creatorId, tempCode, certState, afreecaId)
+    VALUES (?, ?, ?, ?)`;
+    // 상태 0 으로 생성
+    const queryArray = [creatorId, certCode, 0, afreecaId];
+
+    const { result } = await doQuery(query, queryArray);
+
+    if (result.affectedRows > 0) {
+      responseHelper.send({
+        status: 'created',
+        cert: {
+          creatorId, tempCode: certCode, certState: 0, afreecaId
+        }
+      }, 'POST', res);
+    } else {
+      responseHelper.promiseError(
+        Error('An error ocurred during insert afreecaLinkCertification'),
+        next
+      );
+    }
+  }));
+
+// 아프리카 쪽지 인증 취소
+router.delete('/afreeca',
+  responseHelper.middleware.checkSessionExists,
+  responseHelper.middleware.withErrorCatch(async (req, res, next) => {
+    const { creatorId } = responseHelper.getSessionData(req);
+    const query = `DELETE FROM afreecaLinkCertification
+    WHERE creatorId = ? AND certState = 0`;
+    const { result } = await doQuery(query, [creatorId]);
+    if (result.affectedRows > 0) {
+      responseHelper.send('success', 'get', res);
+    }
+  }));
+
+// 향후 아프리카 open api를 통한 로그인에서 사용됨. from 2020 12 25 hwasurr
+// creator - afreeca oauth 로그인
+router.get('/afreeca/nextversion', (req, res) => {
   Axios.get('https://openapi.afreecatv.com/auth/code',
     {
       params: { client_id: process.env.AFREECA_KEY },
@@ -45,8 +139,8 @@ router.get('/afreeca', (req, res) => {
     });
 });
 
-// 
-router.get('/afreeca/callback', (req, res) => {
+// 향후 아프리카 open api를 통한 로그인에서 사용됨. from 2020 12 25 hwasurr
+router.get('/afreeca/nextversion/callback', (req, res) => {
   const afreecaCode = req.query.code;
   Axios.post('https://openapi.afreecatv.com/auth/token',
     {

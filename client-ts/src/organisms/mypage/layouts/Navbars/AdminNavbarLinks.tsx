@@ -75,7 +75,6 @@ function HeaderLinks(): JSX.Element {
 
   const [type] = useState(window.document.location.pathname.includes('/creator/') ? 'creator' : 'marketer');
 
-  console.log(userProfileGet);
   return (
     <div>
 
