@@ -147,6 +147,12 @@ class AfreecaNoteCrawler:
             if time_delta.total_seconds() > ONE_HOUR:
                 self.driver.get(note['note_url'])
                 self.logger.info(note['username'] + ' 쪽지 데이터 읽음 처리 완료')
+                
+                # 1시간 이상 지난 쪽지를 afreecaLinkCertification목록에서 삭제하는 작업
+                self.logger.info(note['afreecaId'] + ' 1시간 이상 지난 인증 실패한 cert 삭제 처리 시작')
+                self.db_controller.delete_link_cert(note['afreecaId'])
+                self.logger.info(note['afreecaId'] + ' 1시간 이상 지난 인증 실패한 cert 삭제 처리 완료')
+
                 time.sleep(2)
 
         self.logger.info('1시간 이상 지난 인증 실패한 쪽지 읽음 처리 완료')
