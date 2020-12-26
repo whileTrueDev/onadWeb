@@ -19,7 +19,10 @@ class DBController:
         '''
         return self.dao.query(AfreecaLinkCertification).filter_by(certState=certState).all()
 
-    def delete_link_cert(self, afreecaId):
-        self.dao.query(AfreecaLinkCertification).filter_by(afreecaId=afreecaId).delete()
+    def delete_link_cert(self, afreecaId, target_time):
+        self.dao.query(AfreecaLinkCertification)\
+            .filter_by(afreecaId=afreecaId)\
+            .filter(AfreecaLinkCertification.createdAt <= target_time)\
+            .delete()
         self.dao.commit()
         

@@ -150,7 +150,8 @@ class AfreecaNoteCrawler:
                 
                 # 1시간 이상 지난 쪽지를 afreecaLinkCertification목록에서 삭제하는 작업
                 self.logger.info(note['afreecaId'] + ' 1시간 이상 지난 인증 실패한 cert 삭제 처리 시작')
-                self.db_controller.delete_link_cert(note['afreecaId'])
+                target_time = moment.now().subtract(hours=1).date
+                self.db_controller.delete_link_cert(note['afreecaId'], target_time)
                 self.logger.info(note['afreecaId'] + ' 1시간 이상 지난 인증 실패한 cert 삭제 처리 완료')
 
                 time.sleep(2)
