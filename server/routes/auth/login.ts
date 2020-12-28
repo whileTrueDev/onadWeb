@@ -55,7 +55,8 @@ router.get('/kakao/callback', passport.authenticate('kakao'),
     }
   });
 
-// creator - twitch -> 새로운 로그인 방식 처리
+// creator - twitch -> 기존 크리에이터 유저의 새로운 로그인 방식 처리
+// 기존 아이디에 로그인용 아이디 비번 생성
 router.get('/twitch/pre-creator', passport.authenticate('twitch-pre-creator'));
 router.get('/twitch/pre-creator/callback', passport.authenticate('twitch-pre-creator'),
   (req, res) => {
@@ -70,52 +71,6 @@ router.get('/twitch/pre-creator/callback', passport.authenticate('twitch-pre-cre
 
 
 // creator - afreeca 로그인
-router.get('/afreeca', (req, res) => {
-  Axios.get('https://openapi.afreecatv.com/auth/code',
-    {
-      params: { client_id: process.env.AFREECA_KEY },
-      headers: {
-        'Content-Type': 'application/json',
-        Accept: '*/*',
-      }
-    })
-    .then((apiRes) => {
-      res.redirect(apiRes.request.res.responseUrl);
-    })
-    .catch((err) => {
-      console.log(err.response.data);
-      res.sendStatus(err.response.status);
-    });
-});
-
-// 
-router.get('/afreeca/callback', (req, res) => {
-  const afreecaCode = req.query.code;
-  Axios.post('https://openapi.afreecatv.com/auth/token',
-    {
-      grant_type: 'authorization_code',
-      client_id: process.env.AFREECA_KEY,
-      client_secret: process.env.AFREECA_SECRET_KEY,
-      code: afreecaCode,
-    },
-    {
-      headers: {
-        'Content-Type': 'application/json',
-        Accept: '*/*',
-      }
-    })
-    .then((tokenRes) => {
-      console.log(tokenRes.data);
-      res.redirect(`${HOST}/creator`);
-    })
-    .catch((err) => {
-      if (err.response) {
-        console.log(err.response.data);
-      } else {
-        console.log(err);
-      }
-    });
-});
 
 router.route('/check')
   .get(

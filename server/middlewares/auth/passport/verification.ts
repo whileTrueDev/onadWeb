@@ -5,7 +5,6 @@ import Google from 'passport-google-oauth20';
 import Naver from 'passport-naver';
 import Kakao from 'passport-kakao';
 // DB 커넥션 쿼리 함수
-import createHttpError from 'http-errors';
 import doQuery from '../../../model/doQuery';
 // 암호화 체크 객체 생성
 import encrpyto from '../../encryption';
@@ -111,6 +110,7 @@ const local = (
 };
 
 /**
+ * @deprecated
  * @author 박찬우
  * @date 2019-07-02
  * @description
