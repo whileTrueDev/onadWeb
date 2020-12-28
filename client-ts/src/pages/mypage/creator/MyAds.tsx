@@ -12,7 +12,9 @@ import ChatAdInfo from '../../../organisms/mypage/creator/CampaignManage/ChatAdI
 import ClickAdInfo from '../../../organisms/mypage/creator/CampaignManage/ClickAdInfo';
 import AdIncomeCard from '../../../organisms/mypage/creator/shared/AdIncomeCard';
 import AdClickCard from '../../../organisms/mypage/creator/CampaignManage/AdClickCard';
+import StartGuideCard from '../../../organisms/mypage/creator/shared/StartGuideCard';
 import { ContractionDataType } from './CPAManage';
+import OverlayUrlCard, { OverlayUrlRes } from '../../../organisms/mypage/creator/shared/OverlayUrlCard';
 
 
 interface LanidngUrlRes { url: string }
@@ -36,15 +38,49 @@ const MyBanner = (): JSX.Element => {
   const currentBannerGet = useGetRequest<null, CurrentBannerRes[]>('/creator/banner/active');
   // 계약 정보 조회
   const profileGet = useGetRequest<null, ContractionDataType>('/creator');
+  // 배너 송출 URL 정보 조회
+  const overlayUrlGet = useGetRequest<null, OverlayUrlRes>('/creator/banner/overlay');
 
   // For Onoff success snackbar
   const snack = useDialog();
   const failSnack = useDialog();
+  const overlayUrlCopySnack = useDialog();
 
-  console.log(profileGet.data);
   return (
     <div style={{ margin: '0 auto', maxWidth: 1430 }}>
       <GridContainer>
+
+        {/* 광고 시작 가이드 */}
+        <GridItem xs={12} lg={6}>
+          {!overlayUrlGet.loading && overlayUrlGet.data
+            && !profileGet.loading && profileGet.data && (
+            <StartGuideCard
+              doContractionDataRequest={profileGet.doGetRequest}
+              overlayUrlData={overlayUrlGet.data}
+              contractionData={profileGet.data}
+              handleSnackOpen={snack.handleOpen}
+            />
+          )}
+        </GridItem>
+
+        {/* 배너 광고 오버레이 URL */}
+        <GridItem xs={12} lg={6}>
+          {overlayUrlGet.loading && (
+          <OverlayUrlCard
+            overlayUrlData={{
+              advertiseUrl: '',
+              creatorContractionAgreement: 0
+            }}
+            handleSnackOpen={overlayUrlCopySnack.handleOpen}
+          />
+          )}
+          {!overlayUrlGet.loading && overlayUrlGet.data && (
+            <OverlayUrlCard
+              overlayUrlData={overlayUrlGet.data}
+              handleSnackOpen={overlayUrlCopySnack.handleOpen}
+            />
+          )}
+        </GridItem>
 
         {/* 현재 송출 배너 광고 정보 */}
         <GridItem xs={12} lg={6}>
@@ -114,6 +150,14 @@ const MyBanner = (): JSX.Element => {
         color="success"
         onClose={banSuccessSnack.handleClose}
       />
+
+      <Snackbar
+        open={overlayUrlCopySnack.open}
+        message="클립보드에 복사되었어요! 방송도구에 등록해주세요"
+        color="success"
+        onClose={overlayUrlCopySnack.handleClose}
+      />
+
     </div>
   );
 };

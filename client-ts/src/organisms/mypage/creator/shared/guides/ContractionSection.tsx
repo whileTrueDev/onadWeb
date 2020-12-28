@@ -8,7 +8,7 @@ import {
   Done, Clear, CheckCircleOutline
 } from '@material-ui/icons';
 import Button from '../../../../../atoms/CustomButtons/Button';
-import terms from '../source/contractTerms';
+import terms from '../../Dashboard/source/contractTerms';
 import SuccessTypo from '../../../../../atoms/Typography/Success';
 import DangerTypo from '../../../../../atoms/Typography/Danger';
 import { useDialog, usePatchRequest } from '../../../../../utils/hooks';

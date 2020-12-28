@@ -3,7 +3,7 @@ import {
   Grid, Divider, Typography, makeStyles
 } from '@material-ui/core';
 import Button from '../../../../../../atoms/CustomButtons/Button';
-import terms from '../../source/contractTerms';
+import terms from '../../../Dashboard/source/contractTerms';
 import Dialog from '../../../../../../atoms/Dialog/Dialog';
 
 const useStyles = makeStyles((theme) => ({

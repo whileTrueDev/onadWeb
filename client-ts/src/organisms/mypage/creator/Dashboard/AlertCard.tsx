@@ -6,8 +6,11 @@ export default function AlertCard(): JSX.Element {
   return (
     <Alert
       severity="error"
-      variant="outlined"
+      variant="standard"
     >
+      <Typography style={{ fontWeight: 'bold' }}>
+        배너 크기 관련 알림
+      </Typography>
       <Typography>
         내 방송의 해상도가 1920 X 1080(1080p) 이상이면 너비를
         {' '}

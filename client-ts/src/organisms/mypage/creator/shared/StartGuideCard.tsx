@@ -1,10 +1,9 @@
 import React, { useEffect } from 'react';
 import {
-  Paper, Typography, Stepper, Step, StepLabel, makeStyles,
+  Paper, Typography, Stepper, Step, StepLabel, makeStyles, Button
 } from '@material-ui/core';
 // components
 import Dialog from '../../../../atoms/Dialog/Dialog';
-import Button from '../../../../atoms/CustomButtons/Button';
 import Snackbar from '../../../../atoms/Snackbar/Snackbar';
 // utils
 import useDialog from '../../../../utils/hooks/useDialog';
@@ -17,6 +16,7 @@ import { OverlayUrlRes } from './OverlayUrlCard';
 import { ContractionDataType } from '../../../../pages/mypage/creator/CPAManage';
 import StyledTooltip from '../../../../atoms/Tooltip/StyledTooltip';
 import history from '../../../../history';
+import GuideComplete from './guides/GuideComplete';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -95,7 +95,8 @@ const ContractionCard = ({
         handleSnackOpen={handleSnackOpen}
       />,
     },
-    { label: '출금 정산 등록하기', component: <SetSettlementSection />, },
+    { label: '광고 준비 완료!', component: <GuideComplete /> },
+    { label: '수익금 출금하기', component: <SetSettlementSection />, },
   ];
 
   function getStepComponent(step: number): React.ReactNode {
@@ -129,8 +130,8 @@ const ContractionCard = ({
         >
           <div>
             <Button
-              size="small"
               color="primary"
+              variant="contained"
               onClick={guideDialog.handleOpen}
             >
               시작하기
@@ -142,7 +143,11 @@ const ContractionCard = ({
 
       <Dialog
         open={guideDialog.open}
-        onClose={guideDialog.handleClose}
+        onClose={(): void => {
+          guideDialog.handleClose();
+          handleIntroReset();
+          handleStepReset();
+        }}
         title="온애드 시작 가이드"
         maxWidth="md"
         fullWidth
@@ -154,7 +159,8 @@ const ContractionCard = ({
             <Typography>아직 연동된 방송 플랫폼이 없어 온애드를 시작할 수 없습니다.</Typography>
             <Button
               color="primary"
-              onClick={() => history.push('/mypage/creator/user')}
+              variant="contained"
+              onClick={(): void => history.push('/mypage/creator/user')}
             >
               플랫폼 연동하러가기
 
@@ -182,7 +188,7 @@ const ContractionCard = ({
             {/* Stepper 버튼 섹션 */}
             <div className={classes.actionsContainer}>
               <Button
-                size="small"
+                variant="contained"
                 onClick={(): void => {
                   if (activeStep === 0) {
                     guideDialog.handleClose();
@@ -194,7 +200,7 @@ const ContractionCard = ({
                 이전
               </Button>
               <Button
-                size="small"
+                variant="contained"
                 color="primary"
                 onClick={(): void => {
                   if (introduction) handleIntroSkip();

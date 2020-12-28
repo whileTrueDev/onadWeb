@@ -5,7 +5,7 @@ import GridContainer from '../../../atoms/Grid/GridContainer';
 import GridItem from '../../../atoms/Grid/GridItem';
 import Snackbar from '../../../atoms/Snackbar/Snackbar';
 // organisms
-import StartGuideCard from '../../../organisms/mypage/creator/Dashboard/StartGuideCard';
+import StartGuideCard from '../../../organisms/mypage/creator/shared/StartGuideCard';
 import AlertCard from '../../../organisms/mypage/creator/Dashboard/AlertCard';
 import UserInfoCard, { IncomeCashRes } from '../../../organisms/mypage/creator/Dashboard/UserInfoCard';
 import WithdrawalDialog from '../../../organisms/mypage/creator/Dashboard/WithdrawalDialog';
@@ -14,7 +14,7 @@ import IncomeChart, {
   IncomeChartData, IncomeChartParams
 } from '../../../organisms/mypage/creator/Dashboard/IncomeChart';
 import BannerCard, { CurrentBannerRes } from '../../../organisms/mypage/creator/Dashboard/BannerCard';
-import OverlayUrlCard, { OverlayUrlRes } from '../../../organisms/mypage/creator/Dashboard/OverlayUrlCard';
+import OverlayUrlCard, { OverlayUrlRes } from '../../../organisms/mypage/creator/shared/OverlayUrlCard';
 import MypageLoading from './Mypage.loading';
 import NoticeCard, { NoticeData } from '../../../organisms/mypage/creator/Dashboard/NoticeCard';
 import CustomerServiceCard from '../../../organisms/mypage/creator/Dashboard/CustomerServiceCard';
