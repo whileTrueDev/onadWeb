@@ -13,10 +13,11 @@ import { ProfileDataType } from './ProfileData.type';
 import HOST from '../../../../config';
 import { OnadTheme } from '../../../../theme';
 import history from '../../../../history';
-import { useDialog, useGetRequest } from '../../../../utils/hooks';
+import { useDialog, useGetRequest, useEventTargetValue } from '../../../../utils/hooks';
 import AfreecaLinkDialog from './LinkDialog/AfreecaLinkDialog';
 import axiosInstance from '../../../../utils/axios';
 import CustomDialog from '../../../../atoms/Dialog/Dialog';
+import Snackbar from '../../../../atoms/Snackbar/Snackbar';
 
 const useStyles = makeStyles((theme: OnadTheme) => ({
   success: { color: theme.palette.success.main },
@@ -56,7 +57,11 @@ export default function PlatformLinkCard({
     return result;
   }
 
-  const afreecaLinkData = useGetRequest('/link/afreeca');
+  // *********************************************
+  // 연동하고자 하는 아프리카 ID (사용자입력)
+  const afreecaId = useEventTargetValue();
+
+  const afreecaLinkData = useGetRequest('/link/afreeca/cert');
 
   // 아프리카 연동 다이얼로그
   const afreecaLinkDialog = useDialog();
@@ -65,14 +70,55 @@ export default function PlatformLinkCard({
   const afreecaCancelConfirmDialog = useDialog();
   // 아프리카 연동 요청 취소 핸들러
   function handleCancel(): void {
-    axiosInstance.delete(`${HOST}/link/afreeca`, {
-      data: { afreecaId: 'orangene11' }
+    axiosInstance.delete(`${HOST}/link/afreeca/cert`, {
+      data: { afreecaId: afreecaId.value }
     })
       .then((res) => {
         if (res.data) {
           afreecaCancelConfirmDialog.handleClose();
           profileRefetch();
         }
+      });
+  }
+
+  // *********************************************
+  // 아프리카 연동 제거 스낵바 오픈 상태
+  const afreecaLinkDeleteDialog = useDialog();
+  // 아프리카 연동 제거 성공 스낵바 오픈 상태
+  const linkDeleteSuccessSnack = useDialog();
+  // 아프리카 연동 제거 실패 스낵바 오픈 상태
+  const linkDeleteFailSnack = useDialog();
+  // 아프리카 연동 해제
+  function handleDeleteLinkAfreeca(): void {
+    axiosInstance.delete(`${HOST}/link/afreeca`)
+      .then((res) => {
+        if (res.data) {
+          afreecaLinkDeleteDialog.handleClose();
+          profileRefetch();
+          linkDeleteSuccessSnack.handleOpen();
+        }
+      })
+      .catch((err) => {
+        linkDeleteFailSnack.handleOpen();
+        console.error(err);
+      });
+  }
+
+  // ************************************************
+  // 트위치 연동 해제
+  const twitchLinkDeleteDialog = useDialog();
+  function handleDeleteLinkTwitch(): void {
+    axiosInstance.delete(`${HOST}/link/twitch`)
+      .then((res) => {
+        if (res.data) {
+          twitchLinkDeleteDialog.handleClose();
+          profileRefetch();
+          linkDeleteSuccessSnack.handleOpen();
+        }
+      })
+      .catch((err) => {
+        linkDeleteFailSnack.handleOpen();
+        console.error(err);
       });
   }
 
@@ -144,6 +190,14 @@ export default function PlatformLinkCard({
               <Typography style={{ marginLeft: 8 }}>
                 {`${profileData.creatorName}, ${profileData.creatorTwitchId}`}
               </Typography>
+              <Button
+                size="small"
+                variant="text"
+                style={{ textDecoration: 'underline' }}
+                onClick={twitchLinkDeleteDialog.handleOpen}
+              >
+                연동해제
+              </Button>
             </div>
           )}
         </Grid>
@@ -193,20 +247,29 @@ export default function PlatformLinkCard({
               <Typography style={{ marginLeft: 8 }}>
                 {`${profileData.afreecaName}, ${profileData.afreecaId}`}
               </Typography>
+              <Button
+                size="small"
+                variant="text"
+                style={{ textDecoration: 'underline' }}
+                onClick={afreecaLinkDeleteDialog.handleOpen}
+              >
+              연동해제
+              </Button>
             </div>
           )}
         </Grid>
       </Grid>
 
-      {/* 아프리카 연동 다이얼로그 */}
+      {/* 아프리카 연동진행 다이얼로그 */}
       <AfreecaLinkDialog
+        afreecaId={afreecaId}
         afreecaLinkData={afreecaLinkData.data}
         afreecaLinkDataRefetch={afreecaLinkData.doGetRequest}
         open={afreecaLinkDialog.open}
         onClose={afreecaLinkDialog.handleClose}
       />
 
-      {/* 아프리카 연동 취소 확인 다이얼로그 */}
+      {/* 아프리카 연동진행 취소 확인 다이얼로그 */}
       <CustomDialog
         open={afreecaCancelConfirmDialog.open}
         onClose={afreecaCancelConfirmDialog.handleClose}
@@ -222,6 +285,65 @@ export default function PlatformLinkCard({
       >
         <Typography>정말로 취소하시겠습니까?</Typography>
       </CustomDialog>
+
+      {/* 아프리카 연동 해제 확인 다이얼로그 */}
+      {profileData && profileData.afreecaId && (
+      <CustomDialog
+        open={afreecaLinkDeleteDialog.open}
+        onClose={afreecaLinkDeleteDialog.handleClose}
+        title="아프리카TV 연동 해제 확인"
+        maxWidth="xs"
+        fullWidth
+        buttons={(
+          <div>
+            <Button size="small" onClick={handleDeleteLinkAfreeca} variant="contained" color="primary">
+              확인
+            </Button>
+            <Button size="small" onClick={afreecaLinkDeleteDialog.handleClose}>취소</Button>
+          </div>
+        )}
+      >
+        <Typography>정말로 아프리카TV연동을 해제하시겠습니까?</Typography>
+      </CustomDialog>
+      )}
+
+      {/* 트위치 연동 해제 확인 다이얼로그 */}
+      {profileData && profileData.creatorTwitchOriginalId && (
+      <CustomDialog
+        open={twitchLinkDeleteDialog.open}
+        onClose={twitchLinkDeleteDialog.handleClose}
+        title="Twitch 연동 해제 확인"
+        maxWidth="xs"
+        fullWidth
+        buttons={(
+          <div>
+            <Button size="small" onClick={handleDeleteLinkTwitch} variant="contained" color="primary">
+              확인
+            </Button>
+            <Button size="small" onClick={twitchLinkDeleteDialog.handleClose}>취소</Button>
+          </div>
+        )}
+      >
+        <Typography>정말로 Twitch 연동을 해제하시겠습니까?</Typography>
+      </CustomDialog>
+      )}
+
+
+      {/* 플랫폼 연동 해제 성공 스낵바 */}
+      <Snackbar
+        color="success"
+        open={linkDeleteSuccessSnack.open}
+        message="성공적으로 연동이 해제 되었습니다."
+        onClose={linkDeleteSuccessSnack.handleClose}
+      />
+
+      {/* 플랫폼 연동 해제 실패 스낵바 */}
+      <Snackbar
+        color="error"
+        open={linkDeleteFailSnack.open}
+        message="연동 해제 도중 오류가 발생했습니다. 잠시 후 다시 시도해주세요."
+        onClose={linkDeleteFailSnack.handleClose}
+      />
     </Paper>
   );
 }

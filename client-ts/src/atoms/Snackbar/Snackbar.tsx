@@ -4,7 +4,7 @@ import Snack, { SnackbarProps as MuiSnackbarProps } from '@material-ui/core/Snac
 import Alert, { AlertProps } from '@material-ui/lab/Alert';
 
 interface SnackBarProps extends MuiSnackbarProps {
-  color: 'success' | 'info' | 'warning' | 'error';
+  color?: 'success' | 'info' | 'warning' | 'error';
   alertProps?: AlertProps;
   onClose: (event: React.SyntheticEvent, reason?: string) => void;
 }

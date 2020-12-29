@@ -486,16 +486,20 @@ const creatorTwitchLink = async (
   done: OAuth2Strategy.VerifyCallback
 ): Promise<void> => {
   const { creatorId } = req.user as Session;
-  const creatorTwitchOriginalId = profile.id;
-  const creatorName = profile.display_name;
-  const creatorTwitchId = profile.login;
-  const creatorMail = profile.email;
-  const creatorLogo = profile.profile_image_url;
+  const creatorTwitchOriginalId = profile.id; // 트위치 고유 아이디 (ex. 13009139)
+  const creatorName = profile.display_name; // 트위치 닉네임 (ex. 화수르)
+  const creatorTwitchId = profile.login; // 트위치 로그인 아이디 (ex. hwasurr)
+  const creatorMail = profile.email; // 트위치 가입 이메일 주소
+  const creatorLogo = profile.profile_image_url; // 트위치 로고 주소
 
   // ***************************************************
   // 이전 온애드 계정 사용으로, creatorId 가 twitchId인 경우 (본인일 수 있음)
-  const preCreatorQuery = 'SELECT creatorId, creatorName FROM creatorInfo_v2 WHERE creatorId = ?';
-  const preCreatorRow = await doQuery(preCreatorQuery, [creatorTwitchOriginalId]);
+  const preCreatorQuery = `
+    SELECT creatorId, creatorName
+    FROM creatorInfo_v2
+    WHERE creatorId = ? AND creatorTwitchId = ?
+  `;
+  const preCreatorRow = await doQuery(preCreatorQuery, [creatorTwitchOriginalId, creatorTwitchId]);
   if (preCreatorRow.result.length > 0) {
     const alreadyLinked = preCreatorRow.result[0];
     if (alreadyLinked.creatorId === creatorTwitchOriginalId) {
@@ -531,6 +535,7 @@ const creatorTwitchLink = async (
         .then((row) => {
           if (row.result) {
             done(null, {
+              userType: 'creator',
               creatorId,
               creatorTwitchOriginalId,
               creatorName,

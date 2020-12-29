@@ -10,7 +10,7 @@ const HOST = process.env.REACT_HOSTNAME;
 const router = express.Router();
 
 // ************************************************************
-// 온애드 계정 - 트위치 연결
+// 온애드 계정 연결 - 트위치
 // middlewares/auth/passport/verification 의 creatorTwitchLink 함수를 확인.
 router.get('/twitch', passport.authenticate('twitch-link'));
 router.route('/twitch/callback')
@@ -27,8 +27,29 @@ router.route('/twitch/callback')
     } else res.redirect(`${HOST}/mypage/creator/user?error=error&platform=twitch`);
   },);
 
+
+// 트위치 연동을 해제 (쪽지인증정보를 제거하는것이 아닌 creatorInfo의 연동을 제거)
+router.delete('/twitch',
+  responseHelper.middleware.checkSessionExists,
+  responseHelper.middleware.withErrorCatch(async (req, res, next) => {
+    const { creatorId } = responseHelper.getSessionData(req);
+    const query = `UPDATE creatorInfo_v2
+    SET
+      creatorTwitchOriginalId = ?, creatorName = ?, creatorTwitchId = ?,
+      creatorMail = ?, creatorLogo = ?, creatorTwitchRefreshToken = ?
+    WHERE creatorId = ?`;
+    const queryArray = [null, null, null, null, null, null, creatorId];
+    const { result } = await doQuery(query, queryArray);
+    if (result.affectedRows > 0) {
+      responseHelper.send('success', 'delete', res);
+    }
+  }));
+
+// ***********************************************************
+// 온애드 계정 연결 - 아프리카
+
 // 아프리카 쪽지 인증 기록 조회
-router.get('/afreeca',
+router.get('/afreeca/cert',
   responseHelper.middleware.checkSessionExists,
   responseHelper.middleware.withErrorCatch(async (req, res, next) => {
     const { creatorId } = responseHelper.getSessionData(req);
@@ -40,7 +61,7 @@ router.get('/afreeca',
     }
   }));
 // 아프리카 쪽지 인증을 이용한 채널 연동
-router.post('/afreeca',
+router.post('/afreeca/cert',
   responseHelper.middleware.checkSessionExists,
   responseHelper.middleware.withErrorCatch(async (req, res, next) => {
     const { creatorId } = responseHelper.getSessionData(req);
@@ -107,7 +128,7 @@ router.post('/afreeca',
   }));
 
 // 아프리카 쪽지 인증 취소
-router.delete('/afreeca',
+router.delete('/afreeca/cert',
   responseHelper.middleware.checkSessionExists,
   responseHelper.middleware.withErrorCatch(async (req, res, next) => {
     const { creatorId } = responseHelper.getSessionData(req);
@@ -119,6 +140,22 @@ router.delete('/afreeca',
     }
   }));
 
+// 아프리카 연동을 해제 (쪽지인증정보를 제거하는것이 아닌 creatorInfo의 연동을 제거)
+router.delete('/afreeca',
+  responseHelper.middleware.checkSessionExists,
+  responseHelper.middleware.withErrorCatch(async (req, res, next) => {
+    const { creatorId } = responseHelper.getSessionData(req);
+    const query = `UPDATE creatorInfo_v2
+    SET afreecaId = ?, afreecaName = ?, afreecaLogo = ?, afreecaRefreshToken = ?
+    WHERE creatorId = ?`;
+    const queryArray = [null, null, null, null, creatorId];
+    const { result } = await doQuery(query, queryArray);
+    if (result.affectedRows > 0) {
+      responseHelper.send('success', 'delete', res);
+    }
+  }));
+
+// ***************************************************************
 // 향후 아프리카 open api를 통한 로그인에서 사용됨. from 2020 12 25 hwasurr
 // creator - afreeca oauth 로그인
 router.get('/afreeca/nextversion', (req, res) => {

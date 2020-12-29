@@ -70,7 +70,7 @@ function ProfileCard({ profileData }: ProfileCardProps): JSX.Element {
 
           <TextFieldWithLabel title="이용동의상태">
             <TextField
-              value={profileData.creatorContractionAgreement === 1 ? '이용동의완료' : '미동의'}
+              value={profileData.creatorContractionAgreement === 1 ? '이용동의완료✔️' : '미동의'}
               margin="normal"
               disabled
               InputProps={{ readOnly: true, style: { padding: 0 } }}

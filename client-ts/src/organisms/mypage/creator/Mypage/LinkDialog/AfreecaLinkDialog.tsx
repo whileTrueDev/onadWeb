@@ -5,7 +5,7 @@ import { OpenInNew } from '@material-ui/icons';
 import HOST from '../../../../../config';
 import axiosInstance from '../../../../../utils/axios';
 import CustomDialog from '../../../../../atoms/Dialog/Dialog';
-import { useDialog, useEventTargetValue } from '../../../../../utils/hooks';
+import { useDialog } from '../../../../../utils/hooks';
 import Snackbar from '../../../../../atoms/Snackbar/Snackbar';
 
 export interface AfreecaLinkData {
@@ -16,19 +16,22 @@ export interface AfreecaLinkData {
   createdAt: string;
 }
 export interface AfreecaLinkDialogProps {
+  afreecaId: {
+    value: string;
+    handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  };
   open: boolean;
   onClose: () => void;
   afreecaLinkData?: AfreecaLinkData;
   afreecaLinkDataRefetch: () => void;
 }
 export default function AfreecaLinkDialog({
+  afreecaId,
   open,
   onClose,
   afreecaLinkData,
   afreecaLinkDataRefetch,
 }: AfreecaLinkDialogProps): JSX.Element {
-  // 연동하고자 하는 아프리카 ID (사용자입력)
-  const afreecaId = useEventTargetValue();
   // 아프리카 연동 인증번호
   const [certCode, setCertCode] = useState('');
   function handleCertCode(cert: string): void {
@@ -45,8 +48,8 @@ export default function AfreecaLinkDialog({
   const failsnack = useDialog();
   // 아프리카 연동 요청
   function handleAfreecaClick(): void {
-    axiosInstance.post(`${HOST}/link/afreeca`, {
-      afreecaId: 'orangene11'
+    axiosInstance.post(`${HOST}/link/afreeca/cert`, {
+      afreecaId: afreecaId.value
     })
       .then((res) => {
         // 아프리카 연동 요청 목록 재요청 (parent 컴포넌트를 위해)
