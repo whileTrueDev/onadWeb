@@ -7,10 +7,12 @@ import Kakao from 'passport-kakao';
 // DB 커넥션 쿼리 함수
 import doQuery from '../../../model/doQuery';
 // 암호화 체크 객체 생성
-import encrpyto from '../../encryption';
+import encrpyto from '../../../middlewares/encryption';
 // type
 import { Session } from '../../../@types/session';
 import makeAdvertiseUrl from '../../../lib/makeAdvertiseUrl';
+import twitchUpdate from './funcs/twitchUpdate';
+import afreecaUpdate from './funcs/afreecaUpdate';
 
 /**
  * @author 박찬우
@@ -30,22 +32,24 @@ import makeAdvertiseUrl from '../../../lib/makeAdvertiseUrl';
  * 3. 구동방식
  *   - 추후에 비밀번호 및 ID에 대한 오류 수정.
  */
-const local = (
+const local = async (
   req: express.Request,
   userid: string, passwd: string,
   done: (error: any, user?: any, options?: any) => void
-): void => {
+): Promise<void> => {
   const { type } = req.body;
   switch (type) {
     case 'creator': {
-      console.log('creator new 통합 Login request');
+      console.log(`creator new 통합 Login request - ${userid}`);
       const query = `
-      SELECT creatorId, loginId, password, passwordSalt, creatorName, creatorMail, advertiseUrl, creatorContractionAgreement,
-      creatorTwitchId, creatorLogo, arrested, noticeReadState, adChatAgreement, settlementState
+      SELECT creatorId, loginId, password, passwordSalt, advertiseUrl, creatorContractionAgreement,
+      arrested, noticeReadState, adChatAgreement, settlementState,
+      creatorName, creatorMail, creatorTwitchId, creatorLogo,  creatorTwitchRefreshToken, creatorTwitchOriginalId,
+      afreecaId, afreecaName, afreecaLogo
       FROM creatorInfo_v2 WHERE loginId = ?`;
       const queryArray = [userid];
-      doQuery(query, queryArray)
-        .then((row) => {
+      await doQuery(query, queryArray)
+        .then(async (row) => {
           if (row.result.length > 0) {
             const creator = row.result[0];
             if (encrpyto.check(passwd, creator.password, creator.passwordSalt)) {
@@ -54,6 +58,22 @@ const local = (
                 creatorId: creator.creatorId,
                 creatorIp: creator.creatorIp,
               };
+
+              // 트위치 연동한 상태라면, 트위치 연동 정보 최신화
+              if (creator.creatorTwitchOriginalId) {
+                await twitchUpdate(creator).then((result) => {
+                  if (result === 'success') console.log(`트위치 연동 정보 최신화 성공 - ${userid}`);
+                  if (result === 'fail') console.log(`트위치 연동 정보 최신화 실패 - ${userid}`);
+                }).catch((err) => console.error(`트위치 연동 정보 최신화 실패 - ${err}`));
+              }
+
+              if (creator.afreecaId) {
+                await afreecaUpdate(creator).then((result) => {
+                  if (result === 'success') console.log(`아프리카 연동 정보 최신화 성공 - ${userid}`);
+                  if (result === 'fail') console.log(`아프리카 연동 정보 최신화 실패 - ${userid}`);
+                }).catch((err) => console.error(`아프리카 연동 정보 최신화 실패 - ${err}`));
+              }
+
               return done(null, user);
             }
             console.log(`${creator.loginId} 비밀번호가 일치하지 않습니다.`);
@@ -171,11 +191,12 @@ const creatorTwitch = (
   doQuery(selectQuery, [user.creatorId])
     .then((row): void => {
       const creatorData = row.result[0];
+      // 기존 유저 로그인 시
       if (creatorData) {
         console.log(`[${new Date().toLocaleString()}] [크리에이터트위치로그인] ${user.creatorDisplayName}`);
         user.creatorIp = creatorData.creatorIp;
 
-        // Data 변경시에 변경된 값을 반영하는 영역.
+        // 트위치 Data 변경시에 변경된 값을 반영하는 영역.
         if (!(creatorData.creatorName === user.creatorDisplayName
           && creatorData.creatorMail === user.creatorMail)) {
           // 크리에이터의 name 또는 email 이 바뀐 경우 재설정
@@ -243,6 +264,7 @@ const creatorTwitch = (
         }
         return done(null, user);
       }
+      // 최초 로그인 시
       console.log(`${user.creatorDisplayName} 님이 최초 로그인 하셨습니다.`);
       const creatorIp = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
       const campaignList = JSON.stringify({ campaignList: [] });

@@ -8,7 +8,7 @@ import createError from 'http-errors';
 import session from 'express-session';
 import morgan from 'morgan';
 // import checkAuthOnReq from './middlewares/auth/checkAuthOnReq';
-import passport from './middlewares/auth/passport';
+import passport from './routes/auth/passport';
 // Routers
 import alimtalkRouter from './routes/alimtalk';
 import creatorRouter from './routes/creator';
