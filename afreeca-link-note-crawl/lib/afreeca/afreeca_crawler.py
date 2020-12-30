@@ -30,8 +30,9 @@ class AfreecaNoteCrawler:
 
         # Driver 옵션 설정
         self.driver_options = webdriver.ChromeOptions()
-        # self.driver_options.add_argument('headless')
-        self.driver_options.add_experimental_option("excludeSwitches", ["enable-logging"])
+        self.driver_options.add_argument('headless')
+        self.driver_options.add_experimental_option(
+            "excludeSwitches", ["enable-logging"])
         self.driver_options.add_argument('disable-gpu')
         self.driver_options.add_argument('--no-sandbox')
         self.driver_options.add_argument('--mute-audio')
@@ -39,7 +40,7 @@ class AfreecaNoteCrawler:
         self.logger.info('크롬드라이버 생성 시작')
         # Driver 설정
         self.driver = webdriver.Chrome(
-            driver_path, options=self.driver_options)
+            executable_path=driver_path, options=self.driver_options)
 
         self.login_id = config.AFREECA_LOGIN_ID
         self.password = config.AFREECA_LOGIN_PASSWORD
@@ -139,20 +140,24 @@ class AfreecaNoteCrawler:
     def __do_failed_note_read(self, notes):
         self.logger.info('1시간 이상 지난 인증 실패한 쪽지 읽음 처리 시작')
         ONE_HOUR = 3600
-        
+
         for note in notes:
-            note_created_at = moment.date(note['created_at'], "YY-MM-DD [HH:mm]")
+            note_created_at = moment.date(
+                note['created_at'], "YY-MM-DD [HH:mm]")
             time_delta = moment.now() - note_created_at
             # 1시간 이상 지난 쪽지인 경우
             if time_delta.total_seconds() > ONE_HOUR:
                 self.driver.get(note['note_url'])
                 self.logger.info(note['username'] + ' 쪽지 데이터 읽음 처리 완료')
-                
+
                 # 1시간 이상 지난 쪽지를 afreecaLinkCertification목록에서 삭제하는 작업
-                self.logger.info(note['afreecaId'] + ' 1시간 이상 지난 인증 실패한 cert 삭제 처리 시작')
+                self.logger.info(note['afreecaId'] +
+                                 ' 1시간 이상 지난 인증 실패한 cert 삭제 처리 시작')
                 target_time = moment.now().subtract(hours=1).date
-                self.db_controller.delete_link_cert(note['afreecaId'], target_time)
-                self.logger.info(note['afreecaId'] + ' 1시간 이상 지난 인증 실패한 cert 삭제 처리 완료')
+                self.db_controller.delete_link_cert(
+                    note['afreecaId'], target_time)
+                self.logger.info(note['afreecaId'] +
+                                 ' 1시간 이상 지난 인증 실패한 cert 삭제 처리 완료')
 
                 time.sleep(2)
 
@@ -175,9 +180,9 @@ class AfreecaNoteCrawler:
 
     def __check_code(self, notes):
         self.logger.info('인증코드 체크 시작')
-        verified_note_list = [] # 인증완료된 쪽지 목록
-        verified_cert_list = [] # 인증완료된 인증요청 row 목록
-            
+        verified_note_list = []  # 인증완료된 쪽지 목록
+        verified_cert_list = []  # 인증완료된 인증요청 row 목록
+
         for item in self.cert_list:
             for note in notes:
                 if item.afreecaId == note['afreecaId'] and item.tempCode in note['note_contents']:

@@ -16,6 +16,8 @@ def get_driver_path():
     '''
     if sys.platform == 'darwin':
         return join(ROOT_PATH, 'driver', 'darwin', 'chromedriver')
+    elif sys.platform == 'linux':
+        return join(ROOT_PATH, 'driver', 'linux', 'chromedriver')
     elif sys.platform == 'win32':
         return join(ROOT_PATH, 'driver', 'windows', 'chromedriver.exe')
 
@@ -23,7 +25,7 @@ def get_driver_path():
 def run():
     # *****************************************************
     # logger 설정
-    FORMAT="[%(asctime)s]:%(levelname)s: %(filename)s | %(funcName)s - %(message)s"
+    FORMAT = "[%(asctime)s]:%(levelname)s: %(filename)s | %(funcName)s - %(message)s"
     logging.basicConfig(format=FORMAT)
     logger = logging.getLogger(__name__)
     logger.setLevel(logging.DEBUG)
