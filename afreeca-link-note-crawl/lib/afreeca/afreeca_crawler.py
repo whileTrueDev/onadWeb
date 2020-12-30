@@ -34,8 +34,12 @@ class AfreecaNoteCrawler:
         self.driver_options.add_experimental_option(
             "excludeSwitches", ["enable-logging"])
         self.driver_options.add_argument('disable-gpu')
-        self.driver_options.add_argument('--no-sandbox')
         self.driver_options.add_argument('--mute-audio')
+        self.driver_options.add_argument('--no-sandbox')
+        self.driver_options.add_argument('--disable-dev-shm-usage')
+        self.driver_options.add_argument('--disable-extensions')
+        self.driver_options.add_argument('--disable-infobars')
+        self.driver_options.add_argument('--silent')
 
         self.logger.info('크롬드라이버 생성 시작')
         # Driver 설정

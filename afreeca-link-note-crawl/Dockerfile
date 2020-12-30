@@ -10,6 +10,10 @@ FROM python:3.8-slim-buster
 
 LABEL Name=afreeca_link_note_crawler Version=0.0.3
 
+# timezone 설정
+ENV TZ=Asia/Seoul
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+# env 설정
 ENV PYTHON_ENV production
 
 WORKDIR /app

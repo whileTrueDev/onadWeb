@@ -1,12 +1,15 @@
-import { Button, TextField, Typography } from '@material-ui/core';
+import {
+  Button, TextField, Typography,
+} from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
 import React, { useEffect, useState } from 'react';
-import { OpenInNew } from '@material-ui/icons';
+import { OpenInNew, Refresh } from '@material-ui/icons';
 import HOST from '../../../../../config';
 import axiosInstance from '../../../../../utils/axios';
 import CustomDialog from '../../../../../atoms/Dialog/Dialog';
 import { useDialog } from '../../../../../utils/hooks';
 import Snackbar from '../../../../../atoms/Snackbar/Snackbar';
+import copyToClipboard from '../../../../../utils/copyToClipboard';
 
 export interface AfreecaLinkData {
   tempCode: string;
@@ -32,6 +35,8 @@ export default function AfreecaLinkDialog({
   afreecaLinkData,
   afreecaLinkDataRefetch,
 }: AfreecaLinkDialogProps): JSX.Element {
+  const AFREECA_ONAD_ID_LINK_NOTE = '온애드 (kmotiv)';
+
   // 아프리카 연동 인증번호
   const [certCode, setCertCode] = useState('');
   function handleCertCode(cert: string): void {
@@ -43,7 +48,6 @@ export default function AfreecaLinkDialog({
       setCertCode(afreecaLinkData.tempCode);
     }
   }, [afreecaLinkData]);
-
 
   const failsnack = useDialog();
   // 아프리카 연동 요청
@@ -72,6 +76,14 @@ export default function AfreecaLinkDialog({
         console.error('err');
       });
   }
+
+  // 쪽지 바로 보내기 버튼 클릭 여부
+  const [isClicked, setIsClicked] = useState(false);
+  function handleButtonClicked() {
+    setIsClicked(!isClicked);
+  }
+
+  const copySnack = useDialog();
 
   return (
     <CustomDialog
@@ -123,31 +135,59 @@ export default function AfreecaLinkDialog({
           <Typography variant="body2">
             아래 인증번호를 &quot;
             <Typography component="span" color="error">
-              kmotiv
+              {AFREECA_ONAD_ID_LINK_NOTE}
             </Typography>
             &quot; 에게 쪽지로 보내주세요.
           </Typography>
-          <Typography variant="caption">- 온애드에서 쪽지를 인증하기까지 5분정도 시간이 걸릴 수 있습니다.</Typography>
+          <Typography variant="body2">쪽지를 보낸 이후 3~5분 정도 기다려 주세요.</Typography>
+          <Typography variant="caption">- 온애드에서 쪽지를 인증하기까지 5분 정도 시간이 걸릴 수 있습니다.</Typography>
           <br />
-          <Typography variant="caption">- 현재 창을 닫아도 인증은 진행됩니다.</Typography>
+          <Typography variant="caption">- 현재 창을 닫고 새로고침 버튼을 눌러 경과를 확인할 수 있습니다.</Typography>
           <div style={{ textAlign: 'center', margin: '16px 0px' }}>
-            <Typography
-              variant="body1"
-              style={{ textDecoration: 'underline', fontWeight: 'bold' }}
-            >
-              {certCode}
-            </Typography>
+            <TextField
+              fullWidth
+              value={certCode}
+              id="afreeca-cert-code"
+              helperText="인증번호 클릭시 복사됩니다."
+              onClick={(e): void => copyToClipboard(e, 'afreeca-cert-code', copySnack.handleOpen)}
+            />
           </div>
+
+          {/* 아프리카 쪽지창으로 이동하기 버튼 */}
           <Button
             style={{ marginTop: 8 }}
             variant="contained"
             color="primary"
             fullWidth
-            onClick={() => { window.open('http://note.afreecatv.com/app/index.php'); }}
+            onClick={() => {
+              window.open('http://note.afreecatv.com/app/index.php?page=write');
+              handleButtonClicked();
+            }}
           >
-            아프리카TV 쪽지창으로 이동
+            쪽지 바로 보내기
             <OpenInNew fontSize="small" />
           </Button>
+
+          {isClicked && (
+            <div style={{ marginTop: 8 }}>
+              <Typography variant="body2">쪽지를 올바르게 보내셨다면 창을 닫고 잠시 기다려주세요.</Typography>
+              <Typography variant="body2">
+                <Typography variant="body2" component="span" color="primary">
+                  새로고침
+                  <Refresh fontSize="small" />
+                </Typography>
+                버튼을 통해 경과를 확인할 수 있습니다.
+              </Typography>
+              <Button
+                style={{ marginTop: 8, float: 'right' }}
+                variant="contained"
+                color="default"
+                onClick={onClose}
+              >
+              창닫기
+              </Button>
+            </div>
+          )}
         </Alert>
         )}
       </div>
@@ -159,6 +199,25 @@ export default function AfreecaLinkDialog({
         message="인증번호를 발급하는 중 오류가 발생했습니다. 잠시후 다시 시도해 주세요"
       />
 
+
+      <Snackbar
+        open={copySnack.open}
+        onClose={copySnack.handleClose}
+        color="success"
+        message={(
+          <Typography variant="body2">
+            인증번호가 복사되었습니다.
+            &nbsp;
+            <Typography variant="body2" component="span" style={{ fontWeight: 'bold' }}>
+              &quot;
+              {AFREECA_ONAD_ID_LINK_NOTE}
+              &quot;
+            </Typography>
+            &nbsp;
+            에게 복사된 인증번호를 쪽지로 보내주세요.
+          </Typography>
+        )}
+      />
     </CustomDialog>
   );
 }
