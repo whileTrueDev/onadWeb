@@ -10,14 +10,21 @@ const FEERATE = 0.5;
 // const FEERATE = 1;
 
 
+// *************************************************************
+// 피계산 유저 및 유저 정보(시청자 수, 유저별 단가 등) 검색 함수 모음
+// @주석작성  hwasurr 2020.12.31
+// *************************************************************
+
 // 현재시간은 5분, crawler가 활동하는 시기는 0분 타이밍이므로 10분을 깎아서
 const getcreatorList = ({ date }) => {
+  // 기준 시간 안에, 방송을 진행한 크리에이터 목록
   const streamerListQuery = `
   SELECT B.streamerId
   FROM (SELECT * FROM twitchStreamDetail WHERE time > ?) AS A
   LEFT JOIN twitchStream AS B
   ON A.streamId = B.streamId `;
 
+  // 광고 배너 송출 기록 조회 쿼리
   const bannerListQuery = `
   SELECT RT.creatorId, RT.campaignId
   FROM
@@ -39,19 +46,19 @@ const getcreatorList = ({ date }) => {
   WHERE NOT campaign.limitState = 1
   GROUP BY creatorId`;
 
-  // 제약조건 추가. 계산하는 시간 내 OFF 버튼 존재시 그냥 해당 시점 밴
+  // 제약조건 추가. 계산하는 시간 내 광고 오버레이 OFF 버튼 존재시 그냥 해당 시점 밴
   const offListQuery = `
-  select creatorId
-  from (
-  select advertiseUrl
-  from bannerVisible
-  where date > ?
-  and type = 1
-  and visibleState = 0
-  ) as URL
-  left join creatorInfo
-  on URL.advertiseUrl = creatorInfo.advertiseUrl
-  group by creatorId
+  SELECT creatorId
+    FROM (
+    SELECT advertiseUrl
+    FROM bannerVisible
+    WHERE date > ?
+    AND type = 1
+    AND visibleState = 0
+    ) AS URL
+  LEFT JOIN creatorInfo
+  ON URL.advertiseUrl = creatorInfo.advertiseUrl
+  GROUP BY creatorId
   `;
 
   return new Promise((resolve, reject) => {
@@ -201,6 +208,12 @@ const getStreamList = ({
   })
 );
 
+
+// *************************************************************
+// 계산 작업 모음. 크리에이터 계산. 마케터 계산, 캠페인 계산
+// @주석작성  hwasurr 2020.12.31
+// *************************************************************
+
 // 커넥션으로 warpping한다.
 // func, params로 나뉘어 전달받아 커넥션을 전달함.
 // func : 커넥션을 반환 받아 쿼리문을 수행할 함수
@@ -224,6 +237,7 @@ const connectionWarp = ({ func, params }) => new Promise((resolve, reject) => {
   });
 });
 
+// 크리에이터 수익금 추가 처리
 const creatorCalculate = ({ connection, price, creatorId }) => {
   const searchQuery = `
   SELECT creatorId, creatorTotalIncome, creatorReceivable 
@@ -276,6 +290,7 @@ const creatorCalculate = ({ connection, price, creatorId }) => {
   });
 };
 
+// 마케터 광고 캐시 차감 처리
 const marketerCalculate = ({ connection, campaignId, price }) => {
   const marketerId = campaignId.split('_')[0];
   const queryState = `
@@ -285,6 +300,7 @@ const marketerCalculate = ({ connection, campaignId, price }) => {
   return doTransacQuery({ connection, queryState, params: [price, marketerId] });
 };
 
+// 캠페인 광고 로그 처리
 const campaignCalculate = ({
   connection, creatorId, campaignId, cashFromMarketer, cashToCreator, viewer
 }) => {
@@ -295,6 +311,12 @@ const campaignCalculate = ({
   return doTransacQuery({ connection, queryState, params: [campaignId, creatorId, 'CPM', cashFromMarketer, cashToCreator, viewer] });
 };
 
+// *************************************************************
+// Next 계산. (광고비 소진 처리, 캠페인 별 일일예산 처리)
+// @주석작성  hwasurr 2020.12.31
+// *************************************************************
+
+// 광고 소진 처리 및 광고 10000원 이하 소진 임박 처리
 const marketerZeroCalculate = ({ connection, marketerId }) => {
   const marketerDebitQuery = `
   SELECT cashAmount, warning
@@ -306,12 +328,14 @@ const marketerZeroCalculate = ({ connection, marketerId }) => {
   SET cashAmount = 0 
   WHERE marketerId = ? `;
 
+  // 해당 마케터의 모든 캠페인 광고상태 off
   const campaignSetQuery = `
   UPDATE campaign 
   SET onOff = 0  
   WHERE SUBSTRING_INDEX(campaignId, '_' , 1) = ?
   `;
 
+  // 마케터 광고상태 off
   const marketerSetQuery = `
   UPDATE marketerInfo
   SET marketerContraction = 0
@@ -395,6 +419,7 @@ const zeroCalculateConnectionWarp = ({ marketerList }) => new Promise((resolve, 
   });
 });
 
+// 캠페인별 일일 예산 처리
 const dailyLimitCalculate = ({ connection, campaignId }) => {
   const campaignDailyLimitQuery = `
   SELECT optionType, dailyLimit
@@ -462,7 +487,15 @@ const dailyLimitCalculateConnectionWarp = ({ campaignList }) => new Promise((res
   });
 });
 
+// *************************************************************
+// 계산 작업 단위 함수 ( 계산 시작 / 계산 후 처리 시작 )
+// @주석작성  hwasurr 2)020.12.31
+// *************************************************************
 
+/**
+ * 실 광고 송출 수익금 계산 작업
+ * @param {Object} 계산 진행할 대상
+ */
 const calculateConnectionWrap = ({
   creatorId, campaignId, cashFromMarketer, cashToCreator, viewer
 }) => new Promise((resolve, reject) => {
@@ -471,10 +504,11 @@ const calculateConnectionWrap = ({
       console.log(err);
     }
     Promise.all([
-      creatorCalculate({
-        connection, price: cashToCreator, creatorId
-      }),
+      // 크리에이터 수익금 추가 처리 (creatorIncome)
+      creatorCalculate({ connection, price: cashToCreator, creatorId }),
+      // 마케터 광고캐시 차감 처리 (marketerDebit)
       marketerCalculate({ connection, campaignId, price: cashFromMarketer }),
+      // 광고 진행 로그 처리 (campaignLog)
       campaignCalculate({
         connection, creatorId, campaignId, cashFromMarketer, cashToCreator, viewer
       })
@@ -490,7 +524,7 @@ const calculateConnectionWrap = ({
   });
 });
 
-// next calculation
+// 계산 이후 처리 작업 ( 소진 처리, 일일 예산 처리 )
 const nextCalculate = ({ marketerList, campaignList }) => new Promise((resolve, reject) => {
   setTimeout(() => {
     Promise.all([
@@ -506,8 +540,16 @@ const nextCalculate = ({ marketerList, campaignList }) => new Promise((resolve, 
   }, 30000);
 });
 
+// *************************************************************
+// 계산 작업 시작. 계산 작업 함수들을 조합하여 사용함.
+// @주석작성  hwasurr 2020.12.31
+// *************************************************************
 
-// 계산프로그램시 필요한 함수
+/**
+ * 기준 날짜를 통해 계산 대상 목록을 반환합니다.  
+ * 계산대상은 기준 날짜 이전에 방송을 진행하였으며, 해당 방송의 시청자수가 0이 아니며, 온애드 광고를 송출한 크리에이터 목록입니다.
+ * @param {Date} date 계산 대상 목록을 가져올 기준 날짜
+ */
 async function getList(date) {
   // 계산할 대상을 탐색하는 함수.
   const creatorList = await getcreatorList({ date });
@@ -524,6 +566,9 @@ async function getList(date) {
   return returnList;
 }
 
+/**
+ * CPM 배너광고 계산 실행 함수
+ */
 const calculationPromise = async () => {
   const date = new Date();
   date.setMinutes(date.getMinutes() - 10);
