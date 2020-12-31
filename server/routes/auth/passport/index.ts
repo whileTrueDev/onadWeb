@@ -48,7 +48,7 @@ passport.use(new Twitch.Strategy(
   {
     clientID: process.env.TWITCH_CLIENT_ID!,
     clientSecret: process.env.TWITCH_CLIENT_SECRET!,
-    callbackURL: `${HOST}/login/twitch/callback`,
+    callbackURL: `${HOST}/login/twitch/pre-creator/callback`,
     scope: 'user:read:email', // user:read:email
     authorizationURL: 'https://id.twitch.tv/oauth2/authorize',
     tokenURL: 'https://id.twitch.tv/oauth2/token',

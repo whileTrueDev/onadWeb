@@ -112,17 +112,25 @@ export default function CreatorLoginForm({
           <Divider style={{ marginTop: 16, marginBottom: 16 }} />
 
           <div style={{ margin: 16 }}>
-            <Typography variant="body2" onClick={(): void => history.push('/creator/signup')}>
+            <Typography variant="body2">
               온애드 계정이 없으신가요?&nbsp;
-              <span style={{ color: 'red', textDecoration: 'underline', cursor: 'pointer' }}>
+              <Typography
+                component="span"
+                onClick={(): void => history.push('/creator/signup')}
+                style={{ color: 'red', textDecoration: 'underline', cursor: 'pointer' }}
+              >
                 가입하기
-              </span>
+              </Typography>
             </Typography>
-            <Typography variant="body2" onClick={() => history.push('/creator/signup/pre-user')}>
+            <Typography variant="body2">
               트위치 계정 로그인 방식으로 온애드를 사용했었나요?&nbsp;
-              <span style={{ color: 'red', textDecoration: 'underline', cursor: 'pointer' }}>
+              <Typography
+                component="span"
+                onClick={(): void => history.push('/creator/signup/pre-user')}
+                style={{ color: 'red', textDecoration: 'underline', cursor: 'pointer' }}
+              >
                 기존계정로그인
-              </span>
+              </Typography>
             </Typography>
           </div>
         </DialogContent>

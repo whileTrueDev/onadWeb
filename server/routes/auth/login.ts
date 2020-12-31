@@ -58,19 +58,27 @@ router.get('/kakao/callback', passport.authenticate('kakao'),
 // creator - twitch -> 기존 크리에이터 유저의 새로운 로그인 방식 처리
 // 기존 아이디에 로그인용 아이디 비번 생성
 router.get('/twitch/pre-creator', passport.authenticate('twitch-pre-creator'));
-router.get('/twitch/pre-creator/callback', passport.authenticate('twitch-pre-creator'),
-  (req, res) => {
-    const { creatorId, creatorName, accessToken } = req.user as any;
-    res.redirect([
-      `${HOST}/creator/signup/pre-user`,
-      `?creatorId=${creatorId}`,
-      `&creatorName=${creatorName}`,
-      `&accessToken=${accessToken}`
-    ].join(''));
-  });
+router.route('/twitch/pre-creator/callback')
+  .get(
+    passport.authenticate('twitch-pre-creator'),
+    (req, res) => {
+      const { creatorId, creatorName, accessToken } = req.user as any;
+      res.redirect([
+        `${HOST}/creator/signup/pre-user`,
+        `?creatorId=${creatorId}`,
+        `&creatorName=${creatorName}`,
+        `&accessToken=${accessToken}`
+      ].join(''));
+    }
+  )
+  // exception filter 역할의 에러 처리 미들웨어
+  .get((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
+    console.log(err);
+    if (err.message) {
+      res.redirect(`${HOST}/creator/signup/pre-user?${err.message}&platform=twitch`);
+    } else res.redirect(`${HOST}/creator/signup/pre-user?error=error&platform=twitch`);
+  },);
 
-
-// creator - afreeca 로그인
 
 router.route('/check')
   .get(

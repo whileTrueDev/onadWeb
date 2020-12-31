@@ -16,16 +16,14 @@ router.get('/twitch', passport.authenticate('twitch-link'));
 router.route('/twitch/callback')
   .get(
     passport.authenticate('twitch-link'),
-    (req, res, next) => {
-      res.redirect(`${HOST}/mypage/creator/user`);
-    }
+    (req, res) => { res.redirect(`${HOST}/mypage/creator/user`); }
   )
   // exception filter 역할의 에러 처리 미들웨어
   .get((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
     if (err.message) {
       res.redirect(`${HOST}/mypage/creator/user?${err.message}&platform=twitch`);
     } else res.redirect(`${HOST}/mypage/creator/user?error=error&platform=twitch`);
-  },);
+  });
 
 
 // 트위치 연동을 해제 (쪽지인증정보를 제거하는것이 아닌 creatorInfo의 연동을 제거)

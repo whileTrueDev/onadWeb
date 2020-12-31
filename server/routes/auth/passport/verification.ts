@@ -485,6 +485,7 @@ const creatorTwitchPreCreator = (
   doQuery(searchQuery, searchArray).then((row) => {
     if (row.result.length > 0) {
       done(null, {
+        userType: 'creator',
         accessToken,
         creatorId: row.result[0].creatorId,
         creatorName: row.result[0].creatorName,
