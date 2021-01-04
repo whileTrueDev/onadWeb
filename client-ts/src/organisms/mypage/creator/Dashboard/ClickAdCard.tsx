@@ -66,7 +66,6 @@ const ClickAdCard = ({
           </div>
           <div className={classes.flex}>
             <Typography gutterBottom variant="h5" className={classnames(classes.text, classes.bold)}>
-              {clicksData.adchat.toLocaleString()}
               {`${numFormatter(clicksData.adchat ? clicksData.adchat : 0)} 회`}
             </Typography>
           </div>
