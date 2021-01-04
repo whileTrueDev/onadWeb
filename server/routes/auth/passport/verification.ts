@@ -478,12 +478,17 @@ const creatorTwitchPreCreator = (
 ): void => {
   // 이전에 트위치 로그인을 사용해 사용했던 크리에이터를 찾는다. V
   // 프론트로 보낸다. ( 크리에이터 아이디/이름과 엑세스 토큰을 ) V
-
   const searchQuery = `
   SELECT creatorId, creatorName FROM creatorInfo_v2 WHERE creatorId = ? LIMIT 1`;
   const searchArray = [profile.id];
   doQuery(searchQuery, searchArray).then((row) => {
     if (row.result.length > 0) {
+      // 해당 크리에이터의 twitch api 리프레시 토큰 삽입
+      const updateRefreshTokenQuery = `
+      UPDATE creatorInfo_v2 SET creatorTwitchRefreshToken = ? WHERE creatorId = ?
+      `;
+      doQuery(updateRefreshTokenQuery, [refreshToken, profile.id]);
+
       done(null, {
         userType: 'creator',
         accessToken,
