@@ -662,6 +662,7 @@ async function getList(date) {
 
 /**
  * CPM 배너광고 계산 실행 함수
+ * 아프리카 tv 연동 추가. 아프리카 tv 시청자수 까지 반영하여 계산 작업 실행.
  */
 const calculationPromise = async () => {
   const date = new Date();
