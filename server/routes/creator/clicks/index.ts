@@ -53,7 +53,7 @@ router.route('/current')
         ORDER BY clickedTime DESC
         LIMIT ?, ?
       `;
-      const queryArray = [creatorId, Number(page), Number(offset)];
+      const queryArray = [creatorId, Number(page) * Number(offset), Number(offset)];
 
       interface CurrentClickQueryRes {
         id: string; clickedTime: string; costType: string; linkId: string;

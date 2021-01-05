@@ -63,8 +63,9 @@ export default function AdClickCard({
     }
   }
   // 최근 클릭 로그 조회
+  const CURRENT_CLICK_OFFSET = 3;
   const currentClickGet = useGetRequest<{offset: number; page: number}, CurrentClickRes[]>(
-    '/creator/clicks/current', { offset: 3, page: 0 }
+    '/creator/clicks/current', { offset: CURRENT_CLICK_OFFSET, page: 0 }
   );
 
   const renderClickChannel = (type: string): string => {
@@ -176,7 +177,10 @@ export default function AdClickCard({
                 onClick={(): void => {
                   if (currentClicksPage > 0) {
                     handleBack();
-                    currentClickGet.doGetRequest({ offset: 3, page: currentClicksPage - 1 });
+                    currentClickGet.doGetRequest({
+                      offset: CURRENT_CLICK_OFFSET,
+                      page: currentClicksPage - 1
+                    });
                   }
                 }}
               >
@@ -190,7 +194,10 @@ export default function AdClickCard({
                 onClick={(): void => {
                   if (currentClickGet.data && currentClickGet.data.length > 2) {
                     handleNext();
-                    currentClickGet.doGetRequest({ offset: 3, page: currentClicksPage + 1 });
+                    currentClickGet.doGetRequest({
+                      offset: CURRENT_CLICK_OFFSET,
+                      page: currentClicksPage + 1
+                    });
                   }
                 }}
               >
