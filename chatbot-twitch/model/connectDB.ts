@@ -28,8 +28,8 @@ export interface Campaign extends CampaignQueryResult {
 function getContratedCreators(): Promise<ContractedCreatorsResult[]> {
   const getContractedChannelsQuery = `
   SELECT creatorTwitchId, adChatAgreement
-    FROM creatorInfo
-    WHERE creatorContractionAgreement = 1`;
+    FROM creatorInfo_v2
+    WHERE creatorTwitchId IS NOT NULL AND creatorTwitchId != "" AND creatorContractionAgreement = 1`;
   return doQuery<ContractedCreatorsResult[]>(getContractedChannelsQuery)
     .then((row) => {
       if (row.error || !row.result) {
