@@ -6,10 +6,6 @@ const { doConnectionQuery, doTransacQuery } = require('../model/doQuery');
 const PPP = 2;
 const FEERATE = 0.5;
 
-// 추석 이벤트 가격 수정
-// const FEERATE = 1;
-
-
 // *************************************************************
 // 피계산 유저 및 유저 정보(시청자 수, 유저별 단가 등) 검색 함수 모음
 // @주석작성  hwasurr 2020.12.31
@@ -129,9 +125,7 @@ const getcreatorList = ({ date }) => {
  * 특정 크리에이터의 트위치 시청자수 가져오는 함수
  * @param {object} param0 커넥션, 크리에이터아이디
  */
-const getTwitchViewer = ({
-  connection, creatorId
-}) => {
+const getTwitchViewer = ({ connection, creatorId }) => {
   // 해당 creatorId의 creatorOriginalId 를 통해 최신 streamId를 가져온다.
   const streamIdQuery = `
   SELECT streamId FROM twitchStream
@@ -149,22 +143,23 @@ const getTwitchViewer = ({
   // transction을 하는 이유는 쓰기에 대한 오류를 범하지 않기 위해서이므로 읽기에는 사용하지 않는다.
   return new Promise((resolve, reject) => {
     connection.query(streamIdQuery, [creatorId], (err1, result) => {
-      if (err1) {
-        reject(err1);
+      if (err1) reject(err1);
+      if (!(result.length > 0)) resolve(0); // 트위치 스트리밍 데이터가 없는 경우 0 처리
+      else {
+        const { streamId } = result[0];
+        connection.query(viewerQuery, [streamId], (err2, result1) => {
+          if (err2) {
+            reject(err2);
+          }
+          // stamp에 찍혀있더라도 존재하지 않는 경우가 존재한다.
+          if (result1.length !== 0) {
+            const { viewer } = result1[0];
+            resolve(viewer);
+          } else {
+            resolve(0);
+          }
+        });
       }
-      const { streamId } = result[0];
-      connection.query(viewerQuery, [streamId], (err2, result1) => {
-        if (err2) {
-          reject(err2);
-        }
-        // stamp에 찍혀있더라도 존재하지 않는 경우가 존재한다.
-        if (result1.length !== 0) {
-          const { viewer } = result1[0];
-          resolve(viewer);
-        } else {
-          resolve(0);
-        }
-      });
     });
   });
 };
@@ -173,9 +168,7 @@ const getTwitchViewer = ({
  * 특정 크리에이터의 아프리카 시청자수를 가져오는 함수
  * @param {object} param0 커넥션, 크리에이터아이디
  */
-const getAfreecaViewer = ({
-  connection, creatorId
-}) => {
+const getAfreecaViewer = ({ connection, creatorId }) => {
   // 해당 creatorId의 afreecaId 를 통해 최신 streamId를 가져온다.
   const streamIdQuery = `
   SELECT broadId AS streamId
@@ -194,22 +187,21 @@ const getAfreecaViewer = ({
   // transction을 하는 이유는 쓰기에 대한 오류를 범하지 않기 위해서이므로 읽기에는 사용하지 않는다.
   return new Promise((resolve, reject) => {
     connection.query(streamIdQuery, [creatorId], (err1, result) => {
-      if (err1) {
-        reject(err1);
+      if (err1) reject(err1);
+      if (!(result.length > 0)) resolve(0); // 아프리카 스트리밍 데이터가 없는 경우 0 처리
+      else {
+        const { streamId } = result[0];
+        connection.query(viewerQuery, [streamId], (err2, result1) => {
+          if (err2) reject(err2);
+          // stamp에 찍혀있더라도 존재하지 않는 경우가 존재한다.
+          if (result1.length !== 0) {
+            const { viewer } = result1[0];
+            resolve(viewer);
+          } else {
+            resolve(0);
+          }
+        });
       }
-      const { streamId } = result[0];
-      connection.query(viewerQuery, [streamId], (err2, result1) => {
-        if (err2) {
-          reject(err2);
-        }
-        // stamp에 찍혀있더라도 존재하지 않는 경우가 존재한다.
-        if (result1.length !== 0) {
-          const { viewer } = result1[0];
-          resolve(viewer);
-        } else {
-          resolve(0);
-        }
-      });
     });
   });
 };
