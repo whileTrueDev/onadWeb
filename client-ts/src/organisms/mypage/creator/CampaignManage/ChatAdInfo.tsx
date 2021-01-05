@@ -80,7 +80,9 @@ export default function ChatAdInfo({
           <div className={classes.onoffButton}>
             <FormControlLabel
               label="끄기/켜기"
-              disabled={!contracitonAgreementData.data.creatorContractionAgreement}
+              // 온애드 이용 동의를 안했거나, 트위치 연동을 안한 경우
+              disabled={!contracitonAgreementData.data.creatorContractionAgreement
+                || !contracitonAgreementData.data.creatorTwitchOriginalId}
               control={(
                 <Switch
                   color="primary"
@@ -93,6 +95,10 @@ export default function ChatAdInfo({
             />
             {!contracitonAgreementData.data.creatorContractionAgreement && (
             <Typography variant="body2" color="textSecondary">이용동의가 필요합니다.</Typography>
+            )}
+            {contracitonAgreementData.data.creatorContractionAgreement
+            && !contracitonAgreementData.data.creatorTwitchOriginalId && (
+            <Typography variant="body2" color="textSecondary">트위치TV 연동이 필요합니다.</Typography>
             )}
           </div>
         )}
