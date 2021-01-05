@@ -31,4 +31,4 @@ class CreatorInfo(Base):
     afreecaId = Column(String(50))
     afreecaName = Column(String(50))
     afreecaLogo = Column(String(200))
-    afreecaRefreshToken = Column(String(50))
+    afreecaRefreshToken = Column(String(200))
