@@ -30,6 +30,8 @@ export interface ContractionDataType {
   creatorTwitchId: string;
   creatorTwitchOriginalId: string;
   afreecaId: string;
+  afreecaName: string;
+  afreecaLogo: string;
   realName: string;
   creatorLogo: string;
   NowIp: string;

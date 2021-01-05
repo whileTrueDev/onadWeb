@@ -126,7 +126,7 @@ const UserInfoCard = ({
               )}
             </Typography>
             <Typography variant="body2">
-              {`${userProfileData.creatorName} ${userProfileData.creatorMail}`}
+              {`${userProfileData.creatorName || ''} ${userProfileData.creatorMail || ''}`}
             </Typography>
           </div>
           {/* 상태 칩 섹션 */}
@@ -231,7 +231,7 @@ const UserInfoCard = ({
             color="textSecondary"
             className={classes.moreButton}
             onClick={(): void => {
-              history.push('/mypage/creator/user');
+              history.push('/mypage/creator/income');
             }}
           >
             자세히 보기

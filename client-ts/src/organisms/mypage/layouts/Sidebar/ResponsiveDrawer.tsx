@@ -76,7 +76,11 @@ export default function ResponsiveDrawer(props: ResponsiveDrawerProps): JSX.Elem
   }
 
   function handleLogoClick(): void {
-    history.push('/');
+    if (window.location.pathname.indexOf('/creator')) {
+      history.push('/creator');
+    } else {
+      history.push('/marketer');
+    }
   }
 
   const drawer = (

@@ -6,7 +6,7 @@ import IconButton from '@material-ui/core/IconButton';
 // @material-ui/icons
 import Notifications from '@material-ui/icons/Notifications';
 // core components
-import { Avatar, makeStyles } from '@material-ui/core';
+import { Avatar, capitalize, makeStyles } from '@material-ui/core';
 import NotificationPopper from './sub/NotificationPopper';
 // utils
 import axios from '../../../../utils/axios';
@@ -106,7 +106,9 @@ function HeaderLinks(): JSX.Element {
             <Badge variant="dot" color="primary">
               <div>
                 {type === 'creator' && (
-                <Avatar className={classes.avatar} src={userProfileGet.data ? userProfileGet.data.creatorLogo : ''} />
+                  <Avatar className={classes.avatar} src={userProfileGet.data ? userProfileGet.data.creatorLogo || userProfileGet.data.afreecaLogo : ''}>
+                    {userProfileGet.data && userProfileGet.data.loginId ? capitalize(userProfileGet.data.loginId[0]) : ''}
+                  </Avatar>
                 )}
                 {type === 'marketer' && (
                 <Avatar className={classes.avatar}>
@@ -119,7 +121,9 @@ function HeaderLinks(): JSX.Element {
             <div>
               {/* 읽지않은 공지사항이 없는 경우 */}
               {type === 'creator' && (
-              <Avatar className={classes.avatar} src={userProfileGet.data ? userProfileGet.data.creatorLogo : ''} />
+              <Avatar className={classes.avatar} src={userProfileGet.data ? userProfileGet.data.creatorLogo || userProfileGet.data.afreecaLogo : ''}>
+                {userProfileGet.data && userProfileGet.data.loginId ? capitalize(userProfileGet.data.loginId[0]) : ''}
+              </Avatar>
               )}
               {type === 'marketer' && (
               <Avatar className={classes.avatar}>
