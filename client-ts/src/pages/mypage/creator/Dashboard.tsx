@@ -24,6 +24,7 @@ import useGetRequest from '../../../utils/hooks/useGetRequest';
 import useDialog from '../../../utils/hooks/useDialog';
 import { ContractionDataType } from './CPAManage';
 import PlatformLinkDialog from '../../../organisms/mypage/shared/PlatformLinkDialog';
+import history from '../../../history';
 
 const Dashboard = (): JSX.Element => {
   // 계약 정보 조회
@@ -53,18 +54,17 @@ const Dashboard = (): JSX.Element => {
   // 오버레이 url 복사 성공 알림 스낵바를 위한 객체
   const snack = useDialog();
 
-  // *************************** 작업중 빼둔것.
   // 출금 신청 다이얼로그
   const [open, setOpen] = React.useState(false);
   const handleOpen = (): void => {
     if (incomeCashGet.data && !(incomeCashGet.data.settlementState === 2)) {
-      alert('정산등록 신청이 승인되지 않았습니다.');
-      // history.push('/mypage/creator/user');
+      alert('정산등록 신청이 승인되지 않았습니다. 내 수익 관리 탭에서 정산 등록을 진행해주세요.');
+      history.push('/mypage/creator/income');
+    } else {
+      setOpen(true);
     }
-    setOpen(true);
   };
   const handleClose = (): void => { setOpen(false); };
-  // *************************** 작업중 빼둔것.
 
   return (
     <>

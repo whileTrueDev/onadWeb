@@ -56,16 +56,7 @@ const useWithdrawalAgreementStyles = makeStyles((theme: Theme) => ({
       padding: theme.spacing(2),
     },
   },
-  names: {
-    [theme.breakpoints.down('xs')]: {
-      fontSize: '12px',
-      fontWeight: 500,
-    },
-    [theme.breakpoints.up('sm')]: {
-      fontSize: '12px',
-      fontWeight: 700,
-    },
-  },
+  names: { lineHeight: 1.8 },
 
 }));
 
