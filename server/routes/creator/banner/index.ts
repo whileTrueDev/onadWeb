@@ -12,7 +12,8 @@ interface CampaignData {
   bannerSrc: string;
   connectedLinkId?: string;
   marketerName: string;
-  // bannerDescription?: string;
+  marketerContraction: number;
+  campaignDescription?: string;
   links?: string;
   CPM?: number;
   CPC?: number;
@@ -136,7 +137,7 @@ const getIncomePerCampaign = async ({
     console.log(errorData);
   });
 
-  return newList;
+  return newList.sort((x, y) => y.state - x.state);
 };
 
 router.route('/list')
@@ -148,12 +149,17 @@ router.route('/list')
       const [page, offset] = responseHelper.getOptionalParam(['page', 'offset'], 'get', req);
       const startNum = Number(page) * Number(offset);
 
+
+      // 마케터 onOff가 꺼진 경우, 캠페인이 켜져있다 해도, 크리에이터 입장에서는 캠페인이 꺼진 것으로 인식되어야 하므로.
+      // marketerContraction이 1이며, campaign.onOff가 1인 경우가 제일 앞으로 오도록 정렬 변경
+      // @by hwasurr, 2021. 01. 05
       const listQuery = `
       SELECT
       CT.campaignId, CT.date, CT.creatorId,
       BR.bannerSrc,
       campaign.connectedLinkId, campaign.onOff as state, campaign.marketerName,
       campaign.campaignDescription, campaign.priorityType, campaign.optionType, campaign.targetList,
+      MI.marketerContraction,
       IR.links
       FROM (
       SELECT creatorId, campaignId , min(date) as date
@@ -167,8 +173,10 @@ router.route('/list')
       ON campaign.bannerId = BR.bannerId
       LEFT JOIN linkRegistered AS IR
       ON connectedLinkId = IR.linkId
-         ORDER BY DATE DESC
-         LIMIT ?, ?   
+      LEFT JOIN marketerInfo AS MI
+      ON campaign.marketerId = MI.marketerId
+        ORDER BY campaign.onOff = 1 AND MI.marketerContraction = 1 DESC, CT.date DESC
+        LIMIT ?, ?
       `;
       const bannerQuery = `
       SELECT banList 
