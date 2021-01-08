@@ -1,7 +1,8 @@
+import { Socket } from 'socket.io';
 import { gameDict } from '../models/gameCategory';
 import doQuery from '../models/doQuery';
 
-function callImg(socket: any, msg: string[]): void {
+function callImg(socket: Socket, msg: string[]): void {
   const fullUrl: string = msg[0];
   const cutUrl = `/${fullUrl.split('/')[4]}`;
   const prevBannerName: string = msg[1];
@@ -98,7 +99,7 @@ function callImg(socket: any, msg: string[]): void {
     const campaignListQuery = `
     SELECT campaignList 
     FROM categoryCampaign
-    WHERE categoryId = ? 
+    WHERE categoryId = ?
     `;
 
     return new Promise((resolve, reject) => {
@@ -117,26 +118,41 @@ function callImg(socket: any, msg: string[]): void {
 
   const getGameId = async (creatorId: string): Promise<string> => {
     console.log(`${creatorId} / get gameid / ${getTime}`);
-    const getGameIdQuery = `SELECT gameId 
-                            FROM twitchStreamDetail AS tsd 
-                            WHERE streamId = (SELECT streamId FROM twitchStream WHERE streamerId = ? ORDER BY startedAt DESC LIMIT 1)
-                            ORDER BY tsd.time DESC LIMIT 1;`;
-    return new Promise((resolve, reject) => {
-      doQuery(getGameIdQuery, [creatorId])
-        .then((row) => {
-          if (row.result.length !== 0) {
-            myGameId = row.result[0].gameId;
-            resolve(myGameId);
-          } else {
-            console.log('GETGAMEID ERROR');
-          }
-        })
-        .catch((errorData) => {
-          errorData.point = 'getGameId()';
-          errorData.description = 'TWITCHSTREAMDETAIL에서 GAMEID 가져오기';
-          reject(errorData);
-        });
-    });
+    const getGameIdQuery = `
+    SELECT gameId  FROM twitchStreamDetail AS tsd 
+    WHERE streamId = (
+      SELECT streamId FROM twitchStream WHERE streamerId = ? ORDER BY startedAt DESC LIMIT 1
+    ) ORDER BY tsd.time DESC LIMIT 1;`;
+
+    const getAfreecaGameIdQuery = `
+    SELECT broadCategory AS gameId FROM AfreecaBroadDetail AS ABD
+    WHERE broadId = (
+      SELECT broadId FROM AfreecaBroad JOIN creatorInfo ON afreecaId = userId
+      WHERE creatorId = ? ORDER BY broadStartedAt DESC LIMIT 1
+    ) ORDER BY ABD.createdAt DESC LIMIT 1;
+    `;
+
+    try {
+      const [{ result: twitchGameIdResult }, { result: afreecaGameIdResult }] = await Promise.all([
+        doQuery(getGameIdQuery, [creatorId]), doQuery(getAfreecaGameIdQuery, [creatorId])
+      ]);
+
+      // 트위치 방송 중인 경우, 트위치 현재 진행 중 카테고리
+      if (twitchGameIdResult.length > 0) {
+        myGameId = twitchGameIdResult.gameId;
+      }
+
+      // 트위치 방송중이 아니며, 아프리카티비 방송 중 -> 아프리카 tv 카테고리
+      // 즉, 동시 송출 중이라면, twitch 카테고리를 우선시 함. @by hwasurr
+      if (!(afreecaGameIdResult.length > 0) && afreecaGameIdResult.length > 0) {
+        myGameId = afreecaGameIdResult.gameId;
+      }
+      return myGameId;
+    } catch (errorData) {
+      errorData.point = 'getGameId()';
+      errorData.description = 'TWITCHSTREAMDETAIL에서 GAMEID 가져오기';
+      throw errorData;
+    }
   };
 
   const insertTwitchGameUnchecked = (gameId: string, creatorId: string) => {
@@ -157,7 +173,10 @@ function callImg(socket: any, msg: string[]): void {
 
   // 하나의 gameId에 해당하는 모든 캠페인 리스트를 반환하는 Promise
   const getGameCampaignList = async (gameId: string, creatorId: string): Promise<string[]> => {
-    const categoryList: number[] = gameDict[gameId] ? gameDict[gameId].concat(gameDict.default) : gameDict.default;
+    const categoryList: number[] = gameDict[gameId]
+      ? gameDict[gameId].concat(gameDict.default)
+      : gameDict.default;
+
     let returnList: string[] = [];
     if (categoryList) {
       if (categoryList.includes(14) && categoryList.length === 1) {
@@ -256,7 +275,9 @@ function callImg(socket: any, msg: string[]): void {
     return Math.floor(Math.random() * (max - 0)) + 0; // 최댓값은 제외, 최솟값은 포함
   };
 
-  async function getBanner([creatorId, gameId]: string[]): Promise<[string | boolean, string | boolean, string | boolean]> {
+  async function getBanner(
+    [creatorId, gameId]: string[]
+  ): Promise<[string | boolean, string | boolean, string | boolean]> {
     console.log(`-----------------------Id : ${creatorId} / ${getTime}---------------------------`);
     let linkToChatBot;
     const [creatorCampaignList, onCampaignList, banList] = await Promise.all(
@@ -299,11 +320,16 @@ function callImg(socket: any, msg: string[]): void {
   }
   interface CreatorIds {
     creatorId: string;
-    creatorTwitchId: string;
+    creatorTwitchId?: string;
+    afreecaId?: string;
     adChatAgreement: number;
   }
   async function getCreatorData(): Promise<CreatorIds> {
-    const initQuery = 'SELECT creatorId, creatorTwitchId, adChatAgreement FROM creatorInfo WHERE advertiseUrl = ?';
+    const initQuery = `
+    SELECT creatorId, creatorTwitchId, adChatAgreement, afreecaId
+    FROM creatorInfo
+    WHERE advertiseUrl = ?
+    `;
     return new Promise((resolve, reject) => {
       doQuery(initQuery, [cutUrl])
         .then((row) => {
@@ -330,8 +356,6 @@ function callImg(socket: any, msg: string[]): void {
     const CREATOR_DATA = await getCreatorData();
     if (CREATOR_DATA.creatorId) { // 새로운 배너가 송출되는 경우
       myGameId = await getGameId(CREATOR_DATA.creatorId);
-      const myCreatorTwitchId = CREATOR_DATA.creatorTwitchId;
-      const myAdChatAgreement = CREATOR_DATA.adChatAgreement;
       const bannerInfo = await getBanner([CREATOR_DATA.creatorId, myGameId]);
       const checkOptionType = typeof bannerInfo[1] === 'string' ? campaignObject[bannerInfo[1]][0] : null;
       const campaignName = typeof bannerInfo[1] === 'string' ? campaignObject[bannerInfo[1]][1] : null;
@@ -339,11 +363,23 @@ function callImg(socket: any, msg: string[]): void {
       const campaignDescription = typeof bannerInfo[1] === 'string' ? campaignObject[bannerInfo[1]][2] : null;
       const descriptionToChat: string | boolean | null = campaignDescription || linkName;
 
-      if (myAdChatAgreement === 1 && checkOptionType === 1) { // 채봇 동의 및 옵션타입 cpm+cpc인 경우에 챗봇으로 데이터 전송
-        console.log(`${CREATOR_DATA.creatorId} / next-campaigns-twitch-chatbot Emitting ${myCreatorTwitchId} / ${getTime}`);
-        socket.broadcast.emit('next-campaigns-twitch-chatbot', {
-          campaignId: myCampaignId, creatorId: CREATOR_DATA.creatorId, creatorTwitchId: myCreatorTwitchId, campaignName, descriptionToChat
-        });
+      // 챗봇 관련 필요 정보
+      const myCreatorTwitchId = CREATOR_DATA.creatorTwitchId;
+      const myAdChatAgreement = CREATOR_DATA.adChatAgreement;
+      // 트위치 챗봇 동의 및 옵션타입 cpm+cpc인 경우에 챗봇으로 데이터 전송
+      if (myAdChatAgreement === 1 && checkOptionType === 1) {
+        if (myCreatorTwitchId) {
+          // 챗봇은 트위치 한정. 트위치 아이디가 없는 경우 에미팅 하지 않도록 추가
+          // @by hwasurr 21.01.08
+          console.log(`${CREATOR_DATA.creatorId} / next-campaigns-twitch-chatbot Emitting ${myCreatorTwitchId} / ${getTime}`);
+          socket.broadcast.emit('next-campaigns-twitch-chatbot', {
+            campaignId: myCampaignId,
+            creatorId: CREATOR_DATA.creatorId,
+            creatorTwitchId: myCreatorTwitchId,
+            campaignName,
+            descriptionToChat
+          });
+        }
       }
 
       if (typeof bannerInfo[0] === 'string' && typeof bannerInfo[1] === 'string') {

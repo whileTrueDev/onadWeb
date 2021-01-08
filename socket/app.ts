@@ -6,7 +6,7 @@ dotenv.config();
 
 import express from 'express';
 import http from 'http';
-import socketio from 'socket.io';
+import socketio, { Socket } from 'socket.io';
 import nodeSchedule from 'node-schedule';
 import doQuery from './models/doQuery';
 import callImg from './public/callImg';
@@ -51,10 +51,13 @@ interface SocketInfo {
 (
   function () {
     const socketInfo: SocketInfo = {};
-    io.on('connection', (socket: any) => {
+    io.on('connection', (socket: Socket) => {
       const roomInfo: {} = socket.adapter.rooms; // 현재 웹소켓에 접속중이 room들과 그 접속자들의 정보 얻음
       let SOCKET_ID: string = socket.id;
       const urlArray: Array<string> = Object.values(socketInfo);
+
+      // ***********************************************************
+      // 스케쥴링
       const rule = new nodeSchedule.RecurrenceRule(); // 스케쥴러 객체 생성
       rule.hour = new nodeSchedule.Range(0, 23); // cronTask 시간지정
       rule.minute = [0, 10, 20, 30, 40, 50]; // cronTask 실행되는 분(minute)
@@ -64,6 +67,8 @@ interface SocketInfo {
         socket.emit('re-render at client', {});
       });
 
+      // ***********************************************************
+      // 첫 입장시 발생되는 이벤트인 "new client" 이벤트 핸들러
       socket.on('new client', (msg: [string, number, string]) => {
         const CLIENT_URL = msg[0];
         const HISTORY = msg[1];
@@ -87,21 +92,29 @@ interface SocketInfo {
         }
       });
 
+      // ***********************************************************
+      // 접속 종료시 발생되는 이벤트인 "disconnect" 이벤트 핸들러
       socket.on('disconnect', () => { // 접속종료시
         delete socketInfo[SOCKET_ID]; // socketsInfo에서 접속종료한 clientID 삭제
         SOCKET_ID = '';
       });
 
+      // ***********************************************************
+      // 송출될 광고 재요청 이벤트 : "re-render" 이벤트 핸들러
       socket.on('re-render', (msg: [string, string, string]) => {
         callImg(socket, msg);
       });
 
+      // ***********************************************************
+      // 
       socket.on('pageOn', (msg: [string, string]) => {
         const CLIENT_URL = msg[0];
         const programType = msg[1];
         callImg(socket, [CLIENT_URL, '', programType]);
       });
 
+      // 배너 더블 클릭을 통해 ON/OFF 조절 
+      // bannerVisible 에 상태 삽입
       socket.on('pageActive handler', (msg: [string, boolean, string]) => {
         // 배너창을 띄웠을 때는 state = 1
         // 배너창 숨겼을 때는 state = 0
@@ -112,6 +125,8 @@ interface SocketInfo {
         doQuery(activeQuery, [clientUrl, state, program]);
       });
 
+      // 배너 더블 클릭을 통해 ON/OFF 조절 
+      // bannerVisible 에 상태 삽입
       socket.on('banner click', (msg: [string, boolean, string]) => {
         const clientUrl = msg[0];
         const state = msg[1] === true ? 1 : 0;
@@ -119,6 +134,7 @@ interface SocketInfo {
         const hiddenQuery = 'INSERT INTO bannerVisible (advertiseUrl, visibleState, program, type) VALUES (?, ?, ?, 1);';
         doQuery(hiddenQuery, [clientUrl, state, program]);
       });
+      // ***********************************************************
     });
   }());
 

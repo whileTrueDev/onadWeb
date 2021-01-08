@@ -41,7 +41,11 @@ router.route('/')
   .get(
     responseHelper.middleware.checkSessionExists,
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
-      const { creatorId } = responseHelper.getSessionData(req);
+      const { creatorId, userType } = responseHelper.getSessionData(req);
+
+      if (userType === 'marketer') {
+        throw new createHttpError[403]('you are not a creator!');
+      }
       const NowIp: any = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
 
       const query = `
