@@ -87,7 +87,7 @@ export default async function twitchUpdate(user: User): Promise<string> {
 
   // 변경사항이 있는제 치크하여 유저 정보 업데이트
   const updateQuery = `
-  UPDATE creatorInfo_v2
+  UPDATE creatorInfo
   SET creatorName = ?, creatorTwitchId = ?, creatorMail = ?,
   creatorLogo = ?, creatorTwitchRefreshToken = ?
   WHERE creatorId = ?`;

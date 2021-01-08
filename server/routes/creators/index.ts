@@ -12,7 +12,7 @@ router.route('/')
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
       const searchQuery = `
       SELECT creatorTwitchId, creatorName, creatorLogo
-      FROM creatorInfo_v2
+      FROM creatorInfo
       WHERE creatorContractionAgreement = 1 
       ORDER BY date DESC
       `;
@@ -36,7 +36,7 @@ router.route('/live')
 
       // 현재방송중이면서, 배너를 띄우고있는 스트리머 (시청자 많은 순)
       const query = `SELECT creatorTwitchId
-      FROM creatorInfo_v2 as CI
+      FROM creatorInfo as CI
 
       LEFT JOIN
       (SELECT streamerName, viewer
@@ -75,7 +75,7 @@ router.route('/broadcast')
       date.setMinutes(date.getMinutes() - 10);
 
       const query = `SELECT COUNT(creatorId) AS nowBroadcast
-      FROM creatorInfo_v2 as CI
+      FROM creatorInfo as CI
       RIGHT JOIN
       (SELECT streamerName, viewer
       FROM twitchStreamDetail

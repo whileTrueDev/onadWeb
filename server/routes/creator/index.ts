@@ -25,7 +25,7 @@ router.route('/check-id')
   .get(
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
       const userid = responseHelper.getParam('userid', 'get', req);
-      const duplicateCheckQuery = 'SELECT creatorId, loginId FROM creatorInfo_v2 WHERE loginId = ?';
+      const duplicateCheckQuery = 'SELECT creatorId, loginId FROM creatorInfo WHERE loginId = ?';
       const queryArray = [userid];
       const { result } = await doQuery(duplicateCheckQuery, queryArray);
       if (result.length > 0) { // 중복아이디가 있는 경우
@@ -46,7 +46,7 @@ router.route('/')
 
       const query = `
       SELECT *
-      FROM creatorInfo_v2
+      FROM creatorInfo
       WHERE creatorId = ?`;
       doQuery(query, [creatorId])
         .then((row) => {
@@ -76,7 +76,7 @@ router.route('/')
       // 고유 아이디
       const creatorId = `V2_${userid}_${new Date().getTime()}`;
       const createCreatorQuery = `
-      INSERT INTO creatorInfo_v2 
+      INSERT INTO creatorInfo 
         (creatorId, loginId, password, passwordSalt, creatorIp) 
         VALUES (?, ?, ?, ?, ?)`;
       const queryArray = [creatorId, userid, encryptedPassword, salt, creatorIp];
@@ -118,7 +118,7 @@ router.route('/')
 
       if (typeof newIp === 'string') {
         // IP update
-        const ipQuery = 'UPDATE creatorInfo_v2 SET creatorIp = ? WHERE creatorId = ?';
+        const ipQuery = 'UPDATE creatorInfo SET creatorIp = ? WHERE creatorId = ?';
         doQuery(ipQuery, [newIp, creatorId])
           .then(() => {
             responseHelper.send(`${creatorId}님 IP변경완료`, 'PATCH', res);
@@ -132,9 +132,9 @@ router.route('/')
         // 크리에이터 계약
         const creatorBannerUrl = makeAdvertiseUrl();
         const contractionUpdateQuery = `
-          UPDATE creatorInfo_v2
+          UPDATE creatorInfo
           SET creatorContractionAgreement = ?, advertiseUrl = ?
-          WHERE creatorInfo_v2.creatorId = ?`;
+          WHERE creatorInfo.creatorId = ?`;
         // 계약시 생성되는 creatorCampaign 기본값
         const campaignList = JSON.stringify({ campaignList: [] });
         const campaignQuery = `
@@ -160,9 +160,9 @@ router.route('/')
           });
       } else if (type === 'CPAAgreement') {
         const CPAAgreementUpdateQuery = `
-          UPDATE creatorInfo_v2
+          UPDATE creatorInfo
           SET CPAAgreement = ?
-          WHERE creatorInfo_v2.creatorId = ?`;
+          WHERE creatorInfo.creatorId = ?`;
 
         doQuery(CPAAgreementUpdateQuery, [1, creatorId])
           .then(() => {
@@ -199,7 +199,7 @@ router.route('/pre-user')
         // 올바른 정보가 오면 아디/비번을 설정
           const [encrypted, salt] = encrypto.make(passwd);
           const query = `
-          UPDATE creatorInfo_v2
+          UPDATE creatorInfo
           SET loginId = ?, password = ?, passwordSalt = ?, creatorTwitchOriginalId = ?
           WHERE creatorId = ?`;
           const queryArray = [userid, encrypted, salt, creatorId, creatorId];
@@ -238,7 +238,7 @@ router.route('/settlement')
       const enciphedIdentityNum: string = encrypto.encipher(CreatorIdentity);
 
       const settlementQuery = `
-      UPDATE creatorInfo_v2
+      UPDATE creatorInfo
       SET name = ?, settlementState = ?, identificationNumber = ?, phoneNumber = ?, creatorType = ?,
       identificationImg = ?, AccountImg = ?, BussinessRegiImg = ?, creatorAccountNumber = ?, realName = ?
       WHERE creatorId = ?
@@ -374,7 +374,7 @@ router.route('/landing-url')
       const query = `
       SELECT 
       creatorTwitchId 
-      FROM creatorInfo_v2
+      FROM creatorInfo
       WHERE creatorId = ?
       `;
 
@@ -395,7 +395,7 @@ router.route('/adchat/agreement')
     responseHelper.middleware.checkSessionExists,
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
       const { creatorId } = responseHelper.getSessionData(req);
-      const query = 'SELECT adChatAgreement FROM creatorInfo_v2 WHERE creatorId = ?';
+      const query = 'SELECT adChatAgreement FROM creatorInfo WHERE creatorId = ?';
       const queryArray = [creatorId];
 
       const row = await doQuery(query, queryArray);
@@ -409,7 +409,7 @@ router.route('/adchat/agreement')
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
       const { creatorId } = responseHelper.getSessionData(req);
       const targetOnOffState = responseHelper.getParam('targetOnOffState', 'patch', req);
-      const query = 'UPDATE creatorInfo_v2 SET adChatAgreement = ? WHERE creatorId = ?';
+      const query = 'UPDATE creatorInfo SET adChatAgreement = ? WHERE creatorId = ?';
       const queryArray = [targetOnOffState, creatorId];
       const row = await doQuery(query, queryArray);
       if (row.result.affectedRows > 0) {
@@ -505,7 +505,7 @@ router.route('/password')
       const newPassword = responseHelper.getParam('password', 'PATCH', req);
 
       const [encrypted, salt] = encrypto.make(newPassword);
-      const query = 'UPDATE creatorInfo_v2 SET password = ?, passwordSalt = ? WHERE creatorId = ?';
+      const query = 'UPDATE creatorInfo SET password = ?, passwordSalt = ? WHERE creatorId = ?';
       const queryArray = [encrypted, salt, sess.creatorId];
 
       doQuery(query, queryArray)
@@ -522,7 +522,7 @@ router.route('/password')
       const password = responseHelper.getParam('password', 'post', req);
 
       const findQuery = `
-      SELECT password, passwordSalt FROM creatorInfo_v2 WHERE creatorId = ?`;
+      SELECT password, passwordSalt FROM creatorInfo WHERE creatorId = ?`;
       const queryArray = [sess.creatorId];
 
       doQuery(findQuery, queryArray)

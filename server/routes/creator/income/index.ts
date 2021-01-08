@@ -20,7 +20,7 @@ router.route('/')
       creatorTotalIncome as creatorTotalIncome,
       creatorReceivable as creatorReceivable,
       creatorAccountNumber, creatorIncome.date, creatorContractionAgreement, realName
-      FROM creatorInfo_v2 as ci
+      FROM creatorInfo as ci
       JOIN creatorIncome 
       ON ci.creatorId = creatorIncome.creatorId
       WHERE ci.creatorId= ? 

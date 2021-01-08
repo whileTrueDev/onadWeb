@@ -42,7 +42,7 @@ export default async function afreecaUpdate(user: User): Promise<any> {
   } = await getUserProfile(user.afreecaId);
   // 변경사항이 있는제 치크하여 유저 정보 업데이트
   const updateQuery = `
-  UPDATE creatorInfo_v2
+  UPDATE creatorInfo
   SET afreecaName = ?, afreecaLogo = ?
   WHERE creatorId = ?`;
   const updateQueryArray = [nickname, logo, user.creatorId];

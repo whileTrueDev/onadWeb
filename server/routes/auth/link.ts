@@ -31,7 +31,7 @@ router.delete('/twitch',
   responseHelper.middleware.checkSessionExists,
   responseHelper.middleware.withErrorCatch(async (req, res, next) => {
     const { creatorId } = responseHelper.getSessionData(req);
-    const query = `UPDATE creatorInfo_v2
+    const query = `UPDATE creatorInfo
     SET
       creatorTwitchOriginalId = ?, creatorName = ?, creatorTwitchId = ?,
       creatorMail = ?, creatorLogo = ?, creatorTwitchRefreshToken = ?
@@ -66,7 +66,7 @@ router.post('/afreeca/cert',
     const afreecaId = responseHelper.getParam('afreecaId', 'POST', req);
 
     // 요청받은 afreecaId가 이미 다른 onad유저에게 연동되어 있는 지 체크
-    const checkQuery = `SELECT creatorId, loginId FROM creatorInfo_v2
+    const checkQuery = `SELECT creatorId, loginId FROM creatorInfo
     WHERE afreecaId = ?`;
     const checkQueryArray = [afreecaId];
     const alreadyLinked = await doQuery(checkQuery, checkQueryArray);
@@ -143,7 +143,7 @@ router.delete('/afreeca',
   responseHelper.middleware.checkSessionExists,
   responseHelper.middleware.withErrorCatch(async (req, res, next) => {
     const { creatorId } = responseHelper.getSessionData(req);
-    const query = `UPDATE creatorInfo_v2
+    const query = `UPDATE creatorInfo
     SET afreecaId = ?, afreecaName = ?, afreecaLogo = ?, afreecaRefreshToken = ?
     WHERE creatorId = ?`;
     const queryArray = [null, null, null, null, creatorId];

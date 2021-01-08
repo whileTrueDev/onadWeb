@@ -13,7 +13,7 @@ router.route('/detail')
       left join 
       (
       select creatorId, creatorLogo, creatorName
-      from creatorInfo_v2
+      from creatorInfo
       )as B
       on creatorDetail.creatorId = B.creatorId
       WHERE rip > 0.5
@@ -37,7 +37,7 @@ router.route('/contents')
       SELECT
         creatorName, creatorTwitchId, creatorLogo, contentsGraphData
       FROM creatorDetail AS cc
-      JOIN creatorInfo_v2 AS ci
+      JOIN creatorInfo AS ci
       ON ci.creatorId = cc.creatorId
       WHERE cc.creatorId = ?`;
       doQuery(query, [creatorId])
@@ -67,7 +67,7 @@ router.route('/hours')
       const query = `
       SELECT creatorName, timeGraphData
       FROM creatorDetail AS cc
-      JOIN creatorInfo_v2 AS ci
+      JOIN creatorInfo AS ci
       ON ci.creatorId = cc.creatorId
       WHERE cc.creatorId = ?`;
       doQuery(query, [creatorId])

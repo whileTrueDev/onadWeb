@@ -53,7 +53,7 @@ router.route('/read-flag')
       } else if (userType === 'creator') {
         query = `
           SELECT noticeReadState 
-          FROM creatorInfo_v2
+          FROM creatorInfo
           WHERE creatorId = ?`;
         queryParam.push(creatorId);
       }
@@ -83,7 +83,7 @@ router.route('/read-flag')
         queryParam.push(marketerId);
       } else if (userType === 'creator') {
         query = `
-        UPDATE creatorInfo_v2
+        UPDATE creatorInfo
         SET noticeReadState = 1
         WHERE creatorId = ?`;
         queryParam.push(creatorId);

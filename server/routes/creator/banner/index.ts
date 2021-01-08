@@ -209,7 +209,7 @@ router.route('/overlay')
       const { creatorId } = responseHelper.getSessionData(req);
       const query = `
       SELECT advertiseUrl, creatorContractionAgreement
-      FROM creatorInfo_v2
+      FROM creatorInfo
       WHERE creatorId = ?
       `;
 

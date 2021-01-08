@@ -59,7 +59,7 @@ router.route('/')
       SELECT campaignName, linkId, links, creatorId
         FROM campaign
         JOIN linkRegistered ON linkId = connectedLinkId
-        RIGHT JOIN creatorInfo_v2 ON creatorTwitchId = ?
+        RIGHT JOIN creatorInfo ON creatorTwitchId = ?
       WHERE campaignId = ?
         AND campaign.optionType = 1`; // cpm+cpc
 

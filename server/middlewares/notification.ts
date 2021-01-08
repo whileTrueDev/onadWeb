@@ -94,7 +94,7 @@ const messageDict: MessageDict = {
     settle: {
       selectQuery: `
       SELECT creatorName, creatorAccountNumber
-      FROM creatorInfo_v2
+      FROM creatorInfo
       WHERE creatorId = ?`,
       getTitle: ({ creatorName }) => `${creatorName}님, 광고비가 정산되었습니다.`,
       getMessage: ({ creatorName, creatorAccountNumber, creatorWithdrawalAmount }) => `${creatorName}님의 신청하신 ${creatorWithdrawalAmount}원이 ${creatorAccountNumber}으로 입금되었습니다.
@@ -103,7 +103,7 @@ const messageDict: MessageDict = {
     levelUp: {
       selectQuery: `
       SELECT creatorName
-      FROM creatorInfo_v2
+      FROM creatorInfo
       WHERE creatorId = ?`,
       getTitle: ({ creatorName }) => `${creatorName}님, 광고 페이지 레벨이 올랐습니다.`,
       getMessage: ({ creatorName, level }) => `${creatorName}님의 광고 페이지 레벨이 ${level}이 되었습니다.
