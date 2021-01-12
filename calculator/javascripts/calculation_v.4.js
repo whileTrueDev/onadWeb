@@ -127,38 +127,24 @@ const getcreatorList = ({ date }) => {
  */
 const getTwitchViewer = ({ connection, creatorId }) => {
   // 해당 creatorId의 creatorOriginalId 를 통해 최신 streamId를 가져온다.
-  const streamIdQuery = `
-  SELECT streamId FROM twitchStream
-  WHERE streamerId = (SELECT creatorTwitchOriginalId FROM creatorInfo WHERE creatorId = ? LIMIT 1)
-  ORDER BY startedAt DESC LIMIT 1
-  `;
-
-  const viewerQuery = `SELECT viewer
-  FROM twitchStreamDetail WHERE streamId = ?
-  ORDER BY time DESC LIMIT 1
+  const viewerQuery = `
+  SELECT TS.streamId, viewer FROM twitchStream AS TS
+  JOIN twitchStreamDetail AS TSD ON TS.streamId = TSD.streamId
+    WHERE streamerId = (SELECT creatorTwitchOriginalId FROM creatorInfo WHERE creatorId = ? LIMIT 1)
+    AND TSD.time > DATE_SUB(NOW(), INTERVAL 10 MINUTE)
+  ORDER BY TSD.time DESC LIMIT 1
   `;
 
   // 함수의 인자로 커넥션을 하나 받는다.
   // query를 사용하여 값을 가져오는 것이기 때문에 Promise 객체를 생성하여 wrapping 한다.
   // transction을 하는 이유는 쓰기에 대한 오류를 범하지 않기 위해서이므로 읽기에는 사용하지 않는다.
   return new Promise((resolve, reject) => {
-    connection.query(streamIdQuery, [creatorId], (err1, result) => {
+    connection.query(viewerQuery, [creatorId], (err1, result) => {
       if (err1) reject(err1);
       if (!(result.length > 0)) resolve(0); // 트위치 스트리밍 데이터가 없는 경우 0 처리
       else {
-        const { streamId } = result[0];
-        connection.query(viewerQuery, [streamId], (err2, result1) => {
-          if (err2) {
-            reject(err2);
-          }
-          // stamp에 찍혀있더라도 존재하지 않는 경우가 존재한다.
-          if (result1.length !== 0) {
-            const { viewer } = result1[0];
-            resolve(viewer);
-          } else {
-            resolve(0);
-          }
-        });
+        const { streamId, viewer } = result[0];
+        resolve(viewer);
       }
     });
   });
@@ -170,37 +156,25 @@ const getTwitchViewer = ({ connection, creatorId }) => {
  */
 const getAfreecaViewer = ({ connection, creatorId }) => {
   // 해당 creatorId의 afreecaId 를 통해 최신 streamId를 가져온다.
-  const streamIdQuery = `
-  SELECT broadId AS streamId
-  FROM AfreecaBroad
+  const viewerQuery = `
+  SELECT AB.broadId AS streamId, viewCount AS viewer
+  FROM AfreecaBroad AS AB
+  JOIN AfreecaBroadDetail AS ABD ON AB.broadId = ABD.broadId
   WHERE userId = (SELECT afreecaId FROM creatorInfo WHERE creatorId = ? LIMIT 1)
-  ORDER BY broadStartedAt DESC LIMIT 1
-  `;
-
-  const viewerQuery = `SELECT viewCount AS viewer
-  FROM AfreecaBroadDetail WHERE broadId = ?
-  ORDER BY createdAt DESC LIMIT 1
+    AND ABD.createdAt > DATE_SUB(NOW(), INTERVAL 10 MINUTE)
+  ORDER BY ABD.createdAt DESC LIMIT 1
   `;
 
   // 함수의 인자로 커넥션을 하나 받는다.
   // query를 사용하여 값을 가져오는 것이기 때문에 Promise 객체를 생성하여 wrapping 한다.
   // transction을 하는 이유는 쓰기에 대한 오류를 범하지 않기 위해서이므로 읽기에는 사용하지 않는다.
   return new Promise((resolve, reject) => {
-    connection.query(streamIdQuery, [creatorId], (err1, result) => {
+    connection.query(viewerQuery, [creatorId], (err1, result) => {
       if (err1) reject(err1);
       if (!(result.length > 0)) resolve(0); // 아프리카 스트리밍 데이터가 없는 경우 0 처리
       else {
-        const { streamId } = result[0];
-        connection.query(viewerQuery, [streamId], (err2, result1) => {
-          if (err2) reject(err2);
-          // stamp에 찍혀있더라도 존재하지 않는 경우가 존재한다.
-          if (result1.length !== 0) {
-            const { viewer } = result1[0];
-            resolve(viewer);
-          } else {
-            resolve(0);
-          }
-        });
+        const { streamId, viewer } = result[0];
+        resolve(viewer);
       }
     });
   });
