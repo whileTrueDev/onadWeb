@@ -94,14 +94,16 @@ function callImg(socket: Socket, msg: string[]): void {
     });
   };
   // 하나의 categoryId 에 해당하는 캠페인 리스트를 반환하는 Promise
-  const getCategoryCampaignList = (categoryId: string): Promise<string[]> => {
+  const getCategoryCampaignList = async (categoryId: string): Promise<string[]> => {
     const campaignListQuery = 'SELECT campaignList FROM categoryCampaign WHERE categoryId = ?';
-
     return new Promise((resolve, reject) => {
       doQuery(campaignListQuery, [categoryId])
         .then((row) => {
-          const jsonData = JSON.parse(row.result[0].campaignList);
-          resolve(jsonData.campaignList);
+          if (row.result.length > 0) {
+            const jsonData = JSON.parse(row.result[0].campaignList);
+            resolve(jsonData.campaignList);
+          }
+          resolve([]);
         })
         .catch((errorData) => {
           errorData.point = 'getCategoryCampaignList()';
@@ -186,19 +188,20 @@ function callImg(socket: Socket, msg: string[]): void {
     // ************************************************************
     // 트위치 카테고리의 경우
     const CATEGORY_WHATEVER = '14';
-    const categoryList: string[] = [gameId, CATEGORY_WHATEVER];
 
     let returnList: string[] = [];
-    await Promise.all(
-      categoryList.map((categoryId) => getCategoryCampaignList(categoryId)
-        .then((campaignList: any) => {
-          returnList = returnList.concat(campaignList);
-        }))
-    )
+    await Promise.all([
+      getCategoryCampaignList(gameId),
+      getCategoryCampaignList(CATEGORY_WHATEVER)
+    ])
+      .then(([campaignList1, campaignList2]) => {
+        returnList = campaignList1.concat(campaignList2);
+      })
       .catch((errorData) => {
         errorData.point = 'getGameCampaignList()';
         errorData.description = 'categoryCampaign에서 각각의 categoryId에 따른 캠페인 가져오기';
       });
+
     return Array.from(new Set(returnList));
   };
 
@@ -327,9 +330,13 @@ function callImg(socket: Socket, msg: string[]): void {
       const extractBanCampaignList = onCategorycampaignList.filter(
         (campaignId) => !banList.includes(campaignId)
       );
-      // 해당 목록 중 랜덤으로 하나를 송출하도록 결졍.
-      const returnCampaignId = extractBanCampaignList[getRandomInt(extractBanCampaignList.length)];
-      myCampaignId = returnCampaignId;
+      if (extractBanCampaignList) {
+        // 해당 목록 중 랜덤으로 하나를 송출하도록 결졍.
+        const returnCampaignId = extractBanCampaignList[
+          getRandomInt(extractBanCampaignList.length)
+        ];
+        myCampaignId = returnCampaignId;
+      }
     }
 
     // *********************************************************
