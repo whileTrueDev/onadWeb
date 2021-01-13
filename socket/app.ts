@@ -77,12 +77,14 @@ interface SocketInfo {
           console.log('SOCKET ON');
           socket.emit('host pass', SOCKET_HOST);
           callImg(socket, [CLIENT_URL, '', programType]);
+        } else if (
+          // 트위치 스튜디오 또는 아프리카 프릭샷으로 접속하지 않았으면서
+          !['afreeca-freecshot', 'twitch-studio'].includes(programType)
+          // history.length가 1이 아닌 경우에 잘못된 접속 처리
+          && HISTORY !== 1) {
+          const DESTINATION_URL = `${SOCKET_HOST}/browserWarn`;
+          socket.emit('browser warning', DESTINATION_URL);
         }
-        // 브라우저 제한 임시 제거 ( 아프리카 프릭샷이 부정 접속으로 판단되는 현상으로 인해 @hwasurr @21.01.13 )
-        // else if (programType !== 'twitch-studio' && HISTORY !== 1) {
-        //   const DESTINATION_URL = `${SOCKET_HOST}/browserWarn`;
-        //   socket.emit('browser warning', DESTINATION_URL);
-        // }
 
         if (urlArray.includes(CLIENT_URL)) {
           const DESTINATION_URL = `${SOCKET_HOST}/duplicate`;
