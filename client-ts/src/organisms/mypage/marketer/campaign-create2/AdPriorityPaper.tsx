@@ -9,6 +9,7 @@ import {
   CampaignCreateInterface,
   CampaignCreateAction
 } from './reducers/campaignCreate.reducer';
+import GameSelectAfreeca from './AdPriorityComponents/GameSelecAfreeca';
 
 
 export interface PriorityInterface {
@@ -58,8 +59,8 @@ const priorityTypes: PriorityInterface[] = [
   },
   {
     id: 'type1',
-    primaryText: '특정 게임에만 광고 송출',
-    secondaryText: '특정 게임에만 광고를 송출할 수 있어요.',
+    primaryText: '특정 카테고리에만 광고 송출 (트위치 카테고리)',
+    secondaryText: '특정 카테고리에만 광고를 송출할 수 있어요.',
     defaultChildren: (
       state: CampaignCreateInterface,
       dispatch: React.Dispatch<CampaignCreateAction>,
@@ -68,6 +69,38 @@ const priorityTypes: PriorityInterface[] = [
     ): JSX.Element => (
       <Collapse in={state.selectedPriorityType === 'type1'}>
         <GameSelect
+          state={state}
+          dispatch={dispatch}
+          handleComplete={handleComplete}
+          handleIncomplete={handleIncomplete}
+        />
+      </Collapse>
+    ),
+    completeChildren: (data: { selectedGameNames: string[] }): JSX.Element => (
+      <div>
+        {data.selectedGameNames.map((game: string) => (
+          <Chip
+            key={game}
+            label={game}
+            variant="outlined"
+            style={{ margin: 4 }}
+          />
+        ))}
+      </div>
+    ),
+  },
+  {
+    id: 'type1-1',
+    primaryText: '특정 카테고리에만 광고 송출 (아프리카 카테고리)',
+    secondaryText: '특정 카테고리에만 광고를 송출할 수 있어요.',
+    defaultChildren: (
+      state: CampaignCreateInterface,
+      dispatch: React.Dispatch<CampaignCreateAction>,
+      handleComplete: () => void,
+      handleIncomplete: () => void,
+    ): JSX.Element => (
+      <Collapse in={state.selectedPriorityType === 'type1-1'}>
+        <GameSelectAfreeca
           state={state}
           dispatch={dispatch}
           handleComplete={handleComplete}

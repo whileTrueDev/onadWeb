@@ -18,9 +18,11 @@ export type CampaignCreateAction = {
     | 'DELETE_SELECTED_CREATOR_NAMES'
     | 'RESET_SELECTED_CREATORS'
     | 'SET_SELECTED_GAMES'
+    | 'SET_SELECTED_GAMES_MANY'
     | 'DELETE_SELECTED_GAMES'
+    | 'DELETE_SELECTED_GAMES_MANY'
     | 'RESET_SELECTED_GAMES';
-  value: string;
+  value: any;
 }
 
 export interface CampaignCreateInterface {
@@ -104,11 +106,20 @@ export const CampaignCreateReducer = (
     // 광고 송출 게임 선택 관련
     case 'SET_SELECTED_GAMES':
       return { ...state, selectedGames: [...state.selectedGames, action.value] };
+    case 'SET_SELECTED_GAMES_MANY': {
+      const tmp = [...state.selectedGames, ...action.value];
+      const result = Array.from(new Set(tmp));
+      return { ...state, selectedGames: result };
+    }
     case 'DELETE_SELECTED_GAMES':
       return {
         ...state,
-        selectedGames: state.selectedGames.filter((item: string) => item !== value)
+        selectedGames: state.selectedGames.filter((item) => item !== value)
       };
+    case 'DELETE_SELECTED_GAMES_MANY': {
+      const tmp = state.selectedGames.filter((item) => !value.includes(item));
+      return { ...state, selectedGames: tmp };
+    }
     case 'RESET_SELECTED_GAMES':
       return { ...state, selectedGames: [] };
     // 모두 초기화

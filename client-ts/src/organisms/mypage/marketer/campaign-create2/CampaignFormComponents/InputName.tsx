@@ -44,6 +44,7 @@ const InputName = (props: InputNameProps): JSX.Element => {
             inputRef={nameInputRef}
             inputProps={{
               minLength: 2,
+              maxLength: 50,
               required: true
             }}
           />

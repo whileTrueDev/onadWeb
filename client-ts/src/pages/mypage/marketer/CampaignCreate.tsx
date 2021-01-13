@@ -103,7 +103,10 @@ const CampaignCreate = (): JSX.Element => {
     }
     const campaignCreateDTO: any = {
       optionType: typeToNum(campaignCreateState.selectedOption),
-      priorityType: typeToNum(campaignCreateState.selectedPriorityType),
+      // 아프리카 카테고리 선택형의 경우 type1-1이므로 11이 됨.
+      // 하지만 "카테고리 선택형" 이라는 동일한 유형이므로 동일하게 처리되어야 함. => 1로 수정함.
+      priorityType: campaignCreateState.selectedPriorityType === 'type1-1'
+        ? '1-1' : typeToNum(campaignCreateState.selectedPriorityType),
     };
     // ***********************************************************
     // 필수 ref 값 설정
@@ -130,8 +133,10 @@ const CampaignCreate = (): JSX.Element => {
       && campaignCreateState.selectedCreators.length > 0) {
       campaignCreateDTO.priorityList = campaignCreateState.selectedCreators;
     }
-    if (campaignCreateState.selectedPriorityType === 'type1'
-      && campaignCreateState.selectedGames.length > 0) {
+    if ((campaignCreateState.selectedPriorityType === 'type1'
+      && campaignCreateState.selectedGames.length > 0)
+      || (campaignCreateState.selectedPriorityType === 'type1-1'
+      && campaignCreateState.selectedGames.length > 0)) {
       campaignCreateDTO.priorityList = campaignCreateState.selectedGames;
     }
     if (campaignCreateState.selectedPriorityType === 'type2') {
