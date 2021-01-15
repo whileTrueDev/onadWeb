@@ -108,6 +108,7 @@ router.route('/creator-data')
         LEFT JOIN creatorDetail AS cd
         ON cl.creatorId = cd.creatorId
         WHERE campaignId = ?
+        AND ci.arrested != 1
         GROUP BY cl.creatorId
         ORDER BY total_ad_exposure_amount DESC`;
 
@@ -132,6 +133,7 @@ router.route('/creator-data')
         LEFT JOIN creatorDetail AS cd
         ON cl.creatorId = cd.creatorId
         WHERE SUBSTRING_INDEX(campaignId, '_', 1) = ?
+        AND ci.arrested != 1
         GROUP BY cl.creatorId
         ORDER BY total_ad_exposure_amount DESC`;
 
