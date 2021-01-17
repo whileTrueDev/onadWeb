@@ -10,8 +10,8 @@ import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import {
   Check, Lock, Visibility, VisibilityOff
 } from '@material-ui/icons';
-import React, { useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import { Alert } from '@material-ui/lab';
 import axiosInstance from '../../../utils/axios';
 import HOST from '../../../config';
@@ -49,6 +49,9 @@ const useStyles = makeStyles((theme: OnadTheme) => ({
     height: 35,
     position: 'absolute',
     left: theme.spacing(2),
+  },
+  finished: {
+    minWidth: 280, padding: theme.spacing(2),
   }
 }));
 
@@ -93,8 +96,8 @@ export default function SignupCreator(): JSX.Element {
   // Parse search parpameter
   function parseParams(params: string) {
     const result: {
-          accessToken?: string; creatorId?: string; creatorName?: string;
-        } = {};
+        accessToken?: string; creatorId?: string; creatorName?: string;
+      } = {};
     params.substr(1).split('&').map((splited) => {
       const [key, value] = splited.split('=');
       return Object.assign(result, {
@@ -109,10 +112,13 @@ export default function SignupCreator(): JSX.Element {
     axiosInstance.post(`${HOST}/creator`, {
       userid: signupInfo.userid, passwd: signupInfo.passwd
     })
-      .then((res) => {
-        alert(`${res.data}완료`); history.push('/creator/signup/complete');
+      .then(() => {
+        history.push(`/creator/signup/complete?userId=${signupInfo.userid}`);
       })
-      .catch();
+      .catch(() => {
+        setSnackErrMsg('회원가입 과정에서 오류가 발생했습니다. 잠시후 다시 시도해주세요.');
+        failSnack.handleOpen();
+      });
   }
 
   /**
@@ -125,7 +131,7 @@ export default function SignupCreator(): JSX.Element {
       creatorId: parseParams(location.search).creatorId,
       accessToken: parseParams(location.search).accessToken
     }).then(() => {
-      history.push('/creator/signup/complete');
+      history.push(`/creator/signup/complete?userId=${signupInfo.userid}`);
     }).catch(() => {
       setSnackErrMsg('회원가입 과정에서 오류가 발생했습니다. 잠시후 다시 시도해주세요.');
       failSnack.handleOpen();
@@ -238,6 +244,26 @@ export default function SignupCreator(): JSX.Element {
       }
     }
   }
+
+  // 트위치 인증 진행 이후, 이미 새로운 로그인 방식 처리를 진행한 유저인 경우
+  // 이미 등록함 처리
+  const [alreadySigned, setAlreadySigned] = useState(false);
+  const [alreadySignedId, setAlreadySignedId] = useState('');
+  useEffect(() => {
+    if (isLogedIn) {
+      const { creatorId } = parseParams(location.search);
+      axiosInstance.get(`${HOST}/creator`, { params: { creatorId } })
+        .then((res) => {
+          if (res.data.loginId) {
+            setAlreadySigned(true);
+            setAlreadySignedId(res.data.loginId);
+          }
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    }
+  });
 
   // 회원가입 입력 폼
   const signupForm = (
@@ -359,74 +385,114 @@ export default function SignupCreator(): JSX.Element {
     </form>
   );
 
+  const completeButtonSet = (
+    <div>
+      <Button
+        component={Link}
+        className={classes.socialLoginButton}
+        to="/mypage/creator/main"
+        color="primary"
+        variant="contained"
+        fullWidth
+      >
+    마이페이지로 이동
+      </Button>
+      <Button
+        component={Link}
+        className={classes.socialLoginButton}
+        to="/creator"
+        color="default"
+        variant="contained"
+        fullWidth
+      >
+    메인화면으로
+      </Button>
+    </div>
+  );
+
   return (
     <Grid container alignItems="center" direction="column">
       <Grid item xs={12} md={6} style={{ maxWidth: 500 }}>
         <Paper style={{ padding: 24, textAlign: 'center' }}>
           <Typography variant="h4" style={{ fontWeight: 'bold' }}>회원가입</Typography>
 
-          {/* 회원가입 완료 페이지 */}
-          {location.pathname === '/creator/signup/complete' && (
-          <div>
-            <Typography>회원가입이 완료되었습니다.</Typography>
-            <Typography>회원가입 완료 페이지를 여기에.</Typography>
-          </div>
-          )}
-
-          {/* 기존 유저 회원 가입 안내 */}
-          {location.pathname === '/creator/signup/pre-user' && (
-            <>
+          {/* 이미 새로운 방식의 회원가입을 완료한 경우 */}
+          {(isLogedIn && alreadySigned) ? (
+            <div className={classes.finished}>
+              <Typography>
+                이미 새로운 방식의 회원가입을 완료하였습니다.
+              </Typography>
               <Alert severity="info" style={{ textAlign: 'left', marginTop: 16, paddingTop: 16 }}>
                 <Typography>
-                  기존 &quot;트위치로 로그인&quot;기능으로 온애드를 이용한 유저는 다음 방법으로 로그인할 수 있습니다.
+                  가입하신 아이디는 다음과 같습니다.
                 </Typography>
-
-                <div style={{ marginTop: 8 }}>
-                  <Typography variant="body2">
-                    1. &quot;기존 트위치 로그인&quot; 버튼을 통해 사용하던 트위치 계정으로 로그인해주세요.
-                  </Typography>
-                  <Typography variant="body2">
-                    2. 로그인 시 사용할 ID/PW를 입력해주세요.
-                  </Typography>
-                  <Typography variant="body2">
-                    3. 이후 로그인부터는 입력한 ID/PW로 로그인할 수 있습니다.
-                  </Typography>
-
-                </div>
+                <Typography>
+                  {alreadySignedId.slice(0, alreadySignedId.length - 3).concat('***')}
+                </Typography>
               </Alert>
-
-              <Button
-                onClick={(e): void => {
-                  e.preventDefault();
-                  if (!isLogedIn) window.location.href = `${HOST}/login/twitch/pre-creator`;
-                }}
-                className={classnames(classes.socialLoginButton, classes.twitch, {
-                  [classes.success]: !!isLogedIn
-                })}
-                variant="contained"
-              >
-                {isLogedIn ? (
-                  <>
-                    <Check />
-                    <Typography variant="body1">
-                      {`${parseParams(location.search).creatorName} 기존계정인증 완료`}
+              <br />
+              {completeButtonSet}
+            </div>
+          ) : (
+            <>
+              {/* 기존 유저 회원 가입 안내 */}
+              {location.pathname === '/creator/signup/pre-user' && (
+                <>
+                  <Alert severity="info" style={{ textAlign: 'left', marginTop: 16, paddingTop: 16 }}>
+                    <Typography>
+                  기존 &quot;트위치로 로그인&quot;기능으로 온애드를 이용한 유저는 다음 방법으로 로그인할 수 있습니다.
                     </Typography>
-                  </>
-                ) : (
-                  <>
-                    <img src="/pngs/logo/twitch/TwitchGlitchWhite.png" alt="" className={classes.socialLogo} />
-                    <Typography variant="body1">기존 트위치 로그인</Typography>
-                  </>
-                )}
-              </Button>
+
+                    <div style={{ marginTop: 8 }}>
+                      <Typography variant="body2">
+                    1. &quot;기존 트위치 로그인&quot; 버튼을 통해 사용하던 트위치 계정으로 로그인해주세요.
+                      </Typography>
+                      <Typography variant="body2">
+                    2. 로그인 시 사용할 ID/PW를 입력해주세요.
+                      </Typography>
+                      <Typography variant="body2">
+                    3. 이후 로그인부터는 입력한 ID/PW로 로그인할 수 있습니다.
+                      </Typography>
+
+                    </div>
+                  </Alert>
+
+                  <Button
+                    onClick={(e): void => {
+                      e.preventDefault();
+                      if (!isLogedIn) window.location.href = `${HOST}/login/twitch/pre-creator`;
+                    }}
+                    className={classnames(classes.socialLoginButton, classes.twitch, {
+                      [classes.success]: !!isLogedIn
+                    })}
+                    variant="contained"
+                  >
+                    {isLogedIn ? (
+                      <>
+                        <Check />
+                        <Typography variant="body1">
+                          {`${parseParams(location.search).creatorName} 기존계정인증 완료`}
+                        </Typography>
+                      </>
+                    ) : (
+                      <>
+                        <img src="/pngs/logo/twitch/TwitchGlitchWhite.png" alt="" className={classes.socialLogo} />
+                        <Typography variant="body1">기존 트위치 로그인</Typography>
+                      </>
+                    )}
+                  </Button>
+                </>
+              )}
+
+
+              {/* 회원정보 받기 */}
+              {!(location.pathname === '/creator/signup/complete') && activeStep === 0 && (
+              <div>{signupForm}</div>
+              )}
+
             </>
           )}
 
-
-          {/* 회원정보 받기 */}
-          {!(location.pathname === '/creator/signup/complete') && activeStep === 0 && (
-            <div>{signupForm}</div>
-          )}
 
           {/* 본인인증 진행 */}
           {!(location.pathname === '/creator/signup/pre-user')
@@ -435,6 +501,14 @@ export default function SignupCreator(): JSX.Element {
               onSuccess={handleSignup}
               onBackClick={handleBack}
             />
+          )}
+
+          {/* 회원가입 완료 페이지 */}
+          {location.pathname === '/creator/signup/complete' && (
+          <div className={classes.finished}>
+            <Typography>회원가입이 성공적으로 완료되었습니다.</Typography>
+            {completeButtonSet}
+          </div>
           )}
 
           {location.pathname === '/creator/signup' && (
