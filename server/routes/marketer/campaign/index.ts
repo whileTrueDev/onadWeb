@@ -306,14 +306,14 @@ router.route('/')
               marketerActionLogging([
                 marketerId, MARKETER_ACTION_LOG_TYPE, JSON.stringify({ campaignName })
               ]);
-              slack({
-                summary: '캠페인 등록 알림',
-                text: '관리자 페이지에서 방금 등록된 캠페인을 확인하세요.',
-                fields: [
-                  { title: '마케터 이름', value: marketerName!, short: true },
-                  { title: '캠페인 이름', value: campaignName!, short: true },
-                ]
-              });
+              // slack({
+              //   summary: '캠페인 등록 알림',
+              //   text: '관리자 페이지에서 방금 등록된 캠페인을 확인하세요.',
+              //   fields: [
+              //     { title: '마케터 이름', value: marketerName!, short: true },
+              //     { title: '캠페인 이름', value: campaignName!, short: true },
+              //   ]
+              // });
             })
             .catch((error) => {
               responseHelper.promiseError(error, next);

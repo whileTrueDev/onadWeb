@@ -128,3 +128,17 @@ a:hover,
 a:focus {
     text-decoration: none;
 }
+
+/* material-table min width 설정을 위해 by hwasurr 21.01.15 */
+#creator-select-table table.MuiTable-root {
+    min-width: 1340px;
+}
+
+#creator-select-table table.MuiTable-root:nth-child(2) {
+    display: table-row;
+}
+
+#creator-select-table table.MuiTable-root tfoot {
+    float: left;
+}
+

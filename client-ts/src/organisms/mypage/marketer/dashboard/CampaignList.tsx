@@ -86,8 +86,19 @@ export default function CampaignList(): JSX.Element {
     axios.patch(`${HOST}/marketer/campaign/on-off`, { onoffState, campaignId })
       .then((res) => {
         if (res.data[0]) {
+          if (campaignData.data) {
+            const target = campaignData.data.findIndex((x) => x.campaignId === campaignId);
+            if (target > -1) {
+              const tmpList = campaignData.data;
+              const tmp = campaignData.data[target];
+              tmp.onOff = !tmp.onOff ? 1 : 0;
+
+              tmpList[target] = tmp;
+              campaignData.setData(tmpList);
+            }
+          }
           snack.handleOpen();
-          campaignData.request();
+          // campaignData.request();
         } else {
           alert(res.data[1]);
         }
@@ -181,11 +192,8 @@ export default function CampaignList(): JSX.Element {
                               {priorityTypeList[detail.priorityType]}
                             </Typography>
                             {detail.campaignDescription && (
-                            <Typography variant="caption" gutterBottom>
-                              {detail.campaignDescription.slice(0, 10)}
-                              {detail.campaignDescription.length > 10 && (
-                                <span>...</span>
-                              )}
+                            <Typography variant="caption" gutterBottom noWrap>
+                              {detail.campaignDescription}
                             </Typography>
                             )}
                             <Typography variant="caption" color="textSecondary">

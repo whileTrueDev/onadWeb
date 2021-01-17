@@ -55,7 +55,7 @@ const SelectTime = (props: SelectTimeProps): JSX.Element => {
           <StyledSelectText
             primary="송출 시간 설정"
             secondary={toggle && (
-              <Typography variant="body2">
+              <Typography variant="body2" color="textSecondary">
                 선택한 시간대에 광고가 송출됩니다.
                 <Typography color="error" variant="caption">(중복 선택 가능)</Typography>
               </Typography>

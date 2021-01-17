@@ -15,6 +15,8 @@ import {
 import HOST from '../../../config';
 import axios from '../../../utils/axios';
 import history from '../../../history';
+import Snackbar from '../../../atoms/Snackbar/Snackbar';
+import { useDialog } from '../../../utils/hooks';
 
 
 const useStyles = makeStyles((_theme: Theme) => ({
@@ -69,6 +71,9 @@ const CampaignCreate = (): JSX.Element => {
     event.preventDefault();
     setStep(step + 1);
   };
+
+  // *****************************************************
+  const errorSnack = useDialog();
 
   // *****************************************************
   // 캠페인정보 - 이름, 홍보문구, 예산 ref
@@ -162,19 +167,34 @@ const CampaignCreate = (): JSX.Element => {
     }
     campaignCreateDTO.keyword = ['', '', '']; // keyword추가후 수정
 
+    campaignCreateDispatch({ type: 'LOADING_START', value: '' });
     axios.post(`${HOST}/marketer/campaign`, campaignCreateDTO)
       .then((res) => {
+        campaignCreateDispatch({ type: 'LOADING_DONE', value: '' });
         if (res.data[0]) {
           alert(res.data[1]);
           history.push('/mypage/marketer/main');
         } else {
           alert(res.data[1]);
         }
+      })
+      .catch((err) => {
+        console.error(err);
+        errorSnack.handleOpen();
       });
   };
 
   return (
     <Grid container direction="row" spacing={2} wrap="wrap">
+
+      {/* 요청 실패 스낵바 */}
+      <Snackbar
+        open={errorSnack.open}
+        onClose={errorSnack.handleClose}
+        color="error"
+        message="캠페인 생성 과정에서 오류가 발생했습니다. 잠시 후 다시 시도해주세요."
+      />
+
       {isDesktop ? (
         <Grid item xs={12}>
           <Paper>

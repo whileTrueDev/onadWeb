@@ -1,11 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import {
-  Grid, Paper, CircularProgress
+  Chip, Grid, Typography,
 } from '@material-ui/core';
-import StyledItemText from '../../../../../atoms/StyledItemText';
 import CreatorTable from './CreatorSelectTable';
-import useGetRequest from '../../../../../utils/hooks/useGetRequest';
 import { CampaignCreateInterface, CampaignCreateAction } from '../reducers/campaignCreate.reducer';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -17,13 +15,10 @@ const useStyles = makeStyles((theme: Theme) => ({
       margin: 0,
     },
   },
-  choice: {
-    padding: theme.spacing(3),
-    margin: '16px',
-    [theme.breakpoints.down('sm')]: {
-      padding: theme.spacing(1),
-    },
+  bold: {
+    fontWeight: theme.typography.fontWeightBold
   },
+  chip: { margin: theme.spacing(0.5) }
 }));
 
 
@@ -41,10 +36,6 @@ const CreatorSelect = (props: CreatorSelectProps): JSX.Element => {
   const classes = useStyles();
 
   // **********************************************************
-  // 게임데이터 로딩 및 클릭 핸들러
-  const creatorsData = useGetRequest('/creators');
-
-  // **********************************************************
   // "다음" 버튼 핸들러
   useEffect(() => {
     if (state.selectedPriorityType !== 'type0') {
@@ -57,41 +48,20 @@ const CreatorSelect = (props: CreatorSelectProps): JSX.Element => {
     }
   }, [handleComplete, handleIncomplete, state.selectedCreators.length, state.selectedPriorityType]);
 
-  // **********************************************************
-  // 선택된 크리에이터 이름 핸들러
-  const [creatorsText, setText] = useState('');
-  useEffect(() => {
-    const texts = state.selectedCreatorNames.reduce((text, creatorName) => {
-      const newText = text.concat(creatorName).concat(', ');
-      return newText;
-    }, '현재까지 선택된 크리에이터 :  ');
-
-    setText(texts);
-  }, [state.selectedCreatorNames]);
-
   return (
     <Grid container direction="column" spacing={2} className={classes.root}>
       <Grid item>
-        <Grid container direction="column" spacing={2}>
-          <Grid item>
-            <Paper className={classes.choice}>
-              <StyledItemText primary={creatorsText} />
-            </Paper>
-          </Grid>
-          <Grid item>
-            {creatorsData.loading && (
-              <div style={{ padding: 72, textAlign: 'center' }}>
-                <CircularProgress size={100} disableShrink />
-              </div>
-            )}
-            {!creatorsData.loading && creatorsData.data && (
-              <CreatorTable
-                checkedCreators={state.selectedCreators}
-                dispatch={dispatch}
-              />
-            )}
-          </Grid>
-        </Grid>
+        <Typography variant="body1" className={classes.bold}>현재까지 선택된 크리에이터 : </Typography>
+        <Typography variant="body2" color="textSecondary">* 표에서 크리에이터 클릭시 선택됩니다.</Typography>
+        {state.selectedCreatorNames.map((name) => (
+          <Chip className={classes.chip} label={name} key={name} color="primary" />
+        ))}
+      </Grid>
+      <Grid item>
+        <CreatorTable
+          checkedCreators={state.selectedCreators}
+          dispatch={dispatch}
+        />
       </Grid>
     </Grid>
   );

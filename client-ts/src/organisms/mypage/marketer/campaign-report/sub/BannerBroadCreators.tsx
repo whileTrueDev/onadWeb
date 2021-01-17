@@ -42,7 +42,6 @@ export default function BannerBroadCreators(
         params: { creatorId },
         cancelToken: cancelToken.source().token,
         withCredentials: true
-
       })
         .then((res) => {
           const rawDetailData = res.data;
@@ -64,7 +63,7 @@ export default function BannerBroadCreators(
               empty: false,
               payload: {
                 ...rawDetailData,
-                ...creatorsData.data[index]
+                // ...creatorsData.data[index]
               }
             });
           }

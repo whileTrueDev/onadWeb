@@ -48,7 +48,6 @@ export default function Dashboard(): JSX.Element {
   const adData = useGetRequest<null, AdInterface | null>('/marketer/ad');
   const countsData = useGetRequest<null, CountInterface | null>('/marketer/ad/analysis/creator-count');
   const valueChartData = useGetRequest<null, ValueChartInterface[] | null>('/marketer/ad/analysis/expenditure');
-  const broadCreatorData = useGetRequest<null, string[] | null>('/marketer/ad/analysis/creator/list');
   const actionLogData = useGetRequest<null, ActionLogInterface[] | null>('/marketer/history');
 
 
@@ -133,7 +132,6 @@ export default function Dashboard(): JSX.Element {
                       <Grid item xs={9} md={3} lg={9}>
                         <CanvasForChart
                           valueChartData={valueChartData}
-                          broadCreatorData={broadCreatorData}
                         />
                       </Grid>
                       <Grid item xs={3} md={3} lg={3}>

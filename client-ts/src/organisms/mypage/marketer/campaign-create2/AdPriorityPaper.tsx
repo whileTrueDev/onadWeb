@@ -26,7 +26,7 @@ const priorityTypes: PriorityInterface[] = [
   {
     id: 'type0',
     primaryText: '특정 크리에이터에게만 광고 송출',
-    secondaryText: '특정 크리에이터에게만 광고를 송출할 수 있어요',
+    secondaryText: '특정 크리에이터에게만 광고를 송출할 수 있어요.',
     defaultChildren: (
       state: CampaignCreateInterface,
       dispatch: React.Dispatch<CampaignCreateAction>,
@@ -59,7 +59,7 @@ const priorityTypes: PriorityInterface[] = [
   },
   {
     id: 'type1',
-    primaryText: '특정 카테고리에만 광고 송출 (트위치 카테고리)',
+    primaryText: '특정 트위치 카테고리에만 광고 송출',
     secondaryText: '특정 카테고리에만 광고를 송출할 수 있어요.',
     defaultChildren: (
       state: CampaignCreateInterface,
@@ -91,7 +91,7 @@ const priorityTypes: PriorityInterface[] = [
   },
   {
     id: 'type1-1',
-    primaryText: '특정 카테고리에만 광고 송출 (아프리카 카테고리)',
+    primaryText: '특정 아프리카TV 카테고리에만 광고 송출',
     secondaryText: '특정 카테고리에만 광고를 송출할 수 있어요.',
     defaultChildren: (
       state: CampaignCreateInterface,
@@ -123,8 +123,8 @@ const priorityTypes: PriorityInterface[] = [
   },
   {
     id: 'type2',
-    primaryText: '노출 우선',
-    secondaryText: ' 최대한 많은 시청자들에게 브랜드를 인지시키고 싶은 광고주님께 추천드립니다.',
+    primaryText: '조건 무관 송출 (노출 우선)',
+    secondaryText: '최대한 많은 시청자들에게 브랜드를 인지시키고 싶은 광고주님께 추천드립니다.',
   }
 ];
 

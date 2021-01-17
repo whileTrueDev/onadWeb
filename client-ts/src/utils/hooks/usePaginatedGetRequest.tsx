@@ -54,6 +54,6 @@ export default function usePaginatedGetRequest<T = any>(
   }, [request]);
 
   return {
-    loading, data, handleNextPage, request,
+    loading, data, handleNextPage, request, setData,
   };
 }
