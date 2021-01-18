@@ -1,4 +1,5 @@
 export interface CreatorDetailDataInterface {
+  // 트위치 지표
   creatorId: string;
   followers: number;
   viewer: number;
@@ -14,8 +15,29 @@ export interface CreatorDetailDataInterface {
   contentsGraphData: string;
   date: Date;
   viewerHeatmatData: string | null;
-  creatorLogo: string;
-  creatorName: string;
+  // 아프리카 지표
+  creatorIdAfreeca: string;
+  followersAfreeca: number;
+  viewerAfreeca: number;
+  peakviewAfreeca: number;
+  airtimeAfreeca: number;
+  impressionAfreeca: number;
+  ctrAfreeca: number;
+  costAfreeca: number;
+  ripAfreeca: number;
+  contentAfreeca: string;
+  openHourAfreeca: string;
+  timeGraphDataAfreeca: string;
+  contentsGraphDataAfreeca: string;
+  dateAfreeca: Date;
+  viewerHeatmatDataAfreeca: string | null;
+
+  creatorTwitchId?: string;
+  creatorLogo?: string;
+  afreecaLogo?: string;
+  creatorName?: string;
+  afreecaName?: string;
+  afreecaId?: string;
 }
 // 백엔드와 데이터 주고받기 위한 DTO 인터페이스 - 캠페인 생성
 export interface CampaignCreateDTO {

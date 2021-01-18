@@ -69,7 +69,6 @@ function makeContent(selectedCampaign: CampaignInterface): { topic: string; valu
     },
     { topic: '캠페인 유형', value: getOptionType(selectedCampaign.optionType) },
     { topic: '캠페인 생성 날짜', value: new Date(selectedCampaign.regiDate).toLocaleString() },
-    { topic: '', value: '' },
   ];
 }
 

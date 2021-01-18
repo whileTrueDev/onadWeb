@@ -108,6 +108,7 @@ router.route('/creator-data')
         LEFT JOIN creatorDetail AS cd
         ON cl.creatorId = cd.creatorId
         WHERE campaignId = ?
+        AND ci.arrested != 1
         GROUP BY cl.creatorId
         ORDER BY total_ad_exposure_amount DESC`;
 
@@ -115,23 +116,19 @@ router.route('/creator-data')
       } else {
         query = `
         SELECT
-        ci.creatorId AS creatorId, 
-        ci.creatorName AS creatorName, 
-        ci.creatorTwitchId AS creatorTwitchId,
-        ci.creatorLogo AS creatorLogo, 
-        sum(cashFromMarketer) AS total_ad_exposure_amount,
-        cd.viewer AS viewer,
-        cd.followers AS followers, 
-        cd.airtime AS airtime, 
-        cd.impression AS impression, 
-        cd.openHour AS openHour, 
-        cd.content AS content
+          IFNULL(creatorName, afreecaName) AS creatorName,
+          ci.creatorId AS creatorId,
+          ci.creatorName AS creatorTwitchName,
+          ci.creatorTwitchId AS creatorTwitchId,
+          ci.creatorLogo AS creatorLogo,
+          ci.afreecaId,
+          ci.afreecaName,
+          SUM(cashFromMarketer) AS total_ad_exposure_amount
         FROM campaignLog as cl
         JOIN creatorInfo as ci
         ON cl.creatorId = ci.creatorId
-        LEFT JOIN creatorDetail AS cd
-        ON cl.creatorId = cd.creatorId
         WHERE SUBSTRING_INDEX(campaignId, '_', 1) = ?
+        AND ci.arrested != 1
         GROUP BY cl.creatorId
         ORDER BY total_ad_exposure_amount DESC`;
 

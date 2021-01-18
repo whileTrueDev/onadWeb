@@ -11,7 +11,6 @@ import sources from '../../organisms/main/main/source/sources';
 import AppFooter from '../../organisms/main/layouts/AppFooter';
 import textSource from '../../organisms/main/Introduction/source/textSource';
 import Question from '../../organisms/main/Introduction/Question';
-import withRoot from './withRoot';
 
 
 export interface Props {
@@ -22,7 +21,7 @@ export interface Props {
 
 
 // this is layout compoent
-export default withRoot(({ match }: Props) => {
+export default function Introduction({ match }: Props): JSX.Element {
   const { isLogin, logout } = useLoginValue();
   const classes = styles();
   const { userType } = match.params;
@@ -116,4 +115,4 @@ export default withRoot(({ match }: Props) => {
         )}
     </div>
   );
-});
+}

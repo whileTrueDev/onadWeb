@@ -8,6 +8,11 @@
     src: url(./fonts/NotoSansKR-Regular.otf) format('truetype');
 }
 
+@font-face {
+    font-family: 'AppleSDGothicNeo';
+    src: url(./fonts/AppleSDGothicNeoM.ttf) format('truetype');
+}
+
 html * {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -15,10 +20,10 @@ html * {
 }
 
 body {
-    background-color: #eeeeee;
+    /* background-color: #fff; */
     margin: 0;
     font-family: Helvetica, 'Sunflower', sans-serif;
-    font-weight: 300;
+    font-weight: 400;
     line-height: 1.5em;
 }
 
@@ -123,3 +128,17 @@ a:hover,
 a:focus {
     text-decoration: none;
 }
+
+/* material-table min width 설정을 위해 by hwasurr 21.01.15 */
+#creator-select-table table.MuiTable-root {
+    min-width: 1340px;
+}
+
+#creator-select-table table.MuiTable-root:nth-child(2) {
+    display: table-row;
+}
+
+#creator-select-table table.MuiTable-root tfoot {
+    float: left;
+}
+

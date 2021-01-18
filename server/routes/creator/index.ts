@@ -11,6 +11,8 @@ import bannerRouter from './banner';
 import notificationRouter from './notification';
 import clicksRouter from './clicks';
 import cpaRouter from './cpa';
+import makeAdvertiseUrl from '../../lib/makeAdvertiseUrl';
+import makeRemoteControllerUrl from '../../lib/makeRemoteControllerUrl';
 
 const router = express.Router();
 router.use('/income', incomeRouter);
@@ -19,13 +21,32 @@ router.use('/notification', notificationRouter);
 router.use('/clicks', clicksRouter);
 router.use('/cpa', cpaRouter);
 
+// 통합 회원가입 - 아이디 중복 체크
+router.route('/check-id')
+  .get(
+    responseHelper.middleware.withErrorCatch(async (req, res, next) => {
+      const userid = responseHelper.getParam('userid', 'get', req);
+      const duplicateCheckQuery = 'SELECT creatorId, loginId FROM creatorInfo WHERE loginId = ?';
+      const queryArray = [userid];
+      const { result } = await doQuery(duplicateCheckQuery, queryArray);
+      if (result.length > 0) { // 중복아이디가 있는 경우
+        responseHelper.send('duplicate', 'get', res);
+      } else { // 중복 아이디가 없는 경우
+        responseHelper.send('allow', 'get', res);
+      }
+    })
+  );
 
 router.route('/')
   // 크리에이터 유저정보(계좌암호화 해제하여 전송) 조회
   .get(
     responseHelper.middleware.checkSessionExists,
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
-      const { creatorId, creatorLogo } = responseHelper.getSessionData(req);
+      const { creatorId, userType } = responseHelper.getSessionData(req);
+
+      if (userType === 'marketer') {
+        throw new createHttpError[403]('you are not a creator!');
+      }
       const NowIp: any = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
 
       const query = `
@@ -37,9 +58,10 @@ router.route('/')
           const userData = row.result[0];
           const rawAccount: string = row.result[0].creatorAccountNumber || '';
           const deciphedAccountNum: string = encrypto.decipher(rawAccount);
-          const deciphedIdentificationNum: string = encrypto.decipher(userData.identificationNumber);
+          const deciphedIdentificationNum: string = encrypto.decipher(
+            userData.identificationNumber
+          );
           const deciphedphoneNum: string = encrypto.decipher(userData.phoneNumber);
-          userData.creatorLogo = creatorLogo;
           userData.identificationNumber = deciphedIdentificationNum;
           userData.phoneNumber = deciphedphoneNum;
           userData.creatorAccountNumber = deciphedAccountNum;
@@ -49,6 +71,48 @@ router.route('/')
           responseHelper.promiseError(error, next);
         });
     }),
+  )
+  .post(
+    // 크리에이터 회원 가입
+    responseHelper.middleware.withErrorCatch(async (req, res, next) => {
+      const creatorIp = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+      const [userid, passwd] = responseHelper.getParam(['userid', 'passwd'], 'POST', req);
+      const [encryptedPassword, salt] = encrypto.make(passwd);
+      // 고유 아이디
+      const creatorId = `V2_${userid}_${new Date().getTime()}`;
+      const createCreatorQuery = `
+      INSERT INTO creatorInfo 
+        (creatorId, loginId, password, passwordSalt, creatorIp) 
+        VALUES (?, ?, ?, ?, ?)`;
+      const queryArray = [creatorId, userid, encryptedPassword, salt, creatorIp];
+      const row = await doQuery(createCreatorQuery, queryArray);
+      if (row.result) {
+        responseHelper.send(userid, 'post', res);
+      } else next();
+
+      // 각 테이블 기본 행 추가 (수익금, 수익률, 레벨)
+      const incomeQuery = `
+        INSERT INTO creatorIncome 
+        (creatorId, creatorTotalIncome, creatorReceivable) 
+        VALUES (?, 0, 0)`;
+
+      const priceQuery = `
+        INSERT INTO creatorPrice
+        (creatorId, grade, viewerAverageCount, unitPrice)
+        VALUES (?, ?, ?, ?)`;
+
+      const royaltyQuery = `
+        INSERT INTO creatorRoyaltyLevel
+        (creatorId, level, exp, visitCount)
+        VALUES (?, 1, 0, 0)`;
+
+      Promise.all([
+        doQuery(incomeQuery, [creatorId]),
+        doQuery(priceQuery, [creatorId, 1, 0, 2]),
+        doQuery(royaltyQuery, [creatorId])
+      ]).then(() => responseHelper.send(userid, 'post', res))
+        .catch(() => next());
+    })
   )
   .patch(
     // 크리에이터 계약 OR IP 업데이트 OR CPA 계약 동의
@@ -67,10 +131,15 @@ router.route('/')
             responseHelper.promiseError(error, next);
           });
       } else if (type === 'contraction') {
+        // ***************************************************************************
+        // 201207 - advertiseURL 생성 기능 여기서 추가필요. ( 회원가입시 -> 이용계약시 수정 )
+
         // 크리에이터 계약
+        const creatorBannerUrl = makeAdvertiseUrl();
+        const remoteControllerUrl = makeRemoteControllerUrl();
         const contractionUpdateQuery = `
           UPDATE creatorInfo
-          SET creatorContractionAgreement = ?
+          SET creatorContractionAgreement = ?, advertiseUrl = ?, remoteControllerUrl = ?
           WHERE creatorInfo.creatorId = ?`;
         // 계약시 생성되는 creatorCampaign 기본값
         const campaignList = JSON.stringify({ campaignList: [] });
@@ -84,10 +153,9 @@ router.route('/')
           INSERT INTO creatorLanding
           (creatorId, creatorTwitchId)
           VALUES (?, ?)`;
-
         Promise.all([
-          doQuery(contractionUpdateQuery, [1, creatorId]),
           doQuery(campaignQuery, [creatorId, campaignList, campaignList, campaignList]),
+          doQuery(contractionUpdateQuery, [1, creatorBannerUrl, remoteControllerUrl, creatorId]),
           doQuery(landingQuery, [creatorId, creatorName])
         ])
           .then(() => {
@@ -116,6 +184,49 @@ router.route('/')
   )
   .all(responseHelper.middleware.unusedMethod);
 
+// 기존 트위치 로그인 -> 새로운 로그인 방식으로 변환하는 작업
+// @2020 12 13 hwasurr
+router.route('/pre-user')
+  .post(responseHelper.middleware.withErrorCatch(async (req, res, next) => {
+    const [creatorId, userid, passwd, accessToken] = responseHelper.getParam([
+      'creatorId', 'userid', 'passwd', 'accessToken'
+    ], 'POST', req);
+
+    // 백에서는 받은 액세스토큰으로 twitch users 요청을 진행,
+    axios.get('https://api.twitch.tv/helix/users', {
+      params: { id: creatorId },
+      headers: {
+        'Client-Id': process.env.TWITCH_CLIENT_ID,
+        Authorization: `Bearer ${accessToken}`
+      }
+    })
+      .then((userInfoRes) => {
+        if (userInfoRes.data.data.length > 0) {
+        // 올바른 정보가 오면 아디/비번을 설정
+          const [encrypted, salt] = encrypto.make(passwd);
+          const query = `
+          UPDATE creatorInfo
+          SET loginId = ?, password = ?, passwordSalt = ?, creatorTwitchOriginalId = ?
+          WHERE creatorId = ?`;
+          const queryArray = [userid, encrypted, salt, creatorId, creatorId];
+          doQuery(query, queryArray)
+            .then((row) => {
+              responseHelper.send(row.result.affectedRows, 'POST', res);
+            })
+            .catch((err) => {
+              console.error('Query Error occurred in - /pre-user');
+              throw err;
+            });
+        }
+      })
+      // 액세스토큰이 없거나, 올바르지 못한 액세스토큰인 경우, 에러처리.
+      .catch((err) => {
+        if (err.response.status === 401) {
+          throw new createHttpError[401](err.response.data);
+        }
+        throw err;
+      });
+  }));
 
 router.route('/settlement')
   .patch( // 크리에이터 정산에 필요한 계좌 등록 / 변경
@@ -307,7 +418,11 @@ router.route('/adchat/agreement')
       const query = 'UPDATE creatorInfo SET adChatAgreement = ? WHERE creatorId = ?';
       const queryArray = [targetOnOffState, creatorId];
       const row = await doQuery(query, queryArray);
-      responseHelper.send(row.result, 'patch', res);
+      if (row.result.affectedRows > 0) {
+        responseHelper.send(row.result.affectedRows, 'patch', res);
+      } else {
+        responseHelper.promiseError(new Error(`failed - creatorId ${creatorId} is not exists`), next);
+      }
     })
   )
   .all(responseHelper.middleware.unusedMethod);
@@ -386,4 +501,47 @@ router.route('/follower')
     })
 
   );
+
+// 2020.12.14 hwasurr - 새로운 로그인 방식에 따른 password 변경 라우터 생성
+router.route('/password')
+  .patch( // 비밀번호 변경
+    responseHelper.middleware.checkSessionExists,
+    responseHelper.middleware.withErrorCatch(async (req, res, next) => {
+      const sess = responseHelper.getSessionData(req);
+      const newPassword = responseHelper.getParam('password', 'PATCH', req);
+
+      const [encrypted, salt] = encrypto.make(newPassword);
+      const query = 'UPDATE creatorInfo SET password = ?, passwordSalt = ? WHERE creatorId = ?';
+      const queryArray = [encrypted, salt, sess.creatorId];
+
+      doQuery(query, queryArray)
+        .then((row) => {
+          responseHelper.send(row.result.changedRows, 'PATCH', res);
+        })
+        .catch((err) => responseHelper.promiseError(err, next));
+    })
+  )
+  .post( // 비밀번호 확인
+    responseHelper.middleware.checkSessionExists,
+    responseHelper.middleware.withErrorCatch(async (req, res, next) => {
+      const sess = responseHelper.getSessionData(req);
+      const password = responseHelper.getParam('password', 'post', req);
+
+      const findQuery = `
+      SELECT password, passwordSalt FROM creatorInfo WHERE creatorId = ?`;
+      const queryArray = [sess.creatorId];
+
+      doQuery(findQuery, queryArray)
+        .then((row) => {
+          const user = row.result[0];
+          if (encrypto.check(password, user.password, user.passwordSalt)) {
+            responseHelper.send(true, 'get', res);
+          } else {
+            responseHelper.send(false, 'get', res);
+          }
+        })
+        .catch((err) => responseHelper.promiseError(err, next));
+    })
+  );
+
 export default router;

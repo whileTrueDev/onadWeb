@@ -55,60 +55,30 @@ router.get('/kakao/callback', passport.authenticate('kakao'),
     }
   });
 
-// creator - twitch 로그인
-router.get('/twitch', passport.authenticate('twitch'));
-router.get('/twitch/callback', passport.authenticate('twitch'),
-  (req, res) => {
-    res.redirect(`${HOST}/mypage/creator/main`);
-  });
+// creator - twitch -> 기존 크리에이터 유저의 새로운 로그인 방식 처리
+// 기존 아이디에 로그인용 아이디 비번 생성
+router.get('/twitch/pre-creator', passport.authenticate('twitch-pre-creator'));
+router.route('/twitch/pre-creator/callback')
+  .get(
+    passport.authenticate('twitch-pre-creator'),
+    (req, res) => {
+      const { creatorId, creatorName, accessToken } = req.user as any;
+      res.redirect([
+        `${HOST}/creator/signup/pre-user`,
+        `?creatorId=${creatorId}`,
+        `&creatorName=${creatorName}`,
+        `&accessToken=${accessToken}`
+      ].join(''));
+    }
+  )
+  // exception filter 역할의 에러 처리 미들웨어
+  .get((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
+    console.log(err);
+    if (err.message) {
+      res.redirect(`${HOST}/creator/signup/pre-user?${err.message}&platform=twitch`);
+    } else res.redirect(`${HOST}/creator/signup/pre-user?error=error&platform=twitch`);
+  },);
 
-// creator - afreeca 로그인
-router.get('/afreeca', (req, res) => {
-  Axios.get('https://openapi.afreecatv.com/auth/code',
-    {
-      params: { client_id: process.env.AFREECA_KEY },
-      headers: {
-        'Content-Type': 'application/json',
-        Accept: '*/*',
-      }
-    })
-    .then((apiRes) => {
-      res.redirect(apiRes.request.res.responseUrl);
-    })
-    .catch((err) => {
-      console.log(err.response.data);
-      res.sendStatus(err.response.status);
-    });
-});
-
-// 
-router.get('/afreeca/callback', (req, res) => {
-  const afreecaCode = req.query.code;
-  Axios.post('https://openapi.afreecatv.com/auth/token',
-    {
-      grant_type: 'authorization_code',
-      client_id: process.env.AFREECA_KEY,
-      client_secret: process.env.AFREECA_SECRET_KEY,
-      code: afreecaCode,
-    },
-    {
-      headers: {
-        'Content-Type': 'application/json',
-        Accept: '*/*',
-      }
-    })
-    .then((tokenRes) => {
-      console.log(tokenRes.data);
-      res.redirect(`${HOST}/creator`);
-    })
-    .catch((err) => {
-      if (err.response) {
-        console.log(err.response.data);
-      } else {
-        console.log(err);
-      }
-    });
-});
 
 router.route('/check')
   .get(
@@ -147,4 +117,5 @@ router.route('/check')
     })
   )
   .all(responseHelper.middleware.unusedMethod);
+
 export default router;

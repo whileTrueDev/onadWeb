@@ -6,15 +6,13 @@ import Person from '@material-ui/icons/PersonOutline';
 import BrandingWatermark from '@material-ui/icons/BrandingWatermarkOutlined';
 import Reorder from '@material-ui/icons/Reorder';
 import Work from '@material-ui/icons/Work';
-import Mouse from '@material-ui/icons/Mouse'; // 마우스 아이콘
 import HowToRegIcon from '@material-ui/icons/HowToReg';
-
+import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
 // 크리에이터 라우터
-import CreatorCampaignManage from './creator/CampaignManage';
+import CreatorMyAds from './creator/MyAds';
 import CreatorDashboard from './creator/Dashboard';
 import CreatorManual from './creator/Manual';
 import CreatorMyPage from './creator/Mypage';
-import CreatorClickAdManage from './creator/ClickAdManage';
 // import CreatorCPAManage from './creator/CPAManage';
 
 // 마케터 라우터
@@ -25,6 +23,7 @@ import MarketerMyOffice from './marketer/MyOffice';
 import MarketerCreateCampaign from './marketer/CampaignCreate';
 import MarketerManual from './marketer/Manual';
 import CpaStop from './temp/CPA-STOP';
+import CreatorIncomeManage from './creator/IncomeManage';
 
 export interface MypageRoute {
   path: string;
@@ -33,6 +32,7 @@ export interface MypageRoute {
   component?: () => JSX.Element;
   layout: string;
   noTab?: boolean;
+  needNextDivider?: boolean;
 }
 
 export interface MypageRoutes {
@@ -50,17 +50,10 @@ const dashboardRoutes: MypageRoutes = {
       layout: '/mypage/creator',
     },
     {
-      path: '/banner',
-      name: '내 배너광고',
+      path: '/ad',
+      name: '내 광고 관리',
       icon: BrandingWatermark,
-      component: CreatorCampaignManage,
-      layout: '/mypage/creator',
-    },
-    {
-      path: '/ad-dashboard',
-      name: '내 클릭광고',
-      icon: Mouse,
-      component: CreatorClickAdManage,
+      component: CreatorMyAds,
       layout: '/mypage/creator',
     },
     {
@@ -75,19 +68,28 @@ const dashboardRoutes: MypageRoutes = {
       // component: CreatorCPAManage,
       component: CpaStop,
       layout: '/mypage/creator',
+      needNextDivider: true,
     },
+    {
+      path: '/income',
+      name: '내 수익 관리',
+      icon: AttachMoneyIcon,
+      component: CreatorIncomeManage,
+      layout: '/mypage/creator',
+    },
+    {
+      path: '/user',
+      name: '내 계정 관리',
+      icon: Person,
+      component: CreatorMyPage,
+      layout: '/mypage/creator',
+    },
+
     {
       path: '/manual',
       name: '사용 방법',
       icon: Reorder,
       component: CreatorManual,
-      layout: '/mypage/creator',
-    },
-    {
-      path: '/user',
-      name: '내 계정',
-      icon: Person,
-      component: CreatorMyPage,
       layout: '/mypage/creator',
     },
   ],

@@ -2,22 +2,52 @@ import React, { useState } from 'react';
 import classnames from 'classnames';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/styles';
+import styled, { keyframes } from 'styled-components';
+
+const shivering = keyframes`
+  10%, 90% {
+    transform: translate3d(-1px, 0, 0);
+  }
+  20%, 80% {
+    transform: translate3d(2px, 0, 0);
+  }
+  30%, 50%, 70% {
+    transform: translate3d(-4px, 0, 0);
+  }
+  40%, 60% {
+    transform: translate3d(4px, 0, 0);
+  }
+`
 
 const useStyles = makeStyles((theme) => ({
   bibble: {
     transition: 'transform .1s linear',
+ },
+  shiver: {
+    animation: '$shiver 1s infinite',
+    '&:hover': {
+      animationPlayState: 'paused',
+    },
   },
-  binggleLeft: {
+  notshiver: {
     '&:hover': {
-      transform: `rotate(45deg)` 
-    }},
-  binggleRight: {
-    '&:hover': {
-    transform: `rotate(-45deg)` 
-  }},
-  dragged: {
-    width: 300
-  }
+      transform: 'rotate(45deg)',
+    },
+  },
+  '@keyframes shiver': {
+    "10%, 90%": {
+      transform: 'translate3d(-0.5px, 0, 0)'
+    },
+    "20%, 80%": {
+      transform: 'translate3d(0.5px, 0, 0)'
+    },
+    "30%, 50%, 70%": {
+      transform: 'translate3d(-1px, 0, 0)'
+    },
+    "40%, 60%": {
+      transform: 'translate3d(1px, 0, 0)',
+    }
+  },
 }))
 
 export default function CpaStop() {
@@ -46,11 +76,10 @@ export default function CpaStop() {
             src="https://static-cdn.jtvnw.net/emoticons/v2/86/default/light/3.0"
             width={50}
             height={50}
-            className={classnames({
-              [classes.bibble]: true,
-              [classes.binggleLeft]: Boolean(Math.round(Math.random())),
-              [classes.binggleRight]: Boolean(Math.round(Math.random())),
-            })}
+            className={classnames(
+              classes.bibble,
+              Math.random() < 0.3 ? classes.shiver : classes.notshiver
+            )}
           />
         ))}
       </div>

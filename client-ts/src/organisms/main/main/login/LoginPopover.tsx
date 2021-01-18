@@ -8,6 +8,7 @@ import useStyles from '../style/LoginPopover.style';
 import MarketerLoginForm from './MarketerLoginForm';
 import CreatorLoginForm from './CreatorLoginForm';
 import RegistDialog from '../../regist/RegistDialog';
+import history from '../../../../history';
 
 
 interface Props {
@@ -115,8 +116,7 @@ function LoginPopover({
                     <Button
                       className={classes.rightLink2}
                       onClick={() => {
-                        alert('현재, Twitch 아이디로 로그인할 수 있어요! 확인 이후 로그인하세요!');
-                        handleDialogOpenClick('creator');
+                        history.push('/creator/signup');
                       }}
                     >
                       <Hidden mdUp>
@@ -129,8 +129,7 @@ function LoginPopover({
                       <Button
                         className={!trigger ? (classes.rightLink) : (classes.rightLink2)}
                         onClick={() => {
-                          alert('현재, Twitch 아이디로 로그인할 수 있어요! 확인 이후 로그인하세요!');
-                          handleDialogOpenClick('creator');
+                          history.push('/creator/signup');
                         }}
                       >
                         <Hidden mdUp>

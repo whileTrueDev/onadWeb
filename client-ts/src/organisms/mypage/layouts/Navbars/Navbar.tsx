@@ -37,24 +37,24 @@ function Navbar(props: NavbarProps): JSX.Element {
     <AppBar className={classes.appBar}>
       <Toolbar className={classes.container}>
         <div className={classes.flex}>
+          <Hidden mdUp>
+            <IconButton
+              aria-label="open drawer"
+              edge="start"
+              onClick={handleDrawerToggle}
+              className={classes.menuButton}
+            >
+              <Menu />
+            </IconButton>
+          </Hidden>
           {makeBrand() ? (
             <Button color="default" variant="text" href="#" className={classes.title}>
               {makeBrand()}
             </Button>
           ) : (null)}
+
         </div>
-
         <AdminNavbarLinks />
-
-        <Hidden mdUp implementation="css">
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            onClick={handleDrawerToggle}
-          >
-            <Menu />
-          </IconButton>
-        </Hidden>
       </Toolbar>
     </AppBar>
   );

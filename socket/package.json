@@ -9,7 +9,7 @@
     "prebuild": "rimraf ./dist",
     "build": "tsc",
     "postbuild": "browserify ./dist/public/client.js ./dist/public/hiddenEventHandler.js ./dist/public/programIdentifier.js ./dist/public/imageClicker.js -o ./dist/public/bundle.js && cp -r ./views ./dist/views",
-    "start:debug": "tsc -w",
+    "start:debug": "nodemon --watch ./ --exec ts-node ./app.ts",
     "start:production": "node ./dist/app.js"
   },
   "dependencies": {
@@ -34,6 +34,8 @@
   "devDependencies": {
     "@types/express": "^4.17.4",
     "browserify": "^16.5.1",
-    "rimraf": "^3.0.2"
+    "nodemon": "^2.0.7",
+    "rimraf": "^3.0.2",
+    "ts-node": "^9.1.1"
   }
 }

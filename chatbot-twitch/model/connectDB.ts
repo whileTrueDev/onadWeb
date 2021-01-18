@@ -29,7 +29,7 @@ function getContratedCreators(): Promise<ContractedCreatorsResult[]> {
   const getContractedChannelsQuery = `
   SELECT creatorTwitchId, adChatAgreement
     FROM creatorInfo
-    WHERE creatorContractionAgreement = 1`;
+    WHERE creatorTwitchId IS NOT NULL AND creatorTwitchId != "" AND creatorContractionAgreement = 1`;
   return doQuery<ContractedCreatorsResult[]>(getContractedChannelsQuery)
     .then((row) => {
       if (row.error || !row.result) {

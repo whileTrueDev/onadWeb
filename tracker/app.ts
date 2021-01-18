@@ -66,6 +66,37 @@ app.get('/:creatorTwitchId', async (req, res, next) => {
   }
 });
 
+// 아프리카 광고 클릭 라우터 (아프리카는 챗봇광고가 없으므로 클릭광고만.)
+app.get('/afreeca/:afreecaId', async (req, res, next) => {
+  const costType = 'adpanel';
+  // Get semantic parameters
+  const afreecaId = req.params.afreecaId as string;
+  // Get UserAgent and IP
+  const nowIp: string | string[] | undefined = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+  const uastring = req.headers['user-agent'];
+  const userAgent = parseUserAgent(uastring);
+
+  const result = await tracking(nowIp, userAgent, afreecaId, costType, 'afreeca');
+  if (result.href) {
+    res.redirect(302, result.href);
+  } else {
+    let message = '광고주 페이지로 이동중입니다...';
+    if (result.message === 'Invalid ip'
+      || result.message === 'DB Error'
+      || result.message === 'invalid link') {
+      message = '죄송합니다. 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.';
+    } else if (result.message === 'No campaign') {
+      message = `${result.name || afreecaId} 님은 현재 광고중이지 않습니다.`;
+    }
+    res.set('Cache-Control', 'no-cache, no-store, must-revalidate');
+    res.set('Clear-Site-Data', '*');
+
+    // 버튼 클릭 시 현재 방송으로 리다이렉트 => `http://play.afreecatv.com/${afreecaId}`
+    // [현재 설정] 버튼 클릭 시 방송국으로 리다이렉트
+    res.render('server', { message, twitchlink: `http://bj.afreecatv.com/${afreecaId}` });
+  }
+});
+
 app.get('/adchat/:creatorTwitchId', async (req, res, next) => {
   const costType = 'adchat';
   // Get semantic parameters

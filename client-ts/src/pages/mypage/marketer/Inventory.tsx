@@ -10,6 +10,7 @@ import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 
+import { GetApp } from '@material-ui/icons';
 import GridContainer from '../../../atoms/Grid/GridContainer';
 import GridItem from '../../../atoms/Grid/GridItem';
 import CustomButton from '../../../atoms/CustomButtons/Button';
@@ -60,16 +61,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexGrow: 1,
     backgroundColor: theme.palette.background.paper,
   },
-  guideButton:{
-    padding: '5px 10px',
-    marginLeft: 10
-  },
-  guideLink:{
-    color: 'white',
-    fontFamily: 'Noto Sans kr',
-    fontSize: 16
-  },
-
+  secondButton: { marginLeft: theme.spacing(1) },
+  guideLink: { color: 'white' },
 }));
 
 const Inventory = (): JSX.Element => {
@@ -103,23 +96,25 @@ const Inventory = (): JSX.Element => {
             </Tabs>
           </AppBar>
           <TabPanel value={value} index={0}>
-            <CustomButton color="primary" size="large" onClick={(): void => { uploadDialog.handleOpen(); }}>
+            <CustomButton color="primary" onClick={(): void => { uploadDialog.handleOpen(); }}>
               + 새 배너 등록
             </CustomButton>
             <CustomButton
               color="default"
-              size="large"
+              className={classes.secondButton}
               onClick={(): void => { InquireDialog.handleOpen(); }}
             >
               배너가 없으신가요?
             </CustomButton>
             <CustomButton
               color="primary"
-              size="large"
-              className={classes.guideButton}
-              load={true}
+              className={classes.secondButton}
+              load
             >
-              <a href="/IntroService/온애드배너제작가이드.pdf" download="온애드배너제작가이드" className={classes.guideLink}>배너제작 가이드</a>
+              <GetApp fontSize="small" />
+              <a href="/IntroService/온애드배너제작가이드.pdf" download="온애드배너제작가이드" className={classes.guideLink}>
+                배너제작 가이드 다운로드
+              </a>
             </CustomButton>
             <BannerTable
               handleDeleteOpen={deleteDialog.handleOpen}

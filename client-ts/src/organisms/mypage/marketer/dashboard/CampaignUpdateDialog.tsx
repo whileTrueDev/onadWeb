@@ -225,7 +225,12 @@ const CampaignUpdateDialog = (props: CampaignUpdateDialogProps): JSX.Element => 
                 <Grid item className={classes.text}>
                   <Grid container direction="column" spacing={1} className={classes.item}>
                     <Grid item>
-                      <StyledInput autoFocus onChange={handleChangeName} style={{ width: '200px' }} />
+                      <StyledInput
+                        inputProps={{ maxLength: 50 }}
+                        autoFocus
+                        onChange={handleChangeName}
+                        style={{ width: '200px' }}
+                      />
                     </Grid>
                     <Grid item>
                       {(checkName && state.campaignName !== '')

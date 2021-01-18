@@ -19,7 +19,8 @@ const useStyles = makeStyles((theme) => ({
     borderWidth: 1,
     borderStyle: 'solid',
     borderRadius: '0px 0px 15px 15px',
-  }
+  },
+  optionImages: { display: 'flex', alignItems: 'center', justifyContent: 'center' },
 }));
 
 // 추후에 인터페이스 통합
@@ -81,13 +82,21 @@ const OptionPaper = (props: OptionPaperProps): JSX.Element => {
               handleSelect={handleChange(opt.id)}
               innerPaperChildren={opt.id !== 'option1' ? (null) : (
                 <div>
-                  <img
-                    height={50}
-                    alt="a"
-                    src="/pngs/logo/twitch.png"
-                    style={{ filter: 'grayscale(0%)', padding: 8 }}
-                  />
-                  <Typography variant="body2">(유튜브, 아프리카TV 향후 지원 예정)</Typography>
+                  <div className={classes.optionImages}>
+                    <img
+                      height={22}
+                      alt="a"
+                      src="/pngs/logo/twitch/TwitchExtrudedWordmarkPurple.png"
+                      style={{ filter: 'grayscale(0%)', padding: 8 }}
+                    />
+                    <img
+                      height={20}
+                      alt="a"
+                      src="/pngs/logo/afreeca/blue01.png"
+                      style={{ filter: 'grayscale(0%)', padding: 8 }}
+                    />
+                  </div>
+                  <Typography variant="body2">(유튜브 향후 지원 예정)</Typography>
                 </div>
               )}
             >

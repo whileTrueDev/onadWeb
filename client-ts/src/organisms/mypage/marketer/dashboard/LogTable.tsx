@@ -6,47 +6,16 @@ import {
   IconButton, CircularProgress,
 } from '@material-ui/core';
 import Refresh from '@material-ui/icons/Refresh';
-import { makeStyles, Theme } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import { ActionLogInterface } from './interfaces';
 import { UseGetRequestObject } from '../../../../utils/hooks/useGetRequest';
 
-const styles = makeStyles((theme: Theme) => ({
-  title: {
-    fontSize: '14px',
-    fontWeight: 550,
-    [theme.breakpoints.down('md')]: {
-      fontSize: '18px',
-    },
-    [theme.breakpoints.down('sm')]: {
-      fontSize: '18px',
-    },
-    [theme.breakpoints.down('xs')]: {
-      fontSize: '12px',
-    },
-  },
-  caption: {
-    fontSize: '10px',
-    color: 'grey',
-    fontWeight: 500,
-    [theme.breakpoints.down('md')]: {
-      fontSize: '13px',
-    },
-    [theme.breakpoints.down('sm')]: {
-      fontSize: '13px',
-    },
-    [theme.breakpoints.down('xs')]: {
-      fontSize: '9px',
-    },
-  },
+const styles = makeStyles(() => ({
   loading: {
-    paddingTop: theme.spacing(3),
-    paddingBottom: theme.spacing(3)
-  },
-  statement: {
-    fontSize: 15,
-    fontWeight: 700,
-    textAlign: 'center',
-    marginBottom: theme.spacing(2)
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'column',
   },
 }));
 
@@ -131,9 +100,9 @@ export default function issueTable(
     <Paper style={{ height: 'auto' }}>
       <div style={{ padding: 16, display: 'flex', justifyContent: 'space-between' }}>
         <div style={{ display: 'flex', alignItems: 'center' }}>
-          <Typography className={classes.title}>활동</Typography>
-          <Typography className={classes.caption}>
-            &emsp;
+          <Typography variant="h6">활동</Typography>
+          <Typography variant="caption" color="textSecondary">
+            &nbsp;
             목록갱신은 새로고침을 눌러주세요
           </Typography>
         </div>
@@ -154,7 +123,7 @@ export default function issueTable(
         {/* 데이터 있는 경우 */}
         {actionLogData.loading && (
           <Grid item xs={12} className={classes.loading}>
-            <Typography className={classes.statement}>
+            <Typography variant="body2">
               활동내역 데이터를 로드하고 있습니다.
             </Typography>
             <div style={{ textAlign: 'center' }}><CircularProgress /></div>
@@ -185,7 +154,7 @@ export default function issueTable(
               display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%'
             }}
           >
-            <Typography variant="body1">아직 활동내역이 없습니다.</Typography>
+            <Typography variant="body2">아직 활동내역이 없습니다.</Typography>
           </div>
         )}
       </Grid>

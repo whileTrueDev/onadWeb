@@ -33,6 +33,9 @@ router.route('/list')
     responseHelper.middleware.checkSessionExists,
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
       const { marketerId } = responseHelper.getSessionData(req);
+      const [page, offset] = responseHelper.getParam(['page', 'offset'], 'get', req);
+      const searchPage = Number(page * offset);
+      const searchOffset = Number(offset);
       // 오늘자 일일예산에 대한 예산소비량을 체크하기 위해 오늘의 맨처음 시간으로 설정
       const date = new Date();
       date.setHours(0);
@@ -41,28 +44,29 @@ router.route('/list')
       date.setMilliseconds(0);
 
       const query = `
-              SELECT
-              campaignId, campaignName, optionType, priorityType, 
-              campaign.regiDate as regiDate, onOff, br.confirmState, 
-              bannerSrc, lr.links as links, lr.confirmState as linkConfirmState, dailyLimit,
-              campaignDescription
-              FROM campaign
-              JOIN bannerRegistered AS br
-              ON br.bannerId = campaign.bannerId
-              JOIN linkRegistered AS lr
-              ON lr.linkId = connectedLinkId
-              WHERE campaign.marketerId = ?
-              AND deletedState = 0
-              ORDER BY br.regiDate DESC
-            `;
+        SELECT
+        campaignId, campaignName, optionType, priorityType, 
+        campaign.regiDate as regiDate, onOff, br.confirmState, 
+        bannerSrc, lr.links as links, lr.confirmState as linkConfirmState, dailyLimit,
+        campaignDescription
+        FROM campaign
+        JOIN bannerRegistered AS br
+        ON br.bannerId = campaign.bannerId
+        JOIN linkRegistered AS lr
+        ON lr.linkId = connectedLinkId
+        WHERE campaign.marketerId = ?
+        AND deletedState = 0
+        ORDER BY campaign.onOff DESC, campaign.regiDate DESC
+        LIMIT ?, ?
+      `;
 
       const sumQuery = `
-            select sum(cashFromMarketer) as dailysum
-            from campaignLog
-            where campaignId = ?
-            and date > ?
-            `;
-      doQuery(query, [marketerId])
+        SELECT sum(cashFromMarketer) AS dailysum
+        FROM campaignLog
+        WHERE campaignId = ?
+        AND date > ?
+        `;
+      doQuery(query, [marketerId, searchPage, searchOffset])
         .then((row) => {
           if (row.result) {
             Promise.all(
@@ -86,6 +90,18 @@ router.route('/list')
   )
   .all(responseHelper.middleware.unusedMethod);
 
+// 켜져있는 캠페인 수
+router.route('/active')
+  .get(
+    responseHelper.middleware.checkSessionExists,
+    responseHelper.middleware.withErrorCatch(async (req, res, next) => {
+      const { marketerId } = responseHelper.getSessionData(req);
+      const query = `
+      SELECT COUNT(campaignId) AS activeCampaignCount FROM campaign WHERE onOff = 1 AND marketerId = ?`;
+      const { result } = await doQuery(query, [marketerId]);
+      if (result.length > 0) { responseHelper.send(result[0], 'get', res); } else { responseHelper.send(0, 'get', res); }
+    })
+  );
 
 // 캠페인 생성시에 캠페인 중복제거를 위한 name list추출.
 // 테스트 완료
@@ -265,15 +281,22 @@ router.route('/')
 
           // 마케터 활동내역 로깅 테이블에서, 캠페인 생성의 상태값
           const MARKETER_ACTION_LOG_TYPE = 5;
+
           Promise.all([
             doQuery(saveQuery,
               [campaignId, campaignName, marketerId, bannerId, connectedLinkId, dailyLimit,
-                priorityType, optionType, targetJsonData, marketerName, keywordsJsonData,
+                // @by hwasurr "1-1" 은 아프리카 카테고리 선택형. 1로 수정하여 카테고리 선택형으로 넣는다.
+                (priorityType === '1-1') ? '1' : priorityType,
+                optionType, targetJsonData, marketerName, keywordsJsonData,
                 startDate, finDate, timeJsonData, campaignDescription]),
             dataProcessing.PriorityDoquery({
-              campaignId, priorityType, priorityList, optionType
+              campaignId,
+              priorityType,
+              priorityList,
+              optionType,
+              platform: priorityType === '1' ? 'twitch' : 'afreeca' // afreeca 카테고리 선택형 = 1-1
             }),
-            dataProcessing.LandingDoQuery({
+            dataProcessing.adpageDoQuery({
               campaignId, optionType, priorityType, priorityList
             }),
           ])
@@ -283,14 +306,14 @@ router.route('/')
               marketerActionLogging([
                 marketerId, MARKETER_ACTION_LOG_TYPE, JSON.stringify({ campaignName })
               ]);
-              slack({
-                summary: '캠페인 등록 알림',
-                text: '관리자 페이지에서 방금 등록된 캠페인을 확인하세요.',
-                fields: [
-                  { title: '마케터 이름', value: marketerName!, short: true },
-                  { title: '캠페인 이름', value: campaignName!, short: true },
-                ]
-              });
+              // slack({
+              //   summary: '캠페인 등록 알림',
+              //   text: '관리자 페이지에서 방금 등록된 캠페인을 확인하세요.',
+              //   fields: [
+              //     { title: '마케터 이름', value: marketerName!, short: true },
+              //     { title: '캠페인 이름', value: campaignName!, short: true },
+              //   ]
+              // });
             })
             .catch((error) => {
               responseHelper.promiseError(error, next);

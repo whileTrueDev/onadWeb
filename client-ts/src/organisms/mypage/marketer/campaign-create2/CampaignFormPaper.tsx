@@ -148,6 +148,7 @@ function CampaignFormPaper({
         type="submit"
         handleBack={handleBack}
         nextButtonOpen
+        disabled={state.loading}
       />
 
       {/* 배너 생성 다이얼로그 */}
