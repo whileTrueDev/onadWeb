@@ -23,7 +23,7 @@ router.route('/')
       FROM creatorInfo as ci
       JOIN creatorIncome 
       ON ci.creatorId = creatorIncome.creatorId
-      WHERE ci.creatorId= ? 
+      WHERE ci.creatorId= ?
       ORDER BY date desc
       LIMIT 1
       `;
@@ -31,7 +31,6 @@ router.route('/')
       doQuery(query, [creatorId])
         .then((row) => {
           const result = row.result[0];
-          result.date = result.date.toLocaleString();
           let deciphedAccountNum;
           if (result.creatorAccountNumber) {
             deciphedAccountNum = encrypto.decipher(result.creatorAccountNumber);
