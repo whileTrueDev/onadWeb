@@ -1,6 +1,8 @@
 import React from 'react';
 import shortid from 'shortid';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import { makeStyles } from '@material-ui/core/styles';
+
 import {
   Table, TableHead, TableRow, TableBody, TableCell, Switch,
   Typography, FormControlLabel, Chip
@@ -12,6 +14,17 @@ import useDialog from '../../../../utils/hooks/useDialog';
 import usePatchRequest from '../../../../utils/hooks/usePatchRequest';
 import useGetRequest from '../../../../utils/hooks/useGetRequest';
 
+const useStyles = makeStyles(() => ({
+  th: {
+    flexDirection: 'column',
+    textAlign: 'center',
+    width: '170px',
+    padding: '5px'
+  },
+  chip: {
+    marginBottom: '5px'
+  }
+}));
 export interface BannerStatus {
   loading: boolean; campaignId: string; index: number;
   marketerName: string; priorityType: number;
@@ -31,7 +44,7 @@ const RemotePageBannerTable = (props: RemotePageBannerTable): JSX.Element => {
   const {
     pageUrl
   } = props;
-
+  const classes = useStyles();
   const snack = useDialog();
   const failSnack = useDialog();
   const remoteCampaignTableGet = useGetRequest<Params, BannerStatus[]>('/creator/banner/remote-page', { remoteControllerUrl: pageUrl });
@@ -62,9 +75,9 @@ const RemotePageBannerTable = (props: RemotePageBannerTable): JSX.Element => {
       case 0: return (
         <TableCell>
           <Chip
+            className={classes.chip}
             size="small"
             label="크리에이터 우선형"
-            style={{ marginBottom: '5px' }}
           />
           <Typography variant="body2">
             <span style={{ fontWeight: 'bold' }}>
@@ -77,10 +90,10 @@ const RemotePageBannerTable = (props: RemotePageBannerTable): JSX.Element => {
       case 1: return (
         <TableCell>
           <Chip
+            className={classes.chip}
             color="primary"
             size="small"
             label="카테고리 우선형"
-            style={{ marginBottom: '5px' }}
           />
           <Typography variant="body2">
             <span style={{ fontWeight: 'bold' }}>
@@ -111,40 +124,16 @@ const RemotePageBannerTable = (props: RemotePageBannerTable): JSX.Element => {
       <Table>
         <TableHead>
           <TableRow>
-            <TableCell style={{
-              flexDirection: 'column',
-              textAlign: 'center',
-              width: '170px',
-              padding: '5px'
-            }}
-            >
+            <TableCell className={classes.th}>
               시작일 / 광고주
             </TableCell>
-            <TableCell style={{
-              flexDirection: 'column',
-              textAlign: 'center',
-              width: '170px',
-              padding: '5px'
-            }}
-            >
+            <TableCell className={classes.th}>
               카테고리
             </TableCell>
-            <TableCell style={{
-              flexDirection: 'column',
-              textAlign: 'center',
-              width: '170px',
-              padding: '5px'
-            }}
-            >
+            <TableCell className={classes.th}>
               배너 이미지
             </TableCell>
-            <TableCell style={{
-              flexDirection: 'column',
-              textAlign: 'center',
-              width: '170px',
-              padding: '5px'
-            }}
-            >
+            <TableCell className={classes.th}>
               배너 설명
             </TableCell>
           </TableRow>
@@ -215,14 +204,14 @@ const RemotePageBannerTable = (props: RemotePageBannerTable): JSX.Element => {
       <Snackbar
         color="success"
         open={snack.open}
-        message="정상적으로 변경되었습니다."
+        message="정상적으로 변경 되었습니다."
         onClose={snack.handleClose}
       />
 
       <Snackbar
         color="error"
         open={failSnack.open}
-        message="변경중 오류가 발생했습니다."
+        message="변경 중 오류가 발생 했습니다."
         onClose={failSnack.handleClose}
       />
     </div>

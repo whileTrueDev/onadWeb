@@ -30,14 +30,13 @@ const makeUrl = (): string => {
 /**
  * @name 리모컨 URL 생성함수 
  */
-const makeRemoteControllerUrl = (creatorId: string): string | undefined => {
+const makeRemoteControllerUrl = (creatorId: string): string | null => {
   if (creatorId.length !== 0) {
-    const remoteControllerUrl = btoa(creatorId);
+    const remoteControllerUrl = Buffer.from(creatorId).toString('base64');
     return remoteControllerUrl;
   }
-  return undefined;
+  return null;
 };
-
 /**
  * @author 박찬우
  * @date 2019-07-13
@@ -236,7 +235,7 @@ const creatorTwitch = (
       const campaignList = JSON.stringify({ campaignList: [] });
 
       const creatorBannerUrl = makeUrl();
-      const creatorRemoteControllerUrl = makeRemoteControllerUrl(user?.creatorId ? user.creatorId : '');
+      const creatorRemoteControllerUrl = makeRemoteControllerUrl(user.creatorId ? user.creatorId : '');
       user.creatorIp = creatorIp;
 
       const infoQuery = `
