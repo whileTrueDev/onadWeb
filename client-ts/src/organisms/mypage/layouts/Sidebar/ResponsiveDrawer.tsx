@@ -103,6 +103,7 @@ export default function ResponsiveDrawer(props: ResponsiveDrawerProps): JSX.Elem
                 [classes.activeLink]: isActiveRoute(route.layout + route.path),
               })}
               button
+              onClick={handleDrawerToggle}
               to={route.layout + route.path}
               component={Link}
             /**

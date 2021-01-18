@@ -27,6 +27,17 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex', alignItems: 'center', justifyContent: 'center', height: 200
   },
   head: { fontWeight: 700 },
+  title: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    [theme.breakpoints.down('xs')]: {
+      display: 'block'
+    }
+  },
+  remoteOpenButtonContainer: {
+    [theme.breakpoints.down('xs')]: { marginTop: theme.spacing(1) },
+  }
 }));
 
 
@@ -49,12 +60,15 @@ export default function NowBroadCard({
   return (
     <Paper className={classes.container}>
       {/* 제목 */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <div className={classes.title}>
         <Typography className={classes.bold}>
           현재 송출중인 배너광고
         </Typography>
+
         {/* 실시간 광고 제어 버튼 */}
-        <RemotePageOpenButton />
+        <div className={classes.remoteOpenButtonContainer}>
+          <RemotePageOpenButton />
+        </div>
       </div>
 
       <div className={classes.section}>

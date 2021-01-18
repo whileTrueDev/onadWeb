@@ -15,14 +15,29 @@ const useStyles = makeStyles((theme: Theme) => ({
   bannerContainer: { display: 'flex', alignItems: 'center' },
   bannerItem: { maxHeight: '160px', maxWidth: '320px', },
   area: {
-    display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 150
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    minHeight: 150,
+    [theme.breakpoints.down('xs')]: { minHeight: 100 },
   },
   right: { textAlign: 'right' },
   moreButton: {
     cursor: 'pointer',
     '&:hover': { textDecoration: 'underline', }
   },
-  head: { fontWeight: 700 }
+  head: { fontWeight: 700 },
+  title: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    [theme.breakpoints.down('xs')]: {
+      display: 'block'
+    }
+  },
+  remoteOpenButtonContainer: {
+    [theme.breakpoints.down('xs')]: { marginTop: theme.spacing(1) },
+  }
 }));
 
 export interface CurrentBannerRes {
@@ -38,7 +53,7 @@ function BannerCard({ currentBannerData }: BannerCardProps): JSX.Element {
   return (
     <Paper className={classes.container}>
       {/* 제목 */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <div className={classes.title}>
         <div>
           <Typography className={classes.bold}>
           현재 송출중인 배너광고
@@ -48,7 +63,10 @@ function BannerCard({ currentBannerData }: BannerCardProps): JSX.Element {
           </Typography>
         </div>
 
-        <RemotePageOpenButton />
+        {/* 실시간 광고 제어 버튼 */}
+        <div className={classes.remoteOpenButtonContainer}>
+          <RemotePageOpenButton />
+        </div>
       </div>
 
       <div className={classes.section}>
