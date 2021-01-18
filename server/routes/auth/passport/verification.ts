@@ -274,8 +274,8 @@ const creatorTwitch = (
 
       const infoQuery = `
                 INSERT INTO creatorInfo
-                (creatorId, creatorName, creatorMail, creatorIp, advertiseUrl, creatorTwitchId, creatorLogo)
-                VALUES (?, ?, ?, ?, ?, ?, ?)`;
+                (creatorId, creatorName, creatorMail, creatorIp, advertiseUrl, creatorTwitchId, creatorLogo, remoteControllerUrl)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
 
       const incomeQuery = `
                 INSERT INTO creatorIncome 

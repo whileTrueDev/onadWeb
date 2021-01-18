@@ -9,6 +9,7 @@ import {
 } from '@material-ui/core/styles';
 import history from './history';
 import theme, { OnadTheme } from './theme';
+import useOnadThemeType from './utils/hooks/useOnadThemeType';
 
 // Pages
 import Door from './pages/main/Door';
@@ -22,7 +23,7 @@ import MarketerDashboard from './pages/mypage/layouts/MarketerLayout';
 import ChargeDialog from './organisms/mypage/marketer/office/charge/ChargeDialog';
 import CreatorDashboard from './pages/mypage/layouts/CreatorLayout';
 import NotFound from './pages/others/NotFound';
-import useOnadThemeType from './utils/hooks/useOnadThemeType';
+import RemotePage from './pages/mypage/creator/RemotePage';
 import RegistCreator from './pages/main/RegistCreator';
 
 dotenv.config();
@@ -50,6 +51,7 @@ const OnadIndex = (): JSX.Element => {
             <Route exact path="/" component={Door} />
             <Route exact path="/marketer" component={Main} />
             <Route exact path="/creator" component={Main} />
+            <Route path="/creator/remote/:id" component={RemotePage} />
             <Route exact path="/creator/signup" component={RegistCreator} />
             <Route exact path="/creator/signup/complete" component={RegistCreator} />
             <Route exact path="/creator/signup/pre-user" component={RegistCreator} />

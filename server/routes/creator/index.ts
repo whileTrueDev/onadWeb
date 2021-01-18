@@ -12,6 +12,7 @@ import notificationRouter from './notification';
 import clicksRouter from './clicks';
 import cpaRouter from './cpa';
 import makeAdvertiseUrl from '../../lib/makeAdvertiseUrl';
+import makeRemoteControllerUrl from '../../lib/makeRemoteControllerUrl';
 
 const router = express.Router();
 router.use('/income', incomeRouter);
@@ -135,16 +136,17 @@ router.route('/')
 
         // 크리에이터 계약
         const creatorBannerUrl = makeAdvertiseUrl();
+        const remoteControllerUrl = makeRemoteControllerUrl();
         const contractionUpdateQuery = `
           UPDATE creatorInfo
-          SET creatorContractionAgreement = ?, advertiseUrl = ?
+          SET creatorContractionAgreement = ?, advertiseUrl = ?, remoteControllerUrl = ?
           WHERE creatorInfo.creatorId = ?`;
         // 계약시 생성되는 creatorCampaign 기본값
         const campaignList = JSON.stringify({ campaignList: [] });
         const campaignQuery = `
           INSERT INTO creatorCampaign
-          (creatorId, campaignList, banList)
-          VALUES (?, ?, ?)
+          (creatorId, campaignList, banList, pausedList)
+          VALUES (?, ?, ?, ?)
         `;
         // 계약시 생성되는 creatorLanding 기본값
         const landingQuery = `
@@ -152,8 +154,8 @@ router.route('/')
           (creatorId, creatorTwitchId)
           VALUES (?, ?)`;
         Promise.all([
-          doQuery(contractionUpdateQuery, [1, creatorBannerUrl, creatorId]),
-          doQuery(campaignQuery, [creatorId, campaignList, campaignList]),
+          doQuery(campaignQuery, [creatorId, campaignList, campaignList, campaignList]),
+          doQuery(contractionUpdateQuery, [1, creatorBannerUrl, remoteControllerUrl, creatorId]),
           doQuery(landingQuery, [creatorId, creatorName])
         ])
           .then(() => {

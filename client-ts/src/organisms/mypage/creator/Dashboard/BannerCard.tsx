@@ -1,6 +1,7 @@
 import React from 'react';
 import { Grid, Paper, Typography } from '@material-ui/core';
 import { makeStyles, Theme } from '@material-ui/core/styles';
+import RemotePageOpenButton from '../RemotePage/sub/RemotePageOpenButton';
 import history from '../../../../history';
 import isVideo from '../../../../utils/isVideo';
 import VideoBanner from '../../../../atoms/Banner/VideoBanner';
@@ -37,13 +38,17 @@ function BannerCard({ currentBannerData }: BannerCardProps): JSX.Element {
   return (
     <Paper className={classes.container}>
       {/* 제목 */}
-      <div>
-        <Typography className={classes.bold}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div>
+          <Typography className={classes.bold}>
           현재 송출중인 배너광고
-        </Typography>
-        <Typography variant="caption">
+          </Typography>
+          <Typography variant="caption">
           내 광고관리 탭에서 자세히 확인할 수 있습니다.
-        </Typography>
+          </Typography>
+        </div>
+
+        <RemotePageOpenButton />
       </div>
 
       <div className={classes.section}>

@@ -5,6 +5,7 @@ import React from 'react';
 import VideoBanner from '../../../../atoms/Banner/VideoBanner';
 import { UseGetRequestObject } from '../../../../utils/hooks/useGetRequest';
 import isVideo from '../../../../utils/isVideo';
+import RemotePageOpenButton from '../RemotePage/sub/RemotePageOpenButton';
 import { Link } from './BannerList';
 
 const useStyles = makeStyles((theme) => ({
@@ -48,10 +49,12 @@ export default function NowBroadCard({
   return (
     <Paper className={classes.container}>
       {/* 제목 */}
-      <div>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <Typography className={classes.bold}>
           현재 송출중인 배너광고
         </Typography>
+        {/* 실시간 광고 제어 버튼 */}
+        <RemotePageOpenButton />
       </div>
 
       <div className={classes.section}>
