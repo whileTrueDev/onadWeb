@@ -144,7 +144,7 @@ const Dashboard = (): JSX.Element => {
               </GridItem>
 
               {/* 현재 송출중 배너 카드 */}
-              <GridItem xs={12} sm={6}>
+              <GridItem xs={12} lg={6}>
                 {!incomeChartGet.loading && (
                 <BannerCard
                   currentBannerData={currentBannerGet.data ? currentBannerGet.data : []}
@@ -153,7 +153,7 @@ const Dashboard = (): JSX.Element => {
               </GridItem>
 
               {/* 클릭광고 카드 */}
-              <GridItem xs={12} sm={6}>
+              <GridItem xs={12} lg={6}>
                 {!levelGet.loading && levelGet.data && !clicksGet.loading && clicksGet.data && (
                 <ClickAdCard levelData={levelGet.data} clicksData={clicksGet.data} />
                 )}

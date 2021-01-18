@@ -60,7 +60,8 @@ const RemotePageBannerTable = (props: RemotePageBannerTable): JSX.Element => {
   const page = 1; // 테이블 페이지
   const rowsPerPage = 8; // 테이블 페이지당 행
 
-  const emptyRows = !remoteCampaignTableGet.loading && remoteCampaignTableGet.data && (rowsPerPage - Math.min(
+  const emptyRows = !remoteCampaignTableGet.loading
+    && remoteCampaignTableGet.data && (rowsPerPage - Math.min(
     rowsPerPage, remoteCampaignTableGet.data.length - page * rowsPerPage,
   ));
 
@@ -70,7 +71,9 @@ const RemotePageBannerTable = (props: RemotePageBannerTable): JSX.Element => {
     }
   }, [onOffUpdate.error, failSnack]);
 
-  const categorySwitch = (category: number, targetList: string[], creatorName: string): JSX.Element => {
+  const categorySwitch = (
+    category: number, targetList: string[], creatorName: string
+  ): JSX.Element => {
     switch (category) {
       case 0: return (
         <TableCell>
@@ -163,8 +166,7 @@ const RemotePageBannerTable = (props: RemotePageBannerTable): JSX.Element => {
                       }}
                       disabled={Boolean(remoteCampaignTableGet.loading)}
                     />
-
-            )}
+                  )}
                 />
                 <Typography variant="body1">
                   {value.date.split('T')[0]}

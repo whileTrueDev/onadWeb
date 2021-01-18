@@ -216,10 +216,10 @@ router.route('/remote-page-url')
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
       const { creatorId } = responseHelper.getSessionData(req);
       const searchQuery = `
-                          SELECT remoteControllerUrl
-                          FROM creatorInfo
-                          WHERE creatorId = ?
-                          `;
+        SELECT remoteControllerUrl
+        FROM creatorInfo
+        WHERE creatorId = ?
+      `;
       doQuery(searchQuery, [creatorId])
         .then((row) => {
           responseHelper.send(row.result[0].remoteControllerUrl, 'get', res);
@@ -229,16 +229,17 @@ router.route('/remote-page-url')
         });
     }))
   .all(responseHelper.middleware.unusedMethod);
+
 router.route('/remote-page')
 // 크리에이터 배너 목록 정보
   .get(
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
       const urlInfo = responseHelper.getParam('remoteControllerUrl', 'get', req);
       const getCreatorIdQuery = `
-                                  SELECT creatorId 
-                                  FROM creatorInfo 
-                                  WHERE remoteControllerUrl = ?
-                                `;
+          SELECT creatorId 
+          FROM creatorInfo 
+          WHERE remoteControllerUrl = ?
+      `;
       const listQuery = `
                           SELECT
                             campaign.campaignId, campaign.marketerName, priorityType, BR.bannerSrc, targetList, CT.date, campaign.onOff as state,
@@ -264,11 +265,11 @@ router.route('/remote-page')
                               WHERE creatorId = ?
                               `;
       const searchQuery = `
-                            SELECT creatorName
+                            SELECT creatorName, afreecaName
                             FROM creatorInfo
                             WHERE creatorId = ?
                             `;
-      const creatorId = await doQuery(getCreatorIdQuery, [urlInfo]);
+      const creatorId = await doQuery(getCreatorIdQuery, [!urlInfo.startsWith('/') ? `/${urlInfo}` : urlInfo]);
       Promise.all([
         doQuery(searchQuery, [creatorId.result[0].creatorId]),
         doQuery(listQuery, [creatorId.result[0].creatorId]),
@@ -277,11 +278,12 @@ router.route('/remote-page')
         .then(async ([creatorName, row, paused]) => {
           const pausedList: string[] = JSON.parse(paused.result[0].pausedList).campaignList;
           const campaignList = await getRemotePageBanner(row.result, pausedList);
-          campaignList.map((value: any): void => {
-            value.targetList = JSON.parse(value.targetList).targetList;
-            value.creatorName = creatorName.result[0].creatorName;
-          });
-          responseHelper.send(campaignList, 'get', res);
+          const result = campaignList.map((value: any): void => ({
+            ...value,
+            targetList: JSON.parse(value.targetList).targetList,
+            creatorName: creatorName.result[0].creatorName || creatorName.result[0].afreecaName
+          }));
+          responseHelper.send(result, 'get', res);
         })
         .catch((error) => {
           responseHelper.promiseError(error, next);
