@@ -111,11 +111,12 @@ export default function CreatorLoginForm({
 
           <Divider style={{ marginTop: 16, marginBottom: 16 }} />
 
-          <div style={{ margin: 16 }}>
+          <div style={{ marginTop: 16, marginBottom: 16 }}>
             <Typography variant="body2">
               온애드 계정이 없으신가요?&nbsp;
               <Typography
                 component="span"
+                variant="body2"
                 onClick={(): void => history.push('/creator/signup')}
                 style={{ color: 'red', textDecoration: 'underline', cursor: 'pointer' }}
               >
@@ -126,6 +127,7 @@ export default function CreatorLoginForm({
               트위치 계정 로그인 방식으로 온애드를 사용했었나요?&nbsp;
               <Typography
                 component="span"
+                variant="body2"
                 onClick={(): void => history.push('/creator/signup/pre-user')}
                 style={{ color: 'red', textDecoration: 'underline', cursor: 'pointer' }}
               >
