@@ -313,7 +313,7 @@ router.route('/remote-page')
                                   SET pausedList = ? 
                                   WHERE creatorId = ?
                                   `;
-      const creatorId = await doQuery(getCreatorIdQuery, [pageUrl])
+      const creatorId = await doQuery(getCreatorIdQuery, [`/${pageUrl}`])
         .then((value) => value.result[0].creatorId);
       const row = await doQuery(getPausedListQuery, [creatorId]);
 
