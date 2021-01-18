@@ -17,9 +17,8 @@ import Reference from '../../organisms/main/main/Reference/Reference';
 // utill 계열 컴포넌트
 import useLoginValue from '../../utils/hooks/useLoginValue';
 import history from '../../history';
-import withRoot from './withRoot';
 
-export default withRoot(() => {
+export default function Main(): JSX.Element {
   const {
     isLogin, repasswordOpen, logout, setRepassword,
   } = useLoginValue();
@@ -86,4 +85,4 @@ export default withRoot(() => {
         )}
     </div>
   );
-});
+}

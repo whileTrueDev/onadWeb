@@ -53,7 +53,7 @@ router.route('/read-flag')
       } else if (userType === 'creator') {
         query = `
           SELECT noticeReadState 
-          FROM creatorInfo 
+          FROM creatorInfo
           WHERE creatorId = ?`;
         queryParam.push(creatorId);
       }

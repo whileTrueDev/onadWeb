@@ -1,4 +1,4 @@
-import React, { useReducer } from 'react';
+import React, { useReducer, useState } from 'react';
 // material ui core
 import { makeStyles } from '@material-ui/core/styles';
 import {
@@ -94,19 +94,30 @@ function WithdrawDialog({
   };
 
   // 출금 POST 요청객체 생성
-  const withdrawalPost = usePostRequest('/creator/income/withdrawal', () => {
-    // 요청 성공시 Success callback 함수
-    setActiveStep((preIndex) => preIndex + 1);
-  });
+  const withdrawalPost = usePostRequest('/creator/income/withdrawal');
 
+  // 출금 신청 버튼 1번만 클릭될 수 있도록 disabled 하기 위한 상태
+  const [clicked, setClicked] = useState(false);
+  function handleClicked(): void {
+    setClicked(true);
+  }
+  function handleClickedReset(): void{
+    setClicked(false);
+  }
+  // 출금 신청 클릭 핸들러
   function handleSubmitClick(event: React.MouseEvent<HTMLButtonElement>): void {
     event.preventDefault();
+    handleClicked();
     // 해당 금액 만큼 출금 내역에 추가하는 요청 실시
-    withdrawalPost.doPostRequest({ withdrawalAmount: selectValue });
+    withdrawalPost.doPostRequest({ withdrawalAmount: selectValue }).then(() => {
+      // 요청 성공시 Success callback 함수
+      setActiveStep((preIndex) => preIndex + 1);
+    });
   }
 
   const handleBack = (event: React.MouseEvent<HTMLButtonElement>): void => {
     event.preventDefault();
+    handleClickedReset();
     setStepComplete(false);
     setPaperSwitch(false);
     if (activeStep === 0 || activeStep === 1 || activeStep === 2) {
@@ -120,13 +131,13 @@ function WithdrawDialog({
 
   const DefaultIndex = (): void => {
     handleClose();
+    handleClickedReset();
     setActiveStep(0);
     stepDispatch({ key: 'reset' });
   };
 
   const finishIndex = (): void => {
     handleClose();
-    history.push('/mypage/creator/main');
   };
 
   return (
@@ -158,9 +169,10 @@ function WithdrawDialog({
                   <Button
                     variant="contained"
                     color="primary"
+                    disabled={clicked || withdrawalPost.loading}
                     onClick={handleSubmitClick}
                   >
-                    신청
+                    {withdrawalPost.loading ? '신청 진행중...' : '신청'}
                   </Button>
                 </Collapse>
               </Grid>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 // material ui style helper, Theme type
 import { withStyles, Theme } from '@material-ui/core/styles';
 // material ui core components
@@ -77,6 +77,12 @@ interface CustomDialogProps {
 function CustomDialog({
   title, open, onClose, buttons, children, ...rest
 }: CustomDialogProps): JSX.Element {
+  const contentRef = useRef<HTMLDivElement>();
+  useEffect(() => {
+    if (contentRef.current) {
+      contentRef.current.scrollTo(0, 0);
+    }
+  });
   return (
     <Dialog
       onClose={onClose}
@@ -88,7 +94,7 @@ function CustomDialog({
           {title}
         </DialogTitle>
       ) : null}
-      <DialogContent dividers>
+      <DialogContent dividers ref={contentRef}>
         {children}
       </DialogContent>
       {buttons

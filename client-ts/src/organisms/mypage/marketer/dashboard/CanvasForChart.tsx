@@ -9,11 +9,10 @@ import { UseGetRequestObject } from '../../../../utils/hooks/useGetRequest';
 
 interface CanvasForChartProps {
   valueChartData: UseGetRequestObject<ValueChartInterface[] | null>;
-  broadCreatorData: UseGetRequestObject<null | string[]>;
 }
 
 export default function CanvasForChart(props: CanvasForChartProps): JSX.Element {
-  const { valueChartData, broadCreatorData } = props;
+  const { valueChartData } = props;
 
   const [tabValue, setTabValue] = React.useState<number>(0);
 
@@ -34,12 +33,7 @@ export default function CanvasForChart(props: CanvasForChartProps): JSX.Element 
           {tabValue === 0 && valueChartData.data && (
             <ReChartBar data={valueChartData.data} dataKey={['cpm_amount', 'cpc_amount']} />
           )}
-          {tabValue === 1
-            && ((!broadCreatorData.loading) && broadCreatorData.data
-              && (
-                <CreatorsChart broadCreatorData={broadCreatorData} />
-              )
-            )}
+          {tabValue === 1 && (<CreatorsChart />)}
         </div>
 
       </div>

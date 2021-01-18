@@ -44,7 +44,9 @@ coverage
 
 # production
 /build
+build
 /dist
+dist
 
 # misc
 .DS_Store
@@ -63,3 +65,7 @@ et --hard commit_id
 # tmp 
 sleepAccount/
 ./sleepAccount
+
+# python
+__pycache__
+__pypackages__/

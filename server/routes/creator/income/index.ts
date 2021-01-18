@@ -1,6 +1,5 @@
 import express from 'express';
 import responseHelper from '../../../middlewares/responseHelper';
-import dataProcessing from '../../../lib/dataProcessing';
 import doQuery from '../../../model/doQuery';
 import encrypto from '../../../middlewares/encryption';
 
@@ -14,6 +13,7 @@ router.route('/')
     responseHelper.middleware.checkSessionExists,
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
       const { creatorId } = responseHelper.getSessionData(req);
+      console.log('income/ creatorId: ', creatorId);
       const query = `
       SELECT
       ci.settlementState,
@@ -47,6 +47,25 @@ router.route('/')
   )
   .all(responseHelper.middleware.unusedMethod);
 
+router.route('/ratio').get(
+  responseHelper.middleware.checkSessionExists,
+  responseHelper.middleware.withErrorCatch(async (req, res, next) => {
+    const { creatorId } = responseHelper.getSessionData(req);
+    const query = `
+    SELECT
+      creatorId, type, SUM(cashToCreator) as cashAmount
+      FROM campaignLog
+      WHERE creatorId= ?
+      GROUP BY type`;
+      // 248937084
+    interface RatioQueryResult {
+      creatorId: string; type: 'CPM' | 'CPC' | 'CPA'; cashAmount: number;
+    }
+    const { result } = await doQuery<RatioQueryResult>(query, [creatorId]);
+    responseHelper.send(result, 'get', res);
+  })
+);
+
 router.route('/withdrawal')
   // 크리에이터 출금 내역 리스트
   .get(
@@ -56,9 +75,9 @@ router.route('/withdrawal')
 
       const query = `
       SELECT
-      DATE_FORMAT(DATE, "%Y년 %m월 %d일") as date, creatorWithdrawalAmount, withdrawalState
+        date, creatorWithdrawalAmount, withdrawalState
       FROM creatorWithdrawal
-      WHERE creatorId= ?
+      WHERE creatorId = ?
       ORDER BY date DESC
       `;
 

@@ -5,7 +5,7 @@ import Grid, { GridProps } from '@material-ui/core/Grid';
 
 const useStyles = makeStyles({
   grid: {
-    padding: '0 15px !important',
+    padding: '0 8px !important',
   },
 });
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  Grid, Avatar, Chip, Typography, Badge, CircularProgress
+  Grid, Avatar, Chip, Typography, CircularProgress
 } from '@material-ui/core';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 // import Skeleton from '@material-ui/lab/Skeleton';
@@ -8,13 +8,14 @@ import Error from '@material-ui/icons/Error';
 import ReChartPie from '../../../../atoms/Chart/ReChartPie';
 
 // usehook
-import useGetRequest, { UseGetRequestObject } from '../../../../utils/hooks/useGetRequest';
+import useGetRequest from '../../../../utils/hooks/useGetRequest';
 import { CreatorDataInterface } from '../dashboard/interfaces';
 
 const useStyles = makeStyles((theme) => ({
   chip: {
     margin: theme.spacing(0.5)
   },
+  chipImg: { margin: theme.spacing(0, 0.5) },
   loading: {
     paddingTop: theme.spacing(3),
     paddingBottom: theme.spacing(3)
@@ -33,14 +34,12 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-interface CustomPieChartProps {
-  broadCreatorData: UseGetRequestObject<string[] | null>;
-}
 
-export default function CustomPieChart(props: CustomPieChartProps): JSX.Element {
+export default function CustomPieChart(): JSX.Element {
   const classes = useStyles();
-  const { broadCreatorData } = props;
-  const creatorsData = useGetRequest<{ campaignId: string }, CreatorDataInterface[] | null>('/marketer/campaign/analysis/creator-data', { campaignId: '' });
+  const creatorsData = useGetRequest<{ campaignId: string }, CreatorDataInterface[] | null>(
+    '/marketer/campaign/analysis/creator-data', { campaignId: '' }
+  );
 
   const [activeIndex, setActiveIndex] = React.useState<number>(0);
 
@@ -63,8 +62,7 @@ export default function CustomPieChart(props: CustomPieChartProps): JSX.Element 
       )}
       {!creatorsData.loading
       && creatorsData.data
-      && broadCreatorData.data
-      && broadCreatorData.data.length === 0 && creatorsData.data.length === 0 && (
+      && creatorsData.data.length === 0 && (
         <Grid
           item
           xs={12}
@@ -91,13 +89,12 @@ export default function CustomPieChart(props: CustomPieChartProps): JSX.Element 
       <Grid item xs={12} lg={6}>
 
         {!creatorsData.loading
-        && broadCreatorData.data
         && creatorsData.data
         && creatorsData.data.length > 0 && (
           <ReChartPie
             activeIndex={activeIndex}
             onPieEnter={onPieEnter}
-            data={creatorsData.data.slice(0, 50)}
+            data={creatorsData.data.slice(0, 30)}
             height={400}
             nameKey="creatorName"
             dataKey="total_ad_exposure_amount"
@@ -113,36 +110,45 @@ export default function CustomPieChart(props: CustomPieChartProps): JSX.Element 
               <Grid item xs={12}>
                 <Typography variant="caption">* 아이콘 클릭시 해당 크리에이터의 채널로 이동됩니다.</Typography>
               </Grid>
-              <Grid item xs={12}>
-                <Typography variant="caption">
-                  * 붉은 점 표시는 현재 배너 송출중 상태를 나타냅니다 (오차가 있을수 있습니다.)
-                </Typography>
-              </Grid>
-              {creatorsData.data.slice(0, 30).map((d: CreatorDataInterface, index: number) => (
+              {creatorsData.data.slice(0, 20).map((d: CreatorDataInterface, index: number) => (
                 <Chip
-                  key={d.creatorName}
+                  key={d.creatorId}
                   variant="outlined"
                   className={classes.chip}
                   label={(
-                    <div>
-                      {broadCreatorData.data && broadCreatorData.data.includes(d.creatorName) ? (
-                        <Badge color="error" badgeContent=" " variant="dot">
-                          <Typography variant="body2">{`${index + 1}. ${d.creatorName}`}</Typography>
-                        </Badge>
-                      ) : (
-                        <Typography variant="body2">{`${index + 1}. ${d.creatorName}`}</Typography>
+                    <Typography variant="body2">
+                      {`${index + 1}. ${d.creatorName || d.afreecaName}`}
+                      {d.afreecaId && (
+                      <img
+                        alt=""
+                        height={10}
+                        src="/pngs/logo/afreeca/onlyFace.png"
+                        className={classes.chipImg}
+                      />
                       )}
-                    </div>
+                      {d.creatorTwitchId && (
+                      <img
+                        alt=""
+                        height={10}
+                        src="/pngs/logo/twitch/TwitchGlitchPurple.png"
+                        className={classes.chipImg}
+                      />
+                      )}
+                    </Typography>
                   )}
                   avatar={(
-                    <Avatar
-                      src={d.creatorLogo}
-                    />
+                    <Avatar src={d.creatorLogo || d.afreecaLogo} />
                   )}
                   onMouseEnter={(): void => {
                     setActiveIndex(index);
                   }}
-                  onClick={(): void => { window.open(`https://twitch.tv/${d.creatorTwitchId}`); }}
+                  onClick={(): void => {
+                    if (d.creatorTwitchId) {
+                      window.open(`https://twitch.tv/${d.creatorTwitchId}`);
+                    } else if (d.afreecaId) {
+                      window.open(`http://play.afreecatv.com/${d.afreecaId}`);
+                    }
+                  }}
                 />
               ))}
             </Grid>

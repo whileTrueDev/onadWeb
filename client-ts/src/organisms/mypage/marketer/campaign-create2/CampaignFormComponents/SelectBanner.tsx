@@ -39,7 +39,7 @@ const SelectBanner = (props: SelectBannerProps): JSX.Element => {
           <StyledItemText
             primary="배너 선택하기"
             secondary={(
-              <Typography variant="body2">
+              <Typography variant="body2" color="textSecondary">
                 선택된 배너는 크리에이터의 방송화면에 송출됩니다.
               </Typography>
             )}
