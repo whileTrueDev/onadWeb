@@ -200,6 +200,8 @@ export default function CreatorTable(props: CreatorTableProps): JSX.Element {
             {
               searchable: false,
               title: '팔로워 수',
+              field: 'followers',
+              customSort: (a, b) => (b.followers + b.followersAfreeca) - (a.followers + a.followersAfreeca),
               render: (rowData: CreatorDetailDataInterface): JSX.Element => (
                 <div className={classes.valueContainer} style={{ whiteSpace: 'nowrap', }}>
                   {rowData.creatorId && (
@@ -216,6 +218,8 @@ export default function CreatorTable(props: CreatorTableProps): JSX.Element {
             {
               searchable: false,
               title: '평균 시청자 수',
+              field: 'viewer',
+              customSort: (a, b) => (b.viewer + b.viewerAfreeca) - (a.viewer + a.viewerAfreeca),
               render: (rowData: CreatorDetailDataInterface): JSX.Element => (
                 <div className={classes.valueContainer} style={{ whiteSpace: 'nowrap', }}>
                   {rowData.creatorId && (
@@ -232,6 +236,8 @@ export default function CreatorTable(props: CreatorTableProps): JSX.Element {
             {
               searchable: false,
               title: '평균 방송 시간',
+              field: 'airtime',
+              customSort: (a, b) => (b.airtime + b.airtimeAfreeca) - (a.airtime + a.airtimeAfreeca),
               render: (rowData: CreatorDetailDataInterface): JSX.Element => (
                 <div className={classes.valueContainer} style={{ whiteSpace: 'nowrap', }}>
                   {rowData.creatorId && (
@@ -248,6 +254,8 @@ export default function CreatorTable(props: CreatorTableProps): JSX.Element {
             {
               searchable: false,
               title: '방송당 평균 노출량',
+              field: 'impression',
+              customSort: (a, b) => (b.impression + b.impressionAfreeca) - (a.impression + a.impressionAfreeca),
               render: (rowData: CreatorDetailDataInterface): JSX.Element => (
                 <div className={classes.valueContainer} style={{ whiteSpace: 'nowrap', }}>
                   {rowData.creatorId && (
@@ -264,6 +272,8 @@ export default function CreatorTable(props: CreatorTableProps): JSX.Element {
             {
               searchable: false,
               title: '시간당 예상 노출 비용',
+              field: 'cost',
+              customSort: (a, b) => (b.cost + b.costAfreeca) - (a.cost + a.costAfreeca),
               render: (rowData: CreatorDetailDataInterface): JSX.Element => (
                 <div className={classes.valueContainer} style={{ whiteSpace: 'nowrap', }}>
                   {rowData.creatorId && (
@@ -280,6 +290,8 @@ export default function CreatorTable(props: CreatorTableProps): JSX.Element {
             {
               searchable: false,
               title: '일간 평균 클릭 수',
+              field: 'ctr',
+              customSort: (a, b) => (b.ctr + b.ctrAfreeca) - (a.ctr + a.ctrAfreeca),
               render: (rowData: CreatorDetailDataInterface): JSX.Element => (
                 <div className={classes.valueContainer} style={{ whiteSpace: 'nowrap', }}>
                   {rowData.creatorId && (

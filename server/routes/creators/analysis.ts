@@ -33,7 +33,7 @@ router.route('/detail')
       LEFT JOIN creatorDetail AS A ON C.creatorId = A.creatorId
       LEFT JOIN creatorDetailAfreeca AS B ON C.creatorId = B.creatorId 
       WHERE A.rip > 0.5 OR B.rip > 0.5
-      ORDER BY A.viewer + B.viewer DESC`;
+      ORDER BY IFNULL(A.viewer, 0) + IFNULL(B.viewer, 0) DESC`;
       doQuery(searchQuery, [])
         .then((row) => {
           responseHelper.send(row.result, 'get', res);
@@ -163,7 +163,7 @@ router.route('/detail-data')
       LEFT JOIN creatorDetail AS A ON C.creatorId = A.creatorId
       LEFT JOIN creatorDetailAfreeca AS B ON C.creatorId = B.creatorId 
       WHERE C.creatorId = ? AND (A.rip > 0.5 OR B.rip > 0.5)
-      ORDER BY A.viewer + B.viewer DESC`;
+      ORDER BY IFNULL(A.viewer, 0) + IFNULL(B.viewer, 0) DESC`;
       doQuery(query, [creatorId])
         .then((row) => {
           let detailData = {};
