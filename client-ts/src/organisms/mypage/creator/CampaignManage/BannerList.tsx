@@ -107,15 +107,14 @@ export default function BannerList(): JSX.Element {
                     src={campaign.bannerSrc}
                     draggable={false}
                     alt="bannerArea"
-                    width="100%"
-                    height="100%"
+                    style={{ maxWidth: '100%', maxHeight: '100%' }}
                   />
                 ) : (
                   <img
                     src={campaign.bannerSrc}
                     draggable={false}
                     alt="bannerArea"
-                    style={{ maxWidth: 320, maxHeight: 160 }}
+                    style={{ maxWidth: '100%', maxHeight: '100%' }}
                   />
                 )}
               </div>
