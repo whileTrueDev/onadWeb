@@ -1,12 +1,15 @@
 import classnames from 'classnames';
 import {
+  Button,
   Divider,
   Hidden,
-  Input, makeStyles, Paper, Popover, Typography
+  makeStyles, Paper, Popover, TextField, Typography
 } from '@material-ui/core';
 import HelpIcon from '@material-ui/icons/Help';
 import React from 'react';
-import { useAnchorEl } from '../../../../utils/hooks';
+import { Link } from 'react-router-dom';
+import { useAnchorEl, useGetRequest } from '../../../../utils/hooks';
+import CircularProgress from '../../../../atoms/Progress/CircularProgress';
 
 const useStyles = makeStyles((theme) => ({
   bold: { fontWeight: theme.typography.fontWeightBold },
@@ -16,11 +19,8 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(4),
     marginBottom: theme.spacing(2),
     marginTop: theme.spacing(2),
-    [theme.breakpoints.down('md')]: {
-      height: 125,
-    }
   },
-  overlayUrl: { marginTop: theme.spacing(4), textAlign: 'center' },
+  overlayUrl: { marginTop: theme.spacing(2), textAlign: 'center' },
   overlayUrlInput: { color: theme.palette.primary.main, },
   popover: { maxWidth: 450 },
   popoverContents: { padding: theme.spacing(4), },
@@ -29,14 +29,19 @@ const useStyles = makeStyles((theme) => ({
   divider: { marginTop: theme.spacing(3), marginBottom: theme.spacing(3), }
 }));
 
-export interface ClickAdInfoProps {
-  creatorUrl: string;
-}
-export default function ClickAdInfo({
-  creatorUrl,
-}: ClickAdInfoProps): JSX.Element {
+export default function ClickAdInfo(): JSX.Element {
   const classes = useStyles();
   const descAnchor = useAnchorEl();
+
+  // Landing url
+  const landingUrlGet = useGetRequest(
+    '/creator/landing-url', { type: 'twitch' }
+  );
+  // afreeca Landing url
+  const afreecaLandingUrlGet = useGetRequest(
+    '/creator/landing-url', { type: 'afreeca' }
+  );
+
   return (
     <Paper className={classes.container}>
       <div style={{ height: '100%' }}>
@@ -58,18 +63,50 @@ export default function ClickAdInfo({
         <Typography variant="caption" color="textSecondary">
           이 링크 클릭으로  수익이 창출됩니다.
         </Typography>
-        <Input
-          className={classes.overlayUrl}
-          fullWidth
-          id="ad-page-url"
-          value={creatorUrl || '이용동의가 필요합니다.'}
-          disabled={!creatorUrl}
-          inputProps={{
-            readOnly: true,
-            className: creatorUrl
-              ? classes.overlayUrlInput : undefined
-          }}
-        />
+
+        {(landingUrlGet.loading || afreecaLandingUrlGet.loading) ? (
+          <CircularProgress />
+        ) : (
+          <div>
+            {landingUrlGet.data && (
+            <TextField
+              label="트위치 링크"
+              className={classes.overlayUrl}
+              fullWidth
+              id="ad-page-url"
+              value={landingUrlGet.data ? landingUrlGet.data.url : ''}
+              disabled={landingUrlGet.loading || !landingUrlGet.data}
+              inputProps={{
+                readOnly: true,
+                className: landingUrlGet.data ? classes.overlayUrlInput : undefined
+              }}
+            />
+            )}
+            {afreecaLandingUrlGet.data && (
+            <TextField
+              label="아프리카TV 링크"
+              className={classes.overlayUrl}
+              fullWidth
+              id="ad-page-url"
+              value={afreecaLandingUrlGet.data ? afreecaLandingUrlGet.data.url : ''}
+              disabled={afreecaLandingUrlGet.loading || !afreecaLandingUrlGet.data}
+              inputProps={{
+                readOnly: true,
+                className: afreecaLandingUrlGet.data ? classes.overlayUrlInput : undefined
+              }}
+            />
+            )}
+
+            {!landingUrlGet.data && !afreecaLandingUrlGet.data && (
+              <div style={{ textAlign: 'center', marginTop: 32 }}>
+                <Typography variant="body2" color="textSecondary">플랫폼 연동이 필요합니다!</Typography>
+                <Button variant="contained" color="primary" component={Link} to="/mypage/creator/user">
+                  연동하러가기
+                </Button>
+              </div>
+            )}
+          </div>
+        )}
       </div>
       {descAnchor.open && (
         <Popover
@@ -127,15 +164,27 @@ export default function ClickAdInfo({
                   (사용할 이미지가 없으시면 사용해주세요.)
                 </Typography>
               </Typography>
-            </div>
-            <br />
-            <div>
-              <a href="/pngs/landing/온애드패널바로가기.png" download="onad_panel_banner_default">
-                <img src="/pngs/landing/온애드패널바로가기.png" alt="패널기본배너1" />
-              </a>
               <Typography variant="body2" color="textSecondary">
                 이미지 클릭시 다운로드 됩니다.
               </Typography>
+            </div>
+            <br />
+            <div>
+              <div style={{
+                display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center'
+              }}
+              >
+                <a href="/pngs/landing/온애드패널바로가기.png" download="온애드패널_트위치">
+                  <img src="/pngs/landing/온애드패널바로가기.png" alt="온애드패널_트위치" style={{ width: 320 }} />
+                </a>
+                <Typography variant="body2">트위치 패널에 등록하세요!</Typography>
+
+                <br />
+                <a href="/pngs/landing/온애드패널_아프리카_플로팅.png" download="온애드패널_아프리카">
+                  <img src="/pngs/landing/온애드패널_아프리카_플로팅.png" alt="온애드패널_아프리카" style={{ width: 45 }} />
+                </a>
+                <Typography variant="body2">아프리카 방송국 플로팅 배너에 등록하세요!</Typography>
+              </div>
             </div>
           </div>
 

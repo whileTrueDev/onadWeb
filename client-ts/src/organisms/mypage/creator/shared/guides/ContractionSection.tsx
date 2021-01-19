@@ -31,12 +31,12 @@ const useStyles = makeStyles((theme) => ({
   section: { margin: `${theme.spacing(2)}px 0px` },
 }));
 export interface ContractionSectionProps {
-  doContractionDataRequest: () => void;
+  doReRequest: () => void;
   contractionData: ContractionDataType;
   handleSuccess: () => void;
 }
 export default function ContractionSection({
-  doContractionDataRequest,
+  doReRequest,
   contractionData,
   handleSuccess,
 }: ContractionSectionProps): JSX.Element {
@@ -45,7 +45,7 @@ export default function ContractionSection({
   // 계약 정보 업데이트 요청
   const contractionPatch = usePatchRequest('/creator', // 계약정보 업데이트
     () => {
-      doContractionDataRequest();
+      doReRequest();
       // 성공 스낵 오픈
       handleSuccess();
     });

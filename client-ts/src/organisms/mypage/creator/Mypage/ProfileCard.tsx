@@ -4,6 +4,7 @@ import {
 } from '@material-ui/core';
 import { OpenInNew } from '@material-ui/icons';
 import Button from '../../../../atoms/CustomButtons/Button';
+import Snackbar from '../../../../atoms/Snackbar/Snackbar';
 
 import Contract from './Contract/Contract';
 import { ProfileDataType } from './ProfileData.type';
@@ -42,6 +43,10 @@ function ProfileCard({ profileData }: ProfileCardProps): JSX.Element {
   // 비밀번호 변경 다이얼로그
   const passwordDialog = useDialog();
 
+  // ***************************************************
+  // 비밀번호 변경 성공 알림 스낵바
+  const successSnack = useDialog();
+
   return (
     <>
       <Paper style={{ padding: 32, marginTop: 8 }}>
@@ -75,6 +80,7 @@ function ProfileCard({ profileData }: ProfileCardProps): JSX.Element {
               disabled
               InputProps={{ readOnly: true, style: { padding: 0 } }}
             />
+            {profileData.creatorContractionAgreement === 1 && (
             <Button
               size="small"
               style={{ marginLeft: 16 }}
@@ -83,12 +89,24 @@ function ProfileCard({ profileData }: ProfileCardProps): JSX.Element {
               <OpenInNew fontSize="small" />
               이용약관 보기
             </Button>
+            )}
           </TextFieldWithLabel>
         </Grid>
       </Paper>
 
       {/* 비밀번호 변경 폼 다이얼로그 */}
-      <PasswordDialog open={passwordDialog.open} onClose={passwordDialog.handleClose} />
+      <PasswordDialog
+        open={passwordDialog.open}
+        onClose={passwordDialog.handleClose}
+        handleSnackOpen={successSnack.handleOpen}
+      />
+      {/* 비밀번호 변경 성공 스낵바 */}
+      <Snackbar
+        message="성공적으로 비밀번호를 변경했습니다."
+        color="success"
+        open={successSnack.open}
+        onClose={successSnack.handleClose}
+      />
 
       {/* 계약서 다이얼로그 */}
       <Contract open={ContractionOpen} handleClose={handleContractionClose} />

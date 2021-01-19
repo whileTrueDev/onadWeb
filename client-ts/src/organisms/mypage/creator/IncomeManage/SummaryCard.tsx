@@ -42,12 +42,12 @@ export default function SummaryCard({
 
   return (
     <Paper style={{ padding: 32, height: 200, marginTop: 8 }}>
-      <Typography style={{ fontWeight: 'bold' }}>수익금 정보 및 출금신청</Typography>
       {/* 로딩 */}
       {incomeCashGet.loading && (<CenterLoading />)}
 
       {!incomeCashGet.loading && incomeCashGet.data && (
       <div style={{ height: 'auto' }}>
+        <Typography style={{ fontWeight: 'bold' }}>수익금 정보 및 정산 정보</Typography>
         <Grid container alignItems="center" style={{ marginTop: 32, }}>
           <Grid item xs={6} md={4}>
             {!profileData.loading && profileData.data && (

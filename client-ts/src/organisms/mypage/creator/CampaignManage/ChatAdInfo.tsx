@@ -16,9 +16,6 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(4),
     marginBottom: theme.spacing(2),
     marginTop: theme.spacing(2),
-    [theme.breakpoints.down('md')]: {
-      height: 125,
-    }
   },
   onoffButton: { marginTop: theme.spacing(4), textAlign: 'center' },
   popover: { maxWidth: 450 },

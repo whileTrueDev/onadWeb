@@ -26,8 +26,6 @@ const MyBanner = (): JSX.Element => {
   // 배너광고 그만하기 성공시 스낵바
   const banSuccessSnack = useDialog();
 
-  // Landing url
-  const landingUrlGet = useGetRequest<null, LanidngUrlRes>('/creator/landing-url');
   // Adchat agreement
   const adchatGet = useGetRequest<null, AdChatRes>('/creator/adchat/agreement');
   // Creator click data
@@ -56,6 +54,7 @@ const MyBanner = (): JSX.Element => {
             && !profileGet.loading && profileGet.data && (
             <StartGuideCard
               doContractionDataRequest={profileGet.doGetRequest}
+              doOverlayUrlDataRequest={overlayUrlGet.doGetRequest}
               overlayUrlData={overlayUrlGet.data}
               contractionData={profileGet.data}
               handleSnackOpen={snack.handleOpen}
@@ -89,14 +88,7 @@ const MyBanner = (): JSX.Element => {
 
         {/* 클릭광고 정보 */}
         <GridItem xs={12} sm={6} lg={3}>
-          <ClickAdInfo
-            creatorUrl={
-            (!profileGet.loading && profileGet.data
-              && profileGet.data.creatorContractionAgreement && landingUrlGet.data)
-              ? landingUrlGet.data.url
-              : ''
-            }
-          />
+          <ClickAdInfo />
         </GridItem>
 
         {/* 채팅광고 정보 */}

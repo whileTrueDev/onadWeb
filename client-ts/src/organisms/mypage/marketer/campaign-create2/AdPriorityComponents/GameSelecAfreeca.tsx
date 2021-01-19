@@ -245,7 +245,7 @@ const GameSelectAfreeca = (props: GameSelectProps): JSX.Element => {
 
         {state.selectedGames.length > 0 && (
           <Grid item xs={12}>
-            <Typography variant="h6">선택된 게임</Typography>
+            <Typography variant="h6">선택된 카테고리</Typography>
             <div style={{ padding: 16 }}>
               {state.selectedGames.map((game) => (
                 <Chip

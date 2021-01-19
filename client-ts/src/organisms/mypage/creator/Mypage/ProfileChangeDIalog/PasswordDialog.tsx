@@ -5,19 +5,19 @@ import { Visibility, VisibilityOff } from '@material-ui/icons';
 import { Alert } from '@material-ui/lab';
 import React, { useState } from 'react';
 import CustomDialog from '../../../../../atoms/Dialog/Dialog';
-import Snackbar from '../../../../../atoms/Snackbar/Snackbar';
 import HOST from '../../../../../config';
 import axiosInstance from '../../../../../utils/axios';
 import {
-  useDialog, useEventTargetValue, usePatchRequest, useToggle
+  useEventTargetValue, usePatchRequest, useToggle
 } from '../../../../../utils/hooks';
 
 export interface PasswordDialogProps {
   open: boolean;
   onClose: () => void;
+  handleSnackOpen: () => void;
 }
 export default function PasswordDialog({
-  open, onClose
+  open, onClose, handleSnackOpen,
 }: PasswordDialogProps): JSX.Element {
   // ***************************************************
   // 단계 스테이트
@@ -28,10 +28,6 @@ export default function PasswordDialog({
   function handleReset(): void {
     setActiveStep(0);
   }
-
-  // ***************************************************
-  // 성공/실패 알림 스낵바
-  const successSnack = useDialog();
 
   // ***************************************************
   // 기존 비밀번호 스테이트
@@ -68,6 +64,7 @@ export default function PasswordDialog({
   function handleDialogClose(): void {
     onClose();
     handleReset();
+    setPasswordCheckFail('');
     password.handleReset();
     newPw.handleReset();
     newPwCheck.handleReset();
@@ -81,7 +78,7 @@ export default function PasswordDialog({
     doPatchRequest({ password: newPw.value })
       .then((res) => {
         if (res.data > 0) { // 수정된 행 숫자 (affected Rows)
-          successSnack.handleOpen();
+          handleSnackOpen();
           handleDialogClose();
         } else {
           setChangeFailError('비밀번호 변경 과정에서 오류가 발생했습니다. 잠시후 다시 시도해주세요!');
@@ -212,7 +209,7 @@ export default function PasswordDialog({
               style={{ marginLeft: 4 }}
               variant="contained"
               color="primary"
-              disabled={!newPw.value}
+              disabled={!newPw.value || newPw.value !== newPwCheck.value}
               onClick={handleSubmit}
             >
               변경하기
@@ -221,8 +218,6 @@ export default function PasswordDialog({
           </div>
         </div>
       )}
-
-      <Snackbar message="성공적으로 비밀번호를 변경했습니다." color="success" open={successSnack.open} onClose={successSnack.handleClose} />
     </CustomDialog>
   );
 }

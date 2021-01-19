@@ -14,8 +14,9 @@ import { useAnchorEl } from '../../../../utils/hooks';
 const useStyles = makeStyles((theme) => ({
   container: {
     height: 200,
-    padding: 32,
-    marginBottom: 16,
+    padding: theme.spacing(4),
+    marginTop: theme.spacing(1),
+    marginBottom: theme.spacing(2),
     [theme.breakpoints.down('xs')]: { height: 400 },
   },
   divider: {

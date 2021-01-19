@@ -34,12 +34,14 @@ const useStyles = makeStyles((theme) => ({
 
 interface ContractionCardProps {
   doContractionDataRequest: () => void;
+  doOverlayUrlDataRequest: () => void;
   contractionData: ContractionDataType;
   overlayUrlData: OverlayUrlRes;
   handleSnackOpen: () => void;
 }
 const ContractionCard = ({
   doContractionDataRequest,
+  doOverlayUrlDataRequest,
   contractionData,
   overlayUrlData,
   handleSnackOpen,
@@ -77,7 +79,10 @@ const ContractionCard = ({
       label: '온애드 이용약관 동의하기',
       component: <ContractionSection
         contractionData={contractionData}
-        doContractionDataRequest={doContractionDataRequest}
+        doReRequest={(): void => {
+          doContractionDataRequest();
+          doOverlayUrlDataRequest();
+        }}
         handleSuccess={(): void => { snack.handleOpen(); }}
       />,
     },
@@ -157,6 +162,7 @@ const ContractionCard = ({
           <div style={{ textAlign: 'center', padding: 32 }}>
             <Typography>죄송합니다. </Typography>
             <Typography>아직 연동된 방송 플랫폼이 없어 온애드를 시작할 수 없습니다.</Typography>
+            <br />
             <Button
               color="primary"
               variant="contained"

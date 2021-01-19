@@ -147,15 +147,17 @@ router.route('/')
           INSERT INTO creatorCampaign
           (creatorId, campaignList, banList, pausedList)
           VALUES (?, ?, ?, ?)
+          ON DUPLICATE KEY UPDATE creatorId = creatorId
         `;
         // 계약시 생성되는 creatorLanding 기본값
         const landingQuery = `
           INSERT INTO creatorLanding
           (creatorId, creatorTwitchId)
-          VALUES (?, ?)`;
+          VALUES (?, ?)
+          ON DUPLICATE KEY UPDATE creatorId = creatorId`;
         Promise.all([
-          doQuery(campaignQuery, [creatorId, campaignList, campaignList, campaignList]),
           doQuery(contractionUpdateQuery, [1, creatorBannerUrl, remoteControllerUrl, creatorId]),
+          doQuery(campaignQuery, [creatorId, campaignList, campaignList, campaignList]),
           doQuery(landingQuery, [creatorId, creatorName])
         ])
           .then(() => {
@@ -376,22 +378,48 @@ router.route('/landing-url')
     responseHelper.middleware.checkSessionExists,
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
       const { creatorId } = responseHelper.getSessionData(req);
+      const type = responseHelper.getParam('type', 'get', req);
 
-      const query = `
-      SELECT 
-      creatorTwitchId 
-      FROM creatorInfo
-      WHERE creatorId = ?
-      `;
-
-      doQuery(query, [creatorId])
-        .then((row) => {
-          const { creatorTwitchId } = row.result[0];
-          const result = `https://t.onad.io/${creatorTwitchId}`;
-          responseHelper.send({ url: result }, 'get', res);
-        }).catch((error) => {
-          responseHelper.promiseError(error, next);
-        });
+      switch (type) {
+        case 'twitch':
+          doQuery(
+            'SELECT creatorTwitchId AS targetId FROM creatorInfo WHERE creatorId = ? AND creatorTwitchId IS NOT NULL',
+            [creatorId]
+          )
+            .then((row) => {
+              if (row.result.length > 0) {
+                const { targetId } = row.result[0];
+                const result = `https://t.onad.io/${targetId}`;
+                responseHelper.send({ url: result }, 'get', res);
+              } else {
+                // 오류를 반환 처리
+                responseHelper.send(null, 'get', res);
+              }
+            }).catch((error) => {
+              responseHelper.promiseError(error, next);
+            });
+          break;
+        case 'afreeca':
+          doQuery(
+            'SELECT afreecaId AS targetId FROM creatorInfo WHERE creatorId = ? AND afreecaId IS NOT NULL',
+            [creatorId]
+          )
+            .then((row) => {
+              if (row.result.length > 0) {
+                const { targetId } = row.result[0];
+                const result = `https://t.onad.io/afreeca/${targetId}`;
+                responseHelper.send({ url: result }, 'get', res);
+              } else {
+                // 오류를 반환 처리
+                responseHelper.send(null, 'get', res);
+              }
+            }).catch((error) => {
+              responseHelper.promiseError(error, next);
+            });
+          break;
+        default:
+          next(new createHttpError[401]('type parameter is required. type must be afreeca or twitch'));
+      }
     }),
   )
   .all(responseHelper.middleware.unusedMethod);

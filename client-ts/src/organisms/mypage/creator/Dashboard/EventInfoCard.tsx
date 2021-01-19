@@ -27,7 +27,7 @@ export default function EventInfoCard(): JSX.Element {
         <Typography
           color="primary"
           style={{ textDecoration: 'underline', cursor: 'pointer' }}
-          onClick={(): void => { window.open('https://mytruepoint.com'); }}
+          onClick={(): void => { window.open('https://mytruepoint.com/infoCBT'); }}
         >
           Truepoint 알아보기
         </Typography>

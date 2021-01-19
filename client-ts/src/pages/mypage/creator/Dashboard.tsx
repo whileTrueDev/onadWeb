@@ -105,6 +105,7 @@ const Dashboard = (): JSX.Element => {
                 && !profileGet.loading && profileGet.data && (
                 <StartGuideCard
                   doContractionDataRequest={profileGet.doGetRequest}
+                  doOverlayUrlDataRequest={overlayUrlGet.doGetRequest}
                   overlayUrlData={overlayUrlGet.data}
                   contractionData={profileGet.data}
                   handleSnackOpen={snack.handleOpen}

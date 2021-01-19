@@ -75,7 +75,9 @@ interface UserInfoCardProps {
   handleWithdrawalDialogOpen: () => void;
 }
 const UserInfoCard = ({
-  userProfileData, incomeData, withdrawalData, handleWithdrawalDialogOpen
+  userProfileData, incomeData,
+  handleWithdrawalDialogOpen,
+  withdrawalData = [],
 }: UserInfoCardProps): JSX.Element => {
   const classes = useStyles();
 
@@ -199,7 +201,7 @@ const UserInfoCard = ({
       <Divider />
 
       <div className={classes.withdrawalSection}>
-        {withdrawalData.length === 0 && (
+        {(!withdrawalData || withdrawalData.length === 0) && (
         <div className={classes.flex} style={{ marginTop: 32 }}>
           <Typography variant="body2" className={classes.ellipsis}>아직 출금 신청 내역이 없어요..</Typography>
         </div>
