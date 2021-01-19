@@ -136,7 +136,7 @@ router.route('/')
 
         // 크리에이터 계약
         const creatorBannerUrl = makeAdvertiseUrl();
-        const remoteControllerUrl = makeRemoteControllerUrl();
+        const remoteControllerUrl = makeRemoteControllerUrl(creatorId);
         const contractionUpdateQuery = `
           UPDATE creatorInfo
           SET creatorContractionAgreement = ?, advertiseUrl = ?, remoteControllerUrl = ?

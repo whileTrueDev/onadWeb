@@ -263,7 +263,7 @@ function callImg(socket: Socket, msg: string[]): void {
     return new Promise((resolve, reject) => {
       doQuery(selectQuery, [campaignId])
         .then((row) => {
-          let linkName;
+          let linkName = '';
           const links = JSON.parse(row.result[0].links);
           links.links.map((data: LinkJson) => {
             if (data.primary === true) {
