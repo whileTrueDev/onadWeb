@@ -30,7 +30,7 @@ const manualSources = {
     },
     {
       icon: AccountBox,
-      label: '세금계산서 발행'
+      label: '세금계산서 및 현금영수증 발행'
     },
   ],
   bannerRegist: {
@@ -65,7 +65,8 @@ const manualSources = {
         image: null,
         description: `거절된 배너의 경우 거절 사유를 확인한 이후 삭제한 뒤,  
         규정에 알맞은 배너로 다시 업로드합니다.  
-        배너 승인 및 거절에 대한 도움은 support@onad.io 에게 메일로 요청가능합니다.`
+        배너 승인 및 거절에 대한 도움은 support@onad.io 에게 메일로 요청가능합니다.`,
+        customButton: true
       },
       {
         image: null,
@@ -157,21 +158,22 @@ const manualSources = {
   },
   business: {
     card: {
-      title: '세금 계산서 발행',
-      subtitle: '사업자 계정의 경우만 세금계산서가 발행됩니다.'
+      title: '세금 계산서 및 현금영수증발행',
+      subtitle: '사업자 계정의 경우만 세금계산서가 발행되지만 현금영수증은 누구든 발행 요청이 가능합니다.'
     },
     source: [
       {
         image: null,
-        description: `세금계산서는  
-        발행 기준 : 캐시 충전 시 발행  
-        발행 주기 : 익월 10일, 월 1회 일괄 발행  
+        description: `세금계산서는 및 현금영수증은 
+        발행 기준 : 캐시 충전 완료 시 발행  
+        발행 주기 : 세금계산서는 당월 말일, 월 1회 일괄 발행 / 현금영수증의 경우 충전 당일을 원칙으로 합니다.  
         발행 단위 : ${textStyling.styledText('사업자등록증')}을 업로드한 사업자 계정 대상으로,  
-        캐시 충전 시 마다 한 장의 세금계산서로 발행 기준에 따라, 회원가입 시 입력한 메일로 전송. ${textStyling.styledBlock('단, 신용카드 결제의 경우 세금계산서 발행불가')}`
+        캐시 충전 시 마다 한 장의 세금계산서로 발행 기준에 따라, 회원가입 시 입력한 메일로 전송. ${textStyling.styledBlock(`단, 신용카드 결제의 경우 세금계산서 발행불가.  
+        현금영수증은 전자결제 과정에서 입력 혹은 별도로 요청시 ${textStyling.LinkText("<내 오피스>", "myoffice", "marketer")}발행할 번호를 입력바랍니다.`)}`
       },
       {
         image: '/pngs/dashboard/manual/new_marketer/marketer-taxbill-01.png',
-        description: `사업자 등록증 업로드는 ${textStyling.LinkText('<내 오피스>', 'myoffice', 'marketer')}에서 ${textStyling.styledText('사업자등록증 등록')}을 클릭하여 진행할 수 있습니다.${textStyling.styledBlock('사업자 등록증이 업로드된 계정만 세금계산서가 발행됨을 유의하시기 바랍니다.')}`
+        description: `사업자 등록증 업로드 및 현금영수증 번호 입력은 ${textStyling.LinkText('<내 오피스>', 'myoffice', 'marketer')}에서 세금계산서/현금영수증 발행의 ${textStyling.styledText('발행진행')}을 클릭하여 진행할 수 있습니다.${textStyling.styledBlock('사업자 등록증이 업로드 혹은 현금영수증 발행 번호가 입력된 계정만 발행됨을 유의하시기 바랍니다.')}`
       },
       {
         image: '/pngs/dashboard/manual/new_marketer/marketer-taxbill-02.png',

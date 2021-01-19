@@ -3,13 +3,12 @@ import useStyles from './style/Regist.style';
 import RegistStepper from '../../organisms/main/regist/Stepper';
 import AppAppBar from '../../organisms/main/layouts/AppAppbar';
 import useLoginValue from '../../utils/hooks/useLoginValue';
-import withRoot from './withRoot';
 
 interface Props {
   match: { params: { platform: string } };
 }
 
-export default withRoot(({ match }: Props) => {
+export default function Regist({ match }: Props): JSX.Element {
   const classes = useStyles();
   const { logout } = useLoginValue();
   return (
@@ -18,4 +17,4 @@ export default withRoot(({ match }: Props) => {
       <RegistStepper platform={match.params.platform} />
     </div>
   );
-});
+}

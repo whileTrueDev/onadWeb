@@ -1,4 +1,5 @@
 import React from 'react';
+import moment from 'moment';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import {
   Grid, Paper, Divider, Button,
@@ -16,12 +17,12 @@ import CampaignAnalysisDialog from './CampaignAnalysisDialog';
 import CampaignAnalysisDialogV2 from './CampaignAnalysisDialogV2';
 import VideoBanner from '../../../../atoms/Banner/VideoBanner';
 import { CampaignInterface } from './interfaces';
-import { UseGetRequestObject } from '../../../../utils/hooks/useGetRequest';
 import useDialog from '../../../../utils/hooks/useDialog';
 import history from '../../../../history';
 import axios from '../../../../utils/axios';
 import isVideo from '../../../../utils/isVideo';
 import HOST from '../../../../config';
+import usePaginatedGetRequest from '../../../../utils/hooks/usePaginatedGetRequest';
 
 
 const SLIDE_TIMEOUT = 500;
@@ -30,17 +31,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   container: { padding: theme.spacing(2) },
   list: {
     width: '100%',
-    '&:hover': {
-      backgroundColor: theme.palette.action.hover
-    }
+    '&:hover': { backgroundColor: theme.palette.action.hover }
   },
   img: {
     width: 240,
     height: 120,
-    [theme.breakpoints.down('md')]: {
-      width: 120,
-      height: 60
-    },
+    [theme.breakpoints.down('md')]: { width: 120, height: 60 },
     maxWidth: '100%',
   },
   contents: {
@@ -59,14 +55,17 @@ const useStyles = makeStyles((theme: Theme) => ({
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     width: '240px'
-  }
+  },
+  moreButton: { margin: theme.spacing(1) }
 }));
 
-export default function CampaignList(
-  props: { campaignData: UseGetRequestObject<null | CampaignInterface[]> }
-): JSX.Element {
+export default function CampaignList(): JSX.Element {
+  const OFFSET = 2;
   const classes = useStyles();
-  const { campaignData } = props;
+
+  const campaignData = usePaginatedGetRequest<CampaignInterface>(
+    '/marketer/campaign/list', { offset: OFFSET }
+  );
 
   const [selectedCampaign, setSelectedCampaign] = React.useState<CampaignInterface | null>(null);
   const optionTypeList = ['(구)배너 광고', '생방송 배너 광고', '(구)클릭 광고'];
@@ -87,8 +86,19 @@ export default function CampaignList(
     axios.patch(`${HOST}/marketer/campaign/on-off`, { onoffState, campaignId })
       .then((res) => {
         if (res.data[0]) {
+          if (campaignData.data) {
+            const target = campaignData.data.findIndex((x) => x.campaignId === campaignId);
+            if (target > -1) {
+              const tmpList = campaignData.data;
+              const tmp = campaignData.data[target];
+              tmp.onOff = !tmp.onOff ? 1 : 0;
+
+              tmpList[target] = tmp;
+              campaignData.setData(tmpList);
+            }
+          }
           snack.handleOpen();
-          campaignData.doGetRequest();
+          // campaignData.request();
         } else {
           alert(res.data[1]);
         }
@@ -135,8 +145,8 @@ export default function CampaignList(
       </div>
 
       <Divider />
-      {!campaignData.loading && campaignData.data && (
-        <List style={{ maxHeight: 380, overflowY: 'auto' }}>
+      {campaignData.data && (
+        <List>
           {campaignData.data.map((detail: CampaignInterface, index) => (
             <div key={detail.campaignId}>
               <ListItem className={classes.list}>
@@ -182,15 +192,12 @@ export default function CampaignList(
                               {priorityTypeList[detail.priorityType]}
                             </Typography>
                             {detail.campaignDescription && (
-                            <Typography variant="caption" gutterBottom>
-                              {detail.campaignDescription.slice(0, 10)}
-                              {detail.campaignDescription.length > 10 && (
-                                <span>...</span>
-                              )}
+                            <Typography variant="caption" gutterBottom noWrap>
+                              {detail.campaignDescription}
                             </Typography>
                             )}
                             <Typography variant="caption" color="textSecondary">
-                              {new Date(detail.regiDate).toLocaleDateString()}
+                              {moment(detail.regiDate).format('YYYY-MM-DD HH:mm:ss')}
                             </Typography>
                           </Grid>
                         </Grid>
@@ -301,34 +308,41 @@ export default function CampaignList(
                       </List>
                     </Grid>
                   </Hidden>
-
                 </Grid>
-
               </ListItem>
               {(campaignData.data
                 && !(campaignData.data.length - 1 === index)) && (<Divider light />)}
             </div>
           ))}
+
+          {campaignData.data.length % OFFSET === 0 && (
+          <div style={{ textAlign: 'center' }}>
+            <Button
+              className={classes.moreButton}
+              variant="contained"
+              color="primary"
+              onClick={campaignData.handleNextPage}
+            >
+              더보기
+            </Button>
+          </div>
+          )}
         </List>
       )}
-      {
-        (!campaignData.loading && campaignData.data && campaignData.data.length === 0) && (
-          <Grid container justify="center" alignItems="center" direction="column" style={{ marginTop: 40 }}>
-            <Typography variant="body1">생성된 캠페인이 없습니다.</Typography>
-            <Typography variant="body1">새로운 캠페인을 생성해 광고를 진행하세요.</Typography>
-          </Grid>
-        )
-      }
-      {
-        (campaignData.loading) && (
-          <Grid item xs={12} className={classes.loading}>
-            <Typography className={classes.statement}>
-              캠페인 리스트 데이터를 로드하고 있습니다.
-            </Typography>
-            <div style={{ textAlign: 'center' }}><CircularProgress /></div>
-          </Grid>
-        )
-      }
+      {(!campaignData.loading && campaignData.data && campaignData.data.length === 0) && (
+        <Grid container justify="center" alignItems="center" direction="column" style={{ marginTop: 40 }}>
+          <Typography variant="body1">생성된 캠페인이 없습니다.</Typography>
+          <Typography variant="body1">새로운 캠페인을 생성해 광고를 진행하세요.</Typography>
+        </Grid>
+      )}
+      {(campaignData.loading) && (
+      <Grid item xs={12} className={classes.loading}>
+        <Typography className={classes.statement}>
+            캠페인 목록을 로드하고 있습니다.
+        </Typography>
+        <div style={{ textAlign: 'center' }}><CircularProgress /></div>
+      </Grid>
+      )}
 
 
       <Snackbar
@@ -403,7 +417,7 @@ export default function CampaignList(
           <CampaignUpdateDialog
             open={campaignUpdateDialog.open}
             selectedCampaign={selectedCampaign}
-            doGetRequest={campaignData.doGetRequest}
+            doGetRequest={campaignData.request}
             handleClose={(): void => {
               setSelectedCampaign(null);
               campaignUpdateDialog.handleClose();
@@ -418,7 +432,7 @@ export default function CampaignList(
           <CampaignDeleteConfirmDialog
             open={campaignDeleteDialog.open}
             selectedCampaign={selectedCampaign}
-            doGetRequest={campaignData.doGetRequest}
+            doGetRequest={campaignData.request}
             handleClose={(): void => {
               setSelectedCampaign(null);
               campaignDeleteDialog.handleClose();

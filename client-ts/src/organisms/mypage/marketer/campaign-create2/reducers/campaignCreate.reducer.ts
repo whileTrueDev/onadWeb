@@ -18,9 +18,13 @@ export type CampaignCreateAction = {
     | 'DELETE_SELECTED_CREATOR_NAMES'
     | 'RESET_SELECTED_CREATORS'
     | 'SET_SELECTED_GAMES'
+    | 'SET_SELECTED_GAMES_MANY'
     | 'DELETE_SELECTED_GAMES'
-    | 'RESET_SELECTED_GAMES';
-  value: string;
+    | 'DELETE_SELECTED_GAMES_MANY'
+    | 'RESET_SELECTED_GAMES'
+    | 'LOADING_START'
+    | 'LOADING_DONE';
+  value: any;
 }
 
 export interface CampaignCreateInterface {
@@ -36,6 +40,7 @@ export interface CampaignCreateInterface {
     finDate?: string;
   };
   campaignTime: string[];
+  loading: boolean;
 }
 
 export const defaultState: CampaignCreateInterface = {
@@ -51,6 +56,7 @@ export const defaultState: CampaignCreateInterface = {
     startDate: new Date(),
     finDate: undefined,
   },
+  loading: false
 };
 export const CampaignCreateReducer = (
   state: CampaignCreateInterface,
@@ -104,13 +110,28 @@ export const CampaignCreateReducer = (
     // 광고 송출 게임 선택 관련
     case 'SET_SELECTED_GAMES':
       return { ...state, selectedGames: [...state.selectedGames, action.value] };
+    case 'SET_SELECTED_GAMES_MANY': {
+      const tmp = [...state.selectedGames, ...action.value];
+      const result = Array.from(new Set(tmp));
+      return { ...state, selectedGames: result };
+    }
     case 'DELETE_SELECTED_GAMES':
       return {
         ...state,
-        selectedGames: state.selectedGames.filter((item: string) => item !== value)
+        selectedGames: state.selectedGames.filter((item) => item !== value)
       };
+    case 'DELETE_SELECTED_GAMES_MANY': {
+      const tmp = state.selectedGames.filter((item) => !value.includes(item));
+      return { ...state, selectedGames: tmp };
+    }
     case 'RESET_SELECTED_GAMES':
       return { ...state, selectedGames: [] };
+    // 캠페인 생성 요청 로딩
+    case 'LOADING_START':
+      return { ...state, loading: true };
+    // 캠페인 생성 요청 로딩 완료
+    case 'LOADING_DONE':
+      return { ...state, loading: false };
     // 모두 초기화
     case 'ALL_RESET':
       return defaultState;

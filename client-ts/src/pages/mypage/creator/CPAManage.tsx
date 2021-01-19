@@ -17,10 +17,27 @@ import HowToCPADialog from '../../../organisms/mypage/creator/CPAManage/HowToCPA
 import textsource from '../../../organisms/mypage/creator/CPAManage/source/AgreementText';
 // types
 import { CampaignResult, AdPickIncome, AdPickMetrics } from '../../../organisms/mypage/creator/CPAManage/AdpickTypes';
-import { ContractionDataType } from '../../../organisms/mypage/creator/Dashboard/ContractionCard';
 import CPAIntroduction from '../../../organisms/mypage/creator/CPAManage/CPAIntroduction';
 
-
+export interface ContractionDataType {
+  creatorId: string;
+  creatorName: string;
+  loginId: string;
+  creatorIp: string;
+  creatorMail: string;
+  creatorAccountNumber: string;
+  creatorContractionAgreement: number;
+  creatorTwitchId: string;
+  creatorTwitchOriginalId: string;
+  afreecaId: string;
+  afreecaName: string;
+  afreecaLogo: string;
+  realName: string;
+  creatorLogo: string;
+  NowIp: string;
+  CPAAgreement: number;
+  settlementState: number;
+}
 export default function CPAManage(): JSX.Element {
   const contractionGet = useGetRequest<null, ContractionDataType>('/creator');
   const CPAmainData = useGetRequest<null, AdPickMetrics>('/creator/cpa/adpick/mainIndicator');
@@ -55,6 +72,7 @@ export default function CPAManage(): JSX.Element {
 
   return (
     <div style={{ margin: '0px auto', maxWidth: 1430 }}>
+
       {/* 설명 */}
       <GridContainer>
         <GridItem xs={12}>

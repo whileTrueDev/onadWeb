@@ -1,4 +1,5 @@
 import React, { useCallback } from 'react';
+import { AxiosResponse } from 'axios';
 import axios from '../axios';
 import host from '../../config';
 
@@ -7,7 +8,7 @@ export interface UsePutRequestObject<T, P> {
   success: true | null;
   loading: boolean | null;
   error: string;
-  doPutRequest: (param: T) => void;
+  doPutRequest: (param?: T) => Promise<AxiosResponse<P>>;
   data: P | null;
 }
 
@@ -43,10 +44,10 @@ export default function usePutRequest<PARAM_TYPE = {[key: string]: any}, RES_DAT
   const [loading, setLoading] = React.useState<boolean | null>(null);
   const [error, setError] = React.useState('');
 
-  const doPutRequest = useCallback((param: PARAM_TYPE): void => {
+  const doPutRequest = useCallback(async (
+    param?: PARAM_TYPE): Promise<AxiosResponse<RES_DATA_TYPE>> => {
     setLoading(true); // 로딩 시작
-    console.log('params', param);
-    axios.put<RES_DATA_TYPE>(`${host}${url}`,
+    return axios.put<RES_DATA_TYPE>(`${host}${url}`,
       { ...param })
       .then((res) => {
         setLoading(false); // 로딩 완료
@@ -57,6 +58,7 @@ export default function usePutRequest<PARAM_TYPE = {[key: string]: any}, RES_DAT
           setSuccess(true);
           if (successCallback) { successCallback(); }
         }
+        return res;
       })
       .catch((err) => {
         setLoading(false); // 로딩 완료
@@ -75,6 +77,7 @@ export default function usePutRequest<PARAM_TYPE = {[key: string]: any}, RES_DAT
           console.log('오류를 발생시킨 요청을 설정하는 중에 문제가 발생했습니다');
           setError(DEFAULT_ERROR_MESSAGE);
         }
+        throw err;
       });
   }, [successCallback, url]);
 
