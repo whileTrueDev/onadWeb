@@ -202,20 +202,24 @@ class AfreecaNoteCrawler:
 
         if len(verified_cert_list) > 0:
             for verified_cert in verified_cert_list:
+                if verified_cert:
+                    self.logger.info(verified_cert.afreecaId + ' 연동 DB작업 시작')
+                    # 인증된 유저 정보의 afreecaId 연동 작업
+                    verified_user = self.db_controller.get_user(
+                        verified_cert.creatorId)
 
-                self.logger.info(verified_cert.afreecaId + ' 연동 DB작업 시작')
-                # 인증된 유저 정보의 afreecaId 연동 작업
-                verified_user = self.db_controller.get_user(
-                    verified_cert.creatorId)
+                    if verified_user:
+                        # #########################
+                        # bjapi 요청 및 유저 정보를 creatorInfo로 업데이트
+                        afreeca_info = self.__call_bjapi_station(
+                            verified_cert.afreecaId)
 
-                # #########################
-                # bjapi 요청 및 유저 정보를 creatorInfo로 업데이트
-                afreeca_info = self.__call_bjapi_station(
-                    verified_cert.afreecaId)
-
-                verified_user.afreecaId = verified_cert.afreecaId
-                verified_user.afreecaName = afreeca_info['nickname']
-                verified_user.afreecaLogo = afreeca_info['logo']
+                        verified_user.afreecaId = verified_cert.afreecaId
+                        verified_user.afreecaName = afreeca_info['nickname']
+                        verified_user.afreecaLogo = afreeca_info['logo']
+                    else:
+                        raise Exception(
+                            'creatorId' + verified_cert.creatorId + '에 해당하는 크리에이터가 없습니다.')
 
             self.logger.info('연동 DB작업 완료')
             # 인증 상태 변경 / 유저 아프리카 Id 변경 DB에 적용

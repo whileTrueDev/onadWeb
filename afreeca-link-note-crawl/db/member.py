@@ -25,7 +25,7 @@ class AfreecaLinkCertification(Base):
 
 
 class CreatorInfo(Base):
-    __tablename__ = 'creatorInfo_v2'
+    __tablename__ = 'creatorInfo'
 
     creatorId = Column(String(50), primary_key=True)
     afreecaId = Column(String(50))
