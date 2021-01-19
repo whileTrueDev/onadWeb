@@ -102,7 +102,10 @@ export default function AfreecaLinkDialog({
         {!certCode ? (
           <div>
             <TextField
-              helperText="아프리카tv로그인시 입력하는 ID를 입력해주세요"
+              helperText="아프리카tv로그인시 입력하는 ID를 입력해주세요 (오타를 주의해주세요)"
+              inputProps={{
+                maxLength: 12 // 아프리카 회원가입시 아이디 입력 12자리 까지로 제한됨.
+              }}
               fullWidth
               value={afreecaId.value}
               onChange={afreecaId.handleChange}

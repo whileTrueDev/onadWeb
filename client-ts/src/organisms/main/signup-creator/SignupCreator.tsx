@@ -56,14 +56,14 @@ const useStyles = makeStyles((theme: OnadTheme) => ({
 }));
 
 export interface CreatorSignupInfo {
-  userid: string; passwd: string; repasswd: string; pwdVisibility: boolean;
+  userid: string; passwd: string; repasswd: string; pwdVisibility: boolean; repwdVisibility: boolean;
 }
 export default function SignupCreator(): JSX.Element {
   const classes = useStyles();
   const location = useLocation();
   // 회원가입 정보
   const [signupInfo, setSignupInfo] = useState<CreatorSignupInfo>({
-    userid: '', passwd: '', repasswd: '', pwdVisibility: false,
+    userid: '', passwd: '', repasswd: '', pwdVisibility: false, repwdVisibility: false,
   });
 
   // 에러 정보
@@ -142,13 +142,7 @@ export default function SignupCreator(): JSX.Element {
   const handleChange = (
     prop: keyof CreatorSignupInfo
   ) => (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (prop === 'passwd' || prop === 'repasswd') {
-      if (!signupInfo.pwdVisibility) {
-        setSignupInfo({ ...signupInfo, [prop]: event.target.value });
-      }
-    } else {
-      setSignupInfo({ ...signupInfo, [prop]: event.target.value });
-    }
+    setSignupInfo({ ...signupInfo, [prop]: event.target.value });
     setUseridHelperText(defaultHelperText);
     setUseridError(false);
     setPwdError(false);
@@ -157,6 +151,9 @@ export default function SignupCreator(): JSX.Element {
   // 비밀번호 보기 / 보지않기 버튼 핸들러
   const handleClickShowPassword = (): void => {
     setSignupInfo({ ...signupInfo, pwdVisibility: !signupInfo.pwdVisibility });
+  };
+  const handleClickShowRePassword = (): void => {
+    setSignupInfo({ ...signupInfo, repwdVisibility: !signupInfo.repwdVisibility });
   };
   const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>): void => {
     event.preventDefault();
@@ -284,6 +281,8 @@ export default function SignupCreator(): JSX.Element {
         helperText={useridHelperText}
         onFocus={(): void => setUseridIconColor('primary')}
         onBlur={(): void => setUseridIconColor('disabled')}
+        inputProps={{ maxLength: 15 }}
+        // eslint-disable-next-line react/jsx-no-duplicate-props
         InputProps={{
           startAdornment: (
             <InputAdornment position="start">
@@ -306,6 +305,8 @@ export default function SignupCreator(): JSX.Element {
         onChange={handleChange('passwd')}
         onFocus={(): void => setPwIconColor('primary')}
         onBlur={(): void => setPwIconColor('disabled')}
+        inputProps={{ maxLength: 20, minLength: 8 }}
+        // eslint-disable-next-line react/jsx-no-duplicate-props
         InputProps={{
           startAdornment: (
             <InputAdornment position="start">
@@ -332,13 +333,15 @@ export default function SignupCreator(): JSX.Element {
         variant="outlined"
         placeholder="비밀번호확인"
         disabled={duplicateCheckLoading}
-        type={signupInfo.pwdVisibility ? 'text' : 'password'}
+        type={signupInfo.repwdVisibility ? 'text' : 'password'}
         error={repwdError}
         helperText={repwdError ? '비밀번호와 동일하지 않습니다.' : ''}
         value={signupInfo.repasswd}
         onChange={handleChange('repasswd')}
         onFocus={(): void => setRePwIconColor('primary')}
         onBlur={(): void => setRePwIconColor('disabled')}
+        inputProps={{ maxLength: 20, minLength: 8 }}
+        // eslint-disable-next-line react/jsx-no-duplicate-props
         InputProps={{
           startAdornment: (
             <InputAdornment position="start">
@@ -349,10 +352,10 @@ export default function SignupCreator(): JSX.Element {
             <InputAdornment position="end">
               <IconButton
                 aria-label="toggle password visibility"
-                onClick={handleClickShowPassword}
+                onClick={handleClickShowRePassword}
                 onMouseDown={handleMouseDownPassword}
               >
-                {signupInfo.pwdVisibility ? <Visibility /> : <VisibilityOff />}
+                {signupInfo.repwdVisibility ? <Visibility /> : <VisibilityOff />}
               </IconButton>
             </InputAdornment>
           )

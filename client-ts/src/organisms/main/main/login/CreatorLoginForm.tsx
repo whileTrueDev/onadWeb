@@ -93,7 +93,7 @@ export default function CreatorLoginForm({
           </form>
 
           {error && (
-            <Alert severity="error">
+            <Alert severity="error" icon={false}>
               <Typography>{error}</Typography>
             </Alert>
           )}
