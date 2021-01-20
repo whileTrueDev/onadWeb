@@ -56,7 +56,8 @@ const useStyles = makeStyles((theme: OnadTheme) => ({
 }));
 
 export interface CreatorSignupInfo {
-  userid: string; passwd: string; repasswd: string; pwdVisibility: boolean; repwdVisibility: boolean;
+  userid: string; passwd: string; repasswd: string;
+  pwdVisibility: boolean; repwdVisibility: boolean;
 }
 export default function SignupCreator(): JSX.Element {
   const classes = useStyles();
@@ -96,7 +97,7 @@ export default function SignupCreator(): JSX.Element {
   // Parse search parpameter
   function parseParams(params: string) {
     const result: {
-        accessToken?: string; creatorId?: string; creatorName?: string;
+        accessToken?: string; creatorId?: string; creatorName?: string; error?: string;
       } = {};
     params.substr(1).split('&').map((splited) => {
       const [key, value] = splited.split('=');
@@ -398,7 +399,7 @@ export default function SignupCreator(): JSX.Element {
         variant="contained"
         fullWidth
       >
-    마이페이지로 이동
+        마이페이지로 이동
       </Button>
       <Button
         component={Link}
@@ -408,7 +409,7 @@ export default function SignupCreator(): JSX.Element {
         variant="contained"
         fullWidth
       >
-    메인화면으로
+        메인화면으로
       </Button>
     </div>
   );
@@ -443,53 +444,98 @@ export default function SignupCreator(): JSX.Element {
                 <>
                   <Alert severity="info" style={{ textAlign: 'left', marginTop: 16, paddingTop: 16 }}>
                     <Typography>
-                  기존 &quot;트위치로 로그인&quot;기능으로 온애드를 이용한 유저는 다음 방법으로 로그인할 수 있습니다.
+                      기존 &quot;트위치로 로그인&quot;기능으로 온애드를 이용한 유저는 다음 방법으로 로그인할 수 있습니다.
                     </Typography>
 
                     <div style={{ marginTop: 8 }}>
                       <Typography variant="body2">
-                    1. &quot;기존 트위치 로그인&quot; 버튼을 통해 사용하던 트위치 계정으로 로그인해주세요.
+                        1. &quot;기존 트위치 로그인&quot; 버튼을 통해 사용하던 트위치 계정으로 로그인해주세요.
                       </Typography>
                       <Typography variant="body2">
-                    2. 로그인 시 사용할 ID/PW를 입력해주세요.
+                        2. 로그인 시 사용할 ID/PW를 입력해주세요.
                       </Typography>
                       <Typography variant="body2">
-                    3. 이후 로그인부터는 입력한 ID/PW로 로그인할 수 있습니다.
+                        3. 이후 로그인부터는 입력한 ID/PW로 로그인할 수 있습니다.
                       </Typography>
 
                     </div>
                   </Alert>
 
-                  <Button
-                    onClick={(e): void => {
-                      e.preventDefault();
-                      if (!isLogedIn) window.location.href = `${HOST}/login/twitch/pre-creator`;
-                    }}
-                    className={classnames(classes.socialLoginButton, classes.twitch, {
-                      [classes.success]: !!isLogedIn
-                    })}
-                    variant="contained"
-                  >
-                    {isLogedIn ? (
-                      <>
-                        <Check />
-                        <Typography variant="body1">
-                          {`${parseParams(location.search).creatorName} 기존계정인증 완료`}
-                        </Typography>
-                      </>
-                    ) : (
-                      <>
-                        <img src="/pngs/logo/twitch/TwitchGlitchWhite.png" alt="" className={classes.socialLogo} />
-                        <Typography variant="body1">기존 트위치 로그인</Typography>
-                      </>
-                    )}
-                  </Button>
+                  {/* 기존 유저가 아닌 경우 */}
+                  {parseParams(location.search).error === 'no-pre-creator' ? (
+                    <div style={{ marginTop: 16 }}>
+                      <Typography variant="body1">
+                        기존 유저가 아닙니다.
+                      </Typography>
+                      <Typography variant="body1" style={{ marginBottom: 16 }}>
+                        온애드 회원가입을 진행해주세요.
+                      </Typography>
+                      <Button
+                        component={Link}
+                        className={classes.socialLoginButton}
+                        to="/creator/signup"
+                        color="primary"
+                        variant="contained"
+                        fullWidth
+                      >
+                        회원가입하기
+                      </Button>
+                      <Button
+                        component={Link}
+                        className={classes.socialLoginButton}
+                        to="/creator"
+                        color="default"
+                        variant="contained"
+                        fullWidth
+                      >
+                        메인화면으로
+                      </Button>
+                    </div>
+                  ) : (
+                    <Button
+                      onClick={(e): void => {
+                        e.preventDefault();
+                        if (!isLogedIn) window.location.href = `${HOST}/login/twitch/pre-creator`;
+                      }}
+                      className={classnames(classes.socialLoginButton, classes.twitch, {
+                        [classes.success]: !!isLogedIn
+                      })}
+                      variant="contained"
+                    >
+                      {isLogedIn ? (
+                        <>
+                          <Check />
+                          <Typography variant="body1">
+                            {`${parseParams(location.search).creatorName} 기존계정인증 완료`}
+                          </Typography>
+                        </>
+                      ) : (
+                        <>
+                          <img src="/pngs/logo/twitch/TwitchGlitchWhite.png" alt="" className={classes.socialLogo} />
+                          <Typography variant="body1">기존 트위치 로그인</Typography>
+                        </>
+                      )}
+                    </Button>
+                  )}
                 </>
+              )}
+
+              {isLogedIn && (
+                <Alert severity="success" style={{ textAlign: 'left' }}>
+                  <Typography variant="body2">
+                    아이디와 비밀번호를 입력이후 연결을 진행해주세요.
+                  </Typography>
+                  <Typography variant="body2">
+                    이후 작성하신 ID/PW로 온애드 로그인이 가능합니다.
+                  </Typography>
+                </Alert>
               )}
 
 
               {/* 회원정보 받기 */}
-              {!(location.pathname === '/creator/signup/complete') && activeStep === 0 && (
+              {/* 완료화면이 아니며, no-pre-creator에러가 아닌 경우 */}
+              {!(location.pathname === '/creator/signup/complete') && activeStep === 0
+              && !(parseParams(location.search).error === 'no-pre-creator') && (
               <div>{signupForm}</div>
               )}
 

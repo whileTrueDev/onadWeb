@@ -76,7 +76,7 @@ export default function ResponsiveDrawer(props: ResponsiveDrawerProps): JSX.Elem
   }
 
   function handleLogoClick(): void {
-    if (window.location.pathname.indexOf('/creator')) {
+    if (window.location.pathname.indexOf('/creator') > -1) {
       history.push('/creator');
     } else {
       history.push('/marketer');

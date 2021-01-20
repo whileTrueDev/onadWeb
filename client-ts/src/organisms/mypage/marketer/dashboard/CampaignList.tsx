@@ -315,7 +315,8 @@ export default function CampaignList(): JSX.Element {
             </div>
           ))}
 
-          {campaignData.data.length % OFFSET === 0 && (
+          {/* 캠페인 목록이 있고, 캠페인 갯수가 offset 으로 나누었을 때 나머지가 0인 경우  */}
+          {campaignData.data.length > 0 && campaignData.data.length % OFFSET === 0 && (
           <div style={{ textAlign: 'center' }}>
             <Button
               className={classes.moreButton}
