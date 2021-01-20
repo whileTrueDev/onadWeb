@@ -479,13 +479,13 @@ const creatorTwitchPreCreator = (
   // 이전에 트위치 로그인을 사용해 사용했던 크리에이터를 찾는다. V
   // 프론트로 보낸다. ( 크리에이터 아이디/이름과 엑세스 토큰을 ) V
   const searchQuery = `
-  SELECT creatorId, creatorName FROM creatorInfo WHERE creatorId = ? LIMIT 1`;
+  SELECT creatorId, creatorName FROM creatorInfo WHERE creatorTwitchOriginalId = ? LIMIT 1`;
   const searchArray = [profile.id];
   doQuery(searchQuery, searchArray).then((row) => {
     if (row.result.length > 0) {
       // 해당 크리에이터의 twitch api 리프레시 토큰 삽입
       const updateRefreshTokenQuery = `
-      UPDATE creatorInfo SET creatorTwitchRefreshToken = ? WHERE creatorId = ?
+      UPDATE creatorInfo SET creatorTwitchRefreshToken = ? WHERE creatorTwitchOriginalId = ?
       `;
       doQuery(updateRefreshTokenQuery, [refreshToken, profile.id]);
 
@@ -514,23 +514,26 @@ const creatorTwitchLink = async (
   done: OAuth2Strategy.VerifyCallback
 ): Promise<void> => {
   const { creatorId } = req.user as Session;
-  const creatorTwitchOriginalId = profile.id; // 트위치 고유 아이디 (ex. 13009139)
-  const creatorName = profile.display_name; // 트위치 닉네임 (ex. 화수르)
-  const creatorTwitchId = profile.login; // 트위치 로그인 아이디 (ex. hwasurr)
-  const creatorMail = profile.email; // 트위치 가입 이메일 주소
-  const creatorLogo = profile.profile_image_url; // 트위치 로고 주소
+  const newCreatorTwitchOriginalId = profile.id; // 트위치 고유 아이디 (ex. 13009139)
+  const newCreatorName = profile.display_name; // 트위치 닉네임 (ex. 화수르)
+  const newCreatorTwitchId = profile.login; // 트위치 로그인 아이디 (ex. hwasurr)
+  const newCreatorMail = profile.email; // 트위치 가입 이메일 주소
+  const newCreatorLogo = profile.profile_image_url; // 트위치 로고 주소
 
   // ***************************************************
+  // 기존 유저 체크
   // 이전 온애드 계정 사용으로, creatorId 가 twitchId인 경우 (본인일 수 있음)
   const preCreatorQuery = `
     SELECT creatorId, creatorName
     FROM creatorInfo
     WHERE creatorId = ? AND creatorTwitchId = ?
   `;
-  const preCreatorRow = await doQuery(preCreatorQuery, [creatorTwitchOriginalId, creatorTwitchId]);
+  const preCreatorRow = await doQuery(
+    preCreatorQuery, [newCreatorTwitchOriginalId, newCreatorTwitchId]
+  );
   if (preCreatorRow.result.length > 0) {
     const alreadyLinked = preCreatorRow.result[0];
-    if (alreadyLinked.creatorId === creatorTwitchOriginalId) {
+    if (alreadyLinked.creatorId === newCreatorTwitchOriginalId) {
       done(Error('error=precreator'));
     }
   } else {
@@ -538,7 +541,7 @@ const creatorTwitchLink = async (
     // 연결된 다른 유저가 있는지 조회
     const searchQuery = `SELECT creatorId, creatorName, loginId
     FROM creatorInfo WHERE creatorTwitchOriginalId = ?`;
-    const { result } = await doQuery(searchQuery, [creatorTwitchOriginalId]);
+    const { result } = await doQuery(searchQuery, [newCreatorTwitchOriginalId]);
     // 이미 해당 아이디에 연결된 유저가 있는 경우
     if (result.length > 0) {
       const alreadyLinked = result[0];
@@ -546,6 +549,7 @@ const creatorTwitchLink = async (
       const user = `${alreadyLinked.loginId.slice(0, alreadyLinked.loginId.length - 2)}**`;
       done(Error(`error=alreadyLinked&user=${user}`));
     } else {
+      // 이미 해당 twitch 아이디에 연결된 유저가 없는 경우.
       // 정상 연결 작업
       const linkQuery = `
       UPDATE creatorInfo
@@ -555,7 +559,8 @@ const creatorTwitchLink = async (
       creatorTwitchRefreshToken = ?
       WHERE creatorId = ?`;
       const queryArray = [
-        creatorTwitchOriginalId, creatorName, creatorTwitchId, creatorMail, creatorLogo,
+        newCreatorTwitchOriginalId, newCreatorName,
+        newCreatorTwitchId, newCreatorMail, newCreatorLogo,
         refreshToken, creatorId
       ];
 
@@ -565,10 +570,10 @@ const creatorTwitchLink = async (
             done(null, {
               userType: 'creator',
               creatorId,
-              creatorTwitchOriginalId,
-              creatorName,
-              creatorMail,
-              creatorLogo,
+              newCreatorTwitchOriginalId,
+              newCreatorName,
+              newCreatorMail,
+              newCreatorLogo,
             });
           } else {
             done(Error('DB Update Error'));
