@@ -96,6 +96,13 @@ export default function BannerList(): JSX.Element {
       <Grid item xs={12}>
         <Typography className={classes.bold}>내가 진행한 광고 목록</Typography>
       </Grid>
+
+      {/* 아직 없는 경우 처리 */}
+      {!loading && (!data || data.length < 1) && (
+      <Grid item xs={12} style={{ marginTop: 8 }}>
+        <Typography variant="body2" color="textSecondary">아직 진행한 광고가 없습니다.</Typography>
+      </Grid>
+      )}
       {/* 목록 */}
       {data.map((campaign) => (
         <Grid item xs={12} sm={6} lg={3} key={campaign.campaignId}>
@@ -163,7 +170,7 @@ export default function BannerList(): JSX.Element {
       )}
 
       {/* 더보기 버튼 */}
-      {data.length % OFFSET === 0 && (
+      {data && data.length > 0 && data.length % OFFSET === 0 && (
       <Grid item xs={12}>
         <div className={classes.moreButton}>
           <Button

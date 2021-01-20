@@ -184,6 +184,8 @@ router.route('/list')
       WHERE creatorId = ?
       `;
 
+      console.log('[HWASURR, TEST서버 로그] - banner/list - session creatorId: ', creatorId);
+
       Promise.all([
         doQuery(listQuery, [creatorId, Number(startNum), Number(offset)]),
         doQuery(bannerQuery, [creatorId])
