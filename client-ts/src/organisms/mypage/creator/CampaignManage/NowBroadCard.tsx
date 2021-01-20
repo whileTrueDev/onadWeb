@@ -51,9 +51,10 @@ export interface CurrentBannerRes {
 }
 export interface NowBroadCardProps {
   currentBannerGet: UseGetRequestObject<CurrentBannerRes[]>;
+  remoteControllerUrlGet: UseGetRequestObject<string>;
 }
 export default function NowBroadCard({
-  currentBannerGet
+  currentBannerGet, remoteControllerUrlGet
 }: NowBroadCardProps): JSX.Element {
   const classes = useStyles();
 
@@ -67,7 +68,7 @@ export default function NowBroadCard({
 
         {/* 실시간 광고 제어 버튼 */}
         <div className={classes.remoteOpenButtonContainer}>
-          <RemotePageOpenButton />
+          <RemotePageOpenButton remoteControllerUrl={remoteControllerUrlGet} />
         </div>
       </div>
 

@@ -35,6 +35,7 @@ const useStyles = makeStyles((theme) => ({
 interface ContractionCardProps {
   doContractionDataRequest: () => void;
   doOverlayUrlDataRequest: () => void;
+  doRemoteControllerUrlRequest?: () => void;
   contractionData: ContractionDataType;
   overlayUrlData: OverlayUrlRes;
   handleSnackOpen: () => void;
@@ -42,6 +43,7 @@ interface ContractionCardProps {
 const ContractionCard = ({
   doContractionDataRequest,
   doOverlayUrlDataRequest,
+  doRemoteControllerUrlRequest,
   contractionData,
   overlayUrlData,
   handleSnackOpen,
@@ -82,6 +84,7 @@ const ContractionCard = ({
         doReRequest={(): void => {
           doContractionDataRequest();
           doOverlayUrlDataRequest();
+          if (doRemoteControllerUrlRequest) doRemoteControllerUrlRequest();
         }}
         handleSuccess={(): void => { snack.handleOpen(); }}
       />,

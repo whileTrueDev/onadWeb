@@ -47,6 +47,8 @@ const Dashboard = (): JSX.Element => {
   const noticeGet = useGetRequest<null, NoticeData[]>('/notice');
   // 출금 내역 정보
   const withdrawalData = useGetRequest('/creator/income/withdrawal');
+  // 리모트 컨트롤러 URL 정보
+  const remoteControllerUrlGet = useGetRequest<null, string>('/creator/banner/remote-page-url');
 
   // 채널 연동 유도 다이얼로그
   const platformLinkDialog = useDialog();
@@ -106,6 +108,7 @@ const Dashboard = (): JSX.Element => {
                 <StartGuideCard
                   doContractionDataRequest={profileGet.doGetRequest}
                   doOverlayUrlDataRequest={overlayUrlGet.doGetRequest}
+                  doRemoteControllerUrlRequest={remoteControllerUrlGet.doGetRequest}
                   overlayUrlData={overlayUrlGet.data}
                   contractionData={profileGet.data}
                   handleSnackOpen={snack.handleOpen}
@@ -148,6 +151,7 @@ const Dashboard = (): JSX.Element => {
               <GridItem xs={12} lg={6}>
                 {!incomeChartGet.loading && (
                 <BannerCard
+                  remoteControllerUrlData={remoteControllerUrlGet}
                   currentBannerData={currentBannerGet.data ? currentBannerGet.data : []}
                 />
                 )}

@@ -39,6 +39,9 @@ const MyBanner = (): JSX.Element => {
   // 배너 송출 URL 정보 조회
   const overlayUrlGet = useGetRequest<null, OverlayUrlRes>('/creator/banner/overlay');
 
+  // 리모트 컨트롤러 URL 정보
+  const remoteControllerUrlGet = useGetRequest<null, string>('/creator/banner/remote-page-url');
+
   // For Onoff success snackbar
   const snack = useDialog();
   const failSnack = useDialog();
@@ -83,7 +86,7 @@ const MyBanner = (): JSX.Element => {
 
         {/* 현재 송출 배너 광고 정보 */}
         <GridItem xs={12} lg={6}>
-          <NowBroadCard currentBannerGet={currentBannerGet} />
+          <NowBroadCard currentBannerGet={currentBannerGet} remoteControllerUrlGet={remoteControllerUrlGet} />
         </GridItem>
 
         {/* 클릭광고 정보 */}
