@@ -479,13 +479,13 @@ const creatorTwitchPreCreator = (
   // 이전에 트위치 로그인을 사용해 사용했던 크리에이터를 찾는다. V
   // 프론트로 보낸다. ( 크리에이터 아이디/이름과 엑세스 토큰을 ) V
   const searchQuery = `
-  SELECT creatorId, creatorName FROM creatorInfo WHERE creatorTwitchOriginalId = ? LIMIT 1`;
+  SELECT creatorId, creatorName FROM creatorInfo WHERE creatorId = ? LIMIT 1`;
   const searchArray = [profile.id];
   doQuery(searchQuery, searchArray).then((row) => {
     if (row.result.length > 0) {
       // 해당 크리에이터의 twitch api 리프레시 토큰 삽입
       const updateRefreshTokenQuery = `
-      UPDATE creatorInfo SET creatorTwitchRefreshToken = ? WHERE creatorTwitchOriginalId = ?
+      UPDATE creatorInfo SET creatorTwitchRefreshToken = ? WHERE creatorId = ?
       `;
       doQuery(updateRefreshTokenQuery, [refreshToken, profile.id]);
 
@@ -495,7 +495,7 @@ const creatorTwitchPreCreator = (
         creatorId: row.result[0].creatorId,
         creatorName: row.result[0].creatorName,
       });
-    } else done(Error('기존 회원이 아닙니다.'));
+    } else done(Error('error=no-pre-creator'));
   })
     .catch((err) => done(Error(`Internal Server Error\n${err}`)));
 };

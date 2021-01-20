@@ -96,7 +96,7 @@ export default function SignupCreator(): JSX.Element {
   // Parse search parpameter
   function parseParams(params: string) {
     const result: {
-        accessToken?: string; creatorId?: string; creatorName?: string;
+        accessToken?: string; creatorId?: string; creatorName?: string; error?: string;
       } = {};
     params.substr(1).split('&').map((splited) => {
       const [key, value] = splited.split('=');
@@ -460,36 +460,70 @@ export default function SignupCreator(): JSX.Element {
                     </div>
                   </Alert>
 
-                  <Button
-                    onClick={(e): void => {
-                      e.preventDefault();
-                      if (!isLogedIn) window.location.href = `${HOST}/login/twitch/pre-creator`;
-                    }}
-                    className={classnames(classes.socialLoginButton, classes.twitch, {
-                      [classes.success]: !!isLogedIn
-                    })}
-                    variant="contained"
-                  >
-                    {isLogedIn ? (
-                      <>
-                        <Check />
-                        <Typography variant="body1">
-                          {`${parseParams(location.search).creatorName} 기존계정인증 완료`}
-                        </Typography>
-                      </>
-                    ) : (
-                      <>
-                        <img src="/pngs/logo/twitch/TwitchGlitchWhite.png" alt="" className={classes.socialLogo} />
-                        <Typography variant="body1">기존 트위치 로그인</Typography>
-                      </>
-                    )}
-                  </Button>
+                  {/* 기존 유저가 아닌 경우 */}
+                  {parseParams(location.search).error === 'no-pre-creator' ? (
+                    <div style={{ marginTop: 16 }}>
+                      <Typography variant="body1">
+                        기존 유저가 아닙니다.
+                      </Typography>
+                      <Typography variant="body1" style={{ marginBottom: 16 }}>
+                        온애드 회원가입을 진행해주세요.
+                      </Typography>
+                      <Button
+                        component={Link}
+                        className={classes.socialLoginButton}
+                        to="/creator/signup"
+                        color="primary"
+                        variant="contained"
+                        fullWidth
+                      >
+                        회원가입하기
+                      </Button>
+                      <Button
+                        component={Link}
+                        className={classes.socialLoginButton}
+                        to="/creator"
+                        color="default"
+                        variant="contained"
+                        fullWidth
+                      >
+                        메인화면으로
+                      </Button>
+                    </div>
+                  ) : (
+                    <Button
+                      onClick={(e): void => {
+                        e.preventDefault();
+                        if (!isLogedIn) window.location.href = `${HOST}/login/twitch/pre-creator`;
+                      }}
+                      className={classnames(classes.socialLoginButton, classes.twitch, {
+                        [classes.success]: !!isLogedIn
+                      })}
+                      variant="contained"
+                    >
+                      {isLogedIn ? (
+                        <>
+                          <Check />
+                          <Typography variant="body1">
+                            {`${parseParams(location.search).creatorName} 기존계정인증 완료`}
+                          </Typography>
+                        </>
+                      ) : (
+                        <>
+                          <img src="/pngs/logo/twitch/TwitchGlitchWhite.png" alt="" className={classes.socialLogo} />
+                          <Typography variant="body1">기존 트위치 로그인</Typography>
+                        </>
+                      )}
+                    </Button>
+                  )}
                 </>
               )}
 
 
               {/* 회원정보 받기 */}
-              {!(location.pathname === '/creator/signup/complete') && activeStep === 0 && (
+              {/* 완료화면이 아니며, no-pre-creator에러가 아닌 경우 */}
+              {!(location.pathname === '/creator/signup/complete') && activeStep === 0
+              && !(parseParams(location.search).error === 'no-pre-creator') && (
               <div>{signupForm}</div>
               )}
 
