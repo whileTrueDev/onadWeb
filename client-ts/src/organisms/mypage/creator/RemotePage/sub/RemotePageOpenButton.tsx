@@ -2,12 +2,16 @@ import { Button } from '@material-ui/core';
 import { OpenInNew } from '@material-ui/icons';
 import React from 'react';
 import { REACT_HOST } from '../../../../../config';
-import useGetRequest from '../../../../../utils/hooks/useGetRequest';
+import { UseGetRequestObject } from '../../../../../utils/hooks/useGetRequest';
 
-const RemotePageOpenButton = (): JSX.Element => {
+export interface RemotePageOpenButtonProps {
+  remoteControllerUrl: UseGetRequestObject<string>;
+}
+const RemotePageOpenButton = ({
+  remoteControllerUrl,
+}: RemotePageOpenButtonProps): JSX.Element => {
   const POPUP_WIDTH = process.env.NODE_ENV === 'production' ? 900 : 900;
   const POPUP_HEIGHT = process.env.NODE_ENV === 'production' ? 800 : 700;
-  const remoteControllerUrl = useGetRequest<null, string>('/creator/banner/remote-page-url');
 
   const getCorrectUrl = (url: string): string => (url.startsWith('/') ? url.replace('/', '') : url);
 

@@ -5,6 +5,7 @@ import RemotePageOpenButton from '../RemotePage/sub/RemotePageOpenButton';
 import history from '../../../../history';
 import isVideo from '../../../../utils/isVideo';
 import VideoBanner from '../../../../atoms/Banner/VideoBanner';
+import { UseGetRequestObject } from '../../../../utils/hooks/useGetRequest';
 
 const useStyles = makeStyles((theme: Theme) => ({
   container: {
@@ -46,8 +47,14 @@ export interface CurrentBannerRes {
   campaignDescription: string;
 }
 
-interface BannerCardProps { currentBannerData: CurrentBannerRes[] }
-function BannerCard({ currentBannerData }: BannerCardProps): JSX.Element {
+interface BannerCardProps {
+  currentBannerData: CurrentBannerRes[];
+  remoteControllerUrlData: UseGetRequestObject<string>;
+}
+function BannerCard({
+  currentBannerData,
+  remoteControllerUrlData,
+}: BannerCardProps): JSX.Element {
   const classes = useStyles();
 
   return (
@@ -65,7 +72,7 @@ function BannerCard({ currentBannerData }: BannerCardProps): JSX.Element {
 
         {/* 실시간 광고 제어 버튼 */}
         <div className={classes.remoteOpenButtonContainer}>
-          <RemotePageOpenButton />
+          <RemotePageOpenButton remoteControllerUrl={remoteControllerUrlData} />
         </div>
       </div>
 
