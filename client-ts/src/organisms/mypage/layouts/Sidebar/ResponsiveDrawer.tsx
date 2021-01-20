@@ -7,15 +7,15 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import {
-  makeStyles, Theme, createStyles
+  makeStyles, Theme,
 } from '@material-ui/core/styles';
-import { Button, Typography, useTheme } from '@material-ui/core';
+import { Button, } from '@material-ui/core';
 import { Link } from 'react-router-dom';
 import { drawerWidth } from '../../../../assets/jss/onad';
 import history from '../../../../history';
 import { MypageRoute } from '../../../../pages/mypage/routes';
 
-const useStyles = makeStyles((theme: Theme) => createStyles({
+const useStyles = makeStyles((theme: Theme) => ({
   root: {
     display: 'flex',
   },
@@ -68,7 +68,6 @@ interface ResponsiveDrawerProps {
 export default function ResponsiveDrawer(props: ResponsiveDrawerProps): JSX.Element {
   const { routes, mobileOpen, handleDrawerToggle } = props;
   const classes = useStyles();
-  const theme = useTheme();
 
   // verifies if routeName is the one active (in browser input)
   function isActiveRoute(routeName: string): boolean {
@@ -106,43 +105,12 @@ export default function ResponsiveDrawer(props: ResponsiveDrawerProps): JSX.Elem
               onClick={(): void => { if (mobileOpen) handleDrawerToggle(); }}
               to={route.layout + route.path}
               component={Link}
-            /**
-             * 참여형 광고 긴급점검 표시를 위한 처리
-             * @since 2020. 11. 03
-             * @by dan, martini
-             */
-              style={route.name === '참여형 광고' ? { color: theme.palette.error.main } : {}}
             >
-              {/**
-            * 참여형 광고 긴급점검 표시를 위한 처리
-            * @since 2020. 11. 03
-            * @by dan, martini
-            */}
-              {route.name === '참여형 광고' && (
-              <div style={{
-                width: 50,
-                backgroundColor: 'red',
-                position: 'absolute',
-                top: 0,
-                right: 0,
-              }}
-              >
-                <Typography variant="body2" style={{ color: 'white' }}>
-                  점검중
-                </Typography>
-              </div>
-              )}
               <route.icon
                 className={classNames({
                   [classes.routeIcon]: true,
                   [classes.activeRouteIcon]: isActiveRoute(route.layout + route.path)
                 })}
-              /**
-               * 참여형 광고 긴급점검 표시를 위한 처리
-               * @since 2020. 11. 03
-               * @by dan, martini
-               */
-                style={route.name === '참여형 광고' ? { color: theme.palette.error.main } : {}}
               />
               <ListItemText primary={route.name} />
             </ListItem>

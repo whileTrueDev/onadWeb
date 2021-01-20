@@ -22,7 +22,6 @@ export default function CanvasForChart(props: CanvasForChartProps): JSX.Element 
 
   return (
     <Paper>
-
       <div>
         <div style={{ display: 'flex', padding: '16px 16px 0px 16px' }}>
           <ChartTabs value={tabValue} handleChange={handleTabChange} />
