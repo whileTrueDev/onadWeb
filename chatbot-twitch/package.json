@@ -37,7 +37,7 @@
     "jest": "^25.1.0",
     "nodemon": "^2.0.2",
     "rimraf": "^3.0.2",
-    "socket.io": "^2.3.0",
+    "socket.io": "^2.4.0",
     "ts-jest": "^25.2.1",
     "ts-loader": "^6.2.1",
     "ts-node": "^8.6.2",
