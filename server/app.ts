@@ -26,6 +26,7 @@ import trackingRouter from './routes/tracking';
 import cpapageRouter from './routes/cpapage';
 import certificationRouter from './routes/cert/certification';
 import gamesRouter from './routes/games';
+import manualRouter from './routes/manual';
 // Middleware or custom modules
 import taxBillScheduler from './middlewares/scheduler/taxBillScheduler';
 import dailyLimitScheduler from './middlewares/scheduler/dailyLimitScheduler';
@@ -141,6 +142,7 @@ class OnadWebApi {
     this.app.use('/cpapage', cpapageRouter);
     this.app.use('/certification', certificationRouter);
     this.app.use('/games', gamesRouter);
+    this.app.use('/manual', manualRouter); // 이용안내 데이터 라우터
     // Error handling
     // catch 404 and forward to error handler
     this.app.use((req, res, next) => {
