@@ -12,7 +12,7 @@ import axiosInstance from '../../../../utils/axios';
 import isVideo from '../../../../utils/isVideo';
 
 const useStyles = makeStyles((theme) => ({
-  bold: { fontWeight: 'bold' },
+  bold: { fontWeight: 'bold', color: theme.palette.text.primary },
   container: { marginBottom: theme.spacing(4) },
   paper: { padding: theme.spacing(2), height: 350, overflowY: 'auto' },
   img: { maxHeight: 160, maxWidth: 320, },

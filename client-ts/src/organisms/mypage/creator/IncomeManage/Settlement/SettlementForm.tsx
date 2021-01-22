@@ -279,6 +279,7 @@ function SettlementForm({
             value={creatorName}
             onChange={handleCreatorNameChange}
             className={classes.textField}
+            inputProps={{ maxLength: 17 }}
             margin="dense"
             name="creatorName"
             helperText="크리에이터님의 실명을 입력해주세요"
@@ -348,6 +349,7 @@ function SettlementForm({
             margin="dense"
             name="userName"
             helperText="해당 계좌의 예금주를 입력해주세요."
+            inputProps={{ maxLength: 17 }}
           />
         </Grid>
         <Grid item className={classes.content}>
@@ -362,6 +364,7 @@ function SettlementForm({
             className={classes.textField}
             allowNegative={false}
             allowLeadingZeros
+            inputProps={{ maxLength: 16 }}
           />
         </Grid>
         <div>

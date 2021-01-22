@@ -5,7 +5,7 @@ export interface ManualSelect {
   label: string;
 }
 export interface Source {
-  image: string | null; description: string; customButton?: boolean
+  image: string | null; description: string; customButton?: boolean;
 }
 
 export interface ManualContentSources {
@@ -23,7 +23,6 @@ export interface ManualSources {
   programSetting: ManualContentSources;
   income: ManualContentSources;
   landing: ManualContentSources;
-  adpage: ManualContentSources;
   bannerlist: ManualContentSources;
   withdrawal: ManualContentSources;
 }

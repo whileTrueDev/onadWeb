@@ -8,7 +8,7 @@ import Card from '../../../../atoms/Card/Card';
 import CardHeader from '../../../../atoms/Card/CardHeader';
 import CardBody from '../../../../atoms/Card/CardBody';
 // material-ui
-import ManualContent from '../../shared/ManualContent';
+import ManualContent from '../../shared/ManualContent_deprecated';
 import { ManualContentSources, Source } from '../../shared/ManualTypes';
 
 interface ManualProgramSelectorProps {

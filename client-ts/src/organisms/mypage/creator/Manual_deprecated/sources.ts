@@ -4,7 +4,6 @@ import AttachMoney from '@material-ui/icons/AttachMoney';
 import InsertChart from '@material-ui/icons/InsertChart';
 import Public from '@material-ui/icons/Public';
 import Contactless from '@material-ui/icons/Contactless';
-import Contact from '@material-ui/icons/Contacts';
 
 import { ManualSources } from '../../shared/ManualTypes';
 import textStyling from '../../shared/textStyling';
@@ -13,7 +12,7 @@ const manualSources: ManualSources = {
   selectComponent: [
     {
       icon: HowToReg,
-      label: 'OnAD 플랫폼과 계약',
+      label: '온애드 이용 동의',
     },
     {
       icon: BrandingWatermark,
@@ -25,15 +24,11 @@ const manualSources: ManualSources = {
     },
     {
       icon: Public,
-      label: '내 클릭광고 설정',
-    },
-    {
-      icon: Contact,
-      label: '내 참여형광고 설정',
+      label: '클릭광고 설정',
     },
     {
       icon: Contactless,
-      label: '배너 송출 내역 확인'
+      label: '배너 송출 내역 확인',
     },
     {
       icon: AttachMoney,
@@ -236,37 +231,7 @@ const manualSources: ManualSources = {
       },
     ]
   },
-  adpage: {
-    subType: false,
-    card: {
-      title: '내 참여형광고 관리하기',
-      subtitle: '참여형광고를 관리하고, 현황을 확인하세요'
-    },
-    source: [
-      {
-        image: '/pngs/dashboard/manual/new_creator/creator-adpage-02.png',
-        description: `${textStyling.LinkText('<내 참여형광고>', 'cpa-dashboard')}에서 지금까지의 참여형 광고 수익금과 진행한 광고 수를 확인할 수 있습니다. 
-        ${textStyling.styledText('광고시작하기')} 버튼을 클릭해 지금 바로 광고를 시작해보세요!`
-      },
-      {
-        image: '/pngs/dashboard/manual/new_creator/creator-adpage-03.png',
-        description: `${textStyling.styledText('참여형 광고 목록')}에서 자신의 광고 페이지에 게시할 캠페인을 선택하세요. 
-        ${textStyling.styledText('캠페인 유형별 버튼')}을 통해 유형에 따라 캠페인을 찾으실 수 있습니다.`
-      },
-      {
-        image: '/pngs/dashboard/manual/new_creator/creator-adpage-04.png',
-        description: `광고 페이지에 게시할 캠페인의 정보를 확인할 수 있습니다. 더 많은 정보를 원하시면 ${textStyling.styledText('상세보기')}를 클릭하여 캠페인 설명 및 캠페인 달성 조건을 확인하세요. `
-      },
-      {
-        image: '/pngs/dashboard/manual/new_creator/creator-adpage-05.png',
-        description: `광고 페이지에 게시할 캠페인을 선택하셨다면 ${textStyling.styledText('캠페인 홍보 유의사항 및  미정산 조건 확인')}을 체크하고 등록 버튼을 누르시면 내 광고페이지에서 광고가 시작됩니다! `
-      },
-      {
-        image: '/pngs/dashboard/manual/new_creator/creator-adpage-07.png',
-        description: `광고 페이지에 등록된 캠페인을 종료하고 싶다면 ${textStyling.styledText('제외하기')} 버튼을 누르시면 됩니다. 내 광고페이지에서 광고가 더 이상 보이지 않게 됩니다. `
-      },
-    ]
-  },
+
   bannerlist: {
     subType: false,
     card: { title: '진행한 모든 배너를 확인', subtitle: '' },

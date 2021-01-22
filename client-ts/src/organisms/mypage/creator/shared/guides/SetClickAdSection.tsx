@@ -66,6 +66,7 @@ export default function SetClickAdSection({
                     handleSnackOpen();
                   });
                 }}
+                disabled={contractionData.creatorContractionAgreement !== 1}
                 size="small"
               >
                 <InsertLinkOutlined />
