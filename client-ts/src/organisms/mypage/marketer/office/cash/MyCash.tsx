@@ -6,6 +6,7 @@ import DateRange from '@material-ui/icons/DateRange';
 import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
 // own components
+import { Paper } from '@material-ui/core';
 import CircularProgress from '../../../../../atoms/Progress/CircularProgress';
 import ExpansionPanel from '../../../../../atoms/ExpansionPanel/ExpansionPanel';
 import Button from '../../../../../atoms/CustomButtons/Button';
@@ -48,11 +49,8 @@ function MyCash(props: MyCashProps): JSX.Element {
   // front HOST
 
   return (
-    <Card>
-      <CardHeader color="blueGray" stats icon>
-        <CardIcon color="blueGray">
-          <AttachMoney />
-        </CardIcon>
+    <Paper style={{ padding: 32, marginTop: 8 }}>
+      <div>
         {/* 충전, 환불버튼 */}
         <div style={{
           display: 'flex', alignItems: 'center', flexDirection: 'row-reverse', padding: 5
@@ -96,9 +94,9 @@ function MyCash(props: MyCashProps): JSX.Element {
               </Button>
           )}
         </div>
-      </CardHeader>
+      </div>
 
-      <CardBody>
+      <div>
         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
           <Typography gutterBottom variant="body1">보유 광고캐시</Typography>
         </div>
@@ -127,7 +125,7 @@ function MyCash(props: MyCashProps): JSX.Element {
         </ExpansionPanel>
 
 
-      </CardBody>
+      </div>
 
       {/* Dialogs */}
       {!cashData.loading && cashData.data && !cashData.error && (
@@ -154,7 +152,7 @@ function MyCash(props: MyCashProps): JSX.Element {
           />
       )}
 
-    </Card>
+    </Paper>
   );
 }
 

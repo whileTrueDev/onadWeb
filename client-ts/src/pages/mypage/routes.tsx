@@ -96,7 +96,7 @@ const dashboardRoutes: MypageRoutes = {
     },
     {
       path: '/myoffice',
-      name: '내 오피스',
+      name: '내 계정 관리',
       icon: Work,
       component: MarketerMyOffice,
       layout: '/mypage/marketer',

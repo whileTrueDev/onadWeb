@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Typography from '@material-ui/core/Typography';
 // own components
-import Card from '../../../../../atoms/Card/Card';
-import CardHeader from '../../../../../atoms/Card/CardHeader';
-import CardBody from '../../../../../atoms/Card/CardBody';
+import { Paper } from '@material-ui/core';
 import Table from '../../../../../atoms/Table/Table';
 // hooks
 import useGetRequest from '../../../../../utils/hooks/useGetRequest';
@@ -30,24 +28,22 @@ function CashHistory(): JSX.Element {
   }, [setVbankload, vbankload]);
 
   return (
-    <Card>
-      <CardHeader color="blueGray">
-        <Typography variant="h6" style={{ textAlign: 'center', }}>
+    <Paper style={{ padding: 32, marginTop: 16 }}>
+      <Typography style={{ fontWeight: 'bold' }}>
           충전 내역
-        </Typography>
-      </CardHeader>
+      </Typography>
 
-      <CardBody>
+      <div>
         <Table
           // tableHeaderColor="info"
           tableHead={initialData.columns}
           tableData={(loading || (data === null)) ? initialData.data : data.data}
           pagination
         />
-      </CardBody>
+      </div>
 
 
-    </Card>
+    </Paper>
   );
 }
 export default CashHistory;

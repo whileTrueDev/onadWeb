@@ -1,13 +1,10 @@
 import React from 'react';
 // core
-import { makeStyles, withStyles, Theme } from '@material-ui/core/styles';
+import { makeStyles, Theme } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 // own components
-import Card from '../../../../../atoms/Card/Card';
-import CardHeader from '../../../../../atoms/Card/CardHeader';
-import CardBody from '../../../../../atoms/Card/CardBody';
+import { Paper } from '@material-ui/core';
 import Button from '../../../../../atoms/CustomButtons/Button';
-import DashboardStyle from '../../../../../assets/jss/views/dashboardStyle';
 import AccountRegistDialog from '../AccountRegistDialog';
 import { AccountInterface } from '../interface';
 import { UseGetRequestObject } from '../../../../../utils/hooks/useGetRequest';
@@ -25,29 +22,25 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 10
   },
   success: { color: theme.palette.primary.main }
 }));
 
 interface RefundAccountFormProps {
-  classes: any;
   accountData: UseGetRequestObject<AccountInterface | null>;
 }
 
 function RefundAccountForm(props: RefundAccountFormProps): JSX.Element {
   const myClasses = useStyles();
-  const { classes, accountData } = props;
+  const { accountData } = props;
   const { open, handleOpen, handleClose } = useDialog();
   return (
-    <Card>
-      <CardHeader color="blueGray">
-        <Typography variant="h6">
+    <Paper style={{ padding: 32, marginTop: 8 }}>
+      <Typography style={{ fontWeight: 'bold' }}>
           환불 계좌 정보
-        </Typography>
-      </CardHeader>
+      </Typography>
       {!accountData.loading && accountData.data && accountData.data.marketerAccountNumber ? (
-        <CardBody>
+        <div>
           <div className={myClasses.buttonWrapper}>
             <Button
               color="primary"
@@ -70,9 +63,9 @@ function RefundAccountForm(props: RefundAccountFormProps): JSX.Element {
               {accountData.data.accountHolder}
             </Typography>
           </div>
-        </CardBody>
+        </div>
       ) : (
-        <CardBody>
+        <div>
           <div className={myClasses.buttonWrapper}>
             <Button
               color="primary"
@@ -86,22 +79,22 @@ function RefundAccountForm(props: RefundAccountFormProps): JSX.Element {
             <Typography gutterBottom variant="body1">아직 등록된 환불계좌가 없습니다.</Typography>
           </div>
           <div className={myClasses.textBox}>
-            <Typography gutterBottom variant="body1" className={classes.success}>등록</Typography>
+            <Typography gutterBottom variant="body1">등록</Typography>
             <Typography gutterBottom variant="body1">
               버튼을 눌러 환불계좌를 등록해주세요.
             </Typography>
           </div>
 
 
-        </CardBody>
+        </div>
       )}
 
       <AccountRegistDialog open={open} handleDialogClose={handleClose} />
 
 
-    </Card>
+    </Paper>
   );
 }
 
 
-export default withStyles(DashboardStyle)(RefundAccountForm);
+export default RefundAccountForm;

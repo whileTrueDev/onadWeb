@@ -1,21 +1,25 @@
 import React from 'react';
-import Typography from '@material-ui/core/Typography';
 import GridContainer from '../../../atoms/Grid/GridContainer';
 import GridItem from '../../../atoms/Grid/GridItem';
 
 import UserDataForm from '../../../organisms/mypage/marketer/office/profile/UserDataForm';
 import RefundAccountForm from '../../../organisms/mypage/marketer/office/refund/RefundAccountForm';
-import MyCash from '../../../organisms/mypage/marketer/office/cash/MyCash';
-import CashHistoryTable from '../../../organisms/mypage/marketer/office/cash/CashHistoryTable';
-import RefundHistoryTable from '../../../organisms/mypage/marketer/office/refund/RefundHistoryTable';
 import BusinessRegistration from '../../../organisms/mypage/marketer/office/business/BusinessUploadForm';
 import SignOut from '../../../organisms/mypage/marketer/office/profile/SignOut';
 import MyOffceLoading from '../../../organisms/mypage/marketer/office/MyOfficeLoading';
-import TaxBill from '../../../organisms/mypage/marketer/office/TaxBill';
 
-import { BusinessInterface, UserInterface, AccountInterface } from '../../../organisms/mypage/marketer/office/interface';
+import {
+  BusinessInterface, UserInterface, AccountInterface
+} from '../../../organisms/mypage/marketer/office/interface';
 import useGetRequest from '../../../utils/hooks/useGetRequest';
 
+
+import MyCash from '../../../organisms/mypage/marketer/office/cash/MyCash';
+import CashHistoryTable from '../../../organisms/mypage/marketer/office/cash/CashHistoryTable';
+import RefundHistoryTable from '../../../organisms/mypage/marketer/office/refund/RefundHistoryTable';
+
+
+import TaxBill from '../../../organisms/mypage/marketer/office/TaxBill';
 
 export default function MyOffice(): JSX.Element {
   // 계좌 정보
@@ -24,55 +28,48 @@ export default function MyOffice(): JSX.Element {
   const businessRegistrationData = useGetRequest<null, BusinessInterface | null>('/marketer/business');
 
   return (
-    <>
-
-      <Typography variant="h5" style={{ marginTop: 35 }} color="textPrimary">내 정보 관리</Typography>
+    <div style={{ margin: '0 auto', maxWidth: 1430 }}>
       {/* 계정 관리 */}
-      {userData.loading && (
-        <MyOffceLoading />
-      )}
+      {userData.loading && (<MyOffceLoading />)}
       {!userData.loading && userData.data && (
-        <GridContainer>
-          <GridItem xs={12} sm={12} md={12} lg={6} xl={3}>
-            <UserDataForm userData={userData.data} doGetRequest={userData.doGetRequest} />
-          </GridItem>
+        <div>
+          <GridContainer>
+            <GridItem xs={12}>
+              <UserDataForm userData={userData.data} doGetRequest={userData.doGetRequest} />
+            </GridItem>
+          </GridContainer>
 
-          <GridItem xs={12} lg={6} xl={3}>
-            <GridContainer>
-
-              <GridItem xs={12}>
-                <BusinessRegistration businessRegistrationData={businessRegistrationData} />
-              </GridItem>
-
-              <GridItem xs={12}>
-                <RefundAccountForm accountData={accountData} />
-              </GridItem>
-            </GridContainer>
-          </GridItem>
-
-        </GridContainer>
+          <GridContainer>
+            <GridItem xs={12} lg={6}>
+              <BusinessRegistration businessRegistrationData={businessRegistrationData} />
+            </GridItem>
+            <GridItem xs={12} lg={6}>
+              <RefundAccountForm accountData={accountData} />
+            </GridItem>
+          </GridContainer>
+        </div>
       )}
 
-      <Typography variant="h5" style={{ marginTop: 35 }} color="textPrimary">광고캐시 관리</Typography>
       {/* 광고캐시 충전 및 환불, 관리 */}
       <GridContainer>
-        <GridItem xs={12} md={12} lg={8} xl={6}>
+        <GridItem xs={12}>
           <MyCash accountData={accountData} userData={userData} />
         </GridItem>
       </GridContainer>
 
       <GridContainer>
-        <GridItem xs={12} sm={12} md={12} lg={8} xl={3}>
+        {/* 충전 내역 */}
+        <GridItem xs={12} lg={6}>
           <CashHistoryTable />
         </GridItem>
-        <GridItem xs={12} sm={12} md={12} lg={8} xl={3}>
+        {/* 환불 내역 */}
+        <GridItem xs={12} lg={6}>
           <RefundHistoryTable />
         </GridItem>
       </GridContainer>
 
-      <Typography variant="h5" style={{ marginTop: 35 }} color="textPrimary">세금계산서 관리</Typography>
       <GridContainer>
-        <GridItem xs={12} md={12} lg={8} xl={6}>
+        <GridItem xs={12}>
           <TaxBill />
         </GridItem>
       </GridContainer>
@@ -86,6 +83,6 @@ export default function MyOffice(): JSX.Element {
         </GridContainer>
       )}
 
-    </>
+    </div>
   );
 }
