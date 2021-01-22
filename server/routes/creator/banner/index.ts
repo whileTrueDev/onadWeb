@@ -146,7 +146,7 @@ router.route('/list')
     responseHelper.middleware.checkSessionExists,
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
       const { creatorId } = responseHelper.getSessionData(req);
-      const [page, offset] = responseHelper.getOptionalParam(['page', 'offset'], 'get', req);
+      const [page, offset] = responseHelper.getParam(['page', 'offset'], 'get', req);
       const startNum = Number(page) * Number(offset);
 
 
@@ -183,8 +183,6 @@ router.route('/list')
       FROM creatorCampaign
       WHERE creatorId = ?
       `;
-
-      console.log('[HWASURR, TEST서버 로그] - banner/list - session creatorId: ', creatorId);
 
       Promise.all([
         doQuery(listQuery, [creatorId, Number(startNum), Number(offset)]),
