@@ -11,26 +11,32 @@ const manualSources = {
     {
       icon: CloudUpload,
       label: '온애드 광고 아이템',
+      key: 'bannerRegist',
     },
     {
       icon: BrandingWatermark,
       label: '배너 업로드',
+      key: 'bannerUpload',
     },
     {
       icon: ArtTrack,
       label: '캠페인 등록하기',
+      key: 'campaignStart',
     },
     {
       icon: InsertChart,
       label: '광고 성과 확인',
+      key: 'seeChart',
     },
     {
       icon: Money,
       label: '광고 캐시 관리',
+      key: 'cash',
     },
     {
       icon: AccountBox,
-      label: '세금계산서 및 현금영수증 발행'
+      label: '세금계산서 및 현금영수증 발행',
+      key: 'business',
     },
   ],
   bannerRegist: {
@@ -169,7 +175,7 @@ const manualSources = {
         발행 주기 : 세금계산서는 당월 말일, 월 1회 일괄 발행 / 현금영수증의 경우 충전 당일을 원칙으로 합니다.  
         발행 단위 : ${textStyling.styledText('사업자등록증')}을 업로드한 사업자 계정 대상으로,  
         캐시 충전 시 마다 한 장의 세금계산서로 발행 기준에 따라, 회원가입 시 입력한 메일로 전송. ${textStyling.styledBlock(`단, 신용카드 결제의 경우 세금계산서 발행불가.  
-        현금영수증은 전자결제 과정에서 입력 혹은 별도로 요청시 ${textStyling.LinkText("<내 오피스>", "myoffice", "marketer")}발행할 번호를 입력바랍니다.`)}`
+        현금영수증은 전자결제 과정에서 입력 혹은 별도로 요청시 ${textStyling.LinkText('<내 오피스>', 'myoffice', 'marketer')}발행할 번호를 입력바랍니다.`)}`
       },
       {
         image: '/pngs/dashboard/manual/new_marketer/marketer-taxbill-01.png',

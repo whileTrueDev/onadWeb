@@ -92,6 +92,14 @@ const dashboardRoutes: MypageRoutes = {
       icon: BrandingWatermark,
       component: () => <MarketerInventory />, // 마케터 대시보드 컴포넌트로 수정
       layout: '/mypage/marketer',
+      needNextDivider: true,
+    },
+    {
+      path: '/myoffice',
+      name: '내 오피스',
+      icon: Work,
+      component: MarketerMyOffice,
+      layout: '/mypage/marketer',
     },
     {
       path: '/manual',
@@ -99,13 +107,6 @@ const dashboardRoutes: MypageRoutes = {
       icon: Reorder,
       component: MarketerManual, // 마케터 대시보드 컴포넌트로 수정
       layout: '/mypage/marketer',
-    },
-    {
-      path: '/myoffice',
-      name: '내 오피스',
-      icon: Work,
-      component: MarketerMyOffice,
-      layout: '/mypage/marketer'
     },
     {
       path: '/campaigncreate',
