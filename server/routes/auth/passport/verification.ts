@@ -17,6 +17,8 @@ import afreecaUpdate from './funcs/afreecaUpdate';
 /**
  * @author 박찬우
  * @date 2019-07-13
+ * @maintainer hwasurr
+ * @date 2020.12.
  * @description
  * 1. session에 저장할 값 (변경되지 않는 영속적인 값)
  *   - useType
