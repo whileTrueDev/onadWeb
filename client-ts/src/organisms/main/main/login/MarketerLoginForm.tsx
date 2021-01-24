@@ -88,7 +88,7 @@ function LoginForm({
     <Dialog
       open={open}
       onClose={handleClose}
-      maxWidth="sm"
+      maxWidth="xs"
       fullWidth
       disableScrollLock
     >
@@ -149,7 +149,7 @@ function LoginForm({
           style={{ alignItems: 'center' }}
         >
           <img src="/pngs/logo/google.png" alt="" height="30" />
-            구글 아이디로 로그인
+          구글 아이디로 로그인
         </Button>
         <Button
           href={`${HOST}/login/naver`}
@@ -158,7 +158,7 @@ function LoginForm({
           style={{ alignItems: 'center' }}
         >
           <img src="/pngs/logo/naver/naver_icon_green.png" alt="" height="30" />
-            네이버 아이디로 로그인
+          네이버 아이디로 로그인
         </Button>
         <Button
           href={`${HOST}/login/kakao`}
@@ -167,26 +167,26 @@ function LoginForm({
           style={{ alignItems: 'center' }}
         >
           <img src="/pngs/logo/kakao/kakaolink_btn_small.png" alt="" height="30" />
-            카카오 아이디로 로그인
+          카카오 아이디로 로그인
         </Button>
 
         <Divider component="hr" orientation="horizontal" className={classes.divider} />
 
         <div style={{ marginTop: 16 }}>
           <Typography variant="body2" color="textSecondary">
-                계정이 없으신가요?&nbsp;
+            계정이 없으신가요?&nbsp;
             <Typography
               variant="body2"
               component={Link}
               to="/regist"
               style={{ color: 'red', textDecoration: 'underline', cursor: 'pointer' }}
             >
-                  회원가입하기
+              회원가입하기
             </Typography>
           </Typography>
 
           <Typography variant="body2" color="textSecondary">
-                아이디가 기억나지 않나요?&nbsp;
+            아이디가 기억나지 않나요?&nbsp;
             <Typography
               component="span"
               variant="body2"
@@ -196,11 +196,11 @@ function LoginForm({
               }}
               style={{ color: 'red', textDecoration: 'underline', cursor: 'pointer' }}
             >
-                  아이디 찾기
+              아이디 찾기
             </Typography>
           </Typography>
           <Typography variant="body2" color="textSecondary">
-                비밀번호가 기억나지 않나요?&nbsp;
+            비밀번호가 기억나지 않나요?&nbsp;
             <Typography
               component="span"
               variant="body2"
@@ -210,7 +210,7 @@ function LoginForm({
               }}
               style={{ color: 'red', textDecoration: 'underline', cursor: 'pointer' }}
             >
-                  비밀번호 찾기
+              비밀번호 찾기
             </Typography>
           </Typography>
         </div>

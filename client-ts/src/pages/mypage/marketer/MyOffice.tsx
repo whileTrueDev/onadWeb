@@ -1,88 +1,80 @@
 import React from 'react';
+import { Typography } from '@material-ui/core';
 import GridContainer from '../../../atoms/Grid/GridContainer';
 import GridItem from '../../../atoms/Grid/GridItem';
 
-import UserDataForm from '../../../organisms/mypage/marketer/office/profile/UserDataForm';
-import RefundAccountForm from '../../../organisms/mypage/marketer/office/refund/RefundAccountForm';
+import RefundAccountForm from '../../../organisms/mypage/marketer/office/refund/RefundAccountManage';
 import BusinessRegistration from '../../../organisms/mypage/marketer/office/business/BusinessUploadForm';
-import SignOut from '../../../organisms/mypage/marketer/office/profile/SignOut';
-import MyOffceLoading from '../../../organisms/mypage/marketer/office/MyOfficeLoading';
 
 import {
-  BusinessInterface, UserInterface, AccountInterface
+  BusinessInterface, UserInterface, AccountInterface, CashInterface
 } from '../../../organisms/mypage/marketer/office/interface';
 import useGetRequest from '../../../utils/hooks/useGetRequest';
-
-
 import MyCash from '../../../organisms/mypage/marketer/office/cash/MyCash';
-import CashHistoryTable from '../../../organisms/mypage/marketer/office/cash/CashHistoryTable';
-import RefundHistoryTable from '../../../organisms/mypage/marketer/office/refund/RefundHistoryTable';
-
-
-import TaxBill from '../../../organisms/mypage/marketer/office/TaxBill';
+import CashUsageList, { UsageInterface } from '../../../organisms/mypage/marketer/office/cash/CashUsageList';
+import { AdInterface } from '../../../organisms/mypage/marketer/dashboard/interfaces';
+import CircularProgress from '../../../atoms/Progress/CircularProgress';
 
 export default function MyOffice(): JSX.Element {
   // 계좌 정보
   const accountData = useGetRequest<null, AccountInterface | null>('/marketer/account');
   const userData = useGetRequest<null, UserInterface | null>('/marketer');
   const businessRegistrationData = useGetRequest<null, BusinessInterface | null>('/marketer/business');
+  const cashData = useGetRequest<null, CashInterface | null>('/marketer/cash');
+  const adData = useGetRequest<null, AdInterface | null>('/marketer/ad');
+  const usageData = useGetRequest<null, UsageInterface | null>('/marketer/cash/history/usage');
 
   return (
     <div style={{ margin: '0 auto', maxWidth: 1430 }}>
+      {(userData.loading
+      || accountData.loading || businessRegistrationData.loading
+      || cashData.loading || adData.loading) && (
+        <CircularProgress />
+      )}
+
       {/* 계정 관리 */}
-      {userData.loading && (<MyOffceLoading />)}
-      {!userData.loading && userData.data && (
+      {!userData.loading && userData.data
+      && !accountData.loading && !businessRegistrationData.loading
+      && !cashData.loading && !adData.loading && (
         <div>
           <GridContainer>
             <GridItem xs={12}>
-              <UserDataForm userData={userData.data} doGetRequest={userData.doGetRequest} />
+              <Typography style={{ marginTop: 16 }} variant="h6">캐시 관리</Typography>
+            </GridItem>
+            {/* 캐시 정보 */}
+            <GridItem xs={12} lg={6}>
+              <MyCash
+                accountData={accountData}
+                cashData={cashData}
+                adData={adData}
+              />
+            </GridItem>
+            {/* 충전 내역 */}
+            <GridItem xs={12} lg={6}>
+              <CashUsageList usageData={usageData} />
             </GridItem>
           </GridContainer>
 
           <GridContainer>
-            <GridItem xs={12} lg={6}>
-              <BusinessRegistration businessRegistrationData={businessRegistrationData} />
+            <GridItem xs={12}>
+              <Typography style={{ marginTop: 16 }} variant="h6">환불 관리</Typography>
             </GridItem>
+            {/* 환불 계좌 정보 */}
             <GridItem xs={12} lg={6}>
               <RefundAccountForm accountData={accountData} />
             </GridItem>
           </GridContainer>
+
+          <GridContainer>
+            <GridItem xs={12}>
+              <Typography style={{ marginTop: 16 }} variant="h6">세금계산서 관리</Typography>
+            </GridItem>
+            <GridItem xs={12} lg={6}>
+              <BusinessRegistration businessRegistrationData={businessRegistrationData} />
+            </GridItem>
+          </GridContainer>
         </div>
       )}
-
-      {/* 광고캐시 충전 및 환불, 관리 */}
-      <GridContainer>
-        <GridItem xs={12}>
-          <MyCash accountData={accountData} userData={userData} />
-        </GridItem>
-      </GridContainer>
-
-      <GridContainer>
-        {/* 충전 내역 */}
-        <GridItem xs={12} lg={6}>
-          <CashHistoryTable />
-        </GridItem>
-        {/* 환불 내역 */}
-        <GridItem xs={12} lg={6}>
-          <RefundHistoryTable />
-        </GridItem>
-      </GridContainer>
-
-      <GridContainer>
-        <GridItem xs={12}>
-          <TaxBill />
-        </GridItem>
-      </GridContainer>
-
-      {/* 회원탈퇴 */}
-      {!userData.loading && userData.data && (
-        <GridContainer>
-          <GridItem xs={12}>
-            <SignOut userData={userData.data} />
-          </GridItem>
-        </GridContainer>
-      )}
-
     </div>
   );
 }

@@ -126,9 +126,7 @@ function HeaderLinks(): JSX.Element {
               </Avatar>
               )}
               {type === 'marketer' && (
-              <Avatar className={classes.avatar}>
-                {marketerProfileGet.data ? marketerProfileGet.data.marketerName.slice(0, 1) : ''}
-              </Avatar>
+              <Avatar className={classes.avatar} />
               )}
             </div>
           )}

@@ -1,16 +1,34 @@
 import React from 'react';
 // @material-ui/core
 import {
-  makeStyles, Paper, TextField, Typography
+  Avatar,
+  Button,
+  makeStyles, Paper, Typography
 } from '@material-ui/core';
-import Button from '../../../../../atoms/CustomButtons/Button';
 import UserDataUpdateDialog from './UserDataUpdateDialog';
 
 import { UserInterface } from '../interface';
 import useDialog from '../../../../../utils/hooks/useDialog';
 
 const useStyles = makeStyles((theme) => ({
-  textfield: { display: 'flex', flexDirection: 'column' },
+  container: {
+    display: 'flex',
+    alignItems: 'center',
+    padding: theme.spacing(4),
+    marginTop: theme.spacing(1),
+    [theme.breakpoints.down('xs')]: {
+      padding: theme.spacing(2)
+    }
+  },
+  hero: { display: 'flex', alignItems: 'center', },
+  avatar: {
+    width: 100,
+    height: 100,
+    margin: theme.spacing(1, 2, 1, 0),
+    [theme.breakpoints.down('xs')]: {
+      width: 40, height: 40
+    }
+  },
 }));
 interface UserDataFormProps {
   userData: UserInterface;
@@ -21,55 +39,27 @@ const UserDataForm = (props: UserDataFormProps): JSX.Element => {
   const classes = useStyles();
   const { userData, doGetRequest } = props;
   const userDataUpdateDialog = useDialog();
-
   return (
-    <Paper style={{ padding: 32, marginTop: 8 }}>
-      <Typography style={{ fontWeight: 'bold' }}>
-        {`${userData.marketerName} 님의 정보`}
-      </Typography>
-      <Typography variant="body2" color="textSecondary">정보를 변경하시려면 정보변경을 클릭하세요.</Typography>
+    <Paper className={classes.container}>
 
-      <div className={classes.textfield}>
-        <TextField
-          label="이름"
-          fullWidth
-          style={{ maxWidth: 500 }}
-          value={userData.marketerName || ''}
-          id="name"
-          margin="normal"
-          InputProps={{ readOnly: true, }}
-          InputLabelProps={{ shrink: true, }}
-        />
-        <TextField
-          label="이메일"
-          fullWidth
-          style={{ maxWidth: 500 }}
-          value={userData.marketerMail || ''}
-          id="mail"
-          margin="normal"
-          InputProps={{ readOnly: true, }}
-          InputLabelProps={{ shrink: true, }}
-        />
-        <TextField
-          label="휴대폰번호"
-          fullWidth
-          style={{ maxWidth: 500 }}
-          value={userData.marketerPhoneNum || ''}
-          margin="normal"
-          InputProps={{ readOnly: true, }}
-          InputLabelProps={{ shrink: true, }}
-        />
+      <div className={classes.hero}>
+        <Avatar variant="circle" className={classes.avatar} />
+        <div>
+          <Typography variant="h6" style={{ fontWeight: 'bold' }}>
+            {userData.marketerName}
+          </Typography>
+          <Typography variant="body2">{userData.marketerMail}</Typography>
+          <Typography variant="body2">{userData.marketerPhoneNum}</Typography>
+          <Button
+            size="small"
+            variant="outlined"
+            color="primary"
+            onClick={(): void => { userDataUpdateDialog.handleOpen(); }}
+          >
+            정보변경
+          </Button>
+        </div>
       </div>
-
-      <Button
-        onClick={(): void => {
-          userDataUpdateDialog.handleOpen();
-        }}
-        color="primary"
-      >
-          정보변경
-      </Button>
-
 
       <UserDataUpdateDialog
         open={userDataUpdateDialog.open}

@@ -65,7 +65,7 @@ export default function UserPopover(props: UserPopoverProps): JSX.Element {
         {/* 유저 정보 */}
         <List>
           <ListItem style={{ display: 'flex', alignItems: 'center' }}>
-            <Avatar className={classes.icon} src={userData.creatorLogo || userData.afreecaLogo}>
+            <Avatar className={classes.icon} src={userData.creatorLogo || userData.afreecaLogo || ''}>
               {userData.loginId ? capitalize(userData.loginId[0]) : ''}
             </Avatar>
             {/* 트위치만 연동된 경우 */}

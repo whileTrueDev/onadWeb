@@ -19,6 +19,7 @@ import CreatorMyPage from './creator/Mypage';
 import MarketerInventory from './marketer/Inventory';
 import MarketerDashboard from './marketer/Dashboard';
 import MarketerMyOffice from './marketer/MyOffice';
+import MarketerMyInfo from './marketer/MyInfo';
 import MarketerCreateCampaign from './marketer/CampaignCreate';
 import MarketerManual from './marketer/Manual';
 import CreatorIncomeManage from './creator/IncomeManage';
@@ -96,9 +97,16 @@ const dashboardRoutes: MypageRoutes = {
     },
     {
       path: '/myoffice',
-      name: '내 계정 관리',
+      name: '내 오피스',
       icon: Work,
       component: MarketerMyOffice,
+      layout: '/mypage/marketer',
+    },
+    {
+      path: '/user',
+      name: '내 계정 관리',
+      icon: Person,
+      component: MarketerMyInfo,
       layout: '/mypage/marketer',
     },
     {

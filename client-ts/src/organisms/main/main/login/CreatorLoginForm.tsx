@@ -59,7 +59,7 @@ export default function CreatorLoginForm({
           passwd.handleReset();
           setLoading(false);
         }}
-        maxWidth="sm"
+        maxWidth="xs"
         fullWidth
         disableScrollLock
       >
