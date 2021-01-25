@@ -18,12 +18,15 @@ const useStyles = makeStyles((theme: OnadTheme) => ({
     alignItems: 'center'
   },
   divider: { margin: theme.spacing(1, 0, 2) },
-  socialLoginButton: {
+  loginButton: {
     borderRadius: '0px',
     height: 60,
     margin: theme.spacing(0.5, 0, 0.5),
     boxShadow: theme.shadows[0],
     border: `1px solid ${theme.palette.divider}`,
+  },
+  socialLoginButton: {
+    height: 40,
   },
   twitch: {
     color: theme.palette.getContrastText(theme.palette.platform.twitch),

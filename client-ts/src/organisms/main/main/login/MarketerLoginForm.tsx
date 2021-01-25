@@ -90,7 +90,6 @@ function LoginForm({
       onClose={handleClose}
       maxWidth="xs"
       fullWidth
-      disableScrollLock
     >
       <DialogContent className={classes.dialog}>
 
@@ -106,6 +105,7 @@ function LoginForm({
           <TextField
             placeholder="아이디"
             style={{ marginTop: 16 }}
+            InputProps={{ style: { height: 40 } }}
             variant="outlined"
             autoFocus
             value={userid}
@@ -116,6 +116,7 @@ function LoginForm({
           <TextField
             placeholder="비밀번호"
             style={{ marginTop: 16 }}
+            InputProps={{ style: { height: 40 } }}
             variant="outlined"
             type="password"
             value={passwd}
@@ -128,7 +129,7 @@ function LoginForm({
           />
 
           <Button
-            className={classes.socialLoginButton}
+            className={classnames(classes.loginButton, classes.socialLoginButton)}
             variant="contained"
             onClick={login}
             color="primary"
@@ -145,7 +146,7 @@ function LoginForm({
         <Button
           href={`${HOST}/login/google`}
           fullWidth
-          className={classnames(classes.socialLoginButton, classes.google)}
+          className={classnames(classes.loginButton, classes.socialLoginButton, classes.google)}
           style={{ alignItems: 'center' }}
         >
           <img src="/pngs/logo/google.png" alt="" height="30" />
@@ -154,7 +155,7 @@ function LoginForm({
         <Button
           href={`${HOST}/login/naver`}
           fullWidth
-          className={classnames(classes.socialLoginButton, classes.naver)}
+          className={classnames(classes.loginButton, classes.socialLoginButton, classes.naver)}
           style={{ alignItems: 'center' }}
         >
           <img src="/pngs/logo/naver/naver_icon_green.png" alt="" height="30" />
@@ -163,7 +164,7 @@ function LoginForm({
         <Button
           href={`${HOST}/login/kakao`}
           fullWidth
-          className={classnames(classes.socialLoginButton, classes.kakao)}
+          className={classnames(classes.loginButton, classes.socialLoginButton, classes.kakao)}
           style={{ alignItems: 'center' }}
         >
           <img src="/pngs/logo/kakao/kakaolink_btn_small.png" alt="" height="30" />

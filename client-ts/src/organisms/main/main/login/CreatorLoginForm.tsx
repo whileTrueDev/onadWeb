@@ -76,6 +76,7 @@ export default function CreatorLoginForm({
           <form style={{ marginTop: 16 }}>
             <TextField
               style={{ marginBottom: 16 }}
+              InputProps={{ style: { height: 40 } }}
               fullWidth
               variant="outlined"
               autoFocus
@@ -85,6 +86,7 @@ export default function CreatorLoginForm({
             />
             <TextField
               style={{ marginBottom: 16 }}
+              InputProps={{ style: { height: 40 } }}
               fullWidth
               variant="outlined"
               type="password"
