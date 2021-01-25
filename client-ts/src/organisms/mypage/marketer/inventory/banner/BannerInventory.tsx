@@ -1,23 +1,30 @@
 import React from 'react';
 import { Typography, Tooltip } from '@material-ui/core';
 import Delete from '@material-ui/icons/Delete';
-import MaterialTable from '../../../../atoms/Table/MaterialTable';
-import { UseGetRequestObject } from '../../../../utils/hooks/useGetRequest';
-import { BannerDataInterface } from './interface';
-import VideoBanner from '../../../../atoms/Banner/VideoBanner';
-import isVideo from '../../../../utils/isVideo';
+import MaterialTable from '../../../../../atoms/Table/MaterialTable';
+import { UseGetRequestObject } from '../../../../../utils/hooks/useGetRequest';
+import { BannerDataInterface } from '../interface';
+import VideoBanner from '../../../../../atoms/Banner/VideoBanner';
+import isVideo from '../../../../../utils/isVideo';
+import { useDialog } from '../../../../../utils/hooks';
+import DeleteDialog from './DeleteDialog';
 
 const BANNER_MAX_WIDTH = 320;
 const BANNER_MAX_HEIGHT = 200;
 
-interface BannerTableProps {
-  handleDeleteOpen: (v?: boolean | undefined) => void;
-  setBanner: React.Dispatch<React.SetStateAction<BannerDataInterface | null>>;
-  fetchData: UseGetRequestObject<BannerDataInterface[] | null>;
+interface BannerInventoryProps {
+  bannerData: UseGetRequestObject<BannerDataInterface[] | null>;
+  handleItemSelect: (item: string) => void;
 }
 
-export default function BannerTable(props: BannerTableProps): JSX.Element {
-  const { handleDeleteOpen, setBanner, fetchData } = props;
+export default function BannerInventory(props: BannerInventoryProps): JSX.Element {
+  const {
+    bannerData, handleItemSelect
+  } = props;
+
+  const [selectedBanner, setBanner] = React.useState<BannerDataInterface | null>(null);
+
+  const deleteDialog = useDialog();
 
   const columns = [
     {
@@ -63,14 +70,14 @@ export default function BannerTable(props: BannerTableProps): JSX.Element {
 
   return (
     <div>
-      {fetchData.loading && (<MaterialTable columns={columns} data={[]} isLoading style={{ boxShadow: 'none' }} />)}
-      {!fetchData.loading && fetchData.error && (<span>Error</span>)}
-      {!fetchData.loading && fetchData.data && (
+      {bannerData.loading && (<MaterialTable columns={columns} data={[]} isLoading style={{ boxShadow: 'none' }} />)}
+      {!bannerData.loading && bannerData.error && (<span>Error</span>)}
+      {!bannerData.loading && bannerData.data && (
         <MaterialTable
           style={{ boxShadow: 'none' }}
           title=""
           columns={columns}
-          data={fetchData.data}
+          data={bannerData.data}
           actions={[
             {
               icon: (): JSX.Element => (<Delete />),
@@ -78,11 +85,13 @@ export default function BannerTable(props: BannerTableProps): JSX.Element {
               onClick: (event: React.MouseEvent<HTMLButtonElement>,
                 data: BannerDataInterface | BannerDataInterface[]): void => {
                 if (Array.isArray(data)) {
+                  handleItemSelect(data[0].bannerId);
                   setBanner(data[0]);
                 } else {
+                  handleItemSelect(data.bannerId);
                   setBanner(data);
                 }
-                handleDeleteOpen();
+                deleteDialog.handleOpen();
               }
             }
           ]}
@@ -99,6 +108,17 @@ export default function BannerTable(props: BannerTableProps): JSX.Element {
               actions: '삭제'
             }
           }}
+        />
+      )}
+
+      {/* banner  delete dialog */}
+      {deleteDialog.open && selectedBanner && (
+        <DeleteDialog
+          open={deleteDialog.open}
+          selectedBanner={selectedBanner}
+          handleClose={deleteDialog.handleClose}
+          recallRequest={bannerData.doGetRequest}
+
         />
       )}
 

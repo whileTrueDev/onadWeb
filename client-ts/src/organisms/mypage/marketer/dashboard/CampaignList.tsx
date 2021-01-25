@@ -23,6 +23,8 @@ import axios from '../../../../utils/axios';
 import isVideo from '../../../../utils/isVideo';
 import HOST from '../../../../config';
 import usePaginatedGetRequest from '../../../../utils/hooks/usePaginatedGetRequest';
+import renderOptionType from '../../../../utils/renderOptionType';
+import renderPriorityType from '../../../../utils/renderPriorityType';
 
 
 const SLIDE_TIMEOUT = 500;
@@ -68,8 +70,6 @@ export default function CampaignList(): JSX.Element {
   );
 
   const [selectedCampaign, setSelectedCampaign] = React.useState<CampaignInterface | null>(null);
-  const optionTypeList = ['(구)배너 광고', '생방송 배너 광고', '(구)클릭 광고'];
-  const priorityTypeList = ['크리에이터 우선', '카테고리 우선', '노출 우선'];
 
   // To open campaign control dialog
   const campaignUpdateDialog = useDialog();
@@ -186,10 +186,10 @@ export default function CampaignList(): JSX.Element {
                               {detail.campaignName}
                             </Typography>
                             <Typography variant="caption" gutterBottom>
-                              {optionTypeList[detail.optionType]}
+                              {renderOptionType(detail.optionType)}
                             </Typography>
                             <Typography variant="caption" gutterBottom>
-                              {priorityTypeList[detail.priorityType]}
+                              {renderPriorityType(detail.priorityType)}
                             </Typography>
                             {detail.campaignDescription && (
                             <Typography variant="caption" gutterBottom noWrap>
@@ -256,8 +256,7 @@ export default function CampaignList(): JSX.Element {
                               <Typography variant="body1" align="center" style={{ fontWeight: 700 }}>
                                 {new Intl.NumberFormat().format(detail.dailyLimit)}
                               </Typography>
-                            )
-                            : (
+                            ) : (
                               <Typography variant="h4" align="center" style={{ fontWeight: 700 }}>
                                 ∞
                               </Typography>

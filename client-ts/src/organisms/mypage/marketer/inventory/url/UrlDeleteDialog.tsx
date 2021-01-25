@@ -1,12 +1,12 @@
 import React from 'react';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import { Typography, Tooltip, Grid } from '@material-ui/core';
-import CustomButton from '../../../../atoms/CustomButtons/Button';
-import StyledItemText from '../../../../atoms/StyledItemText';
-import Dialog from '../../../../atoms/Dialog/Dialog';
-import useGetRequest from '../../../../utils/hooks/useGetRequest';
-import useDeleteRequest from '../../../../utils/hooks/useDeleteRequest';
-import { UrlDataInterface } from './interface';
+import CustomButton from '../../../../../atoms/CustomButtons/Button';
+import StyledItemText from '../../../../../atoms/StyledItemText';
+import Dialog from '../../../../../atoms/Dialog/Dialog';
+import useGetRequest from '../../../../../utils/hooks/useGetRequest';
+import useDeleteRequest from '../../../../../utils/hooks/useDeleteRequest';
+import { UrlDataInterface } from '../interface';
 
 const useStyles = makeStyles((theme: Theme) => ({
   img: {

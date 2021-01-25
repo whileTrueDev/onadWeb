@@ -4,9 +4,11 @@ import {
   Typography, Tooltip, Divider
 } from '@material-ui/core';
 import { Delete, Star } from '@material-ui/icons';
-import MaterialTable from '../../../../atoms/Table/MaterialTable';
-import { UseGetRequestObject } from '../../../../utils/hooks/useGetRequest';
-import { UrlDataInterface } from './interface';
+import MaterialTable from '../../../../../atoms/Table/MaterialTable';
+import { UseGetRequestObject } from '../../../../../utils/hooks/useGetRequest';
+import { UrlDataInterface } from '../interface';
+import UrlDeleteDialog from './UrlDeleteDialog';
+import { useDialog } from '../../../../../utils/hooks';
 
 const useStyles = makeStyles(() => ({
   title: { fontWeight: 'bold' },
@@ -18,13 +20,19 @@ const useStyles = makeStyles(() => ({
 }));
 
 interface UrlTableProps {
-  handleDeleteOpen: () => void;
-  setUrl: React.Dispatch<React.SetStateAction<UrlDataInterface | null>>;
-  fetchData: UseGetRequestObject<UrlDataInterface[] | null>;
+  urlData: UseGetRequestObject<UrlDataInterface[] | null>;
+  handleItemSelect: (item: string) => void;
 }
 
 export default function UrlTable(props: UrlTableProps): JSX.Element {
-  const { handleDeleteOpen, setUrl, fetchData } = props;
+  const {
+    urlData, handleItemSelect
+  } = props;
+
+  const urlDeleteDialog = useDialog();
+  const [selectedUrl, setUrl] = React.useState<UrlDataInterface | null>(null);
+
+
   const classes = useStyles();
 
   const titleArray = ['MAIN', 'SUB1', 'SUB2'];
@@ -136,14 +144,14 @@ export default function UrlTable(props: UrlTableProps): JSX.Element {
 
   return (
     <div>
-      {fetchData.loading && (<MaterialTable columns={columns} data={[]} isLoading style={{ boxShadow: 'none' }} />)}
-      {!fetchData.loading && fetchData.error && (<span>Error</span>)}
-      {!fetchData.loading && fetchData.data && (
+      {urlData.loading && (<MaterialTable columns={columns} data={[]} isLoading style={{ boxShadow: 'none' }} />)}
+      {!urlData.loading && urlData.error && (<span>Error</span>)}
+      {!urlData.loading && urlData.data && (
         <MaterialTable
           style={{ boxShadow: 'none' }}
           title=""
           columns={columns}
-          data={fetchData.data ? fetchData.data : []}
+          data={urlData.data ? urlData.data : []}
           actions={[
             {
               icon: (): JSX.Element => (<Delete />),
@@ -152,10 +160,12 @@ export default function UrlTable(props: UrlTableProps): JSX.Element {
                 rowData: UrlDataInterface | UrlDataInterface[]): void => {
                 if (Array.isArray(rowData)) {
                   setUrl(rowData[0]);
+                  handleItemSelect(rowData[0].linkId);
                 } else {
                   setUrl(rowData);
+                  handleItemSelect(rowData.linkId);
                 }
-                handleDeleteOpen();
+                urlDeleteDialog.handleOpen();
               }
             }
           ]}
@@ -174,6 +184,14 @@ export default function UrlTable(props: UrlTableProps): JSX.Element {
         />
       )}
 
+      {urlDeleteDialog.open && selectedUrl && (
+      <UrlDeleteDialog
+        open={urlDeleteDialog.open}
+        selectedUrl={selectedUrl}
+        handleClose={urlDeleteDialog.handleClose}
+        recallRequest={urlData.doGetRequest}
+      />
+      )}
     </div>
   );
 }

@@ -1,4 +1,5 @@
 export interface CampaignInterface {
+  id: string;
   campaignId: string;
   campaignName: string;
   optionType: number;

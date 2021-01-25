@@ -1,12 +1,12 @@
 import React from 'react';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import { Typography, Tooltip, Grid } from '@material-ui/core';
-import CustomButton from '../../../../atoms/CustomButtons/Button';
-import StyledItemText from '../../../../atoms/StyledItemText';
-import Dialog from '../../../../atoms/Dialog/Dialog';
-import useGetRequest from '../../../../utils/hooks/useGetRequest';
-import useDeleteRequest from '../../../../utils/hooks/useDeleteRequest';
-import { BannerDataInterface } from './interface';
+import CustomButton from '../../../../../atoms/CustomButtons/Button';
+import StyledItemText from '../../../../../atoms/StyledItemText';
+import Dialog from '../../../../../atoms/Dialog/Dialog';
+import useGetRequest from '../../../../../utils/hooks/useGetRequest';
+import useDeleteRequest from '../../../../../utils/hooks/useDeleteRequest';
+import { BannerDataInterface } from '../interface';
 
 const useStyles = makeStyles((theme: Theme) => ({
   img: {
@@ -66,7 +66,7 @@ const DeleteDialog = (props: DeleteDialogProps): JSX.Element => {
                   </CustomButton>
                 </div>
               </Tooltip>
-            )}
+          )}
           {!connectedCampaign.loading
             && connectedCampaign.data
             && connectedCampaign.data.length === 0 && (
@@ -82,7 +82,7 @@ const DeleteDialog = (props: DeleteDialogProps): JSX.Element => {
               >
                 확인
               </CustomButton>
-            )}
+          )}
           <CustomButton onClick={handleClose}>취소</CustomButton>
         </div>
       )}
