@@ -1,29 +1,29 @@
-import React from 'react';
+import React, { useState } from 'react';
 import moment from 'moment';
 import {
+  ButtonBase,
   Switch,
   Typography
 } from '@material-ui/core';
 import CustomDataGrid from '../../../../../atoms/Table/CustomDataGrid';
 import { CampaignInterface } from '../../dashboard/interfaces';
 import { UsePaginatedGetRequestObject } from '../../../../../utils/hooks/usePaginatedGetRequest';
-import { useDialog, useGetRequest } from '../../../../../utils/hooks';
-import VideoBanner from '../../../../../atoms/Banner/VideoBanner';
-import isVideo from '../../../../../utils/isVideo';
+import { useAnchorEl, useDialog, useGetRequest } from '../../../../../utils/hooks';
 import renderPriorityType from '../../../../../utils/renderPriorityType';
 import renderOptionType from '../../../../../utils/renderOptionType';
 import handleCampaignOnOff from '../../../../../utils/func/handleCampaignOnOff';
 import Snackbar from '../../../../../atoms/Snackbar/Snackbar';
+import BannerInfoPopover from './BannerInfoPopover';
+import isVideo from '../../../../../utils/isVideo';
+import VideoBanner from '../../../../../atoms/Banner/VideoBanner';
 
 export interface CampaignInventoryProps {
   pageOffset: number;
   campaignData: UsePaginatedGetRequestObject<CampaignInterface>;
-  handleItemSelect: (item: string) => void;
 }
 export default function CampaignInventory({
   pageOffset,
   campaignData,
-  handleItemSelect
 }: CampaignInventoryProps): JSX.Element {
   const pageLengthGet = useGetRequest('/marketer/campaign/length');
 
@@ -40,9 +40,11 @@ export default function CampaignInventory({
 
   // *****************************************
   // 캠페인 클릭 핸들러
-  function handleCampaignClick(cam: CampaignInterface): void {
-    handleItemSelect(cam.campaignId);
-    alert(`캠페인 클릭: ${cam.campaignId}`);
+  const anchor = useAnchorEl();
+  const [selected, setSelected] = useState<CampaignInterface>();
+  function handleBannerClick(e: React.MouseEvent<HTMLSpanElement>, cam: CampaignInterface): void {
+    setSelected(cam);
+    anchor.handleAnchorOpen(e);
   }
 
   return (
@@ -54,6 +56,7 @@ export default function CampaignInventory({
         rowCount={pageLengthGet.data || 0}
         rowsPerPageOptions={[5]}
         onPageChange={(param): void => {
+          // 페이지 수정 => 해당 페이지 데이터 로드
           // page 가 1부터 시작되므로 1 줄인다.
           campaignData.handlePage(param.page - 1);
         }}
@@ -82,13 +85,7 @@ export default function CampaignInventory({
             headerName: '캠페인 명',
             width: 200,
             renderCell: (data): React.ReactElement => (
-              <Typography
-                noWrap
-                variant="body2"
-                onClick={(): void => handleCampaignClick(data.row as CampaignInterface)}
-                style={{ cursor: 'pointer' }}
-                color="primary"
-              >
+              <Typography noWrap variant="body2">
                 {data.row.campaignName}
               </Typography>
             )
@@ -99,13 +96,55 @@ export default function CampaignInventory({
             sortable: false,
             filterable: false,
             renderCell: (data): React.ReactElement => (
-              <div>
-                {isVideo(data.row.bannerSrc) ? (
-                  <VideoBanner width="50" height="25" src={data.row.bannerSrc} />
+              // <Typography
+              //   onClick={(e): void => handleBannerClick(e, data.row as CampaignInterface)}
+              //   style={{ cursor: 'pointer' }}
+              //   color="primary"
+              //   variant="body2"
+              //   noWrap
+              // >
+              //   {data.row.bannerId}
+              // </Typography>
+              <>
+                { isVideo(data.row.bannerSrc) ? (
+                  <VideoBanner
+                    onClick={(e): void => handleBannerClick(e, data.row as CampaignInterface)}
+                    style={{ cursor: 'pointer' }}
+                    src={data.row.bannerSrc}
+                    width="50"
+                    height="30"
+                  />
                 ) : (
-                  <img width="50" height="25" src={data.row.bannerSrc} alt="" />
+                  <ButtonBase
+                    onClick={(e): void => handleBannerClick(e, data.row as CampaignInterface)}
+                  >
+                    <img
+                      src={data.row.bannerSrc}
+                      alt={data.row.bannerId}
+                      width="50"
+                      height="30"
+                    />
+                  </ButtonBase>
                 )}
-              </div>
+              </>
+            )
+          },
+          {
+            headerName: 'URL',
+            field: 'linkId',
+            sortable: false,
+            filterable: false,
+            width: 120,
+            renderCell: (data): React.ReactElement => (
+              <Typography
+                // onClick={(e): void => handleItemClick(e, data.row as CampaignInterface)}
+                style={{ cursor: 'pointer' }}
+                color="primary"
+                variant="body2"
+                noWrap
+              >
+                {data.row.linkId}
+              </Typography>
             )
           },
           {
@@ -137,7 +176,7 @@ export default function CampaignInventory({
           },
           {
             field: 'regiDate',
-            headerName: '생성일',
+            headerName: '생성 날짜',
             width: 200,
             renderCell: (data): React.ReactElement => (
               <Typography noWrap variant="body2">{moment(data.row.regiDate).format('YYYY/MM/DD HH:mm:ss')}</Typography>
@@ -147,6 +186,16 @@ export default function CampaignInventory({
         rows={campaignData.data || []}
         loading={campaignData.loading}
       />
+
+      {/* 배너 자세히 보기 popper */}
+      {selected && anchor.open && anchor.anchorEl && (
+        <BannerInfoPopover
+          selectedCampaign={selected}
+          open={anchor.open}
+          anchorEl={anchor.anchorEl}
+          onClose={anchor.handleAnchorClose}
+        />
+      )}
 
       {failSnack.open && (
         <Snackbar

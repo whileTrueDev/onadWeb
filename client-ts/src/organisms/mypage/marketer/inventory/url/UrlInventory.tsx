@@ -21,12 +21,11 @@ const useStyles = makeStyles(() => ({
 
 interface UrlTableProps {
   urlData: UseGetRequestObject<UrlDataInterface[] | null>;
-  handleItemSelect: (item: string) => void;
 }
 
 export default function UrlTable(props: UrlTableProps): JSX.Element {
   const {
-    urlData, handleItemSelect
+    urlData,
   } = props;
 
   const urlDeleteDialog = useDialog();
@@ -160,10 +159,8 @@ export default function UrlTable(props: UrlTableProps): JSX.Element {
                 rowData: UrlDataInterface | UrlDataInterface[]): void => {
                 if (Array.isArray(rowData)) {
                   setUrl(rowData[0]);
-                  handleItemSelect(rowData[0].linkId);
                 } else {
                   setUrl(rowData);
-                  handleItemSelect(rowData.linkId);
                 }
                 urlDeleteDialog.handleOpen();
               }

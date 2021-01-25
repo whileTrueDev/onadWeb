@@ -31,6 +31,19 @@ router.route('/list/active')
   )
   .all(responseHelper.middleware.unusedMethod);
 
+/**
+ * 마케터의 총 배너 리스트 목록 길이를 반환하는 라우터
+ */
+router.route('/length')
+  .get(
+    responseHelper.middleware.checkSessionExists,
+    responseHelper.middleware.withErrorCatch(async (req, res, next) => {
+      const { marketerId } = responseHelper.getSessionData(req);
+      const query = 'SELECT COUNT(*) AS rowCount FROM bannerRegistered WHERE marketerId = ?';
+      const { result } = await doQuery(query, [marketerId]);
+      return responseHelper.send(result[0].rowCount, 'get', res);
+    })
+  );
 
 // marketer/sub/banner => /all에서  가져옴
 router.route('/list')
@@ -39,12 +52,11 @@ router.route('/list')
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
       const { marketerId } = responseHelper.getSessionData(req);
       const query = `
-            SELECT bannerSrc, confirmState, bannerId, 
-            bannerDenialReason, DATE_FORMAT(date, "%Y년% %m월 %d일") as date,
-            DATE_FORMAT(regiDate, "%Y년% %m월 %d일") as regiDate
-            FROM bannerRegistered
-            WHERE marketerId = ?
-            ORDER BY confirmState ASC, regiDate DESC`;
+            SELECT bannerId AS id, bannerSrc, confirmState, bannerId, 
+            bannerDenialReason, regiDate
+              FROM bannerRegistered
+              WHERE marketerId = ?
+              ORDER BY confirmState ASC, regiDate DESC`;
       doQuery(query, [marketerId])
         .then((row) => {
           responseHelper.send(row.result, 'get', res);
@@ -61,6 +73,17 @@ router.route('/list')
 // marketer/sub/banner => /push
 
 router.route('/')
+  .get(
+    responseHelper.middleware.checkSessionExists,
+    responseHelper.middleware.withErrorCatch(async (req, res, next) => {
+      const { marketerId } = responseHelper.getSessionData(req);
+      const bannerId = responseHelper.getParam('bannerId', 'get', req);
+      const query = 'SELECT * FROM bannerRegistered WHERE marketerId = ? AND bannerId = ?';
+
+      const { result } = await doQuery(query, [marketerId, bannerId]);
+      return responseHelper.send(result[0], 'get', res);
+    })
+  )
   .post(
     responseHelper.middleware.checkSessionExists,
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
