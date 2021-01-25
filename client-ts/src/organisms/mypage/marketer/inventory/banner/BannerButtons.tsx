@@ -1,24 +1,29 @@
-import { Button } from '@material-ui/core';
+import { Button, makeStyles } from '@material-ui/core';
 import { GetApp } from '@material-ui/icons';
 import React from 'react';
 import CustomDialog from '../../../../../atoms/Dialog/Dialog';
 import { useDialog } from '../../../../../utils/hooks';
-import { UseGetRequestObject } from '../../../../../utils/hooks/useGetRequest';
+import { UsePaginatedGetRequestObject } from '../../../../../utils/hooks/usePaginatedGetRequest';
 import Inquire from '../../../../main/main/Inquiry/Inquiry';
 import UploadDialog from '../../shared/BannerUploadDialog';
 import { BannerDataInterface } from '../interface';
 
+
+const useStyles = makeStyles((theme) => ({
+  container: { marginBottom: theme.spacing(1) },
+}));
 export interface BannerButtonsProps {
-  bannerData: UseGetRequestObject<BannerDataInterface[] | null>;
+  bannerData: UsePaginatedGetRequestObject<BannerDataInterface>;
 }
 export default function BannerButtons({
   bannerData,
 }: BannerButtonsProps): JSX.Element {
+  const classes = useStyles();
   const uploadDialog = useDialog();
   const InquireDialog = useDialog();
 
   return (
-    <div>
+    <div className={classes.container}>
       <Button variant="outlined" color="primary" onClick={uploadDialog.handleOpen}>
         + 새 배너 등록
       </Button>
@@ -39,7 +44,7 @@ export default function BannerButtons({
       <UploadDialog
         open={uploadDialog.open}
         onClose={uploadDialog.handleClose}
-        recallRequest={bannerData.doGetRequest}
+        recallRequest={bannerData.request}
       />
 
       {/* 배너 생성 가이드 다이얼로그 */}

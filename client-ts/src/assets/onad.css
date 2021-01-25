@@ -140,3 +140,11 @@ a:focus {
     float: left;
 }
 
+
+/* 데이터그리드 푸터 정렬 변경 by hwasurr 21.01.25 */
+div.MuiDataGrid-root .MuiDataGrid-footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align:center;
+}

@@ -1,127 +1,152 @@
 import React from 'react';
-import { Typography, Tooltip } from '@material-ui/core';
+import moment from 'moment';
+import {
+  Typography, Tooltip, IconButton,
+} from '@material-ui/core';
 import Delete from '@material-ui/icons/Delete';
-import MaterialTable from '../../../../../atoms/Table/MaterialTable';
-import { UseGetRequestObject } from '../../../../../utils/hooks/useGetRequest';
+import useGetRequest from '../../../../../utils/hooks/useGetRequest';
 import { BannerDataInterface } from '../interface';
 import VideoBanner from '../../../../../atoms/Banner/VideoBanner';
 import isVideo from '../../../../../utils/isVideo';
 import { useDialog } from '../../../../../utils/hooks';
 import DeleteDialog from './DeleteDialog';
-
-const BANNER_MAX_WIDTH = 320;
-const BANNER_MAX_HEIGHT = 200;
+import CustomDataGrid from '../../../../../atoms/Table/CustomDataGrid';
+import { UsePaginatedGetRequestObject } from '../../../../../utils/hooks/usePaginatedGetRequest';
 
 interface BannerInventoryProps {
-  bannerData: UseGetRequestObject<BannerDataInterface[] | null>;
-  handleItemSelect: (item: string) => void;
+  pageOffset: number;
+  bannerData: UsePaginatedGetRequestObject<BannerDataInterface>;
 }
 
 export default function BannerInventory(props: BannerInventoryProps): JSX.Element {
   const {
-    bannerData, handleItemSelect
+    pageOffset, bannerData,
   } = props;
+  const pageLengthGet = useGetRequest('/marketer/banner/length');
 
-  const [selectedBanner, setBanner] = React.useState<BannerDataInterface | null>(null);
-
+  // 배너 삭제 다이얼로그
   const deleteDialog = useDialog();
-
-  const columns = [
-    {
-      title: '배너 이미지',
-      render: (rowData: BannerDataInterface): JSX.Element => (
-        <>
-          { isVideo(rowData.bannerSrc) ? (
-            <VideoBanner
-              src={rowData.bannerSrc}
-              style={{ maxHeight: BANNER_MAX_HEIGHT, maxWidth: BANNER_MAX_WIDTH }}
-            />
-          ) : (
-            <img
-              src={rowData.bannerSrc}
-              alt={rowData.bannerId}
-              style={{ maxHeight: BANNER_MAX_HEIGHT, maxWidth: BANNER_MAX_WIDTH }}
-            />
-          )}
-        </>
-      )
-    },
-    {
-      title: '심의 결과',
-      field: 'confirmState',
-      render: (rowData: BannerDataInterface): React.ReactNode => {
-        switch (rowData.confirmState) {
-          case 0: return '승인대기⏰';
-          case 1: return '승인됨👌';
-          case 2: return (
-            <Tooltip
-              title={<Typography variant="body2">{`사유: ${rowData.bannerDenialReason}`}</Typography>}
-            >
-              <Typography style={{ color: 'red' }}>거절됨</Typography>
-            </Tooltip>
-          );
-          default: throw new Error('you need confirmState for table');
-        }
-      },
-
-    },
-    { title: '배너 등록 일자', field: 'regiDate', },
-  ];
+  // 배너 선택
+  const [selectedBanner, setBanner] = React.useState<BannerDataInterface | null>(null);
+  function handleBannerSelect(banner: BannerDataInterface): void{
+    setBanner(banner);
+  }
 
   return (
     <div>
-      {bannerData.loading && (<MaterialTable columns={columns} data={[]} isLoading style={{ boxShadow: 'none' }} />)}
-      {!bannerData.loading && bannerData.error && (<span>Error</span>)}
-      {!bannerData.loading && bannerData.data && (
-        <MaterialTable
-          style={{ boxShadow: 'none' }}
-          title=""
-          columns={columns}
-          data={bannerData.data}
-          actions={[
+
+      <div style={{ height: 400, width: '100%' }}>
+        <CustomDataGrid
+          pagination
+          paginationMode="server"
+          rowsPerPageOptions={[5]}
+          onPageChange={(param): void => {
+            // 페이지 수정 => 해당 페이지 데이터 로드
+            // page 가 1부터 시작되므로 1 줄인다.
+            bannerData.handlePage(param.page - 1);
+          }}
+          pageSize={pageOffset}
+          rowCount={pageLengthGet.data || 0}
+          disableSelectionOnClick
+          rows={bannerData.data || []}
+          columns={[
             {
-              icon: (): JSX.Element => (<Delete />),
-              tooltip: '배너삭제',
-              onClick: (event: React.MouseEvent<HTMLButtonElement>,
-                data: BannerDataInterface | BannerDataInterface[]): void => {
-                if (Array.isArray(data)) {
-                  handleItemSelect(data[0].bannerId);
-                  setBanner(data[0]);
-                } else {
-                  handleItemSelect(data.bannerId);
-                  setBanner(data);
+              headerName: '배너',
+              field: 'bannerId',
+              renderCell: (data): React.ReactElement => (
+                <Typography
+                  style={{ cursor: 'pointer' }}
+                  color="primary"
+                  onClick={(): void => handleBannerSelect(data.row as BannerDataInterface)}
+                  variant="body2"
+                >
+                  {data.row.bannerId}
+                </Typography>
+              )
+            },
+            {
+              headerName: '이미지',
+              field: 'bannerSrc',
+              width: 130,
+              renderCell: (rowData): React.ReactElement => (
+                <>
+                  { isVideo(rowData.row.bannerSrc) ? (
+                    <VideoBanner
+                      src={rowData.row.bannerSrc}
+                      width="50"
+                      height="30"
+                    />
+                  ) : (
+                    <img
+                      src={rowData.row.bannerSrc}
+                      alt={rowData.row.bannerId}
+                      width="50"
+                      height="30"
+                    />
+                  )}
+                </>
+              )
+            },
+            {
+              headerName: '심의 결과',
+              field: 'confirmState',
+              width: 110,
+              renderCell: (rowData): React.ReactElement => {
+                switch (rowData.row.confirmState) {
+                  case 0: return <Typography variant="body2">진행중</Typography>;
+                  case 1: return <Typography variant="body2">승인됨</Typography>;
+                  case 2: return (
+                    <Tooltip
+                      title={<Typography variant="caption">{`사유: ${rowData.row.bannerDenialReason}`}</Typography>}
+                    >
+                      <Typography variant="body2" style={{ color: 'red' }}>거절됨</Typography>
+                    </Tooltip>
+                  );
+                  default: throw new Error('you need confirmState for table');
                 }
-                deleteDialog.handleOpen();
-              }
+              },
+
+            },
+            {
+              headerName: '배너 등록 일자',
+              field: 'regiDate',
+              width: 150,
+              renderCell: (data): React.ReactElement => (
+                <Typography variant="body2">{moment(data.row.regiDate).format('YYYY/MM/DD HH:mm:ss')}</Typography>
+              )
+            },
+            {
+              field: '',
+              headerName: '삭제',
+              width: 70,
+              sortable: false,
+              filterable: false,
+              disableColumnMenu: true,
+              disableClickEventBubbling: true,
+              renderCell: (data): React.ReactElement => (
+                <IconButton onClick={(): void => {
+                  handleBannerSelect(data.row as BannerDataInterface);
+                  deleteDialog.handleOpen();
+                }}
+                >
+                  <Delete fontSize="small" />
+                </IconButton>
+              )
             }
           ]}
-          options={{
-            actionsColumnIndex: -1,
-            search: false,
-            headerStyle: { zIndex: 0 }
-          }}
-          localization={{
-            body: {
-              emptyDataSourceMessage: '등록된 배너가 없습니다.'
-            },
-            header: {
-              actions: '삭제'
-            }
-          }}
         />
-      )}
+      </div>
+
 
       {/* banner  delete dialog */}
       {deleteDialog.open && selectedBanner && (
-        <DeleteDialog
-          open={deleteDialog.open}
-          selectedBanner={selectedBanner}
-          handleClose={deleteDialog.handleClose}
-          recallRequest={bannerData.doGetRequest}
-
-        />
+      <DeleteDialog
+        open={deleteDialog.open}
+        selectedBanner={selectedBanner}
+        handleClose={deleteDialog.handleClose}
+        recallRequest={bannerData.request}
+      />
       )}
-
     </div>
   );
 }

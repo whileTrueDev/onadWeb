@@ -1,7 +1,8 @@
 export interface BannerDataInterface {
+  id: string;
+  bannerId: string;
   bannerSrc: string;
   confirmState: number;
-  bannerId: string;
   bannerDenialReason: string;
   date: string;
   regiDate: string;

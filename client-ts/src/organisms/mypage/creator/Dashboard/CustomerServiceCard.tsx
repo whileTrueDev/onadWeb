@@ -3,6 +3,7 @@ import {
   makeStyles, Paper, Typography
 } from '@material-ui/core';
 import Button from '../../../../atoms/CustomButtons/Button';
+import openKakaoChat from '../../../../utils/openKakaoChat';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -27,7 +28,7 @@ export default function CustomerServiceCard(): JSX.Element {
       <div className={classes.buttonSection}>
         <Button
           color="primary"
-          onClick={(): void => { window.open('http://pf.kakao.com/_xoyxmfT/chat'); }}
+          onClick={openKakaoChat}
         >
           문의하기
         </Button>

@@ -7,7 +7,10 @@ export interface CampaignInterface {
   regiDate: string;
   onOff: number;
   confirmState: number;
+  bannerId: string;
   bannerSrc: string;
+  bannerRegiDate: string;
+  linkId: string;
   linkData: {
     links: {
       primary: boolean;

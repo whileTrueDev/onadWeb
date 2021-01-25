@@ -25,6 +25,9 @@ interface CampaignData {
   dailyLimit: number;
 }
 
+/**
+ * 마케터의 캠페인 목록 총 길이를 반환하는 라우터
+ */
 router.route('/length')
   .get(
     responseHelper.middleware.checkSessionExists,
@@ -60,7 +63,8 @@ router.route('/list')
         SELECT
         campaignId AS id, campaignId, campaignName, optionType, priorityType, 
         campaign.regiDate as regiDate, onOff, br.confirmState, 
-        bannerSrc, lr.links as links, lr.confirmState as linkConfirmState, dailyLimit,
+        br.bannerId, bannerSrc, br.regiDate AS bannerRegiDate,
+        lr.linkId, lr.links as links, lr.confirmState as linkConfirmState, dailyLimit,
         campaignDescription
         FROM campaign
         JOIN bannerRegistered AS br

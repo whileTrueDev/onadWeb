@@ -1,5 +1,4 @@
 // 라우터 아이콘 @material-ui/icons
-import React from 'react';
 import { SvgIconProps } from '@material-ui/core/SvgIcon';
 import Dashboard from '@material-ui/icons/DashboardOutlined';
 import Person from '@material-ui/icons/PersonOutline';
