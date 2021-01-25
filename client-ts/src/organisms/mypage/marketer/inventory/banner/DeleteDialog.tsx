@@ -38,6 +38,7 @@ interface DeleteDialogProps {
 
 const DeleteDialog = (props: DeleteDialogProps): JSX.Element => {
   const classes = useStyles();
+
   const {
     open, selectedBanner, handleClose, recallRequest
   } = props;
