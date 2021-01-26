@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import classnames from 'classnames';
 import {
-  Dialog, DialogContent, Button, Typography, CircularProgress, TextField, Divider
+  Dialog, DialogContent, Button, Typography, CircularProgress, TextField, Divider, IconButton
 } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
+import { Close } from '@material-ui/icons';
 import useStyles from '../style/LoginForm.style';
 import axios from '../../../../utils/axios';
 import HOST from '../../../../config';
@@ -58,17 +59,24 @@ export default function CreatorLoginForm({
           passwd.handleReset();
           setLoading(false);
         }}
-        maxWidth="sm"
+        maxWidth="xs"
         fullWidth
         disableScrollLock
       >
         <DialogContent className={classes.dialog}>
 
+          <IconButton onClick={handleClose} style={{ position: 'absolute', top: 10, right: 10 }}>
+            <Close />
+          </IconButton>
+
           <img src="/pngs/logo/onad_logo_vertical_small.png" alt="" width={80} height={80} />
+
+          <Typography variant="h6">온애드 방송인 로그인</Typography>
 
           <form style={{ marginTop: 16 }}>
             <TextField
               style={{ marginBottom: 16 }}
+              InputProps={{ style: { height: 40 } }}
               fullWidth
               variant="outlined"
               autoFocus
@@ -78,6 +86,7 @@ export default function CreatorLoginForm({
             />
             <TextField
               style={{ marginBottom: 16 }}
+              InputProps={{ style: { height: 40 } }}
               fullWidth
               variant="outlined"
               type="password"
@@ -105,6 +114,7 @@ export default function CreatorLoginForm({
             disableElevation
             className={classnames(classes.socialLoginButton)}
             onClick={handleLogin}
+            fullWidth
           >
             로그인
           </Button>

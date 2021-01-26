@@ -1,5 +1,4 @@
 // 라우터 아이콘 @material-ui/icons
-import React from 'react';
 import { SvgIconProps } from '@material-ui/core/SvgIcon';
 import Dashboard from '@material-ui/icons/DashboardOutlined';
 import Person from '@material-ui/icons/PersonOutline';
@@ -19,6 +18,7 @@ import CreatorMyPage from './creator/Mypage';
 import MarketerInventory from './marketer/Inventory';
 import MarketerDashboard from './marketer/Dashboard';
 import MarketerMyOffice from './marketer/MyOffice';
+import MarketerMyInfo from './marketer/MyInfo';
 import MarketerCreateCampaign from './marketer/CampaignCreate';
 import MarketerManual from './marketer/Manual';
 import CreatorIncomeManage from './creator/IncomeManage';
@@ -88,9 +88,9 @@ const dashboardRoutes: MypageRoutes = {
     },
     {
       path: '/inventory',
-      name: '내 배너',
+      name: '내 광고 관리',
       icon: BrandingWatermark,
-      component: () => <MarketerInventory />, // 마케터 대시보드 컴포넌트로 수정
+      component: MarketerInventory, // 마케터 대시보드 컴포넌트로 수정
       layout: '/mypage/marketer',
       needNextDivider: true,
     },
@@ -99,6 +99,13 @@ const dashboardRoutes: MypageRoutes = {
       name: '내 오피스',
       icon: Work,
       component: MarketerMyOffice,
+      layout: '/mypage/marketer',
+    },
+    {
+      path: '/user',
+      name: '내 계정 관리',
+      icon: Person,
+      component: MarketerMyInfo,
       layout: '/mypage/marketer',
     },
     {

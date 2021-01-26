@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { response } from 'express';
 import responseHelper from '../../../middlewares/responseHelper';
 import slack from '../../../lib/slack/messageWithJson';
 import doQuery from '../../../model/doQuery';
@@ -25,6 +25,22 @@ interface CampaignData {
   dailyLimit: number;
 }
 
+/**
+ * 마케터의 캠페인 목록 총 길이를 반환하는 라우터
+ */
+router.route('/length')
+  .get(
+    responseHelper.middleware.checkSessionExists,
+    responseHelper.middleware.withErrorCatch(async (req, res, next) => {
+      const marketerId = responseHelper.getSessionData(req);
+      const query = 'SELECT COUNT(*) AS rowCount FROM campaign WHERE campaign.marketerId = "gubgoo" AND deletedState = 0';
+      const { result } = await doQuery(query, [marketerId]);
+
+      return responseHelper.send(result[0].rowCount, 'get', res);
+    })
+  )
+  .all(responseHelper.middleware.unusedMethod);
+
 // 모든 캠페인에 대한 목록을 의미한다.
 // marketer/sub/campaign =>/new
 // 테스트 완료
@@ -45,9 +61,10 @@ router.route('/list')
 
       const query = `
         SELECT
-        campaignId, campaignName, optionType, priorityType, 
+        campaignId AS id, campaignId, campaignName, optionType, priorityType, 
         campaign.regiDate as regiDate, onOff, br.confirmState, 
-        bannerSrc, lr.links as links, lr.confirmState as linkConfirmState, dailyLimit,
+        br.bannerId, bannerSrc, br.regiDate AS bannerRegiDate,
+        lr.linkId, lr.links as links, lr.confirmState as linkConfirmState, dailyLimit,
         campaignDescription
         FROM campaign
         JOIN bannerRegistered AS br

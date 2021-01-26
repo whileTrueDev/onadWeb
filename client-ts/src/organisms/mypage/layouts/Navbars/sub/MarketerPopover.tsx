@@ -73,9 +73,7 @@ export default function MarketerPopover(props: MarketerPopoverProps): JSX.Elemen
         {/* 유저 정보 */}
         <List>
           <ListItem style={{ display: 'flex', alignItems: 'center' }}>
-            <Avatar className={classes.icon}>
-              {userData.marketerName.slice(0, 1)}
-            </Avatar>
+            <Avatar className={classes.icon} />
             <ListItemText
               primary={userData.marketerName}
               secondary={userData.marketerMail}

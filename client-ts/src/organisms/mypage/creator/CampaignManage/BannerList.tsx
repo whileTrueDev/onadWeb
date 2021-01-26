@@ -5,11 +5,10 @@ import {
   Grid, makeStyles, Paper, Typography,
 } from '@material-ui/core';
 import React, { useCallback, useEffect, useState } from 'react';
-import VideoBanner from '../../../../atoms/Banner/VideoBanner';
+import OnadBanner from '../../../../atoms/Banner/OnadBanner';
 import Snackbar from '../../../../atoms/Snackbar/Snackbar';
 import HOST from '../../../../config';
 import axiosInstance from '../../../../utils/axios';
-import isVideo from '../../../../utils/isVideo';
 
 const useStyles = makeStyles((theme) => ({
   bold: { fontWeight: 'bold', color: theme.palette.text.primary },
@@ -109,21 +108,11 @@ export default function BannerList(): JSX.Element {
           <Paper className={classes.paper}>
             <div>
               <div className={classes.img}>
-                {isVideo(campaign.bannerSrc) ? (
-                  <VideoBanner
-                    src={campaign.bannerSrc}
-                    draggable={false}
-                    alt="bannerArea"
-                    style={{ maxWidth: '100%', maxHeight: '100%' }}
-                  />
-                ) : (
-                  <img
-                    src={campaign.bannerSrc}
-                    draggable={false}
-                    alt="bannerArea"
-                    style={{ maxWidth: '100%', maxHeight: '100%' }}
-                  />
-                )}
+                <OnadBanner
+                  src={campaign.bannerSrc}
+                  alt="bannerArea"
+                  style={{ maxWidth: '100%', maxHeight: '100%' }}
+                />
               </div>
 
               <div className={classes.bannerContents}>

@@ -1,5 +1,5 @@
 import React, { useReducer, MouseEvent } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import {
   Grid, Paper, Collapse, useMediaQuery, Button
@@ -40,6 +40,9 @@ const useStyles = makeStyles((_theme: Theme) => ({
 
 const CampaignCreate = (): JSX.Element => {
   const classes = useStyles();
+
+  // *****************************************************
+  const { to: whereToGo } = useParams<{to: string}>();
 
   // *****************************************************
   // 캠페인 생성은 Desktop only 이므로, Desktop 인지 불린값.
@@ -173,6 +176,7 @@ const CampaignCreate = (): JSX.Element => {
         campaignCreateDispatch({ type: 'LOADING_DONE', value: '' });
         if (res.data[0]) {
           alert(res.data[1]);
+          if (whereToGo) history.push(`/mypage/marketer/${whereToGo}`);
           history.push('/mypage/marketer/main');
         } else {
           alert(res.data[1]);

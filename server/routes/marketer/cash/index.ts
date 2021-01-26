@@ -22,8 +22,7 @@ router.route('/')
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
       const { marketerId } = responseHelper.getSessionData(req);
       const query = `
-            SELECT FORMAT(cashAmount, 0) as cashAmount,
-            DATE_FORMAT(date, '%y년 %m월 %d일 %T') as date
+            SELECT FORMAT(cashAmount, 0) as cashAmount, date
             FROM marketerDebit
             WHERE marketerId = ?
             ORDER BY date DESC

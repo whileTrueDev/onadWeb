@@ -5,8 +5,7 @@ import {
   Grid, FormControl, InputLabel, Input, FormHelperText, CircularProgress
 } from '@material-ui/core';
 import CustomButton from '../../../../atoms/CustomButtons/Button';
-import VideoBanner from '../../../../atoms/Banner/VideoBanner';
-import isVideo from '../../../../utils/isVideo';
+import OnadBanner from '../../../../atoms/Banner/OnadBanner';
 
 const useStyle = makeStyles((theme: Theme) => ({
   imgPreview: {
@@ -89,13 +88,8 @@ const BannerDescFrom = (props: BannerDescFromProps): JSX.Element => {
     <Grid container direction="column" spacing={3}>
       <Grid item>
         <div>
-          {state.imageUrl && isVideo(state.imageUrl) ? (
-            <VideoBanner
-              className={classes.imgPreview}
-              src={state.imageUrl}
-            />
-          ) : (
-            <img id="preview" src={state.imageUrl} className={classes.imgPreview} alt="배너이미지" />
+          {state.imageUrl && (
+            <OnadBanner id="preview" src={state.imageUrl} className={classes.imgPreview} alt="배너이미지" />
           )}
         </div>
       </Grid>
