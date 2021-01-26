@@ -24,4 +24,10 @@ export default makeStyles((theme: Theme) => ({
     maxHeight: 300,
     overflow: 'auto',
   },
+  selectedLanding: {
+    maxWidth: 600, lineBreak: 'anywhere', width: '100%',
+  },
+  selectedLandingIcon: {
+    fontSize: 16
+  }
 }));

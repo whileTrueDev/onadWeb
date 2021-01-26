@@ -270,6 +270,7 @@ function RegistForm({
                               />
                             )}
                             className={classes.switch}
+                            classes={{ label: classes.switchLabel }}
                             label="휴대폰"
                             labelPlacement="bottom"
                           />
@@ -287,6 +288,7 @@ function RegistForm({
                               />
                             )}
                             className={classes.switch}
+                            classes={{ label: classes.switchLabel }}
                             label="회사"
                             labelPlacement="bottom"
                           />

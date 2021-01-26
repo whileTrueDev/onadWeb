@@ -37,11 +37,11 @@ const SearchTextField = ({ searchText, setSearchText }: any) => {
         inputRef={searchTextRef}
         onKeyDown={handleEnterKey}
       />
-      <Button size="large" color="primary" variant="contained" onClick={handleSearchClick}>
+      <Button color="primary" variant="contained" onClick={handleSearchClick}>
         검색
       </Button>
       {searchText && (
-      <Button size="large" variant="contained" onClick={handleSearchReset}>
+      <Button variant="contained" onClick={handleSearchReset} style={{ marginLeft: 8 }}>
         검색제거
       </Button>
       )}

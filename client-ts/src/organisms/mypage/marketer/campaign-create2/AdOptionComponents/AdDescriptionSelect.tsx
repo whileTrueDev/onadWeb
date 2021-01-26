@@ -6,6 +6,7 @@ import { OptionInterface, AdMaterial } from '../interfaces';
 
 const useStyles = makeStyles((theme) => ({
   expansionElement: { display: 'flex', justifyContent: 'center', padding: theme.spacing(2) },
+  button: { margin: theme.spacing(1) },
 }));
 
 interface AdDescriptionSelectProps {
@@ -28,8 +29,9 @@ export default function AdDescriptionSelect({
       <div className={classes.expansionElement}>
         {opt.materials!.map((item) => (
           <Button
-            color={selectedMaterialName === item.name ? 'primary' : 'default'}
-            style={{ margin: 8 }}
+            variant={selectedMaterialName === item.name ? 'outlined' : 'contained'}
+            color="primary"
+            className={classes.button}
             key={item.name}
             onClick={(): void => {
               handleMaterialClick(item);

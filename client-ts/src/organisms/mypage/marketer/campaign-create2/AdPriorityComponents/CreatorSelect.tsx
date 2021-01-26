@@ -54,7 +54,12 @@ const CreatorSelect = (props: CreatorSelectProps): JSX.Element => {
         <Typography variant="body1" className={classes.bold}>현재까지 선택된 크리에이터 : </Typography>
         <Typography variant="body2" color="textSecondary">* 표에서 크리에이터 클릭시 선택됩니다.</Typography>
         {state.selectedCreatorNames.map((name) => (
-          <Chip className={classes.chip} label={name} key={name} color="primary" />
+          <Chip
+            className={classes.chip}
+            label={name}
+            key={name}
+            color="primary"
+          />
         ))}
       </Grid>
       <Grid item>
