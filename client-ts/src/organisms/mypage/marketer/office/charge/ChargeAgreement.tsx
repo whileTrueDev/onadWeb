@@ -17,6 +17,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   warning: {
     backgroundColor: theme.palette.action.disabledBackground,
+    padding: theme.spacing(2),
     borderLeft: `0.25rem solid ${theme.palette.error.main}`,
     wordBreak: 'keep-all'
   },
@@ -192,8 +193,8 @@ const TestChargeAgreement = (
   return (
     <div>
       <blockquote className={classes.warning}>
-        <h4 className={classes.title}>&raquo; 주의사항</h4>
-        <p className={classes.content}>{sources.content.warning}</p>
+        <Typography variant="h6" className={classes.title}>&raquo; 주의사항</Typography>
+        <Typography color="textPrimary" variant="body2">{sources.content.warning}</Typography>
       </blockquote>
       <div>
         {terms.map((term: TermInterface) => (
