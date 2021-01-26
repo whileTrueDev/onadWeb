@@ -10,6 +10,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useAnchorEl, useGetRequest } from '../../../../utils/hooks';
 import CircularProgress from '../../../../atoms/Progress/CircularProgress';
+import { ContractionDataType } from '../../../../pages/mypage/creator/CPAManage';
+import { UseGetRequestObject } from '../../../../utils/hooks/useGetRequest';
 
 const useStyles = makeStyles((theme) => ({
   bold: { fontWeight: theme.typography.fontWeightBold },
@@ -22,14 +24,26 @@ const useStyles = makeStyles((theme) => ({
   },
   overlayUrl: { marginTop: theme.spacing(2), textAlign: 'center' },
   overlayUrlInput: { color: theme.palette.primary.main, },
-  popover: { maxWidth: 450 },
-  popoverContents: { padding: theme.spacing(4), },
-  popoverimg: { height: 350, maxWidth: '100%' },
+  popoverContents: { padding: theme.spacing(4), maxWidth: 350, width: '100%' },
+  popoverimg: { height: 350, maxWidth: '100%', textAlign: 'center' },
   alignCenter: { textAlign: 'center' },
-  divider: { marginTop: theme.spacing(3), marginBottom: theme.spacing(3), }
+  divider: { marginTop: theme.spacing(3), marginBottom: theme.spacing(3), },
+  imageContainer: {
+    display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center'
+  },
+  bannerImg: {
+    width: '100%', border: `1px solid ${theme.palette.divider}`,
+  },
+  horizontal: { maxWidth: 320, },
+  vertical: { maxWidth: 80 },
 }));
 
-export default function ClickAdInfo(): JSX.Element {
+export interface ClickAdInfoProps {
+  profileData: UseGetRequestObject<ContractionDataType>;
+}
+export default function ClickAdInfo({
+  profileData,
+}: ClickAdInfoProps): JSX.Element {
   const classes = useStyles();
   const descAnchor = useAnchorEl();
 
@@ -111,7 +125,6 @@ export default function ClickAdInfo(): JSX.Element {
       {descAnchor.open && (
         <Popover
           disableScrollLock
-          className={classes.popover}
           id="mouse-over-popover"
           open={descAnchor.open}
           anchorEl={descAnchor.anchorEl}
@@ -127,11 +140,13 @@ export default function ClickAdInfo(): JSX.Element {
           disableRestoreFocus
         >
           <div className={classes.popoverContents}>
-            <img
-              src="/pngs/dashboard/clickad_panel_example.png"
-              alt="panel_example"
-              className={classes.popoverimg}
-            />
+            <div className={classes.imageContainer}>
+              <img
+                src="/pngs/dashboard/clickad_panel_example.png"
+                alt="panel_example"
+                className={classes.popoverimg}
+              />
+            </div>
             <Typography variant="body2">
               내 클릭광고 링크는 고유하게 부여된 클릭 가능한 링크입니다.
               시청자가 이 링크를 클릭하면, 현재 방송화면에 송출되고 있는 광고의 페이지로 바로 이동하게 됩니다.
@@ -156,36 +171,66 @@ export default function ClickAdInfo(): JSX.Element {
             </Typography>
 
             <Divider className={classes.divider} />
-            <div>
-              <Typography variant="body1" className={classes.bold}>
-                기본 이미지
-                {' '}
-                <Typography variant="caption" color="textSecondary">
-                  (사용할 이미지가 없으시면 사용해주세요.)
-                </Typography>
-              </Typography>
-              <Typography variant="body2" color="textSecondary">
-                이미지 클릭시 다운로드 됩니다.
-              </Typography>
-            </div>
-            <br />
-            <div>
-              <div style={{
-                display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center'
-              }}
-              >
-                <a href="/pngs/landing/온애드패널바로가기.png" download="온애드패널_트위치">
-                  <img src="/pngs/landing/온애드패널바로가기.png" alt="온애드패널_트위치" style={{ width: 320 }} />
-                </a>
-                <Typography variant="body2">트위치 패널에 등록하세요!</Typography>
 
+            {!profileData.loading && profileData.data
+            && (profileData.data.afreecaId || profileData.data.creatorTwitchOriginalId) && (
+              <>
+                <div>
+                  <Typography variant="body1" className={classes.bold}>
+                    기본 이미지
+                    {' '}
+                    <Typography variant="caption" color="textSecondary">
+                    (사용할 이미지가 없으시면 사용해주세요.)
+                    </Typography>
+                  </Typography>
+                  <Typography variant="body2" color="textSecondary">
+                    이미지 클릭시 다운로드 됩니다.
+                  </Typography>
+                </div>
                 <br />
-                <a href="/pngs/landing/온애드패널_아프리카_플로팅.png" download="온애드패널_아프리카">
-                  <img src="/pngs/landing/온애드패널_아프리카_플로팅.png" alt="온애드패널_아프리카" style={{ width: 45 }} />
-                </a>
-                <Typography variant="body2">아프리카 방송국 플로팅 배너에 등록하세요!</Typography>
-              </div>
-            </div>
+                <div>
+                  <div className={classes.imageContainer}>
+                    {profileData.data.creatorTwitchOriginalId && (
+                      <>
+                        <a href="/pngs/landing/트위치_패널배너.png" download="온애드_트위치_패널배너">
+                          <img
+                            src="/pngs/landing/트위치_패널배너.png"
+                            alt="온애드_트위치_패널배너"
+                            className={classnames(classes.bannerImg, classes.horizontal)}
+                          />
+                        </a>
+                        <Typography variant="body2">트위치 패널에 등록하세요!</Typography>
+                      </>
+                    )}
+
+                    {profileData.data.afreecaId && (
+                      <>
+                        <br />
+                        <a href="/pngs/landing/아프리카_플로팅배너.png" download="온애드_아프리카_플로팅">
+                          <img
+                            src="/pngs/landing/아프리카_플로팅배너.png"
+                            alt="온애드_아프리카_플로팅"
+                            className={classnames(classes.bannerImg, classes.vertical)}
+                          />
+                        </a>
+                        <Typography variant="body2">아프리카 방송국 플로팅 배너에 등록하세요!</Typography>
+
+                        <br />
+                        <a href="/pngs/landing/아프리카_하단배너.png" download="온애드_아프리카_하단배너">
+                          <img
+                            src="/pngs/landing/아프리카_하단배너.png"
+                            alt="온애드_아프리카_하단배너"
+                            className={classnames(classes.bannerImg, classes.horizontal)}
+                          />
+                        </a>
+                        <Typography variant="body2">아프리카 방송국 하단 배너에 등록하세요!</Typography>
+                      </>
+                    )}
+                  </div>
+                </div>
+              </>
+            )}
+
           </div>
 
         </Popover>
