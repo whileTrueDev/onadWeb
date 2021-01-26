@@ -1,5 +1,5 @@
 import React from 'react';
-import { makeStyles, Theme } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import {
   Typography, Tooltip, Grid, Button
 } from '@material-ui/core';
@@ -8,19 +8,10 @@ import Dialog from '../../../../../atoms/Dialog/Dialog';
 import useGetRequest from '../../../../../utils/hooks/useGetRequest';
 import useDeleteRequest from '../../../../../utils/hooks/useDeleteRequest';
 import { BannerDataInterface } from '../interface';
-import isVideo from '../../../../../utils/isVideo';
-import VideoBanner from '../../../../../atoms/Banner/VideoBanner';
 import openKakaoChat from '../../../../../utils/openKakaoChat';
+import OnadBanner from '../../../../../atoms/Banner/OnadBanner';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  img: {
-    maxHeight: '200px',
-    maxWidth: '100%'
-  },
-  reasonText: {
-    marginLeft: theme.spacing(2),
-    color: 'red'
-  },
+const useStyles = makeStyles(() => ({
   center: {
     display: 'flex',
     justifyContent: 'center',
@@ -96,20 +87,12 @@ const DeleteDialog = (props: DeleteDialogProps): JSX.Element => {
     >
       <Grid container direction="column" spacing={2}>
         <Grid item className={classes.center}>
-          { isVideo(selectedBanner.bannerSrc) ? (
-            <VideoBanner
-              src={selectedBanner.bannerSrc}
-              width="320"
-              height="160"
-            />
-          ) : (
-            <img
-              src={selectedBanner.bannerSrc}
-              alt={selectedBanner.bannerId}
-              width="320"
-              height="160"
-            />
-          )}
+          <OnadBanner
+            src={selectedBanner.bannerSrc}
+            alt={selectedBanner.bannerId}
+            width="320"
+            height="160"
+          />
         </Grid>
         {selectedBanner.bannerDenialReason && (
           <Grid item>

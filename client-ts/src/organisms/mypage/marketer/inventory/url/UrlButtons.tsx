@@ -1,7 +1,7 @@
 import { Button, makeStyles } from '@material-ui/core';
 import React from 'react';
 import { useDialog } from '../../../../../utils/hooks';
-import { UseGetRequestObject } from '../../../../../utils/hooks/useGetRequest';
+import { UsePaginatedGetRequestObject } from '../../../../../utils/hooks/usePaginatedGetRequest';
 import UrlUploadDialog from '../../shared/UrlUploadDialog';
 import { UrlDataInterface } from '../interface';
 
@@ -9,7 +9,7 @@ const useStyles = makeStyles((theme) => ({
   container: { marginBottom: theme.spacing(1) },
 }));
 export interface UrlButtonsProps {
-  urlData: UseGetRequestObject<UrlDataInterface[] | null>;
+  urlData: UsePaginatedGetRequestObject<UrlDataInterface>;
 }
 export default function UrlButtons({
   urlData
@@ -26,7 +26,7 @@ export default function UrlButtons({
       <UrlUploadDialog
         open={urlUploadDialog.open}
         handleClose={urlUploadDialog.handleClose}
-        recallRequest={urlData.doGetRequest}
+        recallRequest={urlData.request}
       />
     </div>
   );

@@ -4,7 +4,7 @@ import React from 'react';
 export const KOREAN_LOCALE_TEXT: LocaleText = {
   // Root
   rootGridLabel: 'grid',
-  // noRowsLabel: 'No rows',
+  // noRowsLabel: '데이터가 없습니다',
   // errorOverlayDefaultLabel: 'An error occurred.',
 
   // Density selector toolbar button text

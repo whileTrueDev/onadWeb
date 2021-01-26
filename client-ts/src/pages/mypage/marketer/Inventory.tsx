@@ -15,5 +15,4 @@ const Inventory = (): JSX.Element => (
 
 );
 
-
 export default Inventory;

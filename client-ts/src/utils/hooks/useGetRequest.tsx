@@ -10,7 +10,7 @@ const DEFAULT_ERROR_MESSAGE = '죄송합니다.. 데이터 조회중 오류가 �
 const UNAUTHORIZED = 401;
 export interface UseGetRequestObject<T> {
   data: T | null;
-  loading: boolean | null;
+  loading: boolean;
   error: string;
   doGetRequest: (newParam?: any) => Promise<AxiosResponse<T>>;
   setData: React.Dispatch<React.SetStateAction<T | null>>;
@@ -46,7 +46,7 @@ export default function useGetRequest<
 ): UseGetRequestObject<RES_DATA_TYPE> {
   const [param] = useState(params);
   const [data, setData] = useState<RES_DATA_TYPE | null>(null);
-  const [loading, setLoading] = useState<boolean | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
 
   const [unmounted, setUnmounted] = useState(false);

@@ -7,12 +7,11 @@ import {
   Table, TableHead, TableRow, TableBody, TableCell, Switch,
   Typography, FormControlLabel, Chip
 } from '@material-ui/core';
-import isVideo from '../../../../utils/isVideo';
-import VideoBanner from '../../../../atoms/Banner/VideoBanner';
 import Snackbar from '../../../../atoms/Snackbar/Snackbar';
 import useDialog from '../../../../utils/hooks/useDialog';
 import usePatchRequest from '../../../../utils/hooks/usePatchRequest';
 import useGetRequest from '../../../../utils/hooks/useGetRequest';
+import OnadBanner from '../../../../atoms/Banner/OnadBanner';
 
 const useStyles = makeStyles(() => ({
   th: {
@@ -175,11 +174,7 @@ const RemotePageBannerTable = (props: RemotePageBannerTable): JSX.Element => {
               {categorySwitch(value.priorityType, value.targetList, value.creatorName)}
               <TableCell>
                 <div>
-                  { isVideo(value.bannerSrc) ? (
-                    <VideoBanner src={value.bannerSrc} style={{ maxHeight: '100px', width: '150' }} />
-                  ) : (
-                    <img src={value.bannerSrc} alt="banner" style={{ maxHeight: '100px', width: '150' }} />
-                  )}
+                  <OnadBanner src={value.bannerSrc} style={{ maxHeight: '100px', width: '150' }} />
                 </div>
               </TableCell>
               <TableCell>

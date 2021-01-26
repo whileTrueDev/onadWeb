@@ -6,7 +6,7 @@ import host from '../../config';
 const DEFAULT_ERROR_MESSAGE = '죄송합니다.. 오류가 발생했습니다..';
 export interface UsePostRequestObject<T, P> {
     success: true | null;
-    loading: boolean | undefined;
+    loading: boolean;
     error: string;
     doPostRequest: (param?: T) => Promise<AxiosResponse<P>>;
     data: P | null;
@@ -40,7 +40,7 @@ export default function usePostRequest<PARAM_TYPE = {[key: string]: any}, RES_DA
 ): UsePostRequestObject<PARAM_TYPE, RES_DATA_TYPE> {
   const [success, setSuccess] = React.useState<true | null>(null);
   const [data, setData] = React.useState<RES_DATA_TYPE | null>(null);
-  const [loading, setLoading] = React.useState<boolean | undefined>(undefined);
+  const [loading, setLoading] = React.useState<boolean>(false);
   const [error, setError] = React.useState('');
 
   const doPostRequest = useCallback(async (

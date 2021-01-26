@@ -15,16 +15,15 @@ import CampaignDeleteConfirmDialog from './CampaignDeleteConfirmDialog';
 import CampaignUpdateDialog from './CampaignUpdateDialog';
 import CampaignAnalysisDialog from './CampaignAnalysisDialog';
 import CampaignAnalysisDialogV2 from './CampaignAnalysisDialogV2';
-import VideoBanner from '../../../../atoms/Banner/VideoBanner';
 import { CampaignInterface } from './interfaces';
 import useDialog from '../../../../utils/hooks/useDialog';
 import history from '../../../../history';
 import axios from '../../../../utils/axios';
-import isVideo from '../../../../utils/isVideo';
 import HOST from '../../../../config';
 import usePaginatedGetRequest from '../../../../utils/hooks/usePaginatedGetRequest';
-import renderOptionType from '../../../../utils/renderOptionType';
-import renderPriorityType from '../../../../utils/renderPriorityType';
+import renderOptionType from '../../../../utils/render_funcs/renderOptionType';
+import renderPriorityType from '../../../../utils/render_funcs/renderPriorityType';
+import OnadBanner from '../../../../atoms/Banner/OnadBanner';
 
 
 const SLIDE_TIMEOUT = 500;
@@ -173,11 +172,7 @@ export default function CampaignList(): JSX.Element {
                         />
                       </Grid>
                       <Grid item>
-                        {isVideo(detail.bannerSrc) ? (
-                          <VideoBanner className={classes.img} src={detail.bannerSrc} />
-                        ) : (
-                          <img className={classes.img} alt="campaign-logo" src={detail.bannerSrc} />
-                        )}
+                        <OnadBanner className={classes.img} alt="campaign-logo" src={detail.bannerSrc} />
                       </Grid>
                       <Hidden xsDown>
                         <Grid item>

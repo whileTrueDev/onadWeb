@@ -3,9 +3,8 @@ import { Grid, Paper, Typography } from '@material-ui/core';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import RemotePageOpenButton from '../RemotePage/sub/RemotePageOpenButton';
 import history from '../../../../history';
-import isVideo from '../../../../utils/isVideo';
-import VideoBanner from '../../../../atoms/Banner/VideoBanner';
 import { UseGetRequestObject } from '../../../../utils/hooks/useGetRequest';
+import OnadBanner from '../../../../atoms/Banner/OnadBanner';
 
 const useStyles = makeStyles((theme: Theme) => ({
   container: {
@@ -95,23 +94,12 @@ function BannerCard({
             className={classes.bannerContainer}
           >
             <Grid item xs={12} md={6} className={classes.bannerItem}>
-              {isVideo(bannerData.bannerSrc) ? (
-                <VideoBanner
-                  src={bannerData.bannerSrc}
-                  draggable={false}
-                  alt="bannerArea"
-                  width="100%"
-                  height="100%"
-                />
-              ) : (
-                <img
-                  src={bannerData.bannerSrc}
-                  draggable={false}
-                  alt="bannerArea"
-                  width="100%"
-                  height="100%"
-                />
-              )}
+              <OnadBanner
+                src={bannerData.bannerSrc}
+                alt="bannerArea"
+                width="100%"
+                height="100%"
+              />
             </Grid>
             <Grid item xs={12} lg={6}>
               <Typography variant="body1" gutterBottom>

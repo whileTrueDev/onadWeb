@@ -4,28 +4,29 @@ import {
   Typography, Tooltip, IconButton,
 } from '@material-ui/core';
 import Delete from '@material-ui/icons/Delete';
-import useGetRequest from '../../../../../utils/hooks/useGetRequest';
 import { BannerDataInterface } from '../interface';
-import VideoBanner from '../../../../../atoms/Banner/VideoBanner';
-import isVideo from '../../../../../utils/isVideo';
-import { useDialog } from '../../../../../utils/hooks';
+import { useAnchorEl, useDialog } from '../../../../../utils/hooks';
 import DeleteDialog from './DeleteDialog';
 import CustomDataGrid from '../../../../../atoms/Table/CustomDataGrid';
 import { UsePaginatedGetRequestObject } from '../../../../../utils/hooks/usePaginatedGetRequest';
+import BannerInfoPopover from '../campaign/BannerInfoPopover';
+import OnadBanner from '../../../../../atoms/Banner/OnadBanner';
 
 interface BannerInventoryProps {
   pageOffset: number;
+  totalPageLength: number;
   bannerData: UsePaginatedGetRequestObject<BannerDataInterface>;
 }
 
 export default function BannerInventory(props: BannerInventoryProps): JSX.Element {
   const {
-    pageOffset, bannerData,
+    totalPageLength, pageOffset, bannerData,
   } = props;
-  const pageLengthGet = useGetRequest('/marketer/banner/length');
+
 
   // 배너 삭제 다이얼로그
   const deleteDialog = useDialog();
+  const anchor = useAnchorEl(); // 배너 자세하 보기 앵커
   // 배너 선택
   const [selectedBanner, setBanner] = React.useState<BannerDataInterface | null>(null);
   function handleBannerSelect(banner: BannerDataInterface): void{
@@ -46,7 +47,7 @@ export default function BannerInventory(props: BannerInventoryProps): JSX.Elemen
             bannerData.handlePage(param.page - 1);
           }}
           pageSize={pageOffset}
-          rowCount={pageLengthGet.data || 0}
+          rowCount={totalPageLength}
           disableSelectionOnClick
           rows={bannerData.data || []}
           columns={[
@@ -54,12 +55,7 @@ export default function BannerInventory(props: BannerInventoryProps): JSX.Elemen
               headerName: '배너',
               field: 'bannerId',
               renderCell: (data): React.ReactElement => (
-                <Typography
-                  style={{ cursor: 'pointer' }}
-                  color="primary"
-                  onClick={(): void => handleBannerSelect(data.row as BannerDataInterface)}
-                  variant="body2"
-                >
+                <Typography variant="body2">
                   {data.row.bannerId}
                 </Typography>
               )
@@ -69,22 +65,16 @@ export default function BannerInventory(props: BannerInventoryProps): JSX.Elemen
               field: 'bannerSrc',
               width: 130,
               renderCell: (rowData): React.ReactElement => (
-                <>
-                  { isVideo(rowData.row.bannerSrc) ? (
-                    <VideoBanner
-                      src={rowData.row.bannerSrc}
-                      width="50"
-                      height="30"
-                    />
-                  ) : (
-                    <img
-                      src={rowData.row.bannerSrc}
-                      alt={rowData.row.bannerId}
-                      width="50"
-                      height="30"
-                    />
-                  )}
-                </>
+                <OnadBanner
+                  src={rowData.row.bannerSrc}
+                  width="50"
+                  height="30"
+                  style={{ cursor: 'zoom-in' }}
+                  onClick={(e): void => {
+                    handleBannerSelect(rowData.row as BannerDataInterface);
+                    anchor.handleAnchorOpen(e);
+                  }}
+                />
               )
             },
             {
@@ -99,7 +89,7 @@ export default function BannerInventory(props: BannerInventoryProps): JSX.Elemen
                     <Tooltip
                       title={<Typography variant="caption">{`사유: ${rowData.row.bannerDenialReason}`}</Typography>}
                     >
-                      <Typography variant="body2" style={{ color: 'red' }}>거절됨</Typography>
+                      <Typography variant="body2" color="error">거절됨</Typography>
                     </Tooltip>
                   );
                   default: throw new Error('you need confirmState for table');
@@ -124,7 +114,7 @@ export default function BannerInventory(props: BannerInventoryProps): JSX.Elemen
               disableColumnMenu: true,
               disableClickEventBubbling: true,
               renderCell: (data): React.ReactElement => (
-                <IconButton onClick={(): void => {
+                <IconButton onClick={(e): void => {
                   handleBannerSelect(data.row as BannerDataInterface);
                   deleteDialog.handleOpen();
                 }}
@@ -145,6 +135,16 @@ export default function BannerInventory(props: BannerInventoryProps): JSX.Elemen
         selectedBanner={selectedBanner}
         handleClose={deleteDialog.handleClose}
         recallRequest={bannerData.request}
+      />
+      )}
+
+      {/* 배너 자세히 보기 popper */}
+      {selectedBanner && anchor.open && anchor.anchorEl && (
+      <BannerInfoPopover
+        selectedBanner={selectedBanner}
+        open={anchor.open}
+        anchorEl={anchor.anchorEl}
+        onClose={anchor.handleAnchorClose}
       />
       )}
     </div>

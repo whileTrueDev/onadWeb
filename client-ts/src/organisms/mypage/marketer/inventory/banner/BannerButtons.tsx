@@ -11,6 +11,7 @@ import { BannerDataInterface } from '../interface';
 
 const useStyles = makeStyles((theme) => ({
   container: { marginBottom: theme.spacing(1) },
+  button: { margin: theme.spacing(0, 0.5) },
 }));
 export interface BannerButtonsProps {
   bannerData: UsePaginatedGetRequestObject<BannerDataInterface>;
@@ -24,13 +25,24 @@ export default function BannerButtons({
 
   return (
     <div className={classes.container}>
-      <Button variant="outlined" color="primary" onClick={uploadDialog.handleOpen}>
+      <Button
+        className={classes.button}
+        variant="outlined"
+        color="primary"
+        onClick={uploadDialog.handleOpen}
+      >
         + 새 배너 등록
       </Button>
-      <Button variant="outlined" color="default" onClick={InquireDialog.handleOpen}>
+      <Button
+        className={classes.button}
+        variant="outlined"
+        color="default"
+        onClick={InquireDialog.handleOpen}
+      >
         배너가 없으신가요?
       </Button>
       <Button
+        className={classes.button}
         variant="outlined"
         color="primary"
       >
@@ -54,11 +66,9 @@ export default function BannerButtons({
         fullWidth
         maxWidth="md"
         buttons={(
-          <div>
-            <Button onClick={InquireDialog.handleClose}>
-              취소
-            </Button>
-          </div>
+          <Button onClick={InquireDialog.handleClose} variant="contained">
+            취소
+          </Button>
         )}
       >
         <Inquire confirmClose={InquireDialog.handleClose} />

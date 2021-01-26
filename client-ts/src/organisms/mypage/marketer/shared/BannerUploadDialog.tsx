@@ -1,12 +1,11 @@
 import React, { useReducer, useState } from 'react';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import {
-  Stepper, Step, StepLabel, StepContent, Collapse
+  Stepper, Step, StepLabel, StepContent, Collapse, Button
 } from '@material-ui/core';
 import classnames from 'classnames';
 import Check from '@material-ui/icons/Check';
 import Dialog from '../../../../atoms/Dialog/Dialog';
-import Button from '../../../../atoms/CustomButtons/Button';
 // import BannerDescForm from './BannerDescForm';
 import './upload.css';
 import ImageUpload from './ImageUpload';
@@ -100,24 +99,9 @@ const UploadDialog = (props: UploadDialogProps): JSX.Element => {
     onClose();
   };
 
-  // // usePostRequest 수정 이후 적용
-  // const {
-  //   data, loading, error, doPostRequest
-  // } = usePostRequest<{ bannerSrc: string; bannerDescription: string }, boolean[]>(
-  //   '/marketer/banner');
 
-  // url을 제출.
+  // 배너를 제출.
   const handleSubmit = (): void => {
-    // const bannerDescription = (document.getElementById('banner') as HTMLInputElement).value || '';
-    // // usePostRequest 수정 이후 적용
-    // if (state.imageUrl) {
-    //   doPostRequest({
-    //     bannerSrc: state.imageUrl, bannerDescription,
-    //   });
-    //   if (recallRequest) {
-    //     recallRequest();
-    //   }
-    // }
     axios.post(`${HOST}/marketer/banner`, {
       bannerSrc: state.imageUrl
     })
@@ -148,12 +132,18 @@ const UploadDialog = (props: UploadDialogProps): JSX.Element => {
           <Collapse in={Boolean(state.imageUrl && (state.imageUrl !== DEFAULT_IMAGE_PATH))}>
             <Button
               color="primary"
+              variant="contained"
               onClick={handleSubmit}
             >
               등록
             </Button>
           </Collapse>
-          <Button onClick={handleClose}>취소</Button>
+          <Button
+            variant="contained"
+            onClick={handleClose}
+          >
+            취소
+          </Button>
         </div>
           )}
     >

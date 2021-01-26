@@ -3,6 +3,7 @@ import {
   makeStyles,
   Paper, Tab, Tabs
 } from '@material-ui/core';
+import { TabContext, TabPanel } from '@material-ui/lab';
 import usePaginatedGetRequest from '../../../../utils/hooks/usePaginatedGetRequest';
 import { CampaignInterface } from '../dashboard/interfaces';
 import { useGetRequest } from '../../../../utils/hooks';
@@ -19,71 +20,85 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(2, 0, 0),
     borderBottom: `1px solid ${theme.palette.divider}`
   },
-  container: { padding: theme.spacing(2) },
 }));
 
 export default function InventoryManage(): JSX.Element {
   const classes = useStyles();
 
-  const [selectedTabIndex, setSelectedTabIndex] = React.useState<number>(0);
-  const handleTabChange = (event: React.ChangeEvent<{}>, newValue: number): void => {
+  const [selectedTabIndex, setSelectedTabIndex] = React.useState<string>('0');
+  const handleTabChange = (event: React.ChangeEvent<{}>, newValue: string): void => {
     setSelectedTabIndex(newValue);
   };
 
+  // **************************************************************************************
+  // 캠페인 데이터
   const CAMPAIGN_LOAD_PAGE_OFFSET = 5;
+  const campaignPageLength = useGetRequest('/marketer/campaign/length');
   const campaignData = usePaginatedGetRequest<CampaignInterface>(
     '/marketer/campaign/list', { offset: CAMPAIGN_LOAD_PAGE_OFFSET, doNotConcatNewData: true }
   );
 
+  // **************************************************************************************
+  // 배너 데이터
+  const bannerPageLength = useGetRequest('/marketer/banner/length');
   const bannerData = usePaginatedGetRequest<BannerDataInterface>(
     '/marketer/banner/list', { offset: CAMPAIGN_LOAD_PAGE_OFFSET, doNotConcatNewData: true }
   );
-  const urlData = useGetRequest<null, UrlDataInterface[] | null>('/marketer/landing-url/list');
+
+  // **************************************************************************************
+  // URL 데이터
+  const urlPageLength = useGetRequest('/marketer/landing-url/length');
+  const urlData = usePaginatedGetRequest<UrlDataInterface>(
+    '/marketer/landing-url/list', { offset: CAMPAIGN_LOAD_PAGE_OFFSET, doNotConcatNewData: true }
+  );
+
 
   return (
     <Paper>
-      <nav>
+      <TabContext value={selectedTabIndex}>
         <Tabs
           indicatorColor="primary"
           value={selectedTabIndex}
           onChange={handleTabChange}
           className={classes.tabs}
         >
-          <Tab label="캠페인 인벤토리" />
-          <Tab label="배너 인벤토리" />
-          <Tab label="URL 인벤토리" />
+          <Tab label="캠페인 인벤토리" value="0" />
+          <Tab label="배너 인벤토리" value="1" />
+          <Tab label="URL 인벤토리" value="2" />
         </Tabs>
-      </nav>
 
-      {/* 선택된 탭의 컨텐츠 */}
-      <div>
-        {selectedTabIndex === 0 && (
-        <div className={classes.container}>
-          <CampaignButtons />
-          <CampaignInventory
-            pageOffset={CAMPAIGN_LOAD_PAGE_OFFSET}
-            campaignData={campaignData}
-          />
-        </div>
-        )}
+        {/* 선택된 탭의 컨텐츠 */}
+        <div>
+          <TabPanel value="0">
+            <CampaignButtons />
+            <CampaignInventory
+              pageOffset={CAMPAIGN_LOAD_PAGE_OFFSET}
+              campaignData={campaignData}
+              pageLength={campaignPageLength.data || undefined}
+            />
+          </TabPanel>
 
-        {selectedTabIndex === 1 && (
-        <div className={classes.container}>
-          <BannerButtons bannerData={bannerData} />
-          <BannerInventory
-            pageOffset={CAMPAIGN_LOAD_PAGE_OFFSET}
-            bannerData={bannerData}
-          />
-        </div>
-        )}
 
-        {selectedTabIndex === 2 && (
-        <div className={classes.container}>
-          <UrlButtons urlData={urlData} />
-          <UrlInventory urlData={urlData} />
+          <TabPanel value="1">
+            <BannerButtons bannerData={bannerData} />
+            <BannerInventory
+              totalPageLength={bannerPageLength.data || undefined}
+              pageOffset={CAMPAIGN_LOAD_PAGE_OFFSET}
+              bannerData={bannerData}
+            />
+          </TabPanel>
+
+          <TabPanel value="2">
+            <UrlButtons urlData={urlData} />
+            <UrlInventory
+              urlData={urlData}
+              totalPageLength={urlPageLength.data || undefined}
+              pageOffset={CAMPAIGN_LOAD_PAGE_OFFSET}
+            />
+          </TabPanel>
         </div>
-        )}
-      </div>
+      </TabContext>
+
     </Paper>
   );
 }

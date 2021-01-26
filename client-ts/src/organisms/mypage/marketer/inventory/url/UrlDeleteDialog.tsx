@@ -1,7 +1,9 @@
 import React from 'react';
 import { makeStyles, Theme } from '@material-ui/core/styles';
-import { Typography, Tooltip, Grid } from '@material-ui/core';
-import CustomButton from '../../../../../atoms/CustomButtons/Button';
+import {
+  Button, Typography, Tooltip, Grid
+} from '@material-ui/core';
+import { OpenInNew } from '@material-ui/icons';
 import StyledItemText from '../../../../../atoms/StyledItemText';
 import Dialog from '../../../../../atoms/Dialog/Dialog';
 import useGetRequest from '../../../../../utils/hooks/useGetRequest';
@@ -10,8 +12,7 @@ import { UrlDataInterface } from '../interface';
 
 const useStyles = makeStyles((theme: Theme) => ({
   img: {
-    maxHeight: '200px',
-    maxWidth: '100%'
+    maxHeight: '200px', maxWidth: '100%'
   },
   reasonText: {
     marginLeft: theme.spacing(2),
@@ -22,6 +23,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  openInNew: {
+    fontSize: theme.spacing(2)
+  }
 }));
 
 interface UrlDeleteDialogProps {
@@ -38,7 +42,7 @@ const UrlDeleteDialog = (props: UrlDeleteDialogProps): JSX.Element => {
     open, selectedUrl, handleClose, recallRequest
   } = props;
 
-  const { doDeleteRequest } = useDeleteRequest<{ linkId: string }, any[]>('/marketer/landing-url');
+  const { loading, doDeleteRequest } = useDeleteRequest<{ linkId: string }, any[]>('/marketer/landing-url');
 
   const connectedCampaign = useGetRequest<{ linkId: string }, { campaignId: string }[]>(
     '/marketer/landing-url/campaigns', {
@@ -60,20 +64,19 @@ const UrlDeleteDialog = (props: UrlDeleteDialogProps): JSX.Element => {
             && connectedCampaign.data.length > 0 && (
               <Tooltip title={<Typography>URL이 캠페인에 할당되어 있어 삭제가 불가능합니다.</Typography>}>
                 <div>
-                  <CustomButton
-                    color="primary"
-                    disabled
-                  >
+                  <Button variant="contained" color="primary" disabled>
                     확인
-                  </CustomButton>
+                  </Button>
                 </div>
               </Tooltip>
           )}
           {(!connectedCampaign.loading
             && connectedCampaign.data
             && connectedCampaign.data.length === 0) && (
-              <CustomButton
+              <Button
+                variant="contained"
                 color="primary"
+                disabled={loading}
                 onClick={(): void => {
                   doDeleteRequest({ linkId: selectedUrl.linkId });
                   setTimeout(() => {
@@ -85,9 +88,9 @@ const UrlDeleteDialog = (props: UrlDeleteDialogProps): JSX.Element => {
                 }}
               >
                 확인
-              </CustomButton>
+              </Button>
           )}
-          <CustomButton onClick={handleClose}>취소</CustomButton>
+          <Button variant="contained" onClick={handleClose}>취소</Button>
         </div>
       )}
     >
@@ -95,8 +98,8 @@ const UrlDeleteDialog = (props: UrlDeleteDialogProps): JSX.Element => {
         {selectedUrl.links.links.map((url, index) => (
           <Grid key={url.linkName} item className={classes.center}>
             <Typography
+              color="primary"
               style={{
-                color: 'red',
                 cursor: 'pointer',
                 textDecoration: index === (selectedUrl.links.links.length - 1) ? 'none' : 'underline'
               }}
@@ -105,7 +108,8 @@ const UrlDeleteDialog = (props: UrlDeleteDialogProps): JSX.Element => {
                 window.open(url.linkTo);
               }}
             >
-              {url && url.linkName ? url.linkName : url.linkTo}
+              <OpenInNew className={classes.openInNew} />
+              {url.linkName || url.linkTo}
             </Typography>
           </Grid>
         ))}
