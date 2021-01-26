@@ -1,4 +1,5 @@
 export interface CampaignInterface {
+  id: string;
   campaignId: string;
   campaignName: string;
   optionType: number;
@@ -6,7 +7,10 @@ export interface CampaignInterface {
   regiDate: string;
   onOff: number;
   confirmState: number;
+  bannerId: string;
   bannerSrc: string;
+  bannerRegiDate: string;
+  linkId: string;
   linkData: {
     links: {
       primary: boolean;

@@ -2,9 +2,8 @@ import {
   CircularProgress, Grid, makeStyles, Paper, Typography
 } from '@material-ui/core';
 import React from 'react';
-import VideoBanner from '../../../../atoms/Banner/VideoBanner';
+import OnadBanner from '../../../../atoms/Banner/OnadBanner';
 import { UseGetRequestObject } from '../../../../utils/hooks/useGetRequest';
-import isVideo from '../../../../utils/isVideo';
 import RemotePageOpenButton from '../RemotePage/sub/RemotePageOpenButton';
 import { Link } from './BannerList';
 
@@ -100,23 +99,12 @@ export default function NowBroadCard({
               className={classes.bannerContainer}
             >
               <Grid item xs={12} sm={6} className={classes.bannerImgWrapper}>
-                {isVideo(bannerData.bannerSrc) ? (
-                  <VideoBanner
-                    src={bannerData.bannerSrc}
-                    draggable={false}
-                    alt="bannerArea"
-                    width="100%"
-                    height="100%"
-                  />
-                ) : (
-                  <img
-                    src={bannerData.bannerSrc}
-                    draggable={false}
-                    alt="bannerArea"
-                    width="100%"
-                    height="100%"
-                  />
-                )}
+                <OnadBanner
+                  src={bannerData.bannerSrc}
+                  width="100%"
+                  height="100%"
+                  alt="bannerArea"
+                />
               </Grid>
               <Grid item xs={12} sm={6}>
                 <Typography

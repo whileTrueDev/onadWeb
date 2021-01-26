@@ -86,12 +86,15 @@ const MyBanner = (): JSX.Element => {
 
         {/* 현재 송출 배너 광고 정보 */}
         <GridItem xs={12} lg={6}>
-          <NowBroadCard currentBannerGet={currentBannerGet} remoteControllerUrlGet={remoteControllerUrlGet} />
+          <NowBroadCard
+            currentBannerGet={currentBannerGet}
+            remoteControllerUrlGet={remoteControllerUrlGet}
+          />
         </GridItem>
 
         {/* 클릭광고 정보 */}
         <GridItem xs={12} sm={6} lg={3}>
-          <ClickAdInfo />
+          <ClickAdInfo profileData={profileGet} />
         </GridItem>
 
         {/* 채팅광고 정보 */}

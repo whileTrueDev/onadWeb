@@ -1,5 +1,5 @@
 import React from 'react';
-import { Typography } from '@material-ui/core';
+import { CircularProgress, Typography } from '@material-ui/core';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import Dialog from '../../../../../atoms/Dialog/Dialog';
 import useGetRequest from '../../../../../utils/hooks/useGetRequest';
@@ -51,6 +51,7 @@ export default function CashUsageDialog(props: CashUsageDialogProps): JSX.Elemen
           <Typography variant="h6" gutterBottom>{`${data[1]} 원`}</Typography>
         </div>
 
+        {usagePerMonthData.loading && (<div style={{ textAlign: 'center' }}><CircularProgress /></div>)}
         {!usagePerMonthData.loading && usagePerMonthData.data && (
           <div className={classes.flex}>
             {usagePerMonthData.data.metaData.map((meta) => (

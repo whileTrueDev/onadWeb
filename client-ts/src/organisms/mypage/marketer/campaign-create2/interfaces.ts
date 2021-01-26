@@ -61,7 +61,7 @@ export interface LandingUrlData {
   confirmState: number;
   denialReason: string;
   links: { links: { linkName: string; linkTo: string; primary: boolean }[] };
-  regiDate: string;
+  regiDate: Date;
   updateDate: string;
 }
 

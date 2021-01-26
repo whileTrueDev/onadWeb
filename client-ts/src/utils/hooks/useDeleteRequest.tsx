@@ -7,7 +7,7 @@ const DEFAULT_ERROR_MESSAGE = '죄송합니다.. 오류입니다..';
 
 export interface UseDeleteRequestObject<T, P> {
   success: true | null;
-  loading: boolean | null;
+  loading: boolean;
   error: string;
   doDeleteRequest: (param?: T) => Promise<AxiosResponse<P>>;
   data: P | null;
@@ -42,7 +42,7 @@ export default function useDeleteRequest<PARAM_TYPE = {[key: string]: any}, RES_
 ): UseDeleteRequestObject<PARAM_TYPE, RES_DATA_TYPE> {
   const [success, setSuccess] = React.useState<true | null>(null);
   const [data, setData] = React.useState<RES_DATA_TYPE | null>(null);
-  const [loading, setLoading] = React.useState<boolean | null>(null);
+  const [loading, setLoading] = React.useState<boolean>(false);
   const [error, setError] = React.useState('');
 
   const doDeleteRequest = useCallback(async (

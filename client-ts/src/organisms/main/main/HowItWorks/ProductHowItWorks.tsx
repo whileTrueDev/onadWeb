@@ -5,6 +5,7 @@ import { Button, Hidden, Typography } from '@material-ui/core';
 import styles from '../style/ProductHowItWorks.style';
 import MarketerLoginForm from '../login/MarketerLoginForm';
 import CreatorLoginForm from '../login/CreatorLoginForm';
+import openKakaoChat from '../../../../utils/openKakaoChat';
 
 
 interface Props {
@@ -76,7 +77,7 @@ function ProductHowItWorks({ source, MainUserType, logout }: Props): JSX.Element
 
             <Button
               className={classes.button}
-              onClick={(): void => { window.open('http://pf.kakao.com/_xoyxmfT/chat'); }}
+              onClick={openKakaoChat}
             >
               플러스친구 문의
             </Button>

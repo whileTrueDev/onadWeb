@@ -10,6 +10,8 @@ export interface OnadPalette extends Palette {
     afreeca: string;
     twitch: string;
     youtube: string;
+    naver: string;
+    kakao: string;
   };
 }
 export interface OnadTheme extends Theme {
@@ -52,6 +54,8 @@ const platformOverrides = {
   afreeca: '#2e6afd',
   twitch: '#9147ff',
   youtube: '#CC0000',
+  naver: '#1EC800',
+  kakao: '#ffe812',
 };
 
 

@@ -18,6 +18,7 @@ import AfreecaLinkDialog from './LinkDialog/AfreecaLinkDialog';
 import axiosInstance from '../../../../utils/axios';
 import CustomDialog from '../../../../atoms/Dialog/Dialog';
 import Snackbar from '../../../../atoms/Snackbar/Snackbar';
+import openKakaoChat from '../../../../utils/openKakaoChat';
 
 const useStyles = makeStyles((theme: OnadTheme) => ({
   success: { color: theme.palette.success.main },
@@ -161,7 +162,7 @@ export default function PlatformLinkCard({
                 size="small"
                 variant="contained"
                 color="primary"
-                onClick={() => window.open('http://pf.kakao.com/_xoyxmfT/chat')}
+                onClick={openKakaoChat}
               >
                 문의하기
               </Button>
@@ -253,7 +254,7 @@ export default function PlatformLinkCard({
                 style={{ textDecoration: 'underline' }}
                 onClick={afreecaLinkDeleteDialog.handleOpen}
               >
-              연동해제
+                연동해제
               </Button>
             </div>
           )}
