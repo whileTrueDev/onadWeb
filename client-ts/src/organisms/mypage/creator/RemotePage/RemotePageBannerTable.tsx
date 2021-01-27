@@ -115,7 +115,7 @@ const RemotePageBannerTable = (props: RemotePageBannerTable): JSX.Element => {
       default: return (
         <TableCell>
           <Typography variant="body2">
-            자동으로 매칭되는 광고입니다.
+            수익이 창출되지 않는 온애드 기본 배너입니다.
           </Typography>
         </TableCell>
       );

@@ -55,6 +55,9 @@ function getPriorityType(type: number): string {
   if (type === 2) {
     result = '노출우선';
   }
+  if (type === 99) {
+    result = '온애드 기본배너';
+  }
   return result;
 }
 
