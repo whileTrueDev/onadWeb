@@ -97,7 +97,6 @@ export default function CampaignList(): JSX.Element {
             }
           }
           snack.handleOpen();
-          // campaignData.request();
         } else {
           alert(res.data[1]);
         }
@@ -412,7 +411,7 @@ export default function CampaignList(): JSX.Element {
           <CampaignUpdateDialog
             open={campaignUpdateDialog.open}
             selectedCampaign={selectedCampaign}
-            doGetRequest={campaignData.request}
+            doGetRequest={campaignData.requestWithoutConcat}
             handleClose={(): void => {
               setSelectedCampaign(null);
               campaignUpdateDialog.handleClose();
@@ -427,7 +426,7 @@ export default function CampaignList(): JSX.Element {
           <CampaignDeleteConfirmDialog
             open={campaignDeleteDialog.open}
             selectedCampaign={selectedCampaign}
-            doGetRequest={campaignData.request}
+            doGetRequest={campaignData.requestWithoutConcat}
             handleClose={(): void => {
               setSelectedCampaign(null);
               campaignDeleteDialog.handleClose();

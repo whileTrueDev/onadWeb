@@ -15,16 +15,13 @@ import BusinessUploadStep from './BusinessUploadStep';
 import BusinessCompleteStep from './BusinessCompleteStep';
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-    width: '100%',
-  },
-  backButton: {
-    marginRight: theme.spacing(1),
-  },
+  root: { width: '100%', },
+  backButton: { marginRight: theme.spacing(1), },
   instructions: {
     marginTop: theme.spacing(1),
     marginBottom: theme.spacing(1),
   },
+  buttons: { textAlign: 'right', marginTop: theme.spacing(2) },
 }));
 
 interface BusinessRegiUploadDialogProps {
@@ -115,15 +112,20 @@ export default function BuisnessUploadStepManager(
           </div>
         ) : (
           <div>
-            <Typography component="span" className={classes.instructions}>{getStepContent(activeStep)}</Typography>
-            <Button
-              disabled={activeStep === 0}
-              onClick={handleBack}
-              className={classes.backButton}
-            >
+            <Typography component="span" className={classes.instructions}>
+              {getStepContent(activeStep)}
+            </Typography>
+
+            <div className={classes.buttons}>
+              <Button
+                variant="contained"
+                disabled={activeStep === 0}
+                onClick={handleBack}
+                className={classes.backButton}
+              >
               이전으로
-            </Button>
-            {activeStep === 2 ? (
+              </Button>
+              {activeStep === 2 && (
               <Button
                 variant="contained"
                 color="primary"
@@ -134,7 +136,8 @@ export default function BuisnessUploadStepManager(
               >
                 완료
               </Button>
-            ) : (<span />)}
+              )}
+            </div>
           </div>
         )}
       </span>

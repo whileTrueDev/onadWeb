@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import moment from 'moment';
 import {
   Grid, List, ListItem, ListItemText, ListItemIcon,
-  ListItemSecondaryAction, Typography, Tooltip, Link
+  ListItemSecondaryAction, Typography, Tooltip,
 } from '@material-ui/core';
 
 import { Check, HourglassEmpty, OpenInNew } from '@material-ui/icons';

@@ -138,7 +138,7 @@ function SettlementForm({
     setCreatorPhone(values.value);
   };
 
-  const MB = 1048576; // 1Mbytes
+  const MB = 1024 * 1024; // 1Mbytes
   const IMAGE_SIZE_LIMIT = 5 * MB;
 
   // 신분증 이미지

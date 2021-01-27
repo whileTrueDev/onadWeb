@@ -2,11 +2,13 @@ import React, { useState } from 'react';
 import moment from 'moment';
 import {
   Switch,
+  Tooltip,
   Typography
 } from '@material-ui/core';
 import { OpenInNew } from '@material-ui/icons';
+import shortid from 'shortid';
 import CustomDataGrid from '../../../../../atoms/Table/CustomDataGrid';
-import { CampaignInterface } from '../../dashboard/interfaces';
+import { CampaignInterface, CampaignTargetCreator } from '../../dashboard/interfaces';
 import { UsePaginatedGetRequestObject } from '../../../../../utils/hooks/usePaginatedGetRequest';
 import { useAnchorEl, useDialog } from '../../../../../utils/hooks';
 import renderPriorityType from '../../../../../utils/render_funcs/renderPriorityType';
@@ -36,7 +38,7 @@ export default function CampaignInventory({
   // ******************************************
   // 캠페인 On/Off 변경 요청 성공 핸들러
   function onOnOffSuccess(): void {
-    campaignData.request();
+    campaignData.requestWithoutConcat();
   }
   // 캠페인 On/Off 변경 요청 실패 핸들러
   const failSnack = useDialog();
@@ -61,6 +63,14 @@ export default function CampaignInventory({
   ): void {
     setSelected(cam);
     menuAnchor.handleAnchorOpen(e);
+  }
+
+  // *************************************
+  // 캠페인 타겟 스트리머 목록 렌더링
+  function renderTargetCreators(creators: CampaignTargetCreator[]): string {
+    return creators
+      .map((creator: CampaignTargetCreator) => `${creator.afreecaName || creator.creatorName}`)
+      .join(',');
   }
 
   // 캠페인 메뉴 다이얼로그
@@ -182,8 +192,54 @@ export default function CampaignInventory({
             )
           },
           {
+            field: 'campaignDescription',
+            headerName: '홍보 문구',
+            width: 200,
+            renderCell: (data): React.ReactElement => (
+              <Tooltip title={data.row.campaignDescription} placement="bottom-start">
+                <Typography noWrap variant="body2">
+                  {data.row.campaignDescription}
+                </Typography>
+              </Tooltip>
+            )
+          },
+          {
+            field: 'selectedTime',
+            headerName: '송출 시간',
+            width: 150,
+            renderCell: (data): React.ReactElement => (
+              <Tooltip title={data.row.selectedTime.join(',')} placement="bottom-start">
+                <Typography noWrap variant="body2">
+                  {data.row.selectedTime.join(',')}
+                </Typography>
+              </Tooltip>
+            )
+          },
+          {
+            field: 'targetList',
+            headerName: '타겟 목록',
+            width: 150,
+            renderCell: (data): React.ReactElement => (
+              <>
+                {data.row.priorityType === 0 && data.row.targetCreators ? ( // 크리에이터 우선형의 경우
+                  <Tooltip title={renderTargetCreators(data.row.targetCreators)} placement="bottom-start">
+                    <Typography noWrap variant="body2">
+                      {renderTargetCreators(data.row.targetCreators)}
+                    </Typography>
+                  </Tooltip>
+                ) : (
+                  <Tooltip title={data.row.targetList.join(',')} placement="bottom-start">
+                    <Typography noWrap variant="body2">
+                      {data.row.targetList.join(',')}
+                    </Typography>
+                  </Tooltip>
+                )}
+              </>
+            )
+          },
+          {
             field: 'regiDate',
-            headerName: '생성 날짜',
+            headerName: '캠페인 생성일',
             width: 200,
             renderCell: (data): React.ReactElement => (
               <Typography noWrap variant="body2">{moment(data.row.regiDate).format('YYYY/MM/DD HH:mm:ss')}</Typography>
@@ -246,7 +302,7 @@ export default function CampaignInventory({
       <CampaignUpdateDialog
         open={campaignUpdateDialog.open}
         selectedCampaign={selected}
-        doGetRequest={campaignData.request}
+        doGetRequest={campaignData.requestWithoutConcat}
         handleClose={(): void => {
           setSelected(undefined);
           campaignUpdateDialog.handleClose();
@@ -259,7 +315,7 @@ export default function CampaignInventory({
       <CampaignDeleteConfirmDialog
         open={campaignDeleteDialog.open}
         selectedCampaign={selected}
-        doGetRequest={campaignData.request}
+        doGetRequest={campaignData.requestWithoutConcat}
         handleClose={(): void => {
           setSelected(undefined);
           campaignDeleteDialog.handleClose();
