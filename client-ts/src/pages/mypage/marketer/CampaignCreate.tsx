@@ -1,5 +1,5 @@
 import React, { useReducer, MouseEvent } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import {
   Grid, Paper, Collapse, useMediaQuery, Button
@@ -15,6 +15,8 @@ import {
 import HOST from '../../../config';
 import axios from '../../../utils/axios';
 import history from '../../../history';
+import Snackbar from '../../../atoms/Snackbar/Snackbar';
+import { useDialog } from '../../../utils/hooks';
 
 
 const useStyles = makeStyles((_theme: Theme) => ({
@@ -38,6 +40,9 @@ const useStyles = makeStyles((_theme: Theme) => ({
 
 const CampaignCreate = (): JSX.Element => {
   const classes = useStyles();
+
+  // *****************************************************
+  const { to: whereToGo } = useParams<{to: string}>();
 
   // *****************************************************
   // 캠페인 생성은 Desktop only 이므로, Desktop 인지 불린값.
@@ -69,6 +74,9 @@ const CampaignCreate = (): JSX.Element => {
     event.preventDefault();
     setStep(step + 1);
   };
+
+  // *****************************************************
+  const errorSnack = useDialog();
 
   // *****************************************************
   // 캠페인정보 - 이름, 홍보문구, 예산 ref
@@ -103,7 +111,10 @@ const CampaignCreate = (): JSX.Element => {
     }
     const campaignCreateDTO: any = {
       optionType: typeToNum(campaignCreateState.selectedOption),
-      priorityType: typeToNum(campaignCreateState.selectedPriorityType),
+      // 아프리카 카테고리 선택형의 경우 type1-1이므로 11이 됨.
+      // 하지만 "카테고리 선택형" 이라는 동일한 유형이므로 동일하게 처리되어야 함. => 1로 수정함.
+      priorityType: campaignCreateState.selectedPriorityType === 'type1-1'
+        ? '1-1' : typeToNum(campaignCreateState.selectedPriorityType),
     };
     // ***********************************************************
     // 필수 ref 값 설정
@@ -130,8 +141,10 @@ const CampaignCreate = (): JSX.Element => {
       && campaignCreateState.selectedCreators.length > 0) {
       campaignCreateDTO.priorityList = campaignCreateState.selectedCreators;
     }
-    if (campaignCreateState.selectedPriorityType === 'type1'
-      && campaignCreateState.selectedGames.length > 0) {
+    if ((campaignCreateState.selectedPriorityType === 'type1'
+      && campaignCreateState.selectedGames.length > 0)
+      || (campaignCreateState.selectedPriorityType === 'type1-1'
+      && campaignCreateState.selectedGames.length > 0)) {
       campaignCreateDTO.priorityList = campaignCreateState.selectedGames;
     }
     if (campaignCreateState.selectedPriorityType === 'type2') {
@@ -157,19 +170,35 @@ const CampaignCreate = (): JSX.Element => {
     }
     campaignCreateDTO.keyword = ['', '', '']; // keyword추가후 수정
 
+    campaignCreateDispatch({ type: 'LOADING_START', value: '' });
     axios.post(`${HOST}/marketer/campaign`, campaignCreateDTO)
       .then((res) => {
+        campaignCreateDispatch({ type: 'LOADING_DONE', value: '' });
         if (res.data[0]) {
           alert(res.data[1]);
+          if (whereToGo) history.push(`/mypage/marketer/${whereToGo}`);
           history.push('/mypage/marketer/main');
         } else {
           alert(res.data[1]);
         }
+      })
+      .catch((err) => {
+        console.error(err);
+        errorSnack.handleOpen();
       });
   };
 
   return (
     <Grid container direction="row" spacing={2} wrap="wrap">
+
+      {/* 요청 실패 스낵바 */}
+      <Snackbar
+        open={errorSnack.open}
+        onClose={errorSnack.handleClose}
+        color="error"
+        message="캠페인 생성 과정에서 오류가 발생했습니다. 잠시 후 다시 시도해주세요."
+      />
+
       {isDesktop ? (
         <Grid item xs={12}>
           <Paper>

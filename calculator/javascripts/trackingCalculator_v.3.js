@@ -18,6 +18,11 @@ const PAGE_FEERATE = 0.8;
 // 2020 07 27 0.3 => 0.8로 변경 * 크리에이터 이탈률 증가에 대한 대처방안
 
 
+// *************************************************************
+// 계산에 필요한 계산 목록 조회 함수 모음 (크리에이터, 캠페인, 마케터 등)
+// @주석작성  hwasurr 2020.12.31
+// *************************************************************
+
 // 각 action에 따른 cash
 const getCreatorCash = ({ payouts, channel }) => {
   switch (channel) {
@@ -77,7 +82,7 @@ const getCreatorList = (date) => {
         inrow.result.forEach(({
           creatorId, payouts, channel, peakview
         }) => {
-          if ((peakview !== null && countsList[creatorId] > peakview) || creatorId == null ) {
+          if ((peakview !== null && countsList[creatorId] > peakview) || creatorId == null) {
             banList.push(creatorId);
           } else {
             const cash = getCreatorCash({ payouts, channel });
@@ -184,6 +189,12 @@ const getMarketerList = ({ date, banList }) => {
   });
 };
 
+
+// *************************************************************
+// CPC/CPA 계산 함수 모음
+// 1. 크리에이터 수익금 계산 함수 | 2. 마케터 광고캐시 차감 계산 함수 | 3. 광고 로그(캠페인로그) 생성 함수
+// @주석작성  hwasurr 2020.12.31
+// *************************************************************
 
 const doTransacCreatorQuery = ({
   connection, params
@@ -349,6 +360,10 @@ const MarketerConnectionWarp = ({ marketerDic }) => new Promise((resolve, reject
   });
 });
 
+// *************************************************************
+/**
+ * CPC 클릭광고 계산 실행 함수
+ */
 const calculationPromise = async () => {
   const date = new Date();
   date.setMinutes(date.getMinutes() - 10);

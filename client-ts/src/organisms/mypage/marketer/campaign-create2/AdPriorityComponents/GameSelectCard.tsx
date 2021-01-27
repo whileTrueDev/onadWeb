@@ -63,7 +63,7 @@ export default function GameCard(props: GameCardProps): JSX.Element {
             </Typography>
             <Typography variant="caption">
               {count}
-              명이 주로 이 게임을 방송중
+              명이 주로 이 방송을 진행
             </Typography>
           </Grid>
         </Grid>

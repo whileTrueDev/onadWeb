@@ -6,6 +6,7 @@ import Grow from '@material-ui/core/Grow';
 import Button from '@material-ui/core/Button';
 import ProductHeroLayout from './ProductHeroLayout';
 import styles from '../style/ProductHero.style';
+import openKakaoChat from '../../../../utils/openKakaoChat';
 
 interface Props {
   MainUserType: string;
@@ -51,7 +52,7 @@ function ProductHero({ MainUserType, source }: Props): JSX.Element {
             </Button>
             <Button
               className={classes.buttonRight}
-              onClick={(): void => { window.open('http://pf.kakao.com/_xoyxmfT/chat'); }}
+              onClick={openKakaoChat}
             >
               실시간 문의하기
             </Button>
@@ -95,7 +96,7 @@ function ProductHero({ MainUserType, source }: Props): JSX.Element {
               </Button>
               <Button
                 className={classes.buttonRight}
-                onClick={(): void => { window.open('http://pf.kakao.com/_xoyxmfT/chat'); }}
+                onClick={openKakaoChat}
               >
                 실시간 문의하기
               </Button>

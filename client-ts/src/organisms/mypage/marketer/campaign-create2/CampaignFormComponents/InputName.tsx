@@ -27,7 +27,7 @@ const InputName = (props: InputNameProps): JSX.Element => {
           <StyledItemText
             primary="캠페인 이름 입력하기"
             secondary={(
-              <Typography variant="body2">
+              <Typography variant="body2" color="textSecondary">
                 캠페인 구분을 위해 사용됩니다.
                 <Typography color="error" variant="caption">(최소 2자)</Typography>
               </Typography>
@@ -44,6 +44,7 @@ const InputName = (props: InputNameProps): JSX.Element => {
             inputRef={nameInputRef}
             inputProps={{
               minLength: 2,
+              maxLength: 50,
               required: true
             }}
           />

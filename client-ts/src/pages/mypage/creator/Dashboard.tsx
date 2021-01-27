@@ -5,23 +5,30 @@ import GridContainer from '../../../atoms/Grid/GridContainer';
 import GridItem from '../../../atoms/Grid/GridItem';
 import Snackbar from '../../../atoms/Snackbar/Snackbar';
 // organisms
-import ContractionCard, { ContractionDataType } from '../../../organisms/mypage/creator/Dashboard/ContractionCard';
-import NotificationCard from '../../../organisms/mypage/creator/Dashboard/NotificationCard';
-import IncomeCard, { IncomeCashRes } from '../../../organisms/mypage/creator/Dashboard/IncomeCard';
-import AdPageCard, { ClicksRes, LevelRes } from '../../../organisms/mypage/creator/Dashboard/AdPageCard';
+import StartGuideCard from '../../../organisms/mypage/creator/shared/StartGuideCard';
+import AlertCard from '../../../organisms/mypage/creator/Dashboard/AlertCard';
+import UserInfoCard, { IncomeCashRes } from '../../../organisms/mypage/creator/Dashboard/UserInfoCard';
+import WithdrawalDialog from '../../../organisms/mypage/creator/Dashboard/WithdrawalDialog';
+import ClickAdCard, { ClicksRes, LevelRes } from '../../../organisms/mypage/creator/Dashboard/ClickAdCard';
 import IncomeChart, {
   IncomeChartData, IncomeChartParams
 } from '../../../organisms/mypage/creator/Dashboard/IncomeChart';
 import BannerCard, { CurrentBannerRes } from '../../../organisms/mypage/creator/Dashboard/BannerCard';
-import UrlCard, { OverlayUrlRes } from '../../../organisms/mypage/creator/Dashboard/OverlayUrlCard';
-import DashboardLoading from './Dashboard.loading';
+import OverlayUrlCard, { OverlayUrlRes } from '../../../organisms/mypage/creator/shared/OverlayUrlCard';
+import MypageLoading from './Mypage.loading';
+import NoticeCard, { NoticeData } from '../../../organisms/mypage/creator/Dashboard/NoticeCard';
+import CustomerServiceCard from '../../../organisms/mypage/creator/Dashboard/CustomerServiceCard';
+import EventInfoCard from '../../../organisms/mypage/creator/Dashboard/EventInfoCard';
 // hooks
 import useGetRequest from '../../../utils/hooks/useGetRequest';
 import useDialog from '../../../utils/hooks/useDialog';
+import { ContractionDataType } from './CPAManage';
+import PlatformLinkDialog from '../../../organisms/mypage/shared/PlatformLinkDialog';
+import history from '../../../history';
 
 const Dashboard = (): JSX.Element => {
   // 계약 정보 조회
-  const contractionGet = useGetRequest<null, ContractionDataType>('/creator');
+  const profileGet = useGetRequest<null, ContractionDataType>('/creator');
   // 수익금 정보 조회
   const incomeCashGet = useGetRequest<null, IncomeCashRes>('/creator/income');
   // 광고페이지 정보 조회
@@ -36,79 +43,157 @@ const Dashboard = (): JSX.Element => {
   const currentBannerGet = useGetRequest<null, CurrentBannerRes[]>('/creator/banner/active');
   // 배너 송출 URL 정보 조회
   const overlayUrlGet = useGetRequest<null, OverlayUrlRes>('/creator/banner/overlay');
-  const snack = useDialog(); // 오버레이 url 복사 성공 알림 스낵바를 위한 객체
+  // 공지사항 정보 조회
+  const noticeGet = useGetRequest<null, NoticeData[]>('/notice');
+  // 출금 내역 정보
+  const withdrawalData = useGetRequest('/creator/income/withdrawal');
+  // 리모트 컨트롤러 URL 정보
+  const remoteControllerUrlGet = useGetRequest<null, string>('/creator/banner/remote-page-url');
+
+  // 채널 연동 유도 다이얼로그
+  const platformLinkDialog = useDialog();
+
+  // 오버레이 url 복사 성공 알림 스낵바를 위한 객체
+  const snack = useDialog();
+
+  // 출금 신청 다이얼로그
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = (): void => {
+    if (incomeCashGet.data && !(incomeCashGet.data.settlementState === 2)) {
+      alert('정산등록 신청이 승인되지 않았습니다. 내 수익 관리 탭에서 정산 등록을 진행해주세요.');
+      history.push('/mypage/creator/income');
+    } else {
+      setOpen(true);
+    }
+  };
+  const handleClose = (): void => { setOpen(false); };
+
   return (
     <>
-      {(contractionGet.loading || incomeCashGet.loading
+      <div style={{ margin: '0 auto', maxWidth: 1430 }}>
+        {(profileGet.loading || incomeCashGet.loading
         || clicksGet.loading || levelGet.loading || incomeChartGet.loading
         || currentBannerGet.loading || overlayUrlGet.loading) ? (
-          <DashboardLoading />
-        ) : (
-          <GridContainer direction="row">
-            {/* 크리에이터 계약 */}
-            <GridItem sm={12} xl={10}>
-              {!contractionGet.loading && contractionGet.data && !contractionGet.data.creatorContractionAgreement && (
-                <ContractionCard
-                  contractionData={contractionGet.data}
-                  doContractionDataRequest={contractionGet.doGetRequest}
+          <MypageLoading />
+          ) : (
+            <GridContainer direction="row">
+
+              {/* 출금신청 다이얼로그 */}
+              {incomeCashGet.data && Boolean(incomeCashGet.data.creatorContractionAgreement)
+            && incomeCashGet.data.creatorAccountNumber && (
+              <WithdrawalDialog
+                open={open}
+                handleClose={handleClose}
+                realName={incomeCashGet.data.realName}
+                accountNumber={incomeCashGet.data.creatorAccountNumber}
+                receivable={incomeCashGet.data.creatorReceivable}
+              />
+              )}
+
+              {/* 배너 권장 크기 및 무효화 공지 */}
+              {!profileGet.loading && profileGet.data
+                && Boolean(profileGet.data.creatorContractionAgreement)
+                && (
+                  <Hidden smDown>
+                    <GridItem xs={12}>
+                      <AlertCard />
+                    </GridItem>
+                  </Hidden>
+                )}
+
+              {/* 온애드 시작 가이드 */}
+              <GridItem xs={12} lg={6}>
+                {!overlayUrlGet.loading && overlayUrlGet.data
+                && !profileGet.loading && profileGet.data && (
+                <StartGuideCard
+                  doContractionDataRequest={profileGet.doGetRequest}
+                  doOverlayUrlDataRequest={overlayUrlGet.doGetRequest}
+                  doRemoteControllerUrlRequest={remoteControllerUrlGet.doGetRequest}
+                  overlayUrlData={overlayUrlGet.data}
+                  contractionData={profileGet.data}
+                  handleSnackOpen={snack.handleOpen}
                 />
-              )}
-            </GridItem>
-
-            {/* 배너 권장 크기 및 무효화 공지 */}
-            <Hidden smDown>
-              <GridItem sm={12} xl={9}>
-                <NotificationCard />
+                )}
               </GridItem>
-            </Hidden>
 
-            <Hidden lgDown>
-              <GridItem xl={3} />
-            </Hidden>
+              {/* 배너 광고 송출 URL */}
+              <GridItem xs={12} lg={6}>
+                {!overlayUrlGet.loading && overlayUrlGet.data && (
+                <OverlayUrlCard
+                  overlayUrlData={overlayUrlGet.data}
+                  handleSnackOpen={snack.handleOpen}
+                />
+                )}
+              </GridItem>
 
-            <GridItem xs={12} xl={3}>
-              <GridContainer>
+              {/* 유저 정보 및 수익금 카드 */}
+              <GridItem xs={12} lg={6}>
+                {!incomeCashGet.loading && incomeCashGet.data
+                && !profileGet.loading && profileGet.data
+                && !withdrawalData.loading && (
+                <UserInfoCard
+                  userProfileData={profileGet.data}
+                  withdrawalData={withdrawalData.data}
+                  incomeData={incomeCashGet.data}
+                  handleWithdrawalDialogOpen={handleOpen}
+                />
+                )}
+              </GridItem>
 
-                {/* 수익금 카드 */}
-                <GridItem xs={12} md={6} xl={12}>
-                  {!incomeCashGet.loading && incomeCashGet.data && (
-                    <IncomeCard incomeData={incomeCashGet.data} />
-                  )}
-                </GridItem>
-
-                {/* 광고페이지 카드 */}
-                <GridItem xs={12} md={6} xl={12}>
-                  {!levelGet.loading && levelGet.data && !clicksGet.loading && clicksGet.data && (
-                    <AdPageCard levelData={levelGet.data} clicksData={clicksGet.data} />
-                  )}
-                </GridItem>
-              </GridContainer>
-            </GridItem>
-
-            {/* 수익금 차트 */}
-            <GridItem xs={12} xl={6}>
-              {!incomeChartGet.loading && (
+              {/* 수익금 차트 카드 */}
+              <GridItem xs={12} lg={6}>
+                {!incomeChartGet.loading && (
                 <IncomeChart incomeChartData={incomeChartGet.data ? incomeChartGet.data : []} />
-              )}
-            </GridItem>
+                )}
+              </GridItem>
 
-            {/* 현재 송출중 배너 카드 */}
-            <GridItem xs={12} sm={6} lg={4}>
-              {!incomeChartGet.loading && (
-                <BannerCard currentBannerData={currentBannerGet.data ? currentBannerGet.data : []} />
-              )}
-            </GridItem>
+              {/* 현재 송출중 배너 카드 */}
+              <GridItem xs={12} lg={6}>
+                {!incomeChartGet.loading && (
+                <BannerCard
+                  remoteControllerUrlData={remoteControllerUrlGet}
+                  currentBannerData={currentBannerGet.data ? currentBannerGet.data : []}
+                />
+                )}
+              </GridItem>
 
-            {/* 배너 광고 송출 URL */}
-            <GridItem xs={12} sm={6} lg={4}>
-              {!overlayUrlGet.loading && overlayUrlGet.data && (
-                <UrlCard overlayUrlData={overlayUrlGet.data} handleSnackOpen={snack.handleOpen} />
-              )}
-            </GridItem>
+              {/* 클릭광고 카드 */}
+              <GridItem xs={12} lg={6}>
+                {!levelGet.loading && levelGet.data && !clicksGet.loading && clicksGet.data && (
+                <ClickAdCard levelData={levelGet.data} clicksData={clicksGet.data} />
+                )}
+              </GridItem>
 
-            <GridItem xs={12} sm={1} xl={2} />
-          </GridContainer>
-        )}
+              {/* 공지사항 카드 */}
+              <GridItem xs={12} sm={6}>
+                {!noticeGet.loading && noticeGet.data && (
+                  <NoticeCard noticeData={noticeGet.data} />
+                )}
+              </GridItem>
+
+              {/* 고객센터 카드 */}
+              <GridItem xs={12} sm={6} lg={3}>
+                <CustomerServiceCard />
+              </GridItem>
+
+              {/* 이벤트 알림 카드 */}
+              <GridItem xs={12} sm={6} lg={3}>
+                <EventInfoCard />
+              </GridItem>
+
+            </GridContainer>
+          )}
+      </div>
+
+      {!profileGet.loading && profileGet.data
+      && (!profileGet.data.creatorTwitchOriginalId && !profileGet.data.afreecaId)
+      && (
+      <PlatformLinkDialog
+        open={platformLinkDialog.open}
+        handleOpen={platformLinkDialog.handleOpen}
+        onClose={platformLinkDialog.handleClose}
+      />
+      )}
 
       <Snackbar
         color="success"

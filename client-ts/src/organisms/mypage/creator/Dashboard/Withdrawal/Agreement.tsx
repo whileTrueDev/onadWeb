@@ -92,7 +92,7 @@ const WithdrawalAgreement = ({
           {/* 계약 내용 */}
           <div className={classes.inDialogContent}>
             {terms.agreement.split('\n').map((sentence) => (
-              <p key={shortid.generate()} className={classes.names}>{sentence}</p>
+              <Typography variant="body2" key={shortid.generate()} className={classes.names}>{sentence}</Typography>
             ))}
 
             <div style={{ textAlign: 'right' }}>

@@ -65,7 +65,7 @@ export default function ReChartBar<DataType extends IncomeChartData>({
           data={nopreprocessing ? data : makeBarChartData<DataType>(data)}
           stackOffset="sign"
           margin={{
-            top: 20, right: 30, left: 20, bottom: 5
+            right: theme.spacing(3),
           }}
         >
           <CartesianGrid strokeDasharray="3 3" />

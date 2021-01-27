@@ -1,119 +1,129 @@
 import React from 'react';
-import shortid from 'shortid';
-import { Grid, Typography } from '@material-ui/core';
+import { Grid, Paper, Typography } from '@material-ui/core';
 import { makeStyles, Theme } from '@material-ui/core/styles';
-import BrandingWatermark from '@material-ui/icons/BrandingWatermark';
-import Button from '../../../../atoms/CustomButtons/Button';
-import CustomCard from '../../../../atoms/CustomCard';
-import StyledItemText from '../../../../atoms/StyledItemText';
-import VideoBanner from '../../../../atoms/Banner/VideoBanner';
-import isVideo from '../../../../utils/isVideo';
+import RemotePageOpenButton from '../RemotePage/sub/RemotePageOpenButton';
 import history from '../../../../history';
+import { UseGetRequestObject } from '../../../../utils/hooks/useGetRequest';
+import OnadBanner from '../../../../atoms/Banner/OnadBanner';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  area: {
-    marginTop: theme.spacing(4),
-    marginBottom: theme.spacing(4),
+  container: {
+    padding: theme.spacing(4), marginTop: theme.spacing(1), height: 280, overflowY: 'auto'
   },
-  head: { fontWeight: 700 }
+  bold: { fontWeight: 'bold' },
+  section: { marginTop: theme.spacing(2) },
+  bannerContainer: { display: 'flex', alignItems: 'center' },
+  bannerItem: { maxHeight: '160px', maxWidth: '320px', },
+  area: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    minHeight: 150,
+    [theme.breakpoints.down('xs')]: { minHeight: 100 },
+  },
+  right: { textAlign: 'right' },
+  moreButton: {
+    cursor: 'pointer',
+    '&:hover': { textDecoration: 'underline', }
+  },
+  head: { fontWeight: 700 },
+  title: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    [theme.breakpoints.down('xs')]: {
+      display: 'block'
+    }
+  },
+  remoteOpenButtonContainer: {
+    [theme.breakpoints.down('xs')]: { marginTop: theme.spacing(1) },
+  }
 }));
 
 export interface CurrentBannerRes {
   marketerName: string; bannerSrc: string;
+  campaignName: string;
+  campaignDescription: string;
 }
 
-interface BannerCardProps { currentBannerData: CurrentBannerRes[] }
-function BannerCard({ currentBannerData }: BannerCardProps): JSX.Element {
+interface BannerCardProps {
+  currentBannerData: CurrentBannerRes[];
+  remoteControllerUrlData: UseGetRequestObject<string>;
+}
+function BannerCard({
+  currentBannerData,
+  remoteControllerUrlData,
+}: BannerCardProps): JSX.Element {
   const classes = useStyles();
-  const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
-  const [descIndex, setDescIndex] = React.useState(0); // popover의 내용 Index
-
-  const handlePopoverClose = (): void => {
-    setAnchorEl(null);
-  };
-
-  const handlePopoverOpen = (index: number) => (
-    event: React.MouseEvent<HTMLElement>
-  ): void => {
-    if (index !== descIndex) {
-      handlePopoverClose();
-    }
-    setDescIndex(index);
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handlePopoverClick = (index: number) => (
-    event: React.MouseEvent<HTMLElement>
-  ): void => {
-    if (anchorEl) {
-      setAnchorEl(null);
-    } else {
-      setDescIndex(index);
-      setAnchorEl(event.currentTarget);
-    }
-  };
 
   return (
-    <CustomCard
-      iconComponent={<BrandingWatermark />}
-      buttonComponent={(
-        <Button
-          color="primary"
-          onClick={(): void => { history.push('/mypage/creator/banner'); }}
-        >
-          배너광고내역
-        </Button>
-      )}
-    >
-      <Grid container direction="column" spacing={2}>
-        <Grid item>
-          <StyledItemText primary="현재 송출중인 배너광고" secondary="내 배너광고로 이동하면 상세정보를 확인할 수 있습니다." />
-        </Grid>
-        <Grid container direction="row" spacing={1} justify="center">
-          {currentBannerData.map((bannerData, index) => (
-            <Grid
-              item
-              xs={12}
-              lg={6}
-              onClick={handlePopoverClick(index)}
-              key={shortid.generate()}
-            >
-              {isVideo(bannerData.bannerSrc) ? (
-                <VideoBanner
-                  src={bannerData.bannerSrc}
-                  onMouseEnter={handlePopoverOpen(index)}
-                  onMouseLeave={handlePopoverClose}
-                  alt="bannerArea"
-                  width="100%"
-                  height="100%"
-                  style={{ maxHeight: '160px', maxWidth: '320px' }}
-                />
-              ) : (
-                <img
-                  src={bannerData.bannerSrc}
-                  onMouseEnter={handlePopoverOpen(index)}
-                  onMouseLeave={handlePopoverClose}
-                  alt="bannerArea"
-                  width="100%"
-                  height="100%"
-                  style={{ maxHeight: '160px', maxWidth: '320px' }}
-                />
-              )}
+    <Paper className={classes.container}>
+      {/* 제목 */}
+      <div className={classes.title}>
+        <div>
+          <Typography className={classes.bold}>
+          현재 송출중인 배너광고
+          </Typography>
+          <Typography variant="caption">
+          내 광고관리 탭에서 자세히 확인할 수 있습니다.
+          </Typography>
+        </div>
+
+        {/* 실시간 광고 제어 버튼 */}
+        <div className={classes.remoteOpenButtonContainer}>
+          <RemotePageOpenButton remoteControllerUrl={remoteControllerUrlData} />
+        </div>
+      </div>
+
+      <div className={classes.section}>
+        {currentBannerData.length <= 0 && (
+        <div className={classes.area}>
+          <div style={{ textAlign: 'center' }}>
+            <Typography variant="body1" className={classes.head}>
+              매칭된 광고가 없습니다.
+            </Typography>
+            <Typography variant="body2" color="textSecondary">정확하게 표시되지 않을 수 있습니다.</Typography>
+          </div>
+        </div>
+        )}
+        {currentBannerData.map((bannerData) => (
+          <Grid
+            container
+            spacing={2}
+            key={bannerData.campaignDescription}
+            className={classes.bannerContainer}
+          >
+            <Grid item xs={12} md={6} className={classes.bannerItem}>
+              <OnadBanner
+                src={bannerData.bannerSrc}
+                alt="bannerArea"
+                width="100%"
+                height="100%"
+              />
             </Grid>
-          ))}
-          {currentBannerData.length <= 0 && (
-            <div className={classes.area}>
-              <Typography variant="h6" className={classes.head}>
-                <span role="img" aria-label="caution">🚫</span>
-                {' '}
-                매칭된 광고가 없습니다.
+            <Grid item xs={12} lg={6}>
+              <Typography variant="body1" gutterBottom>
+                {bannerData.campaignName}
               </Typography>
-            </div>
-          )}
-        </Grid>
-        <Grid item />
-      </Grid>
-    </CustomCard>
+              <Typography variant="body2">
+                {bannerData.campaignDescription}
+              </Typography>
+            </Grid>
+          </Grid>
+        ))}
+      </div>
+
+      <div className={classes.right}>
+        <Typography
+          className={classes.moreButton}
+          variant="caption"
+          color="textSecondary"
+          onClick={(): void => { history.push('/mypage/creator/ad'); }}
+        >
+          자세히 보기
+        </Typography>
+      </div>
+    </Paper>
   );
 }
 

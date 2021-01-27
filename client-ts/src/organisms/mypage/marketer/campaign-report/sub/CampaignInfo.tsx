@@ -2,8 +2,7 @@ import React from 'react';
 import { Typography, Grid, Divider } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { CampaignInterface } from '../../dashboard/interfaces';
-import VideoBanner from '../../../../../atoms/Banner/VideoBanner';
-import isVideo from '../../../../../utils/isVideo';
+import OnadBanner from '../../../../../atoms/Banner/OnadBanner';
 
 /**
  * 우선 순위 타입넘버에 해당하는 문자열 반환
@@ -69,7 +68,6 @@ function makeContent(selectedCampaign: CampaignInterface): { topic: string; valu
     },
     { topic: '캠페인 유형', value: getOptionType(selectedCampaign.optionType) },
     { topic: '캠페인 생성 날짜', value: new Date(selectedCampaign.regiDate).toLocaleString() },
-    { topic: '', value: '' },
   ];
 }
 
@@ -88,16 +86,11 @@ export default function CampaignInfo(props: CampaignInfoProps): JSX.Element {
         <div className={classes.container}>
           <Typography variant="h5">배너 이미지</Typography>
           <Divider className={classes.divierHalf} />
-
-          { isVideo(selectedCampaign.bannerSrc) ? (
-            <VideoBanner className={classes.img} src={selectedCampaign.bannerSrc} />
-          ) : (
-            <img
-              className={classes.img}
-              src={selectedCampaign.bannerSrc}
-              alt={selectedCampaign.campaignName}
-            />
-          )}
+          <OnadBanner
+            className={classes.img}
+            src={selectedCampaign.bannerSrc}
+            alt={selectedCampaign.campaignName}
+          />
         </div>
       </Grid>
       {data.map((d) => (

@@ -1,13 +1,14 @@
 import React, { useCallback } from 'react';
+import { AxiosResponse } from 'axios';
 import axios from '../axios';
 import host from '../../config';
 
 const DEFAULT_ERROR_MESSAGE = '죄송합니다.. 수정중 오류가 발생했습니다..';
 export interface UsePatchRequestObject<T, P> {
   success: true | null;
-  loading?: boolean;
+  loading: boolean;
   error: string;
-  doPatchRequest: (param: T) => void;
+  doPatchRequest: (param?: T) => Promise<AxiosResponse<P>>;
   data: P | null;
 }
 /**
@@ -39,13 +40,13 @@ export default function usePatchRequest<PARAM_TYPE = {[key: string]: any}, RES_D
 ): UsePatchRequestObject<PARAM_TYPE, RES_DATA_TYPE> {
   const [success, setSuccess] = React.useState<true | null>(null);
   const [data, setData] = React.useState<RES_DATA_TYPE | null>(null);
-  const [loading, setLoading] = React.useState<boolean | undefined>(undefined);
+  const [loading, setLoading] = React.useState<boolean>(false);
   const [error, setError] = React.useState('');
 
-  const doPatchRequest = useCallback((param: PARAM_TYPE): void => {
+  const doPatchRequest = useCallback(async (
+    param?: PARAM_TYPE): Promise<AxiosResponse<RES_DATA_TYPE>> => {
     setLoading(true); // 로딩 시작
-    axios.patch<RES_DATA_TYPE>(`${host}${url}`,
-      { ...param })
+    return axios.patch<RES_DATA_TYPE>(`${host}${url}`, { ...param })
       .then((res) => {
         setLoading(false); // 로딩 완료
 
@@ -54,7 +55,9 @@ export default function usePatchRequest<PARAM_TYPE = {[key: string]: any}, RES_D
         if (Math.floor(status / 100) === 2) {
           setSuccess(true);
           if (successCallback) { successCallback(); }
+          return res;
         }
+        return res;
       })
       .catch((err) => {
         setLoading(false); // 로딩 완료
@@ -73,6 +76,7 @@ export default function usePatchRequest<PARAM_TYPE = {[key: string]: any}, RES_D
           console.log('오류를 발생시킨 요청을 설정하는 중에 문제가 발생했습니다');
           setError(DEFAULT_ERROR_MESSAGE);
         }
+        throw err;
       });
   }, [successCallback, url]);
 

@@ -46,7 +46,7 @@ router.route('/user')
       (
       select 
       creatorName, creatorLogo, creatorTwitchId, creatorId
-      from creatorInfo 
+      from creatorInfo
       WHERE creatorTwitchId = ? 
       ) as ci
       join 

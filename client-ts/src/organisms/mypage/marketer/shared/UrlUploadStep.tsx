@@ -2,8 +2,8 @@ import React from 'react';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 
 import {
-  Grid, InputLabel, Input, FormHelperText,
-  FormControlLabel, Checkbox, Collapse,
+  Grid, InputLabel, Input, FormHelperText, Collapse,
+  //  FormControlLabel, Checkbox,
 } from '@material-ui/core';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -60,7 +60,7 @@ const UrlUploadStep = (props: any): JSX.Element => {
       <FormHelperText>* 시청자가 채팅광고 또는 패널 클릭시 접속될 웹페이지를 작성해주세요</FormHelperText>
       <FormHelperText>* URL 이름은 URL 구분을 위해 사용됩니다.</FormHelperText>
 
-      <Grid item>
+      {/* <Grid item>
         <FormControlLabel
           control={(
             <Checkbox
@@ -78,7 +78,7 @@ const UrlUploadStep = (props: any): JSX.Element => {
           labelPlacement="end"
         />
         <FormHelperText>SUB URL은 향후 CPA 상품 개발 시 사용될 예정입니다.</FormHelperText>
-      </Grid>
+      </Grid> */}
 
       <Collapse in={subOpen.toggle}>
         <Grid item>

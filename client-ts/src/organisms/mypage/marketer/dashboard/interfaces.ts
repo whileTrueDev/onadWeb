@@ -1,4 +1,5 @@
 export interface CampaignInterface {
+  id: string;
   campaignId: string;
   campaignName: string;
   optionType: number;
@@ -6,7 +7,10 @@ export interface CampaignInterface {
   regiDate: string;
   onOff: number;
   confirmState: number;
+  bannerId: string;
   bannerSrc: string;
+  bannerRegiDate: string;
+  linkId: string;
   linkData: {
     links: {
       primary: boolean;
@@ -66,8 +70,15 @@ export interface ReportInterfaceV2 {
 export interface CreatorDataInterface {
   creatorId: string;
   creatorName: string;
+  // twitch information
   creatorTwitchId: string;
+  creatorTwitchName: string;
   creatorLogo: string;
+  // afreeca information
+  afreecaId: string;
+  afreecaName: string;
+  afreecaLogo: string;
+
   total_ad_exposure_amount: number;
   viewer: number;
   followers: number;

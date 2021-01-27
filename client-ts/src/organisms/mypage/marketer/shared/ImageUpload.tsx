@@ -3,8 +3,8 @@ import { makeStyles, Theme } from '@material-ui/core/styles';
 import {
   Grid, Hidden, Typography, Button
 } from '@material-ui/core';
-import VideoBanner from '../../../../atoms/Banner/VideoBanner';
-import isVideo from '../../../../utils/isVideo';
+import { Alert } from '@material-ui/lab';
+import OnadBanner from '../../../../atoms/Banner/OnadBanner';
 
 
 const useStyle = makeStyles((theme: Theme) => ({
@@ -84,21 +84,20 @@ const ImageUpload = (props: ImageUploadProps): JSX.Element => {
 
   return (
     <div>
-      {state.imageUrl && isVideo(state.imageUrl) ? (
-        <VideoBanner
-          className={classes.imgPreview}
-          src={state.imageUrl}
-          onError={(): void => { dispatch({ type: 'reset' }); }}
-        />
-      ) : (
-        <img
+      {state.imageUrl && (
+        <OnadBanner
           id="preview"
           src={state.imageUrl}
           className={classes.imgPreview}
+          width="320"
+          height="160"
           onError={(): void => { dispatch({ type: 'reset' }); }}
           alt="배너이미지"
         />
       )}
+      <Alert severity="info">
+        <Typography>배너이미지의 배경이 있을 때 명확하게 잘 보입니다.</Typography>
+      </Alert>
       <div className="filebox">
         <Grid container direction="row" justify="flex-end">
           <Grid item className={classes.container}>
@@ -118,7 +117,6 @@ const ImageUpload = (props: ImageUploadProps): JSX.Element => {
           </Grid>
         </Grid>
       </div>
-      <Typography variant="h6">* 배너이미지는 배경이 존재해야 합니다.</Typography>
 
     </div>
 

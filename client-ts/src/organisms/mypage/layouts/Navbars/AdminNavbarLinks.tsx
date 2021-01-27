@@ -1,18 +1,13 @@
-import React, { useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useRef, useState } from 'react';
 // @material-ui/core components
 import Tooltip from '@material-ui/core/Tooltip';
 import Badge from '@material-ui/core/Badge';
-import Hidden from '@material-ui/core/Hidden';
 import IconButton from '@material-ui/core/IconButton';
 // @material-ui/icons
 import Notifications from '@material-ui/icons/Notifications';
-import Person from '@material-ui/icons/Person';
-import Home from '@material-ui/icons/Home';
-import SpeakerNotes from '@material-ui/icons/SpeakerNotes';
-import PowerSettingsNew from '@material-ui/icons/PowerSettingsNew';
 // core components
-import NotificationPopper from './NotificationPopper';
+import { Avatar, capitalize, makeStyles } from '@material-ui/core';
+import NotificationPopper from './sub/NotificationPopper';
 // utils
 import axios from '../../../../utils/axios';
 import history from '../../../../history';
@@ -22,8 +17,16 @@ import useGetRequest from '../../../../utils/hooks/useGetRequest';
 import useAnchorEl from '../../../../utils/hooks/useAnchorEl';
 // types
 import { NoticeDataParam, NoticeDataRes } from './NotificationType';
+import UserPopover from './sub/UserPopover';
+import { ContractionDataType } from '../../../../pages/mypage/creator/CPAManage';
+import MarketerPopover, { MarketerInfoRes } from './sub/MarketerPopover';
+
+const useStyles = makeStyles((theme) => ({
+  avatar: { width: theme.spacing(4), height: theme.spacing(4) }
+}));
 
 function HeaderLinks(): JSX.Element {
+  const classes = useStyles();
   const userType = window.location.pathname.split('/')[2];
 
   // 개인 알림
@@ -61,99 +64,115 @@ function HeaderLinks(): JSX.Element {
   }, [handleAnchorOpenWithRef, isAlreadyRendered, notificationGet.data, notificationGet.loading]);
   // ------ For 읽지않은 알림 존재 시 알림 컴포넌트 열어두기 ------
 
+
+  // 유저 로고 클릭시의 설정 리스트
+  const userLogoAnchor = useAnchorEl();
+  // anchorEl, handleAnchorOpen, handleAnchorOpenWithRef, handleAnchorClose
+
+  // 유저 정보 조회
+  const userProfileGet = useGetRequest<null, ContractionDataType>('/creator');
+  const marketerProfileGet = useGetRequest<null, MarketerInfoRes>('/marketer');
+
+  const [type] = useState(window.document.location.pathname.includes('/creator/') ? 'creator' : 'marketer');
+
   return (
     <div>
-      {/* notification */}
-      <Hidden smDown>
-        <Tooltip title="알림">
-          <IconButton
-            aria-label="notifications"
-            ref={notificationRef}
-            onClick={(e): void => {
-              if (anchorEl) { handleAnchorClose(); } else { handleAnchorOpen(e); }
-            }}
-          >
-            <Badge
-              badgeContent={!notificationGet.loading && notificationGet.data
-                ? (notificationGet.data.notifications.filter((noti) => noti.readState === 0).length)
-                : (null)}
-              color="secondary"
-            >
-              <Notifications />
-            </Badge>
-          </IconButton>
-        </Tooltip>
-      </Hidden>
 
-      <Hidden smDown>
-        {anchorEl && !notificationGet.loading && notificationGet.data && (
+      {/* notification */}
+      <Tooltip title="알림">
+        <IconButton
+          size="medium"
+          aria-label="notifications"
+          ref={notificationRef}
+          onClick={(e): void => {
+            if (anchorEl) { handleAnchorClose(); } else { handleAnchorOpen(e); }
+          }}
+        >
+          <Badge
+            badgeContent={!notificationGet.loading && notificationGet.data
+              ? (notificationGet.data.notifications.filter((noti) => noti.readState === 0).length)
+              : (null)}
+            color="secondary"
+          >
+            <Notifications fontSize="default" />
+          </Badge>
+        </IconButton>
+      </Tooltip>
+
+      <IconButton size="small" onClick={userLogoAnchor.handleAnchorOpen}>
+        {/* 읽지않은 공지사항이 있는 경우 뱃지 표시 */}
+        {!noticeReadFlagGet.loading && noticeReadFlagGet.data
+          && noticeReadFlagGet.data.noticeReadState === 0 ? (
+            <Badge variant="dot" color="primary">
+              <div>
+                {type === 'creator' && (
+                  <Avatar className={classes.avatar} src={userProfileGet.data ? userProfileGet.data.creatorLogo || userProfileGet.data.afreecaLogo : ''}>
+                    {userProfileGet.data && userProfileGet.data.loginId ? capitalize(userProfileGet.data.loginId[0]) : ''}
+                  </Avatar>
+                )}
+                {type === 'marketer' && (
+                <Avatar className={classes.avatar}>
+                  {marketerProfileGet.data ? marketerProfileGet.data.marketerName.slice(0, 1) : ''}
+                </Avatar>
+                )}
+              </div>
+            </Badge>
+          ) : (
+            <div>
+              {/* 읽지않은 공지사항이 없는 경우 */}
+              {type === 'creator' && (
+              <Avatar className={classes.avatar} src={userProfileGet.data ? userProfileGet.data.creatorLogo || userProfileGet.data.afreecaLogo : ''}>
+                {userProfileGet.data && userProfileGet.data.loginId ? capitalize(userProfileGet.data.loginId[0]) : ''}
+              </Avatar>
+              )}
+              {type === 'marketer' && (
+              <Avatar className={classes.avatar} />
+              )}
+            </div>
+          )}
+
+      </IconButton>
+
+
+      {/* 알림 popover 모바일 크기 최적화 필요 */}
+      {anchorEl && !notificationGet.loading && notificationGet.data && (
         <NotificationPopper
           anchorEl={anchorEl}
+          handleAnchorClose={handleAnchorClose}
           notificationData={notificationGet.data.notifications}
           successCallback={notificationGet.doGetRequest}
         />
-        )}
-      </Hidden>
+      )}
 
-      <Hidden smDown>
-        <Tooltip title="계정관리로 이동">
-          <IconButton
-            aria-label="User"
-            to={window.location.pathname.includes('marketer')
-              ? '/mypage/marketer/myoffice'
-              : '/mypage/creator/user'}
-            component={Link}
-          >
-            <Person />
-          </IconButton>
-        </Tooltip>
-      </Hidden>
+      {/* 유저 설정 리스트 */}
+      {type === 'creator' && !userProfileGet.loading && userProfileGet.data && (
+      <UserPopover
+        open={userLogoAnchor.open}
+        userData={userProfileGet.data}
+        anchorEl={userLogoAnchor.anchorEl}
+        handleAnchorClose={userLogoAnchor.handleAnchorClose}
+        handleLogoutClick={handleLogoutClick}
+        noticeReadFlagGet={noticeReadFlagGet}
+        doNoticePatchRequest={() => {
+          noticeReadFlagPatch.doPatchRequest({ userType });
+        }}
+      />
+      )}
 
-      <Hidden smDown>
-        <Tooltip title="공지사항으로 이동">
-          <IconButton
-            aria-label="to-notice"
-            to="/notice"
-            component={Link}
-            onClick={(): void => {
-              if (!noticeReadFlagGet.loading && noticeReadFlagGet.data) {
-                noticeReadFlagPatch.doPatchRequest({ userType });
-              }
-            }}
-          >
-            {!noticeReadFlagGet.loading
-            && noticeReadFlagGet.data
-            && noticeReadFlagGet.data.noticeReadState === 0 ? (
-              <Badge variant="dot" color="primary">
-                <SpeakerNotes />
-              </Badge>
-              ) : (
-                <SpeakerNotes />
-              )}
-          </IconButton>
-        </Tooltip>
-      </Hidden>
-
-      <Hidden smDown>
-        <Tooltip title="홈으로 이동">
-          <IconButton
-            aria-label="to-home"
-            to="/"
-            component={Link}
-          >
-            <Home />
-          </IconButton>
-        </Tooltip>
-      </Hidden>
-
-      <Tooltip title="로그아웃">
-        <IconButton
-          onClick={handleLogoutClick}
-          aria-label="logout"
-        >
-          <PowerSettingsNew />
-        </IconButton>
-      </Tooltip>
+      {/* 유저 설정 리스트 */}
+      {type === 'marketer' && !marketerProfileGet.loading && marketerProfileGet.data && (
+      <MarketerPopover
+        open={userLogoAnchor.open}
+        userData={marketerProfileGet.data}
+        anchorEl={userLogoAnchor.anchorEl}
+        handleAnchorClose={userLogoAnchor.handleAnchorClose}
+        handleLogoutClick={handleLogoutClick}
+        noticeReadFlagGet={noticeReadFlagGet}
+        doNoticePatchRequest={() => {
+          noticeReadFlagPatch.doPatchRequest({ userType });
+        }}
+      />
+      )}
     </div>
   );
 }
