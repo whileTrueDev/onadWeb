@@ -43,7 +43,7 @@ const UserDataForm = (props: UserDataFormProps): JSX.Element => {
     <Paper className={classes.container}>
 
       <div className={classes.hero}>
-        <Avatar variant="circle" className={classes.avatar} />
+        <Avatar variant="circular" className={classes.avatar} />
         <div>
           <Typography variant="h6" style={{ fontWeight: 'bold' }}>
             {userData.marketerName}

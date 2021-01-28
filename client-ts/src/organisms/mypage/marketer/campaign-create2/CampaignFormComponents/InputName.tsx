@@ -29,7 +29,7 @@ const InputName = (props: InputNameProps): JSX.Element => {
             secondary={(
               <Typography variant="body2" color="textSecondary">
                 캠페인 구분을 위해 사용됩니다.
-                <Typography color="error" variant="caption">(최소 2자)</Typography>
+                <Typography color="error" variant="caption">(최소 2자, 최대 20자)</Typography>
               </Typography>
             )}
             className={classes.label}
@@ -44,7 +44,7 @@ const InputName = (props: InputNameProps): JSX.Element => {
             inputRef={nameInputRef}
             inputProps={{
               minLength: 2,
-              maxLength: 50,
+              maxLength: 20,
               required: true
             }}
           />

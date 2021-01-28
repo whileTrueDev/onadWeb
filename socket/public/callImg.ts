@@ -184,12 +184,16 @@ function callImg(socket: Socket, msg: string[]): void {
   };
 
   // "하나의 gameId" + "카테고리무관" 에 해당하는 모든 캠페인 리스트를 반환하는 Promise
-  const getGameCampaignList = async (gameId: string): Promise<string[]> => {
+  const getGameCampaignList = async (gameId: string, isDefault = false): Promise<string[]> => {
     // ************************************************************
     // 트위치 카테고리의 경우
     const CATEGORY_WHATEVER = '14';
 
     let returnList: string[] = [];
+    if (isDefault) {
+      returnList = await getCategoryCampaignList(gameId);
+      return returnList;
+    }
     await Promise.all([
       getCategoryCampaignList(gameId),
       getCategoryCampaignList(CATEGORY_WHATEVER)
@@ -338,9 +342,27 @@ function callImg(socket: Socket, msg: string[]): void {
       linkToChatBot = await getLinkName(myCampaignId);
     } else {
       // 송출할 광고 없다.
-      socket.emit('img clear', []);
-      console.log(`${creatorId} / 켜져있는 광고 없음 / ${getTime}`);
-      return [false, false, false];
+      // 기본배너 검색
+      const categoryCampaignList = await getGameCampaignList('-1', true);
+      console.log(`${creatorId} 기본 배너 검색 / ${getTime}`);
+      const onCategorycampaignList = categoryCampaignList
+        .filter((campaignId) => onCampaignList.includes(campaignId));
+      const extractPausedCampaignList = onCategorycampaignList
+        .filter((campaignId) => !checkList.pausedList.includes(campaignId)); // 일시정지 배너 거르기.
+      const extractBanCampaignList = extractPausedCampaignList
+        .filter((campaignId) => !checkList.banList.includes(campaignId)); // 마지막에 banList를 통해 거르기.
+      const returnCampaignId = extractBanCampaignList[getRandomInt(extractBanCampaignList.length)];
+      myCampaignId = returnCampaignId;
+      if (myCampaignId) {
+        // 기본 배너 송출
+        console.log(`${creatorId} 기본 배너 송출 / ${getTime}`);
+        linkToChatBot = await getLinkName(myCampaignId);
+      } else {
+        // 기본 배너도 꺼둔 경우
+        socket.emit('img clear', []);
+        console.log(`${creatorId} / 켜져있는 광고 없음 / ${getTime}`);
+        return [false, false, false];
+      }
     }
 
     // 이전 송출하던 배너와 현재 배너가 같은 경우

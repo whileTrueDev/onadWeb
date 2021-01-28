@@ -1,3 +1,9 @@
+export interface CampaignTargetCreator {
+  creatorTwitchId?: string;
+  creatorName?: string;
+  afreecaId?: string;
+  afreecaName?: string;
+}
 export interface CampaignInterface {
   id: string;
   campaignId: string;
@@ -22,6 +28,11 @@ export interface CampaignInterface {
   dailyLimit: number;
   dailysum: number;
   campaignDescription: string;
+  startDate: string;
+  finDate: string;
+  selectedTime: number[];
+  targetList: string[];
+  targetCreators?: CampaignTargetCreator[];
 }
 
 export interface OnOffInterface {

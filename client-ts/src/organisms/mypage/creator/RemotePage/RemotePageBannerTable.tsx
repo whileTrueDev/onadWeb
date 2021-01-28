@@ -12,6 +12,7 @@ import useDialog from '../../../../utils/hooks/useDialog';
 import usePatchRequest from '../../../../utils/hooks/usePatchRequest';
 import useGetRequest from '../../../../utils/hooks/useGetRequest';
 import OnadBanner from '../../../../atoms/Banner/OnadBanner';
+import renderPriorityType from '../../../../utils/render_funcs/renderPriorityType';
 
 const useStyles = makeStyles(() => ({
   th: {
@@ -79,7 +80,7 @@ const RemotePageBannerTable = (props: RemotePageBannerTable): JSX.Element => {
           <Chip
             className={classes.chip}
             size="small"
-            label="크리에이터 우선형"
+            label={renderPriorityType(category)}
           />
           <Typography variant="body2">
             <span style={{ fontWeight: 'bold' }}>
@@ -95,7 +96,7 @@ const RemotePageBannerTable = (props: RemotePageBannerTable): JSX.Element => {
             className={classes.chip}
             color="primary"
             size="small"
-            label="카테고리 우선형"
+            label={renderPriorityType(category)}
           />
           <Typography variant="body2">
             <span style={{ fontWeight: 'bold' }}>
@@ -115,7 +116,7 @@ const RemotePageBannerTable = (props: RemotePageBannerTable): JSX.Element => {
       default: return (
         <TableCell>
           <Typography variant="body2">
-            자동으로 매칭되는 광고입니다.
+            수익이 창출되지 않는 온애드 기본 배너입니다.
           </Typography>
         </TableCell>
       );

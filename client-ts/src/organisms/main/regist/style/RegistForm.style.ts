@@ -41,14 +41,11 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'center',
   },
   switch: {
-    '& .MuiFormControlLabel-label': {
-      fontSize: '11px',
-      color: 'black'
-    },
     margin: 0,
     marginTop: theme.spacing(3),
     padding: 0,
-  }
+  },
+  switchLabel: { fontSize: theme.typography.caption.fontSize, },
 }));
 
 

@@ -28,7 +28,7 @@ const RegistDialog = ({ open, handleClose }: Props) => {
       maxWidth="xs"
       fullWidth
     >
-      <DialogTitle className={classes.title}>REGIST</DialogTitle>
+      <DialogTitle className={classes.title}>광고주 회원가입</DialogTitle>
       <DialogContent>
         <Grid container direction="column" className={classes.contents}>
           <Grid item>
@@ -43,14 +43,12 @@ const RegistDialog = ({ open, handleClose }: Props) => {
             </CustomButton>
           </Grid>
           <Grid item>
-            <Typography style={{
-              fontSize: 15,
-              fontFamily:
-               'Noto Sans kr',
-              marginTop: '20px',
-              color: theme.palette.text.hint,
-              marginBottom: '3px'
-            }}
+            <Typography
+              color="textSecondary"
+              style={{
+                marginTop: 16,
+                marginBottom: '3px'
+              }}
             >
               소셜 계정으로 온애드 시작하기
             </Typography>
