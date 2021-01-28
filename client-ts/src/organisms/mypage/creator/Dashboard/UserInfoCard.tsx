@@ -111,7 +111,7 @@ const UserInfoCard = ({
       {/* 유저 정보 섹션 */}
       <div className={classes.infoSection}>
         <Avatar
-          variant="circle"
+          variant="circular"
           className={classes.avatar}
           src={userProfileData.creatorLogo}
         />

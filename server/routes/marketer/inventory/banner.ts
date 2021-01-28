@@ -87,7 +87,7 @@ router.route('/')
   .post(
     responseHelper.middleware.checkSessionExists,
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
-      const [bannerSrc] = responseHelper.getParam(['bannerSrc'], 'PUT', req);
+      const [bannerSrc] = responseHelper.getParam(['bannerSrc'], 'POST', req);
       const { marketerId } = responseHelper.getSessionData(req);
       const searchQuery = `
             SELECT bannerId 

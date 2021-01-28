@@ -25,19 +25,22 @@ const useStyles = makeStyles((theme) => ({
   avatar: { width: theme.spacing(4), height: theme.spacing(4) }
 }));
 
-function HeaderLinks(): JSX.Element {
+export default function AdminNavbarLinks(): JSX.Element {
   const classes = useStyles();
-  const userType = window.location.pathname.split('/')[2];
+
+  const [type] = useState<'creator' | 'marketer'>(
+    window.document.location.pathname.includes('/creator/') ? 'creator' : 'marketer'
+  );
 
   // 개인 알림
-  const notificationGet = useGetRequest<NoticeDataParam, NoticeDataRes>(`/${userType}/notification`);
+  const notificationGet = useGetRequest<NoticeDataParam, NoticeDataRes>(`/${type}/notification`);
   const {
     anchorEl, handleAnchorOpen, handleAnchorOpenWithRef, handleAnchorClose
   } = useAnchorEl();
 
   // 공지사항
-  const noticeReadFlagGet = useGetRequest<{userType: string}, {noticeReadState: number}>(
-    '/notice/read-flag', { userType }
+  const noticeReadFlagGet = useGetRequest<any, {noticeReadState: number}>(
+    '/notice/read-flag', { userType: type }
   );
   const noticeReadFlagPatch = usePatchRequest('/notice/read-flag', () => {
     noticeReadFlagGet.doGetRequest();
@@ -70,10 +73,7 @@ function HeaderLinks(): JSX.Element {
   // anchorEl, handleAnchorOpen, handleAnchorOpenWithRef, handleAnchorClose
 
   // 유저 정보 조회
-  const userProfileGet = useGetRequest<null, ContractionDataType>('/creator');
-  const marketerProfileGet = useGetRequest<null, MarketerInfoRes>('/marketer');
-
-  const [type] = useState(window.document.location.pathname.includes('/creator/') ? 'creator' : 'marketer');
+  const userProfileGet = useGetRequest<null, ContractionDataType & MarketerInfoRes>(`/${type}`);
 
   return (
     <div>
@@ -112,7 +112,7 @@ function HeaderLinks(): JSX.Element {
                 )}
                 {type === 'marketer' && (
                 <Avatar className={classes.avatar}>
-                  {marketerProfileGet.data ? marketerProfileGet.data.marketerName.slice(0, 1) : ''}
+                  {userProfileGet.data ? userProfileGet.data.marketerName.slice(0, 1) : ''}
                 </Avatar>
                 )}
               </div>
@@ -154,27 +154,25 @@ function HeaderLinks(): JSX.Element {
         handleLogoutClick={handleLogoutClick}
         noticeReadFlagGet={noticeReadFlagGet}
         doNoticePatchRequest={() => {
-          noticeReadFlagPatch.doPatchRequest({ userType });
+          noticeReadFlagPatch.doPatchRequest({ type });
         }}
       />
       )}
 
       {/* 유저 설정 리스트 */}
-      {type === 'marketer' && !marketerProfileGet.loading && marketerProfileGet.data && (
+      {type === 'marketer' && !userProfileGet.loading && userProfileGet.data && (
       <MarketerPopover
         open={userLogoAnchor.open}
-        userData={marketerProfileGet.data}
+        userData={userProfileGet.data}
         anchorEl={userLogoAnchor.anchorEl}
         handleAnchorClose={userLogoAnchor.handleAnchorClose}
         handleLogoutClick={handleLogoutClick}
         noticeReadFlagGet={noticeReadFlagGet}
         doNoticePatchRequest={() => {
-          noticeReadFlagPatch.doPatchRequest({ userType });
+          noticeReadFlagPatch.doPatchRequest({ type });
         }}
       />
       )}
     </div>
   );
 }
-
-export default HeaderLinks;

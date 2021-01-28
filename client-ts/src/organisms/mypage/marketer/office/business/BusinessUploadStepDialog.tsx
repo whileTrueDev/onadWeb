@@ -22,8 +22,8 @@ export default function BusinessRegiUploadStepDialogProps(
     <Dialog
       open={open}
       onClose={handleClose}
-      title="세금계산서 발행하기/현금영수증 발행하기"
-      maxWidth="md"
+      title="세금계산서/현금영수증 발행"
+      maxWidth="sm"
       scroll="body"
       fullWidth
     >

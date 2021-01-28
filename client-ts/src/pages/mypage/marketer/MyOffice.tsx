@@ -1,5 +1,5 @@
 import React from 'react';
-import { Typography } from '@material-ui/core';
+import { makeStyles, Typography } from '@material-ui/core';
 import GridContainer from '../../../atoms/Grid/GridContainer';
 import GridItem from '../../../atoms/Grid/GridItem';
 
@@ -15,7 +15,12 @@ import CashUsageList, { UsageInterface } from '../../../organisms/mypage/markete
 import { AdInterface } from '../../../organisms/mypage/marketer/dashboard/interfaces';
 import CircularProgress from '../../../atoms/Progress/CircularProgress';
 
+const useStyles = makeStyles((theme) => ({
+  container: { margin: '0 auto', maxWidth: 1430 },
+  title: { marginTop: theme.spacing(2), color: theme.palette.text.primary },
+}));
 export default function MyOffice(): JSX.Element {
+  const classes = useStyles();
   // 계좌 정보
   const accountData = useGetRequest<null, AccountInterface | null>('/marketer/account');
   const userData = useGetRequest<null, UserInterface | null>('/marketer');
@@ -25,7 +30,7 @@ export default function MyOffice(): JSX.Element {
   const usageData = useGetRequest<null, UsageInterface | null>('/marketer/cash/history/usage');
 
   return (
-    <div style={{ margin: '0 auto', maxWidth: 1430 }}>
+    <div className={classes.container}>
       {(userData.loading
       || accountData.loading || businessRegistrationData.loading
       || cashData.loading || adData.loading) && (
@@ -39,7 +44,7 @@ export default function MyOffice(): JSX.Element {
         <div>
           <GridContainer>
             <GridItem xs={12}>
-              <Typography style={{ marginTop: 16 }} variant="h6">캐시 관리</Typography>
+              <Typography className={classes.title} variant="h6">캐시 관리</Typography>
             </GridItem>
             {/* 캐시 정보 */}
             <GridItem xs={12} lg={6}>
@@ -57,7 +62,7 @@ export default function MyOffice(): JSX.Element {
 
           <GridContainer>
             <GridItem xs={12}>
-              <Typography style={{ marginTop: 16 }} variant="h6">환불 관리</Typography>
+              <Typography className={classes.title} variant="h6">환불 관리</Typography>
             </GridItem>
             {/* 환불 계좌 정보 */}
             <GridItem xs={12} lg={6}>
@@ -67,7 +72,7 @@ export default function MyOffice(): JSX.Element {
 
           <GridContainer>
             <GridItem xs={12}>
-              <Typography style={{ marginTop: 16 }} variant="h6">세금계산서 관리</Typography>
+              <Typography className={classes.title} variant="h6">세금계산서 관리</Typography>
             </GridItem>
             <GridItem xs={12} lg={6}>
               <BusinessRegistration businessRegistrationData={businessRegistrationData} />

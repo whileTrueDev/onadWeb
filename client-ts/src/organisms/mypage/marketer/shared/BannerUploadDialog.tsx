@@ -85,11 +85,12 @@ interface UploadDialogProps {
   open: boolean;
   onClose: () => void;
   recallRequest?: () => void;
+  failCallback?: (e: any) => void;
 }
 
 const UploadDialog = (props: UploadDialogProps): JSX.Element => {
   const {
-    open, onClose, recallRequest
+    open, onClose, recallRequest, failCallback
   } = props;
   const [state, dispatch] = useReducer(myReducer, { imageName: '', imageUrl: DEFAULT_IMAGE_PATH });
   const [activeStep, setStep] = useState(0);
@@ -99,26 +100,25 @@ const UploadDialog = (props: UploadDialogProps): JSX.Element => {
     onClose();
   };
 
+  // 등록 버튼 로딩을 위한 상태값
+  const [submitLoading, setSubmitLoading] = useState(false);
 
-  // 배너를 제출.
+  // 배너를 등록 함수
   const handleSubmit = (): void => {
-    axios.post(`${HOST}/marketer/banner`, {
-      bannerSrc: state.imageUrl
-    })
+    setSubmitLoading(true);
+    axios.post(`${HOST}/marketer/banner`, { bannerSrc: state.imageUrl })
       .then((res) => {
+        setSubmitLoading(false);
         if (res.data[0]) {
           alert(res.data[1]);
-          if (recallRequest) {
-            recallRequest();
-          }
+          if (recallRequest) recallRequest();
         } else {
-          alert('현재는 등록할 수 없습니다. 잠시 후 다시 시도해주세요.');
+          alert('배너 등록 도중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
         }
         handleClose();
-      });
+      })
+      .catch((e) => { if (failCallback) failCallback(e); });
   };
-  // text format을 사용하기 위해 state로 사용한다.
-
 
   return (
     <Dialog
@@ -133,6 +133,7 @@ const UploadDialog = (props: UploadDialogProps): JSX.Element => {
             <Button
               color="primary"
               variant="contained"
+              disabled={submitLoading}
               onClick={handleSubmit}
             >
               등록
@@ -154,8 +155,13 @@ const UploadDialog = (props: UploadDialogProps): JSX.Element => {
           </StepLabel>
           <StepContent>
             <ImageUpload
-              state={state}
-              dispatch={dispatch}
+              image={state}
+              onReset={(): void => dispatch({ type: 'reset' })}
+              onSucess={(image): void => {
+                dispatch({
+                  type: 'set', imageName: image.imageName, imageUrl: image.imageUrl,
+                });
+              }}
             />
           </StepContent>
         </Step>

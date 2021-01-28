@@ -18,7 +18,7 @@ function Footer(): JSX.Element {
         </Button>
       </div>
       <div className={classes.flex}>
-        <Typography variant="body2">
+        <Typography variant="body2" color="textSecondary">
           &copy;
           {`${new Date().getFullYear()} while True Corp. All rights Reserved`}
         </Typography>

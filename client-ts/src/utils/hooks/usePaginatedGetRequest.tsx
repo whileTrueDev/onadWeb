@@ -10,12 +10,13 @@ export interface UsePaginatedGetRequestObject<T> {
   handleBackPage: () => void;
   handleNextPage: () => void;
   request: (newParam?: any) => Promise<AxiosResponse<T[]>>;
+  requestWithoutConcat: (newParam?: any) => Promise<AxiosResponse<T[]>>;
   setData: React.Dispatch<React.SetStateAction<T[] | undefined>>;
 }
 export interface PagenatedGetRequestOption {
   offset?: number;
   firstPage?: number;
-  doNotConcatNewData?: boolean;
+  disableConcat?: boolean;
 }
 export default function usePaginatedGetRequest<T = any>(
   url: string,
@@ -23,12 +24,12 @@ export default function usePaginatedGetRequest<T = any>(
 ): UsePaginatedGetRequestObject<T> {
   let offset = 2;
   let firstPage = 0;
-  let doNotConcatNewData = false;
+  let disableConcat = false;
 
   if (options) {
     if (options.offset) offset = options.offset;
     if (options.firstPage) firstPage = options.firstPage;
-    if (options.doNotConcatNewData) doNotConcatNewData = true;
+    if (options.disableConcat) disableConcat = options.disableConcat;
   }
   // 캠페인목록 크기
   const OFFSET = offset;
@@ -48,6 +49,10 @@ export default function usePaginatedGetRequest<T = any>(
   function handlePage(targetPage: number): void {
     setPage(targetPage);
   }
+
+  /**
+   * 기존 데이터에 덧붙이는 방식의 데이터 요청
+   */
   const request = useCallback((): Promise<AxiosResponse<T[]>> => {
     setLoading(true);
     return axiosInstance.get<T[]>(
@@ -57,7 +62,6 @@ export default function usePaginatedGetRequest<T = any>(
         setLoading(false);
         setData((prev) => {
           if (!prev) return res.data;
-          if (doNotConcatNewData) return res.data;
           return prev.concat(res.data);
         });
         return res;
@@ -66,13 +70,43 @@ export default function usePaginatedGetRequest<T = any>(
         setLoading(false);
         throw err;
       });
-  }, [OFFSET, doNotConcatNewData, page, url]);
+  }, [OFFSET, page, url]);
+
+  /**
+   * 기존 데이터에 덧붙이지 않는 방식의 데이터 요청
+   */
+  const requestWithoutConcat = useCallback((): Promise<AxiosResponse<T[]>> => {
+    setLoading(true);
+    return axiosInstance.get<T[]>(
+      `${HOST}${url}`, { params: { offset: OFFSET, page } }
+    )
+      .then((res) => {
+        setLoading(false);
+        setData((prev) => {
+          if (!prev) return res.data;
+          return res.data;
+        });
+        return res;
+      })
+      .catch((err) => {
+        setLoading(false);
+        throw err;
+      });
+  }, [OFFSET, page, url]);
 
   useEffect(() => {
-    request();
-  }, [request]);
+    if (disableConcat) requestWithoutConcat();
+    else request();
+  }, [disableConcat, request, requestWithoutConcat]);
 
   return {
-    loading, data, handleBackPage, handleNextPage, request, setData, handlePage
+    loading,
+    data,
+    handleBackPage,
+    handleNextPage,
+    request,
+    requestWithoutConcat,
+    setData,
+    handlePage
   };
 }

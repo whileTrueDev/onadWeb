@@ -73,6 +73,7 @@ const SelectBudget = (props: SelectBudgetProps): JSX.Element => {
           inputRef={budgetInputRef}
           inputProps={{
             min: 5000,
+            step: 100,
             required: true
           }}
         />

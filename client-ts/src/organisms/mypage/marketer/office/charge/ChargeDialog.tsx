@@ -21,7 +21,8 @@ declare global {
 
 const useStyles = makeStyles((theme: Theme) => ({
   container: {
-    backgroundColor: 'white'
+    backgroundColor: theme.palette.background.default,
+    minHeight: '100vh',
   },
   contentTitle: {
     fontWeight: 'bold',
@@ -58,7 +59,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   titleWrap: {
     background: `linear-gradient(45deg, ${theme.palette.primary.light} 30%, ${theme.palette.primary.dark} 90%)`,
-    color: 'white',
+    color: theme.palette.common.white,
     textAlign: 'center'
   },
   buttonContainer: {
