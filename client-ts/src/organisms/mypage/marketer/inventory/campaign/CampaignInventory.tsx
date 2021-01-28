@@ -68,8 +68,11 @@ export default function CampaignInventory({
   // 캠페인 타겟 스트리머 목록 렌더링
   function renderTargetCreators(creators: CampaignTargetCreator[]): string {
     return creators
-      .map((creator: CampaignTargetCreator) => `${creator.afreecaName || creator.creatorName}`)
-      .join(',');
+      .map((creator: CampaignTargetCreator) => {
+        if (creator.afreecaName && creator.creatorName) return `${creator.creatorName}(${creator.afreecaName})`;
+        return `${creator.afreecaName || creator.creatorName}`;
+      })
+      .join(', ');
   }
 
   // 캠페인 메뉴 다이얼로그
