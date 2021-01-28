@@ -142,7 +142,7 @@ const CampaignCreate = (): JSX.Element => {
     // optional state 값 설정
     if (campaignCreateState.selectedPriorityType === 'type0'
       && campaignCreateState.selectedCreators.length > 0) {
-      campaignCreateDTO.priorityList = campaignCreateState.selectedCreators;
+      campaignCreateDTO.priorityList = campaignCreateState.selectedCreators.map((c) => c.creatorId);
     }
     if ((campaignCreateState.selectedPriorityType === 'type1'
       && campaignCreateState.selectedGames.length > 0)

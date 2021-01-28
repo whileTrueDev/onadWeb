@@ -6,7 +6,6 @@ import {
   Typography
 } from '@material-ui/core';
 import { OpenInNew } from '@material-ui/icons';
-import shortid from 'shortid';
 import CustomDataGrid from '../../../../../atoms/Table/CustomDataGrid';
 import { CampaignInterface, CampaignTargetCreator } from '../../dashboard/interfaces';
 import { UsePaginatedGetRequestObject } from '../../../../../utils/hooks/usePaginatedGetRequest';

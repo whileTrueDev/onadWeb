@@ -27,11 +27,14 @@ export type CampaignCreateAction = {
   value: any;
 }
 
+export interface CampaignSelectedCreator {
+  creatorId: string;
+  creatorName: string;
+}
 export interface CampaignCreateInterface {
   selectedOption: string;
   selectedPriorityType: string;
-  selectedCreators: string[];
-  selectedCreatorNames: string[];
+  selectedCreators: CampaignSelectedCreator[];
   selectedGames: string[];
   selectedBannerId: string;
   selectedLandingUrl: string;
@@ -47,7 +50,6 @@ export const defaultState: CampaignCreateInterface = {
   selectedOption: 'option1',
   selectedPriorityType: '',
   selectedCreators: [],
-  selectedCreatorNames: [],
   selectedGames: [],
   selectedBannerId: '',
   selectedLandingUrl: '',
@@ -91,22 +93,18 @@ export const CampaignCreateReducer = (
       return { ...state, campaignTime: [] };
     // 광고 송출 크리에이터 선택 관련
     case 'SET_SELECTED_CREATORS':
-      return { ...state, selectedCreators: [...state.selectedCreators, action.value] };
+      return {
+        ...state,
+        selectedCreators: [...state.selectedCreators, action.value],
+      };
     case 'DELETE_SELECTED_CREATORS':
       return {
         ...state,
-        selectedCreators: state.selectedCreators.filter((item: string) => item !== value)
-      };
-    // 광고 송출 크리에이터 이름 (선택된 이름을 보여주기 위해)
-    case 'SET_SELECTED_CREATOR_NAMES':
-      return { ...state, selectedCreatorNames: [...state.selectedCreatorNames, action.value] };
-    case 'DELETE_SELECTED_CREATOR_NAMES':
-      return {
-        ...state,
-        selectedCreatorNames: state.selectedCreatorNames.filter((item: string) => item !== value)
+        selectedCreators: state.selectedCreators
+          .filter((item) => item.creatorId !== action.value.creatorId),
       };
     case 'RESET_SELECTED_CREATORS':
-      return { ...state, selectedCreators: [], selectedCreatorNames: [] };
+      return { ...state, selectedCreators: [] };
     // 광고 송출 게임 선택 관련
     case 'SET_SELECTED_GAMES':
       return { ...state, selectedGames: [...state.selectedGames, action.value] };
