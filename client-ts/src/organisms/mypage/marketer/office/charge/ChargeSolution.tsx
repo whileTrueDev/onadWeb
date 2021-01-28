@@ -19,6 +19,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   contentTitle: {
     fontWeight: 'bold',
+    fontFamily: 'Noto Sans KR'
   },
   contentDetail: {
     marginTop: theme.spacing(1),
@@ -42,8 +43,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontFamily: 'Noto Sans KR'
   },
   content: {
-    color: theme.palette.text.primary,
-    padding: theme.spacing(2, 0)
+    color: 'black',
+    paddingLeft: 5,
+    marginTop: 3,
+    fontSize: 15,
+    fontStyle: 'inherit',
+    fontFamily: 'Noto Sans KR',
   },
   warning: {
     background: theme.palette.action.disabledBackground,
@@ -73,15 +78,15 @@ const TestChargeSolution = (props: TestChargeSolutionProps): JSX.Element => {
         <Grid item>
           <Grid container direction="row" justify="space-between">
             <Grid item>
-              <Typography color="textPrimary" className={classes.contentTitle} variant="h6">
+              <Typography className={classes.contentTitle} variant="h6">
                 자동 충전금액
               </Typography>
-              <Typography color="textPrimary" variant="caption" style={{ fontFamily: 'Noto Sans KR' }}>
+              <Typography variant="caption" style={{ fontFamily: 'Noto Sans KR' }}>
                 부가세 포함
               </Typography>
             </Grid>
             <Grid item className={classes.contentTitle}>
-              <Typography color="textPrimary" className={classes.contentTitle} variant="h6">
+              <Typography className={classes.contentTitle} variant="h6">
                 {Math.round(parseInt(selectValue, 10) * 1.1)}
                 {' '}
                 원
@@ -92,7 +97,7 @@ const TestChargeSolution = (props: TestChargeSolutionProps): JSX.Element => {
         <Grid item>
           <Grid container direction="row" justify="space-between">
             <Grid item>
-              <Typography color="textPrimary" className={classes.newContentTitle} variant="h6">
+              <Typography className={classes.newContentTitle} variant="h6">
                 충전 후 잔액
               </Typography>
             </Grid>
@@ -114,7 +119,7 @@ const TestChargeSolution = (props: TestChargeSolutionProps): JSX.Element => {
         <Grid item>
           <Grid container direction="column" spacing={4}>
             <Grid item>
-              <Typography color="textPrimary" variant="h6" style={{ fontWeight: 'bold', fontFamily: 'Noto Sans KR' }}>
+              <Typography variant="h6" style={{ fontWeight: 'bold', fontFamily: 'Noto Sans KR' }}>
                 결제방법 선택
               </Typography>
             </Grid>
@@ -130,7 +135,7 @@ const TestChargeSolution = (props: TestChargeSolutionProps): JSX.Element => {
                     value="card"
                     control={<Radio color="primary" />}
                     label={(
-                      <Typography color="textPrimary" variant="subtitle1">
+                      <Typography variant="subtitle1">
                         신용카드
                       </Typography>
                     )}
@@ -139,7 +144,7 @@ const TestChargeSolution = (props: TestChargeSolutionProps): JSX.Element => {
                     value="trans"
                     control={<Radio color="primary" />}
                     label={(
-                      <Typography color="textPrimary" variant="subtitle1">
+                      <Typography variant="subtitle1">
                         계좌이체
                       </Typography>
                     )}
@@ -148,7 +153,7 @@ const TestChargeSolution = (props: TestChargeSolutionProps): JSX.Element => {
                     value="vbank"
                     control={<Radio color="primary" />}
                     label={(
-                      <Typography color="textPrimary" variant="subtitle1">
+                      <Typography variant="subtitle1">
                         가상계좌
                       </Typography>
                     )}
@@ -156,9 +161,8 @@ const TestChargeSolution = (props: TestChargeSolutionProps): JSX.Element => {
                 </RadioGroup>
               </Grid>
               <Grid item className={classes.valueContainer}>
-                {chargeType && (
-                <img src={`/pngs/Charge/${chargeType}.png`} alt={`${chargeType}`} width="100" height="75" />
-                )}
+
+                <img src={`/pngs/Charge/${chargeType}.png`} alt={`${chargeType}`} width="150" height="120" />
               </Grid>
             </Grid>
           </Grid>
@@ -166,10 +170,8 @@ const TestChargeSolution = (props: TestChargeSolutionProps): JSX.Element => {
         <Grid item className={classes.warning}>
           <Grid container>
             <Grid item className={classes.content}>
-              <Typography variant="body2" color="textPrimary">
-                자동 충전 금액에는 부가세가 적용되며 &apos;계좌이체&apos;의 경우 1인 1계좌 하루 최대 50만원까지 결제 가능합니다.
-                또한, 신용카드 결제시 및 프로모션 이벤트 금액에 대한 세금계산서 발급은 불가합니다.
-              </Typography>
+              자동 충전 금액에는 부가세가 적용되며 &apos;계좌이체&apos;의 경우 1인 1계좌 하루 최대 50만원까지 결제 가능합니다.
+              또한, 신용카드 결제시 및 프로모션 이벤트 금액에 대한 세금계산서 발급은 불가합니다.
             </Grid>
           </Grid>
         </Grid>

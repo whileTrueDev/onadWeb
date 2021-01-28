@@ -35,21 +35,21 @@ export default function InventoryManage(): JSX.Element {
   const CAMPAIGN_LOAD_PAGE_OFFSET = 5;
   const campaignPageLength = useGetRequest('/marketer/campaign/length');
   const campaignData = usePaginatedGetRequest<CampaignInterface>(
-    '/marketer/campaign/list', { offset: CAMPAIGN_LOAD_PAGE_OFFSET, disableConcat: true }
+    '/marketer/campaign/list', { offset: CAMPAIGN_LOAD_PAGE_OFFSET, doNotConcatNewData: true }
   );
 
   // **************************************************************************************
   // 배너 데이터
   const bannerPageLength = useGetRequest('/marketer/banner/length');
   const bannerData = usePaginatedGetRequest<BannerDataInterface>(
-    '/marketer/banner/list', { offset: CAMPAIGN_LOAD_PAGE_OFFSET, disableConcat: true }
+    '/marketer/banner/list', { offset: CAMPAIGN_LOAD_PAGE_OFFSET, doNotConcatNewData: true }
   );
 
   // **************************************************************************************
   // URL 데이터
   const urlPageLength = useGetRequest('/marketer/landing-url/length');
   const urlData = usePaginatedGetRequest<UrlDataInterface>(
-    '/marketer/landing-url/list', { offset: CAMPAIGN_LOAD_PAGE_OFFSET, disableConcat: true }
+    '/marketer/landing-url/list', { offset: CAMPAIGN_LOAD_PAGE_OFFSET, doNotConcatNewData: true }
   );
 
 

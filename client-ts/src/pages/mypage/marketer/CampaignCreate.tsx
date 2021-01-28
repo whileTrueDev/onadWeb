@@ -1,5 +1,5 @@
 import React, { useReducer, MouseEvent } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import {
   Grid, Paper, Collapse, useMediaQuery, Button
@@ -17,7 +17,6 @@ import axios from '../../../utils/axios';
 import history from '../../../history';
 import Snackbar from '../../../atoms/Snackbar/Snackbar';
 import { useDialog } from '../../../utils/hooks';
-import parseParams from '../../../utils/parseParams';
 
 
 const useStyles = makeStyles((_theme: Theme) => ({
@@ -43,9 +42,7 @@ const CampaignCreate = (): JSX.Element => {
   const classes = useStyles();
 
   // *****************************************************
-  // url search parameter를 토대로 캠페인 생성 이후 보낼 redirect uri를 가져온다.
-  const location = useLocation();
-  const urlParams = parseParams(location.search);
+  const { to: whereToGo } = useParams<{to: string}>();
 
   // *****************************************************
   // 캠페인 생성은 Desktop only 이므로, Desktop 인지 불린값.
@@ -142,7 +139,7 @@ const CampaignCreate = (): JSX.Element => {
     // optional state 값 설정
     if (campaignCreateState.selectedPriorityType === 'type0'
       && campaignCreateState.selectedCreators.length > 0) {
-      campaignCreateDTO.priorityList = campaignCreateState.selectedCreators.map((c) => c.creatorId);
+      campaignCreateDTO.priorityList = campaignCreateState.selectedCreators;
     }
     if ((campaignCreateState.selectedPriorityType === 'type1'
       && campaignCreateState.selectedGames.length > 0)
@@ -179,8 +176,8 @@ const CampaignCreate = (): JSX.Element => {
         campaignCreateDispatch({ type: 'LOADING_DONE', value: '' });
         if (res.data[0]) {
           alert(res.data[1]);
-          if (urlParams && urlParams.to) history.push(`/mypage/marketer/${urlParams.to}`);
-          else history.push('/mypage/marketer/main');
+          if (whereToGo) history.push(`/mypage/marketer/${whereToGo}`);
+          history.push('/mypage/marketer/main');
         } else {
           alert(res.data[1]);
         }

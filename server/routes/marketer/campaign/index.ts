@@ -1,6 +1,6 @@
-import express from 'express';
-import slack from '../../../lib/slack/messageWithJson';
+import express, { response } from 'express';
 import responseHelper from '../../../middlewares/responseHelper';
+import slack from '../../../lib/slack/messageWithJson';
 import doQuery from '../../../model/doQuery';
 import dataProcessing from '../../../lib/dataProcessing';
 import analysisRouter from './analysis_v1';
@@ -23,16 +23,6 @@ interface CampaignData {
   links: string;
   linkConfirmState: number;
   dailyLimit: number;
-  selectedTime: string;
-  targetList: string;
-  startDate: string;
-  finDate: string;
-  targetCreators?: {
-    afreecaId?: string;
-    afreecaName?: string;
-    creatorName?: string;
-    creatorTwitchId?: string;
-  }[];
 }
 
 /**
@@ -62,29 +52,6 @@ router.route('/list')
       const [page, offset] = responseHelper.getParam(['page', 'offset'], 'get', req);
       const searchPage = Number(page * offset);
       const searchOffset = Number(offset);
-
-      // *******************************************************************
-      // 캠페인 목록 불러오기
-      const query = `
-        SELECT
-          campaignId AS id, campaignId, campaignName, optionType, priorityType, 
-          campaign.regiDate as regiDate, onOff, br.confirmState, 
-          br.bannerId, bannerSrc, br.regiDate AS bannerRegiDate,
-          lr.linkId, lr.links as links, lr.confirmState as linkConfirmState, dailyLimit,
-          campaignDescription, startDate, finDate, selectedTime, targetList
-        FROM campaign
-          JOIN bannerRegistered AS br ON br.bannerId = campaign.bannerId
-          JOIN linkRegistered AS lr ON lr.linkId = connectedLinkId
-        WHERE campaign.marketerId = ? AND deletedState = 0
-        ORDER BY campaign.onOff DESC, campaign.regiDate DESC
-        LIMIT ?, ?
-      `;
-      const { result } = await doQuery(query, [marketerId, searchPage, searchOffset]);
-      if ((result.length === 0)) return responseHelper.send(result, 'get', res);
-
-      // *******************************************************************
-      // 캠페인 별 금일 예산 사용량 불러오기  +  타겟 크리에이터 정보 불러오기
-
       // 오늘자 일일예산에 대한 예산소비량을 체크하기 위해 오늘의 맨처음 시간으로 설정
       const date = new Date();
       date.setHours(0);
@@ -92,57 +59,51 @@ router.route('/list')
       date.setSeconds(0);
       date.setMilliseconds(0);
 
-      const sumQuery = `
-        SELECT sum(cashFromMarketer) AS dailysum
-        FROM campaignLog WHERE campaignId = ? AND date > ?
+      const query = `
+        SELECT
+        campaignId AS id, campaignId, campaignName, optionType, priorityType, 
+        campaign.regiDate as regiDate, onOff, br.confirmState, 
+        br.bannerId, bannerSrc, br.regiDate AS bannerRegiDate,
+        lr.linkId, lr.links as links, lr.confirmState as linkConfirmState, dailyLimit,
+        campaignDescription
+        FROM campaign
+        JOIN bannerRegistered AS br
+        ON br.bannerId = campaign.bannerId
+        JOIN linkRegistered AS lr
+        ON lr.linkId = connectedLinkId
+        WHERE campaign.marketerId = ?
+        AND deletedState = 0
+        ORDER BY campaign.onOff DESC, campaign.regiDate DESC
+        LIMIT ?, ?
       `;
 
-      const responseResult = await Promise.all(
-        result
-          .map((cam: CampaignData) => doQuery(sumQuery, [cam.campaignId, date])
-            .then(async (inrow) => {
-              const { dailysum } = inrow.result[0];
-              const linkData = JSON.parse(cam.links);
-              const selectedTime = JSON.parse(cam.selectedTime).time;
-              const { targetList } = JSON.parse(cam.targetList);
-
-              // 캠페인 송출 우선순위가 크리에이터 우선인 경우 크리에이터 정보를 가져온다.
-              if (cam.priorityType === 0) {
-                let targetCreatorInfoQuery = `
-                  SELECT creatorName, creatorTwitchId, afreecaId, afreecaName
-                  FROM creatorInfo WHERE creatorId IN
-                `;
-                targetList.forEach((creatorId: string, index: number) => {
-                  if (index === 0) targetCreatorInfoQuery += '(';
-                  targetCreatorInfoQuery += `"${creatorId}"`;
-                  if (index !== targetList.length - 1) targetCreatorInfoQuery += ',';
-                  else targetCreatorInfoQuery += ')';
-                });
-
-                const creatorInfos = await doQuery(targetCreatorInfoQuery);
-                return {
-                  ...cam,
-                  linkData,
-                  dailysum,
-                  selectedTime,
-                  targetList,
-                  targetCreators: creatorInfos.result,
-                };
-              }
-
-              // 캠페인 송출 우선순위가 크리에이터 우선형이 아닌 경우에는 타겟 리스트 그대로 반환
-              return {
-                ...cam,
-                linkData,
-                dailysum,
-                selectedTime,
-                targetList
-              };
-            }))
-      ) as CampaignData[];
-
-      return responseHelper.send(responseResult, 'GET', res);
-    })
+      const sumQuery = `
+        SELECT sum(cashFromMarketer) AS dailysum
+        FROM campaignLog
+        WHERE campaignId = ?
+        AND date > ?
+        `;
+      doQuery(query, [marketerId, searchPage, searchOffset])
+        .then((row) => {
+          if (row.result) {
+            Promise.all(
+              row.result.map((campaignData: CampaignData) => doQuery(sumQuery,
+                [campaignData.campaignId, date])
+                .then((inrow) => {
+                  const { dailysum } = inrow.result[0];
+                  const linkData = JSON.parse(campaignData.links);
+                  return { ...campaignData, linkData, dailysum };
+                }))
+            ).then((campaignList) => {
+              responseHelper.send(campaignList, 'get', res);
+            }).catch((error) => {
+              responseHelper.promiseError(error, next);
+            });
+          }
+        }).catch((error) => {
+          responseHelper.promiseError(error, next);
+        });
+    }),
   )
   .all(responseHelper.middleware.unusedMethod);
 
@@ -362,14 +323,14 @@ router.route('/')
               marketerActionLogging([
                 marketerId, MARKETER_ACTION_LOG_TYPE, JSON.stringify({ campaignName })
               ]);
-              slack({
-                summary: '캠페인 등록 알림',
-                text: '관리자 페이지에서 방금 등록된 캠페인을 확인하세요.',
-                fields: [
-                  { title: '마케터 이름', value: marketerName!, short: true },
-                  { title: '캠페인 이름', value: campaignName!, short: true },
-                ]
-              });
+              // slack({
+              //   summary: '캠페인 등록 알림',
+              //   text: '관리자 페이지에서 방금 등록된 캠페인을 확인하세요.',
+              //   fields: [
+              //     { title: '마케터 이름', value: marketerName!, short: true },
+              //     { title: '캠페인 이름', value: campaignName!, short: true },
+              //   ]
+              // });
             })
             .catch((error) => {
               responseHelper.promiseError(error, next);

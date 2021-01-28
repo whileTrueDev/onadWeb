@@ -51,7 +51,6 @@ function DateTermPicker(props: DateTermPickerProps): JSX.Element {
           invalidDateMessage="날짜 형식이 올바르지 않습니다."
           id="start-date-picker"
           label="시작일"
-          maxDateMessage="종료일보다 이전이여야 합니다."
           minDate={today}
           value={state.campaignTerm.startDate}
           onChange={handleStartDateChange}
@@ -67,7 +66,6 @@ function DateTermPicker(props: DateTermPickerProps): JSX.Element {
           variant="inline"
           margin="normal"
           invalidDateMessage="날짜 형식이 올바르지 않습니다."
-          minDateMessage="시작일보다 이후여야 합니다."
           id="end-date-picker"
           label="종료일"
           minDate={finDateToggle ? undefined : state.campaignTerm.startDate}

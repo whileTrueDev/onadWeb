@@ -1,6 +1,6 @@
 import React from 'react';
 import makeStyles from '@material-ui/core/styles/makeStyles';
-import Button from '@material-ui/core/Button';
+import Button from '../../../../../../atoms/CustomButtons/Button';
 
 const useStyles = makeStyles((theme) => ({
   imgInput: {
@@ -40,28 +40,24 @@ export default function BusinessSelectStep(props: StepperInterface): JSX.Element
   return (
     <div className={classes.container}>
       <Button
-        variant="outlined"
-        color="primary"
         onClick={(): void => {
           handleChangeStep(1);
           handleIsBusiness(true);
         }}
       >
-        세금계산서 발행
+            세금계산서 발행
         <br />
-        (사업자 등록증 업로드)
+            (사업자 등록증 업로드)
       </Button>
       <Button
-        variant="outlined"
-        color="primary"
         onClick={(): void => {
           handleChangeStep(1);
           handleIsBusiness(false);
         }}
       >
-        현금영수증 발행
+             현금영수증 발행
         <br />
-        (휴대전화 번호 업로드)
+            (휴대전화 번호 업로드)
       </Button>
     </div>
   );

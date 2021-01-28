@@ -7,8 +7,7 @@ import CreatorSelect from './AdPriorityComponents/CreatorSelect';
 import GameSelect from './AdPriorityComponents/GameSelect';
 import {
   CampaignCreateInterface,
-  CampaignCreateAction,
-  CampaignSelectedCreator
+  CampaignCreateAction
 } from './reducers/campaignCreate.reducer';
 import GameSelectAfreeca from './AdPriorityComponents/GameSelecAfreeca';
 
@@ -45,12 +44,12 @@ const priorityTypes: PriorityInterface[] = [
         />
       </Collapse>
     ),
-    completeChildren: (data: { selectedCreators: CampaignSelectedCreator[] }): JSX.Element => (
+    completeChildren: (data: { selectedCreatorNames: string[] }): JSX.Element => (
       <div>
-        {data.selectedCreators.map((creator) => (
+        {data.selectedCreatorNames.map((creator: string) => (
           <Chip
-            key={creator.creatorName}
-            label={creator.creatorName}
+            key={creator}
+            label={creator}
             variant="outlined"
             style={{ margin: 4 }}
           />
@@ -224,7 +223,7 @@ function PriorityPaper({
                   <div>
                     {selected.completeChildren
                       ? selected.completeChildren({
-                        selectedCreators: state.selectedCreators,
+                        selectedCreatorNames: state.selectedCreatorNames,
                         selectedGameNames: state.selectedGames,
                       })
                       : null}

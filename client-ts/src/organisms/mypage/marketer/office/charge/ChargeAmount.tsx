@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   warningTitle: {
     fontWeight: 'bold',
-    color: theme.palette.text.primary,
+    color: 'black',
     fontFamily: 'Noto Sans KR'
   },
   contentDetail: {
@@ -50,8 +50,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
   },
   content: {
-    color: theme.palette.text.primary,
-    padding: theme.spacing(2, 0)
+    color: 'black',
+    paddingLeft: 5,
+    marginTop: 3,
+    fontSize: 12,
+    fontStyle: 'inherit',
+    fontFamily: 'Noto Sans KR',
   },
   warning: {
     background: theme.palette.action.disabledBackground,
@@ -121,7 +125,7 @@ const TestChargeAmount = (props: TestChargeAmountProps): JSX.Element => {
         <Grid item>
           <Grid container direction="column" spacing={4}>
             <Grid item>
-              <Typography color="textPrimary" variant="h6" style={{ fontWeight: 'bold', }}>
+              <Typography variant="h6" style={{ fontWeight: 'bold', fontFamily: 'Noto Sans KR' }}>
                 충전할 OnAD 캐시
               </Typography>
             </Grid>
@@ -137,7 +141,7 @@ const TestChargeAmount = (props: TestChargeAmountProps): JSX.Element => {
                     value="50000"
                     control={<Radio color="primary" />}
                     label={(
-                      <Typography color="textPrimary" variant="subtitle1">
+                      <Typography variant="subtitle1">
                         50,000 원
                       </Typography>
                     )}
@@ -146,7 +150,7 @@ const TestChargeAmount = (props: TestChargeAmountProps): JSX.Element => {
                     value="100000"
                     control={<Radio color="primary" />}
                     label={(
-                      <Typography color="textPrimary" variant="subtitle1">
+                      <Typography variant="subtitle1">
                         100,000 원
                       </Typography>
                     )}
@@ -155,7 +159,7 @@ const TestChargeAmount = (props: TestChargeAmountProps): JSX.Element => {
                     value="300000"
                     control={<Radio color="primary" />}
                     label={(
-                      <Typography color="textPrimary" variant="subtitle1">
+                      <Typography variant="subtitle1">
                         300,000 원
                       </Typography>
                     )}
@@ -164,7 +168,7 @@ const TestChargeAmount = (props: TestChargeAmountProps): JSX.Element => {
                     value="500000"
                     control={<Radio color="primary" />}
                     label={(
-                      <Typography color="textPrimary" variant="subtitle1">
+                      <Typography variant="subtitle1">
                         500,000 원
                       </Typography>
                     )}
@@ -187,9 +191,8 @@ const TestChargeAmount = (props: TestChargeAmountProps): JSX.Element => {
                       onChange={handleChange}
                       margin="normal"
                       variant="outlined"
-                      error={!(parseInt(selectValue, 10) > 10000) || parseInt(selectValue, 10) > 1000001}
-                      helperText={parseInt(selectValue, 10) > 10000
-                        ? '최대 1000만원까지 가능합니다.' : '10000원 이상 충전가능'}
+                      error={!(parseInt(selectValue, 10) > 10000)}
+                      helperText={parseInt(selectValue, 10) > 10000 ? null : '10000원 이상 충전가능'}
                     />
                   </Tooltip>
                 </div>
@@ -205,9 +208,7 @@ const TestChargeAmount = (props: TestChargeAmountProps): JSX.Element => {
               </Typography>
             </Grid>
             <Grid item className={classes.content}>
-              <Typography variant="body2">
-                {sources.content.buyCash}
-              </Typography>
+              {sources.content.buyCash}
             </Grid>
           </Grid>
         </Grid>

@@ -134,7 +134,7 @@ export default function BannerInventory(props: BannerInventoryProps): JSX.Elemen
         open={deleteDialog.open}
         selectedBanner={selectedBanner}
         handleClose={deleteDialog.handleClose}
-        recallRequest={bannerData.requestWithoutConcat}
+        recallRequest={bannerData.request}
       />
       )}
 

@@ -21,7 +21,6 @@ function AppFooter(): JSX.Element {
           <ul className={classes.list}>
             <li>
               <Link
-                variant="body1"
                 href="/policy"
                 color="inherit"
                 underline="none"
@@ -32,7 +31,6 @@ function AppFooter(): JSX.Element {
             </li>
             <li>
               <Link
-                variant="body1"
                 href="/policy/privacy"
                 color="inherit"
                 underline="none"

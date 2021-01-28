@@ -9,6 +9,7 @@ import StyledSelectText from '../../../../../atoms/StyledItemText';
 import useGetRequest from '../../../../../utils/hooks/useGetRequest';
 import ContentsPie from '../../shared/ContentsPie';
 import TimeChart from '../../shared/TimeChart';
+import { CampaignCreateAction } from '../reducers/campaignCreate.reducer';
 import { CreatorDetailDataInterface } from '../interfaces';
 
 const SearchTextField = ({ searchText, setSearchText }: any) => {
@@ -36,11 +37,11 @@ const SearchTextField = ({ searchText, setSearchText }: any) => {
         inputRef={searchTextRef}
         onKeyDown={handleEnterKey}
       />
-      <Button color="primary" variant="contained" onClick={handleSearchClick}>
+      <Button size="large" color="primary" variant="contained" onClick={handleSearchClick}>
         검색
       </Button>
       {searchText && (
-      <Button variant="contained" onClick={handleSearchReset} style={{ marginLeft: 8 }}>
+      <Button size="large" variant="contained" onClick={handleSearchReset}>
         검색제거
       </Button>
       )}
@@ -80,19 +81,41 @@ const useStyles = makeStyles((theme) => ({
   secondText: { marginTop: theme.spacing(1) },
 }));
 export interface CreatorTableProps {
-  onCreatorSelect: (rowData?: CreatorDetailDataInterface) => void;
-  isCheckedCreator: (c: string) => boolean;
+  checkedCreators: string[];
+  dispatch: React.Dispatch<CampaignCreateAction>;
 }
 export default function CreatorTable(props: CreatorTableProps): JSX.Element {
   const classes = useStyles();
   const theme = useTheme();
 
-  const { onCreatorSelect, isCheckedCreator } = props;
+  const { checkedCreators, dispatch } = props;
 
   // **********************************************************
   // 데이터 요청
   const fetchData = useGetRequest<null, CreatorDetailDataInterface[]>('/creators/analysis/detail');
 
+  // **********************************************************
+  // 크리에이터 선택 관련
+  const getChecked = (creatorId: string): boolean => checkedCreators.includes(creatorId);
+
+  const handleCreatorSelect = (
+    rowData?: CreatorDetailDataInterface
+  ): void => {
+    if (rowData) {
+      const {
+        creatorId, creatorName, creatorIdAfreeca, afreecaName
+      } = rowData;
+      if (getChecked(creatorId || creatorIdAfreeca)) {
+        // 체크 된 걸 다시 체크할 때
+        dispatch({ type: 'DELETE_SELECTED_CREATORS', value: creatorId || creatorIdAfreeca });
+        dispatch({ type: 'DELETE_SELECTED_CREATOR_NAMES', value: creatorName || afreecaName });
+      } else {
+        // 체크 됐을 때
+        dispatch({ type: 'SET_SELECTED_CREATORS', value: creatorId || creatorIdAfreeca });
+        dispatch({ type: 'SET_SELECTED_CREATOR_NAMES', value: creatorName || afreecaName });
+      }
+    }
+  };
 
   // 크리에이터별 상세 그래프
   const renderDetailGraph = (rowData: CreatorDetailDataInterface): JSX.Element => (
@@ -146,7 +169,7 @@ export default function CreatorTable(props: CreatorTableProps): JSX.Element {
               field: 'creatorName',
               render: (rowData: CreatorDetailDataInterface): JSX.Element => (
                 <div style={{ display: 'flex', alignItems: 'center' }}>
-                  <Avatar variant="circular" className={classes.image}>
+                  <Avatar variant="circle" className={classes.image}>
                     <img
                       src={rowData.creatorLogo || rowData.afreecaLogo}
                       alt={rowData.creatorName || rowData.afreecaName}
@@ -316,7 +339,7 @@ export default function CreatorTable(props: CreatorTableProps): JSX.Element {
             },
           ]}
           onRowClick={(e, rowData): void => {
-            onCreatorSelect(rowData);
+            handleCreatorSelect(rowData);
           }}
           title=""
           cellWidth={90}
@@ -343,7 +366,7 @@ export default function CreatorTable(props: CreatorTableProps): JSX.Element {
             pageSize: 10,
             detailPanelColumnAlignment: 'left',
             rowStyle: (rowData: CreatorDetailDataInterface): React.CSSProperties => ({
-              backgroundColor: isCheckedCreator(rowData.creatorId || rowData.creatorIdAfreeca)
+              backgroundColor: getChecked(rowData.creatorId || rowData.creatorIdAfreeca)
                 ? theme.palette.action.selected : theme.palette.background.paper,
             }),
             headerStyle: { textAlign: 'right', flexDirection: 'row-reverse' }

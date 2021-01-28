@@ -8,7 +8,7 @@ import AdDescriptionSelect from './AdDescriptionSelect';
 import { OptionInterface, AdMaterial } from '../interfaces';
 
 const useStyles = makeStyles((theme) => ({
-  select: { marginTop: theme.spacing(2), marginBottom: theme.spacing(2) },
+  select: { marginTop: 32, marginBottom: 32 },
   itmeTitle: {
     display: 'flex',
     alignItems: 'center',

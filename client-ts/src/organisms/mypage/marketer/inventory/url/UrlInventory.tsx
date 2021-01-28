@@ -3,7 +3,6 @@ import moment from 'moment';
 import {
   IconButton,
   makeStyles,
-  Tooltip,
   Typography,
 } from '@material-ui/core';
 import { Delete, OpenInNew } from '@material-ui/icons';
@@ -72,10 +71,9 @@ export default function UrlTable(props: UrlTableProps): JSX.Element {
               renderCell: (data): React.ReactElement => (
                 <Typography variant="body2" color={data.row.confirmState === 2 ? 'error' : 'textPrimary'}>
                   {renderUrlConfirmState(data.row.confirmState)}
-                  <br />
                   {data.row.confirmState === 2 && (
                   // 거절됨의 경우 사유 렌더링
-                  <Typography noWrap component="span" variant="caption" color="error">
+                  <Typography component="span" variant="caption" color="error">
                     {data.row.denialReason}
                   </Typography>
                   )}
@@ -98,22 +96,20 @@ export default function UrlTable(props: UrlTableProps): JSX.Element {
                     >
                       {link.linkName || ''}
                       {link.linkName && (<br />)}
-                      <Tooltip title={link.linkTo} placement="bottom-start">
-                        <Typography
-                          noWrap
-                          className={classes.clickableText}
-                          onClick={(e: React.MouseEvent<HTMLElement>): void => {
-                            e.preventDefault();
-                            window.open(link.linkTo, '_blank');
-                          }}
-                          variant="body2"
-                          color="primary"
-                          component="span"
-                        >
-                          <OpenInNew className={classes.openInNew} />
-                          {link.linkTo}
-                        </Typography>
-                      </Tooltip>
+                      <Typography
+                        noWrap
+                        className={classes.clickableText}
+                        onClick={(e: React.MouseEvent<HTMLElement>): void => {
+                          e.preventDefault();
+                          window.open(link.linkTo, '_blank');
+                        }}
+                        variant="body2"
+                        color="primary"
+                        component="span"
+                      >
+                        <OpenInNew className={classes.openInNew} />
+                        {link.linkTo}
+                      </Typography>
                     </Typography>
                   ))}
                 </div>
@@ -153,7 +149,7 @@ export default function UrlTable(props: UrlTableProps): JSX.Element {
         selectedUrl={selectedUrl}
         handleClose={urlDeleteDialog.handleClose}
         recallRequest={(): void => {
-          urlData.requestWithoutConcat();
+          urlData.request();
           successSnack.handleOpen();
         }}
       />

@@ -125,10 +125,6 @@ const AccountDialog = (
         margin="dense"
         className={classes.textField}
         id="accountHolder"
-        type="text"
-        inputProps={{
-          maxLength: 17
-        }}
         InputLabelProps={{
           shrink: true,
         }}
@@ -142,17 +138,15 @@ const AccountDialog = (
         className={classes.textField}
         helperText="주민등록번호 앞 6자리를 입력해주세요."
         margin="normal"
-        type="number"
-        inputProps={{
-          maxLength: 6
-        }}
         InputLabelProps={{
           shrink: true,
         }}
-        style={{
-          maxWidth: 250,
-          marginRight: 10,
-        }}
+        style={
+          {
+            maxWidth: 250,
+            marginRight: 10,
+          }
+        }
       />
 
       <FormControl className={classes.textField}>
@@ -160,10 +154,8 @@ const AccountDialog = (
         <Input
           required
           id="bankAccount"
-          type="number"
           inputProps={{
-            required: true,
-            maxLength: 16
+            required: '{true}'
           }}
         />
         <FormHelperText>

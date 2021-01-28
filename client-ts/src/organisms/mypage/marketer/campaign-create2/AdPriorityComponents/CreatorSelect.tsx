@@ -4,8 +4,7 @@ import {
   Chip, Grid, Typography,
 } from '@material-ui/core';
 import CreatorTable from './CreatorSelectTable';
-import { CampaignCreateInterface, CampaignCreateAction, CampaignSelectedCreator } from '../reducers/campaignCreate.reducer';
-import { CreatorDetailDataInterface } from '../interfaces';
+import { CampaignCreateInterface, CampaignCreateAction } from '../reducers/campaignCreate.reducer';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -49,63 +48,19 @@ const CreatorSelect = (props: CreatorSelectProps): JSX.Element => {
     }
   }, [handleComplete, handleIncomplete, state.selectedCreators.length, state.selectedPriorityType]);
 
-  // **********************************************************
-  // 선택된 크리에이터인지 확인하는 함수
-  const isCheckedCreator = (creatorId: string): boolean => {
-    if (state.selectedCreators.filter((c) => c.creatorId === creatorId).length > 0) return true;
-    return false;
-  };
-  // 크리에이터 선택 해제 핸들러
-  const handleCreatorSelectCancel = (creator: CampaignSelectedCreator): void => dispatch({
-    type: 'DELETE_SELECTED_CREATORS',
-    value: { creatorId: creator.creatorId, creatorName: creator.creatorName, }
-  });
-  // 크리에이터 선택 핸들러
-  const handleCreatorSelect = (
-    rowData?: CreatorDetailDataInterface
-  ): void => {
-    if (rowData) {
-      const {
-        creatorId, creatorName, creatorIdAfreeca, afreecaName
-      } = rowData;
-      if (isCheckedCreator(creatorId || creatorIdAfreeca)) {
-        // 체크 된 걸 다시 체크할 때
-        handleCreatorSelectCancel({
-          creatorId: creatorId || creatorIdAfreeca, creatorName: creatorName || afreecaName || ''
-        });
-      } else {
-        // 체크 됐을 때
-        dispatch({
-          type: 'SET_SELECTED_CREATORS',
-          value: {
-            creatorId: creatorId || creatorIdAfreeca,
-            creatorName: creatorName || afreecaName,
-          }
-        });
-      }
-    }
-  };
-
-
   return (
     <Grid container direction="column" spacing={2} className={classes.root}>
       <Grid item>
         <Typography variant="body1" className={classes.bold}>현재까지 선택된 크리에이터 : </Typography>
         <Typography variant="body2" color="textSecondary">* 표에서 크리에이터 클릭시 선택됩니다.</Typography>
-        {state.selectedCreators.map((creator) => (
-          <Chip
-            className={classes.chip}
-            label={creator.creatorName}
-            key={creator.creatorName}
-            color="primary"
-            onDelete={(): void => handleCreatorSelectCancel(creator)}
-          />
+        {state.selectedCreatorNames.map((name) => (
+          <Chip className={classes.chip} label={name} key={name} color="primary" />
         ))}
       </Grid>
       <Grid item>
         <CreatorTable
-          onCreatorSelect={handleCreatorSelect}
-          isCheckedCreator={isCheckedCreator}
+          checkedCreators={state.selectedCreators}
+          dispatch={dispatch}
         />
       </Grid>
     </Grid>

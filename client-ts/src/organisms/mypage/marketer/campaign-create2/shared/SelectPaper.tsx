@@ -46,7 +46,7 @@ export default function SelectPaper(props: SelectPaperProps): JSX.Element {
     if (checked) {
       return theme.palette.primary.light;
     } if (!checked && disabled) {
-      return theme.palette.action.disabledBackground;
+      return theme.palette.grey[300];
     }
     return 'inherit';
   }

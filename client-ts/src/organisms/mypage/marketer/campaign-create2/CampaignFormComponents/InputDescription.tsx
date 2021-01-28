@@ -34,8 +34,7 @@ const InputDescription = (props: InputDescriptionProps): JSX.Element => {
             className={classes.input}
             inputRef={descriptionInputRef}
             inputProps={{
-              required: true,
-              maxLength: 50
+              required: true
             }}
           />
         </Grid>

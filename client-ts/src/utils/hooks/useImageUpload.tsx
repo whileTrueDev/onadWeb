@@ -1,9 +1,9 @@
 import React from 'react';
 
-const MB = 1024 * 1024; // 1Mbytes
+const MB = 1048576; // 1Mbytes
 const IMAGE_SIZE_LIMIT = 5 * MB;
 
-export type UploadImage = string | null;
+export type UploadImage = string | ArrayBuffer | null;
 export interface ImageData {
   newImageName?: string;
   newImageUrl: UploadImage;
@@ -30,7 +30,7 @@ export interface UseImageUploadResult {
 export default function useImageUpload(
   DEFAULT_IMAGE: string,
 ): UseImageUploadResult {
-  const [imageUrl, setImageUrl] = React.useState<string | null>(DEFAULT_IMAGE);
+  const [imageUrl, setImageUrl] = React.useState<string | ArrayBuffer | null>(DEFAULT_IMAGE);
   const [imageName, setImageName] = React.useState<string | undefined>('');
 
   // image reset
@@ -59,14 +59,11 @@ export default function useImageUpload(
           const reader = new FileReader();
           reader.readAsDataURL(myImage);
           reader.onload = (): void => {
-            handleImageChange({
-              newImageName: myImage.name,
-              newImageUrl: reader.result as string
-            });
+            handleImageChange({ newImageName: myImage.name, newImageUrl: reader.result });
           };
         } else {
           // 사이즈 제한보다 큰 경우
-          alert('5MB 이하의 이미지를 업로드해주세요.');
+          alert('10MB 이하의 이미지를 업로드해주세요.');
         }
       } else {
         alert('파일의 형식이 올바르지 않습니다.');

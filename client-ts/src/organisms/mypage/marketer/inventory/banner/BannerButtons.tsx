@@ -5,7 +5,7 @@ import CustomDialog from '../../../../../atoms/Dialog/Dialog';
 import { useDialog } from '../../../../../utils/hooks';
 import { UsePaginatedGetRequestObject } from '../../../../../utils/hooks/usePaginatedGetRequest';
 import Inquire from '../../../../main/main/Inquiry/Inquiry';
-import BannerUploadDialog from '../../shared/BannerUploadDialog';
+import UploadDialog from '../../shared/BannerUploadDialog';
 import { BannerDataInterface } from '../interface';
 
 
@@ -43,21 +43,17 @@ export default function BannerButtons({
       </Button>
       <Button
         className={classes.button}
-        variant="contained"
+        variant="outlined"
         color="primary"
       >
         <GetApp fontSize="small" />
-        <a
-          href="/IntroService/온애드배너제작가이드.pdf"
-          style={{ textDecoration: 'none', color: 'inherit' }}
-          download="온애드배너제작가이드"
-        >
+        <a href="/IntroService/온애드배너제작가이드.pdf" download="온애드배너제작가이드">
           배너제작 가이드 다운로드
         </a>
       </Button>
 
       {/* 배너 업로드 다이얼로그 */}
-      <BannerUploadDialog
+      <UploadDialog
         open={uploadDialog.open}
         onClose={uploadDialog.handleClose}
         recallRequest={bannerData.request}
