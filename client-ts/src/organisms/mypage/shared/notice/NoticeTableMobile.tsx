@@ -1,7 +1,7 @@
 
 import classnames from 'classnames';
 import moment from 'moment';
-import React from 'react';
+import React, { useState } from 'react';
 import Markdown from 'react-markdown/with-html';
 
 import List from '@material-ui/core/List';
@@ -15,17 +15,26 @@ import { makeStyles } from '@material-ui/core/styles';
 import { NoticeData } from './NoticeTable';
 
 const useStyles = makeStyles((theme) => ({
+  accordion: { marginTop: theme.spacing(1) },
   root: {
     width: '100%',
     padding: 0,
-    minWidth: 360,
+    minWidth: 280,
     minHeight: '70vh',
     backgroundColor: theme.palette.background.paper,
     fontFamily: 'Noto Sans KR',
   },
-  MustTopic: {
+  title: { display: 'flex', flexDirection: 'column', },
+  important: {
     backgroundColor: theme.palette.primary.light,
     color: theme.palette.getContrastText(theme.palette.primary.light)
+  },
+  detail: {
+    backgroundColor: theme.palette.background.default
+  },
+  markdown: {
+    fontSize: theme.typography.body1.fontSize,
+    fontWeight: theme.typography.body1.fontWeight,
   },
 }));
 
@@ -36,41 +45,32 @@ export default function NoticeTableMobile({ data }: NoticeTableMobileProps): JSX
   const classes = useStyles();
 
   return (
-    <div>
-
-      <List component="nav" className={classes.root} aria-label="contacts">
-        {data.map((row) => (
-          <div key={row.title}>
-            <Accordion>
-              <AccordionSummary
-                expandIcon={<ExpandMoreIcon color="action" />}
-                aria-controls="panel1a-content"
-                id="panel1a-header"
-                className={classnames({ [classes.MustTopic]: row.topic === '필독' })}
-              >
-                <div
-                  style={{ display: 'flex', flexDirection: 'column', }}
-                >
-                  <ListItemText secondary={row.topic} />
-                  <ListItemText
-                    primary={row.title}
-                    secondary={<Typography color="textSecondary" variant="body2">{moment(row.regiDate).format('YYYY/MM/DD HH:mm:ss')}</Typography>}
-                  />
-                </div>
-              </AccordionSummary>
-              <AccordionDetails>
-                <div style={{ display: 'block' }}>
-                  <Markdown
-                    source={row.contents}
-                    escapeHtml={false}
-                    renderers={{ code: ({ value }) => <Markdown source={value} /> }}
-                  />
-                </div>
-              </AccordionDetails>
-            </Accordion>
-          </div>
-        ))}
-      </List>
-    </div>
+    <List component="nav" className={classes.root} aria-label="contacts">
+      {data.map((row) => (
+        <div key={row.title}>
+          <Accordion variant="outlined" TransitionProps={{ unmountOnExit: true }} className={classes.accordion}>
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon color="action" />}
+              aria-controls="panel1a-content"
+              id="panel1a-header"
+              className={classnames({ [classes.important]: row.topic === '필독' })}
+            >
+              <div className={classes.title}>
+                <Typography variant="body2" color="textSecondary">{row.topic}</Typography>
+                <ListItemText
+                  primary={row.title}
+                  secondary={<Typography color="textSecondary" variant="body2">{moment(row.regiDate).format('YYYY/MM/DD HH:mm:ss')}</Typography>}
+                />
+              </div>
+            </AccordionSummary>
+            <AccordionDetails className={classes.detail}>
+              <div>
+                <Markdown source={row.contents} escapeHtml={false} className={classnames(classes.markdown, 'react-markdown')} />
+              </div>
+            </AccordionDetails>
+          </Accordion>
+        </div>
+      ))}
+    </List>
   );
 }
