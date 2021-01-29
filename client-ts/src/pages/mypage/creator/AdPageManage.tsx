@@ -41,7 +41,7 @@ function AdPageManage(): JSX.Element {
             <Typography variant="body1">
               ‘내 광고페이지’ 기능 중단 안내에 대한 자세한 사항을
               {' '}
-              <Typography variant="h6" component={Link} to="/notice" style={{ verticalAlign: 'center' }}>
+              <Typography variant="h6" component={Link} to="/mypage/creator/notice" style={{ verticalAlign: 'center' }}>
                 공지사항
                 <SpeakerNotes />
               </Typography>

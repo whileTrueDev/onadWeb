@@ -98,7 +98,7 @@ export default function MarketerPopover(props: MarketerPopoverProps): JSX.Elemen
           <ListItem
             button
             aria-label="to-notice"
-            to="/notice"
+            to="/mypage/marketer/notice"
             component={Link}
             onClick={(): void => {
               if (!noticeReadFlagGet.loading && noticeReadFlagGet.data) {

@@ -16,7 +16,7 @@ import IncomeChart, {
 import BannerCard, { CurrentBannerRes } from '../../../organisms/mypage/creator/Dashboard/BannerCard';
 import OverlayUrlCard, { OverlayUrlRes } from '../../../organisms/mypage/creator/shared/OverlayUrlCard';
 import MypageLoading from './Mypage.loading';
-import NoticeCard, { NoticeData } from '../../../organisms/mypage/creator/Dashboard/NoticeCard';
+import NoticeCard from '../../../organisms/mypage/creator/Dashboard/NoticeCard';
 import CustomerServiceCard from '../../../organisms/mypage/creator/Dashboard/CustomerServiceCard';
 import EventInfoCard from '../../../organisms/mypage/creator/Dashboard/EventInfoCard';
 // hooks
@@ -25,6 +25,7 @@ import useDialog from '../../../utils/hooks/useDialog';
 import { ContractionDataType } from './CPAManage';
 import PlatformLinkDialog from '../../../organisms/mypage/shared/PlatformLinkDialog';
 import history from '../../../history';
+import { NoticeData } from '../../../organisms/mypage/shared/notice/NoticeTable';
 
 const Dashboard = (): JSX.Element => {
   // 계약 정보 조회

@@ -6,15 +6,14 @@ import BrandingWatermark from '@material-ui/icons/BrandingWatermarkOutlined';
 import Reorder from '@material-ui/icons/Reorder';
 import Work from '@material-ui/icons/Work';
 import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
+import SpeakerNotes from '@material-ui/icons/SpeakerNotes';
 // 크리에이터 라우터
 import CreatorMyAds from './creator/MyAds';
 import CreatorDashboard from './creator/Dashboard';
 import CreatorManual from './creator/Manual';
 import CreatorMyPage from './creator/Mypage';
 // import CreatorCPAManage from './creator/CPAManage';
-
 // 마케터 라우터
-
 import MarketerInventory from './marketer/Inventory';
 import MarketerDashboard from './marketer/Dashboard';
 import MarketerMyOffice from './marketer/MyOffice';
@@ -22,6 +21,8 @@ import MarketerMyInfo from './marketer/MyInfo';
 import MarketerCreateCampaign from './marketer/CampaignCreate';
 import MarketerManual from './marketer/Manual';
 import CreatorIncomeManage from './creator/IncomeManage';
+// shared 라우터
+import Notice from './shared/Notice';
 
 export interface MypageRoute {
   path: string;
@@ -68,8 +69,15 @@ const dashboardRoutes: MypageRoutes = {
       icon: Person,
       component: CreatorMyPage,
       layout: '/mypage/creator',
+      needNextDivider: true,
     },
-
+    {
+      path: '/notice',
+      name: '공지사항',
+      icon: SpeakerNotes,
+      component: Notice,
+      layout: '/mypage/creator',
+    },
     {
       path: '/manual',
       name: '사용 방법',
@@ -106,6 +114,14 @@ const dashboardRoutes: MypageRoutes = {
       name: '내 계정 관리',
       icon: Person,
       component: MarketerMyInfo,
+      layout: '/mypage/marketer',
+      needNextDivider: true,
+    },
+    {
+      path: '/notice',
+      name: '공지사항',
+      icon: SpeakerNotes,
+      component: Notice,
       layout: '/mypage/marketer',
     },
     {

@@ -17,7 +17,6 @@ import Main from './pages/main/Main';
 import Introduction from './pages/main/Introduction';
 import RegistPage from './pages/main/Regist';
 import Policy from './pages/main/Policy';
-import Notice from './pages/others/Notice';
 import CreatorList from './pages/main/CreatorList';
 import MarketerDashboard from './pages/mypage/layouts/MarketerLayout';
 import ChargeDialog from './organisms/mypage/marketer/office/charge/ChargeDialog';
@@ -60,8 +59,6 @@ const OnadIndex = (): JSX.Element => {
           <Route exact path="/introduce/:userType" component={Introduction} />
           <Route exact path="/policy" component={Policy} />
           <Route exact path="/policy/:privacy" component={Policy} />
-          <Route exact path="/notice" component={Notice} />
-          <Route path="/notice/:code" component={Notice} />
           <Route path="/mypage/creator" component={CreatorDashboard} />
           <Route path="/mypage/marketer" component={MarketerDashboard} />
           <Route exact path="/marketer/charge" component={ChargeDialog} />

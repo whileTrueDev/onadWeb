@@ -148,3 +148,12 @@ div.MuiDataGrid-root .MuiDataGrid-footer {
     align-items: center;
     text-align:center;
 }
+
+/* 공지사항 및 이용약관 markdown 스타일링 */
+.react-markdown a {
+    color: rgb(53, 201, 220);
+    text-decoration: underline;
+}
+.react-markdown h1,h2,h3,h4,h5,h6 {
+    font-weight: bold;
+}

@@ -1,4 +1,4 @@
-import express, { response } from 'express';
+import express from 'express';
 import responseHelper from '../../middlewares/responseHelper';
 import doQuery from '../../model/doQuery';
 
@@ -12,11 +12,10 @@ router.route('/')
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
       const query = `
       SELECT
-        code, topic, title, contents, regiDate
+        code AS id ,code, topic, title, contents, regiDate
       FROM publicNotice
       ORDER BY code DESC
       `;
-
       interface NoticeResult {
         code: string | number;
         topic: string | number;

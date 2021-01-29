@@ -4,6 +4,7 @@ import React from 'react';
 import { makeStyles, Paper, Typography } from '@material-ui/core';
 import history from '../../../../history';
 import { usePatchRequest } from '../../../../utils/hooks';
+import { NoticeData } from '../../shared/notice/NoticeTable';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -20,14 +21,6 @@ const useStyles = makeStyles((theme) => ({
     '&:hover': { textDecoration: 'underline', }
   }
 }));
-
-export interface NoticeData {
-  code: string;
-  topic: string;
-  title: string;
-  contents: string;
-  regiDate: string;
-}
 export interface NoticeCardProps {
   noticeData: NoticeData[];
 }
@@ -52,7 +45,7 @@ export default function NoticeCard({
               <Typography
                 onClick={(): void => {
                   noticeReadFlagPatch.doPatchRequest();
-                  history.push(`/notice/${noti.code}`);
+                  history.push('/mypage/creator/notice', { selectedNotice: noti.code });
                 }}
                 className={classnames(classes.link, classes.ellipsis)}
               >
@@ -76,7 +69,7 @@ export default function NoticeCard({
           variant="caption"
           color="textSecondary"
           onClick={(): void => {
-            history.push('/notice');
+            history.push('/mypage/creator/notice');
           }}
         >
           자세히 보기

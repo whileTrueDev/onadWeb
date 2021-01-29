@@ -102,7 +102,7 @@ export default function UserPopover(props: UserPopoverProps): JSX.Element {
           <ListItem
             button
             aria-label="to-notice"
-            to="/notice"
+            to={window.location.pathname.includes('marketer') ? 'mypage/marketer/notice' : '/mypage/creator/notice'}
             component={Link}
             onClick={(): void => {
               if (!noticeReadFlagGet.loading && noticeReadFlagGet.data) {
