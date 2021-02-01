@@ -62,7 +62,7 @@ export default function EditablePasswordInput({
       {!editMode.toggle ? (
         <div className={classes.editable}>
           <Typography className={classes.value}>{displayValue}</Typography>
-          <Button onClick={editMode.handleToggle} variant="contained">편집</Button>
+          <Button onClick={editMode.handleToggle} variant="outlined">편집</Button>
         </div>
       ) : (
         <div className={classes.editable}>

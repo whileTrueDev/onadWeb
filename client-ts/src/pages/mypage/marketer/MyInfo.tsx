@@ -8,7 +8,7 @@ import UserDataForm from '../../../organisms/mypage/marketer/office/profile/User
 import SignOut from '../../../organisms/mypage/marketer/office/profile/SignOut';
 
 const useStyles = makeStyles((theme) => ({
-  container: { margin: '0 auto', maxWidth: 1430 },
+  // container: { margin: '0 auto', maxWidth: 1430 },
   title: { marginTop: theme.spacing(2), color: theme.palette.text.primary },
 }));
 export default function MyInfo(): JSX.Element {
@@ -17,7 +17,7 @@ export default function MyInfo(): JSX.Element {
   const accountData = useGetRequest<null, AccountInterface | null>('/marketer/account');
 
   return (
-    <div className={classes.container}>
+    <div>
       {/* 계정 관리 */}
       {!userData.loading && userData.data && !accountData.loading && (
         <div>
