@@ -12,5 +12,6 @@ COPY ./yarn.lock /home/api_server/yarn.lock
 COPY ./package.json /home/api_server/package.json
 COPY ./public /home/api_server/dist/public
 RUN yarn install --prod
+
 EXPOSE 3000 587
 CMD NODE_ENV=production yarn start:production
