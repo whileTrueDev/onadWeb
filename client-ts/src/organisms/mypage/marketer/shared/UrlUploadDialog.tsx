@@ -12,6 +12,7 @@ import useToggle from '../../../../utils/hooks/useToggle';
 import useEventTargetValue from '../../../../utils/hooks/useEventTargetValue';
 import usePostRequest from '../../../../utils/hooks/usePostRequest';
 import UrlUploadStep from './UrlUploadStep';
+import landingUrlRegex from '../../../../utils/inputs/regex/landing-url.regex';
 
 const useQontoStepIconStyles = makeStyles((theme: Theme) => ({
   root: { color: theme.palette.background.paper, display: 'flex', },
@@ -127,9 +128,8 @@ export default function UrlUploadDialog(props: UrlUploadDialogProps): JSX.Elemen
           <Button
             color="primary"
             disabled={// from https://regexr.com/3um70
-                  !(/^(https?|chrome):\/\/[^\s$.?#].[^\s]*$/
-                    .test(mainUrl.value)) || !isLengthValid()
-                }
+              !(landingUrlRegex.test(mainUrl.value)) || !isLengthValid()
+            }
             onClick={handleSubmit}
           >
             등록

@@ -24,19 +24,7 @@ import SuccessTypo from '../../../atoms/Typography/Success';
 import HOST from '../../../config';
 import StyledInput from '../../../atoms/StyledInput';
 import { Props } from './PlatformRegistForm';
-
-// Style Overriding용.
-
-// domain select용.
-const domains = [
-  { value: 'naver.com' },
-  { value: 'daum.net' },
-  { value: 'nate.com' },
-  { value: 'gmail.com' },
-  { value: 'hotmail.com' },
-  { value: 'yahoo.co.kr' },
-  { value: '직접입력' },
-];
+import domains from '../../../utils/inputs/email-domains';
 
 
 /*
@@ -90,7 +78,7 @@ function RegistForm({
       return;
     }
     const {
-      id, password, repasswd, checkDuplication,
+      id, password, repasswd, checkDuplication, phoneNumValidationCheck
     } = state;
 
     // const marketerMailId = document.getElementById('email').value;
@@ -100,8 +88,9 @@ function RegistForm({
       alert('입력이 올바르지 않습니다.');
       return;
     }
+
     // 모든 state가 false가 되어야한다.
-    if (!(id || password || repasswd || checkDuplication)) {
+    if (!(id || password || repasswd || checkDuplication || phoneNumValidationCheck)) {
       // const marketerId = document.getElementById('id')!.value;
       const marketerId = state.idValue;
       const marketerName = state.name;
@@ -161,51 +150,53 @@ function RegistForm({
           <form autoComplete="off" onSubmit={handleSubmit} id="form">
             <Grid container direction="column" spacing={1}>
               <Grid item xs={12}>
-                <FormControl
-                  error={Boolean(state.id)}
-                >
-                  <InputLabel shrink>ID</InputLabel>
+                <FormControl required error={Boolean(state.id)}>
+                  <InputLabel shrink>아이디</InputLabel>
                   <Input
                     required
                     id="id"
                     placeholder="아이디를 입력하세요"
                     onChange={handleChange('id')}
+                    inputProps={{
+                      maxLength: 15,
+                    }}
                     endAdornment={(
                       <InputAdornment position="end">
                         <Divider className={classes.divider} />
-                        <Button onClick={() => checkDuplicateID()}>
-                          조회
+                        <Button color="primary" onClick={() => checkDuplicateID()}>
+                          중복조회
                         </Button>
                         {!state.checkDuplication && <SuccessTypo><Done /></SuccessTypo>}
                       </InputAdornment>
                     )}
                   />
-                  <FormHelperText>{state.id ? '영문자로 시작하는 4-15자 영문 또는 숫자' : ' '}</FormHelperText>
+                  <FormHelperText>{state.id ? '6자 이상, 15자 이하 영문(소문자) 또는 숫자' : ' '}</FormHelperText>
                 </FormControl>
               </Grid>
               <Grid container direction="row">
                 <Grid item>
                   <TextField
                     required
-                    label="PASSWORD"
                     type="password"
+                    label="비밀번호"
                     placeholder="비밀번호를 입력하세요."
                     className={classes.textField}
                     onChange={handleChange('password')}
-                    helperText={state.password ? '특수문자를 포함한 8-20자 영문 또는 숫자' : ' '}
+                    helperText={state.password ? '특수문자 !@#$%^*+=- 를 포함한 8-20 영문 또는 숫자' : ' '}
                     error={state.password}
                     margin="normal"
                     InputLabelProps={{
                       shrink: true,
                     }}
+                    inputProps={{ maxLength: 20, }}
                   />
                 </Grid>
                 <Grid item>
                   <TextField
                     required
-                    label="RE-PASSWORD"
                     type="password"
-                    placeholder="비밀번호를 재입력하세요."
+                    label="비밀번호확인"
+                    placeholder="비밀번호 확인을 입력하세요."
                     helperText={state.repasswd ? '비밀번호와 동일하지 않습니다.' : ' '}
                     error={state.repasswd}
                     className={classes.textField}
@@ -214,6 +205,7 @@ function RegistForm({
                     InputLabelProps={{
                       shrink: true,
                     }}
+                    inputProps={{ maxLength: 20, }}
                   />
                 </Grid>
               </Grid>
@@ -225,13 +217,15 @@ function RegistForm({
                     id="name"
                     onChange={handleChange('name')}
                     className={classes.textField}
-                    // defaultValue={defaultName}
                     placeholder="회사명(브랜드명)을 입력하세요"
                     margin="normal"
                     InputLabelProps={{
                       shrink: true,
                     }}
-                    helperText="크리에이터와 시청자들에게 보여질 이름입니다!"
+                    inputProps={{
+                      maxLength: 15
+                    }}
+                    helperText="방송인과 시청자에게 해당 이름으로 보여집니다."
                   />
                 </Grid>
                 <Grid item>
@@ -241,9 +235,11 @@ function RegistForm({
                         className={classes.phoneField}
                         required
                         margin="normal"
+                        error={Boolean(state.phoneNumValidationCheck)}
                       >
                         <InputLabel shrink htmlFor="phoneNumber">전화번호</InputLabel>
                         <NumberFormat
+                          pattern="^\( [0-9]{3} \) [-] +[0-9]{3,4} [-] +[0-9]{4}$"
                           placeholder="( ___ ) - ____ - ____"
                           value={state.phoneNum}
                           onValueChange={handleChangePhone}
@@ -252,7 +248,11 @@ function RegistForm({
                           className={classes.phoneField}
                           allowNegative={false}
                         />
-                        <FormHelperText>온애드와 연락할 전화번호를 입력하세요.</FormHelperText>
+                        <FormHelperText>
+                          {state.phoneNumValidationCheck
+                            ? '전화번호를 모두 채워주세요!'
+                            : '온애드와 연락할 전화번호를 입력하세요.'}
+                        </FormHelperText>
                       </FormControl>
                     </Grid>
                     <Grid item className={classes.switchbox}>
@@ -271,7 +271,7 @@ function RegistForm({
                             )}
                             className={classes.switch}
                             classes={{ label: classes.switchLabel }}
-                            label="휴대폰"
+                            label={'휴대폰\0인터넷전화'}
                             labelPlacement="bottom"
                           />
                         </Grid>
@@ -303,10 +303,10 @@ function RegistForm({
                 <Grid item>
                   <TextField
                     required
-                    label="EMAIL ID"
+                    label="이메일"
                     className={classes.textField}
                     onChange={handleChange('email')}
-                    helperText="EMAIL ID을 입력하세요."
+                    helperText="연락 가능한 이메일을 입력하세요."
                     margin="normal"
                     id="email"
                     InputLabelProps={{
@@ -315,6 +315,10 @@ function RegistForm({
                     InputProps={{
                       endAdornment: <InputAdornment position="end" className={classes.adornment}><div>@</div></InputAdornment>,
                     }}
+                    // eslint-disable-next-line react/jsx-no-duplicate-props
+                    inputProps={{
+                      maxLength: 64
+                    }}
                   />
                 </Grid>
                 <Grid item>
@@ -322,11 +326,11 @@ function RegistForm({
                     <TextField
                       required
                       select
-                      label="Domain"
+                      label="도메인"
                       className={classes.textField}
                       value={state.domain}
                       onChange={handleChange('domain')}
-                      helperText="EMAIL Domain을 선택하세요."
+                      helperText="EMAIL 도메인을 선택하세요."
                       InputLabelProps={{
                         shrink: true,
                       }}
@@ -339,22 +343,24 @@ function RegistForm({
                       ))}
                     </TextField>
 
-                  )
-                    : (
-                      <TextField
-                        required
-                        autoFocus
-                        label="Domain"
-                        className={classes.textField}
-                        value={marketerCustomDomain}
-                        onChange={handleCustom}
-                        helperText="EMAIL Domain을 입력하세요."
-                        InputLabelProps={{
-                          shrink: true,
-                        }}
-                        margin="normal"
-                      />
-                    )}
+                  ) : (
+                    <TextField
+                      required
+                      autoFocus
+                      label="도메인"
+                      inputProps={{
+                        maxLength: 255
+                      }}
+                      className={classes.textField}
+                      value={marketerCustomDomain}
+                      onChange={handleCustom}
+                      helperText="이메일 도메인을 입력하세요."
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                      margin="normal"
+                    />
+                  )}
                 </Grid>
               </Grid>
               <Grid item style={{ marginTop: '16px' }}>

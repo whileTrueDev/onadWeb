@@ -20,6 +20,8 @@ import history from '../../../history';
 import { OnadTheme } from '../../../theme';
 import Snackbar from '../../../atoms/Snackbar/Snackbar';
 import { useDialog } from '../../../utils/hooks';
+import userIdRegex from '../../../utils/inputs/regex/userId.regex';
+import passwordRegex from '../../../utils/inputs/regex/password.regex';
 
 const useStyles = makeStyles((theme: OnadTheme) => ({
   socialLoginButton: {
@@ -68,7 +70,7 @@ export default function SignupCreator(): JSX.Element {
   });
 
   // 에러 정보
-  const defaultHelperText = '영문자로 시작하는 영문 또는 숫자 6-15자';
+  const defaultHelperText = '영문자로 시작하는 영문(소문자) 또는 숫자 6-15자';
   const [useridHelperText, setUseridHelperText] = useState(defaultHelperText);
   const [useridError, setUseridError] = useState<boolean>(false);
   const [pwdError, setPwdError] = useState<boolean>(false);
@@ -162,14 +164,13 @@ export default function SignupCreator(): JSX.Element {
 
   // 아이디 에러 체크 ( 중복 체크 제외 )
   function useridErrorCheck(): boolean {
-    const idReg = /^[A-za-z]{1}[a-z0-9]{5,14}$/g;
     if (!signupInfo.userid) return false;
     if (signupInfo.userid.length < 6 || signupInfo.userid.length > 15) {
       setUseridHelperText('아이디는 6자 이상, 15자 이하만 가능합니다.');
       setUseridError(true);
       return false;
     }
-    if (!idReg.test(signupInfo.userid)) {
+    if (!userIdRegex.test(signupInfo.userid)) {
       setUseridHelperText(`${defaultHelperText}`);
       setUseridError(true);
       return false;
@@ -204,8 +205,7 @@ export default function SignupCreator(): JSX.Element {
 
   // 비밀번호 에러 체크
   function passwdErrorCheck(): boolean {
-    const regx = /^(?=.*[a-zA-Z0-9])(?=.*[!@#$%^*+=-]).{8,20}$/;
-    const isValid = regx.test(signupInfo.passwd);
+    const isValid = passwordRegex.test(signupInfo.passwd);
     if (!isValid) {
       setPwdError(true);
       return false;
@@ -301,7 +301,7 @@ export default function SignupCreator(): JSX.Element {
         disabled={duplicateCheckLoading}
         type={signupInfo.pwdVisibility ? 'text' : 'password'}
         error={pwdError}
-        helperText="특수문자를 포함한 8-20자 영문 또는 숫자"
+        helperText="특수문자 !@#$%^*+=- 를 포함한 8-20자 영문 또는 숫자"
         value={signupInfo.passwd}
         onChange={handleChange('passwd')}
         onFocus={(): void => setPwIconColor('primary')}

@@ -7,6 +7,7 @@ import {
   //  FormControlLabel, Checkbox,
 } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
+import landingUrlRegex from '../../../../utils/inputs/regex/landing-url.regex';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -53,7 +54,7 @@ const UrlUploadStep = (props: any): JSX.Element => {
           className={classes.textField}
           inputProps={{ minLength: 8 }}
           onChange={mainUrl.handleChange}
-          error={!(/^(https?|chrome):\/\/[^\s$.?#].[^\s]*$/.test(mainUrl.value))}
+          error={!(landingUrlRegex.test(mainUrl.value))}
           helperText="클릭시 이동될 주소"
         />
       </div>
@@ -98,7 +99,7 @@ const UrlUploadStep = (props: any): JSX.Element => {
                 value={subUrl.value}
                 onChange={subUrl.handleChange}
                 disabled={subUrlCheck.toggle}
-                error={!(/^(https?|chrome):\/\/[^\s$.?#].[^\s]*$/.test(subUrl.value))}
+                error={!landingUrlRegex.test(subUrl.value))}
               />
             </Grid>
           </Grid>

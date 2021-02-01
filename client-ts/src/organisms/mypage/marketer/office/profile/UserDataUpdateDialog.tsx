@@ -12,6 +12,7 @@ import StyledInput from '../../../../../atoms/StyledInput';
 import useDialog from '../../../../../utils/hooks/useDialog';
 import usePatchRequest from '../../../../../utils/hooks/usePatchRequest';
 import { UserInterface } from '../interface';
+import passwordRegex from '../../../../../utils/inputs/regex/password.regex';
 
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -99,8 +100,7 @@ const reducer = (state: StateInterface, action: Action): StateInterface => {
       return { ...state, name: action.value };
     }
     case 'password': {
-      const regx = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,20}$/;
-      if (regx.test(action.value)) {
+      if (passwordRegex.test(action.value)) {
         return { ...state, passwordValue: action.value, password: false };
       }
       return { ...state, passwordValue: action.value, password: true };
@@ -177,7 +177,7 @@ const UserDataUpdateDialog = (props: UserDataUpdateDialogProps): JSX.Element => 
         case 'phone':
           return formattedPhone;
         case 'mail':
-          if(marketerCustomDomain !== ''){
+          if (marketerCustomDomain !== '') {
             return `${state.email}@${marketerCustomDomain}`;
           }
           return `${state.email}@${state.domain}`;
@@ -229,12 +229,12 @@ const UserDataUpdateDialog = (props: UserDataUpdateDialogProps): JSX.Element => 
                       <Grid item className={classes.text}>
                         <TextField
                           required
-                          label="PASSWORD"
+                          label="비밀번호"
                           type="password"
                           id="password"
                           placeholder="변경할 비밀번호를 입력하세요."
                           onChange={handleChange('password')}
-                          helperText={state.password ? '특수문자를 포함한 영문/숫자 혼합 8자리 이상입니다.' : ' '}
+                          helperText={state.password ? '특수문자 !@#$%^*+=- 를 포함한 8-20 영문 또는 숫자' : ' '}
                           error={state.password}
                           className={classes.textField}
                           margin="normal"
@@ -242,6 +242,7 @@ const UserDataUpdateDialog = (props: UserDataUpdateDialogProps): JSX.Element => 
                           InputLabelProps={{
                             shrink: true,
                           }}
+                          inputProps={{ maxLength: 20, }}
                         />
                       </Grid>
                     </Grid>
@@ -252,7 +253,7 @@ const UserDataUpdateDialog = (props: UserDataUpdateDialogProps): JSX.Element => 
                             <Grid item>
                               <TextField
                                 required
-                                label="RE-PASSWORD"
+                                label="비밀번호 확인"
                                 type="password"
                                 placeholder="변경할 비밀번호를 재입력하세요."
                                 helperText={state.repasswd ? '비밀번호가 동일하지 않습니다.' : ' '}
@@ -263,6 +264,7 @@ const UserDataUpdateDialog = (props: UserDataUpdateDialogProps): JSX.Element => 
                                 InputLabelProps={{
                                   shrink: true,
                                 }}
+                                inputProps={{ maxLength: 20, }}
                               />
                             </Grid>
                           </Grid>
