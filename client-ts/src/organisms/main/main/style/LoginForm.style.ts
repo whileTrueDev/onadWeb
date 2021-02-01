@@ -3,18 +3,11 @@ import { darken } from '@material-ui/core/styles/colorManipulator';
 import { OnadTheme } from '../../../../theme';
 
 const useStyles = makeStyles((theme: OnadTheme) => ({
-  image: {
-    width: '50px',
-    height: '50px',
-    objectFit: 'cover',
-    objectPosition: 'top',
-    borderRadius: '50%'
-  },
+  form: { margin: theme.spacing(1, 0) },
   dialog: {
     textAlign: 'center',
     padding: `${theme.spacing(6)}px ${theme.spacing(4)}px`,
   },
-  dialogTitle: { fontWeight: 700 },
   buttonLoading: {
     backgroundColor: theme.palette.action.disabledBackground,
     position: 'absolute',
@@ -24,12 +17,16 @@ const useStyles = makeStyles((theme: OnadTheme) => ({
     justifyContent: 'center',
     alignItems: 'center'
   },
-  socialLoginButton: {
+  divider: { margin: theme.spacing(1, 0, 2) },
+  loginButton: {
     borderRadius: '0px',
-    width: '100%',
     height: 60,
-    margin: `${theme.spacing(1)}px 0px`,
-    boxShadow: theme.shadows[0]
+    margin: theme.spacing(0.5, 0, 0.5),
+    boxShadow: theme.shadows[0],
+    border: `1px solid ${theme.palette.divider}`,
+  },
+  socialLoginButton: {
+    height: 40,
   },
   twitch: {
     color: theme.palette.getContrastText(theme.palette.platform.twitch),
@@ -43,6 +40,27 @@ const useStyles = makeStyles((theme: OnadTheme) => ({
     backgroundColor: theme.palette.platform.afreeca,
     '&:hover': {
       backgroundColor: darken(theme.palette.platform.afreeca, 0.07),
+    }
+  },
+  kakao: {
+    color: theme.palette.getContrastText(theme.palette.platform.kakao),
+    backgroundColor: theme.palette.platform.kakao,
+    '&:hover': {
+      backgroundColor: darken(theme.palette.platform.kakao, 0.07),
+    }
+  },
+  naver: {
+    color: theme.palette.getContrastText(theme.palette.platform.naver),
+    backgroundColor: theme.palette.platform.naver,
+    '&:hover': {
+      backgroundColor: darken(theme.palette.platform.naver, 0.07),
+    }
+  },
+  google: {
+    color: theme.palette.getContrastText(theme.palette.common.white),
+    backgroundColor: theme.palette.common.white,
+    '&:hover': {
+      backgroundColor: darken(theme.palette.common.white, 0.07),
     }
   },
   socialLogo: {

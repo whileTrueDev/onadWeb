@@ -1,3 +1,7 @@
+import passwordRegex from '../../../utils/inputs/regex/password.regex';
+import phoneNumRegex from '../../../utils/inputs/regex/phoneNum.regex';
+import userIdRegex from '../../../utils/inputs/regex/userId.regex';
+
 export const initialState = {
   passwordValue: '',
   id: false,
@@ -6,19 +10,21 @@ export const initialState = {
   checkDuplication: true,
   email: '',
   phoneNum: '',
+  phoneNumValidationCheck: false,
   domain: '',
   name: '',
   idValue: '',
 };
 export interface StepState {
-  passwordValue: string | number;
+  passwordValue: string;
   id: string | boolean;
   idValue: string;
   password: boolean;
   repasswd: boolean;
   checkDuplication: boolean;
   email: string;
-  phoneNum: string | number;
+  phoneNum: string;
+  phoneNumValidationCheck: boolean;
   domain: string;
   name: string;
 }
@@ -27,7 +33,7 @@ export type StepAction = { type: 'id'; value: string }
   | { type: 'password'; value: string }
   | { type: 'repasswd'; value: string }
   | { type: 'email'; value: string }
-  | { type: 'phoneNum'; value: string | number }
+  | { type: 'phoneNum'; value: string }
   | { type: 'domain'; value: string }
   | { type: 'checkDuplication'; value: boolean }
   | { type: 'name'; value: string }
@@ -41,8 +47,7 @@ export function myReducer(
 ): StepState {
   switch (action.type) {
     case 'id': {
-      const idReg = /^[A-za-z]+[a-z0-9]{4,15}$/g;
-      if (idReg.test(action.value)) {
+      if (userIdRegex.test(action.value)) {
         return {
           ...state, id: false, checkDuplication: true, idValue: action.value
         };
@@ -53,8 +58,7 @@ export function myReducer(
     }
     // (?=.*[0-9])
     case 'password': {
-      const regx = /^(?=.*[a-zA-Z0-9])(?=.*[!@#$%^*+=-]).{8,20}$/;
-      if (regx.test(action.value)) {
+      if (passwordRegex.test(action.value)) {
         return { ...state, passwordValue: action.value, password: false };
       }
       return { ...state, passwordValue: action.value, password: true };
@@ -74,7 +78,10 @@ export function myReducer(
       return { ...state, email: action.value };
     }
     case 'phoneNum': {
-      return { ...state, phoneNum: action.value };
+      if (phoneNumRegex.test(action.value)) {
+        return { ...state, phoneNum: action.value, phoneNumValidationCheck: false };
+      }
+      return { ...state, phoneNum: action.value, phoneNumValidationCheck: true };
     }
     case 'domain': {
       return { ...state, domain: action.value };

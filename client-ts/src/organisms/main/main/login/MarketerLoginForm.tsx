@@ -1,16 +1,17 @@
 import React, { useState } from 'react';
+import classnames from 'classnames';
 import { Link } from 'react-router-dom';
 import {
   Dialog,
-  DialogActions,
   DialogContent,
-  DialogContentText,
   Button,
   TextField,
-  Grid,
   Divider,
-  Typography
+  Typography,
+  IconButton,
+  CircularProgress
 } from '@material-ui/core';
+import { Close } from '@material-ui/icons';
 import useStyles from '../style/LoginForm.style';
 import axios from '../../../../utils/axios';
 import FindDialog from './FindDialog';
@@ -44,16 +45,17 @@ function LoginForm({
     }
   };
 
+  const [loading, setLoading] = useState(false);
+
   const login = (event: React.SyntheticEvent) => {
     if (event) {
       event.preventDefault();
     }
+    setLoading(true);
     axios.post(`${HOST}/login`,
-      {
-        userid,
-        passwd,
-      })
+      { userid, passwd, type: 'marketer' })
       .then((res) => {
+        setLoading(false);
         if (res.data[0]) {
           setPasswd('');
           console.log(res.data);
@@ -74,6 +76,7 @@ function LoginForm({
         }
       })
       .catch((reason) => {
+        setLoading(false);
         console.log(reason);
         setPasswd(''); // 비밀번호 초기화
         alert('회원이 아닙니다.');
@@ -86,102 +89,138 @@ function LoginForm({
       open={open}
       onClose={handleClose}
       maxWidth="xs"
+      fullWidth
     >
-      <DialogContent>
-        <DialogContentText style={{ fontSize: 15, fontFamily: 'Noto Sans kr' }}>
-            온애드로 쉽고 빠르게!
-        </DialogContentText>
-        <form>
+      <DialogContent className={classes.dialog}>
+
+        <IconButton onClick={handleClose} style={{ position: 'absolute', top: 10, right: 10 }}>
+          <Close />
+        </IconButton>
+
+        <img src="/pngs/logo/onad_logo_vertical_small.png" alt="" width={80} height={80} />
+
+        <Typography variant="h6">온애드 광고주 로그인</Typography>
+
+        <form className={classes.form}>
           <TextField
+            placeholder="아이디"
+            style={{ marginTop: 16 }}
+            InputProps={{ style: { height: 40 } }}
+            variant="outlined"
             autoFocus
-            required
-            label="ID"
-            helperText="ID를 입력하세요."
             value={userid}
-            margin="dense"
             name="userid"
-            InputLabelProps={{ shrink: true }}
-            style={{ width: '90%' }}
+            fullWidth
             onChange={onChange}
           />
           <TextField
-            required
-            label="PASSWORD"
-            helperText="PASSWORD를 입력하세요"
+            placeholder="비밀번호"
+            style={{ marginTop: 16 }}
+            InputProps={{ style: { height: 40 } }}
+            variant="outlined"
             type="password"
             value={passwd}
-            margin="dense"
             name="passwd"
             onChange={onChange}
-            InputLabelProps={{ shrink: true }}
-            style={{ width: '90%' }}
+            fullWidth
             onKeyPress={(e) => {
-              if (e.key === 'Enter') {
-                login(e);
-              }
+              if (e.key === 'Enter') login(e);
             }}
           />
-        </form>
-        <Typography style={{
-          fontSize: 15, fontFamily: 'Noto Sans kr', marginTop: '20px', color: 'rgba(0, 0, 0, 0.54)', marginBottom: '3px'
-        }}
-        >
-            소셜 계정으로 온애드 서비스 이용
-        </Typography>
-        <Divider component="hr" orientation="horizontal" />
-        <Grid container direction="row" alignItems="flex-end">
-          <Grid item>
-            <Button href={`${HOST}/login/google`}>
-              <img src="/pngs/logo/google.png" alt="google" className={classes.image} />
-            </Button>
-          </Grid>
-          <Grid item>
-            <Button href={`${HOST}/login/naver`}>
-              <img src="/pngs/logo/naver2.png" alt="naver" className={classes.image} />
-            </Button>
-          </Grid>
-          <Grid item>
-            <Button href={`${HOST}/login/kakao`}>
-              <img src="/pngs/logo/kakao.png" alt="kakao" className={classes.image} />
-            </Button>
-          </Grid>
-        </Grid>
-        <Button
-          style={{ fontSize: 11, marginTop: 10 }}
-          onClick={() => {
-            setDialogType('ID');
-            setFindDialogOpen(true);
-          }}
-        >
-            아이디가 기억나지 않으신가요?
-        </Button>
-        <br />
-        <Button
-          style={{ fontSize: 11, marginTop: 10 }}
-          onClick={() => {
-            setDialogType('PASSWORD');
-            setFindDialogOpen(true);
-          }}
-        >
-            비밀번호가 기억나지 않으신가요?
-        </Button>
-        <br />
-        <Button
-          component={Link}
-          style={{ fontSize: 11, marginTop: 10 }}
-          to="/regist"
-        >
-            계정이 없으신가요? 회원가입하기
-        </Button>
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={login} color="primary">
+
+          <Button
+            className={classnames(classes.loginButton, classes.socialLoginButton)}
+            variant="contained"
+            onClick={login}
+            color="primary"
+            fullWidth
+            style={{ marginTop: 16, marginBottom: 8 }}
+          >
             로그인
+          </Button>
+
+        </form>
+
+        <Divider component="hr" orientation="horizontal" className={classes.divider} />
+
+        <Button
+          href={`${HOST}/login/google`}
+          fullWidth
+          className={classnames(classes.loginButton, classes.socialLoginButton, classes.google)}
+          style={{ alignItems: 'center' }}
+        >
+          <img src="/pngs/logo/google.png" alt="" height="30" />
+          구글 아이디로 로그인
         </Button>
-        <Button onClick={handleClose} color="primary">
-            취소
+        <Button
+          href={`${HOST}/login/naver`}
+          fullWidth
+          className={classnames(classes.loginButton, classes.socialLoginButton, classes.naver)}
+          style={{ alignItems: 'center' }}
+        >
+          <img src="/pngs/logo/naver/naver_icon_green.png" alt="" height="30" />
+          네이버 아이디로 로그인
         </Button>
-      </DialogActions>
+        <Button
+          href={`${HOST}/login/kakao`}
+          fullWidth
+          className={classnames(classes.loginButton, classes.socialLoginButton, classes.kakao)}
+          style={{ alignItems: 'center' }}
+        >
+          <img src="/pngs/logo/kakao/kakaolink_btn_small.png" alt="" height="30" />
+          카카오 아이디로 로그인
+        </Button>
+
+        <Divider component="hr" orientation="horizontal" className={classes.divider} />
+
+        <div style={{ marginTop: 16 }}>
+          <Typography variant="body2" color="textSecondary">
+            계정이 없으신가요?&nbsp;
+            <Typography
+              variant="body2"
+              component={Link}
+              to="/regist"
+              style={{ color: 'red', textDecoration: 'underline', cursor: 'pointer' }}
+            >
+              회원가입하기
+            </Typography>
+          </Typography>
+
+          <Typography variant="body2" color="textSecondary">
+            아이디가 기억나지 않나요?&nbsp;
+            <Typography
+              component="span"
+              variant="body2"
+              onClick={() => {
+                setDialogType('ID');
+                setFindDialogOpen(true);
+              }}
+              style={{ color: 'red', textDecoration: 'underline', cursor: 'pointer' }}
+            >
+              아이디 찾기
+            </Typography>
+          </Typography>
+          <Typography variant="body2" color="textSecondary">
+            비밀번호가 기억나지 않나요?&nbsp;
+            <Typography
+              component="span"
+              variant="body2"
+              onClick={() => {
+                setDialogType('PASSWORD');
+                setFindDialogOpen(true);
+              }}
+              style={{ color: 'red', textDecoration: 'underline', cursor: 'pointer' }}
+            >
+              비밀번호 찾기
+            </Typography>
+          </Typography>
+        </div>
+      </DialogContent>
+
+      {loading && (
+      <div className={classes.buttonLoading}><CircularProgress /></div>
+      )}
+
     </Dialog>
   );
 

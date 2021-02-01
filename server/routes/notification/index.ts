@@ -13,7 +13,7 @@ function getQuery(userType: string): string {
     }
     case 'creatorSelect': {
       return (`SELECT noticeReadState 
-                FROM creatorInfo 
+                FROM creatorInfo
                 WHERE creatorId = ?`);
     }
     case 'marketerUpdate': {

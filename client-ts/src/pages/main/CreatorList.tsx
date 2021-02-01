@@ -12,8 +12,6 @@ import Card from '../../atoms/Card/Card';
 import CardAvatar from '../../atoms/Card/CardAvatar';
 import CardBody from '../../atoms/Card/CardBody';
 import CircularProgress from '../../atoms/Progress/CircularProgress';
-import withRoot from './withRoot';
-
 
 export interface ContractedCreatorListData<T> {
   creatorTwitchId: T;
@@ -21,7 +19,7 @@ export interface ContractedCreatorListData<T> {
   creatorLogo: T;
 }
 
-export default withRoot(() => {
+export default function CreatorList(): JSX.Element {
   const {
     isLogin, repasswordOpen, logout, setRepassword
   } = useLoginValue();
@@ -108,4 +106,4 @@ export default withRoot(() => {
       />
     </div>
   );
-});
+}

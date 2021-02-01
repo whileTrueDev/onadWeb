@@ -8,12 +8,13 @@ import createError from 'http-errors';
 import session from 'express-session';
 import morgan from 'morgan';
 // import checkAuthOnReq from './middlewares/auth/checkAuthOnReq';
-import passport from './middlewares/auth/passport';
+import passport from './routes/auth/passport';
 // Routers
 import alimtalkRouter from './routes/alimtalk';
 import creatorRouter from './routes/creator';
 import creatorsRouter from './routes/creators';
 import loginRouter from './routes/auth/login';
+import linkRouter from './routes/auth/link';
 import logoutRouter from './routes/auth/logout';
 import marketerRouter from './routes/marketer';
 import chartRouter from './routes/chart';
@@ -23,6 +24,9 @@ import inquiryRouter from './routes/inquiry';
 import noticeRouter from './routes/notice';
 import trackingRouter from './routes/tracking';
 import cpapageRouter from './routes/cpapage';
+import certificationRouter from './routes/cert/certification';
+import gamesRouter from './routes/games';
+import manualRouter from './routes/manual';
 // Middleware or custom modules
 import taxBillScheduler from './middlewares/scheduler/taxBillScheduler';
 import dailyLimitScheduler from './middlewares/scheduler/dailyLimitScheduler';
@@ -123,6 +127,7 @@ class OnadWebApi {
     // /auth로 변경
     // *********************************
     this.app.use('/login', loginRouter);
+    this.app.use('/link', linkRouter);
 
     this.app.use('/logout', logoutRouter);
     this.app.use('/creator', creatorRouter);
@@ -135,6 +140,9 @@ class OnadWebApi {
     this.app.use('/notice', noticeRouter);
     this.app.use('/tracking', trackingRouter);
     this.app.use('/cpapage', cpapageRouter);
+    this.app.use('/certification', certificationRouter);
+    this.app.use('/games', gamesRouter);
+    this.app.use('/manual', manualRouter); // 이용안내 데이터 라우터
     // Error handling
     // catch 404 and forward to error handler
     this.app.use((req, res, next) => {

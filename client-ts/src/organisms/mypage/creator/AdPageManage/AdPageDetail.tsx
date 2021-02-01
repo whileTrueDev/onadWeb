@@ -5,7 +5,7 @@ import {
 } from '@material-ui/core';
 import BarChart from '@material-ui/icons/BarChart';
 import CustomCard from '../../../../atoms/CustomCard';
-import PrettoSlider from '../../../../atoms/PrettoSlider';
+import PrettoSlider from '../../../../atoms/AdLevelSlider';
 import StyledItemText from '../../../../atoms/StyledItemText';
 import Tooltip from '../../../../atoms/DescPopover';
 import useTooltip from '../../../../utils/hooks/useTooltip';

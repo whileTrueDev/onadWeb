@@ -2,11 +2,10 @@ import React from 'react';
 import shortid from 'shortid';
 // @material-ui/core components
 import {
-  Table, TableHead, TableRow, TableBody, TableCell
+  Table, TableHead, TableRow, TableBody, TableCell, Button
 } from '@material-ui/core';
 // custom table component
 import CustomTableFooter from './TableFooter';
-import Button from '../CustomButtons/Button';
 import useTableStyles from './Table.style';
 // import CpcCpmTooltip from '../Tooltip/CpcCpmTooltip';
 
@@ -85,11 +84,12 @@ function CustomTable({
               {detailButton && (
                 <TableCell className={classes.tableCell}>
                   <Button
-                    variant="contained"
+                    variant="outlined"
                     color="primary"
+                    size="small"
                     onClick={(): void => {
                       if (handleDialogOpen) {
-                        handleDialogOpen((page * rowsPerPage) + i + 1);
+                        handleDialogOpen((page * rowsPerPage) + i);
                       }
                     }}
                   >

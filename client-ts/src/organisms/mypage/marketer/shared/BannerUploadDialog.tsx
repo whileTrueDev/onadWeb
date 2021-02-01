@@ -1,12 +1,11 @@
 import React, { useReducer, useState } from 'react';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import {
-  Stepper, Step, StepLabel, StepContent, Collapse
+  Stepper, Step, StepLabel, StepContent, Collapse, Button
 } from '@material-ui/core';
 import classnames from 'classnames';
 import Check from '@material-ui/icons/Check';
 import Dialog from '../../../../atoms/Dialog/Dialog';
-import Button from '../../../../atoms/CustomButtons/Button';
 // import BannerDescForm from './BannerDescForm';
 import './upload.css';
 import ImageUpload from './ImageUpload';
@@ -86,11 +85,12 @@ interface UploadDialogProps {
   open: boolean;
   onClose: () => void;
   recallRequest?: () => void;
+  failCallback?: (e: any) => void;
 }
 
 const UploadDialog = (props: UploadDialogProps): JSX.Element => {
   const {
-    open, onClose, recallRequest
+    open, onClose, recallRequest, failCallback
   } = props;
   const [state, dispatch] = useReducer(myReducer, { imageName: '', imageUrl: DEFAULT_IMAGE_PATH });
   const [activeStep, setStep] = useState(0);
@@ -100,41 +100,25 @@ const UploadDialog = (props: UploadDialogProps): JSX.Element => {
     onClose();
   };
 
-  // // usePostRequest 수정 이후 적용
-  // const {
-  //   data, loading, error, doPostRequest
-  // } = usePostRequest<{ bannerSrc: string; bannerDescription: string }, boolean[]>(
-  //   '/marketer/banner');
+  // 등록 버튼 로딩을 위한 상태값
+  const [submitLoading, setSubmitLoading] = useState(false);
 
-  // url을 제출.
+  // 배너를 등록 함수
   const handleSubmit = (): void => {
-    // const bannerDescription = (document.getElementById('banner') as HTMLInputElement).value || '';
-    // // usePostRequest 수정 이후 적용
-    // if (state.imageUrl) {
-    //   doPostRequest({
-    //     bannerSrc: state.imageUrl, bannerDescription,
-    //   });
-    //   if (recallRequest) {
-    //     recallRequest();
-    //   }
-    // }
-    axios.post(`${HOST}/marketer/banner`, {
-      bannerSrc: state.imageUrl
-    })
+    setSubmitLoading(true);
+    axios.post(`${HOST}/marketer/banner`, { bannerSrc: state.imageUrl })
       .then((res) => {
+        setSubmitLoading(false);
         if (res.data[0]) {
           alert(res.data[1]);
-          if (recallRequest) {
-            recallRequest();
-          }
+          if (recallRequest) recallRequest();
         } else {
-          alert('현재는 등록할 수 없습니다. 잠시 후 다시 시도해주세요.');
+          alert('배너 등록 도중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
         }
         handleClose();
-      });
+      })
+      .catch((e) => { if (failCallback) failCallback(e); });
   };
-  // text format을 사용하기 위해 state로 사용한다.
-
 
   return (
     <Dialog
@@ -148,12 +132,19 @@ const UploadDialog = (props: UploadDialogProps): JSX.Element => {
           <Collapse in={Boolean(state.imageUrl && (state.imageUrl !== DEFAULT_IMAGE_PATH))}>
             <Button
               color="primary"
+              variant="contained"
+              disabled={submitLoading}
               onClick={handleSubmit}
             >
               등록
             </Button>
           </Collapse>
-          <Button onClick={handleClose}>취소</Button>
+          <Button
+            variant="contained"
+            onClick={handleClose}
+          >
+            취소
+          </Button>
         </div>
           )}
     >
@@ -164,8 +155,13 @@ const UploadDialog = (props: UploadDialogProps): JSX.Element => {
           </StepLabel>
           <StepContent>
             <ImageUpload
-              state={state}
-              dispatch={dispatch}
+              image={state}
+              onReset={(): void => dispatch({ type: 'reset' })}
+              onSucess={(image): void => {
+                dispatch({
+                  type: 'set', imageName: image.imageName, imageUrl: image.imageUrl,
+                });
+              }}
             />
           </StepContent>
         </Step>

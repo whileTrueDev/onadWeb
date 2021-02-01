@@ -27,7 +27,7 @@ function IndentityVerification({
   const classes = useStyles();
 
   const submitImpUid = useCallback(({ impUid }) => {
-    axios.post(`${HOST}/marketer/certification`, { imp_uid: impUid })
+    axios.post(`${HOST}/certification`, { imp_uid: impUid })
       .then((res) => {
         const { error, data } = res.data;
         if (error) {

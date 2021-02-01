@@ -15,6 +15,21 @@ interface UrlData {
   confirmState: number;
 }
 
+/**
+ * 마케터의 총 랜딩URL 리스트 목록 길이를 반환하는 라우터
+ */
+router.route('/length')
+  .get(
+    responseHelper.middleware.checkSessionExists,
+    responseHelper.middleware.withErrorCatch(async (req, res, next) => {
+      const { marketerId } = responseHelper.getSessionData(req);
+      const query = 'SELECT COUNT(*) AS rowCount FROM linkRegistered WHERE marketerId = ?';
+      const { result } = await doQuery(query, [marketerId]);
+      responseHelper.send(result[0].rowCount, 'get', res);
+    })
+  )
+  .all(responseHelper.middleware.unusedMethod);
+
 //  marketer/sub/inventory =>/landingurl/all
 // test 완료
 router.route('/list')
@@ -24,8 +39,8 @@ router.route('/list')
       const { marketerId } = responseHelper.getSessionData(req);
       const query = `
             SELECT
-            linkId, marketerId, confirmState, denialReason,
-            links, DATE_FORMAT(regiDate, "%Y년 %m월 %d일") as regiDate, updateDate
+            linkId AS id, linkId, marketerId, confirmState, denialReason,
+            links, regiDate, updateDate
             FROM linkRegistered
             WHERE marketerId = ?
             ORDER BY regiDate DESC

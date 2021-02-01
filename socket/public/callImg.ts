@@ -1,7 +1,7 @@
-import { gameDict } from '../models/gameCategory';
+import { Socket } from 'socket.io';
 import doQuery from '../models/doQuery';
 
-function callImg(socket: any, msg: string[]): void {
+function callImg(socket: Socket, msg: string[]): void {
   const fullUrl: string = msg[0];
   const cutUrl = `/${fullUrl.split('/')[4]}`;
   const prevBannerName: string = msg[1];
@@ -94,18 +94,16 @@ function callImg(socket: any, msg: string[]): void {
     });
   };
   // 하나의 categoryId 에 해당하는 캠페인 리스트를 반환하는 Promise
-  const getCategoryCampaignList = (categoryId: number): Promise<string[]> => {
-    const campaignListQuery = `
-    SELECT campaignList 
-    FROM categoryCampaign
-    WHERE categoryId = ? 
-    `;
-
+  const getCategoryCampaignList = async (categoryId: string): Promise<string[]> => {
+    const campaignListQuery = 'SELECT campaignList FROM categoryCampaign WHERE categoryId = ?';
     return new Promise((resolve, reject) => {
       doQuery(campaignListQuery, [categoryId])
         .then((row) => {
-          const jsonData = JSON.parse(row.result[0].campaignList);
-          resolve(jsonData.campaignList);
+          if (row.result.length > 0) {
+            const jsonData = JSON.parse(row.result[0].campaignList);
+            resolve(jsonData.campaignList);
+          }
+          resolve([]);
         })
         .catch((errorData) => {
           errorData.point = 'getCategoryCampaignList()';
@@ -117,28 +115,58 @@ function callImg(socket: any, msg: string[]): void {
 
   const getGameId = async (creatorId: string): Promise<string> => {
     console.log(`${creatorId} / get gameid / ${getTime}`);
-    const getGameIdQuery = `SELECT gameId 
-                            FROM twitchStreamDetail AS tsd 
-                            WHERE streamId = (SELECT streamId FROM twitchStream WHERE streamerId = ? ORDER BY startedAt DESC LIMIT 1)
-                            ORDER BY tsd.time DESC LIMIT 1;`;
-    return new Promise((resolve, reject) => {
-      doQuery(getGameIdQuery, [creatorId])
-        .then((row) => {
-          if (row.result.length !== 0) {
-            myGameId = row.result[0].gameId;
-            resolve(myGameId);
-          } else {
-            console.log('GETGAMEID ERROR');
-          }
-        })
-        .catch((errorData) => {
-          errorData.point = 'getGameId()';
-          errorData.description = 'TWITCHSTREAMDETAIL에서 GAMEID 가져오기';
-          reject(errorData);
-        });
-    });
+    const getGameIdQuery = `
+    SELECT gameId FROM twitchStreamDetail AS tsd 
+    WHERE streamId = (
+      SELECT streamId FROM twitchStream
+      JOIN creatorInfo ON creatorTwitchOriginalId = streamerId
+      WHERE creatorId = ?
+      ORDER BY startedAt DESC LIMIT 1
+    ) AND time > DATE_SUB(NOW(), INTERVAL 10 MINUTE)
+    ORDER BY tsd.time DESC LIMIT 1;`;
+
+    const getAfreecaGameIdQuery = `
+    SELECT broadCategory AS gameId FROM AfreecaBroadDetail AS ABD
+    WHERE broadId = (
+      SELECT broadId FROM AfreecaBroad JOIN creatorInfo ON afreecaId = userId
+      WHERE creatorId = ? ORDER BY broadStartedAt DESC LIMIT 1
+    ) AND createdAt > DATE_SUB(NOW(), INTERVAL 10 MINUTE)
+    ORDER BY createdAt DESC LIMIT 1
+    `;
+
+    try {
+      const [
+        { result: twitchGameIdResult },
+        { result: afreecaGameIdResult }
+      ] = await Promise.all([
+        doQuery(getGameIdQuery, [creatorId]),
+        doQuery(getAfreecaGameIdQuery, [creatorId])
+      ]);
+
+      // 트위치 방송 중인 경우, 트위치 현재 진행 중 카테고리
+      if (twitchGameIdResult.length > 0) {
+        myGameId = twitchGameIdResult[0].gameId;
+      }
+
+      // 트위치 방송중이 아니며, 아프리카티비 방송 중 -> 아프리카 tv 카테고리
+      // 즉, 동시 송출 중이라면, twitch 카테고리를 우선시 함. @by hwasurr
+      if (!(twitchGameIdResult.length > 0) && afreecaGameIdResult.length > 0) {
+        myGameId = afreecaGameIdResult[0].gameId;
+      }
+      return myGameId;
+    } catch (errorData) {
+      errorData.point = 'getGameId()';
+      errorData.description = 'TWITCHSTREAMDETAIL 또는 AFREECABROAD 에서 GAMEID 가져오기';
+      throw errorData;
+    }
   };
 
+  /**
+   * @deprecated 2021.01.11 by hwasurr
+   * store uncehcked game
+   * @param gameId gameId
+   * @param creatorId creatorId
+   */
   const insertTwitchGameUnchecked = (gameId: string, creatorId: string) => {
     const insertTwitchGameUncheckedQuery = 'INSERT IGNORE INTO twitchGame_unchecked(gameId, creatorId) values(?,?)';
     return new Promise((resolve, reject) => {
@@ -155,31 +183,35 @@ function callImg(socket: any, msg: string[]): void {
     });
   };
 
-  // 하나의 gameId에 해당하는 모든 캠페인 리스트를 반환하는 Promise
-  const getGameCampaignList = async (gameId: string, creatorId: string): Promise<string[]> => {
-    const categoryList: number[] = gameDict[gameId] ? gameDict[gameId].concat(gameDict.default) : gameDict.default;
+  // "하나의 gameId" + "카테고리무관" 에 해당하는 모든 캠페인 리스트를 반환하는 Promise
+  const getGameCampaignList = async (gameId: string, isDefault = false): Promise<string[]> => {
+    // ************************************************************
+    // 트위치 카테고리의 경우
+    const CATEGORY_WHATEVER = '14';
+
     let returnList: string[] = [];
-    if (categoryList) {
-      if (categoryList.includes(14) && categoryList.length === 1) {
-        insertTwitchGameUnchecked(gameId, creatorId);
-      }
-      await Promise.all(
-        categoryList.map((categoryId) => getCategoryCampaignList(categoryId)
-          .then((campaignList: any) => {
-            returnList = returnList.concat(campaignList);
-          }))
-      )
-        .catch((errorData) => {
-          errorData.point = 'getGameCampaignList()';
-          errorData.description = 'categoryCampaign에서 각각의 categoryId에 따른 캠페인 가져오기';
-        });
+    if (isDefault) {
+      returnList = await getCategoryCampaignList(gameId);
+      return returnList;
     }
+    await Promise.all([
+      getCategoryCampaignList(gameId),
+      getCategoryCampaignList(CATEGORY_WHATEVER)
+    ])
+      .then(([campaignList1, campaignList2]) => {
+        returnList = campaignList1.concat(campaignList2);
+      })
+      .catch((errorData) => {
+        errorData.point = 'getGameCampaignList()';
+        errorData.description = 'categoryCampaign에서 각각의 categoryId에 따른 캠페인 가져오기';
+      });
+
     return Array.from(new Set(returnList));
   };
 
-  const getBanList = (creatorId: string): Promise<string[]> => {
+  const getBanList = (creatorId: string): Promise<any> => {
     const selectQuery = `
-    SELECT banList 
+    SELECT banList, pausedList
     FROM creatorCampaign
     WHERE creatorId = ?
     `;
@@ -188,7 +220,8 @@ function callImg(socket: any, msg: string[]): void {
       doQuery(selectQuery, [creatorId])
         .then((row) => {
           const banList = JSON.parse(row.result[0].banList).campaignList;
-          resolve(banList);
+          const pausedList = JSON.parse(row.result[0].pausedList).campaignList;
+          resolve({ banList, pausedList });
         })
         .catch((errorData) => {
           errorData.point = 'getBanList()';
@@ -234,7 +267,7 @@ function callImg(socket: any, msg: string[]): void {
     return new Promise((resolve, reject) => {
       doQuery(selectQuery, [campaignId])
         .then((row) => {
-          let linkName;
+          let linkName = '';
           const links = JSON.parse(row.result[0].links);
           links.links.map((data: LinkJson) => {
             if (data.primary === true) {
@@ -256,41 +289,83 @@ function callImg(socket: any, msg: string[]): void {
     return Math.floor(Math.random() * (max - 0)) + 0; // 최댓값은 제외, 최솟값은 포함
   };
 
-  async function getBanner([creatorId, gameId]: string[]): Promise<[string | boolean, string | boolean, string | boolean]> {
+  async function getBanner(
+    [creatorId, gameId]: string[]
+  ): Promise<[string | boolean, string | boolean, string | boolean]> {
     console.log(`-----------------------Id : ${creatorId} / ${getTime}---------------------------`);
     let linkToChatBot;
-    const [creatorCampaignList, onCampaignList, banList] = await Promise.all(
+    const [creatorCampaignList, onCampaignList, checkList] = await Promise.all(
       [
         getCreatorCampaignList(creatorId),
         getOnCampaignList(),
         getBanList(creatorId)
       ]
     );
-    const categoryCampaignList = await getGameCampaignList(gameId, creatorId);
-    const onCreatorcampaignList = creatorCampaignList.filter((campaignId) => onCampaignList.includes(campaignId));
+    // *********************************************************
+    // 크리에이터 개인에게 할당된(크리에이터 에게 송출) 캠페인 -> ON 상태 필터링
+    const onCreatorcampaignList = creatorCampaignList.filter(
+      (campaignId) => onCampaignList.includes(campaignId)
+    );
+
+    // 현재 ON상태인 크리에이터 개인에게 할당된(크리에이터 에게 송출) 캠페인 목록이 있는 경우
     if (onCreatorcampaignList.length !== 0) {
-      const extractBanCampaignList = onCreatorcampaignList.filter((campaignId) => !banList.includes(campaignId)); // 마지막에 banList를 통해 거르기.
+      const extractPausedCampaignList = onCreatorcampaignList
+        .filter((campaignId) => !checkList.pausedList.includes(campaignId)); // 일시정지 배너 거르기.
+      const extractBanCampaignList = extractPausedCampaignList
+        .filter((campaignId) => !checkList.banList.includes(campaignId)); // 마지막에 banList를 통해 거르기.
       if (extractBanCampaignList) {
-        const returnCampaignId = extractBanCampaignList[getRandomInt(extractBanCampaignList.length)];
+        const returnCampaignId = extractBanCampaignList[
+          getRandomInt(extractBanCampaignList.length)
+        ];
         myCampaignId = returnCampaignId;
       }
     } else {
+      // *********************************************************
+      // 현재 ON상태인 크리에이터 개인에게 할당된(크리에이터 에게 송출) 캠페인이 없는 경우
+      const categoryCampaignList = await getGameCampaignList(gameId);
       console.log(`${creatorId} 크리에이터에게만 송출될 광고 없음. 카테고리 선택형 및 노출우선형 광고 검색 / ${getTime}`);
-      const onCategorycampaignList = categoryCampaignList.filter((campaignId) => onCampaignList.includes(campaignId));
-      const extractBanCampaignList = onCategorycampaignList.filter((campaignId) => !banList.includes(campaignId)); // 마지막에 banList를 통해 거르기.
+      const onCategorycampaignList = categoryCampaignList
+        .filter((campaignId) => onCampaignList.includes(campaignId));
+      const extractPausedCampaignList = onCategorycampaignList
+        .filter((campaignId) => !checkList.pausedList.includes(campaignId)); // 일시정지 배너 거르기.
+      const extractBanCampaignList = extractPausedCampaignList
+        .filter((campaignId) => !checkList.banList.includes(campaignId)); // 마지막에 banList를 통해 거르기.
       const returnCampaignId = extractBanCampaignList[getRandomInt(extractBanCampaignList.length)];
       myCampaignId = returnCampaignId;
     }
 
+    // *********************************************************
+    // RETRUN 섹션
     if (myCampaignId && campaignObject[myCampaignId][0] === 1) {
+      // 송출될 캠페인의 link 를 가져와 트위치 챗봇에 챗봇광고 이벤트를 에밋하기 위한 정보를 가져온다.
       console.log(`${creatorId} / 광고될 캠페인은 ${myCampaignId} / ${getTime}`);
       linkToChatBot = await getLinkName(myCampaignId);
     } else {
-      socket.emit('img clear', []);
-      console.log(`${creatorId} / 켜져있는 광고 없음 / ${getTime}`);
-      return [false, false, false];
+      // 송출할 광고 없다.
+      // 기본배너 검색
+      const categoryCampaignList = await getGameCampaignList('-1', true);
+      console.log(`${creatorId} 기본 배너 검색 / ${getTime}`);
+      const onCategorycampaignList = categoryCampaignList
+        .filter((campaignId) => onCampaignList.includes(campaignId));
+      const extractPausedCampaignList = onCategorycampaignList
+        .filter((campaignId) => !checkList.pausedList.includes(campaignId)); // 일시정지 배너 거르기.
+      const extractBanCampaignList = extractPausedCampaignList
+        .filter((campaignId) => !checkList.banList.includes(campaignId)); // 마지막에 banList를 통해 거르기.
+      const returnCampaignId = extractBanCampaignList[getRandomInt(extractBanCampaignList.length)];
+      myCampaignId = returnCampaignId;
+      if (myCampaignId) {
+        // 기본 배너 송출
+        console.log(`${creatorId} 기본 배너 송출 / ${getTime}`);
+        linkToChatBot = await getLinkName(myCampaignId);
+      } else {
+        // 기본 배너도 꺼둔 경우
+        socket.emit('img clear', []);
+        console.log(`${creatorId} / 켜져있는 광고 없음 / ${getTime}`);
+        return [false, false, false];
+      }
     }
 
+    // 이전 송출하던 배너와 현재 배너가 같은 경우
     if (prevBannerName && myCampaignId === prevBannerName.split(',')[0]) {
       return [false, myCampaignId, linkToChatBot];
     }
@@ -299,11 +374,16 @@ function callImg(socket: any, msg: string[]): void {
   }
   interface CreatorIds {
     creatorId: string;
-    creatorTwitchId: string;
+    creatorTwitchId?: string;
+    afreecaId?: string;
     adChatAgreement: number;
   }
   async function getCreatorData(): Promise<CreatorIds> {
-    const initQuery = 'SELECT creatorId, creatorTwitchId, adChatAgreement FROM creatorInfo WHERE advertiseUrl = ?';
+    const initQuery = `
+    SELECT creatorId, creatorTwitchId, adChatAgreement, afreecaId
+    FROM creatorInfo
+    WHERE advertiseUrl = ?
+    `;
     return new Promise((resolve, reject) => {
       doQuery(initQuery, [cutUrl])
         .then((row) => {
@@ -330,8 +410,6 @@ function callImg(socket: any, msg: string[]): void {
     const CREATOR_DATA = await getCreatorData();
     if (CREATOR_DATA.creatorId) { // 새로운 배너가 송출되는 경우
       myGameId = await getGameId(CREATOR_DATA.creatorId);
-      const myCreatorTwitchId = CREATOR_DATA.creatorTwitchId;
-      const myAdChatAgreement = CREATOR_DATA.adChatAgreement;
       const bannerInfo = await getBanner([CREATOR_DATA.creatorId, myGameId]);
       const checkOptionType = typeof bannerInfo[1] === 'string' ? campaignObject[bannerInfo[1]][0] : null;
       const campaignName = typeof bannerInfo[1] === 'string' ? campaignObject[bannerInfo[1]][1] : null;
@@ -339,11 +417,23 @@ function callImg(socket: any, msg: string[]): void {
       const campaignDescription = typeof bannerInfo[1] === 'string' ? campaignObject[bannerInfo[1]][2] : null;
       const descriptionToChat: string | boolean | null = campaignDescription || linkName;
 
-      if (myAdChatAgreement === 1 && checkOptionType === 1) { // 채봇 동의 및 옵션타입 cpm+cpc인 경우에 챗봇으로 데이터 전송
-        console.log(`${CREATOR_DATA.creatorId} / next-campaigns-twitch-chatbot Emitting ${myCreatorTwitchId} / ${getTime}`);
-        socket.broadcast.emit('next-campaigns-twitch-chatbot', {
-          campaignId: myCampaignId, creatorId: CREATOR_DATA.creatorId, creatorTwitchId: myCreatorTwitchId, campaignName, descriptionToChat
-        });
+      // 챗봇 관련 필요 정보
+      const myCreatorTwitchId = CREATOR_DATA.creatorTwitchId;
+      const myAdChatAgreement = CREATOR_DATA.adChatAgreement;
+      // 트위치 챗봇 동의 및 옵션타입 cpm+cpc인 경우에 챗봇으로 데이터 전송
+      if (myAdChatAgreement === 1 && checkOptionType === 1) {
+        if (myCreatorTwitchId) {
+          // 챗봇은 트위치 한정. 트위치 아이디가 없는 경우 에미팅 하지 않도록 추가
+          // @by hwasurr 21.01.08
+          console.log(`${CREATOR_DATA.creatorId} / next-campaigns-twitch-chatbot Emitting ${myCreatorTwitchId} / ${getTime}`);
+          socket.broadcast.emit('next-campaigns-twitch-chatbot', {
+            campaignId: myCampaignId,
+            creatorId: CREATOR_DATA.creatorId,
+            creatorTwitchId: myCreatorTwitchId,
+            campaignName,
+            descriptionToChat
+          });
+        }
       }
 
       if (typeof bannerInfo[0] === 'string' && typeof bannerInfo[1] === 'string') {

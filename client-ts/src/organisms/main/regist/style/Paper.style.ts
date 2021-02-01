@@ -54,9 +54,6 @@ const useStyles = makeStyles((theme) => ({
   },
   buttonStyle: {
     flex: 1,
-    backgroundColor: '#d6d6d6',
-    height: '70%',
-    fontSize: 13,
   }
 }));
 

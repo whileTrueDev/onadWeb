@@ -7,12 +7,12 @@ const checkEmailAuth = (req: any, res: any): void => {
   const { message } = req.session.passport.user;
   if (req.session.passport.user.message) {
     res.send([true, message]);
-  } else {
+  } else if (req.session.passport.user.userType === 'marketer') {
     const { marketerId } = req.session.passport.user;
     const checkQuery = `
-    SELECT marketerEmailAuth, temporaryLogin
-    FROM marketerInfo
-    WHERE marketerId = ? `;
+      SELECT marketerEmailAuth, temporaryLogin
+      FROM marketerInfo
+      WHERE marketerId = ? `;
     doQuery(checkQuery, [marketerId])
       .then((row) => {
         const { marketerEmailAuth } = row.result[0];
@@ -27,6 +27,8 @@ const checkEmailAuth = (req: any, res: any): void => {
       .catch(() => {
         res.send([true, '일시적인 DB오류입니다. 로그인이 불가하오니 잠시 후 다시 시도해주세요..']);
       });
+  } else if (req.session.passport.user.userType === 'creator') {
+    res.send('success');
   }
 };
 

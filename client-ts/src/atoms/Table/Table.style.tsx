@@ -10,18 +10,17 @@ const useTableStyles = makeStyles((theme: Theme) => ({
     borderCollapse: 'collapse',
   },
   tableHeadCell: {
-    color: 'inherit',
-    fontSize: '1em',
-    textAlign: 'center'
+    textAlign: 'center',
+    color: theme.palette.text.primary,
+    fontWeight: theme.typography.body1.fontWeight,
+    fontSize: theme.typography.body1.fontSize,
   },
   tableCell: {
-    lineHeight: '1.42857143',
-    padding: '10px 8px',
-    // padding: 0,
-    verticalAlign: 'middle',
-    fontWeight: 500,
-    fontSize: '1.1em',
-    textAlign: 'center'
+    padding: theme.spacing(1),
+    textAlign: 'center',
+    color: theme.palette.text.primary,
+    fontWeight: theme.typography.body1.fontWeight,
+    fontSize: theme.typography.body1.fontSize,
   },
   tableFooter: {
     borderBottom: 'none',

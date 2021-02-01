@@ -8,16 +8,32 @@ router.route('/detail')
   .get(
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
       const searchQuery = `
-      SELECT *
-      FROM creatorDetail
-      left join 
-      (
-      select creatorId, creatorLogo, creatorName
-      from creatorInfo
-      )as B
-      on creatorDetail.creatorId = B.creatorId
-      WHERE rip > 0.5
-      order by viewer desc`;
+      SELECT
+        C.creatorLogo,
+        C.creatorName,
+        C.afreecaName,
+        C.afreecaLogo,
+        A.*,
+        B.creatorId AS creatorIdAfreeca,
+        B.followers AS followersAfreeca,
+        B.viewer AS viewerAfreeca,
+        B.peakview AS peakviewAfreeca,
+        B.airtime AS airtimeAfreeca,
+        B.impression AS impressionAfreeca,
+        B.ctr AS ctrAfreeca,
+        B.cost AS costAfreeca,
+        B.rip AS ripAfreeca,
+        B.content AS contentAfreeca,
+        B.openHour AS openHourAfreeca,
+        B.timeGraphData AS timeGraphDataAfreeca,
+        B.contentsGraphData AS contentsGraphDataAfreeca,
+        B.date AS dateAfreeca,
+        B.viewerHeatmapData AS viewerHeatmapDataAfreeca
+      FROM creatorInfo AS C
+      LEFT JOIN creatorDetail AS A ON C.creatorId = A.creatorId
+      LEFT JOIN creatorDetailAfreeca AS B ON C.creatorId = B.creatorId 
+      WHERE A.rip > 0.5 OR B.rip > 0.5
+      ORDER BY IFNULL(A.viewer, 0) + IFNULL(B.viewer, 0) DESC`;
       doQuery(searchQuery, [])
         .then((row) => {
           responseHelper.send(row.result, 'get', res);
@@ -32,7 +48,7 @@ router.route('/detail')
 router.route('/contents')
   .get(
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
-      const creatorId = responseHelper.getParam('creatorId', "GET", req);
+      const creatorId = responseHelper.getParam('creatorId', 'GET', req);
       const query = `
       SELECT
         creatorName, creatorTwitchId, creatorLogo, contentsGraphData
@@ -43,7 +59,7 @@ router.route('/contents')
       doQuery(query, [creatorId])
         .then((row) => {
           if (row.result.length > 0) {
-            const result = row.result.map((r: { creatorName: string, creatorTwitchId: string, creatorLogo: string, contentsGraphData: string }) => ({
+            const result = row.result.map((r: { creatorName: string; creatorTwitchId: string; creatorLogo: string; contentsGraphData: string }) => ({
               ...r,
               contentsGraphData: JSON.parse(r.contentsGraphData)
             }));
@@ -63,7 +79,7 @@ router.route('/contents')
 router.route('/hours')
   .get(
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
-      const creatorId = responseHelper.getParam('creatorId', "GET", req);
+      const creatorId = responseHelper.getParam('creatorId', 'GET', req);
       const query = `
       SELECT creatorName, timeGraphData
       FROM creatorDetail AS cc
@@ -73,7 +89,7 @@ router.route('/hours')
       doQuery(query, [creatorId])
         .then((row) => {
           if (row.result.length > 0) {
-            const result = row.result.map((r: { creatorName: string, timeGraphData: string }) => ({
+            const result = row.result.map((r: { creatorName: string; timeGraphData: string }) => ({
               ...r,
               timeGraphData: JSON.parse(r.timeGraphData)
             }));
@@ -88,7 +104,6 @@ router.route('/hours')
     }),
   )
   .all(responseHelper.middleware.unusedMethod);
-
 
 
 router.route('/games')
@@ -121,9 +136,34 @@ router.route('/detail-data')
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
       const creatorId = responseHelper.getParam('creatorId', 'GET', req);
       const query = `
-      SELECT *
-      FROM creatorDetail
-      WHERE creatorId = ? `;
+      SELECT
+        C.creatorLogo,
+        C.creatorTwitchId,
+        C.creatorName,
+        C.afreecaName,
+        C.afreecaId,
+        C.afreecaLogo,
+        A.*,
+        B.creatorId AS creatorIdAfreeca,
+        B.followers AS followersAfreeca,
+        B.viewer AS viewerAfreeca,
+        B.peakview AS peakviewAfreeca,
+        B.airtime AS airtimeAfreeca,
+        B.impression AS impressionAfreeca,
+        B.ctr AS ctrAfreeca,
+        B.cost AS costAfreeca,
+        B.rip AS ripAfreeca,
+        B.content AS contentAfreeca,
+        B.openHour AS openHourAfreeca,
+        B.timeGraphData AS timeGraphDataAfreeca,
+        B.contentsGraphData AS contentsGraphDataAfreeca,
+        B.date AS dateAfreeca,
+        B.viewerHeatmapData AS viewerHeatmapDataAfreeca
+      FROM creatorInfo AS C
+      LEFT JOIN creatorDetail AS A ON C.creatorId = A.creatorId
+      LEFT JOIN creatorDetailAfreeca AS B ON C.creatorId = B.creatorId 
+      WHERE C.creatorId = ? AND (A.rip > 0.5 OR B.rip > 0.5)
+      ORDER BY IFNULL(A.viewer, 0) + IFNULL(B.viewer, 0) DESC`;
       doQuery(query, [creatorId])
         .then((row) => {
           let detailData = {};
@@ -147,4 +187,3 @@ router.route('/detail-data')
   .all(responseHelper.middleware.unusedMethod);
 
 export default router;
-

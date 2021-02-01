@@ -1,13 +1,14 @@
 import React, { useCallback } from 'react';
+import { AxiosResponse } from 'axios';
 import axios from '../axios';
 import host from '../../config';
 
 const DEFAULT_ERROR_MESSAGE = '죄송합니다.. 오류가 발생했습니다..';
 export interface UsePostRequestObject<T, P> {
     success: true | null;
-    loading: boolean | undefined;
+    loading: boolean;
     error: string;
-    doPostRequest: (param: T) => void;
+    doPostRequest: (param?: T) => Promise<AxiosResponse<P>>;
     data: P | null;
   }
 /**
@@ -39,18 +40,20 @@ export default function usePostRequest<PARAM_TYPE = {[key: string]: any}, RES_DA
 ): UsePostRequestObject<PARAM_TYPE, RES_DATA_TYPE> {
   const [success, setSuccess] = React.useState<true | null>(null);
   const [data, setData] = React.useState<RES_DATA_TYPE | null>(null);
-  const [loading, setLoading] = React.useState<boolean | undefined>(undefined);
+  const [loading, setLoading] = React.useState<boolean>(false);
   const [error, setError] = React.useState('');
 
-  const doPostRequest = useCallback((param: PARAM_TYPE): void => {
+  const doPostRequest = useCallback(async (
+    param?: PARAM_TYPE): Promise<AxiosResponse<RES_DATA_TYPE>> => {
     setLoading(true); // 로딩 시작
-    axios.post<RES_DATA_TYPE>(`${host}${url}`,
+    return axios.post<RES_DATA_TYPE>(`${host}${url}`,
       { ...param })
       .then((res) => { // 200 번대 상태코드
         setLoading(false); // 로딩 완료
         setData(res.data);
         setSuccess(true);
         if (successCallback) { successCallback(); }
+        return res;
       })
       .catch((err) => {
         setLoading(false); // 로딩 완료
@@ -69,6 +72,7 @@ export default function usePostRequest<PARAM_TYPE = {[key: string]: any}, RES_DA
           console.log('오류를 발생시킨 요청을 설정하는 중에 문제가 발생');
           setError(DEFAULT_ERROR_MESSAGE);
         }
+        throw err;
       });
   }, [successCallback, url]);
 

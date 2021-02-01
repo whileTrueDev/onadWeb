@@ -104,6 +104,9 @@ function PaperSheet({ handleBack, handleNext }: Props): JSX.Element {
                 <Grid container direction="row" alignItems="center">
                   <Grid item>
                     <Button
+                      color="default"
+                      variant="contained"
+                      size="small"
                       className={classes.buttonStyle}
                       onClick={(): void => handleOpen(term)}
                     >

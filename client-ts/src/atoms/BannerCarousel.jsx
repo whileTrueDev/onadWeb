@@ -8,12 +8,11 @@ import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import SwipeableViews from 'react-swipeable-views';
 import Check from '@material-ui/icons/Check';
 import Success from './Typography/Success';
-import isVideo from '../utils/isVideo';
-import VideoBanner from './Banner/VideoBanner';
+import OnadBanner from './Banner/OnadBanner';
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    width: '600px',
+    width: 320,
     [theme.breakpoints.down('sm')]: {
       width: '100%',
     },
@@ -43,8 +42,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundSize: 'cover',
     width: '100%',
     height: 'auto',
-    maxHeight: 300
-    // backgroundPosition: 'center 40%',
+    maxHeight: 160,
   },
   imageBackdrop: {
     position: 'absolute',
@@ -124,11 +122,7 @@ const BannerCarousel = (props) => {
             focusvisibleclassname={classes.focusVisible}
             onClick={handleActiveStep(step)}
           >
-            { isVideo(step.bannerSrc) ? (
-              <VideoBanner className={classes.imageSrc} src={step.bannerSrc} />
-            ) : (
-              <img className={classes.imageSrc} src={step.bannerSrc} alt={step.bannerId} />
-            )}
+            <OnadBanner className={classes.imageSrc} src={step.bannerSrc} alt={step.bannerId} />
             <span
               className={classes.imageBackdrop}
               style={checkImage.check ? { opacity: 0.5 } : {}}
