@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import classnames from 'classnames';
 import {
-  Dialog, DialogContent, Button, Typography, CircularProgress, TextField, Divider, IconButton
+  Dialog, DialogContent, Button, Typography,
+  CircularProgress, TextField, Divider, IconButton,
 } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
 import { Close } from '@material-ui/icons';
@@ -10,6 +11,7 @@ import axios from '../../../../utils/axios';
 import HOST from '../../../../config';
 import history from '../../../../history';
 import { useEventTargetValue } from '../../../../utils/hooks';
+import StyledTooltip from '../../../../atoms/Tooltip/StyledTooltip';
 
 interface CreatorLoginFormProps {
   open: boolean;
@@ -135,14 +137,16 @@ export default function CreatorLoginForm({
             </Typography>
             <Typography variant="body2">
               트위치 계정 로그인 방식으로 온애드를 사용했었나요?&nbsp;
-              <Typography
-                component="span"
-                variant="body2"
-                onClick={(): void => history.push('/creator/signup/pre-user')}
-                style={{ color: 'red', textDecoration: 'underline', cursor: 'pointer' }}
-              >
-                기존계정로그인
-              </Typography>
+              <StyledTooltip open arrow interactive title={<Typography variant="body2">기존회원은여기</Typography>}>
+                <Typography
+                  component="span"
+                  variant="body2"
+                  onClick={(): void => history.push('/creator/signup/pre-user')}
+                  style={{ color: 'red', textDecoration: 'underline', cursor: 'pointer' }}
+                >
+                  기존계정로그인
+                </Typography>
+              </StyledTooltip>
             </Typography>
           </div>
         </DialogContent>

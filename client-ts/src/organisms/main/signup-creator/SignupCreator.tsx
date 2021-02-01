@@ -449,7 +449,7 @@ export default function SignupCreator(): JSX.Element {
 
                     <div style={{ marginTop: 8 }}>
                       <Typography variant="body2">
-                        1. &quot;기존 트위치 로그인&quot; 버튼을 통해 사용하던 트위치 계정으로 로그인해주세요.
+                        1. &quot;기존 트위치 계정 인증&quot; 버튼을 통해 사용하던 트위치 계정으로 로그인해주세요.
                       </Typography>
                       <Typography variant="body2">
                         2. 로그인 시 사용할 ID/PW를 입력해주세요.
@@ -512,7 +512,7 @@ export default function SignupCreator(): JSX.Element {
                       ) : (
                         <>
                           <img src="/pngs/logo/twitch/TwitchGlitchWhite.png" alt="" className={classes.socialLogo} />
-                          <Typography variant="body1">기존 트위치 로그인</Typography>
+                          <Typography variant="body1">기존 트위치 계정 인증</Typography>
                         </>
                       )}
                     </Button>
