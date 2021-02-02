@@ -18,6 +18,7 @@ const useStyles = makeStyles((theme) => ({
     maxWidth: 320,
     margin: theme.spacing(1, 1, 0, 0)
   },
+  button: { margin: theme.spacing(0, 1, 0, 0) }
 }));
 
 export interface EditablePasswordInputProps {
@@ -99,6 +100,7 @@ export default function EditablePasswordInput({
               variant="contained"
               color="primary"
               type="submit"
+              className={classes.button}
               disabled={!(rePassword.value === value)
                 || !value || !passwordRegex.test(value) || loading}
             >
@@ -109,6 +111,7 @@ export default function EditablePasswordInput({
                 editMode.handleToggle();
                 onReset();
               }}
+              className={classes.button}
               variant="contained"
             >
               닫기

@@ -17,6 +17,9 @@ const useStyles = makeStyles((theme) => ({
     maxWidth: 320,
     margin: theme.spacing(1, 0)
   },
+  button: {
+    margin: theme.spacing(0, 1, 0, 0),
+  }
 }));
 
 export interface EditableTextFieldProps {
@@ -78,6 +81,7 @@ export default function EditableTextField({
               variant="contained"
               color="primary"
               type="submit"
+              className={classes.button}
               disabled={textFieldProps?.error || !value || loading}
             >
               저장
@@ -87,6 +91,7 @@ export default function EditableTextField({
                 editMode.handleToggle();
                 onReset();
               }}
+              className={classes.button}
               variant="contained"
             >
               닫기

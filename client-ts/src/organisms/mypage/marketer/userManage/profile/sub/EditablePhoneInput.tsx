@@ -20,7 +20,8 @@ const useStyles = makeStyles((theme) => ({
   },
   switchLabel: {
     fontSize: theme.typography.caption.fontSize
-  }
+  },
+  button: { margin: theme.spacing(0, 1, 0, 0) }
 }));
 
 export interface EditableTextField {
@@ -128,6 +129,7 @@ export default function EditableTextField({
               variant="contained"
               color="primary"
               type="submit"
+              className={classes.button}
               disabled={!value || !phoneNumRegex.test(value) || loading}
             >
               저장
@@ -137,6 +139,7 @@ export default function EditableTextField({
                 editMode.handleToggle();
                 onReset();
               }}
+              className={classes.button}
               variant="contained"
             >
               닫기
