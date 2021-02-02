@@ -87,9 +87,10 @@ export default function ResponsiveDrawer(props: ResponsiveDrawerProps): JSX.Elem
       <div className={classes.toolbar}>
         <Button onClick={handleLogoClick}>
           <img
-            src="/pngs/logo/onad_logo_vertical_white.png"
-            alt="logo"
-            style={{ width: 50, margin: '0px 16px' }}
+            src="/pngs/logo/renewal/1x/logo_onad_x_w.png"
+            alt=""
+            width={120}
+            draggable={false}
           />
         </Button>
       </div>

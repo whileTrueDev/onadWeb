@@ -45,6 +45,10 @@ interface LandingImageUploadFormProps {
   userData: AdPageData;
   handleSnackOpen: () => void;
 }
+/**
+ * @deprecated
+ * @author hwasurr 2021. 02. 02
+ */
 export default function LandingImageUploadForm({
   userData, handleSnackOpen
 }: LandingImageUploadFormProps): JSX.Element {

@@ -10,6 +10,7 @@ export interface ProfileDataType {
   creatorTwitchOriginalId: string;
   afreecaId?: string;
   afreecaName?: string;
+  afreecaLogo?: string;
   afreecaRefreshToken?: string;
   realName: string;
   creatorLogo: string;

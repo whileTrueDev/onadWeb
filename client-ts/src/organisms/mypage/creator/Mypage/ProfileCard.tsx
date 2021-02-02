@@ -54,7 +54,7 @@ function ProfileCard({ profileData }: ProfileCardProps): JSX.Element {
           <Typography style={{ fontWeight: 'bold', marginBottom: 8 }}>내 정보 관리</Typography>
 
           <TextFieldWithLabel title="프로필사진">
-            <Avatar src={profileData.creatorLogo} style={{ width: 45, height: 45 }} />
+            <Avatar src={profileData.creatorLogo || profileData.afreecaLogo || ''} style={{ width: 45, height: 45 }} />
           </TextFieldWithLabel>
 
           <TextFieldWithLabel title="아이디">
