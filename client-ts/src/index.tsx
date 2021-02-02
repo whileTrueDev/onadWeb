@@ -21,7 +21,7 @@ import CreatorList from './pages/main/CreatorList';
 import MarketerDashboard from './pages/mypage/layouts/MarketerLayout';
 import ChargeDialog from './organisms/mypage/marketer/office/charge/ChargeDialog';
 import CreatorDashboard from './pages/mypage/layouts/CreatorLayout';
-import NotFound from './pages/others/NotFound';
+// import NotFound from './pages/others/NotFound';
 import RemotePage from './pages/mypage/creator/RemotePage';
 import RegistCreator from './pages/main/RegistCreator';
 
@@ -62,7 +62,6 @@ const OnadIndex = (): JSX.Element => {
           <Route path="/mypage/creator" component={CreatorDashboard} />
           <Route path="/mypage/marketer" component={MarketerDashboard} />
           <Route exact path="/marketer/charge" component={ChargeDialog} />
-          <Route component={NotFound} />
         </ThemeProvider>
       </Switch>
     </Router>
