@@ -18,14 +18,14 @@ router.route('/')
       const { marketerId } = responseHelper.getSessionData(req);
 
       const query = `SELECT cashAmount, spendAll FROM
-            (
-                SELECT cashAmount
-                FROM marketerDebit
-                WHERE marketerId = ?) AS cashAmount,
-            (
-                SELECT sum(cashFromMarketer) AS spendAll
-                FROM campaignLog
-                WHERE SUBSTRING_INDEX(campaignId, "_" , 1) = ?) AS spendAll
+      (
+          SELECT cashAmount
+          FROM marketerDebit
+          WHERE marketerId = ?) AS cashAmount,
+      (
+          SELECT IFNULL(sum(cashFromMarketer), 0) AS spendAll
+          FROM campaignLog
+          WHERE SUBSTRING_INDEX(campaignId, "_" , 1) = ?) AS spendAll
             `;
       doQuery(query, [marketerId, marketerId])
         .then((row) => {
