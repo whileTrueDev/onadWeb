@@ -87,20 +87,20 @@ export default function ReChartBar<DataType extends IncomeChartData>({
           <Bar
             dataKey={dataKey instanceof Array ? dataKey[0] : dataKey}
             stackId="a"
-            fill={theme.palette.primary.light}
+            fill={theme.palette.primary.main}
           />
           {dataKey instanceof Array && dataKey.length >= 2 ? (
             <Bar
               dataKey={dataKey[1]}
               stackId="a"
-              fill={theme.palette.secondary.light}
+              fill={theme.palette.secondary.main}
             />
           ) : (null)}
           {dataKey instanceof Array && dataKey.length >= 3 ? (
             <Bar
               dataKey={dataKey[2]}
               stackId="a"
-              fill={theme.palette.success.light}
+              fill={theme.palette.success.main}
             />
           ) : (null)}
         </BarChart>

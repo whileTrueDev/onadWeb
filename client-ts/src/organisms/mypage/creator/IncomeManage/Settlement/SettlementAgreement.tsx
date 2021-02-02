@@ -11,7 +11,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: 150,
     overflowX: 'hidden',
     overflowY: 'auto',
-    border: 'solid 1px #00acc1'
+    border: 'solid 1px #2771ff'
   },
   checked: {},
   checkboxRoot: {

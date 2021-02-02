@@ -1,6 +1,6 @@
 import { createMuiTheme, Theme } from '@material-ui/core/styles';
 import {
-  cyan, blueGrey
+  blueGrey
 } from '@material-ui/core/colors';
 import { darken, lighten } from '@material-ui/core/styles/colorManipulator';
 import { Palette } from '@material-ui/core/styles/createPalette';
@@ -23,21 +23,38 @@ const defaultTheme = createMuiTheme();
 const rawTheme = {
   palette: {
     primary: {
-      light: lighten(cyan[400], 0.07),
-      main: cyan[600],
-      dark: darken(cyan[600], 0.07),
+      light: '#528dff',
+      main: '#2771ff',
+      dark: '#174DFC',
       // contrastText: will be calculated to contrast with palette.primary.main
-      contrastText: defaultTheme.palette.getContrastText(cyan[700]),
+      contrastText: defaultTheme.palette.getContrastText('#2771ff'),
     },
-    secondary: defaultTheme.palette.warning,
+    secondary: {
+      dark: '#B5A2FC',
+      main: '#866DCA',
+      light: '#533E92',
+      contrastText: defaultTheme.palette.getContrastText('#866DCA'),
+    },
     info: {
       light: lighten(blueGrey[400], 0.07),
       main: blueGrey[700],
       dark: darken(blueGrey[800], 0.07),
-      // contrastText: will be calculated to contrast with palette.primary.main
+      // contrastText: will be calculated to contrast with palette.info.main
       contrastText: defaultTheme.palette.getContrastText(blueGrey[700]),
     },
     warning: defaultTheme.palette.secondary,
+    error: {
+      dark: '#B75736',
+      main: '#FF7C62',
+      light: '#FFBAA5',
+      contrastText: defaultTheme.palette.getContrastText('#FF7C62'),
+    },
+    success: {
+      dark: '#48A69E',
+      main: '#8BE6E2',
+      light: '#BCF0EF',
+      contrastText: defaultTheme.palette.getContrastText('#8BE6E2'),
+    },
   },
   typography: {
     fontFamily: '"AppleSDGothicNeo", "Roboto", "NotoSansKR-Regular", sans-serif',

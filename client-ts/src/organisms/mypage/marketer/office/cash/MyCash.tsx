@@ -28,6 +28,7 @@ const useStyles = makeStyles((theme) => ({
       padding: theme.spacing(2)
     }
   },
+  button: { margin: theme.spacing(0, 1, 0, 0) }
 }));
 
 interface MyCashProps {
@@ -91,6 +92,7 @@ function MyCash(props: MyCashProps): JSX.Element {
               variant="outlined"
               color="primary"
               size="small"
+              className={classes.button}
               onClick={(): void => {
                 window.open(`${REACT_HOST}/marketer/charge`,
                   '_blank', `width=${POPUP_WIDTH}, height=${POPUP_HEIGHT}, left=${POPUP_X}, top=${POPUP_Y}`);
@@ -102,6 +104,7 @@ function MyCash(props: MyCashProps): JSX.Element {
               variant="outlined"
               color="primary"
               size="small"
+              className={classes.button}
               onClick={(): void => { chargeDialog.handleOpen(); }}
             >
               캐시충전(무통장)
@@ -110,12 +113,27 @@ function MyCash(props: MyCashProps): JSX.Element {
             {!accountData.loading && !accountData.error && accountData.data
           && !accountData.data.marketerAccountNumber && (
             <Tooltip title="환불계좌가 등록되지 않아 진행이 불가합니다.">
-              <span><Button size="medium" color="default" disabled>환불요청</Button></span>
+              <span>
+                <Button
+                  size="medium"
+                  color="default"
+                  disabled
+                  className={classes.button}
+                >
+                환불요청
+                </Button>
+
+              </span>
             </Tooltip>
             )}
             {!accountData.loading && !accountData.error && accountData.data
           && accountData.data.marketerAccountNumber && (
-            <Button size="medium" color="default" onClick={(): void => { refundDialog.handleOpen(); }}>
+            <Button
+              size="medium"
+              color="default"
+              className={classes.button}
+              onClick={(): void => { refundDialog.handleOpen(); }}
+            >
               환불요청
             </Button>
             )}

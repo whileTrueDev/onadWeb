@@ -8,7 +8,7 @@ import {
 } from '@material-ui/core';
 import EditableTextField from './sub/EditableTextField';
 import EditablePhoneInput from './sub/EditablePhoneInput';
-import { UserInterface } from '../interface';
+import { UserInterface } from '../../office/interface';
 import { useDialog, useEventTargetValue, usePatchRequest } from '../../../../../utils/hooks';
 import EditablePasswordInput from './sub/EditablePasswordInput';
 import Snackbar from '../../../../../atoms/Snackbar/Snackbar';
