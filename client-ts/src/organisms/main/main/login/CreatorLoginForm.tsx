@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import classnames from 'classnames';
 import {
   Dialog, DialogContent, Button, Typography,
-  CircularProgress, TextField, Divider, IconButton, useTheme,
+  CircularProgress, TextField, Divider, IconButton,
 } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
 import { Close } from '@material-ui/icons';
@@ -52,7 +52,6 @@ export default function CreatorLoginForm({
       });
   };
 
-  const theme = useTheme();
   return (
     (
       // 크리에이터 로그인 창

@@ -14,7 +14,6 @@ import { Link } from 'react-router-dom';
 import { drawerWidth } from '../../../../assets/jss/onad';
 import history from '../../../../history';
 import { MypageRoute } from '../../../../pages/mypage/routes';
-import OnadLogo from '../../../../atoms/Logo/OnadLogo';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {

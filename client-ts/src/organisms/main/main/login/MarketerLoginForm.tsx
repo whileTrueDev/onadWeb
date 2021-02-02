@@ -10,7 +10,6 @@ import {
   Typography,
   IconButton,
   CircularProgress,
-  useTheme
 } from '@material-ui/core';
 import { Close } from '@material-ui/icons';
 import useStyles from '../style/LoginForm.style';
@@ -84,8 +83,6 @@ function LoginForm({
         alert('회원이 아닙니다.');
       });
   };
-
-  const theme = useTheme();
 
   const dialog = (
     // 마케터 로그인 창
