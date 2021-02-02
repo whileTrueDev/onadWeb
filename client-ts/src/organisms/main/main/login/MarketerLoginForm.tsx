@@ -9,7 +9,8 @@ import {
   Divider,
   Typography,
   IconButton,
-  CircularProgress
+  CircularProgress,
+  useTheme
 } from '@material-ui/core';
 import { Close } from '@material-ui/icons';
 import useStyles from '../style/LoginForm.style';
@@ -17,6 +18,7 @@ import axios from '../../../../utils/axios';
 import FindDialog from './FindDialog';
 import HOST from '../../../../config';
 import history from '../../../../history';
+import OnadLogo from '../../../../atoms/Logo/OnadLogo';
 
 interface Props {
   open: boolean;
@@ -83,6 +85,8 @@ function LoginForm({
       });
   };
 
+  const theme = useTheme();
+
   const dialog = (
     // 마케터 로그인 창
     <Dialog
@@ -97,7 +101,9 @@ function LoginForm({
           <Close />
         </IconButton>
 
-        <img src="/pngs/logo/onad_logo_vertical_small.png" alt="" width={80} height={80} />
+        <div style={{ marginBottom: 8, marginTop: 8 }}>
+          <OnadLogo width={80} />
+        </div>
 
         <Typography variant="h6">온애드 광고주 로그인</Typography>
 

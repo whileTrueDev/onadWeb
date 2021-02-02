@@ -62,8 +62,8 @@ const OnadIndex = (): JSX.Element => {
           <Route path="/mypage/creator" component={CreatorDashboard} />
           <Route path="/mypage/marketer" component={MarketerDashboard} />
           <Route exact path="/marketer/charge" component={ChargeDialog} />
+          <Route component={NotFound} />
         </ThemeProvider>
-        <Route component={NotFound} />
       </Switch>
     </Router>
   );

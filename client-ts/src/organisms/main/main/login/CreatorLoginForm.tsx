@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import classnames from 'classnames';
 import {
   Dialog, DialogContent, Button, Typography,
-  CircularProgress, TextField, Divider, IconButton,
+  CircularProgress, TextField, Divider, IconButton, useTheme,
 } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
 import { Close } from '@material-ui/icons';
@@ -12,6 +12,7 @@ import HOST from '../../../../config';
 import history from '../../../../history';
 import { useEventTargetValue } from '../../../../utils/hooks';
 import StyledTooltip from '../../../../atoms/Tooltip/StyledTooltip';
+import OnadLogo from '../../../../atoms/Logo/OnadLogo';
 
 interface CreatorLoginFormProps {
   open: boolean;
@@ -50,6 +51,8 @@ export default function CreatorLoginForm({
         setError(err.response.data.message);
       });
   };
+
+  const theme = useTheme();
   return (
     (
       // 크리에이터 로그인 창
@@ -71,8 +74,9 @@ export default function CreatorLoginForm({
             <Close />
           </IconButton>
 
-          <img src="/pngs/logo/onad_logo_vertical_small.png" alt="" width={80} height={80} />
-
+          <div style={{ marginBottom: 8, marginTop: 8 }}>
+            <OnadLogo width={80} />
+          </div>
           <Typography variant="h6">온애드 방송인 로그인</Typography>
 
           <form style={{ marginTop: 16 }}>

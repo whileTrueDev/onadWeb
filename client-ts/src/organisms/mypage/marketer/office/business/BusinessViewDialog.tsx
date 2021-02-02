@@ -42,7 +42,7 @@ const BusinessViewDialog = (props: BusinessRegiUploadDialogProps): JSX.Element =
     open, handleClose, businessRegiImage
   } = props;
   const classes = useStyles();
-  let defaultImage = '/pngs/logo/onad_logo_vertical_small.png';
+  let defaultImage = '/pngs/logo/renewal/1x/logo_onad_y_w.png';
   let isPdf = false;
   if (typeof businessRegiImage === 'string') {
     if (businessRegiImage.indexOf('pdf') === -1) {

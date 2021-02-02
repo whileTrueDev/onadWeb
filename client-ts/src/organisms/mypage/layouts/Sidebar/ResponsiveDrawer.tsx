@@ -14,6 +14,7 @@ import { Link } from 'react-router-dom';
 import { drawerWidth } from '../../../../assets/jss/onad';
 import history from '../../../../history';
 import { MypageRoute } from '../../../../pages/mypage/routes';
+import OnadLogo from '../../../../atoms/Logo/OnadLogo';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -86,11 +87,7 @@ export default function ResponsiveDrawer(props: ResponsiveDrawerProps): JSX.Elem
     <div>
       <div className={classes.toolbar}>
         <Button onClick={handleLogoClick}>
-          <img
-            src="/pngs/logo/onad_logo_vertical_white.png"
-            alt="logo"
-            style={{ width: 50, margin: '0px 16px' }}
-          />
+          <OnadLogo width={120} />
         </Button>
       </div>
       <Divider />
