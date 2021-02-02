@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
   titleWrap: {
     textAlign: 'center',
     height: 30,
-    border: 'solid 1px #00acc1',
+    border: 'solid 1px #2771ff',
     margin: '10px 0',
     borderRadius: 5
   },
@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
     height: 80,
     overflowX: 'hidden',
     overflowY: 'auto',
-    border: 'solid 1px #00acc1'
+    border: 'solid 1px #2771ff'
   },
   checked: {},
   checkboxRoot: {
@@ -91,19 +91,19 @@ const SettlementCard = ({
           <Grid container direction="row" justify="center" alignItems="center" spacing={2}>
             <Grid item sm={12}>
               <div className={classes.titleWrap}>
-                <StyledItemText primary="정산관리 설정" fontSize="18px" color="#00acc1" />
+                <StyledItemText primary="정산관리 설정" fontSize="18px" color="#2771ff" />
               </div>
             </Grid>
             <Grid item sm={12}>
               <div>
-                <StyledItemText primary="해당하는 유형을 선택해주세요." fontSize="18px" color="#00acc1" />
+                <StyledItemText primary="해당하는 유형을 선택해주세요." fontSize="18px" color="#2771ff" />
               </div>
               <Button className={classes.typeButton} color={CreatorType === 0 ? 'primary' : undefined} onClick={(): void => { handleClick('normal'); }}>개인(대한민국 국민)</Button>
               <Button className={classes.typeButton} color={CreatorType === 1 ? 'primary' : undefined} onClick={(): void => { handleClick('bussiness'); }}>개인사업자</Button>
             </Grid>
             <Grid item sm={12}>
               <div className={classes.titleWrap}>
-                <StyledItemText primary="정산등록 신청서" fontSize="18px" color="#00acc1" />
+                <StyledItemText primary="정산등록 신청서" fontSize="18px" color="#2771ff" />
               </div>
             </Grid>
             <Grid item sm={12}>
@@ -119,7 +119,7 @@ const SettlementCard = ({
           <Grid container direction="row" justify="center" alignItems="center" spacing={2}>
             <Grid item sm={12}>
               <div className={classes.titleWrap}>
-                <StyledItemText primary="정산등록 신청 승인대기 중입니다." fontSize="18px" color="#00acc1" />
+                <StyledItemText primary="정산등록 신청 승인대기 중입니다." fontSize="18px" color="#2771ff" />
               </div>
             </Grid>
           </Grid>

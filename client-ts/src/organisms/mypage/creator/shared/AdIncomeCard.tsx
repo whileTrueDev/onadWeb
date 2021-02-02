@@ -50,9 +50,9 @@ export default function AdIncomeCard(): JSX.Element {
   // *********************************************
   // chart settings
   const COLORS = [
-    theme.palette.primary.light,
-    theme.palette.secondary.light,
-    theme.palette.success.light
+    theme.palette.primary.main,
+    theme.palette.secondary.main,
+    theme.palette.success.main
   ];
 
   const RADIAN = Math.PI / 180;
@@ -64,7 +64,7 @@ export default function AdIncomeCard(): JSX.Element {
     const y = cy + radius * Math.sin(-midAngle * RADIAN);
 
     return (
-      <text x={x} y={y} fill="white" textAnchor={x > cx ? 'start' : 'end'} dominantBaseline="central">
+      <text x={x} y={y} fill="#000" textAnchor={x > cx ? 'start' : 'end'} dominantBaseline="central">
         {`${(percent * 100).toFixed(0)}%`}
       </text>
     );

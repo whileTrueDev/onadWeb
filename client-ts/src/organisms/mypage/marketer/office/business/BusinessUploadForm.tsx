@@ -23,6 +23,9 @@ const useStyles = makeStyles((theme) => ({
       padding: theme.spacing(2)
     }
   },
+  button: {
+    margin: theme.spacing(0, 1, 0, 0),
+  }
 }));
 interface BusinessUploadFormProps {
   businessRegistrationData: UseGetRequestObject<BusinessInterface | null>;
@@ -68,6 +71,7 @@ function BusinessUploadForm(props: BusinessUploadFormProps): JSX.Element {
                       size="small"
                       variant="outlined"
                       color="primary"
+                      className={classes.button}
                       onClick={(): void => {
                         setStep({
                           currStep: 0,
@@ -81,6 +85,7 @@ function BusinessUploadForm(props: BusinessUploadFormProps): JSX.Element {
                     <Button
                       size="small"
                       variant="outlined"
+                      className={classes.button}
                       color="secondary"
                       onClick={(): void => { showDialog.handleOpen(); }}
                     >
@@ -111,6 +116,7 @@ function BusinessUploadForm(props: BusinessUploadFormProps): JSX.Element {
                       size="small"
                       variant="outlined"
                       color="primary"
+                      className={classes.button}
                       onClick={(): void => {
                         setStep({ currStep: 0, isBusiness: false });
                         stepDialog.handleOpen();
@@ -135,6 +141,7 @@ function BusinessUploadForm(props: BusinessUploadFormProps): JSX.Element {
               size="small"
               variant="outlined"
               color="primary"
+              className={classes.button}
               onClick={(): void => {
                 setStep({ currStep: 0, isBusiness: false });
                 stepDialog.handleOpen();
