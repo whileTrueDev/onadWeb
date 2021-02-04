@@ -32,10 +32,11 @@ export default function PublicNotification(): JSX.Element {
 
   const mainPanel = document.getElementById('onad-main-panel');
   React.useEffect(() => {
+    if (mainPanel) {
+      mainPanel.scroll({ top: 0, behavior: 'smooth' });
+    }
+
     if (location.state && location.state.selectedNotice && noticeData.data) {
-      if (mainPanel) {
-        mainPanel.scroll({ top: 0, behavior: 'auto' });
-      }
       // 대시보드로부터 선택된 공지사항 찾기
       const targetNoti = noticeData.data.find(
         (noti) => noti.code === location.state.selectedNotice
