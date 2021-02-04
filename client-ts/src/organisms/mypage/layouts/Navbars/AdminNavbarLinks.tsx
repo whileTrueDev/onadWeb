@@ -111,9 +111,7 @@ export default function AdminNavbarLinks(): JSX.Element {
                   </Avatar>
                 )}
                 {type === 'marketer' && (
-                <Avatar className={classes.avatar}>
-                  {userProfileGet.data ? userProfileGet.data.marketerName.slice(0, 1) : ''}
-                </Avatar>
+                <Avatar className={classes.avatar} />
                 )}
               </div>
             </Badge>

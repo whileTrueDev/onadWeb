@@ -5,6 +5,7 @@ import ProfileCard from '../../../organisms/mypage/creator/Mypage/ProfileCard';
 import PlatformLinkCard from '../../../organisms/mypage/creator/Mypage/PlatformLinkCard';
 import useGetRequest from '../../../utils/hooks/useGetRequest';
 import CenterLoading from '../../../atoms/Loading/CenterLoading';
+import useMypageScrollToTop from '../../../utils/hooks/useMypageScrollToTop';
 
 const Mypage = (): JSX.Element => {
   // 프로필 유저 데이터
@@ -12,6 +13,7 @@ const Mypage = (): JSX.Element => {
   // 출금 내역 데이터
   const withdrawalData = useGetRequest('/creator/income/withdrawal');
 
+  useMypageScrollToTop();
   return (
     <div style={{ margin: '0 auto', maxWidth: 1024 }}>
 
