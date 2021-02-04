@@ -116,6 +116,7 @@ function MyCash(props: MyCashProps): JSX.Element {
               <span>
                 <Button
                   size="medium"
+                  variant="outlined"
                   color="default"
                   disabled
                   className={classes.button}
@@ -130,6 +131,7 @@ function MyCash(props: MyCashProps): JSX.Element {
           && accountData.data.marketerAccountNumber && (
             <Button
               size="medium"
+              variant="outlined"
               color="default"
               className={classes.button}
               onClick={(): void => { refundDialog.handleOpen(); }}
