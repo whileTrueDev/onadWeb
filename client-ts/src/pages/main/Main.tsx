@@ -27,6 +27,7 @@ export default function Main(): JSX.Element {
   } = useLoginValue();
 
   React.useEffect(() => {
+    document.title = '온애드 | 1인 미디어 실시간 광고 플랫폼';
     window.scrollTo(0, 0);
   }, []);
 

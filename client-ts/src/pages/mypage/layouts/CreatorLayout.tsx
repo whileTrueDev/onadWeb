@@ -29,7 +29,7 @@ const CreatorDashboard = (): JSX.Element => {
   useEffect(() => {
     document.title = '온애드 | 마이페이지';
     if (mainPanel && mainPanel.current) {
-      mainPanel.current.scrollTop = 0;
+      mainPanel.current.scroll({ top: 0, behavior: 'smooth' });
     }
 
     return (): void => {

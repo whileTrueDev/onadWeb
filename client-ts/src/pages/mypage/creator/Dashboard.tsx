@@ -26,6 +26,7 @@ import { ContractionDataType } from './CPAManage';
 import PlatformLinkDialog from '../../../organisms/mypage/shared/PlatformLinkDialog';
 import history from '../../../history';
 import { NoticeData } from '../../../organisms/mypage/shared/notice/NoticeTable';
+import useMypageScrollToTop from '../../../utils/hooks/useMypageScrollToTop';
 
 const Dashboard = (): JSX.Element => {
   // 계약 정보 조회
@@ -69,6 +70,7 @@ const Dashboard = (): JSX.Element => {
   };
   const handleClose = (): void => { setOpen(false); };
 
+  useMypageScrollToTop();
   return (
     <>
       <div style={{ margin: '0 auto', maxWidth: 1430 }}>

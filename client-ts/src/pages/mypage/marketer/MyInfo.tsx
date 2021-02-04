@@ -6,6 +6,7 @@ import GridContainer from '../../../atoms/Grid/GridContainer';
 import GridItem from '../../../atoms/Grid/GridItem';
 import UserDataForm from '../../../organisms/mypage/marketer/userManage/profile/UserDataForm';
 import SignOut from '../../../organisms/mypage/marketer/userManage/profile/SignOut';
+import useMypageScrollToTop from '../../../utils/hooks/useMypageScrollToTop';
 
 const useStyles = makeStyles((theme) => ({
   // container: { margin: '0 auto', maxWidth: 1430 },
@@ -16,6 +17,7 @@ export default function MyInfo(): JSX.Element {
   const userData = useGetRequest<null, UserInterface | null>('/marketer');
   const accountData = useGetRequest<null, AccountInterface | null>('/marketer/account');
 
+  useMypageScrollToTop();
   return (
     <div>
       {/* 계정 관리 */}

@@ -18,6 +18,7 @@ import history from '../../../history';
 import Snackbar from '../../../atoms/Snackbar/Snackbar';
 import { useDialog } from '../../../utils/hooks';
 import parseParams from '../../../utils/parseParams';
+import useMypageScrollToTop from '../../../utils/hooks/useMypageScrollToTop';
 
 
 const useStyles = makeStyles((_theme: Theme) => ({
@@ -191,6 +192,7 @@ const CampaignCreate = (): JSX.Element => {
       });
   };
 
+  useMypageScrollToTop();
   return (
     <Grid container direction="row" spacing={2} wrap="wrap">
 
