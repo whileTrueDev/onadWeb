@@ -13,7 +13,7 @@ router.route('/')
       const searchQuery = `
       SELECT creatorTwitchId, creatorName, creatorLogo
       FROM creatorInfo
-      WHERE creatorContractionAgreement = 1 
+      WHERE creatorContractionAgreement = 1 AND creatorTwitchOriginalId IS NOT NULL
       ORDER BY date DESC
       `;
       doQuery(searchQuery, [])
