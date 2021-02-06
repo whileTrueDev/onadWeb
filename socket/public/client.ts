@@ -2,7 +2,7 @@ import identifier from './programIdentifier';
 import hiddenEventHandler from './hiddenEventHandler';
 import imageClicker from './imageClicker';
 
-const socket: any = io({transports: ['websocket']});
+const socket: any = io({ transports: ['websocket'] });
 const programType: string = identifier();
 const history: number = window.history.length;
 const THIS_URL: string = window.location.href;
@@ -15,6 +15,15 @@ function isVideo(src: string): boolean {
 
 hiddenEventHandler(socket, THIS_URL, programType);
 imageClicker(socket, THIS_URL, programType);
+
+
+setInterval(() => {
+  $('.default').toggleClass('top');
+  setTimeout(() => {
+    $('.default.top').toggleClass('top');
+  }, 10000);
+}, 300000);
+
 
 let socketHost = '';
 socket.emit('new client', [THIS_URL, history, programType]);
@@ -88,5 +97,6 @@ socket.on('re-render at client', () => {
 socket.on('img clear', () => {
   $('.img-area').empty();
 });
+
 
 export { };
