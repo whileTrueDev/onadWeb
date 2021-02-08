@@ -46,10 +46,11 @@ const ClickAdCard = ({
       </div>
 
       <div className={classes.right}>
-        <Typography>내 광고레벨</Typography>
+        {/* 삭제요청 from scott 2021.02.08 */}
+        {/* <Typography>내 광고레벨</Typography>
         <Typography gutterBottom variant="h4" className={classes.bold}>
           {`LV. ${levelData.level}`}
-        </Typography>
+        </Typography> */}
         <AdLevelSlider
           valueLabelFormat={(x): string => `광고 경험치: ${x}`}
           className={classes.slider}

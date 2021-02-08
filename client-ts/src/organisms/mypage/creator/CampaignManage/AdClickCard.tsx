@@ -94,7 +94,8 @@ export default function AdClickCard({
 
           <Grid container spacing={2} justify="center">
             {/* 레벨 / 경험치 정보 */}
-            {!levelData.loading && levelData.data && (
+            {/* 삭제요청 from scott 2021.02.08 */}
+            {/* {!levelData.loading && levelData.data && (
             <Grid item>
               <div style={{ marginBottom: 8, }}>
                 <Typography>광고 레벨</Typography>
@@ -109,7 +110,7 @@ export default function AdClickCard({
                 </Typography>
               </div>
             </Grid>
-            )}
+            )} */}
 
             {/* 클릭 수 정보 */}
             {!clicksSummaryData.loading && clicksSummaryData.data && (
