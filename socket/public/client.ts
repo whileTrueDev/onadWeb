@@ -22,7 +22,7 @@ setInterval(() => {
   setTimeout(() => {
     $('.default.top').toggleClass('top');
   }, 10000);
-}, 300000);
+}, 600000);
 
 
 let socketHost = '';
