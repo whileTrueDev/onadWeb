@@ -41,6 +41,7 @@ export interface NoticeData {
   regiDate: string;
   title: string;
   contents?: string;
+  target: string;
 }
 
 export default function NoticeTable({
@@ -71,8 +72,16 @@ export default function NoticeTable({
               ),
             },
             {
-              width: 150,
+              width: 80,
               headerName: '구분',
+              field: 'target',
+              renderCell: (_data): React.ReactElement => (
+                <Typography variant="body2" noWrap>{_data.row.target}</Typography>
+              )
+            },
+            {
+              width: 150,
+              headerName: '카테고리',
               field: 'topic',
               renderCell: (_data): React.ReactElement => (
                 <Typography variant="body2" noWrap>
