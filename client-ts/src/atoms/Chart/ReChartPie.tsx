@@ -3,6 +3,7 @@ import {
   PieChart, Pie, Sector, Cell,
   ResponsiveContainer, Legend
 } from 'recharts';
+import shortid from 'shortid';
 import COLORS from './chartTheme';
 
 interface RenderActiveShapeProps {
@@ -120,7 +121,7 @@ export default function CustomPieChart<DataType>({
             {data.map<JSX.Element>(
               (entry, index) => (
                 <Cell
-                  key={`cell_${index}`}
+                  key={shortid.generate()}
                   fill={COLORS.pie[index % COLORS.pie.length]}
                 />
               )

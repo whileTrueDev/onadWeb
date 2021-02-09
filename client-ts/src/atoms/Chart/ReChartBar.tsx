@@ -69,10 +69,14 @@ export default function ReChartBar<DataType extends IncomeChartData>({
           }}
         >
           <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey={xAxisDataKey} />
-          <YAxis />
+          <XAxis dataKey={xAxisDataKey} tick={{ fill: theme.palette.text.secondary }} />
+          <YAxis tick={{ fill: theme.palette.text.secondary }} />
           <Tooltip
-            contentStyle={{ backgroundColor: theme.palette.background.paper }}
+            contentStyle={{
+              backgroundColor: theme.palette.common.white,
+              color: theme.palette.common.black,
+              fontWeight: theme.typography.fontWeightBold
+            }}
             cursor={{ stroke: theme.palette.primary.main, strokeWidth: 1 }}
             labelFormatter={tooltipLabelFormatter}
             formatter={tooltipFormatter}
@@ -80,6 +84,9 @@ export default function ReChartBar<DataType extends IncomeChartData>({
           {legend && (
             <Legend
               iconType="circle"
+              wrapperStyle={{
+                fontWeight: theme.typography.fontWeightRegular
+              }}
               formatter={legendFormatter}
             />
           )}
