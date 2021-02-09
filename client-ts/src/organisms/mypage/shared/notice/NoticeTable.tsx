@@ -7,7 +7,7 @@ import { lighten, makeStyles, Paper } from '@material-ui/core';
 import CustomDataGrid from '../../../../atoms/Table/CustomDataGrid';
 
 const useStyles = makeStyles((theme) => ({
-  new: { color: theme.palette.secondary.main },
+  new: { color: theme.palette.primary.main },
   title: {
     cursor: 'pointer',
     '&:hover': { textDecoration: 'underline' },
