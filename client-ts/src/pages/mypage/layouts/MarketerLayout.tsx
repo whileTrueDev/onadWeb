@@ -51,14 +51,15 @@ const MarketerDashboard = (): JSX.Element => {
         mobileOpen={mobileOpen}
         handleDrawerToggle={handleDrawerToggle}
       />
-      <div className={classes.mainPanel} ref={mainPanel} id="onad-main-panel">
-        <Navbar
-          handleDrawerToggle={handleDrawerToggle}
-          routes={allRoutes.marketer}
-        />
-        <div className={classes.content}>
-          <div className={classes.container}>
-            <MarketerInfoContextProvider>
+      <MarketerInfoContextProvider>
+        <div className={classes.mainPanel} ref={mainPanel} id="onad-main-panel">
+          <Navbar
+            type="marketer"
+            handleDrawerToggle={handleDrawerToggle}
+            routes={allRoutes.marketer}
+          />
+          <div className={classes.content}>
+            <div className={classes.container}>
               <Switch>
                 {allRoutes.marketer.map((prop) => (
                   <Route
@@ -68,11 +69,11 @@ const MarketerDashboard = (): JSX.Element => {
                   />
                 ))}
               </Switch>
-            </MarketerInfoContextProvider>
+            </div>
           </div>
+          <Footer />
         </div>
-        <Footer />
-      </div>
+      </MarketerInfoContextProvider>
     </div>
   );
 };

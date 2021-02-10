@@ -1,5 +1,5 @@
 import React, {
-  // useContext,
+  useContext,
   useEffect
 } from 'react';
 import classnames from 'classnames';
@@ -14,7 +14,7 @@ import { useDialog, useEventTargetValue, usePatchRequest } from '../../../../../
 import EditablePasswordInput from './sub/EditablePasswordInput';
 import Snackbar from '../../../../../atoms/Snackbar/Snackbar';
 import EditProfileImage from './sub/EditProfileImage';
-// import MarketerProfileImageContext from '../../../../../context/MarketerInfo.context';
+import MarketerInfoContext from '../../../../../context/MarketerInfo.context';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -37,14 +37,15 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(1, 0)
   },
 }));
-interface UserDataFormProps {
-  userData: MarketerInfo;
-  doGetRequest: () => void;
-}
 
-const UserDataForm = (props: UserDataFormProps): JSX.Element => {
+export interface UserDataFormProps {
+  userData: MarketerInfo;
+}
+const UserDataForm = ({
+  userData
+}: UserDataFormProps): JSX.Element => {
   const classes = useStyles();
-  const { userData, doGetRequest } = props;
+  const marketerInfo = useContext(MarketerInfoContext);
 
   const nameValue = useEventTargetValue(userData.marketerName);
   const passwordValue = useEventTargetValue();
@@ -59,7 +60,9 @@ const UserDataForm = (props: UserDataFormProps): JSX.Element => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userData.marketerMail, userData.marketerName, userData.marketerPhoneNum]);
 
-  const { doPatchRequest } = usePatchRequest<{ type: string; value: string | number }, any[]>(
+  const {
+    loading, doPatchRequest
+  } = usePatchRequest<{ type: string; value: string | number }, any[]>(
     '/marketer'
   );
 
@@ -68,11 +71,6 @@ const UserDataForm = (props: UserDataFormProps): JSX.Element => {
   const successSnack = useDialog();
   const failSnack = useDialog();
 
-  // ***************************************************
-  // 프로필 사진 변경 시, 마이페이지 네비바에서 유저 정보 다시 조회하기 위한 컨텍스트 사용
-  // const marketerProfileImageContext = useContext(MarketerProfileImageContext);
-
-  const loading = useDialog();
   /**
    * 내 정보 수정 핸들러
    * @param type 변경할 필드
@@ -82,31 +80,24 @@ const UserDataForm = (props: UserDataFormProps): JSX.Element => {
     type: 'name' | 'password' | 'mail' | 'phone' | 'profileImage',
     value: string,
   ): void {
-    loading.handleOpen();
     doPatchRequest({ type, value })
       .then(() => {
         successSnack.handleOpen();
         setTimeout(() => {
-          loading.handleClose();
-          doGetRequest();
-          // 프로필 사진 변경 시, 마이페이지 네비바에서 유저 정보 다시 조회하기 위한 컨텍스트 사용
-          // if (type === 'profileImage') marketerProfileImageContext.doGetRequest();
+          marketerInfo.doGetRequest();
         }, 1000);
       })
       .catch(() => {
-        loading.handleClose();
         failSnack.handleOpen();
       });
   }
 
   return (
     <Paper className={classes.container}>
-
       <Grid container>
         <Grid item xs={12} className={classnames(classes.field, classes.first)}>
           <EditProfileImage
-            defaultProfileImage={userData.profileImage}
-            loading={loading.open}
+            loading={loading}
             onSubmit={(image): void => {
               handlePatchSubmit('profileImage', image);
             }}
@@ -116,7 +107,7 @@ const UserDataForm = (props: UserDataFormProps): JSX.Element => {
         {/* 회사명/브랜드명/이름 */}
         <Grid item xs={12} className={classes.field}>
           <EditableTextField
-            loading={loading.open}
+            loading={loading}
             label="이름(회사명or브랜드명)"
             displayValue={userData.marketerName}
             value={nameValue.value}
@@ -131,7 +122,7 @@ const UserDataForm = (props: UserDataFormProps): JSX.Element => {
 
         <Grid item xs={12} className={classes.field}>
           <EditablePasswordInput
-            loading={loading.open}
+            loading={loading}
             label="비밀번호"
             displayValue="****"
             value={passwordValue.value}
@@ -147,7 +138,7 @@ const UserDataForm = (props: UserDataFormProps): JSX.Element => {
         {/* 이메일 */}
         <Grid item xs={12} className={classes.field}>
           <EditableTextField
-            loading={loading.open}
+            loading={loading}
             label="이메일"
             displayValue={userData.marketerMail}
             value={mailValue.value}
@@ -166,7 +157,7 @@ const UserDataForm = (props: UserDataFormProps): JSX.Element => {
         {/* 휴대전화 */}
         <Grid item xs={12} className={classes.field}>
           <EditablePhoneInput
-            loading={loading.open}
+            loading={loading}
             label="휴대전화"
             displayValue={userData.marketerPhoneNum}
             value={phoneValue.value}

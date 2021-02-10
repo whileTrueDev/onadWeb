@@ -1,17 +1,18 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import React, {
-  createContext, useCallback, useEffect, useState
+  createContext,
 } from 'react';
-import HOST from '../config';
 import { MarketerInfo } from '../organisms/mypage/marketer/office/interface';
-import axiosInstance from '../utils/axios';
+import { useGetRequest } from '../utils/hooks';
 
 export interface MarketerInfoContextValue {
-  user: MarketerInfo | null;
+  user?: MarketerInfo;
+  loading: boolean;
   doGetRequest: () => void;
 }
 export const defaultValue: MarketerInfoContextValue = {
-  user: null,
+  user: undefined,
+  loading: false,
   doGetRequest: () => {},
 };
 
@@ -23,24 +24,16 @@ const MarketerInfoContext = createContext<MarketerInfoContextValue>(
 
 export function MarketerInfoContextProvider(props: any): JSX.Element {
   const { children } = props;
-  const [marketerInfo, setMarketerInfo] = useState<MarketerInfo|null>(null);
-
-  const doGetRequest = useCallback(() => {
-    axiosInstance.get<MarketerInfo>(`${HOST}/marketer`)
-      .then((response) => {
-        setMarketerInfo(response.data); // update your state
-      })
-      .catch((error) => {
-        throw error;
-      });
-  }, []);
-
-  useEffect(() => {
-    doGetRequest();
-  }, [doGetRequest]);
+  const marketerInfo = useGetRequest<null, MarketerInfo>('/marketer');
 
   return (
-    <MarketerInfoContext.Provider value={{ user: marketerInfo, doGetRequest }}>
+    <MarketerInfoContext.Provider
+      value={{
+        user: marketerInfo.data,
+        loading: marketerInfo.loading,
+        doGetRequest: marketerInfo.doGetRequest
+      }}
+    >
       {children}
     </MarketerInfoContext.Provider>
   );

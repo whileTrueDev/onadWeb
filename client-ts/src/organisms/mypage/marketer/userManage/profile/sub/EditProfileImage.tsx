@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, } from 'react';
 import {
   Button,
   Typography
@@ -6,23 +6,17 @@ import {
 import EditableAvatar from '../../../../../../atoms/Avatar/EditableAvatar';
 import { useDialog } from '../../../../../../utils/hooks';
 import CustomDialog from '../../../../../../atoms/Dialog/Dialog';
+import MarketerInfoContext from '../../../../../../context/MarketerInfo.context';
 
 export interface EditProfileImageProps {
-  defaultProfileImage?: string;
   onSubmit: (value: string) => void;
   loading?: boolean;
 }
 export default function EditProfileImage({
-  defaultProfileImage,
   onSubmit,
   loading,
 }: EditProfileImageProps): JSX.Element {
-  // 프로필 이미지
-  const [uploadedImage, setUploadImage] = useState<string | undefined>(defaultProfileImage);
-  useEffect(() => {
-    setUploadImage(defaultProfileImage);
-  }, [defaultProfileImage]);
-
+  const marketerInfo = useContext(MarketerInfoContext);
   /**
    * 이미지 업로드 핸들러
    * @param event FormEvent
@@ -42,7 +36,6 @@ export default function EditProfileImage({
           reader.readAsDataURL(myImage);
           reader.onload = (): void => {
             if (reader.result) {
-              setUploadImage(reader.result as string);
               onSubmit(reader.result as string);
             }
           };
@@ -66,12 +59,12 @@ export default function EditProfileImage({
         <Typography color="textSecondary" variant="body2">프로필 사진을 클릭해 편집을 시작하세요.</Typography>
         <EditableAvatar
           changeLoading={loading}
-          src={uploadedImage}
+          src={marketerInfo.user ? marketerInfo.user.profileImage : ''}
           onProfileImageChange={handleProfileImageChange}
         />
         <Button
           variant="outlined"
-          disabled={!uploadedImage}
+          disabled={!marketerInfo.user || !marketerInfo.user.profileImage}
           onClick={(): void => {
             confirmDialog.handleOpen();
           }}

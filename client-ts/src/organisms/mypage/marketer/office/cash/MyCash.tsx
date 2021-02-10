@@ -146,7 +146,7 @@ function MyCash(props: MyCashProps): JSX.Element {
             <Table
               rowPerPage={3}
               tableHead={['날짜', '충전금액', '결제수단', '진행상황']}
-              tableData={(loading || (data === null)) ? [] : data.data}
+              tableData={(loading || !data) ? [] : data.data}
               pagination
             />
           </div>

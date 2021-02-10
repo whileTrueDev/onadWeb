@@ -67,7 +67,7 @@ const MapWithAMarkerClusterer = compose<
     </GoogleMap>
   ));
 
-type IpToGeoData = UseGetRequestObject<GeoInterface[] | null>;
+type IpToGeoData = UseGetRequestObject<GeoInterface[]>;
 interface IpToGeoProps {
   ipToGeoData: IpToGeoData;
 }

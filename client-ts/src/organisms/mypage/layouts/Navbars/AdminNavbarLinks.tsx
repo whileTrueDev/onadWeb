@@ -1,6 +1,7 @@
 import React, {
-  // useContext,
-  useEffect, useRef, useState
+  useContext,
+  useEffect,
+  useRef,
 } from 'react';
 // @material-ui/core components
 import Tooltip from '@material-ui/core/Tooltip';
@@ -24,18 +25,19 @@ import UserPopover from './sub/UserPopover';
 import { ContractionDataType } from '../../../../pages/mypage/creator/CPAManage';
 import MarketerPopover from './sub/MarketerPopover';
 import { MarketerInfo } from '../../marketer/office/interface';
-// import MarketerInfoContext from '../../../../context/MarketerInfo.context';
+import MarketerInfoContext from '../../../../context/MarketerInfo.context';
 
 const useStyles = makeStyles((theme) => ({
   avatar: { width: theme.spacing(4), height: theme.spacing(4) }
 }));
 
-export default function AdminNavbarLinks(): JSX.Element {
+export interface AdminNavbarLinksProps {
+  type: 'marketer' | 'creator';
+}
+export default function AdminNavbarLinks({
+  type,
+}: AdminNavbarLinksProps): JSX.Element {
   const classes = useStyles();
-
-  const [type] = useState<'creator' | 'marketer'>(
-    window.document.location.pathname.includes('/creator/') ? 'creator' : 'marketer'
-  );
 
   // 개인 알림
   const notificationGet = useGetRequest<NoticeDataParam, NoticeDataRes>(`/${type}/notification`);
@@ -75,14 +77,13 @@ export default function AdminNavbarLinks(): JSX.Element {
 
   // 유저 로고 클릭시의 설정 리스트
   const userLogoAnchor = useAnchorEl();
-  // anchorEl, handleAnchorOpen, handleAnchorOpenWithRef, handleAnchorClose
 
   // 유저 정보 조회
   const userProfileGet = useGetRequest<null, ContractionDataType & MarketerInfo>(`/${type}`);
 
   // ***************************************************
   // 프로필 사진 변경 시, 마이페이지 네비바에서 유저 정보 다시 조회하기 위한 컨텍스트 사용
-  // const marketerInfo = useContext(MarketerInfoContext);
+  const marketerInfo = useContext(MarketerInfoContext);
 
   return (
     <div>
@@ -123,7 +124,7 @@ export default function AdminNavbarLinks(): JSX.Element {
                 {type === 'marketer' && (
                 <Avatar
                   className={classes.avatar}
-                  src={userProfileGet.data ? userProfileGet.data.profileImage : ''}
+                  src={marketerInfo.user ? marketerInfo.user.profileImage : ''}
                 />
                 )}
               </div>
@@ -139,7 +140,7 @@ export default function AdminNavbarLinks(): JSX.Element {
               )}
               <Avatar
                 className={classes.avatar}
-                src={userProfileGet.data ? userProfileGet.data.profileImage : ''}
+                src={marketerInfo.user ? marketerInfo.user.profileImage : ''}
               />
             </div>
           )}
@@ -173,10 +174,10 @@ export default function AdminNavbarLinks(): JSX.Element {
       )}
 
       {/* 유저 설정 리스트 */}
-      {type === 'marketer' && !userProfileGet.loading && userProfileGet.data && (
+      {type === 'marketer' && !marketerInfo.loading && marketerInfo.user && (
       <MarketerPopover
         open={userLogoAnchor.open}
-        userData={userProfileGet.data}
+        userData={marketerInfo.user}
         anchorEl={userLogoAnchor.anchorEl}
         handleAnchorClose={userLogoAnchor.handleAnchorClose}
         handleLogoutClick={handleLogoutClick}
