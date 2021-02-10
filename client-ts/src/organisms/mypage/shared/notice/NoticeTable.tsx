@@ -62,8 +62,10 @@ export default function NoticeTable({
           scrollbarSize={10}
           columns={[
             {
-              width: 80,
+              width: 100,
               headerName: '번호',
+              disableClickEventBubbling: true,
+              disableColumnMenu: true,
               field: 'code',
               renderCell: (_data): React.ReactElement => (
                 <Typography variant="body2" noWrap>
@@ -72,7 +74,7 @@ export default function NoticeTable({
               ),
             },
             {
-              width: 80,
+              width: 110,
               headerName: '구분',
               field: 'target',
               renderCell: (_data): React.ReactElement => (
