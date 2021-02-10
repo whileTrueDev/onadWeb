@@ -1,5 +1,7 @@
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, {
+  useState, useEffect, useRef,
+} from 'react';
 import { Switch, Route } from 'react-router-dom';
 import Navbar from '../../../organisms/mypage/layouts/Navbars/Navbar';
 import ResponsiveDrawer from '../../../organisms/mypage/layouts/Sidebar/ResponsiveDrawer';
@@ -10,6 +12,7 @@ import useLoginValue from '../../../utils/hooks/useLoginValue';
 // css
 import useLayoutStyles from './Layout.style';
 import '../../../assets/onad.css';
+import { MarketerInfoContextProvider } from '../../../context/MarketerInfo.context';
 
 const MarketerDashboard = (): JSX.Element => {
   const classes = useLayoutStyles();
@@ -55,15 +58,17 @@ const MarketerDashboard = (): JSX.Element => {
         />
         <div className={classes.content}>
           <div className={classes.container}>
-            <Switch>
-              {allRoutes.marketer.map((prop) => (
-                <Route
-                  path={prop.layout + prop.path}
-                  component={prop.component}
-                  key={prop.name}
-                />
-              ))}
-            </Switch>
+            <MarketerInfoContextProvider>
+              <Switch>
+                {allRoutes.marketer.map((prop) => (
+                  <Route
+                    path={prop.layout + prop.path}
+                    component={prop.component}
+                    key={prop.name}
+                  />
+                ))}
+              </Switch>
+            </MarketerInfoContextProvider>
           </div>
         </div>
         <Footer />

@@ -1,17 +1,20 @@
-import React, { useEffect } from 'react';
+import React, {
+  // useContext,
+  useEffect
+} from 'react';
 import classnames from 'classnames';
 // @material-ui/core
 import {
-  Avatar,
-  Grid,
-  makeStyles, Paper, Typography
+  Grid, makeStyles, Paper,
 } from '@material-ui/core';
 import EditableTextField from './sub/EditableTextField';
 import EditablePhoneInput from './sub/EditablePhoneInput';
-import { UserInterface } from '../../office/interface';
+import { MarketerInfo } from '../../office/interface';
 import { useDialog, useEventTargetValue, usePatchRequest } from '../../../../../utils/hooks';
 import EditablePasswordInput from './sub/EditablePasswordInput';
 import Snackbar from '../../../../../atoms/Snackbar/Snackbar';
+import EditProfileImage from './sub/EditProfileImage';
+// import MarketerProfileImageContext from '../../../../../context/MarketerInfo.context';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -33,14 +36,9 @@ const useStyles = makeStyles((theme) => ({
     maxWidth: 320,
     margin: theme.spacing(1, 0)
   },
-  avatar: {
-    width: 40,
-    height: 40,
-    margin: theme.spacing(1, 2, 1, 0),
-  },
 }));
 interface UserDataFormProps {
-  userData: UserInterface;
+  userData: MarketerInfo;
   doGetRequest: () => void;
 }
 
@@ -65,8 +63,14 @@ const UserDataForm = (props: UserDataFormProps): JSX.Element => {
     '/marketer'
   );
 
+  // **************************************************
+  // 성공, 실패 알림을 위한 상태값
   const successSnack = useDialog();
   const failSnack = useDialog();
+
+  // ***************************************************
+  // 프로필 사진 변경 시, 마이페이지 네비바에서 유저 정보 다시 조회하기 위한 컨텍스트 사용
+  // const marketerProfileImageContext = useContext(MarketerProfileImageContext);
 
   const loading = useDialog();
   /**
@@ -75,7 +79,8 @@ const UserDataForm = (props: UserDataFormProps): JSX.Element => {
    * @param value 해당 필드의 변경할 값
    */
   function handlePatchSubmit(
-    type: 'name' | 'password' | 'mail' | 'phone', value: string,
+    type: 'name' | 'password' | 'mail' | 'phone' | 'profileImage',
+    value: string,
   ): void {
     loading.handleOpen();
     doPatchRequest({ type, value })
@@ -84,6 +89,8 @@ const UserDataForm = (props: UserDataFormProps): JSX.Element => {
         setTimeout(() => {
           loading.handleClose();
           doGetRequest();
+          // 프로필 사진 변경 시, 마이페이지 네비바에서 유저 정보 다시 조회하기 위한 컨텍스트 사용
+          // if (type === 'profileImage') marketerProfileImageContext.doGetRequest();
         }, 1000);
       })
       .catch(() => {
@@ -97,8 +104,13 @@ const UserDataForm = (props: UserDataFormProps): JSX.Element => {
 
       <Grid container>
         <Grid item xs={12} className={classnames(classes.field, classes.first)}>
-          <Typography style={{ fontWeight: 'bold' }}>프로필 사진</Typography>
-          <Avatar variant="circular" className={classes.avatar} />
+          <EditProfileImage
+            defaultProfileImage={userData.profileImage}
+            loading={loading.open}
+            onSubmit={(image): void => {
+              handlePatchSubmit('profileImage', image);
+            }}
+          />
         </Grid>
 
         {/* 회사명/브랜드명/이름 */}
@@ -158,7 +170,7 @@ const UserDataForm = (props: UserDataFormProps): JSX.Element => {
             label="휴대전화"
             displayValue={userData.marketerPhoneNum}
             value={phoneValue.value}
-            onChange={(v) => phoneValue.setValue(v.formattedValue)}
+            onChange={(v): void => phoneValue.setValue(v.formattedValue)}
             onSubmit={(phoneNum): void => {
               handlePatchSubmit('phone', phoneNum);
             }}

@@ -1,4 +1,7 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, {
+  // useContext,
+  useEffect, useRef, useState
+} from 'react';
 // @material-ui/core components
 import Tooltip from '@material-ui/core/Tooltip';
 import Badge from '@material-ui/core/Badge';
@@ -6,7 +9,7 @@ import IconButton from '@material-ui/core/IconButton';
 // @material-ui/icons
 import Notifications from '@material-ui/icons/Notifications';
 // core components
-import { Avatar, capitalize, makeStyles } from '@material-ui/core';
+import { Avatar, makeStyles } from '@material-ui/core';
 import NotificationPopper from './sub/NotificationPopper';
 // utils
 import axios from '../../../../utils/axios';
@@ -19,7 +22,9 @@ import useAnchorEl from '../../../../utils/hooks/useAnchorEl';
 import { NoticeDataParam, NoticeDataRes } from './NotificationType';
 import UserPopover from './sub/UserPopover';
 import { ContractionDataType } from '../../../../pages/mypage/creator/CPAManage';
-import MarketerPopover, { MarketerInfoRes } from './sub/MarketerPopover';
+import MarketerPopover from './sub/MarketerPopover';
+import { MarketerInfo } from '../../marketer/office/interface';
+// import MarketerInfoContext from '../../../../context/MarketerInfo.context';
 
 const useStyles = makeStyles((theme) => ({
   avatar: { width: theme.spacing(4), height: theme.spacing(4) }
@@ -73,7 +78,11 @@ export default function AdminNavbarLinks(): JSX.Element {
   // anchorEl, handleAnchorOpen, handleAnchorOpenWithRef, handleAnchorClose
 
   // 유저 정보 조회
-  const userProfileGet = useGetRequest<null, ContractionDataType & MarketerInfoRes>(`/${type}`);
+  const userProfileGet = useGetRequest<null, ContractionDataType & MarketerInfo>(`/${type}`);
+
+  // ***************************************************
+  // 프로필 사진 변경 시, 마이페이지 네비바에서 유저 정보 다시 조회하기 위한 컨텍스트 사용
+  // const marketerInfo = useContext(MarketerInfoContext);
 
   return (
     <div>
@@ -103,15 +112,19 @@ export default function AdminNavbarLinks(): JSX.Element {
         {/* 읽지않은 공지사항이 있는 경우 뱃지 표시 */}
         {!noticeReadFlagGet.loading && noticeReadFlagGet.data
           && noticeReadFlagGet.data.noticeReadState === 0 ? (
-            <Badge variant="dot" color="primary">
+            <Badge variant="dot" color="secondary">
               <div>
                 {type === 'creator' && (
-                  <Avatar className={classes.avatar} src={userProfileGet.data ? userProfileGet.data.creatorLogo || userProfileGet.data.afreecaLogo : ''}>
-                    {userProfileGet.data && userProfileGet.data.loginId ? capitalize(userProfileGet.data.loginId[0]) : ''}
-                  </Avatar>
+                  <Avatar
+                    className={classes.avatar}
+                    src={userProfileGet.data ? userProfileGet.data.creatorLogo || userProfileGet.data.afreecaLogo : ''}
+                  />
                 )}
                 {type === 'marketer' && (
-                <Avatar className={classes.avatar} />
+                <Avatar
+                  className={classes.avatar}
+                  src={userProfileGet.data ? userProfileGet.data.profileImage : ''}
+                />
                 )}
               </div>
             </Badge>
@@ -119,13 +132,15 @@ export default function AdminNavbarLinks(): JSX.Element {
             <div>
               {/* 읽지않은 공지사항이 없는 경우 */}
               {type === 'creator' && (
-              <Avatar className={classes.avatar} src={userProfileGet.data ? userProfileGet.data.creatorLogo || userProfileGet.data.afreecaLogo : ''}>
-                {userProfileGet.data && userProfileGet.data.loginId ? capitalize(userProfileGet.data.loginId[0]) : ''}
-              </Avatar>
+              <Avatar
+                className={classes.avatar}
+                src={userProfileGet.data ? userProfileGet.data.creatorLogo || userProfileGet.data.afreecaLogo : ''}
+              />
               )}
-              {type === 'marketer' && (
-              <Avatar className={classes.avatar} />
-              )}
+              <Avatar
+                className={classes.avatar}
+                src={userProfileGet.data ? userProfileGet.data.profileImage : ''}
+              />
             </div>
           )}
 
@@ -151,7 +166,7 @@ export default function AdminNavbarLinks(): JSX.Element {
         handleAnchorClose={userLogoAnchor.handleAnchorClose}
         handleLogoutClick={handleLogoutClick}
         noticeReadFlagGet={noticeReadFlagGet}
-        doNoticePatchRequest={() => {
+        doNoticePatchRequest={(): void => {
           noticeReadFlagPatch.doPatchRequest({ type });
         }}
       />
@@ -166,7 +181,7 @@ export default function AdminNavbarLinks(): JSX.Element {
         handleAnchorClose={userLogoAnchor.handleAnchorClose}
         handleLogoutClick={handleLogoutClick}
         noticeReadFlagGet={noticeReadFlagGet}
-        doNoticePatchRequest={() => {
+        doNoticePatchRequest={(): void => {
           noticeReadFlagPatch.doPatchRequest({ type });
         }}
       />

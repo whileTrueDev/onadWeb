@@ -1,6 +1,6 @@
 import React from 'react';
 import { CircularProgress, makeStyles, Typography } from '@material-ui/core';
-import { AccountInterface, UserInterface } from '../../../organisms/mypage/marketer/office/interface';
+import { AccountInterface, MarketerInfo } from '../../../organisms/mypage/marketer/office/interface';
 import { useGetRequest } from '../../../utils/hooks';
 import GridContainer from '../../../atoms/Grid/GridContainer';
 import GridItem from '../../../atoms/Grid/GridItem';
@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 export default function MyInfo(): JSX.Element {
   const classes = useStyles();
-  const userData = useGetRequest<null, UserInterface | null>('/marketer');
+  const userData = useGetRequest<null, MarketerInfo | null>('/marketer');
   const accountData = useGetRequest<null, AccountInterface | null>('/marketer/account');
 
   useMypageScrollToTop();

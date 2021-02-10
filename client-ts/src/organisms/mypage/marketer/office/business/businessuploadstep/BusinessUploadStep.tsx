@@ -6,7 +6,7 @@ import {
   Button, Typography, Grid, TextField
 } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
-import useImageUpload from '../../../../../../utils/hooks/useImageUpload';
+import useBannerUpload from '../../../../../../utils/hooks/useBannerUpload';
 import useEventTargetValue from '../../../../../../utils/hooks/useEventTargetValue';
 import usePutRequest from '../../../../../../utils/hooks/usePutRequest';
 
@@ -65,7 +65,7 @@ function BusinessUploadStep(props: StepperInterface&BusinessRegiUploadDialogProp
   const defaultNumber = '';
   const {
     imageUrl, imageName, handleReset, readImage
-  } = useImageUpload(defaultImage);
+  } = useBannerUpload(defaultImage);
   const eventValue = useEventTargetValue(defaultNumber);
   const imageUpload = usePutRequest('/marketer/business', () => {
     handleChangeStep(2);

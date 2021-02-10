@@ -7,7 +7,7 @@ import RefundAccountForm from '../../../organisms/mypage/marketer/office/refund/
 import BusinessRegistration from '../../../organisms/mypage/marketer/office/business/BusinessUploadForm';
 
 import {
-  BusinessInterface, UserInterface, AccountInterface, CashInterface
+  BusinessInterface, MarketerInfo, AccountInterface, CashInterface
 } from '../../../organisms/mypage/marketer/office/interface';
 import useGetRequest from '../../../utils/hooks/useGetRequest';
 import MyCash from '../../../organisms/mypage/marketer/office/cash/MyCash';
@@ -24,7 +24,7 @@ export default function MyOffice(): JSX.Element {
   const classes = useStyles();
   // 계좌 정보
   const accountData = useGetRequest<null, AccountInterface | null>('/marketer/account');
-  const userData = useGetRequest<null, UserInterface | null>('/marketer');
+  const userData = useGetRequest<null, MarketerInfo | null>('/marketer');
   const businessRegistrationData = useGetRequest<null, BusinessInterface | null>('/marketer/business');
   const cashData = useGetRequest<null, CashInterface | null>('/marketer/cash');
   const adData = useGetRequest<null, AdInterface | null>('/marketer/ad');
