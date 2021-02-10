@@ -88,7 +88,7 @@ const useStyles = makeStyles((theme) => ({
     width: 400,
     height: 240,
     borderRadius: theme.spacing(1),
-    background: `linear-gradient(to bottom, white, #eff4f9 60%, #d8fff7 120%)`,
+    background: 'linear-gradient(to bottom, white, #eff4f9 60%, #d8fff7 120%)',
     boxShadow: '0px 2px 4px 4px rgba(0,0,0,0.02)',
     position: 'relative',
     [theme.breakpoints.down('md')]: {
@@ -175,12 +175,12 @@ const useStyles = makeStyles((theme) => ({
     animation: '$flip 8s cubic-bezier(0.23, 1, 0.32, 1.2) forwards',
   },
   '@keyframes flip': {
-    '0%': { marginTop: '560px'},
-    '5%, 20%': { marginTop: '440px'},
-    '25%, 50%': { marginTop: '330px'},
-    '55%, 60%': { marginTop: '210px'},
-    '65%, 90%': { marginTop: '120px'},
-    '95%, 100%': { marginTop: '8px'},
+    '0%': { marginTop: '560px' },
+    '5%, 20%': { marginTop: '440px' },
+    '25%, 50%': { marginTop: '330px' },
+    '55%, 60%': { marginTop: '210px' },
+    '65%, 90%': { marginTop: '120px' },
+    '95%, 100%': { marginTop: '8px' },
   },
   logo: {
     padding: theme.spacing(3, 0)
@@ -211,8 +211,10 @@ const useStyles = makeStyles((theme) => ({
       height: 50,
       backgroundColor: `${theme.palette.common.white} !important`
     },
+    color: theme.palette.common.black,
   },
   buttonText: {
+    // color: theme.palette.common.black,
     [theme.breakpoints.down('xs')]: {
       fontSize: '20px !important'
     },
@@ -254,7 +256,7 @@ const useStyles = makeStyles((theme) => ({
     height: 1600,
     left: '30%',
     top: '-60%',
-    background: `url('/door/bluetouch.svg') no-repeat`,
+    background: 'url(\'/door/bluetouch.svg\') no-repeat',
     backgroundSize: 'cover',
     animation: '$downwardleft 4s ease-in-out forwards',
     '&:after': {
@@ -266,7 +268,7 @@ const useStyles = makeStyles((theme) => ({
       left: '-32.5%',
       bottom: '-80%',
       transform: 'translate(0,0) rotate(180deg)',
-      background: `url('/door/greentouch.svg') no-repeat`,
+      background: 'url(\'/door/greentouch.svg\') no-repeat',
       backgroundSize: 'cover',
       animation: '$UpwardRight 4s ease-in-out forwards',
       [theme.breakpoints.down('sm')]: {

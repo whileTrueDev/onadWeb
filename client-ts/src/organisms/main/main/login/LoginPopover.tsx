@@ -5,8 +5,10 @@ import {
 import LockOpen from '@material-ui/icons/LockOpen';
 import SupervisedUserCircle from '@material-ui/icons/SupervisedUserCircle';
 import useStyles from '../style/LoginPopover.style';
-import LoginForm from './LoginForm';
+import MarketerLoginForm from './MarketerLoginForm';
+import CreatorLoginForm from './CreatorLoginForm';
 import RegistDialog from '../../regist/RegistDialog';
+import history from '../../../../history';
 
 
 interface LoginPopoverProps {
@@ -65,17 +67,14 @@ function LoginPopover({
               온애드 시작하기
             </Button>
 
-            <LoginForm
+            <MarketerLoginForm
               open={loginValue === 'marketer'}
-              isMarketer
               handleClose={handleDialogClose}
               logout={logout}
             />
-            <LoginForm
+            <CreatorLoginForm
               open={loginValue === 'creator'}
-              isMarketer={false}
               handleClose={handleDialogClose}
-              logout={logout}
             />
           </>
         )
@@ -108,8 +107,7 @@ function LoginPopover({
                     <Button
                       className={classes.rightLink2}
                       onClick={() => {
-                        alert('현재, Twitch 아이디로 로그인할 수 있어요! 확인 이후 로그인하세요!');
-                        handleDialogOpenClick('creator');
+                        history.push('/creator/signup');
                       }}
                     >
                       회원가입
@@ -119,8 +117,7 @@ function LoginPopover({
                       <Button
                         className={!trigger ? (classes.rightLink) : (classes.rightLink2)}
                         onClick={() => {
-                          alert('현재, Twitch 아이디로 로그인할 수 있어요! 확인 이후 로그인하세요!');
-                          handleDialogOpenClick('creator');
+                          history.push('/creator/signup');
                         }}
                       >
                         회원가입
@@ -128,11 +125,9 @@ function LoginPopover({
                     )}
                 </div>
               )}
-            <LoginForm
+            <CreatorLoginForm
               open={loginValue === 'creator'}
-              isMarketer={false}
               handleClose={handleDialogClose}
-              logout={logout}
             />
             <RegistDialog
               open={registOpen}

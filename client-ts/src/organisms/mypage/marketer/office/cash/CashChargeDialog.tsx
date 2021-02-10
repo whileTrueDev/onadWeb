@@ -96,6 +96,7 @@ function CashDialog(props: CashDialogProps): JSX.Element {
 
 
   function handleSubmitClick(): void {
+    if (selectValue > 1000001) return;
     // 해당 금액 만큼 광고 캐시에 추가하는 요청
     axios.post<boolean[]>(`${HOST}/marketer/cash/charge`, {
       chargeCash: selectValue,
@@ -252,6 +253,8 @@ function CashDialog(props: CashDialogProps): JSX.Element {
                       충전할 금액을 입력하세요
                     </Typography>
                   )}
+                  error={selectValue > 1000001}
+                  helperText="최대 1000만원까지 가능합니다."
                   type="number"
                   className={classes.textField}
                   value={selectValue}
@@ -272,7 +275,11 @@ function CashDialog(props: CashDialogProps): JSX.Element {
           title="입력하신대로 캐시 충전 하시겠어요?"
           buttons={(
             <div>
-              <Button onClick={handleSubmitClick} color="primary">
+              <Button
+                disabled={selectValue > 1000001}
+                onClick={handleSubmitClick}
+                color="primary"
+              >
                 진행
               </Button>
               <Button onClick={handleOnlyDialogClose}>

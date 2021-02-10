@@ -107,6 +107,9 @@ function Inquire({ confirmClose }: Props): JSX.Element {
                   disableUnderline
                   onChange={onChange}
                   required
+                  inputProps={{
+                    maxLength: 30
+                  }}
                   name="name"
                 />
               </Grid>
@@ -156,6 +159,7 @@ function Inquire({ confirmClose }: Props): JSX.Element {
                   multiline
                   required
                   rows={5}
+                  inputProps={{ maxLength: 500 }}
                   name="inquiryContents"
                 />
               </Grid>

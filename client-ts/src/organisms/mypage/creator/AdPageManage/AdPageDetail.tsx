@@ -5,7 +5,7 @@ import {
 } from '@material-ui/core';
 import BarChart from '@material-ui/icons/BarChart';
 import CustomCard from '../../../../atoms/CustomCard';
-import PrettoSlider from '../../../../atoms/PrettoSlider';
+import PrettoSlider from '../../../../atoms/AdLevelSlider';
 import StyledItemText from '../../../../atoms/StyledItemText';
 import Tooltip from '../../../../atoms/DescPopover';
 import useTooltip from '../../../../utils/hooks/useTooltip';
@@ -63,12 +63,12 @@ const AdPageDetail = ({
                 value={userData.exp}
               />
             </Grid>
-
-            <Grid item>
+            {/* 삭제요청 from scott 2021.02.08 */}
+            {/* <Grid item>
               <Typography gutterBottom variant="body2" className={classes.level}>
                 {`LV. ${userData.level}`}
               </Typography>
-            </Grid>
+            </Grid> */}
 
           </Grid>
         </Grid>

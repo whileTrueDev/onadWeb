@@ -34,6 +34,7 @@ function RegistStepper({ platform }: { platform: string }): JSX.Element {
   }
 
   function handleBack(): void {
+    if (activeStep - 1 === -1) history.push('/marketer');
     dispatch({ type: 'reset' });
     setStep(activeStep - 1);
   }

@@ -10,13 +10,13 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex', alignItems: 'center', flexDirection: 'row-reverse', padding: 5
   },
   root: {
+    marginTop: theme.spacing(4),
     width: '100%',
     heigth: '100%',
     [theme.breakpoints.down('sm')]: {
       width: '100%',
     },
     marginBotton: '20px',
-    marginTop: '20px'
   },
 }));
 

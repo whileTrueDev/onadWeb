@@ -332,7 +332,9 @@ const MarketerConnectionWarp = ({ marketerDic }) => new Promise((resolve, reject
   });
 });
 
-
+/**
+ * @deprecated
+ */
 async function calculation() {
   const date = new Date();
   date.setMinutes(date.getMinutes() - 10);

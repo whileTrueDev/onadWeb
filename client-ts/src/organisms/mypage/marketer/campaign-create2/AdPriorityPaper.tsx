@@ -7,8 +7,10 @@ import CreatorSelect from './AdPriorityComponents/CreatorSelect';
 import GameSelect from './AdPriorityComponents/GameSelect';
 import {
   CampaignCreateInterface,
-  CampaignCreateAction
+  CampaignCreateAction,
+  CampaignSelectedCreator
 } from './reducers/campaignCreate.reducer';
+import GameSelectAfreeca from './AdPriorityComponents/GameSelecAfreeca';
 
 
 export interface PriorityInterface {
@@ -25,7 +27,7 @@ const priorityTypes: PriorityInterface[] = [
   {
     id: 'type0',
     primaryText: '특정 크리에이터에게만 광고 송출',
-    secondaryText: '특정 크리에이터에게만 광고를 송출할 수 있어요',
+    secondaryText: '특정 크리에이터에게만 광고를 송출할 수 있어요.',
     defaultChildren: (
       state: CampaignCreateInterface,
       dispatch: React.Dispatch<CampaignCreateAction>,
@@ -43,12 +45,12 @@ const priorityTypes: PriorityInterface[] = [
         />
       </Collapse>
     ),
-    completeChildren: (data: { selectedCreatorNames: string[] }): JSX.Element => (
+    completeChildren: (data: { selectedCreators: CampaignSelectedCreator[] }): JSX.Element => (
       <div>
-        {data.selectedCreatorNames.map((creator: string) => (
+        {data.selectedCreators.map((creator) => (
           <Chip
-            key={creator}
-            label={creator}
+            key={creator.creatorName}
+            label={creator.creatorName}
             variant="outlined"
             style={{ margin: 4 }}
           />
@@ -58,8 +60,8 @@ const priorityTypes: PriorityInterface[] = [
   },
   {
     id: 'type1',
-    primaryText: '특정 게임에만 광고 송출',
-    secondaryText: '특정 게임에만 광고를 송출할 수 있어요.',
+    primaryText: '특정 트위치 카테고리에만 광고 송출',
+    secondaryText: '특정 카테고리에만 광고를 송출할 수 있어요.',
     defaultChildren: (
       state: CampaignCreateInterface,
       dispatch: React.Dispatch<CampaignCreateAction>,
@@ -89,9 +91,41 @@ const priorityTypes: PriorityInterface[] = [
     ),
   },
   {
+    id: 'type1-1',
+    primaryText: '특정 아프리카TV 카테고리에만 광고 송출',
+    secondaryText: '특정 카테고리에만 광고를 송출할 수 있어요.',
+    defaultChildren: (
+      state: CampaignCreateInterface,
+      dispatch: React.Dispatch<CampaignCreateAction>,
+      handleComplete: () => void,
+      handleIncomplete: () => void,
+    ): JSX.Element => (
+      <Collapse in={state.selectedPriorityType === 'type1-1'}>
+        <GameSelectAfreeca
+          state={state}
+          dispatch={dispatch}
+          handleComplete={handleComplete}
+          handleIncomplete={handleIncomplete}
+        />
+      </Collapse>
+    ),
+    completeChildren: (data: { selectedGameNames: string[] }): JSX.Element => (
+      <div>
+        {data.selectedGameNames.map((game: string) => (
+          <Chip
+            key={game}
+            label={game}
+            variant="outlined"
+            style={{ margin: 4 }}
+          />
+        ))}
+      </div>
+    ),
+  },
+  {
     id: 'type2',
-    primaryText: '노출 우선',
-    secondaryText: ' 최대한 많은 시청자들에게 브랜드를 인지시키고 싶은 광고주님께 추천드립니다.',
+    primaryText: '조건 무관 송출 (노출 우선)',
+    secondaryText: '최대한 많은 시청자들에게 브랜드를 인지시키고 싶은 광고주님께 추천드립니다.',
   }
 ];
 
@@ -190,7 +224,7 @@ function PriorityPaper({
                   <div>
                     {selected.completeChildren
                       ? selected.completeChildren({
-                        selectedCreatorNames: state.selectedCreatorNames,
+                        selectedCreators: state.selectedCreators,
                         selectedGameNames: state.selectedGames,
                       })
                       : null}

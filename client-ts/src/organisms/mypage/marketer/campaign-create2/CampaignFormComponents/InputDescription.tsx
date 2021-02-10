@@ -19,7 +19,7 @@ const InputDescription = (props: InputDescriptionProps): JSX.Element => {
           <StyledItemText
             primary="홍보 문구 입력하기"
             secondary={(
-              <Typography variant="body2">
+              <Typography variant="body2" color="textSecondary">
                 광고 홍보 문구를 입력해 주세요. 채팅광고의 문구로 사용되어, 시청자에게 직접 노출됩니다.
                 <Typography color="error" variant="caption">(최대 50자)</Typography>
               </Typography>
@@ -34,7 +34,8 @@ const InputDescription = (props: InputDescriptionProps): JSX.Element => {
             className={classes.input}
             inputRef={descriptionInputRef}
             inputProps={{
-              required: true
+              required: true,
+              maxLength: 50
             }}
           />
         </Grid>

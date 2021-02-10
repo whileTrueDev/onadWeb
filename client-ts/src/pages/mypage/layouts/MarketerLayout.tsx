@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Switch, Route } from 'react-router-dom';
 import Navbar from '../../../organisms/mypage/layouts/Navbars/Navbar';
-import Sidebar from '../../../organisms/mypage/layouts/Sidebar/Sidebar';
+import ResponsiveDrawer from '../../../organisms/mypage/layouts/Sidebar/ResponsiveDrawer';
 import Footer from '../../../organisms/mypage/layouts/Footer/Footer';
 import allRoutes from '../routes';
 import history from '../../../history';
@@ -27,9 +27,9 @@ const MarketerDashboard = (): JSX.Element => {
 
 
   useEffect(() => {
-    document.title = '온애드 | 대시보드';
+    document.title = '온애드 | 마이페이지';
     if (mainPanel && mainPanel.current) {
-      mainPanel.current.scrollTop = 0;
+      mainPanel.current.scroll({ top: 0, behavior: 'smooth' });
     }
 
     return (): void => {
@@ -43,13 +43,12 @@ const MarketerDashboard = (): JSX.Element => {
 
   return (
     <div className={classes.wrapper}>
-      <Sidebar
+      <ResponsiveDrawer
         routes={allRoutes.marketer.filter((r) => !r.noTab)}
-        logo="/pngs/logo/onad_logo_vertical_white.png"
         mobileOpen={mobileOpen}
         handleDrawerToggle={handleDrawerToggle}
       />
-      <div className={classes.mainPanel} ref={mainPanel}>
+      <div className={classes.mainPanel} ref={mainPanel} id="onad-main-panel">
         <Navbar
           handleDrawerToggle={handleDrawerToggle}
           routes={allRoutes.marketer}

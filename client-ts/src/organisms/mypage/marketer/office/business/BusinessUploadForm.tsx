@@ -1,13 +1,9 @@
 import React from 'react';
 // core
-import { makeStyles, withStyles, Theme } from '@material-ui/core/styles';
-import { Typography } from '@material-ui/core';
+import {
+  Paper, Typography, Button, makeStyles
+} from '@material-ui/core';
 // own components
-import Card from '../../../../../atoms/Card/Card';
-import CardHeader from '../../../../../atoms/Card/CardHeader';
-import CardBody from '../../../../../atoms/Card/CardBody';
-import Button from '../../../../../atoms/CustomButtons/Button';
-import DashboardStyle from '../../../../../assets/jss/views/dashboardStyle';
 import BusinessViewDialog from './BusinessViewDialog';
 
 // step dialog
@@ -15,33 +11,29 @@ import BusinessUploadStepDialog from './BusinessUploadStepDialog';
 
 // hooks
 import useDialog from '../../../../../utils/hooks/useDialog';
-import { UseGetRequestObject } from '../../../../../utils/hooks/useGetRequest';
+import useGetRequest, { UseGetRequestObject } from '../../../../../utils/hooks/useGetRequest';
 import { BusinessInterface } from '../interface';
+import Table from '../../../../../atoms/Table/Table';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  buttonWrapper: {
-    display: 'flex',
-    flexDirection: 'row-reverse',
-    justifyContent: 'space-between'
+const useStyles = makeStyles((theme) => ({
+  root: {
+    padding: theme.spacing(4),
+    marginTop: theme.spacing(1),
+    [theme.breakpoints.down('xs')]: {
+      padding: theme.spacing(2)
+    }
   },
-  textBox: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  success: {
-    color: theme.palette.primary.main
+  button: {
+    margin: theme.spacing(0, 1, 0, 0),
   }
 }));
-
 interface BusinessUploadFormProps {
-  classes: any;
   businessRegistrationData: UseGetRequestObject<BusinessInterface | null>;
 }
 
 function BusinessUploadForm(props: BusinessUploadFormProps): JSX.Element {
-  const myClasses = useStyles();
-  const { classes, businessRegistrationData } = props;
+  const classes = useStyles();
+  const { businessRegistrationData } = props;
   const showDialog = useDialog();
   const snack = useDialog();
   const stepDialog = useDialog();
@@ -53,113 +45,127 @@ function BusinessUploadForm(props: BusinessUploadFormProps): JSX.Element {
     isBusiness: false
   });
 
-  return (
-    <Card>
-      <CardHeader color="blueGray">
-        <div className={myClasses.textBox}>
-          <Typography variant="h6">
-            세금계산서/현금영수증 발행
-          </Typography>
-        </div>
+  // 목록 데이터
+  const { data, loading } = useGetRequest<null, string[][]>('/marketer/tax-bills');
 
-      </CardHeader>
+  return (
+    <Paper className={classes.root}>
+
+      <Typography style={{ fontWeight: 'bold' }}>
+        세금계산서/현금영수증 발행
+      </Typography>
+
       {!businessRegistrationData.loading
         && businessRegistrationData.data && businessRegistrationData.data.marketerBusinessRegSrc ? (
 
-          <CardBody>
-            {imageRex.test(businessRegistrationData.data.marketerBusinessRegSrc) ||
-             pdfRex.test(businessRegistrationData.data.marketerBusinessRegSrc)? (
-              <>
-                <div className={myClasses.buttonWrapper}>
-                  <Button
-                    color="primary"
-                    onClick={(): void => {
-                      setStep({
-                        currStep: 0,
-                        isBusiness: true
-                      });
-                      stepDialog.handleOpen();
-                    }}
-                  >
-                    사업자 등록증 변경
-                  </Button>
-                  <Button
-                    color="secondary"
-                    onClick={(): void => { showDialog.handleOpen(); }}
-                  >
-                    사업자 등록증 보기
-                  </Button>
-                </div>
-                <div className={myClasses.textBox} style={{ marginTop: 5 }}>
-                  <Typography gutterBottom variant="body1">사업자 등록증이 업로드 되어 있습니다.</Typography>
-                </div>
-              </>
-            ) : (
-              <>
-                <div className={myClasses.buttonWrapper}>
-                  <Button
-                    color="primary"
-                    onClick={(): void => {
-                      setStep({
-                        currStep: 0,
-                        isBusiness: false
-                      });
-                      stepDialog.handleOpen();
-                    }}
-                  >
-                    현금 영수증 변경
-                  </Button>
-                </div>
-                {phoneRex.test(businessRegistrationData.data.marketerBusinessRegSrc) ? (
-                  <span>
-                    <Typography gutterBottom align="center">
-                      전화번호 :
-                      {' '}
-                      {businessRegistrationData.data.marketerBusinessRegSrc}
-                    </Typography>
-                    <div className={myClasses.textBox} style={{ marginTop: 5 }}>
-                      <Typography gutterBottom>현금 영수증이 업로드 되어 있습니다.</Typography>
-                    </div>
-                  </span>
-                ) : (
-                  <Typography variant="body1" align="center">
-                    전화 번호 형식이 올바르지 않습니다.
-                    <br />
-                    변경하기를 눌러 다시 등록해주세요
+          <div>
+            {imageRex.test(businessRegistrationData.data.marketerBusinessRegSrc)
+             || pdfRex.test(businessRegistrationData.data.marketerBusinessRegSrc)
+              ? (
+                <>
+                  <Typography gutterBottom variant="body2">
+                    사업자 등록증이 업로드 되어 있습니다.
                   </Typography>
-                )}
-              </>
-            )}
+                  <div>
+                    <Button
+                      size="small"
+                      variant="outlined"
+                      color="primary"
+                      className={classes.button}
+                      onClick={(): void => {
+                        setStep({
+                          currStep: 0,
+                          isBusiness: true
+                        });
+                        stepDialog.handleOpen();
+                      }}
+                    >
+                      사업자 등록증 변경
+                    </Button>
+                    <Button
+                      size="small"
+                      variant="outlined"
+                      className={classes.button}
+                      color="secondary"
+                      onClick={(): void => { showDialog.handleOpen(); }}
+                    >
+                      사업자 등록증 보기
+                    </Button>
+                  </div>
+                </>
+              ) : (
+                <>
+                  {phoneRex.test(businessRegistrationData.data.marketerBusinessRegSrc) ? (
+                    <span>
+                      <Typography gutterBottom align="center" variant="body2">
+                        전화번호 :
+                        {' '}
+                        {businessRegistrationData.data.marketerBusinessRegSrc}
+                      </Typography>
+                      <Typography gutterBottom variant="body2">현금 영수증이 업로드 되어 있습니다.</Typography>
+                    </span>
+                  ) : (
+                    <Typography variant="body2" align="center">
+                      전화 번호 형식이 올바르지 않습니다.
+                      <br />
+                      변경하기를 눌러 다시 등록해주세요
+                    </Typography>
+                  )}
+                  <div>
+                    <Button
+                      size="small"
+                      variant="outlined"
+                      color="primary"
+                      className={classes.button}
+                      onClick={(): void => {
+                        setStep({ currStep: 0, isBusiness: false });
+                        stepDialog.handleOpen();
+                      }}
+                    >
+                      현금 영수증 변경
+                    </Button>
+                  </div>
+                </>
+              )}
 
-          </CardBody>
+          </div>
         ) : (
-          <CardBody>
-            <div className={myClasses.buttonWrapper} style={{ marginRight: 5 }}>
-              <Button
-                color="primary"
-                onClick={(): void => {
-                  setStep({
-                    currStep: 0,
-                    isBusiness: false
-                  });
-                  stepDialog.handleOpen();
-                }}
-                size="medium"
-              >
-                발행 진행
-              </Button>
-            </div>
-            <div className={myClasses.textBox} style={{ marginTop: 5 }}>
-              <Typography gutterBottom variant="body1">아직 등록된 [사업자 등록증 혹은 현금 영수증 번호]가 없습니다.</Typography>
-            </div>
-            <div className={myClasses.textBox} style={{ marginBottom: 10 }}>
-              <Typography gutterBottom variant="body1" className={classes.success}>진행</Typography>
-              <Typography gutterBottom variant="body1">
-                버튼을 눌러 필수정보 등록 절차를 진행해주세요.
-              </Typography>
-            </div>
-          </CardBody>
+          <div>
+            <Typography gutterBottom variant="body2">
+              아직 등록된 [사업자 등록증 혹은 현금 영수증 번호]가 없습니다.
+            </Typography>
+            <Typography gutterBottom variant="body2">
+              진행 버튼을 눌러 필수정보 등록 절차를 진행해주세요.
+            </Typography>
+            <Button
+              size="small"
+              variant="outlined"
+              color="primary"
+              className={classes.button}
+              onClick={(): void => {
+                setStep({ currStep: 0, isBusiness: false });
+                stepDialog.handleOpen();
+              }}
+            >
+              발행 진행
+            </Button>
+          </div>
         )}
+
+
+      {data && (
+      <div style={{ marginTop: 16 }}>
+        <Typography style={{ fontWeight: 'bold' }}>
+          세금계산서 발행 내역
+        </Typography>
+        <Table
+          rowPerPage={3}
+          tableHead={['날짜', '금액', '발행상태']}
+          tableData={loading || data === null ? [] : data}
+          pagination
+        />
+      </div>
+      )}
 
       {!businessRegistrationData.loading && businessRegistrationData.data && (
       <BusinessUploadStepDialog
@@ -182,8 +188,8 @@ function BusinessUploadForm(props: BusinessUploadFormProps): JSX.Element {
           step={step}
         />
       )}
-    </Card>
+    </Paper>
   );
 }
 
-export default withStyles(DashboardStyle)(BusinessUploadForm);
+export default BusinessUploadForm;

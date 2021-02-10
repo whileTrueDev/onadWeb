@@ -56,7 +56,7 @@ const SelectBudget = (props: SelectBudgetProps): JSX.Element => {
           style={{ cursor: 'pointer', maxWidth: 300 }}
           primary="일예산 설정"
           secondary={toggle && (
-            <Typography variant="body2">
+            <Typography variant="body2" color="textSecondary">
               최소금액
               <Typography color="error" variant="caption">(5000원 이상)</Typography>
             </Typography>
@@ -73,6 +73,7 @@ const SelectBudget = (props: SelectBudgetProps): JSX.Element => {
           inputRef={budgetInputRef}
           inputProps={{
             min: 5000,
+            step: 100,
             required: true
           }}
         />

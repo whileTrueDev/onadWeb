@@ -20,7 +20,7 @@ router.route('/')
       ) as A
       
       ON cI.creatorId = A.creatorId
-      WHERE creatorContractionAgreement = 1 
+      WHERE creatorContractionAgreement = 1 AND creatorTwitchOriginalId IS NOT NULL
       ORDER BY cI.creatorId DESC
       `;
       doQuery(searchQuery, [])

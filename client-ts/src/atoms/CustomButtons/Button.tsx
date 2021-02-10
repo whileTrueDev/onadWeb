@@ -2,15 +2,15 @@ import React from 'react';
 // material-ui components
 import Button, { ButtonProps } from '@material-ui/core/Button';
 // Styles
-import useButtonStyles from './Button.style';
 import {
   CircularProgress
 } from '@material-ui/core';
+import useButtonStyles from './Button.style';
 
 interface CustomProps extends ButtonProps {
   to?: string;
   link?: any;
-  load?: boolean
+  load?: boolean;
 }
 
 function RegularButton({
@@ -41,9 +41,9 @@ function RegularButton({
       color={color}
       className={classes.button}
       component={link}
-      disabled={ load && isloading }
+      disabled={load && isloading}
       onClick={(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-        if (onClick) onClick(e)
+        if (onClick) onClick(e);
         if (load) {
           handleClick();
         }

@@ -8,6 +8,7 @@ interface PriorityData {
   priorityType: any;
   priorityList: any[];
   optionType: string;
+  platform?: 'twitch' | 'afreeca';
 }
 
 interface WithrawalList {
@@ -22,6 +23,11 @@ interface Array<A, B> {
   [index: number]: A | B;
   map(arg: any): any;
 }
+
+const PER_GAME_PRIORITY_TYPE = '1';
+const PER_AFREECA_GAME_PRIORITY_TYPE = '1-1';
+const PER_CREATOR_PRIORITY_TYPE = '0';
+const WHATEVER_PRIORITY_TYPE = '2';
 
 /**
  * @description
@@ -48,17 +54,17 @@ const PriorityDoquery = ({
   campaignId,
   priorityType,
   priorityList,
-  optionType
+  optionType,
+  platform
 }: PriorityData) => {
   const getSearchQuery = (type: string) => {
     switch (type) {
-      case '0': {
+      case PER_CREATOR_PRIORITY_TYPE: {
         return 'SELECT campaignList FROM creatorCampaign WHERE creatorId = ?';
       }
-      case '1': {
-        return 'SELECT campaignList FROM categoryCampaign WHERE categoryName = ?';
-      }
-      case '2': {
+      case PER_GAME_PRIORITY_TYPE:
+      case PER_AFREECA_GAME_PRIORITY_TYPE:
+      case WHATEVER_PRIORITY_TYPE: {
         return 'SELECT campaignList FROM categoryCampaign WHERE categoryName = ?';
       }
       default: {
@@ -69,23 +75,19 @@ const PriorityDoquery = ({
 
   const getSaveQuery = (type: string) => {
     switch (type) {
-      case '0': {
+      case PER_CREATOR_PRIORITY_TYPE: {
         return `
           UPDATE creatorCampaign 
           SET campaignList = ? 
           WHERE creatorId = ?`;
       }
-      case '1': {
+      case PER_GAME_PRIORITY_TYPE:
+      case PER_AFREECA_GAME_PRIORITY_TYPE:
+      case WHATEVER_PRIORITY_TYPE: {
         return `
           UPDATE categoryCampaign
           SET campaignList = ?
           WHERE categoryName = ?`;
-      }
-      case '2': {
-        return `
-          UPDATE categoryCampaign 
-          SET campaignList = ?
-          WHERE categoryName = ? `;
       }
       default: {
         return '';
@@ -93,7 +95,14 @@ const PriorityDoquery = ({
     }
   };
 
-  const insertQuery = 'INSERT INTO categoryCampaign (categoryName, campaignList, state) VALUES(?, ?, 1)';
+  const getInfoQuery = (type: string): string => {
+    if (type === PER_AFREECA_GAME_PRIORITY_TYPE) {
+      return 'SELECT categoryId AS ID FROM AfreecaCategory WHERE categoryNameKr = ? LIMIT 1';
+    }
+    return 'SELECT gameId AS ID FROM twitchGame WHERE gameName = ? LIMIT 1';
+  };
+
+  const insertQuery = 'INSERT INTO categoryCampaign (categoryId, categoryName, campaignList, state, platform) VALUES(?, ?, ?, 1, ?)';
   const searchQuery = getSearchQuery(priorityType);
   const saveQuery = getSaveQuery(priorityType);
 
@@ -104,27 +113,29 @@ const PriorityDoquery = ({
   }
 
   return Promise.all(
-    priorityList.map(async (targetId: string) => new Promise((resolve, reject) => {
-      doQuery(searchQuery, [targetId])
-        .then((row) => {
+    priorityList.map(async (targetName: string) => new Promise((resolve, reject) => {
+      doQuery(searchQuery, [targetName])
+        .then(async (row) => {
           if (row.result.length === 0) {
+            // categoryCampaign 행이 없는 경우
+            // (creatorCampaign의 경우 크리에이터 이용약관 동의 시, 자동 생성되므로 자동 제외)
             const newJsonData = JSON.stringify({ campaignList: [campaignId] });
-            doQuery(insertQuery, [targetId, newJsonData])
-              .then(() => {
-                resolve();
-              })
-              .catch((errorData) => {
-                console.log(errorData, '429');
-                reject(errorData);
-              });
+            const infoQuery = getInfoQuery(priorityType);
+            const { result } = await doQuery(infoQuery, [targetName]);
+            if (result.length > 0) {
+              doQuery(insertQuery, [result[0].ID, targetName, newJsonData, platform])
+                .then(() => resolve())
+                .catch((errorData) => {
+                  console.log(errorData, '429');
+                  reject(errorData);
+                });
+            }
           } else {
             const jsonData = JSON.parse(row.result[0].campaignList);
             const newCampaignList = jsonData.campaignList.concat(campaignId);
             jsonData.campaignList = newCampaignList;
-            doQuery(saveQuery, [JSON.stringify(jsonData), targetId])
-              .then(() => {
-                resolve();
-              })
+            doQuery(saveQuery, [JSON.stringify(jsonData), targetName])
+              .then(() => resolve())
               .catch((errorData) => {
                 console.log(errorData);
                 reject(errorData);
@@ -165,7 +176,7 @@ const getCreatorList = () => new Promise<string[]>((resolve, reject) => {
 
 /**
  * @description
-  캠페인을 생성하는 시점에 랜딩페이지 초기화를 진행하는 함수
+  캠페인을 생성하는 시점에 광고페이지(구 랜딩페이지) 초기화를 진행하는 함수
   priorityType : 배너 광고 우선순위 타입 ( 0: 크리에이터 우선형, 1: 카테고리 우선형 2: 노출 우선형)
   optionType : 캠페인의 광고타입 ( 0: CPM, 1: CPM + CPC, 2: CPC )
 
@@ -179,7 +190,7 @@ const getCreatorList = () => new Promise<string[]>((resolve, reject) => {
  * @param {array} priorityList ? 선택된 광고 타겟 ID 리스트(게임 ID 또는 크리에이터 ID) 
  * @author 박찬우
  */
-const LandingDoQuery = async ({
+const adpageDoQuery = async ({
   campaignId, optionType, priorityType, priorityList
 }: PriorityData) => {
   const insertQuery = `
@@ -287,7 +298,7 @@ const getUrlId = (marketerId: string | undefined) => new Promise((resolve, rejec
 
 export default {
   PriorityDoquery,
-  LandingDoQuery,
+  adpageDoQuery,
   getCampaignId,
   getUrlId,
 };

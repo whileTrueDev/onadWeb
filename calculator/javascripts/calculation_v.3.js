@@ -6,6 +6,10 @@ const { doConnectionQuery, doTransacQuery } = require('../model/doQuery');
 const PPP = 2;
 const FEERATE = 0.5;
 
+// 추석 이벤트 가격 수정
+// const FEERATE = 1;
+
+
 // 현재시간은 5분, crawler가 활동하는 시기는 0분 타이밍이므로 10분을 깎아서
 const getcreatorList = ({ date }) => {
   const streamerListQuery = `
@@ -187,8 +191,15 @@ const getStreamList = ({
 
     streamData.viewer = viewer || 0;
 
+    // ********************************************************************************************
+    // 2020-11-29 특정 마케터 금액 높이기. + 아래 마케터 캐시 코드에서 weight 곱 추가
+    const marketerId = campaignId.split('_')[0];
+    const vips = ['richmarket', 'mojirange', 'herbsoap', 'injecake', 'seoulcake'];
+    const weight = vips.includes(marketerId) ? 10 : 1;
+    // ********************************************************************************************
+
     // 마케터에게서 징수하는 금액은 PPP(노출 1회당 가격) X viewer(10분동안의 노출량) X unitPrice(마케터 고유의 가격)
-    streamData.cashFromMarketer = Math.round(Number(viewer) * Number(unitPrice) * PPP);
+    streamData.cashFromMarketer = Math.round(Number(viewer) * Number(unitPrice) * PPP * weight);
 
     // 크리에이터에게 전달되는 금액은 PPP(노출 1회당 가격) X viewer(10분동안의 노출량) X unitPrice(마케터 고유의 가격) X FEERATE(세율)
     streamData.cashToCreator = Math.round(Math.round(Number(viewer) * Number(unitPrice) * PPP) * FEERATE);

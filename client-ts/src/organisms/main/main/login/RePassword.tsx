@@ -12,6 +12,7 @@ import useStyles from '../style/RePassword.style';
 import axios from '../../../../utils/axios';
 import HOST from '../../../../config';
 import history from '../../../../history';
+import passwordRegex from '../../../../utils/inputs/regex/password.regex';
 
 const initialValue = {
   value: '',
@@ -35,8 +36,7 @@ const myReducer = (
 ) => {
   switch (action.type) {
     case 'password': {
-      const regx = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,20}$/;
-      if (regx.test(action.value)) {
+      if (passwordRegex.test(action.value)) {
         console.log('비밀번호가 형식과 일치합니다.');
         return { ...state, value: action.value, password: false };
       }
@@ -118,7 +118,7 @@ function RePasswordDialog({ setRepassword, logout, repasswordOpen }: Props): JSX
             id="password"
             placeholder="비밀번호를 입력하세요."
             onChange={checkPasswd}
-            helperText={state.password ? '특수문자를 포함한 영문/숫자 혼합 8자리 이상입니다.' : ' '}
+            helperText={state.password ? '특수문자 !@#$%^*+=- 를 포함한 8-20 영문 또는 숫자' : ' '}
             error={state.password}
             margin="dense"
             autoFocus

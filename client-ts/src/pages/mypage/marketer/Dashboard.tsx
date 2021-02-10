@@ -20,9 +20,10 @@ import useDialog from '../../../utils/hooks/useDialog';
 import CashChargeDialog from '../../../organisms/mypage/marketer/office/cash/CashChargeDialog';
 
 import {
-  CampaignInterface, OnOffInterface, AdInterface, CountInterface,
+  OnOffInterface, AdInterface, CountInterface,
   ValueChartInterface, ActionLogInterface
 } from '../../../organisms/mypage/marketer/dashboard/interfaces';
+import useMypageScrollToTop from '../../../utils/hooks/useMypageScrollToTop';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -43,22 +44,20 @@ export default function Dashboard(): JSX.Element {
   const chargeDialog = useDialog();
 
   const { anchorEl, handleAnchorOpen, handleAnchorClose } = useAnchorEl();
-  const campaignData = useGetRequest<null, CampaignInterface[] | null>('/marketer/campaign/list');
+  const campaignData = useGetRequest<null, {activeCampaignCount: number} | null>('/marketer/campaign/active');
   const onOffData = useGetRequest<null, OnOffInterface | null>('/marketer/ad/on-off');
   const adData = useGetRequest<null, AdInterface | null>('/marketer/ad');
   const countsData = useGetRequest<null, CountInterface | null>('/marketer/ad/analysis/creator-count');
   const valueChartData = useGetRequest<null, ValueChartInterface[] | null>('/marketer/ad/analysis/expenditure');
-  const broadCreatorData = useGetRequest<null, string[] | null>('/marketer/ad/analysis/creator/list');
   const actionLogData = useGetRequest<null, ActionLogInterface[] | null>('/marketer/history');
 
+  useMypageScrollToTop();
 
   return (
     <div className={classes.root}>
-      {(adData.loading
-        || countsData.loading
-        || valueChartData.loading
-        || countsData.loading) ? (
-          <DashboardLoading />
+      {(adData.loading || countsData.loading
+      || valueChartData.loading || countsData.loading) ? (
+        <DashboardLoading />
         ) : (
           <div>
             {adData.data && valueChartData.data && countsData.data && (
@@ -109,7 +108,7 @@ export default function Dashboard(): JSX.Element {
                         <DescCard data={{
                           title: '운용중 캠페인',
                           value: (!campaignData.loading && campaignData.data)
-                            ? campaignData.data.filter((c) => c.onOff === 1).length
+                            ? campaignData.data.activeCampaignCount
                             : 0,
                           unit: '캠페인'
                         }}
@@ -129,13 +128,12 @@ export default function Dashboard(): JSX.Element {
                 <Grid item xs={12} md={12} lg={12}>
                   <Grid container spacing={2}>
                     <Grid item xs={12} md={12}>
-                      <CampaignList campaignData={campaignData} />
+                      <CampaignList />
                     </Grid>
                     <Hidden mdDown>
                       <Grid item xs={9} md={3} lg={9}>
                         <CanvasForChart
                           valueChartData={valueChartData}
-                          broadCreatorData={broadCreatorData}
                         />
                       </Grid>
                       <Grid item xs={3} md={3} lg={3}>

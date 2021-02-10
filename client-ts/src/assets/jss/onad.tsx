@@ -28,7 +28,8 @@ const hexToRgb = (paramInput: string): string => {
 // ##############################
 // // // Variables - Styles that are used on more than one component
 // #############################
-const drawerWidth = 120;
+// const drawerWidth = 120;
+const drawerWidth = 240;
 
 export {
   hexToRgb,

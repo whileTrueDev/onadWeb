@@ -13,8 +13,7 @@ import CustomTableFooter from '../../../../../atoms/Table/TableFooter';
 // core components
 import useTableStyles from '../../../../../atoms/Table/Table.style';
 import useCampaignTableStyles from './CampaignTable.style';
-import isVideo from '../../../../../utils/isVideo';
-import VideoBanner from '../../../../../atoms/Banner/VideoBanner';
+import OnadBanner from '../../../../../atoms/Banner/OnadBanner';
 
 const stateDic = ['✔️ 완료', '⏱ 진행중'];
 
@@ -121,11 +120,7 @@ function CampaignTable({
               </Hidden>
               <TableCell className={classes.imgCell}>
                 <div className={innerClasses.flex}>
-                  { isVideo(bannerData.bannerSrc) ? (
-                    <VideoBanner src={bannerData.bannerSrc} style={{ maxHeight: '200px', width: '300' }} />
-                  ) : (
-                    <img src={bannerData.bannerSrc} alt="banner" style={{ maxHeight: '200px', width: '300' }} />
-                  )}
+                  <OnadBanner src={bannerData.bannerSrc} style={{ maxHeight: '200px', width: '300' }} />
                 </div>
               </TableCell>
               <TableCell className={classes.tableCell}>

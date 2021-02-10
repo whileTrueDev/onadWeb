@@ -65,14 +65,18 @@ export default function ReChartBar<DataType extends IncomeChartData>({
           data={nopreprocessing ? data : makeBarChartData<DataType>(data)}
           stackOffset="sign"
           margin={{
-            top: 20, right: 30, left: 20, bottom: 5
+            right: theme.spacing(3),
           }}
         >
           <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey={xAxisDataKey} />
-          <YAxis />
+          <XAxis dataKey={xAxisDataKey} tick={{ fill: theme.palette.text.secondary }} />
+          <YAxis tick={{ fill: theme.palette.text.secondary }} />
           <Tooltip
-            contentStyle={{ backgroundColor: theme.palette.background.paper }}
+            contentStyle={{
+              backgroundColor: theme.palette.common.white,
+              color: theme.palette.common.black,
+              fontWeight: theme.typography.fontWeightBold
+            }}
             cursor={{ stroke: theme.palette.primary.main, strokeWidth: 1 }}
             labelFormatter={tooltipLabelFormatter}
             formatter={tooltipFormatter}
@@ -80,6 +84,9 @@ export default function ReChartBar<DataType extends IncomeChartData>({
           {legend && (
             <Legend
               iconType="circle"
+              wrapperStyle={{
+                fontWeight: theme.typography.fontWeightRegular
+              }}
               formatter={legendFormatter}
             />
           )}
@@ -87,20 +94,20 @@ export default function ReChartBar<DataType extends IncomeChartData>({
           <Bar
             dataKey={dataKey instanceof Array ? dataKey[0] : dataKey}
             stackId="a"
-            fill={theme.palette.primary.light}
+            fill={theme.palette.primary.main}
           />
           {dataKey instanceof Array && dataKey.length >= 2 ? (
             <Bar
               dataKey={dataKey[1]}
               stackId="a"
-              fill={theme.palette.secondary.light}
+              fill={theme.palette.secondary.main}
             />
           ) : (null)}
           {dataKey instanceof Array && dataKey.length >= 3 ? (
             <Bar
               dataKey={dataKey[2]}
               stackId="a"
-              fill={theme.palette.success.light}
+              fill={theme.palette.success.main}
             />
           ) : (null)}
         </BarChart>

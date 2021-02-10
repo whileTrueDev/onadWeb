@@ -72,11 +72,21 @@ const GameSelect = (props: GameSelectProps): JSX.Element => {
   return (
     <Grid container direction="column" spacing={2} className={classes.root}>
       <Grid item xs={12} lg={8} xl={6}>
-        <Typography variant="h6">광고를 송출하려는 게임을 선택해주세요.</Typography>
+        <Typography variant="h6">
+          광고를 송출하려는 카테고리를 선택해주세요.
+        </Typography>
         <Divider />
       </Grid>
 
       <Grid item xs={12}>
+        <Typography variant="body2" color="textSecondary">
+          * 상위 12개의 카테고리는 온애드 방송인이 가장 많이 진행하는 방송 카테고리입니다.
+        </Typography>
+        <br />
+      </Grid>
+
+      <Grid item xs={12}>
+
         {gamesData.loading && (
           <div style={{ padding: 72, textAlign: 'center' }}>
             <CircularProgress size={100} disableShrink />

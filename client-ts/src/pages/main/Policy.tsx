@@ -2,20 +2,19 @@ import React from 'react';
 import { Grid } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import { Link } from 'react-router-dom';
+import classNames from 'classnames';
 import useStyles from './style/Policy.style';
 import AppFooter from '../../organisms/main/layouts/AppFooter';
 import RePasswordDialog from '../../organisms/main/main/login/RePassword';
 import useLoginValue from '../../utils/hooks/useLoginValue';
 import Policy from '../../organisms/main/policy/Policy';
 import PolicyPrivacy from '../../organisms/main/policy/PolicyPrivacy';
-import withRoot from './withRoot';
-import classNames from 'classnames'
 
 interface Props {
   match: { params: { privacy: string } };
 }
 
-export default withRoot(({ match }: Props) => {
+export default ({ match }: Props): JSX.Element => {
   const {
     repasswordOpen, logout, setRepassword
   } = useLoginValue();
@@ -71,4 +70,4 @@ export default withRoot(({ match }: Props) => {
       />
     </div>
   );
-});
+};

@@ -19,6 +19,7 @@ interface ButtonSetProps {
   handleBack: (event: React.MouseEvent<HTMLButtonElement>) => void;
   handleNext?: (event: React.MouseEvent<HTMLButtonElement>) => void;
   nextButtonOpen: boolean;
+  disabled?: boolean;
 }
 
 export default function ButtonSet({
@@ -27,7 +28,8 @@ export default function ButtonSet({
   backButtonName = '뒤로',
   handleNext,
   handleBack,
-  nextButtonOpen
+  nextButtonOpen,
+  disabled,
 }: ButtonSetProps): JSX.Element {
   const classes = useStyles();
 
@@ -38,6 +40,7 @@ export default function ButtonSet({
           <Button
             variant="contained"
             color="primary"
+            disabled={disabled}
             type={type}
             onClick={handleNext}
             className={classes.end}

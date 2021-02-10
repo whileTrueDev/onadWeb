@@ -1,6 +1,6 @@
 import express from 'express';
-import responseHelper from '../../../middlewares/responseHelper';
 import slack from '../../../lib/slack/messageWithJson';
+import responseHelper from '../../../middlewares/responseHelper';
 import doQuery from '../../../model/doQuery';
 import dataProcessing from '../../../lib/dataProcessing';
 import analysisRouter from './analysis_v1';
@@ -23,7 +23,33 @@ interface CampaignData {
   links: string;
   linkConfirmState: number;
   dailyLimit: number;
+  selectedTime: string;
+  targetList: string;
+  startDate: string;
+  finDate: string;
+  targetCreators?: {
+    afreecaId?: string;
+    afreecaName?: string;
+    creatorName?: string;
+    creatorTwitchId?: string;
+  }[];
 }
+
+/**
+ * 마케터의 캠페인 목록 총 길이를 반환하는 라우터
+ */
+router.route('/length')
+  .get(
+    responseHelper.middleware.checkSessionExists,
+    responseHelper.middleware.withErrorCatch(async (req, res, next) => {
+      const marketerId = responseHelper.getSessionData(req);
+      const query = 'SELECT COUNT(*) AS rowCount FROM campaign WHERE campaign.marketerId = "gubgoo" AND deletedState = 0';
+      const { result } = await doQuery(query, [marketerId]);
+
+      return responseHelper.send(result[0].rowCount, 'get', res);
+    })
+  )
+  .all(responseHelper.middleware.unusedMethod);
 
 // 모든 캠페인에 대한 목록을 의미한다.
 // marketer/sub/campaign =>/new
@@ -33,6 +59,32 @@ router.route('/list')
     responseHelper.middleware.checkSessionExists,
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
       const { marketerId } = responseHelper.getSessionData(req);
+      const [page, offset] = responseHelper.getParam(['page', 'offset'], 'get', req);
+      const searchPage = Number(page * offset);
+      const searchOffset = Number(offset);
+
+      // *******************************************************************
+      // 캠페인 목록 불러오기
+      const query = `
+        SELECT
+          campaignId AS id, campaignId, campaignName, optionType, priorityType, 
+          campaign.regiDate as regiDate, onOff, br.confirmState, 
+          br.bannerId, bannerSrc, br.regiDate AS bannerRegiDate,
+          lr.linkId, lr.links as links, lr.confirmState as linkConfirmState, dailyLimit,
+          campaignDescription, startDate, finDate, selectedTime, targetList
+        FROM campaign
+          JOIN bannerRegistered AS br ON br.bannerId = campaign.bannerId
+          JOIN linkRegistered AS lr ON lr.linkId = connectedLinkId
+        WHERE campaign.marketerId = ? AND deletedState = 0
+        ORDER BY campaign.onOff DESC, campaign.regiDate DESC
+        LIMIT ?, ?
+      `;
+      const { result } = await doQuery(query, [marketerId, searchPage, searchOffset]);
+      if ((result.length === 0)) return responseHelper.send(result, 'get', res);
+
+      // *******************************************************************
+      // 캠페인 별 금일 예산 사용량 불러오기  +  타겟 크리에이터 정보 불러오기
+
       // 오늘자 일일예산에 대한 예산소비량을 체크하기 위해 오늘의 맨처음 시간으로 설정
       const date = new Date();
       date.setHours(0);
@@ -40,52 +92,72 @@ router.route('/list')
       date.setSeconds(0);
       date.setMilliseconds(0);
 
-      const query = `
-              SELECT
-              campaignId, campaignName, optionType, priorityType, 
-              campaign.regiDate as regiDate, onOff, br.confirmState, 
-              bannerSrc, lr.links as links, lr.confirmState as linkConfirmState, dailyLimit,
-              campaignDescription
-              FROM campaign
-              JOIN bannerRegistered AS br
-              ON br.bannerId = campaign.bannerId
-              JOIN linkRegistered AS lr
-              ON lr.linkId = connectedLinkId
-              WHERE campaign.marketerId = ?
-              AND deletedState = 0
-              ORDER BY br.regiDate DESC
-            `;
-
       const sumQuery = `
-            select sum(cashFromMarketer) as dailysum
-            from campaignLog
-            where campaignId = ?
-            and date > ?
-            `;
-      doQuery(query, [marketerId])
-        .then((row) => {
-          if (row.result) {
-            Promise.all(
-              row.result.map((campaignData: CampaignData) => doQuery(sumQuery,
-                [campaignData.campaignId, date])
-                .then((inrow) => {
-                  const { dailysum } = inrow.result[0];
-                  const linkData = JSON.parse(campaignData.links);
-                  return { ...campaignData, linkData, dailysum };
-                }))
-            ).then((campaignList) => {
-              responseHelper.send(campaignList, 'get', res);
-            }).catch((error) => {
-              responseHelper.promiseError(error, next);
-            });
-          }
-        }).catch((error) => {
-          responseHelper.promiseError(error, next);
-        });
-    }),
+        SELECT sum(cashFromMarketer) AS dailysum
+        FROM campaignLog WHERE campaignId = ? AND date > ?
+      `;
+
+      const responseResult = await Promise.all(
+        result
+          .map((cam: CampaignData) => doQuery(sumQuery, [cam.campaignId, date])
+            .then(async (inrow) => {
+              const { dailysum } = inrow.result[0];
+              const linkData = JSON.parse(cam.links);
+              const selectedTime = JSON.parse(cam.selectedTime).time;
+              const { targetList } = JSON.parse(cam.targetList);
+
+              // 캠페인 송출 우선순위가 크리에이터 우선인 경우 크리에이터 정보를 가져온다.
+              if (cam.priorityType === 0) {
+                let targetCreatorInfoQuery = `
+                  SELECT creatorName, creatorTwitchId, afreecaId, afreecaName
+                  FROM creatorInfo WHERE creatorId IN
+                `;
+                targetList.forEach((creatorId: string, index: number) => {
+                  if (index === 0) targetCreatorInfoQuery += '(';
+                  targetCreatorInfoQuery += `"${creatorId}"`;
+                  if (index !== targetList.length - 1) targetCreatorInfoQuery += ',';
+                  else targetCreatorInfoQuery += ')';
+                });
+
+                const creatorInfos = await doQuery(targetCreatorInfoQuery);
+                return {
+                  ...cam,
+                  linkData,
+                  dailysum,
+                  selectedTime,
+                  targetList,
+                  targetCreators: creatorInfos.result,
+                };
+              }
+
+              // 캠페인 송출 우선순위가 크리에이터 우선형이 아닌 경우에는 타겟 리스트 그대로 반환
+              return {
+                ...cam,
+                linkData,
+                dailysum,
+                selectedTime,
+                targetList
+              };
+            }))
+      ) as CampaignData[];
+
+      return responseHelper.send(responseResult, 'GET', res);
+    })
   )
   .all(responseHelper.middleware.unusedMethod);
 
+// 켜져있는 캠페인 수
+router.route('/active')
+  .get(
+    responseHelper.middleware.checkSessionExists,
+    responseHelper.middleware.withErrorCatch(async (req, res, next) => {
+      const { marketerId } = responseHelper.getSessionData(req);
+      const query = `
+      SELECT COUNT(campaignId) AS activeCampaignCount FROM campaign WHERE onOff = 1 AND marketerId = ?`;
+      const { result } = await doQuery(query, [marketerId]);
+      if (result.length > 0) { responseHelper.send(result[0], 'get', res); } else { responseHelper.send(0, 'get', res); }
+    })
+  );
 
 // 캠페인 생성시에 캠페인 중복제거를 위한 name list추출.
 // 테스트 완료
@@ -265,15 +337,22 @@ router.route('/')
 
           // 마케터 활동내역 로깅 테이블에서, 캠페인 생성의 상태값
           const MARKETER_ACTION_LOG_TYPE = 5;
+
           Promise.all([
             doQuery(saveQuery,
               [campaignId, campaignName, marketerId, bannerId, connectedLinkId, dailyLimit,
-                priorityType, optionType, targetJsonData, marketerName, keywordsJsonData,
+                // @by hwasurr "1-1" 은 아프리카 카테고리 선택형. 1로 수정하여 카테고리 선택형으로 넣는다.
+                (priorityType === '1-1') ? '1' : priorityType,
+                optionType, targetJsonData, marketerName, keywordsJsonData,
                 startDate, finDate, timeJsonData, campaignDescription]),
             dataProcessing.PriorityDoquery({
-              campaignId, priorityType, priorityList, optionType
+              campaignId,
+              priorityType,
+              priorityList,
+              optionType,
+              platform: priorityType === '1' ? 'twitch' : 'afreeca' // afreeca 카테고리 선택형 = 1-1
             }),
-            dataProcessing.LandingDoQuery({
+            dataProcessing.adpageDoQuery({
               campaignId, optionType, priorityType, priorityList
             }),
           ])

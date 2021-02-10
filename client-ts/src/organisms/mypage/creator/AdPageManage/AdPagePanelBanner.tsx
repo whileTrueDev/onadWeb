@@ -39,6 +39,10 @@ const useStyles = makeStyles((theme) => ({
 interface AdPagePanelBannerProps {
   userData: AdPageData;
 }
+/**
+ * @deprecated
+ * @author hwasurr 2021. 02. 02
+ */
 export default function AdPagePanelBanner({
   userData
 }: AdPagePanelBannerProps): JSX.Element {

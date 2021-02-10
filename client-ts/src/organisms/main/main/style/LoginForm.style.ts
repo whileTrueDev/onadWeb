@@ -1,36 +1,75 @@
 import makeStyles from '@material-ui/core/styles/makeStyles';
+import { darken } from '@material-ui/core/styles/colorManipulator';
+import { OnadTheme } from '../../../../theme';
 
-const useStyles = makeStyles(() => ({
-  title: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    fontSize: '20px',
-    fontFamily: 'Noto Sans KR',
-    fontWeight: 600
+const useStyles = makeStyles((theme: OnadTheme) => ({
+  form: { margin: theme.spacing(1, 0) },
+  dialog: {
+    textAlign: 'center',
+    padding: `${theme.spacing(6)}px ${theme.spacing(4)}px`,
   },
-  button: {
-    fontWeight: 800,
+  buttonLoading: {
+    backgroundColor: theme.palette.action.disabledBackground,
+    position: 'absolute',
     width: '100%',
-    fontFamily: 'Noto Sans KR',
-  },
-  image: {
-    width: '50px',
-    height: '50px',
-    objectFit: 'cover',
-    objectPosition: 'top',
-    borderRadius: '50%'
-  },
-  imageSrc: {
+    height: '100%',
     display: 'flex',
-    backgroundSize: 'cover',
-    backgroundPosition: 'inherit',
-    width: '150px',
-    height: '120px',
-    maxWidth: '160px',
-    maxHeight: '130px',
-    margin: '0 auto',
+    justifyContent: 'center',
+    alignItems: 'center'
   },
+  divider: { margin: theme.spacing(1, 0, 2) },
+  loginButton: {
+    borderRadius: '0px',
+    height: 60,
+    margin: theme.spacing(0.5, 0, 0.5),
+    boxShadow: theme.shadows[0],
+    border: `1px solid ${theme.palette.divider}`,
+  },
+  socialLoginButton: {
+    height: 40,
+  },
+  twitch: {
+    color: theme.palette.getContrastText(theme.palette.platform.twitch),
+    backgroundColor: theme.palette.platform.twitch,
+    '&:hover': {
+      backgroundColor: darken(theme.palette.platform.twitch, 0.07),
+    }
+  },
+  afreeca: {
+    color: theme.palette.getContrastText(theme.palette.platform.twitch),
+    backgroundColor: theme.palette.platform.afreeca,
+    '&:hover': {
+      backgroundColor: darken(theme.palette.platform.afreeca, 0.07),
+    }
+  },
+  kakao: {
+    color: theme.palette.getContrastText(theme.palette.platform.kakao),
+    backgroundColor: theme.palette.platform.kakao,
+    '&:hover': {
+      backgroundColor: darken(theme.palette.platform.kakao, 0.07),
+    }
+  },
+  naver: {
+    color: theme.palette.getContrastText(theme.palette.platform.naver),
+    backgroundColor: theme.palette.platform.naver,
+    '&:hover': {
+      backgroundColor: darken(theme.palette.platform.naver, 0.07),
+    }
+  },
+  google: {
+    color: theme.palette.getContrastText(theme.palette.common.white),
+    backgroundColor: theme.palette.common.white,
+    '&:hover': {
+      backgroundColor: darken(theme.palette.common.white, 0.07),
+    }
+  },
+  socialLogo: {
+    width: 35,
+    height: 35,
+    position: 'absolute',
+    left: theme.spacing(2),
+  },
+
 }));
 
 export default useStyles;
