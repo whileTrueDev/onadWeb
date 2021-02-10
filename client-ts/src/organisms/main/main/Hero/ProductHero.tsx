@@ -1,112 +1,91 @@
 import React from 'react';
-
-import { Link } from 'react-router-dom';
-import Grow from '@material-ui/core/Grow';
-// import Button from '../../components/Button';
 import Button from '@material-ui/core/Button';
 import ProductHeroLayout from './ProductHeroLayout';
 import styles from '../style/ProductHero.style';
+import { Typography } from '@material-ui/core';
+import LoginForm from '../login/LoginForm';
 
-interface Props {
-  MainUserType: string;
+interface ProductHeroProps {
+  MainUserType: boolean;
   source: {
     text: {
       title: string;
+      beforeSubTitle: string;
       subTitle: string;
-      marketerTail: string;
-      creatorTail: string;
+    };
+    textCreator: {
+      title: string;
+      subTitle: string;
     };
   };
+  isLogin: boolean;
+  logout: () => void
 }
 
-function ProductHero({ MainUserType, source }: Props): JSX.Element {
+function ProductHero({ MainUserType, source, isLogin, logout }: ProductHeroProps): JSX.Element {
   const classes = styles();
+
+  const [loginValue, setLoginValue] = React.useState('');
+
+  function handleDialogOpenClick(newValue: string): void {
+    setLoginValue(newValue);
+  }
+
+  function handleDialogClose(): void {
+    setLoginValue('');
+  }
 
   return (
     <ProductHeroLayout MainUserType={MainUserType}>
-      {MainUserType === 'marketer' ? (
-        <div className={classes.maintop}>
-          <div className={classes.loginButtonLeft}>
-            <Grow in timeout={1500}>
-              <h1 className={classes.h1}>
-                {source.text.title}
-              </h1>
-            </Grow>
-            <Grow in timeout={1500}>
-              <h1 className={classes.h1}>
-                {source.text.subTitle}
-              </h1>
-            </Grow>
-            <div className={classes.h1sub}>
-              {source.text.marketerTail.split('\n').map((row) => (
-                <p key={row}>{`${row}`}</p>
-              ))}
-            </div>
-            <Button
-              className={classes.buttonLeft}
-              component={Link}
-              to="/introduce/marketer"
-            >
-              + 자세히보기
-            </Button>
-            <Button
-              className={classes.buttonRight}
-              onClick={(): void => { window.open('http://pf.kakao.com/_xoyxmfT/chat'); }}
-            >
-              실시간 문의하기
-            </Button>
-          </div>
+      {MainUserType ? (
+        // 마케터 페이지
+        <div className={classes.root}>
+            <Typography align="center" variant="h2" className={classes.mainTitle}>
+              {source.text.title}
+            </Typography>
+            <Typography align="center" variant="h2" className={classes.mainTitle}>
+              <span>{source.text.beforeSubTitle}</span>
+              <span>{source.text.subTitle}</span>
+            </Typography>
 
-          <video
-            className={classes.maintopCenterVideo}
-            autoPlay
-            loop
-            muted
+          <Button 
+            className={classes.loginButton}
+            onClick={() => handleDialogOpenClick('marketer')}
           >
-            <source src="/video/main/mainMarketer.mp4" type="video/mp4" />
-            <track />
-          </video>
+            온애드 시작하기
+          </Button>
         </div>
       )
-        : (
-          <div className={classes.maintop}>
-            <div className={classes.loginButtonLeft}>
-              <Grow in timeout={1500}>
-                <h1 className={classes.h1}>
-                  {source.text.title}
-                </h1>
-              </Grow>
-              <Grow in timeout={1500}>
-                <h1 className={classes.h1}>
-                  {source.text.subTitle}
-                </h1>
-              </Grow>
-              <div className={classes.h1sub}>
-                {source.text.creatorTail.split('\n').map((row) => (
-                  <p key={row}>{`${row}`}</p>
-                ))}
-              </div>
-              <Button
-                className={classes.buttonLeft}
-                component={Link}
-                to="/introduce/creator"
-              >
-                + 자세히보기
-              </Button>
-              <Button
-                className={classes.buttonRight}
-                onClick={(): void => { window.open('http://pf.kakao.com/_xoyxmfT/chat'); }}
-              >
-                실시간 문의하기
-              </Button>
-            </div>
+      : (
+        // 크리에이터 페이지
+        <div className={classes.root}>
+            <Typography align="center" variant="h2" className={classes.mainTitle}>
+              {source.textCreator.title}
+            </Typography>
+            <Typography align="center" variant="h2" className={classes.mainTitle}>
+              <span>{source.textCreator.subTitle}</span>
+            </Typography>
 
-            <video className={classes.maintopCenterVideo} autoPlay loop muted>
-              <source src="/video/main/mainMarketer.mp4" type="video/mp4" />
-              <track />
-            </video>
-          </div>
-        )}
+          <Button
+            className={classes.loginButton2}
+            onClick={() => handleDialogOpenClick('creator')}
+          >
+            온애드 시작하기
+          </Button>
+        </div>
+      )}
+      <LoginForm
+        open={loginValue === 'marketer'}
+        isMarketer
+        handleClose={handleDialogClose}
+        logout={logout}
+      />
+      <LoginForm
+        open={loginValue === 'creator'}
+        isMarketer={false}
+        handleClose={handleDialogClose}
+        logout={logout}
+      />
     </ProductHeroLayout>
   );
 }

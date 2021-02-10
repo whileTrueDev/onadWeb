@@ -1,17 +1,18 @@
 import React from 'react';
-import { Grow } from '@material-ui/core';
+import { Typography } from '@material-ui/core';
 import styles from './style/Introduction.style';
 import useLoginValue from '../../utils/hooks/useLoginValue';
-import AppAppBar from '../../organisms/main/layouts/AppAppbar';
+import NavTop from '../../organisms/main/layouts/NavTop';
 import HowToUseCreator from '../../organisms/main/Introduction/HowToUseCreator';
 import HowToUseMarketer from '../../organisms/main/Introduction/HowToUseMarketer';
 import IntroduceMiddle from '../../organisms/main/Introduction/IntroduceMiddle';
-import ProductHowItWorks from '../../organisms/main/main/HowItWorks/ProductHowItWorks';
-import sources from '../../organisms/main/main/source/sources';
+
 import AppFooter from '../../organisms/main/layouts/AppFooter';
 import textSource from '../../organisms/main/Introduction/source/textSource';
 import Question from '../../organisms/main/Introduction/Question';
+import IntroContact from '../../organisms/main/main/Contact/IntroContact'
 import withRoot from './withRoot';
+import shortid from 'shortid'
 
 
 export interface Props {
@@ -25,94 +26,94 @@ export interface Props {
 export default withRoot(({ match }: Props) => {
   const { isLogin, logout } = useLoginValue();
   const classes = styles();
-  const { userType } = match.params;
+  const { userType } = match.params
 
-  // if Link here, set the scroll to top of the page
   React.useEffect(() => {
-    window.scrollTo(0, 0);
+    const glassElement = document.getElementById('glass')
+      document.addEventListener("mousemove", (e) => {
+      glassElement!.style.left = e.offsetX + 'px'
+      glassElement!.style.top = e.offsetY + 'px'
+      glassElement!.style.display = 'block'
+    })
   }, []);
 
   return (
     <div>
       {userType === 'marketer' ? (
         <div>
-          <div className={classes.rootWrap}>
-            <div className={classes.containerWrap}>
-              <AppAppBar
-                isLogin={isLogin}
-                logout={logout}
-                MainUserType="marketer"
-              />
-              <div className={classes.maintop}>
-                <div className={classes.loginMiddle}>
-                  <Grow in timeout={1500}>
-                    <h1 className={classes.h1}>
-                      {textSource.heroSector.marketer.text.title}
-                    </h1>
-                  </Grow>
-                  <div className={classes.h1sub}>
-                    {textSource.heroSector.marketer.text.content.split('\n').map((row: string) => (
-                      <p key={row}>{`${row}`}</p>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <section style={{ background: 'linear-gradient(60deg, #0D93BF 30%, #3154EB 90%)' }}>
-            <HowToUseMarketer source={textSource.marketer.secondSector} />
-          </section>
-
-          <IntroduceMiddle userType />
-
-          <ProductHowItWorks
-            source={sources.howitworks}
-            MainUserType="marketer"
+          <NavTop
+            isLogin={isLogin}
+            MainUserType
             logout={logout}
           />
-          <Question MainUserType="marketer" />
+          <div className={classes.root}>
+            <div className={classes.wrapper}>
+              <div className={classes.mainTop}>
+                {textSource.heroSector.marketer.text.title.map((text: string) => (
+                  <Typography className={classes.mainTitle} variant="h3" key={shortid.generate()}>
+                    {text}
+                  </Typography>
+                ))}
+                <div className={classes.middleLine}/>
+                <Typography variant="h5">
+                  {textSource.heroSector.marketer.text.content}
+                </Typography>
+                <div className={classes.imageWrapper}>
+                  <div className={classes.glassEffect} id="glass"/>
+                  <img src="/introduction/marketerIntro.svg" className={classes.topImage} alt="Intro"/>
+                </div>
+              </div>
+
+              <HowToUseMarketer source={textSource.marketer.secondSector} />
+
+              <IntroduceMiddle userType={userType} />
+
+              <Question MainUserType="marketer" />
+            </div>
+          </div>
+          <IntroContact
+            MainUserType
+          />
           <AppFooter />
         </div>
       )
         : (
           <div>
-            <div className={classes.rootWrap}>
-              <div className={classes.containerWrap}>
-                <AppAppBar
-                  isLogin={isLogin}
-                  logout={logout}
-                  MainUserType="creator"
-                />
-                <div className={classes.maintop}>
-                  <div className={classes.loginMiddle}>
-                    <Grow in timeout={1500}>
-                      <h1 className={classes.h1}>
-                        {textSource.heroSector.creator.text.title}
-                      </h1>
-                    </Grow>
-                    <div className={classes.h1sub}>
-                      {textSource.heroSector.creator.text.content.split('\n').map((row: string) => (
-                        <p key={row}>{`${row}`}</p>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <section style={{ background: 'linear-gradient(45deg, #FFAA00 30%, #FF8E53 90%)' }}>
-              <HowToUseCreator source={textSource.creator.secondSector} />
-            </section>
-
-            <IntroduceMiddle userType={false} />
-
-            <ProductHowItWorks
-              source={sources.howitworks}
-              MainUserType="creator"
+            <NavTop
+              isLogin={isLogin}
+              MainUserType={false}
               logout={logout}
             />
-            <Question MainUserType="creator" />
-            <AppFooter />
-          </div>
+            <div className={classes.root}>
+              <div className={classes.wrapper}>
+                <div className={classes.mainTop}>
+                  {textSource.heroSector.creator.text.title.map((text: string) => (
+                    <Typography className={classes.mainTitle} variant="h3" key={shortid.generate()}>
+                      {text}
+                    </Typography>
+                  ))}
+                  <div className={classes.middleLine2}/>
+                  <Typography variant="h5">
+                    {textSource.heroSector.marketer.text.content}
+                  </Typography>
+                  <div className={classes.imageWrapper}>
+                    <div className={classes.glassEffect} id="glass"/>
+                    <img src="/introduction/creatorIntro.svg" className={classes.topImage} alt="Intro"/>
+                  </div>
+                </div>
+
+                <HowToUseCreator source={textSource.creator.secondSector} />
+
+                <IntroduceMiddle userType={userType} />
+
+                <Question MainUserType="creator" />
+              </div>
+            </div>
+          <IntroContact
+            MainUserType={false}
+          />
+          <AppFooter />
+        </div>
         )}
     </div>
   );

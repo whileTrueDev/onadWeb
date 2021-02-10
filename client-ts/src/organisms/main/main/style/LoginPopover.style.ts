@@ -2,48 +2,53 @@ import makeStyles from '@material-ui/core/styles/makeStyles';
 
 const useStyles = makeStyles((theme) => ({
   rightLink: {
-    fontFamily: 'Noto Sans KR',
-    color: theme.palette.common.white,
+    color: 'black',
     marginLeft: 0,
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: 'bold',
     [theme.breakpoints.up('md')]: {
-      color: theme.palette.common.white,
-      marginLeft: theme.spacing(3),
-      marginRight: theme.spacing(3),
-      '&:hover': {
-        fontWeight: 'bold',
-      },
+      color: theme.palette.common.black,
+      margin: theme.spacing(0, 3),
     },
   },
   rightLink2: {
-    fontFamily: 'Noto Sans KR',
     color: 'black',
     marginLeft: 0,
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: 'bold',
     [theme.breakpoints.up('md')]: {
-      color: 'black',
+      color: theme.palette.common.black,
+      margin: theme.spacing(0, 3),
+    },
+  },
+  str_rightLink: {
+    width: 160,
+    background: 'linear-gradient(to right, #3589fc, #0dd0ff)',
+    color: theme.palette.common.white,
+    marginLeft: 0,
+    fontSize: 18,
+    height: 40,
+    padding: '0px 10px',
+    fontWeight: 'bold',
+    borderRadius: 20,
+    [theme.breakpoints.up('md')]: {
+      color: theme.palette.common.white,
       marginLeft: theme.spacing(3),
-      marginRight: theme.spacing(3),
       '&:hover': {
         fontWeight: 'bold',
       },
     },
   },
-  str_rightLink: {
-    fontFamily: 'Noto Sans KR',
-    width: 180,
-    background: '#3154EB',
+  str_rightLink2: {
+    width: 160,
+    background: 'linear-gradient(to right, #54eacd, #5ed7ed)',
     color: theme.palette.common.white,
     marginLeft: 0,
-    fontSize: 20,
-    height: '100%',
+    fontSize: 18,
+    height: 40,
     padding: '0px 10px',
     fontWeight: 'bold',
-    '&:hover': {
-      background: '#3154EB',
-    },
+    borderRadius: 20,
     [theme.breakpoints.up('md')]: {
       color: theme.palette.common.white,
       marginLeft: theme.spacing(3),

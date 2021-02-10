@@ -2,223 +2,159 @@ import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    marginTop: theme.spacing(8),
-    marginBottom: theme.spacing(8),
-    backgroundColor: 'white',
-    padding: '0 5%',
+    width: '100%',
+    marginTop: theme.spacing(10),
+    marginBottom: theme.spacing(10),
+    padding: '0 2%',
   },
-  loginButtonRight: {
-    width: '50%',
-    display: 'flex',
+  platformWrapper: {
+    margin: theme.spacing(5, 0)
+  },
+  selected: {
+    color: theme.palette.common.white,
+    backgroundColor: '#335cff',
+    borderRadius: 20,
+    height: 45,
+    fontSize: 18,
+    width: 200,
+    '&:hover': {
+      backgroundColor: '#335cff',
+    }
+  },
+  selected2: {
+    color: theme.palette.common.white,
+    backgroundColor: '#4bd4a6',
+    borderRadius: 20,
+    height: 45,
+    fontSize: 18,
+    width: 200,
+    '&:hover': {
+      backgroundColor: '#4bd4a6',
+    }
+  },
+  notSelected: {
+    color: theme.palette.common.black,
+    backgroundColor: '#f7f7f7',
+    borderRadius: 20,
+    height: 45,
+    fontSize: 18,
+    width: 200,
+    '&:hover': {
+      backgroundColor: '#335cff',
+    }
+  },
+  notSelected2: {
+    color: theme.palette.common.black,
+    backgroundColor: '#f7f7f7',
+    borderRadius: 20,
+    height: 45,
+    fontSize: 18,
+    width: 200,
+    '&:hover': {
+      backgroundColor: '#4bd4a6',
+    }
+  },
+  cotentWrapper: {
+    width: '100%',
+    display:'flex',
+    flexDirection: 'row',
+    alignItems: 'flex-start',
     justifyContent: 'center',
-    alignItems: 'center',
-    [theme.breakpoints.down('md')]: {
-      width: '50%',
-    },
-    [theme.breakpoints.down('sm')]: {
-      display: 'none'
-    },
-    [theme.breakpoints.down('xs')]: {
-      display: 'none'
-    },
   },
-  loginButtonRight2: {
-    marginTop: 20,
-    marginBottom: 40,
+  content: {
     width: '100%',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: 'center'
   },
-  exBanner: {
-    width: '900px',
-    height: '700px',
-    [theme.breakpoints.down('lg')]: {
-      width: '700px',
-      height: '500px',
-    },
-    [theme.breakpoints.down('md')]: {
-      width: '500px',
-      height: '400px',
-    },
-    [theme.breakpoints.down('sm')]: {
-      width: '360px',
-      height: '288px',
-    },
-    [theme.breakpoints.down('xs')]: {
-      width: '300px',
-      height: '240px',
-    },
+  leftLine: {
+    height: 1500,
+    width: 10,
+    background: 'linear-gradient(to bottom, #00e2ff, #5800ff)',
+    borderRadius: 5,
+    marginRight: theme.spacing(5)
   },
-  exBanner2: {
-    width: '1000px',
-    height: '800px',
-    [theme.breakpoints.down('lg')]: {
-      width: '900px',
-      height: '700px',
-    },
-    [theme.breakpoints.down('md')]: {
-      width: '700px',
-      height: '550px',
-    },
-    [theme.breakpoints.down('sm')]: {
-      width: '500px',
-      height: '400px',
-    },
-    [theme.breakpoints.down('xs')]: {
-      width: '300px',
-      height: '240px',
-    },
+  leftLine2: {
+    height: 1100,
+    width: 10,
+    background: 'linear-gradient(to bottom, #00e2ff, #5800ff)',
+    borderRadius: 5,
+    marginRight: theme.spacing(5)
   },
-  h1: {
-    marginTop: '0px',
-    marginBottom: '5px',
-    fontSize: 45,
-    wordBreak: 'keep-all',
-    fontWeight: 600,
-    [theme.breakpoints.down('md')]: {
-      fontSize: '30px',
-    },
-    [theme.breakpoints.down('sm')]: {
-      fontSize: '25px',
-    },
-    [theme.breakpoints.down('xs')]: {
-      marginTop: 20,
-      fontSize: '20px',
-    },
-    color: '#0D93BF',
-    fontFamily: 'Noto Sans KR',
+  leftLine3: {
+    height: 1500,
+    width: 10,
+    background: 'linear-gradient(to bottom, #80ffac, #089f9f)',
+    borderRadius: 5,
+    marginRight: theme.spacing(5)
   },
-  mainMiddle: {
+  leftLine4: {
+    height: 1100,
+    width: 10,
+    background: 'linear-gradient(to bottom, #80ffac, #089f9f)',
+    borderRadius: 5,
+    marginRight: theme.spacing(5)
+  },
+  contentTop: {
     width: '100%',
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
+    alignItems: 'flex-end',
   },
-  mainMiddle2: {
+  title: {
+    fontWeight: theme.typography.fontWeightBold
+  },
+  contentBottom: {
     width: '100%',
-    display: 'flex',
-    flexDirection: 'column',
-    marginTop: 80,
-  },
-  costContent: {
-    width: '40%',
-    [theme.breakpoints.down('sm')]: {
-      width: '60%',
-    },
-    [theme.breakpoints.down('xs')]: {
-      width: '90%',
-    },
-  },
-  costCardWrapper: {
     display: 'flex',
     flexDirection: 'row',
-    [theme.breakpoints.down('xs')]: {
-      flexDirection: 'column',
-    },
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
+    margin: theme.spacing(8,0)
   },
-  costCardTitle: {
-    marginTop: 0,
-    marginBottom: 15,
-    fontSize: 30,
-    fontFamily: 'Noto Sans KR',
-    fontWeight: 600,
-    [theme.breakpoints.down('md')]: {
-      fontSize: 25
-    },
-    [theme.breakpoints.down('sm')]: {
-      fontSize: 22
-    },
-    [theme.breakpoints.down('xs')]: {
-      fontSize: 18
-    },
+  subContent: {
+    width: '40%'
   },
-  costCardCon: {
-    margin: '5px',
-    fontSize: 20,
-    fontFamily: 'Noto Sans KR',
-    fontWeight: 550,
-    [theme.breakpoints.down('md')]: {
-      fontSize: 18
-    },
-    [theme.breakpoints.down('sm')]: {
-      fontSize: 14
-    },
-    [theme.breakpoints.down('xs')]: {
-      fontSize: 12
-    },
+  subContent2: {
+    width: '50%'
   },
-  subAdtitle: {
-    color: 'black',
-    fontFamily: 'Noto Sans KR',
-    fontSize: '20px',
-    marginTop: 0,
-    marginBottom: 10,
-    fontWeight: 600
+  exImage: {
+    width: 600,
+    height: 300,
+    margin: theme.spacing(0,8)
   },
-  costContent2: {
+  exImage2: {
+    width: 540,
+    height: 300,
+    marginRight: theme.spacing(0,5)
+  },
+  subtitle: {
+    fontWeight: theme.typography.fontWeightBold,
+    color: '#008bf0',
+    marginBottom: theme.spacing(1)
+  },
+  subtitle2: {
+    fontWeight: theme.typography.fontWeightBold,
+    color: '#008bf0',
+    marginTop: theme.spacing(4)
+  },
+  subtitle3: {
+    fontWeight: theme.typography.fontWeightBold,
+    color: '#4bd4a6',
+    marginBottom: theme.spacing(1)
+  },
+  subtitle4: {
+    fontWeight: theme.typography.fontWeightBold,
+    color: '#4bd4a6',
+    marginTop: theme.spacing(4)
+  },
+  divider: {
     width: '100%',
-  },
-  subAdtitle2: {
-    color: 'black',
-    fontFamily: 'Noto Sans KR',
-    fontSize: '20px',
-    marginTop: 0,
-    marginBottom: 10,
-    fontWeight: 500,
-    [theme.breakpoints.down('md')]: {
-      fontSize: 18,
-    },
-    [theme.breakpoints.down('sm')]: {
-      fontSize: 15,
-    },
-    [theme.breakpoints.down('xs')]: {
-      fontSize: 12,
-    },
-
-  },
-  subAdSub: {
-    color: 'white',
-    fontFamily: 'Noto Sans KR',
-    fontSize: 45,
-    fontWeight: 600,
-    backgroundColor: 'red'
-  },
-  subAdSub2: {
-    color: 'black',
-    fontFamily: 'Noto Sans KR',
-    fontSize: 45,
-    fontWeight: 600,
-    backgroundColor: '#3154EB'
-  },
-  costCard: {
-    width: '95%',
-    display: 'flex',
-    flexDirection: 'column',
-    padding: 30,
-    boxShadow: '0px 0px 5px 1px rgba(0,0,0,0.2)',
-    marginTop: 30,
-    marginBottom: 30,
-    borderRadius: '15px',
-    textAlign: 'left'
-  },
-  costCard2: {
-    width: '50%',
-    display: 'flex',
-    flexDirection: 'column',
-    padding: 30,
-    boxShadow: '0px 0px 5px 1px rgba(0,0,0,0.2)',
-    marginTop: 15,
-    marginBottom: 15,
-    borderRadius: '15px',
-    textAlign: 'left',
-    marginRight: 30,
-    [theme.breakpoints.down('xs')]: {
-      width: '85%',
-    },
-  },
+    marginBottom: theme.spacing(10)
+  }
+  
 }));
 
 export default useStyles;

@@ -2,6 +2,7 @@ import makeStyles from '@material-ui/core/styles/makeStyles';
 
 const useStyles = makeStyles((theme) => ({
   root: {
+    padding: `${theme.spacing(5)}px 10%`,
     width: '90%',
     display: 'flex',
     flexDirection: 'column',
@@ -16,21 +17,33 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     alignItems: 'center',
   },
-  icon: {
-    width: 40,
-    height: 40,
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: theme.spacing(1),
-  },
   name: {
-    fontWeight: 700,
-    fontSize: 15,
+    fontWeight: theme.typography.fontWeightBold,
     [theme.breakpoints.down('sm')]: {
       width: 20,
       fontSize: 15,
     },
+  },
+  iconLogo: {
+    width: 40,
+    height: 40
+  },
+  Wrapper: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center'
+  },
+  logoWrapper: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  logo: {
+    width: 30,
+    height: 30,
+    marginLeft: theme.spacing(2)
   },
   address: {
     marginLeft: '7px',
@@ -66,11 +79,12 @@ const useStyles = makeStyles((theme) => ({
     paddingTop: theme.spacing(2),
     paddingBottom: theme.spacing(2),
     marginLeft: 30,
+    fontWeight: 500,
+    fontSize: 18,
     '&:hover': {
       fontWeight: 'bold',
     },
     '&>a': {
-      fontWeight: 300,
       padding: 0,
       paddingLeft: '15px',
     },

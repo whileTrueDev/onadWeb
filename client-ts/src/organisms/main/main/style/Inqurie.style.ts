@@ -2,14 +2,27 @@ import makeStyles from '@material-ui/core/styles/makeStyles';
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    marginTop: theme.spacing(12),
+    marginTop: theme.spacing(5),
     marginBottom: theme.spacing(5),
+  },
+  titleWapper: {
+    margin: theme.spacing(3,0),
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center'
+  },
+  titleLine: {
+    marginRight: theme.spacing(4),
+    height: 50,
+    width: 10,
+    borderRadius: 5,
+    background: 'linear-gradient(to bottom, #00e2ff, #5800ff)',
   },
   title: {
     fontFamily: 'Noto Sans KR',
-    marginTop: '20px',
-    marginBottom: '30px',
-    fontWeight: 600,
+    marginRight: theme.spacing(2),
+    fontWeight: theme.typography.fontWeightBold,
     wordBreak: 'keep-all',
     [theme.breakpoints.down('sm')]: {
       fontSize: '25px',
@@ -18,6 +31,7 @@ const useStyles = makeStyles((theme) => ({
   subTitle: {
     fontFamily: 'Noto Sans KR',
     wordBreak: 'keep-all',
+    color: '#0074d8',
     [theme.breakpoints.down('sm')]: {
       fontSize: '20px',
     }
@@ -25,7 +39,6 @@ const useStyles = makeStyles((theme) => ({
   contentWraper: {
     margin: '20px auto',
     wordBreak: 'keep-all',
-    // 브레이크 포인트 나눠서 반응형 내용추가 => 폭 너비 및 폰트크기
   },
   cardWrapper: {
     zIndex: 1,
@@ -33,13 +46,7 @@ const useStyles = makeStyles((theme) => ({
   },
   card: {
     margin: '20px auto',
-    border: '2px solid #3154EB',
-    borderRadius: '10px',
-    padding: theme.spacing(8, 3),
-    width: '70%',
-    [theme.breakpoints.down('xs')]: {
-      width: '100%',
-    }
+    width: '100%',
   },
   cardContent: {
     marginBottom: theme.spacing(5),
@@ -47,11 +54,13 @@ const useStyles = makeStyles((theme) => ({
   datailContent: {
     minWidth: 30,
     marginTop: theme.spacing(2),
-    borderRadius: 3,
+    borderRadius: 10,
     border: '1px solid #dddd',
     width: '100%',
+    backgroundColor: theme.palette.divider,
     '&:hover': {
-      border: '1px solid #3154EB'
+      border: '1px solid #0074d8',
+      backgroundColor: theme.palette.common.white,
     }
   },
   textField: {
@@ -74,26 +83,38 @@ const useStyles = makeStyles((theme) => ({
   checked: {},
   button: {
     width: '200px',
-    background: '#3154EB',
+    background: '#0074d8',
+    borderRadius: 20,
     color: 'white',
     height: '50px',
     fontSize: '20px',
     fontFamily: 'Noto Sans KR',
     [theme.breakpoints.down('xs')]: {
       width: '150px',
+    },
+    '&:hover': {
+      background: '#0074d8',
     }
   },
   detailTitle: {
     fontFamily: 'Noto Sans KR',
     fontWeight: 600,
-    color: '#3154EB',
+    color: '#0074d8',
+    [theme.breakpoints.down('sm')]: {
+      fontSize: '15px',
+    }
+  },
+  notColoredTitle: {
+    fontFamily: 'Noto Sans KR',
+    fontWeight: 600,
     [theme.breakpoints.down('sm')]: {
       fontSize: '15px',
     }
   },
   inputStyle: {
     boxShadow: '0px 0px 5px #00ace0',
-    border: '1px solid #3154EB'
+    border: '1px solid #3154EB',
+    backgroundColor: theme.palette.common.white,
   },
   buttonProgress: {
     color: theme.palette.primary.main,

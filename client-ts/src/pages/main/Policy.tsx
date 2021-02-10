@@ -9,6 +9,7 @@ import useLoginValue from '../../utils/hooks/useLoginValue';
 import Policy from '../../organisms/main/policy/Policy';
 import PolicyPrivacy from '../../organisms/main/policy/PolicyPrivacy';
 import withRoot from './withRoot';
+import classNames from 'classnames'
 
 interface Props {
   match: { params: { privacy: string } };
@@ -30,14 +31,13 @@ export default withRoot(({ match }: Props) => {
     <div>
       <div className={classes.root}>
         <div className={classes.contentBox}>
-          <Grid container direction="row" alignItems="center" justify="space-between">
-
-            <Grid item>
-              <h1 className={classes.policyTitle}>ONAD Policy</h1>
-            </Grid>
+          <Grid container direction="row" alignItems="center" justify="flex-start">
             <Grid item>
               <Button
-                className={classes.button}
+                className={classNames({
+                  [classes.buttonPrivacy]: privacy,
+                  [classes.button]: !privacy,
+                })}
                 component={Link}
                 color="secondary"
                 to="/policy"
@@ -45,7 +45,10 @@ export default withRoot(({ match }: Props) => {
                 이용약관
               </Button>
               <Button
-                className={classes.button}
+                className={classNames({
+                  [classes.buttonPrivacy]: !privacy,
+                  [classes.button]: privacy,
+                })}
                 component={Link}
                 color="secondary"
                 to="/policy/privacy"

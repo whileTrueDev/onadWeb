@@ -13,7 +13,6 @@ const rawTheme = {
       light: lighten(cyan[400], 0.07),
       main: cyan[600],
       dark: darken(cyan[700], 0.07),
-      // contrastText: will be calculated to contrast with palette.primary.main
       contrastText: defaultTheme.palette.getContrastText(cyan[700]),
     },
     secondary: defaultTheme.palette.warning,
@@ -21,13 +20,12 @@ const rawTheme = {
       light: lighten(blueGrey[400], 0.07),
       main: blueGrey[700],
       dark: darken(blueGrey[800], 0.07),
-      // contrastText: will be calculated to contrast with palette.primary.main
       contrastText: defaultTheme.palette.getContrastText(blueGrey[700]),
     },
     warning: defaultTheme.palette.secondary,
   },
   typography: {
-    fontFamily: '"NotoSansKR-Regular", "Sunflower", sans-serif'
+    fontFamily: 'AppleSDGothicNeoB, NotoSansKR-Regular, sans-serif'
   }
 };
 
@@ -46,16 +44,5 @@ const darkTheme = responsiveFontSizes(createMuiTheme({
   }
 }));
 
-const MainPageTheme = {
-  white: '#fff',
-  mainBlue: blue[600],
-  black: grey[900],
-  mainYellow: yellow[700],
-  red: red[500],
-  cyan: cyan[500],
-  subYellow: yellow[500],
-  Mainfont: 'Noto Sans KR',
-  ...rawTheme
-};
 
-export default { lightTheme, darkTheme, MainPageTheme };
+export default { lightTheme, darkTheme };

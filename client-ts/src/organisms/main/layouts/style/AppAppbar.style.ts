@@ -132,7 +132,7 @@ const useStyles = makeStyles((theme) => ({
     marginRight: theme.spacing(1),
     '&:hover': {
       cursor: 'pointer',
-    },
+    }, 
     '&>img': {
       width: 160,
       height: 45

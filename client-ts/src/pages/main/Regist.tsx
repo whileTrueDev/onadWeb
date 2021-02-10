@@ -14,7 +14,7 @@ export default withRoot(({ match }: Props) => {
   const { logout } = useLoginValue();
   return (
     <div className={classes.root}>
-      <AppAppBar MainUserType="marketer" logout={logout} noTrigger />
+      <AppAppBar MainUserType logout={logout} noTrigger />
       <RegistStepper platform={match.params.platform} />
     </div>
   );

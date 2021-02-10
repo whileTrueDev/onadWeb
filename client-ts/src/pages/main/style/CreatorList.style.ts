@@ -1,9 +1,11 @@
 import makeStyles from '@material-ui/core/styles/makeStyles';
 
+
+
 const useStyles = makeStyles((theme) => ({
   root: {
-    background: 'url(\'/pngs/main/loading.gif\') no-repeat center center',
-    backgroundSize: 'cover',
+    background: 'linear-gradient(to bottom, #fff, #dfe9f3)',
+    marginTop: theme.spacing(8),
     width: '100%',
     height: '700px',
     [theme.breakpoints.down('md')]: {
@@ -17,100 +19,80 @@ const useStyles = makeStyles((theme) => ({
     }
   },
   containerWrap: {
-    backgroundColor: 'rgb(0,0,0, 0.6)',
     width: '100%',
     height: '100%',
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'center',
+    paddingBottom: theme.spacing(5)
   },
-  loginMiddle: {
-    color: 'white',
-    textAlign: 'left',
-    width: '50%',
-    fontSize: '20px',
-    fontFamily: 'Noto Sans KR',
-    marginRight: 30,
+  title: {
+    fontWeight: theme.typography.fontWeightBold
   },
-  h1: {
-    marginTop: '10px',
-    marginBottom: '5px',
-    fontSize: 45,
-    fontWeight: 600,
-    [theme.breakpoints.down('md')]: {
-      fontSize: 35,
-    },
-    [theme.breakpoints.down('sm')]: {
-      fontSize: 27,
-    },
-    [theme.breakpoints.down('sm')]: {
-      fontSize: 25,
-    },
-  },
-  h1sub: {
-    marginTop: 40,
-    marginBottom: 40,
-    [theme.breakpoints.down('md')]: {
-      fontSize: 18,
-      marginTop: 35,
-      marginBottom: 35,
-    },
-    [theme.breakpoints.down('sm')]: {
-      fontSize: 15,
-      marginTop: 30,
-      marginBottom: 30,
-    },
-    [theme.breakpoints.down('xs')]: {
-      fontSize: 12,
-      marginTop: 20,
-      marginBottom: 20,
-    },
-  },
-  maintop: {
+  mainImage: {
     width: '100%',
+    height: '100%'
+  },
+  wrapper: {
+    padding: '5% 15%'
+  },
+  liveContainer: {
+    overflowX: 'scroll',
+    width: '100%',
+    height: 300,
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'center',
     alignItems: 'center',
+    justifyContent: 'flex-start',
+    margin: theme.spacing(3, 0)
   },
-  mainList: {
-    padding: '80px 10%'
+  liveCreatorWrapper: {
+    borderRadius: '50%',
+    backgroundOrigin: 'border-box',
+    backgroundClip: 'content-box, border-box',
+    margin: theme.spacing(2,2),
+    width: 160,
+    height: 160,
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center'
   },
-  listWrapper: {
-    padding: 20,
+  liveCreator: {
+    margin: theme.spacing(2,2),
+    width: 150,
+    height: 150,
+    borderRadius: '50%',
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center'
   },
-  cardTitle: {
-    fontFamily: 'S-CoreDream-8Heavy',
-    fontSize: 22,
-    margin: 0
+  creatorLogoWrapper: {
+    borderRadius: '50%',
+    backgroundOrigin: 'border-box',
+    backgroundClip: 'content-box, border-box',
+    margin: theme.spacing(1,5),
+    width: 60,
+    height: 60,
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center'
   },
-  liveTitle: {
-    fontFamily: 'S-CoreDream-8Heavy',
-    fontSize: 22,
-    margin: 0,
-    background: 'red',
-    color: 'white'
+  creatorLogo: {
+    width: 50,
+    height: 50,
+    borderRadius: '50%',
   },
-  live: {
-    borderRadius: '10px',
-    height: 200,
-    boxShadow: '0px 0px 15px 3px red',
-    '&:hover': {
-      boxShadow: '0px 0px 30px 5px red'
-    }
+  columnWrapper: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center'
   },
-  notlive: {
-    borderRadius: '10px',
-    height: 200,
-    boxShadow: '0px 0px 15px 0px rgba(0, 0, 0, 0.1)',
-    '&:hover': {
-      boxShadow: '0px 0px 30px 5px rgba(0, 0, 255, 0.7)'
-    }
-  },
-  loadingTitle: {
-    fontFamily: 'Noto Sans KR',
-    fontSize: 40,
-    fontWeight: 580
+  columnText: {
+    fontWeight: theme.typography.fontWeightBold
   }
 }));
 

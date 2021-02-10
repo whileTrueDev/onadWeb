@@ -18,7 +18,7 @@ interface Props {
   isLogin?: boolean;
   logout: () => void;
   noButtons?: boolean;
-  MainUserType?: string;
+  MainUserType?: boolean;
   noTrigger?: boolean;
 }
 
@@ -129,7 +129,7 @@ function AppAppBar({
               <Button
                 className={classes.rightLink2}
                 component={Link}
-                to={MainUserType === 'marketer' ? ('/introduce/marketer') : ('/introduce/creator')}
+                to={MainUserType ? ('/introduce/marketer') : ('/introduce/creator')}
               >
                 <Domain className={classes.buttonIcon} />
                 서비스 소개
@@ -203,13 +203,13 @@ function AppAppBar({
                 <Button
                   className={!trigger ? (classes.rightLink) : (classes.rightLink2)}
                   component={Link}
-                  to={MainUserType === 'marketer' ? ('/introduce/marketer') : ('/introduce/creator')}
+                  to={MainUserType ? ('/introduce/marketer') : ('/introduce/creator')}
                 >
                   서비스소개
                 </Button>
                 <RegButton />
 
-                {MainUserType === 'marketer' ? (
+                {MainUserType ? (
                   <div>
                     <Button
                       className={!trigger ? (classes.rightLink3) : (classes.rightLink4)}

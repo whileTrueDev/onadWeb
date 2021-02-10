@@ -1,44 +1,103 @@
 import React from 'react';
 import useStyles from './style/Door.style';
-
+import {Typography, Button} from '@material-ui/core';
+import classNames from 'classnames';
+import source from './source/doorSource';
+import shortid from 'shortid'
 
 export default function Door(): JSX.Element {
-  const classes = useStyles();
-
+  const css = useStyles();
+  const wavePathMd = `
+  M 0 66.6 c 0 0 184.7 -66.6 480 -66.6 s 480 66.6 480 66.6 s 203.3 66.6 480 66.6 s 480 -66.6 480 -66.6;
+  M 0 66.6 c 0 0 203.3 66.6 480 66.6 s 480 -66.6 480 -66.6 s 184.7 -66.6 480 -66.6 s 480 66.6 480 66.6;
+  M 0 66.6 c 0 0 184.7 -66.6 480 -66.6 s 480 66.6 480 66.6 s 203.3 66.6 480 66.6 s 480 -66.6 480 -66.6;
+  `
   return (
-    <div className={classes.wrapper}>
-      <div className={classes.logo}>
-        <div style={{ padding: '20px' }}>
-          <p className={classes.fontStyle} style={{ fontSize: '20px' }}><strong>실시간 광고매칭 플랫폼 : 온애드</strong></p>
-        </div>
-        <img src="/pngs/main/doorlogo.png" alt="logo" className={classes.doorlogo} />
-      </div>
-      <div className={classes.advertiser}>
-        <div className={classes.advertiserContent} id="advertiserContent">
-          <img src="/pngs/main/main_client.png" alt="client" className={classes.icon} />
-          <h1 className={classes.fontStyle3}><strong>광고주</strong></h1>
-          <h1 className={classes.fontStyle}><strong>브랜드를 홍보하고 싶은 광고주!</strong></h1>
-          <h3 className={classes.fontStyle2}>1인 미디어 컨텐츠 속 광고,</h3>
-          <h3 className={classes.fontStyle2}>복잡한 절차 없이 진행하세요</h3>
-          <a href="/marketer" className={classes.linkStyle}>바로가기</a>
-        </div>
-      </div>
-      <div className={classes.creator}>
-        <div className={classes.creatorWrap}>
-          <div className={classes.linear} />
-          <div className={classes.creatorContent} id="creatorContent">
-            <img src="/pngs/main/main_creator.png" alt="creator" className={classes.icon} />
-            <h1 className={classes.fontStyle3}><strong>방송인</strong></h1>
-            <h1 className={classes.fontStyle}><strong>광고 수익을 원하는 방송인!</strong></h1>
-            <h3 className={classes.fontStyle2}>1인 미디어 방송인의 파트너</h3>
-            <h3 className={classes.fontStyle2}>온애드입니다</h3>
-            <a href="/creator" className={classes.linkStyle}>바로가기</a>
+    <div className={classNames(css.root, css.rowCenterAlign)}>
+        <div className={css.contentWrapper}>
+          <img src="/logo/textLogo.png" alt="textlogo" className={css.logo}/>
+          <div className={css.content}>
+            <div className={css.leftContent}>
+              <div>
+                {source.title.map((title) => (
+                  <Typography variant="h4" style={{fontWeight: 500 }} className={css.mainTitle} key={shortid.generate()}>{title}</Typography>
+                ))}
+              </div>
+
+              <div className={classNames(css.buttonWrapper, css.columnCenterAlign)}>
+                {source.buttonTitle.map((title) => (
+                  <Button 
+                    className={css.button}
+                    href={title === '광고주' ? "/marketer" : "/creator"}
+                    key={shortid.generate()}
+                  >
+                    <Typography variant="h6" className={css.buttonText}>{title}</Typography>
+                  </Button>
+                ))}
+              </div>
+
+            </div>
+            <div className={classNames(css.rightContent, css.rowCenterAlign)}>
+              <div>
+                <div className={css.InnerLeft}>
+                  <img src="/door/mainCharacter.png" className={css.mainCharacter} alt="mainCharacter" />
+                  <div className={css.banner}>
+                    <Typography variant="subtitle1" style={{fontWeight: 600}}>{source.banner}</Typography>
+                  </div>
+                </div>
+                <div className={css.InnerLeftBottom}>
+                  <img src="/logo/iconLogo.png" alt="iconlogo" className={css.onadLogo}/>
+                  <div className={css.bottomText}>
+                    <Typography variant="body2" style={{fontWeight: 600}}>{source.capationTitle}</Typography>
+                    <Typography variant="caption">{source.captionContent}</Typography>
+                  </div>
+                </div>
+              </div>
+              <div className={css.InnerRight}>
+                <div className={css.flipWrapper}>
+                  <div className={css.flip}>
+                    {source.chatting.map((row) => (
+                      <div key={shortid.generate()} className={css.chatting}>
+                        <Typography variant="body2" style={{fontWeight: 600, color: `${row.color}`}}>{row.userName}</Typography>
+                        <Typography variant="body2" style={{fontWeight: 600}}>{row.text}</Typography>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <div className={css.chattingBottom}>
+                  <div id="chatControl" />
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-      <div className={classes.corp}>
-        &copy; while True Corp.
-      </div>
+
+        {/* 바탕 그라데이션 */}
+        <div className={css.bgParent} />
+        
+        {/* 웨이브 애니메이션 커스터마이징 */}
+        <svg className={css.wave} viewBox="0 0 1920 140">
+          <defs>
+            <path
+              id="waveMotion"
+              strokeWidth="2px"
+              fill="none"
+              stroke="#b1e4ff"
+              strokeLinecap="round" 
+            >
+                <animate 
+                  id="waving"
+                  attributeName="d"
+                  values={wavePathMd}
+                  dur="30s"
+                  repeatCount="indefinite"
+                />
+            </path>
+          </defs>
+          <use xlinkHref="#waveMotion"/>
+        </svg>
+
     </div>
+
   );
 }

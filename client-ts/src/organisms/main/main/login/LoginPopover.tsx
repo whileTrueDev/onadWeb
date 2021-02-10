@@ -9,10 +9,10 @@ import LoginForm from './LoginForm';
 import RegistDialog from '../../regist/RegistDialog';
 
 
-interface Props {
+interface LoginPopoverProps {
   type?: string;
   logout: () => void;
-  MainUserType?: string;
+  MainUserType?: boolean;
   trigger?: boolean;
   mode?: string | undefined;
 }
@@ -26,7 +26,7 @@ function LoginPopover({
   trigger,
   mode,
   logout,
-}: Props): JSX.Element {
+}: LoginPopoverProps): JSX.Element {
   const [loginValue, setLoginValue] = React.useState('');
   const [registOpen, setRegistOpen] = React.useState(false);
 
@@ -53,18 +53,15 @@ function LoginPopover({
         ? (
           <>
             <Button
-              className={classes.str_rightLink}
+              className={MainUserType ? classes.str_rightLink : classes.str_rightLink2}
               onClick={() => {
-                if (MainUserType === 'marketer') {
+                if (MainUserType) {
                   handleDialogOpenClick('marketer');
                 } else {
                   handleDialogOpenClick('creator');
                 }
               }}
             >
-              <Hidden mdUp>
-                <LockOpen />
-              </Hidden>
               온애드 시작하기
             </Button>
 
@@ -84,16 +81,13 @@ function LoginPopover({
         )
         : (
           <>
-            {MainUserType === 'marketer' ? (
+            {MainUserType ? (
               <div>
                 {mode ? (
                   <Button
                     className={classes.rightLink2}
                     onClick={handleRegistOpen}
                   >
-                    <Hidden mdUp>
-                      <SupervisedUserCircle style={{ marginRight: 10 }} />
-                    </Hidden>
                     회원가입
                   </Button>
                 )
@@ -102,9 +96,6 @@ function LoginPopover({
                       className={!trigger ? (classes.rightLink) : (classes.rightLink2)}
                       onClick={handleRegistOpen}
                     >
-                      <Hidden mdUp>
-                        <SupervisedUserCircle style={{ marginRight: 10 }} />
-                      </Hidden>
                       회원가입
                     </Button>
                   )}
@@ -121,9 +112,6 @@ function LoginPopover({
                         handleDialogOpenClick('creator');
                       }}
                     >
-                      <Hidden mdUp>
-                        <SupervisedUserCircle style={{ marginRight: 10 }} />
-                      </Hidden>
                       회원가입
                     </Button>
                   )
@@ -135,9 +123,6 @@ function LoginPopover({
                           handleDialogOpenClick('creator');
                         }}
                       >
-                        <Hidden mdUp>
-                          <SupervisedUserCircle style={{ marginRight: 10 }} />
-                        </Hidden>
                         회원가입
                       </Button>
                     )}

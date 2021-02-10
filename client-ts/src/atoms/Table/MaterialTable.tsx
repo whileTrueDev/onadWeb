@@ -29,7 +29,7 @@ const tableIcons = {
 const localization = {
   body: {
     deleteTooltip: '캠페인 삭제',
-    emptyDataSourceMessage: '해당하는 데이터가 없습니다.'
+    emptyDataSourceMessage: '잠시만 기다려주세요'
   },
   pagination: {
     firstTooltip: '첫 페이지',
@@ -43,7 +43,7 @@ const localization = {
   },
   toolbar: {
     searchTooltip: '',
-    searchPlaceholder: '검색어를 입력하세요..'
+    searchPlaceholder: '검색어를 입력해주세요!'
   }
 };
 
@@ -60,7 +60,7 @@ export default function MaterialTable<RowDataType extends object>(
   function styleColumn(_columns: Column<RowDataType>[], minWidth = 100): Column<RowDataType>[] {
     _columns.map((col) => {
       const column = col;
-      column.cellStyle = { minWidth, ...column };
+      column.cellStyle = { minWidth, padding: 0, ...column };
       return column;
     });
     return _columns;

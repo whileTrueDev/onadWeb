@@ -1,180 +1,303 @@
-import React from 'react';
-import { Grow, useScrollTrigger } from '@material-ui/core';
+import React, {useState} from 'react';
+import { Typography, Button, Divider } from '@material-ui/core';
+import classNames from 'classnames'
 import useStyles from './style/IntroduceMiddle.style';
 
 
 export default function IntroduceTop({ userType }: { userType: string | boolean }): JSX.Element {
   const classes = useStyles();
-  const trigger = useScrollTrigger({ threshold: 850, disableHysteresis: true });
-  const trigger2 = useScrollTrigger({ threshold: 1650, disableHysteresis: true });
+
+  const [platform, setFlatform] = useState(true)
+
+  function handlePlatform(platform: string): void {
+    switch (platform) {
+      case 'afreecatv':
+        return setFlatform(false)
+      default:
+        return setFlatform(true)
+    }
+  }
 
   return (
-    <div>
-      {userType ? (
-        <div className={classes.root}>
-          <div className={classes.mainMiddle}>
-            <div className={classes.costContent}>
-              <p className={classes.subAdtitle}>크리에이터 배너광고</p>
-              <h1 className={classes.h1}>
-                배너광고(CPM)
-              </h1>
-              <p className={classes.subAdtitle2}>생방송 화면에 노출되는 배너를 송출하여 상품 및 브랜드의 인지도를 높이는 광고입니다.</p>
-              <div className={classes.costCard}>
-                <h3 className={classes.costCardTitle}>광고형식</h3>
-                <p className={classes.costCardCon}>GIF, JPG, PNG 형식을 지원합니다.</p>
-                <p className={classes.costCardCon}>배너사이즈 1920X1080(px) 기준 배너크기 320X160(px)</p>
-              </div>
-              <div className={classes.costCard}>
-                <h3 className={classes.costCardTitle}>
-                  과금기준&nbsp;
-                </h3>
-                <p className={classes.costCardCon}>시청자 수(1명) X 방송시간(10분) X 2원</p>
-                <p className={classes.costCardCon}>2000cpm(1,000회 노출당 비용 = 2,000원/1,000원)</p>
-              </div>
-            </div>
-            <div className={classes.loginButtonRight}>
-              <Grow in={trigger} timeout={1000}>
-                <img src="/pngs/introduction/exCPM.png" alt="exCPM" className={classes.exBanner} />
-              </Grow>
-            </div>
+    <div className={classes.root}>
+      {userType === 'marketer' ? (
+        <div>
+          <div className={classes.platformWrapper}>
+            <Button
+              onClick={() => handlePlatform('twitch')}
+              className={classNames({
+                [classes.selected]: platform,
+                [classes.notSelected]: !platform,
+              })}
+            >
+              트위치
+            </Button>
+              
+            <Button
+              onClick={() => handlePlatform('afreecatv')}
+              className={classNames({
+                [classes.selected]: !platform,
+                [classes.notSelected]: platform,
+              })}
+            >
+              아프리카tv
+            </Button>
           </div>
 
-          <div className={classes.mainMiddle2}>
-            <div className={classes.costContent2}>
-              <p className={classes.subAdtitle}>배너광고에서 클릭까지</p>
-              <h1 className={classes.h1}>
-                광고페이지(CPC)
-              </h1>
-              <p className={classes.subAdtitle2}>
-                랜딩 페이지(예: 회사 홈페이지, 쇼핑몰)로의 유입을 원하는 광고주를 위한 형태
-              </p>
-              <div className={classes.costCardWrapper}>
-                <div className={classes.costCard2}>
-                  <h3 className={classes.costCardTitle}>광고형식 1. 패널</h3>
-                  <p className={classes.costCardCon}>크리에이터님이 개인방송 플랫폼(채널)에 패널 등록 후</p>
-                  <p className={classes.costCardCon}>패널 클릭시 지금 송출되는 광고 랜딩페이지로 이동합니다.</p>
+          <div className={classes.cotentWrapper}>
+            <div className={platform ? classes.leftLine : classes.leftLine2}/>
+            <div className={classes.content}>
+
+              <div className={classes.contentTop}>
+                <div>
+                  <Typography variant="h2" className={classes.title}>
+                    배너광고 (CPM)
+                  </Typography>
+                  <Typography variant="subtitle1">
+                    생방송 화면에 노출되는 배너를 송출하여
+                  </Typography>
+                  <Typography variant="subtitle1">
+                    상품 및 브랜드의 인지도를 높이는 광고입니다.
+                  </Typography>
                 </div>
-                <div className={classes.costCard2}>
-                  <h3 className={classes.costCardTitle}>
-                    과금기준
-                  </h3>
-                  <p className={classes.costCardCon}>100 CPC (클릭당 비용 = 100원/1회 클릭)</p>
-                </div>
-              </div>
-              <div className={classes.loginButtonRight2}>
-                <Grow in={trigger2} timeout={1000}>
-                  <img src="/pngs/introduction/exCPC.png" alt="exCPC" className={classes.exBanner2} />
-                </Grow>
+                <img src={platform ? "/introduction/twitch_cpm.jpg" : "/introduction/afreecatv_cpm.jpg"} alt="exCPM" className={classes.exImage}/>
               </div>
 
+              <div className={classes.contentBottom}>
+                <div className={classes.subContent}>
+                  <Typography variant="h4" className={classes.subtitle}>
+                    광고 형식
+                  </Typography>
+                  <Typography variant="subtitle1">
+                    GIF, JPG, PNG 형식을 지원합니다.
+                  </Typography>
+                  <Typography variant="subtitle1">
+                    해상도 1920*1080px 기준
+                  </Typography>
+                  <Typography variant="subtitle1">
+                    배너 사이즈 320*160px입니다.
+                  </Typography>
+                </div>
+                <div className={classes.subContent}>
+                  <Typography variant="h4" className={classes.subtitle}>
+                    과금 기준
+                  </Typography>
+                  <Typography variant="subtitle1">
+                    시청자수 (1명) X 방송시간 X 2원
+                  </Typography>
+                  <Typography variant="subtitle1">
+                    2000cpm(1000회 노출당 비용=2000원/1000원)
+                  </Typography>
+                </div>
+              </div>
 
-              <div className={classes.costCardWrapper}>
-                <div className={classes.costCard2}>
-                  <h3 className={classes.costCardTitle}>광고형식 2. 채팅봇</h3>
-                  <p className={classes.costCardCon}>크리에이터님이 개인방송 플랫폼(채널)에 채팅봇 등록 후</p>
-                  <p className={classes.costCardCon}>채팅봇 클릭시 지금 송출되는 광고 랜딩페이지로 이동합니다.</p>
-                </div>
-                <div className={classes.costCard2}>
-                  <h3 className={classes.costCardTitle}>
-                    과금기준
-                  </h3>
-                  <p className={classes.costCardCon}>100 CPC (클릭당 비용 = 100원/1회 클릭)</p>
+              <Divider className={classes.divider}/>
+
+              <div className={classes.contentTop}>
+                <div>
+                  <Typography variant="h2" className={classes.title}>
+                    광고 페이지 (CPC)
+                  </Typography>
+                  <Typography variant="subtitle1">
+                    랜딩페이지 (회사 홈페이지, 쇼핑몰)로의 유입을 원하신다면?
+                  </Typography>
                 </div>
               </div>
-              <div className={classes.loginButtonRight2}>
-                <Grow in={trigger2} timeout={1400}>
-                  <img src="/pngs/introduction/exChatbot.png" alt="exCPC" className={classes.exBanner2} />
-                </Grow>
+
+              <div className={classes.contentBottom}>
+                <div className={classes.subContent2}>
+                  <img src={platform ? "/introduction/twitch_cpc.png" : "/introduction/afreecatv_cpc.png"} alt="exCPC" className={classes.exImage2}/>
+                </div>
+                <div className={classes.subContent2}>
+                  <Typography variant="h4" className={classes.subtitle}>
+                    광고 형식 1. 패널
+                  </Typography>
+                  <Typography variant="subtitle1">
+                    크리에이터가 개인방송 플랫폼(채널)에
+                  </Typography>
+                  <Typography variant="subtitle1">
+                    패널을 등록한 후 패널 클릭시
+                  </Typography>
+                  <Typography variant="subtitle1">
+                    지금 송출되는 광고 랜딩페이지로 이동합니다.
+                  </Typography>
+                  <Typography variant="h4" className={classes.subtitle2}>
+                    과금 기준
+                  </Typography>
+                  <Typography variant="subtitle1">
+                    100 CPC (클릭당 비용 = 100원 / 1회 클릭)
+                  </Typography>
+                </div>
               </div>
+
+              {platform && 
+              <div className={classes.contentBottom}>
+                <div className={classes.subContent2}>
+                  <img src="/introduction/twitch_chat.jpg" alt="exChat" className={classes.exImage2}/>
+                </div>
+                <div className={classes.subContent2}>
+                  <Typography variant="h4" className={classes.subtitle}>
+                    광고 형식 1. 패널
+                  </Typography>
+                  <Typography variant="subtitle1">
+                    크리에이터가 개인방송 플랫폼(채널)에
+                  </Typography>
+                  <Typography variant="subtitle1">
+                    패널을 등록한 후 패널 클릭시
+                  </Typography>
+                  <Typography variant="subtitle1">
+                    지금 송출되는 광고 랜딩페이지로 이동합니다.
+                  </Typography>
+                  <Typography variant="h4" className={classes.subtitle2}>
+                    과금 기준
+                  </Typography>
+                  <Typography variant="subtitle1">
+                    100 CPC (클릭당 비용 = 100원 / 1회 클릭)
+                  </Typography>
+                </div>
+              </div>
+              }
             </div>
           </div>
         </div>
       )
         : (
-          <div className={classes.root}>
-            <div className={classes.mainMiddle}>
-              <div className={classes.costContent}>
-                <p className={classes.subAdtitle}>크리에이터 배너광고</p>
-                <h1 className={classes.h1}>
-                  방송에만 집중하세요
-                </h1>
-                <p className={classes.subAdtitle2}>
-                  광고섭외, 계약, 예산협의 그리고 세금처리까지&#10;어려운 일들은 저희가 책임질게요
-                  <span role="img" aria-label="emoji">💪</span>
-                </p>
-                <div className={classes.costCard}>
-                  <h3 className={classes.costCardTitle}>배너광고</h3>
-                  <p className={classes.costCardCon}>
-                    오버레이창만 띄우면 배너가 뙇!
-                    <span role="img" aria-label="emoji">👏🏻</span>
-                  </p>
-                  <p className={classes.costCardCon}>해상도 1920X1080(px) 기준 배너크기 320X160(px)입니다</p>
-                </div>
-                <div className={classes.costCard}>
-                  <h3 className={classes.costCardTitle}>
-                    수익금
-                  </h3>
-                  <p className={classes.costCardCon}>실시간 시청자수에 따라 수익금이 쌓입니다</p>
-                  <p className={classes.costCardCon}>3만원 이상 적립시 언제든 출금신청 가능!</p>
-                </div>
-              </div>
-              <div className={classes.loginButtonRight}>
-                <Grow in={trigger} timeout={1000}>
-                  <img src="/pngs/introduction/exCPM.png" alt="exCPM" className={classes.exBanner} />
-                </Grow>
-              </div>
+          <div>
+            <div className={classes.platformWrapper}>
+              <Button
+                onClick={() => handlePlatform('twitch')}
+                className={classNames({
+                  [classes.selected2]: platform,
+                  [classes.notSelected2]: !platform,
+                })}
+              >
+                트위치
+              </Button>
+                
+              <Button
+                onClick={() => handlePlatform('afreecatv')}
+                className={classNames({
+                  [classes.selected2]: !platform,
+                  [classes.notSelected2]: platform,
+                })}
+              >
+                아프리카tv
+              </Button>
             </div>
 
-            <div className={classes.mainMiddle2}>
-              <div className={classes.costContent2}>
-                <p className={classes.subAdtitle}>배너광고에서 클릭까지</p>
-                <h1 className={classes.h1}>
-                  지금 송출되는 광고 클릭해봐요
-                </h1>
-                <p className={classes.subAdtitle2}>
-                  시청자의 참여와 관심이 추가 수익으로!
-                  <span role="img" aria-label="emoji">😲</span>
-                </p>
-                <div className={classes.costCardWrapper}>
-                  <div className={classes.costCard2}>
-                    <h3 className={classes.costCardTitle}>광고형식 1. 패널</h3>
-                    <p className={classes.costCardCon}>크리에이터님이 개인방송 플랫폼(채널)에 패널 등록 후</p>
-                    <p className={classes.costCardCon}>패널 클릭시 지금 송출되는 광고 랜딩페이지로 이동합니다.</p>
+            <div className={classes.cotentWrapper}>
+              <div className={platform ? classes.leftLine3 : classes.leftLine4}/>
+              <div className={classes.content}>
+
+                <div className={classes.contentTop}>
+                  <div>
+                    <Typography variant="h2" className={classes.title}>
+                      배너광고 (CPM)
+                    </Typography>
+                    <Typography variant="subtitle1">
+                      생방송 화면에 노출되는 배너를 송출하여
+                    </Typography>
+                    <Typography variant="subtitle1">
+                      상품 및 브랜드의 인지도를 높이는 광고입니다.
+                    </Typography>
                   </div>
-                  <div className={classes.costCard2}>
-                    <h3 className={classes.costCardTitle}>
-                      수익금
-                    </h3>
-                    <p className={classes.costCardCon}>시청자의 참여도(클릭, 다운로드, 구매 등)에 따라 수익이 쌓입니다</p>
-                    <p className={classes.costCardCon}>배너광고와 별도로 적립돼요!</p>
-                  </div>
-                </div>
-                <div className={classes.loginButtonRight2}>
-                  <Grow in={trigger2} timeout={1000}>
-                    <img src="/pngs/introduction/exCPC.png" alt="exCPC" className={classes.exBanner2} />
-                  </Grow>
+                  <img src={platform ? "/introduction/twitch_cpm.jpg" : "/introduction/afreecatv_cpm.jpg"} alt="exCPM" className={classes.exImage}/>
                 </div>
 
+                <div className={classes.contentBottom}>
+                  <div className={classes.subContent}>
+                    <Typography variant="h4" className={classes.subtitle3}>
+                      광고 형식
+                    </Typography>
+                    <Typography variant="subtitle1">
+                      GIF, JPG, PNG 형식을 지원합니다.
+                    </Typography>
+                    <Typography variant="subtitle1">
+                      해상도 1920*1080px 기준
+                    </Typography>
+                    <Typography variant="subtitle1">
+                      배너 사이즈 320*160px입니다.
+                    </Typography>
+                  </div>
+                  <div className={classes.subContent}>
+                    <Typography variant="h4" className={classes.subtitle3}>
+                      과금 기준
+                    </Typography>
+                    <Typography variant="subtitle1">
+                      시청자수 (1명) X 방송시간 X 2원
+                    </Typography>
+                    <Typography variant="subtitle1">
+                      2000cpm(1000회 노출당 비용=2000원/1000원)
+                    </Typography>
+                  </div>
+                </div>
 
-                <div className={classes.costCardWrapper}>
-                  <div className={classes.costCard2}>
-                    <h3 className={classes.costCardTitle}>광고형식 2. 채팅봇</h3>
-                    <p className={classes.costCardCon}>크리에이터님이 개인방송 플랫폼(채널)에 채팅봇 등록 후</p>
-                    <p className={classes.costCardCon}>채팅봇 클릭시 지금 송출되는 광고 랜딩페이지로 이동합니다.</p>
-                  </div>
-                  <div className={classes.costCard2}>
-                    <h3 className={classes.costCardTitle}>
-                      수익금
-                    </h3>
-                    <p className={classes.costCardCon}>시청자의 참여도(클릭, 다운로드, 구매 등)에 따라 수익이 쌓입니다</p>
-                    <p className={classes.costCardCon}>패널의 클릭과 합산되어 적립돼요!</p>
+                <Divider className={classes.divider}/>
+
+                <div className={classes.contentTop}>
+                  <div>
+                    <Typography variant="h2" className={classes.title}>
+                      광고 페이지 (CPC)
+                    </Typography>
+                    <Typography variant="subtitle1">
+                      랜딩페이지 (회사 홈페이지, 쇼핑몰)로의 유입을 원하신다면?
+                    </Typography>
                   </div>
                 </div>
-                <div className={classes.loginButtonRight2}>
-                  <Grow in={trigger2} timeout={1400}>
-                    <img src="/pngs/introduction/exChatbot.png" alt="exCPC" className={classes.exBanner2} />
-                  </Grow>
+
+                <div className={classes.contentBottom}>
+                  <div className={classes.subContent2}>
+                    <img src={platform ? "/introduction/twitch_cpc.png" : "/introduction/afreecatv_cpc.png"} alt="exCPC" className={classes.exImage2}/>
+                  </div>
+                  <div className={classes.subContent2}>
+                    <Typography variant="h4" className={classes.subtitle3}>
+                      광고 형식 1. 패널
+                    </Typography>
+                    <Typography variant="subtitle1">
+                      크리에이터가 개인방송 플랫폼(채널)에
+                    </Typography>
+                    <Typography variant="subtitle1">
+                      패널을 등록한 후 패널 클릭시
+                    </Typography>
+                    <Typography variant="subtitle1">
+                      지금 송출되는 광고 랜딩페이지로 이동합니다.
+                    </Typography>
+                    <Typography variant="h4" className={classes.subtitle4}>
+                      과금 기준
+                    </Typography>
+                    <Typography variant="subtitle1">
+                      100 CPC (클릭당 비용 = 100원 / 1회 클릭)
+                    </Typography>
+                  </div>
                 </div>
+
+                {platform && 
+                <div className={classes.contentBottom}>
+                  <div className={classes.subContent2}>
+                    <img src="/introduction/twitch_chat.jpg" alt="exChat" className={classes.exImage2}/>
+                  </div>
+                  <div className={classes.subContent2}>
+                    <Typography variant="h4" className={classes.subtitle3}>
+                      광고 형식 1. 패널
+                    </Typography>
+                    <Typography variant="subtitle1">
+                      크리에이터가 개인방송 플랫폼(채널)에
+                    </Typography>
+                    <Typography variant="subtitle1">
+                      패널을 등록한 후 패널 클릭시
+                    </Typography>
+                    <Typography variant="subtitle1">
+                      지금 송출되는 광고 랜딩페이지로 이동합니다.
+                    </Typography>
+                    <Typography variant="h4" className={classes.subtitle4}>
+                      과금 기준
+                    </Typography>
+                    <Typography variant="subtitle1">
+                      100 CPC (클릭당 비용 = 100원 / 1회 클릭)
+                    </Typography>
+                  </div>
+                </div>
+                }
               </div>
             </div>
           </div>
