@@ -64,7 +64,7 @@ export default function EditProfileImage({
         />
         <Button
           variant="outlined"
-          disabled={!marketerInfo.user || !marketerInfo.user.profileImage}
+          disabled={!marketerInfo.user || !marketerInfo.user.profileImage || loading}
           onClick={(): void => {
             confirmDialog.handleOpen();
           }}

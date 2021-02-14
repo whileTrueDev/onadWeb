@@ -67,6 +67,7 @@ export default function EditableAvatar({
       onMouseLeave={isAvatarHover.handleClose}
       component="label"
       onChange={onProfileImageChange}
+      disabled={changeLoading}
     >
       {!changeLoading ? (
         <Avatar
