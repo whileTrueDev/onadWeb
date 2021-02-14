@@ -8,7 +8,6 @@ import sources from '../source/sources'
 import classNames from 'classnames';
 
 interface IndicatorProps {
-  psIndex: number
   nowBroadcast: number
 }
 

@@ -13,10 +13,12 @@ interface SliderProps {
 };
 
 const numberOfSlides = (maxVisibleSlides: number, windowWidth: number) => {
-  if (windowWidth > 1200) return maxVisibleSlides;
-  if (windowWidth > 992) return 4;
-  if (windowWidth > 768) return 3;
-  return 2;
+  if (windowWidth > 1650) return maxVisibleSlides;
+  if (windowWidth > 1280) return 3;
+  if (windowWidth > 960) return 2;
+  if (windowWidth > 600) return 2;
+  if (windowWidth > 400) return 2;
+  return 1;
 };
 
 function Slider({
@@ -116,16 +118,16 @@ function Slider({
         ))}
       </StyledSlider>
       {currentPage > 0 && (
-        <div className='button-wrapper back'>
+        <div className='button-wrapper backWrapper'>
           <button className={MainUserType ? 'button back' : 'button2 back'} onClick={() => handleSlideMove(false)}>
-            &#8249;
+            <span className='buttonArrow'>&#8249;</span>
           </button>
         </div>
       )}
       {currentPage !== totalPages && (
-        <div className='button-wrapper forward'>
+        <div className='button-wrapper forwardWrapper'>
           <button className={MainUserType ? 'button forward' : 'button2 forward'} onClick={() => handleSlideMove(true)}>
-            &#8250;
+            <span className='buttonArrow'>&#8250;</span>
           </button>
         </div>
       )}

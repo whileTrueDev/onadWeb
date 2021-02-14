@@ -38,7 +38,7 @@ function IntroContact({MainUserType }: IntroContactProps): JSX.Element {
             지금 바로 온애드와 시작해보세요
           </Typography>
           <Button
-            className={classes.button}
+            className={MainUserType ? classes.button : classes.button2}
             onClick={() => handleOpen('marketer')}
             id="inquiry"
           >

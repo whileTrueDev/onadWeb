@@ -1,6 +1,6 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core';
-import AppAppBar from '../../organisms/main/layouts/AppAppbar';
+import NavTop from '../../organisms/main/layouts/NavTop';
 import { useLoginValue } from '../../utils/hooks';
 import SignupCreator from '../../organisms/main/signup-creator/SignupCreator';
 
@@ -18,7 +18,7 @@ export default function RegistCreator(): JSX.Element {
   return (
     <div className={classes.root}>
       {/* mainUserType true:광고주, false:크리에이터 */}
-      <AppAppBar MainUserType={false} logout={logout} noTrigger />
+      <NavTop MainUserType={false} logout={logout} />
 
       <div style={{ paddingTop: 90 }} />
 

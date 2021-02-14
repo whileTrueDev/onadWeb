@@ -8,14 +8,13 @@ const Styles = makeStyles((theme) => ({
     margin: theme.spacing(5, 0),
     fontWeight: theme.typography.fontWeightBold,
     [theme.breakpoints.down('md')]: {
-      fontSize: '30px',
+      fontSize: '40px',
     },
     [theme.breakpoints.down('sm')]: {
-      fontSize: '25px',
+      fontSize: '30px',
     },
     [theme.breakpoints.down('xs')]: {
-      marginTop: 20,
-      fontSize: '20px',
+      fontSize: '30px',
     },
     color: '#008bf0',
     fontFamily: 'Noto Sans KR',
@@ -24,14 +23,13 @@ const Styles = makeStyles((theme) => ({
     margin: theme.spacing(5, 0),
     fontWeight: theme.typography.fontWeightBold,
     [theme.breakpoints.down('md')]: {
-      fontSize: '30px',
+      fontSize: '40px',
     },
     [theme.breakpoints.down('sm')]: {
-      fontSize: '25px',
+      fontSize: '30px',
     },
     [theme.breakpoints.down('xs')]: {
-      marginTop: 20,
-      fontSize: '20px',
+      fontSize: '30px',
     },
     color: '#00b7b0',
     fontFamily: 'Noto Sans KR',

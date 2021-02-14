@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import {
-  Typography, TablePagination
+  Typography, TablePagination, useMediaQuery
 } from '@material-ui/core';
 import shortid from 'shortid';
 import useStyles from './style/CreatorList.style';
@@ -19,6 +19,7 @@ export interface ContractedCreatorListData<T> {
   followers: number;
   content: T;
   openHour: T;
+  creatorTwitchId: T
 }
 
 const COLORS = [
@@ -36,7 +37,8 @@ export default function CreatorList(): JSX.Element {
   const [LiveCreator, setLiveCreator] = React.useState<null | ContractedCreatorListData<string>[]>();
   const ContractedCreatorList = useGetRequest<null, ContractedCreatorListData<string>[]>('/creators');
   const LiveCreatorList = useGetRequest<null, string[]>('/creators/live');
-  console.log(ContractedCreatorList.data);
+  const isSmWidth = useMediaQuery('(max-width:960px)');
+  const isXsWidth = useMediaQuery('(max-width:600px)');
 
   function getRandomColors(array: any): string {
     const RandomColor = array[Math.floor(Math.random() * array.length)];
@@ -50,12 +52,59 @@ export default function CreatorList(): JSX.Element {
     }
   }, [ContractedCreatorList.data, ContractedCreatorList.loading, LiveCreatorList.data, LiveCreatorList.loading]);
 
+  const Columns = [
+    {
+      title: '크리에이터명',
+      field: 'creatorName',
+      render: (rowData: any): JSX.Element => (
+        <div className={classes.columnWrapper}>
+          <div className={classes.creatorLogoWrapper} key={shortid.generate()} style={{ backgroundImage: `${getRandomColors(COLORS)}` }}>
+            <img
+              src={rowData.creatorLogo}
+              alt="creatorLogo"
+              className={classes.creatorLogo}
+              onError={(e) => { e.currentTarget.src = '/pngs/logo/onad_logo_vertical_small.png'; }}
+            />
+          </div>
+          <Typography variant="subtitle1" className={classes.columnText}>{rowData.creatorName}</Typography>
+        </div>
+      )
+    },
+    {
+      title: '팔로워수',
+      field: 'followers',
+      render: (rowData: any): JSX.Element => (
+        <Typography variant="subtitle1" align="center" className={classes.columnText}>
+          {rowData.followers}
+        </Typography>
+      ),
+    },
+    {
+      title: '컨텐츠',
+      field: 'content',
+      render: (rowData: any): JSX.Element => (
+        <Typography variant="subtitle1" align="center" className={classes.columnText}>
+          {rowData.content}
+        </Typography>
+      )
+    },
+    {
+      title: '주방송시간',
+      field: 'openHour',
+      render: (rowData: any): JSX.Element => (
+        <Typography variant="subtitle1" align="center" className={classes.columnText}>
+          {rowData.openHour}
+        </Typography>
+      )
+    },
+  ]
+  
   return (
     <div>
       <NavTop isLogin={isLogin} logout={logout} MainUserType />
       <div className={classes.root}>
         <div className={classes.containerWrap}>
-          <img src="/creatorList/creatorList.svg" className={classes.mainImage} />
+          <img src="/creatorList/creatorList.svg" alt="creatorList" className={classes.mainImage} />
         </div>
         <div className={classes.wrapper}>
           <Typography variant="h3" className={classes.title}>LIVE STREAMING</Typography>
@@ -64,7 +113,7 @@ export default function CreatorList(): JSX.Element {
             { !ContractedCreatorList.loading && ContractedCreatorList.data && !LiveCreatorList.loading && LiveCreatorList.data && (
               LiveCreator?.map((row) => (
                 <div className={classes.liveCreatorWrapper} key={shortid.generate()} style={{ backgroundImage: `${getRandomColors(COLORS)}` }}>
-                  <a href={`https://www.twitch.tv/${row}`} className={classes.liveCreator}>
+                  <a href={`https://www.twitch.tv/${row.creatorTwitchId}`} className={classes.liveCreator}>
                     <img
                       src={row.creatorLogo}
                       alt="creatorLogo"
@@ -81,52 +130,7 @@ export default function CreatorList(): JSX.Element {
           {/* 전체 크리에이터 리스트 */}
           <div>
             <Table
-              columns={[
-                {
-                  title: '크리에이터명',
-                  field: 'creatorName',
-                  render: (rowData): JSX.Element => (
-                    <div className={classes.columnWrapper}>
-                      <div className={classes.creatorLogoWrapper} key={shortid.generate()} style={{ backgroundImage: `${getRandomColors(COLORS)}` }}>
-                        <img
-                          src={rowData.creatorLogo}
-                          alt="creatorLogo"
-                          className={classes.creatorLogo}
-                          onError={(e) => { e.currentTarget.src = '/pngs/logo/onad_logo_vertical_small.png'; }}
-                        />
-                      </div>
-                      <Typography variant="subtitle1" className={classes.columnText}>{rowData.creatorName}</Typography>
-                    </div>
-                  )
-                },
-                {
-                  title: '팔로워수',
-                  field: 'followers',
-                  render: (rowData): JSX.Element => (
-                    <Typography variant="subtitle1" align="center" className={classes.columnText}>
-                      {rowData.followers}
-                    </Typography>
-                  ),
-                },
-                {
-                  title: '컨텐츠',
-                  field: 'content',
-                  render: (rowData): JSX.Element => (
-                    <Typography variant="subtitle1" align="center" className={classes.columnText}>
-                      {rowData.content}
-                    </Typography>
-                  )
-                },
-                {
-                  title: '주방송시간',
-                  field: 'openHour',
-                  render: (rowData): JSX.Element => (
-                    <Typography variant="subtitle1" align="center" className={classes.columnText}>
-                      {rowData.openHour}
-                    </Typography>
-                  )
-                },
-              ]}
+              columns={!isSmWidth ? Columns : (!isXsWidth ? Columns.slice(0,3): Columns.slice(0,1))}
               data={ContractedCreatorList.data || []}
               isLoading={ContractedCreatorList.loading || false}
               components={{

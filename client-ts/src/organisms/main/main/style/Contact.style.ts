@@ -17,6 +17,12 @@ const styles = makeStyles((theme) => ({
     width: 10,
     borderRadius: 5,
     background: 'linear-gradient(to bottom, #00e2ff, #5800ff)',
+    [theme.breakpoints.down('sm')]: {
+      height: 80,
+    },
+    [theme.breakpoints.down('xs')]: {
+      height: 100,
+    },
   },
   topLeftLine2: {
     marginRight: theme.spacing(4),
@@ -24,6 +30,12 @@ const styles = makeStyles((theme) => ({
     width: 10,
     borderRadius: 5,
     background: 'linear-gradient(to bottom, #54eacd, #5ed7ed)',
+    [theme.breakpoints.down('sm')]: {
+      height: 80,
+    },
+    [theme.breakpoints.down('xs')]: {
+      height: 100,
+    },
   },
   top: {
     width: '100%',
@@ -31,10 +43,22 @@ const styles = makeStyles((theme) => ({
     flexDirection: 'row',
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    [theme.breakpoints.down('xs')]: {
+      width: '90%',
+    },
   },
   topText: {
-    fontWeight: theme.typography.fontWeightBold
+    fontWeight: theme.typography.fontWeightBold,
+    [theme.breakpoints.down('md')]: {
+      fontSize: 30
+    },
+    [theme.breakpoints.down('sm')]: {
+      fontSize: 25
+    },
+    [theme.breakpoints.down('xs')]: {
+      fontSize: 18
+    }
   },
   bottom: {
     width: '100%',
@@ -43,7 +67,7 @@ const styles = makeStyles((theme) => ({
     flexDirection: 'column',
     backgroundColor: '#009efd',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   bottom2: {
     width: '100%',
@@ -52,11 +76,17 @@ const styles = makeStyles((theme) => ({
     flexDirection: 'column',
     backgroundColor: '#00d1c9',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   }, 
   bottomText: {
     fontWeight: theme.typography.fontWeightBold,
-    color: theme.palette.common.white
+    color: theme.palette.common.white,
+    [theme.breakpoints.down('sm')]: {
+      fontSize: 35
+    },
+    [theme.breakpoints.down('xs')]: {
+      fontSize: 22
+    }
   },
   button: {
     marginTop: theme.spacing(4),
@@ -66,6 +96,14 @@ const styles = makeStyles((theme) => ({
     borderRadius: 30,
     '&:hover': {
       background: '#0074d8'
+    },
+    [theme.breakpoints.down('sm')]: {
+      width: 220,
+      height : 70,
+    },
+    [theme.breakpoints.down('xs')]: {
+      width: 180,
+      height : 60,
     }
   },
   button2: {

@@ -1,9 +1,7 @@
 import React from 'react';
 import {
-  Button, Hidden,
+  Button
 } from '@material-ui/core';
-import LockOpen from '@material-ui/icons/LockOpen';
-import SupervisedUserCircle from '@material-ui/icons/SupervisedUserCircle';
 import useStyles from '../style/LoginPopover.style';
 import MarketerLoginForm from './MarketerLoginForm';
 import CreatorLoginForm from './CreatorLoginForm';
@@ -84,7 +82,7 @@ function LoginPopover({
               <div>
                 {mode ? (
                   <Button
-                    className={classes.rightLink2}
+                    className={classes.rightLink}
                     onClick={handleRegistOpen}
                   >
                     회원가입
@@ -92,7 +90,7 @@ function LoginPopover({
                 )
                   : (
                     <Button
-                      className={!trigger ? (classes.rightLink) : (classes.rightLink2)}
+                      className={classes.rightLink}
                       onClick={handleRegistOpen}
                     >
                       회원가입
@@ -105,7 +103,7 @@ function LoginPopover({
                 <div>
                   {mode ? (
                     <Button
-                      className={classes.rightLink2}
+                      className={classes.rightLink}
                       onClick={() => {
                         history.push('/creator/signup');
                       }}
@@ -115,7 +113,7 @@ function LoginPopover({
                   )
                     : (
                       <Button
-                        className={!trigger ? (classes.rightLink) : (classes.rightLink2)}
+                        className={classes.rightLink}
                         onClick={() => {
                           history.push('/creator/signup');
                         }}

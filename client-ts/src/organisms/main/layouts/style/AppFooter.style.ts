@@ -2,13 +2,14 @@ import makeStyles from '@material-ui/core/styles/makeStyles';
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    padding: `${theme.spacing(5)}px 10%`,
     width: '90%',
+    padding: `${theme.spacing(5)}px 0`,
     display: 'flex',
     flexDirection: 'column',
     margin: '20px auto'
   },
   iconsWrapper: {
+    width: '100%',
     height: 30,
     marginTop: 10,
     marginBottom: 20
@@ -20,8 +21,7 @@ const useStyles = makeStyles((theme) => ({
   name: {
     fontWeight: theme.typography.fontWeightBold,
     [theme.breakpoints.down('sm')]: {
-      width: 20,
-      fontSize: 15,
+      fontSize: 18,
     },
   },
   iconLogo: {
@@ -38,7 +38,10 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    [theme.breakpoints.down('sm')]: {
+      marginTop: theme.spacing(2),
+    },
   },
   logo: {
     width: 30,
@@ -54,7 +57,6 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: 300,
   },
   addressTitle: {
-    fontFamily: 'Noto Sans KR',
     fontWeight: 'bold',
     marginTop: 5,
     marginBottom: 5,
@@ -64,7 +66,6 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   addressLocation: {
-    fontFamily: 'Noto Sans KR',
     fontWeight: 300,
     fontSize: '15px',
   },
@@ -89,11 +90,11 @@ const useStyles = makeStyles((theme) => ({
       paddingLeft: '15px',
     },
     [theme.breakpoints.down('sm')]: {
-      marginLeft: 15
+      marginLeft: 15,
+      fontSize: 12,
     },
   },
   corp: {
-    fontFamily: 'Noto Sans KR',
     fontWeight: 300,
     marginTop: '15px',
     '& strong': {

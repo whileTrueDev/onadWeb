@@ -35,23 +35,33 @@ const style = makeStyles((theme) => ({
   },
   prev: {
     position: 'fixed',
-    width: 20,
-    height: 20,
-    backgroundColor: 'black',
-    left: 20,
-    bottom: 20,
+    width: 30,
+    height: 30,
+    borderRadius: '50%',
+    border: `2px solid ${theme.palette.common.black}`,
+    left: 10,
+    bottom: 30,
     display: 'none',
     zIndex: 400,
+    transform: 'translate(0%, -60%)',
+    [theme.breakpoints.down('md')]: {
+      display: 'inline',
+    }
   },
   next: {
-    width: 20,
-    height: 20,
-    backgroundColor: 'red',
-    left: 40,
-    bottom: 20,
     position: 'fixed',
+    width: 30,
+    height: 30,
+    borderRadius: '50%',
+    border: `2px solid ${theme.palette.common.black}`,
+    left: 10,
+    bottom: 30,
     display: 'none',
     zIndex: 400,
+    transform: 'translate(0%, 60%)',
+    [theme.breakpoints.down('md')]: {
+      display: 'inline',
+    }
   }
 }));
 

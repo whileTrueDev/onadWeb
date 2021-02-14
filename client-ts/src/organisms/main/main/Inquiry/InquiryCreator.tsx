@@ -83,12 +83,12 @@ function Inquire({ confirmClose }: Props): JSX.Element {
   return (
     <Container className={classes.root}>
       <div className={classes.titleWapper}>
-        <div className={classes.titleLine}/>
+        <div className={classes.titleLine2}/>
         <Typography variant="h4" display="inline" className={classes.title}>
           문의사항을 남겨주세요
         </Typography>
-        <Typography variant="subtitle2" display="inline" className={classes.subTitle}>
-          * 파란색 글씨는 필수 입력 사항입니다.
+        <Typography variant="subtitle2" display="inline" className={classes.subTitle2}>
+          * 초록색 글씨는 필수 입력 사항입니다.
         </Typography>
       </div>
       <Grid container className={classes.contentWraper} direction="column">
@@ -97,12 +97,12 @@ function Inquire({ confirmClose }: Props): JSX.Element {
 
             <Grid container direction="row" alignItems="center" className={classes.cardContent}>
               <Grid item xs={6} sm={6} md={4} className={classes.detailWrap}>
-                <Typography className={classes.detailTitle}>
+                <Typography className={classes.detailTitle2}>
                   채널 명 또는 활동 명
                 </Typography>
                 <Input
-                  className={classes.datailContent}
-                  classes={{ focused: classes.inputStyle }}
+                  className={classes.datailContent2}
+                  classes={{ focused: classes.inputStyle2 }}
                   autoComplete="off"
                   disableUnderline
                   onChange={onChange}
@@ -114,12 +114,12 @@ function Inquire({ confirmClose }: Props): JSX.Element {
                 />
               </Grid>
               <Grid item xs={6} sm={6} md={4} className={classes.detailWrap}>
-                <Typography className={classes.detailTitle}>
+                <Typography className={classes.detailTitle2}>
                   이메일
                 </Typography>
                 <Input
-                  className={classes.datailContent}
-                  classes={{ focused: classes.inputStyle }}
+                  className={classes.datailContent2}
+                  classes={{ focused: classes.inputStyle2 }}
                   type="email"
                   placeholder="email@email.com"
                   autoComplete="off"
@@ -130,12 +130,12 @@ function Inquire({ confirmClose }: Props): JSX.Element {
                 />
               </Grid>
               <Grid item xs={6} sm={6} md={4}className={classes.detailWrap}>
-                <Typography className={classes.detailTitle}>
+                <Typography className={classes.detailTitle2}>
                   활동 플랫폼
                 </Typography>
                 <Input
-                  className={classes.datailContent}
-                  classes={{ focused: classes.inputStyle }}
+                  className={classes.datailContent2}
+                  classes={{ focused: classes.inputStyle2 }}
                   autoComplete="off"
                   placeholder="Twitch, afreecaTv, Youtube 등"
                   onChange={onChange}
@@ -148,12 +148,12 @@ function Inquire({ confirmClose }: Props): JSX.Element {
 
             <Grid container className={classes.cardContent}>
               <Grid item xs={12} sm={12} className={classes.detailWrap}>
-                <Typography className={classes.detailTitle}>
+                <Typography className={classes.detailTitle2}>
                   내용
                 </Typography>
                 <Input
-                  classes={{ focused: classes.inputStyle }}
-                  className={classes.datailContent}
+                  classes={{ focused: classes.inputStyle2 }}
+                  className={classes.datailContent2}
                   disableUnderline
                   onChange={onChange}
                   multiline
@@ -173,7 +173,7 @@ function Inquire({ confirmClose }: Props): JSX.Element {
                       onChange={handleChange}
                       checked={checked}
                       classes={{
-                        root: classes.checkboxRoot,
+                        root: classes.checkboxRoot2,
                         checked: classes.checked,
                       }}
                     />
@@ -184,7 +184,7 @@ function Inquire({ confirmClose }: Props): JSX.Element {
               </Grid>
 
               <Button
-                className={classes.button}
+                className={classes.button2}
                 type="submit"
                 disabled={loading}
               >

@@ -3,17 +3,6 @@ import makeStyles from '@material-ui/core/styles/makeStyles';
 const useStyles = makeStyles((theme) => ({
   rightLink: {
     color: 'black',
-    marginLeft: 0,
-    fontSize: 18,
-    fontWeight: 'bold',
-    [theme.breakpoints.up('md')]: {
-      color: theme.palette.common.black,
-      margin: theme.spacing(0, 3),
-    },
-  },
-  rightLink2: {
-    color: 'black',
-    marginLeft: 0,
     fontSize: 18,
     fontWeight: 'bold',
     [theme.breakpoints.up('md')]: {
@@ -56,9 +45,6 @@ const useStyles = makeStyles((theme) => ({
         fontWeight: 'bold',
       },
     },
-  },
-  button: {
-    width: '100%',
   },
 }));
 

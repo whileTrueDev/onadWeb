@@ -11,7 +11,7 @@ router.route('/')
     // responseHelper.middleware.checkSessionExists,
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
       const searchQuery = `
-      SELECT cI.creatorId, cI.creatorName, cI.creatorLogo, A.followers, A.content, A.openHour
+      SELECT cI.creatorId, cI.creatorName, cI.creatorLogo, cI.creatorTwitchId, A.followers, A.content, A.openHour
       FROM creatorInfo as cI
 
       RIGHT JOIN

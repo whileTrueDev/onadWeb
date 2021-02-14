@@ -10,8 +10,7 @@ const styles = makeStyles((theme) => ({
     height: '100%'
   },
   mainTitle: {
-    fontWeight: 700,
-    fontFamily: ''
+    fontWeight: 700, 
   },
   loginButton: {
     width: 250,

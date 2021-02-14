@@ -74,6 +74,27 @@ const useStyles = makeStyles((theme) => ({
   },
   coloredLink: {
     color: theme.palette.primary.main,
+  },
+  mobileButton: {
+    fontWeight: theme.typography.fontWeightBold,
+    fontSize: 18,
+    borderRadius: 0,
+    [theme.breakpoints.up('md')]: {
+      fontWeight: theme.typography.fontWeightBold,
+      color: theme.palette.common.black,
+    },
+  },
+  rightMobile: {
+    display: 'flex',
+    [theme.breakpoints.up('md')]: {
+      display: 'none',
+    },
+  },
+  buttonWraper: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    padding: theme.spacing(1)
   }
 }));
 

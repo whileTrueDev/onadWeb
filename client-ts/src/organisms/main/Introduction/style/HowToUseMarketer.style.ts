@@ -8,11 +8,25 @@ const useStyles = makeStyles((theme) => ({
   marketerUse: {
     padding: theme.spacing(3, 4),
     wordBreak: 'keep-all',
-    hegiht: 250,
     borderTop: '1px solid #00a7ff',
     borderLeft: '1px solid #00a7ff',
     borderBottom: '1px solid #00a7ff',
-    position: 'relative'
+    position: 'relative',
+    [theme.breakpoints.between('sm', 'sm')]: {
+      padding: theme.spacing(1.5, 2),
+      borderLeft: 'none',
+      display: 'flex',
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center'
+    },
+    [theme.breakpoints.down('xs')]: {
+      borderLeft: 'none',
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
+      alignItems: 'center'
+    }
   },
   lineDecoration: {
     width: 130,
@@ -24,11 +38,17 @@ const useStyles = makeStyles((theme) => ({
   subTitle: {
     fontFamily: 'Noto Sans kr',
     color: 'white',
-    margin: theme.spacing(2, 0)
+    margin: theme.spacing(2, 0),
+    [theme.breakpoints.down('sm')]: {
+      fontSize: 35
+    }
   },
   useNumber: {
     color: '#196ee3',
-    fontWeight: theme.typography.fontWeightBold
+    fontWeight: theme.typography.fontWeightBold,
+    [theme.breakpoints.down('sm')]: {
+      fontSize: 45
+    }
   },
   Content: {
     marginTop: theme.spacing(2),
@@ -40,6 +60,9 @@ const useStyles = makeStyles((theme) => ({
     textDecoration: 'underline',
     '&:hover': {
       cursor: 'pointer'
+    },
+    [theme.breakpoints.down('sm')]: {
+      display: 'none'
     }
   },
   sampleLink: {
@@ -56,6 +79,9 @@ const useStyles = makeStyles((theme) => ({
     marginTop: 20,
     marginLeft: 10,
     borderRadius: 10,
+    [theme.breakpoints.down('md')]: {
+      marginLeft: 0,
+    }
   },
   guideLink:{
     color: 'white',

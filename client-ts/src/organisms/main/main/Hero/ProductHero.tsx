@@ -43,10 +43,10 @@ function ProductHero({
       {MainUserType ? (
         // 마케터 페이지
         <div className={classes.root}>
-          <Typography align="center" variant="h2" className={classes.mainTitle}>
+          <Typography align="center" variant="h4" className={classes.mainTitle}>
             {source.text.title}
           </Typography>
-          <Typography align="center" variant="h2" className={classes.mainTitle}>
+          <Typography align="center" variant="h4" className={classes.mainTitle}>
             <span>{source.text.beforeSubTitle}</span>
             <span>{source.text.subTitle}</span>
           </Typography>
@@ -62,10 +62,10 @@ function ProductHero({
         : (
         // 크리에이터 페이지
           <div className={classes.root}>
-            <Typography align="center" variant="h2" className={classes.mainTitle}>
+            <Typography align="center" variant="h4" className={classes.mainTitle}>
               {source.textCreator.title}
             </Typography>
-            <Typography align="center" variant="h2" className={classes.mainTitle}>
+            <Typography align="center" variant="h4" className={classes.mainTitle}>
               <span>{source.textCreator.subTitle}</span>
             </Typography>
 

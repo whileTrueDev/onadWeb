@@ -43,7 +43,7 @@ function Contact({ source, MainUserType }: ContactProps): JSX.Element {
         <div className={classes.top}>
           <div className={MainUserType ? classes.topLeftLine : classes.topLeftLine2}/>
           <div>
-            <Typography variant="h4" style={{marginBottom: '8px'}}className={classes.topText}>
+            <Typography variant="h4" style={{marginBottom: '8px'}} className={classes.topText}>
               {source.content.title}
             </Typography>
             <Typography variant="h5" className={classes.topText}>
@@ -52,7 +52,7 @@ function Contact({ source, MainUserType }: ContactProps): JSX.Element {
           </div>
         </div>
         <div className={MainUserType ? classes.bottom : classes.bottom2}>
-          <Typography variant="h2" className={classes.bottomText}>
+          <Typography variant="h3" className={classes.bottomText}>
             지금 바로 온애드와 시작해보세요
           </Typography>
           <Button
@@ -62,7 +62,7 @@ function Contact({ source, MainUserType }: ContactProps): JSX.Element {
           >
             <Typography variant="h4" className={classes.bottomText}>
               문의하기
-          </Typography>
+            </Typography>
           </Button>
         </div>
         <Dialog

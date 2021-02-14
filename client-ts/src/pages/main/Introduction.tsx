@@ -54,7 +54,7 @@ export default function Introduction({ match }: Props): JSX.Element {
                   </Typography>
                 ))}
                 <div className={classes.middleLine} />
-                <Typography variant="h5">
+                <Typography variant="h5" className={classes.subtitle} >
                   {textSource.heroSector.marketer.text.content}
                 </Typography>
                 <div className={classes.imageWrapper}>

@@ -21,14 +21,11 @@ import RenewalDialog from '../../organisms/main/popup/RenewalDialog';
 import { useDialog } from '../../utils/hooks';
 import CreatorLoginForm from '../../organisms/main/main/login/CreatorLoginForm';
 
-interface NowBroadcastData {
-  nowBroadcast: number;
-}
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   parallax: {
     width: '100%',
-    height: ' 100vh'
+    height: 'calc(100vh)',
   },
 }));
 
@@ -39,8 +36,11 @@ export default function Main(): JSX.Element {
 
   const classes = useStyles();
   const [psIndex, setPsIndex] = useState(0);
+  // const [isDown, setIsDown] = useState(false)
+  // const [offsetY, setOffsetY] = useState(0)
   const [nowBroadcast, setNowBroadcast] = useState(50);
   const [loading, setLoading] = useState(false);
+  const [timer, setTimer] = useState<NodeJS.Timeout>()
 
   const MainUserType = (history.location.pathname === '/marketer');
   React.useEffect(() => {
@@ -56,8 +56,18 @@ export default function Main(): JSX.Element {
           setLoading(true);
         }
       });
-  }, []);
 
+      // 모바일, 태블릿 pointer Event 임시 주석
+      // function onUp() {
+      //   setIsDown(false)
+      // }
+      // document.addEventListener('pointerup', onUp);
+
+      // return () => {
+      //   document.removeEventListener('pointerup', onUp);
+      // }
+  }, [psIndex]);
+  
   // **************************************************
   // 리뉴얼 추가 작업 - 리뉴얼 알림창 및 크리에이터 로그인 다이얼로그 오픈 토글
   // 크리에이터 로그인창
@@ -91,6 +101,12 @@ export default function Main(): JSX.Element {
             psIndex={psIndex}
             loading={loading}
             bgfixedRange={[0, 3]}
+            timer={timer}
+            setTimer={setTimer}
+            // isDown={isDown}
+            // setIsDown={setIsDown}
+            // offsetY={offsetY}
+            // setOffsetY={setOffsetY}
           >
             <div className={classes.parallax} data-parallax="0">
               { psIndex === 0 && (
@@ -105,7 +121,7 @@ export default function Main(): JSX.Element {
 
             <div className={classes.parallax} data-parallax="1">
               { psIndex === 1 && loading && (
-                <Indicator psIndex={psIndex} nowBroadcast={nowBroadcast} />
+                <Indicator nowBroadcast={nowBroadcast} />
               )}
             </div>
 
@@ -114,6 +130,7 @@ export default function Main(): JSX.Element {
                 <HowToUse
                   source={sources.howTo}
                   MainUserType={MainUserType}
+                  timer={timer}
                 />
               )}
             </div>
@@ -148,28 +165,69 @@ export default function Main(): JSX.Element {
       )
         : (
           <div>
-            {/* <NavTop isLogin={isLogin} logout={logout} MainUserType={MainUserType} />
-            <ParallaxScroll
-            >
-              <ProductHero
-                source={sources.hero}
-                MainUserType={MainUserType}
-                logout={logout}
-              />
-              <Indicator />
-              <HowToUse
-                source={sources.howTo}
-                MainUserType={MainUserType}
-              />
-              <Advantage source={sources.advantage} MainUserType={MainUserType}/>
-              <Reference />
-              <Contact source={sources.howitworks} MainUserType={MainUserType} />
+            <NavTop isLogin={isLogin} logout={logout} MainUserType={MainUserType} />
+              <ParallaxScroll
+                isLogin={isLogin}
+                setPsIndex={setPsIndex}
+                psIndex={psIndex}
+                loading={loading}
+                bgfixedRange={[0, 3]}
+                timer={timer}
+                setTimer={setTimer}
+              >
+                <div className={classes.parallax} data-parallax="0">
+                  { psIndex === 0 && (
+                    <ProductHero
+                      source={sources.hero}
+                      isLogin={isLogin}
+                      MainUserType={MainUserType}
+                      logout={logout}
+                    />
+                  )}
+                </div>
+
+                <div className={classes.parallax} data-parallax="1">
+                  { psIndex === 1 && loading && (
+                    <Indicator nowBroadcast={nowBroadcast} />
+                  )}
+                </div>
+
+                <div className={classes.parallax} data-parallax="2">
+                  { psIndex === 2 && (
+                    <HowToUse
+                      source={sources.howTo}
+                      MainUserType={MainUserType}
+                      timer={timer}
+                    />
+                  )}
+                </div>
+
+                <div className={classes.parallax} data-parallax="3">
+                  { psIndex === 3 && (
+                    <Advantage
+                      source={sources.advantage}
+                      MainUserType={MainUserType}
+                    />
+                  )}
+                </div>
+
+                <div className={classes.parallax} data-parallax="4">
+                  { psIndex === 4 && (
+                    <Reference />
+                  )}
+                </div>
+
+                <div className={classes.parallax} data-parallax="5">
+                  { psIndex === 5 && (
+                    <Contact source={sources.howitworks} MainUserType={MainUserType} />
+                  )}
+                </div>
             </ParallaxScroll>
             <RePasswordDialog
               repasswordOpen={repasswordOpen}
               setRepassword={setRepassword}
               logout={logout}
-            /> */}
+            />
 
             {/* 온애드 리뉴얼 관련 임시 팝업  */}
             <RenewalDialog

@@ -18,27 +18,23 @@ type SliderProps = {
 export const StyledSliderWrapper = styled.div<SliderWrapperProps>`
   overflow: hidden;
   position: relative;
-  padding: ${(props) => (props.zoomFactor / props.visibleSlides) * 0.7 + '%'} 0;
+  padding: ${(props) => (props.zoomFactor / props.visibleSlides) * 1 + '%'} 0;
   .button-wrapper {
     position: absolute;
-    width: 55px;
-    height: 100%;
-    top: 0;
-    padding: ${(props) => props.zoomFactor / 7 + '%'} 0;
+    width: 30px;
+    height: 30px;
+    bottom: 20px;
     box-sizing: border-box;
   }
   .button {
+    background-color: white;
     display: block;
-    background: rgb(4, 190, 254, 0.7);
-    border: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    color: #fff;
-    font-size: 3rem;
+    border: 2px solid #009efd;
+    width: 30px;
+    height: 30px;
+    color: #009efd;
     font-weight: 800;
     cursor: pointer;
-    outline: none;
     transition: all 0.7s;
     user-select: none;
     :hover {
@@ -46,37 +42,55 @@ export const StyledSliderWrapper = styled.div<SliderWrapperProps>`
     }
   }
   .button2 {
+    background-color: white;
     display: block;
-    background: #00d1c9;
-    opacity: 0.7;
-    border: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    color: #fff;
-    font-size: 3rem;
+    border: 2px solid #00d1c9;
+    width: 30px;
+    height: 30px;
+    color: #00d1c9;
     font-weight: 800;
     cursor: pointer;
-    outline: none;
     transition: all 0.7s;
     user-select: none;
     :hover {
       opacity: 0.5;
     }
   }
+  .backWrapper {
+    left: 50%;
+    bottom: 20px;
+    transform: translate(100%, 0);
+  }
+  .forwardWrapper {
+    left: 50%;
+    transform: translate(-100%, 0);
+    bottom: 20px;
+  }
   .back {
-    left: 0;
-    border-radius: 0 1.5vw 1.5vw 0;
+    border-radius: 50%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    position: relative;
   }
   .forward {
-    left: 0;
-    border-radius: 0 1.5vw 1.5vw 0;
+    border-radius: 50%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    position: relative;
+  }
+  .buttonArrow {
+    position: absolute;
+    font-size: 40px;
+    margin: 0;
+    top: -18px;
   }
 `;
 
 export const StyledSlider = styled.div<SliderProps>`
   display: flex;
-  padding: 0 55px;
+  padding: 0 40px;
   transition: transform ${(props) => props.pageTransition}ms ease;
   :hover ${StyledSliderItem} {
     transform: translateX(${(props) => props.transformValue});
