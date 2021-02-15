@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Button } from '@material-ui/core';
 // layout 계열 컴포넌트
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import NavTop from '../../organisms/main/layouts/NavTop';
@@ -20,13 +21,32 @@ import HOST from '../../config';
 import RenewalDialog from '../../organisms/main/popup/RenewalDialog';
 import { useDialog } from '../../utils/hooks';
 import CreatorLoginForm from '../../organisms/main/main/login/CreatorLoginForm';
+import openKakaoChat from '../../utils/openKakaoChat';
 
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   parallax: {
     width: '100%',
     height: 'calc(100vh)',
   },
+  root: {
+    position: 'relative'
+  },
+  kakaoContact: {
+    position: 'fixed',
+    right: 20,
+    bottom: 20,
+    width: 60,
+    height: 60,
+    zIndex: 300,
+    background: 'url(\'/contact/liveContact.svg\') no-repeat center center',
+    [theme.breakpoints.down('xs')]: {
+      width: 40,
+      height: 40,
+      right: 10,
+      bottom: 10,
+    }
+  }
 }));
 
 export default function Main(): JSX.Element {
@@ -91,7 +111,7 @@ export default function Main(): JSX.Element {
   }, []);
 
   return (
-    <div>
+    <div className={classes.root}>
       {MainUserType ? (
         <div>
           <NavTop isLogin={isLogin} logout={logout} MainUserType={MainUserType} />
@@ -103,6 +123,7 @@ export default function Main(): JSX.Element {
             bgfixedRange={[0, 3]}
             timer={timer}
             setTimer={setTimer}
+            renewalDialog={renewalDialog.open}
             // isDown={isDown}
             // setIsDown={setIsDown}
             // offsetY={offsetY}
@@ -174,6 +195,7 @@ export default function Main(): JSX.Element {
               bgfixedRange={[0, 3]}
               timer={timer}
               setTimer={setTimer}
+              renewalDialog={renewalDialog.open}
             >
               <div className={classes.parallax} data-parallax="0">
                 { psIndex === 0 && (
@@ -243,6 +265,10 @@ export default function Main(): JSX.Element {
             {/* *******************************  */}
           </div>
         )}
+      <Button
+        className={classes.kakaoContact}
+        onClick={openKakaoChat}
+      />
     </div>
   );
 }

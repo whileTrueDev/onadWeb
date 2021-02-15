@@ -2,6 +2,7 @@ import { makeStyles } from '@material-ui/core/styles';
 
 const styles = makeStyles((theme) => ({
   root: {
+    position: 'relative',
     padding: '0 10%',
     [theme.breakpoints.down('xs')]: {
       padding: '0 5%',
@@ -73,8 +74,22 @@ const styles = makeStyles((theme) => ({
   topImage: {
     width: '90%',
     margin: theme.spacing(5, 0)
+  },
+  kakaoContact: {
+    position: 'fixed',
+    right: 20,
+    bottom: 20,
+    width: 60,
+    height: 60,
+    zIndex: 300,
+    background: 'url(\'/contact/liveContact.svg\') no-repeat center center',
+    [theme.breakpoints.down('xs')]: {
+      width: 40,
+      height: 40,
+      right: 10,
+      bottom: 10,
+    }
   }
-
 }));
 
 export default styles;

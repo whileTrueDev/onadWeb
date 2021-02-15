@@ -1,5 +1,5 @@
 import React from 'react';
-import { Typography } from '@material-ui/core';
+import { Typography, Button } from '@material-ui/core';
 import shortid from 'shortid';
 import styles from './style/Introduction.style';
 import useLoginValue from '../../utils/hooks/useLoginValue';
@@ -12,7 +12,7 @@ import AppFooter from '../../organisms/main/layouts/AppFooter';
 import textSource from '../../organisms/main/Introduction/source/textSource';
 import Question from '../../organisms/main/Introduction/Question';
 import IntroContact from '../../organisms/main/main/Contact/IntroContact';
-
+import openKakaoChat from '../../utils/openKakaoChat';
 
 export interface Props {
   match: {
@@ -114,6 +114,10 @@ export default function Introduction({ match }: Props): JSX.Element {
             <AppFooter />
           </div>
         )}
+      <Button
+        className={classes.kakaoContact}
+        onClick={openKakaoChat}
+      />
     </div>
   );
 }

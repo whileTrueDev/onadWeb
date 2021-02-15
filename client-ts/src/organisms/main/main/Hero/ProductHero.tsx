@@ -51,12 +51,21 @@ function ProductHero({
             <span>{source.text.subTitle}</span>
           </Typography>
 
-          <Button
-            className={classes.loginButton}
-            onClick={() => handleDialogOpenClick('marketer')}
-          >
-            온애드 시작하기
-          </Button>
+          { !isLogin ? (
+            <Button
+              className={classes.loginButton}
+              onClick={() => handleDialogOpenClick('marketer')}
+            >
+              온애드 시작하기
+            </Button>
+          ) : (
+            <Button
+              className={classes.loginButton}
+              onClick={logout}
+            >
+              로그아웃
+            </Button>
+          )}
         </div>
       )
         : (
@@ -69,12 +78,21 @@ function ProductHero({
               <span>{source.textCreator.subTitle}</span>
             </Typography>
 
-            <Button
-              className={classes.loginButton2}
-              onClick={() => handleDialogOpenClick('creator')}
-            >
-            온애드 시작하기
-            </Button>
+            { !isLogin ? (
+              <Button
+                className={classes.loginButton2}
+                onClick={() => handleDialogOpenClick('creator')}
+              >
+                온애드 시작하기
+              </Button>
+            ) : (
+              <Button
+                className={classes.loginButton2}
+                onClick={logout}
+              >
+                로그아웃
+              </Button>
+            )}
           </div>
         )}
       <MarketerLoginForm

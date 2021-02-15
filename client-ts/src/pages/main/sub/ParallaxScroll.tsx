@@ -15,6 +15,7 @@ interface ParallaxScrollProps {
   bgfixedRange: number[];
   timer: NodeJS.Timeout | undefined;
   setTimer: React.Dispatch<React.SetStateAction<NodeJS.Timeout|undefined>>;
+  renewalDialog: boolean;
   // isDown: boolean;
   // setIsDown: React.Dispatch<React.SetStateAction<boolean>>
   // offsetY: number;
@@ -24,7 +25,7 @@ interface ParallaxScrollProps {
 function ParallaxScroll({
   children, psIndex,
   setPsIndex, isLogin, loading, bgfixedRange,
-  timer, setTimer
+  timer, setTimer, renewalDialog
   // isDown, setIsDown,
   // offsetY, setOffsetY
 }: ParallaxScrollProps): JSX.Element {
@@ -169,7 +170,7 @@ function ParallaxScroll({
         // parallaxWapper?.removeEventListener('pointermove', onMove);
         // window.removeEventListener('resize', handleHeight)
       };
-  }, [psIndex, isLogin, lastTime, loading, setPsIndex, timer, setTimer]);
+  }, [psIndex, isLogin, lastTime, loading, setPsIndex, timer, setTimer, renewalDialog]);
 
   return (
     <main className={classes.container} id="parallax">
