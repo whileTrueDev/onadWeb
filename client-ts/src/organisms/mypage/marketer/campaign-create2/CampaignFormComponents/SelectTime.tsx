@@ -2,7 +2,6 @@ import React from 'react';
 import {
   Grid, Typography
 } from '@material-ui/core';
-import SelectTimeDetail from './SelectTimeDetail';
 import GreenCheckbox from '../../../../../atoms/Checkbox/GreenCheckBox';
 import StyledSelectText from '../../../../../atoms/StyledSelectText';
 
@@ -10,6 +9,7 @@ import {
   CampaignCreateAction,
   CampaignCreateInterface
 } from '../reducers/campaignCreate.reducer';
+import TimeSelector from '../../../../../atoms/Selector/TimeSelector';
 
 interface SelectTimeProps {
   state: CampaignCreateInterface;
@@ -26,6 +26,10 @@ const SelectTime = (props: SelectTimeProps): JSX.Element => {
   function handleNotUse(): void {
     setToggle(false);
     dispatch({ type: 'RESET_TIME', value: '' });
+  }
+
+  function handleTimeSelect(timeIndex: number): void {
+    dispatch({ type: 'SET_TIME', value: String(timeIndex) });
   }
 
   return (
@@ -64,7 +68,9 @@ const SelectTime = (props: SelectTimeProps): JSX.Element => {
             style={{ cursor: 'pointer', maxWidth: 300 }}
           />
         </Grid>
-        {toggle ? (<SelectTimeDetail state={state} dispatch={dispatch} />) : null}
+        {toggle
+          ? (<TimeSelector timeList={state.campaignTime} onTimeSelect={handleTimeSelect} />)
+          : null}
       </Grid>
     </Grid>
   );

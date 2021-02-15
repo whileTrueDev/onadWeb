@@ -28,11 +28,13 @@ export interface CampaignInventoryProps {
   pageOffset: number;
   campaignData: UsePaginatedGetRequestObject<CampaignInterface>;
   pageLength: number;
+  handleCampaignSelect: (campaign: CampaignInterface) => void;
 }
 export default function CampaignInventory({
   pageOffset,
   campaignData,
   pageLength,
+  handleCampaignSelect,
 }: CampaignInventoryProps): JSX.Element {
   // ******************************************
   // 캠페인 On/Off 변경 요청 성공 핸들러
@@ -61,6 +63,7 @@ export default function CampaignInventory({
     e: React.MouseEvent<HTMLSpanElement>, cam: CampaignInterface
   ): void {
     setSelected(cam);
+    handleCampaignSelect(cam);
     menuAnchor.handleAnchorOpen(e);
   }
 
@@ -80,6 +83,14 @@ export default function CampaignInventory({
   const campaignDeleteDialog = useDialog(); // 캠페인 삭제
   const campaignReportDialog = useDialog(); // 캠페인 분석
 
+  // *****************************************
+  // 편한 개발을 위해. 삭제요망!
+  React.useEffect(() => {
+    if (campaignData.data) {
+      handleCampaignSelect(campaignData.data[0]);
+    }
+  });
+  // *****************************************
   return (
     <div style={{ height: 400, width: '100%' }}>
       <CustomDataGrid

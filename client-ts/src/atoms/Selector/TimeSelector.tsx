@@ -1,28 +1,51 @@
 import React from 'react';
 import classnames from 'classnames';
 import Grid from '@material-ui/core/Grid';
+import { makeStyles } from '@material-ui/core';
 
-import {
-  CampaignCreateAction,
-  CampaignCreateInterface
-} from '../reducers/campaignCreate.reducer';
-import SelectTimeDetailUseStyles from './SelectTimeDetail.style';
+
+const useStyles = makeStyles((theme) => ({
+  table: { width: '960px', borderCollapse: 'collapse' },
+  legend: {
+    display: 'flex', marginTop: theme.spacing(2), justifyContent: 'center', width: 960
+  },
+  legendItem: {
+    height: 20, width: 60, marginLeft: theme.spacing(1), marginRight: theme.spacing(1),
+  },
+  legendItemOn: { backgroundColor: theme.palette.primary.main, },
+  legendItemOff: { backgroundColor: theme.palette.action.disabled, },
+  thead: {
+    border: '1px',
+    padding: 'auto',
+    width: '40px',
+    textAlign: 'center'
+  },
+  td: {
+    border: '1px',
+    borderColor: theme.palette.common.black,
+    borderStyle: 'solid',
+    padding: 'auto',
+    textAlign: 'center',
+    height: '3px',
+    backgroundColor: theme.palette.action.disabled,
+  },
+  tdCheck: {
+    backgroundColor: theme.palette.primary.main,
+  },
+  font: { opacity: '0' }
+}));
 
 interface SelectTimeDetailProps {
-  state: CampaignCreateInterface;
-  dispatch: React.Dispatch<CampaignCreateAction>;
+  timeList: number[];
+  onTimeSelect?: (timeIndex: number) => void;
 }
 
-const SelectTimeDetail = (props: SelectTimeDetailProps): JSX.Element => {
-  const { state, dispatch } = props;
-  const classes = SelectTimeDetailUseStyles();
+export default function (props: SelectTimeDetailProps): JSX.Element {
+  const { timeList, onTimeSelect } = props;
+  const classes = useStyles();
 
   const times = [
     0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23];
-
-  const onUpdate = (index: number) => (): void => {
-    dispatch({ type: 'SET_TIME', value: String(index) });
-  };
 
   return (
     <Grid container item direction="column">
@@ -48,12 +71,12 @@ const SelectTimeDetail = (props: SelectTimeDetailProps): JSX.Element => {
               <td
                 className={classnames({
                   [classes.td]: true,
-                  [classes.tdCheck]: state.campaignTime.indexOf(String(index)) > -1
+                  [classes.tdCheck]: timeList.indexOf(index) > -1
                 })}
                 key={index}
-                onClick={onUpdate(index)}
+                onClick={(): void => (onTimeSelect ? onTimeSelect(index) : undefined)}
                 role="gridcell"
-                style={{ cursor: 'pointer' }}
+                style={{ cursor: onTimeSelect ? 'pointer' : 'default' }}
               >
                 <span className={classes.font}>
                   {index}
@@ -65,16 +88,4 @@ const SelectTimeDetail = (props: SelectTimeDetailProps): JSX.Element => {
       </table>
     </Grid>
   );
-};
-
-/**
- * @description
-  해당 캠페인의 시간대를 변경하는 컴포넌트
-
- * @param {*} state ? 시간대를 저장하는 object
- * @param {*} dispatch ? 시간대를 변경하는 func
-
- * @author 박찬우
- */
-
-export default SelectTimeDetail;
+}
