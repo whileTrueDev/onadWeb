@@ -4,7 +4,7 @@ import Button from '../../../../atoms/CustomButtons/Button';
 import CustomCard from '../../../../atoms/CustomCard';
 import StyledItemText from '../../../../atoms/StyledItemText';
 // utils
-import useImageUpload, { ImageData, UploadImage } from '../../../../utils/hooks/useImageUpload';
+import useBannerUpload, { ImageData, UploadImage } from '../../../../utils/hooks/useBannerUpload';
 import usePatchRequest from '../../../../utils/hooks/usePatchRequest';
 // style and interface
 import useAdPageImageUploadFormStyles from './AdPageImageUploadForm.style';
@@ -59,7 +59,7 @@ export default function LandingImageUploadForm({
   // 배경 이미지 업로드를 위한 훅
   const {
     imageUrl, readImage, handleImageChange
-  } = useImageUpload(userData.creatorBackgroundImage);
+  } = useBannerUpload(userData.creatorBackgroundImage);
 
   const backgroundPatch = usePatchRequest('/creator/ad-page', () => {
     handleSnackOpen();

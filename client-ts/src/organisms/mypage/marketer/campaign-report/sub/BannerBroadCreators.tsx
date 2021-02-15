@@ -13,7 +13,7 @@ import useAnchorEl from '../../../../../utils/hooks/useAnchorEl';
 
 
 interface BannerBroadCreatorsProps {
-  creatorsData: UseGetRequestObject<null | CreatorDataInterface[]>;
+  creatorsData: UseGetRequestObject<CreatorDataInterface[]>;
 }
 
 export default function BannerBroadCreators(

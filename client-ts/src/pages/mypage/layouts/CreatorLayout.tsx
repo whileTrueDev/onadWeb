@@ -50,6 +50,7 @@ const CreatorDashboard = (): JSX.Element => {
       />
       <div className={classes.mainPanel} ref={mainPanel} id="onad-main-panel">
         <Navbar
+          type="creator"
           handleDrawerToggle={handleDrawerToggle}
           routes={allRoutes.creator}
         />

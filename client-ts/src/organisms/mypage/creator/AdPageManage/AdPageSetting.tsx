@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
 
 interface AdPageSettingProps {
   userData: AdPageData;
-  setUserData: React.Dispatch<React.SetStateAction<AdPageData | null>>;
+  setUserData: React.Dispatch<React.SetStateAction<AdPageData | undefined>>;
   handleSnackOpen: () => void;
 }
 export default function AdPageSetting({

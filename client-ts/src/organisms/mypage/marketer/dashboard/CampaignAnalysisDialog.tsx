@@ -35,12 +35,12 @@ export default function CampaignReportDialog(props: CampaignReportDialogProps): 
     SLIDE_TIMEOUT, selectedCampaign, open, handleClose
   } = props;
 
-  const ipToGeoData = useGetRequest<{ campaignId: string }, GeoInterface[] | null>(
+  const ipToGeoData = useGetRequest<{ campaignId: string }, GeoInterface[]>(
     '/marketer/geo/v1/campaign/',
     { campaignId: selectedCampaign.campaignId }
   );
 
-  const reportData = useGetRequest<{ campaignId: string }, ReportInterface | null>(
+  const reportData = useGetRequest<{ campaignId: string }, ReportInterface>(
     '/marketer/campaign/analysis/v1',
     { campaignId: selectedCampaign.campaignId }
   );
@@ -50,12 +50,12 @@ export default function CampaignReportDialog(props: CampaignReportDialogProps): 
     { campaignId: selectedCampaign.campaignId }
   );
 
-  const creatorsData = useGetRequest<{ campaignId: string }, CreatorDataInterface[] | null>(
+  const creatorsData = useGetRequest<{ campaignId: string }, CreatorDataInterface[]>(
     '/marketer/campaign/analysis/creator-data',
     { campaignId: selectedCampaign.campaignId }
   );
 
-  const clickData = useGetRequest<{ campaignId: string }, HeatmapInterface[] | null>(
+  const clickData = useGetRequest<{ campaignId: string }, HeatmapInterface[]>(
     '/marketer/campaign/analysis/v1/heatmap',
     { campaignId: selectedCampaign.campaignId }
   );

@@ -7,7 +7,7 @@ import { lighten, makeStyles, Paper } from '@material-ui/core';
 import CustomDataGrid from '../../../../atoms/Table/CustomDataGrid';
 
 const useStyles = makeStyles((theme) => ({
-  new: { color: theme.palette.secondary.main },
+  new: { color: theme.palette.primary.main },
   title: {
     cursor: 'pointer',
     '&:hover': { textDecoration: 'underline' },
@@ -41,6 +41,7 @@ export interface NoticeData {
   regiDate: string;
   title: string;
   contents?: string;
+  target: string;
 }
 
 export default function NoticeTable({
@@ -71,8 +72,16 @@ export default function NoticeTable({
               ),
             },
             {
-              width: 150,
+              width: 80,
               headerName: '구분',
+              field: 'target',
+              renderCell: (_data): React.ReactElement => (
+                <Typography variant="body2" noWrap>{_data.row.target}</Typography>
+              )
+            },
+            {
+              width: 150,
+              headerName: '카테고리',
               field: 'topic',
               renderCell: (_data): React.ReactElement => (
                 <Typography variant="body2" noWrap>

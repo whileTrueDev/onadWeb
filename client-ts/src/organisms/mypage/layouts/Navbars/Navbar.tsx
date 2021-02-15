@@ -14,13 +14,14 @@ import AdminNavbarLinks from './AdminNavbarLinks';
 import { MypageRoute as MypageRouteType } from '../../../../pages/mypage/routes';
 
 export interface NavbarProps {
+  type: 'marketer' | 'creator';
   routes: MypageRouteType[];
   handleDrawerToggle: () => void;
 }
 
 function Navbar(props: NavbarProps): JSX.Element {
   const classes = useNavbarStyles();
-  const { routes, handleDrawerToggle } = props;
+  const { type, routes, handleDrawerToggle } = props;
 
   function makeBrand(): string {
     let routeName = '';
@@ -54,7 +55,7 @@ function Navbar(props: NavbarProps): JSX.Element {
           ) : (null)}
 
         </div>
-        <AdminNavbarLinks />
+        <AdminNavbarLinks type={type} />
       </Toolbar>
     </AppBar>
   );

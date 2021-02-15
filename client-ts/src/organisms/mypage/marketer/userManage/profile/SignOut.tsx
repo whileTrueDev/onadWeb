@@ -4,9 +4,9 @@ import Typography from '@material-ui/core/Typography';
 import axios from '../../../../../utils/axios';
 import SignOutDialog from './SignOutDialog';
 import HOST, { REACT_HOST } from '../../../../../config';
-import { UserInterface } from '../../office/interface';
+import { MarketerInfo } from '../../office/interface';
 
-const SignOut = (props: { userData: UserInterface }): JSX.Element => {
+const SignOut = (props: { userData: MarketerInfo }): JSX.Element => {
   const { userData } = props;
   const [open, openState] = useState(false);
   const [marketerId, setMarketerId] = useState<string>('');

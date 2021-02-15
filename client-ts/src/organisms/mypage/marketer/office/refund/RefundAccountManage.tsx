@@ -90,7 +90,7 @@ function RefundAccountForm(props: RefundAccountFormProps): JSX.Element {
           <Table
             rowPerPage={3}
             tableHead={initialData.columns}
-            tableData={(loading || (data === null)) ? initialData.data : data.data}
+            tableData={(loading || !data) ? initialData.data : data.data}
             pagination
           />
         </div>
