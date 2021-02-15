@@ -84,7 +84,7 @@ export const StyledSliderWrapper = styled.div<SliderWrapperProps>`
     position: absolute;
     font-size: 40px;
     margin: 0;
-    top: -18px;
+    line-height: 0.5;
   }
 `;
 
