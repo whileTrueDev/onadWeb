@@ -82,25 +82,27 @@ function Inquire({ confirmClose }: Props): JSX.Element {
 
   return (
     <Container className={classes.root}>
-      <Typography variant="h3" align="center" component="h2" className={classes.title}>
-        광고 문의하기
-      </Typography>
-      <Typography variant="h5" align="center" component="h2" className={classes.subTitle}>
-        광고 관련 문의를 남겨주시면 상담해드립니다
-      </Typography>
+      <div className={classes.titleWapper}>
+        <div className={classes.titleLine2} />
+        <Typography variant="h4" display="inline" className={classes.title}>
+          문의사항을 남겨주세요
+        </Typography>
+        <Typography variant="subtitle2" display="inline" className={classes.subTitle2}>
+          * 초록색 글씨는 필수 입력 사항입니다.
+        </Typography>
+      </div>
       <Grid container className={classes.contentWraper} direction="column">
         <form onSubmit={handleSubmit} className={classes.cardWrapper} ref={formRef}>
           <Grid container className={classes.card} direction="column">
 
             <Grid container direction="row" alignItems="center" className={classes.cardContent}>
-              <Grid item xs={6} sm={6} className={classes.detailWrap}>
-                <Typography className={classes.detailTitle}>
+              <Grid item xs={6} sm={6} md={4} className={classes.detailWrap}>
+                <Typography className={classes.detailTitle2}>
                   채널 명 또는 활동 명
-                  <Typography variant="caption" color="error">(필수)</Typography>
                 </Typography>
                 <Input
-                  className={classes.datailContent}
-                  classes={{ focused: classes.inputStyle }}
+                  className={classes.datailContent2}
+                  classes={{ focused: classes.inputStyle2 }}
                   autoComplete="off"
                   disableUnderline
                   onChange={onChange}
@@ -111,14 +113,13 @@ function Inquire({ confirmClose }: Props): JSX.Element {
                   name="name"
                 />
               </Grid>
-              <Grid item xs={6} sm={6} className={classes.detailWrap}>
-                <Typography className={classes.detailTitle}>
+              <Grid item xs={6} sm={6} md={4} className={classes.detailWrap}>
+                <Typography className={classes.detailTitle2}>
                   이메일
-                  <Typography variant="caption" color="error">(필수)</Typography>
                 </Typography>
                 <Input
-                  className={classes.datailContent}
-                  classes={{ focused: classes.inputStyle }}
+                  className={classes.datailContent2}
+                  classes={{ focused: classes.inputStyle2 }}
                   type="email"
                   placeholder="email@email.com"
                   autoComplete="off"
@@ -128,17 +129,13 @@ function Inquire({ confirmClose }: Props): JSX.Element {
                   name="email"
                 />
               </Grid>
-            </Grid>
-
-            <Grid container direction="row" alignItems="center" className={classes.cardContent}>
-              <Grid item xs={6} sm={6} className={classes.detailWrap}>
-                <Typography className={classes.detailTitle}>
+              <Grid item xs={6} sm={6} md={4} className={classes.detailWrap}>
+                <Typography className={classes.detailTitle2}>
                   활동 플랫폼
-                  <Typography variant="caption" color="error">(필수)</Typography>
                 </Typography>
                 <Input
-                  className={classes.datailContent}
-                  classes={{ focused: classes.inputStyle }}
+                  className={classes.datailContent2}
+                  classes={{ focused: classes.inputStyle2 }}
                   autoComplete="off"
                   placeholder="Twitch, afreecaTv, Youtube 등"
                   onChange={onChange}
@@ -151,13 +148,12 @@ function Inquire({ confirmClose }: Props): JSX.Element {
 
             <Grid container className={classes.cardContent}>
               <Grid item xs={12} sm={12} className={classes.detailWrap}>
-                <Typography className={classes.detailTitle}>
-                  문의 상세내용
-                  <Typography variant="caption" color="error">(필수)</Typography>
+                <Typography className={classes.detailTitle2}>
+                  내용
                 </Typography>
                 <Input
-                  classes={{ focused: classes.inputStyle }}
-                  className={classes.datailContent}
+                  classes={{ focused: classes.inputStyle2 }}
+                  className={classes.datailContent2}
                   disableUnderline
                   onChange={onChange}
                   multiline
@@ -177,7 +173,7 @@ function Inquire({ confirmClose }: Props): JSX.Element {
                       onChange={handleChange}
                       checked={checked}
                       classes={{
-                        root: classes.checkboxRoot,
+                        root: classes.checkboxRoot2,
                         checked: classes.checked,
                       }}
                     />
@@ -188,11 +184,11 @@ function Inquire({ confirmClose }: Props): JSX.Element {
               </Grid>
 
               <Button
-                className={classes.button}
+                className={classes.button2}
                 type="submit"
                 disabled={loading}
               >
-                문의 남기기
+                문의하기
                 {loading && (
                   <CircularProgress
                     disableShrink

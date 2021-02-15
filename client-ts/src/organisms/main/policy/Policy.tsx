@@ -8,15 +8,11 @@ function Policy(): JSX.Element {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
 
-  function handleTabChange(event: React.ChangeEvent<{}>, newValue: number): void {
-    setValue(newValue);
-  }
-
   return (
     <div className={classes.root}>
       <TabBar
         tabValue={value}
-        handleTabChange={handleTabChange}
+        handleTabChange={setValue}
       />
 
       {value === 0 ? (
