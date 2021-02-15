@@ -11,6 +11,7 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'center'
   },
   Selected: {
+    color: theme.palette.common.black,
     marginRight: theme.spacing(2),
     width: 190,
     '&:hover': {
@@ -19,6 +20,7 @@ const useStyles = makeStyles((theme) => ({
     borderBottom: '1px solid black'
   },
   notSelected: {
+    color: theme.palette.common.black,
     marginRight: theme.spacing(2),
     width: 190,
     '&:hover': {

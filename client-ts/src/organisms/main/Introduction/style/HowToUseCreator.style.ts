@@ -55,7 +55,7 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 15
   },
   sampleLink: {
-    fontFamily: 'Noto Sans kr',
+    color: theme.palette.common.black,
     border: '1px solid black',
     borderRadius: 10,
     width: 100,

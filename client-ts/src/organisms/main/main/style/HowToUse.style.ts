@@ -86,7 +86,7 @@ const styles = makeStyles((theme) => ({
   button: {
     borderRadius: 15,
     padding: theme.spacing(1, 2),
-    border: `2px solid ${theme.palette.divider}`,
+    border: `2px solid ${theme.palette.common.black}`,
     [theme.breakpoints.down('xs')]: {
       width: 170,
       height: 50

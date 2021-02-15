@@ -95,7 +95,7 @@ function Question({ MainUserType }: { MainUserType: string }): JSX.Element {
             <AccordionDetails>
               <div className={classes.ansWrapper}>
                 {ansData[index].split('\n').map((ans: string) => (
-                  <Typography key={shortid.generate()}>{`${ans}`}</Typography>
+                  <Typography key={shortid.generate()} className={classes.color}>{`${ans}`}</Typography>
                 ))}
               </div>
             </AccordionDetails>

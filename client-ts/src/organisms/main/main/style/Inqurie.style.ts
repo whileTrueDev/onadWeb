@@ -88,6 +88,7 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: theme.spacing(5),
   },
   datailContent: {
+    color: theme.palette.common.black,
     minWidth: 30,
     marginTop: theme.spacing(2),
     borderRadius: 10,
@@ -100,6 +101,7 @@ const useStyles = makeStyles((theme) => ({
     }
   },
   datailContent2: {
+    color: theme.palette.common.black,
     minWidth: 30,
     marginTop: theme.spacing(2),
     borderRadius: 10,
