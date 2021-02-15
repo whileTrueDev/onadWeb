@@ -73,7 +73,7 @@ const useStyles = makeStyles((theme) => ({
     color: '#29e3dc',
     fontFamily: 'Noto Sans kr',
     fontWeight: theme.typography.fontWeightBold
-  },  
+  },
 }));
 
 export default useStyles;

@@ -1,11 +1,11 @@
 import React from 'react';
 import shortid from 'shortid';
-import Styles from './style/Question.style';
-import textSource from './source/textSource';
 import { Typography, withStyles } from '@material-ui/core';
 import MuiAccordion from '@material-ui/core/Accordion';
 import MuiAccordionSummary from '@material-ui/core/AccordionSummary';
 import MuiAccordionDetails from '@material-ui/core/AccordionDetails';
+import textSource from './source/textSource';
+import Styles from './style/Question.style';
 
 interface QandAData {
   id: string;
@@ -19,9 +19,9 @@ function Question({ MainUserType }: { MainUserType: string }): JSX.Element {
 
   let ansData;
   if (MainUserType === 'marketer') {
-    ansData = textSource.answerMarketer
+    ansData = textSource.answerMarketer;
   } else {
-    ansData = textSource.answerCreator
+    ansData = textSource.answerCreator;
   }
 
   let source;
@@ -48,7 +48,7 @@ function Question({ MainUserType }: { MainUserType: string }): JSX.Element {
     },
     expanded: {},
   }))(MuiAccordion);
-  
+
   const AccordionSummary = withStyles(() => ({
     root: {
       borderBottom: '1px solid #c6c6c6',
@@ -65,7 +65,7 @@ function Question({ MainUserType }: { MainUserType: string }): JSX.Element {
     },
     expanded: {},
   }))(MuiAccordionSummary);
-  
+
   const AccordionDetails = withStyles((theme) => ({
     root: {
       padding: theme.spacing(2),
@@ -73,34 +73,34 @@ function Question({ MainUserType }: { MainUserType: string }): JSX.Element {
     },
   }))(MuiAccordionDetails);
 
-  function QnAAccordion({source, ansData}: any): JSX.Element {
+  function QnAAccordion({ source, ansData }: any): JSX.Element {
     const [expanded, setExpanded] = React.useState<string | false>('one');
-  
+
     const handleChange = (row: any) => (event: React.ChangeEvent<{}>, newExpanded: boolean) => {
       setExpanded(newExpanded ? row.id : false);
     };
-  
+
     return (
       <div>
         {source.map((row: any, index: number) => (
-            <Accordion square expanded={expanded === row.id} onChange={handleChange(row)} key={shortid.generate()}>
-              <AccordionSummary aria-controls={`${row.id}d-content`} id={`${row.id}d-header`}>
-                <div className={classes.titleWrapper}>
-                  <div className={classes.ansTitle}>
-                    {row.text}
-                  </div>
-                  <img src="/introduction/arrow.svg" alt="arrow" className={classes.arrow}/>
-                </div>   
-              </AccordionSummary>
-              <AccordionDetails>
-                <div className={classes.ansWrapper}>
-                  {ansData[index].split('\n').map((ans: string) => (
-                    <Typography key={shortid.generate()}>{`${ans}`}</Typography>
-                  ))}
+          <Accordion square expanded={expanded === row.id} onChange={handleChange(row)} key={shortid.generate()}>
+            <AccordionSummary aria-controls={`${row.id}d-content`} id={`${row.id}d-header`}>
+              <div className={classes.titleWrapper}>
+                <div className={classes.ansTitle}>
+                  {row.text}
                 </div>
-              </AccordionDetails>
-            </Accordion>
-          ))}
+                <img src="/introduction/arrow.svg" alt="arrow" className={classes.arrow} />
+              </div>
+            </AccordionSummary>
+            <AccordionDetails>
+              <div className={classes.ansWrapper}>
+                {ansData[index].split('\n').map((ans: string) => (
+                  <Typography key={shortid.generate()}>{`${ans}`}</Typography>
+                ))}
+              </div>
+            </AccordionDetails>
+          </Accordion>
+        ))}
       </div>
     );
   }
@@ -110,7 +110,7 @@ function Question({ MainUserType }: { MainUserType: string }): JSX.Element {
       <Typography variant="h3" className={MainUserType === 'marketer' ? classes.title : classes.title2}>
         FAQ
       </Typography>
-      <QnAAccordion source={source} ansData={ansData}/>
+      <QnAAccordion source={source} ansData={ansData} />
     </div>
   );
 }

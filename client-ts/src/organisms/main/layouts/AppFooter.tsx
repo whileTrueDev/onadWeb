@@ -48,18 +48,18 @@ function AppFooter(): JSX.Element {
           <Typography className={classes.name} variant="h5" display="inline">
             While True
           </Typography>
-          <img src="/logo/iconLogo.png" alt="iconlogo" className={classes.iconLogo}/>
+          <img src="/logo/iconLogo.png" alt="iconlogo" className={classes.iconLogo} />
         </Grid>
       </Grid>
 
-      <Grid container direction="row" style={{marginBottom: '12px'}} className={classes.Wrapper} >
+      <Grid container direction="row" style={{ marginBottom: '12px' }} className={classes.Wrapper}>
         <Typography variant="subtitle2" className={classes.addressLocation}>
           부산광역시 금정구 장전온천천로 51 테라스파크 3층 313호 와일트루
         </Typography>
         <div className={classes.logoWrapper}>
-          <a href="https://m.blog.naver.com/PostList.nhn?blogId=wt_onad"><img src="/footer/blog.svg" alt="blog" className={classes.logo}/></a>
-          <a href="https://www.instagram.com/official.onad/"><img src="/footer/instagram.svg" alt="instagram" className={classes.logo}/></a>
-          <a href="https://www.youtube.com/channel/UCN3w7jS8f6t2fPROcRY7e0g"><img src="/footer/youtube.svg" alt="youtube" className={classes.logo}/></a>
+          <a href="https://m.blog.naver.com/PostList.nhn?blogId=wt_onad"><img src="/footer/blog.svg" alt="blog" className={classes.logo} /></a>
+          <a href="https://www.instagram.com/official.onad/"><img src="/footer/instagram.svg" alt="instagram" className={classes.logo} /></a>
+          <a href="https://www.youtube.com/channel/UCN3w7jS8f6t2fPROcRY7e0g"><img src="/footer/youtube.svg" alt="youtube" className={classes.logo} /></a>
         </div>
       </Grid>
 

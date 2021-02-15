@@ -40,7 +40,7 @@ export default function Main(): JSX.Element {
   // const [offsetY, setOffsetY] = useState(0)
   const [nowBroadcast, setNowBroadcast] = useState(50);
   const [loading, setLoading] = useState(false);
-  const [timer, setTimer] = useState<NodeJS.Timeout>()
+  const [timer, setTimer] = useState<NodeJS.Timeout>();
 
   const MainUserType = (history.location.pathname === '/marketer');
   React.useEffect(() => {
@@ -57,17 +57,17 @@ export default function Main(): JSX.Element {
         }
       });
 
-      // 모바일, 태블릿 pointer Event 임시 주석
-      // function onUp() {
-      //   setIsDown(false)
-      // }
-      // document.addEventListener('pointerup', onUp);
+    // 모바일, 태블릿 pointer Event 임시 주석
+    // function onUp() {
+    //   setIsDown(false)
+    // }
+    // document.addEventListener('pointerup', onUp);
 
-      // return () => {
-      //   document.removeEventListener('pointerup', onUp);
-      // }
+    // return () => {
+    //   document.removeEventListener('pointerup', onUp);
+    // }
   }, [psIndex]);
-  
+
   // **************************************************
   // 리뉴얼 추가 작업 - 리뉴얼 알림창 및 크리에이터 로그인 다이얼로그 오픈 토글
   // 크리에이터 로그인창
@@ -166,62 +166,62 @@ export default function Main(): JSX.Element {
         : (
           <div>
             <NavTop isLogin={isLogin} logout={logout} MainUserType={MainUserType} />
-              <ParallaxScroll
-                isLogin={isLogin}
-                setPsIndex={setPsIndex}
-                psIndex={psIndex}
-                loading={loading}
-                bgfixedRange={[0, 3]}
-                timer={timer}
-                setTimer={setTimer}
-              >
-                <div className={classes.parallax} data-parallax="0">
-                  { psIndex === 0 && (
-                    <ProductHero
-                      source={sources.hero}
-                      isLogin={isLogin}
-                      MainUserType={MainUserType}
-                      logout={logout}
-                    />
-                  )}
-                </div>
+            <ParallaxScroll
+              isLogin={isLogin}
+              setPsIndex={setPsIndex}
+              psIndex={psIndex}
+              loading={loading}
+              bgfixedRange={[0, 3]}
+              timer={timer}
+              setTimer={setTimer}
+            >
+              <div className={classes.parallax} data-parallax="0">
+                { psIndex === 0 && (
+                <ProductHero
+                  source={sources.hero}
+                  isLogin={isLogin}
+                  MainUserType={MainUserType}
+                  logout={logout}
+                />
+                )}
+              </div>
 
-                <div className={classes.parallax} data-parallax="1">
-                  { psIndex === 1 && loading && (
-                    <Indicator nowBroadcast={nowBroadcast} />
-                  )}
-                </div>
+              <div className={classes.parallax} data-parallax="1">
+                { psIndex === 1 && loading && (
+                <Indicator nowBroadcast={nowBroadcast} />
+                )}
+              </div>
 
-                <div className={classes.parallax} data-parallax="2">
-                  { psIndex === 2 && (
-                    <HowToUse
-                      source={sources.howTo}
-                      MainUserType={MainUserType}
-                      timer={timer}
-                    />
-                  )}
-                </div>
+              <div className={classes.parallax} data-parallax="2">
+                { psIndex === 2 && (
+                <HowToUse
+                  source={sources.howTo}
+                  MainUserType={MainUserType}
+                  timer={timer}
+                />
+                )}
+              </div>
 
-                <div className={classes.parallax} data-parallax="3">
-                  { psIndex === 3 && (
-                    <Advantage
-                      source={sources.advantage}
-                      MainUserType={MainUserType}
-                    />
-                  )}
-                </div>
+              <div className={classes.parallax} data-parallax="3">
+                { psIndex === 3 && (
+                <Advantage
+                  source={sources.advantage}
+                  MainUserType={MainUserType}
+                />
+                )}
+              </div>
 
-                <div className={classes.parallax} data-parallax="4">
-                  { psIndex === 4 && (
-                    <Reference />
-                  )}
-                </div>
+              <div className={classes.parallax} data-parallax="4">
+                { psIndex === 4 && (
+                <Reference />
+                )}
+              </div>
 
-                <div className={classes.parallax} data-parallax="5">
-                  { psIndex === 5 && (
-                    <Contact source={sources.howitworks} MainUserType={MainUserType} />
-                  )}
-                </div>
+              <div className={classes.parallax} data-parallax="5">
+                { psIndex === 5 && (
+                <Contact source={sources.howitworks} MainUserType={MainUserType} />
+                )}
+              </div>
             </ParallaxScroll>
             <RePasswordDialog
               repasswordOpen={repasswordOpen}

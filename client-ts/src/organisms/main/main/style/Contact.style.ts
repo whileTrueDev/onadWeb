@@ -77,7 +77,7 @@ const styles = makeStyles((theme) => ({
     backgroundColor: '#00d1c9',
     justifyContent: 'center',
     alignItems: 'center',
-  }, 
+  },
   bottomText: {
     fontWeight: theme.typography.fontWeightBold,
     color: theme.palette.common.white,
@@ -91,7 +91,7 @@ const styles = makeStyles((theme) => ({
   button: {
     marginTop: theme.spacing(4),
     width: 250,
-    height : 80,
+    height: 80,
     border: '3px solid white',
     borderRadius: 30,
     '&:hover': {
@@ -99,17 +99,17 @@ const styles = makeStyles((theme) => ({
     },
     [theme.breakpoints.down('sm')]: {
       width: 220,
-      height : 70,
+      height: 70,
     },
     [theme.breakpoints.down('xs')]: {
       width: 180,
-      height : 60,
+      height: 60,
     }
   },
   button2: {
     marginTop: theme.spacing(4),
     width: 250,
-    height : 80,
+    height: 80,
     border: '3px solid white',
     borderRadius: 30,
     '&:hover': {

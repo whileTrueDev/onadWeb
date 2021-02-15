@@ -1,13 +1,13 @@
 import styled from 'styled-components';
 
-type Props = {
+export type Props = {
   zoomFactor: number;
   slideMargin: number;
   visibleSlides: number;
   className: string;
 };
 
-export const StyledSliderItem = styled.div<Props>`
+const StyledSliderItem = styled.div<Props>`
   margin: 0 ${(props) => props.slideMargin}px;
   transition: transform 500ms ease;
   border-radius: 20px;
@@ -27,12 +27,12 @@ export const StyledSliderItem = styled.div<Props>`
     transform: scale(${(props) => props.zoomFactor / 100 + 1}) !important;
   }
   :hover ~ * {
-    transform: translateX(${(props) => props.zoomFactor / 2 + '%'}) !important;
+    transform: translateX(${(props) => `${props.zoomFactor / 2}%`}) !important;
   }
   &.left {
     transform-origin: left;
     :hover ~ * {
-      transform: translateX(${(props) => props.zoomFactor + '%'}) !important;
+      transform: translateX(${(props) => `${props.zoomFactor}%`}) !important;
     }
   }
   &.right {
@@ -42,3 +42,5 @@ export const StyledSliderItem = styled.div<Props>`
     }
   }
 `;
+
+export default StyledSliderItem;

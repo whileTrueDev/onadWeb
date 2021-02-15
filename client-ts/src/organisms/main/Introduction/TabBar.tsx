@@ -1,10 +1,10 @@
 import React from 'react';
-import useStyles from './style/TabBar.style';
 import { Typography, Button } from '@material-ui/core';
+import useStyles from './style/TabBar.style';
 
 interface Props {
   tabValue: number;
-  handleTabChange: React.Dispatch<React.SetStateAction<number>>
+  handleTabChange: React.Dispatch<React.SetStateAction<number>>;
 }
 
 function TabBar({ tabValue, handleTabChange }: Props): JSX.Element {
@@ -15,9 +15,9 @@ function TabBar({ tabValue, handleTabChange }: Props): JSX.Element {
       <Button className={tabValue ? classes.notSelected : classes.Selected} onClick={() => handleTabChange(0)}>
         <Typography variant="subtitle1">마케터 이용약관</Typography>
       </Button>
-      <Button className={tabValue ? classes.Selected : classes.notSelected } onClick={() => handleTabChange(1)}>
+      <Button className={tabValue ? classes.Selected : classes.notSelected} onClick={() => handleTabChange(1)}>
         <Typography variant="subtitle1">크리에이터 이용약관</Typography>
-      </Button> 
+      </Button>
     </div>
   );
 }

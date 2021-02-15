@@ -83,7 +83,7 @@ function Inquire({ confirmClose }: Props): JSX.Element {
   return (
     <Container className={classes.root}>
       <div className={classes.titleWapper}>
-        <div className={classes.titleLine}/>
+        <div className={classes.titleLine} />
         <Typography variant="h4" display="inline" className={classes.title}>
           문의사항을 남겨주세요
         </Typography>

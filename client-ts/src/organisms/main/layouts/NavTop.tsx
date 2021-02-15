@@ -23,7 +23,6 @@ function NavTop({
   MainUserType,
   logout, isLogin
 }: NavTopProps): JSX.Element {
-
   const classes = useStyles();
 
   const trigger = useScrollTrigger({ threshold: 100, disableHysteresis: true });
@@ -60,7 +59,7 @@ function NavTop({
       );
     }
     return <LoginPopover type="회원가입" MainUserType={MainUserType} logout={logout} />;
-  }
+  };
 
   // 로그인 버튼
   const LoginButton = () => {
@@ -157,12 +156,12 @@ function NavTop({
 
   return (
     <>
-      <AppBar position="fixed" className={classNames({[classes.root]: !trigger, [classes.rootTriger]: trigger })}>
+      <AppBar position="fixed" className={classNames({ [classes.root]: !trigger, [classes.rootTriger]: trigger })}>
         <Toolbar className={classes.toolbar}>
           <div className={classes.blank} />
 
           <a href="/" className={classes.logo}>
-            <img src="/logo/textLogo.png" alt="textlogo" className={classes.logo}/>
+            <img src="/logo/textLogo.png" alt="textlogo" className={classes.logo} />
           </a>
 
           <div className={classes.tabButtonWrap}>
@@ -193,7 +192,7 @@ function NavTop({
 
             {/* 로그인 버튼 */}
             <LoginButton />
-            
+
           </div>
 
           <div className={classes.rightMobile}>

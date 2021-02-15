@@ -1,7 +1,6 @@
 import makeStyles from '@material-ui/core/styles/makeStyles';
 
 
-
 const useStyles = makeStyles((theme) => ({
   root: {
     height: '100%',
@@ -68,7 +67,7 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: '50%',
     backgroundOrigin: 'border-box',
     backgroundClip: 'content-box, border-box',
-    margin: theme.spacing(2,2),
+    margin: theme.spacing(2, 2),
     width: 160,
     height: 160,
     display: 'flex',
@@ -85,7 +84,7 @@ const useStyles = makeStyles((theme) => ({
     }
   },
   liveCreator: {
-    margin: theme.spacing(2,2),
+    margin: theme.spacing(2, 2),
     width: 150,
     height: 150,
     borderRadius: '50%',
@@ -106,7 +105,7 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: '50%',
     backgroundOrigin: 'border-box',
     backgroundClip: 'content-box, border-box',
-    margin: theme.spacing(1,5),
+    margin: theme.spacing(1, 5),
     width: 60,
     height: 60,
     display: 'flex',

@@ -50,11 +50,11 @@ const Styles = makeStyles((theme) => ({
   ansTitle: {
     fontSize: 20
   },
-  arrow: {  
+  arrow: {
     width: 25,
     height: 12
   }
-  
+
 }));
 
 export default Styles;

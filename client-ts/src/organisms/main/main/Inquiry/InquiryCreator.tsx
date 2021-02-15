@@ -83,7 +83,7 @@ function Inquire({ confirmClose }: Props): JSX.Element {
   return (
     <Container className={classes.root}>
       <div className={classes.titleWapper}>
-        <div className={classes.titleLine2}/>
+        <div className={classes.titleLine2} />
         <Typography variant="h4" display="inline" className={classes.title}>
           문의사항을 남겨주세요
         </Typography>
@@ -129,7 +129,7 @@ function Inquire({ confirmClose }: Props): JSX.Element {
                   name="email"
                 />
               </Grid>
-              <Grid item xs={6} sm={6} md={4}className={classes.detailWrap}>
+              <Grid item xs={6} sm={6} md={4} className={classes.detailWrap}>
                 <Typography className={classes.detailTitle2}>
                   활동 플랫폼
                 </Typography>

@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { StyledSliderItem } from './SliderItems.style';
+import StyledSliderItem from './SliderItems.style';
 
 type SliderWrapperProps = {
   zoomFactor: number;
@@ -18,7 +18,7 @@ type SliderProps = {
 export const StyledSliderWrapper = styled.div<SliderWrapperProps>`
   overflow: hidden;
   position: relative;
-  padding: ${(props) => (props.zoomFactor / props.visibleSlides) * 1 + '%'} 0;
+  padding: ${(props) => `${(props.zoomFactor / props.visibleSlides) * 1}%`} 0;
   .button-wrapper {
     position: absolute;
     width: 30px;

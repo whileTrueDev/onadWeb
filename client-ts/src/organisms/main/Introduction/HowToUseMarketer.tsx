@@ -9,7 +9,7 @@ import useDialog from '../../../utils/hooks/useDialog';
 // import Dialog from './Dialog';
 import Inquire from '../main/Inquiry/Inquiry';
 import Dialog from '../../../atoms/Dialog/Dialog';
-import CustomButtons from '../../../atoms/CustomButtons/Button'
+import CustomButtons from '../../../atoms/CustomButtons/Button';
 
 
 interface Props {
@@ -32,7 +32,7 @@ function HowToUsemarketer({ source }: Props): JSX.Element {
       <Grid container>
         <Grid item xs={12} md={3} className={classes.marketerUse}>
           <div className={classes.lineDecoration} />
-          <Typography variant="h1"className={classes.useNumber}>1</Typography>
+          <Typography variant="h1" className={classes.useNumber}>1</Typography>
           <Typography variant="h5" className={classes.semiTitle}>
             배너등록
           </Typography>
@@ -49,15 +49,15 @@ function HowToUsemarketer({ source }: Props): JSX.Element {
           </Button>
           <CustomButtons
             className={classes.guideButton}
-            load={true}
+            load
           >
             <a href="/howtouse/배너제작가이드.pdf" download="온애드배너제작가이드" className={classes.guideLink}>배너가이드</a>
           </CustomButtons>
-          
+
         </Grid>
         <Grid item xs={12} md={3} className={classes.marketerUse}>
           <div className={classes.lineDecoration} />
-          <Typography variant="h1"className={classes.useNumber}>2</Typography>
+          <Typography variant="h1" className={classes.useNumber}>2</Typography>
           <Typography variant="h5" className={classes.semiTitle}>
             캠페인생성
           </Typography>
@@ -72,7 +72,7 @@ function HowToUsemarketer({ source }: Props): JSX.Element {
         </Grid>
         <Grid item xs={12} md={3} className={classes.marketerUse}>
           <div className={classes.lineDecoration} />
-          <Typography variant="h1"className={classes.useNumber}>3</Typography>
+          <Typography variant="h1" className={classes.useNumber}>3</Typography>
           <Typography variant="h5" className={classes.semiTitle}>
             광고송출확인
           </Typography>
@@ -87,7 +87,7 @@ function HowToUsemarketer({ source }: Props): JSX.Element {
         </Grid>
         <Grid item xs={12} md={3} className={classes.marketerUse}>
           <div className={classes.lineDecoration} />
-          <Typography variant="h1"className={classes.useNumber}>4</Typography>
+          <Typography variant="h1" className={classes.useNumber}>4</Typography>
           <Typography variant="h5" className={classes.semiTitle}>
             세금계산서/현금영수증
           </Typography>

@@ -73,7 +73,7 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 16,
     marginTop: 20
   },
-  guideButton:{
+  guideButton: {
     color: 'white',
     background: '#4083ff',
     marginTop: 20,
@@ -83,7 +83,7 @@ const useStyles = makeStyles((theme) => ({
       marginLeft: 0,
     }
   },
-  guideLink:{
+  guideLink: {
     color: 'white',
     fontFamily: 'Noto Sans kr',
     fontSize: 16,

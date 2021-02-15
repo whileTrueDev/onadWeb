@@ -1,20 +1,20 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import { Typography, Button, Divider } from '@material-ui/core';
-import classNames from 'classnames'
+import classNames from 'classnames';
 import useStyles from './style/IntroduceMiddle.style';
 
 
 export default function IntroduceTop({ userType }: { userType: string | boolean }): JSX.Element {
   const classes = useStyles();
 
-  const [platform, setFlatform] = useState(true)
+  const [platform, setFlatform] = useState(true);
 
   function handlePlatform(platform: string): void {
     switch (platform) {
       case 'afreecatv':
-        return setFlatform(false)
+        return setFlatform(false);
       default:
-        return setFlatform(true)
+        return setFlatform(true);
     }
   }
 
@@ -32,7 +32,7 @@ export default function IntroduceTop({ userType }: { userType: string | boolean 
             >
               트위치
             </Button>
-              
+
             <Button
               onClick={() => handlePlatform('afreecatv')}
               className={classNames({
@@ -45,7 +45,7 @@ export default function IntroduceTop({ userType }: { userType: string | boolean 
           </div>
 
           <div className={classes.cotentWrapper}>
-            <div className={platform ? classes.leftLine : classes.leftLine2}/>
+            <div className={platform ? classes.leftLine : classes.leftLine2} />
             <div className={classes.content}>
 
               <div className={classes.contentTop}>
@@ -60,7 +60,7 @@ export default function IntroduceTop({ userType }: { userType: string | boolean 
                     상품 및 브랜드의 인지도를 높이는 광고입니다.
                   </Typography>
                 </div>
-                <img src={platform ? "/introduction/twitch_cpm.jpg" : "/introduction/afreecatv_cpm.jpg"} alt="exCPM" className={classes.exImage}/>
+                <img src={platform ? '/introduction/twitch_cpm.jpg' : '/introduction/afreecatv_cpm.jpg'} alt="exCPM" className={classes.exImage} />
               </div>
 
               <div className={classes.contentBottom}>
@@ -91,7 +91,7 @@ export default function IntroduceTop({ userType }: { userType: string | boolean 
                 </div>
               </div>
 
-              <Divider className={classes.divider}/>
+              <Divider className={classes.divider} />
 
               <div className={classes.contentTop}>
                 <div>
@@ -106,7 +106,7 @@ export default function IntroduceTop({ userType }: { userType: string | boolean 
 
               <div className={classes.contentBottom}>
                 <div className={classes.subContent2}>
-                  <img src={platform ? "/introduction/twitch_cpc.png" : "/introduction/afreecatv_cpc.png"} alt="exCPC" className={classes.exImage2}/>
+                  <img src={platform ? '/introduction/twitch_cpc.png' : '/introduction/afreecatv_cpc.png'} alt="exCPC" className={classes.exImage2} />
                 </div>
                 <div className={classes.subContent2}>
                   <Typography variant="h4" className={classes.subtitle}>
@@ -130,10 +130,11 @@ export default function IntroduceTop({ userType }: { userType: string | boolean 
                 </div>
               </div>
 
-              {platform && 
+              {platform
+              && (
               <div className={classes.contentBottom}>
                 <div className={classes.subContent2}>
-                  <img src="/introduction/twitch_chat.jpg" alt="exChat" className={classes.exImage2}/>
+                  <img src="/introduction/twitch_chat.jpg" alt="exChat" className={classes.exImage2} />
                 </div>
                 <div className={classes.subContent2}>
                   <Typography variant="h4" className={classes.subtitle}>
@@ -156,7 +157,7 @@ export default function IntroduceTop({ userType }: { userType: string | boolean 
                   </Typography>
                 </div>
               </div>
-              }
+              )}
             </div>
           </div>
         </div>
@@ -173,7 +174,7 @@ export default function IntroduceTop({ userType }: { userType: string | boolean 
               >
                 트위치
               </Button>
-                
+
               <Button
                 onClick={() => handlePlatform('afreecatv')}
                 className={classNames({
@@ -186,7 +187,7 @@ export default function IntroduceTop({ userType }: { userType: string | boolean 
             </div>
 
             <div className={classes.cotentWrapper}>
-              <div className={platform ? classes.leftLine3 : classes.leftLine4}/>
+              <div className={platform ? classes.leftLine3 : classes.leftLine4} />
               <div className={classes.content}>
 
                 <div className={classes.contentTop}>
@@ -201,7 +202,7 @@ export default function IntroduceTop({ userType }: { userType: string | boolean 
                       상품 및 브랜드의 인지도를 높이는 광고입니다.
                     </Typography>
                   </div>
-                  <img src={platform ? "/introduction/twitch_cpm.jpg" : "/introduction/afreecatv_cpm.jpg"} alt="exCPM" className={classes.exImage}/>
+                  <img src={platform ? '/introduction/twitch_cpm.jpg' : '/introduction/afreecatv_cpm.jpg'} alt="exCPM" className={classes.exImage} />
                 </div>
 
                 <div className={classes.contentBottom}>
@@ -232,7 +233,7 @@ export default function IntroduceTop({ userType }: { userType: string | boolean 
                   </div>
                 </div>
 
-                <Divider className={classes.divider}/>
+                <Divider className={classes.divider} />
 
                 <div className={classes.contentTop}>
                   <div>
@@ -247,7 +248,7 @@ export default function IntroduceTop({ userType }: { userType: string | boolean 
 
                 <div className={classes.contentBottom}>
                   <div className={classes.subContent2}>
-                    <img src={platform ? "/introduction/twitch_cpc.png" : "/introduction/afreecatv_cpc.png"} alt="exCPC" className={classes.exImage2}/>
+                    <img src={platform ? '/introduction/twitch_cpc.png' : '/introduction/afreecatv_cpc.png'} alt="exCPC" className={classes.exImage2} />
                   </div>
                   <div className={classes.subContent2}>
                     <Typography variant="h4" className={classes.subtitle3}>
@@ -271,10 +272,11 @@ export default function IntroduceTop({ userType }: { userType: string | boolean 
                   </div>
                 </div>
 
-                {platform && 
+                {platform
+                && (
                 <div className={classes.contentBottom}>
                   <div className={classes.subContent2}>
-                    <img src="/introduction/twitch_chat.jpg" alt="exChat" className={classes.exImage2}/>
+                    <img src="/introduction/twitch_chat.jpg" alt="exChat" className={classes.exImage2} />
                   </div>
                   <div className={classes.subContent2}>
                     <Typography variant="h4" className={classes.subtitle3}>
@@ -297,7 +299,7 @@ export default function IntroduceTop({ userType }: { userType: string | boolean 
                     </Typography>
                   </div>
                 </div>
-                }
+                )}
               </div>
             </div>
           </div>

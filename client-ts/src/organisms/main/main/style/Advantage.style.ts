@@ -31,11 +31,11 @@ const styles = makeStyles((theme) => ({
     },
   },
   face: {
-    position:'absolute',
-    top:0,
-    left:0,
-    width:'100%',
-    height:'100%',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
     transition: 'all 2s ease'
   },
   figure: {

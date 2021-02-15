@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
     color: 'white',
     marginBottom: theme.spacing(2),
   },
-  count: {  
+  count: {
     color: 'white',
     fontWeight: theme.typography.fontWeightBold,
     [theme.breakpoints.down('xs')]: {

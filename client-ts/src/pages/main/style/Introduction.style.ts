@@ -21,7 +21,7 @@ const styles = makeStyles((theme) => ({
   middleLine: {
     width: 350,
     borderBottom: '3px solid #a8deff',
-    margin: theme.spacing(1.5,0),
+    margin: theme.spacing(1.5, 0),
     [theme.breakpoints.down('xs')]: {
       width: 300,
     }
@@ -29,7 +29,7 @@ const styles = makeStyles((theme) => ({
   middleLine2: {
     width: 350,
     borderBottom: '3px solid #a8ffcd',
-    margin: theme.spacing(1.5,0),
+    margin: theme.spacing(1.5, 0),
     [theme.breakpoints.down('xs')]: {
       width: 300,
     }
@@ -56,7 +56,7 @@ const styles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
-    alignItems: 'center', 
+    alignItems: 'center',
     overflow: 'hidden',
     position: 'relative',
   },
@@ -74,7 +74,7 @@ const styles = makeStyles((theme) => ({
     width: '90%',
     margin: theme.spacing(5, 0)
   }
-  
+
 }));
 
 export default styles;

@@ -9,7 +9,7 @@ const useStyles = makeStyles((theme) => ({
     }
   },
   titleWapper: {
-    margin: theme.spacing(3,0),
+    margin: theme.spacing(3, 0),
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'flex-start',

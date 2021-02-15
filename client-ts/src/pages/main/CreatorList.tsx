@@ -19,7 +19,7 @@ export interface ContractedCreatorListData<T> {
   followers: number;
   content: T;
   openHour: T;
-  creatorTwitchId: T
+  creatorTwitchId: T;
 }
 
 const COLORS = [
@@ -97,8 +97,8 @@ export default function CreatorList(): JSX.Element {
         </Typography>
       )
     },
-  ]
-  
+  ];
+
   return (
     <div>
       <NavTop isLogin={isLogin} logout={logout} MainUserType />
@@ -110,7 +110,8 @@ export default function CreatorList(): JSX.Element {
           <Typography variant="h3" className={classes.title}>LIVE STREAMING</Typography>
           {/* 라이브 스트리밍 리스트 */}
           <div className={classes.liveContainer}>
-            { !ContractedCreatorList.loading && ContractedCreatorList.data && !LiveCreatorList.loading && LiveCreatorList.data && (
+            { !ContractedCreatorList.loading && ContractedCreatorList.data
+            && !LiveCreatorList.loading && LiveCreatorList.data && (
               LiveCreator?.map((row) => (
                 <div className={classes.liveCreatorWrapper} key={shortid.generate()} style={{ backgroundImage: `${getRandomColors(COLORS)}` }}>
                   <a href={`https://www.twitch.tv/${row.creatorTwitchId}`} className={classes.liveCreator}>
@@ -130,7 +131,7 @@ export default function CreatorList(): JSX.Element {
           {/* 전체 크리에이터 리스트 */}
           <div>
             <Table
-              columns={!isSmWidth ? Columns : (!isXsWidth ? Columns.slice(0,3): Columns.slice(0,1))}
+              columns={!isSmWidth ? Columns : (!isXsWidth ? Columns.slice(0, 3) : Columns.slice(0, 1))}
               data={ContractedCreatorList.data || []}
               isLoading={ContractedCreatorList.loading || false}
               components={{

@@ -10,7 +10,7 @@ interface SliderProps {
   pageTransition: number;
   MainUserType: boolean;
 
-};
+}
 
 const numberOfSlides = (maxVisibleSlides: number, windowWidth: number) => {
   if (windowWidth > 1650) return maxVisibleSlides;
@@ -32,24 +32,24 @@ function Slider({
   const [currentPage, setCurrentPage] = useState(0);
   const [transformValue, setTransformValue] = useState(`-${zoomFactor / 2}%`);
   const [scrollSize, setScrollSize] = useState(0);
-  
+
   const sliderRef = useRef<HTMLElement>(null);
 
   const visibleSlides = numberOfSlides(maxVisibleSlides, scrollSize);
   const totalPages: number = Math.ceil(children.length / visibleSlides) - 1;
 
   useEffect(() => {
-    //@ts-ignore
-    const resizeObserver = new ResizeObserver(entries => {
+    // @ts-ignore
+    const resizeObserver = new ResizeObserver((entries) => {
       setScrollSize(entries[0].contentRect.width);
     });
     resizeObserver.observe(sliderRef.current);
 
     return () => {
       if (sliderRef.current) {
-        resizeObserver.unobserve(sliderRef.current)
+        resizeObserver.unobserve(sliderRef.current);
       }
-    }
+    };
   }, [sliderRef]);
 
   useEffect(() => {
@@ -72,10 +72,11 @@ function Slider({
     disableHoverEffect();
     setCurrentPage(currentPage + (forward ? 1 : -1));
 
-    if (sliderRef.current)
+    if (sliderRef.current) {
       sliderRef.current.style.transform = `translate3D(-${
         (currentPage + (forward ? 1 : -1)) * scrollSize
       }px, 0, 0)`;
+    }
   };
 
   const handleMouseOver = (id: number) => {
@@ -87,9 +88,9 @@ function Slider({
     setTransformValue(`-${zoomFactor / 2}%`);
   };
 
-  const assignSlideClass = (index: number, visibleSlides: number) => {
+  const assignSlideClass = (index: number, visibleSlides1: number) => {
     const classes = ['right', 'left'];
-    return classes[index % visibleSlides] || '';
+    return classes[index % visibleSlides1] || '';
   };
 
   return (
@@ -118,21 +119,29 @@ function Slider({
         ))}
       </StyledSlider>
       {currentPage > 0 && (
-        <div className='button-wrapper backWrapper'>
-          <button className={MainUserType ? 'button back' : 'button2 back'} onClick={() => handleSlideMove(false)}>
-            <span className='buttonArrow'>&#8249;</span>
+        <div className="button-wrapper backWrapper">
+          <button
+            type="button"
+            className={MainUserType ? 'button back' : 'button2 back'}
+            onClick={() => handleSlideMove(false)}
+          >
+            <span className="buttonArrow">&#8249;</span>
           </button>
         </div>
       )}
       {currentPage !== totalPages && (
-        <div className='button-wrapper forwardWrapper'>
-          <button className={MainUserType ? 'button forward' : 'button2 forward'} onClick={() => handleSlideMove(true)}>
-            <span className='buttonArrow'>&#8250;</span>
+        <div className="button-wrapper forwardWrapper">
+          <button
+            type="button"
+            className={MainUserType ? 'button forward' : 'button2 forward'}
+            onClick={() => handleSlideMove(true)}
+          >
+            <span className="buttonArrow">&#8250;</span>
           </button>
         </div>
       )}
     </StyledSliderWrapper>
   );
-};
+}
 
 export default Slider;

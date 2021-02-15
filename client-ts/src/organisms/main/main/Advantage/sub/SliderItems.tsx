@@ -1,16 +1,16 @@
 import React from 'react';
-import { StyledSliderItem } from './SliderItems.style';
+import StyledSliderItem from './SliderItems.style';
 
 interface SliderItemProps {
   slideClass: string;
-  zoomFactor: number
-  id: number
+  zoomFactor: number;
+  id: number;
   callback: (id: number) => void;
   callbackOut: () => void;
   slideMargin: number;
   visibleSlides: number;
-  children: React.ReactNode
-};
+  children: React.ReactNode;
+}
 
 function SliderItem({
   children,
@@ -22,7 +22,7 @@ function SliderItem({
   slideMargin,
   visibleSlides
 }: SliderItemProps): JSX.Element {
-  return(
+  return (
     <StyledSliderItem
       zoomFactor={zoomFactor}
       slideMargin={slideMargin}
@@ -31,9 +31,9 @@ function SliderItem({
       onMouseOver={() => callback(id)}
       onMouseOut={callbackOut}
     >
-        {children}
+      {children}
     </StyledSliderItem>
-  )
+  );
 }
 
 export default SliderItem;

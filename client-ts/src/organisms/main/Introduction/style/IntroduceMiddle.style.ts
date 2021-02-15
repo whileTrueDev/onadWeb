@@ -72,7 +72,7 @@ const useStyles = makeStyles((theme) => ({
   },
   cotentWrapper: {
     width: '100%',
-    display:'flex',
+    display: 'flex',
     flexDirection: 'row',
     alignItems: 'flex-start',
     justifyContent: 'center',
@@ -166,12 +166,12 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'flex-start',
-    margin: theme.spacing(8,0),
+    margin: theme.spacing(8, 0),
     [theme.breakpoints.down('xs')]: {
       flexDirection: 'column',
       justifyContent: 'center',
       alignItems: 'flex-start',
-      margin: theme.spacing(3,0),
+      margin: theme.spacing(3, 0),
     },
   },
   subContent: {
@@ -194,14 +194,14 @@ const useStyles = makeStyles((theme) => ({
   exImage: {
     width: 500,
     height: 250,
-    margin: theme.spacing(0,4),
+    margin: theme.spacing(0, 4),
     [theme.breakpoints.down('md')]: {
       width: 400,
       height: 200,
-      margin: theme.spacing(0,1),
+      margin: theme.spacing(0, 1),
     },
     [theme.breakpoints.down('sm')]: {
-      margin: theme.spacing(0,0),
+      margin: theme.spacing(0, 0),
       width: 300,
       height: 150,
     },
@@ -214,14 +214,14 @@ const useStyles = makeStyles((theme) => ({
   exImage2: {
     width: 460,
     height: 256,
-    marginRight: theme.spacing(0,4),
+    marginRight: theme.spacing(0, 4),
     [theme.breakpoints.down('md')]: {
       width: 330,
       height: 184,
-      margin: theme.spacing(0,1),
+      margin: theme.spacing(0, 1),
     },
     [theme.breakpoints.down('sm')]: {
-      margin: theme.spacing(0,0),
+      margin: theme.spacing(0, 0),
       width: 250,
       height: 139,
     },
@@ -291,7 +291,7 @@ const useStyles = makeStyles((theme) => ({
     width: '100%',
     marginBottom: theme.spacing(10)
   }
-  
+
 }));
 
 export default useStyles;

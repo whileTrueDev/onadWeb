@@ -27,13 +27,13 @@ const style = makeStyles((theme) => ({
     width: 15,
     height: 15,
     borderRadius: '50%',
-    border: `1px solid #826AEF`,
+    border: '1px solid #826AEF',
     marginBottom: 7.5,
     '&:hover': {
       cursor: 'pointer'
     }
   },
-  prev: {
+  naviIcon: {
     position: 'fixed',
     width: 30,
     height: 30,
@@ -43,26 +43,13 @@ const style = makeStyles((theme) => ({
     bottom: 30,
     display: 'none',
     zIndex: 400,
-    transform: 'translate(0%, -60%)',
+    textAlign: 'center',
     [theme.breakpoints.down('md')]: {
       display: 'inline',
     }
   },
-  next: {
-    position: 'fixed',
-    width: 30,
-    height: 30,
-    borderRadius: '50%',
-    border: `2px solid ${theme.palette.common.black}`,
-    left: 10,
-    bottom: 30,
-    display: 'none',
-    zIndex: 400,
-    transform: 'translate(0%, 60%)',
-    [theme.breakpoints.down('md')]: {
-      display: 'inline',
-    }
-  }
+  prev: { transform: 'translate(0%, -60%)' },
+  next: { transform: 'translate(0%, 60%)' }
 }));
 
 export default style;

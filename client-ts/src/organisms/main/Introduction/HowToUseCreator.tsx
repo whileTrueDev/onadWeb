@@ -27,7 +27,7 @@ function HowToUseCreator({ source }: Source): JSX.Element {
 
         <Grid item xs={12} md={3} className={classes.creatorUse}>
           <div className={classes.lineDecoration} />
-          <Typography variant="h1"className={classes.useNumber}>1</Typography>
+          <Typography variant="h1" className={classes.useNumber}>1</Typography>
           <Typography variant="h5" className={classes.semiTitle}>
             계약하기
           </Typography>
@@ -43,7 +43,7 @@ function HowToUseCreator({ source }: Source): JSX.Element {
 
         <Grid item xs={12} md={3} className={classes.creatorUse}>
           <div className={classes.lineDecoration} />
-          <Typography variant="h1"className={classes.useNumber}>2</Typography>
+          <Typography variant="h1" className={classes.useNumber}>2</Typography>
           <Typography variant="h5" className={classes.semiTitle}>
             광고페이지 설정
           </Typography>
@@ -58,7 +58,7 @@ function HowToUseCreator({ source }: Source): JSX.Element {
         </Grid>
         <Grid item xs={12} md={3} className={classes.creatorUse}>
           <div className={classes.lineDecoration} />
-          <Typography variant="h1"className={classes.useNumber}>3</Typography>
+          <Typography variant="h1" className={classes.useNumber}>3</Typography>
           <Typography variant="h5" className={classes.semiTitle}>
             광고 송출 설정
           </Typography>
@@ -73,7 +73,7 @@ function HowToUseCreator({ source }: Source): JSX.Element {
         </Grid>
         <Grid item xs={12} md={3} className={classes.creatorUse}>
           <div className={classes.lineDecoration} />
-          <Typography variant="h1"className={classes.useNumber}>4</Typography>
+          <Typography variant="h1" className={classes.useNumber}>4</Typography>
           <Typography variant="h5" className={classes.semiTitle}>
             수익정산
           </Typography>

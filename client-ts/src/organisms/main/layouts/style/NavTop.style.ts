@@ -52,7 +52,7 @@ const useStyles = makeStyles((theme) => ({
   tabButton: {
     color: theme.palette.common.black,
     fontWeight: theme.typography.fontWeightRegular,
-    margin: theme.spacing(0 ,1),
+    margin: theme.spacing(0, 1),
     height: 40,
     fontSize: 18,
     borderRadius: 0,
@@ -65,7 +65,7 @@ const useStyles = makeStyles((theme) => ({
     color: theme.palette.common.black,
     height: 40,
     fontWeight: theme.typography.fontWeightRegular,
-    margin: theme.spacing(0 ,1),
+    margin: theme.spacing(0, 1),
     fontSize: 18,
     [theme.breakpoints.up('md')]: {
       fontWeight: theme.typography.fontWeightBold,
