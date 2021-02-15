@@ -45,12 +45,14 @@ function Slider({
     });
     resizeObserver.observe(sliderRef.current);
 
+    const sliderRefCurrent = sliderRef.current;
+
     return () => {
-      if (sliderRef.current) {
-        resizeObserver.unobserve(sliderRef.current);
+      if (sliderRefCurrent) {
+        resizeObserver.unobserve(sliderRefCurrent);
       }
     };
-  }, [sliderRef]);
+  }, []);
 
   useEffect(() => {
     if (sliderRef && sliderRef.current) {
