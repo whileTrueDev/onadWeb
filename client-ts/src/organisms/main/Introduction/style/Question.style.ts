@@ -53,6 +53,9 @@ const Styles = makeStyles((theme) => ({
   arrow: {
     width: 25,
     height: 12
+  },
+  color: {
+    color: theme.palette.common.black
   }
 
 }));

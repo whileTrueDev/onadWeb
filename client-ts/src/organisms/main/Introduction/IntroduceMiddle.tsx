@@ -108,26 +108,49 @@ export default function IntroduceTop({ userType }: { userType: string | boolean 
                 <div className={classes.subContent2}>
                   <img src={platform ? '/introduction/twitch_cpc.png' : '/introduction/afreecatv_cpc.png'} alt="exCPC" className={classes.exImage2} />
                 </div>
-                <div className={classes.subContent2}>
-                  <Typography variant="h4" className={classes.subtitle}>
-                    광고 형식 1. 패널
-                  </Typography>
-                  <Typography variant="subtitle1">
-                    크리에이터가 개인방송 플랫폼(채널)에
-                  </Typography>
-                  <Typography variant="subtitle1">
-                    패널을 등록한 후 패널 클릭시
-                  </Typography>
-                  <Typography variant="subtitle1">
-                    지금 송출되는 광고 랜딩페이지로 이동합니다.
-                  </Typography>
-                  <Typography variant="h4" className={classes.subtitle2}>
-                    과금 기준
-                  </Typography>
-                  <Typography variant="subtitle1">
-                    100 CPC (클릭당 비용 = 100원 / 1회 클릭)
-                  </Typography>
-                </div>
+                {platform ? (
+                  <div className={classes.subContent2}>
+                    <Typography variant="h4" className={classes.subtitle}>
+                      광고 형식 1. 패널
+                    </Typography>
+                    <Typography variant="subtitle1">
+                      크리에이터가 개인방송 플랫폼(채널)에
+                    </Typography>
+                    <Typography variant="subtitle1">
+                      패널을 등록한 후 패널 클릭시
+                    </Typography>
+                    <Typography variant="subtitle1">
+                      지금 송출되는 광고 랜딩페이지로 이동합니다.
+                    </Typography>
+                    <Typography variant="h4" className={classes.subtitle2}>
+                      과금 기준
+                    </Typography>
+                    <Typography variant="subtitle1">
+                      100 CPC (클릭당 비용 = 100원 / 1회 클릭)
+                    </Typography>
+                  </div>
+                ) : (
+                  <div className={classes.subContent2}>
+                    <Typography variant="h4" className={classes.subtitle}>
+                      광고 형식 : 방송국 배너
+                    </Typography>
+                    <Typography variant="subtitle1">
+                      크리에이터가 개인방송 플랫폼(채널)에
+                    </Typography>
+                    <Typography variant="subtitle1">
+                      플로팅 혹은 하단 배너를 등록한 후 배너 클릭시
+                    </Typography>
+                    <Typography variant="subtitle1">
+                      지금 송출되는 광고 랜딩페이지로 이동합니다.
+                    </Typography>
+                    <Typography variant="h4" className={classes.subtitle2}>
+                      과금 기준
+                    </Typography>
+                    <Typography variant="subtitle1">
+                      100 CPC (클릭당 비용 = 100원 / 1회 클릭)
+                    </Typography>
+                  </div>
+                )}
               </div>
 
               {platform
@@ -138,13 +161,13 @@ export default function IntroduceTop({ userType }: { userType: string | boolean 
                 </div>
                 <div className={classes.subContent2}>
                   <Typography variant="h4" className={classes.subtitle}>
-                    광고 형식 1. 패널
+                    광고 형식 2. 채팅봇
                   </Typography>
                   <Typography variant="subtitle1">
                     크리에이터가 개인방송 플랫폼(채널)에
                   </Typography>
                   <Typography variant="subtitle1">
-                    패널을 등록한 후 패널 클릭시
+                    채팅봇 등록 후 채팅봇 클릭 시
                   </Typography>
                   <Typography variant="subtitle1">
                     지금 송출되는 광고 랜딩페이지로 이동합니다.
@@ -250,26 +273,49 @@ export default function IntroduceTop({ userType }: { userType: string | boolean 
                   <div className={classes.subContent2}>
                     <img src={platform ? '/introduction/twitch_cpc.png' : '/introduction/afreecatv_cpc.png'} alt="exCPC" className={classes.exImage2} />
                   </div>
-                  <div className={classes.subContent2}>
-                    <Typography variant="h4" className={classes.subtitle3}>
-                      광고 형식 1. 패널
-                    </Typography>
-                    <Typography variant="subtitle1">
-                      크리에이터가 개인방송 플랫폼(채널)에
-                    </Typography>
-                    <Typography variant="subtitle1">
-                      패널을 등록한 후 패널 클릭시
-                    </Typography>
-                    <Typography variant="subtitle1">
-                      지금 송출되는 광고 랜딩페이지로 이동합니다.
-                    </Typography>
-                    <Typography variant="h4" className={classes.subtitle4}>
-                      과금 기준
-                    </Typography>
-                    <Typography variant="subtitle1">
-                      100 CPC (클릭당 비용 = 100원 / 1회 클릭)
-                    </Typography>
-                  </div>
+                  {platform ? (
+                    <div className={classes.subContent2}>
+                      <Typography variant="h4" className={classes.subtitle3}>
+                        광고 형식 1. 패널
+                      </Typography>
+                      <Typography variant="subtitle1">
+                        크리에이터가 개인방송 플랫폼(채널)에
+                      </Typography>
+                      <Typography variant="subtitle1">
+                        패널을 등록한 후 패널 클릭시
+                      </Typography>
+                      <Typography variant="subtitle1">
+                        지금 송출되는 광고 랜딩페이지로 이동합니다.
+                      </Typography>
+                      <Typography variant="h4" className={classes.subtitle4}>
+                        과금 기준
+                      </Typography>
+                      <Typography variant="subtitle1">
+                        100 CPC (클릭당 비용 = 100원 / 1회 클릭)
+                      </Typography>
+                    </div>
+                  ) : (
+                    <div className={classes.subContent2}>
+                      <Typography variant="h4" className={classes.subtitle3}>
+                        광고 형식 : 방송국 배너
+                      </Typography>
+                      <Typography variant="subtitle1">
+                        크리에이터가 개인방송 플랫폼(채널)에
+                      </Typography>
+                      <Typography variant="subtitle1">
+                        플로팅 혹은 하단 배너를 등록한 후 배너 클릭시
+                      </Typography>
+                      <Typography variant="subtitle1">
+                        지금 송출되는 광고 랜딩페이지로 이동합니다.
+                      </Typography>
+                      <Typography variant="h4" className={classes.subtitle4}>
+                        과금 기준
+                      </Typography>
+                      <Typography variant="subtitle1">
+                        100 CPC (클릭당 비용 = 100원 / 1회 클릭)
+                      </Typography>
+                    </div>
+                  )}
                 </div>
 
                 {platform
@@ -280,13 +326,13 @@ export default function IntroduceTop({ userType }: { userType: string | boolean 
                   </div>
                   <div className={classes.subContent2}>
                     <Typography variant="h4" className={classes.subtitle3}>
-                      광고 형식 1. 패널
+                      광고 형식 2. 채팅봇
                     </Typography>
                     <Typography variant="subtitle1">
                       크리에이터가 개인방송 플랫폼(채널)에
                     </Typography>
                     <Typography variant="subtitle1">
-                      패널을 등록한 후 패널 클릭시
+                      채팅봇 등록 후 채팅봇 클릭 시
                     </Typography>
                     <Typography variant="subtitle1">
                       지금 송출되는 광고 랜딩페이지로 이동합니다.

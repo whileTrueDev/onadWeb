@@ -107,7 +107,7 @@ const useStyles = makeStyles((theme) => ({
       marginRight: theme.spacing(2.5)
     },
     [theme.breakpoints.down('xs')]: {
-      height: 1900,
+      height: 1500,
     },
   },
   leftLine3: {

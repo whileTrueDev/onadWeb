@@ -84,13 +84,13 @@ export const StyledSliderWrapper = styled.div<SliderWrapperProps>`
     position: absolute;
     font-size: 40px;
     margin: 0;
-    top: -18px;
+    line-height: 0.5;
   }
 `;
 
 export const StyledSlider = styled.div<SliderProps>`
   display: flex;
-  padding: 0 40px;
+  padding: 0 60px;
   transition: transform ${(props) => props.pageTransition}ms ease;
   :hover ${StyledSliderItem} {
     transform: translateX(${(props) => props.transformValue});
