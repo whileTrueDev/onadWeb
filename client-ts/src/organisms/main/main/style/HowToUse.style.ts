@@ -35,7 +35,8 @@ const styles = makeStyles((theme) => ({
     left: 0,
     width: '100%',
     height: '100%',
-    animation: '$flow 1s ease-in-out forwards'
+    animation: '$flow 1s ease-in-out forwards',
+    visibility: 'visible',
   },
   '@keyframes flow': {
     '0%, 50%': {
