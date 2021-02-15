@@ -1,105 +1,104 @@
 import React from 'react';
 import {
-  Grid
+  Grid, Typography
 } from '@material-ui/core';
 import Countup from 'react-countup';
+import classNames from 'classnames';
 import useStyles from '../style/Indicator.style';
-import useGetRequest from '../../../../utils/hooks/useGetRequest';
-import { ContractedCreatorListData } from '../../../../pages/main/CreatorList';
+import sources from '../source/sources';
 
-
-interface BannerViewData {
-  bannerView: number;
-}
-
-interface BannerClickData {
-  bannerClick: number;
-}
-
-interface NowBroadcastData {
+interface IndicatorProps {
   nowBroadcast: number;
 }
 
-interface TotalFollowersData {
-  totalFollowers: number;
-}
 
-function Indicator(): JSX.Element {
+function Indicator({ nowBroadcast }: IndicatorProps): JSX.Element {
   const classes = useStyles();
-  const updateTime = new Date().toLocaleDateString();
-  const BannerView = useGetRequest<null, BannerViewData[]>('/banners/impression');
-  const NowBroadcast = useGetRequest<null, NowBroadcastData[]>('/creators/broadcast');
-  const ContractedCreator = useGetRequest<null, ContractedCreatorListData<string>[]>('/creators');
-  const TotoalFollowers = useGetRequest<null, TotalFollowersData[]>('/creators/detail');
+
+  function indicatorDecorate(indicator: number): number {
+    const indicatorLength = String(indicator).length;
+    if (indicatorLength < 4) {
+      return indicator;
+    } if (indicatorLength < 7) {
+      return Number(String(indicator).slice(0, -3));
+    } if (indicatorLength < 10) {
+      return Number(String(indicator).slice(0, -6));
+    }
+    return indicator;
+  }
+
+  function indicatorUnit(indicator: number): string {
+    const indicatorLength = String(indicator).length;
+    if (indicatorLength < 4) {
+      return '';
+    } if (indicatorLength < 7) {
+      return 'K';
+    } if (indicatorLength < 10) {
+      return 'M';
+    }
+    return '';
+  }
 
   return (
-    <div className={classes.container}>
-      <h2 className={classes.title}>
-        현재 온애드의 크리에이터는
-      </h2>
-      <div className={classes.wrapper}>
-        <Grid container className={classes.innerWrapper}>
-          <Grid item className={classes.item}>
-            <h4 className={classes.itemTitle}>총 노출량</h4>
-            <h3 className={classes.itemTitle}>
-              {!BannerView.loading && !NowBroadcast.loading && !ContractedCreator.loading && !TotoalFollowers.loading
-                && BannerView.data && NowBroadcast.data && ContractedCreator.data && TotoalFollowers.data
-                && (
-                  <>
-                    &#43;&nbsp;
-                    <Countup duration={2} end={BannerView.data[0].bannerView} separator="," />
-                    <span className={classes.itemSub}>&nbsp;회</span>
-                  </>
-                )}
-            </h3>
-          </Grid>
-          <Grid item className={classes.item}>
-            <h4 className={classes.itemTitle}>계약 크리에이터</h4>
-            <h3 className={classes.itemTitle}>
-              {!BannerView.loading && !NowBroadcast.loading && !ContractedCreator.loading && !TotoalFollowers.loading
-                && BannerView.data && NowBroadcast.data && ContractedCreator.data && TotoalFollowers.data
-                && (
-                  <>
-                    &#43;&nbsp;
-                    <Countup duration={2} end={ContractedCreator.data.length} separator="," />
-                    <span className={classes.itemSub}>&nbsp;명</span>
-                  </>
-                )}
-            </h3>
-          </Grid>
-          <Grid item className={classes.item}>
-            <h4 className={classes.itemTitle}>총 팔로우</h4>
-            <h3 className={classes.itemTitle}>
-              {!BannerView.loading && !NowBroadcast.loading && !ContractedCreator.loading && !TotoalFollowers.loading
-                && BannerView.data && NowBroadcast.data && ContractedCreator.data && TotoalFollowers.data
-                && (
-                  <>
-                    &#43;&nbsp;
-                    <Countup duration={2} end={TotoalFollowers.data[0].totalFollowers} separator="," />
-                    <span className={classes.itemSub}>&nbsp;명</span>
-                  </>
-                )}
-            </h3>
-          </Grid>
-          <Grid item className={classes.item}>
-            <h4 className={classes.itemTitle}>현재 생방송 중</h4>
-            <h3 className={classes.itemTitle}>
-              {!BannerView.loading && !NowBroadcast.loading && !ContractedCreator.loading && !TotoalFollowers.loading
-                && BannerView.data && NowBroadcast.data && ContractedCreator.data && TotoalFollowers.data
-                && (
-                  <>
-                    &#43;&nbsp;
-                    <Countup duration={2} end={NowBroadcast.data[0].nowBroadcast} separator="," />
-                    <span className={classes.itemSub}>&nbsp;명</span>
-                  </>
-                )}
-            </h3>
-          </Grid>
+    <div className={classes.root}>
+
+      <Grid container spacing={3} justify="center" alignItems="center">
+        <Grid item>
+          <div className={classes.contentWrapper}>
+            <div className={classNames(classes.content, classes.box1)}>
+              <Typography variant="subtitle1" align="center" className={classes.text}>{sources.indicator.text.totalFollower}</Typography>
+              <>
+                <Typography variant="h4" align="center" className={classes.count}>
+                  <Countup duration={2} end={indicatorDecorate(790120)} />
+                  {indicatorUnit(790120)}
+                </Typography>
+              </>
+            </div>
+          </div>
         </Grid>
-        <h4 className={classes.date}>
-          {`UPDATE : ${updateTime}`}
-        </h4>
-      </div>
+
+        <Grid item>
+          <div className={classes.contentWrapper}>
+            <div className={classNames(classes.content, classes.box2)}>
+              <Typography variant="subtitle1" align="center" className={classes.text}>{sources.indicator.text.contractedCreator}</Typography>
+              <>
+                <Typography variant="h4" align="center" display="inline" className={classes.count}>
+                  <Countup duration={2} end={indicatorDecorate(1341)} />
+                  {indicatorUnit(1341)}
+                </Typography>
+              </>
+            </div>
+          </div>
+        </Grid>
+
+        <Grid item>
+          <div className={classes.contentWrapper}>
+            <div className={classNames(classes.content, classes.box3)}>
+              <Typography variant="subtitle1" align="center" className={classes.text}>{sources.indicator.text.nowBroadcast}</Typography>
+              <Typography variant="h4" align="center" display="inline" className={classes.count}>
+                <Countup duration={2} end={indicatorDecorate(nowBroadcast)} />
+              </Typography>
+              <Typography variant="h4" align="center" display="inline" className={classes.count}>
+                {indicatorUnit(nowBroadcast)}
+              </Typography>
+            </div>
+          </div>
+        </Grid>
+
+        <Grid item>
+          <div className={classes.contentWrapper}>
+            <div className={classNames(classes.content, classes.box4)}>
+              <Typography variant="subtitle1" align="center" className={classes.text}>{sources.indicator.text.totalView}</Typography>
+              <>
+                <Typography variant="h4" align="center" display="inline" className={classes.count}>
+                  <Countup duration={2} end={indicatorDecorate(49334643)} />
+                  {indicatorUnit(49334643)}
+                </Typography>
+              </>
+            </div>
+          </div>
+        </Grid>
+      </Grid>
     </div>
   );
 }

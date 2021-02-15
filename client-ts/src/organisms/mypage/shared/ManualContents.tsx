@@ -2,6 +2,7 @@ import {
   CircularProgress,
   makeStyles, Paper, Tab, Tabs, Typography
 } from '@material-ui/core';
+import classnames from 'classnames';
 import React, { useEffect, useMemo } from 'react';
 import Markdown from 'react-markdown/with-html';
 import { UseGetRequestObject } from '../../../utils/hooks/useGetRequest';
@@ -50,7 +51,7 @@ export default function ManualContents({
 
   return (
     <Paper>
-      {manualGet.loading && (<CircularProgress />)}
+      {manualGet.loading && (<div style={{ textAlign: 'center' }}><CircularProgress /></div>)}
 
       {!manualGet.loading && manualGet.data && tabValue && (
       <Tabs
@@ -83,7 +84,7 @@ export default function ManualContents({
                 <Markdown
                   source={currentManual.contents}
                   escapeHtml={false}
-                  className={classes.markdown}
+                  className={classnames(classes.markdown, 'react-markdown')}
                 />
               </div>
             </div>

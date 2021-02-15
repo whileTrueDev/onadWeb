@@ -23,6 +23,7 @@ import {
   OnOffInterface, AdInterface, CountInterface,
   ValueChartInterface, ActionLogInterface
 } from '../../../organisms/mypage/marketer/dashboard/interfaces';
+import useMypageScrollToTop from '../../../utils/hooks/useMypageScrollToTop';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -50,6 +51,7 @@ export default function Dashboard(): JSX.Element {
   const valueChartData = useGetRequest<null, ValueChartInterface[] | null>('/marketer/ad/analysis/expenditure');
   const actionLogData = useGetRequest<null, ActionLogInterface[] | null>('/marketer/history');
 
+  useMypageScrollToTop();
 
   return (
     <div className={classes.root}>

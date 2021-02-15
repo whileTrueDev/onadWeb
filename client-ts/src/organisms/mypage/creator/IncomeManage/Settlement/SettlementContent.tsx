@@ -47,7 +47,7 @@ const useStyles = makeStyles(() => ({
     height: 80,
     overflowX: 'hidden',
     overflowY: 'auto',
-    border: 'solid 1px #00acc1'
+    border: 'solid 1px #2771ff'
   },
   textFieldContent: {
     width: '100%',
@@ -55,7 +55,7 @@ const useStyles = makeStyles(() => ({
     height: 150,
     overflowX: 'hidden',
     overflowY: 'auto',
-    border: 'solid 1px #00acc1'
+    border: 'solid 1px #2771ff'
   },
 }));
 
@@ -79,7 +79,7 @@ function SettlementContent({
   return (
     <>
       <div>
-        <StyledItemText className={classes.titleWrap} primary="정산 수수료 및 절차, 종합소득세 신고 안내 📋" fontSize="18px" color="#00acc1" />
+        <StyledItemText className={classes.titleWrap} primary="정산 수수료 및 절차, 종합소득세 신고 안내 📋" fontSize="18px" color="#2771ff" />
       </div>
       <Grid item className={classes.textFieldContent}>
         {AgreementSource.taxGuidance.split('\n').map((sentence: string) => (
@@ -98,7 +98,7 @@ function SettlementContent({
           </div>
         )}
       <div>
-        <StyledItemText className={classes.titleWrap} primary="계약자 정보 📋" fontSize="18px" color="#00acc1" />
+        <StyledItemText className={classes.titleWrap} primary="계약자 정보 📋" fontSize="18px" color="#2771ff" />
       </div>
       <Grid item className={classes.content}>
         <StyledItemText primary="과세 유형" fontSize="15px" className={classes.contentTitle} />
@@ -138,7 +138,7 @@ function SettlementContent({
         />
       </Grid>
       <div>
-        <StyledItemText className={classes.titleWrap} primary="정산 계좌 정보 📋" fontSize="18px" color="#00acc1" />
+        <StyledItemText className={classes.titleWrap} primary="정산 계좌 정보 📋" fontSize="18px" color="#2771ff" />
       </div>
       <Grid item className={classes.content}>
         <StyledItemText primary="예금주" fontSize="15px" className={classes.contentTitle} />
@@ -160,7 +160,7 @@ function SettlementContent({
         />
       </Grid>
       <div>
-        <StyledItemText className={classes.titleWrap} primary="파일업로드 📋" fontSize="18px" color="#00acc1" />
+        <StyledItemText className={classes.titleWrap} primary="파일업로드 📋" fontSize="18px" color="#2771ff" />
       </div>
       <Grid item className={classes.contentImageWrap}>
         <StyledItemText primary="신분증" fontSize="15px" className={classes.contentTitle} />

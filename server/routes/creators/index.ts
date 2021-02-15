@@ -11,10 +11,17 @@ router.route('/')
     // responseHelper.middleware.checkSessionExists,
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
       const searchQuery = `
-      SELECT creatorTwitchId, creatorName, creatorLogo
-      FROM creatorInfo
-      WHERE creatorContractionAgreement = 1 
-      ORDER BY date DESC
+      SELECT cI.creatorId, cI.creatorName, cI.creatorLogo, cI.creatorTwitchId, A.followers, A.content, A.openHour
+      FROM creatorInfo as cI
+
+      RIGHT JOIN
+      (SELECT creatorId, followers, content, openHour
+      FROM creatorDetail
+      ) as A
+      
+      ON cI.creatorId = A.creatorId
+      WHERE creatorContractionAgreement = 1 AND creatorTwitchOriginalId IS NOT NULL
+      ORDER BY cI.creatorId DESC
       `;
       doQuery(searchQuery, [])
         .then((row) => {
@@ -35,7 +42,7 @@ router.route('/live')
       date.setMinutes(date.getMinutes() - 10);
 
       // 현재방송중이면서, 배너를 띄우고있는 스트리머 (시청자 많은 순)
-      const query = `SELECT creatorTwitchId
+      const query = `SELECT CI.creatorId
       FROM creatorInfo as CI
 
       LEFT JOIN
@@ -56,8 +63,8 @@ router.route('/live')
       doQuery(query, [date, date])
         .then((row) => {
           const resultList = row.result.map((creator: {
-            creatorTwitchId: string;
-          }) => creator.creatorTwitchId);
+            creatorId: string;
+          }) => creator.creatorId);
           responseHelper.send(resultList, 'get', res);
         })
         .catch((errorData) => {

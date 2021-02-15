@@ -14,6 +14,7 @@ import MyCash from '../../../organisms/mypage/marketer/office/cash/MyCash';
 import CashUsageList, { UsageInterface } from '../../../organisms/mypage/marketer/office/cash/CashUsageList';
 import { AdInterface } from '../../../organisms/mypage/marketer/dashboard/interfaces';
 import CircularProgress from '../../../atoms/Progress/CircularProgress';
+import useMypageScrollToTop from '../../../utils/hooks/useMypageScrollToTop';
 
 const useStyles = makeStyles((theme) => ({
   container: { margin: '0 auto', maxWidth: 1430 },
@@ -29,6 +30,7 @@ export default function MyOffice(): JSX.Element {
   const adData = useGetRequest<null, AdInterface | null>('/marketer/ad');
   const usageData = useGetRequest<null, UsageInterface | null>('/marketer/cash/history/usage');
 
+  useMypageScrollToTop();
   return (
     <div className={classes.container}>
       {(userData.loading

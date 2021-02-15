@@ -18,7 +18,7 @@ import { myReducer, initialState } from './Stepper.reducer';
 
 function RegistStepper({ platform }: { platform: string }): JSX.Element {
   const classes = useStyles();
-  const [activeStep, setStep] = useState(2);
+  const [activeStep, setStep] = useState(0);
   const [state, dispatch] = useReducer(myReducer, initialState);
   const [loading, setLoading] = useState(0);
   const [open, setOpen] = useState(0);

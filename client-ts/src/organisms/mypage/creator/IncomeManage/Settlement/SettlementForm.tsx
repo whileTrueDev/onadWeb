@@ -50,7 +50,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   titleWraper: {
     textAlign: 'center',
     height: 30,
-    border: 'solid 1px #00acc1',
+    border: 'solid 1px #2771ff',
     margin: '30px 0',
     borderRadius: 5
   },
@@ -60,7 +60,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: 80,
     overflowX: 'hidden',
     overflowY: 'auto',
-    border: 'solid 1px #00acc1'
+    border: 'solid 1px #2771ff'
   },
   checked: {},
   checkboxRoot: {
@@ -262,7 +262,7 @@ function SettlementForm({
           </div>
           )}
         <div>
-          <StyledItemText className={classes.titleWrap} primary="계약자 정보 📋" fontSize="18px" color="#00acc1" />
+          <StyledItemText className={classes.titleWrap} primary="계약자 정보 📋" fontSize="18px" color="#2771ff" />
         </div>
         <Grid item className={classes.content}>
           <StyledItemText primary="과세 유형" fontSize="15px" className={classes.contentTitle} />
@@ -319,7 +319,7 @@ function SettlementForm({
           />
         </Grid>
         <div>
-          <StyledItemText className={classes.titleWrap} primary="정산 계좌 정보 📋" fontSize="18px" color="#00acc1" />
+          <StyledItemText className={classes.titleWrap} primary="정산 계좌 정보 📋" fontSize="18px" color="#2771ff" />
         </div>
         <Grid item className={classes.content}>
           <StyledItemText primary="은행" fontSize="15px" className={classes.contentTitle} />
@@ -368,7 +368,7 @@ function SettlementForm({
           />
         </Grid>
         <div>
-          <StyledItemText className={classes.titleWrap} primary="파일업로드 📋" fontSize="18px" color="#00acc1" />
+          <StyledItemText className={classes.titleWrap} primary="파일업로드 📋" fontSize="18px" color="#2771ff" />
         </div>
         <Grid item className={classes.contentImageWrap}>
           <StyledItemText primary="신분증 업로드" fontSize="15px" className={classes.contentTitle} />
@@ -410,7 +410,7 @@ function SettlementForm({
           </Grid>
           )}
         <div className={classes.titleWraper}>
-          <StyledItemText primary="서비스 이용 및 정산등록 동의" fontSize="18px" color="#00acc1" />
+          <StyledItemText primary="서비스 이용 및 정산등록 동의" fontSize="18px" color="#2771ff" />
         </div>
         <SettlementAgreement />
         <Grid item>

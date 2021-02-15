@@ -10,6 +10,7 @@ import axiosInstance from '../../../../../utils/axios';
 import {
   useEventTargetValue, usePatchRequest, useToggle
 } from '../../../../../utils/hooks';
+import passwordRegex from '../../../../../utils/inputs/regex/password.regex';
 
 export interface PasswordDialogProps {
   open: boolean;
@@ -55,7 +56,7 @@ export default function PasswordDialog({
 
   // 올바른 비밀번호 체크
   function passwdErrorCheck(pwd: string): boolean {
-    if (!/^(?=.*[a-zA-Z0-9])(?=.*[!@#$%^*+=-]).{8,20}$/.test(pwd)) return false;
+    if (!passwordRegex.test(pwd)) return false;
     return true;
   }
 
@@ -163,7 +164,7 @@ export default function PasswordDialog({
               variant="filled"
               value={newPw.value}
               error={!!(newPw.value && !passwdErrorCheck(newPw.value))}
-              helperText="특수문자를 포함한 8-20자 영문 또는 숫자"
+              helperText="특수문자 !@#$%^*+=- 를 포함한 8-20자 영문 또는 숫자"
               type={newPwVisibility.toggle ? 'text' : 'password'}
               onChange={newPw.handleChange}
               InputProps={{

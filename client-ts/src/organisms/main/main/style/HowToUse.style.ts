@@ -2,186 +2,114 @@ import { makeStyles } from '@material-ui/core/styles';
 
 const styles = makeStyles((theme) => ({
   root: {
-    paddingTop: theme.spacing(10),
-    paddingBottom: theme.spacing(10),
-  },
-  loginButtonRight: {
-    color: 'black',
-    textAlign: 'left',
-    width: '20%',
-    fontSize: '20px',
-    fontFamily: 'Noto Sans KR',
-    [theme.breakpoints.down('md')]: {
-      width: '40%',
-      marginLeft: 0,
-      textAlign: 'left',
-    },
-    [theme.breakpoints.down('sm')]: {
-      width: '40%',
-      marginLeft: 0,
-      textAlign: 'left',
-    },
-    [theme.breakpoints.down('xs')]: {
-      width: '80%',
-    },
-  },
-  h1: {
-    marginTop: '0px',
-    marginBottom: '5px',
-    fontSize: 45,
-    fontWeight: 500,
-    [theme.breakpoints.down('md')]: {
-      fontSize: 35,
-    },
-    [theme.breakpoints.down('sm')]: {
-      fontSize: 27,
-    },
-    [theme.breakpoints.down('sm')]: {
-      fontSize: 25,
-    },
-    color: 'black',
-    fontFamily: 'Noto Sans KR',
-  },
-  h2: {
-    marginTop: '5px',
-    marginBottom: '20px',
-    fontSize: 45,
-    fontWeight: 600,
-    [theme.breakpoints.down('md')]: {
-      fontSize: 35,
-    },
-    [theme.breakpoints.down('sm')]: {
-      fontSize: 27,
-    },
-    [theme.breakpoints.down('sm')]: {
-      fontSize: 25,
-    },
-    color: 'black',
-    fontFamily: 'Noto Sans KR',
-  },
-  h1sub: {
-    marginTop: 40,
-    marginBottom: 40,
-    color: 'black',
-    fontFamily: 'Noto Sans KR',
-    [theme.breakpoints.up('md')]: {
-      margin: '30px 0px',
-      wordBreak: 'keep-all'
-    },
-    [theme.breakpoints.up('sm')]: {
-      margin: '10px 0px',
-      wordBreak: 'keep-all'
-    },
-    [theme.breakpoints.down('sm')]: {
-      margin: '20px 0px',
-      wordBreak: 'keep-all'
-    },
-  },
-  mainMiddle: {
     width: '100%',
+    height: '100vh',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(255,255,255, 0.6)'
+  },
+  wrapper: {
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'center',
     alignItems: 'center',
+    justifyContent: 'center',
+    width: '100%',
     [theme.breakpoints.down('xs')]: {
-      flexDirection: 'column',
+      flexDirection: 'column-reverse',
+      alignItems: 'center',
       justifyContent: 'center',
-    },
+    }
   },
-  mainMiddleLeftVideo: {
-    width: '650px',
-    height: '440px',
+  onadVideo: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+    visibility: 'hidden',
+  },
+  onadVideoReady: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+    animation: '$flow 1s ease-in-out forwards'
+  },
+  '@keyframes flow': {
+    '0%, 50%': {
+      visibility: 'hidden',
+      transform: 'translate(0%, 10%)',
+      opacity: 0
+    },
+    '100%': {
+      visibility: 'visible',
+      transform: 'translate(0%, 0%)',
+      opacity: 1
+    }
+  },
+  contentWapper: {
+    marginLeft: theme.spacing(8),
+    height: 450,
+    width: 300,
     [theme.breakpoints.down('md')]: {
-      width: '540px',
-      height: '380px',
+      height: 350,
+      marginLeft: theme.spacing(3),
     },
     [theme.breakpoints.down('sm')]: {
-      width: '300px',
-      height: '240px',
+      height: 280,
+      marginLeft: theme.spacing(2),
     },
     [theme.breakpoints.down('xs')]: {
-      width: '300px',
-      height: '240px',
+      width: '90%',
+      height: 220,
     },
   },
-  buttonRight: {
-    fontSize: theme.typography.pxToRem(14),
-    fontWeight: theme.typography.fontWeightMedium,
-    padding: theme.spacing(2, 2),
-    boxShadow: 'none',
-    '&:active, &:focus': {
-      boxShadow: 'none',
-    },
-    width: '240px',
-    color: '#3154EB',
-    borderRadius: '5px',
-    border: '1px solid #3154EB',
-    [theme.breakpoints.down('md')]: {
-      width: '230px',
-      fontSize: 18,
-    },
-    [theme.breakpoints.down('sm')]: {
-      width: '190px',
-      fontSize: 13,
-    },
-    [theme.breakpoints.down('xs')]: {
-      width: '190px',
-      fontSize: 13,
-    },
+  content: {
+    fontWeight: theme.typography.fontWeightBold,
+    marginTop: theme.spacing(0.5),
   },
-  text: {
-    marginTop: 5,
-    marginBottom: 5,
-    fontSize: 16,
-    fontFamily: 'Noto Sans KR',
-    [theme.breakpoints.down('md')]: {
-      fontSize: 15,
-    },
-    [theme.breakpoints.down('sm')]: {
-      fontSize: 13,
-    },
+  bottomLine: {
+    borderBottom: '2px solid #20BFE2',
+    margin: theme.spacing(3, 0),
+    animation: '$lineEffect 2s ease-in-out forwards',
     [theme.breakpoints.down('xs')]: {
-      fontSize: 15,
-    },
+      margin: theme.spacing(1.5, 0),
+    }
   },
-  step: {
-    width: 400,
-    height: 120,
-    [theme.breakpoints.down('md')]: {
-      width: '350px',
-      height: '105px',
-    },
-    [theme.breakpoints.down('sm')]: {
-      width: '225px',
-      height: '75px',
-    },
-    [theme.breakpoints.down('xs')]: {
-      width: '250px',
-      height: '75px',
-    },
+  bottomLine2: {
+    borderBottom: '2px solid #5ed7ed',
+    margin: theme.spacing(3, 0),
+    animation: '$lineEffect 2s ease-in-out forwards',
   },
-  slide: {
-    marginRight: 80,
-    width: '650px',
-    height: '440px',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    [theme.breakpoints.down('md')]: {
-      width: '540px',
-      height: '380px',
-      marginRight: 60,
-    },
-    [theme.breakpoints.down('sm')]: {
-      width: '380px',
-      height: '280px',
-      marginRight: 0,
-    },
+  button: {
+    borderRadius: 15,
+    padding: theme.spacing(1, 2),
+    border: `2px solid ${theme.palette.divider}`,
     [theme.breakpoints.down('xs')]: {
-      width: '300px',
-      height: '240px',
-      marginRight: 0,
-    },
+      width: 170,
+      height: 50
+    }
+  },
+  '@keyframes lineEffect': {
+    '0%': { width: '0%' },
+    '100%': { width: '200%' },
+  },
+  iframeWrapper: {
+    position: 'relative',
+    width: '50%',
+    padding: '28.125% 0 0 0',
+    [theme.breakpoints.down('xs')]: {
+      width: '90%',
+      padding: '50.625% 0 0 0',
+    }
+  },
+  download: {
+    color: 'black',
+    [theme.breakpoints.down('xs')]: {
+      fontSize: 15
+    }
   }
 }));
 

@@ -33,12 +33,20 @@ const useStyles = makeStyles((theme) => ({
   chip: {
     marginRight: theme.spacing(1) / 2,
     marginTop: theme.spacing(1) / 2,
-    color: theme.palette.common.white,
   },
-  success: { backgroundColor: theme.palette.success.main, },
+  success: {
+    backgroundColor: theme.palette.success.main,
+    color: theme.palette.success.contrastText
+  },
   error: { backgroundColor: theme.palette.error.main },
-  black: { backgroundColor: theme.palette.common.black },
-  info: { backgroundColor: theme.palette.info.main },
+  black: {
+    backgroundColor: theme.palette.common.black,
+    color: theme.palette.common.white
+  },
+  info: {
+    backgroundColor: theme.palette.info.main,
+    color: theme.palette.info.contrastText
+  },
   secondary: { backgroundColor: theme.palette.secondary.main },
   infoSection: { display: 'flex', alignItems: 'center' },
   section: { textAlign: 'right', margin: theme.spacing(1) },
@@ -113,7 +121,7 @@ const UserInfoCard = ({
         <Avatar
           variant="circular"
           className={classes.avatar}
-          src={userProfileData.creatorLogo}
+          src={userProfileData.creatorLogo || userProfileData.afreecaLogo || ''}
         />
         <div>
           <div>
@@ -128,7 +136,7 @@ const UserInfoCard = ({
               )}
             </Typography>
             <Typography variant="body2">
-              {`${userProfileData.creatorName || ''} ${userProfileData.creatorMail || ''}`}
+              {`${userProfileData.creatorName || userProfileData.afreecaName || ''} ${userProfileData.creatorMail || userProfileData.afreecaId || ''}`}
             </Typography>
           </div>
           {/* 상태 칩 섹션 */}

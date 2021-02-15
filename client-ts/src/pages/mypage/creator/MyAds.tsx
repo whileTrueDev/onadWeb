@@ -15,6 +15,7 @@ import AdClickCard from '../../../organisms/mypage/creator/CampaignManage/AdClic
 import StartGuideCard from '../../../organisms/mypage/creator/shared/StartGuideCard';
 import { ContractionDataType } from './CPAManage';
 import OverlayUrlCard, { OverlayUrlRes } from '../../../organisms/mypage/creator/shared/OverlayUrlCard';
+import useMypageScrollToTop from '../../../utils/hooks/useMypageScrollToTop';
 
 
 interface LanidngUrlRes { url: string }
@@ -47,6 +48,7 @@ const MyBanner = (): JSX.Element => {
   const failSnack = useDialog();
   const overlayUrlCopySnack = useDialog();
 
+  useMypageScrollToTop();
   return (
     <div style={{ margin: '0 auto', maxWidth: 1430 }}>
       <GridContainer>

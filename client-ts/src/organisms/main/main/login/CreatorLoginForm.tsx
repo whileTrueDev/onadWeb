@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import classnames from 'classnames';
 import {
-  Dialog, DialogContent, Button, Typography, CircularProgress, TextField, Divider, IconButton
+  Dialog, DialogContent, Button, Typography,
+  CircularProgress, TextField, Divider, IconButton,
 } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
 import { Close } from '@material-ui/icons';
@@ -10,6 +11,8 @@ import axios from '../../../../utils/axios';
 import HOST from '../../../../config';
 import history from '../../../../history';
 import { useEventTargetValue } from '../../../../utils/hooks';
+import StyledTooltip from '../../../../atoms/Tooltip/StyledTooltip';
+import OnadLogo from '../../../../atoms/Logo/OnadLogo';
 
 interface CreatorLoginFormProps {
   open: boolean;
@@ -48,6 +51,7 @@ export default function CreatorLoginForm({
         setError(err.response.data.message);
       });
   };
+
   return (
     (
       // 크리에이터 로그인 창
@@ -69,8 +73,9 @@ export default function CreatorLoginForm({
             <Close />
           </IconButton>
 
-          <img src="/pngs/logo/onad_logo_vertical_small.png" alt="" width={80} height={80} />
-
+          <div style={{ marginBottom: 8, marginTop: 8 }}>
+            <OnadLogo width={80} />
+          </div>
           <Typography variant="h6">온애드 방송인 로그인</Typography>
 
           <form style={{ marginTop: 16 }}>
@@ -135,14 +140,16 @@ export default function CreatorLoginForm({
             </Typography>
             <Typography variant="body2">
               트위치 계정 로그인 방식으로 온애드를 사용했었나요?&nbsp;
-              <Typography
-                component="span"
-                variant="body2"
-                onClick={(): void => history.push('/creator/signup/pre-user')}
-                style={{ color: 'red', textDecoration: 'underline', cursor: 'pointer' }}
-              >
-                기존계정로그인
-              </Typography>
+              <StyledTooltip open arrow interactive title={<Typography variant="body2">기존회원은여기</Typography>}>
+                <Typography
+                  component="span"
+                  variant="body2"
+                  onClick={(): void => history.push('/creator/signup/pre-user')}
+                  style={{ color: 'red', textDecoration: 'underline', cursor: 'pointer' }}
+                >
+                  기존계정로그인
+                </Typography>
+              </StyledTooltip>
             </Typography>
           </div>
         </DialogContent>

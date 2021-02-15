@@ -42,7 +42,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     ...theme.mixins.toolbar,
     display: 'flex',
     justifyContent: 'center',
-    backgroundColor: theme.palette.primary.light,
+    backgroundColor: theme.palette.primary.dark,
   },
   drawerPaper: { width: drawerWidth, },
   content: {
@@ -87,9 +87,10 @@ export default function ResponsiveDrawer(props: ResponsiveDrawerProps): JSX.Elem
       <div className={classes.toolbar}>
         <Button onClick={handleLogoClick}>
           <img
-            src="/pngs/logo/onad_logo_vertical_white.png"
-            alt="logo"
-            style={{ width: 50, margin: '0px 16px' }}
+            src="/pngs/logo/renewal/1x/logo_onad_text_w.png"
+            alt=""
+            width={90}
+            draggable={false}
           />
         </Button>
       </div>

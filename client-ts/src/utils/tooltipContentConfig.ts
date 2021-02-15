@@ -54,6 +54,9 @@ const budgetConfig = [
   }
 ];
 
+/**
+ * @deprecated
+ */
 const landingManageConfig = [
   {
     title: '소개글 이란?',

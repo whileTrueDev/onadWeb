@@ -45,7 +45,7 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(3),
     padding: 0,
   },
-  switchLabel: { fontSize: theme.typography.caption.fontSize, },
+  switchLabel: { fontSize: theme.typography.caption.fontSize, maxWidth: 40, textAlign: 'center' },
 }));
 
 

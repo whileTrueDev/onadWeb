@@ -9,6 +9,14 @@
 }
 
 @font-face {
+    font-family: 'AppleSDGothicNeoB';
+    src: url(./fonts/AppleSDGothicNeoB.ttf) format('truetype');
+}
+@font-face {
+    font-family: 'AppleSDGothicNeoR';
+    src: url(./fonts/AppleSDGothicNeoR.ttf) format('truetype');
+}
+@font-face {
     font-family: 'AppleSDGothicNeo';
     src: url(./fonts/AppleSDGothicNeoM.ttf) format('truetype');
 }
@@ -52,6 +60,7 @@ body {
 /* 스크롤 바 스타일링 ->| */
 
 * {
+    font-family: "AppleSDGothicNeoR", "NotoSansKR-Regular", "Arial", "sans-serif" !important;
     -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
     -webkit-tap-highlight-color: transparent;
 }
@@ -113,7 +122,6 @@ h3,
 h4,
 h5,
 h6 {
-    font-family: "Roboto", "Helvetica", "Arial", sans-serif;
     font-weight: 300;
     line-height: 1.5em;
 }
@@ -147,4 +155,18 @@ div.MuiDataGrid-root .MuiDataGrid-footer {
     justify-content: center;
     align-items: center;
     text-align:center;
+}
+
+/* 공지사항 및 이용약관 markdown 스타일링 */
+.react-markdown a {
+    color: rgb(53, 201, 220);
+    text-decoration: underline;
+}
+.react-markdown h1,h2,h3,h4,h5,h6 {
+    font-weight: bold;
+}
+@media (max-width: 990px) {
+    .react-markdown img {
+        width: 100%;
+    }
 }

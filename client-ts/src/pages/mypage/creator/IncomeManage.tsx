@@ -14,6 +14,7 @@ import { ProfileDataType } from '../../../organisms/mypage/creator/Mypage/Profil
 import CenterLoading from '../../../atoms/Loading/CenterLoading';
 import WithdrawalRequestCard from '../../../organisms/mypage/creator/IncomeManage/WithdrawalRequestCard';
 import WithdrawDialog from '../../../organisms/mypage/creator/Dashboard/WithdrawalDialog';
+import useMypageScrollToTop from '../../../utils/hooks/useMypageScrollToTop';
 
 
 export default function IncomeManage(): JSX.Element {
@@ -38,6 +39,7 @@ export default function IncomeManage(): JSX.Element {
   };
   const handleDialogClose = (): void => { setOpen(false); };
 
+  useMypageScrollToTop();
   return (
     <div style={{ margin: '0 auto', maxWidth: 1430 }}>
       <GridContainer direction="row" spacing={1}>

@@ -27,9 +27,9 @@ const MarketerDashboard = (): JSX.Element => {
 
 
   useEffect(() => {
-    document.title = '온애드 | 대시보드';
+    document.title = '온애드 | 마이페이지';
     if (mainPanel && mainPanel.current) {
-      mainPanel.current.scrollTop = 0;
+      mainPanel.current.scroll({ top: 0, behavior: 'smooth' });
     }
 
     return (): void => {
@@ -48,7 +48,7 @@ const MarketerDashboard = (): JSX.Element => {
         mobileOpen={mobileOpen}
         handleDrawerToggle={handleDrawerToggle}
       />
-      <div className={classes.mainPanel} ref={mainPanel}>
+      <div className={classes.mainPanel} ref={mainPanel} id="onad-main-panel">
         <Navbar
           handleDrawerToggle={handleDrawerToggle}
           routes={allRoutes.marketer}

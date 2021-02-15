@@ -12,10 +12,10 @@
     line-height: normal; 
     vertical-align: middle; 
     text-align: center;
-    background-color:#00acc1;
+    background-color:#2771ff;
     cursor: pointer; 
     border: 1px solid #ebebeb; 
-    border-color: #00acc1; 
+    border-color: #2771ff; 
     border-radius: .25em; 
 } 
 .filebox input[type="file"] {

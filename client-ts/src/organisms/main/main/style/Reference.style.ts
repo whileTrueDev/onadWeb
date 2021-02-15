@@ -2,38 +2,28 @@ import { grey } from '@material-ui/core/colors';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 
 const useStyles = makeStyles((theme) => ({
-  container: {
+  root: {
     backgroundColor: grey[100],
-    height: 'auto',
-    color: 'black',
+    width: '100%',
+    height: '100vh',
     display: 'flex',
-    flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    padding: theme.spacing(4),
+    overflow: 'hidden',
+  },
+  wrapper: {
+    width: '60%',
+    transformOrigin: '50% 50%',
+    transform: 'rotate(-10deg)',
   },
   image: {
-    width: 200,
-    height: 100,
+    width: 280,
+    height: 140,
   },
   ImageSelector: {
-    '&>img:last-child': {
-      display: 'none'
-    },
-    '&:hover>img:first-child': {
-      display: 'none'
-    },
-    '&:hover>img:last-child': {
-      display: 'inline-block'
-    },
     display: 'flex',
-    flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  title: {
-    fontWeight: 600,
-    fontFamily: 'Noto sans KR',
   },
 }));
 

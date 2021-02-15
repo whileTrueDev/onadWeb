@@ -1,4 +1,4 @@
-import express, { response } from 'express';
+import express from 'express';
 import responseHelper from '../../middlewares/responseHelper';
 import doQuery from '../../model/doQuery';
 
@@ -12,24 +12,21 @@ router.route('/')
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
       const query = `
       SELECT
-        code, topic, title, contents, regiDate
+        code AS id ,code, topic, title, contents, regiDate, target
       FROM publicNotice
-      ORDER BY code DESC
+      ORDER BY topic = "필독" DESC, code DESC
       `;
-
       interface NoticeResult {
         code: string | number;
         topic: string | number;
         title: string;
+        target: string;
         contents: string;
         regiDate: string | Date;
       }
 
       const rows = await doQuery<NoticeResult[]>(query);
-      const MustRows = rows.result.filter((x: NoticeResult) => x.topic === '필독');
-      const NotMustRows = rows.result.filter((x: NoticeResult) => x.topic !== '필독');
-      const result = MustRows.concat(NotMustRows);
-      responseHelper.send(result, 'get', res);
+      responseHelper.send(rows.result, 'get', res);
     })
   )
   .all(responseHelper.middleware.unusedMethod);

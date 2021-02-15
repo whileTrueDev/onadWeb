@@ -2,240 +2,59 @@ import { makeStyles } from '@material-ui/core/styles';
 
 const Styles = makeStyles((theme) => ({
   root: {
-    marginTop: theme.spacing(12),
-    marginBottom: theme.spacing(12),
-    backgroundColor: 'white',
-    padding: '0 5%',
+    margin: theme.spacing(4, 0),
   },
-  h1: {
-    marginTop: '20px',
-    marginBottom: '20px',
-    fontSize: 45,
-    fontWeight: 600,
+  title: {
+    margin: theme.spacing(5, 0),
+    fontWeight: theme.typography.fontWeightBold,
     [theme.breakpoints.down('md')]: {
+      fontSize: '40px',
+    },
+    [theme.breakpoints.down('sm')]: {
       fontSize: '30px',
     },
-    [theme.breakpoints.down('sm')]: {
-      fontSize: '25px',
-    },
     [theme.breakpoints.down('xs')]: {
-      marginTop: 20,
-      fontSize: '20px',
+      fontSize: '30px',
     },
-    color: '#0D93BF',
+    color: '#008bf0',
     fontFamily: 'Noto Sans KR',
   },
-  QnAWrapper: {
+  title2: {
+    margin: theme.spacing(5, 0),
+    fontWeight: theme.typography.fontWeightBold,
+    [theme.breakpoints.down('md')]: {
+      fontSize: '40px',
+    },
+    [theme.breakpoints.down('sm')]: {
+      fontSize: '30px',
+    },
+    [theme.breakpoints.down('xs')]: {
+      fontSize: '30px',
+    },
+    color: '#00b7b0',
+    fontFamily: 'Noto Sans KR',
+  },
+  titleWrapper: {
     display: 'flex',
+    width: '100%',
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    [theme.breakpoints.down('xs')]: {
-      flexDirection: 'column',
-    },
   },
-  question: {
-    width: '45%',
-    height: 400,
+  ansWrapper: {
     display: 'flex',
     flexDirection: 'column',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginRight: '30px',
-    [theme.breakpoints.down('md')]: {
-      width: '45%',
-      height: 350,
-      marginRight: '20px',
-    },
-    [theme.breakpoints.down('sm')]: {
-      width: '45%',
-      height: 300,
-      marginRight: '10px',
-    },
-    [theme.breakpoints.down('xs')]: {
-      width: '100%',
-      height: 200,
-      marginRight: '0px',
-    },
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
   },
-  questionText: {
-    width: '100%',
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: '10px',
-    boxShadow: '0px 0px 5px 1px rgba(0,0,0,0.2)',
-    padding: '10px 25px',
-    '&:hover': {
-      cursor: 'pointer'
-    },
-    [theme.breakpoints.down('xs')]: {
-      padding: '8px 8px',
-    },
+  ansTitle: {
+    fontSize: 20
   },
-  questionTextClicked: {
-    width: '100%',
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: '10px',
-    boxShadow: '0px 0px 5px 1px rgba(0,0,0,0.2)',
-    padding: '10px 25px',
-    '&:hover': {
-      cursor: 'pointer'
-    },
-    backgroundColor: '#3154EB',
-    '&>*': {
-      color: 'white !important'
-    },
-    [theme.breakpoints.down('xs')]: {
-      padding: '8px 8px',
-    },
-  },
-  qicon: {
-    width: '8%',
-    fontFamily: 'S-CoreDream-8Heavy',
-    fontSize: 25,
-    color: '#3154EB',
-    [theme.breakpoints.down('md')]: {
-      fontSize: 18,
-    },
-    [theme.breakpoints.down('sm')]: {
-      fontSize: 14,
-    },
-    [theme.breakpoints.down('xs')]: {
-      fontSize: 11,
-    },
-  },
-  qText: {
-    width: '86%',
-    fontFamily: 'Noto Sans KR',
-    fontSize: 20,
-    color: 'black',
-    [theme.breakpoints.down('md')]: {
-      fontSize: 18,
-    },
-    [theme.breakpoints.down('sm')]: {
-      fontSize: 14,
-    },
-    [theme.breakpoints.down('xs')]: {
-      fontSize: 11,
-    },
-  },
-  questionArrow: {
-    width: '12%',
-    fontFamily: 'S-CoreDream-5Heavy',
-    fontSize: 20,
-    color: '#3154EB',
-    textAlign: 'right',
-    [theme.breakpoints.down('md')]: {
-      fontSize: 18,
-    },
-    [theme.breakpoints.down('sm')]: {
-      fontSize: 14,
-    },
-    [theme.breakpoints.down('xs')]: {
-      fontSize: 11,
-    },
-  },
-  answer: {
-    width: '55%',
-    boxShadow: '0px 0px 5px 1px rgba(0,0,0,0.2)',
-    height: '400px',
-    padding: 30,
-    overflow: 'scroll',
-    overflowX: 'hidden',
-    [theme.breakpoints.down('md')]: {
-      width: '50%',
-      height: 350,
-      padding: 10,
-    },
-    [theme.breakpoints.down('sm')]: {
-      width: '50%',
-      height: 300,
-    },
-    [theme.breakpoints.down('xs')]: {
-      width: '100%',
-      height: 300,
-      marginTop: '30px',
-    },
-  },
-  answerTop: {
-    width: '100%',
-    height: 'auto',
-    borderBottom: '1px solid rgba(0,0,0,0.2)',
-    display: 'flex',
-    flexDirection: 'row',
-    [theme.breakpoints.down('xs')]: {
-      height: 'auto',
-    },
-  },
-  answerBottom: {
-    width: '100%',
-    height: '100%',
-    paddingTop: 30,
-    fontFamily: 'Noto Sans KR',
-    fontSize: 18,
-    color: 'black',
-    wordBreak: 'keep-all',
-    [theme.breakpoints.down('md')]: {
-      fontSize: 16,
-    },
-    [theme.breakpoints.down('sm')]: {
-      fontSize: 14,
-    },
-    [theme.breakpoints.down('xs')]: {
-      fontSize: 12,
-    },
-  },
-  aicon: {
-    width: 50,
-    fontFamily: 'S-CoreDream-8Heavy',
-    fontSize: 30,
-    color: '#3154EB',
-    [theme.breakpoints.down('md')]: {
-      fontSize: 22,
-    },
-    [theme.breakpoints.down('sm')]: {
-      fontSize: 20,
-    },
-    [theme.breakpoints.down('xs')]: {
-      fontSize: 18,
-    },
-  },
-  aText: {
-    width: '90%',
-    fontFamily: 'Noto Sans KR',
-    fontWeight: 600,
-    fontSize: 23,
-    color: 'black',
-    [theme.breakpoints.down('md')]: {
-      fontSize: 20,
-    },
-    [theme.breakpoints.down('sm')]: {
-      fontSize: 16,
-    },
-    [theme.breakpoints.down('xs')]: {
-      fontSize: 13,
-    },
-  },
-  answerText: {
-    fontFamily: 'Noto Sans KR',
-    fontSize: 18,
-    color: 'black',
-    margin: '10px 0px',
-    [theme.breakpoints.down('md')]: {
-      fontSize: 16,
-    },
-    [theme.breakpoints.down('sm')]: {
-      fontSize: 14,
-    },
-    [theme.breakpoints.down('xs')]: {
-      fontSize: 12,
-    },
+  arrow: {
+    width: 25,
+    height: 12
   }
+
 }));
 
 export default Styles;
