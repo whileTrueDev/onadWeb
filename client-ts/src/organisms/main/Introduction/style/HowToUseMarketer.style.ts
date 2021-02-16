@@ -2,77 +2,89 @@ import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    marginBottom: theme.spacing(0),
+    width: '100%',
+    margin: theme.spacing(5, 0),
   },
   marketerUse: {
-    paddingTop: theme.spacing(2),
-    color: 'white',
+    padding: theme.spacing(3, 4),
     wordBreak: 'keep-all',
-    hegiht: 300
+    borderTop: '1px solid #00a7ff',
+    borderLeft: '1px solid #00a7ff',
+    borderBottom: '1px solid #00a7ff',
+    position: 'relative',
+    [theme.breakpoints.between('sm', 'sm')]: {
+      padding: theme.spacing(1.5, 2),
+      borderLeft: 'none',
+      display: 'flex',
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center'
+    },
+    [theme.breakpoints.down('xs')]: {
+      borderLeft: 'none',
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
+      alignItems: 'center'
+    }
   },
-  head: {
-    fontFamily: 'Noto Sans kr',
-    color: 'white',
-    margin: theme.spacing(2, 0),
-    fontWeight: 600,
-    [theme.breakpoints.down('md')]: {
-      fontSize: 35,
-    },
-    [theme.breakpoints.down('sm')]: {
-      fontSize: 27,
-    },
-    [theme.breakpoints.down('sm')]: {
-      fontSize: 25,
-    },
-  },
-  numbertable: {
-    marginTop: theme.spacing(2),
-    paddingBottom: theme.spacing(6),
-    textAlign: 'center'
+  lineDecoration: {
+    width: 130,
+    position: 'absolute',
+    left: -1,
+    top: -5,
+    borderBottom: '5px solid #00a7ff'
   },
   subTitle: {
     fontFamily: 'Noto Sans kr',
     color: 'white',
-    margin: theme.spacing(2, 0)
+    margin: theme.spacing(2, 0),
+    [theme.breakpoints.down('sm')]: {
+      fontSize: 35
+    }
   },
   useNumber: {
-    borderRadius: '100%',
-    backgroundColor: 'white',
-    margin: '20px auto',
-    color: '#3154EB',
-    fontSize: 50,
-    width: 80,
-    height: 80,
-    fontWeight: 600
+    color: '#196ee3',
+    fontWeight: theme.typography.fontWeightBold,
+    [theme.breakpoints.down('sm')]: {
+      fontSize: 45
+    }
   },
   Content: {
     marginTop: theme.spacing(2),
     fontSize: 15
   },
-  inquireLink: {
-    color: 'yellow',
+  inquiryLink: {
+    color: '#196ee3',
     fontFamily: 'Noto Sans kr',
-    border: '1px solid yellow',
-    padding: '5px 10px',
-    fontSize: 16,
-    marginTop: 20
+    textDecoration: 'underline',
+    '&:hover': {
+      cursor: 'pointer'
+    },
+    [theme.breakpoints.down('sm')]: {
+      display: 'none'
+    }
   },
   sampleLink: {
-    color: 'white',
-    fontFamily: 'Noto Sans kr',
-    border: '1px solid white',
-    padding: '5px 10px',
+    color: theme.palette.common.black,
+    border: '1px solid black',
+    borderRadius: 10,
+    width: 100,
     fontSize: 16,
     marginTop: 20
   },
-  guideButton:{
-    border: '1px solid red',
-    padding: '5px 10px',
+  guideButton: {
+    color: 'white',
+    background: '#4083ff',
     marginTop: 20,
     marginLeft: 10,
+    borderRadius: 10,
+    [theme.breakpoints.down('md')]: {
+      marginLeft: 0,
+    }
   },
-  guideLink:{
-    color: 'red',
+  guideLink: {
+    color: 'white',
     fontFamily: 'Noto Sans kr',
     fontSize: 16,
   },
@@ -84,9 +96,9 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'center',
   },
   semiTitle: {
-    color: 'white',
+    color: '#196ee3',
     fontFamily: 'Noto Sans kr',
-    fontWeight: 600
+    fontWeight: theme.typography.fontWeightBold
   }
 }));
 

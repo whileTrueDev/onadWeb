@@ -1,95 +1,94 @@
 import { makeStyles } from '@material-ui/core/styles';
 
 const styles = makeStyles((theme) => ({
-  rootWrap: {
-    background: 'url(\'/pngs/introduction/marketerIntroduce.png\') no-repeat center center',
-    backgroundSize: 'cover',
-    width: '100%',
-    height: '700px',
-    [theme.breakpoints.down('md')]: {
-      height: '600px',
-    },
-    [theme.breakpoints.down('sm')]: {
-      height: '500px'
-    },
+  root: {
+    position: 'relative',
+    padding: '0 10%',
     [theme.breakpoints.down('xs')]: {
-      height: '450px'
+      padding: '0 5%',
     }
   },
-  containerWrap: {
-    backgroundColor: 'rgb(0,0,0, 0.6)',
-    width: '100%',
-    height: '100%',
+  wrapper: {
+    padding: theme.spacing(15, 0),
     display: 'flex',
-    flexDirection: 'row',
+    flexDirection: 'column',
     justifyContent: 'center',
+    alignItems: 'center'
   },
-  loginMiddle: {
-    color: 'white',
-    textAlign: 'left',
-    width: '50%',
-    fontSize: '20px',
-    fontFamily: 'Noto Sans KR',
-    marginRight: 30,
+  mainTop: {
+    margin: theme.spacing(5, 0),
+    width: '100%',
   },
-  h1: {
-    marginTop: '10px',
-    marginBottom: '5px',
-    wordBreak: 'keep-all',
-    fontSize: 40,
-    fontWeight: 600,
-    [theme.breakpoints.down('md')]: {
-      fontSize: 35,
-    },
-    [theme.breakpoints.down('sm')]: {
-      fontSize: 27,
-    },
-    [theme.breakpoints.down('sm')]: {
-      fontSize: 25,
-    },
+  middleLine: {
+    width: 350,
+    borderBottom: '3px solid #a8deff',
+    margin: theme.spacing(1.5, 0),
+    [theme.breakpoints.down('xs')]: {
+      width: 300,
+    }
   },
-  h1sub: {
-    marginTop: 40,
-    marginBottom: 40,
-    [theme.breakpoints.down('md')]: {
-      fontSize: 18,
-      marginTop: 35,
-      marginBottom: 35,
-    },
+  middleLine2: {
+    width: 350,
+    borderBottom: '3px solid #a8ffcd',
+    margin: theme.spacing(1.5, 0),
+    [theme.breakpoints.down('xs')]: {
+      width: 300,
+    }
+  },
+  mainTitle: {
+    fontWeight: theme.typography.fontWeightBold,
     [theme.breakpoints.down('sm')]: {
-      fontSize: 15,
-      marginTop: 30,
-      marginBottom: 30,
+      fontSize: 36
     },
     [theme.breakpoints.down('xs')]: {
-      fontSize: 12,
-      marginTop: 20,
-      marginBottom: 20,
-    },
+      fontSize: 28
+    }
   },
-  maintop: {
+  subtitle: {
+    [theme.breakpoints.down('sm')]: {
+      fontSize: 28
+    },
+    [theme.breakpoints.down('xs')]: {
+      fontSize: 20
+    }
+  },
+  imageWrapper: {
     width: '100%',
     display: 'flex',
-    flexDirection: 'row',
+    flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
+    overflow: 'hidden',
+    position: 'relative',
   },
-  maintopCenterVideo: {
-    width: '750px',
-    height: '500px',
+  glassEffect: {
+    display: 'none',
+    position: 'absolute',
+    pointerEvents: 'none',
+    width: 130,
+    height: 130,
+    background: 'transparent',
+    backdropFilter: 'blur(10px)',
+    transition: '0.1s'
   },
-  buttonLeft: {
-    width: '40%',
-    backgroundColor: '#3154EB',
-    borderRadius: '5px',
-    fontSize: 20,
-    marginRight: 20,
+  topImage: {
+    width: '90%',
+    margin: theme.spacing(5, 0)
   },
-  buttonRight: {
-    width: '40%',
-    borderRadius: '5px',
-    border: '1px solid #3154EB',
-    fontSize: 20,
+  kakaoContact: {
+    position: 'fixed',
+    right: 20,
+    bottom: 20,
+    width: 60,
+    height: 60,
+    zIndex: 300,
+    background: 'url(\'/contact/liveContact.svg\') no-repeat center center',
+    [theme.breakpoints.down('xs')]: {
+      width: 40,
+      height: 40,
+      right: 10,
+      bottom: 10,
+    }
   }
 }));
 

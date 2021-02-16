@@ -1,19 +1,17 @@
 import React from 'react';
 import useStyles from '../style/ProductHeroLayout.style';
 
-interface Props {
+interface ProductHeroLayoutProps {
   children: React.ReactNode;
-  MainUserType: string;
+  MainUserType: boolean;
 }
 
-function ProductHeroLayout({ children, MainUserType }: Props): JSX.Element {
+function ProductHeroLayout({ children, MainUserType }: ProductHeroLayoutProps): JSX.Element {
   const classes = useStyles();
 
   return (
-    <section className={MainUserType === 'marketer' ? (classes.root) : (classes.root2)}>
-      <div className={classes.containerWrap}>
-        {children}
-      </div>
+    <section className={MainUserType ? (classes.marketer) : (classes.creator)}>
+      {children}
     </section>
   );
 }

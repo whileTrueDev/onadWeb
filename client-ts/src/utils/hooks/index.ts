@@ -11,6 +11,7 @@ import useLoginValue from './useLoginValue';
 import useOpenValue from './useOpenValue';
 import useToggle from './useToggle';
 import useTooltip from './useTooltip';
+import useScript from './useScript';
 
 export {
   useGetRequest,
@@ -25,5 +26,6 @@ export {
   useLoginValue,
   useOpenValue,
   useToggle,
-  useTooltip
+  useTooltip,
+  useScript
 };

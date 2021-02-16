@@ -1,118 +1,92 @@
-import React from 'react';
+import React, { useLayoutEffect } from 'react';
 import {
-  Grow, Slide, useScrollTrigger, Grid, Button
+  Button, Typography, CircularProgress
 } from '@material-ui/core';
-import { Link } from 'react-router-dom';
+import shortid from 'shortid';
 import styles from '../style/HowToUse.style';
-// import Button from '../../../../../atoms/CustomButtons/Button';
 
-interface Props {
+interface HowToUseProps {
   source: {
-    title: string;
-    subTitle: string;
-    textMarketer: string;
-    textCreator: string;
+    content: string[];
   };
-  slideTime: number;
-  MainUserType: string;
+  MainUserType: boolean;
+  timer: NodeJS.Timeout | undefined;
 }
 
-function HowToUse({ source, slideTime, MainUserType }: Props): JSX.Element {
+function HowToUse({ source, MainUserType, timer }: HowToUseProps): JSX.Element {
   const classes = styles();
-  const trigger = useScrollTrigger({ threshold: 550, disableHysteresis: true });
+
+  const [loading, setLoading] = React.useState(false);
+  const [iframeLoading, setIframeLoading] = React.useState(false);
+
+  function handleClick(): void {
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+    }, 1000);
+  }
+
+  useLayoutEffect(() => {
+    const iframeDocument = document.getElementById('onadYouTube') as HTMLIFrameElement;
+    iframeDocument.src = 'https://www.youtube.com/embed/hwUgWypZyh8';
+
+    function handleLoad() {
+      if (!iframeLoading) {
+        setIframeLoading(true);
+        iframeDocument.src += '?autoplay=1';
+      }
+    }
+    iframeDocument.addEventListener('load', handleLoad);
+
+    return () => {
+      iframeDocument.removeEventListener('load', handleLoad);
+    };
+  }, [iframeLoading, timer]);
 
   return (
     <div className={classes.root}>
-      {MainUserType === 'marketer' ? (
-        <div className={classes.mainMiddle}>
-          <Slide
-            in={trigger}
-            direction="right"
-            {...(trigger
-              // trigger -> true
-              ? { timeout: slideTime }
-              // trigger -> false
-              : { timeout: slideTime })}
-          >
-            <Grid item className={classes.slide}>
-              <video className={classes.mainMiddleLeftVideo} autoPlay loop muted>
-                <source src="/video/main/howtouseMarketer.mp4" type="video/mp4" />
-                <track />
-              </video>
-            </Grid>
-          </Slide>
-          <div className={classes.loginButtonRight}>
-            <Grow in timeout={1500}>
-              <h1 className={classes.h1}>
-                {source.title}
-              </h1>
-            </Grow>
-            <Grow in timeout={1500}>
-              <h1 className={classes.h2}>
-                {source.subTitle}
-              </h1>
-            </Grow>
-            <img src="/pngs/main/howToUseMarketer.png" alt="Howto" className={classes.step} />
-            <div className={classes.h1sub}>
-              {source.textMarketer.split('\n').map((row) => (
-                <p key={row} className={classes.text}>{`${row}`}</p>
-              ))}
-            </div>
-            <Button
-              className={classes.buttonRight}
-              component={Link}
-              to="/introduce/marketer"
-            >
-              &rarr; 이용방법 자세히보기
-            </Button>
-          </div>
+      <div className={classes.wrapper}>
+        <div className={classes.iframeWrapper}>
+          <iframe
+            title="onadYouTube"
+            frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+            className={!iframeLoading ? classes.onadVideo : classes.onadVideoReady}
+            id="onadYouTube"
+          />
         </div>
-      )
-        : (
-          <div className={classes.mainMiddle}>
-            <Slide
-              in={trigger}
-              direction="right"
-              {...(trigger
-                // trigger -> true
-                ? { timeout: slideTime }
-                // trigger -> false
-                : { timeout: slideTime })}
-            >
-              <Grid item className={classes.slide}>
-                <video className={classes.mainMiddleLeftVideo} autoPlay loop muted>
-                  <source src="/video/main/howtouseCreator.mp4" type="video/mp4" />
-                  <track />
-                </video>
-              </Grid>
-            </Slide>
-            <div className={classes.loginButtonRight}>
-              <Grow in timeout={1500}>
-                <h1 className={classes.h1}>
-                  {source.title}
-                </h1>
-              </Grow>
-              <Grow in timeout={1500}>
-                <h1 className={classes.h2}>
-                  {source.subTitle}
-                </h1>
-              </Grow>
-              <img src="/pngs/main/howtouseCreator.png" alt="Howto" className={classes.step} />
-              <div className={classes.h1sub}>
-                {source.textCreator.split('\n').map((row) => (
-                  <p key={row} className={classes.text}>{`${row}`}</p>
-                ))}
-              </div>
-              <Button
-                className={classes.buttonRight}
-                component={Link}
-                to="/introduce/creator"
+        <div className={classes.contentWapper}>
+          {source.content.map((text) => (
+            <Typography variant="h4" key={shortid.generate()} className={classes.content}>{text}</Typography>
+          ))}
+          <div className={MainUserType ? classes.bottomLine : classes.bottomLine2} />
+          <Button
+            className={classes.button}
+            onClick={handleClick}
+          >
+            <Typography variant="subtitle1">
+              <a
+                href="/howtouse/온애드서비스소개서.pdf"
+                download="온애드서비스소개서"
+                className={classes.download}
               >
-                &rarr; 이용방법 자세히보기
-              </Button>
-            </div>
-          </div>
-        )}
+소개 자료 다운로드
+
+              </a>
+              {loading
+                  && (
+                  <CircularProgress
+                    disableShrink
+                    size={16}
+                    thickness={5}
+                    variant="indeterminate"
+                  />
+                  )}
+            </Typography>
+          </Button>
+        </div>
+      </div>
     </div>
   );
 }

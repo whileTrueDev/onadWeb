@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1180.224" height="708.4" viewBox="0 0 1180.224 708.4">
+    <defs>
+        <style>
+            .cls-1{fill:#c6e9ff}.cls-2{fill:#ffcbf5}.cls-3{fill:#acffff}.cls-4{fill:#e3dbff}.cls-6{fill:#add6ff}
+        </style>
+    </defs>
+    <g id="그룹_338" transform="translate(-212 -80.734)">
+        <path id="사각형_236" d="M0 0H118V118H0z" class="cls-1" transform="translate(920 80.734)"/>
+        <path id="패스_475" d="M330.022 234H212v118.022h236.045V234z" class="cls-2" transform="translate(0 -34.978)"/>
+        <path id="패스_476" d="M671 81v236.045h118.022V81z" class="cls-1" transform="translate(-104.933)"/>
+        <path id="패스_477" d="M1366.045 81h-118.023v118.022H1130v118.023h236.045V199.022h118.022V81z" class="cls-2" transform="translate(-209.866)"/>
+        <path id="패스_478" d="M601.045 352.022V234H483.022v118.022H365v118.023h354.067V352.022z" class="cls-3" transform="translate(-34.978 -34.978)"/>
+        <path id="패스_479" d="M824 234v236.045h118.022V234z" class="cls-4" transform="translate(-139.91 -34.978)"/>
+        <path id="패스_480" fill="#89f7fe" d="M1095.022 352.022V234H977v236.045h236.045V352.022z" transform="translate(-174.888 -34.978)"/>
+        <path id="패스_481" d="M754.045 540H518v118.022h354.067V540z" class="cls-6" transform="translate(-69.955 -104.933)"/>
+        <path id="패스_482" d="M1401.022 387H1283v236.045h236.045V387z" class="cls-6" transform="translate(-244.843 -69.955)"/>
+        <path id="패스_483" d="M1589 81v472.09h118.022V81z" class="cls-1" transform="translate(-314.798)"/>
+        <path id="패스_484" d="M330.022 505.022V387H212v354.067h236.045V505.022z" class="cls-4" transform="translate(0 -69.955)"/>
+        <path id="패스_486" d="M636.022 693H518v118.022h118.022v118.023h118.023V693z" class="cls-2" transform="translate(-69.955 -139.91)"/>
+        <path id="패스_487" d="M942.022 693H824v236.045h236.045V693z" class="cls-1" transform="translate(-139.91 -139.91)"/>
+        <path id="패스_489" d="M1401.022 846H1283v118.022h236.045V846z" class="cls-2" transform="translate(-244.843 -174.888)"/>
+        <path id="패스_490" d="M1519.045 693H1283v118.022h236.045v118.023h118.022V693z" class="cls-3" transform="translate(-244.843 -139.91)"/>
+    </g>
+</svg>

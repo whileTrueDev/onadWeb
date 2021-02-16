@@ -1,7 +1,7 @@
 import React from 'react';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import RegistStepper from '../../organisms/main/regist/Stepper';
-import AppAppBar from '../../organisms/main/layouts/AppAppbar';
+import NavTop from '../../organisms/main/layouts/NavTop';
 import useLoginValue from '../../utils/hooks/useLoginValue';
 
 
@@ -24,7 +24,7 @@ export default function Regist({ match }: Props): JSX.Element {
   const { logout } = useLoginValue();
   return (
     <div className={classes.root}>
-      <AppAppBar MainUserType="marketer" logout={logout} noTrigger />
+      <NavTop MainUserType logout={logout} />
       <RegistStepper platform={match.params.platform} />
     </div>
   );

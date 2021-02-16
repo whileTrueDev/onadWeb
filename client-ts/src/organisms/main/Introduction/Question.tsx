@@ -1,8 +1,11 @@
 import React from 'react';
 import shortid from 'shortid';
-import Styles from './style/Question.style';
+import { Typography, withStyles } from '@material-ui/core';
+import MuiAccordion from '@material-ui/core/Accordion';
+import MuiAccordionSummary from '@material-ui/core/AccordionSummary';
+import MuiAccordionDetails from '@material-ui/core/AccordionDetails';
 import textSource from './source/textSource';
-
+import Styles from './style/Question.style';
 
 interface QandAData {
   id: string;
@@ -10,22 +13,15 @@ interface QandAData {
   ans?: any | '';
 }
 
+
 function Question({ MainUserType }: { MainUserType: string }): JSX.Element {
   const classes = Styles();
 
-  let defaultQuestion: QandAData;
+  let ansData;
   if (MainUserType === 'marketer') {
-    defaultQuestion = {
-      id: 'one',
-      text: '온애드에서 진행가능한 광고 유형은 무엇인가요?',
-      ans: textSource.answerMarketer.one,
-    };
+    ansData = textSource.answerMarketer;
   } else {
-    defaultQuestion = {
-      id: 'one',
-      text: '온애드 가입 조건은 어떻게 되나요?',
-      ans: textSource.answerCreator.one,
-    };
+    ansData = textSource.answerCreator;
   }
 
   let source;
@@ -35,50 +31,86 @@ function Question({ MainUserType }: { MainUserType: string }): JSX.Element {
     source = textSource.questionCreator;
   }
 
-  const [questionNum, setQuestionNum] = React.useState(defaultQuestion);
+  const Accordion = withStyles(() => ({
+    root: {
+      borderTop: MainUserType === 'marketer' ? '3px solid #007af4' : '3px solid #33c2a3',
+      borderBottom: MainUserType === 'marketer' ? '3px solid #007af4' : '3px solid #33c2a3',
+      boxShadow: 'none',
+      '&:not(:last-child)': {
+        borderBottom: 0,
+      },
+      '&:before': {
+        display: 'none',
+      },
+      '&$expanded': {
+        margin: 'auto',
+      },
+    },
+    expanded: {},
+  }))(MuiAccordion);
 
+  const AccordionSummary = withStyles(() => ({
+    root: {
+      borderBottom: '1px solid #c6c6c6',
+      marginBottom: -1,
+      minHeight: 70,
+      '&$expanded': {
+        minHeight: 70,
+      },
+    },
+    content: {
+      '&$expanded': {
+        margin: '12px 0',
+      },
+    },
+    expanded: {},
+  }))(MuiAccordionSummary);
 
-  function handleClick(row: QandAData): void {
-    if (MainUserType === 'marketer') {
-      setQuestionNum({ id: row.id, text: row.text, ans: textSource.answerMarketer[row.id] });
-    } else {
-      setQuestionNum({ id: row.id, text: row.text, ans: textSource.answerCreator[row.id] });
-    }
+  const AccordionDetails = withStyles((theme) => ({
+    root: {
+      padding: theme.spacing(2),
+      backgroundColor: '#f8f8f8'
+    },
+  }))(MuiAccordionDetails);
+
+  function QnAAccordion({ source, ansData }: any): JSX.Element {
+    const [expanded, setExpanded] = React.useState<string | false>('one');
+
+    const handleChange = (row: any) => (event: React.ChangeEvent<{}>, newExpanded: boolean) => {
+      setExpanded(newExpanded ? row.id : false);
+    };
+
+    return (
+      <div>
+        {source.map((row: any, index: number) => (
+          <Accordion square expanded={expanded === row.id} onChange={handleChange(row)} key={shortid.generate()}>
+            <AccordionSummary aria-controls={`${row.id}d-content`} id={`${row.id}d-header`}>
+              <div className={classes.titleWrapper}>
+                <div className={classes.ansTitle}>
+                  {row.text}
+                </div>
+                <img src="/introduction/arrow.svg" alt="arrow" className={classes.arrow} />
+              </div>
+            </AccordionSummary>
+            <AccordionDetails>
+              <div className={classes.ansWrapper}>
+                {ansData[index].split('\n').map((ans: string) => (
+                  <Typography key={shortid.generate()} className={classes.color}>{`${ans}`}</Typography>
+                ))}
+              </div>
+            </AccordionDetails>
+          </Accordion>
+        ))}
+      </div>
+    );
   }
 
   return (
     <div className={classes.root}>
-      <h1 className={classes.h1}>
-        자주 묻는 질문
-      </h1>
-      <div className={classes.QnAWrapper}>
-        <div className={classes.question}>
-          {source.map((row: any) => (
-            <div
-              className={questionNum.id === row.id ? (classes.questionTextClicked) : (classes.questionText)}
-              key={shortid.generate()}
-              onClick={() => { handleClick(row); }}
-            >
-              <div className={classes.qicon}>Q</div>
-              <div className={classes.qText}>{`${row.text}`}</div>
-              <div className={classes.questionArrow}>&#62;</div>
-            </div>
-          ))}
-        </div>
-        <div className={classes.answer}>
-          <div className={classes.answerTop}>
-            <div className={classes.aicon}>Q.</div>
-            <div className={classes.aText}>
-              {questionNum.text}
-            </div>
-          </div>
-          <div className={classes.answerBottom}>
-            {questionNum.ans.split('\n').map((row: string) => (
-              <p key={shortid.generate()} className={classes.answerText}>{`${row}`}</p>
-            ))}
-          </div>
-        </div>
-      </div>
+      <Typography variant="h3" className={MainUserType === 'marketer' ? classes.title : classes.title2}>
+        FAQ
+      </Typography>
+      <QnAAccordion source={source} ansData={ansData} />
     </div>
   );
 }
