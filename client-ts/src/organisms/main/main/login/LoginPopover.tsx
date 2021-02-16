@@ -1,9 +1,7 @@
 import React from 'react';
 import {
-  Button, Hidden,
+  Button
 } from '@material-ui/core';
-import LockOpen from '@material-ui/icons/LockOpen';
-import SupervisedUserCircle from '@material-ui/icons/SupervisedUserCircle';
 import useStyles from '../style/LoginPopover.style';
 import MarketerLoginForm from './MarketerLoginForm';
 import CreatorLoginForm from './CreatorLoginForm';
@@ -11,10 +9,10 @@ import RegistDialog from '../../regist/RegistDialog';
 import history from '../../../../history';
 
 
-interface Props {
+interface LoginPopoverProps {
   type?: string;
   logout: () => void;
-  MainUserType?: string;
+  MainUserType?: boolean;
   trigger?: boolean;
   mode?: string | undefined;
 }
@@ -28,7 +26,7 @@ function LoginPopover({
   trigger,
   mode,
   logout,
-}: Props): JSX.Element {
+}: LoginPopoverProps): JSX.Element {
   const [loginValue, setLoginValue] = React.useState('');
   const [registOpen, setRegistOpen] = React.useState(false);
 
@@ -55,18 +53,15 @@ function LoginPopover({
         ? (
           <>
             <Button
-              className={classes.str_rightLink}
+              className={MainUserType ? classes.str_rightLink : classes.str_rightLink2}
               onClick={() => {
-                if (MainUserType === 'marketer') {
+                if (MainUserType) {
                   handleDialogOpenClick('marketer');
                 } else {
                   handleDialogOpenClick('creator');
                 }
               }}
             >
-              <Hidden mdUp>
-                <LockOpen />
-              </Hidden>
               온애드 시작하기
             </Button>
 
@@ -83,27 +78,21 @@ function LoginPopover({
         )
         : (
           <>
-            {MainUserType === 'marketer' ? (
+            {MainUserType ? (
               <div>
                 {mode ? (
                   <Button
-                    className={classes.rightLink2}
+                    className={classes.rightLink}
                     onClick={handleRegistOpen}
                   >
-                    <Hidden mdUp>
-                      <SupervisedUserCircle style={{ marginRight: 10 }} />
-                    </Hidden>
                     회원가입
                   </Button>
                 )
                   : (
                     <Button
-                      className={!trigger ? (classes.rightLink) : (classes.rightLink2)}
+                      className={classes.rightLink}
                       onClick={handleRegistOpen}
                     >
-                      <Hidden mdUp>
-                        <SupervisedUserCircle style={{ marginRight: 10 }} />
-                      </Hidden>
                       회원가입
                     </Button>
                   )}
@@ -114,27 +103,21 @@ function LoginPopover({
                 <div>
                   {mode ? (
                     <Button
-                      className={classes.rightLink2}
+                      className={classes.rightLink}
                       onClick={() => {
                         history.push('/creator/signup');
                       }}
                     >
-                      <Hidden mdUp>
-                        <SupervisedUserCircle style={{ marginRight: 10 }} />
-                      </Hidden>
                       회원가입
                     </Button>
                   )
                     : (
                       <Button
-                        className={!trigger ? (classes.rightLink) : (classes.rightLink2)}
+                        className={classes.rightLink}
                         onClick={() => {
                           history.push('/creator/signup');
                         }}
                       >
-                        <Hidden mdUp>
-                          <SupervisedUserCircle style={{ marginRight: 10 }} />
-                        </Hidden>
                         회원가입
                       </Button>
                     )}

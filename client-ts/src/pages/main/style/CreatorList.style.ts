@@ -1,116 +1,131 @@
 import makeStyles from '@material-ui/core/styles/makeStyles';
 
+
 const useStyles = makeStyles((theme) => ({
   root: {
-    background: 'url(\'/pngs/main/loading.gif\') no-repeat center center',
-    backgroundSize: 'cover',
+    height: '100%',
     width: '100%',
-    height: '700px',
-    [theme.breakpoints.down('md')]: {
-      height: '600px',
-    },
-    [theme.breakpoints.down('sm')]: {
-      height: '500px'
-    },
-    [theme.breakpoints.down('xs')]: {
-      height: '600px'
-    }
   },
   containerWrap: {
-    backgroundColor: 'rgb(0,0,0, 0.6)',
+    background: 'linear-gradient(to bottom, #fff, #dfe9f3)',
+    marginTop: theme.spacing(8),
     width: '100%',
-    height: '100%',
     display: 'flex',
+    height: 700,
     flexDirection: 'row',
     justifyContent: 'center',
-  },
-  loginMiddle: {
-    color: 'white',
-    textAlign: 'left',
-    width: '50%',
-    fontSize: '20px',
-    fontFamily: 'Noto Sans KR',
-    marginRight: 30,
-  },
-  h1: {
-    marginTop: '10px',
-    marginBottom: '5px',
-    fontSize: 45,
-    fontWeight: 600,
+    paddingBottom: theme.spacing(5),
     [theme.breakpoints.down('md')]: {
-      fontSize: 35,
+      height: 600
     },
     [theme.breakpoints.down('sm')]: {
-      fontSize: 27,
-    },
-    [theme.breakpoints.down('sm')]: {
-      fontSize: 25,
-    },
-  },
-  h1sub: {
-    marginTop: 40,
-    marginBottom: 40,
-    [theme.breakpoints.down('md')]: {
-      fontSize: 18,
-      marginTop: 35,
-      marginBottom: 35,
-    },
-    [theme.breakpoints.down('sm')]: {
-      fontSize: 15,
-      marginTop: 30,
-      marginBottom: 30,
+      height: 500
     },
     [theme.breakpoints.down('xs')]: {
-      fontSize: 12,
-      marginTop: 20,
-      marginBottom: 20,
-    },
+      display: 'none'
+    }
   },
-  maintop: {
+  title: {
+    fontWeight: theme.typography.fontWeightBold,
+    [theme.breakpoints.down('xs')]: {
+      marginTop: theme.spacing(5)
+    }
+  },
+  mainImage: {
     width: '100%',
+    height: '100%'
+  },
+  wrapper: {
+    padding: '5% 15%',
+    [theme.breakpoints.down('md')]: {
+      padding: '5% 3%',
+    },
+    [theme.breakpoints.down('sm')]: {
+      padding: '5% 1%',
+    },
+    [theme.breakpoints.down('xs')]: {
+      padding: '10% 0%',
+    }
+  },
+  liveContainer: {
+    overflowX: 'scroll',
+    width: '100%',
+    height: 300,
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'center',
     alignItems: 'center',
-  },
-  mainList: {
-    padding: '80px 10%'
-  },
-  listWrapper: {
-    padding: 20,
-  },
-  cardTitle: {
-    fontFamily: 'S-CoreDream-8Heavy',
-    fontSize: 22,
-    margin: 0
-  },
-  liveTitle: {
-    fontFamily: 'S-CoreDream-8Heavy',
-    fontSize: 22,
-    margin: 0,
-    background: 'red',
-    color: 'white'
-  },
-  live: {
-    borderRadius: '10px',
-    height: 200,
-    boxShadow: '0px 0px 15px 3px red',
-    '&:hover': {
-      boxShadow: '0px 0px 30px 5px red'
+    justifyContent: 'flex-start',
+    margin: theme.spacing(3, 0),
+    [theme.breakpoints.down('sm')]: {
+      height: 200,
+    },
+    [theme.breakpoints.down('xs')]: {
+      height: 110,
     }
   },
-  notlive: {
-    borderRadius: '10px',
-    height: 200,
-    boxShadow: '0px 0px 15px 0px rgba(0, 0, 0, 0.1)',
-    '&:hover': {
-      boxShadow: '0px 0px 30px 5px rgba(0, 0, 255, 0.7)'
+  liveCreatorWrapper: {
+    borderRadius: '50%',
+    backgroundOrigin: 'border-box',
+    backgroundClip: 'content-box, border-box',
+    margin: theme.spacing(2, 2),
+    width: 160,
+    height: 160,
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    [theme.breakpoints.down('sm')]: {
+      width: 100,
+      height: 100,
+    },
+    [theme.breakpoints.down('xs')]: {
+      width: 60,
+      height: 60,
     }
   },
-  loadingTitle: {
-    fontFamily: 'Noto Sans KR',
-    fontSize: 40,
-    fontWeight: 580
+  liveCreator: {
+    margin: theme.spacing(2, 2),
+    width: 150,
+    height: 150,
+    borderRadius: '50%',
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    [theme.breakpoints.down('sm')]: {
+      width: 90,
+      height: 90,
+    },
+    [theme.breakpoints.down('xs')]: {
+      width: 50,
+      height: 50,
+    }
+  },
+  creatorLogoWrapper: {
+    borderRadius: '50%',
+    backgroundOrigin: 'border-box',
+    backgroundClip: 'content-box, border-box',
+    margin: theme.spacing(1, 5),
+    width: 60,
+    height: 60,
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  creatorLogo: {
+    width: 50,
+    height: 50,
+    borderRadius: '50%',
+  },
+  columnWrapper: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center'
+  },
+  columnText: {
+    fontWeight: theme.typography.fontWeightBold
   }
 }));
 

@@ -2,58 +2,63 @@ import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    marginBottom: theme.spacing(0),
+    width: '100%',
+    margin: theme.spacing(5, 0),
   },
   creatorUse: {
-    paddingTop: theme.spacing(2),
-    color: 'white',
+    padding: theme.spacing(3, 4),
     wordBreak: 'keep-all',
-    hegiht: 300
+    borderTop: '1px solid #29e3dc',
+    borderLeft: '1px solid #29e3dc',
+    borderBottom: '1px solid #29e3dc',
+    position: 'relative',
+    [theme.breakpoints.between('sm', 'sm')]: {
+      padding: theme.spacing(1.5, 2),
+      borderLeft: 'none',
+      display: 'flex',
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center'
+    },
+    [theme.breakpoints.down('xs')]: {
+      borderLeft: 'none',
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
+      alignItems: 'center'
+    }
   },
-  head: {
+  lineDecoration: {
+    width: 130,
+    position: 'absolute',
+    left: -1,
+    top: -5,
+    borderBottom: '5px solid #29e3dc'
+  },
+  subTitle: {
     fontFamily: 'Noto Sans kr',
     color: 'white',
     margin: theme.spacing(2, 0),
-    fontWeight: 600,
-    [theme.breakpoints.down('md')]: {
-      fontSize: 35,
-    },
     [theme.breakpoints.down('sm')]: {
-      fontSize: 27,
-    },
-    [theme.breakpoints.down('sm')]: {
-      fontSize: 25,
-    },
-  },
-  numbertable: {
-    marginTop: theme.spacing(2),
-    paddingBottom: theme.spacing(6),
-    textAlign: 'center'
-  },
-  subTitle: {
-    fontFamily: 'Noto Sans KR',
-    color: 'white',
-    margin: theme.spacing(2, 0)
+      fontSize: 35
+    }
   },
   useNumber: {
-    borderRadius: '100%',
-    backgroundColor: 'white',
-    margin: '20px auto',
-    color: '#FFAA00',
-    fontSize: 50,
-    width: 80,
-    height: 80,
-    fontWeight: 600
+    color: '#29e3dc',
+    fontWeight: theme.typography.fontWeightBold,
+    [theme.breakpoints.down('sm')]: {
+      fontSize: 45
+    }
   },
   Content: {
     marginTop: theme.spacing(2),
     fontSize: 15
   },
   sampleLink: {
-    color: 'white',
-    fontFamily: 'Noto Sans kr',
-    border: '1px solid white',
-    padding: '5px 10px',
+    color: theme.palette.common.black,
+    border: '1px solid black',
+    borderRadius: 10,
+    width: 100,
     fontSize: 16,
     marginTop: 20
   },
@@ -63,7 +68,12 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-  }
+  },
+  semiTitle: {
+    color: '#29e3dc',
+    fontFamily: 'Noto Sans kr',
+    fontWeight: theme.typography.fontWeightBold
+  },
 }));
 
 export default useStyles;

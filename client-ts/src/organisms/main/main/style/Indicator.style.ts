@@ -1,111 +1,92 @@
 import makeStyles from '@material-ui/core/styles/makeStyles';
 
 const useStyles = makeStyles((theme) => ({
-  container: {
-    background: 'linear-gradient(60deg, #0D93BF 30%, #3154EB 90%)',
+  root: {
     width: '100%',
-    height: '500px',
+    height: '100%',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(255,255,255, 0.6)'
+  },
+  contentWrapper: {
+    backgroundColor: 'rgb(255,255,255,0.2)',
+    borderRadius: '20px',
+    boxShadow: '0px 0px 3px 2px rgba(255,255,255,0.2)',
+  },
+  content: {
+    width: 220,
+    height: 160,
+    borderRadius: '20px',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    [theme.breakpoints.down('sm')]: {
+      width: 180,
+      height: 130,
+    },
+    [theme.breakpoints.down('xs')]: {
+      width: 150,
+      height: 110,
+    }
+  },
+  text: {
     color: 'white',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingTop: 0,
-    paddingBottom: 40,
+    marginBottom: theme.spacing(2),
+  },
+  count: {
+    color: 'white',
+    fontWeight: theme.typography.fontWeightBold,
     [theme.breakpoints.down('xs')]: {
-      height: 'auto'
-    },
+      fontSize: 22
+    }
   },
-  wrapper: {
-    width: '1100px',
-    border: '2px solid white',
-    padding: '0px 60px',
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-    [theme.breakpoints.down('md')]: {
-      padding: '8px 30px',
-      width: '825px',
-    },
-    [theme.breakpoints.down('sm')]: {
-      padding: '7px 20px',
-      width: '450px',
-    },
+  box1: {
+    background: 'linear-gradient(to right, #20BFE2, #44A0E7)',
+    animation: '$flowTop1 3s ease-in-out forwards',
     [theme.breakpoints.down('xs')]: {
-      padding: '6px 15px',
-      width: '70%',
-    },
+      animation: 'none'
+    }
   },
-  item: {
-    padding: '10px 40px',
-    textAlign: 'center',
-    [theme.breakpoints.down('md')]: {
-      padding: '8px 30px',
-    },
-    [theme.breakpoints.down('sm')]: {
-      padding: '7px 20px',
-    },
+  '@keyframes flowTop1': {
+    '0%': { transform: 'translate(0, 0)' },
+    '100%': { transform: 'translate(0, -70px)' },
+  },
+  box2: {
+    background: 'linear-gradient(to right, #40A4E6, #6384EB)',
+    animation: '$flowTop2 3s ease-in-out forwards',
     [theme.breakpoints.down('xs')]: {
-      padding: '6px 15px',
-    },
+      animation: 'none'
+    }
   },
-  itemSub: {
-    fontWeight: 550,
-    fontFamily: 'Noto sans KR',
-    fontSize: 20
+  '@keyframes flowTop2': {
+    '0%': { transform: 'translate(0, 0)' },
+    '100%': { transform: 'translate(0, -30px)' },
   },
-  date: {
-    fontFamily: 'S-CoreDream-7Heavy',
-    [theme.breakpoints.down('md')]: {
-      fontSize: '1.2em'
-    },
-    [theme.breakpoints.down('sm')]: {
-      fontSize: '1em'
-    },
+  box3: {
+    background: 'linear-gradient(to right, #6088EA, #826AEF)',
+    animation: '$flowTop3 3s ease-in-out forwards',
     [theme.breakpoints.down('xs')]: {
-      fontSize: '0.8',
-    },
+      animation: 'none'
+    }
   },
-  title: {
-    fontWeight: 600,
-    fontFamily: 'Noto sans KR',
-    marginBottom: 30,
-    marginTop: 10,
-    [theme.breakpoints.down('md')]: {
-      fontSize: '30px'
-    },
-    [theme.breakpoints.down('sm')]: {
-      fontSize: '25px'
-    },
+  '@keyframes flowTop3': {
+    '0%': { transform: 'translate(0, 0)' },
+    '100%': { transform: 'translate(0, -100px)' },
+  },
+  box4: {
+    background: 'linear-gradient(to right, #7E6DEE, #A34DF4)',
+    animation: '$flowTop4 3s ease-in-out forwards',
     [theme.breakpoints.down('xs')]: {
-      marginTop: 20,
-      textAlign: 'center',
-      fontSize: '20px',
-      wordBreak: 'keep-all'
-    },
+      animation: 'none'
+    }
   },
-  innerWrapper: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'center'
+  '@keyframes flowTop4': {
+    '0%': { transform: 'translate(0, 0)' },
+    '100%': { transform: 'translate(0, -40px)' },
   },
-  itemTitle: {
-    fontWeight: 600,
-    fontFamily: 'Noto Sans KR',
-    fontSize: 25,
-    [theme.breakpoints.down('md')]: {
-      fontSize: 20
-    },
-    [theme.breakpoints.down('sm')]: {
-      fontSize: 19
-    },
-    [theme.breakpoints.down('xs')]: {
-      fontSize: 17,
-      wordBreak: 'keep-all'
-    },
-  }
+
 }));
 
 export default useStyles;

@@ -1,8 +1,9 @@
 import {
+  Avatar,
   Button,
   Chip,
   CircularProgress,
-  Grid, makeStyles, Paper, Typography,
+  Grid, makeStyles, Typography,
 } from '@material-ui/core';
 import React, { useCallback, useEffect, useState } from 'react';
 import OnadBanner from '../../../../atoms/Banner/OnadBanner';
@@ -13,10 +14,18 @@ import axiosInstance from '../../../../utils/axios';
 const useStyles = makeStyles((theme) => ({
   bold: { fontWeight: 'bold', color: theme.palette.text.primary },
   container: { marginBottom: theme.spacing(4) },
-  paper: { padding: theme.spacing(2), height: 350, overflowY: 'auto' },
-  img: { maxHeight: 160, maxWidth: 320, },
-  bannerContents: { marginLeft: theme.spacing(1) },
-  linkTitle: { textDecoration: 'underline', cursor: 'pointer' },
+  linkTitle: {
+    textDecoration: 'underline',
+    cursor: 'pointer',
+    '&:hover': {
+      color: theme.palette.primary.light
+    }
+  },
+  campaign: { margin: theme.spacing(0, 1, 4, 1), },
+  campaignSrc: { marginBottom: theme.spacing(1), width: '100%', },
+  campaignImage: { maxWidth: 400, maxHeight: 200 },
+  campaignDesc: { display: 'flex', marginBottom: theme.spacing(1), maxWidth: 320 },
+  marketerLogo: { margin: theme.spacing(1, 1, 0, 0.5) },
   desc: { marginTop: theme.spacing(1) },
   loading: {
     display: 'flex', justifyContent: 'center', height: 200, alignItems: 'center'
@@ -41,6 +50,7 @@ export interface CampaignData {
   campaignDescription: string;
   optionType: number;
   priorityType: number;
+  profileImage?: string;
 }
 export default function BannerList(): JSX.Element {
   const classes = useStyles();
@@ -103,53 +113,56 @@ export default function BannerList(): JSX.Element {
       </Grid>
       )}
       {/* 목록 */}
-      {data.map((campaign) => (
-        <Grid item xs={12} sm={6} lg={3} key={campaign.campaignId}>
-          <Paper className={classes.paper}>
-            <div>
-              <div className={classes.img}>
+      <Grid item xs={12} container>
+        {data.map((campaign) => (
+          <Grid item xs={12} sm={6} md={4} lg={3} key={campaign.campaignId}>
+            <div className={classes.campaign}>
+              <div className={classes.campaignSrc}>
                 <OnadBanner
                   src={campaign.bannerSrc}
-                  alt="bannerArea"
-                  style={{ maxWidth: '100%', maxHeight: '100%' }}
+                  alt=""
+                  width="100%"
+                  height="100%"
+                  className={classes.campaignImage}
                 />
               </div>
-
-              <div className={classes.bannerContents}>
+              <div className={classes.campaignDesc}>
+                <Avatar src={campaign.profileImage} className={classes.marketerLogo} />
                 <div>
-                  {campaign.links && JSON.parse(campaign.links).links.map((link: Link) => (
-                    <>
-                      {link.primary && (
-                      <Typography
-                        component="span"
-                        key={link.linkName}
-                        className={classes.linkTitle}
-                        onClick={() => window.open(link.linkTo)}
-                      >
-                        {' '}
-                        {link.linkName}
-                      </Typography>
-                      )}
-                    </>
-                  ))}
-                  &nbsp;
                   <Chip
                     size="small"
                     label={campaign.state ? '현재진행중' : '광고종료'}
                     color={campaign.state ? 'primary' : 'default'}
                   />
-                </div>
-                <Typography variant="caption" color="textSecondary">{`광고 첫 게시 ${campaign.date}`}</Typography>
-                <Typography variant="body2">{`배너광고 ${campaign.CPM.toLocaleString()}원 • 클릭광고 ${campaign.CPC.toLocaleString()}원`}</Typography>
-                <Typography variant="body2">{`${renderOptionType(campaign.optionType)}`}</Typography>
-                <div className={classes.desc}>
-                  <Typography variant="body2">{campaign.campaignDescription}</Typography>
+                  <div>
+                    {campaign.links && JSON.parse(campaign.links).links.map((link: Link) => (
+                      <span key={link.linkName}>
+                        {link.primary && (
+                        <Typography
+                          component="span"
+                          color="textPrimary"
+                          className={classes.linkTitle}
+                          onClick={() => window.open(link.linkTo)}
+                        >
+                          {' '}
+                          {link.linkName}
+                        </Typography>
+                        )}
+                      </span>
+                    ))}
+                  </div>
+                  <Typography variant="caption" color="textSecondary">{`${campaign.marketerName},첫게시: ${campaign.date}`}</Typography>
+                  <Typography color="textPrimary" variant="body2">{`배너광고 ${campaign.CPM.toLocaleString()}원 • 클릭광고 ${campaign.CPC.toLocaleString()}원`}</Typography>
+                  <Typography color="textPrimary" variant="body2">{`${renderOptionType(campaign.optionType)}`}</Typography>
+                  <div className={classes.desc}>
+                    <Typography color="textPrimary" variant="body2">{campaign.campaignDescription}</Typography>
+                  </div>
                 </div>
               </div>
             </div>
-          </Paper>
-        </Grid>
-      ))}
+          </Grid>
+        ))}
+      </Grid>
 
       {/* 로딩 */}
       {loading && (

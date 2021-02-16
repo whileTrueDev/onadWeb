@@ -6,11 +6,12 @@ import usePatchRequest from './usePatchRequest';
 import useAnchorEl from './useAnchorEl';
 import useDialog from './useDialog';
 import useEventTargetValue from './useEventTargetValue';
-import useImageUpload from './useImageUpload';
+import useBannerUpload from './useBannerUpload';
 import useLoginValue from './useLoginValue';
 import useOpenValue from './useOpenValue';
 import useToggle from './useToggle';
 import useTooltip from './useTooltip';
+import useScript from './useScript';
 
 export {
   useGetRequest,
@@ -21,9 +22,10 @@ export {
   useAnchorEl,
   useDialog,
   useEventTargetValue,
-  useImageUpload,
+  useBannerUpload,
   useLoginValue,
   useOpenValue,
   useToggle,
-  useTooltip
+  useTooltip,
+  useScript
 };

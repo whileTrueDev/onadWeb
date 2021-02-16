@@ -5,7 +5,7 @@ import ClickHeatmap from '../../../../../atoms/Chart/heatmap/ClickHeatmap';
 import { HeatmapInterface } from '../../dashboard/interfaces';
 
 interface HeatmapReportProps {
-  clickData: HeatmapInterface[] | null;
+  clickData?: HeatmapInterface[];
 }
 
 export default function HeatmapReport(props: HeatmapReportProps): JSX.Element {
