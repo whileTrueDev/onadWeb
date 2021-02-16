@@ -23,7 +23,7 @@ interface AdChatRes { adChatAgreement: 1 | 0 }
 interface ClicksRes { adpanel: number; adchat: number }
 interface LevelRes { creatorId: string; level: number; exp: number }
 
-const MyBanner = (): JSX.Element => {
+const CampaignManage = (): JSX.Element => {
   // 배너광고 그만하기 성공시 스낵바
   const banSuccessSnack = useDialog();
 
@@ -161,4 +161,4 @@ const MyBanner = (): JSX.Element => {
     </div>
   );
 };
-export default MyBanner;
+export default CampaignManage;
