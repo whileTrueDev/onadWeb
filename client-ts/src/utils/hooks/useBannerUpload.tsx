@@ -9,7 +9,7 @@ export interface ImageData {
   newImageUrl: UploadImage;
 }
 
-export interface UseImageUploadResult {
+export interface UseBannerUploadResult {
   imageUrl: UploadImage;
   imageName: string | null | undefined;
   handleReset: () => void;
@@ -27,9 +27,9 @@ export interface UseImageUploadResult {
  * iamgeUrl, imageName, handleReset, handleImageChange, readImage, handleUploadClick
  * @reference data_uri_scheme : https://en.wikipedia.org/wiki/Data_URI_scheme
  */
-export default function useImageUpload(
+export default function useBannerUpload(
   DEFAULT_IMAGE: string,
-): UseImageUploadResult {
+): UseBannerUploadResult {
   const [imageUrl, setImageUrl] = React.useState<string | null>(DEFAULT_IMAGE);
   const [imageName, setImageName] = React.useState<string | undefined>('');
 

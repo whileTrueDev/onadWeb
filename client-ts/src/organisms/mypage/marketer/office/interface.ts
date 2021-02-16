@@ -3,7 +3,7 @@ export interface BusinessInterface {
   marketerBusinessRegSrc: string;
 }
 
-export interface UserInterface {
+export interface MarketerInfo {
   marketerId: string;
   marketerName: string;
   marketerMail: string;
@@ -11,6 +11,7 @@ export interface UserInterface {
   marketerBusinessRegNum: string;
   marketerContraction: number;
   platformType: number;
+  profileImage?: string;
 }
 
 export interface AccountInterface {
