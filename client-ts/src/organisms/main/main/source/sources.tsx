@@ -82,7 +82,7 @@ const sources = {
       imageUrl: './reference/lastkingdom.png'
     },
     {
-      imageUrl: './reference/LGU+.png'
+      imageUrl: './reference/lguPlus.png'
     },
     {
       imageUrl: './reference/stillalive.png'
