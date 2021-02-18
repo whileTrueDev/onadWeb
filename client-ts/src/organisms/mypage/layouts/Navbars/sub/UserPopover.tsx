@@ -10,7 +10,7 @@ import EmojiObjectsIcon from '@material-ui/icons/EmojiObjects';
 import NightsStayIcon from '@material-ui/icons/NightsStay';
 // core components
 import {
-  Divider, List, ListItem, Popover, Avatar, ListItemText, capitalize
+  Divider, List, ListItem, Popover, Avatar, ListItemText,
 } from '@material-ui/core';
 import useTheme from '@material-ui/core/styles/useTheme';
 import makeStyles from '@material-ui/core/styles/makeStyles';
@@ -65,9 +65,7 @@ export default function UserPopover(props: UserPopoverProps): JSX.Element {
         {/* 유저 정보 */}
         <List>
           <ListItem style={{ display: 'flex', alignItems: 'center' }}>
-            <Avatar className={classes.icon} src={userData.creatorLogo || userData.afreecaLogo || ''}>
-              {userData.loginId ? capitalize(userData.loginId[0]) : ''}
-            </Avatar>
+            <Avatar className={classes.icon} src={userData.creatorLogo || userData.afreecaLogo || ''} />
             {/* 트위치만 연동된 경우 */}
             {userData.creatorName && (
             <ListItemText primary={`${userData.creatorName} (${userData.loginId})`} secondary={userData.creatorMail || ''} />
@@ -91,9 +89,7 @@ export default function UserPopover(props: UserPopoverProps): JSX.Element {
           <ListItem
             button
             aria-label="User"
-            to={window.location.pathname.includes('marketer')
-              ? '/mypage/marketer/myoffice'
-              : '/mypage/creator/user'}
+            to="/mypage/creator/user"
             component={Link}
           >
             <Person color="action" className={classes.icon} />
@@ -102,7 +98,7 @@ export default function UserPopover(props: UserPopoverProps): JSX.Element {
           <ListItem
             button
             aria-label="to-notice"
-            to={window.location.pathname.includes('marketer') ? 'mypage/marketer/notice' : '/mypage/creator/notice'}
+            to="/mypage/creator/notice"
             component={Link}
             onClick={(): void => {
               if (!noticeReadFlagGet.loading && noticeReadFlagGet.data) {

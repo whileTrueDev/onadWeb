@@ -10,30 +10,22 @@ import EmojiObjectsIcon from '@material-ui/icons/EmojiObjects';
 import NightsStayIcon from '@material-ui/icons/NightsStay';
 // core components
 import {
-  Divider, List, ListItem, Popover, Avatar, ListItemText,
+  Divider, List, ListItem, Popover, Avatar, ListItemText, IconButton, Tooltip,
 } from '@material-ui/core';
 import useTheme from '@material-ui/core/styles/useTheme';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import { UseGetRequestObject } from '../../../../../utils/hooks/useGetRequest';
 import { OnadTheme } from '../../../../../theme';
+import { MarketerInfo } from '../../../marketer/office/interface';
+import history from '../../../../../history';
 
 const useStyles = makeStyles((theme) => ({
   container: { width: 280, },
   icon: { marginRight: theme.spacing(2) }
 }));
-
-export interface MarketerInfoRes {
-  marketerId: string;
-  marketerName: string;
-  marketerMail: string;
-  marketerPhoneNum: string;
-  marketerBusinessRegNum: string;
-  marketerContraction: string;
-  platformType: string;
-}
 export interface MarketerPopoverProps {
   open: boolean;
-  userData: MarketerInfoRes;
+  userData: MarketerInfo;
   anchorEl?: HTMLElement | null;
   handleAnchorClose: () => void;
   handleLogoutClick: () => void;
@@ -73,7 +65,11 @@ export default function MarketerPopover(props: MarketerPopoverProps): JSX.Elemen
         {/* 유저 정보 */}
         <List>
           <ListItem style={{ display: 'flex', alignItems: 'center' }}>
-            <Avatar className={classes.icon} />
+            <Tooltip title="변경하러가기" arrow>
+              <IconButton onClick={(): void => history.push('/mypage/marketer/user')}>
+                <Avatar src={userData.profileImage} />
+              </IconButton>
+            </Tooltip>
             <ListItemText
               primary={userData.marketerName}
               secondary={userData.marketerMail}
@@ -87,9 +83,7 @@ export default function MarketerPopover(props: MarketerPopoverProps): JSX.Elemen
           <ListItem
             button
             aria-label="User"
-            to={window.location.pathname.includes('marketer')
-              ? '/mypage/marketer/myoffice'
-              : '/mypage/creator/user'}
+            to="/mypage/marketer/user"
             component={Link}
           >
             <Person color="action" className={classes.icon} />

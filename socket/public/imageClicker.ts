@@ -1,10 +1,10 @@
-function imageClicker(socket: any, THIS_URL: string, programType: string) {
+function imageClicker(socket: any, THIS_URL: string, programType: string): void {
   $(document).ready(() => {
     let onOff = true;
     const cutUrl = `/${THIS_URL.split('/')[4]}`;
 
-    $('.img-area').dblclick(() => {
-      $('.img-area').toggleClass('hidden');
+    $('.banner-box').dblclick(() => {
+      $('.banner-box').toggleClass('hidden');
       onOff = !onOff;
       socket.emit('banner click', [cutUrl, onOff, programType]);
     });

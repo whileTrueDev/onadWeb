@@ -155,28 +155,24 @@ router.route('/list')
       // @by hwasurr, 2021. 01. 05
       const listQuery = `
       SELECT
-      CT.campaignId, CT.date, CT.creatorId,
-      BR.bannerSrc,
-      campaign.connectedLinkId, campaign.onOff as state, campaign.marketerName,
-      campaign.campaignDescription, campaign.priorityType, campaign.optionType, campaign.targetList,
-      MI.marketerContraction,
-      IR.links
+        CT.campaignId, CT.date, CT.creatorId,
+        BR.bannerSrc,
+        campaign.connectedLinkId, campaign.onOff as state, campaign.marketerName,
+        campaign.campaignDescription, campaign.priorityType, campaign.optionType, campaign.targetList,
+        MI.marketerContraction, MI.profileImage,
+        IR.links
       FROM (
-      SELECT creatorId, campaignId , min(date) as date
-      FROM campaignTimestamp
-      WHERE creatorId = ?
-      GROUP BY campaignId
+        SELECT creatorId, campaignId , min(date) as date
+        FROM campaignTimestamp
+        WHERE creatorId = ?
+        GROUP BY campaignId
       ) AS CT
-      JOIN campaign
-      ON CT.campaignId = campaign.campaignId
-      JOIN bannerRegistered AS BR
-      ON campaign.bannerId = BR.bannerId
-      LEFT JOIN linkRegistered AS IR
-      ON connectedLinkId = IR.linkId
-      LEFT JOIN marketerInfo AS MI
-      ON campaign.marketerId = MI.marketerId
-        ORDER BY campaign.onOff = 1 AND MI.marketerContraction = 1 DESC, CT.date DESC
-        LIMIT ?, ?
+        JOIN campaign ON CT.campaignId = campaign.campaignId
+        JOIN bannerRegistered AS BR ON campaign.bannerId = BR.bannerId
+        LEFT JOIN linkRegistered AS IR ON connectedLinkId = IR.linkId
+        LEFT JOIN marketerInfo AS MI ON campaign.marketerId = MI.marketerId
+      ORDER BY campaign.onOff = 1 AND MI.marketerContraction = 1 DESC, CT.date DESC
+      LIMIT ?, ?
       `;
       const bannerQuery = `
       SELECT banList 
@@ -370,17 +366,17 @@ router.route('/active')
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
       const { creatorId } = responseHelper.getSessionData(req);
       const query = `
-      SELECT cp.bannerId, bannerSrc, cp.campaignName, cp.campaignDescription, lr.links, cp.regiDate
+      SELECT 
+        cp.bannerId, bannerSrc, cp.campaignName, cp.campaignDescription,
+        lr.links, cp.regiDate, mi.profileImage, mi.marketerName, ct.date
       FROM campaignTimestamp AS ct 
-      JOIN campaign AS cp 
-      ON ct.campaignId = cp.campaignId 
-      JOIN bannerRegistered AS br 
-      ON cp.bannerId = br.bannerId
-      JOIN linkRegistered AS lr
-      ON cp.connectedLinkId = lr.linkId
+        JOIN campaign AS cp ON ct.campaignId = cp.campaignId
+        JOIN marketerInfo AS mi ON cp.marketerId = mi.marketerId
+        JOIN bannerRegistered AS br  ON cp.bannerId = br.bannerId
+        JOIN linkRegistered AS lr ON cp.connectedLinkId = lr.linkId
       WHERE creatorId = ?
-      AND ct.DATE > DATE_ADD(NOW(), INTERVAL - 10 MINUTE) 
-      ORDER BY ct.DATE DESC LIMIT 1
+        AND ct.date > DATE_ADD(NOW(), INTERVAL - 10 MINUTE) 
+      ORDER BY ct.date DESC LIMIT 1       
       `;
 
       doQuery(query, [creatorId])

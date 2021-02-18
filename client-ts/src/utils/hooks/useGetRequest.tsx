@@ -9,11 +9,11 @@ import history from '../../history';
 const DEFAULT_ERROR_MESSAGE = '죄송합니다.. 데이터 조회중 오류가 발생했습니다..';
 const UNAUTHORIZED = 401;
 export interface UseGetRequestObject<T> {
-  data: T | null;
+  data?: T;
   loading: boolean;
   error: string;
   doGetRequest: (newParam?: any) => Promise<AxiosResponse<T>>;
-  setData: React.Dispatch<React.SetStateAction<T | null>>;
+  setData: React.Dispatch<React.SetStateAction<T | undefined>>;
 }
 
 type DefaultParamType = { [key: string]: any };
@@ -45,7 +45,7 @@ export default function useGetRequest<
   params?: PARAM_TYPE,
 ): UseGetRequestObject<RES_DATA_TYPE> {
   const [param] = useState(params);
-  const [data, setData] = useState<RES_DATA_TYPE | null>(null);
+  const [data, setData] = useState<RES_DATA_TYPE>();
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
 

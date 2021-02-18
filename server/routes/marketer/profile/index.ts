@@ -1,11 +1,12 @@
 import express from 'express';
-import axios from 'axios';
 import responseHelper from '../../../middlewares/responseHelper';
 import doQuery from '../../../model/doQuery';
 import encrypto from '../../../middlewares/encryption';
 import setTemporaryPassword from '../../../middlewares/auth/setTemporyPassword';
+import profileImageRouter from './profileImage';
 
 const router = express.Router();
+router.use('/profile-image', profileImageRouter);
 
 /**
  * @swagger
@@ -33,7 +34,7 @@ router.route('/')
             SELECT 
             marketerId, marketerName, marketerMail, 
             marketerPhoneNum, marketerBusinessRegNum,
-            marketerContraction, platformType
+            marketerContraction, platformType, profileImage
             FROM marketerInfo
             WHERE marketerId = ? `;
       doQuery(query, [marketerId])
@@ -123,6 +124,9 @@ router.route('/')
                         WHERE marketerId = ? 
                         `, [value, marketerId]];
           }
+          case 'profileImage': {
+            return ['UPDATE marketerInfo SET profileImage = ? WHERE marketerId = ?', [value, marketerId]];
+          }
           default:
             return ['', []];
         }
@@ -156,6 +160,7 @@ router.route('/')
                                     temporaryLogin= null,
                                     marketerAccountNumber= null,
                                     accountHolder= null,
+                                    profileImage = null,
                                     signOutState =2,
                                     signOutDate = NOW()
                                     WHERE marketerId = ?`;
