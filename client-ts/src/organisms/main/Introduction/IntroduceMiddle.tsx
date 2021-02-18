@@ -9,8 +9,8 @@ export default function IntroduceTop({ userType }: { userType: string | boolean 
 
   const [platform, setFlatform] = useState(true);
 
-  function handlePlatform(platform: string): void {
-    switch (platform) {
+  function handlePlatform(platformType: string): void {
+    switch (platformType) {
       case 'afreecatv':
         return setFlatform(false);
       default:

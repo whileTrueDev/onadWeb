@@ -60,7 +60,7 @@ export default function Main(): JSX.Element {
   // const [offsetY, setOffsetY] = useState(0)
   const [nowBroadcast, setNowBroadcast] = useState(50);
   const [loading, setLoading] = useState(false);
-  const [timer, setTimer] = useState<NodeJS.Timeout>();
+  // const [timer, setTimer] = useState<NodeJS.Timeout>();
 
   const MainUserType = (history.location.pathname === '/marketer');
   React.useEffect(() => {
@@ -121,8 +121,8 @@ export default function Main(): JSX.Element {
             psIndex={psIndex}
             loading={loading}
             bgfixedRange={[0, 3]}
-            timer={timer}
-            setTimer={setTimer}
+            // timer={timer}
+            // setTimer={setTimer}
             renewalDialog={renewalDialog.open}
             // isDown={isDown}
             // setIsDown={setIsDown}
@@ -151,7 +151,7 @@ export default function Main(): JSX.Element {
                 <HowToUse
                   source={sources.howTo}
                   MainUserType={MainUserType}
-                  timer={timer}
+                  // timer={timer}
                 />
               )}
             </div>
@@ -193,8 +193,8 @@ export default function Main(): JSX.Element {
               psIndex={psIndex}
               loading={loading}
               bgfixedRange={[0, 3]}
-              timer={timer}
-              setTimer={setTimer}
+              // timer={timer}
+              // setTimer={setTimer}
               renewalDialog={renewalDialog.open}
             >
               <div className={classes.parallax} data-parallax="0">
@@ -219,7 +219,7 @@ export default function Main(): JSX.Element {
                 <HowToUse
                   source={sources.howTo}
                   MainUserType={MainUserType}
-                  timer={timer}
+                  // timer={timer}
                 />
                 )}
               </div>

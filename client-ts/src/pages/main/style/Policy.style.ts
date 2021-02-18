@@ -2,7 +2,7 @@ import makeStyles from '@material-ui/core/styles/makeStyles';
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    paddingTop: theme.spacing(8)
+    paddingTop: theme.spacing(4)
   },
   contentBox: {
     width: '80%',
@@ -34,6 +34,9 @@ const useStyles = makeStyles((theme) => ({
       background: 'linear-gradient(to right, #3589fc, #0dd0ff)',
     },
     margin: theme.spacing(0, 1.5)
+  },
+  logo: {
+    margin: theme.spacing(5, '5%')
   }
 }));
 

@@ -30,13 +30,30 @@ const styles = makeStyles((theme) => ({
       height: 230,
     },
   },
-  face: {
+  flipFront: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'flex-end',
+    backgroundColor: '#eaeaea',
+    zIndex: 100,
     position: 'absolute',
     top: 0,
     left: 0,
     width: '100%',
     height: '100%',
-    transition: 'all 2s ease'
+  },
+  flipBack: {
+    hight: '100%',
+    backgroundColor: '#eaeaea',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '90%',
+    height: '90%',
+    zIndex: 200,
+    visibility: 'visible',
+    padding: '5%'
   },
   figure: {
     display: 'flex',
@@ -44,7 +61,22 @@ const styles = makeStyles((theme) => ({
     justifyContent: 'center',
     alignItems: 'flex-end',
     backgroundColor: 'white',
-    zIndex: 200
+    zIndex: 200,
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+  },
+  caption: {
+    hight: '100%',
+    backgroundColor: '#eaeaea',
+    position: 'absolute',
+    visibility: 'hidden',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
   },
   advImg: {
     width: 380,
@@ -78,11 +110,6 @@ const styles = makeStyles((theme) => ({
     [theme.breakpoints.down('xs')]: {
       fontSize: 12,
     },
-  },
-  caption: {
-    hight: '100%',
-    backgroundColor: '#eaeaea',
-    transform: 'rotateY(180deg)'
   },
   divider: {
     margin: theme.spacing(1.5, 0)
