@@ -71,24 +71,48 @@ export default function CreatorsReportDetail({
       </Button>
       )}
 
-      <div className={classes.chartContainer}>
-        <div className={classes.chart}>
-          {selectedCreator.contentsGraphData && (
-          <ContentsPie
-            selectedChartData={JSON.parse(selectedCreator.contentsGraphData)}
-          />
-          )}
-          <Typography align="center" variant="body1">방송 컨텐츠</Typography>
+      {(selectedCreator.contentsGraphData || selectedCreator.contentsGraphDataAfreeca) && (
+        <div className={classes.chartContainer}>
+          {!selectedCreator.contentsGraphData && !selectedCreator.contentsGraphDataAfreeca
+            && !selectedCreator.timeGraphData && !selectedCreator.timeGraphDataAfreeca
+            ? (
+              <Typography variant="body2">해당 방송인은 아직 분석된 정보가 없습니다.</Typography>
+            ) : (
+              <>
+                <div className={classes.chart}>
+                  {/* 방송 카테고리 파이차트 */}
+                  {selectedCreator.contentsGraphData && (
+                  <ContentsPie
+                    selectedChartData={JSON.parse(selectedCreator.contentsGraphData)}
+                  />
+                  )}
+                  {!selectedCreator.contentsGraphData && selectedCreator.contentsGraphDataAfreeca
+                  && (
+                  <ContentsPie
+                    selectedChartData={JSON.parse(selectedCreator.contentsGraphDataAfreeca)}
+                  />
+                  )}
+                  <Typography align="center" variant="body1">방송 컨텐츠</Typography>
+                </div>
+                {/* 방송 시간대 바차트 */}
+                <div className={classes.chart}>
+                  {selectedCreator.timeGraphData && (
+                  <TimeChart
+                    selectedChartData={JSON.parse(selectedCreator.timeGraphData)}
+                  />
+                  )}
+                  {!selectedCreator.timeGraphData && selectedCreator.timeGraphDataAfreeca
+                  && (
+                  <TimeChart
+                    selectedChartData={JSON.parse(selectedCreator.timeGraphDataAfreeca)}
+                  />
+                  )}
+                  <Typography align="center" variant="body1">주 방송 시간</Typography>
+                </div>
+              </>
+            )}
         </div>
-        <div className={classes.chart}>
-          {selectedCreator.timeGraphData && (
-          <TimeChart
-            selectedChartData={JSON.parse(selectedCreator.timeGraphData)}
-          />
-          )}
-          <Typography align="center" variant="body1">주 방송 시간</Typography>
-        </div>
-      </div>
+      )}
     </div>
   );
 }

@@ -37,13 +37,7 @@ export default function CreatorsReport(props: CreatorsReportProps): JSX.Element 
               flex: 1,
               renderCell: (rowData): JSX.Element => (
                 <div className={classes.name}>
-                  <Avatar variant="circular" className={classes.avatar}>
-                    <img
-                      src={rowData.row.creatorLogo || rowData.row.afreecaLogo}
-                      alt={rowData.row.creatorTwitchName || rowData.row.afreecaName}
-                      draggable={false}
-                    />
-                  </Avatar>
+                  <Avatar variant="circular" className={classes.avatar} src={rowData.row.creatorLogo || rowData.row.afreecaLogo} />
                   <AvatarGroup max={2}>
                     {rowData.row.creatorId && (
                     <Avatar variant="square" className={classes.platform} src="/pngs/logo/twitch/TwitchGlitchPurple.png" />
