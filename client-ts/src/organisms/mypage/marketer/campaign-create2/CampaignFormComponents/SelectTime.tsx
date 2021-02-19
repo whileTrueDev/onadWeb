@@ -29,7 +29,7 @@ const SelectTime = (props: SelectTimeProps): JSX.Element => {
   }
 
   function handleTimeSelect(timeIndex: number): void {
-    dispatch({ type: 'SET_TIME', value: String(timeIndex) });
+    dispatch({ type: 'SET_TIME', value: timeIndex });
   }
 
   return (

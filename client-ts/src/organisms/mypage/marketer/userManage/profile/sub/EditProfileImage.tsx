@@ -73,7 +73,8 @@ export default function EditProfileImage({
           <FiberNew fontSize="small" className={classes.successIcon} />
           )}
         </Typography>
-        <Typography color="textSecondary" variant="body2">프로필 사진을 클릭해 편집을 시작하세요.</Typography>
+        <Typography color="textSecondary" variant="body2">* 프로필 사진을 클릭해 편집을 시작하세요.</Typography>
+        <Typography color="textSecondary" variant="body2">* 프로필 사진은 방송인에게 보여집니다. 브랜드 로고를 프로필 사진으로 사용하는 것이 일반적입니다.</Typography>
         <EditableAvatar
           changeLoading={loading}
           src={marketerInfo.user ? marketerInfo.user.profileImage : ''}

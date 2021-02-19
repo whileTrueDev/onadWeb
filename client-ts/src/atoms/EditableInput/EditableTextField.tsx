@@ -3,7 +3,7 @@ import React from 'react';
 import {
   Button, makeStyles, TextField, TextFieldProps, Typography
 } from '@material-ui/core';
-import { useToggle } from '../../../../../../utils/hooks';
+import { useToggle } from '../../utils/hooks';
 
 const useStyles = makeStyles((theme) => ({
   label: {
@@ -23,6 +23,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export interface EditableTextFieldProps {
+  inputProps?: TextFieldProps['inputProps'];
   label: string;
   displayValue: string;
   value: string;
@@ -35,6 +36,7 @@ export interface EditableTextFieldProps {
 }
 
 export default function EditableTextField({
+  inputProps,
   label,
   displayValue,
   value,
@@ -72,7 +74,7 @@ export default function EditableTextField({
             margin="dense"
             value={value}
             onChange={onChange}
-            inputProps={{ maxLength: 15 }}
+            inputProps={inputProps}
             helperText={helperText}
             {...textFieldProps}
           />
@@ -87,7 +89,7 @@ export default function EditableTextField({
               저장
             </Button>
             <Button
-              onClick={() => {
+              onClick={(): void => {
                 editMode.handleToggle();
                 onReset();
               }}

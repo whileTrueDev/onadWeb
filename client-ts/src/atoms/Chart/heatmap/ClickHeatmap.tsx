@@ -1,3 +1,4 @@
+import moment from 'moment';
 import React from 'react';
 import ReactTooltip from 'react-tooltip';
 import Heatmap from 'react-calendar-heatmap';
@@ -18,7 +19,7 @@ export default function ClickHeatmap(props: ClickHeatmapProps): JSX.Element {
     }
     // Configuration for react-tooltip
     return {
-      'data-tip': `${value.date}, ${value.count} 클릭`,
+      'data-tip': `${moment(value.date).format('YYYY년 MM월 DD일')}, ${value.count}회 클릭`,
     };
   };
 
@@ -37,7 +38,7 @@ export default function ClickHeatmap(props: ClickHeatmapProps): JSX.Element {
 
 
   return (
-    <div style={{ height: 280, overflow: 'auto' }}>
+    <div style={{ height: 220, overflow: 'auto', }}>
 
       <Heatmap
         showMonthLabels
@@ -48,7 +49,7 @@ export default function ClickHeatmap(props: ClickHeatmapProps): JSX.Element {
         monthLabels={['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월']}
         values={data}
         tooltipDataAttrs={getTooltipDataAttrs}
-        onClick={(value): void => { console.log(value); }}
+        // onClick={(value): void => { console.log(value); }}
         classForValue={(value): string => {
           if (!value) { return 'color-empty'; }
           if (value.count < mean - (2 * stddev)) { return 'color-github-0'; }
@@ -58,7 +59,9 @@ export default function ClickHeatmap(props: ClickHeatmapProps): JSX.Element {
           return 'color-github-4';
         }}
       />
-      <ReactTooltip type="success" effect="solid" />
+      {data.length > 0 && (
+      <ReactTooltip type="success" effect="solid" border={false} />
+      )}
     </div>
   );
 }

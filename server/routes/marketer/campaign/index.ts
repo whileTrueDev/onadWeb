@@ -109,7 +109,7 @@ router.route('/list')
               // 캠페인 송출 우선순위가 크리에이터 우선인 경우 크리에이터 정보를 가져온다.
               if (cam.priorityType === 0) {
                 let targetCreatorInfoQuery = `
-                  SELECT creatorName, creatorTwitchId, afreecaId, afreecaName
+                  SELECT creatorId, creatorName, creatorTwitchId, creatorLogo, afreecaId, afreecaName, afreecaLogo
                   FROM creatorInfo WHERE creatorId IN
                 `;
                 targetList.forEach((creatorId: string, index: number) => {

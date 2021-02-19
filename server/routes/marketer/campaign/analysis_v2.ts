@@ -85,54 +85,70 @@ router.route('/creator-data')
     responseHelper.middleware.checkSessionExists, // session 확인이 필요한 경우.
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
       const { marketerId } = responseHelper.getSessionData(req);
-      const campaignId = responseHelper.getParam('campaignId', 'GET', req);
+      const campaignId = responseHelper.getOptionalParam('campaignId', 'GET', req);
       let query = '';
       let queryArray = [];
-      if (campaignId !== '') {
+      if (!campaignId) {
         query = `
         SELECT
-        ci.creatorId AS creatorId, 
-        ci.creatorName AS creatorName, 
-        ci.creatorTwitchId AS creatorTwitchId,
-        ci.creatorLogo AS creatorLogo, 
-        sum(cashFromMarketer) AS total_ad_exposure_amount,
-        cd.viewer AS viewer,
-        cd.followers AS followers, 
-        cd.airtime AS airtime, 
-        cd.impression AS impression, 
-        cd.openHour AS openHour, 
-        cd.content AS content
-        FROM campaignLog as cl
-        JOIN creatorInfo as ci
-        ON cl.creatorId = ci.creatorId
-        LEFT JOIN creatorDetail AS cd
-        ON cl.creatorId = cd.creatorId
-        WHERE campaignId = ?
-        AND ci.arrested != 1
-        GROUP BY cl.creatorId
-        ORDER BY total_ad_exposure_amount DESC`;
-
-        queryArray = [campaignId];
-      } else {
-        query = `
-        SELECT
-          IFNULL(creatorName, afreecaName) AS creatorName,
+          ci.creatorId AS id,
           ci.creatorId AS creatorId,
           ci.creatorName AS creatorTwitchName,
           ci.creatorTwitchId AS creatorTwitchId,
-          ci.creatorLogo AS creatorLogo,
+          ci.creatorLogo AS creatorLogo, 
           ci.afreecaId,
           ci.afreecaName,
-          SUM(cashFromMarketer) AS total_ad_exposure_amount
+          ci.afreecaLogo,
+          sum(cashFromMarketer) AS total_ad_exposure_amount,
+          MAX(cl.date) AS recentDate
         FROM campaignLog as cl
-        JOIN creatorInfo as ci
-        ON cl.creatorId = ci.creatorId
-        WHERE SUBSTRING_INDEX(campaignId, '_', 1) = ?
-        AND ci.arrested != 1
-        GROUP BY cl.creatorId
-        ORDER BY total_ad_exposure_amount DESC`;
+        JOIN creatorInfo as ci ON cl.creatorId = ci.creatorId
+        JOIN campaign ON cl.campaignId = campaign.campaignId
+        WHERE campaign.marketerId = ? AND ci.arrested != 1 AND cl.date > DATE_SUB(NOW(), INTERVAL 30 DAY)
+          GROUP BY cl.creatorId
+          ORDER BY total_ad_exposure_amount DESC
+        LIMIT 100`;
 
         queryArray = [marketerId];
+      } else {
+        query = `
+        SELECT
+          ci.creatorId AS id,
+          ci.creatorId AS creatorId, 
+          ci.creatorName AS creatorTwitchName,
+          ci.creatorTwitchId AS creatorTwitchId,
+          ci.creatorLogo AS creatorLogo, 
+          ci.afreecaId,
+          ci.afreecaName,
+          ci.afreecaLogo,
+          SUM(cashFromMarketer) AS total_ad_exposure_amount,
+          cd.viewer AS viewer,
+          cd.followers AS followers, 
+          cd.airtime AS airtime, 
+          cd.impression AS impression, 
+          cd.openHour AS openHour, 
+          cd.content AS content,
+          cd.ctr,
+          cd.contentsGraphData,
+          cd.timeGraphData,
+          cda.contentsGraphData AS contentsGraphDataAfreeca,
+          cda.timeGraphData  AS timeGraphDataAfreeca,
+          cda.viewer AS viewerAfreeca,
+          cda.followers AS followersAfreeca, 
+          cda.airtime AS airtimeAfreeca, 
+          cda.impression AS impressionAfreeca, 
+          cda.openHour AS openHourAfreeca, 
+          cda.content AS contentAfreeca,
+          MAX(cl.date) AS recentDate
+        FROM campaignLog as cl
+          JOIN creatorInfo as ci ON cl.creatorId = ci.creatorId
+          LEFT JOIN creatorDetail AS cd ON cl.creatorId = cd.creatorId
+          LEFT JOIN creatorDetailAfreeca AS cda ON cl.creatorId = cda.creatorId
+        WHERE campaignId = ? AND ci.arrested != 1  AND (cd.impression != 0 OR cda.impression != 0)
+          GROUP BY cl.creatorId
+          ORDER BY total_ad_exposure_amount DESC`;
+
+        queryArray = [campaignId];
       }
       doQuery(query, queryArray)
         .then((row) => {

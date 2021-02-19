@@ -1,15 +1,16 @@
+import moment from 'moment';
 import React from 'react';
 import {
-  Grid, Avatar, Chip, Typography, CircularProgress
+  Grid, Typography, CircularProgress, Avatar
 } from '@material-ui/core';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 // import Skeleton from '@material-ui/lab/Skeleton';
 import Error from '@material-ui/icons/Error';
-import ReChartPie from '../../../../atoms/Chart/ReChartPie';
 
 // usehook
 import useGetRequest from '../../../../utils/hooks/useGetRequest';
-import { CreatorDataInterface } from '../dashboard/interfaces';
+import { CreatorDataPerMarketerInterface } from '../dashboard/interfaces';
+import CustomDataGrid from '../../../../atoms/Table/CustomDataGrid';
 
 const useStyles = makeStyles((theme) => ({
   chip: {
@@ -31,21 +32,18 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: 700,
     textAlign: 'center',
     marginBottom: theme.spacing(2)
-  }
+  },
+  name: { display: 'flex', alignItems: 'center', justifyContent: 'center' },
+  avatar: { width: theme.spacing(4), height: theme.spacing(4), marginRight: theme.spacing(1) },
+  platform: { height: 20, width: 20, marginRight: theme.spacing(1) },
 }));
 
 
 export default function CustomPieChart(): JSX.Element {
   const classes = useStyles();
-  const creatorsData = useGetRequest<{ campaignId: string }, CreatorDataInterface[] | null>(
-    '/marketer/campaign/analysis/creator-data', { campaignId: '' }
+  const creatorsData = useGetRequest<null, CreatorDataPerMarketerInterface[]>(
+    '/marketer/campaign/analysis/creator-data'
   );
-
-  const [activeIndex, setActiveIndex] = React.useState<number>(0);
-
-  const onPieEnter = (d: CreatorDataInterface, index: number): void => {
-    setActiveIndex(index);
-  };
 
   return (
     <Grid container>
@@ -60,9 +58,10 @@ export default function CustomPieChart(): JSX.Element {
           <div style={{ textAlign: 'center' }}><CircularProgress /></div>
         </Grid>
       )}
+
+      {/* 광고 송출하지 않은 경우 */}
       {!creatorsData.loading
-      && creatorsData.data
-      && creatorsData.data.length === 0 && (
+      && creatorsData.data && creatorsData.data.length === 0 && (
         <Grid
           item
           xs={12}
@@ -76,7 +75,7 @@ export default function CustomPieChart(): JSX.Element {
           <div>
             <Grid container direction="column" justify="center" alignItems="center">
               <Typography style={{ zIndex: 1 }}>
-                아직 광고를 송출한 크리에이터가 없어요.
+                최근 한달간 광고를 송출한 크리에이터가 없어요.
               </Typography>
               <Typography style={{ zIndex: 1 }}>
                 배너와 캠페인을 등록해 광고를 집행해보세요.
@@ -86,74 +85,72 @@ export default function CustomPieChart(): JSX.Element {
         </Grid>
       )}
 
-      <Grid item xs={12} lg={6}>
-
-        {!creatorsData.loading
-        && creatorsData.data
-        && creatorsData.data.length > 0 && (
-          <ReChartPie
-            activeIndex={activeIndex}
-            onPieEnter={onPieEnter}
-            data={creatorsData.data.slice(0, 30)}
-            height={400}
-            nameKey="creatorName"
-            dataKey="total_ad_exposure_amount"
-            tooltipLabelText="노출"
-          />
-        )}
-      </Grid>
-
-      <Grid item xs={12} lg={6} style={{ overflow: 'hidden' }}>
-        {!creatorsData.loading && creatorsData.data
-          && creatorsData.data.length > 0 && (
-            <Grid container>
-              <Grid item xs={12}>
-                <Typography variant="caption">* 아이콘 클릭시 해당 크리에이터의 채널로 이동됩니다.</Typography>
-              </Grid>
-              {creatorsData.data.slice(0, 20).map((d: CreatorDataInterface, index: number) => (
-                <Chip
-                  key={d.creatorId}
-                  variant="outlined"
-                  className={classes.chip}
-                  label={(
-                    <Typography variant="body2">
-                      {`${index + 1}. ${d.creatorName || d.afreecaName}`}
-                      {d.afreecaId && (
-                      <img
-                        alt=""
-                        height={10}
-                        src="/pngs/logo/afreeca/onlyFace.png"
-                        className={classes.chipImg}
-                      />
-                      )}
-                      {d.creatorTwitchId && (
-                      <img
-                        alt=""
-                        height={10}
-                        src="/pngs/logo/twitch/TwitchGlitchPurple.png"
-                        className={classes.chipImg}
-                      />
-                      )}
-                    </Typography>
-                  )}
-                  avatar={(
-                    <Avatar src={d.creatorLogo || d.afreecaLogo} />
-                  )}
-                  onMouseEnter={(): void => {
-                    setActiveIndex(index);
-                  }}
-                  onClick={(): void => {
-                    if (d.creatorTwitchId) {
-                      window.open(`https://twitch.tv/${d.creatorTwitchId}`);
-                    } else if (d.afreecaId) {
-                      window.open(`http://play.afreecatv.com/${d.afreecaId}`);
-                    }
-                  }}
-                />
-              ))}
+      {!creatorsData.loading && creatorsData.data && creatorsData.data.length > 0
+        && (
+          <>
+            <Grid item xs={12} style={{ height: 350 }}>
+              <CustomDataGrid
+                hideFooter
+                disableSelectionOnClick
+                loading={creatorsData.loading}
+                rows={creatorsData.data}
+                columns={[
+                  {
+                    headerName: '방송인',
+                    headerAlign: 'center',
+                    align: 'center',
+                    field: 'creatorId',
+                    flex: 2,
+                    renderCell: (rowData): JSX.Element => (
+                      <div className={classes.name}>
+                        <Avatar
+                          variant="circular"
+                          className={classes.avatar}
+                          src={rowData.row.creatorLogo || rowData.row.afreecaLogo}
+                        />
+                        {rowData.row.creatorId && (
+                          <img alt="" className={classes.platform} src="/pngs/logo/twitch/TwitchGlitchPurple.png" />
+                        )}
+                        {rowData.row.afreecaId && (
+                          <img alt="" className={classes.platform} src="/pngs/logo/afreeca/onlyFace.png" />
+                        )}
+                        <Typography variant="body2" noWrap>
+                          {rowData.row.creatorTwitchName || rowData.row.afreecaName}
+                        </Typography>
+                      </div>
+                    )
+                  },
+                  {
+                    headerName: '지난 30일 총 노출량',
+                    headerAlign: 'center',
+                    align: 'center',
+                    field: 'total_ad_exposure_amount',
+                    flex: 2,
+                    renderCell: (data): React.ReactElement => (
+                      <Typography variant="body2" align="center">
+                        {data.row.total_ad_exposure_amount.toLocaleString()}
+                      </Typography>
+                    )
+                  },
+                  {
+                    headerName: '최근 방송 날짜',
+                    headerAlign: 'center',
+                    field: 'recentDate',
+                    flex: 1,
+                    renderCell: (data): React.ReactElement => (
+                      <Typography variant="body2" align="center">
+                        {moment(data.row.recentDate).format('YYYY/MM/DD')}
+                      </Typography>
+                    )
+                  }
+                ]}
+              />
             </Grid>
+            <Grid item xs={12} style={{ marginTop: 8 }}>
+              <Typography variant="body2" color="textSecondary">* 목록은 최근 한달간의 광고 송출량 상위 100위를 보여줍니다.</Typography>
+            </Grid>
+          </>
         )}
-      </Grid>
     </Grid>
   );
 }

@@ -5,9 +5,12 @@ import { makeStyles } from '@material-ui/core';
 
 
 const useStyles = makeStyles((theme) => ({
-  table: { width: '960px', borderCollapse: 'collapse' },
+  table: { maxWidth: 960, borderCollapse: 'collapse' },
   legend: {
-    display: 'flex', marginTop: theme.spacing(2), justifyContent: 'center', width: 960
+    display: 'flex',
+    marginTop: theme.spacing(2),
+    justifyContent: 'center',
+    maxWidth: 960
   },
   legendItem: {
     height: 20, width: 60, marginLeft: theme.spacing(1), marginRight: theme.spacing(1),

@@ -1,7 +1,6 @@
 import React from 'react';
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
-  ResponsiveContainer
 } from 'recharts';
 import { useTheme } from '@material-ui/core/styles';
 
@@ -43,32 +42,30 @@ export default function ReChartBar<DataType>({
 
   return (
     <div style={{ height: containerHeight, width: '99%' }}>
-      <ResponsiveContainer>
-        <BarChart
-          width={chartWidth}
-          height={chartHeight}
-          data={data}
-          stackOffset="sign"
-          margin={{
-            top: 20, right: 30, left: 20, bottom: 5
-          }}
-        >
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey={xAxisDataKey} />
-          <YAxis dataKey={yAxisDataKey} />
-          <Tooltip
-            contentStyle={{ backgroundColor: theme.palette.background.paper }}
-            cursor={{ stroke: theme.palette.primary.main, strokeWidth: 1 }}
-            labelFormatter={tooltipLabelFormatter}
-            formatter={tooltipFormatter}
-          />
-          {legend && (
-            <Legend
-              iconType="circle"
-            // formatter={legendFormatter}
-            />
-          )}
-          {dataKey
+      <BarChart
+        width={chartWidth}
+        height={chartHeight}
+        data={data}
+        stackOffset="sign"
+        margin={{
+          top: 20, right: 30, left: 20, bottom: 5
+        }}
+      >
+        <CartesianGrid strokeDasharray="3 3" />
+        <XAxis dataKey={xAxisDataKey} />
+        <YAxis dataKey={yAxisDataKey} />
+        <Tooltip
+          contentStyle={{ backgroundColor: theme.palette.background.paper }}
+          cursor={{ stroke: theme.palette.primary.main, strokeWidth: 1 }}
+          labelFormatter={tooltipLabelFormatter}
+          formatter={tooltipFormatter}
+        />
+        {legend && (
+        <Legend
+          iconType="circle"
+        />
+        )}
+        {dataKey
             && (
             <Bar
               dataKey={dataKey}
@@ -76,8 +73,7 @@ export default function ReChartBar<DataType>({
               fill={theme.palette.primary.light}
             />
             )}
-        </BarChart>
-      </ResponsiveContainer>
+      </BarChart>
     </div>
   );
 }

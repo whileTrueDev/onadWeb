@@ -7,7 +7,7 @@ import classnames from 'classnames';
 import {
   Grid, makeStyles, Paper,
 } from '@material-ui/core';
-import EditableTextField from './sub/EditableTextField';
+import EditableTextField from '../../../../../atoms/EditableInput/EditableTextField';
 import EditablePhoneInput from './sub/EditablePhoneInput';
 import { MarketerInfo } from '../../office/interface';
 import { useDialog, useEventTargetValue, usePatchRequest } from '../../../../../utils/hooks';
@@ -117,6 +117,9 @@ const UserDataForm = ({
             }}
             onReset={nameValue.handleReset}
             helperText="방송인과 시청자에게 해당 이름으로 보여집니다."
+            inputProps={{
+              maxLength: 15
+            }}
           />
         </Grid>
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Typography, Grid, Divider } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import { CampaignInterface } from '../../dashboard/interfaces';
+import { CampaignInterface } from '../../../marketer/dashboard/interfaces';
 import OnadBanner from '../../../../../atoms/Banner/OnadBanner';
 import renderOptionType from '../../../../../utils/render_funcs/renderOptionType';
 import renderPriorityType from '../../../../../utils/render_funcs/renderPriorityType';

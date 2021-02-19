@@ -22,8 +22,7 @@ const useStyles = makeStyles((theme) => ({
     borderBottom: `1px solid ${theme.palette.divider}`
   },
   detail: {
-    marginTop: theme.spacing(4),
-    padding: theme.spacing(2),
+    marginTop: theme.spacing(2),
   }
 }));
 
@@ -59,11 +58,14 @@ export default function InventoryManage(): JSX.Element {
 
   // ****************************************
   // 선택된 캠페인
-  const [selectedCampaign, setSelectedCampaign] = useState<CampaignInterface>();
-  function handleCampaignSelect(campaign: CampaignInterface): void {
-    setSelectedCampaign(campaign);
+  const [selectedCampaignId, setSelectedCampaignId] = useState<string>();
+  function handleCampaignSelect(campaignId: string | undefined): void {
+    setSelectedCampaignId(campaignId);
   }
 
+  const selectedCampaign = campaignData.data && campaignData.data.find(
+    (cam) => cam.campaignId === selectedCampaignId
+  );
 
   return (
     <div>
@@ -115,10 +117,10 @@ export default function InventoryManage(): JSX.Element {
       </Paper>
 
       {/* 캠페인 개별 보기 컨텐츠 */}
-      {selectedCampaign && (
-        <Paper className={classes.detail}>
+      {campaignData.data && selectedCampaign && (
+        <div className={classes.detail}>
           <CampaignDetail selectedCampaign={selectedCampaign} />
-        </Paper>
+        </div>
       )}
     </div>
   );

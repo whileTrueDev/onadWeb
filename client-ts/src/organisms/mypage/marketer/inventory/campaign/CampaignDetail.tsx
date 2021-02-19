@@ -1,18 +1,34 @@
-import moment from 'moment';
-import { Divider, makeStyles, Typography } from '@material-ui/core';
+import {
+  Button,
+  Divider,
+  Hidden, makeStyles, Paper
+} from '@material-ui/core';
 import React from 'react';
-import OnadBanner from '../../../../../atoms/Banner/OnadBanner';
 import { CampaignInterface } from '../../dashboard/interfaces';
-import renderPriorityType from '../../../../../utils/render_funcs/renderPriorityType';
-import renderOptionType from '../../../../../utils/render_funcs/renderOptionType';
-import TimeSelector from '../../../../../atoms/Selector/TimeSelector';
+import CampaignInformation from './sub/CampaignInformation';
+import CampaignMetaInfoCard from './sub/CampaignMetaInfoCard';
+import CampaignAnalysis from './sub/CampaignAnalysis';
+import { useToggle } from '../../../../../utils/hooks';
+import { CONFIRM_STATE_CONFIRMED } from '../../../../../utils/render_funcs/renderBannerConfirmState';
 
 const useStyles = makeStyles((theme) => ({
-  metaInfo: {
+  container: {
     display: 'flex',
+    alignItems: 'flex-start',
   },
-  title: {
-    fontWeight: theme.typography.fontWeightBold
+  description: {
+    width: '100%',
+    overflow: 'auto',
+    [theme.breakpoints.up('lg')]: {
+      margin: theme.spacing(0, 0, 0, 2),
+    },
+    padding: theme.spacing(4),
+    [theme.breakpoints.down('sm')]: {
+      padding: theme.spacing(2),
+    }
+  },
+  openAnalysisButton: {
+    marginTop: theme.spacing(2)
   }
 }));
 
@@ -24,45 +40,48 @@ export default function CampaignDetail({
 }: CampaignDetailProps): JSX.Element {
   const classes = useStyles();
 
+  const analysisToggle = useToggle();
+  React.useEffect(() => {
+    if (analysisToggle.toggle) analysisToggle.handleToggle();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedCampaign]);
   return (
-    <div>
-      {/* 캠페인 정보 */}
-      <div id="meta-info" className={classes.metaInfo}>
-        <OnadBanner src={selectedCampaign.bannerSrc} />
+    <div className={classes.container}>
+      {/* 캠페인 메타정보 카드 */}
+      <Hidden mdDown>
+        <CampaignMetaInfoCard campaign={selectedCampaign} />
+      </Hidden>
 
-        <div style={{ marginLeft: 16 }}>
-          <Typography variant="h5" className={classes.title}>
-            {selectedCampaign.campaignName}
-          </Typography>
-          <Typography>
-            {`${renderOptionType(selectedCampaign.optionType)}`}
-          </Typography>
-          <Typography>
-            {`${renderPriorityType(selectedCampaign.priorityType)}`}
-          </Typography>
-          <Typography color="textSecondary">
-            {`등록시간: ${moment(selectedCampaign.regiDate).format('YYYY/MM/DD HH:MM:SS')}`}
-          </Typography>
+      <Paper className={classes.description}>
+        {/* 캠페인 메타정보 카드 */}
+        <Hidden lgUp>
+          <CampaignMetaInfoCard campaign={selectedCampaign} />
+        </Hidden>
+
+        {/* 캠페인 상세 정보 */}
+        <CampaignInformation campaign={selectedCampaign} />
+
+        <Divider />
+        {selectedCampaign.confirmState === CONFIRM_STATE_CONFIRMED && !analysisToggle.toggle && (
+        <div className={classes.openAnalysisButton}>
+          <Button
+            onClick={analysisToggle.handleToggle}
+            fullWidth
+            size="large"
+            variant="contained"
+            color="default"
+          >
+            분석정보보기
+          </Button>
         </div>
-      </div>
+        )}
 
-      <div style={{ margin: '16px 0px', }}>
-        <Typography variant="h6" style={{ fontWeight: 'bold' }}>상세 정보</Typography>
-        <Typography style={{ fontWeight: 'bold' }}>캠페인 홍보 문구</Typography>
-        <Typography>{selectedCampaign.campaignDescription}</Typography>
+        {/* 캠페인 분석 정보 */}
+        {selectedCampaign.confirmState === CONFIRM_STATE_CONFIRMED && analysisToggle.toggle && (
+        <CampaignAnalysis campaignId={selectedCampaign.campaignId} />
+        )}
 
-        <Typography style={{ fontWeight: 'bold' }}>일일 예산</Typography>
-        <Typography>{`${(1000000).toLocaleString()} 원`}</Typography>
-
-        <Typography style={{ fontWeight: 'bold' }}>송출 시간</Typography>
-        <Typography>{selectedCampaign.selectedTime.join(', ')}</Typography>
-        <TimeSelector timeList={selectedCampaign.selectedTime} />
-
-        <Typography style={{ fontWeight: 'bold' }}>송출 목록</Typography>
-        <Typography>{selectedCampaign.targetList}</Typography>
-      </div>
-      <Divider />
-
+      </Paper>
     </div>
   );
 }

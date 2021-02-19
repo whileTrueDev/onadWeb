@@ -12,16 +12,14 @@ import UrlDeleteDialog from './UrlDeleteDialog';
 import { useDialog } from '../../../../../utils/hooks';
 import CustomDataGrid from '../../../../../atoms/Table/CustomDataGrid';
 import { UsePaginatedGetRequestObject } from '../../../../../utils/hooks/usePaginatedGetRequest';
-import renderUrlConfirmState from '../../../../../utils/render_funcs/renderUrlConfirmState';
+import renderUrlConfirmState, { CONFIRM_STATE_REJECTED } from '../../../../../utils/render_funcs/renderUrlConfirmState';
 import Snackbar from '../../../../../atoms/Snackbar/Snackbar';
 
 const useStyles = makeStyles((theme) => ({
   clickableText: {
     cursor: 'pointer', alignItems: 'center'
   },
-  openInNew: {
-    fontSize: theme.spacing(2)
-  },
+  datagrid: { height: 400, width: '100%' },
 }));
 interface UrlTableProps {
   urlData: UsePaginatedGetRequestObject<UrlDataInterface>;
@@ -49,7 +47,7 @@ export default function UrlTable(props: UrlTableProps): JSX.Element {
   return (
     <div>
 
-      <div style={{ height: 400, width: '100%' }}>
+      <div className={classes.datagrid}>
         <CustomDataGrid
           pagination
           paginationMode="server"
@@ -62,18 +60,28 @@ export default function UrlTable(props: UrlTableProps): JSX.Element {
           pageSize={pageOffset}
           rowCount={totalPageLength}
           disableSelectionOnClick
+          loading={urlData.loading}
           rows={urlData.data || []}
           columns={[
-            { field: 'linkId', headerName: '링크 이름', width: 150, },
+            {
+              field: 'linkId',
+              headerName: '링크 이름',
+              width: 150,
+              renderCell: (data): React.ReactElement => (
+                <Tooltip title={data.row.linkId}>
+                  <Typography noWrap variant="body2">{data.row.linkId}</Typography>
+                </Tooltip>
+              )
+            },
             {
               headerName: '심의 결과',
               field: 'confirmState',
               width: 150,
               renderCell: (data): React.ReactElement => (
-                <Typography variant="body2" color={data.row.confirmState === 2 ? 'error' : 'textPrimary'}>
+                <Typography variant="body2" color={data.row.confirmState === CONFIRM_STATE_REJECTED ? 'error' : 'textPrimary'}>
                   {renderUrlConfirmState(data.row.confirmState)}
                   <br />
-                  {data.row.confirmState === 2 && (
+                  {data.row.confirmState === CONFIRM_STATE_REJECTED && (
                   // 거절됨의 경우 사유 렌더링
                   <Typography noWrap component="span" variant="caption" color="error">
                     {data.row.denialReason}
@@ -110,7 +118,7 @@ export default function UrlTable(props: UrlTableProps): JSX.Element {
                           color="primary"
                           component="span"
                         >
-                          <OpenInNew className={classes.openInNew} />
+                          <OpenInNew fontSize="small" style={{ verticalAlign: 'middle' }} />
                           {link.linkTo}
                         </Typography>
                       </Tooltip>

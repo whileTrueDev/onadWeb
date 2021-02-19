@@ -35,13 +35,13 @@ const RemotePageOpenButton = ({
         <StyledTooltip title={(<Typography variant="body2">이용 동의 필요</Typography>)}>
           <Typography variant="body2" style={{ display: 'flex', alignItems: 'center' }}>
             실시간 광고 제어
-            <OpenInNew fontSize="small" />
+            <OpenInNew fontSize="small" style={{ verticalAlign: 'middle' }} />
           </Typography>
         </StyledTooltip>
       ) : (
         <Typography variant="body2" style={{ display: 'flex', alignItems: 'center' }}>
             실시간 광고 제어
-          <OpenInNew fontSize="small" />
+          <OpenInNew fontSize="small" style={{ verticalAlign: 'middle' }} />
         </Typography>
       )}
 

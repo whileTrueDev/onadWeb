@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
 import moment from 'moment';
 import {
+  Badge,
+  IconButton,
+  makeStyles,
   Switch,
   Tooltip,
   Typography
 } from '@material-ui/core';
-import { OpenInNew } from '@material-ui/icons';
+import { MoreVert, OpenInNew } from '@material-ui/icons';
 import CustomDataGrid from '../../../../../atoms/Table/CustomDataGrid';
 import { CampaignInterface, CampaignTargetCreator } from '../../dashboard/interfaces';
 import { UsePaginatedGetRequestObject } from '../../../../../utils/hooks/usePaginatedGetRequest';
@@ -18,17 +21,28 @@ import BannerInfoPopover from './BannerInfoPopover';
 import CampaignInventoryMenuPopover from './CampaignInventoryMenuPopover';
 import CampaignDeleteConfirmDialog from '../../dashboard/CampaignDeleteConfirmDialog';
 import CampaignUpdateDialog from '../../dashboard/CampaignUpdateDialog';
-import CampaignAnalysisDialogV2 from '../../dashboard/CampaignAnalysisDialogV2';
-import CampaignAnalysisDialog from '../../dashboard/CampaignAnalysisDialog';
 import OnadBanner from '../../../../../atoms/Banner/OnadBanner';
 import { UrlLink } from '../interface';
+import { CONFIRM_STATE_CONFIRMED, CONFIRM_STATE_REJECTED } from '../../../../../utils/render_funcs/renderUrlConfirmState';
 
-const V2_TIME = '2020-04-21';
+const useStyles = makeStyles(() => ({
+  link: {
+    cursor: 'pointer',
+    '&:hover': {
+      textDecoration: 'underline',
+    }
+  },
+  datagrid: { height: 400, width: '100%' },
+  campaignName: {
+    width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center'
+  },
+  zoomin: { cursor: 'zoom-in' },
+}));
 export interface CampaignInventoryProps {
   pageOffset: number;
   campaignData: UsePaginatedGetRequestObject<CampaignInterface>;
   pageLength: number;
-  handleCampaignSelect: (campaign: CampaignInterface) => void;
+  handleCampaignSelect: (campaignId: string | undefined) => void;
 }
 export default function CampaignInventory({
   pageOffset,
@@ -36,13 +50,22 @@ export default function CampaignInventory({
   pageLength,
   handleCampaignSelect,
 }: CampaignInventoryProps): JSX.Element {
+  const classes = useStyles();
   // ******************************************
   // 캠페인 On/Off 변경 요청 성공 핸들러
-  function onOnOffSuccess(): void {
-    campaignData.requestWithoutConcat();
+  const [failSnackMessage, setFailSnackMessage] = useState<string>('캠페인 상태를 변경하는 데에 실패했습니다. 잠시 후 다시 시도해주세요.');
+  const failSnack = useDialog();
+  function onOnOffSuccess(resData: any): void {
+    // on/off 변경에 실패한 경우 (캠페인의 url / banner 중 하나라도 심의 통과하지 못한 경우)
+    if (!resData[0]) {
+      failSnack.handleOpen();
+      setFailSnackMessage(resData[1]);
+    } else {
+      handleCampaignSelect(undefined);
+      campaignData.requestWithoutConcat();
+    }
   }
   // 캠페인 On/Off 변경 요청 실패 핸들러
-  const failSnack = useDialog();
   function onOnOffFail(): void {
     failSnack.handleOpen();
   }
@@ -63,7 +86,6 @@ export default function CampaignInventory({
     e: React.MouseEvent<HTMLSpanElement>, cam: CampaignInterface
   ): void {
     setSelected(cam);
-    handleCampaignSelect(cam);
     menuAnchor.handleAnchorOpen(e);
   }
 
@@ -81,18 +103,9 @@ export default function CampaignInventory({
   // 캠페인 메뉴 다이얼로그
   const campaignUpdateDialog = useDialog(); // 캠페인 편집
   const campaignDeleteDialog = useDialog(); // 캠페인 삭제
-  const campaignReportDialog = useDialog(); // 캠페인 분석
 
-  // *****************************************
-  // 편한 개발을 위해. 삭제요망!
-  React.useEffect(() => {
-    if (campaignData.data) {
-      handleCampaignSelect(campaignData.data[0]);
-    }
-  });
-  // *****************************************
   return (
-    <div style={{ height: 400, width: '100%' }}>
+    <div className={classes.datagrid}>
       <CustomDataGrid
         pagination
         paginationMode="server"
@@ -127,17 +140,20 @@ export default function CampaignInventory({
           {
             field: 'campaignName',
             headerName: '캠페인 명',
-            width: 200,
+            width: 220,
             renderCell: (data): React.ReactElement => (
-              <Typography
-                noWrap
-                variant="body2"
-                color="primary"
-                style={{ cursor: 'pointer' }}
-                onClick={(e): void => handleCampaignNameClick(e, data.row as CampaignInterface)}
-              >
-                {data.row.campaignName}
-              </Typography>
+              <div className={classes.campaignName}>
+                <Typography
+                  noWrap
+                  variant="body2"
+                  color="primary"
+                  className={classes.link}
+                  onClick={(): void => handleCampaignSelect(data.row.campaignId as string)}
+                >
+                  {data.row.campaignName}
+                </Typography>
+                <IconButton size="small" onClick={(e): void => handleCampaignNameClick(e, data.row as CampaignInterface)}><MoreVert /></IconButton>
+              </div>
             )
           },
           {
@@ -146,35 +162,46 @@ export default function CampaignInventory({
             sortable: false,
             filterable: false,
             renderCell: (data): React.ReactElement => (
-              <OnadBanner
-                src={data.row.bannerSrc}
+              <Badge
+                color={data.row.confirmState === CONFIRM_STATE_CONFIRMED ? 'primary' : 'secondary'}
+                badgeContent={data.row.confirmState === CONFIRM_STATE_CONFIRMED ? '승인' : '거절'}
                 onClick={(e): void => handleBannerClick(e, data.row as CampaignInterface)}
-                style={{ cursor: 'zoom-in' }}
-                width="50"
-                height="30"
-              />
+                className={classes.zoomin}
+              >
+                <OnadBanner
+                  src={data.row.bannerSrc}
+                  onClick={(e): void => handleBannerClick(e, data.row as CampaignInterface)}
+                  className={classes.zoomin}
+                  width="50"
+                  height="30"
+                />
+              </Badge>
             )
           },
           {
-            headerName: 'URL',
+            headerName: '랜딩URL',
             field: 'linkId',
             sortable: false,
             filterable: false,
             width: 150,
             renderCell: (data): React.ReactElement => (
-              <Typography
-                onClick={(): void => {
-                  const targetUrl = data.row.linkData.links.find((link: UrlLink) => !!link.primary);
-                  window.open(targetUrl.linkTo, '_blank');
-                }}
-                style={{ cursor: 'pointer' }}
-                color="primary"
-                variant="body2"
-                noWrap
-              >
-                <OpenInNew style={{ fontSize: 16 }} />
-                {data.row.linkId}
-              </Typography>
+              <Tooltip title={data.row.linkId}>
+                <Typography
+                  onClick={(): void => {
+                    const targetUrl = data.row.linkData.links.find(
+                      (link: UrlLink) => !!link.primary
+                    );
+                    window.open(targetUrl.linkTo, '_blank');
+                  }}
+                  className={classes.link}
+                  color={data.row.linkConfirmState === CONFIRM_STATE_REJECTED ? 'error' : 'primary'}
+                  variant="body2"
+                  noWrap
+                >
+                  <OpenInNew fontSize="small" style={{ verticalAlign: 'middle' }} />
+                  {data.row.linkId}
+                </Typography>
+              </Tooltip>
             )
           },
           {
@@ -269,45 +296,9 @@ export default function CampaignInventory({
         open={menuAnchor.open}
         anchorEl={menuAnchor.anchorEl}
         onClose={menuAnchor.handleAnchorClose}
-        handleAnaylsisDialogOpen={campaignReportDialog.handleOpen}
         handleDeleteDialogOpen={campaignDeleteDialog.handleOpen}
         handleUpdateDialogOpen={campaignUpdateDialog.handleOpen}
       />
-      )}
-
-      {/* 4월 21일 이전 (광고페이지 있는 경우의) 캠페인 분석 다이얼로그 (full screen) */}
-      {selected && (selected.regiDate < V2_TIME) && campaignReportDialog.open && (
-      <CampaignAnalysisDialog
-        SLIDE_TIMEOUT={500} // 슬라이드 트랜지션 타임아웃
-        open={campaignReportDialog.open}
-        selectedCampaign={selected}
-        handleClose={(): void => {
-          campaignReportDialog.handleClose();
-          setTimeout(() => {
-            setSelected(undefined);
-            // 트랜지션 만큼 뒤에 실행. (먼저 실행하면 트랜지션 발동 안됨)
-          }, 500);
-        }}
-      />
-      )}
-
-
-      {/* 4월 21일 이후 캠페인 분석 다이얼로그 (full screen) */}
-      {campaignReportDialog.open && selected
-        && (selected.regiDate >= V2_TIME)
-        && selected.optionType === 1 && ( // "생방송 배너 광고" 캠페인
-          <CampaignAnalysisDialogV2
-            SLIDE_TIMEOUT={500} // 슬라이드 트랜지션 타임아웃
-            open={campaignReportDialog.open}
-            selectedCampaign={selected}
-            handleClose={(): void => {
-              campaignReportDialog.handleClose();
-              setTimeout(() => {
-                setSelected(undefined);
-                // 트랜지션 만큼 뒤에 실행. (먼저 실행하면 트랜지션 발동 안됨)
-              }, 500);
-            }}
-          />
       )}
 
       {/* 캠페인 업데이트 다이얼로그 */}
@@ -350,7 +341,7 @@ export default function CampaignInventory({
         <Snackbar
           open={failSnack.open}
           onClose={failSnack.handleClose}
-          message="캠페인 상태를 변경하는 데에 실패했습니다. 잠시 후 다시 시도해주세요."
+          message={failSnackMessage}
           color="error"
         />
       )}
