@@ -49,7 +49,6 @@ export default function ClickHeatmap(props: ClickHeatmapProps): JSX.Element {
         monthLabels={['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월']}
         values={data}
         tooltipDataAttrs={getTooltipDataAttrs}
-        // onClick={(value): void => { console.log(value); }}
         classForValue={(value): string => {
           if (!value) { return 'color-empty'; }
           if (value.count < mean - (2 * stddev)) { return 'color-github-0'; }
