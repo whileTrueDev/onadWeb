@@ -6,7 +6,7 @@ import {
 import { Assignment } from '@material-ui/icons';
 import {
   ReportInterface, CreatorDataInterface, HeatmapInterface, GeoInterface, CampaignInterface
-} from '../dashboard/interfaces';
+} from '../../marketer/dashboard/interfaces';
 import { UseGetRequestObject } from '../../../../utils/hooks/useGetRequest';
 
 // own components
@@ -16,7 +16,7 @@ import CampaignCostBar from './sub/CampaignCostBar';
 import BannerBroadCreators from './sub/BannerBroadCreators';
 import ReportCard from './sub/ReportCard';
 import InteractionHeatmap from './sub/HeatmapReport';
-import InteractionToGeo from './sub/GeoReport';
+import InteractionToGeo from '../../marketer/inventory/campaign/sub/report/GeoReport';
 import CampaignInfo from './sub/CampaignInfo';
 
 const makeContents = (reportData: ReportInterface) => ({

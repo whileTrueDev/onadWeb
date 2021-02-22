@@ -1,8 +1,11 @@
 export interface CampaignTargetCreator {
+  creatorId: string;
   creatorTwitchId?: string;
   creatorName?: string;
+  creatorLogo?: string;
   afreecaId?: string;
   afreecaName?: string;
+  afreecaLogo?: string;
 }
 export interface CampaignInterface {
   id: string;
@@ -77,26 +80,52 @@ export interface ReportInterfaceV2 {
   campaignName: string; totalCPM: number; totalViewCount: number;
   totalCPC: number; adchatClick: number; adpanelClick: number;
 }
-
-export interface CreatorDataInterface {
+export interface CreatorDataPerMarketerInterface {
+  id: string;
   creatorId: string;
-  creatorName: string;
   // twitch information
-  creatorTwitchId: string;
-  creatorTwitchName: string;
-  creatorLogo: string;
+  creatorTwitchName?: string;
+  creatorTwitchId?: string;
+  creatorLogo?: string;
   // afreeca information
-  afreecaId: string;
-  afreecaName: string;
-  afreecaLogo: string;
+  afreecaId?: string;
+  afreecaName?: string;
+  afreecaLogo?: string;
 
   total_ad_exposure_amount: number;
-  viewer: number;
-  followers: number;
-  airtime: number;
-  impression: number;
-  openHour: number;
-  content: number;
+  recentDate: string;
+}
+export interface CreatorDataInterface {
+  id: string;
+  creatorId: string;
+  // twitch information
+  creatorTwitchName?: string;
+  creatorTwitchId?: string;
+  creatorLogo?: string;
+  // afreeca information
+  afreecaId?: string;
+  afreecaName?: string;
+  afreecaLogo?: string;
+
+  total_ad_exposure_amount: number;
+  recentDate: string;
+  viewer?: number;
+  followers?: number;
+  airtime?: number;
+  impression?: number;
+  openHour?: number;
+  content?: number;
+  ctr?: number;
+  contentsGraphData?: string;
+  contentsGraphDataAfreeca?: string;
+  timeGraphData?: string;
+  timeGraphDataAfreeca?: string;
+  viewerAfreeca?: number;
+  followersAfreeca?: number;
+  airtimeAfreeca?: number;
+  impressionAfreeca?: number;
+  openHourAfreeca?: number;
+  contentAfreeca?: number;
 }
 
 export interface HeatmapInterface {

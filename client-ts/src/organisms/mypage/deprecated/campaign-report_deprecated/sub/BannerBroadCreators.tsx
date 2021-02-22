@@ -7,7 +7,7 @@ import CardTemplate from './CardTemplate';
 import CreatorInfo from './CreatorInfo';
 import axios, { cancelToken } from '../../../../../utils/axios';
 import HOST from '../../../../../config';
-import { CreatorDataInterface } from '../../dashboard/interfaces';
+import { CreatorDataInterface } from '../../../marketer/dashboard/interfaces';
 import { UseGetRequestObject } from '../../../../../utils/hooks/useGetRequest';
 import useAnchorEl from '../../../../../utils/hooks/useAnchorEl';
 
@@ -85,7 +85,7 @@ export default function BannerBroadCreators(
             {creatorsData.data
             && creatorsData.data.slice(0, 50).map(
               (creator: CreatorDataInterface, index: number) => (
-                <Grid key={creator.creatorName} item xs={4} md={3} lg={2} style={{ padding: 8 }}>
+                <Grid key={creator.creatorId} item xs={4} md={3} lg={2} style={{ padding: 8 }}>
                   <Avatar
                     src={creator.creatorLogo}
                     style={{
@@ -95,7 +95,7 @@ export default function BannerBroadCreators(
                       handleClick(event, index);
                     }}
                   />
-                  <Typography variant="body1">{`${index + 1}. ${creator.creatorName}`}</Typography>
+                  <Typography variant="body1">{`${index + 1}. ${creator.creatorTwitchName || creator.afreecaName}`}</Typography>
                 </Grid>
               )
             )}
