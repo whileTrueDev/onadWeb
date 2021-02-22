@@ -74,10 +74,10 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 interface CampaignOnlyClickAdProps {
   selectedCampaign: CampaignInterface;
-  reportData: UseGetRequestObject<null | ReportInterface>;
+  reportData: UseGetRequestObject<ReportInterface>;
   chartData: UseGetRequestObject<any[]>;
-  ipToGeoData: UseGetRequestObject<null | GeoInterface[]>;
-  clickData: UseGetRequestObject<null | HeatmapInterface[]>;
+  ipToGeoData: UseGetRequestObject<GeoInterface[]>;
+  clickData: UseGetRequestObject<HeatmapInterface[]>;
 }
 
 

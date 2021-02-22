@@ -1,6 +1,10 @@
+import moment from 'moment';
 import {
-  CircularProgress, Grid, makeStyles, Paper, Typography
+  Avatar,
+  Button,
+  CircularProgress, Grid, Hidden, makeStyles, Paper, Typography
 } from '@material-ui/core';
+import { Refresh } from '@material-ui/icons';
 import React from 'react';
 import OnadBanner from '../../../../atoms/Banner/OnadBanner';
 import { UseGetRequestObject } from '../../../../utils/hooks/useGetRequest';
@@ -13,7 +17,7 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(4),
     marginBottom: theme.spacing(2),
     marginTop: theme.spacing(2),
-    [theme.breakpoints.down('xs')]: { minHeight: 260, }
+    [theme.breakpoints.down('xs')]: { minHeight: 320, }
   },
   loading: {
     display: 'flex', justifyContent: 'center', height: 200, alignItems: 'center'
@@ -34,9 +38,15 @@ const useStyles = makeStyles((theme) => ({
       display: 'block'
     }
   },
-  remoteOpenButtonContainer: {
-    [theme.breakpoints.down('xs')]: { marginTop: theme.spacing(1) },
-  }
+  bannerLink: {
+    fontWeight: 'bold',
+    cursor: 'pointer',
+    textDecoration: 'underline',
+    '&:hover': {
+      color: theme.palette.primary.main
+    }
+  },
+  marketerLogo: { marginRight: theme.spacing(1) }
 }));
 
 
@@ -47,6 +57,8 @@ export interface CurrentBannerRes {
   campaignDescription: string;
   links: string;
   regiDate: string;
+  profileImage?: string;
+  date: string;
 }
 export interface NowBroadCardProps {
   currentBannerGet: UseGetRequestObject<CurrentBannerRes[]>;
@@ -66,7 +78,19 @@ export default function NowBroadCard({
         </Typography>
 
         {/* 실시간 광고 제어 버튼 */}
-        <div className={classes.remoteOpenButtonContainer}>
+        <div>
+          <Hidden xsDown>
+            <Button
+              style={{ marginRight: 4 }}
+              size="small"
+              variant="outlined"
+              color="primary"
+              onClick={(): void => { currentBannerGet.doGetRequest(); }}
+            >
+              <Refresh />
+              새로고침
+            </Button>
+          </Hidden>
           <RemotePageOpenButton remoteControllerUrl={remoteControllerUrlGet} />
         </div>
       </div>
@@ -88,7 +112,7 @@ export default function NowBroadCard({
           </div>
         </div>
         )}
-        {currentBannerGet.data
+        {!currentBannerGet.loading && currentBannerGet.data
         && currentBannerGet.data
           .slice(0, 1)
           .map((bannerData) => (
@@ -107,9 +131,14 @@ export default function NowBroadCard({
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <Avatar src={bannerData.profileImage} className={classes.marketerLogo} />
+                  <Typography variant="body2">{bannerData.marketerName}</Typography>
+                </div>
                 <Typography
                   variant="body1"
-                  style={{ fontWeight: 'bold', cursor: 'pointer', textDecoration: 'underline' }}
+                  component="a"
+                  className={classes.bannerLink}
                   onClick={(): void => {
                     if (JSON.parse(bannerData.links).links) {
                       window.open(JSON.parse(bannerData.links).links
@@ -124,10 +153,13 @@ export default function NowBroadCard({
                 </Typography>
                 <Typography variant="body2">
                   {bannerData.campaignDescription.length > 50
-                    ? `${bannerData.campaignDescription.substr(0, 50)}...`
+                    ? (`${bannerData.campaignDescription.slice(0, 50)}...`)
                     : bannerData.campaignDescription}
                 </Typography>
-                <Typography variant="body2" />
+                <Typography variant="body2" color="textSecondary">
+                  {`${moment(bannerData.date).fromNow()}`}
+                </Typography>
+
               </Grid>
             </Grid>
           ))}

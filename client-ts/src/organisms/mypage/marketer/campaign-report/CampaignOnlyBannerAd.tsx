@@ -92,9 +92,9 @@ const useStyles = makeStyles((theme) => ({
 
 interface CampaignOnlyBannerAdProps {
   selectedCampaign: CampaignInterface;
-  reportData: UseGetRequestObject<null | ReportInterface>;
+  reportData: UseGetRequestObject<ReportInterface>;
   chartData: UseGetRequestObject<any[]>;
-  creatorsData: UseGetRequestObject<null | CreatorDataInterface[]>;
+  creatorsData: UseGetRequestObject<CreatorDataInterface[]>;
 }
 
 export default function CampaignOnlyBannerAd(props: CampaignOnlyBannerAdProps): JSX.Element {

@@ -8,7 +8,7 @@ import Work from '@material-ui/icons/Work';
 import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
 import SpeakerNotes from '@material-ui/icons/SpeakerNotes';
 // 크리에이터 라우터
-import CreatorMyAds from './creator/MyAds';
+import CreatorMyAds from './creator/CampaignManage';
 import CreatorDashboard from './creator/Dashboard';
 import CreatorManual from './creator/Manual';
 import CreatorMyPage from './creator/Mypage';

@@ -1,9 +1,9 @@
 const sources = {
   hero: {
     text: {
-      title: '새로운 광고의 선구자',
-      beforeSubTitle: 'LIVE ',
-      subTitle: '배너광고'
+      title: '라이브 방송에 광고하는',
+      beforeSubTitle: '빠르고 ',
+      subTitle: '정확한 방법'
     },
     textCreator: {
       title: '추억도 쌓고 수익도 쌓는',

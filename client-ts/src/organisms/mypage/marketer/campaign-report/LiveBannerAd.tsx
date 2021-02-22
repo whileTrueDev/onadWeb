@@ -34,11 +34,11 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 interface CampaignBannerClickAdProps {
   selectedCampaign: CampaignInterface;
-  reportData: UseGetRequestObject<null | ReportInterfaceV2>;
+  reportData: UseGetRequestObject<ReportInterfaceV2>;
   chartData: UseGetRequestObject<any[]>;
-  creatorsData: UseGetRequestObject<null | CreatorDataInterface[]>;
-  ipToGeoData: UseGetRequestObject<null | GeoInterface[]>;
-  clickData: UseGetRequestObject<null | HeatmapInterface[]>;
+  creatorsData: UseGetRequestObject<CreatorDataInterface[]>;
+  ipToGeoData: UseGetRequestObject<GeoInterface[]>;
+  clickData: UseGetRequestObject<HeatmapInterface[]>;
 }
 
 export default function CampaignBannerClickAd(

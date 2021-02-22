@@ -8,7 +8,7 @@ import { UseGetRequestObject } from '../../../../../utils/hooks/useGetRequest';
 
 interface CampaignCostPieProps {
   color: string;
-  reportData: UseGetRequestObject<null | ReportInterfaceV2>;
+  reportData: UseGetRequestObject<ReportInterfaceV2>;
   [key: string]: any;
 }
 
