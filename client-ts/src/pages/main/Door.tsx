@@ -27,6 +27,7 @@ export default function Door(): JSX.Element {
                   key={shortid.generate()}
                 >
                   {title}
+                  메롱
                 </Typography>
               ))}
             </div>
