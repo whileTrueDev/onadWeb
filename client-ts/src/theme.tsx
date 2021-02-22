@@ -12,6 +12,11 @@ export interface OnadPalette extends Palette {
     youtube: string;
     naver: string;
     kakao: string;
+    afreecaContrastText: string;
+    twitchContrastText: string;
+    youtubeContrastText: string;
+    naverContrastText: string;
+    kakaoContrastText: string;
   };
 }
 export interface OnadTheme extends Theme {
@@ -42,7 +47,6 @@ const rawTheme = {
       // contrastText: will be calculated to contrast with palette.info.main
       contrastText: defaultTheme.palette.getContrastText(blueGrey[700]),
     },
-    warning: defaultTheme.palette.secondary,
     error: {
       dark: '#c55024',
       main: '#f67157',
@@ -69,10 +73,15 @@ const rawTheme = {
 
 const platformOverrides = {
   afreeca: '#2e6afd',
+  afreecaContrastText: defaultTheme.palette.getContrastText('#2e6afd'),
   twitch: '#9147ff',
+  twitchContrastText: defaultTheme.palette.getContrastText('#9147ff'),
   youtube: '#CC0000',
+  youtubeContrastText: defaultTheme.palette.getContrastText('#CC0000'),
   naver: '#1EC800',
+  naverContrastText: defaultTheme.palette.getContrastText('#1EC800'),
   kakao: '#ffe812',
+  kakaoContrastText: defaultTheme.palette.getContrastText('#ffe812'),
 };
 
 

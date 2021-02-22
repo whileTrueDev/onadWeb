@@ -23,9 +23,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  openInNew: {
-    fontSize: theme.spacing(2)
-  }
 }));
 
 interface UrlDeleteDialogProps {
@@ -108,7 +105,7 @@ const UrlDeleteDialog = (props: UrlDeleteDialogProps): JSX.Element => {
                 window.open(url.linkTo);
               }}
             >
-              <OpenInNew className={classes.openInNew} />
+              <OpenInNew fontSize="small" style={{ verticalAlign: 'middle' }} />
               {url.linkName || url.linkTo}
             </Typography>
           </Grid>

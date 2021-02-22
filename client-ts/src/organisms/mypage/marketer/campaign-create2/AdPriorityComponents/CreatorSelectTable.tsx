@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import React, { useRef, useState } from 'react';
 import { useTheme } from '@material-ui/core/styles';
 import {

@@ -1,13 +1,24 @@
 import React, { useContext, } from 'react';
 import {
   Button,
+  makeStyles,
   Typography
 } from '@material-ui/core';
+import { FiberNew } from '@material-ui/icons';
 import EditableAvatar from '../../../../../../atoms/Avatar/EditableAvatar';
 import { useDialog } from '../../../../../../utils/hooks';
 import CustomDialog from '../../../../../../atoms/Dialog/Dialog';
 import MarketerInfoContext from '../../../../../../context/MarketerInfo.context';
 
+const useStyles = makeStyles((theme) => ({
+  bold: { fontWeight: 'bold' },
+  successIcon: {
+    color: theme.palette.success.main,
+  },
+  button: {
+    marginRight: theme.spacing(1)
+  }
+}));
 export interface EditProfileImageProps {
   onSubmit: (value: string) => void;
   loading?: boolean;
@@ -16,6 +27,7 @@ export default function EditProfileImage({
   onSubmit,
   loading,
 }: EditProfileImageProps): JSX.Element {
+  const classes = useStyles();
   const marketerInfo = useContext(MarketerInfoContext);
   /**
    * 이미지 업로드 핸들러
@@ -55,8 +67,14 @@ export default function EditProfileImage({
   return (
     <>
       <div>
-        <Typography style={{ fontWeight: 'bold' }}>프로필 사진</Typography>
-        <Typography color="textSecondary" variant="body2">프로필 사진을 클릭해 편집을 시작하세요.</Typography>
+        <Typography className={classes.bold}>
+          프로필 사진
+          {marketerInfo.user && !marketerInfo.user.profileImage && (
+          <FiberNew fontSize="small" className={classes.successIcon} />
+          )}
+        </Typography>
+        <Typography color="textSecondary" variant="body2">* 프로필 사진을 클릭해 편집을 시작하세요.</Typography>
+        <Typography color="textSecondary" variant="body2">* 프로필 사진은 방송인에게 보여집니다. 브랜드 로고를 프로필 사진으로 사용하는 것이 일반적입니다.</Typography>
         <EditableAvatar
           changeLoading={loading}
           src={marketerInfo.user ? marketerInfo.user.profileImage : ''}
@@ -83,14 +101,14 @@ export default function EditProfileImage({
               onSubmit('');
               confirmDialog.handleClose();
             }}
-            style={{ marginRight: 8 }}
+            className={classes.button}
           >
             확인
           </Button>
           <Button
             variant="contained"
             onClick={confirmDialog.handleClose}
-            style={{ marginRight: 8 }}
+            className={classes.button}
           >
             취소
           </Button>

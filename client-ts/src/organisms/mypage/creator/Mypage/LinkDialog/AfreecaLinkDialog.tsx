@@ -168,7 +168,7 @@ export default function AfreecaLinkDialog({
             }}
           >
             쪽지 바로 보내기
-            <OpenInNew fontSize="small" />
+            <OpenInNew fontSize="small" style={{ verticalAlign: 'middle' }} />
           </Button>
 
           {isClicked && (

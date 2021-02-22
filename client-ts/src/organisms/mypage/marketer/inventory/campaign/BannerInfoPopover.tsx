@@ -7,6 +7,7 @@ import React from 'react';
 import { CampaignInterface } from '../../dashboard/interfaces';
 import { BannerDataInterface } from '../interface';
 import OnadBanner from '../../../../../atoms/Banner/OnadBanner';
+import renderBannerConfirmState, { CONFIRM_STATE_REJECTED } from '../../../../../utils/render_funcs/renderBannerConfirmState';
 
 const useStyles = makeStyles((theme) => ({
   container: { padding: theme.spacing(2), minWidth: 350, minHeight: 200 }
@@ -27,19 +28,11 @@ export default function BannerInfoPopover({
 }: BannerInfoPopoverProps): JSX.Element {
   const classes = useStyles();
 
-  function renderConfirmState(state: number): string {
-    const states = ['진행중', '승인됨', '거절됨'];
-    return states[state];
-  }
 
   return (
     <Popover
-      anchorOrigin={{
-        vertical: 'bottom', horizontal: 'left',
-      }}
-      transformOrigin={{
-        vertical: 'top', horizontal: 'left',
-      }}
+      anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+      transformOrigin={{ vertical: 'top', horizontal: 'left' }}
       open={open}
       anchorEl={anchorEl}
       onClose={onClose}
@@ -52,7 +45,10 @@ export default function BannerInfoPopover({
               {`배너 이름: ${selectedBanner.bannerId}`}
             </Typography>
             <Typography variant="body2">
-              {`심의 상태: ${renderConfirmState(selectedBanner.confirmState)}`}
+              {'심의 상태: '}
+              <Typography variant="body2" component="span" color={selectedBanner.confirmState === CONFIRM_STATE_REJECTED ? 'error' : 'textPrimary'}>
+                {renderBannerConfirmState(selectedBanner.confirmState)}
+              </Typography>
             </Typography>
             <Typography variant="body2">
               {`생성 날짜: ${moment(selectedBanner.regiDate).format('YYYY/MM/DD HH:mm:ss')}`}
@@ -66,7 +62,10 @@ export default function BannerInfoPopover({
             {`배너 이름: ${selectedCampaign.bannerId}`}
           </Typography>
           <Typography variant="body2">
-            {`심의 상태: ${renderConfirmState(selectedCampaign.confirmState)}`}
+            {'심의 상태: '}
+            <Typography variant="body2" component="span" color={selectedCampaign.linkConfirmState === CONFIRM_STATE_REJECTED ? 'error' : 'textPrimary'}>
+              {renderBannerConfirmState(selectedCampaign.linkConfirmState)}
+            </Typography>
           </Typography>
           <Typography variant="body2">
             {`생성 날짜: ${moment(selectedCampaign.bannerRegiDate).format('YYYY/MM/DD HH:mm:ss')}`}

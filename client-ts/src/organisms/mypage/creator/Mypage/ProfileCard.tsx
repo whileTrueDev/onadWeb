@@ -68,7 +68,7 @@ function ProfileCard({ profileData }: ProfileCardProps): JSX.Element {
           <TextFieldWithLabel title="비밀번호">
             <TextField InputProps={{ style: { padding: 0 } }} value="****" disabled />
             <Button size="small" style={{ marginLeft: 16 }} onClick={passwordDialog.handleOpen}>
-              <OpenInNew fontSize="small" />
+              <OpenInNew fontSize="small" style={{ verticalAlign: 'middle' }} />
               변경하기
             </Button>
           </TextFieldWithLabel>
@@ -86,7 +86,7 @@ function ProfileCard({ profileData }: ProfileCardProps): JSX.Element {
               style={{ marginLeft: 16 }}
               onClick={handleContractionOpen}
             >
-              <OpenInNew fontSize="small" />
+              <OpenInNew fontSize="small" style={{ verticalAlign: 'middle' }} />
               이용약관 보기
             </Button>
             )}

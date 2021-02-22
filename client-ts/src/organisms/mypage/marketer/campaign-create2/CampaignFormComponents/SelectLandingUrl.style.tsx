@@ -27,7 +27,4 @@ export default makeStyles((theme: Theme) => ({
   selectedLanding: {
     maxWidth: 600, lineBreak: 'anywhere', width: '100%',
   },
-  selectedLandingIcon: {
-    fontSize: 16
-  }
 }));

@@ -1,20 +1,18 @@
 import React from 'react';
 import shortid from 'shortid';
 import {
-  Grid, Typography, Button
+  Typography, Button, makeStyles
 } from '@material-ui/core';
 import Skeleton from '@material-ui/lab/Skeleton';
-import BubbleChart from '@material-ui/icons/BubbleChart';
 import { compose, withProps, withHandlers } from 'recompose';
 import {
   withScriptjs, withGoogleMap, GoogleMap, Marker
 } from 'react-google-maps';
 import MarkerClusterer from 'react-google-maps/lib/components/addons/MarkerClusterer';
 import dotenv from 'dotenv';
-import CardTemplate from './CardTemplate';
-import MaterialTable from '../../../../../atoms/Table/MaterialTable';
-import { GeoInterface } from '../../dashboard/interfaces';
-import { UseGetRequestObject } from '../../../../../utils/hooks/useGetRequest';
+import { GeoInterface } from '../../../../dashboard/interfaces';
+import { UseGetRequestObject } from '../../../../../../../utils/hooks/useGetRequest';
+import CustomDataGrid from '../../../../../../../atoms/Table/CustomDataGrid';
 
 dotenv.config();
 interface MapWithMarkerClustererProps {
@@ -70,6 +68,7 @@ const MapWithAMarkerClusterer = compose<
 type IpToGeoData = UseGetRequestObject<GeoInterface[]>;
 interface IpToGeoProps {
   ipToGeoData: IpToGeoData;
+  [key: string]: any;
 }
 
 // Ip To Geo Map component
@@ -109,6 +108,7 @@ function IpToGeo(props: IpToGeoProps): JSX.Element {
 }
 
 interface GeoTableData {
+  id: string;
   click: number;
   city: string;
 }
@@ -121,7 +121,7 @@ function groupByCity(payload: GeoInterface[] | null): Array<GeoTableData> {
       if (click.city) {
         if (!cities.includes(click.city)) {
           cities.push(click.city);
-          newData.push({ city: click.city, click: 1 });
+          newData.push({ id: shortid.generate(), city: click.city, click: 1 });
         } else {
           newData.map((d, idx) => {
             if (d.city === click.city) {
@@ -137,68 +137,63 @@ function groupByCity(payload: GeoInterface[] | null): Array<GeoTableData> {
       return click;
     });
   }
-  return newData;
+  return newData.sort((x, y) => y.click - x.click);
 }
 
+const useStyles = makeStyles(() => ({
+  datagrid: {
+    borderLeft: 'none',
+    borderRight: 'none',
+  }
+}));
 // Ip To Geo Table
 interface IpToGeoTableProps {
   ipToGeoData: IpToGeoData;
 }
 function IpToGeoTable(props: IpToGeoTableProps): JSX.Element {
   const { ipToGeoData } = props;
+  const classes = useStyles();
 
   return (
-    <div style={{ height: '410px' }}>
+    <div style={{ height: '250px' }}>
       {!ipToGeoData.loading && ipToGeoData.data && (
-        <MaterialTable
-          style={{ boxShadow: 'none' }}
+        <CustomDataGrid
+          disableSelectionOnClick
+          className={classes.datagrid}
+          rows={groupByCity(ipToGeoData.data)}
+          density="compact"
           columns={[
-            { title: '지역', field: 'city', },
             {
-              title: '클릭',
+              headerName: '지역',
+              field: 'city',
+              align: 'center',
+              headerAlign: 'center',
+              flex: 1,
+            },
+            {
+              headerName: '클릭',
               field: 'click',
-              defaultSort: 'desc',
-              render: (rowData): React.ReactNode => {
-                if (rowData.city) {
-                  return (<Typography>{rowData.click}</Typography>);
-                }
-                return null;
-              }
+              align: 'center',
+              headerAlign: 'center',
+              flex: 1,
             },
           ]}
-          data={groupByCity(ipToGeoData.data)}
-          options={{
-            toolbar: false,
-            pageSize: 5,
-            pageSizeOptions: [5, 10, 15],
-            maxBodyHeight: 400,
-            searchFieldAlignment: 'right'
-          }}
         />
       )}
-      <div style={{ padding: 8 }}>
-        <Typography variant="caption">* 정확한 위치가 확인되는 경우에만 해당 테이블에 표시됩니다.</Typography>
-      </div>
     </div>
   );
 }
 
 
-export default function InteractionToGeo(props: IpToGeoProps): JSX.Element {
+export default function GeoReport(props: IpToGeoProps): JSX.Element {
   const { ipToGeoData, ...rest } = props;
   return (
     <div {...rest}>
-      <CardTemplate title="지역별 상호작용" color="secondary" IconComponent={BubbleChart}>
-        <Grid container spacing={1}>
-          <Grid item xs={12}>
-            <IpToGeo ipToGeoData={ipToGeoData} />
-          </Grid>
-
-          <Grid item xs={12}>
-            <IpToGeoTable ipToGeoData={ipToGeoData} />
-          </Grid>
-        </Grid>
-      </CardTemplate>
+      <IpToGeo ipToGeoData={ipToGeoData} />
+      <IpToGeoTable ipToGeoData={ipToGeoData} />
+      <div style={{ padding: 8 }}>
+        <Typography variant="caption">* 정확한 위치가 확인되는 경우만 목록에 표시됩니다.</Typography>
+      </div>
     </div>
   );
 }

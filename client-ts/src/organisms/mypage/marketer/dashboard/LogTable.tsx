@@ -101,10 +101,6 @@ export default function issueTable(
       <div style={{ padding: 16, display: 'flex', justifyContent: 'space-between' }}>
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <Typography variant="h6">활동</Typography>
-          <Typography variant="caption" color="textSecondary">
-            &nbsp;
-            목록갱신은 새로고침을 눌러주세요
-          </Typography>
         </div>
 
         <IconButton

@@ -42,7 +42,7 @@ export interface CampaignCreateInterface {
     startDate: Date | string;
     finDate?: string;
   };
-  campaignTime: string[];
+  campaignTime: number[];
   loading: boolean;
 }
 

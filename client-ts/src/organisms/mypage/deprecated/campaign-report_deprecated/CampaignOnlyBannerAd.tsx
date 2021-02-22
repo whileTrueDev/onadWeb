@@ -11,7 +11,7 @@ import CampaignCostBar from './sub/CampaignCostBar';
 import BannerBroadCreators from './sub/BannerBroadCreators';
 import CampaignInfo from './sub/CampaignInfo';
 import MakePdfButton from './sub/MakePdfButton';
-import { ReportInterface, CreatorDataInterface, CampaignInterface } from '../dashboard/interfaces';
+import { ReportInterface, CreatorDataInterface, CampaignInterface } from '../../marketer/dashboard/interfaces';
 import { UseGetRequestObject } from '../../../../utils/hooks/useGetRequest';
 
 

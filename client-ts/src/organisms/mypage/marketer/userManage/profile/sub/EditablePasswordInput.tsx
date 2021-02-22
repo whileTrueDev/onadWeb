@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme) => ({
   value: { margin: theme.spacing(1, 0), },
   textField: {
     maxWidth: 320,
-    margin: theme.spacing(1, 1, 0, 0)
+    margin: theme.spacing(1, 1, 1, 0)
   },
   button: { margin: theme.spacing(0, 1, 0, 0) }
 }));
@@ -53,7 +53,7 @@ export default function EditablePasswordInput({
     e.preventDefault();
     if (!(value === rePassword.value)) return alert('비밀번호와 비밀번호 확인이 동일하지 않습니다.');
     if (!passwordRegex.test(value)) return alert('비밀번호 형식이 올바르지 않습니다.');
-    onSubmit(value);
+    return onSubmit(value);
   }
 
   return (
