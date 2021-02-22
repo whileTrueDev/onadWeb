@@ -34,7 +34,7 @@ function ImageUploadAccount(): JSX.Element {
     <div>
       <Grid container direction="column" justify="center" alignItems="center" spacing={2} className={classes.wraper}>
         <Grid item className={classes.title}>
-          온애드는 크리에이터님의 수익금을 소유하신 계좌로 지급해드립니다. 아래 두 가지 방법 중 편한 방법으로 이미지를 업로드 해주시기 바랍니다.
+          온애드는 방송인분들의 수익금을 소유하신 계좌로 지급해드립니다. 아래 두 가지 방법 중 편한 방법으로 이미지를 업로드 해주시기 바랍니다.
         </Grid>
         <Grid item className={classes.title}>
           1. 실물 통장 사본

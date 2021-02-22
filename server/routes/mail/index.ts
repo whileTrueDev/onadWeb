@@ -69,7 +69,7 @@ router.route('/inquiry/creator')
       const mailOptions = {
         from: `${inputForm.email}`, // 발송 메일 주소
         to: 'support@onad.io', // 수신 메일 주소부분
-        subject: `${inputForm.name}님의 크리에이터 문의 입니다.`, // 제목부분
+        subject: `${inputForm.name}님의 방송인 문의 입니다.`, // 제목부분
         html: makeCreatorInquiry(inputForm),
         // attachments: [{
         //   filename: 'onad_logo_vertical_small.png',

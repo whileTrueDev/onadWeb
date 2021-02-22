@@ -54,7 +54,7 @@ export default function CreatorList(): JSX.Element {
 
   const Columns = [
     {
-      title: '크리에이터명',
+      title: '방송인명',
       field: 'creatorName',
       render: (rowData: any): JSX.Element => (
         <div className={classes.columnWrapper}>

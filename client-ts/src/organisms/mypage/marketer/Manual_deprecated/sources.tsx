@@ -42,7 +42,7 @@ const manualSources = {
   bannerRegist: {
     card: {
       title: '등록 가능 배너',
-      subtitle: '크리에이터의 방송 및 패널에 송출할 수 있는 배너를 소개합니다',
+      subtitle: '방송인의 방송 및 패널에 송출할 수 있는 배너를 소개합니다',
     },
     source: [
       {
@@ -58,7 +58,7 @@ const manualSources = {
   bannerUpload: {
     card: {
       title: '배너 업로드',
-      subtitle: '크리에이터의 방송 및 패널에 송출하고자 하는 광고를 등록하고 관리할 수 있습니다.',
+      subtitle: '방송인의 방송 및 패널에 송출하고자 하는 광고를 등록하고 관리할 수 있습니다.',
     },
     source: [
       {
@@ -99,7 +99,7 @@ const manualSources = {
       },
       {
         image: '/pngs/dashboard/manual/new_marketer/marketer-campaign-03.png',
-        description: `원하는 송출 방식을 선택하고 ${textStyling.styledText('다음')}을 눌러주세요. ${textStyling.styledBlock(`- 특정 크리에이터에게만 광고 송출 : 원하는 크리에이터에게만 송출을 원하는 경우<br>
+        description: `원하는 송출 방식을 선택하고 ${textStyling.styledText('다음')}을 눌러주세요. ${textStyling.styledBlock(`- 특정 방송인에게만 광고 송출 : 원하는 방송인에게만 송출을 원하는 경우<br>
         - 특정 게임에만 광고 송출 : 특정 게임 시청자들을 타겟팅 하는 경우<br>
         - 업로드형 광고 캠페인(유투브) : 많은 시청자들에게 노출되는 것을 우선하는 경우(노출 수 가장 높음)`)}`
       },
@@ -132,7 +132,7 @@ const manualSources = {
       {
         image: '/pngs/dashboard/manual/new_marketer/marketer-costChart-01.png',
         description: `광고 비용에 대한 차트는 ${textStyling.LinkText('<대시보드>', 'main', 'marketer')}에서 확인할 수 있습니다.  
-        또한 광고주님의 광고를 송출한 크리에이터를 ${textStyling.LinkText('<대시보드>', 'main', 'marketer')}의 ${textStyling.styledText('송출크리에이터')}에서 확인할 수 있습니다.`,
+        또한 광고주님의 광고를 송출한 방송인을 ${textStyling.LinkText('<대시보드>', 'main', 'marketer')}의 ${textStyling.styledText('송출방송인')}에서 확인할 수 있습니다.`,
       },
       {
         image: '/pngs/dashboard/manual/new_marketer/marketer-costChart-02.png',
@@ -140,7 +140,7 @@ const manualSources = {
       },
       {
         image: '/pngs/dashboard/manual/new_marketer/marketer-costChart-03.png',
-        description: '캠페인 상태 및 광고비용 그래프, 광고비용 비율, 배너 송출 크리에이터, 날짜별, 지역별 유입 수를 한눈에 확인하실 수 있습니다.'
+        description: '캠페인 상태 및 광고비용 그래프, 광고비용 비율, 배너 송출 방송인, 날짜별, 지역별 유입 수를 한눈에 확인하실 수 있습니다.'
       },
     ],
   },

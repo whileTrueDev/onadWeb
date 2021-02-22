@@ -90,8 +90,8 @@ const CreatorSelect = (props: CreatorSelectProps): JSX.Element => {
   return (
     <Grid container direction="column" spacing={2} className={classes.root}>
       <Grid item>
-        <Typography variant="body1" className={classes.bold}>현재까지 선택된 크리에이터 : </Typography>
-        <Typography variant="body2" color="textSecondary">* 표에서 크리에이터 클릭시 선택됩니다.</Typography>
+        <Typography variant="body1" className={classes.bold}>현재까지 선택된 방송인 : </Typography>
+        <Typography variant="body2" color="textSecondary">* 표에서 방송인 클릭시 선택됩니다.</Typography>
         {state.selectedCreators.map((creator) => (
           <Chip
             className={classes.chip}

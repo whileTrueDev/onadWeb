@@ -114,7 +114,7 @@ export default function IntroduceTop({ userType }: { userType: string | boolean 
                       광고 형식 1. 패널
                     </Typography>
                     <Typography variant="subtitle1">
-                      크리에이터가 개인방송 플랫폼(채널)에
+                      방송인이 개인방송 플랫폼(채널)에
                     </Typography>
                     <Typography variant="subtitle1">
                       패널을 등록한 후 패널 클릭시
@@ -135,7 +135,7 @@ export default function IntroduceTop({ userType }: { userType: string | boolean 
                       광고 형식 : 방송국 배너
                     </Typography>
                     <Typography variant="subtitle1">
-                      크리에이터가 개인방송 플랫폼(채널)에
+                      방송인이 개인방송 플랫폼(채널)에
                     </Typography>
                     <Typography variant="subtitle1">
                       플로팅 혹은 하단 배너를 등록한 후 배너 클릭시
@@ -164,7 +164,7 @@ export default function IntroduceTop({ userType }: { userType: string | boolean 
                     광고 형식 2. 채팅봇
                   </Typography>
                   <Typography variant="subtitle1">
-                    크리에이터가 개인방송 플랫폼(채널)에
+                    방송인이 개인방송 플랫폼(채널)에
                   </Typography>
                   <Typography variant="subtitle1">
                     채팅봇 등록 후 채팅봇 클릭 시
@@ -279,7 +279,7 @@ export default function IntroduceTop({ userType }: { userType: string | boolean 
                         광고 형식 1. 패널
                       </Typography>
                       <Typography variant="subtitle1">
-                        크리에이터가 개인방송 플랫폼(채널)에
+                        방송인이 개인방송 플랫폼(채널)에
                       </Typography>
                       <Typography variant="subtitle1">
                         패널을 등록한 후 패널 클릭시
@@ -300,7 +300,7 @@ export default function IntroduceTop({ userType }: { userType: string | boolean 
                         광고 형식 : 방송국 배너
                       </Typography>
                       <Typography variant="subtitle1">
-                        크리에이터가 개인방송 플랫폼(채널)에
+                        방송인이 개인방송 플랫폼(채널)에
                       </Typography>
                       <Typography variant="subtitle1">
                         플로팅 혹은 하단 배너를 등록한 후 배너 클릭시
@@ -329,7 +329,7 @@ export default function IntroduceTop({ userType }: { userType: string | boolean 
                       광고 형식 2. 채팅봇
                     </Typography>
                     <Typography variant="subtitle1">
-                      크리에이터가 개인방송 플랫폼(채널)에
+                      방송인이 개인방송 플랫폼(채널)에
                     </Typography>
                     <Typography variant="subtitle1">
                       채팅봇 등록 후 채팅봇 클릭 시
