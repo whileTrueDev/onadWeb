@@ -27,7 +27,7 @@ const sources = {
       { title: '안전한 예산 설정', content: '충전된 금액에서 비용이 차감되며 일예산을 설정하여 추가 과금없이 안전하게 예산 집행할 수 있습니다.', imageUrl: './advantage/advCreator2.svg' },
       { title: '효율적 타겟팅', content: '원하는 시간, 카테고리를 설정하여 원하는 타켓에 맞게 광고를 집행할 수 있습니다.', imageUrl: './advantage/advCreator3.svg' },
       { title: '합리적인 가격 책정', content: '배너가 송출된 만큼, 클릭된 만큼 비용이 책정됩니다.', imageUrl: './advantage/advCreator4.svg' },
-      { title: '실시간 보고서', content: '송출하고 이쓴ㄴ 크리에이터, 노출수, 클릭수 등을 실시간으로 확인할 수 있습니다', imageUrl: './advantage/advCreator5.svg' },
+      { title: '실시간 보고서', content: '송출하고 있는 크리에이터, 노출수, 클릭수 등을 실시간으로 확인할 수 있습니다', imageUrl: './advantage/advCreator5.svg' },
     ],
     creator: [
       { title: '간편한 계약 절차', content: '온애드는 이미 수많은 크리에이터와 광고주와 계약을 맺은 상태입니다. 직접 컨택할 필요없이 간편하게 계약이 가능합니다.', imageUrl: './advantage/advCreator1.svg' },
