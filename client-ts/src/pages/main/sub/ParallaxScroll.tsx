@@ -13,9 +13,9 @@ interface ParallaxScrollProps {
   isLogin: boolean;
   loading: boolean | null;
   bgfixedRange: number[];
-  timer: NodeJS.Timeout | undefined;
-  setTimer: React.Dispatch<React.SetStateAction<NodeJS.Timeout|undefined>>;
   renewalDialog: boolean;
+  // timer: NodeJS.Timeout | undefined;
+  // setTimer: React.Dispatch<React.SetStateAction<NodeJS.Timeout|undefined>>;
   // isDown: boolean;
   // setIsDown: React.Dispatch<React.SetStateAction<boolean>>
   // offsetY: number;
@@ -25,7 +25,8 @@ interface ParallaxScrollProps {
 function ParallaxScroll({
   children, psIndex,
   setPsIndex, isLogin, loading, bgfixedRange,
-  timer, setTimer, renewalDialog
+  renewalDialog,
+  // timer, setTimer
   // isDown, setIsDown,
   // offsetY, setOffsetY
 }: ParallaxScrollProps): JSX.Element {
@@ -40,17 +41,17 @@ function ParallaxScroll({
     const nextBtn = document.getElementById('next');
     const prevBtn = document.getElementById('prev');
 
-    function handleHeight() {
-      if (timer) {
-        clearTimeout(timer);
-      }
-      const newTimer = setTimeout(() => {
-        window.location.reload();
-      }, 300);
-      setTimer(newTimer);
-    }
+    // function handleHeight() {
+    //   if (timer) {
+    //     clearTimeout(timer);
+    //   }
+    //   const newTimer = setTimeout(() => {
+    //     window.location.reload();
+    //   }, 300);
+    //   setTimer(newTimer);
+    // }
 
-    window.addEventListener('resize', handleHeight);
+    // window.addEventListener('resize', handleHeight);
 
     // 변수 설정 및 초깃값
     // let moveY = 0
@@ -170,7 +171,7 @@ function ParallaxScroll({
         // parallaxWapper?.removeEventListener('pointermove', onMove);
         // window.removeEventListener('resize', handleHeight)
       };
-  }, [psIndex, isLogin, lastTime, loading, setPsIndex, timer, setTimer, renewalDialog]);
+  }, [psIndex, isLogin, lastTime, loading, setPsIndex, renewalDialog]);
 
   return (
     <main className={classes.container} id="parallax">

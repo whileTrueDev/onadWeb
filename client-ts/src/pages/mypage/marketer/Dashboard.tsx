@@ -118,7 +118,7 @@ export default function Dashboard(): JSX.Element {
                     <Grid item xs={12} sm={6} lg={3}>
                       <Grow in timeout={{ enter: 1500 }}>
                         <DescCard data={{
-                          title: '송출크리에이터수', value: countsData.data.counts, unit: '명'
+                          title: '송출방송인수', value: countsData.data.counts, unit: '명'
                         }}
                         />
                       </Grow>

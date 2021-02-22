@@ -10,10 +10,10 @@ interface HowToUseProps {
     content: string[];
   };
   MainUserType: boolean;
-  timer: NodeJS.Timeout | undefined;
+  // timer: NodeJS.Timeout | undefined;
 }
 
-function HowToUse({ source, MainUserType, timer }: HowToUseProps): JSX.Element {
+function HowToUse({ source, MainUserType, }: HowToUseProps): JSX.Element {
   const classes = styles();
 
   const [loading, setLoading] = React.useState(false);
@@ -41,7 +41,7 @@ function HowToUse({ source, MainUserType, timer }: HowToUseProps): JSX.Element {
     return () => {
       iframeDocument.removeEventListener('load', handleLoad);
     };
-  }, [iframeLoading, timer]);
+  }, [iframeLoading]);
 
   return (
     <div className={classes.root}>
@@ -71,7 +71,7 @@ function HowToUse({ source, MainUserType, timer }: HowToUseProps): JSX.Element {
                 download="온애드서비스소개서"
                 className={classes.download}
               >
-소개 자료 다운로드
+                소개 자료 다운로드
 
               </a>
               {loading

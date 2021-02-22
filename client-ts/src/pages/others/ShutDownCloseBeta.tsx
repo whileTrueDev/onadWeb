@@ -58,7 +58,7 @@ export default function ShutDownCloseBeta(): JSX.Element {
         <img src="/pngs/logo/onad_logo_vertical.png" alt="logo" width="150px" />
 
         <h2>방문해주셔서 감사합니다.</h2>
-        <span>크리에이터를 위한 광고 플랫폼 온애드입니다.</span>
+        <span>방송인을 위한 광고 플랫폼 온애드입니다.</span>
         <span>2019년 10월 중, 2차 클로즈베타로 다시 찾아뵙겠습니다. </span>
         <span>
           <strong>1차 클로즈베타 테스터분들은</strong>

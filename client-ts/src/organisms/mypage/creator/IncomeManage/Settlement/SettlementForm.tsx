@@ -282,7 +282,7 @@ function SettlementForm({
             inputProps={{ maxLength: 17 }}
             margin="dense"
             name="creatorName"
-            helperText="크리에이터님의 실명을 입력해주세요"
+            helperText="방송인님의 실명을 입력해주세요"
           />
         </Grid>
         <Grid item className={classes.content}>

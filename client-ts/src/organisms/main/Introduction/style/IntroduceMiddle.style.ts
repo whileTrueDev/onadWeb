@@ -175,7 +175,10 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   subContent: {
-    width: '40%',
+    width: '50%',
+    [theme.breakpoints.down('md')]: {
+      width: '40%',
+    },
     [theme.breakpoints.down('sm')]: {
       width: '40%',
     },
@@ -194,7 +197,7 @@ const useStyles = makeStyles((theme) => ({
   exImage: {
     width: 500,
     height: 250,
-    margin: theme.spacing(0, 4),
+    margin: theme.spacing(0, '20%', 0, '5%'),
     [theme.breakpoints.down('md')]: {
       width: 400,
       height: 200,
@@ -214,7 +217,7 @@ const useStyles = makeStyles((theme) => ({
   exImage2: {
     width: 460,
     height: 256,
-    marginRight: theme.spacing(0, 4),
+    margin: theme.spacing(0, '4%', 0, '10%'),
     [theme.breakpoints.down('md')]: {
       width: 330,
       height: 184,

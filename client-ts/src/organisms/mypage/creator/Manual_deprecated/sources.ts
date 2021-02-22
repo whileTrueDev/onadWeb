@@ -54,7 +54,7 @@ const manualSources: ManualSources = {
       },
       {
         image: null,
-        description: `계약 상태 및 계약서 확인은 ${textStyling.LinkText('<내 계정>', 'user')} 크리에이터님의 정보란에서 확인 가능합니다.`,
+        description: `계약 상태 및 계약서 확인은 ${textStyling.LinkText('<내 계정>', 'user')} 방송인님의 정보란에서 확인 가능합니다.`,
       },
     ],
   },
@@ -184,9 +184,9 @@ const manualSources: ManualSources = {
       },
       {
         image: '/pngs/dashboard/manual/new_creator/creator-income-02.png',
-        description: `송출되는 광고는 크리에이터님의 방송 채널 패널과 연동됩니다.   
+        description: `송출되는 광고는 방송인님의 방송 채널 패널과 연동됩니다.   
         패널 클릭시 광고주/마케터 님이 연동한 URL 페이지로 이동합니다. 패널 및 채팅광고에 대한 시청자의 클릭(상호작용)에 대해 수익은 추가적으로 발생합니다.   
-        또한, 시청자의 광고에 대한 클릭에 따라 크리에이터님의 광고 레벨도 상승합니다.   
+        또한, 시청자의 광고에 대한 클릭에 따라 방송인님의 광고 레벨도 상승합니다.   
         ${textStyling.LinkText('<내 클릭광고>', 'ad-dashboard')}에서 확인하세요!
         광고 단가 책정, 이벤트 및 광고 선정 우선순위에 가산점으로 작용할 수 있습니다.`
       },

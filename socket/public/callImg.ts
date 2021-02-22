@@ -16,7 +16,7 @@ function callImg(socket: Socket, msg: string[]): void {
   let myGameId: string;
   // creatorId를 전달받아 creatorCampaign과 onff List를 도출.
   const getCreatorCampaignList = (creatorId: string): Promise<string[]> => {
-    console.log(`${creatorId} / 특정 크리에이터 송출 광고 조회 / ${getTime}`);
+    console.log(`${creatorId} / 특정 방송인 송출 광고 조회 / ${getTime}`);
 
     const campaignListQuery = `
     SELECT campaignList 
@@ -323,7 +323,7 @@ function callImg(socket: Socket, msg: string[]): void {
       // *********************************************************
       // 현재 ON상태인 크리에이터 개인에게 할당된(크리에이터 에게 송출) 캠페인이 없는 경우
       const categoryCampaignList = await getGameCampaignList(gameId);
-      console.log(`${creatorId} 크리에이터에게만 송출될 광고 없음. 카테고리 선택형 및 노출우선형 광고 검색 / ${getTime}`);
+      console.log(`${creatorId} 방송인에게만 송출될 광고 없음. 카테고리 선택형 및 노출우선형 광고 검색 / ${getTime}`);
       const onCategorycampaignList = categoryCampaignList
         .filter((campaignId) => onCampaignList.includes(campaignId));
       const extractPausedCampaignList = onCategorycampaignList

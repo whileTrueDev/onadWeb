@@ -76,11 +76,11 @@ export default function BannerBroadCreators(
       {creatorsData.data && creatorsData.data.length === 0 ? (
         null
       ) : (
-        <CardTemplate title="배너 송출 크리에이터" color="secondary" IconComponent={AccountCircle}>
+        <CardTemplate title="배너 송출 방송인" color="secondary" IconComponent={AccountCircle}>
           <Grid container style={{ height: 380, overflow: 'auto' }} id="broad-creators">
             <Grid item container direction="column">
-              <Typography variant="caption">* 송출량 순 상위 50명까지의 크리에이터 목록입니다.</Typography>
-              <Typography variant="caption">* 크리에이터 클릭 시, 상세정보를 볼 수 있습니다.</Typography>
+              <Typography variant="caption">* 송출량 순 상위 50명까지의 방송인 목록입니다.</Typography>
+              <Typography variant="caption">* 방송인 클릭 시, 상세정보를 볼 수 있습니다.</Typography>
             </Grid>
             {creatorsData.data
             && creatorsData.data.slice(0, 50).map(

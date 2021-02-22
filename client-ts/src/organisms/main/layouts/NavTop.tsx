@@ -123,7 +123,7 @@ function NavTop({
               component={Link}
               to="/creatorlist"
             >
-              크리에이터 리스트
+              방송인 목록
             </Button>
           </MenuItem>
         ) : null}
@@ -174,7 +174,7 @@ function NavTop({
               이용방법
             </Button>
 
-            {/* 크리에이터 리스트 버튼 */}
+            {/* 방송인 목록 버튼 */}
             {MainUserType ? (
               <div>
                 <Button
@@ -182,7 +182,7 @@ function NavTop({
                   component={Link}
                   to="/creatorlist"
                 >
-                  크리에이터 리스트
+                  방송인 목록
                 </Button>
               </div>
             ) : null}

@@ -52,7 +52,7 @@ export default function CustomPieChart(): JSX.Element {
       {(creatorsData.loading) && (
         <Grid item xs={12} className={classes.loading}>
           <Typography className={classes.statement}>
-            송출 크리에이터 데이터를 로드하고 있습니다.
+            송출 방송인 데이터를 로드하고 있습니다.
           </Typography>
           <Typography className={classes.sub} color="textSecondary">
             접속환경에 따라 수 분이 걸릴 수 있습니다.
@@ -76,7 +76,7 @@ export default function CustomPieChart(): JSX.Element {
           <div>
             <Grid container direction="column" justify="center" alignItems="center">
               <Typography style={{ zIndex: 1 }}>
-                아직 광고를 송출한 크리에이터가 없어요.
+                아직 광고를 송출한 방송인이 없어요.
               </Typography>
               <Typography style={{ zIndex: 1 }}>
                 배너와 캠페인을 등록해 광고를 집행해보세요.
@@ -108,7 +108,7 @@ export default function CustomPieChart(): JSX.Element {
           && creatorsData.data.length > 0 && (
             <Grid container>
               <Grid item xs={12}>
-                <Typography variant="caption">* 아이콘 클릭시 해당 크리에이터의 채널로 이동됩니다.</Typography>
+                <Typography variant="caption">* 아이콘 클릭시 해당 방송인의 채널로 이동됩니다.</Typography>
               </Grid>
               {creatorsData.data.slice(0, 20).map((d: CreatorDataInterface, index: number) => (
                 <Chip

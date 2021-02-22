@@ -26,8 +26,8 @@ export interface PriorityInterface {
 const priorityTypes: PriorityInterface[] = [
   {
     id: 'type0',
-    primaryText: '특정 크리에이터에게만 광고 송출',
-    secondaryText: '특정 크리에이터에게만 광고를 송출할 수 있어요.',
+    primaryText: '특정 방송인에게만 광고 송출',
+    secondaryText: '특정 방송인에게만 광고를 송출할 수 있어요.',
     defaultChildren: (
       state: CampaignCreateInterface,
       dispatch: React.Dispatch<CampaignCreateAction>,

@@ -195,7 +195,7 @@ const creatorTwitch = (
       const creatorData = row.result[0];
       // 기존 유저 로그인 시
       if (creatorData) {
-        console.log(`[${new Date().toLocaleString()}] [크리에이터트위치로그인] ${user.creatorDisplayName}`);
+        console.log(`[${new Date().toLocaleString()}] [방송인트위치로그인] ${user.creatorDisplayName}`);
         user.creatorIp = creatorData.creatorIp;
 
         // 트위치 Data 변경시에 변경된 값을 반영하는 영역.

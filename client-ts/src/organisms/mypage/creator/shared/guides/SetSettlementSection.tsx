@@ -20,14 +20,14 @@ export default function SetSettlementSection(): JSX.Element {
 
         <br />
         <Typography>온애드에서는 안전하게 수익금을 정산하기 위해</Typography>
-        <Typography>크리에이터님에 대한 몇가지 정보를 요구합니다.</Typography>
+        <Typography>방송인님에 대한 몇가지 정보를 요구합니다.</Typography>
 
         <br />
 
         <Typography>수익금 출금 신청을 하면 매달 정산 처리 된다. </Typography>
         <Typography>출금을 하기 위해서는 정산 등록이 필요하다.</Typography>
         <Typography>
-        출금 신청과 정산등록은
+          출금 신청과 정산등록은
           &nbsp;
           <Typography
             color="primary"

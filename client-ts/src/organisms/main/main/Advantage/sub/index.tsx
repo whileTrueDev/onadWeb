@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
+import ArrowRight from '@material-ui/icons/ArrowRight';
+import ArrowLeft from '@material-ui/icons/ArrowLeft';
 import SliderItem from './SliderItems';
 import { StyledSliderWrapper, StyledSlider } from './Slider.style';
 
@@ -127,7 +129,7 @@ function Slider({
             className={MainUserType ? 'button back' : 'button2 back'}
             onClick={() => handleSlideMove(false)}
           >
-            <span className="buttonArrow">&#8249;</span>
+            <ArrowLeft className="buttonArrow" />
           </button>
         </div>
       )}
@@ -138,7 +140,7 @@ function Slider({
             className={MainUserType ? 'button forward' : 'button2 forward'}
             onClick={() => handleSlideMove(true)}
           >
-            <span className="buttonArrow">&#8250;</span>
+            <ArrowRight className="buttonArrow" />
           </button>
         </div>
       )}
