@@ -28,8 +28,8 @@
     "jquery": "^3.4.1",
     "jspdf": "^1.5.3",
     "material-table": "1.57.2",
-    "node-sass": "4.14.1",
     "moment": "^2.29.1",
+    "node-sass": "4.14.1",
     "react": "^16.12.0",
     "react-bootstrap": "^1.0.0-beta.16",
     "react-calendar-heatmap": "^1.8.1",
@@ -48,13 +48,25 @@
     "recompose": "^0.30.0",
     "shortid": "^2.2.15",
     "styled-components": "^5.2.1",
-    "typescript": "3.9.7"
+    "typescript": "3.9.7",
+    "web-vitals": "^0.2.4",
+    "workbox-background-sync": "^5.1.3",
+    "workbox-broadcast-update": "^5.1.3",
+    "workbox-cacheable-response": "^5.1.3",
+    "workbox-core": "^5.1.3",
+    "workbox-expiration": "^5.1.3",
+    "workbox-google-analytics": "^5.1.3",
+    "workbox-navigation-preload": "^5.1.3",
+    "workbox-precaching": "^5.1.3",
+    "workbox-range-requests": "^5.1.3",
+    "workbox-routing": "^5.1.3",
+    "workbox-strategies": "^5.1.3",
+    "workbox-streams": "^5.1.3"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
-    "@types/styled-components": "^5.1.7",
     "@types/axios": "^0.14.0",
     "@types/chart.js": "^2.9.15",
     "@types/classnames": "^2.2.9",
@@ -78,7 +90,8 @@
     "@types/react-tooltip": "^3.11.0",
     "@types/recharts": "^1.8.5",
     "@types/recompose": "^0.30.7",
-    "@types/shortid": "^0.0.29"
+    "@types/shortid": "^0.0.29",
+    "@types/styled-components": "^5.1.7"
   },
   "browserslist": {
     "production": [
