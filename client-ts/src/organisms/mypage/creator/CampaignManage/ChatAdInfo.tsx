@@ -123,7 +123,7 @@ export default function ChatAdInfo({
             </div>
             <Typography variant="body2">
               온애드의 광고채팅봇 onadyy는 주기적으로 광고에 대한 설명과 광고 링크를 채팅으로 자동홍보합니다.
-              시청자가 onadyy가 홍보한 링크를 클릭하면, 클릭에 대한 수익이 크리에이터에게 발생합니다.
+              시청자가 onadyy가 홍보한 링크를 클릭하면, 클릭에 대한 수익이 방송인에게 발생합니다.
             </Typography>
             <br />
             <Typography variant="body2">

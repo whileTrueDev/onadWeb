@@ -1,4 +1,5 @@
 import makeStyles from '@material-ui/core/styles/makeStyles';
+import { grey } from '@material-ui/core/colors';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -9,7 +10,7 @@ const useStyles = makeStyles((theme) => ({
     overflow: 'hidden',
     position: 'relative',
     '&:before': {
-      willChange: 'transform, marignTop'
+      willChange: 'transform, margin-top'
     }
   },
   rowCenterAlign: {
@@ -28,6 +29,9 @@ const useStyles = makeStyles((theme) => ({
     position: 'absolute',
     maxWidth: '100%',
     maxHeight: '100%',
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
     left: 0,
     right: 0,
     bottom: 0,
@@ -163,27 +167,14 @@ const useStyles = makeStyles((theme) => ({
       display: 'none'
     },
   },
-  flipWrapper: {
-    height: 270,
-    overflow: 'hidden',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  flip: {
-    animation: '$flip 8s cubic-bezier(0.23, 1, 0.32, 1.2) forwards',
-  },
-  '@keyframes flip': {
-    '0%': { marginTop: '560px' },
-    '5%, 20%': { marginTop: '440px' },
-    '25%, 50%': { marginTop: '330px' },
-    '55%, 60%': { marginTop: '210px' },
-    '65%, 90%': { marginTop: '120px' },
-    '95%, 100%': { marginTop: '8px' },
-  },
   logo: {
-    padding: theme.spacing(3, 0)
+    position: 'absolute',
+    left: '10%',
+    top: 20,
+    padding: theme.spacing(3, 0),
+    [theme.breakpoints.down('md')]: {
+      left: '5%',
+    },
   },
   onadLogo: {
     width: 36,
@@ -214,19 +205,44 @@ const useStyles = makeStyles((theme) => ({
     color: theme.palette.common.black,
   },
   buttonText: {
-    // color: theme.palette.common.black,
     [theme.breakpoints.down('xs')]: {
       fontSize: '20px !important'
     },
   },
+  flipWrapper: {
+    height: 270,
+    position: 'relative',
+    overflow: 'hidden',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  flip: {
+    position: 'absolute',
+    width: '95%',
+    height: '95%',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    animation: '$flip 8s cubic-bezier(0.23, 1, 0.32, 1.2) forwards',
+  },
+  '@keyframes flip': {
+    '0%': { top: '105%' },
+    '5%, 20%': { top: '85%' },
+    '25%, 50%': { top: '65%' },
+    '55%, 60%': { top: '45%' },
+    '65%, 90%': { top: '25%' },
+    '95%, 100%': { top: '5%' },
+  },
   chatting: {
-    margin: theme.spacing(0.5, 2)
+    margin: '0rem 1rem'
   },
   chattingBottom: {
     width: '90%',
     height: 25,
     marginTop: theme.spacing(1.5),
-    background: theme.palette.divider,
+    background: grey[400],
     borderRadius: theme.spacing(3),
     zIndex: 200,
     position: 'absolute',
@@ -243,6 +259,9 @@ const useStyles = makeStyles((theme) => ({
       background: 'white',
       marginRight: theme.spacing(1)
     }
+  },
+  chattingText: {
+    fontSize: '1rem'
   },
   bottomText: {
     display: 'flex',

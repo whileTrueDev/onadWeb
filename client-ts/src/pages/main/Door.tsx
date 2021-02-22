@@ -14,8 +14,8 @@ export default function Door(): JSX.Element {
   `;
   return (
     <div className={classNames(css.root, css.rowCenterAlign)}>
+      <img src="/logo/textLogo.png" alt="textlogo" className={css.logo} />
       <div className={css.contentWrapper}>
-        <img src="/logo/textLogo.png" alt="textlogo" className={css.logo} />
         <div className={css.content}>
           <div className={css.leftContent}>
             <div>
@@ -65,8 +65,8 @@ export default function Door(): JSX.Element {
                 <div className={css.flip}>
                   {source.chatting.map((row) => (
                     <div key={shortid.generate()} className={css.chatting}>
-                      <Typography variant="body2" style={{ fontWeight: 600, color: `${row.color}` }}>{row.userName}</Typography>
-                      <Typography variant="body2" style={{ fontWeight: 600 }}>{row.text}</Typography>
+                      <Typography variant="body2" className={css.chattingText} style={{ fontWeight: 600, color: `${row.color}` }}>{row.userName}</Typography>
+                      <Typography variant="body2" className={css.chattingText} style={{ fontWeight: 600 }}>{row.text}</Typography>
                     </div>
                   ))}
                 </div>

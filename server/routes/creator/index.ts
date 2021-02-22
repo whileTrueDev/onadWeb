@@ -259,10 +259,10 @@ router.route('/settlement')
             responseHelper.send([true], 'patch', res);
             // 정산 등록 슬랙 알림
             slack({
-              summary: '크리에이터 정산 등록 알림',
-              text: '크리에이터가 정산을 등록했습니다. 확인해주세요.',
+              summary: '방송인 정산 등록 알림',
+              text: '방송인아 정산을 등록했습니다. 확인해주세요.',
               fields: [
-                { title: '크리에이터 아이디', value: creatorId!, short: true },
+                { title: '방송인 아이디', value: creatorId!, short: true },
                 { title: '은행', value: bankName!, short: true },
               ]
             });

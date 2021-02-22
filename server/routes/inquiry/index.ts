@@ -79,10 +79,10 @@ router.route('/creator')
         responseHelper.send(row.result, 'post', res);
         // onad_alarm 슬랙 채널에 알림메시지 보내기
         slackMessage({
-          summary: '크리에이터 문의 요청 알림',
-          text: '관리자 페이지에서 방금 등록된 크리에이터의 문의를 확인하고, 응답하세요.',
+          summary: '방송인 문의 요청 알림',
+          text: '관리자 페이지에서 방금 등록된 방송인의 문의를 확인하고, 응답하세요.',
           fields: [
-            { title: '크리에이터 이름', value: name, short: true },
+            { title: '방송인 이름', value: name, short: true },
             { title: '이용중인 플랫폼', value: usingPlatform, short: true },
             {
               title: '문의 내용',
