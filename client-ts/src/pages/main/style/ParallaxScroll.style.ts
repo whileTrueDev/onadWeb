@@ -45,7 +45,10 @@ const style = makeStyles((theme) => ({
     zIndex: 400,
     textAlign: 'center',
     [theme.breakpoints.down('md')]: {
-      display: 'inline',
+      display: 'flex',
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'center'
     }
   },
   prev: { transform: 'translate(0%, -60%)' },

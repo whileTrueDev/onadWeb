@@ -27,7 +27,7 @@ function CompleteMessage({ handleClose }: CompleteMessageProps): JSX.Element {
     <div>
       <Grid container direction="column" justify="center" alignItems="center" spacing={2} className={classes.wraper}>
         <Grid item className={classes.title}>
-          크리에이터님의 소중한 개인정보를 입력해주셔서 감사합니다.
+          방송인님의 소중한 개인정보를 입력해주셔서 감사합니다.
         </Grid>
         <Grid item>
           정산등록 신청서에 대한 관리자의 승인 완료시 언제든지 출금신청을 하실 수 있습니다.

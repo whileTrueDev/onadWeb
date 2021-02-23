@@ -215,7 +215,7 @@ export default function CreatorInfo(props: CreatorInfoProps): JSX.Element {
         )
           : (
             <div className={classes.nodetails}>
-              <Typography variant="body1">해당 크리에이터는 </Typography>
+              <Typography variant="body1">해당 방송인은 </Typography>
               <Typography variant="body1">아직 분석할 데이터가 부족합니다.</Typography>
             </div>
           )}

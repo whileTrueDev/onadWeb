@@ -13,7 +13,7 @@ function PolicyCreator(): JSX.Element {
 
   return (
     <div className={classes.root}>
-      <h2>크리에이터 서비스 이용약관</h2>
+      <h2>방송인 서비스 이용약관</h2>
       <div className={classes.content}>
         {terms[0].map((term: Terms) => (
           <div key={shortid.generate()} className={classes.policyWrapper}>

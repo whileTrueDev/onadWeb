@@ -153,7 +153,7 @@ function PlatformRegistForm({
                     InputLabelProps={{
                       shrink: true,
                     }}
-                    helperText="크리에이터와 시청자들에게 보여질 이름입니다!"
+                    helperText="방송인과 시청자들에게 보여질 이름입니다!"
                   />
                 </Grid>
                 <Grid item>

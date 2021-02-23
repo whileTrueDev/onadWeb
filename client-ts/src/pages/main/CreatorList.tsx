@@ -54,7 +54,7 @@ export default function CreatorList(): JSX.Element {
 
   const Columns = [
     {
-      title: '크리에이터명',
+      title: '방송인명',
       field: 'creatorName',
       render: (rowData: any): JSX.Element => (
         <div className={classes.columnWrapper}>
@@ -63,7 +63,7 @@ export default function CreatorList(): JSX.Element {
               src={rowData.creatorLogo}
               alt="creatorLogo"
               className={classes.creatorLogo}
-              onError={(e) => { e.currentTarget.src = '/pngs/logo/onad_logo_vertical_small.png'; }}
+              onError={(e) => { e.currentTarget.src = '/logo/noBgIconLogo.png'; }}
             />
           </div>
           <Typography variant="subtitle1" className={classes.columnText}>{rowData.creatorName}</Typography>
@@ -119,7 +119,7 @@ export default function CreatorList(): JSX.Element {
                       src={row.creatorLogo}
                       alt="creatorLogo"
                       className={classes.liveCreator}
-                      onError={(e) => { e.currentTarget.src = '/pngs/logo/onad_logo_vertical_small.png'; }}
+                      onError={(e) => { e.currentTarget.src = '/logo/noBgIconLogo.png'; }}
                     />
                   </a>
                 </div>
