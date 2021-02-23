@@ -6,9 +6,9 @@ import makeStyles from '@material-ui/core/styles/makeStyles';
 import Typography from '@material-ui/core/Typography';
 import Popover from '@material-ui/core/Popover';
 import Button from '@material-ui/core/Button';
-import ContentsPie from '../../shared/ContentsPie';
-import TimeChart from '../../shared/TimeChart';
-import { CreatorDetailDataInterface } from '../../campaign-create2/interfaces';
+import ContentsPie from '../../../marketer/shared/ContentsPie';
+import TimeChart from '../../../marketer/shared/TimeChart';
+import { CreatorDetailDataInterface } from '../../../marketer/campaign-create2/interfaces';
 
 const useStyles = makeStyles((theme) => ({
   container: {

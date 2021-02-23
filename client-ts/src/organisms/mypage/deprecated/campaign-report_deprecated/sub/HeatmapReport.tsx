@@ -2,7 +2,7 @@ import React from 'react';
 import Flag from '@material-ui/icons/Flag';
 import CardTemplate from './CardTemplate';
 import ClickHeatmap from '../../../../../atoms/Chart/heatmap/ClickHeatmap';
-import { HeatmapInterface } from '../../dashboard/interfaces';
+import { HeatmapInterface } from '../../../marketer/dashboard/interfaces';
 
 interface HeatmapReportProps {
   clickData?: HeatmapInterface[];

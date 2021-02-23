@@ -49,6 +49,9 @@ export default function AfreecaLinkDialog({
     }
   }, [afreecaLinkData]);
 
+  // 이미 연동된 경우 알림말
+  const alreadyLinkedSnack = useDialog();
+
   const failsnack = useDialog();
   // 아프리카 연동 요청
   function handleAfreecaClick(): void {
@@ -63,6 +66,7 @@ export default function AfreecaLinkDialog({
         const { status } = res.data;
         if (status === 'already-linked') {
           // 이미 다른유저에게 연동 된 경우
+          alreadyLinkedSnack.handleOpen();
         } else if (status === 'duplicate-request') {
           // 이미 아프리카 연동 진행을 했다 + 아직 쪽지를 보내지 않은 경우
           handleCertCode(res.data.cert.tempCode);
@@ -168,7 +172,7 @@ export default function AfreecaLinkDialog({
             }}
           >
             쪽지 바로 보내기
-            <OpenInNew fontSize="small" />
+            <OpenInNew fontSize="small" style={{ verticalAlign: 'middle' }} />
           </Button>
 
           {isClicked && (
@@ -195,13 +199,23 @@ export default function AfreecaLinkDialog({
         )}
       </div>
 
+      {failsnack.open && (
       <Snackbar
         open={failsnack.open}
         onClose={failsnack.handleClose}
         color="error"
         message="인증번호를 발급하는 중 오류가 발생했습니다. 잠시후 다시 시도해 주세요"
       />
+      )}
 
+      {alreadyLinkedSnack.open && (
+      <Snackbar
+        open={alreadyLinkedSnack.open}
+        onClose={alreadyLinkedSnack.handleClose}
+        color="error"
+        message={`${afreecaId.value}는 이미 다른 유저에게 연동되어있습니다.`}
+      />
+      )}
 
       <Snackbar
         open={copySnack.open}

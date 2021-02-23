@@ -24,11 +24,13 @@ import {
   ValueChartInterface, ActionLogInterface
 } from '../../../organisms/mypage/marketer/dashboard/interfaces';
 import useMypageScrollToTop from '../../../utils/hooks/useMypageScrollToTop';
+import MarketerCustomerServiceCard from '../../../organisms/mypage/marketer/dashboard/MarketerCustomerServiceCard';
 
 const useStyles = makeStyles((theme) => ({
   root: {
     [theme.breakpoints.up('xl')]: {
-      margin: '0px 160px'
+      width: 1430,
+      margin: '0 auto',
     }
   },
   buttons: {
@@ -62,10 +64,13 @@ export default function Dashboard(): JSX.Element {
           <div>
             {adData.data && valueChartData.data && countsData.data && (
               <Grid container spacing={2}>
-                <Grid item xs={12} md={6} lg={3}>
+                <Grid item xs={12} md={12} lg={6}>
                   <Grid container spacing={2}>
-                    <Grid item xs={12}>
+                    <Grid item xs={12} md={6}>
                       <OnOffSwitch onOffData={onOffData} />
+                    </Grid>
+                    <Grid item xs={12} md={6}>
+                      <MarketerCustomerServiceCard />
                     </Grid>
                   </Grid>
                 </Grid>
@@ -82,14 +87,11 @@ export default function Dashboard(): JSX.Element {
                               variant="contained"
                               color="primary"
                               onClick={(event): void => {
-                                if (anchorEl) {
-                                  handleAnchorClose();
-                                } else {
-                                  handleAnchorOpen(event);
-                                }
+                                if (anchorEl) handleAnchorClose();
+                                else handleAnchorOpen(event);
                               }}
                             >
-                              광고캐시 충전
+                              충전
                             </Button>
                           )}
                         />
@@ -132,14 +134,10 @@ export default function Dashboard(): JSX.Element {
                     </Grid>
                     <Hidden mdDown>
                       <Grid item xs={9} md={3} lg={9}>
-                        <CanvasForChart
-                          valueChartData={valueChartData}
-                        />
+                        <CanvasForChart valueChartData={valueChartData} />
                       </Grid>
                       <Grid item xs={3} md={3} lg={3}>
-                        <LogTable
-                          actionLogData={actionLogData}
-                        />
+                        <LogTable actionLogData={actionLogData} />
                       </Grid>
                     </Hidden>
                   </Grid>
