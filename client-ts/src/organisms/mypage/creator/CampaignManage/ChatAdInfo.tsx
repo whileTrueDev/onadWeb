@@ -88,8 +88,19 @@ export default function ChatAdInfo({
                     handleSwitch();
                   }}
                 />
-            )}
+              )}
             />
+            {Boolean(adChatData.data?.adChatAgreement) && (
+            <Typography variant="body2" color="textSecondary">
+              채팅창에서
+              <Typography variant="body2" color="primary" component="span">
+                /mod onadbot
+              </Typography>
+              <Typography component="span" variant="body2" color="textSecondary">
+                명령어를 입력해주세요!
+              </Typography>
+            </Typography>
+            )}
             {!contracitonAgreementData.data.creatorContractionAgreement && (
             <Typography variant="body2" color="textSecondary">이용동의가 필요합니다.</Typography>
             )}
@@ -136,7 +147,7 @@ export default function ChatAdInfo({
             <Typography variant="body2">
               또한, onadbot이 광고채팅을 원활히 진행할 수 있게 채팅창에서 &quot;
               <span className={classnames(classes.highlight, classes.bold)}>/mod onadbot</span>
-              &quot;를 입력해 매니저로 임명해주세요!
+              &quot;를 입력해 꼭 매니저로 임명해주세요!
             </Typography>
 
             <br />
