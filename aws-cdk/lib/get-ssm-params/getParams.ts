@@ -238,7 +238,7 @@ export default function getSSMParams(scope: cdk.Construct) {
   // Twitch chatbot - onadyy oauth token
   const TWITCH_BOT_OAUTH_TOKEN = ssm.StringParameter.fromSecureStringParameterAttributes(
     scope, 'TWITCH_BOT_OAUTH_TOKEN', {
-      parameterName: '/TWITCH_BOT_OAUTH_TOKEN', version: 1
+      parameterName: '/TWITCH_BOT_OAUTH_TOKEN', version: 2
     }
   );
 

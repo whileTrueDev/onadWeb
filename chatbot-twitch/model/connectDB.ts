@@ -2,7 +2,7 @@ import doQuery, { OkPacket } from './doQuery'; // For data insert
 import createChatInsertQueryValues from '../lib/createChatInsertQueryValues'; // For Query
 import { Chat } from '../chat/twitch/chat.type';
 
-export interface ContractedCreatorsResult {
+export interface AgreedCreator {
   creatorTwitchId: string;
   adChatAgreement: number;
 }
@@ -25,12 +25,16 @@ export interface Campaign extends CampaignQueryResult {
 }
 
 // 계약된 모든 크리에이터 가져오기.
-function getContratedCreators(): Promise<ContractedCreatorsResult[]> {
+function getContratedCreators(): Promise<AgreedCreator[]> {
   const getContractedChannelsQuery = `
   SELECT creatorTwitchId, adChatAgreement
     FROM creatorInfo
-    WHERE creatorTwitchId IS NOT NULL AND creatorTwitchId != "" AND creatorContractionAgreement = 1`;
-  return doQuery<ContractedCreatorsResult[]>(getContractedChannelsQuery)
+    WHERE creatorTwitchId IS NOT NULL
+      AND creatorTwitchId != ""
+      AND creatorContractionAgreement = 1
+      AND adChatAgreement = 1
+  `;
+  return doQuery<AgreedCreator[]>(getContractedChannelsQuery)
     .then((row) => {
       if (row.error || !row.result) {
         console.log('[DB적재 에러]');
@@ -63,25 +67,8 @@ function insertChats(chatBuffer: Chat[]): Promise<OkPacket> {
     });
 }
 
-// 모든 ON 상태인 캠페인 가져오기
-async function getActiveCampaigns(): Promise<Campaign[]> {
-  const query = `
-  SELECT campaign.campaignId, campaignName, marketerName, linkId, links as linkstring
-    FROM campaign
-  JOIN linkRegistered AS lr
-    ON campaign.connectedLinkId = lr.linkId
-  WHERE campaign.onOff = 1
-  `;
-  const row = await doQuery<CampaignQueryResult[]>(query);
-  if (row.error) {
-    throw Error(`getActiveCampaigns Error - ${row.error}`);
-  }
-  const result = row.result.map((camp) => ({ ...camp, links: JSON.parse(camp.linkstring).links }));
-  return result;
-}
 
 export default {
   getContratedCreators,
   insertChats,
-  getActiveCampaigns,
 };
