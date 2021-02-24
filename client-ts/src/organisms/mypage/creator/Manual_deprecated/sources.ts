@@ -220,8 +220,8 @@ const manualSources: ManualSources = {
       {
         image: '/pngs/dashboard/manual/new_creator/creator-chatbot-01.png',
         description: `채팅 광고를 하고 싶다면 채팅광고 ON/OFF를 설정해주세요.   
-        온애드의 광고채팅봇 ${textStyling.styledText('onadyy')}는 주기적으로 현재 송출중인 배너광고에 대한 설명과 광고 링크를 채팅으로 자동홍보해줘요.   
-        시청자가 ${textStyling.styledText('onadyy')}가 홍보한 링크를 클릭하면, 클릭에 대한 추가적인 광고 수익이 발생한답니다.
+        온애드의 광고채팅봇 ${textStyling.styledText('onadbot')}은 주기적으로 현재 송출중인 배너광고에 대한 설명과 광고 링크를 채팅으로 자동홍보해줘요.   
+        시청자가 ${textStyling.styledText('onadbot')}이 홍보한 링크를 클릭하면, 클릭에 대한 추가적인 광고 수익이 발생한답니다.
         `
       },
       {
