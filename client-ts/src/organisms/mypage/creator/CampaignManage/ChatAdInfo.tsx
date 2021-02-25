@@ -88,8 +88,19 @@ export default function ChatAdInfo({
                     handleSwitch();
                   }}
                 />
-            )}
+              )}
             />
+            {Boolean(adChatData.data?.adChatAgreement) && (
+            <Typography variant="body2" color="textSecondary">
+              채팅창에서
+              <Typography variant="body2" color="primary" component="span">
+                /mod onadbot
+              </Typography>
+              <Typography component="span" variant="body2" color="textSecondary">
+                명령어를 입력해주세요!
+              </Typography>
+            </Typography>
+            )}
             {!contracitonAgreementData.data.creatorContractionAgreement && (
             <Typography variant="body2" color="textSecondary">이용동의가 필요합니다.</Typography>
             )}
@@ -119,24 +130,24 @@ export default function ChatAdInfo({
         >
           <div className={classnames(classes.popoverContents, classes.alignCenter)}>
             <div className={classes.alignCenter}>
-              <img src="/pngs/dashboard/onaddy_example.png" alt="onaddy_example" width="320px" />
+              <img src="/pngs/dashboard/bot_example.png" alt="bot_example" width="320px" />
             </div>
             <Typography variant="body2">
-              온애드의 광고채팅봇 onadyy는 주기적으로 광고에 대한 설명과 광고 링크를 채팅으로 자동홍보합니다.
-              시청자가 onadyy가 홍보한 링크를 클릭하면, 클릭에 대한 수익이 방송인에게 발생합니다.
+              온애드의 광고채팅봇 onadbot은 주기적으로 광고에 대한 설명과 광고 링크를 채팅으로 자동홍보합니다.
+              시청자가 onadbot이 홍보한 링크를 클릭하면, 클릭에 대한 수익이 방송인에게 발생합니다.
             </Typography>
             <br />
             <Typography variant="body2">
-              onadyy가 채널 채팅창에서 홍보하는 것을 허용하려면
+              onadbot이 채널 채팅창에서 홍보하는 것을 허용하려면
               {' '}
               <span className={classnames(classes.highlight, classes.bold)}>스위치를 On</span>
               {' '}
               시켜주세요. 스위치를 켜기만 하면 자동으로 광고가 송출됩니다.
             </Typography>
             <Typography variant="body2">
-              또한, onadyy가 광고채팅을 원활히 진행할 수 있게 채팅창에서 &quot;
-              <span className={classnames(classes.highlight, classes.bold)}>/mod onaddy</span>
-              &quot;를 입력해 매니저로 임명해주세요!
+              또한, onadbot이 광고채팅을 원활히 진행할 수 있게 채팅창에서 &quot;
+              <span className={classnames(classes.highlight, classes.bold)}>/mod onadbot</span>
+              &quot;를 입력해 꼭 매니저로 임명해주세요!
             </Typography>
 
             <br />
