@@ -1,7 +1,7 @@
 import tmi, { ChatUserstate } from 'tmi.js'; // For twitchChat socket server
 import io from 'socket.io-client';
 
-import connectDB, { ContractedCreatorsResult } from '../../model/connectDB';
+import connectDB, { AgreedCreator } from '../../model/connectDB';
 import OnAdScheduler from '../../lib/scheduler';
 import { Chat } from './chat.type';
 
@@ -44,7 +44,7 @@ class Bot {
 
   private chatContainer: ChatContainer;
 
-  private creators: ContractedCreatorsResult[];
+  private creators: AgreedCreator[];
 
   private handlers: Handlers;
 
