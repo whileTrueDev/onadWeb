@@ -54,7 +54,7 @@
           "name": "SOCKET_HOSTNAME"
         },
         {
-          "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/TWITCH_BOT_OAUTH_TOKEN",
+          "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/TWITCH_BOT_OAUTH_TOKEN_ONADBOT",
           "name": "TWITCH_BOT_OAUTH_TOKEN"
         }
       ],
