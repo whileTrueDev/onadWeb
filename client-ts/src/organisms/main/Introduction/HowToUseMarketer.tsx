@@ -96,7 +96,7 @@ function HowToUsemarketer({ source }: Props): JSX.Element {
               <Typography variant="body2" key={shortid.generate()}>{`${row}`}</Typography>
             ))}
           </div>
-          <Button className={classes.sampleLink} onClick={() => { setImgStep('taxbill'); UseStep.handleOpen(); }}>
+          <Button className={classes.sampleLink} onClick={() => { setImgStep('marketer_manual_4'); UseStep.handleOpen(); }}>
             샘플
           </Button>
         </Grid>
