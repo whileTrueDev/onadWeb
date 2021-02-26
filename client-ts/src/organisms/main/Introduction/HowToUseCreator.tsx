@@ -29,14 +29,14 @@ function HowToUseCreator({ source }: Source): JSX.Element {
           <div className={classes.lineDecoration} />
           <Typography variant="h1" className={classes.useNumber}>1</Typography>
           <Typography variant="h5" className={classes.semiTitle}>
-            계약하기
+            이용동의하기
           </Typography>
           <div className={classes.Content}>
             {source.firstContent.split('\n').map((row) => (
               <Typography variant="body2" key={shortid.generate()}>{`${row}`}</Typography>
             ))}
           </div>
-          <Button className={classes.sampleLink} onClick={() => { setImgStep('contract'); UseStep.handleOpen(); }}>
+          <Button className={classes.sampleLink} onClick={() => { setImgStep('creator_manual_1'); UseStep.handleOpen(); }}>
             샘플
           </Button>
         </Grid>
@@ -45,14 +45,14 @@ function HowToUseCreator({ source }: Source): JSX.Element {
           <div className={classes.lineDecoration} />
           <Typography variant="h1" className={classes.useNumber}>2</Typography>
           <Typography variant="h5" className={classes.semiTitle}>
-            광고페이지 설정
+            배너 광고 설정
           </Typography>
           <div className={classes.Content}>
             {source.secondContent.split('\n').map((row) => (
               <Typography variant="body2" key={shortid.generate()}>{`${row}`}</Typography>
             ))}
           </div>
-          <Button className={classes.sampleLink} onClick={() => { setImgStep('landingpage'); UseStep.handleOpen(); }}>
+          <Button className={classes.sampleLink} onClick={() => { setImgStep('creator_manual_2'); UseStep.handleOpen(); }}>
             샘플
           </Button>
         </Grid>
@@ -60,14 +60,14 @@ function HowToUseCreator({ source }: Source): JSX.Element {
           <div className={classes.lineDecoration} />
           <Typography variant="h1" className={classes.useNumber}>3</Typography>
           <Typography variant="h5" className={classes.semiTitle}>
-            광고 송출 설정
+            클릭 광고 설정
           </Typography>
           <div className={classes.Content}>
             {source.thirdContent.split('\n').map((row) => (
               <Typography variant="body2" key={shortid.generate()}>{`${row}`}</Typography>
             ))}
           </div>
-          <Button className={classes.sampleLink} onClick={() => { setImgStep('broadcast'); UseStep.handleOpen(); }}>
+          <Button className={classes.sampleLink} onClick={() => { setImgStep('creator_manual_3'); UseStep.handleOpen(); }}>
             샘플
           </Button>
         </Grid>
@@ -82,7 +82,7 @@ function HowToUseCreator({ source }: Source): JSX.Element {
               <Typography variant="body2" key={shortid.generate()}>{`${row}`}</Typography>
             ))}
           </div>
-          <Button className={classes.sampleLink} onClick={() => { setImgStep('benefit'); UseStep.handleOpen(); }}>
+          <Button className={classes.sampleLink} onClick={() => { setImgStep('creator_manual_4'); UseStep.handleOpen(); }}>
             샘플
           </Button>
         </Grid>
