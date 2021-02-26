@@ -19,9 +19,9 @@ const textSource: any = {
   },
   creator: {
     secondSector: {
-      firstContent: '계약서를 읽으시고\n동의해주세요\n온애드와 함께합니다',
-      secondContent: '[내 광고페이지]로\n이동하여 랜딩페이지를\n 설정해주세요',
-      thirdContent: 'X-Split, OBS로 \n자신의 광고 URL을 입력하여\n사용하실 수 있습니다',
+      firstContent: '이용약관을 읽으시고\n동의해주시면\n온애드와 함께합니다.',
+      secondContent: '방송 송출 프로그램에서\n자신의 광고 URL을 입력하여\n 사용하실 수 있습니다.',
+      thirdContent: '패널(트위치),방송국배너(아프리카)를 \n설정하면 시청자 분들이\n광고에 참여할 수 있습니다.',
       fourthContent: '광고로 인한 수익금을\n신청을 통해\n 정산받으세요.',
     },
   },
