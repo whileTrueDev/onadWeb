@@ -28,7 +28,7 @@ function HowToUse({ source, MainUserType, }: HowToUseProps): JSX.Element {
 
   useLayoutEffect(() => {
     const iframeDocument = document.getElementById('onadYouTube') as HTMLIFrameElement;
-    iframeDocument.src = 'https://www.youtube.com/embed/hwUgWypZyh8';
+    iframeDocument.src = 'https://www.youtube.com/embed/E3HQlhMF-eg';
 
     function handleLoad() {
       if (!iframeLoading) {
