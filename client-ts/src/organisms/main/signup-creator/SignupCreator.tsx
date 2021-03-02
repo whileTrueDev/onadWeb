@@ -1,6 +1,7 @@
 import classnames from 'classnames';
 import {
   Button,
+  CircularProgress,
   darken,
   Divider,
   Grid, IconButton, InputAdornment, makeStyles, Paper,
@@ -8,9 +9,9 @@ import {
 } from '@material-ui/core';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import {
-  Check, Lock, Visibility, VisibilityOff
+  Check, Help, HowToReg, Lock, Visibility, VisibilityOff
 } from '@material-ui/icons';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Alert } from '@material-ui/lab';
 import axiosInstance from '../../../utils/axios';
@@ -46,6 +47,7 @@ const useStyles = makeStyles((theme: OnadTheme) => ({
       boxShadow: theme.shadows[0]
     }
   },
+  successIcon: { color: theme.palette.success.main },
   socialLogo: {
     width: 35,
     height: 35,
@@ -60,13 +62,14 @@ const useStyles = makeStyles((theme: OnadTheme) => ({
 export interface CreatorSignupInfo {
   userid: string; passwd: string; repasswd: string;
   pwdVisibility: boolean; repwdVisibility: boolean;
+  referralCode: string;
 }
 export default function SignupCreator(): JSX.Element {
   const classes = useStyles();
   const location = useLocation();
   // 회원가입 정보
   const [signupInfo, setSignupInfo] = useState<CreatorSignupInfo>({
-    userid: '', passwd: '', repasswd: '', pwdVisibility: false, repwdVisibility: false,
+    userid: '', passwd: '', repasswd: '', pwdVisibility: false, repwdVisibility: false, referralCode: ''
   });
 
   // 에러 정보
@@ -80,6 +83,7 @@ export default function SignupCreator(): JSX.Element {
   const [useridIconColor, setUseridIconColor] = useState<'primary' | 'disabled'>('disabled');
   const [pwIconColor, setPwIconColor] = useState<'primary' | 'disabled'>('disabled');
   const [rePwIconColor, setRePwIconColor] = useState<'primary' | 'disabled'>('disabled');
+  const [referralCodeColor, setReferralCodeColor] = useState<'primary' | 'disabled'>('disabled');
 
   // 단계 정보
   const [activeStep, setStep] = useState(0);
@@ -113,7 +117,7 @@ export default function SignupCreator(): JSX.Element {
   // 본인인증 완료 이후 -> 회원가입 요청
   function handleSignup(): void {
     axiosInstance.post(`${HOST}/creator`, {
-      userid: signupInfo.userid, passwd: signupInfo.passwd
+      userid: signupInfo.userid, passwd: signupInfo.passwd, referralCode: signupInfo.referralCode
     })
       .then(() => {
         history.push(`/creator/signup/complete?userId=${signupInfo.userid}`);
@@ -141,6 +145,39 @@ export default function SignupCreator(): JSX.Element {
     });
   }
 
+  // *************************************************************
+  // 추천인 이름 정보
+  // 2021. 03. 02 by hwasurr
+  const [loadingCheckReferralCode, setLoadingCheckReferralCode] = useState(false);
+  const [referredCreator, setReferredCreator] = useState('');
+  const [referredCreatorError, setReferredCreatorError] = useState('');
+  const needReferredCreatorSnack = useDialog();
+  // 추천인 확인 함수
+  function checkReferralCode(): void {
+    const errorMsg = '입력하신 추천인 코드에 해당하는 방송인이 없습니다. 추천인 코드를 사용하지 않는 경우, 추천인 코드를 꼭 비워주세요.';
+    setLoadingCheckReferralCode(true);
+    axiosInstance.get(
+      `${HOST}/creator/referral-code`, { params: { referralCode: signupInfo.referralCode } }
+    )
+      .then((res) => {
+        setLoadingCheckReferralCode(false);
+        if (res.data && res.data.length > 0) {
+          const {
+            creatorName, afreecaName, loginId, expired
+          } = res.data[0];
+          if (!expired) setReferredCreator(creatorName || afreecaName || loginId);
+          else setReferredCreatorError('이미 다른 방송인에 의해 사용된 추천인 코드입니다.');
+        } else {
+          setReferredCreatorError(errorMsg);
+        }
+      })
+      .catch(() => {
+        setReferredCreatorError(errorMsg);
+        setLoadingCheckReferralCode(false);
+      });
+  }
+  // *************************************************************
+
   // 회원가입 정보 변경 핸들러
   const handleChange = (
     prop: keyof CreatorSignupInfo
@@ -149,6 +186,10 @@ export default function SignupCreator(): JSX.Element {
     setUseridHelperText(defaultHelperText);
     setUseridError(false);
     setPwdError(false);
+    if (prop === 'referralCode') {
+      setReferredCreator('');
+      setReferredCreatorError('');
+    }
   };
 
   // 비밀번호 보기 / 보지않기 버튼 핸들러
@@ -163,10 +204,9 @@ export default function SignupCreator(): JSX.Element {
   };
 
   // 아이디 에러 체크 ( 중복 체크 제외 )
-  function useridErrorCheck(): boolean {
-    if (!signupInfo.userid) return false;
-    if (signupInfo.userid.length < 6 || signupInfo.userid.length > 15) {
-      setUseridHelperText('아이디는 6자 이상, 15자 이하만 가능합니다.');
+  const useridErrorCheck = useCallback((): boolean => {
+    if (!signupInfo.userid) {
+      setUseridHelperText('아이디를 입력해주세요.');
       setUseridError(true);
       return false;
     }
@@ -176,7 +216,7 @@ export default function SignupCreator(): JSX.Element {
       return false;
     }
     return true;
-  }
+  }, [signupInfo.userid]);
   // 아이디 중복 체크
   const [duplicateCheckLoading, setLoading] = useState<boolean>(false);
   async function duplicateCheck(): Promise<boolean> {
@@ -234,8 +274,12 @@ export default function SignupCreator(): JSX.Element {
           if (location.pathname === '/creator/signup/pre-user') {
             // 기존 회원 트위치로 로그인
             handleSignupPreCreator();
+          } else if (signupInfo.referralCode) {
+            if (!referredCreator || !!referredCreatorError) {
+              // 추천인 확인 필요하다는 문구 처리
+              needReferredCreatorSnack.handleOpen();
+            } else handleNext();
           } else {
-            // 회원가입 요청
             handleNext();
           }
         }
@@ -363,6 +407,64 @@ export default function SignupCreator(): JSX.Element {
         }}
       />
 
+      {location.pathname !== '/creator/signup/pre-user' && (
+        <TextField
+          style={{ marginBottom: 16 }}
+          variant="outlined"
+          fullWidth
+          placeholder="추천인 코드 (선택 사항)"
+          value={signupInfo.referralCode}
+          onChange={handleChange('referralCode')}
+          helperText="추천인이 있는 경우, 추천인코드 입력 후 추천인 확인을 진행해주세요."
+          onFocus={(): void => setReferralCodeColor('primary')}
+          onBlur={(): void => setReferralCodeColor('disabled')}
+          inputProps={{ maxLength: 30 }}
+          // eslint-disable-next-line react/jsx-no-duplicate-props
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <HowToReg color={referralCodeColor} />
+              </InputAdornment>
+            ),
+            endAdornment: (
+              <InputAdornment position="end">
+                {referredCreator ? (
+                  <IconButton disabled>
+                    <Check className={classes.successIcon} />
+                  </IconButton>
+                ) : (
+                  <Button
+                    disabled={!signupInfo.referralCode || loadingCheckReferralCode}
+                    size="small"
+                    onClick={checkReferralCode}
+                  >
+                    추천인 확인
+                  </Button>
+                )}
+              </InputAdornment>
+            )
+          }}
+        />
+      )}
+
+      {loadingCheckReferralCode && (
+        <div style={{ marginBottom: 16 }}>
+          <CircularProgress size={24} />
+        </div>
+      )}
+      {/* 올바른 추천인이 있는 경우 */}
+      {!loadingCheckReferralCode && referredCreator && (
+      <Alert severity="success" style={{ marginBottom: 16 }}>
+        {`추천인: ${referredCreator}`}
+      </Alert>
+      )}
+      {/* 추천인 코드가 만료되었거나, 없는 코드인 경우 */}
+      {!loadingCheckReferralCode && !referredCreator && referredCreatorError && (
+        <Alert severity="error" style={{ marginBottom: 16 }}>
+          {referredCreatorError}
+        </Alert>
+      )}
+
       {location.pathname === '/creator/signup/pre-user' ? (
         <Button
           type="submit"
@@ -381,7 +483,9 @@ export default function SignupCreator(): JSX.Element {
           size="large"
           variant="contained"
           style={{ width: '100%' }}
-          disabled={!signupInfo.userid || !signupInfo.passwd || !signupInfo.repasswd}
+          disabled={
+            !signupInfo.userid || !signupInfo.passwd || !signupInfo.repasswd
+          }
         >
           가입하기
         </Button>
@@ -457,7 +561,6 @@ export default function SignupCreator(): JSX.Element {
                       <Typography variant="body2">
                         3. 이후 로그인부터는 입력한 ID/PW로 로그인할 수 있습니다.
                       </Typography>
-
                     </div>
                   </Alert>
 
@@ -577,6 +680,14 @@ export default function SignupCreator(): JSX.Element {
       </Grid>
 
       <Snackbar color="error" message={snackErrMsg} onClose={failSnack.handleClose} />
+      {needReferredCreatorSnack.open && (
+      <Snackbar
+        open={needReferredCreatorSnack.open}
+        color="error"
+        message="추천인 확인이 올바르게 끝나지 않았어요!"
+        onClose={needReferredCreatorSnack.handleClose}
+      />
+      )}
     </Grid>
   );
 }
