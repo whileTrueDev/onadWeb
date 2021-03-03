@@ -73,7 +73,7 @@ const doIncomeCalculate = async (creatorId) => {
  * @author hwasurr
  */
 const changeCalculateState = async (referralCode) => {
-  const query = 'UPDATE creatorReferralCodeLogs SET calculateState = ? calculatedAt = NOW() WHERE referralCode = ?';
+  const query = 'UPDATE creatorReferralCodeLogs SET calculateState = ?, calculatedAt = NOW() WHERE referralCode = ?';
   return doQuery(
     query,
     [CALCULATE_DONE_STATE, referralCode]
