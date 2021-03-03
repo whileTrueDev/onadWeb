@@ -36,7 +36,7 @@ jobs:
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
           task-definition: afreeca-link-note-crawl/task-definition.json
-          container-name: afreeca-link-note-crawl
+          container-name: onad-afreeca-link-note-crawl
           image: ${{ secrets.DOCKER_USERNAME }}/afreeca-link-note-crawl:${{ github.sha }}
 
       - name: Deploy Amazon ECS task definition

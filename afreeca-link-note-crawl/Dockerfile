@@ -25,6 +25,7 @@ RUN apt-get -y update
 RUN apt-get install -y google-chrome-stable
 RUN rm -rf /etc/apt/sources.list.d/google.list
 
+
 # Using pip:
 RUN python3 -m pip install -r requirements.txt
 CMD ["python3", "run.py"]
