@@ -3,16 +3,18 @@ const doQuery = require('../model/calculatorQuery');
 
 const CALCULATE_TARGET_STATE = 1; // 1=가입이후 연동완료
 const CALCULATE_DONE_STATE = 2; // 2=계산 및 수익 반영완료
-const EVENT_CASH_PAYOUT = 10; // 추천인 코드 이벤트 수익금 5000원
+const EVENT_CASH_PAYOUT = 5000; // 추천인 코드 이벤트 수익금 5000원
 
 /**
  * 추천인 코드 이벤트 계산 대상 불러오는 함수
  * @author hwasurr
  * @return array of { referringCreatorId: string, referralCode: string, referredCreatorId: string }
+ * referringCreator = 추천한 유저 ( 기존 가입자 )
+ * referredCreator = 추천받은 유저 ( 신규 가입 + 연동자 )
  */
 const getReferralCodeTargets = async () => {
   const query = `
-  SELECT A.creatorId AS referringCreatorId, referralCode, B.creatorId AS referredCreatorId
+  SELECT A.creatorId AS referredCreatorId, referralCode, B.creatorId AS referringCreatorId
   FROM creatorReferralCodeLogs as A
   JOIN creatorReferralCode AS B USING(referralCode)
   WHERE calculateState = ?
@@ -76,6 +78,40 @@ const changeCalculateState = async (referralCode) => {
 };
 
 /**
+ * 추천한 유저와 추천받은 유저에게 이벤트 수익금 적립 알림을 생성합니다.
+ * @param {object} param0 추천한 유저, 추천 받은 유저의 creatorId
+ */
+const referralCodeNotification = async ({ referringCreatorId, referredCreatorId }) => {
+  const userQuery = 'SELECT creatorName, afreecaName, loginId FROM creatorInfo WHERE creatorId = ?';
+
+  // 추천한 유저 (기존 유저) 이름을 조회
+  const { result: referringUserResult } = await doQuery(userQuery, [referringCreatorId]);
+  const referringUser = referringUserResult[0];
+  const referringUserId = referringUser.creatorName && referringUser.afreecaName
+    ? `${referringUser.creatorName}(${referringUser.afreecaName})`
+    : referringUser.creatorName || referringUser.afreecaName || referringUser.loginId;
+
+  // 추천 받은 유저 (신규 유저) 이름을 조회
+  const { result: referredUserResult } = await doQuery(userQuery, [referredCreatorId]);
+  const referredUser = referredUserResult[0];
+  const referredUserId = referredUser.creatorName && referredUser.afreecaName
+    ? `${referredUser.creatorName}(${referredUser.afreecaName})`
+    : referredUser.creatorName || referringUser.afreecaName || referredUser.loginId;
+
+  const query = 'INSERT INTO creatorNotification (creatorId,  title, content)  VALUES (?, ?, ?)';
+
+  const msgTitle = '추천인 이벤트 수익금 적립 알림';
+
+  const referringUserMsg = `${referringUserId}님께서 추천한 ${referredUserId}님이 아프리카TV 연동을 완료하셨습니다. 저희 온애드를 추천해 주셔서 감사합니다. 추천인 이벤트 수익금 ${EVENT_CASH_PAYOUT.toLocaleString()}원이 적립되었습니다.`;
+  const referredUserMsg = `${referredUserId}님, 아프리카TV 연동을 환영합니다. 추천인 이벤트 수익금 ${EVENT_CASH_PAYOUT.toLocaleString()}원이 적립되었습니다.`;
+
+  return Promise.all([
+    doQuery(query, [referringCreatorId, msgTitle, referringUserMsg]),
+    doQuery(query, [referredCreatorId, msgTitle, referredUserMsg]),
+  ]);
+};
+
+/**
  * 해당 추천인 코드 연합(추천인 수익금, 추천받은 방송인 수익금, 추천인코드 플래그 작업)에 대한 계산을 실행합니다.
  * @param {object} param0 추천인 코드 계산 타겟
  * @author hwasurr
@@ -84,7 +120,7 @@ const calculate = ({ referralCode, referringCreatorId, referredCreatorId }) => P
   doIncomeCalculate(referredCreatorId),
   doIncomeCalculate(referringCreatorId),
   changeCalculateState(referralCode),
-]);
+]).then(referralCodeNotification({ referringCreatorId, referredCreatorId }));
 
 async function referralCodeCalculate() {
   console.info('추천인 코드 이벤트 계산을 시작합니다.');
