@@ -115,7 +115,7 @@ router.route('/')
         VALUES (?, 1, 0, 0)`;
 
       // 가입시 입력한 추천인코드 값 추가
-      // 추천인 코드 디코딩 
+      const REFERRALCODE_SINGUP_STATE = 0;
       const enteredFriendCodeQuery = `
         INSERT INTO creatorReferralCodeLogs (creatorId, referralCode, calculateState)
         VALUES (?, ?, ?)
@@ -125,7 +125,7 @@ router.route('/')
         doQuery(incomeQuery, [creatorId]),
         doQuery(priceQuery, [creatorId, 1, 0, 2]),
         doQuery(royaltyQuery, [creatorId]),
-        doQuery(enteredFriendCodeQuery, [creatorId, referralCode, 0]),
+        doQuery(enteredFriendCodeQuery, [creatorId, referralCode, REFERRALCODE_SINGUP_STATE]),
       ]).then(() => responseHelper.send(userid, 'post', res))
         .catch(() => next());
     })

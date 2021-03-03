@@ -9,7 +9,7 @@ import {
 } from '@material-ui/core';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import {
-  Check, Help, HowToReg, Lock, Visibility, VisibilityOff
+  Check, HowToReg, Lock, Visibility, VisibilityOff
 } from '@material-ui/icons';
 import React, { useCallback, useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
@@ -163,9 +163,9 @@ export default function SignupCreator(): JSX.Element {
         setLoadingCheckReferralCode(false);
         if (res.data && res.data.length > 0) {
           const {
-            creatorName, afreecaName, loginId, expired
+            creatorName, afreecaName, loginId, calculateState
           } = res.data[0];
-          if (!expired) setReferredCreator(creatorName || afreecaName || loginId);
+          if (calculateState === null) setReferredCreator(creatorName || afreecaName || loginId);
           else setReferredCreatorError('이미 다른 방송인에 의해 사용된 추천인 코드입니다.');
         } else {
           setReferredCreatorError(errorMsg);
