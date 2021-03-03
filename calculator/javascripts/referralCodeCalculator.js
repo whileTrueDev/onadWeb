@@ -61,8 +61,7 @@ const doIncomeCalculate = async (creatorId) => {
       (creatorId, creatorTotalIncome, creatorReceivable) 
       VALUES (?, ?, ?)`;
 
-      return doQuery(calculateQuery, [creatorId, totalIncome, receivable])
-        .catch((err) => { throw err; });
+      return doQuery(calculateQuery, [creatorId, totalIncome, receivable]);
     })
     .catch((err) => { throw err; });
 };
@@ -77,7 +76,7 @@ const changeCalculateState = async (referralCode) => {
   return doQuery(
     query,
     [CALCULATE_DONE_STATE, referralCode]
-  ).catch((err) => { throw err; });
+  );
 };
 
 /**
@@ -141,7 +140,11 @@ async function referralCodeCalculate() {
     }))
   )
     .then(() => console.log(`[${new Date().toLocaleString()}] 추천인 코드 이벤트 계산을 완료하였습니다.`))
-    .catch((err) => { throw err; });
+    .catch((err) => {
+      console.log(`[${new Date().toLocaleString()}] 추천인 코드 이벤트 계산 중 오류 발생`);
+      console.error(err);
+      throw err;
+    });
 }
 
 module.exports = referralCodeCalculate;
