@@ -103,34 +103,40 @@ export default function RenewalDialog({
               {' '}
              이 적립되며,
             </Typography>
-            <Typography variant="body2" style={{ fontWeight: 'bold' }}>추천인 코드를 생성하여 동료 BJ에게 추천하여</Typography>
+            <Typography variant="body2" style={{ fontWeight: 'bold' }}>추천인 코드를 동료 BJ에게 추천하고</Typography>
             <Typography variant="body2" style={{ fontWeight: 'bold' }}>
               추천받은 BJ가 신규가입 하면
               {' '}
               <Typography component="span" variant="body2" color="primary" style={{ fontWeight: 'bold' }}>
-                5,000원이 추가 적립
+                5,000원이 적립
               </Typography>
               됩니다.
             </Typography>
 
             <br />
 
-            <Typography variant="body2" style={{ fontWeight: 'bold' }}>
-              추천을 통해 최대
-              {' '}
-              <Typography component="span" variant="body2" style={{ fontWeight: 'bold', color: 'rgba(249, 159, 88)' }}>
-                1만원까지
-              </Typography>
-              {' '}
-              적립됩니다.
-            </Typography>
-            <br />
-
             <div style={{
               backgroundColor: 'rgba(231, 245, 255)', textAlign: 'start', padding: 32, borderRadius: '0px 0px 12px 12px'
             }}
             >
-              <Typography variant="body2" style={{ fontWeight: 'bold' }}>- 신규가입자가 아닌, 기존 회원은 추천만 가능합니다.</Typography>
+              <Typography variant="body2" style={{ fontWeight: 'bold' }}>
+                - 추천인 코드는
+                {' '}
+                <Typography component="span" variant="body2" color="error" style={{ fontWeight: 'bold' }}>
+                1회만
+                </Typography>
+                {' '}
+                사용 가능합니다.
+              </Typography>
+              <Typography variant="body2" style={{ fontWeight: 'bold' }}>
+                - 신규가입자가 아닌, 기존 회원은
+                {' '}
+                <Typography component="span" variant="body2" color="error" style={{ fontWeight: 'bold' }}>
+                  추천만
+                </Typography>
+                {' '}
+                가능합니다.
+              </Typography>
               <Typography variant="body2" style={{ fontWeight: 'bold' }}>- 온애드 계정 생성 후,</Typography>
               <Typography variant="body2" style={{ fontWeight: 'bold' }}>
                 &nbsp;&nbsp;
