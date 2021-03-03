@@ -9,25 +9,18 @@ import {
 } from '@material-ui/core';
 
 import Countup from 'react-countup';
-import { Assessment, Delete as DeleteIcon, Build } from '@material-ui/icons';
 import CloseIcon from '@material-ui/icons/Close';
-import CampaignDeleteConfirmDialog from './CampaignDeleteConfirmDialog';
-import CampaignUpdateDialog from './CampaignUpdateDialog';
-import CampaignAnalysisDialog from './CampaignAnalysisDialog';
-import CampaignAnalysisDialogV2 from './CampaignAnalysisDialogV2';
 import { CampaignInterface } from './interfaces';
 import useDialog from '../../../../utils/hooks/useDialog';
 import history from '../../../../history';
 import axios from '../../../../utils/axios';
 import HOST from '../../../../config';
-import usePaginatedGetRequest from '../../../../utils/hooks/usePaginatedGetRequest';
 import renderOptionType from '../../../../utils/render_funcs/renderOptionType';
 import renderPriorityType from '../../../../utils/render_funcs/renderPriorityType';
 import OnadBanner from '../../../../atoms/Banner/OnadBanner';
+import { useGetRequest } from '../../../../utils/hooks';
 
 
-const SLIDE_TIMEOUT = 500;
-const V2_TIME = '2020-04-21';
 const useStyles = makeStyles((theme: Theme) => ({
   container: { padding: theme.spacing(2) },
   list: {
@@ -64,16 +57,10 @@ export default function CampaignList(): JSX.Element {
   const OFFSET = 2;
   const classes = useStyles();
 
-  const campaignData = usePaginatedGetRequest<CampaignInterface>(
-    '/marketer/campaign/list', { offset: OFFSET }
+  const campaignData = useGetRequest<{page: number; offset: number}, CampaignInterface[]>(
+    '/marketer/campaign/list', { page: 0, offset: OFFSET }
   );
 
-  const [selectedCampaign, setSelectedCampaign] = React.useState<CampaignInterface | null>(null);
-
-  // To open campaign control dialog
-  const campaignUpdateDialog = useDialog();
-  const campaignDeleteDialog = useDialog();
-  const campaignReportDialog = useDialog();
   const snack = useDialog();
 
   // useUpdateData를 사용할 때, 전달되는 url router의 response data의 형태가 array여야함을 고려한다.
@@ -180,14 +167,11 @@ export default function CampaignList(): JSX.Element {
                               {detail.campaignName}
                             </Typography>
                             <Typography variant="caption" gutterBottom>
-                              {renderOptionType(detail.optionType)}
-                            </Typography>
-                            <Typography variant="caption" gutterBottom>
-                              {renderPriorityType(detail.priorityType)}
+                              {`${renderOptionType(detail.optionType)} • ${renderPriorityType(detail.priorityType)}`}
                             </Typography>
                             {detail.campaignDescription && (
                             <Typography variant="caption" gutterBottom noWrap>
-                              {detail.campaignDescription}
+                              {detail.campaignDescription.slice(0, 20)}
                             </Typography>
                             )}
                             <Typography variant="caption" color="textSecondary">
@@ -198,7 +182,7 @@ export default function CampaignList(): JSX.Element {
                       </Hidden>
                     </Grid>
                   </Grid>
-                  <Hidden xsDown>
+                  <Hidden mdDown>
                     <Grid item>
                       <Grid container direction="column" spacing={2}>
                         {detail.linkData.links.map((link): JSX.Element | null => (
@@ -228,7 +212,7 @@ export default function CampaignList(): JSX.Element {
                       </Grid>
                     </Grid>
                   </Hidden>
-                  <Hidden xsDown>
+                  <Hidden mdDown>
                     <Grid item style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                       <Grid container direction="column">
                         <Grid item>
@@ -266,40 +250,6 @@ export default function CampaignList(): JSX.Element {
                         </Grid>
                       </Grid>
                     </Grid>
-                    <Grid item>
-                      <List>
-                        <ListItem
-                          button
-                          onClick={(): void => {
-                            setSelectedCampaign(detail);
-                            campaignReportDialog.handleOpen();
-                          }}
-                        >
-                          <Assessment />
-                          <Typography>분석</Typography>
-                        </ListItem>
-                        <ListItem
-                          button
-                          onClick={(): void => {
-                            setSelectedCampaign(detail);
-                            campaignUpdateDialog.handleOpen();
-                          }}
-                        >
-                          <Build color="action" />
-                          <Typography>수정</Typography>
-                        </ListItem>
-                        <ListItem
-                          button
-                          onClick={(): void => {
-                            setSelectedCampaign(detail);
-                            campaignDeleteDialog.handleOpen();
-                          }}
-                        >
-                          <DeleteIcon color="error" />
-                          <Typography color="error">삭제</Typography>
-                        </ListItem>
-                      </List>
-                    </Grid>
                   </Hidden>
                 </Grid>
               </ListItem>
@@ -309,13 +259,15 @@ export default function CampaignList(): JSX.Element {
           ))}
 
           {/* 캠페인 목록이 있고, 캠페인 갯수가 offset 으로 나누었을 때 나머지가 0인 경우  */}
-          {campaignData.data.length > 0 && campaignData.data.length % OFFSET === 0 && (
+          {campaignData.data.length > 0 && (
           <div style={{ textAlign: 'center' }}>
             <Button
               className={classes.moreButton}
               variant="contained"
               color="primary"
-              onClick={campaignData.handleNextPage}
+              onClick={() => {
+                history.push('/mypage/marketer/inventory');
+              }}
             >
               더보기
             </Button>
@@ -366,74 +318,6 @@ export default function CampaignList(): JSX.Element {
         ]}
       />
 
-      {/* 4월 21일 이전 (광고페이지 있는 경우의) 캠페인 분석 다이얼로그 (full screen) */}
-      {
-        selectedCampaign && (selectedCampaign.regiDate < V2_TIME) && (
-          <CampaignAnalysisDialog
-            SLIDE_TIMEOUT={SLIDE_TIMEOUT} // 슬라이드 트랜지션 타임아웃
-            open={campaignReportDialog.open}
-            selectedCampaign={selectedCampaign}
-            handleClose={(): void => {
-              campaignReportDialog.handleClose();
-              setTimeout(() => {
-                setSelectedCampaign(null);
-                // 트랜지션 만큼 뒤에 실행. (먼저 실행하면 트랜지션 발동 안됨)
-              }, SLIDE_TIMEOUT);
-            }}
-          />
-        )
-      }
-
-
-      {/* 4월 21일 이후 캠페인 분석 다이얼로그 (full screen) */}
-      {
-        selectedCampaign
-        && (selectedCampaign.regiDate >= V2_TIME)
-        && selectedCampaign.optionType === 1 && ( // "생방송 배너 광고" 캠페인
-          <CampaignAnalysisDialogV2
-            SLIDE_TIMEOUT={SLIDE_TIMEOUT} // 슬라이드 트랜지션 타임아웃
-            open={campaignReportDialog.open}
-            selectedCampaign={selectedCampaign}
-            handleClose={(): void => {
-              campaignReportDialog.handleClose();
-              setTimeout(() => {
-                setSelectedCampaign(null);
-                // 트랜지션 만큼 뒤에 실행. (먼저 실행하면 트랜지션 발동 안됨)
-              }, SLIDE_TIMEOUT);
-            }}
-          />
-        )
-      }
-
-      {/* 캠페인 업데이트 다이얼로그 */}
-      {
-        selectedCampaign && (
-          <CampaignUpdateDialog
-            open={campaignUpdateDialog.open}
-            selectedCampaign={selectedCampaign}
-            doGetRequest={campaignData.requestWithoutConcat}
-            handleClose={(): void => {
-              setSelectedCampaign(null);
-              campaignUpdateDialog.handleClose();
-            }}
-          />
-        )
-      }
-
-      {/* 캠페인 삭제 클릭시 다이얼로그 */}
-      {
-        selectedCampaign && (
-          <CampaignDeleteConfirmDialog
-            open={campaignDeleteDialog.open}
-            selectedCampaign={selectedCampaign}
-            doGetRequest={campaignData.requestWithoutConcat}
-            handleClose={(): void => {
-              setSelectedCampaign(null);
-              campaignDeleteDialog.handleClose();
-            }}
-          />
-        )
-      }
     </Paper>
   );
 }

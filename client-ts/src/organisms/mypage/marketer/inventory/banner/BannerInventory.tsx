@@ -11,6 +11,7 @@ import CustomDataGrid from '../../../../../atoms/Table/CustomDataGrid';
 import { UsePaginatedGetRequestObject } from '../../../../../utils/hooks/usePaginatedGetRequest';
 import BannerInfoPopover from '../campaign/BannerInfoPopover';
 import OnadBanner from '../../../../../atoms/Banner/OnadBanner';
+import renderBannerConfirmState, { CONFIRM_STATE_REJECTED } from '../../../../../utils/render_funcs/renderBannerConfirmState';
 
 interface BannerInventoryProps {
   pageOffset: number;
@@ -49,21 +50,23 @@ export default function BannerInventory(props: BannerInventoryProps): JSX.Elemen
           pageSize={pageOffset}
           rowCount={totalPageLength}
           disableSelectionOnClick
+          loading={bannerData.loading}
           rows={bannerData.data || []}
           columns={[
             {
               headerName: '배너',
               field: 'bannerId',
+              width: 150,
               renderCell: (data): React.ReactElement => (
-                <Typography variant="body2">
-                  {data.row.bannerId}
-                </Typography>
+                <Tooltip title={data.row.bannerId}>
+                  <Typography noWrap variant="body2">{data.row.bannerId}</Typography>
+                </Tooltip>
               )
             },
             {
               headerName: '이미지',
               field: 'bannerSrc',
-              width: 130,
+              width: 150,
               renderCell: (rowData): React.ReactElement => (
                 <OnadBanner
                   src={rowData.row.bannerSrc}
@@ -80,21 +83,19 @@ export default function BannerInventory(props: BannerInventoryProps): JSX.Elemen
             {
               headerName: '심의 결과',
               field: 'confirmState',
-              width: 110,
-              renderCell: (rowData): React.ReactElement => {
-                switch (rowData.row.confirmState) {
-                  case 0: return <Typography variant="body2">진행중</Typography>;
-                  case 1: return <Typography variant="body2">승인됨</Typography>;
-                  case 2: return (
-                    <Tooltip
-                      title={<Typography variant="caption">{`사유: ${rowData.row.bannerDenialReason}`}</Typography>}
-                    >
-                      <Typography variant="body2" color="error">거절됨</Typography>
-                    </Tooltip>
-                  );
-                  default: throw new Error('you need confirmState for table');
-                }
-              },
+              width: 130,
+              renderCell: (data): React.ReactElement => (
+                <Typography variant="body2" color={data.row.confirmState === CONFIRM_STATE_REJECTED ? 'error' : 'textPrimary'}>
+                  {renderBannerConfirmState(data.row.confirmState)}
+                  <br />
+                  {data.row.confirmState === CONFIRM_STATE_REJECTED && (
+                  // 거절됨의 경우 사유 렌더링
+                    <Typography noWrap component="span" variant="caption" color="error">
+                      {data.row.bannerDenialReason}
+                    </Typography>
+                  )}
+                </Typography>
+              ),
 
             },
             {

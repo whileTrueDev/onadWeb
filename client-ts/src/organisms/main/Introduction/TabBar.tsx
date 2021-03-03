@@ -16,7 +16,7 @@ function TabBar({ tabValue, handleTabChange }: Props): JSX.Element {
         <Typography variant="subtitle1">마케터 이용약관</Typography>
       </Button>
       <Button className={tabValue ? classes.Selected : classes.notSelected} onClick={() => handleTabChange(1)}>
-        <Typography variant="subtitle1">크리에이터 이용약관</Typography>
+        <Typography variant="subtitle1">방송인 이용약관</Typography>
       </Button>
     </div>
   );

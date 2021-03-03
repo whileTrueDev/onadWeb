@@ -59,7 +59,7 @@ export default async function tracking(
   } = result[0];
 
   // CPC 요금
-  const payout = process.env.CPC_PAYOUT || 100; // calculator > landingCalculator_v1 > GAUGE
+  let payout = process.env.CPC_PAYOUT || 100; // calculator > landingCalculator_v1 > GAUGE
   // CPC 링크
   const linksObject = JSON.parse(links).links as Link[];
   const whereToGo = linksObject.find((link) => link.primary)?.linkTo;
@@ -76,6 +76,9 @@ export default async function tracking(
       alreadyInsertedCheckQuery, alreadyInsertedCheckArray
     );
     if (alreadyInserted.result.length === 0) { // 중복클릭이 아닌 경우
+      if (campaignId.startsWith('onadbanner')) {
+        payout = 0;
+      }
       const [insertQuery, queryArray] = createTrackingInsertQuery(broadPlatform, {
         costType: 'CPC',
         conversinoTime: null,

@@ -497,7 +497,7 @@ body{background-color:#fbfbfb}.logo a:hover,.logo a:focus{color:#1e2e3b !importa
         
             <div style="Margin-left: 20px;Margin-right: 20px;Margin-top: 24px;">
       <div style="mso-line-height-rule: exactly;mso-text-raise: 4px;">
-        <h1 style="Margin-top: 0;Margin-bottom: 0;font-style: normal;font-weight: normal;color: #565656;font-size: 22px;line-height: 31px;font-family: arial,sans-serif;text-align: center;"><span class="font-arial">크리에이터 ${inputData.name}님의 광고 문의 입니다.</span></h1><p style="Margin-top: 20px;Margin-bottom: 0;font-family: arial,sans-serif;text-align: center;"><span class="font-arial">&#54644;&#45817;&#32;&#45236;&#50857;&#51008;&#32;&#45796;&#51020;&#44284;&#32;&#44057;&#49845;&#45768;&#45796;&#46;</span></p><p style="Margin-top: 20px;Margin-bottom: 20px;font-family: arial,sans-serif;text-align: center;"><span class="font-arial">&nbsp;</span></p>
+        <h1 style="Margin-top: 0;Margin-bottom: 0;font-style: normal;font-weight: normal;color: #565656;font-size: 22px;line-height: 31px;font-family: arial,sans-serif;text-align: center;"><span class="font-arial">방송인 ${inputData.name}님의 광고 문의 입니다.</span></h1><p style="Margin-top: 20px;Margin-bottom: 0;font-family: arial,sans-serif;text-align: center;"><span class="font-arial">&#54644;&#45817;&#32;&#45236;&#50857;&#51008;&#32;&#45796;&#51020;&#44284;&#32;&#44057;&#49845;&#45768;&#45796;&#46;</span></p><p style="Margin-top: 20px;Margin-bottom: 20px;font-family: arial,sans-serif;text-align: center;"><span class="font-arial">&nbsp;</span></p>
       </div>
     </div>
         

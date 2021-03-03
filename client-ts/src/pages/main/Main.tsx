@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button } from '@material-ui/core';
+import { Button, Hidden } from '@material-ui/core';
 // layout 계열 컴포넌트
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import NavTop from '../../organisms/main/layouts/NavTop';
@@ -18,7 +18,7 @@ import history from '../../history';
 import ParallaxScroll from './sub/ParallaxScroll';
 import axios from '../../utils/axios';
 import HOST from '../../config';
-import RenewalDialog from '../../organisms/main/popup/RenewalDialog';
+import EventDialog from '../../organisms/main/popup/EventDialog';
 import { useDialog } from '../../utils/hooks';
 import CreatorLoginForm from '../../organisms/main/main/login/CreatorLoginForm';
 import openKakaoChat from '../../utils/openKakaoChat';
@@ -60,7 +60,7 @@ export default function Main(): JSX.Element {
   // const [offsetY, setOffsetY] = useState(0)
   const [nowBroadcast, setNowBroadcast] = useState(50);
   const [loading, setLoading] = useState(false);
-  const [timer, setTimer] = useState<NodeJS.Timeout>();
+  // const [timer, setTimer] = useState<NodeJS.Timeout>();
 
   const MainUserType = (history.location.pathname === '/marketer');
   React.useEffect(() => {
@@ -121,8 +121,8 @@ export default function Main(): JSX.Element {
             psIndex={psIndex}
             loading={loading}
             bgfixedRange={[0, 3]}
-            timer={timer}
-            setTimer={setTimer}
+            // timer={timer}
+            // setTimer={setTimer}
             renewalDialog={renewalDialog.open}
             // isDown={isDown}
             // setIsDown={setIsDown}
@@ -151,7 +151,7 @@ export default function Main(): JSX.Element {
                 <HowToUse
                   source={sources.howTo}
                   MainUserType={MainUserType}
-                  timer={timer}
+                  // timer={timer}
                 />
               )}
             </div>
@@ -193,8 +193,8 @@ export default function Main(): JSX.Element {
               psIndex={psIndex}
               loading={loading}
               bgfixedRange={[0, 3]}
-              timer={timer}
-              setTimer={setTimer}
+              // timer={timer}
+              // setTimer={setTimer}
               renewalDialog={renewalDialog.open}
             >
               <div className={classes.parallax} data-parallax="0">
@@ -219,7 +219,7 @@ export default function Main(): JSX.Element {
                 <HowToUse
                   source={sources.howTo}
                   MainUserType={MainUserType}
-                  timer={timer}
+                  // timer={timer}
                 />
                 )}
               </div>
@@ -252,11 +252,12 @@ export default function Main(): JSX.Element {
             />
 
             {/* 온애드 리뉴얼 관련 임시 팝업  */}
-            <RenewalDialog
-              open={renewalDialog.open}
-              onClose={renewalDialog.handleClose}
-              onClick={creatorLoginDialog.handleOpen}
-            />
+            <Hidden xsDown>
+              <EventDialog
+                open={renewalDialog.open}
+                onClose={renewalDialog.handleClose}
+              />
+            </Hidden>
             <CreatorLoginForm
               open={creatorLoginDialog.open}
               handleClose={creatorLoginDialog.handleClose}

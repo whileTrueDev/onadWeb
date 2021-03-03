@@ -5,13 +5,12 @@ import {
   Typography,
 } from '@material-ui/core';
 import React from 'react';
-import { Assessment, Build, Delete } from '@material-ui/icons';
+import { Build, Delete } from '@material-ui/icons';
 
 export interface CampaignInventoryMenuPopoverProps {
   open: boolean;
   anchorEl: HTMLElement;
   onClose: () => void;
-  handleAnaylsisDialogOpen: () => void;
   handleDeleteDialogOpen: () => void;
   handleUpdateDialogOpen: () => void;
 }
@@ -19,7 +18,6 @@ export default function CampaignInventoryMenuPopover({
   open,
   anchorEl,
   onClose,
-  handleAnaylsisDialogOpen,
   handleDeleteDialogOpen,
   handleUpdateDialogOpen,
 }: CampaignInventoryMenuPopoverProps): JSX.Element {
@@ -37,13 +35,6 @@ export default function CampaignInventoryMenuPopover({
         vertical: 'top', horizontal: 'left',
       }}
     >
-      <MenuItem onClick={handleAnaylsisDialogOpen}>
-        <Typography gutterBottom>
-          <Assessment fontSize="small" />
-          분석
-        </Typography>
-
-      </MenuItem>
       <MenuItem onClick={handleUpdateDialogOpen}>
         <Typography gutterBottom>
           <Build fontSize="small" />

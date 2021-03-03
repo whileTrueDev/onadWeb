@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import React, { useRef, useState } from 'react';
 import { useTheme } from '@material-ui/core/styles';
 import {
@@ -349,7 +350,7 @@ export default function CreatorTable(props: CreatorTableProps): JSX.Element {
             headerStyle: { textAlign: 'right', flexDirection: 'row-reverse' }
           }}
           localization={{
-            body: { emptyDataSourceMessage: '선택가능한 크리에이터가 없습니다.' },
+            body: { emptyDataSourceMessage: '선택가능한 방송인이 없습니다.' },
             pagination: {
               labelRowsSelect: '행',
             },

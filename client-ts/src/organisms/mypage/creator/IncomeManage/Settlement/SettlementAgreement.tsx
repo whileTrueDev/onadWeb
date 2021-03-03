@@ -53,7 +53,7 @@ function SettlementAgreement(): JSX.Element {
         ))}
       </Grid>
       <Grid item>
-        크리에이터 서비스 이용약관(필수)
+        방송인 서비스 이용약관(필수)
         <FormControlLabel
           control={(
             <Checkbox

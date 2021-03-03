@@ -54,7 +54,7 @@ const manualSources: ManualSources = {
       },
       {
         image: null,
-        description: `계약 상태 및 계약서 확인은 ${textStyling.LinkText('<내 계정>', 'user')} 크리에이터님의 정보란에서 확인 가능합니다.`,
+        description: `계약 상태 및 계약서 확인은 ${textStyling.LinkText('<내 계정>', 'user')} 방송인님의 정보란에서 확인 가능합니다.`,
       },
     ],
   },
@@ -184,9 +184,9 @@ const manualSources: ManualSources = {
       },
       {
         image: '/pngs/dashboard/manual/new_creator/creator-income-02.png',
-        description: `송출되는 광고는 크리에이터님의 방송 채널 패널과 연동됩니다.   
+        description: `송출되는 광고는 방송인님의 방송 채널 패널과 연동됩니다.   
         패널 클릭시 광고주/마케터 님이 연동한 URL 페이지로 이동합니다. 패널 및 채팅광고에 대한 시청자의 클릭(상호작용)에 대해 수익은 추가적으로 발생합니다.   
-        또한, 시청자의 광고에 대한 클릭에 따라 크리에이터님의 광고 레벨도 상승합니다.   
+        또한, 시청자의 광고에 대한 클릭에 따라 방송인님의 광고 레벨도 상승합니다.   
         ${textStyling.LinkText('<내 클릭광고>', 'ad-dashboard')}에서 확인하세요!
         광고 단가 책정, 이벤트 및 광고 선정 우선순위에 가산점으로 작용할 수 있습니다.`
       },
@@ -220,8 +220,8 @@ const manualSources: ManualSources = {
       {
         image: '/pngs/dashboard/manual/new_creator/creator-chatbot-01.png',
         description: `채팅 광고를 하고 싶다면 채팅광고 ON/OFF를 설정해주세요.   
-        온애드의 광고채팅봇 ${textStyling.styledText('onadyy')}는 주기적으로 현재 송출중인 배너광고에 대한 설명과 광고 링크를 채팅으로 자동홍보해줘요.   
-        시청자가 ${textStyling.styledText('onadyy')}가 홍보한 링크를 클릭하면, 클릭에 대한 추가적인 광고 수익이 발생한답니다.
+        온애드의 광고채팅봇 ${textStyling.styledText('onadbot')}은 주기적으로 현재 송출중인 배너광고에 대한 설명과 광고 링크를 채팅으로 자동홍보해줘요.   
+        시청자가 ${textStyling.styledText('onadbot')}이 홍보한 링크를 클릭하면, 클릭에 대한 추가적인 광고 수익이 발생한답니다.
         `
       },
       {

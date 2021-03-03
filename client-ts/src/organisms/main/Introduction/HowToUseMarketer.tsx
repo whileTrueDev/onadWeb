@@ -44,7 +44,7 @@ function HowToUsemarketer({ source }: Props): JSX.Element {
           <Typography variant="body2" className={classes.inquiryLink} onClick={() => { InquireDialog.handleOpen(); }}>
             배너가 아직 없으시다면 클릭!
           </Typography>
-          <Button className={classes.sampleLink} onClick={() => { setImgStep('banner'); UseStep.handleOpen(); }}>
+          <Button className={classes.sampleLink} onClick={() => { setImgStep('marketer_manual_1'); UseStep.handleOpen(); }}>
             샘플
           </Button>
           <CustomButtons
@@ -66,7 +66,7 @@ function HowToUsemarketer({ source }: Props): JSX.Element {
               <Typography variant="body2" key={shortid.generate()}>{`${row}`}</Typography>
             ))}
           </div>
-          <Button className={classes.sampleLink} onClick={() => { setImgStep('campaign'); UseStep.handleOpen(); }}>
+          <Button className={classes.sampleLink} onClick={() => { setImgStep('marketer_manual_2'); UseStep.handleOpen(); }}>
             샘플
           </Button>
         </Grid>
@@ -81,7 +81,7 @@ function HowToUsemarketer({ source }: Props): JSX.Element {
               <Typography variant="body2" key={shortid.generate()}>{`${row}`}</Typography>
             ))}
           </div>
-          <Button className={classes.sampleLink} onClick={() => { setImgStep('confirm'); UseStep.handleOpen(); }}>
+          <Button className={classes.sampleLink} onClick={() => { setImgStep('marketer_manual_3'); UseStep.handleOpen(); }}>
             샘플
           </Button>
         </Grid>
@@ -96,7 +96,7 @@ function HowToUsemarketer({ source }: Props): JSX.Element {
               <Typography variant="body2" key={shortid.generate()}>{`${row}`}</Typography>
             ))}
           </div>
-          <Button className={classes.sampleLink} onClick={() => { setImgStep('taxbill'); UseStep.handleOpen(); }}>
+          <Button className={classes.sampleLink} onClick={() => { setImgStep('marketer_manual_4'); UseStep.handleOpen(); }}>
             샘플
           </Button>
         </Grid>

@@ -22,7 +22,7 @@ export default function CustomerServiceCard(): JSX.Element {
       </Typography>
 
       <Typography variant="caption" color="textSecondary">
-        궁금한 점, 버그제보, 기능제안 등 어떠한 내용이든 괜찮습니다. 언제나 크리에이터 분들과 함께 성장하기 위해 노력합니다.
+        궁금한 점, 버그제보, 기능제안 등 어떠한 내용이든 괜찮습니다. 언제나 방송인 분들과 함께 성장하기 위해 노력합니다.
       </Typography>
 
       <div className={classes.buttonSection}>

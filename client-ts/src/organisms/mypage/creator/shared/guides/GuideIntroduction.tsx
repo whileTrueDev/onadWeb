@@ -16,7 +16,7 @@ export default function GuideIntroduction(): JSX.Element {
       </div>
 
       <div className={classes.section}>
-        <Typography>온애드는 1인 미디어 크리에이터를 위한 배너 광고 플랫폼입니다.</Typography>
+        <Typography>온애드는 1인 미디어 방송인분들을 위한 배너 광고 플랫폼입니다.</Typography>
         <Typography>쉽고 빠르게 광고를 유치하고, 수익을 창출할 수 있게 도와줍니다.</Typography>
 
         {/* 온애드 유튜브 영상 (마케터용 영상이라 혼란만 가중할 듯.) */}

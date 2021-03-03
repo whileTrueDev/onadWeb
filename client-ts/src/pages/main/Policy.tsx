@@ -28,6 +28,9 @@ export default ({ match }: Props): JSX.Element => {
 
   return (
     <div>
+      <a href="/" className={classes.logo}>
+        <img src="/logo/textLogo.png" alt="textlogo" className={classes.logo} />
+      </a>
       <div className={classes.root}>
         <div className={classes.contentBox}>
           <Grid container direction="row" alignItems="center" justify="flex-start">

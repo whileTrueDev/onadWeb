@@ -60,7 +60,7 @@ function SelectLandingUrl(props: SelectLandingUrlProps): JSX.Element {
       <Grid item className={classes.selectedLanding}>
         <Typography variant="body2">
           선택된 링크 주소
-          <OpenInNew className={classes.selectedLandingIcon} />
+          <OpenInNew fontSize="small" style={{ verticalAlign: 'middle' }} />
         </Typography>
         <Typography
           style={{ cursor: 'pointer' }}

@@ -28,15 +28,18 @@ export const StyledSliderWrapper = styled.div<SliderWrapperProps>`
   }
   .button {
     background-color: white;
+    margin: 0px;
+    padding: 0px;
     display: block;
-    border: 2px solid #009efd;
     width: 30px;
     height: 30px;
+    border: 2px solid #009efd;
     color: #009efd;
     font-weight: 800;
     cursor: pointer;
     transition: all 0.7s;
     user-select: none;
+    border-radius: 50%;
     :hover {
       opacity: 0.5;
     }
@@ -44,10 +47,11 @@ export const StyledSliderWrapper = styled.div<SliderWrapperProps>`
   .button2 {
     background-color: white;
     display: block;
-    border: 2px solid #00d1c9;
     width: 30px;
     height: 30px;
+    border: 2px solid #00d1c9;
     color: #00d1c9;
+    border-radius: 50%;
     font-weight: 800;
     cursor: pointer;
     transition: all 0.7s;
@@ -67,14 +71,12 @@ export const StyledSliderWrapper = styled.div<SliderWrapperProps>`
     bottom: 20px;
   }
   .back {
-    border-radius: 50%;
     display: flex;
     flex-direction: row;
     justify-content: center;
     position: relative;
   }
   .forward {
-    border-radius: 50%;
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -82,9 +84,10 @@ export const StyledSliderWrapper = styled.div<SliderWrapperProps>`
   }
   .buttonArrow {
     position: absolute;
-    font-size: 40px;
-    margin: 0;
-    line-height: 0.5;
+    left: 0px;
+    top: 0px;
+    width: 26px;
+    height: 26px;
   }
 `;
 

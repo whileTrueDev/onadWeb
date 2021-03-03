@@ -1,6 +1,7 @@
 import express from 'express';
 import createHttpError from 'http-errors';
 import axios from 'axios';
+import shortid from 'shortid';
 import responseHelper from '../../middlewares/responseHelper';
 import doQuery from '../../model/doQuery';
 import encrypto from '../../middlewares/encryption';
@@ -11,6 +12,7 @@ import bannerRouter from './banner';
 import notificationRouter from './notification';
 import clicksRouter from './clicks';
 import cpaRouter from './cpa';
+import referralCodeRouter from './referral-code';
 import makeAdvertiseUrl from '../../lib/makeAdvertiseUrl';
 import makeRemoteControllerUrl from '../../lib/makeRemoteControllerUrl';
 
@@ -20,6 +22,7 @@ router.use('/banner', bannerRouter);
 router.use('/notification', notificationRouter);
 router.use('/clicks', clicksRouter);
 router.use('/cpa', cpaRouter);
+router.use('/referral-code', referralCodeRouter);
 
 // 통합 회원가입 - 아이디 중복 체크
 router.route('/check-id')
@@ -76,7 +79,11 @@ router.route('/')
     // 크리에이터 회원 가입
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
       const creatorIp = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-      const [userid, passwd] = responseHelper.getParam(['userid', 'passwd'], 'POST', req);
+      const [userid, passwd, referralCode] = responseHelper.getParam(
+        ['userid', 'passwd', 'referralCode'], 'POST', req
+      );
+
+      // 암호화된 비밀번호
       const [encryptedPassword, salt] = encrypto.make(passwd);
       // 고유 아이디
       const creatorId = `V2_${userid}_${new Date().getTime()}`;
@@ -86,30 +93,39 @@ router.route('/')
         VALUES (?, ?, ?, ?, ?)`;
       const queryArray = [creatorId, userid, encryptedPassword, salt, creatorIp];
       const row = await doQuery(createCreatorQuery, queryArray);
-      if (row.result) {
-        responseHelper.send(userid, 'post', res);
-      } else next();
+      if (!row.result) next();
 
       // 각 테이블 기본 행 추가 (수익금, 수익률, 레벨)
+      // 수익금 테이블 기본값 추가
       const incomeQuery = `
         INSERT INTO creatorIncome 
         (creatorId, creatorTotalIncome, creatorReceivable) 
         VALUES (?, 0, 0)`;
 
+      // 수익률 테이블 기본값 추가
       const priceQuery = `
         INSERT INTO creatorPrice
         (creatorId, grade, viewerAverageCount, unitPrice)
         VALUES (?, ?, ?, ?)`;
 
+      // 레벨 테이블 기본값 추가
       const royaltyQuery = `
         INSERT INTO creatorRoyaltyLevel
         (creatorId, level, exp, visitCount)
         VALUES (?, 1, 0, 0)`;
 
+      // 가입시 입력한 추천인코드 값 추가
+      const REFERRALCODE_SINGUP_STATE = 0;
+      const enteredFriendCodeQuery = `
+        INSERT INTO creatorReferralCodeLogs (creatorId, referralCode, calculateState)
+        VALUES (?, ?, ?)
+      `;
+
       Promise.all([
         doQuery(incomeQuery, [creatorId]),
         doQuery(priceQuery, [creatorId, 1, 0, 2]),
-        doQuery(royaltyQuery, [creatorId])
+        doQuery(royaltyQuery, [creatorId]),
+        doQuery(enteredFriendCodeQuery, [creatorId, referralCode, REFERRALCODE_SINGUP_STATE]),
       ]).then(() => responseHelper.send(userid, 'post', res))
         .catch(() => next());
     })
@@ -155,10 +171,18 @@ router.route('/')
           (creatorId, creatorTwitchId)
           VALUES (?, ?)
           ON DUPLICATE KEY UPDATE creatorId = creatorId`;
+
+        // 계약시 생성되는 추천인 코드 기본값 추가 작업.
+        const myReferralCode = shortid.generate();
+        const referralCodeQuery = `
+          INSERT INTO creatorReferralCode (creatorId, referralCode) VALUES (?, ?)
+          ON DUPLICATE KEY UPDATE creatorId = creatorId
+        `;
         Promise.all([
           doQuery(contractionUpdateQuery, [1, creatorBannerUrl, remoteControllerUrl, creatorId]),
           doQuery(campaignQuery, [creatorId, campaignList, campaignList, campaignList]),
-          doQuery(landingQuery, [creatorId, creatorName])
+          doQuery(landingQuery, [creatorId, creatorName]),
+          doQuery(referralCodeQuery, [creatorId, myReferralCode]),
         ])
           .then(() => {
             responseHelper.send([true], 'PATCH', res);
@@ -259,10 +283,10 @@ router.route('/settlement')
             responseHelper.send([true], 'patch', res);
             // 정산 등록 슬랙 알림
             slack({
-              summary: '크리에이터 정산 등록 알림',
-              text: '크리에이터가 정산을 등록했습니다. 확인해주세요.',
+              summary: '방송인 정산 등록 알림',
+              text: '방송인아 정산을 등록했습니다. 확인해주세요.',
               fields: [
-                { title: '크리에이터 아이디', value: creatorId!, short: true },
+                { title: '방송인 아이디', value: creatorId!, short: true },
                 { title: '은행', value: bankName!, short: true },
               ]
             });
