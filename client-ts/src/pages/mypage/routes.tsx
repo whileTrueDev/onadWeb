@@ -8,6 +8,7 @@ import Work from '@material-ui/icons/Work';
 import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
 import SpeakerNotes from '@material-ui/icons/SpeakerNotes';
 // 크리에이터 라우터
+import { HowToReg } from '@material-ui/icons';
 import CreatorMyAds from './creator/CampaignManage';
 import CreatorDashboard from './creator/Dashboard';
 import CreatorManual from './creator/Manual';
@@ -21,6 +22,7 @@ import MarketerMyInfo from './marketer/MyInfo';
 import MarketerCreateCampaign from './marketer/CampaignCreate';
 import MarketerManual from './marketer/Manual';
 import CreatorIncomeManage from './creator/IncomeManage';
+import CreatorReferralCodeManage from './creator/ReferralCodeManage';
 // shared 라우터
 import Notice from './shared/Notice';
 
@@ -60,6 +62,14 @@ const dashboardRoutes: MypageRoutes = {
       name: '내 수익 관리',
       icon: AttachMoneyIcon,
       component: CreatorIncomeManage,
+      layout: '/mypage/creator',
+      // needNextDivider: true,
+    },
+    {
+      path: '/referral-code',
+      name: '내 추천인코드',
+      icon: HowToReg,
+      component: CreatorReferralCodeManage,
       layout: '/mypage/creator',
       needNextDivider: true,
     },
