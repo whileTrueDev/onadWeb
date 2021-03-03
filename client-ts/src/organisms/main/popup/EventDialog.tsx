@@ -93,17 +93,16 @@ export default function RenewalDialog({
             }}
             />
 
-            <Typography variant="body2" style={{ fontWeight: 'bold' }}>온애드에 가입할 때 추천인 코드를 작성하면</Typography>
+            <Typography variant="body2" style={{ fontWeight: 'bold' }}>온애드에 가입할 때 추천인 코드를 입력하면</Typography>
             <Typography variant="body2" style={{ fontWeight: 'bold' }}>
               신규 가입자에게 온애드 수익금
               {' '}
               <Typography component="span" variant="body2" color="primary" style={{ fontWeight: 'bold' }}>
-                5,000원
+                5,000원이 적립
               </Typography>
-              {' '}
-             이 적립되며,
+              되며,
             </Typography>
-            <Typography variant="body2" style={{ fontWeight: 'bold' }}>추천인 코드를 동료 BJ에게 추천하고</Typography>
+            <Typography variant="body2" style={{ fontWeight: 'bold' }}>동료 BJ에게 추천인 코드를 전달하고</Typography>
             <Typography variant="body2" style={{ fontWeight: 'bold' }}>
               추천받은 BJ가 신규가입 하면
               {' '}
