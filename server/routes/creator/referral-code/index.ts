@@ -21,4 +21,25 @@ router.get('/',
     responseHelper.send(result, 'get', res);
   }));
 
+router.get('/my',
+  responseHelper.middleware.checkSessionExists,
+  responseHelper.middleware.withErrorCatch(async (req, res, next) => {
+    const { creatorId } = responseHelper.getSessionData(req);
+    const query = `
+    SELECT referralCode, calculateState, B.createdAt, B.calculatedAt, C.creatorName, C.afreecaName, C.loginId
+    FROM creatorReferralCode AS A
+    LEFT JOIN creatorReferralCodeLogs AS B USING(referralCode)
+    JOIN creatorInfo AS C ON B.creatorId = C.creatorId
+    WHERE A.creatorId = ?
+    `;
+
+    const { result } = await doQuery(query, [creatorId]);
+
+    if (!result || result.length === 0) {
+      responseHelper.send('referral-code is not exists', 'get', res);
+    }
+
+    responseHelper.send(result[0], 'get', res);
+  }));
+
 export default router;
