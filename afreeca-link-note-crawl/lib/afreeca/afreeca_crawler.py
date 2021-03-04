@@ -227,7 +227,9 @@ class AfreecaNoteCrawler:
             self.db_controller.commit()
 
             # 추천인 코드 상태 변경 (dao.commit 포함됨.)
+            self.logger.info('추천인 코드 상태 변경 시작')
             self.db_controller.update_referral_code(verified_cert.creatorId)
+            self.logger.info('추천인 코드 상태 변경 완료')
 
         return verified_note_list
 
