@@ -24,9 +24,9 @@ function Navbar(props: NavbarProps): JSX.Element {
   const { type, routes, handleDrawerToggle } = props;
 
   function makeBrand(): string {
+    const { pathname } = window.location;
     let name = '';
     routes.forEach((route) => {
-      const { pathname } = window.location;
       if (route.hasSubRoutes && route.subRoutes && route.subRoutes.length > 0) {
         for (let i = 0; i < route.subRoutes.length; i += 1) {
           if (route.layout + route.path + route.subRoutes[i].path === pathname) {
