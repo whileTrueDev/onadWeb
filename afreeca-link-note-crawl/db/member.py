@@ -32,3 +32,19 @@ class CreatorInfo(Base):
     afreecaName = Column(String(50))
     afreecaLogo = Column(String(200))
     afreecaRefreshToken = Column(String(200))
+
+
+class CreatorReferralCodeLogs(Base):
+    __tablename__ = 'creatorReferralCodeLogs'
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    creatorId = Column(String(50))
+    referralCode = Column(String(100))
+    calculateState = Column(SmallInteger)
+
+
+class CreatorReferralCode(Base):
+    __tablename__ = 'creatorReferralCode'
+
+    creatorId = Column(String(50), primary_key=True)
+    referralCode = Column(String(100))

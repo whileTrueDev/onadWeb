@@ -91,7 +91,6 @@
         "EC2",
         "FARGATE"
     ],
-    "taskDefinitionArn": "arn:aws:ecs:ap-northeast-2:803609402610:task-definition/afreeca-link-note-crawl:2",
     "family": "afreeca-link-note-crawl",
     "pidMode": null,
     "requiresCompatibilities": [

@@ -222,8 +222,14 @@ class AfreecaNoteCrawler:
                             'creatorId' + verified_cert.creatorId + '에 해당하는 크리에이터가 없습니다.')
 
             self.logger.info('연동 DB작업 완료')
+
             # 인증 상태 변경 / 유저 아프리카 Id 변경 DB에 적용
             self.db_controller.commit()
+
+            # 추천인 코드 상태 변경 (dao.commit 포함됨.)
+            self.logger.info('추천인 코드 상태 변경 시작')
+            self.db_controller.update_referral_code(verified_cert.creatorId)
+            self.logger.info('추천인 코드 상태 변경 완료')
 
         return verified_note_list
 
