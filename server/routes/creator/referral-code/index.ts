@@ -26,14 +26,16 @@ router.get('/my',
   responseHelper.middleware.withErrorCatch(async (req, res, next) => {
     const { creatorId } = responseHelper.getSessionData(req);
     const query = `
-    SELECT referralCode, calculateState, B.createdAt, B.calculatedAt, C.creatorName, C.afreecaName, C.loginId
+    SELECT referralCode, calculateState, B.createdAt, B.calculatedAt, C.creatorName, C.afreecaName, C.loginId, C.creatorContractionAgreement
     FROM creatorReferralCode AS A
     LEFT JOIN creatorReferralCodeLogs AS B USING(referralCode)
-    JOIN creatorInfo AS C ON B.creatorId = C.creatorId
+    JOIN creatorInfo AS C ON A.creatorId = C.creatorId
     WHERE A.creatorId = ?
     `;
 
     const { result } = await doQuery(query, [creatorId]);
+
+    console.log(result);
 
     if (!result || result.length === 0) {
       responseHelper.send('referral-code is not exists', 'get', res);

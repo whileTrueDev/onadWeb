@@ -5,6 +5,7 @@ import {
   Button, Paper, TextField, Typography, CircularProgress, makeStyles
 } from '@material-ui/core';
 import { CheckCircle } from '@material-ui/icons';
+import { Alert } from '@material-ui/lab';
 import { useDialog, useGetRequest } from '../../../utils/hooks';
 import copyToClipboard from '../../../utils/copyToClipboard';
 import Snackbar from '../../../atoms/Snackbar/Snackbar';
@@ -27,6 +28,7 @@ export interface ReferralCodeRes {
   creatorName?: string;
   afreecaName?: string;
   loginId?: string;
+  creatorContractionAgreement: number; // 0, 1
 }
 
 const CALCULATE_DONE_STATE = 2;
@@ -49,28 +51,38 @@ export default function ReferralCodeManage(): JSX.Element {
           {referralCodeReq.loading && (<CircularProgress />)}
           {!referralCodeReq.loading && referralCodeReq.data && (
             <>
-              <TextField
-                value={referralCodeReq.data.referralCode}
-                className={classes.textfield}
-                fullWidth
-                variant="outlined"
-                id="referral-code-textfield"
-                InputProps={{
-                  readOnly: true
-                }}
-                disabled={referralCodeReq.data.calculateState === CALCULATE_DONE_STATE}
-              />
-              <Button
-                color="primary"
-                variant="contained"
-                onClick={(e) => copyToClipboard(e, 'referral-code-textfield', copySnack.handleOpen)}
-                disabled={referralCodeReq.data.calculateState === CALCULATE_DONE_STATE}
-              >
-                복사
-              </Button>
+              {referralCodeReq.data.creatorContractionAgreement === 0 ? (
+                <Alert severity="error">
+                  <Typography variant="body2">아직 온애드 이용동의를 마치지 않아 사용할 수 없습니다.</Typography>
+                  <Typography variant="body2">대시보드에서 [시작하기]를 통해 이용동의를 진행해주세요.</Typography>
+                </Alert>
+              ) : (
+                <>
+                  <TextField
+                    value={referralCodeReq.data.referralCode}
+                    className={classes.textfield}
+                    fullWidth
+                    variant="outlined"
+                    id="referral-code-textfield"
+                    InputProps={{
+                      readOnly: true
+                    }}
+                    disabled={referralCodeReq.data.calculateState === CALCULATE_DONE_STATE}
+                  />
+                  <Button
+                    color="primary"
+                    variant="contained"
+                    onClick={(e) => copyToClipboard(e, 'referral-code-textfield', copySnack.handleOpen)}
+                    disabled={referralCodeReq.data.calculateState === CALCULATE_DONE_STATE}
+                  >
+                  복사
+                  </Button>
+                </>
+              )}
             </>
           )}
         </div>
+
 
         {referralCodeReq.data && Boolean(referralCodeReq.data.calculateState) && (
           <div className={classes.contentsSpace}>
