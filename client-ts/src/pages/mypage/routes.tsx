@@ -15,7 +15,8 @@ import CreatorManual from './creator/Manual';
 import CreatorMyPage from './creator/Mypage';
 // import CreatorCPAManage from './creator/CPAManage';
 // 마케터 라우터
-import MarketerInventory from './marketer/Inventory';
+import MarketerCampaign from './marketer/AdManage/Campaign';
+import MarketerInventory from './marketer/AdManage/Inventory';
 import MarketerDashboard from './marketer/Dashboard';
 import MarketerMyOffice from './marketer/MyOffice';
 import MarketerMyInfo from './marketer/MyInfo';
@@ -26,14 +27,18 @@ import CreatorReferralCodeManage from './creator/ReferralCodeManage';
 // shared 라우터
 import Notice from './shared/Notice';
 
-export interface MypageRoute {
+export interface RouteBase {
   path: string;
   name: string;
-  icon: (props: SvgIconProps) => JSX.Element;
   component?: () => JSX.Element;
+}
+export interface MypageRoute extends RouteBase {
+  icon: (props: SvgIconProps) => JSX.Element;
   layout: string;
   noTab?: boolean;
   needNextDivider?: boolean;
+  hasSubRoutes?: boolean;
+  subRoutes?: RouteBase[];
 }
 
 export interface MypageRoutes {
@@ -108,9 +113,21 @@ const dashboardRoutes: MypageRoutes = {
       path: '/inventory',
       name: '내 광고 관리',
       icon: BrandingWatermark,
-      component: MarketerInventory, // 마케터 대시보드 컴포넌트로 수정
       layout: '/mypage/marketer',
       needNextDivider: true,
+      hasSubRoutes: true,
+      subRoutes: [
+        {
+          path: '/campaigns',
+          name: '캠페인 관리',
+          component: MarketerCampaign,
+        },
+        {
+          path: '/inventory',
+          name: '광고 인벤토리',
+          component: MarketerInventory,
+        },
+      ]
     },
     {
       path: '/myoffice',

@@ -35,8 +35,6 @@ router.get('/my',
 
     const { result } = await doQuery(query, [creatorId]);
 
-    console.log(result);
-
     if (!result || result.length === 0) {
       responseHelper.send('referral-code is not exists', 'get', res);
     }
