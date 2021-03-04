@@ -68,7 +68,7 @@ export default function RenewalDialog({
 
         <div style={{ padding: '0px 32px 32px' }}>
           <div style={{
-            backgroundColor: 'white', boxShadow: '10px 5px 5px black', borderRadius: 12, textAlign: 'center'
+            backgroundColor: 'white', boxShadow: '10px 5px 5px black', borderRadius: 12, textAlign: 'center', color: 'black'
           }}
           >
             <img src="/pngs/main-popup/event_logo.png" alt="" height={35} />
