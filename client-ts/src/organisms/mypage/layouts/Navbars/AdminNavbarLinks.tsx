@@ -138,10 +138,12 @@ export default function AdminNavbarLinks({
                 src={userProfileGet.data ? userProfileGet.data.creatorLogo || userProfileGet.data.afreecaLogo : ''}
               />
               )}
+              {type === 'marketer' && (
               <Avatar
                 className={classes.avatar}
                 src={marketerInfo.user ? marketerInfo.user.profileImage : ''}
               />
+              )}
             </div>
           )}
 
