@@ -9,8 +9,9 @@ import ListItemText from '@material-ui/core/ListItemText';
 import {
   makeStyles, Theme,
 } from '@material-ui/core/styles';
-import { Button, } from '@material-ui/core';
+import { Button, Collapse, } from '@material-ui/core';
 import { Link } from 'react-router-dom';
+import { ExpandLess, ExpandMore } from '@material-ui/icons';
 import { drawerWidth } from '../../../../assets/jss/onad';
 import history from '../../../../history';
 import { MypageRoute } from '../../../../pages/mypage/routes';
@@ -56,7 +57,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginRight: theme.spacing(3),
     color: theme.palette.text.secondary
   },
-  activeRouteIcon: { color: theme.palette.primary.main }
+  activeRouteIcon: { color: theme.palette.primary.main },
+  nested: {
+    paddingLeft: theme.spacing(8),
+  },
+
 }));
 
 interface ResponsiveDrawerProps {
@@ -82,6 +87,16 @@ export default function ResponsiveDrawer(props: ResponsiveDrawerProps): JSX.Elem
     }
   }
 
+  const [subRouteOpenList, setSubRouteOpenList] = React.useState<string[]>([]);
+
+  const handleClick = (routeName: string): void => {
+    setSubRouteOpenList((prev) => {
+      if (prev.includes(routeName)) return prev.filter((r) => r !== routeName);
+      return prev.concat(routeName);
+    });
+  };
+
+
   const drawer = (
     <div>
       <div className={classes.toolbar}>
@@ -98,23 +113,65 @@ export default function ResponsiveDrawer(props: ResponsiveDrawerProps): JSX.Elem
       <List>
         {routes.map((route) => (
           <div key={route.layout + route.name}>
-            <ListItem
-              className={classNames({
-                [classes.activeLink]: isActiveRoute(route.layout + route.path),
-              })}
-              button
-              onClick={(): void => { if (mobileOpen) handleDrawerToggle(); }}
-              to={route.layout + route.path}
-              component={Link}
-            >
-              <route.icon
+            {route.hasSubRoutes ? (
+              <>
+                <ListItem
+                  button
+                  className={classNames({
+                    [classes.activeLink]: !subRouteOpenList.includes(route.name)
+                      && isActiveRoute(route.layout + route.path)
+                  })}
+                  onClick={() => { handleClick(route.name); }}
+                >
+                  <route.icon
+                    className={classNames({
+                      [classes.routeIcon]: true,
+                      [classes.activeRouteIcon]: isActiveRoute(route.layout + route.path)
+                    })}
+                  />
+                  <ListItemText primary={route.name} />
+                  {subRouteOpenList.includes(route.name) ? <ExpandLess /> : <ExpandMore />}
+                </ListItem>
+                <Collapse in={subRouteOpenList.includes(route.name)} timeout="auto" unmountOnExit>
+                  <List component="div" disablePadding>
+                    {route.subRoutes?.map((subroute) => (
+                      <ListItem
+                        className={classNames({
+                          [classes.nested]: true,
+                          [classes.activeLink]: isActiveRoute(
+                            route.layout + route.path + subroute.path
+                          ),
+                        })}
+                        key={route.layout + route.name + subroute.name}
+                        button
+                        to={route.layout + route.path + subroute.path}
+                        component={Link}
+                      >
+                        <ListItemText primary={subroute.name} />
+                      </ListItem>
+                    ))}
+                  </List>
+                </Collapse>
+              </>
+            ) : (
+              <ListItem
                 className={classNames({
-                  [classes.routeIcon]: true,
-                  [classes.activeRouteIcon]: isActiveRoute(route.layout + route.path)
+                  [classes.activeLink]: isActiveRoute(route.layout + route.path),
                 })}
-              />
-              <ListItemText primary={route.name} />
-            </ListItem>
+                button
+                onClick={(): void => { if (mobileOpen) handleDrawerToggle(); }}
+                to={route.layout + route.path}
+                component={Link}
+              >
+                <route.icon
+                  className={classNames({
+                    [classes.routeIcon]: true,
+                    [classes.activeRouteIcon]: isActiveRoute(route.layout + route.path)
+                  })}
+                />
+                <ListItemText primary={route.name} />
+              </ListItem>
+            )}
             {route.needNextDivider && (<Divider style={{ margin: '8px 0px' }} />)}
           </div>
         ))}

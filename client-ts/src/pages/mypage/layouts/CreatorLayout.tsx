@@ -57,13 +57,28 @@ const CreatorDashboard = (): JSX.Element => {
         <div className={classes.content}>
           <div className={classes.container}>
             <Switch>
-              {allRoutes.creator.map((route) => (
-                <Route
-                  path={route.layout + route.path}
-                  component={route.component}
-                  key={route.name}
-                />
-              ))}
+              {allRoutes.creator.map((prop) => {
+                if (prop.hasSubRoutes && prop.subRoutes) {
+                  return (
+                    <React.Fragment key={prop.name + prop.layout + prop.path}>
+                      {prop.subRoutes.map((subroute) => (
+                        <Route
+                          path={prop.layout + prop.path + subroute.path}
+                          component={subroute.component}
+                          key={prop.name + subroute.name}
+                        />
+                      ))}
+                    </React.Fragment>
+                  );
+                }
+                return (
+                  <Route
+                    path={prop.layout + prop.path}
+                    component={prop.component}
+                    key={prop.name}
+                  />
+                );
+              })}
             </Switch>
           </div>
         </div>

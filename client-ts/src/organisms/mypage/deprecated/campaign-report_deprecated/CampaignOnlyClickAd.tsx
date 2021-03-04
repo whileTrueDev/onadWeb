@@ -8,7 +8,7 @@ import { Assignment } from '@material-ui/icons';
 import ContentCard from './sub/ContentCard';
 import ReportCard from './sub/ReportCard';
 import InteractionHeatmap from './sub/HeatmapReport';
-import InteractionToGeo from '../../marketer/inventory/campaign/sub/report/GeoReport';
+import InteractionToGeo from '../../marketer/adManage/campaign/sub/report/GeoReport';
 import CampaignInfo from './sub/CampaignInfo';
 import {
   ReportInterface, HeatmapInterface, GeoInterface, CampaignInterface

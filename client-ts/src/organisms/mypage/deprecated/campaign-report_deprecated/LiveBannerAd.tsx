@@ -15,7 +15,7 @@ import CampaignCostPie from './sub/CampaignCostPieV2';
 import CampaignCostBar from './sub/CampaignCostBar';
 import BannerBroadCreators from './sub/BannerBroadCreators';
 import InteractionHeatmap from './sub/HeatmapReport';
-import InteractionToGeo from '../../marketer/inventory/campaign/sub/report/GeoReport';
+import InteractionToGeo from '../../marketer/adManage/campaign/sub/report/GeoReport';
 import CampaignInfo from './sub/CampaignInfo';
 import CardTemplate from './sub/CardTemplate';
 import MetricsExpression from './sub/MetricsExpression';
