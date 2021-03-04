@@ -24,14 +24,21 @@ function Navbar(props: NavbarProps): JSX.Element {
   const { type, routes, handleDrawerToggle } = props;
 
   function makeBrand(): string {
-    let routeName = '';
+    let name = '';
     routes.forEach((route) => {
-      if (route.layout + route.path === window.location.pathname) {
-        const { name } = route;
-        routeName = name;
+      const { pathname } = window.location;
+      if (route.hasSubRoutes && route.subRoutes && route.subRoutes.length > 0) {
+        for (let i = 0; i < route.subRoutes.length; i += 1) {
+          if (route.layout + route.path + route.subRoutes[i].path === pathname) {
+            name = route.subRoutes[i].name;
+          }
+        }
+      }
+      if (route.layout + route.path === pathname) {
+        name = route.name;
       }
     });
-    return routeName;
+    return name;
   }
 
   return (

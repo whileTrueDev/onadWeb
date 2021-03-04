@@ -1,7 +1,7 @@
 import React from 'react';
 import GridContainer from '../../../atoms/Grid/GridContainer';
 import GridItem from '../../../atoms/Grid/GridItem';
-import InventoryManage from '../../../organisms/mypage/marketer/inventory/InventoryManage';
+import InventoryManage from '../../../organisms/mypage/marketer/adManage/InventoryManage';
 import useMypageScrollToTop from '../../../utils/hooks/useMypageScrollToTop';
 
 
