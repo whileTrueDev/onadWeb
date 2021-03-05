@@ -6,11 +6,13 @@ import {
 import { TabContext, TabPanel } from '@material-ui/lab';
 import usePaginatedGetRequest from '../../../../utils/hooks/usePaginatedGetRequest';
 import { useGetRequest } from '../../../../utils/hooks';
-import { BannerDataInterface, UrlDataInterface } from './interface';
+import { BannerDataInterface, Merchandise, UrlDataInterface } from './interface';
 import BannerInventory from './banner/BannerInventory';
 import UrlInventory from './url/UrlInventory';
 import UrlButtons from './url/UrlButtons';
 import BannerButtons from './banner/BannerButtons';
+import MerchandiseInventory from './merchandise/MerchandiseInventory';
+import MerchandiseButtons from './merchandise/MerchandiseButtons';
 
 const useStyles = makeStyles((theme) => ({
   tabs: {
@@ -27,7 +29,7 @@ const FETCH_PAGE_OFFSET = 5;
 export default function InventoryManage(): JSX.Element {
   const classes = useStyles();
 
-  const [selectedTabIndex, setSelectedTabIndex] = React.useState<string>('0');
+  const [selectedTabIndex, setSelectedTabIndex] = React.useState<string>('2');
   const handleTabChange = (event: React.ChangeEvent<{}>, newValue: string): void => {
     setSelectedTabIndex(newValue);
   };
@@ -46,6 +48,13 @@ export default function InventoryManage(): JSX.Element {
     '/marketer/landing-url/list', { offset: FETCH_PAGE_OFFSET, disableConcat: true }
   );
 
+  // **************************************************************************************
+  // 상품 데이터
+  const merchandisePageLength = useGetRequest('/marketer/merchandises/length');
+  const merchandiseData = usePaginatedGetRequest<Merchandise>(
+    '/marketer/merchandises', { offset: FETCH_PAGE_OFFSET, disableConcat: true }
+  );
+
 
   return (
     <div>
@@ -59,11 +68,13 @@ export default function InventoryManage(): JSX.Element {
           >
             <Tab label="배너 인벤토리" value="0" />
             <Tab label="URL 인벤토리" value="1" />
+            <Tab label="상품 인벤토리" value="2" />
           </Tabs>
 
           {/* 선택된 탭의 컨텐츠 */}
           <div>
 
+            {/* 배너 인벤토리 */}
             <TabPanel value="0">
               <BannerButtons bannerData={bannerData} />
               <BannerInventory
@@ -73,11 +84,22 @@ export default function InventoryManage(): JSX.Element {
               />
             </TabPanel>
 
+            {/* URL 인벤토리 */}
             <TabPanel value="1">
               <UrlButtons urlData={urlData} />
               <UrlInventory
                 urlData={urlData}
                 totalPageLength={urlPageLength.data || undefined}
+                pageOffset={FETCH_PAGE_OFFSET}
+              />
+            </TabPanel>
+
+            {/* 상품 인벤토리 */}
+            <TabPanel value="2">
+              <MerchandiseButtons />
+              <MerchandiseInventory
+                merchandiseData={merchandiseData}
+                totalPageLength={merchandisePageLength.data || undefined}
                 pageOffset={FETCH_PAGE_OFFSET}
               />
             </TabPanel>

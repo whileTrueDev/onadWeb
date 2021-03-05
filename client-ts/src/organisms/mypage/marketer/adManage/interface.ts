@@ -26,3 +26,17 @@ export interface UrlDataInterface {
   regiDate: string;
   updateDate: Date;
 }
+export interface Merchandise {
+  id: number;
+  name: string;
+  price: number;
+  stock: number;
+  optionFlag?: boolean;
+  description: string;
+  images: string;
+  pickupFlag?: boolean;
+  pickupId: string;
+  createDate?: Date;
+  updateDate?: Date;
+  mallUploadFlag?: boolean;
+}
