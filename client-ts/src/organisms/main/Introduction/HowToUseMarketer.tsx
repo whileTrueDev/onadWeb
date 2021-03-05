@@ -51,7 +51,7 @@ function HowToUsemarketer({ source }: Props): JSX.Element {
             className={classes.guideButton}
             load
           >
-            <a href="/howtouse/배너제작가이드.pdf" download="온애드배너제작가이드" className={classes.guideLink}>배너가이드</a>
+            <a href="/howtouse/bannerGuide.pdf" download="온애드배너제작가이드" className={classes.guideLink}>배너가이드</a>
           </CustomButtons>
 
         </Grid>
