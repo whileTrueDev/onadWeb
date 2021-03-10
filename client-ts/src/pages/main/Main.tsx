@@ -39,8 +39,16 @@ const useStyles = makeStyles((theme) => ({
     width: 60,
     height: 60,
     zIndex: 300,
-    background: 'url(\'/contact/liveContact.svg\') no-repeat center center',
+    [theme.breakpoints.up('sm')]: {
+      width: 270.5,
+      height: 50,
+      background: 'url(\'/contact/liveContactSpreaded.png\') no-repeat center center',
+      backgroundSize: 'cover',
+      right: 10,
+      bottom: 10,
+    },
     [theme.breakpoints.down('xs')]: {
+      background: 'url(\'/contact/liveContact.svg\') no-repeat center center',
       width: 40,
       height: 40,
       right: 10,
@@ -173,7 +181,12 @@ export default function Main(): JSX.Element {
 
             <div className={classes.parallax} data-parallax="5">
               { psIndex === 5 && (
-                <Contact source={sources.howitworks} MainUserType={MainUserType} />
+                <Contact
+                  source={sources.howitworks}
+                  MainUserType={MainUserType}
+                  isLogin={isLogin}
+                  logout={logout}
+                />
               )}
             </div>
           </ParallaxScroll>
@@ -241,7 +254,12 @@ export default function Main(): JSX.Element {
 
               <div className={classes.parallax} data-parallax="5">
                 { psIndex === 5 && (
-                <Contact source={sources.howitworks} MainUserType={MainUserType} />
+                <Contact
+                  source={sources.howitworks}
+                  MainUserType={MainUserType}
+                  isLogin={isLogin}
+                  logout={logout}
+                />
                 )}
               </div>
             </ParallaxScroll>

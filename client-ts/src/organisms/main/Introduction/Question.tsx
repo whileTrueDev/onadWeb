@@ -7,12 +7,6 @@ import MuiAccordionDetails from '@material-ui/core/AccordionDetails';
 import textSource from './source/textSource';
 import Styles from './style/Question.style';
 
-interface QandAData {
-  id: string;
-  text: string;
-  ans?: any | '';
-}
-
 
 function Question({ MainUserType }: { MainUserType: string }): JSX.Element {
   const classes = Styles();
@@ -89,7 +83,9 @@ function Question({ MainUserType }: { MainUserType: string }): JSX.Element {
                 <div className={classes.ansTitle}>
                   {row.text}
                 </div>
-                <img src="/introduction/arrow.svg" alt="arrow" className={classes.arrow} />
+                { MainUserType === 'marketer'
+                  ? <img src="/introduction/arrow.svg" alt="arrow" className={classes.arrow} />
+                  : <img src="/introduction/arrowCreator.svg" alt="arrow" className={classes.arrow} />}
               </div>
             </AccordionSummary>
             <AccordionDetails>
