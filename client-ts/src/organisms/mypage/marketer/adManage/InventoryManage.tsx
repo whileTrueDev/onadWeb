@@ -96,7 +96,7 @@ export default function InventoryManage(): JSX.Element {
 
             {/* 상품 인벤토리 */}
             <TabPanel value="2">
-              <MerchandiseButtons />
+              <MerchandiseButtons merchandiseData={merchandiseData} />
               <MerchandiseInventory
                 merchandiseData={merchandiseData}
                 totalPageLength={merchandisePageLength.data || undefined}

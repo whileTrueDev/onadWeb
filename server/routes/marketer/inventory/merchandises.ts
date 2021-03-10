@@ -10,9 +10,29 @@ export interface Merchandise {
   stock: number;
   optionFlag?: boolean;
   description: string;
-  images: string;
+  images: string[];
   pickupFlag?: boolean;
-  pickupId: string;
+  pickupAddress?: {
+    roadAddress: string; // 도로명 주소
+    roadAddressEnglish: string; // 도로명 영어 주소
+    roadAddressDetail?: string; // 사용자 입력 상세 주소
+    jibunAddress: string; // 지번 주소
+    jibunAddressEnglish: string; // 지번 영어 주소
+    buildingCode: string; // 건물 코드
+    sido: string; // 시/도
+    sigungu: string; // 시군구 이름
+    sigunguCode: string; // 시군구 코드
+    bname: string; // 법정동 이름
+    bCode: string; // 법정동 코드
+    roadname: string; // 도로명
+    roadnameCode: string; // 도로명코드
+    zoneCode: string; // 우편번호
+  };
+  options?: {
+    type: string;
+    name: string;
+    additionalPrice: number;
+  }[];
   createDate?: Date;
   updateDate?: Date;
   mallUploadFlag?: boolean;
@@ -68,25 +88,73 @@ const findWithPagination = async (
  */
 const createMerchandise = async (
   marketerId: string, merchandise: Merchandise
-): Promise<number> => {
-  const query = `
+): Promise<Merchandise> => {
+  const {
+    name, price, stock, optionFlag, description, images, pickupFlag, pickupAddress, options,
+  } = merchandise;
+  const insertQuery = `
     INSERT INTO merchandiseRegistered
-    (name, price, stock, optionFlag, description, images, pickupFlag, pickupId, marketerId)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+    (name, price, stock, optionFlag, description, images, pickupFlag, marketerId)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
   `;
-  const { result } = await doQuery(query, [
-    merchandise.name,
-    merchandise.price,
-    merchandise.stock,
-    merchandise.optionFlag,
-    merchandise.description,
-    merchandise.images,
-    merchandise.pickupFlag,
-    merchandise.pickupId,
-    marketerId
-  ]);
+  const insertQueryArray = [
+    name, price, stock, optionFlag, description, images.join(','), pickupFlag, marketerId
+  ];
+  const { result } = await doQuery(insertQuery, insertQueryArray);
+  const merchandiseId = result.insertId;
 
-  return result.affectedRows;
+  // *********************************************************************
+  // 상품 픽업 주소가 존재하는 경우
+  if (pickupAddress) {
+    const {
+      roadAddress, roadAddressEnglish, roadAddressDetail, jibunAddress, jibunAddressEnglish,
+      buildingCode, sido, sigungu, sigunguCode, bname, bCode, roadname, roadnameCode, zoneCode,
+    } = pickupAddress;
+
+    const pickupAddressQuery = `
+    INSERT INTO merchandisePickupAddresses (
+      roadAddress, roadAddressEnglish, roadAddressDetail, jibunAddress,
+      jibunAddressEnglish, buildingCode, sido, sigungu,
+      sigunguCode, bname, bCode, roadname, roadnameCode, zoneCode
+    ) VALUES (
+      ?, ?, ?, ?,
+      ?, ?, ?, ?,
+      ?, ?, ?, ?, ?, ?
+    )`;
+
+    const pickupAddressQueryArray = [
+      roadAddress, roadAddressEnglish, roadAddressDetail, jibunAddress,
+      jibunAddressEnglish, buildingCode, sido, sigungu,
+      sigunguCode, bname, bCode, roadname, roadnameCode, zoneCode
+    ];
+
+    const pickupAddressQueryResult = await doQuery(pickupAddressQuery, pickupAddressQueryArray);
+    const pickupAddressId = pickupAddressQueryResult.result.insertId;
+
+    // merchandise pickupId 업데이트
+    const pickupAddressUpdateQuery = `
+      UPDATE merchandiseRegistered SET pickupId = ? WHERE id = ?
+    `;
+    const pickupAddressUpdateQueryArray = [pickupAddressId, merchandiseId];
+    await doQuery(pickupAddressUpdateQuery, pickupAddressUpdateQueryArray);
+  }
+
+  // *************************************************************
+  // 옵션이 존재하는 경우
+  if (options) {
+    options.forEach((option) => {
+      const { type, name: optionName, additionalPrice } = option;
+      const insertOptionQuery = `INSERT INTO merchandiseOptions
+        (merchandiseId, type, name, additionalPrice) VALUES (?, ?, ?, ?)`;
+      doQuery(insertOptionQuery, [merchandiseId, type, optionName, additionalPrice]);
+    });
+  }
+
+  const insertedMerchandise = await doQuery(
+    'SELECT * FROM merchandiseRegistered WHERE id = ?',
+    [merchandiseId]
+  );
+  return insertedMerchandise.result[0];
 };
 
 /**
@@ -123,15 +191,19 @@ router.route('/')
     responseHelper.middleware.withErrorCatch((async (req, res, next) => {
       const { marketerId } = responseHelper.getSessionData(req);
       if (!marketerId) throw createHttpError[401];
+
       const [
-        name, price, stock, optionFlag,
-        description, images, pickupFlag, pickupId,
+        name, price, stock, optionFlag, pickupFlag, description, images
       ] = responseHelper.getParam([
-        'name', 'price', 'stock', 'optionFlag',
-        'description', 'images', 'pickupFlag', 'pickupId',
+        'name', 'price', 'stock', 'optionFlag', 'pickupFlag', 'description', 'images',
       ], 'post', req);
+
+      const [pickupAddress, options] = responseHelper.getOptionalParam(
+        ['pickupAddress', 'options'], 'post', req
+      );
+
       const result = await createMerchandise(marketerId, {
-        name, price, stock, optionFlag, description, images, pickupFlag, pickupId,
+        name, price, stock, optionFlag, description, images, pickupFlag, pickupAddress, options,
       });
 
       responseHelper.send(result, 'post', res);

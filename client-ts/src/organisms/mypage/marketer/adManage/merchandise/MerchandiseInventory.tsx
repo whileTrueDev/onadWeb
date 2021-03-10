@@ -86,6 +86,7 @@ export default function MerchandiseInventory({
             field: '',
             width: 80,
             headerName: '삭제',
+            disableColumnMenu: true,
             renderCell: (data): React.ReactElement => (
               <IconButton onClick={(): void => {
                 handleSelect(data.row as Merchandise);

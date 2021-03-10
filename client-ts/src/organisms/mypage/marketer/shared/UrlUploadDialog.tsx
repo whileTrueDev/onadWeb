@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import {
-  Stepper, Step, StepLabel, StepContent,
+  Stepper, Step, StepLabel, StepContent, Button
 } from '@material-ui/core';
 import Check from '@material-ui/icons/Check';
 import classnames from 'classnames';
 
 import Dialog from '../../../../atoms/Dialog/Dialog';
-import Button from '../../../../atoms/CustomButtons/Button';
 import useToggle from '../../../../utils/hooks/useToggle';
 import useEventTargetValue from '../../../../utils/hooks/useEventTargetValue';
 import usePostRequest from '../../../../utils/hooks/usePostRequest';
@@ -131,10 +130,11 @@ export default function UrlUploadDialog(props: UrlUploadDialogProps): JSX.Elemen
               !(landingUrlRegex.test(mainUrl.value)) || !isLengthValid()
             }
             onClick={handleSubmit}
+            variant="contained"
           >
             등록
           </Button>
-          <Button onClick={handleDialogClose}>취소</Button>
+          <Button variant="contained" onClick={handleDialogClose}>취소</Button>
         </div>
         )}
     >

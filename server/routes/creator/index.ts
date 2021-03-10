@@ -121,13 +121,22 @@ router.route('/')
         VALUES (?, ?, ?)
       `;
 
-      Promise.all([
-        doQuery(incomeQuery, [creatorId]),
-        doQuery(priceQuery, [creatorId, 1, 0, 2]),
-        doQuery(royaltyQuery, [creatorId]),
-        doQuery(enteredFriendCodeQuery, [creatorId, referralCode, REFERRALCODE_SINGUP_STATE]),
-      ]).then(() => responseHelper.send(userid, 'post', res))
-        .catch(() => next());
+      if (!referralCode) {
+        Promise.all([
+          doQuery(incomeQuery, [creatorId]),
+          doQuery(priceQuery, [creatorId, 1, 0, 2]),
+          doQuery(royaltyQuery, [creatorId]),
+        ]).then(() => responseHelper.send(userid, 'post', res))
+          .catch(() => next());
+      } else {
+        Promise.all([
+          doQuery(incomeQuery, [creatorId]),
+          doQuery(priceQuery, [creatorId, 1, 0, 2]),
+          doQuery(royaltyQuery, [creatorId]),
+          doQuery(enteredFriendCodeQuery, [creatorId, referralCode, REFERRALCODE_SINGUP_STATE]),
+        ]).then(() => responseHelper.send(userid, 'post', res))
+          .catch(() => next());
+      }
     })
   )
   .patch(

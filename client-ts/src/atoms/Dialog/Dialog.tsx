@@ -71,15 +71,16 @@ interface CustomDialogProps {
   children: React.ReactNode;
   buttons?: React.ReactNode;
   onClose: () => void;
+  disableScrollTop?: boolean;
   [rest: string]: any;
 }
 
 function CustomDialog({
-  title, open, onClose, buttons, children, ...rest
+  title, open, onClose, buttons, children, disableScrollTop = false, ...rest
 }: CustomDialogProps): JSX.Element {
   const contentRef = useRef<HTMLDivElement>();
   useEffect(() => {
-    if (contentRef.current) {
+    if (contentRef.current && !disableScrollTop) {
       contentRef.current.scrollTo(0, 0);
     }
   });

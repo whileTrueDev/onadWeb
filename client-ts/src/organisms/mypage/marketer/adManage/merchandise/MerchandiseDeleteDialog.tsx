@@ -21,9 +21,9 @@ const MerchandiseDeleteDialog = (props: MerchandiseDeleteDialogProps): JSX.Eleme
     open, selectedMerchandise, handleClose, recallRequest
   } = props;
 
-  const { loading, doDeleteRequest } = useDeleteRequest<{ id: number }, any[]>('/marketer/merchandises');
+  const { loading, doDeleteRequest } = useDeleteRequest<{ id?: number }, any[]>('/marketer/merchandises');
 
-  const connectedCampaign = useGetRequest<{ id: number }, { campaignId: string }[]>(
+  const connectedCampaign = useGetRequest<{ id?: number }, { campaignId: string }[]>(
     '/marketer/merchandises/campaigns', {
       id: selectedMerchandise.id
     }
