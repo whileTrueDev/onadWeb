@@ -27,7 +27,7 @@ export interface CampaignInterface {
       linkTo: string;
     }[];
   };
-  linkConfirmState: number;
+  linkConfirmState?: number;
   dailyLimit: number;
   dailysum: number;
   campaignDescription: string;

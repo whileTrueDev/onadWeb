@@ -89,7 +89,11 @@ export default function CampaignInformation({
       <article className={classes.article}>
         <Typography className={classes.bold}>현재 캠페인 상태</Typography>
         {renderConfirmState('배너', campaign.confirmState)}
-        {renderConfirmState('랜딩URL', campaign.linkConfirmState)}
+        {campaign.linkId && campaign.linkConfirmState && (
+          <span>
+            {renderConfirmState('랜딩URL', campaign.linkConfirmState)}
+          </span>
+        )}
       </article>
 
       {landingUrl && (
