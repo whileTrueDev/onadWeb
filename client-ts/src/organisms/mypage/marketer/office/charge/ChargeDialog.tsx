@@ -86,6 +86,7 @@ function TestChargeDialog(): JSX.Element {
 
 
   const classes = useStyles();
+  const [completeLoading, setCompleteLoading] = useState(false);
   const [vbankInfo, setVbankInfo] = useState<VbankInterface>(
     {
       vbankNum: '',
@@ -146,6 +147,8 @@ function TestChargeDialog(): JSX.Element {
       return;
     }
 
+    setCompleteLoading(true);
+
     // merchant_uid 생성에 필요한 날짜 포맷
     const currentDate = new Date();
     const currentDateFormat = `${currentDate.getFullYear()}`
@@ -194,7 +197,9 @@ function TestChargeDialog(): JSX.Element {
 
     // 결제 완료 시 호출될 콜백함수
     const payCallback = (rsp: any) => {
+      console.log(rsp, 'before success');
       if (rsp.success) { // 결제 성공 시: 결제 승인 또는 가상계좌 발급에 성공한 경우
+        console.log(rsp, 'after success');
         axios.post(`${HOST}/marketer/cash/charge/card`, {
           chargeCash: selectValue,
           chargeType,
@@ -212,12 +217,14 @@ function TestChargeDialog(): JSX.Element {
                 vbanDate: `${rsp.vbank_date}`,
                 vbankAmount: `${rsp.paid_amount}`,
               });
+              setCompleteLoading(false);
               setIndex((preIndex) => preIndex + 1);
               break;
 
             // 계좌이체 및 신용카드 결제 완료시 로직
             case 'success':
               if (!data.data[0]) {
+                setCompleteLoading(false);
                 setIndex(index + 1);
               } else {
                 console.log('cash - charge - error!');
@@ -315,6 +322,7 @@ function TestChargeDialog(): JSX.Element {
             setStepComplete={setStepComplete}
             state={stepState}
             dispatch={stepDispatch}
+            completeLoading={completeLoading}
           />
         );
       case 3:
