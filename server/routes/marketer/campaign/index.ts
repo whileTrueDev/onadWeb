@@ -71,10 +71,12 @@ router.route('/list')
           campaign.regiDate as regiDate, onOff, br.confirmState, 
           br.bannerId, bannerSrc, br.regiDate AS bannerRegiDate,
           lr.linkId, lr.links as links, lr.confirmState as linkConfirmState, dailyLimit,
-          campaignDescription, startDate, finDate, selectedTime, targetList
+          campaignDescription, startDate, finDate, selectedTime, targetList, merchandiseId,
+          mr.name AS merchandiseName
         FROM campaign
           JOIN bannerRegistered AS br ON br.bannerId = campaign.bannerId
-          JOIN linkRegistered AS lr ON lr.linkId = connectedLinkId
+          LEFT JOIN linkRegistered AS lr ON lr.linkId = connectedLinkId
+          LEFT JOIN merchandiseRegistered AS mr ON mr.id = merchandiseId
         WHERE campaign.marketerId = ? AND deletedState = 0
         ORDER BY campaign.onOff DESC, campaign.regiDate DESC
         LIMIT ?, ?
@@ -302,16 +304,16 @@ router.route('/')
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
       const { marketerId, marketerName } = responseHelper.getSessionData(req);
       const [campaignName, optionType, priorityType, priorityList, selectedTime, dailyLimit,
-        startDate, finDate, keyword, bannerId, connectedLinkId, campaignDescription
+        startDate, finDate, keyword, bannerId, connectedLinkId, campaignDescription, merchandiseId
       ] = responseHelper.getOptionalParam([
         'campaignName', 'optionType', 'priorityType',
         'priorityList', 'selectedTime', 'dailyLimit', 'startDate', 'finDate',
-        'keyword', 'bannerId', 'connectedLinkId', 'campaignDescription'], 'POST', req);
+        'keyword', 'bannerId', 'connectedLinkId', 'campaignDescription', 'merchandiseId'], 'POST', req);
 
       console.log('campaignId', campaignName, marketerId,
         bannerId, connectedLinkId, dailyLimit, priorityType,
         optionType, 0, priorityList, marketerName,
-        keyword, startDate, finDate, selectedTime, campaignDescription);
+        keyword, startDate, finDate, selectedTime, campaignDescription, merchandiseId);
 
       const searchQuery = `
             SELECT campaignId
@@ -325,8 +327,8 @@ router.route('/')
             (campaignId, campaignName, marketerId,
             bannerId, connectedLinkId, dailyLimit, priorityType, 
             optionType, onOff, targetList, marketerName, 
-            keyword, startDate, finDate, selectedTime, campaignDescription) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, 0, ?, ?, ?, ?, ?, ?, ?)`;
+            keyword, startDate, finDate, selectedTime, campaignDescription, merchandiseId) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, 0, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
       doQuery(searchQuery, [marketerId])
         .then((row) => {
@@ -344,7 +346,7 @@ router.route('/')
                 // @by hwasurr "1-1" 은 아프리카 카테고리 선택형. 1로 수정하여 카테고리 선택형으로 넣는다.
                 (priorityType === '1-1') ? '1' : priorityType,
                 optionType, targetJsonData, marketerName, keywordsJsonData,
-                startDate, finDate, timeJsonData, campaignDescription]),
+                startDate, finDate, timeJsonData, campaignDescription, merchandiseId]),
             dataProcessing.PriorityDoquery({
               campaignId,
               priorityType,
@@ -362,14 +364,14 @@ router.route('/')
               marketerActionLogging([
                 marketerId, MARKETER_ACTION_LOG_TYPE, JSON.stringify({ campaignName })
               ]);
-              slack({
-                summary: '캠페인 등록 알림',
-                text: '관리자 페이지에서 방금 등록된 캠페인을 확인하세요.',
-                fields: [
-                  { title: '마케터 이름', value: marketerName!, short: true },
-                  { title: '캠페인 이름', value: campaignName!, short: true },
-                ]
-              });
+              // slack({
+              //   summary: '캠페인 등록 알림',
+              //   text: '관리자 페이지에서 방금 등록된 캠페인을 확인하세요.',
+              //   fields: [
+              //     { title: '마케터 이름', value: marketerName!, short: true },
+              //     { title: '캠페인 이름', value: campaignName!, short: true },
+              //   ]
+              // });
             })
             .catch((error) => {
               responseHelper.promiseError(error, next);

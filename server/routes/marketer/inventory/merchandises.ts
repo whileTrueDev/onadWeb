@@ -76,15 +76,21 @@ const getConnectedCampaigns = async <T = any>(merchandiseId: number): Promise<T>
   return result;
 };
 
+const findAllbyMarketer = async (marketerId: string): Promise<Merchandise[]> => {
+  const query = 'SELECT * FROM merchandiseRegistered WHERE marketerId = ? ORDER BY createDate DESC';
+  const { result } = await doQuery<Merchandise[]>(query, [marketerId]);
+  return result;
+};
+
 /**
- * 상품 리스트 정보 반환 함수
+ * 상품 리스트 정보를 페이지네이션에 따라 반환하는 함수
  * @param marketerId 마케터 고유 아이디
  */
 const findWithPagination = async (
   marketerId: string, page: number, offset: number
 ): Promise<Merchandise[]> => {
   const query = `
-    SELECT id, name, price, stock, optionFlag, description, images, pickupFlag, pickupId
+    SELECT *
     FROM merchandiseRegistered WHERE marketerId = ?
     ORDER BY createDate DESC
     LIMIT ?, ?
@@ -192,12 +198,16 @@ router.route('/')
     responseHelper.middleware.withErrorCatch((async (req, res, next) => {
       const { marketerId } = responseHelper.getSessionData(req);
       if (!marketerId) throw createHttpError[401];
-      const [page, offset] = responseHelper.getParam(['page', 'offset'], 'get', req);
+      const [page, offset] = responseHelper.getOptionalParam(['page', 'offset'], 'get', req);
       const searchPage = Number(page * offset);
       const searchOffset = Number(offset);
 
-      const result = await findWithPagination(marketerId, searchPage, searchOffset);
-      responseHelper.send(result, 'GET', res);
+      if (page && offset) {
+        const result = await findWithPagination(marketerId, searchPage, searchOffset);
+        return responseHelper.send(result, 'GET', res);
+      }
+      const result = await findAllbyMarketer(marketerId);
+      return responseHelper.send(result, 'GET', res);
     }))
   )
   .post(
