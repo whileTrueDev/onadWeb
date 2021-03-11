@@ -11,6 +11,7 @@ export interface Merchandise {
   optionFlag?: boolean;
   description: string;
   images: string[];
+  descImages: string[];
   pickupFlag?: boolean;
   pickupAddress?: {
     roadAddress: string; // 도로명 주소
@@ -39,6 +40,18 @@ export interface Merchandise {
 }
 
 const router = express.Router();
+
+/**
+ * 입력한 상품명과 중복되는 상품이 있는 지 체크합니다. 있으면 true를 없으면 false를 반환합니다.
+ * @param merchandiseName 중복 체크할 상품명
+ * @returns {boolean}
+ */
+const checkNameDulicated = async (merchandiseName: string): Promise<boolean> => {
+  const query = 'SELECT COUNT(*) AS duplicatedRowCount FROM merchandiseRegistered WHERE name = ?';
+  const { result } = await doQuery(query, [merchandiseName]);
+  if (!result || result.length === 0) return false;
+  return true;
+};
 
 /**
  * 상품 개수 정보 반환 함수
@@ -90,15 +103,16 @@ const createMerchandise = async (
   marketerId: string, merchandise: Merchandise
 ): Promise<Merchandise> => {
   const {
-    name, price, stock, optionFlag, description, images, pickupFlag, pickupAddress, options,
+    name, price, stock, optionFlag, description,
+    images, descImages, pickupFlag, pickupAddress, options,
   } = merchandise;
   const insertQuery = `
     INSERT INTO merchandiseRegistered
-    (name, price, stock, optionFlag, description, images, pickupFlag, marketerId)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    (name, price, stock, optionFlag, description, images, descImages, pickupFlag, marketerId)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
   `;
   const insertQueryArray = [
-    name, price, stock, optionFlag, description, images.join(','), pickupFlag, marketerId
+    name, price, stock, optionFlag, description, images.join(','), descImages.join(','), pickupFlag, marketerId
   ];
   const { result } = await doQuery(insertQuery, insertQueryArray);
   const merchandiseId = result.insertId;
@@ -193,9 +207,9 @@ router.route('/')
       if (!marketerId) throw createHttpError[401];
 
       const [
-        name, price, stock, optionFlag, pickupFlag, description, images
+        name, price, stock, optionFlag, pickupFlag, description, images, descImages
       ] = responseHelper.getParam([
-        'name', 'price', 'stock', 'optionFlag', 'pickupFlag', 'description', 'images',
+        'name', 'price', 'stock', 'optionFlag', 'pickupFlag', 'description', 'images', 'descImages',
       ], 'post', req);
 
       const [pickupAddress, options] = responseHelper.getOptionalParam(
@@ -203,7 +217,16 @@ router.route('/')
       );
 
       const result = await createMerchandise(marketerId, {
-        name, price, stock, optionFlag, description, images, pickupFlag, pickupAddress, options,
+        name,
+        price,
+        stock,
+        optionFlag,
+        description,
+        images,
+        pickupFlag,
+        pickupAddress,
+        options,
+        descImages,
       });
 
       responseHelper.send(result, 'post', res);
@@ -245,5 +268,18 @@ router.route('/campaigns')
       const lengthCount = await getConnectedCampaigns(id);
       responseHelper.send(lengthCount, 'get', res);
     })
+  );
+
+/**
+ * 상품명 중복 체크
+ */
+router.route('dup-check')
+  .get(
+    responseHelper.middleware.checkSessionExists,
+    responseHelper.middleware.withErrorCatch(async (req, res, next) => {
+      const name = responseHelper.getParam('name', 'get', req);
+      const isDuplicated = await checkNameDulicated(name);
+      responseHelper.send(isDuplicated, 'get', res);
+    }),
   );
 export default router;

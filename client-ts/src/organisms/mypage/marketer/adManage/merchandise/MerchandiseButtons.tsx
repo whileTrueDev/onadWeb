@@ -42,11 +42,10 @@ export default function MerchandiseButtons({
         onSuccess={() => {
           successSnack.handleOpen();
           merchandiseUploadDialog.handleClose();
-          merchandiseData.request();
+          merchandiseData.requestWithoutConcat();
         }}
         onFail={() => {
-          successSnack.handleOpen();
-          merchandiseUploadDialog.handleClose();
+          failSnack.handleOpen();
         }}
       />
 

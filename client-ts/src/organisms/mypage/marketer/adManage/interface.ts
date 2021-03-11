@@ -75,6 +75,7 @@ export interface CreateMerchandiseDto {
   stock: string | number;
   description: string;
   images: string[];
+  descImages: string[];
   optionFlag: boolean;
   pickupFlag: boolean;
   pickupAddress?: OnadAddressData;

@@ -1,15 +1,18 @@
+import classnames from 'classnames';
 import {
   Button, Collapse, FormControl, FormControlLabel,
   makeStyles, Radio, RadioGroup, TextField, Typography
 } from '@material-ui/core';
+import { Alert } from '@material-ui/lab';
 import React, {
-  useState, useContext
+  useState, useRef
 } from 'react';
 import { AddressData } from 'react-daum-postcode';
 import CustomDialog from '../../../../atoms/Dialog/Dialog';
-import MarketerInfoContext from '../../../../context/MarketerInfo.context';
-import { s3UploadImage } from '../../../../utils/aws/OnadAWS';
-import { useDialog, useEventTargetValue, usePostRequest } from '../../../../utils/hooks';
+import {
+  useDialog, useEventTargetValue, usePostRequest
+} from '../../../../utils/hooks';
+import useImageListUpload from '../../../../utils/hooks/useImageListUpload';
 import useSwapableListItem from '../../../../utils/hooks/useSwappableListItem';
 import { CreateMerchandiseDto, MerchandiseImage, MerchandiseOption } from '../adManage/interface';
 import AddressInput, { OnadAddressData } from './sub/MerchandiseAddressInput';
@@ -21,12 +24,15 @@ const FLAG_ON = 'Yes';
 const FLAG_OFF = 'No';
 
 const useStyles = makeStyles((theme) => ({
-  textField: {
-    margin: theme.spacing(1, 0)
-  },
+  textField: { margin: theme.spacing(1, 0) },
+  textFieldHalf: { width: 300 },
   smallInput: {
     height: 35
-  }
+  },
+  form: { maxHeight: 600, },
+  bottomSpace: { marginBottom: theme.spacing(2) },
+  field: { margin: theme.spacing(1, 0, 2) },
+  emptySpace: { height: theme.spacing(4) },
 }));
 
 export interface MerchandiseInfo {
@@ -52,14 +58,15 @@ export default function MerchandiseUploadDialog({
   // recallRequest,
 }: MerchandiseUploadDialogProps): JSX.Element {
   const classes = useStyles();
-  const marketerInfo = useContext(MarketerInfoContext);
 
   const optionFlag = useEventTargetValue(FLAG_OFF);
   const pickupFlag = useEventTargetValue(FLAG_OFF);
 
+  // 다이얼로그 컨텐츠 Ref - 스크롤링을 위해
+  const dialogContentRef = useRef<HTMLDivElement>(null);
+
   // *********************************************************
   // 상품정보
-
   const [merchandiseInfo, setMerchandiseInfo] = useState<MerchandiseInfo>({
     name: '',
     price: '',
@@ -108,25 +115,16 @@ export default function MerchandiseUploadDialog({
   }
 
   // ***********************************************************
-  // 상품이미지
-  const [images, setImages] = useState<MerchandiseImage[]>([]);
-  function handleImageUpload(imageData: MerchandiseImage): void {
-    if (images.length >= 10) return alert('이미지는 최대 10장까지 업로드 가능합니다.');
-    return setImages((prev) => {
-      // 이미 동일한 이미지가 업로드 되지 않았을 때만 추가
-      if (prev.filter((i) => i.imageName === imageData.imageName).length === 0) {
-        return prev.concat(imageData);
-      }
-      return prev;
-    });
-  }
-  function handleImageRemove(imageName: string): void {
-    setImages((prev) => prev.filter((imageData) => imageData.imageName !== imageName));
-  }
+  // 상품 이미지
+  const {
+    images, handleImageUpload, handleImageRemove, uploadToS3
+  } = useImageListUpload<MerchandiseImage>({ limit: 4 });
+
+  // 상품 상세 설명 이미지
+  const descImages = useImageListUpload<MerchandiseImage>();
 
   // ***********************************************************
   // 상품 옵션
-
   const options = useSwapableListItem<MerchandiseOption>([
     { type: '', name: '', additionalPrice: '', },
   ]);
@@ -152,6 +150,14 @@ export default function MerchandiseUploadDialog({
   // 상품 등록 백엔드 요청
   const merchandisePost = usePostRequest<CreateMerchandiseDto>('/marketer/merchandises');
 
+  // form error 표시를 위한 변수
+  const [formError, setFormError] = useState('');
+  const handleFormError = (errMsg: string): void => {
+    setFormError(errMsg);
+    if (dialogContentRef && dialogContentRef.current) dialogContentRef.current.scrollTo(0, 0);
+  };
+  const handleFormErrorReset = (): void => { setFormError(''); };
+
   // form submit 로딩
   const formLoading = useDialog();
   const [formLoadingStatus, setLoadingStatus] = useState<string>();
@@ -160,15 +166,18 @@ export default function MerchandiseUploadDialog({
   }
   // 폼 제출 핸들러
   function handleSubmit(): void {
-    if (!merchandiseInfo.name) return alert('상품명을 입력해주세요.');
-    if (!merchandiseInfo.price) return alert('판매가를 입력해주세요.');
-    if (!merchandiseInfo.stock) return alert('재고를 입력해주세요.');
+    // 유효성 체크
+    if (!merchandiseInfo.name) return handleFormError('상품명을 입력해주세요.');
+    if (!merchandiseInfo.price) return handleFormError('판매가를 입력해주세요.');
+    if (!merchandiseInfo.stock) return handleFormError('재고를 입력해주세요.');
     if (optionFlag.value === FLAG_ON
-      && options.checkItemsEmpty()) return alert('옵션을 올바르게 입력해주세요. 각 옵션은 빈 값이 없어야 합니다.');
-    if (images.length === 0) return alert('상품을 등록하기 위해서는 상품 사진이 최소 1개 이상 필요합니다.');
-    if (pickupFlag.value === FLAG_ON && !address) return alert('상품 픽업 주소를 입력해주세요');
-    if (pickupFlag.value === FLAG_ON && address && !address.roadAddressDetail) return alert('상품 픽업 상세 주소를 입력해주세요');
-    if (!merchandiseInfo.description) return alert('상세 설명을 입력해주세요.');
+      && options.checkItemsEmpty()) return handleFormError('옵션을 올바르게 입력해주세요. 각 옵션은 빈 값이 없어야 합니다.');
+    if (images.length === 0) return handleFormError('상품을 등록하기 위해서는 상품 사진이 최소 1개 이상 필요합니다.');
+    if (descImages.images.length === 0) return handleFormError('상품을 등록하기 위해서는 상품 상세 사진이 최소 1개 이상 필요합니다.');
+    if (pickupFlag.value === FLAG_ON && !address) return handleFormError('상품 픽업 주소를 입력해주세요');
+    if (pickupFlag.value === FLAG_ON && address && !address.roadAddressDetail) return handleFormError('상품 픽업 상세 주소를 입력해주세요');
+    if (!merchandiseInfo.description) return handleFormError('상세 설명을 입력해주세요.');
+
     formLoading.handleOpen();
     handleLoadingStatus('상품 등록 중...');
     // 상품 등록 POST 요청
@@ -178,162 +187,210 @@ export default function MerchandiseUploadDialog({
       pickupFlag: pickupFlag.value === FLAG_ON,
       pickupAddress: address,
       images: images.map((image) => image.imageName),
+      descImages: descImages.images.map((image) => image.imageName),
       options: options.items,
-    }).then(({ data }) => {
-      const uploadedMerchandiseId = data.id;
-      handleLoadingStatus('상품 사진 등록 중...');
-      // 상품 사진 S3 업로드
-      images.forEach((image) => {
-        if (marketerInfo.user) {
-          s3UploadImage({
-            key: `merchandises/${marketerInfo.user.marketerId}/${uploadedMerchandiseId}`,
-            filename: image.imageName,
-            file: image.imageFile,
-          }).then(
+    })
+      .then(({ data }) => {
+        if (!data) return alert('상품 업로드 중 오류가 발생했습니다. 오류가 지속적으로 발생되면 support@onad.io로 문의부탁드립니다.');
+
+        handleLoadingStatus('상품 사진 등록 중...');
+        const { id: uploadedMerchandiseId, marketerId } = data;
+        // 상품 사진 S3 업로드
+        const key = `merchandises/${marketerId}/${uploadedMerchandiseId}/merchandise`;
+        const uploadFailCallback = (err: any) => {
+          formLoading.handleClose();
+          if (onFail) onFail();
+          else alert('상품 사진 업로드 중 오류가 발생했습니다. 오류가 지속적으로 발생되면 support@onad.io로 문의부탁드립니다.');
+          console.error(err);
+        };
+        const uploadSuccessCallback = () => {
+          const descImagesKey = `merchandises/${marketerId}/${uploadedMerchandiseId}/desc-images`;
+          // 상품 설명 이미지 업로드
+          descImages.uploadToS3(
+            descImagesKey,
             () => {
+              handleLoadingStatus('상품 상세 설명 이미지 등록 중...');
               formLoading.handleClose();
               if (onSuccess) onSuccess();
               onClose();
             },
-            (err) => {
-              formLoading.handleClose();
-              if (onFail) onFail();
-              else alert('상품 사진 업로드 중 오류가 발생했습니다. 오류가 지속적으로 발생되면 support@onad.io로 문의부탁드립니다.');
-              console.error(err);
-            }
-          ).catch((err) => {
-            formLoading.handleClose();
-            if (onFail) onFail();
-            else alert('상품 사진 업로드 중 오류가 발생했습니다. 오류가 지속적으로 발생되면 support@onad.io로 문의부탁드립니다.');
-            console.error(err);
-          });
-        }
-      });
-    });
+            uploadFailCallback
+          );
+        };
+        // 상품 사진 S3 업로드 트리거
+        uploadToS3(key, uploadSuccessCallback, uploadFailCallback);
+      })
+      .catch(onFail);
     // eslint-disable-next-line no-useless-return, consistent-return
     return;
   }
 
   // 입력 폼
   const form = (
-    <form style={{ maxHeight: 600 }} autoComplete="off">
-      {/* <Typography>상품 등록 설명 뭐시기 뭐시기</Typography> */}
-
-      <Typography>상품명</Typography>
-      <TextField
-        className={classes.textField}
-        variant="outlined"
-        fullWidth
-        style={{ maxWidth: 300 }}
-        placeholder="상품명"
-        value={merchandiseInfo.name}
-        onChange={handleChange('name')}
-        InputProps={{ className: classes.smallInput }}
-        // eslint-disable-next-line react/jsx-no-duplicate-props
-        inputProps={{
-          maxLength: 30
-        }}
-      />
-
-      <Typography>판매가</Typography>
-      <TextField
-        className={classes.textField}
-        variant="outlined"
-        fullWidth
-        style={{ maxWidth: 300 }}
-        placeholder="판매가"
-        type="number"
-        value={merchandiseInfo.price}
-        onChange={handleChange('price')}
-        InputProps={{ className: classes.smallInput }}
-        // eslint-disable-next-line react/jsx-no-duplicate-props
-        inputProps={{
-          min: 0, step: 1
-        }}
-      />
-
-      <Typography>재고</Typography>
-      <TextField
-        className={classes.textField}
-        variant="outlined"
-        fullWidth
-        style={{ maxWidth: 300 }}
-        placeholder="재고"
-        type="number"
-        value={merchandiseInfo.stock}
-        onChange={handleChange('stock')}
-        InputProps={{ className: classes.smallInput }}
-        // eslint-disable-next-line react/jsx-no-duplicate-props
-        inputProps={{
-          min: 0, step: 1
-        }}
-      />
-
-      <Typography>옵션 여부</Typography>
-      <FormControl component="fieldset">
-        <RadioGroup
-          row
-          aria-label="option-flag"
-          name="optionFlag"
-          value={optionFlag.value}
-          onChange={optionFlag.handleChange}
+    <form className={classes.form} autoComplete="off">
+      {formError && (
+      <Alert severity="error" className={classes.bottomSpace}>
+        <Typography variant="body2" style={{ marginBottom: 4 }}>
+          {formError}
+        </Typography>
+        <Button
+          size="small"
+          variant="outlined"
+          color="primary"
+          onClick={handleFormErrorReset}
         >
-          <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
-          <FormControlLabel value="No" control={<Radio />} label="No" />
-        </RadioGroup>
-      </FormControl>
-      <div style={{ marginBottom: 16 }}>
-        {option}
-      </div>
-
-      <Typography>픽업여부</Typography>
-      <FormControl component="fieldset">
-        <RadioGroup
-          row
-          aria-label="pickup-flag"
-          name="pickupFlag"
-          value={pickupFlag.value}
-          onChange={pickupFlag.handleChange}
-        >
-          <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
-          <FormControlLabel value="No" control={<Radio />} label="No" />
-        </RadioGroup>
-      </FormControl>
-
-      <Collapse in={pickupFlag.value === FLAG_ON}>
-        <Typography>픽업주소</Typography>
-        <div style={{ marginBottom: 16 }}>
-          <AddressInput
-            addressValue={address}
-            onChange={handleAddressChangeByDaumPopup}
-            onDetailChange={handleAddressDetailChange}
-          />
-        </div>
-      </Collapse>
+          확인
+        </Button>
+      </Alert>
+      )}
 
 
-      <Typography>사진</Typography>
-      <Typography color="textSecondary" variant="body2">상품 사진업로드는 사진당 최대 5MB용량까지 가능합니다.</Typography>
-      <div style={{ marginBottom: 16 }}>
-        <MerchandiseImageUpload
-          images={images}
-          onImageUpload={handleImageUpload}
-          onImageRemove={handleImageRemove}
+      <div className={classes.field}>
+        <Typography>상품명</Typography>
+        <Typography variant="body2" color="textSecondary">상품명은 최대 30자까지 가능합니다.</Typography>
+        <TextField
+          className={classnames(classes.textField, classes.textFieldHalf)}
+          variant="outlined"
+          fullWidth
+          placeholder="상품명"
+          value={merchandiseInfo.name}
+          onChange={handleChange('name')}
+          InputProps={{ className: classes.smallInput }}
+        // eslint-disable-next-line react/jsx-no-duplicate-props
+          inputProps={{
+            maxLength: 30
+          }}
         />
       </div>
 
-      <Typography>상품 상세설명</Typography>
-      <TextField
-        className={classes.textField}
-        variant="outlined"
-        fullWidth
-        placeholder="상세설명"
-        multiline
-        rowsMax={10}
-        rows={5}
-        value={merchandiseInfo.description}
-        onChange={handleChange('description')}
-      />
+      <div className={classes.field}>
+        <Typography>판매가</Typography>
+        <TextField
+          className={classnames(classes.textField, classes.textFieldHalf)}
+          variant="outlined"
+          fullWidth
+          placeholder="10000"
+          type="number"
+          value={merchandiseInfo.price}
+          onChange={handleChange('price')}
+          InputProps={{ className: classes.smallInput }}
+        // eslint-disable-next-line react/jsx-no-duplicate-props
+          inputProps={{
+            min: 0, step: 1
+          }}
+        />
+      </div>
+
+      <div className={classes.field}>
+        <Typography>재고</Typography>
+        <TextField
+          className={classnames(classes.textField, classes.textFieldHalf)}
+          variant="outlined"
+          fullWidth
+          placeholder="10"
+          type="number"
+          value={merchandiseInfo.stock}
+          onChange={handleChange('stock')}
+          InputProps={{ className: classes.smallInput }}
+        // eslint-disable-next-line react/jsx-no-duplicate-props
+          inputProps={{
+            min: 0, step: 1
+          }}
+        />
+      </div>
+
+      <div className={classes.field}>
+        <Typography>옵션 여부</Typography>
+        <FormControl component="fieldset">
+          <RadioGroup
+            row
+            aria-label="option-flag"
+            name="optionFlag"
+            value={optionFlag.value}
+            onChange={optionFlag.handleChange}
+          >
+            <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
+            <FormControlLabel value="No" control={<Radio />} label="No" />
+          </RadioGroup>
+        </FormControl>
+        <div className={classes.bottomSpace}>
+          {option}
+        </div>
+      </div>
+
+      <div className={classes.field}>
+        <Typography>상품픽업여부</Typography>
+        <FormControl component="fieldset">
+          <RadioGroup
+            row
+            aria-label="pickup-flag"
+            name="pickupFlag"
+            value={pickupFlag.value}
+            onChange={pickupFlag.handleChange}
+          >
+            <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
+            <FormControlLabel value="No" control={<Radio />} label="No" />
+          </RadioGroup>
+        </FormControl>
+
+        <Collapse in={pickupFlag.value === FLAG_ON}>
+          <Typography>픽업주소</Typography>
+          <div className={classes.bottomSpace}>
+            <AddressInput
+              addressValue={address}
+              onChange={handleAddressChangeByDaumPopup}
+              onDetailChange={handleAddressDetailChange}
+            />
+          </div>
+        </Collapse>
+      </div>
+
+
+      <div className={classes.field}>
+        <Typography>상품사진</Typography>
+        <Typography color="textSecondary" variant="body2">상품 사진업로드는 사진당 최대 5MB용량까지 가능합니다.</Typography>
+        <div className={classes.bottomSpace}>
+          <MerchandiseImageUpload
+            images={images}
+            onImageUpload={handleImageUpload}
+            onImageRemove={handleImageRemove}
+          />
+        </div>
+      </div>
+
+      <div className={classes.field}>
+        <Typography>상품 상세설명</Typography>
+        <TextField
+          className={classes.textField}
+          variant="outlined"
+          fullWidth
+          placeholder="상세 설명"
+          multiline
+          rowsMax={10}
+          rows={5}
+          value={merchandiseInfo.description}
+          onChange={handleChange('description')}
+        />
+      </div>
+
+      <div className={classes.field}>
+        <Typography>상품 상세 이미지</Typography>
+        <Typography color="textSecondary" variant="body2">상세 사진업로드는 사진당 최대 10MB용량까지 가능합니다.</Typography>
+        <MerchandiseImageUpload
+          limitMb={10}
+          images={descImages.images}
+          onImageUpload={(img): void => {
+            descImages.handleImageUpload(img);
+            if (dialogContentRef.current) {
+              dialogContentRef.current.scrollTo(0, dialogContentRef.current.scrollHeight);
+            }
+          }}
+          onImageRemove={descImages.handleImageRemove}
+        />
+      </div>
+
+      <div className={classes.emptySpace} />
+
     </form>
   );
 
@@ -345,6 +402,7 @@ export default function MerchandiseUploadDialog({
       fullWidth
       title="상품 등록"
       disableScrollTop
+      dialogContentRef={dialogContentRef}
       buttons={(
         <div style={{ display: 'flex' }}>
           <Button

@@ -29,9 +29,10 @@ export interface MerchandiseImageUploadProps {
   images: MerchandiseImage[];
   onImageUpload: (imageData: MerchandiseImage) => void;
   onImageRemove: (imageName: string) => void;
+  limitMb?: number;
 }
 export default function MerchandiseImageUpload({
-  images, onImageUpload, onImageRemove,
+  images, onImageUpload, onImageRemove, limitMb = 5,
 }: MerchandiseImageUploadProps): React.ReactElement {
   const classes = useStyles();
 
@@ -54,9 +55,9 @@ export default function MerchandiseImageUpload({
 
       // *******************************
       // 파일 크기 체크
-      const MB_5 = 5 * 1024 * 1024; // 5kb말
-      if (uploadedImage.size > MB_5) {
-        return alert('5MB이하의 이미지만 업로드할 수 있습니다.');
+      const MB_LIMIT = limitMb * 1024 * 1024;
+      if (uploadedImage.size > MB_LIMIT) {
+        return alert(`${limitMb}MB이하의 이미지만 업로드할 수 있습니다.`);
       }
 
       // *******************************
