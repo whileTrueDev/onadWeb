@@ -48,8 +48,8 @@ const SelectBanner = (props: SelectBannerProps): JSX.Element => {
         </Grid>
         <Grid item>
           {bannerData.loading && (
-            <div style={{ padding: 72 }}>
-              <CircularProgress size={100} disableShrink />
+            <div className={classes.loading}>
+              <CircularProgress />
             </div>
           )}
           {!bannerData.loading && bannerData.data && bannerData.data.length > 0 ? (

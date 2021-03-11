@@ -61,6 +61,7 @@ export default function BannerList(): JSX.Element {
     if (option === 0) str = '배너광고';
     if (option === 1) str = '배너+클릭광고';
     if (option === 2) str = '클릭광고';
+    if (option === 3) str = '상품판매광고';
     return str;
   }
   // 에러 스낵바

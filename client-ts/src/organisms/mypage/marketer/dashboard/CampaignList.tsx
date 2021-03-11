@@ -185,30 +185,31 @@ export default function CampaignList(): JSX.Element {
                   <Hidden mdDown>
                     <Grid item>
                       <Grid container direction="column" spacing={2}>
-                        {detail.linkData.links.map((link): JSX.Element | null => (
-                          <Grid item key={link.linkName}>
-                            {link.linkName && (
-                              <>
-                                <Typography variant="body1" color="primary" align="center">
+                        {detail.linkId && detail.linkData && detail.linkData.links
+                          .map((link): JSX.Element | null => (
+                            <Grid item key={link.linkName}>
+                              {link.linkName && (
+                                <>
+                                  <Typography variant="body1" color="primary" align="center">
                                   링크 이름
-                                </Typography>
-                                <Divider orientation="horizontal" />
-                                <Typography gutterBottom variant="body2" align="center">
-                                  {link.linkName}
-                                </Typography>
-                              </>
-                            )}
-                            <Typography variant="body1" color="primary" align="center">
+                                  </Typography>
+                                  <Divider orientation="horizontal" />
+                                  <Typography gutterBottom variant="body2" align="center">
+                                    {link.linkName}
+                                  </Typography>
+                                </>
+                              )}
+                              <Typography variant="body1" color="primary" align="center">
                               URL 주소
-                            </Typography>
-                            <Divider orientation="horizontal" />
-                            <Typography className={classes.url} gutterBottom variant="body2" align="center">
-                              {link.linkTo}
-                            </Typography>
-                            <Divider orientation="horizontal" />
-                            {confirmCases(detail.linkConfirmState)}
-                          </Grid>
-                        ))}
+                              </Typography>
+                              <Divider orientation="horizontal" />
+                              <Typography className={classes.url} gutterBottom variant="body2" align="center">
+                                {link.linkTo}
+                              </Typography>
+                              <Divider orientation="horizontal" />
+                              {confirmCases(detail.linkConfirmState)}
+                            </Grid>
+                          ))}
                       </Grid>
                     </Grid>
                   </Hidden>

@@ -29,7 +29,7 @@ export interface UrlDataInterface {
   updateDate: Date;
 }
 export interface Merchandise {
-  id?: number;
+  id: number;
   name: string;
   price: number;
   stock: number;

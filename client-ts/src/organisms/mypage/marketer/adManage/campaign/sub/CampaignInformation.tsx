@@ -44,7 +44,7 @@ export default function CampaignInformation({
 
   // const campaignDescription = useEventTargetValue(campaign.campaignDescription);
 
-  const landingUrl = campaign.linkData.links.find((link) => link.primary);
+  const landingUrl = campaign.linkData?.links.find((link) => link.primary);
 
   function renderConfirmState(type: '배너' | '랜딩URL', confirmState: number): React.ReactElement {
     return (

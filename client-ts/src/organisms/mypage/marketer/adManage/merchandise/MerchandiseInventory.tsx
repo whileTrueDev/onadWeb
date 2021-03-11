@@ -55,7 +55,7 @@ export default function MerchandiseInventory({
           {
             field: 'id',
             headerName: '고유아이디',
-            width: 150,
+            width: 120,
           },
           {
             field: 'name',

@@ -34,4 +34,7 @@ export default makeStyles((theme: Theme) => ({
       marginBottom: '8px',
     },
   },
+  loading: {
+    height: 200, paddingLeft: theme.spacing(8), display: 'flex', alignItems: 'center'
+  }
 }));
