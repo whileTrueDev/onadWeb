@@ -68,7 +68,7 @@ function HowToUse({ source, MainUserType, }: HowToUseProps): JSX.Element {
             <Typography variant="subtitle1">
               <a
                 href="/howtouse/onadIntro.pdf"
-                download="온애드서비스소개서"
+                download
                 className={classes.download}
               >
                 소개 자료 다운로드
