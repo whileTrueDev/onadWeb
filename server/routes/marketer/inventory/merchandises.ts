@@ -243,7 +243,7 @@ router.route('/')
     }
     ))
   )
-  .patch()
+  .patch(responseHelper.middleware.unusedMethod)
   .delete(
     responseHelper.middleware.checkSessionExists,
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
