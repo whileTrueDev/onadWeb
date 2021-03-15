@@ -37,9 +37,51 @@ export interface Merchandise {
   createDate?: Date;
   updateDate?: Date;
   mallUploadFlag?: boolean;
+  soldCount?: number;
+  uploadState?: number;
+  itemSiteUrl?: string;
 }
 
 const router = express.Router();
+
+/**
+ * 입력받은 ID에 해당하는 상품 상세 정보를 반환합니다.
+ * @param merchandiseId 상품 고유 ID
+ * @returns 상품 정보 객체 (픽업주소, 옵션 포함)
+ */
+const findOne = async (merchandiseId: string): Promise<Merchandise | null> => {
+  const selectQuery = `
+  SELECT mr.*, mm.itemSiteUrl, mm.soldCount, mm.uploadState
+    FROM merchandiseRegistered AS mr
+    LEFT JOIN merchandiseMallItems AS mm ON mr.id = mm.merchandiseId
+  WHERE mr.id = ?`;
+  const selectQueryArray = [merchandiseId];
+
+  const merchandise = await doQuery(selectQuery, selectQueryArray);
+  if (merchandise.result.length === 0) return null;
+  const targetMerchandise = merchandise.result[0];
+
+  if (targetMerchandise.optionFlag) {
+    const optionSelectQuery = 'SELECT * FROM merchandiseOptions WHERE merchandiseId = ?';
+    const merchandiseOptions = await doQuery(optionSelectQuery, [merchandiseId]);
+    if (merchandiseOptions.result.length === 0) return null;
+    const targetMerchandiseOptions = merchandiseOptions.result;
+    targetMerchandise.options = targetMerchandiseOptions;
+  }
+
+  if (targetMerchandise.pickupFlag) {
+    const pickupSelectQuery = 'SELECT * FROM merchandisePickupAddresses WHERE id = ?';
+    const merchandisePickupAddress = await doQuery(pickupSelectQuery, [targetMerchandise.pickupId]);
+    if (merchandisePickupAddress.result.length === 0) return null;
+    const targetMerchandisePickupAddress = merchandisePickupAddress.result[0];
+    targetMerchandise.pickupAddress = targetMerchandisePickupAddress;
+  }
+
+  const imageListString = targetMerchandise.images.split(',');
+  targetMerchandise.images = imageListString;
+  targetMerchandise.imagesRes = imageListString;
+  return targetMerchandise;
+};
 
 /**
  * 입력한 상품명과 중복되는 상품이 있는 지 체크합니다. 있으면 true를 없으면 false를 반환합니다.
@@ -72,7 +114,7 @@ const getConnectedCampaigns = async <T = any>(merchandiseId: number): Promise<T>
   const query = `SELECT campaignId
   FROM campaign
   WHERE merchandiseId = ? AND deletedState = 0`;
-  const { result } = await doQuery(query, [merchandiseId]);
+  const { result } = await doQuery<T>(query, [merchandiseId]);
   return result;
 };
 
@@ -197,7 +239,7 @@ router.route('/')
     responseHelper.middleware.checkSessionExists,
     responseHelper.middleware.withErrorCatch((async (req, res, next) => {
       const { marketerId } = responseHelper.getSessionData(req);
-      if (!marketerId) throw createHttpError[401];
+      if (!marketerId) throw new createHttpError[401]();
       const [page, offset] = responseHelper.getOptionalParam(['page', 'offset'], 'get', req);
       const searchPage = Number(page * offset);
       const searchOffset = Number(offset);
@@ -214,7 +256,7 @@ router.route('/')
     responseHelper.middleware.checkSessionExists,
     responseHelper.middleware.withErrorCatch((async (req, res, next) => {
       const { marketerId } = responseHelper.getSessionData(req);
-      if (!marketerId) throw createHttpError[401];
+      if (!marketerId) throw new createHttpError[401]();
 
       const [
         name, price, stock, optionFlag, pickupFlag, description, images, descImages
@@ -248,12 +290,34 @@ router.route('/')
     responseHelper.middleware.checkSessionExists,
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
       const { marketerId } = responseHelper.getSessionData(req);
-      if (!marketerId) throw createHttpError[401];
+      if (!marketerId) throw new createHttpError[401]();
       const id = responseHelper.getParam('id', 'delete', req);
+
+      const connectedCampaigns = await getConnectedCampaigns(id);
+      if (connectedCampaigns) return responseHelper.send('connectedCampaign exists', 'delete', res);
+
       const reuslt = await removeMerchandise({ marketerId, id });
-      responseHelper.send(reuslt, 'delete', res);
+      return responseHelper.send(reuslt, 'delete', res);
     })
   );
+
+/**
+ * 개별 상품 상세 정보 라우터
+ */
+router.route('/:id')
+  .get(
+    responseHelper.middleware.checkSessionExists,
+    responseHelper.middleware.withErrorCatch(async (req, res, next) => {
+      const { marketerId } = responseHelper.getSessionData(req);
+      if (!marketerId) throw new createHttpError[401]();
+      const { id } = req.params;
+      if (!id) throw new createHttpError[400]();
+
+      const merchandise = await findOne(id);
+
+      return responseHelper.send(merchandise, 'get', res);
+    })
+  ).all(responseHelper.middleware.unusedMethod);
 
 /**
  * 마케터의 총 랜딩URL 리스트 목록 길이를 반환하는 라우터
@@ -263,13 +327,16 @@ router.route('/length')
     responseHelper.middleware.checkSessionExists,
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
       const { marketerId } = responseHelper.getSessionData(req);
-      if (!marketerId) throw createHttpError[401];
+      if (!marketerId) throw new createHttpError[401]();
       const lengthCount = await getMerchandiseListLength(marketerId);
       responseHelper.send(lengthCount, 'get', res);
     })
   )
   .all(responseHelper.middleware.unusedMethod);
 
+/**
+ * 상품과 연결된 캠페인 여부 체크
+ */
 router.route('/campaigns')
   .get(
     responseHelper.middleware.checkSessionExists,
@@ -283,7 +350,7 @@ router.route('/campaigns')
 /**
  * 상품명 중복 체크
  */
-router.route('dup-check')
+router.route('/dup-check')
   .get(
     responseHelper.middleware.checkSessionExists,
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
