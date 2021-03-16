@@ -10,9 +10,7 @@ export interface HandleCampaignOnOffParam {
 // useUpdateData를 사용할 때, 전달되는 url router의 response data의 형태가 array여야함을 고려한다.
 const handleCampaignOnOff = ({
   onoffState, campaignId, onSuccess, onFail
-}: HandleCampaignOnOffParam) => (event: React.ChangeEvent<HTMLInputElement>): void => {
-  event.preventDefault();
-
+}: HandleCampaignOnOffParam): void => {
   axiosInstance.patch(`${HOST}/marketer/campaign/on-off`, { onoffState, campaignId })
     .then((res) => {
       onSuccess(res.data);
