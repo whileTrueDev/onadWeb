@@ -118,6 +118,11 @@ export default function OrderManageTabContents({
           handleMerchandiseSelectReset();
         }}
         merchandiseOrder={selectedMerchandise}
+        onStatusChange={() => {
+          ordersGet.doGetRequest();
+          orderDetailDialog.handleClose();
+        }}
+        onStatusChangeFail={() => orderDetailDialog.handleClose()}
       />
       )}
     </>

@@ -51,6 +51,35 @@ router.route('/')
         return responseHelper.send(result, 'get', res);
       }
     })
+  )
+  .patch(
+    responseHelper.middleware.checkSessionExists,
+    responseHelper.middleware.withErrorCatch(async (req, res, next) => {
+      const { marketerId } = responseHelper.getSessionData(req);
+      if (!marketerId) throw new createHttpError[401]();
+
+      const [orderId, status] = responseHelper.getParam(['orderId', 'status'], 'patch', req);
+
+      // 해당 order가 요청자의 marketerId와 동일한 지 확인을 위해
+      const selectQuery = `
+      SELECT marketerId FROM merchandiseRegistered
+      JOIN merchandiseOrders ON merchandiseRegistered.id = merchandiseOrders.merchandiseId
+      where merchandiseOrders.id = ?`;
+      const merchandiseMarketerIdQuery = await doQuery(selectQuery, [orderId]);
+      if (!merchandiseMarketerIdQuery.result || merchandiseMarketerIdQuery.result.length === 0) {
+        throw new createHttpError[401]();
+      } else {
+        const marketer = merchandiseMarketerIdQuery.result[0];
+        if (marketer.marketerId === marketerId) {
+          const query = 'UPDATE merchandiseOrders SET status = ? WHERE id = ?';
+          const queryArray = [status, orderId];
+
+          const { result } = await doQuery(query, queryArray);
+
+          responseHelper.send(result.affectedRows, 'patch', res);
+        }
+      }
+    })
   );
 
 export default router;
