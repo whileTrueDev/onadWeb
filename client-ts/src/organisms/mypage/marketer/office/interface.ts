@@ -130,3 +130,12 @@ export interface VbankInterface {
   vbanDate: string;
   vbankAmount: string;
 }
+
+
+export interface MarketerSalesImcome {
+  id: number;
+  marketerId: string;
+  totalIncome: number;
+  receivable: number;
+  createDate: string;
+}
