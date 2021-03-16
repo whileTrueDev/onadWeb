@@ -3,13 +3,12 @@ import moment from 'moment';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import {
   Grid, Paper, Divider, Button,
-  Typography, IconButton,
+  Typography,
   ListItem, List,
   Hidden, CircularProgress
 } from '@material-ui/core';
 
 import Countup from 'react-countup';
-import CloseIcon from '@material-ui/icons/Close';
 import { CampaignInterface } from './interfaces';
 import useDialog from '../../../../utils/hooks/useDialog';
 import history from '../../../../history';
