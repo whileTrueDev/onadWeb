@@ -51,7 +51,13 @@ function HowToUsemarketer({ source }: Props): JSX.Element {
             className={classes.guideButton}
             load
           >
-            <a href="/howtouse/bannerGuide.pdf" download className={classes.guideLink}>배너가이드</a>
+            <a
+              href="https://onad-static-files.s3.ap-northeast-2.amazonaws.com/pdfs/bannerGuide.pdf"
+              download
+              className={classes.guideLink}
+            >
+              배너가이드
+            </a>
           </CustomButtons>
 
         </Grid>
