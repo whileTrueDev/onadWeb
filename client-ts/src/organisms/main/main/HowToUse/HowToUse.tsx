@@ -67,12 +67,11 @@ function HowToUse({ source, MainUserType, }: HowToUseProps): JSX.Element {
           >
             <Typography variant="subtitle1">
               <a
-                href="/howtouse/onadIntro.pdf"
+                href="https://onad-static-files.s3.ap-northeast-2.amazonaws.com/pdfs/onadIntro.pdf"
                 download
                 className={classes.download}
               >
                 소개 자료 다운로드
-
               </a>
               {loading
                   && (
