@@ -4,9 +4,11 @@ import doQuery from '../../../model/doQuery';
 import encrypto from '../../../middlewares/encryption';
 import setTemporaryPassword from '../../../middlewares/auth/setTemporyPassword';
 import profileImageRouter from './profileImage';
+import settlementRouter from './settlement';
 
 const router = express.Router();
 router.use('/profile-image', profileImageRouter);
+router.use('/settlement', settlementRouter);
 
 /**
  * @swagger
@@ -66,14 +68,20 @@ router.route('/')
       const infoQueryArray = [marketerId, key, salt, marketerName, marketerMail,
         marketerPhoneNum];
 
+      // 광고 캐시 최초 row 생성
       const cashQuery = `
               INSERT INTO marketerDebit
               (marketerId, cashAmount)
-              VALUES (?, ?)`;
+              VALUES (?, ?)
+      `;
+
+      // 판매 대금 최초 row 생성
+      const salesIncomeQuery = 'INSERT INTO marketerSalesIncome (marketerId, totalIncome, receivable) VALUES (?, ?, ?)';
 
       Promise.all([
         doQuery(infoQuery, infoQueryArray),
         doQuery(cashQuery, [marketerId, 0]),
+        doQuery(salesIncomeQuery, [marketerId, 0, 0]),
       ])
         .then(() => {
           responseHelper.send({

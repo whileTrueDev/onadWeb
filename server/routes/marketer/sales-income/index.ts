@@ -2,8 +2,11 @@ import express from 'express';
 import createHttpError from 'http-errors';
 import responseHelper from '../../../middlewares/responseHelper';
 import doQuery from '../../../model/doQuery';
+import salesIncomeWithdrawalRouter from './salesIncomeWithdrawal';
 
 const router = express.Router();
+
+router.use('/withdrawal', salesIncomeWithdrawalRouter);
 
 export interface MarketerSalesImcome {
   id: number;

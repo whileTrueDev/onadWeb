@@ -8,7 +8,7 @@ import Snackbar from '../../../atoms/Snackbar/Snackbar';
 import StartGuideCard from '../../../organisms/mypage/creator/shared/StartGuideCard';
 import AlertCard from '../../../organisms/mypage/creator/Dashboard/AlertCard';
 import UserInfoCard, { IncomeCashRes } from '../../../organisms/mypage/creator/Dashboard/UserInfoCard';
-import WithdrawalDialog from '../../../organisms/mypage/creator/Dashboard/WithdrawalDialog';
+import WithdrawalDialog from '../../../organisms/mypage/creator/shared/WithdrawalDialog';
 import ClickAdCard, { ClicksRes, LevelRes } from '../../../organisms/mypage/creator/Dashboard/ClickAdCard';
 import IncomeChart, {
   IncomeChartData, IncomeChartParams

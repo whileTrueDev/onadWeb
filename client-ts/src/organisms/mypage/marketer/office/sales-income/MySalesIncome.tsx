@@ -1,12 +1,17 @@
 import { Link } from 'react-router-dom';
 import {
-  Button, makeStyles, Paper, Typography
+  Button, Chip, makeStyles, Paper, Typography
 } from '@material-ui/core';
 import moment from 'moment';
 import React from 'react';
 import CircularProgress from '../../../../../atoms/Progress/CircularProgress';
 import { UseGetRequestObject } from '../../../../../utils/hooks/useGetRequest';
-import { MarketerSalesImcome } from '../interface';
+
+import { MarketerSalesImcome, MarketerSettlement } from '../interface';
+import { useDialog } from '../../../../../utils/hooks';
+import SettlementRegDialog from '../../shared/settlement/SettlementRegDialog';
+import renderMarketerSettlementState, { 광고주_정산등록상태_승인 } from '../../../../../utils/render_funcs/renderMarketerSettlementState';
+import SettlementViewer from '../../shared/settlement/SettlementViewer';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -17,15 +22,21 @@ const useStyles = makeStyles((theme) => ({
     }
   },
   button: { margin: theme.spacing(0, 1, 0, 0) },
+  bottomSpace: { marginBottom: theme.spacing(1) },
 }));
 
 export interface MySalesIncomeProps {
   salesIncomeData: UseGetRequestObject<MarketerSalesImcome>;
+  settlementData: UseGetRequestObject<MarketerSettlement>;
 }
 export default function MySalesIncome({
-  salesIncomeData
+  salesIncomeData,
+  settlementData,
 }: MySalesIncomeProps): JSX.Element {
   const classes = useStyles();
+
+  const settlementDialog = useDialog();
+
   return (
     <Paper className={classes.root}>
 
@@ -63,6 +74,45 @@ export default function MySalesIncome({
           )}
         </div>
       )}
+      {!settlementData.loading && (
+      <div className={classes.bottomSpace}>
+        <Typography>
+          {'정산등록상태: '}
+          {!settlementData.data
+            ? (<Chip label="미등록" size="small" />)
+            : (
+              <Chip
+                label={renderMarketerSettlementState(settlementData.data.state)}
+                size="small"
+                color={settlementData.data.state === 광고주_정산등록상태_승인 ? 'primary' : 'default'}
+              />
+            )}
+        </Typography>
+      </div>
+      )}
+
+      <div>
+        <Button
+          className={classes.button}
+          size="small"
+          variant="outlined"
+          color="primary"
+          onClick={settlementDialog.handleOpen}
+        >
+          {settlementData.data ? ('계좌 및 정산 등록') : ('계좌 및 정산정보 수정')}
+        </Button>
+      </div>
+
+      {settlementData.data && (
+        <SettlementViewer settlement={settlementData.data} />
+      )}
+
+      <SettlementRegDialog
+        open={settlementDialog.open}
+        onClose={settlementDialog.handleClose}
+        settlementData={settlementData}
+      />
+
     </Paper>
   );
 }

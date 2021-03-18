@@ -5,7 +5,7 @@ import {
 } from '@material-ui/core';
 import { Done, Clear } from '@material-ui/icons';
 // components
-import sources from '../source/withdrawalSources';
+import sources from './withdrawalSources';
 import Dialog from '../../../../../atoms/Dialog/Dialog';
 import Button from '../../../../../atoms/CustomButtons/Button';
 import DangerTypo from '../../../../../atoms/Typography/Danger';

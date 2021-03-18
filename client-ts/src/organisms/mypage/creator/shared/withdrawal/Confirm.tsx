@@ -2,7 +2,7 @@ import React from 'react';
 import { Grid } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
-import sources from '../source/withdrawalSources';
+import sources from './withdrawalSources';
 import StyledSelectText from '../../../../../atoms/StyledSelectText';
 import { WithdrawalDialogState } from '../WithdrawalDialog.reducer';
 import useWithdrawalConfirmStyles from './Confirm.style';

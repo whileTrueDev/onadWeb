@@ -7,10 +7,10 @@ import {
 // customized component
 import Button from '../../../../atoms/CustomButtons/Button';
 import Dialog from '../../../../atoms/Dialog/Dialog';
-import WithdrawalAgreement from './Withdrawal/Agreement';
-import WithdrawalAmount from './Withdrawal/Amount';
-import WithdrawalConfirm from './Withdrawal/Confirm';
-import WithdrawalComplete from './Withdrawal/Complete';
+import WithdrawalAgreement from './withdrawal/Agreement';
+import WithdrawalAmount from './withdrawal/Amount';
+import WithdrawalConfirm from './withdrawal/Confirm';
+import WithdrawalComplete from './withdrawal/Complete';
 // reducer
 import withdrawalDialogReducer, {
   WithdrawalDialogState
@@ -18,7 +18,7 @@ import withdrawalDialogReducer, {
 // utils
 import usePostRequest from '../../../../utils/hooks/usePostRequest';
 import history from '../../../../history';
-import withdrawalSources from './source/withdrawalSources';
+import withdrawalSources from './withdrawal/withdrawalSources';
 
 const useWithdrawalDialogStyles = makeStyles((theme) => ({
   title: { marginTop: theme.spacing(1) },

@@ -13,7 +13,7 @@ import SummaryCard from '../../../organisms/mypage/creator/IncomeManage/SummaryC
 import { ProfileDataType } from '../../../organisms/mypage/creator/Mypage/ProfileData.type';
 import CenterLoading from '../../../atoms/Loading/CenterLoading';
 import WithdrawalRequestCard from '../../../organisms/mypage/creator/IncomeManage/WithdrawalRequestCard';
-import WithdrawDialog from '../../../organisms/mypage/creator/Dashboard/WithdrawalDialog';
+import WithdrawDialog from '../../../organisms/mypage/creator/shared/WithdrawalDialog';
 import useMypageScrollToTop from '../../../utils/hooks/useMypageScrollToTop';
 
 

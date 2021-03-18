@@ -31,6 +31,8 @@ export default function MyOffice(): JSX.Element {
   const usageData = useGetRequest<null, UsageInterface | null>('/marketer/cash/history/usage');
   // CPS 판매 광고 대금
   const salesIncomeData = useGetRequest('/marketer/sales-income');
+  // 판매대금 출금을 위한 정산 등록
+  const settlementData = useGetRequest('/marketer/settlement');
 
   useMypageScrollToTop();
   return (
@@ -70,6 +72,7 @@ export default function MyOffice(): JSX.Element {
             <GridItem xs={12} lg={6}>
               <MySalesIncome
                 salesIncomeData={salesIncomeData}
+                settlementData={settlementData}
               />
             </GridItem>
             {/* 판매 대금 수익 내역 */}
