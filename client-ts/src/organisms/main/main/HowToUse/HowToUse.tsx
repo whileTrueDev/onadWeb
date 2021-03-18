@@ -63,16 +63,13 @@ function HowToUse({ source, MainUserType, }: HowToUseProps): JSX.Element {
           <div className={MainUserType ? classes.bottomLine : classes.bottomLine2} />
           <Button
             className={classes.button}
-            onClick={handleClick}
+            onClick={() => {
+              handleClick();
+              window.open('https://onad-static-files.s3.ap-northeast-2.amazonaws.com/pdfs/onadIntro.pdf', '_blank');
+            }}
           >
             <Typography variant="subtitle1">
-              <a
-                href="https://onad-static-files.s3.ap-northeast-2.amazonaws.com/pdfs/onadIntro.pdf"
-                download
-                className={classes.download}
-              >
-                소개 자료 다운로드
-              </a>
+              소개 자료 다운로드
               {loading
                   && (
                   <CircularProgress
