@@ -1,5 +1,4 @@
 import express from 'express';
-import slack from '../../../lib/slack/messageWithJson';
 import responseHelper from '../../../middlewares/responseHelper';
 import doQuery from '../../../model/doQuery';
 import dataProcessing from '../../../lib/dataProcessing';
@@ -10,7 +9,6 @@ import marketerActionLogging from '../../../middlewares/marketerActionLog';
 const router = express.Router();
 router.use('/analysis/v1', analysisRouter);
 router.use(['/analysis', '/analysis/v2'], analysisV2Router);
-
 interface CampaignData {
   campaignId: string;
   campaignName: string;
@@ -66,19 +64,22 @@ router.route('/list')
       // *******************************************************************
       // 캠페인 목록 불러오기
       const query = `
-        SELECT
-          campaignId AS id, campaignId, campaignName, optionType, priorityType, 
-          campaign.regiDate as regiDate, onOff, br.confirmState, 
-          br.bannerId, bannerSrc, br.regiDate AS bannerRegiDate,
-          lr.linkId, lr.links as links, lr.confirmState as linkConfirmState, dailyLimit,
-          campaignDescription, startDate, finDate, selectedTime, targetList, merchandiseId,
-          mr.name AS merchandiseName
-        FROM campaign
-          JOIN bannerRegistered AS br ON br.bannerId = campaign.bannerId
-          LEFT JOIN linkRegistered AS lr ON lr.linkId = connectedLinkId
-          LEFT JOIN merchandiseRegistered AS mr ON mr.id = merchandiseId
-        WHERE campaign.marketerId = ? AND deletedState = 0
-        ORDER BY campaign.onOff DESC, campaign.regiDate DESC
+      SELECT
+        campaignId AS id, campaignId, campaignName, optionType, priorityType, 
+        campaign.regiDate as regiDate, onOff, br.confirmState, 
+        br.bannerId, br.bannerSrc, br.regiDate AS bannerRegiDate,
+        lr.linkId, lr.links as links, lr.confirmState as linkConfirmState, dailyLimit,
+        campaignDescription, startDate, finDate, selectedTime, targetList, campaign.merchandiseId,
+        mr.name AS merchandiseName, mr.stock AS merchandiseStock,
+        mm.soldCount AS merchandiseSoldCount, mm.itemSiteUrl AS merchandiseItemSiteUrl,
+        mm.uploadState AS merchandiseUploadState
+      FROM campaign
+        JOIN bannerRegistered AS br ON br.bannerId = campaign.bannerId
+        LEFT JOIN linkRegistered AS lr ON lr.linkId = connectedLinkId
+        LEFT JOIN merchandiseRegistered AS mr ON mr.id = campaign.merchandiseId
+        LEFT JOIN merchandiseMallItems AS mm ON campaign.merchandiseId = mm.merchandiseId
+      WHERE campaign.marketerId = ? AND deletedState = 0
+      ORDER BY campaign.onOff DESC, campaign.regiDate DESC
         LIMIT ?, ?
       `;
       const { result } = await doQuery(query, [marketerId, searchPage, searchOffset]);
@@ -163,7 +164,6 @@ router.route('/active')
 
 // 캠페인 생성시에 캠페인 중복제거를 위한 name list추출.
 // 테스트 완료
-
 router.route('/names')
   .get(
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {

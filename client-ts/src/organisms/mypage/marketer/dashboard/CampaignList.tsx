@@ -3,22 +3,21 @@ import moment from 'moment';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import {
   Grid, Paper, Divider, Button,
-  Typography, IconButton,
-  ListItem, List, FormControlLabel,
-  Snackbar, Hidden, Switch, CircularProgress
+  Typography,
+  ListItem, List,
+  Hidden, CircularProgress
 } from '@material-ui/core';
 
 import Countup from 'react-countup';
-import CloseIcon from '@material-ui/icons/Close';
 import { CampaignInterface } from './interfaces';
 import useDialog from '../../../../utils/hooks/useDialog';
 import history from '../../../../history';
-import axios from '../../../../utils/axios';
-import HOST from '../../../../config';
 import renderOptionType from '../../../../utils/render_funcs/renderOptionType';
 import renderPriorityType from '../../../../utils/render_funcs/renderPriorityType';
 import OnadBanner from '../../../../atoms/Banner/OnadBanner';
 import { useGetRequest } from '../../../../utils/hooks';
+import CampaignOnOffSwitch from '../../../../atoms/Switch/CampaignOnOffSwitch';
+import Snackbar from '../../../../atoms/Snackbar/Snackbar';
 
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -63,33 +62,26 @@ export default function CampaignList(): JSX.Element {
 
   const snack = useDialog();
 
-  // useUpdateData를 사용할 때, 전달되는 url router의 response data의 형태가 array여야함을 고려한다.
-  const handleUpdateState = (
-    { onoffState, campaignId }: { onoffState: boolean; campaignId: string }
-  ) => (event: React.ChangeEvent<HTMLInputElement>): void => {
-    event.preventDefault();
+  // on-off 상태 변경 성공시 핸들러
+  const onOnOffSuccess = (camp: CampaignInterface) => (data: any) => {
+    if (data[0]) {
+      if (campaignData.data) {
+        const targetIndex = campaignData.data.findIndex((x) => x.campaignId === camp.campaignId);
+        if (targetIndex > -1) {
+          const tmpList = campaignData.data;
+          const tmp = campaignData.data[targetIndex];
+          tmp.onOff = !tmp.onOff ? 1 : 0;
 
-    axios.patch(`${HOST}/marketer/campaign/on-off`, { onoffState, campaignId })
-      .then((res) => {
-        if (res.data[0]) {
-          if (campaignData.data) {
-            const target = campaignData.data.findIndex((x) => x.campaignId === campaignId);
-            if (target > -1) {
-              const tmpList = campaignData.data;
-              const tmp = campaignData.data[target];
-              tmp.onOff = !tmp.onOff ? 1 : 0;
-
-              tmpList[target] = tmp;
-              campaignData.setData(tmpList);
-            }
-          }
-          snack.handleOpen();
-        } else {
-          alert(res.data[1]);
+          tmpList[targetIndex] = tmp;
+          campaignData.setData(tmpList);
         }
-      });
-    // doPatchRequest({ onoffState, campaignId });
+      }
+      snack.handleOpen();
+    } else {
+      alert(data[1]);
+    }
   };
+
 
   const confirmCases = (state: number) => {
     switch (state) {
@@ -139,22 +131,11 @@ export default function CampaignList(): JSX.Element {
                   <Grid item className={classes.contents}>
                     <Grid container direction="row" className={classes.contents} spacing={3}>
                       <Grid item>
-                        <FormControlLabel
-                          control={(
-                            <Switch
-                              id="onoff-switch"
-                              color="primary"
-                              checked={Boolean(detail.onOff)}
-                              onChange={handleUpdateState({
-                                onoffState: !detail.onOff,
-                                campaignId: detail.campaignId
-                              })}
-                            />
-                          )}
-                          label={detail.onOff
-                            ? (<Typography color="primary">활성화</Typography>)
-                            : (<Typography>비활성화</Typography>)}
-                          labelPlacement="bottom"
+                        <CampaignOnOffSwitch
+                          campaign={detail}
+                          onSuccess={onOnOffSuccess(detail)}
+                          onFail={(_) => alert('캠페인 On/Off 도중 오류가 발생했습니다. 문제가 지속될 경우 support@onad.io로 문의바랍니다.')}
+                          inventoryLoading={campaignData.loading}
                         />
                       </Grid>
                       <Grid item>
@@ -272,7 +253,7 @@ export default function CampaignList(): JSX.Element {
               variant="contained"
               color="primary"
               onClick={() => {
-                history.push('/mypage/marketer/inventory');
+                history.push('/mypage/marketer/inventory/campaigns');
               }}
             >
               더보기
@@ -298,30 +279,10 @@ export default function CampaignList(): JSX.Element {
 
 
       <Snackbar
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'left',
-        }}
         open={snack.open}
-        autoHideDuration={400}
-        onClose={(): void => {
-          snack.handleClose();
-        }}
-        ContentProps={{
-          'aria-describedby': 'message-id',
-        }}
-        // variant="success"
-        message={<Typography id="message-id">성공적으로 반영되었습니다.</Typography>}
-        action={[
-          <IconButton
-            key="close"
-            aria-label="close"
-            color="inherit"
-            onClick={snack.handleClose}
-          >
-            <CloseIcon />
-          </IconButton>,
-        ]}
+        onClose={snack.handleClose}
+        color="success"
+        message="캠페인 On/Off 상태 변경 완료"
       />
 
     </Paper>

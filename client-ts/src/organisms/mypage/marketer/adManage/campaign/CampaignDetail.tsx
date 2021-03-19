@@ -1,6 +1,4 @@
 import {
-  Button,
-  Divider,
   Hidden, makeStyles, Paper
 } from '@material-ui/core';
 import React from 'react';
@@ -22,13 +20,11 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.up('lg')]: {
       margin: theme.spacing(0, 0, 0, 2),
     },
-    padding: theme.spacing(4),
-    [theme.breakpoints.down('sm')]: {
-      padding: theme.spacing(2),
-    }
   },
-  openAnalysisButton: {
-    marginTop: theme.spacing(2)
+  contents: {
+    padding: theme.spacing(4),
+    [theme.breakpoints.down('sm')]: { padding: theme.spacing(2) },
+    [theme.breakpoints.down('xs')]: { padding: theme.spacing(1) },
   }
 }));
 
@@ -59,26 +55,17 @@ export default function CampaignDetail({
         </Hidden>
 
         {/* 캠페인 상세 정보 */}
-        <CampaignInformation campaign={selectedCampaign} />
-
-        <Divider />
-        {selectedCampaign.confirmState === CONFIRM_STATE_CONFIRMED && !analysisToggle.toggle && (
-        <div className={classes.openAnalysisButton}>
-          <Button
-            onClick={analysisToggle.handleToggle}
-            fullWidth
-            size="large"
-            variant="contained"
-            color="default"
-          >
-            분석정보보기
-          </Button>
-        </div>
-        )}
+        <CampaignInformation
+          campaign={selectedCampaign}
+          analysisToggle={analysisToggle.toggle}
+          openAnalysis={analysisToggle.handleToggle}
+        />
 
         {/* 캠페인 분석 정보 */}
         {selectedCampaign.confirmState === CONFIRM_STATE_CONFIRMED && analysisToggle.toggle && (
-        <CampaignAnalysis campaignId={selectedCampaign.campaignId} />
+          <div className={classes.contents}>
+            <CampaignAnalysis campaignId={selectedCampaign.campaignId} />
+          </div>
         )}
 
       </Paper>

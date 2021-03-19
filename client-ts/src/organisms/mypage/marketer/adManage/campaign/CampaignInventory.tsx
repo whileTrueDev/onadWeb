@@ -4,7 +4,6 @@ import {
   Badge,
   IconButton,
   makeStyles,
-  Switch,
   Tooltip,
   Typography
 } from '@material-ui/core';
@@ -15,7 +14,6 @@ import { UsePaginatedGetRequestObject } from '../../../../../utils/hooks/usePagi
 import { useAnchorEl, useDialog } from '../../../../../utils/hooks';
 import renderPriorityType from '../../../../../utils/render_funcs/renderPriorityType';
 import renderOptionType from '../../../../../utils/render_funcs/renderOptionType';
-import handleCampaignOnOff from '../../../../../utils/func/handleCampaignOnOff';
 import Snackbar from '../../../../../atoms/Snackbar/Snackbar';
 import BannerInfoPopover from './BannerInfoPopover';
 import CampaignInventoryMenuPopover from './CampaignInventoryMenuPopover';
@@ -24,6 +22,7 @@ import CampaignUpdateDialog from '../../dashboard/CampaignUpdateDialog';
 import OnadBanner from '../../../../../atoms/Banner/OnadBanner';
 import { UrlLink } from '../interface';
 import { CONFIRM_STATE_CONFIRMED, CONFIRM_STATE_REJECTED } from '../../../../../utils/render_funcs/renderUrlConfirmState';
+import CampaignOnOffSwitch from '../../../../../atoms/Switch/CampaignOnOffSwitch';
 
 const useStyles = makeStyles(() => ({
   link: {
@@ -123,19 +122,13 @@ export default function CampaignInventory({
             field: 'onOff',
             headerName: 'On/Off',
             renderCell: (data): React.ReactElement => (
-              <Switch
-                size="small"
-                id="onoff-switch"
-                color="primary"
-                checked={Boolean(data.row.onOff)}
-                onChange={handleCampaignOnOff({
-                  onoffState: !data.row.onOff,
-                  campaignId: data.row.campaignId,
-                  onSuccess: onOnOffSuccess,
-                  onFail: onOnOffFail,
-                })}
+              <CampaignOnOffSwitch
+                campaign={data.row as CampaignInterface}
+                onSuccess={onOnOffSuccess}
+                onFail={onOnOffFail}
+                inventoryLoading={campaignData.loading}
               />
-            ),
+            )
           },
           {
             field: 'campaignName',

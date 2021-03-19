@@ -29,7 +29,7 @@ const FETCH_PAGE_OFFSET = 5;
 export default function InventoryManage(): JSX.Element {
   const classes = useStyles();
 
-  const [selectedTabIndex, setSelectedTabIndex] = React.useState<string>('2');
+  const [selectedTabIndex, setSelectedTabIndex] = React.useState<string>('0');
   const handleTabChange = (event: React.ChangeEvent<{}>, newValue: string): void => {
     setSelectedTabIndex(newValue);
   };

@@ -118,7 +118,7 @@ function CampaignFormPaper({
       title: '홍보 문구 입력',
       component: <InputDescription descriptionInputRef={descriptionInputRef} />
     },
-    {
+    (optionType === 'option1') && {
       title: '일예산 설정',
       component: <SelectBudget budgetInputRef={budgetInputRef} />
     },

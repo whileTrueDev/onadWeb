@@ -41,6 +41,11 @@ export interface Merchandise {
   createDate?: Date;
   updateDate?: Date;
   mallUploadFlag?: boolean;
+  imagesRes?: string[];
+  options?: MerchandiseOption[];
+  soldCount?: number;
+  uploadState?: number;
+  itemSiteUrl?: string;
 }
 
 export interface MerchandisePickupAddress {
@@ -65,6 +70,7 @@ export interface MerchandiseImage {
   imageName: string; // 이미지명
 }
 export interface MerchandiseOption {
+  id?: number;
   type: string; // 옵션 타입
   name: string; // 옵션 값
   additionalPrice: string; // 옵션 추가 금액
@@ -80,4 +86,25 @@ export interface CreateMerchandiseDto {
   pickupFlag: boolean;
   pickupAddress?: OnadAddressData;
   options?: MerchandiseOption[];
+}
+
+export interface MerchandiseOrder {
+  id: string;
+  merchandiseId: number;
+  campaignId: string;
+  optionId: number;
+  status: number;
+  orderPrice: number;
+  ordererName: string;
+  recipientName: string;
+  quantity: number;
+  createDate: string;
+  name: string;
+  price: number;
+  stock: number;
+  optionFlag: boolean;
+  optionType?: string;
+  optionValue?: string;
+  additionalPrice?: number;
+  merchandiseSoldCount?: number;
 }

@@ -36,8 +36,12 @@ export interface CampaignInterface {
   selectedTime: number[];
   targetList: string[];
   targetCreators?: CampaignTargetCreator[];
-  merchandiseId: number;
-  merchandiseName: string;
+  merchandiseId?: number;
+  merchandiseName?: string;
+  merchandiseStock?: number;
+  merchandiseSoldCount?: number;
+  merchandiseItemSiteUrl?: string;
+  merchandiseUploadState?: number;
 }
 
 export interface OnOffInterface {

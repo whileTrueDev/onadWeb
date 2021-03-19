@@ -19,6 +19,7 @@ import AddressInput, { OnadAddressData } from './sub/MerchandiseAddressInput';
 import MerchandiseImageUpload from './sub/MerchandiseImageUpload';
 import MerchandiseOptionInput from './sub/MerchandiseOptionInput';
 import MerchandiseUploadDialogLoading from './sub/MerchandiseUploadDialogLoading';
+import { getS3MerchandiseImagePath } from '../../../../utils/aws/getS3Path';
 
 const FLAG_ON = 'Yes';
 const FLAG_OFF = 'No';
@@ -204,7 +205,7 @@ export default function MerchandiseUploadDialog({
           console.error(err);
         };
         const uploadSuccessCallback = () => {
-          const descImagesKey = `merchandises/${marketerId}/${uploadedMerchandiseId}/desc-images`;
+          const descImagesKey = getS3MerchandiseImagePath(marketerId, uploadedMerchandiseId);
           // 상품 설명 이미지 업로드
           descImages.uploadToS3(
             descImagesKey,

@@ -5,7 +5,7 @@ import campaignRouter from './campaign';
 import cashRouter from './cash';
 import adRouter from './ad';
 import geoRouter from './geo';
-
+import ordersRouter from './orders';
 
 const router = express.Router();
 
@@ -16,6 +16,6 @@ router.use('/ad', adRouter);
 router.use('/campaign', campaignRouter);
 router.use('/cash', cashRouter);
 router.use('/geo', geoRouter);
-
+router.use('/orders', ordersRouter);
 
 export default router;
