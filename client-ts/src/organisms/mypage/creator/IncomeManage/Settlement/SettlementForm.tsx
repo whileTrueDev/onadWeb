@@ -8,16 +8,16 @@ import {
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import NumberFormat, { NumberFormatValues } from 'react-number-format';
 import Button from '../../../../../atoms/CustomButtons/Button';
-import banks from './banks';
 import settlementFormReducer from './Settlement.reducer';
 import usePatchRequest from '../../../../../utils/hooks/usePatchRequest';
 import StyledItemText from '../../../../../atoms/StyledItemText';
 import useDialog from '../../../../../utils/hooks/useDialog';
 import SettlementAgreement from './SettlementAgreement';
-import ImageUploadIdentity from './ImageUploadIdentity';
-import ImageUploadAccount from './ImageUploadAccount';
+import ImageUploadAccount from '../../../shared/settlement/ImageUploadAccount';
 import BussinessImgUpload from './BussinessImgUpload';
 import CompleteMessage from './CompleteMessage';
+import banks from '../../../../../constants/banks';
+import ImageUploadIdentity from '../../../shared/settlement/ImageUploadIdentity';
 
 const useStyles = makeStyles((theme: Theme) => ({
   textField: {

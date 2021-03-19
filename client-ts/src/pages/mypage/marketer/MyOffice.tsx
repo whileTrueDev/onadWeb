@@ -15,6 +15,7 @@ import CashUsageList, { UsageInterface } from '../../../organisms/mypage/markete
 import { AdInterface } from '../../../organisms/mypage/marketer/dashboard/interfaces';
 import CircularProgress from '../../../atoms/Progress/CircularProgress';
 import useMypageScrollToTop from '../../../utils/hooks/useMypageScrollToTop';
+import MySalesIncome from '../../../organisms/mypage/marketer/office/sales-income/MySalesIncome';
 
 const useStyles = makeStyles((theme) => ({
   container: { margin: '0 auto', maxWidth: 1430 },
@@ -28,6 +29,10 @@ export default function MyOffice(): JSX.Element {
   const cashData = useGetRequest<null, CashInterface | null>('/marketer/cash');
   const adData = useGetRequest<null, AdInterface | null>('/marketer/ad');
   const usageData = useGetRequest<null, UsageInterface | null>('/marketer/cash/history/usage');
+  // CPS 판매 광고 대금
+  const salesIncomeData = useGetRequest('/marketer/sales-income');
+  // 판매대금 출금을 위한 정산 등록
+  const settlementData = useGetRequest('/marketer/settlement');
 
   useMypageScrollToTop();
   return (
@@ -53,10 +58,27 @@ export default function MyOffice(): JSX.Element {
                 adData={adData}
               />
             </GridItem>
-            {/* 충전 내역 */}
+            {/* 캐시 사용 내역 */}
             <GridItem xs={12} lg={6}>
               <CashUsageList usageData={usageData} />
             </GridItem>
+          </GridContainer>
+
+          <GridContainer>
+            <GridItem xs={12}>
+              <Typography className={classes.title} variant="h6">판매 대금 관리</Typography>
+            </GridItem>
+            {/* 판매 대금 정보 */}
+            <GridItem xs={12} lg={6}>
+              <MySalesIncome
+                salesIncomeData={salesIncomeData}
+                settlementData={settlementData}
+              />
+            </GridItem>
+            {/* 판매 대금 수익 내역 */}
+            {/* <GridItem xs={12} lg={6}>
+              <CashUsageList usageData={usageData} />
+            </GridItem> */}
           </GridContainer>
 
           <GridContainer>
