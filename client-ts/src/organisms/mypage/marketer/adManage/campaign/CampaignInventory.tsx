@@ -157,6 +157,14 @@ export default function CampaignInventory({
             )
           },
           {
+            field: 'optionType',
+            headerName: '타입',
+            width: 160,
+            renderCell: (data): React.ReactElement => (
+              <Typography noWrap variant="body2">{renderOptionType(data.row.optionType)}</Typography>
+            )
+          },
+          {
             headerName: '배너',
             field: 'bannerSrc',
             sortable: false,
@@ -184,33 +192,45 @@ export default function CampaignInventory({
             sortable: false,
             filterable: false,
             width: 150,
-            renderCell: (data): React.ReactElement => (
-              <Tooltip title={data.row.linkId}>
-                <Typography
-                  onClick={(): void => {
-                    const targetUrl = data.row.linkData.links.find(
-                      (link: UrlLink) => !!link.primary
-                    );
-                    window.open(targetUrl.linkTo, '_blank');
-                  }}
-                  className={classes.link}
-                  color={data.row.linkConfirmState === CONFIRM_STATE_REJECTED ? 'error' : 'primary'}
-                  variant="body2"
-                  noWrap
-                >
-                  <OpenInNew fontSize="small" style={{ verticalAlign: 'middle' }} />
-                  {data.row.linkId}
-                </Typography>
-              </Tooltip>
-            )
+            renderCell: (data): React.ReactElement => {
+              if (!data.row.linkId) return <Typography variant="body2">온애드몰</Typography>;
+              return (
+                <Tooltip title={data.row.linkId}>
+                  <Typography
+                    onClick={(): void => {
+                      const targetUrl = data.row.linkData.links.find(
+                        (link: UrlLink) => !!link.primary
+                      );
+                      window.open(targetUrl.linkTo, '_blank');
+                    }}
+                    className={classes.link}
+                    color={data.row.linkConfirmState === CONFIRM_STATE_REJECTED ? 'error' : 'primary'}
+                    variant="body2"
+                    noWrap
+                  >
+                    <OpenInNew fontSize="small" style={{ verticalAlign: 'middle' }} />
+                    {data.row.linkId}
+                  </Typography>
+                </Tooltip>
+              );
+            }
           },
           {
-            field: 'optionType',
-            headerName: '타입',
-            width: 150,
-            renderCell: (data): React.ReactElement => (
-              <Typography noWrap variant="body2">{renderOptionType(data.row.optionType)}</Typography>
-            )
+            field: 'merchandiseId',
+            headerName: '상품',
+            width: 120,
+            filterable: false,
+            sortable: false,
+            renderCell: (data): React.ReactElement => {
+              if (!data.row.merchandiseId) return <Typography variant="body2">없음</Typography>;
+              return (
+                <Tooltip title={data.row.merchandiseName}>
+                  <Typography variant="body2" noWrap>
+                    {data.row.merchandiseName}
+                  </Typography>
+                </Tooltip>
+              );
+            }
           },
           {
             field: 'priorityType',

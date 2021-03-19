@@ -15,13 +15,13 @@ import { UsePaginatedGetRequestObject } from '../../../../../utils/hooks/usePagi
 import renderUrlConfirmState, { CONFIRM_STATE_REJECTED } from '../../../../../utils/render_funcs/renderUrlConfirmState';
 import Snackbar from '../../../../../atoms/Snackbar/Snackbar';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   clickableText: {
     cursor: 'pointer', alignItems: 'center'
   },
   datagrid: { height: 400, width: '100%' },
 }));
-interface UrlTableProps {
+export interface UrlTableProps {
   urlData: UsePaginatedGetRequestObject<UrlDataInterface>;
   pageOffset: number;
   totalPageLength: number;

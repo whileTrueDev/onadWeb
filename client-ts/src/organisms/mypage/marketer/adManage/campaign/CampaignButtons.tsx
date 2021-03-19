@@ -14,7 +14,7 @@ export default function CampaignButtons(): JSX.Element {
         variant="outlined"
         color="primary"
         component={Link}
-        to="/mypage/marketer/campaigncreate?to=inventory"
+        to="/mypage/marketer/campaigncreate?to=inventory/campaigns"
       >
         + 캠페인 생성
       </Button>

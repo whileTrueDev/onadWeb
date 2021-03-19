@@ -44,7 +44,7 @@ export default function CampaignInformation({
 
   // const campaignDescription = useEventTargetValue(campaign.campaignDescription);
 
-  const landingUrl = campaign.linkData.links.find((link) => link.primary);
+  const landingUrl = campaign.linkData?.links.find((link) => link.primary);
 
   function renderConfirmState(type: '배너' | '랜딩URL', confirmState: number): React.ReactElement {
     return (
@@ -89,7 +89,11 @@ export default function CampaignInformation({
       <article className={classes.article}>
         <Typography className={classes.bold}>현재 캠페인 상태</Typography>
         {renderConfirmState('배너', campaign.confirmState)}
-        {renderConfirmState('랜딩URL', campaign.linkConfirmState)}
+        {campaign.linkId && campaign.linkConfirmState && (
+          <span>
+            {renderConfirmState('랜딩URL', campaign.linkConfirmState)}
+          </span>
+        )}
       </article>
 
       {landingUrl && (

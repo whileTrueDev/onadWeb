@@ -98,9 +98,12 @@ const CampaignCreate = (): JSX.Element => {
       alert('캠페인의 배너가 선택되지 않았습니다. 송출할 배너를 선택해 주세요.');
       return;
     }
-    if (!campaignCreateState.selectedLandingUrl) {
-      alert('캠페인의 랜딩 페이지 URL이 선택되지 않았습니다.');
+    if (campaignCreateState.selectedOption === 'option1' && !campaignCreateState.selectedLandingUrl) {
+      alert('캠페인의 랜딩 페이지 URL이 선택되지 않았습니다. URL을 선택해 주세요.');
       return;
+    }
+    if (campaignCreateState.selectedOption === 'option3' && !campaignCreateState.selectedMerchandiseId) {
+      alert('캠페인의 판매 상품이 선택되지 않았습니다. 상품을 선택해 주세요.');
     }
     if (campaignCreateState.campaignTerm.finDate && (
       campaignCreateState.campaignTerm.finDate < campaignCreateState.campaignTerm.startDate)
@@ -139,6 +142,7 @@ const CampaignCreate = (): JSX.Element => {
     // 필수 state 값 설정
     campaignCreateDTO.bannerId = campaignCreateState.selectedBannerId;
     campaignCreateDTO.connectedLinkId = campaignCreateState.selectedLandingUrl;
+    campaignCreateDTO.merchandiseId = campaignCreateState.selectedMerchandiseId;
     // ***********************************************************
     // optional state 값 설정
     if (campaignCreateState.selectedPriorityType === 'type0'

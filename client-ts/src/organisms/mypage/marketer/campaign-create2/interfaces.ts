@@ -71,6 +71,9 @@ export interface AdMaterial {
    billingType: string;
 }
 export interface OptionInterface {
-  id: string; primaryText: string; secondaryText: string;
+  id: string;
+  primaryText: string;
+  secondaryText: string;
   materials?: AdMaterial[];
+  deprecated?: boolean;
 }

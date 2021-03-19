@@ -61,12 +61,14 @@ export default function BannerInfoPopover({
           <Typography variant="body2">
             {`배너 이름: ${selectedCampaign.bannerId}`}
           </Typography>
+          {selectedCampaign.linkId && selectedCampaign.linkConfirmState && (
           <Typography variant="body2">
             {'심의 상태: '}
             <Typography variant="body2" component="span" color={selectedCampaign.linkConfirmState === CONFIRM_STATE_REJECTED ? 'error' : 'textPrimary'}>
               {renderBannerConfirmState(selectedCampaign.linkConfirmState)}
             </Typography>
           </Typography>
+          )}
           <Typography variant="body2">
             {`생성 날짜: ${moment(selectedCampaign.bannerRegiDate).format('YYYY/MM/DD HH:mm:ss')}`}
           </Typography>

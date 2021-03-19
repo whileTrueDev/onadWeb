@@ -19,15 +19,15 @@ export interface CampaignInterface {
   bannerId: string;
   bannerSrc: string;
   bannerRegiDate: string;
-  linkId: string;
-  linkData: {
+  linkId?: string;
+  linkData?: {
     links: {
       primary: boolean;
       linkName: string;
       linkTo: string;
     }[];
   };
-  linkConfirmState: number;
+  linkConfirmState?: number;
   dailyLimit: number;
   dailysum: number;
   campaignDescription: string;
@@ -36,6 +36,8 @@ export interface CampaignInterface {
   selectedTime: number[];
   targetList: string[];
   targetCreators?: CampaignTargetCreator[];
+  merchandiseId: number;
+  merchandiseName: string;
 }
 
 export interface OnOffInterface {
