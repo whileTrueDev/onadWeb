@@ -125,6 +125,21 @@ const findAllbyMarketer = async (marketerId: string): Promise<Merchandise[]> => 
 };
 
 /**
+ * 해당 마케터의 캠페인에 연결되지 않은 상품들을 반환합니다.
+ * @param marketerId 마케터 고유 아이디
+ */
+const findNotconnectedMerchandises = async (marketerId: string): Promise<Merchandise[]> => {
+  const query = `SELECT *
+  FROM merchandiseRegistered AS mr
+  LEFT JOIN campaign ON merchandiseId = mr.id
+  WHERE mr.marketerId = ? AND campaignId IS NULL
+  ORDER BY createDate DESC
+  `;
+  const { result } = await doQuery(query, [marketerId]);
+  return result;
+};
+
+/**
  * 상품 리스트 정보를 페이지네이션에 따라 반환하는 함수
  * @param marketerId 마케터 고유 아이디
  */
@@ -243,6 +258,13 @@ router.route('/')
       const [page, offset] = responseHelper.getOptionalParam(['page', 'offset'], 'get', req);
       const searchPage = Number(page * offset);
       const searchOffset = Number(offset);
+
+      // 캠페인에 연결되지 않은 상품만을 반환하기를 요청하는 경우
+      const onlyNotConnected = responseHelper.getOptionalParam('onlyNotConnected', 'get', req);
+      if (onlyNotConnected) {
+        const result = await findNotconnectedMerchandises(marketerId);
+        return responseHelper.send(result, 'GET', res);
+      }
 
       if (page && offset) {
         const result = await findWithPagination(marketerId, searchPage, searchOffset);
