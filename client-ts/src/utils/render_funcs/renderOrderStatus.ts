@@ -1,14 +1,18 @@
-// 주문상태(0=주문접수,1=결제확인,2=상품준비,3=출고준비,4=출고완료,5=배송중,6=배송완료,7=반품요청,8=구매완료대기,9=구매완료)
+// 주문상태(0=주문접수,1=상품준비중,2=출고준비, 3=출고완료,4=배송완료, 5=주문취소)
 
 export const 주문상태_주문접수 = 0;
-export const 주문상태_상품준비중 = 1;
-export const 주문상태_출고준비완료 = 2;
-export const 주문상태_주문취소 = 3;
+export const 주문상태_상품준비 = 1;
+export const 주문상태_출고준비 = 2;
+export const 주문상태_출고완료 = 3;
+export const 주문상태_배송완료 = 4;
+export const 주문상태_주문취소 = 5;
 
 export const orderStatus = [
   '주문접수',
-  '상품준비중',
-  '출고준비완료',
+  '상품준비',
+  '출고준비',
+  '출고완료',
+  '배송완료',
   '주문취소',
 ];
 export default function renderOrderStatus(status: number): string {

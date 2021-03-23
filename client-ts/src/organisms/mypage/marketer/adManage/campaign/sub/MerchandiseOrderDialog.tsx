@@ -1,6 +1,6 @@
 import classnames from 'classnames';
 import {
-  Button, Chip, CircularProgress, makeStyles, Typography
+  Button, Chip, CircularProgress, Divider, makeStyles, Typography
 } from '@material-ui/core';
 import React, { useContext, useMemo, useState } from 'react';
 import SwipeableTextMobileStepper from '../../../../../../atoms/Carousel/Carousel';
@@ -9,7 +9,7 @@ import MarketerInfoContext from '../../../../../../context/MarketerInfo.context'
 import { getS3MerchandiseImagePath } from '../../../../../../utils/aws/getS3Path';
 import { useDialog, useGetRequest, usePatchRequest } from '../../../../../../utils/hooks';
 import renderOrderStatus, {
-  주문상태_출고준비완료, 주문상태_상품준비중, 주문상태_주문취소
+  주문상태_출고준비, 주문상태_상품준비, 주문상태_주문취소, 주문상태_배송완료, 주문상태_주문접수, 주문상태_출고완료
 } from '../../../../../../utils/render_funcs/renderOrderStatus';
 import { Merchandise, MerchandiseOrder } from '../../interface';
 import Snackbar from '../../../../../../atoms/Snackbar/Snackbar';
@@ -34,7 +34,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export type OrderStatus = typeof 주문상태_상품준비중 | typeof 주문상태_출고준비완료 | typeof 주문상태_주문취소;
+export type OrderStatus = typeof 주문상태_출고준비
+|typeof 주문상태_상품준비|typeof 주문상태_주문취소|typeof 주문상태_배송완료|typeof 주문상태_주문접수|typeof 주문상태_출고완료;
 export interface MerchandiseDetailDialogProps {
   merchandiseOrder: MerchandiseOrder;
   open: boolean;
@@ -67,7 +68,7 @@ function MerchandiseOrderDialog({
   }
 
   // 남은 재고 수량 변수
-  const stockLeft = useMemo(
+  const availableStock = useMemo(
     () => merchandiseOrder.stock - (merchandiseOrder.merchandiseSoldCount || 0),
     [merchandiseOrder.merchandiseSoldCount, merchandiseOrder.stock]
   );
@@ -138,9 +139,9 @@ function MerchandiseOrderDialog({
               <Chip
                 size="small"
                 label={renderOrderStatus(merchandiseOrder.status)}
-                color={merchandiseOrder.status === 주문상태_상품준비중 ? 'primary' : 'default'}
+                color={merchandiseOrder.status === 주문상태_상품준비 ? 'primary' : 'default'}
                 className={classnames({
-                  [classes.success]: merchandiseOrder.status === 주문상태_출고준비완료,
+                  [classes.success]: [주문상태_출고준비, 주문상태_출고완료].includes(merchandiseOrder.status),
                 })}
               />
             </Typography>
@@ -152,7 +153,7 @@ function MerchandiseOrderDialog({
             </Typography>
             )}
             <Typography>{`주문 수량: ${merchandiseOrder.quantity}`}</Typography>
-            <Typography>{`남은 재고: ${stockLeft}`}</Typography>
+            <Typography>{`남은 재고: ${availableStock}`}</Typography>
             <Typography>
               {`총 주문 금액: ${
                 (merchandiseOrder.orderPrice
@@ -160,30 +161,41 @@ function MerchandiseOrderDialog({
               } 원`}
             </Typography>
 
+            <Divider />
+            <Typography>상태변경</Typography>
             <div className={classes.buttonSet}>
               <Button
                 className={classes.actionbutton}
                 variant="contained"
                 color="primary"
-                disabled={stockLeft === 0}
-                onClick={(): void => handleStatusSelect(주문상태_상품준비중)}
+                disabled={availableStock === 0}
+                onClick={(): void => handleStatusSelect(주문상태_상품준비)}
               >
-              상품준비중 상태로 변경
+                상품준비 상태로 변경
+              </Button>
+              <Button
+                className={classes.actionbutton}
+                color="primary"
+                variant="contained"
+                disabled={availableStock === 0}
+                onClick={(): void => handleStatusSelect(주문상태_출고준비)}
+              >
+                출고준비 상태로 변경
               </Button>
               <Button
                 className={classnames(classes.success, classes.actionbutton)}
                 variant="contained"
-                disabled={stockLeft === 0}
-                onClick={(): void => handleStatusSelect(주문상태_출고준비완료)}
+                disabled={availableStock === 0}
+                onClick={(): void => handleStatusSelect(주문상태_출고완료)}
               >
-              출고준비완료 상태로 변경
+                출고완료 상태로 변경
               </Button>
               <Button
                 className={classnames(classes.error, classes.actionbutton)}
                 variant="contained"
                 onClick={(): void => handleStatusSelect(주문상태_주문취소)}
               >
-              주문취소
+                주문취소
               </Button>
             </div>
             <Button fullWidth variant="contained" onClick={onClose}>닫기</Button>
