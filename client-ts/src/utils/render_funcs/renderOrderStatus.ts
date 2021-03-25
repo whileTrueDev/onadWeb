@@ -6,6 +6,7 @@ export const 주문상태_출고준비 = 2;
 export const 주문상태_출고완료 = 3;
 export const 주문상태_배송완료 = 4;
 export const 주문상태_주문취소 = 5;
+export const 주문상태_구매확정 = 6;
 
 export const orderStatus = [
   '주문접수',
@@ -14,6 +15,7 @@ export const orderStatus = [
   '출고완료',
   '배송완료',
   '주문취소',
+  '구매확정',
 ];
 export default function renderOrderStatus(status: number): string {
   return orderStatus[status];
