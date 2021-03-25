@@ -147,9 +147,11 @@ const findWithPagination = async (
   marketerId: string, page: number, offset: number
 ): Promise<Merchandise[]> => {
   const query = `
-    SELECT *
-    FROM merchandiseRegistered WHERE marketerId = ?
-    ORDER BY createDate DESC
+    SELECT mr.*, mmi.uploadState, denialReason
+    FROM merchandiseRegistered AS mr
+    LEFT JOIN merchandiseMallItems AS mmi ON mmi.merchandiseId = mr.id
+    WHERE marketerId = ?
+    ORDER BY createDate DESC                   
     LIMIT ?, ?
   `;
 

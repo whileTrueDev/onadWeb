@@ -72,7 +72,7 @@ router.route('/list')
         campaignDescription, startDate, finDate, selectedTime, targetList, campaign.merchandiseId,
         mr.name AS merchandiseName, mr.stock AS merchandiseStock,
         mm.soldCount AS merchandiseSoldCount, mm.itemSiteUrl AS merchandiseItemSiteUrl,
-        mm.uploadState AS merchandiseUploadState
+        mm.uploadState AS merchandiseUploadState, mm.denialReason AS merchandiseDenialReason
       FROM campaign
         JOIN bannerRegistered AS br ON br.bannerId = campaign.bannerId
         LEFT JOIN linkRegistered AS lr ON lr.linkId = connectedLinkId

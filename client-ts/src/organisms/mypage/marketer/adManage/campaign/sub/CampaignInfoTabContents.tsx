@@ -16,7 +16,7 @@ import renderBannerConfirmState, {
   CONFIRM_STATE_WAIT, CONFIRM_STATE_REJECTED, CONFIRM_STATE_CONFIRMED
 } from '../../../../../../utils/render_funcs/renderBannerConfirmState';
 import withJosa from '../../../../../../utils/withJosa';
-import renderMerchandiseUploadState, { MERCHANDISE_SOLDOUT } from '../../../../../../utils/render_funcs/renderMerchandiseUploadState';
+import renderMerchandiseUploadState, { MERCHANDISE_UPLOAD_SOLDOUT, MERCHANDISE_UPLOAD_WAITING } from '../../../../../../utils/render_funcs/renderMerchandiseUploadState';
 
 const useStyles = makeStyles((theme) => ({
   bold: { fontWeight: theme.typography.fontWeightBold },
@@ -84,7 +84,7 @@ export default function CampaignInfoTabContents({
 
       {/* CPS 캠페인의 상품이 아직 온애드몰에 업로드 되지 않은 경우 */}
       {campaign.merchandiseId && campaign.merchandiseName
-      && !(campaign.merchandiseUploadState || campaign.merchandiseItemSiteUrl)
+      && campaign.merchandiseUploadState === MERCHANDISE_UPLOAD_WAITING
       && (// 캠페인 정보 불러올 때 업로드 상태도 불러오게 변경한 이후 추가.
         <Alert severity="error">
           <Typography variant="body2">
@@ -94,13 +94,25 @@ export default function CampaignInfoTabContents({
         </Alert>
       )}
 
+      {/* CPS 캠페인의 상품이 아직 온애드몰에 업로드 되지 않은 경우 */}
+      {campaign.merchandiseId && campaign.merchandiseName
+      && campaign.merchandiseUploadState === 0
+      && (// 캠페인 정보 불러올 때 업로드 상태도 불러오게 변경한 이후 추가.
+        <Alert severity="error">
+          <Typography variant="body2">
+            {`캠페인 ${campaign.campaignName} 의 상품 -> ${withJosa(campaign.merchandiseName, '은/는')} 관리자에 의해 거절되었습니다.`}
+          </Typography>
+          <Typography variant="body2">{`사유는 ${campaign.merchandiseDenialReason}입니다. 문의는 support@onad.io 로 메일을 보내주세요.`}</Typography>
+        </Alert>
+      )}
+
       {/* CPS 캠페인의 상품이 재고 소진된 경우 */}
       {campaign.merchandiseId && campaign.merchandiseName
       && campaign.merchandiseStock && campaign.merchandiseSoldCount
       && (campaign.merchandiseStock - campaign.merchandiseSoldCount) <= 0 // 재고 소진으로 광고 진행 불가
       && (
         <Alert severity="info">
-          {campaign.merchandiseUploadState === MERCHANDISE_SOLDOUT && (
+          {campaign.merchandiseUploadState === MERCHANDISE_UPLOAD_SOLDOUT && (
           <Typography>축하합니다!! 해당 캠페인의 판매가 모두 완료되었습니다.</Typography>
           )}
           <Typography variant="body2">
@@ -121,7 +133,7 @@ export default function CampaignInfoTabContents({
         {campaign.merchandiseId && (
           <>
             <Typography>
-              {`상품 판매 상태 - ${renderMerchandiseUploadState(campaign.merchandiseUploadState || 0)}`}
+              {`상품 판매 상태 - ${renderMerchandiseUploadState(campaign.merchandiseUploadState || null)}`}
               {Boolean(campaign.merchandiseUploadState) && (
                 <CheckCircle className={classes.middle} fontSize="small" color="primary" />
               )}
