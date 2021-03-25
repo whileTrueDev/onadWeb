@@ -76,7 +76,7 @@ export default function OrderManageTabContents({
               field: 'status',
               width: 130,
               renderCell: (data): React.ReactElement => (
-                <Chip label={renderOrderStatus(data.row.status)} />
+                <Chip label={data.row.statusString} />
               )
             },
             { headerName: '수량', field: 'quantity', width: 130, },

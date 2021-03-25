@@ -138,10 +138,10 @@ function MerchandiseOrderDialog({
               {'주문 상태: '}
               <Chip
                 size="small"
-                label={renderOrderStatus(merchandiseOrder.status)}
-                color={merchandiseOrder.status === 주문상태_상품준비 ? 'primary' : 'default'}
+                label={merchandiseOrder.statusString}
+                color={[주문상태_상품준비, 주문상태_출고준비].includes(merchandiseOrder.status) ? 'primary' : 'default'}
                 className={classnames({
-                  [classes.success]: [주문상태_출고준비, 주문상태_출고완료].includes(merchandiseOrder.status),
+                  [classes.success]: [주문상태_배송완료, 주문상태_출고완료].includes(merchandiseOrder.status),
                 })}
               />
             </Typography>
