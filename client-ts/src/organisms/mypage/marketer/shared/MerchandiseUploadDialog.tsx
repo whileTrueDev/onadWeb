@@ -61,7 +61,7 @@ export default function MerchandiseUploadDialog({
   const classes = useStyles();
 
   const optionFlag = useEventTargetValue(FLAG_OFF);
-  const pickupFlag = useEventTargetValue(FLAG_OFF);
+  const pickupFlag = useEventTargetValue(FLAG_ON);
 
   // 다이얼로그 컨텐츠 Ref - 스크롤링을 위해
   const dialogContentRef = useRef<HTMLDivElement>(null);
@@ -320,22 +320,8 @@ export default function MerchandiseUploadDialog({
       </div>
 
       <div className={classes.field}>
-        <Typography>상품픽업여부</Typography>
-        <FormControl component="fieldset">
-          <RadioGroup
-            row
-            aria-label="pickup-flag"
-            name="pickupFlag"
-            value={pickupFlag.value}
-            onChange={pickupFlag.handleChange}
-          >
-            <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
-            <FormControlLabel value="No" control={<Radio />} label="No" />
-          </RadioGroup>
-        </FormControl>
-
         <Collapse in={pickupFlag.value === FLAG_ON}>
-          <Typography>픽업주소</Typography>
+          <Typography>상품픽업주소</Typography>
           <div className={classes.bottomSpace}>
             <AddressInput
               addressValue={address}
