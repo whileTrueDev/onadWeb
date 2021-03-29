@@ -110,17 +110,17 @@ export default function CampaignInfoTabContents({
       {campaign.merchandiseId && campaign.merchandiseName
       && campaign.merchandiseStock && campaign.merchandiseSoldCount
       && (campaign.merchandiseStock - campaign.merchandiseSoldCount) <= 0 // 재고 소진으로 광고 진행 불가
-      && (
-        <Alert severity="info">
-          {campaign.merchandiseUploadState === MERCHANDISE_UPLOAD_SOLDOUT && (
-          <Typography>축하합니다!! 해당 캠페인의 판매가 모두 완료되었습니다.</Typography>
-          )}
-          <Typography variant="body2">
-            {`캠페인 ${campaign.campaignName} 의 상품 -> ${withJosa(campaign.merchandiseName, '이/가')} 재고 소진으로 인해 더이상 광고 진행이 불가한 상태입니다.`}
-          </Typography>
-          <Typography variant="body2">더 많은 상품 판매를 원하신다면 새로 상품을 등록하고 캠페인을 등록해주세요.</Typography>
-        </Alert>
-      )}
+        ? (
+          <Alert severity="info">
+            {campaign.merchandiseUploadState === MERCHANDISE_UPLOAD_SOLDOUT && (
+            <Typography>축하합니다!! 해당 캠페인의 판매가 모두 완료되었습니다.</Typography>
+            )}
+            <Typography variant="body2">
+              {`캠페인 ${campaign.campaignName} 의 상품 -> ${withJosa(campaign.merchandiseName, '이/가')} 재고 소진으로 인해 더이상 광고 진행이 불가한 상태입니다.`}
+            </Typography>
+            <Typography variant="body2">더 많은 상품 판매를 원하신다면 새로 상품을 등록하고 캠페인을 등록해주세요.</Typography>
+          </Alert>
+        ) : null}
 
       <article className={classes.article}>
         <Typography className={classes.bold}>현재 캠페인 상태</Typography>
