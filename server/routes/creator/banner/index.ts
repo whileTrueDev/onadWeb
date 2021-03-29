@@ -373,10 +373,10 @@ router.route('/active')
         JOIN campaign AS cp ON ct.campaignId = cp.campaignId
         JOIN marketerInfo AS mi ON cp.marketerId = mi.marketerId
         JOIN bannerRegistered AS br  ON cp.bannerId = br.bannerId
-        JOIN linkRegistered AS lr ON cp.connectedLinkId = lr.linkId
+        LEFT JOIN linkRegistered AS lr ON cp.connectedLinkId = lr.linkId
       WHERE creatorId = ?
         AND ct.date > DATE_ADD(NOW(), INTERVAL - 10 MINUTE) 
-      ORDER BY ct.date DESC LIMIT 1       
+      ORDER BY ct.date DESC LIMIT 1
       `;
 
       doQuery(query, [creatorId])
