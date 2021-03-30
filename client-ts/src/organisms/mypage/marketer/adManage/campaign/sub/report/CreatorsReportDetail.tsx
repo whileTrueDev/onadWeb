@@ -3,7 +3,7 @@ import { Button, makeStyles, Typography } from '@material-ui/core';
 import { OpenInNew } from '@material-ui/icons';
 import React from 'react';
 import { OnadTheme } from '../../../../../../../theme';
-import { CreatorDataInterface } from '../../../../dashboard/interfaces';
+import { CreatorDataInterface, CreatorDataCPSInterface } from '../../../../dashboard/interfaces';
 import ContentsPie from '../../../../shared/ContentsPie';
 import TimeChart from '../../../../shared/TimeChart';
 
@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme: OnadTheme) => ({
 }));
 
 export interface CreatorsReportDetailProps {
-  selectedCreator: CreatorDataInterface;
+  selectedCreator: CreatorDataInterface | CreatorDataCPSInterface;
 }
 export default function CreatorsReportDetail({
   selectedCreator,

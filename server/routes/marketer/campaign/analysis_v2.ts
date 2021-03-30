@@ -1,8 +1,11 @@
 import express from 'express';
 import responseHelper from '../../../middlewares/responseHelper';
 import doQuery from '../../../model/doQuery';
+import cpsAnalysisRouter from './cpsAnalysis';
 
 const router = express.Router();
+
+router.use('/cps', cpsAnalysisRouter);
 
 // 분석 데이터
 router.route('/')
@@ -134,6 +137,7 @@ router.route('/creator-data')
           cda.contentsGraphData AS contentsGraphDataAfreeca,
           cda.timeGraphData  AS timeGraphDataAfreeca,
           cda.viewer AS viewerAfreeca,
+          cda.ctr AS ctrAfreeca,
           cda.followers AS followersAfreeca, 
           cda.airtime AS airtimeAfreeca, 
           cda.impression AS impressionAfreeca, 

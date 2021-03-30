@@ -8,6 +8,8 @@ import CampaignMetaInfoCard from './sub/CampaignMetaInfoCard';
 import CampaignAnalysis from './sub/CampaignAnalysis';
 import { useToggle } from '../../../../../utils/hooks';
 import { CONFIRM_STATE_CONFIRMED } from '../../../../../utils/render_funcs/renderBannerConfirmState';
+import { CPS_OPTION_TYPE, LIVE_BANNER_OPTION_TYPE } from '../../../../../utils/render_funcs/renderOptionType';
+import CampaignAnalysisCPS from './sub/CampaignAnalysisCPS';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -61,10 +63,21 @@ export default function CampaignDetail({
           openAnalysis={analysisToggle.handleToggle}
         />
 
-        {/* 캠페인 분석 정보 */}
-        {selectedCampaign.confirmState === CONFIRM_STATE_CONFIRMED && analysisToggle.toggle && (
+        {/* 라이브 배너 광고 캠페인 분석 정보 */}
+        {selectedCampaign.confirmState === CONFIRM_STATE_CONFIRMED
+        && analysisToggle.toggle && selectedCampaign.optionType === LIVE_BANNER_OPTION_TYPE
+        && (
           <div className={classes.contents}>
             <CampaignAnalysis campaignId={selectedCampaign.campaignId} />
+          </div>
+        )}
+
+        {/* CPS 광고 캠페인 분석 정보 */}
+        {selectedCampaign.confirmState === CONFIRM_STATE_CONFIRMED
+        && analysisToggle.toggle && selectedCampaign.optionType === CPS_OPTION_TYPE
+        && (
+          <div className={classes.contents}>
+            <CampaignAnalysisCPS campaignId={selectedCampaign.campaignId} />
           </div>
         )}
 

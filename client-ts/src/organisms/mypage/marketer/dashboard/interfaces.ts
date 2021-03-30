@@ -87,6 +87,14 @@ export interface ReportInterfaceV2 {
   campaignName: string; totalCPM: number; totalViewCount: number;
   totalCPC: number; adchatClick: number; adpanelClick: number;
 }
+
+export interface CpsAnalysisReportData {
+  totalSalesIncome: number;
+  adchatClick: number;
+  adpanelClick: number;
+  totalSalesAmount: number;
+}
+
 export interface CreatorDataPerMarketerInterface {
   id: string;
   creatorId: string;
@@ -128,11 +136,16 @@ export interface CreatorDataInterface {
   timeGraphData?: string;
   timeGraphDataAfreeca?: string;
   viewerAfreeca?: number;
+  ctrAfreeca?: number;
   followersAfreeca?: number;
   airtimeAfreeca?: number;
   impressionAfreeca?: number;
   openHourAfreeca?: number;
   contentAfreeca?: number;
+}
+
+export interface CreatorDataCPSInterface extends Omit<CreatorDataInterface, 'total_ad_exposure_amount'>{
+  total_sales_amount: number;
 }
 
 export interface HeatmapInterface {

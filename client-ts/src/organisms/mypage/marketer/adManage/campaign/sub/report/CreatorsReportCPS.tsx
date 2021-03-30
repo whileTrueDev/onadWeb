@@ -4,7 +4,7 @@ import { AvatarGroup } from '@material-ui/lab';
 import React from 'react';
 import CustomDataGrid from '../../../../../../../atoms/Table/CustomDataGrid';
 import { UseGetRequestObject } from '../../../../../../../utils/hooks/useGetRequest';
-import { CreatorDataInterface } from '../../../../dashboard/interfaces';
+import { CreatorDataCPSInterface } from '../../../../dashboard/interfaces';
 
 const useStyles = makeStyles((theme) => ({
   container: { maxWidth: 600, height: 300 },
@@ -13,11 +13,11 @@ const useStyles = makeStyles((theme) => ({
   platform: { height: 20, width: 20, marginRight: theme.spacing(1) },
 }));
 
-interface CreatorsReportProps {
-  creatorsData: UseGetRequestObject<CreatorDataInterface[]>;
-  onRowClick?: (row: CreatorDataInterface) => void;
+interface CreatorsReportCPSProps {
+  creatorsData: UseGetRequestObject<CreatorDataCPSInterface[]>;
+  onRowClick?: (row: CreatorDataCPSInterface) => void;
 }
-export default function CreatorsReport(props: CreatorsReportProps): JSX.Element {
+export default function CreatorsReportCPS(props: CreatorsReportCPSProps): JSX.Element {
   const { creatorsData, onRowClick } = props;
   const classes = useStyles();
 
@@ -26,7 +26,7 @@ export default function CreatorsReport(props: CreatorsReportProps): JSX.Element 
       {!creatorsData.loading && creatorsData.data && (
         <CustomDataGrid
           disableSelectionOnClick
-          onRowClick={(param) => { if (onRowClick) onRowClick(param.row as CreatorDataInterface); }}
+          onRowClick={(param) => { if (onRowClick) onRowClick(param.row as CreatorDataCPSInterface); }}
           loading={creatorsData.loading}
           rows={creatorsData.data}
           density="compact"
@@ -53,16 +53,14 @@ export default function CreatorsReport(props: CreatorsReportProps): JSX.Element 
               )
             },
             {
-              headerName: '방송당 평균 노출량',
-              field: 'impression',
+              headerName: '판매수',
+              field: 'total_sales_amount',
               flex: 1,
               renderCell: (data): React.ReactElement => {
-                if (!data.row.impression && !data.row.impressionAfreeca) return <Typography variant="body2">0</Typography>;
-                if (!data.row.impressionAfreeca) return <Typography variant="body2">{data.row.impression}</Typography>;
-                if (!data.row.impression) return <Typography variant="body2">{data.row.impressionAfreeca}</Typography>;
+                if (!data.row.total_sales_amount) return <Typography variant="body2">0</Typography>;
                 return (
                   <Typography variant="body2">
-                    {(data.row.impression + data.row.impressionAfreeca).toLocaleString()}
+                    {data.row.total_sales_amount.toLocaleString()}
                   </Typography>
                 );
               }

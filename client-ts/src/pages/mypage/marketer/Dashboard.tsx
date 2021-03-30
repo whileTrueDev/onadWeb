@@ -7,7 +7,7 @@ import Hidden from '@material-ui/core/Hidden';
 import CampaignList from '../../../organisms/mypage/marketer/dashboard/CampaignList';
 import CanvasForChart from '../../../organisms/mypage/marketer/dashboard/CanvasForChart';
 import DescCard from '../../../organisms/mypage/marketer/dashboard/DescCard';
-import OnOffSwitch from '../../../organisms/mypage/marketer/dashboard/OnOffSwitch';
+import OnOffSwitch from '../../../organisms/mypage/marketer/shared/OnOffSwitch';
 import DashboardLoading from '../../../organisms/mypage/marketer/dashboard/DashboardLoading';
 import LogTable from '../../../organisms/mypage/marketer/dashboard/LogTable';
 import CashPopper from '../../../organisms/mypage/marketer/dashboard/CashPopper';

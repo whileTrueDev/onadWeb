@@ -1,41 +1,61 @@
-import React from 'react';
+/* eslint-disable max-len */
+import moment from 'moment';
+import _ from 'lodash';
+import React, { useCallback, useMemo } from 'react';
 import { useTheme } from '@material-ui/core/styles';
 import { Bar, ChartComponentProps } from 'react-chartjs-2';
 
 interface DefaultDataType {
   date: string;
-  cash: number;
+  value: number;
   type: 'CPC' | 'CPM';
 }
-interface ReportStackedBarProps<T> extends Omit<ChartComponentProps, 'type' | 'data'> {
-  dataSet: T[];
+interface ReportStackedBarProps extends Omit<ChartComponentProps, 'type' | 'data'> {
+  dataSet: any[];
   labelArray: string[];
 }
-export default function ReportStackedBar<DataType extends DefaultDataType>({
+export default function ReportStackedBar({
   height = 70,
   dataSet,
   labelArray,
   ...rest
-}: ReportStackedBarProps<DataType>): JSX.Element {
+}: ReportStackedBarProps): JSX.Element {
   const theme = useTheme();
 
   // 차트 데이터
-  function setStackedBarData<T extends DefaultDataType>(
-    data: Array<T>, defaultLabelArray: string[]
-  ): any {
+  const setStackedBarData = useCallback(<T extends DefaultDataType>(
+    data: Array<T>, _labelArray: string[],
+  ): any => {
     const labels = Array<string>();
-    const CPM = Array<number>();
-    const CPC = Array<number>();
-    data.map((d) => {
-      const date = new Date(d.date);
-      const label = `${date.getMonth() + 1}. ${date.getDate()}.`;
-      if (!labels.includes(label)) { labels.push(label); }
-      if (d.type === 'CPM') {
-        CPM.push(d.cash);
-      } else if (d.type === 'CPC') {
-        CPC.push(d.cash);
-      }
-      return d;
+    const array1 = Array<number>();
+    const array2 = Array<number>();
+    const grouped = _.groupBy(data.map((x) => ({ ...x, date: moment(x.date).format('M.DD'), })), 'date');
+
+    Object.keys(grouped).forEach((date) => {
+      if (!labels.includes(date)) { labels.push(date); }
+
+      const types = Array.from(new Set(grouped[date].map((x) => x.type)));
+
+      grouped[date].forEach((_row) => {
+        // 판매/클릭 모두 있는 경우
+        if (types.length === _labelArray.length) {
+          if (_row.type === _labelArray[0]) {
+            array1.push(_row.value);
+          }
+          if (_row.type === _labelArray[1]) {
+            array2.push(_row.value);
+          }
+        } else {
+          if (_row.type === _labelArray[0]) {
+            array1.push(_row.value);
+            array2.push(0);
+          }
+          if (_row.type === _labelArray[1]) {
+            array1.push(0);
+            array2.push(_row.value);
+          }
+        }
+      });
     });
 
     const ChartjsBarData = {
@@ -43,29 +63,30 @@ export default function ReportStackedBar<DataType extends DefaultDataType>({
       datasets: [
         {
           stack: '1',
-          label: defaultLabelArray[0],
+          label: _labelArray[0],
           backgroundColor: theme.palette.primary.main,
           borderColor: theme.palette.primary.main,
           borderWidth: 1,
           hoverBackgroundColor: theme.palette.primary.light,
           hoverBorderColor: theme.palette.primary.light,
-          data: CPM
+          data: array1
         },
         {
           stack: '1',
-          label: defaultLabelArray[1],
+          label: _labelArray[1],
           backgroundColor: theme.palette.secondary.main,
           borderColor: theme.palette.secondary.main,
           borderWidth: 1,
           hoverBackgroundColor: theme.palette.secondary.light,
           hoverBorderColor: theme.palette.secondary.light,
-          data: CPC
+          data: array2 // 클릭
         },
       ],
     };
     return ChartjsBarData;
-  }
-  const preprocessedDataSet = setStackedBarData<DataType>(dataSet, labelArray);
+  }, [theme.palette.primary.light, theme.palette.primary.main, theme.palette.secondary.light, theme.palette.secondary.main]);
+
+  const preprocessedDataSet = useMemo(() => setStackedBarData(dataSet, labelArray), [dataSet, labelArray, setStackedBarData]);
 
   return (
     <Bar

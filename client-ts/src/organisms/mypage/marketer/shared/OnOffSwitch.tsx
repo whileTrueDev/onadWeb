@@ -5,7 +5,7 @@ import {
 } from '@material-ui/core';
 // import usePostRequest from '../../../../utils/hooks/usePostRequest';
 import { UseGetRequestObject } from '../../../../utils/hooks/useGetRequest';
-import { OnOffInterface } from './interfaces';
+import { OnOffInterface } from '../dashboard/interfaces';
 import HOST from '../../../../config';
 import axios from '../../../../utils/axios';
 
@@ -15,11 +15,14 @@ const useStyles = makeStyles(() => ({
 }));
 
 interface OnOffSwitchProps {
+  title?: string;
   onOffData: UseGetRequestObject<OnOffInterface | null>;
 }
 
-export default function OnOffSwitch(props: OnOffSwitchProps): JSX.Element {
-  const { onOffData } = props;
+export default function OnOffSwitch({
+  title = '광고 On/Off',
+  onOffData,
+}: OnOffSwitchProps): JSX.Element {
   const classes = useStyles();
   const [viewState, setView] = useState<boolean>(false);
 
@@ -51,7 +54,7 @@ export default function OnOffSwitch(props: OnOffSwitchProps): JSX.Element {
     <Paper className={classes.paper}>
       <div className={classes.div}>
         <Typography variant="h6">
-          광고 On/Off
+          {title}
         </Typography>
         <FormControlLabel
           label=""
