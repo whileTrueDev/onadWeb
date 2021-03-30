@@ -47,7 +47,7 @@ router.route('/current')
       const query = `
       SELECT tracking.id, clickedTime, costType, tracking.linkId, campaignName, links, creatorId, payout, channel, os, browser
         FROM tracking
-        JOIN linkRegistered AS lr
+        LEFT JOIN linkRegistered AS lr
         ON lr.linkId = tracking.linkId
         WHERE creatorId = ?
         ORDER BY clickedTime DESC

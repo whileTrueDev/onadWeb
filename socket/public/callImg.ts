@@ -284,6 +284,21 @@ function callImg(socket: Socket, msg: string[]): void {
     });
   };
 
+  /**
+   * 해당 캠페인에 연결된 상품의 온애드몰 URL을 가져옵니다.
+   * @param campaignId 캠페인 아이디
+   * @returns 상품 사이트 URL 문자열
+   */
+  const getMerchandiseSiteUrl = async (campaignId: string): Promise<string> => {
+    const query = `SELECT itemSiteUrl
+    FROM merchandiseMallItems
+    JOIN campaign on campaign.merchandiseId = merchandiseMallItems.merchandiseId
+    WHERE campaignId = ?`;
+    const { result } = await doQuery(query, [campaignId]);
+    if (!(result.length > 0)) return '';
+    return result[0].itemSiteUrl;
+  };
+
   const getRandomInt = (length: number): number => {
     const max = Math.floor(length);
     return Math.floor(Math.random() * (max - 0)) + 0; // 최댓값은 제외, 최솟값은 포함
@@ -304,20 +319,21 @@ function callImg(socket: Socket, msg: string[]): void {
     // *********************************************************
     // 크리에이터 개인에게 할당된(크리에이터 에게 송출) 캠페인 -> ON 상태 필터링
     const onCreatorcampaignList = creatorCampaignList.filter(
-      (campaignId) => onCampaignList.includes(campaignId)
+      (campaignId: any) => onCampaignList.includes(campaignId)
     );
 
     // 현재 ON상태인 크리에이터 개인에게 할당된(크리에이터 에게 송출) 캠페인 목록이 있는 경우
     if (onCreatorcampaignList.length !== 0) {
       const extractPausedCampaignList = onCreatorcampaignList
-        .filter((campaignId) => !checkList.pausedList.includes(campaignId)); // 일시정지 배너 거르기.
+        .filter((campaignId: any) => !checkList.pausedList.includes(campaignId)); // 일시정지 배너 거르기.
       const extractBanCampaignList = extractPausedCampaignList
-        .filter((campaignId) => !checkList.banList.includes(campaignId)); // 마지막에 banList를 통해 거르기.
+        .filter((campaignId: any) => !checkList.banList.includes(campaignId)); // 마지막에 banList를 통해 거르기.
       if (extractBanCampaignList) {
         const returnCampaignId = extractBanCampaignList[
           getRandomInt(extractBanCampaignList.length)
         ];
         myCampaignId = returnCampaignId;
+        console.log('캠페인 : ', myCampaignId);
       }
     } else {
       // *********************************************************
@@ -336,10 +352,16 @@ function callImg(socket: Socket, msg: string[]): void {
 
     // *********************************************************
     // RETRUN 섹션
-    if (myCampaignId && campaignObject[myCampaignId][0] === 1) {
+    const OPTION_TYPE_LIVE_BANNER_CAMPAIGN = 1; // 생방송 라이브 배너광고 캠페인의 경우
+    const OPTION_TYPE_CPS_CAMPAIGN = 3; // 판매형광고(CPS) 캠페인의 경우
+
+    if (myCampaignId && campaignObject[myCampaignId][0] === OPTION_TYPE_LIVE_BANNER_CAMPAIGN) {
       // 송출될 캠페인의 link 를 가져와 트위치 챗봇에 챗봇광고 이벤트를 에밋하기 위한 정보를 가져온다.
       console.log(`${creatorId} / 광고될 캠페인은 ${myCampaignId} / ${getTime}`);
       linkToChatBot = await getLinkName(myCampaignId);
+    } else if (myCampaignId && campaignObject[myCampaignId][0] === OPTION_TYPE_CPS_CAMPAIGN) {
+      console.log(`${creatorId} / 광고될 캠페인은 ${myCampaignId} / ${getTime}`);
+      linkToChatBot = await getMerchandiseSiteUrl(myCampaignId);
     } else {
       // 송출할 광고 없다.
       // 기본배너 검색
