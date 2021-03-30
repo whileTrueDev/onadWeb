@@ -51,7 +51,7 @@ export default function Dashboard(): JSX.Element {
   const adData = useGetRequest<null, AdInterface | null>('/marketer/ad');
   const countsData = useGetRequest<null, CountInterface | null>('/marketer/ad/analysis/creator-count');
   const actionLogData = useGetRequest<null, ActionLogInterface[] | null>('/marketer/history');
-  const valueChartData = useGetRequest<null, ValueChartInterface[] | null>('/marketer/ad/analysis/expenditure');
+  const valueChartData = useGetRequest<null, ValueChartInterface[]>('/marketer/ad/analysis/expenditure');
   const cpsChartData = useGetRequest<null, CPSChartInterface[]>('/marketer/ad/analysis/expenditure/cps');
 
   useMypageScrollToTop();
@@ -130,9 +130,6 @@ export default function Dashboard(): JSX.Element {
                 </Grid>
                 <Grid item xs={12} md={12} lg={12}>
                   <Grid container spacing={2}>
-                    <Grid item xs={12} md={12}>
-                      <CampaignList />
-                    </Grid>
                     <Hidden mdDown>
                       <Grid item xs={9} md={3} lg={9}>
                         <CanvasForChart
@@ -144,6 +141,9 @@ export default function Dashboard(): JSX.Element {
                         <LogTable actionLogData={actionLogData} />
                       </Grid>
                     </Hidden>
+                    <Grid item xs={12} md={12}>
+                      <CampaignList />
+                    </Grid>
                   </Grid>
                 </Grid>
 

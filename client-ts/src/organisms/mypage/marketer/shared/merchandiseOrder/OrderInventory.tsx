@@ -1,13 +1,15 @@
+import classnames from 'classnames';
 import {
   Chip, makeStyles, Tooltip, Typography
 } from '@material-ui/core';
-import React, { useState } from 'react';
-import CustomDataGrid from '../../../../../../atoms/Table/CustomDataGrid';
+import React, { useContext, useState } from 'react';
 // import CustomDataGrid from '../../../../../../atoms/Table/CustomDataGrid';
-import { useDialog, useGetRequest } from '../../../../../../utils/hooks';
-import { CampaignInterface } from '../../../dashboard/interfaces';
-import { MerchandiseOrder } from '../../interface';
+import CustomDataGrid from '../../../../../atoms/Table/CustomDataGrid';
+import MarketerInfoContext from '../../../../../context/MarketerInfo.context';
+import { useDialog, useGetRequest } from '../../../../../utils/hooks';
+import { MerchandiseOrder } from '../../adManage/interface';
 import MerchandiseOrderDialog from './MerchandiseOrderDialog';
+import CampaignDetailDialog from '../CampaignDetailDialog';
 
 const useStyles = makeStyles((theme) => ({
   bold: { fontWeight: theme.typography.fontWeightBold },
@@ -17,20 +19,29 @@ const useStyles = makeStyles((theme) => ({
     '&:hover': {
       textDecoration: 'underline',
     }
-  }
+  },
+  title: { padding: theme.spacing(1) }
 }));
 
 
-export interface OrderManageTabContentsProps {
-  campaign: CampaignInterface;
+export interface OrderInventoryProps {
+  by?: 'marketer' | 'merchandise';
+  merchandiseId?: number;
+  campaignId?: number;
 }
-export default function OrderManageTabContents({
-  campaign
-}: OrderManageTabContentsProps): React.ReactElement {
+export default function OrderInventory({
+  by = 'marketer',
+  merchandiseId,
+}: OrderInventoryProps): React.ReactElement {
+  const auth = useContext(MarketerInfoContext);
   const classes = useStyles();
 
-  const ordersGet = useGetRequest<{merchandiseId?: number}, MerchandiseOrder[]>(
-    '/marketer/orders', { merchandiseId: campaign.merchandiseId }
+  // eslint-disable-next-line max-len
+  const ordersGet = useGetRequest<{ marketerId?: string; merchandiseId?: number }, MerchandiseOrder[]>(
+    '/marketer/orders', {
+      marketerId: by === 'marketer' ? auth.user?.marketerId : undefined,
+      merchandiseId: by === 'merchandise' ? merchandiseId : undefined,
+    }
   );
 
   const orderDetailDialog = useDialog();
@@ -42,9 +53,18 @@ export default function OrderManageTabContents({
     setSelectedMerchandise(undefined);
   }
 
+  const campaignDetailDialog = useDialog();
+  const [selectedCampaignId, setSelectedCampaignId] = useState('');
+  function handleCampaignSelect(_campaignId: string): void {
+    setSelectedCampaignId(_campaignId);
+  }
+  function handleCampaignSelectReset(): void {
+    setSelectedCampaignId('');
+  }
+
   return (
     <>
-      <Typography className={classes.bold}>주문 목록</Typography>
+      <Typography className={classnames(classes.title, classes.bold)}>주문 목록</Typography>
       <div style={{ height: 400 }}>
         <CustomDataGrid
           loading={ordersGet.loading}
@@ -66,6 +86,25 @@ export default function OrderManageTabContents({
                     }}
                   >
                     {data.row.name}
+                  </Typography>
+                </Tooltip>
+              )
+            },
+            {
+              headerName: '캠페인',
+              field: 'campaignId',
+              width: 130,
+              renderCell: (data): React.ReactElement => (
+                <Tooltip title={data.row.campaignId}>
+                  <Typography
+                    variant="body2"
+                    className={classes.clickable}
+                    onClick={(): void => {
+                      handleCampaignSelect(data.row.campaignId as string);
+                      campaignDetailDialog.handleOpen();
+                    }}
+                  >
+                    {data.row.campaignId}
                   </Typography>
                 </Tooltip>
               )
@@ -117,12 +156,23 @@ export default function OrderManageTabContents({
           handleMerchandiseSelectReset();
         }}
         merchandiseOrder={selectedMerchandise}
-        onStatusChange={() => {
+        onStatusChange={(): void => {
           ordersGet.doGetRequest();
           orderDetailDialog.handleClose();
         }}
-        onStatusChangeFail={() => orderDetailDialog.handleClose()}
+        onStatusChangeFail={(): void => orderDetailDialog.handleClose()}
       />
+      )}
+
+      {selectedCampaignId && (
+        <CampaignDetailDialog
+          campaignId={selectedCampaignId}
+          open={campaignDetailDialog.open}
+          onClose={(): void => {
+            campaignDetailDialog.handleClose();
+            handleCampaignSelectReset();
+          }}
+        />
       )}
     </>
   );

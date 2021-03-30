@@ -10,9 +10,7 @@ import AlertCard from '../../../organisms/mypage/creator/Dashboard/AlertCard';
 import UserInfoCard, { IncomeCashRes } from '../../../organisms/mypage/creator/Dashboard/UserInfoCard';
 import WithdrawalDialog from '../../../organisms/mypage/creator/shared/WithdrawalDialog';
 import ClickAdCard, { ClicksRes, LevelRes } from '../../../organisms/mypage/creator/Dashboard/ClickAdCard';
-import IncomeChart, {
-  IncomeChartData, IncomeChartParams
-} from '../../../organisms/mypage/creator/Dashboard/IncomeChart';
+import IncomeChart, { IncomeChartParams } from '../../../organisms/mypage/creator/Dashboard/IncomeChart';
 import BannerCard, { CurrentBannerRes } from '../../../organisms/mypage/creator/Dashboard/BannerCard';
 import OverlayUrlCard, { OverlayUrlRes } from '../../../organisms/mypage/creator/shared/OverlayUrlCard';
 import MypageLoading from './Mypage.loading';
@@ -27,6 +25,7 @@ import PlatformLinkDialog from '../../../organisms/mypage/shared/PlatformLinkDia
 import history from '../../../history';
 import { NoticeData } from '../../../organisms/mypage/shared/notice/NoticeTable';
 import useMypageScrollToTop from '../../../utils/hooks/useMypageScrollToTop';
+import { IncomeChartData } from '../../../utils/chart/makeBarChartData';
 
 const Dashboard = (): JSX.Element => {
   // 계약 정보 조회

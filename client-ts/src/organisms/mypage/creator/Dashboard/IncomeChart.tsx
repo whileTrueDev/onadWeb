@@ -2,14 +2,10 @@ import React from 'react';
 // components
 import { Paper } from '@material-ui/core';
 import ReChartBar from '../../../../atoms/Chart/ReChartBar';
+import { IncomeChartData } from '../../../../utils/chart/makeBarChartData';
 
 export interface IncomeChartParams {
   dateRange: string;
-}
-export interface IncomeChartData {
-  date: string;
-  cash: number;
-  type: 'CPM' | 'CPC';
 }
 export interface IncomeChartProps {
   incomeChartData: IncomeChartData[];

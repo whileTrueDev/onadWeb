@@ -36,12 +36,12 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const CPS_OPTION_TYPE = 3; // CPS 캠페인 옵션 넘버
-export interface CampaignInfoTabContentsProps {
+export interface CampaignDetailProps {
   campaign: CampaignInterface;
 }
-export default function CampaignInfoTabContents({
+export default function CampaignDetail({
   campaign
-}: CampaignInfoTabContentsProps): React.ReactElement {
+}: CampaignDetailProps): React.ReactElement {
   const classes = useStyles();
 
   // 캠페인의 연결된 링크
@@ -155,6 +155,23 @@ export default function CampaignInfoTabContents({
         >
           {landingUrl.linkTo}
           <OpenInNew fontSize="small" className={classes.middle} />
+        </Typography>
+      </article>
+      )}
+
+      {/* 상품 URL */}
+      {campaign.merchandiseItemSiteUrl && (
+      <article className={classes.article}>
+        <Typography className={classes.bold}>상품페이지 URL</Typography>
+        <Typography
+          color="primary"
+          className={classes.linkUrl}
+          onClick={(): void => {
+            window.open(campaign.merchandiseItemSiteUrl, '_blank');
+          }}
+        >
+          <OpenInNew fontSize="small" className={classes.middle} />
+          {campaign.merchandiseItemSiteUrl}
         </Typography>
       </article>
       )}
