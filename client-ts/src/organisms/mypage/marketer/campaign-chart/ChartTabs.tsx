@@ -37,6 +37,11 @@ export default function ReportTabs(props: ReportTabsProps): JSX.Element {
         label="송출방송인"
         classes={{ wrapper: classes.wrapper, labelIcon: classes.labelIcon }}
       />
+      <Tab
+        className={classes.tab}
+        label="상품 판매"
+        classes={{ wrapper: classes.wrapper, labelIcon: classes.labelIcon }}
+      />
     </Tabs>
   );
 }

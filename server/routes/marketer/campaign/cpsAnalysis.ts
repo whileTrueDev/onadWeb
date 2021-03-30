@@ -80,8 +80,6 @@ router.route('/chart')
         doQuery(clickQuery, [campaignId]),
         doQuery(salesQuery, [campaignId])
       ]);
-      if (!result || result.length === 0) return [];
-      if (!result2 || result2.length === 0) return [];
 
       const dataArray: any[] = [];
       result.forEach((value: any) => {

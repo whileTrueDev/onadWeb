@@ -1,14 +1,9 @@
-function datefy(dd: Date): string {
-  const year = dd.getFullYear();
-  const month = `${dd.getMonth() + 1}`.padStart(2, '0');
-  const day = `${dd.getDate()}`.padStart(2, '0');
-  return `${year}-${month}-${day}`;
-}
+import datefy from '../datefy';
 
 export interface IncomeChartData {
   date: string;
-  cash: number;
-  type: 'CPM' | 'CPC' | 'CPA';
+  value: number;
+  type: string; // 'CPM' | 'CPC' | 'CPA';
 }
 
 export interface PreprocessedIncomeChartData {
@@ -18,8 +13,8 @@ export interface PreprocessedIncomeChartData {
   cpa_amount: number;
 }
 
-export default function makeBarChartData<T extends IncomeChartData>(
-  arrayOfExposureData: T[], howMuchDate = 30
+export default function makeBarChartData(
+  arrayOfExposureData: IncomeChartData[], howMuchDate = 30
 ): PreprocessedIncomeChartData[] {
   const KEY_CPM = 'cpm_amount'; const KEY_CPC = 'cpc_amount'; const KEY_CPA = 'cpa_amount';
   const dataSet = Array<PreprocessedIncomeChartData>();
@@ -30,9 +25,9 @@ export default function makeBarChartData<T extends IncomeChartData>(
     // 데이터 형 변환
     arrayOfExposureData.map((d) => {
       const data: PreprocessedIncomeChartData = {
-        cpm_amount: 0,
-        cpc_amount: 0,
-        cpa_amount: 0,
+        [KEY_CPM]: 0,
+        [KEY_CPC]: 0,
+        [KEY_CPA]: 0,
         date: ''
       }; // date 검사
 
@@ -44,12 +39,12 @@ export default function makeBarChartData<T extends IncomeChartData>(
 
         // CPM의 경우
         if (d.type === 'CPM') {
-          data.cpm_amount = d.cash;
+          data[KEY_CPM] = d.value;
         } else if (d.type === 'CPC') {
           // CPC의 경우
-          data.cpc_amount = d.cash;
+          data[KEY_CPC] = d.value;
         } else if (d.type === 'CPA') {
-          data.cpa_amount = d.cash;
+          data[KEY_CPA] = d.value;
         }
         data.date = d.date;
 
@@ -61,11 +56,11 @@ export default function makeBarChartData<T extends IncomeChartData>(
 
         // 결과 데이터에 CPM, CPC 중 없는 값 추가
         if (d.type === 'CPM') {
-          targetObject.cpm_amount = d.cash;
+          targetObject[KEY_CPM] = d.value;
         } else if (d.type === 'CPC') {
-          targetObject.cpc_amount = d.cash;
+          targetObject[KEY_CPC] = d.value;
         } else if (d.type === 'CPA') {
-          targetObject.cpa_amount = d.cash;
+          targetObject[KEY_CPA] = d.value;
         }
 
         // 결과데이터 배열에서 해당 날짜의 결과데이터의 인덱스 찾기
@@ -89,7 +84,7 @@ export default function makeBarChartData<T extends IncomeChartData>(
         if (dataSet.findIndex((d2) => d2.date === emptyDate) === -1) {
           // dataSet에 해당 날짜의 데이터가 없는 경우
           dataSet.splice(currentIndex, 0, {
-            cpc_amount: 0, date: emptyDate, cpm_amount: 0, cpa_amount: 0,
+            [KEY_CPC]: 0, date: emptyDate, [KEY_CPM]: 0, [KEY_CPA]: 0,
           });
         } else {
           // console.log('날짜 데이터 있음 - ', dataSet[currentIndex]);
@@ -121,7 +116,7 @@ export default function makeBarChartData<T extends IncomeChartData>(
         // howMuchDate - 14 만큼 반복하며 하루씩 빼고, 0,0의 데이터를 넣어준다.
         farthestDay.setDate(farthestDay.getDate() - 1);
         dataSet.push({
-          date: datefy(farthestDay), cpc_amount: 0, cpm_amount: 0, cpa_amount: 0
+          date: datefy(farthestDay), [KEY_CPC]: 0, [KEY_CPM]: 0, [KEY_CPA]: 0
         });
       }
     }
@@ -138,7 +133,7 @@ export default function makeBarChartData<T extends IncomeChartData>(
       for (let i = 0; i < betweenDay; i += 1) {
         newestDate.setDate(newestDate.getDate() + 1);
         dataSet.push({
-          date: datefy(newestDate), cpc_amount: 0, cpm_amount: 0, cpa_amount: 0
+          date: datefy(newestDate), [KEY_CPC]: 0, [KEY_CPM]: 0, [KEY_CPA]: 0
         });
       }
     }
@@ -160,9 +155,9 @@ export default function makeBarChartData<T extends IncomeChartData>(
   for (let i = 0; i < howMuchDate; i += 1) {
     dataSet.push({
       date: datefy(now),
-      cpm_amount: 0,
-      cpc_amount: 0,
-      cpa_amount: 0,
+      [KEY_CPM]: 0,
+      [KEY_CPC]: 0,
+      [KEY_CPA]: 0,
     });
     now.setDate(now.getDate() - 1);
   }
