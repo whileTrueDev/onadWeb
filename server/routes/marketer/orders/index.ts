@@ -26,11 +26,12 @@ router.route('/')
 
       const query = `
       SELECT
-        mo.id, mo.merchandiseId, campaignId, optionId, status, orderPrice, ordererName, recipientName, quantity, mo.createDate,
+        mo.id, mo.merchandiseId, campaignId, optionId, status, statusString, orderPrice, ordererName, recipientName, quantity, mo.createDate,
         mr.name, mr.price, stock, optionFlag, mopt.type as optionType, mopt.name as optionValue, mopt.additionalPrice,
         mm.soldCount AS merchandiseSoldCount
       FROM merchandiseOrders AS mo
       JOIN merchandiseRegistered AS mr ON mr.id =  mo.merchandiseId
+      JOIN merchandiseOrderStatuses AS mos ON mo.status = mos.statusNumber
       LEFT JOIN merchandiseOptions AS mopt ON mo.optionId = mopt.id
       LEFT JOIN merchandiseMallItems AS mm ON mr.id = mm.merchandiseId
        `;

@@ -19,7 +19,7 @@ import AddressInput, { OnadAddressData } from './sub/MerchandiseAddressInput';
 import MerchandiseImageUpload from './sub/MerchandiseImageUpload';
 import MerchandiseOptionInput from './sub/MerchandiseOptionInput';
 import MerchandiseUploadDialogLoading from './sub/MerchandiseUploadDialogLoading';
-import { getS3MerchandiseImagePath } from '../../../../utils/aws/getS3Path';
+import { getS3MerchandiseImagePath, getS3MerchandiseDescImagePath } from '../../../../utils/aws/getS3Path';
 
 const FLAG_ON = 'Yes';
 const FLAG_OFF = 'No';
@@ -197,7 +197,7 @@ export default function MerchandiseUploadDialog({
         handleLoadingStatus('상품 사진 등록 중...');
         const { id: uploadedMerchandiseId, marketerId } = data;
         // 상품 사진 S3 업로드
-        const key = `merchandises/${marketerId}/${uploadedMerchandiseId}/merchandise`;
+        const key = getS3MerchandiseImagePath(marketerId, uploadedMerchandiseId);
         const uploadFailCallback = (err: any) => {
           formLoading.handleClose();
           if (onFail) onFail();
@@ -205,7 +205,7 @@ export default function MerchandiseUploadDialog({
           console.error(err);
         };
         const uploadSuccessCallback = () => {
-          const descImagesKey = getS3MerchandiseImagePath(marketerId, uploadedMerchandiseId);
+          const descImagesKey = getS3MerchandiseDescImagePath(marketerId, uploadedMerchandiseId);
           // 상품 설명 이미지 업로드
           descImages.uploadToS3(
             descImagesKey,

@@ -5,7 +5,6 @@ import React, { useState } from 'react';
 import CustomDataGrid from '../../../../../../atoms/Table/CustomDataGrid';
 // import CustomDataGrid from '../../../../../../atoms/Table/CustomDataGrid';
 import { useDialog, useGetRequest } from '../../../../../../utils/hooks';
-import renderOrderStatus from '../../../../../../utils/render_funcs/renderOrderStatus';
 import { CampaignInterface } from '../../../dashboard/interfaces';
 import { MerchandiseOrder } from '../../interface';
 import MerchandiseOrderDialog from './MerchandiseOrderDialog';
@@ -76,7 +75,7 @@ export default function OrderManageTabContents({
               field: 'status',
               width: 130,
               renderCell: (data): React.ReactElement => (
-                <Chip label={renderOrderStatus(data.row.status)} />
+                <Chip label={data.row.statusString} />
               )
             },
             { headerName: '수량', field: 'quantity', width: 130, },

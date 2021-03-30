@@ -1,6 +1,6 @@
 import moment from 'moment';
 import {
-  IconButton, makeStyles, Typography
+  IconButton, makeStyles, Tooltip, Typography
 } from '@material-ui/core';
 import React, { useState } from 'react';
 import { Delete } from '@material-ui/icons';
@@ -10,6 +10,7 @@ import { Merchandise } from '../interface';
 import MerchandiseDeleteDialog from './MerchandiseDeleteDialog';
 import { useDialog } from '../../../../../utils/hooks';
 import Snackbar from '../../../../../atoms/Snackbar/Snackbar';
+import renderMerchandiseUploadState from '../../../../../utils/render_funcs/renderMerchandiseUploadState';
 
 const useStyles = makeStyles(() => ({
   datagrid: { height: 400, width: '100%' },
@@ -71,6 +72,23 @@ export default function MerchandiseInventory({
             field: 'stock',
             headerName: '재고',
             width: 150,
+          },
+          {
+            field: 'uploadState',
+            headerName: '상태',
+            width: 120,
+            renderCell: (data): React.ReactElement => (
+              <div>
+                <Typography variant="body2" noWrap>
+                  {renderMerchandiseUploadState(data.row.uploadState)}
+                </Typography>
+                {data.row.uploadState === 0 && data.row.denialReason && (
+                  <Tooltip title={`사유: ${data.row.denialReason}`}>
+                    <Typography noWrap variant="body2">{`사유: ${data.row.denialReason}`}</Typography>
+                  </Tooltip>
+                )}
+              </div>
+            )
           },
           {
             field: 'createDate',

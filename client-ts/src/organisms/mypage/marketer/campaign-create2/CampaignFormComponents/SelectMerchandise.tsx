@@ -41,9 +41,17 @@ export default function SelectMerchandise({
       <StyledItemText
         primary="판매 상품 선택하기"
         secondary={(
-          <Typography variant="body2" color="textSecondary">
-            선택된 상품은 온애드몰에서 판매됩니다.
-          </Typography>
+          <div>
+            <Typography variant="body2" color="textSecondary">
+              선택된 상품은 온애드몰에서 판매됩니다.
+            </Typography>
+            <Typography variant="body2" color="textSecondary">
+              다른 캠페인에 연결되지 않은 상품만 표시됩니다.
+              <Typography component="span" color="error" variant="body2">
+                {' (상품은 1개의 캠페인에만 연결될 수 있습니다.)'}
+              </Typography>
+            </Typography>
+          </div>
         )}
         // className={classes.label}
       />

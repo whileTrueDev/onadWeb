@@ -94,6 +94,7 @@ export interface MerchandiseOrder {
   campaignId: string;
   optionId: number;
   status: number;
+  statusString: string;
   orderPrice: number;
   ordererName: string;
   recipientName: string;

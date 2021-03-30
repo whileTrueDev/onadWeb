@@ -70,7 +70,7 @@ function CampaignFormPaper({
 
   const landingUrlData = useGetRequest('/marketer/landing-url/list');
   const bannerData = useGetRequest('/marketer/banner/list/active');
-  const merchandiseData = useGetRequest('/marketer/merchandises');
+  const merchandiseData = useGetRequest('/marketer/merchandises', { onlyNotConnected: true });
 
   const bannerUploadDialog = useDialog();
   const landingUrlUploadDialog = useDialog();

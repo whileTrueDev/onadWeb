@@ -83,7 +83,9 @@ export default function CampaignOnOffSwitch(props: CampaignOnOffSwitchProps): Re
     if (campaign.optionType === CPS_OPTION_TYPE) {
       // 현재 off 상태이면서 온애드몰에 아직 업로드 되지 않았거나, 상품이 없거나, 온애드몰 사이트 URL이 아직 업로드 되지 않은 경우
       if (!campaign.onOff && (!campaign.merchandiseUploadState || !campaign.merchandiseId || !campaign.merchandiseItemSiteUrl)) {
-        handleOnOffDisable('아직 온애드몰에 상품이 업로드되지 않았습니다.');
+        let message = '아직 온애드몰에 상품이 업로드되지 않았습니다.';
+        if (campaign.merchandiseUploadState === 0 && campaign.merchandiseDenialReason) message = '상품이 거절된 캠페인입니다.';
+        handleOnOffDisable(message);
         return true;
       }
       // off 상태이면서 상품의 남은 재고가 없는 경우
@@ -94,7 +96,7 @@ export default function CampaignOnOffSwitch(props: CampaignOnOffSwitchProps): Re
       }
     }
     return false;
-  }, [campaign.confirmState, campaign.linkConfirmState, campaign.merchandiseId, campaign.merchandiseItemSiteUrl, campaign.merchandiseSoldCount, campaign.merchandiseStock, campaign.merchandiseUploadState, campaign.onOff, campaign.optionType]);
+  }, [campaign.confirmState, campaign.linkConfirmState, campaign.merchandiseDenialReason, campaign.merchandiseId, campaign.merchandiseItemSiteUrl, campaign.merchandiseSoldCount, campaign.merchandiseStock, campaign.merchandiseUploadState, campaign.onOff, campaign.optionType]);
 
   const switchButton = useMemo(() => (
     <Switch

@@ -16,3 +16,16 @@ export function getS3MerchandiseImagePath(
     fileName || ''
   );
 }
+
+export function getS3MerchandiseDescImagePath(
+  marketerId: string, merchandiseId: string, fileName?: string
+): string {
+  return path.join(
+    S3_BASE_URL,
+    'merchandises',
+    marketerId,
+    merchandiseId,
+    'desc-images',
+    fileName || ''
+  );
+}

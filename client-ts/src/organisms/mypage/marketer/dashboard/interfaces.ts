@@ -42,6 +42,7 @@ export interface CampaignInterface {
   merchandiseSoldCount?: number;
   merchandiseItemSiteUrl?: string;
   merchandiseUploadState?: number;
+  merchandiseDenialReason?: string;
 }
 
 export interface OnOffInterface {
