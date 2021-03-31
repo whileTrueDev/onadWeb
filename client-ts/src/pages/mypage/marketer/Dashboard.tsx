@@ -25,6 +25,7 @@ import {
 } from '../../../organisms/mypage/marketer/dashboard/interfaces';
 import useMypageScrollToTop from '../../../utils/hooks/useMypageScrollToTop';
 import MarketerCustomerServiceCard from '../../../organisms/mypage/marketer/dashboard/MarketerCustomerServiceCard';
+import OrderList from '../../../organisms/mypage/marketer/dashboard/OrderList';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -141,8 +142,11 @@ export default function Dashboard(): JSX.Element {
                         <LogTable actionLogData={actionLogData} />
                       </Grid>
                     </Hidden>
-                    <Grid item xs={12} md={12}>
+                    <Grid item xs={12} lg={6}>
                       <CampaignList />
+                    </Grid>
+                    <Grid item xs={12} lg={6}>
+                      <OrderList />
                     </Grid>
                   </Grid>
                 </Grid>

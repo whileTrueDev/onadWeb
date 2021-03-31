@@ -28,10 +28,14 @@ export interface OrderInventoryProps {
   by?: 'marketer' | 'merchandise';
   merchandiseId?: number;
   campaignId?: number;
+  height?: number;
+  withoutTitle?: boolean;
 }
 export default function OrderInventory({
   by = 'marketer',
   merchandiseId,
+  height = 400,
+  withoutTitle,
 }: OrderInventoryProps): React.ReactElement {
   const auth = useContext(MarketerInfoContext);
   const classes = useStyles();
@@ -64,8 +68,10 @@ export default function OrderInventory({
 
   return (
     <>
-      <Typography className={classnames(classes.title, classes.bold)}>주문 목록</Typography>
-      <div style={{ height: 400 }}>
+      {withoutTitle ? null : (
+        <Typography className={classnames(classes.title, classes.bold)}>주문 목록</Typography>
+      )}
+      <div style={{ height }}>
         <CustomDataGrid
           loading={ordersGet.loading}
           rows={ordersGet.data || []}
