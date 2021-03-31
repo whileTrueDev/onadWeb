@@ -72,6 +72,8 @@ export default function Introduction({ match }: Props): JSX.Element {
           </div>
           <IntroContact
             MainUserType
+            isLogin={isLogin}
+            logout={logout}
           />
           <AppFooter />
         </div>
@@ -110,6 +112,8 @@ export default function Introduction({ match }: Props): JSX.Element {
             </div>
             <IntroContact
               MainUserType={false}
+              isLogin={isLogin}
+              logout={logout}
             />
             <AppFooter />
           </div>

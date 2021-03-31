@@ -89,7 +89,7 @@ const styles = makeStyles((theme) => ({
     }
   },
   button: {
-    marginTop: theme.spacing(4),
+    margin: theme.spacing(4, 2, 0, 2),
     width: 250,
     height: 80,
     border: '3px solid white',
@@ -107,7 +107,7 @@ const styles = makeStyles((theme) => ({
     }
   },
   button2: {
-    marginTop: theme.spacing(4),
+    margin: theme.spacing(4, 2, 0, 2),
     width: 250,
     height: 80,
     border: '3px solid white',
