@@ -18,7 +18,7 @@ import history from '../../history';
 import ParallaxScroll from './sub/ParallaxScroll';
 import axios from '../../utils/axios';
 import HOST from '../../config';
-import EventDialog from '../../organisms/main/popup/EventDialog';
+import CPSEventDialog from '../../organisms/shared/popup/CPSEventDialog';
 import { useDialog } from '../../utils/hooks';
 import CreatorLoginForm from '../../organisms/main/main/login/CreatorLoginForm';
 import openKakaoChat from '../../utils/openKakaoChat';
@@ -97,11 +97,8 @@ export default function Main(): JSX.Element {
   }, [psIndex]);
 
   // **************************************************
-  // 리뉴얼 추가 작업 - 리뉴얼 알림창 및 크리에이터 로그인 다이얼로그 오픈 토글
-  // 크리에이터 로그인창
-  const creatorLoginDialog = useDialog();
-  // 리뉴얼 알림 창
-  const renewalDialog = useDialog();
+  // 라이브커머스 이벤트 팝업
+  const liveCommerceEventDialog = useDialog();
   React.useEffect(() => {
     const now = new Date();
     const noShowDateString = localStorage.getItem('renewal-popup-no-show');
@@ -110,10 +107,10 @@ export default function Main(): JSX.Element {
       const ONE_DAY = 1000 * 60 * 60 * 24;
       // 다시 보지 않기 클릭 이후 24시간이 지나지 않은 경우 열리지 않게
       if (now.getTime() - noShowDate.getTime() > ONE_DAY) {
-        renewalDialog.handleOpen();
+        liveCommerceEventDialog.handleOpen();
       }
     } else { // 다시보지않기를 한번도 누르지 않은 경우
-      renewalDialog.handleOpen();
+      liveCommerceEventDialog.handleOpen();
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -131,7 +128,7 @@ export default function Main(): JSX.Element {
             bgfixedRange={[0, 3]}
             // timer={timer}
             // setTimer={setTimer}
-            renewalDialog={renewalDialog.open}
+            renewalDialog={liveCommerceEventDialog.open}
             // isDown={isDown}
             // setIsDown={setIsDown}
             // offsetY={offsetY}
@@ -208,7 +205,7 @@ export default function Main(): JSX.Element {
               bgfixedRange={[0, 3]}
               // timer={timer}
               // setTimer={setTimer}
-              renewalDialog={renewalDialog.open}
+              renewalDialog={liveCommerceEventDialog.open}
             >
               <div className={classes.parallax} data-parallax="0">
                 { psIndex === 0 && (
@@ -269,17 +266,13 @@ export default function Main(): JSX.Element {
               logout={logout}
             />
 
-            {/* 온애드 리뉴얼 관련 임시 팝업  */}
+            {/* CPS  관련 임시 팝업  */}
             <Hidden xsDown>
-              <EventDialog
-                open={renewalDialog.open}
-                onClose={renewalDialog.handleClose}
+              <CPSEventDialog
+                open={liveCommerceEventDialog.open}
+                onClose={liveCommerceEventDialog.handleClose}
               />
             </Hidden>
-            <CreatorLoginForm
-              open={creatorLoginDialog.open}
-              handleClose={creatorLoginDialog.handleClose}
-            />
             {/* 온애드 리뉴얼 관련 임시 팝업  */}
             {/* *******************************  */}
           </div>
