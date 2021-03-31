@@ -146,9 +146,20 @@ export default function OrderInventory({
               headerName: '상품금액',
               field: 'price',
               width: 130,
-              renderCell: (data): React.ReactElement => (
-                <Typography variant="body2">{data.row.price.toLocaleString()}</Typography>
-              )
+              renderCell: (data): React.ReactElement => {
+                if (data.row.additionalPrice) {
+                  return (
+                    <Tooltip title={`${data.row.price.toLocaleString()} (+${data.row.additionalPrice.toLocaleString()})`}>
+                      <Typography variant="body2">
+                        {`${data.row.price.toLocaleString()} (+${data.row.additionalPrice.toLocaleString()})`}
+                      </Typography>
+                    </Tooltip>
+                  );
+                }
+                return (
+                  <Typography variant="body2">{data.row.price.toLocaleString()}</Typography>
+                );
+              }
             },
           ]}
         />
