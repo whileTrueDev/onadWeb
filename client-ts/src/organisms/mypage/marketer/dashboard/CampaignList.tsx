@@ -48,13 +48,18 @@ export default function CampaignList(): JSX.Element {
         <Typography variant="h6">
           내 캠페인
         </Typography>
+        {campaignData.data && campaignData.data.length > 0 && (
         <Button
-          variant="contained"
+          variant="outlined"
+          size="small"
           color="primary"
-          onClick={(): void => { history.push('/mypage/marketer/campaigncreate'); }}
+          onClick={(): void => {
+            history.push('/mypage/marketer/inventory/campaigns');
+          }}
         >
-          캠페인 등록
+              더보기
         </Button>
+        )}
       </div>
 
       <Divider />
@@ -88,22 +93,16 @@ export default function CampaignList(): JSX.Element {
           ))}
         </article>
 
-        {/* 캠페인 목록이 있고, 캠페인 갯수가 offset 으로 나누었을 때 나머지가 0인 경우  */}
-        {campaignData.data.length > 0 && (
-        <div style={{ textAlign: 'right' }}>
+        <div style={{ textAlign: 'center' }}>
           <Button
             className={classes.moreButton}
             variant="outlined"
-            size="small"
             color="primary"
-            onClick={(): void => {
-              history.push('/mypage/marketer/inventory/campaigns');
-            }}
+            onClick={(): void => { history.push('/mypage/marketer/campaigncreate'); }}
           >
-              더보기
+            캠페인 등록
           </Button>
         </div>
-        )}
       </div>
       )}
 

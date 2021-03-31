@@ -86,7 +86,8 @@ export default function Dashboard(): JSX.Element {
                           }}
                           button={(
                             <Button
-                              variant="contained"
+                              variant="outlined"
+                              size="small"
                               color="primary"
                               onClick={(event): void => {
                                 if (anchorEl) handleAnchorClose();
