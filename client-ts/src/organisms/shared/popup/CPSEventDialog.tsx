@@ -19,13 +19,19 @@ export default function RenewalDialog({
       disableFullWidth
       noShowKey="cps-event-popup-no-show"
     >
-      <img draggable={false} src="/pngs/main-popup/cps_full.png" alt="" height={600} width="100%" />
+      <img
+        draggable={false}
+        src="/pngs/main-popup/cps_full.png"
+        alt=""
+        height={600}
+        width="100%"
+      />
       <button
         type="button"
         style={{
           position: 'absolute',
           backgroundColor: 'tan',
-          bottom: 60,
+          top: 518,
           left: 130,
           height: 65,
           width: 185,
@@ -33,7 +39,7 @@ export default function RenewalDialog({
           cursor: 'pointer',
         }}
         onClick={(): void => {
-          window.open(GOOGLE_FORM_URL);
+          window.open(GOOGLE_FORM_URL, '_blank');
         }}
       >
         참여하기
