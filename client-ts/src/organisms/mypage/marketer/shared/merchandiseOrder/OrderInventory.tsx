@@ -1,15 +1,15 @@
+import { makeStyles, Tooltip, Typography } from '@material-ui/core';
 import classnames from 'classnames';
-import {
-  Chip, makeStyles, Tooltip, Typography
-} from '@material-ui/core';
-import React, { useContext, useState } from 'react';
+import moment from 'moment';
+import React, { useState } from 'react';
+import OrderStatusChip from '../../../../../atoms/Chip/OrderStatusChip';
 // import CustomDataGrid from '../../../../../../atoms/Table/CustomDataGrid';
 import CustomDataGrid from '../../../../../atoms/Table/CustomDataGrid';
-import MarketerInfoContext from '../../../../../context/MarketerInfo.context';
 import { useDialog, useGetRequest } from '../../../../../utils/hooks';
+import { OrderStatus, 주문상태_배송완료 } from '../../../../../utils/render_funcs/renderOrderStatus';
 import { MerchandiseOrder } from '../../adManage/interface';
-import MerchandiseOrderDialog from './MerchandiseOrderDialog';
 import CampaignDetailDialog from '../CampaignDetailDialog';
+import MerchandiseOrderDialog from './MerchandiseOrderDialog';
 
 const useStyles = makeStyles((theme) => ({
   bold: { fontWeight: theme.typography.fontWeightBold },
@@ -25,26 +25,26 @@ const useStyles = makeStyles((theme) => ({
 
 
 export interface OrderInventoryProps {
-  by?: 'marketer' | 'merchandise';
+  by?: 'marketer' | 'merchandise' | 'campaign';
   merchandiseId?: number;
-  campaignId?: number;
+  campaignId?: string;
   height?: number;
   withoutTitle?: boolean;
 }
 export default function OrderInventory({
   by = 'marketer',
   merchandiseId,
+  campaignId,
   height = 400,
   withoutTitle,
 }: OrderInventoryProps): React.ReactElement {
-  const auth = useContext(MarketerInfoContext);
   const classes = useStyles();
 
   // eslint-disable-next-line max-len
-  const ordersGet = useGetRequest<{ marketerId?: string; merchandiseId?: number }, MerchandiseOrder[]>(
+  const ordersGet = useGetRequest<{ campaignId?: string; merchandiseId?: number }, MerchandiseOrder[]>(
     '/marketer/orders', {
-      marketerId: by === 'marketer' ? auth.user?.marketerId : undefined,
       merchandiseId: by === 'merchandise' ? merchandiseId : undefined,
+      campaignId: by === 'campaign' ? campaignId : undefined,
     }
   );
 
@@ -74,7 +74,10 @@ export default function OrderInventory({
       <div style={{ height }}>
         <CustomDataGrid
           loading={ordersGet.loading}
-          rows={ordersGet.data || []}
+          rows={ordersGet.data
+          // 배송완료 목록에서 제거
+            ? ordersGet.data.filter((x) => !(x.status === 주문상태_배송완료))
+            : []}
           columns={[
             { headerName: '주문번호', field: 'id', width: 120, },
             {
@@ -120,7 +123,7 @@ export default function OrderInventory({
               field: 'status',
               width: 130,
               renderCell: (data): React.ReactElement => (
-                <Chip label={data.row.statusString} />
+                <OrderStatusChip status={data.row.status as OrderStatus} />
               )
             },
             { headerName: '수량', field: 'quantity', width: 130, },
@@ -151,7 +154,10 @@ export default function OrderInventory({
                   return (
                     <Tooltip title={`${data.row.price.toLocaleString()} (+${data.row.additionalPrice.toLocaleString()})`}>
                       <Typography variant="body2">
-                        {`${data.row.price.toLocaleString()} (+${data.row.additionalPrice.toLocaleString()})`}
+                        {`${data.row.price.toLocaleString()}`}
+                        <Typography variant="body2">
+                          {`(+${data.row.additionalPrice.toLocaleString()})`}
+                        </Typography>
                       </Typography>
                     </Tooltip>
                   );
@@ -161,6 +167,16 @@ export default function OrderInventory({
                 );
               }
             },
+            {
+              headerName: '주문일시',
+              field: 'createDate',
+              width: 180,
+              renderCell: (data): React.ReactElement => (
+                <Typography variant="body2">
+                  {moment(data.row.createDate).format('YYYY/MM/DD HH:mm:ss')}
+                </Typography>
+              )
+            }
           ]}
         />
       </div>

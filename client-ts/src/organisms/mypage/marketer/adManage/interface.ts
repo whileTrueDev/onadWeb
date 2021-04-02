@@ -1,3 +1,4 @@
+import { OrderStatus, OrderStatusString } from '../../../../utils/render_funcs/renderOrderStatus';
 import { OnadAddressData } from '../shared/sub/MerchandiseAddressInput';
 
 export interface BannerDataInterface {
@@ -93,13 +94,14 @@ export interface MerchandiseOrder {
   merchandiseId: number;
   campaignId: string;
   optionId: number;
-  status: number;
-  statusString: string;
+  status: OrderStatus;
+  statusString: OrderStatusString;
   orderPrice: number;
   ordererName: string;
   recipientName: string;
   quantity: number;
   createDate: string;
+  updateDate: string;
   name: string;
   price: number;
   stock: number;
@@ -108,4 +110,13 @@ export interface MerchandiseOrder {
   optionValue?: string;
   additionalPrice?: number;
   merchandiseSoldCount?: number;
+  email: string;
+  phone: string;
+  zoneCode: string;
+  roadAddress: string;
+  jibunAddress: string;
+  deliveryMemo?: string;
+  releaseId?: string;
+  courierCompany?: string;
+  trackingNumber?: string;
 }
