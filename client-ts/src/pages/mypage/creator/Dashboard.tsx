@@ -49,7 +49,7 @@ const Dashboard = (): JSX.Element => {
   // 출금 내역 정보
   const withdrawalData = useGetRequest('/creator/income/withdrawal');
   // 리모트 컨트롤러 URL 정보
-  const remoteControllerUrlGet = useGetRequest<null, string>('/creator/banner/remote-page-url');
+  const remoteControllerUrlGet = useGetRequest<null, string>('/creator/remote/page-url');
 
   // 채널 연동 유도 다이얼로그
   const platformLinkDialog = useDialog();

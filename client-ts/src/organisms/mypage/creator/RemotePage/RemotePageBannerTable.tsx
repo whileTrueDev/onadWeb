@@ -31,25 +31,30 @@ export interface BannerStatus {
   targetList: string[]; date: string; bannerSrc: string;
   state: number; campaignDescription: string;
   creatorName: string;
+  merchandiseId?: string;
+  merchandiseName?: string;
+  merchandisePrice?: number;
 }
 
-interface RemotePageBannerTable {
+interface RemotePageBannerTableProps {
   pageUrl: string;
 }
 
 interface Params {
   remoteControllerUrl: string;
 }
-const RemotePageBannerTable = (props: RemotePageBannerTable): JSX.Element => {
+const RemotePageBannerTable = (props: RemotePageBannerTableProps): JSX.Element => {
   const {
     pageUrl
   } = props;
   const classes = useStyles();
   const snack = useDialog();
   const failSnack = useDialog();
-  const remoteCampaignTableGet = useGetRequest<Params, BannerStatus[]>('/creator/banner/remote-page', { remoteControllerUrl: pageUrl });
+  const remoteCampaignTableGet = useGetRequest<Params, BannerStatus[]>(
+    '/creator/remote/campaigns', { remoteControllerUrl: pageUrl }
+  );
 
-  const onOffUpdate = usePatchRequest('/creator/banner/remote-page', () => {
+  const onOffUpdate = usePatchRequest('/creator/remote/campaigns/onoff', () => {
     remoteCampaignTableGet.doGetRequest();
   });
 
@@ -143,7 +148,7 @@ const RemotePageBannerTable = (props: RemotePageBannerTable): JSX.Element => {
         </TableHead>
         <TableBody>
 
-          {remoteCampaignTableGet?.data?.map((value: BannerStatus) => (
+          {remoteCampaignTableGet.data?.map((value: BannerStatus) => (
             <TableRow key={value.index}>
               <TableCell style={{
                 flexDirection: 'column',
@@ -175,7 +180,7 @@ const RemotePageBannerTable = (props: RemotePageBannerTable): JSX.Element => {
               {categorySwitch(value.priorityType, value.targetList, value.creatorName)}
               <TableCell>
                 <div>
-                  <OnadBanner src={value.bannerSrc} style={{ maxHeight: '100px', width: '150' }} />
+                  <OnadBanner src={value.bannerSrc} style={{ maxHeight: '75px', width: '150px' }} />
                 </div>
               </TableCell>
               <TableCell>

@@ -13,6 +13,7 @@ import notificationRouter from './notification';
 import clicksRouter from './clicks';
 import cpaRouter from './cpa';
 import referralCodeRouter from './referral-code';
+import remoteRouter from './remote/remote';
 import makeAdvertiseUrl from '../../lib/makeAdvertiseUrl';
 import makeRemoteControllerUrl from '../../lib/makeRemoteControllerUrl';
 
@@ -23,6 +24,7 @@ router.use('/notification', notificationRouter);
 router.use('/clicks', clicksRouter);
 router.use('/cpa', cpaRouter);
 router.use('/referral-code', referralCodeRouter);
+router.use('/remote', remoteRouter);
 
 // 통합 회원가입 - 아이디 중복 체크
 router.route('/check-id')

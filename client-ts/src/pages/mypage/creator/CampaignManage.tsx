@@ -41,7 +41,7 @@ const CampaignManage = (): JSX.Element => {
   const overlayUrlGet = useGetRequest<null, OverlayUrlRes>('/creator/banner/overlay');
 
   // 리모트 컨트롤러 URL 정보
-  const remoteControllerUrlGet = useGetRequest<null, string>('/creator/banner/remote-page-url');
+  const remoteControllerUrlGet = useGetRequest<null, string>('/creator/remote/page-url');
 
   // For Onoff success snackbar
   const snack = useDialog();
