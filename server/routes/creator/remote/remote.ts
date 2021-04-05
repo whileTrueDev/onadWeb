@@ -46,20 +46,22 @@ router.route('/campaigns')
       `;
       const listQuery = `
       SELECT
+        optionType,
         campaign.campaignId, campaign.marketerName, priorityType, targetList, CT.date, campaign.onOff as state,
         campaign.campaignDescription,
-        MR.id AS merchandiseId, MR.name AS merchandiseName, MR.price AS merchandisePrce,
+        MR.id AS merchandiseId, MR.name AS merchandiseName, MR.price AS merchandisePrice, itemSiteUrl,
         BR.bannerSrc
       FROM (
         SELECT creatorId, campaignId , min(date) as date 
         FROM campaignTimestamp
-        WHERE creatorId = "130096343"
+        WHERE creatorId = ?
         GROUP BY campaignId
       ) AS CT
       JOIN campaign ON CT.campaignId = campaign.campaignId
       JOIN bannerRegistered AS BR ON campaign.bannerId = BR.bannerId
       LEFT JOIN linkRegistered AS IR ON connectedLinkId = IR.linkId
       LEFT JOIN merchandiseRegistered AS MR ON MR.id = campaign.merchandiseId
+      LEFT JOIN merchandiseMallItems AS MMI ON MMI.merchandiseId = campaign.merchandiseId
       WHERE campaign.onOff = 1
       ORDER BY date DESC
                           `;
