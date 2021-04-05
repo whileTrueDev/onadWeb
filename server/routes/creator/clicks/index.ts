@@ -41,16 +41,18 @@ router.route('/')
 
 router.route('/current')
   .get(responseHelper.middleware.checkSessionExists,
-    responseHelper.middleware.withErrorCatch(async (req, res, next) => {
+    responseHelper.middleware.withErrorCatch(async (req, res) => {
       const { creatorId } = responseHelper.getSessionData(req);
       const [offset, page] = responseHelper.getParam(['offset', 'page'], 'get', req);
       const query = `
-      SELECT tracking.id, clickedTime, costType, tracking.linkId, campaignName, links, creatorId, payout, channel, os, browser
+      SELECT tracking.id, clickedTime, costType, tracking.linkId,
+      campaign.campaignName, links, creatorId, payout, channel, os, browser,
+      campaign.merchandiseId, itemSiteUrl
         FROM tracking
-        LEFT JOIN linkRegistered AS lr
-        ON lr.linkId = tracking.linkId
-        WHERE creatorId = ?
-        ORDER BY clickedTime DESC
+        JOIN campaign ON campaign.campaignId = tracking.campaignid
+        LEFT JOIN linkRegistered AS lr ON lr.linkId = tracking.linkId
+        LEFT JOIN merchandiseMallItems AS mmi ON mmi.merchandiseId = campaign.merchandiseId
+        WHERE creatorId = ? ORDER BY clickedTime DESC                                          
         LIMIT ?, ?
       `;
       const queryArray = [creatorId, Number(page) * Number(offset), Number(offset)];

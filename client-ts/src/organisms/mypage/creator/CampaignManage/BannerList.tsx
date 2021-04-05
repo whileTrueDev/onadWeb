@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export interface Link {primary: boolean; linkTo: string; linkName: string}
-export interface CampaignData {
+export interface BannerStarted {
   campaignId: string;
   date: string;
   bannerSrc: string;
@@ -51,6 +51,9 @@ export interface CampaignData {
   optionType: number;
   priorityType: number;
   profileImage?: string;
+  itemSiteUrl?: string;
+  merchandiseId?: string;
+  merchandiseName?: string;
 }
 export default function BannerList(): JSX.Element {
   const classes = useStyles();
@@ -74,7 +77,7 @@ export default function BannerList(): JSX.Element {
   // 로딩
   const [loading, setLoading] = useState<boolean>(false);
   // 데이터
-  const [data, setData] = useState<CampaignData[]>([]);
+  const [data, setData] = useState<BannerStarted[]>([]);
   // 요청 페이지
   const [page, setPage] = useState(0);
   function handleNextPage(): void {
@@ -82,7 +85,7 @@ export default function BannerList(): JSX.Element {
   }
   const request = useCallback((): void => {
     setLoading(true);
-    axiosInstance.get<CampaignData[]>(
+    axiosInstance.get<BannerStarted[]>(
       `${HOST}/creator/banner/list`, { params: { offset: OFFSET, page } }
     )
       .then((res) => {
@@ -136,6 +139,7 @@ export default function BannerList(): JSX.Element {
                     color={campaign.state ? 'primary' : 'default'}
                   />
                   <div>
+                    {/* LIVE 배너 광고의 랜딩페이지 링크 */}
                     {campaign.links && JSON.parse(campaign.links).links.map((link: Link) => (
                       <span key={link.linkName}>
                         {link.primary && (
@@ -143,7 +147,7 @@ export default function BannerList(): JSX.Element {
                           component="span"
                           color="textPrimary"
                           className={classes.linkTitle}
-                          onClick={() => window.open(link.linkTo)}
+                          onClick={() => window.open(link.linkTo, '_blank')}
                         >
                           {' '}
                           {link.linkName}
@@ -151,6 +155,17 @@ export default function BannerList(): JSX.Element {
                         )}
                       </span>
                     ))}
+                    {/* 판매형 광고의 경우 상품 판매 링크 */}
+                    {!campaign.links && campaign.merchandiseId && campaign.itemSiteUrl && (
+                      <Typography
+                        component="span"
+                        color="textPrimary"
+                        className={classes.linkTitle}
+                        onClick={() => window.open(campaign.itemSiteUrl, '_blank')}
+                      >
+                        {campaign.merchandiseName}
+                      </Typography>
+                    )}
                   </div>
                   <Typography variant="caption" color="textSecondary">{`${campaign.marketerName},첫게시: ${campaign.date}`}</Typography>
                   <Typography color="textPrimary" variant="body2">{`배너광고 ${campaign.CPM.toLocaleString()}원 • 클릭광고 ${campaign.CPC.toLocaleString()}원`}</Typography>

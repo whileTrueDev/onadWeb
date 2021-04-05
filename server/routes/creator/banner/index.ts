@@ -160,7 +160,8 @@ router.route('/list')
         campaign.connectedLinkId, campaign.onOff as state, campaign.marketerName,
         campaign.campaignDescription, campaign.priorityType, campaign.optionType, campaign.targetList,
         MI.marketerContraction, MI.profileImage,
-        IR.links
+        IR.links,
+        itemSiteUrl, campaign.merchandiseId, MR.name AS merchandiseName
       FROM (
         SELECT creatorId, campaignId , min(date) as date
         FROM campaignTimestamp
@@ -171,6 +172,8 @@ router.route('/list')
         JOIN bannerRegistered AS BR ON campaign.bannerId = BR.bannerId
         LEFT JOIN linkRegistered AS IR ON connectedLinkId = IR.linkId
         LEFT JOIN marketerInfo AS MI ON campaign.marketerId = MI.marketerId
+        LEFT JOIN merchandiseRegistered AS MR ON campaign.merchandiseId = MR.id
+        LEFT JOIN merchandiseMallItems AS MMI ON campaign.merchandiseId = MMI.merchandiseId
       ORDER BY campaign.onOff = 1 AND MI.marketerContraction = 1 DESC, CT.date DESC
       LIMIT ?, ?
       `;
