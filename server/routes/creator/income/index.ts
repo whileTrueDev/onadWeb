@@ -58,7 +58,7 @@ router.route('/ratio').get(
       GROUP BY type`;
       // 248937084
     interface RatioQueryResult {
-      creatorId: string; type: 'CPM' | 'CPC' | 'CPA'; cashAmount: number;
+      creatorId: string; type: 'CPM' | 'CPC' | 'CPA' | 'CPS'; cashAmount: number;
     }
     const { result } = await doQuery<RatioQueryResult>(query, [creatorId]);
     responseHelper.send(result, 'get', res);

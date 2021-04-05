@@ -52,7 +52,8 @@ export default function AdIncomeCard(): JSX.Element {
   const COLORS = [
     theme.palette.primary.main,
     theme.palette.secondary.main,
-    theme.palette.success.main
+    theme.palette.success.main,
+    theme.palette.info.light,
   ];
 
   const RADIAN = Math.PI / 180;
@@ -88,10 +89,11 @@ export default function AdIncomeCard(): JSX.Element {
   };
 
   // 수익 type 렌더링 함수
-  const renderType = (type: 'CPM' | 'CPC' | 'CPA'): string => {
+  const renderType = (type: 'CPM' | 'CPC' | 'CPA' | 'CPS'): string => {
     if (type === 'CPM') return '배너광고';
     if (type === 'CPC') return '클릭/채팅광고';
     if (type === 'CPA') return '참여형광고';
+    if (type === 'CPS') return '판매형광고';
     return '';
   };
 
@@ -121,30 +123,34 @@ export default function AdIncomeCard(): JSX.Element {
           <>
             <Grid item xs={12} sm={6}>
               <Typography className={classes.title}>광고 수익 정보</Typography>
-              {incomeRatioGet.data.sort((a, b) => b.type.localeCompare(a.type)).map((d) => (
-                <div key={d.type + d.cashAmount} className={classes.fields}>
-                  <Typography>
-                    {renderType(d.type)}
+              <Grid container alignItems="center">
+                {incomeRatioGet.data.sort((a, b) => b.type.localeCompare(a.type))
+                  .map((d) => (
+                    <Grid item xs={6} key={d.type + d.cashAmount} className={classes.fields}>
+                      <Typography>
+                        {renderType(d.type)}
 
-                    {/* CPA의 경우 설명 (?) 아이콘 생성 */}
-                    {d.type === 'CPA' && (
-                    <Typography
-                      aria-owns={descAnchor.open ? 'mouse-over-popover' : undefined}
-                      component="span"
-                      aria-haspopup="true"
-                      style={{ cursor: 'pointer' }}
-                      onClick={descAnchor.handleAnchorOpen}
-                    >
-                      <Help fontSize="small" />
-                    </Typography>
-                    )}
+                        {/* CPA의 경우 설명 (?) 아이콘 생성 */}
+                        {d.type === 'CPA' && (
+                        <Typography
+                          aria-owns={descAnchor.open ? 'mouse-over-popover' : undefined}
+                          component="span"
+                          aria-haspopup="true"
+                          variant="body2"
+                          style={{ cursor: 'pointer' }}
+                          onClick={descAnchor.handleAnchorOpen}
+                        >
+                          <Help fontSize="small" style={{ verticalAlign: 'middle' }} />
+                        </Typography>
+                        )}
 
-                  </Typography>
-                  <Typography variant="h6" className={classes.bold}>
-                    {`${d.cashAmount.toLocaleString()} 원`}
-                  </Typography>
-                </div>
-              ))}
+                      </Typography>
+                      <Typography className={classes.bold}>
+                        {`${d.cashAmount.toLocaleString()} 원`}
+                      </Typography>
+                    </Grid>
+                  ))}
+              </Grid>
             </Grid>
             <Grid item xs={12} sm={6}>
               {/* 모바일화면 DIvider */}
@@ -164,7 +170,9 @@ export default function AdIncomeCard(): JSX.Element {
                     label={renderCustomizedLabel}
                     outerRadius={70}
                   >
-                    {incomeRatioGet.data.map((entry, index) => <Cell key={`cell-${entry.type}`} fill={COLORS[index % COLORS.length]} />)}
+                    {incomeRatioGet.data.map(
+                      (entry, index) => <Cell key={`cell-${entry.type}`} fill={COLORS[index % COLORS.length]} />
+                    )}
                   </Pie>
                   <Legend layout="vertical" align="right" verticalAlign="middle" content={renderLegend} />
                   <Tooltip />
