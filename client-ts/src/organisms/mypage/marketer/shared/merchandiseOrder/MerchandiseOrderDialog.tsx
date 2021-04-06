@@ -3,16 +3,16 @@ import {
   Button, Chip, CircularProgress, Divider, makeStyles, Typography
 } from '@material-ui/core';
 import React, { useContext, useMemo, useState } from 'react';
-import SwipeableTextMobileStepper from '../../../../../../atoms/Carousel/Carousel';
-import CustomDialog from '../../../../../../atoms/Dialog/Dialog';
-import MarketerInfoContext from '../../../../../../context/MarketerInfo.context';
-import { getS3MerchandiseImagePath } from '../../../../../../utils/aws/getS3Path';
-import { useDialog, useGetRequest, usePatchRequest } from '../../../../../../utils/hooks';
+import SwipeableTextMobileStepper from '../../../../../atoms/Carousel/Carousel';
+import CustomDialog from '../../../../../atoms/Dialog/Dialog';
+import MarketerInfoContext from '../../../../../context/MarketerInfo.context';
+import { getS3MerchandiseImagePath } from '../../../../../utils/aws/getS3Path';
+import { useDialog, useGetRequest, usePatchRequest } from '../../../../../utils/hooks';
 import renderOrderStatus, {
   주문상태_출고준비, 주문상태_상품준비, 주문상태_주문취소, 주문상태_배송완료, 주문상태_주문접수, 주문상태_출고완료
-} from '../../../../../../utils/render_funcs/renderOrderStatus';
-import { Merchandise, MerchandiseOrder } from '../../interface';
-import Snackbar from '../../../../../../atoms/Snackbar/Snackbar';
+} from '../../../../../utils/render_funcs/renderOrderStatus';
+import { Merchandise, MerchandiseOrder } from '../../adManage/interface';
+import Snackbar from '../../../../../atoms/Snackbar/Snackbar';
 
 const useStyles = makeStyles((theme) => ({
   buttonSet: {

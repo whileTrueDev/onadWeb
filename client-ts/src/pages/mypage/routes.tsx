@@ -13,6 +13,8 @@ import CreatorMyAds from './creator/CampaignManage';
 import CreatorDashboard from './creator/Dashboard';
 import CreatorManual from './creator/Manual';
 import CreatorMyPage from './creator/Mypage';
+import CreatorIncomeManage from './creator/IncomeManage';
+import CreatorReferralCodeManage from './creator/ReferralCodeManage';
 // import CreatorCPAManage from './creator/CPAManage';
 // 마케터 라우터
 import MarketerCampaign from './marketer/AdManage/Campaign';
@@ -22,8 +24,7 @@ import MarketerMyOffice from './marketer/MyOffice';
 import MarketerMyInfo from './marketer/MyInfo';
 import MarketerCreateCampaign from './marketer/CampaignCreate';
 import MarketerManual from './marketer/Manual';
-import CreatorIncomeManage from './creator/IncomeManage';
-import CreatorReferralCodeManage from './creator/ReferralCodeManage';
+import MarketerOrders from './marketer/AdManage/Orders';
 // shared 라우터
 import Notice from './shared/Notice';
 
@@ -126,6 +127,11 @@ const dashboardRoutes: MypageRoutes = {
           path: '/inventory',
           name: '광고 인벤토리',
           component: MarketerInventory,
+        },
+        {
+          path: '/orders',
+          name: '주문 관리',
+          component: MarketerOrders,
         },
       ]
     },

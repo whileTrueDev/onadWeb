@@ -47,7 +47,8 @@ router.route('/list')
             links, regiDate, updateDate
             FROM linkRegistered
             WHERE marketerId = ?
-            ORDER BY regiDate DESC`;
+            ORDER BY regiDate DESC
+          `;
 
       const handleSuccess = (row: any) => {
         const result = row.result.map(
@@ -57,7 +58,7 @@ router.route('/list')
       };
 
       if (page && offset) {
-        return doQuery(query, [marketerId, searchPage, searchOffset])
+        return doQuery(`${query} LIMIT ?, ?`, [marketerId, searchPage, searchOffset])
           .then(handleSuccess)
           .catch((error) => {
             responseHelper.promiseError(error, next);

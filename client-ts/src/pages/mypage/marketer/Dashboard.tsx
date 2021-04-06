@@ -25,6 +25,7 @@ import {
 } from '../../../organisms/mypage/marketer/dashboard/interfaces';
 import useMypageScrollToTop from '../../../utils/hooks/useMypageScrollToTop';
 import MarketerCustomerServiceCard from '../../../organisms/mypage/marketer/dashboard/MarketerCustomerServiceCard';
+import OrderList from '../../../organisms/mypage/marketer/dashboard/OrderList';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -51,7 +52,7 @@ export default function Dashboard(): JSX.Element {
   const adData = useGetRequest<null, AdInterface | null>('/marketer/ad');
   const countsData = useGetRequest<null, CountInterface | null>('/marketer/ad/analysis/creator-count');
   const actionLogData = useGetRequest<null, ActionLogInterface[] | null>('/marketer/history');
-  const valueChartData = useGetRequest<null, ValueChartInterface[] | null>('/marketer/ad/analysis/expenditure');
+  const valueChartData = useGetRequest<null, ValueChartInterface[]>('/marketer/ad/analysis/expenditure');
   const cpsChartData = useGetRequest<null, CPSChartInterface[]>('/marketer/ad/analysis/expenditure/cps');
 
   useMypageScrollToTop();
@@ -85,7 +86,8 @@ export default function Dashboard(): JSX.Element {
                           }}
                           button={(
                             <Button
-                              variant="contained"
+                              variant="outlined"
+                              size="small"
                               color="primary"
                               onClick={(event): void => {
                                 if (anchorEl) handleAnchorClose();
@@ -130,9 +132,6 @@ export default function Dashboard(): JSX.Element {
                 </Grid>
                 <Grid item xs={12} md={12} lg={12}>
                   <Grid container spacing={2}>
-                    <Grid item xs={12} md={12}>
-                      <CampaignList />
-                    </Grid>
                     <Hidden mdDown>
                       <Grid item xs={9} md={3} lg={9}>
                         <CanvasForChart
@@ -144,6 +143,12 @@ export default function Dashboard(): JSX.Element {
                         <LogTable actionLogData={actionLogData} />
                       </Grid>
                     </Hidden>
+                    <Grid item xs={12} lg={6}>
+                      <CampaignList />
+                    </Grid>
+                    <Grid item xs={12} lg={6}>
+                      <OrderList />
+                    </Grid>
                   </Grid>
                 </Grid>
 

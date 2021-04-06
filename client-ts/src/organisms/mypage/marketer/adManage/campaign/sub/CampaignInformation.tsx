@@ -8,8 +8,8 @@ import { CampaignInterface } from '../../../dashboard/interfaces';
 import {
   CONFIRM_STATE_CONFIRMED,
 } from '../../../../../../utils/render_funcs/renderBannerConfirmState';
-import OrderManageTabContents from './OrderManageTabContents';
-import CampaignInfoTabContents from './CampaignInfoTabContents';
+import CampaignDetail from './CampaignDetail';
+import OrderInventory from '../../../shared/merchandiseOrder/OrderInventory';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -64,12 +64,12 @@ export default function CampaignInformation({
 
       {selectedTabIndex === '0' && (
       <section id="campaign-analysis" className={classes.contents}>
-        <CampaignInfoTabContents campaign={campaign} />
+        <CampaignDetail campaign={campaign} />
       </section>
       )}
       {selectedTabIndex === '1' && (
       <section id="campaign-analysis" className={classes.contents}>
-        <OrderManageTabContents campaign={campaign} />
+        <OrderInventory by="merchandise" merchandiseId={campaign.merchandiseId} />
       </section>
       )}
 
