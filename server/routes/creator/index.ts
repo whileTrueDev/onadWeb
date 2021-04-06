@@ -12,6 +12,7 @@ import bannerRouter from './banner';
 import notificationRouter from './notification';
 import clicksRouter from './clicks';
 import cpaRouter from './cpa';
+import cpsRouter from './cps/cps';
 import referralCodeRouter from './referral-code';
 import remoteRouter from './remote/remote';
 import makeAdvertiseUrl from '../../lib/makeAdvertiseUrl';
@@ -25,6 +26,7 @@ router.use('/clicks', clicksRouter);
 router.use('/cpa', cpaRouter);
 router.use('/referral-code', referralCodeRouter);
 router.use('/remote', remoteRouter);
+router.use('/cps', cpsRouter);
 
 // 통합 회원가입 - 아이디 중복 체크
 router.route('/check-id')

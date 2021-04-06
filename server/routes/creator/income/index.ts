@@ -136,7 +136,7 @@ router.route('/chart')
       const query = `
       SELECT
         DATE_FORMAT(cl.date, "%Y-%m-%d") as date,
-        sum(cashToCreator) as cash, type
+        sum(cashToCreator) as value, type
       FROM campaignLog AS cl
       WHERE creatorId = ?
         AND  cl.date >= DATE_SUB(NOW(), INTERVAL ? DAY)

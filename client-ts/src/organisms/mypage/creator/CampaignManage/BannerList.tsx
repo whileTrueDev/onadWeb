@@ -12,7 +12,6 @@ import HOST from '../../../../config';
 import axiosInstance from '../../../../utils/axios';
 
 const useStyles = makeStyles((theme) => ({
-  bold: { fontWeight: 'bold', color: theme.palette.text.primary },
   container: { marginBottom: theme.spacing(4) },
   linkTitle: {
     textDecoration: 'underline',
@@ -28,7 +27,11 @@ const useStyles = makeStyles((theme) => ({
   marketerLogo: { margin: theme.spacing(1, 1, 0, 0.5) },
   desc: { marginTop: theme.spacing(1) },
   loading: {
-    display: 'flex', justifyContent: 'center', height: 200, alignItems: 'center'
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    height: 200,
+    alignItems: 'center'
   },
   moreButton: { textAlign: 'center' },
 }));
@@ -106,10 +109,6 @@ export default function BannerList(): JSX.Element {
   return (
     <Grid container spacing={1} className={classes.container}>
 
-      <Grid item xs={12}>
-        <Typography className={classes.bold}>내가 진행한 광고 목록</Typography>
-      </Grid>
-
       {/* 아직 없는 경우 처리 */}
       {!loading && (!data || data.length < 1) && (
       <Grid item xs={12} style={{ marginTop: 8 }}>
@@ -184,6 +183,7 @@ export default function BannerList(): JSX.Element {
       {loading && (
       <Grid item xs={12} className={classes.loading}>
         <CircularProgress />
+        <Typography>광고 목록 로딩중입니다. 상황에 따라 1분 이상 소요될 수 있습니다.</Typography>
       </Grid>
       )}
 

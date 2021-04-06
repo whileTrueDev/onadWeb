@@ -9,7 +9,9 @@ import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
 import SpeakerNotes from '@material-ui/icons/SpeakerNotes';
 // 크리에이터 라우터
 import { HowToReg } from '@material-ui/icons';
-import CreatorMyAds from './creator/CampaignManage';
+import CreatorMyAds from './creator/campaign/CampaignManage';
+import CreatorProgressedCampaigns from './creator/campaign/ProgressedCampaigns';
+import CreatorCPSManage from './creator/campaign/CPSManage';
 import CreatorDashboard from './creator/Dashboard';
 import CreatorManual from './creator/Manual';
 import CreatorMyPage from './creator/Mypage';
@@ -60,8 +62,25 @@ const dashboardRoutes: MypageRoutes = {
       path: '/ad',
       name: '내 광고 관리',
       icon: BrandingWatermark,
-      component: CreatorMyAds,
       layout: '/mypage/creator',
+      hasSubRoutes: true,
+      subRoutes: [
+        {
+          path: '/campaigns',
+          name: '광고 관리',
+          component: CreatorMyAds,
+        },
+        {
+          path: '/cps',
+          name: '판매형 광고 관리',
+          component: CreatorCPSManage,
+        },
+        {
+          path: '/progressed',
+          name: '진행한 광고목록',
+          component: CreatorProgressedCampaigns,
+        },
+      ]
     },
     {
       path: '/income',

@@ -25,7 +25,7 @@ import PlatformLinkDialog from '../../../organisms/mypage/shared/PlatformLinkDia
 import history from '../../../history';
 import { NoticeData } from '../../../organisms/mypage/shared/notice/NoticeTable';
 import useMypageScrollToTop from '../../../utils/hooks/useMypageScrollToTop';
-import { IncomeChartData } from '../../../utils/chart/makeBarChartData';
+import { ChartDataBase } from '../../../utils/chart/makeBarChartData';
 
 const Dashboard = (): JSX.Element => {
   // 계약 정보 조회
@@ -37,7 +37,7 @@ const Dashboard = (): JSX.Element => {
   // 크리에이터 광고 레벨 정보 조회
   const levelGet = useGetRequest<null, LevelRes>('/creator/level');
   // 수익금 차트 정보 조회
-  const incomeChartGet = useGetRequest<IncomeChartParams, IncomeChartData[]>(
+  const incomeChartGet = useGetRequest<IncomeChartParams, ChartDataBase[]>(
     '/creator/income/chart', { dateRange: '30' }
   );
   // 현재 송출중 배너 정보 조회
