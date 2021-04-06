@@ -1,23 +1,29 @@
-import classnames from 'classnames';
 import {
-  Button, Chip, CircularProgress, Divider, makeStyles, Typography
+  Button, CircularProgress, Divider, makeStyles, Tooltip, Typography
 } from '@material-ui/core';
+import LocalShippingIcon from '@material-ui/icons/LocalShipping';
+import classnames from 'classnames';
 import React, { useContext, useMemo, useState } from 'react';
 import SwipeableTextMobileStepper from '../../../../../atoms/Carousel/Carousel';
+import OrderStatusChip from '../../../../../atoms/Chip/OrderStatusChip';
+import DataText from '../../../../../atoms/DataText/DataText';
 import CustomDialog from '../../../../../atoms/Dialog/Dialog';
+import Snackbar from '../../../../../atoms/Snackbar/Snackbar';
 import MarketerInfoContext from '../../../../../context/MarketerInfo.context';
 import { getS3MerchandiseImagePath } from '../../../../../utils/aws/getS3Path';
 import { useDialog, useGetRequest, usePatchRequest } from '../../../../../utils/hooks';
-import renderOrderStatus, {
-  주문상태_출고준비, 주문상태_상품준비, 주문상태_주문취소, 주문상태_배송완료, 주문상태_주문접수, 주문상태_출고완료
+import {
+  OrderStatus, 주문상태_상품준비, 주문상태_주문취소, 주문상태_출고완료, 주문상태_출고준비
 } from '../../../../../utils/render_funcs/renderOrderStatus';
 import { Merchandise, MerchandiseOrder } from '../../adManage/interface';
-import Snackbar from '../../../../../atoms/Snackbar/Snackbar';
+import OrderStateChangeDialog, { OrderCourierDTO } from './OrderStateChangeDialog';
 
 const useStyles = makeStyles((theme) => ({
   buttonSet: {
     display: 'flex',
     alignItems: 'stretch',
+    justifyContent: 'space-between',
+    margin: theme.spacing(1, 0),
   },
   success: {
     backgroundColor: theme.palette.success.main,
@@ -28,14 +34,11 @@ const useStyles = makeStyles((theme) => ({
     '&:hover': { backgroundColor: theme.palette.error.light, },
   },
   actionbutton: {
-    margin: theme.spacing(1),
-    flex: 1,
-    wordBreak: 'keep-all',
+    // margin: theme.spacing(1),
   },
+  bold: { fontWeight: 'bold' },
 }));
 
-export type OrderStatus = typeof 주문상태_출고준비
-|typeof 주문상태_상품준비|typeof 주문상태_주문취소|typeof 주문상태_배송완료|typeof 주문상태_주문접수|typeof 주문상태_출고완료;
 export interface MerchandiseDetailDialogProps {
   merchandiseOrder: MerchandiseOrder;
   open: boolean;
@@ -48,7 +51,7 @@ function MerchandiseOrderDialog({
   open,
   onClose,
   onStatusChange,
-  onStatusChangeFail,
+  // onStatusChangeFail,
 }: MerchandiseDetailDialogProps): React.ReactElement {
   const classes = useStyles();
   const marketerInfo = useContext(MarketerInfoContext);
@@ -95,23 +98,31 @@ function MerchandiseOrderDialog({
   }
 
   // 상태 변경 요청 함수
-  function handleStatusChange(
-    status: OrderStatus
-  ): void {
-    orderStatusPatch.doPatchRequest({ orderId: merchandiseOrder.id, status })
+  type StatusChangeParams = { status: OrderStatus; dto?: OrderCourierDTO; denialReason?: string };
+  function handleStatusChange({
+    status, dto, denialReason
+  }: StatusChangeParams): void {
+    orderStatusPatch.doPatchRequest({
+      orderId: merchandiseOrder.id,
+      status,
+      denialReason,
+      courierCompany: dto ? dto.courierCompany : null,
+      trackingNumber: dto ? dto.trackingNumber : null,
+    })
       .then(() => {
         handleSnackMsg(
           '주문 상태를 변경이 완료되었습니다.', 'success'
         );
         snack.handleOpen();
+        confirmDialog.handleClose();
         if (onStatusChange) onStatusChange();
       })
-      .catch(() => {
+      .catch((err) => {
+        console.error(err);
         handleSnackMsg(
           '주문 상태를 변경하는 도중 오류가 발생했습니다. 문제가 지속적으로 발견될 시 support@onad.io로 문의바랍니다.', 'error'
         );
         snack.handleOpen();
-        if (onStatusChangeFail) onStatusChangeFail();
       });
   }
 
@@ -134,69 +145,99 @@ function MerchandiseOrderDialog({
                 .map((image) => getMerchandiseS3Url(image, merchandiseOrder.merchandiseId))}
             />
             )}
-            <Typography>
-              {'주문 상태: '}
-              <Chip
-                size="small"
-                label={merchandiseOrder.statusString}
-                color={[주문상태_상품준비, 주문상태_출고준비].includes(merchandiseOrder.status) ? 'primary' : 'default'}
-                className={classnames({
-                  [classes.success]: [주문상태_배송완료, 주문상태_출고완료].includes(merchandiseOrder.status),
-                })}
-              />
-            </Typography>
-            <Typography>{`상품 명: ${merchandiseOrder.name}`}</Typography>
+            <DataText name="상품 명" value={merchandiseOrder.name} />
             {merchandiseOrder.optionId && (
-            <Typography>
-              {`선택 옵션: ${merchandiseOrder.optionType} - ${merchandiseOrder.optionValue}`}
-              {merchandiseOrder.additionalPrice ? `(+${merchandiseOrder.additionalPrice.toLocaleString()}원)` : ''}
-            </Typography>
+            <DataText
+              name="선택 옵션"
+              value={(
+                <Typography component="span">
+                  {`${merchandiseOrder.optionType} - ${merchandiseOrder.optionValue}`}
+                  {merchandiseOrder.additionalPrice ? `(+${merchandiseOrder.additionalPrice.toLocaleString()}원)` : ''}
+                </Typography>
+              )}
+            />
             )}
-            <Typography>{`주문 수량: ${merchandiseOrder.quantity}`}</Typography>
-            <Typography>{`남은 재고: ${availableStock}`}</Typography>
-            <Typography>
-              {`총 주문 금액: ${
+            <DataText name="주문 수량" value={merchandiseOrder.quantity} />
+            <DataText name="남은 상품 재고" value={availableStock} />
+            <DataText
+              name="총 주문 금액"
+              value={`${
                 (merchandiseOrder.orderPrice
                 + (merchandiseOrder.additionalPrice || 0)).toLocaleString()
               } 원`}
-            </Typography>
+            />
 
             <Divider />
-            <Typography>상태변경</Typography>
+
+            <DataText name="주문자 이메일" value={merchandiseOrder.email} />
+            <DataText name="받는분" value={merchandiseOrder.recipientName} />
+            <DataText name="전화번호" value={merchandiseOrder.phone} />
+            <DataText name="우편번호" value={merchandiseOrder.zoneCode} />
+            <DataText name="도로명 주소" value={merchandiseOrder.roadAddress} />
+            <DataText name="지번 주소" value={merchandiseOrder.jibunAddress} />
+            {merchandiseOrder.deliveryMemo ? (
+              <DataText name="배송 메모" value={merchandiseOrder.deliveryMemo} />
+            ) : null}
+
+            <Divider />
+
+            <DataText
+              name="주문상태"
+              value={(
+                <OrderStatusChip status={merchandiseOrder.status} />
+              )}
+            />
+            {merchandiseOrder.releaseId && (
+              <DataText
+                iconComponent={LocalShippingIcon}
+                iconColor="success"
+                name="출고 정보"
+                value={`${merchandiseOrder.courierCompany} ${merchandiseOrder.trackingNumber}`}
+              />
+            )}
+            <Typography className={classes.bold}>상태변경</Typography>
+            <Typography color="error" variant="body2">변경한 상태는 되돌릴 수 없습니다.</Typography>
+            <Typography color="error" variant="body2">주문취소는 주문접수 상태에서만 가능합니다.</Typography>
+
             <div className={classes.buttonSet}>
               <Button
                 className={classes.actionbutton}
                 variant="contained"
-                color="primary"
-                disabled={availableStock === 0}
+                color="secondary"
+                disabled={availableStock === 0 || merchandiseOrder.status >= 주문상태_상품준비}
                 onClick={(): void => handleStatusSelect(주문상태_상품준비)}
               >
-                상품준비 상태로 변경
+                상품준비
               </Button>
               <Button
                 className={classes.actionbutton}
-                color="primary"
+                color="secondary"
                 variant="contained"
-                disabled={availableStock === 0}
+                disabled={availableStock === 0 || merchandiseOrder.status >= 주문상태_출고준비}
                 onClick={(): void => handleStatusSelect(주문상태_출고준비)}
               >
-                출고준비 상태로 변경
+                출고준비
               </Button>
               <Button
                 className={classnames(classes.success, classes.actionbutton)}
                 variant="contained"
-                disabled={availableStock === 0}
+                disabled={availableStock === 0 || merchandiseOrder.status >= 주문상태_출고완료}
                 onClick={(): void => handleStatusSelect(주문상태_출고완료)}
               >
-                출고완료 상태로 변경
+                출고완료
               </Button>
-              <Button
-                className={classnames(classes.error, classes.actionbutton)}
-                variant="contained"
-                onClick={(): void => handleStatusSelect(주문상태_주문취소)}
-              >
-                주문취소
-              </Button>
+              <Tooltip title="주문취소는 되돌릴 수 없습니다.">
+                <div>
+                  <Button
+                    className={classnames(classes.error, classes.actionbutton)}
+                    variant="contained"
+                    onClick={(): void => handleStatusSelect(주문상태_주문취소)}
+                    disabled={merchandiseOrder.status !== 0}
+                  >
+                  주문취소
+                  </Button>
+                </div>
+              </Tooltip>
             </div>
             <Button fullWidth variant="contained" onClick={onClose}>닫기</Button>
           </>
@@ -205,27 +246,16 @@ function MerchandiseOrderDialog({
 
       {/* 상태변경 확인 다이얼로그 */}
       {selectedStatus && (
-      <CustomDialog
-        fullWidth
-        maxWidth="xs"
-        open={confirmDialog.open}
-        onClose={() => {
-          confirmDialog.handleClose();
-          handleStatusReset();
-        }}
-        buttons={(
-          <div>
-            <Button variant="contained" color="primary" onClick={(): void => handleStatusChange(selectedStatus)}>확인</Button>
-            <Button variant="contained" onClick={confirmDialog.handleClose}>취소</Button>
-          </div>
-        )}
-      >
-        <div style={{ textAlign: 'center' }}>
-          <Typography>
-            {`${merchandiseOrder.name}의 상태를 ${renderOrderStatus(selectedStatus)}로 변경하시겠습니까?`}
-          </Typography>
-        </div>
-      </CustomDialog>
+        <OrderStateChangeDialog
+          open={confirmDialog.open}
+          onClose={(): void => {
+            confirmDialog.handleClose();
+            handleStatusReset();
+          }}
+          onClick={handleStatusChange}
+          merchandiseOrder={merchandiseOrder}
+          selectedStatus={selectedStatus}
+        />
       )}
 
       {snackMsg && (
