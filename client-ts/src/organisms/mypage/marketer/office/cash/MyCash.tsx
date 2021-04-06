@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(1),
     [theme.breakpoints.down('xs')]: {
       padding: theme.spacing(2)
-    }
+    },
   },
   button: { margin: theme.spacing(0, 1, 0, 0) }
 }));

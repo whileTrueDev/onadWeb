@@ -76,6 +76,9 @@ const useStyles = makeStyles((theme) => ({
   guideButton: {
     color: 'white',
     background: '#4083ff',
+    '&:hover': {
+      backgroundColor: '#00a7ff',
+    },
     marginTop: 20,
     marginLeft: 10,
     borderRadius: 10,

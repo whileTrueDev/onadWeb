@@ -48,10 +48,11 @@ function HowToUsemarketer({ source }: Props): JSX.Element {
             샘플
           </Button>
           <CustomButtons
-            className={classes.guideButton}
             load
+            className={classes.guideButton}
+            onClick={() => window.open('https://onad-static-files.s3.ap-northeast-2.amazonaws.com/pdfs/bannerGuide.pdf', '_blank')}
           >
-            <a href="/howtouse/배너제작가이드.pdf" download="온애드배너제작가이드" className={classes.guideLink}>배너가이드</a>
+            배너가이드
           </CustomButtons>
 
         </Grid>

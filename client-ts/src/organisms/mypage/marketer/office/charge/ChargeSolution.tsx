@@ -48,6 +48,30 @@ const useStyles = makeStyles((theme: Theme) => ({
   warning: {
     background: theme.palette.action.disabledBackground,
     marginTop: theme.spacing(2),
+  },
+  untilPay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: theme.palette.grey[500],
+    opacity: 0.8,
+    zIndex: 200
+  },
+  untilPayTitle: {
+    color: theme.palette.common.black,
+    fontWeight: theme.typography.fontWeightBold,
+    marginBottom: theme.spacing(5)
+  },
+  untilPayContent: {
+    marginBottom: theme.spacing(2),
+    color: theme.palette.error.dark,
+    fontWeight: theme.typography.fontWeightBold,
   }
 }));
 
@@ -55,10 +79,13 @@ interface TestChargeSolutionProps {
   state: ChargeInterface;
   dispatch: React.Dispatch<ChargeAction>;
   setStepComplete: React.Dispatch<React.SetStateAction<boolean>>;
+  completeLoading: boolean;
 }
 
 const TestChargeSolution = (props: TestChargeSolutionProps): JSX.Element => {
-  const { setStepComplete, state, dispatch } = props;
+  const {
+    setStepComplete, state, dispatch, completeLoading
+  } = props;
   const classes = useStyles();
   const { totalDebit, selectValue, chargeType } = state;
 
@@ -157,7 +184,7 @@ const TestChargeSolution = (props: TestChargeSolutionProps): JSX.Element => {
               </Grid>
               <Grid item className={classes.valueContainer}>
                 {chargeType && (
-                <img src={`/pngs/Charge/${chargeType}.png`} alt={`${chargeType}`} width="100" height="75" />
+                <img src={`/pngs/Charge/${chargeType}.png`} alt={`${chargeType}`} width="164" height="64" />
                 )}
               </Grid>
             </Grid>
@@ -174,6 +201,20 @@ const TestChargeSolution = (props: TestChargeSolutionProps): JSX.Element => {
           </Grid>
         </Grid>
       </Grid>
+      { completeLoading
+        && (
+        <div className={classes.untilPay}>
+          <Typography variant="h4" className={classes.untilPayTitle}>
+            잠시만 기다려주세요...
+          </Typography>
+          <Typography variant="h5" className={classes.untilPayContent}>
+            결제 완료 시 결제 완료에 대한 다음 안내가 진행됩니다.
+          </Typography>
+          <Typography variant="h5" className={classes.untilPayContent}>
+            결제창 종료 시 정상적인 결제가 이루어지지 않습니다.
+          </Typography>
+        </div>
+        )}
     </div>
   );
 };
