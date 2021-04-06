@@ -227,7 +227,10 @@ const RemotePageBannerTable = (props: RemotePageBannerTableProps): JSX.Element =
                           </Typography>
                         </Typography>
                         <Typography variant="body2">
-                          {`판매수익: ${Math.ceil(value.merchandisePrice * 0.1).toLocaleString()}`}
+                          {'판매수익: '}
+                          <Typography variant="body2" component="span" className={classes.bold}>
+                            {Math.ceil(value.merchandisePrice * 0.1).toLocaleString()}
+                          </Typography>
                         </Typography>
                       </div>
                     ) : null}
