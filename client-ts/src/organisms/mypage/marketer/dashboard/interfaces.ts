@@ -60,8 +60,8 @@ export interface CountInterface {
 
 export interface ValueChartInterface {
   date: string;
-  cash: number;
-  type: 'CPM' | 'CPC';
+  value: number;
+  type: string; // 'CPM' | 'CPC';
 }
 
 export interface ActionLogInterface {
@@ -146,6 +146,10 @@ export interface CreatorDataInterface {
 
 export interface CreatorDataCPSInterface extends Omit<CreatorDataInterface, 'total_ad_exposure_amount'>{
   total_sales_amount: number;
+}
+
+export interface CPSChartInterface {
+  date: string; value: number; type: string;
 }
 
 export interface HeatmapInterface {

@@ -9,6 +9,7 @@ import CircularProgress from '../../../../../../atoms/Progress/CircularProgress'
 import { useGetRequest } from '../../../../../../utils/hooks';
 import {
   CpsAnalysisReportData,
+  CPSChartInterface,
   CreatorDataCPSInterface, GeoInterface, HeatmapInterface
 } from '../../../dashboard/interfaces';
 import ReportStackedBar from '../../../../../../atoms/Chart/ReportStackedBar';
@@ -59,7 +60,7 @@ export default function CampaignAnalysisCPS({
   );
 
   // eslint-disable-next-line max-len
-  const chartData = useGetRequest<{ campaignId: string }, { date: string; value: number; type: string }[]>(
+  const chartData = useGetRequest<{ campaignId: string }, CPSChartInterface[]>(
     '/marketer/campaign/analysis/cps/chart', { campaignId }
   );
 

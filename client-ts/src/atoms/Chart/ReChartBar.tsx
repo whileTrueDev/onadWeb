@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
   ResponsiveContainer
 } from 'recharts';
 import { useTheme } from '@material-ui/core/styles';
-import makeBarChartData, { IncomeChartData } from './makeBarChartData';
+import makeBarChartData, { IncomeChartData } from '../../utils/chart/makeBarChartData';
 
 
 interface ReChartBarProps<T> {
@@ -14,47 +14,36 @@ interface ReChartBarProps<T> {
   chartHeight?: number;
   chartWidth?: number;
   xAxisDataKey?: string;
-  tooltipFormatter?: (
-    value: string | number | Array<string | number>, name: string) => React.ReactNode;
-  tooltipLabelFormatter?: (label: string | number) => React.ReactNode;
-  legendFormatter?: (value: string | number | Array<string | number>) => string;
+  tooltipFormatter?: (value: any, name: any) => React.ReactNode;
+  tooltipLabelFormatter?: (label: any) => React.ReactNode;
+  legendFormatter?: (value: string) => string;
   nopreprocessing?: boolean;
   dataKey?: string[] | string;
+  labels?: any;
+  preprocessFn?: (data: T[]) => any;
 }
 
 export default function ReChartBar<DataType extends IncomeChartData>({
   data,
   legend = true,
   dataKey = ['cpm_amount', 'cpc_amount', 'cpa_amount'],
+  labels = ['배너광고', '클릭광고', '참여형광고'],
   containerHeight = 400,
   chartHeight = 300,
   chartWidth = 500,
   xAxisDataKey = 'date',
   tooltipLabelFormatter = (label: string | number): string | number => label,
-  tooltipFormatter = (value: string | number | Array<string | number>, name: string): any => {
-    if (name === 'cpm_amount') {
-      return [value, '배너광고'];
-    }
-    if (name === 'cpc_amount') {
-      return [value, '클릭광고'];
-    }
-    if (name === 'cpa_amount') {
-      return [value, '참여형광고'];
-    }
-  },
-  legendFormatter = (value: string | number | Array<string | number>): any => {
-    if (value === 'cpm_amount') {
-      return '배너광고';
-    } if (value === 'cpc_amount') {
-      return '클릭광고';
-    }
-    if (value === 'cpa_amount') {
-      return '참여형광고';
-    }
-  },
+  tooltipFormatter = (value: any, name: any): any => [value, labels[name]],
+  legendFormatter = (value: any): any => labels[value],
   nopreprocessing = false,
+  preprocessFn = makeBarChartData
 }: ReChartBarProps<DataType>): JSX.Element {
   const theme = useTheme();
+
+  const preprocessed = useMemo(() => {
+    if (nopreprocessing) return data;
+    return preprocessFn(data);
+  }, [data, nopreprocessing, preprocessFn]);
 
   return (
     <div style={{ height: containerHeight, width: '99%' }}>
@@ -62,7 +51,7 @@ export default function ReChartBar<DataType extends IncomeChartData>({
         <BarChart
           width={chartWidth}
           height={chartHeight}
-          data={nopreprocessing ? data : makeBarChartData<DataType>(data)}
+          data={preprocessed}
           stackOffset="sign"
           margin={{
             right: theme.spacing(3),

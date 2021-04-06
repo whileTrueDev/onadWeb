@@ -16,7 +16,7 @@ router.route('/expenditure')
       const query = `
             SELECT
             DATE_FORMAT(max(cl.date), "%Y-%m-%d") as date,
-            sum(cashFromMarketer) as cash, type
+            sum(cashFromMarketer) as value, type
             FROM campaignLog AS cl
             WHERE SUBSTRING_INDEX(cl.campaignId, '_', 1) = ?
             AND  cl.date >= DATE_SUB(NOW(), INTERVAL 30 DAY)
@@ -30,6 +30,59 @@ router.route('/expenditure')
         .catch((error) => {
           responseHelper.promiseError(error, next);
         });
+    }),
+  )
+  .all(responseHelper.middleware.unusedMethod);
+
+// 마케터 대시보드의 판매에 대한 차트 데이터 제공
+// 마케터의 CPS 캠페인들의 클릭, CPS 판매
+router.route('/expenditure/cps')
+  .get(
+    responseHelper.middleware.checkSessionExists, // session 확인이 필요한 경우.
+    responseHelper.middleware.withErrorCatch(async (req, res) => {
+      const { marketerId } = responseHelper.getSessionData(req);
+
+      // 월간, 일별 CPS 클릭
+      const clickQuery = `
+      SELECT 
+        DATE_FORMAT(max(createdAt), "%Y-%m-%d") as date,
+        COUNT(*) AS amount
+      FROM tracking
+      WHERE marketerId = ? AND os IS NOT NULL AND costType = "CPS" AND DATE_SUB(createdAt, INTERVAL 1 MONTH)
+      GROUP BY DATE_FORMAT(createdAt, "%y년 %m월 %d일")
+      ORDER BY createdAt ASC
+      `;
+
+      // 월간, 일별 CPS 판매량
+      const salesQuery = `
+      SELECT
+        DATE_FORMAT(max(date), "%Y-%m-%d") as date,
+        COUNT(*) AS amount
+      FROM campaignLog_copy
+      WHERE SUBSTRING_INDEX(campaignId, '_', 1) = ? AND type = "CPS"
+      GROUP BY DATE_FORMAT(date, "%y년 %m월 %d일")
+      ORDER BY date ASC
+      `;
+
+      const [{ result }, { result: result2 }] = await Promise.all([
+        doQuery(clickQuery, [marketerId]),
+        doQuery(salesQuery, [marketerId])
+      ]);
+
+      const dataArray: any[] = [];
+      result.forEach((value: any) => {
+        const obj = { date: value.date, value: value.amount, type: '클릭' };
+        dataArray.push(obj);
+      });
+
+      result2.forEach((value: any) => {
+        const obj = { date: value.date, value: value.amount, type: '판매' };
+        dataArray.push(obj);
+      });
+
+      const sorted = dataArray.sort((x, y) => x.date - y.date);
+
+      return responseHelper.send(sorted, 'GET', res);
     }),
   )
   .all(responseHelper.middleware.unusedMethod);

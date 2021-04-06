@@ -28,7 +28,7 @@
     "html2canvas": "^1.0.0-rc.5",
     "jquery": "^3.4.1",
     "jspdf": "^1.5.3",
-    "loadsh": "^0.0.4",
+    "lodash": "^4.17.21",
     "material-table": "1.57.2",
     "moment": "^2.29.1",
     "node-sass": "4.14.1",
