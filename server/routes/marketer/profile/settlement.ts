@@ -5,8 +5,10 @@ import encrypto from '../../../middlewares/encryption';
 import responseHelper from '../../../middlewares/responseHelper';
 import doQuery from '../../../model/doQuery';
 import slack from '../../../lib/slack/messageWithJson';
+import settlementLogsRouter from './settlementLogs/settlementLogs';
 
 const router = express.Router();
+router.use('/logs', settlementLogsRouter);
 
 export interface MarketerSettlement {
   id: number;
@@ -218,14 +220,14 @@ router.route('/')
         }
       );
 
-      // slack({
-      //   summary: '광고주 판매대금 정산 등록 알림',
-      //   text: '광고주가 판매대금 정산을 등록했습니다. 확인해주세요.',
-      //   fields: [
-      //     { title: '방송인 아이디', value: marketerId!, short: true },
-      //     { title: '은행', value: bankName!, short: true },
-      //   ]
-      // });
+      slack({
+        summary: '광고주 판매대금 정산 등록 알림',
+        text: '광고주가 판매대금 정산을 등록했습니다. 확인해주세요.',
+        fields: [
+          { title: '방송인 아이디', value: marketerId!, short: true },
+          { title: '은행', value: bankName!, short: true },
+        ]
+      });
 
       return responseHelper.send(result, 'post', res);
     })
@@ -259,14 +261,14 @@ router.route('/')
         }
       );
 
-      // slack({
-      //   summary: '광고주 판매대금 정산 재등록 알림',
-      //   text: '광고주가 판매대금 정산을 재등록(수정)했습니다. 확인해주세요.',
-      //   fields: [
-      //     { title: '방송인 아이디', value: marketerId!, short: true },
-      //     { title: '은행', value: bankName!, short: true },
-      //   ]
-      // });
+      slack({
+        summary: '광고주 판매대금 정산 재등록 알림',
+        text: '광고주가 판매대금 정산을 재등록(수정)했습니다. 확인해주세요.',
+        fields: [
+          { title: '방송인 아이디', value: marketerId!, short: true },
+          { title: '은행', value: bankName!, short: true },
+        ]
+      });
 
       return responseHelper.send(result, 'patch', res);
     })
