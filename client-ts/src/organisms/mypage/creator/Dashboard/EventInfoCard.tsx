@@ -20,14 +20,14 @@ export default function EventInfoCard(): JSX.Element {
       </Typography>
 
       <Typography variant="caption" color="textSecondary">
-        데이터 분석을 통해 긴 방송 중의 하이라이트 포인트를 찾아주고, 진행한 방송과 방송인에 대한 민심을 알려드립니다. 클로즈 베타를 신청해 미리 경험해보세요!
+        분석된 방송정보를 토대로 시청자들과 소통하세요. 방송분석 정보를 통해 쉽게 영상을 편집하세요.
       </Typography>
 
       <div className={classes.buttonSection}>
         <Typography
           color="primary"
           style={{ textDecoration: 'underline', cursor: 'pointer' }}
-          onClick={(): void => { window.open('https://mytruepoint.com/infoCBT'); }}
+          onClick={(): void => { window.open('https://mytruepoint.com'); }}
         >
           Truepoint 알아보기
         </Typography>

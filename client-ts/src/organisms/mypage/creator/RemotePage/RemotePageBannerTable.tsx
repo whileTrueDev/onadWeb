@@ -1,20 +1,23 @@
-import React from 'react';
-import shortid from 'shortid';
+import {
+  Chip, FormControlLabel, Switch, Table, TableBody, TableCell, TableHead, TableRow,
+  Tooltip, Typography
+} from '@material-ui/core';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { makeStyles } from '@material-ui/core/styles';
-
-import {
-  Table, TableHead, TableRow, TableBody, TableCell, Switch,
-  Typography, FormControlLabel, Chip
-} from '@material-ui/core';
+import { OpenInNew } from '@material-ui/icons';
+import React from 'react';
+import shortid from 'shortid';
+import OnadBanner from '../../../../atoms/Banner/OnadBanner';
 import Snackbar from '../../../../atoms/Snackbar/Snackbar';
 import useDialog from '../../../../utils/hooks/useDialog';
-import usePatchRequest from '../../../../utils/hooks/usePatchRequest';
 import useGetRequest from '../../../../utils/hooks/useGetRequest';
-import OnadBanner from '../../../../atoms/Banner/OnadBanner';
+import usePatchRequest from '../../../../utils/hooks/usePatchRequest';
+import { CPS_OPTION_TYPE } from '../../../../utils/render_funcs/renderOptionType';
 import renderPriorityType from '../../../../utils/render_funcs/renderPriorityType';
 
-const useStyles = makeStyles(() => ({
+
+const useStyles = makeStyles((theme) => ({
+  bold: { fontWeight: 'bold' },
   th: {
     flexDirection: 'column',
     textAlign: 'center',
@@ -22,39 +25,52 @@ const useStyles = makeStyles(() => ({
     padding: '5px'
   },
   chip: {
-    marginBottom: '5px'
-  }
+    marginBottom: theme.spacing(0, 0.5, 0.5, 0)
+  },
+  linkText: {
+    textDecoration: 'underline',
+    cursor: 'pointer',
+  },
 }));
 export interface BannerStatus {
-  loading: boolean; campaignId: string; index: number;
+  optionType: 1 | 3; // 1 = LIVE배너광고, 3 = 판매형광고
+  campaignId: string; index: number;
   marketerName: string; priorityType: number;
   targetList: string[]; date: string; bannerSrc: string;
   state: number; campaignDescription: string;
   creatorName: string;
+  merchandiseId?: string;
+  merchandiseName?: string;
+  merchandisePrice?: number;
+  itemSiteUrl?: string;
 }
 
-interface RemotePageBannerTable {
+interface RemotePageBannerTableProps {
   pageUrl: string;
 }
 
 interface Params {
   remoteControllerUrl: string;
 }
-const RemotePageBannerTable = (props: RemotePageBannerTable): JSX.Element => {
+const RemotePageBannerTable = (props: RemotePageBannerTableProps): JSX.Element => {
   const {
     pageUrl
   } = props;
   const classes = useStyles();
   const snack = useDialog();
   const failSnack = useDialog();
-  const remoteCampaignTableGet = useGetRequest<Params, BannerStatus[]>('/creator/banner/remote-page', { remoteControllerUrl: pageUrl });
+  const remoteCampaignTableGet = useGetRequest<Params, BannerStatus[]>(
+    '/creator/remote/campaigns', { remoteControllerUrl: pageUrl }
+  );
 
-  const onOffUpdate = usePatchRequest('/creator/banner/remote-page', () => {
+  const onOffUpdate = usePatchRequest('/creator/remote/onoff', () => {
     remoteCampaignTableGet.doGetRequest();
   });
 
   const handleSwitch = (campaignId: string, state: number, url: string): void => {
-    onOffUpdate.doPatchRequest({ campaignId, state, url });
+    onOffUpdate.doPatchRequest({ campaignId, state, url })
+      .then(() => snack.handleOpen())
+      .catch(() => failSnack.handleOpen());
   };
 
   const page = 1; // 테이블 페이지
@@ -64,12 +80,6 @@ const RemotePageBannerTable = (props: RemotePageBannerTable): JSX.Element => {
     && remoteCampaignTableGet.data && (rowsPerPage - Math.min(
     rowsPerPage, remoteCampaignTableGet.data.length - page * rowsPerPage,
   ));
-
-  React.useEffect(() => {
-    if (onOffUpdate.error) {
-      failSnack.handleOpen();
-    }
-  }, [onOffUpdate.error, failSnack]);
 
   const categorySwitch = (
     category: number, targetList: string[], creatorName: string
@@ -99,10 +109,18 @@ const RemotePageBannerTable = (props: RemotePageBannerTable): JSX.Element => {
             label={renderPriorityType(category)}
           />
           <Typography variant="body2">
-            <span style={{ fontWeight: 'bold' }}>
-              {targetList.join(', ')}
-            </span>
-            와 매칭 되는 광고입니다.
+            {targetList.length > 20 ? (
+              <Tooltip title={targetList.join(', ')}>
+                <span style={{ fontWeight: 'bold' }}>
+                  {`${targetList.slice(0, 20).join(', ')}...`}
+                </span>
+              </Tooltip>
+            ) : (
+              <span style={{ fontWeight: 'bold' }}>
+                {targetList.join(', ')}
+              </span>
+            )}
+            카테고리에 매칭 되는 광고입니다.
           </Typography>
         </TableCell>
       );
@@ -143,7 +161,7 @@ const RemotePageBannerTable = (props: RemotePageBannerTable): JSX.Element => {
         </TableHead>
         <TableBody>
 
-          {remoteCampaignTableGet?.data?.map((value: BannerStatus) => (
+          {remoteCampaignTableGet.data?.map((value: BannerStatus) => (
             <TableRow key={value.index}>
               <TableCell style={{
                 flexDirection: 'column',
@@ -162,7 +180,6 @@ const RemotePageBannerTable = (props: RemotePageBannerTable): JSX.Element => {
                       color="secondary"
                       onChange={(): void => {
                         handleSwitch(value.campaignId, value.state, pageUrl);
-                        snack.handleOpen();
                       }}
                       disabled={Boolean(remoteCampaignTableGet.loading)}
                     />
@@ -172,10 +189,53 @@ const RemotePageBannerTable = (props: RemotePageBannerTable): JSX.Element => {
                   {value.date.split('T')[0]}
                 </Typography>
               </TableCell>
-              {categorySwitch(value.priorityType, value.targetList, value.creatorName)}
+
+              {/* 카테고리 렌더링 */}
+              {value.optionType === CPS_OPTION_TYPE
+              && value.merchandiseId
+                ? (
+                  <TableCell>
+                    <div>
+                      <Chip size="small" className={classes.chip} label="판매형광고" />
+                      <Chip size="small" className={classes.chip} label="10%" />
+                    </div>
+                    <Typography variant="body2">상품 판매 리워드형 광고입니다.</Typography>
+                    {value.merchandiseName && value.itemSiteUrl && (
+                      <Typography
+                        className={classes.linkText}
+                        variant="body2"
+                        color="primary"
+                        onClick={(): void => {
+                          window.open(value.itemSiteUrl, '_blank');
+                        }}
+                      >
+                        {value.merchandiseName}
+                        <OpenInNew fontSize="small" color="primary" style={{ verticalAlign: 'middle' }} />
+                      </Typography>
+                    )}
+                    {value.merchandisePrice ? (
+                      <div>
+                        <Typography variant="body2">
+                          {'상품가격: '}
+                          <Typography variant="body2" component="span" className={classes.bold}>
+                            {value.merchandisePrice.toLocaleString()}
+                          </Typography>
+                        </Typography>
+                        <Typography variant="body2">
+                          {'판매수익: '}
+                          <Typography variant="body2" component="span" className={classes.bold}>
+                            {Math.ceil(value.merchandisePrice * 0.1).toLocaleString()}
+                          </Typography>
+                        </Typography>
+                      </div>
+                    ) : null}
+                  </TableCell>
+                )
+                : categorySwitch(value.priorityType, value.targetList, value.creatorName)}
+
               <TableCell>
                 <div>
-                  <OnadBanner src={value.bannerSrc} style={{ maxHeight: '100px', width: '150' }} />
+                  <OnadBanner src={value.bannerSrc} style={{ maxHeight: '75px', width: '150px' }} />
                 </div>
               </TableCell>
               <TableCell>
