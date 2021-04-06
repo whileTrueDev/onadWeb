@@ -73,7 +73,7 @@ router.route('/expenditure')
       const totalQuery = `
             SELECT
                 cl.date as date,
-                sum(cashFromMarketer) as cash, type
+                sum(cashFromMarketer) as value, type
             FROM campaignLog AS cl
             WHERE campaignId = ? AND cl.date > DATE_SUB(cl.date, INTERVAL 30 DAY)
             GROUP BY DATE_FORMAT(cl.date, "%y년 %m월 %d일"), type
@@ -83,7 +83,7 @@ router.route('/expenditure')
       const cpmQuery = `
             SELECT
                 cl.date as date,
-                sum(cashFromMarketer) as cash, type
+                sum(cashFromMarketer) as value, type
             FROM campaignLog AS cl
             WHERE campaignId = ?
                 AND type="CPM"
@@ -95,7 +95,7 @@ router.route('/expenditure')
       const cpcQuery = `
             SELECT
                 cl.date as date,
-                sum(cashFromMarketer) as cash, type
+                sum(cashFromMarketer) as value, type
             FROM campaignLog AS cl
             WHERE campaignId = ?
                 AND type="CPC"
