@@ -17,6 +17,7 @@ import renderPriorityType from '../../../../utils/render_funcs/renderPriorityTyp
 
 
 const useStyles = makeStyles((theme) => ({
+  bold: { fontWeight: 'bold' },
   th: {
     flexDirection: 'column',
     textAlign: 'center',
@@ -62,7 +63,7 @@ const RemotePageBannerTable = (props: RemotePageBannerTableProps): JSX.Element =
     '/creator/remote/campaigns', { remoteControllerUrl: pageUrl }
   );
 
-  const onOffUpdate = usePatchRequest('/creator/remote/campaigns/onoff', () => {
+  const onOffUpdate = usePatchRequest('/creator/remote/onoff', () => {
     remoteCampaignTableGet.doGetRequest();
   });
 
@@ -220,7 +221,10 @@ const RemotePageBannerTable = (props: RemotePageBannerTableProps): JSX.Element =
                     {value.merchandisePrice ? (
                       <div>
                         <Typography variant="body2">
-                          {`상품가격: ${value.merchandisePrice.toLocaleString()}`}
+                          {'상품가격: '}
+                          <Typography variant="body2" component="span" className={classes.bold}>
+                            {value.merchandisePrice.toLocaleString()}
+                          </Typography>
                         </Typography>
                         <Typography variant="body2">
                           {`판매수익: ${Math.ceil(value.merchandisePrice * 0.1).toLocaleString()}`}
