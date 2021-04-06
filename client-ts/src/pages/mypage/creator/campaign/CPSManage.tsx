@@ -2,9 +2,10 @@ import React from 'react';
 import GridContainer from '../../../../atoms/Grid/GridContainer';
 import GridItem from '../../../../atoms/Grid/GridItem';
 import CPSChart, { CpsChartData } from '../../../../organisms/mypage/creator/CampaignManage/cps/CPSChart';
-import CPSReviews, { CPSReview } from '../../../../organisms/mypage/creator/CampaignManage/cps/CPSReviews';
+import CPSReviews from '../../../../organisms/mypage/creator/CampaignManage/cps/CPSReviews';
 import CPSMetaInfo, { CpsMetaInfoRes } from '../../../../organisms/mypage/creator/CampaignManage/cps/CPSMetaInfo';
 import { useGetRequest } from '../../../../utils/hooks';
+import { CPSReview } from '../../../../organisms/mypage/creator/CampaignManage/cps/CPSReviewDialog';
 
 
 export default function CPSManage(): React.ReactElement {

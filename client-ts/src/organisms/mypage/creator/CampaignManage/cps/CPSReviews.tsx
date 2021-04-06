@@ -1,51 +1,19 @@
 import {
-  Avatar,
-  Button,
   makeStyles, Paper, Tooltip, Typography
 } from '@material-ui/core';
 import moment from 'moment';
 import React, { useState } from 'react';
-import SwipeableTextMobileStepper from '../../../../../atoms/Carousel/Carousel';
-import CustomDialog from '../../../../../atoms/Dialog/Dialog';
 import CustomDataGrid from '../../../../../atoms/Table/CustomDataGrid';
-import { getS3MerchandiseImagePath } from '../../../../../utils/aws/getS3Path';
-import { useDialog, useToggle } from '../../../../../utils/hooks';
+import { useDialog } from '../../../../../utils/hooks';
 import { UseGetRequestObject } from '../../../../../utils/hooks/useGetRequest';
+import CPSReviewDialog, { CPSReview } from './CPSReviewDialog';
 
 const useStyles = makeStyles((theme) => ({
   linkText: {
     textDecoration: 'underline',
     cursor: 'pointer',
   },
-  image: {
-    marginTop: theme.spacing(2),
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    flexDirection: 'column'
-  }
 }));
-
-export interface CPSReview {
-  id: number;
-  orderId: number;
-  authorName: string;
-  authorId: string;
-  targetCreatorName: string;
-  title: string;
-  contents: string;
-  creatorId: string;
-  createDate: string;
-  updateDate: string;
-  merchandiseId: number;
-  merchandiseName: string;
-  orderPrice: number;
-  optionId?: number;
-  quantity: number;
-  images: string;
-  marketerId: string;
-}
-
 interface CPSReviewsProps {
   cpsReviewData: UseGetRequestObject<CPSReview[]>;
 }
@@ -65,10 +33,10 @@ export default function CPSReviews({
 
   const getAuthorName = (review: CPSReview): string => `${review.authorName}(${review.authorId})`;
 
-  const imgaeToggle = useToggle(false);
 
   return (
-    <Paper style={{ height: 400, marginTop: 8, padding: 32 }}>
+    <Paper style={{ height: 420, marginTop: 8, padding: 32 }}>
+      <Typography style={{ fontWeight: 'bold' }}>응원 메시지</Typography>
       <CustomDataGrid
         loading={cpsReviewData.loading}
         rows={cpsReviewData.data || []}
@@ -148,59 +116,14 @@ export default function CPSReviews({
       />
 
       {selectedReview && (
-      <CustomDialog
-        maxWidth="sm"
-        fullWidth
-        title={`응원메시지 - ${selectedReview.title}`}
+      <CPSReviewDialog
         open={detailDialog.open}
         onClose={() => {
           detailDialog.handleClose();
           handleSelectedReviewReset();
         }}
-      >
-        <article>
-          <Typography>
-            {`${selectedReview.merchandiseName}, ${selectedReview.orderPrice.toLocaleString()}원 (${selectedReview.quantity}개)`}
-          </Typography>
-          <Typography variant="h5" style={{ fontWeight: 'bold' }}>{selectedReview.title}</Typography>
-          <div style={{ marginTop: 8, display: 'flex', alignItems: 'center' }}>
-            <Avatar src="" style={{ marginRight: 8 }} />
-            <div>
-              <Typography variant="body2">{getAuthorName(selectedReview)}</Typography>
-              <Typography variant="body2" color="textSecondary">
-                {moment(selectedReview.createDate).format('YY/MM/DD HH:mm:ss')}
-              </Typography>
-            </div>
-          </div>
-        </article>
-
-        <div className={classes.image}>
-          {selectedReview.images && (
-            <>
-              <Button
-                size="small"
-                color="primary"
-                variant="outlined"
-                onClick={imgaeToggle.handleToggle}
-              >
-                {`상품사진 ${imgaeToggle.toggle ? '닫기' : '열기'}`}
-              </Button>
-              {imgaeToggle.toggle && (
-              <SwipeableTextMobileStepper
-                images={selectedReview.images.split(',')
-                  .map((image) => getS3MerchandiseImagePath(
-                    selectedReview.marketerId, selectedReview.merchandiseId, image
-                  ))}
-              />
-              )}
-            </>
-          )}
-        </div>
-
-        <div style={{ marginTop: 16 }}>
-          <Typography>{selectedReview.contents}</Typography>
-        </div>
-      </CustomDialog>
+        review={selectedReview}
+      />
       )}
     </Paper>
   );
