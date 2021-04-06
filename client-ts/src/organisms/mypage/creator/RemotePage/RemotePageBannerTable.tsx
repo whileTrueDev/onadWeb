@@ -68,7 +68,9 @@ const RemotePageBannerTable = (props: RemotePageBannerTableProps): JSX.Element =
   });
 
   const handleSwitch = (campaignId: string, state: number, url: string): void => {
-    onOffUpdate.doPatchRequest({ campaignId, state, url });
+    onOffUpdate.doPatchRequest({ campaignId, state, url })
+      .then(() => snack.handleOpen())
+      .catch(() => failSnack.handleOpen());
   };
 
   const page = 1; // 테이블 페이지
@@ -78,12 +80,6 @@ const RemotePageBannerTable = (props: RemotePageBannerTableProps): JSX.Element =
     && remoteCampaignTableGet.data && (rowsPerPage - Math.min(
     rowsPerPage, remoteCampaignTableGet.data.length - page * rowsPerPage,
   ));
-
-  React.useEffect(() => {
-    if (onOffUpdate.error) {
-      failSnack.handleOpen();
-    }
-  }, [onOffUpdate.error, failSnack]);
 
   const categorySwitch = (
     category: number, targetList: string[], creatorName: string
@@ -184,7 +180,6 @@ const RemotePageBannerTable = (props: RemotePageBannerTableProps): JSX.Element =
                       color="secondary"
                       onChange={(): void => {
                         handleSwitch(value.campaignId, value.state, pageUrl);
-                        snack.handleOpen();
                       }}
                       disabled={Boolean(remoteCampaignTableGet.loading)}
                     />
