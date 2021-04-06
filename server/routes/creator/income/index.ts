@@ -58,7 +58,7 @@ router.route('/ratio').get(
       GROUP BY type`;
       // 248937084
     interface RatioQueryResult {
-      creatorId: string; type: 'CPM' | 'CPC' | 'CPA'; cashAmount: number;
+      creatorId: string; type: 'CPM' | 'CPC' | 'CPA' | 'CPS'; cashAmount: number;
     }
     const { result } = await doQuery<RatioQueryResult>(query, [creatorId]);
     responseHelper.send(result, 'get', res);
@@ -136,7 +136,7 @@ router.route('/chart')
       const query = `
       SELECT
         DATE_FORMAT(cl.date, "%Y-%m-%d") as date,
-        sum(cashToCreator) as cash, type
+        sum(cashToCreator) as value, type
       FROM campaignLog AS cl
       WHERE creatorId = ?
         AND  cl.date >= DATE_SUB(NOW(), INTERVAL ? DAY)

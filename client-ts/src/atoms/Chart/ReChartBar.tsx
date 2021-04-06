@@ -4,11 +4,11 @@ import {
   ResponsiveContainer
 } from 'recharts';
 import { useTheme } from '@material-ui/core/styles';
-import makeBarChartData, { IncomeChartData } from '../../utils/chart/makeBarChartData';
+import makeBarChartData, { KeyMap, ChartDataBase } from '../../utils/chart/makeBarChartData';
 
 
-interface ReChartBarProps<T> {
-  data: T[];
+interface ReChartBarProps {
+  data: ChartDataBase[];
   legend?: boolean;
   containerHeight?: number;
   chartHeight?: number;
@@ -20,10 +20,10 @@ interface ReChartBarProps<T> {
   nopreprocessing?: boolean;
   dataKey?: string[] | string;
   labels?: any;
-  preprocessFn?: (data: T[]) => any;
+  keyMap: KeyMap[];
 }
 
-export default function ReChartBar<DataType extends IncomeChartData>({
+export default function ReChartBar({
   data,
   legend = true,
   dataKey = ['cpm_amount', 'cpc_amount', 'cpa_amount'],
@@ -36,14 +36,15 @@ export default function ReChartBar<DataType extends IncomeChartData>({
   tooltipFormatter = (value: any, name: any): any => [value, labels[name]],
   legendFormatter = (value: any): any => labels[value],
   nopreprocessing = false,
-  preprocessFn = makeBarChartData
-}: ReChartBarProps<DataType>): JSX.Element {
+  keyMap,
+}: ReChartBarProps): JSX.Element {
   const theme = useTheme();
 
   const preprocessed = useMemo(() => {
     if (nopreprocessing) return data;
-    return preprocessFn(data);
-  }, [data, nopreprocessing, preprocessFn]);
+    const _data = makeBarChartData(data, keyMap);
+    return _data;
+  }, [data, keyMap, nopreprocessing]);
 
   return (
     <div style={{ height: containerHeight, width: '99%' }}>

@@ -6,25 +6,26 @@ export const S3_BUCKET_REGION = 'ap-northeast-2';
 export const S3_BASE_URL = `https://${S3_BUCKET_NAME}.s3.${S3_BUCKET_REGION}.amazonaws.com/`;
 
 export function getS3MerchandiseImagePath(
-  marketerId: string, merchandiseId: string, fileName?: string
+  marketerId: string, merchandiseId: number, fileName?: string
 ): string {
-  return path.join(
+  const result = path.join(
     S3_BASE_URL,
     'merchandises',
     marketerId,
-    merchandiseId,
+    String(merchandiseId),
     fileName || ''
   );
+  return result;
 }
 
 export function getS3MerchandiseDescImagePath(
-  marketerId: string, merchandiseId: string, fileName?: string
+  marketerId: string, merchandiseId: number, fileName?: string
 ): string {
   return path.join(
     S3_BASE_URL,
     'merchandises',
     marketerId,
-    merchandiseId,
+    String(merchandiseId),
     'desc-images',
     fileName || ''
   );

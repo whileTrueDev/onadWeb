@@ -61,10 +61,9 @@ function MerchandiseOrderDialog({
 
   // S3 상품 이미지 URL을 구하는 함수.
   function getMerchandiseS3Url(imageName: string, merchandiseId: number): string {
-    const targetMerchandiseId = String(merchandiseId);
     if (marketerInfo.user) {
       return getS3MerchandiseImagePath(
-        marketerInfo.user.marketerId, targetMerchandiseId, imageName
+        marketerInfo.user.marketerId, merchandiseId, imageName
       );
     }
     return imageName;

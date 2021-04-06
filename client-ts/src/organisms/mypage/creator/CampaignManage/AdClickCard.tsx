@@ -40,17 +40,17 @@ export interface CurrentClickRes {
   campaignName: string;
   creatorId: string; payout: number; channel: string;
   os: string; browser: string;
-  links: {
+  links?: {
     links: Array<{ primary: boolean; linkTo: string; linkName: string }>;
   };
+  merchandiseId?: number;
+  itemSiteUrl?: string;
 }
 export interface AdClickCardProps {
   clicksSummaryData: UseGetRequestObject<ClicksRes>;
-  levelData: UseGetRequestObject<LevelRes>;
 }
 export default function AdClickCard({
   clicksSummaryData,
-  levelData,
 }: AdClickCardProps): JSX.Element {
   const classes = useStyles();
 
@@ -83,6 +83,19 @@ export default function AdClickCard({
   }
   // 설명 팝오버
   const descAnchor = useAnchorEl();
+
+  /**
+   * 해당 클릭 객체의 실제 랜딩페이지 URL을 반환합니다. (CPS 광고 분기처리 추가되었습니다.)
+   * @param click 클릭 객체
+   * @returns 문자열 또는 undefined
+   */
+  const getLandingUrl = (click: CurrentClickRes): string | undefined => {
+    // 판매형 광고의 경우
+    if (click.merchandiseId) {
+      return click.itemSiteUrl;
+    }
+    return click.links?.links.find((link) => link.primary)?.linkTo;
+  };
 
   return (
     <Paper className={classes.container}>
@@ -151,7 +164,8 @@ export default function AdClickCard({
           && currentClickGet.data.length === 0 && (
             <Typography variant="body2" style={{ marginTop: 16 }}>최근 광고 클릭 내역이 없어요..</Typography>
           )}
-          {!currentClickGet.loading && currentClickGet.data && currentClickGet.data.map((click) => (
+          {!currentClickGet.loading && currentClickGet.data
+          && currentClickGet.data.map((click) => (
             <div key={click.id} style={{ maxWidth: 270 }}>
               <Typography
                 className={classnames(classes.buttonText, classes.line)}
@@ -161,18 +175,21 @@ export default function AdClickCard({
                   descAnchor.handleAnchorOpen(e);
                 }}
               >
-                {`${click.links.links.find((link) => link.primary)?.linkName}`}
-
+                {click.campaignName}
               </Typography>
-              <Typography style={{ cursor: 'default' }} variant="caption" color="textSecondary">{`${renderClickChannel(click.channel)} • `}</Typography>
-              <Typography style={{ cursor: 'default' }} variant="caption" color="textSecondary">{moment(click.clickedTime).fromNow()}</Typography>
+              <Typography style={{ cursor: 'default' }} variant="caption" color="textSecondary">
+                {`${renderClickChannel(click.channel)} • `}
+              </Typography>
+              <Typography style={{ cursor: 'default' }} variant="caption" color="textSecondary">
+                {moment(click.clickedTime).fromNow()}
+              </Typography>
             </div>
           ))}
           {/* 이전/다음 버튼 */}
           {currentClickGet.data && currentClickGet.data.length > 0 && (
             <div style={{ display: 'flex', }}>
               <Button
-                variant="contained"
+                variant="outlined"
                 size="small"
                 style={{ maxWidth: 16 }}
                 disabled={currentClicksPage <= 0}
@@ -189,7 +206,7 @@ export default function AdClickCard({
                 이전
               </Button>
               <Button
-                variant="contained"
+                variant="outlined"
                 size="small"
                 style={{ maxWidth: 16 }}
                 disabled={!(currentClickGet.data && currentClickGet.data.length > 2)}
@@ -210,6 +227,7 @@ export default function AdClickCard({
         </Grid>
       </Grid>
 
+      {/* 최근 광고 클릭 자세히보기 팝오버 */}
       {selectedClick && descAnchor.open && (
       <Popover
         disableScrollLock
@@ -230,12 +248,22 @@ export default function AdClickCard({
         <div style={{ padding: 8, maxWidth: 300, }}>
           <Chip size="small" label={renderClickChannel(selectedClick.channel)} />
           <div style={{ padding: 4 }}>
+            {/* 링크이름 */}
             <Typography variant="body2">
-              {`${selectedClick.links.links.find((link) => link.primary)?.linkName}`}
+              {selectedClick.campaignName}
             </Typography>
+
+            {selectedClick.merchandiseId && (
+            <Typography variant="body2" color="primary">
+              판매형 광고클릭
+            </Typography>
+            )}
+            {/* 링크 클릭 수익금 */}
             {selectedClick.payout > 0 && (
             <Typography variant="body2">{`수익금: ${selectedClick.payout} 원`}</Typography>
             )}
+
+            {/* 클릭 정보 */}
             <Typography variant="caption" color="textSecondary">
               {`${selectedClick.os}, ${selectedClick.browser}`}
             </Typography>
@@ -245,7 +273,7 @@ export default function AdClickCard({
             color="primary"
             size="small"
             onClick={() => {
-              window.open(`${selectedClick.links.links.find((link) => link.primary)?.linkTo}`);
+              window.open(getLandingUrl(selectedClick), '_blank');
             }}
           >
             링크바로가기
