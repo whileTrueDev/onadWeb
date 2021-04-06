@@ -8,7 +8,7 @@ import Check from '@material-ui/icons/Check';
 import Dialog from '../../../../atoms/Dialog/Dialog';
 // import BannerDescForm from './BannerDescForm';
 import './upload.css';
-import ImageUpload from './ImageUpload';
+import BannerUpload from './sub/BannerUpload';
 import HOST from '../../../../config';
 import axios from '../../../../utils/axios';
 
@@ -154,7 +154,7 @@ const UploadDialog = (props: UploadDialogProps): JSX.Element => {
             배너 이미지 등록
           </StepLabel>
           <StepContent>
-            <ImageUpload
+            <BannerUpload
               image={state}
               onReset={(): void => dispatch({ type: 'reset' })}
               onSucess={(image): void => {

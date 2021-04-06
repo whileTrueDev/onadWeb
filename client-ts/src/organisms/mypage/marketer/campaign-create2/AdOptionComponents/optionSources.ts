@@ -41,12 +41,13 @@ const options: OptionInterface[] = [
     ]
   },
   {
-    id: 'option0',
-    primaryText: '참여형 광고 캠페인(CPA only)',
-    secondaryText: '추가 예정입니다.',
+    id: 'option3',
+    primaryText: '상품 판매 성과형 캠페인',
+    secondaryText: '등록한 상품을 구매했을 때 과금되는 광고 유형입니다.\n상품 판매를 원하는 광고주 분들에게 좋은 옵션입니다.',
   },
   {
     id: 'option2',
+    deprecated: true,
     primaryText: '업로드형 광고 캠페인(유튜브)',
     secondaryText: '추가 예정입니다.',
   },

@@ -1,6 +1,4 @@
 import {
-  Button,
-  Divider,
   Hidden, makeStyles, Paper
 } from '@material-ui/core';
 import React from 'react';
@@ -10,6 +8,8 @@ import CampaignMetaInfoCard from './sub/CampaignMetaInfoCard';
 import CampaignAnalysis from './sub/CampaignAnalysis';
 import { useToggle } from '../../../../../utils/hooks';
 import { CONFIRM_STATE_CONFIRMED } from '../../../../../utils/render_funcs/renderBannerConfirmState';
+import { CPS_OPTION_TYPE, LIVE_BANNER_OPTION_TYPE } from '../../../../../utils/render_funcs/renderOptionType';
+import CampaignAnalysisCPS from './sub/CampaignAnalysisCPS';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -22,13 +22,11 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.up('lg')]: {
       margin: theme.spacing(0, 0, 0, 2),
     },
-    padding: theme.spacing(4),
-    [theme.breakpoints.down('sm')]: {
-      padding: theme.spacing(2),
-    }
   },
-  openAnalysisButton: {
-    marginTop: theme.spacing(2)
+  contents: {
+    padding: theme.spacing(4),
+    [theme.breakpoints.down('sm')]: { padding: theme.spacing(2) },
+    [theme.breakpoints.down('xs')]: { padding: theme.spacing(1) },
   }
 }));
 
@@ -59,26 +57,28 @@ export default function CampaignDetail({
         </Hidden>
 
         {/* 캠페인 상세 정보 */}
-        <CampaignInformation campaign={selectedCampaign} />
+        <CampaignInformation
+          campaign={selectedCampaign}
+          analysisToggle={analysisToggle.toggle}
+          openAnalysis={analysisToggle.handleToggle}
+        />
 
-        <Divider />
-        {selectedCampaign.confirmState === CONFIRM_STATE_CONFIRMED && !analysisToggle.toggle && (
-        <div className={classes.openAnalysisButton}>
-          <Button
-            onClick={analysisToggle.handleToggle}
-            fullWidth
-            size="large"
-            variant="contained"
-            color="default"
-          >
-            분석정보보기
-          </Button>
-        </div>
+        {/* 라이브 배너 광고 캠페인 분석 정보 */}
+        {selectedCampaign.confirmState === CONFIRM_STATE_CONFIRMED
+        && analysisToggle.toggle && selectedCampaign.optionType === LIVE_BANNER_OPTION_TYPE
+        && (
+          <div className={classes.contents}>
+            <CampaignAnalysis campaignId={selectedCampaign.campaignId} />
+          </div>
         )}
 
-        {/* 캠페인 분석 정보 */}
-        {selectedCampaign.confirmState === CONFIRM_STATE_CONFIRMED && analysisToggle.toggle && (
-        <CampaignAnalysis campaignId={selectedCampaign.campaignId} />
+        {/* CPS 광고 캠페인 분석 정보 */}
+        {selectedCampaign.confirmState === CONFIRM_STATE_CONFIRMED
+        && analysisToggle.toggle && selectedCampaign.optionType === CPS_OPTION_TYPE
+        && (
+          <div className={classes.contents}>
+            <CampaignAnalysisCPS campaignId={selectedCampaign.campaignId} />
+          </div>
         )}
 
       </Paper>

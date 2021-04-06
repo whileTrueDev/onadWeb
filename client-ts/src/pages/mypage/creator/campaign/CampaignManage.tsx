@@ -1,21 +1,23 @@
 import React from 'react';
 // components
-import GridContainer from '../../../atoms/Grid/GridContainer';
-import GridItem from '../../../atoms/Grid/GridItem';
-import Snackbar from '../../../atoms/Snackbar/Snackbar';
+import { Typography } from '@material-ui/core';
+import GridContainer from '../../../../atoms/Grid/GridContainer';
+import GridItem from '../../../../atoms/Grid/GridItem';
+import Snackbar from '../../../../atoms/Snackbar/Snackbar';
 // hooks
-import useGetRequest from '../../../utils/hooks/useGetRequest';
-import useDialog from '../../../utils/hooks/useDialog';
-import BannerList from '../../../organisms/mypage/creator/CampaignManage/BannerList';
-import NowBroadCard, { CurrentBannerRes } from '../../../organisms/mypage/creator/CampaignManage/NowBroadCard';
-import ChatAdInfo from '../../../organisms/mypage/creator/CampaignManage/ChatAdInfo';
-import ClickAdInfo from '../../../organisms/mypage/creator/CampaignManage/ClickAdInfo';
-import AdIncomeCard from '../../../organisms/mypage/creator/shared/AdIncomeCard';
-import AdClickCard from '../../../organisms/mypage/creator/CampaignManage/AdClickCard';
-import StartGuideCard from '../../../organisms/mypage/creator/shared/StartGuideCard';
-import { ContractionDataType } from './CPAManage';
-import OverlayUrlCard, { OverlayUrlRes } from '../../../organisms/mypage/creator/shared/OverlayUrlCard';
-import useMypageScrollToTop from '../../../utils/hooks/useMypageScrollToTop';
+import useGetRequest from '../../../../utils/hooks/useGetRequest';
+import useDialog from '../../../../utils/hooks/useDialog';
+import NowBroadCard, { CurrentBannerRes } from '../../../../organisms/mypage/creator/CampaignManage/NowBroadCard';
+import ChatAdInfo from '../../../../organisms/mypage/creator/CampaignManage/ChatAdInfo';
+import ClickAdInfo from '../../../../organisms/mypage/creator/CampaignManage/ClickAdInfo';
+import AdIncomeCard from '../../../../organisms/mypage/creator/shared/AdIncomeCard';
+import AdClickCard from '../../../../organisms/mypage/creator/CampaignManage/AdClickCard';
+import StartGuideCard from '../../../../organisms/mypage/creator/shared/StartGuideCard';
+import { ContractionDataType } from '../CPAManage';
+import OverlayUrlCard, { OverlayUrlRes } from '../../../../organisms/mypage/creator/shared/OverlayUrlCard';
+import useMypageScrollToTop from '../../../../utils/hooks/useMypageScrollToTop';
+import IncomeChart, { IncomeChartParams } from '../../../../organisms/mypage/creator/Dashboard/IncomeChart';
+import { ChartDataBase } from '../../../../utils/chart/makeBarChartData';
 
 
 interface LanidngUrlRes { url: string }
@@ -31,8 +33,6 @@ const CampaignManage = (): JSX.Element => {
   const adchatGet = useGetRequest<null, AdChatRes>('/creator/adchat/agreement');
   // Creator click data
   const clicksSummaryGet = useGetRequest<null, ClicksRes>('/creator/clicks');
-  // Creator Level data
-  const levelGet = useGetRequest<null, LevelRes>('/creator/level');
   // 현재 송출중 배너 정보 조회
   const currentBannerGet = useGetRequest<null, CurrentBannerRes[]>('/creator/banner/active');
   // 계약 정보 조회
@@ -41,7 +41,12 @@ const CampaignManage = (): JSX.Element => {
   const overlayUrlGet = useGetRequest<null, OverlayUrlRes>('/creator/banner/overlay');
 
   // 리모트 컨트롤러 URL 정보
-  const remoteControllerUrlGet = useGetRequest<null, string>('/creator/banner/remote-page-url');
+  const remoteControllerUrlGet = useGetRequest<null, string>('/creator/remote/page-url');
+
+  // 수익금 차트 정보 조회
+  const incomeChartGet = useGetRequest<IncomeChartParams, ChartDataBase[]>(
+    '/creator/income/chart', { dateRange: '30' }
+  );
 
   // For Onoff success snackbar
   const snack = useDialog();
@@ -116,48 +121,47 @@ const CampaignManage = (): JSX.Element => {
         <GridItem xs={12} lg={6}>
           <AdClickCard
             clicksSummaryData={clicksSummaryGet}
-            levelData={levelGet}
           />
         </GridItem>
 
-
-        {/* 진행한 캠페인 정보 */}
         <GridItem xs={12}>
-          {!profileGet.loading && profileGet.data
-          && profileGet.data.creatorContractionAgreement === 1 && (
-          <BannerList />
+          {!incomeChartGet.loading && (
+          <IncomeChart
+            title={<Typography style={{ fontWeight: 'bold', marginBottom: 8 }}>광고 현황</Typography>}
+            incomeChartData={incomeChartGet.data ? incomeChartGet.data : []}
+          />
           )}
         </GridItem>
+
+        <Snackbar
+          color="success"
+          open={snack.open}
+          message="정상적으로 변경되었습니다."
+          onClose={snack.handleClose}
+        />
+
+        <Snackbar
+          color="error"
+          open={failSnack.open}
+          message="변경중 오류가 발생했습니다."
+          onClose={failSnack.handleClose}
+        />
+
+        <Snackbar
+          open={banSuccessSnack.open}
+          message="배너광고 거절을 완료하였습니다."
+          color="success"
+          onClose={banSuccessSnack.handleClose}
+        />
+
+        <Snackbar
+          open={overlayUrlCopySnack.open}
+          message="클립보드에 복사되었어요! 방송도구에 등록해주세요"
+          color="success"
+          onClose={overlayUrlCopySnack.handleClose}
+        />
+
       </GridContainer>
-
-      <Snackbar
-        color="success"
-        open={snack.open}
-        message="정상적으로 변경되었습니다."
-        onClose={snack.handleClose}
-      />
-
-      <Snackbar
-        color="error"
-        open={failSnack.open}
-        message="변경중 오류가 발생했습니다."
-        onClose={failSnack.handleClose}
-      />
-
-      <Snackbar
-        open={banSuccessSnack.open}
-        message="배너광고 거절을 완료하였습니다."
-        color="success"
-        onClose={banSuccessSnack.handleClose}
-      />
-
-      <Snackbar
-        open={overlayUrlCopySnack.open}
-        message="클립보드에 복사되었어요! 방송도구에 등록해주세요"
-        color="success"
-        onClose={overlayUrlCopySnack.handleClose}
-      />
-
     </div>
   );
 };

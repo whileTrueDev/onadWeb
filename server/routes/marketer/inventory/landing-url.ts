@@ -37,6 +37,10 @@ router.route('/list')
     responseHelper.middleware.checkSessionExists, // session 확인이 필요한 경우.
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
       const { marketerId } = responseHelper.getSessionData(req);
+      const [page, offset] = responseHelper.getOptionalParam(['page', 'offset'], 'get', req);
+      const searchPage = Number(page * offset);
+      const searchOffset = Number(offset);
+
       const query = `
             SELECT
             linkId AS id, linkId, marketerId, confirmState, denialReason,
@@ -44,14 +48,24 @@ router.route('/list')
             FROM linkRegistered
             WHERE marketerId = ?
             ORDER BY regiDate DESC
-            `;
-      doQuery(query, [marketerId])
-        .then((row) => {
-          const result = row.result.map(
-            (urlData: UrlData) => ({ ...urlData, links: JSON.parse(urlData.links) })
-          );
-          responseHelper.send(result, 'get', res);
-        })
+          `;
+
+      const handleSuccess = (row: any) => {
+        const result = row.result.map(
+          (urlData: UrlData) => ({ ...urlData, links: JSON.parse(urlData.links) })
+        );
+        responseHelper.send(result, 'get', res);
+      };
+
+      if (page && offset) {
+        return doQuery(`${query} LIMIT ?, ?`, [marketerId, searchPage, searchOffset])
+          .then(handleSuccess)
+          .catch((error) => {
+            responseHelper.promiseError(error, next);
+          });
+      }
+      return doQuery(query, [marketerId])
+        .then(handleSuccess)
         .catch((error) => {
           responseHelper.promiseError(error, next);
         });

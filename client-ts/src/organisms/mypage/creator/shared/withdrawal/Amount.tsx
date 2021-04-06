@@ -13,7 +13,7 @@ import TextField from '@material-ui/core/TextField';
 // styles
 import { WithdrawlDialogAction, WithdrawalDialogState } from '../WithdrawalDialog.reducer';
 import useWithdrawalAmountStyles from './Amount.style';
-import sources from '../source/withdrawalSources';
+import sources from './withdrawalSources';
 
 interface WithdrawalAmountProps {
   setStepComplete: React.Dispatch<React.SetStateAction<boolean>>;

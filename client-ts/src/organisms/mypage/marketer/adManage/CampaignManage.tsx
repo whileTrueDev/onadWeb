@@ -5,11 +5,12 @@ import {
 } from '@material-ui/core';
 import { TabContext, TabPanel } from '@material-ui/lab';
 import usePaginatedGetRequest from '../../../../utils/hooks/usePaginatedGetRequest';
-import { CampaignInterface } from '../dashboard/interfaces';
+import { CampaignInterface, OnOffInterface } from '../dashboard/interfaces';
 import { useGetRequest } from '../../../../utils/hooks';
 import CampaignInventory from './campaign/CampaignInventory';
 import CampaignButtons from './campaign/CampaignButtons';
 import CampaignDetail from './campaign/CampaignDetail';
+import OnOffSwitch from '../shared/OnOffSwitch';
 
 const useStyles = makeStyles((theme) => ({
   tabs: {
@@ -48,9 +49,17 @@ export default function InventoryManage(): JSX.Element {
     (cam) => cam.campaignId === selectedCampaignId
   );
 
+  // ********************************************
+  // 광고주 캠페인 On/Off
+  const onOffData = useGetRequest<null, OnOffInterface | null>('/marketer/ad/on-off');
+
   return (
     <div>
-      <Paper>
+      <div style={{ marginTop: 8, maxWidth: 320 }}>
+        <OnOffSwitch onOffData={onOffData} />
+      </div>
+
+      <Paper style={{ marginTop: 8 }}>
         <TabContext value={selectedTabIndex}>
           <Tabs
             indicatorColor="primary"

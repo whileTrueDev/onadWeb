@@ -72,7 +72,9 @@ export default function CreatorsReport(props: CreatorsReportProps): JSX.Element 
               field: 'ctr',
               flex: 1,
               renderCell: (data): React.ReactElement => {
-                if (!data.row.ctr) return <Typography variant="body2">0</Typography>;
+                if (!data.row.ctr && !data.row.ctrAfreeca) return <Typography variant="body2">0</Typography>;
+                if (!data.row.ctrAfreeca) return <Typography variant="body2">{data.row.ctr}</Typography>;
+                if (!data.row.ctr) return <Typography variant="body2">{data.row.ctrAfreeca}</Typography>;
                 return (
                   <Typography variant="body2">
                     {data.row.ctr.toLocaleString()}

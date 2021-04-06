@@ -95,6 +95,8 @@ export default function CampaignAnalysis({
     setSelectedCreator(undefined);
   }
 
+  console.log(chartData);
+
   return (
     <div className={classes.container}>
       <Typography

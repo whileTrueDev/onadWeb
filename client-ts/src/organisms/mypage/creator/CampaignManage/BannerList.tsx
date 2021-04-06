@@ -12,7 +12,6 @@ import HOST from '../../../../config';
 import axiosInstance from '../../../../utils/axios';
 
 const useStyles = makeStyles((theme) => ({
-  bold: { fontWeight: 'bold', color: theme.palette.text.primary },
   container: { marginBottom: theme.spacing(4) },
   linkTitle: {
     textDecoration: 'underline',
@@ -28,13 +27,17 @@ const useStyles = makeStyles((theme) => ({
   marketerLogo: { margin: theme.spacing(1, 1, 0, 0.5) },
   desc: { marginTop: theme.spacing(1) },
   loading: {
-    display: 'flex', justifyContent: 'center', height: 200, alignItems: 'center'
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    height: 200,
+    alignItems: 'center'
   },
   moreButton: { textAlign: 'center' },
 }));
 
 export interface Link {primary: boolean; linkTo: string; linkName: string}
-export interface CampaignData {
+export interface BannerStarted {
   campaignId: string;
   date: string;
   bannerSrc: string;
@@ -51,6 +54,9 @@ export interface CampaignData {
   optionType: number;
   priorityType: number;
   profileImage?: string;
+  itemSiteUrl?: string;
+  merchandiseId?: string;
+  merchandiseName?: string;
 }
 export default function BannerList(): JSX.Element {
   const classes = useStyles();
@@ -61,6 +67,7 @@ export default function BannerList(): JSX.Element {
     if (option === 0) str = '배너광고';
     if (option === 1) str = '배너+클릭광고';
     if (option === 2) str = '클릭광고';
+    if (option === 3) str = '상품판매광고';
     return str;
   }
   // 에러 스낵바
@@ -73,7 +80,7 @@ export default function BannerList(): JSX.Element {
   // 로딩
   const [loading, setLoading] = useState<boolean>(false);
   // 데이터
-  const [data, setData] = useState<CampaignData[]>([]);
+  const [data, setData] = useState<BannerStarted[]>([]);
   // 요청 페이지
   const [page, setPage] = useState(0);
   function handleNextPage(): void {
@@ -81,7 +88,7 @@ export default function BannerList(): JSX.Element {
   }
   const request = useCallback((): void => {
     setLoading(true);
-    axiosInstance.get<CampaignData[]>(
+    axiosInstance.get<BannerStarted[]>(
       `${HOST}/creator/banner/list`, { params: { offset: OFFSET, page } }
     )
       .then((res) => {
@@ -101,10 +108,6 @@ export default function BannerList(): JSX.Element {
 
   return (
     <Grid container spacing={1} className={classes.container}>
-
-      <Grid item xs={12}>
-        <Typography className={classes.bold}>내가 진행한 광고 목록</Typography>
-      </Grid>
 
       {/* 아직 없는 경우 처리 */}
       {!loading && (!data || data.length < 1) && (
@@ -135,6 +138,7 @@ export default function BannerList(): JSX.Element {
                     color={campaign.state ? 'primary' : 'default'}
                   />
                   <div>
+                    {/* LIVE 배너 광고의 랜딩페이지 링크 */}
                     {campaign.links && JSON.parse(campaign.links).links.map((link: Link) => (
                       <span key={link.linkName}>
                         {link.primary && (
@@ -142,7 +146,7 @@ export default function BannerList(): JSX.Element {
                           component="span"
                           color="textPrimary"
                           className={classes.linkTitle}
-                          onClick={() => window.open(link.linkTo)}
+                          onClick={() => window.open(link.linkTo, '_blank')}
                         >
                           {' '}
                           {link.linkName}
@@ -150,6 +154,17 @@ export default function BannerList(): JSX.Element {
                         )}
                       </span>
                     ))}
+                    {/* 판매형 광고의 경우 상품 판매 링크 */}
+                    {!campaign.links && campaign.merchandiseId && campaign.itemSiteUrl && (
+                      <Typography
+                        component="span"
+                        color="textPrimary"
+                        className={classes.linkTitle}
+                        onClick={() => window.open(campaign.itemSiteUrl, '_blank')}
+                      >
+                        {campaign.merchandiseName}
+                      </Typography>
+                    )}
                   </div>
                   <Typography variant="caption" color="textSecondary">{`${campaign.marketerName},첫게시: ${campaign.date}`}</Typography>
                   <Typography color="textPrimary" variant="body2">{`배너광고 ${campaign.CPM.toLocaleString()}원 • 클릭광고 ${campaign.CPC.toLocaleString()}원`}</Typography>
@@ -168,6 +183,7 @@ export default function BannerList(): JSX.Element {
       {loading && (
       <Grid item xs={12} className={classes.loading}>
         <CircularProgress />
+        <Typography>광고 목록 로딩중입니다. 상황에 따라 1분 이상 소요될 수 있습니다.</Typography>
       </Grid>
       )}
 

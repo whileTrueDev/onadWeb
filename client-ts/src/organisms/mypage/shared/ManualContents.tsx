@@ -1,6 +1,7 @@
 import {
+  Chip,
   CircularProgress,
-  makeStyles, Paper, Tab, Tabs, Typography
+  makeStyles, Paper, Typography
 } from '@material-ui/core';
 import classnames from 'classnames';
 import React, { useEffect, useMemo } from 'react';
@@ -8,7 +9,8 @@ import Markdown from 'react-markdown/with-html';
 import { UseGetRequestObject } from '../../../utils/hooks/useGetRequest';
 
 const useStyles = makeStyles((theme) => ({
-  tabs: { padding: theme.spacing(2, 0, 0), borderBottom: `2px solid ${theme.palette.divider}` },
+  tabs: { padding: theme.spacing(1, 0), borderBottom: `2px solid ${theme.palette.divider}` },
+  chip: { margin: theme.spacing(1, 1) },
   container: { padding: theme.spacing(4) },
   contents: { margin: theme.spacing(4, 0) },
   markdown: {
@@ -31,7 +33,7 @@ export default function ManualContents({
   const classes = useStyles();
 
   const [tabValue, setTabValue] = React.useState<string>();
-  function handleTabChange(event: React.ChangeEvent<{}>, newValue: string): void {
+  function handleTabChange(newValue: string): void {
     setTabValue(newValue);
   }
 
@@ -53,23 +55,23 @@ export default function ManualContents({
     <Paper>
       {manualGet.loading && (<div style={{ textAlign: 'center' }}><CircularProgress /></div>)}
 
-      {!manualGet.loading && manualGet.data && tabValue && (
-      <Tabs
-        className={classes.tabs}
-        value={tabValue}
-        onChange={handleTabChange}
-        indicatorColor="primary"
-        textColor="primary"
-        scrollButtons="auto"
-        aria-label="scrollable auto tabs example"
-        variant="scrollable"
-      >
-        {manualGet.data
+      <div className={classes.tabs}>
+        {!manualGet.loading && manualGet.data && manualGet.data
           .map((eachManual: any) => (
-            <Tab key={eachManual.title} label={eachManual.title} value={eachManual.title} />
+            <Chip
+              onClick={() => {
+                handleTabChange(eachManual.title);
+              }}
+              className={classes.chip}
+              size="medium"
+              key={eachManual.title}
+              label={eachManual.title}
+              variant={eachManual.title === tabValue ? 'default' : 'outlined'}
+              color={eachManual.title === tabValue ? 'primary' : 'default'}
+            />
           ))}
-      </Tabs>
-      )}
+
+      </div>
 
       {!manualGet.loading && manualGet.data && (
         <div>

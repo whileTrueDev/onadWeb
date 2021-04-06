@@ -1,8 +1,8 @@
 
 export interface TrackingInsertParams {
-    costType: 'CPC' | 'CPA';
+    costType: 'CPC' | 'CPA' | 'CPS';
     conversinoTime: Date | null;
-    connectedLinkId: string;
+    connectedLinkId: string | null;
     campaignId: string;
     campaignName: string;
     marketerId: string;

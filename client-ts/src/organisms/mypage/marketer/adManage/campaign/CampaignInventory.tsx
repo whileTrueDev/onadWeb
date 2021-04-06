@@ -4,7 +4,6 @@ import {
   Badge,
   IconButton,
   makeStyles,
-  Switch,
   Tooltip,
   Typography
 } from '@material-ui/core';
@@ -15,7 +14,6 @@ import { UsePaginatedGetRequestObject } from '../../../../../utils/hooks/usePagi
 import { useAnchorEl, useDialog } from '../../../../../utils/hooks';
 import renderPriorityType from '../../../../../utils/render_funcs/renderPriorityType';
 import renderOptionType from '../../../../../utils/render_funcs/renderOptionType';
-import handleCampaignOnOff from '../../../../../utils/func/handleCampaignOnOff';
 import Snackbar from '../../../../../atoms/Snackbar/Snackbar';
 import BannerInfoPopover from './BannerInfoPopover';
 import CampaignInventoryMenuPopover from './CampaignInventoryMenuPopover';
@@ -24,6 +22,7 @@ import CampaignUpdateDialog from '../../dashboard/CampaignUpdateDialog';
 import OnadBanner from '../../../../../atoms/Banner/OnadBanner';
 import { UrlLink } from '../interface';
 import { CONFIRM_STATE_CONFIRMED, CONFIRM_STATE_REJECTED } from '../../../../../utils/render_funcs/renderUrlConfirmState';
+import CampaignOnOffSwitch from '../../../../../atoms/Switch/CampaignOnOffSwitch';
 
 const useStyles = makeStyles(() => ({
   link: {
@@ -123,19 +122,13 @@ export default function CampaignInventory({
             field: 'onOff',
             headerName: 'On/Off',
             renderCell: (data): React.ReactElement => (
-              <Switch
-                size="small"
-                id="onoff-switch"
-                color="primary"
-                checked={Boolean(data.row.onOff)}
-                onChange={handleCampaignOnOff({
-                  onoffState: !data.row.onOff,
-                  campaignId: data.row.campaignId,
-                  onSuccess: onOnOffSuccess,
-                  onFail: onOnOffFail,
-                })}
+              <CampaignOnOffSwitch
+                campaign={data.row as CampaignInterface}
+                onSuccess={onOnOffSuccess}
+                onFail={onOnOffFail}
+                inventoryLoading={campaignData.loading}
               />
-            ),
+            )
           },
           {
             field: 'campaignName',
@@ -154,6 +147,14 @@ export default function CampaignInventory({
                 </Typography>
                 <IconButton size="small" onClick={(e): void => handleCampaignNameClick(e, data.row as CampaignInterface)}><MoreVert /></IconButton>
               </div>
+            )
+          },
+          {
+            field: 'optionType',
+            headerName: '타입',
+            width: 160,
+            renderCell: (data): React.ReactElement => (
+              <Typography noWrap variant="body2">{renderOptionType(data.row.optionType)}</Typography>
             )
           },
           {
@@ -184,33 +185,45 @@ export default function CampaignInventory({
             sortable: false,
             filterable: false,
             width: 150,
-            renderCell: (data): React.ReactElement => (
-              <Tooltip title={data.row.linkId}>
-                <Typography
-                  onClick={(): void => {
-                    const targetUrl = data.row.linkData.links.find(
-                      (link: UrlLink) => !!link.primary
-                    );
-                    window.open(targetUrl.linkTo, '_blank');
-                  }}
-                  className={classes.link}
-                  color={data.row.linkConfirmState === CONFIRM_STATE_REJECTED ? 'error' : 'primary'}
-                  variant="body2"
-                  noWrap
-                >
-                  <OpenInNew fontSize="small" style={{ verticalAlign: 'middle' }} />
-                  {data.row.linkId}
-                </Typography>
-              </Tooltip>
-            )
+            renderCell: (data): React.ReactElement => {
+              if (!data.row.linkId) return <Typography variant="body2">온애드몰</Typography>;
+              return (
+                <Tooltip title={data.row.linkId}>
+                  <Typography
+                    onClick={(): void => {
+                      const targetUrl = data.row.linkData.links.find(
+                        (link: UrlLink) => !!link.primary
+                      );
+                      window.open(targetUrl.linkTo, '_blank');
+                    }}
+                    className={classes.link}
+                    color={data.row.linkConfirmState === CONFIRM_STATE_REJECTED ? 'error' : 'primary'}
+                    variant="body2"
+                    noWrap
+                  >
+                    <OpenInNew fontSize="small" style={{ verticalAlign: 'middle' }} />
+                    {data.row.linkId}
+                  </Typography>
+                </Tooltip>
+              );
+            }
           },
           {
-            field: 'optionType',
-            headerName: '타입',
-            width: 150,
-            renderCell: (data): React.ReactElement => (
-              <Typography noWrap variant="body2">{renderOptionType(data.row.optionType)}</Typography>
-            )
+            field: 'merchandiseId',
+            headerName: '상품',
+            width: 120,
+            filterable: false,
+            sortable: false,
+            renderCell: (data): React.ReactElement => {
+              if (!data.row.merchandiseId) return <Typography variant="body2">없음</Typography>;
+              return (
+                <Tooltip title={data.row.merchandiseName}>
+                  <Typography variant="body2" noWrap>
+                    {data.row.merchandiseName}
+                  </Typography>
+                </Tooltip>
+              );
+            }
           },
           {
             field: 'priorityType',

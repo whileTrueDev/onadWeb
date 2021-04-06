@@ -6,6 +6,8 @@ import RemotePageBannerTable from '../../../organisms/mypage/creator/RemotePage/
 const RemotePage = (): JSX.Element => {
   const thisUrl: string = window.location.pathname.split('/')[3];
 
+  console.log(thisUrl);
+
   return (
     <Paper>
       <RemotePageBannerTable

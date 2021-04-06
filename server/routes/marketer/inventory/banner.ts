@@ -78,9 +78,14 @@ router.route('/')
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
       const { marketerId } = responseHelper.getSessionData(req);
       const bannerId = responseHelper.getParam('bannerId', 'get', req);
-      const query = 'SELECT * FROM bannerRegistered WHERE marketerId = ? AND bannerId = ?';
 
-      const { result } = await doQuery(query, [marketerId, bannerId]);
+      const [page, offset] = responseHelper.getParam(['page', 'offset'], 'get', req);
+      const searchPage = Number(page * offset);
+      const searchOffset = Number(offset);
+
+      const query = 'SELECT * FROM bannerRegistered WHERE marketerId = ? AND bannerId = ? LIMIT ?, ?';
+
+      const { result } = await doQuery(query, [marketerId, bannerId, searchPage, searchOffset]);
       return responseHelper.send(result[0], 'get', res);
     })
   )

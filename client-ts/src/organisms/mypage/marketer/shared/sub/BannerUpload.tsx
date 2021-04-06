@@ -4,7 +4,7 @@ import {
   Grid, Hidden, Typography, Button, CircularProgress
 } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
-import OnadBanner from '../../../../atoms/Banner/OnadBanner';
+import OnadBanner from '../../../../../atoms/Banner/OnadBanner';
 
 
 const useStyle = makeStyles((theme: Theme) => ({
@@ -50,7 +50,7 @@ interface ImageUploadProps {
 
 const DEFAULT_IMAGE_PATH = '/pngs/dashboard/banner_upload_manual.png';
 
-const ImageUpload = (props: ImageUploadProps): JSX.Element => {
+const BannerUpload = (props: ImageUploadProps): JSX.Element => {
   const classes = useStyle();
   const {
     image,
@@ -191,4 +191,4 @@ const ImageUpload = (props: ImageUploadProps): JSX.Element => {
   );
 };
 
-export default ImageUpload;
+export default BannerUpload;

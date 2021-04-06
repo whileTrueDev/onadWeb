@@ -12,7 +12,9 @@ import bannerRouter from './banner';
 import notificationRouter from './notification';
 import clicksRouter from './clicks';
 import cpaRouter from './cpa';
+import cpsRouter from './cps/cps';
 import referralCodeRouter from './referral-code';
+import remoteRouter from './remote/remote';
 import makeAdvertiseUrl from '../../lib/makeAdvertiseUrl';
 import makeRemoteControllerUrl from '../../lib/makeRemoteControllerUrl';
 
@@ -23,6 +25,8 @@ router.use('/notification', notificationRouter);
 router.use('/clicks', clicksRouter);
 router.use('/cpa', cpaRouter);
 router.use('/referral-code', referralCodeRouter);
+router.use('/remote', remoteRouter);
+router.use('/cps', cpsRouter);
 
 // 통합 회원가입 - 아이디 중복 체크
 router.route('/check-id')
@@ -121,13 +125,22 @@ router.route('/')
         VALUES (?, ?, ?)
       `;
 
-      Promise.all([
-        doQuery(incomeQuery, [creatorId]),
-        doQuery(priceQuery, [creatorId, 1, 0, 2]),
-        doQuery(royaltyQuery, [creatorId]),
-        doQuery(enteredFriendCodeQuery, [creatorId, referralCode, REFERRALCODE_SINGUP_STATE]),
-      ]).then(() => responseHelper.send(userid, 'post', res))
-        .catch(() => next());
+      if (!referralCode) {
+        Promise.all([
+          doQuery(incomeQuery, [creatorId]),
+          doQuery(priceQuery, [creatorId, 1, 0, 2]),
+          doQuery(royaltyQuery, [creatorId]),
+        ]).then(() => responseHelper.send(userid, 'post', res))
+          .catch(() => next());
+      } else {
+        Promise.all([
+          doQuery(incomeQuery, [creatorId]),
+          doQuery(priceQuery, [creatorId, 1, 0, 2]),
+          doQuery(royaltyQuery, [creatorId]),
+          doQuery(enteredFriendCodeQuery, [creatorId, referralCode, REFERRALCODE_SINGUP_STATE]),
+        ]).then(() => responseHelper.send(userid, 'post', res))
+          .catch(() => next());
+      }
     })
   )
   .patch(
@@ -284,7 +297,7 @@ router.route('/settlement')
             // 정산 등록 슬랙 알림
             slack({
               summary: '방송인 정산 등록 알림',
-              text: '방송인아 정산을 등록했습니다. 확인해주세요.',
+              text: '방송인이 정산을 등록했습니다. 확인해주세요.',
               fields: [
                 { title: '방송인 아이디', value: creatorId!, short: true },
                 { title: '은행', value: bankName!, short: true },

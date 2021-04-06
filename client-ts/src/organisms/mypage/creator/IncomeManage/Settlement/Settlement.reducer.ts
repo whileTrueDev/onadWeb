@@ -1,4 +1,4 @@
-import banks from './banks';
+import banks from '../../../../../constants/banks';
 
 export interface AccountNumberFormState {
   name: string;

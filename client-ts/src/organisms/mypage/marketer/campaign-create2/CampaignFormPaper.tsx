@@ -21,6 +21,8 @@ import ButtonSet from './shared/ButtonSet';
 import useDialog from '../../../../utils/hooks/useDialog';
 import useGetRequest from '../../../../utils/hooks/useGetRequest';
 import { CampaignCreateAction, CampaignCreateInterface } from './reducers/campaignCreate.reducer';
+import SelectMerchandise from './CampaignFormComponents/SelectMerchandise';
+import MerchandiseUploadDialog from '../shared/MerchandiseUploadDialog';
 
 const StyledTableCell = withStyles((theme) => ({
   head: {
@@ -68,9 +70,11 @@ function CampaignFormPaper({
 
   const landingUrlData = useGetRequest('/marketer/landing-url/list');
   const bannerData = useGetRequest('/marketer/banner/list/active');
+  const merchandiseData = useGetRequest('/marketer/merchandises', { onlyNotConnected: true });
 
   const bannerUploadDialog = useDialog();
   const landingUrlUploadDialog = useDialog();
+  const merchandiseUploadDialog = useDialog();
 
   const inputsteps: Array<{ title: string; component: JSX.Element } | false> = [
     {
@@ -88,23 +92,33 @@ function CampaignFormPaper({
         />
       )
     },
-    (optionType !== 'option0')
-      && {
-        title: '랜딩페이지 URL 선택',
-        component: (
-          <SelectLandingUrl
-            state={state}
-            dispatch={dispatch}
-            handleDialogOpen={landingUrlUploadDialog.handleOpen}
-            landingUrlData={landingUrlData}
-          />
-        )
-      },
+    (optionType === 'option1') && {
+      title: '랜딩페이지 URL 선택',
+      component: (
+        <SelectLandingUrl
+          state={state}
+          dispatch={dispatch}
+          handleDialogOpen={landingUrlUploadDialog.handleOpen}
+          landingUrlData={landingUrlData}
+        />
+      )
+    },
+    (optionType === 'option3') && {
+      title: '판매 상품 선택',
+      component: (
+        <SelectMerchandise
+          state={state}
+          dispatch={dispatch}
+          handleDialogOpen={merchandiseUploadDialog.handleOpen}
+          merchandiseData={merchandiseData}
+        />
+      )
+    },
     {
       title: '홍보 문구 입력',
       component: <InputDescription descriptionInputRef={descriptionInputRef} />
     },
-    {
+    (optionType === 'option1') && {
       title: '일예산 설정',
       component: <SelectBudget budgetInputRef={budgetInputRef} />
     },
@@ -163,6 +177,13 @@ function CampaignFormPaper({
         open={landingUrlUploadDialog.open}
         handleClose={landingUrlUploadDialog.handleClose}
         recallRequest={landingUrlData.doGetRequest}
+      />
+
+      {/* 상품 생성 다이얼로그 */}
+      <MerchandiseUploadDialog
+        open={merchandiseUploadDialog.open}
+        onClose={merchandiseUploadDialog.handleClose}
+        recallRequest={merchandiseData.doGetRequest}
       />
     </CampaignCreateStepLayout>
   );

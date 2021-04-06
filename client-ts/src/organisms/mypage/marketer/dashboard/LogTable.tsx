@@ -115,7 +115,7 @@ export default function issueTable(
 
       <Divider />
 
-      <Grid container style={{ height: '350px', overflow: 'auto' }}>
+      <Grid container style={{ height: '430px', overflow: 'auto' }}>
         {/* 데이터 있는 경우 */}
         {actionLogData.loading && (
           <Grid item xs={12} className={classes.loading}>
@@ -128,6 +128,7 @@ export default function issueTable(
         {!actionLogData.loading && actionLogData.data && actionLogData.data.length > 0 && (
           <List component="nav" style={{ width: '100%' }} aria-label="issue-table">
             {actionLogData.data
+              // eslint-disable-next-line no-nested-ternary
               .sort((a, b) => (a.date > b.date ? -1 : a.date < b.date ? 1 : 0))
               .map((r, index) => (
                 <div key={shortid.generate()}>
