@@ -69,12 +69,10 @@ export default function MerchandiseUploadDialog({
 
   // *********************************************************
   // 상품정보
-  const [merchandiseInfo, setMerchandiseInfo] = useState<MerchandiseInfo>({
-    name: '',
-    price: '',
-    stock: '',
-    description: '',
-  });
+  const defaultMerchandiseInfo = {
+    name: '', price: '', stock: '', description: '',
+  };
+  const [merchandiseInfo, setMerchandiseInfo] = useState<MerchandiseInfo>(defaultMerchandiseInfo);
 
   const handleChange = (
     key: keyof MerchandiseInfo
@@ -107,7 +105,6 @@ export default function MerchandiseUploadDialog({
       zoneCode: addr.zoneCode,
     });
   }
-  console.log(address);
   // 상세 주소
   function handleAddressDetailChange(detail: string): void {
     if (address) {
@@ -121,7 +118,7 @@ export default function MerchandiseUploadDialog({
   // ***********************************************************
   // 상품 이미지
   const {
-    images, handleImageUpload, handleImageRemove, uploadToS3
+    images, handleImageUpload, handleImageRemove, uploadToS3, ...imagesHookObj
   } = useImageListUpload<MerchandiseImage>({ limit: 4 });
 
   // 상품 상세 설명 이미지
@@ -161,6 +158,16 @@ export default function MerchandiseUploadDialog({
     if (dialogContentRef && dialogContentRef.current) dialogContentRef.current.scrollTo(0, 0);
   };
   const handleFormErrorReset = (): void => { setFormError(''); };
+
+  // ********************************************************
+  // 모든 필드 리셋
+  function resetAll(): void {
+    options.handleReset();
+    descImages.handleReset();
+    imagesHookObj.handleReset();
+    setAddress(undefined);
+    setMerchandiseInfo(defaultMerchandiseInfo);
+  }
 
   // form submit 로딩
   const formLoading = useDialog();
@@ -222,6 +229,7 @@ export default function MerchandiseUploadDialog({
               handleLoadingStatus('상품 상세 설명 이미지 등록 중...');
               formLoading.handleClose();
               if (onSuccess) onSuccess();
+              resetAll();
               onClose();
             },
             uploadFailCallback
@@ -235,6 +243,7 @@ export default function MerchandiseUploadDialog({
     return;
   }
 
+  // 주소 내역 불러오기.
   const addressHistoryGet = useGetRequest<null, OnadAddressData[]>('/marketer/merchandises/addresses');
 
   // 입력 폼
