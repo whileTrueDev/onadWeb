@@ -2,6 +2,7 @@ import express from 'express';
 import createHttpError from 'http-errors';
 import responseHelper from '../../../middlewares/responseHelper';
 import doQuery from '../../../model/doQuery';
+import merchandisePickupAddressRouter from './merchandisePickupAddress';
 
 export interface Merchandise {
   id?: number;
@@ -14,6 +15,7 @@ export interface Merchandise {
   descImages: string[];
   pickupFlag?: boolean;
   pickupAddress?: {
+    id?: number;
     roadAddress: string; // 도로명 주소
     roadAddressEnglish: string; // 도로명 영어 주소
     roadAddressDetail?: string; // 사용자 입력 상세 주소
@@ -186,29 +188,34 @@ const createMerchandise = async (
   // 상품 픽업 주소가 존재하는 경우
   if (pickupAddress) {
     const {
-      roadAddress, roadAddressEnglish, roadAddressDetail, jibunAddress, jibunAddressEnglish,
+      id, roadAddress, roadAddressEnglish, roadAddressDetail, jibunAddress, jibunAddressEnglish,
       buildingCode, sido, sigungu, sigunguCode, bname, bCode, roadname, roadnameCode, zoneCode,
     } = pickupAddress;
 
-    const pickupAddressQuery = `
-    INSERT INTO merchandisePickupAddresses (
-      roadAddress, roadAddressEnglish, roadAddressDetail, jibunAddress,
-      jibunAddressEnglish, buildingCode, sido, sigungu,
-      sigunguCode, bname, bCode, roadname, roadnameCode, zoneCode
-    ) VALUES (
-      ?, ?, ?, ?,
-      ?, ?, ?, ?,
-      ?, ?, ?, ?, ?, ?
-    )`;
+    let pickupAddressId = id;
+    if (!pickupAddressId) {
+      // 새롭게 입력받은 주소 데이터인 경우
+      const pickupAddressQuery = `
+      INSERT INTO merchandisePickupAddresses (
+        roadAddress, roadAddressEnglish, roadAddressDetail, jibunAddress,
+        jibunAddressEnglish, buildingCode, sido, sigungu,
+        sigunguCode, bname, bCode, roadname, roadnameCode, zoneCode
+      ) VALUES (
+        ?, ?, ?, ?,
+        ?, ?, ?, ?,
+        ?, ?, ?, ?, ?, ?
+      )`;
 
-    const pickupAddressQueryArray = [
-      roadAddress, roadAddressEnglish, roadAddressDetail, jibunAddress,
-      jibunAddressEnglish, buildingCode, sido, sigungu,
-      sigunguCode, bname, bCode, roadname, roadnameCode, zoneCode
-    ];
+      const pickupAddressQueryArray = [
+        roadAddress, roadAddressEnglish, roadAddressDetail, jibunAddress,
+        jibunAddressEnglish, buildingCode, sido, sigungu,
+        sigunguCode, bname, bCode, roadname, roadnameCode, zoneCode
+      ];
 
-    const pickupAddressQueryResult = await doQuery(pickupAddressQuery, pickupAddressQueryArray);
-    const pickupAddressId = pickupAddressQueryResult.result.insertId;
+      const pickupAddressQueryResult = await doQuery(pickupAddressQuery, pickupAddressQueryArray);
+      // pickupAddressId를 방금 생성한 주소 ID로 오버라이딩.
+      pickupAddressId = pickupAddressQueryResult.result.insertId;
+    }
 
     // merchandise pickupId 업데이트
     const pickupAddressUpdateQuery = `
@@ -250,6 +257,9 @@ const removeMerchandise = async ({
 
 // ******************************************************
 // Routers
+
+// 주소 라우터
+router.use('/addresses', merchandisePickupAddressRouter);
 
 router.route('/')
   .get(

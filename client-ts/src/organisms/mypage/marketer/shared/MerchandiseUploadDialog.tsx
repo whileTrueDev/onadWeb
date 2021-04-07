@@ -1,16 +1,15 @@
 import classnames from 'classnames';
 import {
-  Button, Collapse, FormControl, FormControlLabel,
+  Button, Chip, Collapse, FormControl, FormControlLabel,
   makeStyles, Radio, RadioGroup, TextField, Typography
 } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
 import React, {
   useState, useRef
 } from 'react';
-import { AddressData } from 'react-daum-postcode';
 import CustomDialog from '../../../../atoms/Dialog/Dialog';
 import {
-  useDialog, useEventTargetValue, usePostRequest
+  useDialog, useEventTargetValue, useGetRequest, usePostRequest
 } from '../../../../utils/hooks';
 import useImageListUpload from '../../../../utils/hooks/useImageListUpload';
 import useSwapableListItem from '../../../../utils/hooks/useSwappableListItem';
@@ -23,6 +22,8 @@ import { getS3MerchandiseImagePath, getS3MerchandiseDescImagePath } from '../../
 
 const FLAG_ON = 'Yes';
 const FLAG_OFF = 'No';
+
+const getAddressName = (r: string, rd: string): string => (r ? `${r} ${rd}` : '');
 
 const useStyles = makeStyles((theme) => ({
   textField: { margin: theme.spacing(1, 0) },
@@ -88,8 +89,9 @@ export default function MerchandiseUploadDialog({
   // 상품 픽업 주소
   const [address, setAddress] = useState<OnadAddressData>();
 
-  function handleAddressChangeByDaumPopup(addr: AddressData): void {
+  function handleAddressChangeByDaumPopup(addr: OnadAddressData): void {
     setAddress({
+      id: addr.id || undefined,
       roadAddress: addr.roadAddress,
       roadAddressEnglish: addr.roadAddressEnglish,
       jibunAddress: addr.jibunAddress,
@@ -99,12 +101,13 @@ export default function MerchandiseUploadDialog({
       sigungu: addr.sigungu,
       sigunguCode: addr.sigunguCode,
       bname: addr.bname,
-      bCode: addr.bcode,
+      bCode: addr.bCode,
       roadname: addr.roadname,
       roadnameCode: addr.roadnameCode,
-      zoneCode: addr.zonecode,
+      zoneCode: addr.zoneCode,
     });
   }
+  console.log(address);
   // 상세 주소
   function handleAddressDetailChange(detail: string): void {
     if (address) {
@@ -226,6 +229,8 @@ export default function MerchandiseUploadDialog({
     return;
   }
 
+  const addressHistoryGet = useGetRequest<null, OnadAddressData[]>('/marketer/merchandises/addresses');
+
   // 입력 폼
   const form = (
     <form className={classes.form} autoComplete="off">
@@ -323,6 +328,30 @@ export default function MerchandiseUploadDialog({
         <Collapse in={pickupFlag.value === FLAG_ON}>
           <Typography>상품픽업주소</Typography>
           <div className={classes.bottomSpace}>
+            {!addressHistoryGet.loading && addressHistoryGet.data && (
+              <div style={{ margin: '8px 0px' }}>
+                <Typography variant="body2" color="textSecondary">기록 (클릭시 주소 설정)</Typography>
+                {addressHistoryGet.data.map((_address) => {
+                  const addr = getAddressName(address?.roadAddress || '', address?.roadAddressDetail || '');
+                  const currentAddr = getAddressName(_address.roadAddress, _address.roadAddressDetail || '');
+                  return (
+                    <Chip
+                      color="primary"
+                      variant="outlined"
+                      size="small"
+                      style={{ margin: '0px 0px 8px 0px' }}
+                      key={_address.bCode + _address.bname}
+                      label={currentAddr}
+                      onClick={() => {
+                        if (addr !== currentAddr) {
+                          setAddress({ ..._address, roadAddressDetail: _address.roadAddressDetail || '' });
+                        }
+                      }}
+                    />
+                  );
+                })}
+              </div>
+            )}
             <AddressInput
               addressValue={address}
               onChange={handleAddressChangeByDaumPopup}

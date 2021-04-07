@@ -18,6 +18,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export interface OnadAddressData {
+  id?: number;
   roadAddress: string; // 도로명 주소
   roadAddressEnglish: string; // 도로명 영어 주소
   roadAddressDetail?: string; // 사용자 입력 상세 주소
@@ -37,7 +38,7 @@ export interface MerchandiseAddressInputProps {
   textfieldClassName?: string;
   inputClassName?: string;
   addressValue?: OnadAddressData;
-  onChange: (addr: AddressData) => void;
+  onChange: (addr: Omit<AddressData, 'zonecode' | 'bcode'> & { zoneCode: string; bCode: string }) => void;
   onDetailChange: (detail: string) => void;
 }
 
@@ -109,7 +110,7 @@ export default function MerchandiseAddressInput({
         open={postcodeDialog.open}
         onClose={postcodeDialog.handleClose}
         onComplete={(data): void => {
-          onChange(data);
+          onChange({ ...data, zoneCode: data.zonecode, bCode: data.bcode });
           postcodeDialog.handleClose();
         }}
       />
