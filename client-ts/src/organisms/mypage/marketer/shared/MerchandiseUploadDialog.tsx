@@ -173,7 +173,9 @@ export default function MerchandiseUploadDialog({
     // 유효성 체크
     if (!merchandiseInfo.name) return handleFormError('상품명을 입력해주세요.');
     if (!merchandiseInfo.price) return handleFormError('판매가를 입력해주세요.');
+    if (merchandiseInfo.price && merchandiseInfo.price < 1) return handleFormError('판매가를 올바르게 입력해주세요.');
     if (!merchandiseInfo.stock) return handleFormError('재고를 입력해주세요.');
+    if (merchandiseInfo.stock && merchandiseInfo.stock < 1) return handleFormError('재고를 올바르게 입력해주세요.');
     if (optionFlag.value === FLAG_ON
       && options.checkItemsEmpty()) return handleFormError('옵션을 올바르게 입력해주세요. 각 옵션은 빈 값이 없어야 합니다.');
     if (images.length === 0) return handleFormError('상품을 등록하기 위해서는 상품 사진이 최소 1개 이상 필요합니다.');
