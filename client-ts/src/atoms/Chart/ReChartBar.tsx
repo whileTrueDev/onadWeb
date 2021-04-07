@@ -33,7 +33,7 @@ export default function ReChartBar({
   chartWidth = 500,
   xAxisDataKey = 'date',
   tooltipLabelFormatter = (label: string | number): string | number => label,
-  tooltipFormatter = (value: any, name: any): any => [value, labels[name]],
+  tooltipFormatter = (value: any, name: any): any => [typeof value === 'number' ? value.toLocaleString() : value, labels[name]],
   legendFormatter = (value: any): any => labels[value],
   nopreprocessing = false,
   keyMap,
