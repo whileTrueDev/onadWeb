@@ -339,7 +339,7 @@ export default function MerchandiseUploadDialog({
                       color="primary"
                       variant="outlined"
                       size="small"
-                      style={{ margin: '0px 0px 8px 0px' }}
+                      style={{ margin: '0px 4px 4px 0px' }}
                       key={_address.bCode + _address.bname}
                       label={currentAddr}
                       onClick={() => {
