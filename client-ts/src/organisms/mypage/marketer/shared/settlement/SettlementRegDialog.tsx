@@ -55,6 +55,7 @@ export default function SettlementRegDialog({
     if (!data.identificationNumber) return handleSnackContents('주민등록번호를 입력해주세요.', 'error');
     if (!data.bankName) return handleSnackContents('은행을 선택해주세요.', 'error');
     if (!data.bankAccountOwner) return handleSnackContents('예금주를 입력해주세요.', 'error');
+    if (data.bankAccountNumber && data.bankAccountNumber.includes('-')) return handleSnackContents('계좌번호에는 - 가 포함될 수 없습니다.', 'error');
     if (!data.bankAccountNumber) return handleSnackContents('계좌번호를 입력해주세요.', 'error');
     if (!data.identificationImgSrc) return handleSnackContents('신분증을 업로드해주세요.', 'error');
     if (!data.bankAccountImgSrc) return handleSnackContents('통장 사본을 업로드해주세요.', 'error');
@@ -89,7 +90,7 @@ export default function SettlementRegDialog({
         maxWidth="sm"
         open={open}
         onClose={onClose}
-        title="정산 등록 다이얼로그"
+        title="정산 등록"
       >
         {settlementData?.data && (
           <Alert severity="error">

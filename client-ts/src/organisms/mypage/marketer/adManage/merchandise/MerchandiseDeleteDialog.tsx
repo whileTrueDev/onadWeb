@@ -23,7 +23,7 @@ const MerchandiseDeleteDialog = (props: MerchandiseDeleteDialogProps): JSX.Eleme
 
   const { loading, doDeleteRequest } = useDeleteRequest<{ id?: number }, any[]>('/marketer/merchandises');
 
-  const connectedCampaign = useGetRequest<{ id?: number }, { campaignId: string }[]>(
+  const connectedCampaign = useGetRequest<{ id?: number }, number>(
     '/marketer/merchandises/campaigns', {
       id: selectedMerchandise.id
     }
@@ -38,38 +38,40 @@ const MerchandiseDeleteDialog = (props: MerchandiseDeleteDialogProps): JSX.Eleme
       maxWidth="sm"
       buttons={(
         <div style={{ display: 'flex' }}>
-          {!connectedCampaign.loading
-            && connectedCampaign.data
-            && connectedCampaign.data.length > 0 && (
-              <Tooltip title={<Typography>상품이 캠페인에 할당되어 있어 삭제가 불가능합니다.</Typography>}>
-                <div>
-                  <Button variant="contained" color="primary" disabled>
+          {!connectedCampaign.loading && connectedCampaign.data && connectedCampaign.data > 0 ? (
+            <Tooltip title={<Typography>상품이 캠페인에 할당되어 있어 삭제가 불가능합니다.</Typography>}>
+              <div>
+                <Button
+                  variant="outlined"
+                  color="primary"
+                  disabled
+                  style={{ marginRight: 4 }}
+                >
                     확인
-                  </Button>
-                </div>
-              </Tooltip>
-          )}
-          {(!connectedCampaign.loading
-            && connectedCampaign.data
-            && connectedCampaign.data.length === 0) && (
-              <Button
-                variant="contained"
-                color="primary"
-                disabled={loading}
-                onClick={(): void => {
-                  doDeleteRequest({ id: selectedMerchandise.id });
-                  setTimeout(() => {
-                    handleClose();
-                    if (recallRequest) {
-                      recallRequest();
-                    }
-                  }, 1000);
-                }}
-              >
+                </Button>
+              </div>
+            </Tooltip>
+          ) : null}
+          {(!connectedCampaign.loading && connectedCampaign.data === 0) ? (
+            <Button
+              style={{ marginRight: 4 }}
+              variant="outlined"
+              color="primary"
+              disabled={loading}
+              onClick={(): void => {
+                doDeleteRequest({ id: selectedMerchandise.id });
+                setTimeout(() => {
+                  handleClose();
+                  if (recallRequest) {
+                    recallRequest();
+                  }
+                }, 1000);
+              }}
+            >
                 확인
-              </Button>
-          )}
-          <Button variant="contained" onClick={handleClose}>취소</Button>
+            </Button>
+          ) : null}
+          <Button variant="outlined" onClick={handleClose}>취소</Button>
         </div>
       )}
     >

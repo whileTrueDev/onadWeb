@@ -193,9 +193,9 @@ export default function CampaignDetail({
           {campaign.merchandiseStock && (
           <article className={classes.article}>
             <Typography className={classes.bold}>상품 재고 상태</Typography>
-            <Typography variant="body2" color="textSecondary">(판매된재고 / 총재고)로 표시됩니다.</Typography>
+            <Typography variant="body2" color="textSecondary">(남은재고 / 총재고)로 표시됩니다.</Typography>
             <Typography>
-              {`${campaign.merchandiseSoldCount || 0} / ${campaign.merchandiseStock || 0}`}
+              {`${campaign.merchandiseStock - (campaign.merchandiseSoldCount || 0)} / ${campaign.merchandiseStock || 0}`}
             </Typography>
           </article>
           )}

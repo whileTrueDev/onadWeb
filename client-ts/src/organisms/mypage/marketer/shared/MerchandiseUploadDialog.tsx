@@ -1,16 +1,15 @@
 import classnames from 'classnames';
 import {
-  Button, Collapse, FormControl, FormControlLabel,
+  Button, Chip, Collapse, FormControl, FormControlLabel,
   makeStyles, Radio, RadioGroup, TextField, Typography
 } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
 import React, {
   useState, useRef
 } from 'react';
-import { AddressData } from 'react-daum-postcode';
 import CustomDialog from '../../../../atoms/Dialog/Dialog';
 import {
-  useDialog, useEventTargetValue, usePostRequest
+  useDialog, useEventTargetValue, useGetRequest, usePostRequest
 } from '../../../../utils/hooks';
 import useImageListUpload from '../../../../utils/hooks/useImageListUpload';
 import useSwapableListItem from '../../../../utils/hooks/useSwappableListItem';
@@ -23,6 +22,8 @@ import { getS3MerchandiseImagePath, getS3MerchandiseDescImagePath } from '../../
 
 const FLAG_ON = 'Yes';
 const FLAG_OFF = 'No';
+
+const getAddressName = (r: string, rd: string): string => (r ? `${r} ${rd}` : '');
 
 const useStyles = makeStyles((theme) => ({
   textField: { margin: theme.spacing(1, 0) },
@@ -68,12 +69,10 @@ export default function MerchandiseUploadDialog({
 
   // *********************************************************
   // 상품정보
-  const [merchandiseInfo, setMerchandiseInfo] = useState<MerchandiseInfo>({
-    name: '',
-    price: '',
-    stock: '',
-    description: '',
-  });
+  const defaultMerchandiseInfo = {
+    name: '', price: '', stock: '', description: '',
+  };
+  const [merchandiseInfo, setMerchandiseInfo] = useState<MerchandiseInfo>(defaultMerchandiseInfo);
 
   const handleChange = (
     key: keyof MerchandiseInfo
@@ -88,8 +87,9 @@ export default function MerchandiseUploadDialog({
   // 상품 픽업 주소
   const [address, setAddress] = useState<OnadAddressData>();
 
-  function handleAddressChangeByDaumPopup(addr: AddressData): void {
+  function handleAddressChangeByDaumPopup(addr: OnadAddressData): void {
     setAddress({
+      id: addr.id || undefined,
       roadAddress: addr.roadAddress,
       roadAddressEnglish: addr.roadAddressEnglish,
       jibunAddress: addr.jibunAddress,
@@ -99,10 +99,10 @@ export default function MerchandiseUploadDialog({
       sigungu: addr.sigungu,
       sigunguCode: addr.sigunguCode,
       bname: addr.bname,
-      bCode: addr.bcode,
+      bCode: addr.bCode,
       roadname: addr.roadname,
       roadnameCode: addr.roadnameCode,
-      zoneCode: addr.zonecode,
+      zoneCode: addr.zoneCode,
     });
   }
   // 상세 주소
@@ -118,7 +118,7 @@ export default function MerchandiseUploadDialog({
   // ***********************************************************
   // 상품 이미지
   const {
-    images, handleImageUpload, handleImageRemove, uploadToS3
+    images, handleImageUpload, handleImageRemove, uploadToS3, ...imagesHookObj
   } = useImageListUpload<MerchandiseImage>({ limit: 4 });
 
   // 상품 상세 설명 이미지
@@ -159,6 +159,16 @@ export default function MerchandiseUploadDialog({
   };
   const handleFormErrorReset = (): void => { setFormError(''); };
 
+  // ********************************************************
+  // 모든 필드 리셋
+  function resetAll(): void {
+    options.handleReset();
+    descImages.handleReset();
+    imagesHookObj.handleReset();
+    setAddress(undefined);
+    setMerchandiseInfo(defaultMerchandiseInfo);
+  }
+
   // form submit 로딩
   const formLoading = useDialog();
   const [formLoadingStatus, setLoadingStatus] = useState<string>();
@@ -170,9 +180,15 @@ export default function MerchandiseUploadDialog({
     // 유효성 체크
     if (!merchandiseInfo.name) return handleFormError('상품명을 입력해주세요.');
     if (!merchandiseInfo.price) return handleFormError('판매가를 입력해주세요.');
+    if (merchandiseInfo.price && merchandiseInfo.price < 1) return handleFormError('판매가를 올바르게 입력해주세요.');
     if (!merchandiseInfo.stock) return handleFormError('재고를 입력해주세요.');
+    if (merchandiseInfo.stock && merchandiseInfo.stock < 1) return handleFormError('재고를 올바르게 입력해주세요.');
     if (optionFlag.value === FLAG_ON
       && options.checkItemsEmpty()) return handleFormError('옵션을 올바르게 입력해주세요. 각 옵션은 빈 값이 없어야 합니다.');
+    if (optionFlag.value === FLAG_ON
+      && options.items.forEach((opt) => parseInt(opt.additionalPrice, 10) < 1)) {
+      return handleFormError('옵션을 올바르게 입력해주세요. 옵션 가격은 1보다 작을 수 없습니다.');
+    }
     if (images.length === 0) return handleFormError('상품을 등록하기 위해서는 상품 사진이 최소 1개 이상 필요합니다.');
     if (descImages.images.length === 0) return handleFormError('상품을 등록하기 위해서는 상품 상세 사진이 최소 1개 이상 필요합니다.');
     if (pickupFlag.value === FLAG_ON && !address) return handleFormError('상품 픽업 주소를 입력해주세요');
@@ -213,6 +229,7 @@ export default function MerchandiseUploadDialog({
               handleLoadingStatus('상품 상세 설명 이미지 등록 중...');
               formLoading.handleClose();
               if (onSuccess) onSuccess();
+              resetAll();
               onClose();
             },
             uploadFailCallback
@@ -225,6 +242,9 @@ export default function MerchandiseUploadDialog({
     // eslint-disable-next-line no-useless-return, consistent-return
     return;
   }
+
+  // 주소 내역 불러오기.
+  const addressHistoryGet = useGetRequest<null, OnadAddressData[]>('/marketer/merchandises/addresses');
 
   // 입력 폼
   const form = (
@@ -323,6 +343,30 @@ export default function MerchandiseUploadDialog({
         <Collapse in={pickupFlag.value === FLAG_ON}>
           <Typography>상품픽업주소</Typography>
           <div className={classes.bottomSpace}>
+            {!addressHistoryGet.loading && addressHistoryGet.data && (
+              <div style={{ margin: '8px 0px' }}>
+                <Typography variant="body2" color="textSecondary">기록 (클릭시 주소 설정)</Typography>
+                {addressHistoryGet.data.map((_address) => {
+                  const addr = getAddressName(address?.roadAddress || '', address?.roadAddressDetail || '');
+                  const currentAddr = getAddressName(_address.roadAddress, _address.roadAddressDetail || '');
+                  return (
+                    <Chip
+                      color="primary"
+                      variant="outlined"
+                      size="small"
+                      style={{ margin: '0px 4px 4px 0px' }}
+                      key={_address.bCode + _address.bname}
+                      label={currentAddr}
+                      onClick={() => {
+                        if (addr !== currentAddr) {
+                          setAddress({ ..._address, roadAddressDetail: _address.roadAddressDetail || '' });
+                        }
+                      }}
+                    />
+                  );
+                })}
+              </div>
+            )}
             <AddressInput
               addressValue={address}
               onChange={handleAddressChangeByDaumPopup}

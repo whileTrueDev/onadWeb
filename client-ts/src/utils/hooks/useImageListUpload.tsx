@@ -11,6 +11,7 @@ export interface ImageListUploadHookResult<T> {
   handleImageUpload: (imageData: T) => void;
   handleImageRemove: (imageName: string) => void;
   uploadToS3: (key: string, onSuccess: () => void, onFail: (err: any) => void) => Promise<void[]>;
+  handleReset: () => void;
 }
 export interface ImageListUploadHookOptions {
   limit: number;
@@ -61,10 +62,15 @@ export default function useImageListUpload<T extends OnadUploadedImageData>(
     );
   }
 
+  function handleReset(): void {
+    setImages([]);
+  }
+
   return {
     images,
     handleImageUpload,
     handleImageRemove,
-    uploadToS3
+    uploadToS3,
+    handleReset
   };
 }

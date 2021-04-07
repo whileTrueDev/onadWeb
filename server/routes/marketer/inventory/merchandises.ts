@@ -2,6 +2,7 @@ import express from 'express';
 import createHttpError from 'http-errors';
 import responseHelper from '../../../middlewares/responseHelper';
 import doQuery from '../../../model/doQuery';
+import merchandisePickupAddressRouter from './merchandisePickupAddress';
 
 export interface Merchandise {
   id?: number;
@@ -14,6 +15,7 @@ export interface Merchandise {
   descImages: string[];
   pickupFlag?: boolean;
   pickupAddress?: {
+    id?: number;
     roadAddress: string; // 도로명 주소
     roadAddressEnglish: string; // 도로명 영어 주소
     roadAddressDetail?: string; // 사용자 입력 상세 주소
@@ -110,12 +112,13 @@ const getMerchandiseListLength = async (marketerId: string): Promise<number> => 
  * 해당 상품이 연결된 캠페인 목록 정보 반환 함수
  * @param marketerId 마케터 고유 아이디
  */
-const getConnectedCampaigns = async <T = any>(merchandiseId: number): Promise<T> => {
-  const query = `SELECT campaignId
+const getConnectedCampaigns = async (merchandiseId: number): Promise<number> => {
+  const query = `SELECT COUNT(campaignId) AS count
   FROM campaign
   WHERE merchandiseId = ? AND deletedState = 0`;
-  const { result } = await doQuery<T>(query, [merchandiseId]);
-  return result;
+  const { result } = await doQuery(query, [merchandiseId]);
+  if (!result || result.length === 0) return 0;
+  return result[0].count;
 };
 
 const findAllbyMarketer = async (marketerId: string): Promise<Merchandise[]> => {
@@ -186,29 +189,34 @@ const createMerchandise = async (
   // 상품 픽업 주소가 존재하는 경우
   if (pickupAddress) {
     const {
-      roadAddress, roadAddressEnglish, roadAddressDetail, jibunAddress, jibunAddressEnglish,
+      id, roadAddress, roadAddressEnglish, roadAddressDetail, jibunAddress, jibunAddressEnglish,
       buildingCode, sido, sigungu, sigunguCode, bname, bCode, roadname, roadnameCode, zoneCode,
     } = pickupAddress;
 
-    const pickupAddressQuery = `
-    INSERT INTO merchandisePickupAddresses (
-      roadAddress, roadAddressEnglish, roadAddressDetail, jibunAddress,
-      jibunAddressEnglish, buildingCode, sido, sigungu,
-      sigunguCode, bname, bCode, roadname, roadnameCode, zoneCode
-    ) VALUES (
-      ?, ?, ?, ?,
-      ?, ?, ?, ?,
-      ?, ?, ?, ?, ?, ?
-    )`;
+    let pickupAddressId = id;
+    if (!pickupAddressId) {
+      // 새롭게 입력받은 주소 데이터인 경우
+      const pickupAddressQuery = `
+      INSERT INTO merchandisePickupAddresses (
+        roadAddress, roadAddressEnglish, roadAddressDetail, jibunAddress,
+        jibunAddressEnglish, buildingCode, sido, sigungu,
+        sigunguCode, bname, bCode, roadname, roadnameCode, zoneCode
+      ) VALUES (
+        ?, ?, ?, ?,
+        ?, ?, ?, ?,
+        ?, ?, ?, ?, ?, ?
+      )`;
 
-    const pickupAddressQueryArray = [
-      roadAddress, roadAddressEnglish, roadAddressDetail, jibunAddress,
-      jibunAddressEnglish, buildingCode, sido, sigungu,
-      sigunguCode, bname, bCode, roadname, roadnameCode, zoneCode
-    ];
+      const pickupAddressQueryArray = [
+        roadAddress, roadAddressEnglish, roadAddressDetail, jibunAddress,
+        jibunAddressEnglish, buildingCode, sido, sigungu,
+        sigunguCode, bname, bCode, roadname, roadnameCode, zoneCode
+      ];
 
-    const pickupAddressQueryResult = await doQuery(pickupAddressQuery, pickupAddressQueryArray);
-    const pickupAddressId = pickupAddressQueryResult.result.insertId;
+      const pickupAddressQueryResult = await doQuery(pickupAddressQuery, pickupAddressQueryArray);
+      // pickupAddressId를 방금 생성한 주소 ID로 오버라이딩.
+      pickupAddressId = pickupAddressQueryResult.result.insertId;
+    }
 
     // merchandise pickupId 업데이트
     const pickupAddressUpdateQuery = `
@@ -250,6 +258,9 @@ const removeMerchandise = async ({
 
 // ******************************************************
 // Routers
+
+// 주소 라우터
+router.use('/addresses', merchandisePickupAddressRouter);
 
 router.route('/')
   .get(
@@ -326,24 +337,6 @@ router.route('/')
   );
 
 /**
- * 개별 상품 상세 정보 라우터
- */
-router.route('/:id')
-  .get(
-    responseHelper.middleware.checkSessionExists,
-    responseHelper.middleware.withErrorCatch(async (req, res, next) => {
-      const { marketerId } = responseHelper.getSessionData(req);
-      if (!marketerId) throw new createHttpError[401]();
-      const { id } = req.params;
-      if (!id) throw new createHttpError[400]();
-
-      const merchandise = await findOne(id);
-
-      return responseHelper.send(merchandise, 'get', res);
-    })
-  ).all(responseHelper.middleware.unusedMethod);
-
-/**
  * 마케터의 총 랜딩URL 리스트 목록 길이를 반환하는 라우터
  */
 router.route('/length')
@@ -367,7 +360,8 @@ router.route('/campaigns')
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
       const id = responseHelper.getParam('id', 'get', req);
       const lengthCount = await getConnectedCampaigns(id);
-      responseHelper.send(lengthCount, 'get', res);
+      console.log(lengthCount);
+      return responseHelper.send(lengthCount, 'get', res);
     })
   );
 
@@ -383,4 +377,23 @@ router.route('/dup-check')
       responseHelper.send(isDuplicated, 'get', res);
     }),
   );
+
+/**
+ * 개별 상품 상세 정보 라우터
+ */
+router.route('/:id')
+  .get(
+    responseHelper.middleware.checkSessionExists,
+    responseHelper.middleware.withErrorCatch(async (req, res, next) => {
+      const { marketerId } = responseHelper.getSessionData(req);
+      if (!marketerId) throw new createHttpError[401]();
+      const { id } = req.params;
+      if (!id) throw new createHttpError[400]();
+
+      const merchandise = await findOne(id);
+
+      return responseHelper.send(merchandise, 'get', res);
+    })
+  ).all(responseHelper.middleware.unusedMethod);
+
 export default router;

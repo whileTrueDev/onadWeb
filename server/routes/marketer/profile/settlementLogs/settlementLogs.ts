@@ -11,9 +11,10 @@ router.route('/').get(
   responseHelper.middleware.withErrorCatch(async (req, res, next) => {
     const { marketerId } = responseHelper.getSessionData(req);
     const query = `SELECT
-      DATE_FORMAT(doneDate, "%y년 %m월") as doneDate,
-      FORMAT(sum(amount), 0) as amount
-    FROM ${TABLE_NAME} WHERE marketerId = ?`;
+      DATE_FORMAT(doneDate, "%y년 %m월 %d일") as doneDate,
+      FORMAT(amount, 0) as amount
+    FROM ${TABLE_NAME} WHERE marketerId = ?
+    ORDER BY doneDate DESC`;
     const queryArray = [marketerId];
 
     const { result } = await doQuery(query, queryArray);
