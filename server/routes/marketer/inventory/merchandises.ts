@@ -112,12 +112,13 @@ const getMerchandiseListLength = async (marketerId: string): Promise<number> => 
  * 해당 상품이 연결된 캠페인 목록 정보 반환 함수
  * @param marketerId 마케터 고유 아이디
  */
-const getConnectedCampaigns = async <T = any>(merchandiseId: number): Promise<T> => {
-  const query = `SELECT campaignId
+const getConnectedCampaigns = async (merchandiseId: number): Promise<number> => {
+  const query = `SELECT COUNT(campaignId) AS count
   FROM campaign
   WHERE merchandiseId = ? AND deletedState = 0`;
-  const { result } = await doQuery<T>(query, [merchandiseId]);
-  return result;
+  const { result } = await doQuery(query, [merchandiseId]);
+  if (!result || result.length === 0) return 0;
+  return result[0].count;
 };
 
 const findAllbyMarketer = async (marketerId: string): Promise<Merchandise[]> => {
@@ -336,24 +337,6 @@ router.route('/')
   );
 
 /**
- * 개별 상품 상세 정보 라우터
- */
-router.route('/:id')
-  .get(
-    responseHelper.middleware.checkSessionExists,
-    responseHelper.middleware.withErrorCatch(async (req, res, next) => {
-      const { marketerId } = responseHelper.getSessionData(req);
-      if (!marketerId) throw new createHttpError[401]();
-      const { id } = req.params;
-      if (!id) throw new createHttpError[400]();
-
-      const merchandise = await findOne(id);
-
-      return responseHelper.send(merchandise, 'get', res);
-    })
-  ).all(responseHelper.middleware.unusedMethod);
-
-/**
  * 마케터의 총 랜딩URL 리스트 목록 길이를 반환하는 라우터
  */
 router.route('/length')
@@ -377,7 +360,8 @@ router.route('/campaigns')
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
       const id = responseHelper.getParam('id', 'get', req);
       const lengthCount = await getConnectedCampaigns(id);
-      responseHelper.send(lengthCount, 'get', res);
+      console.log(lengthCount);
+      return responseHelper.send(lengthCount, 'get', res);
     })
   );
 
@@ -393,4 +377,23 @@ router.route('/dup-check')
       responseHelper.send(isDuplicated, 'get', res);
     }),
   );
+
+/**
+ * 개별 상품 상세 정보 라우터
+ */
+router.route('/:id')
+  .get(
+    responseHelper.middleware.checkSessionExists,
+    responseHelper.middleware.withErrorCatch(async (req, res, next) => {
+      const { marketerId } = responseHelper.getSessionData(req);
+      if (!marketerId) throw new createHttpError[401]();
+      const { id } = req.params;
+      if (!id) throw new createHttpError[400]();
+
+      const merchandise = await findOne(id);
+
+      return responseHelper.send(merchandise, 'get', res);
+    })
+  ).all(responseHelper.middleware.unusedMethod);
+
 export default router;
