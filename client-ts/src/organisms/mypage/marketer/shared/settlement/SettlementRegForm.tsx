@@ -206,7 +206,9 @@ export default function SettlementRegForm({
           className={classes.textField}
           allowLeadingZeros
         />
-        <Typography variant="body2" color="textSecondary">주민등록번호 13자리를 입력해주세요</Typography>
+        <Typography variant="body2" color="textSecondary">
+          {dto.businessmanFlag === 'true' ? '사업자등록번호 10자리를 입력해주세요' : '주민등록번호 13자리를 입력해주세요'}
+        </Typography>
       </div>
 
       <div className={classes.field}>
