@@ -58,7 +58,7 @@ router.route('/expenditure/cps')
       SELECT
         DATE_FORMAT(max(date), "%Y-%m-%d") as date,
         COUNT(*) AS amount
-      FROM campaignLog_copy
+      FROM campaignLog
       WHERE SUBSTRING_INDEX(campaignId, '_', 1) = ? AND type = "CPS"
       GROUP BY DATE_FORMAT(date, "%y년 %m월 %d일")
       ORDER BY date ASC

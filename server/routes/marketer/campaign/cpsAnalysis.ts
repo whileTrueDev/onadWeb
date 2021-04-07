@@ -4,7 +4,7 @@ import doQuery from '../../../model/doQuery';
 
 const router = Router();
 
-const CAMPAIGNLOG_TABLE_NAME = 'campaignLog_copy';
+const CAMPAIGNLOG_TABLE_NAME = 'campaignLog';
 
 interface CpsAnalysisData {
   totalSalesIncome: number;
@@ -102,6 +102,7 @@ router.route('/creators')
   .get(
     responseHelper.middleware.checkSessionExists,
     responseHelper.middleware.withErrorCatch(async (req, res) => {
+      const campaignId = responseHelper.getParam('campaignId', 'get', req);
       const query = `
       SELECT
           ci.creatorId AS id,
@@ -132,14 +133,14 @@ router.route('/creators')
           cda.openHour AS openHourAfreeca, 
           cda.content AS contentAfreeca,
           MAX(cl.date) AS recentDate
-        FROM campaignLog_copy as cl
+        FROM campaignLog as cl
           JOIN creatorInfo as ci ON cl.creatorId = ci.creatorId
           LEFT JOIN creatorDetail AS cd ON cl.creatorId = cd.creatorId
           LEFT JOIN creatorDetailAfreeca AS cda ON cl.creatorId = cda.creatorId
         WHERE campaignId = ? AND ci.arrested != 1  AND (cd.impression != 0 OR cda.impression != 0)
           GROUP BY cl.creatorId
           ORDER BY total_sales_amount DESC  `;
-      const queryArray = ['gubgoo_c35'];
+      const queryArray = [campaignId];
 
       const { result } = await doQuery(query, queryArray);
       return responseHelper.send(result, 'get', res);

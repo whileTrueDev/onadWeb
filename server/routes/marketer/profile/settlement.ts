@@ -247,7 +247,7 @@ router.route('/')
       ], 'patch', req);
 
       const result = await SettlementService.updateOne(
-        'gubgoo',
+        marketerId,
         {
           id,
           name,
