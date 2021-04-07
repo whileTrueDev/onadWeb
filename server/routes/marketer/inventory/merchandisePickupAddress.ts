@@ -7,10 +7,11 @@ const router = Router();
 
 const findAddressByMarketer = async (marketerId: string) => {
   const query = `
-  SELECT MPA.* FROM merchandisePickupAddresses AS MPA
-  JOIN merchandiseRegistered AS MR ON MR.pickupId = MPA.id
-  WHERE marketerId = ?
-  ORDER BY MPA.createDate LIMIT 2
+  SELECT MPA.*
+  FROM merchandisePickupAddresses AS MPA
+   WHERE MPA.id IN (
+   SELECT pickupId FROM merchandiseRegistered WHERE marketerId = ?)
+  ORDER BY MPA.createDate LIMIT 22
   `;
   const queryArray = [marketerId];
   const { result } = await doQuery(query, queryArray);
