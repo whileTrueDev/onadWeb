@@ -157,7 +157,7 @@ function MerchandiseOrderDialog({
             />
             )}
             <DataText name="주문 수량" value={merchandiseOrder.quantity} />
-            <DataText name="남은 상품 재고" value={availableStock} />
+            <DataText name="남은 상품 재고" value={`남은 재고 ${availableStock} / 총 재고 ${merchandiseOrder.stock}`} />
             <DataText
               name="총 주문 금액"
               value={`${

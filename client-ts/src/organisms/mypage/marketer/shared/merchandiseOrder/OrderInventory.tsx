@@ -6,7 +6,7 @@ import OrderStatusChip from '../../../../../atoms/Chip/OrderStatusChip';
 // import CustomDataGrid from '../../../../../../atoms/Table/CustomDataGrid';
 import CustomDataGrid from '../../../../../atoms/Table/CustomDataGrid';
 import { useDialog, useGetRequest } from '../../../../../utils/hooks';
-import { OrderStatus, 주문상태_배송완료 } from '../../../../../utils/render_funcs/renderOrderStatus';
+import { OrderStatus } from '../../../../../utils/render_funcs/renderOrderStatus';
 import { MerchandiseOrder } from '../../adManage/interface';
 import CampaignDetailDialog from '../CampaignDetailDialog';
 import MerchandiseOrderDialog from './MerchandiseOrderDialog';
@@ -125,16 +125,6 @@ export default function OrderInventory({
             },
             { headerName: '수량', field: 'quantity', width: 130, },
             {
-              headerName: '남은재고',
-              field: 'stock',
-              width: 130,
-              renderCell: (data): React.ReactElement => (
-                <Typography variant="body2">
-                  {data.row.stock - (data.row.merchandiseSoldCount || 0).toLocaleString()}
-                </Typography>
-              )
-            },
-            {
               headerName: '주문금액',
               field: 'orderPrice',
               width: 130,
@@ -164,6 +154,16 @@ export default function OrderInventory({
                 );
               }
             },
+            // {
+            //   headerName: '남은재고',
+            //   field: 'stock',
+            //   width: 130,
+            //   renderCell: (data): React.ReactElement => (
+            //     <Typography variant="body2">
+            //       {data.row.stock - (data.row.merchandiseSoldCount || 0).toLocaleString()}
+            //     </Typography>
+            //   )
+            // },
             {
               headerName: '주문일시',
               field: 'createDate',
