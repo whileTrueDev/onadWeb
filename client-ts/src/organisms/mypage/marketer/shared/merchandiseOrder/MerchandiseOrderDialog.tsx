@@ -186,6 +186,12 @@ function MerchandiseOrderDialog({
                 <OrderStatusChip status={merchandiseOrder.status} />
               )}
             />
+            {merchandiseOrder.status === 주문상태_주문취소 && merchandiseOrder.denialReason && (
+              <DataText
+                name="취소 사유"
+                value={merchandiseOrder.denialReason}
+              />
+            )}
             {merchandiseOrder.releaseId && (
               <DataText
                 iconComponent={LocalShippingIcon}

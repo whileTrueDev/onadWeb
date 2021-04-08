@@ -119,4 +119,5 @@ export interface MerchandiseOrder {
   releaseId?: string;
   courierCompany?: string;
   trackingNumber?: string;
+  denialReason?: string;
 }

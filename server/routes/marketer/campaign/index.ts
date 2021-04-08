@@ -19,9 +19,10 @@ router.route('/length')
   .get(
     responseHelper.middleware.checkSessionExists,
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
-      const marketerId = responseHelper.getSessionData(req);
+      const { marketerId } = responseHelper.getSessionData(req);
       const query = 'SELECT COUNT(*) AS rowCount FROM campaign WHERE campaign.marketerId = ? AND deletedState = 0';
       const { result } = await doQuery(query, [marketerId]);
+      if (!result) return responseHelper.send(0, 'get', res);
 
       return responseHelper.send(result[0].rowCount, 'get', res);
     })

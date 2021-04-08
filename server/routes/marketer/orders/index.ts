@@ -25,7 +25,7 @@ router.route('/')
       const query = `
       SELECT
         mo.id, mo.merchandiseId, campaignId, optionId, status, statusString, orderPrice, ordererName,
-        recipientName, quantity, mo.createDate, mo.updateDate, 
+        recipientName, quantity, mo.createDate, mo.updateDate, mo.denialReason,
         deliveryMemo, email, jibunAddress, roadAddress, mo.denialReason, zoneCode, phone,
         mr.name, mr.price, stock, optionFlag, mopt.type as optionType, mopt.name as optionValue, mopt.additionalPrice,
         mm.soldCount AS merchandiseSoldCount,
@@ -39,17 +39,17 @@ router.route('/')
       `;
 
       if (merchandiseId) {
-        const queryCondition = 'WHERE mo.merchandiseId = ?';
+        const queryCondition = 'WHERE mo.merchandiseId = ? ORDER BY mo.createDate DESC';
         const { result } = await doQuery(query + queryCondition, [merchandiseId]);
         return responseHelper.send(result, 'get', res);
       }
       if (campaignId) {
-        const queryCondition = 'WHERE campaignId = ?';
+        const queryCondition = 'WHERE campaignId = ? ORDER BY mo.createDate DESC';
         const { result } = await doQuery(query + queryCondition, [campaignId]);
         return responseHelper.send(result, 'get', res);
       }
       if (marketerId) {
-        const queryCondition = 'WHERE marketerId = ?';
+        const queryCondition = 'WHERE marketerId = ? ORDER BY mo.createDate DESC';
         const { result } = await doQuery(query + queryCondition, [marketerId]);
         return responseHelper.send(result, 'get', res);
       }

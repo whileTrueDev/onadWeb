@@ -74,10 +74,7 @@ export default function OrderInventory({
       <div style={{ height }}>
         <CustomDataGrid
           loading={ordersGet.loading}
-          rows={ordersGet.data
-          // 배송완료 목록에서 제거
-            ? ordersGet.data.filter((x) => !(x.status === 주문상태_배송완료))
-            : []}
+          rows={ordersGet.data || []}
           columns={[
             { headerName: '주문번호', field: 'id', width: 120, },
             {
