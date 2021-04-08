@@ -25,7 +25,7 @@ export default function MarketerSettlementLogsTable({
   const classes = useTableStyles();
 
   const [page, setPage] = React.useState(0); // 테이블 페이지
-  const [rowsPerPage, setRowsPerPage] = React.useState(5); // 테이블 페이지당 행
+  const [rowsPerPage, setRowsPerPage] = React.useState(4); // 테이블 페이지당 행
   const emptyRows = rowsPerPage - Math.min(
     rowsPerPage, tableData.length - page * rowsPerPage,
   );
@@ -86,7 +86,7 @@ export default function MarketerSettlementLogsTable({
           ))}
 
           {emptyRows > 0 && (
-            <TableRow style={{ height: 48 * emptyRows }} key={shortid.generate()}>
+            <TableRow style={{ height: 36 * emptyRows }} key={shortid.generate()}>
               <TableCell colSpan={6} />
             </TableRow>
           )}

@@ -6,7 +6,7 @@ import moment from 'moment';
 import React from 'react';
 import CircularProgress from '../../../../../atoms/Progress/CircularProgress';
 import { UseGetRequestObject } from '../../../../../utils/hooks/useGetRequest';
-
+import MarketerSettlementLogsTable from '../../../../../atoms/Table/MarketerSettlementLogsTable';
 import { MarketerSalesImcome, MarketerSettlement } from '../interface';
 import { useDialog } from '../../../../../utils/hooks';
 import SettlementRegDialog from '../../shared/settlement/SettlementRegDialog';
@@ -23,15 +23,19 @@ const useStyles = makeStyles((theme) => ({
   },
   button: { margin: theme.spacing(0, 1, 0, 0) },
   bottomSpace: { marginBottom: theme.spacing(1) },
+  topSpace: { marginTop: theme.spacing(2) },
 }));
 
+export type SalesIncomeSettlement = Array<string>
 export interface MySalesIncomeProps {
   salesIncomeData: UseGetRequestObject<MarketerSalesImcome>;
   settlementData: UseGetRequestObject<MarketerSettlement>;
+  salesIncomeSettlementData: UseGetRequestObject<SalesIncomeSettlement[]>;
 }
 export default function MySalesIncome({
   salesIncomeData,
   settlementData,
+  salesIncomeSettlementData,
 }: MySalesIncomeProps): JSX.Element {
   const classes = useStyles();
 
@@ -105,6 +109,18 @@ export default function MySalesIncome({
 
       {settlementData.data && (
         <SettlementViewer settlement={settlementData.data} />
+      )}
+
+      {!salesIncomeSettlementData.loading && !salesIncomeSettlementData.error
+      && salesIncomeSettlementData.data && (
+        <div className={classes.topSpace}>
+          <Typography style={{ fontWeight: 'bold' }}>판매 대금 정산 처리 목록</Typography>
+
+          <MarketerSettlementLogsTable
+            tableHead={['날짜', '금액']}
+            tableData={salesIncomeSettlementData.data}
+          />
+        </div>
       )}
 
       <SettlementRegDialog

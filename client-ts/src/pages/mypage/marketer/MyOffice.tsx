@@ -16,7 +16,6 @@ import { AdInterface } from '../../../organisms/mypage/marketer/dashboard/interf
 import CircularProgress from '../../../atoms/Progress/CircularProgress';
 import useMypageScrollToTop from '../../../utils/hooks/useMypageScrollToTop';
 import MySalesIncome from '../../../organisms/mypage/marketer/office/sales-income/MySalesIncome';
-import SalesIncomeSettlements from '../../../organisms/mypage/marketer/office/sales-income/SalesIncomeSettlements';
 
 const useStyles = makeStyles((theme) => ({
   container: { margin: '0 auto', maxWidth: 1430 },
@@ -76,11 +75,8 @@ export default function MyOffice(): JSX.Element {
               <MySalesIncome
                 salesIncomeData={salesIncomeData}
                 settlementData={settlementData}
+                salesIncomeSettlementData={settlementLogsData}
               />
-            </GridItem>
-            {/* 판매 대금 수익 내역 */}
-            <GridItem xs={12} lg={6}>
-              <SalesIncomeSettlements salesIncomeSettlementData={settlementLogsData} />
             </GridItem>
           </GridContainer>
 
