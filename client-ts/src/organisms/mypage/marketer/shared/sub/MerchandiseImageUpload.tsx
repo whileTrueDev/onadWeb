@@ -2,7 +2,7 @@ import classnames from 'classnames';
 import {
   Button, Chip, Dialog, makeStyles, Typography
 } from '@material-ui/core';
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { useDialog } from '../../../../../utils/hooks';
 import { MerchandiseImage } from '../../adManage/interface';
 
@@ -49,7 +49,7 @@ export default function MerchandiseImageUpload({
 
   // 이미지 업로드 핸들러
   const readImage = (event: React.ChangeEvent<HTMLInputElement>): void => {
-    if (event.target.files && event.target.files.length !== 0) {
+    if (event.target.files && event.target.files.length !== 0 && event.target.files.length < 5) {
       const uploadedImage = event.target.files[0];
       const imageName = uploadedImage.name;
 
@@ -82,11 +82,28 @@ export default function MerchandiseImageUpload({
     }
   };
 
+  const uploadInputRef = useRef<HTMLInputElement>(null);
+  function handleImageRemove(imgName: string): void {
+    onImageRemove(imgName);
+    // 방금 지운 파일 재선택 안되는 현상 수정을 위한 처리 21 04 08 목 hwasurr
+    if (uploadInputRef.current) {
+      uploadInputRef.current.value = '';
+    }
+  }
+
 
   return (
     <div>
       <Button component="label" color="primary" variant="contained">
-        <input type="file" id="getfile" accept="image/*" hidden onChange={readImage} />
+        <input
+          id="merchandise-image-upload"
+          multiple
+          type="file"
+          accept="image/*"
+          hidden
+          onChange={readImage}
+          ref={uploadInputRef}
+        />
         <Typography>파일찾기</Typography>
       </Button>
 
@@ -109,7 +126,9 @@ export default function MerchandiseImageUpload({
               <Button
                 size="small"
                 variant="outlined"
-                onClick={(): void => onImageRemove(name)}
+                onClick={(): void => {
+                  handleImageRemove(name);
+                }}
               >
                 제거
               </Button>

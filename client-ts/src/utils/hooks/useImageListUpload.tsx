@@ -27,9 +27,10 @@ export default function useImageListUpload<T extends OnadUploadedImageData>(
    */
   function handleImageUpload(imageData: T): void {
     if (options && images.length >= options.limit) return alert(`이미지는 최대 ${options.limit}장까지 업로드 가능합니다.`);
+
     return setImages((prev) => {
       // 이미 동일한 이미지가 업로드 되지 않았을 때만 추가
-      if (prev.filter((i) => i.imageName === imageData.imageName).length === 0) {
+      if (!(prev.map((x) => x.imageName).includes(imageData.imageName))) {
         return prev.concat(imageData);
       }
       return prev;
