@@ -9,19 +9,18 @@ export function getReadableS3MerchandiseImagePath(
   marketerId: string, merchandiseId: number, fileName?: string
 ): string {
   const result = path.join(
-    S3_BASE_URL,
     'merchandises',
     marketerId,
     String(merchandiseId),
     fileName || ''
   );
-  return result;
+  return S3_BASE_URL + result;
 }
 
 export function getReadableS3MerchandiseDescImagePath(
   marketerId: string, merchandiseId: number, fileName?: string
 ): string {
-  return path.join(
+  const result = path.join(
     S3_BASE_URL,
     'merchandises',
     marketerId,
@@ -29,6 +28,7 @@ export function getReadableS3MerchandiseDescImagePath(
     'desc-images',
     fileName || ''
   );
+  return S3_BASE_URL + result;
 }
 
 export function getS3MerchandiseImagePath(
