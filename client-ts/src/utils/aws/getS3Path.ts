@@ -9,7 +9,6 @@ export function getS3MerchandiseImagePath(
   marketerId: string, merchandiseId: number, fileName?: string
 ): string {
   const result = path.join(
-    S3_BASE_URL,
     'merchandises',
     marketerId,
     String(merchandiseId),
@@ -22,7 +21,6 @@ export function getS3MerchandiseDescImagePath(
   marketerId: string, merchandiseId: number, fileName?: string
 ): string {
   return path.join(
-    S3_BASE_URL,
     'merchandises',
     marketerId,
     String(merchandiseId),
