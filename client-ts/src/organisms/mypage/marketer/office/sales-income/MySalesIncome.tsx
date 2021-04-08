@@ -46,9 +46,11 @@ export default function MySalesIncome({
 
       {salesIncomeData.loading && (<CircularProgress />)}
       {!salesIncomeData.loading && !salesIncomeData.error && !salesIncomeData.data && (
-        <div>
-          <Typography variant="body2">아직 판매대금이 없습니다.</Typography>
-          <Typography variant="body2">판매형 광고를 진행하고, 판매대금을 확보한 뒤, 출금하세요.</Typography>
+        <div className={classes.bottomSpace}>
+          <div className={classes.bottomSpace}>
+            <Typography variant="body2">아직 판매대금이 없습니다.</Typography>
+            <Typography variant="body2">판매형 광고를 진행하고, 판매대금을 확보한 뒤, 출금하세요.</Typography>
+          </div>
           <Button
             variant="outlined"
             color="primary"
@@ -62,7 +64,7 @@ export default function MySalesIncome({
         </div>
       )}
       {!salesIncomeData.loading && salesIncomeData.data && (
-        <div>
+        <div className={classes.bottomSpace}>
           <Typography style={{ fontWeight: 'bold' }}>보유 판매 대금</Typography>
           <Typography gutterBottom variant="h4" style={{ fontWeight: 'bold' }}>
             {`${salesIncomeData.data.receivable.toLocaleString()} 원`}
