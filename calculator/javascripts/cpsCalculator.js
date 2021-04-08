@@ -79,7 +79,7 @@ const calculateCampaignLog = async ({
     INSERT INTO campaignLog (campaignId, creatorId, type, cashToCreator, salesIncomeToMarketer)
     VALUES (?, ?, ?, ?, ?)
   `;
-  const queryArray = [campaignId, creatorId, 'CPS', cashToCreator, salesIncomeToMarketer];
+  const queryArray = [campaignId, creatorId || null, 'CPS', cashToCreator, salesIncomeToMarketer];
 
   const { result } = await doQuery(query, queryArray);
   if (result && result.insertId) return result.insertId;
@@ -218,9 +218,9 @@ async function cpsCalculate() {
   )
     .then(() => console.log(`[${new Date().toLocaleString()}] CPS 판매 대금 계산을 모두 완료하였습니다.`))
     .catch((err) => {
-      console.log(`[${new Date().toLocaleString()}] CPS 판매 대금 계산 중 오류 발생`);
+      console.error(`[${new Date().toLocaleString()}] CPS 판매 대금 계산 중 오류 발생`);
       console.error(err);
-      throw err;
+      return 0;
     });
 }
 
