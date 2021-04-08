@@ -49,7 +49,6 @@ export interface MerchandiseUploadDialogProps {
   onClose: () => void;
   onSuccess?: () => void;
   onFail?: () => void;
-  recallRequest?: () => void;
 }
 
 export default function MerchandiseUploadDialog({
@@ -57,7 +56,6 @@ export default function MerchandiseUploadDialog({
   onClose,
   onSuccess,
   onFail,
-  // recallRequest,
 }: MerchandiseUploadDialogProps): JSX.Element {
   const classes = useStyles();
 
@@ -186,7 +184,7 @@ export default function MerchandiseUploadDialog({
     if (optionFlag.value === FLAG_ON
       && options.checkItemsEmpty()) return handleFormError('옵션을 올바르게 입력해주세요. 각 옵션은 빈 값이 없어야 합니다.');
     if (optionFlag.value === FLAG_ON
-      && options.items.forEach((opt) => parseInt(opt.additionalPrice, 10) < 1)) {
+      && options.items.filter((opt) => parseInt(opt.additionalPrice, 10) < 1).length > 0) {
       return handleFormError('옵션을 올바르게 입력해주세요. 옵션 가격은 1보다 작을 수 없습니다.');
     }
     if (images.length === 0) return handleFormError('상품을 등록하기 위해서는 상품 사진이 최소 1개 이상 필요합니다.');

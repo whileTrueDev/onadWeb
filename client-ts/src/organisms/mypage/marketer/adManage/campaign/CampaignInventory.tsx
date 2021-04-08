@@ -117,6 +117,8 @@ export default function CampaignInventory({
           campaignData.handlePage(param.page - 1);
         }}
         disableSelectionOnClick
+        rows={campaignData.data || []}
+        loading={campaignData.loading}
         columns={[
           {
             field: 'onOff',
@@ -299,8 +301,6 @@ export default function CampaignInventory({
             ),
           },
         ]}
-        rows={campaignData.data || []}
-        loading={campaignData.loading}
       />
 
       {/* 캠페인 메뉴 (분석, 수정, 삭제) */}

@@ -183,7 +183,7 @@ function CampaignFormPaper({
       <MerchandiseUploadDialog
         open={merchandiseUploadDialog.open}
         onClose={merchandiseUploadDialog.handleClose}
-        recallRequest={merchandiseData.doGetRequest}
+        onSuccess={merchandiseData.doGetRequest}
       />
     </CampaignCreateStepLayout>
   );
