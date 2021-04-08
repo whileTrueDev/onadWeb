@@ -6,10 +6,8 @@ require('./javascripts/calculation_v.4')()
   .then(require('./javascripts/trackingCalculator_v.3'))
   // 추천인 코드 계산
   .then(require('./javascripts/referralCodeCalculator'))
+  // CPS 계산
+  .then(require('./javascripts/cpsCalculator'))
   .then(() => {
     process.exit(0);
   });
-
-// CPS 계산
-require('./javascripts/cpsCalculator')()
-  .then(() => process.exit(0));
