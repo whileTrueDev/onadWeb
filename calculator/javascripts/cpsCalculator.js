@@ -76,7 +76,7 @@ const calculateCampaignLog = async ({
   campaignId, creatorId, cashToCreator, salesIncomeToMarketer
 }) => {
   const query = `
-    INSERT INTO campaignLog_copy (campaignId, creatorId, type, cashToCreator, salesIncomeToMarketer)
+    INSERT INTO campaignLog (campaignId, creatorId, type, cashToCreator, salesIncomeToMarketer)
     VALUES (?, ?, ?, ?, ?)
   `;
   const queryArray = [campaignId, creatorId, 'CPS', cashToCreator, salesIncomeToMarketer];
@@ -121,12 +121,12 @@ const calculateCreatorIncome = async ({
 }) => {
   if (creatorId && cashToCreator) {
     const query = `
-    INSERT INTO creatorIncome_copy (
+    INSERT INTO creatorIncome (
       creatorId, creatorTotalIncome, creatorReceivable
     ) VALUES (
       ?,
-      (SELECT IFNULL(MAX(creatorTotalIncome), 0) + ? AS creatorTotalIncome FROM creatorIncome_copy AS a WHERE creatorId = ? ORDER BY date DESC LIMIT 1),
-      (SELECT IFNULL(MAX(creatorReceivable), 0) + ? AS creatorReceivable FROM creatorIncome_copy AS b WHERE creatorId = ? ORDER BY date DESC LIMIT 1)
+      (SELECT IFNULL(MAX(creatorTotalIncome), 0) + ? AS creatorTotalIncome FROM creatorIncome AS a WHERE creatorId = ? ORDER BY date DESC LIMIT 1),
+      (SELECT IFNULL(MAX(creatorReceivable), 0) + ? AS creatorReceivable FROM creatorIncome AS b WHERE creatorId = ? ORDER BY date DESC LIMIT 1)
     )           `;
     const queryArray = [creatorId, cashToCreator, creatorId, cashToCreator, creatorId];
 
