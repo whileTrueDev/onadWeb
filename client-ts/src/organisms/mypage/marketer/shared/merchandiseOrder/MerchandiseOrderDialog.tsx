@@ -10,7 +10,7 @@ import DataText from '../../../../../atoms/DataText/DataText';
 import CustomDialog from '../../../../../atoms/Dialog/Dialog';
 import Snackbar from '../../../../../atoms/Snackbar/Snackbar';
 import MarketerInfoContext from '../../../../../context/MarketerInfo.context';
-import { getS3MerchandiseImagePath } from '../../../../../utils/aws/getS3Path';
+import { getReadableS3MerchandiseImagePath } from '../../../../../utils/aws/getS3Path';
 import { useDialog, useGetRequest, usePatchRequest } from '../../../../../utils/hooks';
 import {
   OrderStatus, 주문상태_상품준비, 주문상태_주문취소, 주문상태_출고완료, 주문상태_출고준비
@@ -62,7 +62,7 @@ function MerchandiseOrderDialog({
   // S3 상품 이미지 URL을 구하는 함수.
   function getMerchandiseS3Url(imageName: string, merchandiseId: number): string {
     if (marketerInfo.user) {
-      return getS3MerchandiseImagePath(
+      return getReadableS3MerchandiseImagePath(
         marketerInfo.user.marketerId, merchandiseId, imageName
       );
     }
