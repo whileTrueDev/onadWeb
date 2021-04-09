@@ -142,7 +142,7 @@ export default function OrderInventory({
                     <Tooltip title={`${data.row.price.toLocaleString()} (+${data.row.additionalPrice.toLocaleString()})`}>
                       <Typography variant="body2">
                         {`${data.row.price.toLocaleString()}`}
-                        <Typography variant="body2">
+                        <Typography variant="body2" component="span">
                           {`(+${data.row.additionalPrice.toLocaleString()})`}
                         </Typography>
                       </Typography>

@@ -79,7 +79,7 @@ const calculateCampaignLog = async ({
     INSERT INTO campaignLog (campaignId, creatorId, type, cashToCreator, salesIncomeToMarketer)
     VALUES (?, ?, ?, ?, ?)
   `;
-  const queryArray = [campaignId, creatorId || null, 'CPS', cashToCreator, salesIncomeToMarketer];
+  const queryArray = [campaignId, creatorId || '', 'CPS', cashToCreator, salesIncomeToMarketer];
 
   const { result } = await doQuery(query, queryArray);
   if (result && result.insertId) return result.insertId;

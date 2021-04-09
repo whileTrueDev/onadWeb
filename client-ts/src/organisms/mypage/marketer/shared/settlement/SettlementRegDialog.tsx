@@ -49,15 +49,26 @@ export default function SettlementRegDialog({
   // eslint-disable-next-line consistent-return
   function handleSubmit(dto: SettlementRegDTO, reqType?: 'post' | 'patch'): void | Promise<void> {
     // 제출 핸들링 작성 필요
-    const data = { ...dto, businessmanFlag: dto.businessmanFlag === 'true' };
+    const isBusinessman = dto.businessmanFlag === 'true';
+    const data = { ...dto, businessmanFlag: isBusinessman };
 
-    if (!data.name) return handleSnackContents('이름을 입력해주세요.', 'error');
-    if (!data.identificationNumber) return handleSnackContents('주민등록번호를 입력해주세요.', 'error');
+    if (isBusinessman) {
+      if (!data.name) return handleSnackContents('회사명을 입력해주세요.', 'error');
+      if (!data.identificationNumber) return handleSnackContents('사업자등록번호를 입력해주세요.', 'error');
+      if (data.identificationNumber.length !== 10) return handleSnackContents('사업자등록번호 10자리를 입력해주세요.', 'error');
+    } else {
+      if (!data.name) return handleSnackContents('성명을 입력해주세요.', 'error');
+      if (!data.identificationNumber) return handleSnackContents('주민등록번호를 입력해주세요.', 'error');
+      if (data.identificationNumber.length !== 13) return handleSnackContents('주민등록번호를 13자리를 입력해주세요.', 'error');
+    }
+
     if (!data.bankName) return handleSnackContents('은행을 선택해주세요.', 'error');
     if (!data.bankAccountOwner) return handleSnackContents('예금주를 입력해주세요.', 'error');
     if (data.bankAccountNumber && data.bankAccountNumber.includes('-')) return handleSnackContents('계좌번호에는 - 가 포함될 수 없습니다.', 'error');
     if (!data.bankAccountNumber) return handleSnackContents('계좌번호를 입력해주세요.', 'error');
-    if (!data.identificationImgSrc) return handleSnackContents('신분증을 업로드해주세요.', 'error');
+    if (isBusinessman) {
+      if (!data.identificationImgSrc) return handleSnackContents('사업자등록증을 업로드해주세요.', 'error');
+    } else if (!data.identificationImgSrc) return handleSnackContents('신분증을 업로드해주세요.', 'error');
     if (!data.bankAccountImgSrc) return handleSnackContents('통장 사본을 업로드해주세요.', 'error');
 
     const onSuccess = (res: any): void => {
@@ -98,7 +109,7 @@ export default function SettlementRegDialog({
               * 정산 등록을 수정하면 다시 검수과정을 거치게 됩니다.
             </Typography>
             <Typography variant="body2">
-              * 파일 등록을 변경하지 않으시는 경우, &quot;선택된 파일 없음&quot;으로 표시되어도 새 파일을 업로드하지 않으셔도 됩니다.
+              * 파일 등록을 변경하지 않으시는 경우, &quot;선택된 파일 없음&quot;으로 표시되는 것과 관계없이 파일을 다시 업로드하지 않으셔도 됩니다.
             </Typography>
           </Alert>
         )}
@@ -113,14 +124,12 @@ export default function SettlementRegDialog({
 
       </CustomDialog>
       {/* 에러 처리 */}
-      {snackContents.msg && (
       <Snackbar
         open={snackbar.open}
         onClose={snackbar.handleClose}
         message={snackContents.msg}
         color={snackContents.color}
       />
-      )}
     </>
   );
 }

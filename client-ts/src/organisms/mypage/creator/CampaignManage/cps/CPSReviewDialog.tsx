@@ -5,7 +5,7 @@ import moment from 'moment';
 import React from 'react';
 import ImageCarousel from '../../../../../atoms/Carousel/Carousel';
 import CustomDialog from '../../../../../atoms/Dialog/Dialog';
-import { getS3MerchandiseImagePath } from '../../../../../utils/aws/getS3Path';
+import { getReadableS3MerchandiseImagePath } from '../../../../../utils/aws/getS3Path';
 import { useToggle } from '../../../../../utils/hooks';
 
 
@@ -70,7 +70,7 @@ export default function CPSReviewDialog({
     >
       <article>
         <Typography>
-          {`${review.merchandiseName}, ${review.orderPrice.toLocaleString()}원 (${review.quantity}개)`}
+          {`${review.merchandiseName}(${review.quantity}개) 구매금액: ${review.orderPrice.toLocaleString()}원`}
         </Typography>
         <Typography variant="h5" style={{ fontWeight: 'bold' }}>{review.title}</Typography>
         <div style={{ marginTop: 8, display: 'flex', alignItems: 'center' }}>
@@ -98,7 +98,7 @@ export default function CPSReviewDialog({
               {imgaeToggle.toggle && (
               <ImageCarousel
                 images={review.images.split(',')
-                  .map((image) => getS3MerchandiseImagePath(
+                  .map((image) => getReadableS3MerchandiseImagePath(
                     review.marketerId, review.merchandiseId, image
                   ))}
               />

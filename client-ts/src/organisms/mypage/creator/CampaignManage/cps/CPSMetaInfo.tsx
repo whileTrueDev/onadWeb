@@ -20,7 +20,7 @@ export default function CPSMetaInfo({
         {!cpsMetaInfo.loading && cpsMetaInfo.data && (
           <>
             <div style={{ textAlign: 'center' }}>
-              <Typography>수익금</Typography>
+              <Typography>판매 누적 수익금</Typography>
               <Typography style={{ fontWeight: 'bold' }} variant="h6">
                 {(cpsMetaInfo.data.income).toLocaleString()}
               </Typography>

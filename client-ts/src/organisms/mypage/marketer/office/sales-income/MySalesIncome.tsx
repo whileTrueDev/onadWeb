@@ -105,7 +105,7 @@ export default function MySalesIncome({
           color="primary"
           onClick={settlementDialog.handleOpen}
         >
-          {settlementData.data ? ('계좌 및 정산 등록') : ('계좌 및 정산정보 수정')}
+          {settlementData.data ? '계좌 및 정산정보 수정' : '계좌 및 정산 등록'}
         </Button>
       </div>
 

@@ -151,14 +151,6 @@ export default function SettlementRegForm({
     }
   }
 
-  // ***********************************************
-  // 유효성 검사
-  function validationCheck(data: SettlementRegDTO): boolean {
-    if (data.businessmanFlag === 'true' && data.identificationNumber.length !== 10) return false;
-    if (data.businessmanFlag === 'false' && data.identificationNumber.length !== 13) return false;
-    return true;
-  }
-
   return (
     <form className={classes.form}>
       <div className={classes.field}>
@@ -266,7 +258,7 @@ export default function SettlementRegForm({
         <Button component="label" color="primary" variant="outlined" className={classes.button}>
           <input
             type="file"
-            id="getfile"
+            id="get-registration-file"
             accept="image/*, application/pdf"
             onChange={(e): void => readImage(e, handleIdentificationImgSrc)}
           />
@@ -293,7 +285,7 @@ export default function SettlementRegForm({
         <Button component="label" color="primary" variant="outlined" className={classes.button}>
           <input
             type="file"
-            id="getfile"
+            id="get-account-file"
             accept="image/*"
             onChange={(e): void => readImage(e, handleBankAccountImgSrc)}
           />
@@ -314,7 +306,7 @@ export default function SettlementRegForm({
         variant="contained"
         color="primary"
         onClick={(): void => {
-          if (validationCheck(dto)) onSubmit(dto, requestType);
+          onSubmit(dto, requestType);
         }}
         disabled={loading}
       >

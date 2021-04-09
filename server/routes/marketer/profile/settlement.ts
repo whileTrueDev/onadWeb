@@ -152,7 +152,7 @@ class SettlementService {
 
     const query = `UPDATE ${this._tableName}
     SET name = ?, identificationNumber = ?, bankAccountOwner = ?,
-    bankAccountNumber = ?, businessmanFlag = ?, identificationImgSrc = ?, bankAccountImgSrc = ?
+    bankAccountNumber = ?, businessmanFlag = ?, identificationImgSrc = ?, bankAccountImgSrc = ?,
     state = 0
     WHERE id = ? AND marketerId = ?`;
     const queryArray = [name, identificationNumber, bankAccountOwner,
@@ -222,7 +222,7 @@ router.route('/')
 
       slack({
         summary: '광고주 판매대금 정산 등록 알림',
-        text: '광고주가 판매대금 정산을 등록했습니다. 확인해주세요.',
+        text: '광고주가 판매대금 정산을 등록했습니다. 확인하고 검수를 진행해주세요.',
         fields: [
           { title: '방송인 아이디', value: marketerId!, short: true },
           { title: '은행', value: bankName!, short: true },
@@ -262,8 +262,8 @@ router.route('/')
       );
 
       slack({
-        summary: '광고주 판매대금 정산 재등록 알림',
-        text: '광고주가 판매대금 정산을 재등록(수정)했습니다. 확인해주세요.',
+        summary: '광고주 판매대금 정산 재등록(수정) 알림',
+        text: '광고주가 판매대금 정산을 재등록(수정)했습니다. 확인하고 검수를 진행해주세요.',
         fields: [
           { title: '방송인 아이디', value: marketerId!, short: true },
           { title: '은행', value: bankName!, short: true },

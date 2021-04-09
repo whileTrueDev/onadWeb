@@ -21,12 +21,12 @@ export default function makeBarChartData(
   data: ChartDataBase[], keyMaps: KeyMap[], howMuchDate = 30
 ) {
   const dataSet: any[] = [];
-  const previousDates = Array<string | Date>();
+  const previousDates = Array<string>();
 
   // 데이터가 있고, 데이터를 담은 배열의 길이가 1개보다 많을 때.
   if (data && data.length > 0) {
     // 데이터 형 변환
-    data.map((d) => {
+    data.forEach((d) => {
       const _data: any = { date: '' };
       keyMaps.forEach(({ to }) => {
         _data[to] = 0;
@@ -47,21 +47,22 @@ export default function makeBarChartData(
       } else {
         // 이전 날짜 목록에 포함되어 있는 경우
         // 해당 날짜의 결과데이터 찾기
-        const targetObject = dataSet.filter((d1) => d1.date === d.date)[0];
+        const targetObject = dataSet.find((d1) => d1.date === d.date);
 
-        // 결과 데이터에 CPM, CPC 중 없는 값 추가
-        keyMaps.forEach(({ typeName, to }) => {
-          if (d.type === typeName) targetObject[to] = d.value;
-        });
+        if (targetObject) {
+          // 결과 데이터에 key값 중, 없는 값 추가
+          keyMaps.forEach(({ typeName, to }) => {
+            if (d.type === typeName) targetObject[to] = d.value;
+          });
+        }
 
         // 결과데이터 배열에서 해당 날짜의 결과데이터의 인덱스 찾기
         dataSet[dataSet.findIndex((i) => i.date === d.date)] = targetObject;
       }
-
-      return null;
     });
 
     // 중간중간 비어있는 날짜에 기본 데이터 삽입
+    previousDates.sort((x, y) => y.localeCompare(x));
     previousDates.reduce((previousValue, currentValue, currentIndex) => {
       const previous = new Date(previousValue);
       const previousPlusOneDay = previous;
@@ -91,7 +92,7 @@ export default function makeBarChartData(
           });
         }
       }
-      return previousPlusOneDay;
+      return datefy(previousPlusOneDay);
     });
 
     if (previousDates.length < howMuchDate) {

@@ -23,7 +23,7 @@ router.route('/expenditure')
             GROUP BY DATE_FORMAT(cl.date, "%y년 %m월 %d일"), type
             ORDER BY cl.date DESC
             `;
-      doQuery(query, [marketerId])
+      doQuery(query, ['107511687333993136761'])// 107511687333993136761
         .then((row) => {
           responseHelper.send(row.result, 'get', res);
         })

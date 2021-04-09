@@ -36,6 +36,8 @@ export default function CanvasForChart(props: CanvasForChartProps): JSX.Element 
         <Divider />
 
         <div className={classes.container}>
+
+          {/* 광고비용 */}
           {tabValue === 0 && (
           <div>
             {valueChartData.loading && (<CircularProgress />)}
@@ -56,8 +58,11 @@ export default function CanvasForChart(props: CanvasForChartProps): JSX.Element 
           </div>
 
           )}
+
+          {/* 송출 방송인 */}
           {tabValue === 1 && (<CreatorsChart />)}
 
+          {/* 상품 판매 클릭수 / 판매수 */}
           {tabValue === 2 && (
             <div style={{ width: '100%' }}>
               {cpsChartData.loading && (<CircularProgress />)}
@@ -70,8 +75,8 @@ export default function CanvasForChart(props: CanvasForChartProps): JSX.Element 
                   { typeName: '판매', to: 'sales_amount' },
                 ]}
                 labels={{
-                  click_amount: '클릭',
-                  sales_amount: '판매',
+                  click_amount: '클릭수',
+                  sales_amount: '판매수',
                 }}
               />
               )}
