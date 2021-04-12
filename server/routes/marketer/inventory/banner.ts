@@ -5,7 +5,7 @@ import responseHelper from '../../../middlewares/responseHelper';
 import doQuery from '../../../model/doQuery';
 import marketerActionLogging from '../../../middlewares/marketerActionLog';
 import slack from '../../../lib/slack/messageWithJson';
-import { uploadImageAsync } from '../../../lib/AWS/S3';
+import { getBaseUrl, uploadImageAsync } from '../../../lib/AWS/S3';
 import decodeBase64Banner from '../../../lib/decodeBase64Banner';
 // import S3 from '../../../lib/AWS/S3';
 
@@ -128,21 +128,21 @@ router.route('/')
         VALUES (?, ?, ?, ?, 0)`;
 
       doQuery(saveQuery,
-        [bannerId, marketerId, BANNER_FILE_PATH, ''])
+        [bannerId, marketerId, getBaseUrl() + BANNER_FILE_PATH, ''])
         .then(() => {
           responseHelper.send([true, '배너 등록이 완료되었습니다.'], 'POST', res);
           const MARKETER_ACTION_LOG_TYPE = 2; // <배너 등록> 의 상태값 : 2
           marketerActionLogging([
             marketerId, MARKETER_ACTION_LOG_TYPE, JSON.stringify({ bannerId })
           ]);
-          // slack({
-          //   summary: '배너 등록 알림',
-          //   text: '관리자 페이지에서 방금 등록된 배너를 확인하고, 심사하세요.',
-          //   fields: [
-          //     { title: '마케터 아이디', value: marketerId!, short: true },
-          //     { title: '배너 아이디', value: bannerId!, short: true },
-          //   ]
-          // });
+          slack({
+            summary: '배너 등록 알림',
+            text: '관리자 페이지에서 방금 등록된 배너를 확인하고, 심사하세요.',
+            fields: [
+              { title: '마케터 아이디', value: marketerId!, short: true },
+              { title: '배너 아이디', value: bannerId!, short: true },
+            ]
+          });
         })
         .catch((error) => {
           responseHelper.promiseError(error, next);
