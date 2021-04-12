@@ -209,7 +209,7 @@ function MerchandiseOrderDialog({
                 className={classes.actionbutton}
                 variant="contained"
                 color="secondary"
-                disabled={availableStock === 0 || merchandiseOrder.status >= 주문상태_상품준비}
+                disabled={merchandiseOrder.status >= 주문상태_상품준비}
                 onClick={(): void => handleStatusSelect(주문상태_상품준비)}
               >
                 상품준비
@@ -218,7 +218,7 @@ function MerchandiseOrderDialog({
                 className={classes.actionbutton}
                 color="secondary"
                 variant="contained"
-                disabled={availableStock === 0 || merchandiseOrder.status >= 주문상태_출고준비}
+                disabled={merchandiseOrder.status >= 주문상태_출고준비}
                 onClick={(): void => handleStatusSelect(주문상태_출고준비)}
               >
                 출고준비
@@ -226,7 +226,7 @@ function MerchandiseOrderDialog({
               <Button
                 className={classnames(classes.success, classes.actionbutton)}
                 variant="contained"
-                disabled={availableStock === 0 || merchandiseOrder.status >= 주문상태_출고완료}
+                disabled={merchandiseOrder.status >= 주문상태_출고완료}
                 onClick={(): void => handleStatusSelect(주문상태_출고완료)}
               >
                 출고완료
