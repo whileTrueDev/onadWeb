@@ -233,7 +233,7 @@ function callImg(socket: Socket, msg: string[]): void {
 
   const getBannerSrc = (campaignId: string): Promise<string> => {
     const selectQuery = `
-                        SELECT br.bannerSrc
+                        SELECT br.bannerSrcUrl AS bannerSrc
                         FROM campaign
                         JOIN bannerRegistered as br
                         ON br.bannerId = campaign.bannerId
@@ -242,6 +242,7 @@ function callImg(socket: Socket, msg: string[]): void {
     return new Promise((resolve, reject) => {
       doQuery(selectQuery, [campaignId])
         .then((row) => {
+          console.log(row.result[0].bannerSrc);
           resolve(row.result[0].bannerSrc);
         })
         .catch((errorData) => {
