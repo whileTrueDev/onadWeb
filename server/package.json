@@ -30,6 +30,7 @@
     "@types/http-errors": "^1.6.3",
     "@types/jest": "^25.1.2",
     "@types/morgan": "^1.7.37",
+    "@types/memory-cache": "^0.2.1",
     "@types/mysql": "^2.15.9",
     "@types/node": "^13.7.1",
     "@types/nodemailer": "^6.4.0",
@@ -53,7 +54,6 @@
     "typescript": "^3.8.2"
   },
   "dependencies": {
-    "@types/morgan": "^1.7.37",
     "aws-sdk": "^2.649.0",
     "axios": "^0.19.2",
     "axios-mock-adapter": "^1.18.1",
@@ -73,6 +73,7 @@
     "helmet": "^3.21.2",
     "http-error": "0.0.6",
     "http-errors": "^1.7.3",
+    "memory-cache": "^0.2.0",
     "moment": "^2.24.0",
     "morgan": "^1.9.1",
     "mysql": "^2.18.1",

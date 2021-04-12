@@ -112,7 +112,7 @@ export default function BannerList(): JSX.Element {
       {/* 아직 없는 경우 처리 */}
       {!loading && (!data || data.length < 1) && (
       <Grid item xs={12} style={{ marginTop: 8 }}>
-        <Typography variant="body2" color="textSecondary">아직 진행한 광고가 없습니다.</Typography>
+        <Typography>아직 진행한 광고가 없습니다.</Typography>
       </Grid>
       )}
       {/* 목록 */}
@@ -183,7 +183,7 @@ export default function BannerList(): JSX.Element {
       {loading && (
       <Grid item xs={12} className={classes.loading}>
         <CircularProgress />
-        <Typography>광고 목록 로딩중입니다. 상황에 따라 1분 이상 소요될 수 있습니다.</Typography>
+        <Typography>광고 목록 로딩중입니다.</Typography>
       </Grid>
       )}
 

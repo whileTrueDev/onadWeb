@@ -156,7 +156,7 @@ router.route('/list')
       const listQuery = `
       SELECT
         CT.campaignId, CT.date, CT.creatorId,
-        BR.bannerSrc,
+        BR.bannerSrcUrl AS bannerSrc,
         campaign.connectedLinkId, campaign.onOff as state, campaign.marketerName,
         campaign.campaignDescription, campaign.priorityType, campaign.optionType, campaign.targetList,
         MI.marketerContraction, MI.profileImage,
@@ -232,7 +232,7 @@ router.route('/active')
       const { creatorId } = responseHelper.getSessionData(req);
       const query = `
       SELECT 
-        cp.bannerId, bannerSrc, cp.campaignName, cp.campaignDescription,
+        cp.bannerId, bannerSrcUrl AS bannerSrc, cp.campaignName, cp.campaignDescription,
         lr.links, cp.regiDate, mi.profileImage, mi.marketerName, ct.date
       FROM campaignTimestamp AS ct 
         JOIN campaign AS cp ON ct.campaignId = cp.campaignId

@@ -32,7 +32,7 @@ export const CAMPAIGN_QUERY_BASE = `
 SELECT
   campaignId AS id, campaignId, campaignName, optionType, priorityType, 
   campaign.regiDate as regiDate, onOff, br.confirmState, 
-  br.bannerId, br.bannerSrc, br.regiDate AS bannerRegiDate,
+  br.bannerId, br.bannerSrcUrl AS bannerSrc, br.regiDate AS bannerRegiDate,
   lr.linkId, lr.links as links, lr.confirmState as linkConfirmState, dailyLimit,
   campaignDescription, startDate, finDate, selectedTime, targetList, campaign.merchandiseId,
   mr.name AS merchandiseName, mr.stock AS merchandiseStock,

@@ -66,6 +66,7 @@ export default function CreatorLoginForm({
         maxWidth="xs"
         fullWidth
         disableScrollLock
+        disableBackdropClick
       >
         <DialogContent className={classes.dialog}>
 
