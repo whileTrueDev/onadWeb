@@ -63,7 +63,7 @@ const getTargets = async () => {
   LEFT JOIN creatorInfo ON MOC.creatorId = creatorInfo.creatorId
   WHERE statusString = ? AND calculateDoneFlag = ?`;
 
-  const { result } = await doQuery(query, ['구매확정', false]);
+  const { result } = await doQuery(query, ['구매확정', false]).catch((err) => `error occurred during run getTargets - ${err}`);
   return result;
 };
 
@@ -81,7 +81,7 @@ const calculateCampaignLog = async ({
   `;
   const queryArray = [campaignId, creatorId || '', 'CPS', cashToCreator, salesIncomeToMarketer];
 
-  const { result } = await doQuery(query, queryArray);
+  const { result } = await doQuery(query, queryArray).catch((err) => `error occurred during run calculateCampaignLog - ${err}`);
   if (result && result.insertId) return result.insertId;
   return null;
 };
@@ -104,7 +104,7 @@ const calculateMarketerSalesIncome = async ({
   )`;
   const queryArray = [marketerId, salesIncomeToMarketer, marketerId, salesIncomeToMarketer, marketerId];
 
-  const { result } = await doQuery(query, queryArray);
+  const { result } = await doQuery(query, queryArray).catch((err) => `error occurred during run calculateMarketerSalesIncome - ${err}`);
   if (result && result.insertId) return result.insertId;
   return null;
 };
@@ -120,6 +120,7 @@ const calculateCreatorIncome = async ({
   creatorId, cashToCreator
 }) => {
   if (creatorId && cashToCreator) {
+    const creatorIdStr = String(creatorId);
     const query = `
     INSERT INTO creatorIncome (
       creatorId, creatorTotalIncome, creatorReceivable
@@ -127,10 +128,10 @@ const calculateCreatorIncome = async ({
       ?,
       (SELECT IFNULL(MAX(creatorTotalIncome), 0) + ? AS creatorTotalIncome FROM creatorIncome AS a WHERE creatorId = ? ORDER BY date DESC LIMIT 1),
       (SELECT IFNULL(MAX(creatorReceivable), 0) + ? AS creatorReceivable FROM creatorIncome AS b WHERE creatorId = ? ORDER BY date DESC LIMIT 1)
-    )           `;
-    const queryArray = [creatorId, cashToCreator, creatorId, cashToCreator, creatorId];
+    )`;
+    const queryArray = [creatorIdStr, cashToCreator, creatorIdStr, cashToCreator, creatorIdStr];
 
-    const { result } = await doQuery(query, queryArray);
+    const { result } = await doQuery(query, queryArray).catch((err) => `error occurred during run calculateCreatorIncome - ${err}`);
     if (result && result.insertId) return result.insertId;
     return null;
   }
@@ -146,7 +147,7 @@ const updateFlag = async ({ orderId }) => {
   const query = 'UPDATE merchandiseOrders SET calculateDoneFlag = ? WHERE id = ?';
   const queryArray = [1, orderId];
 
-  const { result } = await doQuery(query, queryArray);
+  const { result } = await doQuery(query, queryArray).catch((err) => `error occurred during run updateFlag - ${err}`);
   if (result && result.affectedRows) return result.affectedRows;
   return null;
 };
