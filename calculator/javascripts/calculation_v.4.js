@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 const Notification = require('./notification');
 const pool = require('../model/connectionPool');
 const sendAlimtalk = require('./alimtalk');
@@ -386,6 +387,18 @@ const marketerZeroCalculate = ({ connection, marketerId }) => {
   WHERE marketerId = ?
   `;
 
+  // * CPS 캠페인의 경우 0원이어도 광고 송출 되어야하므로 on/off를 끄지 않는다.
+  // const campaignSetQuery = `
+  //   UPDATE campaign 
+  //   SET onOff = 0  
+  //   WHERE SUBSTRING_INDEX(campaignId, '_' , 1) = ?
+  //   `;
+  // const marketerSetQuery = `
+  //   UPDATE marketerInfo
+  //   SET marketerContraction = 0
+  //   WHERE marketerId = ?
+  //   `;
+
   return new Promise((resolve, reject) => {
     connection.query(marketerDebitQuery, [marketerId], (err1, result) => {
       if (err1) {
@@ -400,6 +413,9 @@ const marketerZeroCalculate = ({ connection, marketerId }) => {
           // transaction open and Promise chain start!!!
           Promise.all([
             doTransacQuery({ connection, queryState: emptyQuery, params: [marketerId] }),
+            // * CPS 캠페인의 경우 0원이어도 광고 송출 되어야하므로 on/off를 끄지 않는다.
+            // .then(doTransacQuery({ connection, queryState: campaignSetQuery, params: [marketerId] }))
+            // .then(doTransacQuery({ connection, queryState: marketerSetQuery, params: [marketerId] })),
             Notification({
               userType: 'marketer',
               type: 'runOut',
