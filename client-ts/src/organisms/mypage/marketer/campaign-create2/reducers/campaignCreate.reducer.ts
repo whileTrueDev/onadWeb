@@ -137,7 +137,7 @@ export const CampaignCreateReducer = (
       return { ...state, loading: false };
     // 모두 초기화
     case 'ALL_RESET':
-      return defaultState;
+      return { ...defaultState, selectedOption: state.selectedOption };
     default:
       throw new Error(`action.type is not defined or there is no handler for ${type}`);
   }

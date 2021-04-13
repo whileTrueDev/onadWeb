@@ -104,7 +104,7 @@ export default function CampaignList(): JSX.Element {
             color="primary"
             onClick={(): void => { history.push('/mypage/marketer/campaigncreate'); }}
           >
-            캠페인 등록
+            캠페인 생성
           </Button>
         </div>
       </div>
