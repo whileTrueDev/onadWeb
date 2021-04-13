@@ -40,7 +40,7 @@ function ImageUploadAccount(): JSX.Element {
           1. 실물 통장 사본
         </Grid>
         <Grid item>
-          <img src="/pngs/settlement/realAccount.png" alt="실물통장사본" className={classes.sampleRealAccount} />
+          <img src="/pngs/settlement/real-account.png" alt="실물통장사본" className={classes.sampleRealAccount} />
         </Grid>
         <Grid item>
           위와같이 계좌번호, 은행, 발급지점, 발급일등이 표시된 첫 번째 장을 카메라로 촬영하거나 스캔한 뒤 이미지 파일로 업로드 해 주시면 됩니다.
@@ -49,7 +49,7 @@ function ImageUploadAccount(): JSX.Element {
           2. 인터넷 출력
         </Grid>
         <Grid item>
-          <img src="/pngs/settlement/internetAccount.png" alt="인터넷출력" className={classes.sampleInternetAccount} />
+          <img src="/pngs/settlement/internet-account.png" alt="인터넷출력" className={classes.sampleInternetAccount} />
         </Grid>
         <Grid item>
           통장실물을 가지고 있지 않거나 온라인 전용계좌일 경우, 각 은행 인터넷 뱅킹 및 일부 모바일 뱅킹 앱에서 제공하는
