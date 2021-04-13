@@ -66,41 +66,20 @@ router.route('/on-off')
       const { marketerId } = responseHelper.getSessionData(req);
       const onOffState = responseHelper.getParam('onOffState', 'POST', req);
       const contractionState = onOffState === false ? 0 : 1;
-      const costQuery = `
-            SELECT cashAmount
-            FROM marketerDebit
-            WHERE marketerId = ?
-            LIMIT 1
-            `;
 
-      const infoQuery = `
-            UPDATE marketerInfo
-            SET marketerContraction = ?
-            WHERE marketerId = ?
-            `;
-      doQuery(costQuery, [marketerId])
-        .then((row) => {
-          const debit = row.result[0].cashAmount;
-          if (debit === 0) {
-            responseHelper.send([false, '잔액이 부족합니다'], 'POST', res);
-          } else {
-            // 마케터 활동내역 테이블 적재: 마케터 onoff를 위한 상태값
-            const MARKETER_ACTION_LOG_TYPE = 7;
-            Promise.all([
-              doQuery(infoQuery, [contractionState, marketerId]),
-            ])
-              .then(() => {
-                // 마케터 활동내역 테이블 적재
-                marketerActionLogging([marketerId, MARKETER_ACTION_LOG_TYPE,
-                  JSON.stringify({
-                    onoffState: contractionState // on: 1, off : 0
-                  })]);
-                responseHelper.send([true], 'POST', res);
-              })
-              .catch((error) => {
-                responseHelper.promiseError(error, next);
-              });
-          }
+      const infoQuery = 'UPDATE marketerInfo SET marketerContraction = ? WHERE marketerId = ?';
+
+      // 마케터 활동내역 테이블 적재: 마케터 onoff를 위한 상태값
+      const MARKETER_ACTION_LOG_TYPE = 7;
+
+      doQuery(infoQuery, [contractionState, marketerId])
+        .then(() => {
+          // 마케터 활동내역 테이블 적재
+          marketerActionLogging([marketerId, MARKETER_ACTION_LOG_TYPE,
+            JSON.stringify({
+              onoffState: contractionState // on: 1, off : 0
+            })]);
+          responseHelper.send([true], 'POST', res);
         })
         .catch((error) => {
           responseHelper.promiseError(error, next);

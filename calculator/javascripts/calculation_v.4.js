@@ -50,8 +50,8 @@ const getcreatorList = ({ date }) => {
   LEFT JOIN
   campaign
   ON RT.campaignId = campaign.campaignId
-  WHERE NOT campaign.limitState = 1
-  GROUP BY creatorId`;
+  WHERE NOT campaign.limitState = 1 AND campaign.optionType = 1
+  GROUP BY creatorId`; // LIVE배너광고(optionType=1)의 경우만 목록으로 불러온다.
 
   // 제약조건 추가. 계산하는 시간 내 광고 오버레이 OFF 버튼 존재시 그냥 해당 시점 밴
   const offListQuery = `
@@ -380,20 +380,6 @@ const marketerZeroCalculate = ({ connection, marketerId }) => {
   SET cashAmount = 0 
   WHERE marketerId = ? `;
 
-  // 해당 마케터의 모든 캠페인 광고상태 off
-  const campaignSetQuery = `
-  UPDATE campaign 
-  SET onOff = 0  
-  WHERE SUBSTRING_INDEX(campaignId, '_' , 1) = ?
-  `;
-
-  // 마케터 광고상태 off
-  const marketerSetQuery = `
-  UPDATE marketerInfo
-  SET marketerContraction = 0
-  WHERE marketerId = ?
-  `;
-
   const setWarningQuery = `
   UPDATE marketerDebit
   SET warning = 1 
@@ -413,9 +399,7 @@ const marketerZeroCalculate = ({ connection, marketerId }) => {
         if (debit <= 0) {
           // transaction open and Promise chain start!!!
           Promise.all([
-            doTransacQuery({ connection, queryState: emptyQuery, params: [marketerId] })
-              .then(doTransacQuery({ connection, queryState: campaignSetQuery, params: [marketerId] }))
-              .then(doTransacQuery({ connection, queryState: marketerSetQuery, params: [marketerId] })),
+            doTransacQuery({ connection, queryState: emptyQuery, params: [marketerId] }),
             Notification({
               userType: 'marketer',
               type: 'runOut',
