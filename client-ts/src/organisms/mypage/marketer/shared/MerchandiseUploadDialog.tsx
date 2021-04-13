@@ -120,7 +120,7 @@ export default function MerchandiseUploadDialog({
   } = useImageListUpload<MerchandiseImage>({ limit: 4 });
 
   // 상품 상세 설명 이미지
-  const descImages = useImageListUpload<MerchandiseImage>({ limit: 10 });
+  const descImages = useImageListUpload<MerchandiseImage>({ limit: 4 });
 
   // ***********************************************************
   // 상품 옵션
