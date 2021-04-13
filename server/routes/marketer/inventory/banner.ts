@@ -55,19 +55,33 @@ router.route('/list')
     responseHelper.middleware.checkSessionExists, // session 확인이 필요한 경우.
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
       const { marketerId } = responseHelper.getSessionData(req);
+      const [offset, page] = responseHelper.getOptionalParam(['offset', 'page'], 'get', req);
+      const searchPage = Number(page * offset);
+      const searchOffset = Number(offset);
       const query = `
             SELECT bannerId AS id, bannerSrcUrl AS bannerSrc, confirmState, bannerId, 
             bannerDenialReason, regiDate
               FROM bannerRegistered
               WHERE marketerId = ?
               ORDER BY confirmState ASC, regiDate DESC`;
-      doQuery(query, [marketerId])
-        .then((row) => {
-          responseHelper.send(row.result, 'get', res);
-        })
-        .catch((error) => {
-          responseHelper.promiseError(error, next);
-        });
+
+      if (offset && page) {
+        doQuery(`${query} LIMIT ?, ?`, [marketerId, searchPage, searchOffset])
+          .then((row) => {
+            responseHelper.send(row.result, 'get', res);
+          })
+          .catch((error) => {
+            responseHelper.promiseError(error, next);
+          });
+      } else {
+        doQuery(query, [marketerId])
+          .then((row) => {
+            responseHelper.send(row.result, 'get', res);
+          })
+          .catch((error) => {
+            responseHelper.promiseError(error, next);
+          });
+      }
     }),
   )
   .all(responseHelper.middleware.unusedMethod);

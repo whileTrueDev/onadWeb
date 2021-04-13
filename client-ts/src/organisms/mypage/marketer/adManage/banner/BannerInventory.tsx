@@ -19,12 +19,9 @@ interface BannerInventoryProps {
   bannerData: UsePaginatedGetRequestObject<BannerDataInterface>;
 }
 
-export default function BannerInventory(props: BannerInventoryProps): JSX.Element {
-  const {
-    totalPageLength, pageOffset, bannerData,
-  } = props;
-
-
+export default function BannerInventory({
+  totalPageLength, pageOffset, bannerData,
+}: BannerInventoryProps): JSX.Element {
   // 배너 삭제 다이얼로그
   const deleteDialog = useDialog();
   const anchor = useAnchorEl(); // 배너 자세하 보기 앵커

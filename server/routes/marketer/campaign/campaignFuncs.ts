@@ -118,7 +118,7 @@ export const getCampaignDetail = async (
 export const getCampaigns = async ({
   marketerId, searchPage, searchOffset
 }: {
-  marketerId: string; searchPage: number; searchOffset: number;
+  marketerId: string; searchPage?: number; searchOffset?: number;
 }): Promise<CampaignDataWithCreators[]> => {
   // *******************************************************************
   // 캠페인 목록 불러오기
@@ -126,7 +126,7 @@ export const getCampaigns = async ({
   WHERE campaign.marketerId = ? AND deletedState = 0
   ORDER BY campaign.onOff DESC, campaign.regiDate DESC
   LIMIT ?, ?`;
-  const { result } = await doQuery(query, [marketerId, searchPage, searchOffset]);
+  const { result } = await doQuery(query, [marketerId, searchPage || 0, searchOffset || 50]);
   if ((result.length === 0)) return result;
 
   const responseResult = await Promise.all(

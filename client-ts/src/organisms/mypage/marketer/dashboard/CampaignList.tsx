@@ -10,6 +10,7 @@ import CampaignOnOffSwitch from '../../../../atoms/Switch/CampaignOnOffSwitch';
 import history from '../../../../history';
 import { useGetRequest } from '../../../../utils/hooks';
 import useDialog from '../../../../utils/hooks/useDialog';
+import { CONFIRM_STATE_REJECTED } from '../../../../utils/render_funcs/renderBannerConfirmState';
 import CampaignMetaInfoCard from '../adManage/campaign/sub/CampaignMetaInfoCard';
 import { CampaignInterface } from './interfaces';
 
@@ -32,7 +33,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 export default function CampaignList(): JSX.Element {
-  const OFFSET = 2;
+  const OFFSET = 4;
   const classes = useStyles();
 
   const campaignData = useGetRequest<{page: number; offset: number}, CampaignInterface[]>(
@@ -73,24 +74,27 @@ export default function CampaignList(): JSX.Element {
       {campaignData.data && (
       <div>
         <article className={classes.article}>
-          {campaignData.data.map((campaign: CampaignInterface) => (
-            <CampaignMetaInfoCard
-              key={campaign.campaignId}
-              campaign={campaign}
-              switchComponent={(
-                <CampaignOnOffSwitch
-                  campaign={campaign}
-                  onSuccess={(): void => {
-                    campaignData.doGetRequest();
-                    snack.handleOpen();
-                  }}
-                  onFail={(): void => {
-                    failSnack.handleOpen();
-                  }}
-                />
+          {campaignData.data
+            .filter((cam) => cam.confirmState !== CONFIRM_STATE_REJECTED)
+            .slice(0, 2)
+            .map((campaign: CampaignInterface) => (
+              <CampaignMetaInfoCard
+                key={campaign.campaignId}
+                campaign={campaign}
+                switchComponent={(
+                  <CampaignOnOffSwitch
+                    campaign={campaign}
+                    onSuccess={(): void => {
+                      campaignData.doGetRequest();
+                      snack.handleOpen();
+                    }}
+                    onFail={(): void => {
+                      failSnack.handleOpen();
+                    }}
+                  />
                 )}
-            />
-          ))}
+              />
+            ))}
         </article>
 
         <div style={{ textAlign: 'center' }}>
