@@ -42,15 +42,16 @@ function callImg(socket: Socket, msg: string[]): void {
 
   // 켜져있는 광고
   const getOnCampaignList = (): Promise<string[]> => {
+    // 광고주 상태가 켜져있고, 캠페인이 켜져있으며 일일예산을 소진하지 않은 LIVE생방송배너광고(CPM+CPC) 이거나,
+    // 광고주 상태가 켜져있고, 캠페인이 켜져있는 판매형광고(CPS)만 가져온다.
     const campaignListQuery = `
-    SELECT campaignId, campaignName, optionType, startDate, finDate, selectedTime, campaignDescription
-    FROM campaign
-    LEFT JOIN marketerInfo
-    ON campaign.marketerId = marketerInfo.marketerId
-    WHERE marketerInfo.marketerContraction = 1
-    AND campaign.onOff = 1
-    AND NOT campaign.optionType = 2
-    AND campaign.limitState = 0
+      SELECT campaignId, campaignName, optionType, startDate, finDate, selectedTime, campaignDescription, cashAmount
+        FROM campaign
+        LEFT JOIN marketerInfo ON campaign.marketerId = marketerInfo.marketerId
+        LEFT JOIN marketerDebit ON campaign.marketerId = marketerDebit.marketerId
+      WHERE
+      (marketerInfo.marketerContraction = 1 AND campaign.onOff = 1 AND campaign.optionType = 1 AND campaign.limitState = 0)
+        OR (marketerInfo.marketerContraction = 1 AND campaign.onOff = 1 AND campaign.optionType = 3)
     `;
     interface TimeData {
       startDate: Date;
