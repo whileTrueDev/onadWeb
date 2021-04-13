@@ -14,16 +14,17 @@ router.route('/expenditure')
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
       const { marketerId } = responseHelper.getSessionData(req);
       const query = `
-            SELECT
-            DATE_FORMAT(max(cl.date), "%Y-%m-%d") as date,
-            sum(cashFromMarketer) as value, type
-            FROM campaignLog AS cl
-            WHERE SUBSTRING_INDEX(cl.campaignId, '_', 1) = ?
-            AND  cl.date >= DATE_SUB(NOW(), INTERVAL 30 DAY)
-            GROUP BY DATE_FORMAT(cl.date, "%y년 %m월 %d일"), type
-            ORDER BY cl.date DESC
+      SELECT
+        DATE_FORMAT(max(cl.date), "%Y-%m-%d") as date,
+        IFNULL(sum(cashFromMarketer), 0) as value,
+        type
+      FROM campaignLog AS cl
+      WHERE SUBSTRING_INDEX(cl.campaignId, '_', 1) = "gubgoo"
+        AND cl.date >= DATE_SUB(NOW(), INTERVAL 30 DAY)
+      GROUP BY DATE_FORMAT(cl.date, "%y년 %m월 %d일"), type
+      ORDER BY cl.date DESC
             `;
-      doQuery(query, ['107511687333993136761'])// 107511687333993136761
+      doQuery(query, [marketerId])
         .then((row) => {
           responseHelper.send(row.result, 'get', res);
         })
@@ -96,15 +97,11 @@ router.route('/creator-count')
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
       const { marketerId } = responseHelper.getSessionData(req);
       const query = `
-            select count( DISTINCT creatorId ) as counts
-            from 
-            campaignLog as CL
-            inner join
-            (select  campaignId
-            from campaign
-            where marketerId= ?
-            ) as CP
-            on CL.campaignId = CP.campaignId
+            SELECT COUNT( DISTINCT creatorId ) AS counts
+            FROM campaignLog AS CL
+            INNER JOIN
+            (SELECT campaignId FROM campaign WHERE marketerId = ?) AS CP
+            ON CL.campaignId = CP.campaignId
             `;
       doQuery(query, [marketerId])
         .then((row) => {

@@ -17,17 +17,44 @@ const s3 = new AWS.S3({
 
 const params = { Bucket: AWS_S3_BUCKET_NAME };
 
+export function getBaseUrl(): string {
+  return [
+    'https://',
+    AWS_S3_BUCKET_NAME,
+    '.s3.',
+    AWS_REGION,
+    '.amazonaws.com/',
+  ].join('');
+}
+
 type S3Folders = 'adpage-background/' | 'banner/' | 'business-regi/'| undefined;
-function getImages(folder?: S3Folders, howMuch = 100): void {
-  s3.listObjectsV2({
+export async function getFolders(
+  folder?: S3Folders, howMuch = 100
+): Promise<PromiseResult<AWS.S3.ListObjectsV2Output, AWS.AWSError>> {
+  const prom = s3.listObjectsV2({
     ...params,
     Delimiter: '/',
     Prefix: folder,
     MaxKeys: howMuch
-  }, (err, data) => {
-    if (err) { console.log('error in S3.getImages - ', err); }
-    console.log('data.contents: ', data.Contents);
-    return data.Contents;
+  }).promise();
+
+  return prom.catch((err) => {
+    if (err) { console.log('error in S3.getImages - ', err); return err; }
+  });
+}
+
+export async function getImagesByMarketerId(
+  marketerId: string, howMuch = 100
+): Promise<PromiseResult<AWS.S3.ListObjectsV2Output, AWS.AWSError>> {
+  const prom = s3.listObjectsV2({
+    ...params,
+    Delimiter: '/',
+    Prefix: path.join('banner', `${marketerId}/`),
+    MaxKeys: howMuch
+  }).promise();
+
+  return prom.catch((err) => {
+    if (err) { console.log('error in S3.getImages - ', err); return err; }
   });
 }
 
@@ -38,7 +65,7 @@ function getImages(folder?: S3Folders, howMuch = 100): void {
  * @example
  * S3.uploadImage('banner/asdf.png', ASDFImage);
  */
-function uploadImage(
+export function uploadImage(
   name: string,
   image: string | Buffer | Uint8Array | Blob
 ): void {
@@ -59,7 +86,7 @@ function uploadImage(
  * @example 
  * await S3.uploadImageAsync('banner/asdf.png', someImageBuffer);
  */
-function uploadImageAsync(
+export function uploadImageAsync(
   name: string,
   image: string | Buffer | Uint8Array | Blob,
   options?: Omit<AWS.S3.PutObjectRequest, 'Key' | 'Body' | 'Bucket'>,
@@ -72,7 +99,7 @@ function uploadImageAsync(
   }).promise();
 }
 
-function deleteImage(fileName: string): void {
+export function deleteImage(fileName: string): void {
   s3.deleteObject({
     ...params,
     Key: fileName
@@ -82,7 +109,7 @@ function deleteImage(fileName: string): void {
   });
 }
 
-async function migrateFromDB(): Promise<void> {
+export async function migrateFromDB(): Promise<void> {
   const query = 'SELECT * FROM bannerRegistered WHERE marketerId = "gubgoo" LIMIT 1';
   const { result } = await doQuery(query);
   if (!result) throw new Error('Banner migration failed when find banners query');
@@ -100,7 +127,3 @@ async function migrateFromDB(): Promise<void> {
       .catch((err) => console.log(err));
   });
 }
-
-export default {
-  getImages, uploadImage, uploadImageAsync, deleteImage
-};
