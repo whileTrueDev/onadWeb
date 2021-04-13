@@ -335,7 +335,7 @@ function callImg(socket: Socket, msg: string[]): void {
           getRandomInt(extractBanCampaignList.length)
         ];
         myCampaignId = returnCampaignId;
-        console.log('캠페인 : ', myCampaignId);
+        console.log('방송인 에게만 송출될 캠페인 : ', myCampaignId);
       }
     } else {
       // *********************************************************
@@ -445,7 +445,10 @@ function callImg(socket: Socket, msg: string[]): void {
       const myCreatorTwitchId = CREATOR_DATA.creatorTwitchId;
       const myAdChatAgreement = CREATOR_DATA.adChatAgreement;
       // 트위치 챗봇 동의 및 옵션타입 cpm+cpc인 경우에 챗봇으로 데이터 전송
-      if (myAdChatAgreement === 1 && checkOptionType === 1) {
+      const CHATBOT_ALLOWED_CAMPAIGN_OPTION_TYPE = [1, 3];
+      if (myAdChatAgreement === 1
+        && checkOptionType
+        && CHATBOT_ALLOWED_CAMPAIGN_OPTION_TYPE.includes(checkOptionType)) {
         if (myCreatorTwitchId) {
           // 챗봇은 트위치 한정. 트위치 아이디가 없는 경우 에미팅 하지 않도록 추가
           // @by hwasurr 21.01.08
