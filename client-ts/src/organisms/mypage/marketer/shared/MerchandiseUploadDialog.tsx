@@ -120,7 +120,7 @@ export default function MerchandiseUploadDialog({
   } = useImageListUpload<MerchandiseImage>({ limit: 4 });
 
   // 상품 상세 설명 이미지
-  const descImages = useImageListUpload<MerchandiseImage>();
+  const descImages = useImageListUpload<MerchandiseImage>({ limit: 10 });
 
   // ***********************************************************
   // 상품 옵션
@@ -183,10 +183,6 @@ export default function MerchandiseUploadDialog({
     if (merchandiseInfo.stock && merchandiseInfo.stock < 1) return handleFormError('재고를 올바르게 입력해주세요.');
     if (optionFlag.value === FLAG_ON
       && options.checkItemsEmpty()) return handleFormError('옵션을 올바르게 입력해주세요. 각 옵션은 빈 값이 없어야 합니다.');
-    if (optionFlag.value === FLAG_ON
-      && options.items.filter((opt) => parseInt(opt.additionalPrice, 10) < 1).length > 0) {
-      return handleFormError('옵션을 올바르게 입력해주세요. 옵션 가격은 1보다 작을 수 없습니다.');
-    }
     if (images.length === 0) return handleFormError('상품을 등록하기 위해서는 상품 사진이 최소 1개 이상 필요합니다.');
     if (descImages.images.length === 0) return handleFormError('상품을 등록하기 위해서는 상품 상세 사진이 최소 1개 이상 필요합니다.');
     if (pickupFlag.value === FLAG_ON && !address) return handleFormError('상품 픽업 주소를 입력해주세요');
@@ -339,7 +335,7 @@ export default function MerchandiseUploadDialog({
 
       <div className={classes.field}>
         <Collapse in={pickupFlag.value === FLAG_ON}>
-          <Typography>상품픽업주소</Typography>
+          <Typography>반송지주소</Typography>
           <div className={classes.bottomSpace}>
             {!addressHistoryGet.loading && addressHistoryGet.data && (
               <div style={{ margin: '8px 0px' }}>
@@ -378,6 +374,7 @@ export default function MerchandiseUploadDialog({
       <div className={classes.field}>
         <Typography>상품사진</Typography>
         <Typography color="textSecondary" variant="body2">상품 사진업로드는 사진당 최대 5MB용량까지 가능합니다.</Typography>
+        <Typography color="textSecondary" variant="body2">사진은 최대 4장까지 업로드 가능합니다.</Typography>
         <div className={classes.bottomSpace}>
           <MerchandiseImageUpload
             images={images}
@@ -405,6 +402,7 @@ export default function MerchandiseUploadDialog({
       <div className={classes.field}>
         <Typography>상품 상세 이미지</Typography>
         <Typography color="textSecondary" variant="body2">상세 사진업로드는 사진당 최대 10MB용량까지 가능합니다.</Typography>
+        <Typography color="textSecondary" variant="body2">사진은 최대 4장까지 업로드 가능합니다.</Typography>
         <MerchandiseImageUpload
           limitMb={10}
           images={descImages.images}
