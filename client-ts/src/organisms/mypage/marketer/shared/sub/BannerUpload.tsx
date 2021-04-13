@@ -157,8 +157,7 @@ const BannerUpload = (props: ImageUploadProps): JSX.Element => {
             src={image.imageUrl}
             width="320"
             height="160"
-            onError={(err): void => {
-              console.log('OnadBanner 이미지 로딩에러: ', err);
+            onError={(): void => {
               handleFailed('이미지를 로드하지 못했습니다. 다시 시도해보세요.');
               onReset();
             }}
