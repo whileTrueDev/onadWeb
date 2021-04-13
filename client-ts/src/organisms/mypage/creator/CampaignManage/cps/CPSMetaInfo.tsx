@@ -22,19 +22,19 @@ export default function CPSMetaInfo({
             <div style={{ textAlign: 'center' }}>
               <Typography>판매 누적 수익금</Typography>
               <Typography style={{ fontWeight: 'bold' }} variant="h6">
-                {(cpsMetaInfo.data.income).toLocaleString()}
+                {(cpsMetaInfo.data.income || 0).toLocaleString()}
               </Typography>
             </div>
             <div style={{ textAlign: 'center' }}>
               <Typography>판매</Typography>
               <Typography style={{ fontWeight: 'bold' }} variant="h6">
-                {(cpsMetaInfo.data.salesCount).toLocaleString()}
+                {(cpsMetaInfo.data.salesCount || 0).toLocaleString()}
               </Typography>
             </div>
             <div style={{ textAlign: 'center' }}>
               <Typography>클릭수</Typography>
               <Typography style={{ fontWeight: 'bold' }} variant="h6">
-                {(cpsMetaInfo.data.clickCount).toLocaleString()}
+                {(cpsMetaInfo.data.clickCount || 0).toLocaleString()}
               </Typography>
             </div>
           </>
