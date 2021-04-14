@@ -188,7 +188,7 @@ export default function CampaignInventory({
             filterable: false,
             width: 150,
             renderCell: (data): React.ReactElement => {
-              if (!data.row.linkId) return <Typography variant="body2">온애드몰</Typography>;
+              if (!data.row.linkId) return <Typography variant="body2">온애드샵</Typography>;
               return (
                 <Tooltip title={data.row.linkId}>
                   <Typography

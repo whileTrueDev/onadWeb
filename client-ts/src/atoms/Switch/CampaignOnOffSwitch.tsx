@@ -81,9 +81,9 @@ export default function CampaignOnOffSwitch(props: CampaignOnOffSwitchProps): Re
     }
     // CPS 캠페인인 경우
     if (campaign.optionType === CPS_OPTION_TYPE) {
-      // 현재 off 상태이면서 온애드몰에 아직 업로드 되지 않았거나, 상품이 없거나, 온애드몰 사이트 URL이 아직 업로드 되지 않은 경우
+      // 현재 off 상태이면서 온애드샵에 아직 업로드 되지 않았거나, 상품이 없거나, 온애드샵 사이트 URL이 아직 업로드 되지 않은 경우
       if (!campaign.onOff && (!campaign.merchandiseUploadState || !campaign.merchandiseId || !campaign.merchandiseItemSiteUrl)) {
-        let message = '아직 온애드몰에 상품이 업로드되지 않았습니다.';
+        let message = '아직 온애드샵에 상품이 업로드되지 않았습니다.';
         if (campaign.merchandiseUploadState === 0 && campaign.merchandiseDenialReason) message = '상품이 거절된 캠페인입니다.';
         handleOnOffDisable(message);
         return true;

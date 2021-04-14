@@ -44,7 +44,7 @@ export default function SelectMerchandise({
         secondary={(
           <div>
             <Typography variant="body2" color="textSecondary">
-              선택된 상품은 온애드몰에서 판매됩니다.
+              선택된 상품은 온애드샵에서 판매됩니다.
             </Typography>
             <Typography variant="body2" color="textSecondary">
               다른 캠페인에 연결되지 않은 상품만 표시됩니다.
