@@ -1,8 +1,8 @@
 /* eslint-disable max-len */
 const doQuery = require('../model/calculatorQuery');
 
-const CREATOR_FEERATE = 0.2;
-const MARKETER_FEERATE_PROMOTED_BY_CREATOR = 0.7;
+const CREATOR_FEERATE = 0.1;
+const MARKETER_FEERATE_PROMOTED_BY_CREATOR = 0.8;
 const MARKETER_FEERATE_DEFAULT = 0.9;
 
 /**
