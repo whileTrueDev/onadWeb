@@ -48,7 +48,7 @@ export default function CPAConfirmDialog({
 }: CPAConfirmDialogProps): JSX.Element {
   const classes = useStyles();
 
-  // 캠페인 등록 POST 요청
+  // 캠페인 생성 POST 요청
   const campaignStart = usePostRequest(
     '/creator/cpa/adpick/campaign', callback
   );

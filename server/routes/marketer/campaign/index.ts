@@ -1,4 +1,5 @@
 import express from 'express';
+import slack from '../../../lib/slack/messageWithJson';
 import responseHelper from '../../../middlewares/responseHelper';
 import doQuery from '../../../model/doQuery';
 import dataProcessing from '../../../lib/dataProcessing';
@@ -18,9 +19,10 @@ router.route('/length')
   .get(
     responseHelper.middleware.checkSessionExists,
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
-      const marketerId = responseHelper.getSessionData(req);
+      const { marketerId } = responseHelper.getSessionData(req);
       const query = 'SELECT COUNT(*) AS rowCount FROM campaign WHERE campaign.marketerId = ? AND deletedState = 0';
       const { result } = await doQuery(query, [marketerId]);
+      if (!result) return responseHelper.send(0, 'get', res);
 
       return responseHelper.send(result[0].rowCount, 'get', res);
     })
@@ -234,7 +236,6 @@ router.route('/')
             optionType, onOff, targetList, marketerName, 
             keyword, startDate, finDate, selectedTime, campaignDescription, merchandiseId) 
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, 0, ?, ?, ?, ?, ?, ?, ?, ?)`;
-
       doQuery(searchQuery, [marketerId])
         .then((row) => {
           const campaignId = dataProcessing.getCampaignId(row.result[0], marketerId);
@@ -245,13 +246,13 @@ router.route('/')
           // 마케터 활동내역 로깅 테이블에서, 캠페인 생성의 상태값
           const MARKETER_ACTION_LOG_TYPE = 5;
 
-          Promise.all([
+          Promise.all<any>([
             doQuery(saveQuery,
               [campaignId, campaignName, marketerId, bannerId, connectedLinkId, dailyLimit,
                 // @by hwasurr "1-1" 은 아프리카 카테고리 선택형. 1로 수정하여 카테고리 선택형으로 넣는다.
                 (priorityType === '1-1') ? '1' : priorityType,
                 optionType, targetJsonData, marketerName, keywordsJsonData,
-                startDate, finDate, timeJsonData, campaignDescription, merchandiseId]),
+                new Date(startDate), finDate, timeJsonData, campaignDescription, merchandiseId || null]),
             dataProcessing.PriorityDoquery({
               campaignId,
               priorityType,
@@ -269,14 +270,14 @@ router.route('/')
               marketerActionLogging([
                 marketerId, MARKETER_ACTION_LOG_TYPE, JSON.stringify({ campaignName })
               ]);
-              // slack({
-              //   summary: '캠페인 등록 알림',
-              //   text: '관리자 페이지에서 방금 등록된 캠페인을 확인하세요.',
-              //   fields: [
-              //     { title: '마케터 이름', value: marketerName!, short: true },
-              //     { title: '캠페인 이름', value: campaignName!, short: true },
-              //   ]
-              // });
+              slack({
+                summary: '캠페인 등록 알림',
+                text: '관리자 페이지에서 방금 등록된 캠페인을 확인하세요.',
+                fields: [
+                  { title: '마케터 이름', value: marketerName!, short: true },
+                  { title: '캠페인 이름', value: campaignName!, short: true },
+                ]
+              });
             })
             .catch((error) => {
               responseHelper.promiseError(error, next);

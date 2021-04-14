@@ -30,7 +30,10 @@ export default function SettlementViewer({
   return (
     <div className={classes.container}>
       <Typography variant="body2">
-        {`이름: ${settlement.name}`}
+        {`유형: ${settlement.businessmanFlag ? '사업자' : '비사업자'}`}
+      </Typography>
+      <Typography variant="body2">
+        {settlement.businessmanFlag ? (`회사명: ${settlement.name}`) : (`이름: ${settlement.name}`)}
       </Typography>
       {settlement.businessmanFlag ? (
         <Typography variant="body2">

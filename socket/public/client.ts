@@ -9,7 +9,7 @@ const THIS_URL: string = window.location.href;
 let bannerName: string | undefined = $('.banner-area').attr('name');
 
 function isVideo(src: string): boolean {
-  const videoRegex = /video\/mp4/;
+  const videoRegex = /.mp4/;
   return videoRegex.test(src);
 }
 

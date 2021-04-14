@@ -10,7 +10,7 @@ import DataText from '../../../../../atoms/DataText/DataText';
 import CustomDialog from '../../../../../atoms/Dialog/Dialog';
 import Snackbar from '../../../../../atoms/Snackbar/Snackbar';
 import MarketerInfoContext from '../../../../../context/MarketerInfo.context';
-import { getS3MerchandiseImagePath } from '../../../../../utils/aws/getS3Path';
+import { getReadableS3MerchandiseImagePath } from '../../../../../utils/aws/getS3Path';
 import { useDialog, useGetRequest, usePatchRequest } from '../../../../../utils/hooks';
 import {
   OrderStatus, 주문상태_상품준비, 주문상태_주문취소, 주문상태_출고완료, 주문상태_출고준비
@@ -62,7 +62,7 @@ function MerchandiseOrderDialog({
   // S3 상품 이미지 URL을 구하는 함수.
   function getMerchandiseS3Url(imageName: string, merchandiseId: number): string {
     if (marketerInfo.user) {
-      return getS3MerchandiseImagePath(
+      return getReadableS3MerchandiseImagePath(
         marketerInfo.user.marketerId, merchandiseId, imageName
       );
     }
@@ -157,7 +157,7 @@ function MerchandiseOrderDialog({
             />
             )}
             <DataText name="주문 수량" value={merchandiseOrder.quantity} />
-            <DataText name="남은 상품 재고" value={availableStock} />
+            <DataText name="남은 상품 재고" value={`남은 재고 ${availableStock} / 총 재고 ${merchandiseOrder.stock}`} />
             <DataText
               name="총 주문 금액"
               value={`${
@@ -186,6 +186,12 @@ function MerchandiseOrderDialog({
                 <OrderStatusChip status={merchandiseOrder.status} />
               )}
             />
+            {merchandiseOrder.status === 주문상태_주문취소 && merchandiseOrder.denialReason && (
+              <DataText
+                name="취소 사유"
+                value={merchandiseOrder.denialReason}
+              />
+            )}
             {merchandiseOrder.releaseId && (
               <DataText
                 iconComponent={LocalShippingIcon}
@@ -203,7 +209,7 @@ function MerchandiseOrderDialog({
                 className={classes.actionbutton}
                 variant="contained"
                 color="secondary"
-                disabled={availableStock === 0 || merchandiseOrder.status >= 주문상태_상품준비}
+                disabled={merchandiseOrder.status >= 주문상태_상품준비}
                 onClick={(): void => handleStatusSelect(주문상태_상품준비)}
               >
                 상품준비
@@ -212,7 +218,7 @@ function MerchandiseOrderDialog({
                 className={classes.actionbutton}
                 color="secondary"
                 variant="contained"
-                disabled={availableStock === 0 || merchandiseOrder.status >= 주문상태_출고준비}
+                disabled={merchandiseOrder.status >= 주문상태_출고준비}
                 onClick={(): void => handleStatusSelect(주문상태_출고준비)}
               >
                 출고준비
@@ -220,7 +226,7 @@ function MerchandiseOrderDialog({
               <Button
                 className={classnames(classes.success, classes.actionbutton)}
                 variant="contained"
-                disabled={availableStock === 0 || merchandiseOrder.status >= 주문상태_출고완료}
+                disabled={merchandiseOrder.status >= 주문상태_출고완료}
                 onClick={(): void => handleStatusSelect(주문상태_출고완료)}
               >
                 출고완료

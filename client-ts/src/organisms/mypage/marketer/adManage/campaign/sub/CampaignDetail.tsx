@@ -82,19 +82,19 @@ export default function CampaignDetail({
         </Alert>
       )}
 
-      {/* CPS 캠페인의 상품이 아직 온애드몰에 업로드 되지 않은 경우 */}
+      {/* CPS 캠페인의 상품이 아직 온애드샵에 업로드 되지 않은 경우 */}
       {campaign.merchandiseId && campaign.merchandiseName
       && campaign.merchandiseUploadState === MERCHANDISE_UPLOAD_WAITING
       && (// 캠페인 정보 불러올 때 업로드 상태도 불러오게 변경한 이후 추가.
         <Alert severity="error">
           <Typography variant="body2">
-            {`캠페인 ${campaign.campaignName} 의 상품 -> ${withJosa(campaign.merchandiseName, '이/가')} 아직 온애드몰에 업로드되지 않아 광고 진행이 불가한 상태입니다.`}
+            {`캠페인 ${campaign.campaignName} 의 상품 -> ${withJosa(campaign.merchandiseName, '이/가')} 아직 온애드샵에 업로드되지 않아 광고 진행이 불가한 상태입니다.`}
           </Typography>
           <Typography variant="body2">조금만 기다려 주세요!!</Typography>
         </Alert>
       )}
 
-      {/* CPS 캠페인의 상품이 아직 온애드몰에 업로드 되지 않은 경우 */}
+      {/* CPS 캠페인의 상품이 아직 온애드샵에 업로드 되지 않은 경우 */}
       {campaign.merchandiseId && campaign.merchandiseName
       && campaign.merchandiseUploadState === 0
       && (// 캠페인 정보 불러올 때 업로드 상태도 불러오게 변경한 이후 추가.

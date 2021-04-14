@@ -117,6 +117,8 @@ export default function CampaignInventory({
           campaignData.handlePage(param.page - 1);
         }}
         disableSelectionOnClick
+        rows={campaignData.data || []}
+        loading={campaignData.loading}
         columns={[
           {
             field: 'onOff',
@@ -186,7 +188,7 @@ export default function CampaignInventory({
             filterable: false,
             width: 150,
             renderCell: (data): React.ReactElement => {
-              if (!data.row.linkId) return <Typography variant="body2">온애드몰</Typography>;
+              if (!data.row.linkId) return <Typography variant="body2">온애드샵</Typography>;
               return (
                 <Tooltip title={data.row.linkId}>
                   <Typography
@@ -299,8 +301,6 @@ export default function CampaignInventory({
             ),
           },
         ]}
-        rows={campaignData.data || []}
-        loading={campaignData.loading}
       />
 
       {/* 캠페인 메뉴 (분석, 수정, 삭제) */}

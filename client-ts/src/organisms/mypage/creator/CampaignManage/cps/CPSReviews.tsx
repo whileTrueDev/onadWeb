@@ -3,6 +3,7 @@ import {
 } from '@material-ui/core';
 import moment from 'moment';
 import React, { useState } from 'react';
+import OrderStatusChip from '../../../../../atoms/Chip/OrderStatusChip';
 import CustomDataGrid from '../../../../../atoms/Table/CustomDataGrid';
 import { useDialog } from '../../../../../utils/hooks';
 import { UseGetRequestObject } from '../../../../../utils/hooks/useGetRequest';
@@ -101,6 +102,14 @@ export default function CPSReviews({
                 </Tooltip>
               );
             }
+          },
+          {
+            width: 120,
+            headerName: '주문상태',
+            field: 'status',
+            renderCell: (data): React.ReactElement => (
+              <OrderStatusChip status={data.row.status} />
+            )
           },
           {
             width: 130,

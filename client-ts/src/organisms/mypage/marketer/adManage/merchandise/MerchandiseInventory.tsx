@@ -76,7 +76,7 @@ export default function MerchandiseInventory({
           {
             field: 'uploadState',
             headerName: '상태',
-            width: 120,
+            width: 150,
             renderCell: (data): React.ReactElement => (
               <div>
                 <Typography variant="body2" noWrap>
@@ -84,7 +84,9 @@ export default function MerchandiseInventory({
                 </Typography>
                 {data.row.uploadState === 0 && data.row.denialReason && (
                   <Tooltip title={`사유: ${data.row.denialReason}`}>
-                    <Typography noWrap variant="body2">{`사유: ${data.row.denialReason}`}</Typography>
+                    <Typography color="error" noWrap variant="body2">
+                      {`사유: ${data.row.denialReason}`}
+                    </Typography>
                   </Tooltip>
                 )}
               </div>

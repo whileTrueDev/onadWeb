@@ -1,8 +1,8 @@
 /* eslint-disable max-len */
 const doQuery = require('../model/calculatorQuery');
 
-const CREATOR_FEERATE = 0.2;
-const MARKETER_FEERATE_PROMOTED_BY_CREATOR = 0.7;
+const CREATOR_FEERATE = 0.1;
+const MARKETER_FEERATE_PROMOTED_BY_CREATOR = 0.8;
 const MARKETER_FEERATE_DEFAULT = 0.9;
 
 /**
@@ -63,7 +63,7 @@ const getTargets = async () => {
   LEFT JOIN creatorInfo ON MOC.creatorId = creatorInfo.creatorId
   WHERE statusString = ? AND calculateDoneFlag = ?`;
 
-  const { result } = await doQuery(query, ['구매확정', false]);
+  const { result } = await doQuery(query, ['구매확정', false]).catch((err) => `error occurred during run getTargets - ${err}`);
   return result;
 };
 
@@ -76,12 +76,12 @@ const calculateCampaignLog = async ({
   campaignId, creatorId, cashToCreator, salesIncomeToMarketer
 }) => {
   const query = `
-    INSERT INTO campaignLog_copy (campaignId, creatorId, type, cashToCreator, salesIncomeToMarketer)
+    INSERT INTO campaignLog (campaignId, creatorId, type, cashToCreator, salesIncomeToMarketer)
     VALUES (?, ?, ?, ?, ?)
   `;
-  const queryArray = [campaignId, creatorId, 'CPS', cashToCreator, salesIncomeToMarketer];
+  const queryArray = [campaignId, creatorId || '', 'CPS', cashToCreator, salesIncomeToMarketer];
 
-  const { result } = await doQuery(query, queryArray);
+  const { result } = await doQuery(query, queryArray).catch((err) => `error occurred during run calculateCampaignLog - ${err}`);
   if (result && result.insertId) return result.insertId;
   return null;
 };
@@ -104,7 +104,7 @@ const calculateMarketerSalesIncome = async ({
   )`;
   const queryArray = [marketerId, salesIncomeToMarketer, marketerId, salesIncomeToMarketer, marketerId];
 
-  const { result } = await doQuery(query, queryArray);
+  const { result } = await doQuery(query, queryArray).catch((err) => `error occurred during run calculateMarketerSalesIncome - ${err}`);
   if (result && result.insertId) return result.insertId;
   return null;
 };
@@ -120,17 +120,18 @@ const calculateCreatorIncome = async ({
   creatorId, cashToCreator
 }) => {
   if (creatorId && cashToCreator) {
+    const creatorIdStr = String(creatorId);
     const query = `
-    INSERT INTO creatorIncome_copy (
+    INSERT INTO creatorIncome (
       creatorId, creatorTotalIncome, creatorReceivable
     ) VALUES (
       ?,
-      (SELECT IFNULL(MAX(creatorTotalIncome), 0) + ? AS creatorTotalIncome FROM creatorIncome_copy AS a WHERE creatorId = ? ORDER BY date DESC LIMIT 1),
-      (SELECT IFNULL(MAX(creatorReceivable), 0) + ? AS creatorReceivable FROM creatorIncome_copy AS b WHERE creatorId = ? ORDER BY date DESC LIMIT 1)
-    )           `;
-    const queryArray = [creatorId, cashToCreator, creatorId, cashToCreator, creatorId];
+      (SELECT IFNULL(MAX(creatorTotalIncome), 0) + ? AS creatorTotalIncome FROM creatorIncome AS a WHERE creatorId = ? ORDER BY date DESC LIMIT 1),
+      (SELECT IFNULL(MAX(creatorReceivable), 0) + ? AS creatorReceivable FROM creatorIncome AS b WHERE creatorId = ? ORDER BY date DESC LIMIT 1)
+    )`;
+    const queryArray = [creatorIdStr, cashToCreator, creatorIdStr, cashToCreator, creatorIdStr];
 
-    const { result } = await doQuery(query, queryArray);
+    const { result } = await doQuery(query, queryArray).catch((err) => `error occurred during run calculateCreatorIncome - ${err}`);
     if (result && result.insertId) return result.insertId;
     return null;
   }
@@ -146,7 +147,7 @@ const updateFlag = async ({ orderId }) => {
   const query = 'UPDATE merchandiseOrders SET calculateDoneFlag = ? WHERE id = ?';
   const queryArray = [1, orderId];
 
-  const { result } = await doQuery(query, queryArray);
+  const { result } = await doQuery(query, queryArray).catch((err) => `error occurred during run updateFlag - ${err}`);
   if (result && result.affectedRows) return result.affectedRows;
   return null;
 };
@@ -218,9 +219,9 @@ async function cpsCalculate() {
   )
     .then(() => console.log(`[${new Date().toLocaleString()}] CPS 판매 대금 계산을 모두 완료하였습니다.`))
     .catch((err) => {
-      console.log(`[${new Date().toLocaleString()}] CPS 판매 대금 계산 중 오류 발생`);
+      console.error(`[${new Date().toLocaleString()}] CPS 판매 대금 계산 중 오류 발생`);
       console.error(err);
-      throw err;
+      return 0;
     });
 }
 

@@ -6,7 +6,7 @@ import OrderStatusChip from '../../../../../atoms/Chip/OrderStatusChip';
 // import CustomDataGrid from '../../../../../../atoms/Table/CustomDataGrid';
 import CustomDataGrid from '../../../../../atoms/Table/CustomDataGrid';
 import { useDialog, useGetRequest } from '../../../../../utils/hooks';
-import { OrderStatus, 주문상태_배송완료 } from '../../../../../utils/render_funcs/renderOrderStatus';
+import { OrderStatus } from '../../../../../utils/render_funcs/renderOrderStatus';
 import { MerchandiseOrder } from '../../adManage/interface';
 import CampaignDetailDialog from '../CampaignDetailDialog';
 import MerchandiseOrderDialog from './MerchandiseOrderDialog';
@@ -74,10 +74,7 @@ export default function OrderInventory({
       <div style={{ height }}>
         <CustomDataGrid
           loading={ordersGet.loading}
-          rows={ordersGet.data
-          // 배송완료 목록에서 제거
-            ? ordersGet.data.filter((x) => !(x.status === 주문상태_배송완료))
-            : []}
+          rows={ordersGet.data || []}
           columns={[
             { headerName: '주문번호', field: 'id', width: 120, },
             {
@@ -128,16 +125,6 @@ export default function OrderInventory({
             },
             { headerName: '수량', field: 'quantity', width: 130, },
             {
-              headerName: '남은재고',
-              field: 'stock',
-              width: 130,
-              renderCell: (data): React.ReactElement => (
-                <Typography variant="body2">
-                  {data.row.stock - (data.row.merchandiseSoldCount || 0).toLocaleString()}
-                </Typography>
-              )
-            },
-            {
               headerName: '주문금액',
               field: 'orderPrice',
               width: 130,
@@ -155,7 +142,7 @@ export default function OrderInventory({
                     <Tooltip title={`${data.row.price.toLocaleString()} (+${data.row.additionalPrice.toLocaleString()})`}>
                       <Typography variant="body2">
                         {`${data.row.price.toLocaleString()}`}
-                        <Typography variant="body2">
+                        <Typography variant="body2" component="span">
                           {`(+${data.row.additionalPrice.toLocaleString()})`}
                         </Typography>
                       </Typography>
@@ -167,6 +154,16 @@ export default function OrderInventory({
                 );
               }
             },
+            // {
+            //   headerName: '남은재고',
+            //   field: 'stock',
+            //   width: 130,
+            //   renderCell: (data): React.ReactElement => (
+            //     <Typography variant="body2">
+            //       {data.row.stock - (data.row.merchandiseSoldCount || 0).toLocaleString()}
+            //     </Typography>
+            //   )
+            // },
             {
               headerName: '주문일시',
               field: 'createDate',

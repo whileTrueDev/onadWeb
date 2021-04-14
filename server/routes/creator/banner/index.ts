@@ -156,7 +156,7 @@ router.route('/list')
       const listQuery = `
       SELECT
         CT.campaignId, CT.date, CT.creatorId,
-        BR.bannerSrc,
+        BR.bannerSrcUrl AS bannerSrc,
         campaign.connectedLinkId, campaign.onOff as state, campaign.marketerName,
         campaign.campaignDescription, campaign.priorityType, campaign.optionType, campaign.targetList,
         MI.marketerContraction, MI.profileImage,
@@ -232,13 +232,16 @@ router.route('/active')
       const { creatorId } = responseHelper.getSessionData(req);
       const query = `
       SELECT 
-        cp.bannerId, bannerSrc, cp.campaignName, cp.campaignDescription,
-        lr.links, cp.regiDate, mi.profileImage, mi.marketerName, ct.date
+        cp.bannerId, bannerSrcUrl AS bannerSrc, cp.campaignName, cp.campaignDescription,
+        lr.links, cp.regiDate, mi.profileImage, mi.marketerName, ct.date,
+        mr.name AS merchandiseName, mmi.itemSiteUrl
       FROM campaignTimestamp AS ct 
         JOIN campaign AS cp ON ct.campaignId = cp.campaignId
         JOIN marketerInfo AS mi ON cp.marketerId = mi.marketerId
         JOIN bannerRegistered AS br  ON cp.bannerId = br.bannerId
         LEFT JOIN linkRegistered AS lr ON cp.connectedLinkId = lr.linkId
+        LEFT JOIN merchandiseRegistered AS mr ON cp.merchandiseId = mr.id
+        LEFT JOIN merchandiseMallItems AS mmi ON mr.id = mmi.merchandiseId
       WHERE creatorId = ?
         AND ct.date > DATE_ADD(NOW(), INTERVAL - 10 MINUTE) 
       ORDER BY ct.date DESC LIMIT 1

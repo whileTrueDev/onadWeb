@@ -65,7 +65,7 @@ export default function (props: SelectTimeDetailProps): JSX.Element {
         <thead>
           <tr>
             {times.map((index) => (
-              <td className={classes.thead} key={index}>{`${index}시`}</td>))}
+              <td className={classes.thead} key={index}>{`${index}`}</td>))}
           </tr>
         </thead>
         <tbody>

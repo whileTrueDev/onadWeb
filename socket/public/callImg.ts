@@ -42,15 +42,16 @@ function callImg(socket: Socket, msg: string[]): void {
 
   // 켜져있는 광고
   const getOnCampaignList = (): Promise<string[]> => {
+    // 광고주 상태가 켜져있고, 캠페인이 켜져있으며 일일예산을 소진하지 않은 LIVE생방송배너광고(CPM+CPC) 이거나,
+    // 광고주 상태가 켜져있고, 캠페인이 켜져있는 판매형광고(CPS)만 가져온다.
     const campaignListQuery = `
-    SELECT campaignId, campaignName, optionType, startDate, finDate, selectedTime, campaignDescription
-    FROM campaign
-    LEFT JOIN marketerInfo
-    ON campaign.marketerId = marketerInfo.marketerId
-    WHERE marketerInfo.marketerContraction = 1
-    AND campaign.onOff = 1
-    AND NOT campaign.optionType = 2
-    AND campaign.limitState = 0
+      SELECT campaignId, campaignName, optionType, startDate, finDate, selectedTime, campaignDescription, cashAmount
+        FROM campaign
+        LEFT JOIN marketerInfo ON campaign.marketerId = marketerInfo.marketerId
+        LEFT JOIN marketerDebit ON campaign.marketerId = marketerDebit.marketerId
+      WHERE
+      (marketerInfo.marketerContraction = 1 AND campaign.onOff = 1 AND campaign.optionType = 1 AND campaign.limitState = 0)
+        OR (marketerInfo.marketerContraction = 1 AND campaign.onOff = 1 AND campaign.optionType = 3)
     `;
     interface TimeData {
       startDate: Date;
@@ -233,7 +234,7 @@ function callImg(socket: Socket, msg: string[]): void {
 
   const getBannerSrc = (campaignId: string): Promise<string> => {
     const selectQuery = `
-                        SELECT br.bannerSrc
+                        SELECT br.bannerSrcUrl AS bannerSrc
                         FROM campaign
                         JOIN bannerRegistered as br
                         ON br.bannerId = campaign.bannerId
@@ -242,6 +243,7 @@ function callImg(socket: Socket, msg: string[]): void {
     return new Promise((resolve, reject) => {
       doQuery(selectQuery, [campaignId])
         .then((row) => {
+          console.log(row.result[0].bannerSrc);
           resolve(row.result[0].bannerSrc);
         })
         .catch((errorData) => {
@@ -333,7 +335,7 @@ function callImg(socket: Socket, msg: string[]): void {
           getRandomInt(extractBanCampaignList.length)
         ];
         myCampaignId = returnCampaignId;
-        console.log('캠페인 : ', myCampaignId);
+        console.log('방송인 에게만 송출될 캠페인 : ', myCampaignId);
       }
     } else {
       // *********************************************************
@@ -443,7 +445,10 @@ function callImg(socket: Socket, msg: string[]): void {
       const myCreatorTwitchId = CREATOR_DATA.creatorTwitchId;
       const myAdChatAgreement = CREATOR_DATA.adChatAgreement;
       // 트위치 챗봇 동의 및 옵션타입 cpm+cpc인 경우에 챗봇으로 데이터 전송
-      if (myAdChatAgreement === 1 && checkOptionType === 1) {
+      const CHATBOT_ALLOWED_CAMPAIGN_OPTION_TYPE = [1, 3];
+      if (myAdChatAgreement === 1
+        && checkOptionType
+        && CHATBOT_ALLOWED_CAMPAIGN_OPTION_TYPE.includes(checkOptionType)) {
         if (myCreatorTwitchId) {
           // 챗봇은 트위치 한정. 트위치 아이디가 없는 경우 에미팅 하지 않도록 추가
           // @by hwasurr 21.01.08

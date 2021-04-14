@@ -32,16 +32,23 @@ export default function OnOffSwitch({
     }
   }, [onOffData]);
 
+  const [loading, setLoading] = useState<boolean>(false);
   const handleSwitch = () => {
+    setLoading(true);
     axios.post(`${HOST}/marketer/ad/on-off`, {
       onOffState: onOffData.data ? !onOffData.data.onOffState : false
     })
       .then((res) => {
+        setLoading(false);
         if (!res.data[0]) {
           alert(res.data[1]);
         } else if (onOffData.doGetRequest) {
           onOffData.doGetRequest();
         }
+      }).catch((err) => {
+        setLoading(false);
+        alert('광고 On/Off 도중에 문제가 발생했습니다. 잠시 후 다시 시도해주세요. 지속적으로 문제가 발견되면 support@onad.io로 문의 바랍니다.');
+        console.error(err);
       });
   };
 
@@ -60,6 +67,7 @@ export default function OnOffSwitch({
           label=""
           control={(
             <Switch
+              disabled={loading}
               color="secondary"
               checked={viewState}
               onChange={(): void => {

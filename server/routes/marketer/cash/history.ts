@@ -110,8 +110,9 @@ router.route('/usage/month')
                 DATE_FORMAT(cl.date, "%y년 %m월 %d일") as date,
                 FORMAT(sum(cashFromMarketer), 0) as cash, type
             FROM campaignLog AS cl
-            WHERE SUBSTRING_INDEX(cl.campaignId, '_', 1) = ?
-            AND DATE_FORMAT(cl.date, "%y년 %m월") = ?
+              WHERE SUBSTRING_INDEX(cl.campaignId, '_', 1) = ?
+              AND DATE_FORMAT(cl.date, "%y년 %m월") = ?
+              AND type != "CPS"
             GROUP BY DATE_FORMAT(cl.date, "%y년 %m월 %d일"), type
             ORDER BY cl.date DESC
             `;
@@ -120,8 +121,9 @@ router.route('/usage/month')
             SELECT
                 type, FORMAT(sum(cashFromMarketer), 0) as cash
             FROM campaignLog AS cl
-            WHERE SUBSTRING_INDEX(cl.campaignId, '_', 1) = ?
-            AND DATE_FORMAT(cl.date, "%y년 %m월") = ?
+              WHERE SUBSTRING_INDEX(cl.campaignId, '_', 1) = ?
+              AND DATE_FORMAT(cl.date, "%y년 %m월") = ?
+              AND type != "CPS"
             GROUP BY DATE_FORMAT(cl.date, "%y년 %m월"), type
             ORDER BY type DESC
             `;
@@ -152,13 +154,13 @@ router.route('/usage')
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
       const { marketerId } = responseHelper.getSessionData(req);
       const query = `
-            SELECT
-                DATE_FORMAT(cl.date, "%y년 %m월") as date,
-                FORMAT(sum(cashFromMarketer), 0) as cash
-            FROM campaignLog AS cl
-            WHERE SUBSTRING_INDEX(cl.campaignId, '_', 1) = ?
-            GROUP BY month(cl.date)
-            ORDER BY cl.date DESC`;
+      SELECT
+          DATE_FORMAT(cl.date, "%y년 %m월") as date,
+          FORMAT(sum(cashFromMarketer), 0) as cash
+      FROM campaignLog AS cl
+      WHERE SUBSTRING_INDEX(cl.campaignId, '_', 1) = "gubgoo" AND type != "CPS"
+      GROUP BY month(cl.date)
+      ORDER BY cl.date DESC`;
 
       doQuery(query, [marketerId])
         .then((row) => {

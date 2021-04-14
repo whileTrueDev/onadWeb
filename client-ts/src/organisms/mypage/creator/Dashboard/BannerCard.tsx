@@ -5,6 +5,8 @@ import RemotePageOpenButton from '../RemotePage/sub/RemotePageOpenButton';
 import history from '../../../../history';
 import { UseGetRequestObject } from '../../../../utils/hooks/useGetRequest';
 import OnadBanner from '../../../../atoms/Banner/OnadBanner';
+import { CurrentBannerRes } from '../CampaignManage/NowBroadCard';
+import { Link } from '../CampaignManage/BannerList';
 
 const useStyles = makeStyles((theme: Theme) => ({
   container: {
@@ -37,15 +39,16 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   remoteOpenButtonContainer: {
     [theme.breakpoints.down('xs')]: { marginTop: theme.spacing(1) },
-  }
+  },
+  bannerLink: {
+    fontWeight: 'bold',
+    cursor: 'pointer',
+    textDecoration: 'underline',
+    '&:hover': {
+      color: theme.palette.primary.main
+    }
+  },
 }));
-
-export interface CurrentBannerRes {
-  marketerName: string; bannerSrc: string;
-  campaignName: string;
-  campaignDescription: string;
-}
-
 interface BannerCardProps {
   currentBannerData: CurrentBannerRes[];
   remoteControllerUrlData: UseGetRequestObject<string>;
@@ -105,6 +108,33 @@ function BannerCard({
               <Typography variant="body1" gutterBottom>
                 {bannerData.campaignName}
               </Typography>
+              {bannerData.merchandiseName ? (
+                <Typography
+                  className={classes.bannerLink}
+                  onClick={() => {
+                    if (bannerData.itemSiteUrl) window.open(bannerData.itemSiteUrl, '_blank');
+                  }}
+                >
+                  {bannerData.merchandiseName}
+                </Typography>
+              ) : (
+                <Typography
+                  variant="body1"
+                  component="a"
+                  className={classes.bannerLink}
+                  onClick={(): void => {
+                    if (JSON.parse(bannerData.links).links) {
+                      window.open(JSON.parse(bannerData.links).links
+                        .find((link: Link) => !!link.primary).linkTo);
+                    }
+                  }}
+                >
+                  {JSON.parse(bannerData.links).links
+                    ? JSON.parse(bannerData.links).links
+                      .find((link: Link) => !!link.primary).linkName
+                    : bannerData.campaignName}
+                </Typography>
+              )}
               <Typography variant="body2">
                 {bannerData.campaignDescription}
               </Typography>
@@ -118,7 +148,7 @@ function BannerCard({
           className={classes.moreButton}
           variant="caption"
           color="textSecondary"
-          onClick={(): void => { history.push('/mypage/creator/ad'); }}
+          onClick={(): void => { history.push('/mypage/creator/ad/campaigns'); }}
         >
           자세히 보기
         </Typography>

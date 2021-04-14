@@ -321,7 +321,11 @@ const CampaignConnectionWarp = ({ campaignDic }) => new Promise((resolve, reject
         Object.keys(campaignDic).map((logId) => {
           const [campaignId, creatorId] = logId.split('/');
           const { cashFromMarketer, cashToCreator, costType } = campaignDic[logId];
-          return doTransacQuery({ connection, queryState: campaignLogQuery, params: [campaignId, creatorId, costType, cashFromMarketer, cashToCreator] });
+          return doTransacQuery({
+            connection,
+            queryState: campaignLogQuery,
+            params: [campaignId, creatorId, costType, cashFromMarketer, cashToCreator]
+          });
         })
       )
         .then(() => {

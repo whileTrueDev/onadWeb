@@ -50,7 +50,7 @@ router.route('/campaigns')
         campaign.campaignId, campaign.marketerName, priorityType, targetList, CT.date, campaign.onOff as state,
         campaign.campaignDescription,
         MR.id AS merchandiseId, MR.name AS merchandiseName, MR.price AS merchandisePrice, itemSiteUrl,
-        BR.bannerSrc
+        BR.bannerSrcUrl AS bannerSrc
       FROM (
         SELECT creatorId, campaignId , min(date) as date 
         FROM campaignTimestamp

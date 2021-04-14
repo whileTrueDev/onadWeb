@@ -1,12 +1,14 @@
 import {
-  Typography, Avatar, makeStyles, Button
+  Avatar, Button, makeStyles, Typography
 } from '@material-ui/core';
 import moment from 'moment';
 import React from 'react';
 import ImageCarousel from '../../../../../atoms/Carousel/Carousel';
+import OrderStatusChip from '../../../../../atoms/Chip/OrderStatusChip';
 import CustomDialog from '../../../../../atoms/Dialog/Dialog';
-import { getS3MerchandiseImagePath } from '../../../../../utils/aws/getS3Path';
+import { getReadableS3MerchandiseImagePath } from '../../../../../utils/aws/getS3Path';
 import { useToggle } from '../../../../../utils/hooks';
+import { OrderStatus } from '../../../../../utils/render_funcs/renderOrderStatus';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -20,6 +22,18 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'center',
     alignItems: 'center',
     flexDirection: 'column'
+  },
+  title: {
+    marginBottom: theme.spacing(2),
+  },
+  nameSection: {
+    marginTop: theme.spacing(1), display: 'flex', alignItems: 'center'
+  },
+  contents: {
+    margin: theme.spacing(2, 0),
+  },
+  avatar: {
+    marginRight: theme.spacing(1)
   }
 }));
 
@@ -29,6 +43,7 @@ export interface CPSReview {
   authorName: string;
   authorId: string;
   targetCreatorName: string;
+  status: OrderStatus;
   title: string;
   contents: string;
   creatorId: string;
@@ -69,12 +84,18 @@ export default function CPSReviewDialog({
       onClose={onClose}
     >
       <article>
-        <Typography>
-          {`${review.merchandiseName}, ${review.orderPrice.toLocaleString()}원 (${review.quantity}개)`}
-        </Typography>
+        <div className={classes.title}>
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <Typography>주문상태:</Typography>
+            <OrderStatusChip status={review.status} />
+          </div>
+          <Typography>
+            {`${review.merchandiseName}(${review.quantity}개) 구매금액: ${review.orderPrice.toLocaleString()}원`}
+          </Typography>
+        </div>
         <Typography variant="h5" style={{ fontWeight: 'bold' }}>{review.title}</Typography>
-        <div style={{ marginTop: 8, display: 'flex', alignItems: 'center' }}>
-          <Avatar src="" style={{ marginRight: 8 }} />
+        <div className={classes.nameSection}>
+          <Avatar src="" className={classes.avatar} />
           <div>
             <Typography variant="body2">{`${review.authorName}(${review.authorId})`}</Typography>
             <Typography variant="body2" color="textSecondary">
@@ -92,13 +113,14 @@ export default function CPSReviewDialog({
               color="primary"
               variant="outlined"
               onClick={imgaeToggle.handleToggle}
+              className={classes.title}
             >
               {`상품사진 ${imgaeToggle.toggle ? '닫기' : '열기'}`}
             </Button>
               {imgaeToggle.toggle && (
               <ImageCarousel
                 images={review.images.split(',')
-                  .map((image) => getS3MerchandiseImagePath(
+                  .map((image) => getReadableS3MerchandiseImagePath(
                     review.marketerId, review.merchandiseId, image
                   ))}
               />
@@ -107,7 +129,7 @@ export default function CPSReviewDialog({
         )}
       </div>
 
-      <div style={{ marginTop: 16 }}>
+      <div className={classes.contents}>
         <Typography>{review.contents}</Typography>
       </div>
     </CustomDialog>

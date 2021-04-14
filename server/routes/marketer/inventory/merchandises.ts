@@ -319,7 +319,7 @@ router.route('/')
 
       slack({
         summary: '[CPS] 상품 등록 알림',
-        text: '관리자 페이지에서 방금 등록된 상품을 확인하고, 온애드몰에 업로드하세요.',
+        text: '관리자 페이지에서 방금 등록된 상품을 확인하고, 온애드샵에 업로드하세요.',
         fields: [
           { title: '마케터 아이디', value: marketerId!, short: true },
           { title: '상품명', value: name, short: true },

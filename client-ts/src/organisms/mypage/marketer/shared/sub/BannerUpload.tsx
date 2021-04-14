@@ -95,6 +95,7 @@ const BannerUpload = (props: ImageUploadProps): JSX.Element => {
    * @param event Input change React Event
    */
   const readImage = (event: React.ChangeEvent<HTMLInputElement>): void => {
+    onReset();
     handleFailedReset();
     setImageLoading(true);
     if (event.target.files && event.target.files.length !== 0) {
@@ -102,7 +103,7 @@ const BannerUpload = (props: ImageUploadProps): JSX.Element => {
 
       // *******************************
       // 파일 확장자 체크
-      const fileRegx = /(.mp4)|(^image\/[a-z]*)$/;
+      const fileRegx = /(.mp4)|(^image\/[a-zA-Z]*)$/;
       if (!fileRegx.test(myImage.type)) {
         setImageLoading(false);
         if (onExtCheckFailed) onExtCheckFailed();
@@ -127,7 +128,8 @@ const BannerUpload = (props: ImageUploadProps): JSX.Element => {
           onSucess({ imageName: myImage.name, imageUrl: reader.result as string });
         }
       };
-      reader.onerror = (): void => {
+      reader.onerror = (err): void => {
+        console.log('error', err);
         if (onLoadError) onLoadError();
         loadError();
       };
@@ -155,7 +157,10 @@ const BannerUpload = (props: ImageUploadProps): JSX.Element => {
             src={image.imageUrl}
             width="320"
             height="160"
-            onError={(): void => { onReset(); }}
+            onError={(): void => {
+              handleFailed('이미지를 로드하지 못했습니다. 다시 시도해보세요.');
+              onReset();
+            }}
             alt="배너이미지"
           />
         )}

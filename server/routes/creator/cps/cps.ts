@@ -62,7 +62,7 @@ const getCpsChartData = async (creatorId: string, dateRange?: number): Promise<C
 const getCpsReviews = async (creatorId: string) => {
   const query = `
   SELECT
-    MOC.*, MO.orderPrice, optionId, quantity,
+    MOC.*, MO.orderPrice, optionId, quantity, MO.status,
     MR.id AS merchandiseId, MR.name AS merchandiseName, MR.images, MR.marketerId
     FROM merchandiseOrderComments AS MOC
   JOIN merchandiseOrders AS MO ON MOC.orderId = MO.id

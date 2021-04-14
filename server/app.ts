@@ -128,12 +128,10 @@ class OnadWebApi {
     // *********************************
     this.app.use('/login', loginRouter);
     this.app.use('/link', linkRouter);
-
     this.app.use('/logout', logoutRouter);
     this.app.use('/creator', creatorRouter);
     this.app.use('/marketer', marketerRouter);
     this.app.use('/chart', chartRouter);
-
     this.app.use('/creators', creatorsRouter);
     this.app.use('/banners', bannersRouter);
     this.app.use('/mail', mailRouter);
