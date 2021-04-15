@@ -56,22 +56,25 @@ router.route('/')
       }
       const NowIp: any = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
 
-      const query = `
-      SELECT *
-      FROM creatorInfo
-      WHERE creatorId = ?`;
+      const query = 'SELECT * FROM creatorInfo WHERE creatorId = ?';
       doQuery(query, [creatorId])
         .then((row) => {
           const userData = row.result[0];
           const rawAccount: string = row.result[0].creatorAccountNumber || '';
-          const deciphedAccountNum: string = encrypto.decipher(rawAccount);
-          const deciphedIdentificationNum: string = encrypto.decipher(
-            userData.identificationNumber
-          );
-          const deciphedphoneNum: string = encrypto.decipher(userData.phoneNumber);
-          userData.identificationNumber = deciphedIdentificationNum;
-          userData.phoneNumber = deciphedphoneNum;
-          userData.creatorAccountNumber = deciphedAccountNum;
+          if (rawAccount) {
+            const deciphedAccountNum: string = encrypto.decipher(rawAccount);
+            userData.creatorAccountNumber = deciphedAccountNum;
+          }
+          if (userData.identificationNumber) {
+            const deciphedIdentificationNum: string = encrypto.decipher(
+              userData.identificationNumber
+            );
+            userData.identificationNumber = deciphedIdentificationNum;
+          }
+          if (userData.phoneNumber) {
+            const deciphedphoneNum: string = encrypto.decipher(userData.phoneNumber);
+            userData.phoneNumber = deciphedphoneNum;
+          }
           const result = { ...userData, NowIp };
           responseHelper.send(result, 'get', res);
         }).catch((error) => {
