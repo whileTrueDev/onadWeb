@@ -128,7 +128,9 @@ export default function CustomPieChart(): JSX.Element {
                     flex: 2,
                     renderCell: (data): React.ReactElement => (
                       <Typography variant="body2" align="center">
-                        {data.row.total_ad_exposure_amount.toLocaleString()}
+                        {data.row.total_ad_exposure_amount
+                          ? data.row.total_ad_exposure_amount.toLocaleString()
+                          : 0}
                       </Typography>
                     )
                   },

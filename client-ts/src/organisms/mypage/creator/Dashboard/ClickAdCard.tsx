@@ -94,7 +94,7 @@ const ClickAdCard = ({
           className={classes.moreButton}
           variant="caption"
           color="textSecondary"
-          onClick={(): void => { history.push('/mypage/creator/ad'); }}
+          onClick={(): void => { history.push('/mypage/creator/ad/campaigns'); }}
         >
           자세히 보기
         </Typography>

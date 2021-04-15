@@ -6,34 +6,11 @@ import dataProcessing from '../../../lib/dataProcessing';
 import analysisRouter from './analysis_v1';
 import analysisV2Router from './analysis_v2';
 import marketerActionLogging from '../../../middlewares/marketerActionLog';
+import { getCampaign, getCampaigns } from './campaignFuncs';
 
 const router = express.Router();
 router.use('/analysis/v1', analysisRouter);
 router.use(['/analysis', '/analysis/v2'], analysisV2Router);
-
-interface CampaignData {
-  campaignId: string;
-  campaignName: string;
-  optionType: number;
-  priorityType: number | string;
-  regiDate: string;
-  onOff: number;
-  confirmState: number;
-  bannerSrc: string;
-  links: string;
-  linkConfirmState: number;
-  dailyLimit: number;
-  selectedTime: string;
-  targetList: string;
-  startDate: string;
-  finDate: string;
-  targetCreators?: {
-    afreecaId?: string;
-    afreecaName?: string;
-    creatorName?: string;
-    creatorTwitchId?: string;
-  }[];
-}
 
 /**
  * 마케터의 캠페인 목록 총 길이를 반환하는 라우터
@@ -42,9 +19,10 @@ router.route('/length')
   .get(
     responseHelper.middleware.checkSessionExists,
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
-      const marketerId = responseHelper.getSessionData(req);
-      const query = 'SELECT COUNT(*) AS rowCount FROM campaign WHERE campaign.marketerId = "gubgoo" AND deletedState = 0';
+      const { marketerId } = responseHelper.getSessionData(req);
+      const query = 'SELECT COUNT(*) AS rowCount FROM campaign WHERE campaign.marketerId = ? AND deletedState = 0';
       const { result } = await doQuery(query, [marketerId]);
+      if (!result) return responseHelper.send(0, 'get', res);
 
       return responseHelper.send(result[0].rowCount, 'get', res);
     })
@@ -63,85 +41,9 @@ router.route('/list')
       const searchPage = Number(page * offset);
       const searchOffset = Number(offset);
 
-      // *******************************************************************
-      // 캠페인 목록 불러오기
-      const query = `
-        SELECT
-          campaignId AS id, campaignId, campaignName, optionType, priorityType, 
-          campaign.regiDate as regiDate, onOff, br.confirmState, 
-          br.bannerId, bannerSrc, br.regiDate AS bannerRegiDate,
-          lr.linkId, lr.links as links, lr.confirmState as linkConfirmState, dailyLimit,
-          campaignDescription, startDate, finDate, selectedTime, targetList
-        FROM campaign
-          JOIN bannerRegistered AS br ON br.bannerId = campaign.bannerId
-          JOIN linkRegistered AS lr ON lr.linkId = connectedLinkId
-        WHERE campaign.marketerId = ? AND deletedState = 0
-        ORDER BY campaign.onOff DESC, campaign.regiDate DESC
-        LIMIT ?, ?
-      `;
-      const { result } = await doQuery(query, [marketerId, searchPage, searchOffset]);
-      if ((result.length === 0)) return responseHelper.send(result, 'get', res);
+      const result = await getCampaigns({ marketerId: marketerId!, searchPage, searchOffset });
 
-      // *******************************************************************
-      // 캠페인 별 금일 예산 사용량 불러오기  +  타겟 크리에이터 정보 불러오기
-
-      // 오늘자 일일예산에 대한 예산소비량을 체크하기 위해 오늘의 맨처음 시간으로 설정
-      const date = new Date();
-      date.setHours(0);
-      date.setMinutes(0);
-      date.setSeconds(0);
-      date.setMilliseconds(0);
-
-      const sumQuery = `
-        SELECT sum(cashFromMarketer) AS dailysum
-        FROM campaignLog WHERE campaignId = ? AND date > ?
-      `;
-
-      const responseResult = await Promise.all(
-        result
-          .map((cam: CampaignData) => doQuery(sumQuery, [cam.campaignId, date])
-            .then(async (inrow) => {
-              const { dailysum } = inrow.result[0];
-              const linkData = JSON.parse(cam.links);
-              const selectedTime = JSON.parse(cam.selectedTime).time;
-              const { targetList } = JSON.parse(cam.targetList);
-
-              // 캠페인 송출 우선순위가 크리에이터 우선인 경우 크리에이터 정보를 가져온다.
-              if (cam.priorityType === 0) {
-                let targetCreatorInfoQuery = `
-                  SELECT creatorId, creatorName, creatorTwitchId, creatorLogo, afreecaId, afreecaName, afreecaLogo
-                  FROM creatorInfo WHERE creatorId IN
-                `;
-                targetList.forEach((creatorId: string, index: number) => {
-                  if (index === 0) targetCreatorInfoQuery += '(';
-                  targetCreatorInfoQuery += `"${creatorId}"`;
-                  if (index !== targetList.length - 1) targetCreatorInfoQuery += ',';
-                  else targetCreatorInfoQuery += ')';
-                });
-
-                const creatorInfos = await doQuery(targetCreatorInfoQuery);
-                return {
-                  ...cam,
-                  linkData,
-                  dailysum,
-                  selectedTime,
-                  targetList,
-                  targetCreators: creatorInfos.result,
-                };
-              }
-
-              // 캠페인 송출 우선순위가 크리에이터 우선형이 아닌 경우에는 타겟 리스트 그대로 반환
-              return {
-                ...cam,
-                linkData,
-                dailysum,
-                selectedTime,
-                targetList
-              };
-            }))
-      ) as CampaignData[];
-
-      return responseHelper.send(responseResult, 'GET', res);
+      return responseHelper.send(result, 'GET', res);
     })
   )
   .all(responseHelper.middleware.unusedMethod);
@@ -161,7 +63,6 @@ router.route('/active')
 
 // 캠페인 생성시에 캠페인 중복제거를 위한 name list추출.
 // 테스트 완료
-
 router.route('/names')
   .get(
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
@@ -237,6 +138,14 @@ router.route('/on-off')
 
 
 router.route('/')
+  .get(
+    // responseHelper.middleware.checkSessionExists,
+    responseHelper.middleware.withErrorCatch(async (req, res,) => {
+      const campaignId = responseHelper.getParam('campaignId', 'get', req);
+      const result = await getCampaign(campaignId);
+      return responseHelper.send(result, 'get', res);
+    })
+  )
   .patch( // 캠페인 정보 변경
     responseHelper.middleware.checkSessionExists,
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
@@ -302,16 +211,16 @@ router.route('/')
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
       const { marketerId, marketerName } = responseHelper.getSessionData(req);
       const [campaignName, optionType, priorityType, priorityList, selectedTime, dailyLimit,
-        startDate, finDate, keyword, bannerId, connectedLinkId, campaignDescription
+        startDate, finDate, keyword, bannerId, connectedLinkId, campaignDescription, merchandiseId
       ] = responseHelper.getOptionalParam([
         'campaignName', 'optionType', 'priorityType',
         'priorityList', 'selectedTime', 'dailyLimit', 'startDate', 'finDate',
-        'keyword', 'bannerId', 'connectedLinkId', 'campaignDescription'], 'POST', req);
+        'keyword', 'bannerId', 'connectedLinkId', 'campaignDescription', 'merchandiseId'], 'POST', req);
 
       console.log('campaignId', campaignName, marketerId,
         bannerId, connectedLinkId, dailyLimit, priorityType,
         optionType, 0, priorityList, marketerName,
-        keyword, startDate, finDate, selectedTime, campaignDescription);
+        keyword, startDate, finDate, selectedTime, campaignDescription, merchandiseId);
 
       const searchQuery = `
             SELECT campaignId
@@ -325,9 +234,8 @@ router.route('/')
             (campaignId, campaignName, marketerId,
             bannerId, connectedLinkId, dailyLimit, priorityType, 
             optionType, onOff, targetList, marketerName, 
-            keyword, startDate, finDate, selectedTime, campaignDescription) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, 0, ?, ?, ?, ?, ?, ?, ?)`;
-
+            keyword, startDate, finDate, selectedTime, campaignDescription, merchandiseId) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, 0, ?, ?, ?, ?, ?, ?, ?, ?)`;
       doQuery(searchQuery, [marketerId])
         .then((row) => {
           const campaignId = dataProcessing.getCampaignId(row.result[0], marketerId);
@@ -338,13 +246,13 @@ router.route('/')
           // 마케터 활동내역 로깅 테이블에서, 캠페인 생성의 상태값
           const MARKETER_ACTION_LOG_TYPE = 5;
 
-          Promise.all([
+          Promise.all<any>([
             doQuery(saveQuery,
               [campaignId, campaignName, marketerId, bannerId, connectedLinkId, dailyLimit,
                 // @by hwasurr "1-1" 은 아프리카 카테고리 선택형. 1로 수정하여 카테고리 선택형으로 넣는다.
                 (priorityType === '1-1') ? '1' : priorityType,
                 optionType, targetJsonData, marketerName, keywordsJsonData,
-                startDate, finDate, timeJsonData, campaignDescription]),
+                new Date(startDate), finDate, timeJsonData, campaignDescription, merchandiseId || null]),
             dataProcessing.PriorityDoquery({
               campaignId,
               priorityType,

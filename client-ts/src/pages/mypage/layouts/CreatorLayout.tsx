@@ -57,12 +57,23 @@ const CreatorDashboard = (): JSX.Element => {
         <div className={classes.content}>
           <div className={classes.container}>
             <Switch>
-              {allRoutes.creator.map((route) => (
-                <Route
-                  path={route.layout + route.path}
-                  component={route.component}
-                  key={route.name}
-                />
+              {allRoutes.creator.map((prop) => (
+                prop.hasSubRoutes
+                  ? (
+                    prop.subRoutes && prop.subRoutes.map((subRoute) => (
+                      <Route
+                        path={prop.layout + prop.path + subRoute.path}
+                        component={subRoute.component}
+                        key={subRoute.name}
+                      />
+                    ))
+                  ) : (
+                    <Route
+                      path={prop.layout + prop.path}
+                      component={prop.component}
+                      key={prop.name}
+                    />
+                  )
               ))}
             </Switch>
           </div>

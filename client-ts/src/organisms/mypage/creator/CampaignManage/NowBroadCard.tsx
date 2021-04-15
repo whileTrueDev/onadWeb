@@ -59,6 +59,8 @@ export interface CurrentBannerRes {
   regiDate: string;
   profileImage?: string;
   date: string;
+  merchandiseName?: string;
+  itemSiteUrl?: string;
 }
 export interface NowBroadCardProps {
   currentBannerGet: UseGetRequestObject<CurrentBannerRes[]>;
@@ -135,22 +137,33 @@ export default function NowBroadCard({
                   <Avatar src={bannerData.profileImage} className={classes.marketerLogo} />
                   <Typography variant="body2">{bannerData.marketerName}</Typography>
                 </div>
-                <Typography
-                  variant="body1"
-                  component="a"
-                  className={classes.bannerLink}
-                  onClick={(): void => {
-                    if (JSON.parse(bannerData.links).links) {
-                      window.open(JSON.parse(bannerData.links).links
-                        .find((link: Link) => !!link.primary).linkTo);
-                    }
-                  }}
-                >
-                  {JSON.parse(bannerData.links).links
-                    ? JSON.parse(bannerData.links).links
-                      .find((link: Link) => !!link.primary).linkName
-                    : bannerData.campaignName}
-                </Typography>
+                {bannerData.merchandiseName ? (
+                  <Typography
+                    className={classes.bannerLink}
+                    onClick={() => {
+                      if (bannerData.itemSiteUrl) window.open(bannerData.itemSiteUrl, '_blank');
+                    }}
+                  >
+                    {bannerData.merchandiseName}
+                  </Typography>
+                ) : (
+                  <Typography
+                    variant="body1"
+                    component="a"
+                    className={classes.bannerLink}
+                    onClick={(): void => {
+                      if (JSON.parse(bannerData.links).links) {
+                        window.open(JSON.parse(bannerData.links).links
+                          .find((link: Link) => !!link.primary).linkTo);
+                      }
+                    }}
+                  >
+                    {JSON.parse(bannerData.links).links
+                      ? JSON.parse(bannerData.links).links
+                        .find((link: Link) => !!link.primary).linkName
+                      : bannerData.campaignName}
+                  </Typography>
+                )}
                 <Typography variant="body2">
                   {bannerData.campaignDescription.length > 50
                     ? (`${bannerData.campaignDescription.slice(0, 50)}...`)

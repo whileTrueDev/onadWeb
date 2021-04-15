@@ -16,7 +16,7 @@ import CampaignCostBar from './sub/CampaignCostBar';
 import BannerBroadCreators from './sub/BannerBroadCreators';
 import ReportCard from './sub/ReportCard';
 import InteractionHeatmap from './sub/HeatmapReport';
-import InteractionToGeo from '../../marketer/inventory/campaign/sub/report/GeoReport';
+import InteractionToGeo from '../../marketer/adManage/campaign/sub/report/GeoReport';
 import CampaignInfo from './sub/CampaignInfo';
 
 const makeContents = (reportData: ReportInterface) => ({

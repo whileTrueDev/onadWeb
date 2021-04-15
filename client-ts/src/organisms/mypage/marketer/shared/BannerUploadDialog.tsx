@@ -1,16 +1,16 @@
-import React, { useReducer, useState } from 'react';
-import { makeStyles, Theme } from '@material-ui/core/styles';
 import {
-  Stepper, Step, StepLabel, StepContent, Collapse, Button
+  Button, Collapse, Step, StepContent, StepLabel, Stepper
 } from '@material-ui/core';
-import classnames from 'classnames';
+import { makeStyles, Theme } from '@material-ui/core/styles';
 import Check from '@material-ui/icons/Check';
+import classnames from 'classnames';
+import React, { useReducer, useState } from 'react';
 import Dialog from '../../../../atoms/Dialog/Dialog';
-// import BannerDescForm from './BannerDescForm';
-import './upload.css';
-import ImageUpload from './ImageUpload';
 import HOST from '../../../../config';
 import axios from '../../../../utils/axios';
+import BannerUpload from './sub/BannerUpload';
+// import BannerDescForm from './BannerDescForm';
+import './upload.css';
 
 const DEFAULT_IMAGE_PATH = '/pngs/dashboard/banner_upload_manual.png';
 
@@ -117,7 +117,12 @@ const UploadDialog = (props: UploadDialogProps): JSX.Element => {
         }
         handleClose();
       })
-      .catch((e) => { if (failCallback) failCallback(e); });
+      .catch((e) => {
+        if (failCallback) failCallback(e);
+        else {
+          alert('배너 등록 도중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
+        }
+      });
   };
 
   return (
@@ -154,7 +159,7 @@ const UploadDialog = (props: UploadDialogProps): JSX.Element => {
             배너 이미지 등록
           </StepLabel>
           <StepContent>
-            <ImageUpload
+            <BannerUpload
               image={state}
               onReset={(): void => dispatch({ type: 'reset' })}
               onSucess={(image): void => {

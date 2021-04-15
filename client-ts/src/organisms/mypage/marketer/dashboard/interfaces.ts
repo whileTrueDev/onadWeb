@@ -19,15 +19,15 @@ export interface CampaignInterface {
   bannerId: string;
   bannerSrc: string;
   bannerRegiDate: string;
-  linkId: string;
-  linkData: {
+  linkId?: string;
+  linkData?: {
     links: {
       primary: boolean;
       linkName: string;
       linkTo: string;
     }[];
   };
-  linkConfirmState: number;
+  linkConfirmState?: number;
   dailyLimit: number;
   dailysum: number;
   campaignDescription: string;
@@ -36,6 +36,13 @@ export interface CampaignInterface {
   selectedTime: number[];
   targetList: string[];
   targetCreators?: CampaignTargetCreator[];
+  merchandiseId?: number;
+  merchandiseName?: string;
+  merchandiseStock?: number;
+  merchandiseSoldCount?: number;
+  merchandiseItemSiteUrl?: string;
+  merchandiseUploadState?: number;
+  merchandiseDenialReason?: string;
 }
 
 export interface OnOffInterface {
@@ -53,8 +60,8 @@ export interface CountInterface {
 
 export interface ValueChartInterface {
   date: string;
-  cash: number;
-  type: 'CPM' | 'CPC';
+  value: number;
+  type: string; // 'CPM' | 'CPC';
 }
 
 export interface ActionLogInterface {
@@ -80,6 +87,14 @@ export interface ReportInterfaceV2 {
   campaignName: string; totalCPM: number; totalViewCount: number;
   totalCPC: number; adchatClick: number; adpanelClick: number;
 }
+
+export interface CpsAnalysisReportData {
+  totalSalesIncome: number;
+  adchatClick: number;
+  adpanelClick: number;
+  totalSalesAmount: number;
+}
+
 export interface CreatorDataPerMarketerInterface {
   id: string;
   creatorId: string;
@@ -121,11 +136,20 @@ export interface CreatorDataInterface {
   timeGraphData?: string;
   timeGraphDataAfreeca?: string;
   viewerAfreeca?: number;
+  ctrAfreeca?: number;
   followersAfreeca?: number;
   airtimeAfreeca?: number;
   impressionAfreeca?: number;
   openHourAfreeca?: number;
   contentAfreeca?: number;
+}
+
+export interface CreatorDataCPSInterface extends Omit<CreatorDataInterface, 'total_ad_exposure_amount'>{
+  total_sales_amount: number;
+}
+
+export interface CPSChartInterface {
+  date: string; value: number; type: string;
 }
 
 export interface HeatmapInterface {

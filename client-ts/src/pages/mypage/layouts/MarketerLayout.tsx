@@ -62,11 +62,22 @@ const MarketerDashboard = (): JSX.Element => {
             <div className={classes.container}>
               <Switch>
                 {allRoutes.marketer.map((prop) => (
-                  <Route
-                    path={prop.layout + prop.path}
-                    component={prop.component}
-                    key={prop.name}
-                  />
+                  prop.hasSubRoutes
+                    ? (
+                      prop.subRoutes && prop.subRoutes.map((subRoute) => (
+                        <Route
+                          path={prop.layout + prop.path + subRoute.path}
+                          component={subRoute.component}
+                          key={subRoute.name}
+                        />
+                      ))
+                    ) : (
+                      <Route
+                        path={prop.layout + prop.path}
+                        component={prop.component}
+                        key={prop.name}
+                      />
+                    )
                 ))}
               </Switch>
             </div>

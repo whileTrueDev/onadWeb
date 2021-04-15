@@ -258,7 +258,7 @@ export default function CPACampaigns({
               </Collapse>
               )}
 
-              {/* 캠페인 등록/제외 버튼 셋트 */}
+              {/* 캠페인 생성/제외 버튼 셋트 */}
               <Divider />
               <div className={classnames(classes.flex, classes.buttonsetContainer)}>
                 {item.campaignState && (item.campaignState === AdpickCampaignStateEnum.ACTIVE) ? (

@@ -10,12 +10,13 @@ export default function createInformationQuery(
   if (broadPlatform === 'afreeca') {
     const getInformationQuery = `
     SELECT
-        campaign.campaignId, campaign.campaignName, creatorInfo.creatorId, campaign.marketerId,
-        campaignTimestamp.date, connectedLinkId, links, creatorName
+      campaign.optionType, campaign.campaignId, campaign.campaignName, creatorInfo.creatorId, campaign.marketerId,
+        campaignTimestamp.date, connectedLinkId, links, creatorName, campaign.merchandiseId, itemSiteUrl
       FROM campaignTimestamp
         JOIN creatorInfo ON afreecaId = ?
         JOIN campaign ON campaign.campaignId = campaignTimestamp.campaignId
-        JOIN linkRegistered ON linkRegistered.linkId = connectedLinkId
+        LEFT JOIN linkRegistered ON linkRegistered.linkId = connectedLinkId
+        LEFT JOIN merchandiseMallItems ON campaign.merchandiseId = merchandiseMallItems.merchandiseId
         JOIN AfreecaBroad ON creatorInfo.afreecaId = AfreecaBroad.userId
         JOIN AfreecaBroadDetail on AfreecaBroad.broadId = AfreecaBroadDetail.broadId
       WHERE campaignTimestamp.creatorId = creatorInfo.creatorId
@@ -28,12 +29,13 @@ export default function createInformationQuery(
 
   const getInformationQuery = `
       SELECT
-        campaign.campaignId, campaign.campaignName, creatorInfo.creatorId, campaign.marketerId,
-        campaignTimestamp.date, connectedLinkId, links, creatorName
+      campaign.optionType, campaign.campaignId, campaign.campaignName, creatorInfo.creatorId, campaign.marketerId,
+        campaignTimestamp.date, connectedLinkId, links, creatorName, campaign.merchandiseId, itemSiteUrl
       FROM campaignTimestamp
         JOIN creatorInfo ON creatorTwitchId = ?
         JOIN campaign ON campaign.campaignId = campaignTimestamp.campaignId
-        JOIN linkRegistered ON linkRegistered.linkId = connectedLinkId
+        LEFT JOIN linkRegistered ON linkRegistered.linkId = connectedLinkId
+        LEFT JOIN merchandiseMallItems ON campaign.merchandiseId = merchandiseMallItems.merchandiseId
         JOIN twitchStreamDetail ON creatorInfo.creatorName = twitchStreamDetail.streamerName
       WHERE campaignTimestamp.creatorId = creatorInfo.creatorId
         AND campaignTimestamp.date > date_sub(NOW(), INTERVAL 10 MINUTE)

@@ -19,7 +19,8 @@ export default function MarketerCustomerServiceCard(): JSX.Element {
         </Typography>
 
         <Button
-          variant="contained"
+          variant="outlined"
+          size="small"
           color="primary"
           onClick={openKakaoChat}
         >

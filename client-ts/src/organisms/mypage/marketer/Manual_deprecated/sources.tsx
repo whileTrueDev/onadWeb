@@ -20,7 +20,7 @@ const manualSources = {
     },
     {
       icon: ArtTrack,
-      label: '캠페인 등록하기',
+      label: '캠페인 생성하기',
       key: 'campaignStart',
     },
     {
@@ -84,13 +84,13 @@ const manualSources = {
   },
   campaignStart: {
     card: {
-      title: '캠페인 등록하기',
+      title: '캠페인 생성하기',
       subtitle: '승인된 배너를 통해 캠페인을 운용하는 방법에 대한 설명입니다.',
     },
     source: [
       {
         image: '/pngs/dashboard/manual/new_marketer/marketer-campaign-01.png',
-        description: `${textStyling.LinkText('<대시보드>', 'main', 'marketer')}에서 ${textStyling.styledText('캠페인 등록하기')} 버튼을 눌러주세요.`,
+        description: `${textStyling.LinkText('<대시보드>', 'main', 'marketer')}에서 ${textStyling.styledText('캠페인 생성하기')} 버튼을 눌러주세요.`,
       },
       {
         image: '/pngs/dashboard/manual/new_marketer/marketer-campaign-02.png',

@@ -8,9 +8,11 @@ import createDuplicateCheckQuery from './queries/createDuplicateCheckQuery';
 import createLevelUpQuery from './queries/createLevelUpQuery';
 
 interface NowBroadData {
+  optionType: number; // 1=생방송배너광고, 3=판매형 광고
   campaignId: string; campaignName: string; creatorId: string;
   marketerId: string; date: string; creatorName: string;
   connectedLinkId: string; links: string;
+  merchandiseId?: string; itemSiteUrl?: string;
 }
 
 interface Link { primary?: boolean; linkName: string; linkTo: string }
@@ -55,8 +57,32 @@ export default async function tracking(
   // ******************************
   // when campaign is valid
   const {
-    campaignId, creatorId, connectedLinkId, links, campaignName, creatorName, marketerId
+    campaignId, creatorId, connectedLinkId, links,
+    campaignName, creatorName, marketerId, merchandiseId, itemSiteUrl
   } = result[0];
+
+  // CPS 캠페인의 경우
+  if (merchandiseId) {
+    const [query, queryArray] = createTrackingInsertQuery(broadPlatform, {
+      costType: 'CPS',
+      conversinoTime: null,
+      connectedLinkId: null,
+      campaignId,
+      campaignName,
+      channelType,
+      creatorId,
+      creatorPlatformId,
+      marketerId,
+      payout: 0,
+      userAgent,
+      nowIp
+    });
+    await doQuery(query, queryArray);
+    message = 'Successfully Inserted';
+    trackingLogging(channelType, creatorPlatformId, message);
+
+    return { message, name: creatorName, href: itemSiteUrl };
+  }
 
   // CPC 요금
   let payout = process.env.CPC_PAYOUT || 100; // calculator > landingCalculator_v1 > GAUGE

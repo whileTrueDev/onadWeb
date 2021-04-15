@@ -1,6 +1,6 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { Collapse, Typography } from '@material-ui/core';
+import { Chip, Collapse, Typography } from '@material-ui/core';
 import CampaignCreateStepLayout from './shared/StepLayout';
 import OptionSelectPaper from './shared/SelectPaper';
 import ButtonSet from './shared/ButtonSet';
@@ -21,6 +21,7 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: '0px 0px 15px 15px',
   },
   optionImages: { display: 'flex', alignItems: 'center', justifyContent: 'center' },
+  optionPanel: { margin: theme.spacing(2, 0, 0) }
 }));
 
 // 추후에 인터페이스 통합
@@ -63,6 +64,36 @@ const OptionPaper = (props: OptionPaperProps): JSX.Element => {
     setSelectedMaterial(material);
   }
 
+  const getInnerPaperChildren = (optionType: string): React.ReactElement | null => {
+    switch (optionType) {
+      case 'option1': return (
+        <div>
+          <div className={classes.optionImages}>
+            <img
+              height={22}
+              alt="a"
+              src="/pngs/logo/twitch/TwitchExtrudedWordmarkPurple.png"
+              style={{ filter: 'grayscale(0%)', padding: 8 }}
+            />
+            <img
+              height={20}
+              alt="a"
+              src="/pngs/logo/afreeca/blue01.png"
+              style={{ filter: 'grayscale(0%)', padding: 8 }}
+            />
+          </div>
+          <Typography variant="body2">(유튜브 향후 지원 예정)</Typography>
+        </div>
+      );
+      case 'option3': return (
+        <div className={classes.optionPanel}>
+          <Chip label="Beta" color="primary" size="small" />
+        </div>
+      );
+      default: return null;
+    }
+  };
+
   return (
     <CampaignCreateStepLayout
       primaryText="첫째, &nbsp;&nbsp; 광고 유형 선택"
@@ -76,29 +107,11 @@ const OptionPaper = (props: OptionPaperProps): JSX.Element => {
             <OptionSelectPaper
               key={opt.id}
               checked={state.selectedOption === opt.id}
-              disabled={opt.id !== 'option1'}
+              disabled={opt.deprecated}
               primaryText={opt.primaryText}
               secondaryText={opt.secondaryText}
               handleSelect={handleChange(opt.id)}
-              innerPaperChildren={opt.id !== 'option1' ? (null) : (
-                <div>
-                  <div className={classes.optionImages}>
-                    <img
-                      height={22}
-                      alt="a"
-                      src="/pngs/logo/twitch/TwitchExtrudedWordmarkPurple.png"
-                      style={{ filter: 'grayscale(0%)', padding: 8 }}
-                    />
-                    <img
-                      height={20}
-                      alt="a"
-                      src="/pngs/logo/afreeca/blue01.png"
-                      style={{ filter: 'grayscale(0%)', padding: 8 }}
-                    />
-                  </div>
-                  <Typography variant="body2">(유튜브 향후 지원 예정)</Typography>
-                </div>
-              )}
+              innerPaperChildren={getInnerPaperChildren(opt.id)}
             >
               {opt.materials && (
               <Collapse in={state.selectedOption === opt.id}>

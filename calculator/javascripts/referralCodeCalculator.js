@@ -130,7 +130,7 @@ async function referralCodeCalculate() {
   // Find all referral code log list
   const targets = await getReferralCodeTargets();
   console.info('추천인 코드 이벤트 계산 타겟 수: ', targets.length);
-  console.log(targets);
+  console.log('추천인 코드 타겟: ', targets);
 
   return Promise.all(
     targets.map((target) => calculate({

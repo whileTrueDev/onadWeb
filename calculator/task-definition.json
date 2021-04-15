@@ -59,7 +59,7 @@
       "memoryReservation": 500,
       "volumesFrom": [],
       "stopTimeout": null,
-      "image": "hwasurr/onad_calculator",
+      "image": "hwasurr/calculator",
       "startTimeout": null,
       "firelensConfiguration": null,
       "dependsOn": null,

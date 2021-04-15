@@ -6,6 +6,7 @@ export type CampaignCreateAction = {
     | 'RESET_PRIORITY_TYPE'
     | 'SET_BANNER'
     | 'SET_LANDING_URL'
+    | 'SET_MERCHANDISE'
     | 'SET_TERM_START_DATE'
     | 'SET_TERM_FIN_DATE'
     | 'RESET_TERM_FIN_DATE'
@@ -38,6 +39,7 @@ export interface CampaignCreateInterface {
   selectedGames: string[];
   selectedBannerId: string;
   selectedLandingUrl: string;
+  selectedMerchandiseId: string;
   campaignTerm: {
     startDate: Date | string;
     finDate?: string;
@@ -53,6 +55,7 @@ export const defaultState: CampaignCreateInterface = {
   selectedGames: [],
   selectedBannerId: '',
   selectedLandingUrl: '',
+  selectedMerchandiseId: '',
   campaignTime: [],
   campaignTerm: {
     startDate: new Date(),
@@ -76,6 +79,8 @@ export const CampaignCreateReducer = (
       return { ...state, selectedBannerId: value };
     case 'SET_LANDING_URL':
       return { ...state, selectedLandingUrl: value };
+    case 'SET_MERCHANDISE':
+      return { ...state, selectedMerchandiseId: value };
     // 광고 타겟 기간 선택 관련
     case 'SET_TERM_START_DATE':
       return { ...state, campaignTerm: { ...state.campaignTerm, startDate: value } };
@@ -132,7 +137,7 @@ export const CampaignCreateReducer = (
       return { ...state, loading: false };
     // 모두 초기화
     case 'ALL_RESET':
-      return defaultState;
+      return { ...defaultState, selectedOption: state.selectedOption };
     default:
       throw new Error(`action.type is not defined or there is no handler for ${type}`);
   }

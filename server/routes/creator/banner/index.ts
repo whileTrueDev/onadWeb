@@ -156,11 +156,12 @@ router.route('/list')
       const listQuery = `
       SELECT
         CT.campaignId, CT.date, CT.creatorId,
-        BR.bannerSrc,
+        BR.bannerSrcUrl AS bannerSrc,
         campaign.connectedLinkId, campaign.onOff as state, campaign.marketerName,
         campaign.campaignDescription, campaign.priorityType, campaign.optionType, campaign.targetList,
         MI.marketerContraction, MI.profileImage,
-        IR.links
+        IR.links,
+        itemSiteUrl, campaign.merchandiseId, MR.name AS merchandiseName
       FROM (
         SELECT creatorId, campaignId , min(date) as date
         FROM campaignTimestamp
@@ -171,6 +172,8 @@ router.route('/list')
         JOIN bannerRegistered AS BR ON campaign.bannerId = BR.bannerId
         LEFT JOIN linkRegistered AS IR ON connectedLinkId = IR.linkId
         LEFT JOIN marketerInfo AS MI ON campaign.marketerId = MI.marketerId
+        LEFT JOIN merchandiseRegistered AS MR ON campaign.merchandiseId = MR.id
+        LEFT JOIN merchandiseMallItems AS MMI ON campaign.merchandiseId = MMI.merchandiseId
       ORDER BY campaign.onOff = 1 AND MI.marketerContraction = 1 DESC, CT.date DESC
       LIMIT ?, ?
       `;
@@ -192,144 +195,6 @@ router.route('/list')
         .catch((error) => {
           responseHelper.promiseError(error, next);
         });
-    }),
-  )
-  .all(responseHelper.middleware.unusedMethod);
-
-async function getRemotePageBanner(campaignList: any, pausedList: string[]) {
-  await Promise.all(
-    campaignList.map((campaignData: any) => {
-      if (pausedList.includes(campaignData.campaignId)) {
-        campaignData.state = 0;
-      }
-    })
-  );
-  return campaignList;
-}
-
-router.route('/remote-page-url')
-  .get(responseHelper.middleware.checkSessionExists,
-    responseHelper.middleware.withErrorCatch(async (req, res, next) => {
-      const { creatorId } = responseHelper.getSessionData(req);
-      const searchQuery = `
-        SELECT remoteControllerUrl
-        FROM creatorInfo
-        WHERE creatorId = ?
-      `;
-      doQuery(searchQuery, [creatorId])
-        .then((row) => {
-          responseHelper.send(row.result[0].remoteControllerUrl, 'get', res);
-        })
-        .catch((errorData) => {
-          throw new Error(`Error in /creators - ${errorData}`);
-        });
-    }))
-  .all(responseHelper.middleware.unusedMethod);
-
-router.route('/remote-page')
-// 크리에이터 배너 목록 정보
-  .get(
-    responseHelper.middleware.withErrorCatch(async (req, res, next) => {
-      const urlInfo = responseHelper.getParam('remoteControllerUrl', 'get', req);
-      const getCreatorIdQuery = `
-          SELECT creatorId 
-          FROM creatorInfo 
-          WHERE remoteControllerUrl = ?
-      `;
-      const listQuery = `
-                          SELECT
-                            campaign.campaignId, campaign.marketerName, priorityType, BR.bannerSrc, targetList, CT.date, campaign.onOff as state,
-                            campaign.campaignDescription
-                          FROM (
-                            SELECT creatorId, campaignId , min(date) as date 
-                            FROM campaignTimestamp
-                            WHERE creatorId = ?
-                            GROUP BY campaignId
-                          ) AS CT
-                          JOIN campaign 
-                            ON CT.campaignId = campaign.campaignId
-                          JOIN bannerRegistered AS BR
-                            ON campaign.bannerId = BR.bannerId
-                          LEFT JOIN linkRegistered AS IR
-                            ON connectedLinkId = IR.linkId
-                          WHERE campaign.onOff = 1
-                          ORDER BY date DESC
-                          `;
-      const getPausedQuery = `
-                              SELECT pausedList 
-                              FROM creatorCampaign
-                              WHERE creatorId = ?
-                              `;
-      const searchQuery = `
-                            SELECT creatorName, afreecaName
-                            FROM creatorInfo
-                            WHERE creatorId = ?
-                            `;
-      const creatorId = await doQuery(getCreatorIdQuery, [!urlInfo.startsWith('/') ? `/${urlInfo}` : urlInfo]);
-      Promise.all([
-        doQuery(searchQuery, [creatorId.result[0].creatorId]),
-        doQuery(listQuery, [creatorId.result[0].creatorId]),
-        doQuery(getPausedQuery, [creatorId.result[0].creatorId])
-      ])
-        .then(async ([creatorName, row, paused]) => {
-          const pausedList: string[] = JSON.parse(paused.result[0].pausedList).campaignList;
-          const campaignList = await getRemotePageBanner(row.result, pausedList);
-          const result = campaignList.map((value: any): void => ({
-            ...value,
-            targetList: JSON.parse(value.targetList).targetList,
-            creatorName: creatorName.result[0].creatorName || creatorName.result[0].afreecaName
-          }));
-          responseHelper.send(result, 'get', res);
-        })
-        .catch((error) => {
-          responseHelper.promiseError(error, next);
-        });
-    })
-
-  )
-  .patch(
-    // 토글 버튼 변화에 따른 pausedList 업데이트
-    responseHelper.middleware.withErrorCatch(async (req, res, next) => {
-      const onOffDetail: (string|number)[] = responseHelper.getParam(['campaignId', 'state', 'url'], 'PATCH', req);
-      const campaignId = onOffDetail[0];
-      const state = onOffDetail[1];
-      const pageUrl = onOffDetail[2];
-      const getCreatorIdQuery = `
-                                  SELECT creatorId
-                                  FROM creatorInfo
-                                  WHERE remoteControllerUrl = ?
-                                  `;
-
-      const getPausedListQuery = `
-                                  SELECT pausedList 
-                                  FROM creatorCampaign 
-                                  WHERE creatorId = ?`;
-      const banListUpdateQuery = `
-                                  UPDATE creatorCampaign 
-                                  SET pausedList = ? 
-                                  WHERE creatorId = ?
-                                  `;
-      const creatorId = await doQuery(getCreatorIdQuery, [`/${pageUrl}`])
-        .then((value) => value.result[0].creatorId);
-      const row = await doQuery(getPausedListQuery, [creatorId]);
-
-      if (row.result) {
-        const pausedList = JSON.parse(row.result[0].pausedList);
-        if (state === 1) {
-          const newCampaignList = pausedList.campaignList.concat(campaignId);
-          pausedList.campaignList = newCampaignList;
-        } else {
-          pausedList.campaignList.splice(pausedList.campaignList.indexOf(campaignId), 1);
-        }
-        const pausedListUpdate = await doQuery(
-          banListUpdateQuery, [JSON.stringify(pausedList), creatorId]
-        );
-        if (pausedListUpdate.result.affectedRows > 0) {
-          responseHelper.send([true, 'success'], 'patch', res);
-        } else {
-          responseHelper.promiseError(new Error('배너 상태 변경에 실패했습니다'), next);
-        }
-      }
     }),
   )
   .all(responseHelper.middleware.unusedMethod);
@@ -367,16 +232,19 @@ router.route('/active')
       const { creatorId } = responseHelper.getSessionData(req);
       const query = `
       SELECT 
-        cp.bannerId, bannerSrc, cp.campaignName, cp.campaignDescription,
-        lr.links, cp.regiDate, mi.profileImage, mi.marketerName, ct.date
+        cp.bannerId, bannerSrcUrl AS bannerSrc, cp.campaignName, cp.campaignDescription,
+        lr.links, cp.regiDate, mi.profileImage, mi.marketerName, ct.date,
+        mr.name AS merchandiseName, mmi.itemSiteUrl
       FROM campaignTimestamp AS ct 
         JOIN campaign AS cp ON ct.campaignId = cp.campaignId
         JOIN marketerInfo AS mi ON cp.marketerId = mi.marketerId
         JOIN bannerRegistered AS br  ON cp.bannerId = br.bannerId
-        JOIN linkRegistered AS lr ON cp.connectedLinkId = lr.linkId
+        LEFT JOIN linkRegistered AS lr ON cp.connectedLinkId = lr.linkId
+        LEFT JOIN merchandiseRegistered AS mr ON cp.merchandiseId = mr.id
+        LEFT JOIN merchandiseMallItems AS mmi ON mr.id = mmi.merchandiseId
       WHERE creatorId = ?
         AND ct.date > DATE_ADD(NOW(), INTERVAL - 10 MINUTE) 
-      ORDER BY ct.date DESC LIMIT 1       
+      ORDER BY ct.date DESC LIMIT 1
       `;
 
       doQuery(query, [creatorId])

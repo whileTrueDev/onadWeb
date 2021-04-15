@@ -8,12 +8,10 @@ import Snackbar from '../../../atoms/Snackbar/Snackbar';
 import StartGuideCard from '../../../organisms/mypage/creator/shared/StartGuideCard';
 import AlertCard from '../../../organisms/mypage/creator/Dashboard/AlertCard';
 import UserInfoCard, { IncomeCashRes } from '../../../organisms/mypage/creator/Dashboard/UserInfoCard';
-import WithdrawalDialog from '../../../organisms/mypage/creator/Dashboard/WithdrawalDialog';
+import WithdrawalDialog from '../../../organisms/mypage/creator/shared/WithdrawalDialog';
 import ClickAdCard, { ClicksRes, LevelRes } from '../../../organisms/mypage/creator/Dashboard/ClickAdCard';
-import IncomeChart, {
-  IncomeChartData, IncomeChartParams
-} from '../../../organisms/mypage/creator/Dashboard/IncomeChart';
-import BannerCard, { CurrentBannerRes } from '../../../organisms/mypage/creator/Dashboard/BannerCard';
+import IncomeChart, { IncomeChartParams } from '../../../organisms/mypage/creator/Dashboard/IncomeChart';
+import BannerCard from '../../../organisms/mypage/creator/Dashboard/BannerCard';
 import OverlayUrlCard, { OverlayUrlRes } from '../../../organisms/mypage/creator/shared/OverlayUrlCard';
 import MypageLoading from './Mypage.loading';
 import NoticeCard from '../../../organisms/mypage/creator/Dashboard/NoticeCard';
@@ -27,6 +25,8 @@ import PlatformLinkDialog from '../../../organisms/mypage/shared/PlatformLinkDia
 import history from '../../../history';
 import { NoticeData } from '../../../organisms/mypage/shared/notice/NoticeTable';
 import useMypageScrollToTop from '../../../utils/hooks/useMypageScrollToTop';
+import { ChartDataBase } from '../../../utils/chart/makeBarChartData';
+import { CurrentBannerRes } from '../../../organisms/mypage/creator/CampaignManage/NowBroadCard';
 
 const Dashboard = (): JSX.Element => {
   // 계약 정보 조회
@@ -38,7 +38,7 @@ const Dashboard = (): JSX.Element => {
   // 크리에이터 광고 레벨 정보 조회
   const levelGet = useGetRequest<null, LevelRes>('/creator/level');
   // 수익금 차트 정보 조회
-  const incomeChartGet = useGetRequest<IncomeChartParams, IncomeChartData[]>(
+  const incomeChartGet = useGetRequest<IncomeChartParams, ChartDataBase[]>(
     '/creator/income/chart', { dateRange: '30' }
   );
   // 현재 송출중 배너 정보 조회
@@ -50,7 +50,7 @@ const Dashboard = (): JSX.Element => {
   // 출금 내역 정보
   const withdrawalData = useGetRequest('/creator/income/withdrawal');
   // 리모트 컨트롤러 URL 정보
-  const remoteControllerUrlGet = useGetRequest<null, string>('/creator/banner/remote-page-url');
+  const remoteControllerUrlGet = useGetRequest<null, string>('/creator/remote/page-url');
 
   // 채널 연동 유도 다이얼로그
   const platformLinkDialog = useDialog();
