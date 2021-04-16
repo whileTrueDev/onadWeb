@@ -12,14 +12,15 @@ import {
   Paper,
   Typography,
   FormControlLabel,
-  Radio
+  Radio,
+  Select
 } from '@material-ui/core';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import useStyles from './style/PlatformRegistForm.style';
 import useGetRequest from '../../../utils/hooks/useGetRequest';
-import StyledInput from '../../../atoms/StyledInput';
+import StaticInput from '../../../atoms/StaticInput';
 import { StepAction, StepState } from './Stepper.reducer';
-
+import areaCodes, { MenuProps } from '../../../utils/inputs/area-codes';
 
 // domain select용.
 const domains = [
@@ -32,20 +33,6 @@ const domains = [
   { value: '직접입력' },
 ];
 
-
-/*
-2019-07-04 박찬우
-  PlatformRegistForm 수정사항
-  1. 함수형 Component화
-  2. value를 state로 사용하지 않고 event를 통하여 catch
-  3. handleChange 로 onChange listener 통일 및 Reducer를 통한 형식 check
-  4. ID 중복 조회 완료 후 check icon 생성.
-
-  State 에 value가 존재하는 input값.
-  - 1. phoneNum
-  - 2. domain
-  - 3. passwordValue
-*/
 export interface Props {
   handleBack: () => void;
   handleUserSubmit: (user: any) => void;
@@ -71,6 +58,7 @@ function PlatformRegistForm({
   const classes = useStyles();
   const [numberType, setNumberType] = useState(true);
   const [marketerCustomDomain, setCustomDomain] = useState('');
+  const [areaCode, setAreaCode] = useState('');
   const [marketerId, setMarketerId] = useState('');
 
   // user 데이터를 전달 받는 hook 사용하여 기본 값을 가져온다.
@@ -90,7 +78,12 @@ function PlatformRegistForm({
     setCustomDomain(event.target.value);
   }
 
+  function handleAreaCode(event: React.ChangeEvent<{ value: unknown }>): void {
+    setAreaCode(event.target.value as string);
+  }
+
   function handleTypeToogle(): void {
+    dispatch({ type: 'phoneNum', value: '' });
     setNumberType(!numberType);
   }
 
@@ -99,7 +92,11 @@ function PlatformRegistForm({
   };
 
   function handleChangePhone(value: any): void {
-    dispatch({ type: 'phoneNum', value: value.formattedValue });
+    if (numberType) {
+      dispatch({ type: 'phoneNum', value: value.formattedValue });
+    }else {
+      dispatch({ type: 'companyNum', value: value.formattedValue });
+    }
   }
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>): void {
@@ -109,7 +106,14 @@ function PlatformRegistForm({
     // 모든 state가 false가 되어야한다.
     // const marketerName = document.getElementById('name').value;
     const marketerName = state.name;
-    const marketerPhoneNum = state.phoneNum;
+    let marketerPhoneNum = state.phoneNum;
+    if (!numberType) {
+      if(state.phoneNum.length === 7) {
+        marketerPhoneNum = `( ${areaCode} ) - ${state.phoneNum.slice(0, 3)} - ${state.phoneNum.slice(3)}`;
+      } else {
+        marketerPhoneNum = `( ${areaCode} ) - ${state.phoneNum.slice(0, 4)} - ${state.phoneNum.slice(4)}`;
+      }
+    }
     const marketerDomain = state.domain === '직접입력' ? marketerCustomDomain : state.domain;
     const user = {
       marketerId,
@@ -157,63 +161,97 @@ function PlatformRegistForm({
                   />
                 </Grid>
                 <Grid item>
-                  <Grid container direction="row">
-                    <Grid item>
-                      <FormControl
+                  <FormControl
+                    required
+                    margin="normal"
+                    error={Boolean(state.phoneNumValidationCheck)}
+                  >
+                    <InputLabel shrink htmlFor="phoneNumber">전화번호</InputLabel>
+                    {numberType ? (
+                      <NumberFormat
+                        pattern="^\( [0-9]{3} \) [-] +[0-9]{3,4} [-] +[0-9]{4}$"
+                        placeholder="( ___ ) - ____ - ____"
+                        value={state.phoneNum}
+                        onValueChange={handleChangePhone}
+                        customInput={StaticInput}
+                        format={'( ### ) - #### - ####'}
                         className={classes.phoneField}
-                        required
-                        margin="normal"
-                      >
-                        <InputLabel shrink htmlFor="phoneNumber">전화번호</InputLabel>
-                        <NumberFormat
-                          placeholder="( ___ ) - ____ - ____"
-                          value={state.phoneNum}
-                          onValueChange={handleChangePhone}
-                          customInput={StyledInput}
-                          format={numberType ? '( ### ) - #### - ####' : '( ### ) - ### - ####'}
-                          className={classes.phoneField}
-                          allowNegative={false}
-                        />
-                        <FormHelperText>온애드와 연락할 전화번호를 입력하세요.</FormHelperText>
-                      </FormControl>
-                    </Grid>
-                    <Grid item className={classes.switchbox}>
-                      <Grid container direction="row">
-                        <Grid item>
-                          <FormControlLabel
-                            value="phone"
-                            control={(
-                              <Radio
-                                checked={numberType}
-                                onChange={handleTypeToogle}
-                                inputProps={{ 'aria-label': 'A' }}
-                                size="small"
-                                color="primary"
-                              />
-                            )}
-                            className={classes.switch}
-                            label="휴대폰"
-                            labelPlacement="bottom"
-                          />
+                        allowNegative={false}
+                      />
+                    ):
+                    (
+                      <Grid container direction = "row" className = {classes.companyNum}>
+                        <Grid item xs={3}>
+                          <Select
+                            required
+                            className={classes.companySelect}
+                            value={areaCode}
+                            onChange={handleAreaCode}
+                            MenuProps={MenuProps}
+                          >
+                            {areaCodes.map((option: {value: string}) => (
+                              <MenuItem key={option.value} value={option.value}>
+                                {option.value}
+                              </MenuItem>
+                            ))}
+                          </Select>
                         </Grid>
-                        <Grid item>
-                          <FormControlLabel
-                            value="tel"
-                            control={(
-                              <Radio
-                                checked={!numberType}
-                                onChange={handleTypeToogle}
-                                inputProps={{ 'aria-label': 'A' }}
-                                size="small"
-                                color="primary"
-                              />
-                            )}
-                            className={classes.switch}
-                            label="회사"
-                            labelPlacement="bottom"
+                        <Grid item xs={9}>
+                          <NumberFormat
+                            value={state.phoneNum}
+                            onValueChange={handleChangePhone}
+                            customInput={StaticInput}
+                            className={classes.companyField}
+                            allowNegative={false}
                           />
                         </Grid>
                       </Grid>
+                    )
+                    }
+                    <FormHelperText>
+                      {state.phoneNumValidationCheck
+                        ? '전화번호를 올바르게 입력하세요!'
+                        : '온애드와 연락할 전화번호를 입력하세요.'}
+                    </FormHelperText>
+                  </FormControl>
+                </Grid>
+                <Grid item className={classes.switchbox}>
+                  <Grid container direction="row">
+                    <Grid item>
+                      <FormControlLabel
+                        value="phone"
+                        control={(
+                          <Radio
+                            checked={numberType}
+                            onChange={handleTypeToogle}
+                            inputProps={{ 'aria-label': 'A' }}
+                            size="small"
+                            color="primary"
+                          />
+                        )}
+                        className={classes.switch}
+                        classes={{ label: classes.switchLabel }}
+                        label={'휴대폰\0인터넷전화'}
+                        labelPlacement="bottom"
+                      />
+                    </Grid>
+                    <Grid item>
+                      <FormControlLabel
+                        value="tel"
+                        control={(
+                          <Radio
+                            checked={!numberType}
+                            onChange={handleTypeToogle}
+                            inputProps={{ 'aria-label': 'A' }}
+                            size="small"
+                            color="primary"
+                          />
+                        )}
+                        className={classes.switch}
+                        classes={{ label: classes.switchLabel }}
+                        label="회사"
+                        labelPlacement="bottom"
+                      />
                     </Grid>
                   </Grid>
                 </Grid>

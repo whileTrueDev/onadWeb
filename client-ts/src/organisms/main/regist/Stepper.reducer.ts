@@ -1,5 +1,6 @@
 import passwordRegex from '../../../utils/inputs/regex/password.regex';
 import phoneNumRegex from '../../../utils/inputs/regex/phoneNum.regex';
+import companyNumRegex from '../../../utils/inputs/regex/companyNum.regex';
 import userIdRegex from '../../../utils/inputs/regex/userId.regex';
 
 export const initialState = {
@@ -34,6 +35,7 @@ export type StepAction = { type: 'id'; value: string }
   | { type: 'repasswd'; value: string }
   | { type: 'email'; value: string }
   | { type: 'phoneNum'; value: string }
+  | { type: 'companyNum'; value: string }
   | { type: 'domain'; value: string }
   | { type: 'checkDuplication'; value: boolean }
   | { type: 'name'; value: string }
@@ -86,9 +88,13 @@ export function myReducer(
     case 'domain': {
       return { ...state, domain: action.value };
     }
-    // case 'businessRegNum': {
-    //   return { ...state, businessRegNum: action.value };
-    // }
+    case 'companyNum': {
+      // 동일한 값, state를 공유한다.
+      if (companyNumRegex.test(action.value)) {
+        return { ...state, phoneNum: action.value, phoneNumValidationCheck: false };
+      }
+      return { ...state, phoneNum: action.value, phoneNumValidationCheck: true };
+    }
     case 'name': {
       return { ...state, name: action.value };
     }
