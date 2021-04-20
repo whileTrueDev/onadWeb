@@ -60,19 +60,20 @@ export default function makeBarChartData(
         dataSet[dataSet.findIndex((i) => i.date === d.date)] = targetObject;
       }
     });
-
     // 중간중간 비어있는 날짜에 기본 데이터 삽입
     previousDates.sort((x, y) => y.localeCompare(x));
-    previousDates.reduce((previousValue, currentValue, currentIndex) => {
-      const previous = new Date(previousValue);
-      const previousPlusOneDay = previous;
-      previousPlusOneDay.setDate(previousPlusOneDay.getDate() - 1);
-      const now = new Date(currentValue);
-      const DAY_EQUAL = datefy(previous) === datefy(now);
+    previousDates.forEach((date, idx) => {
+      if (idx === 0) return;
+      // previousValue = 21-04-05, currentValue = 21-04-04
+      const prev = new Date(previousDates[idx - 1]);
+      const curr = new Date(date);
 
-      if (!DAY_EQUAL) {
-        // 같지 않다면,
-        const emptyDate = datefy(previous);
+      const prevMinusOneDay = prev;
+      prevMinusOneDay.setDate(prevMinusOneDay.getDate() - 1);
+
+      if (!(datefy(prevMinusOneDay) === datefy(curr))) {
+        // 바로 다음 날짜 데이터가 없는 경우. 기본값 데이터 추가
+        const emptyDate = datefy(curr);
         if (dataSet.findIndex((d2) => d2.date === emptyDate) === -1) {
           // dataSet에 해당 날짜의 데이터가 없는 경우
           const emptyData: any = { date: emptyDate, };
@@ -80,19 +81,18 @@ export default function makeBarChartData(
             emptyData[to] = 0;
           });
 
-          dataSet.splice(currentIndex, 0, emptyData);
+          dataSet.splice(idx, 0, emptyData);
         } else {
-          // console.log('날짜 데이터 있음 - ', dataSet[currentIndex]);
-          // dataSet에 해당 날짜의 데이터가 있는 경우
-          const keys = Object.keys(dataSet[currentIndex]);
+          // 바로 다음 날짜의 데이터가 있는 경우.
+        // dataSet에 해당 날짜의 데이터가 있는 경우 필드체크하여 없는 필드 0으로 기본값 처리
+          const keys = Object.keys(dataSet[idx]);
           keyMaps.forEach(({ typeName, to }) => {
             if (!(keys.includes(typeName))) {
-              dataSet[currentIndex][to] = 0;
+              dataSet[idx][to] = 0;
             }
           });
         }
       }
-      return datefy(previousPlusOneDay);
     });
 
     if (previousDates.length < howMuchDate) {

@@ -158,7 +158,7 @@ router.route('/usage')
           DATE_FORMAT(cl.date, "%y년 %m월") as date,
           FORMAT(sum(cashFromMarketer), 0) as cash
       FROM campaignLog AS cl
-      WHERE SUBSTRING_INDEX(cl.campaignId, '_', 1) = "gubgoo" AND type != "CPS"
+      WHERE SUBSTRING_INDEX(cl.campaignId, '_', 1) = ? AND type != "CPS"
       GROUP BY month(cl.date)
       ORDER BY cl.date DESC`;
 
