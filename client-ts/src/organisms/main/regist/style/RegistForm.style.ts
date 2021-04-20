@@ -2,6 +2,7 @@ import makeStyles from '@material-ui/core/styles/makeStyles';
 
 const useStyles = makeStyles((theme) => ({
   textField: {
+    fontSize: '17px',
     [theme.breakpoints.down('xs')]: {
       minWidth: '200px',
       marginRight: 0,
@@ -12,13 +13,13 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   phoneField: {
-    fontSize: '17px',
     [theme.breakpoints.down('xs')]: {
       minWidth: '200px',
       marginRight: 0,
     },
     [theme.breakpoints.up('sm')]: {
-      width: 220,
+      maxWidth: 220,
+
     },
   },
   divider: {
@@ -46,6 +47,24 @@ const useStyles = makeStyles((theme) => ({
     padding: 0,
   },
   switchLabel: { fontSize: theme.typography.caption.fontSize, maxWidth: 40, textAlign: 'center' },
+  companyField: {
+    [theme.breakpoints.down('xs')]: {
+      minWidth: '150px',
+      marginRight: 0,
+    },
+    [theme.breakpoints.up('sm')]: {
+      maxWidth: 150
+    },
+  },
+  companyNum: {
+    marginTop : '16px'
+  },
+  companySelect : {
+    [theme.breakpoints.down('xs')]: {
+      minWidth: '100%',
+      marginRight: 0,
+    },
+  }
 }));
 
 
