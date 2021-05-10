@@ -1,16 +1,18 @@
-import React, { useState } from 'react';
-import { makeStyles, Theme } from '@material-ui/core/styles';
 import {
   DialogActions, DialogContent,
-  DialogContentText, TextField,
-  FormHelperText, FormControl,
-  InputLabel, Input, MenuItem,
+  DialogContentText,
+  FormControl, FormHelperText,
+  Input, InputLabel, TextField
 } from '@material-ui/core';
-import axios from '../../../../utils/axios';
-import Dialog from '../../../../atoms/Dialog/Dialog';
+import { makeStyles, Theme } from '@material-ui/core/styles';
+import { Autocomplete } from '@material-ui/lab';
+import React, { useState } from 'react';
 import Button from '../../../../atoms/CustomButtons/Button';
+import Dialog from '../../../../atoms/Dialog/Dialog';
 import HOST from '../../../../config';
+import banks, { Bank } from '../../../../constants/banks';
 import history from '../../../../history';
+import axios from '../../../../utils/axios';
 
 const useStyles = makeStyles((theme: Theme) => ({
   contents: {
@@ -43,14 +45,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const banks = [
-  { bankName: '국민', }, { bankName: '기업', },
-  { bankName: '농협', }, { bankName: '신한(구)', },
-  { bankName: '신한(신)', }, { bankName: '우리', },
-  { bankName: '우체국', }, { bankName: '하나', },
-  { bankName: '부산', }, { bankName: 'SC제일', },
-];
-
 const AccountDialog = (
   props: {
     open: boolean;
@@ -60,16 +54,14 @@ const AccountDialog = (
   const { open, handleDialogClose } = props;
   const classes = useStyles();
 
-  const [bank, setBank] = useState<string>('농협');
-
-  const handleChangeBank = (event: React.ChangeEvent<HTMLInputElement>): void => {
-    const newbank = event.target.value;
-    setBank(newbank);
+  // ****************************************************
+  const [bank, setBank] = useState<Bank | null>(null);
+  const handleChangeBank = (event: any, newValue: Bank | null): void => {
+    setBank(newValue);
   };
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
-    console.log('제출');
 
     const bankRealName = (document.getElementById('accountHolder') as HTMLInputElement).value;
     const idNumber = (document.getElementById('idNumber') as HTMLInputElement).value;
@@ -78,17 +70,19 @@ const AccountDialog = (
     /** *******************
      * 계좌 조회 api 요청필요
      ******************* */
+    if (!bank) return alert('은행을 선택해주세요!');
+
     axios.put(`${HOST}/marketer/account`, {
-      bankName: bank, bankRealName, idNumber, bankAccount
+      bankName: bank.bankName, bankRealName, idNumber, bankAccount
     })
       .then(() => {
-        alert('계좌번호 저장에 성공하였습니다.');
+        alert('환불 계좌번호 저장에 성공하였습니다.');
         handleDialogClose();
         history.push('/mypage/marketer/myoffice');
       })
       .catch((err) => {
         console.log(err);
-        alert('계좌번호 저장에 실패하였습니다.');
+        alert('환불 계좌번호 저장에 실패하였습니다. 문제가 지속적으로 발견될 시, support@onad.io로 문의바랍니다.');
       });
   };
 
@@ -98,26 +92,25 @@ const AccountDialog = (
       <DialogContentText className={classes.contentText}>
         환불 받을 계좌정보를 입력해주세요.
       </DialogContentText>
-      <TextField
-        required
-        select
-        label="BANK"
-        name="bank"
-        className={classes.textField}
+
+      <Autocomplete
+        id="bank-name-box"
+        options={banks}
+        getOptionLabel={(option) => option.bankName}
         value={bank}
         onChange={handleChangeBank}
-        helperText="은행을 선택하세요."
-        InputLabelProps={{
-          shrink: true,
-        }}
-        margin="normal"
-
-      >
-        {banks.map((row) => {
-          const name = row.bankName;
-          return <MenuItem key={name} value={name}>{name}</MenuItem>;
-        })}
-      </TextField>
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            required
+            label="은행"
+            className={classes.textField}
+            InputLabelProps={{
+              shrink: true,
+            }}
+          />
+        )}
+      />
 
       <TextField
         required

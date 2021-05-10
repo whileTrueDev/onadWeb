@@ -47,7 +47,7 @@ export default function SettlementRegDialog({
   }
 
   // eslint-disable-next-line consistent-return
-  function handleSubmit(dto: SettlementRegDTO, reqType?: 'post' | 'patch'): void | Promise<void> {
+  function handleSubmit(dto: Partial<SettlementRegDTO>, reqType?: 'post' | 'patch'): void | Promise<void> {
     // 제출 핸들링 작성 필요
     const isBusinessman = dto.businessmanFlag === 'true';
     const data = { ...dto, businessmanFlag: isBusinessman };
