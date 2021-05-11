@@ -12,7 +12,7 @@ router.route('/').get(
     const { marketerId } = responseHelper.getSessionData(req);
     const query = `SELECT
       DATE_FORMAT(doneDate, "%y년 %m월 %d일") as doneDate,
-      FORMAT(amount, 0) as amount
+      FORMAT(amount + amountDeliveryFee, 0) as amount
     FROM ${TABLE_NAME} WHERE marketerId = ?
     ORDER BY doneDate DESC`;
     const queryArray = [marketerId];

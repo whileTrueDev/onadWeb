@@ -10,12 +10,14 @@ export interface MarketerSalesImcome {
   marketerId: string;
   totalIncome: number;
   receivable: number;
+  totalDeliveryFee: number;
+  receivableDeliveryFee: number;
   createDate: string;
 }
 
-const findOne = async (marketerId: string,): Promise<MarketerSalesImcome[]> => {
+const findOne = async (marketerId: string,): Promise<MarketerSalesImcome | null> => {
   const query = `SELECT
-      id, marketerId, totalIncome, receivable, createDate
+      id, marketerId, totalIncome, receivable, createDate, totalDeliveryFee, receivableDeliveryFee
       FROM marketerSalesIncome
       WHERE marketerId = ?
       ORDER BY createDate DESC
@@ -23,12 +25,12 @@ const findOne = async (marketerId: string,): Promise<MarketerSalesImcome[]> => {
   const queryArray = [marketerId];
 
   const { result } = await doQuery(query, queryArray);
-  return result;
+  return result.length === 0 ? null : result[0];
 };
 
 const findMany = async (marketerId: string,): Promise<MarketerSalesImcome[]> => {
   const query = `SELECT
-      id, marketerId, totalIncome, receivable, createDate
+      id, marketerId, totalIncome, receivable, createDate, totalDeliveryFee, receivableDeliveryFee
       FROM marketerSalesIncome
       WHERE marketerId = ?
       ORDER BY createDate DESC
@@ -47,8 +49,7 @@ router.route('/')
       if (!marketerId) throw new createHttpError[401]();
 
       const result = await findOne(marketerId);
-      if (result.length === 0) return responseHelper.send(null, 'get', res);
-      return responseHelper.send(result[0], 'get', res);
+      return responseHelper.send(result, 'get', res);
     })
   )
   .all(responseHelper.middleware.unusedMethod);
