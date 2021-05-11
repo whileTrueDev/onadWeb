@@ -132,11 +132,13 @@ export interface VbankInterface {
 }
 
 
-export interface MarketerSalesImcome {
+export interface MarketerSalesIncome {
   id: number;
   marketerId: string;
   totalIncome: number;
   receivable: number;
+  totalDeliveryFee: number;
+  receivableDeliveryFee: number;
   createDate: string;
 }
 export interface MarketerSettlement {
