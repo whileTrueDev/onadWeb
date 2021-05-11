@@ -5,7 +5,7 @@ import {
 } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
 import React, {
-  useState, useRef
+  useState, useRef, useMemo
 } from 'react';
 import CustomDialog from '../../../../atoms/Dialog/Dialog';
 import {
@@ -19,6 +19,7 @@ import MerchandiseImageUpload from './sub/MerchandiseImageUpload';
 import MerchandiseOptionInput from './sub/MerchandiseOptionInput';
 import MerchandiseUploadDialogLoading from './sub/MerchandiseUploadDialogLoading';
 import { getS3MerchandiseImagePath, getS3MerchandiseDescImagePath } from '../../../../utils/aws/getS3Path';
+import getDiscountPrice from '../../../../utils/getDiscountPrice';
 
 const FLAG_ON = 'Yes';
 const FLAG_OFF = 'No';
@@ -39,6 +40,7 @@ const useStyles = makeStyles((theme) => ({
 
 export interface MerchandiseInfo {
   name: string;
+  regularPrice: number | string;
   price: number | string;
   stock: number | string;
   description: string;
@@ -68,7 +70,7 @@ export default function MerchandiseUploadDialog({
   // *********************************************************
   // 상품정보
   const defaultMerchandiseInfo = {
-    name: '', price: '', stock: '', description: '',
+    name: '', regularPrice: '', price: '', stock: '', description: '',
   };
   const [merchandiseInfo, setMerchandiseInfo] = useState<MerchandiseInfo>(defaultMerchandiseInfo);
 
@@ -177,10 +179,13 @@ export default function MerchandiseUploadDialog({
   function handleSubmit(): void {
     // 유효성 체크
     if (!merchandiseInfo.name) return handleFormError('상품명을 입력해주세요.');
+    if (!merchandiseInfo.regularPrice) return handleFormError('정가를 입력해주세요.');
+    if (merchandiseInfo.regularPrice && merchandiseInfo.regularPrice < 1) return handleFormError('정가를 올바르게 입력해주세요.');
     if (!merchandiseInfo.price) return handleFormError('판매가를 입력해주세요.');
-    if (merchandiseInfo.price && merchandiseInfo.price < 1) return handleFormError('판매가를 올바르게 입력해주세요.');
+    if (merchandiseInfo.price && Number(merchandiseInfo.price) < 1) return handleFormError('판매가를 올바르게 입력해주세요.');
+    if (merchandiseInfo.price && merchandiseInfo.regularPrice && Number(merchandiseInfo.regularPrice) < Number(merchandiseInfo.price)) return handleFormError('판매가가 정가보다 큽니다. 판매가를 올바르게 입력해주세요.');
     if (!merchandiseInfo.stock) return handleFormError('재고를 입력해주세요.');
-    if (merchandiseInfo.stock && merchandiseInfo.stock < 1) return handleFormError('재고를 올바르게 입력해주세요.');
+    if (merchandiseInfo.stock && Number(merchandiseInfo.stock) < 1) return handleFormError('재고를 올바르게 입력해주세요.');
     if (optionFlag.value === FLAG_ON
       && options.checkItemsEmpty()) return handleFormError('옵션을 올바르게 입력해주세요. 각 옵션은 빈 값이 없어야 합니다.');
     if (images.length === 0) return handleFormError('상품을 등록하기 위해서는 상품 사진이 최소 1개 이상 필요합니다.');
@@ -240,6 +245,9 @@ export default function MerchandiseUploadDialog({
   // 주소 내역 불러오기.
   const addressHistoryGet = useGetRequest<null, OnadAddressData[]>('/marketer/merchandises/addresses');
 
+  // 할인율 계산 변수
+  const discountRate = useMemo(() => getDiscountPrice(merchandiseInfo.regularPrice, merchandiseInfo.price), [merchandiseInfo.price, merchandiseInfo.regularPrice]);
+
   // 입력 폼
   const form = (
     <form className={classes.form} autoComplete="off">
@@ -279,7 +287,31 @@ export default function MerchandiseUploadDialog({
       </div>
 
       <div className={classes.field}>
-        <Typography>판매가</Typography>
+        <Typography>정가</Typography>
+        <TextField
+          className={classnames(classes.textField, classes.textFieldHalf)}
+          variant="outlined"
+          fullWidth
+          placeholder="10000"
+          type="number"
+          value={merchandiseInfo.regularPrice}
+          onChange={handleChange('regularPrice')}
+          InputProps={{ className: classes.smallInput }}
+        // eslint-disable-next-line react/jsx-no-duplicate-props
+          inputProps={{
+            min: 0, step: 1,
+          }}
+        />
+      </div>
+
+      <div className={classes.field}>
+        <Typography>
+          판매가
+          {' '}
+          {discountRate > 0 && (
+          <Typography variant="body2" component="span">{`(할인율 ${discountRate}%)`}</Typography>
+          )}
+        </Typography>
         <TextField
           className={classnames(classes.textField, classes.textFieldHalf)}
           variant="outlined"
@@ -291,7 +323,7 @@ export default function MerchandiseUploadDialog({
           InputProps={{ className: classes.smallInput }}
         // eslint-disable-next-line react/jsx-no-duplicate-props
           inputProps={{
-            min: 0, step: 1
+            min: 0, step: 1, max: merchandiseInfo.regularPrice
           }}
         />
       </div>

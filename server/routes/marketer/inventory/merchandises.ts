@@ -8,6 +8,7 @@ import merchandisePickupAddressRouter from './merchandisePickupAddress';
 export interface Merchandise {
   id?: number;
   name: string;
+  regularPrice: number;
   price: number;
   stock: number;
   optionFlag?: boolean;
@@ -172,16 +173,17 @@ const createMerchandise = async (
   marketerId: string, merchandise: Merchandise
 ): Promise<Merchandise> => {
   const {
-    name, price, stock, optionFlag, description,
+    name, regularPrice, price, stock, optionFlag, description,
     images, descImages, pickupFlag, pickupAddress, options,
   } = merchandise;
   const insertQuery = `
     INSERT INTO merchandiseRegistered
-    (name, price, stock, optionFlag, description, images, descImages, pickupFlag, marketerId)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+    (name, regularPrice, price, stock, optionFlag, description, images, descImages, pickupFlag, marketerId)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `;
   const insertQueryArray = [
-    name, price, stock, optionFlag, description, images.join(','), descImages.join(','), pickupFlag, marketerId
+    name, regularPrice, price, stock, optionFlag,
+    description, images.join(','), descImages.join(','), pickupFlag, marketerId,
   ];
   const { result } = await doQuery(insertQuery, insertQueryArray);
   const merchandiseId = result.insertId;
@@ -229,13 +231,13 @@ const createMerchandise = async (
 
   // *************************************************************
   // 옵션이 존재하는 경우
-  if (options) {
-    options.forEach((option) => {
+  if (optionFlag && options) {
+    await Promise.all(options.map((option) => {
       const { type, name: optionName, additionalPrice } = option;
       const insertOptionQuery = `INSERT INTO merchandiseOptions
         (merchandiseId, type, name, additionalPrice) VALUES (?, ?, ?, ?)`;
-      doQuery(insertOptionQuery, [merchandiseId, type, optionName, additionalPrice]);
-    });
+      return doQuery(insertOptionQuery, [merchandiseId, type, optionName, additionalPrice]);
+    }));
   }
 
   const insertedMerchandise = await doQuery(
@@ -295,9 +297,9 @@ router.route('/')
       if (!marketerId) throw new createHttpError[401]();
 
       const [
-        name, price, stock, optionFlag, pickupFlag, description, images, descImages
+        name, regularPrice, price, stock, optionFlag, pickupFlag, description, images, descImages
       ] = responseHelper.getParam([
-        'name', 'price', 'stock', 'optionFlag', 'pickupFlag', 'description', 'images', 'descImages',
+        'name', 'regularPrice', 'price', 'stock', 'optionFlag', 'pickupFlag', 'description', 'images', 'descImages',
       ], 'post', req);
 
       const [pickupAddress, options] = responseHelper.getOptionalParam(
@@ -306,6 +308,7 @@ router.route('/')
 
       const result = await createMerchandise(marketerId, {
         name,
+        regularPrice,
         price,
         stock,
         optionFlag,

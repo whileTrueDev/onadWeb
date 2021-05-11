@@ -11,6 +11,7 @@ import MerchandiseDeleteDialog from './MerchandiseDeleteDialog';
 import { useDialog } from '../../../../../utils/hooks';
 import Snackbar from '../../../../../atoms/Snackbar/Snackbar';
 import renderMerchandiseUploadState from '../../../../../utils/render_funcs/renderMerchandiseUploadState';
+import getDiscountPrice from '../../../../../utils/getDiscountPrice';
 
 const useStyles = makeStyles(() => ({
   datagrid: { height: 400, width: '100%' },
@@ -36,6 +37,7 @@ export default function MerchandiseInventory({
 
   const merchandiseDeleteDialog = useDialog();
   const successSnack = useDialog();
+
   return (
     <div className={classes.datagrid}>
       <CustomDataGrid
@@ -64,9 +66,26 @@ export default function MerchandiseInventory({
             width: 150,
           },
           {
+            field: 'regularPrice',
+            headerName: '정가',
+            width: 120,
+          },
+          {
             field: 'price',
             headerName: '판매가',
-            width: 150,
+            width: 170,
+            renderCell: (data): React.ReactElement => {
+              const discountRate = getDiscountPrice(data.row.regularPrice, data.row.price);
+              return (
+                <Typography variant="body2">
+                  {data.row.price}
+                  {' '}
+                  {discountRate > 0 && (
+                  <Typography variant="caption" component="span">{`(할인율 ${discountRate}%)`}</Typography>
+                  )}
+                </Typography>
+              );
+            }
           },
           {
             field: 'stock',
