@@ -97,19 +97,15 @@ const calculateMarketerSalesIncome = async ({
 }) => {
   const query = `
   INSERT INTO marketerSalesIncome (marketerId, totalIncome, receivable, totalDeliveryFee, receivableDeliveryFee) 
-  VALUES (
-    ?,
-    (SELECT IFNULL(MAX(totalIncome), 0) + ? AS totalIncome FROM marketerSalesIncome AS a WHERE marketerId = ? ORDER BY createDate DESC LIMIT 1),
-    (SELECT IFNULL(MAX(receivable), 0) + ? AS totalIncome FROM marketerSalesIncome AS a WHERE marketerId = ? ORDER BY createDate DESC LIMIT 1),
-    (SELECT IFNULL(MAX(totalDeliveryFee), 0) + ? AS totalDeliveryFee FROM marketerSalesIncome AS a WHERE marketerId = ? ORDER BY createDate DESC LIMIT 1),
-    (SELECT IFNULL(MAX(receivableDeliveryFee), 0) + ? AS receivableDeliveryFee FROM marketerSalesIncome AS a WHERE marketerId = ? ORDER BY createDate DESC LIMIT 1)
-  )`;
-  const queryArray = [
+  SELECT
     marketerId,
-    salesIncomeToMarketer, marketerId,
-    salesIncomeToMarketer, marketerId,
-    deliveryFee, marketerId,
-    deliveryFee, marketerId,
+    IFNULL(MAX(totalIncome), 0) + ? AS totalIncome,
+    IFNULL(MAX(receivable), 0) + ? AS totalIncome,
+    IFNULL(MAX(totalDeliveryFee), 0) + ? AS totalDeliveryFee,
+    IFNULL(MAX(receivableDeliveryFee), 0) + ? AS receivableDeliveryFee
+  FROM marketerSalesIncome AS a WHERE marketerId = ? ORDER BY createDate DESC LIMIT 1`;
+  const queryArray = [
+    salesIncomeToMarketer, salesIncomeToMarketer, deliveryFee, deliveryFee, marketerId,
   ];
 
   const { result } = await doQuery(query, queryArray).catch((err) => `error occurred during run calculateMarketerSalesIncome - ${err}`);
