@@ -52,7 +52,7 @@ const getCashesCalculated = (totalOrderPrice, isCreatorExists) => {
 const getTargets = async () => {
   const query = `
   SELECT
-    MO.id, campaignId, merchandiseId, orderPrice, calculateDoneFlag,
+    MO.id, campaignId, merchandiseId, orderPrice, calculateDoneFlag, deliveryFee,
     MR.marketerId, MR.name,
     MOC.creatorId AS targetCreatorId, creatorName,
     statusString
@@ -93,16 +93,24 @@ const calculateCampaignLog = async ({
  * @returns null | insertId
  */
 const calculateMarketerSalesIncome = async ({
-  marketerId, salesIncomeToMarketer
+  marketerId, salesIncomeToMarketer, deliveryFee
 }) => {
   const query = `
-  INSERT INTO marketerSalesIncome (marketerId, totalIncome, receivable) 
+  INSERT INTO marketerSalesIncome (marketerId, totalIncome, receivable, totalDeliveryFee, receivableDeliveryFee) 
   VALUES (
     ?,
     (SELECT IFNULL(MAX(totalIncome), 0) + ? AS totalIncome FROM marketerSalesIncome AS a WHERE marketerId = ? ORDER BY createDate DESC LIMIT 1),
-    (SELECT IFNULL(MAX(receivable), 0) + ? AS totalIncome FROM marketerSalesIncome AS a WHERE marketerId = ? ORDER BY createDate DESC LIMIT 1)
+    (SELECT IFNULL(MAX(receivable), 0) + ? AS totalIncome FROM marketerSalesIncome AS a WHERE marketerId = ? ORDER BY createDate DESC LIMIT 1),
+    (SELECT IFNULL(MAX(totalDeliveryFee), 0) + ? AS totalDeliveryFee FROM marketerSalesIncome AS a WHERE marketerId = ? ORDER BY createDate DESC LIMIT 1),
+    (SELECT IFNULL(MAX(receivableDeliveryFee), 0) + ? AS receivableDeliveryFee FROM marketerSalesIncome AS a WHERE marketerId = ? ORDER BY createDate DESC LIMIT 1)
   )`;
-  const queryArray = [marketerId, salesIncomeToMarketer, marketerId, salesIncomeToMarketer, marketerId];
+  const queryArray = [
+    marketerId,
+    salesIncomeToMarketer, marketerId,
+    salesIncomeToMarketer, marketerId,
+    deliveryFee, marketerId,
+    deliveryFee, marketerId,
+  ];
 
   const { result } = await doQuery(query, queryArray).catch((err) => `error occurred during run calculateMarketerSalesIncome - ${err}`);
   if (result && result.insertId) return result.insertId;
@@ -160,12 +168,13 @@ const updateFlag = async ({ orderId }) => {
  * 4. 모두 완료 후, 주문의 계산완료플래그를 true로 처리 (merchandiseOrders - calculateDoneFlag)
  */
 const calculate = async ({
-  orderId, campaignId, merchandiseId, orderPrice, calculateDoneFlag, marketerId, name, targetCreatorId, creatorName, statusString
+  orderId, campaignId, merchandiseId, orderPrice, calculateDoneFlag,
+  marketerId, name, targetCreatorId, creatorName, statusString, deliveryFee,
 }) => {
   const { cashToCreator, salesIncomeToMarketer } = getCashesCalculated(orderPrice, !!targetCreatorId);
 
   // * 1. 광고주 판매대금 처리 (marketerSalesIncome - marketerId, 추가금액)
-  await calculateMarketerSalesIncome({ marketerId, salesIncomeToMarketer });
+  await calculateMarketerSalesIncome({ marketerId, salesIncomeToMarketer, deliveryFee });
 
   // * 2. 방송인 수익금 처리 (creatorIncome - creatorId, 추가금액)
   if (targetCreatorId) {
@@ -179,7 +188,7 @@ const calculate = async ({
     campaignId,
     creatorId: targetCreatorId,
     cashToCreator,
-    salesIncomeToMarketer
+    salesIncomeToMarketer: Number(salesIncomeToMarketer) + Number(deliveryFee)
   });
 
   // * 4. 모두 완료 후, 주문의 계산완료플래그를 true로 처리 (merchandiseOrders - calculateDoneFlag)
@@ -209,6 +218,7 @@ async function cpsCalculate() {
       campaignId: target.campaignId,
       merchandiseId: target.merchandiseId,
       orderPrice: target.orderPrice,
+      deliveryFee: target.deliveryFee,
       calculateDoneFlag: target.calculateDoneFlag,
       marketerId: target.marketerId,
       name: target.name,
