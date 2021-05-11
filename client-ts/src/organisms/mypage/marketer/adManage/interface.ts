@@ -32,6 +32,7 @@ export interface UrlDataInterface {
 export interface Merchandise {
   id: number;
   name: string;
+  regularPrice: number;
   price: number;
   stock: number;
   optionFlag?: boolean;

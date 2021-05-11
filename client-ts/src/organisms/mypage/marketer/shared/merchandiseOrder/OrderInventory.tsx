@@ -133,7 +133,7 @@ export default function OrderInventory({
               )
             },
             {
-              headerName: '상품금액',
+              headerName: '상품판매금액',
               field: 'price',
               width: 130,
               renderCell: (data): React.ReactElement => {
