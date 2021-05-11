@@ -188,7 +188,7 @@ const calculate = async ({
     campaignId,
     creatorId: targetCreatorId,
     cashToCreator,
-    salesIncomeToMarketer: Number(salesIncomeToMarketer) + Number(deliveryFee)
+    salesIncomeToMarketer,
   });
 
   // * 4. 모두 완료 후, 주문의 계산완료플래그를 true로 처리 (merchandiseOrders - calculateDoneFlag)
