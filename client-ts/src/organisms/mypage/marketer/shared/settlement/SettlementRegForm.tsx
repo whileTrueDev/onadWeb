@@ -1,18 +1,19 @@
-import React, { useEffect, useState } from 'react';
 import {
-  MenuItem, TextField, Typography,
-  OutlinedInput, makeStyles, Button, FormControl,
-  Radio, RadioGroup, FormControlLabel
+  Button, FormControl,
+  FormControlLabel, makeStyles, OutlinedInput,
+  Radio, RadioGroup, TextField, Typography
 } from '@material-ui/core';
+import { Autocomplete } from '@material-ui/lab';
+import React, { useEffect, useState } from 'react';
 import NumberFormat, { NumberFormatValues } from 'react-number-format';
-import banks from '../../../../../constants/banks';
-import ImageUploadIdentity from '../../../shared/settlement/ImageUploadIdentity';
-import { OnadUploadedImageData } from '../../../../../utils/hooks/useImageListUpload';
-import { useDialog } from '../../../../../utils/hooks';
 import CustomDialog from '../../../../../atoms/Dialog/Dialog';
-import ImageUploadAccount from '../../../shared/settlement/ImageUploadAccount';
-import { MarketerSettlement } from '../../office/interface';
+import banks, { Bank } from '../../../../../constants/banks';
+import { useDialog } from '../../../../../utils/hooks';
 import { UseGetRequestObject } from '../../../../../utils/hooks/useGetRequest';
+import { OnadUploadedImageData } from '../../../../../utils/hooks/useImageListUpload';
+import ImageUploadAccount from '../../../shared/settlement/ImageUploadAccount';
+import ImageUploadIdentity from '../../../shared/settlement/ImageUploadIdentity';
+import { MarketerSettlement } from '../../office/interface';
 
 const useStyles = makeStyles((theme) => ({
   field: { margin: theme.spacing(2, 0) },
@@ -43,7 +44,7 @@ export interface SettlementRegDTO {
 }
 
 export interface SettlementRegFormProps {
-  onSubmit: (dto: SettlementRegDTO, reqType?: 'post' | 'patch') => void;
+  onSubmit: (dto: Partial<SettlementRegDTO>, reqType?: 'post' | 'patch') => void;
   onCancle?: () => void;
   loading?: boolean;
   settlementData?: UseGetRequestObject<MarketerSettlement>;
@@ -62,11 +63,11 @@ export default function SettlementRegForm({
   }
   const sampleDialog = useDialog();
 
-  const [dto, setDto] = useState<SettlementRegDTO>({
+  const [dto, setDto] = useState<Omit<SettlementRegDTO, 'bankName'> & { bank: Bank | null }>({
     businessmanFlag: 'false',
     name: '',
     identificationNumber: '',
-    bankName: '',
+    bank: null,
     bankAccountOwner: '',
     bankAccountNumber: '',
     identificationImgSrc: '',
@@ -79,6 +80,7 @@ export default function SettlementRegForm({
     if (settlementData && settlementData.data) {
       setDto({
         ...settlementData.data,
+        bank: { bankCode: 'unknown', bankName: settlementData.data.bankName },
         businessmanFlag: settlementData.data.businessmanFlag ? 'true' : 'false'
       });
       setRequestType('patch');
@@ -94,6 +96,12 @@ export default function SettlementRegForm({
     setDto((prev) => ({ ...prev, [field]: e.target.value }));
   };
 
+  // ************************************************************
+  // 은행 선택 핸들러
+  const handleBankSelected = (e: any, bank: Bank | null): void => {
+    setDto({ ...dto, bank });
+  };
+  // ************************************************************
   // 주민등록번호 핸들러
   const handleNumberFormatChange = (
     d: NumberFormatValues, key: keyof SettlementRegDTO
@@ -205,18 +213,16 @@ export default function SettlementRegForm({
 
       <div className={classes.field}>
         <Typography className={classes.fieldTitle}>은행</Typography>
-        <TextField
-          select
-          value={dto.bankName}
-          onChange={handleChange('bankName')}
-          margin="dense"
-          className={classes.textField}
-        >
-          {banks.map((row) => {
-            const name = row.bankName;
-            return <MenuItem key={name} value={name}>{name}</MenuItem>;
-          })}
-        </TextField>
+        <Autocomplete
+          options={banks}
+          getOptionLabel={(options) => options.bankName}
+          value={dto.bank}
+          onChange={handleBankSelected}
+          style={{ maxWidth: 240 }}
+          renderInput={(params) => (
+            <TextField {...params} margin="dense" />
+          )}
+        />
       </div>
 
       <div className={classes.field}>
@@ -306,7 +312,7 @@ export default function SettlementRegForm({
         variant="contained"
         color="primary"
         onClick={(): void => {
-          onSubmit(dto, requestType);
+          onSubmit({ ...dto, bankName: dto.bank?.bankName }, requestType);
         }}
         disabled={loading}
       >

@@ -95,7 +95,9 @@
     "@types/recharts": "^1.8.5",
     "@types/recompose": "^0.30.7",
     "@types/shortid": "^0.0.29",
-    "@types/styled-components": "^5.1.7"
+    "@types/styled-components": "^5.1.7",
+    "cra-bundle-analyzer": "^0.1.0",
+    "webpack-bundle-analyzer": "^4.4.1"
   },
   "browserslist": {
     "production": [

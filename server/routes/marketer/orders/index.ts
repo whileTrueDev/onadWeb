@@ -2,6 +2,7 @@ import express from 'express';
 import createHttpError from 'http-errors';
 import responseHelper from '../../../middlewares/responseHelper';
 import doQuery from '../../../model/doQuery';
+import slack from '../../../lib/slack/messageWithJson';
 
 const router = express.Router();
 
@@ -69,17 +70,18 @@ router.route('/')
       // 해당 order가 요청자의 marketerId와 동일한 지 확인을 위해
       const selectQuery = `
       SELECT
-        marketerId, quantity, merchandiseRegistered.id AS merchandiseId, mor.id AS releaseId
+        marketerId, quantity, merchandiseRegistered.id AS merchandiseId,
+        mor.id AS releaseId, ordererName, merchandiseRegistered.name AS merchandiseName
       FROM merchandiseRegistered
         JOIN merchandiseOrders ON merchandiseRegistered.id = merchandiseOrders.merchandiseId
         LEFT JOIN merchandiseOrderRelease AS mor ON mor.orderId = merchandiseOrders.id
       WHERE merchandiseOrders.id = ?`;
-      const merchandiseMarketerIdQuery = await doQuery(selectQuery, [orderId]);
-      if (!merchandiseMarketerIdQuery.result || merchandiseMarketerIdQuery.result.length === 0) {
+      const orderData = await doQuery(selectQuery, [orderId]);
+      if (!orderData.result || orderData.result.length === 0) {
         throw new createHttpError[401]();
       } else {
-        const marketer = merchandiseMarketerIdQuery.result[0];
-        if (marketer.marketerId === marketerId) {
+        const order = orderData.result[0];
+        if (order.marketerId === marketerId) {
           const query = 'UPDATE merchandiseOrders SET status = ?, denialReason = ? WHERE id = ?';
           const queryArray = [status, denialReason || null, orderId];
 
@@ -91,12 +93,24 @@ router.route('/')
             merchandiseOrderRelease (orderId, courierCompany, trackingNumber) VALUES (?, ?, ?)`;
             let releaseArray = [orderId, courierCompany, trackingNumber];
 
-            if (marketer.releaseId) {
+            if (order.releaseId) {
               releaseQuery = 'UPDATEA merchandiseOrderRelease SET courierCompany = ? trackingNumber = ? WHERE id = ?';
-              releaseArray = [courierCompany, trackingNumber, marketer.releaseId];
+              releaseArray = [courierCompany, trackingNumber, order.releaseId];
             }
 
             await doQuery(releaseQuery, releaseArray);
+
+            // 슬랙 알림
+            slack({
+              summary: '[온애드 CPS] 상품 출고 완료 알림',
+              text: '광고주가 주문상품을 출고하였습니다. 온애드샵에서 출고 정보를 입력하고, 출고완료 처리를 진행해주세요.',
+              fields: [
+                { title: '상품명', value: order.merchandiseName, short: true },
+                { title: '주문자', value: order.ordererName, short: true },
+                { title: '택배사', value: courierCompany, short: true },
+                { title: '송장번호', value: trackingNumber, short: true },
+              ]
+            });
           }
 
           // 주문 취소시 팔린개수 처리 롤백
@@ -104,7 +118,7 @@ router.route('/')
             const soldCountQuery = `
             UPDATE merchandiseMallItems SET soldCount = soldCount - ? WHERE merchandiseId = ?
             `;
-            await doQuery(soldCountQuery, [marketer.quantity, marketer.merchandiseId]);
+            await doQuery(soldCountQuery, [order.quantity, order.merchandiseId]);
           }
 
           responseHelper.send(result.affectedRows, 'patch', res);

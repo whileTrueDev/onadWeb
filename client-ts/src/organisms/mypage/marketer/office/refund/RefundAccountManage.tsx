@@ -40,7 +40,7 @@ function RefundAccountForm(props: RefundAccountFormProps): JSX.Element {
   return (
     <Paper className={classes.root}>
       <Typography style={{ fontWeight: 'bold' }}>
-        환불 계좌 정보
+        광고 캐시 환불 계좌 정보
       </Typography>
       {!accountData.loading && accountData.data && accountData.data.marketerAccountNumber ? (
         <div>

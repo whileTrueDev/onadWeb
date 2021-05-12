@@ -97,7 +97,7 @@ function updateFail() {
 }
 
 const scheduler = schedule.scheduleJob(
-  'Marketer taxbill scheduler', '1 10 1 * *', () => {
+  'Marketer taxbill scheduler', '1 10 1 * *', process.env.NODE_ENV === 'production' ? () => {
     // 전전월의 발행대기 => 미발행으로 변경 작업.
     updateFail()
       .then(() => {
@@ -121,7 +121,7 @@ const scheduler = schedule.scheduleJob(
         console.log(err);
         slack('마케터 세금계산서 미발행처리 중 오류발생함.', '마케터 세금계산서');
       });
-  }
+  } : () => {}
 );
 
 export default scheduler;

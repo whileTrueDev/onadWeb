@@ -3,11 +3,11 @@ import {
   Button, Chip, makeStyles, Paper, Typography
 } from '@material-ui/core';
 import moment from 'moment';
-import React from 'react';
+import React, { useMemo } from 'react';
 import CircularProgress from '../../../../../atoms/Progress/CircularProgress';
 import { UseGetRequestObject } from '../../../../../utils/hooks/useGetRequest';
 import MarketerSettlementLogsTable from '../../../../../atoms/Table/MarketerSettlementLogsTable';
-import { MarketerSalesImcome, MarketerSettlement } from '../interface';
+import { MarketerSalesIncome, MarketerSettlement } from '../interface';
 import { useDialog } from '../../../../../utils/hooks';
 import SettlementRegDialog from '../../shared/settlement/SettlementRegDialog';
 import renderMarketerSettlementState, { 광고주_정산등록상태_승인 } from '../../../../../utils/render_funcs/renderMarketerSettlementState';
@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
 
 export type SalesIncomeSettlement = Array<string>
 export interface MySalesIncomeProps {
-  salesIncomeData: UseGetRequestObject<MarketerSalesImcome>;
+  salesIncomeData: UseGetRequestObject<MarketerSalesIncome>;
   settlementData: UseGetRequestObject<MarketerSettlement>;
   salesIncomeSettlementData: UseGetRequestObject<SalesIncomeSettlement[]>;
 }
@@ -40,6 +40,11 @@ export default function MySalesIncome({
   const classes = useStyles();
 
   const settlementDialog = useDialog();
+
+  const salesIncome = useMemo(() => {
+    if (!salesIncomeData.data) return 0;
+    return salesIncomeData.data.receivable + salesIncomeData.data.receivableDeliveryFee;
+  }, [salesIncomeData.data]);
 
   return (
     <Paper className={classes.root}>
@@ -66,12 +71,11 @@ export default function MySalesIncome({
       {!salesIncomeData.loading && salesIncomeData.data && (
         <div className={classes.bottomSpace}>
           <Typography style={{ fontWeight: 'bold' }}>보유 판매 대금</Typography>
-          <Typography gutterBottom variant="h4" style={{ fontWeight: 'bold' }}>
-            {`${salesIncomeData.data.receivable.toLocaleString()} 원`}
-            <Typography component="span" variant="body2" color="textSecondary">
-              &nbsp;
-              {`누적 판매 대금: ${salesIncomeData.data.totalIncome.toLocaleString()} 원`}
-            </Typography>
+          <Typography variant="h4" style={{ fontWeight: 'bold' }}>
+            {`${salesIncome.toLocaleString()} 원`}
+          </Typography>
+          <Typography variant="body2" color="textSecondary" gutterBottom>
+            {`상품 판매 ${salesIncomeData.data.receivable.toLocaleString()} 원 + 배송비 ${salesIncomeData.data.receivableDeliveryFee.toLocaleString()} 원`}
           </Typography>
           {!salesIncomeData.loading && !salesIncomeData.error && salesIncomeData.data && (
           <Typography variant="caption" color="textSecondary">
@@ -82,7 +86,7 @@ export default function MySalesIncome({
       )}
       {!settlementData.loading && (
       <div className={classes.bottomSpace}>
-        <Typography>
+        <Typography component="div">
           {'정산등록상태: '}
           {!settlementData.data
             ? (<Chip label="미등록" size="small" />)
