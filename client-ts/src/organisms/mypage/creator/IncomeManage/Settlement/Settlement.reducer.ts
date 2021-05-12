@@ -20,7 +20,7 @@ const SettlementFormReducer = (
         code: bank.bankCode
       };
     default:
-      return { name: '농협', code: '011' };
+      return { name: 'NH농협은행', code: '010' };
   }
 };
 

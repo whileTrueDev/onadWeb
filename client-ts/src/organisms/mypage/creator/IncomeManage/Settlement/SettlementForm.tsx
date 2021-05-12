@@ -1,23 +1,23 @@
 // AccountNumber를 입력하는 Form component 작성
-import React, {
-  useState, useReducer
-} from 'react';
 import {
-  TextField, MenuItem, Grid, Dialog, FormControlLabel, Checkbox
+  Checkbox, Dialog, FormControlLabel, Grid, TextField
 } from '@material-ui/core';
 import { makeStyles, Theme } from '@material-ui/core/styles';
+import { Autocomplete } from '@material-ui/lab';
+import React, {
+  useState
+} from 'react';
 import NumberFormat, { NumberFormatValues } from 'react-number-format';
 import Button from '../../../../../atoms/CustomButtons/Button';
-import settlementFormReducer from './Settlement.reducer';
-import usePatchRequest from '../../../../../utils/hooks/usePatchRequest';
 import StyledItemText from '../../../../../atoms/StyledItemText';
+import banks, { Bank } from '../../../../../constants/banks';
 import useDialog from '../../../../../utils/hooks/useDialog';
-import SettlementAgreement from './SettlementAgreement';
+import usePatchRequest from '../../../../../utils/hooks/usePatchRequest';
 import ImageUploadAccount from '../../../shared/settlement/ImageUploadAccount';
+import ImageUploadIdentity from '../../../shared/settlement/ImageUploadIdentity';
 import BussinessImgUpload from './BussinessImgUpload';
 import CompleteMessage from './CompleteMessage';
-import banks from '../../../../../constants/banks';
-import ImageUploadIdentity from '../../../shared/settlement/ImageUploadIdentity';
+import SettlementAgreement from './SettlementAgreement';
 
 const useStyles = makeStyles((theme: Theme) => ({
   textField: {
@@ -95,10 +95,9 @@ function SettlementForm({
   };
 
   // 은행이름
-  const [bankState, dispatch] = useReducer(settlementFormReducer, { name: '농협', code: '011' });
-  const handleChangeBank = (event: React.ChangeEvent<HTMLInputElement>): void => {
-    const newbank = event.target.value;
-    dispatch({ type: 'set', name: newbank });
+  const [bankState, setBankState] = useState<Bank | null>(null);
+  const handleChangeBank = (_: any, newValue: Bank | null): void => {
+    setBankState(newValue);
   };
 
   // 계좌번호
@@ -211,21 +210,24 @@ function SettlementForm({
 
   const handleSubmit = (event: React.MouseEvent<HTMLFormElement>): void => {
     event.preventDefault();
-    const creatorData = {
-      bankName: bankState.name,
-      bankRealName: realName,
-      bankAccount: accountNum,
-      CreatorName: creatorName,
-      CreatorIdentity: creatorIdentity,
-      CreatorPhone: creatorPhone,
-      CreatorIDImg: creatorIDImg,
-      CreatorAccountImg: creatorAccountImg,
-      CreatorBussinessImg: creatorBussinessImg,
-      CreatorType
-    };
 
-    // usePostRequest
-    settlementPatch.doPatchRequest({ ...creatorData });
+    if (!bankState) alert('은행을 선택해주세요.');
+    else {
+      const creatorData = {
+        bankName: bankState.bankName,
+        bankRealName: realName,
+        bankAccount: accountNum,
+        CreatorName: creatorName,
+        CreatorIdentity: creatorIdentity,
+        CreatorPhone: creatorPhone,
+        CreatorIDImg: creatorIDImg,
+        CreatorAccountImg: creatorAccountImg,
+        CreatorBussinessImg: creatorBussinessImg,
+        CreatorType
+      };
+      // usePostRequest
+      settlementPatch.doPatchRequest({ ...creatorData });
+    }
   };
 
   return (
@@ -323,21 +325,16 @@ function SettlementForm({
         </div>
         <Grid item className={classes.content}>
           <StyledItemText primary="은행" fontSize="15px" className={classes.contentTitle} />
-          <TextField
-            required
-            select
-            name="bank"
-            id="bank"
-            className={classes.textField}
-            value={bankState.name || ''}
+          <Autocomplete
+            options={banks}
+            getOptionLabel={(option) => option.bankName}
+            value={bankState}
             onChange={handleChangeBank}
-            margin="dense"
-          >
-            {banks.map((row) => {
-              const name = row.bankName;
-              return <MenuItem key={name} value={name}>{name}</MenuItem>;
-            })}
-          </TextField>
+            className={classes.textField}
+            renderInput={(params) => (
+              <TextField {...params} required margin="dense" />
+            )}
+          />
         </Grid>
         <Grid item className={classes.content}>
           <StyledItemText primary="예금주" fontSize="15px" className={classes.contentTitle} />
