@@ -2,7 +2,6 @@
 import express from 'express';
 import passport from 'passport';
 // import checkEmailAuth from '../../middlewares/checkEmailAuth';
-import Axios from 'axios';
 import responseHelper from '../../middlewares/responseHelper';
 import doQuery from '../../model/doQuery';
 import checkEmailAuth from '../../middlewares/checkEmailAuth';
