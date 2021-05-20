@@ -1,4 +1,6 @@
-export type Session = CreatorSession & MarketerSession
+export type OnadSession = {
+  userType: 'marketer' | 'creator';
+} & Omit<MarketerSession, 'userType'> & Omit<CreatorSession, 'userType'>;
 
 export type MarketerSession = {
   userType: 'marketer';

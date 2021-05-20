@@ -8,13 +8,22 @@ import { LocalStrategy } from './strategies/local.strategy';
 import { LoginController } from './login.controller';
 import { LoginStamp } from '../../entities/LoginStamp';
 import { MarketerModule } from '../marketer/marketer.module';
+import { MarketerGoogleStrategy } from './strategies/marketerGoogle.strategy';
+import { SessionSerializer } from './passport.serializer';
 
 @Module({
   imports: [
-    MarketerModule, CreatorModule, PassportModule,
+    MarketerModule,
+    CreatorModule,
+    PassportModule.register({ session: true }),
     TypeOrmModule.forFeature([LoginStamp])
   ],
   controllers: [AuthController, LoginController],
-  providers: [AuthService, LocalStrategy]
+  providers: [
+    AuthService,
+    SessionSerializer,
+    LocalStrategy,
+    MarketerGoogleStrategy,
+  ],
 })
 export class AuthModule {}

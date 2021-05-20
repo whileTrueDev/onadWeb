@@ -4,7 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Profile } from 'passport-google-oauth20';
 import { Repository } from 'typeorm';
 import { LoginStamp } from '../../entities/LoginStamp';
-import { CreatorSession, MarketerSession } from '../../interfaces/Session.interface';
+import { CreatorSession, MarketerSession, OnadSession } from '../../interfaces/Session.interface';
 import encryption from '../../utils/encryption';
 import { CreatorService } from '../creator/creator.service';
 import { MarketerService } from '../marketer/marketer.service';
@@ -20,7 +20,7 @@ export class AuthService {
     private readonly marketerService: MarketerService,
   ) {}
 
-  public login(type?: UserType, loginDto?: LoginDto): any { // return User
+  public login(type?: UserType, loginDto?: LoginDto): Promise<OnadSession> { // return User
     switch (type) {
       case 'creator':
         return this.creatorLocalLogin(loginDto.userId, loginDto.password);
@@ -110,8 +110,7 @@ export class AuthService {
       sub, given_name, family_name, email
     } = jsonData;
 
-    const marketer = await this.marketerService.findOne(sub);
-
+    const marketer = await this.marketerService.findGoogleUser(sub);
     // 이미 구글로그인을 통해 가입한 경우 로그인 처리
     if (marketer) {
       const user: MarketerSession = {
@@ -131,7 +130,7 @@ export class AuthService {
 
     // 이미 구글로그인을 통해 가입한 경우 회원가입 처리 (registered속성을 통해)
     const user = {
-      userType: 'marketer',
+      userType: 'marketer' as const,
       marketerMail: email,
       marketerName: family_name + given_name,
       marketerPlatformData: sub,

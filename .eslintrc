@@ -69,7 +69,7 @@
             }
         ],
         "class-methods-use-this": 0,
-        // "@typescript-eslint/camelcase": "warn",
+        "@typescript-eslint/camelcase": "warn",
         "@typescript-eslint/no-var-requires": "warn", // please use import
         "no-case-declarations": "warn", // please use import
         "import/extensions": [

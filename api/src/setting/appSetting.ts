@@ -4,6 +4,7 @@ import express from 'express';
 import session from 'express-session';
 import helmet from 'helmet';
 import cors from 'cors';
+import passport from 'passport';
 import colorizedMorgan from '../middleware/colorizedMorgan.middleware';
 
 const MySQLStore = require('express-mysql-session')(session);
@@ -45,14 +46,15 @@ export class AppSetting {
         // expiration: 86400000 // 세션 만료 시간 86400000 = 24h
       }),
       cookie: {
-        // sameSite: 'none',
+        sameSite: 'lax',
         secure: false, // production환경 ? true : false
+        httpOnly: true,
         // maxAge: Date.now() + (30 * 86400 * 1000), // 만료 날짜 설정
       }
     }));
 
     // passport 초기화를 통해 'local' 전략이 수립된다.
-    // this.app.use(passport.initialize());
-    // this.app.use(passport.session());
+    this.app.use(passport.initialize());
+    this.app.use(passport.session());
   }
 }

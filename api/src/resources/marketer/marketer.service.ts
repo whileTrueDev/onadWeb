@@ -7,10 +7,12 @@ import { MarketerInfo } from '../../entities/MarketerInfo';
 export class MarketerService {
   constructor(
     @InjectRepository(MarketerInfo) private readonly marketerInfoRepo: Repository<MarketerInfo>,
-  ) {
-
-  }
+  ) {}
   async findOne(marketerId: string): Promise<MarketerInfo> {
     return this.marketerInfoRepo.findOne(marketerId);
+  }
+
+  async findGoogleUser(marketerId: string): Promise<MarketerInfo> {
+    return this.marketerInfoRepo.findOne(marketerId, { where: { platformType: 1 } });
   }
 }

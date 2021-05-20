@@ -1,37 +1,57 @@
 import {
-  Controller, Get, Post, Req, Res, UseGuards
+  Controller, Get, Post, Req, Res, Session, UseGuards
 } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { Request, Response } from 'express';
+import { SessionData } from 'express-session';
+import { MarketerSession } from '../../interfaces/Session.interface';
 import { GoogleAuthGuard } from './guards/google.guard';
 import { LocalAuthGuard } from './guards/local.guard';
 
 @Controller('login')
 export class LoginController {
+  HOST: string;
+
+  constructor(
+    private readonly configService: ConfigService,
+  ) {
+    this.HOST = configService.get('REACT_HOSTNAME');
+  }
   @UseGuards(LocalAuthGuard)
   @Post()
   localLogin(@Req() req: Request): Express.User {
     return req.user;
   }
 
+  @Post('logout')
+  logout(@Req() req: Request, @Res() res: Response): void {
+    req.logout();
+    if (req.session) {
+      req.session.destroy((err) => {
+        console.log('logout error - ', err);
+      });
+    }
+    res.end();
+  }
+
   @UseGuards(GoogleAuthGuard)
-  @Post('google')
   @Get('google')
   googleLogin(@Req() req: Request): Express.User {
     return req.user;
   }
 
   @UseGuards(GoogleAuthGuard)
-  @Post('google/callback')
   @Get('google/callback')
-  googleLoginCallback(@Res() res: Response) {
+  googleLoginCallback(
+    @Req() req: Request, @Session() session: MarketerSession, @Res() res: Response
+  ): void {
+    console.log('req.user: ', req.user);
     // 구글로그인 콜백함수 추가
-    // console.log(sess);
-    // if (sess.registered) {
-    //   console.log('success google login');
-    //   res.redirect(`${HOST}/mypage/marketer/main`);
-    // } else {
-    //   console.log('success google login - 정보입력');
-    //   res.redirect(`${HOST}/regist/google`);
-    // }
+    if (req.user.registered) {
+      console.log('success google login');
+      return res.redirect(`${this.HOST}/mypage/marketer/main`);
+    }
+    console.log('success google login - 최초 로그인 정보입력');
+    return res.redirect(`${this.HOST}/regist/google`);
   }
 }
