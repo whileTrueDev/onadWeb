@@ -5,7 +5,12 @@ export class MarketerInfo {
   @Column('varchar', { primary: true, name: 'marketerId', length: 100 })
   marketerId: string;
 
-  @Column('int', { name: 'platformType', nullable: true, default: () => "'0'" })
+  @Column('int', {
+    name: 'platformType',
+    nullable: true,
+    default: () => "'0'",
+    comment: '0: 우리플랫폼, 1: 구글, 2: 네이버, 3: 카카오',
+  })
   platformType: number | null;
 
   @Column('varchar', { name: 'marketerName', nullable: true, length: 50 })

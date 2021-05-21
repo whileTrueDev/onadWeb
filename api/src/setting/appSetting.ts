@@ -4,7 +4,6 @@ import express from 'express';
 import session from 'express-session';
 import helmet from 'helmet';
 import cors from 'cors';
-import csurf from 'csurf';
 import passport from 'passport';
 import colorizedMorgan from '../middleware/colorizedMorgan.middleware';
 
@@ -26,9 +25,8 @@ export class AppSetting {
   constructor(private app: NestExpressApplication) {}
 
   public initialize(): void {
-    this.app.use(cors(this.corsOptions));
-    this.app.use(csurf());
     this.app.use(helmet());
+    this.app.use(cors(this.corsOptions));
     this.app.use(express.urlencoded({ limit: '50mb', extended: true }));
     this.app.use(express.json({ limit: '50mb' }));
     this.app.use(cookieParser('@#@$MYSIGN#@$#$'));

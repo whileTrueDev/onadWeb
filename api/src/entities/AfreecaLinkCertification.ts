@@ -1,6 +1,4 @@
-import {
-  Column, Entity, Index, PrimaryGeneratedColumn
-} from 'typeorm';
+import { Column, Entity, Index, PrimaryGeneratedColumn } from 'typeorm';
 
 @Index('tempCode', ['tempCode'], { unique: true })
 @Entity('afreecaLinkCertification', { schema: 'onadnode' })
@@ -19,7 +17,7 @@ export class AfreecaLinkCertification {
   })
   tempCode: string | null;
 
-  @Column('smallint', { name: 'certState', nullable: true })
+  @Column('smallint', { name: 'certState', nullable: true, comment: '0=진행중,1=완료' })
   certState: number | null;
 
   @Column('varchar', { name: 'afreecaId', nullable: true, length: 50 })

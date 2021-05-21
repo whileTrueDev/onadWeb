@@ -18,6 +18,6 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
 
     // type 을 통해 creator, marketer 구분하여 로그인
     const { type } = req.body;
-    return authService.login(type, { userId, password }); // returns User
+    return authService.localLogin(type, { userId, password }); // returns User
   }
 }

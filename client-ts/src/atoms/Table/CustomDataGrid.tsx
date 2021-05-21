@@ -1,7 +1,7 @@
-import { DataGrid, DataGridProps, LocaleText } from '@material-ui/data-grid';
+import { DataGrid, DataGridProps, GridLocaleText } from '@material-ui/data-grid';
 import React from 'react';
 
-export const KOREAN_LOCALE_TEXT: LocaleText = {
+export const KOREAN_LOCALE_TEXT: Partial<GridLocaleText> = {
   // Root
   rootGridLabel: 'grid',
   noRowsLabel: '데이터가 없습니다',
@@ -63,7 +63,7 @@ export const KOREAN_LOCALE_TEXT: LocaleText = {
   footerTotalRows: '총 행:',
 
   // Pagination footer text
-  footerPaginationRowsPerPage: '페이지 당 행:',
+  // footerPaginationRowsPerPage: '페이지 당 행:',
 };
 
 export default function CustomDataGrid(props: DataGridProps): JSX.Element {

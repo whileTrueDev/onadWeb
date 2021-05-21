@@ -1,25 +1,7 @@
 /* eslint-disable camelcase */
 import { Injectable } from '@nestjs/common';
 import Axios from 'axios';
-
-export interface TwitchTokenRes {
-  access_token: string;
-  refresh_token: string;
-  scope: string;
-}
-
-export interface TwitchProfile {
-  id: string;
-  login: string;
-  display_name: string;
-  type: string;
-  broadcaster_type: string;
-  description: string;
-  profile_image_url: string;
-  offline_image_url: string;
-  view_count: number;
-  email: string;
-}
+import { TwitchTokenRes, TwitchProfile } from '../../interfaces/TwitchProfile.interface';
 
 @Injectable()
 export class TwitchApiService {
@@ -40,7 +22,7 @@ export class TwitchApiService {
       });
   }
 
-  getUserProfile(access_token: string, creatorId: string): Promise<TwitchProfile> {
+  getUserProfile(access_token: string, creatorId?: string): Promise<TwitchProfile> {
     const profileUrl = 'https://api.twitch.tv/helix/users';
     const headers = {
       Authorization: `Bearer ${access_token}`,

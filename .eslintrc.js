@@ -29,6 +29,7 @@ module.exports = {
         ignorePattern: '^import\\s.+\\sfrom\\s.+;$',
       },
     ],
+    'lines-between-class-members': ['error', 'always', { exceptAfterSingleLine: true }],
     'no-use-before-define': 'off',
     'linebreak-style': 'off',
     camelcase: 'warn',

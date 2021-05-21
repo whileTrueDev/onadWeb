@@ -8,11 +8,29 @@ export class MarketerService {
   constructor(
     @InjectRepository(MarketerInfo) private readonly marketerInfoRepo: Repository<MarketerInfo>,
   ) {}
+
   async findOne(marketerId: string): Promise<MarketerInfo> {
     return this.marketerInfoRepo.findOne(marketerId);
   }
 
-  async findGoogleUser(marketerId: string): Promise<MarketerInfo> {
-    return this.marketerInfoRepo.findOne(marketerId, { where: { platformType: 1 } });
+  async findOneByPlatform(
+    marketerId: string,
+    platform: 'google' | 'naver' | 'kakao',
+  ): Promise<MarketerInfo> {
+    let platformId = 0;
+    switch (platform) {
+      case 'google':
+        platformId = 1;
+        break;
+      case 'naver':
+        platformId = 2;
+        break;
+      case 'kakao':
+        platformId = 3;
+        break;
+      default:
+        platformId = 0;
+    }
+    return this.marketerInfoRepo.findOne(marketerId, { where: { platformType: platformId } });
   }
 }
