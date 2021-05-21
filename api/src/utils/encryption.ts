@@ -31,13 +31,9 @@ const makeDecipherText = (account: string): string => {
   const iv = Buffer.alloc(16, process.env.CIPHER_IV, 'base64');
 
   const decipher = crypto.createDecipheriv('aes-256-cbc', cryptkey, iv);
-  const buffer = Buffer.concat([
-    decipher.update(accountBuffer),
-    decipher.final()
-  ]);
+  const buffer = Buffer.concat([decipher.update(accountBuffer), decipher.final()]);
   return buffer.toString('utf-8');
 };
-
 
 const makeCipherText = (account: string): string => {
   if (account === '') {
@@ -50,10 +46,7 @@ const makeCipherText = (account: string): string => {
   const iv = Buffer.alloc(16, process.env.CIPHER_IV, 'base64');
   const cryptkey = crypto.createHash('sha256').update(secret).digest();
   const encipher = crypto.createCipheriv('aes-256-cbc', cryptkey, iv);
-  const buffer = Buffer.concat([
-    encipher.update(account),
-    encipher.final()
-  ]);
+  const buffer = Buffer.concat([encipher.update(account), encipher.final()]);
 
   return buffer.toString('base64');
 };
@@ -62,7 +55,7 @@ const encrypto = {
   make: makeEncryption,
   check: checkEncryption,
   encipher: makeCipherText,
-  decipher: makeDecipherText
+  decipher: makeDecipherText,
 };
 
 export default encrypto;

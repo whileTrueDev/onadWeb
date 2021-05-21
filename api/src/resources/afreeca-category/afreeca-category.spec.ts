@@ -5,7 +5,7 @@ import { AfreecaCategoryService } from './afreeca-category.service';
 
 describe('AfreecaCategoryController', () => {
   let controller: AfreecaCategoryController;
-  let service : AfreecaCategoryService;
+  let service: AfreecaCategoryService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -26,12 +26,18 @@ describe('AfreecaCategoryController', () => {
 
   describe('getCategories', () => {
     it('should return an array of AfreecaCategory', async () => {
-      const result:AfreecaCategory[] = [
+      const result: AfreecaCategory[] = [
         {
-          categoryId: '001234', categoryNameKr: 'cateogry1', isSub: 0, parentCategoryId: null
+          categoryId: '001234',
+          categoryNameKr: 'cateogry1',
+          isSub: 0,
+          parentCategoryId: null,
         },
         {
-          categoryId: '000000', categoryNameKr: 'cateogry2', isSub: 1, parentCategoryId: '001234'
+          categoryId: '000000',
+          categoryNameKr: 'cateogry2',
+          isSub: 1,
+          parentCategoryId: '001234',
         },
       ];
       jest.spyOn(service, 'getCategories').mockImplementation(async () => result);

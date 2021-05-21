@@ -16,14 +16,9 @@ import { SessionSerializer } from './passport.serializer';
     MarketerModule,
     CreatorModule,
     PassportModule.register({ session: true }),
-    TypeOrmModule.forFeature([LoginStamp])
+    TypeOrmModule.forFeature([LoginStamp]),
   ],
   controllers: [AuthController, LoginController],
-  providers: [
-    AuthService,
-    SessionSerializer,
-    LocalStrategy,
-    MarketerGoogleStrategy,
-  ],
+  providers: [AuthService, SessionSerializer, LocalStrategy, MarketerGoogleStrategy],
 })
 export class AuthModule {}

@@ -14,8 +14,9 @@
     "baseUrl": "./",
     "incremental": true,
     "moduleResolution": "node",
-    "compilerOptions": {
-      "typeRoots": ["./node_modules/@types","./@types"], 
-   }
+    "typeRoots": [
+      "./node_modules/@types",
+      "./@types"
+    ],
   }
 }

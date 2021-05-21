@@ -14,18 +14,26 @@ export class MarketerGoogleStrategy extends PassportStrategy(Strategy, 'google')
     super({
       clientID: configService.get<string>('GOOGLE_CLIENT_ID'),
       clientSecret: configService.get<string>('GOOGLE_CLIENT_SECRET'),
-      callbackURL: `${configService.get<string>('API_HOSTNAME' || 'http://localhost:3000')}/login/google/callback`,
+      callbackURL: `${configService.get<string>(
+        'API_HOSTNAME' || 'http://localhost:3000',
+      )}/login/google/callback`,
       scope: ['email', 'profile'],
     });
   }
 
   authorizationParams(option: any): any {
-    return Object.assign(option, { access_type: 'offline', prompt: 'consent', include_granted_scopes: true, });
+    return Object.assign(option, {
+      access_type: 'offline',
+      prompt: 'consent',
+      include_granted_scopes: true,
+    });
   }
 
   async validate(
-    accessToken: string, refreshToken: string, profile: Profile,
+    accessToken: string,
+    refreshToken: string,
+    profile: Profile,
   ): Promise<OnadSession & { marketerPlatformData?: string }> {
-    return this.authService.googleLogin(profile); // returns User 
+    return this.authService.googleLogin(profile); // returns User
   }
 }

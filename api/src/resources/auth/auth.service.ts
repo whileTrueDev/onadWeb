@@ -20,7 +20,8 @@ export class AuthService {
     private readonly marketerService: MarketerService,
   ) {}
 
-  public login(type?: UserType, loginDto?: LoginDto): Promise<OnadSession> { // return User
+  public login(type?: UserType, loginDto?: LoginDto): Promise<OnadSession> {
+    // return User
     switch (type) {
       case 'creator':
         return this.creatorLocalLogin(loginDto.userId, loginDto.password);
@@ -43,7 +44,7 @@ export class AuthService {
     const creator = await this.creatorService.findOne({ loginId: userId });
     if (!creator) throw new UnauthorizedException('회원이 아닙니다.');
 
-    if (!(encryption.check(password, creator.password, creator.passwordSalt))) {
+    if (!encryption.check(password, creator.password, creator.passwordSalt)) {
       throw new UnauthorizedException('비밀번호가 일치하지 않습니다.');
     }
     const user: CreatorSession = {
@@ -53,20 +54,26 @@ export class AuthService {
     };
 
     // ***************************************************
-    // 트위치 연동한 상태라면, 트위치 연동 정보 최신화 
+    // 트위치 연동한 상태라면, 트위치 연동 정보 최신화
     if (creator.creatorTwitchOriginalId) {
-      this.creatorService.updateTwitchInfo(creator).then((result) => {
-        if (result === 'success') console.log(`트위치 연동 정보 최신화 성공 - ${userId}`);
-        if (result === 'fail') console.log(`트위치 연동 정보 최신화 실패 - ${userId}`);
-      }).catch((err) => console.error(`트위치 연동 정보 최신화 실패 - ${err}`));
+      this.creatorService
+        .updateTwitchInfo(creator)
+        .then(result => {
+          if (result === 'success') console.log(`트위치 연동 정보 최신화 성공 - ${userId}`);
+          if (result === 'fail') console.log(`트위치 연동 정보 최신화 실패 - ${userId}`);
+        })
+        .catch(err => console.error(`트위치 연동 정보 최신화 실패 - ${err}`));
     }
 
-    // 아프리카 연동한 상태라면, 아프리카 연동 정보 최신화 
+    // 아프리카 연동한 상태라면, 아프리카 연동 정보 최신화
     if (creator.afreecaId) {
-      this.creatorService.updateAfreecaInfo(creator).then((result) => {
-        if (result === 'success') console.log(`아프리카 연동 정보 최신화 성공 - ${userId}`);
-        if (result === 'fail') console.log(`아프리카 연동 정보 최신화 실패 - ${userId}`);
-      }).catch((err) => console.error(`아프리카 연동 정보 최신화 실패 - ${err}`));
+      this.creatorService
+        .updateAfreecaInfo(creator)
+        .then(result => {
+          if (result === 'success') console.log(`아프리카 연동 정보 최신화 성공 - ${userId}`);
+          if (result === 'fail') console.log(`아프리카 연동 정보 최신화 실패 - ${userId}`);
+        })
+        .catch(err => console.error(`아프리카 연동 정보 최신화 실패 - ${err}`));
     }
 
     return user;
@@ -84,7 +91,7 @@ export class AuthService {
     const marketer = await this.marketerService.findOne(userId);
     if (!marketer) throw new UnauthorizedException('회원이 아닙니다.');
 
-    if (!(encryption.check(password, marketer.marketerPasswd, marketer.marketerSalt))) {
+    if (!encryption.check(password, marketer.marketerPasswd, marketer.marketerSalt)) {
       throw new UnauthorizedException('비밀번호가 일치하지 않습니다.');
     }
 
@@ -106,9 +113,7 @@ export class AuthService {
 
   public async googleLogin(profile: Profile) {
     const jsonData = profile._json;
-    const {
-      sub, given_name, family_name, email
-    } = jsonData;
+    const { sub, given_name, family_name, email } = jsonData;
 
     const marketer = await this.marketerService.findGoogleUser(sub);
     // 이미 구글로그인을 통해 가입한 경우 로그인 처리
@@ -121,7 +126,7 @@ export class AuthService {
         marketerBusinessRegNum: marketer.marketerBusinessRegNum,
         marketerName: marketer.marketerName,
         marketerPhoneNum: marketer.marketerPhoneNum,
-        registered: true
+        registered: true,
       };
       this.marketerLoginStamp(user.marketerId);
       console.log(`[${new Date().toLocaleString()}] [마케터구글로그인] ${user.marketerName}`);
@@ -134,7 +139,7 @@ export class AuthService {
       marketerMail: email,
       marketerName: family_name + given_name,
       marketerPlatformData: sub,
-      registered: false
+      registered: false,
     };
 
     return user;

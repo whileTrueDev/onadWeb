@@ -5,11 +5,7 @@ import { AfreecaCategoryController } from './afreeca-category.controller';
 import { AfreecaCategory } from '../../entities/AfreecaCategory';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([
-      AfreecaCategory,
-    ])
-  ],
+  imports: [TypeOrmModule.forFeature([AfreecaCategory])],
   controllers: [AfreecaCategoryController],
   providers: [AfreecaCategoryService],
 })

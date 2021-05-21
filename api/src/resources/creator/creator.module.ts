@@ -7,13 +7,7 @@ import { CreatorController } from './creator.controller';
 import { CreatorService } from './creator.service';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([
-      CreatorInfo,
-    ]),
-    TwitchApiModule,
-    AfreecaApiModule,
-  ],
+  imports: [TypeOrmModule.forFeature([CreatorInfo]), TwitchApiModule, AfreecaApiModule],
   controllers: [CreatorController],
   providers: [CreatorService],
   exports: [CreatorService],

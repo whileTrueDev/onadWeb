@@ -8,10 +8,8 @@ import { AuthService } from '../auth.service';
 
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy) {
-  constructor(
-    private moduleRef: ModuleRef,
-  ) {
-    super({ usernameField: 'userid', passwordField: 'passwd', passReqToCallback: true, },);
+  constructor(private moduleRef: ModuleRef) {
+    super({ usernameField: 'userid', passwordField: 'passwd', passReqToCallback: true });
   }
 
   async validate(req: Request, userId: string, password: string): Promise<OnadSession> {
@@ -20,6 +18,6 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
 
     // type 을 통해 creator, marketer 구분하여 로그인
     const { type } = req.body;
-    return authService.login(type, { userId, password }); // returns User 
+    return authService.login(type, { userId, password }); // returns User
   }
 }

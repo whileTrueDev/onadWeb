@@ -22,7 +22,9 @@ const colorizedMorgan = morgan((tokens, req, res) => {
     chalk.cyanBright.bold(tokens.url(req, res)),
     contnetLength,
     chalk.hex('#2ed573').bold(`${tokens['response-time'](req, res)} ms`),
-    process.env.NODE_ENV === 'production' ? chalk.hex('#adf573').bold(tokens['remote-addr'](req, res)) : undefined,
+    process.env.NODE_ENV === 'production'
+      ? chalk.hex('#adf573').bold(tokens['remote-addr'](req, res))
+      : undefined,
     chalk.hex('#e1d573').bold(`[${tokens.date(req, res).toLocaleString()}]`),
   ].join(' ');
 });

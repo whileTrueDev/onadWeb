@@ -4,14 +4,14 @@ import request from 'request';
 
 const clientID = process.env.TWITCH_CLIENT_ID;
 
-export interface TwitchStrategyOptions extends OAuth2Strategy.StrategyOptionsWithRequest{
+export interface TwitchStrategyOptions extends OAuth2Strategy.StrategyOptionsWithRequest {
   forceVerify?: boolean;
 }
 class TwitchStrategy extends OAuth2Strategy {
   constructor(
     name: string,
     options: TwitchStrategyOptions,
-    verify: OAuth2Strategy.VerifyFunctionWithRequest
+    verify: OAuth2Strategy.VerifyFunctionWithRequest,
   ) {
     super(options, verify);
 
@@ -40,8 +40,8 @@ class TwitchStrategy extends OAuth2Strategy {
       headers: {
         'Client-ID': clientID,
         Accept: 'application/vnd.twitchtv.v5+json',
-        Authorization: `Bearer ${accessToken}`
-      }
+        Authorization: `Bearer ${accessToken}`,
+      },
     };
 
     request(options, (error, response, body) => {
@@ -54,7 +54,7 @@ class TwitchStrategy extends OAuth2Strategy {
   }
 
   authorizationParams(options: any): any {
-    const params: {[key: string]: any} = {};
+    const params: { [key: string]: any } = {};
     if (options.forceVerify) {
       params.force_verify = !!options.forceVerify;
     }

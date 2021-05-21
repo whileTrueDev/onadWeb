@@ -1,75 +1,71 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo_text.svg" width="320" alt="Nest Logo" /></a>
-</p>
-
-[travis-image]: https://api.travis-ci.org/nestjs/nest.svg?branch=master
-[travis-url]: https://travis-ci.org/nestjs/nest
-[linux-image]: https://img.shields.io/travis/nestjs/nest/master.svg?label=linux
-[linux-url]: https://travis-ci.org/nestjs/nest
-  
-  <p align="center">A progressive <a href="http://nodejs.org" target="blank">Node.js</a> framework for building efficient and scalable server-side applications, heavily inspired by <a href="https://angular.io" target="blank">Angular</a>.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore"><img src="https://img.shields.io/npm/dm/@nestjs/core.svg" alt="NPM Downloads" /></a>
-<a href="https://travis-ci.org/nestjs/nest"><img src="https://api.travis-ci.org/nestjs/nest.svg?branch=master" alt="Travis" /></a>
-<a href="https://travis-ci.org/nestjs/nest"><img src="https://img.shields.io/travis/nestjs/nest/master.svg?label=linux" alt="Linux" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#5" alt="Coverage" /></a>
-<a href="https://gitter.im/nestjs/nestjs?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=body_badge"><img src="https://badges.gitter.im/nestjs/nestjs.svg" alt="Gitter" /></a>
-<a href="https://opencollective.com/nest#backer"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec"><img src="https://img.shields.io/badge/Donate-PayPal-dc3d53.svg"/></a>
-  <a href="https://twitter.com/nestframework"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+# API server on Nestjs
 
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+기존에 존재하는 Express 서버에 /v2 엔드포인트를 생성한 뒤, Nest를 순차적으로 도입하고자 했으나,
+
+1. 그렇게 사용되는 예시가 없는 점
+2. 순차적 도입에는 대개 진행이 제대로 되지 않는다는 점
+3. 프론트 코드에서 요청시 /v2 엔드포인트 입력처리 등이 필요한 점
+4. 두 코드가 섞여있는 것이 더 어지러워, 관리가 더 어려운 점
+
+등에 의해 Nest 버전으로 rewrite 하는 방식으로 가는 것이 향후 프로젝트 관리에 있어 더 좋을 것이라 판단하였음.
+
+### Nestjs 프로젝트 정보
+
+1. 기존 트루포인트와는 다르게 `src/entities`에 모든 엔터티 클래스를 모아둔다.
+
+    → `typeorm-model-generator` 사용하여 기존 DB의 모든 테이블을 typeorm 엔터티 클래스로 구성함
+
+2. 모든 interface, dto는 shared 모듈 만들지 않고, API 프로젝트 내부에 구성.
+
+    → `shared` 모듈을 함께 제작하는 방향은 그 크기가 더 크다고 판단.
+    → 1차적으로 Nestjs로 옮기는 작업이후 향후 공유가 필요한 코드를 `shared` 로 빼는 작업을 다시 진행하는 것이 낫다.
+
+3. 기존 DB query 의 처리
+    1. 기본적으로는 모든 쿼리를 typeorm repository 방식으로 변경.
+    2. 어느정도 복잡한 쿼리에 queryBuilder 활용 가능.
+    3. 쿼리빌더 활용하여도 변경하기 힘든 경우, 기존 쿼리를 그대로 사용.
+4. test코드의 작성
+
+    nest-cli (`nest g resource`, `nest g controller`, ...) 로 생성시 작성되는 테스트 코드를 그대로 둔다.
+
+    → 테스트 코드 작성을 함께 진행시, 크기가 크다고 판단. 향후 테스트 코드 구성.
+
+5. 컨트롤러 엔드포인트의 처리
+
+    → 기존 express 엔드포인트를 1도 다름없이 똑같이 가져간다.
 
 ## Installation
 
 ```bash
-$ npm install
+$ yarn install
 ```
 
 ## Running the app
 
 ```bash
 # development
-$ npm run start
+$ yarn start
 
 # watch mode
-$ npm run start:dev
+$ yarn start:dev
+$ yarn start:dev
 
 # production mode
-$ npm run start:prod
+$ yarn start:prod
 ```
 
 ## Test
 
 ```bash
 # unit tests
-$ npm run test
+$ yarn test
 
 # e2e tests
-$ npm run test:e2e
+$ yarn test:e2e
 
 # test coverage
-$ npm run test:cov
+$ yarn test:cov
 ```
 
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-  Nest is [MIT licensed](LICENSE).

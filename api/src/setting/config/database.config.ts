@@ -5,7 +5,7 @@ import { DbSecret } from '../../interfaces/Secrets.interface';
 
 @Injectable()
 export class TypeOrmConfigService implements TypeOrmOptionsFactory {
-  constructor(private readonly configService: ConfigService) { }
+  constructor(private readonly configService: ConfigService) {}
 
   createTypeOrmOptions(): TypeOrmModuleOptions {
     const database: DbSecret = {
