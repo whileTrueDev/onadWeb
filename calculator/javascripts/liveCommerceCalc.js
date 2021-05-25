@@ -91,8 +91,8 @@ const calculate = async ({
     orderPrice, creatorCommission, onadCommission
   });
 
-  connection.beginTransaction();
   try {
+    connection.beginTransaction();
     // * 1. 광고주 판매대금 처리 (marketerSalesIncome)
     const marketerSalesIncome = calculateMarketerSalesIncome({
       marketerId, salesIncomeToMarketer, deliveryFee
@@ -118,7 +118,7 @@ const calculate = async ({
     connection.commit();
     console.log(`[${new Date().toLocaleString()}] ${campaignId} 캠페인 (상품: ${name}, 방송인: ${targetCreatorId}) 계산 완료`);
   } catch (e) {
-    console.log(`[order${orderId}, marketer${marketerId}]error occurred during calculate - `, e);
+    console.log(`[order: ${orderId}, marketer: ${marketerId}]error occurred during calculate - `, e);
     connection.rollback();
   } finally {
     connection.release();

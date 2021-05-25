@@ -1,5 +1,6 @@
 /* eslint-disable max-len */
 const doQuery = require('../model/calculatorQuery');
+const pool = require('../model/connectionPool');
 
 /**
    * 각 유저별 계산 대금을 구합니다. 리뷰/자랑하기/응원하기 글의 대상인 방송인이 있는 지 여부를 기준으로
@@ -32,7 +33,7 @@ const getCashesCalculated = ({
  * 주문 목록 중, 
  * 주문의 상태가 "구매확정"(6) 이며, 계산완료플래그가 false인 목록을 불러옵니다.
  * 이 목록은 계산의 대상입니다.
- * @returns [
+ * @returns {Array} [
   {
     id: 1,
     campaignId: 'gubgoo_c34',
@@ -70,9 +71,8 @@ const getTargets = async () => {
 /**
  * 계산 로그를 campaignLog에 적재
  * @param {object} param0 campaignId, creatorId, cashToCreator, salesIncomeToMarketer
- * @returns {number} inserted id
  */
-const calculateCampaignLog = async ({
+const calculateCampaignLog = ({
   campaignId, creatorId, cashToCreator, salesIncomeToMarketer
 }) => {
   const query = `
@@ -81,18 +81,15 @@ const calculateCampaignLog = async ({
   `;
   const queryArray = [campaignId, creatorId || '', 'CPS', cashToCreator, salesIncomeToMarketer];
 
-  const { result } = await doQuery(query, queryArray).catch((err) => `error occurred during run calculateCampaignLog - ${err}`);
-  if (result && result.insertId) return result.insertId;
-  return null;
+  return { query, queryArray };
 };
 
 /**
  * 광고주 판매대금을 입력합니다.
  * @author hwasurr
  * @param {object} param0 marketerId, salesIncomeToMarketer
- * @returns null | insertId
  */
-const calculateMarketerSalesIncome = async ({
+const calculateMarketerSalesIncome = ({
   marketerId, salesIncomeToMarketer, deliveryFee
 }) => {
   const query = `
@@ -107,10 +104,7 @@ const calculateMarketerSalesIncome = async ({
   const queryArray = [
     salesIncomeToMarketer, salesIncomeToMarketer, deliveryFee, deliveryFee, marketerId,
   ];
-
-  const { result } = await doQuery(query, queryArray).catch((err) => `error occurred during run calculateMarketerSalesIncome - ${err}`);
-  if (result && result.insertId) return result.insertId;
-  return null;
+  return { query, queryArray };
 };
 
 /**
@@ -120,7 +114,7 @@ const calculateMarketerSalesIncome = async ({
  * @param {object} param0 creatorId, cashToCreator
  * @returns null | insertId
  */
-const calculateCreatorIncome = async ({ creatorId, cashToCreator }) => {
+const calculateCreatorIncome = ({ creatorId, cashToCreator }) => {
   if (creatorId && cashToCreator) {
     const creatorIdStr = String(creatorId);
     const query = `
@@ -132,10 +126,7 @@ const calculateCreatorIncome = async ({ creatorId, cashToCreator }) => {
     FROM creatorIncome AS a WHERE creatorId = ? ORDER BY date DESC LIMIT 1
     `;
     const queryArray = [cashToCreator, cashToCreator, creatorIdStr];
-
-    const { result } = await doQuery(query, queryArray).catch((err) => `error occurred during run calculateCreatorIncome - ${err}`);
-    if (result && result.insertId) return result.insertId;
-    return null;
+    return { query, queryArray };
   }
   return null;
 };
@@ -145,13 +136,10 @@ const calculateCreatorIncome = async ({ creatorId, cashToCreator }) => {
  * @param {object} param0 orderId
  * @returns null | affectedRows
  */
-const updateFlag = async ({ orderId }) => {
+const updateFlag = ({ orderId }) => {
   const query = 'UPDATE merchandiseOrders SET calculateDoneFlag = ? WHERE id = ?';
   const queryArray = [1, orderId];
-
-  const { result } = await doQuery(query, queryArray).catch((err) => `error occurred during run updateFlag - ${err}`);
-  if (result && result.affectedRows) return result.affectedRows;
-  return null;
+  return { query, queryArray };
 };
 
 /**
@@ -172,27 +160,42 @@ const calculate = async ({
     creatorCommission,
     onadCommission,
   });
+  const conn = await pool.promise().getConnection();
 
-  // * 1. 광고주 판매대금 처리 (marketerSalesIncome - marketerId, 추가금액)
-  await calculateMarketerSalesIncome({ marketerId, salesIncomeToMarketer, deliveryFee });
+  try {
+    conn.beginTransaction();
 
-  // * 2. 방송인 수익금 처리 (creatorIncome - creatorId, 추가금액)
-  if (targetCreatorId) {
-    await calculateCreatorIncome({ creatorId: targetCreatorId, cashToCreator });
+    // * 1. 광고주 판매대금 처리 (marketerSalesIncome - marketerId, 추가금액)
+    const salesIncome = calculateMarketerSalesIncome({ marketerId, salesIncomeToMarketer, deliveryFee });
+    await conn.query(salesIncome.query, salesIncome.queryArray);
+
+    // * 2. 방송인 수익금 처리 (creatorIncome - creatorId, 추가금액)
+    if (targetCreatorId) {
+      const creatorIncome = calculateCreatorIncome({ creatorId: targetCreatorId, cashToCreator });
+      await conn.query(creatorIncome.query, creatorIncome.queryArray);
+    }
+
+    // * 3. 캠페인 계산 로그 처리 (campaignLog - campaignId, creatorId, type=CPS, cashToCreator, salesIncomeToMarketer)
+    const campaignLog = calculateCampaignLog({
+      campaignId,
+      creatorId: targetCreatorId,
+      cashToCreator,
+      salesIncomeToMarketer,
+    });
+    await conn.query(campaignLog.query, campaignLog.queryArray);
+
+    // * 4. 모두 완료 후, 주문의 계산완료플래그를 true로 처리 (merchandiseOrders - calculateDoneFlag)
+    const flag = updateFlag({ orderId });
+    await conn.query(flag.query, flag.queryArray);
+
+    conn.commit();
+    console.log(`[${new Date().toLocaleString()}] ${campaignId} 캠페인 (상품: ${name}, 방송인: ${creatorName || '없음'}) 계산 완료`);
+  } catch (e) {
+    console.log(`[${new Date().toLocaleString()}] order: ${orderId}, marketer: ${marketerId} error occurred during calculate - `, e);
+    conn.rollback();
+  } finally {
+    conn.release();
   }
-
-  // * 3. 캠페인 계산 로그 처리 (campaignLog - campaignId, creatorId, type=CPS, cashToCreator, salesIncomeToMarketer)
-  await calculateCampaignLog({
-    campaignId,
-    creatorId: targetCreatorId,
-    cashToCreator,
-    salesIncomeToMarketer,
-  });
-
-  // * 4. 모두 완료 후, 주문의 계산완료플래그를 true로 처리 (merchandiseOrders - calculateDoneFlag)
-  await updateFlag({ orderId });
-
-  console.log(`[${new Date().toLocaleString()}] ${campaignId} 캠페인 (상품: ${name}, 방송인: ${creatorName || '없음'}) 계산 완료`);
 };
 
 /**
