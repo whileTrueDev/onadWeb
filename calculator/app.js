@@ -8,6 +8,8 @@ require('./javascripts/calculation_v.5')()
   .then(require('./javascripts/referralCodeCalculator'))
   // CPS 계산
   .then(require('./javascripts/cpsCalculator'))
+  // 라이브커머스 계산
+  .then(require('./javascripts/liveCommerceCalc'))
   .then(() => {
     process.exit(0);
   });

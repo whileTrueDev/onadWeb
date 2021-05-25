@@ -3,7 +3,6 @@
     "plugins": [
         "react",
         "prettier",
-        "jest",
         "react-hooks"
     ],
     "extends": [
@@ -122,5 +121,5 @@
         "browser": true,
         "jest": true,
         "es6": true
-        }
     }
+}
