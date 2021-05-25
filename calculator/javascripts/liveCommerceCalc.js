@@ -3,6 +3,7 @@ const { doQuery } = require('../model/doQuery');
 const {
   getUpdateFlag, getInsertCampaignLog, getCalculateCreatorIncome, getCalculateMarketerSalesIncome
 } = require('../utils/cps/queries');
+const { getCashesCalculatedForLiveCommerce } = require('../utils/cps/commission');
 
 const getTargets = async () => {
   const query = `
@@ -24,13 +25,6 @@ const getTargets = async () => {
     ...res,
     targetCreatorId: JSON.parse(res.targetList).targetList[0], // 라이브커머스는 언제나 1명. (2명이상일 시 무시)
   }));
-};
-
-const getCashesCalculatedForLiveCommerce = ({ orderPrice, creatorCommission, onadCommission }) => {
-  const cashToCreator = Math.round(orderPrice * creatorCommission);
-  const cashToOnad = Math.round(orderPrice * onadCommission);
-  const salesIncomeToMarketer = orderPrice - cashToCreator - cashToOnad;
-  return { cashToCreator, salesIncomeToMarketer };
 };
 
 const calculate = async ({
@@ -112,3 +106,4 @@ async function liveCommerceCalc() {
 }
 
 module.exports = liveCommerceCalc;
+exports.getCashesCalculatedForLiveCommerce = getCashesCalculatedForLiveCommerce;

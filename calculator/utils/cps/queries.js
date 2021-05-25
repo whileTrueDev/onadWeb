@@ -19,10 +19,10 @@ const getInsertCampaignLog = ({
   campaignId, creatorId, cashToCreator, salesIncomeToMarketer
 }) => {
   const query = `
-   INSERT INTO campaignLog
-   (campaignId, creatorId, type, cashToCreator, salesIncomeToMarketer)
-   VALUES (?, ?, ?, ?, ?)
- `;
+    INSERT INTO campaignLog
+    (campaignId, creatorId, type, cashToCreator, salesIncomeToMarketer)
+    VALUES (?, ?, ?, ?, ?)
+  `;
   const queryArray = [campaignId, creatorId || '', 'CPS', cashToCreator, salesIncomeToMarketer];
   return { query, queryArray };
 };
@@ -61,14 +61,14 @@ const getCalculateMarketerSalesIncome = ({
   marketerId, salesIncomeToMarketer, deliveryFee
 }) => {
   const query = `
-  INSERT INTO marketerSalesIncome (marketerId, totalIncome, receivable, totalDeliveryFee, receivableDeliveryFee) 
-  SELECT
-    marketerId,
-    IFNULL(MAX(totalIncome), 0) + ? AS totalIncome,
-    IFNULL(MAX(receivable), 0) + ? AS receivable,
-    IFNULL(MAX(totalDeliveryFee), 0) + ? AS totalDeliveryFee,
-    IFNULL(MAX(receivableDeliveryFee), 0) + ? AS receivableDeliveryFee
-  FROM marketerSalesIncome AS a WHERE marketerId = ? ORDER BY createDate DESC LIMIT 1`;
+    INSERT INTO marketerSalesIncome (marketerId, totalIncome, receivable, totalDeliveryFee, receivableDeliveryFee) 
+    SELECT
+      marketerId,
+      IFNULL(MAX(totalIncome), 0) + ? AS totalIncome,
+      IFNULL(MAX(receivable), 0) + ? AS receivable,
+      IFNULL(MAX(totalDeliveryFee), 0) + ? AS totalDeliveryFee,
+      IFNULL(MAX(receivableDeliveryFee), 0) + ? AS receivableDeliveryFee
+    FROM marketerSalesIncome AS a WHERE marketerId = ? ORDER BY createDate DESC LIMIT 1`;
   const queryArray = [
     salesIncomeToMarketer, salesIncomeToMarketer, deliveryFee, deliveryFee, marketerId,
   ];
