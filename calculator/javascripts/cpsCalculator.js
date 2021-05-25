@@ -1,10 +1,6 @@
 /* eslint-disable max-len */
 const doQuery = require('../model/calculatorQuery');
 
-const CREATOR_FEERATE = 0.1;
-const MARKETER_FEERATE_PROMOTED_BY_CREATOR = 0.8;
-const MARKETER_FEERATE_DEFAULT = 0.9;
-
 /**
    * 각 유저별 계산 대금을 구합니다. 리뷰/자랑하기/응원하기 글의 대상인 방송인이 있는 지 여부를 기준으로
    * 계산 대금은 다르게 계산됩니다.
@@ -17,16 +13,18 @@ const MARKETER_FEERATE_DEFAULT = 0.9;
    * 2. 방송인 A로부터 유입된 시청자가 구입 + 인증(리뷰or자랑하기)**글을 남기지 않고** 구매완료 시
    *    - **⇒ 광고주 90 %, 온애드 10 %**
    */
-const getCashesCalculated = (totalOrderPrice, isCreatorExists) => {
+const getCashesCalculated = ({
+  totalOrderPrice, isCreatorExists, creatorCommission, onadCommission
+}) => {
   if (isCreatorExists) { // 1 번의 경우
-    const cashToCreator = totalOrderPrice * CREATOR_FEERATE;
-    const salesIncomeToMarketer = totalOrderPrice * MARKETER_FEERATE_PROMOTED_BY_CREATOR;
-    return {
-      cashToCreator, salesIncomeToMarketer
-    };
+    const cashToCreator = Math.round(totalOrderPrice * creatorCommission);
+    const cashToOnad = Math.round(totalOrderPrice * onadCommission);
+    const salesIncomeToMarketer = totalOrderPrice - cashToCreator - cashToOnad;
+    return { cashToCreator, salesIncomeToMarketer };
   }
   const cashToCreator = 0;
-  const salesIncomeToMarketer = totalOrderPrice * MARKETER_FEERATE_DEFAULT;
+  const cashToOnad = Math.round(totalOrderPrice * onadCommission);
+  const salesIncomeToMarketer = totalOrderPrice - cashToOnad;
   return { cashToCreator, salesIncomeToMarketer };
 };
 
@@ -55,15 +53,17 @@ const getTargets = async () => {
     MO.id, campaignId, merchandiseId, orderPrice, calculateDoneFlag, deliveryFee,
     MR.marketerId, MR.name,
     MOC.creatorId AS targetCreatorId, creatorName,
-    statusString
+    statusString,
+    creatorCommission, onadCommission
   FROM merchandiseOrders AS MO
   JOIN merchandiseRegistered AS MR ON MR.id = MO.merchandiseId
   JOIN merchandiseOrderStatuses AS MOS ON MOS.statusNumber = MO.status
   LEFT JOIN merchandiseOrderComments AS MOC ON MO.id = MOC.orderId
   LEFT JOIN creatorInfo ON MOC.creatorId = creatorInfo.creatorId
-  WHERE statusString = ? AND calculateDoneFlag = ?`;
+  WHERE statusString = ? AND calculateDoneFlag = ? AND isLiveCommerce = ?`;
 
-  const { result } = await doQuery(query, ['구매확정', false]).catch((err) => `error occurred during run getTargets - ${err}`);
+  const { result } = await doQuery(query, ['구매확정', false, false])
+    .catch((err) => `error occurred during run getTargets - ${err}`);
   return result;
 };
 
@@ -100,7 +100,7 @@ const calculateMarketerSalesIncome = async ({
   SELECT
     marketerId,
     IFNULL(MAX(totalIncome), 0) + ? AS totalIncome,
-    IFNULL(MAX(receivable), 0) + ? AS totalIncome,
+    IFNULL(MAX(receivable), 0) + ? AS receivable,
     IFNULL(MAX(totalDeliveryFee), 0) + ? AS totalDeliveryFee,
     IFNULL(MAX(receivableDeliveryFee), 0) + ? AS receivableDeliveryFee
   FROM marketerSalesIncome AS a WHERE marketerId = ? ORDER BY createDate DESC LIMIT 1`;
@@ -120,20 +120,18 @@ const calculateMarketerSalesIncome = async ({
  * @param {object} param0 creatorId, cashToCreator
  * @returns null | insertId
  */
-const calculateCreatorIncome = async ({
-  creatorId, cashToCreator
-}) => {
+const calculateCreatorIncome = async ({ creatorId, cashToCreator }) => {
   if (creatorId && cashToCreator) {
     const creatorIdStr = String(creatorId);
     const query = `
-    INSERT INTO creatorIncome (
-      creatorId, creatorTotalIncome, creatorReceivable
-    ) VALUES (
-      ?,
-      (SELECT IFNULL(MAX(creatorTotalIncome), 0) + ? AS creatorTotalIncome FROM creatorIncome AS a WHERE creatorId = ? ORDER BY date DESC LIMIT 1),
-      (SELECT IFNULL(MAX(creatorReceivable), 0) + ? AS creatorReceivable FROM creatorIncome AS b WHERE creatorId = ? ORDER BY date DESC LIMIT 1)
-    )`;
-    const queryArray = [creatorIdStr, cashToCreator, creatorIdStr, cashToCreator, creatorIdStr];
+    INSERT INTO creatorIncome (creatorId, creatorTotalIncome, creatorReceivable)
+    SELECT
+      creatorId,
+      IFNULL(MAX(creatorTotalIncome), 0) + ? AS creatorTotalIncome,
+      IFNULL(MAX(creatorReceivable), 0) + ? AS creatorReceivable
+    FROM creatorIncome AS a WHERE creatorId = ? ORDER BY date DESC LIMIT 1
+    `;
+    const queryArray = [cashToCreator, cashToCreator, creatorIdStr];
 
     const { result } = await doQuery(query, queryArray).catch((err) => `error occurred during run calculateCreatorIncome - ${err}`);
     if (result && result.insertId) return result.insertId;
@@ -166,17 +164,21 @@ const updateFlag = async ({ orderId }) => {
 const calculate = async ({
   orderId, campaignId, merchandiseId, orderPrice, calculateDoneFlag,
   marketerId, name, targetCreatorId, creatorName, statusString, deliveryFee,
+  creatorCommission, onadCommission,
 }) => {
-  const { cashToCreator, salesIncomeToMarketer } = getCashesCalculated(orderPrice, !!targetCreatorId);
+  const { cashToCreator, salesIncomeToMarketer } = getCashesCalculated({
+    orderPrice,
+    isCreatorExists: !!targetCreatorId,
+    creatorCommission,
+    onadCommission,
+  });
 
   // * 1. 광고주 판매대금 처리 (marketerSalesIncome - marketerId, 추가금액)
   await calculateMarketerSalesIncome({ marketerId, salesIncomeToMarketer, deliveryFee });
 
   // * 2. 방송인 수익금 처리 (creatorIncome - creatorId, 추가금액)
   if (targetCreatorId) {
-    await calculateCreatorIncome({
-      creatorId: targetCreatorId, cashToCreator
-    });
+    await calculateCreatorIncome({ creatorId: targetCreatorId, cashToCreator });
   }
 
   // * 3. 캠페인 계산 로그 처리 (campaignLog - campaignId, creatorId, type=CPS, cashToCreator, salesIncomeToMarketer)
@@ -221,6 +223,8 @@ async function cpsCalculate() {
       targetCreatorId: target.targetCreatorId,
       creatorName: target.creatorName,
       statusString: target.statusString,
+      creatorCommission: target.creatorCommission,
+      onadCommission: target.onadCommission
     }))
   )
     .then(() => console.log(`[${new Date().toLocaleString()}] CPS 판매 대금 계산을 모두 완료하였습니다.`))
