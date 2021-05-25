@@ -4,7 +4,7 @@
  * @param {object} param0 orderId
  * @returns null | affectedRows
  */
-export const getUpdateFlag = ({ orderId }) => {
+const getUpdateFlag = ({ orderId }) => {
   const query = 'UPDATE merchandiseOrders SET calculateDoneFlag = ? WHERE id = ?';
   const queryArray = [1, orderId];
   return { query, queryArray };
@@ -15,7 +15,7 @@ export const getUpdateFlag = ({ orderId }) => {
 * 계산 로그를 campaignLog에 적재
 * @param {object} param0 campaignId, creatorId, cashToCreator, salesIncomeToMarketer
 */
-export const getInsertCampaignLog = ({
+const getInsertCampaignLog = ({
   campaignId, creatorId, cashToCreator, salesIncomeToMarketer
 }) => {
   const query = `
@@ -34,7 +34,7 @@ export const getInsertCampaignLog = ({
  * @author hwasaurr
  * @param {object} param0 creatorId, cashToCreator
  */
-export const getCalculateCreatorIncome = ({ creatorId, cashToCreator }) => {
+const getCalculateCreatorIncome = ({ creatorId, cashToCreator }) => {
   if (creatorId && cashToCreator) {
     const creatorIdStr = String(creatorId);
     const query = `
@@ -57,7 +57,7 @@ export const getCalculateCreatorIncome = ({ creatorId, cashToCreator }) => {
  * @author hwasurr
  * @param {object} param0 marketerId, salesIncomeToMarketer
  */
-export const getCalculateMarketerSalesIncome = ({
+const getCalculateMarketerSalesIncome = ({
   marketerId, salesIncomeToMarketer, deliveryFee
 }) => {
   const query = `
@@ -73,4 +73,12 @@ export const getCalculateMarketerSalesIncome = ({
     salesIncomeToMarketer, salesIncomeToMarketer, deliveryFee, deliveryFee, marketerId,
   ];
   return { query, queryArray };
+};
+
+
+module.exports = {
+  getUpdateFlag,
+  getInsertCampaignLog,
+  getCalculateCreatorIncome,
+  getCalculateMarketerSalesIncome,
 };

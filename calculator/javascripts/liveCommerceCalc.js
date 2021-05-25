@@ -17,7 +17,7 @@ const getTargets = async () => {
    JOIN campaign ON campaign.campaignId = MO.campaignId
   WHERE statusString = ? AND calculateDoneFlag = ? AND isLiveCommerce = ?`;
 
-  const { result } = await doQuery(query, ['구매확정', 0, true])
+  const { result } = await doQuery(query, ['구매확정', false, true])
     .catch((err) => `error occurred during run getTargets - ${err}`);
 
   return result.map((res) => ({
@@ -74,8 +74,8 @@ const calculate = async ({
     connection.commit();
     console.log(`[${new Date().toLocaleString()}] ${campaignId} 캠페인 (상품: ${name}, 방송인: ${targetCreatorId}) 계산 완료`);
   } catch (e) {
-    console.log(`[order: ${orderId}, marketer: ${marketerId}]error occurred during calculate - `, e);
     connection.rollback();
+    throw e;
   } finally {
     connection.release();
   }

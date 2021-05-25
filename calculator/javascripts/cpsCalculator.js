@@ -78,7 +78,7 @@ const calculate = async ({
   creatorCommission, onadCommission,
 }) => {
   const { cashToCreator, salesIncomeToMarketer } = getCashesCalculated({
-    orderPrice,
+    totalOrderPrice: orderPrice,
     isCreatorExists: !!targetCreatorId,
     creatorCommission,
     onadCommission,
@@ -116,8 +116,8 @@ const calculate = async ({
     conn.commit();
     console.log(`[${new Date().toLocaleString()}] ${campaignId} 캠페인 (상품: ${name}, 방송인: ${creatorName || '없음'}) 계산 완료`);
   } catch (e) {
-    console.log(`[${new Date().toLocaleString()}] order: ${orderId}, marketer: ${marketerId} error occurred during calculate - `, e);
     conn.rollback();
+    throw e;
   } finally {
     conn.release();
   }
