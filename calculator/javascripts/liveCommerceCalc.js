@@ -1,5 +1,8 @@
 const pool = require('../model/connectionPool');
 const { doQuery } = require('../model/doQuery');
+const {
+  getUpdateFlag, getInsertCampaignLog, getCalculateCreatorIncome, getCalculateMarketerSalesIncome
+} = require('../utils/cps/queries');
 
 const getTargets = async () => {
   const query = `
@@ -23,60 +26,11 @@ const getTargets = async () => {
   }));
 };
 
-const getCashesCalculated = ({ orderPrice, creatorCommission, onadCommission }) => {
+const getCashesCalculatedForLiveCommerce = ({ orderPrice, creatorCommission, onadCommission }) => {
   const cashToCreator = Math.round(orderPrice * creatorCommission);
   const cashToOnad = Math.round(orderPrice * onadCommission);
   const salesIncomeToMarketer = orderPrice - cashToCreator - cashToOnad;
   return { cashToCreator, salesIncomeToMarketer };
-};
-
-const calculateMarketerSalesIncome = ({ marketerId, salesIncomeToMarketer, deliveryFee }) => {
-  const query = `
-  INSERT INTO marketerSalesIncome (marketerId, totalIncome, receivable, totalDeliveryFee, receivableDeliveryFee) 
-  SELECT
-    marketerId,
-    IFNULL(MAX(totalIncome), 0) + ? AS totalIncome,
-    IFNULL(MAX(receivable), 0) + ? AS receivable,
-    IFNULL(MAX(totalDeliveryFee), 0) + ? AS totalDeliveryFee,
-    IFNULL(MAX(receivableDeliveryFee), 0) + ? AS receivableDeliveryFee
-  FROM marketerSalesIncome AS a WHERE marketerId = ? ORDER BY createDate DESC LIMIT 1`;
-  const queryArray = [
-    salesIncomeToMarketer, salesIncomeToMarketer, deliveryFee, deliveryFee, marketerId
-  ];
-  return { query, queryArray };
-};
-
-const calculateCreatorIncome = ({ creatorId, cashToCreator }) => {
-  const creatorIdStr = String(creatorId);
-  const query = `
-  INSERT INTO creatorIncome (creatorId, creatorTotalIncome, creatorReceivable)
-  SELECT
-    creatorId,
-    IFNULL(MAX(creatorTotalIncome), 0) + ? AS creatorTotalIncome,
-    IFNULL(MAX(creatorReceivable), 0) + ? AS creatorReceivable
-  FROM creatorIncome AS a WHERE creatorId = ? ORDER BY date DESC LIMIT 1
-  `;
-  const queryArray = [cashToCreator, cashToCreator, creatorIdStr];
-
-  return { query, queryArray };
-};
-
-const insertCampaignLog = ({
-  campaignId, creatorId, cashToCreator, salesIncomeToMarketer
-}) => {
-  const query = `
-    INSERT INTO campaignLog
-    (campaignId, creatorId, type, cashToCreator, salesIncomeToMarketer)
-    VALUES (?, ?, ?, ?, ?)
-  `;
-  const queryArray = [campaignId, creatorId || '', 'CPS', cashToCreator, salesIncomeToMarketer];
-  return { query, queryArray };
-};
-
-const updateCalcDoneFlag = ({ orderId }) => {
-  const query = 'UPDATE merchandiseOrders SET calculateDoneFlag = ? WHERE id = ?';
-  const queryArray = [1, orderId];
-  return { query, queryArray };
 };
 
 const calculate = async ({
@@ -87,32 +41,34 @@ const calculate = async ({
   const connection = await pool.promise().getConnection();
 
   // 수수료 및 광고 대금 추산
-  const { cashToCreator, salesIncomeToMarketer } = getCashesCalculated({
+  const { cashToCreator, salesIncomeToMarketer } = getCashesCalculatedForLiveCommerce({
     orderPrice, creatorCommission, onadCommission
   });
 
   try {
     connection.beginTransaction();
     // * 1. 광고주 판매대금 처리 (marketerSalesIncome)
-    const marketerSalesIncome = calculateMarketerSalesIncome({
+    const marketerSalesIncome = getCalculateMarketerSalesIncome({
       marketerId, salesIncomeToMarketer, deliveryFee
     });
     await connection.query(marketerSalesIncome.query, marketerSalesIncome.queryArray);
 
     // * 2. 방송인 수익금 처리 (creatorIncome)
-    const creatorIncome = calculateCreatorIncome({
+    const creatorIncome = getCalculateCreatorIncome({
       creatorId: targetCreatorId, cashToCreator
     });
-    await connection.query(creatorIncome.query, creatorIncome.queryArray);
+    if (creatorIncome) {
+      await connection.query(creatorIncome.query, creatorIncome.queryArray);
+    }
 
     // * 3. 캠페인 계산 로그 처리 (campaignLog)
-    const campaignLog = insertCampaignLog({
+    const campaignLog = getInsertCampaignLog({
       campaignId, creatorId: targetCreatorId, cashToCreator, salesIncomeToMarketer
     });
     await connection.query(campaignLog.query, campaignLog.queryArray);
 
     // * 4. 모두 완료 후, 주문의 계산완료플래그를 true로 처리 (merchandiseOrders - calculateDoneFlag)
-    const doneFlag = updateCalcDoneFlag({ orderId });
+    const doneFlag = getUpdateFlag({ orderId });
     await connection.query(doneFlag.query, doneFlag.queryArray);
 
     connection.commit();
