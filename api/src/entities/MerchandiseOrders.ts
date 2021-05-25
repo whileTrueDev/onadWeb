@@ -1,6 +1,4 @@
-import {
-  Column, Entity, OneToMany, PrimaryGeneratedColumn
-} from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { MerchandiseOrderComments } from './MerchandiseOrderComments';
 import { MerchandiseOrderRelease } from './MerchandiseOrderRelease';
 
@@ -125,13 +123,13 @@ export class MerchandiseOrders {
 
   @OneToMany(
     () => MerchandiseOrderComments,
-    (merchandiseOrderComments) => merchandiseOrderComments.order
+    merchandiseOrderComments => merchandiseOrderComments.order,
   )
   merchandiseOrderComments: MerchandiseOrderComments[];
 
   @OneToMany(
     () => MerchandiseOrderRelease,
-    (merchandiseOrderRelease) => merchandiseOrderRelease.order
+    merchandiseOrderRelease => merchandiseOrderRelease.order,
   )
   merchandiseOrderReleases: MerchandiseOrderRelease[];
 }

@@ -1,6 +1,4 @@
-import {
-  Column, Entity, Index, PrimaryGeneratedColumn
-} from 'typeorm';
+import { Column, Entity, Index, PrimaryGeneratedColumn } from 'typeorm';
 
 @Index('video', ['videoid'], {})
 @Entity('youtubeOldChat', { schema: 'onadnode' })

@@ -1,6 +1,4 @@
-import {
-  Column, Entity, Index, PrimaryGeneratedColumn
-} from 'typeorm';
+import { Column, Entity, Index, PrimaryGeneratedColumn } from 'typeorm';
 
 @Index('streamId_index', ['streamId'], {})
 @Index('gameId_index', ['gameId'], {})

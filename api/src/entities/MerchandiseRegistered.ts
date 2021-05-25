@@ -1,6 +1,4 @@
-import {
-  Column, Entity, Index, PrimaryGeneratedColumn
-} from 'typeorm';
+import { Column, Entity, Index, PrimaryGeneratedColumn } from 'typeorm';
 
 @Index('merchandiseRegistered_marketerId_IDX', ['marketerId'], {})
 @Entity('merchandiseRegistered', { schema: 'onadnode' })
@@ -95,4 +93,30 @@ export class MerchandiseRegistered {
     default: () => 'CURRENT_TIMESTAMP',
   })
   updateDate: Date;
+
+  @Column('tinyint', {
+    name: 'isLiveCommerce',
+    comment: '라이브커머스용 상품 여부 (0=X, 1=O)',
+    width: 1,
+    default: () => "'0'",
+  })
+  isLiveCommerce: boolean;
+
+  @Column('float', {
+    name: 'creatorCommission',
+    comment: '크리에이터에게 향하는 수수료 비율',
+    unsigned: true,
+    precision: 12,
+    default: () => "'0.1'",
+  })
+  creatorCommission: number;
+
+  @Column('float', {
+    name: 'onadCommission',
+    comment: '온애드 수수료 비율',
+    unsigned: true,
+    precision: 12,
+    default: () => "'0.1'",
+  })
+  onadCommission: number;
 }

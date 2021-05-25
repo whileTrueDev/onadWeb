@@ -1,6 +1,4 @@
-import {
-  Column, Entity, Index, PrimaryGeneratedColumn
-} from 'typeorm';
+import { Column, Entity, Index, PrimaryGeneratedColumn } from 'typeorm';
 
 @Index('twitch_chat_time_index', ['time'], {})
 @Entity('twitchChat', { schema: 'onadnode' })

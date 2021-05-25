@@ -1,11 +1,4 @@
-import {
-  Column,
-  Entity,
-  Index,
-  JoinColumn,
-  ManyToOne,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+import { Column, Entity, Index, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { MerchandiseOrders } from './MerchandiseOrders';
 
 @Index('orderRelease', ['orderId'], {})
@@ -40,8 +33,8 @@ export class MerchandiseOrderRelease {
 
   @ManyToOne(
     () => MerchandiseOrders,
-    (merchandiseOrders) => merchandiseOrders.merchandiseOrderReleases,
-    { onDelete: 'RESTRICT', onUpdate: 'NO ACTION' }
+    merchandiseOrders => merchandiseOrders.merchandiseOrderReleases,
+    { onDelete: 'RESTRICT', onUpdate: 'NO ACTION' },
   )
   @JoinColumn([{ name: 'orderId', referencedColumnName: 'id' }])
   order: MerchandiseOrders;
