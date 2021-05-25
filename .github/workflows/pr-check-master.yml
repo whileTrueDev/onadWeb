@@ -47,3 +47,9 @@ jobs:
           yarn test --watchAll=false
           yarn build
           cd -
+
+      - name: <calculator> test
+        run: |
+          cd calculator
+          yarn
+          yarn test
