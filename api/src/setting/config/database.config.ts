@@ -28,6 +28,7 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
       timezone: 'Asia/Seoul',
       synchronize: false,
       entities: [`${__dirname}/../../entities/*.{ts,js}`],
+      logging: true,
     };
   }
 }

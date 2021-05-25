@@ -12,14 +12,14 @@ import { MarketerGoogleStrategy } from './strategies/marketerGoogle.strategy';
 import { SessionSerializer } from './strategies/passport.serializer';
 import { PreCreatorTwitchStrategy } from './strategies/preCreatorTwitch.strategy';
 import { TwitchLinkStrategy } from './strategies/creatorTwitchLink.strategy';
-import { LinkController } from './link.controller';
+import { LinkController } from './auth-link/link.controller';
 import { TwitchApiModule } from '../../api/twitch-api/twitch-api.module';
 import { LogoutController } from './logout.controller';
 import { MarketerNaverStrategy } from './strategies/marketerNaver.strategy';
 import { MarketerKakaoStrategy } from './strategies/marketerKakao.strategy';
-import { LinkService } from './link.service';
 import { CreatorInfo } from '../../entities/CreatorInfo';
 import { AfreecaLinkCertification } from '../../entities/AfreecaLinkCertification';
+import { LinkService } from './auth-link/link.service';
 
 @Module({
   imports: [

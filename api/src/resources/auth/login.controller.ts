@@ -1,19 +1,40 @@
 import { Controller, Get, Post, Req, Res, UseFilters, UseGuards } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Request, Response } from 'express';
+import { MarketerService } from '../marketer/marketer.service';
 import { GoogleAuthGuard } from './guards/google.guard';
 import { KakaoAuthGuard } from './guards/kakao.guard';
 import { LocalAuthGuard } from './guards/local.guard';
 import { NaverAuthGuard } from './guards/naver.guard';
 import { PreCreatorTwitchExceptionFilter } from './guards/preCreatorTwitch.filter';
 import { PreCreatorTwitchAuthGuard } from './guards/preCreatorTwitch.guard';
+import { LoginCheckRes } from './interfaces/loginCheckRes.interface';
 
 @Controller('login')
 export class LoginController {
   HOST: string;
 
-  constructor(private readonly configService: ConfigService) {
+  constructor(
+    private readonly configService: ConfigService,
+    private readonly marketerService: MarketerService,
+  ) {
     this.HOST = configService.get('REACT_HOSTNAME');
+  }
+
+  @Get('check')
+  async check(@Req() req: Request): Promise<LoginCheckRes> {
+    if (req.user) {
+      const session = req.user;
+      if (session.userType === 'marketer') {
+        const marketer = await this.marketerService.findOne(session.marketerId);
+        if (marketer.temporaryLogin === 1) return { error: false, state: 1 };
+        return { error: false, state: 0, userType: 'marketer' };
+      }
+      if (session.userType === 'creator') {
+        return { error: false, state: 0, userType: 'creator' };
+      }
+    }
+    return { error: true };
   }
 
   @UseGuards(LocalAuthGuard)

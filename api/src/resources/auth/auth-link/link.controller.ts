@@ -11,10 +11,10 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Request, Response } from 'express';
-import { AfreecaLinkCertification } from '../../entities/AfreecaLinkCertification';
-import { IsAuthGuard } from './guards/isAuth.guard';
-import { TwitchLinkExceptionFilter } from './guards/twitchLink.filter';
-import { TwitchLinkGuard } from './guards/twitchLink.guard';
+import { AfreecaLinkCertification } from '../../../entities/AfreecaLinkCertification';
+import { IsAuthGuard } from '../guards/isAuth.guard';
+import { TwitchLinkExceptionFilter } from '../guards/twitchLink.filter';
+import { TwitchLinkGuard } from '../guards/twitchLink.guard';
 import { AfreecaLinkCertificationRes, LinkService } from './link.service';
 
 @Controller('link')

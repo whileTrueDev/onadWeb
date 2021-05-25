@@ -4,7 +4,7 @@ import { Repository } from 'typeorm';
 import { AfreecaCategory } from '../../entities/AfreecaCategory';
 
 @Injectable()
-export class AfreecaCategoryService {
+export class GamesService {
   constructor(
     @InjectRepository(AfreecaCategory)
     private readonly acRepo: Repository<AfreecaCategory>,

@@ -2,8 +2,8 @@ import shortid from 'shortid';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { AfreecaLinkCertification } from '../../entities/AfreecaLinkCertification';
-import { CreatorInfo } from '../../entities/CreatorInfo';
+import { AfreecaLinkCertification } from '../../../entities/AfreecaLinkCertification';
+import { CreatorInfo } from '../../../entities/CreatorInfo';
 
 export interface AfreecaLinkCertificationRes {
   status: 'already-linked' | 'duplicate-request' | 'created';
