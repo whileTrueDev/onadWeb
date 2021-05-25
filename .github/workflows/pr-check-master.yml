@@ -35,7 +35,7 @@ jobs:
       - name: <client-ts> install dependencies
         working-directory: ./client-ts
         if: steps.yarn-cache.outputs.cache-hit != 'true'
-        run: yarn intsall
+        run: yarn install
 
       - name: <client-ts> test/build-test/
         working-directory: ./client-ts
@@ -44,7 +44,7 @@ jobs:
       - name: <server> install dependencies
         working-directory: ./server
         if: steps.yarn-cache.outputs.cache-hit != 'true'
-        run: yarn intsall
+        run: yarn install
 
       - name: <server> test/build-test/
         working-directory: ./server
@@ -53,7 +53,7 @@ jobs:
       - name: <calculator> install dependencies
         working-directory: ./calculator
         if: steps.yarn-cache.outputs.cache-hit != 'true'
-        run: yarn intsall
+        run: yarn install
 
       - name: <calculator> test
         working-directory: ./calculator
