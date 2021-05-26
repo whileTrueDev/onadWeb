@@ -1,7 +1,3 @@
-export type OnadSession = {
-  userType: 'marketer' | 'creator';
-} & Omit<MarketerSession, 'userType'> & Omit<CreatorSession, 'userType'>;
-
 export type MarketerSession = {
   userType: 'marketer';
   marketerId?: string;
@@ -12,8 +8,7 @@ export type MarketerSession = {
   marketerPhoneNum?: string;
   registered?: boolean;
   marketerPlatformData?: string;
-}
-
+};
 
 export type CreatorSession = {
   userType: 'creator';
@@ -23,4 +18,9 @@ export type CreatorSession = {
   creatorMail?: string;
   creatorLogo?: string;
   creatorIp?: string | string[];
-}
+};
+
+export type OnadSession = {
+  userType: 'marketer' | 'creator';
+} & Omit<MarketerSession, 'userType'> &
+  Omit<CreatorSession, 'userType'>;

@@ -39,8 +39,8 @@ export class LoginController {
 
   @UseGuards(LocalAuthGuard)
   @Post()
-  localLogin(@Req() req: Request): Express.User {
-    return req.user;
+  localLogin(@Req() req: Request): [boolean, Express.User | string] {
+    return [false, req.user];
   }
 
   // *********************************************

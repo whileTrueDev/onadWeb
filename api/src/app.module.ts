@@ -15,6 +15,8 @@ import { InquiryModule } from './resources/inquiry/inquiry.module';
 import { SlackService } from './resources/slack/slack.service';
 import { SlackModule } from './resources/slack/slack.module';
 import { MailModule } from './resources/mail/mail.module';
+import { ManualModule } from './resources/manual/manual.module';
+import { NoticeModule } from './resources/notice/notice.module';
 
 @Module({
   imports: [
@@ -33,6 +35,8 @@ import { MailModule } from './resources/mail/mail.module';
     InquiryModule,
     SlackModule,
     MailModule,
+    ManualModule,
+    NoticeModule,
   ],
   controllers: [AppController],
   providers: [SlackService],

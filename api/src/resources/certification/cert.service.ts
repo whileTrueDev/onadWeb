@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import axios from 'axios';
+import { CertificationInfo } from './interfaces/certificationInfo.interface';
 import { CertificationRes } from './interfaces/certificationRes.interface';
 
 @Injectable()
@@ -35,7 +36,7 @@ export class CertService {
 
       // imp_uid로 인증 정보 조회
       const getCertifications = await this.getCertification(impUid, accessToken);
-      const certificationsInfo = getCertifications.data.response; // 조회한 인증 정보
+      const certificationsInfo = getCertifications.data.response as CertificationInfo; // 조회한 인증 정보
 
       // 인증정보에 대한 데이터를 저장하거나 사용한다.
       const { birth } = certificationsInfo;

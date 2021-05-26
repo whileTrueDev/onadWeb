@@ -1,17 +1,9 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Post,
-  Req,
-  Res,
-  UseFilters,
-  UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, Delete, Get, Post, Res, UseFilters, UseGuards } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { Request, Response } from 'express';
+import { Response } from 'express';
+import { Creator } from '../../../decorator/sessionData.decorator';
 import { AfreecaLinkCertification } from '../../../entities/AfreecaLinkCertification';
+import { CreatorSession } from '../../../interfaces/Session.interface';
 import { IsAuthGuard } from '../guards/isAuth.guard';
 import { TwitchLinkExceptionFilter } from '../guards/twitchLink.filter';
 import { TwitchLinkGuard } from '../guards/twitchLink.guard';
@@ -33,8 +25,8 @@ export class LinkController {
   // *********************************************
   @UseGuards(TwitchLinkGuard)
   @Get('twitch')
-  twitchLink(@Req() req: Request): Express.User {
-    return req.user;
+  twitchLink(@Creator() creatorSession: CreatorSession): Express.User {
+    return creatorSession;
   }
 
   // 커스텀 에러 filter 적용 필요
@@ -47,8 +39,7 @@ export class LinkController {
 
   @UseGuards(IsAuthGuard)
   @Delete('twitch')
-  deleteTwitchLink(@Req() req: Request): Promise<'success' | 'fail'> {
-    const { creatorId } = req.user;
+  deleteTwitchLink(@Creator() { creatorId }: CreatorSession): Promise<'success' | 'fail'> {
     return this.linkService.removeTwitchInfo(creatorId);
   }
 
@@ -58,8 +49,7 @@ export class LinkController {
   // 아프리카 쪽지 인증 기록 조회
   @UseGuards(IsAuthGuard)
   @Get('afreeca/cert')
-  findAfreecaCert(@Req() req: Request): Promise<AfreecaLinkCertification> {
-    const { creatorId } = req.user;
+  findAfreecaCert(@Creator() { creatorId }: CreatorSession): Promise<AfreecaLinkCertification> {
     return this.linkService.findAfreecaCert(creatorId);
   }
 
@@ -67,26 +57,23 @@ export class LinkController {
   @UseGuards(IsAuthGuard)
   @Post('afreeca/cert')
   createAfreecaCert(
-    @Req() req: Request,
+    @Creator() { creatorId }: CreatorSession,
     @Body('afreecaId') afreecaId: string,
   ): Promise<AfreecaLinkCertificationRes> {
-    const { creatorId } = req.user;
     return this.linkService.createLinkCert(creatorId, afreecaId);
   }
 
   // 아프리카 쪽지 연동 취소
   @UseGuards(IsAuthGuard)
   @Delete('afreeca/cert')
-  deleteAfreecaCert(@Req() req: Request): Promise<AfreecaLinkCertification> {
-    const { creatorId } = req.user;
+  deleteAfreecaCert(@Creator() { creatorId }: CreatorSession): Promise<AfreecaLinkCertification> {
     return this.linkService.removeLinkCert(creatorId);
   }
 
   // 아프리카 연동 해제
   @UseGuards(IsAuthGuard)
   @Delete('afreeca')
-  deleteAfreecaLink(@Req() req: Request): Promise<'success' | 'fail'> {
-    const { creatorId } = req.user;
+  deleteAfreecaLink(@Creator() { creatorId }: CreatorSession): Promise<'success' | 'fail'> {
     return this.linkService.removeAfreecaInfo(creatorId);
   }
 }
