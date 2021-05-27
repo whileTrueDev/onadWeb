@@ -30,6 +30,7 @@
     "@nestjs/platform-express": "^7.6.17",
     "@nestjs/typeorm": "^7.1.5",
     "@types/shortid": "^0.0.29",
+    "aws-sdk": "^2.916.0",
     "axios": "^0.21.1",
     "chalk": "^4.1.1",
     "class-transformer": "^0.4.0",

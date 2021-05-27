@@ -14,10 +14,13 @@ import { ProfileImageModule } from './profile-image/profile-image.module';
 import { SettlementModule } from './settlement/settlement.module';
 import { SalesIncomeModule } from './sales-income/sales-income.module';
 import { OrdersModule } from './orders/orders.module';
+import { InventoryModule } from './inventory/inventory.module';
+import { MarketerActionLogService } from './marketerActionLog.service';
+import { MarketerActionLog } from '../../entities/MarketerActionLog';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([MarketerInfo, MarketerDebit, MarketerSalesIncome]),
+    TypeOrmModule.forFeature([MarketerInfo, MarketerDebit, MarketerSalesIncome, MarketerActionLog]),
     MailModule,
     AccountModule,
     BusinessModule,
@@ -27,9 +30,10 @@ import { OrdersModule } from './orders/orders.module';
     SettlementModule,
     SalesIncomeModule,
     OrdersModule,
+    InventoryModule,
   ],
   controllers: [MarketerController],
-  providers: [MarketerService],
-  exports: [MarketerService],
+  providers: [MarketerService, MarketerActionLogService],
+  exports: [MarketerService, MarketerActionLogService],
 })
 export class MarketerModule {}
