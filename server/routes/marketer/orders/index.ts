@@ -94,7 +94,7 @@ router.route('/')
             let releaseArray = [orderId, courierCompany, trackingNumber];
 
             if (order.releaseId) {
-              releaseQuery = 'UPDATEA merchandiseOrderRelease SET courierCompany = ? trackingNumber = ? WHERE id = ?';
+              releaseQuery = 'UPDATE merchandiseOrderRelease SET courierCompany = ? trackingNumber = ? WHERE id = ?';
               releaseArray = [courierCompany, trackingNumber, order.releaseId];
             }
 
