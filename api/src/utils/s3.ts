@@ -16,12 +16,12 @@ const s3 = new AWS.S3({
 
 const params = { Bucket: AWS_S3_BUCKET_NAME };
 
-export function getBaseUrl(): string {
+function getBaseUrl(): string {
   return ['https://', AWS_S3_BUCKET_NAME, '.s3.', AWS_REGION, '.amazonaws.com/'].join('');
 }
 
 type S3Folders = 'adpage-background/' | 'banner/' | 'business-regi/' | undefined;
-export async function getFolders(
+async function getFolders(
   folder?: S3Folders,
   howMuch = 100,
 ): Promise<PromiseResult<AWS.S3.ListObjectsV2Output, AWS.AWSError>> {
@@ -40,7 +40,7 @@ export async function getFolders(
   });
 }
 
-export async function getImagesByMarketerId(
+async function getImagesByMarketerId(
   marketerId: string,
   howMuch = 100,
 ): Promise<PromiseResult<AWS.S3.ListObjectsV2Output, AWS.AWSError>> {
@@ -66,7 +66,7 @@ export async function getImagesByMarketerId(
  * @example
  * S3.uploadImage('banner/asdf.png', ASDFImage);
  */
-export function uploadImage(name: string, image: string | Buffer | Uint8Array | Blob): void {
+function uploadImage(name: string, image: string | Buffer | Uint8Array | Blob): void {
   s3.putObject(
     {
       ...params,
@@ -89,7 +89,7 @@ export function uploadImage(name: string, image: string | Buffer | Uint8Array | 
  * @example
  * await S3.uploadImageAsync('banner/asdf.png', someImageBuffer);
  */
-export function uploadImageAsync(
+function uploadImageAsync(
   name: string,
   image: string | Buffer | Uint8Array | Blob,
   options?: Omit<AWS.S3.PutObjectRequest, 'Key' | 'Body' | 'Bucket'>,
@@ -104,7 +104,7 @@ export function uploadImageAsync(
     .promise();
 }
 
-export function deleteImage(fileName: string): void {
+function deleteImage(fileName: string): void {
   s3.deleteObject(
     {
       ...params,
@@ -118,3 +118,12 @@ export function deleteImage(fileName: string): void {
     },
   );
 }
+
+export default {
+  getBaseUrl,
+  uploadImage,
+  uploadImageAsync,
+  deleteImage,
+  getFolders,
+  getImagesByMarketerId,
+};

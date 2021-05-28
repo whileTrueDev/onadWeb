@@ -2,10 +2,10 @@ import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import path from 'path';
 import { Repository } from 'typeorm';
-import { PaginationDto } from '../../../dto/paginationDto.dto';
-import { BannerRegistered } from '../../../entities/BannerRegistered';
-import { Campaign } from '../../../entities/Campaign';
-import * as s3 from '../../../utils/s3';
+import { PaginationDto } from '../../../../dto/paginationDto.dto';
+import { BannerRegistered } from '../../../../entities/BannerRegistered';
+import { Campaign } from '../../../../entities/Campaign';
+import s3 from '../../../../utils/s3';
 import { FindAllBannersConfirmedRes } from './interfaces/findAllBannersConfirmedRes.interface';
 import { FindCampaignByBannerIdRes } from './interfaces/findCampaignByBannerIdRes.interface';
 
