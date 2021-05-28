@@ -70,15 +70,26 @@ export class MerchandisesService {
    * 상품을 생성하는 함수
    * @param marketerId 마케터 고유 아이디
    * @param merchandise 상품 정보
+   * @미완성수정필요 210528 hwasurr
    */
   async createMerchandise(marketerId: string, dto: CreateMerchandiseDto) {
-    const newMerchandise = this.merchandiseRepo.create({
+    const merchandiseObj = this.merchandiseRepo.create({
       ...dto,
       images: dto.images.join(','),
       descImages: dto.descImages.join(','),
       marketerId,
     });
-    console.log(newMerchandise);
+
+    if (dto.optionFlag && dto.options) {
+      await this.merchandiseOptionRepo.save([...dto.options]);
+    }
+    if (dto.pickupFlag && dto.pickupAddress) {
+      const pickupAddr = await this.merchandisePickupAddressRepo.save({ ...dto.pickupAddress });
+      merchandiseObj.pickupId = String(pickupAddr.id);
+    }
+
+    const newMerchandise = await this.merchandiseRepo.save(merchandiseObj);
+
     return newMerchandise;
   }
 
