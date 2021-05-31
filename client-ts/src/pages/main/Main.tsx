@@ -18,9 +18,9 @@ import history from '../../history';
 import ParallaxScroll from './sub/ParallaxScroll';
 import axios from '../../utils/axios';
 import HOST from '../../config';
-import CPSEventDialog from '../../organisms/shared/popup/CPSEventDialog';
 import { useDialog } from '../../utils/hooks';
 import openKakaoChat from '../../utils/openKakaoChat';
+import ReferralCodeEventDialog from '../../organisms/shared/popup/ReferralCodeEventDialog';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -267,7 +267,7 @@ export default function Main(): JSX.Element {
 
             {/* CPS  관련 임시 팝업  */}
             <Hidden xsDown>
-              <CPSEventDialog
+              <ReferralCodeEventDialog
                 open={liveCommerceEventDialog.open}
                 onClose={liveCommerceEventDialog.handleClose}
               />

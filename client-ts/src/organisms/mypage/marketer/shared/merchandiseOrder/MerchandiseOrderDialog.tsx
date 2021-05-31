@@ -160,10 +160,7 @@ function MerchandiseOrderDialog({
             <DataText name="남은 상품 재고" value={`남은 재고 ${availableStock} / 총 재고 ${merchandiseOrder.stock}`} />
             <DataText
               name="총 주문 금액"
-              value={`${
-                (merchandiseOrder.orderPrice
-                + (merchandiseOrder.additionalPrice || 0)).toLocaleString()
-              } 원`}
+              value={`${(merchandiseOrder.orderPrice).toLocaleString()} 원`}
             />
 
             <Divider />
