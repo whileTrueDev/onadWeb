@@ -1,6 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { getConnection, Repository } from 'typeorm';
 import { PaginationDto } from '../../../../dto/paginationDto.dto';
 import { Campaign } from '../../../../entities/Campaign';
 import { MerchandiseMallItems } from '../../../../entities/MerchandiseMallItems';
@@ -70,9 +70,11 @@ export class MerchandisesService {
    * 상품을 생성하는 함수
    * @param marketerId 마케터 고유 아이디
    * @param merchandise 상품 정보
-   * @미완성수정필요 210528 hwasurr
    */
-  async createMerchandise(marketerId: string, dto: CreateMerchandiseDto) {
+  async createMerchandise(
+    marketerId: string,
+    dto: CreateMerchandiseDto,
+  ): Promise<MerchandiseRegistered> {
     const merchandiseObj = this.merchandiseRepo.create({
       ...dto,
       images: dto.images.join(','),
@@ -80,9 +82,6 @@ export class MerchandisesService {
       marketerId,
     });
 
-    if (dto.optionFlag && dto.options) {
-      await this.merchandiseOptionRepo.save([...dto.options]);
-    }
     if (dto.pickupFlag && dto.pickupAddress) {
       const pickupAddr = await this.merchandisePickupAddressRepo.save({ ...dto.pickupAddress });
       merchandiseObj.pickupId = String(pickupAddr.id);
@@ -90,11 +89,53 @@ export class MerchandisesService {
 
     const newMerchandise = await this.merchandiseRepo.save(merchandiseObj);
 
+    if (dto.optionFlag && dto.options) {
+      const options = dto.options.map(opt => ({ ...opt, merchandiseId: newMerchandise.id }));
+      await this.merchandiseOptionRepo.save([...options]);
+    }
+
     return newMerchandise;
   }
 
-  deleteMerchandise() {
-    //
+  /**
+   * * 상품 삭제
+   * 특정 상품을 삭제합니다. option이 있다면 option도 함께 삭제합니다.
+   * @param marketerId 마케터 고유 아이디
+   * @param merchandiseId 삭제할 상품 번호
+   * @returns {boolean}
+   */
+  async deleteMerchandise(
+    marketerId: string,
+    merchandiseId: MerchandiseRegistered['id'],
+  ): Promise<boolean> {
+    const merchandise = await this.merchandiseRepo.findOne(merchandiseId);
+    const queryRunner = getConnection().createQueryRunner();
+    try {
+      await queryRunner.startTransaction();
+      if (merchandise.optionFlag) {
+        this.merchandiseOptionRepo
+          .createQueryBuilder('mro', queryRunner)
+          .delete()
+          .where('merchandiseId = :merchandiseId', { merchandiseId })
+          .execute();
+      }
+      const result = await this.merchandiseRepo
+        .createQueryBuilder('mr', queryRunner)
+        .delete()
+        .where('marketerId = :marketerId AND id = :merchandiseId', { marketerId, merchandiseId })
+        .execute();
+
+      await queryRunner.commitTransaction();
+
+      if (result.affected > 0) return true;
+      return false;
+    } catch (err) {
+      console.log(`An error occurred during delete merchandise (id:${merchandiseId}) - `, err);
+      await queryRunner.rollbackTransaction();
+      throw new InternalServerErrorException();
+    } finally {
+      await queryRunner.release();
+    }
   }
 
   // * 상품 개수 조회
