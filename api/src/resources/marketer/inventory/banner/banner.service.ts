@@ -20,7 +20,7 @@ export class BannerService {
     marketerId: string,
     dto: Partial<PaginationDto>,
   ): Promise<Array<BannerRegistered & { id: string }>> {
-    const searchPage = Number(dto.page) * Number(dto.offset);
+    const searchPage = Math.round(Number(dto.page) * Number(dto.offset));
     const searchOffset = Number(dto.offset);
     const banners = await this.bannerRepo.find({
       select: ['bannerSrcUrl', 'bannerId', 'confirmState', 'bannerDenialReason', 'regiDate'],

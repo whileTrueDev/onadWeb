@@ -1,39 +1,43 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { getConnection, In, QueryRunner, Repository } from 'typeorm';
+import { PaginationDto } from '../../../dto/paginationDto.dto';
 import { AfreecaCategory } from '../../../entities/AfreecaCategory';
 import { Campaign } from '../../../entities/Campaign';
+import { CampaignLog } from '../../../entities/CampaignLog';
 import { CategoryCampaign } from '../../../entities/CategoryCampaign';
-import { CreatorCampaign } from '../../../entities/CreatorCampaign';
 import { TwitchGame } from '../../../entities/TwitchGame';
 import { CreateCampaignDto } from './dto/createCampaignDto.dto';
-
-export enum CampaignPriorityType {
-  특정크리에이터송출 = '0',
-  특정트위치카테고리송출 = '1',
-  특정아프리카카테고리송출 = '1-1',
-  무관송출 = '2',
-}
+import { CampaignPriorityType } from './interfaces/campaignPriorityType.enum';
+import { FindCampaignRes } from './interfaces/findCampaignRes.interface';
+import { CampaignRepository } from './repository/campaign.repository';
+import { CategoryCampaignRepository } from './repository/category-campaign.repository';
+import { CreatorCampaignRepository } from './repository/creator-campaign.repository';
 
 @Injectable()
 export class CampaignService {
   constructor(
-    @InjectRepository(Campaign) private readonly campaignRepo: Repository<Campaign>,
-    @InjectRepository(CreatorCampaign)
-    private readonly creatorCampaignRepo: Repository<CreatorCampaign>,
-    @InjectRepository(CategoryCampaign)
-    private readonly categoryCampaignRepo: Repository<CategoryCampaign>,
+    @InjectRepository(CampaignRepository) private readonly campaignRepo: CampaignRepository,
+    @InjectRepository(CreatorCampaignRepository)
+    private readonly creatorCampaignRepo: CreatorCampaignRepository,
+    @InjectRepository(CategoryCampaignRepository)
+    private readonly categoryCampaignRepo: CategoryCampaignRepository,
     @InjectRepository(TwitchGame) private readonly twitchGameRepo: Repository<TwitchGame>,
     @InjectRepository(AfreecaCategory)
     private readonly afreecaCategoryRepo: Repository<AfreecaCategory>,
+    @InjectRepository(CampaignLog) private readonly campaignLogRepo: Repository<CampaignLog>,
   ) {}
 
   // * 개별 캠페인 정보 조회
-  findCampaign(campaignId: string): Promise<Campaign> {
-    return this.campaignRepo.findOne({
-      where: { campaignId, deletedState: 0 },
-      order: { onOff: 'DESC', regiDate: 'DESC' },
-    });
+  findCampaign(campaignId: string): Promise<FindCampaignRes> {
+    return this.campaignRepo.findOneCampaign(campaignId);
+  }
+
+  // * 캠페인 목록 조회
+  async findAllCampaigns(marketerId: string, dto: PaginationDto): Promise<FindCampaignRes[]> {
+    const searchPage = Math.round(Number(dto.page) * Number(dto.offset));
+    const searchOffset = Number(dto.offset);
+    return this.campaignRepo.findAllCampaigns(marketerId, searchPage, searchOffset);
   }
 
   // * 캠페인 생성
@@ -98,13 +102,76 @@ export class CampaignService {
     }
   }
 
-  updateCampaign() {}
+  // * 캠페인 정보 수정 - 캠페인 이름 수정
+  async updateCampaignName(
+    marketerId: string,
+    campaignId: string,
+    newName: string,
+  ): Promise<boolean> {
+    const result = await this.campaignRepo
+      .createQueryBuilder()
+      .update()
+      .set({ campaignName: newName })
+      .where('campaignId = :campaignId', { campaignId })
+      .andWhere('marketerId = :marketerId', { marketerId })
+      .execute();
+    if (result.affected > 0) return true;
+    return false;
+  }
 
-  deleteCampaign() {}
+  // * 캠페인 정보 수정 - 캠페인 일일 예산 수정
+  async updateCampaignBudget(
+    marketerId: string,
+    campaignId: string,
+    newBudget: number,
+  ): Promise<boolean> {
+    const todayAmount = (await this.campaignLogRepo
+      .createQueryBuilder('cl')
+      .innerJoin(Campaign, 'c', 'c.campaignId = cl.campaignId')
+      .where('cl.campaignId = :campaignId', { campaignId })
+      .andWhere('DATE(cl.date) = DATE(NOW())')
+      .andWhere('c.marketerId = :marketerId', { marketerId })
+      .select('SUM(cashFromMarketer) AS count, limitState')
+      .getRawOne()) as { count: number; limitState: 0 | 1 }; // limitState 0 | 1
 
-  findCampaignCounts() {}
+    // 본인 데이터가 아닌 경우
+    if (todayAmount.limitState === null && todayAmount.count === null) return false;
 
-  findAllCampaigns() {}
+    if (todayAmount.count >= newBudget) {
+      if (todayAmount.limitState === 1) {
+        // 현재까지 사용한 광고 금액이 바꿀 예산보다 큰 경우
+        // ex) 기존 설정 값 (30,000) → 변경 값 (50,000)이고, 현재 30,000을 사용
+        // 예산 변경 적용, limitState를 1 -> 0으로 변경
+        return this.campaignRepo.updateCampaignBudget({ campaignId, newBudget, limitState: 0 });
+      }
+      // 현재까지 사용한 광고 금액이 바꿀 예산보다 큰 경우
+      // ex) 기존 설정 값 (30,000) → 변경 값 (20,000)이고, 현재 20,001원을 사용
+      return this.campaignRepo.updateCampaignBudget({ campaignId, newBudget, limitState: 1 });
+    }
+    // 현재 사용한 금액이 바꿀 예산보다 작은 경우
+    // ex) 기존 설정 값 (30,000) → 변경 값 (20,000)이고, 현재 10,000원을 사용
+    // ex) 기존 설정 값 (30,000) → 변경 값 (50,000)이고, 현재 20,000원을 사용
+    return this.campaignRepo.updateCampaignBudget({ campaignId, newBudget, limitState: 0 });
+  }
+
+  // * 캠페인 삭제
+  async deleteCampaign(marketerId: string, campaignId: string): Promise<boolean | Campaign> {
+    const result = await this.campaignRepo
+      .createQueryBuilder()
+      .update()
+      .set({ deletedState: 1, onOff: 0 })
+      .where('campaignId = :campaignId', { campaignId })
+      .andWhere('marketerId = :marketerId', { marketerId })
+      .execute();
+
+    if (result.affected > 0) return this.campaignRepo.findOne({ where: { campaignId } });
+    return false;
+  }
+
+  // * 캠페인 목록의 총 길이를 반환
+  findCampaignCounts(marketerId: string): Promise<number> {
+    return this.campaignRepo.count({ where: { marketerId, deletedState: 0 } });
+  }
 
   findAllAcitveCampaigns() {}
 
@@ -147,7 +214,7 @@ export class CampaignService {
         creatorCampaigns.map(creator => {
           const campaignListJson = JSON.parse(creator.campaignList);
           campaignListJson.campaignList = campaignListJson.campaignList.concat(campaignId);
-          return this.updateCreatorCategory(
+          return this.creatorCampaignRepo.updateCreatorCategory(
             JSON.stringify(campaignListJson),
             creator.creatorId,
             queryRunner,
@@ -178,7 +245,7 @@ export class CampaignService {
       const afreecaCategories = await this.afreecaCategoryRepo.find({
         where: { categoryNameKr: In(priorityList) },
       });
-      await this.insertCategoryCampaign(
+      await this.categoryCampaignRepo.insertCategoryCampaign(
         needInsertCategories.map(categoryName => ({
           categoryId: afreecaCategories.find(x => x.categoryNameKr === categoryName).categoryId,
           categoryName,
@@ -196,7 +263,7 @@ export class CampaignService {
       const twitchCategory = await this.twitchGameRepo.find({
         where: { gameName: In(priorityList) },
       });
-      await this.insertCategoryCampaign(
+      await this.categoryCampaignRepo.insertCategoryCampaign(
         needInsertCategories.map(categoryName => ({
           categoryId: twitchCategory.find(x => x.gameName === categoryName).gameId,
           categoryName,
@@ -214,55 +281,12 @@ export class CampaignService {
       needUpdateCategories.map(categoryCampaign => {
         const campaignListJson = JSON.parse(categoryCampaign.campaignList);
         campaignListJson.campaignList = campaignListJson.campaignList.concat(campaignId);
-        return this.updateCategoryCampaign(
+        return this.categoryCampaignRepo.updateCategoryCampaign(
           JSON.stringify(campaignListJson),
           categoryCampaign.categoryName,
           queryRunner,
         );
       }),
     );
-  }
-
-  // * categoryCampaign 데이터 업데이트
-  private async updateCreatorCategory(
-    newCampaignListJsonString: string,
-    creatorId: string,
-    queryRunner: QueryRunner,
-  ) {
-    const result = await this.creatorCampaignRepo
-      .createQueryBuilder('creatorcampaign', queryRunner)
-      .update()
-      .set({ campaignList: newCampaignListJsonString })
-      .where('creatorId = :creatorId', { creatorId })
-      .execute();
-    if (result.affected > 0) return true;
-    return false;
-  }
-
-  // * categoryCampaign 데이터 삽입
-  private async insertCategoryCampaign(categories: CategoryCampaign[], queryRunner: QueryRunner) {
-    const result = await this.categoryCampaignRepo
-      .createQueryBuilder('categoryCampaign', queryRunner)
-      .insert()
-      .values(categories)
-      .execute();
-    if (result.raw) return true;
-    return false;
-  }
-
-  // * categoryCampaign 데이터 업데이트
-  private async updateCategoryCampaign(
-    newCampaignListJsonString: string,
-    categoryName: string,
-    queryRunner: QueryRunner,
-  ) {
-    const result = await this.categoryCampaignRepo
-      .createQueryBuilder('categoryCampaign', queryRunner)
-      .update()
-      .set({ campaignList: newCampaignListJsonString })
-      .where('categoryName = :categoryName', { categoryName })
-      .execute();
-    if (result.affected > 0) return true;
-    return false;
   }
 }

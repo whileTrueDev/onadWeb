@@ -41,7 +41,7 @@ export class LandingUrlService {
     marketerId: string,
     dto: Partial<PaginationDto>,
   ): Promise<LinkRegistered[]> {
-    const searchPage = Number(dto.page) * Number(dto.offset);
+    const searchPage = Math.round(Number(dto.page) * Number(dto.offset));
     const searchOffset = Number(dto.offset);
     const urlList = await this.landingUrlRepo.find({
       where: { marketerId },
