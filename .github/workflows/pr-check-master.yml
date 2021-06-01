@@ -18,41 +18,65 @@ jobs:
         id: yarn-cache-dir-path
         run: echo "::set-output name=dir::$(yarn cache dir)"
 
-      - name: Cache yarn dependencies
-        uses: actions/cache@v2
-        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
-        with:
-          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-
-
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
 
+      - name: <client-ts> Cache yarn dependencies
+        uses: actions/cache@v2
+        id: yarn-cache-client-ts # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
+        with:
+          path: |
+            ${{ steps.yarn-cache-dir-path.outputs.dir }}
+            ./client-ts/node_modules
+          key: ${{ runner.os }}-yarn-${{ hashFiles('./client-ts/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
       - name: <client-ts> install dependencies
         working-directory: ./client-ts
-        if: steps.yarn-cache.outputs.cache-hit != 'true'
+        if: steps.yarn-cache-client-ts.outputs.cache-hit != 'true'
         run: yarn install
 
       - name: <client-ts> test/build-test/
         working-directory: ./client-ts
         run: yarn test --watchAll=false
 
+      - name: <server> Cache yarn dependencies
+        uses: actions/cache@v2
+        id: yarn-cache-server # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
+        with:
+          path: |
+            ${{ steps.yarn-cache-dir-path.outputs.dir }}
+            ./server/node_modules
+          key: ${{ runner.os }}-yarn-${{ hashFiles('./server/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
       - name: <server> install dependencies
         working-directory: ./server
-        if: steps.yarn-cache.outputs.cache-hit != 'true'
+        if: steps.yarn-cache-server.outputs.cache-hit != 'true'
         run: yarn install
 
       - name: <server> test/build-test/
         working-directory: ./server
         run: yarn test --watchAll=false
 
+      - name: <calculator> Cache yarn dependencies
+        uses: actions/cache@v2
+        id: yarn-cache-calculator # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
+        with:
+          path: |
+            ${{ steps.yarn-cache-dir-path.outputs.dir }}
+            ./calculator/node_modules
+          key: ${{ runner.os }}-yarn-${{ hashFiles('./calculator/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
       - name: <calculator> install dependencies
         working-directory: ./calculator
-        if: steps.yarn-cache.outputs.cache-hit != 'true'
+        if: steps.yarn--calculatorcache.outputs.cache-hit != 'true'
         run: yarn install
 
       - name: <calculator> test
@@ -74,19 +98,21 @@ jobs:
         id: yarn-cache-dir-path
         run: echo "::set-output name=dir::$(yarn cache dir)"
 
-      - name: Cache yarn dependencies
-        uses: actions/cache@v2
-        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
-        with:
-          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-
-
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
+
+      - name: <client-ts> Cache yarn dependencies
+        uses: actions/cache@v2
+        id: yarn-cache-client-ts # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
+        with:
+          path: |
+            ${{ steps.yarn-cache-dir-path.outputs.dir }}
+            ./client-ts/node_modules
+          key: ${{ runner.os }}-yarn-${{ hashFiles('./client-ts/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
 
       - name: <client-ts> install dependencies
         working-directory: ./client-ts
@@ -96,6 +122,17 @@ jobs:
       - name: <client-ts> test/build-test/
         working-directory: ./client-ts
         run: yarn build
+
+      - name: <server> Cache yarn dependencies
+        uses: actions/cache@v2
+        id: yarn-cache-server # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
+        with:
+          path: |
+            ${{ steps.yarn-cache-dir-path.outputs.dir }}
+            ./server/node_modules
+          key: ${{ runner.os }}-yarn-${{ hashFiles('./server/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
 
       - name: <server> install dependencies
         working-directory: ./server
