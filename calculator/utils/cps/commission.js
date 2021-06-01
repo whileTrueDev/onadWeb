@@ -1,11 +1,3 @@
-const getCashesCalculatedForLiveCommerce = ({ orderPrice, creatorCommission, onadCommission }) => {
-  const cashToCreator = Math.round(orderPrice * creatorCommission);
-  const cashToOnad = Math.round(orderPrice * onadCommission);
-  const salesIncomeToMarketer = orderPrice - cashToCreator - cashToOnad;
-  return { cashToCreator, salesIncomeToMarketer };
-};
-
-
 /**
    * 각 유저별 계산 대금을 구합니다. 리뷰/자랑하기/응원하기 글의 대상인 방송인이 있는 지 여부를 기준으로
    * 계산 대금은 다르게 계산됩니다.
@@ -33,7 +25,19 @@ const getCashesCalculated = ({
   return { cashToCreator, salesIncomeToMarketer };
 };
 
+// CPS 계산 타겟들의 수수료 계산
+const getFeeCalculatedTargets = (_targets) => _targets.map((target) => {
+  const { cashToCreator, salesIncomeToMarketer } = getCashesCalculated({
+    totalOrderPrice: target.orderPrice,
+    isCreatorExists: !!target.targetCreatorId,
+    creatorCommission: target.creatorCommission,
+    onadCommission: target.onadCommission,
+  });
+  return { ...target, cashToCreator, salesIncomeToMarketer };
+});
+
+
 module.exports = {
-  getCashesCalculatedForLiveCommerce,
   getCashesCalculated,
+  getFeeCalculatedTargets,
 };

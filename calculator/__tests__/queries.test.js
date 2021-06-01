@@ -52,42 +52,58 @@ describe('queries', () => {
     expect(queryUnit.queryArray[4]).toBe('gubgoo');
   });
 
-  test('getInsertCampaignLog when creatorId is exists', () => {
-    const param = {
-      campaignId: 'gubgoo_c42', creatorId: '130096343', cashToCreator: 1000, salesIncomeToMarketer: 4000
-    };
+  test('getInsertCampaignLog when targetCreatorId is exists', () => {
+    const param = [
+      {
+        campaignId: 'gubgoo_c42', targetCreatorId: '130096343', cashToCreator: 1000, salesIncomeToMarketer: 4000
+      },
+      {
+        campaignId: 'gubgoo_c42', targetCreatorId: '130096343', cashToCreator: 1000, salesIncomeToMarketer: 4000
+      },
+    ];
 
     const queryUnit = getInsertCampaignLog(param);
     expect(queryUnit.query).toMatch(`
     INSERT INTO campaignLog
     (campaignId, creatorId, type, cashToCreator, salesIncomeToMarketer)
-    VALUES (?, ?, ?, ?, ?)
-  `);
+    VALUES 
+  (?, ?, ?, ?, ?), (?, ?, ?, ?, ?)`);
 
     expect(queryUnit.queryArray[0]).toBe('gubgoo_c42');
     expect(queryUnit.queryArray[1]).toBe('130096343');
     expect(queryUnit.queryArray[2]).toBe('CPS');
     expect(queryUnit.queryArray[3]).toBe(1000);
     expect(queryUnit.queryArray[4]).toBe(4000);
+    expect(queryUnit.queryArray[5]).toBe('gubgoo_c42');
+    expect(queryUnit.queryArray[6]).toBe('130096343');
+    expect(queryUnit.queryArray[7]).toBe('CPS');
+    expect(queryUnit.queryArray[8]).toBe(1000);
+    expect(queryUnit.queryArray[9]).toBe(4000);
   });
 
   test('getInsertCampaignLog when creatorId is not exists', () => {
-    const param = {
-      campaignId: 'gubgoo_c42', cashToCreator: 1000, salesIncomeToMarketer: 4000
-    };
+    const param = [
+      { campaignId: 'gubgoo_c42', cashToCreator: 1000, salesIncomeToMarketer: 4000 },
+      { campaignId: 'gubgoo_c42', cashToCreator: 1000, salesIncomeToMarketer: 4000 },
+    ];
 
     const queryUnit = getInsertCampaignLog(param);
     expect(queryUnit.query).toMatch(`
     INSERT INTO campaignLog
     (campaignId, creatorId, type, cashToCreator, salesIncomeToMarketer)
-    VALUES (?, ?, ?, ?, ?)
-  `);
+    VALUES 
+  (?, ?, ?, ?, ?), (?, ?, ?, ?, ?)`);
 
     expect(queryUnit.queryArray[0]).toBe('gubgoo_c42');
     expect(queryUnit.queryArray[1]).toBe('');
     expect(queryUnit.queryArray[2]).toBe('CPS');
     expect(queryUnit.queryArray[3]).toBe(1000);
     expect(queryUnit.queryArray[4]).toBe(4000);
+    expect(queryUnit.queryArray[5]).toBe('gubgoo_c42');
+    expect(queryUnit.queryArray[6]).toBe('');
+    expect(queryUnit.queryArray[7]).toBe('CPS');
+    expect(queryUnit.queryArray[8]).toBe(1000);
+    expect(queryUnit.queryArray[9]).toBe(4000);
   });
 
   test('getUpdateFlag', () => {
