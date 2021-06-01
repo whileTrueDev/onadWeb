@@ -148,7 +148,6 @@ async function cpsCalculate() {
       .then(() => console.log(`[${new Date().toLocaleString()}] 모든 주문의 캠페인 계산 로그 처리 완료`));
 
     console.log(`[${new Date().toLocaleString()}] [CPS|라이브커머스] 판매 대금 계산을 모두 완료하였습니다.`);
-    await conn.rollback();
     return conn.commit();
   } catch (e) {
     await conn.rollback();
