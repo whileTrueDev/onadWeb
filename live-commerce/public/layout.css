@@ -1,0 +1,241 @@
+@font-face {
+  font-family: 'NEXON';
+  src:url('/public/fonts/NEXON-Lv2-Gothic-Medium.ttf');
+}
+
+@font-face {
+  font-family: 'KOTRA';
+  src:url('/public/fonts/KOTRA_BOLD.ttf');
+}
+
+body {
+  max-width: 100%;
+  max-height: 100%;
+  bottom: 0;
+  left: 0;
+  margin: auto;
+  overflow: auto;
+  position: fixed;
+  right: 0;
+  top: 0;
+}
+
+.live-commerce-area {
+  width:100%;
+  height:100%;
+  position:relative;
+  display:block;
+}
+
+
+/* 하단영역 */
+.bottom-area-wrapper {
+  width:1520px;
+  height:60px;
+  position:absolute;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  bottom:0px;
+  right:0px;
+  background-color: rgba( 0, 0, 0, 0.5 );
+}
+
+.bottom-area {
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  display:flex;
+  flex-direction: row;
+  align-items:center;
+}
+
+.bottom-area-text#bottom-admin {
+  margin-right:0;
+  color:#ffffff;
+  font-size:23px;
+  /* font-weight:bold; */
+}
+
+.bottom-area p:after {
+  content:"";
+  white-space:nowrap;
+  padding-right:100%;
+}
+
+.bottom-area-text {
+  font-family:'NEXON';
+  margin-right:100%;
+  font-size:23px;
+  color:#ffffff;
+  -webkit-text-stroke: 1px #000000;
+      }
+
+.bottom-area p {
+  padding-left:100%;
+  display:inline-block;
+  white-space:nowrap;
+    -webkit-animation-name:marquee;
+    -webkit-animation-timing-function:linear;
+    -webkit-animation-duration:10s;
+    -webkit-animation-iteration-count:infinite;
+    -moz-animation-name:marquee;
+    -moz-animation-timing-function:linear;
+    -moz-animation-duration:10s;
+    -moz-animation-iteration-count:infinite;
+    -ms-animation-name:marquee;
+    -ms-animation-timing-function:linear;
+    -ms-animation-duration:10s;
+    -ms-animation-iteration-count:infinite;
+    -o-animation-name:marquee;
+    -o-animation-timing-function:linear;
+    -o-animation-duration:10s;
+    -o-animation-iteration-count:infinite;
+    animation-name:marquee;
+    animation-timing-function:linear;
+    animation-duration:10s;
+    animation-iteration-count:infinite;
+}
+
+@-webkit-keyframes marquee {
+  from   { -webkit-transform: translate(0%);}
+  99%,to { -webkit-transform: translate(-100%);}
+}
+
+@-moz-keyframes marquee {
+  from   { -moz-transform: translate(0%);}
+  99%,to { -moz-transform: translate(-100%);}
+}
+
+@-ms-keyframes marquee {
+  from   { -ms-transform: translate(0%);}
+  99%,to { -ms-transform: translate(-100%);}
+}
+
+@-o-keyframes marquee {
+  from   { -o-transform: translate(0%);}
+  99%,to { -o-transform: translate(-100%);}
+}
+
+@keyframes marquee {
+  from   { transform: translate(0%);}
+  99%,to { transform: translate(-100%);}
+}
+/* 좌측 영역 */
+.left-section {
+  float:left;
+  width:400px;
+  height:100%;
+  position:relative
+}
+
+/* 좌측 상단 랭킹 */
+.outer-text-area {
+  display:flex;
+  flex-direction: column;
+  width:400px;
+  height:180px;
+  position:absolute;
+  align-items:center;
+  justify-content:flex-start;
+  background-color: rgba( 0, 0, 0, 0.5 );
+  z-index:1;
+}
+
+.inner-text-area-wrapper {
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  justify-content:center;
+}
+
+.inner-text-area{
+  display:flex;
+  align-items: center;
+  justify-content: center;
+  margin:2px;
+  font-family:'NEXON';
+  font-size: 25px;
+  color:#ffffff;
+  -webkit-text-stroke: 1px black;
+}
+
+.inner-text-area-id{
+  font-size: 25px;
+  color:#27b9ac;
+  -webkit-text-stroke: 1px black;
+}
+
+#ranking-icon {
+  width:60px;
+  height:52px;
+  margin-right:10px;
+}
+
+/* 좌측 배너영역 */
+.left-banner-area {
+  width:400px;
+  height:900px;
+  left:0%;
+  bottom:0%;
+  position:absolute;
+}
+
+/* 우측 상단 응원메세지 영역 */
+.top-right {
+  display:none;
+  width:600px;
+  height:400px;
+  top:50px;
+  right:50px;
+  position:fixed;
+}
+
+.centered {
+  display:flex;
+  flex-direction: column;
+  width:100%;
+  height:100%;
+  align-items: center;
+  justify-content: flex-start;
+  -webkit-text-stroke: 1.5px rgb(46, 45, 45);
+   font-family:'KOTRA'
+}
+
+.animated.heartbeat{
+  font-size: 20px; 
+  color: rgb(255, 255, 255); 
+  font-weight: 600;
+}
+
+#donation-user-id {
+  font-size:40px;
+  font-weight:bold;
+  color:#32C3A6;
+}
+
+#donation-num{
+  font-size:40px;
+  font-weight:bold;
+  color:#32C3A6;
+}
+
+#message{
+  font-size:40px;
+  color:rgb(255, 255, 255);
+  margin:6px
+}
+
+#donation-sub{
+  color:rgb(255, 255, 255);
+}
+
+#donation-image{
+  width:600;
+  height:400px;
+  margin-bottom:10px
+}
+
+#donation-top{
+  margin:6px
+}
