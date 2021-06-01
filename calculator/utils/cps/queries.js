@@ -13,17 +13,24 @@ const getUpdateFlag = ({ orderId }) => {
 
 /**
 * 계산 로그를 campaignLog에 적재
-* @param {object} param0 campaignId, creatorId, cashToCreator, salesIncomeToMarketer
+* @param {array of object} param0 {campaignId, creatorId, cashToCreator, salesIncomeToMarketer}[]
 */
-const getInsertCampaignLog = ({
-  campaignId, creatorId, cashToCreator, salesIncomeToMarketer
-}) => {
-  const query = `
+const getInsertCampaignLog = (targets) => {
+  let query = `
     INSERT INTO campaignLog
     (campaignId, creatorId, type, cashToCreator, salesIncomeToMarketer)
-    VALUES (?, ?, ?, ?, ?)
+    VALUES 
   `;
-  const queryArray = [campaignId, creatorId || '', 'CPS', cashToCreator, salesIncomeToMarketer];
+  const valuesSnippet = '(?, ?, ?, ?, ?)';
+  const comma = ', ';
+  let queryArray = [];
+  targets.forEach(({
+    campaignId, targetCreatorId, cashToCreator, salesIncomeToMarketer
+  }, idx) => {
+    query += valuesSnippet;
+    if (idx !== targets.length - 1) query += comma;
+    queryArray = queryArray.concat([campaignId, targetCreatorId || '', 'CPS', cashToCreator, salesIncomeToMarketer]);
+  });
   return { query, queryArray };
 };
 
