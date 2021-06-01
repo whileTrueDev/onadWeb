@@ -57,7 +57,7 @@ jobs:
 
       - name: <calculator> test
         working-directory: ./calculator
-        run: yarn test
+        run: yarn test:ci --watchAll=false
 
   build:
     strategy:
