@@ -19,6 +19,7 @@ import { MarketerActionLogService } from './marketerActionLog.service';
 import { MarketerActionLog } from '../../entities/MarketerActionLog';
 import { AdModule } from './ad/ad.module';
 import { CampaignModule } from './campaign/campaign.module';
+import { CashModule } from './cash/cash.module';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { CampaignModule } from './campaign/campaign.module';
     InventoryModule,
     AdModule,
     CampaignModule,
+    CashModule,
   ],
   controllers: [MarketerController],
   providers: [MarketerService, MarketerActionLogService],
