@@ -1,14 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { EntityRepository, getConnection, Repository } from 'typeorm';
-import { BannerRegistered } from '../../../../entities/BannerRegistered';
-import { Campaign } from '../../../../entities/Campaign';
-import { CampaignLog } from '../../../../entities/CampaignLog';
-import { CreatorInfo } from '../../../../entities/CreatorInfo';
-import { LinkRegistered } from '../../../../entities/LinkRegistered';
-import { MerchandiseMallItems } from '../../../../entities/MerchandiseMallItems';
-import { MerchandiseRegistered } from '../../../../entities/MerchandiseRegistered';
-import { CampaignPriorityType } from '../interfaces/campaignPriorityType.enum';
-import { CampaignDetail, FindCampaignRes } from '../interfaces/findCampaignRes.interface';
+import { BannerRegistered } from '../entities/BannerRegistered';
+import { Campaign } from '../entities/Campaign';
+import { CampaignLog } from '../entities/CampaignLog';
+import { CreatorInfo } from '../entities/CreatorInfo';
+import { LinkRegistered } from '../entities/LinkRegistered';
+import { MerchandiseMallItems } from '../entities/MerchandiseMallItems';
+import { MerchandiseRegistered } from '../entities/MerchandiseRegistered';
+import { CampaignPriorityType } from '../resources/marketer/campaign/interfaces/campaignPriorityType.enum';
+import {
+  CampaignDetail,
+  FindCampaignRes,
+} from '../resources/marketer/campaign/interfaces/findCampaignRes.interface';
 
 @Injectable()
 @EntityRepository(Campaign)
@@ -65,6 +68,40 @@ export class CampaignRepository extends Repository<Campaign> {
     return null;
   }
 
+  // * 캠페인 배너, 랜딩URL 승인 여부를 조회합니다.
+  public async findCampaignOnOffDetail(
+    campaignId: string,
+  ): Promise<{
+    campaignName: string;
+    bannerId: string;
+    bannerConfirm: number;
+    linkConfirm: number;
+  }> {
+    return this.createQueryBuilder('campaign')
+      .select(
+        'campaignName, campaign.bannerId, connectedLinkId, br.confirmState AS bannerConfirm, lr.confirmState AS linkConfirm',
+      )
+      .innerJoin(BannerRegistered, 'br', 'br.bannerId = campaign.bannerId')
+      .leftJoin(LinkRegistered, 'lr', 'lr.linkId = campaign.connectedLinkId')
+      .where('campaignId = :campaignId', { campaignId })
+      .getRawOne();
+  }
+
+  // * 캠페인의 금일 사용량과 한계 도달 여부를 조회
+  public async findCampaignUsageToday(
+    marketerId: string,
+    campaignId: string,
+  ): Promise<{ count: number | null; limitState: 0 | 1 | null }> {
+    const todayAmount = await this.createQueryBuilder('cl')
+      .innerJoin(Campaign, 'c', 'c.campaignId = cl.campaignId')
+      .where('cl.campaignId = :campaignId', { campaignId })
+      .andWhere('DATE(cl.date) = DATE(NOW())')
+      .andWhere('c.marketerId = :marketerId', { marketerId })
+      .select('SUM(cashFromMarketer) AS count, limitState')
+      .getRawOne();
+    return todayAmount;
+  }
+
   // * 캠페인 일일 예산 정보 변경
   public async updateCampaignBudget({
     campaignId,
@@ -81,6 +118,51 @@ export class CampaignRepository extends Repository<Campaign> {
       .where('campaignId = :campaignId', { campaignId })
       .execute();
     if (reuslt.affected > 0) return true;
+    return false;
+  }
+
+  // * 캠페인 On/Off 상태를 변경합니다.
+  public async updateCampaignOnOff(
+    marketerId: string,
+    campaignId: string,
+    targetOnOffState: boolean,
+  ): Promise<boolean> {
+    const result = await this.createQueryBuilder()
+      .update()
+      .set({ onOff: targetOnOffState ? 1 : 0 })
+      .where('campaignId = :campaignId', { campaignId })
+      .andWhere('marketerId = :marketerId', { marketerId })
+      .execute();
+    if (result.affected > 0) return true;
+    return false;
+  }
+
+  // * 캠페인 이름 정보 변경
+  public async updateCampaignName(
+    marketerId: string,
+    campaignId: string,
+    newName: string,
+  ): Promise<boolean> {
+    const result = await this.createQueryBuilder()
+      .update()
+      .set({ campaignName: newName })
+      .where('campaignId = :campaignId', { campaignId })
+      .andWhere('marketerId = :marketerId', { marketerId })
+      .execute();
+    if (result.affected > 0) return true;
+    return false;
+  }
+
+  // * 특정 캠페인 삭제
+  public async deleteCampaign(marketerId: string, campaignId: string): Promise<boolean | Campaign> {
+    const result = await this.createQueryBuilder()
+      .update()
+      .set({ deletedState: 1, onOff: 0 })
+      .where('campaignId = :campaignId', { campaignId })
+      .andWhere('marketerId = :marketerId', { marketerId })
+      .execute();
+
+    if (result.affected > 0) return this.findOne({ where: { campaignId } });
     return false;
   }
 

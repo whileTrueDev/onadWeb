@@ -1,5 +1,5 @@
 import { Controller, Get, UseGuards } from '@nestjs/common';
-import { Marketer } from '../../../decorator/sessionData.decorator';
+import { Marketer } from '../../../decorators/sessionData.decorator';
 import { MarketerSession } from '../../../interfaces/Session.interface';
 import { IsAuthGuard } from '../../auth/guards/isAuth.guard';
 import { FindTaxBillsRes } from './interfaces/findTaxBillsRes.interface';

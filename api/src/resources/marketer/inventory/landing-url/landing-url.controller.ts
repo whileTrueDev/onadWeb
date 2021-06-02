@@ -8,7 +8,7 @@ import {
   UseGuards,
   ValidationPipe,
 } from '@nestjs/common';
-import { Marketer } from '../../../../decorator/sessionData.decorator';
+import { Marketer } from '../../../../decorators/sessionData.decorator';
 import { PaginationDto } from '../../../../dto/paginationDto.dto';
 import { Campaign } from '../../../../entities/Campaign';
 import { LinkRegistered } from '../../../../entities/LinkRegistered';

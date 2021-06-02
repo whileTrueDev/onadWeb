@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { EntityRepository, Repository, QueryRunner } from 'typeorm';
-import { CreatorCampaign } from '../../../../entities/CreatorCampaign';
+import { CreatorCampaign } from '../entities/CreatorCampaign';
 
 @Injectable()
 @EntityRepository(CreatorCampaign)

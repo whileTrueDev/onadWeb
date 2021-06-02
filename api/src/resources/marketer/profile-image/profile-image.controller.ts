@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, Patch, Post, UseGuards } from '@nestjs/common';
-import { Marketer } from '../../../decorator/sessionData.decorator';
+import { Marketer } from '../../../decorators/sessionData.decorator';
 import { MarketerInfo } from '../../../entities/MarketerInfo';
 import { MarketerSession } from '../../../interfaces/Session.interface';
 import { IsAuthGuard } from '../../auth/guards/isAuth.guard';

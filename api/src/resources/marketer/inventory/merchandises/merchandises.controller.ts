@@ -10,7 +10,7 @@ import {
   UseGuards,
   ValidationPipe,
 } from '@nestjs/common';
-import { Marketer } from '../../../../decorator/sessionData.decorator';
+import { Marketer } from '../../../../decorators/sessionData.decorator';
 import { MerchandisePickupAddresses } from '../../../../entities/MerchandisePickupAddresses';
 import { MerchandiseRegistered } from '../../../../entities/MerchandiseRegistered';
 import { MarketerSession } from '../../../../interfaces/Session.interface';

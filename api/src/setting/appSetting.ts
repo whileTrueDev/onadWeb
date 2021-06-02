@@ -5,7 +5,7 @@ import session from 'express-session';
 import helmet from 'helmet';
 import cors from 'cors';
 import passport from 'passport';
-import colorizedMorgan from '../middleware/colorizedMorgan.middleware';
+import colorizedMorgan from '../middlewares/colorizedMorgan.middleware';
 
 const MySQLStore = require('express-mysql-session')(session);
 

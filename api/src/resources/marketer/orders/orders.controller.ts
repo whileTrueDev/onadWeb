@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Patch, Query, UseGuards, ValidationPipe } from '@nestjs/common';
-import { Marketer } from '../../../decorator/sessionData.decorator';
+import { Marketer } from '../../../decorators/sessionData.decorator';
 import { MarketerSession } from '../../../interfaces/Session.interface';
 import { IsAuthGuard } from '../../auth/guards/isAuth.guard';
 import { FindOrdersDto } from './dto/findOrdersDto.dto';

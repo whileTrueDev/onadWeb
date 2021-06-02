@@ -10,17 +10,19 @@ import {
   UseGuards,
   ValidationPipe,
 } from '@nestjs/common';
-import { Marketer } from '../../../decorator/sessionData.decorator';
+import { Marketer } from '../../../decorators/sessionData.decorator';
 import { PaginationDto } from '../../../dto/paginationDto.dto';
 import { MarketerSession } from '../../../interfaces/Session.interface';
 import { IsAuthGuard } from '../../auth/guards/isAuth.guard';
 import { SlackService } from '../../slack/slack.service';
 import { MarketerActionLogService, MarketerActionLogType } from '../marketerActionLog.service';
 import { CampaignService } from './campaign.service';
+import { ChangeCampaignOnOffStateDto } from './dto/changeCampaignOnOffStateDto.dto';
 import { CreateCampaignDto } from './dto/createCampaignDto.dto';
 import { DeleteCampaignDto } from './dto/deleteCampaignDto.dto';
 import { FindCampaignDto } from './dto/findCampaignDto.dto';
 import { UpdateCampaignDto } from './dto/updateCampaignDto.dto';
+import { FindActiveCampaignCountsRes } from './interfaces/findActiveCampaignCountsRes.interface';
 import { FindCampaignRes } from './interfaces/findCampaignRes.interface';
 
 @Controller('marketer/campaign')
@@ -125,18 +127,24 @@ export class CampaignController {
 
   @UseGuards(IsAuthGuard)
   @Get('active')
-  findAllAcitveCampaigns() {
-    return this.campaignService.findAllAcitveCampaigns();
+  findAllAcitveCampaigns(
+    @Marketer() { marketerId }: MarketerSession,
+  ): Promise<FindActiveCampaignCountsRes> {
+    return this.campaignService.findActiveCampaignCounts(marketerId);
   }
 
+  @UseGuards(IsAuthGuard)
   @Get('names')
-  findNames() {
+  findNames(): Promise<string[]> {
     return this.campaignService.findNames();
   }
 
   @UseGuards(IsAuthGuard)
   @Patch('on-off')
-  changeOnOffState() {
-    return this.campaignService.changeOnOffState();
+  changeOnOffState(
+    @Marketer() { marketerId }: MarketerSession,
+    @Body(ValidationPipe) dto: ChangeCampaignOnOffStateDto,
+  ): Promise<[boolean, string?]> {
+    return this.campaignService.changeOnOffState(marketerId, dto);
   }
 }

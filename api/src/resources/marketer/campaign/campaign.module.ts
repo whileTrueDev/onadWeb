@@ -1,7 +1,6 @@
 import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AfreecaCategory } from '../../../entities/AfreecaCategory';
-import { CampaignLog } from '../../../entities/CampaignLog';
 import { TwitchGame } from '../../../entities/TwitchGame';
 import { SlackModule } from '../../slack/slack.module';
 import { MarketerModule } from '../marketer.module';
@@ -9,9 +8,11 @@ import { CampaignAnalysisController } from './campaign-analysis.controller';
 import { CampaignAnalysisService } from './campaign-analysis.service';
 import { CampaignController } from './campaign.controller';
 import { CampaignService } from './campaign.service';
-import { CampaignRepository } from './repository/campaign.repository';
-import { CategoryCampaignRepository } from './repository/category-campaign.repository';
-import { CreatorCampaignRepository } from './repository/creator-campaign.repository';
+import { CampaignLogRepository } from '../../../repositories/CampaignLog.repository';
+import { CampaignRepository } from '../../../repositories/Campaign.repository';
+import { CategoryCampaignRepository } from '../../../repositories/CategoryCampaign.repository';
+import { CreatorCampaignRepository } from '../../../repositories/CreatorCampaign.repository';
+import { TrackingRepository } from '../../../repositories/Tracking.repository';
 
 @Module({
   imports: [
@@ -21,7 +22,8 @@ import { CreatorCampaignRepository } from './repository/creator-campaign.reposit
       CreatorCampaignRepository,
       AfreecaCategory,
       TwitchGame,
-      CampaignLog,
+      CampaignLogRepository,
+      TrackingRepository,
     ]),
     forwardRef(() => MarketerModule),
     SlackModule,

@@ -13,7 +13,7 @@ import {
 } from '@nestjs/common';
 import { Request } from 'express';
 import nanoid from 'nanoid';
-import { Marketer } from '../../decorator/sessionData.decorator';
+import { Marketer } from '../../decorators/sessionData.decorator';
 import { MarketerInfo } from '../../entities/MarketerInfo';
 import { MarketerSession } from '../../interfaces/Session.interface';
 import { IsAuthGuard } from '../auth/guards/isAuth.guard';

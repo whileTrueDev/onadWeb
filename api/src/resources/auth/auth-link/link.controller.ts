@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Post, Res, UseFilters, UseGuards } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Response } from 'express';
-import { Creator } from '../../../decorator/sessionData.decorator';
+import { Creator } from '../../../decorators/sessionData.decorator';
 import { AfreecaLinkCertification } from '../../../entities/AfreecaLinkCertification';
 import { CreatorSession } from '../../../interfaces/Session.interface';
 import { IsAuthGuard } from '../guards/isAuth.guard';

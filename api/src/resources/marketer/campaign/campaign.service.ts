@@ -4,15 +4,16 @@ import { getConnection, In, QueryRunner, Repository } from 'typeorm';
 import { PaginationDto } from '../../../dto/paginationDto.dto';
 import { AfreecaCategory } from '../../../entities/AfreecaCategory';
 import { Campaign } from '../../../entities/Campaign';
-import { CampaignLog } from '../../../entities/CampaignLog';
 import { CategoryCampaign } from '../../../entities/CategoryCampaign';
 import { TwitchGame } from '../../../entities/TwitchGame';
+import { ChangeCampaignOnOffStateDto } from './dto/changeCampaignOnOffStateDto.dto';
 import { CreateCampaignDto } from './dto/createCampaignDto.dto';
 import { CampaignPriorityType } from './interfaces/campaignPriorityType.enum';
+import { FindActiveCampaignCountsRes } from './interfaces/findActiveCampaignCountsRes.interface';
 import { FindCampaignRes } from './interfaces/findCampaignRes.interface';
-import { CampaignRepository } from './repository/campaign.repository';
-import { CategoryCampaignRepository } from './repository/category-campaign.repository';
-import { CreatorCampaignRepository } from './repository/creator-campaign.repository';
+import { CampaignRepository } from '../../../repositories/Campaign.repository';
+import { CategoryCampaignRepository } from '../../../repositories/CategoryCampaign.repository';
+import { CreatorCampaignRepository } from '../../../repositories/CreatorCampaign.repository';
 
 @Injectable()
 export class CampaignService {
@@ -25,7 +26,6 @@ export class CampaignService {
     @InjectRepository(TwitchGame) private readonly twitchGameRepo: Repository<TwitchGame>,
     @InjectRepository(AfreecaCategory)
     private readonly afreecaCategoryRepo: Repository<AfreecaCategory>,
-    @InjectRepository(CampaignLog) private readonly campaignLogRepo: Repository<CampaignLog>,
   ) {}
 
   // * 개별 캠페인 정보 조회
@@ -35,7 +35,7 @@ export class CampaignService {
 
   // * 캠페인 목록 조회
   async findAllCampaigns(marketerId: string, dto: PaginationDto): Promise<FindCampaignRes[]> {
-    const searchPage = Math.round(Number(dto.page) * Number(dto.offset));
+    const searchPage = Math.round(Number(dto.page > 0 ? dto.page : 0) * Number(dto.offset));
     const searchOffset = Number(dto.offset);
     return this.campaignRepo.findAllCampaigns(marketerId, searchPage, searchOffset);
   }
@@ -108,15 +108,7 @@ export class CampaignService {
     campaignId: string,
     newName: string,
   ): Promise<boolean> {
-    const result = await this.campaignRepo
-      .createQueryBuilder()
-      .update()
-      .set({ campaignName: newName })
-      .where('campaignId = :campaignId', { campaignId })
-      .andWhere('marketerId = :marketerId', { marketerId })
-      .execute();
-    if (result.affected > 0) return true;
-    return false;
+    return this.campaignRepo.updateCampaignName(marketerId, campaignId, newName);
   }
 
   // * 캠페인 정보 수정 - 캠페인 일일 예산 수정
@@ -125,14 +117,7 @@ export class CampaignService {
     campaignId: string,
     newBudget: number,
   ): Promise<boolean> {
-    const todayAmount = (await this.campaignLogRepo
-      .createQueryBuilder('cl')
-      .innerJoin(Campaign, 'c', 'c.campaignId = cl.campaignId')
-      .where('cl.campaignId = :campaignId', { campaignId })
-      .andWhere('DATE(cl.date) = DATE(NOW())')
-      .andWhere('c.marketerId = :marketerId', { marketerId })
-      .select('SUM(cashFromMarketer) AS count, limitState')
-      .getRawOne()) as { count: number; limitState: 0 | 1 }; // limitState 0 | 1
+    const todayAmount = await this.campaignRepo.findCampaignUsageToday(marketerId, campaignId);
 
     // 본인 데이터가 아닌 경우
     if (todayAmount.limitState === null && todayAmount.count === null) return false;
@@ -156,16 +141,7 @@ export class CampaignService {
 
   // * 캠페인 삭제
   async deleteCampaign(marketerId: string, campaignId: string): Promise<boolean | Campaign> {
-    const result = await this.campaignRepo
-      .createQueryBuilder()
-      .update()
-      .set({ deletedState: 1, onOff: 0 })
-      .where('campaignId = :campaignId', { campaignId })
-      .andWhere('marketerId = :marketerId', { marketerId })
-      .execute();
-
-    if (result.affected > 0) return this.campaignRepo.findOne({ where: { campaignId } });
-    return false;
+    return this.campaignRepo.deleteCampaign(marketerId, campaignId);
   }
 
   // * 캠페인 목록의 총 길이를 반환
@@ -173,11 +149,45 @@ export class CampaignService {
     return this.campaignRepo.count({ where: { marketerId, deletedState: 0 } });
   }
 
-  findAllAcitveCampaigns() {}
+  // * 해당 광고주의 켜져있는 캠페인 수를 반환
+  async findActiveCampaignCounts(marketerId: string): Promise<FindActiveCampaignCountsRes> {
+    const activeCampaignCount = await this.campaignRepo.count({ where: { onOff: 1, marketerId } });
+    return { activeCampaignCount };
+  }
 
-  findNames() {}
+  // * 캠페인 이름 목록 반환 - 캠페인 이름 중복 확인을 위해
+  async findNames(): Promise<string[]> {
+    const result = await this.campaignRepo.find({ select: ['campaignName'] });
+    return result.map(c => c.campaignName);
+  }
 
-  changeOnOffState() {}
+  // * 캠페인 On/Off
+  async changeOnOffState(
+    marketerId: string,
+    dto: ChangeCampaignOnOffStateDto,
+  ): Promise<[boolean, string?]> {
+    const { bannerConfirm, linkConfirm } = await this.campaignRepo.findCampaignOnOffDetail(
+      dto.campaignId,
+    );
+    if (
+      (bannerConfirm === 1 && linkConfirm === 1) ||
+      (bannerConfirm === 1 && linkConfirm === null)
+    ) {
+      const result = await this.campaignRepo.updateCampaignOnOff(
+        marketerId,
+        dto.campaignId,
+        dto.onoffState,
+      );
+      return [result];
+    }
+    if (bannerConfirm === 1) {
+      return [false, 'URL에 대한 승인이 완료되지 않았습니다.'];
+    }
+    if (linkConfirm === 1) {
+      return [false, '배너에 대한 승인이 완료되지 않았습니다.'];
+    }
+    return [false, '배너, URL에 대한 승인이 완료되지 않았습니다.'];
+  }
 
   // **********************************
   // * Private Methods
