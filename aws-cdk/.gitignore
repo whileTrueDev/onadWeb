@@ -10,3 +10,9 @@ cdk.out
 # Parcel build directories
 .cache
 .build
+
+
+cdk.context.json
+.cdk.staging/
+cdk.out/
+*.tabl.json
