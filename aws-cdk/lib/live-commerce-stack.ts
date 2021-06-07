@@ -1,10 +1,14 @@
 import * as ec2 from '@aws-cdk/aws-ec2';
-import { SecurityGroup, Vpc } from '@aws-cdk/aws-ec2';
+import {
+  Vpc
+} from '@aws-cdk/aws-ec2';
 import {
   AwsLogDriver, Cluster, ContainerImage, FargateService, FargateTaskDefinition
 } from '@aws-cdk/aws-ecs';
 import {
-  ApplicationListener, ApplicationLoadBalancer, ApplicationProtocol, ApplicationTargetGroup
+  ApplicationListener,
+  ApplicationLoadBalancer,
+  ApplicationProtocol, ApplicationTargetGroup
 } from '@aws-cdk/aws-elasticloadbalancingv2';
 import { Role } from '@aws-cdk/aws-iam';
 import { LogGroup } from '@aws-cdk/aws-logs';
@@ -80,12 +84,12 @@ export default class LiveCommerceStack extends cdk.Stack {
     // Find OnAD ALB Listener
     const myAlbHTTPSListener = ApplicationListener.fromApplicationListenerAttributes(this, 'FindALBListener', {
       listenerArn: process.env.AWS_ONAD_ALB_LISTENER_ARN!,
-      securityGroup: SecurityGroup.fromSecurityGroupId(this, 'FindALBSG', process.env.AWS_ONAD_ALB_SG_ID!)
+      securityGroupId: process.env.AWS_ONAD_ALB_SG_ID!,
     });
 
     // Attach Target groups to existing http listener
     myAlbHTTPSListener.addTargetGroups(`${PREFIX}TargetGroups`, {
-      priority: 6,
+      priority: 10,
       hostHeader: DOMAIN,
       targetGroups: [
         new ApplicationTargetGroup(this, `${PREFIX}TargetGroup`, {
@@ -106,17 +110,21 @@ export default class LiveCommerceStack extends cdk.Stack {
 
 
     // Find Onad ALB
-    const alb = ApplicationLoadBalancer.fromApplicationLoadBalancerAttributes(this, 'FindOnADALB', {
-      securityGroupId: process.env.AWS_ONAD_ALB_SG_ID!,
-      loadBalancerArn: process.env.AWS_ONAD_ALB_ARN!,
-      loadBalancerCanonicalHostedZoneId: hostedZone.hostedZoneId,
-      loadBalancerDnsName: process.env.AWS_ONAD_ALB_DNS_NAME!,
-    });
+    const alb = ApplicationLoadBalancer.fromApplicationLoadBalancerAttributes(
+      this,
+      'FindOnADALB', {
+        vpc: onadVpc,
+        securityGroupId: process.env.AWS_ONAD_ALB_SG_ID!,
+        loadBalancerArn: process.env.AWS_ONAD_ALB_ARN!,
+        loadBalancerCanonicalHostedZoneId: process.env.AWS_ONAD_ALB_HOSTEDZONE_ID!,
+        loadBalancerDnsName: process.env.AWS_ONAD_ALB_DNS_NAME!,
+      }
+    );
 
-    const Record = new ARecord(this, `${PREFIX}ARecord`, {
-      zone: hostedZone,
+    const record = new ARecord(this, `${PREFIX}ARecord`, {
       target: RecordTarget.fromAlias(new LoadBalancerTarget(alb)),
-      recordName: DOMAIN
+      zone: hostedZone,
+      recordName: DOMAIN,
     });
   }
 
@@ -130,7 +138,8 @@ export default class LiveCommerceStack extends cdk.Stack {
       'AWS_HOSTEDZONE_ID',
       'AWS_ONAD_ALB_SG_ID',
       'AWS_ONAD_ALB_ARN',
-      'AWS_ONAD_ALB_DNS_NAME'
+      'AWS_ONAD_ALB_DNS_NAME',
+      'AWS_ONAD_ALB_HOSTEDZONE_ID',
     ];
 
     required.forEach((key) => {
