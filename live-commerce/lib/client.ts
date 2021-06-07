@@ -119,8 +119,8 @@ socket.on('get top-left ranking', (data:PurchaseMessage) => {
     rankingArray.splice(4)
   }
   rankingArray.map((puschaseInfo, index:number) => {
-    if ($(`.inner-text-area-id#${index}`).text !== Object.values(puschaseInfo)[0]) {
-      $(`.inner-text-area#${index}`).html(`
+    if ($(`.inner-text-area-id#rank-${index}`).text !== Object.values(puschaseInfo)[0]) {
+      $(`.inner-text-area#rank-${index}`).html(`
       <img src="/public/images/${ICON_ARRAY[index]}.png" id="ranking-icon"/>
       <span class="inner-text-area-id" id=${index}>${Object.values(puschaseInfo)[0]}</span>님 ${Object.values(puschaseInfo)[1]}개 구매`)
     }
@@ -201,6 +201,27 @@ socket.on('clear bottom area to client', () => {
   $('.bottom-area-wrapper').empty()
   $('.bottom-area-wrapper').fadeOut(1000)
   idArray.length = 0
+})
+
+// 랭킹 비우기
+socket.on('clear ranking area', () => {
+  $('.inner-text-area-wrapper').html(
+    `
+    <p class="inner-text-area" id="rank-0">
+      <span class="inner-text-area-id">
+      </span>
+    </p>
+    <p class="inner-text-area" id="rank-1">
+      <span class="inner-text-area-id">
+      </span>
+    </p>
+    <p class="inner-text-area" id="rank-2">
+      <span class="inner-text-area-id">
+      </span>
+    </p>
+  `
+  )
+  rankingArray.length = 0
 })
 
 // 하단 다시 띄우기

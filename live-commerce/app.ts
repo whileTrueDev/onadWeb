@@ -71,8 +71,6 @@ io.on('connection', (socket:Socket) => {
     io.to(clientId).emit('get live commerce image', data)
   })
 
-
-
   socket.on('purshase alarm', (data:TextData) => {
     const clientId = data.clientId
     const text = data.text
@@ -101,6 +99,7 @@ io.on('connection', (socket:Socket) => {
   socket.on('clear bottom area from admin', (data:TextData) => {
     const clientId = data.clientId
     io.to(clientId).emit('clear bottom area to client')
+    io.to(clientId).emit('clear ranking area')
   })
 
   socket.on('show bottom area from admin', (data:TextData) => {
