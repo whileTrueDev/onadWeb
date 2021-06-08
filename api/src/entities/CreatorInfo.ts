@@ -1,3 +1,4 @@
+import { Exclude } from 'class-transformer';
 import { Column, Entity } from 'typeorm';
 
 @Entity('creatorInfo', { schema: 'onadnode' })
@@ -93,6 +94,7 @@ export class CreatorInfo {
   @Column('int', { name: 'creatorType', default: () => "'0'" })
   creatorType: number;
 
+  @Exclude()
   @Column('longtext', { name: 'identificationImg', nullable: true })
   identificationImg: string | null;
 
@@ -115,9 +117,11 @@ export class CreatorInfo {
   @Column('varchar', { name: 'loginId', nullable: true, length: 50 })
   loginId: string | null;
 
+  @Exclude()
   @Column('varchar', { name: 'password', nullable: true, length: 150 })
   password: string | null;
 
+  @Exclude()
   @Column('varchar', { name: 'passwordSalt', nullable: true, length: 150 })
   passwordSalt: string | null;
 
@@ -150,4 +154,8 @@ export class CreatorInfo {
 
   @Column('varchar', { name: 'afreecaLogo', nullable: true, length: 200 })
   afreecaLogo: string | null;
+
+  constructor(partial: Partial<CreatorInfo>) {
+    Object.assign(this, partial);
+  }
 }

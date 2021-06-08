@@ -19,4 +19,17 @@ export class CreatorCampaignRepository extends Repository<CreatorCampaign> {
     if (result.affected > 0) return true;
     return false;
   }
+
+  // * 해당 크리에이터의 creatorCampaign 초기값 생성
+  public new(creatorId: string): Promise<CreatorCampaign> {
+    const emptyList = JSON.stringify({ campaignList: [] });
+    const newOne = this.create({
+      creatorId,
+      campaignList: emptyList,
+      banList: emptyList,
+      pausedList: emptyList,
+    });
+
+    return this.save(newOne);
+  }
 }
