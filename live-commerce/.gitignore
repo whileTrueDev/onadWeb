@@ -21,3 +21,5 @@ calculationLog/*
 /local/*
 
 /dist/*
+
+ngrok.exe
