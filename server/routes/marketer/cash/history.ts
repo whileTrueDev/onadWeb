@@ -168,23 +168,6 @@ router
         .then(row => {
           const sendArray: any[] = [];
           row.result.forEach((obj: any) => {
-            const object = obj;
-            switch (object.state) {
-              case 0: {
-                object.state = '발행대기';
-                break;
-              }
-              case 1: {
-                object.state = '발행완료';
-                break;
-              }
-              case 2: {
-                object.state = '미발행';
-                break;
-              }
-              default:
-                break;
-            }
             sendArray.push(Object.values(obj));
           });
           responseHelper.send({ data: sendArray }, 'get', res);

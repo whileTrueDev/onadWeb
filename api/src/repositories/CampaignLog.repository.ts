@@ -12,6 +12,7 @@ import {
   FindCreatorDataRes,
 } from '../resources/marketer/campaign/interfaces/findCreatorDataRes.interface';
 import { FindExpenditureDataRes } from '../resources/marketer/campaign/interfaces/findExpenditureDataRes.interface';
+import { FindUsageHistoryResObj } from '../resources/marketer/cash/interfaces/findUsageHistoryRes.interface';
 
 @Injectable()
 @EntityRepository(CampaignLog)
@@ -84,6 +85,27 @@ export class CampaignLogRepository extends Repository<CampaignLog> {
       .addSelect('COUNT(*) AS total_sales_amount')
       .orderBy('total_sales_amount', 'DESC')
       .getRawMany();
+  }
+
+  // * 마케터 광고캐시 소진 내역
+  public async findCashUsageFromCampaignLog(
+    marketerId: string,
+    targetMonth?: string,
+  ): Promise<FindUsageHistoryResObj[]> {
+    const qb = this.createQueryBuilder('cl')
+      .select(`DATE_FORMAT(cl.date, "%y년 %m월") as date, FORMAT(sum(cashFromMarketer), 0) as cash`)
+      .where(`SUBSTRING_INDEX(cl.campaignId, '_', 1) = :marketerId AND type != "CPS"`, {
+        marketerId,
+      })
+      .orderBy('cl.date', 'DESC');
+
+    if (targetMonth) {
+      return qb
+        .andWhere('DATE_FORMAT(cl.date, "%y년 %m월") = :targetMonth', { targetMonth })
+        .groupBy('DATE_FORMAT(cl.date, "%y년 %m월 %d일"), type')
+        .getRawMany();
+    }
+    return qb.groupBy('month(cl.date)').getRawMany();
   }
 
   // * 마케터 캠페인 분석에 사용되는 크리에이터 데이터를 조회하기 위한 중복되는 쿼리를 생성해주는 메서드

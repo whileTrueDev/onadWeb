@@ -52,6 +52,7 @@ export class MarketerService {
       await queryRunner.manager.save(newMarketer);
       await queryRunner.manager.save(newMarketerDebit);
       await queryRunner.manager.save(newSalesIncome);
+      await queryRunner.commitTransaction();
     } catch (err) {
       await queryRunner.rollbackTransaction();
       throw new InternalServerErrorException();

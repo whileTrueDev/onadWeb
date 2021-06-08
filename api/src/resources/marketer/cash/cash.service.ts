@@ -1,16 +1,34 @@
-import { Injectable } from '@nestjs/common';
+/* eslint-disable camelcase */
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import dayjs from 'dayjs';
+import { Connection, Repository } from 'typeorm';
+import { IamportPaymentResponse, IamportService } from '../../../api/iamport/iamport.service';
 import { MarketerCharge } from '../../../entities/MarketerCharge';
 import { MarketerDebit } from '../../../entities/MarketerDebit';
-import { ChargeHistoryResObj } from './interfaces/chargeHistoryRes.interface';
+import { MarketerRefund } from '../../../entities/MarketerRefund';
+import { MarketerCashCargeDto } from './dto/marketerCashCargeDto.dto';
+import { MarketerCashChargeByCardDto } from './dto/marketerCashChargeByCardDto.dto';
+import { MarketerChargeRes } from './interfaces/marketerChargeRes.interface';
 
+export interface ChargeParams {
+  marketerId: string;
+  chargeCash: number;
+  chargeType: string;
+  merchant_uid: string;
+  imp_uid: string;
+  paymentData?: IamportPaymentResponse;
+}
 @Injectable()
 export class CashService {
   constructor(
     @InjectRepository(MarketerDebit) private readonly marketerDebitRepo: Repository<MarketerDebit>,
     @InjectRepository(MarketerCharge)
     private readonly marketerChargeRepo: Repository<MarketerCharge>,
+    @InjectRepository(MarketerRefund)
+    private readonly marketerRefundRepo: Repository<MarketerRefund>,
+    private readonly iamportService: IamportService,
+    private readonly connection: Connection,
   ) {}
 
   // * 광고주 광고 캐시 조회
@@ -23,68 +41,225 @@ export class CashService {
       .getRawOne();
   }
 
-  async charge() {
-    //
-  }
-
-  async chargeCard() {
-    //
-  }
-
-  async refund() {
-    //
-  }
-
-  async updateChargeVbankState() {
-    //
-  }
-
-  // **************************
-  // * history 캐시 충전 및 사용 내역
-  // **************************
-
-  // * 캐시 충전 내역 테이블 데이터
-  async findChargeHistory(marketerId: string): Promise<string[][]> {
-    const result = (await this.marketerChargeRepo
-      .createQueryBuilder()
-      .select('DATE_FORMAT(date, "%y년 %m월 %d일 %T") as date')
-      .addSelect('FORMAT(ROUND(cash), 0) as cash, type, temporaryState')
-      .where('marketerId = :marketerId', { marketerId })
-      .orderBy('date', 'DESC')
-      .getRawMany()) as MarketerCharge[];
-
-    const sendArray: string[][] = [];
-    result.forEach(queryResult => {
-      const object: Partial<ChargeHistoryResObj> = {};
-      object.cash = String(queryResult.cash);
-      if (queryResult.type === 'vbank') object.type = '가상계좌';
-      else if (queryResult.type === 'trans') object.type = '계좌이체';
-      else if (queryResult.type === 'card') object.type = '신용카드';
-      switch (queryResult.temporaryState) {
-        case 1:
-          object.temporaryState = '완료됨';
-          break;
-        case 2:
-          object.temporaryState = '취소됨';
-          break;
-        default:
-          object.temporaryState = '진행중';
-          break;
-      }
-      sendArray.push(Object.values(object));
+  // * 광고주 캐시 충전
+  async charge(marketerId: string, dto: MarketerCashCargeDto): Promise<MarketerCharge> {
+    const chargeCash = Number(dto.chargeCashString);
+    const row = this.marketerChargeRepo.create({
+      marketerId,
+      cash: chargeCash,
+      type: dto.chargeType,
     });
-    return sendArray;
+    return this.marketerChargeRepo.save(row);
   }
 
-  async findRefundHistory() {
-    //
+  // * 광고주 카드 캐시 충전
+  async chargeCard(
+    marketerId: string,
+    dto: MarketerCashChargeByCardDto,
+  ): Promise<MarketerChargeRes> {
+    const chargeCash = Number(dto.chargeCashString);
+
+    // 결제시스템의 액세스 토큰(access token) 발급 받기 => 결제 위변조를 대조 용도도 포함
+    const { access_token } = await this.iamportService.getToken(); // 접속 인증 토큰
+
+    // imp_uid로 아임포트 서버에서 결제 정보 조회하여, 실제로 사용자가 전송한 금액과 그 상태를 조회
+    const paymentData = await this.iamportService.getPaymentData(dto.imp_uid, access_token);
+
+    const { amount, status } = paymentData;
+    if (this.checkChargeAmountIsValid(chargeCash, amount)) {
+      switch (status) {
+        // 가상계좌 발급 로직
+        case 'ready': {
+          return this.chargeVbank({
+            marketerId,
+            chargeCash,
+            chargeType: dto.chargeType,
+            imp_uid: dto.imp_uid,
+            merchant_uid: dto.merchant_uid,
+            paymentData,
+          });
+        }
+        // 계좌이체 및 신용카드 결제 로직
+        case 'paid': {
+          return this.chargeCommon({
+            marketerId,
+            chargeCash,
+            chargeType: dto.chargeType,
+            imp_uid: dto.imp_uid,
+            merchant_uid: dto.merchant_uid,
+            paymentData,
+          });
+        }
+        default:
+          throw new InternalServerErrorException('status가 정의되지 않았습니다.');
+      }
+    }
+    return null;
   }
 
-  async findUsageHistory() {
-    //
+  // * 환불 생성
+  async refund(marketerId: string, withdrawCash: number): Promise<boolean> {
+    let withFeeRefundCash;
+    if (withdrawCash < 10000) {
+      withFeeRefundCash = withdrawCash - 1000;
+    } else {
+      withFeeRefundCash = withdrawCash * 0.9;
+    }
+
+    // 현재 마케터의 캐시 보유량 조회
+    const debit = await this.marketerDebitRepo.findOne({
+      where: { marketerId },
+      order: { date: 'DESC' },
+    });
+
+    const queryRunner = this.connection.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+    try {
+      // 마케터 캐시 보유량 수정 ( 환불진행한 만큼 차감 )
+      await this.marketerDebitRepo
+        .createQueryBuilder()
+        .update()
+        .set({ cashAmount: debit.cashAmount - withdrawCash })
+        .where('marketerId = :marketerId', { marketerId })
+        .execute();
+      // 환불 내역에 데이터 적재
+      const newRefund = this.marketerRefundRepo.create({
+        marketerId,
+        cash: withFeeRefundCash,
+        check: 0,
+      });
+      await this.marketerRefundRepo.save(newRefund);
+      await queryRunner.commitTransaction();
+      return true;
+    } catch (err) {
+      await queryRunner.rollbackTransaction();
+      throw new InternalServerErrorException();
+    } finally {
+      await queryRunner.release();
+    }
   }
 
-  async findUsageHistoryMohthly() {
-    //
+  // * 가상계좌 상태 업데이트
+  async updateChargeVbankState(marketerId: string): Promise<boolean> {
+    const result = await this.marketerChargeRepo
+      .createQueryBuilder()
+      .update()
+      .set({ temporaryState: 2 })
+      .where('marketerId = :marketerId', { marketerId })
+      .andWhere('type = :type', { type: 'vbank' })
+      .andWhere('(NOW() > vbankDueDate)')
+      .andWhere('temporaryState = 0')
+      .execute();
+
+    if (result.affected > 0) return true;
+    return false;
+  }
+
+  // ********************************
+  // * Private methods
+  // ********************************
+  // 가상계좌 생성
+  private async chargeVbank({
+    marketerId,
+    paymentData,
+    chargeCash,
+    chargeType,
+    merchant_uid,
+    imp_uid,
+  }: ChargeParams): Promise<MarketerChargeRes | null> {
+    // * 가상계좌 발급 시 로직 (DB에 가상계좌 발급 정보 저장)
+    const { vbank_num, vbank_date, vbank_name, vbank_holder } = paymentData;
+
+    // 마케터 현재 보유금액 조회
+    const currentDebit = await this.marketerDebitRepo.findOne({
+      where: { marketerId },
+      order: { date: 'DESC' },
+    });
+
+    if (currentDebit) {
+      // 충전 금액 row 추가
+      const obj = this.marketerChargeRepo.create({
+        marketerId,
+        cash: chargeCash,
+        type: chargeType,
+        merchantUid: merchant_uid,
+        impUid: imp_uid,
+        temporaryState: 0,
+        vbanknum: vbank_num,
+        vbankName: vbank_name,
+        vbankDueDate: dayjs(vbank_date).format('YYYY-MM-DD hh:mm:ss'),
+      });
+      await this.marketerChargeRepo.save(obj);
+      return {
+        status: 'vbankIssued',
+        vbank_num: `${vbank_num}`,
+        vbank_date: `${vbank_date}`,
+        vbank_name: `${vbank_name}`,
+        vbank_holder: `${vbank_holder}`,
+        chargedCashAmount: paymentData.amount,
+      };
+    }
+    return null;
+  }
+
+  // * 계좌이체 및 신용카드 통한 일반 캐시 충전
+  private async chargeCommon({
+    marketerId,
+    paymentData,
+    chargeCash,
+    chargeType,
+    merchant_uid,
+    imp_uid,
+  }: ChargeParams): Promise<MarketerChargeRes | null> {
+    // 마케터 현재 보유금액 조회
+    const currentDebit = await this.marketerDebitRepo.findOne({
+      where: { marketerId },
+      order: { date: 'DESC' },
+    });
+    if (!currentDebit) return null;
+
+    const queryRunner = this.connection.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+    try {
+      // 신용카드 및 계좌이체로 row 한줄 생성
+      const obj = this.marketerChargeRepo.create({
+        marketerId,
+        cash: chargeCash,
+        type: chargeType,
+        merchantUid: merchant_uid,
+        impUid: imp_uid,
+        temporaryState: 1,
+      });
+      await queryRunner.manager.save(obj);
+      // 충전시 기존의 캐시량 + 캐시충전량으로 바로 update
+      const cashAmount = currentDebit.cashAmount + chargeCash;
+      await queryRunner.manager
+        .createQueryBuilder(MarketerDebit, 'md')
+        .update()
+        .set({ cashAmount })
+        .where('marketerId = :marketerId', { marketerId })
+        .execute();
+      await queryRunner.commitTransaction();
+      return {
+        status: 'success',
+        message: '일반 결제 성공',
+        chargedCashAmount: paymentData.amount,
+      };
+    } catch (err) {
+      await queryRunner.rollbackTransaction();
+      throw new InternalServerErrorException();
+    } finally {
+      await queryRunner.release();
+    }
+  }
+
+  // * 충전 요청받은 데이터와 응답받은 iamport 데이터와 비교
+  private checkChargeAmountIsValid(requested: number, iamportResponded: number | string): boolean {
+    if (typeof iamportResponded === 'number') {
+      return requested * 1.1 === iamportResponded;
+    }
+    return requested * 1.1 === parseInt(iamportResponded, 10);
   }
 }
