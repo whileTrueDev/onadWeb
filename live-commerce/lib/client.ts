@@ -133,7 +133,7 @@ socket.on('get right-top purchase message', (data: PurchaseMessage) => {
   const { text } = data;
   const num = data.purchaseNum;
   messageHtml = `
-  <iframe src="/public/audio/${alarmType === '1' ? 'alarm-type-1.wav' : 'alarm-type-2.mp3'}" id="iframeAudio" allow="autoplay" style="display:none"></iframe>
+  <iframe src="/public/audio/${alarmType === '2' ? 'alarm-type-2.mp3' : 'alarm-type-1.wav'}" id="iframeAudio" allow="autoplay" style="display:none"></iframe>
   <div class="item">
     <div class="centered">
       <img src="/public/images/mars.gif" id="donation-image"/>
