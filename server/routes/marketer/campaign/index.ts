@@ -313,25 +313,14 @@ router
           const MARKETER_ACTION_LOG_TYPE = 5;
 
           Promise.all<any>([
-            doQuery(saveQuery, [
-              campaignId,
-              campaignName,
-              marketerId,
-              bannerId,
-              connectedLinkId,
-              dailyLimit,
-              // @by hwasurr "1-1" 은 아프리카 카테고리 선택형. 1로 수정하여 카테고리 선택형으로 넣는다.
-              priorityType === '1-1' ? '1' : priorityType,
-              optionType,
-              targetJsonData,
-              marketerName,
-              keywordsJsonData,
-              new Date(startDate),
-              finDate,
-              timeJsonData,
-              campaignDescription,
-              merchandiseId || null,
-            ]),
+            doQuery(saveQuery,
+              [campaignId, campaignName, marketerId, bannerId, connectedLinkId, dailyLimit,
+                // @by hwasurr "1-1" 은 아프리카 카테고리 선택형. 1로 수정하여 카테고리 선택형으로 넣는다.
+                (priorityType === '1-1') ? '1' : priorityType,
+                optionType, targetJsonData, marketerName, keywordsJsonData,
+                new Date(startDate),
+                finDate ? new Date(finDate) : finDate,
+                timeJsonData, campaignDescription, merchandiseId || null]),
             dataProcessing.PriorityDoquery({
               campaignId,
               priorityType,

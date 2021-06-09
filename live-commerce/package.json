@@ -1,0 +1,36 @@
+{
+  "name": "live-commerce",
+  "version": "0.0.0",
+  "description": "Live Commerce Socket Server",
+  "main": "dist/app.js",
+  "author": "WhileTrue M'baku",
+  "license": "MIT",
+  "scripts": {
+    "prebuild": "rimraf ./dist",
+    "build": "tsc",
+    "postbuild": "browserify ./dist/lib/client.js -o ./dist/lib/bundle.js && cp -r ./views ./dist/views && cp -r ./public ./dist/public",
+    "start:debug": "nodemon --watch ./ --exec ts-node ./app.ts",
+    "start:production": "node ./dist/app.js"
+  },
+  "dependencies": {
+    "@types/http-errors": "^1.6.3",
+    "@types/jquery": "^3.3.33",
+    "@types/node-schedule": "^1.3.0",
+    "@types/socket.io": "^2.1.4",
+    "@types/socket.io-client": "^1.4.32",
+    "dotenv": "^8.2.0",
+    "ejs": "^3.1.6",
+    "express": "^4.17.1",
+    "mysql": "^2.18.1",
+    "socket.io": "^2.3.0",
+    "socket.io-client": "^2.3.0",
+    "socketio": "^1.0.0"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.4",
+    "browserify": "^16.5.1",
+    "nodemon": "^2.0.7",
+    "rimraf": "^3.0.2",
+    "ts-node": "^9.1.1"
+  }
+}

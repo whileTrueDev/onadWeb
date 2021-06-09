@@ -14,7 +14,8 @@ import {
   Paper,
   Typography,
   Radio,
-  FormControlLabel
+  FormControlLabel,
+  Select
 } from '@material-ui/core';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Done from '@material-ui/icons/Done';
@@ -22,24 +23,10 @@ import useStyles from './style/RegistForm.style';
 import axios from '../../../utils/axios';
 import SuccessTypo from '../../../atoms/Typography/Success';
 import HOST from '../../../config';
-import StyledInput from '../../../atoms/StyledInput';
+import StaticInput from '../../../atoms/StaticInput';
 import { Props } from './PlatformRegistForm';
 import domains from '../../../utils/inputs/email-domains';
-
-
-/*
-2019-07-04 박찬우
-  RegistForm 수정사항
-  1. 함수형 Component화
-  2. value를 state로 사용하지 않고 event를 통하여 catch
-  3. handleChange 로 onChange listener 통일 및 Reducer를 통한 형식 check
-  4. ID 중복 조회 완료 후 check icon 생성.
-
-  State 에 value가 존재하는 input값.
-  - 1. phoneNum
-  - 2. domain
-  - 3. passwordValue
-*/
+import areaCodes, { MenuProps } from '../../../utils/inputs/area-codes';
 
 function RegistForm({
   handleBack,
@@ -51,9 +38,14 @@ function RegistForm({
 }: Props): JSX.Element {
   const classes = useStyles();
   const [marketerCustomDomain, setCustomDomain] = useState('');
+  const [areaCode, setAreaCode] = useState('');
   const [numberType, setNumberType] = useState(true);
 
+
+  
   const handleTypeChange = () => {
+    // numberType이 변경될 때, 데이터도 리셋.
+    dispatch({ type: 'phoneNum', value: '' });
     setNumberType(!numberType);
   };
   // handle을 전달.
@@ -61,13 +53,20 @@ function RegistForm({
     setCustomDomain(event.target.value);
   }
 
+  function handleAreaCode(event: React.ChangeEvent<{ value: unknown }>): void {
+    setAreaCode(event.target.value as string);
+  }
+
   const handleChange = (name: any) => (event: React.ChangeEvent<HTMLInputElement>) => {
     dispatch({ type: name, value: event.target.value });
   };
 
   function handleChangePhone(value: any): void {
-    dispatch({ type: 'phoneNum', value: value.formattedValue });
-    // setFomattedPhone(value.formattedValue);
+    if (numberType) {
+      dispatch({ type: 'phoneNum', value: value.formattedValue });
+    }else {
+      dispatch({ type: 'companyNum', value: value.formattedValue });
+    }
   }
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>): void {
@@ -88,14 +87,21 @@ function RegistForm({
       alert('입력이 올바르지 않습니다.');
       return;
     }
-
+  
     // 모든 state가 false가 되어야한다.
     if (!(id || password || repasswd || checkDuplication || phoneNumValidationCheck)) {
       // const marketerId = document.getElementById('id')!.value;
       const marketerId = state.idValue;
       const marketerName = state.name;
       // const marketerName = document.getElementById('name')!.value;
-      const marketerPhoneNum = state.phoneNum;
+      let marketerPhoneNum = state.phoneNum;
+      if (!numberType) {
+        if(state.phoneNum.length === 7) {
+          marketerPhoneNum = `( ${areaCode} ) - ${state.phoneNum.slice(0, 3)} - ${state.phoneNum.slice(3)}`;
+        } else {
+          marketerPhoneNum = `( ${areaCode} ) - ${state.phoneNum.slice(0, 4)} - ${state.phoneNum.slice(4)}`;
+        }
+      }
       const marketerRawPasswd = state.passwordValue;
       const marketerDomain = state.domain === '직접입력' ? marketerCustomDomain : state.domain;
       const user = {
@@ -238,19 +244,50 @@ function RegistForm({
                         error={Boolean(state.phoneNumValidationCheck)}
                       >
                         <InputLabel shrink htmlFor="phoneNumber">전화번호</InputLabel>
-                        <NumberFormat
-                          pattern="^\( [0-9]{3} \) [-] +[0-9]{3,4} [-] +[0-9]{4}$"
-                          placeholder="( ___ ) - ____ - ____"
-                          value={state.phoneNum}
-                          onValueChange={handleChangePhone}
-                          customInput={StyledInput}
-                          format={numberType ? '( ### ) - #### - ####' : '( ### ) - ### - ####'}
-                          className={classes.phoneField}
-                          allowNegative={false}
-                        />
+                        {numberType ? (
+                          <NumberFormat
+                            pattern="^\( [0-9]{3} \) [-] +[0-9]{3,4} [-] +[0-9]{4}$"
+                            placeholder="( ___ ) - ____ - ____"
+                            value={state.phoneNum}
+                            onValueChange={handleChangePhone}
+                            customInput={StaticInput}
+                            format={'( ### ) - #### - ####'}
+                            className={classes.phoneField}
+                            allowNegative={false}
+                          />
+                        ):
+                        (
+                          <Grid container direction = "row" className = {classes.companyNum}>
+                            <Grid item xs={3}>
+                              <Select
+                                required
+                                className={classes.companySelect}
+                                value={areaCode}
+                                onChange={handleAreaCode}
+                                MenuProps={MenuProps}
+                              >
+                                {areaCodes.map((option: {value: string}) => (
+                                  <MenuItem key={option.value} value={option.value}>
+                                    {option.value}
+                                  </MenuItem>
+                                ))}
+                              </Select>
+                            </Grid>
+                            <Grid item xs={9}>
+                              <NumberFormat
+                                value={state.phoneNum}
+                                onValueChange={handleChangePhone}
+                                customInput={StaticInput}
+                                className={classes.companyField}
+                                allowNegative={false}
+                              />
+                            </Grid>
+                          </Grid>
+                        )
+                        }
                         <FormHelperText>
                           {state.phoneNumValidationCheck
-                            ? '전화번호를 모두 채워주세요!'
+                            ? '전화번호를 올바르게 입력하세요!'
                             : '온애드와 연락할 전화번호를 입력하세요.'}
                         </FormHelperText>
                       </FormControl>

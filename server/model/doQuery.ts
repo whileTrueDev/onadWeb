@@ -44,6 +44,7 @@ function doQuery<QueryResult = any>(
         conn.query(query, queryArray, (error, result: QueryResult) => {
           if (error) {
             conn.release();
+            console.log(`doQuery error - query: ${query}\nerror - `, error);
             reject(new createError[500](error.sqlMessage));
           } else {
             conn.release();
