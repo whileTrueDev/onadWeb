@@ -61,7 +61,7 @@ io.on('connection', (socket: Socket) => {
         return url;
       }
       return '';
-    }).filter((url: string | undefined) => url !== undefined);
+    }).filter((url: string | undefined) => url !== undefined && url !== '');
     if (process.env.NODE_ENV === 'development') {
       io.to(data.clientId).emit('creator list from server', fullUrl[0] ? socketInfo[fullUrl[0]] : null);
     } else if (process.env.NODE_ENV === 'production') {
