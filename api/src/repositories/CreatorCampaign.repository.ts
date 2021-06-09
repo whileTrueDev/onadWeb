@@ -21,7 +21,7 @@ export class CreatorCampaignRepository extends Repository<CreatorCampaign> {
   }
 
   // * 해당 크리에이터의 creatorCampaign 초기값 생성
-  public new(creatorId: string): Promise<CreatorCampaign> {
+  public new(creatorId: string): CreatorCampaign {
     const emptyList = JSON.stringify({ campaignList: [] });
     const newOne = this.create({
       creatorId,
@@ -30,6 +30,14 @@ export class CreatorCampaignRepository extends Repository<CreatorCampaign> {
       pausedList: emptyList,
     });
 
-    return this.save(newOne);
+    return newOne;
+  }
+
+  // * pausedList 조회
+  public async __getPausedCampaignList(creatorId: string): Promise<string[]> {
+    const pausedListResult = await this.findOne({
+      where: { creatorId },
+    });
+    return JSON.parse(pausedListResult.pausedList).campaignList;
   }
 }

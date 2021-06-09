@@ -17,6 +17,7 @@ import { SlackModule } from './resources/slack/slack.module';
 import { MailModule } from './resources/mail/mail.module';
 import { ManualModule } from './resources/manual/manual.module';
 import { NoticeModule } from './resources/notice/notice.module';
+import { AlimtalkModule } from './resources/alimtalk/alimtalk.module';
 
 @Module({
   imports: [
@@ -37,6 +38,7 @@ import { NoticeModule } from './resources/notice/notice.module';
     MailModule,
     ManualModule,
     NoticeModule,
+    AlimtalkModule,
   ],
   controllers: [AppController],
   providers: [SlackService],

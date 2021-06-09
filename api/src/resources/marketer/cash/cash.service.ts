@@ -7,6 +7,7 @@ import { IamportPaymentResponse, IamportService } from '../../../api/iamport/iam
 import { MarketerCharge } from '../../../entities/MarketerCharge';
 import { MarketerDebit } from '../../../entities/MarketerDebit';
 import { MarketerRefund } from '../../../entities/MarketerRefund';
+import { transactionQuery } from '../../../utils/transactionQuery';
 import { MarketerCashCargeDto } from './dto/marketerCashCargeDto.dto';
 import { MarketerCashChargeByCardDto } from './dto/marketerCashChargeByCardDto.dto';
 import { MarketerChargeRes } from './interfaces/marketerChargeRes.interface';
@@ -112,13 +113,10 @@ export class CashService {
       order: { date: 'DESC' },
     });
 
-    const queryRunner = this.connection.createQueryRunner();
-    await queryRunner.connect();
-    await queryRunner.startTransaction();
-    try {
+    return transactionQuery(this.connection, async queryRunner => {
       // 마케터 캐시 보유량 수정 ( 환불진행한 만큼 차감 )
       await this.marketerDebitRepo
-        .createQueryBuilder()
+        .createQueryBuilder('md', queryRunner)
         .update()
         .set({ cashAmount: debit.cashAmount - withdrawCash })
         .where('marketerId = :marketerId', { marketerId })
@@ -129,15 +127,9 @@ export class CashService {
         cash: withFeeRefundCash,
         check: 0,
       });
-      await this.marketerRefundRepo.save(newRefund);
-      await queryRunner.commitTransaction();
+      await queryRunner.manager.save(MarketerRefund, newRefund);
       return true;
-    } catch (err) {
-      await queryRunner.rollbackTransaction();
-      throw new InternalServerErrorException();
-    } finally {
-      await queryRunner.release();
-    }
+    });
   }
 
   // * 가상계좌 상태 업데이트
@@ -219,40 +211,35 @@ export class CashService {
     });
     if (!currentDebit) return null;
 
-    const queryRunner = this.connection.createQueryRunner();
-    await queryRunner.connect();
-    await queryRunner.startTransaction();
-    try {
-      // 신용카드 및 계좌이체로 row 한줄 생성
-      const obj = this.marketerChargeRepo.create({
-        marketerId,
-        cash: chargeCash,
-        type: chargeType,
-        merchantUid: merchant_uid,
-        impUid: imp_uid,
-        temporaryState: 1,
-      });
-      await queryRunner.manager.save(obj);
-      // 충전시 기존의 캐시량 + 캐시충전량으로 바로 update
-      const cashAmount = currentDebit.cashAmount + chargeCash;
-      await queryRunner.manager
-        .createQueryBuilder(MarketerDebit, 'md')
-        .update()
-        .set({ cashAmount })
-        .where('marketerId = :marketerId', { marketerId })
-        .execute();
-      await queryRunner.commitTransaction();
-      return {
-        status: 'success',
-        message: '일반 결제 성공',
-        chargedCashAmount: paymentData.amount,
-      };
-    } catch (err) {
-      await queryRunner.rollbackTransaction();
-      throw new InternalServerErrorException();
-    } finally {
-      await queryRunner.release();
-    }
+    return transactionQuery(
+      this.connection,
+      async queryRunner => {
+        // 신용카드 및 계좌이체로 row 한줄 생성
+        const obj = this.marketerChargeRepo.create({
+          marketerId,
+          cash: chargeCash,
+          type: chargeType,
+          merchantUid: merchant_uid,
+          impUid: imp_uid,
+          temporaryState: 1,
+        });
+        await queryRunner.manager.save(MarketerCharge, obj);
+        // 충전시 기존의 캐시량 + 캐시충전량으로 바로 update
+        const cashAmount = currentDebit.cashAmount + chargeCash;
+        await queryRunner.manager
+          .createQueryBuilder(MarketerDebit, 'md')
+          .update()
+          .set({ cashAmount })
+          .where('marketerId = :marketerId', { marketerId })
+          .execute();
+        return {
+          status: 'success',
+          message: '일반 결제 성공',
+          chargedCashAmount: paymentData.amount,
+        };
+      },
+      { errorMessage: 'error occurred during - 계좌이체 및 신용카드 통한 일반 캐시 충전' },
+    );
   }
 
   // * 충전 요청받은 데이터와 응답받은 iamport 데이터와 비교

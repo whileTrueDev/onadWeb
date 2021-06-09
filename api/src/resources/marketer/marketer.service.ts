@@ -5,6 +5,7 @@ import { MarketerDebit } from '../../entities/MarketerDebit';
 import { MarketerInfo } from '../../entities/MarketerInfo';
 import { MarketerSalesIncome } from '../../entities/MarketerSalesIncome';
 import encrypto from '../../utils/encryption';
+import { transactionQuery } from '../../utils/transactionQuery';
 import { CreateNewMarketerDto } from './dto/createNewMarketerDto.dto';
 import { CreateNewMarketerWithSocialLoginDto } from './dto/createNewMarketerWithSocialLoginDto.dto';
 import { FindMarketerIdDto } from './dto/findMarketerIdDto.dto';
@@ -45,20 +46,15 @@ export class MarketerService {
       receivable: 0,
     });
 
-    const queryRunner = this.connection.createQueryRunner();
-    await queryRunner.connect();
-    await queryRunner.startTransaction();
-    try {
-      await queryRunner.manager.save(newMarketer);
-      await queryRunner.manager.save(newMarketerDebit);
-      await queryRunner.manager.save(newSalesIncome);
-      await queryRunner.commitTransaction();
-    } catch (err) {
-      await queryRunner.rollbackTransaction();
-      throw new InternalServerErrorException();
-    } finally {
-      await queryRunner.release();
-    }
+    await transactionQuery(
+      this.connection,
+      async queryRunner => {
+        await queryRunner.manager.save(newMarketer);
+        await queryRunner.manager.save(newMarketerDebit);
+        await queryRunner.manager.save(newSalesIncome);
+      },
+      { errorMessage: 'An Error occurred during 신규 마케터 생성' },
+    );
 
     return { error: false, result: 'Email skip!' };
   }
@@ -88,19 +84,15 @@ export class MarketerService {
       receivable: 0,
     });
 
-    const queryRunner = this.connection.createQueryRunner();
-    await queryRunner.connect();
-    await queryRunner.startTransaction();
-    try {
-      await queryRunner.manager.save(newMarketer);
-      await queryRunner.manager.save(newMarketerDebit);
-      await queryRunner.manager.save(newSalesIncome);
-    } catch (err) {
-      await queryRunner.rollbackTransaction();
-      throw new InternalServerErrorException();
-    } finally {
-      await queryRunner.release();
-    }
+    await transactionQuery(
+      this.connection,
+      async queryRunner => {
+        await queryRunner.manager.save(newMarketer);
+        await queryRunner.manager.save(newMarketerDebit);
+        await queryRunner.manager.save(newSalesIncome);
+      },
+      { errorMessage: 'An error occurred during 신규 광고주 생성 - 소셜로그인' },
+    );
     return { error: false };
   }
 

@@ -4,6 +4,7 @@ import { nanoid } from 'nanoid';
 import { Connection, IsNull, Not, Repository } from 'typeorm';
 import { AfreecaApiService } from '../../api/afreeca-api/afreeca-api.service';
 import { TwitchApiService } from '../../api/twitch-api/twitch-api.service';
+import { CreatorCampaign } from '../../entities/CreatorCampaign';
 import { CreatorIncome } from '../../entities/CreatorIncome';
 import { CreatorInfo } from '../../entities/CreatorInfo';
 import { CreatorPrice } from '../../entities/CreatorPrice';
@@ -14,6 +15,7 @@ import { TwitchProfile } from '../../interfaces/TwitchProfile.interface';
 import { CreatorCampaignRepository } from '../../repositories/CreatorCampaign.repository';
 import { CreatorInfoRepository } from '../../repositories/CreatorInfo.repository';
 import encrypto from '../../utils/encryption';
+import { transactionQuery } from '../../utils/transactionQuery';
 import { CreateCreatorDto } from './dto/createCreatorDto.dto';
 import { CreateCreatorPreUserDto } from './dto/createCreatorPreUserDto.dto';
 import { FindCreatorDto } from './dto/findCreator.dto';
@@ -92,30 +94,26 @@ export class CreatorService {
       visitCount: 0,
     });
 
-    const queryRunner = this.connection.createQueryRunner();
-    await queryRunner.connect();
-    await queryRunner.startTransaction();
-    try {
-      await this.creatorInfoRepo.save(newCreator);
-      await this.creatorIncomeRepo.save(newIncome);
-      await this.creatorPriceRepo.save(newPrice);
-      await this.creatorLevelRepo.save(newLevel);
-      // creatorReferralCodeLogs 가입시 입력한 추천인코드 값 추가
-      const newRefferalCodeLog = this.creatorReferralCodeLogsRepo.create({
-        creatorId,
-        referralCode: dto.referralCode,
-        calculateState: 0,
-      });
-      await this.creatorReferralCodeLogsRepo.save(newRefferalCodeLog);
-      await queryRunner.commitTransaction();
-      return dto.userid;
-    } catch (err) {
-      await queryRunner.rollbackTransaction();
-      console.log(`An error occurred during create creatorInfo (${dto.userid}) - `, err);
-      throw new InternalServerErrorException();
-    } finally {
-      await queryRunner.release();
-    }
+    return transactionQuery(
+      this.connection,
+      async queryRunner => {
+        await queryRunner.manager.save(CreatorInfo, newCreator);
+        await queryRunner.manager.save(CreatorIncome, newIncome);
+        await queryRunner.manager.save(CreatorPrice, newPrice);
+        await queryRunner.manager.save(CreatorRoyaltyLevel, newLevel);
+        // creatorReferralCodeLogs 가입시 입력한 추천인코드 값 추가
+        if (dto.referralCode) {
+          const newRefferalCodeLog = this.creatorReferralCodeLogsRepo.create({
+            creatorId,
+            referralCode: dto.referralCode,
+            calculateState: 0,
+          });
+          await queryRunner.manager.save(CreatorReferralCodeLogs, newRefferalCodeLog);
+        }
+        return dto.userid;
+      },
+      { errorMessage: `An error occurred during create creatorInfo (${dto.userid}) - ` },
+    );
   }
 
   // * creatorInfo 정보 수정
@@ -336,28 +334,27 @@ export class CreatorService {
     const remoteControllerUrl = `/${nanoid(8)}`;
     const myReferralCode = nanoid();
 
-    const queryRunner = this.connection.createQueryRunner();
-    queryRunner.connect();
-    await queryRunner.startTransaction();
-    try {
-      // 크리에이터 계약처리
-      await this.creatorInfoRepo._updateCreatorContraction(
-        creatorId,
-        creatorBannerUrl,
-        remoteControllerUrl,
-      );
-      // 계약시 생성되는 creatorCampaign 기본값
-      await this.creatorCampaignRepo.new(creatorId);
-      // 계약시 생성되는 추천인 코드 기본값 추가 작업.
-      await this.creatorReferralCodeRepo.save({ creatorId, referralCode: myReferralCode });
-      await queryRunner.commitTransaction();
-      return true;
-    } catch (err) {
-      await queryRunner.rollbackTransaction();
-      console.log(`An error occurred during CreatorInfo contraction update (${creatorId}) - `, err);
-      throw new InternalServerErrorException();
-    } finally {
-      await queryRunner.release();
-    }
+    return transactionQuery(
+      this.connection,
+      async queryRunner => {
+        // 크리에이터 계약처리
+        await this.creatorInfoRepo._updateCreatorContraction(
+          creatorId,
+          creatorBannerUrl,
+          remoteControllerUrl,
+        );
+        // 계약시 생성되는 creatorCampaign 기본값
+        const newCreatorCampaign = this.creatorCampaignRepo.new(creatorId);
+        await queryRunner.manager.save(CreatorCampaign, newCreatorCampaign);
+        // 계약시 생성되는 추천인 코드 기본값 추가 작업.
+        await queryRunner.manager.save(CreatorReferralCode, {
+          creatorId,
+          referralCode: myReferralCode,
+        });
+
+        return true;
+      },
+      { errorMessage: `An error occurred during CreatorInfo contraction update (${creatorId}) - ` },
+    );
   }
 }

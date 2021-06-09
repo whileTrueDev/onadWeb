@@ -7,6 +7,7 @@ import { MerchandiseMallItems } from '../../../../entities/MerchandiseMallItems'
 import { MerchandiseOptions } from '../../../../entities/MerchandiseOptions';
 import { MerchandisePickupAddresses } from '../../../../entities/MerchandisePickupAddresses';
 import { MerchandiseRegistered } from '../../../../entities/MerchandiseRegistered';
+import { transactionQuery } from '../../../../utils/transactionQuery';
 import { CreateMerchandiseDto } from './dto/createMerchandiseDto.dto';
 import {
   FindMerchandiseDetail,
@@ -109,33 +110,28 @@ export class MerchandisesService {
     merchandiseId: MerchandiseRegistered['id'],
   ): Promise<boolean> {
     const merchandise = await this.merchandiseRepo.findOne(merchandiseId);
-    const queryRunner = getConnection().createQueryRunner();
-    try {
-      await queryRunner.startTransaction();
-      if (merchandise.optionFlag) {
-        this.merchandiseOptionRepo
-          .createQueryBuilder('mro', queryRunner)
+    const connection = getConnection();
+    return transactionQuery(
+      connection,
+      async queryRunner => {
+        if (merchandise.optionFlag) {
+          this.merchandiseOptionRepo
+            .createQueryBuilder('mro', queryRunner)
+            .delete()
+            .where('merchandiseId = :merchandiseId', { merchandiseId })
+            .execute();
+        }
+        const result = await this.merchandiseRepo
+          .createQueryBuilder('mr', queryRunner)
           .delete()
-          .where('merchandiseId = :merchandiseId', { merchandiseId })
+          .where('marketerId = :marketerId AND id = :merchandiseId', { marketerId, merchandiseId })
           .execute();
-      }
-      const result = await this.merchandiseRepo
-        .createQueryBuilder('mr', queryRunner)
-        .delete()
-        .where('marketerId = :marketerId AND id = :merchandiseId', { marketerId, merchandiseId })
-        .execute();
 
-      await queryRunner.commitTransaction();
-
-      if (result.affected > 0) return true;
-      return false;
-    } catch (err) {
-      console.log(`An error occurred during delete merchandise (id:${merchandiseId}) - `, err);
-      await queryRunner.rollbackTransaction();
-      throw new InternalServerErrorException();
-    } finally {
-      await queryRunner.release();
-    }
+        if (result.affected > 0) return true;
+        return false;
+      },
+      { errorMessage: `An error occurred during delete merchandise (id:${merchandiseId}) - ` },
+    );
   }
 
   // * 상품 개수 조회

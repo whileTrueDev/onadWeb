@@ -14,6 +14,7 @@ import { FindCampaignRes } from './interfaces/findCampaignRes.interface';
 import { CampaignRepository } from '../../../repositories/Campaign.repository';
 import { CategoryCampaignRepository } from '../../../repositories/CategoryCampaign.repository';
 import { CreatorCampaignRepository } from '../../../repositories/CreatorCampaign.repository';
+import { transactionQuery } from '../../../utils/transactionQuery';
 
 @Injectable()
 export class CampaignService {
@@ -78,28 +79,23 @@ export class CampaignService {
     });
 
     // 트랜잭션 처리
-    const queryRunner = getConnection().createQueryRunner();
-    await queryRunner.connect();
-    try {
-      await queryRunner.startTransaction();
-      await queryRunner.manager.insert(Campaign, campaignObj);
-      // 송출 목록 생성
-      if (dto.priorityType !== CampaignPriorityType.무관송출) {
-        await this.insertCampaignTargets(queryRunner, {
-          priorityType: dto.priorityType,
-          priorityList: dto.priorityList,
-          campaignId,
-        });
-      }
-      await queryRunner.commitTransaction();
-      return campaignObj;
-    } catch (err) {
-      await queryRunner.rollbackTransaction();
-      console.log(`An error occurred during create campaign (${marketerId}) - `, err);
-      throw new InternalServerErrorException();
-    } finally {
-      await queryRunner.release();
-    }
+    const connection = getConnection();
+    return transactionQuery(
+      connection,
+      async queryRunner => {
+        await queryRunner.manager.insert(Campaign, campaignObj);
+        // 송출 목록 생성
+        if (dto.priorityType !== CampaignPriorityType.무관송출) {
+          await this.insertCampaignTargets(queryRunner, {
+            priorityType: dto.priorityType,
+            priorityList: dto.priorityList,
+            campaignId,
+          });
+        }
+        return campaignObj;
+      },
+      { errorMessage: `An error occurred during create campaign (${marketerId}) - ` },
+    );
   }
 
   // * 캠페인 정보 수정 - 캠페인 이름 수정
