@@ -29,10 +29,10 @@ export function s3UploadImage({
   }).promise();
 }
 
-function encode(data: any) {
-  const str = data.reduce((a: any, b: any) => a + String.fromCharCode(b), '');
-  return btoa(str).replace(/.{76}(?=.)/g, '$&\n');
-}
+// function encode(data: any) {
+//   const str = data.reduce((a: any, b: any) => a + String.fromCharCode(b), '');
+//   return btoa(str).replace(/.{76}(?=.)/g, '$&\n');
+// }
 
 
 export const sts = new AWS.STS({ apiVersion: '2011-06-15' });
