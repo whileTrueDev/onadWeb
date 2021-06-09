@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "start": "node app.js",
-    "test": "jest"
+    "test": "jest",
+    "test:ci": "jest --coverage"
   },
   "dependencies": {
     "axios": "^0.19.1",
