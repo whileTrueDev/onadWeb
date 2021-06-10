@@ -195,7 +195,7 @@
     }
   ],
   "placementConstraints": [],
-  "memory": "1024",
+  "memory": "512",
   "taskRoleArn": "arn:aws:iam::803609402610:role/ecsTaskExecutionRole",
   "family": "onad-web-api",
   "pidMode": null,
@@ -203,7 +203,7 @@
     "FARGATE"
   ],
   "networkMode": "awsvpc",
-  "cpu": "512",
+  "cpu": "256",
   "inferenceAccelerators": null,
   "proxyConfiguration": null,
   "volumes": []
