@@ -53,7 +53,7 @@
       "dockerLabels": null,
       "systemControls": null,
       "privileged": null,
-      "name": "onad_live-commerce"
+      "name": "LiveCommerce"
     }
   ],
   "placementConstraints": [],
