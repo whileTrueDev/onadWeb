@@ -14,13 +14,7 @@ interface CommonCampaignAmouat {
   total_ad_exposure_amount: string;
 }
 
-interface CpsCampaignAmount {
-  total_sales_amount: string;
-}
-
 export type FindCreatorDataRes = Array<FindCreatorDataResObj & CommonCampaignAmouat>;
-
-export type FindCreatorDataCpsRes = Array<FindCreatorDataResObj & CpsCampaignAmount>;
 
 interface CreatorDataByCampaign {
   viewer: number;
@@ -47,9 +41,4 @@ export type FindCreatorDataByCampaignResObj = FindCreatorDataResObj &
   CommonCampaignAmouat &
   CreatorDataByCampaign;
 
-export type FindCreatorDataByCampaignCpsResObj = FindCreatorDataResObj &
-  CpsCampaignAmount &
-  CreatorDataByCampaign;
-
 export type FindCreatorDataByCampaignRes = FindCreatorDataByCampaignResObj[];
-export type FindCreatorDataByCampaignCpsRes = FindCreatorDataByCampaignCpsResObj[];

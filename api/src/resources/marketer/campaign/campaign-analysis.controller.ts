@@ -6,26 +6,25 @@ import { CampaignAnalysisService } from './campaign-analysis.service';
 import { CampaignIdDto } from './dto/campaignIdDto.dto';
 import { FindAnalysisDataRes } from './interfaces/findAnalysisDataRes.interface';
 import { FindCpsAnalysisDataRes } from './interfaces/findCpsAnalysisDataRes.interface';
+import { FindCpsCreatorsRes } from './interfaces/findCpsCreatorsRes.interface';
 import { FindCpsExpenditureDataRes } from './interfaces/findCpsExpenditureDataRes.interface';
 import {
   FindCreatorDataByCampaignRes,
-  FindCreatorDataCpsRes,
   FindCreatorDataRes,
 } from './interfaces/findCreatorDataRes.interface';
 import { FindExpenditureDataRes } from './interfaces/findExpenditureDataRes.interface';
 import { FindHeatmapDataRes } from './interfaces/FindHeatmapDataRes.interface';
 
+@UseGuards(IsAuthGuard)
 @Controller('marketer/campaign/analysis')
 export class CampaignAnalysisController {
   constructor(private readonly campaignAnalysisService: CampaignAnalysisService) {}
 
-  @UseGuards(IsAuthGuard)
   @Get()
-  findAnalysisData(): Promise<FindAnalysisDataRes> {
-    return this.campaignAnalysisService.findAnalysisData('gubgoo_c02');
+  findAnalysisData(@Query(ValidationPipe) dto: CampaignIdDto): Promise<FindAnalysisDataRes> {
+    return this.campaignAnalysisService.findAnalysisData(dto.campaignId);
   }
 
-  @UseGuards(IsAuthGuard)
   @Get('v1/expenditure')
   findExpenditureChartData(
     @Query(ValidationPipe) dto: CampaignIdDto,
@@ -33,7 +32,6 @@ export class CampaignAnalysisController {
     return this.campaignAnalysisService.findExpenditureChartData(dto.campaignId);
   }
 
-  @UseGuards(IsAuthGuard)
   @Get('creator-data')
   findCreatorData(
     @Marketer() { marketerId }: MarketerSession,
@@ -45,7 +43,6 @@ export class CampaignAnalysisController {
     return this.campaignAnalysisService.findCreatorData(marketerId);
   }
 
-  @UseGuards(IsAuthGuard)
   @Get('heatmap')
   findHeatmapData(
     @Query('campaignId') campaignId: string,
@@ -57,13 +54,11 @@ export class CampaignAnalysisController {
   // *******************************
   // * CPS 데이터
   // *******************************
-  @UseGuards(IsAuthGuard)
   @Get('cps')
   findCpsAnalysisData(@Query(ValidationPipe) dto: CampaignIdDto): Promise<FindCpsAnalysisDataRes> {
     return this.campaignAnalysisService.findCpsAnalysisData(dto.campaignId);
   }
 
-  @UseGuards(IsAuthGuard)
   @Get('cps/chart')
   findCpsExpenditureChartData(
     @Query(ValidationPipe) dto: CampaignIdDto,
@@ -71,9 +66,8 @@ export class CampaignAnalysisController {
     return this.campaignAnalysisService.findCpsExpenditureChartData(dto.campaignId);
   }
 
-  @UseGuards(IsAuthGuard)
   @Get('cps/creators')
-  findCpsCreators(@Query(ValidationPipe) dto: CampaignIdDto): Promise<FindCreatorDataCpsRes> {
+  findCpsCreators(@Query(ValidationPipe) dto: CampaignIdDto): Promise<FindCpsCreatorsRes> {
     return this.campaignAnalysisService.findCpsCreators(dto.campaignId);
   }
 }

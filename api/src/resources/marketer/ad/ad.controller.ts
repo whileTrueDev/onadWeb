@@ -1,11 +1,11 @@
 import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
 import { Marketer } from '../../../decorators/sessionData.decorator';
-import { MarketerInfo } from '../../../entities/MarketerInfo';
 import { MarketerSession } from '../../../interfaces/Session.interface';
 import { IsAuthGuard } from '../../auth/guards/isAuth.guard';
 import { AdService } from './ad.service';
 import { ChangeOnOffStateDto } from './dto/changeOnOffStateDto.dto';
 import { FindCashAmountRes } from './interfaces/findCashAmountRes.interface';
+import { FindCreatorCountRes } from './interfaces/findCreatorCountRes.interface';
 import { FindExpenditureCpsRes } from './interfaces/findExpenditureCpsRes.interface';
 import { FindExpenditureRes } from './interfaces/findExpenditureRes.interface';
 
@@ -21,10 +21,11 @@ export class AdController {
 
   @UseGuards(IsAuthGuard)
   @Get('on-off')
-  findOnOffState(
+  async findOnOffState(
     @Marketer() { marketerId }: MarketerSession,
-  ): Promise<Pick<MarketerInfo, 'marketerContraction'>> {
-    return this.adService.findOnOffState(marketerId);
+  ): Promise<{ onOffState: boolean }> {
+    const onOffState = await this.adService.findOnOffState(marketerId);
+    return { onOffState };
   }
 
   @UseGuards(IsAuthGuard)
@@ -50,7 +51,7 @@ export class AdController {
   }
 
   @Get('analysis/creator-count')
-  findCreatorCount(@Marketer() { marketerId }: MarketerSession) {
+  findCreatorCount(@Marketer() { marketerId }: MarketerSession): Promise<FindCreatorCountRes> {
     return this.adService.findCreatorCount(marketerId);
   }
 }

@@ -14,13 +14,13 @@ export class TaxBillsService {
   private getTaxBillStateString(stateNumber: number) {
     switch (stateNumber) {
       case 0:
-        return TaxBillState.발행대기;
+        return TaxBillState[0];
       case 1:
-        return TaxBillState.발행완료;
+        return TaxBillState[1];
       case 2:
-        return TaxBillState.미발행;
+        return TaxBillState[2];
       default:
-        return TaxBillState.미발행;
+        return TaxBillState[2];
     }
   }
 
@@ -28,12 +28,16 @@ export class TaxBillsService {
     const result = await this.marketerInfoRepo.find({
       where: { marketerId },
       order: { date: 'DESC' },
+      select: ['date', 'cashAmount', 'state'],
     });
 
-    return result.map(tax => ({
-      ...tax,
-      state: this.getTaxBillStateString(tax.state),
-      cashAmount: tax.cashAmount ? tax.cashAmount.toString() : '0',
-    }));
+    const sendArray: string[][] = [];
+    result.forEach(taxBill => {
+      const object: any = { date: taxBill.date };
+      object.cashAmount = object.cashAmount ? object.cashAmount.toString() : '0';
+      object.state = this.getTaxBillStateString(taxBill.state);
+      sendArray.push(Object.values(object));
+    });
+    return sendArray;
   }
 }

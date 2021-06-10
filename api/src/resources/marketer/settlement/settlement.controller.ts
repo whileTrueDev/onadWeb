@@ -30,7 +30,7 @@ export class SettlementController {
 
   @UseGuards(IsAuthGuard)
   @Get()
-  findOne(@Marketer() { marketerId }: MarketerSession): Promise<MarketerSettlement> {
+  findOne(@Marketer() { marketerId }: MarketerSession): Promise<MarketerSettlement | null> {
     return this.settlementService.findOne(marketerId);
   }
 

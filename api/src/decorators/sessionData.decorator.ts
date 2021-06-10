@@ -11,8 +11,8 @@ import { CreatorSession, MarketerSession } from '../interfaces/Session.interface
  * @returns {MarketerSession}
  */
 export const Marketer = createParamDecorator((data: unknown, ctx: ExecutionContext) => {
-  const request = ctx.switchToHttp().getRequest();
-  if (request.user.userType === 'marketer') return request.user as MarketerSession;
+  const request = ctx.switchToHttp().getRequest<Express.Request>();
+  if (request.user && request.user.userType === 'marketer') return request.user as MarketerSession;
   throw new UnauthorizedException();
 });
 
@@ -27,6 +27,6 @@ export const Marketer = createParamDecorator((data: unknown, ctx: ExecutionConte
  */
 export const Creator = createParamDecorator((data: unknown, ctx: ExecutionContext) => {
   const request = ctx.switchToHttp().getRequest();
-  if (request.user.userType === 'creator') return request.user as CreatorSession;
+  if (request.user && request.user.userType === 'creator') return request.user as CreatorSession;
   throw new UnauthorizedException();
 });

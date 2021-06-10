@@ -40,7 +40,7 @@ export class LandingUrlService {
   async findLandingUrlsPaginated(
     marketerId: string,
     dto: Partial<PaginationDto>,
-  ): Promise<LinkRegistered[]> {
+  ): Promise<Array<{ id: string } & LinkRegistered>> {
     const searchPage = Math.round(Number(dto.page) * Number(dto.offset));
     const searchOffset = Number(dto.offset);
     const urlList = await this.landingUrlRepo.find({
@@ -51,6 +51,7 @@ export class LandingUrlService {
     });
     return urlList.map(url => ({
       ...url,
+      id: url.linkId,
       links: JSON.parse(url.links),
     }));
   }

@@ -1,21 +1,21 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { getConnection } from 'typeorm';
-import { FindAnalysisDataRes } from './interfaces/findAnalysisDataRes.interface';
-import {
-  FindCreatorDataByCampaignRes,
-  FindCreatorDataCpsRes,
-  FindCreatorDataRes,
-} from './interfaces/findCreatorDataRes.interface';
-import { FindExpenditureDataRes } from './interfaces/findExpenditureDataRes.interface';
 import { CampaignLogRepository } from '../../../repositories/CampaignLog.repository';
 import { TrackingRepository } from '../../../repositories/Tracking.repository';
-import { FindHeatmapDataRes } from './interfaces/FindHeatmapDataRes.interface';
+import { FindAnalysisDataRes } from './interfaces/findAnalysisDataRes.interface';
 import { FindCpsAnalysisDataRes } from './interfaces/findCpsAnalysisDataRes.interface';
+import { FindCpsCreatorsRes } from './interfaces/findCpsCreatorsRes.interface';
 import {
   FindCpsExpenditureDataRes,
   FindCpsExpenditureDataResObj,
 } from './interfaces/findCpsExpenditureDataRes.interface';
+import {
+  FindCreatorDataByCampaignRes,
+  FindCreatorDataRes,
+} from './interfaces/findCreatorDataRes.interface';
+import { FindExpenditureDataRes } from './interfaces/findExpenditureDataRes.interface';
+import { FindHeatmapDataRes } from './interfaces/FindHeatmapDataRes.interface';
 
 @Injectable()
 export class CampaignAnalysisService {
@@ -60,7 +60,8 @@ export class CampaignAnalysisService {
 
   // * 클릭 히트맵 분석 데이터
   public async findHeatmapData(campaignId: string): Promise<FindHeatmapDataRes> {
-    return this.trackingRepo.findCampaignAnalysisHeatmapData(campaignId);
+    const result = await this.trackingRepo.findCampaignAnalysisHeatmapData(campaignId);
+    return result.map(obj => ({ ...obj, count: Number(obj.count) }));
   }
 
   /**
@@ -99,7 +100,21 @@ export class CampaignAnalysisService {
     return dataArray;
   }
 
-  public async findCpsCreators(campaignId: string): Promise<FindCreatorDataCpsRes> {
-    return this.campaignLogRepo.findCreatorDataByCpsCampaign(campaignId);
+  // * CPS 캠페인 분석 - 상품을 판매한 방송인
+  public async findCpsCreators(campaignId: string): Promise<FindCpsCreatorsRes> {
+    const result = await this.campaignLogRepo.findCreatorDataByCpsCampaign(campaignId);
+    return result.map(x => ({
+      ...x,
+      id: x.creatorId,
+      // * 변경 로그 2021 06 10 by @hwasurr
+      // 아래 두 프로퍼티는 이전 버전리액트의 변수명 참조에 맞추기 위해 변경한 것.
+      // (원래 creatorDetail 정보를 가져와 보여주는 방식이었고, 그 방식으로는 올바른 데이터를 보여주지 못했음.)
+      // nestjs rewriting 하면서, 해당 문제를 수정하기 위해 상품판매방송인 목록 정보 조회 로직을 변경하였음.
+      // 리액트 서버에는 일절 변경없이 진행할 것이므로, 리액트 서버에서 사용하는 두 데이터 "판매수", "일간 평균 클릭 수"
+      // 를 각각 프로퍼티명 total_sales_amount, ctr 로 참조하므로, 해당 프로퍼티명에 올바른 데이터를 넣어줌.
+      // "일간 평균 클릭수" =-> 총 클릭수 (이 지표가 더욱 의미 있을 것.)
+      ctr: x.clickCount,
+      total_sales_amount: x.soldCount,
+    }));
   }
 }

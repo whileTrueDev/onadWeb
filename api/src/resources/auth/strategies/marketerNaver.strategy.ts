@@ -14,9 +14,8 @@ export class MarketerNaverStrategy extends PassportStrategy(Strategy, 'naver') {
     super({
       clientID: configService.get<string>('NAVER_CLIENT_ID'),
       clientSecret: configService.get<string>('NAVER_CLIENT_SECRET'),
-      callbackURL: `${configService.get<string>(
-        'API_HOSTNAME' || 'http://localhost:3000',
-      )}/login/naver/callback`,
+      callbackURL: `${configService.get<string>('API_HOSTNAME') ||
+        'http://localhost:3000'}/login/naver/callback`,
     });
   }
 

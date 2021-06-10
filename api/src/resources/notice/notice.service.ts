@@ -14,7 +14,11 @@ export class NoticeService {
   ) {}
 
   async findAllNotice(): Promise<PublicNotice[]> {
-    const noticeList = await this.noticeRepo.find({ order: { topic: 'DESC', code: 'DESC' } });
+    const noticeList = await this.noticeRepo
+      .createQueryBuilder()
+      .orderBy('topic = "필독"', 'DESC')
+      .addOrderBy('code', 'DESC')
+      .getMany();
 
     return noticeList.map(notice => ({ ...notice, id: notice.code }));
   }

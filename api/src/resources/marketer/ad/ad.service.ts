@@ -6,6 +6,7 @@ import { CampaignLog } from '../../../entities/CampaignLog';
 import { MarketerInfo } from '../../../entities/MarketerInfo';
 import { Tracking } from '../../../entities/Tracking';
 import { FindCashAmountRes } from './interfaces/findCashAmountRes.interface';
+import { FindCreatorCountRes } from './interfaces/findCreatorCountRes.interface';
 import {
   FindExpenditureCpsRes,
   FindExpenditureCpsResObj,
@@ -40,11 +41,12 @@ export class AdService {
   }
 
   // * 광고주 ONOFF 상태 조회
-  async findOnOffState(marketerId: string): Promise<Pick<MarketerInfo, 'marketerContraction'>> {
-    return this.marketerInfoRepo.findOne({
+  async findOnOffState(marketerId: string): Promise<boolean> {
+    const { marketerContraction } = await this.marketerInfoRepo.findOne({
       where: { marketerId },
       select: ['marketerContraction'],
     });
+    return !!marketerContraction;
   }
 
   // * 광고주 ONOFF 상태 변경
@@ -94,8 +96,8 @@ export class AdService {
   }
 
   // * 마케터 대시보드의 크리에이터 수, 현재 광고주가 광고 송출한 크리에이터 수
-  async findCreatorCount(marketerId: string): Promise<number> {
-    const result = (await this.campaignLogRepo
+  async findCreatorCount(marketerId: string): Promise<FindCreatorCountRes> {
+    return this.campaignLogRepo
       .createQueryBuilder('CL')
       .select('COUNT( DISTINCT creatorId ) AS counts')
       .innerJoin(
@@ -107,10 +109,7 @@ export class AdService {
         'CP',
         'CL.campaignId = CP.campaignId',
       )
-      .getRawOne()) as { counts: number };
-
-    if (result) return result.counts;
-    return 0;
+      .getRawOne();
   }
 
   // *******************************

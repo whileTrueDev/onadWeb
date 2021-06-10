@@ -63,7 +63,7 @@ export class LandingUrlController {
   findLandingUrlsPaginated(
     @Marketer() { marketerId }: MarketerSession,
     @Body(ValidationPipe) dto: Partial<PaginationDto>,
-  ): Promise<LinkRegistered[]> {
+  ): Promise<Array<LinkRegistered & { id: string }>> {
     return this.landingUrlService.findLandingUrlsPaginated(marketerId, dto);
   }
 

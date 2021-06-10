@@ -16,8 +16,8 @@ export class AccountService {
   ): Promise<Pick<MarketerInfo, 'marketerAccountNumber' | 'accountHolder'>> {
     const user = await this.marketerRepo.findOne({
       where: { marketerId },
-      select: ['marketerAccountNumber', 'accountHolder'],
     });
+    if (!user.marketerAccountNumber) return { marketerAccountNumber: null, accountHolder: null };
 
     const deciphered = encrypto.decipher(user.marketerAccountNumber);
     return {

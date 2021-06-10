@@ -14,6 +14,64 @@ export class SettlementService {
     private readonly marketerSettlementRepo: Repository<MarketerSettlement>,
   ) {}
 
+  async findOne(marketerId: string): Promise<MarketerSettlement> {
+    const data = await this.marketerSettlementRepo.findOne({
+      where: { marketerId },
+      order: { createDate: 'ASC' },
+    });
+    if (!data) return null;
+    return this.decryptSettlement(data);
+  }
+
+  async findAll(marketerId: string): Promise<MarketerSettlement[]> {
+    const data = await this.marketerSettlementRepo.find({
+      where: { marketerId },
+      order: { createDate: 'ASC' },
+    });
+    return data.map(settlement => this.decryptSettlement(settlement));
+  }
+
+  async createOne(
+    marketerId: string,
+    dto: CreateMarketerSettlementDto,
+  ): Promise<MarketerSettlement> {
+    const encryptedDto = this.encryptSettlement(dto);
+    const newSettlement = this.marketerSettlementRepo.create({ ...encryptedDto, marketerId });
+    return this.marketerSettlementRepo.save(newSettlement);
+  }
+
+  async updateOne(marketerId: string, dto: UpdateMarketerSettlementDto): Promise<boolean> {
+    const result = await this.marketerSettlementRepo
+      .createQueryBuilder()
+      .update()
+      .set({ ...dto, state: false, marketerId })
+      .where('id = :id AND marketerId = :marketerId', { id: dto.id, marketerId })
+      .execute();
+    if (result.affected > 0) return true;
+    return false;
+  }
+
+  /**
+   * 해당 정산 등록을 삭제합니다.
+   * @param marketerId 마케터 고유 아이디
+   * @param id 정산등록 아이디
+   * @returns affectedRows를 반환합니다. 1인 경우 삭제가 완료된 것이고, 0인 경우 삭제에 실패한 것입니다.
+   */
+  async deleteOne(marketerId: string, id: number): Promise<boolean> {
+    const result = await this.marketerSettlementRepo
+      .createQueryBuilder()
+      .delete()
+      .where('id = :id AND marketerId = :marketerId', { marketerId, id })
+      .execute();
+
+    if (result.affected > 0) return true;
+    return false;
+  }
+
+  // ***********************************************************
+  // * Private methods
+  // ***********************************************************
+
   /**
    * * 계좌번호 형식 생성
    */
@@ -66,58 +124,5 @@ export class SettlementService {
       identificationImgSrc: encrypto.decipher(settlement.identificationImgSrc),
       bankAccountImgSrc: encrypto.decipher(settlement.bankAccountImgSrc),
     };
-  }
-
-  async findOne(marketerId: string): Promise<MarketerSettlement> {
-    const data = await this.marketerSettlementRepo.findOne({
-      where: { marketerId },
-      order: { createDate: 'ASC' },
-    });
-    return this.decryptSettlement(data);
-  }
-
-  async findAll(marketerId: string): Promise<MarketerSettlement[]> {
-    const data = await this.marketerSettlementRepo.find({
-      where: { marketerId },
-      order: { createDate: 'ASC' },
-    });
-    return data.map(settlement => this.decryptSettlement(settlement));
-  }
-
-  async createOne(
-    marketerId: string,
-    dto: CreateMarketerSettlementDto,
-  ): Promise<MarketerSettlement> {
-    const encryptedDto = this.encryptSettlement(dto);
-    const newSettlement = this.marketerSettlementRepo.create({ ...encryptedDto, marketerId });
-    return this.marketerSettlementRepo.save(newSettlement);
-  }
-
-  async updateOne(marketerId: string, dto: UpdateMarketerSettlementDto): Promise<boolean> {
-    const result = await this.marketerSettlementRepo
-      .createQueryBuilder()
-      .update()
-      .set({ ...dto, state: false, marketerId })
-      .where('id = :id AND marketerId = :marketerId', { id: dto.id, marketerId })
-      .execute();
-    if (result.affected > 0) return true;
-    return false;
-  }
-
-  /**
-   * 해당 정산 등록을 삭제합니다.
-   * @param marketerId 마케터 고유 아이디
-   * @param id 정산등록 아이디
-   * @returns affectedRows를 반환합니다. 1인 경우 삭제가 완료된 것이고, 0인 경우 삭제에 실패한 것입니다.
-   */
-  async deleteOne(marketerId: string, id: number): Promise<boolean> {
-    const result = await this.marketerSettlementRepo
-      .createQueryBuilder()
-      .delete()
-      .where('id = :id AND marketerId = :marketerId', { marketerId, id })
-      .execute();
-
-    if (result.affected > 0) return true;
-    return false;
   }
 }

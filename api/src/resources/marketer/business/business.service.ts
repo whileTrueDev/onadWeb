@@ -17,10 +17,7 @@ export class BusinessService {
       where: { marketerId },
       select: ['marketerBusinessRegNum', 'marketerBusinessRegSrc'],
     });
-    return {
-      marketerBusinessRegNum: user.marketerBusinessRegNum,
-      marketerBusinessRegSrc: user.marketerBusinessRegSrc,
-    };
+    return user;
   }
 
   async updateMarketerBusinessInfo(

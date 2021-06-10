@@ -152,7 +152,7 @@ export class CashController {
   @Get('history/charge')
   async findChargeHistory(
     @Marketer() { marketerId }: MarketerSession,
-  ): Promise<{ data: string[][] }> {
+  ): Promise<{ data: Array<string | Date>[] }> {
     const data = await this.cashHistoryService.findChargeHistory(marketerId);
     return { data };
   }

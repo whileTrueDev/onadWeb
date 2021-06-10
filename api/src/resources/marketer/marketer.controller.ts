@@ -14,6 +14,7 @@ import {
 import { Request } from 'express';
 import nanoid from 'nanoid';
 import { Marketer } from '../../decorators/sessionData.decorator';
+import { MarketerActionLog } from '../../entities/MarketerActionLog';
 import { MarketerInfo } from '../../entities/MarketerInfo';
 import { MarketerSession } from '../../interfaces/Session.interface';
 import { IsAuthGuard } from '../auth/guards/isAuth.guard';
@@ -26,11 +27,13 @@ import { CreateNewMarketerRes } from './interfaces/createNewMarketerRes.interfac
 import { FindMarketerIdRes } from './interfaces/findMarketerIdRes.interface';
 import { TmpPasswordRes } from './interfaces/tmpPasswordRes.interface';
 import { MarketerService } from './marketer.service';
+import { MarketerActionLogService } from './marketerActionLog.service';
 
 @Controller('marketer')
 export class MarketerController {
   constructor(
     private readonly marketerService: MarketerService,
+    private readonly actionLogService: MarketerActionLogService,
     private readonly mailService: MailService,
   ) {}
 
@@ -160,6 +163,12 @@ export class MarketerController {
       tmpPassword,
     );
     return { error: false, mailId };
+  }
+
+  @UseGuards(IsAuthGuard)
+  @Get('history')
+  findActionLogHistory(@Marketer() { marketerId }: MarketerSession): Promise<MarketerActionLog[]> {
+    return this.actionLogService.findActionLogs(marketerId);
   }
 
   // *****************************************************

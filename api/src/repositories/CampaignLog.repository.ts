@@ -5,10 +5,11 @@ import { CampaignLog } from '../entities/CampaignLog';
 import { CreatorDetail } from '../entities/CreatorDetail';
 import { CreatorDetailAfreeca } from '../entities/CreatorDetailAfreeca';
 import { CreatorInfo } from '../entities/CreatorInfo';
+import { Tracking } from '../entities/Tracking';
+import { FindCpsCreatorsRes } from '../resources/marketer/campaign/interfaces/findCpsCreatorsRes.interface';
 import { FindCpsExpenditureDataObj } from '../resources/marketer/campaign/interfaces/findCpsExpenditureDataRes.interface';
 import {
   FindCreatorDataByCampaignRes,
-  FindCreatorDataCpsRes,
   FindCreatorDataRes,
 } from '../resources/marketer/campaign/interfaces/findCreatorDataRes.interface';
 import { FindExpenditureDataRes } from '../resources/marketer/campaign/interfaces/findExpenditureDataRes.interface';
@@ -80,11 +81,39 @@ export class CampaignLogRepository extends Repository<CampaignLog> {
   }
 
   // * 마케터 CPS 캠페인 분석에 사용되는 크리에이터 데이터 -> 캠페인별
-  public async findCreatorDataByCpsCampaign(campaignId: string): Promise<FindCreatorDataCpsRes> {
-    return this.createFindCreatorDataByCampaignBase(campaignId)
-      .addSelect('COUNT(*) AS total_sales_amount')
-      .orderBy('total_sales_amount', 'DESC')
+  public async findCreatorDataByCpsCampaign(campaignId: string): Promise<FindCpsCreatorsRes> {
+    const creatorsWhoSold = await this.createQueryBuilder('cl')
+      .select('cl.creatorId, COUNT(*) AS soldCount')
+      .addSelect('creatorName AS creatorTwitchName, creatorLogo, creatorTwitchId')
+      .addSelect('afreecaId, afreecaName, afreecaLogo')
+      .addSelect('cd.contentsGraphData, cd.timeGraphData')
+      .addSelect(
+        'cda.contentsGraphData AS contentsGraphDataAfreeca, cda.timeGraphData AS timeGraphDataAfreeca',
+      )
+      .innerJoin(CreatorInfo, 'ci', 'ci.creatorId = cl.creatorId')
+      .leftJoin(CreatorDetail, 'cd', 'cd.creatorId = ci.creatorId')
+      .leftJoin(CreatorDetailAfreeca, 'cda', 'cda.creatorId = ci.creatorId')
+      .where('campaignId = :campaignId', { campaignId })
+      .andWhere('type = "CPS"')
+      .groupBy('cl.creatorId')
       .getRawMany();
+    const creatorIds = creatorsWhoSold.map(x => x.creatorId);
+    const clicks = await this.manager
+      .createQueryBuilder()
+      .select('creatorId, COUNT(*) AS clickCount')
+      .from(Tracking, 'tracking')
+      .where('creatorId IN (:creatorIds)', { creatorIds })
+      .andWhere('campaignId = :campaignId', { campaignId })
+      .groupBy('creatorId')
+      .getRawMany();
+
+    return creatorsWhoSold.map(creator => {
+      const mine = clicks.find(x => x.creatorId === creator.creatorId);
+      return {
+        ...creator,
+        clickCount: mine ? mine.clickCount : 0,
+      };
+    });
   }
 
   // * 마케터 광고캐시 소진 내역
@@ -103,8 +132,10 @@ export class CampaignLogRepository extends Repository<CampaignLog> {
       return qb
         .andWhere('DATE_FORMAT(cl.date, "%y년 %m월") = :targetMonth', { targetMonth })
         .groupBy('DATE_FORMAT(cl.date, "%y년 %m월 %d일"), type')
+        .addSelect('type')
         .getRawMany();
     }
+
     return qb.groupBy('month(cl.date)').getRawMany();
   }
 

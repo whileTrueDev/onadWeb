@@ -11,7 +11,7 @@ export class GeoController {
   constructor(private readonly geoService: GeoService) {}
 
   @UseGuards(IsAuthGuard)
-  @Get()
+  @Get('campaign')
   findCampaignGeoData(
     @Marketer() { marketerId }: MarketerSession,
     @Query(ValidationPipe) dto: FindCampaignGeoDataDto,

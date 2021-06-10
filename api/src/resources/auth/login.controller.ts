@@ -57,6 +57,7 @@ export class LoginController {
   @Get('google/callback')
   googleLoginCallback(@Req() req: Request, @Res() res: Response): void {
     // 구글로그인 콜백함수 추가
+    console.log('req.user from google login controller: ', req.user);
     if (req.user.registered) {
       return res.redirect(`${this.HOST}/mypage/marketer/main`);
     }

@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import dayjs from 'dayjs';
 import { Repository } from 'typeorm';
 import { MarketerCharge } from '../../../entities/MarketerCharge';
 import { MarketerRefund } from '../../../entities/MarketerRefund';
@@ -27,7 +28,7 @@ export class CashHistoryService {
   // **************************
 
   // * 캐시 충전 내역 테이블 데이터
-  async findChargeHistory(marketerId: string): Promise<string[][]> {
+  async findChargeHistory(marketerId: string): Promise<Array<string | Date>[]> {
     const result = (await this.marketerChargeRepo
       .createQueryBuilder()
       .select('DATE_FORMAT(date, "%y년 %m월 %d일 %T") as date')
@@ -36,13 +37,16 @@ export class CashHistoryService {
       .orderBy('date', 'DESC')
       .getRawMany()) as MarketerCharge[];
 
-    const sendArray: string[][] = [];
+    const sendArray: Array<string | Date>[] = [];
     result.forEach(queryResult => {
-      const object: Partial<ChargeHistoryResObj> = {};
+      const object: Partial<ChargeHistoryResObj> = {
+        date: queryResult.date,
+      };
       object.cash = String(queryResult.cash);
       if (queryResult.type === 'vbank') object.type = '가상계좌';
       else if (queryResult.type === 'trans') object.type = '계좌이체';
       else if (queryResult.type === 'card') object.type = '신용카드';
+      else object.type = queryResult.type;
       switch (queryResult.temporaryState) {
         case 1:
           object.temporaryState = '완료됨';

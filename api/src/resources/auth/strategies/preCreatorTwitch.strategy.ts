@@ -27,9 +27,8 @@ export class PreCreatorTwitchStrategy extends PassportStrategy(Strategy, 'twitch
       ],
       authorizationURL: 'https://id.twitch.tv/oauth2/authorize',
       tokenURL: 'https://id.twitch.tv/oauth2/token',
-      callbackURL: `${configService.get<string>(
-        'API_HOSTNAME' || 'http://localhost:3000',
-      )}/login/twitch/pre-creator/callback`,
+      callbackURL: `${configService.get<string>('API_HOSTNAME') ||
+        'http://localhost:3000'}/login/twitch/pre-creator/callback`,
     });
 
     this._oauth2.setAuthMethod('Bearer');
