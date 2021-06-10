@@ -43,7 +43,7 @@ jobs:
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
           task-definition: live-commerce/task-definition.json
-          container-name: onad-banner-broad
+          container-name: LiveCommerce
           image: ${{ secrets.DOCKER_USERNAME }}/onad_live-commerce:${{ github.sha }}
 
       - name: Deploy Amazon ECS task definition
