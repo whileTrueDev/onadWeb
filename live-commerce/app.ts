@@ -10,6 +10,7 @@ const httpServer = http.createServer(app);
 const io = socketio(httpServer);
 
 const PORT = 3060;
+
 process.env.NODE_ENV = (process.env.NODE_ENV && (process.env.NODE_ENV).trim().toLowerCase() === 'production') ? 'production' : 'development';
 
 const socketInfo: SocketInfo = {};
