@@ -42,7 +42,7 @@ export class RemoteService {
 
     // remoteurl을 통해 크리에이터 정보 조회
     const creator = await this.creatorInfoRepo.findOne({
-      select: ['creatorId'],
+      select: ['creatorId', 'creatorName', 'afreecaName'],
       where: { remoteControllerUrl },
     });
     if (!creator) throw new BadRequestException('remotecontrollerurl is not correct');
@@ -56,7 +56,7 @@ export class RemoteService {
     // 캠페인 목록에서 paused 캠페인을 필터링
     const filtered = campaignList.map(campaign => {
       if (pausedList.includes(campaign.campaignId)) {
-        return { ...campaign, sttate: 0 };
+        return { ...campaign, state: 0, creatorName: creator.creatorName || creator.afreecaName };
       }
       return campaign;
     });

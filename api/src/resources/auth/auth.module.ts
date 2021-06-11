@@ -12,7 +12,7 @@ import { LinkService } from './auth-link/link.service';
 import { AuthService } from './auth.service';
 import { LoginController } from './login.controller';
 import { LogoutController } from './logout.controller';
-import { TwitchLinkStrategy } from './strategies/creatorTwitchLink.strategy';
+import { TwitchLinkStrategy } from './auth-link/creatorTwitchLink.strategy';
 import { LocalStrategy } from './strategies/local.strategy';
 import { MarketerGoogleStrategy } from './strategies/marketerGoogle.strategy';
 import { MarketerKakaoStrategy } from './strategies/marketerKakao.strategy';

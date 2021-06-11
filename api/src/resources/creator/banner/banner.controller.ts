@@ -14,6 +14,7 @@ import { FindNowActiveBannerRes } from './interfaces/findNowActiveBannerRes.inte
 @Controller('creator/banner')
 export class BannerController {
   constructor(private readonly bannerService: BannerService) {}
+
   @Delete()
   banBanner(
     @Creator() { creatorId }: CreatorSession,

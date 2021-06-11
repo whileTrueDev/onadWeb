@@ -5,9 +5,9 @@ import { Creator } from '../../../decorators/sessionData.decorator';
 import { AfreecaLinkCertification } from '../../../entities/AfreecaLinkCertification';
 import { CreatorSession } from '../../../interfaces/Session.interface';
 import { IsAuthGuard } from '../guards/isAuth.guard';
-import { TwitchLinkExceptionFilter } from '../guards/twitchLink.filter';
-import { TwitchLinkGuard } from '../guards/twitchLink.guard';
+import { TwitchLinkExceptionFilter } from './twitchLink.filter';
 import { AfreecaLinkCertificationRes, LinkService } from './link.service';
+import { TwitchLinkGuard } from './twitchLink.guard';
 
 @Controller('link')
 export class LinkController {
@@ -34,7 +34,7 @@ export class LinkController {
   @UseGuards(TwitchLinkGuard)
   @Get('/twitch/callback')
   twitchLinkCallback(@Res() res: Response): void {
-    res.redirect(`${this.HOST}/mypage/creator/user`);
+    return res.redirect(`${this.HOST}/mypage/creator/user`);
   }
 
   @UseGuards(IsAuthGuard)

@@ -2,6 +2,7 @@ import shortid from 'shortid';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { nanoid } from 'nanoid';
 import { AfreecaLinkCertification } from '../../../entities/AfreecaLinkCertification';
 import { CreatorInfo } from '../../../entities/CreatorInfo';
 
@@ -60,8 +61,11 @@ export class LinkService {
 
     // 동일한 온애드 유저로부터 동일한 afreecaId로의 인증번호 발급의 경우
     const duplicateRequestCheck = await this.afreecaLinkCertRepo.findOne({
-      creatorId,
-      afreecaId: requestedAfreecaId,
+      where: {
+        creatorId,
+        afreecaId: requestedAfreecaId,
+        certState: 0,
+      },
     });
     if (duplicateRequestCheck) {
       return {
@@ -71,7 +75,7 @@ export class LinkService {
     }
 
     // 올바른 요청의 경우.
-    const certCode = `${new Date().getTime()}${shortid.generate()}`;
+    const certCode = nanoid();
     const newCertItem = await this.afreecaLinkCertRepo.save(
       this.afreecaLinkCertRepo.create({
         tempCode: certCode,

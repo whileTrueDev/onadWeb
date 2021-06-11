@@ -1,4 +1,4 @@
-import { Injectable, InternalServerErrorException, UnauthorizedException } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { nanoid } from 'nanoid';
 import { Connection, IsNull, Not, Repository } from 'typeorm';
@@ -344,14 +344,22 @@ export class CreatorService {
           remoteControllerUrl,
         );
         // 계약시 생성되는 creatorCampaign 기본값
-        const newCreatorCampaign = this.creatorCampaignRepo.new(creatorId);
-        await queryRunner.manager.save(CreatorCampaign, newCreatorCampaign);
+        const cc = await queryRunner.manager.findOne(CreatorCampaign, { where: { creatorId } });
+        if (!cc) {
+          const newCreatorCampaign = this.creatorCampaignRepo.new(creatorId);
+          await queryRunner.manager.insert(CreatorCampaign, newCreatorCampaign);
+        }
         // 계약시 생성되는 추천인 코드 기본값 추가 작업.
-        await queryRunner.manager.save(CreatorReferralCode, {
-          creatorId,
-          referralCode: myReferralCode,
+        const crc = await queryRunner.manager.findOne(CreatorReferralCode, {
+          where: { creatorId },
         });
-
+        if (!crc) {
+          const newCrc = this.creatorReferralCodeRepo.create({
+            creatorId,
+            referralCode: myReferralCode,
+          });
+          await queryRunner.manager.insert(CreatorReferralCode, newCrc);
+        }
         return true;
       },
       { errorMessage: `An error occurred during CreatorInfo contraction update (${creatorId}) - ` },

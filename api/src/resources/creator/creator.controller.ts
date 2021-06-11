@@ -1,13 +1,14 @@
 import {
   Body,
+  ClassSerializerInterceptor,
   Controller,
   Get,
   Ip,
-  ParseIntPipe,
   Patch,
   Post,
   Query,
   UseGuards,
+  UseInterceptors,
   ValidationPipe,
 } from '@nestjs/common';
 import { Creator } from '../../decorators/sessionData.decorator';
@@ -22,7 +23,6 @@ import { CreateCreatorDto } from './dto/createCreatorDto.dto';
 import { CreateCreatorPreUserDto } from './dto/createCreatorPreUserDto.dto';
 import { FindCreatorLandingUrlDto } from './dto/findCreatorLandingUrlDto.dto';
 import { FindPasswordDto } from './dto/findPasswordDto.dto';
-import { UpdateAdchatAgreementDto } from './dto/updateAdchatAgreementDto.dto';
 import { UpdateCreatorInfoDto } from './dto/updateCreatorInfoDto.dto';
 import { UpdateCreatorSettlementInfoDto } from './dto/updateCreatorSettlementInfoDto.dto';
 import { UpdatePasswordDto } from './dto/updatePasswordDto.dto';
@@ -35,13 +35,21 @@ export class CreatorController {
   ) {}
 
   @UseGuards(IsAuthGuard)
+  @UseInterceptors(ClassSerializerInterceptor)
   @Get()
   async findCreatorInfo(
     @Creator() { creatorId }: CreatorSession,
     @Ip() ip: string,
-  ): Promise<CreatorInfo & { NowIp: string }> {
+  ): Promise<CreatorInfo & { NowIp: string; AccountImg?: string; BussinessRegiImg?: string }> {
     const result = await this.creatorService.findCreatorInfo(creatorId);
-    return { ...result, NowIp: ip };
+    return {
+      ...result,
+      accountImg: '',
+      AccountImg: result.accountImg,
+      NowIp: ip,
+      password: '',
+      passwordSalt: '',
+    };
   }
 
   @Post()
@@ -116,7 +124,7 @@ export class CreatorController {
   @Patch('adchat/agreement')
   updateAdchatAgreement(
     @Creator() { creatorId }: CreatorSession,
-    @Body('targetOnOffState', ParseIntPipe) targetOnOffState: number,
+    @Body('targetOnOffState') targetOnOffState: number,
   ): Promise<boolean> {
     return this.creatorService.updateAdchatAgreement(creatorId, targetOnOffState);
   }
