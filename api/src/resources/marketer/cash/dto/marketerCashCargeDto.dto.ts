@@ -1,8 +1,8 @@
-import { IsString } from 'class-validator';
+import { IsNumberString, IsString } from 'class-validator';
 
 export class MarketerCashCargeDto {
-  @IsString()
-  chargeCashString: string;
+  @IsNumberString()
+  chargeCash: string;
 
   @IsString()
   chargeType: string;

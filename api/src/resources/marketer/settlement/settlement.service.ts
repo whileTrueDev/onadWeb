@@ -41,10 +41,21 @@ export class SettlementService {
   }
 
   async updateOne(marketerId: string, dto: UpdateMarketerSettlementDto): Promise<boolean> {
+    const encryptedDto = this.encryptSettlement(dto);
     const result = await this.marketerSettlementRepo
       .createQueryBuilder()
       .update()
-      .set({ ...dto, state: false, marketerId })
+      .set({
+        name: encryptedDto.name,
+        identificationNumber: encryptedDto.identificationNumber,
+        bankAccountOwner: encryptedDto.bankAccountOwner,
+        bankAccountNumber: encryptedDto.bankAccountNumber,
+        businessmanFlag: encryptedDto.businessmanFlag,
+        identificationImgSrc: encryptedDto.identificationImgSrc,
+        bankAccountImgSrc: encryptedDto.bankAccountImgSrc,
+        state: false,
+        marketerId,
+      })
       .where('id = :id AND marketerId = :marketerId', { id: dto.id, marketerId })
       .execute();
     if (result.affected > 0) return true;

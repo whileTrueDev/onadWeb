@@ -44,7 +44,7 @@ export class CashService {
 
   // * 광고주 캐시 충전
   async charge(marketerId: string, dto: MarketerCashCargeDto): Promise<MarketerCharge> {
-    const chargeCash = Number(dto.chargeCashString);
+    const chargeCash = Number(dto.chargeCash);
     const row = this.marketerChargeRepo.create({
       marketerId,
       cash: chargeCash,
@@ -58,7 +58,7 @@ export class CashService {
     marketerId: string,
     dto: MarketerCashChargeByCardDto,
   ): Promise<MarketerChargeRes> {
-    const chargeCash = Number(dto.chargeCashString);
+    const chargeCash = Number(dto.chargeCash);
 
     // 결제시스템의 액세스 토큰(access token) 발급 받기 => 결제 위변조를 대조 용도도 포함
     const { access_token } = await this.iamportService.getToken(); // 접속 인증 토큰
@@ -127,7 +127,7 @@ export class CashService {
         cash: withFeeRefundCash,
         check: 0,
       });
-      await queryRunner.manager.save(MarketerRefund, newRefund);
+      await queryRunner.manager.insert(MarketerRefund, newRefund);
       return true;
     });
   }

@@ -45,8 +45,8 @@ export class SettlementController {
       summary: '광고주 판매대금 정산 등록 알림',
       text: '광고주가 판매대금 정산을 등록했습니다. 확인하고 검수를 진행해주세요.',
       fields: [
-        { title: '방송인 아이디', value: marketerId!, short: true },
-        { title: '은행', value: dto.bankName!, short: true },
+        { title: '방송인 아이디', value: marketerId, short: true },
+        { title: '은행', value: dto.bankName, short: true },
       ],
     });
     return newSettlement;
@@ -57,17 +57,17 @@ export class SettlementController {
   async updateOne(
     @Marketer() { marketerId }: MarketerSession,
     @Body(ValidationPipe) dto: UpdateMarketerSettlementDto,
-  ): Promise<boolean> {
+  ): Promise<number> {
     const result = await this.settlementService.updateOne(marketerId, dto);
     this.slackService.jsonMessage({
       summary: '광고주 판매대금 정산 재등록(수정) 알림',
       text: '광고주가 판매대금 정산을 재등록(수정)했습니다. 확인하고 검수를 진행해주세요.',
       fields: [
-        { title: '방송인 아이디', value: marketerId!, short: true },
-        { title: '은행', value: dto.bankName!, short: true },
+        { title: '방송인 아이디', value: marketerId, short: true },
+        { title: '은행', value: dto.bankName, short: true },
       ],
     });
-    return result;
+    return result ? 1 : 0;
   }
 
   @UseGuards(IsAuthGuard)

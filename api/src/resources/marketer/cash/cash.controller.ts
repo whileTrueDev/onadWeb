@@ -100,7 +100,7 @@ export class CashController {
         summary: '마케터 캐시 충전(카드or계좌이체) 알림',
         text: '마케터가 캐시를 충전했습니다. 확인해주세요.',
         fields: [
-          { title: '마케터 아이디', value: marketerId!, short: true },
+          { title: '마케터 아이디', value: marketerId, short: true },
           { title: '캐시 충전 금액', value: result.chargedCashAmount.toString(), short: true },
         ],
       });
@@ -123,7 +123,7 @@ export class CashController {
       summary: '마케터 환불 요청 알림',
       text: '마케터가 환불을 요청했습니다. 확인해주세요.',
       fields: [
-        { title: '마케터 아이디', value: marketerId!, short: true },
+        { title: '마케터 아이디', value: marketerId, short: true },
         { title: '환불 요청 금액', value: withdrawCash.toString(), short: true },
       ],
     });

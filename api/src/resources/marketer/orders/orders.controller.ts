@@ -25,7 +25,7 @@ export class OrdersController {
   async updateOrder(
     @Marketer() { marketerId }: MarketerSession,
     @Body(ValidationPipe) dto: UpdateOrderDto,
-  ) {
+  ): Promise<boolean> {
     const result = await this.ordersService.updateOrder(marketerId, dto);
     return result;
   }

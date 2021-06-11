@@ -68,7 +68,7 @@ export class LandingUrlService {
   ): Promise<Pick<Campaign, 'campaignId'>[]> {
     return this.campaignRepo.find({
       select: ['campaignId'],
-      where: { connectedLinkId: landingUrlId, marketerId },
+      where: { connectedLinkId: landingUrlId, marketerId, deletedState: 0 },
     });
   }
 

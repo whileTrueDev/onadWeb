@@ -1,9 +1,12 @@
-import { Injectable, InternalServerErrorException, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { getConnection, Repository } from 'typeorm';
 import { MerchandiseMallItems } from '../../../entities/MerchandiseMallItems';
+import { MerchandiseOptions } from '../../../entities/MerchandiseOptions';
 import { MerchandiseOrderRelease } from '../../../entities/MerchandiseOrderRelease';
 import { MerchandiseOrders } from '../../../entities/MerchandiseOrders';
+import { MerchandiseOrderStatuses } from '../../../entities/MerchandiseOrderStatuses';
+import { MerchandiseRegistered } from '../../../entities/MerchandiseRegistered';
 import { transactionQuery } from '../../../utils/transactionQuery';
 import { SlackService } from '../../slack/slack.service';
 import { FindOrdersDto } from './dto/findOrdersDto.dto';
@@ -22,7 +25,10 @@ export interface OrderData {
 @Injectable()
 export class OrdersService {
   constructor(
-    @InjectRepository(MerchandiseOrders) private readonly ordersRepo: Repository<MerchandiseOrders>,
+    @InjectRepository(MerchandiseOrders)
+    private readonly orderRepo: Repository<MerchandiseOrders>,
+    @InjectRepository(MerchandiseRegistered)
+    private readonly merchandiseRepo: Repository<MerchandiseRegistered>,
     @InjectRepository(MerchandiseOrderRelease)
     private readonly orderReleaseRepo: Repository<MerchandiseOrderRelease>,
     @InjectRepository(MerchandiseMallItems)
@@ -34,35 +40,37 @@ export class OrdersService {
     marketerId: string,
     { merchandiseId, campaignId }: FindOrdersDto,
   ): Promise<FindOrdersRes> {
-    const query = `SELECT
-      mo.id, mo.merchandiseId, campaignId, optionId, status, statusString, orderPrice, ordererName,
-      recipientName, quantity, mo.createDate, mo.updateDate, mo.denialReason,
-      deliveryMemo, email, jibunAddress, roadAddress, mo.denialReason, zoneCode, phone,
-      mr.name, mr.price, stock, optionFlag, mopt.type as optionType, mopt.name as optionValue, mopt.additionalPrice,
-      mm.soldCount AS merchandiseSoldCount,
-      mor.id AS releaseId, courierCompany, trackingNumber
-    FROM merchandiseOrders AS mo
-    JOIN merchandiseRegistered AS mr ON mr.id =  mo.merchandiseId
-    JOIN merchandiseOrderStatuses AS mos ON mo.status = mos.statusNumber
-    LEFT JOIN merchandiseOptions AS mopt ON mo.optionId = mopt.id
-    LEFT JOIN merchandiseMallItems AS mm ON mr.id = mm.merchandiseId
-    LEFT JOIN merchandiseOrderRelease AS mor ON mo.id = mor.orderId
-    `;
-    const conn = getConnection();
+    const qb = this.orderRepo
+      .createQueryBuilder('mo')
+      .select('mo.id, mo.merchandiseId, campaignId, optionId, status, statusString, orderPrice')
+      .addSelect('ordererName, recipientName, quantity, mo.createDate, mo.updateDate')
+      .addSelect('mo.denialReason, deliveryMemo, email, jibunAddress, roadAddress, mo.denialReason')
+      .addSelect('zoneCode, phone, mr.name, mr.price, stock, optionFlag, mopt.type as optionType')
+      .addSelect('mopt.name as optionValue, mopt.additionalPrice')
+      .addSelect('mm.soldCount AS merchandiseSoldCount, mor.id AS releaseId, courierCompany')
+      .addSelect('trackingNumber')
+      .innerJoin(MerchandiseRegistered, 'mr', 'mr.id =  mo.merchandiseId')
+      .innerJoin(MerchandiseOrderStatuses, 'mos', 'mo.status = mos.statusNumber')
+      .leftJoin(MerchandiseOptions, 'mopt', 'mo.optionId = mopt.id')
+      .leftJoin(MerchandiseMallItems, 'mm', 'mr.id = mm.merchandiseId')
+      .leftJoin(MerchandiseOrderRelease, 'mor', 'mo.id = mor.orderId');
     if (merchandiseId) {
-      const queryCondition = 'WHERE mo.merchandiseId = ? ORDER BY mo.createDate DESC';
-      const result = await conn.query(query + queryCondition, [merchandiseId]);
-      return result;
+      return qb
+        .where('mo.merchandiseId = :merchandiseId', { merchandiseId })
+        .orderBy('mo.createDate', 'DESC')
+        .getRawMany();
     }
     if (campaignId) {
-      const queryCondition = 'WHERE campaignId = ? ORDER BY mo.createDate DESC';
-      const result = await conn.query(query + queryCondition, [campaignId]);
-      return result;
+      return qb
+        .where('campaignId = :campaignId', { campaignId })
+        .orderBy('mo.createDate', 'DESC')
+        .getRawMany();
     }
     if (marketerId) {
-      const queryCondition = 'WHERE marketerId = ? ORDER BY mo.createDate DESC';
-      const result = await conn.query(query + queryCondition, [marketerId]);
-      return result;
+      return qb
+        .where('marketerId = :marketerId', { marketerId })
+        .orderBy('mo.createDate', 'DESC')
+        .getRawMany();
     }
     return null;
   }
@@ -70,20 +78,19 @@ export class OrdersService {
   async updateOrder(marketerId: string, dto: UpdateOrderDto): Promise<boolean> {
     const conn = getConnection();
 
-    const selectResult = (await conn.query(
-      `SELECT
-        marketerId, quantity, merchandiseRegistered.id AS merchandiseId,
-        mor.id AS releaseId, ordererName, merchandiseRegistered.name AS merchandiseName
-      FROM merchandiseRegistered
-        JOIN merchandiseOrders ON merchandiseRegistered.id = merchandiseOrders.merchandiseId
-        LEFT JOIN merchandiseOrderRelease AS mor ON mor.orderId = merchandiseOrders.id
-      WHERE merchandiseOrders.id = ?`,
-      [dto.orderId],
-    )) as OrderData[];
-
-    if (!selectResult || selectResult.length === 0) throw new UnauthorizedException();
-
-    const order = selectResult[0];
+    const order: OrderData = await this.merchandiseRepo
+      .createQueryBuilder('merchandiseRegistered')
+      .select('marketerId, quantity, merchandiseRegistered.id AS merchandiseId')
+      .addSelect('mor.id AS releaseId, ordererName, merchandiseRegistered.name AS merchandiseName')
+      .innerJoin(
+        MerchandiseOrders,
+        'merchandiseOrders',
+        'merchandiseRegistered.id = merchandiseOrders.merchandiseId',
+      )
+      .leftJoin(MerchandiseOrderRelease, 'mor', 'mor.orderId = merchandiseOrders.id')
+      .where('merchandiseOrders.id = :orderId', { orderId: dto.orderId })
+      .getRawOne();
+    if (!order) throw new BadRequestException(`requested order - ${dto.orderId} is not exists`);
     if (!(order.marketerId === marketerId)) throw new UnauthorizedException();
 
     return transactionQuery(
