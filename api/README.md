@@ -111,7 +111,7 @@ by hwasurr(dan) at 21.06.14
     $ yarn migration:run
     ```
 
-5. 올바르게 작성했다면, 변경사항이 DB에 적용되고, `onadMigrations` 테이블에 실행된 마이그레이션 클래스명(이 예제에서는 `CreatorDetailContentMigration1623634408645`) 이 생성되어 있는것을 확인합니다. 여기 `onadMigrations` 테이블에 생성된 마이그레이션은 실행된것으로 간주하고, 다음 마이그레이션 작업 실행시 무시됩니다.
+5. 올바르게 작성했다면, 변경사항이 DB에 적용되고, `onadMigrations` 테이블에 실행된 마이그레이션 클래스명(이 예제에서는 `CreatorDetailContentMigration1623634408645`)을 가진 새로운 행이 생성되어 있는것을 확인합니다. 여기 `onadMigrations` 테이블에 생성된 마이그레이션은 실행된것으로 간주하고, 다음 마이그레이션 작업 실행시 무시됩니다.
 6. 방금 적용한 마이그레이션을 되돌리고 싶다면 `migration:revert` 스크립트를 이용할 수 있습니다. `migration:revert` 스크립트는 가장 최근 실행된 마이그레이션의 `down` 메서드 내에 있는 내용을 실행합니다.
 
     ```bash
