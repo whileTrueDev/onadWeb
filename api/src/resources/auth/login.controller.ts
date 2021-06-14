@@ -75,7 +75,7 @@ export class LoginController {
   }
 
   @UseGuards(NaverAuthGuard)
-  @Get('naver/calback')
+  @Get('naver/callback')
   naverLoginCallback(@Req() req: Request, @Res() res: Response): void {
     if (req.user.registered) {
       return res.redirect(`${this.HOST}/mypage/marketer/main`);
@@ -94,7 +94,7 @@ export class LoginController {
   }
 
   @UseGuards(KakaoAuthGuard)
-  @Get('kakao/calback')
+  @Get('kakao/callback')
   kakaoLoginCallback(@Req() req: Request, @Res() res: Response): void {
     if (req.user.registered) {
       return res.redirect(`${this.HOST}/mypage/marketer/main`);
