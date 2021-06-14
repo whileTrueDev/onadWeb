@@ -1,0 +1,11 @@
+{
+    "compilerOptions": {
+        /* other options */
+        "baseUrl": "./",
+        "paths": {
+            "@onad/*": [
+                "./*/src"
+            ]
+        }
+    }
+}

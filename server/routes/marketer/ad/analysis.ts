@@ -2,13 +2,13 @@ import express from 'express';
 import responseHelper from '../../../middlewares/responseHelper';
 import doQuery from '../../../model/doQuery';
 
-
 const router = express.Router();
 
 // 마케터 대시보드의 비용에 대한 차트 데이터 제공
 // marketer/sub/campaign =>/chart
 // test 완료
-router.route('/expenditure')
+router
+  .route('/expenditure')
   .get(
     responseHelper.middleware.checkSessionExists, // session 확인이 필요한 경우.
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
@@ -25,10 +25,10 @@ router.route('/expenditure')
       ORDER BY cl.date DESC
             `;
       doQuery(query, [marketerId])
-        .then((row) => {
+        .then(row => {
           responseHelper.send(row.result, 'get', res);
         })
-        .catch((error) => {
+        .catch(error => {
           responseHelper.promiseError(error, next);
         });
     }),
@@ -37,7 +37,8 @@ router.route('/expenditure')
 
 // 마케터 대시보드의 판매에 대한 차트 데이터 제공
 // 마케터의 CPS 캠페인들의 클릭, CPS 판매
-router.route('/expenditure/cps')
+router
+  .route('/expenditure/cps')
   .get(
     responseHelper.middleware.checkSessionExists, // session 확인이 필요한 경우.
     responseHelper.middleware.withErrorCatch(async (req, res) => {
@@ -67,7 +68,7 @@ router.route('/expenditure/cps')
 
       const [{ result }, { result: result2 }] = await Promise.all([
         doQuery(clickQuery, [marketerId]),
-        doQuery(salesQuery, [marketerId])
+        doQuery(salesQuery, [marketerId]),
       ]);
 
       const dataArray: any[] = [];
@@ -91,7 +92,8 @@ router.route('/expenditure/cps')
 // 마케터 대시보드의 크리에이터 수를 체크하는 라우트
 // marketer/sub/report =>/counts
 // test 완료
-router.route('/creator-count')
+router
+  .route('/creator-count')
   .get(
     responseHelper.middleware.checkSessionExists, // session 확인이 필요한 경우.
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
@@ -104,10 +106,10 @@ router.route('/creator-count')
             ON CL.campaignId = CP.campaignId
             `;
       doQuery(query, [marketerId])
-        .then((row) => {
+        .then(row => {
           responseHelper.send({ counts: row.result[0].counts }, 'get', res);
         })
-        .catch((error) => {
+        .catch(error => {
           responseHelper.promiseError(error, next);
         });
     }),
@@ -117,7 +119,8 @@ router.route('/creator-count')
 // 마케터의 캠페인을 송출하는 크리에이터 중에서 현재 방송중임을 보여주기 위해서
 // marketer/marketer =>/broadcast/creator
 // test 완료
-router.route('/creator/list')
+router
+  .route('/creator/list')
   .get(
     responseHelper.middleware.checkSessionExists, // session 확인이 필요한 경우.
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
@@ -135,11 +138,11 @@ router.route('/creator/list')
               AND campaignTimestamp.date > ?
               AND substring_index(campaignTimestamp.campaignId, "_", 1) = ?`;
       doQuery(query, [tenMinuteAgoTime, tenMinuteAgoTime, marketerId])
-        .then((row) => {
+        .then(row => {
           const result = row.result.map((d: any) => d.streamerName);
           responseHelper.send(result, 'get', res);
         })
-        .catch((error) => {
+        .catch(error => {
           responseHelper.promiseError(error, next);
         });
     }),

@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start:mac": "PORT=3001 react-scripts start",
+    "start:mac": "PORT=3001 SKIP_PREFLIGHT_CHECK=true react-scripts start",
     "start": "set PORT=3001 && react-scripts start",
     "build": "NODE_ENV=production GENERATE_SOURCEMAP=false react-scripts build",
     "test": "react-scripts test --coverage --detectOpenHandles --forceExit --passWithNoTests",

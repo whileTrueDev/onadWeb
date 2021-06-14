@@ -8,14 +8,15 @@ const router = express.Router();
 // 마케터 광고캐시 충전 내역 리스트
 // { columns: ['날짜', '충전금액', '결제수단'], data: [ [ '19년 07월 06일', '10000', '계좌이체'], [] ] }
 interface ChargeData {
-    date: string;
-    cash: number | string;
-    type: string;
-    temporaryState: number | string;
+  date: string;
+  cash: number | string;
+  type: string;
+  temporaryState: number | string;
 }
 
 // marketer/sub/cash =>/charge/list
-router.route('/charge')
+router
+  .route('/charge')
   .get(
     responseHelper.middleware.checkSessionExists, // session 확인이 필요한 경우.
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
@@ -28,7 +29,7 @@ router.route('/charge')
             WHERE marketerId = ? 
             ORDER BY date DESC`;
       doQuery(query, [marketerId])
-        .then((row) => {
+        .then(row => {
           const sendArray: any[] = [];
           row.result.forEach((obj: ChargeData) => {
             const object = obj;
@@ -55,18 +56,18 @@ router.route('/charge')
           });
           responseHelper.send({ data: sendArray }, 'get', res);
         })
-        .catch((error) => {
+        .catch(error => {
           responseHelper.promiseError(error, next);
         });
     }),
   )
   .all(responseHelper.middleware.unusedMethod);
 
-
 // marekter/sub/cash => /refund/list
 // 마케터 광고캐시 환불 내역 리스트
 // { columns: [ '날짜', '환불금액' '환불상태' ], data: [ [ '19년 07월 06일', '0', '0', '진행중' ], [] ] }
-router.route('/refund')
+router
+  .route('/refund')
   .get(
     responseHelper.middleware.checkSessionExists, // session 확인이 필요한 경우.
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
@@ -79,7 +80,7 @@ router.route('/refund')
             WHERE marketerId = ?
             ORDER BY date DESC`;
       doQuery(query, [marketerId])
-        .then((row) => {
+        .then(row => {
           const sendArray: any[] = [];
           row.result.forEach((obj: any) => {
             const object = obj;
@@ -88,7 +89,7 @@ router.route('/refund')
           });
           responseHelper.send({ data: sendArray }, 'get', res);
         })
-        .catch((error) => {
+        .catch(error => {
           responseHelper.promiseError(error, next);
         });
     }),
@@ -99,7 +100,8 @@ router.route('/refund')
 // 마케터 광고 캐시 소진 내역
 // { columns: ['날짜', '소진금액', '세금계산서 발행 여부'], data: [ [], [] ] }]
 // 테스트 완료
-router.route('/usage/month')
+router
+  .route('/usage/month')
   .get(
     responseHelper.middleware.checkSessionExists, // session 확인이 필요한 경우.
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
@@ -129,26 +131,26 @@ router.route('/usage/month')
             `;
       Promise.all([
         doQuery(selectQuery, [marketerId, month]),
-        doQuery(selectMetaQuery, [marketerId, month])
+        doQuery(selectMetaQuery, [marketerId, month]),
       ])
         .then(([usageData, metaData]) => {
           const sendArray: any[] = usageData.result.map((obj: any) => Object.values(obj));
           const sendMetaArray: any[] = metaData.result;
           responseHelper.send({ data: sendArray, metaData: sendMetaArray }, 'get', res);
         })
-        .catch((error) => {
+        .catch(error => {
           responseHelper.promiseError(error, next);
         });
     }),
   )
   .all(responseHelper.middleware.unusedMethod);
 
-
 // marekter/sub/cash => /usage
 // 마케터 광고 캐시 소진 내역
 // { columns: ['날짜', '소진금액', '세금계산서 발행 여부'], data: [ [], [] ] }
 // 테스트 완료
-router.route('/usage')
+router
+  .route('/usage')
   .get(
     responseHelper.middleware.checkSessionExists, // session 확인이 필요한 경우.
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
@@ -163,21 +165,14 @@ router.route('/usage')
       ORDER BY cl.date DESC`;
 
       doQuery(query, [marketerId])
-        .then((row) => {
+        .then(row => {
           const sendArray: any[] = [];
           row.result.forEach((obj: any) => {
-            const object = obj;
-            switch (object.state) {
-              case 0: { object.state = '발행대기'; break; }
-              case 1: { object.state = '발행완료'; break; }
-              case 2: { object.state = '미발행'; break; }
-              default: break;
-            }
             sendArray.push(Object.values(obj));
           });
           responseHelper.send({ data: sendArray }, 'get', res);
         })
-        .catch((error) => {
+        .catch(error => {
           responseHelper.promiseError(error, next);
         });
     }),

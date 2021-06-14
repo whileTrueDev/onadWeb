@@ -2,7 +2,6 @@ import path from 'path';
 import cors from 'cors';
 import helmet from 'helmet';
 import express from 'express';
-import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import createError from 'http-errors';
 import session from 'express-session';
@@ -30,9 +29,6 @@ import manualRouter from './routes/manual';
 // Middleware or custom modules
 import taxBillScheduler from './middlewares/scheduler/taxBillScheduler';
 import dailyLimitScheduler from './middlewares/scheduler/dailyLimitScheduler';
-
-// import S3 from './lib/AWS/S3';
-import Controller from './controller';
 
 const MySQLStore = require('express-mysql-session')(session);
 
@@ -66,8 +62,8 @@ class OnadWebApi {
   private initializeAppSettings(): void {
     this.app.use(helmet());
     this.app.use(express.static(path.join(__dirname, 'public'))); // 정적리소스 처리
-    this.app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
-    this.app.use(bodyParser.json({ limit: '50mb' })); // body parser 설정
+    this.app.use(express.urlencoded({ limit: '50mb', extended: true }));
+    this.app.use(express.json({ limit: '50mb' })); // body parser 설정
     this.app.use(cookieParser('@#@$MYSIGN#@$#$')); // cookie parser 설정
     this.app.use(morgan(process.env.NODE_ENV === 'development' ? 'dev' : 'common'));
 
@@ -121,11 +117,6 @@ class OnadWebApi {
     // Router 추가
     this.app.use('/alimtalk', alimtalkRouter);
     this.app.use('/inquiry', inquiryRouter);
-
-    // *********************************
-    // 각 로그인 플랫폼 callbackURL 변경 이후 
-    // /auth로 변경
-    // *********************************
     this.app.use('/login', loginRouter);
     this.app.use('/link', linkRouter);
     this.app.use('/logout', logoutRouter);
@@ -182,12 +173,6 @@ class OnadWebApi {
           message: err.message || serverErrorMessage
         });
       }
-    });
-  }
-
-  private initializeControllers(controllers: Controller[]): void {
-    controllers.forEach((controller) => {
-      this.app.use('/', controller.router);
     });
   }
 }
