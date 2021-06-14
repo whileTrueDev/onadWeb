@@ -16,17 +16,14 @@
     "express-generator": "^4.16.0",
     "typescript": "^3.7.5"
   },
-  "prettier": {
-    "singleQuote": true,
-    "semi": true,
-    "useTabs": false,
-    "tabWidth": 2,
-    "trailingComma": "all",
-    "printWidth": 80
+  "dependencies": {
+    "eslint": "^7.24.0",
+    "passport-kakao": "^1.0.1",
+    "passport-naver": "^1.0.6",
+    "prettier": "^2.2.1"
   },
   "scripts": {
     "service": "cd service && node bin/www",
     "client": "cd client && yarn start"
-  },
-  "dependencies": {}
+  }
 }

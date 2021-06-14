@@ -4,7 +4,8 @@ import responseHelper from '../../../middlewares/responseHelper';
 
 const router = express.Router();
 
-router.route('/')
+router
+  .route('/')
   .get(
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
       const dataString = 'DATE_SUB(NOW(), INTERVAL 60 MONTH)';
@@ -19,15 +20,15 @@ router.route('/')
                         WHERE type="CPM" AND cL.date > ${dataString}
                     `;
       doQuery(query)
-        .then((row) => {
+        .then(row => {
           if (!row.error && row.result) {
             responseHelper.send(row.result, 'get', res);
           }
         })
-        .catch((errorData) => {
+        .catch(errorData => {
           throw new Error(`Error in /banners/impression - ${errorData}`);
         });
-    })
+    }),
   )
   .all(responseHelper.middleware.unusedMethod);
 

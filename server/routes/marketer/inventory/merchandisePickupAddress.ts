@@ -11,14 +11,15 @@ const findAddressByMarketer = async (marketerId: string) => {
   FROM merchandisePickupAddresses AS MPA
    WHERE MPA.id IN (
    SELECT pickupId FROM merchandiseRegistered WHERE marketerId = ?)
-  ORDER BY MPA.createDate LIMIT 22
+  ORDER BY MPA.createDate LIMIT 2
   `;
   const queryArray = [marketerId];
   const { result } = await doQuery(query, queryArray);
   return result;
 };
 
-router.route('/')
+router
+  .route('/')
   .get(
     responseHelper.middleware.checkSessionExists,
     responseHelper.middleware.withErrorCatch(async (req, res) => {
@@ -27,7 +28,7 @@ router.route('/')
       const result = await findAddressByMarketer(marketerId);
 
       return responseHelper.send(result, 'get', res);
-    })
+    }),
   )
   .all(responseHelper.middleware.unusedMethod);
 

@@ -1,0 +1,37 @@
+interface CreatorsDetailBase {
+  creatorLogo: string;
+  creatorName: string;
+  afreecaName: string;
+  afreecaLogo: string;
+  creatorId: string | number;
+  creatorIdAfreeca: string | number;
+  followers: string | number;
+  followersAfreeca: string | number;
+  viewer: string | number;
+  viewerAfreeca: string | number;
+  peakview: string | number;
+  peakviewAfreeca: string | number;
+  airtime: string | number;
+  airtimeAfreeca: string | number;
+  impression: string | number;
+  impressionAfreeca: string | number;
+  ctr: string | number;
+  ctrAfreeca: string | number;
+  cost: string | number;
+  costAfreeca: string | number;
+  rip: string | number;
+  ripAfreeca: string | number;
+  content: string | number;
+  contentAfreeca: string | number;
+  openHour: string | number;
+  openHourAfreeca: string | number;
+  timeGraphData: string | number;
+  timeGraphDataAfreeca: string | number;
+  contentsGraphData: string | number;
+  contentsGraphDataAfreeca: string | number;
+  date: string | number;
+  dateAfreeca: string | number;
+  viewerHeatmapData: string | number;
+  viewerHeatmapDataAfreeca: string | number;
+}
+export type CreatorsDetail = Partial<CreatorsDetailBase>;
