@@ -27,7 +27,10 @@ export class LoginController {
       const session = req.user;
       if (session.userType === 'marketer') {
         const marketer = await this.marketerService.findOne(session.marketerId);
-        if (marketer.temporaryLogin === 1) return { error: false, state: 1 };
+        if (!marketer) return { error: true };
+        if (marketer.temporaryLogin && marketer.temporaryLogin === 1) {
+          return { error: false, state: 1 };
+        }
         return { error: false, state: 0, userType: 'marketer' };
       }
       if (session.userType === 'creator') {
