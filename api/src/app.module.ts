@@ -17,7 +17,7 @@ import { MailModule } from './resources/mail/mail.module';
 import { ManualModule } from './resources/manual/manual.module';
 import { NoticeModule } from './resources/notice/notice.module';
 import { AlimtalkModule } from './resources/alimtalk/alimtalk.module';
-import ormconfig from '../ormconfig';
+import ormconfig from './setting/ormconfig';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
