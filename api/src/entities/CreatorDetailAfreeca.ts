@@ -29,7 +29,7 @@ export class CreatorDetailAfreeca {
   @Column('float', { name: 'rip', nullable: true, precision: 12 })
   rip: number | null;
 
-  @Column('varchar', { name: 'content', nullable: true, length: 50 })
+  @Column('varchar', { name: 'content', nullable: true, length: 255 })
   content: string | null;
 
   @Column('varchar', { name: 'openHour', nullable: true, length: 50 })

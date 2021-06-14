@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { getConnection, Repository } from 'typeorm';
 import { CreatorDetail } from '../../../entities/CreatorDetail';
+import { TwitchGame } from '../../../entities/TwitchGame';
 import { CreatorsDetail } from './interfaces/creatorsDetail.interface';
 import { CreatorsGames } from './interfaces/creatorsGames.interface';
 
@@ -45,15 +46,14 @@ export class CreatorsAnalysisService {
     return result;
   }
 
-  public async findGames(): Promise<CreatorsGames> {
-    const query = `
-      SELECT
-        count(content) AS count, content, gameId, gameName, gameNameKr, boxArt
-      FROM creatorDetail
-      JOIN twitchGame ON content = gameName
-      WHERE content IS NOT NULL
-      GROUP BY content ORDER BY count(content) DESC
-      `;
-    return this.creatorDetailRepo.query(query);
+  public async findGames(): Promise<CreatorsGames[]> {
+    return this.creatorDetailRepo
+      .createQueryBuilder()
+      .select('count(content) AS count, content, gameId, gameName, gameNameKr, boxArt')
+      .innerJoin(TwitchGame, 'twitchGame', 'content = gameNameKr OR content = gameName')
+      .where('content IS NOT NULL')
+      .groupBy('content')
+      .orderBy('count(content)', 'DESC')
+      .getRawMany();
   }
 }

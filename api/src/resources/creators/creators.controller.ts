@@ -38,7 +38,7 @@ export class CreatorsController {
   }
 
   @Get('analysis/games')
-  games(): Promise<CreatorsGames> {
+  games(): Promise<CreatorsGames[]> {
     return this.creatorsAnalysisService.findGames();
   }
 }

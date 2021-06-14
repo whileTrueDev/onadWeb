@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { getConnection, Repository } from 'typeorm';
+import { CreatorDetail } from '../../entities/CreatorDetail';
 import { CreatorInfo } from '../../entities/CreatorInfo';
 import { CreatorsBroadcastRes } from './interfaces/creatorsBroadcastRes.interface';
 import { CreatorsLiveRes } from './interfaces/creatorsLiveRes.interface';
@@ -13,19 +14,20 @@ export class CreatorsService {
   ) {}
 
   public async findCreatorsAnalyzed(): Promise<CreatorsRes> {
-    const searchQuery = `
-      SELECT cI.creatorId, cI.creatorName, cI.creatorLogo, cI.creatorTwitchId, A.followers, A.content, A.openHour
-      FROM creatorInfo as cI
-
-      RIGHT JOIN (SELECT creatorId, followers, content, openHour FROM creatorDetail) as A
-      
-      ON cI.creatorId = A.creatorId
-      WHERE creatorContractionAgreement = 1 AND creatorTwitchOriginalId IS NOT NULL
-      ORDER BY cI.creatorId DESC
-      `;
-    const conn = getConnection();
-    const result = await conn.query(searchQuery);
-    return result;
+    return this.creatorInfoRepo
+      .createQueryBuilder('cI')
+      .select(
+        'cI.creatorId, cI.creatorName, cI.creatorLogo, cI.creatorTwitchId, A.followers, A.content, A.openHour',
+      )
+      .innerJoin(
+        qb =>
+          qb.select('creatorId, followers, content, openHour').from(CreatorDetail, 'creatorDetail'),
+        'A',
+        'cI.creatorId = A.creatorId',
+      )
+      .where('creatorContractionAgreement = 1 AND creatorTwitchOriginalId IS NOT NULL')
+      .orderBy('cI.creatorId', 'DESC')
+      .getRawMany();
   }
 
   public async findNowOnBroadCreators(): Promise<CreatorsLiveRes> {
