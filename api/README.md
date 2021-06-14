@@ -69,3 +69,53 @@ $ yarn test:e2e
 $ yarn test:cov
 ```
 
+## DB 변경사항의 적용
+
+21.06.14 hwasurr(dan)
+
+1. 온애드는 typeorm으로 데이터베이스를 다룹니다.
+2. 온애드는 typeorm의 syncronize 기능을 기본적으로 사용하지 않습니다. 따라서 엔터티 파일을 변경하였을 때 그 변경사항이 곧바로 DB에 적용되지 않습니다.
+3. 온애드에서의 DB변경사항의 적용은 migration 기능을 활용하여 진행합니다.
+4. 온에드에서는 typeormCLI의 migration:generate 기능을 사용하지 않습니다.
+
+### DB 변경사항의 적용 방법
+
+1. `migration:create` 스크립트를 이용해 기본적 마이그레이션 파일을 작성합니다.
+
+    ```bash
+    $ yarn migration:create <마이그레이션이름>
+    ```
+
+2. `src/migrations` 에 생성된 `<Timestamp>-<마이그레이션이름>.ts` 파일을 확인할 수 있습니다.
+
+    ```ts
+    import { MigrationInterface, QueryRunner } from 'typeorm';
+
+    export class CreatorDetailContentMigration1623634408645 implements MigrationInterface {
+        // "up" has to contain the code you need to perform the migration
+        public async up(queryRunner: QueryRunner): Promise<void> {
+            await queryRunner.query(`ALTER TABLE creatorDetail MODIFY content varchar(255)`);
+        }
+
+        // "down" has to revert whatever up changed. down method is used to revert the last migration.
+        public async down(queryRunner: QueryRunner): Promise<void> {
+            await queryRunner.query(`ALTER TABLE creatorDetail MODIFY content varchar(50)`);
+        }
+    }
+    ```
+
+3. up메서드에는 변경할 사항에 대한 sql을, down 메서드에는 변경사항을 원래로 되돌리는 사항에 대한 sql을 작성합니다. (내부 변경사항에 대한 sql은 개발자가 직접 작성합니다.)
+4. `migration:run` 스크립트를 통해 마이그레이션을 실행합니다.
+
+    ```bash
+    $ yarn migration:run
+    ```
+
+5. 올바르게 작성했다면, 변경사항이 DB에 적용되고, `onadMigrations` 테이블에 실행된 마이그레이션 클래스명(이 예제에서는 `CreatorDetailContentMigration1623634408645`) 이 생성되어 있는것을 확인합니다. 여기 `onadMigrations` 테이블에 생성된 마이그레이션은 실행된것으로 간주하고, 다음 마이그레이션 작업 실행시 무시됩니다.
+6. 방금 적용한 마이그레이션을 되돌리고 싶다면 `migration:revert` 스크립트를 이용할 수 있습니다. `migration:revert` 스크립트는 가장 최근 실행된 마이그레이션의 `down` 메서드 내에 있는 내용을 실행합니다.
+
+    ```bash
+    $ yarn migration:revert
+    ```
+
+7. 배포 담당자는 production 에 새로운 버전이 배포되기 전에, 새로운 migration을 실행해야합니다.
