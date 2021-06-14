@@ -43,13 +43,13 @@ jobs:
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
           task-definition: live-commerce/task-definition.json
-          container-name: onad-banner-broad
+          container-name: LiveCommerce
           image: ${{ secrets.DOCKER_USERNAME }}/onad_live-commerce:${{ github.sha }}
 
       - name: Deploy Amazon ECS task definition
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
           task-definition: ${{ steps.task-def.outputs.task-definition }}
-          service: ${{ secrets.ECS_SERVICE_NAME_live-commerce_SERVER }}
+          service: ${{ secrets.ECS_SERVICE_NAME_LIVE_COMMERCE_SERVER }}
           cluster: ${{ secrets.ECS_CLUSTER_NAME }}
           wait-for-service-stability: true
