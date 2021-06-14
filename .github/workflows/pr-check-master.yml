@@ -37,17 +37,17 @@ jobs:
         if: steps.yarn-cache.outputs.cache-hit != 'true'
         run: yarn install
 
-      - name: <client-ts> test/build-test/
+      - name: <client-ts> test
         working-directory: ./client-ts
         run: yarn test --watchAll=false
 
-      - name: <server> install dependencies
-        working-directory: ./server
+      - name: <api> install dependencies
+        working-directory: ./api
         if: steps.yarn-cache.outputs.cache-hit != 'true'
         run: yarn install
 
-      - name: <server> test/build-test/
-        working-directory: ./server
+      - name: <api> test
+        working-directory: ./api
         run: yarn test --watchAll=false
 
       - name: <calculator> install dependencies
@@ -93,15 +93,15 @@ jobs:
         if: steps.yarn-cache.outputs.cache-hit != 'true'
         run: yarn install
 
-      - name: <client-ts> test/build-test/
+      - name: <client-ts> build-test
         working-directory: ./client-ts
         run: yarn build
 
-      - name: <server> install dependencies
-        working-directory: ./server
+      - name: <api> install dependencies
+        working-directory: ./api
         if: steps.yarn-cache.outputs.cache-hit != 'true'
         run: yarn install
 
-      - name: <server> test/build-test/
-        working-directory: ./server
+      - name: <api> build-test
+        working-directory: ./api
         run: yarn build
