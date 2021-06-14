@@ -49,7 +49,7 @@ $ yarn install
 $ yarn start
 
 # watch mode
-$ yarn start:dev
+$ yarn dev
 $ yarn start:dev
 
 # production mode
@@ -71,7 +71,7 @@ $ yarn test:cov
 
 ## DB 변경사항의 적용
 
-21.06.14 hwasurr(dan)
+by hwasurr(dan) at 21.06.14
 
 1. 온애드는 typeorm으로 데이터베이스를 다룹니다.
 2. 온애드는 typeorm의 syncronize 기능을 기본적으로 사용하지 않습니다. 따라서 엔터티 파일을 변경하였을 때 그 변경사항이 곧바로 DB에 적용되지 않습니다.
