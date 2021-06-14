@@ -267,7 +267,10 @@ export class CreatorService {
     } = await this.twitchApiService.getAccessToken(previousRefreshToken);
 
     // refresh token으로 user profile 요청
-    const userProfile = await this.twitchApiService.getUserProfile(accessToken, user.creatorId);
+    const userProfile = await this.twitchApiService.getUserProfile(
+      accessToken,
+      user.creatorTwitchOriginalId,
+    );
 
     // 변경사항이 있는제 치크하여 유저 정보 업데이트
     const affectedRows = await this.updateTwitchInfoFromTwitchProfile(
