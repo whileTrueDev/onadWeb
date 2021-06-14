@@ -1,4 +1,7 @@
-const database = {
+import { ConnectionOptions } from 'typeorm';
+import { DbSecret } from '../interfaces/Secrets.interface';
+
+const database: DbSecret = {
   host: process.env.DB_HOST,
   port: Number(process.env.DB_PORT),
   engine: 'mariadb',
@@ -7,7 +10,7 @@ const database = {
   dbname: process.env.DB_DATABASE,
 };
 
-const ormconfig = {
+const ormconfig: ConnectionOptions = {
   type: 'mariadb',
   host: database.host,
   port: database.port,
@@ -24,4 +27,4 @@ const ormconfig = {
   logging: process.env.NODE_ENV === 'production' ? ['migration', 'error'] : 'all',
 };
 
-module.exports = ormconfig;
+export default ormconfig;
