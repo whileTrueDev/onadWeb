@@ -117,5 +117,5 @@ by hwasurr(dan) at 21.06.14
     ```bash
     $ yarn migration:revert
     ```
-
-7. 배포 담당자는 production 에 새로운 버전이 배포되기 전에, 새로운 migration을 실행해야합니다.
+7. 모든 migration 과정이 끝났다면, migration을 통해 변경된 사항을 src/entities 에 동일하게 적용해주어야 합니다. entities의 변경은 DB에 영향을 주지 않으나, entities와 DB의 스키마,테이블등이 동일하게 동기화 되어있을 때, 올바르게 코딩이 가능합니다.
+8. 또한, 배포 담당자는 새로운 DB변경사항이 있는 경우, production 에 새로운 버전이 배포되기 전에 언제나 새로운 migration을 적용해야합니다.
