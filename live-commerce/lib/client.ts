@@ -118,9 +118,9 @@ socket.on('get top-left ranking', (data: PurchaseMessage) => {
     rankingArray.splice(4);
   }
   rankingArray.map((puschaseInfo, index: number) => (
-    $(`.inner-text-area-id#rank-${index}`).text !== Object.values(puschaseInfo)[0] ? $(`.inner-text-area#rank-${index}`).html(`
+    $(`.ranking-text-area-id#rank-${index}`).text !== Object.values(puschaseInfo)[0] ? $(`.ranking-text-area#rank-${index}`).html(`
     <img src="/public/images/${ICON_ARRAY[index]}.png" id="ranking-icon"/>
-    <span class="inner-text-area-id" id=${index}>${Object.values(puschaseInfo)[0]}</span>님 ${Object.values(puschaseInfo)[1]}개 구매`)
+    <span class="ranking-text-area-id" id=${index}>${Object.values(puschaseInfo)[0]}</span>님 ${Object.values(puschaseInfo)[1]}개 구매`)
       : null
   ));
 });
@@ -132,12 +132,12 @@ socket.on('get right-top purchase message', (data: PurchaseMessage) => {
   const { productName } = data;
   const { text } = data;
   const num = data.purchaseNum;
+  // <img src="/public/images/${alarmType === '2' ? 'mars-2.gif' : 'mars-1.gif'}" id="donation-image"/>
   messageHtml = `
   <iframe src="/public/audio/${alarmType === '2' ? 'alarm-type-2.mp3' : 'alarm-type-1.wav'}" id="iframeAudio" allow="autoplay" style="display:none"></iframe>
   <div class="item">
     <div class="centered">
-
-      <img src="/public/images/${alarmType === '2' ? 'mars-2.gif' : 'mars-1.gif'}" id="donation-image"/>
+      <video src="/public/videos/thanos.mp4" id="donation-image" autoplay muted/>
       <div class ="animated heartbeat" id="donation-top">
         <span id="nickname">
           <span class="animated heartbeat" id="donation-user-id">${userId}</span>
@@ -203,18 +203,18 @@ socket.on('clear bottom area to client', () => {
 
 // 랭킹 비우기
 socket.on('clear ranking area', () => {
-  $('.inner-text-area-wrapper').html(
+  $('.ranking-area-inner').html(
     `
-    <p class="inner-text-area" id="rank-0">
-      <span class="inner-text-area-id">
+    <p class="ranking-text-area" id="rank-0">
+      <span class="ranking-text-area-id">
       </span>
     </p>
-    <p class="inner-text-area" id="rank-1">
-      <span class="inner-text-area-id">
+    <p class="ranking-text-area" id="rank-1">
+      <span class="ranking-text-area-id">
       </span>
     </p>
-    <p class="inner-text-area" id="rank-2">
-      <span class="inner-text-area-id">
+    <p class="ranking-text-area" id="rank-2">
+      <span class="ranking-text-area-id">
       </span>
     </p>
   `
@@ -233,6 +233,20 @@ socket.on('show screen', () => {
 
 socket.on('clear screen', () => {
   $(document.body).fadeOut(1000);
+});
+
+socket.on('show virtual ad to client', async () => {
+  $('.virtual-ad').html(
+    `
+    <img 
+      src="/public/images/virtual-ad.gif"
+      style="width:600px;height:300px;bottom:50px;right:50px;position:fixed;"
+    />
+    `
+  ).show();
+  await setTimeout(() => {
+    $('.virtual-ad').empty();
+  }, 10000);
 });
 
 

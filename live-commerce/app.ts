@@ -124,6 +124,10 @@ io.on('connection', (socket: Socket) => {
   socket.on('quit live commerce', (clientId: string) => {
     io.to(clientId).emit('clear screen');
   });
+
+  socket.on('show virtual ad', (clientId: string) => {
+    io.to(clientId).emit('show virtual ad to client');
+  });
 });
 
 
