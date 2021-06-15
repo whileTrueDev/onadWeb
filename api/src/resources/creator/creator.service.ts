@@ -172,18 +172,22 @@ export class CreatorService {
   public async findCreatorLandingUrl(
     creatorId: string,
     type: 'twitch' | 'afreeca',
-  ): Promise<string> {
+  ): Promise<string | null> {
     if (type === 'afreeca') {
       const creator = await this.creatorInfoRepo.findOne({
         where: { creatorId, afreecaId: Not(IsNull()) },
         select: ['afreecaId'],
       });
+      // afreecaId가 없는 경우 creator가 undefined로 온다.
+      if (!creator) return null;
       return this.CREATOR_LANDING_URL_AFREECA_PREFIX + creator.afreecaId;
     }
     const creator = await this.creatorInfoRepo.findOne({
       where: { creatorId, creatorTwitchId: Not(IsNull()) },
       select: ['creatorTwitchId'],
     });
+    // creatorTwitchId가 없는 경우 creator가 undefined로 온다.
+    if (!creator) return null;
     return this.CREATOR_LANDING_URL_TWITCH_PREFIX + creator.creatorTwitchId;
   }
 

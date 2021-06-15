@@ -18,16 +18,17 @@ const checkEncryption = (passwd: string, key: string, salt: string): boolean => 
 
 const makeDecipherText = (account: string): string => {
   //  base64로 되어있는 string을 buffer화 한다.
-  if (account === '') {
-    return '';
-  }
+  if (!account) return '';
 
   const accountBuffer = Buffer.from(account, 'base64');
   if (!process.env.CIPHER_KEY) {
     throw Error('CIPHER_KEY is not defined in envfile');
   }
   const secret = process.env.CIPHER_KEY;
-  const cryptkey = crypto.createHash('sha256').update(secret).digest();
+  const cryptkey = crypto
+    .createHash('sha256')
+    .update(secret)
+    .digest();
   const iv = Buffer.alloc(16, process.env.CIPHER_IV, 'base64');
 
   const decipher = crypto.createDecipheriv('aes-256-cbc', cryptkey, iv);
@@ -36,15 +37,16 @@ const makeDecipherText = (account: string): string => {
 };
 
 const makeCipherText = (account: string): string => {
-  if (account === '') {
-    return '';
-  }
+  if (!account) return '';
   if (!process.env.CIPHER_KEY) {
     throw Error('CIPHER_KEY is not defined in envfile');
   }
   const secret = process.env.CIPHER_KEY;
   const iv = Buffer.alloc(16, process.env.CIPHER_IV, 'base64');
-  const cryptkey = crypto.createHash('sha256').update(secret).digest();
+  const cryptkey = crypto
+    .createHash('sha256')
+    .update(secret)
+    .digest();
   const encipher = crypto.createCipheriv('aes-256-cbc', cryptkey, iv);
   const buffer = Buffer.concat([encipher.update(account), encipher.final()]);
 

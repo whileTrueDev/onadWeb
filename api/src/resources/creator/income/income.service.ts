@@ -1,4 +1,4 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Connection, Repository } from 'typeorm';
 import { CreatorIncome } from '../../../entities/CreatorIncome';
@@ -35,6 +35,7 @@ export class IncomeService {
       .orderBy('date', 'DESC')
       .getRawOne();
 
+    if (!data) return null;
     const deciphed = encrypto.decipher(data.creatorAccountNumber);
     data.creatorAccountNumber = deciphed;
     return data;
