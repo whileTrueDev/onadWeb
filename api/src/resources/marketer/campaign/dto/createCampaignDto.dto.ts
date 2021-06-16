@@ -1,4 +1,12 @@
-import { IsArray, IsDateString, IsIn, IsNumberString, IsOptional, IsString } from 'class-validator';
+import {
+  IsArray,
+  IsDateString,
+  IsIn,
+  IsNotEmpty,
+  IsNumberString,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 
 export class CreateCampaignDto {
   @IsString()
@@ -23,9 +31,11 @@ export class CreateCampaignDto {
   @IsArray()
   keyword: string[];
 
-  @IsNumberString()
+  @IsOptional()
+  @IsNotEmpty()
   dailyLimit: number;
 
+  @IsOptional()
   @IsDateString()
   startDate: string;
 

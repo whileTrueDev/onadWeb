@@ -1,4 +1,4 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { getConnection, In, QueryRunner, Repository } from 'typeorm';
 import { PaginationDto } from '../../../dto/paginationDto.dto';
@@ -6,15 +6,15 @@ import { AfreecaCategory } from '../../../entities/AfreecaCategory';
 import { Campaign } from '../../../entities/Campaign';
 import { CategoryCampaign } from '../../../entities/CategoryCampaign';
 import { TwitchGame } from '../../../entities/TwitchGame';
+import { CampaignRepository } from '../../../repositories/Campaign.repository';
+import { CategoryCampaignRepository } from '../../../repositories/CategoryCampaign.repository';
+import { CreatorCampaignRepository } from '../../../repositories/CreatorCampaign.repository';
+import { transactionQuery } from '../../../utils/transactionQuery';
 import { ChangeCampaignOnOffStateDto } from './dto/changeCampaignOnOffStateDto.dto';
 import { CreateCampaignDto } from './dto/createCampaignDto.dto';
 import { CampaignPriorityType } from './interfaces/campaignPriorityType.enum';
 import { FindActiveCampaignCountsRes } from './interfaces/findActiveCampaignCountsRes.interface';
 import { FindCampaignRes } from './interfaces/findCampaignRes.interface';
-import { CampaignRepository } from '../../../repositories/Campaign.repository';
-import { CategoryCampaignRepository } from '../../../repositories/CategoryCampaign.repository';
-import { CreatorCampaignRepository } from '../../../repositories/CreatorCampaign.repository';
-import { transactionQuery } from '../../../utils/transactionQuery';
 
 @Injectable()
 export class CampaignService {
