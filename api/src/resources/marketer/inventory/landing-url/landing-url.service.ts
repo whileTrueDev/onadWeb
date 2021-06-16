@@ -17,10 +17,13 @@ export class LandingUrlService {
 
   // * landingUrl 생성
   async createLandingUrl(marketerId: string, dto: CreateLandingUrlDto): Promise<LinkRegistered> {
-    const lastLandingUrl = await this.landingUrlRepo.findOne({ where: { marketerId } });
+    const lastLandingUrl = await this.landingUrlRepo.findOne({
+      where: { marketerId },
+      order: { regiDate: 'DESC' },
+    });
 
     const linkId = this.getNewLandingUrlId(marketerId, lastLandingUrl);
-    return this.landingUrlRepo.create({
+    return this.landingUrlRepo.save({
       linkId,
       marketerId,
       confirmState: this.DEFAULT_CONFIRM_STATE,
