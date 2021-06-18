@@ -25,14 +25,15 @@ setInterval(() => {
 // 우측상단 응원문구 이벤트
 setInterval(async () => {
   if (messageArray.length !== 0 && $('.top-right').css('display') === 'none') {
-    $('.top-right').css({ display: 'flex' }).fadeIn(1000, () => {
+    $('.top-right').css({ display: 'flex' }).fadeIn(async() => {
       $('.top-right').html(messageArray[0])
-    });
-
-    messageArray.splice(0, 1);
-    await setTimeout(() => {
-      $('.top-right').fadeOut(800)
-    }, 10000);
+      messageArray.splice(0, 1);
+      await setTimeout(() => {
+        $('.top-right').fadeOut(800)
+        $('.donation-image').attr('src','/public/images/invisible.png');
+      }, 10000);  
+    })
+    
   }
 }, 2000);
 
@@ -141,7 +142,7 @@ socket.on('get right-top purchase message', (data: PurchaseMessage) => {
     <iframe src="/public/audio/${alarmType === '2' ? 'alarm-type-2.mp3' : 'alarm-type-1.wav'}" id="iframeAudio" allow="autoplay" style="display:none"></iframe>
     <div class="item">
       <div class="centered">
-        <video src="/public/videos/${alarmType === '2' ? 'thanos.mp4' : 'thanos.mp4'}" class="donation-image" autoplay muted loop/>
+      <img src="/public/images/${alarmType === '2' ? 'donation-2.gif' : 'donation-1.gif'}" class="donation-image"/>
         <div class ="animated heartbeat" id="donation-top">
           <span id="nickname">
             <span class="animated heartbeat" id="donation-user-id">${userId}</span>
