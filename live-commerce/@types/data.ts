@@ -1,39 +1,38 @@
 export interface UserInfo {
-  socketId:string; 
-  device:string;
+  socketId: string;
+  device: string;
 }
 
 export interface SocketInfo {
-  [key:string]: any[]
+  [key: string]: any[];
 }
 
-export interface TextData{
-  clientId: string;
-  text: string
+export interface TextData {
+  roomName: string;
+  text: string;
 }
 
-export interface PurchaseMessage{
-  clientId: string;
+export interface PurchaseMessage {
+  roomName: string;
   text: string;
   icon: string;
-  userId:string;
-  productName:string;
-  purchaseNum:string;
+  userId: string;
+  productName: string;
+  purchaseNum: string;
 }
 
-export interface ImageData{
+export interface ImageData {
   which: string;
-  clientId: string;
+  roomName: string;
   imgUrl: string;
 }
 
-
-export interface Data{
-  which:string;
-  imgUrl:string
+export interface Data {
+  which: string;
+  imgUrl: string;
 }
 
-export interface SinglePurchase{
-  name:string;
-  purchaseNumber:number;
+export interface SinglePurchase {
+  name: string;
+  purchaseNumber: number;
 }
