@@ -47,7 +47,6 @@ io.on('connection', (socket: Socket) => {
 
   socket.on('disconnect', () => { // 접속종료시
     const SOCKET_ID: string = socket.id;
-    console.log(socketInfo) 
     if (Object.values(socketInfo)) {
       const itemToFind = Object.values(socketInfo)[0]?.find((item) => item.socketId === SOCKET_ID);
       const idx = Object.values(socketInfo)[0]?.indexOf(itemToFind);
