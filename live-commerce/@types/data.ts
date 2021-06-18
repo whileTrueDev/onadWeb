@@ -8,12 +8,12 @@ export interface SocketInfo {
 }
 
 export interface TextData {
-  clientId: string;
+  roomName: string;
   text: string;
 }
 
 export interface PurchaseMessage {
-  clientId: string;
+  roomName: string;
   text: string;
   icon: string;
   userId: string;
@@ -23,7 +23,7 @@ export interface PurchaseMessage {
 
 export interface ImageData {
   which: string;
-  clientId: string;
+  roomName: string;
   imgUrl: string;
 }
 

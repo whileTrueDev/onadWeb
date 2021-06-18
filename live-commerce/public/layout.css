@@ -1,9 +1,4 @@
 @font-face {
-  font-family: 'NEXON';
-  src: url('/public/fonts/NEXON-Lv2-Gothic-Medium.ttf');
-}
-
-@font-face {
   font-family: 'KOTRA';
   src: url('/public/fonts/KOTRA_BOLD.ttf');
 }
@@ -244,7 +239,6 @@ body {
 #message {
   font-size: 40px;
   color: rgb(255, 255, 255);
-  /* margin: 6px; */
 }
 
 #donation-sub {
