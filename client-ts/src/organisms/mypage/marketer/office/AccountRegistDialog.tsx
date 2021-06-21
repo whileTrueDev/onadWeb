@@ -59,7 +59,7 @@ const AccountDialog = (props: { open: boolean; handleDialogClose: () => void }):
     setBank(newValue);
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault();
 
     const bankRealName = (document.getElementById('accountHolder') as HTMLInputElement).value;
@@ -71,7 +71,7 @@ const AccountDialog = (props: { open: boolean; handleDialogClose: () => void }):
      ******************* */
     if (!bank) return alert('은행을 선택해주세요!');
 
-    axios
+    return axios
       .put(`${HOST}/marketer/account`, {
         bankName: bank.bankName,
         bankRealName,
@@ -81,7 +81,7 @@ const AccountDialog = (props: { open: boolean; handleDialogClose: () => void }):
       .then(() => {
         alert('환불 계좌번호 저장에 성공하였습니다.');
         handleDialogClose();
-        history.push('/mypage/marketer/myoffice');
+        history.push('/mypage/marketer/myoffice/cash');
       })
       .catch(err => {
         console.log(err);

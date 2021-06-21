@@ -109,7 +109,7 @@ function CashDialog(props: CashDialogProps): JSX.Element {
       .then(res => {
         if (res.data[0]) {
           handleConfirmDialogClose();
-          history.push('/mypage/marketer/myoffice');
+          history.push('/mypage/marketer/myoffice/cash');
         } else {
           console.log('cash - charge - error!');
         }

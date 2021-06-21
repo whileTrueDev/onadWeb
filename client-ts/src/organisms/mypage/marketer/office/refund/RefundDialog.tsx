@@ -86,7 +86,7 @@ function RefundDialog(props: RefundDialogProps): JSX.Element {
       })
       .catch(err => {
         console.log(err);
-        history.push('/mypage/marketer/myoffice');
+        history.push('/mypage/marketer/myoffice/cash');
       });
   }
 
@@ -102,7 +102,7 @@ function RefundDialog(props: RefundDialogProps): JSX.Element {
         alert(
           '환불 신청 금액은 1000원 이하에서는 불가하며 환불 신청 금액이 보유 캐시보다 클 수 없습니다.',
         );
-        history.push('/mypage/marketer/myoffice');
+        history.push('/mypage/marketer/myoffice/cash');
       } else {
         setTimeout(() => {
           if (go) {
@@ -182,7 +182,7 @@ function RefundDialog(props: RefundDialogProps): JSX.Element {
 
   const finishIndex = (): void => {
     handleClose();
-    history.push('/dashboard/marketer/myoffice');
+    history.push('/dashboard/marketer/myoffice/cash');
   };
 
   return (
