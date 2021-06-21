@@ -1,8 +1,6 @@
 import React from 'react';
 import { makeStyles, Theme } from '@material-ui/core/styles';
-import {
-  Grid
-} from '@material-ui/core';
+import { Grid } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import sources from '../sources';
@@ -12,22 +10,22 @@ import { StateInterface } from '../interface';
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     width: '85%',
-    margin: '5px auto'
+    margin: '5px auto',
   },
   contentTitle: {
     fontWeight: 'bold',
     color: theme.palette.text.primary,
-    fontFamily: 'Noto Sans KR'
+    fontFamily: 'Noto Sans KR',
   },
   newContentTitle: {
     fontWeight: 'bold',
     color: theme.palette.primary.main,
-    fontFamily: 'Noto Sans KR'
+    fontFamily: 'Noto Sans KR',
   },
   warningTitle: {
     fontWeight: 'bold',
     color: 'black',
-    fontFamily: 'Noto Sans KR'
+    fontFamily: 'Noto Sans KR',
   },
   contentDetail: { marginTop: theme.spacing(1) },
   textField: {
@@ -54,16 +52,14 @@ const useStyles = makeStyles((theme: Theme) => ({
     background: theme.palette.action.disabledBackground,
     marginTop: theme.spacing(2),
     marginBottom: theme.spacing(2),
-  }
+  },
 }));
-
 
 interface RefundConfirmProps {
   state: StateInterface;
   accountNumber: string;
   accountHolder: string;
 }
-
 
 const RefundConfirm = (props: RefundConfirmProps): JSX.Element => {
   const { state, accountNumber, accountHolder } = props;
@@ -106,14 +102,17 @@ const RefundConfirm = (props: RefundConfirmProps): JSX.Element => {
         <Grid item>
           <Grid container direction="row" justify="space-between">
             <Grid item>
-              <StyledSelectText primary="환불 요청 금액" secondary="수수료 제함" className={classes.contentTitle} />
+              <StyledSelectText
+                primary="환불 요청 금액"
+                secondary="수수료 제함"
+                className={classes.contentTitle}
+              />
             </Grid>
             <Grid item className={classes.contentTitle}>
               <Typography className={classes.contentTitle} variant="h6">
                 {parseInt(selectValue, 10) < 10000
                   ? parseInt(selectValue, 10) - 1000
-                  : parseInt(selectValue, 10) * 0.9}
-                {' '}
+                  : parseInt(selectValue, 10) * 0.9}{' '}
                 원
               </Typography>
             </Grid>
@@ -130,13 +129,7 @@ const RefundConfirm = (props: RefundConfirmProps): JSX.Element => {
             <Grid item className={classes.contentTitle}>
               <Typography className={classes.newContentTitle} variant="h6">
                 &#45;
-                {selectValue}
-                {' '}
-                &rarr;
-                {' '}
-                {totalDebit}
-                {' '}
-                원
+                {selectValue} &rarr;{totalDebit} 원
               </Typography>
             </Grid>
           </Grid>

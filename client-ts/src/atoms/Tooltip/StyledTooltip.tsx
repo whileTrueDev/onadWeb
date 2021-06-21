@@ -1,6 +1,6 @@
 import { withStyles, Tooltip } from '@material-ui/core';
 
-const StyledTooltip = withStyles((theme) => ({
+const StyledTooltip = withStyles(theme => ({
   tooltip: {
     backgroundColor: theme.palette.success.main,
     maxWidth: '425px',

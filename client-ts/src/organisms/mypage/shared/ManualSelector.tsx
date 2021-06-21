@@ -13,7 +13,7 @@ import CardHeader from '../../../atoms/Card/CardHeader';
 import CardBody from '../../../atoms/Card/CardBody';
 import { ManualSelect } from './ManualTypes';
 
-const useButtonStyle = makeStyles((theme) => ({
+const useButtonStyle = makeStyles(theme => ({
   root: {
     background: theme.palette.background.paper,
     borderRadius: 3,
@@ -50,7 +50,7 @@ const ManualSelector = ({
 
       <CardBody>
         <Stepper orientation="vertical" activeStep={activeStep ? activeStep - 1 : undefined}>
-          { sources.map((source, index) => (
+          {sources.map((source, index) => (
             <Step key={shortid.generate()}>
               <StepLabel>
                 <Button
@@ -67,10 +67,8 @@ const ManualSelector = ({
               </StepLabel>
             </Step>
           ))}
-
         </Stepper>
       </CardBody>
-
     </Card>
   );
 };

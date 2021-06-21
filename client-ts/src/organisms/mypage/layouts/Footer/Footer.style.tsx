@@ -7,9 +7,9 @@ const useFooterStyle = makeStyles((theme: Theme) => ({
     [theme.breakpoints.up('md')]: {
       display: 'flex',
       justifyContent: 'space-between',
-      alignItems: 'center'
-    }
+      alignItems: 'center',
+    },
   },
-  flex: { display: 'flex', justifyContent: 'center', alignItems: 'center' }
+  flex: { display: 'flex', justifyContent: 'center', alignItems: 'center' },
 }));
 export default useFooterStyle;

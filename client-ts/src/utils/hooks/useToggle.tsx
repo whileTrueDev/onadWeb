@@ -1,7 +1,8 @@
 import React from 'react';
 
-
-export default function useToggle(defaultToggle = false): {
+export default function useToggle(
+  defaultToggle = false,
+): {
   toggle: boolean;
   handleToggle: () => void;
 } {

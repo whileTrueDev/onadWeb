@@ -10,20 +10,14 @@ function Policy(): JSX.Element {
 
   return (
     <div className={classes.root}>
-      <TabBar
-        tabValue={value}
-        handleTabChange={setValue}
-      />
+      <TabBar tabValue={value} handleTabChange={setValue} />
 
       {value === 0 ? (
         // 마케터
         <PolicyMarketer />
-      )
-        : (
-          <PolicyCreator />
-        )}
-
-
+      ) : (
+        <PolicyCreator />
+      )}
     </div>
   );
 }

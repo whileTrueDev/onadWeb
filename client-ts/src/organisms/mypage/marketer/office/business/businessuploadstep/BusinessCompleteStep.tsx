@@ -2,7 +2,7 @@ import React from 'react';
 import { Typography } from '@material-ui/core';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 
-interface StepperInterface{
+interface StepperInterface {
   handleChangeStep: (index: number) => void;
   isBusiness: boolean;
 }
@@ -10,8 +10,8 @@ interface StepperInterface{
 const useStyles = makeStyles(() => ({
   resize: {
     fontSize: 17,
-    margin: '20px'
-  }
+    margin: '20px',
+  },
 }));
 
 export default function BusinessCompleteStep(props: StepperInterface): JSX.Element {
@@ -20,7 +20,6 @@ export default function BusinessCompleteStep(props: StepperInterface): JSX.Eleme
 
   return (
     <div>
-
       {isBusiness ? (
         <Typography variant="body1" align="center" className={classes.resize}>
           사업자 등록증 업로드가 완료되었습니다.

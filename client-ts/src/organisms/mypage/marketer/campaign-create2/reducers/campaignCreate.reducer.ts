@@ -26,7 +26,7 @@ export type CampaignCreateAction = {
     | 'LOADING_START'
     | 'LOADING_DONE';
   value: any;
-}
+};
 
 export interface CampaignSelectedCreator {
   creatorId: string;
@@ -61,11 +61,11 @@ export const defaultState: CampaignCreateInterface = {
     startDate: new Date(),
     finDate: undefined,
   },
-  loading: false
+  loading: false,
 };
 export const CampaignCreateReducer = (
   state: CampaignCreateInterface,
-  action: CampaignCreateAction
+  action: CampaignCreateAction,
 ): CampaignCreateInterface => {
   const { type, value } = action;
   switch (type) {
@@ -91,7 +91,7 @@ export const CampaignCreateReducer = (
     // 광고 타겟 시간 선택 관련
     case 'SET_TIME':
       if (state.campaignTime.includes(value)) {
-        return { ...state, campaignTime: state.campaignTime.filter((x) => x !== value) };
+        return { ...state, campaignTime: state.campaignTime.filter(x => x !== value) };
       }
       return { ...state, campaignTime: [...state.campaignTime, value] };
     case 'RESET_TIME':
@@ -105,8 +105,9 @@ export const CampaignCreateReducer = (
     case 'DELETE_SELECTED_CREATORS':
       return {
         ...state,
-        selectedCreators: state.selectedCreators
-          .filter((item) => item.creatorId !== action.value.creatorId),
+        selectedCreators: state.selectedCreators.filter(
+          item => item.creatorId !== action.value.creatorId,
+        ),
       };
     case 'RESET_SELECTED_CREATORS':
       return { ...state, selectedCreators: [] };
@@ -121,10 +122,10 @@ export const CampaignCreateReducer = (
     case 'DELETE_SELECTED_GAMES':
       return {
         ...state,
-        selectedGames: state.selectedGames.filter((item) => item !== value)
+        selectedGames: state.selectedGames.filter(item => item !== value),
       };
     case 'DELETE_SELECTED_GAMES_MANY': {
-      const tmp = state.selectedGames.filter((item) => !value.includes(item));
+      const tmp = state.selectedGames.filter(item => !value.includes(item));
       return { ...state, selectedGames: tmp };
     }
     case 'RESET_SELECTED_GAMES':

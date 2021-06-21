@@ -1,7 +1,5 @@
 import React from 'react';
-import {
-  Grid, Typography
-} from '@material-ui/core';
+import { Grid, Typography } from '@material-ui/core';
 import Countup from 'react-countup';
 import classNames from 'classnames';
 import useStyles from '../style/Indicator.style';
@@ -11,7 +9,6 @@ interface IndicatorProps {
   nowBroadcast: number;
 }
 
-
 function Indicator({ nowBroadcast }: IndicatorProps): JSX.Element {
   const classes = useStyles();
 
@@ -19,9 +16,11 @@ function Indicator({ nowBroadcast }: IndicatorProps): JSX.Element {
     const indicatorLength = String(indicator).length;
     if (indicatorLength < 4) {
       return indicator;
-    } if (indicatorLength < 7) {
+    }
+    if (indicatorLength < 7) {
       return Number(String(indicator).slice(0, -3));
-    } if (indicatorLength < 10) {
+    }
+    if (indicatorLength < 10) {
       return Number(String(indicator).slice(0, -6));
     }
     return indicator;
@@ -31,9 +30,11 @@ function Indicator({ nowBroadcast }: IndicatorProps): JSX.Element {
     const indicatorLength = String(indicator).length;
     if (indicatorLength < 4) {
       return '';
-    } if (indicatorLength < 7) {
+    }
+    if (indicatorLength < 7) {
       return 'K';
-    } if (indicatorLength < 10) {
+    }
+    if (indicatorLength < 10) {
       return 'M';
     }
     return '';
@@ -41,12 +42,13 @@ function Indicator({ nowBroadcast }: IndicatorProps): JSX.Element {
 
   return (
     <div className={classes.root}>
-
       <Grid container spacing={3} justify="center" alignItems="center">
         <Grid item>
           <div className={classes.contentWrapper}>
             <div className={classNames(classes.content, classes.box1)}>
-              <Typography variant="subtitle1" align="center" className={classes.text}>{sources.indicator.text.totalFollower}</Typography>
+              <Typography variant="subtitle1" align="center" className={classes.text}>
+                {sources.indicator.text.totalFollower}
+              </Typography>
               <>
                 <Typography variant="h4" align="center" className={classes.count}>
                   <Countup duration={2} end={indicatorDecorate(790120)} />
@@ -60,7 +62,9 @@ function Indicator({ nowBroadcast }: IndicatorProps): JSX.Element {
         <Grid item>
           <div className={classes.contentWrapper}>
             <div className={classNames(classes.content, classes.box2)}>
-              <Typography variant="subtitle1" align="center" className={classes.text}>{sources.indicator.text.contractedCreator}</Typography>
+              <Typography variant="subtitle1" align="center" className={classes.text}>
+                {sources.indicator.text.contractedCreator}
+              </Typography>
               <>
                 <Typography variant="h4" align="center" display="inline" className={classes.count}>
                   <Countup duration={2} end={indicatorDecorate(1341)} />
@@ -74,7 +78,9 @@ function Indicator({ nowBroadcast }: IndicatorProps): JSX.Element {
         <Grid item>
           <div className={classes.contentWrapper}>
             <div className={classNames(classes.content, classes.box3)}>
-              <Typography variant="subtitle1" align="center" className={classes.text}>{sources.indicator.text.nowBroadcast}</Typography>
+              <Typography variant="subtitle1" align="center" className={classes.text}>
+                {sources.indicator.text.nowBroadcast}
+              </Typography>
               <Typography variant="h4" align="center" display="inline" className={classes.count}>
                 <Countup duration={2} end={indicatorDecorate(nowBroadcast)} />
               </Typography>
@@ -88,7 +94,9 @@ function Indicator({ nowBroadcast }: IndicatorProps): JSX.Element {
         <Grid item>
           <div className={classes.contentWrapper}>
             <div className={classNames(classes.content, classes.box4)}>
-              <Typography variant="subtitle1" align="center" className={classes.text}>{sources.indicator.text.totalView}</Typography>
+              <Typography variant="subtitle1" align="center" className={classes.text}>
+                {sources.indicator.text.totalView}
+              </Typography>
               <>
                 <Typography variant="h4" align="center" display="inline" className={classes.count}>
                   <Countup duration={2} end={indicatorDecorate(49334643)} />

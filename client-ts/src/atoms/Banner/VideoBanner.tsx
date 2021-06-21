@@ -1,16 +1,12 @@
 import React from 'react';
 
-interface VideoProps extends React.DetailedHTMLProps<
-  React.VideoHTMLAttributes<HTMLVideoElement>, HTMLVideoElement> {
+interface VideoProps
+  extends React.DetailedHTMLProps<React.VideoHTMLAttributes<HTMLVideoElement>, HTMLVideoElement> {
   src: string;
   onError?: () => void;
   [key: string]: any;
 }
-export default function VideoBanner({
-  onError,
-  src,
-  ...rest
-}: VideoProps): JSX.Element {
+export default function VideoBanner({ onError, src, ...rest }: VideoProps): JSX.Element {
   return (
     <video {...rest} autoPlay loop muted onError={onError}>
       <source src={src} type="video/mp4" />

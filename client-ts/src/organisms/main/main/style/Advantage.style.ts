@@ -1,19 +1,19 @@
 import { makeStyles } from '@material-ui/core/styles';
 
-const styles = makeStyles((theme) => ({
+const styles = makeStyles(theme => ({
   root: {
     width: '100%',
     height: '100vh',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(255,255,255, 0.6)'
+    backgroundColor: 'rgba(255,255,255, 0.6)',
   },
   contentWrapper: {
     width: 380,
     height: 400,
     '&:hover': {
-      cursor: 'poiner'
+      cursor: 'poiner',
     },
     position: 'relative',
     boxShadow: '0px 2px 3px 3px rgb(0 0 0 / 8%)',
@@ -53,7 +53,7 @@ const styles = makeStyles((theme) => ({
     height: '90%',
     zIndex: 200,
     visibility: 'visible',
-    padding: '5%'
+    padding: '5%',
   },
   figure: {
     display: 'flex',
@@ -83,15 +83,15 @@ const styles = makeStyles((theme) => ({
     height: 300,
     [theme.breakpoints.down('md')]: {
       width: 320,
-      height: 250
+      height: 250,
     },
     [theme.breakpoints.down('sm')]: {
       width: 280,
-      height: 210
+      height: 210,
     },
     [theme.breakpoints.down('xs')]: {
       width: 210,
-      height: 160
+      height: 160,
     },
   },
   title: {
@@ -112,8 +112,8 @@ const styles = makeStyles((theme) => ({
     },
   },
   divider: {
-    margin: theme.spacing(1.5, 0)
-  }
+    margin: theme.spacing(1.5, 0),
+  },
 }));
 
 export default styles;

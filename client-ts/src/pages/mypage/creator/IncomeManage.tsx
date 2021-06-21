@@ -16,7 +16,6 @@ import WithdrawalRequestCard from '../../../organisms/mypage/creator/IncomeManag
 import WithdrawDialog from '../../../organisms/mypage/creator/shared/WithdrawalDialog';
 import useMypageScrollToTop from '../../../utils/hooks/useMypageScrollToTop';
 
-
 export default function IncomeManage(): JSX.Element {
   // 프로필 유저 데이터
   const profileData = useGetRequest<null, ProfileDataType>('/creator');
@@ -25,7 +24,7 @@ export default function IncomeManage(): JSX.Element {
   // 출금 내역 데이터
   const withdrawalData = useGetRequest('/creator/income/withdrawal');
 
-  // 설명 anchor 
+  // 설명 anchor
   const descAnchor = useAnchorEl();
 
   // 출금 신청 다이얼로그
@@ -37,13 +36,14 @@ export default function IncomeManage(): JSX.Element {
       setOpen(true);
     }
   };
-  const handleDialogClose = (): void => { setOpen(false); };
+  const handleDialogClose = (): void => {
+    setOpen(false);
+  };
 
   useMypageScrollToTop();
   return (
     <div style={{ margin: '0 auto', maxWidth: 1430 }}>
       <GridContainer direction="row" spacing={1}>
-
         {/* 광고 수익 정보 */}
         <GridItem xs={12} lg={6}>
           <AdIncomeCard />
@@ -61,7 +61,7 @@ export default function IncomeManage(): JSX.Element {
 
         {/* 출금 신청 내역 */}
         <GridItem xs={12} lg={6}>
-          {(profileData.loading || withdrawalData.loading) && (<CenterLoading />)}
+          {(profileData.loading || withdrawalData.loading) && <CenterLoading />}
           {!(profileData.loading || withdrawalData.loading) && (
             <div>
               <WithdrawalRequestCard handleDialogOpen={handleDialogOpen} />
@@ -72,9 +72,9 @@ export default function IncomeManage(): JSX.Element {
 
         {/* 정산 등록 */}
         <GridItem xs={12} lg={6}>
-          {(profileData.loading || withdrawalData.loading) && (<CenterLoading />)}
+          {(profileData.loading || withdrawalData.loading) && <CenterLoading />}
           {!(profileData.loading || withdrawalData.loading) && profileData.data && (
-          <SettlementCard profileData={profileData.data} />
+            <SettlementCard profileData={profileData.data} />
           )}
         </GridItem>
       </GridContainer>
@@ -87,8 +87,9 @@ export default function IncomeManage(): JSX.Element {
       />
 
       {/* 출금신청 다이얼로그 */}
-      {incomeCashGet.data && Boolean(incomeCashGet.data.creatorContractionAgreement)
-        && incomeCashGet.data.creatorAccountNumber && (
+      {incomeCashGet.data &&
+        Boolean(incomeCashGet.data.creatorContractionAgreement) &&
+        incomeCashGet.data.creatorAccountNumber && (
           <WithdrawDialog
             open={open}
             handleClose={handleDialogClose}
@@ -96,7 +97,7 @@ export default function IncomeManage(): JSX.Element {
             accountNumber={incomeCashGet.data.creatorAccountNumber}
             receivable={incomeCashGet.data.creatorReceivable}
           />
-      )}
+        )}
     </div>
   );
 }

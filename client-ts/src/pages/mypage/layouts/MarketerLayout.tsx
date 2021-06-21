@@ -1,7 +1,4 @@
-
-import React, {
-  useState, useEffect, useRef,
-} from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Switch, Route } from 'react-router-dom';
 import Navbar from '../../../organisms/mypage/layouts/Navbars/Navbar';
 import ResponsiveDrawer from '../../../organisms/mypage/layouts/Sidebar/ResponsiveDrawer';
@@ -28,7 +25,6 @@ const MarketerDashboard = (): JSX.Element => {
   // main ref
   const mainPanel = useRef<HTMLDivElement>(null);
 
-
   useEffect(() => {
     document.title = '온애드 | 마이페이지';
     if (mainPanel && mainPanel.current) {
@@ -47,7 +43,7 @@ const MarketerDashboard = (): JSX.Element => {
   return (
     <div className={classes.wrapper}>
       <ResponsiveDrawer
-        routes={allRoutes.marketer.filter((r) => !r.noTab)}
+        routes={allRoutes.marketer.filter(r => !r.noTab)}
         mobileOpen={mobileOpen}
         handleDrawerToggle={handleDrawerToggle}
       />
@@ -61,24 +57,24 @@ const MarketerDashboard = (): JSX.Element => {
           <div className={classes.content}>
             <div className={classes.container}>
               <Switch>
-                {allRoutes.marketer.map((prop) => (
-                  prop.hasSubRoutes
-                    ? (
-                      prop.subRoutes && prop.subRoutes.map((subRoute) => (
-                        <Route
-                          path={prop.layout + prop.path + subRoute.path}
-                          component={subRoute.component}
-                          key={subRoute.name}
-                        />
-                      ))
-                    ) : (
+                {allRoutes.marketer.map(prop =>
+                  prop.hasSubRoutes ? (
+                    prop.subRoutes &&
+                    prop.subRoutes.map(subRoute => (
                       <Route
-                        path={prop.layout + prop.path}
-                        component={prop.component}
-                        key={prop.name}
+                        path={prop.layout + prop.path + subRoute.path}
+                        component={subRoute.component}
+                        key={subRoute.name}
                       />
-                    )
-                ))}
+                    ))
+                  ) : (
+                    <Route
+                      path={prop.layout + prop.path}
+                      component={prop.component}
+                      key={prop.name}
+                    />
+                  ),
+                )}
               </Switch>
             </div>
           </div>

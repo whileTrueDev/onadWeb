@@ -21,8 +21,9 @@ export default function useUpdateData(url, successCallback = null) {
    * @author hwasurr
    */
   function handleUpdateRequest(data) {
-    axios.post(`${host}${url}`, data)
-      .then((res) => {
+    axios
+      .post(`${host}${url}`, data)
+      .then(res => {
         setLoading(false);
         setSuccess(res.data);
         if (res.data[0]) {
@@ -35,7 +36,8 @@ export default function useUpdateData(url, successCallback = null) {
         } else {
           alert('오류가 발생했습니다.');
         }
-      }).catch((err) => {
+      })
+      .catch(err => {
         // 요청을 전달할 수 없음.
         setError(err);
         console.log(err);
@@ -43,6 +45,9 @@ export default function useUpdateData(url, successCallback = null) {
   }
 
   return {
-    success, loading, error, handleUpdateRequest,
+    success,
+    loading,
+    error,
+    handleUpdateRequest,
   };
 }

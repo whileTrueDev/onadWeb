@@ -1,8 +1,7 @@
+/* eslint-disable react/display-name */
 import React from 'react';
 import moment from 'moment';
-import {
-  Typography, Tooltip, IconButton,
-} from '@material-ui/core';
+import { Typography, Tooltip, IconButton } from '@material-ui/core';
 import Delete from '@material-ui/icons/Delete';
 import { BannerDataInterface } from '../interface';
 import { useAnchorEl, useDialog } from '../../../../../utils/hooks';
@@ -11,7 +10,9 @@ import CustomDataGrid from '../../../../../atoms/Table/CustomDataGrid';
 import { UsePaginatedGetRequestObject } from '../../../../../utils/hooks/usePaginatedGetRequest';
 import BannerInfoPopover from '../campaign/BannerInfoPopover';
 import OnadBanner from '../../../../../atoms/Banner/OnadBanner';
-import renderBannerConfirmState, { CONFIRM_STATE_REJECTED } from '../../../../../utils/render_funcs/renderBannerConfirmState';
+import renderBannerConfirmState, {
+  CONFIRM_STATE_REJECTED,
+} from '../../../../../utils/render_funcs/renderBannerConfirmState';
 
 interface BannerInventoryProps {
   pageOffset: number;
@@ -20,20 +21,21 @@ interface BannerInventoryProps {
 }
 
 export default function BannerInventory({
-  totalPageLength, pageOffset, bannerData,
+  totalPageLength,
+  pageOffset,
+  bannerData,
 }: BannerInventoryProps): JSX.Element {
   // 배너 삭제 다이얼로그
   const deleteDialog = useDialog();
   const anchor = useAnchorEl(); // 배너 자세하 보기 앵커
   // 배너 선택
   const [selectedBanner, setBanner] = React.useState<BannerDataInterface | null>(null);
-  function handleBannerSelect(banner: BannerDataInterface): void{
+  function handleBannerSelect(banner: BannerDataInterface): void {
     setBanner(banner);
   }
 
   return (
     <div>
-
       <div style={{ height: 400, width: '100%' }}>
         <CustomDataGrid
           pagination
@@ -56,9 +58,11 @@ export default function BannerInventory({
               width: 150,
               renderCell: (data): React.ReactElement => (
                 <Tooltip title={data.row.bannerId}>
-                  <Typography noWrap variant="body2">{data.row.bannerId}</Typography>
+                  <Typography noWrap variant="body2">
+                    {data.row.bannerId}
+                  </Typography>
                 </Tooltip>
-              )
+              ),
             },
             {
               headerName: '이미지',
@@ -75,33 +79,37 @@ export default function BannerInventory({
                     anchor.handleAnchorOpen(e);
                   }}
                 />
-              )
+              ),
             },
             {
               headerName: '심의 결과',
               field: 'confirmState',
               width: 130,
               renderCell: (data): React.ReactElement => (
-                <Typography variant="body2" color={data.row.confirmState === CONFIRM_STATE_REJECTED ? 'error' : 'textPrimary'}>
+                <Typography
+                  variant="body2"
+                  color={data.row.confirmState === CONFIRM_STATE_REJECTED ? 'error' : 'textPrimary'}
+                >
                   {renderBannerConfirmState(data.row.confirmState)}
                   <br />
                   {data.row.confirmState === CONFIRM_STATE_REJECTED && (
-                  // 거절됨의 경우 사유 렌더링
+                    // 거절됨의 경우 사유 렌더링
                     <Typography noWrap component="span" variant="caption" color="error">
                       {data.row.bannerDenialReason}
                     </Typography>
                   )}
                 </Typography>
               ),
-
             },
             {
               headerName: '배너 등록 일자',
               field: 'regiDate',
               width: 150,
               renderCell: (data): React.ReactElement => (
-                <Typography variant="body2">{moment(data.row.regiDate).format('YYYY/MM/DD HH:mm:ss')}</Typography>
-              )
+                <Typography variant="body2">
+                  {moment(data.row.regiDate).format('YYYY/MM/DD HH:mm:ss')}
+                </Typography>
+              ),
             },
             {
               field: '',
@@ -112,38 +120,38 @@ export default function BannerInventory({
               disableColumnMenu: true,
               disableClickEventBubbling: true,
               renderCell: (data): React.ReactElement => (
-                <IconButton onClick={(e): void => {
-                  handleBannerSelect(data.row as BannerDataInterface);
-                  deleteDialog.handleOpen();
-                }}
+                <IconButton
+                  onClick={(e): void => {
+                    handleBannerSelect(data.row as BannerDataInterface);
+                    deleteDialog.handleOpen();
+                  }}
                 >
                   <Delete fontSize="small" />
                 </IconButton>
-              )
-            }
+              ),
+            },
           ]}
         />
       </div>
 
-
       {/* banner  delete dialog */}
       {deleteDialog.open && selectedBanner && (
-      <DeleteDialog
-        open={deleteDialog.open}
-        selectedBanner={selectedBanner}
-        handleClose={deleteDialog.handleClose}
-        recallRequest={bannerData.requestWithoutConcat}
-      />
+        <DeleteDialog
+          open={deleteDialog.open}
+          selectedBanner={selectedBanner}
+          handleClose={deleteDialog.handleClose}
+          recallRequest={bannerData.requestWithoutConcat}
+        />
       )}
 
       {/* 배너 자세히 보기 popper */}
       {selectedBanner && anchor.open && anchor.anchorEl && (
-      <BannerInfoPopover
-        selectedBanner={selectedBanner}
-        open={anchor.open}
-        anchorEl={anchor.anchorEl}
-        onClose={anchor.handleAnchorClose}
-      />
+        <BannerInfoPopover
+          selectedBanner={selectedBanner}
+          open={anchor.open}
+          anchorEl={anchor.anchorEl}
+          onClose={anchor.handleAnchorClose}
+        />
       )}
     </div>
   );

@@ -1,3 +1,4 @@
+/* eslint-disable react/display-name */
 import React from 'react';
 import shortid from 'shortid';
 
@@ -14,7 +15,7 @@ import ImageDialog from './ManualImageDialog';
 import { Source } from './ManualTypes';
 import useDialog from '../../../utils/hooks/useDialog';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   root: { marginTop: theme.spacing(3) },
   image: {
     position: 'relative',
@@ -43,12 +44,12 @@ const useStyles = makeStyles((theme) => ({
   },
   guideButton: {
     padding: '5px 10px',
-    marginLeft: 10
+    marginLeft: 10,
   },
   guideLink: {
     color: 'white',
     fontFamily: 'Noto Sans kr',
-    fontSize: 16
+    fontSize: 16,
   },
 }));
 
@@ -66,57 +67,53 @@ const ManualContent = ({ source }: ManualContentProps): JSX.Element => {
 
   return (
     <Stepper orientation="vertical" className={classes.root}>
-      {source.map((value) => (
+      {source.map(value => (
         <Step active key={shortid.generate()}>
           <StepLabel>
             <Markdown
               source={value.description}
               escapeHtml={false}
-              renderers={{ code: ({ value1 }): JSX.Element => <Markdown source={value1} /> }}
+              renderers={{ code: ({ value1 }: any): JSX.Element => <Markdown source={value1} /> }}
             />
             {value && value.customButton && (
-              <CustomButton
-                color="primary"
-                size="large"
-                className={classes.guideButton}
-                load
-              >
-                <a href="/IntroService/온애드배너제작가이드.pdf" download="온애드배너제작가이드" className={classes.guideLink}>배너제작 가이드 확인하기</a>
+              <CustomButton color="primary" size="large" className={classes.guideButton} load>
+                <a
+                  href="/IntroService/온애드배너제작가이드.pdf"
+                  download="온애드배너제작가이드"
+                  className={classes.guideLink}
+                >
+                  배너제작 가이드 확인하기
+                </a>
               </CustomButton>
             )}
           </StepLabel>
           <StepContent>
             {value && value.image && (
-            <ButtonBase
-              focusRipple
-              key={shortid.generate()}
-              className={classes.image}
-              focusVisibleClassName={classes.focusVisible}
-              onClick={(): void => {
-                if (value.image) {
-                  handleImageChange(value.image);
-                  dialog.handleOpen();
-                }
-              }}
-            >
-              <div
-                className={classes.imageSrc}
-                style={{
-                  backgroundImage: `url(${value.image})`,
+              <ButtonBase
+                focusRipple
+                key={shortid.generate()}
+                className={classes.image}
+                focusVisibleClassName={classes.focusVisible}
+                onClick={(): void => {
+                  if (value.image) {
+                    handleImageChange(value.image);
+                    dialog.handleOpen();
+                  }
                 }}
-              />
-            </ButtonBase>
+              >
+                <div
+                  className={classes.imageSrc}
+                  style={{
+                    backgroundImage: `url(${value.image})`,
+                  }}
+                />
+              </ButtonBase>
             )}
           </StepContent>
         </Step>
       ))}
 
-      <ImageDialog
-        open={dialog.open}
-        handleDialogClose={dialog.handleClose}
-        imageSrc={imageSrc}
-      />
-
+      <ImageDialog open={dialog.open} handleDialogClose={dialog.handleClose} imageSrc={imageSrc} />
     </Stepper>
   );
 };

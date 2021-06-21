@@ -12,7 +12,6 @@ import renderPriorityType from '../../../../../utils/render_funcs/renderPriority
  * @return // 0: CPM, 1: CPC + CPM, 2: CPC
  */
 
-
 const useStyles = makeStyles(() => ({
   typo: { fontWeight: 600, textAlign: 'right' },
   divider: { marginBottom: 10 },
@@ -23,9 +22,8 @@ const useStyles = makeStyles(() => ({
     height: 160,
     overflow: 'hidden',
     display: 'block',
-  }
+  },
 }));
-
 
 function makeContent(selectedCampaign: CampaignInterface): { topic: string; value: string }[] {
   return [
@@ -33,7 +31,7 @@ function makeContent(selectedCampaign: CampaignInterface): { topic: string; valu
     { topic: '캠페인 상태', value: selectedCampaign.onOff ? '운용중' : '중지' },
     {
       topic: '송출 우선순위',
-      value: renderPriorityType(selectedCampaign.priorityType)
+      value: renderPriorityType(selectedCampaign.priorityType),
     },
     { topic: '캠페인 유형', value: renderOptionType(selectedCampaign.optionType) },
     { topic: '캠페인 생성 날짜', value: new Date(selectedCampaign.regiDate).toLocaleString() },
@@ -62,7 +60,7 @@ export default function CampaignInfo(props: CampaignInfoProps): JSX.Element {
           />
         </div>
       </Grid>
-      {data.map((d) => (
+      {data.map(d => (
         <Grid item xs={6} sm={3} key={d.topic}>
           <Typography variant="h5">{d.topic}</Typography>
           {d.value && <Divider className={classes.divider} />}

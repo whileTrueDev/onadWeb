@@ -35,7 +35,6 @@ function Snackbar({
         {...alertProps}
       >
         {message}
-
       </Alert>
     </Snack>
   );

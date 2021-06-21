@@ -3,7 +3,7 @@ import { Theme, makeStyles } from '@material-ui/core/styles';
 const useWithdrawalAmountStyles = makeStyles((theme: Theme) => ({
   root: {
     width: '85%',
-    margin: '5px auto'
+    margin: '5px auto',
   },
   contentTitle: { fontWeight: 'bold' },
   newContentTitle: {
@@ -39,7 +39,7 @@ const useWithdrawalAmountStyles = makeStyles((theme: Theme) => ({
     background: theme.palette.action.disabledBackground,
     marginTop: theme.spacing(2),
     marginBottom: theme.spacing(2),
-  }
+  },
 }));
 
 export default useWithdrawalAmountStyles;

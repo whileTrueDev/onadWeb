@@ -1,6 +1,6 @@
 import { makeStyles } from '@material-ui/core/styles';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   root: {
     width: '100%',
     margin: theme.spacing(5, 0),
@@ -18,52 +18,52 @@ const useStyles = makeStyles((theme) => ({
       display: 'flex',
       flexDirection: 'row',
       justifyContent: 'space-between',
-      alignItems: 'center'
+      alignItems: 'center',
     },
     [theme.breakpoints.down('xs')]: {
       borderLeft: 'none',
       display: 'flex',
       flexDirection: 'column',
       justifyContent: 'center',
-      alignItems: 'center'
-    }
+      alignItems: 'center',
+    },
   },
   lineDecoration: {
     width: 130,
     position: 'absolute',
     left: -1,
     top: -5,
-    borderBottom: '5px solid #00a7ff'
+    borderBottom: '5px solid #00a7ff',
   },
   subTitle: {
     fontFamily: 'Noto Sans kr',
     color: 'white',
     margin: theme.spacing(2, 0),
     [theme.breakpoints.down('sm')]: {
-      fontSize: 35
-    }
+      fontSize: 35,
+    },
   },
   useNumber: {
     color: '#196ee3',
     fontWeight: theme.typography.fontWeightBold,
     [theme.breakpoints.down('sm')]: {
-      fontSize: 45
-    }
+      fontSize: 45,
+    },
   },
   Content: {
     marginTop: theme.spacing(2),
-    fontSize: 15
+    fontSize: 15,
   },
   inquiryLink: {
     color: '#196ee3',
     fontFamily: 'Noto Sans kr',
     textDecoration: 'underline',
     '&:hover': {
-      cursor: 'pointer'
+      cursor: 'pointer',
     },
     [theme.breakpoints.down('sm')]: {
-      display: 'none'
-    }
+      display: 'none',
+    },
   },
   sampleLink: {
     color: theme.palette.common.black,
@@ -71,7 +71,7 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: 10,
     width: 100,
     fontSize: 16,
-    marginTop: 20
+    marginTop: 20,
   },
   guideButton: {
     color: 'white',
@@ -84,7 +84,7 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: 10,
     [theme.breakpoints.down('md')]: {
       marginLeft: 0,
-    }
+    },
   },
   guideLink: {
     color: 'white',
@@ -101,8 +101,8 @@ const useStyles = makeStyles((theme) => ({
   semiTitle: {
     color: '#196ee3',
     fontFamily: 'Noto Sans kr',
-    fontWeight: theme.typography.fontWeightBold
-  }
+    fontWeight: theme.typography.fontWeightBold,
+  },
 }));
 
 export default useStyles;

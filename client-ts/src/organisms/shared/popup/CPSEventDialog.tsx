@@ -5,10 +5,7 @@ export interface RenewalDialogProps {
   open: boolean;
   onClose: () => void;
 }
-export default function RenewalDialog({
-  open,
-  onClose,
-}: RenewalDialogProps): JSX.Element {
+export default function RenewalDialog({ open, onClose }: RenewalDialogProps): JSX.Element {
   const GOOGLE_FORM_URL = 'https://forms.gle/196HNR6iDV8U3Zk79';
   return (
     <EventPopup
@@ -19,13 +16,7 @@ export default function RenewalDialog({
       disableFullWidth
       noShowKey="cps-event-popup-no-show"
     >
-      <img
-        draggable={false}
-        src="/pngs/main-popup/cps_full.png"
-        alt=""
-        height={600}
-        width="100%"
-      />
+      <img draggable={false} src="/pngs/main-popup/cps_full.png" alt="" height={600} width="100%" />
       <button
         type="button"
         style={{

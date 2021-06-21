@@ -10,9 +10,7 @@ function ProductHeroLayout({ children, MainUserType }: ProductHeroLayoutProps): 
   const classes = useStyles();
 
   return (
-    <section className={MainUserType ? (classes.marketer) : (classes.creator)}>
-      {children}
-    </section>
+    <section className={MainUserType ? classes.marketer : classes.creator}>{children}</section>
   );
 }
 

@@ -2,32 +2,31 @@ import React from 'react';
 import classnames from 'classnames';
 import moment from 'moment';
 import { makeStyles } from '@material-ui/core/styles';
-import {
-  Typography, Divider, Paper, Avatar, Chip, Grow
-} from '@material-ui/core';
+import { Typography, Divider, Paper, Avatar, Chip, Grow } from '@material-ui/core';
 import shortid from 'shortid';
 import Button from '../../../../atoms/CustomButtons/Button';
 import { useGetRequest } from '../../../../utils/hooks';
 import history from '../../../../history';
 import { ContractionDataType } from '../../../../pages/mypage/creator/CPAManage';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   flex: { display: 'flex', justifyContent: 'center', alignItems: 'center' },
   container: {
     minHeight: 400,
     marginTop: theme.spacing(1),
     padding: theme.spacing(4),
     [theme.breakpoints.down('xs')]: {
-      padding: theme.spacing(1)
-    }
+      padding: theme.spacing(1),
+    },
   },
   avatar: {
     width: 100,
     height: 100,
     margin: `${theme.spacing(1)}px ${theme.spacing(2)}px ${theme.spacing(1)}px 0px`,
     [theme.breakpoints.down('xs')]: {
-      width: 40, height: 40
-    }
+      width: 40,
+      height: 40,
+    },
   },
   bold: { fontWeight: 'bold' },
   chip: {
@@ -36,16 +35,16 @@ const useStyles = makeStyles((theme) => ({
   },
   success: {
     backgroundColor: theme.palette.success.main,
-    color: theme.palette.success.contrastText
+    color: theme.palette.success.contrastText,
   },
   error: { backgroundColor: theme.palette.error.main },
   black: {
     backgroundColor: theme.palette.common.black,
-    color: theme.palette.common.white
+    color: theme.palette.common.white,
   },
   info: {
     backgroundColor: theme.palette.info.main,
-    color: theme.palette.info.contrastText
+    color: theme.palette.info.contrastText,
   },
   secondary: { backgroundColor: theme.palette.secondary.main },
   infoSection: { display: 'flex', alignItems: 'center' },
@@ -55,11 +54,13 @@ const useStyles = makeStyles((theme) => ({
   withdrawalChip: { marginLeft: theme.spacing(1) },
   right: { textAlign: 'right' },
   ellipsis: {
-    whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
   },
   moreButton: {
     cursor: 'pointer',
-    '&:hover': { textDecoration: 'underline', }
+    '&:hover': { textDecoration: 'underline' },
   },
 }));
 export interface WithdrawalRes {
@@ -83,7 +84,8 @@ interface UserInfoCardProps {
   handleWithdrawalDialogOpen: () => void;
 }
 const UserInfoCard = ({
-  userProfileData, incomeData,
+  userProfileData,
+  incomeData,
   handleWithdrawalDialogOpen,
   withdrawalData = [],
 }: UserInfoCardProps): JSX.Element => {
@@ -115,7 +117,6 @@ const UserInfoCard = ({
 
   return (
     <Paper className={classes.container}>
-
       {/* 유저 정보 섹션 */}
       <div className={classes.infoSection}>
         <Avatar
@@ -129,14 +130,26 @@ const UserInfoCard = ({
               {userProfileData.loginId}
               &nbsp;
               {userProfileData.afreecaId && (
-              <img alt="" height={25} src="/pngs/logo/afreeca/onlyFace.png" style={{ marginRight: 8 }} />
+                <img
+                  alt=""
+                  height={25}
+                  src="/pngs/logo/afreeca/onlyFace.png"
+                  style={{ marginRight: 8 }}
+                />
               )}
               {userProfileData.creatorTwitchOriginalId && (
-              <img alt="" height={25} src="/pngs/logo/twitch/TwitchGlitchPurple.png" style={{ marginRight: 8 }} />
+                <img
+                  alt=""
+                  height={25}
+                  src="/pngs/logo/twitch/TwitchGlitchPurple.png"
+                  style={{ marginRight: 8 }}
+                />
               )}
             </Typography>
             <Typography variant="body2">
-              {`${userProfileData.creatorName || userProfileData.afreecaName || ''} ${userProfileData.creatorMail || userProfileData.afreecaId || ''}`}
+              {`${userProfileData.creatorName ||
+                userProfileData.afreecaName ||
+                ''} ${userProfileData.creatorMail || userProfileData.afreecaId || ''}`}
             </Typography>
           </div>
           {/* 상태 칩 섹션 */}
@@ -145,9 +158,9 @@ const UserInfoCard = ({
               className={classes.chip}
               size="small"
               color="primary"
-              label={userProfileData.creatorContractionAgreement === 1
-                ? '이용 동의완료'
-                : '이용 미동의'}
+              label={
+                userProfileData.creatorContractionAgreement === 1 ? '이용 동의완료' : '이용 미동의'
+              }
             />
           </Grow>
           <Grow in>
@@ -183,7 +196,9 @@ const UserInfoCard = ({
 
       {/* 수익금 섹션 */}
       <div className={classes.section}>
-        <Typography gutterBottom variant="body1">출금가능한 수익금</Typography>
+        <Typography gutterBottom variant="body1">
+          출금가능한 수익금
+        </Typography>
         <Typography gutterBottom variant="h4" className={classes.bold}>
           <Typography component="span" variant="body2" color="textSecondary">
             {`누적 수익 ${incomeData.creatorTotalIncome.toLocaleString()}원`}
@@ -191,18 +206,22 @@ const UserInfoCard = ({
           &nbsp;
           {`${incomeData.creatorReceivable.toLocaleString()} 원`}
         </Typography>
-        <Typography color="textSecondary" variant="caption">{`최근 수익 반영: ${moment(incomeData.date).fromNow()}`}</Typography>
+        <Typography color="textSecondary" variant="caption">
+          {`최근 수익 반영: ${moment(incomeData.date).fromNow()}`}
+        </Typography>
 
-        {(incomeData && incomeData.creatorAccountNumber) && (
-        <div className={classes.right}>
-          <Button
-            color="primary"
-            size="small"
-            onClick={(): void => { handleWithdrawalDialogOpen(); }}
-          >
-            출금신청
-          </Button>
-        </div>
+        {incomeData && incomeData.creatorAccountNumber && (
+          <div className={classes.right}>
+            <Button
+              color="primary"
+              size="small"
+              onClick={(): void => {
+                handleWithdrawalDialogOpen();
+              }}
+            >
+              출금신청
+            </Button>
+          </div>
         )}
       </div>
 
@@ -210,43 +229,46 @@ const UserInfoCard = ({
 
       <div className={classes.withdrawalSection}>
         {(!withdrawalData || withdrawalData.length === 0) && (
-        <div className={classes.flex} style={{ marginTop: 32 }}>
-          <Typography variant="body2" className={classes.ellipsis}>아직 출금 신청 내역이 없어요..</Typography>
-        </div>
-        )}
-        {withdrawalData && withdrawalData.slice(0, 2).map((withdrawalRequest) => (
-          <div className={classes.withdrawalItem} key={shortid.generate()}>
-            <Typography className={classes.ellipsis}>
-              {`${withdrawalRequest.creatorWithdrawalAmount.toLocaleString()}원 출금신청 `}
-              <Typography component="span" variant="caption" color="textSecondary">
-                {moment(withdrawalRequest.date).format('YYYY년 MM월 DD일')}
-              </Typography>
+          <div className={classes.flex} style={{ marginTop: 32 }}>
+            <Typography variant="body2" className={classes.ellipsis}>
+              아직 출금 신청 내역이 없어요..
             </Typography>
-            <Chip
-              size="small"
-              className={classnames({
-                [classes.chip]: true,
-                [classes.success]: withdrawalRequest.withdrawalState === 1,
-                [classes.info]: withdrawalRequest.withdrawalState === 0,
-                [classes.withdrawalChip]: true,
-              })}
-              label={withdrawalRequest.withdrawalState === 1 ? '정산 완료' : '정산 예정'}
-            />
           </div>
-        ))}
+        )}
+        {withdrawalData &&
+          withdrawalData.slice(0, 2).map(withdrawalRequest => (
+            <div className={classes.withdrawalItem} key={shortid.generate()}>
+              <Typography className={classes.ellipsis}>
+                {`${withdrawalRequest.creatorWithdrawalAmount.toLocaleString()}원 출금신청 `}
+                <Typography component="span" variant="caption" color="textSecondary">
+                  {moment(withdrawalRequest.date).format('YYYY년 MM월 DD일')}
+                </Typography>
+              </Typography>
+              <Chip
+                size="small"
+                className={classnames({
+                  [classes.chip]: true,
+                  [classes.success]: withdrawalRequest.withdrawalState === 1,
+                  [classes.info]: withdrawalRequest.withdrawalState === 0,
+                  [classes.withdrawalChip]: true,
+                })}
+                label={withdrawalRequest.withdrawalState === 1 ? '정산 완료' : '정산 예정'}
+              />
+            </div>
+          ))}
         {!(withdrawalData.length === 0) && (
-        <div className={classes.right}>
-          <Typography
-            variant="caption"
-            color="textSecondary"
-            className={classes.moreButton}
-            onClick={(): void => {
-              history.push('/mypage/creator/income');
-            }}
-          >
-            자세히 보기
-          </Typography>
-        </div>
+          <div className={classes.right}>
+            <Typography
+              variant="caption"
+              color="textSecondary"
+              className={classes.moreButton}
+              onClick={(): void => {
+                history.push('/mypage/creator/income');
+              }}
+            >
+              자세히 보기
+            </Typography>
+          </div>
         )}
       </div>
     </Paper>

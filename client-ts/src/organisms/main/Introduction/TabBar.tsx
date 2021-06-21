@@ -12,10 +12,16 @@ function TabBar({ tabValue, handleTabChange }: Props): JSX.Element {
 
   return (
     <div className={classes.root}>
-      <Button className={tabValue ? classes.notSelected : classes.Selected} onClick={() => handleTabChange(0)}>
+      <Button
+        className={tabValue ? classes.notSelected : classes.Selected}
+        onClick={() => handleTabChange(0)}
+      >
         <Typography variant="subtitle1">마케터 이용약관</Typography>
       </Button>
-      <Button className={tabValue ? classes.Selected : classes.notSelected} onClick={() => handleTabChange(1)}>
+      <Button
+        className={tabValue ? classes.Selected : classes.notSelected}
+        onClick={() => handleTabChange(1)}
+      >
         <Typography variant="subtitle1">방송인 이용약관</Typography>
       </Button>
     </div>

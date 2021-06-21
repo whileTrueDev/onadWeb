@@ -3,17 +3,17 @@ import { makeStyles, Theme } from '@material-ui/core/styles';
 const useStyle = makeStyles((theme: Theme) => ({
   text: {
     fontFamily: 'Noto Sans KR',
-    fontSize: 15
+    fontSize: 15,
   },
   step: {
     display: 'flex',
     flexDirection: 'column',
   },
   stepTitle: {
-    marginRight: 10
+    marginRight: 10,
   },
   stepExplain: {
-    margin: '20px 0 20px 0'
+    margin: '20px 0 20px 0',
   },
   stepWrap: {
     display: 'flex',
@@ -29,21 +29,21 @@ const useStyle = makeStyles((theme: Theme) => ({
     justifyContent: 'center',
   },
   stepWrapRed: {
-    color: theme.palette.primary.main
+    color: theme.palette.primary.main,
   },
   stepWrap2: {
-    marginBottom: 20
+    marginBottom: 20,
   },
   stepIMG: {
     width: 150,
     height: 150,
-    margin: 'auto'
+    margin: 'auto',
   },
   box: {
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   buttonWrap: {
     width: '70%',
@@ -51,8 +51,8 @@ const useStyle = makeStyles((theme: Theme) => ({
     flexDirection: 'row',
     justifyContent: 'space-around',
     [theme.breakpoints.down('xs')]: {
-      width: '100%'
-    }
+      width: '100%',
+    },
   },
   agreementWrap: {
     width: '100%',
@@ -64,8 +64,8 @@ const useStyle = makeStyles((theme: Theme) => ({
   endButton: {
     padding: '10px 0px',
     display: 'flex',
-    justifyContent: 'center'
-  }
+    justifyContent: 'center',
+  },
 }));
 
 export default useStyle;

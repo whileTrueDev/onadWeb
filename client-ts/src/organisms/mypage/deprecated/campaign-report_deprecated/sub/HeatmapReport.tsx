@@ -13,12 +13,7 @@ export default function HeatmapReport(props: HeatmapReportProps): JSX.Element {
   return (
     <div {...rest}>
       <CardTemplate title="날짜별 유입 수" IconComponent={Flag} color="secondary">
-        {clickData
-          && (
-            <ClickHeatmap
-              data={clickData}
-            />
-          )}
+        {clickData && <ClickHeatmap data={clickData} />}
       </CardTemplate>
     </div>
   );

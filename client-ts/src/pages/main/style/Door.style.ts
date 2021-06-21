@@ -1,7 +1,7 @@
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import { grey } from '@material-ui/core/colors';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   root: {
     zIndex: 1,
     background: 'white',
@@ -10,20 +10,20 @@ const useStyles = makeStyles((theme) => ({
     overflow: 'hidden',
     position: 'relative',
     '&:before': {
-      willChange: 'transform, margin-top'
-    }
+      willChange: 'transform, margin-top',
+    },
   },
   rowCenterAlign: {
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   columnCenterAlign: {
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   contentWrapper: {
     position: 'absolute',
@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
     top: 0,
     padding: '0 10%',
     [theme.breakpoints.down('md')]: {
-      padding: '0 5%'
+      padding: '0 5%',
     },
   },
   mainTitle: {
@@ -152,7 +152,7 @@ const useStyles = makeStyles((theme) => ({
       width: 350,
     },
     [theme.breakpoints.down('xs')]: {
-      display: 'none'
+      display: 'none',
     },
   },
   InnerRight: {
@@ -164,7 +164,7 @@ const useStyles = makeStyles((theme) => ({
     boxShadow: '0px 2px 4px 4px rgba(0,0,0,0.02)',
     position: 'relative',
     [theme.breakpoints.down('sm')]: {
-      display: 'none'
+      display: 'none',
     },
   },
   logo: {
@@ -179,7 +179,7 @@ const useStyles = makeStyles((theme) => ({
   onadLogo: {
     width: 36,
     height: 36,
-    margin: theme.spacing(0, 1)
+    margin: theme.spacing(0, 1),
   },
   buttonWrapper: {
     marginTop: theme.spacing(3),
@@ -200,13 +200,13 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.down('xs')]: {
       width: 200,
       height: 50,
-      backgroundColor: `${theme.palette.common.white} !important`
+      backgroundColor: `${theme.palette.common.white} !important`,
     },
     color: theme.palette.common.black,
   },
   buttonText: {
     [theme.breakpoints.down('xs')]: {
-      fontSize: '20px !important'
+      fontSize: '20px !important',
     },
   },
   flipWrapper: {
@@ -216,7 +216,7 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   flip: {
     position: 'absolute',
@@ -236,7 +236,7 @@ const useStyles = makeStyles((theme) => ({
     '95%, 100%': { top: '5%' },
   },
   chatting: {
-    margin: '0rem 1rem'
+    margin: '0rem 1rem',
   },
   chattingBottom: {
     width: '90%',
@@ -257,17 +257,17 @@ const useStyles = makeStyles((theme) => ({
       height: 15,
       borderRadius: theme.spacing(3),
       background: 'white',
-      marginRight: theme.spacing(1)
-    }
+      marginRight: theme.spacing(1),
+    },
   },
   chattingText: {
-    fontSize: '1rem'
+    fontSize: '1rem',
   },
   bottomText: {
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
-    alignItems: 'flex-start'
+    alignItems: 'flex-start',
   },
   bgParent: {
     position: 'relative',
@@ -275,7 +275,7 @@ const useStyles = makeStyles((theme) => ({
     height: 1600,
     left: '30%',
     top: '-60%',
-    background: 'url(\'/door/bluetouch.svg\') no-repeat',
+    background: "url('/door/bluetouch.svg') no-repeat",
     backgroundSize: 'cover',
     animation: '$downwardleft 4s ease-in-out forwards',
     '&:after': {
@@ -287,7 +287,7 @@ const useStyles = makeStyles((theme) => ({
       left: '-32.5%',
       bottom: '-80%',
       transform: 'translate(0,0) rotate(180deg)',
-      background: 'url(\'/door/greentouch.svg\') no-repeat',
+      background: "url('/door/greentouch.svg') no-repeat",
       backgroundSize: 'cover',
       animation: '$UpwardRight 4s ease-in-out forwards',
       [theme.breakpoints.down('sm')]: {

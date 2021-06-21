@@ -3,15 +3,9 @@ import koLocale from 'date-fns/locale/ko';
 import React, { useState } from 'react';
 import { Grid, FormControlLabel, Checkbox } from '@material-ui/core';
 import DateFnsUtils from '@date-io/date-fns';
-import {
-  MuiPickersUtilsProvider,
-  KeyboardDatePicker,
-} from '@material-ui/pickers';
+import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
 
-import {
-  CampaignCreateAction,
-  CampaignCreateInterface
-} from '../reducers/campaignCreate.reducer';
+import { CampaignCreateAction, CampaignCreateInterface } from '../reducers/campaignCreate.reducer';
 
 interface DateTermPickerProps {
   state: CampaignCreateInterface;
@@ -78,7 +72,7 @@ function DateTermPicker(props: DateTermPickerProps): JSX.Element {
           }}
         />
         <FormControlLabel
-          control={(
+          control={
             <Checkbox
               color="primary"
               checked={finDateToggle}
@@ -86,7 +80,7 @@ function DateTermPicker(props: DateTermPickerProps): JSX.Element {
               size="small"
               style={{ padding: '3px' }}
             />
-          )}
+          }
           label="종료일 미설정"
           labelPlacement="start"
         />
@@ -94,7 +88,6 @@ function DateTermPicker(props: DateTermPickerProps): JSX.Element {
     </MuiPickersUtilsProvider>
   );
 }
-
 
 /**
  * @description

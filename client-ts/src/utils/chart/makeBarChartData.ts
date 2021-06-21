@@ -18,7 +18,9 @@ interface ChartDataResult {
 }
 
 export default function makeBarChartData(
-  data: ChartDataBase[], keyMaps: KeyMap[], howMuchDate = 30
+  data: ChartDataBase[],
+  keyMaps: KeyMap[],
+  howMuchDate = 30,
 ) {
   const dataSet: any[] = [];
   const previousDates = Array<string>();
@@ -26,14 +28,14 @@ export default function makeBarChartData(
   // 데이터가 있고, 데이터를 담은 배열의 길이가 1개보다 많을 때.
   if (data && data.length > 0) {
     // 데이터 형 변환
-    data.forEach((d) => {
+    data.forEach(d => {
       const _data: any = { date: '' };
       keyMaps.forEach(({ to }) => {
         _data[to] = 0;
       });
 
       // 이전 날짜와 비교
-      if (!(previousDates.includes(d.date))) {
+      if (!previousDates.includes(d.date)) {
         // 이전 날짜 목록에 포함되어 있지 않은 경우
         // 이전 날짜 목록에 추가
         previousDates.push(d.date);
@@ -47,7 +49,7 @@ export default function makeBarChartData(
       } else {
         // 이전 날짜 목록에 포함되어 있는 경우
         // 해당 날짜의 결과데이터 찾기
-        const targetObject = dataSet.find((d1) => d1.date === d.date);
+        const targetObject = dataSet.find(d1 => d1.date === d.date);
 
         if (targetObject) {
           // 결과 데이터에 key값 중, 없는 값 추가
@@ -57,7 +59,7 @@ export default function makeBarChartData(
         }
 
         // 결과데이터 배열에서 해당 날짜의 결과데이터의 인덱스 찾기
-        dataSet[dataSet.findIndex((i) => i.date === d.date)] = targetObject;
+        dataSet[dataSet.findIndex(i => i.date === d.date)] = targetObject;
       }
     });
     // 중간중간 비어있는 날짜에 기본 데이터 삽입
@@ -74,9 +76,9 @@ export default function makeBarChartData(
       if (!(datefy(prevMinusOneDay) === datefy(curr))) {
         // 바로 다음 날짜 데이터가 없는 경우. 기본값 데이터 추가
         const emptyDate = datefy(curr);
-        if (dataSet.findIndex((d2) => d2.date === emptyDate) === -1) {
+        if (dataSet.findIndex(d2 => d2.date === emptyDate) === -1) {
           // dataSet에 해당 날짜의 데이터가 없는 경우
-          const emptyData: any = { date: emptyDate, };
+          const emptyData: any = { date: emptyDate };
           keyMaps.forEach(({ to }) => {
             emptyData[to] = 0;
           });
@@ -84,10 +86,10 @@ export default function makeBarChartData(
           dataSet.splice(idx, 0, emptyData);
         } else {
           // 바로 다음 날짜의 데이터가 있는 경우.
-        // dataSet에 해당 날짜의 데이터가 있는 경우 필드체크하여 없는 필드 0으로 기본값 처리
+          // dataSet에 해당 날짜의 데이터가 있는 경우 필드체크하여 없는 필드 0으로 기본값 처리
           const keys = Object.keys(dataSet[idx]);
           keyMaps.forEach(({ typeName, to }) => {
-            if (!(keys.includes(typeName))) {
+            if (!keys.includes(typeName)) {
               dataSet[idx][to] = 0;
             }
           });
@@ -96,7 +98,7 @@ export default function makeBarChartData(
     });
 
     if (previousDates.length < howMuchDate) {
-      const sortedDates = previousDates.sort((a: any, b: any) => (a - b));
+      const sortedDates = previousDates.sort((a: any, b: any) => a - b);
       const farthest = sortedDates[previousDates.length - 1];
 
       const farthestDay = new Date(farthest);
@@ -132,7 +134,6 @@ export default function makeBarChartData(
       }
     }
 
-
     return dataSet.sort((a, b) => {
       if (a.date < b.date) {
         return -1;
@@ -147,7 +148,7 @@ export default function makeBarChartData(
   // 데이터가 없는 경우
   const now = new Date();
   for (let i = 0; i < howMuchDate; i += 1) {
-    const pushObject: any = { date: datefy(now), };
+    const pushObject: any = { date: datefy(now) };
     keyMaps.forEach(({ to }) => {
       pushObject[to] = 0;
     });

@@ -9,7 +9,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   end: {
     color: theme.palette.common.white,
     marginRight: theme.spacing(1),
-  }
+  },
 }));
 
 interface ButtonSetProps {

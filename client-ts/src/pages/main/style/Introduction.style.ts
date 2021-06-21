@@ -1,19 +1,19 @@
 import { makeStyles } from '@material-ui/core/styles';
 
-const styles = makeStyles((theme) => ({
+const styles = makeStyles(theme => ({
   root: {
     position: 'relative',
     padding: '0 10%',
     [theme.breakpoints.down('xs')]: {
       padding: '0 5%',
-    }
+    },
   },
   wrapper: {
     padding: theme.spacing(15, 0),
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   mainTop: {
     margin: theme.spacing(5, 0),
@@ -25,7 +25,7 @@ const styles = makeStyles((theme) => ({
     margin: theme.spacing(1.5, 0),
     [theme.breakpoints.down('xs')]: {
       width: 300,
-    }
+    },
   },
   middleLine2: {
     width: 350,
@@ -33,24 +33,24 @@ const styles = makeStyles((theme) => ({
     margin: theme.spacing(1.5, 0),
     [theme.breakpoints.down('xs')]: {
       width: 300,
-    }
+    },
   },
   mainTitle: {
     fontWeight: theme.typography.fontWeightBold,
     [theme.breakpoints.down('sm')]: {
-      fontSize: 36
+      fontSize: 36,
     },
     [theme.breakpoints.down('xs')]: {
-      fontSize: 28
-    }
+      fontSize: 28,
+    },
   },
   subtitle: {
     [theme.breakpoints.down('sm')]: {
-      fontSize: 28
+      fontSize: 28,
     },
     [theme.breakpoints.down('xs')]: {
-      fontSize: 20
-    }
+      fontSize: 20,
+    },
   },
   imageWrapper: {
     width: '100%',
@@ -69,11 +69,11 @@ const styles = makeStyles((theme) => ({
     height: 130,
     background: 'transparent',
     backdropFilter: 'blur(10px)',
-    transition: '0.1s'
+    transition: '0.1s',
   },
   topImage: {
     width: '90%',
-    margin: theme.spacing(5, 0)
+    margin: theme.spacing(5, 0),
   },
   kakaoContact: {
     position: 'fixed',
@@ -85,19 +85,19 @@ const styles = makeStyles((theme) => ({
     [theme.breakpoints.up('sm')]: {
       width: 270.5,
       height: 50,
-      background: 'url(\'/contact/liveContactSpreaded.png\') no-repeat center center',
+      background: "url('/contact/liveContactSpreaded.png') no-repeat center center",
       backgroundSize: 'cover',
       right: 10,
       bottom: 10,
     },
     [theme.breakpoints.down('xs')]: {
-      background: 'url(\'/contact/liveContact.svg\') no-repeat center center',
+      background: "url('/contact/liveContact.svg') no-repeat center center",
       width: 40,
       height: 40,
       right: 10,
       bottom: 10,
-    }
-  }
+    },
+  },
 }));
 
 export default styles;

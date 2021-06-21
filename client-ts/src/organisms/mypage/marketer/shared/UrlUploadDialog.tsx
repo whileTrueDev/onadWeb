@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import { makeStyles, Theme } from '@material-ui/core/styles';
-import {
-  Stepper, Step, StepLabel, StepContent, Button
-} from '@material-ui/core';
+import { Stepper, Step, StepLabel, StepContent, Button } from '@material-ui/core';
 import Check from '@material-ui/icons/Check';
 import classnames from 'classnames';
 
@@ -14,7 +12,7 @@ import UrlUploadStep from './UrlUploadStep';
 import landingUrlRegex from '../../../../utils/inputs/regex/landing-url.regex';
 
 const useQontoStepIconStyles = makeStyles((theme: Theme) => ({
-  root: { color: theme.palette.background.paper, display: 'flex', },
+  root: { color: theme.palette.background.paper, display: 'flex' },
   active: {
     color: theme.palette.primary.main,
   },
@@ -38,7 +36,6 @@ interface UrlUploadDialogProps {
   open: boolean;
   handleClose: () => void;
   recallRequest?: () => void;
-
 }
 
 function QontoStepIcon(props: any): JSX.Element {
@@ -46,9 +43,7 @@ function QontoStepIcon(props: any): JSX.Element {
   const { active, completed } = props;
 
   return (
-    <div
-      className={classnames(classes2.root, { [classes2.active]: active })}
-    >
+    <div className={classnames(classes2.root, { [classes2.active]: active })}>
       {completed ? <Check className={classes2.completed} /> : <div className={classes2.circle} />}
     </div>
   );
@@ -70,13 +65,16 @@ export default function UrlUploadDialog(props: UrlUploadDialogProps): JSX.Elemen
   const sub2UrlName = useEventTargetValue(); // Sub url2 name
   const sub2UrlCheck = useToggle(true); // Sub url2 설정/미설정
 
-  const { doPostRequest } = usePostRequest<{
-    links: {
-      primary: boolean;
-      linkName: string;
-      linkTo: string;
-    }[];
-  }, any[]>(
+  const { doPostRequest } = usePostRequest<
+    {
+      links: {
+        primary: boolean;
+        linkName: string;
+        linkTo: string;
+      }[];
+    },
+    any[]
+  >(
     '/marketer/landing-url',
     // success callback function
     () => {
@@ -84,13 +82,15 @@ export default function UrlUploadDialog(props: UrlUploadDialogProps): JSX.Elemen
       if (recallRequest) {
         recallRequest();
       }
-    }
+    },
   );
 
   function handleSubmit(): void {
     const linkResult = [];
     linkResult.push({
-      primary: true, linkName: mainUrlName.value, linkTo: mainUrl.value
+      primary: true,
+      linkName: mainUrlName.value,
+      linkTo: mainUrl.value,
     });
     if (!subUrlCheck.toggle) {
       linkResult.push({ primary: false, linkName: subUrlName.value, linkTo: subUrl.value });
@@ -113,7 +113,11 @@ export default function UrlUploadDialog(props: UrlUploadDialogProps): JSX.Elemen
   };
 
   function isLengthValid(): boolean {
-    return !(mainUrlName.value.length > 20 || subUrlName.value.length > 20 || sub2UrlName.value.length > 20);
+    return !(
+      mainUrlName.value.length > 20 ||
+      subUrlName.value.length > 20 ||
+      sub2UrlName.value.length > 20
+    );
   }
   return (
     <Dialog
@@ -122,27 +126,28 @@ export default function UrlUploadDialog(props: UrlUploadDialogProps): JSX.Elemen
       maxWidth="sm"
       fullWidth
       title="랜딩페이지 URL 등록"
-      buttons={(
+      buttons={
         <div style={{ display: 'flex' }}>
           <Button
             color="primary"
-            disabled={// from https://regexr.com/3um70
-              !(landingUrlRegex.test(mainUrl.value)) || !isLengthValid()
+            disabled={
+              // from https://regexr.com/3um70
+              !landingUrlRegex.test(mainUrl.value) || !isLengthValid()
             }
             onClick={handleSubmit}
             variant="contained"
           >
             등록
           </Button>
-          <Button variant="contained" onClick={handleDialogClose}>취소</Button>
+          <Button variant="contained" onClick={handleDialogClose}>
+            취소
+          </Button>
         </div>
-        )}
+      }
     >
       <Stepper activeStep={activeStep} orientation="vertical" style={{ padding: 0 }}>
         <Step key="0">
-          <StepLabel StepIconComponent={QontoStepIcon}>
-            URL 등록
-          </StepLabel>
+          <StepLabel StepIconComponent={QontoStepIcon}>URL 등록</StepLabel>
           <StepContent>
             <UrlUploadStep
               mainUrlName={mainUrlName}

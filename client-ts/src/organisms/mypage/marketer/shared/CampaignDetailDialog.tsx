@@ -7,17 +7,17 @@ import { useGetRequest } from '../../../../utils/hooks';
 import CampaignDetail from '../adManage/campaign/sub/CampaignDetail';
 import { CampaignInterface } from '../dashboard/interfaces';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   bold: { fontWeight: theme.typography.fontWeightBold },
   linkUrl: {
     display: 'inline-block',
     cursor: 'pointer',
     '&:hover': {
       textDecoration: 'underline',
-    }
+    },
   },
   center: {
-    textAlign: 'center'
+    textAlign: 'center',
   },
   article: { marginTop: theme.spacing(2) },
 }));
@@ -35,17 +35,12 @@ export default function CampaignDetailDialog({
 }: CampaignDetailDialogProps): React.ReactElement {
   const classes = useStyles();
   const campaignData = useGetRequest<{ campaignId: string }, CampaignInterface>(
-    '/marketer/campaign', { campaignId }
+    '/marketer/campaign',
+    { campaignId },
   );
 
   return (
-    <CustomDialog
-      open={open}
-      onClose={onClose}
-      maxWidth="xs"
-      fullWidth
-      title="캠페인 정보"
-    >
+    <CustomDialog open={open} onClose={onClose} maxWidth="xs" fullWidth title="캠페인 정보">
       <div>
         {campaignData.loading && (
           <div className={classes.center}>

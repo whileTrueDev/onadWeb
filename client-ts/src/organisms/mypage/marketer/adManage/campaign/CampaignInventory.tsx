@@ -1,12 +1,7 @@
+/* eslint-disable react/display-name */
 import React, { useState } from 'react';
 import moment from 'moment';
-import {
-  Badge,
-  IconButton,
-  makeStyles,
-  Tooltip,
-  Typography
-} from '@material-ui/core';
+import { Badge, IconButton, makeStyles, Tooltip, Typography } from '@material-ui/core';
 import { MoreVert, OpenInNew } from '@material-ui/icons';
 import CustomDataGrid from '../../../../../atoms/Table/CustomDataGrid';
 import { CampaignInterface, CampaignTargetCreator } from '../../dashboard/interfaces';
@@ -21,7 +16,10 @@ import CampaignDeleteConfirmDialog from '../../dashboard/CampaignDeleteConfirmDi
 import CampaignUpdateDialog from '../../dashboard/CampaignUpdateDialog';
 import OnadBanner from '../../../../../atoms/Banner/OnadBanner';
 import { UrlLink } from '../interface';
-import { CONFIRM_STATE_CONFIRMED, CONFIRM_STATE_REJECTED } from '../../../../../utils/render_funcs/renderUrlConfirmState';
+import {
+  CONFIRM_STATE_CONFIRMED,
+  CONFIRM_STATE_REJECTED,
+} from '../../../../../utils/render_funcs/renderUrlConfirmState';
 import CampaignOnOffSwitch from '../../../../../atoms/Switch/CampaignOnOffSwitch';
 
 const useStyles = makeStyles(() => ({
@@ -29,11 +27,14 @@ const useStyles = makeStyles(() => ({
     cursor: 'pointer',
     '&:hover': {
       textDecoration: 'underline',
-    }
+    },
   },
   datagrid: { height: 400, width: '100%' },
   campaignName: {
-    width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center'
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   zoomin: { cursor: 'zoom-in' },
 }));
@@ -52,7 +53,9 @@ export default function CampaignInventory({
   const classes = useStyles();
   // ******************************************
   // 캠페인 On/Off 변경 요청 성공 핸들러
-  const [failSnackMessage, setFailSnackMessage] = useState<string>('캠페인 상태를 변경하는 데에 실패했습니다. 잠시 후 다시 시도해주세요.');
+  const [failSnackMessage, setFailSnackMessage] = useState<string>(
+    '캠페인 상태를 변경하는 데에 실패했습니다. 잠시 후 다시 시도해주세요.',
+  );
   const failSnack = useDialog();
   function onOnOffSuccess(resData: any): void {
     // on/off 변경에 실패한 경우 (캠페인의 url / banner 중 하나라도 심의 통과하지 못한 경우)
@@ -82,7 +85,8 @@ export default function CampaignInventory({
   // 캠페인 메뉴
   const menuAnchor = useAnchorEl();
   function handleCampaignNameClick(
-    e: React.MouseEvent<HTMLSpanElement>, cam: CampaignInterface
+    e: React.MouseEvent<HTMLSpanElement>,
+    cam: CampaignInterface,
   ): void {
     setSelected(cam);
     menuAnchor.handleAnchorOpen(e);
@@ -93,7 +97,8 @@ export default function CampaignInventory({
   function renderTargetCreators(creators: CampaignTargetCreator[]): string {
     return creators
       .map((creator: CampaignTargetCreator) => {
-        if (creator.afreecaName && creator.creatorName) return `${creator.creatorName}(${creator.afreecaName})`;
+        if (creator.afreecaName && creator.creatorName)
+          return `${creator.creatorName}(${creator.afreecaName})`;
         return `${creator.afreecaName || creator.creatorName}`;
       })
       .join(', ');
@@ -130,7 +135,7 @@ export default function CampaignInventory({
                 onFail={onOnOffFail}
                 inventoryLoading={campaignData.loading}
               />
-            )
+            ),
           },
           {
             field: 'campaignName',
@@ -147,17 +152,24 @@ export default function CampaignInventory({
                 >
                   {data.row.campaignName}
                 </Typography>
-                <IconButton size="small" onClick={(e): void => handleCampaignNameClick(e, data.row as CampaignInterface)}><MoreVert /></IconButton>
+                <IconButton
+                  size="small"
+                  onClick={(e): void => handleCampaignNameClick(e, data.row as CampaignInterface)}
+                >
+                  <MoreVert />
+                </IconButton>
               </div>
-            )
+            ),
           },
           {
             field: 'optionType',
             headerName: '타입',
             width: 160,
             renderCell: (data): React.ReactElement => (
-              <Typography noWrap variant="body2">{renderOptionType(data.row.optionType)}</Typography>
-            )
+              <Typography noWrap variant="body2">
+                {renderOptionType(data.row.optionType)}
+              </Typography>
+            ),
           },
           {
             headerName: '배너',
@@ -179,7 +191,7 @@ export default function CampaignInventory({
                   height="30"
                 />
               </Badge>
-            )
+            ),
           },
           {
             headerName: '랜딩URL',
@@ -194,12 +206,14 @@ export default function CampaignInventory({
                   <Typography
                     onClick={(): void => {
                       const targetUrl = data.row.linkData.links.find(
-                        (link: UrlLink) => !!link.primary
+                        (link: UrlLink) => !!link.primary,
                       );
                       window.open(targetUrl.linkTo, '_blank');
                     }}
                     className={classes.link}
-                    color={data.row.linkConfirmState === CONFIRM_STATE_REJECTED ? 'error' : 'primary'}
+                    color={
+                      data.row.linkConfirmState === CONFIRM_STATE_REJECTED ? 'error' : 'primary'
+                    }
                     variant="body2"
                     noWrap
                   >
@@ -208,7 +222,7 @@ export default function CampaignInventory({
                   </Typography>
                 </Tooltip>
               );
-            }
+            },
           },
           {
             field: 'merchandiseId',
@@ -225,15 +239,17 @@ export default function CampaignInventory({
                   </Typography>
                 </Tooltip>
               );
-            }
+            },
           },
           {
             field: 'priorityType',
             headerName: '송출 우선순위',
             width: 150,
             renderCell: (data): React.ReactElement => (
-              <Typography noWrap variant="body2">{renderPriorityType(data.row.priorityType)}</Typography>
-            )
+              <Typography noWrap variant="body2">
+                {renderPriorityType(data.row.priorityType)}
+              </Typography>
+            ),
           },
           {
             field: 'dailyLimit',
@@ -244,7 +260,7 @@ export default function CampaignInventory({
               <Typography noWrap variant="body2">
                 {data.row.dailyLimit !== -1 ? data.row.dailyLimit.toLocaleString() : '없음'}
               </Typography>
-            )
+            ),
           },
           {
             field: 'campaignDescription',
@@ -256,7 +272,7 @@ export default function CampaignInventory({
                   {data.row.campaignDescription}
                 </Typography>
               </Tooltip>
-            )
+            ),
           },
           {
             field: 'selectedTime',
@@ -268,7 +284,7 @@ export default function CampaignInventory({
                   {data.row.selectedTime.join(',')}
                 </Typography>
               </Tooltip>
-            )
+            ),
           },
           {
             field: 'targetList',
@@ -277,7 +293,10 @@ export default function CampaignInventory({
             renderCell: (data): React.ReactElement => (
               <>
                 {data.row.priorityType === 0 && data.row.targetCreators ? ( // 크리에이터 우선형의 경우
-                  <Tooltip title={renderTargetCreators(data.row.targetCreators)} placement="bottom-start">
+                  <Tooltip
+                    title={renderTargetCreators(data.row.targetCreators)}
+                    placement="bottom-start"
+                  >
                     <Typography noWrap variant="body2">
                       {renderTargetCreators(data.row.targetCreators)}
                     </Typography>
@@ -290,14 +309,16 @@ export default function CampaignInventory({
                   </Tooltip>
                 )}
               </>
-            )
+            ),
           },
           {
             field: 'regiDate',
             headerName: '캠페인 생성일',
             width: 200,
             renderCell: (data): React.ReactElement => (
-              <Typography noWrap variant="body2">{moment(data.row.regiDate).format('YYYY/MM/DD HH:mm:ss')}</Typography>
+              <Typography noWrap variant="body2">
+                {moment(data.row.regiDate).format('YYYY/MM/DD HH:mm:ss')}
+              </Typography>
             ),
           },
         ]}
@@ -305,39 +326,39 @@ export default function CampaignInventory({
 
       {/* 캠페인 메뉴 (분석, 수정, 삭제) */}
       {selected && menuAnchor.open && menuAnchor.anchorEl && (
-      <CampaignInventoryMenuPopover
-        open={menuAnchor.open}
-        anchorEl={menuAnchor.anchorEl}
-        onClose={menuAnchor.handleAnchorClose}
-        handleDeleteDialogOpen={campaignDeleteDialog.handleOpen}
-        handleUpdateDialogOpen={campaignUpdateDialog.handleOpen}
-      />
+        <CampaignInventoryMenuPopover
+          open={menuAnchor.open}
+          anchorEl={menuAnchor.anchorEl}
+          onClose={menuAnchor.handleAnchorClose}
+          handleDeleteDialogOpen={campaignDeleteDialog.handleOpen}
+          handleUpdateDialogOpen={campaignUpdateDialog.handleOpen}
+        />
       )}
 
       {/* 캠페인 업데이트 다이얼로그 */}
       {campaignUpdateDialog.open && selected && (
-      <CampaignUpdateDialog
-        open={campaignUpdateDialog.open}
-        selectedCampaign={selected}
-        doGetRequest={campaignData.requestWithoutConcat}
-        handleClose={(): void => {
-          setSelected(undefined);
-          campaignUpdateDialog.handleClose();
-        }}
-      />
+        <CampaignUpdateDialog
+          open={campaignUpdateDialog.open}
+          selectedCampaign={selected}
+          doGetRequest={campaignData.requestWithoutConcat}
+          handleClose={(): void => {
+            setSelected(undefined);
+            campaignUpdateDialog.handleClose();
+          }}
+        />
       )}
 
       {/* 캠페인 삭제 클릭시 다이얼로그 */}
       {campaignDeleteDialog.open && selected && (
-      <CampaignDeleteConfirmDialog
-        open={campaignDeleteDialog.open}
-        selectedCampaign={selected}
-        doGetRequest={campaignData.requestWithoutConcat}
-        handleClose={(): void => {
-          setSelected(undefined);
-          campaignDeleteDialog.handleClose();
-        }}
-      />
+        <CampaignDeleteConfirmDialog
+          open={campaignDeleteDialog.open}
+          selectedCampaign={selected}
+          doGetRequest={campaignData.requestWithoutConcat}
+          handleClose={(): void => {
+            setSelected(undefined);
+            campaignDeleteDialog.handleClose();
+          }}
+        />
       )}
 
       {/* 배너 자세히 보기 popper */}

@@ -19,7 +19,7 @@ export default function Door(): JSX.Element {
         <div className={css.content}>
           <div className={css.leftContent}>
             <div>
-              {source.title.map((title) => (
+              {source.title.map(title => (
                 <Typography
                   variant="h4"
                   style={{ fontWeight: 500 }}
@@ -32,30 +32,39 @@ export default function Door(): JSX.Element {
             </div>
 
             <div className={classNames(css.buttonWrapper, css.columnCenterAlign)}>
-              {source.buttonTitle.map((title) => (
+              {source.buttonTitle.map(title => (
                 <Button
                   className={css.button}
                   href={title === '광고주' ? '/marketer' : '/creator'}
                   key={shortid.generate()}
                 >
-                  <Typography variant="h6" className={css.buttonText}>{title}</Typography>
+                  <Typography variant="h6" className={css.buttonText}>
+                    {title}
+                  </Typography>
                 </Button>
               ))}
             </div>
-
           </div>
           <div className={classNames(css.rightContent, css.rowCenterAlign)}>
             <div>
               <div className={css.InnerLeft}>
-                <img src="/door/mainCharacter.png" className={css.mainCharacter} alt="mainCharacter" />
+                <img
+                  src="/door/mainCharacter.png"
+                  className={css.mainCharacter}
+                  alt="mainCharacter"
+                />
                 <div className={css.banner}>
-                  <Typography variant="subtitle1" style={{ fontWeight: 600 }}>{source.banner}</Typography>
+                  <Typography variant="subtitle1" style={{ fontWeight: 600 }}>
+                    {source.banner}
+                  </Typography>
                 </div>
               </div>
               <div className={css.InnerLeftBottom}>
                 <img src="/logo/iconLogo.png" alt="iconlogo" className={css.onadLogo} />
                 <div className={css.bottomText}>
-                  <Typography variant="body2" style={{ fontWeight: 600 }}>{source.capationTitle}</Typography>
+                  <Typography variant="body2" style={{ fontWeight: 600 }}>
+                    {source.capationTitle}
+                  </Typography>
                   <Typography variant="caption">{source.captionContent}</Typography>
                 </div>
               </div>
@@ -63,10 +72,22 @@ export default function Door(): JSX.Element {
             <div className={css.InnerRight}>
               <div className={css.flipWrapper}>
                 <div className={css.flip}>
-                  {source.chatting.map((row) => (
+                  {source.chatting.map(row => (
                     <div key={shortid.generate()} className={css.chatting}>
-                      <Typography variant="body2" className={css.chattingText} style={{ fontWeight: 600, color: `${row.color}` }}>{row.userName}</Typography>
-                      <Typography variant="body2" className={css.chattingText} style={{ fontWeight: 600 }}>{row.text}</Typography>
+                      <Typography
+                        variant="body2"
+                        className={css.chattingText}
+                        style={{ fontWeight: 600, color: `${row.color}` }}
+                      >
+                        {row.userName}
+                      </Typography>
+                      <Typography
+                        variant="body2"
+                        className={css.chattingText}
+                        style={{ fontWeight: 600 }}
+                      >
+                        {row.text}
+                      </Typography>
                     </div>
                   ))}
                 </div>
@@ -103,8 +124,6 @@ export default function Door(): JSX.Element {
         </defs>
         <use xlinkHref="#waveMotion" />
       </svg>
-
     </div>
-
   );
 }

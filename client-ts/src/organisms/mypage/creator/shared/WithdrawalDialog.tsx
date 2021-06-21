@@ -1,9 +1,7 @@
 import React, { useReducer, useState } from 'react';
 // material ui core
 import { makeStyles } from '@material-ui/core/styles';
-import {
-  Grid, Slide, Collapse, Typography
-} from '@material-ui/core';
+import { Grid, Slide, Collapse, Typography } from '@material-ui/core';
 // customized component
 import Button from '../../../../atoms/CustomButtons/Button';
 import Dialog from '../../../../atoms/Dialog/Dialog';
@@ -12,15 +10,13 @@ import WithdrawalAmount from './withdrawal/Amount';
 import WithdrawalConfirm from './withdrawal/Confirm';
 import WithdrawalComplete from './withdrawal/Complete';
 // reducer
-import withdrawalDialogReducer, {
-  WithdrawalDialogState
-} from './WithdrawalDialog.reducer';
+import withdrawalDialogReducer, { WithdrawalDialogState } from './WithdrawalDialog.reducer';
 // utils
 import usePostRequest from '../../../../utils/hooks/usePostRequest';
 import history from '../../../../history';
 import withdrawalSources from './withdrawal/withdrawalSources';
 
-const useWithdrawalDialogStyles = makeStyles((theme) => ({
+const useWithdrawalDialogStyles = makeStyles(theme => ({
   title: { marginTop: theme.spacing(1) },
 }));
 
@@ -37,7 +33,7 @@ function WithdrawDialog({
   handleClose,
   accountNumber,
   receivable,
-  realName
+  realName,
 }: WithdrawalDialogProps): JSX.Element {
   const classes = useWithdrawalDialogStyles();
 
@@ -48,11 +44,9 @@ function WithdrawDialog({
     currentCash: currentCashNumber,
     selectValue: '',
     checked: false,
-    totalIncome: ''
+    totalIncome: '',
   };
-  const [stepState, stepDispatch] = useReducer(
-    withdrawalDialogReducer, defaultState
-  );
+  const [stepState, stepDispatch] = useReducer(withdrawalDialogReducer, defaultState);
 
   const { selectValue, checked } = stepState;
 
@@ -61,7 +55,7 @@ function WithdrawDialog({
   const [activeStep, setActiveStep] = React.useState(0); // 각 step을 정의하는  state
 
   const handleNext = (targetStep?: number) => (
-    event: React.MouseEvent<HTMLButtonElement>
+    event: React.MouseEvent<HTMLButtonElement>,
   ): void => {
     event.preventDefault();
     setPaperSwitch(false);
@@ -69,14 +63,16 @@ function WithdrawDialog({
 
     if (activeStep === 1) {
       if (currentCashNumber - Number(selectValue) < 0 || Number(selectValue) < 30000) {
-        alert('출금 신청 금액은 30000원 미만에서는 불가하며 출금 신청 금액이 보유 수익금보다 클 수 없습니다.');
+        alert(
+          '출금 신청 금액은 30000원 미만에서는 불가하며 출금 신청 금액이 보유 수익금보다 클 수 없습니다.',
+        );
         history.push('/mypage/creator/main');
       } else {
         setTimeout(() => {
           if (targetStep) {
             setActiveStep(targetStep);
           } else {
-            setActiveStep((preIndex) => preIndex + 1);
+            setActiveStep(preIndex => preIndex + 1);
           }
           setPaperSwitch(true);
         }, 500);
@@ -86,7 +82,7 @@ function WithdrawDialog({
         if (targetStep) {
           setActiveStep(targetStep);
         } else {
-          setActiveStep((preIndex) => preIndex + 1);
+          setActiveStep(preIndex => preIndex + 1);
         }
         setPaperSwitch(true);
       }, 500);
@@ -101,7 +97,7 @@ function WithdrawDialog({
   function handleClicked(): void {
     setClicked(true);
   }
-  function handleClickedReset(): void{
+  function handleClickedReset(): void {
     setClicked(false);
   }
   // 출금 신청 클릭 핸들러
@@ -111,7 +107,7 @@ function WithdrawDialog({
     // 해당 금액 만큼 출금 내역에 추가하는 요청 실시
     withdrawalPost.doPostRequest({ withdrawalAmount: selectValue }).then(() => {
       // 요청 성공시 Success callback 함수
-      setActiveStep((preIndex) => preIndex + 1);
+      setActiveStep(preIndex => preIndex + 1);
     });
   }
 
@@ -124,7 +120,7 @@ function WithdrawDialog({
       stepDispatch({ key: 'reset' });
     }
     setTimeout(() => {
-      setActiveStep((preIndex) => preIndex - 1);
+      setActiveStep(preIndex => preIndex - 1);
       setPaperSwitch(true);
     }, 500);
   };
@@ -143,27 +139,24 @@ function WithdrawDialog({
   return (
     <Dialog
       open={open}
-      title={(
+      title={
         <div>
           <>
-            OnAD 출금신청 Step
-            {' '}
-            {activeStep + 1}
+            OnAD 출금신청 Step {activeStep + 1}
             /4
           </>
           <Typography variant="h6" className={classes.title}>
             {withdrawalSources.titleWithdrawal[activeStep]}
           </Typography>
         </div>
-      )}
-      onClose={activeStep !== 3 ? (DefaultIndex) : (finishIndex)}
+      }
+      onClose={activeStep !== 3 ? DefaultIndex : finishIndex}
       maxWidth="sm"
       fullWidth
-      buttons={(
+      buttons={
         <div>
           <Grid container direction="row">
-            {activeStep === 2
-              && (
+            {activeStep === 2 && (
               <Grid item>
                 <Collapse in>
                   <Button
@@ -176,54 +169,55 @@ function WithdrawDialog({
                   </Button>
                 </Collapse>
               </Grid>
-              )}
-            { (activeStep === 0 || activeStep === 1)
-              && (
+            )}
+            {(activeStep === 0 || activeStep === 1) && (
               <Grid item>
                 <Collapse in={stepComplete}>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={handleNext()}
-                  >
+                  <Button variant="contained" color="primary" onClick={handleNext()}>
                     다음
                   </Button>
                 </Collapse>
               </Grid>
-              )}
-            { (activeStep === 1 || activeStep === 2) ? (
+            )}
+            {activeStep === 1 || activeStep === 2 ? (
               <Grid item>
-                <Button onClick={handleBack}>
-                  뒤로
+                <Button onClick={handleBack}>뒤로</Button>
+              </Grid>
+            ) : null}
+            {activeStep !== 3 && (
+              <Grid item>
+                <Button onClick={DefaultIndex}>취소</Button>
+              </Grid>
+            )}
+            {activeStep === 3 && (
+              <Grid item>
+                <Button color="primary" onClick={finishIndex}>
+                  완료
                 </Button>
               </Grid>
-            ) : null }
-            {activeStep !== 3
-          && <Grid item><Button onClick={DefaultIndex}>취소</Button></Grid>}
-            {activeStep === 3
-          && <Grid item><Button color="primary" onClick={finishIndex}>완료</Button></Grid>}
+            )}
           </Grid>
         </div>
-      )}
+      }
     >
       <Slide direction="right" in={paperSwitch} mountOnEnter unmountOnExit timeout={{ exit: 500 }}>
         <div>
           {activeStep === 0 && (
-          <WithdrawalAgreement
-            setStepComplete={setStepComplete}
-            checked={checked}
-            dispatch={stepDispatch}
-          />
+            <WithdrawalAgreement
+              setStepComplete={setStepComplete}
+              checked={checked}
+              dispatch={stepDispatch}
+            />
           )}
           {activeStep === 1 && (
-          <WithdrawalAmount
-            setStepComplete={setStepComplete}
-            state={stepState}
-            dispatch={stepDispatch}
-            stepComplete={stepComplete}
-            accountNumber={accountNumber}
-            realName={realName}
-          />
+            <WithdrawalAmount
+              setStepComplete={setStepComplete}
+              state={stepState}
+              dispatch={stepDispatch}
+              stepComplete={stepComplete}
+              accountNumber={accountNumber}
+              realName={realName}
+            />
           )}
           {activeStep === 2 && (
             <WithdrawalConfirm
@@ -232,7 +226,7 @@ function WithdrawDialog({
               realName={realName}
             />
           )}
-          {activeStep === 3 && (<WithdrawalComplete state={stepState} />)}
+          {activeStep === 3 && <WithdrawalComplete state={stepState} />}
         </div>
       </Slide>
     </Dialog>

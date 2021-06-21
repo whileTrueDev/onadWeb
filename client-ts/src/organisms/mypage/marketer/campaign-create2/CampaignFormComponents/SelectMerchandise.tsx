@@ -1,6 +1,12 @@
 import moment from 'moment';
 import {
-  List, ListItem, ListItemText, Typography, ListItemSecondaryAction, makeStyles, CircularProgress
+  List,
+  ListItem,
+  ListItemText,
+  Typography,
+  ListItemSecondaryAction,
+  makeStyles,
+  CircularProgress,
 } from '@material-ui/core';
 import React from 'react';
 import { Alert } from '@material-ui/lab';
@@ -11,7 +17,7 @@ import { Merchandise } from '../../adManage/interface';
 import Button from '../../../../../atoms/CustomButtons/Button';
 import { CampaignCreateAction, CampaignCreateInterface } from '../reducers/campaignCreate.reducer';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   merchandiseList: {
     width: '100%',
     maxWidth: 600,
@@ -41,7 +47,7 @@ export default function SelectMerchandise({
     <div>
       <StyledItemText
         primary="판매 상품 선택하기"
-        secondary={(
+        secondary={
           <div>
             <Typography variant="body2" color="textSecondary">
               선택된 상품은 온애드샵에서 판매됩니다.
@@ -53,7 +59,7 @@ export default function SelectMerchandise({
               </Typography>
             </Typography>
           </div>
-        )}
+        }
         // className={classes.label}
       />
 
@@ -64,9 +70,8 @@ export default function SelectMerchandise({
           </div>
         )}
         {!merchandiseData.loading && merchandiseData.data && merchandiseData.data.length > 0 && (
-        <List className={classes.merchandiseList}>
-          {merchandiseData.data
-            .map((merchandise) => (
+          <List className={classes.merchandiseList}>
+            {merchandiseData.data.map(merchandise => (
               <ListItem
                 key={merchandise.id}
                 button
@@ -77,7 +82,9 @@ export default function SelectMerchandise({
               >
                 <ListItemText
                   primary={merchandise.name}
-                  secondary={`등록일: ${moment(merchandise.createDate).format('YYYY년 MM월 DD일 HH:mm:ss')}`}
+                  secondary={`등록일: ${moment(merchandise.createDate).format(
+                    'YYYY년 MM월 DD일 HH:mm:ss',
+                  )}`}
                 />
                 <ListItemSecondaryAction>
                   <GreenRadio
@@ -90,10 +97,9 @@ export default function SelectMerchandise({
                 </ListItemSecondaryAction>
               </ListItem>
             ))}
-        </List>
+          </List>
         )}
-        {!merchandiseData.loading && merchandiseData.data && merchandiseData.data.length === 0
-        && (
+        {!merchandiseData.loading && merchandiseData.data && merchandiseData.data.length === 0 && (
           <Alert severity="warning">
             <Typography variant="body2">선택할 수 있는 상품이 없어요..</Typography>
             <Typography variant="body2">새로운 상품을 등록하세요!</Typography>

@@ -66,7 +66,5 @@ export default function OnadBanner({
     );
   }
 
-  return (
-    <img draggable={false} src={src} alt={alt} width={width} height={height} {...rest} />
-  );
+  return <img draggable={false} src={src} alt={alt} width={width} height={height} {...rest} />;
 }

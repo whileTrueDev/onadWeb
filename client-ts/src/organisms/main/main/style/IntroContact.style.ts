@@ -1,6 +1,6 @@
 import makeStyles from '@material-ui/core/styles/makeStyles';
 
-const styles = makeStyles((theme) => ({
+const styles = makeStyles(theme => ({
   root: {
     backgroundColor: theme.palette.common.white,
     width: '100%',
@@ -51,13 +51,13 @@ const styles = makeStyles((theme) => ({
     fontWeight: theme.typography.fontWeightBold,
     color: theme.palette.common.white,
     [theme.breakpoints.down('md')]: {
-      fontSize: 45
+      fontSize: 45,
     },
     [theme.breakpoints.down('sm')]: {
-      fontSize: 32
+      fontSize: 32,
     },
     [theme.breakpoints.down('xs')]: {
-      fontSize: 22
+      fontSize: 22,
     },
   },
   button: {
@@ -67,7 +67,7 @@ const styles = makeStyles((theme) => ({
     border: '3px solid white',
     borderRadius: 30,
     '&:hover': {
-      background: '#0074d8'
+      background: '#0074d8',
     },
     [theme.breakpoints.down('md')]: {
       width: 210,
@@ -90,7 +90,7 @@ const styles = makeStyles((theme) => ({
     borderRadius: 30,
     '&:hover': {
       background: '#00d1c9',
-      opacity: 0.5
+      opacity: 0.5,
     },
     [theme.breakpoints.down('md')]: {
       width: 210,
@@ -109,8 +109,8 @@ const styles = makeStyles((theme) => ({
     position: 'absolute',
     left: 0,
     right: 0,
-    bottom: 0
-  }
+    bottom: 0,
+  },
 }));
 
 export default styles;

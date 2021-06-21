@@ -1,6 +1,12 @@
 import classnames from 'classnames';
 import {
-  FormControlLabel, Hidden, makeStyles, Paper, Popover, Switch, Typography
+  FormControlLabel,
+  Hidden,
+  makeStyles,
+  Paper,
+  Popover,
+  Switch,
+  Typography,
 } from '@material-ui/core';
 import HelpIcon from '@material-ui/icons/Help';
 import React from 'react';
@@ -8,7 +14,7 @@ import { useAnchorEl, usePatchRequest } from '../../../../utils/hooks';
 import { UseGetRequestObject } from '../../../../utils/hooks/useGetRequest';
 import { ContractionDataType } from '../../../../pages/mypage/creator/CPAManage';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   bold: { fontWeight: theme.typography.fontWeightBold },
   highlight: { color: theme.palette.primary.main },
   container: {
@@ -19,11 +25,13 @@ const useStyles = makeStyles((theme) => ({
   },
   onoffButton: { marginTop: theme.spacing(4), textAlign: 'center' },
   popover: { maxWidth: 450 },
-  popoverContents: { padding: theme.spacing(4), },
+  popoverContents: { padding: theme.spacing(4) },
   alignCenter: { textAlign: 'center' },
 }));
 
-export interface AdChatRes { adChatAgreement: 1 | 0 }
+export interface AdChatRes {
+  adChatAgreement: 1 | 0;
+}
 export interface ChatAdInfoProps {
   contracitonAgreementData: UseGetRequestObject<ContractionDataType>;
   adChatData: UseGetRequestObject<AdChatRes>;
@@ -46,7 +54,8 @@ export default function ChatAdInfo({
     doGetReqeustOnOff();
   });
   const handleSwitch = (): void => {
-    onOffUpdate.doPatchRequest({ targetOnOffState: !(adChatData.data?.adChatAgreement) })
+    onOffUpdate
+      .doPatchRequest({ targetOnOffState: !adChatData.data?.adChatAgreement })
       .then(() => successSnackOpen())
       .catch(() => failSnackOpen());
   };
@@ -78,9 +87,11 @@ export default function ChatAdInfo({
             <FormControlLabel
               label="끄기/켜기"
               // 온애드 이용 동의를 안했거나, 트위치 연동을 안한 경우
-              disabled={!contracitonAgreementData.data.creatorContractionAgreement
-                || !contracitonAgreementData.data.creatorTwitchOriginalId}
-              control={(
+              disabled={
+                !contracitonAgreementData.data.creatorContractionAgreement ||
+                !contracitonAgreementData.data.creatorTwitchOriginalId
+              }
+              control={
                 <Switch
                   color="primary"
                   checked={Boolean(adChatData.data?.adChatAgreement)}
@@ -88,26 +99,30 @@ export default function ChatAdInfo({
                     handleSwitch();
                   }}
                 />
-              )}
+              }
             />
             {Boolean(adChatData.data?.adChatAgreement) && (
-            <Typography variant="body2" color="textSecondary">
-              채팅창에서
-              <Typography variant="body2" color="primary" component="span">
-                /mod onadbot
+              <Typography variant="body2" color="textSecondary">
+                채팅창에서
+                <Typography variant="body2" color="primary" component="span">
+                  /mod onadbot
+                </Typography>
+                <Typography component="span" variant="body2" color="textSecondary">
+                  명령어를 입력해주세요!
+                </Typography>
               </Typography>
-              <Typography component="span" variant="body2" color="textSecondary">
-                명령어를 입력해주세요!
-              </Typography>
-            </Typography>
             )}
             {!contracitonAgreementData.data.creatorContractionAgreement && (
-            <Typography variant="body2" color="textSecondary">이용동의가 필요합니다.</Typography>
+              <Typography variant="body2" color="textSecondary">
+                이용동의가 필요합니다.
+              </Typography>
             )}
-            {contracitonAgreementData.data.creatorContractionAgreement
-            && !contracitonAgreementData.data.creatorTwitchOriginalId && (
-            <Typography variant="body2" color="textSecondary">트위치TV 연동이 필요합니다.</Typography>
-            )}
+            {contracitonAgreementData.data.creatorContractionAgreement &&
+              !contracitonAgreementData.data.creatorTwitchOriginalId && (
+                <Typography variant="body2" color="textSecondary">
+                  트위치TV 연동이 필요합니다.
+                </Typography>
+              )}
           </div>
         )}
       </div>
@@ -120,10 +135,12 @@ export default function ChatAdInfo({
           open={descAnchor.open}
           anchorEl={descAnchor.anchorEl}
           anchorOrigin={{
-            vertical: 'bottom', horizontal: 'center',
+            vertical: 'bottom',
+            horizontal: 'center',
           }}
           transformOrigin={{
-            vertical: 'top', horizontal: 'center',
+            vertical: 'top',
+            horizontal: 'center',
           }}
           onClose={descAnchor.handleAnchorClose}
           disableRestoreFocus
@@ -133,15 +150,14 @@ export default function ChatAdInfo({
               <img src="/pngs/dashboard/bot_example.png" alt="bot_example" width="320px" />
             </div>
             <Typography variant="body2">
-              온애드의 광고채팅봇 onadbot은 주기적으로 광고에 대한 설명과 광고 링크를 채팅으로 자동홍보합니다.
-              시청자가 onadbot이 홍보한 링크를 클릭하면, 클릭에 대한 수익이 방송인에게 발생합니다.
+              온애드의 광고채팅봇 onadbot은 주기적으로 광고에 대한 설명과 광고 링크를 채팅으로
+              자동홍보합니다. 시청자가 onadbot이 홍보한 링크를 클릭하면, 클릭에 대한 수익이
+              방송인에게 발생합니다.
             </Typography>
             <br />
             <Typography variant="body2">
-              onadbot이 채널 채팅창에서 홍보하는 것을 허용하려면
-              {' '}
-              <span className={classnames(classes.highlight, classes.bold)}>스위치를 On</span>
-              {' '}
+              onadbot이 채널 채팅창에서 홍보하는 것을 허용하려면{' '}
+              <span className={classnames(classes.highlight, classes.bold)}>스위치를 On</span>{' '}
               시켜주세요. 스위치를 켜기만 하면 자동으로 광고가 송출됩니다.
             </Typography>
             <Typography variant="body2">
@@ -151,11 +167,8 @@ export default function ChatAdInfo({
             </Typography>
 
             <br />
-            <Typography variant="body2">
-              아프리카TV의 경우 사용할 수 없습니다.
-            </Typography>
+            <Typography variant="body2">아프리카TV의 경우 사용할 수 없습니다.</Typography>
           </div>
-
         </Popover>
       )}
     </Paper>

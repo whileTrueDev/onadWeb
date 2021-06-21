@@ -2,9 +2,7 @@ import React from 'react';
 // material-ui components
 import Button, { ButtonProps } from '@material-ui/core/Button';
 // Styles
-import {
-  CircularProgress
-} from '@material-ui/core';
+import { CircularProgress } from '@material-ui/core';
 import useButtonStyles from './Button.style';
 
 interface CustomProps extends ButtonProps {
@@ -53,12 +51,7 @@ function RegularButton({
     >
       {children}
       {isloading && (
-        <CircularProgress
-          disableShrink
-          size={16}
-          thickness={5}
-          variant="indeterminate"
-        />
+        <CircularProgress disableShrink size={16} thickness={5} variant="indeterminate" />
       )}
     </Button>
   );

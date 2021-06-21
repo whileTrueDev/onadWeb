@@ -17,20 +17,18 @@ export default function ExpansionPanel({
   ...rest
 }: ExpansionPanelProps): JSX.Element {
   return (
-    <div
-      className={className}
-    >
+    <div className={className}>
       <MuiExpansionPanel {...rest}>
         <ExpansionPanelSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls="panel-content"
           id="panel-header"
         >
-          <Typography variant="body1" gutterBottom>{title}</Typography>
+          <Typography variant="body1" gutterBottom>
+            {title}
+          </Typography>
         </ExpansionPanelSummary>
-        <ExpansionPanelDetails>
-          {children}
-        </ExpansionPanelDetails>
+        <ExpansionPanelDetails>{children}</ExpansionPanelDetails>
       </MuiExpansionPanel>
     </div>
   );

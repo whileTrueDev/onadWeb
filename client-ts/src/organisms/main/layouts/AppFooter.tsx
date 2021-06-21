@@ -5,7 +5,6 @@ import Link from '@material-ui/core/Link';
 import Typography from '@material-ui/core/Typography';
 import useStyles from './style/AppFooter.style';
 
-
 function AppFooter(): JSX.Element {
   const classes = useStyles();
   return (
@@ -57,9 +56,15 @@ function AppFooter(): JSX.Element {
           부산광역시 금정구 장전온천천로 51 테라스파크 3층 313호 와일트루
         </Typography>
         <div className={classes.logoWrapper}>
-          <a href="https://m.blog.naver.com/PostList.nhn?blogId=wt_onad"><img src="/footer/blog.svg" alt="blog" className={classes.logo} /></a>
-          <a href="https://www.instagram.com/official.onad/"><img src="/footer/instagram.svg" alt="instagram" className={classes.logo} /></a>
-          <a href="https://www.youtube.com/channel/UCN3w7jS8f6t2fPROcRY7e0g"><img src="/footer/youtube.svg" alt="youtube" className={classes.logo} /></a>
+          <a href="https://m.blog.naver.com/PostList.nhn?blogId=wt_onad">
+            <img src="/footer/blog.svg" alt="blog" className={classes.logo} />
+          </a>
+          <a href="https://www.instagram.com/official.onad/">
+            <img src="/footer/instagram.svg" alt="instagram" className={classes.logo} />
+          </a>
+          <a href="https://www.youtube.com/channel/UCN3w7jS8f6t2fPROcRY7e0g">
+            <img src="/footer/youtube.svg" alt="youtube" className={classes.logo} />
+          </a>
         </div>
       </Grid>
 
@@ -89,10 +94,7 @@ function AppFooter(): JSX.Element {
       </Grid>
 
       <Typography variant="caption" className={classes.corp}>
-        <strong>
-          &copy;
-          while True Corp.
-        </strong>
+        <strong>&copy; while True Corp.</strong>
         {' All rights Reserved'}
       </Typography>
     </div>

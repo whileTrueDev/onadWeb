@@ -1,10 +1,6 @@
 import React from 'react';
-import {
-  ButtonBase,
-  Typography,
-} from '@material-ui/core';
+import { ButtonBase, Typography } from '@material-ui/core';
 import useStyles from './style/Usertype.style';
-
 
 const images = [
   {
@@ -40,7 +36,7 @@ function Usertype({ typeChange, handleNext }: Props): JSX.Element {
 
   return (
     <div className={classes.root}>
-      {images.map((image) => (
+      {images.map(image => (
         <ButtonBase
           focusRipple
           key={image.title}

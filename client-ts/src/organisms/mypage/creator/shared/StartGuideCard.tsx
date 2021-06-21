@@ -1,7 +1,5 @@
 import React, { useEffect } from 'react';
-import {
-  Paper, Typography, Stepper, Step, StepLabel, makeStyles, Button
-} from '@material-ui/core';
+import { Paper, Typography, Stepper, Step, StepLabel, makeStyles, Button } from '@material-ui/core';
 // components
 import Dialog from '../../../../atoms/Dialog/Dialog';
 import Snackbar from '../../../../atoms/Snackbar/Snackbar';
@@ -18,18 +16,18 @@ import StyledTooltip from '../../../../atoms/Tooltip/StyledTooltip';
 import history from '../../../../history';
 import GuideComplete from './guides/GuideComplete';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   container: {
     padding: theme.spacing(2),
     marginTop: theme.spacing(1),
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
   },
   bold: { fontWeight: 'bold' },
   red: { color: theme.palette.error.main },
   contents: { padding: theme.spacing(2) },
-  actionsContainer: { textAlign: 'right', },
+  actionsContainer: { textAlign: 'right' },
 }));
 
 interface ContractionCardProps {
@@ -66,10 +64,10 @@ const ContractionCard = ({
   // 가이드 Stepper
   const [activeStep, setActiveStep] = React.useState(0);
   const handleNext = (): void => {
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    setActiveStep(prevActiveStep => prevActiveStep + 1);
   };
   const handleBack = (): void => {
-    setActiveStep((prevActiveStep) => prevActiveStep - 1);
+    setActiveStep(prevActiveStep => prevActiveStep - 1);
   };
   const handleStepReset = (): void => {
     setActiveStep(0);
@@ -79,39 +77,41 @@ const ContractionCard = ({
   const steps = [
     {
       label: '온애드 이용약관 동의하기',
-      component: <ContractionSection
-        contractionData={contractionData}
-        doReRequest={(): void => {
-          doContractionDataRequest();
-          doOverlayUrlDataRequest();
-          if (doRemoteControllerUrlRequest) doRemoteControllerUrlRequest();
-        }}
-        handleSuccess={(): void => { snack.handleOpen(); }}
-      />,
+      component: (
+        <ContractionSection
+          contractionData={contractionData}
+          doReRequest={(): void => {
+            doContractionDataRequest();
+            doOverlayUrlDataRequest();
+            if (doRemoteControllerUrlRequest) doRemoteControllerUrlRequest();
+          }}
+          handleSuccess={(): void => {
+            snack.handleOpen();
+          }}
+        />
+      ),
     },
     {
       label: '배너광고 준비하기',
-      component: <SetOverlaySection
-        overlayUrlData={overlayUrlData}
-        handleSnackOpen={handleSnackOpen}
-      />,
+      component: (
+        <SetOverlaySection overlayUrlData={overlayUrlData} handleSnackOpen={handleSnackOpen} />
+      ),
     },
     {
       label: '클릭광고 준비하기',
-      component: <SetClickAdSection
-        contractionData={contractionData}
-        handleSnackOpen={handleSnackOpen}
-      />,
+      component: (
+        <SetClickAdSection contractionData={contractionData} handleSnackOpen={handleSnackOpen} />
+      ),
     },
     { label: '광고 준비 완료!', component: <GuideComplete /> },
-    { label: '수익금 출금하기', component: <SetSettlementSection />, },
+    { label: '수익금 출금하기', component: <SetSettlementSection /> },
   ];
 
   function getStepComponent(step: number): React.ReactNode {
     return steps[step].component;
   }
 
-  // 첫 사용자 도움 popper 
+  // 첫 사용자 도움 popper
   const tooltip = useDialog();
   useEffect(() => {
     if (!contractionData.creatorContractionAgreement) {
@@ -124,8 +124,7 @@ const ContractionCard = ({
       <Paper className={classes.container}>
         <Typography className={classes.bold}>
           <span className={classes.red}>[필수]</span>
-          &nbsp;
-          온애드 시작 가이드
+          &nbsp; 온애드 시작 가이드
         </Typography>
 
         {/* 계약 완료 버튼 */}
@@ -137,16 +136,11 @@ const ContractionCard = ({
           interactive
         >
           <div>
-            <Button
-              color="primary"
-              variant="contained"
-              onClick={guideDialog.handleOpen}
-            >
+            <Button color="primary" variant="contained" onClick={guideDialog.handleOpen}>
               시작하기
             </Button>
           </div>
         </StyledTooltip>
-
       </Paper>
 
       <Dialog
@@ -172,25 +166,24 @@ const ContractionCard = ({
               onClick={(): void => history.push('/mypage/creator/user')}
             >
               플랫폼 연동하러가기
-
             </Button>
           </div>
         ) : (
           <div>
-            {introduction ? (<GuideIntroduction />) : (
+            {introduction ? (
+              <GuideIntroduction />
+            ) : (
               <>
                 {/* 가이드 Stepper */}
                 <Stepper activeStep={activeStep} alternativeLabel>
-                  {steps.map((step) => (
+                  {steps.map(step => (
                     <Step key={step.label}>
                       <StepLabel color="textPrimary">{step.label}</StepLabel>
                     </Step>
                   ))}
                 </Stepper>
                 {/* 단계별 컴포넌트 */}
-                <div className={classes.contents}>
-                  {getStepComponent(activeStep)}
-                </div>
+                <div className={classes.contents}>{getStepComponent(activeStep)}</div>
               </>
             )}
 
@@ -214,7 +207,8 @@ const ContractionCard = ({
                 onClick={(): void => {
                   if (introduction) handleIntroSkip();
                   else if (activeStep === steps.length - 1) {
-                    guideDialog.handleClose(); handleStepReset();
+                    guideDialog.handleClose();
+                    handleStepReset();
                   } else {
                     handleNext();
                   }

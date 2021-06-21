@@ -1,20 +1,20 @@
 import React from 'react';
 import classnames from 'classnames';
 import MuiCircularProgress, {
-  CircularProgressProps as MuiCircularProgressProps
+  CircularProgressProps as MuiCircularProgressProps,
 } from '@material-ui/core/CircularProgress';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   wrapper: {
     display: 'flex',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   big: {
     marginTop: theme.spacing(15),
     marginBottom: theme.spacing(15),
-  }
+  },
 }));
 
 interface CircularProgressProps extends MuiCircularProgressProps {
@@ -29,7 +29,7 @@ export default function CircularProgress({
 
   return (
     <div>
-      { small ? (
+      {small ? (
         <div className={classes.wrapper}>
           <MuiCircularProgress {...rest} />
         </div>

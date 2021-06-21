@@ -1,7 +1,6 @@
+/* eslint-disable react/display-name */
 import moment from 'moment';
-import {
-  IconButton, makeStyles, Tooltip, Typography
-} from '@material-ui/core';
+import { IconButton, makeStyles, Tooltip, Typography } from '@material-ui/core';
 import React, { useState } from 'react';
 import { Delete } from '@material-ui/icons';
 import CustomDataGrid from '../../../../../atoms/Table/CustomDataGrid';
@@ -78,14 +77,15 @@ export default function MerchandiseInventory({
               const discountRate = getDiscountPrice(data.row.regularPrice, data.row.price);
               return (
                 <Typography variant="body2">
-                  {data.row.price}
-                  {' '}
+                  {data.row.price}{' '}
                   {discountRate > 0 && (
-                  <Typography variant="caption" component="span">{`(할인율 ${discountRate}%)`}</Typography>
+                    <Typography variant="caption" component="span">
+                      {`(할인율 ${discountRate}%)`}
+                    </Typography>
                   )}
                 </Typography>
               );
-            }
+            },
           },
           {
             field: 'stock',
@@ -109,7 +109,7 @@ export default function MerchandiseInventory({
                   </Tooltip>
                 )}
               </div>
-            )
+            ),
           },
           {
             field: 'createDate',
@@ -119,7 +119,7 @@ export default function MerchandiseInventory({
               <Typography variant="body2" noWrap>
                 {moment(data.row.createDate).format('YYYY/MM/DD HH:mm:ss')}
               </Typography>
-            )
+            ),
           },
           {
             field: '',
@@ -127,30 +127,35 @@ export default function MerchandiseInventory({
             headerName: '삭제',
             disableColumnMenu: true,
             renderCell: (data): React.ReactElement => (
-              <IconButton onClick={(): void => {
-                handleSelect(data.row as Merchandise);
-                merchandiseDeleteDialog.handleOpen();
-              }}
+              <IconButton
+                onClick={(): void => {
+                  handleSelect(data.row as Merchandise);
+                  merchandiseDeleteDialog.handleOpen();
+                }}
               >
                 <Delete fontSize="small" />
               </IconButton>
-            )
-          }
+            ),
+          },
         ]}
       />
 
       {merchandiseDeleteDialog.open && selectedMerchandise && (
-      <MerchandiseDeleteDialog
-        open={merchandiseDeleteDialog.open}
-        selectedMerchandise={selectedMerchandise}
-        handleClose={merchandiseDeleteDialog.handleClose}
-        recallRequest={(): void => {
-          merchandiseData.requestWithoutConcat();
-          successSnack.handleOpen();
-        }}
-      />
+        <MerchandiseDeleteDialog
+          open={merchandiseDeleteDialog.open}
+          selectedMerchandise={selectedMerchandise}
+          handleClose={merchandiseDeleteDialog.handleClose}
+          recallRequest={(): void => {
+            merchandiseData.requestWithoutConcat();
+            successSnack.handleOpen();
+          }}
+        />
       )}
-      <Snackbar message="올바르게 삭제되었습니다." open={successSnack.open} onClose={successSnack.handleClose} />
+      <Snackbar
+        message="올바르게 삭제되었습니다."
+        open={successSnack.open}
+        onClose={successSnack.handleClose}
+      />
     </div>
   );
 }

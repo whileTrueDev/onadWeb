@@ -1,6 +1,6 @@
 import { makeStyles } from '@material-ui/core/styles';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   root: {
     width: '100%',
     marginTop: theme.spacing(8),
@@ -8,23 +8,23 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'flex-start',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   Selected: {
     color: theme.palette.common.black,
     marginRight: theme.spacing(2),
     width: 190,
     '&:hover': {
-      cursor: 'pointer'
+      cursor: 'pointer',
     },
-    borderBottom: '1px solid black'
+    borderBottom: '1px solid black',
   },
   notSelected: {
     color: theme.palette.common.black,
     marginRight: theme.spacing(2),
     width: 190,
     '&:hover': {
-      cursor: 'pointer'
+      cursor: 'pointer',
     },
   },
 }));

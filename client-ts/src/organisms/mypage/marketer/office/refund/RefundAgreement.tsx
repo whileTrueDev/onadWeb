@@ -1,15 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { makeStyles, Theme } from '@material-ui/core/styles';
-import {
-  Paper, Typography, FormControlLabel,
-  Checkbox, Divider, Grid,
-} from '@material-ui/core';
+import { Paper, Typography, FormControlLabel, Checkbox, Divider, Grid } from '@material-ui/core';
 import shortid from 'shortid';
 import sources from '../sources';
 import Dialog from '../../../../../atoms/Dialog/Dialog';
 import Button from '../../../../../atoms/CustomButtons/Button';
 import { Action } from '../interface';
-
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -20,7 +16,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   warning: {
     backgroundColor: theme.palette.action.disabledBackground,
     borderLeft: `0.25rem solid ${theme.palette.error.main}`,
-    wordBreak: 'keep-all'
+    wordBreak: 'keep-all',
   },
   title: {
     marginBottom: 0,
@@ -40,7 +36,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   checkboxRoot: {
     color: theme.palette.success.light,
     '&$checked': {
-      color: theme.palette.success.light
+      color: theme.palette.success.light,
     },
   },
   divider: {
@@ -84,7 +80,6 @@ const useStyles = makeStyles((theme: Theme) => ({
       fontWeight: 700,
     },
   },
-
 }));
 
 interface RefundAgreementProps {
@@ -119,7 +114,6 @@ const RefundAgreement = (props: RefundAgreementProps): JSX.Element => {
     }
   };
 
-
   return (
     <div>
       <blockquote className={classes.warning}>
@@ -139,7 +133,9 @@ const RefundAgreement = (props: RefundAgreementProps): JSX.Element => {
                 <Grid item>
                   <Button
                     style={{
-                      flex: 1, height: '70%', fontSize: 13,
+                      flex: 1,
+                      height: '70%',
+                      fontSize: 13,
                     }}
                     onClick={handleOpen}
                   >
@@ -151,7 +147,7 @@ const RefundAgreement = (props: RefundAgreementProps): JSX.Element => {
                 </Grid>
                 <Grid item>
                   <FormControlLabel
-                    control={(
+                    control={
                       <Checkbox
                         onChange={handleChange}
                         checked={checked}
@@ -161,7 +157,7 @@ const RefundAgreement = (props: RefundAgreementProps): JSX.Element => {
                           checked: classes.checked,
                         }}
                       />
-                    )}
+                    }
                     label="동의"
                     style={{ flex: 2, marginRight: 0 }}
                   />
@@ -176,25 +172,23 @@ const RefundAgreement = (props: RefundAgreementProps): JSX.Element => {
           onClose={handleClose}
           title={terms.itemTitle}
           maxWidth="md"
-          buttons={(
+          buttons={
             <div>
-              <Button onClick={handleClose}>
-                취소
-              </Button>
+              <Button onClick={handleClose}>취소</Button>
             </div>
-          )}
+          }
         >
           {/* 계약 내용 */}
           <div className={classes.inDialogContent}>
             {terms.agreement.split('\n').map((sentence: string) => (
-              <p key={shortid.generate()} className={classes.names}>{sentence}</p>
+              <p key={shortid.generate()} className={classes.names}>
+                {sentence}
+              </p>
             ))}
           </div>
         </Dialog>
-
       </div>
     </div>
-
   );
 };
 

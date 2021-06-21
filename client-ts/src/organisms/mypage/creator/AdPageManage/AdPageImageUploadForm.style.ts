@@ -12,8 +12,8 @@ const useAdPageImageUploadFormStyles = makeStyles((theme: Theme) => ({
       zIndex: 1,
     },
     '&:hover $imageButton': {
-      opacity: 1
-    }
+      opacity: 1,
+    },
   },
   imageSrc: {
     position: 'absolute',
@@ -33,10 +33,10 @@ const useAdPageImageUploadFormStyles = makeStyles((theme: Theme) => ({
     textAlign: 'center',
     [theme.breakpoints.down('xs')]: {
       margin: '2px',
-      width: 235
+      width: 235,
     },
     [theme.breakpoints.up('xl')]: {
-      padding: theme.spacing(2)
+      padding: theme.spacing(2),
     },
   },
 }));

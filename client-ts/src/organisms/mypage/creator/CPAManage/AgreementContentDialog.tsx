@@ -9,34 +9,36 @@ interface AgreementContentDialogProps {
 }
 
 function AgreementContentDialog({
-  changeHandle, source
+  changeHandle,
+  source,
 }: AgreementContentDialogProps): JSX.Element {
   return (
     <Dialog
       open={Boolean(changeHandle.open)}
-      title={(
+      title={
         <div>
-          <Typography variant="h6">
-            유의사항
-          </Typography>
+          <Typography variant="h6">유의사항</Typography>
         </div>
-      )}
+      }
       onClose={changeHandle.handleClose}
       fullWidth
       maxWidth="md"
-      buttons={(
+      buttons={
         <div>
-          <Button onClick={(): void => {
-            changeHandle.handleClose();
-          }}
+          <Button
+            onClick={(): void => {
+              changeHandle.handleClose();
+            }}
           >
             확인
           </Button>
         </div>
-      )}
+      }
     >
-      {source.agreementText.split('\n').map((sentence) => (
-        <p style={{ fontWeight: 500 }} key={shortid.generate()}>{sentence}</p>
+      {source.agreementText.split('\n').map(sentence => (
+        <p style={{ fontWeight: 500 }} key={shortid.generate()}>
+          {sentence}
+        </p>
       ))}
     </Dialog>
   );

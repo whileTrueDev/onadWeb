@@ -7,7 +7,8 @@
     "start": "set PORT=3001 && react-scripts start",
     "build": "NODE_ENV=production GENERATE_SOURCEMAP=false react-scripts build",
     "test": "react-scripts test --coverage --detectOpenHandles --forceExit --passWithNoTests",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "format": "eslint ./src --ext .js,.jsx,.ts,.tsx --fix"
   },
   "dependencies": {
     "@date-io/date-fns": "^1.3.13",
@@ -52,19 +53,7 @@
     "shortid": "^2.2.15",
     "styled-components": "^5.2.1",
     "typescript": "3.9.7",
-    "web-vitals": "^0.2.4",
-    "workbox-background-sync": "^5.1.3",
-    "workbox-broadcast-update": "^5.1.3",
-    "workbox-cacheable-response": "^5.1.3",
-    "workbox-core": "^5.1.3",
-    "workbox-expiration": "^5.1.3",
-    "workbox-google-analytics": "^5.1.3",
-    "workbox-navigation-preload": "^5.1.3",
-    "workbox-precaching": "^5.1.3",
-    "workbox-range-requests": "^5.1.3",
-    "workbox-routing": "^5.1.3",
-    "workbox-strategies": "^5.1.3",
-    "workbox-streams": "^5.1.3"
+    "web-vitals": "^0.2.4"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^4.2.4",

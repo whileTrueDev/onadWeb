@@ -1,8 +1,6 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import {
-  Grid
-} from '@material-ui/core';
+import { Grid } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
 import Tooltip from '@material-ui/core/Tooltip';
 import Divider from '@material-ui/core/Divider';
@@ -13,26 +11,25 @@ import TextField from '@material-ui/core/TextField';
 import sources from '../sources';
 import { StateInterface, Action } from '../interface';
 
-
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   root: {
     width: '85%',
-    margin: '5px auto'
+    margin: '5px auto',
   },
   contentTitle: {
     fontWeight: 'bold',
     color: theme.palette.text.primary,
-    fontFamily: 'Noto Sans KR'
+    fontFamily: 'Noto Sans KR',
   },
   newContentTitle: {
     fontWeight: 'bold',
     color: theme.palette.primary.main,
-    fontFamily: 'Noto Sans KR'
+    fontFamily: 'Noto Sans KR',
   },
   warningTitle: {
     fontWeight: 'bold',
     color: 'black',
-    fontFamily: 'Noto Sans KR'
+    fontFamily: 'Noto Sans KR',
   },
   contentDetail: { marginTop: theme.spacing(1) },
   textField: {
@@ -59,7 +56,7 @@ const useStyles = makeStyles((theme) => ({
     background: theme.palette.action.disabledBackground,
     marginTop: theme.spacing(2),
     marginBottom: theme.spacing(2),
-  }
+  },
 }));
 
 interface RefundAmountProps {
@@ -71,11 +68,8 @@ interface RefundAmountProps {
   accountHolder: string;
 }
 
-
 const RefundAmount = (props: RefundAmountProps): JSX.Element => {
-  const {
-    setStepComplete, state, dispatch, stepComplete, accountNumber, accountHolder
-  } = props;
+  const { setStepComplete, state, dispatch, stepComplete, accountNumber, accountHolder } = props;
   const classes = useStyles();
   const { currentCash, selectValue, totalDebit } = state;
 
@@ -167,65 +161,49 @@ const RefundAmount = (props: RefundAmountProps): JSX.Element => {
                   <FormControlLabel
                     value="10000"
                     control={<Radio color="primary" />}
-                    label={(
+                    label={
                       currentCash >= 10000 ? (
-                        <Typography variant="subtitle1">
-                          10,000 원
-                        </Typography>
+                        <Typography variant="subtitle1">10,000 원</Typography>
+                      ) : (
+                        <Typography variant="subtitle1">10,000 원</Typography>
                       )
-                        : (
-                          <Typography variant="subtitle1">
-                            10,000 원
-                          </Typography>
-                        ))}
+                    }
                     disabled={!(currentCash >= 10000)}
                   />
                   <FormControlLabel
                     value="30000"
                     control={<Radio color="primary" />}
-                    label={(
+                    label={
                       currentCash >= 30000 ? (
-                        <Typography variant="subtitle1">
-                          30,000 원
-                        </Typography>
+                        <Typography variant="subtitle1">30,000 원</Typography>
+                      ) : (
+                        <Typography variant="subtitle1">30,000 원</Typography>
                       )
-                        : (
-                          <Typography variant="subtitle1">
-                            30,000 원
-                          </Typography>
-                        ))}
+                    }
                     disabled={!(currentCash >= 30000)}
                   />
                   <FormControlLabel
                     value="50000"
                     control={<Radio color="primary" />}
-                    label={(
+                    label={
                       currentCash >= 50000 ? (
-                        <Typography variant="subtitle1">
-                          50,000 원
-                        </Typography>
+                        <Typography variant="subtitle1">50,000 원</Typography>
+                      ) : (
+                        <Typography variant="subtitle1">50,000 원</Typography>
                       )
-                        : (
-                          <Typography variant="subtitle1">
-                            50,000 원
-                          </Typography>
-                        ))}
+                    }
                     disabled={!(currentCash >= 50000)}
                   />
                   <FormControlLabel
                     value="100000"
                     control={<Radio color="primary" />}
-                    label={(
+                    label={
                       currentCash >= 100000 ? (
-                        <Typography variant="subtitle1">
-                          100,000 원
-                        </Typography>
+                        <Typography variant="subtitle1">100,000 원</Typography>
+                      ) : (
+                        <Typography variant="subtitle1">100,000 원</Typography>
                       )
-                        : (
-                          <Typography variant="subtitle1">
-                            100,000 원
-                          </Typography>
-                        ))}
+                    }
                     disabled={!(currentCash >= 100000)}
                   />
                 </RadioGroup>
@@ -235,21 +213,24 @@ const RefundAmount = (props: RefundAmountProps): JSX.Element => {
                   <Tooltip title="직접입력 하십시오.">
                     <TextField
                       id="selectValue"
-                      label={(
-                        <Typography variant="subtitle1">
-                          환불 요청할 금액을 입력하세요
-                        </Typography>
-                      )}
+                      label={
+                        <Typography variant="subtitle1">환불 요청할 금액을 입력하세요</Typography>
+                      }
                       type="number"
                       className={classes.textField}
                       value={selectValue}
                       onChange={handleChange}
                       margin="normal"
                       variant="outlined"
-                      error={!((currentCash >= parseInt(selectValue, 10)))
-                        || !(parseInt(selectValue, 10) > 1000)}
-                      helperText={((currentCash >= parseInt(selectValue, 10))
-                        && (parseInt(selectValue, 10) > 1000)) ? null : '올바른 입력 부탁드립니다'}
+                      error={
+                        !(currentCash >= parseInt(selectValue, 10)) ||
+                        !(parseInt(selectValue, 10) > 1000)
+                      }
+                      helperText={
+                        currentCash >= parseInt(selectValue, 10) && parseInt(selectValue, 10) > 1000
+                          ? null
+                          : '올바른 입력 부탁드립니다'
+                      }
                     />
                   </Tooltip>
                 </div>

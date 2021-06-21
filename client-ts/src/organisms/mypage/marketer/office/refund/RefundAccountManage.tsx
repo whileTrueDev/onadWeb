@@ -11,13 +11,13 @@ import Table from '../../../../../atoms/Table/Table';
 // hooks
 import useDialog from '../../../../../utils/hooks/useDialog';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   root: {
     padding: theme.spacing(4),
     marginTop: theme.spacing(1),
     [theme.breakpoints.down('xs')]: {
-      padding: theme.spacing(2)
-    }
+      padding: theme.spacing(2),
+    },
   },
 }));
 
@@ -36,29 +36,27 @@ function RefundAccountForm(props: RefundAccountFormProps): JSX.Element {
   const { open, handleOpen, handleClose } = useDialog();
 
   // 환불 목록 데이터
-  const { data, loading } = useGetRequest<null, { data: string[][] }>('/marketer/cash/history/refund');
+  const { data, loading } = useGetRequest<null, { data: string[][] }>(
+    '/marketer/cash/history/refund',
+  );
   return (
     <Paper className={classes.root}>
-      <Typography style={{ fontWeight: 'bold' }}>
-        광고 캐시 환불 계좌 정보
-      </Typography>
+      <Typography style={{ fontWeight: 'bold' }}>광고 캐시 환불 계좌 정보</Typography>
       {!accountData.loading && accountData.data && accountData.data.marketerAccountNumber ? (
         <div>
           <Typography gutterBottom variant="body1">
-            계좌번호 :
-            {' '}
-            {accountData.data.marketerAccountNumber}
+            계좌번호 : {accountData.data.marketerAccountNumber}
           </Typography>
           <Typography gutterBottom variant="body1">
-            예금주 :
-            {' '}
-            {accountData.data.accountHolder}
+            예금주 : {accountData.data.accountHolder}
           </Typography>
           <Button
             variant="outlined"
             color="primary"
             size="small"
-            onClick={(): void => { handleOpen(); }}
+            onClick={(): void => {
+              handleOpen();
+            }}
           >
             환불계좌 변경
           </Button>
@@ -66,7 +64,9 @@ function RefundAccountForm(props: RefundAccountFormProps): JSX.Element {
       ) : (
         <div>
           <div>
-            <Typography gutterBottom variant="body2">아직 등록된 환불계좌가 없습니다.</Typography>
+            <Typography gutterBottom variant="body2">
+              아직 등록된 환불계좌가 없습니다.
+            </Typography>
             <Typography gutterBottom variant="body2">
               등록 버튼을 눌러 환불계좌를 등록해주세요.
             </Typography>
@@ -74,7 +74,9 @@ function RefundAccountForm(props: RefundAccountFormProps): JSX.Element {
               variant="outlined"
               color="primary"
               size="small"
-              onClick={(): void => { handleOpen(); }}
+              onClick={(): void => {
+                handleOpen();
+              }}
             >
               환불계좌 등록
             </Button>
@@ -83,24 +85,20 @@ function RefundAccountForm(props: RefundAccountFormProps): JSX.Element {
       )}
 
       <div style={{ marginTop: 16 }}>
-        <Typography style={{ fontWeight: 'bold' }}>
-          환불 처리 내역
-        </Typography>
+        <Typography style={{ fontWeight: 'bold' }}>환불 처리 내역</Typography>
         <div>
           <Table
             rowPerPage={3}
             tableHead={initialData.columns}
-            tableData={(loading || !data) ? initialData.data : data.data}
+            tableData={loading || !data ? initialData.data : data.data}
             pagination
           />
         </div>
       </div>
 
       <AccountRegistDialog open={open} handleDialogClose={handleClose} />
-
     </Paper>
   );
 }
-
 
 export default RefundAccountForm;

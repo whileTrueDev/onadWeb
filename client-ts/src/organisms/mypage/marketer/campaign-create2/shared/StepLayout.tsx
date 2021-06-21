@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Grid, Divider } from '@material-ui/core';
 import StyledItemText from '../../../../../atoms/StyledItemText';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   root: {
     width: '100%',
     marginTop: '0px',
@@ -13,7 +13,7 @@ const useStyles = makeStyles((theme) => ({
     },
     '& .MuiGrid-container': {
       flexWrap: 'nowrap',
-    }
+    },
   },
   item: {
     marginBottom: '15px',
@@ -32,7 +32,7 @@ interface CampaignCreateStepLayoutProps {
 }
 
 export default function CampaignCreateStepLayout(
-  props: CampaignCreateStepLayoutProps
+  props: CampaignCreateStepLayoutProps,
 ): JSX.Element {
   const classes = useStyles();
   const { children, primaryText, secondaryText } = props;
@@ -48,7 +48,6 @@ export default function CampaignCreateStepLayout(
       <Grid item className={classes.item} xs={12}>
         {children}
       </Grid>
-
     </Grid>
   );
 }

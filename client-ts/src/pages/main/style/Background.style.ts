@@ -1,6 +1,6 @@
 import { makeStyles } from '@material-ui/core/styles';
 
-const style = makeStyles((theme) => ({
+const style = makeStyles(theme => ({
   root: {
     width: '100%',
     height: '100vh',
@@ -8,17 +8,17 @@ const style = makeStyles((theme) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    willChange: 'top, left, right, bottom'
+    willChange: 'top, left, right, bottom',
   },
   wrapper: {
     width: '100%',
     height: '100%',
     position: 'relative',
-    overflow: 'hidden'
+    overflow: 'hidden',
   },
   figure1: {
     position: 'absolute',
-    background: 'url(\'/parallaxBg/figure1.png\') no-repeat center center',
+    background: "url('/parallaxBg/figure1.png') no-repeat center center",
     backgroundSize: 'cover',
     width: 150,
     height: 75,
@@ -35,7 +35,7 @@ const style = makeStyles((theme) => ({
   },
   figure2: {
     position: 'absolute',
-    background: 'url(\'/parallaxBg/figure2.png\') no-repeat center center',
+    background: "url('/parallaxBg/figure2.png') no-repeat center center",
     backgroundSize: 'cover',
     width: 100,
     height: 120,
@@ -52,7 +52,7 @@ const style = makeStyles((theme) => ({
   },
   figure3: {
     position: 'absolute',
-    background: 'url(\'/parallaxBg/figure3.png\') no-repeat center center',
+    background: "url('/parallaxBg/figure3.png') no-repeat center center",
     backgroundSize: 'cover',
     width: 410,
     height: 130,
@@ -70,7 +70,7 @@ const style = makeStyles((theme) => ({
   },
   figure4: {
     position: 'absolute',
-    background: 'url(\'/parallaxBg/figure4.png\') no-repeat center center',
+    background: "url('/parallaxBg/figure4.png') no-repeat center center",
     backgroundSize: 'cover',
     width: 400,
     height: 80,
@@ -88,7 +88,7 @@ const style = makeStyles((theme) => ({
   },
   figure5: {
     position: 'absolute',
-    background: 'url(\'/parallaxBg/figure5.png\') no-repeat center center',
+    background: "url('/parallaxBg/figure5.png') no-repeat center center",
     backgroundSize: 'cover',
     width: 140,
     height: 120,
@@ -105,7 +105,7 @@ const style = makeStyles((theme) => ({
   },
   figure6: {
     position: 'absolute',
-    background: 'url(\'/parallaxBg/figure6.png\') no-repeat center center',
+    background: "url('/parallaxBg/figure6.png') no-repeat center center",
     backgroundSize: 'cover',
     width: 50,
     height: 50,
@@ -122,7 +122,7 @@ const style = makeStyles((theme) => ({
   },
   figure7: {
     position: 'absolute',
-    background: 'url(\'/parallaxBg/figure7.png\') no-repeat center center',
+    background: "url('/parallaxBg/figure7.png') no-repeat center center",
     backgroundSize: 'cover',
     width: 120,
     height: 120,
@@ -139,7 +139,7 @@ const style = makeStyles((theme) => ({
   },
   figure8: {
     position: 'absolute',
-    background: 'url(\'/parallaxBg/figure8.png\') no-repeat center center',
+    background: "url('/parallaxBg/figure8.png') no-repeat center center",
     backgroundSize: 'cover',
     width: 40,
     height: 240,
@@ -156,7 +156,7 @@ const style = makeStyles((theme) => ({
   },
   figure9: {
     position: 'absolute',
-    background: 'url(\'/parallaxBg/figure9.png\') no-repeat center center',
+    background: "url('/parallaxBg/figure9.png') no-repeat center center",
     backgroundSize: 'cover',
     width: 100,
     height: 100,
@@ -173,7 +173,7 @@ const style = makeStyles((theme) => ({
   },
   figure10: {
     position: 'absolute',
-    background: 'url(\'/parallaxBg/figure10.png\') no-repeat center center',
+    background: "url('/parallaxBg/figure10.png') no-repeat center center",
     backgroundSize: 'cover',
     width: 40,
     height: 180,
@@ -194,7 +194,7 @@ const style = makeStyles((theme) => ({
     },
     '100%': {
       left: '10%',
-    }
+    },
   },
   '@keyframes flow2': {
     '0%': {
@@ -202,7 +202,7 @@ const style = makeStyles((theme) => ({
     },
     '100%': {
       left: '25%',
-    }
+    },
   },
   '@keyframes flow3': {
     '0%': {
@@ -210,23 +210,23 @@ const style = makeStyles((theme) => ({
     },
     '100%': {
       left: '8%',
-    }
+    },
   },
   '@keyframes flow4': {
     '0%': {
-      left: '0%'
+      left: '0%',
     },
     '100%': {
-      left: '8%'
-    }
+      left: '8%',
+    },
   },
   '@keyframes flow5': {
     '0%': {
-      bottom: '-20%'
+      bottom: '-20%',
     },
     '100%': {
-      bottom: '20%'
-    }
+      bottom: '20%',
+    },
   },
   '@keyframes flow6': {
     '0%': {
@@ -234,7 +234,7 @@ const style = makeStyles((theme) => ({
     },
     '100%': {
       right: '10%',
-    }
+    },
   },
   '@keyframes flow7': {
     '0%': {
@@ -242,31 +242,31 @@ const style = makeStyles((theme) => ({
     },
     '100%': {
       right: '20%',
-    }
+    },
   },
   '@keyframes flow8': {
     '0%': {
-      top: '-20%'
+      top: '-20%',
     },
     '100%': {
-      top: '5%'
-    }
+      top: '5%',
+    },
   },
   '@keyframes flow9': {
     '0%': {
-      top: '-20%'
+      top: '-20%',
     },
     '100%': {
-      top: '15%'
-    }
+      top: '15%',
+    },
   },
   '@keyframes flow10': {
     '0%': {
-      top: '-20%'
+      top: '-20%',
     },
     '100%': {
-      top: '10%'
-    }
+      top: '10%',
+    },
   },
   '@keyframes mobileflow1': {
     '0%': {
@@ -274,7 +274,7 @@ const style = makeStyles((theme) => ({
     },
     '100%': {
       left: '5%',
-    }
+    },
   },
   '@keyframes mobileflow2': {
     '0%': {
@@ -282,7 +282,7 @@ const style = makeStyles((theme) => ({
     },
     '100%': {
       left: '12.5%',
-    }
+    },
   },
   '@keyframes mobileflow3': {
     '0%': {
@@ -290,23 +290,23 @@ const style = makeStyles((theme) => ({
     },
     '100%': {
       left: '-40%',
-    }
+    },
   },
   '@keyframes mobileflow4': {
     '0%': {
-      left: '-60%'
+      left: '-60%',
     },
     '100%': {
-      left: '-40%'
-    }
+      left: '-40%',
+    },
   },
   '@keyframes mobileflow5': {
     '0%': {
-      bottom: '-20%'
+      bottom: '-20%',
     },
     '100%': {
-      bottom: '10%'
-    }
+      bottom: '10%',
+    },
   },
   '@keyframes mobileflow6': {
     '0%': {
@@ -314,7 +314,7 @@ const style = makeStyles((theme) => ({
     },
     '100%': {
       right: '5%',
-    }
+    },
   },
   '@keyframes mobileflow7': {
     '0%': {
@@ -322,31 +322,31 @@ const style = makeStyles((theme) => ({
     },
     '100%': {
       right: '10%',
-    }
+    },
   },
   '@keyframes mobileflow8': {
     '0%': {
-      top: '-40%'
+      top: '-40%',
     },
     '100%': {
-      top: '-5%'
-    }
+      top: '-5%',
+    },
   },
   '@keyframes mobileflow9': {
     '0%': {
-      top: '-20%'
+      top: '-20%',
     },
     '100%': {
-      top: '8%'
-    }
+      top: '8%',
+    },
   },
   '@keyframes mobileflow10': {
     '0%': {
-      top: '-20%'
+      top: '-20%',
     },
     '100%': {
-      top: '1.5%'
-    }
+      top: '1.5%',
+    },
   },
 }));
 

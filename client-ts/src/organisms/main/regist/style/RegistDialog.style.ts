@@ -1,13 +1,13 @@
 import { makeStyles } from '@material-ui/core/styles';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   title: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     fontSize: '20px',
     fontFamily: 'Noto Sans KR',
-    fontWeight: 600
+    fontWeight: 600,
   },
   button: {
     fontWeight: 800,
@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme) => ({
     height: '50px',
     objectFit: 'cover',
     objectPosition: 'top',
-    borderRadius: '50%'
+    borderRadius: '50%',
   },
   contents: {
     display: 'flex',
@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
   container: {
     paddingLeft: theme.spacing(4),
     paddingRight: theme.spacing(4),
-  }
+  },
 }));
 
 export default useStyles;

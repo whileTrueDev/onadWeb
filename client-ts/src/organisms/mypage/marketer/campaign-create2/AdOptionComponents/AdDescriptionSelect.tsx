@@ -4,7 +4,7 @@ import Typography from '@material-ui/core/Typography';
 import Button from '../../../../../atoms/CustomButtons/Button';
 import { OptionInterface, AdMaterial } from '../interfaces';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   expansionElement: { display: 'flex', justifyContent: 'center', padding: theme.spacing(2) },
   button: { margin: theme.spacing(1) },
 }));
@@ -16,18 +16,19 @@ interface AdDescriptionSelectProps {
   handleMaterialClick: (material: AdMaterial) => void;
 }
 export default function AdDescriptionSelect({
-  selectedMaterialName, primary, opt, handleMaterialClick
+  selectedMaterialName,
+  primary,
+  opt,
+  handleMaterialClick,
 }: AdDescriptionSelectProps): JSX.Element {
   const classes = useStyles();
   return (
     <>
       <div className={classes.expansionElement}>
-        <Typography>
-          {`${primary}의 ${opt.materials!.length} 가지 구성을 확인해보세요!`}
-        </Typography>
+        <Typography>{`${primary}의 ${opt.materials!.length} 가지 구성을 확인해보세요!`}</Typography>
       </div>
       <div className={classes.expansionElement}>
-        {opt.materials!.map((item) => (
+        {opt.materials!.map(item => (
           <Button
             variant={selectedMaterialName === item.name ? 'outlined' : 'contained'}
             color="primary"

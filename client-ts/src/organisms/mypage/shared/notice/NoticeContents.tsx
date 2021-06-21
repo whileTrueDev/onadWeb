@@ -1,12 +1,10 @@
 import React from 'react';
 import classnames from 'classnames';
-import {
-  Paper, Typography, Divider, makeStyles, Chip
-} from '@material-ui/core';
+import { Paper, Typography, Divider, makeStyles, Chip } from '@material-ui/core';
 import Markdown from 'react-markdown/with-html';
 import { NoticeData } from './NoticeTable';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   markdown: {
     fontSize: theme.typography.body1.fontSize,
     fontWeight: theme.typography.body1.fontWeight,
@@ -18,9 +16,7 @@ const useStyles = makeStyles((theme) => ({
 interface NoticeContentsProps {
   selectedNotice: NoticeData;
 }
-export default function NoticeContents({
-  selectedNotice
-}: NoticeContentsProps): JSX.Element {
+export default function NoticeContents({ selectedNotice }: NoticeContentsProps): JSX.Element {
   const classes = useStyles();
   return (
     <Paper>
@@ -42,7 +38,6 @@ export default function NoticeContents({
           escapeHtml={false}
         />
       </div>
-
     </Paper>
   );
 }

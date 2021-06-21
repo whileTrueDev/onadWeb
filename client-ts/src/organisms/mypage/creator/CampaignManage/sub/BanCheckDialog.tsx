@@ -11,7 +11,7 @@ import { CampaignTableData } from './CampaignTable';
 // utils
 import useDeleteRequest from '../../../../../utils/hooks/useDeleteRequest';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   dialog: {
     marginTop: theme.spacing(2),
     marginRight: theme.spacing(1),
@@ -31,7 +31,11 @@ interface BanCheckDialogProps {
   doCampaignGetRequest: () => void;
 }
 function BanCheckDialog({
-  open, handleDialogClose, handleSnackOpen, campaign, doCampaignGetRequest
+  open,
+  handleDialogClose,
+  handleSnackOpen,
+  campaign,
+  doCampaignGetRequest,
 }: BanCheckDialogProps): JSX.Element {
   const classes = useStyles();
 
@@ -52,30 +56,32 @@ function BanCheckDialog({
       title="이 배너 광고 그만하기"
       maxWidth="sm"
       fullWidth
-      buttons={(
+      buttons={
         <div>
-          <Button
-            color="primary"
-            onClick={handleSubmit}
-          >
+          <Button color="primary" onClick={handleSubmit}>
             진행
           </Button>
-          <Button onClick={handleDialogClose}>
-            취소
-          </Button>
+          <Button onClick={handleDialogClose}>취소</Button>
         </div>
-      )}
+      }
     >
       <div className={classes.dialog}>
         <Grid container>
           {/* 출금가능금액 */}
           <Grid item>
             <div>
-              <img src={campaign.bannerSrc} alt="banner" style={{ maxHeight: '200px', width: '100%' }} />
+              <img
+                src={campaign.bannerSrc}
+                alt="banner"
+                style={{ maxHeight: '200px', width: '100%' }}
+              />
             </div>
           </Grid>
           <Grid item className={classes.dialogContent}>
-            <StyledItemText primary="해당 광고의 송출을 중단하시겠어요?" secondary="지금까지의 광고료는 정산되며, 더 이상 이 배너가 송출되지 않습니다." />
+            <StyledItemText
+              primary="해당 광고의 송출을 중단하시겠어요?"
+              secondary="지금까지의 광고료는 정산되며, 더 이상 이 배너가 송출되지 않습니다."
+            />
           </Grid>
         </Grid>
       </div>

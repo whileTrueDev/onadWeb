@@ -1,13 +1,14 @@
 /* eslint-disable max-len */
 import React, { useCallback, useMemo, useState } from 'react';
-import {
-  Switch, SwitchProps, Tooltip
-} from '@material-ui/core';
+import { Switch, SwitchProps, Tooltip } from '@material-ui/core';
 import { CampaignInterface } from '../../organisms/mypage/marketer/dashboard/interfaces';
 import handleCampaignOnOff from '../../utils/func/handleCampaignOnOff';
-import { CONFIRM_STATE_REJECTED, CONFIRM_STATE_WAIT } from '../../utils/render_funcs/renderUrlConfirmState';
+import {
+  CONFIRM_STATE_REJECTED,
+  CONFIRM_STATE_WAIT,
+} from '../../utils/render_funcs/renderUrlConfirmState';
 
-export interface CampaignOnOffSwitchProps extends SwitchProps{
+export interface CampaignOnOffSwitchProps extends SwitchProps {
   campaign: CampaignInterface;
   onSuccess: (data: any) => void;
   onFail: (err: any) => void;
@@ -44,11 +45,11 @@ export default function CampaignOnOffSwitch(props: CampaignOnOffSwitchProps): Re
     handleCampaignOnOff({
       onoffState: !campaign.onOff,
       campaignId: campaign.campaignId,
-      onSuccess: (data) => {
+      onSuccess: data => {
         handleLoadingEnd();
         return onSuccess(data);
       },
-      onFail: (err) => {
+      onFail: err => {
         handleLoadingEnd();
         return onFail(err);
       },
@@ -82,32 +83,56 @@ export default function CampaignOnOffSwitch(props: CampaignOnOffSwitchProps): Re
     // CPS 캠페인인 경우
     if (campaign.optionType === CPS_OPTION_TYPE) {
       // 현재 off 상태이면서 온애드샵에 아직 업로드 되지 않았거나, 상품이 없거나, 온애드샵 사이트 URL이 아직 업로드 되지 않은 경우
-      if (!campaign.onOff && (!campaign.merchandiseUploadState || !campaign.merchandiseId || !campaign.merchandiseItemSiteUrl)) {
+      if (
+        !campaign.onOff &&
+        (!campaign.merchandiseUploadState ||
+          !campaign.merchandiseId ||
+          !campaign.merchandiseItemSiteUrl)
+      ) {
         let message = '아직 온애드샵에 상품이 업로드되지 않았습니다.';
-        if (campaign.merchandiseUploadState === 0 && campaign.merchandiseDenialReason) message = '상품이 거절된 캠페인입니다.';
+        if (campaign.merchandiseUploadState === 0 && campaign.merchandiseDenialReason)
+          message = '상품이 거절된 캠페인입니다.';
         handleOnOffDisable(message);
         return true;
       }
       // off 상태이면서 상품의 남은 재고가 없는 경우
-      if (!campaign.onOff && campaign.merchandiseStock && campaign.merchandiseSoldCount
-        && !((campaign.merchandiseStock - campaign.merchandiseSoldCount) > 0)) {
+      if (
+        !campaign.onOff &&
+        campaign.merchandiseStock &&
+        campaign.merchandiseSoldCount &&
+        !(campaign.merchandiseStock - campaign.merchandiseSoldCount > 0)
+      ) {
         handleOnOffDisable('상품 판매 재고를 모두 소진하였습니다.');
         return true;
       }
     }
     return false;
-  }, [campaign.confirmState, campaign.linkConfirmState, campaign.merchandiseDenialReason, campaign.merchandiseId, campaign.merchandiseItemSiteUrl, campaign.merchandiseSoldCount, campaign.merchandiseStock, campaign.merchandiseUploadState, campaign.onOff, campaign.optionType]);
+  }, [
+    campaign.confirmState,
+    campaign.linkConfirmState,
+    campaign.merchandiseDenialReason,
+    campaign.merchandiseId,
+    campaign.merchandiseItemSiteUrl,
+    campaign.merchandiseSoldCount,
+    campaign.merchandiseStock,
+    campaign.merchandiseUploadState,
+    campaign.onOff,
+    campaign.optionType,
+  ]);
 
-  const switchButton = useMemo(() => (
-    <Switch
-      size={size}
-      id={id}
-      color={color}
-      disabled={inventoryLoading || loading || onOffDisabled}
-      checked={Boolean(campaign.onOff)}
-      onChange={handleSwitch}
-    />
-  ), [campaign.onOff, color, handleSwitch, id, inventoryLoading, loading, onOffDisabled, size]);
+  const switchButton = useMemo(
+    () => (
+      <Switch
+        size={size}
+        id={id}
+        color={color}
+        disabled={inventoryLoading || loading || onOffDisabled}
+        checked={Boolean(campaign.onOff)}
+        onChange={handleSwitch}
+      />
+    ),
+    [campaign.onOff, color, handleSwitch, id, inventoryLoading, loading, onOffDisabled, size],
+  );
 
   if (onOffDisabled) {
     return (

@@ -11,8 +11,11 @@ const useStyles = makeStyles(() => ({
     backgroundColor: 'rgba(0, 0, 0, 0.3)',
   },
   loadingContainer: {
-    position: 'absolute', bottom: '50%', width: '100%', textAlign: 'center'
-  }
+    position: 'absolute',
+    bottom: '50%',
+    width: '100%',
+    textAlign: 'center',
+  },
 }));
 
 export interface MerchandiseUploadDialogLoadingProps {

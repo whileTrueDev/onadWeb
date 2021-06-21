@@ -1,6 +1,6 @@
 import makeStyles from '@material-ui/core/styles/makeStyles';
 
-const styles = makeStyles((theme) => ({
+const styles = makeStyles(theme => ({
   root: {
     backgroundColor: theme.palette.common.white,
     width: '100%',
@@ -9,7 +9,7 @@ const styles = makeStyles((theme) => ({
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    position: 'relative'
+    position: 'relative',
   },
   topLeftLine: {
     marginRight: theme.spacing(4),
@@ -51,14 +51,14 @@ const styles = makeStyles((theme) => ({
   topText: {
     fontWeight: theme.typography.fontWeightBold,
     [theme.breakpoints.down('md')]: {
-      fontSize: 30
+      fontSize: 30,
     },
     [theme.breakpoints.down('sm')]: {
-      fontSize: 25
+      fontSize: 25,
     },
     [theme.breakpoints.down('xs')]: {
-      fontSize: 18
-    }
+      fontSize: 18,
+    },
   },
   bottom: {
     width: '100%',
@@ -82,11 +82,11 @@ const styles = makeStyles((theme) => ({
     fontWeight: theme.typography.fontWeightBold,
     color: theme.palette.common.white,
     [theme.breakpoints.down('sm')]: {
-      fontSize: 35
+      fontSize: 35,
     },
     [theme.breakpoints.down('xs')]: {
-      fontSize: 22
-    }
+      fontSize: 22,
+    },
   },
   button: {
     margin: theme.spacing(4, 2, 0, 2),
@@ -95,7 +95,7 @@ const styles = makeStyles((theme) => ({
     border: '3px solid white',
     borderRadius: 30,
     '&:hover': {
-      background: '#0074d8'
+      background: '#0074d8',
     },
     [theme.breakpoints.down('sm')]: {
       width: 220,
@@ -104,7 +104,7 @@ const styles = makeStyles((theme) => ({
     [theme.breakpoints.down('xs')]: {
       width: 180,
       height: 60,
-    }
+    },
   },
   button2: {
     margin: theme.spacing(4, 2, 0, 2),
@@ -113,15 +113,15 @@ const styles = makeStyles((theme) => ({
     border: '3px solid white',
     borderRadius: 30,
     '&:hover': {
-      background: '#00d1c9'
-    }
+      background: '#00d1c9',
+    },
   },
   waveClosed: {
     position: 'absolute',
     left: 0,
     right: 0,
-    bottom: 0
-  }
+    bottom: 0,
+  },
 }));
 
 export default styles;

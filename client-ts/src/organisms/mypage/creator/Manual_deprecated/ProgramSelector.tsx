@@ -1,11 +1,9 @@
 import React from 'react';
 import makeStyles from '@material-ui/core/styles/makeStyles';
-import {
-  ButtonBase, Typography, Avatar
-} from '@material-ui/core';
+import { ButtonBase, Typography, Avatar } from '@material-ui/core';
 import { ManualContentSources } from '../../shared/ManualTypes';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   root: {
     display: 'flex',
     justifyContent: 'center',
@@ -43,23 +41,23 @@ const ProgramSelector = ({ source, handleTypeChange }: ProgramSelectorProps): JS
 
   return (
     <div className={classes.root}>
-      {source.selectorImages && source.selectorImages.map((image) => (
-        <ButtonBase
-          className={classes.button}
-          key={image.title}
-          onClick={(): void => {
-            if (image.title === 'XSplit Broadcaster'
-            || image.title === 'OBS Studio') {
-              handleTypeChange(image.title);
-            }
-          }}
-        >
-          <div>
-            <Avatar src={image.url} className={classes.bigAvatar} />
-            <Typography>{image.title}</Typography>
-          </div>
-        </ButtonBase>
-      ))}
+      {source.selectorImages &&
+        source.selectorImages.map(image => (
+          <ButtonBase
+            className={classes.button}
+            key={image.title}
+            onClick={(): void => {
+              if (image.title === 'XSplit Broadcaster' || image.title === 'OBS Studio') {
+                handleTypeChange(image.title);
+              }
+            }}
+          >
+            <div>
+              <Avatar src={image.url} className={classes.bigAvatar} />
+              <Typography>{image.title}</Typography>
+            </div>
+          </ButtonBase>
+        ))}
     </div>
   );
 };

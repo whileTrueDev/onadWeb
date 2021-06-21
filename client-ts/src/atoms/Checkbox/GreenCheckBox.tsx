@@ -5,7 +5,6 @@ import { withStyles, Theme } from '@material-ui/core/styles';
 import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@material-ui/icons/CheckBox';
 
-
 const GreenCheckBox = withStyles((theme: Theme) => ({
   root: {
     color: theme.palette.success.light,

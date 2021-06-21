@@ -8,7 +8,7 @@ export default interface AdPageData {
   exp: number;
   clickCount: number;
   transferCount: number;
-};
+}
 
 export interface AdPagePatchParamAndRes {
   creatorBackgroundImage?: string;

@@ -1,7 +1,5 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-import React, {
-  createContext,
-} from 'react';
+import React, { createContext } from 'react';
 import { MarketerInfo } from '../organisms/mypage/marketer/office/interface';
 import { useGetRequest } from '../utils/hooks';
 
@@ -18,9 +16,7 @@ export const defaultValue: MarketerInfoContextValue = {
 
 // *******************************************************
 // 네비바 프로필 사진 동시 변경을 위한 컨텍스트
-const MarketerInfoContext = createContext<MarketerInfoContextValue>(
-  defaultValue
-);
+const MarketerInfoContext = createContext<MarketerInfoContextValue>(defaultValue);
 
 export function MarketerInfoContextProvider(props: any): JSX.Element {
   const { children } = props;
@@ -31,7 +27,7 @@ export function MarketerInfoContextProvider(props: any): JSX.Element {
       value={{
         user: marketerInfo.data,
         loading: marketerInfo.loading,
-        doGetRequest: marketerInfo.doGetRequest
+        doGetRequest: marketerInfo.doGetRequest,
       }}
     >
       {children}

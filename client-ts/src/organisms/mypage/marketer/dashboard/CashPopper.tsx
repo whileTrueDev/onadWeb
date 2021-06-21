@@ -11,13 +11,13 @@ import CreditCard from '@material-ui/icons/CreditCard';
 import Input from '@material-ui/icons/Input';
 import { REACT_HOST } from '../../../../config';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   buttons: {
     paddingTop: theme.spacing(2),
     paddingBottom: theme.spacing(2),
     paddingLeft: theme.spacing(3),
-    paddingRight: theme.spacing(3)
-  }
+    paddingRight: theme.spacing(3),
+  },
 }));
 
 interface CashPopperProps {
@@ -27,15 +27,19 @@ interface CashPopperProps {
 }
 
 export default function CashPopper(props: CashPopperProps): JSX.Element {
-  const {
-    anchorEl, handleOpen, handleAnchorClose
-  } = props;
+  const { anchorEl, handleOpen, handleAnchorClose } = props;
   const classes = useStyles();
 
   const POPUP_WIDTH = process.env.NODE_ENV === 'production' ? 900 : 700;
   const POPUP_HEIGHT = process.env.NODE_ENV === 'production' ? 800 : 700;
-  const POPUP_X = process.env.NODE_ENV === 'production' ? (window.screen.width / 2) - 450 : (window.screen.width / 2) - 350;
-  const POPUP_Y = process.env.NODE_ENV === 'production' ? (window.screen.height / 2) - 400 : (window.screen.height / 2) - 350;
+  const POPUP_X =
+    process.env.NODE_ENV === 'production'
+      ? window.screen.width / 2 - 450
+      : window.screen.width / 2 - 350;
+  const POPUP_Y =
+    process.env.NODE_ENV === 'production'
+      ? window.screen.height / 2 - 400
+      : window.screen.height / 2 - 350;
 
   function handleListKeyDown(event: React.KeyboardEvent<HTMLUListElement>) {
     if (event.key === 'Tab') {
@@ -43,7 +47,6 @@ export default function CashPopper(props: CashPopperProps): JSX.Element {
       handleAnchorClose();
     }
   }
-
 
   return (
     <Popper
@@ -69,11 +72,18 @@ export default function CashPopper(props: CashPopperProps): JSX.Element {
         >
           <Paper>
             <ClickAwayListener onClickAway={handleAnchorClose}>
-              <MenuList autoFocusItem={Boolean(anchorEl)} id="menu-list-grow" onKeyDown={handleListKeyDown}>
+              <MenuList
+                autoFocusItem={Boolean(anchorEl)}
+                id="menu-list-grow"
+                onKeyDown={handleListKeyDown}
+              >
                 <MenuItem
                   onClick={(): void => {
-                    window.open(`${REACT_HOST}/marketer/charge`,
-                      '_blank', `width=${POPUP_WIDTH}, height=${POPUP_HEIGHT}, left=${POPUP_X}, top=${POPUP_Y}`);
+                    window.open(
+                      `${REACT_HOST}/marketer/charge`,
+                      '_blank',
+                      `width=${POPUP_WIDTH}, height=${POPUP_HEIGHT}, left=${POPUP_X}, top=${POPUP_Y}`,
+                    );
                     handleAnchorClose();
                   }}
                   className={classes.buttons}
@@ -83,7 +93,13 @@ export default function CashPopper(props: CashPopperProps): JSX.Element {
                   </ListItemIcon>
                   전자결제
                 </MenuItem>
-                <MenuItem onClick={(): void => { handleOpen(); handleAnchorClose(); }} className={classes.buttons}>
+                <MenuItem
+                  onClick={(): void => {
+                    handleOpen();
+                    handleAnchorClose();
+                  }}
+                  className={classes.buttons}
+                >
                   <ListItemIcon>
                     <Input />
                   </ListItemIcon>
@@ -95,6 +111,5 @@ export default function CashPopper(props: CashPopperProps): JSX.Element {
         </Grow>
       )}
     </Popper>
-
   );
 }

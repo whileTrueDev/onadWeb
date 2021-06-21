@@ -8,17 +8,14 @@ import Inquire from '../../../../main/main/Inquiry/Inquiry';
 import BannerUploadDialog from '../../shared/BannerUploadDialog';
 import { BannerDataInterface } from '../interface';
 
-
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   container: { marginBottom: theme.spacing(1) },
   button: { margin: theme.spacing(0, 0.5) },
 }));
 export interface BannerButtonsProps {
   bannerData: UsePaginatedGetRequestObject<BannerDataInterface>;
 }
-export default function BannerButtons({
-  bannerData,
-}: BannerButtonsProps): JSX.Element {
+export default function BannerButtons({ bannerData }: BannerButtonsProps): JSX.Element {
   const classes = useStyles();
   const uploadDialog = useDialog();
   const InquireDialog = useDialog();
@@ -41,11 +38,7 @@ export default function BannerButtons({
       >
         배너가 없으신가요?
       </Button>
-      <Button
-        className={classes.button}
-        variant="contained"
-        color="primary"
-      >
+      <Button className={classes.button} variant="contained" color="primary">
         <GetApp fontSize="small" />
         <a
           href="/IntroService/온애드배너제작가이드.pdf"
@@ -69,11 +62,11 @@ export default function BannerButtons({
         onClose={InquireDialog.handleClose}
         fullWidth
         maxWidth="md"
-        buttons={(
+        buttons={
           <Button onClick={InquireDialog.handleClose} variant="contained">
             취소
           </Button>
-        )}
+        }
       >
         <Inquire confirmClose={InquireDialog.handleClose} />
       </CustomDialog>

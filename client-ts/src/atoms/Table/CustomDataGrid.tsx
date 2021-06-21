@@ -23,7 +23,7 @@ export const KOREAN_LOCALE_TEXT: Partial<GridLocaleText> = {
   toolbarFiltersLabel: '필터 보기',
   toolbarFiltersTooltipHide: '필터 숨김',
   toolbarFiltersTooltipShow: '필터 보기',
-  toolbarFiltersTooltipActive: (count) => `${count} 필터 선택됨`,
+  toolbarFiltersTooltipActive: count => `${count} 필터 선택됨`,
 
   // Columns panel text
   columnsPanelTextFieldLabel: '컬럼 이름',
@@ -50,14 +50,13 @@ export const KOREAN_LOCALE_TEXT: Partial<GridLocaleText> = {
   columnMenuSortDesc: '내림차순 정렬', // Sort by Desc
 
   // Column header text
-  columnHeaderFiltersTooltipActive: (count) => `${count} 필터 선택됨`,
+  columnHeaderFiltersTooltipActive: count => `${count} 필터 선택됨`,
   columnHeaderFiltersLabel: '필터 보기',
   columnHeaderSortIconLabel: '정렬',
 
   // Rows selected footer text
-  footerRowSelected: (count) => (count !== 1
-    ? `${count.toLocaleString()} 행 선택됨`
-    : `${count.toLocaleString()} 행 선택됨`),
+  footerRowSelected: count =>
+    count !== 1 ? `${count.toLocaleString()} 행 선택됨` : `${count.toLocaleString()} 행 선택됨`,
 
   // Total rows footer text
   footerTotalRows: '총 행:',
@@ -67,7 +66,5 @@ export const KOREAN_LOCALE_TEXT: Partial<GridLocaleText> = {
 };
 
 export default function CustomDataGrid(props: DataGridProps): JSX.Element {
-  return (
-    <DataGrid localeText={KOREAN_LOCALE_TEXT} {...props} />
-  );
+  return <DataGrid localeText={KOREAN_LOCALE_TEXT} {...props} />;
 }

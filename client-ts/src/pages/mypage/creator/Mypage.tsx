@@ -16,20 +16,19 @@ const Mypage = (): JSX.Element => {
   useMypageScrollToTop();
   return (
     <div style={{ margin: '0 auto', maxWidth: 1024 }}>
-
       <GridContainer direction="row">
         <GridItem xs={12}>
-          {(profileData.loading || withdrawalData.loading) && (<CenterLoading />)}
+          {(profileData.loading || withdrawalData.loading) && <CenterLoading />}
           {!(profileData.loading || withdrawalData.loading) && profileData.data && (
-          <PlatformLinkCard
-            profileData={profileData.data}
-            profileRefetch={profileData.doGetRequest}
-          />
+            <PlatformLinkCard
+              profileData={profileData.data}
+              profileRefetch={profileData.doGetRequest}
+            />
           )}
         </GridItem>
         <GridItem xs={12}>
           {!(profileData.loading || withdrawalData.loading) && profileData.data && (
-          <ProfileCard profileData={profileData.data} />
+            <ProfileCard profileData={profileData.data} />
           )}
         </GridItem>
       </GridContainer>

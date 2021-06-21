@@ -2,7 +2,7 @@ import React from 'react';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import Button from '@material-ui/core/Button';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   imgInput: {
     [theme.breakpoints.down('xs')]: {
       margin: '2px',
@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-interface StepperInterface{
+interface StepperInterface {
   handleChangeStep: (index: number) => void;
   handleIsBusiness: (stepIndex: boolean) => void;
 }

@@ -1,6 +1,6 @@
 const withdrawalDialogReducer = (
   state: WithdrawalDialogState,
-  action: WithdrawlDialogAction
+  action: WithdrawlDialogAction,
 ): WithdrawalDialogState => {
   switch (action.key) {
     case 'currentCash': {
@@ -31,10 +31,11 @@ export interface WithdrawalDialogState {
   checked: boolean;
 }
 
-export type WithdrawlDialogAction = { key: 'currentCash'; value: any}
-  | {key: 'selectValue'; value: number | string}
-  | {key: 'checked'; value: boolean}
-  | {key: 'totalIncome'; value: number | string}
-  | {key: 'reset'}
+export type WithdrawlDialogAction =
+  | { key: 'currentCash'; value: any }
+  | { key: 'selectValue'; value: number | string }
+  | { key: 'checked'; value: boolean }
+  | { key: 'totalIncome'; value: number | string }
+  | { key: 'reset' };
 
 export default withdrawalDialogReducer;

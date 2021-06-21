@@ -9,11 +9,7 @@ interface CardIconProps {
   [rest: string]: any;
 }
 
-function CardIcon({
-  className,
-  children,
-  ...rest
-}: CardIconProps): JSX.Element {
+function CardIcon({ className, children, ...rest }: CardIconProps): JSX.Element {
   const classes = useCardIconStyle();
 
   const cardIconClasses = classNames({
@@ -27,7 +23,7 @@ function CardIcon({
   });
 
   return (
-    <div className={className === 'yellowBack' ? (cardIconClasses2) : (cardIconClasses)} {...rest}>
+    <div className={className === 'yellowBack' ? cardIconClasses2 : cardIconClasses} {...rest}>
       {children}
     </div>
   );

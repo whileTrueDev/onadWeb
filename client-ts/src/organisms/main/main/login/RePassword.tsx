@@ -26,14 +26,10 @@ interface RepasswordState {
   value: string;
 }
 
-type RepasswordAction = { type: 'password'; value: string }
-  | { type: 'repasswd'; value: string }
+type RepasswordAction = { type: 'password'; value: string } | { type: 'repasswd'; value: string };
 
 // reducer를 사용하여 Error를 handling하자
-const myReducer = (
-  state: RepasswordState,
-  action: RepasswordAction
-) => {
+const myReducer = (state: RepasswordState, action: RepasswordAction) => {
   switch (action.type) {
     case 'password': {
       if (passwordRegex.test(action.value)) {
@@ -54,8 +50,8 @@ const myReducer = (
   }
 };
 
-type InputType = React.ChangeEvent<HTMLInputElement>
-type FormType = React.FormEvent<HTMLFormElement>
+type InputType = React.ChangeEvent<HTMLInputElement>;
+type FormType = React.FormEvent<HTMLFormElement>;
 interface Props {
   setRepassword: any;
   logout: () => void;
@@ -84,27 +80,24 @@ function RePasswordDialog({ setRepassword, logout, repasswordOpen }: Props): JSX
     }
     const user = {
       type: 'password',
-      value: state.value
+      value: state.value,
     };
 
-    axios.patch(`${HOST}/marketer`, user)
+    axios
+      .patch(`${HOST}/marketer`, user)
       .then(() => {
         alert('비밀번호 변경이 완료되었습니다. 다시 로그인 해주세요');
         setRepassword(false);
         logout();
         history.replace('/');
       })
-      .catch((err) => {
+      .catch(err => {
         console.log(err);
       });
   };
 
   return (
-    <Dialog
-      open={repasswordOpen}
-      maxWidth="xl"
-      disableBackdropClick={false}
-    >
+    <Dialog open={repasswordOpen} maxWidth="xl" disableBackdropClick={false}>
       <DialogTitle>CHANGE PW</DialogTitle>
       <form onSubmit={handleSubmit}>
         <DialogContent className={classes.contents}>
@@ -143,12 +136,13 @@ function RePasswordDialog({ setRepassword, logout, repasswordOpen }: Props): JSX
           />
         </DialogContent>
         <DialogActions>
-          <Button type="submit" value="Submit" color="primary">확인</Button>
+          <Button type="submit" value="Submit" color="primary">
+            확인
+          </Button>
         </DialogActions>
       </form>
     </Dialog>
   );
 }
-
 
 export default RePasswordDialog;

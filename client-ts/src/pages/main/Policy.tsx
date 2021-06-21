@@ -7,17 +7,15 @@ import useStyles from './style/Policy.style';
 import AppFooter from '../../organisms/main/layouts/AppFooter';
 import RePasswordDialog from '../../organisms/main/main/login/RePassword';
 import useLoginValue from '../../utils/hooks/useLoginValue';
-import Policy from '../../organisms/main/policy/Policy';
+import DefaultPolicy from '../../organisms/main/policy/Policy';
 import PolicyPrivacy from '../../organisms/main/policy/PolicyPrivacy';
 
-interface Props {
+interface PolicyProps {
   match: { params: { privacy: string } };
 }
 
-export default ({ match }: Props): JSX.Element => {
-  const {
-    repasswordOpen, logout, setRepassword
-  } = useLoginValue();
+export default function Policy({ match }: PolicyProps): JSX.Element {
+  const { repasswordOpen, logout, setRepassword } = useLoginValue();
 
   const { privacy } = match.params;
   const classes = useStyles();
@@ -58,11 +56,8 @@ export default ({ match }: Props): JSX.Element => {
                 개인정보 처리방침
               </Button>
             </Grid>
-
           </Grid>
-          <Grid container>
-            {privacy ? (<PolicyPrivacy />) : (<Policy />)}
-          </Grid>
+          <Grid container>{privacy ? <PolicyPrivacy /> : <DefaultPolicy />}</Grid>
         </div>
       </div>
       <AppFooter />
@@ -73,4 +68,4 @@ export default ({ match }: Props): JSX.Element => {
       />
     </div>
   );
-};
+}

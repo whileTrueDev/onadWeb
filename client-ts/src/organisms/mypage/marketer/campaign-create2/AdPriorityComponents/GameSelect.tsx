@@ -1,8 +1,15 @@
 import React, { useEffect } from 'react';
 import { makeStyles, useTheme, Theme } from '@material-ui/core/styles';
 import {
-  Grid, CircularProgress, Typography, Divider,
-  FormControl, InputLabel, Select, Input, Chip
+  Grid,
+  CircularProgress,
+  Typography,
+  Divider,
+  FormControl,
+  InputLabel,
+  Select,
+  Input,
+  Chip,
 } from '@material-ui/core';
 import GameCard from './GameSelectCard';
 import { CampaignCreateInterface, CampaignCreateAction } from '../reducers/campaignCreate.reducer';
@@ -19,7 +26,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   formControl: { margin: theme.spacing(1), minWidth: 120, maxWidth: 300 },
-
 }));
 
 interface GameDataInterface {
@@ -38,9 +44,7 @@ interface GameSelectProps {
 }
 
 const GameSelect = (props: GameSelectProps): JSX.Element => {
-  const {
-    state, dispatch, handleComplete, handleIncomplete
-  } = props;
+  const { state, dispatch, handleComplete, handleIncomplete } = props;
   const classes = useStyles();
   const theme = useTheme();
 
@@ -68,13 +72,10 @@ const GameSelect = (props: GameSelectProps): JSX.Element => {
     }
   }, [handleComplete, handleIncomplete, state.selectedGames.length, state.selectedPriorityType]);
 
-
   return (
     <Grid container direction="column" spacing={2} className={classes.root}>
       <Grid item xs={12} lg={8} xl={6}>
-        <Typography variant="h6">
-          광고를 송출하려는 카테고리를 선택해주세요.
-        </Typography>
+        <Typography variant="h6">광고를 송출하려는 카테고리를 선택해주세요.</Typography>
         <Divider />
       </Grid>
 
@@ -86,14 +87,12 @@ const GameSelect = (props: GameSelectProps): JSX.Element => {
       </Grid>
 
       <Grid item xs={12}>
-
         {gamesData.loading && (
           <div style={{ padding: 72, textAlign: 'center' }}>
             <CircularProgress size={100} disableShrink />
           </div>
         )}
         {!gamesData.loading && gamesData.data && (
-
           <Grid container spacing={2} style={{ flexWrap: 'wrap' }}>
             {gamesData.data.slice(0, 12).map((game: GameDataInterface) => (
               <Grid key={game.gameId} item xs={4} md={3} xl={2}>
@@ -102,11 +101,19 @@ const GameSelect = (props: GameSelectProps): JSX.Element => {
                   gameNameKr={game.gameNameKr}
                   count={game.count}
                   boxArt={game.boxArt}
-                  handleClick={(): void => { handleGameClick(game.gameName); }}
-                  backgroundColor={state.selectedGames.includes(game.gameName)
-                    ? theme.palette.primary.light : 'inherit'}
-                  color={state.selectedGames.includes(game.gameName)
-                    ? theme.palette.common.white : 'inherit'}
+                  handleClick={(): void => {
+                    handleGameClick(game.gameName);
+                  }}
+                  backgroundColor={
+                    state.selectedGames.includes(game.gameName)
+                      ? theme.palette.primary.light
+                      : 'inherit'
+                  }
+                  color={
+                    state.selectedGames.includes(game.gameName)
+                      ? theme.palette.common.white
+                      : 'inherit'
+                  }
                 />
               </Grid>
             ))}
@@ -119,7 +126,7 @@ const GameSelect = (props: GameSelectProps): JSX.Element => {
                   native
                   input={<Input id="grouped-native-select" />}
                   onChange={(
-                    event: React.ChangeEvent<{ name?: string | undefined; value: unknown }>
+                    event: React.ChangeEvent<{ name?: string | undefined; value: unknown }>,
                   ): void => {
                     if (typeof event.target.value === 'string') {
                       if (!state.selectedGames.includes(event.target.value)) {
@@ -132,17 +139,13 @@ const GameSelect = (props: GameSelectProps): JSX.Element => {
                     }
                   }}
                 >
-                  {gamesData.data.slice(12, gamesData.data.length).map(
-                    (game: GameDataInterface) => (
-                      <option
-                        key={game.gameId}
-                        value={game.gameName}
-                      >
+                  {gamesData.data
+                    .slice(12, gamesData.data.length)
+                    .map((game: GameDataInterface) => (
+                      <option key={game.gameId} value={game.gameName}>
                         {game.gameNameKr || game.gameName}
-
                       </option>
-                    )
-                  )}
+                    ))}
                 </Select>
               </FormControl>
             </Grid>
@@ -153,20 +156,21 @@ const GameSelect = (props: GameSelectProps): JSX.Element => {
           <Grid item xs={12}>
             <Typography variant="h6">선택된 게임</Typography>
             <div style={{ padding: 16 }}>
-              {state.selectedGames.map((game) => (
+              {state.selectedGames.map(game => (
                 <Chip
                   key={`selected_${game}`}
                   label={game}
                   color="primary"
                   variant="outlined"
-                  onDelete={(): void => { handleGameClick(game); }}
+                  onDelete={(): void => {
+                    handleGameClick(game);
+                  }}
                   style={{ margin: 4 }}
                 />
               ))}
             </div>
           </Grid>
         )}
-
       </Grid>
     </Grid>
   );

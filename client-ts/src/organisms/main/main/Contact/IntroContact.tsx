@@ -36,13 +36,14 @@ function IntroContact({ MainUserType, isLogin, logout }: IntroContactProps): JSX
       setOpen(false);
     }
     return {
-      open, isMarketer, handleOpen, handleClose,
+      open,
+      isMarketer,
+      handleOpen,
+      handleClose,
     };
   }
 
-  const {
-    open, handleOpen, handleClose
-  } = useDialog();
+  const { open, handleOpen, handleClose } = useDialog();
 
   return (
     <section className={classes.root}>
@@ -61,7 +62,7 @@ function IntroContact({ MainUserType, isLogin, logout }: IntroContactProps): JSX
             </Typography>
           </Button>
 
-          { !isLogin ? (
+          {!isLogin ? (
             <Button
               className={MainUserType ? classes.button : classes.button2}
               onClick={() => handleDialogOpenClick(MainUserType ? 'marketer' : 'creator')}
@@ -71,10 +72,7 @@ function IntroContact({ MainUserType, isLogin, logout }: IntroContactProps): JSX
               </Typography>
             </Button>
           ) : (
-            <Button
-              className={MainUserType ? classes.button : classes.button2}
-              onClick={logout}
-            >
+            <Button className={MainUserType ? classes.button : classes.button2} onClick={logout}>
               <Typography variant="h4" className={classes.bottomText} onClick={logout}>
                 로그아웃
               </Typography>
@@ -87,27 +85,24 @@ function IntroContact({ MainUserType, isLogin, logout }: IntroContactProps): JSX
         onClose={handleClose}
         fullWidth
         maxWidth="md"
-        buttons={(
+        buttons={
           <div>
-            <Button onClick={handleClose}>
-              취소
-            </Button>
+            <Button onClick={handleClose}>취소</Button>
           </div>
-          )}
+        }
       >
-        { MainUserType
-          ? (<Inquiry confirmClose={handleClose} />)
-          : (<InquiryCreator confirmClose={handleClose} />)}
+        {MainUserType ? (
+          <Inquiry confirmClose={handleClose} />
+        ) : (
+          <InquiryCreator confirmClose={handleClose} />
+        )}
       </Dialog>
       <MarketerLoginForm
         open={loginValue === 'marketer'}
         handleClose={handleDialogClose}
         logout={logout}
       />
-      <CreatorLoginForm
-        open={loginValue === 'creator'}
-        handleClose={handleDialogClose}
-      />
+      <CreatorLoginForm open={loginValue === 'creator'} handleClose={handleDialogClose} />
     </section>
   );
 }

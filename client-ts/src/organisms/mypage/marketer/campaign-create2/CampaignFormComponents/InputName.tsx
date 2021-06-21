@@ -26,12 +26,14 @@ const InputName = (props: InputNameProps): JSX.Element => {
         <Grid item>
           <StyledItemText
             primary="캠페인 이름 입력하기"
-            secondary={(
+            secondary={
               <Typography variant="body2" color="textSecondary">
                 캠페인 구분을 위해 사용됩니다.
-                <Typography color="error" variant="caption">(최소 2자, 최대 20자)</Typography>
+                <Typography color="error" variant="caption">
+                  (최소 2자, 최대 20자)
+                </Typography>
               </Typography>
-            )}
+            }
             className={classes.label}
           />
         </Grid>
@@ -45,7 +47,7 @@ const InputName = (props: InputNameProps): JSX.Element => {
             inputProps={{
               minLength: 2,
               maxLength: 20,
-              required: true
+              required: true,
             }}
           />
         </Grid>

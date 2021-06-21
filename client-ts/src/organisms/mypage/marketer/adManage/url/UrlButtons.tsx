@@ -5,21 +5,25 @@ import { UsePaginatedGetRequestObject } from '../../../../../utils/hooks/usePagi
 import UrlUploadDialog from '../../shared/UrlUploadDialog';
 import { UrlDataInterface } from '../interface';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   container: { marginBottom: theme.spacing(1) },
 }));
 export interface UrlButtonsProps {
   urlData: UsePaginatedGetRequestObject<UrlDataInterface>;
 }
-export default function UrlButtons({
-  urlData
-}: UrlButtonsProps): JSX.Element {
+export default function UrlButtons({ urlData }: UrlButtonsProps): JSX.Element {
   const classes = useStyles();
   const urlUploadDialog = useDialog();
 
   return (
     <div className={classes.container}>
-      <Button color="primary" variant="outlined" onClick={(): void => { urlUploadDialog.handleOpen(); }}>
+      <Button
+        color="primary"
+        variant="outlined"
+        onClick={(): void => {
+          urlUploadDialog.handleOpen();
+        }}
+      >
         + 새 URL 등록
       </Button>
       {/* landing url upload, delete dialog */}

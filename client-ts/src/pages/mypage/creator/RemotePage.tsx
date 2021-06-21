@@ -10,9 +10,7 @@ const RemotePage = (): JSX.Element => {
 
   return (
     <Paper>
-      <RemotePageBannerTable
-        pageUrl={thisUrl}
-      />
+      <RemotePageBannerTable pageUrl={thisUrl} />
     </Paper>
   );
 };

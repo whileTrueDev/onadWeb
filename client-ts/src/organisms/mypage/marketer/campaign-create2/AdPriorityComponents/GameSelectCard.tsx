@@ -1,8 +1,6 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import {
-  Paper, ButtonBase, Grid, Typography
-} from '@material-ui/core';
+import { Paper, ButtonBase, Grid, Typography } from '@material-ui/core';
 
 const useStyles = makeStyles(() => ({
   image: {
@@ -22,25 +20,13 @@ interface GameCardProps {
   color: string;
 }
 
-
 export default function GameCard(props: GameCardProps): JSX.Element {
-  const {
-    boxArt, gameName, gameNameKr, count, handleClick, backgroundColor, color
-  } = props;
+  const { boxArt, gameName, gameNameKr, count, handleClick, backgroundColor, color } = props;
   const classes = useStyles();
   return (
     <Paper>
-      <ButtonBase
-        className={classes.image}
-        onClick={handleClick}
-      >
-        <img
-          draggable={false}
-          width="100%"
-          key={boxArt}
-          src={boxArt}
-          alt={gameName}
-        />
+      <ButtonBase className={classes.image} onClick={handleClick}>
+        <img draggable={false} width="100%" key={boxArt} src={boxArt} alt={gameName} />
         <Grid
           container
           justify="space-evenly"
@@ -49,7 +35,7 @@ export default function GameCard(props: GameCardProps): JSX.Element {
           style={{
             height: 150,
             backgroundColor,
-            color
+            color,
           }}
         >
           <Grid>
@@ -58,9 +44,7 @@ export default function GameCard(props: GameCardProps): JSX.Element {
             </Typography>
           </Grid>
           <Grid item style={{ textOverflow: 'ellipsis', overflow: 'hidden' }}>
-            <Typography variant="body2">
-              {gameNameKr ? gameName : ''}
-            </Typography>
+            <Typography variant="body2">{gameNameKr ? gameName : ''}</Typography>
             <Typography variant="caption">
               {count}
               명이 주로 이 방송을 진행

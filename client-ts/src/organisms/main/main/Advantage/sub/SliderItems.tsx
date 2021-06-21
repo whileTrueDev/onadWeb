@@ -20,7 +20,7 @@ function SliderItem({
   callback,
   callbackOut,
   slideMargin,
-  visibleSlides
+  visibleSlides,
 }: SliderItemProps): JSX.Element {
   return (
     <StyledSliderItem

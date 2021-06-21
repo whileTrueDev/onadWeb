@@ -16,7 +16,11 @@ import HowToCPADialog from '../../../organisms/mypage/creator/CPAManage/HowToCPA
 // source
 import textsource from '../../../organisms/mypage/creator/CPAManage/source/AgreementText';
 // types
-import { CampaignResult, AdPickIncome, AdPickMetrics } from '../../../organisms/mypage/creator/CPAManage/AdpickTypes';
+import {
+  CampaignResult,
+  AdPickIncome,
+  AdPickMetrics,
+} from '../../../organisms/mypage/creator/CPAManage/AdpickTypes';
 import CPAIntroduction from '../../../organisms/mypage/creator/CPAManage/CPAIntroduction';
 
 export interface ContractionDataType {
@@ -69,10 +73,8 @@ export default function CPAManage(): JSX.Element {
   // 광고 시작 방법 dialog
   const howToCPADialog = useDialog();
 
-
   return (
     <div style={{ margin: '0px auto', maxWidth: 1430 }}>
-
       {/* 설명 */}
       <GridContainer>
         <GridItem xs={12}>
@@ -83,19 +85,18 @@ export default function CPAManage(): JSX.Element {
       {!contractionGet.loading && contractionGet.data && (
         <>
           {/* 계약 진행하지 않은 경우와 진행한 경우 분기처리 */}
-          {!contractionGet.data?.CPAAgreement
-            ? (
-              <GridContainer>
-                <GridItem xs={12}>
-                  {/* 광고페이지 유의사항 및 동의 */}
-                  <CPAAgreement callback={contractionGet.doGetRequest} />
-                </GridItem>
-              </GridContainer>
-            ) : (
-              <>
-                {/* 지표 indicator */}
-                {CPAmainData.loading && (<MainIndicatorLoading />)}
-                {!CPAmainData.loading && CPAmainData.data && (
+          {!contractionGet.data?.CPAAgreement ? (
+            <GridContainer>
+              <GridItem xs={12}>
+                {/* 광고페이지 유의사항 및 동의 */}
+                <CPAAgreement callback={contractionGet.doGetRequest} />
+              </GridItem>
+            </GridContainer>
+          ) : (
+            <>
+              {/* 지표 indicator */}
+              {CPAmainData.loading && <MainIndicatorLoading />}
+              {!CPAmainData.loading && CPAmainData.data && (
                 <GridContainer>
                   <GridItem xs={12}>
                     <CPAIndicator
@@ -107,21 +108,20 @@ export default function CPAManage(): JSX.Element {
                     />
                   </GridItem>
                 </GridContainer>
-                )}
+              )}
 
-                {/* 현재 가능한 CPA 캠페인 목록 */}
-                {getAdpickCampaigns.loading && (<CPACampaignsLoading />)}
-                {!getAdpickCampaigns.loading && getAdpickCampaigns.data
-                && (
-                  <CPACampaigns
-                    campaigns={getAdpickCampaigns.data}
-                    onStartClick={handleStartDialogOpen}
-                    onStopClick={handleStopDialogOpen}
-                  />
-                )}
+              {/* 현재 가능한 CPA 캠페인 목록 */}
+              {getAdpickCampaigns.loading && <CPACampaignsLoading />}
+              {!getAdpickCampaigns.loading && getAdpickCampaigns.data && (
+                <CPACampaigns
+                  campaigns={getAdpickCampaigns.data}
+                  onStartClick={handleStartDialogOpen}
+                  onStopClick={handleStopDialogOpen}
+                />
+              )}
 
-                {/* 자신의 CPA페이지에 등록 확인 다이얼로그 */}
-                {startDialog.open && selectedCampaign && (
+              {/* 자신의 CPA페이지에 등록 확인 다이얼로그 */}
+              {startDialog.open && selectedCampaign && (
                 <CPAConfirmDialog
                   type="등록"
                   title={`${selectedCampaign.apAppTitle}`}
@@ -133,10 +133,10 @@ export default function CPAManage(): JSX.Element {
                   }}
                   selectedCampaign={selectedCampaign}
                 />
-                )}
+              )}
 
-                {/* 자신의 CPA페이지에서 제외 확인 다이얼로그 */}
-                {stopDialog.open && selectedCampaign && (
+              {/* 자신의 CPA페이지에서 제외 확인 다이얼로그 */}
+              {stopDialog.open && selectedCampaign && (
                 <CPAConfirmDialog
                   type="제외"
                   title={`${selectedCampaign.apAppTitle}`}
@@ -148,37 +148,35 @@ export default function CPAManage(): JSX.Element {
                   }}
                   selectedCampaign={selectedCampaign}
                 />
+              )}
+
+              {/* 유의사항 다이얼로그 */}
+              <AgreementContentDialog changeHandle={agreementDialog} source={textsource} />
+
+              {/* CPA 수익내역 다이얼로그 */}
+              {!getAdpickCampaigns.loading &&
+                getAdpickCampaigns.data &&
+                !getCampaignIncomes.loading && (
+                  <CPAIncomeTableDialog
+                    open={incomeTableDialog.open}
+                    handleClose={incomeTableDialog.handleClose}
+                    campaigns={getAdpickCampaigns.data}
+                    campaignIncomes={getCampaignIncomes.data}
+                  />
                 )}
 
-                {/* 유의사항 다이얼로그 */}
-                <AgreementContentDialog changeHandle={agreementDialog} source={textsource} />
-
-                {/* CPA 수익내역 다이얼로그 */}
-                {!getAdpickCampaigns.loading && getAdpickCampaigns.data
-                  && !getCampaignIncomes.loading
-                  && (
-                    <CPAIncomeTableDialog
-                      open={incomeTableDialog.open}
-                      handleClose={incomeTableDialog.handleClose}
-                      campaigns={getAdpickCampaigns.data}
-                      campaignIncomes={getCampaignIncomes.data}
-                    />
-                  )}
-
-                {/* CPA광고 시작 방법 다이얼로그 */}
-                {!CPAmainData.loading && CPAmainData.data && (
+              {/* CPA광고 시작 방법 다이얼로그 */}
+              {!CPAmainData.loading && CPAmainData.data && (
                 <HowToCPADialog
                   open={howToCPADialog.open}
                   handleClose={howToCPADialog.handleClose}
                   CPAmainData={CPAmainData.data}
                 />
-                )}
-
-              </>
-            )}
+              )}
+            </>
+          )}
         </>
       )}
-
     </div>
   );
 }

@@ -1,6 +1,6 @@
 import { makeStyles } from '@material-ui/core/styles';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   root: {
     width: '100%',
     marginTop: theme.spacing(10),
@@ -8,7 +8,7 @@ const useStyles = makeStyles((theme) => ({
     padding: '0 2%',
   },
   platformWrapper: {
-    margin: theme.spacing(5, 0)
+    margin: theme.spacing(5, 0),
   },
   selected: {
     color: theme.palette.common.white,
@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.down('sm')]: {
       height: 33.75,
       width: 150,
-    }
+    },
   },
   selected2: {
     color: theme.palette.common.white,
@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.down('sm')]: {
       height: 33.75,
       width: 150,
-    }
+    },
   },
   notSelected: {
     color: theme.palette.common.black,
@@ -53,7 +53,7 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.down('sm')]: {
       height: 33.75,
       width: 150,
-    }
+    },
   },
   notSelected2: {
     color: theme.palette.common.black,
@@ -68,7 +68,7 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.down('sm')]: {
       height: 33.75,
       width: 150,
-    }
+    },
   },
   cotentWrapper: {
     width: '100%',
@@ -82,7 +82,7 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   leftLine: {
     height: 1500,
@@ -91,7 +91,7 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: 5,
     marginRight: theme.spacing(5),
     [theme.breakpoints.down('sm')]: {
-      marginRight: theme.spacing(2.5)
+      marginRight: theme.spacing(2.5),
     },
     [theme.breakpoints.down('xs')]: {
       height: 1900,
@@ -104,7 +104,7 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: 5,
     marginRight: theme.spacing(5),
     [theme.breakpoints.down('sm')]: {
-      marginRight: theme.spacing(2.5)
+      marginRight: theme.spacing(2.5),
     },
     [theme.breakpoints.down('xs')]: {
       height: 1500,
@@ -117,7 +117,7 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: 5,
     marginRight: theme.spacing(5),
     [theme.breakpoints.down('sm')]: {
-      marginRight: theme.spacing(2.5)
+      marginRight: theme.spacing(2.5),
     },
     [theme.breakpoints.down('xs')]: {
       height: 1900,
@@ -130,7 +130,7 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: 5,
     marginRight: theme.spacing(5),
     [theme.breakpoints.down('sm')]: {
-      marginRight: theme.spacing(2.5)
+      marginRight: theme.spacing(2.5),
     },
     [theme.breakpoints.down('xs')]: {
       height: 1400,
@@ -151,13 +151,13 @@ const useStyles = makeStyles((theme) => ({
   title: {
     fontWeight: theme.typography.fontWeightBold,
     [theme.breakpoints.down('md')]: {
-      fontSize: 40
+      fontSize: 40,
     },
     [theme.breakpoints.down('sm')]: {
-      fontSize: 30
+      fontSize: 30,
     },
     [theme.breakpoints.down('xs')]: {
-      fontSize: 24
+      fontSize: 24,
     },
   },
   contentBottom: {
@@ -184,14 +184,14 @@ const useStyles = makeStyles((theme) => ({
     },
     [theme.breakpoints.down('xs')]: {
       width: '100%',
-      marginTop: theme.spacing(2)
+      marginTop: theme.spacing(2),
     },
   },
   subContent2: {
     width: '50%',
     [theme.breakpoints.down('xs')]: {
       width: '100%',
-      marginTop: theme.spacing(2)
+      marginTop: theme.spacing(2),
     },
   },
   exImage: {
@@ -212,7 +212,7 @@ const useStyles = makeStyles((theme) => ({
       margin: '16px auto',
       width: 270,
       height: 135,
-    }
+    },
   },
   exImage2: {
     width: 460,
@@ -239,13 +239,13 @@ const useStyles = makeStyles((theme) => ({
     color: '#008bf0',
     marginBottom: theme.spacing(1),
     [theme.breakpoints.down('md')]: {
-      fontSize: 30
+      fontSize: 30,
     },
     [theme.breakpoints.down('sm')]: {
-      fontSize: 24
+      fontSize: 24,
     },
     [theme.breakpoints.down('xs')]: {
-      fontSize: 22
+      fontSize: 22,
     },
   },
   subtitle2: {
@@ -253,13 +253,13 @@ const useStyles = makeStyles((theme) => ({
     color: '#008bf0',
     marginTop: theme.spacing(4),
     [theme.breakpoints.down('md')]: {
-      fontSize: 30
+      fontSize: 30,
     },
     [theme.breakpoints.down('sm')]: {
-      fontSize: 24
+      fontSize: 24,
     },
     [theme.breakpoints.down('xs')]: {
-      fontSize: 22
+      fontSize: 22,
     },
   },
   subtitle3: {
@@ -267,13 +267,13 @@ const useStyles = makeStyles((theme) => ({
     color: '#4bd4a6',
     marginBottom: theme.spacing(1),
     [theme.breakpoints.down('md')]: {
-      fontSize: 30
+      fontSize: 30,
     },
     [theme.breakpoints.down('sm')]: {
-      fontSize: 24
+      fontSize: 24,
     },
     [theme.breakpoints.down('xs')]: {
-      fontSize: 22
+      fontSize: 22,
     },
   },
   subtitle4: {
@@ -281,20 +281,19 @@ const useStyles = makeStyles((theme) => ({
     color: '#4bd4a6',
     marginTop: theme.spacing(4),
     [theme.breakpoints.down('md')]: {
-      fontSize: 30
+      fontSize: 30,
     },
     [theme.breakpoints.down('sm')]: {
-      fontSize: 24
+      fontSize: 24,
     },
     [theme.breakpoints.down('xs')]: {
-      fontSize: 22
+      fontSize: 22,
     },
   },
   divider: {
     width: '100%',
-    marginBottom: theme.spacing(10)
-  }
-
+    marginBottom: theme.spacing(10),
+  },
 }));
 
 export default useStyles;
