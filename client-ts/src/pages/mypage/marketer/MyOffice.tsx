@@ -7,17 +7,21 @@ import RefundAccountForm from '../../../organisms/mypage/marketer/office/refund/
 import BusinessRegistration from '../../../organisms/mypage/marketer/office/business/BusinessUploadForm';
 
 import {
-  BusinessInterface, AccountInterface, CashInterface
+  BusinessInterface,
+  AccountInterface,
+  CashInterface,
 } from '../../../organisms/mypage/marketer/office/interface';
 import useGetRequest from '../../../utils/hooks/useGetRequest';
 import MyCash from '../../../organisms/mypage/marketer/office/cash/MyCash';
-import CashUsageList, { UsageInterface } from '../../../organisms/mypage/marketer/office/cash/CashUsageList';
+import CashUsageList, {
+  UsageInterface,
+} from '../../../organisms/mypage/marketer/office/cash/CashUsageList';
 import { AdInterface } from '../../../organisms/mypage/marketer/dashboard/interfaces';
 import CircularProgress from '../../../atoms/Progress/CircularProgress';
 import useMypageScrollToTop from '../../../utils/hooks/useMypageScrollToTop';
 import MySalesIncome from '../../../organisms/mypage/marketer/office/sales-income/MySalesIncome';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   container: { margin: '0 auto', maxWidth: 1430 },
   title: { marginTop: theme.spacing(2), color: theme.palette.text.primary },
 }));
@@ -25,7 +29,9 @@ export default function MyOffice(): JSX.Element {
   const classes = useStyles();
   // 계좌 정보
   const accountData = useGetRequest<null, AccountInterface | null>('/marketer/account');
-  const businessRegistrationData = useGetRequest<null, BusinessInterface | null>('/marketer/business');
+  const businessRegistrationData = useGetRequest<null, BusinessInterface | null>(
+    '/marketer/business',
+  );
   const cashData = useGetRequest<null, CashInterface | null>('/marketer/cash');
   const adData = useGetRequest<null, AdInterface | null>('/marketer/ad');
   const usageData = useGetRequest<null, UsageInterface | null>('/marketer/cash/history/usage');
@@ -39,67 +45,73 @@ export default function MyOffice(): JSX.Element {
   useMypageScrollToTop();
   return (
     <div className={classes.container}>
-      {(accountData.loading || businessRegistrationData.loading
-      || cashData.loading || adData.loading) && (
-        <CircularProgress />
-      )}
+      {(accountData.loading ||
+        businessRegistrationData.loading ||
+        cashData.loading ||
+        adData.loading) && <CircularProgress />}
 
       {/* 계정 관리 */}
-      {!accountData.loading && !businessRegistrationData.loading
-      && !cashData.loading && !adData.loading && (
-        <div>
-          <GridContainer>
-            <GridItem xs={12}>
-              <Typography className={classes.title} variant="h6">캐시 관리</Typography>
-            </GridItem>
-            {/* 캐시 정보 */}
-            <GridItem xs={12} lg={6}>
-              <MyCash
-                accountData={accountData}
-                cashData={cashData}
-                adData={adData}
-              />
-            </GridItem>
-            {/* 캐시 사용 내역 */}
-            <GridItem xs={12} lg={6}>
-              <CashUsageList usageData={usageData} />
-            </GridItem>
-          </GridContainer>
+      {!accountData.loading &&
+        !businessRegistrationData.loading &&
+        !cashData.loading &&
+        !adData.loading && (
+          <div>
+            <GridContainer>
+              <GridItem xs={12}>
+                <Typography className={classes.title} variant="h6">
+                  캐시 관리
+                </Typography>
+              </GridItem>
+              {/* 캐시 정보 */}
+              <GridItem xs={12} lg={6}>
+                <MyCash accountData={accountData} cashData={cashData} adData={adData} />
+              </GridItem>
+              {/* 캐시 사용 내역 */}
+              <GridItem xs={12} lg={6}>
+                <CashUsageList usageData={usageData} />
+              </GridItem>
+            </GridContainer>
 
-          <GridContainer>
-            <GridItem xs={12}>
-              <Typography className={classes.title} variant="h6">판매 대금 관리</Typography>
-            </GridItem>
-            {/* 판매 대금 정보 */}
-            <GridItem xs={12} lg={6}>
-              <MySalesIncome
-                salesIncomeData={salesIncomeData}
-                settlementData={settlementData}
-                salesIncomeSettlementData={settlementLogsData}
-              />
-            </GridItem>
-          </GridContainer>
+            <GridContainer>
+              <GridItem xs={12}>
+                <Typography className={classes.title} variant="h6">
+                  판매 대금 관리
+                </Typography>
+              </GridItem>
+              {/* 판매 대금 정보 */}
+              <GridItem xs={12} lg={6}>
+                <MySalesIncome
+                  salesIncomeData={salesIncomeData}
+                  settlementData={settlementData}
+                  salesIncomeSettlementData={settlementLogsData}
+                />
+              </GridItem>
+            </GridContainer>
 
-          <GridContainer>
-            <GridItem xs={12}>
-              <Typography className={classes.title} variant="h6">환불 관리</Typography>
-            </GridItem>
-            {/* 환불 계좌 정보 */}
-            <GridItem xs={12} lg={6}>
-              <RefundAccountForm accountData={accountData} />
-            </GridItem>
-          </GridContainer>
+            <GridContainer>
+              <GridItem xs={12}>
+                <Typography className={classes.title} variant="h6">
+                  환불 관리
+                </Typography>
+              </GridItem>
+              {/* 환불 계좌 정보 */}
+              <GridItem xs={12} lg={6}>
+                <RefundAccountForm accountData={accountData} />
+              </GridItem>
+            </GridContainer>
 
-          <GridContainer>
-            <GridItem xs={12}>
-              <Typography className={classes.title} variant="h6">세금계산서 관리</Typography>
-            </GridItem>
-            <GridItem xs={12} lg={6}>
-              <BusinessRegistration businessRegistrationData={businessRegistrationData} />
-            </GridItem>
-          </GridContainer>
-        </div>
-      )}
+            <GridContainer>
+              <GridItem xs={12}>
+                <Typography className={classes.title} variant="h6">
+                  세금계산서 관리
+                </Typography>
+              </GridItem>
+              <GridItem xs={12} lg={6}>
+                <BusinessRegistration businessRegistrationData={businessRegistrationData} />
+              </GridItem>
+            </GridContainer>
+          </div>
+        )}
     </div>
   );
 }
