@@ -15,8 +15,8 @@ body {
 }
 
 .live-commerce {
-  width:97%;
-  height:95%;
+  width:96.9%;
+  height:94.5%;
   position:relative
 }
 
@@ -211,7 +211,7 @@ body {
 
 .ranking-text-area {
   width:100%;
-  height:25%;
+  height:27%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -223,6 +223,8 @@ body {
 }
 
 .ranking-text-area#title {
+  height:15%;
+  margin-bottom:0;
   font-size:30px;
   color:#F5F171;
 }
