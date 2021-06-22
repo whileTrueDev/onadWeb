@@ -76,4 +76,11 @@ export class MarketerSalesIncomeSettlementLogs {
     mod => mod.settlementLog,
   )
   orderDetail: number;
+
+  @Column('tinyint', {
+    name: 'roundInMonth',
+    comment: '1회차/2회차 구분. 가능한값은 (1, 2)',
+    default: () => 1,
+  })
+  roundInMonth: number;
 }

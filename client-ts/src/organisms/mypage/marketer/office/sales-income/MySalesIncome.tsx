@@ -1,17 +1,16 @@
-import { Link } from 'react-router-dom';
 import { Button, Chip, makeStyles, Paper, Typography } from '@material-ui/core';
 import moment from 'moment';
 import React, { useMemo } from 'react';
+import { Link } from 'react-router-dom';
 import CircularProgress from '../../../../../atoms/Progress/CircularProgress';
-import { UseGetRequestObject } from '../../../../../utils/hooks/useGetRequest';
-import MarketerSettlementLogsTable from '../../../../../atoms/Table/MarketerSettlementLogsTable';
-import { MarketerSalesIncome, MarketerSettlement } from '../interface';
 import { useDialog } from '../../../../../utils/hooks';
-import SettlementRegDialog from '../../shared/settlement/SettlementRegDialog';
+import { UseGetRequestObject } from '../../../../../utils/hooks/useGetRequest';
 import renderMarketerSettlementState, {
   광고주_정산등록상태_승인,
 } from '../../../../../utils/render_funcs/renderMarketerSettlementState';
+import SettlementRegDialog from '../../shared/settlement/SettlementRegDialog';
 import SettlementViewer from '../../shared/settlement/SettlementViewer';
+import { MarketerSalesIncome, MarketerSettlement } from '../interface';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -30,12 +29,10 @@ export type SalesIncomeSettlement = Array<string>;
 export interface MySalesIncomeProps {
   salesIncomeData: UseGetRequestObject<MarketerSalesIncome>;
   settlementData: UseGetRequestObject<MarketerSettlement>;
-  salesIncomeSettlementData: UseGetRequestObject<SalesIncomeSettlement[]>;
 }
 export default function MySalesIncome({
   salesIncomeData,
   settlementData,
-  salesIncomeSettlementData,
 }: MySalesIncomeProps): JSX.Element {
   const classes = useStyles();
 
@@ -117,19 +114,6 @@ export default function MySalesIncome({
       </div>
 
       {settlementData.data && <SettlementViewer settlement={settlementData.data} />}
-
-      {!salesIncomeSettlementData.loading &&
-        !salesIncomeSettlementData.error &&
-        salesIncomeSettlementData.data && (
-          <div className={classes.topSpace}>
-            <Typography style={{ fontWeight: 'bold' }}>판매 대금 정산 처리 목록</Typography>
-
-            <MarketerSettlementLogsTable
-              tableHead={['날짜', '금액']}
-              tableData={salesIncomeSettlementData.data}
-            />
-          </div>
-        )}
 
       <SettlementRegDialog
         open={settlementDialog.open}

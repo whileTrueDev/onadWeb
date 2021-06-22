@@ -7,19 +7,24 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  Query,
   UseGuards,
   ValidationPipe,
 } from '@nestjs/common';
 import { Marketer } from '../../../decorators/sessionData.decorator';
+import { MarketerSalesIncomeSettlementLogs } from '../../../entities/MarketerSalesIncomeSettlementLogs';
 import { MarketerSettlement } from '../../../entities/MarketerSettlement';
+import { MerchandiseOrdersDetail } from '../../../entities/MerchandiseOrdersDetail';
 import { MarketerSession } from '../../../interfaces/Session.interface';
 import { IsAuthGuard } from '../../auth/guards/isAuth.guard';
 import { SlackService } from '../../slack/slack.service';
 import { CreateMarketerSettlementDto } from './dto/createMarketerSettlementDto.dto';
 import { UpdateMarketerSettlementDto } from './dto/updateMarketerSettlementDto.dto';
+import { FindSettlementLogsRes } from './interfaces/FindSettlementLogsRes.interface';
 import { SettlementLogsService } from './settlement-logs.service';
 import { SettlementService } from './settlement.service';
 
+@UseGuards(IsAuthGuard)
 @Controller('marketer/settlement')
 export class SettlementController {
   constructor(
@@ -28,13 +33,11 @@ export class SettlementController {
     private readonly slackService: SlackService,
   ) {}
 
-  @UseGuards(IsAuthGuard)
   @Get()
   findOne(@Marketer() { marketerId }: MarketerSession): Promise<MarketerSettlement | null> {
     return this.settlementService.findOne(marketerId);
   }
 
-  @UseGuards(IsAuthGuard)
   @Post()
   async createOne(
     @Marketer() { marketerId }: MarketerSession,
@@ -52,7 +55,6 @@ export class SettlementController {
     return newSettlement;
   }
 
-  @UseGuards(IsAuthGuard)
   @Patch()
   async updateOne(
     @Marketer() { marketerId }: MarketerSession,
@@ -70,7 +72,6 @@ export class SettlementController {
     return result ? 1 : 0;
   }
 
-  @UseGuards(IsAuthGuard)
   @Delete()
   deleteOne(
     @Marketer() { marketerId }: MarketerSession,
@@ -80,7 +81,6 @@ export class SettlementController {
     return this.settlementService.deleteOne(marketerId, id);
   }
 
-  @UseGuards(IsAuthGuard)
   @Get('/list')
   findAll(@Marketer() { marketerId }: MarketerSession): Promise<MarketerSettlement[]> {
     return this.settlementService.findAll(marketerId);
@@ -89,9 +89,32 @@ export class SettlementController {
   // *****************************************************
   // * SettlementLogs
   // *****************************************************
-  @UseGuards(IsAuthGuard)
   @Get('/logs')
-  findSettlementLogs(@Marketer() { marketerId }: MarketerSession): Promise<Array<string[]>> {
-    return this.settlementLogsService.findAll(marketerId);
+  findSettlementLogs(
+    @Marketer() { marketerId }: MarketerSession,
+    @Query('settlementLogId') settlementLogId?: string,
+    @Query('year') year?: string,
+    @Query('month') month?: string,
+  ): Promise<
+    | Array<Omit<MarketerSalesIncomeSettlementLogs, 'doneDate'> & { doneDate: string }>
+    | FindSettlementLogsRes
+  > {
+    if (year && month) {
+      return this.settlementLogsService.findAllByOrder(marketerId, year, month);
+    }
+    if (settlementLogId) {
+      return this.settlementLogsService.findAllById(marketerId, Number(settlementLogId));
+    }
+    return this.settlementLogsService.findAllMonthly(marketerId, year || new Date().getFullYear());
+  }
+
+  @Get('/logs/years')
+  findSettlementLogsYears(@Marketer() { marketerId }: MarketerSession): Promise<string[]> {
+    return this.settlementLogsService.findYears(marketerId);
+  }
+
+  @Get('/logs/months')
+  findSettlementLogsMonths(@Marketer() { marketerId }: MarketerSession): Promise<string[]> {
+    return this.settlementLogsService.findMonths(marketerId);
   }
 }

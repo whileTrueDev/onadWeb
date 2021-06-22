@@ -64,19 +64,6 @@ export class MerchandiseOrdersDetail {
   })
   actualSendedAmount: number;
 
-  @Column('varchar', {
-    comment: '지급상태(지급완료, 지급예정, 취소매출)',
-    default: '지급예정',
-    length: 50,
-  })
-  sendStatus: string;
-
-  @Column('timestamp', {
-    comment: '주문일자',
-    nullable: true,
-  })
-  orderDate?: Date;
-
   @Column('timestamp', {
     comment: '취소일자',
     nullable: true,

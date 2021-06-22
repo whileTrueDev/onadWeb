@@ -27,7 +27,7 @@ import MarketerDashboard from './marketer/Dashboard';
 import MarketerManual from './marketer/Manual';
 import MarketerMyInfo from './marketer/MyInfo';
 import MyOfficeCashManage from './marketer/MyOffice/CashManage';
-import MyOfficeSettlementManage from './marketer/MyOffice/SettlementManage';
+import MarketerSalesIncomeManage from './marketer/MyOffice/SalesIncomeManage';
 import MyOfficeTaxBill from './marketer/MyOffice/TaxBill';
 // shared 라우터
 import Notice from './shared/Notice';
@@ -170,7 +170,7 @@ const dashboardRoutes: MypageRoutes = {
         },
         {
           path: '/settlement',
-          component: MyOfficeSettlementManage,
+          component: MarketerSalesIncomeManage,
           name: '판매 대금',
         },
         {

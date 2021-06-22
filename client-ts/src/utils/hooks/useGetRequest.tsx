@@ -40,7 +40,14 @@ type DefaultParamType = { [key: string]: any };
 export default function useGetRequest<PARAM_TYPE = DefaultParamType, RES_DATA_TYPE = any>(
   url: string,
   params?: PARAM_TYPE,
+  options?: {
+    lateFetch?: boolean;
+  },
 ): UseGetRequestObject<RES_DATA_TYPE> {
+  let lateFetch = false;
+  if (options) {
+    lateFetch = !!options.lateFetch;
+  }
   const [param] = useState(params);
   const [data, setData] = useState<RES_DATA_TYPE>();
   const [loading, setLoading] = useState<boolean>(false);
@@ -100,14 +107,13 @@ export default function useGetRequest<PARAM_TYPE = DefaultParamType, RES_DATA_TY
   );
 
   useEffect(() => {
-    doGetRequest();
-
+    if (!lateFetch) doGetRequest();
     // cleanup function
     return (): void => {
       source.cancel('Cancelling in cleanup');
       setUnmounted(true);
     };
-  }, [doGetRequest, source]);
+  }, [doGetRequest, lateFetch, source]);
 
   return {
     data,
