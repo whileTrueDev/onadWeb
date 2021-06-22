@@ -69,7 +69,6 @@ export default function NoticeTable({
             {
               width: 100,
               headerName: '번호',
-              disableClickEventBubbling: true,
               disableColumnMenu: true,
               field: 'code',
               renderCell: (_data): React.ReactElement => (

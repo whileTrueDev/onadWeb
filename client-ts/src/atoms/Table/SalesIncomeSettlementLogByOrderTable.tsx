@@ -1,7 +1,7 @@
 /* eslint-disable react/display-name */
 import { Box, Typography } from '@material-ui/core';
 import { GridColumns } from '@material-ui/data-grid';
-import React from 'react';
+import React, { useMemo } from 'react';
 import { UseGetRequestObject } from '../../utils/hooks/useGetRequest';
 import CustomDataGridExportable from './CustomDataGridExportable';
 
@@ -25,6 +25,7 @@ export interface SettlementByOrderData {
   cancelDate: Date | null;
   purchaseConfirmDate: Date;
   updateDate: Date;
+  isLiveCommerce: number;
 }
 
 export interface PaymentMethods {
@@ -34,25 +35,19 @@ export interface PaymentMethods {
   paymentFeeFixed: number;
 }
 interface SalesIncomeSettlementLogByOrderTableProps {
+  exportFileName: string;
   settlementLogsData: UseGetRequestObject<SettlementByOrderData[]>;
   paymentMethodData: UseGetRequestObject<PaymentMethods[]>;
 }
 
 export default function SalesIncomeSettlementLogByOrderTable({
+  exportFileName,
   settlementLogsData,
   paymentMethodData,
 }: SalesIncomeSettlementLogByOrderTableProps): React.ReactElement {
   const column: GridColumns = [
     { field: 'orderId', headerName: '주문번호', width: 100 },
-    {
-      field: 'isLiveCommerce',
-      headerName: '캠페인유형',
-      renderCell: (data: any): React.ReactElement => (
-        <Typography variant="body2">
-          {data.row.isLiveCommerce ? '라이브커머스' : '판매형광고'}
-        </Typography>
-      ),
-    },
+    { field: 'isLiveCommerce', headerName: '캠페인유형' },
     { field: 'campaignName', headerName: '캠페인명' },
     { field: 'orderPrice', headerName: '정산대상액' },
     { field: 'purchaseChannel', headerName: '구매채널' },
@@ -73,10 +68,19 @@ export default function SalesIncomeSettlementLogByOrderTable({
     sortable: false,
     width: x.width || 150,
   }));
+
+  const preprocessedData = useMemo(() => {
+    if (!settlementLogsData.data) return [];
+    return settlementLogsData.data.map(d => ({
+      ...d,
+      isLiveCommerce: d.isLiveCommerce ? '라이브커머스' : '판매형광고',
+    }));
+  }, [settlementLogsData.data]);
   return (
     <Box>
       <Box height={400}>
         <CustomDataGridExportable
+          exportFileName={exportFileName}
           disableSelectionOnClick
           disableColumnMenu
           disableColumnFilter
@@ -84,7 +88,7 @@ export default function SalesIncomeSettlementLogByOrderTable({
           disableMultipleColumnsSorting
           columns={column}
           loading={settlementLogsData.loading}
-          rows={settlementLogsData.data || []}
+          rows={preprocessedData}
         />
       </Box>
 

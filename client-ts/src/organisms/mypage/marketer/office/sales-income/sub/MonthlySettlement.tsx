@@ -1,4 +1,4 @@
-import { Button, Box, Typography, TextField } from '@material-ui/core';
+import { CircularProgress, Button, Box, Typography, TextField } from '@material-ui/core';
 import { Autocomplete } from '@material-ui/lab';
 import React from 'react';
 import SalesIncomeSettlementLogMonthlyTable from '../../../../../../atoms/Table/SalesIncomeSettlementLogMonthlyTable';
@@ -62,8 +62,12 @@ export default function MonthlySettlement(): React.ReactElement {
           보기
         </Button>
       </Box>
+      {settlementLogsData.loading && <CircularProgress />}
       {!settlementLogsData.loading && !settlementLogsData.error && settlementLogsData.data && (
-        <SalesIncomeSettlementLogMonthlyTable settlementLogsData={settlementLogsData} />
+        <SalesIncomeSettlementLogMonthlyTable
+          exportFileName={`온애드_판매대금_정산_내역_${year}년`}
+          settlementLogsData={settlementLogsData}
+        />
       )}
     </Box>
   );

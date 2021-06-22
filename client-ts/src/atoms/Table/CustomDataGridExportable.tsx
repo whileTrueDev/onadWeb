@@ -1,93 +1,30 @@
+/* eslint-disable react/display-name */
+import React from 'react';
 import {
   DataGrid,
   DataGridProps,
-  GridLocaleText,
   GridToolbarContainer,
   GridToolbarExport,
 } from '@material-ui/data-grid';
-import React from 'react';
+import { dataGridLocale } from './dataGridLocale.kr';
 
-export const KOREAN_LOCALE_TEXT: Partial<GridLocaleText> = {
-  // Root
-  rootGridLabel: 'grid',
-  noRowsLabel: '데이터가 없습니다',
-  errorOverlayDefaultLabel: '에러가 발생했습니다. support@onad.io로 문의바랍니다.',
-
-  // Density selector toolbar button text
-  toolbarDensity: '행 간격',
-  toolbarDensityLabel: '행 간격',
-  toolbarDensityCompact: '좁게',
-  toolbarDensityStandard: '보통',
-  toolbarDensityComfortable: '넓게',
-
-  // Columns selector toolbar button text
-  toolbarColumns: '컬럼 설정',
-  toolbarColumnsLabel: '컬럼 설정 보기',
-
-  // Filters toolbar button text
-  toolbarFilters: '필터목록',
-  toolbarFiltersLabel: '필터 보기',
-  toolbarFiltersTooltipHide: '필터 숨김',
-  toolbarFiltersTooltipShow: '필터 보기',
-  toolbarFiltersTooltipActive: count => `${count} 필터 선택됨`,
-
-  // Columns panel text
-  columnsPanelTextFieldLabel: '컬럼 이름',
-  columnsPanelTextFieldPlaceholder: '컬럼 이름',
-  columnsPanelDragIconLabel: '재정렬',
-  columnsPanelShowAllButton: '모두 보기',
-  columnsPanelHideAllButton: '모두 숨김',
-
-  // Filter panel text
-  filterPanelAddFilter: '필터 추가',
-  filterPanelDeleteIconLabel: '삭제',
-  filterPanelOperators: '필터 방식',
-  filterPanelOperatorAnd: 'And',
-  filterPanelOperatorOr: 'Or',
-  filterPanelColumns: '타겟 컬럼',
-
-  // Column menu text
-  columnMenuLabel: '메뉴',
-  columnMenuShowColumns: '컬럼 설정 보기',
-  columnMenuFilter: '필터',
-  columnMenuHideColumn: '숨김',
-  columnMenuUnsort: '정렬해제',
-  columnMenuSortAsc: '오름차순 정렬', // Sort by Asc
-  columnMenuSortDesc: '내림차순 정렬', // Sort by Desc
-
-  // Column header text
-  columnHeaderFiltersTooltipActive: count => `${count} 필터 선택됨`,
-  columnHeaderFiltersLabel: '필터 보기',
-  columnHeaderSortIconLabel: '정렬',
-
-  // Rows selected footer text
-  footerRowSelected: count =>
-    count !== 1 ? `${count.toLocaleString()} 행 선택됨` : `${count.toLocaleString()} 행 선택됨`,
-
-  // Total rows footer text
-  footerTotalRows: '총 행:',
-
-  // Pagination footer text
-
-  toolbarExport: '내보내기',
-  toolbarExportLabel: '내보내기',
-  toolbarExportCSV: 'CSV로 다운로드',
-};
-
-function CustomToolbar(): React.ReactElement {
-  return (
-    <GridToolbarContainer>
-      <GridToolbarExport />
-    </GridToolbarContainer>
-  );
+export interface CustomDataGridExportableProps {
+  exportFileName: string;
 }
 
-export default function CustomDataGridExportable(props: DataGridProps): JSX.Element {
+export default function CustomDataGridExportable({
+  exportFileName,
+  ...props
+}: DataGridProps & CustomDataGridExportableProps): JSX.Element {
   return (
     <DataGrid
-      localeText={KOREAN_LOCALE_TEXT}
+      localeText={dataGridLocale}
       components={{
-        Toolbar: CustomToolbar,
+        Toolbar: (): React.ReactElement => (
+          <GridToolbarContainer>
+            <GridToolbarExport csvOptions={{ fileName: exportFileName }} />
+          </GridToolbarContainer>
+        ),
       }}
       {...props}
     />

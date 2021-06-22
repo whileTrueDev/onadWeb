@@ -118,7 +118,6 @@ export default function BannerInventory({
               sortable: false,
               filterable: false,
               disableColumnMenu: true,
-              disableClickEventBubbling: true,
               renderCell: (data): React.ReactElement => (
                 <IconButton
                   onClick={(e): void => {

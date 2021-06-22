@@ -8,10 +8,12 @@ import { UseGetRequestObject } from '../../utils/hooks/useGetRequest';
 import CustomDataGridExportable from './CustomDataGridExportable';
 
 interface SalesIncomeSettlementLogMonthlyTableProps {
+  exportFileName: string;
   settlementLogsData: UseGetRequestObject<SalesIncomeSettlement[]>;
 }
 
 export default function SalesIncomeSettlementLogMonthlyTable({
+  exportFileName,
   settlementLogsData,
 }: SalesIncomeSettlementLogMonthlyTableProps): React.ReactElement {
   const history = useHistory();
@@ -54,6 +56,7 @@ export default function SalesIncomeSettlementLogMonthlyTable({
     <>
       <Box height={400}>
         <CustomDataGridExportable
+          exportFileName={exportFileName}
           loading={settlementLogsData.loading}
           disableSelectionOnClick
           disableColumnMenu

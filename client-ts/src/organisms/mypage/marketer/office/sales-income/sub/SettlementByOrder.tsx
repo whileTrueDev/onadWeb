@@ -62,6 +62,16 @@ export default function SettlementByOrder(): React.ReactElement {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params.settlementLogId]);
 
+  // * 내보내기 파일 명
+  const exportFileName = useMemo(() => {
+    if (params && params.year && params.month && params.roundInMonth) {
+      const { year, month, roundInMonth } = params;
+      return `온애드_판매대금_정산_내역_${year}년_${month}월_${roundInMonth}회차`;
+    }
+    const { year, month, roundInMonth } = filterValue;
+    return `온애드_판매대금_정산_내역_${year}년_${month}월_${roundInMonth}회차`;
+  }, [filterValue, params]);
+
   return (
     <Box marginTop={2}>
       <Box marginBottom={1}>
@@ -185,8 +195,10 @@ export default function SettlementByOrder(): React.ReactElement {
         </Box>
       ) : null}
 
+      {settlementLogsData.loading && <CircularProgress />}
       {!settlementLogsData.loading && !settlementLogsData.error && settlementLogsData.data && (
         <SalesIncomeSettlementLogByOrderTable
+          exportFileName={exportFileName}
           settlementLogsData={settlementLogsData}
           paymentMethodData={paymentMethodData}
         />
