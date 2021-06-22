@@ -9,6 +9,7 @@
     "prebuild": "rimraf ./dist",
     "build": "tsc",
     "postbuild": "browserify ./dist/lib/client.js -o ./dist/lib/bundle.js && cp -r ./views ./dist/views && cp -r ./public ./dist/public",
+    "windowspostbuild": "browserify ./dist/lib/client.js -o ./dist/lib/bundle.js && copy ./views -Recurse -Destination ./dist -Force && copy ./public -Recurse -Destination ./dist -Force",
     "start:debug": "nodemon --watch ./ --exec ts-node ./app.ts",
     "start:production": "node ./dist/app.js"
   },

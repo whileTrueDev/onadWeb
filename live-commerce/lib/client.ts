@@ -11,16 +11,16 @@ const messageArray: string[] = [];
 let idx = 0;
 
 // 하단 marquee 영역 이벤트
-setInterval(() => {
-  if (idx >= idArray.length) {
-    idx = 0;
-  }
-  if ($('.bottom-area-text').css({ display: 'none' }) && idArray.length && idArray[idx]) {
-    $('.bottom-area-wrapper').html(`<div class="bottom-area"><p class="bottom-area-text">${idArray[idx]}</p></div>`);
-    $('.bottom-area-wrapper').css({ display: 'flex' });
-    idx += 1;
-  } else { $('.purchase-customer-id').html('<p></p>'); }
-}, 10000);
+// setInterval(() => {
+//   if (idx >= idArray.length) {
+//     idx = 0;
+//   }
+//   if ($('.bottom-area-text').css({ display: 'none' }) && idArray.length && idArray[idx]) {
+//     $('.bottom-area-wrapper').html(`<div class="bottom-area"><p class="bottom-area-text">${idArray[idx]}</p></div>`);
+//     $('.bottom-area-wrapper').css({ display: 'flex' });
+//     idx += 1;
+//   } else { $('.purchase-customer-id').html('<p></p>'); }
+// }, 10000);
 
 // 우측상단 응원문구 이벤트
 setInterval(async () => {
@@ -59,6 +59,34 @@ function getOS(): string|null {
   return os;
 }
 
+function dailyMissionTimer(duration:number) {
+    
+  let timer = duration * 60;
+  let hours, minutes, seconds;
+  
+  const interval = setInterval(function(){
+      hours	= parseInt(String(timer / 3600), 10);
+      minutes = parseInt(String(timer / 60 % 60), 10);
+      seconds = parseInt(String(timer % 60), 10);
+  
+      hours 	= hours < 10 ? "0" + hours : hours;
+      minutes = minutes < 10 ? "0" + minutes : minutes;
+      seconds = seconds < 10 ? "0" + seconds : seconds;
+  
+      $('#time-hour').text(hours);
+      $('#time-min').text(minutes);
+      $('#time-sec').text(seconds);
+
+      if (--timer < 0) {
+          timer = 0;
+          clearInterval(interval);
+      }
+  }, 1000);
+}
+
+dailyMissionTimer(60);	// hour base
+
+// ---------------------------------------- 소켓 ------------------------------------
 const device: string|null = getOS();
 
 socket.emit('new client', { THIS_URL, device });
