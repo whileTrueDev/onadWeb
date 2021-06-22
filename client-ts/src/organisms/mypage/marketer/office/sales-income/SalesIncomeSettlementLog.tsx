@@ -1,5 +1,7 @@
 import { makeStyles, Paper, Tab, Tabs } from '@material-ui/core';
-import React from 'react';
+import React, { useEffect, useMemo } from 'react';
+import { useHistory } from 'react-router-dom';
+import parseParams from '../../../../../utils/parseParams';
 import MonthlySettlement from './sub/MonthlySettlement';
 import SettlementByOrder from './sub/SettlementByOrder';
 
@@ -19,15 +21,27 @@ const useStyles = makeStyles(theme => ({
 export interface FilterValue {
   month?: string | null;
   year?: string | null;
+  roundInMonth?: string | null;
 }
 
 export default function SalesIncomeSettlementLog(): React.ReactElement {
   const classes = useStyles();
+  const history = useHistory();
 
   const [value, setValue] = React.useState<number>(0);
   const handleChange = (e: React.ChangeEvent<{}>, newValue: number): void => {
     setValue(newValue);
+    if (newValue === 0) {
+      history.push(history.location.pathname);
+    }
   };
+
+  const params = useMemo(() => parseParams(history.location.search), [history.location.search]);
+  useEffect(() => {
+    if (params.settlementLogId) {
+      setValue(1);
+    }
+  }, [params.settlementLogId]);
 
   return (
     <Paper className={classes.root}>

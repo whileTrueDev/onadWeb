@@ -19,6 +19,9 @@ import { MarketerSession } from '../../../interfaces/Session.interface';
 import { IsAuthGuard } from '../../auth/guards/isAuth.guard';
 import { SlackService } from '../../slack/slack.service';
 import { CreateMarketerSettlementDto } from './dto/createMarketerSettlementDto.dto';
+import { FindSettlementLogsDto } from './dto/FindSettlementLogsDto.dto';
+import { FindSettlementLogsMonthsDto } from './dto/FindSettlementLogsMonthsDto.dto';
+import { FindSettlementLogsRoundsDto } from './dto/FindSettlementLogsRoundsDto.dto';
 import { UpdateMarketerSettlementDto } from './dto/updateMarketerSettlementDto.dto';
 import { FindSettlementLogsRes } from './interfaces/FindSettlementLogsRes.interface';
 import { SettlementLogsService } from './settlement-logs.service';
@@ -92,18 +95,18 @@ export class SettlementController {
   @Get('/logs')
   findSettlementLogs(
     @Marketer() { marketerId }: MarketerSession,
-    @Query('settlementLogId') settlementLogId?: string,
-    @Query('year') year?: string,
-    @Query('month') month?: string,
+    @Query(ValidationPipe) dto: FindSettlementLogsDto,
   ): Promise<
     | Array<Omit<MarketerSalesIncomeSettlementLogs, 'doneDate'> & { doneDate: string }>
     | FindSettlementLogsRes
   > {
-    if (year && month) {
-      return this.settlementLogsService.findAllByOrder(marketerId, year, month);
+    const { year, month, settlementLogId, roundInMonth } = dto;
+    if (year && month && roundInMonth) {
+      return this.settlementLogsService.findAllByOrder(marketerId, year, month, roundInMonth);
     }
     if (settlementLogId) {
-      return this.settlementLogsService.findAllById(marketerId, Number(settlementLogId));
+      const realSettlementLogId = Number(settlementLogId);
+      return this.settlementLogsService.findAllById(realSettlementLogId);
     }
     return this.settlementLogsService.findAllMonthly(marketerId, year || new Date().getFullYear());
   }
@@ -114,7 +117,18 @@ export class SettlementController {
   }
 
   @Get('/logs/months')
-  findSettlementLogsMonths(@Marketer() { marketerId }: MarketerSession): Promise<string[]> {
-    return this.settlementLogsService.findMonths(marketerId);
+  findSettlementLogsMonths(
+    @Marketer() { marketerId }: MarketerSession,
+    @Query(ValidationPipe) dto: FindSettlementLogsMonthsDto,
+  ): Promise<string[]> {
+    return this.settlementLogsService.findMonths(marketerId, dto.year);
+  }
+
+  @Get('/logs/rounds')
+  findSettlementLogsRounds(
+    @Marketer() { marketerId }: MarketerSession,
+    @Query(ValidationPipe) dto: FindSettlementLogsRoundsDto,
+  ): Promise<string[]> {
+    return this.settlementLogsService.findRounds(marketerId, dto.year, dto.month);
   }
 }

@@ -3,7 +3,7 @@ import { Box, Typography } from '@material-ui/core';
 import { GridColumns } from '@material-ui/data-grid';
 import React from 'react';
 import { UseGetRequestObject } from '../../utils/hooks/useGetRequest';
-import CustomDataGrid from './CustomDataGrid';
+import CustomDataGridExportable from './CustomDataGridExportable';
 
 export interface SettlementByOrderData {
   VAT: number;
@@ -27,14 +27,23 @@ export interface SettlementByOrderData {
   updateDate: Date;
 }
 
+export interface PaymentMethods {
+  id: number;
+  method: string;
+  paymentFee: number;
+  paymentFeeFixed: number;
+}
 interface SalesIncomeSettlementLogByOrderTableProps {
   settlementLogsData: UseGetRequestObject<SettlementByOrderData[]>;
+  paymentMethodData: UseGetRequestObject<PaymentMethods[]>;
 }
 
 export default function SalesIncomeSettlementLogByOrderTable({
   settlementLogsData,
+  paymentMethodData,
 }: SalesIncomeSettlementLogByOrderTableProps): React.ReactElement {
   const column: GridColumns = [
+    { field: 'orderId', headerName: '주문번호', width: 100 },
     {
       field: 'isLiveCommerce',
       headerName: '캠페인유형',
@@ -67,7 +76,7 @@ export default function SalesIncomeSettlementLogByOrderTable({
   return (
     <Box>
       <Box height={400}>
-        <CustomDataGrid
+        <CustomDataGridExportable
           disableSelectionOnClick
           disableColumnMenu
           disableColumnFilter
@@ -79,8 +88,19 @@ export default function SalesIncomeSettlementLogByOrderTable({
         />
       </Box>
 
-      <Typography variant="body2">* 결제수단별 수수료</Typography>
-      <Typography variant="caption">결제수단별 수수료</Typography>
+      {!paymentMethodData.loading && paymentMethodData.data && (
+        <Box>
+          <Typography variant="body2">결제수단별 수수료</Typography>
+          {paymentMethodData.data.map(paymentMethod => (
+            <Typography key={paymentMethod.id} variant="caption">
+              {`${paymentMethod.method}: `}
+              {paymentMethod.paymentFee
+                ? `${paymentMethod.paymentFee}%`
+                : `${paymentMethod.paymentFeeFixed}원 (고정)`}{' '}
+            </Typography>
+          ))}
+        </Box>
+      )}
     </Box>
   );
 }

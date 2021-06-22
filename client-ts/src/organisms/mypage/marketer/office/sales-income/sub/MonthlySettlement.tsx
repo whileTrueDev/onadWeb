@@ -8,7 +8,7 @@ import { FilterValue } from '../SalesIncomeSettlementLog';
 
 export default function MonthlySettlement(): React.ReactElement {
   // 월 데이터
-  const [year, setYear] = React.useState<null | string>('');
+  const [year, setYear] = React.useState<null | string>(null);
   function handleYearChange(e: React.ChangeEvent<{}>, newValue: string | null): void {
     setYear(newValue);
   }

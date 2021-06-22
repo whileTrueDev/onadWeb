@@ -36,6 +36,11 @@ const OnadIndex = (): JSX.Element => {
     createMuiTheme({
       ...theme.rawTheme,
       palette: { ...theme.rawTheme.palette, type: themeType },
+      props: {
+        MuiTablePagination: {
+          labelRowsPerPage: '페이지당 행',
+        },
+      },
     }),
   );
   const onadTheme: OnadTheme = {
