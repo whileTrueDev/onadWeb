@@ -81,7 +81,7 @@ export class LandingUrlService {
 
   // * landingUrl 프라이머리 키 생성
   private getNewLandingUrlId(marketerId: string, lastLandingUrl?: LinkRegistered): string {
-    if (!marketerId) return `${this.COLUMN_PREFIX}${marketerId}_01`;
+    if (!lastLandingUrl) return `${this.COLUMN_PREFIX}${marketerId}_01`;
     const count = parseInt(lastLandingUrl.linkId.split('_')[2], 10) + 1;
     if (count < 10) return `${this.COLUMN_PREFIX}${marketerId}_0${count}`;
     return `${this.COLUMN_PREFIX}${marketerId}_${count}`;
