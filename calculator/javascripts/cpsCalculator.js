@@ -6,6 +6,7 @@ const {
   getInsertCampaignLog,
   getCalculateCreatorIncome,
   getCalculateMarketerSalesIncome,
+  getUpdateOrdersDetail,
 } = require('../utils/cps/queries');
 const { getFeeCalculatedTargets } = require('../utils/cps/commission');
 const generateOptimizedDataSet = require('../utils/cps/generateOptimizedDataSet');
@@ -30,10 +31,11 @@ const getTargets = async () => {
     MR.marketerId, MR.name,
     MOC.creatorId AS targetCreatorId,
     statusString,
-    creatorCommission, onadCommission
+    creatorCommission, onadCommission, paymentCommissionAmount
   FROM merchandiseOrders AS MO
   JOIN merchandiseRegistered AS MR ON MR.id = MO.merchandiseId
   JOIN merchandiseOrderStatuses AS MOS ON MOS.statusNumber = MO.status
+  JOIN merchandiseOrdersDetail AS DETAIL ON MO.id = DETAIL.orderId
   LEFT JOIN merchandiseOrderComments AS MOC ON MO.id = MOC.orderId
   LEFT JOIN creatorInfo ON MOC.creatorId = creatorInfo.creatorId
   WHERE statusString = ? AND calculateDoneFlag = ? AND isLiveCommerce = ?`;
@@ -49,16 +51,17 @@ const getLiveCommerceTargets = async () => {
   const query = `
   SELECT
     MO.id, MO.campaignId, MO.merchandiseId, orderPrice, calculateDoneFlag, deliveryFee,
-    MR.marketerId, MR.name, creatorCommission, onadCommission,
+    MR.marketerId, MR.name, creatorCommission, onadCommission, paymentCommissionAmount,
     statusString,
     campaign.targetList
   FROM merchandiseOrders AS MO
   JOIN merchandiseRegistered AS MR ON MR.id = MO.merchandiseId
   JOIN merchandiseOrderStatuses AS MOS ON MOS.statusNumber = MO.status
-   JOIN campaign ON campaign.campaignId = MO.campaignId
+  JOIN campaign ON campaign.campaignId = MO.campaignId
+  JOIN merchandiseOrdersDetail AS DETAIL ON MO.id = DETAIL.orderId
   WHERE statusString = ? AND calculateDoneFlag = ? AND isLiveCommerce = ?`;
 
-  const { result } = await doQuery(query, ['구매확정', false, true]) // 실 구동시, "구매확정"
+  const { result } = await doQuery(query, ['테스트', false, true]) // 실 구동시, "구매확정"
     .catch(err => `error occurred during run getTargets - ${err}`);
 
   return result.map(res => ({
@@ -111,6 +114,16 @@ const updateCampaignLog = (conn, feeCalculatedTargets) => {
   return conn.query(campaignLog.query, campaignLog.queryArray);
 };
 
+// * 5. 정산 관련 정보 처리 (merchandiseOrdersDetail)
+const updateOrdersDetail = (conn, feeCalculatedTargets) => {
+  return Promise.all(
+    feeCalculatedTargets.map(t => {
+      const ordersDetail = getUpdateOrdersDetail(t);
+      return conn.query(ordersDetail.query, ordersDetail.queryArray);
+    }),
+  );
+};
+
 /**
  * ### CPS 계산 정책
  * 1. 방송인 A로부터 유입된 시청자가 구입 + 인증(리뷰or자랑하기)**글을 남기고** 구매완료 시
@@ -127,11 +140,11 @@ async function cpsCalculate() {
   const cpsTargets = await getTargets().catch(err =>
     console.error(`CPS 계산 대상 목록 가져오는 도중 오류 - ${err}`),
   );
-  const liveCommeerceTargets = await getLiveCommerceTargets().catch(err =>
+  const liveCommerceTargets = await getLiveCommerceTargets().catch(err =>
     console.error(`[liveCommerce] 계산 대상 목록 가져오는 도중 오류 - ${err}`),
   );
 
-  const targets = cpsTargets.concat(liveCommeerceTargets);
+  const targets = cpsTargets.concat(liveCommerceTargets);
   const feeCalculatedTargets = getFeeCalculatedTargets(targets);
   console.info('[CPS|라이브커머스] 판매 대금 계산 타겟 수: ', targets.length);
 
@@ -162,6 +175,11 @@ async function cpsCalculate() {
     // * 4. 캠페인 계산 로그 처리
     await updateCampaignLog(conn, feeCalculatedTargets).then(() =>
       console.log(`[${new Date().toLocaleString()}] 모든 주문의 캠페인 계산 로그 처리 완료`),
+    );
+
+    // * 5. 정산 관련 정보 처리 (merchandiseOrdersDetail)
+    await updateOrdersDetail(conn, feeCalculatedTargets).then(() =>
+      console.log(`[${new Date().toLocaleString()}] 모든 주문의 정산 정보 처리 완료`),
     );
 
     console.log(

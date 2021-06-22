@@ -84,9 +84,20 @@ const getCalculateMarketerSalesIncome = ({ marketerId, salesIncomeToMarketer, de
   return { query, queryArray };
 };
 
+const getUpdateOrdersDetail = ({ commissionAmount, VAT, actualSendedAmount, id: orderId }) => {
+  const query = `
+    UPDATE merchandiseOrdersDetail
+    SET commissionAmount = ?, VAT = ?, actualSendedAmount = ?
+    WHERE orderId = ?
+  `;
+  const queryArray = [commissionAmount, VAT, actualSendedAmount, orderId];
+  return { query, queryArray };
+};
+
 module.exports = {
   getUpdateFlag,
   getInsertCampaignLog,
   getCalculateCreatorIncome,
   getCalculateMarketerSalesIncome,
+  getUpdateOrdersDetail,
 };
