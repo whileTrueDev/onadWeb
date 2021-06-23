@@ -37,11 +37,11 @@ export class CreateCampaignDto {
   dailyLimit: number;
 
   @IsOptional()
-  @IsDateString()
+  @IsNotEmpty()
   startDate: string;
 
   @IsOptional()
-  @IsDateString()
+  @IsNotEmpty()
   finDate: string;
 
   @IsString()
@@ -51,10 +51,10 @@ export class CreateCampaignDto {
   campaignDescription: string;
 
   @IsOptional()
-  @IsString()
+  @IsNotEmpty()
   connectedLinkId?: string | null;
 
   @IsOptional()
-  @IsInt()
+  @IsNotEmpty()
   merchandiseId?: number | null;
 }
