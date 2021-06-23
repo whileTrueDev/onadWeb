@@ -2,6 +2,7 @@ import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
 import { Marketer } from '../../../decorators/sessionData.decorator';
 import { MarketerSession } from '../../../interfaces/Session.interface';
 import { IsAuthGuard } from '../../auth/guards/isAuth.guard';
+import { MarketerActionLogService, MarketerActionLogType } from '../marketerActionLog.service';
 import { AdService } from './ad.service';
 import { ChangeOnOffStateDto } from './dto/changeOnOffStateDto.dto';
 import { FindCashAmountRes } from './interfaces/findCashAmountRes.interface';
@@ -11,7 +12,10 @@ import { FindExpenditureRes } from './interfaces/findExpenditureRes.interface';
 
 @Controller('marketer/ad')
 export class AdController {
-  constructor(private readonly adService: AdService) {}
+  constructor(
+    private readonly adService: AdService,
+    private readonly marketerActionLogService: MarketerActionLogService,
+  ) {}
 
   @UseGuards(IsAuthGuard)
   @Get()
@@ -25,6 +29,13 @@ export class AdController {
     @Marketer() { marketerId }: MarketerSession,
   ): Promise<{ onOffState: boolean }> {
     const onOffState = await this.adService.findOnOffState(marketerId);
+    this.marketerActionLogService.createLog(
+      marketerId,
+      MarketerActionLogType['광고on/off'],
+      JSON.stringify({
+        onoffState: onOffState, // on: 1, off : 0
+      }),
+    );
     return { onOffState };
   }
 
