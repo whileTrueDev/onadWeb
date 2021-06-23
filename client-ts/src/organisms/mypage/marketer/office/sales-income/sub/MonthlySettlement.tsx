@@ -47,6 +47,11 @@ export default function MonthlySettlement(): React.ReactElement {
           )}
         />
       </Box>
+      {!settlementLogsYears.loading && settlementLogsYears.data?.length === 0 && (
+        <Box>
+          <Typography variant="body2">아직 정산 내역이 없습니다.</Typography>
+        </Box>
+      )}
       <Box marginY={1}>
         <Button
           variant="contained"

@@ -24,7 +24,7 @@ export class SettlementLogsService {
   ): Promise<Array<Omit<MarketerSalesIncomeSettlementLogs, 'doneDate'> & { doneDate: string }>> {
     const data = await this.marketerSalesIncomeSettlementLogsRepo
       .createQueryBuilder()
-      .where('marketerId = :marketerId', { marketerId: 'cookmagic' })
+      .where('marketerId = :marketerId', { marketerId })
       .andWhere('YEAR(doneDate) = :year', { year })
       .orderBy('doneDate', 'DESC')
       .getMany();
@@ -41,7 +41,7 @@ export class SettlementLogsService {
   ): Promise<FindSettlementLogsRes> {
     const data = await this.marketerSalesIncomeSettlementLogsRepo
       .createQueryBuilder()
-      .where('marketerId = :marketerId', { marketerId: 'cookmagic' })
+      .where('marketerId = :marketerId', { marketerId })
       .andWhere('YEAR(doneDate) = :year', { year })
       .andWhere('MONTH(doneDate) = :month', { month })
       .andWhere('roundInMonth = :roundInMonth', { roundInMonth })
@@ -63,7 +63,7 @@ export class SettlementLogsService {
       .select('YEAR(doneDate) AS year')
       .groupBy('YEAR(doneDate)')
       .orderBy('doneDate', 'DESC')
-      .where('marketerId = :marketerId', { marketerId: 'cookmagic' })
+      .where('marketerId = :marketerId', { marketerId })
       .getRawMany();
     return data.map(d => String(d.year));
   }
@@ -75,7 +75,7 @@ export class SettlementLogsService {
       .select('MONTH(doneDate) AS month')
       .groupBy('MONTH(doneDate)')
       .orderBy('doneDate', 'DESC')
-      .where('marketerId = :marketerId', { marketerId: 'cookmagic' })
+      .where('marketerId = :marketerId', { marketerId })
       .andWhere('YEAR(doneDate) = :year', { year })
       .getRawMany();
 
@@ -87,7 +87,7 @@ export class SettlementLogsService {
     const data = await this.marketerSalesIncomeSettlementLogsRepo
       .createQueryBuilder()
       .select('roundInMonth')
-      .where('marketerId = :marketerId', { marketerId: 'cookmagic' })
+      .where('marketerId = :marketerId', { marketerId })
       .andWhere('YEAR(doneDate) = :year', { year })
       .andWhere('MONTH(doneDate) = :month', { month })
       .groupBy('roundInMonth')

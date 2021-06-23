@@ -164,6 +164,12 @@ export default function SettlementByOrder(): React.ReactElement {
         </Box>
       </Grid>
 
+      {!settlementLogsYears.loading && settlementLogsYears.data?.length === 0 && (
+        <Box>
+          <Typography variant="body2">아직 정산 내역이 없습니다.</Typography>
+        </Box>
+      )}
+
       {/* 보기 버튼 */}
       <Box marginY={1}>
         <Button

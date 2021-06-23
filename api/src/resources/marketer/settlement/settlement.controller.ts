@@ -14,7 +14,6 @@ import {
 import { Marketer } from '../../../decorators/sessionData.decorator';
 import { MarketerSalesIncomeSettlementLogs } from '../../../entities/MarketerSalesIncomeSettlementLogs';
 import { MarketerSettlement } from '../../../entities/MarketerSettlement';
-import { MerchandiseOrdersDetail } from '../../../entities/MerchandiseOrdersDetail';
 import { MarketerSession } from '../../../interfaces/Session.interface';
 import { IsAuthGuard } from '../../auth/guards/isAuth.guard';
 import { SlackService } from '../../slack/slack.service';
