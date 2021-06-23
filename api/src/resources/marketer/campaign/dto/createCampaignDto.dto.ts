@@ -7,6 +7,7 @@ import {
   IsNumberString,
   IsOptional,
   IsString,
+  ValidateIf,
 } from 'class-validator';
 
 export class CreateCampaignDto {
@@ -50,10 +51,12 @@ export class CreateCampaignDto {
   @IsString()
   campaignDescription: string;
 
+  @ValidateIf(o => o.optionType !== '3') // 3 = 상품판매형광고
   @IsOptional()
   @IsNotEmpty()
   connectedLinkId?: string | null;
 
+  @ValidateIf(o => o.optionType === '3') // 3 = 상품판매형광고
   @IsOptional()
   @IsNotEmpty()
   merchandiseId?: number | null;
