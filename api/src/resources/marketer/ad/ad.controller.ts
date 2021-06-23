@@ -30,11 +30,13 @@ export class AdController {
 
   @UseGuards(IsAuthGuard)
   @Post('on-off')
-  changeOnOffState(
+  async changeOnOffState(
     @Marketer() { marketerId }: MarketerSession,
     @Body() dto: ChangeOnOffStateDto,
-  ): Promise<boolean> {
-    return this.adService.changeOnOffState(marketerId, dto.onOffState);
+  ): Promise<[boolean, string?]> {
+    const result = await this.adService.changeOnOffState(marketerId, dto.onOffState);
+    if (!result) return [false, '광고 On/Off에 실패하였습니다. 문제가 지속되는 경우 문의바랍니다.'];
+    return [true];
   }
 
   // *************************************
