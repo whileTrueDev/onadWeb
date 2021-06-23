@@ -97,6 +97,9 @@ export class CampaignLogRepository extends Repository<CampaignLog> {
       .andWhere('type = "CPS"')
       .groupBy('cl.creatorId')
       .getRawMany();
+
+    if (!(creatorsWhoSold.length > 0)) return [];
+
     const creatorIds = creatorsWhoSold.map(x => x.creatorId);
     const clicks = await this.manager
       .createQueryBuilder()

@@ -44,6 +44,7 @@ export class CampaignController {
     @Marketer() sess: MarketerSession,
     @Body(ValidationPipe) dto: CreateCampaignDto,
   ): Promise<[boolean, string]> {
+    console.log(dto);
     const campaign = await this.campaignService.createCampaign(
       sess.marketerId,
       sess.marketerName,

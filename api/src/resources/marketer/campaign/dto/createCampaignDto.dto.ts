@@ -2,6 +2,7 @@ import {
   IsArray,
   IsDateString,
   IsIn,
+  IsInt,
   IsNotEmpty,
   IsNumberString,
   IsOptional,
@@ -54,6 +55,6 @@ export class CreateCampaignDto {
   connectedLinkId?: string | null;
 
   @IsOptional()
-  @IsString()
+  @IsInt()
   merchandiseId?: number | null;
 }
