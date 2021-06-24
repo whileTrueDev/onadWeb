@@ -1,5 +1,6 @@
 const mysql = require('mysql2');
 
+
 const pool = mysql.createPool({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
@@ -12,7 +13,5 @@ const pool = mysql.createPool({
      * If set to 0, there is no limit to the number of queued connection requests. (Default: 0)
      */
 });
-
 console.log('create pool!');
-
 module.exports = pool;
