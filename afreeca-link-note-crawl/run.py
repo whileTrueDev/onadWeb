@@ -58,6 +58,9 @@ def run():
     # 크롤러 시작
     af.start()
 
+    # 크롤러 종료시, 커넥션 종료
+    DBManager.dispose()
+
 
 if __name__ == '__main__':
     run()
