@@ -3,21 +3,30 @@
   src: url('/public/fonts/KOTRA_BOLD.ttf');
 }
 
+@font-face {
+  font-family: 'DIGITAL';
+  src: url('/public/fonts/LAB디지털.ttf');
+}
+
+@font-face {
+  font-family: 'COOKIE';
+  src: url('/public/fonts/JalnanOTF.otf');
+}
+
 body {
   width: 100%;
   height: 100%;
   margin: 0px;
   overflow: auto;
   position: fixed;
-  display:flex;
+  display: flex;
   justify-content: flex-end;
-
 }
 
 .live-commerce {
-  width:96.9%;
-  height:94.5%;
-  position:relative
+  width: 96.9%;
+  height: 94.5%;
+  position: relative;
 }
 
 /* 하단영역 */
@@ -33,45 +42,49 @@ body {
   background-color: rgba(0, 0, 0, 0.5);
 }
 
-.bottom-left{
-  width:22.5%;
+.bottom-left {
+  width: 22.5%;
   height: 100%;
-  display:flex;
+  display: flex;
   flex-direction: row;
-  justify-content: space-evenly ;
+  justify-content: space-evenly;
   align-items: center;
 }
 
+.bottom-left-icon {
+  width: 15%;
+  margin-right: 5%;
+}
+
 .bottom-object {
-  width:50%;
-  display:flex;
+  width: 50%;
+  display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
 }
 
-.bottom-object p{
-  font-family: 'KOTRA';
-  font-size: 23px;
+.bottom-object span {
+  font-family: 'COOKIE';
+  font-size: 30px;
   color: #ffffff;
   -webkit-text-stroke: 1px #000000;
 }
 
 .bottom-timer {
-  width:50%;
-  display:flex;
+  width: 50%;
+  display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  font-family: 'KOTRA';
-  font-size: 23px;
+  font-family: 'DIGITAL';
+  font-size: 30px;
   color: #ffffff;
-  -webkit-text-stroke: 1px #000000;
 }
 
 .bottom-timer span {
-  width:10%;
-  display:flex;
+  width: 10%;
+  display: flex;
   justify-content: space-around;
 }
 
@@ -190,9 +203,9 @@ body {
 /* 좌측 상단 랭킹 */
 .ranking-area {
   display: flex;
-  top:6.5%;
+  top: 3.5%;
   width: 100%;
-  height: 31%;
+  height: 25%;
   position: absolute;
   align-items: center;
   justify-content: center;
@@ -201,8 +214,8 @@ body {
 }
 
 .ranking-area-inner {
-  width:100%;
-  height:100%;
+  width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -210,41 +223,41 @@ body {
 }
 
 .ranking-text-area {
-  width:100%;
-  height:27%;
+  width: 100%;
+  height: 29%;
   display: flex;
   align-items: center;
   justify-content: center;
   margin: 1%;
-  font-family: 'KOTRA';
+  font-family: 'COOKIE';
   font-size: 25px;
   color: #ffffff;
   -webkit-text-stroke: 1px black;
 }
 
 .ranking-text-area#title {
-  height:15%;
-  margin-bottom:0;
-  font-size:30px;
-  color:#F5F171;
+  height: 15%;
+  margin-bottom: 0;
+  font-size: 30px;
+  color: #fcfaad;
 }
 
 .ranking-text-area-id {
-  margin-left:2%;
-  font-size: 25px;
+  margin-left: 2%;
+  font-size: 30px;
   color: #27b9ac;
   -webkit-text-stroke: 1px black;
 }
 
 #ranking-icon {
-  width: 15%;
+  width: 13%;
   margin-right: 0.005%;
 }
 
 /* 좌측 배너영역 */
 .left-banner-area {
   width: 100%;
-  height: 62.5%;
+  height: 71.5%;
   left: 0%;
   bottom: 0%;
   position: absolute;
@@ -260,9 +273,9 @@ body {
   position: fixed;
 }
 
-.donation-wrapper{
-  width:100%;
-  height:100%
+.donation-wrapper {
+  width: 100%;
+  height: 100%;
 }
 
 .centered {
@@ -315,14 +328,14 @@ body {
 
 /* 가상광고 */
 .virtual-ad {
-  position:fixed;
-  bottom:10.7%;
-  right:0px;
-  width:40.6%;
-  height:39%;
+  position: fixed;
+  bottom: 10.7%;
+  right: 0px;
+  width: 40.6%;
+  height: 39%;
 }
 
-.virtual-ad img{
-  width:100%;
-  height:100%;
+.virtual-ad img {
+  width: 100%;
+  height: 100%;
 }

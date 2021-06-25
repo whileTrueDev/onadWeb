@@ -24,7 +24,7 @@ app.get('/', (req, res) => {
 });
 
 app.get('/:id', (req, res) => {
-  res.render('client.ejs');
+  res.render('test-client.ejs');
 });
 
 io.on('connection', (socket: Socket) => {
