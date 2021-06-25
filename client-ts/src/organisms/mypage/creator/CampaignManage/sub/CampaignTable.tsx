@@ -1,5 +1,5 @@
 import * as React from 'react';
-import shortid from 'shortid';
+import { nanoid } from 'nanoid';
 import classnames from 'classnames';
 // @material-ui/core components
 import {
@@ -93,7 +93,7 @@ function CampaignTable({
               {tableHead.map(value => (
                 <TableCell
                   className={`${classes.tableCell} ${classes.tableHeadCell}`}
-                  key={shortid.generate()}
+                  key={nanoid()}
                 >
                   {value}
                 </TableCell>
@@ -106,7 +106,7 @@ function CampaignTable({
             .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
             .sort((a, b) => b.date.localeCompare(a.date))
             .map(bannerData => (
-              <TableRow hover key={shortid.generate()}>
+              <TableRow hover key={nanoid()}>
                 <Hidden mdDown>
                   <TableCell className={classes.tableCell}>
                     <Grid container direction="column" justify="center">
@@ -207,7 +207,7 @@ function CampaignTable({
               </TableRow>
             ))}
           {emptyRows > 0 && (
-            <TableRow style={{ height: 48 * emptyRows }} key={shortid.generate()}>
+            <TableRow style={{ height: 48 * emptyRows }} key={nanoid()}>
               <TableCell colSpan={6} />
             </TableRow>
           )}

@@ -1,4 +1,4 @@
-import shortid from 'shortid';
+import { nanoid } from 'nanoid';
 import {
   Paper,
   Grid,
@@ -137,7 +137,7 @@ export default function issueTable(props: {
               // eslint-disable-next-line no-nested-ternary
               .sort((a, b) => (a.date > b.date ? -1 : a.date < b.date ? 1 : 0))
               .map((r, index) => (
-                <div key={shortid.generate()}>
+                <div key={nanoid()}>
                   <ListItem style={{ justifyContent: 'space-between' }}>
                     <ListItemText
                       primary={makeContents(r.type, r.detail)}

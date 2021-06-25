@@ -1,6 +1,6 @@
 /* eslint-disable react/display-name */
 import { useState } from 'react';
-import shortid from 'shortid';
+import { nanoid } from 'nanoid';
 
 import Markdown from 'react-markdown/with-html';
 import Stepper from '@material-ui/core/Stepper';
@@ -68,7 +68,7 @@ const ManualContent = ({ source }: ManualContentProps): JSX.Element => {
   return (
     <Stepper orientation="vertical" className={classes.root}>
       {source.map(value => (
-        <Step active key={shortid.generate()}>
+        <Step active key={nanoid()}>
           <StepLabel>
             <Markdown
               source={value.description}
@@ -91,7 +91,7 @@ const ManualContent = ({ source }: ManualContentProps): JSX.Element => {
             {value && value.image && (
               <ButtonBase
                 focusRipple
-                key={shortid.generate()}
+                key={nanoid()}
                 className={classes.image}
                 focusVisibleClassName={classes.focusVisible}
                 onClick={(): void => {

@@ -1,5 +1,5 @@
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts';
-import shortid from 'shortid';
+import { nanoid } from 'nanoid';
 import COLORS from './chartTheme';
 
 interface RenderActiveShapeProps {
@@ -42,7 +42,7 @@ export default function CustomPieChart<DataType>({
             animationDuration={1000}
           >
             {data.map<JSX.Element>((entry, index) => (
-              <Cell key={shortid.generate()} fill={COLORS.pie[index % COLORS.pie.length]} />
+              <Cell key={nanoid()} fill={COLORS.pie[index % COLORS.pie.length]} />
             ))}
           </Pie>
 

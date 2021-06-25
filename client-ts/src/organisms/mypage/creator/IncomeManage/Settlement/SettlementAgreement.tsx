@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Grid, FormControlLabel, Checkbox } from '@material-ui/core';
 import { makeStyles, Theme } from '@material-ui/core/styles';
-import shortid from 'shortid';
+import { nanoid } from 'nanoid';
 import AgreementSource from '../source/source';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -48,7 +48,7 @@ function SettlementAgreement(): JSX.Element {
     <>
       <Grid item className={classes.textField}>
         {AgreementSource.creatorAgreement.split('\n').map(sentence => (
-          <p key={shortid.generate()}>{sentence}</p>
+          <p key={nanoid()}>{sentence}</p>
         ))}
       </Grid>
       <Grid item>
@@ -72,7 +72,7 @@ function SettlementAgreement(): JSX.Element {
       </Grid>
       <Grid item className={classes.textField}>
         {AgreementSource.privacyAgreement.split('\n').map(sentence => (
-          <p key={shortid.generate()}>{sentence}</p>
+          <p key={nanoid()}>{sentence}</p>
         ))}
       </Grid>
       <Grid item>
@@ -96,7 +96,7 @@ function SettlementAgreement(): JSX.Element {
       </Grid>
       <Grid item className={classes.textField}>
         {AgreementSource.SettlementAgreement.split('\n').map(sentence => (
-          <p key={shortid.generate()}>{sentence}</p>
+          <p key={nanoid()}>{sentence}</p>
         ))}
       </Grid>
       <Grid item>

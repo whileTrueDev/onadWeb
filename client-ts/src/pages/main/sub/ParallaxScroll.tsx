@@ -2,7 +2,7 @@
 import classnames from 'classnames';
 import { useEffect, useState } from 'react';
 import * as React from 'react';
-import shortid from 'shortid';
+import { nanoid } from 'nanoid';
 import ArrowUpwardOutlinedIcon from '@material-ui/icons/ArrowUpwardOutlined';
 import ArrowDownwardOutlinedIcon from '@material-ui/icons/ArrowDownwardOutlined';
 import Background from './Background';
@@ -184,12 +184,7 @@ ParallaxScrollProps): JSX.Element {
       {bgfixedRange[1] >= psIndex ? <Background /> : null}
       <div>
         {children.map((component, index) => (
-          <div
-            key={shortid.generate()}
-            className={classes.slide}
-            id="slideContent"
-            data-slideindex={index}
-          >
+          <div key={nanoid()} className={classes.slide} id="slideContent" data-slideindex={index}>
             {component}
           </div>
         ))}
@@ -198,7 +193,7 @@ ParallaxScrollProps): JSX.Element {
       <div className={classes.slideController}>
         {children.map((num, index) => (
           <div
-            key={shortid.generate()}
+            key={nanoid()}
             className={classes.slideNum}
             id="slideController"
             data-controllernum={index}

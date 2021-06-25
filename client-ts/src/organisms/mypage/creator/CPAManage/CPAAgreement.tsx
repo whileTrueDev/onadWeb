@@ -8,7 +8,7 @@ import {
   Button,
   Divider,
 } from '@material-ui/core';
-import shortid from 'shortid';
+import { nanoid } from 'nanoid';
 import CustomCard from '../../../../atoms/CustomCard';
 import StyledItemText from '../../../../atoms/StyledItemText';
 // hook
@@ -49,7 +49,7 @@ const CPAAgreement = ({ callback }: CPAAgreementProps): JSX.Element => {
             <Grid item className={classes.text} xs={12} md={8} sm={8}>
               <div className={classes.agreementWrap}>
                 {textsource.agreementText.split('\n').map(sentence => (
-                  <p key={shortid.generate()}>{sentence}</p>
+                  <p key={nanoid()}>{sentence}</p>
                 ))}
                 <Divider />
                 <div className={classes.endButton}>

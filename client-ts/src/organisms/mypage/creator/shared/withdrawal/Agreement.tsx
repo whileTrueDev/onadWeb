@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import * as React from 'react';
-import shortid from 'shortid';
+import { nanoid } from 'nanoid';
 import { Paper, Typography, Divider, Grid } from '@material-ui/core';
 import { Done, Clear } from '@material-ui/icons';
 // components
@@ -88,7 +88,7 @@ const WithdrawalAgreement = ({
           {/* 계약 내용 */}
           <div className={classes.inDialogContent}>
             {terms.agreement.split('\n').map(sentence => (
-              <Typography variant="body2" key={shortid.generate()} className={classes.names}>
+              <Typography variant="body2" key={nanoid()} className={classes.names}>
                 {sentence}
               </Typography>
             ))}

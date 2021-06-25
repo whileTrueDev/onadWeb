@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { Typography, Button } from '@material-ui/core';
-import shortid from 'shortid';
+import { nanoid } from 'nanoid';
 import styles from './style/Introduction.style';
 import useLoginValue from '../../utils/hooks/useLoginValue';
 import NavTop from '../../organisms/main/layouts/NavTop';
@@ -44,7 +44,7 @@ export default function Introduction({ match }: Props): JSX.Element {
             <div className={classes.wrapper}>
               <div className={classes.mainTop}>
                 {textSource.heroSector.marketer.text.title.map((text: string) => (
-                  <Typography className={classes.mainTitle} variant="h3" key={shortid.generate()}>
+                  <Typography className={classes.mainTitle} variant="h3" key={nanoid()}>
                     {text}
                   </Typography>
                 ))}
@@ -79,7 +79,7 @@ export default function Introduction({ match }: Props): JSX.Element {
             <div className={classes.wrapper}>
               <div className={classes.mainTop}>
                 {textSource.heroSector.creator.text.title.map((text: string) => (
-                  <Typography className={classes.mainTitle} variant="h3" key={shortid.generate()}>
+                  <Typography className={classes.mainTitle} variant="h3" key={nanoid()}>
                     {text}
                   </Typography>
                 ))}

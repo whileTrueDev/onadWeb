@@ -1,6 +1,6 @@
 import { Typography, Button } from '@material-ui/core';
 import classNames from 'classnames';
-import shortid from 'shortid';
+import { nanoid } from 'nanoid';
 import source from './source/doorSource';
 import useStyles from './style/Door.style';
 
@@ -23,7 +23,7 @@ export default function Door(): JSX.Element {
                   variant="h4"
                   style={{ fontWeight: 500 }}
                   className={css.mainTitle}
-                  key={shortid.generate()}
+                  key={nanoid()}
                 >
                   {title}
                 </Typography>
@@ -35,7 +35,7 @@ export default function Door(): JSX.Element {
                 <Button
                   className={css.button}
                   href={title === '광고주' ? '/marketer' : '/creator'}
-                  key={shortid.generate()}
+                  key={nanoid()}
                 >
                   <Typography variant="h6" className={css.buttonText}>
                     {title}
@@ -72,7 +72,7 @@ export default function Door(): JSX.Element {
               <div className={css.flipWrapper}>
                 <div className={css.flip}>
                   {source.chatting.map(row => (
-                    <div key={shortid.generate()} className={css.chatting}>
+                    <div key={nanoid()} className={css.chatting}>
                       <Typography
                         variant="body2"
                         className={css.chattingText}

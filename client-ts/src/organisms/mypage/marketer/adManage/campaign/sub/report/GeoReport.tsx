@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import shortid from 'shortid';
+import { nanoid } from 'nanoid';
 import { Typography, Button, makeStyles } from '@material-ui/core';
 import Skeleton from '@material-ui/lab/Skeleton';
 import { compose, withProps, withHandlers } from 'recompose';
@@ -51,10 +51,7 @@ const MapWithAMarkerClusterer = compose<
       gridSize={60}
     >
       {props.markers.map((marker: GeoInterface) => (
-        <Marker
-          key={shortid.generate()}
-          position={{ lat: marker.latitude, lng: marker.longitude }}
-        />
+        <Marker key={nanoid()} position={{ lat: marker.latitude, lng: marker.longitude }} />
       ))}
     </MarkerClusterer>
   </GoogleMap>
@@ -118,7 +115,7 @@ function groupByCity(payload: GeoInterface[] | null): Array<GeoTableData> {
       if (click.city) {
         if (!cities.includes(click.city)) {
           cities.push(click.city);
-          newData.push({ id: shortid.generate(), city: click.city, click: 1 });
+          newData.push({ id: nanoid(), city: click.city, click: 1 });
         } else {
           newData.map((d, idx) => {
             if (d.city === click.city) {

@@ -2,7 +2,7 @@ import classnames from 'classnames';
 import moment from 'moment';
 import { makeStyles } from '@material-ui/core/styles';
 import { Typography, Divider, Paper, Avatar, Chip, Grow } from '@material-ui/core';
-import shortid from 'shortid';
+import { nanoid } from 'nanoid';
 import Button from '../../../../atoms/CustomButtons/Button';
 import { useGetRequest } from '../../../../utils/hooks';
 import history from '../../../../history';
@@ -236,7 +236,7 @@ const UserInfoCard = ({
         )}
         {withdrawalData &&
           withdrawalData.slice(0, 2).map(withdrawalRequest => (
-            <div className={classes.withdrawalItem} key={shortid.generate()}>
+            <div className={classes.withdrawalItem} key={nanoid()}>
               <Typography className={classes.ellipsis}>
                 {`${withdrawalRequest.creatorWithdrawalAmount.toLocaleString()}원 출금신청 `}
                 <Typography component="span" variant="caption" color="textSecondary">

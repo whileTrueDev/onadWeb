@@ -1,7 +1,7 @@
 /* eslint-disable react/display-name */
 import { useState, useEffect } from 'react';
 import { Typography, TablePagination, useMediaQuery } from '@material-ui/core';
-import shortid from 'shortid';
+import { nanoid } from 'nanoid';
 import useStyles from './style/CreatorList.style';
 import NavTop from '../../organisms/main/layouts/NavTop';
 import AppFooter from '../../organisms/main/layouts/AppFooter';
@@ -30,8 +30,7 @@ const COLORS = [
 export default function CreatorList(): JSX.Element {
   const { isLogin, repasswordOpen, logout, setRepassword } = useLoginValue();
   const classes = useStyles();
-  const [LiveCreator, setLiveCreator] =
-    useState<null | ContractedCreatorListData<string>[]>();
+  const [LiveCreator, setLiveCreator] = useState<null | ContractedCreatorListData<string>[]>();
   const ContractedCreatorList =
     useGetRequest<null, ContractedCreatorListData<string>[]>('/creators');
   const LiveCreatorList = useGetRequest<null, string[]>('/creators/live');
@@ -69,7 +68,7 @@ export default function CreatorList(): JSX.Element {
         <div className={classes.columnWrapper}>
           <div
             className={classes.creatorLogoWrapper}
-            key={shortid.generate()}
+            key={nanoid()}
             style={{ backgroundImage: `${getRandomColors(COLORS)}` }}
           >
             <img
@@ -136,7 +135,7 @@ export default function CreatorList(): JSX.Element {
               LiveCreator?.map(row => (
                 <div
                   className={classes.liveCreatorWrapper}
-                  key={shortid.generate()}
+                  key={nanoid()}
                   style={{ backgroundImage: `${getRandomColors(COLORS)}` }}
                 >
                   <a

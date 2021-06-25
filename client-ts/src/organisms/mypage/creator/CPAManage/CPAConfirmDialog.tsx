@@ -1,4 +1,4 @@
-import shortid from 'shortid';
+import { nanoid } from 'nanoid';
 import { makeStyles } from '@material-ui/core/styles';
 import { Typography, FormControlLabel, Checkbox } from '@material-ui/core';
 
@@ -143,7 +143,7 @@ export default function CPAConfirmDialog({
             캠페인 한줄 설명
           </Typography>
           {selectedCampaign.apHeadline.split('\n').map(v => (
-            <Typography variant="body2" key={shortid.generate()}>
+            <Typography variant="body2" key={nanoid()}>
               {v}
             </Typography>
           ))}

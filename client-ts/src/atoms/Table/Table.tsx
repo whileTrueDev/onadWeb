@@ -1,5 +1,5 @@
 import * as React from 'react';
-import shortid from 'shortid';
+import { nanoid } from 'nanoid';
 // @material-ui/core components
 import { Table, TableHead, TableRow, TableBody, TableCell } from '@material-ui/core';
 import Done from '@material-ui/icons/Done';
@@ -50,7 +50,7 @@ function CustomTable({
               {tableHead.map(value => (
                 <TableCell
                   className={`${classes.tableCell} ${classes.tableHeadCell}`}
-                  key={shortid.generate()}
+                  key={nanoid()}
                 >
                   {value}
                 </TableCell>
@@ -62,10 +62,10 @@ function CustomTable({
           <TableBody>
             {/** 페이지네이션 있는 경우 */}
             {tableData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(prop => (
-              <TableRow hover key={shortid.generate()}>
+              <TableRow hover key={nanoid()}>
                 {prop.map(value =>
                   value.indexOf('data:image/') === -1 ? ( // 없는 경우
-                    <TableCell className={classes.tableCell} key={shortid.generate()}>
+                    <TableCell className={classes.tableCell} key={nanoid()}>
                       {value === '완료됨' ? (
                         <span>
                           {value}
@@ -76,7 +76,7 @@ function CustomTable({
                       )}
                     </TableCell>
                   ) : (
-                    <TableCell className={classes.imgCell} key={shortid.generate()}>
+                    <TableCell className={classes.imgCell} key={nanoid()}>
                       <img src={value} alt="banner" style={{ width: '100%', height: 'auto' }} />
                     </TableCell>
                   ),
@@ -85,7 +85,7 @@ function CustomTable({
             ))}
 
             {emptyRows > 0 && (
-              <TableRow style={{ height: 48 * emptyRows }} key={shortid.generate()}>
+              <TableRow style={{ height: 48 * emptyRows }} key={nanoid()}>
                 <TableCell colSpan={6} />
               </TableRow>
             )}
@@ -94,20 +94,20 @@ function CustomTable({
           <TableBody>
             {/** 페이지네이션 없는경우 */}
             {tableData.map(prop => (
-              <TableRow hover key={shortid.generate()}>
+              <TableRow hover key={nanoid()}>
                 {prop.map((value, i) =>
                   typeof value === 'string' &&
                   (value.indexOf('data:image/') >= 0 || value.indexOf('http') === 0) ? ( // 사진데이터 또는 사진 url 인 경우
-                    <TableCell className={classes.imgCellNoPage} key={shortid.generate()}>
+                    <TableCell className={classes.imgCellNoPage} key={nanoid()}>
                       <img
                         src={value}
                         alt="banner"
                         style={{ width: '100%', height: 'auto' }}
-                        key={shortid.generate()}
+                        key={nanoid()}
                       />
                     </TableCell>
                   ) : (
-                    <TableCell className={classes.tableCell} key={shortid.generate()}>
+                    <TableCell className={classes.tableCell} key={nanoid()}>
                       {value}
                     </TableCell>
                   ),

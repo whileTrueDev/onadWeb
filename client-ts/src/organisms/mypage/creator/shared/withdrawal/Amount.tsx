@@ -1,5 +1,5 @@
 import * as React from 'react';
-import shortid from 'shortid';
+import { nanoid } from 'nanoid';
 import { Grid } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
 import Tooltip from '@material-ui/core/Tooltip';
@@ -123,7 +123,7 @@ const WithdrawalAmount = ({
                   {values.map(value => (
                     <FormControlLabel
                       value={value}
-                      key={shortid.generate()}
+                      key={nanoid()}
                       control={<Radio color="primary" />}
                       label={
                         currentCash >= Number(value) ? (

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import shortid from 'shortid';
+import { nanoid } from 'nanoid';
 import { Typography, withStyles } from '@material-ui/core';
 import MuiAccordion from '@material-ui/core/Accordion';
 import MuiAccordionSummary from '@material-ui/core/AccordionSummary';
@@ -80,7 +80,7 @@ function Question({ MainUserType }: { MainUserType: string }): JSX.Element {
             square
             expanded={expanded === row.id}
             onChange={handleChange(row)}
-            key={shortid.generate()}
+            key={nanoid()}
           >
             <AccordionSummary aria-controls={`${row.id}d-content`} id={`${row.id}d-header`}>
               <div className={classes.titleWrapper}>
@@ -95,7 +95,7 @@ function Question({ MainUserType }: { MainUserType: string }): JSX.Element {
             <AccordionDetails>
               <div className={classes.ansWrapper}>
                 {_ansData[index].split('\n').map((ans: string) => (
-                  <Typography key={shortid.generate()} className={classes.color}>
+                  <Typography key={nanoid()} className={classes.color}>
                     {`${ans}`}
                   </Typography>
                 ))}

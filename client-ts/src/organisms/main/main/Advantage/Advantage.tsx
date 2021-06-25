@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { Divider, Typography } from '@material-ui/core';
 import classNames from 'classnames';
-import shortid from 'shortid';
+import { nanoid } from 'nanoid';
 import styles from '../style/Advantage.style';
 import Slider from './sub/index';
 
@@ -48,7 +48,7 @@ function Advantage({ source, MainUserType }: Props): JSX.Element {
             <div
               className={classes.contentWrapper}
               id={`contentWrap${i}`}
-              key={shortid.generate()}
+              key={nanoid()}
               onClick={e => flipHandler(e)}
             >
               <div
@@ -83,7 +83,7 @@ function Advantage({ source, MainUserType }: Props): JSX.Element {
       ) : (
         <Slider {...silderProps} MainUserType={MainUserType}>
           {source.creator.map((content: any, i: number) => (
-            <div className={classes.contentWrapper} id="contentWrap" key={shortid.generate()}>
+            <div className={classes.contentWrapper} id="contentWrap" key={nanoid()}>
               <div
                 className={classNames(classes.figure, {
                   [classes.flipFront]: itemClicked[`contentWrap${i}`],

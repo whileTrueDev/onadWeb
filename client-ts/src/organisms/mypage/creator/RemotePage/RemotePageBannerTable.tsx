@@ -13,7 +13,7 @@ import {
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { makeStyles } from '@material-ui/core/styles';
 import { OpenInNew } from '@material-ui/icons';
-import shortid from 'shortid';
+import { nanoid } from 'nanoid';
 import OnadBanner from '../../../../atoms/Banner/OnadBanner';
 import Snackbar from '../../../../atoms/Snackbar/Snackbar';
 import useDialog from '../../../../utils/hooks/useDialog';
@@ -238,7 +238,7 @@ const RemotePageBannerTable = (props: RemotePageBannerTableProps): JSX.Element =
             </TableRow>
           ))}
           {emptyRows && emptyRows > 0 && (
-            <TableRow style={{ height: 48 * emptyRows }} key={shortid.generate()}>
+            <TableRow style={{ height: 48 * emptyRows }} key={nanoid()}>
               <TableCell colSpan={4} />
             </TableRow>
           )}

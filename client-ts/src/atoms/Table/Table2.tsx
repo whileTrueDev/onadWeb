@@ -1,5 +1,5 @@
 import * as React from 'react';
-import shortid from 'shortid';
+import { nanoid } from 'nanoid';
 import { makeStyles } from '@material-ui/core/styles';
 // @material-ui/core components
 import { Table, TableHead, TableRow, TableBody, TableCell, Grid } from '@material-ui/core';
@@ -63,7 +63,7 @@ function CustomTable({
             <TableRow>
               {banner && <TableCell />}
               {tableHead.map((column, index) => (
-                <TableCell className={myClasses.tableHeadCell} key={shortid.generate()}>
+                <TableCell className={myClasses.tableHeadCell} key={nanoid()}>
                   <Grid container direction="row">
                     <Grid item>
                       <div>{column.label}</div>
@@ -82,19 +82,19 @@ function CustomTable({
         ) : null}
         <TableBody>
           {tableData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(prop => (
-            <TableRow key={shortid.generate()}>
+            <TableRow key={nanoid()}>
               {banner && (
-                <TableCell key={shortid.generate()}>
+                <TableCell key={nanoid()}>
                   <img
                     src="/pngs/logo/onad_logo.png"
                     alt="banner"
                     style={{ width: '100%', height: 'auto', maxWidth: '50px' }}
-                    key={shortid.generate()}
+                    key={nanoid()}
                   />
                 </TableCell>
               )}
               {prop.map((value, i) => (
-                <TableCell className={classes.tableCell} key={shortid.generate()}>
+                <TableCell className={classes.tableCell} key={nanoid()}>
                   {value}
                 </TableCell>
               ))}
@@ -107,7 +107,7 @@ function CustomTable({
           ))}
 
           {emptyRows > 0 && (
-            <TableRow style={{ height: 48 * emptyRows }} key={shortid.generate()}>
+            <TableRow style={{ height: 48 * emptyRows }} key={nanoid()}>
               <TableCell colSpan={3} />
             </TableRow>
           )}

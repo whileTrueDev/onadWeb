@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import shortid from 'shortid';
+import { nanoid } from 'nanoid';
 import { Grid, Button, Typography } from '@material-ui/core';
 import useStyles from './style/HowToUseMarketer.style';
 // import Typography from '../../Main/components/Typography';
@@ -37,7 +37,7 @@ function HowToUsemarketer({ source }: Props): JSX.Element {
           </Typography>
           <div className={classes.Content}>
             {source.firstContent.split('\n').map(row => (
-              <Typography variant="body2" key={shortid.generate()}>{`${row}`}</Typography>
+              <Typography variant="body2" key={nanoid()}>{`${row}`}</Typography>
             ))}
           </div>
           <Typography
@@ -81,7 +81,7 @@ function HowToUsemarketer({ source }: Props): JSX.Element {
           </Typography>
           <div className={classes.Content}>
             {source.secondContent.split('\n').map(row => (
-              <Typography variant="body2" key={shortid.generate()}>{`${row}`}</Typography>
+              <Typography variant="body2" key={nanoid()}>{`${row}`}</Typography>
             ))}
           </div>
           <Button
@@ -104,7 +104,7 @@ function HowToUsemarketer({ source }: Props): JSX.Element {
           </Typography>
           <div className={classes.Content}>
             {source.thirdContent.split('\n').map(row => (
-              <Typography variant="body2" key={shortid.generate()}>{`${row}`}</Typography>
+              <Typography variant="body2" key={nanoid()}>{`${row}`}</Typography>
             ))}
           </div>
           <Button
@@ -127,7 +127,7 @@ function HowToUsemarketer({ source }: Props): JSX.Element {
           </Typography>
           <div className={classes.Content}>
             {source.fourthContent.split('\n').map(row => (
-              <Typography variant="body2" key={shortid.generate()}>{`${row}`}</Typography>
+              <Typography variant="body2" key={nanoid()}>{`${row}`}</Typography>
             ))}
           </div>
           <Button

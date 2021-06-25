@@ -1,6 +1,6 @@
 import { useState, useLayoutEffect } from 'react';
 import { Button, Typography, CircularProgress } from '@material-ui/core';
-import shortid from 'shortid';
+import { nanoid } from 'nanoid';
 import styles from '../style/HowToUse.style';
 
 interface HowToUseProps {
@@ -56,7 +56,7 @@ function HowToUse({ source, MainUserType }: HowToUseProps): JSX.Element {
         </div>
         <div className={classes.contentWapper}>
           {source.content.map(text => (
-            <Typography variant="h4" key={shortid.generate()} className={classes.content}>
+            <Typography variant="h4" key={nanoid()} className={classes.content}>
               {text}
             </Typography>
           ))}

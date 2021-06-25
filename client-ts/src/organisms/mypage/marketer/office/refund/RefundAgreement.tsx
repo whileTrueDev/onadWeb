@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import * as React from 'react';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import { Paper, Typography, FormControlLabel, Checkbox, Divider, Grid } from '@material-ui/core';
-import shortid from 'shortid';
+import { nanoid } from 'nanoid';
 import sources from '../sources';
 import Dialog from '../../../../../atoms/Dialog/Dialog';
 import Button from '../../../../../atoms/CustomButtons/Button';
@@ -182,7 +182,7 @@ const RefundAgreement = (props: RefundAgreementProps): JSX.Element => {
           {/* 계약 내용 */}
           <div className={classes.inDialogContent}>
             {terms.agreement.split('\n').map((sentence: string) => (
-              <p key={shortid.generate()} className={classes.names}>
+              <p key={nanoid()} className={classes.names}>
                 {sentence}
               </p>
             ))}

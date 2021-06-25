@@ -1,5 +1,5 @@
 import { Button, Typography } from '@material-ui/core';
-import shortid from 'shortid';
+import { nanoid } from 'nanoid';
 import Dialog from '../../../../atoms/Dialog/Dialog';
 
 interface AgreementContentDialogProps {
@@ -35,7 +35,7 @@ function AgreementContentDialog({
       }
     >
       {source.agreementText.split('\n').map(sentence => (
-        <p style={{ fontWeight: 500 }} key={shortid.generate()}>
+        <p style={{ fontWeight: 500 }} key={nanoid()}>
           {sentence}
         </p>
       ))}

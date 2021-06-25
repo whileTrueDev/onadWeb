@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import * as React from 'react';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import { Paper, Typography, FormControlLabel, Checkbox, Divider, Grid } from '@material-ui/core';
-import shortid from 'shortid';
+import { nanoid } from 'nanoid';
 import sources from '../sources';
 import Dialog from '../../../../../atoms/Dialog/Dialog';
 import Button from '../../../../../atoms/CustomButtons/Button';
@@ -255,7 +255,7 @@ const TestChargeAgreement = (props: {
           {/* 계약 내용 */}
           <div className={classes.inDialogContent}>
             {selectTerm.text.split('\n').map(sentence => (
-              <p key={shortid.generate()} className={classes.names}>
+              <p key={nanoid()} className={classes.names}>
                 {sentence}
               </p>
             ))}

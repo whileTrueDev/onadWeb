@@ -1,4 +1,4 @@
-import shortid from 'shortid';
+import { nanoid } from 'nanoid';
 // core ../../../atoms
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
@@ -50,7 +50,7 @@ const ManualSelector = ({
       <CardBody>
         <Stepper orientation="vertical" activeStep={activeStep ? activeStep - 1 : undefined}>
           {sources.map((source, index) => (
-            <Step key={shortid.generate()}>
+            <Step key={nanoid()}>
               <StepLabel>
                 <Button
                   onClick={(): void => handleButton(index + 1)}

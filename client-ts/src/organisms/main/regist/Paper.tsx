@@ -8,7 +8,7 @@ import {
   Button,
   Grid,
 } from '@material-ui/core';
-import shortid from 'shortid';
+import { nanoid } from 'nanoid';
 import useStyles from './style/Paper.style';
 import Dialog from '../../../atoms/Dialog/Dialog';
 import terms from './source/registConfig';
@@ -156,7 +156,7 @@ function PaperSheet({ handleBack, handleNext }: Props): JSX.Element {
         {/* 계약 내용 */}
         <div className={classes.inDialogContent}>
           {selectTerm.text.split('\n').map(sentence => (
-            <p key={shortid.generate()} className={classes.names}>
+            <p key={nanoid()} className={classes.names}>
               {sentence}
             </p>
           ))}

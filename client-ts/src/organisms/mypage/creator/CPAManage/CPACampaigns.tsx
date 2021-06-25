@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import classnames from 'classnames';
-import shortid from 'shortid';
+import { nanoid } from 'nanoid';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import { Typography, Divider, Collapse, ButtonGroup } from '@material-ui/core';
 import TransparentButton from '@material-ui/core/Button';
@@ -210,7 +210,7 @@ export default function CPACampaigns({
                           캠페인 한줄 설명
                         </Typography>
                         {item.apHeadline.split('\n').map(v => (
-                          <Typography variant="body2" key={shortid.generate()}>
+                          <Typography variant="body2" key={nanoid()}>
                             {v}
                           </Typography>
                         ))}
@@ -227,7 +227,7 @@ export default function CPACampaigns({
                           캠페인 미정산 조건
                         </Typography>
                         {item.apKPI.split('\n').map(v => (
-                          <Typography variant="body2" key={shortid.generate()}>
+                          <Typography variant="body2" key={nanoid()}>
                             {v}
                           </Typography>
                         ))}
@@ -244,7 +244,7 @@ export default function CPACampaigns({
                           캠페인 프로모션 텍스트
                         </Typography>
                         {item.apAppPromoText.split('\n').map(v => (
-                          <Typography variant="body2" key={shortid.generate()}>
+                          <Typography variant="body2" key={nanoid()}>
                             {v}
                           </Typography>
                         ))}

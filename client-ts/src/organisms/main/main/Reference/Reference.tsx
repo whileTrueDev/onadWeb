@@ -1,5 +1,5 @@
 import { Grid } from '@material-ui/core';
-import shortid from 'shortid';
+import { nanoid } from 'nanoid';
 import useStyles from '../style/Reference.style';
 import urlsource from '../source/sources';
 
@@ -19,7 +19,7 @@ function Reference(): JSX.Element {
         className={classes.wrapper}
       >
         {urlsource.Reference.map(element => (
-          <Grid item key={shortid.generate()} className={classes.ImageSelector}>
+          <Grid item key={nanoid()} className={classes.ImageSelector}>
             <img src={element.imageUrl} className={classes.image} alt="clientImage" />
           </Grid>
         ))}

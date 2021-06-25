@@ -1,5 +1,5 @@
 import * as React from 'react';
-import shortid from 'shortid';
+import { nanoid } from 'nanoid';
 // @material-ui/core components
 import { Table, TableHead, TableRow, TableBody, TableCell, Button } from '@material-ui/core';
 // custom table component
@@ -45,10 +45,7 @@ export default function MarketerSettlementLogsTable({
         <TableHead>
           <TableRow>
             {tableHead.map(value => (
-              <TableCell
-                className={`${classes.tableCell} ${classes.tableHeadCell}`}
-                key={shortid.generate()}
-              >
+              <TableCell className={`${classes.tableCell} ${classes.tableHeadCell}`} key={nanoid()}>
                 {value}
               </TableCell>
             ))}
@@ -57,9 +54,9 @@ export default function MarketerSettlementLogsTable({
 
         <TableBody>
           {tableData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((prop, i) => (
-            <TableRow hover key={shortid.generate()}>
+            <TableRow hover key={nanoid()}>
               {prop.map(value => (
-                <TableCell className={classes.tableCell} key={shortid.generate()}>
+                <TableCell className={classes.tableCell} key={nanoid()}>
                   <span>{value}</span>
                 </TableCell>
               ))}
@@ -83,7 +80,7 @@ export default function MarketerSettlementLogsTable({
           ))}
 
           {emptyRows > 0 && (
-            <TableRow style={{ height: 36 * emptyRows }} key={shortid.generate()}>
+            <TableRow style={{ height: 36 * emptyRows }} key={nanoid()}>
               <TableCell colSpan={6} />
             </TableRow>
           )}

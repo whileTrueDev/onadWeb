@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import shortid from 'shortid';
+import { nanoid } from 'nanoid';
 import { Typography, Grid } from '@material-ui/core';
 import Button from '../../../../../atoms/CustomButtons/Button';
 import Dialog from '../../../../../atoms/Dialog/Dialog';
@@ -61,7 +61,7 @@ function CompletedContract({ open, handleClose }: CompletedContractProps): JSX.E
             {/* 계약 내용 */}
             <div className={classes.inDialogContent}>
               {selectedTerm.text.split('\n').map(sentence => (
-                <p key={shortid.generate()}>{sentence}</p>
+                <p key={nanoid()}>{sentence}</p>
               ))}
             </div>
           </Dialog>

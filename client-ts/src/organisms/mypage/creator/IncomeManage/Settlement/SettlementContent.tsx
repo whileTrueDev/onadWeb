@@ -1,7 +1,7 @@
 // AccountNumber를 입력하는 Form component 작성
 import { TextField, Grid, Dialog } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import shortid from 'shortid';
+import { nanoid } from 'nanoid';
 import Button from '../../../../../atoms/CustomButtons/Button';
 import StyledItemText from '../../../../../atoms/StyledItemText';
 import { ProfileDataType } from '../../Mypage/ProfileData.type';
@@ -90,7 +90,7 @@ function SettlementContent({ profileData }: SettlementContentProps): JSX.Element
       </div>
       <Grid item className={classes.textFieldContent}>
         {AgreementSource.taxGuidance.split('\n').map((sentence: string) => (
-          <p key={shortid.generate()}>{sentence}</p>
+          <p key={nanoid()}>{sentence}</p>
         ))}
       </Grid>
       {creatorType === 1 && (

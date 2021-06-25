@@ -1,4 +1,4 @@
-import shortid from 'shortid';
+import { nanoid } from 'nanoid';
 import useStyles from './style/PolicyCreator.style';
 import terms from './source/PolicySource';
 
@@ -15,11 +15,11 @@ function PolicyCreator(): JSX.Element {
       <h2>방송인 서비스 이용약관</h2>
       <div className={classes.content}>
         {terms[0].map((term: Terms) => (
-          <div key={shortid.generate()} className={classes.policyWrapper}>
-            <h3 key={shortid.generate()}>{term.title}</h3>
-            <div key={shortid.generate()} className={classes.text}>
+          <div key={nanoid()} className={classes.policyWrapper}>
+            <h3 key={nanoid()}>{term.title}</h3>
+            <div key={nanoid()} className={classes.text}>
               {term.text.split('\n').map(sentence => (
-                <p key={shortid.generate()}>{sentence}</p>
+                <p key={nanoid()}>{sentence}</p>
               ))}
             </div>
           </div>
